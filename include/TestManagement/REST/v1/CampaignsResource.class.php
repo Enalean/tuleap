@@ -410,7 +410,7 @@ class CampaignsResource
         foreach ($definition_ids_to_add as $definition_id) {
             $definition = $this->artifact_factory->getArtifactById($definition_id);
             if (! $definition) {
-                throw new RestException(400, 'Invalid definition id '. (int) $definition_id);
+                throw new RestException(400, 'Invalid definition id ' . (int) $definition_id);
             }
             $new_execution_ref   = $this->execution_creator->createTestExecution(
                 $project_id,
@@ -708,7 +708,7 @@ class CampaignsResource
     {
         $user = $this->user_manager->getCurrentUser();
 
-        if(!$user) {
+        if (!$user) {
             throw new RestException(
                 400,
                 'User not found'

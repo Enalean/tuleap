@@ -66,7 +66,7 @@ class NodeResource
             $factory = new NodeBuilderFactory();
             $user = $this->getCurrentUser();
 
-            $artifact = $factory->getArtifactById($user, (int)$id);
+            $artifact = $factory->getArtifactById($user, (int) $id);
 
             ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
                 $user,
@@ -99,7 +99,7 @@ class NodeResource
      */
     private function getCurrentUser(): PFUser
     {
-        $user =UserManager::instance()->getCurrentUser();
+        $user = UserManager::instance()->getCurrentUser();
         if (! $user) {
             throw new RestException(404, "User not found");
         }

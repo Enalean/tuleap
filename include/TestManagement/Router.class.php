@@ -26,7 +26,6 @@ use CSRFSynchronizerToken;
 use EventManager;
 use PFUser;
 use Project;
-use ProjectManager;
 use TrackerFactory;
 use TrackerXmlImport;
 use Tuleap\TestManagement\Administration\StepFieldUsageDetector;
@@ -109,7 +108,7 @@ class Router
     public function route(Codendi_Request $request)
     {
         $csrf_token = new \CSRFSynchronizerToken(
-            TESTMANAGEMENT_BASE_URL .'/?'. http_build_query(['group_id' => $request->get('group_id')])
+            TESTMANAGEMENT_BASE_URL . '/?' . http_build_query(['group_id' => $request->get('group_id')])
         );
         switch ($request->get('action')) {
             case 'admin':
@@ -289,7 +288,7 @@ class Router
         if ($this->userIsAdmin($request)) {
             $toolbar[] = array(
                 'title' => $GLOBALS['Language']->getText('global', 'Admin'),
-                'url'   => TESTMANAGEMENT_BASE_URL .'/?'. http_build_query(array(
+                'url'   => TESTMANAGEMENT_BASE_URL . '/?' . http_build_query(array(
                     'group_id' => $request->get('group_id'),
                     'action'   => 'admin',
                 ))

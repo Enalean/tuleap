@@ -23,7 +23,6 @@ namespace Tuleap\TestManagement\Step\Execution\Field;
 use PFUser;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValueVisitor;
-use Tuleap;
 use Tuleap\TestManagement\Step\Execution\StepResult;
 
 class StepExecutionChangesetValue extends \Tracker_Artifact_ChangesetValue

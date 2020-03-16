@@ -111,7 +111,7 @@ class Config
 
         $tracker = $this->tracker_factory->getTrackerById($id);
         if ($tracker->isActive()) {
-            return (int)$id;
+            return (int) $id;
         }
 
         return false;

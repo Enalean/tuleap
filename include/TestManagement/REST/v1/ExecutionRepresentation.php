@@ -111,6 +111,6 @@ class ExecutionRepresentation
         $this->assigned_to      = $assigned_to;
         $this->time             = $time;
         $this->linked_bugs      = $linked_bug;
-        $this->steps_results    = (array)JsonCast::toObject($steps_results);
+        $this->steps_results    = (array) JsonCast::toObject($steps_results);
     }
 }

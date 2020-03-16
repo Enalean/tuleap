@@ -25,6 +25,6 @@ class TestManagementPluginDescriptor extends \PluginDescriptor
     public function __construct()
     {
         parent::__construct(dgettext('tuleap-testmanagement', 'Test Management'), false, dgettext('tuleap-testmanagement', 'Test management tool'));
-        $this->setVersionFromFile(__DIR__ .'/../../VERSION');
+        $this->setVersionFromFile(__DIR__ . '/../../VERSION');
     }
 }

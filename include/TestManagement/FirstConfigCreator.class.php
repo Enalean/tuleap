@@ -90,7 +90,7 @@ class FirstConfigCreator
                 if ($tracker) {
                     $project_tracker_ids[$tracker_itemname] = $tracker->getId();
                 }
-            } else if ($tracker_id) {
+            } elseif ($tracker_id) {
                 $project_tracker_ids[$tracker_itemname] = $tracker_mapping[$tracker_id];
             }
         }
@@ -120,7 +120,7 @@ class FirstConfigCreator
 
         foreach ($tracker_itemnames as $tracker_itemname) {
             $tracker = $this->getTracker($project, $tracker_itemname);
-            if(! $tracker) {
+            if (! $tracker) {
                 continue;
             }
             $tracker_ids[$tracker_itemname] = $tracker->getId();
@@ -185,7 +185,7 @@ class FirstConfigCreator
      */
     private function createTrackerFromXML(Project $project, $tracker_itemname)
     {
-        $template_path = TESTMANAGEMENT_RESOURCE_DIR .'/Tracker_'.$tracker_itemname.'.xml';
+        $template_path = TESTMANAGEMENT_RESOURCE_DIR . '/Tracker_' . $tracker_itemname . '.xml';
         if ($tracker_itemname === ISSUE_TRACKER_SHORTNAME) {
             $template_path = realpath(__DIR__ . '/../../../tracker/www/resources/templates/Tracker_Bugs.xml');
         }
@@ -207,7 +207,7 @@ class FirstConfigCreator
         try {
             $created_tracker = $this->xml_import->createFromXMLFile($project, $template_path);
         } catch (\Exception $exception) {
-            $this->logger->error('Unable to create testmanagement config for '. $project->getId() .': '. $exception->getMessage());
+            $this->logger->error('Unable to create testmanagement config for ' . $project->getId() . ': ' . $exception->getMessage());
         } finally {
             return $created_tracker;
         }

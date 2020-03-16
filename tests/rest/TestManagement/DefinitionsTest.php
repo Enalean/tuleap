@@ -23,7 +23,7 @@ namespace Tuleap\TestManagement;
 use REST_TestDataBuilder;
 use TestManagementDataBuilder;
 
-require_once dirname(__FILE__).'/../bootstrap.php';
+require_once dirname(__FILE__) . '/../bootstrap.php';
 
 /**
  * @group TestManagementTest
@@ -64,7 +64,7 @@ final class DefinitionsTest extends BaseTest
 
     private function getFirstExecution($campaign_id, string $user_name)
     {
-        $executions_request = $this->client->get('testmanagement_campaigns/'.$campaign_id.'/testmanagement_executions');
+        $executions_request = $this->client->get('testmanagement_campaigns/' . $campaign_id . '/testmanagement_executions');
         $executions         = $this->getResponse(
             $executions_request,
             $user_name

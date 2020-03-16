@@ -33,7 +33,7 @@ class TestManagementDataBuilder extends REST_TestDataBuilder
         parent::__construct();
         $this->instanciateFactories();
 
-        $this->template_path   = dirname(__FILE__).'/_fixtures/';
+        $this->template_path   = dirname(__FILE__) . '/_fixtures/';
     }
 
     public function setUp()

@@ -65,7 +65,7 @@ abstract class TestManagementController extends MVC2_PluginController
 
         $event = new \Tuleap\TestManagement\Event\GetMilestone(
             $request->getCurrentUser(),
-            (int)$request->getValidated('milestone_id', 'int', 0)
+            (int) $request->getValidated('milestone_id', 'int', 0)
         );
         $this->event_manager->processEvent($event);
         $milestone = $event->getMilestone();
@@ -81,6 +81,6 @@ abstract class TestManagementController extends MVC2_PluginController
 
     protected function getTemplatesDir()
     {
-        return TESTMANAGEMENT_BASE_DIR.'/templates';
+        return TESTMANAGEMENT_BASE_DIR . '/templates';
     }
 }

@@ -30,6 +30,6 @@ class MalformedQueryParameterException extends Exception
         if (! isset($message)) {
             $message = 'Expecting a JSON object.';
         }
-        parent::__construct('Query is malformed. ' .$message);
+        parent::__construct('Query is malformed. ' . $message);
     }
 }

@@ -90,7 +90,7 @@ class Exporter
      */
     private function validateXMLContent(SimpleXMLElement $testmanagement_xml_content)
     {
-        $rng_path = realpath(TESTMANAGEMENT_RESOURCE_DIR.'/testmanagement.rng');
+        $rng_path = realpath(TESTMANAGEMENT_RESOURCE_DIR . '/testmanagement.rng');
 
         $this->validator->validate($testmanagement_xml_content, $rng_path);
     }

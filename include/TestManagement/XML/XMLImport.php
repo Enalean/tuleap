@@ -61,7 +61,7 @@ class XMLImport
      */
     public function import(Project $project, $extraction_path, $tracker_mapping) : void
     {
-        $xml_path = $extraction_path .'/testmanagement.xml';
+        $xml_path = $extraction_path . '/testmanagement.xml';
         if (file_exists($xml_path)) {
             $xml = simplexml_load_string(file_get_contents($xml_path));
             if (! $xml) {
@@ -69,7 +69,7 @@ class XMLImport
             }
 
             $xml_validator = new XML_RNGValidator();
-            $rng_path      = realpath(TESTMANAGEMENT_RESOURCE_DIR.'/testmanagement.rng');
+            $rng_path      = realpath(TESTMANAGEMENT_RESOURCE_DIR . '/testmanagement.rng');
 
             $xml_validator->validate($xml, $rng_path);
 

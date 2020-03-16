@@ -119,7 +119,7 @@ class AdminController extends TestManagementController
 
         $issue_tracker_id = $this->checkIssueTrackerIdForProject(
             $this->request->get('issue_tracker_id'),
-            (string)$this->config->getIssueTrackerId($this->project),
+            (string) $this->config->getIssueTrackerId($this->project),
             false
         );
 
@@ -184,9 +184,9 @@ class AdminController extends TestManagementController
             }
 
             if ($must_check_frozen_fields) {
-                $this->tracker_checker->checkSubmittedTrackerCanBeUsed($this->project, (int)$submitted_id);
+                $this->tracker_checker->checkSubmittedTrackerCanBeUsed($this->project, (int) $submitted_id);
             } else {
-                $this->tracker_checker->checkTrackerIsInProject($this->project, (int)$submitted_id);
+                $this->tracker_checker->checkTrackerIsInProject($this->project, (int) $submitted_id);
             }
             return $submitted_id;
         } catch (TrackerNotInProjectException $exception) {

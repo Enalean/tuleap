@@ -59,8 +59,8 @@ class AgileDashboardPaneInfo extends PaneInfo
 
     public function getUri()
     {
-        $uri = TESTMANAGEMENT_BASE_URL . '/?group_id=' . (int)$this->project_id
-             . '&milestone_id=' . (int)$this->milestone_id;
+        $uri = TESTMANAGEMENT_BASE_URL . '/?group_id=' . (int) $this->project_id
+             . '&milestone_id=' . (int) $this->milestone_id;
         return $uri;
     }
 

@@ -29,7 +29,7 @@ class ArtifactNodeDao extends DataAccessObject
     public function getTitlesStatusAndTypes(array $artifact_ids)
     {
         $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
-        $sql = "SELECT artifact.id, tracker.color, tracker.item_name, tracker.name as tracker_label, cvt_title.value as title, IF(cvl_status.bindvalue_id IS NULL, '".Tracker_Artifact::STATUS_CLOSED."', '".Tracker_Artifact::STATUS_OPEN."') AS status_semantic, lbsv_status.label AS status_label
+        $sql = "SELECT artifact.id, tracker.color, tracker.item_name, tracker.name as tracker_label, cvt_title.value as title, IF(cvl_status.bindvalue_id IS NULL, '" . Tracker_Artifact::STATUS_CLOSED . "', '" . Tracker_Artifact::STATUS_OPEN . "') AS status_semantic, lbsv_status.label AS status_label
                     FROM tracker_artifact AS artifact
                 LEFT JOIN (
                     tracker_changeset_value AS cv_status
@@ -84,7 +84,7 @@ class ArtifactNodeDao extends DataAccessObject
         $sql = "SELECT target_id as id
                 FROM cross_references
                 WHERE source_id = $artifact_id
-                    AND source_type = ".$this->da->quoteSmart(Tracker_Artifact::REFERENCE_NATURE)."
+                    AND source_type = " . $this->da->quoteSmart(Tracker_Artifact::REFERENCE_NATURE) . "
                     AND target_type = source_type";
 
         return $this->retrieve($sql);
@@ -97,7 +97,7 @@ class ArtifactNodeDao extends DataAccessObject
         $sql = "SELECT source_id as id
                 FROM cross_references
                 WHERE target_id = $artifact_id
-                    AND target_type = ".$this->da->quoteSmart(Tracker_Artifact::REFERENCE_NATURE)."
+                    AND target_type = " . $this->da->quoteSmart(Tracker_Artifact::REFERENCE_NATURE) . "
                     AND source_type = target_type";
 
         return $this->retrieve($sql);

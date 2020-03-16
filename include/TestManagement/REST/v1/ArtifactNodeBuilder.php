@@ -160,7 +160,7 @@ class ArtifactNodeBuilder
                 $node->build(
                     $row['id'],
                     NodeReferenceRepresentation::NATURE_ARTIFACT,
-                    TRACKER_BASE_URL.'/?aid='.$row['id'],
+                    TRACKER_BASE_URL . '/?aid=' . $row['id'],
                     $row['item_name'],
                     $row['tracker_label'],
                     $row['color'],

@@ -172,15 +172,15 @@ class CampaignCreator
         $link_field   = $this->getField($tracker_reference, $user, CampaignRepresentation::FIELD_ARTIFACT_LINKS);
 
         $label_value           = new ArtifactValuesRepresentation();
-        $label_value->field_id = (int)$label_field->getId();
+        $label_value->field_id = (int) $label_field->getId();
         $label_value->value    = $label;
 
         $status_value                 = new ArtifactValuesRepresentation();
-        $status_value->field_id       = (int)$status_field->getId();
-        $status_value->bind_value_ids = array((int)$status_field->getDefaultValue());
+        $status_value->field_id       = (int) $status_field->getId();
+        $status_value->bind_value_ids = array((int) $status_field->getDefaultValue());
 
         $link_value           = new ArtifactValuesRepresentation();
-        $link_value->field_id = (int)$link_field->getId();
+        $link_value->field_id = (int) $link_field->getId();
         $link_value->links    = $execution_ids;
 
         return array($label_value, $status_value, $link_value);

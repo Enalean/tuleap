@@ -18,6 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once dirname(__FILE__).'/TestManagementDataBuilder.php';
-require_once dirname(__FILE__).'/TestManagement/BaseTest.php';
+require_once dirname(__FILE__) . '/TestManagementDataBuilder.php';
+require_once dirname(__FILE__) . '/TestManagement/BaseTest.php';
 require_once __DIR__ . '/lib/Cache.php';

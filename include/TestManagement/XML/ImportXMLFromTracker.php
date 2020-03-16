@@ -22,11 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement\XML;
 
-use Project;
 use SimpleXMLElement;
 use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
-use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 use XML_RNGValidator;
 
 class ImportXMLFromTracker
@@ -70,14 +68,14 @@ class ImportXMLFromTracker
         $att = $testmanagement->attributes();
         assert($att !== null);
         $row            = [
-            'name'              => (string)$testmanagement->name,
-            'label'             => (string)$testmanagement->label,
-            'rank'              => (int)$att['rank'],
-            'use_it'            => isset($att['use_it']) ? (int)$att['use_it'] : 1,
-            'scope'             => isset($att['scope']) ? (string)$att['scope'] : 'P',
-            'required'          => isset($att['required']) ? (int)$att['required'] : 0,
-            'notifications'     => isset($att['notifications']) ? (int)$att['notifications'] : 0,
-            'description'       => (string)$testmanagement->description,
+            'name'              => (string) $testmanagement->name,
+            'label'             => (string) $testmanagement->label,
+            'rank'              => (int) $att['rank'],
+            'use_it'            => isset($att['use_it']) ? (int) $att['use_it'] : 1,
+            'scope'             => isset($att['scope']) ? (string) $att['scope'] : 'P',
+            'required'          => isset($att['required']) ? (int) $att['required'] : 0,
+            'notifications'     => isset($att['notifications']) ? (int) $att['notifications'] : 0,
+            'description'       => (string) $testmanagement->description,
             'id'                => 0,
             'tracker_id'        => 0,
             'parent_id'         => 0,
@@ -92,9 +90,9 @@ class ImportXMLFromTracker
             $row['name'],
             $row['label'],
             $row['description'],
-            (bool)$row['use_it'],
+            (bool) $row['use_it'],
             $row['scope'],
-            (bool)$row['required'],
+            (bool) $row['required'],
             $row['notifications'],
             $row['rank'],
             $original_field

@@ -24,7 +24,7 @@ use TestManagementDataBuilder;
 use RestBase;
 use Tuleap\TestManagement\Tests\Rest\Cache;
 
-require_once dirname(__FILE__).'/../bootstrap.php';
+require_once dirname(__FILE__) . '/../bootstrap.php';
 
 /**
  * @group TestManagementTest

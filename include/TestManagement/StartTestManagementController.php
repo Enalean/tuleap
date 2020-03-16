@@ -145,7 +145,7 @@ class StartTestManagementController
 
     private function redirectToTestManagementHomepage(Project $project)
     {
-        $GLOBALS['Response']->redirect(TESTMANAGEMENT_BASE_URL . '/?group_id=' . urlencode((string)$project->getID()));
+        $GLOBALS['Response']->redirect(TESTMANAGEMENT_BASE_URL . '/?group_id=' . urlencode((string) $project->getID()));
     }
 
     public function getBreadcrumbs()

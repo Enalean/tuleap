@@ -24,7 +24,6 @@ use PFUser;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_Artifact_ChangesetValueVisitor;
-use Tuleap;
 use Tuleap\TestManagement\Step\Step;
 
 class StepDefinitionChangesetValue extends Tracker_Artifact_ChangesetValue

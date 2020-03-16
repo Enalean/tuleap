@@ -23,7 +23,7 @@ namespace Tuleap\TestManagement;
 use REST_TestDataBuilder;
 use TestManagementDataBuilder;
 
-require_once dirname(__FILE__).'/../bootstrap.php';
+require_once dirname(__FILE__) . '/../bootstrap.php';
 
 /**
  * @group TestManagementTest
@@ -39,7 +39,7 @@ final class ExecutionsTest extends BaseTest
         $this->assertEquals($initial_value, $execution['status']);
 
         $response = $this->getResponse(
-            $this->client->put('testmanagement_executions/'. $execution['id'], null, json_encode(array(
+            $this->client->put('testmanagement_executions/' . $execution['id'], null, json_encode(array(
                 'status' => $new_value,
                 'time'   => 0
             ))),
@@ -52,7 +52,7 @@ final class ExecutionsTest extends BaseTest
         $this->assertEquals($initial_value, $updated_execution['status']);
 
         $response2 = $this->getResponse(
-            $this->client->put('testmanagement_executions/'. $execution['id'], null, json_encode(array(
+            $this->client->put('testmanagement_executions/' . $execution['id'], null, json_encode(array(
                 'status' => $initial_value,
                 'time'   => 0
             ))),
@@ -70,7 +70,7 @@ final class ExecutionsTest extends BaseTest
         $execution = $this->getLastExecutionForValid73Campaign(TestManagementDataBuilder::USER_TESTER_NAME);
         $this->assertEquals($initial_value, $execution['status']);
 
-        $response = $this->getResponse($this->client->put('testmanagement_executions/'. $execution['id'], null, json_encode(array(
+        $response = $this->getResponse($this->client->put('testmanagement_executions/' . $execution['id'], null, json_encode(array(
             'status' => $new_value,
             'time'   => 0
         ))));
@@ -80,7 +80,7 @@ final class ExecutionsTest extends BaseTest
         $updated_execution = $this->getLastExecutionForValid73Campaign(TestManagementDataBuilder::USER_TESTER_NAME);
         $this->assertEquals($new_value, $updated_execution['status']);
 
-        $this->getResponse($this->client->put('testmanagement_executions/'. $execution['id'], null, json_encode(array(
+        $this->getResponse($this->client->put('testmanagement_executions/' . $execution['id'], null, json_encode(array(
             'status' => $initial_value,
             'time'   => 0
         ))));
@@ -96,7 +96,7 @@ final class ExecutionsTest extends BaseTest
         $execution = $this->getLastExecutionForValid73Campaign(REST_TestDataBuilder::TEST_BOT_USER_NAME);
         $response  = $this->getResponse(
             $this->client->patch(
-                'testmanagement_executions/'. $execution['id'] . '/issues',
+                'testmanagement_executions/' . $execution['id'] . '/issues',
                 null,
                 json_encode(array(
                     'issue_id' => $issue_id,
@@ -121,7 +121,7 @@ final class ExecutionsTest extends BaseTest
 
         $execution = $this->getLastExecutionForValid73Campaign(TestManagementDataBuilder::USER_TESTER_NAME);
         $response  = $this->getResponse($this->client->patch(
-            'testmanagement_executions/'. $execution['id'] . '/issues',
+            'testmanagement_executions/' . $execution['id'] . '/issues',
             null,
             json_encode(array(
                 'issue_id' => $issue_id,
@@ -147,7 +147,7 @@ final class ExecutionsTest extends BaseTest
     {
         $campaign = $this->valid_73_campaign;
 
-        $all_executions_request  = $this->client->get('testmanagement_campaigns/'. $campaign['id'] . '/testmanagement_executions');
+        $all_executions_request  = $this->client->get('testmanagement_campaigns/' . $campaign['id'] . '/testmanagement_executions');
         $all_executions_response = $this->getResponse($all_executions_request, $user_name);
 
         $executions     = $all_executions_response->json();
@@ -159,7 +159,7 @@ final class ExecutionsTest extends BaseTest
 
     private function getLastArtifactFromTracker($tracker_id)
     {
-        $all_artifacts_request  = $this->client->get('trackers/'. $tracker_id . '/artifacts');
+        $all_artifacts_request  = $this->client->get('trackers/' . $tracker_id . '/artifacts');
         $all_artifacts_response = $this->getResponse($all_artifacts_request);
 
         $artifacts      = $all_artifacts_response->json();
@@ -170,7 +170,7 @@ final class ExecutionsTest extends BaseTest
 
     private function getArtifactData($artifact_id, $optional_querypath = '')
     {
-        $artifact_request  = $this->client->get('artifacts/'. $artifact_id . $optional_querypath);
+        $artifact_request  = $this->client->get('artifacts/' . $artifact_id . $optional_querypath);
         $artifact_response = $this->getResponse($artifact_request);
 
         return $artifact_response->json();

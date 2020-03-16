@@ -26,7 +26,7 @@ use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker;
 
-require_once __DIR__ .'/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 class ConfigConformanceAsserterTest extends TestCase
 {

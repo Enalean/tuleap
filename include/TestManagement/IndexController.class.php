@@ -95,7 +95,7 @@ class IndexController extends TestManagementController
 
         $execution_tracker_id = $this->config->getTestExecutionTrackerId($this->project);
 
-        if(!$execution_tracker_id) {
+        if (!$execution_tracker_id) {
             return $empty_config;
         }
         $execution_tracker    = $this->tracker_factory->getTrackerById($execution_tracker_id);

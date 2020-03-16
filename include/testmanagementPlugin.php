@@ -142,7 +142,7 @@ class testmanagementPlugin extends Plugin
 
             $style_css_url = $include_assets->getFileURL('flamingparrot.css');
 
-            echo '<link rel="stylesheet" type="text/css" href="'.$style_css_url.'" />';
+            echo '<link rel="stylesheet" type="text/css" href="' . $style_css_url . '" />';
         }
     }
 
@@ -246,9 +246,9 @@ class testmanagementPlugin extends Plugin
         $link_label = dgettext('tuleap-testmanagement', 'See graph of dependencies');
 
         $url = $this->getPluginPath() . '/?'
-            . http_build_query(['group_id' =>$tracker->getGroupId()])
+            . http_build_query(['group_id' => $tracker->getGroupId()])
             . '#!/graph/'
-            .urlencode((string)$event->getArtifact()->getId());
+            . urlencode((string) $event->getArtifact()->getId());
 
         $icon = 'fa-tlp-dependencies-graph';
 
@@ -486,7 +486,7 @@ class testmanagementPlugin extends Plugin
     {
         $xml = $validate_external_fields->getXml();
         $attributes = $xml->attributes();
-        if ($attributes && isset($attributes['type']) && (string)$attributes['type'] === 'ttmstepdef') {
+        if ($attributes && isset($attributes['type']) && (string) $attributes['type'] === 'ttmstepdef') {
             $validator = $this->getImportXmlFromTracker();
             $validator->validateXMLImport($xml);
         }

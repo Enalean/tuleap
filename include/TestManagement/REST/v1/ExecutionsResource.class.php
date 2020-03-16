@@ -326,7 +326,7 @@ class ExecutionsResource
     public function patchId($id, PATCHExecutionRepresentation $body)
     {
         $user               = $this->getCurrentUser();
-        $execution_artifact = $this->getArtifactById($user, (int)$id);
+        $execution_artifact = $this->getArtifactById($user, (int) $id);
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
             $execution_artifact->getTracker()->getProject()
@@ -378,7 +378,7 @@ class ExecutionsResource
     protected function putId($id, $status, $time = 0, $results = '')
     {
         $user     = $this->getCurrentUser();
-        $artifact = $this->getArtifactById($user, (int)$id);
+        $artifact = $this->getArtifactById($user, (int) $id);
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
             $artifact->getTracker()->getProject()
@@ -409,7 +409,7 @@ class ExecutionsResource
     protected function presences($id, $uuid, $remove_from = '')
     {
         $user = $this->getCurrentUser();
-        $artifact = $this->getArtifactById($user, (int)$id);
+        $artifact = $this->getArtifactById($user, (int) $id);
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
             $artifact->getTracker()->getProject()
@@ -439,13 +439,13 @@ class ExecutionsResource
     protected function patchIssueLink($id, $issue_id, ?ChangesetCommentRepresentation $comment = null)
     {
         $user               = $this->getCurrentUser();
-        $execution_artifact = $this->getArtifactById($user, (int)$id);
+        $execution_artifact = $this->getArtifactById($user, (int) $id);
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
             $execution_artifact->getTracker()->getProject()
         );
 
-        $issue_artifact = $this->getArtifactById($user, (int)$issue_id);
+        $issue_artifact = $this->getArtifactById($user, (int) $issue_id);
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
             $issue_artifact->getTracker()->getProject()
@@ -727,7 +727,6 @@ class ExecutionsResource
      */
     private function getDefinitionOfExecution(PFUser $user, Tracker_Artifact $execution_artifact)
     {
-
         try {
             return $this->definition_retriever->getDefinitionRepresentationForExecution(
                 $user,

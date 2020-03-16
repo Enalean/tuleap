@@ -22,7 +22,7 @@ namespace Tuleap\TestManagement;
 
 use REST_TestDataBuilder;
 
-require_once dirname(__FILE__).'/../bootstrap.php';
+require_once dirname(__FILE__) . '/../bootstrap.php';
 
 /**
  * @group TestManagementTest
@@ -34,7 +34,7 @@ final class CampaignsTest extends BaseTest
     {
         $expected_campaign = $this->valid_73_campaign;
 
-        $response  = $this->getResponse($this->client->get('testmanagement_campaigns/'. $expected_campaign['id']));
+        $response  = $this->getResponse($this->client->get('testmanagement_campaigns/' . $expected_campaign['id']));
         $campaign = $response->json();
 
         $this->assertEquals($expected_campaign, $campaign);
@@ -45,7 +45,7 @@ final class CampaignsTest extends BaseTest
         $expected_campaign = $this->valid_73_campaign;
 
         $response  = $this->getResponse(
-            $this->client->get('testmanagement_campaigns/'. $expected_campaign['id']),
+            $this->client->get('testmanagement_campaigns/' . $expected_campaign['id']),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -58,7 +58,7 @@ final class CampaignsTest extends BaseTest
     {
         $campaign = $this->valid_73_campaign;
 
-        $all_executions_request  = $this->client->get('testmanagement_campaigns/'. $campaign['id'] .'/testmanagement_executions');
+        $all_executions_request  = $this->client->get('testmanagement_campaigns/' . $campaign['id'] . '/testmanagement_executions');
         $all_executions_response = $this->getResponse($all_executions_request);
 
         $executions = $all_executions_response->json();
@@ -72,7 +72,7 @@ final class CampaignsTest extends BaseTest
     {
         $campaign = $this->valid_73_campaign;
 
-        $all_executions_request  = $this->client->get('testmanagement_campaigns/'. $campaign['id'] .'/testmanagement_executions');
+        $all_executions_request  = $this->client->get('testmanagement_campaigns/' . $campaign['id'] . '/testmanagement_executions');
 
         $all_executions_response = $this->getResponse(
             $all_executions_request,

@@ -21,7 +21,6 @@
 namespace Tuleap\TestManagement\REST\v1;
 
 use Tracker_FormElement_Field_List;
-use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_List_BindValue;
 use Tuleap\TestManagement\Step\Step;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;

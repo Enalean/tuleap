@@ -28,7 +28,7 @@ use TrackerFactory;
 use Tracker_FormElementFactory;
 use Tracker_REST_Artifact_ArtifactCreator;
 
-require_once __DIR__ .'/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 class CampaignCreatorTest extends TestCase
 {

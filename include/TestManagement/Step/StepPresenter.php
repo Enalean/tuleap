@@ -37,7 +37,6 @@ class StepPresenter
 
     public function __construct(Step $step, Project $project)
     {
-
         $this->id                        = $step->getId();
         $this->rank                      = $step->getRank();
         $this->raw_description           = $step->getDescription();

@@ -70,7 +70,6 @@ class CampaignRepresentationBuilder
 
     /**
      * @param $campaign_tracker_id
-     * @param ISearchOnMilestone $milestone_criterion
      * @param $limit
      * @param $offset
      * @return PaginatedCampaignsRepresentations
