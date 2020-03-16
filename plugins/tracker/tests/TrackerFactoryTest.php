@@ -135,7 +135,7 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase
 
         $this->tracker_factory->setReturnValue('create', array('tracker' => $t_new, 'field_mapping' => array(), 'report_mapping' => array()));
 
-        $this->tracker_factory->expectOnce('create', array(999, 100, 1234, 'Bugs', 'Bug Tracker', 'bug', null));
+        $this->tracker_factory->expectOnce('create', array(999, 100, 1234, 'Bugs', 'Bug Tracker', 'bug', 'inca-silver', null));
 
         $this->hierarchy_factory->expectOnce('duplicate');
 
@@ -147,31 +147,61 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase
         $t1 = $this->GivenADuplicatableTracker(123);
         $t2 = $this->GivenADuplicatableTracker(567);
 
-        $trackers = array($t1, $t2);
-        $this->tracker_factory->setReturnReference('getTrackersByGroupId', $trackers, array(100));
+        $trackers = [$t1, $t2];
+        $this->tracker_factory->setReturnReference('getTrackersByGroupId', $trackers, [100]);
 
         $t_new1 = stub('Tracker')->getId()->returns(1234);
         $t_new2 = stub('Tracker')->getId()->returns(5678);
 
-        $t_new1_field_mapping = array(array('from' => '11', 'to' => '111'),
-                                      array('from' => '22', 'to' => '222'));
-        $t_new2_field_mapping = array(array('from' => '33', 'to' => '333'),
-                                      array('from' => '44', 'to' => '444'));
+        $t_new1_field_mapping = [
+            ['from' => '11', 'to' => '111'],
+            ['from' => '22', 'to' => '222']
+        ];
+        $t_new2_field_mapping = [
+            ['from' => '33', 'to' => '333'],
+            ['from' => '44', 'to' => '444']
+        ];
         $full_field_mapping = array_merge($t_new1_field_mapping, $t_new2_field_mapping);
         $to_project_id   = 999;
         $from_project_id = 100;
         $this->tracker_factory->setReturnValue(
             'create',
-            array('tracker' => $t_new1, 'field_mapping' => $t_new1_field_mapping, 'report_mapping' => array()),
-            array($to_project_id, $from_project_id, 123, '*', '*', '*', null)
+            [
+                'tracker' => $t_new1,
+                'field_mapping' => $t_new1_field_mapping,
+                'report_mapping' => []
+            ],
+            [
+                $to_project_id,
+                $from_project_id,
+                123,
+                '*',
+                '*',
+                '*',
+                '*',
+                null
+            ]
         );
         $this->tracker_factory->setReturnValue(
             'create',
-            array('tracker' => $t_new2, 'field_mapping' => $t_new2_field_mapping, 'report_mapping' => array()),
-            array($to_project_id, $from_project_id, 567, '*', '*', '*', null)
+            [
+                'tracker' => $t_new2,
+                'field_mapping' => $t_new2_field_mapping,
+                'report_mapping' => []
+            ],
+            [
+                $to_project_id,
+                $from_project_id,
+                567,
+                '*',
+                '*',
+                '*',
+                '*',
+                null
+            ]
         );
 
-        $this->formelement_factory->expectOnce('fixOriginalFieldIdsAfterDuplication', array($to_project_id, $from_project_id, $full_field_mapping));
+        $this->formelement_factory->expectOnce('fixOriginalFieldIdsAfterDuplication', [$to_project_id, $from_project_id, $full_field_mapping]);
         $this->tracker_factory->duplicate($from_project_id, $to_project_id, null);
     }
 
@@ -193,6 +223,7 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase
         $t1 = new MockTracker();
         $t1->setReturnValue('mustBeInstantiatedForNewProjects', true);
         $t1->setReturnValue('getId', $tracker_id);
+        $t1->setReturnValue('getColor', \Tuleap\Tracker\TrackerColor::default());
         return $t1;
     }
 
@@ -210,7 +241,7 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase
 
         $this->tracker_factory->setReturnValue('create', array('tracker' => $t_new, 'field_mapping' => array(), 'report_mapping' => array()));
 
-        $this->tracker_factory->expectOnce('create', array(999, 100, 1234, 'Bugs', 'Bug Tracker', 'bug', null));
+        $this->tracker_factory->expectOnce('create', array(999, 100, 1234, 'Bugs', 'Bug Tracker', 'bug', 'inca-silver', null));
 
         $this->trigger_rules_manager->expectOnce('duplicate');
 

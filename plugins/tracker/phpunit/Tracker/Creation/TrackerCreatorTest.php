@@ -107,7 +107,8 @@ final class TrackerCreatorTest extends \PHPUnit\Framework\TestCase
                 "101",
                 "Tracker Name",
                 "",
-                "tracker-shortname"
+                "tracker-shortname",
+                "peggy-pink"
             ]
         )->once()->andReturn(['tracker' => $tracker]);
         $this->creation_data_checker->shouldReceive('checkAtTrackerDuplication')->once();
@@ -117,6 +118,7 @@ final class TrackerCreatorTest extends \PHPUnit\Framework\TestCase
             "Tracker Name",
             "",
             "tracker-shortname",
+            "peggy-pink",
             "101",
             Mockery::mock(\PFUser::class)
         );
@@ -136,7 +138,8 @@ final class TrackerCreatorTest extends \PHPUnit\Framework\TestCase
                 "101",
                 "Tracker Name",
                 "",
-                "tracker-shortname"
+                "tracker-shortname",
+                "peggy-pink"
             ]
         )->once()->andReturn(false);
 
@@ -146,6 +149,7 @@ final class TrackerCreatorTest extends \PHPUnit\Framework\TestCase
             "Tracker Name",
             "",
             "tracker-shortname",
+            "peggy-pink",
             "101",
             Mockery::mock(\PFUser::class)
         );

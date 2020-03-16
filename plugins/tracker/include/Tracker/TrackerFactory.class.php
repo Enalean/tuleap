@@ -359,13 +359,13 @@ class TrackerFactory
      * @return mixed array(Tracker object, field_mapping array)
      * @throws TrackerIsInvalidException
      */
-    public function create($project_id, $project_id_template, $id_template, $name, $description, $itemname, $ugroup_mapping = false)
+    public function create($project_id, $project_id_template, $id_template, $name, $description, $itemname, $color, $ugroup_mapping = false)
     {
         $this->getTrackerChecker()->checkAtProjectCreation((int) $project_id, $name, $itemname);
         $template_tracker = $this->getTrackerChecker()->checkAndRetrieveTrackerTemplate((int) $id_template);
 
         //Ask to dao to duplicate the tracker
-        $id = $this->getDao()->duplicate($id_template, $project_id, $name, $description, $itemname);
+        $id = $this->getDao()->duplicate($id_template, $project_id, $name, $description, $itemname, $color);
         if (! $id) {
             return null;
         }
@@ -543,12 +543,7 @@ class TrackerFactory
             }
         }
 
-        /*
-         * @todo
-         * $tracker_mapping has been defined as an array. Surely this should be
-         * if(! empty($tracker_mapping))
-         */
-        if ($tracker_mapping) {
+        if (! empty($tracker_mapping)) {
             $hierarchy_factory = $this->getHierarchyFactory();
             $hierarchy_factory->duplicate($tracker_mapping);
 
@@ -606,10 +601,11 @@ class TrackerFactory
             $tracker->getName(),
             $tracker->getDescription(),
             $tracker->getItemName(),
+            $tracker->getColor()->getName(),
             $ugroup_mapping
         );
 
-        if ($tracker_and_field_and_report_mapping) {
+        if ($tracker_and_field_and_report_mapping !== null) {
             $tracker_mapping[$tracker->getId()] = $tracker_and_field_and_report_mapping['tracker']->getId();
             $field_mapping  = array_merge($field_mapping, $tracker_and_field_and_report_mapping['field_mapping']);
             $report_mapping = $report_mapping + $tracker_and_field_and_report_mapping['report_mapping'];
@@ -617,7 +613,11 @@ class TrackerFactory
             $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin', 'tracker_not_duplicated', array($tracker->getName())));
         }
 
-        return array($tracker_mapping, $field_mapping, $report_mapping);
+        return [
+            $tracker_mapping,
+            $field_mapping,
+            $report_mapping
+        ];
     }
 
     /**
