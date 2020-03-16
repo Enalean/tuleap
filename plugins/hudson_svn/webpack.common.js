@@ -18,17 +18,21 @@
  */
 
 const path = require("path");
-const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
+const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 
 module.exports = [
     {
         entry: {
-            "default-style": "./default/style.scss"
+            "default-style": "./themes/default/style.scss",
+            form: "./scripts/form.js"
         },
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../../src/www/assets/hudson_svn/themes/")
+            path.resolve(__dirname, "../../src/www/assets/hudson_svn/")
         ),
+        externals: {
+            jquery: "jQuery"
+        },
         module: {
             rules: [webpack_configurator.rule_scss_loader]
         },
