@@ -120,13 +120,19 @@ codendi.tracker.TemplateSelector = Class.create({
 });
 
 document.observe("dom:loaded", function() {
+    if (!$("tracker_create_new")) {
+        return;
+    }
+
     // Refresh project list
-    var selector = new codendi.tracker.TemplateSelector($("tracker_create_new"));
-    var autocomplete = new ProjectAutoCompleter("tracker_new_prjname", codendi.imgroot, false, {
+    const selector = new codendi.tracker.TemplateSelector($("tracker_create_new"));
+    const autocomplete = new ProjectAutoCompleter("tracker_new_prjname", codendi.imgroot, false, {
         autoLoad: false
     });
-    autocomplete.setAfterUpdateElement(function() {
-        selector.updateTrackerTemplateList($F("tracker_new_prjname"));
-    });
-    autocomplete.registerOnLoad();
+    if (autocomplete) {
+        autocomplete.setAfterUpdateElement(function() {
+            selector.updateTrackerTemplateList($F("tracker_new_prjname"));
+        });
+        autocomplete.registerOnLoad();
+    }
 });
