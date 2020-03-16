@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,10 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global jQuery:readonly */
+const common = require("./webpack.common.js");
+const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 
-(function($) {
-    window.toggle_addurlform = function() {
-        $("#hudson_add_job").slideToggle(300);
-    };
-})(jQuery);
+module.exports = webpack_configurator.extendDevConfiguration(common);

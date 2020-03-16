@@ -90,11 +90,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
         if ($this->canIncludeStylesheets() ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0
         ) {
-            $asset = new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/hudson/themes',
-                '/assets/hudson/themes'
-            );
-            echo '<link rel="stylesheet" type="text/css" href="' . $asset->getFileURL('default-style.css') . '" />';
+            echo '<link rel="stylesheet" type="text/css" href="' . $this->getAssets()->getFileURL('default-style.css') . '" />';
         }
     }
 
@@ -104,9 +100,16 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
         // This stops styles inadvertently clashing with the main site.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             echo '<script type="text/javascript" src="/scripts/scriptaculous/scriptaculous.js"></script>' . "\n";
-            echo '<script type="text/javascript" src="js/hudson_tab.js"></script>' . "\n";
-            echo '<script type="text/javascript" src="js/form.js"></script>' . "\n";
+            echo $this->getAssets()->getHTMLSnippet('hudson_tab.js');
         }
+    }
+
+    private function getAssets(): IncludeAssets
+    {
+        return new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/hudson',
+            '/assets/hudson'
+        );
     }
 
     /**
