@@ -32,6 +32,10 @@ export function informUsersThatTheyCanPasteImagesInEditor(element) {
         return;
     }
 
+    if (help_block.textContent) {
+        return;
+    }
+
     const p = document.createElement("p");
     p.innerText = getGettextProvider().gettext(
         "You can drag 'n drop or paste image directly in the editor."
