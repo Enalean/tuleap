@@ -44,11 +44,13 @@ use Tuleap\TestManagement\TrackerComesFromLegacyEngineException;
 use Tuleap\TestManagement\TrackerNotCreatedException;
 use Tuleap\TestManagement\XML\Exporter;
 use Tuleap\TestManagement\XML\ImportXMLFromTracker;
+use Tuleap\TestManagement\XML\TrackerArtifactXMLImportXMLImportFieldStrategySteps;
 use Tuleap\TestManagement\XML\XMLImport;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonLinkPresenter;
+use Tuleap\Tracker\Artifact\Event\ExternalStrategiesGetter;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
@@ -90,6 +92,8 @@ class testmanagementPlugin extends Plugin
         $this->addHook(ServiceEnableForXmlImportRetriever::NAME);
         $this->addHook(ImportExternalElement::NAME);
         $this->addHook(ImportValidateChangesetExternalField::NAME);
+        $this->addHook(ExternalStrategiesGetter::NAME);
+
         $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
 
         if (defined('AGILEDASHBOARD_BASE_URL')) {
@@ -511,6 +515,11 @@ class testmanagementPlugin extends Plugin
             $validator = $this->getImportXmlFromTracker();
             $validator->validateChangesetXMLImport($xml);
         }
+    }
+
+    public function getExternalStrategies(ExternalStrategiesGetter $event): void
+    {
+        $event->addStrategies(StepDefinition::TYPE, new TrackerArtifactXMLImportXMLImportFieldStrategySteps());
     }
 
     public function project_service_before_activation(ProjectServiceBeforeActivation $event)
