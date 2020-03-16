@@ -225,13 +225,10 @@ class ProjectMilestonesPresenterBuilder
     }
 
     /**
-     * @param Planning|false $root_planning
-     * @param Project|false $project
-     * @throws ProjectMilestonesException
      * @throws ProjectMilestonesException
      * @throws TimeframeBrokenConfigurationException
      */
-    public function getProjectMilestonePresenter($project, $root_planning): ProjectMilestonesPresenter
+    public function getProjectMilestonePresenter(?Project $project, ?Planning $root_planning): ProjectMilestonesPresenter
     {
         if ($this->request->getBrowser()->isIE11()) {
             throw ProjectMilestonesException::buildBrowserIsIE11();
