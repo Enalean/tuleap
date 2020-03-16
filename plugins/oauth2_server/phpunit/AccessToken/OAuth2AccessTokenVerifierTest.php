@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User\OAuth2\AccessToken;
+namespace Tuleap\OAuth2Server\AccessToken;
 
 use DateTimeImmutable;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -33,7 +33,12 @@ use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\User\OAuth2\AccessToken\Scope\OAuth2AccessTokenScopeRetriever;
+use Tuleap\OAuth2Server\AccessToken\Scope\OAuth2AccessTokenScopeRetriever;
+use Tuleap\User\OAuth2\AccessToken\InvalidOAuth2AccessTokenException;
+use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenDoesNotHaveRequiredScopeException;
+use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenExpiredException;
+use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenMatchingUnknownUserException;
+use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenNotFoundException;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
 final class OAuth2AccessTokenVerifierTest extends TestCase

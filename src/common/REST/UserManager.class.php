@@ -20,6 +20,7 @@
 namespace Tuleap\REST;
 
 use Luracast\Restler\Data\ApiMethodInfo;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
@@ -32,11 +33,8 @@ use Tuleap\User\AccessKey\Scope\AccessKeyScopeRetriever;
 use Tuleap\User\AccessKey\Scope\CoreAccessKeyScopeBuilderFactory;
 use Tuleap\User\AccessKey\Scope\RESTAccessKeyScope;
 use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminUserBuilder;
-use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenDAO;
-use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenVerifier;
 use Tuleap\User\OAuth2\AccessToken\PrefixOAuth2AccessToken;
-use Tuleap\User\OAuth2\AccessToken\Scope\OAuth2AccessTokenScopeDAO;
-use Tuleap\User\OAuth2\AccessToken\Scope\OAuth2AccessTokenScopeRetriever;
+use Tuleap\User\OAuth2\AccessToken\VerifyOAuth2AccessTokenEvent;
 use Tuleap\User\OAuth2\BearerTokenHeaderParser;
 use Tuleap\User\OAuth2\Scope\OAuth2ProjectReadScope;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeExtractorRESTEndpoint;
@@ -89,9 +87,9 @@ class UserManager
      */
     private $read_only_admin_user_builder;
     /**
-     * @var OAuth2AccessTokenVerifier
+     * @var EventDispatcherInterface
      */
-    private $oauth2_access_token_verifier;
+    private $event_dispatcher;
     /**
      * @var SplitTokenIdentifierTranslator
      */
@@ -109,7 +107,7 @@ class UserManager
         BearerTokenHeaderParser $bearer_token_header_parser,
         SplitTokenIdentifierTranslator $access_token_identifier_unserializer,
         OAuth2ScopeExtractorRESTEndpoint $oauth2_scope_extractor_endpoint,
-        OAuth2AccessTokenVerifier $oauth2_access_token_verifier,
+        EventDispatcherInterface $event_dispatcher,
         RestReadOnlyAdminUserBuilder $read_only_admin_user_builder
     ) {
         $this->user_manager                         = $user_manager;
@@ -119,12 +117,13 @@ class UserManager
         $this->bearer_token_header_parser           = $bearer_token_header_parser;
         $this->access_token_identifier_unserializer = $access_token_identifier_unserializer;
         $this->oauth2_scope_extractor_endpoint      = $oauth2_scope_extractor_endpoint;
-        $this->oauth2_access_token_verifier         = $oauth2_access_token_verifier;
+        $this->event_dispatcher                     = $event_dispatcher;
         $this->read_only_admin_user_builder         = $read_only_admin_user_builder;
     }
 
     public static function build(): self
     {
+        $event_manager    = EventManager::instance();
         $user_manager     = \UserManager::instance();
         $password_handler = PasswordHandlerFactory::getPasswordHandler();
 
@@ -135,7 +134,7 @@ class UserManager
         return new self(
             $user_manager,
             new User_LoginManager(
-                EventManager::instance(),
+                $event_manager,
                 $user_manager,
                 new PasswordVerifier($password_handler),
                 new User_PasswordExpirationChecker(),
@@ -154,15 +153,7 @@ class UserManager
             new BearerTokenHeaderParser(),
             new PrefixedSplitTokenSerializer(new PrefixOAuth2AccessToken()),
             new OAuth2ScopeExtractorRESTEndpoint($oauth2_scope_builder),
-            new OAuth2AccessTokenVerifier(
-                new OAuth2AccessTokenDAO(),
-                new OAuth2AccessTokenScopeRetriever(
-                    new OAuth2AccessTokenScopeDAO(),
-                    $oauth2_scope_builder
-                ),
-                $user_manager,
-                new SplitTokenVerificationStringHasher(),
-            ),
+            $event_manager,
             new RestReadOnlyAdminUserBuilder(
                 new User_ForgeUserGroupPermissionsManager(
                     new User_ForgeUserGroupPermissionsDao()
@@ -283,10 +274,12 @@ class UserManager
 
         $required_scope = $this->oauth2_scope_extractor_endpoint->extractRequiredScope($api_method_info);
 
-        return $this->oauth2_access_token_verifier->getUser(
+        $event = new VerifyOAuth2AccessTokenEvent(
             $this->access_token_identifier_unserializer->getSplitToken($access_token),
             $required_scope
         );
+
+        return $this->event_dispatcher->dispatch($event)->getUser();
     }
 
     /**

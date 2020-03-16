@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
@@ -31,8 +32,11 @@ use Tuleap\Http\Server\Authentication\BasicAuthLoginExtractor;
 use Tuleap\Http\Server\DisableCacheMiddleware;
 use Tuleap\Http\Server\RejectNonHTTPSRequestMiddleware;
 use Tuleap\Http\Server\ServiceInstrumentationMiddleware;
-use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenAuthorizationGrantAssociationDAO;
 use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenCreator;
+use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenDAO;
+use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenVerifier;
+use Tuleap\OAuth2Server\AccessToken\Scope\OAuth2AccessTokenScopeDAO;
+use Tuleap\OAuth2Server\AccessToken\Scope\OAuth2AccessTokenScopeRetriever;
 use Tuleap\OAuth2Server\AccessToken\Scope\OAuth2AccessTokenScopeSaver;
 use Tuleap\OAuth2Server\App\AppDao;
 use Tuleap\OAuth2Server\App\AppFactory;
@@ -53,11 +57,8 @@ use Tuleap\Project\Admin\Navigation\NavigationPresenter;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\User\Account\AccountTabPresenterCollection;
-use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenDAO;
-use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenVerifier;
 use Tuleap\User\OAuth2\AccessToken\PrefixOAuth2AccessToken;
-use Tuleap\User\OAuth2\AccessToken\Scope\OAuth2AccessTokenScopeDAO;
-use Tuleap\User\OAuth2\AccessToken\Scope\OAuth2AccessTokenScopeRetriever;
+use Tuleap\User\OAuth2\AccessToken\VerifyOAuth2AccessTokenEvent;
 use Tuleap\User\OAuth2\BearerTokenHeaderParser;
 use Tuleap\User\OAuth2\Scope\DemoOAuth2Scope;
 use Tuleap\User\OAuth2\Scope\OAuth2ProjectReadScope;
@@ -82,6 +83,7 @@ final class oauth2_serverPlugin extends Plugin
         $this->addHook(NavigationPresenter::NAME);
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(AccountTabPresenterCollection::NAME);
+        $this->addHook(VerifyOAuth2AccessTokenEvent::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -181,10 +183,7 @@ final class oauth2_serverPlugin extends Plugin
         $response_factory = HTTPFactoryBuilder::responseFactory();
         $stream_factory = HTTPFactoryBuilder::streamFactory();
         $redirect_uri_builder = new RedirectURIBuilder(HTTPFactoryBuilder::URIFactory());
-        $scope_builder = new AuthenticationScopeBuilderFromClassNames(
-            DemoOAuth2Scope::class,
-            OAuth2ProjectReadScope::class
-        );
+        $scope_builder = $this->buildScopeBuilder();
         return new AuthorizationEndpointGetController(
             new \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationFormRenderer(
                 $response_factory,
@@ -269,17 +268,7 @@ final class oauth2_serverPlugin extends Plugin
                 $response_factory,
                 new BearerTokenHeaderParser(),
                 new PrefixedSplitTokenSerializer(new PrefixOAuth2AccessToken()),
-                new OAuth2AccessTokenVerifier(
-                    new OAuth2AccessTokenDAO(),
-                    new OAuth2AccessTokenScopeRetriever(
-                        new OAuth2AccessTokenScopeDAO(),
-                        new AuthenticationScopeBuilderFromClassNames(
-                            DemoOAuth2Scope::class
-                        )
-                    ),
-                    UserManager::instance(),
-                    new SplitTokenVerificationStringHasher()
-                ),
+                EventManager::instance(),
                 DemoOAuth2Scope::fromItself(),
                 new User_LoginManager(
                     EventManager::instance(),
@@ -306,7 +295,6 @@ final class oauth2_serverPlugin extends Plugin
                     new SplitTokenVerificationStringHasher(),
                     new OAuth2AccessTokenDAO(),
                     new OAuth2AccessTokenScopeSaver(new OAuth2AccessTokenScopeDAO()),
-                    new OAuth2AccessTokenAuthorizationGrantAssociationDAO(),
                     new DateInterval('PT1H'),
                     new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
                 )
@@ -354,5 +342,29 @@ final class oauth2_serverPlugin extends Plugin
     public function accountTabPresenterCollection(AccountTabPresenterCollection $collection): void
     {
         (new \Tuleap\OAuth2Server\User\Account\AppsTabAdder())->addTabs($collection);
+    }
+
+    public function verifyAccessToken(VerifyOAuth2AccessTokenEvent $event): void
+    {
+        $verifier = new OAuth2AccessTokenVerifier(
+            new OAuth2AccessTokenDAO(),
+            new OAuth2AccessTokenScopeRetriever(
+                new OAuth2AccessTokenScopeDAO(),
+                $this->buildScopeBuilder()
+            ),
+            UserManager::instance(),
+            new SplitTokenVerificationStringHasher()
+        );
+
+        $user = $verifier->getUser($event->getAccessToken(), $event->getRequiredScope());
+        $event->setVerifiedUser($user);
+    }
+
+    private function buildScopeBuilder(): AuthenticationScopeBuilder
+    {
+        return new AuthenticationScopeBuilderFromClassNames(
+            DemoOAuth2Scope::class,
+            OAuth2ProjectReadScope::class
+        );
     }
 }

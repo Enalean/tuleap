@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User\OAuth2\AccessToken\Scope;
+namespace Tuleap\OAuth2Server\AccessToken\Scope;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;

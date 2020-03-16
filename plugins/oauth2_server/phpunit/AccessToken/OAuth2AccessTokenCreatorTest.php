@@ -31,7 +31,6 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OAuth2Server\AccessToken\Scope\OAuth2AccessTokenScopeSaver;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
-use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenDAO;
 
 final class OAuth2AccessTokenCreatorTest extends TestCase
 {
@@ -47,10 +46,6 @@ final class OAuth2AccessTokenCreatorTest extends TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OAuth2AccessTokenScopeSaver
      */
     private $scope_saver;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OAuth2AccessTokenAuthorizationGrantAssociationDAO
-     */
-    private $access_token_authorization_grant_association_dao;
 
     /**
      * @var OAuth2AccessTokenCreator
@@ -61,7 +56,6 @@ final class OAuth2AccessTokenCreatorTest extends TestCase
     {
         $this->access_token_dao                                 = \Mockery::mock(OAuth2AccessTokenDAO::class);
         $this->scope_saver                                      = \Mockery::mock(OAuth2AccessTokenScopeSaver::class);
-        $this->access_token_authorization_grant_association_dao = \Mockery::mock(OAuth2AccessTokenAuthorizationGrantAssociationDAO::class);
 
         $formatter = new class implements SplitTokenFormatter
         {
@@ -76,7 +70,6 @@ final class OAuth2AccessTokenCreatorTest extends TestCase
             new SplitTokenVerificationStringHasher(),
             $this->access_token_dao,
             $this->scope_saver,
-            $this->access_token_authorization_grant_association_dao,
             new \DateInterval('PT' . self::EXPECTED_EXPIRATION_DELAY_SECONDS . 'S'),
             new DBTransactionExecutorPassthrough()
         );
@@ -90,13 +83,10 @@ final class OAuth2AccessTokenCreatorTest extends TestCase
 
         $this->access_token_dao->shouldReceive('create')->once()->andReturn($generated_access_token_id);
         $this->scope_saver->shouldReceive('saveAccessTokenScopes')->once();
-        $this->access_token_authorization_grant_association_dao->shouldReceive('createAssociationBetweenAuthorizationGrantAndAccessToken')
-            ->with($authorization_grant_id, $generated_access_token_id)->once();
 
         $access_token = $this->token_creator->issueAccessToken(
             $current_time,
             $authorization_grant_id,
-            new \PFUser(['language_id' => 'en']),
             [\Mockery::mock(AuthenticationScope::class)]
         );
 
@@ -112,12 +102,10 @@ final class OAuth2AccessTokenCreatorTest extends TestCase
 
         $this->access_token_dao->shouldReceive('create')->andReturn(1);
         $this->scope_saver->shouldReceive('saveAccessTokenScopes');
-        $this->access_token_authorization_grant_association_dao->shouldReceive('createAssociationBetweenAuthorizationGrantAndAccessToken');
-        $user   = new \PFUser(['language_id' => 'en']);
         $scopes = [\Mockery::mock(AuthenticationScope::class)];
 
-        $access_token_1 = $this->token_creator->issueAccessToken($current_time, 1, $user, $scopes);
-        $access_token_2 = $this->token_creator->issueAccessToken($current_time, 2, $user, $scopes);
+        $access_token_1 = $this->token_creator->issueAccessToken($current_time, 1, $scopes);
+        $access_token_2 = $this->token_creator->issueAccessToken($current_time, 2, $scopes);
 
         $this->assertNotEquals(
             $access_token_1->getIdentifier()->getString(),

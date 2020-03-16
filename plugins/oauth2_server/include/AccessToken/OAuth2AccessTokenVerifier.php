@@ -20,13 +20,18 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User\OAuth2\AccessToken;
+namespace Tuleap\OAuth2Server\AccessToken;
 
 use DateTimeImmutable;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
-use Tuleap\User\OAuth2\AccessToken\Scope\OAuth2AccessTokenScopeRetriever;
+use Tuleap\OAuth2Server\AccessToken\Scope\OAuth2AccessTokenScopeRetriever;
+use Tuleap\User\OAuth2\AccessToken\InvalidOAuth2AccessTokenException;
+use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenDoesNotHaveRequiredScopeException;
+use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenExpiredException;
+use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenMatchingUnknownUserException;
+use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenNotFoundException;
 
 class OAuth2AccessTokenVerifier
 {
