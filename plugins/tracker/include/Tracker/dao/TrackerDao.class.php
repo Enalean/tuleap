@@ -149,18 +149,21 @@ class TrackerDao extends DataAccessObject
         }
     }
 
-    public function duplicate($atid_template, $group_id, $name, $description, $item_name, $color)
+    public function duplicate($atid_template, $group_id, $name, $description, $item_name, ?string $color)
     {
         $atid_template = $this->da->escapeInt($atid_template);
         $group_id      = $this->da->escapeInt($group_id);
         $name          = $this->da->quoteSmart($name);
         $description   = $this->da->quoteSmart($description);
         $item_name     = $this->da->quoteSmart($item_name);
-        $color_name    = $this->da->quoteSmart($color);
 
         $id_sharing = new TrackerIdSharingDao();
-        if ($id = $id_sharing->generateTrackerId()) {
-            $sql = "INSERT INTO $this->table_name
+        $id         = $id_sharing->generateTrackerId();
+        if (! $id) {
+            return false;
+        }
+
+        $insert = "INSERT INTO tracker
                        (id,
                         group_id,
                         name,
@@ -175,7 +178,10 @@ class TrackerDao extends DataAccessObject
                         notifications_level,
                         color,
                         enable_emailgateway)
-                    SELECT
+                    ";
+        if ($color) {
+            $color_name  = $this->da->quoteSmart($color);
+            $from_select = "SELECT
                         $id,
                         $group_id,
                         $name,
@@ -190,12 +196,33 @@ class TrackerDao extends DataAccessObject
                         notifications_level,
                         $color_name,
                         enable_emailgateway
-                    FROM $this->table_name
+                    FROM tracker
                     WHERE id = $atid_template";
-            if ($this->update($sql)) {
-                return $id;
-            }
+        } else {
+            $from_select = "SELECT
+                        $id,
+                        $group_id,
+                        $name,
+                        $description,
+                        $item_name,
+                        1,
+                        log_priority_changes,
+                        allow_copy,
+                        submit_instructions,
+                        browse_instructions,
+                        status,
+                        notifications_level,
+                        color,
+                        enable_emailgateway
+                    FROM tracker
+                    WHERE id = $atid_template";
         }
+
+        $sql = $insert . $from_select;
+        if ($this->update($sql)) {
+            return $id;
+        }
+
         return false;
     }
 

@@ -122,7 +122,7 @@ class TrackerCreator
         string $name,
         string $description,
         string $itemname,
-        string $color,
+        ?string $color,
         string $atid_template,
         \PFUser $user
     ): Tracker {

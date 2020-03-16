@@ -359,7 +359,7 @@ class TrackerFactory
      * @return mixed array(Tracker object, field_mapping array)
      * @throws TrackerIsInvalidException
      */
-    public function create($project_id, $project_id_template, $id_template, $name, $description, $itemname, $color, $ugroup_mapping = false)
+    public function create($project_id, $project_id_template, $id_template, $name, $description, $itemname, ?string $color, $ugroup_mapping = false)
     {
         $this->getTrackerChecker()->checkAtProjectCreation((int) $project_id, $name, $itemname);
         $template_tracker = $this->getTrackerChecker()->checkAndRetrieveTrackerTemplate((int) $id_template);
