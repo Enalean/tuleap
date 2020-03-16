@@ -44,7 +44,7 @@ EOT;
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while droping table plugin_botmattermost_channel: '.implode(', ', $this->db->dbh->errorInfo()));
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while droping table plugin_botmattermost_channel: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 }

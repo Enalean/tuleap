@@ -33,7 +33,7 @@ class MarkdownMustacheRendererTest extends TestCase
     {
         $renderer = new MarkdownMustacheRenderer(
             \Mockery::spy(\Tuleap\Templating\TemplateCache::class),
-            __DIR__ .'/templates'
+            __DIR__ . '/templates'
         );
 
         $text   = '![my](text)|{~}\*+-._$>`';

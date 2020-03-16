@@ -81,13 +81,13 @@ class BotMattermostPlugin extends Plugin
                 __DIR__ . '/../../../src/www/assets/botmattermost/',
                 '/assets/botmattermost'
             );
-            $params['stylesheets'][] = $asset->getFileURL('style-'.$variant->getName().'.css');
+            $params['stylesheets'][] = $asset->getFileURL('style-' . $variant->getName() . '.css');
         }
     }
 
     public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
     {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath().'/admin/') === 0) {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/admin/') === 0) {
             $event->setIsInBurningParrotCompatiblePage();
         }
     }

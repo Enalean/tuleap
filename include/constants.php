@@ -18,5 +18,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('PLUGIN_BOT_MATTERMOST_BASE_DIR', realpath(__DIR__.'/..'));
+define('PLUGIN_BOT_MATTERMOST_BASE_DIR', realpath(__DIR__ . '/..'));
 define('BOT_MATTERMOST_BASE_URL', '/plugins/botmattermost');

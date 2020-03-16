@@ -30,7 +30,7 @@ class BotMattermostLogger extends TruncateLevelLogger
     public function __construct()
     {
         parent::__construct(
-            new BackendLogger(ForgeConfig::get('codendi_log').'/botMattermost_syslog'),
+            new BackendLogger(ForgeConfig::get('codendi_log') . '/botMattermost_syslog'),
             ForgeConfig::get('sys_logger_level')
         );
     }

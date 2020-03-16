@@ -31,6 +31,6 @@ class PluginDescriptor extends \PluginDescriptor
             $GLOBALS['Language']->getText('plugin_botmattermost', 'descriptor_description')
         );
 
-        $this->setVersionFromFile(PLUGIN_BOT_MATTERMOST_BASE_DIR.'/VERSION');
+        $this->setVersionFromFile(PLUGIN_BOT_MATTERMOST_BASE_DIR . '/VERSION');
     }
 }

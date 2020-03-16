@@ -45,7 +45,7 @@ EOT;
         $res = $this->db->dbh->exec($sql);
 
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while add column avatar_url in table plugin_botmattermost_bot: '.implode(', ', $this->db->dbh->errorInfo()));
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while add column avatar_url in table plugin_botmattermost_bot: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 }

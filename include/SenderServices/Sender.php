@@ -46,8 +46,8 @@ class Sender
 
     public function pushNotification(Bot $bot, Message $message, array $channels)
     {
-        $this->logger->debug('bot: #'.$bot->getId().' '.$bot->getName());
-        $this->logger->debug('channels: '.implode(', ', $channels));
+        $this->logger->debug('bot: #' . $bot->getId() . ' ' . $bot->getName());
+        $this->logger->debug('channels: ' . implode(', ', $channels));
 
         if (! empty($channels)) {
             foreach ($channels as $channel) {
@@ -60,7 +60,7 @@ class Sender
 
     private function pushNotificationByChannel(Bot $bot, Message $message, $channel)
     {
-        $this->logger->debug('channel: '.$channel);
+        $this->logger->debug('channel: ' . $channel);
         $this->generateAndSendNotification($bot, $message, $channel);
     }
 
@@ -82,8 +82,8 @@ class Sender
 
     private function send($post_string, $url)
     {
-        $this->logger->debug('post string: '.$post_string);
-        $this->logger->debug('url: '.$url);
+        $this->logger->debug('post string: ' . $post_string);
+        $this->logger->debug('url: ' . $url);
         try {
             $this->client->sendMessage($post_string, $url);
             $this->logger->info('message send');

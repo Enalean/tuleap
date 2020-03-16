@@ -70,7 +70,7 @@ class AdminController
             $admin_page_renderer = new AdminPageRenderer();
             $admin_page_renderer->renderAPresenter(
                 $admin_presenter->title,
-                PLUGIN_BOT_MATTERMOST_BASE_DIR.'/template/',
+                PLUGIN_BOT_MATTERMOST_BASE_DIR . '/template/',
                 'index',
                 $admin_presenter
             );
@@ -174,7 +174,6 @@ class AdminController
 
     private function validBotId(BaseLayout $response, $id)
     {
-
         if ($this->bot_factory->getBotById($id)) {
             return true;
         } else {
@@ -191,6 +190,6 @@ class AdminController
 
     private function redirectToIndex(BaseLayout $response) : void
     {
-        $response->redirect(BOT_MATTERMOST_BASE_URL.'/admin/');
+        $response->redirect(BOT_MATTERMOST_BASE_URL . '/admin/');
     }
 }

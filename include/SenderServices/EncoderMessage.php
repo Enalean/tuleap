@@ -26,8 +26,6 @@ use Tuleap\BotMattermost\SenderServicesException\Exception\HasNoMessageContentEx
 class EncoderMessage
 {
     /**
-     * @param Bot $bot
-     * @param Message $message
      * @param string $channel
      * @return String [POST format]
      * @throws HasNoMessageContentException
