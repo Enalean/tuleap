@@ -36,7 +36,7 @@
         {{/ csrf_token }}
         <input type="hidden" name="redirect_uri" value="{{ redirect_uri }}">
         {{# state }}<input type="hidden" name="state" value="{{ state }}">{{/ state }}
-        <input type="hidden" name="app_id" value="{{ app_id }}">
+        <input type="hidden" name="app_identifier" value="{{ app_identifier }}">
         {{# scope_identifier_presenters }}
             <input type="hidden" name="scope[]" value="{{ scope_key }}">
         {{/ scope_identifier_presenters }}

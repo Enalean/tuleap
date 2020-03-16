@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\AuthorizationServer;
 
 use Psr\Http\Message\UriInterface;
+use Tuleap\OAuth2Server\App\ClientIdentifier;
 
 /**
  * @psalm-immutable
@@ -30,9 +31,9 @@ use Psr\Http\Message\UriInterface;
 final class AuthorizationFormPresenter
 {
     /**
-     * @var int
+     * @var string
      */
-    public $app_id;
+    public $app_identifier;
     /**
      * @var string
      */
@@ -78,7 +79,7 @@ final class AuthorizationFormPresenter
     ) {
         $app = $data->getApp();
 
-        $this->app_id                      = $app->getId();
+        $this->app_identifier              = ClientIdentifier::fromOAuth2App($app)->toString();
         $this->app_name                    = $app->getName();
         $this->project_name                = $app->getProject()->getPublicName();
         $this->csrf_token                  = $data->getCSRFToken();

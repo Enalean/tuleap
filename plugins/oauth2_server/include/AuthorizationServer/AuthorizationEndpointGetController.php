@@ -144,7 +144,7 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
             $client_app->getId(),
             ...$scopes
         )) {
-            return $this->response_factory->createSuccessfulResponse($user, $redirect_uri, $state_value);
+            return $this->response_factory->createSuccessfulResponse($client_app, $user, $redirect_uri, $state_value);
         }
 
         $layout = $request->getAttribute(BaseLayout::class);

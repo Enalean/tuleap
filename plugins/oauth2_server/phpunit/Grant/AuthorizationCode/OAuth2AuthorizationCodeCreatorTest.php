@@ -24,10 +24,12 @@ namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Project;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\OAuth2Server\App\OAuth2App;
 
 final class OAuth2AuthorizationCodeCreatorTest extends TestCase
 {
@@ -70,11 +72,12 @@ final class OAuth2AuthorizationCodeCreatorTest extends TestCase
         $current_time = new \DateTimeImmutable('@10');
 
         $this->dao->shouldReceive('create')
-            ->with(102, \Mockery::any(), $current_time->getTimestamp() + self::EXPECTED_EXPIRATION_DELAY_SECONDS)
+            ->with(12, 102, \Mockery::any(), $current_time->getTimestamp() + self::EXPECTED_EXPIRATION_DELAY_SECONDS)
             ->once()->andReturn(1);
 
         $auth_code = $this->auth_code_creator->createAuthorizationCodeIdentifier(
             $current_time,
+            $this->buildOAuth2App(),
             new \PFUser(['language_id' => 'en', 'user_id' => '102'])
         );
 
@@ -89,13 +92,20 @@ final class OAuth2AuthorizationCodeCreatorTest extends TestCase
 
         $auth_code_1 = $this->auth_code_creator->createAuthorizationCodeIdentifier(
             $current_time,
+            $this->buildOAuth2App(),
             new \PFUser(['language_id' => 'en', 'user_id' => '102'])
         );
         $auth_code_2 = $this->auth_code_creator->createAuthorizationCodeIdentifier(
             $current_time,
+            $this->buildOAuth2App(),
             new \PFUser(['language_id' => 'en', 'user_id' => '103'])
         );
 
         $this->assertFalse($auth_code_1->isIdenticalTo($auth_code_2));
+    }
+
+    private function buildOAuth2App(): OAuth2App
+    {
+        return new OAuth2App(12, 'Name', 'https://example.com', new Project(['group_id' => 102]));
     }
 }

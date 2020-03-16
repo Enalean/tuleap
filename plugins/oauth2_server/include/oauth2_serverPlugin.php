@@ -220,6 +220,7 @@ final class oauth2_serverPlugin extends Plugin
         $response_factory = HTTPFactoryBuilder::responseFactory();
         return new \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationEndpointPostController(
             \UserManager::instance(),
+            new AppFactory(new AppDao(), ProjectManager::instance()),
             new \Tuleap\OAuth2Server\User\AuthorizationCreator(
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
                 new \Tuleap\OAuth2Server\User\AuthorizationDao(),
