@@ -144,6 +144,9 @@ final class UsersTest extends RestBase // phpcs:ignore
             )
             )
         );
+
+        $this->tuleap_config->setForgeToRestricted();
+
         $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->patch('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME], null, $value));
         $this->assertEquals($response->getStatusCode(), 200);
 
@@ -163,6 +166,21 @@ final class UsersTest extends RestBase // phpcs:ignore
         );
         $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->patch('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME], null, $value));
         $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    public function testUserCanNotUpdateToRestrictedIfPlatformDoesntAllowsRestricted(): void
+    {
+        $value = json_encode(
+            [
+                'values' => [
+                    'status' => "R",
+                ]
+            ]
+        );
+        $this->tuleap_config->setForgeToRegular();
+
+        $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->patch('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME], null, $value));
+        $this->assertEquals($response->getStatusCode(), 400);
     }
 
     public function testPATCHUserWithReadOnlySiteAdmin(): void
