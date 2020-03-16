@@ -2685,10 +2685,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         return $header_displayed_builder->build($selected_tab);
     }
 
-    /**
-     * @access protected for test purpose
-     */
-    protected function getIncludeAssets(): IncludeAssets
+    public function getIncludeAssets(): IncludeAssets
     {
         return new IncludeAssets(
             __DIR__ . '/../../../src/www/assets/git',

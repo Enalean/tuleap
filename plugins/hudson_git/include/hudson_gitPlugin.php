@@ -91,9 +91,16 @@ class hudson_gitPlugin extends Plugin
 
     public function cssFile($params)
     {
-        if (strpos($_SERVER['REQUEST_URI'], '/administration/jenkins') !== false &&
-            strpos($_SERVER['REQUEST_URI'], '/plugins/git/') === 0) {
+        $git_plugin = PluginManager::instance()->getPluginByName('git');
+        if (! $git_plugin instanceof GitPlugin) {
+            throw new RuntimeException('Cannot instantiate Git plugin');
+        }
+
+        if (strpos($_SERVER['REQUEST_URI'], '/administration/jenkins') !== false
+            && $git_plugin->getPluginPath() === 0
+        ) {
             echo '<link rel="stylesheet" type="text/css" href="' . $this->getIncludeAssets()->getFileURL('style.css') . '" />';
+            echo '<link rel="stylesheet" type="text/css" href="' . $git_plugin->getIncludeAssets()->getFileURL('default.css') . '" />';
         }
     }
 
@@ -105,6 +112,14 @@ class hudson_gitPlugin extends Plugin
         return new IncludeAssets(
             __DIR__ . '/../../../src/www/assets/hudson_git',
             "/assets/hudson_git"
+        );
+    }
+
+    protected function getGitIncludeAssets(): IncludeAssets
+    {
+        return new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/git',
+            "/assets/git"
         );
     }
 
