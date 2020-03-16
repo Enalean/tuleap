@@ -320,10 +320,6 @@ class hudson_gitPlugin extends Plugin
 
     public function gitAdminGetExternalPanePresenters(GitAdminGetExternalPanePresenters $event): void
     {
-        if (! ForgeConfig::get('git_allow_jenkins_plugin_hook_configuration')) {
-            return;
-        }
-
         $event->addExternalPanePresenter(AdministrationPaneBuilder::buildPane($event->getProject()));
     }
 
