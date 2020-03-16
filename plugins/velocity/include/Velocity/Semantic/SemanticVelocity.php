@@ -237,7 +237,7 @@ class SemanticVelocity extends Tracker_Semantic
         if (! isset(self::$instances[$tracker->getId()])) {
             $semantic_dao   = new SemanticVelocityDao();
             $field_velocity = $semantic_dao->searchUsedVelocityField($tracker->getId());
-            $field_id = isset($field_velocity['field_id'])? $field_velocity['field_id'] : 0;
+            $field_id = isset($field_velocity['field_id']) ? $field_velocity['field_id'] : 0;
 
             $factory = Tracker_FormElementFactory::instance();
             $field   = $factory->getFieldById($field_id);

@@ -80,13 +80,13 @@ class WikiPlugin_RssFeed extends WikiPlugin
         if (!empty($feed)) {
             if (!empty($url)) {
                 $titre = HTML::span(HTML::a(
-                    array('href'=>$rss_parser->channel['link']),
+                    array('href' => $rss_parser->channel['link']),
                     $rss_parser->channel['title']
                 ));
             } else {
                 $titre = HTML::span($rss_parser->channel['title']);
             }
-            $th = HTML::div(array('class'=> 'feed'), $titre);
+            $th = HTML::div(array('class' => 'feed'), $titre);
             if (!empty($description)) {
                 $th->pushContent(HTML::p(
                     array('class' => 'chandesc'),
@@ -98,37 +98,37 @@ class WikiPlugin_RssFeed extends WikiPlugin
         }
 
         if (!empty($rss_parser->channel['date'])) {
-            $th->pushContent(HTML::raw("<!--".$rss_parser->channel['date']."-->"));
+            $th->pushContent(HTML::raw("<!--" . $rss_parser->channel['date'] . "-->"));
         }
-        $html = HTML::div(array('class'=> 'rss'), $th);
+        $html = HTML::div(array('class' => 'rss'), $th);
         if ($rss_parser->items) {
             // only maxitem's
             if ($maxitem > 0) {
                 $rss_parser->items = array_slice($rss_parser->items, 0, $maxitem);
             }
             foreach ($rss_parser->items as $item) {
-                $cell = HTML::div(array('class'=> 'rssitem'));
+                $cell = HTML::div(array('class' => 'rssitem'));
                 if ($item['link'] and empty($item['title'])) {
                     $item['title'] = $item['link'];
                 }
                 $cell_title = HTML::div(
-                    array('class'=> 'itemname'),
+                    array('class' => 'itemname'),
                     HTML::a(
-                        array('href'=>$item['link']),
+                        array('href' => $item['link']),
                         HTML::raw($item['title'])
                     )
                 );
                 $cell->pushContent($cell_title);
                 if (!empty($item['description'])) {
                     $cell->pushContent(HTML::div(
-                        array('class'=> 'itemdesc'),
+                        array('class' => 'itemdesc'),
                         HTML::raw($item['description'])
                     ));
                 }
                 $html->pushContent($cell);
             }
         } else {
-            $html = HTML::div(array('class'=> 'rss'), HTML::em(_("no RSS items")));
+            $html = HTML::div(array('class' => 'rss'), HTML::em(_("no RSS items")));
         }
         return $html;
     }
@@ -154,7 +154,7 @@ class WikiPlugin_RssFeed extends WikiPlugin
             $this->run($request->_dbi, $argstr, $request, $basepage)
         );
     }
-};
+}
 
 // $Log: RssFeed.php,v $
 // Revision 1.10  2005/04/10 10:24:58  rurban

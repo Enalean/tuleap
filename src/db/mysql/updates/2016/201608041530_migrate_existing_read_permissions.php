@@ -57,7 +57,7 @@ class b201608041530_migrate_existing_read_permissions extends ForgeUpgrade_Bucke
 
         $already_set_sql   = "";
         if (count($already_set_projects) > 0) {
-            $already_set_sql   = "AND group_id NOT IN (" . implode(',', $already_set_projects) .")";
+            $already_set_sql   = "AND group_id NOT IN (" . implode(',', $already_set_projects) . ")";
         }
 
         $sql = "SELECT group_id FROM groups
@@ -66,19 +66,19 @@ class b201608041530_migrate_existing_read_permissions extends ForgeUpgrade_Bucke
 
         foreach ($this->db->dbh->query($sql)->fetchAll() as $public) {
             $already_set_projects[] = $public['group_id'];
-            $ugroups_query[]        = "('".$public['group_id']."', '$permission_frs_reader', 2)";
+            $ugroups_query[]        = "('" . $public['group_id'] . "', '$permission_frs_reader', 2)";
         }
 
         $already_set_sql = "";
         if (count($already_set_projects) > 0) {
-            $already_set_sql = " WHERE group_id NOT IN (" . implode(',', $already_set_projects) .")";
+            $already_set_sql = " WHERE group_id NOT IN (" . implode(',', $already_set_projects) . ")";
         }
 
         $sql = "SELECT group_id FROM groups
                 $already_set_sql";
 
         foreach ($this->db->dbh->query($sql)->fetchAll() as $frs_admins) {
-            $ugroups_query[] = "('".$frs_admins['group_id']."', '$permission_frs_reader', 3)";
+            $ugroups_query[] = "('" . $frs_admins['group_id'] . "', '$permission_frs_reader', 3)";
         }
 
         $frs_sql = "INSERT INTO frs_global_permissions VALUES " . implode(',', $ugroups_query);
@@ -99,7 +99,7 @@ class b201608041530_migrate_existing_read_permissions extends ForgeUpgrade_Bucke
             $sql = "SELECT group_id FROM groups WHERE access = '$visibility'";
             foreach ($this->db->dbh->query($sql)->fetchAll() as $project) {
                 $projects[] = $project['group_id'];
-                $ugroups[]  = "('".$project['group_id']."', '$permission_frs_reader', $ugroup_id)";
+                $ugroups[]  = "('" . $project['group_id'] . "', '$permission_frs_reader', $ugroup_id)";
             }
         }
 

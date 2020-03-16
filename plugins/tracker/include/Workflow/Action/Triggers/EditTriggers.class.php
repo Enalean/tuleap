@@ -38,9 +38,9 @@ class Tracker_Workflow_Action_Triggers_EditTriggers extends Tracker_Workflow_Act
     ) {
         parent::__construct($tracker);
 
-        $this->url_query = TRACKER_BASE_URL.'/?'. http_build_query(
+        $this->url_query = TRACKER_BASE_URL . '/?' . http_build_query(
             array(
-                'tracker' => (int)$this->tracker->id,
+                'tracker' => (int) $this->tracker->id,
                 'func'    => Workflow::FUNC_ADMIN_TRANSITIONS,
             )
         );

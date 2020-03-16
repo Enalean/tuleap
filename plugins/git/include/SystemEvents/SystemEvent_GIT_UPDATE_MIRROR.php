@@ -33,7 +33,6 @@ class SystemEvent_GIT_UPDATE_MIRROR extends SystemEvent
 
     public function process()
     {
-
         $dump_is_done = $this->gitolite_driver->updateMirror(
             $this->getMirrorIdFromParameters(),
             $this->getMirrorOldHostnameFromParameters()
@@ -63,6 +62,6 @@ class SystemEvent_GIT_UPDATE_MIRROR extends SystemEvent
 
     public function verbalizeParameters($with_link)
     {
-        return 'Mirror: '.$this->getMirrorIdFromParameters();
+        return 'Mirror: ' . $this->getMirrorIdFromParameters();
     }
 }

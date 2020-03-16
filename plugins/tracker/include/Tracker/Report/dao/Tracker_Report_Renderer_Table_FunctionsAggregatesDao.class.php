@@ -64,13 +64,13 @@ class Tracker_Report_Renderer_Table_FunctionsAggregatesDao extends DataAccessObj
 
     public function deleteByRendererId($renderer_id)
     {
-        $sql = "DELETE FROM $this->table_name WHERE renderer_id = ". $this->da->escapeInt($renderer_id);
+        $sql = "DELETE FROM $this->table_name WHERE renderer_id = " . $this->da->escapeInt($renderer_id);
         return $this->update($sql);
     }
 
     public function deleteByFieldId($field_id)
     {
-        $sql = "DELETE FROM $this->table_name WHERE field_id = ". $this->da->escapeInt($field_id);
+        $sql = "DELETE FROM $this->table_name WHERE field_id = " . $this->da->escapeInt($field_id);
         return $this->update($sql);
     }
 

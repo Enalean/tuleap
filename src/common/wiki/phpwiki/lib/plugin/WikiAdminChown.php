@@ -225,8 +225,8 @@ class WikiPlugin_WikiAdminChown extends WikiPlugin_WikiAdminSelect
 
     public function chownForm(&$header, $post_args)
     {
-        $header->pushContent(_("Chown")." ");
-        $header->pushContent(' '._("to").': ');
+        $header->pushContent(_("Chown") . " ");
+        $header->pushContent(' ' . _("to") . ': ');
         $header->pushContent(HTML::input(array('name' => 'admin_chown[user]',
                                                'value' => $post_args['user'])));
         $header->pushContent(HTML::p());

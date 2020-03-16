@@ -80,8 +80,8 @@ class ArtifactLinkRepresentation
             "shortname"    => $nature->shortname,
             "direction"    => $direction,
             "label"        => $label,
-            "uri"          => "artifacts/".$artifact->getId()."/linked_artifacts?nature=".urlencode($nature->shortname).
-                              "&direction=".urlencode($direction)
+            "uri"          => "artifacts/" . $artifact->getId() . "/linked_artifacts?nature=" . urlencode($nature->shortname) .
+                              "&direction=" . urlencode($direction)
         );
     }
 }

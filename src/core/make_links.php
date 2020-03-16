@@ -36,7 +36,7 @@ $request = HTTPRequest::instance();
 
 if (!$request->getValidated('group_id', 'GroupId')) {
     if (!$request->get('group_name')) {
-        $group_id=100;
+        $group_id = 100;
     } else {
         $pm       = ProjectManager::instance();
         $project  = $pm->getProjectByUnixName($request->get('group_name'));
@@ -46,7 +46,7 @@ if (!$request->getValidated('group_id', 'GroupId')) {
         }
     }
 } else {
-    $group_id=$request->get('group_id');
+    $group_id = $request->get('group_id');
 }
 
 if (!$request->getValidated('text', 'text')) {

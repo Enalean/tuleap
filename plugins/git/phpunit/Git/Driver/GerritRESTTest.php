@@ -110,7 +110,7 @@ final class GerritRESTTest extends TestCase
         assert($request instanceof RequestInterface);
         $this->assertEquals('PUT', $request->getMethod());
         $request_uri = $request->getUri();
-        $this->assertEquals('/a/groups/'.urlencode($group_name).'/groups/'.urlencode($included_group_name), $request_uri->getPath());
+        $this->assertEquals('/a/groups/' . urlencode($group_name) . '/groups/' . urlencode($included_group_name), $request_uri->getPath());
         $this->assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
     }
 
@@ -961,7 +961,7 @@ final class GerritRESTTest extends TestCase
         $this->assertJsonStringEqualsJsonString($expected_json_data, $request->getBody()->getContents());
         $this->assertEquals(Git_Driver_GerritREST::MIME_JSON, $request->getHeaderLine(Git_Driver_GerritREST::HEADER_CONTENT_TYPE));
         $request_uri = $request->getUri();
-        $this->assertEquals('/a/groups/'. urlencode($group_name) .'/groups.delete', $request_uri->getPath());
+        $this->assertEquals('/a/groups/' . urlencode($group_name) . '/groups.delete', $request_uri->getPath());
         $this->assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
     }
 }

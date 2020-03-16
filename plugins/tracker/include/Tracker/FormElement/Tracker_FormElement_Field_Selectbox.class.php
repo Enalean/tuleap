@@ -102,14 +102,14 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
     {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '<script type="text/javascript">';
-        $html .= "tuleap.tracker.fields.add('".(int)$this->getID()."', '".$this->getName()."', '". $hp->purify($this->getLabel(), CODENDI_PURIFIER_JS_QUOTE) ."')";
+        $html .= "tuleap.tracker.fields.add('" . (int) $this->getID() . "', '" . $this->getName() . "', '" . $hp->purify($this->getLabel(), CODENDI_PURIFIER_JS_QUOTE) . "')";
         $default_value = $this->getDefaultValue();
         $values = $this->getBind()->getAllValues();
 
-        $html .= "\n\t.addOption('None'.escapeHTML(), '100', ". (empty($changeset_values)?'true':'false') .")";
+        $html .= "\n\t.addOption('None'.escapeHTML(), '100', " . (empty($changeset_values) ? 'true' : 'false') . ")";
 
         foreach ($values as $id => $value) {
-            $html .= "\n\t.addOption('". $hp->purify($value->getLabel(), CODENDI_PURIFIER_JS_QUOTE) ."'.escapeHTML(), '". (int)$id ."', ". (in_array($id, array_values($changeset_values))?'true':'false') .")";
+            $html .= "\n\t.addOption('" . $hp->purify($value->getLabel(), CODENDI_PURIFIER_JS_QUOTE) . "'.escapeHTML(), '" . (int) $id . "', " . (in_array($id, array_values($changeset_values)) ? 'true' : 'false') . ")";
         }
         $html .= ";\n";
         $html .= '</script>';
@@ -120,14 +120,14 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
     {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '<script type="text/javascript">';
-        $html .= "tuleap.tracker.fields.add('".(int)$this->getID()."', '".$hp->purify($this->getName(), CODENDI_PURIFIER_JS_QUOTE)."', '". $hp->purify($this->getLabel(), CODENDI_PURIFIER_JS_QUOTE) ."')";
+        $html .= "tuleap.tracker.fields.add('" . (int) $this->getID() . "', '" . $hp->purify($this->getName(), CODENDI_PURIFIER_JS_QUOTE) . "', '" . $hp->purify($this->getLabel(), CODENDI_PURIFIER_JS_QUOTE) . "')";
         $default_value = $this->getDefaultValue();
         $values = $this->getBind()->getAllValues();
-        $html .= "\n\t.addOption('None'.escapeHTML(), '100', ". ($default_value==100?'true':'false') .")";
-        $html .= "\n\t.addOption('".$hp->purify($GLOBALS['Language']->getText('global', 'unchanged'), CODENDI_PURIFIER_JS_QUOTE)."'.escapeHTML(), '".$hp->purify(BindStaticValueUnchanged::VALUE_ID, CODENDI_PURIFIER_JS_QUOTE)."', false)";
+        $html .= "\n\t.addOption('None'.escapeHTML(), '100', " . ($default_value == 100 ? 'true' : 'false') . ")";
+        $html .= "\n\t.addOption('" . $hp->purify($GLOBALS['Language']->getText('global', 'unchanged'), CODENDI_PURIFIER_JS_QUOTE) . "'.escapeHTML(), '" . $hp->purify(BindStaticValueUnchanged::VALUE_ID, CODENDI_PURIFIER_JS_QUOTE) . "', false)";
 
         foreach ($values as $id => $value) {
-            $html .= "\n\t.addOption('". $hp->purify($value->getLabel(), CODENDI_PURIFIER_JS_QUOTE) ."'.escapeHTML(), '". (int)$id ."', ". ($id==$default_value?'true':'false') .")";
+            $html .= "\n\t.addOption('" . $hp->purify($value->getLabel(), CODENDI_PURIFIER_JS_QUOTE) . "'.escapeHTML(), '" . (int) $id . "', " . ($id == $default_value ? 'true' : 'false') . ")";
         }
         $html .= ";\n";
         $html .= '</script>';
@@ -210,7 +210,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
             return (int) array_shift($map);
         }
         throw new Tracker_FormElement_InvalidFieldValueException('List fields values must be passed as an array of ids (integer) in \'bind_value_ids\''
-           .' Expected format for field '.$this->id .' : {"field_id": 1548, "bind_value_ids": [457]}');
+           . ' Expected format for field ' . $this->id . ' : {"field_id": 1548, "bind_value_ids": [457]}');
     }
 
     public function getFieldDataFromCSVValue($csv_value, ?Tracker_Artifact $artifact = null)

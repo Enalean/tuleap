@@ -48,7 +48,6 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
      */
     public function __construct($user, $project, $package, $release, $maxFileSize)
     {
-
         $this->user = $user;
         $this->project = $project;
         $this->package = $package;
@@ -63,11 +62,10 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
      */
     public function getChildren()
     {
-
         $children = array();
 
         // Generate file list of the given release
-        $files=$this->getFileList($this->getRelease());
+        $files = $this->getFileList($this->getRelease());
         // Loop through the files, and create objects for each node
         foreach ($files as $file) {
             $children[] = $this->getWebDAVFRSFile($file);
@@ -84,7 +82,6 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
      */
     public function getChild($fileName)
     {
-
         $fileId = $this->getFileIdFromName($fileName);
         $file = $this->getWebDAVFRSFile($this->getFRSFileFromId($fileId));
 
@@ -138,7 +135,6 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
      */
     public function getName()
     {
-
         /* To keep the Url correct the slashes "/" in the name
          *  of the release were replaced by its ascii code "%2F"
          *  same for the "%" replaced by "%25"  */
@@ -153,7 +149,6 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
      */
     public function getLastModified()
     {
-
         return $this->getRelease()->getReleaseDate();
     }
 
@@ -164,7 +159,6 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
      */
     public function getRelease()
     {
-
         return $this->release;
     }
 
@@ -175,7 +169,6 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
      */
     public function getReleaseId()
     {
-
         return $this->getRelease()->getReleaseID();
     }
 
@@ -186,7 +179,6 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
      */
     public function getPackage()
     {
-
         return $this->package;
     }
 
@@ -197,7 +189,6 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
      */
     public function getProject()
     {
-
         return $this->project;
     }
 
@@ -208,7 +199,6 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
      */
     public function getUser()
     {
-
         return $this->user;
     }
 
@@ -219,7 +209,6 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
      */
     public function getUtils()
     {
-
         return WebDAVUtils::getInstance();
     }
 
@@ -242,7 +231,6 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
      */
     public function getFRSFileFromId($fileId)
     {
-
         $frsff = new FRSFileFactory();
         return $frsff->getFRSFileFromDb($fileId, $this->getProject()->getGroupId());
     }
@@ -256,7 +244,6 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
      */
     public function getFileIdFromName($fileName)
     {
-
         $dao = new FRSFileDao(CodendiDataAccess::instance());
         if ($row = $dao->searchFileByNameFromRelease($fileName, $this->getReleaseId())->getRow()) {
             return $row['file_id'];
@@ -273,7 +260,6 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
      */
     public function getWebDAVFRSFile($file)
     {
-
         return new WebDAVFRSFile($this->getUser(), $this->getProject(), $file);
     }
 
@@ -286,7 +272,6 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
      */
     public function getFileList($release)
     {
-
         $frsff = new FRSFileFactory();
         return $frsff->getFRSFilesFromDb($release->getReleaseID());
     }
@@ -298,7 +283,6 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
      */
     public function exist()
     {
-
         return($this->getRelease() && !$this->getRelease()->isDeleted());
     }
 
@@ -343,7 +327,6 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
      */
     public function delete()
     {
-
         if ($this->userCanWrite()) {
             $utils = $this->getUtils();
             $result = $utils->getReleaseFactory()->delete_release($this->getProject()->getGroupId(), $this->getReleaseId());
@@ -366,7 +349,6 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
      */
     public function setName($name)
     {
-
         $utils = $this->getUtils();
         if ($this->userCanWrite()) {
             if (!$utils->getReleaseFactory()->isReleaseNameExist($name, $this->getPackage()->getPackageID())) {
@@ -389,7 +371,6 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
      */
     public function move($destination)
     {
-
         $utils = $this->getUtils();
         if ($utils->getReleaseFactory()->userCanUpdate($this->getProject()->getGroupId(), $this->getReleaseId()) && $destination->userCanWrite()) {
             if (!$utils->getReleaseFactory()->isReleaseNameExist($this->getName(), $destination->getPackageId())) {
@@ -420,7 +401,6 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
      */
     public function createFile($name, $data = null)
     {
-
         if ($this->userCanWrite()) {
             $utils = $this->getUtils();
 
@@ -460,7 +440,6 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
      */
     public function unlinkFile($path)
     {
-
         return unlink($path);
     }
 
@@ -473,7 +452,6 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
      */
     public function openFile($path)
     {
-
         return fopen($path, 'x');
     }
 
@@ -487,7 +465,6 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
      */
     public function streamCopyToStream($data, $file)
     {
-
         return stream_copy_to_stream($data, $file);
     }
 
@@ -500,7 +477,6 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
      */
     public function closeFile($file)
     {
-
         return fclose($file);
     }
 
@@ -514,7 +490,7 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
      */
     public function createFileIntoIncoming($name, $data)
     {
-        $path = $GLOBALS['ftp_incoming_dir'].'/'.$name;
+        $path = $GLOBALS['ftp_incoming_dir'] . '/' . $name;
         if (file_exists($path)) {
             if (!$this->unlinkFile($path)) {
                 throw new Sabre_DAV_Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'delete_file_fail'));

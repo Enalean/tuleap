@@ -37,7 +37,7 @@ class ArtifactAttachmentXMLLinker implements ArtifactAttachmentXMLExporter
     {
         $dar = $this->dao->searchFilesForArtifact($artifact_id);
         foreach ($dar as $row) {
-            $xml_file_id     = ArtifactAttachmentFieldXMLExporter::XML_FILE_PREFIX.$row['id'];
+            $xml_file_id     = ArtifactAttachmentFieldXMLExporter::XML_FILE_PREFIX . $row['id'];
 
             $file = $this->node_helper->createElement('file');
             $file->setAttribute('id', $xml_file_id);

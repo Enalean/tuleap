@@ -93,25 +93,25 @@ class Git_Ci
 
                 $this->getEventManager()->processEvent('display_hudson_addition_info', $parameters);
                 if ($intalled) {
-                    $warning = '<div class="alert alert-warning"> '.
-                        dgettext('tuleap-git', 'Starting Tuleap 8.14, we recommend you to use polling jobs. Please see <a href="/doc/en/user-guide/code-versioning/git.html?#jenkins-webhooks">Hudson Git Plugin</a>.').
+                    $warning = '<div class="alert alert-warning"> ' .
+                        dgettext('tuleap-git', 'Starting Tuleap 8.14, we recommend you to use polling jobs. Please see <a href="/doc/en/user-guide/code-versioning/git.html?#jenkins-webhooks">Hudson Git Plugin</a>.') .
                         ' </div>';
                 }
 
                 $dao          = new GitDao();
                 $repositories = $dao->getProjectRepositoryList($params['group_id'], false, false);
                 $selectBox    = '<select id="hudson_use_plugin_git_trigger" name="hudson_use_plugin_git_trigger">';
-                $selectBox    .= '<option>'.$GLOBALS['Language']->getText('global', 'none').'</option>';
+                $selectBox    .= '<option>' . $GLOBALS['Language']->getText('global', 'none') . '</option>';
                 foreach ($repositories as $repository) {
                     $nameSpace = '';
                     if (!empty($repository['repository_namespace'])) {
-                        $nameSpace = $repository['repository_namespace']."/";
+                        $nameSpace = $repository['repository_namespace'] . "/";
                     }
-                    $selectBox .= '<option value="'.$repository['repository_id'].'" ';
+                    $selectBox .= '<option value="' . $repository['repository_id'] . '" ';
                     if ($repositoryId == $repository['repository_id']) {
                         $selectBox .= 'selected="selected"';
                     }
-                    $selectBox .= '>'.$nameSpace.$repository['repository_name'].'</option>';
+                    $selectBox .= '>' . $nameSpace . $repository['repository_name'] . '</option>';
                 }
                 $selectBox .= '</select>';
 
@@ -119,14 +119,14 @@ class Git_Ci
                                  <div id="hudson_use_plugin_git_trigger_checkbox">
                                      <label class="checkbox">
                                      <input name="hudson_use_plugin_git_trigger_checkbox" type="hidden" value="0" />
-                                     <input name="hudson_use_plugin_git_trigger_checkbox" onclick="toggle_checkbox()" type="checkbox" '.$checked.' value="1" />
+                                     <input name="hudson_use_plugin_git_trigger_checkbox" onclick="toggle_checkbox()" type="checkbox" ' . $checked . ' value="1" />
                                         Git
                                      </label>
                                  </div>
                                  <div id="hudson_use_plugin_git_trigger_form">
-                                     '.$warning.'
-                                     <label for="hudson_use_plugin_git_trigger">'.dgettext('tuleap-git', 'repository').': </label>
-                                     '.$selectBox.'
+                                     ' . $warning . '
+                                     <label for="hudson_use_plugin_git_trigger">' . dgettext('tuleap-git', 'repository') . ': </label>
+                                     ' . $selectBox . '
                                  </div>
                                  <script>
                                      function toggle_checkbox() {
@@ -135,7 +135,7 @@ class Git_Ci
                                      Element.toggle(\'hudson_use_plugin_git_trigger_form\', \'slide\', { duration: 0.3 })
                                  </script>
                              </p>';
-                $editForm = $warning.'<label for="hudson_use_plugin_git_trigger">'.dgettext('tuleap-git', 'Trigger a build after Git pushes in repository').': </label>'.$selectBox;
+                $editForm = $warning . '<label for="hudson_use_plugin_git_trigger">' . dgettext('tuleap-git', 'Trigger a build after Git pushes in repository') . ': </label>' . $selectBox;
                 return array('service'       => GitPlugin::SERVICE_SHORTNAME,
                              'title'         => dgettext('tuleap-git', 'Git trigger'),
                              'used'          => $used,

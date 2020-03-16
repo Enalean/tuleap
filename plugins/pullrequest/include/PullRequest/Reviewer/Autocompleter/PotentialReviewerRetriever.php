@@ -81,7 +81,7 @@ class PotentialReviewerRetriever
 
                 try {
                     $this->pull_request_permission_checker->checkPullRequestIsReadableByUser($pull_request, $user);
-                } catch (GitRepoNotFoundException|Project_AccessException|UserCannotReadGitRepositoryException $e) {
+                } catch (GitRepoNotFoundException | Project_AccessException | UserCannotReadGitRepositoryException $e) {
                     continue;
                 }
 

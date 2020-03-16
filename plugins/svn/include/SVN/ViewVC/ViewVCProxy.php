@@ -205,17 +205,17 @@ class ViewVCProxy
 
         $this->access_history_saver->saveAccess($user, $repository);
 
-        $command = 'REMOTE_USER_ID=' . escapeshellarg($user->getId()) . ' '.
-            'REMOTE_USER=' . escapeshellarg($this->getUsername($user, $project)) . ' '.
-            'PATH_INFO='.$this->setLocaleOnFileName($path).' '.
-            'QUERY_STRING='.escapeshellarg($this->buildQueryString($request)).' '.
-            'SCRIPT_NAME=/plugins/svn '.
-            'HTTP_ACCEPT_ENCODING='.$this->escapeStringFromServer($request, 'HTTP_ACCEPT_ENCODING').' '.
-            'HTTP_ACCEPT_LANGUAGE='.$this->escapeStringFromServer($request, 'HTTP_ACCEPT_LANGUAGE').' '.
-            'TULEAP_PROJECT_NAME='.escapeshellarg($repository->getProject()->getUnixNameMixedCase()).' '.
-            'TULEAP_REPO_NAME='.escapeshellarg($repository->getName()).' '.
-            'TULEAP_REPO_PATH='.escapeshellarg($repository->getSystemPath()).' '.
-            $this->getPythonLauncher() . ' ' . __DIR__.'/../../../bin/viewvc-epel.cgi 2>&1';
+        $command = 'REMOTE_USER_ID=' . escapeshellarg($user->getId()) . ' ' .
+            'REMOTE_USER=' . escapeshellarg($this->getUsername($user, $project)) . ' ' .
+            'PATH_INFO=' . $this->setLocaleOnFileName($path) . ' ' .
+            'QUERY_STRING=' . escapeshellarg($this->buildQueryString($request)) . ' ' .
+            'SCRIPT_NAME=/plugins/svn ' .
+            'HTTP_ACCEPT_ENCODING=' . $this->escapeStringFromServer($request, 'HTTP_ACCEPT_ENCODING') . ' ' .
+            'HTTP_ACCEPT_LANGUAGE=' . $this->escapeStringFromServer($request, 'HTTP_ACCEPT_LANGUAGE') . ' ' .
+            'TULEAP_PROJECT_NAME=' . escapeshellarg($repository->getProject()->getUnixNameMixedCase()) . ' ' .
+            'TULEAP_REPO_NAME=' . escapeshellarg($repository->getName()) . ' ' .
+            'TULEAP_REPO_PATH=' . escapeshellarg($repository->getSystemPath()) . ' ' .
+            $this->getPythonLauncher() . ' ' . __DIR__ . '/../../../bin/viewvc-epel.cgi 2>&1';
 
         $content = $this->setLocaleOnCommand($command, $return_var);
 
@@ -244,14 +244,14 @@ class ViewVCProxy
             $cross_ref = "";
             if ($request->get('revision')) {
                 $crossref_fact = new CrossReferenceFactory(
-                    $repository->getName()."/".$request->get('revision'),
+                    $repository->getName() . "/" . $request->get('revision'),
                     ReferenceManager::REFERENCE_NATURE_SVNREVISION,
                     $repository->getProject()->getID()
                 );
                 $crossref_fact->fetchDatas();
                 if ($crossref_fact->getNbReferences() > 0) {
                     $cross_ref .= '<div class="viewvc-epel-references">';
-                    $cross_ref .= '<h4>'.$GLOBALS['Language']->getText('cross_ref_fact_include', 'references').'</h4>';
+                    $cross_ref .= '<h4>' . $GLOBALS['Language']->getText('cross_ref_fact_include', 'references') . '</h4>';
                     $cross_ref .= $crossref_fact->getHTMLDisplayCrossRefs();
                     $cross_ref .= '</div>';
                 }
@@ -292,8 +292,8 @@ class ViewVCProxy
 
         return '<link rel="stylesheet" href="/viewvc-theme-tuleap/style.css">
             <div class="tuleap-viewvc-header">
-                <h3>'. $title .'</h3>
-                '. $reason .'
+                <h3>' . $title . '</h3>
+                ' . $reason . '
             </div>';
     }
 

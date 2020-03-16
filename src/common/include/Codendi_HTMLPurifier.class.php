@@ -141,9 +141,9 @@ class Codendi_HTMLPurifier
      */
     public function getLightConfigMarkups()
     {
-        $allowed = 'p,br,'.
-                   'a[href|title|class],img[src|alt],'.
-                   'ul,ol,li,'.
+        $allowed = 'p,br,' .
+                   'a[href|title|class],img[src|alt],' .
+                   'ul,ol,li,' .
                    'cite,code,blockquote,strong,em,pre,b,i';
         return $allowed;
     }

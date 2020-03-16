@@ -82,7 +82,7 @@ class Statistics_Services_UsageFormatter
     {
         $resized_results = array();
         foreach ($query_results as $result) {
-            $result[self::VALUES] = round($result[self::VALUES]/self::BYTES_NUMBER_IN_MB);
+            $result[self::VALUES] = round($result[self::VALUES] / self::BYTES_NUMBER_IN_MB);
             $resized_results[]    = $result;
         }
 

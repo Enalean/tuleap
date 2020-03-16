@@ -86,14 +86,14 @@ abstract class SVN_Apache
         $conf = '';
         $conf .= "    Require valid-user\n";
         $conf .= "    AuthType Basic\n";
-        $conf .= "    AuthName \"Subversion Authorization (".$this->escapeStringForApacheConf($projectName).")\"\n";
+        $conf .= "    AuthName \"Subversion Authorization (" . $this->escapeStringForApacheConf($projectName) . ")\"\n";
         return $conf;
     }
 
 
     protected function getRepositoryAuthorization($svn_dir)
     {
-        $conf = "    AuthzSVNAccessFile ".$svn_dir."/.SVNAccessFile\n";
+        $conf = "    AuthzSVNAccessFile " . $svn_dir . "/.SVNAccessFile\n";
         return $conf;
     }
 

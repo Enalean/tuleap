@@ -61,7 +61,7 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer
         $breadcrumbs = array(
             array(
                 'title' => $title,
-                'url'   => TRACKER_BASE_URL.'/?aid='. $this->artifact->getId().'&func=copy-artifact'
+                'url'   => TRACKER_BASE_URL . '/?aid=' . $this->artifact->getId() . '&func=copy-artifact'
             )
         );
 
@@ -89,20 +89,20 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer
         $copy_children_label = $GLOBALS['Language']->getText('plugin_tracker_artifact', 'copy_submit_button_children');
         $copy_children_title = $GLOBALS['Language']->getText('plugin_tracker_artifact', 'copy_submit_button_children_title');
 
-        $button = '<button class="btn btn-large btn-primary" type="submit">'. $copy_label .'</button>';
+        $button = '<button class="btn btn-large btn-primary" type="submit">' . $copy_label . '</button>';
 
         if (count($this->artifact->getChildrenForUser($current_user)) > 0) {
             $button = '<div class="btn-group dropup">
-                <button class="btn btn-large btn-primary" type="submit">'. $copy_label .'</button>
+                <button class="btn btn-large btn-primary" type="submit">' . $copy_label . '</button>
                 <button class="btn btn-large btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
                 <ul class="dropdown-menu pull-right">
                     <li>
                         <input type="hidden" name="copy_children" id="copy_children" value="0" />
                         <a
                             href="#"
-                            title="'. $purifier->purify($copy_children_title) .'"
+                            title="' . $purifier->purify($copy_children_title) . '"
                             id="copy_children_button">
-                            '. $copy_children_label .'
+                            ' . $copy_children_label . '
                         </a>
                     </li>
                 </ul>
@@ -110,8 +110,8 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer
         }
         return '<div class="artifact-copy-button">
                     <input type="hidden" id="submit-type" />
-                    '. $button
-                    . $this->getConcurrentEditMessage() .'
+                    ' . $button
+                    . $this->getConcurrentEditMessage() . '
                 </div>';
     }
 
@@ -136,11 +136,11 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer
 
     private function fetchLastChangesetId()
     {
-        return '<input type="hidden" name="from_changeset_id" value="'.$this->artifact->getLastChangeset()->getId().'"/>';
+        return '<input type="hidden" name="from_changeset_id" value="' . $this->artifact->getLastChangeset()->getId() . '"/>';
     }
 
     private function fetchFromArtifactId()
     {
-        return '<input type="hidden" name="from_artifact_id" value="'.$this->artifact->getId().'"/>';
+        return '<input type="hidden" name="from_artifact_id" value="' . $this->artifact->getId() . '"/>';
     }
 }

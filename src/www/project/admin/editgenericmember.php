@@ -38,7 +38,7 @@ $user_manager         = UserManager::instance();
 $generic_user_factory = new GenericUserFactory($user_manager, ProjectManager::instance(), new GenericUserDao());
 $generic_user         = $generic_user_factory->fetch($group_id);
 
-$redirect_url = '/project/admin/editgenericmember.php?group_id='. (int)$group_id;
+$redirect_url = '/project/admin/editgenericmember.php?group_id=' . (int) $group_id;
 $token = new CSRFSynchronizerToken($redirect_url);
 
 if ($request->get('update_generic_user')) {
@@ -72,29 +72,29 @@ project_admin_header(
     'members'
 );
 
-echo '<h2>'. $title .'</h2>';
+echo '<h2>' . $title . '</h2>';
 echo '<form method="POST" action="">';
 echo $token->fetchHTMLInput();
-echo '<input type="hidden" name="group_id" value="'. (int)$group_id .'" />
+echo '<input type="hidden" name="group_id" value="' . (int) $group_id . '" />
     <p>
-        <label for="newtracker_login"><b>'. $Language->getText('account_login', 'name') .'</b>:<br />
-        '. $generic_user->getUserName() .'
+        <label for="newtracker_login"><b>' . $Language->getText('account_login', 'name') . '</b>:<br />
+        ' . $generic_user->getUserName() . '
     </p>
     <p>
-        <label for="newtracker_real_name"><b>'. $Language->getText('account_register', 'realname') .'</b>:</label><br />
-        '. $generic_user->getRealName() .'
+        <label for="newtracker_real_name"><b>' . $Language->getText('account_register', 'realname') . '</b>:</label><br />
+        ' . $generic_user->getRealName() . '
     </p>
     <p>
-        <label for="generic_user_email"><b>'. _('Change email address') .'</b>:</label><br />
-        <input type="email" name="email" id="generic_user_email" value="'.
-            $hp->purify($generic_user->getEmail(), CODENDI_PURIFIER_CONVERT_HTML) .'" />
+        <label for="generic_user_email"><b>' . _('Change email address') . '</b>:</label><br />
+        <input type="email" name="email" id="generic_user_email" value="' .
+            $hp->purify($generic_user->getEmail(), CODENDI_PURIFIER_CONVERT_HTML) . '" />
      </p>
      <p>
-        <label for="generic_user_password"><b>'. $Language->getText('admin_user_changepw', 'password_field_label') .'</b>:</label><br />
+        <label for="generic_user_password"><b>' . $Language->getText('admin_user_changepw', 'password_field_label') . '</b>:</label><br />
         <input type="password" name="password" id="generic_user_password" value="" autocomplete="off" /><br />
-        <span class="help">'. $Language->getText('project_admin', 'generic_member_leave_blank') .'</span>
+        <span class="help">' . $Language->getText('project_admin', 'generic_member_leave_blank') . '</span>
      </p>
-     <input type="submit" name="update_generic_user" value="'. $Language->getText('global', 'btn_submit') .'" />
+     <input type="submit" name="update_generic_user" value="' . $Language->getText('global', 'btn_submit') . '" />
 </form>';
 
 project_admin_footer(array());

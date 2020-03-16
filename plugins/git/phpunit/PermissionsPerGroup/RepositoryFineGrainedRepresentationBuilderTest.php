@@ -29,7 +29,7 @@ use ProjectUGroup;
 use Tuleap\Git\Permissions\FineGrainedPermission;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 
-require_once dirname(__FILE__).'/../bootstrap.php';
+require_once dirname(__FILE__) . '/../bootstrap.php';
 
 class RepositoryFineGrainedRepresentationBuilderTest extends TestCase
 {

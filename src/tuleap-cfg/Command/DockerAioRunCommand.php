@@ -145,7 +145,7 @@ class DockerAioRunCommand extends Command
     private function deployMysqldConfig()
     {
         unlink('/etc/opt/rh/rh-mysql57/my.cnf.d/rh-mysql57-mysql-server.cnf');
-        copy(__DIR__.'/../../../tools/docker/tuleap-aio-c7/rh-mysql57-mysql-server.cnf', '/etc/opt/rh/rh-mysql57/my.cnf.d/rh-mysql57-mysql-server.cnf');
+        copy(__DIR__ . '/../../../tools/docker/tuleap-aio-c7/rh-mysql57-mysql-server.cnf', '/etc/opt/rh/rh-mysql57/my.cnf.d/rh-mysql57-mysql-server.cnf');
     }
 
     private function startSSHDaemon(OutputInterface $output): Process
@@ -159,14 +159,14 @@ class DockerAioRunCommand extends Command
     private function setupTuleap(OutputInterface $output)
     {
         $output->writeln("Install Tuleap");
-        $this->process_factory->getProcess(['/bin/bash', '+x', '/usr/share/tuleap/tools/setup.el7.sh', '--assumeyes', '--configure', '--server-name=tuleap.local', '--mysql-server=localhost', '--mysql-password='.getenv('MYSQL_ROOT_PASSWORD')])->mustRun();
+        $this->process_factory->getProcess(['/bin/bash', '+x', '/usr/share/tuleap/tools/setup.el7.sh', '--assumeyes', '--configure', '--server-name=tuleap.local', '--mysql-server=localhost', '--mysql-password=' . getenv('MYSQL_ROOT_PASSWORD')])->mustRun();
         $this->process_factory->getProcess(['/usr/bin/tuleap', 'config-set', ServiceControl::FORGECONFIG_INIT_MODE, ServiceControl::SUPERVISORD])->mustRun();
     }
 
     private function shutdownMysql(OutputInterface $output, Process $mysql_daemon): void
     {
         $output->writeln("Shutdown Mysql");
-        $this->process_factory->getProcess(['scl', 'enable', 'rh-mysql57', '--', 'mysqladmin', '-uroot', '-p'.getenv('MYSQL_ROOT_PASSWORD'), 'shutdown'])->mustRun();
+        $this->process_factory->getProcess(['scl', 'enable', 'rh-mysql57', '--', 'mysqladmin', '-uroot', '-p' . getenv('MYSQL_ROOT_PASSWORD'), 'shutdown'])->mustRun();
         while ($mysql_daemon->isRunning()) {
             $output->writeln("Wait for mysql to shutdown");
             sleep(1);
@@ -197,16 +197,16 @@ class DockerAioRunCommand extends Command
         $output->writeln("Setup Rsyslog");
         unlink('/etc/rsyslog.d/listen.conf');
         unlink('/etc/rsyslog.conf');
-        copy(__DIR__.'/../../../tools/docker/tuleap-aio-c7/rsyslog.conf', '/etc/rsyslog.conf');
+        copy(__DIR__ . '/../../../tools/docker/tuleap-aio-c7/rsyslog.conf', '/etc/rsyslog.conf');
     }
 
     private function setupSupervisord(OutputInterface $output) : void
     {
         $output->writeln("Setup Supervisord");
-        foreach (new \DirectoryIterator(__DIR__.'/../../../tools/docker/tuleap-aio-c7/supervisor.d') as $file) {
+        foreach (new \DirectoryIterator(__DIR__ . '/../../../tools/docker/tuleap-aio-c7/supervisor.d') as $file) {
             assert($file instanceof SplFileInfo);
             if (! $file->isDir()) {
-                copy($file->getPathname(), '/etc/supervisord.d/'.$file->getFilename());
+                copy($file->getPathname(), '/etc/supervisord.d/' . $file->getFilename());
             }
         }
         file_put_contents(
@@ -242,13 +242,13 @@ class DockerAioRunCommand extends Command
         foreach (self::PERSISTENT_DATA as $path) {
             $output->writeln("Move $path to persistent storage");
             $this->createBaseDir($path);
-            $this->process_factory->getProcess(['/bin/mv', $path, '/data'.$path])->mustRun();
+            $this->process_factory->getProcess(['/bin/mv', $path, '/data' . $path])->mustRun();
         }
     }
 
     private function createBaseDir(string $path): void
     {
-        $dirname = '/data'.dirname($path);
+        $dirname = '/data' . dirname($path);
         if (! is_dir($dirname) && ! mkdir($dirname, 0755, true) && ! is_dir($dirname)) {
             throw new \RuntimeException(sprintf('Directory "%s" was not created', $dirname));
         }
@@ -267,14 +267,14 @@ class DockerAioRunCommand extends Command
                 unlink($path);
             }
             $output->writeln("Create link to persistent storage for $path");
-            symlink('/data'.$path, $path);
+            symlink('/data' . $path, $path);
         }
     }
 
     private function regenerateConfigurations(OutputInterface $output)
     {
         $output->writeln("Regenerate configurations for nginx, fpm");
-        $this->process_factory->getProcess([__DIR__.'/../../../tools/utils/php73/run.php', '--module=nginx,fpm'])->mustRun();
+        $this->process_factory->getProcess([__DIR__ . '/../../../tools/utils/php73/run.php', '--module=nginx,fpm'])->mustRun();
 
         $output->writeln("Regenerate configuration for apache");
         $configure_apache = new ConfigureApache('/');
@@ -283,7 +283,7 @@ class DockerAioRunCommand extends Command
 
     private function deployCrondConfig()
     {
-        copy(__DIR__.'/../../utils/cron.d/codendi', '/etc/cron.d/tuleap');
+        copy(__DIR__ . '/../../utils/cron.d/codendi', '/etc/cron.d/tuleap');
     }
 
     private function runForgeUpgrade(OutputInterface $output)

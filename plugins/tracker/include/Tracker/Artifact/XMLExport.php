@@ -75,7 +75,7 @@ class Tracker_Artifact_XMLExport
 
         if ($nb_artifacts > self::THRESHOLD) {
             throw new Tracker_Artifact_XMLExportTooManyArtifactsException(
-                "Too many artifacts: $nb_artifacts (IT'S OVER ".self::THRESHOLD."!)"
+                "Too many artifacts: $nb_artifacts (IT'S OVER " . self::THRESHOLD . "!)"
             );
         }
     }

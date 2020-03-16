@@ -110,7 +110,7 @@ class PluginLoader
 
     private function serializeInFile(string $path, EventPluginCache $var) : void
     {
-        $content = '<?php'.PHP_EOL.'return '.VarExporter::export($var).';';
+        $content = '<?php' . PHP_EOL . 'return ' . VarExporter::export($var) . ';';
         try {
             FileWriter::writeFile($path, $content);
         } catch (ExceptionInterface $exception) {

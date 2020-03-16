@@ -70,6 +70,6 @@ class SystemEvent_GIT_REGENERATE_GITOLITE_CONFIG extends SystemEvent
     {
         $project_id = $this->getProjectIdFromParameters();
 
-        return 'Project: '.$this->verbalizeProjectId($project_id, $with_link);
+        return 'Project: ' . $this->verbalizeProjectId($project_id, $with_link);
     }
 }

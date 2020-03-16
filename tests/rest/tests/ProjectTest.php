@@ -171,7 +171,7 @@ class ProjectTest extends ProjectBase
         $this->assertContains(
             array(
                 'type' => 'trackers',
-                'uri' => 'projects/'.$this->project_private_member_id.'/trackers',
+                'uri' => 'projects/' . $this->project_private_member_id . '/trackers',
             ),
             $json_projects[0]['resources']
         );
@@ -179,7 +179,7 @@ class ProjectTest extends ProjectBase
         $this->assertContains(
             array(
                 'type' => 'backlog',
-                'uri' => 'projects/'.$this->project_private_member_id.'/backlog',
+                'uri' => 'projects/' . $this->project_private_member_id . '/backlog',
             ),
             $json_projects[0]['resources']
         );
@@ -187,7 +187,7 @@ class ProjectTest extends ProjectBase
         $this->assertContains(
             array(
                 'type' => 'milestones',
-                'uri' => 'projects/'.$this->project_private_member_id.'/milestones',
+                'uri' => 'projects/' . $this->project_private_member_id . '/milestones',
             ),
             $json_projects[0]['resources']
         );
@@ -195,7 +195,7 @@ class ProjectTest extends ProjectBase
         $this->assertContains(
             array(
                 'type' => 'plannings',
-                'uri' => 'projects/'.$this->project_private_member_id.'/plannings',
+                'uri' => 'projects/' . $this->project_private_member_id . '/plannings',
             ),
             $json_projects[0]['resources']
         );
@@ -203,7 +203,7 @@ class ProjectTest extends ProjectBase
         $this->assertContains(
             array(
                 'type' => 'user_groups',
-                'uri' => 'projects/'.$this->project_private_member_id.'/user_groups',
+                'uri' => 'projects/' . $this->project_private_member_id . '/user_groups',
             ),
             $json_projects[0]['resources']
         );
@@ -211,7 +211,7 @@ class ProjectTest extends ProjectBase
         $this->assertContains(
             array(
                 'type' => 'labels',
-                'uri' => 'projects/'.$this->project_private_member_id.'/labels',
+                'uri' => 'projects/' . $this->project_private_member_id . '/labels',
             ),
             $json_projects[0]['resources']
         );
@@ -219,7 +219,7 @@ class ProjectTest extends ProjectBase
         $this->assertContains(
             array(
                 'type' => 'project_services',
-                'uri' => 'projects/'.$this->project_private_member_id.'/project_services',
+                'uri' => 'projects/' . $this->project_private_member_id . '/project_services',
             ),
             $json_projects[0]['resources']
         );
@@ -227,14 +227,14 @@ class ProjectTest extends ProjectBase
         $this->assertContains(
             [
                 'type' => 'docman_service',
-                'uri'  => 'projects/'.$this->project_private_member_id.'/docman_service',
+                'uri'  => 'projects/' . $this->project_private_member_id . '/docman_service',
             ],
             $json_projects[0]['resources']
         );
         $this->assertContains(
             [
                 'type' => 'docman_metadata',
-                'uri'  => 'projects/'.$this->project_private_member_id.'/docman_metadata',
+                'uri'  => 'projects/' . $this->project_private_member_id . '/docman_metadata',
             ],
             $json_projects[0]['resources']
         );
@@ -243,7 +243,7 @@ class ProjectTest extends ProjectBase
         $this->assertEquals($this->project_private_member_id, $json_projects[0]['id']);
 
         $this->assertArrayHasKey('uri', $json_projects[0]);
-        $this->assertEquals('projects/'.$this->project_private_member_id, $json_projects[0]['uri']);
+        $this->assertEquals('projects/' . $this->project_private_member_id, $json_projects[0]['uri']);
 
         $this->assertArrayHasKey('label', $json_projects[0]);
         $this->assertEquals('Private member', $json_projects[0]['label']);
@@ -265,7 +265,7 @@ class ProjectTest extends ProjectBase
 
     public function testGETByShortname()
     {
-        $response      = $this->getResponse($this->client->get('projects?query='. urlencode('{"shortname":"pbi-6348"}')));
+        $response      = $this->getResponse($this->client->get('projects?query=' . urlencode('{"shortname":"pbi-6348"}')));
         $json_projects = $response->json();
 
         $this->assertArrayHasKey('id', $json_projects[0]);
@@ -279,7 +279,7 @@ class ProjectTest extends ProjectBase
     {
         $response      = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_2_NAME,
-            $this->client->get('projects?query='. urlencode('{"is_member_of":true}'))
+            $this->client->get('projects?query=' . urlencode('{"is_member_of":true}'))
         );
         $json_projects = $response->json();
 
@@ -292,7 +292,7 @@ class ProjectTest extends ProjectBase
     {
         $response      = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
-            $this->client->get('projects?query='. urlencode('{"is_admin_of":true}'))
+            $this->client->get('projects?query=' . urlencode('{"is_admin_of":true}'))
         );
         $json_projects = $response->json();
 
@@ -303,7 +303,7 @@ class ProjectTest extends ProjectBase
 
     public function testGETByNonMembershipShouldFail()
     {
-        $response = $this->getResponse($this->client->get('projects?query='. urlencode('{"is_member_of":false}')));
+        $response = $this->getResponse($this->client->get('projects?query=' . urlencode('{"is_member_of":false}')));
 
         $this->assertEquals($response->getStatusCode(), 400);
     }
@@ -350,7 +350,7 @@ class ProjectTest extends ProjectBase
 
             $this->assertFalse($project['is_member_of']);
 
-            $project_members_uri = "user_groups/$this->project_private_id"."_3/users";
+            $project_members_uri = "user_groups/$this->project_private_id" . "_3/users";
             $project_members = $this
                 ->getResponseByName(
                     REST_TestDataBuilder::ADMIN_USER_NAME,
@@ -367,7 +367,7 @@ class ProjectTest extends ProjectBase
 
     public function testGETbyIdForAdmin()
     {
-        $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->get('projects/'.$this->project_private_member_id));
+        $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->get('projects/' . $this->project_private_member_id));
 
         $json_project = $response->json();
 
@@ -375,7 +375,7 @@ class ProjectTest extends ProjectBase
         $this->assertContains(
             array(
                 'type' => 'trackers',
-                'uri' => 'projects/'.$this->project_private_member_id.'/trackers',
+                'uri' => 'projects/' . $this->project_private_member_id . '/trackers',
             ),
             $json_project['resources']
         );
@@ -383,7 +383,7 @@ class ProjectTest extends ProjectBase
         $this->assertContains(
             array(
                 'type' => 'backlog',
-                'uri' => 'projects/'.$this->project_private_member_id.'/backlog',
+                'uri' => 'projects/' . $this->project_private_member_id . '/backlog',
             ),
             $json_project['resources']
         );
@@ -391,7 +391,7 @@ class ProjectTest extends ProjectBase
         $this->assertContains(
             array(
                 'type' => 'milestones',
-                'uri' => 'projects/'.$this->project_private_member_id.'/milestones',
+                'uri' => 'projects/' . $this->project_private_member_id . '/milestones',
             ),
             $json_project['resources']
         );
@@ -399,7 +399,7 @@ class ProjectTest extends ProjectBase
         $this->assertContains(
             array(
                 'type' => 'plannings',
-                'uri' => 'projects/'.$this->project_private_member_id.'/plannings',
+                'uri' => 'projects/' . $this->project_private_member_id . '/plannings',
             ),
             $json_project['resources']
         );
@@ -407,7 +407,7 @@ class ProjectTest extends ProjectBase
         $this->assertContains(
             array(
                 'type' => 'user_groups',
-                'uri' => 'projects/'.$this->project_private_member_id.'/user_groups',
+                'uri' => 'projects/' . $this->project_private_member_id . '/user_groups',
             ),
             $json_project['resources']
         );
@@ -415,7 +415,7 @@ class ProjectTest extends ProjectBase
         $this->assertContains(
             array(
                 'type' => 'labels',
-                'uri' => 'projects/'.$this->project_private_member_id.'/labels',
+                'uri' => 'projects/' . $this->project_private_member_id . '/labels',
             ),
             $json_project['resources']
         );
@@ -424,7 +424,7 @@ class ProjectTest extends ProjectBase
         $this->assertEquals($this->project_private_member_id, $json_project['id']);
 
         $this->assertArrayHasKey('uri', $json_project);
-        $this->assertEquals('projects/'.$this->project_private_member_id, $json_project['uri']);
+        $this->assertEquals('projects/' . $this->project_private_member_id, $json_project['uri']);
 
         $this->assertArrayHasKey('label', $json_project);
         $this->assertEquals('Private member', $json_project['label']);
@@ -434,7 +434,7 @@ class ProjectTest extends ProjectBase
 
     public function testGETbyIdForDelegatedRestProjectManager()
     {
-        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_DELEGATED_REST_PROJECT_MANAGER_NAME, $this->client->get('projects/'. $this->project_deleted_id));
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_DELEGATED_REST_PROJECT_MANAGER_NAME, $this->client->get('projects/' . $this->project_deleted_id));
 
         $json_project = $response->json();
 
@@ -451,7 +451,7 @@ class ProjectTest extends ProjectBase
 
     public function testOPTIONSbyIdForAdmin()
     {
-        $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->options('projects/'.$this->project_private_member_id));
+        $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->options('projects/' . $this->project_private_member_id));
 
         $this->assertEquals(['OPTIONS', 'GET', 'POST', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
@@ -459,7 +459,7 @@ class ProjectTest extends ProjectBase
 
     public function testOPTIONSbyIdForDelegatedRestProjectManager()
     {
-        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_DELEGATED_REST_PROJECT_MANAGER_NAME, $this->client->options('projects/'.$this->project_deleted_id));
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_DELEGATED_REST_PROJECT_MANAGER_NAME, $this->client->options('projects/' . $this->project_deleted_id));
 
         $this->assertEquals(['OPTIONS', 'GET', 'POST', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
@@ -467,7 +467,7 @@ class ProjectTest extends ProjectBase
 
     public function testOPTIONSbyIdForProjectMember()
     {
-        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->options('projects/'.$this->project_private_member_id));
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->options('projects/' . $this->project_private_member_id));
 
         $this->assertEquals(['OPTIONS', 'GET', 'POST', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
@@ -475,7 +475,7 @@ class ProjectTest extends ProjectBase
 
     public function testGETbyIdForForbiddenUser()
     {
-        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->get('projects/'.REST_TestDataBuilder::ADMIN_PROJECT_ID));
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->get('projects/' . REST_TestDataBuilder::ADMIN_PROJECT_ID));
         $this->assertEquals($response->getStatusCode(), 403);
     }
 
@@ -495,7 +495,7 @@ class ProjectTest extends ProjectBase
     {
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('projects/'.$this->project_private_member_id.'/milestones')
+            $this->client->get('projects/' . $this->project_private_member_id . '/milestones')
         );
 
         $milestones = $response->json();
@@ -506,7 +506,7 @@ class ProjectTest extends ProjectBase
         $this->assertEquals($release_milestone['label'], "Release 1.0");
         $this->assertEquals($release_milestone['project'], array(
             'id'    => $this->project_private_member_id,
-            'uri'   => 'projects/'.$this->project_private_member_id,
+            'uri'   => 'projects/' . $this->project_private_member_id,
             'label' => 'Private member'
         ));
         $this->assertArrayHasKey('id', $release_milestone['artifact']);
@@ -523,7 +523,7 @@ class ProjectTest extends ProjectBase
     {
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('projects/'.$this->project_private_member_id.'/milestones?fields=slim')
+            $this->client->get('projects/' . $this->project_private_member_id . '/milestones?fields=slim')
         );
 
         $milestones = $response->json();
@@ -539,14 +539,14 @@ class ProjectTest extends ProjectBase
 
     public function testOPTIONSmilestones()
     {
-        $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->options('projects/'.$this->project_private_member_id.'/milestones'));
+        $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->options('projects/' . $this->project_private_member_id . '/milestones'));
 
         $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOPTIONStrackers()
     {
-        $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->options('projects/'.$this->project_private_member_id.'/trackers'));
+        $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->options('projects/' . $this->project_private_member_id . '/trackers'));
 
         $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
@@ -554,7 +554,7 @@ class ProjectTest extends ProjectBase
 
     public function testGETtrackers()
     {
-        $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->get('projects/'.$this->project_private_member_id.'/trackers'));
+        $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->get('projects/' . $this->project_private_member_id . '/trackers'));
 
         $trackers = $response->json();
 
@@ -565,7 +565,7 @@ class ProjectTest extends ProjectBase
         $this->assertEquals($epics_tracker['label'], "Epics");
         $this->assertEquals($epics_tracker['project'], array(
             'id'    => $this->project_private_member_id,
-            'uri'   => 'projects/'.$this->project_private_member_id,
+            'uri'   => 'projects/' . $this->project_private_member_id,
             'label' => 'Private member'
         ));
 
@@ -574,7 +574,7 @@ class ProjectTest extends ProjectBase
         $this->assertEquals($kanban_tracker['label'], "Kanban Tasks");
         $this->assertEquals($kanban_tracker['project'], array(
             'id'    => $this->project_private_member_id,
-            'uri'   => 'projects/'.$this->project_private_member_id,
+            'uri'   => 'projects/' . $this->project_private_member_id,
             'label' => 'Private member'
         ));
 
@@ -583,7 +583,7 @@ class ProjectTest extends ProjectBase
         $this->assertEquals($releases_tracker['label'], "Releases");
         $this->assertEquals($releases_tracker['project'], array(
             'id'    => $this->project_private_member_id,
-            'uri'   => 'projects/'.$this->project_private_member_id,
+            'uri'   => 'projects/' . $this->project_private_member_id,
             'label' => 'Private member'
         ));
 
@@ -592,7 +592,7 @@ class ProjectTest extends ProjectBase
         $this->assertEquals($sprints_tracker['label'], "Sprints");
         $this->assertEquals($sprints_tracker['project'], array(
             'id'    => $this->project_private_member_id,
-            'uri'   => 'projects/'.$this->project_private_member_id,
+            'uri'   => 'projects/' . $this->project_private_member_id,
             'label' => 'Private member'
         ));
 
@@ -601,7 +601,7 @@ class ProjectTest extends ProjectBase
         $this->assertEquals($tasks_tracker['label'], "Tasks");
         $this->assertEquals($tasks_tracker['project'], array(
             'id'    => $this->project_private_member_id,
-            'uri'   => 'projects/'.$this->project_private_member_id,
+            'uri'   => 'projects/' . $this->project_private_member_id,
             'label' => 'Private member'
         ));
 
@@ -610,7 +610,7 @@ class ProjectTest extends ProjectBase
         $this->assertEquals($userstories_tracker['label'], "User Stories");
         $this->assertEquals($userstories_tracker['project'], array(
             'id'    => $this->project_private_member_id,
-            'uri'   => 'projects/'.$this->project_private_member_id,
+            'uri'   => 'projects/' . $this->project_private_member_id,
             'label' => 'Private member'
         ));
 
@@ -619,7 +619,7 @@ class ProjectTest extends ProjectBase
 
     public function testOPTIONSbacklog()
     {
-        $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->options('projects/'.$this->project_private_member_id.'/backlog'));
+        $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->options('projects/' . $this->project_private_member_id . '/backlog'));
 
         $this->assertEquals(array('OPTIONS', 'GET', 'PUT', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
     }
@@ -628,7 +628,7 @@ class ProjectTest extends ProjectBase
     {
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->get('projects/'.$this->project_private_member_id.'/backlog')
+            $this->client->get('projects/' . $this->project_private_member_id . '/backlog')
         );
 
         $backlog_items = $response->json();
@@ -662,7 +662,7 @@ class ProjectTest extends ProjectBase
 
     public function testPUTbacklogWithoutPermission()
     {
-        $response_put = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->put('projects/'.$this->project_private_member_id.'/backlog', null, '['.$this->epic_artifact_ids[7].','.$this->epic_artifact_ids[5].','.$this->epic_artifact_ids[6].']'));
+        $response_put = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->put('projects/' . $this->project_private_member_id . '/backlog', null, '[' . $this->epic_artifact_ids[7] . ',' . $this->epic_artifact_ids[5] . ',' . $this->epic_artifact_ids[6] . ']'));
 
         $this->assertEquals($response_put->getStatusCode(), 403);
     }
@@ -757,67 +757,67 @@ class ProjectTest extends ProjectBase
 
     public function testOPTIONSLabels()
     {
-        $response = $this->getResponse($this->client->options('projects/'.$this->project_private_member_id.'/labels'));
+        $response = $this->getResponse($this->client->options('projects/' . $this->project_private_member_id . '/labels'));
 
         $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGETLabels()
     {
-        $response = $this->getResponse($this->client->get('projects/'.$this->project_private_member_id.'/labels'));
+        $response = $this->getResponse($this->client->get('projects/' . $this->project_private_member_id . '/labels'));
 
         $this->assertEquals(array('labels' => array()), $response->json());
     }
 
     public function testOPTIONSUserGroups()
     {
-        $response = $this->getResponse($this->client->options('projects/'.$this->project_private_member_id.'/user_groups'));
+        $response = $this->getResponse($this->client->options('projects/' . $this->project_private_member_id . '/user_groups'));
 
         $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGETUserGroupsContainingStaticUGroups()
     {
-        $response = $this->getResponse($this->client->get('projects/'.$this->project_private_member_id.'/user_groups'));
+        $response = $this->getResponse($this->client->get('projects/' . $this->project_private_member_id . '/user_groups'));
         $expected_result = array(
 
             array(
-                'id' => $this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_ID,
-                'uri' => 'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_ID,
+                'id' => $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_ID,
+                'uri' => 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_ID,
                 'label' => 'Project members',
-                'users_uri' => 'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_ID.'/users',
+                'users_uri' => 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_ID . '/users',
                 'key' => REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_KEY,
                 'short_name' => 'project_members'
             ),
             array(
-                'id' => $this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID,
-                'uri' => 'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID,
+                'id' => $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID,
+                'uri' => 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID,
                 'label' => 'Project administrators',
-                'users_uri' => 'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID.'/users',
-                'key' => 'ugroup_'.REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_LABEL.'_name_key',
+                'users_uri' => 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID . '/users',
+                'key' => 'ugroup_' . REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_LABEL . '_name_key',
                 'short_name' => 'project_admins'
             ),
             array(
-                'id'         => $this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_FILE_MANAGER_ID,
-                'uri'        => 'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_FILE_MANAGER_ID,
+                'id'         => $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_FILE_MANAGER_ID,
+                'uri'        => 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_FILE_MANAGER_ID,
                 'label'      => REST_TestDataBuilder::DYNAMIC_UGROUP_FILE_MANAGER_LABEL,
-                'users_uri'  => 'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_FILE_MANAGER_ID.'/users',
+                'users_uri'  => 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_FILE_MANAGER_ID . '/users',
                 'key'        => 'ugroup_file_manager_admin_name_key',
                 'short_name' => 'file_manager_admins'
             ),
             array(
-                'id' => $this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_WIKI_ADMIN_ID,
-                'uri' => 'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_WIKI_ADMIN_ID,
+                'id' => $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_WIKI_ADMIN_ID,
+                'uri' => 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_WIKI_ADMIN_ID,
                 'label' => 'Wiki administrators',
-                'users_uri' => 'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_WIKI_ADMIN_ID.'/users',
+                'users_uri' => 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_WIKI_ADMIN_ID . '/users',
                 'key' => 'ugroup_wiki_admin_name_key',
                 'short_name' => 'wiki_admins'
             ),
             array(
-                'id' => $this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_FORUM_ADMIN_ID,
-                'uri' => 'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_FORUM_ADMIN_ID,
+                'id' => $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_FORUM_ADMIN_ID,
+                'uri' => 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_FORUM_ADMIN_ID,
                 'label' => 'Forum moderators',
-                'users_uri' => 'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_FORUM_ADMIN_ID.'/users',
+                'users_uri' => 'user_groups/' . $this->project_private_member_id . '_' . REST_TestDataBuilder::DYNAMIC_UGROUP_FORUM_ADMIN_ID . '/users',
                 'key' => 'ugroup_forum_admin_name_key',
                 'short_name' => 'forum_admins'
             ),
@@ -840,25 +840,25 @@ class ProjectTest extends ProjectBase
             ),
             array(
                 'id' => (string) REST_TestDataBuilder::STATIC_UGROUP_1_ID,
-                'uri' => 'user_groups/'.REST_TestDataBuilder::STATIC_UGROUP_1_ID,
+                'uri' => 'user_groups/' . REST_TestDataBuilder::STATIC_UGROUP_1_ID,
                 'label' => REST_TestDataBuilder::STATIC_UGROUP_1_LABEL,
-                'users_uri' => 'user_groups/'.REST_TestDataBuilder::STATIC_UGROUP_1_ID.'/users',
+                'users_uri' => 'user_groups/' . REST_TestDataBuilder::STATIC_UGROUP_1_ID . '/users',
                 'key' => REST_TestDataBuilder::STATIC_UGROUP_1_LABEL,
                 'short_name' => 'static_ugroup_1'
             ),
             array(
                 'id' => (string) REST_TestDataBuilder::STATIC_UGROUP_2_ID,
-                'uri' => 'user_groups/'.REST_TestDataBuilder::STATIC_UGROUP_2_ID,
+                'uri' => 'user_groups/' . REST_TestDataBuilder::STATIC_UGROUP_2_ID,
                 'label' => REST_TestDataBuilder::STATIC_UGROUP_2_LABEL,
-                'users_uri' => 'user_groups/'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users',
+                'users_uri' => 'user_groups/' . REST_TestDataBuilder::STATIC_UGROUP_2_ID . '/users',
                 'key' => REST_TestDataBuilder::STATIC_UGROUP_2_LABEL,
                 'short_name' => 'static_ugroup_2'
             ),
             array(
                 'id' => (string) REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID,
-                'uri' => 'user_groups/'.REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID,
+                'uri' => 'user_groups/' . REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID,
                 'label' => REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_LABEL,
-                'users_uri' => 'user_groups/'.REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID.'/users',
+                'users_uri' => 'user_groups/' . REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID . '/users',
                 'key' => REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_LABEL,
                 'short_name' => REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_LABEL
             )
@@ -888,9 +888,9 @@ class ProjectTest extends ProjectBase
         $response_patch = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_2_NAME,
             $this->client->put(
-                'projects/'.$this->project_private_member_id.'/backlog',
+                'projects/' . $this->project_private_member_id . '/backlog',
                 null,
-                '['.$this->epic_artifact_ids[7].','.$this->epic_artifact_ids[5].','.$this->epic_artifact_ids[6].']'
+                '[' . $this->epic_artifact_ids[7] . ',' . $this->epic_artifact_ids[5] . ',' . $this->epic_artifact_ids[6] . ']'
             )
         );
 
@@ -899,7 +899,7 @@ class ProjectTest extends ProjectBase
 
     public function testPATCHbacklog()
     {
-        $uri = 'projects/'.$this->project_private_member_id.'/backlog';
+        $uri = 'projects/' . $this->project_private_member_id . '/backlog';
         $backlog_items = $this->getResponse($this->client->get($uri))->json();
 
         $first_item  = $backlog_items[0];
@@ -919,7 +919,7 @@ class ProjectTest extends ProjectBase
 
         $response_patch_with_rest_read_only = $this->getResponse(
             $this->client->patch(
-                'projects/'.$this->project_private_member_id.'/backlog',
+                'projects/' . $this->project_private_member_id . '/backlog',
                 null,
                 $request_body
             ),
@@ -929,7 +929,7 @@ class ProjectTest extends ProjectBase
         $this->assertEquals(403, $response_patch_with_rest_read_only->getStatusCode());
 
         $response_patch = $this->getResponse($this->client->patch(
-            'projects/'.$this->project_private_member_id.'/backlog',
+            'projects/' . $this->project_private_member_id . '/backlog',
             null,
             $request_body
         ));
@@ -969,22 +969,22 @@ class ProjectTest extends ProjectBase
 
     public function testPATCHbacklogMoveBackAndForthInTopBacklog()
     {
-        $uri = 'projects/'.$this->project_private_member_id.'/backlog';
+        $uri = 'projects/' . $this->project_private_member_id . '/backlog';
         $backlog_items = $this->getResponse($this->client->get($uri))->json();
 
         $first_item  = $backlog_items[0];
         $second_item = $backlog_items[1];
         $third_item  = $backlog_items[2];
 
-        $releases = $this->getResponse($this->client->get('projects/'.$this->project_private_member_id.'/milestones'))->json();
+        $releases = $this->getResponse($this->client->get('projects/' . $this->project_private_member_id . '/milestones'))->json();
         $first_release = $releases[0];
 
-        $release_content = $this->getResponse($this->client->get('milestones/'.$first_release['id'].'/content'))->json();
+        $release_content = $this->getResponse($this->client->get('milestones/' . $first_release['id'] . '/content'))->json();
         $first_epic  = $release_content[0];
         $second_epic = $release_content[1];
 
         // remove from release, back to top backlog
-        $response = $this->getResponse($this->client->patch('projects/'.$this->project_private_member_id.'/backlog', null, json_encode(array(
+        $response = $this->getResponse($this->client->patch('projects/' . $this->project_private_member_id . '/backlog', null, json_encode(array(
             'order' => array(
                 'ids'         => array($first_epic['id']),
                 'direction'   => 'after',
@@ -1010,7 +1010,7 @@ class ProjectTest extends ProjectBase
         );
 
         // Move back to release
-        $response = $this->getResponse($this->client->patch('milestones/'.$first_release['id'].'/content', null, json_encode(array(
+        $response = $this->getResponse($this->client->patch('milestones/' . $first_release['id'] . '/content', null, json_encode(array(
             'order' => array(
                 'ids'         => array($first_epic['id']),
                 'direction'   => 'before',
@@ -1036,7 +1036,7 @@ class ProjectTest extends ProjectBase
 
         $this->assertEquals(
             $this->getIds($release_content),
-            $this->getIdsOrderedByPriority('milestones/'.$first_release['id'].'/content')
+            $this->getIdsOrderedByPriority('milestones/' . $first_release['id'] . '/content')
         );
     }
 
@@ -1047,14 +1047,14 @@ class ProjectTest extends ProjectBase
 
     public function testOPTIONSWiki()
     {
-        $response = $this->getResponse($this->client->options('projects/'.$this->project_private_member_id.'/phpwiki'));
+        $response = $this->getResponse($this->client->options('projects/' . $this->project_private_member_id . '/phpwiki'));
 
         $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGETWiki()
     {
-        $response = $this->getResponse($this->client->get('projects/'.$this->project_private_member_id.'/phpwiki'));
+        $response = $this->getResponse($this->client->get('projects/' . $this->project_private_member_id . '/phpwiki'));
 
         $expected_result = array(
             'pages' => array(
@@ -1076,7 +1076,7 @@ class ProjectTest extends ProjectBase
 
     public function testGETWikiWithGoodPagename()
     {
-        $response = $this->getResponse($this->client->get('projects/'.$this->project_private_member_id.'/phpwiki?pagename=WithContent'));
+        $response = $this->getResponse($this->client->get('projects/' . $this->project_private_member_id . '/phpwiki?pagename=WithContent'));
 
         $expected_result = array(
             'pages' => array(
@@ -1093,7 +1093,7 @@ class ProjectTest extends ProjectBase
 
     public function testGETWikiWithGoodPagenameAndASpace()
     {
-        $response = $this->getResponse($this->client->get('projects/'.$this->project_private_member_id.'/phpwiki?pagename=With+Space'));
+        $response = $this->getResponse($this->client->get('projects/' . $this->project_private_member_id . '/phpwiki?pagename=With+Space'));
 
         $expected_result = array(
             'pages' => array(
@@ -1110,7 +1110,7 @@ class ProjectTest extends ProjectBase
 
     public function testGETWikiWithGoodRelativePagename()
     {
-        $response = $this->getResponse($this->client->get('projects/'.$this->project_private_member_id.'/phpwiki?pagename=With'));
+        $response = $this->getResponse($this->client->get('projects/' . $this->project_private_member_id . '/phpwiki?pagename=With'));
 
         $expected_result = array(
             'pages' => array(
@@ -1132,7 +1132,7 @@ class ProjectTest extends ProjectBase
 
     public function testGETWikiWithNotExistingPagename()
     {
-        $response = $this->getResponse($this->client->get('projects/'.$this->project_private_member_id.'/phpwiki?pagename="no"'));
+        $response = $this->getResponse($this->client->get('projects/' . $this->project_private_member_id . '/phpwiki?pagename="no"'));
 
         $expected_result = array(
             'pages' => array()
@@ -1167,7 +1167,7 @@ class ProjectTest extends ProjectBase
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_2_NAME,
-            $this->client->patch('projects/'. $this->project_deleted_id, null, $patch_resource)
+            $this->client->patch('projects/' . $this->project_deleted_id, null, $patch_resource)
         );
         $this->assertEquals(403, $response->getStatusCode());
     }
@@ -1180,7 +1180,7 @@ class ProjectTest extends ProjectBase
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch('projects/'. $this->project_deleted_id, null, $patch_resource)
+            $this->client->patch('projects/' . $this->project_deleted_id, null, $patch_resource)
         );
 
         $this->assertEquals($response->getStatusCode(), 200);
@@ -1194,7 +1194,7 @@ class ProjectTest extends ProjectBase
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_DELEGATED_REST_PROJECT_MANAGER_NAME,
-            $this->client->patch('projects/'. $this->project_deleted_id, null, $patch_resource)
+            $this->client->patch('projects/' . $this->project_deleted_id, null, $patch_resource)
         );
 
         $this->assertEquals($response->getStatusCode(), 200);
@@ -1238,7 +1238,7 @@ class ProjectTest extends ProjectBase
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
             $this->client->put(
-                'projects/' . $this->project_public_member_id .'/banner',
+                'projects/' . $this->project_public_member_id . '/banner',
                 null,
                 $payload
             )
@@ -1256,7 +1256,7 @@ class ProjectTest extends ProjectBase
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
             $this->client->put(
-                'projects/' . $this->project_public_member_id .'/banner',
+                'projects/' . $this->project_public_member_id . '/banner',
                 null,
                 $payload
             )
@@ -1288,7 +1288,7 @@ class ProjectTest extends ProjectBase
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
             $this->client->get(
-                'projects/' . $this->project_public_member_id .'/banner'
+                'projects/' . $this->project_public_member_id . '/banner'
             )
         );
 

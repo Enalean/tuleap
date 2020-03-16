@@ -262,12 +262,12 @@ class WikiPlugin_WikiAdminSetAcl extends WikiPlugin_WikiAdminSelect
         } elseif ($type == 'default') {
             $type = _("default page permission");
         }
-        $header->pushContent(HTML::strong(_("Type").': '), HTML::tt($type), HTML::br());
-        $header->pushContent(HTML::strong(_("getfacl").': '), pagePermissionsSimpleFormat($perm_tree, $owner), HTML::br());
-        $header->pushContent(HTML::strong(_("ACL").': '), HTML::tt($perm->asAclLines()), HTML::br());
+        $header->pushContent(HTML::strong(_("Type") . ': '), HTML::tt($type), HTML::br());
+        $header->pushContent(HTML::strong(_("getfacl") . ': '), pagePermissionsSimpleFormat($perm_tree, $owner), HTML::br());
+        $header->pushContent(HTML::strong(_("ACL") . ': '), HTML::tt($perm->asAclLines()), HTML::br());
 
         $header->pushContent(HTML::p(
-            HTML::strong(_("Description").': '),
+            HTML::strong(_("Description") . ': '),
             _("Selected Grant checkboxes allow access, unselected checkboxes deny access."),
             _("To ignore delete the line."),
             _("To add check 'Add' near the dropdown list.")
@@ -311,7 +311,7 @@ class _PageList_Column_acl extends _PageList_Column
         $perm_tree = pagePermissions($page_handle->_pagename);
         return pagePermissionsAclFormat($perm_tree);
     }
-};
+}
 
 class _PageList_Column_perm extends _PageList_Column
 {
@@ -324,7 +324,7 @@ class _PageList_Column_perm extends _PageList_Column
             $page_handle->get('group')
         );
     }
-};
+}
 
 // $Log: WikiAdminSetAcl.php,v $
 // Revision 1.23  2005/02/12 17:24:24  rurban

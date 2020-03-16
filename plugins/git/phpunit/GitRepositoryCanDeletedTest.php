@@ -32,7 +32,7 @@ class GitRepositoryCanDeletedTest extends TestCase
     {
         parent::setUp();
 
-        $this->backend = \Mockery::spy(\GitBackend::class)->shouldReceive('getGitRootPath')->andReturns(dirname(__FILE__).'/_fixtures')->getMock();
+        $this->backend = \Mockery::spy(\GitBackend::class)->shouldReceive('getGitRootPath')->andReturns(dirname(__FILE__) . '/_fixtures')->getMock();
         $project       = \Mockery::spy(\Project::class)->shouldReceive('getUnixName')->andReturns('perms')->getMock();
 
         $this->repo = new GitRepository();

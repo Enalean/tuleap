@@ -20,7 +20,7 @@
  */
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
-require_once __DIR__ .'/../include/Statistics_DiskUsageHtml.class.php';
+require_once __DIR__ . '/../include/Statistics_DiskUsageHtml.class.php';
 
 use Tuleap\Statistics\DiskUsagePie\DiskUsagePieDisplayer;
 use Tuleap\Statistics\DiskUsage\Subversion\Collector as SVNCollector;
@@ -96,7 +96,7 @@ if ($project && !$project->isError()) {
         if ($first != true) {
             $serviceParam .= '&';
         }
-        $serviceParam .= 'services[]='.$serv;
+        $serviceParam .= 'services[]=' . $serv;
         $first     = false;
     }
 
@@ -109,20 +109,20 @@ if ($project && !$project->isError()) {
 
     if ($period == 'year') {
         $statDuration = 12;
-        $link = '?'.$serviceParam.'&group_id='.$groupId.'&period=months';
+        $link = '?' . $serviceParam . '&group_id=' . $groupId . '&period=months';
     } else {
         $statDuration = $statPeriod;
-        $link = '?'.$serviceParam.'&group_id='.$groupId.'&period=year';
+        $link = '?' . $serviceParam . '&group_id=' . $groupId . '&period=year';
     }
 
     $endDate = date('Y-m-d');
-    $startDate = date('Y-m-d', mktime(0, 0, 0, date('m')-$statDuration, date('d'), date('y')));
+    $startDate = date('Y-m-d', mktime(0, 0, 0, date('m') - $statDuration, date('d'), date('y')));
 
     $params['group'] = $groupId;
-    $params['title'] = $GLOBALS['Language']->getText('admin_groupedit', 'proj_admin').': '.$project->getPublicName();
+    $params['title'] = $GLOBALS['Language']->getText('admin_groupedit', 'proj_admin') . ': ' . $project->getPublicName();
     project_admin_header($params, \Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME);
 
-    echo '<h2>'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics').'</h2>';
+    echo '<h2>' . $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics') . '</h2>';
     $usedProportion        = $disk_usage_manager->returnTotalProjectSize($groupId);
     $allowedQuota          = $disk_usage_manager->getProperty('allowed_quota');
     $project_quota_manager = new ProjectQuotaManager();
@@ -131,7 +131,7 @@ if ($project && !$project->isError()) {
         $allowedQuota = $customQuota;
     }
     if ($allowedQuota) {
-        echo '<div id="help_init" class="stat_help">'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_proportion', array($duHtml->sizeReadable($usedProportion),$allowedQuota.'GiB')).'</div>';
+        echo '<div id="help_init" class="stat_help">' . $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_proportion', array($duHtml->sizeReadable($usedProportion),$allowedQuota . 'GiB')) . '</div>';
 
         $pie_displayer = new DiskUsagePieDisplayer(
             $disk_usage_manager,
@@ -149,14 +149,14 @@ if ($project && !$project->isError()) {
         echo $duHtml->sizeReadable($usedProportion);
     }
 
-    $title = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_period_'.$period, array($statDuration));
+    $title = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_period_' . $period, array($statDuration));
     //Display tooltip for start and end date.
-    echo '<h2><span class="plugin_statistics_period" title="'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_period', array($startDate, $endDate)).'">'.$title.'</span></h2>';
-    echo '<div class="stat_help">'.dgettext('tuleap-statistics', "Differences may exist between actual size of a project/service and statistics which are computed daily").'</div>';
-    echo '<p><a href="'.$link.'">'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', $period, $statPeriod).'</a></p>';
+    echo '<h2><span class="plugin_statistics_period" title="' . $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_period', array($startDate, $endDate)) . '">' . $title . '</span></h2>';
+    echo '<div class="stat_help">' . dgettext('tuleap-statistics', "Differences may exist between actual size of a project/service and statistics which are computed daily") . '</div>';
+    echo '<p><a href="' . $link . '">' . $GLOBALS['Language']->getText('plugin_statistics_admin_page', $period, $statPeriod) . '</a></p>';
     echo '<form name="progress_by_service" method="get" action="?">';
-    echo '<input type="hidden" name="group_id" value="'.$groupId.'" />';
-    echo '<input type="hidden" name="period" value="'.$period.'" />';
+    echo '<input type="hidden" name="group_id" value="' . $groupId . '" />';
+    echo '<input type="hidden" name="period" value="' . $period . '" />';
     echo '<table>';
     echo '<tr>';
     echo '<th>Services</th>';
@@ -168,17 +168,17 @@ if ($project && !$project->isError()) {
         $services[] = array('value' => $service, 'text' => $label);
     }
     echo '<td valign="top">';
-    echo html_build_multiple_select_box_from_array($services, 'services[]', $selectedServices, '6', false, '', false, '', false, '', false).' ';
+    echo html_build_multiple_select_box_from_array($services, 'services[]', $selectedServices, '6', false, '', false, '', false, '', false) . ' ';
     echo '</td>';
     echo '</tr>';
     echo '</table>';
 
-    echo '<input type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_submit').'"/>';
+    echo '<input type="submit" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '"/>';
     echo '</form>';
 
     echo '<table><tr><td valign="top">';
     $duHtml->getServiceEvolutionForPeriod($startDate, $endDate, $groupId, true);
-    echo '</td><td valign="top"><img src="project_stat_graph.php?'.$serviceParam.'&group_id='.$groupId.'&start_date='.$startDate.'&end_date='.$endDate.'" title="Project disk usage graph" />';
+    echo '</td><td valign="top"><img src="project_stat_graph.php?' . $serviceParam . '&group_id=' . $groupId . '&start_date=' . $startDate . '&end_date=' . $endDate . '" title="Project disk usage graph" />';
     echo '</td></tr></table>';
 
     site_project_footer($params);

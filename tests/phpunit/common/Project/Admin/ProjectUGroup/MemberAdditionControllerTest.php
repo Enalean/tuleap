@@ -115,7 +115,7 @@ final class MemberAdditionControllerTest extends TestCase
 
         $this->checkUserIsProjectAdmin($project);
 
-        $ugroup = M::mock(\ProjectUGroup::class, [ 'getProjectId' => 101, 'getId' => 202, 'isBound' => false]);
+        $ugroup = M::mock(\ProjectUGroup::class, ['getProjectId' => 101, 'getId' => 202, 'isBound' => false]);
         $this->ugroup_manager->shouldReceive('getUGroup')->with($project, '202')->andReturn($ugroup);
 
         $user_to_add = new \PFUser(['user_id' => 303]);
@@ -139,7 +139,7 @@ final class MemberAdditionControllerTest extends TestCase
 
         $this->checkUserIsProjectAdmin($project);
 
-        $ugroup = M::mock(\ProjectUGroup::class, [ 'getProjectId' => 101, 'getId' => 202, 'isBound' => true]);
+        $ugroup = M::mock(\ProjectUGroup::class, ['getProjectId' => 101, 'getId' => 202, 'isBound' => true]);
         $this->ugroup_manager->shouldReceive('getUGroup')->with($project, '202')->andReturn($ugroup);
 
         $this->layout->shouldReceive('redirect')->with(UGroupRouter::getUGroupUrl($ugroup))->once();
@@ -157,7 +157,7 @@ final class MemberAdditionControllerTest extends TestCase
 
         $this->checkUserIsProjectAdmin($project);
 
-        $ugroup = M::mock(\ProjectUGroup::class, [ 'getProjectId' => 101, 'getId' => 202, 'isBound' => false]);
+        $ugroup = M::mock(\ProjectUGroup::class, ['getProjectId' => 101, 'getId' => 202, 'isBound' => false]);
         $this->ugroup_manager->shouldReceive('getUGroup')->with($project, '202')->andReturn($ugroup);
 
         $this->http_request->shouldReceive('get')->with('add_user_name')->andReturn('danton');

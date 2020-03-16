@@ -33,23 +33,23 @@ class WorkflowManager
     {
         $workflow_factory = WorkflowFactory::instance();
         if ($request->get('func') == Workflow::FUNC_ADMIN_RULES) {
-            $token = new CSRFSynchronizerToken(TRACKER_BASE_URL. '/?'. http_build_query(
+            $token = new CSRFSynchronizerToken(TRACKER_BASE_URL . '/?' . http_build_query(
                 array(
-                    'tracker' => (int)$this->tracker->id,
+                    'tracker' => (int) $this->tracker->id,
                     'func'    => Workflow::FUNC_ADMIN_RULES,
                     )
             ));
             $rule_date_factory = new Tracker_Rule_Date_Factory(new Tracker_Rule_Date_Dao(), Tracker_FormElementFactory::instance());
             $action = new Tracker_Workflow_Action_Rules_EditRules($this->tracker, $rule_date_factory, $token);
         } elseif ($request->get('func') == Workflow::FUNC_ADMIN_CROSS_TRACKER_TRIGGERS) {
-            $token = new CSRFSynchronizerToken(TRACKER_BASE_URL. '/?'. http_build_query(
+            $token = new CSRFSynchronizerToken(TRACKER_BASE_URL . '/?' . http_build_query(
                 array(
-                    'tracker' => (int)$this->tracker->id,
+                    'tracker' => (int) $this->tracker->id,
                     'func'    => Workflow::FUNC_ADMIN_CROSS_TRACKER_TRIGGERS,
                     )
             ));
 
-            $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_BASE_DIR.'/../templates');
+            $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_BASE_DIR . '/../templates');
             $action   = new Tracker_Workflow_Action_Triggers_EditTriggers(
                 $this->tracker,
                 $token,
@@ -63,7 +63,7 @@ class WorkflowManager
         } elseif ($request->get('func') == Workflow::FUNC_ADMIN_DELETE_TRIGGER) {
             $action = new Tracker_Workflow_Action_Triggers_DeleteTrigger($this->tracker, $workflow_factory->getTriggerRulesManager());
         } else {
-            $GLOBALS['Response']->redirect(TRACKER_BASE_URL. '/workflow/' .$this->tracker->id. '/transitions');
+            $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/workflow/' . $this->tracker->id . '/transitions');
             return;
         }
 

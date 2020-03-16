@@ -153,7 +153,7 @@ class WikiPlugin_ExternalSearch extends WikiPlugin
         }
         return $form;
     }
-};
+}
 
 // $Log: ExternalSearch.php,v $
 // Revision 1.12  2004/11/28 20:42:33  rurban

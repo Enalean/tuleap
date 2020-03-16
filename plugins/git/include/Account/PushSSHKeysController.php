@@ -74,7 +74,7 @@ final class PushSSHKeysController implements DispatchableWithRequest
             throw new ForbiddenException();
         }
 
-        $this->logger->info('Trying to push ssh keys for user: '.$user->getUnixName());
+        $this->logger->info('Trying to push ssh keys for user: ' . $user->getUnixName());
 
         try {
             $this->git_user_account_manager->pushSSHKeys($user);
@@ -84,7 +84,7 @@ final class PushSSHKeysController implements DispatchableWithRequest
             $this->logger->error('Unable to push ssh keys: ' . $e->getMessage());
         }
 
-        $this->logger->info('Successfully pushed ssh keys for user: '.$user->getUnixName());
+        $this->logger->info('Successfully pushed ssh keys for user: ' . $user->getUnixName());
         $layout->redirect(AccountGerritController::URL);
     }
 }

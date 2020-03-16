@@ -28,7 +28,7 @@ use Project;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
 
-require_once __DIR__. '/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 class ArtifactLinkValidatorTest extends TestCase
 {

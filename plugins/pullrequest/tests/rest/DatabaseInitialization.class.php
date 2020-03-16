@@ -20,7 +20,7 @@
 
 namespace Tuleap\PullRequest\REST;
 
-require_once __DIR__.'/../../../../tests/lib/DatabaseInitialisation.class.php';
+require_once __DIR__ . '/../../../../tests/lib/DatabaseInitialisation.class.php';
 
 use ForgeConfig;
 

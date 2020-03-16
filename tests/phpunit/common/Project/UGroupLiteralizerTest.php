@@ -50,7 +50,7 @@ class UGroupLiteralizerTest extends TestCase
     {
         $this->user->shouldReceive('getStatus')->andReturns('A');
         $userProjects = array(
-                array('group_id'=>101, 'unix_group_name'=>'gpig1')
+                array('group_id' => 101, 'unix_group_name' => 'gpig1')
         );
         $this->user->shouldReceive('getProjects')->andReturns($userProjects);
         $this->user->shouldReceive('isMember')->andReturns(false);
@@ -63,7 +63,7 @@ class UGroupLiteralizerTest extends TestCase
     {
         $this->user->shouldReceive('getStatus')->andReturns('A');
         $userProjects = array(
-                array('group_id'=>102, 'unix_group_name'=>'gpig2')
+                array('group_id' => 102, 'unix_group_name' => 'gpig2')
         );
         $this->user->shouldReceive('getProjects')->andReturns($userProjects);
         $this->user->shouldReceive('isMember')->andReturns(true);
@@ -77,7 +77,7 @@ class UGroupLiteralizerTest extends TestCase
         $this->user->shouldReceive('getStatus')->andReturns('A');
         $this->user->shouldReceive('getProjects')->andReturns(array());
         $this->user->shouldReceive('isMember')->andReturns(false);
-        $this->user->shouldReceive('getAllUgroups')->andReturns(\TestHelper::arrayToDar(array('ugroup_id'=>304)));
+        $this->user->shouldReceive('getAllUgroups')->andReturns(\TestHelper::arrayToDar(array('ugroup_id' => 304)));
 
         $this->assertUserGroupsForUser(array('site_active','ug_304'));
     }

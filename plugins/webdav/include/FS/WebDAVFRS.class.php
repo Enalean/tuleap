@@ -45,7 +45,6 @@ class WebDAVFRS extends Sabre_DAV_Directory
      */
     public function __construct($user, $project, $maxFileSize)
     {
-
         $this->user = $user;
         $this->project = $project;
         $this->maxFileSize = $maxFileSize;
@@ -58,7 +57,6 @@ class WebDAVFRS extends Sabre_DAV_Directory
      */
     public function getChildren()
     {
-
         $children = array();
 
         // Generate package list of the given project
@@ -84,7 +82,6 @@ class WebDAVFRS extends Sabre_DAV_Directory
      */
     public function getChild($packageName)
     {
-
         $packageName = $this->getUtils()->retrieveName($packageName);
         $package = $this->getWebDAVPackage($this->getFRSPackageFromName($packageName));
 
@@ -122,7 +119,6 @@ class WebDAVFRS extends Sabre_DAV_Directory
      */
     public function getLastModified()
     {
-
         return 0;
     }
 
@@ -133,7 +129,6 @@ class WebDAVFRS extends Sabre_DAV_Directory
      */
     public function getProject()
     {
-
         return $this->project;
     }
 
@@ -144,7 +139,6 @@ class WebDAVFRS extends Sabre_DAV_Directory
      */
     public function getGroupId()
     {
-
         return $this->getProject()->getGroupId();
     }
 
@@ -155,7 +149,6 @@ class WebDAVFRS extends Sabre_DAV_Directory
      */
     public function getUser()
     {
-
         return $this->user;
     }
 
@@ -166,7 +159,6 @@ class WebDAVFRS extends Sabre_DAV_Directory
      */
     public function getUtils()
     {
-
         return WebDAVUtils::getInstance();
     }
 
@@ -189,7 +181,6 @@ class WebDAVFRS extends Sabre_DAV_Directory
      */
     public function getFRSPackageFromName($packageName)
     {
-
         $utils = $this->getUtils();
         return $utils->getPackageFactory()->getFRSPackageFromDb($utils->getPackageFactory()->getPackageIdByName($packageName, $this->getGroupId()), $this->getGroupId());
     }
@@ -203,7 +194,6 @@ class WebDAVFRS extends Sabre_DAV_Directory
      */
     public function getWebDAVPackage($package)
     {
-
         return new WebDAVFRSPackage($this->getUser(), $this->getProject(), $package, $this->getMaxFileSize());
     }
 
@@ -216,7 +206,6 @@ class WebDAVFRS extends Sabre_DAV_Directory
      */
     public function getPackageList($project)
     {
-
         $utils = $this->getUtils();
         return $utils->getPackageFactory()->getFRSPackagesFromDb($project->getGroupId());
     }
@@ -266,7 +255,6 @@ class WebDAVFRS extends Sabre_DAV_Directory
      */
     public function createDirectory($name)
     {
-
         if ($this->userCanWrite()) {
             $utils = $this->getUtils();
             if (!$utils->getPackageFactory()->isPackageNameExist($name, $this->getGroupId())) {

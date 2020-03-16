@@ -22,7 +22,7 @@
 use Tuleap\User\ForgeUserGroupPermission\RestProjectManagementPermission;
 use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminPermission;
 
-require_once __DIR__.'/../../lib/TestDataBuilder.php';
+require_once __DIR__ . '/../../lib/TestDataBuilder.php';
 
 class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLine
 {
@@ -81,7 +81,7 @@ class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLin
     {
         parent::__construct();
 
-        $this->template_path = __DIR__.'/../../rest/_fixtures/';
+        $this->template_path = __DIR__ . '/../../rest/_fixtures/';
     }
 
     public function instanciateFactories()
@@ -93,7 +93,7 @@ class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLin
 
     public function initPlugins()
     {
-        foreach (glob(__DIR__.'/../../../plugins/*/tests/rest/init_test_data.php') as $init_file) {
+        foreach (glob(__DIR__ . '/../../../plugins/*/tests/rest/init_test_data.php') as $init_file) {
             require_once $init_file;
         }
     }

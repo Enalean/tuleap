@@ -82,7 +82,7 @@ class TemporaryFileManagerAppendChunkTest extends TestCase
             0,
             'image/png'
         );
-        touch($this->cache_dir .'/rest_attachement_temp_101_'. $this->empty_file->getTemporaryName());
+        touch($this->cache_dir . '/rest_attachement_temp_101_' . $this->empty_file->getTemporaryName());
 
         $this->wrong_path_file = new Tracker_Artifact_Attachment_TemporaryFile(
             1,
@@ -98,7 +98,7 @@ class TemporaryFileManagerAppendChunkTest extends TestCase
 
     public function tearDown(): void
     {
-        exec('rm -rf '. escapeshellarg($this->cache_dir));
+        exec('rm -rf ' . escapeshellarg($this->cache_dir));
         ForgeConfig::restore();
     }
 
@@ -118,7 +118,7 @@ class TemporaryFileManagerAppendChunkTest extends TestCase
 
     public function testItWritesChunkOnTheDisk()
     {
-        $filepath = $this->cache_dir .'/rest_attachement_temp_101_'. $this->empty_file->getTemporaryName();
+        $filepath = $this->cache_dir . '/rest_attachement_temp_101_' . $this->empty_file->getTemporaryName();
 
         $this->dao->shouldReceive('updateFileInfo');
 
@@ -129,7 +129,7 @@ class TemporaryFileManagerAppendChunkTest extends TestCase
 
     public function testItThrowsExceptionIfChunkIsTooBig()
     {
-        $filepath = $this->cache_dir .'/rest_attachement_temp_101_'. $this->empty_file->getTemporaryName();
+        $filepath = $this->cache_dir . '/rest_attachement_temp_101_' . $this->empty_file->getTemporaryName();
         $this->expectException('Tuleap\Tracker\Artifact\Attachment\QuotaExceededException');
 
         $this->file_manager->appendChunk(base64_encode('le too big content'), $this->empty_file, 1);

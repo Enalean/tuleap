@@ -63,7 +63,7 @@ class Tuleap_CustomToursFactory
     protected function getTourListJson(PFUser $user)
     {
         $tour_folder = $this->getToursFolder($user);
-        $config_file = $tour_folder.self::CUSTOM_TOURS_LIST_FILE;
+        $config_file = $tour_folder . self::CUSTOM_TOURS_LIST_FILE;
         if (! is_dir($tour_folder) || ! file_exists($config_file)) {
             return '';
         }
@@ -74,7 +74,7 @@ class Tuleap_CustomToursFactory
     private function getToursFolder(PFUser $user)
     {
         $user_lang = $user->getLocale();
-        return ForgeConfig::get('sys_custom_incdir').'/'.$user_lang.'/tour/';
+        return ForgeConfig::get('sys_custom_incdir') . '/' . $user_lang . '/tour/';
     }
 
     private function extractWellFormedTourList(array &$tour_list, $tour_folder)
@@ -102,7 +102,7 @@ class Tuleap_CustomToursFactory
 
     private function doesTourStepsFileExist($tour_folder, $tour_name)
     {
-        $file_name = $tour_folder . $tour_name.'.json';
+        $file_name = $tour_folder . $tour_name . '.json';
         return file_exists($file_name);
     }
 

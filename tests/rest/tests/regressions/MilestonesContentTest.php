@@ -31,7 +31,7 @@ class Regressions_MilestonesContentTest extends RestBase
         $epics    = $this->getArtifactIdsIndexedByTitle('pbi-6348', 'epic');
         $products = $this->getArtifactIdsIndexedByTitle('pbi-6348', 'product');
 
-        $this->getResponse($this->client->put('milestones/'.$releases['1.0'].'/content', null, json_encode([$epics['One Epic']])));
+        $this->getResponse($this->client->put('milestones/' . $releases['1.0'] . '/content', null, json_encode([$epics['One Epic']])));
 
         $this->assertEquals($this->getMilestoneContentIds($releases['1.0']), [$epics['One Epic']]);
         $this->assertEquals($this->getMilestoneContentIds($products['Widget 2']), [$epics['One Epic'], $epics['Another Epic']]);

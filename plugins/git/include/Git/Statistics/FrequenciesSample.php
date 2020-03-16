@@ -34,39 +34,39 @@ class FrequenciesSample extends Sample
 
     protected function getDataSQLQuery($filter, $startDate, $endDate)
     {
-        $sql = sprintf('SELECT %s(FROM_UNIXTIME(UNIX_TIMESTAMP(day))) as '.$this->getFilter().', SUM(git_read) as c'.
-            ' FROM plugin_git_log_read_daily'.
-            ' WHERE day >= %d'.
-            ' AND day < %d'.
+        $sql = sprintf('SELECT %s(FROM_UNIXTIME(UNIX_TIMESTAMP(day))) as ' . $this->getFilter() . ', SUM(git_read) as c' .
+            ' FROM plugin_git_log_read_daily' .
+            ' WHERE day >= %d' .
+            ' AND day < %d' .
             ' GROUP BY %s', db_escape_string($filter), db_escape_int($this->getDateFromTimestamp($startDate)), db_escape_int($this->getDateFromTimestamp($endDate)), db_escape_string($filter));
         return $sql;
     }
 
     protected function getMonthDataSQLQuery($startDate, $endDate)
     {
-        $sql = sprintf('SELECT month(FROM_UNIXTIME(UNIX_TIMESTAMP(day))) as month, SUM(git_read) as c, YEAR(FROM_UNIXTIME(UNIX_TIMESTAMP(day))) as year'.
-            ' FROM plugin_git_log_read_daily'.
-            ' WHERE day >= %d'.
-            ' AND day < %d'.
-            ' GROUP BY month, year'.
+        $sql = sprintf('SELECT month(FROM_UNIXTIME(UNIX_TIMESTAMP(day))) as month, SUM(git_read) as c, YEAR(FROM_UNIXTIME(UNIX_TIMESTAMP(day))) as year' .
+            ' FROM plugin_git_log_read_daily' .
+            ' WHERE day >= %d' .
+            ' AND day < %d' .
+            ' GROUP BY month, year' .
             ' ORDER BY year, month', db_escape_int($this->getDateFromTimestamp($startDate)), db_escape_int($this->getDateFromTimestamp($endDate)));
         return $sql;
     }
 
     protected function getDayDataSQLQuery($startDate, $endDate)
     {
-        $sql = sprintf('SELECT day(FROM_UNIXTIME(UNIX_TIMESTAMP(day))) as day, SUM(git_read) as c, MONTH(FROM_UNIXTIME(UNIX_TIMESTAMP(day))) as month, YEAR(FROM_UNIXTIME(UNIX_TIMESTAMP(day))) as year'.
-            ' FROM plugin_git_log_read_daily'.
-            ' WHERE day >= %d'.
-            ' AND day < %d'.
-            ' GROUP BY day, month, year'.
+        $sql = sprintf('SELECT day(FROM_UNIXTIME(UNIX_TIMESTAMP(day))) as day, SUM(git_read) as c, MONTH(FROM_UNIXTIME(UNIX_TIMESTAMP(day))) as month, YEAR(FROM_UNIXTIME(UNIX_TIMESTAMP(day))) as year' .
+            ' FROM plugin_git_log_read_daily' .
+            ' WHERE day >= %d' .
+            ' AND day < %d' .
+            ' GROUP BY day, month, year' .
             ' ORDER BY year, month, day', db_escape_int($this->getDateFromTimestamp($startDate)), db_escape_int($this->getDateFromTimestamp($endDate)));
         return $sql;
     }
 
     private function getDateFromTimestamp($timestamp)
     {
-        $date = new DateTime('@'.$timestamp);
+        $date = new DateTime('@' . $timestamp);
         return $date->format('Ymd');
     }
 }

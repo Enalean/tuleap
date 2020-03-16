@@ -46,7 +46,7 @@ class GeneralSettings extends Pane
      */
     public function getContent()
     {
-        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates/settings');
+        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR) . '/templates/settings');
 
         return $renderer->renderToString('general-settings', $this);
     }

@@ -48,7 +48,7 @@ class b201804051645_add_missing_index_in_table_ugroup extends ForgeUpgrade_Bucke
 
     private function indexNameExists($table_name, $index)
     {
-        $sql = 'SHOW INDEX FROM '.$table_name.' WHERE Key_name LIKE '.$this->db->dbh->quote($index);
+        $sql = 'SHOW INDEX FROM ' . $table_name . ' WHERE Key_name LIKE ' . $this->db->dbh->quote($index);
         $res = $this->db->dbh->query($sql);
         if ($res && $res->fetch() !== false) {
             return true;

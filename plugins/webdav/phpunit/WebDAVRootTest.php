@@ -35,7 +35,7 @@ use Sabre_DAV_Exception_Forbidden;
 use Tuleap\GlobalLanguageMock;
 use WebDAVRoot;
 
-require_once __DIR__.'/bootstrap.php';
+require_once __DIR__ . '/bootstrap.php';
 
 /**
  * This is the unit test of WebDAVRoot

@@ -49,7 +49,7 @@ class VersionOngoingUploadRetriever
         return ! empty(
             $this->dao->searchDocumentVersionOngoingUploadForAnotherUserByItemIdAndExpirationDate(
                 $item->getId(),
-                (int)$user->getId(),
+                (int) $user->getId(),
                 $current_time->getTimestamp()
             )
         );

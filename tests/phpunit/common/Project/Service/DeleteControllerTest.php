@@ -143,7 +143,7 @@ final class DeleteControllerTest extends TestCase
     public function testItDoesNotAllowToDeleteSystemServices() : void
     {
         $this->service_manager->shouldReceive('getService')->with($this->service_id)->andReturn(
-            new Service($this->project, ['service_id' => $this->service_id, 'scope' => Service::SCOPE_SYSTEM ])
+            new Service($this->project, ['service_id' => $this->service_id, 'scope' => Service::SCOPE_SYSTEM])
         );
 
         $this->service_dao->shouldReceive('delete')->never();

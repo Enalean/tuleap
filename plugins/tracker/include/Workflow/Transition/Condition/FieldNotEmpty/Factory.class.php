@@ -56,7 +56,7 @@ class Workflow_Transition_Condition_FieldNotEmpty_Factory
             $condition = new Workflow_Transition_Condition_FieldNotEmpty($transition, $this->dao);
             foreach ($xml->field as $xml_field) {
                 $xml_field_attributes = $xml_field->attributes();
-                $field                = $xmlMapping[(string)$xml_field_attributes['REF']];
+                $field                = $xmlMapping[(string) $xml_field_attributes['REF']];
                 $condition->addField($field);
             }
         }

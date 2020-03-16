@@ -36,7 +36,7 @@ class ZipArchive implements ArchiveInterface
         $this->extraction_path = $this->tempdir($tmpdir);
         $this->archive         = new \ZipArchive();
         if ($this->archive->open($this->archive_path) !== true) {
-            throw new ArchiveException('Cannot open zip archive: '.$archive_path);
+            throw new ArchiveException('Cannot open zip archive: ' . $archive_path);
         }
     }
 

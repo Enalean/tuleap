@@ -55,7 +55,7 @@ class BannerDao extends DataAccessObject
             FROM project_banner
             WHERE project_id=?";
 
-        return $this->getDB()->cell($sql, $project_id)?:null;
+        return $this->getDB()->cell($sql, $project_id) ?: null;
     }
 
     /**

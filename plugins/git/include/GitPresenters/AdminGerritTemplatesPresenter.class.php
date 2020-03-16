@@ -107,7 +107,7 @@ class GitPresenters_AdminGerritTemplatesPresenter extends GitPresenters_AdminPre
 
     public function templates_form_action()
     {
-        return '/plugins/git/?group_id='. $this->project_id .'&action=admin-gerrit-templates';
+        return '/plugins/git/?group_id=' . $this->project_id . '&action=admin-gerrit-templates';
     }
 
     public function template_action_text()

@@ -60,7 +60,7 @@ class ConfigNotificationEmailCustomSenderFormatterTest extends TestCase
     public function testCorrectlyFormatsKnownFields()
     {
         $input      = 'The value %field1 shoud be in $dummydata[field1]';
-        $expected   = 'The value '.self::FIELD1_DATA.' shoud be in dummydata field1';
+        $expected   = 'The value ' . self::FIELD1_DATA . ' shoud be in dummydata field1';
         $this->assertEquals($expected, $this->formatter->formatString($input));
     }
 

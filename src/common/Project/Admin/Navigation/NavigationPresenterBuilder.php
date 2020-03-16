@@ -152,7 +152,7 @@ class NavigationPresenterBuilder
         );
         $entries['categories']               = new NavigationItemPresenter(
             _('Categories'),
-            '/project/'. (int) $project_id .'/admin/categories',
+            '/project/' . (int) $project_id . '/admin/categories',
             'categories',
             $current_pane_shortname
         );
@@ -202,7 +202,7 @@ class NavigationPresenterBuilder
     {
         return new NavigationItemPresenter(
             _('Members'),
-            '/project/'.urlencode((string) $project_id).'/admin/members',
+            '/project/' . urlencode((string) $project_id) . '/admin/members',
             'members',
             $current_pane_shortname
         );

@@ -63,7 +63,7 @@ class SetIntValueRepository
                         $transition->getId()
                     )
                 );
-            };
+            }
             $success = $this->set_int_value_dao->updatePostAction(
                 $id_or_failure,
                 $set_int_value->getFieldId(),

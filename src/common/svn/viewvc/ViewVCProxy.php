@@ -167,17 +167,17 @@ class ViewVCProxy
 
         viewvc_utils_track_browsing($project->getID(), 'svn');
 
-        $command = 'REMOTE_USER_ID=' . escapeshellarg($user->getId()) . ' '.
-            'REMOTE_USER=' . escapeshellarg($this->getUsername($user, $project)) . ' '.
-            'PATH_INFO=' . $this->setLocaleOnFileName($path) . ' '.
-            'QUERY_STRING='.escapeshellarg($this->buildQueryString($request)).' '.
-            'SCRIPT_NAME=/svn/viewvc.php '.
-            'HTTP_ACCEPT_ENCODING='.$this->escapeStringFromServer($request, 'HTTP_ACCEPT_ENCODING').' '.
-            'HTTP_ACCEPT_LANGUAGE='.$this->escapeStringFromServer($request, 'HTTP_ACCEPT_LANGUAGE').' '.
-            'TULEAP_PROJECT_NAME='.escapeshellarg($project->getUnixNameMixedCase()).' '.
-            'TULEAP_REPO_NAME='.escapeshellarg($project->getUnixNameMixedCase()).' '.
-            'TULEAP_REPO_PATH='.escapeshellarg($project->getSVNRootPath()).' '.
-            $this->getPythonLauncher() . ' ' . __DIR__.'/viewvc-epel.cgi 2>&1';
+        $command = 'REMOTE_USER_ID=' . escapeshellarg($user->getId()) . ' ' .
+            'REMOTE_USER=' . escapeshellarg($this->getUsername($user, $project)) . ' ' .
+            'PATH_INFO=' . $this->setLocaleOnFileName($path) . ' ' .
+            'QUERY_STRING=' . escapeshellarg($this->buildQueryString($request)) . ' ' .
+            'SCRIPT_NAME=/svn/viewvc.php ' .
+            'HTTP_ACCEPT_ENCODING=' . $this->escapeStringFromServer($request, 'HTTP_ACCEPT_ENCODING') . ' ' .
+            'HTTP_ACCEPT_LANGUAGE=' . $this->escapeStringFromServer($request, 'HTTP_ACCEPT_LANGUAGE') . ' ' .
+            'TULEAP_PROJECT_NAME=' . escapeshellarg($project->getUnixNameMixedCase()) . ' ' .
+            'TULEAP_REPO_NAME=' . escapeshellarg($project->getUnixNameMixedCase()) . ' ' .
+            'TULEAP_REPO_PATH=' . escapeshellarg($project->getSVNRootPath()) . ' ' .
+            $this->getPythonLauncher() . ' ' . __DIR__ . '/viewvc-epel.cgi 2>&1';
 
         $content = $this->setLocaleOnCommand($command, $return_var);
 
@@ -240,8 +240,8 @@ class ViewVCProxy
 
         return '<link rel="stylesheet" href="/viewvc-theme-tuleap/style.css">
             <div class="tuleap-viewvc-header">
-                <h3>'. $title .'</h3>
-                '. $reason .'
+                <h3>' . $title . '</h3>
+                ' . $reason . '
             </div>';
     }
 }

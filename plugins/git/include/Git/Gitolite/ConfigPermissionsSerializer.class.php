@@ -158,7 +158,7 @@ class Git_Gitolite_ConfigPermissionsSerializer
 
     public function denyAccessForRepository()
     {
-        return self::REMOVE_PERMISSION ."refs/.*$ = @all" . PHP_EOL;
+        return self::REMOVE_PERMISSION . "refs/.*$ = @all" . PHP_EOL;
     }
 
     /**
@@ -263,14 +263,14 @@ class Git_Gitolite_ConfigPermissionsSerializer
 
         $ugroup_names = $ugroup_literalizer->ugroupIdsToString($ugroup_ids, $project);
 
-        $config .= rtrim(self::$permissions_types[$permission_type]) ." $pattern_for_gitolite = " . implode(' ', $ugroup_names) . PHP_EOL;
+        $config .= rtrim(self::$permissions_types[$permission_type]) . " $pattern_for_gitolite = " . implode(' ', $ugroup_names) . PHP_EOL;
 
         return $config;
     }
 
     private function removeAllUgroupForPattern($pattern_for_gitolite)
     {
-        return self::REMOVE_PERMISSION ."$pattern_for_gitolite = @all" . PHP_EOL;
+        return self::REMOVE_PERMISSION . "$pattern_for_gitolite = @all" . PHP_EOL;
     }
 
     private function repositoryIsUsingFineGrainedPermissions(GitRepository $repository)
@@ -287,7 +287,7 @@ class Git_Gitolite_ConfigPermissionsSerializer
     private function formatPermission($permission_type, array $granted)
     {
         if (count($granted)) {
-            return self::$permissions_types[$permission_type] . ' = ' . implode(' ', $granted).PHP_EOL;
+            return self::$permissions_types[$permission_type] . ' = ' . implode(' ', $granted) . PHP_EOL;
         }
         return '';
     }

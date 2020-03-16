@@ -105,7 +105,7 @@ class WikiPlugin_OldStyleTable extends WikiPlugin
         }
         $table = HTML::table($table_args);
         if (!empty($caption)) {
-            $table->pushContent(HTML::caption(array('valign'=>'top'), $caption));
+            $table->pushContent(HTML::caption(array('valign' => 'top'), $caption));
         }
         if (preg_match("/^\s*(cellpadding|cellspacing|border|caption|summary)/", $lines[0])) {
             $lines[0] = '';
@@ -134,7 +134,7 @@ class WikiPlugin_OldStyleTable extends WikiPlugin
     public function _parse_row($line, $basepage)
     {
         $brkt_link = "\\[ .*? [^]\s] .*? \\]";
-        $cell_content  = "(?: [^[] | ".ESCAPE_CHAR."\\[ | $brkt_link )*?";
+        $cell_content  = "(?: [^[] | " . ESCAPE_CHAR . "\\[ | $brkt_link )*?";
 
         preg_match_all(
             "/(\\|+) (v*) ([<>^]?) \s* ($cell_content) \s* (?=\\||\$)/x",
@@ -175,7 +175,7 @@ class WikiPlugin_OldStyleTable extends WikiPlugin
         }
         return $row;
     }
-};
+}
 
 // $Log: OldStyleTable.php,v $
 // Revision 1.11  2005/09/14 05:56:21  rurban

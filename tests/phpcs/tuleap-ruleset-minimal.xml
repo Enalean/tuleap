@@ -18,6 +18,9 @@
         <exclude name="PSR2.Methods.MethodDeclaration.Underscore"/>
         <exclude name="PSR1.Classes.ClassDeclaration.MultipleClasses"/>
     </rule>
+    <rule ref="PSR12.Operators.OperatorSpacing"/>
+    <!-- Type casting operators MUST NOT have any space within the parentheses. -->
+    <rule ref="Squiz.WhiteSpace.CastSpacing"/>
     <!-- Forbid superfluous whitespaces -->
     <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
         <properties>

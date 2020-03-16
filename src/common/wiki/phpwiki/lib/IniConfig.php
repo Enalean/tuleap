@@ -58,12 +58,11 @@
  *   pcre_fix_posix_classes (probably with redefines()).
  */
 
-include_once(dirname(__FILE__)."/config.php");
-include_once(dirname(__FILE__)."/FileFinder.php");
+include_once(dirname(__FILE__) . "/config.php");
+include_once(dirname(__FILE__) . "/FileFinder.php");
 
 function IniConfig($file)
 {
-
     // List of all valid config options to be define()d which take "values" (not
     // booleans). Needs to be categorised, and generally made a lot tidier.
     $_IC_VALID_VALUE = array
@@ -122,7 +121,7 @@ function IniConfig($file)
          );
 
     $rs = @parse_ini_file($file);
-    $rsdef = @parse_ini_file(dirname(__FILE__)."/../config/config-default.ini");
+    $rsdef = @parse_ini_file(dirname(__FILE__) . "/../config/config-default.ini");
     foreach ($rsdef as $k => $v) {
         if (defined($k)) {
             $rs[$k] = constant($k);
@@ -151,7 +150,6 @@ function IniConfig($file)
                                  'LDAP_AUTH_HOST','IMAP_AUTH_HOST','POP3_AUTH_HOST',
             'PLUGIN_CACHED_CACHE_DIR')
         )) {
-            ;
         } elseif (!defined("_PHPWIKI_INSTALL_RUNNING")) {
             trigger_error(sprintf("missing config setting for %s", $item));
         }
@@ -185,7 +183,6 @@ function IniConfig($file)
                                   'WIKIDB_NOCACHE_MARKUP',
                                   'COMPRESS_OUTPUT'
                                   ))) {
-            ;
         } elseif (!$val) {
             define($item, false);
         } elseif (strtolower($val) == 'false' ||
@@ -206,7 +203,7 @@ function IniConfig($file)
     global $ExpireParams;
     foreach (array('major','minor','author') as $major) {
         foreach (array('max_age','min_age','min_keep','keep','max_keep') as $max) {
-            $item = strtoupper($major) . '_'. strtoupper($max);
+            $item = strtoupper($major) . '_' . strtoupper($max);
             if (defined($item)) {
                 $val = constant($item);
             } elseif (array_key_exists($item, $rs)) {
@@ -386,13 +383,13 @@ function fixup_static_configs($file)
     $AllActionPages = explode(
         ':',
         'AllPages:BackLinks:CreatePage:DebugInfo:EditMetaData:FindPage:'
-                              .'FullRecentChanges:FullTextSearch:FuzzyPages:InterWikiSearch:'
-                              .'LikePages:MostPopular:'
-                              .'OrphanedPages:PageDump:PageHistory:PageInfo:RandomPage:'
-                              .'RecentChanges:RecentEdits:RecentComments:RelatedChanges:TitleSearch:'
-                              .'UpLoad:UserPreferences:WantedPages:'
-                              .'PhpWikiAdministration/Remove:'
-                              .'PhpWikiAdministration/Rename:PhpWikiAdministration/Replace'
+                              . 'FullRecentChanges:FullTextSearch:FuzzyPages:InterWikiSearch:'
+                              . 'LikePages:MostPopular:'
+                              . 'OrphanedPages:PageDump:PageHistory:PageInfo:RandomPage:'
+                              . 'RecentChanges:RecentEdits:RecentComments:RelatedChanges:TitleSearch:'
+                              . 'UpLoad:UserPreferences:WantedPages:'
+                              . 'PhpWikiAdministration/Remove:'
+                              . 'PhpWikiAdministration/Rename:PhpWikiAdministration/Replace'
     );
 
     // If user has not defined PHPWIKI_DIR, and we need it
@@ -438,7 +435,7 @@ function fixup_static_configs($file)
         // protect against recursion
         if (!preg_match("/config\-(dist|default)\.ini$/", $file)
             and !defined("_PHPWIKI_INSTALL_RUNNING")) {
-            include_once(dirname(__FILE__)."/install.php");
+            include_once(dirname(__FILE__) . "/install.php");
             run_install("_part1");
             trigger_error($error, E_USER_ERROR);
             exit();
@@ -455,7 +452,7 @@ function fixup_static_configs($file)
         // protect against recursion
         if (!preg_match("/config\-(dist|default)\.ini$/", $file)
            and !defined("_PHPWIKI_INSTALL_RUNNING")) {
-            include_once(dirname(__FILE__)."/install.php");
+            include_once(dirname(__FILE__) . "/install.php");
             run_install("_part1");
             trigger_error($error, E_USER_ERROR);
             exit();
@@ -683,7 +680,7 @@ function fixup_dynamic_configs($file)
         $SCRIPT_FILENAME = @$_ENV['SCRIPT_FILENAME'];
     }
     if (!isset($SCRIPT_FILENAME)) {
-        $SCRIPT_FILENAME = dirname(__FILE__.'/../') . '/index.php';
+        $SCRIPT_FILENAME = dirname(__FILE__ . '/../') . '/index.php';
     }
     if (isWindows()) {
         $SCRIPT_FILENAME = str_replace('\\\\', '\\', strtr($SCRIPT_FILENAME, '/', '\\'));

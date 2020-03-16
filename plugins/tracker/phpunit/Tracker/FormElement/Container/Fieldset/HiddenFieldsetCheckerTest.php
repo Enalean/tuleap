@@ -30,7 +30,7 @@ use Tracker_FormElement_Container_Fieldset;
 use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
-require_once __DIR__. '/../../../../bootstrap.php';
+require_once __DIR__ . '/../../../../bootstrap.php';
 
 class HiddenFieldsetCheckerTest extends TestCase
 {

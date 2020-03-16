@@ -35,7 +35,7 @@ EOT;
 
     public function up()
     {
-        $sql = 'ALTER TABLE groups_notif_delegation '.
+        $sql = 'ALTER TABLE groups_notif_delegation ' .
                ' ADD PRIMARY KEY (group_id, ugroup_id)';
         $this->db->addPrimaryKey('groups_notif_delegation', '(group_id, ugroup_id)', $sql);
     }

@@ -53,13 +53,13 @@ class ToBeMappedUser extends ActionToBeTakenForUser
         $matching = array();
         $actions  = array();
         foreach ($this->matching_users as $user) {
-            $matching[] = $user->getRealName() .' ('. $user->getUserName() .') ['. $user->getStatus() .']';
-            $actions[]  = '"'. self::ACTION .':'. $user->getUserName() .'"';
+            $matching[] = $user->getRealName() . ' (' . $user->getUserName() . ') [' . $user->getStatus() . ']';
+            $actions[]  = '"' . self::ACTION . ':' . $user->getUserName() . '"';
         }
 
         return array(
             $this->username,
-            self::ACTION .':',
+            self::ACTION . ':',
             sprintf(
                 'User %s (%s) has the same email address than following users: %s.'
                 . ' Use one of the following actions to confirm the mapping: %s.',

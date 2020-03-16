@@ -38,8 +38,8 @@ class LDAP_UserGroupDao extends DataAccessObject
      */
     public function searchByGroupId($ugroupId)
     {
-        $sql = 'SELECT * FROM plugin_ldap_ugroup'.
-            ' WHERE ugroup_id = '.db_ei($ugroupId);
+        $sql = 'SELECT * FROM plugin_ldap_ugroup' .
+            ' WHERE ugroup_id = ' . db_ei($ugroupId);
         $dar = $this->retrieve($sql);
         if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
             return $dar->getRow();
@@ -61,8 +61,8 @@ class LDAP_UserGroupDao extends DataAccessObject
     public function linkGroupLdap($ugroupId, $ldapGroupDn, $bindOption, $synchroPolicy)
     {
         $synchroPolicy = $this->da->quoteSmart($synchroPolicy);
-        $sql = 'INSERT INTO plugin_ldap_ugroup (ugroup_id, ldap_group_dn, synchro_policy, bind_option)'.
-            ' VALUES ('.db_ei($ugroupId).',"'.db_es($ldapGroupDn).'",'.$synchroPolicy.', "'.db_es($bindOption).'")';
+        $sql = 'INSERT INTO plugin_ldap_ugroup (ugroup_id, ldap_group_dn, synchro_policy, bind_option)' .
+            ' VALUES (' . db_ei($ugroupId) . ',"' . db_es($ldapGroupDn) . '",' . $synchroPolicy . ', "' . db_es($bindOption) . '")';
         return $this->update($sql);
     }
 
@@ -75,8 +75,8 @@ class LDAP_UserGroupDao extends DataAccessObject
      */
     public function unlinkGroupLdap($ugroupId)
     {
-        $sql = 'DELETE FROM plugin_ldap_ugroup'.
-            ' WHERE ugroup_id = '.db_ei($ugroupId);
+        $sql = 'DELETE FROM plugin_ldap_ugroup' .
+            ' WHERE ugroup_id = ' . db_ei($ugroupId);
         return $this->update($sql);
     }
 
@@ -167,7 +167,7 @@ class LDAP_UserGroupDao extends DataAccessObject
     {
         $ugroup_id = $this->da->escapeInt($ugroup_id);
         $sql = "SELECT * FROM plugin_ldap_ugroup
-                WHERE ugroup_id = ".$ugroup_id." and synchro_policy = ".$this->da->quoteSmart(LDAP_GroupManager::AUTO_SYNCHRONIZATION);
+                WHERE ugroup_id = " . $ugroup_id . " and synchro_policy = " . $this->da->quoteSmart(LDAP_GroupManager::AUTO_SYNCHRONIZATION);
         $rs  = $this->retrieve($sql);
         if (!empty($rs) && $rs->rowCount() == 1) {
             return true;
@@ -186,7 +186,7 @@ class LDAP_UserGroupDao extends DataAccessObject
     {
         $ugroup_id = $this->da->escapeInt($ugroup_id);
         $sql = 'SELECT * FROM plugin_ldap_ugroup
-                WHERE ugroup_id = '.$ugroup_id.' and bind_option = '.$this->da->quoteSmart(LDAP_GroupManager::PRESERVE_MEMBERS_OPTION);
+                WHERE ugroup_id = ' . $ugroup_id . ' and bind_option = ' . $this->da->quoteSmart(LDAP_GroupManager::PRESERVE_MEMBERS_OPTION);
         $rs  = $this->retrieve($sql);
         if (!empty($rs) && $rs->rowCount() == 1) {
             return true;
@@ -205,9 +205,9 @@ class LDAP_UserGroupDao extends DataAccessObject
     {
         $ugroup_id = $this->da->escapeInt($ugroup_id);
         $sql       = "SELECT * FROM plugin_ldap_ugroup
-                      WHERE ugroup_id = ".$ugroup_id."
-                        AND bind_option = ".$this->da->quoteSmart(LDAP_GroupManager::BIND_OPTION)."
-                        AND synchro_policy = ".$this->da->quoteSmart(LDAP_GroupManager::AUTO_SYNCHRONIZATION);
+                      WHERE ugroup_id = " . $ugroup_id . "
+                        AND bind_option = " . $this->da->quoteSmart(LDAP_GroupManager::BIND_OPTION) . "
+                        AND synchro_policy = " . $this->da->quoteSmart(LDAP_GroupManager::AUTO_SYNCHRONIZATION);
         $rs  = $this->retrieve($sql);
         if (!empty($rs) && $rs->rowCount() == 1) {
             return false;

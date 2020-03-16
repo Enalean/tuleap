@@ -59,13 +59,13 @@ class Widget_MyProjects extends Widget
         if ($display_privacy) {
             $order = 'access, groups.group_name';
         }
-        $result = db_query("SELECT groups.group_id, groups.group_name, groups.unix_group_name, groups.status, groups.access, user_group.admin_flags".
-                           " FROM groups".
-                           " JOIN user_group USING (group_id)".
-                           " WHERE user_group.user_id = ". db_ei($user->getId()).
-                           " AND groups.status = 'A'".
+        $result = db_query("SELECT groups.group_id, groups.group_name, groups.unix_group_name, groups.status, groups.access, user_group.admin_flags" .
+                           " FROM groups" .
+                           " JOIN user_group USING (group_id)" .
+                           " WHERE user_group.user_id = " . db_ei($user->getId()) .
+                           " AND groups.status = 'A'" .
                            " ORDER BY $order");
-        $rows=db_numrows($result);
+        $rows = db_numrows($result);
         if (!$result || $rows < 1) {
             $html .= '<div class="empty-pane">';
             $html .= '<svg class="empty-pane-icon" xmlns="http://www.w3.org/2000/svg" width="239" height="287" viewBox="0 0 239 287">';
@@ -108,7 +108,7 @@ class Widget_MyProjects extends Widget
                     $tdClass .= ' widget_my_projects_first_public';
                 }
 
-                $html .= '<tr class="'.util_get_alt_row_color($i++).'" >';
+                $html .= '<tr class="' . util_get_alt_row_color($i++) . '" >';
 
                 // Privacy
                 if ($display_privacy) {
@@ -129,18 +129,18 @@ class Widget_MyProjects extends Widget
                             $privacy = 'fa fa-unlock';
                         }
                     }
-                    $html .= '<td class="widget_my_projects_privacy'.$tdClass.'"><i class="'.$privacy.' dashboard-widget-my-projects-icons"></i></td>';
+                    $html .= '<td class="widget_my_projects_privacy' . $tdClass . '"><i class="' . $privacy . ' dashboard-widget-my-projects-icons"></i></td>';
                 }
 
                 // Project name
-                $html .= '<td class="widget_my_projects_project_name'.$tdClass.'"><a href="/projects/'.urlencode($row['unix_group_name']).'/">';
+                $html .= '<td class="widget_my_projects_project_name' . $tdClass . '"><a href="/projects/' . urlencode($row['unix_group_name']) . '/">';
                 $html .= Codendi_HTMLPurifier::instance()->purify($row['group_name']);
                 $html .= '</a></td>';
 
                 // Admin link
-                $html .= '<td class="widget_my_projects_actions'.$tdClass.'">';
+                $html .= '<td class="widget_my_projects_actions' . $tdClass . '">';
                 if ($row['admin_flags'] == 'A') {
-                    $html .= '<a href="/project/admin/?group_id='.$row['group_id'].'">['.$GLOBALS['Language']->getText('my_index', 'admin_link').']</a>';
+                    $html .= '<a href="/project/admin/?group_id=' . $row['group_id'] . '">[' . $GLOBALS['Language']->getText('my_index', 'admin_link') . ']</a>';
                 } else {
                     $html .= '&nbsp;';
                 }
@@ -148,15 +148,15 @@ class Widget_MyProjects extends Widget
 
                 if ($disable_contact === false) {
                     // Mailing tool
-                    $html .= '<td class="'.$tdClass.'">';
-                    $html .= '<a class="massmail-project-member-link" href="#massmail-project-members" data-project-id="'.$row['group_id'].'" title="'.$GLOBALS['Language']->getText('my_index', 'send_mail', $hp->purify($row['group_name'])).'" data-toggle="modal"><span class="fa fa-envelope-o fa fa-envelope-o"></span></a>';
+                    $html .= '<td class="' . $tdClass . '">';
+                    $html .= '<a class="massmail-project-member-link" href="#massmail-project-members" data-project-id="' . $row['group_id'] . '" title="' . $GLOBALS['Language']->getText('my_index', 'send_mail', $hp->purify($row['group_name'])) . '" data-toggle="modal"><span class="fa fa-envelope-o fa fa-envelope-o"></span></a>';
                     $html .= '</td>';
                 }
 
                 // Remove from project
-                $html .= '<td class="widget_my_projects_remove'.$tdClass.'">';
+                $html .= '<td class="widget_my_projects_remove' . $tdClass . '">';
                 if ($row['admin_flags'] != 'A') {
-                    $html .= html_trash_link_fontawesome('rmproject.php?group_id='.$row['group_id'], $GLOBALS['Language']->getText('my_index', 'quit_proj'));
+                    $html .= html_trash_link_fontawesome('rmproject.php?group_id=' . $row['group_id'], $GLOBALS['Language']->getText('my_index', 'quit_proj'));
                 } else {
                     $html .= '&nbsp;';
                 }
@@ -171,7 +171,7 @@ class Widget_MyProjects extends Widget
                 // Legend
                 $html .= '<tr>';
                 $html .= '<td colspan="5" class="widget_my_projects_legend">';
-                $html .= '<span class="widget_my_projects_legend_title dashboard-widget-my-projects-legend-title">'.$GLOBALS['Language']->getText('my_index', 'my_projects_legend').'</span>';
+                $html .= '<span class="widget_my_projects_legend_title dashboard-widget-my-projects-legend-title">' . $GLOBALS['Language']->getText('my_index', 'my_projects_legend') . '</span>';
                 $icons = [
                     ['classname' => 'fa-lock', 'label' => $GLOBALS['Language']->getText('project_privacy', 'private')],
                     ['classname' => 'fa-unlock', 'label' => $GLOBALS['Language']->getText('project_privacy', 'public')]
@@ -186,7 +186,7 @@ class Widget_MyProjects extends Widget
                 }
                 foreach ($icons as $icon) {
                     $html .= '<span class="dashboard-widget-my-projects-legend-content">
-                        <i class="fa '. $icon['classname'] .' dashboard-widget-my-projects-icons"></i>' . $icon['label']
+                        <i class="fa ' . $icon['classname'] . ' dashboard-widget-my-projects-icons"></i>' . $icon['label']
                         . '</span> ';
                 }
                 $html .= '</td>';
@@ -218,7 +218,7 @@ class Widget_MyProjects extends Widget
             'link'        => $server_url,
             'language'    => 'en-us',
             'copyright'   => 'Copyright Xerox',
-            'pubDate'     => gmdate('D, d M Y G:i:s', time()).' GMT',
+            'pubDate'     => gmdate('D, d M Y G:i:s', time()) . ' GMT',
         ));
         $result = db_query("SELECT groups.group_name,"
             . "groups.group_id,"
@@ -228,9 +228,9 @@ class Widget_MyProjects extends Widget
             . "user_group.admin_flags "
             . "FROM groups,user_group "
             . "WHERE groups.group_id=user_group.group_id "
-            . "AND user_group.user_id='". db_ei(UserManager::instance()->getCurrentUser()->getId()) ."' "
+            . "AND user_group.user_id='" . db_ei(UserManager::instance()->getCurrentUser()->getId()) . "' "
             . "AND groups.status='A' ORDER BY group_name");
-        $rows=db_numrows($result);
+        $rows = db_numrows($result);
         if (!$result || $rows < 1) {
             $rss->addItem(array(
                 'title'       => 'Error',
@@ -238,21 +238,21 @@ class Widget_MyProjects extends Widget
                 'link'        => $server_url
             ));
         } else {
-            for ($i=0; $i<$rows; $i++) {
+            for ($i = 0; $i < $rows; $i++) {
                 $title = db_result($result, $i, 'group_name');
                 if (in_array(db_result($result, $i, 'access'), [Project::ACCESS_PRIVATE, Project::ACCESS_PRIVATE_WO_RESTRICTED], true)) {
                     $title .= ' (*)';
                 }
 
-                $desc = 'Project: '. $server_url .'/project/admin/?group_id='.db_result($result, $i, 'group_id') ."<br />\n";
+                $desc = 'Project: ' . $server_url . '/project/admin/?group_id=' . db_result($result, $i, 'group_id') . "<br />\n";
                 if (db_result($result, $i, 'admin_flags') == 'A') {
-                    $desc .= 'Admin: '. $server_url .'/project/admin/?group_id='.db_result($result, $i, 'group_id');
+                    $desc .= 'Admin: ' . $server_url . '/project/admin/?group_id=' . db_result($result, $i, 'group_id');
                 }
 
                 $rss->addItem(array(
                     'title'       => $hp->purify($title),
                     'description' => $desc,
-                    'link'        => $server_url .'/projects/'. db_result($result, $i, 'unix_group_name')
+                    'link'        => $server_url . '/projects/' . db_result($result, $i, 'unix_group_name')
                 ));
             }
         }

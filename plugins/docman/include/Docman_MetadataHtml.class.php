@@ -30,12 +30,10 @@ class Docman_MetadataHtmlFactory
         switch ($md->getLabel()) {
             case 'owner':
                 $mdh = new Docman_MetadataHtmlOwner($md, $formParams);
-                ;
                 break;
 
             case 'obsolescence_date':
                 $mdh = new Docman_MetadataHtmlObsolescence($md, $formParams);
-                ;
                 break;
         }
 
@@ -43,19 +41,15 @@ class Docman_MetadataHtmlFactory
             switch ($md->getType()) {
                 case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
                     $mdh = new Docman_MetadataHtmlText($md, $formParams);
-                    ;
                     break;
                 case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
                     $mdh = new Docman_MetadataHtmlString($md, $formParams);
-                    ;
                     break;
                 case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
                     $mdh = new Docman_MetadataHtmlDate($md, $formParams);
-                    ;
                     break;
                 case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
                     $mdh = new Docman_MetadataHtmlList($md, $formParams);
-                    ;
                     break;
                 default:
             }
@@ -168,7 +162,7 @@ class Docman_MetadataHtml
     {
         $desc = $this->md->getDescription();
         $html = '';
-        $html .= '<span title="'. $this->hp->purify($desc) .'">';
+        $html .= '<span title="' . $this->hp->purify($desc) . '">';
         if ($this->md->isSpecial()) {
             switch ($this->md->getLabel()) {
                 case 'description':
@@ -197,7 +191,7 @@ class Docman_MetadataHtml
                     break;
             }
         } else {
-            $html .= $this->hp->purify($this->md->getName()) .":";
+            $html .= $this->hp->purify($this->md->getName()) . ":";
         }
         if ($show_mandatory_information && $this->md->canChangeValue() && !$this->md->isEmptyAllowed()) {
             $html .= '&nbsp;';
@@ -216,9 +210,9 @@ class Docman_MetadataHtml
     {
         $lbl = $this->md->getLabel();
         if ($this->md->isSpecial()) {
-            $name  = 'item['.$lbl.']';
+            $name  = 'item[' . $lbl . ']';
         } else {
-            $name  = 'metadata['.$lbl.']';
+            $name  = 'metadata[' . $lbl . ']';
         }
         return $name;
     }
@@ -283,7 +277,7 @@ class Docman_MetadataHtmlText extends Docman_MetadataHtml
             $value = $this->md->getDefaultValue();
         }
         $value = $this->hp->purify($value);
-        $field = '<textarea name="'.$name.'" id="'.$this->md->getLabel().'">'.$value.'</textarea>';
+        $field = '<textarea name="' . $name . '" id="' . $this->md->getLabel() . '">' . $value . '</textarea>';
         return $field;
     }
 }
@@ -307,7 +301,7 @@ class Docman_MetadataHtmlString extends Docman_MetadataHtml
             $value = $this->md->getDefaultValue();
         }
         $value = $this->hp->purify($value);
-        $field = '<input type="text" class="text_field" name="'.$this->_getFieldName().'" value="'.$value.'" id="'.$this->md->getLabel().'" />';
+        $field = '<input type="text" class="text_field" name="' . $this->_getFieldName() . '" value="' . $value . '" id="' . $this->md->getLabel() . '" />';
         return $field;
     }
 }
@@ -449,11 +443,11 @@ class Docman_MetadataHtmlList extends Docman_MetadataHtml
         $name     = $this->_getFieldName();
         $multiple = '';
         if ($this->md->isMultipleValuesAllowed()) {
-            $name = $name.'[]';
+            $name = $name . '[]';
             $multiple = ' multiple = "multiple" size = "6"';
         }
 
-        $html .= '<select name="'.$name.'"'.$multiple.' id="'.$this->md->getLabel().'">'."\n";
+        $html .= '<select name="' . $name . '"' . $multiple . ' id="' . $this->md->getLabel() . '">' . "\n";
 
         $vIter = $this->md->getListOfValueIterator();
         $vIter->rewind();
@@ -465,11 +459,11 @@ class Docman_MetadataHtmlList extends Docman_MetadataHtml
                 $selected = ' selected="selected"';
             }
 
-            $html .= '<option value="'.$e->getId().'"'.$selected.'>'.$this->_getElementName($e).'</option>'."\n";
+            $html .= '<option value="' . $e->getId() . '"' . $selected . '>' . $this->_getElementName($e) . '</option>' . "\n";
 
             $vIter->next();
         }
-        $html .= '</select>'."\n";
+        $html .= '</select>' . "\n";
         return $html;
     }
 
@@ -525,17 +519,17 @@ class Docman_MetadataHtmlObsolescence extends Docman_MetadataHtml
         $inputname = $this->_getFieldName();
 
         $field = '';
-        $field .= '<select name="'.$name.'" onchange="javascript:change_obsolescence_date(document.forms.'.$this->formParams['form_name'].')" id="'.$this->md->getLabel().'">'."\n";
+        $field .= '<select name="' . $name . '" onchange="javascript:change_obsolescence_date(document.forms.' . $this->formParams['form_name'] . ')" id="' . $this->md->getLabel() . '">' . "\n";
         foreach ($labels as $value => $label) {
             $select = '';
             if ($value == $selected) {
                 $select = ' selected="selected"';
             }
-            $field .= '<option value="'.$value.'"'.$select.'>'.$label.'</option>'."\n";
+            $field .= '<option value="' . $value . '"' . $select . '>' . $label . '</option>' . "\n";
         }
-        $field .= '</select>'."\n";
+        $field .= '</select>' . "\n";
 
-        $field .= '&nbsp;<em>'.dgettext('tuleap-docman', 'Corresponding date:').'</em>';
+        $field .= '&nbsp;<em>' . dgettext('tuleap-docman', 'Corresponding date:') . '</em>';
 
         $field .= html_field_date(
             $inputname,
@@ -580,7 +574,7 @@ class Docman_MetadataHtmlOwner extends Docman_MetadataHtmlString
         if ($value != null && $value != '' && $value > 0) {
             $v = user_getname($value);
         }
-        $field = '<input type="text" class="text_field" name="'.$this->_getFieldName().'" value="'.$v.'" />';
+        $field = '<input type="text" class="text_field" name="' . $this->_getFieldName() . '" value="' . $v . '" />';
         return $field;
     }
 }

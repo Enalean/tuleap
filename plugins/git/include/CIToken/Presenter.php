@@ -40,7 +40,7 @@ class Presenter
         $this->project_id      = $project_id;
         $this->repository_id   = $repository_id;
         $this->generate_button = dgettext('tuleap-git', 'Reset token');
-        $csrf_synchro          = new CSRFSynchronizerToken('plugins/git/?group_id='. $project_id .'&pane=citoken');
+        $csrf_synchro          = new CSRFSynchronizerToken('plugins/git/?group_id=' . $project_id . '&pane=citoken');
         $this->csrf            = $csrf_synchro->fetchHTMLInput();
         $this->description     = dgettext('tuleap-git', 'This token is used to authenticate CIs like Jenkins when calling the build status update APIs');
     }

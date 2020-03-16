@@ -42,13 +42,13 @@ final class GitDriverTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
         $this->curDir = getcwd();
-        $this->fixtures_path = __DIR__ .'/_fixtures';
+        $this->fixtures_path = __DIR__ . '/_fixtures';
 
         $this->sourcePath = $this->getTmpDir() . '/source';
         mkdir($this->sourcePath, 0770);
         $this->destination_path = $this->getTmpDir() . '/destination';
         mkdir($this->destination_path, 0770);
-        @exec('GIT_DIR='.$this->sourcePath.' git --bare init --shared=group');
+        @exec('GIT_DIR=' . $this->sourcePath . ' git --bare init --shared=group');
     }
 
     protected function tearDown() : void
@@ -91,7 +91,7 @@ final class GitDriverTest extends \PHPUnit\Framework\TestCase
         $dstPath = $this->getTmpDir() . '/tmp/fork.git';
 
         mkdir($srcPath, 0770, true);
-        @exec('GIT_DIR='.$srcPath.' git --bare init --shared=group');
+        @exec('GIT_DIR=' . $srcPath . ' git --bare init --shared=group');
 
         $driver = new GitDriver();
         $driver->fork($srcPath, $dstPath);
@@ -113,9 +113,9 @@ final class GitDriverTest extends \PHPUnit\Framework\TestCase
         $driver = new GitDriver();
         $driver->cloneAtSpecifiqBranch($this->sourcePath, $this->destination_path, "master");
 
-        @exec('cd '.$this->destination_path.' && touch toto');
+        @exec('cd ' . $this->destination_path . ' && touch toto');
         $driver->add($this->destination_path, 'toto');
-        exec('cd '.$this->destination_path.' && git status --porcelain', $out, $ret);
+        exec('cd ' . $this->destination_path . ' && git status --porcelain', $out, $ret);
         $this->assertEquals(implode($out), 'A  toto');
     }
 
@@ -124,9 +124,9 @@ final class GitDriverTest extends \PHPUnit\Framework\TestCase
         $driver = new GitDriver();
         $driver->cloneAtSpecifiqBranch($this->sourcePath, $this->destination_path, "master");
 
-        @exec('cd '.$this->destination_path.' && touch toto');
+        @exec('cd ' . $this->destination_path . ' && touch toto');
         $driver->add($this->destination_path, 'toto');
-        exec('cd '.$this->destination_path.' && git ls-files -s toto', $out, $ret);
+        exec('cd ' . $this->destination_path . ' && git ls-files -s toto', $out, $ret);
         $sha1 = explode(" ", implode($out));
         $this->assertEquals(strlen($sha1[1]), 40);
     }
@@ -186,10 +186,10 @@ final class GitDriverTest extends \PHPUnit\Framework\TestCase
 
     public function testSetRepositoryAccessPublic() : void
     {
-        $srcPath = $this->getTmpDir().'/tmp/repo.git';
+        $srcPath = $this->getTmpDir() . '/tmp/repo.git';
 
         mkdir($srcPath, 0770, true);
-        @exec('GIT_DIR='.$srcPath.' git --bare init --shared=group');
+        @exec('GIT_DIR=' . $srcPath . ' git --bare init --shared=group');
 
         $driver = new GitDriver();
         $driver->setRepositoryAccess($srcPath, GitRepository::PUBLIC_ACCESS);
@@ -202,10 +202,10 @@ final class GitDriverTest extends \PHPUnit\Framework\TestCase
 
     public function testSetRepositoryAccessPrivate() : void
     {
-        $srcPath = $this->getTmpDir().'/tmp/repo.git';
+        $srcPath = $this->getTmpDir() . '/tmp/repo.git';
 
         mkdir($srcPath, 0770, true);
-        @exec('GIT_DIR='.$srcPath.' git --bare init --shared=group');
+        @exec('GIT_DIR=' . $srcPath . ' git --bare init --shared=group');
 
         $driver = new GitDriver();
         $driver->setRepositoryAccess($srcPath, GitRepository::PRIVATE_ACCESS);
@@ -218,82 +218,82 @@ final class GitDriverTest extends \PHPUnit\Framework\TestCase
 
     public function testForkRepoUnixPermissions() : void
     {
-        $srcPath = $this->getTmpDir().'/tmp/repo.git';
-        $dstPath = $this->getTmpDir().'/tmp/fork.git';
+        $srcPath = $this->getTmpDir() . '/tmp/repo.git';
+        $dstPath = $this->getTmpDir() . '/tmp/fork.git';
 
         mkdir($srcPath, 0770, true);
-        @exec('GIT_DIR='.$srcPath.' git --bare init --shared=group');
+        @exec('GIT_DIR=' . $srcPath . ' git --bare init --shared=group');
 
         $driver = new GitDriver();
         $driver->fork($srcPath, $dstPath);
 
         clearstatcache();
-        $stat = stat($dstPath.'/HEAD');
+        $stat = stat($dstPath . '/HEAD');
         //system('/bin/ls -ld '.$dstPath.'/HEAD');
         $this->assertEquals(base_convert($stat['mode'], 10, 8), 100664, '/HEAD must be writable by group');
 
-        $stat = stat($dstPath.'/refs');
+        $stat = stat($dstPath . '/refs');
         //system('/bin/ls -ld '.$dstPath.'/refs');
         $this->assertEquals(base_convert($stat['mode'], 10, 8), 42775, '/refs must have setgid bit');
 
-        $stat = stat($dstPath.'/refs/heads');
+        $stat = stat($dstPath . '/refs/heads');
         $this->assertEquals(base_convert($stat['mode'], 10, 8), 42775, '/refs/heads must have setgid bit');
     }
 
     public function testActivateHook() : void
     {
-        mkdir($this->getTmpDir().'/hooks', 0770, true);
-        copy($this->fixtures_path.'/hooks/post-receive', $this->getTmpDir().'/hooks/blah');
+        mkdir($this->getTmpDir() . '/hooks', 0770, true);
+        copy($this->fixtures_path . '/hooks/post-receive', $this->getTmpDir() . '/hooks/blah');
 
         $driver = new GitDriver();
         $driver->activateHook('blah', $this->getTmpDir());
 
-        $this->assertEquals(substr(sprintf('%o', fileperms($this->getTmpDir().'/hooks/blah')), -4), '0755');
+        $this->assertEquals(substr(sprintf('%o', fileperms($this->getTmpDir() . '/hooks/blah')), -4), '0755');
     }
 
     public function testSetConfigSimple() : void
     {
-        copy($this->fixtures_path.'/config', $this->getTmpDir().'/config');
+        copy($this->fixtures_path . '/config', $this->getTmpDir() . '/config');
 
         $driver = new GitDriver();
         $driver->setConfig($this->getTmpDir(), 'hooks.showrev', 'abcd');
 
-        $config = parse_ini_file($this->getTmpDir().'/config', true);
+        $config = parse_ini_file($this->getTmpDir() . '/config', true);
         $this->assertEquals($config['hooks']['showrev'], 'abcd');
     }
 
     public function testSetConfigComplex() : void
     {
-        copy($this->fixtures_path.'/config', $this->getTmpDir().'/config');
+        copy($this->fixtures_path . '/config', $this->getTmpDir() . '/config');
 
         $val = "t=%s; git log --name-status --pretty='format:URL:    https://codendi.org/plugins/git/index.php/1750/view/290/?p=git.git&a=commitdiff&h=%%H%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b' \$t~1..\$t";
 
         $driver = new GitDriver();
         $driver->setConfig($this->getTmpDir(), 'hooks.showrev', $val);
 
-        $config = parse_ini_file($this->getTmpDir().'/config', true);
+        $config = parse_ini_file($this->getTmpDir() . '/config', true);
         $this->assertEquals($config['hooks']['showrev'], 't=%s; git log --name-status --pretty=\'format:URL:    https://codendi.org/plugins/git/index.php/1750/view/290/?p=git.git&a=commitdiff&h=%%H%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b\' $t~1..$t');
     }
 
     public function testSetConfigWithSpace() : void
     {
-        copy($this->fixtures_path.'/config', $this->getTmpDir().'/config');
+        copy($this->fixtures_path . '/config', $this->getTmpDir() . '/config');
 
         $driver = new GitDriver();
         $driver->setConfig($this->getTmpDir(), 'hooks.showrev', '[MyVal] ');
 
-        $config = parse_ini_file($this->getTmpDir().'/config', true);
+        $config = parse_ini_file($this->getTmpDir() . '/config', true);
         $this->assertEquals($config['hooks']['showrev'], '[MyVal] ');
     }
 
     public function testSetEmptyConfig() : void
     {
-        copy($this->fixtures_path.'/config', $this->getTmpDir().'/config');
+        copy($this->fixtures_path . '/config', $this->getTmpDir() . '/config');
 
         $driver = new GitDriver();
         $driver->setConfig($this->getTmpDir(), 'hooks.showrev', '');
 
-        $config = parse_ini_file($this->getTmpDir().'/config', true);
+        $config = parse_ini_file($this->getTmpDir() . '/config', true);
         $this->assertEquals($config['hooks']['showrev'], '');
     }
 }

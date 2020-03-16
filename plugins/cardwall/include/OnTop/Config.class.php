@@ -142,9 +142,9 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig
     }
 
     public function isInColumn(
-        Tracker_Artifact                                     $artifact,
+        Tracker_Artifact $artifact,
         Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider,
-        Cardwall_Column                                      $column
+        Cardwall_Column $column
     ) {
         $artifact_status = null;
         $field           = $field_provider->getField($artifact->getTracker());
@@ -174,8 +174,8 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig
     }
 
     private function fillMappingsByDuckType(
-        Cardwall_MappingCollection             $mappings,
-        array                                  $fields,
+        Cardwall_MappingCollection $mappings,
+        array $fields,
         Cardwall_OnTop_Config_ColumnCollection $columns
     ) {
         foreach ($fields as $status_field) {
@@ -190,7 +190,7 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig
     }
 
     public function fillMappingsWithOnTopMappings(
-        Cardwall_MappingCollection             $mappings,
+        Cardwall_MappingCollection $mappings,
         Cardwall_OnTop_Config_ColumnCollection $columns
     ) {
         foreach ($this->getMappings() as $field_mapping) {

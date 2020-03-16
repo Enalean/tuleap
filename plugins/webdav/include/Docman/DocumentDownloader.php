@@ -28,20 +28,20 @@ class DocumentDownloader
     public function downloadDocument(string $document_name, string $fileType, $fileSize, string $path)
     {
         header('Content-Description: File Transfer');
-        header('Content-Type: '. $fileType);
-        header('Content-Disposition: attachment; filename="'.$document_name.'"');
+        header('Content-Type: ' . $fileType);
+        header('Content-Disposition: attachment; filename="' . $document_name . '"');
         header('Content-Transfer-Encoding: binary');
         header('Expires: 0');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header('Pragma: public');
-        header('Content-Length: '. $fileSize);
+        header('Content-Length: ' . $fileSize);
         if (ob_get_contents()) {
             ob_clean();
         }
         flush();
         $file = fopen($path, "r");
         while (! feof($file)) {
-            print fread($file, 30*1024);
+            print fread($file, 30 * 1024);
             flush();
         }
         fclose($file);

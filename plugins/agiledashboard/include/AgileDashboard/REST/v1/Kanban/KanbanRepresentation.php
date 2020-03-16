@@ -98,7 +98,7 @@ class KanbanRepresentation
     ) {
         $this->id                       = JsonCast::toInt($kanban->getId());
         $this->tracker_id               = JsonCast::toInt($kanban->getTrackerId());
-        $this->uri                      = self::ROUTE.'/'.$this->id;
+        $this->uri                      = self::ROUTE . '/' . $this->id;
         $this->label                    = $kanban->getName();
         $this->columns                  = array();
         $this->user_can_add_columns     = $user_can_add_columns;
@@ -117,10 +117,10 @@ class KanbanRepresentation
 
         $this->resources = array(
             'backlog' => array(
-                'uri' => $this->uri . '/'. self::BACKLOG_ROUTE
+                'uri' => $this->uri . '/' . self::BACKLOG_ROUTE
             ),
             'items' => array(
-                'uri' => $this->uri . '/'. self::ITEMS_ROUTE
+                'uri' => $this->uri . '/' . self::ITEMS_ROUTE
             )
         );
     }

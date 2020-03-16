@@ -266,7 +266,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
         );
 
         $document = $response->json();
-        $this->assertEquals($document['lock_info'] ["locked_by"]["username"], DocmanDataBuilder::ADMIN_USER_NAME);
+        $this->assertEquals($document['lock_info']["locked_by"]["username"], DocmanDataBuilder::ADMIN_USER_NAME);
     }
 
     /**
@@ -321,7 +321,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,
-            $this->client->post('docman_wikis/' . $wiki['id'].'/version', null, $put_resource)
+            $this->client->post('docman_wikis/' . $wiki['id'] . '/version', null, $put_resource)
         );
         $this->assertEquals(403, $response->getStatusCode());
     }
@@ -373,7 +373,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
         );
 
         $response_with_rest_read_only_user = $this->getResponse(
-            $this->client->post('docman_wikis/' . $wiki_id.'/version', null, $put_resource),
+            $this->client->post('docman_wikis/' . $wiki_id . '/version', null, $put_resource),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -381,7 +381,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_wikis/' . $wiki_id.'/version', null, $put_resource)
+            $this->client->post('docman_wikis/' . $wiki_id . '/version', null, $put_resource)
         );
         $this->assertEquals(200, $response->getStatusCode());
 

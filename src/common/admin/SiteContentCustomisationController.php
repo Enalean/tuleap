@@ -118,7 +118,7 @@ class SiteContentCustomisationController implements DispatchableWithRequest
     {
         $language = $this->base_language_factory->getBaseLanguage($locale);
         $sitecontent_path = \ForgeConfig::get('sys_custom_incdir') . '/' . $locale;
-        $original_path = '/usr/share/tuleap/site-content/'. $locale;
+        $original_path = '/usr/share/tuleap/site-content/' . $locale;
         $this->parseSiteContentLocaleDir($original_path, $sitecontent_path, $language, $customisations);
     }
 
@@ -136,7 +136,7 @@ class SiteContentCustomisationController implements DispatchableWithRequest
                 continue;
             }
 
-            $original_path = '/usr/share/tuleap/plugins/'. $plugin_folder->getFilename() .'/site-content/'. $locale;
+            $original_path = '/usr/share/tuleap/plugins/' . $plugin_folder->getFilename() . '/site-content/' . $locale;
 
             $this->parseSiteContentLocaleDir($original_path, $sitecontent_path, $language, $customisations);
         }

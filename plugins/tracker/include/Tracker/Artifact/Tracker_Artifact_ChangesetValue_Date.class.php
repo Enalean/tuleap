@@ -145,7 +145,7 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
     {
         if ($this->getTimestamp() != 0) {
             $next_date = $this->getDate();
-            return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'set_to').' '.$next_date;
+            return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'set_to') . ' ' . $next_date;
         }
     }
 }

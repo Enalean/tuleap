@@ -87,7 +87,7 @@ class MailEnhancer
             $from_mail = $headers['from'];
             unset($headers['from']);
         }
-        if ($from_mail=== null && array_key_exists('reply-to', $headers)) {
+        if ($from_mail === null && array_key_exists('reply-to', $headers)) {
             $from_mail = $headers['reply-to'];
         }
 

@@ -34,7 +34,7 @@ class DbaDatabase
             if (!in_array($handler, dba_handlers())) {
                 $this->_error(
                     sprintf(
-                        _("The DBA handler %s is unsupported!")."\n".
+                        _("The DBA handler %s is unsupported!") . "\n" .
                             _("Supported handlers are: %s"),
                         $handler,
                         join(",", dba_handlers())
@@ -87,7 +87,7 @@ class DbaDatabase
                 $mode = "w";
             }
             // conflict: wait some random time to unlock (see ethernet)
-            $secs = 0.5 + ((double)rand(1, 32767)/32767);
+            $secs = 0.5 + ((double) rand(1, 32767) / 32767);
             sleep($secs);
             $watchdog -= $secs;
             if (strlen($mode) == 2) {

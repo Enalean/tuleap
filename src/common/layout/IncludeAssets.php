@@ -38,7 +38,7 @@ class IncludeAssets
 
     public function getHTMLSnippet($file_name)
     {
-        return '<script type="text/javascript" src="'.$this->getFileURL($file_name).'"></script>' . PHP_EOL;
+        return '<script type="text/javascript" src="' . $this->getFileURL($file_name) . '"></script>' . PHP_EOL;
     }
 
     public function getFileURL($file_name)

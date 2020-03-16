@@ -82,14 +82,14 @@ class Collector
 
     private function getGitoliteSizeOnFileSystem(Project $project)
     {
-        $path = ForgeConfig::get('sys_data_dir').'/gitolite/repositories/'.$project->getUnixNameLowerCase();
+        $path = ForgeConfig::get('sys_data_dir') . '/gitolite/repositories/' . $project->getUnixNameLowerCase();
 
         return $this->disk_usage_manager->getDirSize($path);
     }
 
     private function getGitShellSizeOnFileSystem(Project $project)
     {
-        $path = ForgeConfig::get('sys_data_dir').'/gitroot/'.$project->getUnixNameLowerCase();
+        $path = ForgeConfig::get('sys_data_dir') . '/gitroot/' . $project->getUnixNameLowerCase();
 
         return $this->disk_usage_manager->getDirSize($path);
     }

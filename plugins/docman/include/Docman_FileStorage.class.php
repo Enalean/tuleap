@@ -113,7 +113,7 @@ class Docman_FileStorage
         $path_elements = array($this->root, $this->_getGroupName($group_id), $hash2, $hash1, $item_id, $version_number);
         $path = '';
         foreach ($path_elements as $elem) {
-            $path .= $elem .'/';
+            $path .= $elem . '/';
             if (!is_dir($path)) {
                 mkdir($path, 0700);
                 chown($path, ForgeConfig::get('sys_http_user'));

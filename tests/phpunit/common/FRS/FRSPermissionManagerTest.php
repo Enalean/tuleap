@@ -59,9 +59,9 @@ class FRSPermissionManagerTest extends TestCase
     {
         $this->permission_dao     = \Mockery::mock(\Tuleap\FRS\FRSPermissionDao::class);
         $this->permission_factory = \Mockery::mock(\Tuleap\FRS\FRSPermissionFactory::class);
-        $this->project            = \Mockery::mock(\Project::class, [ 'getID' => 101 ]);
-        $this->user               = \Mockery::mock(\PFUser::class, [ 'isSuperUser' => false, 'isAdmin' => false ]);
-        $this->access_checker     = \Mockery::mock(ProjectAccessChecker::class, [ 'checkUserCanAccessProject' => null ]);
+        $this->project            = \Mockery::mock(\Project::class, ['getID' => 101]);
+        $this->user               = \Mockery::mock(\PFUser::class, ['isSuperUser' => false, 'isAdmin' => false]);
+        $this->access_checker     = \Mockery::mock(ProjectAccessChecker::class, ['checkUserCanAccessProject' => null]);
 
         $this->permission_manager = new FRSPermissionManager(
             $this->permission_dao,

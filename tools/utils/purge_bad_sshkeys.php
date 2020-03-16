@@ -39,8 +39,8 @@ while ($row = db_fetch_array($res)) {
     }
     $str_valid_keys = implode(PFUser::SSH_KEY_SEPARATOR, $valid_keys);
     if ($str_valid_keys !== $row['authorized_keys']) {
-        echo "Update user (".$row['user_id'].") ".$row['user_name']." ".$row['realname']." ".$row['email'].PHP_EOL;
-        $sql = 'UPDATE user SET authorized_keys = "'.db_es($str_valid_keys).'" WHERE user_id = '.$row['user_id'];
+        echo "Update user (" . $row['user_id'] . ") " . $row['user_name'] . " " . $row['realname'] . " " . $row['email'] . PHP_EOL;
+        $sql = 'UPDATE user SET authorized_keys = "' . db_es($str_valid_keys) . '" WHERE user_id = ' . $row['user_id'];
         db_query($sql);
     }
 }

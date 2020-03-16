@@ -30,7 +30,7 @@ class SystemEventProcessApplicationOwnerDefaultQueue implements SystemEventProce
      */
     public function getLockName()
     {
-        return 'tuleap_process_system_event_'.SystemEvent::OWNER_APP;
+        return 'tuleap_process_system_event_' . SystemEvent::OWNER_APP;
     }
 
     public function getQueue()
@@ -40,6 +40,6 @@ class SystemEventProcessApplicationOwnerDefaultQueue implements SystemEventProce
 
     public function getCommandName()
     {
-        return 'tuleap.php process-system-events '.SystemEvent::OWNER_APP;
+        return 'tuleap.php process-system-events ' . SystemEvent::OWNER_APP;
     }
 }

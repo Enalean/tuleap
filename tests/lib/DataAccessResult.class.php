@@ -113,7 +113,7 @@ class DataAccessResult implements LegacyDataAccessResultInterface
      */
     public function isError()
     {
-        $error= $this->daIsError();
+        $error = $this->daIsError();
         if (!empty($error)) {
             return $error;
         } else {

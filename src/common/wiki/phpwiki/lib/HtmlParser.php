@@ -53,7 +53,7 @@ class HtmlParser extends XmlParser
      */
     public function __construct($dialect = "PhpWiki2", $encoding = '')
     {
-        $classname = "HtmlParser_".$dialect;
+        $classname = "HtmlParser_" . $dialect;
         if (class_exists($classname)) {
             $this->dialect = new $classname;
         } else {
@@ -98,7 +98,7 @@ class HtmlParser extends XmlParser
                 foreach ($node->getContent() as $n) {
                     $output .= $this->wikify($n, $node);
                 }
-                $output = $conv[0] . $output . $conv[count($conv)-1];
+                $output = $conv[0] . $output . $conv[count($conv) - 1];
             } elseif (!empty($conv)) {
                 $output = $conv;
                 foreach ($node->getContent() as $n) {
@@ -308,7 +308,7 @@ class HtmlParser_PhpWiki2 extends HtmlParser
 
     public function wikify_list_item($node)
     {
-        return ($this->_elem_has_ancestor($node, 'ol') ? '*' : '#') . " " . trim($this->elem_contents($node)). "\n";
+        return ($this->_elem_has_ancestor($node, 'ol') ? '*' : '#') . " " . trim($this->elem_contents($node)) . "\n";
     }
 
     public function wikify_link($node)
@@ -347,7 +347,7 @@ class HtmlParser_PhpWiki2 extends HtmlParser
         } else {
             $markup = '!';
         }
-        return $markup.' '.trim($this->elem_contents($node))."\n\n";
+        return $markup . ' ' . trim($this->elem_contents($node)) . "\n\n";
     }
 
     public function wikify_verbatim($node)
@@ -361,7 +361,7 @@ class HtmlParser_PhpWiki2 extends HtmlParser
         $image_url = $this->absolute_url($node->getAttr('src'));
         $file = basename($image_url);
         $alignment = $node->getAttr('align');
-        $this->log("Processing IMG tag for SRC: ".$image_url."...");
+        $this->log("Processing IMG tag for SRC: " . $image_url . "...");
         // Grab attributes to be added to the [ Image ] markup (since 1.3.10)
         if (!$alignment) {
             if ($this->_elem_is_image_div($node->parent)) {
@@ -423,7 +423,7 @@ class HtmlParser_PhpWiki2 extends HtmlParser
                 $this->log("      -- that means we're going to need a thumbnail");
                 $this->log("    Adding 'height' to list of attributes for [Image] markup");
                 if (isset($width_added)) {
-                    $attrs[count($attr)-1] = "size=".$width."x".$height;
+                    $attrs[count($attr) - 1] = "size=" . $width . "x" . $height;
                 } else {
                     $attrs[] = "height=$height";
                 }

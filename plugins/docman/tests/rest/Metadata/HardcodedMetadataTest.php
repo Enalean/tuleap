@@ -172,7 +172,6 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
      */
     public function testPostEmbeddedFileWithStatusAndObsolescenceDate(array $items): int
     {
-
         $folder_HM = $this->findItemByTitle($items, 'Folder HM');
 
         $headers             = ['Content-Type' => 'application/json'];
@@ -202,7 +201,6 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
      */
     public function testPostEmbeddedFileWithStatusAndObsolescenceDateDeniedForUserRESTReadOnlyAdmin(array $items): void
     {
-
         $folder_HM = $this->findItemByTitle($items, 'Folder HM');
 
         $headers             = ['Content-Type' => 'application/json'];

@@ -23,7 +23,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__. '/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 class tracker_date_reminderPlugin extends Plugin
 {
@@ -73,7 +73,7 @@ class tracker_date_reminderPlugin extends Plugin
         include_once 'TrackerDateReminder_Logger_Prefix.class.php';
 
         if ($this->isLoggingEnabled()) {
-            $logfile = $GLOBALS['codendi_log']."/tracker_date_reminder.log";
+            $logfile = $GLOBALS['codendi_log'] . "/tracker_date_reminder.log";
         } else {
             $logfile = false;
         }
@@ -88,7 +88,7 @@ class tracker_date_reminderPlugin extends Plugin
     {
         // Delete artifact_date_reminder_settings
         $sql = sprintf(
-            'DELETE FROM artifact_date_reminder_settings'.
+            'DELETE FROM artifact_date_reminder_settings' .
                        ' WHERE group_artifact_id=%d',
             $params['tracker_id']
         );
@@ -96,7 +96,7 @@ class tracker_date_reminderPlugin extends Plugin
 
         // Delete artifact_date_reminder_processing
         $sql = sprintf(
-            'DELETE FROM artifact_date_reminder_processing'.
+            'DELETE FROM artifact_date_reminder_processing' .
                        ' WHERE group_artifact_id=%d',
             $params['tracker_id']
         );
@@ -106,15 +106,15 @@ class tracker_date_reminderPlugin extends Plugin
     public function artifact_type_html_display_notification_form($params)
     {
         if ($params['at']->userIsAdmin()) {
-            echo '<br><h3>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'date_fields_mail_notif').' </h3>';
+            echo '<br><h3>' . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'date_fields_mail_notif') . ' </h3>';
 
-            $title_arr=array();
-            $title_arr[]=$GLOBALS['Language']->getText('tracker_include_type', 'df');
-            $title_arr[]=$GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'notification_status');
-            $title_arr[]=$GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'notification_settings');
+            $title_arr = array();
+            $title_arr[] = $GLOBALS['Language']->getText('tracker_include_type', 'df');
+            $title_arr[] = $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'notification_status');
+            $title_arr[] = $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'notification_settings');
 
             $out = html_build_list_table_top($title_arr);
-            $fmt = "\n".'<TR class=%s><td>%s</td><td align="center">%s</td><td align="center">%s</td></tr>';
+            $fmt = "\n" . '<TR class=%s><td>%s</td><td align="center">%s</td><td align="center">%s</td></tr>';
             $row_color = 0;
 
             $tdrArtifactFieldFactory = new TrackerDateReminder_ArtifactFieldFactory();
@@ -123,7 +123,7 @@ class tracker_date_reminderPlugin extends Plugin
             foreach ($fields as $field) {
                 // no notification status/settings for special Date field (Submitted on)
                 if (!$field->isSpecial()) {
-                    $notif_settings = '<A href="/tracker/admin/index.php?func=date_field_notification&group_id='.$params['group_id'].'&atid='.$params['at']->getID().'&field_id='.$field->getID().'">'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'edit_notif_settings').'</A>';
+                    $notif_settings = '<A href="/tracker/admin/index.php?func=date_field_notification&group_id=' . $params['group_id'] . '&atid=' . $params['at']->getID() . '&field_id=' . $field->getID() . '">' . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'edit_notif_settings') . '</A>';
                     if ($tdrArtifactFieldFactory->notificationEnabled($field->getID())) {
                         $notif_status = $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'active');
                     } else {
@@ -225,10 +225,10 @@ class tracker_date_reminderPlugin extends Plugin
                     }
                 }
             }
-            $params['ath']->adminHeader(array ('title'=>$GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'admin_date_field_notif'),
+            $params['ath']->adminHeader(array ('title' => $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'admin_date_field_notif'),
             'help' => 'tracker.html#email-notification-settings'));
 
-            echo '<H2>'.$GLOBALS['Language']->getText('tracker_import_admin', 'tracker').' \'<a href="/tracker/admin/?group_id='.$params['ath']->Group->getID().'&atid='.$params['ath']->getID().'">'.$params['ath']->getName().'</a>\' - '.$GLOBALS['Language']->getText('tracker_include_type', 'mail_notif').'</h2>';
+            echo '<H2>' . $GLOBALS['Language']->getText('tracker_import_admin', 'tracker') . ' \'<a href="/tracker/admin/?group_id=' . $params['ath']->Group->getID() . '&atid=' . $params['ath']->getID() . '">' . $params['ath']->getName() . '</a>\' - ' . $GLOBALS['Language']->getText('tracker_include_type', 'mail_notif') . '</h2>';
 
             $tdrArtifactFieldHtml = new TrackerDateReminder_ArtifactFieldHtml();
             $tdrArtifactFieldHtml->displayDateFieldNotificationSettings($params['ath'], $field);

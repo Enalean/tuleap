@@ -72,7 +72,7 @@ class WikiPlugin_RandomPage extends WikiPlugin
             $pages = false;
         // fix new pages handling in arg preprozessor.
         } elseif (is_array($pages)) {
-            $numpages = (int)$pages[0];
+            $numpages = (int) $pages[0];
             if ($numpages > 0 and !$dbi->isWikiPage($numpages)) {
                 $pages = false;
             } else {
@@ -123,7 +123,7 @@ class WikiPlugin_RandomPage extends WikiPlugin
         }
         return implode(",", $exclude);
     }
-};
+}
 
 
 // $Log: RandomPage.php,v $

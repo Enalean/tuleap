@@ -70,18 +70,18 @@ class Tracker_Report_CriteriaFactory
     {
         $att  = $xml->attributes();
         $fatt = $xml->field->attributes();
-        if (! isset($xmlMapping[(string)$fatt['REF']])) {
+        if (! isset($xmlMapping[(string) $fatt['REF']])) {
             return null;
         }
         $row                = array(
-            'field' => $xmlMapping[(string)$fatt['REF']],
-            'rank' => (int)$att['rank']
+            'field' => $xmlMapping[(string) $fatt['REF']],
+            'rank' => (int) $att['rank']
         );
-        $row['is_advanced'] = isset($att['is_advanced']) ? (int)$att['is_advanced'] : 0;
+        $row['is_advanced'] = isset($att['is_advanced']) ? (int) $att['is_advanced'] : 0;
         // in case old id values are important modify code here
         if (false) {
             foreach ($xml->attributes() as $key => $value) {
-                $row[$key] = (int)$value;
+                $row[$key] = (int) $value;
             }
         } else {
             $row['id']     = 0;

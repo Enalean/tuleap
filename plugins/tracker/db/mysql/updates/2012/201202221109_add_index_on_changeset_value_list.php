@@ -39,7 +39,7 @@ EOT;
         $sql = "ALTER TABLE tracker_changeset_value_list ADD INDEX idx_bind (bindvalue_id, changeset_value_id)";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding index `idx_bind` on `tracker_changeset_value_list`: '.implode(', ', $this->db->dbh->errorInfo()));
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding index `idx_bind` on `tracker_changeset_value_list`: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 }

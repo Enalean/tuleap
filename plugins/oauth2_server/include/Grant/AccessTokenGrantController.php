@@ -114,7 +114,7 @@ final class AccessTokenGrantController extends DispatchablePSR15Compatible imple
             $authorization_code = $this->authorization_code_verifier->getAuthorizationCode(
                 $this->access_token_identifier_unserializer->getSplitToken(new ConcealedString($body_params[self::AUTH_CODE_PARAMETER]))
             );
-        } catch (OAuth2ServerException|SplitTokenException $exception) {
+        } catch (OAuth2ServerException | SplitTokenException $exception) {
             return $this->buildErrorResponse(self::ERROR_CODE_INVALID_GRANT);
         } finally {
             \sodium_memzero($body_params[self::AUTH_CODE_PARAMETER]);

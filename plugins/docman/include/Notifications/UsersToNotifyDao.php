@@ -27,13 +27,13 @@ class UsersToNotifyDao extends DataAccessObject
 {
     public function searchDocmanMonitoredItems($project_id, $user_id)
     {
-        $sql = "SELECT n.user_id, n.item_id, n.type ".
-               " FROM plugin_docman_notifications AS n ".
-               " JOIN plugin_docman_item AS i ".
-               " ON n.item_id = i.item_id ".
-               " WHERE i.group_id = ".$this->da->quoteSmart($project_id);
+        $sql = "SELECT n.user_id, n.item_id, n.type " .
+               " FROM plugin_docman_notifications AS n " .
+               " JOIN plugin_docman_item AS i " .
+               " ON n.item_id = i.item_id " .
+               " WHERE i.group_id = " . $this->da->quoteSmart($project_id);
         if ($user_id) {
-            $sql .= " AND n.user_id = ".$this->da->quoteSmart($user_id);
+            $sql .= " AND n.user_id = " . $this->da->quoteSmart($user_id);
         }
         $sql .= " ORDER BY user_id";
         return $this->retrieve($sql);

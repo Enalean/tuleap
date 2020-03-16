@@ -49,7 +49,7 @@ class Tracker_FormElement_Field_Value_IntegerDao extends Tracker_FormElement_Fie
         }
         $sql = " INSERT INTO $this->table_name(changeset_value_id, value) 
                  VALUES
-                  ( ".implode(' , NULL ),'."\n".' ( ', $changeset_value_ids).", NULL)";
+                  ( " . implode(' , NULL ),' . "\n" . ' ( ', $changeset_value_ids) . ", NULL)";
         return $this->update($sql);
     }
 

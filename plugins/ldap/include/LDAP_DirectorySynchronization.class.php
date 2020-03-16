@@ -70,13 +70,13 @@ class LDAP_DirectorySynchronization
             $this->getLdapUserManager()->triggerRenameOfUsers();
             $this->remindAdminsBeforeCleanUp();
         } else {
-            echo "DB error: ".db_error().PHP_EOL;
+            echo "DB error: " . db_error() . PHP_EOL;
         }
     }
 
     public function ldapSync($row, $users_are_suspendable = true)
     {
-        $ldap_query = $this->ldap->getLDAPParam('eduid').'='.$row['ldap_id'];
+        $ldap_query = $this->ldap->getLDAPParam('eduid') . '=' . $row['ldap_id'];
         $userSync = $this->getLdapUserSync();
         $attributes = $userSync->getSyncAttributes($this->ldap);
 
@@ -90,12 +90,12 @@ class LDAP_DirectorySynchronization
 
         foreach (explode(';', $this->ldap->getLDAPParam('people_dn')) as $PeopleDn) {
             $lri = $this->ldap->search($PeopleDn, $ldap_query, $search_depth, $attributes);
-            if ($lri === false ||count($lri) === 1) {
+            if ($lri === false || count($lri) === 1) {
                 break;
             }
         }
         $time_end   = microtime(true);
-        $this->ldapTime += ($time_end-$time_start);
+        $this->ldapTime += ($time_end - $time_start);
 
         if ($this->ldap->getErrno() === LDAP::ERR_SUCCESS && $lri) {
             $user     = new PFUser($row);
@@ -109,12 +109,12 @@ class LDAP_DirectorySynchronization
                     $this->getLdapUserManager()->updateLdapUid($user, $lr->getLogin());
                 }
             } elseif (count($lri) == 0 && $users_are_suspendable) {
-                $this->logger->warning('LDAP user to be suspended: '.$user->getId().' '. $user->getUserName());
+                $this->logger->warning('LDAP user to be suspended: ' . $user->getId() . ' ' . $user->getUserName());
 
                 $this->logger->debug(
-                    ' *** PEOPLEDN: '.$PeopleDn.
-                    ' *** LDAP QUERY: '. $ldap_query.
-                    ' *** ATTRIBUTES: '. print_r($attributes, true)
+                    ' *** PEOPLEDN: ' . $PeopleDn .
+                    ' *** LDAP QUERY: ' . $ldap_query .
+                    ' *** ATTRIBUTES: ' . print_r($attributes, true)
                 );
 
                 // User not found in LDAP directory

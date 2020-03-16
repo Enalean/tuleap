@@ -46,7 +46,7 @@ class Git_Hook_ExtractCrossReferences
 
     public function execute(Git_Hook_PushDetails $push_details, $commit_sha1)
     {
-        $rev_id = $push_details->getRepository()->getFullName().'/'.$commit_sha1;
+        $rev_id = $push_details->getRepository()->getFullName() . '/' . $commit_sha1;
         $text   = $this->git_exec->catFile($commit_sha1);
         $this->reference_manager->extractCrossRef(
             $text,

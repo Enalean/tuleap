@@ -42,9 +42,9 @@ class TrackerDateReminder_ArtifactFieldFactory
 
     public function cacheFieldsWithNotification($group_artifact_id)
     {
-        $sql = 'SELECT field_id'.
-               ' FROM artifact_date_reminder_settings'.
-               ' WHERE group_artifact_id = '.db_ei($group_artifact_id);
+        $sql = 'SELECT field_id' .
+               ' FROM artifact_date_reminder_settings' .
+               ' WHERE group_artifact_id = ' . db_ei($group_artifact_id);
         $res = db_query($sql);
         if ($res && !db_error($res)) {
             while (($row = db_fetch_array($res))) {

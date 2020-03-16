@@ -220,7 +220,7 @@ class RepositoryHeaderPresenterBuilder
 
         return new TabPresenter(
             $is_selected,
-            $this->url_manager->getRepositoryBaseUrl($repository) .'?'. http_build_query(
+            $this->url_manager->getRepositoryBaseUrl($repository) . '?' . http_build_query(
                 [
                     'a' => 'shortlog'
                 ]

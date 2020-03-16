@@ -35,7 +35,7 @@ class XML_ParseError
 
     public function __toString()
     {
-        return 'Line: '.$this->line.' Column: '.$this->column. ' '.$this->type.' '. $this->message;
+        return 'Line: ' . $this->line . ' Column: ' . $this->column . ' ' . $this->type . ' ' . $this->message;
     }
 
     public function getLine()

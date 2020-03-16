@@ -98,7 +98,7 @@ class SemanticTimeframeAdministrationPresenter
         $this->usable_start_date_fields                = $usable_start_date_fields;
         $this->usable_end_date_fields                  = $usable_end_date_fields;
         $this->usable_numeric_fields                   = $usable_numeric_fields;
-        $this->is_semantic_configured                  = $start_date_field !== null && ($duration_field !== null || $end_date_field !==null);
+        $this->is_semantic_configured                  = $start_date_field !== null && ($duration_field !== null || $end_date_field !== null);
         $this->has_tracker_charts                      = $has_tracker_charts;
         $this->is_semantic_in_start_date_duration_mode = $is_semantic_in_start_date_duration_mode;
         $this->target_url                              = $target_url;

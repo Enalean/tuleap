@@ -46,13 +46,13 @@ class EmailDoesNotMatchUser extends ActionToBeTakenForUser
     {
         return array(
             $this->username,
-            self::$ACTION .':',
+            self::$ACTION . ':',
             sprintf(
                 'There is an existing user %s but its email <%s> does not match <%s>. Use action "%s" to confirm the mapping.',
                 $this->username,
                 $this->email,
                 $this->email_found_in_xml,
-                self::$ACTION .':'. $this->username
+                self::$ACTION . ':' . $this->username
             )
         );
     }

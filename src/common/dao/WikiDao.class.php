@@ -38,9 +38,9 @@ class WikiDao extends DataAccessObject
     public function retrieveWikiPageId($pagename, $group_id)
     {
         $sql = sprintf(
-            'SELECT id'.
-            ' FROM wiki_page'.
-            ' WHERE pagename = %s'.
+            'SELECT id' .
+            ' FROM wiki_page' .
+            ' WHERE pagename = %s' .
             ' AND group_id = %d',
             $this->da->quoteSmart($pagename),
             $this->da->escapeInt($group_id)
@@ -71,10 +71,10 @@ class WikiDao extends DataAccessObject
     {
         $version = null;
         $sql = sprintf(
-            'SELECT MAX(version) AS version'.
-                       ' FROM wiki_page '.
-                       '  INNER JOIN wiki_version USING(id)'.
-                       ' WHERE group_id = %d'.
+            'SELECT MAX(version) AS version' .
+                       ' FROM wiki_page ' .
+                       '  INNER JOIN wiki_version USING(id)' .
+                       ' WHERE group_id = %d' .
                        ' AND pagename = %s',
             $groupId,
             $this->da->quoteSmart($pagename)
@@ -95,7 +95,7 @@ class WikiDao extends DataAccessObject
      */
     public function deleteWikiPage($id)
     {
-        $sql = sprintf('DELETE FROM wiki_page'.
+        $sql = sprintf('DELETE FROM wiki_page' .
                     ' WHERE id=%d', $id);
         return $this->update($sql);
     }
@@ -108,7 +108,7 @@ class WikiDao extends DataAccessObject
      */
     public function deleteWikiPageVersion($id)
     {
-        $sql = sprintf('DELETE FROM wiki_version'.
+        $sql = sprintf('DELETE FROM wiki_version' .
                     ' WHERE id=%d', $id);
         return $this->update($sql);
     }
@@ -121,8 +121,8 @@ class WikiDao extends DataAccessObject
      */
     public function deleteLinksFromToWikiPage($id)
     {
-        $sql = sprintf('DELETE FROM wiki_link'.
-                    ' WHERE linkfrom=%d'.
+        $sql = sprintf('DELETE FROM wiki_link' .
+                    ' WHERE linkfrom=%d' .
                     ' OR linkto=%d', $id, $id);
         return $this->update($sql);
     }
@@ -135,7 +135,7 @@ class WikiDao extends DataAccessObject
      */
     public function deleteWikiPageFromNonEmptyList($id)
     {
-        $sql = sprintf('DELETE FROM wiki_nonempty'.
+        $sql = sprintf('DELETE FROM wiki_nonempty' .
                     ' WHERE id=%d', $id);
         return $this->update($sql);
     }
@@ -148,7 +148,7 @@ class WikiDao extends DataAccessObject
      */
     public function deleteWikiPageRecentInfos($id)
     {
-        $sql = sprintf('DELETE FROM wiki_recent'.
+        $sql = sprintf('DELETE FROM wiki_recent' .
                     ' WHERE id=%d', $id);
         return $this->update($sql);
     }
@@ -161,8 +161,8 @@ class WikiDao extends DataAccessObject
      */
     public function updatePageName($user, $new_name)
     {
-        $sql = 'UPDATE wiki_page SET pagename = '.$this->da->quoteSmart($new_name).
-               ' WHERE pagename = '.$this->da->quoteSmart($user->getUserName());
+        $sql = 'UPDATE wiki_page SET pagename = ' . $this->da->quoteSmart($new_name) .
+               ' WHERE pagename = ' . $this->da->quoteSmart($user->getUserName());
         return $this->update($sql);
     }
 

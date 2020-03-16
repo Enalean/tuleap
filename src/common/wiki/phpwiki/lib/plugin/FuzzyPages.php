@@ -124,7 +124,7 @@ class WikiPlugin_FuzzyPages extends WikiPlugin
             $link = $this->_searchterm;
         }
         $caption = fmt("These page titles match fuzzy with '%s'", $link);
-        $table->pushContent(HTML::caption(array('align'=>'top'), $caption));
+        $table->pushContent(HTML::caption(array('align' => 'top'), $caption));
     }
 
     public function addTableHead(&$table)
@@ -170,7 +170,6 @@ class WikiPlugin_FuzzyPages extends WikiPlugin
 
     public function formatTable(&$list, &$dbi)
     {
-
         $table = HTML::table(array('cellpadding' => 2,
                                    'cellspacing' => 1,
                                    'border'      => 0,
@@ -228,7 +227,7 @@ class WikiPlugin_FuzzyPages extends WikiPlugin
             HTML::td($debug_metaphone)
         );
     }
-};
+}
 
 // $Log: FuzzyPages.php,v $
 // Revision 1.12  2004/11/23 15:17:19  rurban

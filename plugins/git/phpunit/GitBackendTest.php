@@ -37,7 +37,7 @@ class GitBackendTest extends TestCase
         $this->http_request = \Mockery::spy(\HTTPRequest::class);
         HTTPRequest::setInstance($this->http_request);
 
-        $this->fixturesPath = __DIR__.'/_fixtures';
+        $this->fixturesPath = __DIR__ . '/_fixtures';
 
         $git_plugin = \Mockery::mock(GitPlugin::class);
         $git_plugin->shouldReceive('areFriendlyUrlsActivated')->andReturns();
@@ -46,7 +46,7 @@ class GitBackendTest extends TestCase
 
     protected function tearDown(): void
     {
-        @unlink($this->fixturesPath.'/tmp/hooks/post-receive');
+        @unlink($this->fixturesPath . '/tmp/hooks/post-receive');
         HTTPRequest::clearInstance();
 
         parent::tearDown();
@@ -106,17 +106,17 @@ class GitBackendTest extends TestCase
         // spots bugs
         $this->cwd           = getcwd();
         $this->_tmpDir       = $this->getTmpDir();
-        $this->_fixDir       = __DIR__.'/_fixtures';
-        $this->_glAdmDirRef  = $this->_tmpDir.'/gitolite-admin-ref';
-        $this->backupDir     = $this->_tmpDir.'/backup';
-        system('tar -xf '. $this->_fixDir.'/gitolite-admin-ref' .'.tar --directory '.$this->_tmpDir);
+        $this->_fixDir       = __DIR__ . '/_fixtures';
+        $this->_glAdmDirRef  = $this->_tmpDir . '/gitolite-admin-ref';
+        $this->backupDir     = $this->_tmpDir . '/backup';
+        system('tar -xf ' . $this->_fixDir . '/gitolite-admin-ref' . '.tar --directory ' . $this->_tmpDir);
         mkdir($this->backupDir);
     }
 
     private function thenCleanTheWorkspace(): void
     {
-        system('rm -rf '. $this->_glAdmDirRef);
-        system('rm -rf '. $this->backupDir);
+        system('rm -rf ' . $this->_glAdmDirRef);
+        system('rm -rf ' . $this->backupDir);
         chdir($this->cwd);
     }
 }

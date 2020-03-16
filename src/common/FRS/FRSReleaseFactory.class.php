@@ -102,7 +102,7 @@ class FRSReleaseFactory
 
         $data_array = $dar->current();
 
-        return (FRSReleaseFactory :: getFRSReleaseFromArray($data_array));
+        return (FRSReleaseFactory::getFRSReleaseFromArray($data_array));
     }
 
     /**
@@ -234,7 +234,7 @@ class FRSReleaseFactory
     public function isReleaseNameExist($release_name, $package_id)
     {
         $release_exists = $this->getReleaseIdByName($release_name, $package_id);
-        return ($release_exists && count($release_exists) >=1);
+        return ($release_exists && count($release_exists) >= 1);
     }
 
 
@@ -243,7 +243,7 @@ class FRSReleaseFactory
     public function _getFRSReleaseDao()
     {
         if (!$this->dao) {
-            $this->dao =  new FRSReleaseDao(CodendiDataAccess :: instance(), $this->STATUS_DELETED);
+            $this->dao =  new FRSReleaseDao(CodendiDataAccess::instance(), $this->STATUS_DELETED);
         }
         return $this->dao;
     }
@@ -469,7 +469,7 @@ class FRSReleaseFactory
         // Reset permissions for this release, before setting the new ones
         if ($pm->clearPermission(FRSRelease::PERM_READ, $release->getReleaseID())) {
             $dar = $pm->getAuthorizedUgroups($release->getPackageID(), FRSPackage::PERM_READ, false);
-            if ($dar && !$dar->isError() && $dar->rowCount()>0) {
+            if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
                 foreach ($dar as $row) {
                     // Set new permissions
                     $pm->addPermission(FRSRelease::PERM_READ, $release->getReleaseID(), $row['ugroup_id']);
@@ -531,7 +531,7 @@ class FRSReleaseFactory
      */
     private function getNotification(FRSRelease $release, FRSPackage $package, array $array_emails)
     {
-        $subject = ' '.$GLOBALS['Language']->getText(
+        $subject = ' ' . $GLOBALS['Language']->getText(
             'file_admin_editreleases',
             'file_rel_notice_subject',
             array($GLOBALS['sys_name'], $release->getProject()->getPublicName(), $package->getName())
@@ -578,8 +578,8 @@ class FRSReleaseFactory
     {
         $server_url = HTTPRequest::instance()->getServerUrl();
 
-        $fileUrl  = $server_url . "/file/showfiles.php?group_id=".$package->getGroupID()."&release_id=".$release->getReleaseID();
-        $notifUrl = $server_url . "/file/filemodule_monitor.php?filemodule_id=".$package->getPackageID()."&group_id=".$package->getGroupID();
+        $fileUrl  = $server_url . "/file/showfiles.php?group_id=" . $package->getGroupID() . "&release_id=" . $release->getReleaseID();
+        $notifUrl = $server_url . "/file/filemodule_monitor.php?filemodule_id=" . $package->getPackageID() . "&group_id=" . $package->getGroupID();
 
         $body  = $GLOBALS['Language']->getText('file_admin_editreleases', 'download_explain_modified_package', array($release->getProject()->getPublicName(), $package->getName(), $release->getName(), $fileUrl));
 

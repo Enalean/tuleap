@@ -62,12 +62,12 @@ class XMLArtifactSourcePlatformExtractorTest extends TestCase
     {
         $this->config->shouldReceive("isUpdate")->andReturn(true);
 
-        $xml_field_mapping = file_get_contents(__DIR__."/_fixtures/testImportChangesetInArtifactWithoutSourcePlatformAttribute.xml");
+        $xml_field_mapping = file_get_contents(__DIR__ . "/_fixtures/testImportChangesetInArtifactWithoutSourcePlatformAttribute.xml");
         $xml_input = simplexml_load_string($xml_field_mapping);
 
         $this->logger->shouldReceive('warning')->with("No attribute source_platform in XML. New artifact created.");
 
-        $source_platform =$this->xml_source_platform_extractor->getSourcePlatform($xml_input, $this->config, $this->logger);
+        $source_platform = $this->xml_source_platform_extractor->getSourcePlatform($xml_input, $this->config, $this->logger);
         $this->assertEquals(null, $source_platform);
     }
 
@@ -75,12 +75,12 @@ class XMLArtifactSourcePlatformExtractorTest extends TestCase
     {
         $this->config->shouldReceive("isUpdate")->andReturn(true);
 
-        $xml_field_mapping = file_get_contents(__DIR__."/_fixtures/testImportChangesetInArtifactWithWrongSourcePlatformAttribute.xml");
+        $xml_field_mapping = file_get_contents(__DIR__ . "/_fixtures/testImportChangesetInArtifactWithWrongSourcePlatformAttribute.xml");
         $xml_input = simplexml_load_string($xml_field_mapping);
 
         $this->logger->shouldReceive('warning')->with("Source platform is not a valid URI. New artifact created.");
 
-        $source_platform =$this->xml_source_platform_extractor->getSourcePlatform($xml_input, $this->config, $this->logger);
+        $source_platform = $this->xml_source_platform_extractor->getSourcePlatform($xml_input, $this->config, $this->logger);
         $this->assertEquals(null, $source_platform);
     }
 
@@ -88,10 +88,10 @@ class XMLArtifactSourcePlatformExtractorTest extends TestCase
     {
         $this->config->shouldReceive("isUpdate")->andReturn(true);
 
-        $xml_field_mapping = file_get_contents(__DIR__."/_fixtures/testImportChangesetInNewArtifact.xml");
+        $xml_field_mapping = file_get_contents(__DIR__ . "/_fixtures/testImportChangesetInNewArtifact.xml");
         $xml_input = simplexml_load_string($xml_field_mapping);
 
-        $source_platform =$this->xml_source_platform_extractor->getSourcePlatform($xml_input, $this->config, $this->logger);
+        $source_platform = $this->xml_source_platform_extractor->getSourcePlatform($xml_input, $this->config, $this->logger);
         $this->assertEquals("https://web/", $source_platform);
     }
 
@@ -99,10 +99,10 @@ class XMLArtifactSourcePlatformExtractorTest extends TestCase
     {
         $this->config->shouldReceive("isUpdate")->andReturn(false);
 
-        $xml_field_mapping = file_get_contents(__DIR__."/_fixtures/testImportChangesetInArtifactWithoutSourcePlatformAttribute.xml");
+        $xml_field_mapping = file_get_contents(__DIR__ . "/_fixtures/testImportChangesetInArtifactWithoutSourcePlatformAttribute.xml");
         $xml_input = simplexml_load_string($xml_field_mapping);
 
-        $source_platform =$this->xml_source_platform_extractor->getSourcePlatform($xml_input, $this->config, $this->logger);
+        $source_platform = $this->xml_source_platform_extractor->getSourcePlatform($xml_input, $this->config, $this->logger);
         $this->assertEquals(null, $source_platform);
     }
 
@@ -110,10 +110,10 @@ class XMLArtifactSourcePlatformExtractorTest extends TestCase
     {
         $this->config->shouldReceive("isUpdate")->andReturn(false);
 
-        $xml_field_mapping = file_get_contents(__DIR__."/_fixtures/testImportChangesetInNewArtifact.xml");
+        $xml_field_mapping = file_get_contents(__DIR__ . "/_fixtures/testImportChangesetInNewArtifact.xml");
         $xml_input = simplexml_load_string($xml_field_mapping);
 
-        $source_platform =$this->xml_source_platform_extractor->getSourcePlatform($xml_input, $this->config, $this->logger);
+        $source_platform = $this->xml_source_platform_extractor->getSourcePlatform($xml_input, $this->config, $this->logger);
         $this->assertEquals("https://web/", $source_platform);
     }
 }

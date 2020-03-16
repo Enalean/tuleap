@@ -399,7 +399,6 @@ class TrackerRulesListValidatorTest extends TestCase
 
     public function testS6ValidateListRulesReturnFalseAndErrorIfA1TryToAccessToB2()
     {
-
         $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', 'f_1(Champ1) -> f_2(Champ2)']);
         $value_field_list = [
             '101' => 'A1',

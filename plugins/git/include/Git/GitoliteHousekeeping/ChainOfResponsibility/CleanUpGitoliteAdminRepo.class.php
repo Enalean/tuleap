@@ -52,7 +52,7 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepo ex
     public function execute(): void
     {
         $admin_dir  = 'admin';
-        $backup_dir = $this->gitolite_var_path .'/admin.old';
+        $backup_dir = $this->gitolite_var_path . '/admin.old';
         if (is_dir($backup_dir)) {
             $this->response->error("The gitolite backup dir $backup_dir already exists. Please remove it.");
             $this->response->abort();

@@ -150,8 +150,8 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
                 $value = null;
                 if (isset($field['manual_value'])) {
                     $value = $field['manual_value'];
-                } elseif (isset($field[$field['type'].'_value'])) {
-                    $value = $field[$field['type'].'_value'];
+                } elseif (isset($field[$field['type'] . '_value'])) {
+                    $value = $field[$field['type'] . '_value'];
                 } elseif (isset($field['value'])) {
                     $value = $field['value'];
                 }
@@ -390,7 +390,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
     {
         $field_label =  'Summary';
         $put_body    = $this->buildPUTBodyContent($artifact_id, $field_label);
-        $response    = $this->getResponse($this->client->put('artifacts/'.$artifact_id, null, $put_body));
+        $response    = $this->getResponse($this->client->put('artifacts/' . $artifact_id, null, $put_body));
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertNotNull($response->getHeader('Last-Modified'));
@@ -419,7 +419,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
      */
     public function testPutIsIdempotent($artifact_id)
     {
-        $artifact      = $this->getResponse($this->client->get('artifacts/'.$artifact_id));
+        $artifact      = $this->getResponse($this->client->get('artifacts/' . $artifact_id));
         $last_modified = $artifact->getHeader('Last-Modified')->normalize()->__toString();
         $etag          = $artifact->getHeader('Etag')->normalize()->__toString();
 
@@ -434,7 +434,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
             ),
         ));
 
-        $response    = $this->getResponse($this->client->put('artifacts/'.$artifact_id, null, $put_resource));
+        $response    = $this->getResponse($this->client->put('artifacts/' . $artifact_id, null, $put_resource));
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertNotNull($response->getHeader('Last-Modified'));
         $this->assertNotNull($response->getHeader('Etag'));
@@ -461,9 +461,9 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
             ),
         ));
 
-        $request = $this->client->put('artifacts/'.$artifact_id, null, $put_resource);
+        $request = $this->client->put('artifacts/' . $artifact_id, null, $put_resource);
 
-        $artifact      = $this->getResponse($this->client->get('artifacts/'.$artifact_id));
+        $artifact      = $this->getResponse($this->client->get('artifacts/' . $artifact_id));
         $last_modified = $artifact->getHeader('Last-Modified')->normalize()->__toString();
         $request->setHeader('If-Unmodified-Since', $last_modified);
 
@@ -492,9 +492,9 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
             ),
         ));
 
-        $request = $this->client->put('artifacts/'.$artifact_id, null, $put_resource);
+        $request = $this->client->put('artifacts/' . $artifact_id, null, $put_resource);
 
-        $artifact      = $this->getResponse($this->client->get('artifacts/'.$artifact_id));
+        $artifact      = $this->getResponse($this->client->get('artifacts/' . $artifact_id));
         $Etag = $artifact->getHeader('Etag')->normalize()->__toString();
         $request->setHeader('If-Match', $Etag);
 
@@ -524,7 +524,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         ));
 
         $last_modified = "2001-03-05T15:14:55+01:00";
-        $request       = $this->client->put('artifacts/'.$artifact_id, null, $put_resource);
+        $request       = $this->client->put('artifacts/' . $artifact_id, null, $put_resource);
         $request->setHeader('If-Unmodified-Since', $last_modified);
 
         try {
@@ -551,7 +551,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         ));
 
         $Etag    = "one empty bottle";
-        $request = $this->client->put('artifacts/'.$artifact_id, null, $put_resource);
+        $request = $this->client->put('artifacts/' . $artifact_id, null, $put_resource);
         $request->setHeader('If-Match', $Etag);
 
         try {
@@ -574,7 +574,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
             ),
         ));
 
-        $response    = $this->getResponse($this->client->put('artifacts/'.$artifact_id, null, $put_resource));
+        $response    = $this->getResponse($this->client->put('artifacts/' . $artifact_id, null, $put_resource));
         $this->assertEquals($response->getStatusCode(), 200);
         $this->assertNotNull($response->getHeader('Last-Modified'));
         $this->assertNotNull($response->getHeader('Etag'));
@@ -621,7 +621,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
 
     public function testAnonymousGETArtifact()
     {
-        $response = $this->client->get('artifacts/'.$this->story_artifact_ids[1])->send();
+        $response = $this->client->get('artifacts/' . $this->story_artifact_ids[1])->send();
         $this->assertEquals(403, $response->getStatusCode());
     }
 

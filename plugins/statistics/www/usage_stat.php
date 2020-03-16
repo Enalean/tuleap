@@ -103,7 +103,7 @@ header('Content-Type: text/csv');
 header('Content-Disposition: filename=Tuleap_progress_data.csv');
 
 csv_output("Tuleap progress data$eol");
-csv_output("Date".$sep."Registered User".$sep."Registered Projects".$eol);
+csv_output("Date" . $sep . "Registered User" . $sep . "Registered Projects" . $eol);
 
 for ($year = $min_year; $year <= $max_year; $year++) {
     $y_min_month = 1;
@@ -123,6 +123,6 @@ for ($year = $min_year; $year <= $max_year; $year++) {
         if (isset($total_array[$year][$month]['group'])) {
             $group = $total_array[$year][$month]['group'];
         }
-        csv_output('1/'.$month.'/'.$year.$sep.$user.$sep.$group.$eol);
+        csv_output('1/' . $month . '/' . $year . $sep . $user . $sep . $group . $eol);
     }
 }

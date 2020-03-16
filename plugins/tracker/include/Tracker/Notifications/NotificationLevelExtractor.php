@@ -34,8 +34,8 @@ class NotificationLevelExtractor
         }
 
         $notification_level = $request->get('notifications_level');
-        if ((int)$notification_level !== Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE &&
-            (int)$notification_level !== Tracker::NOTIFICATIONS_LEVEL_DISABLED) {
+        if ((int) $notification_level !== Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE &&
+            (int) $notification_level !== Tracker::NOTIFICATIONS_LEVEL_DISABLED) {
             return Tracker::NOTIFICATIONS_LEVEL_DEFAULT;
         }
 

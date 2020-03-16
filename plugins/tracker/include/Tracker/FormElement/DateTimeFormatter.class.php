@@ -72,12 +72,12 @@ class Tracker_FormElement_DateTimeFormatter extends Tracker_FormElement_DateForm
     public function getFieldDataForCSVPreview(array $date_explode)
     {
         return $date_explode[0] . '-' . $date_explode[1] . '-' . $date_explode[2]
-            . ' ' . $date_explode[3].':'.$date_explode[4];
+            . ' ' . $date_explode[3] . ':' . $date_explode[4];
     }
 
     public function formatDate($timestamp)
     {
-        return format_date(self::DATE_TIME_FORMAT, (float)$timestamp, '');
+        return format_date(self::DATE_TIME_FORMAT, (float) $timestamp, '');
     }
 
     public function formatDateForDisplay($timestamp)
@@ -88,8 +88,8 @@ class Tracker_FormElement_DateTimeFormatter extends Tracker_FormElement_DateForm
     protected function getDatePicker($value, array $errors)
     {
         return $GLOBALS['HTML']->getBootstrapDatePicker(
-            "tracker_admin_field_". $this->field->getId(),
-            'artifact['. $this->field->getId() .']',
+            "tracker_admin_field_" . $this->field->getId(),
+            'artifact[' . $this->field->getId() . ']',
             $value,
             array(),
             $errors,

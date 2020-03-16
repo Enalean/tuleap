@@ -23,7 +23,7 @@ class CardwallFromXmlImportCannotBeEnabledException extends Exception
 {
     public function __construct($tracker_id)
     {
-        $message = 'The cardwall on top of the tracker' .$tracker_id.' cannot be enabled.';
+        $message = 'The cardwall on top of the tracker' . $tracker_id . ' cannot be enabled.';
         parent::__construct($message);
     }
 }

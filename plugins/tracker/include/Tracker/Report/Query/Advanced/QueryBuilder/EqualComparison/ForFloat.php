@@ -54,7 +54,7 @@ class ForFloat implements FieldFromWhereBuilder
         if ($value === '') {
             $condition = "$changeset_value_float_alias.value IS NULL";
         } else {
-            $condition = "$changeset_value_float_alias.value = ".$this->escapeFloat($value);
+            $condition = "$changeset_value_float_alias.value = " . $this->escapeFloat($value);
         }
 
         return $this->from_where_builder->getFromWhere(

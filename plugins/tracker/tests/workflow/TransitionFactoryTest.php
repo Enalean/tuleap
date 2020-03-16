@@ -21,7 +21,7 @@
 
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
-require_once __DIR__.'/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 class TransitionFactory_BaseTest extends TuleapTestCase
 {

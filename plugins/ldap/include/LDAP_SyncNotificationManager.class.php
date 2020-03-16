@@ -62,7 +62,7 @@ class LDAP_SyncNotificationManager
     private function getBody($unixProjectName, $user)
     {
         $server_url       = HTTPRequest::instance()->getServerUrl();
-        $project_url      = $server_url.'/projects/'.urlencode($unixProjectName);
+        $project_url      = $server_url . '/projects/' . urlencode($unixProjectName);
         $project = $this->projectManager->getProjectByUnixName($unixProjectName);
         $publicProjectName = $project->getPublicName();
         $purifiedPublicProjectName = Codendi_HTMLPurifier::instance()->purify($publicProjectName, CODENDI_PURIFIER_LIGHT);

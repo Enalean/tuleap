@@ -178,7 +178,7 @@ class NotificationsManager_MoveTest extends TestCase
     //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     protected function _runTest($dr, $br, $cr, $lb, $lc, $ld, $res, $msg = "%s"): void
     {
-        $msg = "[$dr, $br, $cr, $lb, $lc, $ld, $res] ". $msg;
+        $msg = "[$dr, $br, $cr, $lb, $lc, $ld, $res] " . $msg;
 
         $a = \Mockery::spy(\Docman_Item::class);
         $a->shouldReceive('getId')->andReturns('a');

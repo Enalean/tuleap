@@ -31,7 +31,6 @@ class GraphOnTrackersV5_Chart_PieDataBuilder extends ChartDataBuilderV5
      */
     public function buildProperties($engine)
     {
-
         parent::buildProperties($engine);
         $engine->data   = array();
         $engine->legend = null;
@@ -45,10 +44,10 @@ class GraphOnTrackersV5_Chart_PieDataBuilder extends ChartDataBuilderV5
         }
 
         if ($af->userCanRead()) {
-            $select = " SELECT count(a.id) AS nb, ". $af->getQuerySelectWithDecorator();
-            $from   = " FROM tracker_artifact AS a INNER JOIN tracker_changeset AS c ON (c.artifact_id = a.id) ". $af->getQueryFromWithDecorator();
-            $where  = " WHERE a.id IN (". $this->artifacts['id'] .")
-                          AND c.id IN (". $this->artifacts['last_changeset_id'] .") ";
+            $select = " SELECT count(a.id) AS nb, " . $af->getQuerySelectWithDecorator();
+            $from   = " FROM tracker_artifact AS a INNER JOIN tracker_changeset AS c ON (c.artifact_id = a.id) " . $af->getQueryFromWithDecorator();
+            $where  = " WHERE a.id IN (" . $this->artifacts['id'] . ")
+                          AND c.id IN (" . $this->artifacts['last_changeset_id'] . ") ";
             $sql = $select . $from . $where . ' GROUP BY ' . $af->getQueryGroupBy() . ' ORDER BY ' . $af->getQueryOrderby();
             $res = db_query($sql);
             while ($data = db_fetch_array($res)) {

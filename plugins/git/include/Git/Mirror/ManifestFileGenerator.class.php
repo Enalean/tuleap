@@ -178,12 +178,12 @@ class Git_Mirror_ManifestFileGenerator
 
     private function getRepositoryKey(GitRepository $repository)
     {
-        return '/'. $repository->getPath();
+        return '/' . $repository->getPath();
     }
 
     private function getRepositoryKeyFromPathName($path_name)
     {
-        return '/'. $path_name;
+        return '/' . $path_name;
     }
 
     private function getListOfRepositoriesFromManifest($filename)

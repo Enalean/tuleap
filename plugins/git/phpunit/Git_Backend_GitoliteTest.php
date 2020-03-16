@@ -39,7 +39,7 @@ class Git_Backend_GitoliteTest extends TestCase
         parent::setUp();
         $this->fixtureRenamePath = $this->getTmpDir() . '/rename';
 
-        mkdir($this->fixtureRenamePath .'/legacy', 0770, true);
+        mkdir($this->fixtureRenamePath . '/legacy', 0770, true);
 
         $this->forkPermissions = array();
     }
@@ -61,15 +61,15 @@ class Git_Backend_GitoliteTest extends TestCase
         $bck->shouldReceive('log')->never();
         $backend->shouldReceive('getBackend')->andReturns($bck);
 
-        $this->assertTrue(is_dir($this->fixtureRenamePath .'/legacy'));
-        $this->assertFalse(is_dir($this->fixtureRenamePath .'/newone'));
+        $this->assertTrue(is_dir($this->fixtureRenamePath . '/legacy'));
+        $this->assertFalse(is_dir($this->fixtureRenamePath . '/newone'));
 
         $backend->shouldReceive('glRenameProject')->with('legacy', 'newone')->once();
         $this->assertTrue($backend->renameProject($project, 'newone'));
 
-        clearstatcache(true, $this->fixtureRenamePath .'/legacy');
-        $this->assertFalse(is_dir($this->fixtureRenamePath .'/legacy'));
-        $this->assertTrue(is_dir($this->fixtureRenamePath .'/newone'));
+        clearstatcache(true, $this->fixtureRenamePath . '/legacy');
+        $this->assertFalse(is_dir($this->fixtureRenamePath . '/legacy'));
+        $this->assertTrue(is_dir($this->fixtureRenamePath . '/newone'));
     }
 
     public function testItSavesForkInfoIntoDB(): void
@@ -127,7 +127,7 @@ class Git_Backend_GitoliteTest extends TestCase
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
-        $driver->shouldReceive('fork')->with($name, 'gpig/'. $old_namespace, 'gpig/'. $new_namespace)->once()->andReturns(true);
+        $driver->shouldReceive('fork')->with($name, 'gpig/' . $old_namespace, 'gpig/' . $new_namespace)->once()->andReturns(true);
         $driver->shouldReceive('dumpProjectRepoConf')->with($project)->once();
         $driver->shouldReceive('push')->never();
 
@@ -167,7 +167,7 @@ class Git_Backend_GitoliteTest extends TestCase
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
-        $driver->shouldReceive('fork')->with($repo_name, $old_project_name.'/'. $namespace, $new_project_name.'/'. $namespace)->once()->andReturns(true);
+        $driver->shouldReceive('fork')->with($repo_name, $old_project_name . '/' . $namespace, $new_project_name . '/' . $namespace)->once()->andReturns(true);
         $driver->shouldReceive('dumpProjectRepoConf')->with($new_project)->once();
         $driver->shouldReceive('push')->never();
 

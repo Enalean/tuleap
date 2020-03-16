@@ -27,7 +27,7 @@ class Admin_ProjectListExporter
     /**
      * @var array
      */
-    private $column_list= array('group_id', 'project_name', 'unix_name' ,'status', 'type', 'public', 'members');
+    private $column_list = array('group_id', 'project_name', 'unix_name' ,'status', 'type', 'public', 'members');
 
 
     /**
@@ -85,7 +85,7 @@ class Admin_ProjectListExporter
                                      'public'       => $project['access'],
                                      'members'      => $daoUsers->returnUsersNumberByGroupId($project['group_id']));
 
-            $csv_body .= build_csv_record($this->column_list, $documents_body)."\n";
+            $csv_body .= build_csv_record($this->column_list, $documents_body) . "\n";
         }
         return $csv_body;
     }
@@ -100,7 +100,7 @@ class Admin_ProjectListExporter
     private function exportCsv($body)
     {
         $eol = "\n";
-        return $this->buildCsvHeader().$eol.$this->buildCsvBody($body);
+        return $this->buildCsvHeader() . $eol . $this->buildCsvBody($body);
     }
 
     /**
@@ -112,7 +112,7 @@ class Admin_ProjectListExporter
      */
     private function getProjectStatus($status_code)
     {
-        $status="";
+        $status = "";
         switch ($status_code) {
             case Project::STATUS_ACTIVE:
                 $status = $GLOBALS['Language']->getText('admin_groupedit', 'status_A');

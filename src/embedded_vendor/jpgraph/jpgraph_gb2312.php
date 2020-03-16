@@ -1512,15 +1512,15 @@ class GB2312toUTF8
         if (!trim($gb)) {
             return $gb;
         }
-        $utf8='';
+        $utf8 = '';
         while ($gb) {
             if (ord(substr($gb, 0, 1)) > 127) {
-                $t=substr($gb, 0, 2);
-                $gb=substr($gb, 2);
-                $utf8 .= $this->u2utf8($this->codetable[hexdec(bin2hex($t))-0x8080]);
+                $t = substr($gb, 0, 2);
+                $gb = substr($gb, 2);
+                $utf8 .= $this->u2utf8($this->codetable[hexdec(bin2hex($t)) - 0x8080]);
             } else {
-                $t=substr($gb, 0, 1);
-                $gb=substr($gb, 1);
+                $t = substr($gb, 0, 1);
+                $gb = substr($gb, 1);
                 $utf8 .= $this->u2utf8($t);
             }
         }
@@ -1529,21 +1529,21 @@ class GB2312toUTF8
 
     public function u2utf8($c)
     {
-        $str='';
+        $str = '';
         if ($c < 0x80) {
-            $str.=$c;
+            $str .= $c;
         } elseif ($c < 0x800) {
-            $str.=chr(0xC0 | $c>>6);
-            $str.=chr(0x80 | $c & 0x3F);
+            $str .= chr(0xC0 | $c >> 6);
+            $str .= chr(0x80 | $c & 0x3F);
         } elseif ($c < 0x10000) {
-            $str.=chr(0xE0 | $c>>12);
-            $str.=chr(0x80 | $c>>6 & 0x3F);
-            $str.=chr(0x80 | $c & 0x3F);
+            $str .= chr(0xE0 | $c >> 12);
+            $str .= chr(0x80 | $c >> 6 & 0x3F);
+            $str .= chr(0x80 | $c & 0x3F);
         } elseif ($c < 0x200000) {
-            $str.=chr(0xF0 | $c>>18);
-            $str.=chr(0x80 | $c>>12 & 0x3F);
-            $str.=chr(0x80 | $c>>6 & 0x3F);
-            $str.=chr(0x80 | $c & 0x3F);
+            $str .= chr(0xF0 | $c >> 18);
+            $str .= chr(0x80 | $c >> 12 & 0x3F);
+            $str .= chr(0x80 | $c >> 6 & 0x3F);
+            $str .= chr(0x80 | $c & 0x3F);
         }
         return $str;
     }

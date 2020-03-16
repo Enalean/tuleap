@@ -38,11 +38,11 @@ class ServiceFile extends Service
         $purifier = Codendi_HTMLPurifier::instance();
 
         $html    = '';
-        $html   .= '<p><a href="/file/showfiles.php?group_id='.urlencode((string) $this->getGroupId()).'">';
-        $html   .= '<i class="dashboard-widget-content-projectpublicareas '.$purifier->purify($this->getIcon()).'"></i>';
-        $html   .= $GLOBALS['Language']->getText('include_project_home', 'file_releases').'</a>';
+        $html   .= '<p><a href="/file/showfiles.php?group_id=' . urlencode((string) $this->getGroupId()) . '">';
+        $html   .= '<i class="dashboard-widget-content-projectpublicareas ' . $purifier->purify($this->getIcon()) . '"></i>';
+        $html   .= $GLOBALS['Language']->getText('include_project_home', 'file_releases') . '</a>';
         $user_id = UserManager::instance()->getCurrentUser()->getId();
-        $html   .= ' ( '.$GLOBALS['Language']->getText('include_project_home', 'packages', count($this->_getPackagesForUser($user_id))).' )';
+        $html   .= ' ( ' . $GLOBALS['Language']->getText('include_project_home', 'packages', count($this->_getPackagesForUser($user_id))) . ' )';
         $html   .= '</p>';
         return $html;
     }
@@ -68,13 +68,13 @@ class ServiceFile extends Service
                     <thead>
                         <tr class="boxitem">
                             <th>
-                                '.$GLOBALS['Language']->getText('include_project_home', 'package').'
+                                ' . $GLOBALS['Language']->getText('include_project_home', 'package') . '
                             </th>
                             <th>
-                                '.$GLOBALS['Language']->getText('include_project_home', 'version').'
+                                ' . $GLOBALS['Language']->getText('include_project_home', 'version') . '
                             </th>
                             <th>
-                                '.$GLOBALS['Language']->getText('include_project_home', 'download').'
+                                ' . $GLOBALS['Language']->getText('include_project_home', 'download') . '
                             </th>
                         </tr>
                     </thead>
@@ -94,23 +94,23 @@ class ServiceFile extends Service
                   <tr class="boxitem">
                   <td>
                     <b>' .  $hp->purify(util_unconvert_htmlspecialchars($package['package_name']), CODENDI_PURIFIER_CONVERT_HTML)  . '</b>&nbsp;
-                    <a HREF="/file/filemodule_monitor.php?filemodule_id=' . $package['package_id'] . '&group_id='.$this->getGroupId().'">'.
+                    <a HREF="/file/filemodule_monitor.php?filemodule_id=' . $package['package_id'] . '&group_id=' . $this->getGroupId() . '">' .
                         $monitor_img . '
                     </a>
                   </td>';
                 // Releases to display
-                $ret['content'] .= '<td>'.  $hp->purify($package['release_name'], CODENDI_PURIFIER_CONVERT_HTML)  .'&nbsp;<A href="/file/shownotes.php?group_id=' . $this->getGroupId() . '&release_id=' . $package['release_id'] . '">
+                $ret['content'] .= '<td>' .  $hp->purify($package['release_name'], CODENDI_PURIFIER_CONVERT_HTML)  . '&nbsp;<A href="/file/shownotes.php?group_id=' . $this->getGroupId() . '&release_id=' . $package['release_id'] . '">
                     <i class="fa fa-fw fa-files-o"></i>
                   </td>
-                  <td><a href="/file/showfiles.php?group_id=' . $this->getGroupId() . '&release_id=' . $package['release_id'] . '">'.$GLOBALS['Language']->getText('include_project_home', 'download').'</a></td></tr>';
+                  <td><a href="/file/showfiles.php?group_id=' . $this->getGroupId() . '&release_id=' . $package['release_id'] . '">' . $GLOBALS['Language']->getText('include_project_home', 'download') . '</a></td></tr>';
             }
             $ret['content'] .= '</tbody></table>';
         } else {
-            $ret['content'] .= '<b>'. $GLOBALS['Language']->getText('include_project_home', 'no_files_released') .'</b>';
+            $ret['content'] .= '<b>' . $GLOBALS['Language']->getText('include_project_home', 'no_files_released') . '</b>';
         }
         $ret['content'] .= '
             <div align="center">
-                <a href="/file/showfiles.php?group_id='.$this->getGroupId().'">['.$GLOBALS['Language']->getText('include_project_home', 'view_all_files').']</A>
+                <a href="/file/showfiles.php?group_id=' . $this->getGroupId() . '">[' . $GLOBALS['Language']->getText('include_project_home', 'view_all_files') . ']</A>
             </div>
         ';
         return $ret;
@@ -131,29 +131,29 @@ class ServiceFile extends Service
     {
         $frspf = $this->getFRSPackageFactory();
         $packages = array();
-        $sql="SELECT frs_package.package_id,frs_package.name AS package_name,frs_release.name AS release_name,frs_release.release_id AS release_id,frs_release.release_date AS release_date ".
-        "FROM frs_package,frs_release ".
-        "WHERE frs_package.package_id=frs_release.package_id ".
-        "AND frs_package.group_id='". db_ei($this->getGroupId()) ."' ".
-        "AND frs_release.status_id=' ".db_ei($frspf->STATUS_ACTIVE)."' ".
+        $sql = "SELECT frs_package.package_id,frs_package.name AS package_name,frs_release.name AS release_name,frs_release.release_id AS release_id,frs_release.release_date AS release_date " .
+        "FROM frs_package,frs_release " .
+        "WHERE frs_package.package_id=frs_release.package_id " .
+        "AND frs_package.group_id='" . db_ei($this->getGroupId()) . "' " .
+        "AND frs_release.status_id=' " . db_ei($frspf->STATUS_ACTIVE) . "' " .
         "ORDER BY frs_package.rank,frs_package.package_id,frs_release.release_date DESC, frs_release.release_id DESC";
         $res_files = db_query($sql);
         $rows_files = db_numrows($res_files);
         if ($res_files && $rows_files >= 1) {
-            for ($f=0; $f<$rows_files; $f++) {
-                $package_id=db_result($res_files, $f, 'package_id');
-                $release_id=db_result($res_files, $f, 'release_id');
+            for ($f = 0; $f < $rows_files; $f++) {
+                $package_id = db_result($res_files, $f, 'package_id');
+                $release_id = db_result($res_files, $f, 'release_id');
                 if ($frspf->userCanRead($this->getGroupId(), $package_id, $user_id)) {
                     if (isset($package_displayed[$package_id]) && $package_displayed[$package_id]) {
                         //if ($package_id==db_result($res_files,($f-1),'package_id')) {
                         //same package as last iteration - don't show this release
                     } else {
-                        $authorized=false;
+                        $authorized = false;
                         // check access.
                         if (permission_exist('RELEASE_READ', $release_id)) {
-                            $authorized=permission_is_authorized('RELEASE_READ', $release_id, $user_id, $this->getGroupId());
+                            $authorized = permission_is_authorized('RELEASE_READ', $release_id, $user_id, $this->getGroupId());
                         } else {
-                            $authorized=permission_is_authorized('PACKAGE_READ', $package_id, $user_id, $this->getGroupId());
+                            $authorized = permission_is_authorized('PACKAGE_READ', $package_id, $user_id, $this->getGroupId());
                         }
                         if ($authorized) {
                             $packages[] = array(
@@ -181,7 +181,7 @@ class ServiceFile extends Service
         if ($this->getFrsPermissionManager()->isAdmin($project, $user)) {
             $toolbar[]   = array(
                 'title' => $GLOBALS['Language']->getText('file_file_utils', 'toolbar_admin'),
-                'url'   => '/file/admin/?'. http_build_query(array(
+                'url'   => '/file/admin/?' . http_build_query(array(
                         'group_id' => $project->getID(),
                         'action'   => 'edit-permissions'
                     ))
@@ -190,7 +190,7 @@ class ServiceFile extends Service
 
         $toolbar[] = array(
             'title' => $GLOBALS['Language']->getText('file_file_utils', 'toolbar_help'),
-            'url'   => "javascript:help_window('/doc/".$user->getShortLocale()."/user-guide/documents-and-files/frs.html')"
+            'url'   => "javascript:help_window('/doc/" . $user->getShortLocale() . "/user-guide/documents-and-files/frs.html')"
         );
 
         $breadcrumbs = array();

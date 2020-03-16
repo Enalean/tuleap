@@ -149,7 +149,7 @@ final class MemberRemovalControllerTest extends TestCase
 
         $this->checkUserIsProjectAdmin($project);
 
-        $ugroup = M::mock(\ProjectUGroup::class, [ 'getProjectId' => 101, 'getId' => 202]);
+        $ugroup = M::mock(\ProjectUGroup::class, ['getProjectId' => 101, 'getId' => 202]);
         $this->ugroup_manager->shouldReceive('getUGroup')->with($project, '202')->andReturn($ugroup);
 
         $user_to_remove = new \PFUser(['user_id' => 303]);
@@ -177,10 +177,10 @@ final class MemberRemovalControllerTest extends TestCase
 
         $this->checkUserIsProjectAdmin($project);
 
-        $ugroup = M::mock(\ProjectUGroup::class, [ 'getProjectId' => 101, 'getId' => 202]);
+        $ugroup = M::mock(\ProjectUGroup::class, ['getProjectId' => 101, 'getId' => 202]);
         $this->ugroup_manager->shouldReceive('getUGroup')->with($project, '202')->andReturn($ugroup);
 
-        $user_to_remove = M::mock(\PFUser::class, [ 'getId' => 303, 'isAdmin' => false]);
+        $user_to_remove = M::mock(\PFUser::class, ['getId' => 303, 'isAdmin' => false]);
         $this->http_request->shouldReceive('get')->with('remove_user')->andReturn('303');
         $this->user_manager->shouldReceive('getUserById')->with('303')->andReturn($user_to_remove);
 
@@ -203,10 +203,10 @@ final class MemberRemovalControllerTest extends TestCase
 
         $this->checkUserIsProjectAdmin($project);
 
-        $ugroup = M::mock(\ProjectUGroup::class, [ 'getProjectId' => 101, 'getId' => 202]);
+        $ugroup = M::mock(\ProjectUGroup::class, ['getProjectId' => 101, 'getId' => 202]);
         $this->ugroup_manager->shouldReceive('getUGroup')->with($project, '202')->andReturn($ugroup);
 
-        $user_to_remove = M::mock(\PFUser::class, [ 'getId' => 303]);
+        $user_to_remove = M::mock(\PFUser::class, ['getId' => 303]);
         $user_to_remove->shouldReceive('isAdmin')->with(101)->andReturnTrue();
         $this->http_request->shouldReceive('get')->with('remove_user')->andReturn('303');
         $this->user_manager->shouldReceive('getUserById')->with('303')->andReturn($user_to_remove);

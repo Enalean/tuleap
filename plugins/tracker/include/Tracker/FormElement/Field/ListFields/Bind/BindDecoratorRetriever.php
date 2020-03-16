@@ -38,7 +38,7 @@ class BindDecoratorRetriever
         $changeset = $artifact->getLastChangeset();
         if (! $changeset) {
             throw new NoChangesetException();
-        };
+        }
 
         $values = $field->getBind()->getChangesetValues($changeset->getId());
         if (! $values) {

@@ -60,7 +60,7 @@ class Tracker
 
     public function countArtifacts()
     {
-        $request  = $this->client->get('trackers/'. $this->tracker['id'] .'/artifacts');
+        $request  = $this->client->get('trackers/' . $this->tracker['id'] . '/artifacts');
         $response = $this->getResponse($request);
         $header   = $response->getHeader('X-PAGINATION-SIZE')->normalize()->toArray();
         $size     = $header[0];

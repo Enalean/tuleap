@@ -34,7 +34,7 @@ class IdForXMLImportExportConvertor
 
     public static function convertXMLIdToFileInfoId(string $xml_id): int
     {
-        if (! preg_match('/'. preg_quote(self::ID_PREFIX, '/') .'(\d+)/', $xml_id, $matches)) {
+        if (! preg_match('/' . preg_quote(self::ID_PREFIX, '/') . '(\d+)/', $xml_id, $matches)) {
             throw new \InvalidArgumentException("Given id does not look like a valid XML file id.");
         }
 

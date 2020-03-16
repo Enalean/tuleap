@@ -24,10 +24,10 @@
 use Tuleap\PHPWiki\WikiPage;
 
 require_once('WikiActions.class.php');
-require_once(dirname(__FILE__).'/../lib/WikiEntry.class.php');
-require_once(dirname(__FILE__).'/../lib/WikiPage.class.php');
-require_once(dirname(__FILE__).'/../lib/WikiAttachment.class.php');
-require_once(dirname(__FILE__).'/../lib/Wiki.class.php');
+require_once(dirname(__FILE__) . '/../lib/WikiEntry.class.php');
+require_once(dirname(__FILE__) . '/../lib/WikiPage.class.php');
+require_once(dirname(__FILE__) . '/../lib/WikiAttachment.class.php');
+require_once(dirname(__FILE__) . '/../lib/Wiki.class.php');
 
 
 class WikiServiceAdminActions extends WikiActions
@@ -71,9 +71,9 @@ class WikiServiceAdminActions extends WikiActions
 
     public function create()
     {
-        $page=$_POST['page'];
+        $page = $_POST['page'];
         if (!empty($_POST['upage'])) {
-            $page=$_POST['upage'];
+            $page = $_POST['upage'];
         }
 
         if ($this->checkPage($page)) {
@@ -136,9 +136,9 @@ class WikiServiceAdminActions extends WikiActions
 
     public function update()
     {
-        $page=$_POST['page'];
+        $page = $_POST['page'];
         if (!empty($_POST['upage'])) {
-            $page=$_POST['upage'];
+            $page = $_POST['upage'];
         }
 
         if ($this->checkPage($page)) {

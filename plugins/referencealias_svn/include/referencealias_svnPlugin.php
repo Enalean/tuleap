@@ -19,7 +19,7 @@
  */
 
 require_once __DIR__ . '/../../svn/include/svnPlugin.php';
-require_once __DIR__. '/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 require_once 'constants.php';
 
 use Tuleap\ReferenceAliasSVN\Dao;

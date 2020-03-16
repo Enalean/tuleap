@@ -30,11 +30,11 @@ class AdminDelegation_UserServiceLogDao extends DataAccessObject
 
     public function addLog($action, $serviceId, $userId, $time)
     {
-        $sql = 'INSERT INTO plugin_admindelegation_service_user_log (service_id, user_id, date, action)'.
-               ' VALUES ('.$this->da->escapeInt($serviceId).','.
-                           $this->da->escapeInt($userId).','.
-                           'FROM_UNIXTIME('.$this->da->escapeInt($time).'),'.
-                           $this->da->quoteSmart($action).
+        $sql = 'INSERT INTO plugin_admindelegation_service_user_log (service_id, user_id, date, action)' .
+               ' VALUES (' . $this->da->escapeInt($serviceId) . ',' .
+                           $this->da->escapeInt($userId) . ',' .
+                           'FROM_UNIXTIME(' . $this->da->escapeInt($time) . '),' .
+                           $this->da->quoteSmart($action) .
                            ')';
         return $this->update($sql);
     }

@@ -36,7 +36,7 @@ class b201403281402_add_index_for_reverse_link extends ForgeUpgrade_Bucket
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
                 $info = $this->db->dbh->errorInfo();
-                $msg  = 'An error occured adding index to tracker_changeset_value_artifactlink: '.$info[2].' ('.$info[1].' - '.$info[0].')';
+                $msg  = 'An error occured adding index to tracker_changeset_value_artifactlink: ' . $info[2] . ' (' . $info[1] . ' - ' . $info[0] . ')';
                 $this->log->error($msg);
                 throw new ForgeUpgrade_Bucket_Db_Exception($msg);
             }
@@ -60,7 +60,7 @@ class b201403281402_add_index_for_reverse_link extends ForgeUpgrade_Bucket
      */
     private function indexNameExists($tableName, $index)
     {
-        $sql = 'SHOW INDEX FROM '.$tableName.' WHERE Key_name LIKE '.$this->db->dbh->quote($index);
+        $sql = 'SHOW INDEX FROM ' . $tableName . ' WHERE Key_name LIKE ' . $this->db->dbh->quote($index);
         $res = $this->db->dbh->query($sql);
         if ($res && $res->fetch() !== false) {
             $res->closeCursor();

@@ -26,7 +26,7 @@ use Git_Mirror_Mirror;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__.'/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 class ConfigPermissionsSerializerGitoliteConfTest extends TestCase
 {
@@ -56,7 +56,7 @@ class ConfigPermissionsSerializerGitoliteConfTest extends TestCase
 
     protected function tearDown() : void
     {
-        exec('rm -rf '. escapeshellarg($this->cache_dir));
+        exec('rm -rf ' . escapeshellarg($this->cache_dir));
         \ForgeConfig::restore();
         parent::tearDown();
     }
@@ -75,7 +75,7 @@ class ConfigPermissionsSerializerGitoliteConfTest extends TestCase
         );
 
         $this->assertSame(
-            file_get_contents(__DIR__.'/_fixtures/default_gitolite.conf'),
+            file_get_contents(__DIR__ . '/_fixtures/default_gitolite.conf'),
             $serializer->getGitoliteDotConf(array('projecta', 'projectb'))
         );
     }
@@ -86,7 +86,7 @@ class ConfigPermissionsSerializerGitoliteConfTest extends TestCase
         $serializer = new Git_Gitolite_ConfigPermissionsSerializer(
             $this->mirror_mapper,
             Mockery::spy(\Git_Driver_Gerrit_ProjectCreatorStatus::class),
-            __DIR__.'/_fixtures/etc_templates',
+            __DIR__ . '/_fixtures/etc_templates',
             Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRetriever::class),
             Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionFactory::class),
             Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class),
@@ -94,7 +94,7 @@ class ConfigPermissionsSerializerGitoliteConfTest extends TestCase
         );
 
         $this->assertSame(
-            file_get_contents(__DIR__.'/_fixtures/override_gitolite.conf'),
+            file_get_contents(__DIR__ . '/_fixtures/override_gitolite.conf'),
             $serializer->getGitoliteDotConf(array('projecta', 'projectb'))
         );
     }
@@ -112,7 +112,7 @@ class ConfigPermissionsSerializerGitoliteConfTest extends TestCase
             Mockery::spy(EventManager::class)
         );
         $this->assertSame(
-            file_get_contents(dirname(__FILE__).'/_fixtures/mirrors_gitolite.conf'),
+            file_get_contents(dirname(__FILE__) . '/_fixtures/mirrors_gitolite.conf'),
             $serializer->getGitoliteDotConf(array('projecta', 'projectb'))
         );
     }

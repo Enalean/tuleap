@@ -43,5 +43,5 @@ if (isset($argv[1]) && $argv[1] == 'test') {
     } catch (Exception $e) {
         die($e->getMessage());
     }
-    file_put_contents('/etc/tuleap/conf/local.inc', preg_replace('/\$sys_trusted_proxies = \'\'/', '$sys_trusted_proxies = \''.gethostbyname('reverse-proxy').'\'', file_get_contents('/etc/tuleap/conf/local.inc')));
+    file_put_contents('/etc/tuleap/conf/local.inc', preg_replace('/\$sys_trusted_proxies = \'\'/', '$sys_trusted_proxies = \'' . gethostbyname('reverse-proxy') . '\'', file_get_contents('/etc/tuleap/conf/local.inc')));
 }

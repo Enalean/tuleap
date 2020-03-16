@@ -37,7 +37,7 @@ $consoleLogger = new Log_ConsoleLogger();
 $posix_user = posix_getpwuid(posix_geteuid());
 $sys_user   = $posix_user['name'];
 if ($sys_user !== 'root' && $sys_user !== ForgeConfig::get('sys_http_user')) {
-    $consoleLogger->error('Unsufficient privileges for user '.$sys_user);
+    $consoleLogger->error('Unsufficient privileges for user ' . $sys_user);
     return false;
 }
 
@@ -68,9 +68,9 @@ try {
     $XMLExport->setArchiveName(basename($argv[2]));
     $XMLExport->dumpPackage();
 } catch (Exception $exception) {
-    $consoleLogger->error("Export failed : ".$exception->getMessage());
+    $consoleLogger->error("Export failed : " . $exception->getMessage());
     return false;
 }
 
 $end = microtime(true);
-$consoleLogger->info("Elapsed time: ".($end-$start));
+$consoleLogger->info("Elapsed time: " . ($end - $start));

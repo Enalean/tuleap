@@ -35,7 +35,7 @@ class GitPhpAccessLogger
 
     public function logAccess(GitRepository $repository, PFUser $user)
     {
-        $request_time = new DateTime('@'.$_SERVER['REQUEST_TIME']);
+        $request_time = new DateTime('@' . $_SERVER['REQUEST_TIME']);
         $day          = $request_time->format('Ymd');
 
         $this->dao->addGitReadAccess($day, $repository->getId(), $user->getId(), 1);

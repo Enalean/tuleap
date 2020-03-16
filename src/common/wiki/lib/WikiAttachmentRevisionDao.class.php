@@ -30,12 +30,12 @@ class WikiAttachmentRevisionDao extends DataAccessObject
     {
         $sql = sprintf(
             'INSERT INTO wiki_attachment_revision SET'
-                       .'  attachment_id = %d'
-                       .', user_id       = %d'
-                       .', date          = %d'
-                       .', revision      = %d'
-                       .', mimetype      = "%s"'
-                       .', size          = %d',
+                       . '  attachment_id = %d'
+                       . ', user_id       = %d'
+                       . ', date          = %d'
+                       . ', revision      = %d'
+                       . ', mimetype      = "%s"'
+                       . ', size          = %d',
             $attachmentId,
             $ownerId,
             $date,
@@ -52,11 +52,11 @@ class WikiAttachmentRevisionDao extends DataAccessObject
     {
         $sql = sprintf(
             'INSERT INTO wiki_attachment_log SET'
-                       .'  user_id                     = %d'
-                       .', group_id                    = %d'
-                       .', wiki_attachment_id          = %d'
-                       .', wiki_attachment_revision_id = %d'
-                       .', time                        = %d',
+                       . '  user_id                     = %d'
+                       . ', group_id                    = %d'
+                       . ', wiki_attachment_id          = %d'
+                       . ', wiki_attachment_revision_id = %d'
+                       . ', time                        = %d',
             $userId,
             $groupId,
             $attachmentId,
@@ -75,8 +75,8 @@ class WikiAttachmentRevisionDao extends DataAccessObject
     {
         $sql = sprintf(
             'SELECT * FROM wiki_attachment_revision'
-                       .' WHERE attachment_id=%d'
-                       .' AND revision=%d',
+                       . ' WHERE attachment_id=%d'
+                       . ' AND revision=%d',
             $attachmentId,
             $revision
         );
@@ -91,8 +91,8 @@ class WikiAttachmentRevisionDao extends DataAccessObject
     {
         $sql = sprintf(
             'SELECT * FROM wiki_attachment_revision'
-                       .' WHERE attachment_id=%d'
-                       .' ORDER BY date DESC',
+                       . ' WHERE attachment_id=%d'
+                       . ' ORDER BY date DESC',
             $id
         );
 

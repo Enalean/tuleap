@@ -50,7 +50,7 @@ class URLVerificationFactory
     public function getURLVerification($server)
     {
         $this->event_manager->processEvent('url_verification_instance', array('server_param' => $server,
-                                                    'url_verification' =>&$urlVerification));
+                                                    'url_verification' => &$urlVerification));
         if (isset($urlVerification)) {
             return ($urlVerification);
         } else {

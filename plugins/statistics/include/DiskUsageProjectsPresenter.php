@@ -63,10 +63,10 @@ class DiskUsageProjectsPresenter
         $this->data_projects = $data_projects;
         $this->nb_projects   = $nb_projects;
 
-        $this->start_size_url     = $page.'?'.http_build_query($this->buildUrlParams($menu, 'start_size'));
-        $this->end_size_url       = $page.'?'.http_build_query($this->buildUrlParams($menu, 'end_size'));
-        $this->evolution_url      = $page.'?'.http_build_query($this->buildUrlParams($menu, 'evolution'));
-        $this->evolution_rate_url = $page.'?'.http_build_query($this->buildUrlParams($menu, 'evolution_rate'));
+        $this->start_size_url     = $page . '?' . http_build_query($this->buildUrlParams($menu, 'start_size'));
+        $this->end_size_url       = $page . '?' . http_build_query($this->buildUrlParams($menu, 'end_size'));
+        $this->evolution_url      = $page . '?' . http_build_query($this->buildUrlParams($menu, 'evolution'));
+        $this->evolution_rate_url = $page . '?' . http_build_query($this->buildUrlParams($menu, 'evolution_rate'));
 
         $this->pane_title                      = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'data_projects_pane_title');
         $this->table_rank_title                = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'table_rank_title');

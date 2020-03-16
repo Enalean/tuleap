@@ -63,7 +63,7 @@ class SetFloatValueRepository
                         $transition->getId()
                     )
                 );
-            };
+            }
             $success = $this->set_float_value_dao->updatePostAction(
                 $id_or_failure,
                 $set_float_value->getFieldId(),

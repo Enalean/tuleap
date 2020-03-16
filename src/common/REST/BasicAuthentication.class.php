@@ -75,6 +75,6 @@ class BasicAuthentication implements iAuthenticate
      */
     public function __getWWWAuthenticateString() // phpcs:ignore
     {
-        return 'Basic realm="'.AuthenticatedResource::REALM.'" Token realm="'.AuthenticatedResource::REALM.'" AccessKey realm="'.AuthenticatedResource::REALM.'"';
+        return 'Basic realm="' . AuthenticatedResource::REALM . '" Token realm="' . AuthenticatedResource::REALM . '" AccessKey realm="' . AuthenticatedResource::REALM . '"';
     }
 }

@@ -36,7 +36,7 @@ class Dao extends DataAccessObject
                 FROM plugin_svn_repositories
                 LEFT JOIN plugin_svn_last_access
                   ON plugin_svn_repositories.id = plugin_svn_last_access.repository_id
-                WHERE project_id=' . $project_id .'
+                WHERE project_id=' . $project_id . '
                 AND repository_deletion_date IS NULL
                 ORDER BY name ASC';
 
@@ -300,7 +300,7 @@ class Dao extends DataAccessObject
                 FROM plugin_svn_repositories
                     INNER JOIN groups AS project
                     ON plugin_svn_repositories.project_id = project.group_id
-                WHERE project.status <> ' . $status_deleted .'
+                WHERE project.status <> ' . $status_deleted . '
                 AND repository_deletion_date IS NULL
                 ORDER BY project_id, name ASC';
 

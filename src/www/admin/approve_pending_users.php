@@ -41,7 +41,7 @@ define('ADMIN_APPROVE_PENDING_PAGE_VALIDATED', 'validated');
 
 $hp = Codendi_HTMLPurifier::instance();
 $action_select = '';
-$status= '';
+$status = '';
 $users_array = array();
 if ($request->exist('action_select')) {
     $action_select = $request->get('action_select');
@@ -57,31 +57,31 @@ $valid_page = new Valid_WhiteList('page', array(ADMIN_APPROVE_PENDING_PAGE_PENDI
 $page = $request->getValidated('page', $valid_page, '');
 $csrf_token = new CSRFSynchronizerToken('/admin/approve_pending_users.php?page=' . $page);
 $expiry_date = 0;
-if ($request->exist('form_expiry') && $request->get('form_expiry')!='' && ! preg_match("/[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/", $request->get('form_expiry'))) {
-    $feedback .= ' '.$Language->getText('admin_approve_pending_users', 'data_not_parsed');
+if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! preg_match("/[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/", $request->get('form_expiry'))) {
+    $feedback .= ' ' . $Language->getText('admin_approve_pending_users', 'data_not_parsed');
 } else {
     $vDate = new Valid_String();
-    if ($request->exist('form_expiry') && $request->get('form_expiry')!='' && $vDate->validate($request->get('form_expiry'))) {
+    if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && $vDate->validate($request->get('form_expiry'))) {
         $date_list = explode("-", $request->get('form_expiry'), 3);
         $unix_expiry_time = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
         $expiry_date = $unix_expiry_time;
     }
 
-    if (($action_select=='activate')) {
+    if (($action_select == 'activate')) {
         $csrf_token->check();
 
-        $shell="";
-        if ($status=='restricted') {
-            $newstatus='R';
-            $shell=",shell='".$GLOBALS['codendi_bin_prefix'] ."/cvssh-restricted'";
+        $shell = "";
+        if ($status == 'restricted') {
+            $newstatus = 'R';
+            $shell = ",shell='" . $GLOBALS['codendi_bin_prefix'] . "/cvssh-restricted'";
         } else {
-            $newstatus='A';
+            $newstatus = 'A';
         }
 
         $users_ids = db_ei_implode($users_array);
         // update the user status flag to active
-        db_query("UPDATE user SET expiry_date='".$expiry_date."', status='".$newstatus."'".$shell.
-                 ", approved_by='".UserManager::instance()->getCurrentUser()->getId()."'".
+        db_query("UPDATE user SET expiry_date='" . $expiry_date . "', status='" . $newstatus . "'" . $shell .
+                 ", approved_by='" . UserManager::instance()->getCurrentUser()->getId() . "'" .
              " WHERE user_id IN ($users_ids)");
 
         $em = EventManager::instance();
@@ -116,23 +116,23 @@ if ($request->exist('form_expiry') && $request->get('form_expiry')!='' && ! preg
                 $Language->getText('admin_approve_pending_users', 'user_activated_success')
             );
         }
-    } elseif ($action_select=='validate') {
+    } elseif ($action_select == 'validate') {
         $csrf_token->check();
-        if ($status=='restricted') {
-            $newstatus='W';
+        if ($status == 'restricted') {
+            $newstatus = 'W';
         } else {
-            $newstatus='V';
+            $newstatus = 'V';
         }
 
 
         // update the user status flag to active
-        db_query("UPDATE user SET expiry_date='".$expiry_date."', status='".$newstatus."'".
-                 ", approved_by='".UserManager::instance()->getCurrentUser()->getId()."'".
-                 " WHERE user_id IN (".implode(',', $users_array).")");
+        db_query("UPDATE user SET expiry_date='" . $expiry_date . "', status='" . $newstatus . "'" .
+                 ", approved_by='" . UserManager::instance()->getCurrentUser()->getId() . "'" .
+                 " WHERE user_id IN (" . implode(',', $users_array) . ")");
 
         // Now send the user verification emails
         $res_user = db_query("SELECT email, confirm_hash, user_name FROM user "
-                 . " WHERE user_id IN (".implode(',', $users_array).")");
+                 . " WHERE user_id IN (" . implode(',', $users_array) . ")");
 
         while ($row_user = db_fetch_array($res_user)) {
             if (!send_new_user_email($row_user['email'], $row_user['user_name'], $row_user['confirm_hash'])) {
@@ -155,10 +155,10 @@ if ($request->exist('form_expiry') && $request->get('form_expiry')!='' && ! preg
                 $Language->getText('admin_approve_pending_users', 'user_validated_success')
             );
         }
-    } elseif ($action_select=='delete') {
+    } elseif ($action_select == 'delete') {
         $csrf_token->check();
-        db_query("UPDATE user SET status='D', approved_by='".UserManager::instance()->getCurrentUser()->getId()."'".
-                 " WHERE user_id IN (".implode(',', $users_array).")");
+        db_query("UPDATE user SET status='D', approved_by='" . UserManager::instance()->getCurrentUser()->getId() . "'" .
+                 " WHERE user_id IN (" . implode(',', $users_array) . ")");
         $em = EventManager::instance();
         foreach ($users_array as $user_id) {
             $em->processEvent('project_admin_delete_user', array('user_id' => $user_id));

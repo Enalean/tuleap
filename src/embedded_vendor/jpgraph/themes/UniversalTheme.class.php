@@ -33,7 +33,6 @@ class UniversalTheme extends Theme
 
     public function SetupGraph($graph)
     {
-
         // graph
         /*
         $img = $graph->img;
@@ -88,7 +87,6 @@ class UniversalTheme extends Theme
 
     public function SetupPieGraph($graph)
     {
-
         // graph
         $graph->SetFrame(false);
 
@@ -127,7 +125,6 @@ class UniversalTheme extends Theme
 
     public function ApplyPlot($plot)
     {
-
         switch (get_class($plot)) {
             case 'GroupBarPlot':
                 foreach ($plot->plots as $_plot) {
@@ -152,7 +149,7 @@ class UniversalTheme extends Theme
 
             case 'LinePlot':
                 $plot->Clear();
-                $plot->SetColor($this->GetNextColor().'@0.4');
+                $plot->SetColor($this->GetNextColor() . '@0.4');
                 $plot->SetWeight(2);
                 break;
 

@@ -66,8 +66,8 @@ class Docman_View_ItemRanking
         while ($brotherIter->valid()) {
             $item = $brotherIter->current();
             if ($pm->userCanWrite($user, $item->getId())) {
-                $vals[$i]  = $item->getRank()+1;
-                $texts[$i] = dgettext('tuleap-docman', 'After').' '. $hp->purify($item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML) ;
+                $vals[$i]  = $item->getRank() + 1;
+                $texts[$i] = dgettext('tuleap-docman', 'After') . ' ' . $hp->purify($item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML);
                 $i++;
             }
             $brotherIter->next();
@@ -77,16 +77,16 @@ class Docman_View_ItemRanking
         // In this case because of cast string values are converted to 0 on cmp. So if
         // there is a rank == 0 ... so bad :/
         $html = '';
-        $html = dgettext('tuleap-docman', 'Position:').' ';
+        $html = dgettext('tuleap-docman', 'Position:') . ' ';
 
-        $html .= '<select name="'.$this->dropDownName.'">'."\n";
+        $html .= '<select name="' . $this->dropDownName . '">' . "\n";
         $maxOpts = count($vals);
         for ($i = 0; $i < $maxOpts; $i++) {
             $selected = '';
             if ($vals[$i] === $this->selectedValue) {
                 $selected = ' selected="selected"';
             }
-            $html .= '<option value="'.$vals[$i].'"'.$selected.'>'.$texts[$i].'</option>'."\n";
+            $html .= '<option value="' . $vals[$i] . '"' . $selected . '>' . $texts[$i] . '</option>' . "\n";
         }
         $html .= '</select>';
 

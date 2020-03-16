@@ -48,7 +48,7 @@ class ArtifactAttachmentXMLZipper implements ArtifactAttachmentXMLExporter
             $this->archive->addEmptyDir(ArtifactXMLExporter::ARCHIVE_DATA_DIR);
         }
         foreach ($dar as $row) {
-            $xml_file_id     = ArtifactAttachmentFieldXMLExporter::XML_FILE_PREFIX.$row['id'];
+            $xml_file_id     = ArtifactAttachmentFieldXMLExporter::XML_FILE_PREFIX . $row['id'];
             $path_in_archive = $this->getFilePathInArchive($xml_file_id);
             if ($this->skip_files) {
                 $this->archive->addFromString($path_in_archive, '');
@@ -76,6 +76,6 @@ class ArtifactAttachmentXMLZipper implements ArtifactAttachmentXMLExporter
 
     private function getFilePathInArchive($xml_file_id)
     {
-        return ArtifactXMLExporter::ARCHIVE_DATA_DIR.DIRECTORY_SEPARATOR.'Artifact'.$xml_file_id;
+        return ArtifactXMLExporter::ARCHIVE_DATA_DIR . DIRECTORY_SEPARATOR . 'Artifact' . $xml_file_id;
     }
 }

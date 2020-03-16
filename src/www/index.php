@@ -28,7 +28,7 @@ use Tuleap\Request\RouteCollector;
 
 define('FRONT_ROUTER', true);
 
-require_once __DIR__.'/include/pre.php';
+require_once __DIR__ . '/include/pre.php';
 
 $router = new FrontRouter(
     new RouteCollector($event_manager),

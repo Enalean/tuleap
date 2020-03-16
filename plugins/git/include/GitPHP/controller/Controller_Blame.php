@@ -139,7 +139,7 @@ class Controller_Blame extends ControllerBase // @codingStandardsIgnoreLine
             $pathtree[] = $pathtreepiece;
 
             $path = dirname($path);
-        };
+        }
         $this->tpl->assign('pathtree', array_reverse($pathtree));
         $this->tpl->assign('tree', $commit->GetTree());
 

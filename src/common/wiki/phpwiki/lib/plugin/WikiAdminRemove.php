@@ -270,7 +270,7 @@ class _PageList_Column_remove extends _PageList_Column
             $page_handle->getName()
         );
     }
-};
+}
 
 
 // $Log: WikiAdminRemove.php,v $

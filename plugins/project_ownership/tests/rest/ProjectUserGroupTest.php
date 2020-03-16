@@ -72,7 +72,7 @@ class ProjectUserGroupTest extends \RestBase
         return $this->getResponseByName(
             $sender,
             $this->client->put(
-                'user_groups/'.$project_id.'_'.\REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID.'/users',
+                'user_groups/' . $project_id . '_' . \REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID . '/users',
                 null,
                 json_encode([
                     'user_references' => $user_references

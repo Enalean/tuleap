@@ -33,7 +33,7 @@ class ToBeCreatedUser extends ActionToBeTakenForUser
     {
         return array(
             $this->username,
-            self::ACTION .':'. PFUser::STATUS_SUSPENDED,
+            self::ACTION . ':' . PFUser::STATUS_SUSPENDED,
             sprintf(
                 '%s (%s) <%s> must be created',
                 $this->realname,

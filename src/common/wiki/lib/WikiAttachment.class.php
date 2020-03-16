@@ -197,7 +197,7 @@ class WikiAttachment /* implements UGroupPermission */
     public function setGid($id = 0)
     {
         $this->gid      = (int) $id;
-        $this->basedir = $GLOBALS['sys_wiki_attachment_data_dir'].'/'.$this->gid;
+        $this->basedir = $GLOBALS['sys_wiki_attachment_data_dir'] . '/' . $this->gid;
     }
 
     /**
@@ -206,7 +206,6 @@ class WikiAttachment /* implements UGroupPermission */
      */
     public function setFilename($name = "")
     {
-
         if (preg_match("/[^._a-zA-Z0-9-\(\) &]/", $name)) {
             trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 'err_alpha', array($name)), E_USER_ERROR);
         }
@@ -223,7 +222,7 @@ class WikiAttachment /* implements UGroupPermission */
      */
     public function initFilesystemName()
     {
-        $this->filesystemName = $this->filename.'_'.time();
+        $this->filesystemName = $this->filename . '_' . time();
         return true;
     }
 
@@ -314,7 +313,7 @@ class WikiAttachment /* implements UGroupPermission */
                 $filename = $uriExp[5];
             }
             $this->setFilename(urldecode($filename));
-            $file = $this->basedir.'/'.$this->filename;
+            $file = $this->basedir . '/' . $this->filename;
         } else {
             // Take care of possible arguments (if sth like '?' or '&' CUT!)
             if (preg_match('/([^&\?]*)(\?|&)/', $uriExp[4], $matches)) {
@@ -323,7 +322,7 @@ class WikiAttachment /* implements UGroupPermission */
                 $filename = $uriExp[4];
             }
             $this->setFilename(urldecode($filename));
-            $file = $this->basedir.'/'.$this->filename;
+            $file = $this->basedir . '/' . $this->filename;
 
             // @TODO: prevent usage of '?' and '&' as behind. But with a
             // generical functions, in utils.php for instance.
@@ -347,7 +346,7 @@ class WikiAttachment /* implements UGroupPermission */
 
     public function exist()
     {
-        return is_dir($this->basedir.'/'.$this->getFilesystemName());
+        return is_dir($this->basedir . '/' . $this->getFilesystemName());
     }
 
     /**
@@ -398,8 +397,8 @@ class WikiAttachment /* implements UGroupPermission */
         }
 
         // Create directory where file revison will be stored
-        if (!is_dir($this->basedir.'/'.$this->getFilesystemName())) {
-            $res = mkdir($this->basedir.'/'.$this->getFilesystemName(), 0700);
+        if (!is_dir($this->basedir . '/' . $this->getFilesystemName())) {
+            $res = mkdir($this->basedir . '/' . $this->getFilesystemName(), 0700);
             if (!$res) {
                 trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 'err_create_file_dir'), E_USER_ERROR);
                 return false;
@@ -506,7 +505,7 @@ class WikiAttachment /* implements UGroupPermission */
         }
 
         // Validate filename
-        if (!is_dir($this->basedir.'/'.$this->getFilesystemName())) {
+        if (!is_dir($this->basedir . '/' . $this->getFilesystemName())) {
             return false;
             //      print "error ".$this->basedir.'/'.$this->filename;
         }
@@ -670,7 +669,7 @@ class WikiAttachment /* implements UGroupPermission */
     public function purgeAttachment()
     {
         if ($this->exist()) {
-            $attachmentPath = $this->basedir.'/'.$this->getFilesystemName();
+            $attachmentPath = $this->basedir . '/' . $this->getFilesystemName();
             $dirAttachment = new DirectoryIterator($attachmentPath);
             foreach ($dirAttachment as $version) {
                 if (!$version->isDot()) {

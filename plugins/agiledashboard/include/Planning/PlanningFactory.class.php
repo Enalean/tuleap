@@ -736,7 +736,7 @@ class PlanningFactory
         $sub_plannings = [];
         foreach ($all_plannings as $key => $planning) {
             if ($planning->getId() == $base_planning->getId()) {
-                $sub_plannings = array_slice($all_plannings, $key+1);
+                $sub_plannings = array_slice($all_plannings, $key + 1);
                 break;
             }
         }

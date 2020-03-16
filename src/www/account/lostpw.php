@@ -26,7 +26,7 @@ require_once __DIR__ . '/../include/pre.php';
 $em = EventManager::instance();
 $em->processEvent('before_lostpw', array());
 
-$HTML->header(array('title'=>$Language->getText('account_lostpw', 'title')));
+$HTML->header(array('title' => $Language->getText('account_lostpw', 'title')));
 
 ?>
 

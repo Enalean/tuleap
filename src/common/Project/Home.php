@@ -127,7 +127,7 @@ class Home implements DispatchableWithRequest
                         new WidgetMinimizor($dashboard_widget_dao),
                         new AssetsIncluder(
                             $layout,
-                            new IncludeAssets(__DIR__ .'/../../www/assets', '/assets'),
+                            new IncludeAssets(__DIR__ . '/../../www/assets', '/assets'),
                             new CssAssetCollection(
                                 [new CssAsset(
                                     new IncludeAssets(

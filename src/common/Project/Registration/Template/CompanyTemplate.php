@@ -58,7 +58,7 @@ class CompanyTemplate implements ProjectTemplate
 
     public function getId(): string
     {
-        return (string)$this->template_id;
+        return (string) $this->template_id;
     }
 
     public function getTitle(): string

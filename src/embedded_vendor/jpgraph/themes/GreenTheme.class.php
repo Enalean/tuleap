@@ -33,7 +33,6 @@ class GreenTheme extends Theme
 
     public function SetupGraph($graph)
     {
-
         // graph
         /*
         $img = $graph->img;
@@ -83,7 +82,6 @@ class GreenTheme extends Theme
 
     public function SetupPieGraph($graph)
     {
-
         // graph
         $graph->SetFrame(false);
 
@@ -122,7 +120,6 @@ class GreenTheme extends Theme
 
     public function ApplyPlot($plot)
     {
-
         switch (get_class($plot)) {
             case 'GroupBarPlot':
                 foreach ($plot->plots as $_plot) {
@@ -148,7 +145,7 @@ class GreenTheme extends Theme
             case 'LinePlot':
                 $plot->Clear();
 
-                $plot->SetColor($this->GetNextColor().'@0.4');
+                $plot->SetColor($this->GetNextColor() . '@0.4');
                 $plot->SetWeight(2);
                 break;
 

@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once __DIR__.'/../../../bootstrap.php';
+require_once __DIR__ . '/../../../bootstrap.php';
 
 class Tracker_XML_Updater_TemporaryFileCreatorTest extends TuleapTestCase
 {
@@ -36,7 +36,7 @@ class Tracker_XML_Updater_TemporaryFileCreatorTest extends TuleapTestCase
         ForgeConfig::set('tmp_dir', sys_get_temp_dir());
 
         $this->creator = new Tracker_XML_Updater_TemporaryFileCreator();
-        $this->initial = __DIR__ .'/_fixtures/toto.txt';
+        $this->initial = __DIR__ . '/_fixtures/toto.txt';
     }
 
     public function tearDown()

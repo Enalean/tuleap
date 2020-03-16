@@ -42,9 +42,9 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent
         $txt = '';
         if (strpos($this->parameters, ',' === false)) {
             // Only one Group ID
-            $txt .= 'project: '. $this->verbalizeProjectId($this->getIdFromParam($this->parameters), $with_link);
+            $txt .= 'project: ' . $this->verbalizeProjectId($this->getIdFromParam($this->parameters), $with_link);
         } else {
-            $txt .= 'projects: '. $this->parameters;
+            $txt .= 'projects: ' . $this->parameters;
         }
         return $txt;
     }
@@ -54,8 +54,7 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent
      */
     public function process()
     {
-
-        $groups=explode(',', $this->parameters);
+        $groups = explode(',', $this->parameters);
 
         $backendSystem = Backend::instance('System');
 
@@ -88,7 +87,7 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent
                     $backendSVN->setSVNApacheConfNeedUpdate();
                     $backendSVN->setSVNPrivacy($project, !$project->isPublic());
                 }
-                $backendSystem->log("Project ".$project->getUnixName()." created");
+                $backendSystem->log("Project " . $project->getUnixName() . " created");
             }
         }
 

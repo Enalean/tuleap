@@ -165,7 +165,7 @@ $GLOBALS['HTML']->includeFooterJavascriptFile(
 $renderer = new \Tuleap\Admin\AdminPageRenderer();
 $renderer->renderANoFramedPresenter(
     $title,
-    ForgeConfig::get('codendi_dir') .'/src/templates/admin/system_events/',
+    ForgeConfig::get('codendi_dir') . '/src/templates/admin/system_events/',
     'notifications',
     new \Tuleap\SystemEvent\NotificationsPresenter(
         $title,

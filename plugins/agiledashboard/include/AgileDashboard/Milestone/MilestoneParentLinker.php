@@ -94,7 +94,6 @@ class MilestoneParentLinker
         Tracker_Artifact $parent_milestone_artifact,
         PFUser $user
     ) {
-
         $parent = $artifact_added->getParent($user);
 
         if (! $parent) {

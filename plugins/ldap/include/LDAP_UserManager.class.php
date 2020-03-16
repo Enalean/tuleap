@@ -224,9 +224,9 @@ class LDAP_UserManager
     {
         $account_name = $this->getLoginFromString($uid);
         $uid = $account_name;
-        $i=2;
+        $i = 2;
         while ($this->userNameIsAvailable($uid) !== true) {
-            $uid = $account_name.$i;
+            $uid = $account_name . $i;
             $i++;
         }
         return $uid;
@@ -516,16 +516,16 @@ class LDAP_UserManager
         if ($nbr_users_to_suspend == 0 || $nbr_all_users == 0) {
             return true;
         }
-        $percentage_users_to_suspend = ($nbr_users_to_suspend / $nbr_all_users) *100;
+        $percentage_users_to_suspend = ($nbr_users_to_suspend / $nbr_all_users) * 100;
         $threshold_users_suspension  = $this->ldap->getLDAPParam('threshold_users_suspension');
         $logger = new \Tuleap\LDAP\LdapLogger();
         if ($percentage_users_to_suspend <= $threshold_users_suspension) {
-            $logger->info("[LDAP] Percentage of suspended users is ( ".$percentage_users_to_suspend."% ) and threshold is ( ".$threshold_users_suspension."% )");
-            $logger->info("[LDAP] Number of suspended users is ( ".$nbr_users_to_suspend." ) and number of active users is ( ".$nbr_all_users." )");
+            $logger->info("[LDAP] Percentage of suspended users is ( " . $percentage_users_to_suspend . "% ) and threshold is ( " . $threshold_users_suspension . "% )");
+            $logger->info("[LDAP] Number of suspended users is ( " . $nbr_users_to_suspend . " ) and number of active users is ( " . $nbr_all_users . " )");
             return true;
         } else {
-            $logger->warning("[LDAP] Users not suspended: the percentage of users to suspend is ( ".$percentage_users_to_suspend."% ) higher then threshold ( ".$threshold_users_suspension."% )");
-            $logger->warning("[LDAP] Number of users not suspended is ( ".$nbr_users_to_suspend." ) and number of active users is ( ".$nbr_all_users." )");
+            $logger->warning("[LDAP] Users not suspended: the percentage of users to suspend is ( " . $percentage_users_to_suspend . "% ) higher then threshold ( " . $threshold_users_suspension . "% )");
+            $logger->warning("[LDAP] Number of users not suspended is ( " . $nbr_users_to_suspend . " ) and number of active users is ( " . $nbr_all_users . " )");
             return false;
         }
     }
@@ -541,7 +541,7 @@ class LDAP_UserManager
      */
     public function isUserDeletedFromLdap($row)
     {
-        $ldap_query = $this->ldap->getLDAPParam('eduid').'='.$row['ldap_id'];
+        $ldap_query = $this->ldap->getLDAPParam('eduid') . '=' . $row['ldap_id'];
         $attributes = $this->user_sync->getSyncAttributes($this->ldap);
         $ldapSearch = false;
 

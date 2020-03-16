@@ -59,7 +59,7 @@ class UnplannedCriterionOptionsProvider
             $selected = 'selected="selected"';
         }
 
-        $option  = '<option value="'.$milestone_id.'" '. $selected .'>';
+        $option  = '<option value="' . $milestone_id . '" ' . $selected . '>';
         $option .= $label;
         $option .= '</option>';
 

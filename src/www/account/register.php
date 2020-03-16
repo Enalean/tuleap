@@ -27,7 +27,7 @@ require_once __DIR__ . '/../include/account.php';
 require_once __DIR__ . '/../include/timezones.php';
 
 $GLOBALS['HTML']->includeCalendarScripts();
-$request = HTTPRequest:: instance();
+$request = HTTPRequest::instance();
 $page = $request->get('page');
 $confirmation_register = false;
 // ###### function register_valid()
@@ -78,7 +78,7 @@ function register_valid($mail_confirm_code, array &$errors)
         $errors['timezone'] = $Language->getText('account_register', 'err_notz');
         return 0;
     }
-    if (!$request->existAndNonEmpty('form_register_purpose') && ($GLOBALS['sys_user_approval'] && $request->get('page')!="admin_creation")) {
+    if (!$request->existAndNonEmpty('form_register_purpose') && ($GLOBALS['sys_user_approval'] && $request->get('page') != "admin_creation")) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_nopurpose'));
         $errors['form_register_purpose'] = $Language->getText('account_register', 'err_nopurpose');
         return 0;
@@ -89,7 +89,7 @@ function register_valid($mail_confirm_code, array &$errors)
         return 0;
     }
 
-    if ($request->get('page')!="admin_creation" && $request->get('form_pw') != $request->get('form_pw2')) {
+    if ($request->get('page') != "admin_creation" && $request->get('form_pw') != $request->get('form_pw2')) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_passwd'));
         $errors['form_pw'] = $Language->getText('account_register', 'err_passwd');
         return 0;
@@ -105,7 +105,7 @@ function register_valid($mail_confirm_code, array &$errors)
     }
 
     $expiry_date = 0;
-    if ($request->exist('form_expiry') && $request->get('form_expiry')!='' && ! preg_match("/[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/", $request->get('form_expiry'))) {
+    if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! preg_match("/[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/", $request->get('form_expiry'))) {
         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_register', 'data_not_parsed'));
         $errors['form_expiry'] = $Language->getText('account_register', 'data_not_parsed');
         return 0;
@@ -119,7 +119,7 @@ function register_valid($mail_confirm_code, array &$errors)
     }
 
     $status = 'P';
-    if ($request->get('page')== "admin_creation") {
+    if ($request->get('page') == "admin_creation") {
         if ($request->get('form_restricted')) {
             $status = 'R';
         } else {
@@ -171,13 +171,13 @@ function display_account_form($register_error, array $errors)
     if ($register_error) {
         print "<p><blink><b><span class=\"feedback\">$register_error</span></b></blink>";
     }
-    $form_loginname         = $request->exist('form_loginname')?$request->get('form_loginname'):'';
+    $form_loginname         = $request->exist('form_loginname') ? $request->get('form_loginname') : '';
     $form_loginname_error   = getFieldError('form_loginname', $errors);
 
-    $form_realname          = $request->exist('form_realname')?$request->get('form_realname'):'';
+    $form_realname          = $request->exist('form_realname') ? $request->get('form_realname') : '';
     $form_realname_error    = getFieldError('form_realname', $errors);
 
-    $form_email             = $request->exist('form_email')?$request->get('form_email'):'';
+    $form_email             = $request->exist('form_email') ? $request->get('form_email') : '';
     $form_email_error       = getFieldError('form_email', $errors);
 
     $form_pw                = '';
@@ -199,7 +199,7 @@ function display_account_form($register_error, array $errors)
     }
     $timezone_error = getFieldError('timezone', $errors);
 
-    $form_register_purpose          = $request->exist('form_register_purpose')?$request->get('form_register_purpose'):'';
+    $form_register_purpose          = $request->exist('form_register_purpose') ? $request->get('form_register_purpose') : '';
     $form_register_purpose_error    = getFieldError('form_register_purpose', $errors);
 
     $extra_plugin_field = '';
@@ -239,7 +239,7 @@ function display_account_form($register_error, array $errors)
         $presenter = new Account_RegisterByUserPresenter($prefill, $extra_plugin_field);
         $template = 'register-user';
     }
-    $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/account/');
+    $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/account/');
     $renderer->renderToPage($template, $presenter);
 }
 
@@ -341,7 +341,7 @@ if ($request->isPost() && $request->exist('Register')) {
         } else {
             // Registration requires approval
             // inform the user that approval is required
-            $href_approval      = HTTPRequest::instance()->getServerUrl().'/admin/approve_pending_users.php?page=pending';
+            $href_approval      = HTTPRequest::instance()->getServerUrl() . '/admin/approve_pending_users.php?page=pending';
             $title              = $Language->getText('account_register', 'title_approval');
             $content            = $Language->getText('account_register', 'msg_approval', array($GLOBALS['sys_name'], $user_name, $href_approval));
             $redirect_url       = '/';
@@ -384,14 +384,14 @@ if ($page == 'admin_creation') {
 $HTML->includeJavascriptFile('/scripts/check_pw.js');
 $HTML->includeFooterJavascriptFile('/scripts/jstimezonedetect/jstz.min.js');
 $HTML->includeFooterJavascriptFile('/scripts/tuleap/timezone.js');
-$HTML->header(array('title'=>$Language->getText('account_register', 'title'), 'body_class' => $body_class));
+$HTML->header(array('title' => $Language->getText('account_register', 'title'), 'body_class' => $body_class));
 
 
 if (!$confirmation_register) {
-    $reg_err = isset($GLOBALS['register_error'])?$GLOBALS['register_error']:'';
+    $reg_err = isset($GLOBALS['register_error']) ? $GLOBALS['register_error'] : '';
     display_account_form($reg_err, $errors);
 } else {
-    $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/account/');
+    $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/account/');
     $renderer->renderToPage($template, $presenter);
 }
 

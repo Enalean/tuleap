@@ -98,7 +98,7 @@ class UserSyncTest extends TestCase
         $lr->shouldReceive('getEmail')->andReturns('toto');
         $lr->shouldReceive('get')->with('employeetype')->andReturns('contractor');
 
-        include_once __DIR__.'/../site-content/en_US/synchronize_user.txt';
+        include_once __DIR__ . '/../site-content/en_US/synchronize_user.txt';
         $sync = new \LDAPPluginCustomUserSync();
         $sync->sync($user, $lr);
     }

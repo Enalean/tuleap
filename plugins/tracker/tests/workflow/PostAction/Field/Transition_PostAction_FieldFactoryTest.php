@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once __DIR__.'/../../../bootstrap.php';
+require_once __DIR__ . '/../../../bootstrap.php';
 
 class Transition_PostAction_FieldFactory_BaseTest extends TuleapTestCase
 {
@@ -166,9 +166,9 @@ class Transition_PostActionFieldFactory_DuplicateTest extends Transition_PostAct
 
     public function itDelegatesDuplicationToTheCorrespondingDao()
     {
-        $field_mapping = array(1 => array('from'=>2066, 'to'=>3066),
-                               2 => array('from'=>2067, 'to'=>3067),
-                               3 => array('from'=>2065, 'to'=>3065),);
+        $field_mapping = array(1 => array('from' => 2066, 'to' => 3066),
+                               2 => array('from' => 2067, 'to' => 3067),
+                               3 => array('from' => 2065, 'to' => 3065),);
 
         expect($this->float_dao)->duplicate(123, 124, 2065, 3065)->once();
         expect($this->int_dao)->duplicate()->count(2);

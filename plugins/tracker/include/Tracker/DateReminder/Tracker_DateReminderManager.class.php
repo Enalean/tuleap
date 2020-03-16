@@ -57,18 +57,18 @@ class Tracker_DateReminderManager
     public function process()
     {
         $logger = new BackendLogger();
-        if (! ($this->tracker->isNotificationStopped()|| $this->tracker->isDeleted())) {
+        if (! ($this->tracker->isNotificationStopped() || $this->tracker->isDeleted())) {
             $remiderFactory = $this->getDateReminderRenderer()->getDateReminderFactory();
             $reminders      = $remiderFactory->getTrackerReminders(false);
             foreach ($reminders as $reminder) {
-                $logger->debug("[TDR] Processing reminder on ".$reminder->getField()->getName()." (id: ".$reminder->getId().")");
+                $logger->debug("[TDR] Processing reminder on " . $reminder->getField()->getName() . " (id: " . $reminder->getId() . ")");
                 $artifacts = $this->getArtifactsByreminder($reminder);
 
                 if (count($artifacts) == 0) {
                     $logger->debug("[TDR] No artifact match");
                 }
                 foreach ($artifacts as $artifact) {
-                    $logger->debug("[TDR] Artifact #".$artifact->getId()." match");
+                    $logger->debug("[TDR] Artifact #" . $artifact->getId() . " match");
                     $this->sendReminderNotification($reminder, $artifact);
                 }
             }
@@ -167,7 +167,7 @@ class Tracker_DateReminderManager
         // 3. Send the notification
         foreach ($messages as $m) {
             $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
-            $historyDao->groupAddHistory("tracker_date_reminder_sent", $this->tracker->getName().":".$reminder->getField()->getId(), $this->tracker->getGroupId(), $m['recipients']);
+            $historyDao->groupAddHistory("tracker_date_reminder_sent", $this->tracker->getName() . ":" . $reminder->getField()->getId(), $this->tracker->getGroupId(), $m['recipients']);
             $this->sendReminder($artifact, $m['recipients'], $m['headers'], $m['subject'], $m['htmlBody'], $m['txtBody']);
         }
     }
@@ -234,9 +234,9 @@ class Tracker_DateReminderManager
 
         $server_url = HTTPRequest::instance()->getServerUrl();
 
-        $breadcrumbs[] = '<a href="'. $server_url .'/projects/'. $project->getUnixName(true) .'" />'. $hp->purify($project->getPublicName()) .'</a>';
-        $breadcrumbs[] = '<a href="'. $server_url .'/plugins/tracker/?tracker='. (int)$trackerId .'" />'. $hp->purify($this->getTracker()->getName()) .'</a>';
-        $breadcrumbs[] = '<a href="'. $server_url.'/plugins/tracker/?aid='.(int)$artifactId.'" />'. $hp->purify($this->getTracker()->getName().' #'.$artifactId) .'</a>';
+        $breadcrumbs[] = '<a href="' . $server_url . '/projects/' . $project->getUnixName(true) . '" />' . $hp->purify($project->getPublicName()) . '</a>';
+        $breadcrumbs[] = '<a href="' . $server_url . '/plugins/tracker/?tracker=' . (int) $trackerId . '" />' . $hp->purify($this->getTracker()->getName()) . '</a>';
+        $breadcrumbs[] = '<a href="' . $server_url . '/plugins/tracker/?aid=' . (int) $artifactId . '" />' . $hp->purify($this->getTracker()->getName() . ' #' . $artifactId) . '</a>';
 
         $mail_enhancer->addPropertiesToLookAndFeel('breadcrumbs', $breadcrumbs);
         $mail_enhancer->addPropertiesToLookAndFeel('title', $hp->purify($subject));
@@ -282,7 +282,7 @@ class Tracker_DateReminderManager
      */
     public function getSubject($reminder, $artifact, $recipient)
     {
-        $s = "[" . $this->tracker->getName()."] ".$GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'subject', array($reminder->getField()->getLabel(), $reminder->getFieldValue($artifact), $artifact->getTitle()));
+        $s = "[" . $this->tracker->getName() . "] " . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'subject', array($reminder->getField()->getLabel(), $reminder->getFieldValue($artifact), $artifact->getTitle()));
         return $s;
     }
 
@@ -299,9 +299,9 @@ class Tracker_DateReminderManager
     protected function getBodyText(Tracker_DateReminder $reminder, Tracker_Artifact $artifact, $recipient, BaseLanguage $language)
     {
         $protocol = ForgeConfig::get('sys_https_host') ? 'https' : 'http';
-        $link     = ' <'.$protocol.'://'. $GLOBALS['sys_default_domain'] .TRACKER_BASE_URL.'/?aid='. $artifact->getId() .'>';
+        $link     = ' <' . $protocol . '://' . $GLOBALS['sys_default_domain'] . TRACKER_BASE_URL . '/?aid=' . $artifact->getId() . '>';
 
-        $output   = '+============== '.'['.$this->getTracker()->getItemName() .' #'. $artifact->getId().'] '.$artifact->fetchMailTitle($recipient).' ==============+';
+        $output   = '+============== ' . '[' . $this->getTracker()->getItemName() . ' #' . $artifact->getId() . '] ' . $artifact->fetchMailTitle($recipient) . ' ==============+';
         $output   .= PHP_EOL;
 
         $output   .= $language->getText('plugin_tracker_date_reminder', 'body_header', array($GLOBALS['sys_name'], $reminder->getField()->getLabel(), $reminder->getFieldValue($artifact)));
@@ -325,9 +325,9 @@ class Tracker_DateReminderManager
         $format   = Codendi_Mail_Interface::FORMAT_HTML;
         $hp       = Codendi_HTMLPurifier::instance();
         $protocol = ForgeConfig::get('sys_https_host') ? 'https' : 'http';
-        $link     = $protocol.'://'. $GLOBALS['sys_default_domain'] .TRACKER_BASE_URL.'/?aid='. $artifact->getId();
+        $link     = $protocol . '://' . $GLOBALS['sys_default_domain'] . TRACKER_BASE_URL . '/?aid=' . $artifact->getId();
 
-        $output   ='<h1>'.$hp->purify($artifact->fetchMailTitle($recipient, $format, false)).'</h1>'.PHP_EOL;
+        $output   = '<h1>' . $hp->purify($artifact->fetchMailTitle($recipient, $format, false)) . '</h1>' . PHP_EOL;
         $output   .= $language->getText(
             'plugin_tracker_date_reminder',
             'body_header',
@@ -356,7 +356,7 @@ class Tracker_DateReminderManager
         if ($reminder->getNotificationType() == 0) {
             $time_string = '+';
         }
-        $time_string .= $reminder->getDistance().' days';
+        $time_string .= $reminder->getDistance() . ' days';
         $date  = DateHelper::getTimestampAtMidnight($time_string);
         $field = $reminder->getField();
         return $field->getArtifactsByCriterias($date, $this->getTracker()->getId());

@@ -44,7 +44,6 @@ class MetadataEventProcessor
         string $new_value,
         string $field
     ): void {
-
         $params = [
             'group_id'  => $item->getGroupId(),
             'item'      => $item,

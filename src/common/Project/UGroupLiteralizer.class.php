@@ -122,7 +122,7 @@ class UGroupLiteralizer
     {
         $ugroups = $user->getAllUgroups();
         foreach ($ugroups as $row) {
-            $user_ugroups[] = 'ug_'.$row['ugroup_id'];
+            $user_ugroups[] = 'ug_' . $row['ugroup_id'];
         }
         return $user_ugroups;
     }
@@ -147,7 +147,7 @@ class UGroupLiteralizer
     {
         $ugroup = null;
         if ($ugroup_id > 100) {
-            $ugroup = '@ug_'. $ugroup_id;
+            $ugroup = '@ug_' . $ugroup_id;
         } elseif (isset(self::$ugroups_templates[$ugroup_id])) {
             $ugroup = sprintf(self::$ugroups_templates[$ugroup_id], $project_name);
         }

@@ -20,7 +20,7 @@
  */
 
 $HTML->header(array(
-    'title'=>$Language->getText('contact', 'title'),
+    'title' => $Language->getText('contact', 'title'),
     'main_classes' => array('tlp-framed')
 ));
 $HTML->displayContactPage();

@@ -175,7 +175,7 @@ class WikiPlugin_SyntaxHighlighter extends WikiPlugin
             return $this->error(fmt("empty source"));
         }
     }
-};
+}
 
 // $Log: SyntaxHighlighter.php,v $
 // Revision 1.7  2004/07/08 20:30:07  rurban

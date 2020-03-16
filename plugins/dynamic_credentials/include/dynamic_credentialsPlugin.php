@@ -37,7 +37,7 @@ class dynamic_credentialsPlugin extends Plugin // @codingStandardsIgnoreLine
     {
         parent::__construct($id);
         $this->setScope(self::SCOPE_SYSTEM);
-        bindtextdomain('tuleap-dynamic_credentials', __DIR__.'/../site-content');
+        bindtextdomain('tuleap-dynamic_credentials', __DIR__ . '/../site-content');
     }
 
     public function getPluginInfo()

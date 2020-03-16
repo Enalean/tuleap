@@ -60,7 +60,7 @@ class GenericProviderDao extends DataAccessObject
 
                 $db->run($sql, $id, $authorization_endpoint, $token_endpoint, $user_info_endpoint);
 
-                return (int)$id;
+                return (int) $id;
             }
         );
     }

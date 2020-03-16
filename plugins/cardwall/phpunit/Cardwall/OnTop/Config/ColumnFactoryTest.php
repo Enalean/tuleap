@@ -52,7 +52,7 @@ class ColumnFactoryTest extends TestCase
 
     public function testItShouldNotFatalErrorOnInvalidBindValue()
     {
-        $filter = [123,234];
+        $filter = [123, 234];
         $bind   = Mockery::mock(\Tracker_FormElement_Field_List_Bind::class)->makePartial();
 
         $this->field->shouldReceive("getBind")->andReturn($bind);

@@ -43,7 +43,7 @@ class HeartbeatsEntry
 
     public function __construct($updated_at, Glyph $small_icon, Glyph $normal_icon, $html_message)
     {
-        $this->updated_at   = (int)$updated_at;
+        $this->updated_at   = (int) $updated_at;
         $this->small_icon   = $small_icon;
         $this->normal_icon  = $normal_icon;
         $this->html_message = $html_message;

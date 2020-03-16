@@ -98,10 +98,10 @@ class CardValidator
 
         $field = $single_card->getFieldById($value['field_id']);
         if (! $field) {
-            throw new RestException(404, 'Field '.$value['field_id'].' doesn\'t belongs to card');
+            throw new RestException(404, 'Field ' . $value['field_id'] . ' doesn\'t belongs to card');
         }
         if (! $field->userCanUpdate($user)) {
-            throw new RestException(403, 'Field "'.$field->getLabel().'" ('.$field->getId().') cannot be modified or you don\'t have permission to update it');
+            throw new RestException(403, 'Field "' . $field->getLabel() . '" (' . $field->getId() . ') cannot be modified or you don\'t have permission to update it');
         }
         return $field;
     }

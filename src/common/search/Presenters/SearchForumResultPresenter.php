@@ -35,7 +35,7 @@ class Search_SearchForumResultPresenter
 
     public function message_uri()
     {
-        return "/forum/message.php?msg_id=".$this->message_id;
+        return "/forum/message.php?msg_id=" . $this->message_id;
     }
 
     public function message_author()

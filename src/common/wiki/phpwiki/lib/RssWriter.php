@@ -205,7 +205,7 @@ class RssWriter extends XmlElement
         $attr['rdf:resource'] = $reference->getAttr('rdf:about');
         return new XmlElement($predicate, $attr);
     }
-};
+}
 
 
 // (c-file-style: "gnu")

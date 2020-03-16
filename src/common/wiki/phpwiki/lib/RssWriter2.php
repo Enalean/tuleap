@@ -77,7 +77,7 @@ class RssWriter2 extends RssWriter
         echo "              %HTMLlat1;]>\n";
         $this->printXML();
     }
-};
+}
 
 // (c-file-style: "gnu")
 // Local Variables:

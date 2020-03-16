@@ -26,10 +26,10 @@ function extract_params($argv)
         // If arg start by "--" this is the beginning of a new option
         if (strpos($arg, "--") === 0) {
             $eqpos = strpos($arg, "=");
-            $argname=substr($arg, 2, $eqpos-2);
-            $arguments[$argname] = substr($arg, $eqpos+1);
+            $argname = substr($arg, 2, $eqpos - 2);
+            $arguments[$argname] = substr($arg, $eqpos + 1);
         } else {
-            $arguments[$argname] .= " ".$arg;
+            $arguments[$argname] .= " " . $arg;
         }
     }
     return $arguments;
@@ -43,7 +43,7 @@ function getLdapFromUserName($username)
     if (!isset($list[$username])) {
         $user = UserManager::instance()->getUserByUserName($username);
         if ($user) {
-            $res = db_query('SELECT ldap_uid FROM plugin_ldap_user WHERE user_id = '.$user->getId());
+            $res = db_query('SELECT ldap_uid FROM plugin_ldap_user WHERE user_id = ' . $user->getId());
             if (!db_error($res) && db_numrows($res) === 1) {
                 $list[$username] = strtolower(db_result($res, 0, 'ldap_uid'));
             } else {
@@ -61,12 +61,11 @@ function getLdapFromUserName($username)
  */
 function svn_utils_convert_access_file_to_ldap(LDAP_UserManager $ldapUm, $srcFileName, $dstFileName)
 {
-
     $newContent = '';
 
     $f = fopen($srcFileName, "rb");
     if ($f === false) {
-        echo "** ERROR: $srcFileName: No such file or directory".PHP_EOL;
+        echo "** ERROR: $srcFileName: No such file or directory" . PHP_EOL;
     } else {
         $path_pat    = '/^\s*\[(.*)\]/'; // assume no repo name 'repo:'
         $perm_pat    = '/^\s*([^=]*)\s*=\s*(.*)$/';
@@ -113,7 +112,7 @@ function svn_utils_convert_access_file_to_ldap(LDAP_UserManager $ldapUm, $srcFil
                                 }
                             }
                         }
-                        $output = $group.' = '.implode(', ', $ldapLogins);
+                        $output = $group . ' = ' . implode(', ', $ldapLogins);
                     } else {
                         $output = $line;
                     }
@@ -128,9 +127,9 @@ function svn_utils_convert_access_file_to_ldap(LDAP_UserManager $ldapUm, $srcFil
                         } elseif (trim(rtrim($who)) != '*') {
                             $lr = getLdapFromUserName($who);
                             if ($lr !== false) {
-                                $output = $lr.' = '.$perm;
+                                $output = $lr . ' = ' . $perm;
                             } else {
-                                $output = '#'.$line;
+                                $output = '#' . $line;
                             }
                         } else {
                             $output = $line;
@@ -143,7 +142,7 @@ function svn_utils_convert_access_file_to_ldap(LDAP_UserManager $ldapUm, $srcFil
                 }
             }
 
-            $newContent .= $output."\n";
+            $newContent .= $output . "\n";
             //$line = strtok($separator);
         }
         //fclose($f);
@@ -151,7 +150,7 @@ function svn_utils_convert_access_file_to_ldap(LDAP_UserManager $ldapUm, $srcFil
         // Write new file
         $fd = fopen($dstFileName, "w");
         if (!$fd) {
-            echo "** ERROR: $dstFileName: Not writable".PHP_EOL;
+            echo "** ERROR: $dstFileName: Not writable" . PHP_EOL;
         } else {
             fwrite($fd, $newContent);
             fclose($fd);
@@ -173,20 +172,20 @@ if ($ldapPlugin && $plugin_manager->isPluginAvailable($ldapPlugin)) {
         while ($row = db_fetch_array($res)) {
             //foreach (new DirectoryIterator($args['all']) as $dirInfo) {
             //if($dirInfo->isDot()) continue;
-            $svnaccessfile = new SplFileInfo('/svnroot/'.$row['unix_group_name'].'/.SVNAccessFile');
+            $svnaccessfile = new SplFileInfo('/svnroot/' . $row['unix_group_name'] . '/.SVNAccessFile');
             if ($svnaccessfile->isFile()) {
-                echo "Process ".$row['unix_group_name'].PHP_EOL;
-                if (copy($svnaccessfile->getPathname(), $svnaccessfile->getPathname().'.beforeldap')) {
+                echo "Process " . $row['unix_group_name'] . PHP_EOL;
+                if (copy($svnaccessfile->getPathname(), $svnaccessfile->getPathname() . '.beforeldap')) {
                     svn_utils_convert_access_file_to_ldap(
                         $ldapUm,
-                        $svnaccessfile->getPathname().'.beforeldap',
+                        $svnaccessfile->getPathname() . '.beforeldap',
                         $svnaccessfile->getPathname()
                     );
-                    db_query('INSERT INTO plugin_ldap_svn_repository(group_id, ldap_auth) VALUES('.$row['group_id'].',1)');
+                    db_query('INSERT INTO plugin_ldap_svn_repository(group_id, ldap_auth) VALUES(' . $row['group_id'] . ',1)');
                 }
             }
         }
     } else {
-        echo "** ERROR: either --src or --dst are missing".PHP_EOL;
+        echo "** ERROR: either --src or --dst are missing" . PHP_EOL;
     }
 }

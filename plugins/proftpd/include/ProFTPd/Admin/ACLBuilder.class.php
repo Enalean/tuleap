@@ -47,20 +47,20 @@ abstract class ACLBuilder
 
     protected function getACLUserWriter($user)
     {
-        return "u:".$this->getACLWriters($user);
+        return "u:" . $this->getACLWriters($user);
     }
 
     protected function getACLGroupWriters($group)
     {
         if (trim($group)) {
-            return "g:".$this->getACLWriters($group);
+            return "g:" . $this->getACLWriters($group);
         }
     }
 
     protected function getACLGroupReaders($group)
     {
         if (trim($group)) {
-            return "g:".$this->getACLReaders($group);
+            return "g:" . $this->getACLReaders($group);
         }
         return '';
     }

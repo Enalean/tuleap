@@ -64,7 +64,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
     {
         parent::__construct($id);
         $this->setName("mediawiki");
-        $this->text = "Mediawiki" ; // To show in the tabs, use...
+        $this->text = "Mediawiki"; // To show in the tabs, use...
         $this->addHook('cssfile');
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
         $this->addHook(Event::PROCCESS_SYSTEM_CHECK);
@@ -235,7 +235,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
 
     private function getMediawikiSearchURI(Project $project, $words)
     {
-        return $this->getPluginPath().'/wiki/'. $project->getUnixName() .'/index.php?title=Special%3ASearch&search=' . urlencode($words) . '&go=Go';
+        return $this->getPluginPath() . '/wiki/' . $project->getUnixName() . '/index.php?title=Special%3ASearch&search=' . urlencode($words) . '&go=Go';
     }
 
     private function isSearchEntryAvailable(?Project $project = null)
@@ -253,7 +253,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
 
     private function isMediawikiUrl()
     {
-        return preg_match('%'.$this->getPluginPath().'/wiki/.*%', $_SERVER['REQUEST_URI']);
+        return preg_match('%' . $this->getPluginPath() . '/wiki/.*%', $_SERVER['REQUEST_URI']);
     }
 
         /**
@@ -263,7 +263,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
     private function getProjectFromRequest()
     {
         $matches = array();
-        preg_match('%'.$this->getPluginPath().'/wiki/([^/]+)/.*%', $_SERVER['REQUEST_URI'], $matches);
+        preg_match('%' . $this->getPluginPath() . '/wiki/([^/]+)/.*%', $_SERVER['REQUEST_URI'], $matches);
         if (isset($matches[1])) {
             $project = ProjectManager::instance()->getProjectByUnixName($matches[1]);
 
@@ -288,7 +288,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
                 '/assets/mediawiki/themes'
             );
 
-            echo '<link rel="stylesheet" type="text/css" href="'. $asset->getFileURL('style.css') .'" />';
+            echo '<link rel="stylesheet" type="text/css" href="' . $asset->getFileURL('style.css') . '" />';
         }
     }
 
@@ -310,19 +310,19 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
             exit;
         }
 
-        preg_match('%'.$this->getPluginPath().'/wiki/[^/]+/images(.*)%', $_SERVER['REQUEST_URI'], $matches);
+        preg_match('%' . $this->getPluginPath() . '/wiki/[^/]+/images(.*)%', $_SERVER['REQUEST_URI'], $matches);
         $file_location = $matches[1];
 
         $folder_location = '';
         if (is_dir('/var/lib/tuleap/mediawiki/projects/' . $project->getUnixName())) {
-            $folder_location = '/var/lib/tuleap/mediawiki/projects/' . $project->getUnixName().'/images';
+            $folder_location = '/var/lib/tuleap/mediawiki/projects/' . $project->getUnixName() . '/images';
         } elseif (is_dir('/var/lib/tuleap/mediawiki/projects/' . $project->getId())) {
-            $folder_location = '/var/lib/tuleap/mediawiki/projects/' . $project->getId().'/images';
+            $folder_location = '/var/lib/tuleap/mediawiki/projects/' . $project->getId() . '/images';
         } else {
             exit;
         }
 
-        $file = $folder_location.$file_location;
+        $file = $folder_location . $file_location;
         if (! file_exists($file)) {
             exit;
         }
@@ -331,8 +331,8 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
         $fp   = fopen($file, 'r');
 
         if ($size and $fp) {
-            header('Content-Type: '.$size['mime']);
-            header('Content-Length: '.filesize($file));
+            header('Content-Type: ' . $size['mime']);
+            header('Content-Length: ' . filesize($file));
 
             readfile($file);
             exit;
@@ -356,8 +356,8 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
     public function service_replace_template_name_in_link($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['link'] = preg_replace(
-            '#/plugins/mediawiki/wiki/'.preg_quote($params['template']['name'], '#').'(/|$)#',
-            '/plugins/mediawiki/wiki/'. $params['project']->getUnixName().'$1',
+            '#/plugins/mediawiki/wiki/' . preg_quote($params['template']['name'], '#') . '(/|$)#',
+            '/plugins/mediawiki/wiki/' . $params['project']->getUnixName() . '$1',
             $params['link']
         );
     }
@@ -589,7 +589,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
     {
         $project         = $params['project'];
         $project_manager = ProjectManager::instance();
-        $new_link        = '/plugins/mediawiki/wiki/'. $params['new_name'];
+        $new_link        = '/plugins/mediawiki/wiki/' . $params['new_name'];
 
         if (! $project_manager->renameProjectPluginServiceLink($project->getID(), self::SERVICE_SHORTNAME, $new_link)) {
             $params['success'] = false;
@@ -603,7 +603,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
     private function updateMediawikiDirectory(Project $project)
     {
         $logger         = new BackendLogger();
-        $project_id_dir = forge_get_config('projects_path', 'mediawiki') . "/". $project->getID() ;
+        $project_id_dir = forge_get_config('projects_path', 'mediawiki') . "/" . $project->getID();
 
         if (is_dir($project_id_dir)) {
             return true;
@@ -615,7 +615,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
             return true;
         }
 
-        $logger->error('Project Rename: Can\'t find mediawiki directory for project: '.$project->getID());
+        $logger->error('Project Rename: Can\'t find mediawiki directory for project: ' . $project->getID());
         return false;
     }
 
@@ -625,7 +625,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
 
         $delete = $this->getDao()->clearPageCacheForProject($project);
         if (! $delete) {
-            $logger->error('Project Clear cache: Can\'t delete mediawiki cache for schema: '.$project->getID());
+            $logger->error('Project Clear cache: Can\'t delete mediawiki cache for schema: ' . $project->getID());
         }
     }
 
@@ -658,7 +658,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
         $project_for_parth = $this->getMediawikiManager()->instanceUsesProjectID($project) ?
             $row['group_id'] : $row['unix_group_name'];
 
-        $path = $GLOBALS['sys_data_dir']. '/mediawiki/projects/'. $project_for_parth;
+        $path = $GLOBALS['sys_data_dir'] . '/mediawiki/projects/' . $project_for_parth;
 
         $size = $params['DiskUsageManager']->getDirSize($path);
 
@@ -701,7 +701,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
 
     public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
     {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath().'/forge_admin.php?action=site_index') === 0) {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/forge_admin.php?action=site_index') === 0) {
             $event->setIsInBurningParrotCompatiblePage();
         }
     }

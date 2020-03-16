@@ -71,7 +71,7 @@ abstract class Tracker_Artifact_Followup_Item
 
     public function getUserLink()
     {
-        return '<span class="tracker_artifact_followup_title_user">'. $this->getSubmitterUrl() .'</span>';
+        return '<span class="tracker_artifact_followup_title_user">' . $this->getSubmitterUrl() . '</span>';
     }
 
     public function getTimeAgo()

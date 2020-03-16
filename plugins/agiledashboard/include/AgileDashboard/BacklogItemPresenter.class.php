@@ -168,7 +168,7 @@ class AgileDashboard_BacklogItemPresenter implements
     private function getUrlWithRedirect($url)
     {
         if ($this->redirect_to_self) {
-            return $url.'&'.$this->redirect_to_self;
+            return $url . '&' . $this->redirect_to_self;
         }
         return $url;
     }

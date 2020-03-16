@@ -165,7 +165,7 @@ class ServiceManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             Event::SERVICE_IS_USED,
             array(
                 'shortname' => $short_name,
-                'is_used'   => $is_used ? true:false,
+                'is_used'   => $is_used ? true : false,
                 'group_id'  => $project->getID(),
             )
         );

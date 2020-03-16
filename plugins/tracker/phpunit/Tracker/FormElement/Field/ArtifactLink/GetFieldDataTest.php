@@ -113,9 +113,9 @@ final class GetFieldDataTest extends TestCase
 
         $new_values = [
             'links' => [
-                ['id' =>'55', 'type' => '_is_child'],
-                ['id' =>'66', 'type' => 'custom'],
-                ['id' =>'77', 'type' => '']
+                ['id' => '55', 'type' => '_is_child'],
+                ['id' => '66', 'type' => 'custom'],
+                ['id' => '77', 'type' => '']
             ]
         ];
 

@@ -29,7 +29,7 @@ class ArchiveLogger extends TruncateLevelLogger
 
     public function __construct()
     {
-        $file_path = ForgeConfig::get('codendi_log') .'/archive_deleted_item.log';
+        $file_path = ForgeConfig::get('codendi_log') . '/archive_deleted_item.log';
 
         $this->createLogFileForAppUser($file_path);
 

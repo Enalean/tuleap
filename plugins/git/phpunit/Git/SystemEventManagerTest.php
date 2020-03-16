@@ -78,7 +78,7 @@ class Git_SystemEventManagerTest extends TestCase
         $repository->shouldReceive('getId')->andReturns(54);
         $repository->shouldReceive('getProjectId')->andReturns(116);
         $repository->shouldReceive('getBackend')->andReturns(\Mockery::spy(\Git_Backend_Gitolite::class));
-        $this->system_event_manager->shouldReceive('createEvent')->with(SystemEvent_GIT_REPO_DELETE::NAME, "116".SystemEvent::PARAMETER_SEPARATOR."54", \Mockery::any(), SystemEvent::OWNER_APP)->once();
+        $this->system_event_manager->shouldReceive('createEvent')->with(SystemEvent_GIT_REPO_DELETE::NAME, "116" . SystemEvent::PARAMETER_SEPARATOR . "54", \Mockery::any(), SystemEvent::OWNER_APP)->once();
 
         $this->git_system_event_manager->queueRepositoryDeletion($repository);
     }
@@ -89,7 +89,7 @@ class Git_SystemEventManagerTest extends TestCase
         $repository->shouldReceive('getId')->andReturns(54);
         $repository->shouldReceive('getProjectId')->andReturns(116);
         $repository->shouldReceive('getBackend')->andReturns(\Mockery::spy(\GitBackend::class));
-        $this->system_event_manager->shouldReceive('createEvent')->with(SystemEvent_GIT_LEGACY_REPO_DELETE::NAME, "116".SystemEvent::PARAMETER_SEPARATOR."54", \Mockery::any(), SystemEvent::OWNER_ROOT)->once();
+        $this->system_event_manager->shouldReceive('createEvent')->with(SystemEvent_GIT_LEGACY_REPO_DELETE::NAME, "116" . SystemEvent::PARAMETER_SEPARATOR . "54", \Mockery::any(), SystemEvent::OWNER_ROOT)->once();
 
         $this->git_system_event_manager->queueRepositoryDeletion($repository);
     }
@@ -99,7 +99,7 @@ class Git_SystemEventManagerTest extends TestCase
         $old_repository = \Mockery::spy(\GitRepository::class)->shouldReceive('getId')->andReturns(554)->getMock();
         $new_repository = \Mockery::spy(\GitRepository::class)->shouldReceive('getId')->andReturns(667)->getMock();
 
-        $this->system_event_manager->shouldReceive('createEvent')->with(SystemEvent_GIT_REPO_FORK::NAME, "554".SystemEvent::PARAMETER_SEPARATOR."667", SystemEvent::PRIORITY_MEDIUM, SystemEvent::OWNER_APP)->once();
+        $this->system_event_manager->shouldReceive('createEvent')->with(SystemEvent_GIT_REPO_FORK::NAME, "554" . SystemEvent::PARAMETER_SEPARATOR . "667", SystemEvent::PRIORITY_MEDIUM, SystemEvent::OWNER_APP)->once();
 
         $this->git_system_event_manager->queueRepositoryFork($old_repository, $new_repository);
     }

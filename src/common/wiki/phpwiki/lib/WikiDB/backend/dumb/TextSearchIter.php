@@ -52,7 +52,7 @@ class WikiDB_backend_dumb_TextSearchIter extends WikiDB_backend_iterator
 
         if ($this->_fulltext) {
             // eliminate stoplist words from fulltext search
-            if (preg_match("/^".$this->_stoplist."$/i", $text)) {
+            if (preg_match("/^" . $this->_stoplist . "$/i", $text)) {
                 $this->stoplisted[] = $text;
                 return $result;
             }
@@ -81,7 +81,7 @@ class WikiDB_backend_dumb_TextSearchIter extends WikiDB_backend_iterator
     {
         $this->_pages->free();
     }
-};
+}
 
 // (c-file-style: "gnu")
 // Local Variables:

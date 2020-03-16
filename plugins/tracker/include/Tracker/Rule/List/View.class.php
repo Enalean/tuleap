@@ -51,23 +51,23 @@ class Tracker_Rule_List_View
      */
     public function fetch()
     {
-        $output  = '#'. $this->rule->id;
-        $output .= '@'. $this->rule->tracker_id;
-        $output .= ' '. $this->rule->source_field;
-        $output .= '('. $this->rule->source_value .') =>';
-        $output .= ' '. $this->rule->target_field;
-        $output .= '('. $this->rule->target_value .')';
+        $output  = '#' . $this->rule->id;
+        $output .= '@' . $this->rule->tracker_id;
+        $output .= ' ' . $this->rule->source_field;
+        $output .= '(' . $this->rule->source_value . ') =>';
+        $output .= ' ' . $this->rule->target_field;
+        $output .= '(' . $this->rule->target_value . ')';
         return $output;
     }
 
     public function fetchJavascript()
     {
-        $output  = '{id:'. (int)$this->rule->id .', ';
-        $output .= 'tracker_id:'. (int)$this->rule->tracker_id .', ';
-        $output .= 'source_field:'. (int)$this->rule->source_field .', ';
-        $output .= 'source_value:'. (int)$this->rule->source_value .', ';
-        $output .= 'target_field:'. (int)$this->rule->target_field .', ';
-        $output .= 'target_value:'. (int)$this->rule->target_value .'';
+        $output  = '{id:' . (int) $this->rule->id . ', ';
+        $output .= 'tracker_id:' . (int) $this->rule->tracker_id . ', ';
+        $output .= 'source_field:' . (int) $this->rule->source_field . ', ';
+        $output .= 'source_value:' . (int) $this->rule->source_value . ', ';
+        $output .= 'target_field:' . (int) $this->rule->target_field . ', ';
+        $output .= 'target_value:' . (int) $this->rule->target_value . '';
         $output .= '}';
         return $output;
     }

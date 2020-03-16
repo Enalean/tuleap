@@ -70,7 +70,7 @@ class Docman_MetadataValueFactory
      */
     public function newMetadataValue($itemId, $fieldId, $type, $value)
     {
-        return $this->getMetadataTypeObjectFactory()->createMetadataValueObjectWithCorrectValue((int)$itemId, (int)$fieldId, (int)$type, $value);
+        return $this->getMetadataTypeObjectFactory()->createMetadataValueObjectWithCorrectValue((int) $itemId, (int) $fieldId, (int) $type, $value);
     }
 
     /**

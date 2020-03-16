@@ -65,7 +65,7 @@ class ListEndpointsController implements DispatchableWithRequest, DispatchableWi
             throw new ForbiddenException();
         }
 
-        $include_assets = new IncludeAssets(__DIR__.'/../../../../../src/www/assets/tuleap_synchro/scripts', '/assets/tuleap_synchro/scripts');
+        $include_assets = new IncludeAssets(__DIR__ . '/../../../../../src/www/assets/tuleap_synchro/scripts', '/assets/tuleap_synchro/scripts');
         $layout->includeFooterJavascriptFile(
             $include_assets->getFileURL('tuleap_synchro.js')
         );
@@ -84,7 +84,7 @@ class ListEndpointsController implements DispatchableWithRequest, DispatchableWi
 
         $this->admin_page_rendered->renderAPresenter(
             'tuleap_synchro',
-            __DIR__.'/../../../templates',
+            __DIR__ . '/../../../templates',
             'list_endpoints',
             $list_endpoints_presenter
         );

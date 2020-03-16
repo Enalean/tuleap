@@ -44,7 +44,7 @@ class DateHelper
             }
             $str = $GLOBALS['Language']->getText('include_utils', $string_key, self::distanceOfTimeInWords($time, $_SERVER['REQUEST_TIME'], $include_seconds));
             if ($with_title) {
-                $str = '<span title="'. date($GLOBALS['Language']->getText('system', 'datefmt'), $time) .'">'. $str .'</span>';
+                $str = '<span title="' . date($GLOBALS['Language']->getText('system', 'datefmt'), $time) . '">' . $str . '</span>';
             }
         }
         return $str;
@@ -57,7 +57,7 @@ class DateHelper
      */
     public static function distanceOfTimeInWords($from_time, $to_time, $include_seconds = false)
     {
-        $distance_in_minutes = round((abs($to_time - $from_time))/60);
+        $distance_in_minutes = round((abs($to_time - $from_time)) / 60);
         $distance_in_seconds = round(abs($to_time - $from_time));
 
         return self::getFormattedDistance($distance_in_minutes, $distance_in_seconds, $include_seconds);

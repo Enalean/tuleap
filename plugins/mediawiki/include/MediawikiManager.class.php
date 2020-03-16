@@ -199,7 +199,7 @@ class MediawikiManager
 
     public function instanceUsesProjectID(Project $project)
     {
-        return is_dir(forge_get_config('projects_path', 'mediawiki') . "/". $project->getID());
+        return is_dir(forge_get_config('projects_path', 'mediawiki') . "/" . $project->getID());
     }
 
     private function restrictedUserCanRead(PFUser $user, Project $project)

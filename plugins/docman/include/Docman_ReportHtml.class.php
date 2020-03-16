@@ -42,11 +42,11 @@ class Docman_ReportHtml
     public function getSelectOption($value, $text, $selected = null)
     {
         $html = '';
-        $html .= '<option value="'.$value.'"';
+        $html .= '<option value="' . $value . '"';
         if ($value == $selected) {
             $html .= ' selected="selected"';
         }
-        $html .= '>'.$this->hp->purify($text)."</option>\n";
+        $html .= '>' . $this->hp->purify($text) . "</option>\n";
         return $html;
     }
 
@@ -70,7 +70,7 @@ class Docman_ReportHtml
         $current = $this->report->getId();
 
         $html = '';
-        $html .= '<form name="plugin_docman_select_report" action="'. $this->defaultUrl .'" method="get" style="display: inline; float:right;" id="plugin_docman_select_report_id" >';
+        $html .= '<form name="plugin_docman_select_report" action="' . $this->defaultUrl . '" method="get" style="display: inline; float:right;" id="plugin_docman_select_report_id" >';
         $html .= '<select name="report_id" id="plugin_docman_select_saved_report">';
 
         // Project wide report
@@ -94,9 +94,9 @@ class Docman_ReportHtml
 
         $html .= '</select>';
         $html .= '<input type="hidden" name="action" value="search" />';
-        $html .= '<input type="hidden" name="group_id" value="'.$this->report->getGroupId().'" />';
-        $html .= '<input type="hidden" name="id" value="'. $item->getId() .'" />';
-        $html .= '<noscript><input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /></noscript>';
+        $html .= '<input type="hidden" name="group_id" value="' . $this->report->getGroupId() . '" />';
+        $html .= '<input type="hidden" name="id" value="' . $item->getId() . '" />';
+        $html .= '<noscript><input type="submit" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" /></noscript>';
         $html .= '</form>';
 
         return $html;
@@ -154,7 +154,7 @@ class Docman_ReportHtml
         $html = '';
 
         $html .= '<div id="docman_report_options">';
-        $html .= '<strong>'.dgettext('tuleap-docman', 'Search criteria:').'</strong>&nbsp;';
+        $html .= '<strong>' . dgettext('tuleap-docman', 'Search criteria:') . '</strong>&nbsp;';
         // Add a new filter
         $html .= dgettext('tuleap-docman', 'Add');
         $html .= '&nbsp;';
@@ -215,7 +215,7 @@ class Docman_ReportHtml
         $dpm  = Docman_PermissionsManager::instance($this->report->getGroupId());
 
         $html .= '<div id="docman_report_save">';
-        $html .= '<strong>'.dgettext('tuleap-docman', 'Save options:').'</strong>&nbsp;';
+        $html .= '<strong>' . dgettext('tuleap-docman', 'Save options:') . '</strong>&nbsp;';
 
         // Save filter
         $html .= dgettext('tuleap-docman', 'Save as');
@@ -254,8 +254,8 @@ class Docman_ReportHtml
         $html .= '</noscript>';
 
         $html .= '&nbsp;';
-        $settingsUrl = $this->defaultUrl.'&action=report_settings';
-        $html .= '<a href="'.$settingsUrl.'">'.dgettext('tuleap-docman', 'Show my saved search').'</a>';
+        $settingsUrl = $this->defaultUrl . '&action=report_settings';
+        $html .= '<a href="' . $settingsUrl . '">' . dgettext('tuleap-docman', 'Show my saved search') . '</a>';
 
         $html .= '</div><!-- docman_report_save-->';
 
@@ -271,13 +271,13 @@ class Docman_ReportHtml
 
         $html .= $this->getReportSelector($params['item']);
 
-        $toggleIc = '<img src="'.util_get_image_theme("ic/toggle_minus.png").'" id="docman_toggle_filters" data-test="docman_report_search">';
-        $toggle   = '<a href="#" title="'.dgettext('tuleap-docman', 'Toggle search criteria selection').'">'.$toggleIc.'</a>';
+        $toggleIc = '<img src="' . util_get_image_theme("ic/toggle_minus.png") . '" id="docman_toggle_filters" data-test="docman_report_search">';
+        $toggle   = '<a href="#" title="' . dgettext('tuleap-docman', 'Toggle search criteria selection') . '">' . $toggleIc . '</a>';
         $title    = dgettext('tuleap-docman', 'Search');
 
         $hidden_fields = '';
-        $hidden_fields .= '<input type="hidden" name="group_id" value="'.$this->report->getGroupId().'" />';
-        $hidden_fields .= '<input type="hidden" name="id" value="'.$params['item']->getId().'" />';
+        $hidden_fields .= '<input type="hidden" name="group_id" value="' . $this->report->getGroupId() . '" />';
+        $hidden_fields .= '<input type="hidden" name="id" value="' . $params['item']->getId() . '" />';
         $hidden_fields .= '<input type="hidden" name="action" value="search" />';
 
         $global_txt = $this->hp->purify($params['docman']->request->get('global_txt'));
@@ -285,16 +285,16 @@ class Docman_ReportHtml
         $html .= "<div id=\"docman_filters_title\">\n";
         $html .= '<form method="get" action="?" id="plugin_docman_report_form_global">';
         $html .= $toggle;
-        $html .= ' '.$title.' ';
+        $html .= ' ' . $title . ' ';
         $html .= $hidden_fields;
         $html .= '<input type="text"
                         class="text_field"
-                        title="'. dgettext('tuleap-docman', 'Global text search') .'"
-                        value="'. $global_txt .'"
+                        title="' . dgettext('tuleap-docman', 'Global text search') . '"
+                        value="' . $global_txt . '"
                         name="global_txt"
                         data-test="docman_search"
                         />';
-        $html .= '<input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_apply') .'" name="global_filtersubmit" data-test="docman_search_button" />';
+        $html .= '<input type="submit" value="' . $GLOBALS['Language']->getText('global', 'btn_apply') . '" name="global_filtersubmit" data-test="docman_search_button" />';
         $html .= '</form>';
         $html .= "</div>\n";
 
@@ -309,9 +309,9 @@ class Docman_ReportHtml
         $html .= $this->getFiltersOptions($params, $displayedFilters);
         $html .= $this->getReportOptions();
 
-        $html .= '<input id="docman_report_submit" name="filtersubmit" type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_apply') .'">';
+        $html .= '<input id="docman_report_submit" name="filtersubmit" type="submit" value="' . $GLOBALS['Language']->getText('global', 'btn_apply') . '">';
         $html .= '&nbsp;';
-        $html .= '<input id="docman_report_submit" name="clear_filters" type="submit" value="'. dgettext('tuleap-docman', 'Clear all') .'">';
+        $html .= '<input id="docman_report_submit" name="clear_filters" type="submit" value="' . dgettext('tuleap-docman', 'Clear all') . '">';
 
         $html .= '</form>';
         $html .= "</div> <!-- left -->\n";
@@ -323,7 +323,7 @@ class Docman_ReportHtml
         $html .= '<div class="docman_help">
             <table style="width: 100%; padding-left: 2em;">
                 <tr>
-                    <td>'. dgettext('tuleap-docman', 'Allowed patterns:') .'
+                    <td>' . dgettext('tuleap-docman', 'Allowed patterns:') . '
                         <ol style="margin-top: 0;">
                             <li><span class="code">lorem</span></li>
                             <li><span class="code">lorem*</span></li>
@@ -332,26 +332,26 @@ class Docman_ReportHtml
                         </ol>
                     </td>
                     <td valign="top" style="border-left: 1px solid black; padding-left: 1em;">
-                        '. dgettext('tuleap-docman', 'When the pattern doesn\'t start with * (pattern #1 or #2):') .'
+                        ' . dgettext('tuleap-docman', 'When the pattern doesn\'t start with * (pattern #1 or #2):') . '
                         <ul style="list-style: none; margin-top: 0;">
                             <li><span class="code">word</span>
-                            '. sprintf(dgettext('tuleap-docman', 'length must be greater than %1$s'), $minLen) .'
+                            ' . sprintf(dgettext('tuleap-docman', 'length must be greater than %1$s'), $minLen) . '
                             </li>
                             <li><span class="code">+word</span>
-                            '. dgettext('tuleap-docman', 'lorem must be in result') .'
+                            ' . dgettext('tuleap-docman', 'lorem must be in result') . '
                             </li>
                             <li><span class="code">-word</span>
-                            '. dgettext('tuleap-docman', 'lorem must not be in result') .'
+                            ' . dgettext('tuleap-docman', 'lorem must not be in result') . '
                             </li>
                             <li><span class="code">"some words"</span>
-                            '. dgettext('tuleap-docman', 'look for exact sentence') .'
+                            ' . dgettext('tuleap-docman', 'look for exact sentence') . '
                             </li>
                         </ul>
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2">
-                    '. dgettext('tuleap-docman', 'Info: Global text search will search pattern in all "Text" properties (but not within documents yet).'). '
+                    ' . dgettext('tuleap-docman', 'Info: Global text search will search pattern in all "Text" properties (but not within documents yet).') . '
                     </td>
                 </tr>
             </table>
@@ -381,7 +381,7 @@ class Docman_ReportHtml
                     $user = $this->getCurrentUser();
                     $html .= "<div style=\"text-align:center\">\n";
                     if ($dPm->userCanRead($user, $item->getId())) {
-                        $html .= '<img src="'.$this->defaultUrl.'&id='.$itemId.'" >';
+                        $html .= '<img src="' . $this->defaultUrl . '&id=' . $itemId . '" >';
                     } else {
                         $html .= dgettext('tuleap-docman', 'An image is associated to this report but you don\'t have the permission to see it.');
                     }

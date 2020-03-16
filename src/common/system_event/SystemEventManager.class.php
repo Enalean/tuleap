@@ -686,17 +686,17 @@ class SystemEventManager
                 $html .= '<tr>';
 
                 //id
-                $html .= '<td>'. $sysevent->getId() .'</td>';
+                $html .= '<td>' . $sysevent->getId() . '</td>';
 
                 //name of the event
-                $html .= '<td>'. $sysevent->getType() .'</td>';
+                $html .= '<td>' . $sysevent->getType() . '</td>';
 
-                $html .= '<td>'. $sysevent->getOwner() .'</td>';
+                $html .= '<td>' . $sysevent->getOwner() . '</td>';
 
                 //status
-                $html .= '<td class="system_event_status_'. $row['status'] .' system-event-status-'. strtolower($row['status']) .'"';
+                $html .= '<td class="system_event_status_' . $row['status'] . ' system-event-status-' . strtolower($row['status']) . '"';
                 if ($sysevent->getLog()) {
-                    $html .= ' title="'. $purifier->purify($sysevent->getLog(), CODENDI_PURIFIER_CONVERT_HTML) .'" ';
+                    $html .= ' title="' . $purifier->purify($sysevent->getLog(), CODENDI_PURIFIER_CONVERT_HTML) . '" ';
                 }
                 $html .= '>';
                 $html .= $sysevent->getStatus();

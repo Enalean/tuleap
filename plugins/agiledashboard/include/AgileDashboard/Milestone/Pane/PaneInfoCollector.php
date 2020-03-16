@@ -109,7 +109,7 @@ class PaneInfoCollector implements Dispatchable
 
         $this->panes = array_merge(
             array_slice($this->panes, 0, $sibling_position),
-            [ $pane->getIdentifier() => $pane ],
+            [$pane->getIdentifier() => $pane],
             array_slice($this->panes, $sibling_position)
         );
     }

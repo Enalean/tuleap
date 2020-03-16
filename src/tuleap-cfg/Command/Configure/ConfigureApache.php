@@ -49,7 +49,7 @@ class ConfigureApache
             return false;
         }
         if (! is_writable($file_path)) {
-            throw new PermissionsDeniedException($file_path.' is not writable by current user (uid '.posix_getuid().')');
+            throw new PermissionsDeniedException($file_path . ' is not writable by current user (uid ' . posix_getuid() . ')');
         }
 
         $content = file_get_contents($file_path);
@@ -79,7 +79,7 @@ class ConfigureApache
             return false;
         }
         if (! is_writable($file_path)) {
-            throw new PermissionsDeniedException($file_path.' is not writable by current user (uid '.posix_getuid().')');
+            throw new PermissionsDeniedException($file_path . ' is not writable by current user (uid ' . posix_getuid() . ')');
         }
 
         $content = file_get_contents($file_path);

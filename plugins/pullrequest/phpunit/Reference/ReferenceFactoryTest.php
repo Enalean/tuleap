@@ -28,7 +28,7 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
 
-require_once __DIR__.'/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 class ReferenceFactoryTest extends TestCase
 {

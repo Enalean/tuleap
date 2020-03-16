@@ -95,8 +95,8 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         if ($this->artifact->getTracker()->isProjectAllowedToUseNature()) {
             $parents = $this->retriever->getParentsHierarchy($this->artifact);
             if ($parents->isGraph()) {
-                $html .= "<div class='alert alert-warning'>".
-                $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'error_multiple_parents')."</div>";
+                $html .= "<div class='alert alert-warning'>" .
+                $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'error_multiple_parents') . "</div>";
             }
             $html .= $this->fetchTitleIsGraph($parents);
         } else {
@@ -127,7 +127,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         );
         $breadcrumbs = array(
             array('title' => $this->artifact->getXRef(),
-                  'url'   => TRACKER_BASE_URL.'/?aid='. $this->artifact->getId())
+                  'url'   => TRACKER_BASE_URL . '/?aid=' . $this->artifact->getId())
         );
         $toolbar = $this->tracker->getDefaultToolbar();
         $params = [
@@ -236,7 +236,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         }
 
         return '<div class="header-spacer"></div>
-            <div class="show-hide-fieldsets">'.dgettext('tuleap-tracker', 'Hidden fieldsets:').'
+            <div class="show-hide-fieldsets">' . dgettext('tuleap-tracker', 'Hidden fieldsets:') . '
                 <div class="btn-group" data-toggle="buttons-radio">
                     <button type="button" class="btn show-fieldsets"><i class="fa fa-eye"></i></button>
                     <button type="button" class="btn active hide-fieldsets"><i class="fa fa-eye-slash"></i></button>

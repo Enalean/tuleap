@@ -46,7 +46,7 @@ class Tracker_PermissionsDao extends DataAccessObject
                 WHERE object_id = '$tracker_id'
                   AND (
                     permission_type LIKE 'PLUGIN_TRACKER_ACCESS_%'
-                    OR permission_type = '".Tracker::PERMISSION_ADMIN."'
+                    OR permission_type = '" . Tracker::PERMISSION_ADMIN . "'
                   )
                   AND ugroup_id > $dynamic_upper_boundary
 

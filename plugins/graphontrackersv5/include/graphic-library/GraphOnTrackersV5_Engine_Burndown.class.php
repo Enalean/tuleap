@@ -32,7 +32,7 @@ class GraphOnTrackersV5_Engine_Burndown extends GraphOnTrackersV5_Engine
         if ($this->duration && $this->duration > 1) {
             return true;
         } else {
-            echo " <p class='feedback_info'>".$GLOBALS['Language']->getText('plugin_graphontrackersv5_engine', 'no_datas', array($this->title))."</p>";
+            echo " <p class='feedback_info'>" . $GLOBALS['Language']->getText('plugin_graphontrackersv5_engine', 'no_datas', array($this->title)) . "</p>";
             return false;
         }
     }

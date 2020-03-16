@@ -41,7 +41,6 @@ class AgileDashboard_XMLImporter
      */
     public function toArray(SimpleXMLElement $xml_object, array $tracker_mappings)
     {
-
         $plannings_node_name = XMLExporter::NODE_PLANNINGS;
         $plannings = array();
         $plannings[$plannings_node_name] = array();
@@ -121,7 +120,7 @@ class AgileDashboard_XMLImporter
     private function getTrackerIdFromMappings($tracker_id, array $tracker_mappings)
     {
         if (! isset($tracker_mappings[$tracker_id])) {
-            throw new AgileDashboard_XMLImporterInvalidTrackerMappingsException('Missing data for key: '.$tracker_id);
+            throw new AgileDashboard_XMLImporterInvalidTrackerMappingsException('Missing data for key: ' . $tracker_id);
         }
 
         return (int) $tracker_mappings[$tracker_id];

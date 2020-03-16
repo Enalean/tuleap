@@ -60,11 +60,11 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied
     {
         $query = $this->urlQueryToArray($url);
         if (!isset($query['action'])) {
-            $url = $url.'&action=details&section=permissions';
+            $url = $url . '&action=details&section=permissions';
         } else {
             if ($query['action'] == 'details') {
                 if (!isset($query['section'])) {
-                    $url = $url.'&section=permissions';
+                    $url = $url . '&section=permissions';
                 } else {
                     // replace any existing section by 'permissions'
                     $url = preg_replace('/section=([^&]+|$)/', 'section=permissions', $url);

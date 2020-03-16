@@ -591,7 +591,6 @@ class Request_UploadedFile
 {
     public function getUploadedFile($postname)
     {
-
         // Against php5 with !ini_get('register-long-arrays'). See Bug #1180115
         if (!isset($_FILES[$postname])) {
             return false;
@@ -632,8 +631,8 @@ class Request_UploadedFile
                 /* but ending slash in php.ini upload_tmp_dir is required. */
                 if (realpath(preg_replace('#/+#D', '/', $tmp_file)) != realpath($fileinfo['tmp_name'])) {
                     trigger_error(
-                        sprintf("Uploaded tmpfile illegal: %s != %s.", $tmp_file, $fileinfo['tmp_name']).
-                                  "\n".
+                        sprintf("Uploaded tmpfile illegal: %s != %s.", $tmp_file, $fileinfo['tmp_name']) .
+                                  "\n" .
                                   "Probably illegal TEMP environment or upload_tmp_dir setting.",
                         E_USER_ERROR
                     );
@@ -645,11 +644,10 @@ class Request_UploadedFile
                                   "Probably illegal TEMP environment or upload_tmp_dir setting.",
                                   E_USER_NOTICE);
                     */
-                    ;
                 }
             } else {
                 trigger_error(
-                    sprintf("Uploaded tmpfile %s not found.", $fileinfo['tmp_name'])."\n".
+                    sprintf("Uploaded tmpfile %s not found.", $fileinfo['tmp_name']) . "\n" .
                            " Probably illegal TEMP environment or upload_tmp_dir setting.",
                     E_USER_WARNING
                 );

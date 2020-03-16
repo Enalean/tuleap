@@ -49,7 +49,7 @@ class User_LoginController extends MVC2_Controller
                 $user_manager->assignNextUnixUid($user);
                 if ($user->getStatus() == PFUser::STATUS_RESTRICTED) {
                     // Set restricted shell for restricted users.
-                    $user->setShell($GLOBALS['codendi_bin_prefix'] .'/cvssh-restricted');
+                    $user->setShell($GLOBALS['codendi_bin_prefix'] . '/cvssh-restricted');
                 }
             }
             $user->setUnixStatus(PFUser::STATUS_ACTIVE);

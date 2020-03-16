@@ -33,7 +33,7 @@ use Tracker_FormElementFactory;
 use Tuleap\Tracker\Action\Move\NoFeedbackFieldCollector;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 
-require_once __DIR__.'/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 class MoveChangesetXMLUpdaterTest extends TestCase
 {

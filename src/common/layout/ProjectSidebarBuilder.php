@@ -143,11 +143,11 @@ class ProjectSidebarBuilder
             return false;
         }
 
-        if ((string)$short_name === "summary") {
+        if ((string) $short_name === "summary") {
             return false;
         }
 
-        if ((string)$short_name === "admin") {
+        if ((string) $short_name === "admin") {
             if (! $this->userCanSeeAdminService($project, $user)) {
                 return false;
             }

@@ -89,10 +89,10 @@ class Tracker_Semantic_TitleTest extends TestCase
         $array_mapping = ['F13' => '102'];
         $this->semantic_title->exportToXML($this->root, $array_mapping);
 
-        $this->assertEquals((string)$this->xml->shortname, (string)$this->root->semantic->shortname);
-        $this->assertEquals((string)$this->xml->label, (string)$this->root->semantic->label);
-        $this->assertEquals((string)$this->xml->description, (string)$this->root->semantic->description);
-        $this->assertEquals((string)$this->xml->field['REF'], (string)$this->root->semantic->field['REF']);
+        $this->assertEquals((string) $this->xml->shortname, (string) $this->root->semantic->shortname);
+        $this->assertEquals((string) $this->xml->label, (string) $this->root->semantic->label);
+        $this->assertEquals((string) $this->xml->description, (string) $this->root->semantic->description);
+        $this->assertEquals((string) $this->xml->field['REF'], (string) $this->root->semantic->field['REF']);
     }
 
     public function testItDoesntExportTheFieldIfNotDefinedInMapping()

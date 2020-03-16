@@ -53,8 +53,8 @@ class HTML_Element_Pane extends HTML_Element
         $html = '<div class="tabbable">';
         $html .= '<ul class="nav nav-tabs">';
         foreach ($this->panes as $pane) {
-            $html .= '<li class="'. ($pane['name'] == $this->activePane ? 'active' : '') .'">';
-            $html .= '<a href="'.$pane['link'].'">'.$pane['title'].'</a></li>';
+            $html .= '<li class="' . ($pane['name'] == $this->activePane ? 'active' : '') . '">';
+            $html .= '<a href="' . $pane['link'] . '">' . $pane['title'] . '</a></li>';
         }
         $html .= '</ul>';
         $html .= '<div class="tab-content">';

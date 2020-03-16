@@ -171,7 +171,7 @@ class Tracker_Artifact_XMLImport
     ) {
         $artifacts_id_mapping = new Tracker_XML_Importer_ArtifactImportedMapping();
         try {
-            $partial_element = new SimpleXMLElement((string)$xml_element->asXML());
+            $partial_element = new SimpleXMLElement((string) $xml_element->asXML());
             $this->external_fields_extractor->extractExternalFieldsFromArtifact($partial_element);
 
             $this->rng_validator->validate($xml_element, realpath(dirname(TRACKER_BASE_DIR) . '/www/resources/artifacts.rng'));
@@ -195,8 +195,8 @@ class Tracker_Artifact_XMLImport
                 $config
             );
         } catch (Exception $exception) {
-            $this->logger->error("".get_class($exception).': '.$exception->getMessage().' in '.$exception->getFile().' L'.$exception->getLine());
-            echo ("".get_class($exception).': '.$exception->getMessage().' in '.$exception->getFile().' L'.$exception->getLine());
+            $this->logger->error("" . get_class($exception) . ': ' . $exception->getMessage() . ' in ' . $exception->getFile() . ' L' . $exception->getLine());
+            echo ("" . get_class($exception) . ': ' . $exception->getMessage() . ' in ' . $exception->getFile() . ' L' . $exception->getLine());
             return false;
         }
     }
@@ -228,7 +228,7 @@ class Tracker_Artifact_XMLImport
 
             if ($artifact) {
                 $artifacts[$i] = $artifact;
-                $artifacts_id_mapping->add((string)$artifact_xml['id'], $artifact->getId());
+                $artifacts_id_mapping->add((string) $artifact_xml['id'], $artifact->getId());
             }
         }
         return $artifacts;
@@ -323,7 +323,7 @@ class Tracker_Artifact_XMLImport
      */
     private function importBareArtifactInUpdateMode(Tracker $tracker, SimpleXMLElement $xml_artifact)
     {
-        $this->logger->info('art #'.(string)$xml_artifact['id'].' with '.count($xml_artifact->changeset).' changesets ');
+        $this->logger->info('art #' . (string) $xml_artifact['id'] . ' with ' . count($xml_artifact->changeset) . ' changesets ');
 
         if (count($xml_artifact->changeset) === 0) {
             return null;
@@ -350,7 +350,7 @@ class Tracker_Artifact_XMLImport
      */
     private function importBareArtifactInStandardMode(Tracker $tracker, SimpleXMLElement $xml_artifact)
     {
-        $this->logger->info('art #'.(string)$xml_artifact['id'].' with '.count($xml_artifact->changeset).' changesets ');
+        $this->logger->info('art #' . (string) $xml_artifact['id'] . ' with ' . count($xml_artifact->changeset) . ' changesets ');
         if (count($xml_artifact->changeset) > 0) {
             return $this->importNewBareArtifact($tracker, $xml_artifact);
         }
@@ -404,7 +404,7 @@ class Tracker_Artifact_XMLImport
         ImportConfig $configuration,
         CreatedFileURLMapping $url_mapping
     ) {
-        $this->logger->push('art #'.(string)$xml_artifact['id']);
+        $this->logger->push('art #' . (string) $xml_artifact['id']);
         $nb_changesets = count($xml_artifact->changeset);
 
         if ($configuration->isUpdate()) {
@@ -468,7 +468,7 @@ class Tracker_Artifact_XMLImport
         $xml_changesets = $this->getSortedBySubmittedOn($xml_changesets);
 
         $count = $this->getCountChangeset($artifact, $configuration);
-        $this->logger->info('art #'.$artifact->getId());
+        $this->logger->info('art #' . $artifact->getId());
         foreach ($xml_changesets as $xml_changeset) {
             try {
                 if ($count === 0) {
@@ -484,7 +484,7 @@ class Tracker_Artifact_XMLImport
             } catch (Tracker_NoChangeException $exception) {
                 $this->logger->warning("No Change for changeset $count");
             } catch (Exception $exception) {
-                $this->logger->warning("Unexpected error at changeset $count: ".$exception->getMessage());
+                $this->logger->warning("Unexpected error at changeset $count: " . $exception->getMessage());
             }
             $count++;
         }
@@ -544,7 +544,7 @@ class Tracker_Artifact_XMLImport
     ) {
         $submitted_by = $this->getSubmittedBy($xml_changeset);
 
-        $this->logger->warning("Failed to create artifact with first changeset, create a fake one instead: ".$GLOBALS['Response']->getAndClearRawFeedback());
+        $this->logger->warning("Failed to create artifact with first changeset, create a fake one instead: " . $GLOBALS['Response']->getAndClearRawFeedback());
         return $this->artifact_creator->createFirstChangeset(
             $artifact->getTracker(),
             $artifact,
@@ -571,8 +571,8 @@ class Tracker_Artifact_XMLImport
         $initial_comment_body   = '';
         $initial_comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
         if (isset($xml_changeset->comments) && count($xml_changeset->comments->comment) > 0) {
-            $initial_comment_body   = (string)$xml_changeset->comments->comment[0]->body;
-            $initial_comment_format = (string)$xml_changeset->comments->comment[0]->body['format'];
+            $initial_comment_body   = (string) $xml_changeset->comments->comment[0]->body;
+            $initial_comment_format = (string) $xml_changeset->comments->comment[0]->body['format'];
         }
 
         $submitted_by = $this->getSubmittedBy($xml_changeset);
@@ -589,7 +589,7 @@ class Tracker_Artifact_XMLImport
         if ($changeset) {
             $this->updateComments($changeset, $xml_changeset);
         } else {
-            $this->logger->warning("Impossible to create changeset: ".$GLOBALS['Response']->getAndClearRawFeedback());
+            $this->logger->warning("Impossible to create changeset: " . $GLOBALS['Response']->getAndClearRawFeedback());
         }
     }
 
@@ -602,9 +602,9 @@ class Tracker_Artifact_XMLImport
             $all_comments = $xml_changeset->comments->comment;
             for ($i = 1; $i < count($all_comments); ++$i) {
                 $changeset->updateCommentWithoutNotification(
-                    (string)$all_comments[$i]->body,
+                    (string) $all_comments[$i]->body,
                     $this->getSubmittedBy($all_comments[$i]),
-                    (string)$all_comments[$i]->body['format'],
+                    (string) $all_comments[$i]->body['format'],
                     $this->getSubmittedOn($all_comments[$i])
                 );
             }
@@ -625,11 +625,11 @@ class Tracker_Artifact_XMLImport
      */
     private function getSubmittedOn(SimpleXMLElement $xml_changeset)
     {
-        $time = strtotime((string)$xml_changeset->submitted_on);
+        $time = strtotime((string) $xml_changeset->submitted_on);
         if ($time !== false) {
             return $time;
         }
-        throw new Tracker_Artifact_Exception_XMLImportException("Invalid date format not ISO8601: ".(string)$xml_changeset->submitted_on);
+        throw new Tracker_Artifact_Exception_XMLImportException("Invalid date format not ISO8601: " . (string) $xml_changeset->submitted_on);
     }
 
     /**

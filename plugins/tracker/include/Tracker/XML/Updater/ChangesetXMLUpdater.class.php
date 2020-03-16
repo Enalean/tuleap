@@ -49,7 +49,7 @@ class Tracker_XML_Updater_ChangesetXMLUpdater
         $this->addSubmittedInformation($artifact_xml->changeset, $user, $submitted_on);
 
         foreach ($artifact_xml->changeset->field_change as $field_change) {
-            $field_name = (string)$field_change['field_name'];
+            $field_name = (string) $field_change['field_name'];
             $field = $this->formelement_factory->getUsedFieldByNameForUser(
                 $tracker->getId(),
                 $field_name,

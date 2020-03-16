@@ -88,21 +88,21 @@ if (isset($multiple_queries) && $multiple_queries) {
         $rows = db_numrows($result);
     }
 } else {
-    $result=db_query($sql);
+    $result = db_query($sql);
     $rows = db_numrows($result);
 }
 
 if ($export == 'artifact') {
     // Send the result in CSV format
     if ($result && $rows > 0) {
-            $tbl_name = str_replace(' ', '_', 'artifact_'.$at->getItemName());
+            $tbl_name = str_replace(' ', '_', 'artifact_' . $at->getItemName());
         header('Content-Type: text/csv');
-        header('Content-Disposition: filename='.$tbl_name.'_'.$dbname.'.csv');
+        header('Content-Disposition: filename=' . $tbl_name . '_' . $dbname . '.csv');
 
         foreach ($lbl_list as $k => $v) {
             $lbl_list[$k] = SimpleSanitizer::unsanitize($v);
         }
-        echo build_csv_header($col_list, $lbl_list).$eol;
+        echo build_csv_header($col_list, $lbl_list) . $eol;
 
         if ($multiple_queries) {
             $multiarr = array();
@@ -112,30 +112,30 @@ if ($export == 'artifact') {
                 }
 
                 prepare_artifact_record($ath, $fields, $atid, $multiarr, 'csv');
-                echo build_csv_record($col_list, $multiarr).$eol;
+                echo build_csv_record($col_list, $multiarr) . $eol;
             }
         } else {
             while ($arr = db_fetch_array($result)) {
                 prepare_artifact_record($at, $fields, $atid, $arr, 'csv');
-                echo build_csv_record($col_list, $arr).$eol;
+                echo build_csv_record($col_list, $arr) . $eol;
             }
         }
     } else {
-        project_admin_header(array('title'=>$pg_title), 'data');
+        project_admin_header(array('title' => $pg_title), 'data');
 
-        echo '<h3>'.$Language->getText('project_export_artifact_export', 'art_export').'</h3>';
+        echo '<h3>' . $Language->getText('project_export_artifact_export', 'art_export') . '</h3>';
         if ($result) {
-            echo '<P>'.$Language->getText('project_export_artifact_export', 'no_art_found');
+            echo '<P>' . $Language->getText('project_export_artifact_export', 'no_art_found');
         } else {
-            echo '<P>'.$Language->getText('project_export_artifact_export', 'db_access_err', $GLOBALS['sys_name']);
-            echo '<br>'.db_error();
+            echo '<P>' . $Language->getText('project_export_artifact_export', 'db_access_err', $GLOBALS['sys_name']);
+            echo '<br>' . db_error();
         }
         site_project_footer(array());
     }
 } elseif ($export == "artifact_format") {
-    echo '<h3>'.$Language->getText('project_export_artifact_export', 'art_exp_format').'</h3>';
+    echo '<h3>' . $Language->getText('project_export_artifact_export', 'art_exp_format') . '</h3>';
 
-    echo '<p>'.$Language->getText('project_export_artifact_export', 'art_exp_format_msg').'</p>';
+    echo '<p>' . $Language->getText('project_export_artifact_export', 'art_exp_format_msg') . '</p>';
 
     $record = pick_a_record_at_random($result, $rows, $col_list);
     prepare_artifact_record($at, $fields, $atid, $record, 'csv');

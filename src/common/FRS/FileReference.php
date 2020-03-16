@@ -71,8 +71,8 @@ class FileReference extends \Reference
             throw new NotFoundException(self::class . ': no valid package found for ' . $this->reference_value);
         }
         if (! $package->getApproveLicense()) {
-            return '/file/download/'.urlencode((string) $file->getFileID());
+            return '/file/download/' . urlencode((string) $file->getFileID());
         }
-        return '/file/shownotes.php?release_id='.urlencode((string) $file->getReleaseID());
+        return '/file/shownotes.php?release_id=' . urlencode((string) $file->getReleaseID());
     }
 }

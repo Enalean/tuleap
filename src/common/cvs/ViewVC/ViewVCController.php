@@ -73,7 +73,7 @@ class ViewVCController implements DispatchableWithRequest
     private function addLeadingSlash(string $path) : string
     {
         if ($path[0] !== '/') {
-            return '/'.$path;
+            return '/' . $path;
         }
         return $path;
     }
@@ -81,7 +81,7 @@ class ViewVCController implements DispatchableWithRequest
     private function addTrailingSlash(string $path) : string
     {
         if (strrpos($path, "/") !== (strlen($path) - 1)) {
-            return $path.'/';
+            return $path . '/';
         }
         return $path;
     }

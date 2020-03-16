@@ -276,7 +276,7 @@ class AgileDashboard_KanbanItemDao extends DataAccessObject
 
         $row = $this->retrieve($sql)->getRow();
 
-        return is_array($row) ? (int)$row['submitted_on'] : null;
+        return is_array($row) ? (int) $row['submitted_on'] : null;
     }
 
     public function isKanbanItemInBacklog($tracker_id, $artifact_id)

@@ -33,31 +33,31 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisit
     protected $collapsable;
 
     protected $showTreeTpl = array(
-        self::STATE_NODE=> '
+        self::STATE_NODE => '
         	<span class="node-indent node-pipe"><a class="node-tree">&nbsp;</a></span>
         	<span class="node-indent node-minus-tree">&nbsp;</span>',
-        self::STATE_LAST=>'
+        self::STATE_LAST => '
         	<span class="node-indent node-last-left"><a class="node-tree">&nbsp;</a></span>
         	<span class="node-indent node-minus-tree">&nbsp;</span>',
-        self::STATE_BLANK=>'
+        self::STATE_BLANK => '
         	<span class="node-blank">&nbsp;</span>
         	<span class="node-blank">&nbsp;</span>',
-        self::STATE_PIPE=>'
+        self::STATE_PIPE => '
         	<span class="node-indent node-pipe"><a class="node-tree">&nbsp;</a></span>
         	<span class="node-indent node-minus-tree">&nbsp;</span>'
     );
 
     protected $showNormalTpl = array(
-        self::STATE_NODE=> '
+        self::STATE_NODE => '
         	<span class="node-indent node-pipe">&nbsp;</span>
         	<span class="node-indent node-minus">&nbsp;</span>',
-        self::STATE_LAST=>'
+        self::STATE_LAST => '
         	<span class="node-indent node-last-left">&nbsp;</span>
         	<span class="node-indent node-last-right">&nbsp;</span>',
-        self::STATE_BLANK=>'
+        self::STATE_BLANK => '
         	<span class="node-blank">&nbsp;</span>
         	<span class="node-blank">&nbsp;</span>',
-        self::STATE_PIPE=>'
+        self::STATE_PIPE => '
         	<span class="node-indent node-pipe">&nbsp;</span>
         	<span class="node-blank">&nbsp;</span>'
     );
@@ -93,7 +93,7 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisit
         $lastIndex = count($states) - 1;
         foreach ($states as $state_id) {
             $isLastState = $curIndex == $lastIndex;
-            $html.= $this->getPaddingForAState($state_id, $showTree && $isLastState);
+            $html .= $this->getPaddingForAState($state_id, $showTree && $isLastState);
             $curIndex++;
         }
         return $html;

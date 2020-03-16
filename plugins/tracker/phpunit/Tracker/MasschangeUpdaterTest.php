@@ -221,7 +221,7 @@ final class MasschangeUpdaterTest extends TestCase
         $source_and_target_field_both_rules->shouldReceive('isNone')->andReturn(true);
         $last_changeset->shouldReceive('getValue')->with($source_and_target_field_both_rules)->andReturn($changeset_value_source_and_target);
         $target_value_rule2 = Mockery::mock(Tracker_Artifact_ChangesetValue::class);
-        $target_value_rule2->shouldReceive('getValue')->andReturn([333,334]);
+        $target_value_rule2->shouldReceive('getValue')->andReturn([333, 334]);
         $target_field_rule2->shouldReceive('isNone')->andReturn(false);
         $last_changeset->shouldReceive('getValue')->with($target_field_rule2)->andReturn($target_value_rule2);
 

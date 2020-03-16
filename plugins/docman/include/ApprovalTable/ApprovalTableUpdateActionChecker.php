@@ -44,11 +44,11 @@ class ApprovalTableUpdateActionChecker
         \Docman_Item $item
     ): void {
         if ($approval_table_action === null && $this->docman_approval_table_retriever->hasApprovalTable($item)) {
-            throw ApprovalTableException::approvalTableActionIsMandatory((string)$item->getTitle());
+            throw ApprovalTableException::approvalTableActionIsMandatory((string) $item->getTitle());
         }
 
         if ($approval_table_action !== null && ! $this->docman_approval_table_retriever->hasApprovalTable($item)) {
-            throw ApprovalTableException::approvalTableActionShouldNotBeProvided((string)$item->getTitle());
+            throw ApprovalTableException::approvalTableActionShouldNotBeProvided((string) $item->getTitle());
         }
     }
 

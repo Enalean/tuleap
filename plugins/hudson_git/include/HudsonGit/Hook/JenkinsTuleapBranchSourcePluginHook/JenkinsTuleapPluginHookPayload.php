@@ -44,7 +44,7 @@ class JenkinsTuleapPluginHookPayload implements Payload
     {
         $branch_name = str_replace('refs/heads/', '', $refname);
         return [
-            'tuleapProjectId'      => (string)$git_repository->getProjectId(),
+            'tuleapProjectId'      => (string) $git_repository->getProjectId(),
             'repositoryName' => $git_repository->getName(),
             'branchName'     => $branch_name
         ];

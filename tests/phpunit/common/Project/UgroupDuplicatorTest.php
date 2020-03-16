@@ -94,7 +94,7 @@ class UgroupDuplicatorTest extends TestCase
         $ugroup_mapping  = [];
 
         $source_ugroup_id = 201;
-        $source_ugroup = M::mock(ProjectUGroup::class, [ 'getId' => $source_ugroup_id, 'isStatic' => true, 'isBound' => false, 'getMembers' => [ ]]);
+        $source_ugroup = M::mock(ProjectUGroup::class, ['getId' => $source_ugroup_id, 'isStatic' => true, 'isBound' => false, 'getMembers' => [ ]]);
         $this->manager->shouldReceive('getStaticUGroups')->with($template)->once()->andReturns(
             [
                 $source_ugroup,
@@ -106,12 +106,12 @@ class UgroupDuplicatorTest extends TestCase
         $this->dao->shouldReceive('createUgroupFromSourceUgroup')->with($source_ugroup_id, $new_project_id)->once()->andReturns($new_ugroup_id);
         $this->manager->shouldReceive('getById')->with($new_ugroup_id)->once()->andReturn($new_ugroup);
 
-        $this->event_manager->shouldReceive('processEvent')->with(Event::UGROUP_DUPLICATION, [ 'source_ugroup' => $source_ugroup, 'new_ugroup_id' => $new_ugroup_id])->once();
+        $this->event_manager->shouldReceive('processEvent')->with(Event::UGROUP_DUPLICATION, ['source_ugroup' => $source_ugroup, 'new_ugroup_id' => $new_ugroup_id])->once();
 
         $this->dao->shouldReceive('createBinding')->with($new_project_id, $source_ugroup_id, $new_ugroup_id)->once();
 
         $this->ugroup_duplicator->duplicateOnProjectCreation($template, $new_project_id, $ugroup_mapping);
-        $this->assertEquals([ 201 => 301 ], $ugroup_mapping);
+        $this->assertEquals([201 => 301], $ugroup_mapping);
     }
 
     public function testItAddUsersFromSourceGroup()
@@ -123,7 +123,7 @@ class UgroupDuplicatorTest extends TestCase
         $source_ugroup_id = 201;
         $user1 = new \PFUser(['user_id' => 1]);
         $user2 = new \PFUser(['user_id' => 2]);
-        $source_ugroup = M::mock(ProjectUGroup::class, [ 'getId' => $source_ugroup_id, 'isStatic' => true, 'isBound' => false, 'getMembers' => [ $user1, $user2 ] ]);
+        $source_ugroup = M::mock(ProjectUGroup::class, ['getId' => $source_ugroup_id, 'isStatic' => true, 'isBound' => false, 'getMembers' => [$user1, $user2]]);
         $this->manager->shouldReceive('getStaticUGroups')->with($template)->once()->andReturns(
             [
                 $source_ugroup,
@@ -135,7 +135,7 @@ class UgroupDuplicatorTest extends TestCase
         $this->dao->shouldReceive('createUgroupFromSourceUgroup')->with($source_ugroup_id, $new_project_id)->once()->andReturns($new_ugroup_id);
         $this->manager->shouldReceive('getById')->with($new_ugroup_id)->once()->andReturn($new_ugroup);
 
-        $this->event_manager->shouldReceive('processEvent')->with(Event::UGROUP_DUPLICATION, [ 'source_ugroup' => $source_ugroup, 'new_ugroup_id' => $new_ugroup_id])->once();
+        $this->event_manager->shouldReceive('processEvent')->with(Event::UGROUP_DUPLICATION, ['source_ugroup' => $source_ugroup, 'new_ugroup_id' => $new_ugroup_id])->once();
 
         $this->dao->shouldReceive('createBinding')->with($new_project_id, $source_ugroup_id, $new_ugroup_id)->once();
 
@@ -154,7 +154,7 @@ class UgroupDuplicatorTest extends TestCase
         $source_ugroup_id = 201;
         $user1 = new \PFUser(['user_id' => 1]);
         $user2 = new \PFUser(['user_id' => 2]);
-        $source_ugroup = M::mock(ProjectUGroup::class, [ 'getId' => $source_ugroup_id, 'isStatic' => true, 'isBound' => false, 'getMembers' => [ $user1, $user2 ] ]);
+        $source_ugroup = M::mock(ProjectUGroup::class, ['getId' => $source_ugroup_id, 'isStatic' => true, 'isBound' => false, 'getMembers' => [$user1, $user2]]);
         $this->manager->shouldReceive('getStaticUGroups')->with($template)->once()->andReturns(
             [
                 $source_ugroup,
@@ -166,7 +166,7 @@ class UgroupDuplicatorTest extends TestCase
         $this->dao->shouldReceive('createUgroupFromSourceUgroup')->with($source_ugroup_id, $new_project_id)->once()->andReturns($new_ugroup_id);
         $this->manager->shouldReceive('getById')->with($new_ugroup_id)->once()->andReturn($new_ugroup);
 
-        $this->event_manager->shouldReceive('processEvent')->with(Event::UGROUP_DUPLICATION, [ 'source_ugroup' => $source_ugroup, 'new_ugroup_id' => $new_ugroup_id])->once();
+        $this->event_manager->shouldReceive('processEvent')->with(Event::UGROUP_DUPLICATION, ['source_ugroup' => $source_ugroup, 'new_ugroup_id' => $new_ugroup_id])->once();
 
         $this->dao->shouldReceive('createBinding')->with($new_project_id, $source_ugroup_id, $new_ugroup_id)->once();
 

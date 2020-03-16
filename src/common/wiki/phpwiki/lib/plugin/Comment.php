@@ -49,7 +49,7 @@ class WikiPlugin_Comment extends WikiPlugin
 
     // function handle_plugin_args_cruft(&$argstr, &$args) {
     // }
-};
+}
 
 // $Log: Comment.php,v $
 // Revision 1.2  2004/02/17 12:11:36  rurban

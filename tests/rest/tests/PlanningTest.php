@@ -28,20 +28,20 @@ class PlanningTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration
 
     public function testOptionsPlannings(): void
     {
-        $response = $this->getResponse($this->client->options('projects/'.$this->project_private_member_id.'/plannings'));
+        $response = $this->getResponse($this->client->options('projects/' . $this->project_private_member_id . '/plannings'));
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOptionsPlanningsWithRESTReadOnlyUser(): void
     {
-        $response = $this->getResponse($this->client->options('projects/'.$this->project_private_member_id.'/plannings'));
+        $response = $this->getResponse($this->client->options('projects/' . $this->project_private_member_id . '/plannings'));
 
         $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGetPlanningsContainsAReleasePlanning(): void
     {
-        $response = $this->getResponse($this->client->get('projects/'.$this->project_private_member_id.'/plannings'));
+        $response = $this->getResponse($this->client->get('projects/' . $this->project_private_member_id . '/plannings'));
 
         $this->assertPlannigAndReleasePlanning($response);
     }
@@ -49,7 +49,7 @@ class PlanningTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration
     public function testGetPlanningsContainsAReleasePlanningWithRESTReadOnlyUser(): void
     {
         $response = $this->getResponse(
-            $this->client->get('projects/'.$this->project_private_member_id.'/plannings'),
+            $this->client->get('projects/' . $this->project_private_member_id . '/plannings'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -67,14 +67,14 @@ class PlanningTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration
         $this->assertEquals($release_planning['label'], "Release Planning");
         $this->assertEquals($release_planning['project'], array(
             'id'    => $this->project_private_member_id,
-            'uri'   => 'projects/'.$this->project_private_member_id,
+            'uri'   => 'projects/' . $this->project_private_member_id,
             'label' => null
         ));
         $this->assertArrayHasKey('id', $release_planning['milestone_tracker']);
         $this->assertArrayHasKey('uri', $release_planning['milestone_tracker']);
         $this->assertRegExp('%^trackers/[0-9]+$%', $release_planning['milestone_tracker']['uri']);
         $this->assertCount(1, $release_planning['backlog_trackers']);
-        $this->assertEquals($release_planning['milestones_uri'], 'plannings/'.$release_planning['id'].'/milestones');
+        $this->assertEquals($release_planning['milestones_uri'], 'plannings/' . $release_planning['id'] . '/milestones');
 
         $this->assertEquals($response->getStatusCode(), 200);
     }
@@ -117,7 +117,7 @@ class PlanningTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration
     private function getMilestonesUri(): string
     {
         $response_plannings = $this->getResponse(
-            $this->client->get('projects/'.$this->project_private_member_id.'/plannings')
+            $this->client->get('projects/' . $this->project_private_member_id . '/plannings')
         )->json();
 
         return $response_plannings[0]['milestones_uri'];

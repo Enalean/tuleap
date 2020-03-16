@@ -37,7 +37,7 @@ class SystemEvent_USER_RENAME extends SystemEvent
         if (!isset($this->log) || $this->log == '') {
             $this->log = $log;
         } else {
-            $this->log .= PHP_EOL.$log;
+            $this->log .= PHP_EOL . $log;
         }
     }
 
@@ -54,7 +54,7 @@ class SystemEvent_USER_RENAME extends SystemEvent
     {
         $txt = '';
         list($user_id, $new_name) = $this->getParametersAsArray();
-        $txt .= 'user: '. $this->verbalizeUserId($user_id, $with_link).' new name: '.$new_name;
+        $txt .= 'user: ' . $this->verbalizeUserId($user_id, $with_link) . ' new name: ' . $new_name;
         return $txt;
     }
 
@@ -80,7 +80,7 @@ class SystemEvent_USER_RENAME extends SystemEvent
                             $renameState = $renameState & false;
                         }
                     } else {
-                        $this->error('Could not rename user home: Name '.$new_name.' not available');
+                        $this->error('Could not rename user home: Name ' . $new_name . ' not available');
                         $renameState = $renameState & false;
                     }
                 }
@@ -91,21 +91,21 @@ class SystemEvent_USER_RENAME extends SystemEvent
 
             // Update DB
             if (!$this->updateDB($user, $new_name)) {
-                $this->error('Could not update User (id:'.$user->getId().') from "'.$user->getUserName().'" to "'.$new_name.'"');
+                $this->error('Could not update User (id:' . $user->getId() . ') from "' . $user->getUserName() . '" to "' . $new_name . '"');
                 $renameState = $renameState & false;
             }
 
             //Rename CVS files
             $backendCVS = $this->getBackend('CVS');
             if (!$backendCVS->updateCVSWritersForGivenMember($user)) {
-                $this->error('Could not update CVS writers for the user (id:'.$user->getId().')');
+                $this->error('Could not update CVS writers for the user (id:' . $user->getId() . ')');
                 $renameState = $renameState & false;
             }
 
             //Rename SVN files
             $backendSVN = $this->getBackend('SVN');
             if (!$backendSVN->updateSVNAccessForGivenMember($user)) {
-                $this->error('Could not update SVN access files for the user (id:'.$user->getId().')');
+                $this->error('Could not update SVN access files for the user (id:' . $user->getId() . ')');
                 $renameState = $renameState & false;
             }
 

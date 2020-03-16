@@ -28,7 +28,7 @@ function uploadAllowed($name)
 
     // Don't upload backup files
     $tildaEnd = strrpos($name, '~');
-    if ($tildaEnd && $tildaEnd == strlen($name)-1) {
+    if ($tildaEnd && $tildaEnd == strlen($name) - 1) {
         $allowed = false;
     }
     return $allowed;
@@ -41,7 +41,7 @@ if (count($argv) != 4) {
 // Gather some inputs
 echo "Login : ";
 $login = fgets(STDIN);
-$login = substr($login, 0, strlen($login)-1);
+$login = substr($login, 0, strlen($login) - 1);
 
 echo "Password for $login : ";
 if (PHP_OS != 'WINNT') {
@@ -51,7 +51,7 @@ if (PHP_OS != 'WINNT') {
 } else {
     $password = fgets(STDIN);
 }
-$password = substr($password, 0, strlen($password)-1);
+$password = substr($password, 0, strlen($password) - 1);
 echo PHP_EOL;
 
 $chunkSize = 6000000;
@@ -78,10 +78,10 @@ $rii = new RecursiveIteratorIterator(
     RecursiveIteratorIterator::SELF_FIRST
 );
 
-$slashEnd = strrpos($source_dir, '/', strlen($source_dir)-1);
+$slashEnd = strrpos($source_dir, '/', strlen($source_dir) - 1);
 
 if ($slashEnd) {
-    $foldername = substr($source_dir, 0, strlen($source_dir)-1);
+    $foldername = substr($source_dir, 0, strlen($source_dir) - 1);
 } else {
     $foldername = $source_dir;
 }
@@ -94,13 +94,13 @@ foreach ($rii as $r) {
     $name         = $r->getFilename();
 
     if ($r->isDir()) {
-        echo "Creating ".$r->getFilename()." folder ..... ";
+        echo "Creating " . $r->getFilename() . " folder ..... ";
         try {
             $res = $soap->createDocmanFolder($hash, $project_id, $folderhash[$folderpath], $r->getFilename(), '', "end");
         } catch (Exception $e) {
-            die("This folder doesn't exist in the docman. Check out the id_destination(".$e->getMessage().")".PHP_EOL);
+            die("This folder doesn't exist in the docman. Check out the id_destination(" . $e->getMessage() . ")" . PHP_EOL);
         }
-        echo "OK".PHP_EOL;
+        echo "OK" . PHP_EOL;
         $folderhash[$foldername] = $res;
     } elseif ($r->isFile()) {
         if (uploadAllowed($r->getFilename())) {
@@ -109,10 +109,10 @@ foreach ($rii as $r) {
                 $name = substr($r->getFilename(), 0, strrpos($r->getFilename(), '.'));
             }*/
 
-            echo "Uploading ".$name." ..... ";
+            echo "Uploading " . $name . " ..... ";
             $fileName = basename($r->getPathname());
             $fileSize = filesize($r->getPathname());
-            $fileType = shell_exec('file -bi "'.escapeshellcmd($r->getPathname()).'"');
+            $fileType = shell_exec('file -bi "' . escapeshellcmd($r->getPathname()) . '"');
             try {
                 $itemId = $soap->createDocmanFile($hash, $project_id, $folderhash[$folderpath], $name, '', 'end', 100, 0, array(), array(), $fileSize, $fileName, $fileType, '', 0, $chunkSize);
                 if ($itemId) {
@@ -124,12 +124,12 @@ foreach ($rii as $r) {
                 }
                 $uploadedMd5 = $soap->getDocmanFileMD5sum($hash, $project_id, $itemId, 1);
                 if ($uploadedMd5 !== md5_file($r->getPathname())) {
-                    echo "ERROR: md5 differs".PHP_EOL;
+                    echo "ERROR: md5 differs" . PHP_EOL;
                 } else {
-                    echo "OK".PHP_EOL;
+                    echo "OK" . PHP_EOL;
                 }
             } catch (Exception $e) {
-                echo 'ERROR ('.$e->getMessage().')'.PHP_EOL;
+                echo 'ERROR (' . $e->getMessage() . ')' . PHP_EOL;
             }
         }
     }

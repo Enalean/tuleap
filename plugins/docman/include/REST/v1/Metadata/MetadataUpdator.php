@@ -117,7 +117,7 @@ class MetadataUpdator
         PFUser $current_user
     ): void {
         if ($representation->title !== $item->getTitle() &&
-            $this->item_factory->doesTitleCorrespondToExistingDocument($representation->title, (int)$item->getParentId())) {
+            $this->item_factory->doesTitleCorrespondToExistingDocument($representation->title, (int) $item->getParentId())) {
             throw new RestException(400, "A file with same title already exists in the given folder.");
         }
 
@@ -156,7 +156,7 @@ class MetadataUpdator
         foreach ($metadata_to_update_collection as $metadata_to_update) {
                 $this->metadata_value_updator->updateMetadata(
                     $metadata_to_update->getMetadata(),
-                    (int)$item->getId(),
+                    (int) $item->getId(),
                     $metadata_to_update->getValue()
                 );
         }
@@ -211,7 +211,7 @@ class MetadataUpdator
         PFUser $user
     ): void {
         if ($representation->title !== $item->getTitle() &&
-            $this->item_factory->doesTitleCorrespondToExistingFolder($representation->title, (int)$item->getParentId())) {
+            $this->item_factory->doesTitleCorrespondToExistingFolder($representation->title, (int) $item->getParentId())) {
             throw new RestException(400, "A file with same title already exists in the given folder.");
         }
 
@@ -248,7 +248,7 @@ class MetadataUpdator
         foreach ($metadata_to_update_collection as $metadata_to_update) {
             $this->metadata_value_updator->updateMetadata(
                 $metadata_to_update->getMetadata(),
-                (int)$item->getId(),
+                (int) $item->getId(),
                 $metadata_to_update->getValue()
             );
         }
@@ -268,8 +268,8 @@ class MetadataUpdator
             if ($all_item_collection->getTotalElements() > 0) {
                 $this->recursive_updator->updateRecursiveMetadataOnFolderAndItems(
                     $all_item_collection,
-                    (int)$item->getId(),
-                    (int)$project->getID()
+                    (int) $item->getId(),
+                    (int) $project->getID()
                 );
             }
 
@@ -290,8 +290,8 @@ class MetadataUpdator
             $this->event_processor->raiseUpdateEvent(
                 $item,
                 $current_user,
-                (string)$item->getStatus(),
-                (string)$status,
+                (string) $item->getStatus(),
+                (string) $status,
                 'status'
             );
         }

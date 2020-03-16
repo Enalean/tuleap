@@ -209,7 +209,7 @@ class SubmittedValueConvertor
 
     private function extractNewValuesFromSubmittedValue(array $submitted_value)
     {
-        $new_values          = (string)$submitted_value['new_values'];
+        $new_values          = (string) $submitted_value['new_values'];
         $removed_values      = $this->extractRemovedValuesFromSubmittedValue($submitted_value);
         $new_values_as_array = array_filter(array_map('intval', explode(',', $new_values)));
 

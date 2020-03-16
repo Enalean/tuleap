@@ -35,7 +35,7 @@ class Tracker_FormElement_Field_MultiSelectboxDao extends Tracker_FormElement_Sp
     {
         $field_id  = $this->da->escapeInt($field_id);
 
-        if (isset($row['size']) && (int)$row['size']) {
+        if (isset($row['size']) && (int) $row['size']) {
             $size = $this->da->escapeInt($row['size']);
         } else {
             $size = 7;

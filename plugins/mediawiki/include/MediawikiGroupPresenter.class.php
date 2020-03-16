@@ -54,7 +54,7 @@ class MediawikiGroupPresenter
     public function available_groups()
     {
         $selector = array(
-            'name'     => 'available_'.$this->mediawiki_group_id.'[]',
+            'name'     => 'available_' . $this->mediawiki_group_id . '[]',
             'class'    => 'forge_mw_available_groups',
             'options'  => array()
         );
@@ -71,7 +71,7 @@ class MediawikiGroupPresenter
     public function selected_groups()
     {
         $selector = array(
-            'name'     => 'selected_'.$this->mediawiki_group_id.'[]',
+            'name'     => 'selected_' . $this->mediawiki_group_id . '[]',
             'class'    => 'forge_mw_selected_groups',
             'options'  => array()
         );
@@ -89,7 +89,7 @@ class MediawikiGroupPresenter
 
     public function hidden_selected_groups_name()
     {
-        return 'hidden_selected_'.$this->mediawiki_group_id;
+        return 'hidden_selected_' . $this->mediawiki_group_id;
     }
 
     public function hidden_selected_groups_value()

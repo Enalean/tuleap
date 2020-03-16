@@ -58,8 +58,8 @@ class URLVerificationPermissionsOverriderRestrictedPlatformAndOverriderForceAnon
         $this->url_verification->shouldReceive('getEventManager')->andReturns($this->event_manager);
         $this->url_verification->shouldReceive('getCurrentUser')->andReturns($this->user);
         PermissionsOverrider_PermissionsOverriderManager::setInstance($this->overrider_manager);
-        $this->fixtures = dirname(__FILE__).'/_fixtures';
-        $GLOBALS['Language']->shouldReceive('getContent')->andReturns($this->fixtures.'/empty.txt');
+        $this->fixtures = dirname(__FILE__) . '/_fixtures';
+        $GLOBALS['Language']->shouldReceive('getContent')->andReturns($this->fixtures . '/empty.txt');
 
         $this->server = array('SERVER_NAME' => 'example.com');
 

@@ -31,7 +31,6 @@ class ProjectMembersDAO extends DataAccessObject
 {
     public function searchProjectMembers($project_id)
     {
-
         $escaped_project_id = $this->da->escapeInt($project_id);
         $sql_order          = UserHelper::instance()->getDisplayNameSQLOrder();
 

@@ -35,13 +35,13 @@ class FRSLogDao extends DataAccessObject
      */
     public function addLog($userID, $projectID, $itemID, $actionID)
     {
-        $sql = ' INSERT INTO frs_log '.
-               ' (time, user_id, group_id, item_id, action_id) '.
-               ' VALUES ( '.$this->da->escapeInt($_SERVER['REQUEST_TIME']).', '.
-               $this->da->escapeInt($userID).', '.
-               $this->da->escapeInt($projectID).', '.
-               $this->da->escapeInt($itemID).', '.
-               $this->da->escapeInt($actionID).')';
+        $sql = ' INSERT INTO frs_log ' .
+               ' (time, user_id, group_id, item_id, action_id) ' .
+               ' VALUES ( ' . $this->da->escapeInt($_SERVER['REQUEST_TIME']) . ', ' .
+               $this->da->escapeInt($userID) . ', ' .
+               $this->da->escapeInt($projectID) . ', ' .
+               $this->da->escapeInt($itemID) . ', ' .
+               $this->da->escapeInt($actionID) . ')';
         return $this->update($sql);
     }
 }

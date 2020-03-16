@@ -103,7 +103,7 @@ final class oauth2_serverPlugin extends Plugin
 
     public function collectProjectAdminNavigationItems(NavigationPresenter $presenter): void
     {
-        $project_id = urlencode((string)$presenter->getProjectId());
+        $project_id = urlencode((string) $presenter->getProjectId());
         $html_url   = $this->getPluginPath() . "/project/$project_id/admin";
         $presenter->addItem(
             new NavigationItemPresenter(

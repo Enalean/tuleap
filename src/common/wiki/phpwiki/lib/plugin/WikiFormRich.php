@@ -124,7 +124,7 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
         $arg = '';
         for ($i = 0; $i < count($arg_array); $i++) {
             //TODO: we require an name=value pair here, but submit may go without also.
-            if (preg_match("/^\s*(".join("|", $allowed).")\[\](.*)$/", $arg_array[$i], $m)) {
+            if (preg_match("/^\s*(" . join("|", $allowed) . ")\[\](.*)$/", $arg_array[$i], $m)) {
                 $name = $m[1]; // one of the allowed input types
                 $this->inputbox[][$name] = array();
                 $j = count($this->inputbox) - 1;
@@ -193,7 +193,7 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
         foreach ($this->inputbox as $inputbox) {
             foreach ($inputbox as $inputtype => $input) {
                 if ($inputtype == 'radiobutton') {
-                    $inputtype='radio'; // convert from older versions
+                    $inputtype = 'radio'; // convert from older versions
                 }
                 $input['type'] = $inputtype;
                 $text = '';
@@ -201,7 +201,7 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
                     if (empty($input['name'])) {
                         return $this->error(fmt(
                             "A required argument '%s' is missing.",
-                            $inputtype."[][name]"
+                            $inputtype . "[][name]"
                         ));
                     }
                     if (!isset($input['text'])) {
@@ -220,7 +220,7 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
                             $div = HTML::div(array('class' => $class));
                             $values = $input['value'];
                             $name = $input['name'];
-                            $input['name'] = $inputtype == 'checkbox' ? $name."[]" : $name;
+                            $input['name'] = $inputtype == 'checkbox' ? $name . "[]" : $name;
                             foreach ($values as $val) {
                                 $input['value'] = $val;
                                 if ($request->getArg($name)) {
@@ -306,7 +306,7 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
                             $values = explode(",", $values);
                         }
                         if (empty($values) and ($s = $request->getArg($input['name']))) {
-                            $select->pushContent(HTML::option(array('value'=> $s), $s));
+                            $select->pushContent(HTML::option(array('value' => $s), $s));
                         } elseif (is_array($values)) {
                             $name = $input['name'];
                             unset($input['name']);
@@ -377,7 +377,7 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
         }
         return $form;
     }
-};
+}
 
 // $Log: WikiFormRich.php,v $
 // Revision 1.15  2004/11/26 18:25:33  rurban

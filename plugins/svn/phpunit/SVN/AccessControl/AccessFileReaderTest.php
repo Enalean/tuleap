@@ -37,7 +37,7 @@ class AccessFileReaderTest extends TestCase
     protected function setUp() : void
     {
         parent::setUp();
-        $fixtures_dir = __DIR__ .'/_fixtures';
+        $fixtures_dir = __DIR__ . '/_fixtures';
 
         $this->repository = \Mockery::mock(Repository::class);
         $this->repository->shouldReceive('getSystemPath')->andReturn($fixtures_dir);

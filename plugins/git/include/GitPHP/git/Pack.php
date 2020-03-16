@@ -206,7 +206,7 @@ class Pack
          */
         while ($low <= $high) {
             $mid = ($low + $high) >> 1;
-            fseek($index, 4*256 + 24*$mid);
+            fseek($index, 4 * 256 + 24 * $mid);
 
             $off = Pack::fuint32($index);
             $binName = fread($index, 20);
@@ -265,7 +265,7 @@ class Pack
         /*
          * get the object count from fanout[255]
          */
-        fseek($index, 8 + 4*255);
+        fseek($index, 8 + 4 * 255);
         $objectCount = Pack::fuint32($index);
 
         /*
@@ -275,7 +275,7 @@ class Pack
         $objIndex = false;
         while ($low <= $high) {
             $mid = ($low + $high) >> 1;
-            fseek($index, 8 + 4*256 + 20*$mid);
+            fseek($index, 8 + 4 * 256 + 20 * $mid);
 
             $binName = fread($index, 20);
             $name = bin2hex($binName);
@@ -298,14 +298,14 @@ class Pack
         /*
          * get the offset from the same index in the offset table
          */
-        fseek($index, 8 + 4*256 + 24*$objectCount + 4*$objIndex);
+        fseek($index, 8 + 4 * 256 + 24 * $objectCount + 4 * $objIndex);
         $offset = self::fuint32($index);
         if (($offset & 0x80000000) === 0) {
             return $offset;
         }
 
         $offset_in_64bit_entries_index = ($offset ^ 0x80000000);
-        fseek($index, 8 + 4*256 + 24*$objectCount + 4*$objectCount + 8*$offset_in_64bit_entries_index);
+        fseek($index, 8 + 4 * 256 + 24 * $objectCount + 4 * $objectCount + 8 * $offset_in_64bit_entries_index);
         return self::fuint64($index);
     }
 
@@ -413,12 +413,12 @@ class Pack
             /*
              * regular gzipped object data
              */
-            return array($type, gzuncompress(fread($pack, $size+512), $size));
+            return array($type, gzuncompress(fread($pack, $size + 512), $size));
         } elseif ($type == Pack::OBJ_OFS_DELTA) {
             /*
              * delta of an object at offset
              */
-            $buf = fread($pack, $size+512+20);
+            $buf = fread($pack, $size + 512 + 20);
 
             /*
              * read the base object offset

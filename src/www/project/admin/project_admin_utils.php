@@ -31,7 +31,7 @@ function project_admin_header($params, $current_pane_shortname)
 {
     global $group_id;
 
-    $params['toptab'] ='admin';
+    $params['toptab'] = 'admin';
     $params['group']  = $group_id;
     $title            = $params['title'];
 
@@ -206,8 +206,8 @@ function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
                 $arr_args = explode('||', $args);
             }
         } else {
-            $msg_key=$field;
-            $arr_args="";
+            $msg_key = $field;
+            $arr_args = "";
         }
         $msg = $Language->getText('project_admin_utils', $msg_key, $arr_args);
         if (!(strpos($msg, "*** Unkown msg") === false)) {
@@ -215,16 +215,16 @@ function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
         }
 
         if (!$export) {
-            $html .= '<TR class="'. html_get_alt_row_color($i++) .'"><TD>'. $hp->purify($msg, CODENDI_PURIFIER_BASIC, $group_id).'</TD><TD>';
+            $html .= '<TR class="' . html_get_alt_row_color($i++) . '"><TD>' . $hp->purify($msg, CODENDI_PURIFIER_BASIC, $group_id) . '</TD><TD>';
         }
         $val = $row['old_value'];
         //Translate dynamic ugroup name for permission entries
         if (strstr($msg_key, "perm_granted_for_") || strstr($msg_key, "perm_reset_for_") || strstr($msg_key, "membership_request_updated")) {
             $ugroupList = explode(",", $val);
-            $val ='';
+            $val = '';
             foreach ($ugroupList as $ugroup) {
                 if ($val === '') {
-                    $val.=', ';
+                    $val .= ', ';
                 }
                 $val .= util_translate_name_ugroup($ugroup);
             }
@@ -242,12 +242,12 @@ function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
                                      'date'  => format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['date']),
                                      'by'    => UserHelper::instance()->getDisplayNameFromUserName($row['user_name']));
             require_once __DIR__ . '/../export/project_export_utils.php';
-            $html .= build_csv_record(array('event', 'val', 'date', 'by'), $documents_body)."\n";
+            $html .= build_csv_record(array('event', 'val', 'date', 'by'), $documents_body) . "\n";
         } else {
             $html .= $hp->purify($val, CODENDI_PURIFIER_BASIC);
             $user = UserManager::instance()->getUserByUserName($row['user_name']);
-            $html .= '</TD><TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['date']).
-            '</TD><TD>'.UserHelper::instance()->getLinkOnUser($user).'</TD></TR>';
+            $html .= '</TD><TD>' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['date']) .
+            '</TD><TD>' . UserHelper::instance()->getLinkOnUser($user) . '</TD></TR>';
         }
     }
 
@@ -283,12 +283,12 @@ function show_grouphistory($group_id, $offset, $limit, $event = null, $subEvents
 
     if (isset($subEventsBox)) {
         $subEventsString = implode(",", array_keys($subEventsBox));
-        $forwardSubEvents = '&event='.$event.'&subEventsBox='.$subEventsString;
+        $forwardSubEvents = '&event=' . $event . '&subEventsBox=' . $subEventsString;
     } else {
-        $forwardSubEvents = '&event='.$event;
+        $forwardSubEvents = '&event=' . $event;
     }
 
-    $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/project/');
+    $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/project/');
 
     //Event select Box
     $events = array(
@@ -354,8 +354,8 @@ function show_grouphistory($group_id, $offset, $limit, $event = null, $subEvents
         }
     }
 
-    $js = "new UserAutoCompleter('by', '".util_get_dir_image_theme()."', true);
-           new ProjectHistory(".json_encode($translated_events).", ".json_encode($translated_selected_sub_events).");";
+    $js = "new UserAutoCompleter('by', '" . util_get_dir_image_theme() . "', true);
+           new ProjectHistory(" . json_encode($translated_events) . ", " . json_encode($translated_selected_sub_events) . ");";
 
     $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/codendi/ProjectHistory.js');
     $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
@@ -388,7 +388,7 @@ function export_grouphistory($group_id, $event = null, $subEventsBox = null, $va
                               'val'   => $Language->getText('project_admin_utils', 'val'),
                               'date'  => $Language->getText('project_admin_utils', 'date'),
                               'by'    => $Language->getText('global', 'by'));
-    echo build_csv_header($col_list, $documents_title).$eol;
+    echo build_csv_header($col_list, $documents_title) . $eol;
 
     $dao = new ProjectHistoryDao(CodendiDataAccess::instance());
     $history_filter = build_grouphistory_filter($event, $subEventsBox, $value, $startDate, $endDate, $by);
@@ -397,5 +397,5 @@ function export_grouphistory($group_id, $event = null, $subEventsBox = null, $va
     if ($res['numrows'] > 0) {
         echo displayProjectHistoryResults($group_id, $res, true);
     }
-    echo build_csv_header($col_list, array()).$eol;
+    echo build_csv_header($col_list, array()) . $eol;
 }

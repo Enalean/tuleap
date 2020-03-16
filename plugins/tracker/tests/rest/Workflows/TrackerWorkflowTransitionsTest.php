@@ -66,7 +66,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
                     ];
                 }
             }
-        };
+        }
 
         return $all_transitions;
     }

@@ -81,12 +81,12 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget
                 try {
                     $job = $job_with_exception->getHudsonJob();
 
-                    $html .= '<tr class="'. util_get_alt_row_color($cpt) .'">';
+                    $html .= '<tr class="' . util_get_alt_row_color($cpt) . '">';
                     $html .= ' <td>';
-                    $html .= ' <img class="widget-jenkins-job-icon" src="'.$purifier->purify($job->getStatusIcon()).'" title="'.$purifier->purify($job->getStatus()).'" >';
+                    $html .= ' <img class="widget-jenkins-job-icon" src="' . $purifier->purify($job->getStatusIcon()) . '" title="' . $purifier->purify($job->getStatus()) . '" >';
                     $html .= ' </td>';
                     $html .= ' <td style="width:99%">';
-                    $html .= '  <a class="widget-jenkins-job" href="/plugins/hudson/?action=view_job&group_id='.urlencode($this->group_id).'&job_id='.urlencode($job_id).'">'.$purifier->purify($job->getName()).'</a><br />';
+                    $html .= '  <a class="widget-jenkins-job" href="/plugins/hudson/?action=view_job&group_id=' . urlencode($this->group_id) . '&job_id=' . urlencode($job_id) . '">' . $purifier->purify($job->getName()) . '</a><br />';
                     $html .= ' </td>';
                     $html .= '</tr>';
 

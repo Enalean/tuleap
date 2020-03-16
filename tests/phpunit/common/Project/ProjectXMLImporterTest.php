@@ -78,9 +78,9 @@ class ProjectXMLImporterTest extends TestCase
     {
         $this->event_manager     = M::spy(EventManager::class);
         $this->project_manager   = M::spy(\ProjectManager::class);
-        $this->project           = M::spy(\Project::class, [ 'getID' => 122 ]);
+        $this->project           = M::spy(\Project::class, ['getID' => 122]);
         $this->ugroup_manager    = M::spy(\UGroupManager::class);
-        $this->user_manager      = M::spy(\UserManager::class, [ 'getCurrentUser' => M::spy(\PFUser::class) ]);
+        $this->user_manager      = M::spy(\UserManager::class, ['getCurrentUser' => M::spy(\PFUser::class)]);
         $this->user_finder       = new XMLImportHelper($this->user_manager);
         $this->logger            = M::spy(\Psr\Log\LoggerInterface::class);
         $this->ugroup_duplicator = M::spy(\Tuleap\Project\UgroupDuplicator::class);

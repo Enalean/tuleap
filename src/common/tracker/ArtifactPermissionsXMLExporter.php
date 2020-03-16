@@ -67,7 +67,7 @@ class ArtifactPermissionsXMLExporter
         $filtered_ugroup_ids = array();
 
         foreach ($permissions as $row) {
-            $ugroup_id = (int)$row['ugroup_id'];
+            $ugroup_id = (int) $row['ugroup_id'];
 
             if ($ugroup_id === ProjectUGroup::NONE) {
                 $ugroup_id = ProjectUGroup::PROJECT_ADMIN;

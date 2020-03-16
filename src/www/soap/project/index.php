@@ -31,7 +31,7 @@ if ($request->isSecure() || ForgeConfig::get('sys_https_host')) {
 }
 $default_domain = ForgeConfig::get('sys_default_domain');
 
-$uri = $protocol.'://'.$default_domain.'/soap/project';
+$uri = $protocol . '://' . $default_domain . '/soap/project';
 
 $serviceClass = Project_SOAPServer::class;
 
@@ -68,7 +68,7 @@ if ($request->exist('wsdl')) {
     );
 
     $server = new TuleapSOAPServer(
-        $uri.'/?wsdl',
+        $uri . '/?wsdl',
         array('cache_wsdl' => WSDL_CACHE_NONE)
     );
     $server->setClass(

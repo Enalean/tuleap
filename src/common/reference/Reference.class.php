@@ -76,7 +76,7 @@ class Reference
      * This parameter is computed from the 'link' param.
      * @var int when set
      */
-    public $num_param=null;
+    public $num_param = null;
 
     /**
      *
@@ -84,16 +84,16 @@ class Reference
      */
     public function __construct($myid, $mykeyword, $mydescription, $mylink, $myscope, $myservice_short_name, $nature, $myis_active, $mygroup_id)
     {
-        $this->id=$myid;
-        $this->keyword=strtolower($mykeyword);
-        $this->description=$mydescription;
-        $this->link=$mylink;
-        $this->scope=$myscope;
-        $this->service_short_name=$myservice_short_name;
-        $this->nature=$nature;
-        $this->is_active=$myis_active;
-        $this->group_id=$mygroup_id;
-        $this->num_param=$this->computeNumParam($this->link);
+        $this->id = $myid;
+        $this->keyword = strtolower($mykeyword);
+        $this->description = $mydescription;
+        $this->link = $mylink;
+        $this->scope = $myscope;
+        $this->service_short_name = $myservice_short_name;
+        $this->nature = $nature;
+        $this->is_active = $myis_active;
+        $this->group_id = $mygroup_id;
+        $this->num_param = $this->computeNumParam($this->link);
     }
 
     /**
@@ -152,29 +152,29 @@ class Reference
     {
         // Compute number of parameters if not already done
         if ($this->num_param == false) {
-            $this->num_param=$this->computeNumParam($this->link);
+            $this->num_param = $this->computeNumParam($this->link);
         }
         return $this->num_param;
     }
 
     public function setIsActive($my_is_active)
     {
-        $this->is_active=$my_is_active;
+        $this->is_active = $my_is_active;
     }
 
     public function setGroupId($my_group_id)
     {
-        $this->group_id=$my_group_id;
+        $this->group_id = $my_group_id;
     }
 
     public function setId($my_id)
     {
-        $this->id=$my_id;
+        $this->id = $my_id;
     }
 
     public function setDescription($my_description)
     {
-        $this->description=$my_description;
+        $this->description = $my_description;
     }
 
     public function setLink($link)
@@ -203,12 +203,12 @@ class Reference
         }
         $this->link = str_replace('$group_id', $this->group_id, $this->link);
         if (is_array($args)) {
-            $count=count($args);
-            if ($count>9) {
-                $count=9;
+            $count = count($args);
+            if ($count > 9) {
+                $count = 9;
             }
-            for ($i=1; $i<=$count; $i++) {
-                $this->link = str_replace('$'.$i, urlencode($args[$i-1]), $this->link);
+            for ($i = 1; $i <= $count; $i++) {
+                $this->link = str_replace('$' . $i, urlencode($args[$i - 1]), $this->link);
             }
         }
     }
@@ -227,8 +227,8 @@ class Reference
      */
     public function computeNumParam($link)
     {
-        for ($i=9; $i>0; $i--) {
-            if (strpos($link, '$'.$i)!==false) {
+        for ($i = 9; $i > 0; $i--) {
+            if (strpos($link, '$' . $i) !== false) {
                 return $i;
             }
         }

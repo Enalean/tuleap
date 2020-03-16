@@ -93,14 +93,14 @@ class hudson_svnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclarati
                 __DIR__ . '/../../../src/www/assets/hudson_svn/themes',
                 '/assets/hudson_svn/themes'
             );
-            echo '<link rel="stylesheet" type="text/css" href="'. $asset->getFileURL('default-style.css') .'" />';
+            echo '<link rel="stylesheet" type="text/css" href="' . $asset->getFileURL('default-style.css') . '" />';
         }
     }
 
     public function javascript_file($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (strpos($_SERVER['REQUEST_URI'], HUDSON_BASE_URL) === 0) {
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/form.js"></script>';
+            echo '<script type="text/javascript" src="' . $this->getPluginPath() . '/scripts/form.js"></script>';
         }
     }
 
@@ -131,7 +131,7 @@ class hudson_svnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclarati
 
     private function getRenderer()
     {
-        return TemplateRendererFactory::build()->getRenderer(HUDSON_SVN_BASE_DIR.'/templates');
+        return TemplateRendererFactory::build()->getRenderer(HUDSON_SVN_BASE_DIR . '/templates');
     }
 
     private function getRepositoryManager()

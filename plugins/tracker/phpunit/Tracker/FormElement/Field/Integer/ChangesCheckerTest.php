@@ -40,7 +40,7 @@ class ChangesCheckerTest extends \PHPUnit\Framework\TestCase
 
     public function testChecksIfChangesOccuredAtArtifactUpdate()
     {
-        $this->old_value ->shouldReceive('getNumeric')->andReturn(1);
+        $this->old_value->shouldReceive('getNumeric')->andReturn(1);
 
         $this->assertTrue($this->checker->hasChanges($this->old_value, 2));
         $this->assertFalse($this->checker->hasChanges($this->old_value, 1));

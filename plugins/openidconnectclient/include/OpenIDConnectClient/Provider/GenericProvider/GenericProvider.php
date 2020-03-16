@@ -153,6 +153,6 @@ final class GenericProvider implements Provider
 
     public function getRedirectUri() : string
     {
-        return 'https://'. ForgeConfig::get('sys_https_host') . '/plugins/openidconnectclient/';
+        return 'https://' . ForgeConfig::get('sys_https_host') . '/plugins/openidconnectclient/';
     }
 }

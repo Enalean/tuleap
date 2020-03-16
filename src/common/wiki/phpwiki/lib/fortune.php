@@ -31,7 +31,7 @@ class Fortune
                 }
             }
 
-            srand((double)microtime()*1000000);
+            srand((double) microtime() * 1000000);
             $index = rand(0, $amount);
             $i = 0;
 
@@ -39,7 +39,7 @@ class Fortune
                 $i++;
             }
 
-            return $this->getRandomQuote($dir . "/" .$files[$i]);
+            return $this->getRandomQuote($dir . "/" . $files[$i]);
         }
         return -1;
     }
@@ -105,7 +105,7 @@ class Fortune
     public function getQuote($fd, $index)
     {
         fseek($fd, $index);
-        $line="";
+        $line = "";
         $res = "";
         do {
             $res = $res . $line;

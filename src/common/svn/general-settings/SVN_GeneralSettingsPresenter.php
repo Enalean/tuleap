@@ -100,7 +100,7 @@ class SVN_GeneralSettingsPresenter
         return $GLOBALS['Language']->getText(
             'svn_admin_general_settings',
             'preamble',
-            array('/svn/?func=info&group_id='.$this->project->getID(), $GLOBALS['sys_name'])
+            array('/svn/?func=info&group_id=' . $this->project->getID(), $GLOBALS['sys_name'])
         );
     }
 

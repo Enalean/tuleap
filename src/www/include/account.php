@@ -46,7 +46,7 @@ function account_make_login_from_email($email)
 {
     $pattern = "/^(.*)@.*$/";
     $replacement = "$1";
-    $name=preg_replace($pattern, $replacement, $email);
+    $name = preg_replace($pattern, $replacement, $email);
     $name = substr($name, 0, 32);
     $name = strtr($name, ".:;,?%^*(){}[]<>+=$", "___________________");
     $name = strtr($name, "�a��e�u�", "aaeeeuuc");
@@ -101,7 +101,7 @@ function account_shellselects($current)
         if ($current == $shell) {
             $selected = ' selected="selected"';
         }
-        echo '<option value="'.$shell.'"'.$selected.'>'.$shell.'</option>'.PHP_EOL;
+        echo '<option value="' . $shell . '"' . $selected . '>' . $shell . '</option>' . PHP_EOL;
     }
 }
 // Set user password (Unix, Web)

@@ -64,7 +64,7 @@ class Widget_ProjectSvnStats_Layout
      */
     public function getChartHeigh()
     {
-        return $this->hasOnlyOneColumn() ? 300+16*$this->nb_committer*(1/$this->legend_ratio) : 300+(16+$this->legend_ratio)*$this->nb_committer;
+        return $this->hasOnlyOneColumn() ? 300 + 16 * $this->nb_committer * (1 / $this->legend_ratio) : 300 + (16 + $this->legend_ratio) * $this->nb_committer;
     }
 
     /**
@@ -75,7 +75,7 @@ class Widget_ProjectSvnStats_Layout
      */
     private function getCustomImageMargin()
     {
-        return $this->hasMoreThanTwoColumns() ? 80+(16-$this->legend_ratio)*$this->nb_committer : 125+15*(1/$this->legend_ratio)*$this->nb_committer;
+        return $this->hasMoreThanTwoColumns() ? 80 + (16 - $this->legend_ratio) * $this->nb_committer : 125 + 15 * (1 / $this->legend_ratio) * $this->nb_committer;
     }
 
     /**
@@ -123,7 +123,7 @@ class Widget_ProjectSvnStats_Layout
     public function getImageBottomMargin()
     {
         $customImageMargin = $this->getCustomImageMargin();
-        return $this->hasOnlyOneColumn() ? 100+18*$this->nb_committer : $customImageMargin;
+        return $this->hasOnlyOneColumn() ? 100 + 18 * $this->nb_committer : $customImageMargin;
     }
 
     /**

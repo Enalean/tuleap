@@ -57,6 +57,6 @@ class SystemEvent_SVN_AUTHORIZE_TOKENS extends SystemEvent
     public function verbalizeParameters($with_link)
     {
         $group_id = $this->getIdFromParam();
-        return 'project: '. $this->verbalizeProjectId($group_id, $with_link);
+        return 'project: ' . $this->verbalizeProjectId($group_id, $with_link);
     }
 }

@@ -57,7 +57,7 @@ class BindListUserValueGetterTest extends TestCase
         $this->default_dao = Mockery::mock(Tracker_FormElement_Field_List_Bind_DefaultvalueDao::class);
         $this->user_helper = Mockery::mock(\UserHelper::class);
 
-        $this->getter = Mockery::mock(BindListUserValueGetter::class, [$this->default_dao, $this->user_helper ])
+        $this->getter = Mockery::mock(BindListUserValueGetter::class, [$this->default_dao, $this->user_helper])
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
     }

@@ -35,6 +35,6 @@ class Search_SearchTrackerV3ResultPresenter
 
     public function getTemplate()
     {
-        return Search_SearchResultsPresenter::TEMPLATE_PREFIX.Search_SearchTrackerV3::NAME;
+        return Search_SearchResultsPresenter::TEMPLATE_PREFIX . Search_SearchTrackerV3::NAME;
     }
 }

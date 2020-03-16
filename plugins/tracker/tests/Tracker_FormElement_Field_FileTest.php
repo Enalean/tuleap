@@ -35,23 +35,23 @@ abstract class Tracker_FormElement_Field_File_BaseTest extends TuleapTestCase
         parent::setUp();
         $this->setUpGlobalsMockery();
         ForgeConfig::store();
-        $this->fixture_dir    = '/var/tmp'.'/_fixtures';
+        $this->fixture_dir    = '/var/tmp' . '/_fixtures';
         if (!is_dir($this->fixture_dir)) {
             mkdir($this->fixture_dir);
         }
 
-        $this->attachment_dir = $this->fixture_dir.'/attachments';
+        $this->attachment_dir = $this->fixture_dir . '/attachments';
         if (!is_dir($this->attachment_dir)) {
             mkdir($this->attachment_dir);
         }
 
-        $this->thumbnails_dir = $this->attachment_dir.'/thumbnails';
+        $this->thumbnails_dir = $this->attachment_dir . '/thumbnails';
         if (!is_dir($this->thumbnails_dir)) {
             mkdir($this->thumbnails_dir);
         }
 
-        $this->tmp_name         = $this->fixture_dir.'/uploaded_file.txt';
-        $this->another_tmp_name = $this->fixture_dir.'/another_uploaded_file.txt';
+        $this->tmp_name         = $this->fixture_dir . '/uploaded_file.txt';
+        $this->another_tmp_name = $this->fixture_dir . '/another_uploaded_file.txt';
 
         $this->file_info_factory = \Mockery::spy(\Tracker_FileInfoFactory::class);
 
@@ -63,7 +63,7 @@ abstract class Tracker_FormElement_Field_File_BaseTest extends TuleapTestCase
 
     public function tearDown()
     {
-        foreach (glob($this->thumbnails_dir.'/*') as $f) {
+        foreach (glob($this->thumbnails_dir . '/*') as $f) {
             if ($f != '.' && $f != '..') {
                 unlink($f);
             }

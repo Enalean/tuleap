@@ -38,4 +38,4 @@ if ($project && is_object($project) && !$project->isError()) {
     }
 }
 
-$GLOBALS['Response']->redirect('/admin/groupedit.php?group_id='. (int) $project_id);
+$GLOBALS['Response']->redirect('/admin/groupedit.php?group_id=' . (int) $project_id);

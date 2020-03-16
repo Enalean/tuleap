@@ -27,8 +27,8 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
     public function serachByValueId($id)
     {
         $sql = sprintf(
-            'SELECT *'.
-                       ' FROM plugin_docman_metadata_love AS love'.
+            'SELECT *' .
+                       ' FROM plugin_docman_metadata_love AS love' .
                        ' WHERE love.value_id = %d',
             $id
         );
@@ -37,19 +37,18 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
 
     public function searchByFieldId($id, $onlyActive)
     {
-
         $where_clause = '';
         if ($onlyActive === true) {
             $where_clause .= ' AND love.status IN ("A", "P")';
         }
 
         $sql = sprintf(
-            'SELECT *'.
-                       ' FROM plugin_docman_metadata_love AS love,'.
-                       '  plugin_docman_metadata_love_md AS lovemd'.
-                       ' WHERE lovemd.field_id = %d'.
-                       ' AND love.value_id = lovemd.value_id'.
-                       $where_clause.
+            'SELECT *' .
+                       ' FROM plugin_docman_metadata_love AS love,' .
+                       '  plugin_docman_metadata_love_md AS lovemd' .
+                       ' WHERE lovemd.field_id = %d' .
+                       ' AND love.value_id = lovemd.value_id' .
+                       $where_clause .
                        ' ORDER BY love.rank',
             $id
         );
@@ -64,12 +63,12 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
             $where_clause .= ' AND love.status IN ("A", "P")';
         }
         $sql = sprintf(
-            'SELECT love.*'.
-                       ' FROM plugin_docman_metadata_love AS love,'.
-                       '  plugin_docman_metadata_love_md AS lovemd'.
-                       ' WHERE love.name = %s'.
-                       $where_clause.
-                       '  AND lovemd.value_id = love.value_id'.
+            'SELECT love.*' .
+                       ' FROM plugin_docman_metadata_love AS love,' .
+                       '  plugin_docman_metadata_love_md AS lovemd' .
+                       ' WHERE love.name = %s' .
+                       $where_clause .
+                       '  AND lovemd.value_id = love.value_id' .
                        '  AND lovemd.field_id = %d',
             $this->da->quoteSmart($name),
             $metadataId
@@ -81,13 +80,13 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
     public function searchListValuesById($fieldId, $itemId)
     {
         $sql = sprintf(
-            'SELECT love.*'.
-                       ' FROM plugin_docman_metadata_value as mdv'.
-                       '  INNER JOIN plugin_docman_metadata_love AS love '.
-                       '   ON (love.value_id = mdv.valueInt)'.
-                       ' WHERE mdv.field_id = %d'.
-                       ' AND mdv.item_id = %d'.
-                       ' AND love.status IN ("A", "P")'.
+            'SELECT love.*' .
+                       ' FROM plugin_docman_metadata_value as mdv' .
+                       '  INNER JOIN plugin_docman_metadata_love AS love ' .
+                       '   ON (love.value_id = mdv.valueInt)' .
+                       ' WHERE mdv.field_id = %d' .
+                       ' AND mdv.item_id = %d' .
+                       ' AND love.status IN ("A", "P")' .
                        ' ORDER BY love.rank',
             $fieldId,
             $itemId
@@ -99,14 +98,14 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
     {
         // Build the list of values needed in following queries.
         $sql = sprintf(
-            'SELECT value_id '.
-                        ' FROM plugin_docman_metadata_love_md AS lovemd'.
-                        ' WHERE lovemd.field_id = %d'.
+            'SELECT value_id ' .
+                        ' FROM plugin_docman_metadata_love_md AS lovemd' .
+                        ' WHERE lovemd.field_id = %d' .
                         ' AND lovemd.value_id != 100',
             $metadataId
         );
         $dar = $this->retrieve($sql);
-        $valId=array();
+        $valId = array();
         $dar->rewind();
         while ($dar->valid()) {
             $row = $dar->current();
@@ -122,9 +121,9 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
             switch ($rank) {
                 case 'end':
                     //print 'Put a the end<br>';
-                    $sql = sprintf('SELECT MAX(rank)+1 AS rank'.
-                               ' FROM plugin_docman_metadata_love AS love'.
-                               ' WHERE value_id IN ('.$valIdList.')');
+                    $sql = sprintf('SELECT MAX(rank)+1 AS rank' .
+                               ' FROM plugin_docman_metadata_love AS love' .
+                               ' WHERE value_id IN (' . $valIdList . ')');
                     $dar = $this->retrieve($sql);
                     if ($dar && $dar->valid()) {
                         $row = $dar->current();
@@ -134,9 +133,9 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
                     break;
                 case 'beg':
                     //print 'Put a the beginning<br>';
-                    $sql = sprintf('SELECT MIN(rank) AS rank'.
-                               ' FROM plugin_docman_metadata_love AS love'.
-                               ' WHERE value_id IN ('.$valIdList.')');
+                    $sql = sprintf('SELECT MIN(rank) AS rank' .
+                               ' FROM plugin_docman_metadata_love AS love' .
+                               ' WHERE value_id IN (' . $valIdList . ')');
                     $dar = $this->retrieve($sql);
                     if ($dar && $dar->valid()) {
                         $row = $dar->current();
@@ -146,10 +145,10 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
                     // no break
                 default:
                     $sql = sprintf(
-                        'UPDATE plugin_docman_metadata_love AS love'.
-                               ' SET rank = rank + 1'.
-                               ' WHERE rank >= %d'.
-                               ' AND value_id IN ('.$valIdList.')',
+                        'UPDATE plugin_docman_metadata_love AS love' .
+                               ' SET rank = rank + 1' .
+                               ' WHERE rank >= %d' .
+                               ' AND value_id IN (' . $valIdList . ')',
                         $rank
                     );
                     //print $sql."<br>";
@@ -165,10 +164,10 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
     public function createElement($name, $description, $rank, $status)
     {
         $sql = sprintf(
-            'INSERT INTO plugin_docman_metadata_love('.
-                       'name, description, rank, status'.
-                       ') VALUES ('.
-                       '%s, %s, %d, %s'.
+            'INSERT INTO plugin_docman_metadata_love(' .
+                       'name, description, rank, status' .
+                       ') VALUES (' .
+                       '%s, %s, %d, %s' .
                        ')',
             $this->da->quoteSmart($name),
             $this->da->quoteSmart($description),
@@ -181,10 +180,10 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
     public function createMetadataElementBond($metadataId, $elementId)
     {
         $sql = sprintf(
-            'INSERT INTO plugin_docman_metadata_love_md('.
-                       'field_id, value_id'.
-                       ') VALUES ('.
-                       '%d, %d'.
+            'INSERT INTO plugin_docman_metadata_love_md(' .
+                       'field_id, value_id' .
+                       ') VALUES (' .
+                       '%d, %d' .
                        ')',
             $metadataId,
             $elementId
@@ -228,7 +227,7 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
         if ($rank != '--') {
             $r = $this->prepareLoveRanking($metadataId, $rank);
             if ($r !== false) {
-                $rankStmt = '  , love.rank = '.$r;
+                $rankStmt = '  , love.rank = ' . $r;
             }
         } else {
             $rankStmt = '';
@@ -236,11 +235,11 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
 
         if ($rankStmt !== false) {
             $sql = sprintf(
-                'UPDATE plugin_docman_metadata_love AS love'.
-                           ' SET love.name = %s'.
-                           '  , love.description = %s'.
-                           $rankStmt.
-                           '  , love.status = %s'.
+                'UPDATE plugin_docman_metadata_love AS love' .
+                           ' SET love.name = %s' .
+                           '  , love.description = %s' .
+                           $rankStmt .
+                           '  , love.status = %s' .
                            ' WHERE love.value_id = %d',
                 $this->da->quoteSmart($name),
                 $this->da->quoteSmart($description),
@@ -268,13 +267,13 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
                 $set_array = array();
                 foreach ($row as $key => $value) {
                     if ($key != 'value_id' && isset($current[$key]) && $value != $current[$key]) {
-                        $set_array[] = $key .' = '. $this->da->quoteSmart($value);
+                        $set_array[] = $key . ' = ' . $this->da->quoteSmart($value);
                     }
                 }
                 if (count($set_array)) {
                     $sql = 'UPDATE plugin_docman_metadata_love'
-                        .' SET '.implode(' , ', $set_array)
-                        .' WHERE value_id='.$id;
+                        . ' SET ' . implode(' , ', $set_array)
+                        . ' WHERE value_id=' . $id;
                     $updated = $this->update($sql);
                 }
             }
@@ -292,13 +291,13 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
     public function deleteByMetadataId($id)
     {
         $sql = sprintf(
-            'UPDATE plugin_docman_metadata_love AS love'.
-                       ' SET status = \'D\''.
-                       ' WHERE value_id IN ('.
-                       '  SELECT value_id'.
-                       '   FROM plugin_docman_metadata_love_md AS lovemd'.
-                       '   WHERE lovemd.field_id = %d'.
-                       '     AND lovemd.value_id > 100'.
+            'UPDATE plugin_docman_metadata_love AS love' .
+                       ' SET status = \'D\'' .
+                       ' WHERE value_id IN (' .
+                       '  SELECT value_id' .
+                       '   FROM plugin_docman_metadata_love_md AS lovemd' .
+                       '   WHERE lovemd.field_id = %d' .
+                       '     AND lovemd.value_id > 100' .
                        '  )',
             $id
         );

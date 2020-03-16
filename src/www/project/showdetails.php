@@ -31,10 +31,10 @@ function getReferenceRow($ref, $row_num)
 
     if ($ref->isActive() && $ref->getId() != 100) {
         $purifier = Codendi_HTMLPurifier::instance();
-        $html .= '<TR class="'. util_get_alt_row_color($row_num) .'">';
-        $html .= '<TD>'. $purifier->purify($ref->getKeyword()) .'</TD>';
-        $html .= '<TD>'. $purifier->purify(ReferenceAdministrationViews::getReferenceDescription($ref)) .'</TD>';
-        $html .= '<TD>'. $purifier->purify($ref->getLink()) .'</TD>';
+        $html .= '<TR class="' . util_get_alt_row_color($row_num) . '">';
+        $html .= '<TD>' . $purifier->purify($ref->getKeyword()) . '</TD>';
+        $html .= '<TD>' . $purifier->purify(ReferenceAdministrationViews::getReferenceDescription($ref)) . '</TD>';
+        $html .= '<TD>' . $purifier->purify($ref->getLink()) . '</TD>';
         $html .= '</TR>';
     }
 
@@ -44,11 +44,11 @@ function getReferenceRow($ref, $row_num)
 function getReferencesTable($groupId)
 {
     $html = '';
-    $html .= '<h3>'.$GLOBALS['Language']->getText('project_showdetails', 'references').'</h3>';
+    $html .= '<h3>' . $GLOBALS['Language']->getText('project_showdetails', 'references') . '</h3>';
 
-    $title_arr[]=$GLOBALS['Language']->getText('project_reference', 'r_keyword');
-    $title_arr[]=$GLOBALS['Language']->getText('project_reference', 'r_desc');
-    $title_arr[]=$GLOBALS['Language']->getText('project_reference', 'r_link');
+    $title_arr[] = $GLOBALS['Language']->getText('project_reference', 'r_keyword');
+    $title_arr[] = $GLOBALS['Language']->getText('project_reference', 'r_desc');
+    $title_arr[] = $GLOBALS['Language']->getText('project_reference', 'r_link');
     $html .= html_build_list_table_top($title_arr, false, false, true);
 
     $referenceManager = ReferenceManager::instance();
@@ -72,11 +72,11 @@ if ($request->valid($vGroupId)) {
     exit_no_group();
 }
 
-$currentproject= new Project($group_id);
+$currentproject = new Project($group_id);
 
-site_project_header(array('title'=>$Language->getText('project_showdetails', 'proj_details'),'group'=>$group_id,'toptab'=>'summary'));
+site_project_header(array('title' => $Language->getText('project_showdetails', 'proj_details'),'group' => $group_id,'toptab' => 'summary'));
 
-print '<P><h3>'.$Language->getText('project_showdetails', 'proj_details').'</h3>';
+print '<P><h3>' . $Language->getText('project_showdetails', 'proj_details') . '</h3>';
 
 // Now fetch the project details
 
@@ -84,6 +84,6 @@ $currentproject->displayProjectsDescFieldsValue();
 
 echo getReferencesTable($group_id);
 
-print '<P><a href="/project/?group_id='.$group_id .'"> '.$Language->getText('project_showdetails', 'back_main').' </a>';
+print '<P><a href="/project/?group_id=' . $group_id . '"> ' . $Language->getText('project_showdetails', 'back_main') . ' </a>';
 
 site_project_footer(array());

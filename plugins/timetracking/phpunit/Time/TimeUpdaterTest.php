@@ -29,7 +29,7 @@ use Tuleap\Timetracking\Exceptions\TimeTrackingNotAllowedToDeleteException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingNotAllowedToEditException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingNotBelongToUserException;
 
-require_once __DIR__.'/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 class TimeUpdaterTest extends TestCase
 {

@@ -177,7 +177,7 @@ class WikiDB_backend
 
         $this->lock(); // critical section:
         $version = $this->get_latest_version($pagename);
-        $this->set_versiondata($pagename, $version+1, $vdata);
+        $this->set_versiondata($pagename, $version + 1, $vdata);
         $this->set_links($pagename, false); // links are purged.
         // SQL needs to invalidate the non_empty id
         if (! WIKIDB_NOCACHE_MARKUP) {
@@ -600,7 +600,7 @@ class WikiDB_backend
     // adds surrounding quotes
     public function quote($s)
     {
-        return "'".$s."'";
+        return "'" . $s . "'";
     }
     // no surrounding quotes because we know it's a string
     public function qstr($s)
@@ -612,7 +612,7 @@ class WikiDB_backend
     {
         return in_array(DATABASE_TYPE, array('SQL','ADODB','PDO'));
     }
-};
+}
 
 /**
  * Iterator returned by backend methods which (possibly) return
@@ -655,7 +655,7 @@ class WikiDB_backend_iterator
     public function free()
     {
     }
-};
+}
 
 /**
  * search baseclass, pcre-specific
@@ -676,15 +676,15 @@ class WikiDB_backend_search
     //TODO: use word anchors
     public function EXACT($word)
     {
-        return "^".$this->_quote($word)."$";
+        return "^" . $this->_quote($word) . "$";
     }
     public function STARTS_WITH($word)
     {
-        return "^".$this->_quote($word);
+        return "^" . $this->_quote($word);
     }
     public function ENDS_WITH($word)
     {
-        return $this->_quote($word)."$";
+        return $this->_quote($word) . "$";
     }
     public function WORD($word)
     {
@@ -699,7 +699,7 @@ class WikiDB_backend_search
     {
         $method = $node->op;
         $word = $this->$method($node->word);
-        return "preg_match(\"/\".$word.\"/\"".($this->_case_exact ? "i":"").")";
+        return "preg_match(\"/\".$word.\"/\"" . ($this->_case_exact ? "i" : "") . ")";
     }
     /* Eliminate stoplist words.
        Keep a list of Stoplisted words to inform the poor user. */
@@ -709,7 +709,7 @@ class WikiDB_backend_search
         if ($node->op != 'WORD' and $node->op != 'EXACT') {
             return false;
         }
-        if (preg_match("/^".$this->_stoplist."$/i", $node->word)) {
+        if (preg_match("/^" . $this->_stoplist . "$/i", $node->word)) {
             array_push($this->_stoplisted, $node->word);
             return true;
         }

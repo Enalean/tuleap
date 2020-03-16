@@ -67,7 +67,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
     {
         $display_name = $this->getLabel();
 
-        return '<a class="link-to-user" href="'. $this->getUserUrl() .'">'.
+        return '<a class="link-to-user" href="' . $this->getUserUrl() . '">' .
                $this->hp->purify($display_name, CODENDI_PURIFIER_CONVERT_HTML) .
                '</a>';
     }
@@ -79,7 +79,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
 
     public function __toString()
     {
-        return 'Tracker_FormElement_Field_List_Bind_UsersValue #'. $this->getId();
+        return 'Tracker_FormElement_Field_List_Bind_UsersValue #' . $this->getId();
     }
 
     public function fetchFormatted()
@@ -113,7 +113,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
         $user_id     = $this->getId();
 
         $html = '<div class="realname"
-                       title="'. $name . '"
+                       title="' . $name . '"
                        data-user-id = "' . $user_id . '"
                    >';
         $html .= $name;
@@ -193,6 +193,6 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
             $user_name = $this->getUser()->getUserName();
         }
 
-        return '/users/'. urlencode($user_name);
+        return '/users/' . urlencode($user_name);
     }
 }

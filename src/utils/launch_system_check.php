@@ -21,7 +21,7 @@
  *
  */
 
-require_once __DIR__.'/../www/include/pre.php';
+require_once __DIR__ . '/../www/include/pre.php';
 
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Formatter\OutputFormatter;

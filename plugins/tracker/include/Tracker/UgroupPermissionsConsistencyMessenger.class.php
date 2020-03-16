@@ -50,6 +50,6 @@ class Tracker_UgroupPermissionsConsistencyMessenger
 
     private function formatUGroupNames($ugroup_names)
     {
-        return '<ul><li>'. implode('</li><li>', $ugroup_names) .'</li></ul>';
+        return '<ul><li>' . implode('</li><li>', $ugroup_names) . '</li></ul>';
     }
 }

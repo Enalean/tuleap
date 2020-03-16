@@ -63,17 +63,17 @@ class Tracker_FormElement_Container_Column_GroupTest extends TestCase //phpcs:ig
         );
 
         $this->assertEquals(
-            '<table width="100%"><tbody><tr valign="top">'.
-            '<td>C1</td>'.
+            '<table width="100%"><tbody><tr valign="top">' .
+            '<td>C1</td>' .
             '</tr></tbody></table>',
             $column_group->fetchArtifact($one, $artifact, $submitted_values)
         );
         $this->assertEquals(
-            '<table width="100%"><tbody><tr valign="top">'.
-            '<td>C1</td>'.
-            '<td>C2</td>'.
-            '<td>C3</td>'.
-            '<td>C4</td>'.
+            '<table width="100%"><tbody><tr valign="top">' .
+            '<td>C1</td>' .
+            '<td>C2</td>' .
+            '<td>C3</td>' .
+            '<td>C4</td>' .
             '</tr></tbody></table>',
             $column_group->fetchArtifact($many, $artifact, $submitted_values)
         );
@@ -105,15 +105,15 @@ class Tracker_FormElement_Container_Column_GroupTest extends TestCase //phpcs:ig
         $this->assertEquals('', $column_group->fetchArtifact($one_c1, $artifact, $submitted_values));
 
         $this->assertEquals(
-            '<table width="100%"><tbody><tr valign="top">'.
-            '<td>C2</td>'.
+            '<table width="100%"><tbody><tr valign="top">' .
+            '<td>C2</td>' .
             '</tr></tbody></table>',
             $column_group->fetchArtifact($one_c2, $artifact, $submitted_values)
         );
         $this->assertEquals(
-            '<table width="100%"><tbody><tr valign="top">'.
-            '<td>C2</td>'.
-            '<td>C4</td>'.
+            '<table width="100%"><tbody><tr valign="top">' .
+            '<td>C2</td>' .
+            '<td>C4</td>' .
             '</tr></tbody></table>',
             $column_group->fetchArtifact($many, $artifact, $submitted_values)
         );

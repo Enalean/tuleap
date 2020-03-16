@@ -9,7 +9,7 @@
 
 require_once('Docman_View_New.class.php');
 require_once('Docman_View_GetFieldsVisitor.class.php');
-require_once(dirname(__FILE__).'/../Docman_MetadataFactory.class.php');
+require_once(dirname(__FILE__) . '/../Docman_MetadataFactory.class.php');
 
 class Docman_View_NewFolder extends Docman_View_New
 {
@@ -39,7 +39,7 @@ class Docman_View_NewFolder extends Docman_View_New
     {
         $html = '';
         $html .= parent::_getGeneralProperties($params);
-        $html .= '<input type="hidden" name="item[item_type]" value="'. PLUGIN_DOCMAN_ITEM_TYPE_FOLDER .'" />';
+        $html .= '<input type="hidden" name="item[item_type]" value="' . PLUGIN_DOCMAN_ITEM_TYPE_FOLDER . '" />';
         return $html;
     }
 
@@ -58,9 +58,9 @@ class Docman_View_NewFolder extends Docman_View_New
     {
         $html = '';
 
-        $html .= '<div class="properties">'."\n";
-        $html .= '<h3>'. dgettext('tuleap-docman', 'Default Values') .'</h3>';
-        $html .= '<p>'.dgettext('tuleap-docman', 'Define the default properties values for the item that will be created within this folder.').'</p>';
+        $html .= '<div class="properties">' . "\n";
+        $html .= '<h3>' . dgettext('tuleap-docman', 'Default Values') . '</h3>';
+        $html .= '<p>' . dgettext('tuleap-docman', 'Define the default properties values for the item that will be created within this folder.') . '</p>';
         $fields = $this->_getDefaultValuesFields($params);
         $html .= $this->_getPropertiesFieldsDisplay($fields);
         $html .= '</div>';

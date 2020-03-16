@@ -34,7 +34,7 @@ class Docman_MetadataSqlQueryChunk
 
     public function __construct($md)
     {
-        $this->mdv = 'mdv_'.$md->getLabel();
+        $this->mdv = 'mdv_' . $md->getLabel();
         $this->mdId = $md->getId();
 
         $this->isRealMetadata = Docman_MetadataFactory::isRealMetadata($md->getLabel());
@@ -42,16 +42,16 @@ class Docman_MetadataSqlQueryChunk
         if ($this->isRealMetadata) {
             switch ($md->getType()) {
                 case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
-                    $this->field = $this->mdv.'.valueText';
+                    $this->field = $this->mdv . '.valueText';
                     break;
                 case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
-                    $this->field = $this->mdv.'.valueString';
+                    $this->field = $this->mdv . '.valueString';
                     break;
                 case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
-                    $this->field = $this->mdv.'.valueDate';
+                    $this->field = $this->mdv . '.valueDate';
                     break;
                 case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
-                    $this->field = $this->mdv.'.valueInt';
+                    $this->field = $this->mdv . '.valueInt';
                     break;
             }
         } else {
@@ -60,7 +60,7 @@ class Docman_MetadataSqlQueryChunk
                     $this->field = 'i.user_id';
                     break;
                 default:
-                    $this->field = 'i.'.$md->getLabel();
+                    $this->field = 'i.' . $md->getLabel();
             }
         }
     }
@@ -83,15 +83,15 @@ class Docman_MetadataSqlQueryChunk
     public function _getMdvJoin($label = null)
     {
         if ($label !== null) {
-            $mdv = 'mdv_'.$label;
+            $mdv = 'mdv_' . $label;
             $fieldId = substr($label, 6);
         } else {
             $mdv = $this->mdv;
             $fieldId = $this->mdId;
         }
-        $stmt = 'plugin_docman_metadata_value AS '.$mdv.
-            ' ON ('.$mdv.'.item_id = i.item_id'.
-            '  AND '.$mdv.'.field_id = '.$fieldId.')';
+        $stmt = 'plugin_docman_metadata_value AS ' . $mdv .
+            ' ON (' . $mdv . '.item_id = i.item_id' .
+            '  AND ' . $mdv . '.field_id = ' . $fieldId . ')';
         return $stmt;
     }
 }

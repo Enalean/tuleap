@@ -84,7 +84,7 @@ class Rule_Date_Time extends Rule
         if (! preg_match(self::DAYTIME_REGEX, $val, $m)) {
             return false;
         }
-        return (bool)strtotime($val);
+        return (bool) strtotime($val);
     }
 }
 
@@ -313,14 +313,14 @@ class Rule_Email extends Rule
      */
     public function validEmail($email)
     {
-        $valid_chars='-!#$%&\'*+0-9=?A-Z^_`a-z{|}~\.';
+        $valid_chars = '-!#$%&\'*+0-9=?A-Z^_`a-z{|}~\.';
         if (array_key_exists('sys_disable_subdomains', $GLOBALS)
             && $GLOBALS['sys_disable_subdomains']) {
-            $valid_domain='['.$valid_chars.']+';
+            $valid_domain = '[' . $valid_chars . ']+';
         } else {
-            $valid_domain='['.$valid_chars.']+\.['.$valid_chars.']+';
+            $valid_domain = '[' . $valid_chars . ']+\.[' . $valid_chars . ']+';
         }
-        $regexp = '/^['.$valid_chars.']+'.'@'.$valid_domain.'$/D';
+        $regexp = '/^[' . $valid_chars . ']+' . '@' . $valid_domain . '$/D';
         return preg_match($regexp, $email);
     }
 }
@@ -444,14 +444,14 @@ class Rule_UserName extends Rule
      */
     public function isReservedName($val)
     {
-        $is_reserved_name = preg_match('/^('.
-             '(www[0-9]?)|(cvs[0-9]?)|(shell[0-9]?)|(ftp[0-9]?)|(irc[0-9]?)|(news[0-9]?)'.
-             '|(mail[0-9]?)|(ns[0-9]?)|(download[0-9]?)|(pub)|(users)|(compile)|(lists)'.
-             '|(slayer)|(orbital)|(tokyojoe)|(webdev)|(projects)|(cvs)|(monitor)|(mirrors?)'.
-             '|(root)|(bin)|(daemon)|(adm)|(lp)|(sync)|(shutdown)|(halt)|(mail)'.
-             '|(uucp)|(operator)|(games)|(mysql)|(httpd)|(nobody)|(dummy)'.
-             '|(munin)|(mailman)|(ftpadmin)|(codendiadm)|(imadmin-bot)|(apache)|(nscd)'.
-             '|(git)|(gitolite)'.
+        $is_reserved_name = preg_match('/^(' .
+             '(www[0-9]?)|(cvs[0-9]?)|(shell[0-9]?)|(ftp[0-9]?)|(irc[0-9]?)|(news[0-9]?)' .
+             '|(mail[0-9]?)|(ns[0-9]?)|(download[0-9]?)|(pub)|(users)|(compile)|(lists)' .
+             '|(slayer)|(orbital)|(tokyojoe)|(webdev)|(projects)|(cvs)|(monitor)|(mirrors?)' .
+             '|(root)|(bin)|(daemon)|(adm)|(lp)|(sync)|(shutdown)|(halt)|(mail)' .
+             '|(uucp)|(operator)|(games)|(mysql)|(httpd)|(nobody)|(dummy)' .
+             '|(munin)|(mailman)|(ftpadmin)|(codendiadm)|(imadmin-bot)|(apache)|(nscd)' .
+             '|(git)|(gitolite)' .
              ')$/i', $val);
         $is_reserved_prefix = $this->isReservedPrefix($val);
 
@@ -684,7 +684,6 @@ class Rule_ProjectName extends Rule_UserName
      */
     public function isNameAvailable($val)
     {
-
         $backendSVN = $this->_getBackend('SVN');
         if (!$backendSVN->isNameAvailable($val)) {
             $this->error = $GLOBALS['Language']->getText('include_account', 'used_by_svn');

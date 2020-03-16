@@ -135,7 +135,7 @@ class RSSParser extends XmlParser
         } elseif ($this->list_items) {
             if ($current_tag == 'RDF:LI') {
                 // FIXME: avoid duplicates. cdata called back 4x per RDF:LI
-                if ($this->items[count($this->items)-1]['link'] != @$current_attrs['RDF:RESOURCE']) {
+                if ($this->items[count($this->items) - 1]['link'] != @$current_attrs['RDF:RESOURCE']) {
                     $this->items[] = array('link' => @$current_attrs['RDF:RESOURCE'],
                                            'title' => '');
                 }
@@ -164,7 +164,7 @@ class RSSParser extends XmlParser
                     // Let's just say the fall-through here is intentional but it's likely nobody knows or wants to remember
                 default:
                     if (trim($data)) {
-                        $this->divers .= " " . $current_tag."/".$data;
+                        $this->divers .= " " . $current_tag . "/" . $data;
                     }
                     break;
             }

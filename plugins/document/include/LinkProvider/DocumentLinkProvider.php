@@ -51,13 +51,13 @@ class DocumentLinkProvider implements ILinkUrlProvider
     public function getShowLinkUrl(\Docman_Item $item): string
     {
         return $this->base_url . "/plugins/document/" .
-            urlencode($this->project->getUnixNameLowerCase()) . "/preview/" . urlencode((string)$item->getId());
+            urlencode($this->project->getUnixNameLowerCase()) . "/preview/" . urlencode((string) $item->getId());
     }
 
     public function getDetailsLinkUrl(\Docman_Item $item): string
     {
         return $this->base_url . "/plugins/document/" .
-            urlencode($this->project->getUnixNameLowerCase()) . "/preview/" . urlencode((string)$item->getId());
+            urlencode($this->project->getUnixNameLowerCase()) . "/preview/" . urlencode((string) $item->getId());
     }
 
     public function getNotificationLinkUrl(\Docman_Item $item): string

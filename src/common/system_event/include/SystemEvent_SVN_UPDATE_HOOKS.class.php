@@ -68,6 +68,6 @@ class SystemEvent_SVN_UPDATE_HOOKS extends SystemEvent
     public function verbalizeParameters($with_link)
     {
         $group_id = $this->getIdFromParam();
-        return 'project: '. $this->verbalizeProjectId($group_id, $with_link);
+        return 'project: ' . $this->verbalizeProjectId($group_id, $with_link);
     }
 }

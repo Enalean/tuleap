@@ -35,7 +35,7 @@ class ItemImpactedByMetadataChangeCollectionTest extends TestCase
 
     public function testItBuildCollectionForLegacy(): void
     {
-        $collection = ItemImpactedByMetadataChangeCollection::buildFromLegacy(['field_1', 'field_2', 'status'], ['field_1' => 'value',  'field_2' => 'other value']);
+        $collection = ItemImpactedByMetadataChangeCollection::buildFromLegacy(['field_1', 'field_2', 'status'], ['field_1' => 'value', 'field_2' => 'other value']);
 
         $this->assertEquals($collection->getFieldsToUpdate(), ['field_1', 'field_2', 'status']);
         $this->assertEquals($collection->getValuesToExtractCrossReferences(), ['field_1' => 'value', 'field_2' => 'other value', 'status' => '']);

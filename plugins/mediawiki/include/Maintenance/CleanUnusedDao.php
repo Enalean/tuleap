@@ -116,7 +116,7 @@ class CleanUnusedDao extends DataAccessObject
         $project_id = (int) $project_id;
         if ($this->central_database && $project_id > 0) {
             foreach ($this->getTablesToDrop($project_id) as $row) {
-                $fullname = $this->central_database.'.'.$row['name'];
+                $fullname = $this->central_database . '.' . $row['name'];
                 $sql = "DROP TABLE $fullname";
                 $this->logger->info("$sql");
                 if (! $dry_run) {
@@ -131,7 +131,7 @@ class CleanUnusedDao extends DataAccessObject
     private function getTablesToDrop($project_id)
     {
         $central_db = $this->da->quoteSmart($this->central_database);
-        $prefix     = $this->da->quoteLikeValueSuffix(MediawikiDao::DEDICATED_DATABASE_TABLE_PREFIX.'_'.$project_id);
+        $prefix     = $this->da->quoteLikeValueSuffix(MediawikiDao::DEDICATED_DATABASE_TABLE_PREFIX . '_' . $project_id);
 
         $sql = "SELECT TABLE_NAME as name
               FROM INFORMATION_SCHEMA.TABLES
@@ -143,10 +143,10 @@ class CleanUnusedDao extends DataAccessObject
 
     public function dropDatabase($database, $dry_run)
     {
-        $this->logger->info("Attempt to purge database ".$database);
+        $this->logger->info("Attempt to purge database " . $database);
         if (strpos($database, MediawikiDao::DEDICATED_DATABASE_PREFIX) !== false) {
             if ($this->doesDatabaseExist($database)) {
-                $sql = 'DROP DATABASE '.$database;
+                $sql = 'DROP DATABASE ' . $database;
                 $this->logger->info($sql);
                 if (! $dry_run) {
                     $this->update($sql);
@@ -244,9 +244,9 @@ class CleanUnusedDao extends DataAccessObject
     public function doesDatabaseNameCorrespondToAnActiveProject($database_name)
     {
         $identifier = substr($database_name, strlen(MediawikiDao::DEDICATED_DATABASE_PREFIX));
-        $where      = 'groups.unix_group_name = '.$this->da->quoteSmart($identifier);
+        $where      = 'groups.unix_group_name = ' . $this->da->quoteSmart($identifier);
         if (is_int($identifier)) {
-            $where = 'groups.group_id = '.$this->da->escapeInt($identifier);
+            $where = 'groups.group_id = ' . $this->da->escapeInt($identifier);
         }
         $sql = "SELECT 1
                 FROM groups
@@ -259,7 +259,7 @@ class CleanUnusedDao extends DataAccessObject
 
     public function doesDatabaseHaveContent($database_name)
     {
-        $table_name = $database_name.'.'.MediawikiDao::DEDICATED_DATABASE_TABLE_PREFIX.'page';
+        $table_name = $database_name . '.' . MediawikiDao::DEDICATED_DATABASE_TABLE_PREFIX . 'page';
         $sql = "SELECT 1 FROM $table_name LIMIT 1";
         $this->retrieveCount($sql) !== 0;
     }

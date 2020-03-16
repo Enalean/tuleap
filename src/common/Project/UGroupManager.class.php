@@ -203,7 +203,6 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $user_groups = $this->getUGroups($project);
 
         return array_filter($user_groups, function (ProjectUGroup $ugroup) use ($project) {
-
             if ($ugroup->getId() == ProjectUgroup::ANONYMOUS) {
                 return ForgeConfig::areAnonymousAllowed() && $project->isPublic();
             }
@@ -287,7 +286,7 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
     private function getUnormalisedName($name)
     {
-        return 'ugroup_'.$name.'_name_key';
+        return 'ugroup_' . $name . '_name_key';
     }
 
     public function getLabel($group_id, $ugroup_id)
@@ -314,7 +313,7 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
         if ($dar && ! $dar->isError()) {
             foreach ($dar as $row) {
-                $ugroups [] = new ProjectUGroup($row);
+                $ugroups[] = new ProjectUGroup($row);
             }
         }
 

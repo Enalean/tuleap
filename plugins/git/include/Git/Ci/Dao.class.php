@@ -35,7 +35,7 @@ class Git_Ci_Dao extends DataAccessObject
     {
         $sql = 'SELECT repository_id
                 FROM plugin_git_ci
-                WHERE job_id = '.$this->da->escapeInt($jobId);
+                WHERE job_id = ' . $this->da->escapeInt($jobId);
         return $this->retrieve($sql);
     }
 
@@ -51,7 +51,7 @@ class Git_Ci_Dao extends DataAccessObject
         $sql = 'SELECT job_id
                 FROM plugin_git_ci
                 JOIN plugin_git USING(repository_id)
-                WHERE project_id = '.$this->da->escapeInt($projectId);
+                WHERE project_id = ' . $this->da->escapeInt($projectId);
         return $this->retrieve($sql);
     }
 
@@ -67,7 +67,7 @@ class Git_Ci_Dao extends DataAccessObject
         $sql = 'SELECT job_url, token
                 FROM plugin_hudson_job
                 JOIN plugin_git_ci USING(job_id)
-                WHERE repository_id = '.$this->da->escapeInt($repositoryId);
+                WHERE repository_id = ' . $this->da->escapeInt($repositoryId);
         return $this->retrieve($sql);
     }
 
@@ -84,8 +84,8 @@ class Git_Ci_Dao extends DataAccessObject
         $sql = 'SELECT job_id
                 FROM plugin_hudson_job
                 JOIN plugin_git ON (group_id = project_id)
-                WHERE repository_id = '.$this->da->escapeInt($repositoryId).'
-                AND job_id = '.$this->da->escapeInt($jobId);
+                WHERE repository_id = ' . $this->da->escapeInt($repositoryId) . '
+                AND job_id = ' . $this->da->escapeInt($jobId);
         return $this->retrieve($sql);
     }
 
@@ -106,8 +106,8 @@ class Git_Ci_Dao extends DataAccessObject
                 )
                 VALUES
                 (
-                '.$this->da->escapeInt($jobId).',
-                '.$this->da->escapeInt($repositoryId).'
+                ' . $this->da->escapeInt($jobId) . ',
+                ' . $this->da->escapeInt($repositoryId) . '
                 )';
         return $this->update($sql);
     }
@@ -122,7 +122,7 @@ class Git_Ci_Dao extends DataAccessObject
     public function deleteTrigger($jobId)
     {
         $sql = 'DELETE FROM plugin_git_ci
-                WHERE job_id = '.$this->da->escapeInt($jobId);
+                WHERE job_id = ' . $this->da->escapeInt($jobId);
         return $this->update($sql);
     }
 }

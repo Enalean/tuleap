@@ -36,7 +36,7 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXML
             $changeset_value,
             $changeset_xml
         );
-        $field_change->addAttribute('use_perm', (int)$this->isUsed($changeset_value));
+        $field_change->addAttribute('use_perm', (int) $this->isUsed($changeset_value));
 
         $ugroup_names = array_filter($changeset_value->getUgroupNamesFromPerms());
 

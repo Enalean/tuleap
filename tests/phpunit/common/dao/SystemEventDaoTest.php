@@ -45,7 +45,7 @@ final class SystemEventDaoTest extends \PHPUnit\Framework\TestCase
     {
         $dao = new SystemEventDao($this->da);
 
-        $this->da->shouldReceive('quoteLikeValueSuffix')->with($this->search_term.SystemEvent::PARAMETER_SEPARATOR)->andReturns("'" . $this->search_term . "%'");
+        $this->da->shouldReceive('quoteLikeValueSuffix')->with($this->search_term . SystemEvent::PARAMETER_SEPARATOR)->andReturns("'" . $this->search_term . "%'");
         $expected_sql = "SELECT  * FROM system_event
                 WHERE type   IN (MY_IMAGINARY_EVENT)
                 AND status IN (ONGOING)
@@ -61,7 +61,7 @@ final class SystemEventDaoTest extends \PHPUnit\Framework\TestCase
     {
         $dao = new SystemEventDao($this->da);
 
-        $this->da->shouldReceive('quoteLikeValuePrefix')->with(SystemEvent::PARAMETER_SEPARATOR.$this->search_term)->andReturns("'%" . $this->search_term . "'");
+        $this->da->shouldReceive('quoteLikeValuePrefix')->with(SystemEvent::PARAMETER_SEPARATOR . $this->search_term)->andReturns("'%" . $this->search_term . "'");
         $expected_sql = "SELECT  * FROM system_event
                 WHERE type   IN (MY_IMAGINARY_EVENT)
                 AND status IN (ONGOING)

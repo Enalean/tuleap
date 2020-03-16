@@ -168,7 +168,7 @@ class TimetrackingReportTest extends TimetrackingBase
     {
         $minutes = 0;
         foreach ($times_per_user as $time_per_user) {
-            $minutes += (int)$time_per_user['minutes'];
+            $minutes += (int) $time_per_user['minutes'];
         }
 
         return $minutes;

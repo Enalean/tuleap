@@ -258,7 +258,7 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
 
     protected function displayForm(TrackerManager $tracker_manager, HTTPRequest $request, $url, $title, $formContent)
     {
-        $form  = '<form name="form1" method="POST" action="'. $url .'">';
+        $form  = '<form name="form1" method="POST" action="' . $url . '">';
         $form .= $formContent;
         $form .= '</form>';
 
@@ -279,7 +279,7 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
     {
         $this->element->getTracker()->displayAdminFormElementsHeader($tracker_manager, $title);
         $purifier = Codendi_HTMLPurifier::instance();
-        echo '<h2 class="almost-tlp-title">'. $purifier->purify($title) .'</h2>';
+        echo '<h2 class="almost-tlp-title">' . $purifier->purify($title) . '</h2>';
         echo $form;
         $this->element->getTracker()->displayFooter($tracker_manager);
     }

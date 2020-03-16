@@ -91,8 +91,8 @@ final class FieldUpdatorTest extends TestCase
             ]
         );
 
-        $this->dao->shouldReceive('createGroupDescription')->withArgs([$group_id, 1,'My field 1 content'])->once()->andReturn(100);
-        $this->dao->shouldReceive('createGroupDescription')->withArgs([$group_id, 2,'Other content for field 2'])->once()->andReturn(101);
+        $this->dao->shouldReceive('createGroupDescription')->withArgs([$group_id, 1, 'My field 1 content'])->once()->andReturn(100);
+        $this->dao->shouldReceive('createGroupDescription')->withArgs([$group_id, 2, 'Other content for field 2'])->once()->andReturn(101);
 
         $this->logger->shouldReceive('debug')->never();
 
@@ -120,7 +120,7 @@ final class FieldUpdatorTest extends TestCase
             ]
         );
 
-        $this->dao->shouldReceive('createGroupDescription')->withArgs([$group_id, 1,'My field 1 content'])->once()->andReturn(false);
+        $this->dao->shouldReceive('createGroupDescription')->withArgs([$group_id, 1, 'My field 1 content'])->once()->andReturn(false);
 
         $this->logger->shouldReceive('debug')->once();
 
@@ -145,8 +145,8 @@ final class FieldUpdatorTest extends TestCase
             ]
         );
 
-        $this->dao->shouldReceive('createGroupDescription')->withArgs([$group_id, 1,'My field 1 content'])->once()->andReturn(100);
-        $this->dao->shouldReceive('createGroupDescription')->withArgs([$group_id, 2,'Other content for field 2'])->once()->andReturn(101);
+        $this->dao->shouldReceive('createGroupDescription')->withArgs([$group_id, 1, 'My field 1 content'])->once()->andReturn(100);
+        $this->dao->shouldReceive('createGroupDescription')->withArgs([$group_id, 2, 'Other content for field 2'])->once()->andReturn(101);
 
         $this->logger->shouldReceive('debug')->never();
 
@@ -168,7 +168,7 @@ final class FieldUpdatorTest extends TestCase
             ]
         );
 
-        $this->dao->shouldReceive('createGroupDescription')->withArgs([$group_id, 1,'My field 1 content'])->once()->andReturn(false);
+        $this->dao->shouldReceive('createGroupDescription')->withArgs([$group_id, 1, 'My field 1 content'])->once()->andReturn(false);
 
         $this->logger->shouldReceive('debug')->once();
 

@@ -40,7 +40,7 @@ class GenericProviderIssuerClaimValidatorTest extends TestCase
 
     public function testIssuerClaimIsValid()
     {
-        $iss_from_id_tocken   ='example.com';
+        $iss_from_id_tocken   = 'example.com';
 
         $provider = new GenericProvider(
             0,
@@ -61,7 +61,7 @@ class GenericProviderIssuerClaimValidatorTest extends TestCase
 
     public function testIssuerClaimIsInvalid()
     {
-        $iss_from_id_tocken   ='evil.example.com';
+        $iss_from_id_tocken   = 'evil.example.com';
 
         $provider = new GenericProvider(
             0,

@@ -37,13 +37,13 @@ class b201701231415_update_public_forum_in_private_projects extends ForgeUpgrade
 
     private function changeForumVisibilityToPrivate()
     {
-        $sql= "UPDATE forum_group_list f INNER JOIN groups grs
+        $sql = "UPDATE forum_group_list f INNER JOIN groups grs
                ON f.group_id = grs.group_id
                SET is_public = 0
                WHERE is_public = 1 AND f.group_id > 100 AND grs.access='private' AND grs.status = 'A'";
 
         if ($this->db->dbh->exec($sql) === false) {
-            $this->rollBackOnError('An error occurred while changing the visibility of the forum '.$sql);
+            $this->rollBackOnError('An error occurred while changing the visibility of the forum ' . $sql);
         }
     }
 

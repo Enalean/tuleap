@@ -29,7 +29,6 @@ class TokenRequest
 
     public function __construct(\Psr\Http\Message\RequestInterface $request)
     {
-
         $this->request = $request;
     }
 

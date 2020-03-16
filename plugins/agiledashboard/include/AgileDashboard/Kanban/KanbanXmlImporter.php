@@ -103,13 +103,13 @@ class KanbanXmlImporter
             $kanban = $this->dashboard_kanban_factory->getKanbanForXmlImport(
                 $kanban_id
             );
-            $mappings_registry->addReference((string)$attrs['ID'], $kanban);
+            $mappings_registry->addReference((string) $attrs['ID'], $kanban);
 
             foreach ($xml_configuration as $xml_columns) {
                 $columns_attrs = $xml_columns->attributes();
                 $column        = $this->dashboard_kanban_column_factory->getColumnForAKanban(
                     $kanban,
-                    $field_mapping->getNewOpenValueId((string)$columns_attrs['REF']),
+                    $field_mapping->getNewOpenValueId((string) $columns_attrs['REF']),
                     $user
                 );
 

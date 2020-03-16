@@ -154,7 +154,7 @@ class Docman_NotificationsManager_MoveTest extends TestCase
         );
 
         $expected_message = "/my/new/path has been modified by UserRealName.\n";
-        $expected_message .= $details_url. "\n\n";
+        $expected_message .= $details_url . "\n\n";
         $expected_message .= "Moved from:\n /my/old/path to:\n /my/new/path\n\n";
         $expected_message .= "--------------------------------------------------------------------\n";
         $expected_message .= "You are receiving this message because you are monitoring this item.\n";

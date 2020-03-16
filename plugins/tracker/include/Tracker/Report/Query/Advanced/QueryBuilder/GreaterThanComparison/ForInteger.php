@@ -50,7 +50,7 @@ class ForInteger implements FieldFromWhereBuilder
         $changeset_value_int_alias = "CVInt_{$field_id}_{$suffix}";
         $changeset_value_alias      = "CV_{$field_id}_{$suffix}";
 
-        $condition = "$changeset_value_int_alias.value > ".$this->escapeInt($value);
+        $condition = "$changeset_value_int_alias.value > " . $this->escapeInt($value);
 
         return $this->from_where_builder->getFromWhere(
             $field_id,

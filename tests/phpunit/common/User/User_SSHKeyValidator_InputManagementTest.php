@@ -74,7 +74,7 @@ class User_SSHKeyValidator_InputManagementTest extends \PHPUnit\Framework\TestCa
     public function testItUpdatesWithAnExtraSpaceAfterFirstKey() : void
     {
         $keys = $this->validator->validateAllKeys(array(
-            $this->key1." ",
+            $this->key1 . " ",
             $this->key2
         ));
 

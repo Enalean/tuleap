@@ -161,19 +161,19 @@ class Tracker_Artifact_Changeset_Comment
         $html = '<div class="tracker_artifact_followup_comment_edited_by">';
         if ($this->parent_id) {
             $html .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'last_edited');
-            $html .= ' '. $uh->getLinkOnUserFromUserId($this->submitted_by) .' ';
+            $html .= ' ' . $uh->getLinkOnUserFromUserId($this->submitted_by) . ' ';
             $html .= DateHelper::timeAgoInWords($this->submitted_on, false, true);
         }
         $html .= '</div>';
 
         if (!empty($this->body)) {
             $html .= '<input type="hidden"
-                id="tracker_artifact_followup_comment_body_format_'.$this->changeset->getId().'"
-                name="tracker_artifact_followup_comment_body_format_'.$this->changeset->getId().'"
-                value="'.$this->bodyFormat.'" />';
+                id="tracker_artifact_followup_comment_body_format_' . $this->changeset->getId() . '"
+                name="tracker_artifact_followup_comment_body_format_' . $this->changeset->getId() . '"
+                value="' . $this->bodyFormat . '" />';
             $html .= '<div class="tracker_artifact_followup_comment_body">';
             if ($this->parent_id && !trim($this->body)) {
-                $html .= '<em>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'comment_cleared') .'</em>';
+                $html .= '<em>' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'comment_cleared') . '</em>';
             } else {
                 $html .= $this->getPurifiedBodyForHTML();
             }
@@ -206,17 +206,17 @@ class Tracker_Artifact_Changeset_Comment
             }
 
             $body = $this->getPurifiedBodyForText();
-            return PHP_EOL.PHP_EOL.$body.PHP_EOL.PHP_EOL;
+            return PHP_EOL . PHP_EOL . $body . PHP_EOL . PHP_EOL;
         }
 
         $user     = UserManager::instance()->getUserById($this->submitted_by);
         $avatar   = $user->fetchHtmlAvatar();
-        $timezone = ($user->getId() != 0) ? ' ('.$user->getTimezone().')' : '';
+        $timezone = ($user->getId() != 0) ? ' (' . $user->getTimezone() . ')' : '';
 
         $html =
             '<tr valign="top">
-                <td align="left">'.
-                    $avatar.'
+                <td align="left">' .
+                    $avatar . '
                 </td>
                 <td align="left" valign="top">
                     <div style="
@@ -234,20 +234,20 @@ class Tracker_Artifact_Changeset_Comment
                         <table style="width:100%; background-color:#F6F6F6;">
                             <tr>
                                 <td>
-                                    <span> '.
-                                        $this->fetchFormattedMailUserInfo($user).'
+                                    <span> ' .
+                                        $this->fetchFormattedMailUserInfo($user) . '
                                     </span>
                                 </td>
                                 <td align="right" valign="top">
-                                    <div style="text-align:right;font-size:0.95em;color:#666;">'.
-                                        format_date($GLOBALS['Language']->getText('system', 'datefmt'), $this->submitted_on).
-                                        $timezone.'
+                                    <div style="text-align:right;font-size:0.95em;color:#666;">' .
+                                        format_date($GLOBALS['Language']->getText('system', 'datefmt'), $this->submitted_on) .
+                                        $timezone . '
                                     </div>
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="2" >'.
-                                    $this->fetchFormattedMailComment() . ' ' .'
+                                <td colspan="2" >' .
+                                    $this->fetchFormattedMailComment() . ' ' . '
                                 </td>
                             </tr>
                         </table>
@@ -281,14 +281,14 @@ class Tracker_Artifact_Changeset_Comment
         if (!empty($this->body)) {
             if ($this->parent_id && !trim($this->body)) {
                 $comment =
-                '<em>'.
-                    $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'comment_cleared') .'
+                '<em>' .
+                    $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'comment_cleared') . '
                 </em>';
             } else {
                 $comment = $this->getPurifiedBodyForHTML();
             }
 
-            $formatted_comment = '<div style="margin: 1em 0; padding: 0.5em 1em;">'. $comment .'</div>';
+            $formatted_comment = '<div style="margin: 1em 0; padding: 0.5em 1em;">' . $comment . '</div>';
         }
 
         return $formatted_comment;
@@ -300,8 +300,8 @@ class Tracker_Artifact_Changeset_Comment
 
         if ($user && !$user->isAnonymous()) {
             $user_info =
-                '<a href="mailto:'.$hp->purify($user->getEmail()).'">'.
-                    $hp->purify($user->getRealName()).' ('.$hp->purify($user->getUserName()) .')
+                '<a href="mailto:' . $hp->purify($user->getEmail()) . '">' .
+                    $hp->purify($user->getRealName()) . ' (' . $hp->purify($user->getUserName()) . ')
                 </a>';
         } else {
             $user = UserManager::instance()->getUserAnonymous();

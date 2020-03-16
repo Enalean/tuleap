@@ -72,7 +72,7 @@ class Mirroring extends Pane
     public function getContent()
     {
         $presenter = new GitPresenters_MirroringPresenter($this->repository, $this->getMirrorPresenters());
-        $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
+        $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR) . '/templates');
 
         return $renderer->renderToString('mirroring', $presenter);
     }

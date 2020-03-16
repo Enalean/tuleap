@@ -12,6 +12,9 @@
         <!-- checked by SlevomatCodingStandard.Namespaces.UseSpacing -->
         <exclude name="PSR2.Namespaces.UseDeclaration.SpaceAfterLastUse"/>
     </rule>
+    <rule ref="PSR12.Operators.OperatorSpacing"/>
+    <!-- Type casting operators MUST NOT have any space within the parentheses. -->
+    <rule ref="Squiz.WhiteSpace.CastSpacing"/>
     <!-- Forbid superfluous whitespaces -->
     <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
         <properties>

@@ -194,7 +194,7 @@ class ArtifactLinkDiffTest extends TestCase
         $this->factory->shouldReceive('getFromShortname')->with('reported_in')->andReturn(new NaturePresenter('reported_in', 'Reported in', '', true));
         $previous = [
             122 => $this->getTrackerArtifactLinkInfo(122, 'bug', 'reported_in'),
-            123 =>$this->getTrackerArtifactLinkInfo(123, 'bug', 'fixed_in'),
+            123 => $this->getTrackerArtifactLinkInfo(123, 'bug', 'fixed_in'),
         ];
         $next     = [
             122 => $this->getTrackerArtifactLinkInfo(122, 'bug', ''),

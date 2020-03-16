@@ -133,7 +133,7 @@ class b201209121717_turn_tables_innodb extends ForgeUpgrade_Bucket
 
     private function indexNameExists($tableName, $index)
     {
-        $sql = 'SHOW INDEX FROM '.$tableName.' WHERE Key_name LIKE '.$this->db->dbh->quote($index);
+        $sql = 'SHOW INDEX FROM ' . $tableName . ' WHERE Key_name LIKE ' . $this->db->dbh->quote($index);
         $res = $this->db->dbh->query($sql);
         if ($res && $res->fetch() !== false) {
             return true;

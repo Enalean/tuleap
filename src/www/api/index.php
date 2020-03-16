@@ -18,7 +18,7 @@
  */
 
 define('IS_SCRIPT', true);
-require_once __DIR__. '/../include/pre.php';
+require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/../project/admin/permissions.php';
 
 use Tuleap\Instrument\Prometheus\Prometheus;

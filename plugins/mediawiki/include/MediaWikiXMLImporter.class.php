@@ -108,7 +108,7 @@ class MediaWikiXMLImporter
 
         $this->importRights($project, $xml_mediawiki);
 
-        $mediawiki_storage_path = forge_get_config('projects_path', 'mediawiki') . "/". $project->getID();
+        $mediawiki_storage_path = forge_get_config('projects_path', 'mediawiki') . "/" . $project->getID();
         $owner = ForgeConfig::get('sys_http_user');
         if ($owner) {
             $no_filter_file_extension = array();
@@ -178,7 +178,7 @@ class MediaWikiXMLImporter
     {
         $ugroup_ids = array();
         foreach ($permission_xmlnode->ugroup as $ugroup) {
-            $ugroup_name = (string)$ugroup;
+            $ugroup_name = (string) $ugroup;
             $ugroup = $this->ugroup_manager->getUGroupByName($project, $ugroup_name);
             if ($ugroup === null) {
                 $this->logger->warning("Could not find any ugroup named $ugroup_name, skip it.");

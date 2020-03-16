@@ -163,7 +163,7 @@ class TrackerReportRendererTableTest extends TestCase
         $this->tracker_report_renderer_table->shouldReceive('getSort');
         $this->tracker_report_renderer_table->exportToXml($this->xml, $field_info, $mapping['xml']);
 
-        $this->assertEquals('_is_child', (string)$this->xml->columns->field['artlink-nature']);
+        $this->assertEquals('_is_child', (string) $this->xml->columns->field['artlink-nature']);
     }
 
     public function testItAddOnlyFormatInReportXmlExport()
@@ -179,7 +179,7 @@ class TrackerReportRendererTableTest extends TestCase
         $this->tracker_report_renderer_table->shouldReceive('getSort');
         $this->tracker_report_renderer_table->exportToXml($this->xml, $field_info, $mapping['xml']);
 
-        $this->assertEquals('#%id', (string)$this->xml->columns->field['artlink-nature-format']);
+        $this->assertEquals('#%id', (string) $this->xml->columns->field['artlink-nature-format']);
     }
 
     public function testItAddBothNatureAndFormatInTrackerReports()
@@ -196,8 +196,8 @@ class TrackerReportRendererTableTest extends TestCase
         $this->tracker_report_renderer_table->shouldReceive('getSort');
         $this->tracker_report_renderer_table->exportToXml($this->xml, $field_info, $mapping['xml']);
 
-        $this->assertEquals('_is_child', (string)$this->xml->columns->field['artlink-nature']);
-        $this->assertEquals('#%id', (string)$this->xml->columns->field['artlink-nature-format']);
+        $this->assertEquals('_is_child', (string) $this->xml->columns->field['artlink-nature']);
+        $this->assertEquals('#%id', (string) $this->xml->columns->field['artlink-nature-format']);
     }
 
     public function testItNeverAddNatureInTrackerReportsWithoutNature()
@@ -212,7 +212,7 @@ class TrackerReportRendererTableTest extends TestCase
         $this->tracker_report_renderer_table->shouldReceive('getSort');
         $this->tracker_report_renderer_table->exportToXml($this->xml, $field_info, $mapping['xml']);
 
-        $this->assertEquals(null, (string)$this->xml->columns);
+        $this->assertEquals(null, (string) $this->xml->columns);
     }
 
     private function mapFieldWithNature($id, $nature, $format)
@@ -221,7 +221,7 @@ class TrackerReportRendererTableTest extends TestCase
                          ->makePartial()
                          ->shouldAllowMockingProtectedMethods();
         $field->shouldReceive('getId')->andReturn($id);
-        $xml_mapping['F'. $field->getId()] = $field->getId();
+        $xml_mapping['F' . $field->getId()] = $field->getId();
 
         $field_mapping = [
             'field'                 => $field,

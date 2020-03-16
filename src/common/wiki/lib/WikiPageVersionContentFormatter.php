@@ -44,7 +44,7 @@ class WikiPageVersionContentFormatter
         $request = $this->wrapper->getRequest();
         $request->initializeTheme();
 
-        require_once(dirname(__FILE__).'/../phpwiki/lib/Template.php');
+        require_once(dirname(__FILE__) . '/../phpwiki/lib/Template.php');
         $template = new Template(
             self::PHPWIKI_TEMPLATE,
             $request,

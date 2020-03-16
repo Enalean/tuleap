@@ -27,7 +27,7 @@ use Tuleap\Templating\Mustache\GettextCollector;
 use Tuleap\Templating\Mustache\GettextExtractor;
 use Tuleap\Templating\Mustache\GettextSectionContentTransformer;
 
-require_once __DIR__ .'/../../src/vendor/autoload.php';
+require_once __DIR__ . '/../../src/vendor/autoload.php';
 
 $basedir = $argv[1];
 $plugin  = $argv[2] ?: '';
@@ -249,7 +249,6 @@ EOS;
 
 function gettextJS($translated_plugin, $path, $manifest_json)
 {
-
     if (! isset($manifest_json['gettext-js']) || ! is_array($manifest_json['gettext-js'])) {
         return;
     }

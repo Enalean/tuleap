@@ -45,14 +45,14 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
 
     public function testOPTIONS()
     {
-        $response = $this->getResponse($this->client->options('backlog_items/'.$this->stories_ids[0]));
+        $response = $this->getResponse($this->client->options('backlog_items/' . $this->stories_ids[0]));
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOPTIONSWithUserRESTReadOnlyAdmin()
     {
         $response = $this->getResponse(
-            $this->client->options('backlog_items/'.$this->stories_ids[0]),
+            $this->client->options('backlog_items/' . $this->stories_ids[0]),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -61,7 +61,7 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
 
     public function testGET()
     {
-        $response = $this->getResponse($this->client->get('backlog_items/'.$this->stories_ids[0]));
+        $response = $this->getResponse($this->client->get('backlog_items/' . $this->stories_ids[0]));
 
         $this->assertGET($response);
     }
@@ -69,7 +69,7 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
     public function testGETWithUserRESTReadOnlyAdmin()
     {
         $response = $this->getResponse(
-            $this->client->get('backlog_items/'.$this->stories_ids[0]),
+            $this->client->get('backlog_items/' . $this->stories_ids[0]),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -86,14 +86,14 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
 
     public function testOPTIONSChildren()
     {
-        $response = $this->getResponse($this->client->options('backlog_items/'.$this->stories_ids[0].'/children'));
+        $response = $this->getResponse($this->client->options('backlog_items/' . $this->stories_ids[0] . '/children'));
         $this->assertEquals(array('OPTIONS', 'GET', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOPTIONSChildrenWithUserRESTReadOnlyAdmin()
     {
         $response = $this->getResponse(
-            $this->client->options('backlog_items/'.$this->stories_ids[0].'/children'),
+            $this->client->options('backlog_items/' . $this->stories_ids[0] . '/children'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -114,7 +114,7 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
     public function testGETChildrenWithUserRESTReadOnlyAdmin()
     {
         $response = $this->getResponse(
-            $this->client->get('backlog_items/'.$this->stories_ids[0].'/children'),
+            $this->client->get('backlog_items/' . $this->stories_ids[0] . '/children'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -122,7 +122,7 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
         $this->assertCount(0, $backlog_items);
 
         $response = $this->getResponse(
-            $this->client->get('backlog_items/'.$this->stories_ids[1].'/children'),
+            $this->client->get('backlog_items/' . $this->stories_ids[1] . '/children'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -142,7 +142,7 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
 
     public function testPATCHChildrenWithUserRESTReadOnlyAdmin()
     {
-        $uri      = 'backlog_items/'.$this->stories_ids[1].'/children';
+        $uri      = 'backlog_items/' . $this->stories_ids[1] . '/children';
         $response = $this->getResponse(
             $this->client->get($uri),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
@@ -175,7 +175,7 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
 
     public function testPATCHChildren()
     {
-        $uri = 'backlog_items/'.$this->stories_ids[1].'/children';
+        $uri = 'backlog_items/' . $this->stories_ids[1] . '/children';
         $response      = $this->getResponse($this->client->get($uri));
         $backlog_items = $response->json();
 
@@ -225,7 +225,7 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
 
     public function testPATCHChildrenDuplicateIds()
     {
-        $uri = 'backlog_items/'.$this->stories_ids[1].'/children';
+        $uri = 'backlog_items/' . $this->stories_ids[1] . '/children';
         $response      = $this->getResponse($this->client->get($uri));
         $backlog_items = $response->json();
 
@@ -248,7 +248,7 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
 
     public function testPATCHSomeoneElseChildren()
     {
-        $uri = 'backlog_items/'.$this->stories_ids[1].'/children';
+        $uri = 'backlog_items/' . $this->stories_ids[1] . '/children';
         $response      = $this->getResponse($this->client->get($uri));
         $backlog_items = $response->json();
 
@@ -277,7 +277,7 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
 
     public function testPatchChildrenAdd()
     {
-        $uri = 'backlog_items/'.$this->stories_ids[1].'/children';
+        $uri = 'backlog_items/' . $this->stories_ids[1] . '/children';
         $backlog_items = $this->getResponse($this->client->get($uri))->json();
 
         $this->assertCount(2, $backlog_items);
@@ -311,7 +311,7 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
 
     public function testPatchChildrenMove()
     {
-        $uri = 'backlog_items/'.$this->stories_ids[2].'/children';
+        $uri = 'backlog_items/' . $this->stories_ids[2] . '/children';
         $backlog_items = $this->getResponse($this->client->get($uri))->json();
 
         $first_id  = $backlog_items[0]['id'];
@@ -348,7 +348,7 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
             $this->getIdsOrderedByPriority($uri)
         );
 
-        $this->assertCount(0, $this->getResponse($this->client->get('backlog_items/'.$another_story_id.'/children'))->json());
+        $this->assertCount(0, $this->getResponse($this->client->get('backlog_items/' . $another_story_id . '/children'))->json());
     }
 
     private function getIdsOrderedByPriority($uri)

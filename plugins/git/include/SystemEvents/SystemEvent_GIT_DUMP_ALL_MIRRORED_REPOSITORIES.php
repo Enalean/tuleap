@@ -33,7 +33,6 @@ class SystemEvent_GIT_DUMP_ALL_MIRRORED_REPOSITORIES extends SystemEvent
 
     public function process()
     {
-
         $dump_is_done = $this->gitolite_driver->dumpAllMirroredRepositories();
 
         if ($dump_is_done) {

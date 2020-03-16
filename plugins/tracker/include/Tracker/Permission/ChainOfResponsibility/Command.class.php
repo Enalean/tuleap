@@ -75,7 +75,6 @@ abstract class Tracker_Permission_Command
         Tracker_Permission_PermissionSetter $permission_setter,
         $ugroup_id
     ) {
-
         if ($this->requestContainsNonAdminPermissions($request, $ugroup_id)) {
             $this->warnAlreadyHaveFullAccess($permission_setter, $ugroup_id);
             $request->revoke($ugroup_id);

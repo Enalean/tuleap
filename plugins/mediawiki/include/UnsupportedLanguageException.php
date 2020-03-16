@@ -25,7 +25,7 @@ class Mediawiki_UnsupportedLanguageException extends Exception
 
     public function __construct($language)
     {
-        parent::__construct("language ". $language." is not supported");
+        parent::__construct("language " . $language . " is not supported");
         $this->language = $language;
     }
 

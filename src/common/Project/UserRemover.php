@@ -114,7 +114,7 @@ class UserRemover
 
         $this->project_history_dao->groupAddHistory(
             'removed_user',
-            $user_name." ($user_id)",
+            $user_name . " ($user_id)",
             $project_id
         );
 
@@ -126,12 +126,12 @@ class UserRemover
         if ($admin_action) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::INFO,
-                $GLOBALS['Language']->getText('project_admin_index', 'user_removed').' ('.$user_name.')'
+                $GLOBALS['Language']->getText('project_admin_index', 'user_removed') . ' (' . $user_name . ')'
             );
         } else {
             $GLOBALS['Response']->addFeedback(
                 Feedback::INFO,
-                $GLOBALS['Language']->getText('project_admin_index', 'self_user_remove').' ('.$project->getPublicName().')'
+                $GLOBALS['Language']->getText('project_admin_index', 'self_user_remove') . ' (' . $project->getPublicName() . ')'
             );
         }
     }

@@ -106,8 +106,8 @@ class WikiPlugin_PopularNearby extends WikiPlugin
                 break;
         }
         $html = HTML($header);
-        for ($i=0; $i<count($links); $i++) {
-            $html->pushContent($links[$i]['format'], $i<count($links)-1?', ':'');
+        for ($i = 0; $i < count($links); $i++) {
+            $html->pushContent($links[$i]['format'], $i < count($links) - 1 ? ', ' : '');
         }
         return $html;
     }
@@ -176,7 +176,7 @@ class WikiPlugin_PopularNearby extends WikiPlugin
         reset($links);
         return $links;
     }
-};
+}
 
 function cmp_by_hits($a, $b)
 {

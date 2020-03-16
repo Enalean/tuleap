@@ -78,7 +78,7 @@ class SemanticDoneDuplicator
     {
         $values_mapping = [];
         foreach ($field_mapping as $mapping) {
-            if ((int)$mapping['from'] === (int)$from_semantic_status_field_id) {
+            if ((int) $mapping['from'] === (int) $from_semantic_status_field_id) {
                 $values_mapping = $mapping['values'];
             }
         }

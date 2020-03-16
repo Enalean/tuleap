@@ -44,7 +44,7 @@ class DateParser
                 $offsetHour = 0;
                 $offsetMinute = 0;
 
-                $localOffset = date("Z", mktime($hour, $minute, (int)$second, $month, $day, $year));
+                $localOffset = date("Z", mktime($hour, $minute, (int) $second, $month, $day, $year));
                 if (preg_match("/^([+-])(\d{2})(:?(\d{2}))$/", $rest, $matches)) {
                     list( , $sign, $offsetHour, , $offsetMinute) = $matches;
                     if ($sign == '-') {
@@ -56,7 +56,7 @@ class DateParser
                 }
             }
 
-            return mktime($hour - $offsetHour, $minute - $offsetMinute, (int)$second, $month, $day, $year) + $localOffset;
+            return mktime($hour - $offsetHour, $minute - $offsetMinute, (int) $second, $month, $day, $year) + $localOffset;
         }
     }
 }

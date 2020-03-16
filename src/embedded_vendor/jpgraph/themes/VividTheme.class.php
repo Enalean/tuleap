@@ -29,7 +29,6 @@ class VividTheme extends Theme
 
     public function SetupGraph($graph)
     {
-
         // graph
         /*
         $img = $graph->img;
@@ -79,7 +78,6 @@ class VividTheme extends Theme
 
     public function SetupPieGraph($graph)
     {
-
         // graph
         $graph->SetFrame(false);
 
@@ -118,7 +116,6 @@ class VividTheme extends Theme
 
     public function ApplyPlot($plot)
     {
-
         switch (get_class($plot)) {
             case 'GroupBarPlot':
                 foreach ($plot->plots as $_plot) {
@@ -143,7 +140,7 @@ class VividTheme extends Theme
 
             case 'LinePlot':
                 $plot->Clear();
-                $plot->SetColor($this->GetNextColor().'@0.4');
+                $plot->SetColor($this->GetNextColor() . '@0.4');
                 $plot->SetWeight(2);
 //                $plot->SetBarCenter();
                 break;

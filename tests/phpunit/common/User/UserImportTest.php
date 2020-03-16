@@ -61,8 +61,8 @@ final class UserImportTest extends \PHPUnit\Framework\TestCase
         $this->user_helper         = \Mockery::spy(\UserHelper::class);
         $this->project             = \Mockery::spy(\Project::class, ['getID' => 110, 'getUnixName' => false, 'isPublic' => false]);
         $this->user_manager        = \Mockery::spy(\UserManager::class);
-        $this->user_filename       = __DIR__.'/_fixtures/user_import.txt';
-        $this->user_email_filename = __DIR__.'/_fixtures/user_email_import.txt';
+        $this->user_filename       = __DIR__ . '/_fixtures/user_import.txt';
+        $this->user_email_filename = __DIR__ . '/_fixtures/user_email_import.txt';
         $this->user_import         = new UserImport($this->user_manager, $this->user_helper, \Mockery::mock(ProjectMemberAdder::class));
     }
 

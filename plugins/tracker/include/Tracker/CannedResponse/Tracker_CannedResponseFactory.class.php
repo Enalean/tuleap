@@ -74,7 +74,7 @@ class Tracker_CannedResponseFactory
      */
     public function getInstanceFromXML($xml)
     {
-        return new Tracker_CannedResponse(0, null, (string)$xml->title, (string)$xml->body);
+        return new Tracker_CannedResponse(0, null, (string) $xml->title, (string) $xml->body);
     }
 
     /**

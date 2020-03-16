@@ -41,7 +41,7 @@ class UserDeletionRetriever
     {
         $window_start = new DateTimeImmutable('-1day');
 
-        return (int)$this->dao->searchNumberOfArtifactsDeletionsForUserInTimePeriod(
+        return (int) $this->dao->searchNumberOfArtifactsDeletionsForUserInTimePeriod(
             $user->getId(),
             $window_start->getTimestamp()
         );

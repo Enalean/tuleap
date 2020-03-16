@@ -60,7 +60,7 @@ class OneStepProjectCreationRequestTest extends TestCase
         $custom_id    = 101;
 
         $request_data = array(
-            Project_OneStepCreation_OneStepCreationPresenter::PROJECT_DESCRIPTION_PREFIX."$custom_id" => $text_content,
+            Project_OneStepCreation_OneStepCreationPresenter::PROJECT_DESCRIPTION_PREFIX . "$custom_id" => $text_content,
         );
 
         $creation_request = $this->aCreationRequest($request_data);
@@ -73,7 +73,7 @@ class OneStepProjectCreationRequestTest extends TestCase
         $custom_id    = 'name';
 
         $request_data = array(
-            Project_OneStepCreation_OneStepCreationPresenter::PROJECT_DESCRIPTION_PREFIX."$custom_id" => $text_content,
+            Project_OneStepCreation_OneStepCreationPresenter::PROJECT_DESCRIPTION_PREFIX . "$custom_id" => $text_content,
         );
 
         $creation_request = $this->aCreationRequest($request_data);
@@ -86,7 +86,7 @@ class OneStepProjectCreationRequestTest extends TestCase
         $custom_id    = 101;
 
         $request_data = array(
-            Project_OneStepCreation_OneStepCreationPresenter::PROJECT_DESCRIPTION_PREFIX."$custom_id" => $text_content,
+            Project_OneStepCreation_OneStepCreationPresenter::PROJECT_DESCRIPTION_PREFIX . "$custom_id" => $text_content,
         );
 
         $creation_request = $this->aCreationRequest($request_data);
@@ -94,7 +94,7 @@ class OneStepProjectCreationRequestTest extends TestCase
         $project_values = $creation_request->getProjectValues();
         $this->assertEquals(
             $text_content,
-            $project_values['project'][Project_OneStepCreation_OneStepCreationPresenter::PROJECT_DESCRIPTION_PREFIX."$custom_id"]
+            $project_values['project'][Project_OneStepCreation_OneStepCreationPresenter::PROJECT_DESCRIPTION_PREFIX . "$custom_id"]
         );
     }
 

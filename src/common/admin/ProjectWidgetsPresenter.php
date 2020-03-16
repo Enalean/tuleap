@@ -55,7 +55,7 @@ class ProjectWidgetsPresenter
 
     private function buildFormUrl(): string
     {
-        $base_url = '/admin/project-creation/widgets/'.urlencode($this->id);
+        $base_url = '/admin/project-creation/widgets/' . urlencode($this->id);
 
         if ($this->is_disabled) {
             return $base_url . '/enable';

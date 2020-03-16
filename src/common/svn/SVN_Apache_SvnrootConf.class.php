@@ -57,7 +57,7 @@ class SVN_Apache_SvnrootConf
             $conf .= $auth->getConf($row['public_path'], $row['system_path']);
         }
 
-        return $this->getApacheConfHeaders().$conf;
+        return $this->getApacheConfHeaders() . $conf;
     }
 
     private function collectApacheConfHeaders(SVN_Apache $auth)
@@ -73,7 +73,7 @@ class SVN_Apache_SvnrootConf
         $headers  = '';
         $headers .= "# " . $GLOBALS['sys_name'] . " SVN repositories\n";
         $headers .= "# Custom log file for SVN queries\n";
-        $headers .= 'CustomLog '.$log_file_path.' "%h %l %u %t %U %>s \"%{SVN-ACTION}e\"" env=SVN-ACTION' . "\n\n";
+        $headers .= 'CustomLog ' . $log_file_path . ' "%h %l %u %t %U %>s \"%{SVN-ACTION}e\"" env=SVN-ACTION' . "\n\n";
         $headers .= implode(PHP_EOL, $this->apacheConfHeaders);
         return $headers;
     }

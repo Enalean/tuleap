@@ -234,8 +234,8 @@ class GitViews_RepoManagement
 
     private function displayTab(Pane\Pane $pane)
     {
-        echo '<li class="'. ($this->current_pane == $pane->getIdentifier() ? 'active' : '') .'">';
-        $url = GIT_BASE_URL .'/?'. http_build_query(
+        echo '<li class="' . ($this->current_pane == $pane->getIdentifier() ? 'active' : '') . '">';
+        $url = GIT_BASE_URL . '/?' . http_build_query(
             array(
                 'action' => 'repo_management',
                 'group_id' => $this->repository->getProjectId(),
@@ -245,6 +245,6 @@ class GitViews_RepoManagement
         );
         $purifier = Codendi_HTMLPurifier::instance();
 
-        echo '<a href="'. $url .'" title="'. $purifier->purify($pane->getTitle()) .'">'. $purifier->purify($pane->getLabel()) .'</a></li>';
+        echo '<a href="' . $url . '" title="' . $purifier->purify($pane->getTitle()) . '">' . $purifier->purify($pane->getLabel()) . '</a></li>';
     }
 }

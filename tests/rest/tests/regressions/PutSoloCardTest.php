@@ -42,7 +42,7 @@ class Regressions_PutSoloCardTest extends RestBase
                 "values"    => array()
             )
         );
-        $response = $this->getResponse($this->client->put('cards/'.$planning_id.'_'.$stories['Story 1'], null, $put));
+        $response = $this->getResponse($this->client->put('cards/' . $planning_id . '_' . $stories['Story 1'], null, $put));
         $this->assertEquals($response->getStatusCode(), 200);
     }
 

@@ -55,8 +55,8 @@ class GitPanePresenter
         $this->service_presenter    = $service_presenter;
         $this->url                  = $this->getGlobalAdminLink($project);
         $this->project_id           = $project->getID();
-        $this->ugroup_id            = ($ugroup) ? $ugroup->getId(): "";
-        $this->selected_ugroup_name = ($ugroup) ? $ugroup->getTranslatedName(): "";
+        $this->ugroup_id            = ($ugroup) ? $ugroup->getId() : "";
+        $this->selected_ugroup_name = ($ugroup) ? $ugroup->getTranslatedName() : "";
     }
 
     private function getGlobalAdminLink(Project $project)

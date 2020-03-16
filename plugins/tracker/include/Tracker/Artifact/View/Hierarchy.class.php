@@ -36,6 +36,6 @@ class Tracker_Artifact_View_Hierarchy extends Tracker_Artifact_View_View
     /** @see Tracker_Artifact_View_View::fetch() */
     public function fetch()
     {
-        return '<div data-artifact-id="'. $this->artifact->getId() .'" class="artifact-hierarchy"></div>';
+        return '<div data-artifact-id="' . $this->artifact->getId() . '" class="artifact-hierarchy"></div>';
     }
 }

@@ -163,7 +163,6 @@ class URLVerificationRedirectionTests extends TestCase
 
     public function testRestrictedUserCanNotAccessSearchOnLdapPeople(): void
     {
-
         $this->url_verification = \Mockery::mock(\URLVerification::class)->makePartial(
         )->shouldAllowMockingProtectedMethods();
 

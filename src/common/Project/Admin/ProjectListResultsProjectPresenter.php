@@ -53,7 +53,7 @@ class ProjectListResultsProjectPresenter
         $this->type_label       = $type_label;
         $this->access_presenter = new ProjectAccessPresenter($visibility_label);
 
-        $this->nb_members      = (int)$nb_members;
+        $this->nb_members      = (int) $nb_members;
 
         $this->member_of_title = $GLOBALS['Language']->getText('admin_userlist', 'member_of', $nb_members);
     }

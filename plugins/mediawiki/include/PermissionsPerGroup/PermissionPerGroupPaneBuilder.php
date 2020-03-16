@@ -176,7 +176,7 @@ class PermissionPerGroupPaneBuilder
             $this->formatUGroupPermissions(
                 $project,
                 $current_mapping[$mw_group_name],
-                $GLOBALS['Language']->getText('plugin_mediawiki', 'group_name_'.$mw_group_name),
+                $GLOBALS['Language']->getText('plugin_mediawiki', 'group_name_' . $mw_group_name),
                 $collection
             );
         }
@@ -200,7 +200,7 @@ class PermissionPerGroupPaneBuilder
         $this->formatUGroupPermissions(
             $project,
             $current_mapping[$mw_group_name],
-            $GLOBALS['Language']->getText('plugin_mediawiki', 'group_name_'.$mw_group_name),
+            $GLOBALS['Language']->getText('plugin_mediawiki', 'group_name_' . $mw_group_name),
             $collection
         );
     }

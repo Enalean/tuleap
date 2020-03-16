@@ -40,6 +40,6 @@ class SystemEventProcessRootDefaultQueue implements SystemEventProcess
 
     public function getCommandName()
     {
-        return 'tuleap.php process-system-events '.$this->getQueue();
+        return 'tuleap.php process-system-events ' . $this->getQueue();
     }
 }

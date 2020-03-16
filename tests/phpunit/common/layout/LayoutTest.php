@@ -61,6 +61,6 @@ class LayoutTest extends TestCase
         $content = ob_get_contents();
         ob_end_clean();
 
-        $this->assertStringContainsString('<link rel="stylesheet" type="text/css" href="'.$css.'" />', $content);
+        $this->assertStringContainsString('<link rel="stylesheet" type="text/css" href="' . $css . '" />', $content);
     }
 }

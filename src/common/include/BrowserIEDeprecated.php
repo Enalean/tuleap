@@ -45,14 +45,14 @@ class BrowserIEDeprecated extends Browser //phpcs:ignore
 
         $url   = '/account/disable_legacy_browser_warning';
         $csrf  = new CSRFSynchronizerToken($url);
-        $form  = '<form action="'. $url .'" method="POST" style="margin: 0">';
+        $form  = '<form action="' . $url . '" method="POST" style="margin: 0">';
         $form .= $csrf->fetchHTMLInput();
         $form .= $warning_message;
         $form .= ' <button
                     type="submit"
                     class="btn btn-small btn-inverse"
                   >
-                    '.$GLOBALS['Language']->getText('include_browser', 'ie_deprecated_button').'
+                    ' . $GLOBALS['Language']->getText('include_browser', 'ie_deprecated_button') . '
                   </button>
                   </form>';
 

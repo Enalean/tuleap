@@ -214,7 +214,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey
      */
     public function __construct($row = null)
     {
-
         $this->is_super_user = null;
         $this->locale        = '';
         $this->_preferences  = array();
@@ -456,7 +455,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     {
         if (!$this->_tracker_data) {
             $this->_tracker_data = array();
-            $id = (int)$this->user_id;
+            $id = (int) $this->user_id;
             //TODO: use a DAO (waiting for the next tracker api)
             $sql = "SELECT group_artifact_id, perm_level
                     FROM artifact_perm WHERE user_id = $id";
@@ -584,7 +583,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     // Getter
     public function getPublicProfileUrl()
     {
-        return '/users/'.urlencode($this->getUnixName());
+        return '/users/' . urlencode($this->getUnixName());
     }
 
     /**
@@ -730,7 +729,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
 
     public function getUnixHomeDir()
     {
-        return ForgeConfig::get('homedir_prefix')."/".$this->getUserName();
+        return ForgeConfig::get('homedir_prefix') . "/" . $this->getUserName();
     }
 
     /**
@@ -1468,7 +1467,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         $user_id  = $this->getId();
 
         $html = '<div class="avatar"
-                        title="'. $title . '"
+                        title="' . $title . '"
                         data-user-id = "' . $user_id . '"
                     >';
 
@@ -1476,7 +1475,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
 
         if ($url) {
             $alternate_text = $purifier->purify(_('User avatar'));
-            $html .= '<img src="'. $url .'" alt="'. $alternate_text .'" />';
+            $html .= '<img src="' . $url . '" alt="' . $alternate_text . '" />';
         }
 
         $html .= '</div>';
@@ -1493,7 +1492,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         $avatar_url = self::DEFAULT_AVATAR_URL;
 
         if (! $this->isAnonymous() && $this->hasAvatar()) {
-            $avatar_url = '/users/'. urlencode($this->getUserName()) .'/avatar-'.hash_file('sha256', $this->getAvatarFilePath()).'.png';
+            $avatar_url = '/users/' . urlencode($this->getUserName()) . '/avatar-' . hash_file('sha256', $this->getAvatarFilePath()) . '.png';
         }
 
         return $request->getServerUrl() . $avatar_url;
@@ -1565,7 +1564,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
 
     public function __toString()
     {
-        return "User #". $this->getId();
+        return "User #" . $this->getId();
     }
 
     /**

@@ -89,7 +89,7 @@ class Worker
 
         $queue = (new QueueFactory($this->logger))->getPersistentQueue(self::EVENT_QUEUE_NAME, QueueFactory::REDIS);
         $queue->listen($this->id, '*', function ($event) use ($task_worker) {
-            $this->logger->info('Got message: ' .$event);
+            $this->logger->info('Got message: ' . $event);
             try {
                 $task_worker->run($event);
             } catch (TaskWorkerTimedOutException $exception) {
@@ -193,7 +193,7 @@ EOT;
     {
         $user = posix_getpwuid(posix_geteuid());
         if ($user['name'] !== ForgeConfig::get('sys_http_user')) {
-            $this->cliError("This must be run by ".ForgeConfig::get('sys_http_user')."\n");
+            $this->cliError("This must be run by " . ForgeConfig::get('sys_http_user') . "\n");
         }
     }
 

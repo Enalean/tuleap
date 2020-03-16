@@ -287,7 +287,7 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
      */
     public function quoteLikeValuePrefix($value)
     {
-        return $this->quoteSmart('%'. $this->escapeLikeValue($value));
+        return $this->quoteSmart('%' . $this->escapeLikeValue($value));
     }
 
     /**

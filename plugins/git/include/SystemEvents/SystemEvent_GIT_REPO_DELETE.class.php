@@ -97,7 +97,7 @@ class SystemEvent_GIT_REPO_DELETE extends SystemEvent
         $path = $repository->getPath();
 
         try {
-            $this->logger->debug("Deleting repository ". $path);
+            $this->logger->debug("Deleting repository " . $path);
             $this->users_to_notify_dao->deleteByRepositoryId($repository->getId());
             $this->ugroups_to_notify_dao->deleteByRepositoryId($repository->getId());
             $this->system_event_manager->queueGrokMirrorManifestRepoDelete($path);

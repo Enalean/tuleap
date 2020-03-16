@@ -123,7 +123,7 @@ class GitWebhooksSettingsEnhancer
             );
         }
 
-        $renderer = TemplateRendererFactory::build()->getRenderer(HUDSON_GIT_BASE_DIR.'/templates');
+        $renderer = TemplateRendererFactory::build()->getRenderer(HUDSON_GIT_BASE_DIR . '/templates');
         $params['additional_html_bits'][] = $renderer->renderToString(
             'modals',
             new ModalsPresenter($repository, $url, $this->csrf)

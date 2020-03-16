@@ -68,7 +68,7 @@ class PermissionPerGroupPaneCollector implements Dispatchable
      */
     public function addPane($additional_pane, $service_rank)
     {
-        $this->panes[ $service_rank ] = $additional_pane;
+        $this->panes[$service_rank] = $additional_pane;
     }
 
     /**

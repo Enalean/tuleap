@@ -943,7 +943,7 @@ class Tracker_FormElementFactory
                         'from'    => $from_row['id'],
                         'to'      => $id,
                         'values'  => $created_values,
-                        'workflow'=> $has_workflow
+                        'workflow' => $has_workflow
                     );
                     $type = $this->getType($created_form_element);
                 }
@@ -1138,15 +1138,15 @@ class Tracker_FormElementFactory
             $curElem = $external_element_event->getFormElement();
         } else {
             $row = [
-                'formElement_type'  => (string)$att['type'],
-                'name'              => (string)$xml->name,
-                'label'             => (string)$xml->label,
-                'rank'              => (int)$att['rank'],
-                'use_it'            => isset($att['use_it']) ? (int)$att['use_it'] : 1,
-                'scope'             => isset($att['scope']) ? (string)$att['scope'] : 'P',
-                'required'          => isset($att['required']) ? (int)$att['required'] : 0,
-                'notifications'     => isset($att['notifications']) ? (int)$att['notifications'] : 0,
-                'description'       => (string)$xml->description,
+                'formElement_type'  => (string) $att['type'],
+                'name'              => (string) $xml->name,
+                'label'             => (string) $xml->label,
+                'rank'              => (int) $att['rank'],
+                'use_it'            => isset($att['use_it']) ? (int) $att['use_it'] : 1,
+                'scope'             => isset($att['scope']) ? (string) $att['scope'] : 'P',
+                'required'          => isset($att['required']) ? (int) $att['required'] : 0,
+                'notifications'     => isset($att['notifications']) ? (int) $att['notifications'] : 0,
+                'description'       => (string) $xml->description,
                 'id'                => 0,
                 'tracker_id'        => 0,
                 'parent_id'         => 0,
@@ -1156,7 +1156,7 @@ class Tracker_FormElementFactory
         }
         if ($curElem) {
             $curElem->setTracker($tracker);
-            $xmlMapping[(string)$xml['ID']] = $curElem;
+            $xmlMapping[(string) $xml['ID']] = $curElem;
             $curElem->continueGetInstanceFromXML($xml, $xmlMapping, $user_finder, $feedback_collector);
             return $curElem;
         }
@@ -1166,9 +1166,9 @@ class Tracker_FormElementFactory
                     'tuleap-tracker',
                     "Type '%s' does not exist. This field is ignored. (Name : '%s', ID: '%s')."
                 ),
-                (string)$att['type'],
-                (string)$xml->name,
-                (string)$att['ID']
+                (string) $att['type'],
+                (string) $xml->name,
+                (string) $att['ID']
             )
         );
 
@@ -1197,13 +1197,13 @@ class Tracker_FormElementFactory
     public function deductNameFromLabel($label)
     {
         $normalizeChars = array(
-            'Š'=>'S', 'š'=>'s', 'Ð'=>'Dj','Ž'=>'Z', 'ž'=>'z', 'À'=>'A', 'Á'=>'A', 'Â'=>'A', 'Ã'=>'A', 'Ä'=>'A',
-            'Å'=>'A', 'Æ'=>'A', 'Ç'=>'C', 'È'=>'E', 'É'=>'E', 'Ê'=>'E', 'Ë'=>'E', 'Ì'=>'I', 'Í'=>'I', 'Î'=>'I',
-            'Ï'=>'I', 'Ñ'=>'N', 'Ò'=>'O', 'Ó'=>'O', 'Ô'=>'O', 'Õ'=>'O', 'Ö'=>'O', 'Ø'=>'O', 'Ù'=>'U', 'Ú'=>'U',
-            'Û'=>'U', 'Ü'=>'U', 'Ý'=>'Y', 'Þ'=>'B', 'ß'=>'Ss','à'=>'a', 'á'=>'a', 'â'=>'a', 'ã'=>'a', 'ä'=>'a',
-            'å'=>'a', 'æ'=>'a', 'ç'=>'c', 'è'=>'e', 'é'=>'e', 'ê'=>'e', 'ë'=>'e', 'ì'=>'i', 'í'=>'i', 'î'=>'i',
-            'ï'=>'i', 'ð'=>'o', 'ñ'=>'n', 'ò'=>'o', 'ó'=>'o', 'ô'=>'o', 'õ'=>'o', 'ö'=>'o', 'ø'=>'o', 'ù'=>'u',
-            'ú'=>'u', 'û'=>'u', 'ý'=>'y', 'ý'=>'y', 'þ'=>'b', 'ÿ'=>'y', 'ƒ'=>'f'
+            'Š' => 'S', 'š' => 's', 'Ð' => 'Dj','Ž' => 'Z', 'ž' => 'z', 'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Ä' => 'A',
+            'Å' => 'A', 'Æ' => 'A', 'Ç' => 'C', 'È' => 'E', 'É' => 'E', 'Ê' => 'E', 'Ë' => 'E', 'Ì' => 'I', 'Í' => 'I', 'Î' => 'I',
+            'Ï' => 'I', 'Ñ' => 'N', 'Ò' => 'O', 'Ó' => 'O', 'Ô' => 'O', 'Õ' => 'O', 'Ö' => 'O', 'Ø' => 'O', 'Ù' => 'U', 'Ú' => 'U',
+            'Û' => 'U', 'Ü' => 'U', 'Ý' => 'Y', 'Þ' => 'B', 'ß' => 'Ss','à' => 'a', 'á' => 'a', 'â' => 'a', 'ã' => 'a', 'ä' => 'a',
+            'å' => 'a', 'æ' => 'a', 'ç' => 'c', 'è' => 'e', 'é' => 'e', 'ê' => 'e', 'ë' => 'e', 'ì' => 'i', 'í' => 'i', 'î' => 'i',
+            'ï' => 'i', 'ð' => 'o', 'ñ' => 'n', 'ò' => 'o', 'ó' => 'o', 'ô' => 'o', 'õ' => 'o', 'ö' => 'o', 'ø' => 'o', 'ù' => 'u',
+            'ú' => 'u', 'û' => 'u', 'ý' => 'y', 'þ' => 'b', 'ÿ' => 'y', 'ƒ' => 'f'
         );
         $label = strtolower(trim($label));
         $label = preg_replace('/[^\w\d_ -]/si', '', $label);
@@ -1492,7 +1492,7 @@ class Tracker_FormElementFactory
         $html = '';
         $html .= '<div class="tracker-admin-palette-content">';
         foreach ($event->getKlasses() as $type => $klass) {
-            $html .= $this->getFactoryButton($klass, 'create-formElement['.  urlencode($type) .']', $tracker);
+            $html .= $this->getFactoryButton($klass, 'create-formElement[' .  urlencode($type) . ']', $tracker);
         }
         $html .= '</div>';
 
@@ -1517,8 +1517,8 @@ class Tracker_FormElementFactory
             $button_class = 'button_disabled';
         }
 
-        $button .= '<a class="'.$button_class.'" name="'. $name .'" title="'. $hp->purify($description, CODENDI_PURIFIER_CONVERT_HTML) .'"><span>';
-        $button .= '<img width="16" height="16" alt="" src="'. $icon .'" />';
+        $button .= '<a class="' . $button_class . '" name="' . $name . '" title="' . $hp->purify($description, CODENDI_PURIFIER_CONVERT_HTML) . '"><span>';
+        $button .= '<img width="16" height="16" alt="" src="' . $icon . '" />';
         $button .=  $hp->purify($label, CODENDI_PURIFIER_CONVERT_HTML);
         $button .= '</span></a>';
 

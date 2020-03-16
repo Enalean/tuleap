@@ -35,7 +35,7 @@ class ArtifactReference extends Reference
     {
         $base_id     = 0;
         $description = '';
-        $url         = "/plugins/tracker/?aid=".urlencode($artifact_id);
+        $url         = "/plugins/tracker/?aid=" . urlencode($artifact_id);
         $visibility  = 'P';
         $is_used     = 1;
 

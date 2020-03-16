@@ -97,9 +97,9 @@ final class UserlogAccess
             new DateTimeImmutable(),
             $request->getProject(),
             $request->getCurrentUser(),
-            $request->getFromServer('HTTP_USER_AGENT')?: '',
-            $request->getFromServer('REQUEST_METHOD')?: '',
-            $request->getFromServer('REQUEST_URI')?: '',
+            $request->getFromServer('HTTP_USER_AGENT') ?: '',
+            $request->getFromServer('REQUEST_METHOD') ?: '',
+            $request->getFromServer('REQUEST_URI') ?: '',
             $request->getIPAddress(),
             $request->getFromServer('HTTP_REFERER') ?: ''
         );

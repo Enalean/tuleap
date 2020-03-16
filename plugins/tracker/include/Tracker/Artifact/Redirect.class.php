@@ -30,7 +30,7 @@ class Tracker_Artifact_Redirect
 
     public function toUrl() : string
     {
-        return rtrim((string) $this->base_url, '/') .'/?'.http_build_query($this->query_parameters);
+        return rtrim((string) $this->base_url, '/') . '/?' . http_build_query($this->query_parameters);
     }
 
     public function stayInTracker() : bool

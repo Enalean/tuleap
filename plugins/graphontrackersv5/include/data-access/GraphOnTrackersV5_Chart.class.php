@@ -174,20 +174,20 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
 
         $urlimg = $this->getStrokeUrl($store_in_session);
 
-        $html .= '<img  src="'. $urlimg .'"  ismap usemap="#map'. $this->getId() .'"  ';
+        $html .= '<img  src="' . $urlimg . '"  ismap usemap="#map' . $this->getId() . '"  ';
         if ($this->width) {
-            $html .= ' width="'. $this->width .'" ';
+            $html .= ' width="' . $this->width . '" ';
         }
         if ($this->height) {
-            $html .= ' height="'. $this->height .'" ';
+            $html .= ' height="' . $this->height . '" ';
         }
-        $html .= ' alt="'. $this->title .'" border="0">';
+        $html .= ' alt="' . $this->title . '" border="0">';
         return $html;
     }
 
     public function getStrokeUrl($store_in_session = true)
     {
-        return TRACKER_BASE_URL.'/?' . http_build_query(array(
+        return TRACKER_BASE_URL . '/?' . http_build_query(array(
                      '_jpg_csimd' => '1',
                      'report'     => $this->renderer->report->id,
                      'renderer'   => $this->renderer->id,
@@ -261,7 +261,7 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
 
     private function getTemplateRenderer()
     {
-        return TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR.'/report');
+        return TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/report');
     }
 
     public function fetchOnReport(GraphOnTrackersV5_Renderer $renderer, PFUser $current_user, $read_only, $store_in_session = true)
@@ -276,9 +276,9 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
         $hp = Codendi_HTMLPurifier::instance();
 
         $html  = '';
-        $html .= '<div class="widget '. $classname .'">';
-        $html .= '<div class="widget_titlebar" title="'. $hp->purify($this->getDescription()) .'">';
-        $html .= '<div class="widget_titlebar_title">'. $hp->purify($this->getTitle()) .'</div>';
+        $html .= '<div class="widget ' . $classname . '">';
+        $html .= '<div class="widget_titlebar" title="' . $hp->purify($this->getDescription()) . '">';
+        $html .= '<div class="widget_titlebar_title">' . $hp->purify($this->getTitle()) . '</div>';
         $html .= '<div class="plugin_graphontrackersv5_widget_actions">';
         $html .= $this->fetchActionButtons($renderer, $current_user, $read_only);
         $html .= '</div>';
@@ -302,7 +302,7 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
 
         );
 
-        $url = '?'. http_build_query(array(
+        $url = '?' . http_build_query(array(
             'report'   => $renderer->report->id,
             'renderer' => $renderer->id,
             'func'     => 'renderer',
@@ -340,8 +340,8 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
                 );
         }
 
-        $delete_chart_url = $url .'&renderer_plugin_graphontrackersv5[delete_chart]['. $this->getId() .']';
-        $edit_chart_url   = $url .'&renderer_plugin_graphontrackersv5[edit_chart]='. $this->getId();
+        $delete_chart_url = $url . '&renderer_plugin_graphontrackersv5[delete_chart][' . $this->getId() . ']';
+        $edit_chart_url   = $url . '&renderer_plugin_graphontrackersv5[edit_chart]=' . $this->getId();
 
         $my_dashboards_presenters    = $this->getAvailableDashboardsForUser($current_user);
         $project_dashboard_presenter = $this->getAvailableDashboardsForProject($project);

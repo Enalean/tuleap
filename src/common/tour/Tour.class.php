@@ -62,13 +62,13 @@ class Tuleap_Tour
         <div class="popover-content"></div>
         <div class="popover-navigation">
             <button class="btn btn-small" data-role="prev">
-                '. $GLOBALS['Language']->getText('tour', 'previous_button') .'
+                ' . $GLOBALS['Language']->getText('tour', 'previous_button') . '
             </button>
             <button class="btn btn-small" data-role="next">
-                '. $GLOBALS['Language']->getText('tour', 'next_button') .'
+                ' . $GLOBALS['Language']->getText('tour', 'next_button') . '
             </button>
             <button class="btn btn-small" data-role="end">
-                '. $GLOBALS['Language']->getText('tour', 'end_button') .'
+                ' . $GLOBALS['Language']->getText('tour', 'end_button') . '
             </button>
             <div style="clear: both"></div>
         </div>

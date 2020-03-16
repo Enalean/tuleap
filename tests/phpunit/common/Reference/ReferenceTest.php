@@ -51,13 +51,13 @@ final class ReferenceTest extends TestCase
     {
         // Test with full list
         $ref = new Reference(1, "test", "Goto test", '/test/?proj=$projname&param1=$1&param5=$5&param3=$3&param4=$4&param2=$2&testname=$0&group_id=$group_id', 'P', 'tracker', 'artifact', 1, 101);
-        $args=array('arg1','arg2','arg3','arg4','arg5');
+        $args = array('arg1','arg2','arg3','arg4','arg5');
         $ref->replaceLink($args, 'name');
         $this->assertSame('/test/?proj=name&param1=arg1&param5=arg5&param3=arg3&param4=arg4&param2=arg2&testname=test&group_id=101', $ref->getLink());
 
         // real one
         $ref = new Reference(1, "art", "Goto artifact", '/tracker/?func=detail&aid=$1&group_id=$group_id', 'S', 'tracker', 'artifact', 1, 101);
-        $args=array(1000);
+        $args = array(1000);
         $ref->replaceLink($args);
         $this->assertSame('/tracker/?func=detail&aid=1000&group_id=101', $ref->getLink());
     }

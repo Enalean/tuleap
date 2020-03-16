@@ -47,8 +47,8 @@ class Docman_View_ParentsTree /* implements Visitor*/
         $html .= '<div id="docman_new_item_location_position_panel" style="border-top:1px solid #e7e7e7">Position : ';
         $html .= '<span id="docman_new_item_location_position">';
         $html .= '<select id="docman_item_ordering" name="ordering">';
-        $html .= '<option value="beginning">'. dgettext('tuleap-docman', 'At the beginning') .'</option>';
-        $html .= '<option value="end">'. dgettext('tuleap-docman', 'At the end') .'</option>';
+        $html .= '<option value="beginning">' . dgettext('tuleap-docman', 'At the beginning') . '</option>';
+        $html .= '<option value="end">' . dgettext('tuleap-docman', 'At the end') . '</option>';
         $html .= '</select>';
         $html .= '</span>';
         $html .= '</div>';
@@ -67,12 +67,12 @@ class Docman_View_ParentsTree /* implements Visitor*/
         $disabled = ($this->docman->userCanWrite($folder['id'])) ? '' : 'disabled="disabled"';
         $label_classes = $selected ? 'docman_item_actual_parent' : '';
 
-        $h  = '<li  class="'. Docman_View_Browse::getItemClasses(array('is_last' => $params['is_last'])) .'">';
-        $h .= '<label for="item_parent_id_'. $folder['id'] .'" class="'. $label_classes .'" >';
-        $h .= '<input type="radio" '. $selected .' name="'. $params['input_name'] .'" value="'. $folder['id'] .'" id="item_parent_id_'. $folder['id'] .'" '. $disabled .' />';
-        $h .= '<img src="'. $folder['icon_src'] .'" class="docman_item_icon" />';
-        $h .=  $hp->purify($folder['title'], CODENDI_PURIFIER_CONVERT_HTML)  .'</label>';
-        $h .= '<script type="text/javascript">docman.addParentFoldersForNewItem('. $folder['id'] .', '. $folder['parent_id'] .", '".  $hp->purify(addslashes($folder['title']), CODENDI_PURIFIER_CONVERT_HTML) ."');</script>\n";
+        $h  = '<li  class="' . Docman_View_Browse::getItemClasses(array('is_last' => $params['is_last'])) . '">';
+        $h .= '<label for="item_parent_id_' . $folder['id'] . '" class="' . $label_classes . '" >';
+        $h .= '<input type="radio" ' . $selected . ' name="' . $params['input_name'] . '" value="' . $folder['id'] . '" id="item_parent_id_' . $folder['id'] . '" ' . $disabled . ' />';
+        $h .= '<img src="' . $folder['icon_src'] . '" class="docman_item_icon" />';
+        $h .=  $hp->purify($folder['title'], CODENDI_PURIFIER_CONVERT_HTML)  . '</label>';
+        $h .= '<script type="text/javascript">docman.addParentFoldersForNewItem(' . $folder['id'] . ', ' . $folder['parent_id'] . ", '" .  $hp->purify(addslashes($folder['title']), CODENDI_PURIFIER_CONVERT_HTML) . "');</script>\n";
         $h .= '<ul class="docman_items">';
 
         $params['is_last'] = false;
@@ -85,7 +85,7 @@ class Docman_View_ParentsTree /* implements Visitor*/
             }
             $h .= $this->fetchFolder($item, $params);
         }
-        return $h.'</ul></li>';
+        return $h . '</ul></li>';
     }
 
     public function _itemCanBeFetched(&$item, $params)

@@ -64,7 +64,7 @@ EOT;
     {
         $res = $this->db->dbh->query($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while populate artifact prioritis: '.implode(', ', $this->db->dbh->errorInfo()));
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while populate artifact prioritis: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 }

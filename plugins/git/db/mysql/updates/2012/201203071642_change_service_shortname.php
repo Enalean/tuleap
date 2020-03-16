@@ -46,7 +46,7 @@ EOT;
         $sql = "UPDATE service SET short_name = 'plugin_git' WHERE short_name = 'git'";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while updating service short name: '.implode(', ', $this->db->dbh->errorInfo()));
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while updating service short name: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 }

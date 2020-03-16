@@ -146,7 +146,7 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
         // FIXME: this should be moved into WikiDB::normalize() or something...
         $dbi = $request->getDbh();
         $count = 0;
-        $list = HTML::ol(array('align'=>'left'));
+        $list = HTML::ol(array('align' => 'left'));
         $pages = $dbi->getAllPages('include_empty'); // Do we really want the empty ones too?
         while (($page = $pages->next())) {
             $pagename = $page->getName();
@@ -163,7 +163,7 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
         } else {
             return HTML(
                 fmt("Deleted %s pages with invalid names:", $count),
-                HTML::div(array('align'=>'left'), $list)
+                HTML::div(array('align' => 'left'), $list)
             );
         }
     }
@@ -176,7 +176,7 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
         $dbi = $request->getDbh();
         $count = 0;
         $notpurgable = 0;
-        $list = HTML::ol(array('align'=>'left'));
+        $list = HTML::ol(array('align' => 'left'));
         $pages = $dbi->getAllPages('include_empty');
         while (($page = $pages->next())) {
             if (!$page->exists() and ($links = $page->getBackLinks('include_empty')) and !$links->next()) {
@@ -185,9 +185,9 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
                     continue;
                 }
                 if ($dbi->purgePage($pagename)) {
-                    $list->pushContent(HTML::li($pagename.' '._("[purged]")));
+                    $list->pushContent(HTML::li($pagename . ' ' . _("[purged]")));
                 } else {
-                    $list->pushContent(HTML::li($pagename.' '._("[not purgable]")));
+                    $list->pushContent(HTML::li($pagename . ' ' . _("[not purgable]")));
                     $notpurgable++;
                 }
                 $count++;
@@ -199,7 +199,7 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
         } else {
             return HTML(
                 fmt("Deleted %s unreferenced pages:", $count),
-                HTML::div(array('align'=>'left'), $list),
+                HTML::div(array('align' => 'left'), $list),
                 ($notpurgable ?
                 fmt(
                     "The %d not-purgable pages/links are links in some page(s). You might want to edit them.",
@@ -213,7 +213,6 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
 
     public function _do_convert_cached_html(&$request, $args)
     {
-
         return $this->disabled("This action is blocked by administrator. Sorry for the inconvenience !");
     }
 
@@ -259,7 +258,7 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
                 if (!$prefs->get('userid')) {
                     $prefs->set('userid', $username);
                 }
-                $group = (int)(count($pagelist->_rows) / $pagelist->_group_rows);
+                $group = (int) (count($pagelist->_rows) / $pagelist->_group_rows);
                 $class = ($group % 2) ? 'oddrow' : 'evenrow';
                 $row = HTML::tr(array('class' => $class));
                 $page_handle = $dbi->getPage($username);
@@ -306,7 +305,7 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
             );
         }
     }
-};
+}
 
 require_once("lib/PageList.php");
 
@@ -324,7 +323,7 @@ class _PageList_Column_emailVerified extends _PageList_Column
     {
         $name = $prefs->get('userid');
         $input = HTML::input(array('type' => 'checkbox',
-                                   'name' => 'wikiadminutils[verified]['.$name.']',
+                                   'name' => 'wikiadminutils[verified][' . $name . ']',
                                    'value' => 1));
         if ($prefs->get('emailVerified')) {
             $input->setAttr('checked', '1');
@@ -333,7 +332,7 @@ class _PageList_Column_emailVerified extends _PageList_Column
             $input->setAttr('disabled', '1');
         }
         return HTML($input, HTML::input(array('type' => 'hidden',
-                           'name' => 'wikiadminutils[user]['.$name.']',
+                           'name' => 'wikiadminutils[user][' . $name . ']',
         'value' => $name)));
     }
 }

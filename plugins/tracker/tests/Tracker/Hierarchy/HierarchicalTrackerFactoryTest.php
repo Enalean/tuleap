@@ -20,7 +20,7 @@
 
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 
-require_once __DIR__.'/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 Mock::generate('Project');
 Mock::generate('TrackerFactory');
@@ -133,12 +133,12 @@ class HierarchicalTrackerFactoryTest extends TuleapTestCase
         );
 
         $expected_hierarchy = $this->getHierarchyAsTreeNode(array(
-            array('name' => 'Releases', 'id'=>1, 'children' => array(
-                array('name' => 'Sprints', 'id'=>2, 'children' => array(
-                    array('name' => 'Stories', 'id'=>3, 'children' => array(
-                        array('name' => 'Tasks', 'id'=>4, 'children' => array())
+            array('name' => 'Releases', 'id' => 1, 'children' => array(
+                array('name' => 'Sprints', 'id' => 2, 'children' => array(
+                    array('name' => 'Stories', 'id' => 3, 'children' => array(
+                        array('name' => 'Tasks', 'id' => 4, 'children' => array())
                     )),
-                    array('name' => 'Bugs', 'id'=>5, 'children' => array())
+                    array('name' => 'Bugs', 'id' => 5, 'children' => array())
                 ))
             )),
             array('name' => 'Documents', 'id' => 6, 'children' => array())
@@ -178,7 +178,7 @@ class HierarchicalTrackerFactoryTest extends TuleapTestCase
             4 => array(),
             5 => array(),
             6 => array(),
-            'root'=>array(1, 6)
+            'root' => array(1, 6)
         );
         $this->assertEqual($expected, $factory->getChildrenMapFromDar($hierarchy_dar, $project_trackers));
     }

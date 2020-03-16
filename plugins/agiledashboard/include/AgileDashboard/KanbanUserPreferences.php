@@ -80,6 +80,6 @@ class AgileDashboard_KanbanUserPreferences
 
     private function getCollapseColumnPreferenceName(AgileDashboard_Kanban $kanban, $column_id)
     {
-        return self::COLLAPSE_COLUMN_PREFERENCE_PREFIX . $kanban->getId() .'_'. $column_id;
+        return self::COLLAPSE_COLUMN_PREFERENCE_PREFIX . $kanban->getId() . '_' . $column_id;
     }
 }

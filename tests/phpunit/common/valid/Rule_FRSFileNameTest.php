@@ -41,13 +41,13 @@ class Rule_FRSFileNameTest extends TestCase
         $r = new Rule_FRSFileName();
 
         // start
-        $this->assertFalse($r->isValid($c.'tototutu'), $c." is not allowed");
+        $this->assertFalse($r->isValid($c . 'tototutu'), $c . " is not allowed");
 
         // middle
-        $this->assertFalse($r->isValid('toto'.$c.'tutu'), $c." is not allowed");
+        $this->assertFalse($r->isValid('toto' . $c . 'tutu'), $c . " is not allowed");
 
         // end
-        $this->assertFalse($r->isValid('tototutu'.$c), $c." is not allowed");
+        $this->assertFalse($r->isValid('tototutu' . $c), $c . " is not allowed");
     }
 
     public function testNameContainsInvalidCharacterAnywhere(): void

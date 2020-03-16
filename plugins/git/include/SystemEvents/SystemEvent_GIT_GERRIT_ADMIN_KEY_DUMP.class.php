@@ -65,7 +65,7 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP extends SystemEvent
         if ($this->ssh_key_dumper->dumpSSHKeys($replication_key, new InvalidKeysCollector())) {
             $this->done();
         } else {
-            $this->error('Impossible to dump replication ssh key for Gerrit server '.$server->getId());
+            $this->error('Impossible to dump replication ssh key for Gerrit server ' . $server->getId());
         }
     }
 
@@ -73,7 +73,7 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP extends SystemEvent
     {
         if ($with_link) {
             $server = $this->getServer();
-            return 'Update SSH replication key of gerrit server '. $server->getBaseUrl() .' (Id: '.$server->getId().')';
+            return 'Update SSH replication key of gerrit server ' . $server->getBaseUrl() . ' (Id: ' . $server->getId() . ')';
         } else {
             return $this->getServerId();
         }

@@ -48,7 +48,7 @@ final class UpdateProjectAccessFileSystemEvent extends \SystemEvent
     {
         $project_id = $this->getProjectIdFromParameters();
 
-        return 'Project: '.$this->verbalizeProjectId($project_id, $with_link);
+        return 'Project: ' . $this->verbalizeProjectId($project_id, $with_link);
     }
 
     public function injectDependencies(\ProjectManager $project_manager, EventDispatcherInterface $event_dispatcher): void

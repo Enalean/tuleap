@@ -128,7 +128,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
                 $this->forceTrackerSoThatFieldDoesNotLoadAFreshNewTrackerAndLooseTheDisabledStateOnWorkflow($field);
                 $this->appendValidValue($data, $field, $field_change, $submitted_by, $artifact);
             } else {
-                $this->logger->debug("Skipped unknown/unused field ".(string) $field_change['field_name']);
+                $this->logger->debug("Skipped unknown/unused field " . (string) $field_change['field_name']);
             }
         }
         return $data;
@@ -155,12 +155,12 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
                 if (is_array($submitted_value)) {
                     $invalid_submitted_value = implode(', ', $submitted_value);
                 } else {
-                    $invalid_submitted_value = (string)$submitted_value;
+                    $invalid_submitted_value = (string) $submitted_value;
                 }
-                $this->logger->warning("Skipped invalid value $invalid_submitted_value for field ".$field->getName());
+                $this->logger->warning("Skipped invalid value $invalid_submitted_value for field " . $field->getName());
             }
         } catch (Tracker_Artifact_XMLImport_Exception_NoValidAttachementsException $exception) {
-            $this->logger->warning("Skipped invalid value for field ".$field->getName().': '.$exception->getMessage());
+            $this->logger->warning("Skipped invalid value for field " . $field->getName() . ': ' . $exception->getMessage());
         }
     }
 
@@ -183,7 +183,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
         PFUser $submitted_by,
         Tracker_Artifact $artifact
     ) {
-        $type = (string)$field_change['type'];
+        $type = (string) $field_change['type'];
 
         if (! isset($this->strategies[$type])) {
             throw new Tracker_Artifact_XMLImport_Exception_StrategyDoesNotExistException();

@@ -44,6 +44,6 @@ EOF;
             $config_file_content
         );
 
-        system('chown -R codendiadm:codendiadm ' . escapeshellarg($plugin->getPluginEtcRoot()). '/../');
+        system('chown -R codendiadm:codendiadm ' . escapeshellarg($plugin->getPluginEtcRoot()) . '/../');
     }
 }

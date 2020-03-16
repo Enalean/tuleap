@@ -31,7 +31,7 @@ class BaseLanguage
     public const DEFAULT_LANG = 'en_US';
 
     //array to hold the string values
-    public $text_array ;
+    public $text_array;
     public $lang;
     public $name;
     public $id;
@@ -117,7 +117,7 @@ class BaseLanguage
      */
     public function loadCoreSiteContent($lang, &$text_array)
     {
-        $this->loadAllTabFiles($GLOBALS['sys_incdir'].'/'.$lang, $text_array);
+        $this->loadAllTabFiles($GLOBALS['sys_incdir'] . '/' . $lang, $text_array);
     }
 
     /**
@@ -125,7 +125,7 @@ class BaseLanguage
      */
     public function loadCustomSiteContent($lang, &$text_array)
     {
-        $this->loadAllTabFiles($GLOBALS['sys_custom_incdir'].'/'.$lang, $text_array);
+        $this->loadAllTabFiles($GLOBALS['sys_custom_incdir'] . '/' . $lang, $text_array);
     }
 
     /**
@@ -161,12 +161,12 @@ class BaseLanguage
         if (is_dir($basedir)) {
             $fd = opendir($basedir);
             while (false !== ($file = readdir($fd))) {
-                if (is_dir($basedir.'/'.$file)
+                if (is_dir($basedir . '/' . $file)
                    && $file != '.'
                    && $file != '..'
                    && $file != '.svn'
                    && $file != 'CVS') {
-                    $location = $basedir.'/'.$file.'/site-content/'.$lang;
+                    $location = $basedir . '/' . $file . '/site-content/' . $lang;
                     if (is_dir($location)) {
                         $this->loadAllTabFiles($location, $text_array);
                     }
@@ -185,13 +185,13 @@ class BaseLanguage
             $fd = opendir($basedir);
             while (false !== ($file = readdir($fd))) {
                 if (preg_match('/\.tab$/', $file)) {
-                    $this->parseLanguageFile($basedir.'/'.$file, $text_array);
-                } elseif (is_dir($basedir.'/'.$file)
+                    $this->parseLanguageFile($basedir . '/' . $file, $text_array);
+                } elseif (is_dir($basedir . '/' . $file)
                        && $file != '.'
                        && $file != '..'
                        && $file != '.svn'
                        && $file != 'CVS') {
-                    $this->loadAllTabFiles($basedir.'/'.$file, $text_array);
+                    $this->loadAllTabFiles($basedir . '/' . $file, $text_array);
                 }
             }
             closedir($fd);
@@ -209,8 +209,8 @@ class BaseLanguage
             mkdir($this->getCacheDirectory(), 0755);
         }
 
-        $path = $this->getCacheDirectory().DIRECTORY_SEPARATOR.$lang.'.php';
-        $content = '<?php'.PHP_EOL.'return '.VarExporter::export($text_array).';';
+        $path = $this->getCacheDirectory() . DIRECTORY_SEPARATOR . $lang . '.php';
+        $content = '<?php' . PHP_EOL . 'return ' . VarExporter::export($text_array) . ';';
         try {
             FileWriter::writeFile($path, $content);
         } catch (ExceptionInterface $e) {
@@ -224,7 +224,7 @@ class BaseLanguage
     public function parseLanguageFile($fname, &$text_array)
     {
         $ary = @file($fname, 1);
-        for ($i=0; $i<sizeof($ary); $i++) {
+        for ($i = 0; $i < sizeof($ary); $i++) {
             if (substr($ary[$i], 0, 1) == '#' ||  //ignore comments...
                 strlen(trim($ary[$i])) == 0) {    //...or empty lines
                 continue;
@@ -234,7 +234,7 @@ class BaseLanguage
             if (count($line) === 3) {
                 $text_array[$line[0]][$line[1]] = chop(str_replace('\n', "\n", ($line[2])));
             } else {
-                echo '* Error in '.$fname.' line '.$i.' string "'.trim($ary[$i]).'" (length: '.strlen(trim($ary[$i])).') : ';
+                echo '* Error in ' . $fname . ' line ' . $i . ' string "' . trim($ary[$i]) . '" (length: ' . strlen(trim($ary[$i])) . ') : ';
                 if (!isset($line[0])) {
                     echo "no index 0: empty line ? ";
                 } elseif (!isset($line[1])) {
@@ -242,7 +242,7 @@ class BaseLanguage
                 } elseif (!isset($line[2])) {
                     echo "no index 2: keys present but string is missing ";
                 }
-                echo "<br>".PHP_EOL;
+                echo "<br>" . PHP_EOL;
             }
         }
     }
@@ -266,7 +266,7 @@ class BaseLanguage
      */
     private function loadFromSerialized($lang)
     {
-        $filepath = $this->getCacheDirectory().DIRECTORY_SEPARATOR.$lang.'.php';
+        $filepath = $this->getCacheDirectory() . DIRECTORY_SEPARATOR . $lang . '.php';
         if (is_file($filepath)) {
             $this->text_array = require $filepath;
             return true;
@@ -298,7 +298,7 @@ class BaseLanguage
                 $nb_args = count($args);
             }
             for ($i = 1; $i <= $nb_args + 1; $i++) {
-                $patterns[] = '/\$'.$i.'/';
+                $patterns[] = '/\$' . $i . '/';
             }
             $tstring = preg_replace($patterns, $args, $this->text_array[$pagename][$category]);
         } else {
@@ -335,7 +335,6 @@ class BaseLanguage
     // PHP code that can be cutomized
     public function getContent($file, $lang_code = null, $plugin_name = null, $ext = '.txt')
     {
-
         // Language for current user unless it is specified in the param list
         if (!isset($lang_code)) {
             $lang_code = $this->lang;
@@ -343,9 +342,9 @@ class BaseLanguage
 
         if (is_null($plugin_name)) {
             // Test first the custom directory
-            $custom_fn = $GLOBALS['sys_custom_incdir']."/".$lang_code."/".$file.$ext;
+            $custom_fn = $GLOBALS['sys_custom_incdir'] . "/" . $lang_code . "/" . $file . $ext;
         } else {
-            $custom_fn = $GLOBALS['sys_custompluginsroot'].'/'.$plugin_name.'/site-content/'.$lang_code.'/'.$file.$ext ;
+            $custom_fn = $GLOBALS['sys_custompluginsroot'] . '/' . $plugin_name . '/site-content/' . $lang_code . '/' . $file . $ext;
         }
         if (file_exists($custom_fn)) {
             // The custom file exists.
@@ -354,9 +353,9 @@ class BaseLanguage
             // Use the default file
             // Check first if exist
             if (is_null($plugin_name)) {
-                $fn = $GLOBALS['sys_incdir']."/".$lang_code."/".$file.$ext;
+                $fn = $GLOBALS['sys_incdir'] . "/" . $lang_code . "/" . $file . $ext;
             } else {
-                $fn = $GLOBALS['sys_pluginsroot'].'/'.$plugin_name.'/site-content/'.$lang_code.'/'.$file.$ext;
+                $fn = $GLOBALS['sys_pluginsroot'] . '/' . $plugin_name . '/site-content/' . $lang_code . '/' . $file . $ext;
             }
             if (file_exists($fn)) {
                 // The custom file exists.
@@ -364,7 +363,7 @@ class BaseLanguage
             } else {
                 if ($lang_code == self::DEFAULT_LANG) {
                     // return empty content to avoid include error
-                    return $GLOBALS['sys_incdir']."/".$lang_code."/others/empty.txt";
+                    return $GLOBALS['sys_incdir'] . "/" . $lang_code . "/others/empty.txt";
                 } else {
                     // else try to find the file in the en_US directory
                     return $this->getContent($file, "en_US", $plugin_name, $ext);
@@ -503,17 +502,17 @@ class BaseLanguage
 
     public function invalidateCache()
     {
-        foreach (glob($this->getCacheDirectory().DIRECTORY_SEPARATOR.'*.php') as $file) {
+        foreach (glob($this->getCacheDirectory() . DIRECTORY_SEPARATOR . '*.php') as $file) {
             unlink($file);
         }
-        foreach (glob($this->getCacheDirectory().DIRECTORY_SEPARATOR.'*.bin') as $file) {
+        foreach (glob($this->getCacheDirectory() . DIRECTORY_SEPARATOR . '*.bin') as $file) {
             unlink($file);
         }
     }
 
     public function getCacheDirectory()
     {
-        return ForgeConfig::getCacheDir().DIRECTORY_SEPARATOR.'lang';
+        return ForgeConfig::getCacheDir() . DIRECTORY_SEPARATOR . 'lang';
     }
 
     public function getOverridableText($pagename, $category, $args = "")

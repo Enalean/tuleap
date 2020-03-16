@@ -33,7 +33,7 @@ if ($request->isSecure() || ForgeConfig::get('sys_https_host')) {
 }
 $default_domain = ForgeConfig::get('sys_default_domain');
 
-$uri = $protocol.'://'.$default_domain.'/soap/svn';
+$uri = $protocol . '://' . $default_domain . '/soap/svn';
 
 $serviceClass = 'SVN_SOAPServer';
 
@@ -54,7 +54,7 @@ if ($request->exist('wsdl')) {
     $svn_repository_listing = new SVN_RepositoryListing(new SVN_PermissionsManager(), new SVN_Svnlook(), $user_manager);
 
     $server = new TuleapSOAPServer(
-        $uri.'/?wsdl',
+        $uri . '/?wsdl',
         array('cache_wsdl' => WSDL_CACHE_NONE)
     );
     $server->setClass($serviceClass, $soap_request_validator, $svn_repository_listing);

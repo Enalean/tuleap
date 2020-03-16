@@ -62,7 +62,6 @@ final class Tracker_Permission_PermissionChecker_SubmitterOnlyTest extends \PHPU
 
     protected function setUp(): void
     {
-
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getID')->andReturns(120);
         $project->shouldReceive('isPublic')->andReturns(true);

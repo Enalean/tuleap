@@ -38,7 +38,7 @@ final class POTFileDumperTest extends \PHPUnit\Framework\TestCase
 
     public function testItDumpsAnEmptyPot() : void
     {
-        $path       = $this->tmp_dir .'/template.pot';
+        $path       = $this->tmp_dir . '/template.pot';
         $dumper     = new POTFileDumper();
         $collection = new POTEntryCollection('whatever');
 
@@ -49,7 +49,7 @@ final class POTFileDumperTest extends \PHPUnit\Framework\TestCase
 
     public function testItDumpsOneSingularEntry() : void
     {
-        $path       = $this->tmp_dir .'/template.pot';
+        $path       = $this->tmp_dir . '/template.pot';
         $dumper     = new POTFileDumper();
         $collection = new POTEntryCollection('whatever');
         $collection->add('whatever', new POTEntry('whenever, wherever', ''));
@@ -73,7 +73,7 @@ final class POTFileDumperTest extends \PHPUnit\Framework\TestCase
 
     public function testItDumpsTwoSingularEntries() : void
     {
-        $path       = $this->tmp_dir .'/template.pot';
+        $path       = $this->tmp_dir . '/template.pot';
         $dumper     = new POTFileDumper();
         $collection = new POTEntryCollection('whatever');
         $collection->add('whatever', new POTEntry('whenever, wherever', ''));
@@ -101,7 +101,7 @@ final class POTFileDumperTest extends \PHPUnit\Framework\TestCase
 
     public function testItDumpsPluralStrings() : void
     {
-        $path       = $this->tmp_dir .'/template.pot';
+        $path       = $this->tmp_dir . '/template.pot';
         $dumper     = new POTFileDumper();
         $collection = new POTEntryCollection('whatever');
         $collection->add('whatever', new POTEntry('singular', 'plural'));
@@ -127,7 +127,7 @@ final class POTFileDumperTest extends \PHPUnit\Framework\TestCase
 
     public function testItShouldEscapeDoubleQuote() : void
     {
-        $path       = $this->tmp_dir .'/template.pot';
+        $path       = $this->tmp_dir . '/template.pot';
         $dumper     = new POTFileDumper();
         $collection = new POTEntryCollection('whatever');
         $collection->add('whatever', new POTEntry('" should be written escaped', ''));
@@ -151,7 +151,7 @@ final class POTFileDumperTest extends \PHPUnit\Framework\TestCase
 
     public function testItShouldEscapeAntislash() : void
     {
-        $path       = $this->tmp_dir .'/template.pot';
+        $path       = $this->tmp_dir . '/template.pot';
         $dumper     = new POTFileDumper();
         $collection = new POTEntryCollection('whatever');
         $collection->add('whatever', new POTEntry('\\ should be written escaped', ''));
@@ -175,7 +175,7 @@ final class POTFileDumperTest extends \PHPUnit\Framework\TestCase
 
     public function testItShouldEscapeNewline() : void
     {
-        $path       = $this->tmp_dir .'/template.pot';
+        $path       = $this->tmp_dir . '/template.pot';
         $dumper     = new POTFileDumper();
         $collection = new POTEntryCollection('whatever');
         $collection->add('whatever', new POTEntry("\n should be written escaped", ''));

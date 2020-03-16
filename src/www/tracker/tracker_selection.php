@@ -62,7 +62,7 @@ if ($trackers_array !== false) {
            $hp = Codendi_HTMLPurifier::instance();
 
     foreach ($trackers_array as $tracker) {
-        echo '<option value="'. (int)$tracker->getId().'">'. $hp->purify($tracker->getName()) .'</option>';
+        echo '<option value="' . (int) $tracker->getId() . '">' . $hp->purify($tracker->getName()) . '</option>';
         $count ++;
     }
 }

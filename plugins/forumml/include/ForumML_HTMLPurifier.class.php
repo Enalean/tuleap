@@ -61,7 +61,6 @@ class ForumML_HTMLPurifier extends Codendi_HTMLPurifier
      */
     public function getForumMLConfig()
     {
-
         $config = $this->getCodendiConfig();
         // allow <blockquote> html tag, used to display ForumML messages replies
         $config->set('HTML', 'AllowedElements', 'blockquote');

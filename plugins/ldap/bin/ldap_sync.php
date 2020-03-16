@@ -43,27 +43,27 @@ if ($pluginManager->isPluginAvailable($ldapPlugin)) {
             echo "No user will be suspended \n";
             return;
         }
-        $percentage_users_to_suspend = ($nbr_users_to_suspend / $nbr_active_users) *100;
-        echo "Number of users that will be suspended     : ".$nbr_users_to_suspend."\n";
-        echo "Number of active users                     : ".$nbr_active_users."\n";
+        $percentage_users_to_suspend = ($nbr_users_to_suspend / $nbr_active_users) * 100;
+        echo "Number of users that will be suspended     : " . $nbr_users_to_suspend . "\n";
+        echo "Number of active users                     : " . $nbr_active_users . "\n";
         if (!$threshold_users_suspension = $ldapPlugin->getLdap()->getLDAPParam('threshold_users_suspension')) {
             echo "Threshold                                  : Is Not defined \n";
         } else {
-            echo "Threshold                                  : ".$threshold_users_suspension." % \n";
+            echo "Threshold                                  : " . $threshold_users_suspension . " % \n";
         }
-        echo "Percentage of users that will be suspended : ".$percentage_users_to_suspend." % \n";
+        echo "Percentage of users that will be suspended : " . $percentage_users_to_suspend . " % \n";
         echo "--------------------------------------------------- List of users that will be suspended :  \n";
         foreach ($users_to_suspend as $user) {
-            echo "id     : ".$user->getId()."\n";
-            echo "login  : ".$user->getUserName()."\n";
-            echo "name   : ".$user->getRealName()."\n";
-            echo "e-mail : ".$user->getEmail()."\n";
+            echo "id     : " . $user->getId() . "\n";
+            echo "login  : " . $user->getUserName() . "\n";
+            echo "name   : " . $user->getRealName() . "\n";
+            echo "e-mail : " . $user->getEmail() . "\n";
             echo "--------------------------------------------------- \n";
         }
     } else {
         $ldapQuery->syncAll();
         $retentionPeriod = $ldapPlugin->getLdap()->getLDAPParam('daily_sync_retention_period');
-        if ($retentionPeriod != null && $retentionPeriod!= "") {
+        if ($retentionPeriod != null && $retentionPeriod != "") {
             $user_remover = new \Tuleap\Project\UserRemover(
                 ProjectManager::instance(),
                 EventManager::instance(),
@@ -81,7 +81,7 @@ if ($pluginManager->isPluginAvailable($ldapPlugin)) {
         $time_end = microtime(true);
         $time = $time_end - $time_start;
 
-        echo "Time elapsed: ".$time."\n";
-        echo "LDAP time: ".$ldapQuery->getElapsedLdapTime()."\n";
+        echo "Time elapsed: " . $time . "\n";
+        echo "LDAP time: " . $ldapQuery->getElapsedLdapTime() . "\n";
     }
 }

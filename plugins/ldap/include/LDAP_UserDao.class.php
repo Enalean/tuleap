@@ -57,12 +57,12 @@ class LDAP_UserDao extends DataAccessObject
      */
     public function alreadyLoggedInOnce($userId)
     {
-        $sql = 'SELECT NULL'.
-            ' FROM plugin_ldap_user ldap_u'.
-            '   INNER JOIN user u USING (user_id)'.
-            ' WHERE u.user_id = '.$this->da->escapeInt($userId).
-            ' AND u.ldap_id != ""'.
-            ' AND u.ldap_id IS NOT NULL'.
+        $sql = 'SELECT NULL' .
+            ' FROM plugin_ldap_user ldap_u' .
+            '   INNER JOIN user u USING (user_id)' .
+            ' WHERE u.user_id = ' . $this->da->escapeInt($userId) .
+            ' AND u.ldap_id != ""' .
+            ' AND u.ldap_id IS NOT NULL' .
             ' AND login_confirmation_date = 0';
 
         $dar = $this->retrieve($sql);
@@ -83,10 +83,10 @@ class LDAP_UserDao extends DataAccessObject
      */
     public function createLdapUser($userId, $date = 0, $ldap_uid = "")
     {
-        $sql = 'INSERT INTO plugin_ldap_user'.
-            '(user_id, login_confirmation_date, ldap_uid)'.
-            ' VALUES '.
-            '('.db_ei($userId).','.db_ei($date).',"'.db_es($ldap_uid).'")';
+        $sql = 'INSERT INTO plugin_ldap_user' .
+            '(user_id, login_confirmation_date, ldap_uid)' .
+            ' VALUES ' .
+            '(' . db_ei($userId) . ',' . db_ei($date) . ',"' . db_es($ldap_uid) . '")';
         return $this->update($sql);
     }
 
@@ -100,9 +100,9 @@ class LDAP_UserDao extends DataAccessObject
      */
     public function setLoginDate($userId, $date)
     {
-        $sql = 'UPDATE plugin_ldap_user'.
-            ' SET login_confirmation_date = '.db_ei($date).
-            ' WHERE user_id = '.db_ei($userId);
+        $sql = 'UPDATE plugin_ldap_user' .
+            ' SET login_confirmation_date = ' . db_ei($date) .
+            ' WHERE user_id = ' . db_ei($userId);
         $updated = $this->update($sql);
         if (!$updated) {
             // Try to insert
@@ -122,13 +122,13 @@ class LDAP_UserDao extends DataAccessObject
      */
     public function userNameIsAvailable($name)
     {
-        $sql = 'SELECT user_name'.
-            ' FROM user'.
-            ' WHERE user_name LIKE '.$this->da->quoteSmart($name, array('force_string'));
+        $sql = 'SELECT user_name' .
+            ' FROM user' .
+            ' WHERE user_name LIKE ' . $this->da->quoteSmart($name, array('force_string'));
         if ($this->retrieve($sql)->rowCount() === 0) {
-            $sql = 'SELECT group_id'.
-                ' FROM groups'.
-                ' WHERE unix_group_name LIKE '.$this->da->quoteSmart($name, array('force_string'));
+            $sql = 'SELECT group_id' .
+                ' FROM groups' .
+                ' WHERE unix_group_name LIKE ' . $this->da->quoteSmart($name, array('force_string'));
             if ($this->retrieve($sql)->rowCount() === 0) {
                 return true;
             }

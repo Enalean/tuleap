@@ -46,7 +46,7 @@ class ErrorRendering
             ]
         );
 
-        $renderer = \TemplateRendererFactory::build()->getRenderer(__DIR__.'/../../templates/common');
+        $renderer = \TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/common');
         $renderer->renderToPage('http_error', $this->presenter);
         $layout->footer([]);
     }

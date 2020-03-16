@@ -65,7 +65,7 @@ class ArtifactFieldSetFactory
     {
         if ($ArtifactType) {
             if ($ArtifactType->isError()) {
-                $this->setError('ArtifactFieldSetFactory:: '.$ArtifactType->getErrorMessage());
+                $this->setError('ArtifactFieldSetFactory:: ' . $ArtifactType->getErrorMessage());
                 return false;
             }
             $this->ArtifactType = $ArtifactType;
@@ -94,10 +94,9 @@ class ArtifactFieldSetFactory
      */
     public function fetchData($group_artifact_id)
     {
-
         $sql = "SELECT *
                 FROM artifact_field_set
-                WHERE group_artifact_id=". db_ei($group_artifact_id) ."
+                WHERE group_artifact_id=" . db_ei($group_artifact_id) . "
                 ORDER BY rank";
 
         //echo $sql;
@@ -131,7 +130,7 @@ class ArtifactFieldSetFactory
 
         $sql = "SELECT *
                 FROM artifact_field_set
-                WHERE group_artifact_id='". db_ei($group_artifact_id) ."'
+                WHERE group_artifact_id='" . db_ei($group_artifact_id) . "'
                 ORDER BY rank ASC";
 
         $result = db_query($sql);
@@ -139,7 +138,7 @@ class ArtifactFieldSetFactory
         $myArtifactFieldSets = array();
 
         if (!$result || $rows < 1) {
-            $this->setError($Language->getText('tracker_common_type', 'none_found').' '.db_error());
+            $this->setError($Language->getText('tracker_common_type', 'none_found') . ' ' . db_error());
             return false;
         } else {
             while ($arr = db_fetch_array($result)) {
@@ -260,22 +259,21 @@ class ArtifactFieldSetFactory
      */
     public function createFieldSet($fieldset_name, $description, $rank)
     {
-
         global $Language;
 
         // Check arguments
-        if ($fieldset_name=="") {
+        if ($fieldset_name == "") {
             $this->setError($Language->getText('tracker_common_fieldset_factory', 'label_requ'));
             return false;
         }
 
         // Default values
-        $description = ($description?$description:"");
-        $rank = ($rank?$rank:0);
+        $description = ($description ? $description : "");
+        $rank = ($rank ? $rank : 0);
 
         // create the artifact_field_set
         $sql = "INSERT INTO artifact_field_set (group_artifact_id, name, description, rank)
-                VALUES (". db_ei($this->ArtifactType->getID()) .",'". db_es($fieldset_name) ."','". db_es($description) ."',". db_ei($rank) .")";
+                VALUES (" . db_ei($this->ArtifactType->getID()) . ",'" . db_es($fieldset_name) . "','" . db_es($description) . "'," . db_ei($rank) . ")";
 
         $res_insert = db_query($sql);
         if (!$res_insert || db_affected_rows($res_insert) <= 0) {
@@ -297,27 +295,26 @@ class ArtifactFieldSetFactory
      */
     public function deleteFieldSet($field_set_id)
     {
-
         global $Language;
 
         // Check if the field set contains no field
         $sql = "SELECT field_id, label
                 FROM artifact_field
-                WHERE group_artifact_id='".  db_ei($this->ArtifactType->getID())  ."' AND
-                      field_set_id='". db_ei($field_set_id) ."'";
+                WHERE group_artifact_id='" .  db_ei($this->ArtifactType->getID())  . "' AND
+                      field_set_id='" . db_ei($field_set_id) . "'";
 
         $result = db_query($sql);
         $num_rows = db_numrows($result);
         if ($num_rows != 0) {
-            $this->setError($Language->getText('tracker_common_fieldset_factory', 'delete_only_empty_fieldset').' '.db_error());
+            $this->setError($Language->getText('tracker_common_fieldset_factory', 'delete_only_empty_fieldset') . ' ' . db_error());
             return false;
         } else {
             // Delete the FieldSet
             $sql = "DELETE FROM artifact_field_set
-                    WHERE field_set_id=".  db_ei($field_set_id) ;
+                    WHERE field_set_id=" .  db_ei($field_set_id);
             $result = db_query($sql);
             if (!$result || db_affected_rows($result) <= 0) {
-                $this->setError('Error: deleteArtifactFieldSet '.db_error());
+                $this->setError('Error: deleteArtifactFieldSet ' . db_error());
                 return false;
             }
         }
@@ -333,7 +330,7 @@ class ArtifactFieldSetFactory
     {
      // Delete artifact_field_set records
         $artifact_type = $this->getArtifactType();
-        $sql = 'DELETE FROM artifact_field_set WHERE group_artifact_id='. db_ei($artifact_type->getID()) ;
+        $sql = 'DELETE FROM artifact_field_set WHERE group_artifact_id=' . db_ei($artifact_type->getID());
 
      //echo $sql;
 
@@ -359,17 +356,17 @@ class ArtifactFieldSetFactory
         global $Language;
         // Copy the field_sets
         $fieldset_id_source_dest_array = array();
-        $sql_source_fieldset = "SELECT field_set_id, name, description, rank FROM artifact_field_set WHERE group_artifact_id=". db_ei($atid_source) ;
+        $sql_source_fieldset = "SELECT field_set_id, name, description, rank FROM artifact_field_set WHERE group_artifact_id=" . db_ei($atid_source);
         $res_source_fieldset = db_query($sql_source_fieldset);
         while ($fieldset_source_array = db_fetch_array($res_source_fieldset)) {
             // For each fieldset of the source tracker, we create a new fieldset in the dest tracker,
             // And we remember the association source_fieldset_id <=> dest_fieldset_id to build
             // the association in the copied fields
             // Create a new FieldSet, with the same values than the source one
-            $sql_insert_fieldset = "INSERT INTO artifact_field_set VALUES ('', ". db_ei($atid_dest) .", '".
-                db_es($fieldset_source_array['name'])."', '".
-                db_es($fieldset_source_array['description'])."', ".
-                db_ei($fieldset_source_array['rank']) .")";
+            $sql_insert_fieldset = "INSERT INTO artifact_field_set VALUES ('', " . db_ei($atid_dest) . ", '" .
+                db_es($fieldset_source_array['name']) . "', '" .
+                db_es($fieldset_source_array['description']) . "', " .
+                db_ei($fieldset_source_array['rank']) . ")";
             $res_insert_fieldset = db_query($sql_insert_fieldset);
             if (!$res_insert_fieldset || db_affected_rows($res_insert_fieldset) <= 0) {
                 $this->setError($Language->getText('tracker_common_fieldset_factory', 'ins_err', array($fieldset_source_array["field_set_id"],$atid_dest,db_error())));

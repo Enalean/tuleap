@@ -61,12 +61,12 @@ function doPgsrcUpdate(&$request, $pagename, $path, $filename, $checkonly = fals
         // check mtime: update automatically if pgsrc is newer
         $rev = $page->getCurrentRevision();
         $page_mtime = $rev->get('mtime');
-        $data  = implode("", file($path."/".$filename));
+        $data  = implode("", file($path . "/" . $filename));
         if (($parts = ParseMimeifiedPages($data))) {
             usort($parts, 'SortByPageVersion');
             reset($parts);
             $pageinfo = $parts[0];
-            $stat  = stat($path."/".$filename);
+            $stat  = stat($path . "/" . $filename);
             $new_mtime = @$pageinfo['versiondata']['mtime'];
             if (!$new_mtime) {
                 $new_mtime = @$pageinfo['versiondata']['lastmodified'];
@@ -81,7 +81,7 @@ function doPgsrcUpdate(&$request, $pagename, $path, $filename, $checkonly = fals
                 echo "$path/$pagename: ",_("newer than the existing page."),
                     _(" replace "),"($new_mtime &gt; $page_mtime)","<br />\n";
                 if (!$checkonly) {
-                    LoadAny($request, $path."/".$filename);
+                    LoadAny($request, $path . "/" . $filename);
                 }
                 echo "<br />\n";
             } else {
@@ -95,7 +95,7 @@ function doPgsrcUpdate(&$request, $pagename, $path, $filename, $checkonly = fals
     } else {
         echo sprintf(_("%s does not exist"), $pagename),"<br />\n";
         if (!$checkonly) {
-            LoadAny($request, $path."/".$filename);
+            LoadAny($request, $path . "/" . $filename);
         }
         echo "<br />\n";
     }
@@ -116,7 +116,7 @@ function isActionPage($filename)
     if (isset($special[$base])) {
         return $special[$base];
     }
-    if (FindFile("lib/plugin/".$base.".php", true)) {
+    if (FindFile("lib/plugin/" . $base . ".php", true)) {
         return $base;
     } else {
         return false;
@@ -146,7 +146,7 @@ function CheckActionPageUpdate(&$request, $checkonly = false)
                     $filename,
                     $checkonly
                 );
-            } elseif (FindLocalizedFile('pgsrc/'.urlencode($translation), 1)) {
+            } elseif (FindLocalizedFile('pgsrc/' . urlencode($translation), 1)) {
                 doPgsrcUpdate(
                     $request,
                     $translation,
@@ -296,7 +296,6 @@ class Upgrade_CheckDatabaseUpdate extends Upgrade {
  */
 function DoUpgrade($request)
 {
-
     if (!$request->_user->isAdmin()) {
         $request->_notAuthorized(WIKIAUTH_ADMIN);
         $request->finish(

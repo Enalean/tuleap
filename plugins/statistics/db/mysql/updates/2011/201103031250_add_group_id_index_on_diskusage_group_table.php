@@ -37,7 +37,7 @@ EOT;
     public function up()
     {
         $this->log->warn('Following operations might take a while, please be patient...');
-        $sql = 'ALTER TABLE plugin_statistics_diskusage_group'.
+        $sql = 'ALTER TABLE plugin_statistics_diskusage_group' .
                ' ADD INDEX idx_group_id_date (group_id, date)';
         $this->db->addIndex('plugin_statistics_diskusage_group', 'idx_group_id_date', $sql);
     }

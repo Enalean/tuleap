@@ -193,7 +193,7 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
 
     public function getProperties()
     {
-        $parent_properties=parent::getProperties();
+        $parent_properties = parent::getProperties();
         unset($parent_properties['dimensions']);
         return array_merge(
             $parent_properties,
@@ -219,7 +219,6 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
 
     public function createDb($id)
     {
-
         $field_start = $this->getField_start();
         if (!is_string($field_start) && !is_int($field_start) && $field_start) {
             $field_start = $field_start->getid();
@@ -282,7 +281,6 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
 
     protected function updateSpecificProperties($row)
     {
-
         $session = self::getSession($this->renderer->report->id, $this->renderer->id);
 
         $session->set("$this->id.field_start", $row['field_start']);
@@ -352,29 +350,29 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
      */
     public function setSpecificPropertiesFromXML($xml, $formsMapping)
     {
-        if (isset($formsMapping[(string)$xml['start']])) {
-            $this->setField_start($formsMapping[(string)$xml['start']]);
+        if (isset($formsMapping[(string) $xml['start']])) {
+            $this->setField_start($formsMapping[(string) $xml['start']]);
         }
-        if (isset($formsMapping[(string)$xml['due']])) {
-            $this->setField_due($formsMapping[(string)$xml['due']]);
+        if (isset($formsMapping[(string) $xml['due']])) {
+            $this->setField_due($formsMapping[(string) $xml['due']]);
         }
-        if (isset($formsMapping[(string)$xml['finish']])) {
-            $this->setField_finish($formsMapping[(string)$xml['finish']]);
+        if (isset($formsMapping[(string) $xml['finish']])) {
+            $this->setField_finish($formsMapping[(string) $xml['finish']]);
         }
-        if (isset($formsMapping[(string)$xml['righttext']])) {
-            $this->setField_righttext($formsMapping[(string)$xml['righttext']]);
+        if (isset($formsMapping[(string) $xml['righttext']])) {
+            $this->setField_righttext($formsMapping[(string) $xml['righttext']]);
         }
-        if (isset($formsMapping[(string)$xml['summary']])) {
-            $this->setSummary($formsMapping[(string)$xml['summary']]);
+        if (isset($formsMapping[(string) $xml['summary']])) {
+            $this->setSummary($formsMapping[(string) $xml['summary']]);
         }
-        if ((string)$xml['scale']) {
-            $this->setScale((string)$xml['scale']);
+        if ((string) $xml['scale']) {
+            $this->setScale((string) $xml['scale']);
         }
-        if ((string)$xml['as_of_date']) {
-            $this->setAs_of_date((string)$xml['as_of_date']);
+        if ((string) $xml['as_of_date']) {
+            $this->setAs_of_date((string) $xml['as_of_date']);
         }
-        if (isset($formsMapping[(string)$xml['percentage']])) {
-            $this->setField_percentage($formsMapping[(string)$xml['percentage']]);
+        if (isset($formsMapping[(string) $xml['percentage']])) {
+            $this->setField_percentage($formsMapping[(string) $xml['percentage']]);
         }
     }
 
@@ -406,19 +404,19 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
         if ($this->as_of_date) {
             $root->addAttribute('as_of_date', $this->as_of_date);
         }
-        if ($this->field_start && ($start = (string)array_search($this->field_start, $formsMapping))) {
+        if ($this->field_start && ($start = (string) array_search($this->field_start, $formsMapping))) {
             $root->addAttribute('start', $start);
         }
-        if ($this->field_due && ($due = (string)array_search($this->field_due, $formsMapping))) {
+        if ($this->field_due && ($due = (string) array_search($this->field_due, $formsMapping))) {
             $root->addAttribute('due', $due);
         }
-        if ($this->field_finish && ($finish = (string)array_search($this->field_finish, $formsMapping))) {
+        if ($this->field_finish && ($finish = (string) array_search($this->field_finish, $formsMapping))) {
             $root->addAttribute('finish', $finish);
         }
-        if ($this->field_percentage && ($percentage = (string)array_search($this->field_percentage, $formsMapping))) {
+        if ($this->field_percentage && ($percentage = (string) array_search($this->field_percentage, $formsMapping))) {
             $root->addAttribute('percentage', $percentage);
         }
-        if ($this->field_righttext && ($righttext = (string)array_search($this->field_righttext, $formsMapping))) {
+        if ($this->field_righttext && ($righttext = (string) array_search($this->field_righttext, $formsMapping))) {
             $root->addAttribute('righttext', $righttext);
         }
         if ($this->summary) {

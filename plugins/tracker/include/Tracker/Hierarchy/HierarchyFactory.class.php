@@ -246,7 +246,7 @@ class Tracker_HierarchyFactory
 
     private function getParentTitle(Tracker_Artifact $artifact)
     {
-        return '"'. $artifact->getTitle() .' ('. $artifact->fetchXRefLink() .')"';
+        return '"' . $artifact->getTitle() . ' (' . $artifact->fetchXRefLink() . ')"';
     }
 
     /**

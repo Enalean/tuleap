@@ -62,7 +62,7 @@ class PluginViews
 
     public static function linkTo($link, $href, $options = '')
     {
-        $linkTo = '<a href="'.$href.'" '.$options.' >'.$link.'</a>';
+        $linkTo = '<a href="' . $href . '" ' . $options . ' >' . $link . '</a>';
         return $linkTo;
     }
 }

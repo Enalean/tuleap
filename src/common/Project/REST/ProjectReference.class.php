@@ -44,7 +44,7 @@ class ProjectReference
             $this->id    = (int) $project->getId();
             $this->label = (string) $project->getPublicName();
         } else {
-            $this->id = (int)$project;
+            $this->id = (int) $project;
         }
 
         $this->uri = ProjectRepresentation::ROUTE . '/' . $this->id;

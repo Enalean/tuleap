@@ -238,7 +238,7 @@ class RepositoryTestNonRegressionTest extends TestBase
                                 "project-devel@lists.example.com"
                             ),
                             'users'       => array(),
-                            'user_groups' => array("110_".self::TULEAP_MAGIC_GROUP_ID_MEMBERS)
+                            'user_groups' => array("110_" . self::TULEAP_MAGIC_GROUP_ID_MEMBERS)
                         )
                     )
                 )
@@ -264,7 +264,7 @@ class RepositoryTestNonRegressionTest extends TestBase
                                 "project-devel@lists.example.com"
                             ),
                             'users'       => array(),
-                            'user_groups' => array($this->svn_project_id."_".self::TULEAP_MAGIC_GROUP_ID_ANONYMOUS)
+                            'user_groups' => array($this->svn_project_id . "_" . self::TULEAP_MAGIC_GROUP_ID_ANONYMOUS)
                         )
                     )
                 )
@@ -290,7 +290,7 @@ class RepositoryTestNonRegressionTest extends TestBase
                                 "project-devel@lists.example.com"
                             ),
                             'users'       => array(),
-                            'user_groups' => array($this->svn_project_id."_".self::TULEAP_MAGIC_GROUP_ID_MEMBERS)
+                            'user_groups' => array($this->svn_project_id . "_" . self::TULEAP_MAGIC_GROUP_ID_MEMBERS)
                         )
                     )
                 )

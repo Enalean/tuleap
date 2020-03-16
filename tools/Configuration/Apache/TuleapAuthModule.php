@@ -34,6 +34,6 @@ class TuleapAuthModule
         if (! is_dir('/usr/share/perl5/vendor_perl/Apache')) {
             mkdir('/usr/share/perl5/vendor_perl/Apache');
         }
-        copy($this->tuleap_base_dir.'/src/utils/svn/Tuleap.pm', '/usr/share/perl5/vendor_perl/Apache/Tuleap.pm');
+        copy($this->tuleap_base_dir . '/src/utils/svn/Tuleap.pm', '/usr/share/perl5/vendor_perl/Apache/Tuleap.pm');
     }
 }

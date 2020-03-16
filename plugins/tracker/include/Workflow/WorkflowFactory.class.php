@@ -363,7 +363,7 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
             0, // not available yet
             $tracker->getId(),
             0, // not available yet
-            (string)$xml->is_used,
+            (string) $xml->is_used,
             true, // For legacy compatibility
             false,
             $transitions
@@ -399,7 +399,7 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
             0, // not available yet
             $tracker->getId(),
             0, // not available yet
-            (string)$xml->is_used,
+            (string) $xml->is_used,
             false,
             false,
             $transitions
@@ -413,10 +413,10 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
     {
         $xml_field_id = $xml->field_id;
         $xml_field_attributes = $xml_field_id->attributes();
-        if (! isset($xml_mapping[(string)$xml_field_attributes['REF']])) {
+        if (! isset($xml_mapping[(string) $xml_field_attributes['REF']])) {
             return null;
         }
-        $field = $xml_mapping[(string)$xml_field_attributes['REF']];
+        $field = $xml_mapping[(string) $xml_field_attributes['REF']];
 
         return $field;
     }

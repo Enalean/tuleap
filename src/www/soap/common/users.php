@@ -24,12 +24,12 @@ require_once __DIR__ . '/../../include/utils_soap.php';
 if (defined('NUSOAP')) {
     $server->register(
         'checkUsersExistence',
-        array('sessionKey'=>'xsd:string',
-        'users'=>'tns:ArrayOfstring'
+        array('sessionKey' => 'xsd:string',
+        'users' => 'tns:ArrayOfstring'
         ),
-        array('return'=>'tns:ArrayOfUserInfo'),
+        array('return' => 'tns:ArrayOfUserInfo'),
         $uri,
-        $uri.'#checkUsersExistence',
+        $uri . '#checkUsersExistence',
         'rpc',
         'encoded',
         'Returns the users that exist with their user name'
@@ -37,12 +37,12 @@ if (defined('NUSOAP')) {
 
     $server->register(
         'getUserInfo',
-        array('sessionKey' =>'xsd:string',
-          'user_id'    =>'xsd:int'
+        array('sessionKey' => 'xsd:string',
+          'user_id'    => 'xsd:int'
         ),
         array('return' => 'tns:UserInfo'),
         $uri,
-        $uri.'#getUserInfo',
+        $uri . '#getUserInfo',
         'rpc',
         'encoded',
         'Returns the user info matching the given id'

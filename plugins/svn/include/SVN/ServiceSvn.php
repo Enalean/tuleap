@@ -69,7 +69,7 @@ class ServiceSvn extends Service
 
     private function getRenderer()
     {
-        return TemplateRendererFactory::build()->getRenderer(dirname(SVN_BASE_DIR).'/templates');
+        return TemplateRendererFactory::build()->getRenderer(dirname(SVN_BASE_DIR) . '/templates');
     }
 
     private function displaySVNHeader(HTTPRequest $request, $title, $body_class): void
@@ -84,12 +84,12 @@ class ServiceSvn extends Service
         if ($this->getPermissionsManager()->isAdmin($request->getProject(), $request->getCurrentUser())) {
             $toolbar[] = [
                 'title'     => "Administration",
-                'url'       => SVN_BASE_URL . "/?group_id=" . urlencode((string)$request->getProject()->getId()) .
+                'url'       => SVN_BASE_URL . "/?group_id=" . urlencode((string) $request->getProject()->getId()) .
                     "&action=admin-groups",
                 'data-test' => 'svn-admin-groups'
             ];
         }
-        $title       = $title.' - '.dgettext('tuleap-svn', 'SVN');
+        $title       = $title . ' - ' . dgettext('tuleap-svn', 'SVN');
         $breadcrumbs = array(
             array(
                 'title' => "Repository List",

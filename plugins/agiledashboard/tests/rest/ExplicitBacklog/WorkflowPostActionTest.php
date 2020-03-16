@@ -24,7 +24,7 @@ namespace Tuleap\AgileDashboard\REST;
 
 use REST_TestDataBuilder;
 
-require_once dirname(__FILE__).'/../bootstrap.php';
+require_once dirname(__FILE__) . '/../bootstrap.php';
 
 class WorkflowPostActionTest extends TestBase
 {

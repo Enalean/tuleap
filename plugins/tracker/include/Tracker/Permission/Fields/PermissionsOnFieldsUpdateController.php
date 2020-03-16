@@ -75,9 +75,9 @@ class PermissionsOnFieldsUpdateController implements DispatchableWithRequest
                     );
                     $layout->addFeedback(\Feedback::INFO, $GLOBALS['Language']->getText('project_admin_userperms', 'perm_upd'));
                     if ($request->get('origin') === 'fields-by-group') {
-                        $layout->redirect(ByGroupController::getUrl($tracker).'?selected_id='.$request->get('selected_id'));
+                        $layout->redirect(ByGroupController::getUrl($tracker) . '?selected_id=' . $request->get('selected_id'));
                     } else {
-                        $layout->redirect(ByFieldController::getUrl($tracker).'?selected_id='.$request->get('selected_id'));
+                        $layout->redirect(ByFieldController::getUrl($tracker) . '?selected_id=' . $request->get('selected_id'));
                     }
                 }
             }
@@ -89,6 +89,6 @@ class PermissionsOnFieldsUpdateController implements DispatchableWithRequest
 
     public static function getUrl(\Tracker $tracker)
     {
-        return TRACKER_BASE_URL.self::URL.'/'.$tracker->getId();
+        return TRACKER_BASE_URL . self::URL . '/' . $tracker->getId();
     }
 }

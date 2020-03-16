@@ -67,7 +67,7 @@ class Tracker_Workflow_Trigger_RulesProcessor // phpcs:ignore PSR1.Classes.Class
         $this->artifacts_visited_in_processing[$artifact->getId()] = true;
 
         if (! $this->parentAlreadyHasTargetValue($parent, $rule)) {
-            $this->logger->debug('Parent '. $parent->getXRef() .' does not have target value…');
+            $this->logger->debug('Parent ' . $parent->getXRef() . ' does not have target value…');
             $processor_strategy = $this->getRuleStrategy($artifact, $rule);
             if ($processor_strategy->allPrecondtionsAreMet()) {
                 $this->logger->debug('All preconditions are met…');
@@ -93,11 +93,11 @@ class Tracker_Workflow_Trigger_RulesProcessor // phpcs:ignore PSR1.Classes.Class
 
         $target = $rule->getTarget();
         try {
-            $comment = '<p>'.$GLOBALS['Language']->getText('workflow_trigger_rules_processor', 'parent_update', array(
-                'art #'.$child->getId(),
+            $comment = '<p>' . $GLOBALS['Language']->getText('workflow_trigger_rules_processor', 'parent_update', array(
+                'art #' . $child->getId(),
                 $child->getLastChangeset()->getUri()
-            )).'</p>';
-            $comment .= '<p>'.$rule->getAsChangesetComment().'</p>';
+            )) . '</p>';
+            $comment .= '<p>' . $rule->getAsChangesetComment() . '</p>';
             $parent->createNewChangeset(
                 $target->getFieldData(),
                 $comment,
@@ -107,7 +107,7 @@ class Tracker_Workflow_Trigger_RulesProcessor // phpcs:ignore PSR1.Classes.Class
             );
             $this->logger->debug('Parent successfully updated.');
         } catch (Tracker_Exception $e) {
-            $this->logger->debug('Error while updating the parent artifact: '. $e->getMessage());
+            $this->logger->debug('Error while updating the parent artifact: ' . $e->getMessage());
             $GLOBALS['Response']->addFeedback(
                 'error',
                 $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_processor_update', array($parent->fetchDirectLinkToArtifact(), $e->getMessage())),

@@ -34,7 +34,7 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\Project\ProjectAccessChecker;
 use WebDAVProject;
 
-require_once __DIR__.'/bootstrap.php';
+require_once __DIR__ . '/bootstrap.php';
 
 /**
  * This is the unit test of WebDAVProject

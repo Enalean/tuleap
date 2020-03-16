@@ -42,7 +42,7 @@ class GlobalAdminController
 
     private function generateToken(Project $project)
     {
-        return new CSRFSynchronizerToken(SVN_BASE_URL."/?group_id=".$project->getid() . "&action=save-admin-groups");
+        return new CSRFSynchronizerToken(SVN_BASE_URL . "/?group_id=" . $project->getid() . "&action=save-admin-groups");
     }
 
     public function saveAdminGroups(

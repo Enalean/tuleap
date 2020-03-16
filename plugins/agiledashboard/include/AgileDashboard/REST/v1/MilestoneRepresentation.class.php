@@ -246,9 +246,9 @@ class MilestoneRepresentation
 
         $this->has_user_priority_change_permission = $has_user_priority_change_permission;
 
-        $this->sub_milestones_uri = $this->uri . '/'. self::ROUTE;
-        $this->backlog_uri        = $this->uri . '/'. BacklogItemRepresentation::BACKLOG_ROUTE;
-        $this->content_uri        = $this->uri . '/'. BacklogItemRepresentation::CONTENT_ROUTE;
+        $this->sub_milestones_uri = $this->uri . '/' . self::ROUTE;
+        $this->backlog_uri        = $this->uri . '/' . BacklogItemRepresentation::BACKLOG_ROUTE;
+        $this->content_uri        = $this->uri . '/' . BacklogItemRepresentation::CONTENT_ROUTE;
         $this->last_modified_date = JsonCast::toDate($milestone->getLastModifiedDate());
         if ($representation_type === self::ALL_FIELDS && $status_count) {
             $this->status_count = $status_count;
@@ -269,20 +269,20 @@ class MilestoneRepresentation
         }
 
         $this->resources['milestones'] = array(
-            'uri'    => $this->uri . '/'. self::ROUTE,
+            'uri'    => $this->uri . '/' . self::ROUTE,
             'accept' => array(
                 'trackers' => $submilestone_trackers
             )
         );
         $this->resources['backlog'] = array(
-            'uri'    => $this->uri . '/'. BacklogItemRepresentation::BACKLOG_ROUTE,
+            'uri'    => $this->uri . '/' . BacklogItemRepresentation::BACKLOG_ROUTE,
             'accept' => array(
                 'trackers'        => $this->getTrackersRepresentation($backlog_trackers),
                 'parent_trackers' => $this->getTrackersRepresentation($parent_trackers)
             )
         );
         $this->resources['content'] = array(
-            'uri'    => $this->uri . '/'. BacklogItemRepresentation::CONTENT_ROUTE,
+            'uri'    => $this->uri . '/' . BacklogItemRepresentation::CONTENT_ROUTE,
             'accept' => array(
                 'trackers' => $this->getContentTrackersRepresentation($milestone)
             )
@@ -317,7 +317,7 @@ class MilestoneRepresentation
 
     public function enableCardwall()
     {
-        $this->cardwall_uri = $this->uri . '/'. AgileDashboard_MilestonesCardwallRepresentation::ROUTE;
+        $this->cardwall_uri = $this->uri . '/' . AgileDashboard_MilestonesCardwallRepresentation::ROUTE;
         $this->resources['cardwall'] = array(
             'uri' => $this->cardwall_uri
         );
@@ -325,7 +325,7 @@ class MilestoneRepresentation
 
     public function enableBurndown()
     {
-        $this->burndown_uri = $this->uri . '/'. BurndownRepresentation::ROUTE;
+        $this->burndown_uri = $this->uri . '/' . BurndownRepresentation::ROUTE;
         $this->resources['burndown'] = array(
             'uri' => $this->burndown_uri
         );

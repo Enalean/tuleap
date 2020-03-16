@@ -284,7 +284,7 @@ EOS;
 
             $this->doesNotPerformAssertions();
         } catch (SVN_CommitToTagDeniedException $ex) {
-            $this->fail('Commit of "'.implode(', ', $paths) .'" should be allowed');
+            $this->fail('Commit of "' . implode(', ', $paths) . '" should be allowed');
         }
     }
 
@@ -299,7 +299,7 @@ EOS;
                 $this->transaction
             );
 
-            $this->fail('Commit of "'.implode(', ', $paths).'" should be denied');
+            $this->fail('Commit of "' . implode(', ', $paths) . '" should be denied');
         } catch (SVN_CommitToTagDeniedException $ex) {
             $this->doesNotPerformAssertions();
         }

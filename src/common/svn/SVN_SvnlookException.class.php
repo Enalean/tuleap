@@ -26,7 +26,7 @@ class SVN_SvnlookException extends Exception
     public function __construct($command, $output, $return_value)
     {
         $truncated_output = implode(PHP_EOL, array_slice($output, 0, 20));
-        $message = 'Command execution failure: '.$command.' (return value: '.$return_value.'): '.PHP_EOL.$truncated_output;
+        $message = 'Command execution failure: ' . $command . ' (return value: ' . $return_value . '): ' . PHP_EOL . $truncated_output;
         parent::__construct($message, $return_value);
     }
 }

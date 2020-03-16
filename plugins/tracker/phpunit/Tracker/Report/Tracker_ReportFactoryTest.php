@@ -28,7 +28,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker_Report_Renderer;
 
-require_once __DIR__.'/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 final class Tracker_ReportFactoryTest extends TestCase

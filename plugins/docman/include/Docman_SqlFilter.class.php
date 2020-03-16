@@ -94,7 +94,7 @@ class Docman_SqlFilter extends Docman_MetadataSqlQueryChunk
         if ($this->filter->getValue() !== null &&
            $this->filter->getValue() != '') {
             $data_access = CodendiDataAccess::instance();
-            $stmt[] = $this->field.' = '.$data_access->quoteSmart($this->filter->getValue());
+            $stmt[] = $this->field . ' = ' . $data_access->quoteSmart($this->filter->getValue());
         }
 
         return $stmt;
@@ -162,8 +162,8 @@ class Docman_SqlFilterDate extends Docman_SqlFilter
         list($time, $ok) = util_date_to_unixtime($value);
         if ($ok) {
             list($year,$month,$day) = util_date_explode($value);
-            $time_before = mktime(23, 59, 59, $month, $day-1, $year);
-            $stmt = $this->field." <= ".$time_before;
+            $time_before = mktime(23, 59, 59, $month, $day - 1, $year);
+            $stmt = $this->field . " <= " . $time_before;
         }
         return $stmt;
     }
@@ -176,7 +176,7 @@ class Docman_SqlFilterDate extends Docman_SqlFilter
         if ($ok) {
             list($year,$month,$day) = util_date_explode($value);
             $time_end = mktime(23, 59, 59, $month, $day, $year);
-            $stmt = $this->field." >= ".$time." AND ".$this->field." <= ".$time_end;
+            $stmt = $this->field . " >= " . $time . " AND " . $this->field . " <= " . $time_end;
         }
         return $stmt;
     }
@@ -188,8 +188,8 @@ class Docman_SqlFilterDate extends Docman_SqlFilter
         list($time, $ok) = util_date_to_unixtime($value);
         if ($ok) {
             list($year,$month,$day) = util_date_explode($value);
-            $time_after = mktime(0, 0, 0, $month, $day+1, $year);
-            $stmt = $this->field." >= ".$time_after;
+            $time_after = mktime(0, 0, 0, $month, $day + 1, $year);
+            $stmt = $this->field . " >= " . $time_after;
         }
         return $stmt;
     }
@@ -303,9 +303,9 @@ class Docman_SqlFilterText extends Docman_SqlFilter
             $qv = $this->filter->getValue();
             $searchType = $this->getSearchType($qv);
             if ($searchType['like']) {
-                $stmt[] =  $this->field.' LIKE '.$searchType['pattern'];
+                $stmt[] =  $this->field . ' LIKE ' . $searchType['pattern'];
             } else {
-                $stmt[] = "MATCH (".$this->field.") AGAINST ('".db_es($qv)."' ".Docman_SqlFilter::BOOLEAN_SEARCH_TYPE.")";
+                $stmt[] = "MATCH (" . $this->field . ") AGAINST ('" . db_es($qv) . "' " . Docman_SqlFilter::BOOLEAN_SEARCH_TYPE . ")";
             }
         }
         return $stmt;
@@ -340,23 +340,23 @@ class Docman_SqlFilterGlobalText extends Docman_SqlFilterText
             $qv = $this->filter->getValue();
             $searchType = $this->getSearchType($qv);
             if ($searchType['like']) {
-                $matches[] = ' i.title LIKE '.$searchType['pattern'].'  OR i.description LIKE '.$searchType['pattern'];
-                $matches[] = ' v.label LIKE '.$searchType['pattern'].'  OR  v.changelog LIKE '.$searchType['pattern'].'  OR v.filename LIKE '.$searchType['pattern'];
+                $matches[] = ' i.title LIKE ' . $searchType['pattern'] . '  OR i.description LIKE ' . $searchType['pattern'];
+                $matches[] = ' v.label LIKE ' . $searchType['pattern'] . '  OR  v.changelog LIKE ' . $searchType['pattern'] . '  OR v.filename LIKE ' . $searchType['pattern'];
 
                 foreach ($this->filter->dynTextFields as $f) {
-                    $matches[] = ' mdv_'.$f.'.valueText LIKE '.$searchType['pattern'].'  OR  mdv_'.$f.'.valueString LIKE '.$searchType['pattern'];
+                    $matches[] = ' mdv_' . $f . '.valueText LIKE ' . $searchType['pattern'] . '  OR  mdv_' . $f . '.valueString LIKE ' . $searchType['pattern'];
                 }
 
-                $stmt[] = '('.implode(' OR ', $matches).')';
+                $stmt[] = '(' . implode(' OR ', $matches) . ')';
             } else {
-                $matches[] = "MATCH (i.title, i.description) AGAINST ('".db_es($qv)."' ".Docman_SqlFilter::BOOLEAN_SEARCH_TYPE.")";
-                $matches[] = "MATCH (v.label, v.changelog, v.filename) AGAINST ('".db_es($qv)."' ".Docman_SqlFilter::BOOLEAN_SEARCH_TYPE.")";
+                $matches[] = "MATCH (i.title, i.description) AGAINST ('" . db_es($qv) . "' " . Docman_SqlFilter::BOOLEAN_SEARCH_TYPE . ")";
+                $matches[] = "MATCH (v.label, v.changelog, v.filename) AGAINST ('" . db_es($qv) . "' " . Docman_SqlFilter::BOOLEAN_SEARCH_TYPE . ")";
 
                 foreach ($this->filter->dynTextFields as $f) {
-                    $matches[] = "MATCH (mdv_".$f.".valueText, mdv_".$f.".valueString) AGAINST ('".db_es($qv)."' ".Docman_SqlFilter::BOOLEAN_SEARCH_TYPE.")";
+                    $matches[] = "MATCH (mdv_" . $f . ".valueText, mdv_" . $f . ".valueString) AGAINST ('" . db_es($qv) . "' " . Docman_SqlFilter::BOOLEAN_SEARCH_TYPE . ")";
                 }
 
-                $stmt[] = '('.implode(' OR ', $matches).')';
+                $stmt[] = '(' . implode(' OR ', $matches) . ')';
             }
         }
         return $stmt;
@@ -381,7 +381,7 @@ class Docman_SqlFilterListAdvanced extends Docman_SqlFilter
                || (count($v) == 1 && $v[0] != '')
                )
            ) {
-            $stmt[] = $this->field.' IN ('.implode(',', $this->filter->getValue()).')';
+            $stmt[] = $this->field . ' IN (' . implode(',', $this->filter->getValue()) . ')';
         }
 
         return $stmt;

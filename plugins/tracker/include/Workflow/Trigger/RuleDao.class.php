@@ -89,7 +89,7 @@ class Tracker_Workflow_Trigger_RulesDao extends DataAccessObject
     {
         $value_id  = $this->da->escapeInt($value_id);
         $condition = $this->da->quoteSmart($condition);
-        $sql = 'INSERT INTO tracker_workflow_trigger_rule_static_value (value_id, rule_condition) VALUES ('.$value_id.', '.$condition.')';
+        $sql = 'INSERT INTO tracker_workflow_trigger_rule_static_value (value_id, rule_condition) VALUES (' . $value_id . ', ' . $condition . ')';
         return $this->updateAndGetLastId($sql);
     }
 
@@ -97,7 +97,7 @@ class Tracker_Workflow_Trigger_RulesDao extends DataAccessObject
     {
         $rule_id  = $this->da->escapeInt($rule_id);
         $value_id  = $this->da->escapeInt($value_id);
-        $sql = 'INSERT INTO tracker_workflow_trigger_rule_trg_field_static_value (rule_id, value_id) VALUES ('.$rule_id.', '.$value_id.')';
+        $sql = 'INSERT INTO tracker_workflow_trigger_rule_trg_field_static_value (rule_id, value_id) VALUES (' . $rule_id . ', ' . $value_id . ')';
         return $this->updateAndGetLastId($sql);
     }
 

@@ -42,6 +42,6 @@ class PhpWikiPageVersionRepresentation
     public function build(WikiPageVersion $version)
     {
         $this->version_id = $version->getVersionId();
-        $this->uri        = PhpWikiPageRepresentation::ROUTE . '/' . $version->getPageId() . '/'.self::ROUTE .'?version_id='.$this->version_id;
+        $this->uri        = PhpWikiPageRepresentation::ROUTE . '/' . $version->getPageId() . '/' . self::ROUTE . '?version_id=' . $this->version_id;
     }
 }

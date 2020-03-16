@@ -31,7 +31,6 @@ class WebDAVPluginInfo extends PluginFileInfo
      */
     public function __construct($plugin)
     {
-
         parent::__construct($plugin, 'webdav');
         $this->setPluginDescriptor(new WebDAVPluginDescriptor());
     }

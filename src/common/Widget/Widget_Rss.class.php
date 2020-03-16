@@ -60,10 +60,10 @@ abstract class Widget_Rss extends Widget
         $sliced_feed = new LimitIterator($feed, 0, 10);
         foreach ($sliced_feed as $entry) {
             $content .= '<tr><td>';
-            $content .= '<a href="'. $hp->purify($entry->getLink()) .'">'. $hp->purify($entry->getTitle(), CODENDI_PURIFIER_STRIP_HTML) .'</a>';
+            $content .= '<a href="' . $hp->purify($entry->getLink()) . '">' . $hp->purify($entry->getTitle(), CODENDI_PURIFIER_STRIP_HTML) . '</a>';
             $date     = $entry->getDateCreated();
             if ($date !== null) {
-                $content .= '<span style="color:#999;" title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $date->getTimestamp()) .'"> - '. DateHelper::timeAgoInWords($date->getTimestamp()) .'</span>';
+                $content .= '<span style="color:#999;" title="' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), $date->getTimestamp()) . '"> - ' . DateHelper::timeAgoInWords($date->getTimestamp()) . '</span>';
             }
             $content .= '</td></tr>';
         }
@@ -86,25 +86,25 @@ abstract class Widget_Rss extends Widget
 
         return '
             <div class="tlp-form-element">
-                <label class="tlp-label" for="title-'. (int)$widget_id .'">'. $purifier->purify(_('Title')) .'</label>
+                <label class="tlp-label" for="title-' . (int) $widget_id . '">' . $purifier->purify(_('Title')) . '</label>
                 <input type="text"
                        class="tlp-input"
-                       id="title-'. (int)$widget_id .'"
+                       id="title-' . (int) $widget_id . '"
                        name="rss[title]"
-                       value="'. $purifier->purify($this->getTitle()) .'"
+                       value="' . $purifier->purify($this->getTitle()) . '"
                        placeholder="RSS">
             </div>
             <div class="tlp-form-element">
-                <label class="tlp-label" for="url-'. (int)$widget_id .'">
+                <label class="tlp-label" for="url-' . (int) $widget_id . '">
                     URL <i class="fa fa-asterisk"></i>
                 </label>
                 <input type="text"
                        class="tlp-input"
-                       id="url-'. (int)$widget_id .'"
+                       id="url-' . (int) $widget_id . '"
                        name="rss[url]"
-                       value="'. $purifier->purify($this->rss_url) .'"
+                       value="' . $purifier->purify($this->rss_url) . '"
                        pattern="https?://.*"
-                       title="'. $purifier->purify(_('Please, enter a http:// or https:// link')) .'"
+                       title="' . $purifier->purify(_('Please, enter a http:// or https:// link')) . '"
                        required
                        placeholder="https://example.com/rss.xml">
             </div>
@@ -117,12 +117,12 @@ abstract class Widget_Rss extends Widget
 
         return '
             <div class="tlp-form-element">
-                <label class="tlp-label" for="widget-rss-title">'. $purifier->purify(_('Title')) .'</label>
+                <label class="tlp-label" for="widget-rss-title">' . $purifier->purify(_('Title')) . '</label>
                 <input type="text"
                        class="tlp-input"
                        id="widget-rss-title"
                        name="rss[title]"
-                       value="'. $purifier->purify($this->getTitle()) .'"
+                       value="' . $purifier->purify($this->getTitle()) . '"
                        placeholder="RSS">
             </div>
             <div class="tlp-form-element">
@@ -134,7 +134,7 @@ abstract class Widget_Rss extends Widget
                        id="widget-rss-url"
                        name="rss[url]"
                        pattern="https?://.*"
-                       title="'. $purifier->purify(_('Please, enter a http:// or https:// link')) .'"
+                       title="' . $purifier->purify(_('Please, enter a http:// or https:// link')) . '"
                        required
                        placeholder="https://example.com/rss.xml">
             </div>
@@ -149,15 +149,15 @@ abstract class Widget_Rss extends Widget
         $owner_type
     ) {
         $sql = "INSERT INTO widget_rss (owner_id, owner_type, title, url)
-        SELECT  ". $owner_id .", '". $owner_type ."', title, url
+        SELECT  " . $owner_id . ", '" . $owner_type . "', title, url
         FROM widget_rss
-        WHERE owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' ";
+        WHERE owner_id = " . $this->owner_id . " AND owner_type = '" . $this->owner_type . "' ";
         $res = db_query($sql);
         return db_insertid($res);
     }
     public function loadContent($id)
     {
-        $sql = "SELECT * FROM widget_rss WHERE owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' AND id = ". $id;
+        $sql = "SELECT * FROM widget_rss WHERE owner_id = " . $this->owner_id . " AND owner_type = '" . $this->owner_type . "' AND id = " . $id;
         $res = db_query($sql);
         if ($res && db_numrows($res)) {
             $data = db_fetch_array($res);
@@ -185,7 +185,7 @@ abstract class Widget_Rss extends Widget
                     $rss['title'] = $request->get('title');
                 }
             }
-            $sql = 'INSERT INTO widget_rss (owner_id, owner_type, title, url) VALUES ('. $this->owner_id .", '". $this->owner_type ."', '". db_escape_string($rss['title']) ."', '". db_escape_string($rss['url']) ."')";
+            $sql = 'INSERT INTO widget_rss (owner_id, owner_type, title, url) VALUES (' . $this->owner_id . ", '" . $this->owner_type . "', '" . db_escape_string($rss['title']) . "', '" . db_escape_string($rss['url']) . "')";
             $res = db_query($sql);
             $content_id = db_insertid($res);
         }
@@ -199,20 +199,20 @@ abstract class Widget_Rss extends Widget
         if (($rss = $request->get('rss')) && $request->valid($vContentId)) {
             $vUrl = new Valid_String('url');
             if ($request->validInArray('rss', $vUrl)) {
-                $url = " url   = '". db_escape_string($rss['url']) ."' ";
+                $url = " url   = '" . db_escape_string($rss['url']) . "' ";
             } else {
                 $url = '';
             }
 
             $vTitle = new Valid_String('title');
             if ($request->validInArray('rss', $vTitle)) {
-                $title = " title = '". db_escape_string($rss['title']) ."' ";
+                $title = " title = '" . db_escape_string($rss['title']) . "' ";
             } else {
                 $title = '';
             }
 
             if ($url || $title) {
-                $sql = "UPDATE widget_rss SET ". $title .", ". $url ." WHERE owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' AND id = ". (int)$request->get('content_id');
+                $sql = "UPDATE widget_rss SET " . $title . ", " . $url . " WHERE owner_id = " . $this->owner_id . " AND owner_type = '" . $this->owner_type . "' AND id = " . (int) $request->get('content_id');
                 $res = db_query($sql);
                 $done = true;
             }
@@ -221,7 +221,7 @@ abstract class Widget_Rss extends Widget
     }
     public function destroy($id)
     {
-        $sql = 'DELETE FROM widget_rss WHERE id = '. $id .' AND owner_id = '. $this->owner_id ." AND owner_type = '". $this->owner_type ."'";
+        $sql = 'DELETE FROM widget_rss WHERE id = ' . $id . ' AND owner_id = ' . $this->owner_id . " AND owner_type = '" . $this->owner_type . "'";
         db_query($sql);
     }
     public function isUnique()

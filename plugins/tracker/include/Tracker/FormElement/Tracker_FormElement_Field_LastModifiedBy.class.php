@@ -51,17 +51,17 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
 
     public function getCriteriaWhere($criteria)
     {
-        if ($criteria_value= $this->getCriteriaValue($criteria)) {
-            $a = 'A_'. $this->id;
-            $b = 'B_'. $this->id;
+        if ($criteria_value = $this->getCriteriaValue($criteria)) {
+            $a = 'A_' . $this->id;
+            $b = 'B_' . $this->id;
             $ids_to_search = array_intersect(
                 array_values($criteria_value),
                 array_merge(array(100), array_keys($this->getBind()->getAllValues()))
             );
             if (count($ids_to_search) > 1) {
-                return " c.submitted_by IN(". $this->getCriteriaDao()->getDa()->escapeIntImplode($ids_to_search) .") ";
+                return " c.submitted_by IN(" . $this->getCriteriaDao()->getDa()->escapeIntImplode($ids_to_search) . ") ";
             } elseif (count($ids_to_search)) {
-                return " c.submitted_by = ". $this->getCriteriaDao()->getDa()->escapeInt($ids_to_search[0]) ." ";
+                return " c.submitted_by = " . $this->getCriteriaDao()->getDa()->escapeInt($ids_to_search[0]) . " ";
             }
         }
         return '';
@@ -69,7 +69,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
 
     public function getQuerySelect()
     {
-        return "c.submitted_by AS `". $this->name ."`";
+        return "c.submitted_by AS `" . $this->name . "`";
     }
 
     public function getQueryFrom()
@@ -79,8 +79,8 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
 
     public function getQueryFromAggregate()
     {
-        $R1 = 'R1_'. $this->id;
-        $R2 = 'R2_'. $this->id;
+        $R1 = 'R1_' . $this->id;
+        $R2 = 'R2_' . $this->id;
         return " LEFT JOIN  user AS $R2 ON ($R2.user_id = c.submitted_by ) ";
     }
 

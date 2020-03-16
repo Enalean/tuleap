@@ -63,7 +63,6 @@ class Tracker_RuleDao extends DataAccessObject
     */
     public function create($tracker_id, $source_field_id, $source_value_id, $target_field_id, $rule_type, $target_value_id)
     {
-
         $sql_insert_rule = sprintf(
             "INSERT INTO tracker_rule (tracker_id, rule_type)
                             VALUES (%s, %s)",
@@ -103,10 +102,10 @@ class Tracker_RuleDao extends DataAccessObject
        //               " ORDER BY afu1.place, afu2.place, afvls.order_id, afvlt.order_id, ar.id",
        //        $this->da->quoteSmart($tracker_id));
                $sql = sprintf(
-                   "SELECT id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id ".
+                   "SELECT id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id " .
                               "FROM tracker_rule JOIN tracker_rule_list
                                ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)" .
-                              " WHERE tracker_id = %s ".
+                              " WHERE tracker_id = %s " .
                               " ORDER BY id",
                    $this->da->quoteSmart($tracker_id)
                );

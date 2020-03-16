@@ -22,7 +22,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
 
-require_once __DIR__ .'/../../../bootstrap.php';
+require_once __DIR__ . '/../../../bootstrap.php';
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class MembershipManagerTest extends TestCase
@@ -96,9 +96,9 @@ class MembershipManagerTest extends TestCase
         $this->remote_server_factory->shouldReceive('getServersForUGroup')->andReturns(array($this->remote_server));
         $this->user->shouldReceive('getUgroups')->andReturns(array($this->u_group_id));
 
-        $first_group_expected     = $this->project_name.'/'.'project_members';
-        $second_group_expected    = $this->project_name.'/'.'project_admins';
-        $third_group_expected     = $this->project_name.'/'.'ldap_group';
+        $first_group_expected     = $this->project_name . '/' . 'project_members';
+        $second_group_expected    = $this->project_name . '/' . 'project_admins';
+        $third_group_expected     = $this->project_name . '/' . 'ldap_group';
 
         $this->u_group->shouldReceive('getNormalizedName')->andReturns('project_members');
         $this->u_group2->shouldReceive('getNormalizedName')->andReturns('project_admins');
@@ -121,9 +121,9 @@ class MembershipManagerTest extends TestCase
         $this->remote_server_factory->shouldReceive('getServersForUGroup')->andReturns(array($this->remote_server));
         $this->user->shouldReceive('getUgroups')->andReturns(array());
 
-        $first_group_expected     = $this->project_name.'/'.'project_members';
-        $second_group_expected    = $this->project_name.'/'.'project_admins';
-        $third_group_expected     = $this->project_name.'/'.'ldap_group';
+        $first_group_expected     = $this->project_name . '/' . 'project_members';
+        $second_group_expected    = $this->project_name . '/' . 'project_admins';
+        $third_group_expected     = $this->project_name . '/' . 'ldap_group';
 
         $this->u_group->shouldReceive('getNormalizedName')->andReturns('project_members');
         $this->u_group2->shouldReceive('getNormalizedName')->andReturns('project_admins');

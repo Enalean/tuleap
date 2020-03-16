@@ -141,7 +141,6 @@ class WikiPlugin_EditMetaData extends WikiPlugin
                 }
                 $dl->pushContent($dl1);
             } elseif (in_array($key, $hidden_pagemeta)) {
-                ;
             } elseif (in_array($key, $readonly_pagemeta)) {
                 $dl->pushContent(HTML::dt(
                     array('style' => 'background: #dddddd'),
@@ -180,7 +179,7 @@ class WikiPlugin_EditMetaData extends WikiPlugin
         }
         return $html;
     }
-};
+}
 
 // $Log: EditMetaData.php,v $
 // Revision 1.11  2004/06/01 16:48:11  rurban

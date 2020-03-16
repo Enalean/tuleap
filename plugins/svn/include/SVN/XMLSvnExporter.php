@@ -93,7 +93,7 @@ class XMLSvnExporter
             $this->logger->info('dumping ' . $repository->getName());
             $node_repository = $this->dumpRepository($root_node, $repository, $temporary_dump_path_on_filesystem);
 
-            $export_dump_file_name = $repository->getName().".svn";
+            $export_dump_file_name = $repository->getName() . ".svn";
             if ($archive->isADirectory() === true) {
                 $archive->addEmptyDir('svn');
             }

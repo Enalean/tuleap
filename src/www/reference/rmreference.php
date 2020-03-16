@@ -32,9 +32,9 @@ $source_type = $request->get('source_type');
 
 $user = UserManager::instance()->getCurrentUser();
 
-$project_admin = $user->isMember($target_gid, 'A') ;
+$project_admin = $user->isMember($target_gid, 'A');
 if (!$project_admin) {
-    $project_admin_source = $user->isMember($source_gid, 'A') ;
+    $project_admin_source = $user->isMember($source_gid, 'A');
     if ($project_admin_source) {
            $project_admin = true;
     }

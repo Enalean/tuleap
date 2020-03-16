@@ -112,7 +112,7 @@ class KanbanPresenter
         $this->kanban_representation             = json_encode($kanban_representation_builder->build($kanban, $user));
         $this->dashboard_dropdown_representation = json_encode($widget_dropdown_builder->build($kanban, $user, $project_manager->getProject($project_id)));
         $this->tracker_reports                   = json_encode($tracker_report_builder->build($selected_tracker_report_id));
-        $this->user_is_kanban_admin              = (int)$user_is_kanban_admin;
+        $this->user_is_kanban_admin              = (int) $user_is_kanban_admin;
         $this->language                          = $language;
         $this->project_id                        = $project_id;
         $this->user_id                           = $user->getId();

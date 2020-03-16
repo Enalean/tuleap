@@ -155,9 +155,9 @@ class AccessControl extends Pane
         }
         $html .= '<p id="plugin_git_access">';
         $html .= dgettext('tuleap-git', 'Access');
-        $html .= ': <span><input type="radio" name="repo_access" value="private" '. $private .'/> ';
+        $html .= ': <span><input type="radio" name="repo_access" value="private" ' . $private . '/> ';
         $html .= dgettext('tuleap-git', 'Private');
-        $html .= '<input type="radio" name="repo_access" value="public" '. $public .'/> Public';
+        $html .= '<input type="radio" name="repo_access" value="public" ' . $public . '/> Public';
         $html .= '</span>';
         $html .= '</p>';
 

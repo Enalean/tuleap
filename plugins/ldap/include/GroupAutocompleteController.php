@@ -67,8 +67,8 @@ class GroupAutocompleteController implements DispatchableWithRequest
                     $display_name = $lr->getGroupDisplayName();
 
                     $group_list[] = array(
-                        'id' =>$common_name,
-                        'text' =>$display_name
+                        'id' => $common_name,
+                        'text' => $display_name
                     );
                     $lri->next();
                 }

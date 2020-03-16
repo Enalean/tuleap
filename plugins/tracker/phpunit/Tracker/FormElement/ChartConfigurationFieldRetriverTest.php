@@ -26,7 +26,7 @@ use Tracker_FormElement_Chart_Field_Exception;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
-require_once __DIR__.'/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 class ChartConfigurationFieldRetrieverTest extends TestCase
 {

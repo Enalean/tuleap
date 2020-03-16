@@ -65,14 +65,14 @@ class WorkflowMenuTabPresenterBuilder
 
     private function buildLegacyUrl($action, Tracker $tracker)
     {
-        return TRACKER_BASE_URL.'/?'.http_build_query([
-            'tracker' => (int)$tracker->getId(),
+        return TRACKER_BASE_URL . '/?' . http_build_query([
+            'tracker' => (int) $tracker->getId(),
             'func'    => $action
         ]);
     }
 
     private function buildFrontRouterUrl($tracker_path, Tracker $tracker)
     {
-        return TRACKER_BASE_URL.Workflow::BASE_PATH.'/'.urlencode($tracker->getId()).$tracker_path;
+        return TRACKER_BASE_URL . Workflow::BASE_PATH . '/' . urlencode($tracker->getId()) . $tracker_path;
     }
 }

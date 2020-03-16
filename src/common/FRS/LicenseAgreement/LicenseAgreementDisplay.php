@@ -92,12 +92,12 @@ class LicenseAgreementDisplay
                 return '<input type="hidden" name="package[approve_license]" value="1">';
             }
         } else {
-            $license_selector []= (new NoLicenseToApprove())->getLicenseOptionPresenter($package_agreement);
+            $license_selector[] = (new NoLicenseToApprove())->getLicenseOptionPresenter($package_agreement);
         }
 
-        $license_selector []= (new DefaultLicenseAgreement())->getLicenseOptionPresenter($package_agreement);
+        $license_selector[] = (new DefaultLicenseAgreement())->getLicenseOptionPresenter($package_agreement);
         foreach ($all_custom_agreements as $agreement) {
-            $license_selector []= $agreement->getLicenseOptionPresenter($package_agreement);
+            $license_selector[] = $agreement->getLicenseOptionPresenter($package_agreement);
         }
         return $this->renderer->renderToString(
             EditPackagePresenter::TEMPLATE,

@@ -16,8 +16,8 @@
 //===================================================
 class FuncGenerator
 {
-    private $iFunc='';
-    private $iXFunc='';
+    private $iFunc = '';
+    private $iXFunc = '';
     private $iStepSize;
 
     public function __construct($aFunc, $aXFunc = '')
@@ -28,12 +28,12 @@ class FuncGenerator
 
     public function E($aXMin, $aXMax, $aSteps = 50)
     {
-        $this->iStepSize = ($aXMax-$aXMin)/$aSteps;
+        $this->iStepSize = ($aXMax - $aXMin) / $aSteps;
 
         if ($this->iXFunc != '') {
-            $t = 'for($i='.$aXMin.'; $i<='.$aXMax.'; $i += '.$this->iStepSize.') {$ya[]='.$this->iFunc.';$xa[]='.$this->iXFunc.';}';
+            $t = 'for($i=' . $aXMin . '; $i<=' . $aXMax . '; $i += ' . $this->iStepSize . ') {$ya[]=' . $this->iFunc . ';$xa[]=' . $this->iXFunc . ';}';
         } elseif ($this->iFunc != '') {
-            $t = 'for($x='.$aXMin.'; $x<='.$aXMax.'; $x += '.$this->iStepSize.') {$ya[]='.$this->iFunc.';$xa[]=$x;} $x='.$aXMax.';$ya[]='.$this->iFunc.';$xa[]=$x;';
+            $t = 'for($x=' . $aXMin . '; $x<=' . $aXMax . '; $x += ' . $this->iStepSize . ') {$ya[]=' . $this->iFunc . ';$xa[]=$x;} $x=' . $aXMax . ';$ya[]=' . $this->iFunc . ';$xa[]=$x;';
         } else {
             JpGraphError::RaiseL(24001);//('FuncGenerator : No function specified. ');
         }
@@ -73,8 +73,8 @@ define('DSUTILS_YEAR5', 13); // Major ticks on a five-yearly basis
 
 class DateScaleUtils
 {
-    public static $iMin=0;
-    public static $iMax=0;
+    public static $iMin = 0;
+    public static $iMax = 0;
 
     private static $starthour;
     private static $startmonth;
@@ -83,8 +83,8 @@ class DateScaleUtils
     private static $endmonth;
     private static $endyear;
     private static $endday;
-    private static $tickPositions=array();
-    private static $minTickPositions=array();
+    private static $tickPositions = array();
+    private static $minTickPositions = array();
     private static $iUseWeeks = true;
 
     public static function UseWeekFormat($aFlg)
@@ -94,8 +94,8 @@ class DateScaleUtils
 
     public static function doYearly($aType, $aMinor = false)
     {
-        $i=0;
-        $j=0;
+        $i = 0;
+        $j = 0;
         $m = self::$startmonth;
         $y = self::$startyear;
 
@@ -106,7 +106,7 @@ class DateScaleUtils
 
         switch ($aType) {
             case DSUTILS_YEAR1:
-                for ($y=self::$startyear; $y <= self::$endyear; ++$y) {
+                for ($y = self::$startyear; $y <= self::$endyear; ++$y) {
                     if ($aMinor) {
                         while ($m <= 12) {
                             if (!($y == self::$endyear && $m > self::$endmonth)) {
@@ -114,16 +114,16 @@ class DateScaleUtils
                             }
                             ++$m;
                         }
-                        $m=1;
+                        $m = 1;
                     }
                     self::$tickPositions[$i++] = mktime(0, 0, 0, 1, 1, $y);
                 }
                 break;
             case DSUTILS_YEAR2:
-                $y=self::$startyear;
+                $y = self::$startyear;
                 while ($y <= self::$endyear) {
                     self::$tickPositions[$i++] = mktime(0, 0, 0, 1, 1, $y);
-                    for ($k=0; $k < 1; ++$k) {
+                    for ($k = 0; $k < 1; ++$k) {
                         ++$y;
                         if ($aMinor) {
                             self::$minTickPositions[$j++] = mktime(0, 0, 0, 1, 1, $y);
@@ -133,10 +133,10 @@ class DateScaleUtils
                 }
                 break;
             case DSUTILS_YEAR5:
-                $y=self::$startyear;
+                $y = self::$startyear;
                 while ($y <= self::$endyear) {
                     self::$tickPositions[$i++] = mktime(0, 0, 0, 1, 1, $y);
-                    for ($k=0; $k < 4; ++$k) {
+                    for ($k = 0; $k < 4; ++$k) {
                         ++$y;
                         if ($aMinor) {
                             self::$minTickPositions[$j++] = mktime(0, 0, 0, 1, 1, $y);
@@ -154,8 +154,8 @@ class DateScaleUtils
         $y = self::$startyear;
         $d = self::$startday;
         $h = self::$starthour;
-        $i=0;
-        $j=0;
+        $i = 0;
+        $j = 0;
 
         if ($h == 0) {
             self::$tickPositions[$i++] = mktime(0, 0, 0, $m, $d, $y);
@@ -184,7 +184,7 @@ class DateScaleUtils
                 break;
             case DSUTILS_DAY4:
                 while ($t <= self::$iMax) {
-                    for ($k=0; $k < 3; ++$k) {
+                    for ($k = 0; $k < 3; ++$k) {
                         $t = strtotime('+1 day', $t);
                         if ($aMinor) {
                             self::$minTickPositions[$j++] = $t;
@@ -199,8 +199,8 @@ class DateScaleUtils
 
     public static function doWeekly($aType, $aMinor = false)
     {
-        $hpd = 3600*24;
-        $hpw = 3600*24*7;
+        $hpd = 3600 * 24;
+        $hpw = 3600 * 24 * 7;
         // Find out week number of min date
         $thursday = self::$iMin + $hpd * (3 - (date('w', self::$iMin) + 6) % 7);
         $week = 1 + (date('z', $thursday) - (11 - date('w', mktime(0, 0, 0, 1, 1, date('Y', $thursday)))) % 7) / 7;
@@ -211,8 +211,8 @@ class DateScaleUtils
         $m = self::$startmonth;
         $y = self::$startyear;
         $d = self::$startday;
-        $i=0;
-        $j=0;
+        $i = 0;
+        $j = 0;
         // The assumption is that the weeks start on Monday. If the first day
         // is later in the week then the first week tick has to be on the following
         // week.
@@ -220,23 +220,23 @@ class DateScaleUtils
             self::$tickPositions[$i++] = mktime(0, 0, 0, $m, $d, $y);
             $t = mktime(0, 0, 0, $m, $d, $y) + $hpw;
         } else {
-            $t = mktime(0, 0, 0, $m, $d, $y) + $hpd*(8-$daynumber);
+            $t = mktime(0, 0, 0, $m, $d, $y) + $hpd * (8 - $daynumber);
         }
 
         switch ($aType) {
             case DSUTILS_WEEK1:
-                $cnt=0;
+                $cnt = 0;
                 break;
             case DSUTILS_WEEK2:
-                $cnt=1;
+                $cnt = 1;
                 break;
             case DSUTILS_WEEK4:
-                $cnt=3;
+                $cnt = 3;
                 break;
         }
         while ($t <= self::$iMax) {
             self::$tickPositions[$i++] = $t;
-            for ($k=0; $k < $cnt; ++$k) {
+            for ($k = 0; $k < $cnt; ++$k) {
                 $t += $hpw;
                 if ($aMinor) {
                     self::$minTickPositions[$j++] = $t;
@@ -248,16 +248,16 @@ class DateScaleUtils
 
     public static function doMonthly($aType, $aMinor = false)
     {
-        $monthcount=0;
+        $monthcount = 0;
         $m = self::$startmonth;
         $y = self::$startyear;
-        $i=0;
-        $j=0;
+        $i = 0;
+        $j = 0;
 
         // Skip the first month label if it is before the startdate
         if (self::$startday == 1) {
             self::$tickPositions[$i++] = mktime(0, 0, 0, $m, 1, $y);
-            $monthcount=1;
+            $monthcount = 1;
         }
         if ($aType == 1) {
             if (self::$startday < 15) {
@@ -267,7 +267,7 @@ class DateScaleUtils
         ++$m;
 
         // Loop through all the years included in the scale
-        for ($y=self::$startyear; $y <= self::$endyear; ++$y) {
+        for ($y = self::$startyear; $y <= self::$endyear; ++$y) {
             // Loop through all the months. There are three cases to consider:
             // 1. We are in the first year and must start with the startmonth
             // 2. We are in the end year and we must stop at last month of the scale
@@ -279,7 +279,7 @@ class DateScaleUtils
                         // Set minor tick at the middle of the month
                         if ($aMinor) {
                             if ($m <= $stopmonth) {
-                                if (!($y==self::$endyear && $m==$stopmonth && self::$endday < 15)) {
+                                if (!($y == self::$endyear && $m == $stopmonth && self::$endday < 15)) {
                                     self::$minTickPositions[$j++] = mktime(0, 0, 0, $m, 15, $y);
                                 }
                             }
@@ -327,13 +327,13 @@ class DateScaleUtils
                 ++$m;
                 ++$monthcount;
             }
-            $m=1;
+            $m = 1;
         }
 
         // For the case where all dates are within the same month
         // we want to make sure we have at least two ticks on the scale
         // since the scale want work properly otherwise
-        if (self::$startmonth == self::$endmonth && self::$startyear == self::$endyear && $aType==1) {
+        if (self::$startmonth == self::$endmonth && self::$startyear == self::$endyear && $aType == 1) {
             self::$tickPositions[$i++] = mktime(0, 0, 0, self::$startmonth + 1, 1, self::$startyear);
         }
 
@@ -343,16 +343,16 @@ class DateScaleUtils
     public static function GetTicks($aData, $aType = 1, $aMinor = false, $aEndPoints = false)
     {
         $n = count($aData);
-        return self::GetTicksFromMinMax($aData[0], $aData[$n-1], $aType, $aMinor, $aEndPoints);
+        return self::GetTicksFromMinMax($aData[0], $aData[$n - 1], $aType, $aMinor, $aEndPoints);
     }
 
     public static function GetAutoTicks($aMin, $aMax, $aMaxTicks = 10, $aMinor = false)
     {
         $diff = $aMax - $aMin;
-        $spd = 3600*24;
-        $spw = $spd*7;
-        $spm = $spd*30;
-        $spy = $spd*352;
+        $spd = 3600 * 24;
+        $spw = $spd * 7;
+        $spm = $spd * 30;
+        $spy = $spd * 352;
 
         if (self::$iUseWeeks) {
             $w = 'W';
@@ -370,15 +370,15 @@ class DateScaleUtils
             array(-1, array(30,DSUTILS_MONTH1,'M-Y',60,DSUTILS_MONTH2,'M-Y',90,DSUTILS_MONTH3,'M-Y',180,DSUTILS_MONTH6,'M-Y',352,DSUTILS_YEAR1,'Y',704,DSUTILS_YEAR2,'Y',-1,DSUTILS_YEAR5,'Y')));
 
         $ntt = count($tt);
-        $nd = floor($diff/$spd);
-        for ($i=0; $i < $ntt; ++$i) {
-            if ($diff <= $tt[$i][0] || $i==$ntt-1) {
+        $nd = floor($diff / $spd);
+        for ($i = 0; $i < $ntt; ++$i) {
+            if ($diff <= $tt[$i][0] || $i == $ntt - 1) {
                 $t = $tt[$i][1];
-                $n = count($t)/3;
-                for ($j=0; $j < $n; ++$j) {
-                    if ($nd/$t[3*$j] <= $aMaxTicks || $j==$n-1) {
-                        $type = $t[3*$j+1];
-                        $fs = $t[3*$j+2];
+                $n = count($t) / 3;
+                for ($j = 0; $j < $n; ++$j) {
+                    if ($nd / $t[3 * $j] <= $aMaxTicks || $j == $n - 1) {
+                        $type = $t[3 * $j + 1];
+                        $fs = $t[3 * $j + 2];
                         list($tickPositions,$minTickPositions) = self::GetTicksFromMinMax($aMin, $aMax, $type, $aMinor);
                         return array($fs,$tickPositions,$minTickPositions,$type);
                     }
@@ -417,7 +417,7 @@ class DateScaleUtils
 
         // put a label at the very right data pos
         if ($aEndPoints) {
-            $tickPositions[$i] = $aData[$n-1];
+            $tickPositions[$i] = $aData[$n - 1];
         }
 
         return array(self::$tickPositions,self::$minTickPositions);
@@ -459,8 +459,8 @@ class ReadFileData
         // all data is read as strings
         $n = count($tmp);
         $aData = array();
-        $cnt=0;
-        for ($i=0; $i < $n; ++$i) {
+        $cnt = 0;
+        for ($i = 0; $i < $n; ++$i) {
             if ($tmp[$i] !== "") {
                 $aData[$cnt++] = floatval($tmp[$i]);
             }
@@ -545,7 +545,7 @@ class ReadFileData
 
                 if (!($aOptions['ignore_first'] && $num_lines == 1) && is_numeric($aLine[0])) {
                     for ($i = 0; $i < $num_cols; $i++) {
-                        $aData[ $keys[$i] ][] = floatval($aLine[$i]);
+                        $aData[$keys[$i]][] = floatval($aLine[$i]);
                     }
                 }
             }
@@ -571,7 +571,7 @@ class ReadFileData
     // Read data from two columns in a plain text file
     public static function From2Col($aFile, $aCol1, $aCol2, $aSepChar = ' ')
     {
-        $lines = @file($aFile, FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
+        $lines = @file($aFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         if ($lines === false) {
                 return false;
         }
@@ -593,7 +593,7 @@ class ReadFileData
     // Read data from one columns in a plain text file
     public static function From1Col($aFile, $aCol1)
     {
-        $lines = @file($aFile, FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
+        $lines = @file($aFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         if ($lines === false) {
                 return false;
         }
@@ -606,12 +606,12 @@ class ReadFileData
 
     public static function FromMatrix($aFile, $aSepChar = ' ')
     {
-        $lines = @file($aFile, FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
+        $lines = @file($aFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         if ($lines === false) {
                 return false;
         }
         $mat = array();
-        $reg = '/'.$aSepChar.'/';
+        $reg = '/' . $aSepChar . '/';
         foreach ($lines as $line => $datarow) {
                 $row = preg_split($reg, trim($datarow));
             foreach ($row as $key => $cell) {
@@ -629,14 +629,14 @@ define('__LR_EPSILON', 1.0e-8);
 //=============================================================================
 class LinearRegression
 {
-    private $ix=array();
-    private $iy=array();
-    private $ib=0;
-    private $ia=0;
-    private $icalculated=false;
-    public $iDet=0;
-    public $iCorr=0;
-    public $iStdErr=0;
+    private $ix = array();
+    private $iy = array();
+    private $ib = 0;
+    private $ia = 0;
+    private $icalculated = false;
+    public $iDet = 0;
+    public $iCorr = 0;
+    public $iStdErr = 0;
 
     public function __construct($aDataX, $aDataY)
     {
@@ -649,17 +649,16 @@ class LinearRegression
 
     public function Calc()
     {
-
             $this->icalculated = true;
 
             $n = count($this->ix);
-            $sx2 = 0 ;
-            $sy2 = 0 ;
-            $sxy = 0 ;
-            $sx = 0 ;
-            $sy = 0 ;
+            $sx2 = 0;
+            $sy2 = 0;
+            $sxy = 0;
+            $sx = 0;
+            $sy = 0;
 
-        for ($i=0; $i < $n; ++$i) {
+        for ($i = 0; $i < $n; ++$i) {
                 $sx2 += $this->ix[$i] * $this->ix[$i];
                 $sy2 += $this->iy[$i] * $this->iy[$i];
                 $sxy += $this->ix[$i] * $this->iy[$i];
@@ -667,20 +666,20 @@ class LinearRegression
                 $sy += $this->iy[$i];
         }
 
-        if ($n*$sx2 - $sx*$sx > __LR_EPSILON) {
-                $this->ib = ($n*$sxy - $sx*$sy) / ( $n*$sx2 - $sx*$sx );
-                $this->ia = ( $sy - $this->ib*$sx ) / $n;
+        if ($n * $sx2 - $sx * $sx > __LR_EPSILON) {
+                $this->ib = ($n * $sxy - $sx * $sy) / ( $n * $sx2 - $sx * $sx );
+                $this->ia = ( $sy - $this->ib * $sx ) / $n;
 
-                $sx = $this->ib * ( $sxy - $sx*$sy/$n );
-                $sy2 = $sy2 - $sy*$sy/$n;
+                $sx = $this->ib * ( $sxy - $sx * $sy / $n );
+                $sy2 = $sy2 - $sy * $sy / $n;
                 $sy = $sy2 - $sx;
 
                 $this->iDet = $sx / $sy2;
                 $this->iCorr = sqrt($this->iDet);
             if ($n > 2) {
-                    $this->iStdErr = sqrt($sy / ($n-2));
+                    $this->iStdErr = sqrt($sy / ($n - 2));
             } else {
-                    $this->iStdErr = NAN ;
+                    $this->iStdErr = NAN;
             }
         } else {
                 $this->ib = 0;
@@ -712,8 +711,8 @@ class LinearRegression
 
             $yy = array();
             $i = 0;
-        for ($x=$aMinX; $x <= $aMaxX; $x += $aStep) {
-                $xx[$i  ] = $x;
+        for ($x = $aMinX; $x <= $aMaxX; $x += $aStep) {
+                $xx[$i] = $x;
                 $yy[$i++] = $this->ia + $this->ib * $x;
         }
 

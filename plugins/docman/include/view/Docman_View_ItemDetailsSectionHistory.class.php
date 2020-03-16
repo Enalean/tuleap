@@ -55,7 +55,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
     private function getFileVersions()
     {
         $uh      = UserHelper::instance();
-        $content = '<h3>'. dgettext('tuleap-docman', 'Versions') .'</h3>';
+        $content = '<h3>' . dgettext('tuleap-docman', 'Versions') . '</h3>';
         $version_factory = new Docman_VersionFactory();
         $approvalFactory = Docman_ApprovalTableFactoriesFactory::getFromItem($this->item);
         $versions        = $version_factory->getAllVersionForItem($this->item);
@@ -85,12 +85,12 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                         ['action' => 'confirmDelete', 'id' => $this->item->getId(), 'version' => $versions[$key]->getNumber()]
                     );
                     $user = $versions[$key]->getAuthorId() ? $uh->getDisplayNameFromUserId($versions[$key]->getAuthorId()) : dgettext('tuleap-docman', 'Anonymous');
-                    $content .= '<tr class="'. $odd_even[$i++ % count($odd_even)] .'">';
-                    $content .= '<td align="center"><a href="'. $download .'">'. $versions[$key]->getNumber() .'</a></td>';
-                    $content .= '<td>'. html_time_ago($versions[$key]->getDate()) .'</td>';
-                    $content .= '<td>'. $this->hp->purify($user)                                                  .'</td>';
-                    $content .= '<td>'. $this->hp->purify($versions[$key]->getLabel())         .'</td>';
-                    $content .= '<td>'. $this->hp->purify($versions[$key]->getChangelog(), CODENDI_PURIFIER_LIGHT) .'</td>';
+                    $content .= '<tr class="' . $odd_even[$i++ % count($odd_even)] . '">';
+                    $content .= '<td align="center"><a href="' . $download . '">' . $versions[$key]->getNumber() . '</a></td>';
+                    $content .= '<td>' . html_time_ago($versions[$key]->getDate()) . '</td>';
+                    $content .= '<td>' . $this->hp->purify($user)                                                  . '</td>';
+                    $content .= '<td>' . $this->hp->purify($versions[$key]->getLabel())         . '</td>';
+                    $content .= '<td>' . $this->hp->purify($versions[$key]->getChangelog(), CODENDI_PURIFIER_LIGHT) . '</td>';
 
                     $table = $approvalFactory->getTableFromVersion($versions[$key]);
                     if ($table != null) {
@@ -104,19 +104,19 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                                 'version' => $versions[$key]->getNumber(),
                             ]
                         );
-                        $content .= '<td align="center"><a href="'.$appTable.'">'.$titles[] = dgettext('tuleap-docman', 'Show').'</a></td>';
+                        $content .= '<td align="center"><a href="' . $appTable . '">' . $titles[] = dgettext('tuleap-docman', 'Show') . '</a></td>';
                     } else {
                         $content .= '<td></td>';
                     }
-                    $content .= '<td align="center"><a href="'.$delete.'"><img src="'.util_get_image_theme("ic/trash.png").'" height="16" width="16" border="0"></a></td>';
+                    $content .= '<td align="center"><a href="' . $delete . '"><img src="' . util_get_image_theme("ic/trash.png") . '" height="16" width="16" border="0"></a></td>';
                     $content .= '</tr>';
                 }
                 $content .= '</table>';
             } else {
-                $content .= '<div>'. dgettext('tuleap-docman', 'There is no version yet') .'</div>';
+                $content .= '<div>' . dgettext('tuleap-docman', 'There is no version yet') . '</div>';
             }
         } else {
-            $content .= '<div>'. dgettext('tuleap-docman', 'Error while searching for old versions') .'</div>';
+            $content .= '<div>' . dgettext('tuleap-docman', 'Error while searching for old versions') . '</div>';
         }
 
         return $content;
@@ -125,7 +125,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
     private function getLinkVersions()
     {
         $uh      = UserHelper::instance();
-        $content = '<h3>'. dgettext('tuleap-docman', 'Versions') .'</h3>';
+        $content = '<h3>' . dgettext('tuleap-docman', 'Versions') . '</h3>';
 
         $version_factory = new Docman_LinkVersionFactory();
         $versions        = $version_factory->getAllVersionForItem($this->item);
@@ -150,17 +150,17 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                     ['action' => 'show', 'id' => $this->item->getId(), 'version_number' => $versions[$key]->getNumber()]
                 );
                 $user = $versions[$key]->getAuthorId() ? $uh->getDisplayNameFromUserId($versions[$key]->getAuthorId()) : dgettext('tuleap-docman', 'Anonymous');
-                $content .= '<tr class="'. $odd_even[$i++ % count($odd_even)] .'">';
-                $content .= '<td align="center"><a href="'. $download .'">'. $versions[$key]->getNumber().'</a></td>';
-                $content .= '<td>'. html_time_ago($versions[$key]->getDate()) .'</td>';
-                $content .= '<td>'. $this->hp->purify($user).'</td>';
-                $content .= '<td>'. $this->hp->purify($versions[$key]->getLabel()).'</td>';
-                $content .= '<td>'. $this->hp->purify($versions[$key]->getChangelog(), CODENDI_PURIFIER_LIGHT) .'</td>';
+                $content .= '<tr class="' . $odd_even[$i++ % count($odd_even)] . '">';
+                $content .= '<td align="center"><a href="' . $download . '">' . $versions[$key]->getNumber() . '</a></td>';
+                $content .= '<td>' . html_time_ago($versions[$key]->getDate()) . '</td>';
+                $content .= '<td>' . $this->hp->purify($user) . '</td>';
+                $content .= '<td>' . $this->hp->purify($versions[$key]->getLabel()) . '</td>';
+                $content .= '<td>' . $this->hp->purify($versions[$key]->getChangelog(), CODENDI_PURIFIER_LIGHT) . '</td>';
                 $content .= '</tr>';
             }
             $content .= '</table>';
         } else {
-            $content .= '<div>'. dgettext('tuleap-docman', 'Error while searching for old versions') .'</div>';
+            $content .= '<div>' . dgettext('tuleap-docman', 'Error while searching for old versions') . '</div>';
         }
 
         return $content;

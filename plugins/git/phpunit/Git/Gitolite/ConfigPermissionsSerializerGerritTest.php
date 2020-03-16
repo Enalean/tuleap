@@ -29,7 +29,7 @@ use PermissionsManager;
 use PHPUnit\Framework\TestCase;
 use ProjectUGroup;
 
-require_once __DIR__.'/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 class ConfigPermissionsSerializerGerritTest extends TestCase
 {
@@ -88,7 +88,7 @@ class ConfigPermissionsSerializerGerritTest extends TestCase
     public function testItGeneratesTheDefaultConfiguration()
     {
         $this->assertSame(
-            " R   = @site_active @gpig_project_members\n".
+            " R   = @site_active @gpig_project_members\n" .
             " RW  = @gpig_project_members\n",
             $this->serializer->getForRepository($this->repository)
         );
@@ -104,7 +104,7 @@ class ConfigPermissionsSerializerGerritTest extends TestCase
         );
 
         $this->assertSame(
-            " R   = @site_active @gpig_project_members\n".
+            " R   = @site_active @gpig_project_members\n" .
             " RW+ = forge__gerrit_2\n",
             $this->serializer->getForRepository($this->repository)
         );
@@ -120,7 +120,7 @@ class ConfigPermissionsSerializerGerritTest extends TestCase
         );
 
         $this->assertSame(
-            " R   = @site_active @gpig_project_members\n".
+            " R   = @site_active @gpig_project_members\n" .
             " RW  = @gpig_project_members\n",
             $this->serializer->getForRepository($this->repository)
         );
@@ -136,7 +136,7 @@ class ConfigPermissionsSerializerGerritTest extends TestCase
         );
 
         $this->assertSame(
-            " R   = @site_active @gpig_project_members\n".
+            " R   = @site_active @gpig_project_members\n" .
             " RW  = @gpig_project_members\n",
             $this->serializer->getForRepository($this->repository)
         );

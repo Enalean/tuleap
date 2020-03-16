@@ -15,8 +15,8 @@ class Docman_View_PositionWithinFolder extends Docman_View_View  /* implements V
     /* protected */ public function _content($params)
     {
         echo '<select name="ordering">';
-        echo '<option value="beginning" '. ($params['force_ordering'] === 'beginning' ? 'selected="selected"' : '') .'>'. dgettext('tuleap-docman', 'At the beginning') .'</option>';
-        echo '<option value="end"'. ($params['force_ordering'] === 'end' ? 'selected="selected"' : '') .'>'. dgettext('tuleap-docman', 'At the end') .'</option>';
+        echo '<option value="beginning" ' . ($params['force_ordering'] === 'beginning' ? 'selected="selected"' : '') . '>' . dgettext('tuleap-docman', 'At the beginning') . '</option>';
+        echo '<option value="end"' . ($params['force_ordering'] === 'end' ? 'selected="selected"' : '') . '>' . dgettext('tuleap-docman', 'At the end') . '</option>';
         $params['hierarchy']->accept($this, array(
             'parent_id'      => $params['item']->getId(),
             'force_ordering' => $params['force_ordering'],
@@ -29,7 +29,7 @@ class Docman_View_PositionWithinFolder extends Docman_View_View  /* implements V
     {
         $hp = Codendi_HTMLPurifier::instance();
         if (!$params['exclude'] || $params['exclude'] != $item->getId()) {
-            echo '<option value="'. ($item->getRank()+1) .'" '. ($params['force_ordering'] === ("".($item->getRank()+1)) ? 'selected="selected"' : '') .'>After '.  $hp->purify($item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML)  .'</option>';
+            echo '<option value="' . ($item->getRank() + 1) . '" ' . ($params['force_ordering'] === ("" . ($item->getRank() + 1)) ? 'selected="selected"' : '') . '>After ' .  $hp->purify($item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML)  . '</option>';
         }
     }
     public function visitFolder(&$item, $params = array())

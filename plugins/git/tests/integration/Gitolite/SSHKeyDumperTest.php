@@ -50,7 +50,7 @@ final class SSHKeyDumperTest extends GitoliteTestCase
         $this->git_exec->shouldReceive('push')->andReturn(true)->once();
         $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);
 
-        $this->assertTrue(is_file($this->gitolite_admin_dir.'/keydir/john_do@0.pub'));
+        $this->assertTrue(is_file($this->gitolite_admin_dir . '/keydir/john_do@0.pub'));
         $this->assertStringEqualsFile($this->gitolite_admin_dir . '/keydir/john_do@0.pub', $this->key1);
 
         $this->assertEmptyGitStatus();
@@ -62,16 +62,16 @@ final class SSHKeyDumperTest extends GitoliteTestCase
             'id'              => 12,
             'language_id'     => 'en',
             'user_name'       => 'john_do',
-            'authorized_keys' => $this->key1.PFUser::SSH_KEY_SEPARATOR.$this->key2
+            'authorized_keys' => $this->key1 . PFUser::SSH_KEY_SEPARATOR . $this->key2
         ]);
         $invalid_keys_collector = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector::class);
 
         $this->git_exec->shouldReceive('push')->andReturn(true)->once();
         $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);
 
-        $this->assertTrue(is_file($this->gitolite_admin_dir.'/keydir/john_do@0.pub'));
+        $this->assertTrue(is_file($this->gitolite_admin_dir . '/keydir/john_do@0.pub'));
         $this->assertStringEqualsFile($this->gitolite_admin_dir . '/keydir/john_do@0.pub', $this->key1);
-        $this->assertTrue(is_file($this->gitolite_admin_dir.'/keydir/john_do@1.pub'));
+        $this->assertTrue(is_file($this->gitolite_admin_dir . '/keydir/john_do@1.pub'));
         $this->assertStringEqualsFile($this->gitolite_admin_dir . '/keydir/john_do@1.pub', $this->key2);
 
         $this->assertEmptyGitStatus();
@@ -87,7 +87,7 @@ final class SSHKeyDumperTest extends GitoliteTestCase
             'id'              => 12,
             'language_id'     => 'en',
             'user_name'       => 'john_do',
-            'authorized_keys' => $this->key1.PFUser::SSH_KEY_SEPARATOR.$this->key2
+            'authorized_keys' => $this->key1 . PFUser::SSH_KEY_SEPARATOR . $this->key2
         ]);
         $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);
 
@@ -101,7 +101,7 @@ final class SSHKeyDumperTest extends GitoliteTestCase
         $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);
 
         // Ensure second key was deleted
-        $this->assertFalse(is_file($this->gitolite_admin_dir.'/keydir/john_do@1.pub'), "Second key should be deleted");
+        $this->assertFalse(is_file($this->gitolite_admin_dir . '/keydir/john_do@1.pub'), "Second key should be deleted");
 
         $this->assertEmptyGitStatus();
     }
@@ -114,7 +114,7 @@ final class SSHKeyDumperTest extends GitoliteTestCase
             'id'              => 12,
             'language_id'     => 'en',
             'user_name'       => 'john_do',
-            'authorized_keys' => $this->key1.PFUser::SSH_KEY_SEPARATOR.$this->key2
+            'authorized_keys' => $this->key1 . PFUser::SSH_KEY_SEPARATOR . $this->key2
         ]);
         $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);
 
@@ -125,7 +125,7 @@ final class SSHKeyDumperTest extends GitoliteTestCase
             'authorized_keys' => ''
         ]);
         $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);
-        $this->assertCount(0, glob($this->gitolite_admin_dir.'/keydir/*.pub'));
+        $this->assertCount(0, glob($this->gitolite_admin_dir . '/keydir/*.pub'));
 
         $this->assertEmptyGitStatus();
     }
@@ -138,7 +138,7 @@ final class SSHKeyDumperTest extends GitoliteTestCase
             'id'              => 12,
             'language_id'     => 'en',
             'user_name'       => 'john_do',
-            'authorized_keys' => $this->key1.PFUser::SSH_KEY_SEPARATOR.$this->key2
+            'authorized_keys' => $this->key1 . PFUser::SSH_KEY_SEPARATOR . $this->key2
         ]);
         $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);
 
@@ -146,7 +146,7 @@ final class SSHKeyDumperTest extends GitoliteTestCase
             'id'              => 12,
             'language_id'     => 'en',
             'user_name'       => 'john_do',
-            'authorized_keys' => $this->key2.PFUser::SSH_KEY_SEPARATOR.$this->key1
+            'authorized_keys' => $this->key2 . PFUser::SSH_KEY_SEPARATOR . $this->key1
         ]);
         $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);
         $this->assertStringEqualsFile($this->gitolite_admin_dir . '/keydir/john_do@0.pub', $this->key2);

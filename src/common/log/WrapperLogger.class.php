@@ -41,7 +41,7 @@ class WrapperLogger extends \Psr\Log\AbstractLogger implements \Psr\Log\LoggerIn
 
     private function formatMessage($message)
     {
-        return '['. implode('][', $this->prefix) .'] '.$message;
+        return '[' . implode('][', $this->prefix) . '] ' . $message;
     }
 
     public function push($prefix)

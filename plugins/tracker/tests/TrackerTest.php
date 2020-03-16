@@ -31,7 +31,7 @@ class Tracker_FormElement_InterfaceTestVersion implements Tracker_FormElement_In
         $project_export_context,
         UserXMLExporter $user_xml_exporter
     ) {
-        $xmlMapping['F'. $this->getId()] = $this->getId();
+        $xmlMapping['F' . $this->getId()] = $this->getId();
     }
 
     public function getId()

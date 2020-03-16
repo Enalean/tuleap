@@ -61,7 +61,7 @@ class Tracker_FormElement_Field_List_CriteriaTest extends TestCase
 
     public function testItSetsCriteriaValueFromXML(): void
     {
-        $report_id = 'XML_IMPORT_'.rand();
+        $report_id = 'XML_IMPORT_' . rand();
         $report    = Mockery::mock(Tracker_Report::class)->shouldReceive('getId')->andReturn($report_id)->getMock();
         $this->criteria->shouldReceive('getReport')->andReturn($report);
 
@@ -97,7 +97,7 @@ class Tracker_FormElement_Field_List_CriteriaTest extends TestCase
 
     public function testItDoesNotSetCriteriaValueFromXMLIfNotAStaticBind(): void
     {
-        $report_id = 'XML_IMPORT_'.rand();
+        $report_id = 'XML_IMPORT_' . rand();
         $report    = Mockery::mock(Tracker_Report::class)->shouldReceive('getId')->andReturn($report_id)->getMock();
         $this->criteria->shouldReceive('getReport')->andReturn($report);
 

@@ -183,7 +183,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
-        bindtextdomain('tuleap-tracker', __DIR__.'/../site-content');
+        bindtextdomain('tuleap-tracker', __DIR__ . '/../site-content');
 
         $this->addHook('javascript_file');
         $this->addHook('cssfile', 'cssFile', false);
@@ -358,7 +358,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
     {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath().'/config.php') === 0 ||
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/config.php') === 0 ||
             $this->isInDashboard()
         ) {
             $event->setIsInBurningParrotCompatiblePage();
@@ -475,8 +475,8 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         // TODO: Move this in ServiceTracker::displayHeader()
         include $GLOBALS['Language']->getContent('script_locale', null, 'tracker');
         echo PHP_EOL;
-        echo "codendi.tracker = codendi.tracker || { };".PHP_EOL;
-        echo "codendi.tracker.base_url = '". TRACKER_BASE_URL ."/';".PHP_EOL;
+        echo "codendi.tracker = codendi.tracker || { };" . PHP_EOL;
+        echo "codendi.tracker.base_url = '" . TRACKER_BASE_URL . "/';" . PHP_EOL;
     }
 
     public function toggle($params)
@@ -485,7 +485,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             Toggler::togglePreference($params['user'], $params['id']);
             $params['done'] = true;
         } elseif (strpos($params['id'], 'tracker_report_query_') === 0) {
-            $report_id = (int)substr($params['id'], strlen('tracker_report_query_'));
+            $report_id = (int) substr($params['id'], strlen('tracker_report_query_'));
             $report_factory = Tracker_ReportFactory::instance();
             if (($report = $report_factory->getReportById($report_id, $params['user']->getid())) && $report->userCanUpdate($params['user'])) {
                 $report->toggleQueryDisplay();
@@ -609,24 +609,24 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             if (in_array($params['permission_type'], array(Tracker::PERMISSION_ADMIN, Tracker::PERMISSION_FULL, Tracker::PERMISSION_SUBMITTER, Tracker::PERMISSION_ASSIGNEE, Tracker::PERMISSION_SUBMITTER_ONLY, 'PLUGIN_TRACKER_FIELD_SUBMIT', 'PLUGIN_TRACKER_FIELD_READ', 'PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_ARTIFACT_ACCESS'))) {
                 $object_id = $params['object_id'];
                 if ($type == 'tracker') {
-                    $ret = (string)$object_id;
+                    $ret = (string) $object_id;
                     if ($tracker = TrackerFactory::instance()->getTrackerById($object_id)) {
                         $params['object_name'] = $tracker->getName();
                     }
                 } elseif ($type == 'field') {
-                    $ret = (string)$object_id;
+                    $ret = (string) $object_id;
                     if ($field = Tracker_FormElementFactory::instance()->getFormElementById($object_id)) {
                         $ret     = $field->getLabel();
                         $tracker = $field->getTracker();
                         if ($tracker !== null) {
-                            $ret .= ' ('. $tracker->getName() .')';
+                            $ret .= ' (' . $tracker->getName() . ')';
                         }
                     }
                     $params['object_name'] =  $ret;
                 } elseif ($type == 'artifact') {
-                    $ret = (string)$object_id;
+                    $ret = (string) $object_id;
                     if ($a  = Tracker_ArtifactFactory::instance()->getArtifactById($object_id)) {
-                        $ret = 'art #'. $a->getId();
+                        $ret = 'art #' . $a->getId();
                         $semantics = $a->getTracker()
                                        ->getTrackerSemanticManager()
                                        ->getSemantics();
@@ -733,7 +733,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     private function isDefaultReferenceUrl(Reference $reference)
     {
-        return $reference->getLink() === TRACKER_BASE_URL. '/?&aid=$1&group_id=$group_id';
+        return $reference->getLink() === TRACKER_BASE_URL . '/?&aid=$1&group_id=$group_id';
     }
 
     public function build_reference($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
@@ -770,12 +770,12 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         $request_uri = $_SERVER['REQUEST_URI'];
         if (strpos($request_uri, $this->getPluginPath()) === 0 &&
-            strpos($request_uri, $this->getPluginPath().'/notifications/') !== 0 &&
-            strpos($request_uri, $this->getPluginPath().'/webhooks/') !== 0 &&
-            strpos($request_uri, $this->getPluginPath().'/workflow/') !== 0 &&
-            strpos($request_uri, $this->getPluginPath().ByGroupController::URL.'/') !== 0 &&
-            strpos($request_uri, $this->getPluginPath().ByFieldController::URL.'/') !== 0 &&
-            strpos($request_uri, $this->getPluginPath().PermissionsOnFieldsUpdateController::URL.'/') !== 0
+            strpos($request_uri, $this->getPluginPath() . '/notifications/') !== 0 &&
+            strpos($request_uri, $this->getPluginPath() . '/webhooks/') !== 0 &&
+            strpos($request_uri, $this->getPluginPath() . '/workflow/') !== 0 &&
+            strpos($request_uri, $this->getPluginPath() . ByGroupController::URL . '/') !== 0 &&
+            strpos($request_uri, $this->getPluginPath() . ByFieldController::URL . '/') !== 0 &&
+            strpos($request_uri, $this->getPluginPath() . PermissionsOnFieldsUpdateController::URL . '/') !== 0
         ) {
             $params['url_verification'] = new Tracker_URLVerification();
         }
@@ -851,17 +851,17 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                 foreach ($trackers as $t) {
                     if ($t->userCanView()) {
                         $name      = $purifier->purify($t->name, CODENDI_PURIFIER_CONVERT_HTML);
-                        $entries[] = '<a href="'. TRACKER_BASE_URL .'/?tracker='. $t->id .'">'. $name .'</a>';
+                        $entries[] = '<a href="' . TRACKER_BASE_URL . '/?tracker=' . $t->id . '">' . $name . '</a>';
                     }
                 }
                 if ($service !== null && $entries) {
                     $area = '';
-                    $area .= '<a href="'. TRACKER_BASE_URL .'/?group_id='. urlencode($project->getGroupId()) .'">';
-                    $area .= '<i class="dashboard-widget-content-projectpublicareas '.$purifier->purify($service->getIcon()).'"></i>';
+                    $area .= '<a href="' . TRACKER_BASE_URL . '/?group_id=' . urlencode($project->getGroupId()) . '">';
+                    $area .= '<i class="dashboard-widget-content-projectpublicareas ' . $purifier->purify($service->getIcon()) . '"></i>';
                     $area .= $GLOBALS['Language']->getText('plugin_tracker', 'service_lbl_key');
                     $area .= '</a>';
 
-                    $area .= '<ul><li>'. implode('</li><li>', $entries) .'</li></ul>';
+                    $area .= '<ul><li>' . implode('</li><li>', $entries) . '</li></ul>';
 
                     $event->addArea($area);
                 }
@@ -1055,7 +1055,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             return true;
         }
 
-        if (! (array)$xml->natures) {
+        if (! (array) $xml->natures) {
             return true;
         }
 
@@ -1067,7 +1067,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $this->addCustomNatures($plateform_natures["nature"]);
 
         foreach ($xml->natures->nature as $nature) {
-            if (! in_array((string)$nature, $plateform_natures['nature'])) {
+            if (! in_array((string) $nature, $plateform_natures['nature'])) {
                 return false;
             }
         }
@@ -1109,7 +1109,6 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     }
     public function plugin_statistics_service_usage($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-
         $dao = $this->getArtifactDao();
 
         $start_date      = strtotime($params['start_date']);
@@ -1178,7 +1177,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     private function buildRightVersionOfProjectTrackersResource($version)
     {
-        $class_with_right_namespace = '\\Tuleap\\Tracker\\REST\\'.$version.'\\ProjectTrackersResource';
+        $class_with_right_namespace = '\\Tuleap\\Tracker\\REST\\' . $version . '\\ProjectTrackersResource';
         return new $class_with_right_namespace;
     }
 
@@ -1201,7 +1200,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     private function buildRightVersionOfMilestonesBurndownResource($version)
     {
-        $class_with_right_namespace = '\\Tuleap\\Tracker\\REST\\'.$version.'\\MilestonesBurndownResource';
+        $class_with_right_namespace = '\\Tuleap\\Tracker\\REST\\' . $version . '\\MilestonesBurndownResource';
         return new $class_with_right_namespace;
     }
 
@@ -1263,7 +1262,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         );
 
         $src_dir  = ForgeConfig::get('codendi_dir');
-        $script   = $src_dir .'/plugins/tracker/bin/emailgateway-wrapper.sh';
+        $script   = $src_dir . '/plugins/tracker/bin/emailgateway-wrapper.sh';
 
         $command = "sudo -u codendiadm $script";
 
@@ -1433,7 +1432,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $params['buttons'][] = array(
             'icon'        => 'fa-list',
             'label'       => dgettext('tuleap-tracker', 'Configure trackers'),
-            'uri'         => TRACKER_BASE_URL . '/?group_id=' . (int)$template->getID(),
+            'uri'         => TRACKER_BASE_URL . '/?group_id=' . (int) $template->getID(),
             'is_disabled' => ! $is_service_used,
             'title'       => ! $is_service_used ? dgettext('tuleap-tracker', 'This template does not use trackers') : ''
         );
@@ -1495,7 +1494,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
      */
     private function getNotificationForProjectMemberCleaner()
     {
-        return  new NotificationsForProjectMemberCleaner(
+        return new NotificationsForProjectMemberCleaner(
             $this->getTrackerFactory(),
             $this->getTrackerNotificationManager(),
             $this->getUserToNotifyDao()
@@ -1805,7 +1804,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $artifact_deletion_dao   = new ArtifactsDeletionConfigDAO();
 
         return new ConfigController(
-            new CSRFSynchronizerToken(TRACKER_BASE_URL.'/config.php'),
+            new CSRFSynchronizerToken(TRACKER_BASE_URL . '/config.php'),
             new MailGatewayConfigController(
                 new MailGatewayConfig(
                     new MailGatewayConfigDao()
@@ -1860,12 +1859,12 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function routeGetFieldsPermissionsByField() : DispatchableWithRequest
     {
-        return new ByFieldController(TrackerFactory::instance(), TemplateRendererFactory::build()->getRenderer(__DIR__.'/../templates/permission'));
+        return new ByFieldController(TrackerFactory::instance(), TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/permission'));
     }
 
     public function routeGetFieldsPermissionsByGroup() : DispatchableWithRequest
     {
-        return new ByGroupController(TrackerFactory::instance(), TemplateRendererFactory::build()->getRenderer(__DIR__.'/../templates/permission'));
+        return new ByGroupController(TrackerFactory::instance(), TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/permission'));
     }
 
     public function routePostFieldsPermissions(): DispatchableWithRequest
@@ -1890,9 +1889,9 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $r->get('/notifications/my/{id:\d+}/', $this->getRouteHandler('routeGetNotificationsMy'));
             $r->post('/notifications/my/{id:\d+}/', $this->getRouteHandler('routePostNotificationsMy'));
 
-            $r->get(ByFieldController::URL.'/{id:\d+}', $this->getRouteHandler('routeGetFieldsPermissionsByField'));
-            $r->get(ByGroupController::URL.'/{id:\d+}', $this->getRouteHandler('routeGetFieldsPermissionsByGroup'));
-            $r->post(PermissionsOnFieldsUpdateController::URL.'/{id:\d+}', $this->getRouteHandler('routePostFieldsPermissions'));
+            $r->get(ByFieldController::URL . '/{id:\d+}', $this->getRouteHandler('routeGetFieldsPermissionsByField'));
+            $r->get(ByGroupController::URL . '/{id:\d+}', $this->getRouteHandler('routeGetFieldsPermissionsByGroup'));
+            $r->post(PermissionsOnFieldsUpdateController::URL . '/{id:\d+}', $this->getRouteHandler('routePostFieldsPermissions'));
 
             $r->post('/webhooks/delete', $this->getRouteHandler('routePostWebhooksDelete'));
             $r->post('/webhooks/create', $this->getRouteHandler('routePostWebhooksCreate'));

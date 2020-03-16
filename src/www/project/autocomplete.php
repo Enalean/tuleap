@@ -42,7 +42,7 @@ $limit     = 15;
 $page      = 1;
 
 if ($request->get('page')) {
-    $page = (int)$request->get('page');
+    $page = (int) $request->get('page');
 }
 
 $offset    = ($page - 1) * $limit;
@@ -67,12 +67,12 @@ $prjManager     = ProjectManager::instance();
 $nbProjectFound = 0;
 $projects       = $prjManager->searchProjectsNameLike($name, $limit, $nbProjectFound, $user, $isMember, $isAdmin, $isPrivate, $offset);
 foreach ($projects as $project) {
-    $list[] = $project->getPublicName(). " (".$project->getUnixName().")";
+    $list[] = $project->getPublicName() . " (" . $project->getUnixName() . ")";
 }
 
 $nbLeft = $nbProjectFound - $limit;
 if ($nbLeft > 0 && ! $json_format) {
-    $list[] = '<strong>'.$nbLeft.' left ...</strong>';
+    $list[] = '<strong>' . $nbLeft . ' left ...</strong>';
 }
 
 

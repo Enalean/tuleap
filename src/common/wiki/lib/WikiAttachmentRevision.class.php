@@ -67,7 +67,7 @@ class WikiAttachmentRevision
     {
         if (is_numeric($gid)) {
             $this->gid = (int) $gid;
-            $this->basedir = $GLOBALS['sys_wiki_attachment_data_dir'].'/'.$this->gid;
+            $this->basedir = $GLOBALS['sys_wiki_attachment_data_dir'] . '/' . $this->gid;
         }
     }
 
@@ -108,14 +108,14 @@ class WikiAttachmentRevision
     public function create($userfile_tmpname)
     {
         $this->getFilename();
-        $file_dir = $this->basedir.'/'.$this->filename;
+        $file_dir = $this->basedir . '/' . $this->filename;
 
         /** @todo: add lock */
 
         $waIter = $this->getRevisionIterator();
         $this->revision = $waIter->count();
 
-        if (!move_uploaded_file($userfile_tmpname, $file_dir.'/'.$this->revision)) {
+        if (!move_uploaded_file($userfile_tmpname, $file_dir . '/' . $this->revision)) {
             trigger_error(
                 $GLOBALS['Language']->getText(
                     'wiki_lib_attachment_rev',
@@ -127,7 +127,7 @@ class WikiAttachmentRevision
             return false;
         }
 
-        chmod($file_dir.'/'.$this->revision, 0600);
+        chmod($file_dir . '/' . $this->revision, 0600);
 
         $ret = $this->dbadd();
 
@@ -185,7 +185,7 @@ class WikiAttachmentRevision
     {
         $this->getFilename();
 
-        return $this->basedir.'/'.$this->filename.'/'.$this->revision;
+        return $this->basedir . '/' . $this->filename . '/' . $this->revision;
     }
 
 
@@ -193,7 +193,7 @@ class WikiAttachmentRevision
     {
         $this->getFilename();
 
-        return is_file($this->basedir.'/'.$this->filename.'/'.$this->revision);
+        return is_file($this->basedir . '/' . $this->filename . '/' . $this->revision);
     }
 
 
@@ -231,7 +231,7 @@ class WikiAttachmentRevision
     {
         if (is_numeric($gid)) {
             $this->gid = (int) $gid;
-            $this->basedir = $GLOBALS['sys_wiki_attachment_data_dir'].'/'.$this->gid;
+            $this->basedir = $GLOBALS['sys_wiki_attachment_data_dir'] . '/' . $this->gid;
         }
     }
 
@@ -239,7 +239,7 @@ class WikiAttachmentRevision
     {
         global $sys_max_size_upload;
 
-        if ($s> $sys_max_size_upload) {
+        if ($s > $sys_max_size_upload) {
             trigger_error(
                 $GLOBALS['Language']->getText(
                     'wiki_lib_attachment_rev',

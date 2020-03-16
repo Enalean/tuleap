@@ -38,12 +38,12 @@ class CanvasGraph extends Graph
     public function Stroke($aStrokeFileName = "")
     {
         if ($this->texts != null) {
-            for ($i=0; $i < count($this->texts); ++$i) {
+            for ($i = 0; $i < count($this->texts); ++$i) {
                 $this->texts[$i]->Stroke($this->img);
             }
         }
         if ($this->iTables !== null) {
-            for ($i=0; $i < count($this->iTables); ++$i) {
+            for ($i = 0; $i < count($this->iTables); ++$i) {
                 $this->iTables[$i]->Stroke($this->img);
             }
         }
@@ -56,7 +56,7 @@ class CanvasGraph extends Graph
         // to do to generate the image map to improve performance
         // a best we can. Therefor you will see a lot of tests !$_csim in the
         // code below.
-        $_csim = ($aStrokeFileName===_CSIM_SPECIALFILE);
+        $_csim = ($aStrokeFileName === _CSIM_SPECIALFILE);
 
         // We need to know if we have stroked the plot in the
         // GetCSIMareas. Otherwise the CSIM hasn't been generated

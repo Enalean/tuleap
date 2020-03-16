@@ -49,7 +49,7 @@ class Tracker_FormElement_Field_Value_FloatDao extends Tracker_FormElement_Field
         }
         $sql = " INSERT INTO $this->table_name(changeset_value_id, value)
                  VALUES
-                  ( ".implode(' , NULL ), ( ', $changeset_value_ids).", NULL)";
+                  ( " . implode(' , NULL ), ( ', $changeset_value_ids) . ", NULL)";
         return $this->update($sql);
     }
 

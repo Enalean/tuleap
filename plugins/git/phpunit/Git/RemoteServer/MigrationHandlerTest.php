@@ -29,7 +29,7 @@ use Project;
 use Git_SystemEventManager;
 use Git_RemoteServer_NotFoundException;
 
-require_once __DIR__ .'/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 class MigrationHandlerTest extends TestCase
 {

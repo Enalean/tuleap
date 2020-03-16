@@ -33,7 +33,6 @@ class b201406041516_add_email_gateway_salt extends ForgeUpgrade_Bucket
 
     public function up()
     {
-
         $this->createTable();
         $this->initSalt();
     }

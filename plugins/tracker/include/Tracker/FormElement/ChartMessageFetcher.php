@@ -78,7 +78,7 @@ class ChartMessageFetcher
             try {
                 $this->configuration_field_retriever->getStartDateField($tracker, $user);
             } catch (Tracker_FormElement_Chart_Field_Exception $e) {
-                $warnings[] = '<li>'. $e->getMessage() . '</li>';
+                $warnings[] = '<li>' . $e->getMessage() . '</li>';
             }
         }
 
@@ -89,8 +89,8 @@ class ChartMessageFetcher
                 try {
                     $this->configuration_field_retriever->getEndDateField($tracker, $user);
                 } catch (Tracker_FormElement_Chart_Field_Exception $exception_end_date) {
-                    $warnings[] = '<li>'. $exception_duration->getMessage() . '</li>';
-                    $warnings[] = '<li>'. $exception_end_date->getMessage() . '</li>';
+                    $warnings[] = '<li>' . $exception_duration->getMessage() . '</li>';
+                    $warnings[] = '<li>' . $exception_end_date->getMessage() . '</li>';
                 }
             }
         }

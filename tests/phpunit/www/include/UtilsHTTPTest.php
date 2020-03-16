@@ -22,7 +22,7 @@ namespace Tuleap;
 
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__.'/../../../../src/www/include/utils.php';
+require_once __DIR__ . '/../../../../src/www/include/utils.php';
 
 class UtilsHTTPTest extends TestCase
 {
@@ -37,10 +37,10 @@ class UtilsHTTPTest extends TestCase
 
     public function testItExtractBodyThatStartsWithNul()
     {
-        $string = "Content-type: sdfsdf\r\n\r\n".(0x00)."The body";
+        $string = "Content-type: sdfsdf\r\n\r\n" . (0x00) . "The body";
         list($headers, $body) = http_split_header_body($string);
 
-        $this->assertSame((0x00)."The body", $body);
+        $this->assertSame((0x00) . "The body", $body);
     }
 
     public function testItExtractBodyThatStartsWithLN()
@@ -62,7 +62,7 @@ Content-type: sdfsdf\r\n\r\nThe body");
      */
     public function testItExtractsBodyWithBinaryData()
     {
-        list($headers, $body) = http_split_header_body(file_get_contents(dirname(__FILE__).'/_fixtures/svn_bin_data'));
+        list($headers, $body) = http_split_header_body(file_get_contents(dirname(__FILE__) . '/_fixtures/svn_bin_data'));
         $this->assertSame("Content-Type: text/plain", $headers);
     }
 }

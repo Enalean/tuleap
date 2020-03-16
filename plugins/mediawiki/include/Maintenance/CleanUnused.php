@@ -191,7 +191,7 @@ class CleanUnused
 
     private function purgeOneProject(Project $project, array $row, $dry_run)
     {
-        $this->logger->info("Found candidate ".$row['database_name']);
+        $this->logger->info("Found candidate " . $row['database_name']);
         $this->dao->purge($row, $dry_run);
         $this->deleteDirectory($project, $dry_run);
     }

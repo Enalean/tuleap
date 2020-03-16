@@ -260,7 +260,7 @@ class Chart
         //this should be above baseline
         $test2    = "H";
         //some of these additional letters should go below it
-        $test3    ="Hjgqp";
+        $test3    = "Hjgqp";
         //get the dimension for these two:
         $box2     = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $test2);
         $box3     = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $test3);

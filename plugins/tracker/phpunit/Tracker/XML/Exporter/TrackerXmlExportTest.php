@@ -79,7 +79,7 @@ class TrackerXmlExportTest extends TestCase
 
         $this->tracker_artifact_XMLexport = Mockery::mock(Tracker_Artifact_XMLExport::class);
 
-        $trigger_rules_manager =Mockery::mock(\Tracker_Workflow_Trigger_RulesManager::class);
+        $trigger_rules_manager = Mockery::mock(\Tracker_Workflow_Trigger_RulesManager::class);
         $trigger_rules_manager->shouldReceive('exportToXml');
 
         $rng_validator = Mockery::mock(\XML_RNGValidator::class);

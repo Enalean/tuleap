@@ -21,7 +21,7 @@
 
 namespace Tuleap\GitLFS\SSHAuthenticate;
 
-require_once __DIR__.'/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -95,7 +95,7 @@ class SSHAuthenticateTest extends TestCase
         $this->user_operation_factory->shouldReceive('getUserOperationFromName')
             ->andReturns(\Mockery::mock(UserOperation::class));
 
-        $project = Mockery::mock(\Project::class, ['isActive' => false ]);
+        $project = Mockery::mock(\Project::class, ['isActive' => false]);
         $this->project_manager->shouldReceive('getProjectByCaseInsensitiveUnixName')->with('foo')->andReturns($project);
 
         $this->expectException(InvalidCommandException::class);
@@ -108,7 +108,7 @@ class SSHAuthenticateTest extends TestCase
         $this->user_operation_factory->shouldReceive('getUserOperationFromName')
             ->andReturns(\Mockery::mock(UserOperation::class));
 
-        $project = Mockery::mock(\Project::class, ['isActive' => true, 'getID' => 122 ]);
+        $project = Mockery::mock(\Project::class, ['isActive' => true, 'getID' => 122]);
         $this->project_manager->shouldReceive('getProjectByCaseInsensitiveUnixName')->andReturns($project);
 
         $this->git_repository_factory->shouldReceive('getRepositoryByPath')->with(122, 'foo/faa.git')->andReturns(null);
@@ -125,7 +125,7 @@ class SSHAuthenticateTest extends TestCase
         $this->user_operation_factory->shouldReceive('getUserOperationFromName')
             ->andReturns(\Mockery::mock(UserOperation::class));
 
-        $project = Mockery::mock(\Project::class, ['isActive' => true, 'getID' => 122 ]);
+        $project = Mockery::mock(\Project::class, ['isActive' => true, 'getID' => 122]);
         $this->project_manager->shouldReceive('getProjectByCaseInsensitiveUnixName')->andReturns($project);
 
         $repository = Mockery::mock(\GitRepository::class);
@@ -146,7 +146,7 @@ class SSHAuthenticateTest extends TestCase
         $this->user_operation_factory->shouldReceive('getUserOperationFromName')
             ->andReturns(\Mockery::mock(UserOperation::class));
 
-        $project = Mockery::mock(\Project::class, ['isActive' => true, 'getID' => 122 ]);
+        $project = Mockery::mock(\Project::class, ['isActive' => true, 'getID' => 122]);
         $this->project_manager->shouldReceive('getProjectByCaseInsensitiveUnixName')->andReturns($project);
 
         $repository = Mockery::mock(\GitRepository::class);
@@ -168,7 +168,7 @@ class SSHAuthenticateTest extends TestCase
         $this->user_operation_factory->shouldReceive('getUserOperationFromName')
             ->andReturns(\Mockery::mock(UserOperation::class));
 
-        $project = Mockery::mock(\Project::class, ['isActive' => true, 'getID' => 122 ]);
+        $project = Mockery::mock(\Project::class, ['isActive' => true, 'getID' => 122]);
         $this->project_manager->shouldReceive('getProjectByCaseInsensitiveUnixName')->andReturns($project);
 
         $user = Mockery::mock(\PFUser::class, ['isAlive' => true]);
@@ -206,7 +206,7 @@ class SSHAuthenticateTest extends TestCase
         $this->user_operation_factory->shouldReceive('getUserOperationFromName')
             ->andReturns(\Mockery::mock(UserOperation::class));
 
-        $project = Mockery::mock(\Project::class, ['isActive' => true, 'getID' => 122 ]);
+        $project = Mockery::mock(\Project::class, ['isActive' => true, 'getID' => 122]);
         $this->project_manager->shouldReceive('getProjectByCaseInsensitiveUnixName')->andReturns($project);
 
         $user = Mockery::mock(\PFUser::class, ['isAlive' => true]);
@@ -229,7 +229,7 @@ class SSHAuthenticateTest extends TestCase
         $this->user_operation_factory->shouldReceive('getUserOperationFromName')
             ->andReturns($user_operation);
 
-        $project = Mockery::mock(\Project::class, ['isActive' => true, 'getID' => 122 ]);
+        $project = Mockery::mock(\Project::class, ['isActive' => true, 'getID' => 122]);
         $this->project_manager->shouldReceive('getProjectByCaseInsensitiveUnixName')->andReturns($project);
 
         $user = Mockery::mock(\PFUser::class, ['isAlive' => true]);

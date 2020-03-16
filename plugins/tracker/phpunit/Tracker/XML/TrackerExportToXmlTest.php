@@ -141,17 +141,17 @@ class TrackerExportToXmlTest extends TestCase
         $xml = $this->tracker->exportToXML($xml);
 
         $this->assertTrue(isset($xml->permissions));
-        $this->assertEquals('tracker', (string)$xml->permissions->permission[0]['scope']);
-        $this->assertEquals('UGROUP_1', (string)$xml->permissions->permission[0]['ugroup']);
-        $this->assertEquals('PERM_1', (string)$xml->permissions->permission[0]['type']);
+        $this->assertEquals('tracker', (string) $xml->permissions->permission[0]['scope']);
+        $this->assertEquals('UGROUP_1', (string) $xml->permissions->permission[0]['ugroup']);
+        $this->assertEquals('PERM_1', (string) $xml->permissions->permission[0]['type']);
 
-        $this->assertEquals('tracker', (string)$xml->permissions->permission[1]['scope']);
-        $this->assertEquals('UGROUP_3', (string)$xml->permissions->permission[1]['ugroup']);
-        $this->assertEquals('PERM_2', (string)$xml->permissions->permission[1]['type']);
+        $this->assertEquals('tracker', (string) $xml->permissions->permission[1]['scope']);
+        $this->assertEquals('UGROUP_3', (string) $xml->permissions->permission[1]['ugroup']);
+        $this->assertEquals('PERM_2', (string) $xml->permissions->permission[1]['type']);
 
-        $this->assertEquals('tracker', (string)$xml->permissions->permission[2]['scope']);
-        $this->assertEquals('UGROUP_5', (string)$xml->permissions->permission[2]['ugroup']);
-        $this->assertEquals('PERM_3', (string)$xml->permissions->permission[2]['type']);
+        $this->assertEquals('tracker', (string) $xml->permissions->permission[2]['scope']);
+        $this->assertEquals('UGROUP_5', (string) $xml->permissions->permission[2]['ugroup']);
+        $this->assertEquals('PERM_3', (string) $xml->permissions->permission[2]['type']);
     }
 
     public function testItExportsTheTrackerID()
@@ -165,7 +165,7 @@ class TrackerExportToXmlTest extends TestCase
         $xml = $this->tracker->exportToXML($xml);
 
         $attributes = $xml->attributes();
-        $this->assertEquals('T110', (string)$attributes['id']);
+        $this->assertEquals('T110', (string) $attributes['id']);
     }
 
     public function testItExportsNoParentIfNotInAHierarchy()
@@ -179,7 +179,7 @@ class TrackerExportToXmlTest extends TestCase
         $xml = $this->tracker->exportToXML($xml);
 
         $attributes = $xml->attributes();
-        $this->assertEquals("0", (string)$attributes['parent_id']);
+        $this->assertEquals("0", (string) $attributes['parent_id']);
     }
 
     public function testItExportsTheParentId()
@@ -194,7 +194,7 @@ class TrackerExportToXmlTest extends TestCase
         $xml = $this->tracker->exportToXML($xml);
 
         $attributes = $xml->attributes();
-        $this->assertEquals("T9001", (string)$attributes['parent_id']);
+        $this->assertEquals("T9001", (string) $attributes['parent_id']);
     }
 
     public function testItExportsTheTrackerColor()
@@ -208,6 +208,6 @@ class TrackerExportToXmlTest extends TestCase
         $xml = $this->tracker->exportToXML($xml);
 
         $color = $xml->color;
-        $this->assertEquals(TrackerColor::default()->getName(), (string)$color);
+        $this->assertEquals(TrackerColor::default()->getName(), (string) $color);
     }
 }

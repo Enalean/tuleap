@@ -112,7 +112,7 @@ class Tracker_Migration_V3_FieldDependenciesDao extends DataAccessObject
                     $old_rule['my_source_value_id'] . "," .
                     $old_rule['my_target_field_id'] . "," .
                     $old_rule['my_target_value_id'] .
-                ");" ;
+                ");";
             $this->update($tracker_rule_list_insert);
         }
     }

@@ -93,7 +93,7 @@ class crosstrackerPlugin extends Plugin // phpcs:ignore
         parent::__construct($id);
         $this->setScope(self::SCOPE_SYSTEM);
 
-        bindtextdomain('tuleap-crosstracker', __DIR__.'/../site-content');
+        bindtextdomain('tuleap-crosstracker', __DIR__ . '/../site-content');
     }
 
     public function getHooksAndCallbacks()

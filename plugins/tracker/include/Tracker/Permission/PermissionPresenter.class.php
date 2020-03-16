@@ -41,7 +41,7 @@ class Tracker_Permission_PermissionPresenter
 
     public function form_url()
     {
-        return '?'.http_build_query(array(
+        return '?' . http_build_query(array(
             'tracker' => $this->tracker->getId(),
             'func'    => 'admin-perms-tracker'
         ));
@@ -73,7 +73,7 @@ class Tracker_Permission_PermissionPresenter
             'project_admin_permissions',
             'admins_create_modify_ug',
             array(
-                '/project/admin/ugroup.php?group_id='.(int)$this->tracker->getGroupID()
+                '/project/admin/ugroup.php?group_id=' . (int) $this->tracker->getGroupID()
             )
         );
     }

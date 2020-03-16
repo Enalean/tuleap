@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once __DIR__.'/../../../../bootstrap.php';
+require_once __DIR__ . '/../../../../bootstrap.php';
 
 class Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporterTest extends TuleapTestCase
 {
@@ -51,7 +51,6 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporterTest exte
 
     public function itCreatesTextNodeWithHTMLFormattedText()
     {
-
         stub($this->changeset_value)->getText()->returns('<p>test</p>');
         stub($this->changeset_value)->getFormat()->returns(Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
 
@@ -64,10 +63,10 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporterTest exte
 
         $field_change = $this->changeset_xml->field_change;
 
-        $this->assertEqual((string)$field_change['field_name'], 'textarea');
-        $this->assertEqual((string)$field_change['type'], 'text');
+        $this->assertEqual((string) $field_change['field_name'], 'textarea');
+        $this->assertEqual((string) $field_change['type'], 'text');
 
-        $this->assertEqual((string)$field_change->value, '<p>test</p>');
-        $this->assertEqual((string)$field_change->value['format'], 'html');
+        $this->assertEqual((string) $field_change->value, '<p>test</p>');
+        $this->assertEqual((string) $field_change->value['format'], 'html');
     }
 }

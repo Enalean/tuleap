@@ -39,7 +39,7 @@ class HTML_Element_Input_Radio extends HTML_Element_Input
         $hp = Codendi_HTMLPurifier::instance();
         $html  = '<label class="radio">';
         $html .= $this->renderValue();
-        $html .= ' '.$hp->purify($this->label, CODENDI_PURIFIER_CONVERT_HTML);
+        $html .= ' ' . $hp->purify($this->label, CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '</label>';
         return $html;
     }

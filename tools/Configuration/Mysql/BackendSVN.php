@@ -50,11 +50,11 @@ class BackendSVN
             throw new \Exception('Unable to connect to DB (' . $mysqli->connect_errno . ') ' . $mysqli->connect_error);
         }
 
-        $mysqli->query('GRANT SELECT ON tuleap.user to dbauthuser@\''.$this->ip_address.'\' identified by \''.$this->dbauthuser_password.'\'');
-        $mysqli->query('GRANT SELECT ON tuleap.user_group to dbauthuser@\''.$this->ip_address.'\'');
-        $mysqli->query('GRANT SELECT ON tuleap.groups to dbauthuser@\''.$this->ip_address.'\'');
-        $mysqli->query('GRANT SELECT ON tuleap.svn_token to dbauthuser@\''.$this->ip_address.'\'');
-        $mysqli->query('GRANT SELECT ON tuleap.plugin_ldap_user to dbauthuser@\''.$this->ip_address.'\'');
+        $mysqli->query('GRANT SELECT ON tuleap.user to dbauthuser@\'' . $this->ip_address . '\' identified by \'' . $this->dbauthuser_password . '\'');
+        $mysqli->query('GRANT SELECT ON tuleap.user_group to dbauthuser@\'' . $this->ip_address . '\'');
+        $mysqli->query('GRANT SELECT ON tuleap.groups to dbauthuser@\'' . $this->ip_address . '\'');
+        $mysqli->query('GRANT SELECT ON tuleap.svn_token to dbauthuser@\'' . $this->ip_address . '\'');
+        $mysqli->query('GRANT SELECT ON tuleap.plugin_ldap_user to dbauthuser@\'' . $this->ip_address . '\'');
         $mysqli->query('FLUSH PRIVILEGES');
         $mysqli->close();
     }

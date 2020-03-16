@@ -47,7 +47,7 @@ class prometheus_metricsPlugin extends Plugin  // @codingStandardsIgnoreLine
         parent::__construct($id);
         $this->setScope(self::SCOPE_SYSTEM);
 
-        bindtextdomain('tuleap-prometheus_metrics', __DIR__.'/../site-content');
+        bindtextdomain('tuleap-prometheus_metrics', __DIR__ . '/../site-content');
     }
 
     public function getPluginInfo()

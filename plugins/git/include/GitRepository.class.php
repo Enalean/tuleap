@@ -73,7 +73,6 @@ class GitRepository implements DVCSRepository
 
     public function __construct()
     {
-
         $this->hash            = '';
         $this->rootPath        = '';
         $this->path            = '';
@@ -553,7 +552,7 @@ class GitRepository implements DVCSRepository
 
     public function getSSHForMirror(Git_Mirror_Mirror $mirror)
     {
-        return 'ssh://gitolite@'.$mirror->url.'/'.$this->getPath();
+        return 'ssh://gitolite@' . $mirror->url . '/' . $this->getPath();
     }
 
     /**
@@ -575,7 +574,7 @@ class GitRepository implements DVCSRepository
 
     public static function getPathFromProjectAndName(Project $project, $name)
     {
-        return $project->getUnixName().DIRECTORY_SEPARATOR.$name.self::REPO_EXT;
+        return $project->getUnixName() . DIRECTORY_SEPARATOR . $name . self::REPO_EXT;
     }
 
     /**
@@ -587,7 +586,7 @@ class GitRepository implements DVCSRepository
     {
         $root_path = $this->getGitRootPath();
         if (is_string($root_path) && strlen($root_path) > 0) {
-            $root_path = ($root_path[strlen($root_path) - 1] === DIRECTORY_SEPARATOR) ? $root_path : $root_path.DIRECTORY_SEPARATOR ;
+            $root_path = ($root_path[strlen($root_path) - 1] === DIRECTORY_SEPARATOR) ? $root_path : $root_path . DIRECTORY_SEPARATOR;
         }
 
         return $root_path . $this->getPathWithoutLazyLoading();
@@ -646,12 +645,12 @@ class GitRepository implements DVCSRepository
     {
         $url  = $this->getDiffLink($url_manager, '%%H');
 
-        $format = 'format:URL:    '.$url.'%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b';
+        $format = 'format:URL:    ' . $url . '%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b';
 
-        $showrev = "t=%s; ".
-            "git show ".
-            "--name-status ".
-            "--pretty='".$format."' ".
+        $showrev = "t=%s; " .
+            "git show " .
+            "--name-status " .
+            "--pretty='" . $format . "' " .
             "\$t";
         return $showrev;
     }
@@ -775,7 +774,7 @@ class GitRepository implements DVCSRepository
      */
     public function isAlreadyNotified($mail)
     {
-        return (in_array($mail, $this->getNotifiedMails())) ;
+        return (in_array($mail, $this->getNotifiedMails()));
     }
 
     /**
@@ -892,8 +891,8 @@ class GitRepository implements DVCSRepository
     public function canBeDeleted()
     {
         if ($this->getPath() && $this->getBackend()->canBeDeleted($this)) {
-            $referencePath  = $this->getBackend()->getGitRootPath().'/'.$this->getProject()->getUnixName();
-            $repositoryPath = $this->getBackend()->getGitRootPath().'/'.$this->getPath();
+            $referencePath  = $this->getBackend()->getGitRootPath() . '/' . $this->getProject()->getUnixName();
+            $repositoryPath = $this->getBackend()->getGitRootPath() . '/' . $this->getPath();
             return ($this->isSubPath($referencePath, $repositoryPath) && $this->isDotGit($repositoryPath));
         }
         return false;
@@ -971,12 +970,12 @@ class GitRepository implements DVCSRepository
     {
         $href  = $url_manager->getRepositoryBaseUrl($this);
         $label = $this->getName();
-        return '<a href="'. $href .'">'. $label .'</a>';
+        return '<a href="' . $href . '">' . $label . '</a>';
     }
 
     public function setIsMirrored($is_mirrored)
     {
-        $this->is_mirrored = (boolean)$is_mirrored;
+        $this->is_mirrored = (boolean) $is_mirrored;
     }
 
     public function getIsMirrored()
@@ -1026,7 +1025,7 @@ class GitRepository implements DVCSRepository
      */
     public function getFullHTTPUrlWithDotGit()
     {
-        return HTTPRequest::instance()->getServerUrl().$this->getRelativeHTTPUrl().'.git';
+        return HTTPRequest::instance()->getServerUrl() . $this->getRelativeHTTPUrl() . '.git';
     }
 
     /**
@@ -1034,6 +1033,6 @@ class GitRepository implements DVCSRepository
      */
     public function getRelativeHTTPUrl()
     {
-        return GIT_BASE_URL .'/'. $this->getProject()->getUnixName() .'/'. $this->getFullName();
+        return GIT_BASE_URL . '/' . $this->getProject()->getUnixName() . '/' . $this->getFullName();
     }
 }

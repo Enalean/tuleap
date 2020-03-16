@@ -667,7 +667,7 @@ class DocmanFoldersResource extends AuthenticatedResource
         $item_to_delete      = $item_request->getItem();
         $current_user        = $this->user_manager->getCurrentUser();
         $project             = $item_request->getProject();
-        $validator_visitor   =$this->getValidator($project, $current_user, $item_to_delete);
+        $validator_visitor   = $this->getValidator($project, $current_user, $item_to_delete);
 
         $item_to_delete->accept($validator_visitor);
 

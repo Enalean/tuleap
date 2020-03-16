@@ -106,7 +106,7 @@ class ByGroupController implements DispatchableWithRequest
 
     public static function getUrl(\Tracker $tracker): string
     {
-        return TRACKER_BASE_URL.self::URL.'/'.$tracker->getId();
+        return TRACKER_BASE_URL . self::URL . '/' . $tracker->getId();
     }
 
     private function getFieldsPermissionsPerGroup(\Tracker $tracker, int $selected_id) : ByGroupFieldsPermissions

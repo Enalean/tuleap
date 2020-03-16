@@ -333,9 +333,9 @@ class DB
      */
     public static function isManip($query)
     {
-        $manips = 'INSERT|UPDATE|DELETE|LOAD DATA|'.'REPLACE|CREATE|DROP|'.
-                  'ALTER|GRANT|REVOKE|'.'LOCK|UNLOCK';
-        if (preg_match('/^\s*"?('.$manips.')\s+/i', $query)) {
+        $manips = 'INSERT|UPDATE|DELETE|LOAD DATA|' . 'REPLACE|CREATE|DROP|' .
+                  'ALTER|GRANT|REVOKE|' . 'LOCK|UNLOCK';
+        if (preg_match('/^\s*"?(' . $manips . ')\s+/i', $query)) {
             return true;
         }
         return false;
@@ -363,7 +363,7 @@ class DB
                 DB_ERROR_CANNOT_DELETE      => 'can not delete',
                 DB_ERROR_CANNOT_DROP        => 'can not drop',
                 DB_ERROR_CONSTRAINT         => 'constraint violation',
-                DB_ERROR_CONSTRAINT_NOT_NULL=> 'null value violates not-null constraint',
+                DB_ERROR_CONSTRAINT_NOT_NULL => 'null value violates not-null constraint',
                 DB_ERROR_DIVZERO            => 'division by zero',
                 DB_ERROR_INVALID            => 'invalid',
                 DB_ERROR_INVALID_DATE       => 'invalid date or time',
@@ -382,7 +382,7 @@ class DB
                 DB_ERROR_CONNECT_FAILED     => 'connect failed',
                 DB_OK                       => 'no error',
                 DB_ERROR_NEED_MORE_DATA     => 'insufficient data supplied',
-                DB_ERROR_EXTENSION_NOT_FOUND=> 'extension not found',
+                DB_ERROR_EXTENSION_NOT_FOUND => 'extension not found',
                 DB_ERROR_NOSUCHDB           => 'no such database',
                 DB_ERROR_ACCESS_VIOLATION   => 'insufficient permissions',
                 DB_ERROR_TRUNCATED          => 'truncated'

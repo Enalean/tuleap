@@ -98,7 +98,7 @@ function mock($classname)
 {
     $mockclassname = "Mock$classname";
     if (strpos($classname, '\\') !== false) {
-        $mockclassname = "Mock". str_replace('\\', '_', $classname);
+        $mockclassname = "Mock" . str_replace('\\', '_', $classname);
     }
     Mock::generate($classname, $mockclassname);
     return new $mockclassname();

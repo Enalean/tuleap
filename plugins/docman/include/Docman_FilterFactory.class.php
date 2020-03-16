@@ -136,7 +136,7 @@ class Docman_FilterFactory
         $values = array();
         $item_factory = Docman_ItemFactory::instance($this->groupId);
         foreach (array('file', 'wiki', 'embeddedfile', 'empty', 'link', 'folder') as $type) {
-            $row['value_id'] = constant('PLUGIN_DOCMAN_ITEM_TYPE_'.strtoupper($type));
+            $row['value_id'] = constant('PLUGIN_DOCMAN_ITEM_TYPE_' . strtoupper($type));
             $row['name'] = $item_factory->getItemTypeAsText($type);
             $row['status'] = 'A';
             $love = new Docman_MetadataListOfValuesElement();
@@ -333,7 +333,7 @@ class Docman_FilterFactory
             // but main exists with 'clone this report' function
             if (isset($metadataMapping['md'][$srcFilter->md->getId()])) {
                 // For real metadata, create MD based on the new ID
-                $newLabel = 'field_'.$metadataMapping['md'][$srcFilter->md->getId()];
+                $newLabel = 'field_' . $metadataMapping['md'][$srcFilter->md->getId()];
             }
         } else {
             // Check in use

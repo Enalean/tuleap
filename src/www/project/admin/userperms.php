@@ -38,12 +38,12 @@ if (!$group || !is_object($group) || $group->isError()) {
 // Get the artfact type list
 $at_arr = $atf->getArtifactTypes();
 
-session_require(array('group'=>$group_id,'admin_flags'=>'A'));
+session_require(array('group' => $group_id,'admin_flags' => 'A'));
 
-$project=$pm->getProject($group_id);
+$project = $pm->getProject($group_id);
 if ($project->isError()) {
         //wasn't found or some other problem
-        echo $Language->getText('project_admin_userperms', 'unable_load_p')."<br>";
+        echo $Language->getText('project_admin_userperms', 'unable_load_p') . "<br>";
         return;
 }
 
@@ -54,18 +54,18 @@ if ($request->exist('submit')) {
 
     $res_dev = db_query("SELECT * FROM user_group WHERE group_id=$group_id");
     while ($row_dev = db_fetch_array($res_dev)) {
-        if ($request ->exist("update_user_$row_dev[user_id]")) {
+        if ($request->exist("update_user_$row_dev[user_id]")) {
             $svn_flags  = "svn_user_$row_dev[user_id]";
             $res = true;
             if ($request->exist($svn_flags)) {
-                $sql = "UPDATE user_group SET svn_flags = '". db_es($request->get($svn_flags)) ."'";
+                $sql = "UPDATE user_group SET svn_flags = '" . db_es($request->get($svn_flags)) . "'";
                 $sql .= " WHERE user_id='$row_dev[user_id]' AND group_id='$group_id'";
 
                 $res = db_query($sql);
             }
 
             $tracker_error = false;
-            if ($project->usesTracker()&&$at_arr) {
+            if ($project->usesTracker() && $at_arr) {
                 for ($j = 0; $j < count($at_arr); $j++) {
                     $atid = $at_arr[$j]->getID();
                     $perm_level = "tracker_user_$row_dev[user_id]_$atid";
@@ -84,7 +84,7 @@ if ($request->exist('submit')) {
 
             if (!$res || $tracker_error) {
                 $nb_errors++;
-                $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_userperms', 'perm_fail_for', $row_dev['user_id']).' '.db_error());
+                $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_userperms', 'perm_fail_for', $row_dev['user_id']) . ' ' . db_error());
             }
 
             // Raise an event
@@ -128,7 +128,7 @@ $sql['select'] = "SELECT SQL_CALC_FOUND_ROWS user.user_name AS user_name,
 
 $sql['from']  = " FROM user,user_group ";
 $sql['where'] = " WHERE user.user_id = user_group.user_id
-                    AND user_group.group_id = ". db_ei($group_id);
+                    AND user_group.group_id = " . db_ei($group_id);
 
 if ($pattern) {
     $uh = UserHelper::instance();
@@ -138,20 +138,20 @@ if ($pattern) {
 }
 
 $sql['order'] = " ORDER BY user.user_name ";
-$sql['limit'] = " LIMIT ". db_ei($offset) .", ". db_ei($number_per_page);
+$sql['limit'] = " LIMIT " . db_ei($offset) . ", " . db_ei($number_per_page);
 
-if ($project->usesTracker()&&$at_arr) {
+if ($project->usesTracker() && $at_arr) {
     for ($j = 0; $j < count($at_arr); $j++) {
         $atid = db_ei($at_arr[$j]->getID());
-        $sql['select'] .= ", IFNULL(artifact_perm_". $atid .".perm_level, 0) AS perm_level_". $atid ." ";
-        $sql['from']   .= " LEFT JOIN artifact_perm AS artifact_perm_". $atid ."
-                                 ON(artifact_perm_". $atid .".user_id = user_group.user_id
-                                    AND artifact_perm_". $atid .".group_artifact_id = ". $atid .") ";
+        $sql['select'] .= ", IFNULL(artifact_perm_" . $atid . ".perm_level, 0) AS perm_level_" . $atid . " ";
+        $sql['from']   .= " LEFT JOIN artifact_perm AS artifact_perm_" . $atid . "
+                                 ON(artifact_perm_" . $atid . ".user_id = user_group.user_id
+                                    AND artifact_perm_" . $atid . ".group_artifact_id = " . $atid . ") ";
     }
 }
 $res_dev = db_query($sql['select'] . $sql['from'] . $sql['where'] . $sql['filter'] . $sql['order'] . $sql['limit']);
 
-if (!$res_dev || db_numrows($res_dev)==0 || $number_per_page < 1) {
+if (!$res_dev || db_numrows($res_dev) == 0 || $number_per_page < 1) {
     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_userperms', 'no_users_found'));
 }
 $sql = 'SELECT FOUND_ROWS() AS nb';
@@ -161,36 +161,36 @@ $num_total_rows = $row['nb'];
 
 project_admin_header(
     array(
-        'title'=>$Language->getText('project_admin_utils', 'user_perms'),
-        'group'=>$group_id,
+        'title' => $Language->getText('project_admin_utils', 'user_perms'),
+        'group' => $group_id,
         'help' => 'project-admin.html#user-permissions'
     ),
     \Tuleap\Project\Admin\Navigation\NavigationPermissionsDropdownPresenterBuilder::PERMISSIONS_ENTRY_SHORTNAME
 );
 
 echo '
-<h2>'.$Language->getText('project_admin_utils', 'user_perms').'</h2>';
+<h2>' . $Language->getText('project_admin_utils', 'user_perms') . '</h2>';
 echo '<FORM action="userperms.php" name = "form_search" method="post" class="form-inline">';
 
 echo $Language->getText('project_admin_utils', 'search_user');
 echo '&nbsp;';
 echo '<div class="input-append">';
-echo '<INPUT type="text" name="search" value="'.$pattern.'" id="search_user">
-<INPUT type="hidden" name="group_id" value="'.$group_id.'">';
+echo '<INPUT type="text" name="search" value="' . $pattern . '" id="search_user">
+<INPUT type="hidden" name="group_id" value="' . $group_id . '">';
 $js = "new UserAutoCompleter('search_user',
-                          '".util_get_dir_image_theme()."',
+                          '" . util_get_dir_image_theme() . "',
                           true);";
 $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
 
-echo '<INPUT class="btn" type="submit" name ="searchUser" value="'.$Language->getText('admin_main', 'search').'"></div>';
+echo '<INPUT class="btn" type="submit" name ="searchUser" value="' . $Language->getText('admin_main', 'search') . '"></div>';
 echo '</FORM>';
 
 $frs_permission_manager = FRSPermissionManager::build();
 
 if ($res_dev && db_numrows($res_dev) > 0 && $number_per_page > 0) {
     echo '<FORM action="userperms.php" name= "form_update" method="post">
-<INPUT type="hidden" name="group_id" value="'.$group_id.'">
-<INPUT type="hidden" name="offset" value="'.$offset.'">';
+<INPUT type="hidden" name="group_id" value="' . $group_id . '">
+<INPUT type="hidden" name="offset" value="' . $offset . '">';
 
     echo '<TABLE class="table">';
 
@@ -199,14 +199,14 @@ if ($res_dev && db_numrows($res_dev) > 0 && $number_per_page > 0) {
 
     $should_display_submit_button = false;
 
-    $head .= '<th>'.$Language->getText('project_admin_userperms', 'user_name').'</th>';
+    $head .= '<th>' . $Language->getText('project_admin_userperms', 'user_name') . '</th>';
 
     if ($project->usesSVN()) {
         $should_display_submit_button = true;
-        $head .= '<th>'.$Language->getText('project_admin_userperms', 'svn').'</th>';
+        $head .= '<th>' . $Language->getText('project_admin_userperms', 'svn') . '</th>';
     }
 
-    if ($project->usesTracker()&&$at_arr) {
+    if ($project->usesTracker() && $at_arr) {
         $should_display_submit_button = true;
         for ($j = 0; $j < count($at_arr); $j++) {
               $head .= '<th>' . $at_arr[$j]->getName() . '</th>';
@@ -217,36 +217,36 @@ if ($res_dev && db_numrows($res_dev) > 0 && $number_per_page > 0) {
 
     echo $head;
 
-    $i=0;
+    $i = 0;
 
     $uh = new UserHelper();
     $hp = Codendi_HTMLPurifier::instance();
 
     while ($row_dev = db_fetch_array($res_dev)) {
         $i++;
-        print '<TR class="'. util_get_alt_row_color($i) .'">';
+        print '<TR class="' . util_get_alt_row_color($i) . '">';
         $user_name = $hp->purify($uh->getDisplayName($row_dev['user_name'], $row_dev['realname']), CODENDI_PURIFIER_CONVERT_HTML);
-        echo '<td><input type="hidden" name="update_user_'. urlencode($row_dev['user_id']) .'">'. $user_name .'</td>';
+        echo '<td><input type="hidden" name="update_user_' . urlencode($row_dev['user_id']) . '">' . $user_name . '</td>';
      // svn
         if ($project->usesSVN()) {
             $cell = '';
-            $cell .= '<TD><SELECT name="svn_user_'.$row_dev['user_id'].'">';
-            $cell .= '<OPTION value="0"'.(($row_dev['svn_flags']==0)?" selected":"").'>'.$Language->getText('global', 'none');
-            $cell .= '<OPTION value="2"'.(($row_dev['svn_flags']==2)?" selected":"").'>'.$Language->getText('project_admin_index', 'admin');
+            $cell .= '<TD><SELECT name="svn_user_' . $row_dev['user_id'] . '">';
+            $cell .= '<OPTION value="0"' . (($row_dev['svn_flags'] == 0) ? " selected" : "") . '>' . $Language->getText('global', 'none');
+            $cell .= '<OPTION value="2"' . (($row_dev['svn_flags'] == 2) ? " selected" : "") . '>' . $Language->getText('project_admin_index', 'admin');
             $cell .= '</SELECT></TD>';
             echo $cell;
         }
 
         $k = 0;
-        if ($project->usesTracker()&&$at_arr) {
+        if ($project->usesTracker() && $at_arr) {
             // Loop on tracker
             for ($j = 0; $j < count($at_arr); $j++) {
                 $atid = $at_arr[$j]->getID();
                 $perm = $row_dev['perm_level_' . $atid];
                 $cell = '';
-                $cell .= '<TD><SELECT name="tracker_user_'.$row_dev['user_id'].'_'.$atid.'">';
-                $cell .= '<OPTION value="0"'.(($perm==0)?" selected":"").'>'.$Language->getText('global', 'none');
-                $cell .= '<OPTION value="3"'.(($perm==3 || $perm==2)?" selected":"").'>'.$Language->getText('project_admin_userperms', 'admin');
+                $cell .= '<TD><SELECT name="tracker_user_' . $row_dev['user_id'] . '_' . $atid . '">';
+                $cell .= '<OPTION value="0"' . (($perm == 0) ? " selected" : "") . '>' . $Language->getText('global', 'none');
+                $cell .= '<OPTION value="3"' . (($perm == 3 || $perm == 2) ? " selected" : "") . '>' . $Language->getText('project_admin_userperms', 'admin');
                 $cell .= '</SELECT></TD>';
                 echo $cell;
             }
@@ -267,7 +267,7 @@ if ($res_dev && db_numrows($res_dev) > 0 && $number_per_page > 0) {
         $nb_of_pages = ceil($num_total_rows / $number_per_page);
         $current_page = round($offset / $number_per_page);
         if (isset($pattern) && $pattern != '') {
-            $search = '&amp;search='.$pattern;
+            $search = '&amp;search=' . $pattern;
         } else {
             $search = '';
         }
@@ -275,13 +275,13 @@ if ($res_dev && db_numrows($res_dev) > 0 && $number_per_page > 0) {
         $width = 10;
         for ($i = 0; $i < $nb_of_pages; ++$i) {
             if ($i == 0 || $i == $nb_of_pages - 1 || ($current_page - $width / 2 <= $i && $i <= $width / 2 + $current_page)) {
-                echo '<a href="?'.
-                'group_id='. (int)$group_id .
-                '&amp;offset='. (int)($i * $number_per_page) .
-                $search.
+                echo '<a href="?' .
+                'group_id=' . (int) $group_id .
+                '&amp;offset=' . (int) ($i * $number_per_page) .
+                $search .
                 '">';
                 if ($i == $current_page) {
-                    echo '<b>'. ($i + 1) .'</b>';
+                    echo '<b>' . ($i + 1) . '</b>';
                 } else {
                     echo $i + 1;
                 }
@@ -294,7 +294,7 @@ if ($res_dev && db_numrows($res_dev) > 0 && $number_per_page > 0) {
     }
 
     if ($should_display_submit_button) {
-        echo '<P align="center"><INPUT type="submit" name="submit" value="'.$Language->getText('project_admin_userperms', 'upd_user_perm').'">';
+        echo '<P align="center"><INPUT type="submit" name="submit" value="' . $Language->getText('project_admin_userperms', 'upd_user_perm') . '">';
     }
     echo '</FORM>';
 }

@@ -190,7 +190,6 @@ final class LabelsUpdaterTest extends \PHPUnit\Framework\TestCase
 
     public function testItDoesNotAddEmptyLabels() : void
     {
-
         $body = new LabelsPATCHRepresentation();
         $body->add = array(
             $this->buildLabelRepresentation(1),

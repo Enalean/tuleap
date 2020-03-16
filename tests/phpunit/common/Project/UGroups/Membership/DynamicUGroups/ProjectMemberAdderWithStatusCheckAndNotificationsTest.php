@@ -83,7 +83,7 @@ class ProjectMemberAdderWithStatusCheckAndNotificationsTest extends TestCase
     public function testItAddsAndNotifyActiveUsers(): void
     {
         $this->base_language->shouldReceive('getOverridableText')->once()->andReturn('A Subject');
-        $this->base_language->shouldReceive('getContent')->once()->andReturn(__DIR__.'/_fixtures/empty.php');
+        $this->base_language->shouldReceive('getContent')->once()->andReturn(__DIR__ . '/_fixtures/empty.php');
 
         $mail = M::mock(\Codendi_Mail::class);
         $mail->shouldReceive('setTo')->with('foo@example.com')->once();
@@ -106,7 +106,7 @@ class ProjectMemberAdderWithStatusCheckAndNotificationsTest extends TestCase
         $this->an_active_user = new \PFUser(['user_id' => 101, 'user_name' => 'foo', 'status' => \PFUser::STATUS_RESTRICTED, 'language_id' => \BaseLanguage::DEFAULT_LANG, 'email' => 'foo@example.com']);
 
         $this->base_language->shouldReceive('getOverridableText')->once()->andReturn('A Subject');
-        $this->base_language->shouldReceive('getContent')->once()->andReturn(__DIR__.'/_fixtures/empty.php');
+        $this->base_language->shouldReceive('getContent')->once()->andReturn(__DIR__ . '/_fixtures/empty.php');
 
         $mail = M::spy(\Codendi_Mail::class);
         $mail->shouldReceive('send')->once()->andReturnTrue();

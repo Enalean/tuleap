@@ -201,8 +201,8 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     public function __construct($id)
     {
         parent::__construct($id);
-        bindtextdomain('tuleap-git', __DIR__.'/../site-content');
-        bindtextdomain('gitphp', __DIR__.'/../site-content-gitphp');
+        bindtextdomain('tuleap-git', __DIR__ . '/../site-content');
+        bindtextdomain('gitphp', __DIR__ . '/../site-content-gitphp');
 
         $this->setScope(Plugin::SCOPE_PROJECT);
         $this->addHook('site_admin_option_hook', 'site_admin_option_hook', false);
@@ -418,7 +418,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         // This stops styles inadvertently clashing with the main site.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0) {
-            echo '<link rel="stylesheet" type="text/css" href="'. $this->getIncludeAssets()->getFileURL('default.css') .'" />';
+            echo '<link rel="stylesheet" type="text/css" href="' . $this->getIncludeAssets()->getFileURL('default.css') . '" />';
         }
     }
 
@@ -426,7 +426,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     {
         // Only show the javascript if we're actually in the Git pages.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            echo '<script type="text/javascript" src="'.$this->getIncludeAssets()->getFileURL('git.js').'"></script>';
+            echo '<script type="text/javascript" src="' . $this->getIncludeAssets()->getFileURL('git.js') . '"></script>';
         }
     }
 
@@ -1081,7 +1081,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                 $repository->setId($params['object_id']);
                 try {
                     $repository->load();
-                    $params['object_name'] = 'git repository '. $repository->getName();
+                    $params['object_name'] = 'git repository ' . $repository->getName();
                 } catch (Exception $e) {
                     // do nothing
                 }
@@ -1501,7 +1501,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     private function getProjectCreator()
     {
-        $tmp_dir = ForgeConfig::get('tmp_dir') .'/gerrit_'. uniqid();
+        $tmp_dir = ForgeConfig::get('tmp_dir') . '/gerrit_' . uniqid();
         return new Git_Driver_Gerrit_ProjectCreator(
             $tmp_dir,
             $this->getGerritDriverFactory(),
@@ -1997,7 +1997,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             $this->getMirrorDataMapper(),
             new Git_Mirror_ManifestFileGenerator(
                 $this->getLogger(),
-                ForgeConfig::get('sys_data_dir').'/gitolite/grokmirror'
+                ForgeConfig::get('sys_data_dir') . '/gitolite/grokmirror'
             )
         );
     }
@@ -2105,7 +2105,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     public function getRESTRepositoryRepresentationBuilder($version)
     {
-        $class  = "Tuleap\\Git\\REST\\".$version."\\RepositoryRepresentationBuilder";
+        $class  = "Tuleap\\Git\\REST\\" . $version . "\\RepositoryRepresentationBuilder";
         return new $class(
             $this->getGitPermissionsManager(),
             $this->getGerritServerFactory(),
@@ -2117,7 +2117,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     public function rest_project_get_git($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $class            = "Tuleap\\Git\\REST\\".$params['version']."\\ProjectResource";
+        $class            = "Tuleap\\Git\\REST\\" . $params['version'] . "\\ProjectResource";
         $project          = $params['project'];
         $project_resource = new $class(
             $this->getRepositoryFactory(),
@@ -2182,16 +2182,16 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $tab_content .= '<section class="tlp-pane">
         <div class="tlp-pane-container">
             <div class="tlp-pane-header">
-                <h1 class="tlp-pane-title">'. dgettext('tuleap-git', 'Deleted git repositories') .'</h1>
+                <h1 class="tlp-pane-title">' . dgettext('tuleap-git', 'Deleted git repositories') . '</h1>
             </div>
             <section class="tlp-pane-section">
                 <table class="tlp-table">
                     <thead>
                         <tr>
-                            <th>'.dgettext('tuleap-git', 'Repository name').'</th>
-                            <th>'.dgettext('tuleap-git', 'Creation date').'</th>
-                            <th>'.dgettext('tuleap-git', 'Creator').'</th>
-                            <th>'.dgettext('tuleap-git', 'Deletion date').'</th>
+                            <th>' . dgettext('tuleap-git', 'Repository name') . '</th>
+                            <th>' . dgettext('tuleap-git', 'Creation date') . '</th>
+                            <th>' . dgettext('tuleap-git', 'Creator') . '</th>
+                            <th>' . dgettext('tuleap-git', 'Deletion date') . '</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -2200,19 +2200,19 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             $html_purifier = Codendi_HTMLPurifier::instance();
             foreach ($archived_repositories as $archived_repository) {
                 $tab_content .= '<tr>';
-                $tab_content .= '<td>'.$html_purifier->purify($archived_repository->getName()).'</td>';
-                $tab_content .= '<td>'.$html_purifier->purify($archived_repository->getCreationDate()).'</td>';
-                $tab_content .= '<td>'.$html_purifier->purify($archived_repository->getCreator()->getName()).'</td>';
-                $tab_content .= '<td>'.$html_purifier->purify($archived_repository->getDeletionDate()).'</td>';
+                $tab_content .= '<td>' . $html_purifier->purify($archived_repository->getName()) . '</td>';
+                $tab_content .= '<td>' . $html_purifier->purify($archived_repository->getCreationDate()) . '</td>';
+                $tab_content .= '<td>' . $html_purifier->purify($archived_repository->getCreator()->getName()) . '</td>';
+                $tab_content .= '<td>' . $html_purifier->purify($archived_repository->getDeletionDate()) . '</td>';
                 $tab_content .= '<td class="tlp-table-cell-actions">
                                     <form method="post" action="/plugins/git/"
-                                    onsubmit="return confirm(\'' . $html_purifier->purify(dgettext('tuleap-git', 'Confirm restore of this Git repository'), CODENDI_PURIFIER_JS_QUOTE).'\')">
+                                    onsubmit="return confirm(\'' . $html_purifier->purify(dgettext('tuleap-git', 'Confirm restore of this Git repository'), CODENDI_PURIFIER_JS_QUOTE) . '\')">
                                         ' . $params['csrf_token']->fetchHTMLInput() . '
                                         <input type="hidden" name="action" value="restore">
-                                        <input type="hidden" name="group_id" value="'. $html_purifier->purify($group_id) .'">
-                                        <input type="hidden" name="repo_id" value="'. $html_purifier->purify($archived_repository->getId()) .'">
+                                        <input type="hidden" name="group_id" value="' . $html_purifier->purify($group_id) . '">
+                                        <input type="hidden" name="repo_id" value="' . $html_purifier->purify($archived_repository->getId()) . '">
                                         <button class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline">
-                                            <i class="fa fa-repeat tlp-button-icon"></i> '. $html_purifier->purify(dgettext('tuleap-git', 'Restore')) .'
+                                            <i class="fa fa-repeat tlp-button-icon"></i> ' . $html_purifier->purify(dgettext('tuleap-git', 'Restore')) . '
                                         </button>
                                     </form>
                                  </td>';
@@ -2221,7 +2221,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         } else {
             $tab_content .= '<tr>
                 <td class="tlp-table-cell-empty" colspan="5">
-                    '. dgettext('tuleap-git', 'No restorable git repositories found') .'
+                    ' . dgettext('tuleap-git', 'No restorable git repositories found') . '
                 </td>
             </tr>';
         }
@@ -2230,7 +2230,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                 </section>
             </div>
         </section>';
-        $params['html'][]= $tab_content;
+        $params['html'][] = $tab_content;
     }
 
     public function restrictedUsersAreHandledByPluginEvent(RestrictedUsersAreHandledByPluginEvent $event)
@@ -2648,7 +2648,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event)
     {
-        $event->getRouteCollector()->addRoute(['GET', 'POST'], GIT_SITE_ADMIN_BASE_URL.'[/]', $this->getRouteHandler('getAdminRouter'));
+        $event->getRouteCollector()->addRoute(['GET', 'POST'], GIT_SITE_ADMIN_BASE_URL . '[/]', $this->getRouteHandler('getAdminRouter'));
 
         $event->getRouteCollector()->addGroup(GIT_BASE_URL, function (FastRoute\RouteCollector $r) {
             EventManager::instance()->processEvent(new \Tuleap\Git\CollectGitRoutesEvent($r));

@@ -26,7 +26,7 @@
  * @TODO Make sure directories tree to manage forks and repo is a good choice
  */
 
-require_once(__DIR__.'/../DVCS/DVCSDriver.class.php');
+require_once(__DIR__ . '/../DVCS/DVCSDriver.class.php');
 
 class GitDriver implements DVCSDriver
 {
@@ -37,7 +37,7 @@ class GitDriver implements DVCSDriver
         $ret = -1;
         exec($cmd, $out, $ret);
         if ($ret !== 0) {
-            throw new GitDriverErrorException('Git '.$action_name.' failed on '.$ret.' '.$cmd.PHP_EOL.implode(PHP_EOL, $out));
+            throw new GitDriverErrorException('Git ' . $action_name . ' failed on ' . $ret . ' ' . $cmd . PHP_EOL . implode(PHP_EOL, $out));
         }
 
         return implode(PHP_EOL, $out);
@@ -62,7 +62,7 @@ class GitDriver implements DVCSDriver
         $this->checkFileExist($source);
 
         //WARNING : never use --shared/--reference options
-        $cmd = 'git clone '. $option .' --local --no-hardlinks '.escapeshellarg($source).' '.escapeshellarg($destination).' 2>&1';
+        $cmd = 'git clone ' . $option . ' --local --no-hardlinks ' . escapeshellarg($source) . ' ' . escapeshellarg($destination) . ' 2>&1';
 
         return $this->execGitAction($cmd, "clone");
     }
@@ -80,13 +80,13 @@ class GitDriver implements DVCSDriver
     {
         $this->checkFileExist($source);
 
-        return $this->cloneRepo($source, $destination, '--branch '.$branch);
+        return $this->cloneRepo($source, $destination, '--branch ' . $branch);
     }
 
     public function add($repositoryPath, $filePathFromRepository)
     {
         $this->checkFileExist($repositoryPath);
-        $cmd = 'cd '.escapeshellarg($repositoryPath).' && git add '.escapeshellarg($filePathFromRepository).' 2>&1';
+        $cmd = 'cd ' . escapeshellarg($repositoryPath) . ' && git add ' . escapeshellarg($filePathFromRepository) . ' 2>&1';
 
         return $this->execGitAction($cmd, 'add');
     }
@@ -94,7 +94,7 @@ class GitDriver implements DVCSDriver
     public function commit($repositoryPath, $message)
     {
         $this->checkFileExist($repositoryPath);
-        $cmd = 'cd '.escapeshellarg($repositoryPath).' && git commit --allow-empty -m '.escapeshellarg($message).' 2>&1';
+        $cmd = 'cd ' . escapeshellarg($repositoryPath) . ' && git commit --allow-empty -m ' . escapeshellarg($message) . ' 2>&1';
 
         return $this->execGitAction($cmd, 'commit');
     }
@@ -102,7 +102,7 @@ class GitDriver implements DVCSDriver
     public function mergeAndPush($repositoryPath, $bareURL)
     {
         $this->checkFileExist($repositoryPath);
-        $cmd = 'cd '.escapeshellarg($repositoryPath).' && git pull --quiet --rebase && git push '. $bareURL .' 2>&1';
+        $cmd = 'cd ' . escapeshellarg($repositoryPath) . ' && git pull --quiet --rebase && git push ' . $bareURL . ' 2>&1';
 
         return $this->execGitAction($cmd, 'merge and push');
     }
@@ -110,7 +110,7 @@ class GitDriver implements DVCSDriver
     public function getInformationsAboutFile($repositoryPath, $filePathFromRepository)
     {
         $this->checkFileExist($repositoryPath);
-        $cmd = 'cd '.escapeshellarg($repositoryPath).' && git ls-files --stage '.escapeshellarg($filePathFromRepository).' 2>&1';
+        $cmd = 'cd ' . escapeshellarg($repositoryPath) . ' && git ls-files --stage ' . escapeshellarg($filePathFromRepository) . ' 2>&1';
 
         return $this->execGitAction($cmd, 'get informations');
     }
@@ -118,7 +118,7 @@ class GitDriver implements DVCSDriver
     public function removeRepository($repositoryPath)
     {
         $this->checkFileExist($repositoryPath);
-        $cmd = 'rm --recursive --dir --force '.escapeshellarg($repositoryPath).' 2>&1';
+        $cmd = 'rm --recursive --dir --force ' . escapeshellarg($repositoryPath) . ' 2>&1';
 
         return $this->execGitAction($cmd, 'rm');
     }
@@ -145,7 +145,7 @@ class GitDriver implements DVCSDriver
             $ret = -1;
             exec($cmd, $out, $ret);
             if ($ret !== 0) {
-                throw new GitDriverErrorException('Git init failed on '.$cmd.PHP_EOL.implode(PHP_EOL, $out));
+                throw new GitDriverErrorException('Git init failed on ' . $cmd . PHP_EOL . implode(PHP_EOL, $out));
             }
             return true;
         }
@@ -155,7 +155,7 @@ class GitDriver implements DVCSDriver
         $ret = -1;
         exec($cmd, $out, $ret);
         if ($ret !== 0) {
-            throw new GitDriverErrorException('Git init failed on '.$cmd.PHP_EOL.implode(PHP_EOL, $out));
+            throw new GitDriverErrorException('Git init failed on ' . $cmd . PHP_EOL . implode(PHP_EOL, $out));
         }
 
         return $this->setUpFreshRepository(getcwd());
@@ -179,10 +179,10 @@ class GitDriver implements DVCSDriver
         exec($cmd, $out, $ret);
         chdir($cwd);
         if ($ret !== 0) {
-            throw new GitDriverErrorException('Git setup failed on '.$cmd.PHP_EOL.implode(PHP_EOL, $out));
+            throw new GitDriverErrorException('Git setup failed on ' . $cmd . PHP_EOL . implode(PHP_EOL, $out));
         }
 
-        if (!$this->setDescription($path, 'Default description for this project'.PHP_EOL)) {
+        if (!$this->setDescription($path, 'Default description for this project' . PHP_EOL)) {
             throw new GitDriverErrorException('Git setup failed on description update');
         }
 
@@ -192,12 +192,12 @@ class GitDriver implements DVCSDriver
     public function delete($path)
     {
         if (empty($path) || !is_writable($path)) {
-            throw new GitDriverErrorException('Empty path or permission denied '.$path);
+            throw new GitDriverErrorException('Empty path or permission denied ' . $path);
         }
         $rcode = 0;
-        $output = system('rm -fr '.escapeshellarg($path), $rcode);
+        $output = system('rm -fr ' . escapeshellarg($path), $rcode);
         if ($rcode != 0) {
-            throw new GitDriverErrorException('Unable to delete path '.$path);
+            throw new GitDriverErrorException('Unable to delete path ' . $path);
         }
         return true;
     }
@@ -205,25 +205,25 @@ class GitDriver implements DVCSDriver
     public function activateHook($hookName, $repoPath, $uid = false, $gid = false)
     {
         //newer version of git
-        $hook = $repoPath.'/hooks/'.$hookName;
-        if (file_exists($hook.'.sample')) {
+        $hook = $repoPath . '/hooks/' . $hookName;
+        if (file_exists($hook . '.sample')) {
             //old git versions do not need this move
-            rename($hook.'.sample', $hook);
+            rename($hook . '.sample', $hook);
         }
 
         //older versions only requires +x for hook activation
         if (!chmod($hook, 0755)) {
-            throw new GitDriverErrorException('Unable to make '.$hook.' executable');
+            throw new GitDriverErrorException('Unable to make ' . $hook . ' executable');
         }
 
         if ($uid !== false) {
             if (!chown($hook, $uid)) {
-                 throw new GitDriverErrorException('Unable to change '.$hook.' owner to '.$uid);
+                 throw new GitDriverErrorException('Unable to change ' . $hook . ' owner to ' . $uid);
             }
         }
         if ($gid !== false) {
             if (!chgrp($hook, $gid)) {
-                 throw new GitDriverErrorException('Unable to change '.$hook.' group to '.$gid);
+                 throw new GitDriverErrorException('Unable to change ' . $hook . ' group to ' . $gid);
             }
         }
         return true;
@@ -231,7 +231,7 @@ class GitDriver implements DVCSDriver
 
     public function masterExists($repoPath)
     {
-        if (file_exists($repoPath.'/refs/heads/master')) {
+        if (file_exists($repoPath . '/refs/heads/master')) {
             return true;
         }
         return false;
@@ -244,12 +244,12 @@ class GitDriver implements DVCSDriver
      */
     public function isRepositoryCreated($repoPath)
     {
-        return is_dir($repoPath.'/refs/heads');
+        return is_dir($repoPath . '/refs/heads');
     }
 
     public function setDescription($repoPath, $description)
     {
-        if (! file_put_contents($repoPath.'/description', $description)) {
+        if (! file_put_contents($repoPath . '/description', $description)) {
             throw new GitDriverErrorException('Unable to set description');
         }
         return true;
@@ -257,7 +257,7 @@ class GitDriver implements DVCSDriver
 
     public function getDescription($repoPath)
     {
-        return file_get_contents($repoPath.'/description');
+        return file_get_contents($repoPath . '/description');
     }
 
     /**
@@ -274,13 +274,13 @@ class GitDriver implements DVCSDriver
         } else {
             $value = escapeshellarg($value);
         }
-        $configFile = $repoPath.'/config';
-        $cmd = 'git config --file '.$configFile.' --replace-all '.escapeshellarg($key).' '.$value.' 2>&1';
+        $configFile = $repoPath . '/config';
+        $cmd = 'git config --file ' . $configFile . ' --replace-all ' . escapeshellarg($key) . ' ' . $value . ' 2>&1';
         $ret = -1;
         $out = array();
         exec($cmd, $out, $ret);
         if ($ret !== 0) {
-            throw new GitDriverErrorException('Unable to set config for repository '.$repoPath.':'.PHP_EOL.implode(PHP_EOL, $out));
+            throw new GitDriverErrorException('Unable to set config for repository ' . $repoPath . ':' . PHP_EOL . implode(PHP_EOL, $out));
         }
     }
 
@@ -314,13 +314,13 @@ class GitDriver implements DVCSDriver
     protected function setPermissions($path)
     {
         $rcode  = 0;
-        $cmd    = 'find '.$path.' -type d | xargs chmod u+rwx,g+rwxs '.$path;
+        $cmd    = 'find ' . $path . ' -type d | xargs chmod u+rwx,g+rwxs ' . $path;
         $output = system($cmd, $rcode);
         if ($rcode != 0) {
-            throw new GitDriverErrorException($cmd.' -> '.$output);
+            throw new GitDriverErrorException($cmd . ' -> ' . $output);
         }
 
-        if (!chmod($path.DIRECTORY_SEPARATOR.'HEAD', 0664)) {
+        if (!chmod($path . DIRECTORY_SEPARATOR . 'HEAD', 0664)) {
             throw new GitDriverErrorException('Unable to set permissions on HEAD');
         }
         return true;

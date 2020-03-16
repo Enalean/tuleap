@@ -46,7 +46,7 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
     public function process()
     {
         $logger = BackendLogger::getDefaultLogger();
-        $logger->info(self::class.' Start');
+        $logger->info(self::class . ' Start');
 
         // Re-dumping ssh keys should be done only once a day as:
         // - It's I/O intensive
@@ -90,7 +90,7 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
             $this->error($e->getMessage());
         }
 
-        $logger->info(self::class.' Completed');
+        $logger->info(self::class . ' Completed');
         return true;
     }
 
@@ -116,7 +116,7 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
 
     private function runComputeAllDailyStats(\Psr\Log\LoggerInterface $logger, array &$warnings)
     {
-        $process = new Process([__DIR__.'/../../../utils/compute_all_daily_stats.sh']);
+        $process = new Process([__DIR__ . '/../../../utils/compute_all_daily_stats.sh']);
         $this->runCommand($process, $logger, $warnings);
     }
 
@@ -128,7 +128,7 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
     {
         $now = new DateTimeImmutable();
         if ($now->format('l') === self::DAY_OF_WEEKLY_STATS) {
-            $process = new Process(['./db_project_weekly_metric.pl'], __DIR__.'/../../../utils/underworld-root');
+            $process = new Process(['./db_project_weekly_metric.pl'], __DIR__ . '/../../../utils/underworld-root');
             $this->runCommand($process, $logger, $warnings);
         }
     }
@@ -138,7 +138,7 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
         $process->setTimeout(null);
         $process->run();
         if (! $process->isSuccessful()) {
-            $warnings[] = $process->getCommandLine().' ran with errors, check '.ForgeConfig::get('codendi_log');
+            $warnings[] = $process->getCommandLine() . ' ran with errors, check ' . ForgeConfig::get('codendi_log');
             $logger->error(sprintf("%s %s errors. Stdout:\n%s\nStderr:\n%s", self::class, $process->getCommandLine(), $process->getOutput(), $process->getErrorOutput()));
         } else {
             $logger->debug(sprintf("%s %s Stdout:\n%s\nStderr:\n%s", self::class, $process->getCommandLine(), $process->getOutput(), $process->getErrorOutput()));

@@ -22,7 +22,7 @@
  */
 
 require_once('Docman_View_ItemDetailsSectionProperties.class.php');
-require_once(dirname(__FILE__).'/../Docman_PermissionsManager.class.php');
+require_once(dirname(__FILE__) . '/../Docman_PermissionsManager.class.php');
 
 class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetailsSectionProperties
 {
@@ -58,7 +58,7 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
     {
         $html = '';
         $params = array('form_name' => $this->formName);
-        $html  .= '<form name="'.$params['form_name'].'" action="'. $this->url .'" method="post" class="docman_form">';
+        $html  .= '<form name="' . $params['form_name'] . '" action="' . $this->url . '" method="post" class="docman_form">';
         if (!$this->updateConfirmed && $this->_subItemsAreWritable()) {
             $html .= '<div class="docman_confirm_delete">';
             $nbDocs = 0;
@@ -108,17 +108,17 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
             if (in_array($field->md->getLabel(), $this->recurse)) {
                 $checked = ' checked="checked"';
             }
-            $html .= '<td style="text-align: center;"><input type="checkbox" name="recurse[]" value="'.$field->md->getLabel().'"'.$checked.' /></td>';
+            $html .= '<td style="text-align: center;"><input type="checkbox" name="recurse[]" value="' . $field->md->getLabel() . '"' . $checked . ' /></td>';
         }
         $html .= '<td class="label">';
         $fieldHtml = $this->_getFieldLabel($field);
         if ($checked != '') {
-            $html .= '<strong>'.$fieldHtml.'</strong>';
+            $html .= '<strong>' . $fieldHtml . '</strong>';
         } else {
             $html .= $fieldHtml;
         }
         $html .= '</td>';
-        $html .= '<td class="value">'.$this->_showField($field).'</td>';
+        $html .= '<td class="value">' . $this->_showField($field) . '</td>';
         $html .= '</tr>';
         return $html;
     }
@@ -128,9 +128,9 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
         $html = '';
         if ($this->_subItemsAreWritable()) {
             $html .= '<tr>';
-            $html .= '<th>'.dgettext('tuleap-docman', 'Apply<br>recursively').'</th>';
-            $html .= '<th>'.dgettext('tuleap-docman', 'Property').'</td>';
-            $html .= '<th>'.dgettext('tuleap-docman', 'Value').'</th>';
+            $html .= '<th>' . dgettext('tuleap-docman', 'Apply<br>recursively') . '</th>';
+            $html .= '<th>' . dgettext('tuleap-docman', 'Property') . '</td>';
+            $html .= '<th>' . dgettext('tuleap-docman', 'Value') . '</th>';
             $html .= '</tr>';
         }
         return $html;
@@ -156,12 +156,12 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
             $fldChecked = '';
         }
 
-        $html .= '<h4>'.dgettext('tuleap-docman', 'Recursion options').'</h4>';
-        $html .= '<p>'.dgettext('tuleap-docman', 'By default the update only affect folders, if you want to update the documents too with the select box below.').'</p>';
+        $html .= '<h4>' . dgettext('tuleap-docman', 'Recursion options') . '</h4>';
+        $html .= '<p>' . dgettext('tuleap-docman', 'By default the update only affect folders, if you want to update the documents too with the select box below.') . '</p>';
         $html .= '<p>';
         $html .= '<select name="recurse_on_doc">';
-        $html .= '<option value="0"'.$fldChecked.'>'.dgettext('tuleap-docman', 'Apply on folders only').'</option>';
-        $html .= '<option value="1"'.$docChecked.'>'.dgettext('tuleap-docman', 'Apply on documents & folders').'</option>';
+        $html .= '<option value="0"' . $fldChecked . '>' . dgettext('tuleap-docman', 'Apply on folders only') . '</option>';
+        $html .= '<option value="1"' . $docChecked . '>' . dgettext('tuleap-docman', 'Apply on documents & folders') . '</option>';
         $html .= '</select>';
         $html .= '</p>';
 
@@ -172,9 +172,9 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
     {
         $html  = '<p>';
         if ($this->token) {
-            $html .= '<input type="hidden" name="token" value="'. $this->token .'" />';
+            $html .= '<input type="hidden" name="token" value="' . $this->token . '" />';
         }
-        $html .= '<input type="hidden" name="item[id]" value="'. $this->item->getId() .'" />';
+        $html .= '<input type="hidden" name="item[id]" value="' . $this->item->getId() . '" />';
         $html .= '<input type="hidden" name="action" value="update" />';
 
         if ($this->updateConfirmed) {
@@ -182,9 +182,9 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
         } else {
             $confirmStr = $GLOBALS['Language']->getText('global', 'btn_apply');
         }
-        $html .= '<input type="submit" name="confirm" value="'. $confirmStr .'" />';
+        $html .= '<input type="submit" name="confirm" value="' . $confirmStr . '" />';
         $html .= ' ';
-        $html .= '<input type="submit" name="cancel" value="'. $GLOBALS['Language']->getText('global', 'btn_cancel') .'" />';
+        $html .= '<input type="submit" name="cancel" value="' . $GLOBALS['Language']->getText('global', 'btn_cancel') . '" />';
         $html .= '</p>';
         return $html;
     }

@@ -35,7 +35,7 @@ EOT;
 
     public function up()
     {
-        $sql = "ALTER TABLE plugin_git ".
+        $sql = "ALTER TABLE plugin_git " .
                " ADD `repository_events_mailing_prefix` varchar(64) DEFAULT '[SCM]'";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {

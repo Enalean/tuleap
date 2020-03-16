@@ -213,7 +213,7 @@ class CacheableMarkup extends XmlContent
     {
         $basepage = $this->_basepage;
         // _content might be changed from a plugin (CreateToc)
-        for ($i=0; $i < count($this->_content); $i++) {
+        for ($i = 0; $i < count($this->_content); $i++) {
             $item = $this->_content[$i];
             if (is_string($item)) {
                 print $item;
@@ -322,7 +322,7 @@ class Cached_WikiLink extends Cached_Link
     public function expand($basepage, &$markup)
     {
         $label = isset($this->_label) ? $this->_label : false;
-        $anchor = isset($this->_anchor) ? (string)$this->_anchor : '';
+        $anchor = isset($this->_anchor) ? (string) $this->_anchor : '';
         $page = new WikiPageName($this->_page, $basepage, $anchor);
         if ($page->isValid()) {
             return WikiLink($page, 'auto', $label);
@@ -334,7 +334,7 @@ class Cached_WikiLink extends Cached_Link
     public function asXml()
     {
         $label = isset($this->_label) ? $this->_label : false;
-        $anchor = isset($this->_anchor) ? (string)$this->_anchor : '';
+        $anchor = isset($this->_anchor) ? (string) $this->_anchor : '';
         $page = new WikiPageName($this->_page, false, $anchor);
         $link = WikiLink($page, 'auto', $label);
         return $link->asXml();
@@ -495,7 +495,7 @@ class Cached_UserLink extends Cached_WikiLink
     public function expand($basepage, &$markup)
     {
         $label = isset($this->_label) ? $this->_label : false;
-        $anchor = isset($this->_anchor) ? (string)$this->_anchor : '';
+        $anchor = isset($this->_anchor) ? (string) $this->_anchor : '';
         $page = new WikiPageName($this->_page, $basepage, $anchor);
         $link = WikiLink($page, 'auto', $label);
         // $link = HTML::a(array('href' => $PageName));

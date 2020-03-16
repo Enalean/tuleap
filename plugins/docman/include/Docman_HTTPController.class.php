@@ -40,9 +40,9 @@ class Docman_HTTPController extends Docman_Controller
 
     /* protected */ public function _includeView()
     {
-        $className = 'Docman_View_'. $this->view;
-        if (file_exists(dirname(__FILE__).'/view/'. $className .'.class.php')) {
-            require_once('view/'. $className .'.class.php');
+        $className = 'Docman_View_' . $this->view;
+        if (file_exists(dirname(__FILE__) . '/view/' . $className . '.class.php')) {
+            require_once('view/' . $className . '.class.php');
             return $className;
         }
         return false;
@@ -86,7 +86,7 @@ class Docman_HTTPController extends Docman_Controller
     /* protected */ public function _set_doesnot_belong_to_project_error($item, $group)
     {
         $this->feedback->log('warning', sprintf(dgettext('tuleap-docman', 'The item %1$s doesn\'t exist or doesn\'t belong to project %2$s.'), $item->getId(), $group->getPublicName()));
-        $this->_viewParams['redirect_to'] = str_replace('group_id='. $this->request->get('group_id'), 'group_id='. $item->getGroupId(), $_SERVER['REQUEST_URI']);
+        $this->_viewParams['redirect_to'] = str_replace('group_id=' . $this->request->get('group_id'), 'group_id=' . $item->getGroupId(), $_SERVER['REQUEST_URI']);
         $this->view = 'Redirect';
     }
 
@@ -120,9 +120,9 @@ class Docman_HTTPController extends Docman_Controller
             $obsoDate = DateHelper::formatForLanguage($GLOBALS['Language'], $item->getObsolescenceDate(), true);
 
             // Urls
-            $baseUrl = HTTPRequest::instance()->getServerUrl().$this->pluginPath.'/index.php?group_id='.$item->getGroupId().'&id='.$item->getId();
-            $directUrl = $baseUrl .'&action=show';
-            $detailUrl = $baseUrl .'&action=details';
+            $baseUrl = HTTPRequest::instance()->getServerUrl() . $this->pluginPath . '/index.php?group_id=' . $item->getGroupId() . '&id=' . $item->getId();
+            $directUrl = $baseUrl . '&action=show';
+            $detailUrl = $baseUrl . '&action=details';
 
             $subj = sprintf(dgettext('tuleap-docman', '[%1$s] Document \'%2$s\' will be obsolete in one month'), $GLOBALS['sys_name'], $item->getTitle());
             $body = sprintf(dgettext('tuleap-docman', 'As document owner, you are notified of the obsolescence in one month of the

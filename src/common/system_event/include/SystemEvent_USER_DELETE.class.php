@@ -41,7 +41,7 @@ class SystemEvent_USER_DELETE extends SystemEvent
     public function verbalizeParameters($with_link)
     {
         $txt = '';
-        $txt .= 'user: '. $this->verbalizeUserId($this->getIdFromParam($this->parameters), $with_link);
+        $txt .= 'user: ' . $this->verbalizeUserId($this->getIdFromParam($this->parameters), $with_link);
         return $txt;
     }
 
@@ -51,7 +51,7 @@ class SystemEvent_USER_DELETE extends SystemEvent
     public function process()
     {
         // Check parameters
-        $user_id=$this->getIdFromParam($this->parameters);
+        $user_id = $this->getIdFromParam($this->parameters);
 
         if ($user_id == 0) {
             return $this->setErrorBadParam();

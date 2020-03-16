@@ -38,16 +38,16 @@ class TrackerDateReminder_Logger_Prefix extends TrackerDateReminder_Logger
 
     public function info($message)
     {
-        $this->logger->info($this->prefix.' '.$message);
+        $this->logger->info($this->prefix . ' ' . $message);
     }
 
     public function warn($message)
     {
-        $this->logger->warn($this->prefix.' '.$message);
+        $this->logger->warn($this->prefix . ' ' . $message);
     }
 
     public function error($message)
     {
-        $this->logger->error($this->prefix.' '.$message);
+        $this->logger->error($this->prefix . ' ' . $message);
     }
 }

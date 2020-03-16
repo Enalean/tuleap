@@ -27,7 +27,7 @@ class Git_Command_Exception extends Exception
 
     public function __construct($command, $output, $returnValue)
     {
-        $message = 'Command execution failure: '.$command.' (return value: '.$returnValue."):\n".implode("\n", $output);
+        $message = 'Command execution failure: ' . $command . ' (return value: ' . $returnValue . "):\n" . implode("\n", $output);
         parent::__construct($message, $returnValue);
     }
 }

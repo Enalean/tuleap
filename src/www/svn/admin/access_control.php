@@ -48,11 +48,11 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
         }
     }
 
-    $GLOBALS['Response']->redirect('/svn/admin/?func=access_control&group_id='.$group_id);
+    $GLOBALS['Response']->redirect('/svn/admin/?func=access_control&group_id=' . $group_id);
 }
 
 // Display the form
-svn_header_admin(array ('title'=>$Language->getText('svn_admin_access_control', 'access_ctrl'),
+svn_header_admin(array ('title' => $Language->getText('svn_admin_access_control', 'access_ctrl'),
                         'help' => 'svn.html#subversion-access-control'));
 
 if (svn_utils_svn_repo_exists($project_svnroot)) {
@@ -61,7 +61,7 @@ if (svn_utils_svn_repo_exists($project_svnroot)) {
         $select_options[] = array(
             'id'      => $row['id'],
             'version' => $row['version_number'],
-            'date'    => format_date("Y-m-d", (float)$row['version_date'], '')
+            'date'    => format_date("Y-m-d", (float) $row['version_date'], '')
         );
     }
 

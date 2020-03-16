@@ -29,10 +29,10 @@ if (!$request->exist('pv')) {
     }
 }
 
-$params=array('title'=>$group->getPublicName().' '.$ath->getName().' #'.$ah->getID(). ' - \'' . $ah->getSummary().'\'',
-              'pagename'=>'tracker',
-              'atid'=>$ath->getID(),
-              'pv'=>$pv,
+$params = array('title' => $group->getPublicName() . ' ' . $ath->getName() . ' #' . $ah->getID() . ' - \'' . $ah->getSummary() . '\'',
+              'pagename' => 'tracker',
+              'atid' => $ath->getID(),
+              'pv' => $pv,
               'help' => 'tracker-v3.html#artifact-update');
 
 $ath->header($params);
@@ -43,22 +43,22 @@ $ah->display($ro, $pv, UserManager::instance()->getCurrentUser()->getId());
 
 $GLOBALS['Response']->includeFooterJavascriptFile('/scripts/trackerv3_artifact.js');
 
-echo '<script type="text/javascript">'. "\n";
+echo '<script type="text/javascript">' . "\n";
 $armh = new ArtifactRulesManagerHtml($ath);
 $armh->displayRulesAsJavascript();
 echo "Event.observe(window, 'load', function() {
         if ($('tracker_details')) {
             new com.xerox.codendi.FieldEditor('tracker_details', {
-                edit:    '". addslashes($Language->getText('tracker_fieldeditor', 'edit')) ."',
-                preview: '". addslashes($Language->getText('tracker_fieldeditor', 'preview')) ."',
-                warning: '". addslashes($Language->getText('tracker_fieldeditor', 'warning')) ."',
-                group_id:". (int)$ath->getGroupId(). "
+                edit:    '" . addslashes($Language->getText('tracker_fieldeditor', 'edit')) . "',
+                preview: '" . addslashes($Language->getText('tracker_fieldeditor', 'preview')) . "',
+                warning: '" . addslashes($Language->getText('tracker_fieldeditor', 'warning')) . "',
+                group_id:" . (int) $ath->getGroupId() . "
             });
         }
 });";
 
 echo "new UserAutoCompleter('tracker_cc',
-                          '".util_get_dir_image_theme()."',
+                          '" . util_get_dir_image_theme() . "',
                           true);\n";
 
 echo "</script>";

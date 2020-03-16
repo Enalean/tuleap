@@ -108,7 +108,7 @@ class WikiPlugin_Calendar extends WikiPlugin
 
         return HTML::tr(
             HTML::td(
-                array('colspan' => 7, 'align'=> 'center'),
+                array('colspan' => 7, 'align' => 'center'),
                 HTML::table(array('width' => '100%', 'class' => 'cal-header'), $row)
             )
         );

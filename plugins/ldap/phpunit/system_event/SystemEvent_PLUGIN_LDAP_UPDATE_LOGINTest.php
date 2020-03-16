@@ -28,7 +28,7 @@ use PHPUnit\Framework\TestCase;
 use SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN;
 use Tuleap\GlobalSVNPollution;
 
-require_once __DIR__.'/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 final class SystemEvent_PLUGIN_LDAP_UPDATE_LOGINTest extends TestCase

@@ -59,25 +59,25 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         if ($name === true) { //we want the default name
-            $name = 'name="artifact['. $this->id .']"';
+            $name = 'name="artifact[' . $this->id . ']"';
         } elseif ($name === false) { //we don't want a name
             $name = '';
         } else { //we keep the given name
-            $name = 'name="'. $hp->purify($name) .'"';
+            $name = 'name="' . $hp->purify($name) . '"';
         }
         $html .= '<div class="textboxlist">
-                    <input id="tracker_field_'. $this->id .'"
-                           '. $name .'
+                    <input id="tracker_field_' . $this->id . '"
+                           ' . $name . '
                            style="width:98%"
                            type="text"></div>';
 
-        $html .= '<div class="textboxlist-auto" id="tracker_artifact_textboxlist_'. $this->id .'">';
-        $html .= '<div class="default">'.  $hp->purify($this->getProperty('hint'), CODENDI_PURIFIER_LIGHT) .'</div>';
+        $html .= '<div class="textboxlist-auto" id="tracker_artifact_textboxlist_' . $this->id . '">';
+        $html .= '<div class="default">' .  $hp->purify($this->getProperty('hint'), CODENDI_PURIFIER_LIGHT) . '</div>';
         $html .= '<ul class="feed">';
         //Field values
         foreach ($values as $v) {
             if ($v->getId() != 100) {
-                $html .= '<li value="'. $v->getJsonId() .'">';
+                $html .= '<li value="' . $v->getJsonId() . '">';
                 $html .= $hp->purify($v->getLabel());
                 $html .= '</li>';
             }
@@ -100,22 +100,22 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         if ($name === true) { //we want the default name
-            $name = 'name="artifact['. $this->id .']"';
+            $name = 'name="artifact[' . $this->id . ']"';
         } elseif ($name === false) { //we don't want a name
             $name = '';
         } else { //we keep the given name
-            $name = 'name="'. $hp->purify($name) .'"';
+            $name = 'name="' . $hp->purify($name) . '"';
         }
         $html .= '<div class="textboxlist">
-                    <input id="tracker_field_'. $this->id .'"
-                           '. $name .'
+                    <input id="tracker_field_' . $this->id . '"
+                           ' . $name . '
                            style="width:98%"
                            type="text"></div>';
 
-        $html .= '<div class="textboxlist-auto" id="tracker_artifact_textboxlist_'. $this->id .'">';
-        $html .= '<div class="default">'.  $hp->purify($this->getProperty('hint'), CODENDI_PURIFIER_LIGHT) .'</div>';
+        $html .= '<div class="textboxlist-auto" id="tracker_artifact_textboxlist_' . $this->id . '">';
+        $html .= '<div class="default">' .  $hp->purify($this->getProperty('hint'), CODENDI_PURIFIER_LIGHT) . '</div>';
         $html .= '<ul class="feed">';
-        $html .= '<li value="'.$hp->purify(BindStaticValueUnchanged::VALUE_ID).'">';
+        $html .= '<li value="' . $hp->purify(BindStaticValueUnchanged::VALUE_ID) . '">';
         $html .= dgettext('tuleap-tracker', 'Unchanged');
         $html .= '</li>';
         $html .= '</ul>';
@@ -390,10 +390,10 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
             $openvalue_id = null;
             switch ($v[0]) {
                 case self::BIND_PREFIX: // bind value
-                    $bindvalue_id = (int)substr($v, 1);
+                    $bindvalue_id = (int) substr($v, 1);
                     break;
                 case self::OPEN_PREFIX: // open value
-                    $openvalue_id = (int)substr($v, 1);
+                    $openvalue_id = (int) substr($v, 1);
                     break;
                 case self::NEW_VALUE_PREFIX: // new open value
                     $openvalue_id = $openvalue_dao->create($this->getId(), substr($v, 1));
@@ -425,19 +425,19 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
      */
     protected function sanitize($submitted_value)
     {
-        $values = explode(',', (string)$submitted_value);
+        $values = explode(',', (string) $submitted_value);
         $sanitized = array();
         foreach ($values as $v) {
             $v = trim($v);
             if ($v) {
                 switch ($v[0]) {
                     case self::BIND_PREFIX: // bind value
-                        if ($bindvalue_id = (int)substr($v, 1)) {
+                        if ($bindvalue_id = (int) substr($v, 1)) {
                             $sanitized[] = $v;
                         }
                         break;
                     case self::OPEN_PREFIX: // open value
-                        if ($openvalue_id = (int)substr($v, 1)) {
+                        if ($openvalue_id = (int) substr($v, 1)) {
                             $sanitized[] = $v;
                         }
                         break;
@@ -454,19 +454,19 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
 
     protected function toObj($submitted_value)
     {
-        $values    = explode(',', (string)$submitted_value);
+        $values    = explode(',', (string) $submitted_value);
         $sanitized = array();
         foreach ($values as $v) {
             $v = trim($v);
             if ($v) {
                 switch ($v[0]) {
                     case self::BIND_PREFIX: // bind value
-                        if ($bindvalue_id = (int)substr($v, 1)) {
+                        if ($bindvalue_id = (int) substr($v, 1)) {
                             $sanitized[] = $this->getBind()->getBindValueById($bindvalue_id);
                         }
                         break;
                     case self::OPEN_PREFIX: // open value
-                        if ($openvalue_id = (int)substr($v, 1)) {
+                        if ($openvalue_id = (int) substr($v, 1)) {
                             $v = $this->getOpenValueById($openvalue_id);
                             $sanitized[] = $v;
                         }
@@ -614,21 +614,21 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
             }
             //Only filter query if criteria is valuated
             if ($openvalues || $bindvalues) {
-                $a = 'A_'. $this->id;
-                $b = 'B_'. $this->id;
+                $a = 'A_' . $this->id;
+                $b = 'B_' . $this->id;
                 $statement = '';
                 if ($openvalues) {
-                    $statement .= "$b.openvalue_id IN (". $this->getCriteriaDao()->getDa()->escapeIntImplode($openvalues).")";
+                    $statement .= "$b.openvalue_id IN (" . $this->getCriteriaDao()->getDa()->escapeIntImplode($openvalues) . ")";
                 }
                 if ($bindvalues) {
                     if ($statement) {
                         $statement .= ' OR ';
                     }
-                    $statement .= "$b.bindvalue_id IN (". $this->getCriteriaDao()->getDa()->escapeIntImplode($bindvalues) . ")";
+                    $statement .= "$b.bindvalue_id IN (" . $this->getCriteriaDao()->getDa()->escapeIntImplode($bindvalues) . ")";
                 }
                 return " INNER JOIN tracker_changeset_value AS $a
                          ON ($a.changeset_id = c.id
-                             AND $a.field_id = ". $this->id ."
+                             AND $a.field_id = " . $this->id . "
                          )
                          INNER JOIN tracker_changeset_value_openlist AS $b ON (
                             $b.changeset_value_id = $a.id
@@ -642,7 +642,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
 
     protected function formatCriteriaValue($value_to_match)
     {
-        return 'b'.$value_to_match;
+        return 'b' . $value_to_match;
     }
 
     /**
@@ -856,15 +856,15 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         $sv = $this->getBind()->getFieldData($value, false);   // false because we are walking all values one by one
         if ($sv) {
             // existing bind value
-            return self::BIND_PREFIX.$sv;
+            return self::BIND_PREFIX . $sv;
         } else {
             $row = $this->getOpenValueDao()->searchByExactLabel($this->getId(), $value)->getRow();
             if ($row) {
                 // existing open value
-                return self::OPEN_PREFIX.$row['id'];
+                return self::OPEN_PREFIX . $row['id'];
             } else {
                 // new open value
-                return self::NEW_VALUE_PREFIX.$value;
+                return self::NEW_VALUE_PREFIX . $value;
             }
         }
     }
@@ -912,7 +912,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         }
 
         //all default values must be binded
-        return self::BIND_PREFIX . implode(','.self::BIND_PREFIX, $default_values);
+        return self::BIND_PREFIX . implode(',' . self::BIND_PREFIX, $default_values);
     }
 
     public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
@@ -1010,7 +1010,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         $hp   = Codendi_HTMLPurifier::instance();
         $html  = '';
         $html .= '<p>';
-        $html .= '<strong>'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'select_default_value'). '</strong><br />';
+        $html .= '<strong>' . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'select_default_value') . '</strong><br />';
         $html .= '<div class="textboxlist">
                     <input id="tracker_field_default"
                            name="bind[default][]"

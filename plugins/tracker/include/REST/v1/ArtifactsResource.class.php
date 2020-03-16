@@ -303,7 +303,7 @@ class ArtifactsResource extends AuthenticatedResource
             throw new RestException(400, $ex->getMessage());
         }
         if (count($requested_artifact_ids) > 100) {
-            throw new RestException(403, 'No more than '. self::MAX_ARTIFACT_BATCH .' artifacts can be requested at once.');
+            throw new RestException(403, 'No more than ' . self::MAX_ARTIFACT_BATCH . ' artifacts can be requested at once.');
         }
 
         $user                     = $this->user_manager->getCurrentUser();

@@ -13,7 +13,7 @@ global $WikiTheme;
         archive="<?php echo $WikiTheme->_finddata("hyperapplet.jar") ?>"
         width="160" height="360">
 <?php // the dynamic version: ?>
-  <!--param name="file" value="<?php echo WikiURL("LinkDatabase", array('format'=>'xml')) ?>" /-->
+  <!--param name="file" value="<?php echo WikiURL("LinkDatabase", array('format' => 'xml')) ?>" /-->
 <?php // The faster static version: dump it periodically ?>
   <param name="file" value="<?php echo $WikiTheme->_finddata("LinkDatabase.xml") ?>" />
   <!--param name="properties" value="<?php echo $WikiTheme->_finddata("hwiki.prop") ?>" /-->

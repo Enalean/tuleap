@@ -59,11 +59,11 @@ class XMLDocmanUpdate extends XMLDocmanImport
         $tagCounts = $this->tagCount($mergedTree);
 
         if (!$this->continue) {
-            $this->logger->info($tagCounts['IN_BOTH']." item(s) will be updated");
+            $this->logger->info($tagCounts['IN_BOTH'] . " item(s) will be updated");
         }
-        $this->logger->info($tagCounts['IN_SECOND']." item(s) will be created");
+        $this->logger->info($tagCounts['IN_SECOND'] . " item(s) will be created");
         if (!$this->continue) {
-            $this->logger->info($tagCounts['IN_FIRST']." item(s) will be removed");
+            $this->logger->info($tagCounts['IN_FIRST'] . " item(s) will be removed");
         }
         if (!$this->continue) {
             echo "Are you sure you want to update the document tree? (y/n) [n] ";
@@ -187,7 +187,6 @@ class XMLDocmanUpdate extends XMLDocmanImport
      */
     private function buildDistantTreeFromSoapArray()
     {
-
         $listOfNodes = array();
         foreach ($this->remoteItems as $id => $itemInfo) {
             $listOfNodes[$itemInfo->parent_id][] = $id;
@@ -254,7 +253,7 @@ class XMLDocmanUpdate extends XMLDocmanImport
 
         foreach ($itemElement->xpath('item') as $childItem) {
             $children = $this->getTreeFromItemElement_rec($childItem);
-            $childTitle = (string)$childItem->properties->title;
+            $childTitle = (string) $childItem->properties->title;
             if (isset($tree['children'][$childTitle])) {
                 $title = $itemElement->properties->title;
                 $msg = "Several items have the title '$childTitle' in the folder '$title' (in the archive). In order to make use of the update function, please assure that all the items have distinct names in each folder.";
@@ -271,7 +270,7 @@ class XMLDocmanUpdate extends XMLDocmanImport
      */
     private function getTreeFromItemElement($itemElement)
     {
-        $title = (string)$itemElement->properties->title;
+        $title = (string) $itemElement->properties->title;
         return array($title => $this->getTreeFromItemElement_rec($itemElement));
     }
 
@@ -303,8 +302,8 @@ class XMLDocmanUpdate extends XMLDocmanImport
         $md5sums = array();
 
         foreach ($node->xpath('versions/version') as $version) {
-            $file = (string)$version->content;
-            $fullPath = $this->dataBaseDir.'/'.$file;
+            $file = (string) $version->content;
+            $fullPath = $this->dataBaseDir . '/' . $file;
             $md5sums[] = md5_file($fullPath);
         }
 
@@ -352,7 +351,6 @@ class XMLDocmanUpdate extends XMLDocmanImport
      */
     private function updateItem($itemId, $node)
     {
-
         $itemInfo = $this->getItemInformation($node);
 
         switch ($node['type']) {
@@ -378,8 +376,8 @@ class XMLDocmanUpdate extends XMLDocmanImport
                             $date
                         ) = $this->getVersionInformation($version);
 
-                        $fileName = (string)$version->filename;
-                        $fileType = (string)$version->filetype;
+                        $fileName = (string) $version->filename;
+                        $fileType = (string) $version->filetype;
 
                         $this->createFileVersion($itemId, $label, $changelog, $file, $fileName, $fileType, $author, $date);
                     }

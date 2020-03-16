@@ -359,11 +359,11 @@ class Docman_ApprovalTableReviewerFactory
         $reviewsArray = array();
         $dao = Docman_ApprovalTableReviewerFactory::_getDao();
         $dar = $dao->getAllReviewsForUserByState($userId, PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET);
-        $docmanUrl = HTTPRequest::instance()->getServerUrl() .'/plugins/docman';
+        $docmanUrl = HTTPRequest::instance()->getServerUrl() . '/plugins/docman';
         while ($dar->valid()) {
             $row = $dar->current();
-            $baseUrl = $docmanUrl.'/?group_id='.$row['group_id'];
-            $url = $baseUrl.'&action=details&section=approval&id='.$row['item_id'].'&review=1';
+            $baseUrl = $docmanUrl . '/?group_id=' . $row['group_id'];
+            $url = $baseUrl . '&action=details&section=approval&id=' . $row['item_id'] . '&review=1';
             $reviewsArray[] = array('group' => $row['group_name'],
                                     'group_id' => $row['group_id'],
                                     'title' => $row['title'],
@@ -383,13 +383,13 @@ class Docman_ApprovalTableReviewerFactory
         $reviewsArray = array();
         $dao = Docman_ApprovalTableReviewerFactory::_getDao();
         $dar = $dao->getAllApprovalTableForUser($userId);
-        $docmanUrl = HTTPRequest::instance()->getServerUrl().'/plugins/docman';
+        $docmanUrl = HTTPRequest::instance()->getServerUrl() . '/plugins/docman';
         while ($dar->valid()) {
             $row = $dar->current();
 
             // Review URL
-            $baseUrl = $docmanUrl.'/?group_id='.$row['group_id'];
-            $url = $baseUrl.'&action=details&section=approval&id='.$row['item_id'];
+            $baseUrl = $docmanUrl . '/?group_id=' . $row['group_id'];
+            $url = $baseUrl . '&action=details&section=approval&id=' . $row['item_id'];
 
             // Status
             $status = '';

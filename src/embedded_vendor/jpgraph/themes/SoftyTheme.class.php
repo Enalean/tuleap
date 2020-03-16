@@ -44,7 +44,6 @@ class SoftyTheme extends Theme
 
     public function SetupGraph($graph)
     {
-
         // graph
         $graph->SetFrame(false);
         $graph->SetMarginColor('white');
@@ -114,7 +113,6 @@ class SoftyTheme extends Theme
 
     public function SetupPieGraph($graph)
     {
-
         // graph
         $graph->SetFrame(false);
 
@@ -142,7 +140,6 @@ class SoftyTheme extends Theme
 
     public function ApplyPlot($plot)
     {
-
         switch (get_class($plot)) {
             case 'BarPlot':
                 $plot->Clear();

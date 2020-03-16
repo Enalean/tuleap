@@ -60,7 +60,7 @@ class DocumentOnGoingVersionToUploadDAO extends DataAccessObject
                 'description'           => $description
             ]
         );
-        return (int)$version_id;
+        return (int) $version_id;
     }
 
     public function searchDocumentVersionOngoingUploadByItemIdAndExpirationDate(int $id, int $timestamp) : array

@@ -125,7 +125,7 @@ class Wiki
     {
         if ($this->exist === null) {
             $res = db_query('SELECT count(*) AS nb FROM wiki_page'
-                          .' WHERE group_id='.db_ei($this->gid));
+                          . ' WHERE group_id=' . db_ei($this->gid));
 
             $this->exist = (db_result($res, 0, 'nb') > 0);
         }
@@ -139,9 +139,9 @@ class Wiki
     public function getPageCount()
     {
         $res = db_query(' SELECT count(*) as count'
-        .' FROM wiki_page, wiki_nonempty'
-        .' WHERE wiki_page.group_id="'.db_ei($this->gid).'"'
-        .' AND wiki_nonempty.id=wiki_page.id');
+        . ' FROM wiki_page, wiki_nonempty'
+        . ' WHERE wiki_page.group_id="' . db_ei($this->gid) . '"'
+        . ' AND wiki_nonempty.id=wiki_page.id');
 
         if (db_numrows($res) > 0) {
             return db_result($res, 0, 'count');
@@ -162,10 +162,10 @@ class Wiki
             $excluded_pages_db_escaped[] = '"' . db_es($excluded_page) . '"';
         }
         $res = db_query(' SELECT count(*) as count'
-        .' FROM wiki_page, wiki_nonempty'
-        .' WHERE wiki_page.group_id="'.db_ei($this->gid).'"'
-        .' AND wiki_nonempty.id=wiki_page.id'
-            .' AND wiki_page.pagename NOT IN ('.implode(',', $excluded_pages_db_escaped).')');
+        . ' FROM wiki_page, wiki_nonempty'
+        . ' WHERE wiki_page.group_id="' . db_ei($this->gid) . '"'
+        . ' AND wiki_nonempty.id=wiki_page.id'
+            . ' AND wiki_page.pagename NOT IN (' . implode(',', $excluded_pages_db_escaped) . ')');
 
         if (db_numrows($res) > 0) {
             return db_result($res, 0, 'count');
@@ -202,8 +202,8 @@ class Wiki
     public function dropLink($id)
     {
         $res = db_query('  DELETE FROM wiki_link'
-        .' WHERE linkfrom='.db_ei($id)
-        .' OR linkto='.db_ei($id));
+        . ' WHERE linkfrom=' . db_ei($id)
+        . ' OR linkto=' . db_ei($id));
 
         if (db_affected_rows($res) === 1) {
             return true;
@@ -213,25 +213,25 @@ class Wiki
     public function dropNonEmpty($id)
     {
         $res = db_query('  DELETE FROM wiki_nonempty'
-        .' WHERE id='.db_ei($id));
+        . ' WHERE id=' . db_ei($id));
     }
 
     public function dropRecent($id)
     {
         $res = db_query('  DELETE FROM wiki_recent'
-        .' WHERE id='.db_ei($id));
+        . ' WHERE id=' . db_ei($id));
     }
 
     public function dropVersion($id)
     {
         $res = db_query('  DELETE FROM wiki_version'
-        .' WHERE id='.db_ei($id));
+        . ' WHERE id=' . db_ei($id));
     }
 
     public function dropPage($id)
     {
         $res = db_query('  DELETE FROM wiki_page'
-        .' WHERE id='.db_ei($id));
+        . ' WHERE id=' . db_ei($id));
     }
 
     public function drop()
@@ -240,7 +240,7 @@ class Wiki
 
       // PhpWiki
         $res = db_query('  SELECT id FROM wiki_page'
-        .' WHERE group_id='.db_ei($this->gid));
+        . ' WHERE group_id=' . db_ei($this->gid));
 
         while ($row = db_fetch_array($res)) {
             $pid = $row['id'];

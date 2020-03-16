@@ -62,7 +62,7 @@ class FRSReleaseRouter
         $package    = $this->package_factory->getFRSPackageFromDb($package_id, $project->getGroupId());
         if (! $package) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editpackages', 'p_not_exists'));
-            $GLOBALS['Response']->redirect('/file/?group_id='.$project->getGroupId());
+            $GLOBALS['Response']->redirect('/file/?group_id=' . $project->getGroupId());
         }
 
         switch ($request->get('func')) {
@@ -71,7 +71,7 @@ class FRSReleaseRouter
                     $this->release_controller->delete($project, $release);
                 } catch (FRSDeleteReleaseNotYoursException $e) {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'rel_not_yours'));
-                    $GLOBALS['Response']->redirect('/file/?group_id='.$project->getGroupId());
+                    $GLOBALS['Response']->redirect('/file/?group_id=' . $project->getGroupId());
                 }
                 break;
             case 'add':

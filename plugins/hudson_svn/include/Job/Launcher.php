@@ -78,7 +78,7 @@ class Launcher
                     continue;
                 }
 
-                $this->logger->info("Launching job #$job_id triggered by repository ".$repository->getFullName()." with the url " .$job->getUrl());
+                $this->logger->info("Launching job #$job_id triggered by repository " . $repository->getFullName() . " with the url " . $job->getUrl());
                 try {
                     $this->ci_client->setToken($job->getToken());
                     $this->ci_client->launchJobBuild(
@@ -88,7 +88,7 @@ class Launcher
 
                     $this->launched_jobs[] = $job->getUrl();
                 } catch (Jenkins_ClientUnableToLaunchBuildException $exception) {
-                    $this->logger->error("Launching job #$job_id triggered by repository ".$repository->getFullName()." with the url " .$job->getUrl()." returns an error " .$exception->getMessage());
+                    $this->logger->error("Launching job #$job_id triggered by repository " . $repository->getFullName() . " with the url " . $job->getUrl() . " returns an error " . $exception->getMessage());
                 }
 
                 continue;

@@ -95,10 +95,10 @@ class ArchivedeleteditemsPlugin extends Plugin //phpcs:ignore PSR1.Classes.Class
         }
 
         $source_path = $event->getSourcePath();
-        $destination_path = $archive_path.$event->getArchivePrefix().'_'.basename($source_path);
+        $destination_path = $archive_path . $event->getArchivePrefix() . '_' . basename($source_path);
 
         if (! file_exists($source_path)) {
-            $logger->error('Skipping file "'.$source_path.'": not found in file system.');
+            $logger->error('Skipping file "' . $source_path . '": not found in file system.');
             $event->setFailure();
             return;
         }

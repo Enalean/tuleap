@@ -102,21 +102,21 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
 
     public function __construct(
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
-        CSRFSynchronizerToken                $csrf,
-        Git_Mirror_MirrorDataMapper          $git_mirror_factory,
-        Git_MirrorResourceRestrictor         $git_mirror_resource_restrictor,
-        ProjectManager                       $project_manager,
-        Git_SystemEventManager               $git_system_event_manager,
-        RegexpFineGrainedRetriever           $regexp_retriever,
-        RegexpFineGrainedEnabler             $regexp_enabler,
-        AdminPageRenderer                    $admin_page_renderer,
-        RegexpFineGrainedDisabler            $regexp_disabler,
-        GerritServerResourceRestrictor       $gerrit_ressource_restrictor,
-        Restrictor                           $gerrit_restrictor,
-        ManagementDetector                   $management_detector,
-        BigObjectAuthorizationManager        $big_object_authorization_manager,
-        IncludeAssets                        $include_assets,
-        VersionDetector                      $version_detector
+        CSRFSynchronizerToken $csrf,
+        Git_Mirror_MirrorDataMapper $git_mirror_factory,
+        Git_MirrorResourceRestrictor $git_mirror_resource_restrictor,
+        ProjectManager $project_manager,
+        Git_SystemEventManager $git_system_event_manager,
+        RegexpFineGrainedRetriever $regexp_retriever,
+        RegexpFineGrainedEnabler $regexp_enabler,
+        AdminPageRenderer $admin_page_renderer,
+        RegexpFineGrainedDisabler $regexp_disabler,
+        GerritServerResourceRestrictor $gerrit_ressource_restrictor,
+        Restrictor $gerrit_restrictor,
+        ManagementDetector $management_detector,
+        BigObjectAuthorizationManager $big_object_authorization_manager,
+        IncludeAssets $include_assets,
+        VersionDetector $version_detector
     ) {
         $this->gerrit_server_factory            = $gerrit_server_factory;
         $this->csrf                             = $csrf;

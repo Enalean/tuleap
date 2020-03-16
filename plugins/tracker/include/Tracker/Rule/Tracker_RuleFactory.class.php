@@ -124,7 +124,6 @@ class Tracker_RuleFactory
      */
     public function saveObject(array $rules, Tracker $trackerDB)
     {
-
         if (isset($rules['list_rules'])) {
             foreach ($rules['list_rules'] as $list_rule) {
                 assert($list_rule instanceof Tracker_Rule_List);
@@ -377,29 +376,29 @@ class Tracker_RuleFactory
 
         foreach ($list_rules->rule as $xml_rule) {
             $xml_source_field_attributes = $xml_rule->source_field->attributes();
-            if (! isset($xmlMapping[(string)$xml_source_field_attributes['REF']])) {
+            if (! isset($xmlMapping[(string) $xml_source_field_attributes['REF']])) {
                 continue;
             }
-            $source_field = $xmlMapping[(string)$xml_source_field_attributes['REF']];
+            $source_field = $xmlMapping[(string) $xml_source_field_attributes['REF']];
 
             $xml_target_field_attributes = $xml_rule->target_field->attributes();
-            if (! isset($xmlMapping[(string)$xml_target_field_attributes['REF']])) {
+            if (! isset($xmlMapping[(string) $xml_target_field_attributes['REF']])) {
                 continue;
             }
-            $target_field = $xmlMapping[(string)$xml_target_field_attributes['REF']];
+            $target_field = $xmlMapping[(string) $xml_target_field_attributes['REF']];
 
             $xml_source_value_attributes = $xml_rule->source_value->attributes();
             if (isset($xml_source_value_attributes['is_none'])) {
                 $source_value = new Tracker_FormElement_Field_List_Bind_StaticValue_None();
             } else {
-                $source_value = $xmlMapping[(string)$xml_source_value_attributes['REF']];
+                $source_value = $xmlMapping[(string) $xml_source_value_attributes['REF']];
             }
 
             $xml_target_value_attributes = $xml_rule->target_value->attributes();
             if (isset($xml_target_value_attributes['is_none'])) {
                 $target_value = new Tracker_FormElement_Field_List_Bind_StaticValue_None();
             } else {
-                $target_value = $xmlMapping[(string)$xml_target_value_attributes['REF']];
+                $target_value = $xmlMapping[(string) $xml_target_value_attributes['REF']];
             }
 
             $rule_list = new Tracker_Rule_List();

@@ -103,6 +103,6 @@ class Docman_SystemCheck
 
     private function getDocmanRootPath()
     {
-        return $this->docman_plugin->getPluginInfo()->getPropertyValueForName('docman_root').'/';
+        return $this->docman_plugin->getPluginInfo()->getPropertyValueForName('docman_root') . '/';
     }
 }

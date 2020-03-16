@@ -122,9 +122,9 @@ class WikiPlugin_FileInfo extends WikiPlugin
                     break;
                 case 'link':
                     if ($isuploaded) {
-                              $s[] = "[Upload:".basename($file)."]";
+                              $s[] = "[Upload:" . basename($file) . "]";
                     } else {
-                                $s[] = "[".basename($file)."]";
+                                $s[] = "[" . basename($file) . "]";
                     }
                     break;
                 default:
@@ -174,7 +174,7 @@ class WikiPlugin_FileInfo extends WikiPlugin
         if ($n > $factor) {
             $b = $n / $factor;
             $n -= floor($factor * $b);
-            return number_format($b, $n ? 3 : 0). $suffix;
+            return number_format($b, $n ? 3 : 0) . $suffix;
         }
     }
     public function phonysize($a)
@@ -224,7 +224,7 @@ class WikiPlugin_FileInfo extends WikiPlugin
     {
         if (function_exists('res_list_type') or loadPhpExtension('win32std')) {
             // See http://msdn.microsoft.com/workshop/networking/predefined/res.asp
-            $v = file_get_contents('res://'.realpath($file).urlencode('/RT_VERSION/#1'));
+            $v = file_get_contents('res://' . realpath($file) . urlencode('/RT_VERSION/#1'));
             if ($v) {
              // This is really a binary VERSIONINFO block, with lots of
              // nul bytes (widechar) which cannot be transported as string.
@@ -274,7 +274,7 @@ class WikiPlugin_FileInfo extends WikiPlugin
             return "";
         }
     }
-};
+}
 
 /*
  $Log: FileInfo.php,v $

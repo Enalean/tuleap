@@ -46,7 +46,7 @@ class HTTPRequestBrowserTests extends \PHPUnit\Framework\TestCase // phpcs:ignor
         $this->request = new HTTPRequest();
         $this->request->setCurrentUser($this->user);
 
-        ForgeConfig::set('codendi_dir', __DIR__.'/../../../../../');
+        ForgeConfig::set('codendi_dir', __DIR__ . '/../../../../../');
         ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());
     }
 

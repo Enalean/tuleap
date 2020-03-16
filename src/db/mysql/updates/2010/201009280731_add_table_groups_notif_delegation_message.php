@@ -35,12 +35,12 @@ EOT;
 
     public function up()
     {
-        $sql = 'CREATE TABLE groups_notif_delegation_message ('.
-               ' group_id int(11) NOT NULL default 0,'.
-               ' msg_to_requester text NOT NULL default "",'.
+        $sql = 'CREATE TABLE groups_notif_delegation_message (' .
+               ' group_id int(11) NOT NULL default 0,' .
+               ' msg_to_requester text NOT NULL default "",' .
                ' PRIMARY KEY (group_id))';
         $this->db->createTable('groups_notif_delegation_message', $sql);
-        $sql = 'INSERT INTO groups_notif_delegation_message (group_id, msg_to_requester) VALUES '.
+        $sql = 'INSERT INTO groups_notif_delegation_message (group_id, msg_to_requester) VALUES ' .
                        ' (100 , "member_request_delegation_msg_to_requester")';
         $this->db->dbh->query($sql);
     }

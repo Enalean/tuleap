@@ -20,7 +20,7 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
-use Tuleap\User\REST\MinimalUserRepresentation ;
+use Tuleap\User\REST\MinimalUserRepresentation;
 use Tuleap\REST\JsonCast;
 use Tuleap\PullRequest\Timeline\TimelineGlobalEvent;
 

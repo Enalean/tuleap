@@ -21,7 +21,7 @@
 use Tuleap\Tracker\Hierarchy\HierarchyController;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 
-require_once __DIR__.'/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 
 class Tracker_Hierarchy_ControllerTest extends TuleapTestCase
@@ -49,7 +49,7 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase
         $this->dao                  = \Mockery::spy(HierarchyDAO::class);
         $this->type_dao             = \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class);
         $this->factory              = \Mockery::spy(\Tracker_Hierarchy_HierarchicalTrackerFactory::class);
-        $this->redirect_url         = TRACKER_BASE_URL."/?tracker=$this->tracker_id&func=admin-hierarchy";
+        $this->redirect_url         = TRACKER_BASE_URL . "/?tracker=$this->tracker_id&func=admin-hierarchy";
         $this->trigger_rules_dao    = Mockery::spy(Tracker_Workflow_Trigger_RulesDao::class);
         $this->trigger_rules_dao->shouldReceive('searchTriggeringTrackersByTargetTrackerID')->andReturn([]);
 
@@ -118,8 +118,8 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase
 
         $content = $this->WhenICaptureTheOutputOfEditAction();
 
-        $this->assertPattern("%".TRACKER_BASE_URL."/\?tracker=$sprints_id&func=admin-hierarchy%", $content);
-        $this->assertPattern("%".TRACKER_BASE_URL."/\?tracker=$stories_id&func=admin-hierarchy%", $content);
+        $this->assertPattern("%" . TRACKER_BASE_URL . "/\?tracker=$sprints_id&func=admin-hierarchy%", $content);
+        $this->assertPattern("%" . TRACKER_BASE_URL . "/\?tracker=$stories_id&func=admin-hierarchy%", $content);
     }
 
     private function WhenICaptureTheOutputOfEditAction()
@@ -198,7 +198,7 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase
     private function assertContainsAll($expected_strings, $actual_text)
     {
         foreach ($expected_strings as $string) {
-            $this->assertPattern('/'.$string.'/', $actual_text);
+            $this->assertPattern('/' . $string . '/', $actual_text);
         }
     }
 

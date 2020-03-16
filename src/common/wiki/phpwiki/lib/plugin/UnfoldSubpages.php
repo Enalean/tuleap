@@ -128,7 +128,7 @@ class WikiPlugin_UnfoldSubpages extends WikiPlugin_IncludePage
                 $c = $r->getContent();   // array of lines
                 // follow redirects
                 if (preg_match(
-                    '/<'.'\?plugin\s+RedirectTo\s+page=(\w+)\s+\?'.'>/',
+                    '/<' . '\?plugin\s+RedirectTo\s+page=(\w+)\s+\?' . '>/',
                     implode("\n", $c),
                     $m
                 )) {
@@ -138,7 +138,7 @@ class WikiPlugin_UnfoldSubpages extends WikiPlugin_IncludePage
                             $content->pushContent(
                                 HTML::p(sprintf(
                                     _("recursive inclusion of page %s ignored"),
-                                    $cpagename.' => '.$m[1]
+                                    $cpagename . ' => ' . $m[1]
                                 ))
                             );
                         }
@@ -193,7 +193,7 @@ class WikiPlugin_UnfoldSubpages extends WikiPlugin_IncludePage
         }
         return $content;
     }
-};
+}
 
 // $Log: UnfoldSubpages.php,v $
 // Revision 1.22  2007/06/03 21:58:51  rurban

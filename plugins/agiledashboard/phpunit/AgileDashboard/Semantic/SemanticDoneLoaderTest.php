@@ -101,7 +101,7 @@ class SemanticDoneLoaderTest extends TestCase
         $status_field->shouldReceive('getBind')->andReturn($bind);
 
         $this->semantic_status->shouldReceive('getField')->andReturn($status_field);
-        $this->dao->shouldReceive('getSelectedValues')->andReturn([['value_id'=> 3], ['value_id' => 4]]);
+        $this->dao->shouldReceive('getSelectedValues')->andReturn([['value_id' => 3], ['value_id' => 4]]);
 
         $semantic_done = $this->loader->load($this->tracker, $this->semantic_status);
 
@@ -133,7 +133,7 @@ class SemanticDoneLoaderTest extends TestCase
         $status_field->shouldReceive('getBind')->andReturn($bind);
 
         $this->semantic_status->shouldReceive('getField')->andReturn($status_field);
-        $this->dao->shouldReceive('getSelectedValues')->andReturn([['value_id'=> 3], ['value_id' => 4]]);
+        $this->dao->shouldReceive('getSelectedValues')->andReturn([['value_id' => 3], ['value_id' => 4]]);
 
         $semantic_done = $this->loader->load($this->tracker, $this->semantic_status);
 
@@ -155,7 +155,7 @@ class SemanticDoneLoaderTest extends TestCase
         $status_field->shouldReceive('getBind')->andReturn($bind);
 
         $this->semantic_status->shouldReceive('getField')->andReturn($status_field);
-        $this->dao->shouldReceive('getSelectedValues')->andReturn([['value_id'=> 3], ['value_id' => 4]]);
+        $this->dao->shouldReceive('getSelectedValues')->andReturn([['value_id' => 3], ['value_id' => 4]]);
 
         $semantic_done = $this->loader->load($this->tracker, $this->semantic_status);
 

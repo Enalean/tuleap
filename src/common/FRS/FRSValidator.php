@@ -96,7 +96,7 @@ class FRSValidator
                         }
                     }
                     //check if release name exists already
-                    if (($res1->getPackageID()!=$release['package_id']) || ($res1->getPackageID()==$release['package_id'] && $res1->getName() != $release['name'])) {
+                    if (($res1->getPackageID() != $release['package_id']) || ($res1->getPackageID() == $release['package_id'] && $res1->getName() != $release['name'])) {
                         $release_exists = $frsrf->getReleaseIdByName($release['name'], $release['package_id']);
                     }
                     if (!isset($release_exists) || count($release_exists) < 1) {

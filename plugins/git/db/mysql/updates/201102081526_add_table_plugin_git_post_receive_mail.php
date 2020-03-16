@@ -35,9 +35,9 @@ EOT;
 
     public function up()
     {
-        $sql = 'CREATE TABLE IF NOT EXISTS plugin_git_post_receive_mail ('.
-                    ' recipient_mail varchar(255) NOT NULL,'.
-                    ' repository_id INT(10) NOT NULL,'.
+        $sql = 'CREATE TABLE IF NOT EXISTS plugin_git_post_receive_mail (' .
+                    ' recipient_mail varchar(255) NOT NULL,' .
+                    ' repository_id INT(10) NOT NULL,' .
                     ' KEY `repository_id` (`repository_id`)
                     );';
         $this->db->createTable('plugin_git_post_receive_mail', $sql);

@@ -27,7 +27,7 @@ if ($argc < 2) {
     exit(0);
 }
 
-require_once __DIR__.'/../../../src/www/include/pre.php';
+require_once __DIR__ . '/../../../src/www/include/pre.php';
 
 $projects_path = forge_get_config('projects_path', 'mediawiki');
 

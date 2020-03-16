@@ -49,7 +49,7 @@ class b201607281200_migrate_existing_permissions extends ForgeUpgrade_Bucket
                       AND file_flags = 2";
 
         if ($this->db->dbh->exec($sql) === false) {
-            $this->rollBackOnError('An error occured while migrating admin frs permissions for ugroup'.$sql);
+            $this->rollBackOnError('An error occured while migrating admin frs permissions for ugroup' . $sql);
         }
 
         $sql = "INSERT INTO ugroup_user (ugroup_id, user_id)
@@ -63,7 +63,7 @@ class b201607281200_migrate_existing_permissions extends ForgeUpgrade_Bucket
                       AND ugroup_id > $last_ugroup_id";
 
         if ($this->db->dbh->exec($sql) === false) {
-            $this->rollBackOnError('An error occured while migrating admin frs permissions for ugroup_user'.$sql);
+            $this->rollBackOnError('An error occured while migrating admin frs permissions for ugroup_user' . $sql);
         }
 
         $sql = "INSERT INTO frs_global_permissions (project_id, permission_type, ugroup_id)
@@ -73,7 +73,7 @@ class b201607281200_migrate_existing_permissions extends ForgeUpgrade_Bucket
                   AND ugroup_id > $last_ugroup_id";
 
         if ($this->db->dbh->exec($sql) === false) {
-            $this->rollBackOnError('An error occured while add admin frs permissions in new table'.$sql);
+            $this->rollBackOnError('An error occured while add admin frs permissions in new table' . $sql);
         }
 
         $this->db->dbh->commit();

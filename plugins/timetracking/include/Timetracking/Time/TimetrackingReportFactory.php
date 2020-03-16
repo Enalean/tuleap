@@ -62,7 +62,7 @@ class TimetrackingReportFactory
         $tracker_rows    = $this->report_dao->searchReportTrackersById($id);
 
         foreach ($tracker_rows as $row) {
-            $tracker = $this->tracker_factory->getTrackerById($row[ 'tracker_id' ]);
+            $tracker = $this->tracker_factory->getTrackerById($row['tracker_id']);
             if ($tracker !== null) {
                 $report_trackers[] = $tracker;
             }

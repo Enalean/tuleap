@@ -23,13 +23,13 @@ require_once __DIR__ . '/../../www/include/pre.php';
 
 function cvs_loginfo_format_data($line)
 {
-    $match=array();
+    $match = array();
     preg_match_all('/\/cvsroot\/([^\/]*?)\/CVSROOT\/loginfo/', $line, $match);
     return $match[1][0];
 }
 
 $backendCVS = BackendCVS::instance();
-$backendCVS->log(__FILE__." script execution start!");
+$backendCVS->log(__FILE__ . " script execution start!");
 
 $file_list    = glob('/cvsroot/*/CVSROOT/loginfo');
 $project_list = array_map('cvs_loginfo_format_data', $file_list);
@@ -64,4 +64,4 @@ foreach ($file_list as $key => $filename) {
         $backendCVS->log("Nothing to do for file $filename", Backend::LOG_INFO);
     }
 }
-$backendCVS->log(__FILE__." script execution done!");
+$backendCVS->log(__FILE__ . " script execution done!");

@@ -57,7 +57,7 @@ class PluginsAdministrationViews extends Views
     public function header()
     {
         $title = dgettext('tuleap-pluginsadministration', 'Plugins');
-        $GLOBALS['HTML']->header(array('title'=>$title, 'selected_top_tab' => 'admin', 'main_classes' => array('tlp-framed')));
+        $GLOBALS['HTML']->header(array('title' => $title, 'selected_top_tab' => 'admin', 'main_classes' => array('tlp-framed')));
     }
 
     public function footer()
@@ -248,7 +248,7 @@ class PluginsAdministrationViews extends Views
     public function _emphasis($name, $enable)
     {
         if (!$enable) {
-            $name = '<span class="pluginsadministration_unavailable">'.$name.'</span>';
+            $name = '<span class="pluginsadministration_unavailable">' . $name . '</span>';
         }
         return $name;
     }
@@ -296,9 +296,9 @@ class PluginsAdministrationViews extends Views
 
             // ForgeUpgrade configuration warning
             if (isset($noFUConfig) && count($noFUConfig) && isset($GLOBALS['forgeupgrade_file'])) {
-                $txt = 'Some plugins are not referenced in ForgeUpgrade configuration, please add the following in <code>'.$GLOBALS['forgeupgrade_file'].'.</code><br/>';
+                $txt = 'Some plugins are not referenced in ForgeUpgrade configuration, please add the following in <code>' . $GLOBALS['forgeupgrade_file'] . '.</code><br/>';
                 foreach ($noFUConfig as $plugInfo) {
-                    $txt .= '<code>path[]="'.$plugInfo['plugin']->getFilesystemPath().'"</code><br/>';
+                    $txt .= '<code>path[]="' . $plugInfo['plugin']->getFilesystemPath() . '"</code><br/>';
                 }
                 $GLOBALS['Response']->addFeedback('warning', $txt, CODENDI_PURIFIER_DISABLED);
             }
@@ -326,7 +326,7 @@ class PluginsAdministrationViews extends Views
                 $is_there_unmet_dependencies = true;
             }
             $plugins[] = array(
-                'available'                   => $plugin['available']? '': 'pluginsadministration_unavailable',
+                'available'                   => $plugin['available'] ? '' : 'pluginsadministration_unavailable',
                 'name'                        => $plugin['name'],
                 'version'                     => $plugin['version'],
                 'description'                 => $plugin['description'],
@@ -371,11 +371,11 @@ class PluginsAdministrationViews extends Views
         if (! $dont_touch) {
             $csrf_token = new CSRFSynchronizerToken('/plugins/pluginsadministration/');
             $output = '
-            <form id="plugin-switch-form-'.$plugin_id.'" action="?action='. $action .'&plugin_id='. $plugin_id .'&view='.$view.'" method="POST">
+            <form id="plugin-switch-form-' . $plugin_id . '" action="?action=' . $action . '&plugin_id=' . $plugin_id . '&view=' . $view . '" method="POST">
                 ' . $csrf_token->fetchHTMLInput() . '
                 <div class="tlp-switch tlp-table-cell-actions-button">
-                    <input type="checkbox" data-form-id="plugin-switch-form-'.$plugin_id.'" id="plugin-switch-toggler-'.$plugin_id.'" class="tlp-switch-checkbox" '.$checked.'>
-                    <label for="plugin-switch-toggler-'.$plugin_id.'" class="tlp-switch-button">'.$title.'</label>
+                    <input type="checkbox" data-form-id="plugin-switch-form-' . $plugin_id . '" id="plugin-switch-toggler-' . $plugin_id . '" class="tlp-switch-checkbox" ' . $checked . '>
+                    <label for="plugin-switch-toggler-' . $plugin_id . '" class="tlp-switch-button">' . $title . '</label>
                 </div>
             </form>';
         }

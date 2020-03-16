@@ -50,7 +50,6 @@ class ArchiveCleaner
 
     public function cleanPageRevisions($page)
     {
-
         $expire = &$this->expire_params;
         foreach (array('major', 'minor', 'author') as $class) {
             $counter[$class] = new ArchiveCleaner_Counter($expire[$class]);
@@ -94,7 +93,6 @@ class ArchiveCleaner_Counter
 {
     public function __construct($params)
     {
-
         if (!empty($params)) {
             extract($params);
         }

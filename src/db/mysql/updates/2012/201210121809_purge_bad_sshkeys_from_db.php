@@ -54,7 +54,7 @@ EOT;
             }
             $str_valid_keys = implode('###', $valid_keys);
             if ($str_valid_keys !== $row['authorized_keys']) {
-                $this->log->info("Remove invalid SSH key for user ".$row['user_id'].": ".$row['user_name']." (".$row['realname']." <".$row['email'].">)");
+                $this->log->info("Remove invalid SSH key for user " . $row['user_id'] . ": " . $row['user_name'] . " (" . $row['realname'] . " <" . $row['email'] . ">)");
                 $update_sth->execute(array(':authorized_keys' => $str_valid_keys, ':user_id' => $row['user_id']));
             }
         }

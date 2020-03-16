@@ -146,7 +146,7 @@ class SOAP_WSDLMethodGenerator
     private function parseDescription($line)
     {
         if ($this->lineDoesntContainPhpDoc($line)) {
-            $this->comment .= trim($line).PHP_EOL;
+            $this->comment .= trim($line) . PHP_EOL;
         }
     }
 

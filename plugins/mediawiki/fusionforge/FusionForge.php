@@ -131,11 +131,11 @@ foreach ($this->data['xhtmlnamespaces'] as $tag => $ns) {
         <!-- FUSIONFORGE BodyHeader BEGIN -->
            <?php
             if (! $GLOBALS['sys_use_mwframe']) {
-                 $project=group_get_object_by_name($GLOBALS['fusionforgeproject']);
+                 $project = group_get_object_by_name($GLOBALS['fusionforgeproject']);
                 if ($project) {
-                    $GLOBALS['group_id']=$project->getID();
-                    $params['group']=$GLOBALS['group_id'];
-                    $params['toptab']='mediawiki';
+                    $GLOBALS['group_id'] = $project->getID();
+                    $params['group'] = $GLOBALS['group_id'];
+                    $params['toptab'] = 'mediawiki';
                     $GLOBALS['HTML']->bodyHeader($params);
                 }
             }
@@ -148,7 +148,7 @@ foreach ($this->data['xhtmlnamespaces'] as $tag => $ns) {
         <?php if ($this->data['sitenotice']) {
             ?><div id="siteNotice"><?php $this->html('sitenotice') ?></div><?php
         } ?>
-        <h1 id="firstHeading" class="firstHeading"><?php $this->data['displaytitle']!=""?$this->html('title'):$this->text('title') ?></h1>
+        <h1 id="firstHeading" class="firstHeading"><?php $this->data['displaytitle'] != "" ? $this->html('title') : $this->text('title') ?></h1>
         <div id="bodyContent">
             <h3 id="siteSub"><?php $this->msg('tagline') ?></h3>
             <div id="contentSub"><?php $this->html('subtitle') ?></div>
@@ -183,9 +183,9 @@ foreach ($this->data['xhtmlnamespaces'] as $tag => $ns) {
             echo '
 				 <li id="' . Sanitizer::escapeId("ca-$key") . '"';
             if ($tab['class']) {
-                echo ' class="'.htmlspecialchars($tab['class']).'"';
+                echo ' class="' . htmlspecialchars($tab['class']) . '"';
             }
-            echo'><a href="'.htmlspecialchars($tab['href']).'"';
+            echo'><a href="' . htmlspecialchars($tab['href']) . '"';
                     // We don't want to give the watch tab an accesskey if the
                     // page is being edited, because that conflicts with the
                     // accesskey on the watch checkbox.  We also don't want to
@@ -198,7 +198,7 @@ foreach ($this->data['xhtmlnamespaces'] as $tag => $ns) {
             } else {
                 echo $skin->tooltipAndAccesskey("ca-$key");
             }
-            echo '>'.htmlspecialchars($tab['text']).'</a></li>';
+            echo '>' . htmlspecialchars($tab['text']) . '</a></li>';
         } ?>
             </ul>
         </div>
@@ -213,7 +213,7 @@ foreach ($this->data['xhtmlnamespaces'] as $tag => $ns) {
                     ?> class="active"
                 <?php }
                 ?>><a href="<?php
-                echo htmlspecialchars($item['href']) ?>"<?php echo $skin->tooltipAndAccesskey('pt-'.$key) ?><?php
+                echo htmlspecialchars($item['href']) ?>"<?php echo $skin->tooltipAndAccesskey('pt-' . $key) ?><?php
 if (! empty($item['class'])) {
     ?> class="<?php
 echo htmlspecialchars($item['class']) ?>"
@@ -359,13 +359,13 @@ echo htmlspecialchars($item['class']) ?>"
         if ($this->data['feeds']) { ?>
             <li id="feedlinks"><?php foreach ($this->data['feeds'] as $key => $feed) {
                 ?><a id="<?php echo Sanitizer::escapeId("feed-$key"); ?>" href="<?php
-                    echo htmlspecialchars($feed['href']) ?>" rel="alternate" type="application/<?php echo $key ?>+xml" class="feedlink"<?php echo $this->skin->tooltipAndAccesskey('feed-'.$key) ?>><?php echo htmlspecialchars($feed['text'])?></a>&nbsp;
+                    echo htmlspecialchars($feed['href']) ?>" rel="alternate" type="application/<?php echo $key ?>+xml" class="feedlink"<?php echo $this->skin->tooltipAndAccesskey('feed-' . $key) ?>><?php echo htmlspecialchars($feed['text'])?></a>&nbsp;
             <?php } // phpcs:ignore Squiz.WhiteSpace.ScopeClosingBrace.Indent ?></li><?php
         }
         foreach (array('contributions', 'log', 'blockip', 'emailuser', 'upload', 'specialpages') as $special) {
             if ($this->data['nav_urls'][$special]) {
                 ?><li id="t-<?php echo $special ?>"><a href="<?php echo htmlspecialchars($this->data['nav_urls'][$special]['href'])
-?>"<?php echo $this->skin->tooltipAndAccesskey('t-'.$special) ?>><?php $this->msg($special) ?></a></li>
+?>"<?php echo $this->skin->tooltipAndAccesskey('t-' . $special) ?>><?php $this->msg($special) ?></a></li>
             <?php	    }
         }
 
@@ -412,7 +412,7 @@ echo htmlspecialchars($item['class']) ?>"
     public function customBox($bar, $cont)
     {
         ?>
-    <div class='generated-sidebar portlet' id='<?php echo Sanitizer::escapeId("p-$bar") ?>'<?php echo $this->skin->tooltip('p-'.$bar) ?>>
+    <div class='generated-sidebar portlet' id='<?php echo Sanitizer::escapeId("p-$bar") ?>'<?php echo $this->skin->tooltip('p-' . $bar) ?>>
         <h5>
         <?php
         $out = wfMsg($bar);

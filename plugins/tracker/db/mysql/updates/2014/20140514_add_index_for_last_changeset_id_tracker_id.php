@@ -36,7 +36,7 @@ class b20140514_add_index_for_last_changeset_id_tracker_id extends ForgeUpgrade_
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
                 $info = $this->db->dbh->errorInfo();
-                $msg  = 'An error occured adding index idx_changeset_tracker to tracker_artifact: '.$info[2].' ('.$info[1].' - '.$info[0].')';
+                $msg  = 'An error occured adding index idx_changeset_tracker to tracker_artifact: ' . $info[2] . ' (' . $info[1] . ' - ' . $info[0] . ')';
                 $this->log->error($msg);
                 throw new ForgeUpgrade_Bucket_Db_Exception($msg);
             }
@@ -60,7 +60,7 @@ class b20140514_add_index_for_last_changeset_id_tracker_id extends ForgeUpgrade_
      */
     private function indexNameExists($tableName, $index)
     {
-        $sql = 'SHOW INDEX FROM '.$tableName.' WHERE Key_name LIKE '.$this->db->dbh->quote($index);
+        $sql = 'SHOW INDEX FROM ' . $tableName . ' WHERE Key_name LIKE ' . $this->db->dbh->quote($index);
         $res = $this->db->dbh->query($sql);
         if ($res && $res->fetch() !== false) {
             $res->closeCursor();

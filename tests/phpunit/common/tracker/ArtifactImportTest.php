@@ -168,7 +168,7 @@ final class ArtifactImportTest extends \PHPUnit\Framework\TestCase
                                    $GLOBALS['Language']->getText('project_export_artifact_export', 'cc_comment_lbl'),
                                    'Assigned To','Original Submission'));
         $test->predefined_values = array();
-        $test->predefined_values[4] = array('schneide'=>'');
+        $test->predefined_values[4] = array('schneide' => '');
         $data = array($GLOBALS['Language']->getText('tracker_import_utils', 'no_followups'),'','','','schneide','my original submission');
         $test->checkValues('1', $data, false);
         $this->assertFalse($test->isError());
@@ -217,11 +217,11 @@ final class ArtifactImportTest extends \PHPUnit\Framework\TestCase
                                    $GLOBALS['Language']->getText('project_export_artifact_export', 'cc_comment_lbl'),
                                    'Assigned To','Original Submission','MB Field','SB Field'));
         $test->predefined_values = array();
-        $test->predefined_values[4] = array('schneide'=>'');
-        $test->predefined_values[6] = array('one'=>'','two'=>'','three'=>'');
-        $test->predefined_values[7] = array('blue'=>'','yellow'=>'','red'=>'');
+        $test->predefined_values[4] = array('schneide' => '');
+        $test->predefined_values[6] = array('one' => '','two' => '','three' => '');
+        $test->predefined_values[7] = array('blue' => '','yellow' => '','red' => '');
         $data = array($GLOBALS['Language']->getText('tracker_import_utils', 'no_followups'),'','','','schneide','my original submission',
-        'one,two,'.$GLOBALS['Language']->getText('global', 'none'),'yellow');
+        'one,two,' . $GLOBALS['Language']->getText('global', 'none'),'yellow');
         $test->checkValues('1', $data, false);
         $this->assertFalse($test->isError());
 
@@ -287,11 +287,11 @@ final class ArtifactImportTest extends \PHPUnit\Framework\TestCase
         $parsed_comments = array();
         $art_id = '1149';
 
-        $followup_comments= "Follow-ups
+        $followup_comments = "Follow-ups
 **********
 
 ------------------------------------------------------------------
-".$GLOBALS['Language']->getText('tracker_import_utils', 'date').": 2005-09-02 18:18              ".$GLOBALS['Language']->getText('global', 'by').": doswald
+" . $GLOBALS['Language']->getText('tracker_import_utils', 'date') . ": 2005-09-02 18:18              " . $GLOBALS['Language']->getText('global', 'by') . ": doswald
 8/17/2004 4:21:57 PM New Entry
 8/17/2004 4:24:38 PM DCO: Accepted for investigation, Prio Major 2 Assigned Cyrkin, Tonya
 9/14/2004 2:13:03 PM DCO: Waiting on new database from Craig DeHond.
@@ -314,15 +314,15 @@ final class ArtifactImportTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('doswald', $parsed_comments[0]['by']);
 
         $parsed_comments = array();
-        $followup_comments= "Follow-ups
+        $followup_comments = "Follow-ups
 **********
 
 ------------------------------------------------------------------
-".$GLOBALS['Language']->getText('tracker_import_utils', 'date').": 2005-10-19 18:28              ".$GLOBALS['Language']->getText('global', 'by').": doswald
+" . $GLOBALS['Language']->getText('tracker_import_utils', 'date') . ": 2005-10-19 18:28              " . $GLOBALS['Language']->getText('global', 'by') . ": doswald
 Excel issue, reassigned to Gene, reduced to Ordinary
 
 ------------------------------------------------------------------
-".$GLOBALS['Language']->getText('tracker_import_utils', 'date').": 2005-09-02 16:51              ".$GLOBALS['Language']->getText('global', 'by').": doswald
+" . $GLOBALS['Language']->getText('tracker_import_utils', 'date') . ": 2005-09-02 16:51              " . $GLOBALS['Language']->getText('global', 'by') . ": doswald
 1/18/2005 10:09:24 AM New Entry
 1/18/2005 10:10:58 AM DCO: Accepted for investigation, Prio Major  Assigned Unassigned
 ";
@@ -338,21 +338,21 @@ Excel issue, reassigned to Gene, reduced to Ordinary
 
         $parsed_comments = array();
 
-        $followup_comments= "==================================================
-".$GLOBALS['Language']->getText('tracker_import_utils', 'type').": ".$GLOBALS['Language']->getText('global', 'none')."     ".$GLOBALS['Language']->getText('global', 'by').": jstidd      ".$GLOBALS['Language']->getText('global', 'on').": 2000-12-09 00:08
+        $followup_comments = "==================================================
+" . $GLOBALS['Language']->getText('tracker_import_utils', 'type') . ": " . $GLOBALS['Language']->getText('global', 'none') . "     " . $GLOBALS['Language']->getText('global', 'by') . ": jstidd      " . $GLOBALS['Language']->getText('global', 'on') . ": 2000-12-09 00:08
 
 noreply was aliased to codendi-admin in order to prevent failure of delivery (to anybody) for the message.  This will cause all new bugs to be visible to the codendi administrators until an alternate solution is devised.  It seems ill-advised to set the email value in user=100 to null, because we are not sure where this value is used in the system and what the effects will be of possible syntax errors created by the use of null instead of a valid mail address.  What is needed is to alias noreply to a bit bucket.
 ==================================================
-".$GLOBALS['Language']->getText('tracker_import_utils', 'type').": ".$GLOBALS['Language']->getText('global', 'none')."     ".$GLOBALS['Language']->getText('global', 'by').": jstidd      ".$GLOBALS['Language']->getText('global', 'on').": 2000-12-08 23:06
+" . $GLOBALS['Language']->getText('tracker_import_utils', 'type') . ": " . $GLOBALS['Language']->getText('global', 'none') . "     " . $GLOBALS['Language']->getText('global', 'by') . ": jstidd      " . $GLOBALS['Language']->getText('global', 'on') . ": 2000-12-08 23:06
 
 The cause of this problem is that bugs assigned to 'None' are assigned by default to the default user, user_id=100 by bug_data_create in bugs/bug_data.php.  The email field for user 100 in the database was noreply@sourceforge.net.  This has been changed to noreply@codendi.com.  The Assigned To: field on this bug has been changed to None in order to test this change.
 ==================================================
-".$GLOBALS['Language']->getText('tracker_import_utils', 'type').": ".$GLOBALS['Language']->getText('global', 'none')."     ".$GLOBALS['Language']->getText('global', 'by').": jstidd      ".$GLOBALS['Language']->getText('global', 'on').": 2000-12-08 22:30
+" . $GLOBALS['Language']->getText('tracker_import_utils', 'type') . ": " . $GLOBALS['Language']->getText('global', 'none') . "     " . $GLOBALS['Language']->getText('global', 'by') . ": jstidd      " . $GLOBALS['Language']->getText('global', 'on') . ": 2000-12-08 22:30
 
 Confirming the previous Followup.  The bug was assigned to jstidd, who was present twice in the To: field of the message.  The followup message was not sent to noreply@sourceforge.net.
 
 ==================================================
-".$GLOBALS['Language']->getText('tracker_import_utils', 'type').": ".$GLOBALS['Language']->getText('global', 'none')."     ".$GLOBALS['Language']->getText('global', 'by').": jstidd      ".$GLOBALS['Language']->getText('global', 'on').": 2000-12-08 22:27
+" . $GLOBALS['Language']->getText('tracker_import_utils', 'type') . ": " . $GLOBALS['Language']->getText('global', 'none') . "     " . $GLOBALS['Language']->getText('global', 'by') . ": jstidd      " . $GLOBALS['Language']->getText('global', 'on') . ": 2000-12-08 22:27
 
 Problem also occurs for new bugs posted to a project *with* a New Bugs address.  Apparently, if a bug is assigned to None (which is always the case with a new bug), the copy of the message intended for Assigned To is sent to noreply@sourceforge.net.
 
@@ -399,7 +399,7 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
         $aitv = \Mockery::mock(\ArtifactImport::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $followup_comments = file_get_contents(__DIR__ . '/_fixtures/followup_comments1.txt');
         $comments = $aitv->splitFollowUpComments($followup_comments);
-        $this->assertCount(4 +1, $comments); // + 1 because the follow-up comments header is returned
+        $this->assertCount(4 + 1, $comments); // + 1 because the follow-up comments header is returned
     }
 
     public function testCanApplyHtmlSpecialCharsWithBaseTranslation() : void

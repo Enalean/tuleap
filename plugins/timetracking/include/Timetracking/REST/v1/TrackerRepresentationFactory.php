@@ -62,7 +62,7 @@ class TrackerRepresentationFactory
         $authorized_trackers_ids = [];
         foreach ($trackers as $tracker) {
             if ($this->permissions_retriever->userCanSeeAggregatedTimesInTracker($user, $tracker)) {
-                $authorized_trackers_ids[] = (int)$tracker->getId();
+                $authorized_trackers_ids[] = (int) $tracker->getId();
             }
         }
 
@@ -93,11 +93,11 @@ class TrackerRepresentationFactory
     {
         $selected_rows = [];
         foreach ($trackers_rows as $tracker_row) {
-            if ($tracker_id === (int)$tracker_row['tracker_id']) {
+            if ($tracker_id === (int) $tracker_row['tracker_id']) {
                 $tracker_user_representation = TimetrackingTrackerUserRepresentation::build(
                     $tracker_row['full_name'],
-                    (int)$tracker_row['user_id'],
-                    (int)$tracker_row['minutes']
+                    (int) $tracker_row['user_id'],
+                    (int) $tracker_row['minutes']
                 );
                 $selected_rows[] = $tracker_user_representation;
             }

@@ -47,7 +47,7 @@ class TmpWatch
     public function run(): void
     {
         if (! is_dir($this->target_directory)) {
-            throw new InvalidDirectoryException('Cannot delete content of invalid directory: `' .$this->target_directory. '`');
+            throw new InvalidDirectoryException('Cannot delete content of invalid directory: `' . $this->target_directory . '`');
         }
         $now = new \DateTimeImmutable();
         $some_hours_ago = $now->sub(new \DateInterval(sprintf('PT%dH', $this->nb_hours)));

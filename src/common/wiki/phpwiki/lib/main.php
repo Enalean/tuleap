@@ -24,7 +24,7 @@ rcs_id('$Id: main.php,v 1.216 2005/08/27 09:40:46 rurban Exp $');
 define('USE_PREFS_IN_PAGE', true);
 
 //include "lib/config.php";
-require_once(dirname(__FILE__)."/stdlib.php");
+require_once(dirname(__FILE__) . "/stdlib.php");
 require_once('lib/Request.php');
 require_once('lib/WikiDB.php');
 if (ENABLE_USER_NEW) {
@@ -194,7 +194,6 @@ class WikiRequest extends Request
     // [50ms]: 36ms if wikidb_page::exists
     public function updateAuthAndPrefs()
     {
-
         if (isset($this->_user) and (!isa($this->_user, WikiUserClassname()))) {
             $this->_user = false;
         }
@@ -318,7 +317,6 @@ class WikiRequest extends Request
      */
     public function getPostURL($pagename = false)
     {
-
         if ($pagename === false) {
             $pagename = $this->getArg('pagename');
         }
@@ -429,13 +427,13 @@ class WikiRequest extends Request
                             'x1'  => _("BOGO"),
                             'x2'  => _("USER"),
                             'x10' => _("ADMIN"),
-                            'x100'=> _("UNOBTAINABLE"));
+                            'x100' => _("UNOBTAINABLE"));
         }
         if (!empty($level)) {
             $level = '0';
         }
-        if (!empty($levels["x".$level])) {
-            return $levels["x".$level];
+        if (!empty($levels["x" . $level])) {
+            return $levels["x" . $level];
         } else {
             return _("ANON");
         }
@@ -869,7 +867,6 @@ class WikiRequest extends Request
 
     public function _deduceUsername()
     {
-
         if (!empty($this->args['auth']) and !empty($this->args['auth']['userid'])) {
             return $this->args['auth']['userid'];
         }
@@ -970,7 +967,7 @@ class WikiRequest extends Request
 
     public function adminActionSubpage($subpage)
     {
-        $page = _("PhpWikiAdministration")."/".$subpage;
+        $page = _("PhpWikiAdministration") . "/" . $subpage;
         $action = $this->findActionPage($page);
         if ($action) {
             $this->setArg('s', $this->getArg('pagename'));
@@ -978,7 +975,7 @@ class WikiRequest extends Request
             $this->setArg('action', $action);
             $this->actionpage($action);
         } else {
-            trigger_error($page.": Cannot find action page", E_USER_WARNING);
+            trigger_error($page . ": Cannot find action page", E_USER_WARNING);
         }
     }
 
@@ -1004,7 +1001,7 @@ class WikiRequest extends Request
             $this->actionpage($action);
         } else {
             // redirect to action=upgrade if admin?
-            trigger_error(_("PageDump").": Cannot find action page", E_USER_WARNING);
+            trigger_error(_("PageDump") . ": Cannot find action page", E_USER_WARNING);
         }
     }
 
@@ -1218,9 +1215,9 @@ function main()
     // Postpone warnings
     global $ErrorManager;
     if (defined('E_STRICT')) { // and (E_ALL & E_STRICT)) // strict php5?
-        $ErrorManager->setPostponedErrorMask(E_NOTICE|E_USER_NOTICE|E_USER_WARNING|E_WARNING|E_STRICT);
+        $ErrorManager->setPostponedErrorMask(E_NOTICE | E_USER_NOTICE | E_USER_WARNING | E_WARNING | E_STRICT);
     } else {
-        $ErrorManager->setPostponedErrorMask(E_NOTICE|E_USER_NOTICE|E_USER_WARNING|E_WARNING);
+        $ErrorManager->setPostponedErrorMask(E_NOTICE | E_USER_NOTICE | E_USER_WARNING | E_WARNING);
     }
     $request = new WikiRequest();
 
@@ -1264,7 +1261,7 @@ function main()
         $dbi = $request->getDbh();
         $timestamp = $dbi->getTimestamp();
         $validators['mtime'] = $timestamp;
-        $validators['%mtime'] = (int)$timestamp;
+        $validators['%mtime'] = (int) $timestamp;
     }
     // FIXME: we should try to generate strong validators when possible,
     // but for now, our validator is weak, since equal validators do not

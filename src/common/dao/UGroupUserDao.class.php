@@ -23,7 +23,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__. '/../../www/project/admin/ugroup_utils.php';
+require_once __DIR__ . '/../../www/project/admin/ugroup_utils.php';
 
 /**
  *  Data Access Object for ProjectUGroup
@@ -133,9 +133,9 @@ class UGroupUserDao extends DataAccessObject
                     USING(user_id) 
                     WHERE ug.admin_flags="A" 
                     AND u.status IN ("A", "R") 
-                    AND ug.group_id ='.$this->da->escapeInt($groupId).' 
+                    AND ug.group_id =' . $this->da->escapeInt($groupId) . ' 
                     AND u.status IN ("A", "R") 
-                    AND uu.ugroup_id IN ('.implode(",", $ugroups).')';
+                    AND uu.ugroup_id IN (' . implode(",", $ugroups) . ')';
         return $this->retrieve($sql);
     }
 

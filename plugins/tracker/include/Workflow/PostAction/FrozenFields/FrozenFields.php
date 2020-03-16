@@ -83,7 +83,7 @@ class FrozenFields extends Transition_PostAction
      */
     public function exportToXml(SimpleXMLElement $root, $xmlMapping)
     {
-        if (count($this->getFieldIds()) >0) {
+        if (count($this->getFieldIds()) > 0) {
             $child = $root->addChild(self::XML_TAG_NAME);
             foreach ($this->getFieldIds() as $field_id) {
                 $field_id = array_search($field_id, $xmlMapping);

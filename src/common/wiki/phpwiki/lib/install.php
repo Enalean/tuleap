@@ -33,7 +33,7 @@ function init_install()
     static $already = 0;
     // setup default settings
     if (!$already) {
-        IniConfig(dirname(__FILE__)."/../config/config-dist.ini");
+        IniConfig(dirname(__FILE__) . "/../config/config-dist.ini");
     }
     $already = 1;
 }

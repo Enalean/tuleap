@@ -33,27 +33,27 @@ class CardsTest extends CardsBase //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
     public function testPUTCardsWithId()
     {
-        $card_id        = REST_TestDataBuilder::PLANNING_ID .'_'.$this->story_artifact_ids[1];
+        $card_id        = REST_TestDataBuilder::PLANNING_ID . '_' . $this->story_artifact_ids[1];
         $test_label     = "Ieatlaughingcow";
         $test_column_id = 2;
 
         // Keep original values
         $original_card = $this->findCardInCardwall(
-            $this->getResponse($this->client->get('milestones/'. $this->sprint_artifact_ids[1] .'/cardwall'))->json(),
+            $this->getResponse($this->client->get('milestones/' . $this->sprint_artifact_ids[1] . '/cardwall'))->json(),
             $card_id
         );
 
         $response_put = $this->getResponse($this->client->put("cards/$card_id", null, '
             {
                 "label": "' . $test_label . '",
-                "column_id": '. $test_column_id .',
+                "column_id": ' . $test_column_id . ',
                 "values": []
             }
         '));
         $this->assertEquals($response_put->getStatusCode(), 200);
 
         $card = $this->findCardInCardwall(
-            $this->getResponse($this->client->get('milestones/'. $this->sprint_artifact_ids[1] .'/cardwall'))->json(),
+            $this->getResponse($this->client->get('milestones/' . $this->sprint_artifact_ids[1] . '/cardwall'))->json(),
             $card_id
         );
 
@@ -64,7 +64,7 @@ class CardsTest extends CardsBase //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         $this->getResponse($this->client->put("cards/$card_id", null, '
             {
                 "label": "' . $original_card['label'] . '",
-                "column_id": '. $original_card['column_id'] .',
+                "column_id": ' . $original_card['column_id'] . ',
                 "values": []
             }
         '));
@@ -102,7 +102,7 @@ class CardsTest extends CardsBase //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
     public function testOPTIONSCardsWithId()
     {
-        $response = $this->getResponse($this->client->options('cards/'.$this->sprint_artifact_ids[1] .'_'.$this->story_artifact_ids[1]));
+        $response = $this->getResponse($this->client->options('cards/' . $this->sprint_artifact_ids[1] . '_' . $this->story_artifact_ids[1]));
         $this->assertEquals(array('OPTIONS', 'PUT'), $response->getHeader('Allow')->normalize()->toArray());
     }
 }

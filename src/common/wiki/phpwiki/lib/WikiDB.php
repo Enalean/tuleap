@@ -215,7 +215,7 @@ class WikiDB
                     $user              = UserManager::instance()->getCurrentUser();
                     $subject           = sprintf(_("Page removed %s"), $pagename);
                     $body              = $subject . "\n" .
-                                         sprintf(_("Removed by: %s"), $user->getRealName().' ('.$user->getEmail().')') .
+                                         sprintf(_("Removed by: %s"), $user->getRealName() . ' (' . $user->getEmail() . ')') .
                                          "\n\n";
                     $goto_link         = WikiURL($pagename, array('action' => 'PageHistory'), true);
                     $wiki_notification = new WikiNotification($emails, WIKI_NAME, $subject, $body, $goto_link, GROUP_ID);
@@ -304,7 +304,7 @@ class WikiDB
             $count = $iter->count();
             $iter->free();
         }
-        return (int)$count;
+        return (int) $count;
     }
 
     /**
@@ -655,7 +655,7 @@ class WikiDB
             return false;
         }
     }
-};
+}
 
 
 /**
@@ -1054,13 +1054,13 @@ class WikiDB_Page
         }
         $backend = &$this->_wikidb->_backend;
         //$backend = &$request->_dbi->_backend;
-        $subject = _("Page change").' '.$this->_pagename;
+        $subject = _("Page change") . ' ' . $this->_pagename;
         $previous = $backend->get_previous_version($this->_pagename, $version);
         if (!isset($meta['mtime'])) {
             $meta['mtime'] = time();
         }
         if ($previous) {
-            $difflink = WikiURL($this->_pagename, array('action'=>'diff'), true);
+            $difflink = WikiURL($this->_pagename, array('action' => 'diff'), true);
             $difflink .= "&versions%5b%5d=" . $previous . "&versions%5b%5d=" . $version;
             $cache = &$this->_wikidb->_cache;
             //$cache = &$request->_dbi->_cache;
@@ -1089,8 +1089,8 @@ class WikiDB_Page
         }
         // Codendi specific
         $user              = UserManager::instance()->getCurrentUser();
-        $body              = $subject."\n".
-                             sprintf(_("Edited by: %s"), $user->getRealName().' ('.$user->getEmail().')')."\n".
+        $body              = $subject . "\n" .
+                             sprintf(_("Edited by: %s"), $user->getRealName() . ' (' . $user->getEmail() . ')') . "\n" .
                              $difflink;
         $wiki_notification = new WikiNotification($emails, WIKI_NAME, $subject, $body, $difflink, GROUP_ID);
         if ($wiki_notification->send()) {
@@ -1120,8 +1120,8 @@ class WikiDB_Page
             $user              = UserManager::instance()->getCurrentUser();
             $goto_link         = WikiURL($to, array(), true);
             $subject           = sprintf(_("Page rename %s to %s"), $oldname, $to);
-            $body              = $subject."\n".
-                                 sprintf(_("Edited by: %s"), $user->getRealName().' ('.$user->getEmail().')')."\n".
+            $body              = $subject . "\n" .
+                                 sprintf(_("Edited by: %s"), $user->getRealName() . ' (' . $user->getEmail() . ')') . "\n" .
                                  $goto_link;
             $wiki_notification = new WikiNotification($emails, WIKI_NAME, $subject, $body, $goto_link, GROUP_ID);
             if ($wiki_notification->send()) {
@@ -1476,7 +1476,7 @@ class WikiDB_Page
         if (method_exists($version_or_pagerevision, "getContent")) {
             $version = $version_or_pagerevision->getVersion();
         } else {
-            $version = (int)$version_or_pagerevision;
+            $version = (int) $version_or_pagerevision;
         }
 
         assert($version >= 0);
@@ -1501,7 +1501,7 @@ class WikiDB_Page
         $backend = &$this->_wikidb->_backend;
         $pagename = &$this->_pagename;
         $latestversion = $backend->get_latest_version($pagename);
-        for ($v=1; $v <= $latestversion; $v++) {
+        for ($v = 1; $v <= $latestversion; $v++) {
             $rev = $this->getRevision($v, false);
             if ($rev and $owner = $rev->get('author_id')) {
                 return ($owner == "The PhpWiki programming team") ? ADMIN_USER : $owner;
@@ -1735,7 +1735,7 @@ class WikiDB_PageRevision
                 $fortune = new Fortune();
                 $quote = str_replace("\n<br>", "\n", $fortune->quoteFromDir(FORTUNE_DIR));
                 return sprintf(
-                    "<verbatim>\n%s</verbatim>\n\n"._("Describe %s here."),
+                    "<verbatim>\n%s</verbatim>\n\n" . _("Describe %s here."),
                     $quote,
                     "[" . WikiEscape($this->_pagename) . "]"
                 );
@@ -1866,7 +1866,7 @@ class WikiDB_PageRevision
         ob_end_clean();
         return $strval;
     }
-};
+}
 
 
 /**
@@ -2104,7 +2104,7 @@ class WikiDB_PageRevisionIterator
         $this->free();
         return $result;
     }
-};
+}
 
 /** pseudo iterator
  */
@@ -2266,7 +2266,6 @@ class WikiDB_cache
     // FIXME: ugly and wrong. may overwrite full cache with partial cache
     public function cache_data($data)
     {
-        ;
         //if (isset($data['pagedata']))
         //    $this->_pagedata_cache[$data['pagename']] = $data['pagedata'];
     }
@@ -2280,7 +2279,7 @@ class WikiDB_cache
             // There is a bug here somewhere which results in an assertion failure at line 105
             // of ArchiveCleaner.php  It goes away if we use the next line.
             //$need_content = true;
-            $nc = $need_content ? '1':'0';
+            $nc = $need_content ? '1' : '0';
             $cache = &$this->_versiondata_cache;
             if (! isset($cache[$pagename][$version][$nc])
                 || !(is_array($cache[$pagename]))
@@ -2357,7 +2356,7 @@ class WikiDB_cache
             return $this->_backend->get_latest_version($pagename);
         }
     }
-};
+}
 
 function _sql_debuglog($msg, $newline = true, $shutdown = false)
 {

@@ -36,7 +36,7 @@ class Application extends \Symfony\Component\Console\Application
     {
         parent::__construct(
             'Tuleap',
-            trim(file_get_contents(__DIR__.'/../../../VERSION'))
+            trim(file_get_contents(__DIR__ . '/../../../VERSION'))
         );
     }
 

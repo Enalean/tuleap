@@ -9,7 +9,7 @@ function exit_error($title, $text = '')
 
     // if the error comes from the SOAP API, we don't display the site_header and footer, but a soap fault (xml).
     if (substr($_SERVER['SCRIPT_NAME'], 1, 4) != "soap") {
-        site_header(array('title'=>$Language->getText('include_exit', 'exit_error')));
+        site_header(array('title' => $Language->getText('include_exit', 'exit_error')));
         echo '<p data-test="feedback">',$text,'</p>';
         $HTML->footer(array('showfeedback' => false));
     } else {
@@ -29,7 +29,7 @@ function exit_permission_denied()
         }
         exit_not_logged_in();
     } else {
-        exit_error($Language->getText('include_exit', 'perm_denied'), $Language->getText('include_exit', 'no_perm').'<p>'.$feedback);
+        exit_error($Language->getText('include_exit', 'perm_denied'), $Language->getText('include_exit', 'no_perm') . '<p>' . $feedback);
     }
 }
 
@@ -51,23 +51,23 @@ function exit_not_logged_in()
 {
     global $Language;
     //instead of a simple error page, now take them to the login page
-    $GLOBALS['Response']->redirect("/account/login.php?return_to=".urlencode($_SERVER['REQUEST_URI']));
+    $GLOBALS['Response']->redirect("/account/login.php?return_to=" . urlencode($_SERVER['REQUEST_URI']));
     //exit_error($Language->getText('include_exit','not_logged_in'),$Language->getText('include_exit','need_to_login'));
 }
 
 function exit_no_group()
 {
     global $feedback,$Language;
-    exit_error($Language->getText('include_exit', 'choose_proj_err'), $Language->getText('include_exit', 'no_gid_err').'<p>'.$feedback);
+    exit_error($Language->getText('include_exit', 'choose_proj_err'), $Language->getText('include_exit', 'no_gid_err') . '<p>' . $feedback);
 }
 
 function exit_missing_param()
 {
     global $feedback,$Language;
   // Display current $feedback normally, and replace feedback with error message
-    $msg=$feedback;
-    $feedback="";
-    exit_error($Language->getText('include_exit', 'missing_param_err'), '<p>'.$msg);
+    $msg = $feedback;
+    $feedback = "";
+    exit_error($Language->getText('include_exit', 'missing_param_err'), '<p>' . $msg);
 }
 
 function print_soap_fault($fault_code, $fault_factor, $fault_string, $fault_detail)
@@ -76,10 +76,10 @@ function print_soap_fault($fault_code, $fault_factor, $fault_string, $fault_deta
     echo '<SOAP-ENV:Envelope SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/">';
     echo '<SOAP-ENV:Body>';
     echo '<SOAP-ENV:Fault>';
-    echo '<faultcode xsi:type="xsd:string">'.$fault_code.'</faultcode>';
-    echo '<faultactor xsi:type="xsd:string">'.$fault_factor.'</faultactor>';
-    echo '<faultstring xsi:type="xsd:string">'.$fault_string.'</faultstring>';
-    echo '<detail xsi:type="xsd:string">'.$fault_detail.'</detail>';
+    echo '<faultcode xsi:type="xsd:string">' . $fault_code . '</faultcode>';
+    echo '<faultactor xsi:type="xsd:string">' . $fault_factor . '</faultactor>';
+    echo '<faultstring xsi:type="xsd:string">' . $fault_string . '</faultstring>';
+    echo '<detail xsi:type="xsd:string">' . $fault_detail . '</detail>';
     echo '</SOAP-ENV:Fault>';
     echo '</SOAP-ENV:Body>';
     echo '</SOAP-ENV:Envelope>';

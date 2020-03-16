@@ -18,5 +18,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__.'/../../setpath.php';
+require_once __DIR__ . '/../../setpath.php';
 require_once "$mediawikipath/includes/profiler/Profiler.php";

@@ -45,7 +45,7 @@ class RestoreController
             return false;
         }
 
-        $url = '/admin/show_pending_documents.php?'. http_build_query(['group_id' => $project_id]);
+        $url = '/admin/show_pending_documents.php?' . http_build_query(['group_id' => $project_id]);
         (new \CSRFSynchronizerToken($url))->check();
 
         $repository = $this->repository_manager->getByIdAndProject($repository_id, $project);

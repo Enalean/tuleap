@@ -38,7 +38,7 @@ class Docman_MetadataHtmlWiki extends Docman_MetadataHtml
     public function getField()
     {
         $hp = Codendi_HTMLPurifier::instance();
-        return '<input type="text" class="docman_text_field" name="item[wiki_page]" value="'. $hp->purify($this->pagename) .'" /> ';
+        return '<input type="text" class="docman_text_field" name="item[wiki_page]" value="' . $hp->purify($this->pagename) . '" /> ';
     }
 
     public function &getValidator()
@@ -66,7 +66,7 @@ class Docman_MetadataHtmlLink extends Docman_MetadataHtml
     public function getField()
     {
         $hp = Codendi_HTMLPurifier::instance();
-        return '<input type="text" class="docman_text_field" name="item[link_url]" value="'. $hp->purify($this->link_url) .'" />';
+        return '<input type="text" class="docman_text_field" name="item[link_url]" value="' . $hp->purify($this->link_url) . '" />';
     }
 
     public function &getValidator()
@@ -92,7 +92,7 @@ class Docman_MetadataHtmlFile extends Docman_MetadataHtml
     public function getField()
     {
         $html = '<input type="file" name="file" />';
-        $html .= '<br /><em>'. sprintf(dgettext('tuleap-docman', '(The maximum upload file size is %1$s MByte)'), formatByteToMb((int) ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING))) .'</em>';
+        $html .= '<br /><em>' . sprintf(dgettext('tuleap-docman', '(The maximum upload file size is %1$s MByte)'), formatByteToMb((int) ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING))) . '</em>';
 
         return $html;
     }
@@ -124,7 +124,7 @@ class Docman_MetadataHtmlEmbeddedFile extends Docman_MetadataHtml
     {
         $hp = Codendi_HTMLPurifier::instance();
         $html  = '';
-        $html .= '<textarea id="embedded_content" name="content" cols="80" rows="20">'. $hp->purify($this->content) .'</textarea>';
+        $html .= '<textarea id="embedded_content" name="content" cols="80" rows="20">' . $hp->purify($this->content) . '</textarea>';
         return $html;
     }
 

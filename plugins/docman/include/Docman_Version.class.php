@@ -266,7 +266,7 @@ class Docman_Version implements Version
     {
         $value = $this->getNumber();
         if ($this->getLabel() != '') {
-            $value .= ' ('.$this->getLabel().')';
+            $value .= ' (' . $this->getLabel() . ')';
         }
         $params = array('group_id'   => $item->getGroupId(),
                         'item'       => $item,

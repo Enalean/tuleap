@@ -59,7 +59,7 @@ class Tracker_Migration_MailLogger extends \Psr\Log\AbstractLogger implements \P
         $mail        = new Codendi_Mail();
         $breadcrumbs = array();
 
-        $breadcrumbs[] = '<a href="'. HTTPRequest::instance()->getServerUrl() .'/projects/'. $project->getUnixName(true) .'" />'. $hp->purify($project->getPublicName()) .'</a>';
+        $breadcrumbs[] = '<a href="' . HTTPRequest::instance()->getServerUrl() . '/projects/' . $project->getUnixName(true) . '" />' . $hp->purify($project->getPublicName()) . '</a>';
 
         $mail->getLookAndFeelTemplate()->set('breadcrumbs', $breadcrumbs);
         $mail->addAdditionalHeader("X-Codendi-Project", $project->getUnixName());
@@ -84,7 +84,7 @@ class Tracker_Migration_MailLogger extends \Psr\Log\AbstractLogger implements \P
 
         $html .= "<h1> Here are the details (Warnings and Errors only) of your migration Tracker v3 #$tv3_id to $tracker_name</h1>";
         if (count($this->log_stack) > 0) {
-            $html .= '<ul><li>'.implode('</li><li>', $this->log_stack).'</li></ul>';
+            $html .= '<ul><li>' . implode('</li><li>', $this->log_stack) . '</li></ul>';
         } else {
             $html .= "No error detected";
         }

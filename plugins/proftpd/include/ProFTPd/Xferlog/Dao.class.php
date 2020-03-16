@@ -32,7 +32,7 @@ class Dao extends DataAccessObject
 
     public function searchLatestEntryTimestamp()
     {
-        $sql = 'SELECT * FROM plugin_proftpd_xferlog WHERE service_name != "'.self::SERVICE_HTTP.'" ORDER BY id DESC LIMIT 1';
+        $sql = 'SELECT * FROM plugin_proftpd_xferlog WHERE service_name != "' . self::SERVICE_HTTP . '" ORDER BY id DESC LIMIT 1';
         $dar =  $this->retrieve($sql);
         if ($dar && $dar->rowCount() == 1) {
             $row = $dar->getRow();
@@ -147,9 +147,9 @@ class Dao extends DataAccessObject
         $sql = "SELECT
                     log.time AS time,
                     CASE
-                        WHEN direction = '".self::DIRECTION_DOWNLOAD."' THEN $download
-                        WHEN direction = '".self::DIRECTION_UPLOAD."' THEN $upload
-                        WHEN direction = '".self::DIRECTION_DELETE."' THEN $deleted
+                        WHEN direction = '" . self::DIRECTION_DOWNLOAD . "' THEN $download
+                        WHEN direction = '" . self::DIRECTION_UPLOAD . "' THEN $upload
+                        WHEN direction = '" . self::DIRECTION_DELETE . "' THEN $deleted
                     END as type,
                     user.user_name AS user_name,
                     user.realname AS realname,

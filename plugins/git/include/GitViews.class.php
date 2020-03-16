@@ -154,7 +154,7 @@ class GitViews extends PluginViews
             $repository
         );
 
-        echo '<h1>'. $repository->getHTMLLink($this->url_manager) .' - '. $GLOBALS['Language']->getText('global', 'Settings') .'</h1>';
+        echo '<h1>' . $repository->getHTMLLink($this->url_manager) . ' - ' . $GLOBALS['Language']->getText('global', 'Settings') . '</h1>';
         $repo_management_view = new GitViews_RepoManagement(
             $repository,
             $this->controller->getRequest(),
@@ -202,8 +202,8 @@ class GitViews extends PluginViews
             <?php
             $i = 0;
             foreach ($mails as $mail) {
-                echo '<tr class="'.html_get_alt_row_color(++$i).'">';
-                echo '<td>'.$mail.'</td>';
+                echo '<tr class="' . html_get_alt_row_color(++$i) . '">';
+                echo '<td>' . $mail . '</td>';
                 echo '</tr>';
             }
             ?>
@@ -230,29 +230,29 @@ class GitViews extends PluginViews
     {
         $params = $this->getData();
 
-        echo '<h1>'. dgettext('tuleap-git', 'Fork repositories') .'</h1>';
+        echo '<h1>' . dgettext('tuleap-git', 'Fork repositories') . '</h1>';
         if ($this->user->isMember($this->groupId)) {
             echo dgettext('tuleap-git', '<p>You can create personal forks of any reference repositories. By default forks will end up into your personal area of this project.</p></p>');
         }
         echo dgettext('tuleap-git', '<p>You might choose to fork into another project. In this case, fork creates new "References" in the target project.<br />You need to be administrator of the target project to do so and Git service must be activated.</p>');
         if (!empty($params['repository_list'])) {
             echo '<form action="" method="POST">';
-            echo '<input type="hidden" name="group_id" value="'. (int)$this->groupId .'" />';
+            echo '<input type="hidden" name="group_id" value="' . (int) $this->groupId . '" />';
             echo '<input type="hidden" name="action" value="fork_repositories_permissions" />';
-            $token = new CSRFSynchronizerToken('/plugins/git/?group_id='. (int)$this->groupId .'&action=fork_repositories');
+            $token = new CSRFSynchronizerToken('/plugins/git/?group_id=' . (int) $this->groupId . '&action=fork_repositories');
             echo $token->fetchHTMLInput();
 
             echo '<table id="fork_repositories" cellspacing="0">';
             echo '<thead>';
             echo '<tr valign="top">';
             echo '<td class="first">';
-            echo '<label style="font-weight: bold;">'. dgettext('tuleap-git', 'Select repositories to fork') .'</label>';
+            echo '<label style="font-weight: bold;">' . dgettext('tuleap-git', 'Select repositories to fork') . '</label>';
             echo '</td>';
             echo '<td>';
-            echo '<label style="font-weight: bold;">'. dgettext('tuleap-git', 'Choose a destination project') .'</label>';
+            echo '<label style="font-weight: bold;">' . dgettext('tuleap-git', 'Choose a destination project') . '</label>';
             echo '</td>';
             echo '<td>';
-            echo '<label style="font-weight: bold;">'. dgettext('tuleap-git', 'Choose the path for the forks') .'</label>';
+            echo '<label style="font-weight: bold;">' . dgettext('tuleap-git', 'Choose the path for the forks') . '</label>';
             echo '</td>';
             echo '<td class="last">&nbsp;</td>';
             echo '</tr>';
@@ -270,8 +270,8 @@ class GitViews extends PluginViews
                 $options = ' checked="true" ';
             }
             echo '<div>
-                <input id="choose_personal" type="radio" name="choose_destination" value="'. Git::SCOPE_PERSONAL .'" '.$options.' />
-                <label class="radio" for="choose_personal">'.dgettext('tuleap-git', 'Create personal repositories in this project').'</label>
+                <input id="choose_personal" type="radio" name="choose_destination" value="' . Git::SCOPE_PERSONAL . '" ' . $options . ' />
+                <label class="radio" for="choose_personal">' . dgettext('tuleap-git', 'Create personal repositories in this project') . '</label>
             </div>';
 
             echo $this->fetchCopyToAnotherProject();
@@ -280,12 +280,12 @@ class GitViews extends PluginViews
 
             echo '<td>';
             $placeholder = dgettext('tuleap-git', 'Enter a path or leave it blank');
-            echo '<input type="text" title="'. $placeholder .'" placeholder="'. $placeholder .'" id="fork_repositories_path" name="path" />';
-            echo '<input type="hidden" id="fork_repositories_prefix" value="u/'. $this->user->getName() .'" />';
+            echo '<input type="text" title="' . $placeholder . '" placeholder="' . $placeholder . '" id="fork_repositories_path" name="path" />';
+            echo '<input type="hidden" id="fork_repositories_prefix" value="u/' . $this->user->getName() . '" />';
             echo '</td>';
 
             echo '<td class="last">';
-            echo '<input type="submit" class="btn btn-primary" value="'. dgettext('tuleap-git', 'Fork repositories') .'" />';
+            echo '<input type="submit" class="btn btn-primary" value="' . dgettext('tuleap-git', 'Fork repositories') . '" />';
             echo '</td>';
 
             echo '</tr></tbody></table>';
@@ -308,7 +308,7 @@ class GitViews extends PluginViews
             $this->git_permissions_manager->getCurrentGitAdminUgroups($this->project->getId())
         );
 
-        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
+        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR) . '/templates');
 
         $this->header_renderer->renderServiceAdministrationHeader($this->request, $this->user, $this->project);
         echo $renderer->renderToString('admin-git-admins', $presenter);
@@ -336,7 +336,7 @@ class GitViews extends PluginViews
             $params['has_gerrit_servers_set_up']
         );
 
-        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
+        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR) . '/templates');
 
         $this->header_renderer->renderServiceAdministrationHeader($this->request, $this->user, $this->project);
         echo $renderer->renderToString('admin-gerrit-templates', $presenter);
@@ -357,7 +357,7 @@ class GitViews extends PluginViews
             $repository_list
         );
 
-        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
+        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR) . '/templates');
 
         $this->header_renderer->renderServiceAdministrationHeader($this->request, $this->user, $this->project);
         echo $renderer->renderToString('admin-mass-update-select-repositories', $presenter);
@@ -386,7 +386,7 @@ class GitViews extends PluginViews
             new GitPresenters_AdminMassUdpdateMirroringPresenter($mirrors)
         );
 
-        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
+        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR) . '/templates');
 
         $this->header_renderer->renderServiceAdministrationHeader($this->request, $this->user, $this->project);
         echo $renderer->renderToString('admin-mass-update', $presenter);
@@ -423,7 +423,7 @@ class GitViews extends PluginViews
 
     private function generateMassUpdateCSRF()
     {
-        return new CSRFSynchronizerToken('/plugins/git/?group_id='. (int)$this->groupId .'&action=admin-mass-update');
+        return new CSRFSynchronizerToken('/plugins/git/?group_id=' . (int) $this->groupId . '&action=admin-mass-update');
     }
 
     private function getAdminMassUpdateMirrorPresenters()
@@ -450,7 +450,7 @@ class GitViews extends PluginViews
         if ($params['scope'] == 'project') {
             $groupId = $params['group_id'];
         } else {
-            $groupId = (int)$this->groupId;
+            $groupId = (int) $this->groupId;
         }
 
         $repositories = explode(',', $params['repos']);
@@ -496,8 +496,8 @@ class GitViews extends PluginViews
             }
             $html .= '<div>
             <label class="radio">
-                <input id="choose_project" type="radio" name="choose_destination" value="project" '.$options.' />
-                '.dgettext('tuleap-git', 'Copy to another project').'</label>
+                <input id="choose_project" type="radio" name="choose_destination" value="project" ' . $options . ' />
+                ' . dgettext('tuleap-git', 'Copy to another project') . '</label>
             </div>';
 
             $html .= '<select name="to_project" id="fork_destination">';

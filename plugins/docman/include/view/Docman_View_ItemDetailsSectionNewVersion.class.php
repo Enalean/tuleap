@@ -47,7 +47,7 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
 
         $atf = Docman_ApprovalTableFactoriesFactory::getFromItem($this->item);
         if ($atf->tableExistsForItem()) {
-            $html .= '<dt>'. dgettext('tuleap-docman', 'Approval table') .'</dt><dd>';
+            $html .= '<dt>' . dgettext('tuleap-docman', 'Approval table') . '</dt><dd>';
             $html .= '<dd>';
             $html .= Docman_View_ItemDetailsSectionApprovalCreate::displayImportLastTable(false);
             $html .= '</dd>';
@@ -62,7 +62,7 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
         $dPm = Docman_PermissionsManager::instance($this->item->getGroupId());
         if ($dPm->getLockFactory()->itemIsLocked($this->item)) {
             $content .= '<tr style="vertical-align:top;">';
-            $content .= '<td><label>'.dgettext('tuleap-docman', 'Keep the lock:').'</label></td>';
+            $content .= '<td><label>' . dgettext('tuleap-docman', 'Keep the lock:') . '</label></td>';
             $content .= '<td><input type="checkbox" name="lock_document" value="lock" /></td>';
             $content .= '</tr>';
         }
@@ -113,19 +113,19 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
             );
         }
         $content = '';
-        $content .= '<form action="'. $this->url .'&amp;id='. $this->item->getId() .'" method="post" enctype="multipart/form-data" id="plugin_docman_new_version_form" data-test="plugin_docman_new_version_form">';
+        $content .= '<form action="' . $this->url . '&amp;id=' . $this->item->getId() . '" method="post" enctype="multipart/form-data" id="plugin_docman_new_version_form" data-test="plugin_docman_new_version_form">';
 
         $content .= '<dl>';
-        $content .= '<dt>'. dgettext('tuleap-docman', 'Update') .'</dt><dd>';
+        $content .= '<dt>' . dgettext('tuleap-docman', 'Update') . '</dt><dd>';
         $content .= '<table>';
-        $content .= '<tr style="vertical-align:top"><td>'. dgettext('tuleap-docman', 'Version Label:') .'</td><td><input type="text" name="version[label]" value="'.$label.'" /></td></tr>';
-        $content .= '<tr style="vertical-align:top"><td>'. dgettext('tuleap-docman', 'Change Log:') .'</td><td><textarea name="version[changelog]" rows="7" cols="80" data-test="docman_changelog">'.$changelog.'</textarea></td></tr>';
+        $content .= '<tr style="vertical-align:top"><td>' . dgettext('tuleap-docman', 'Version Label:') . '</td><td><input type="text" name="version[label]" value="' . $label . '" /></td></tr>';
+        $content .= '<tr style="vertical-align:top"><td>' . dgettext('tuleap-docman', 'Change Log:') . '</td><td><textarea name="version[changelog]" rows="7" cols="80" data-test="docman_changelog">' . $changelog . '</textarea></td></tr>';
         $fields = $item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('force_item' => $this->force, 'request' => $this->_controller->request));
         if ($fields !== null) {
             foreach ($fields as $field) {
                 $content .= '<tr style="vertical-align:top;">';
-                $content .= '<td><label>'. $field->getLabel().'</label></td>';
-                $content .= '<td>'. $field->getField() .'</td></tr>';
+                $content .= '<td><label>' . $field->getLabel() . '</label></td>';
+                $content .= '<td>' . $field->getField() . '</td></tr>';
             }
         }
         // Release lock
@@ -138,11 +138,11 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
 
         $content .= '<p>';
         if ($this->token) {
-            $content .= '<input type="hidden" name="token" value="'. $this->token .'" />';
+            $content .= '<input type="hidden" name="token" value="' . $this->token . '" />';
         }
         $content .= '<input type="hidden" name="action" value="new_version" />';
-        $content .= '<input type="submit" name="confirm" data-test="docman_create_new_version" value="'. dgettext('tuleap-docman', 'Create new version').'" />';
-        $content .= '<input type="submit" name="cancel"  value="'. $GLOBALS['Language']->getText('global', 'btn_cancel').'" />';
+        $content .= '<input type="submit" name="confirm" data-test="docman_create_new_version" value="' . dgettext('tuleap-docman', 'Create new version') . '" />';
+        $content .= '<input type="submit" name="cancel"  value="' . $GLOBALS['Language']->getText('global', 'btn_cancel') . '" />';
         $content .= '</p>';
 
         $content .= '</dl>';

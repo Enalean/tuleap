@@ -24,10 +24,10 @@
 use Tuleap\GraphOnTrackersV5\Chart\Visitor;
 
 require_once('GraphOnTrackersV5_Chart.class.php');
-require_once(dirname(__FILE__).'/../data-transformation/GraphOnTrackersV5_Burndown_DataBuilder.class.php');
-require_once(dirname(__FILE__).'/../graphic-library/GraphOnTrackersV5_Engine_Burndown.class.php');
+require_once(dirname(__FILE__) . '/../data-transformation/GraphOnTrackersV5_Burndown_DataBuilder.class.php');
+require_once(dirname(__FILE__) . '/../graphic-library/GraphOnTrackersV5_Engine_Burndown.class.php');
 require_once('GraphOnTrackersV5_Chart_BurndownDao.class.php');
-require_once(dirname(__FILE__).'/../common/HTML_Element_Selectbox_TrackerFields_NumericFieldsV5.class.php');
+require_once(dirname(__FILE__) . '/../common/HTML_Element_Selectbox_TrackerFields_NumericFieldsV5.class.php');
 
 /**
  * Base class to provide a Scrum Burndown Chart
@@ -260,13 +260,13 @@ class GraphOnTrackersV5_Chart_Burndown extends GraphOnTrackersV5_Chart
     public function setSpecificPropertiesFromXML($xml, $formsMapping)
     {
         if ($xml['start_date']) {
-            $this->setStartDate((int)$xml['start_date']);
+            $this->setStartDate((int) $xml['start_date']);
         }
         if ($xml['duration']) {
-            $this->setDuration((int)$xml['duration']);
+            $this->setDuration((int) $xml['duration']);
         }
-        if (isset($formsMapping[(int)$xml['field_id']])) {
-            $this->setFieldId($formsMapping[(int)$xml['field_id']]);
+        if (isset($formsMapping[(int) $xml['field_id']])) {
+            $this->setFieldId($formsMapping[(int) $xml['field_id']]);
         }
     }
 

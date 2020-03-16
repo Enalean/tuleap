@@ -123,7 +123,7 @@ class HookTriggerController
         try {
             $this->log_creator->createForRepository($log);
         } catch (CannotCreateLogException $exception) {
-            $this->logger->error('repository #'.$repository->getId().' : '.$exception->getMessage());
+            $this->logger->error('repository #' . $repository->getId() . ' : ' . $exception->getMessage());
         }
     }
 
@@ -179,7 +179,7 @@ class HookTriggerController
         try {
             $this->log_creator->createForProject($jenkins_server, $log);
         } catch (CannotCreateLogException $exception) {
-            $this->logger->error('repository #'.$repository->getId().' : '.$exception->getMessage());
+            $this->logger->error('repository #' . $repository->getId() . ' : ' . $exception->getMessage());
         }
     }
 }

@@ -755,8 +755,8 @@ class Docman_ItemFactory
     {
         // Compute the timescale for the day in one month
         $today = getdate();
-        $tsStart = mktime(0, 0, 0, $today['mon']+1, $today['mday'], $today['year']);
-        $tsEnd   = mktime(23, 59, 59, $today['mon']+1, $today['mday'], $today['year']);
+        $tsStart = mktime(0, 0, 0, $today['mon'] + 1, $today['mday'], $today['year']);
+        $tsEnd   = mktime(23, 59, 59, $today['mon'] + 1, $today['mday'], $today['year']);
 
         $ia = array();
         $dao = $this->_getItemDao();
@@ -1245,7 +1245,7 @@ class Docman_ItemFactory
     public function setCutPreference($item)
     {
         user_set_preference(
-            PLUGIN_DOCMAN_PREF.'_item_cut',
+            PLUGIN_DOCMAN_PREF . '_item_cut',
             $item->getId()
         );
     }
@@ -1253,7 +1253,7 @@ class Docman_ItemFactory
     public function setCopyPreference($item)
     {
         user_set_preference(
-            PLUGIN_DOCMAN_PREF.'_item_copy',
+            PLUGIN_DOCMAN_PREF . '_item_copy',
             $item->getId()
         );
     }
@@ -1274,7 +1274,7 @@ class Docman_ItemFactory
     {
         if (!isset($this->cutItem[$user->getId()])) {
             $cutId = false;
-            $id = user_get_preference(PLUGIN_DOCMAN_PREF.'_item_cut');
+            $id = user_get_preference(PLUGIN_DOCMAN_PREF . '_item_cut');
             if ($groupId !== null && $id !== false) {
                 $item = $this->getItemFromDb($id);
                 if ($item && $item->getGroupId() == $groupId) {
@@ -1289,19 +1289,19 @@ class Docman_ItemFactory
     public function getCopyPreference($user)
     {
         if (!isset($this->copiedItem[$user->getId()])) {
-            $this->copiedItem[$user->getId()] = user_get_preference(PLUGIN_DOCMAN_PREF.'_item_copy');
+            $this->copiedItem[$user->getId()] = user_get_preference(PLUGIN_DOCMAN_PREF . '_item_copy');
         }
         return $this->copiedItem[$user->getId()];
     }
 
     public function delCutPreference()
     {
-        user_del_preference(PLUGIN_DOCMAN_PREF.'_item_cut');
+        user_del_preference(PLUGIN_DOCMAN_PREF . '_item_cut');
     }
 
     public function delCopyPreference()
     {
-        user_del_preference(PLUGIN_DOCMAN_PREF.'_item_copy');
+        user_del_preference(PLUGIN_DOCMAN_PREF . '_item_copy');
     }
 
     /**

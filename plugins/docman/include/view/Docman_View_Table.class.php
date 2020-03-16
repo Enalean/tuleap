@@ -65,7 +65,7 @@ class Docman_View_Table extends Docman_View_Browse
         $table .= '<tr class="boxtable">';
         while ($ci->valid()) {
             $column = $ci->current();
-            $table .= '<td class="boxtitle">'.$column->getTitle($this, $params).'</td>';
+            $table .= '<td class="boxtitle">' . $column->getTitle($this, $params) . '</td>';
             $ci->next();
         }
 
@@ -76,7 +76,7 @@ class Docman_View_Table extends Docman_View_Browse
         while ($itemIterator->valid()) {
             $item = $itemIterator->current();
             $trclass = html_get_alt_row_color($altRowClass++);
-            $table .=  "<tr class=\"".$trclass."\">\n";
+            $table .=  "<tr class=\"" . $trclass . "\">\n";
             $ci->rewind();
             while ($ci->valid()) {
                 $column = $ci->current();
@@ -94,9 +94,9 @@ class Docman_View_Table extends Docman_View_Browse
         // Prepare Navigation Bar
         if ($_low_limit > 0) {
             $firstUrl    = $this->_buildSearchUrl($params, array('start' => '0'));
-            $first       = '<a href="'.$firstUrl.'">&lt;&lt; '.dgettext('tuleap-docman', 'Begin').'</a>';
+            $first       = '<a href="' . $firstUrl . '">&lt;&lt; ' . dgettext('tuleap-docman', 'Begin') . '</a>';
         } else {
-            $first       = '&lt;&lt; '.dgettext('tuleap-docman', 'Begin');
+            $first       = '&lt;&lt; ' . dgettext('tuleap-docman', 'Begin');
         }
 
         $previousOffset = $_low_limit - $offset;
@@ -105,27 +105,27 @@ class Docman_View_Table extends Docman_View_Browse
                 $previousOffset = 0;
             }
             $previousUrl = $this->_buildSearchUrl($params, array('start' => $previousOffset));
-            $previous    = '<a href="'.$previousUrl.'">&lt; '.sprintf(dgettext('tuleap-docman', 'Previous %1$s'), $offset).'&gt;</a>';
+            $previous    = '<a href="' . $previousUrl . '">&lt; ' . sprintf(dgettext('tuleap-docman', 'Previous %1$s'), $offset) . '&gt;</a>';
         } else {
-            $previous    = '&lt; '.sprintf(dgettext('tuleap-docman', 'Previous %1$s'), $offset);
+            $previous    = '&lt; ' . sprintf(dgettext('tuleap-docman', 'Previous %1$s'), $offset);
         }
 
         if ($_high_limit < $nbItemsFound) {
             $nextUrl     = $this->_buildSearchUrl($params, array('start' => $_high_limit));
-            $next        = '<a href="'.$nextUrl.'">'.sprintf(dgettext('tuleap-docman', 'Next %1$s'), $offset).' &gt;</a>';
+            $next        = '<a href="' . $nextUrl . '">' . sprintf(dgettext('tuleap-docman', 'Next %1$s'), $offset) . ' &gt;</a>';
         } else {
-            $next        = sprintf(dgettext('tuleap-docman', 'Next %1$s'), $offset).' &gt;';
+            $next        = sprintf(dgettext('tuleap-docman', 'Next %1$s'), $offset) . ' &gt;';
         }
 
         if ($_high_limit < $nbItemsFound) {
             $lastOffset  = $nbItemsFound - $offset;
             $lastUrl     = $this->_buildSearchUrl($params, array('start' => $lastOffset));
-            $last        = '<a href="'.$lastUrl.'">'.dgettext('tuleap-docman', 'End').' &gt;&gt;</a>';
+            $last        = '<a href="' . $lastUrl . '">' . dgettext('tuleap-docman', 'End') . ' &gt;&gt;</a>';
         } else {
-            $last        = dgettext('tuleap-docman', 'End').' &gt;&gt;';
+            $last        = dgettext('tuleap-docman', 'End') . ' &gt;&gt;';
         }
 
-        $navbar = '<table border="0" width="100%"><tr><td align="left">'.$first.' '.$previous.'</td><td align="center">'.$nbItemsFound.' '.dgettext('tuleap-docman', 'Documents found').'</td><td align="right">'.$next.' '.$last.'</td></tr></table>';
+        $navbar = '<table border="0" width="100%"><tr><td align="left">' . $first . ' ' . $previous . '</td><td align="center">' . $nbItemsFound . ' ' . dgettext('tuleap-docman', 'Documents found') . '</td><td align="right">' . $next . ' ' . $last . '</td></tr></table>';
 
         if (isset($params['filter']) && $params['filter'] !== null) {
             $htmlReport = new Docman_ReportHtml($params['filter'], $this, $params['default_url']);

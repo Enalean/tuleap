@@ -36,7 +36,7 @@ class Docman_View_PasteInProgress extends Docman_View_ProjectHeader
     public function _content($params)
     {
         //spinner
-        echo '<p id="paste_'.$params['itemToPaste']->getId().'">'.dgettext('tuleap-docman', 'Paste in progress...');
+        echo '<p id="paste_' . $params['itemToPaste']->getId() . '">' . dgettext('tuleap-docman', 'Paste in progress...');
         $docmanIcons = $this->_getDocmanIcons(null);
         echo sprintf(dgettext('tuleap-docman', 'Please wait for the paste to complete. This may take a while depending on size of data to be copied <img src="%1$s" />'), $docmanIcons->getIcon('spinner-greenie.gif'));
         echo '</p>';
@@ -53,19 +53,19 @@ class Docman_View_PasteInProgress extends Docman_View_ProjectHeader
         $actions->doPaste($params['itemToPaste'], $params['item'], $params['rank'], $params['importMd'], $params['srcMode']);
 
         // Remove wait mesage and the spinner
-        echo '<script type="text/javascript">$("paste_'.$params['itemToPaste']->getId().'").hide();</script>';
+        echo '<script type="text/javascript">$("paste_' . $params['itemToPaste']->getId() . '").hide();</script>';
 
         //Display paste sucessfully complete.
         echo dgettext('tuleap-docman', '<p>Paste operation successfully completed.</p>');
 
-        $url = $this->_controller->getDefaultUrl().'action=show&id='.$params['item']->getId();
+        $url = $this->_controller->getDefaultUrl() . 'action=show&id=' . $params['item']->getId();
         echo sprintf(dgettext('tuleap-docman', '<p>You will be redirected to <a href="%1$s"> %2$s </a> in %3$s seconds</p>'), $url, $url, 5);
-        echo '<script type="text/javascript">setTimeout(function () {location.href="'.$url.'";}, 5000);</script>';
+        echo '<script type="text/javascript">setTimeout(function () {location.href="' . $url . '";}, 5000);</script>';
     }
 
     public function &_getDocmanIcons($params)
     {
-        $icons = new Docman_Icons($this->_controller->getThemePath().'/images/ic/');
+        $icons = new Docman_Icons($this->_controller->getThemePath() . '/images/ic/');
         return $icons;
     }
 }

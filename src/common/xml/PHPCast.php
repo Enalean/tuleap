@@ -29,6 +29,6 @@ class PHPCast
 {
     public static function toBoolean(SimpleXMLElement $element): bool
     {
-        return ((string)$element === 'true' || (string)$element === '1');
+        return ((string) $element === 'true' || (string) $element === '1');
     }
 }

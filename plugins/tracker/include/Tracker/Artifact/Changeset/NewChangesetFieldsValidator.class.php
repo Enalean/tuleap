@@ -54,15 +54,14 @@ class Tracker_Artifact_Changeset_NewChangesetFieldsValidator extends Tracker_Art
         $is_submission        = false;
         $last_changeset_value = $this->getLastChangesetValue($artifact, $field);
 
-        return
-            $this->workflow_update_checker->canFieldBeUpdated(
-                $artifact,
-                $field,
-                $last_changeset_value,
-                $submitted_value,
-                $is_submission,
-                $user
-            )
+        return $this->workflow_update_checker->canFieldBeUpdated(
+            $artifact,
+            $field,
+            $last_changeset_value,
+            $submitted_value,
+            $is_submission,
+            $user
+        )
             && $field->validateFieldWithPermissionsAndRequiredStatus(
                 $artifact,
                 $submitted_value,

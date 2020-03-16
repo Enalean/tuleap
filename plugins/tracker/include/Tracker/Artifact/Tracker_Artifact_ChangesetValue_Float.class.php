@@ -41,7 +41,7 @@ class Tracker_Artifact_ChangesetValue_Float extends Tracker_Artifact_ChangesetVa
     public function getFloat()
     {
         if ($this->numeric !== null) {
-            $this->numeric = (float)$this->numeric;
+            $this->numeric = (float) $this->numeric;
         }
         return $this->numeric;
     }

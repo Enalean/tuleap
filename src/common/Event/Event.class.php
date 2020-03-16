@@ -592,7 +592,7 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      * Expected results:
      *     Void
      */
-    public const PROJECT_SET_PARENT_PROJECT= 'project_set_parent_project';
+    public const PROJECT_SET_PARENT_PROJECT = 'project_set_parent_project';
 
     /**
      *  Event raised when project parent is removed
@@ -603,7 +603,7 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      * Expected results:
      *     Void
      */
-    public const PROJECT_UNSET_PARENT_PROJECT= 'project_unset_parent_project';
+    public const PROJECT_UNSET_PARENT_PROJECT = 'project_unset_parent_project';
 
     /**
      * Build search entries in Layout

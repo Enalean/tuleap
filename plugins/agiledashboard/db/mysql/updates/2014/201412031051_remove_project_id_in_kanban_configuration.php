@@ -39,13 +39,12 @@ EOT;
 
     public function up()
     {
-
         $sql = "ALTER TABLE plugin_agiledashboard_kanban_configuration
                 DROP COLUMN project_id";
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while removing column project_id in table plugin_agiledashboard_kanban_configuration: '.implode(', ', $this->db->dbh->errorInfo()));
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while removing column project_id in table plugin_agiledashboard_kanban_configuration: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 }

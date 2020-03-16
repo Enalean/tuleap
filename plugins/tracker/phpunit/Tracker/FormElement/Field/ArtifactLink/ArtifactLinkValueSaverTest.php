@@ -26,7 +26,7 @@ use PHPUnit\Framework\TestCase;
 use Tracker_ArtifactLinkInfo;
 use Tracker_ArtifactFactory;
 
-require_once __DIR__.'/../../../../bootstrap.php';
+require_once __DIR__ . '/../../../../bootstrap.php';
 
 class ArtifactLinkValueSaverTest extends TestCase
 {

@@ -117,7 +117,7 @@ class _Diff3_BlockBuilder
             return $block;
         }
     }
-};
+}
 
 
 class Diff3

@@ -91,7 +91,7 @@ class ProjectHistoryResultsPresenter
             $val = '';
             foreach ($ugroup_list as $ugroup) {
                 if ($val) {
-                    $val.=', ';
+                    $val .= ', ';
                 }
                 $val .= util_translate_name_ugroup($ugroup);
             }

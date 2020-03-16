@@ -38,7 +38,7 @@ class Cardwall_OnTop_Config_View_Admin
         $html  = '<p>';
         $html .= '<input type="hidden" name="cardwall_on_top" value="0" />';
         $html .= '<label class="checkbox">';
-        $html .= '<input type="checkbox" name="cardwall_on_top" value="1" id="cardwall_on_top" '. $checked .'/> ';
+        $html .= '<input type="checkbox" name="cardwall_on_top" value="1" id="cardwall_on_top" ' . $checked . '/> ';
         $html .= $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_label');
         $html .= '</label>';
         $html .= '</p>';

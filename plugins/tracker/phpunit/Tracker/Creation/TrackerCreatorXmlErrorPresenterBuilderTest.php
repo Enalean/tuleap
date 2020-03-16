@@ -52,8 +52,8 @@ class TrackerCreatorXmlErrorPresenterBuilderTest extends TestCase
             $error_required
         ];
 
-        $expected [1][2]   = [$error_invalid, $same_line_error];
-        $expected [10][20] = [$error_required];
+        $expected[1][2]   = [$error_invalid, $same_line_error];
+        $expected[10][20] = [$error_required];
 
         $this->assertEquals($expected, $this->displayer->buildErrors($errors));
     }

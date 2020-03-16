@@ -79,7 +79,7 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
             if (!isset($mapping_tracker_info['field'])) {
                 continue;
             }
-            $field_id = (int)$mapping_tracker_info['field'];
+            $field_id = (int) $mapping_tracker_info['field'];
             $mapping_tracker = $this->tracker_factory->getTrackerById($mapping_tracker_id);
             $field           = $this->form_element_factory->getFieldById($field_id);
             $this->save($mapping_tracker_info, $mapping_fields, $mapping_tracker, $field);
@@ -133,7 +133,7 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
                 $mapping_changed = true;
                 $this->value_dao->deleteAllFieldValues($this->tracker->getId(), $mapping_tracker->getId(), $field->getId(), $column_id);
                 foreach ($values as $value_id) {
-                    $nb_changes += $this->value_dao->save($this->tracker->getId(), $mapping_tracker->getId(), $field->getId(), (int)$value_id, $column_id);
+                    $nb_changes += $this->value_dao->save($this->tracker->getId(), $mapping_tracker->getId(), $field->getId(), (int) $value_id, $column_id);
                 }
             }
         }
@@ -167,7 +167,7 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
         $no_update_needed = true;
         foreach ($value_mappings as $value_id => $value_mapping) {
             if ($value_mapping->getColumnId() == $column_id) {
-                $already_processed[]= $value_id;
+                $already_processed[] = $value_id;
                 if (in_array($value_id, $values)) {
                     $no_update_needed = $no_update_needed & true;
                 } else {

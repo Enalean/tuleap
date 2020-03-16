@@ -44,7 +44,7 @@ class Tracker_XML_Updater_TemporaryFileCreator
      */
     public function createTemporaryFile($path)
     {
-        $temporary_file_name = $this->copy_directory .'/'. basename($path);
+        $temporary_file_name = $this->copy_directory . '/' . basename($path);
         copy($path, $temporary_file_name);
 
         return $temporary_file_name;

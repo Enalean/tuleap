@@ -92,7 +92,7 @@ class RepositoryDisplayController
         } catch (CannotFindRepositoryException $e) {
             $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-svn', 'Repository not found.'));
             $GLOBALS['Response']->redirect(
-                SVN_BASE_URL.'/?'. http_build_query(array('group_id' => $request->getProject()->getID()))
+                SVN_BASE_URL . '/?' . http_build_query(array('group_id' => $request->getProject()->getID()))
             );
         }
     }
@@ -108,7 +108,7 @@ class RepositoryDisplayController
     private function addLeadingSlash(string $path) : string
     {
         if ($path[0] !== '/') {
-            return '/'.$path;
+            return '/' . $path;
         }
         return $path;
     }
@@ -116,7 +116,7 @@ class RepositoryDisplayController
     private function addTrailingSlash(string $path) : string
     {
         if (strrpos($path, "/") !== (strlen($path) - 1)) {
-            return $path.'/';
+            return $path . '/';
         }
         return $path;
     }

@@ -92,7 +92,7 @@ class Tracker_Report_HeaderInReportPresenter
 
     public function saveas_url()
     {
-        return '?'.http_build_query(array_merge($this->options_params, array('func' => Tracker_Report::ACTION_SAVEAS)));
+        return '?' . http_build_query(array_merge($this->options_params, array('func' => Tracker_Report::ACTION_SAVEAS)));
     }
 
     public function can_save()
@@ -107,7 +107,7 @@ class Tracker_Report_HeaderInReportPresenter
 
     public function revert_url()
     {
-        return '?'. http_build_query(array_merge($this->options_params, array('func' => Tracker_Report::ACTION_CLEANSESSION)));
+        return '?' . http_build_query(array_merge($this->options_params, array('func' => Tracker_Report::ACTION_CLEANSESSION)));
     }
 
     public function has_changed_classname()

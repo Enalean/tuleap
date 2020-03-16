@@ -28,7 +28,6 @@ require_once __DIR__ . '/project_export_utils.php';
 // Export files access logs for this group
 function export_file_logs($project, $span, $who)
 {
-
     $eol = "\n";
 
     $sql_file = filedownload_logs_extract($project, $span, $who);
@@ -43,17 +42,17 @@ function export_file_logs($project, $span, $who)
                'email'      => $GLOBALS['Language']->getText('project_export_access_logs_export', 'email'),
                'title'      => $GLOBALS['Language']->getText('project_export_access_logs_export', 'file'),
                'local_time' => $GLOBALS['Language']->getText('project_export_access_logs_export', 'local_time'));
-    $result_file=db_query($sql_file);
+    $result_file = db_query($sql_file);
     $rows_file = db_numrows($result_file);
     if ($result_file && $rows_file > 0) {
         // Build csv for files access logs
-        echo build_csv_header($col_list_file, $file_title).$eol;
-        echo build_csv_header($col_list_file, $lbl_list_file).$eol;
+        echo build_csv_header($col_list_file, $file_title) . $eol;
+        echo build_csv_header($col_list_file, $lbl_list_file) . $eol;
         while ($arr_file = db_fetch_array($result_file)) {
             prepare_access_logs_record($project->getGroupId(), $arr_file);
-            echo build_csv_record($col_list_file, $arr_file).$eol;
+            echo build_csv_record($col_list_file, $arr_file) . $eol;
         }
-        echo build_csv_header($col_list_file, array()).$eol;
+        echo build_csv_header($col_list_file, array()) . $eol;
     }
 
     $eol = "\n";
@@ -72,24 +71,23 @@ function export_file_logs($project, $span, $who)
                       'email'      => $GLOBALS['Language']->getText('project_export_access_logs_export', 'email'),
                       'title'      => $GLOBALS['Language']->getText('project_stats_source_code_access_utils', 'frs_elements'),
                       'local_time' => $GLOBALS['Language']->getText('project_export_access_logs_export', 'local_time'));
-    $result=db_query($sql);
+    $result = db_query($sql);
     $rows = db_numrows($result);
     if ($result && $rows > 0) {
         // Build csv for files access logs
-        echo build_csv_header($col_list, $title).$eol;
-        echo build_csv_header($col_list, $lbl_list).$eol;
+        echo build_csv_header($col_list, $title) . $eol;
+        echo build_csv_header($col_list, $lbl_list) . $eol;
         while ($arr = db_fetch_array($result)) {
             prepare_access_logs_record($project->getGroupId(), $arr);
-            echo build_csv_record($col_list, $arr).$eol;
+            echo build_csv_record($col_list, $arr) . $eol;
         }
-        echo build_csv_header($col_list, array()).$eol;
+        echo build_csv_header($col_list, array()) . $eol;
     }
 }
 
 // Export cvs access logs for this group
 function export_cvs_logs($project, $span, $who)
 {
-
     $eol = "\n";
 
     $sql_cvs = cvsaccess_logs_extract($project, $span, $who);
@@ -104,25 +102,24 @@ function export_cvs_logs($project, $span, $who)
                'email'          => $GLOBALS['Language']->getText('project_export_access_logs_export', 'email'),
                'cvs_checkouts'  => $GLOBALS['Language']->getText('project_export_access_logs_export', 'chk_upd'),
                'cvs_browse'     => $GLOBALS['Language']->getText('project_export_access_logs_export', 'file_brows'));
-    $result_cvs=db_query($sql_cvs);
+    $result_cvs = db_query($sql_cvs);
     $rows_cvs = db_numrows($result_cvs);
 
     if ($result_cvs && $rows_cvs > 0) {
         // Build csv for cvs access logs
-        echo build_csv_header($col_list_cvs, $cvs_title).$eol;
-        echo build_csv_header($col_list_cvs, $lbl_list_cvs).$eol;
+        echo build_csv_header($col_list_cvs, $cvs_title) . $eol;
+        echo build_csv_header($col_list_cvs, $lbl_list_cvs) . $eol;
         while ($arr_cvs = db_fetch_array($result_cvs)) {
             prepare_access_logs_record($project->getGroupId(), $arr_cvs);
-            echo build_csv_record($col_list_cvs, $arr_cvs).$eol;
+            echo build_csv_record($col_list_cvs, $arr_cvs) . $eol;
         }
-        echo build_csv_header($col_list_cvs, array()).$eol;
+        echo build_csv_header($col_list_cvs, array()) . $eol;
     }
 }
 
 // Export svn access logs for this group
 function export_svn_logs($project, $span, $who)
 {
-
     $eol = "\n";
 
     $sql_svn = svnaccess_logs_extract($project, $span, $who);
@@ -137,25 +134,24 @@ function export_svn_logs($project, $span, $who)
                'email'            => $GLOBALS['Language']->getText('project_export_access_logs_export', 'email'),
                'svn_access_count' => $GLOBALS['Language']->getText('project_export_access_logs_export', 'access'),
                'svn_browse'       => $GLOBALS['Language']->getText('project_export_access_logs_export', 'file_brows'));
-    $result_svn=db_query($sql_svn);
+    $result_svn = db_query($sql_svn);
     $rows_svn = db_numrows($result_svn);
 
     if ($result_svn && $rows_svn > 0) {
     // Build csv for subversion access logs
-        echo build_csv_header($col_list_svn, $svn_title).$eol;
-        echo build_csv_header($col_list_svn, $lbl_list_svn).$eol;
+        echo build_csv_header($col_list_svn, $svn_title) . $eol;
+        echo build_csv_header($col_list_svn, $lbl_list_svn) . $eol;
         while ($arr_svn = db_fetch_array($result_svn)) {
             prepare_access_logs_record($project->getGroupId(), $arr_svn);
-            echo build_csv_record($col_list_svn, $arr_svn).$eol;
+            echo build_csv_record($col_list_svn, $arr_svn) . $eol;
         }
-        echo build_csv_header($col_list_svn, array()).$eol;
+        echo build_csv_header($col_list_svn, array()) . $eol;
     }
 }
 
 // Export wiki pages access logs for this group
 function export_wiki_pg_logs($project, $span, $who, $sf)
 {
-
     $eol = "\n";
 
     $sql_wiki_pg = wiki_logs_extract($project, $span, $who);
@@ -170,19 +166,19 @@ function export_wiki_pg_logs($project, $span, $who, $sf)
                 'email'      => $GLOBALS['Language']->getText('project_export_access_logs_export', 'email'),
                 'title'      => $GLOBALS['Language']->getText('project_export_access_logs_export', 'page'),
                 'local_time' => $GLOBALS['Language']->getText('project_export_access_logs_export', 'local_time'));
-    $result_wiki_pg=db_query($sql_wiki_pg);
+    $result_wiki_pg = db_query($sql_wiki_pg);
     $rows_wiki_pg = db_numrows($result_wiki_pg);
 
     if (!$sf) {
         if ($result_wiki_pg && $rows_wiki_pg > 0) {
         // Build csv for wiki pages access logs
-            echo build_csv_header($col_list_wiki_pg, $wiki_pg_title).$eol;
-            echo build_csv_header($col_list_wiki_pg, $lbl_list_wiki_pg).$eol;
+            echo build_csv_header($col_list_wiki_pg, $wiki_pg_title) . $eol;
+            echo build_csv_header($col_list_wiki_pg, $lbl_list_wiki_pg) . $eol;
             while ($arr_wiki_pg = db_fetch_array($result_wiki_pg)) {
                 prepare_access_logs_record($project->getGroupId(), $arr_wiki_pg);
-                echo build_csv_record($col_list_wiki_pg, $arr_wiki_pg).$eol;
+                echo build_csv_record($col_list_wiki_pg, $arr_wiki_pg) . $eol;
             }
-            echo build_csv_header($col_list_wiki_pg, array()).$eol;
+            echo build_csv_header($col_list_wiki_pg, array()) . $eol;
         }
     } else {
         //to be used in 'Show Format' link
@@ -202,7 +198,6 @@ function export_wiki_pg_logs($project, $span, $who, $sf)
 // Export wiki pages attachments access logs for this group
 function export_wiki_att_logs($project, $span, $who)
 {
-
     $eol = "\n";
 
     $sql_wiki_att = wiki_attachments_logs_extract($project, $span, $who);
@@ -217,18 +212,18 @@ function export_wiki_att_logs($project, $span, $who)
                 'email'      => $GLOBALS['Language']->getText('project_export_access_logs_export', 'email'),
                 'title'      => $GLOBALS['Language']->getText('project_export_access_logs_export', 'attachment'),
                 'local_time' => $GLOBALS['Language']->getText('project_export_access_logs_export', 'local_time'));
-    $result_wiki_att=db_query($sql_wiki_att);
+    $result_wiki_att = db_query($sql_wiki_att);
     $rows_wiki_att = db_numrows($result_wiki_att);
 
     if ($result_wiki_att && $rows_wiki_att > 0) {
         // Build csv for wiki attachments access logs
-        echo build_csv_header($col_list_wiki_att, $wiki_att_title).$eol;
-        echo build_csv_header($col_list_wiki_att, $lbl_list_wiki_att).$eol;
+        echo build_csv_header($col_list_wiki_att, $wiki_att_title) . $eol;
+        echo build_csv_header($col_list_wiki_att, $lbl_list_wiki_att) . $eol;
         while ($arr_wiki_att = db_fetch_array($result_wiki_att)) {
             prepare_access_logs_record($project->getGroupId(), $arr_wiki_att);
-            echo build_csv_record($col_list_wiki_att, $arr_wiki_att).$eol;
+            echo build_csv_record($col_list_wiki_att, $arr_wiki_att) . $eol;
         }
-        echo build_csv_header($col_list_wiki_att, array()).$eol;
+        echo build_csv_header($col_list_wiki_att, array()) . $eol;
     }
 }
 
@@ -252,7 +247,7 @@ function export_all_plugins_logs($project, $span, $who)
 function export_plugin_logs($log, $project)
 {
     $eol = "\n";
-    $result=db_query($log['sql']);
+    $result = db_query($log['sql']);
     $rows = db_numrows($result);
     if ($result && $rows > 0) {
         $arr = db_fetch_array($result);
@@ -285,13 +280,13 @@ function export_plugin_logs($log, $project)
                 'local_time' => $GLOBALS['Language']->getText('project_export_access_logs_export', 'local_time'));
         }
         // Build csv for plugins logs
-        echo build_csv_header($col_list, $plugin_title).$eol;
-        echo build_csv_header($col_list, $lbl_list).$eol;
+        echo build_csv_header($col_list, $plugin_title) . $eol;
+        echo build_csv_header($col_list, $lbl_list) . $eol;
         do {
             prepare_access_logs_record($project->getGroupId(), $arr);
-            echo build_csv_record($col_list, $arr).$eol;
+            echo build_csv_record($col_list, $arr) . $eol;
         } while ($arr = db_fetch_array($result));
-        echo build_csv_header($col_list, array()).$eol;
+        echo build_csv_header($col_list, array()) . $eol;
     }
 }
 
@@ -301,7 +296,7 @@ $project = new Project($group_id);
 if (isset($export)) {
     $export = (string) $export;
     if ($export == 'access_logs') {
-        $span = 52*30.5;
+        $span = 52 * 30.5;
         $who = "allusers";
 
       // Send the result in CSV format
@@ -315,7 +310,7 @@ if (isset($export)) {
         export_wiki_att_logs($project, $span, $who);
         export_all_plugins_logs($project, $span, $who);
     } elseif ($export == "access_logs_format") {
-        $span = 52*30.5;
+        $span = 52 * 30.5;
         $who = "allusers";
         echo $GLOBALS['Language']->getText('project_export_bug_deps_export', 'bug_deps_export_format', array($GLOBALS['Language']->getText('project_admin_utils', 'access_logs')));
         export_wiki_pg_logs($project, $span, $who, 1);

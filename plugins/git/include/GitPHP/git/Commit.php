@@ -363,7 +363,7 @@ class Commit extends GitObject
         $epoch = $this->GetAuthorEpoch();
         $tz = $this->GetAuthorTimezone();
         if (preg_match('/^([+\-][0-9][0-9])([0-9][0-9])$/', $tz, $regs)) {
-            $local = $epoch + ((((int)$regs[1]) + ($regs[2]/60)) * 3600);
+            $local = $epoch + ((((int) $regs[1]) + ($regs[2] / 60)) * 3600);
             return $local;
         }
         return $epoch;
@@ -460,7 +460,7 @@ class Commit extends GitObject
         $epoch = $this->GetCommitterEpoch();
         $tz = $this->GetCommitterTimezone();
         if (preg_match('/^([+\-][0-9][0-9])([0-9][0-9])$/', $tz, $regs)) {
-            $local = $epoch + ((((int)$regs[1]) + ($regs[2]/60)) * 3600);
+            $local = $epoch + ((((int) $regs[1]) + ($regs[2] / 60)) * 3600);
             return $local;
         }
         return $epoch;
@@ -693,7 +693,7 @@ class Commit extends GitObject
                     $this->title = $trimmed;
                 }
                 if (!empty($this->title)) {
-                    if ((strlen($line) > 0) || ($i < (count($lines)-1))) {
+                    if ((strlen($line) > 0) || ($i < (count($lines) - 1))) {
                         $this->comment[] = $line;
                     }
                 }
@@ -968,7 +968,7 @@ class Commit extends GitObject
                         $results[$regs[1]]['object'] = $obj;
                     }
                 }
-                $results[$regs[1]]['lines'][(int)($regs[2])] = $regs[3];
+                $results[$regs[1]]['lines'][(int) ($regs[2])] = $regs[3];
             }
         }
 

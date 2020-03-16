@@ -214,12 +214,12 @@ class Docman_XMLExportVisitor implements ItemVisitor
         $fileName = sprintf('content%05d.bin', $this->fileCounter++);
         $this->appendChild($vNode, 'content', $fileName);
         if (is_dir($this->dataPath)) {
-            $res = copy($version->getPath(), $this->dataPath.'/'.$fileName);
+            $res = copy($version->getPath(), $this->dataPath . '/' . $fileName);
             if (!$res) {
-                echo $version->getPath()." not copied to ".$this->dataPath.'/'.$fileName."<br>";
-                $this->logger->warning($version->getPath()." not copied to [".$this->dataPath."]");
+                echo $version->getPath() . " not copied to " . $this->dataPath . '/' . $fileName . "<br>";
+                $this->logger->warning($version->getPath() . " not copied to [" . $this->dataPath . "]");
             } else {
-                $this->logger->info($version->getPath()." copied to [".$this->dataPath."]");
+                $this->logger->info($version->getPath() . " copied to [" . $this->dataPath . "]");
             }
         }
         return $vNode;

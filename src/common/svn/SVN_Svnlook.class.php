@@ -26,13 +26,13 @@ class SVN_Svnlook
 
     public function getDirectoryListing(Project $project, $svn_path)
     {
-        $command = 'tree --non-recursive --full-paths '.escapeshellarg($project->getSVNRootPath()).' '.escapeshellarg($svn_path);
+        $command = 'tree --non-recursive --full-paths ' . escapeshellarg($project->getSVNRootPath()) . ' ' . escapeshellarg($svn_path);
         return $this->execute($command);
     }
 
     public function getTree(Project $project)
     {
-        $command = 'tree --full-paths '.escapeshellarg($project->getSVNRootPath());
+        $command = 'tree --full-paths ' . escapeshellarg($project->getSVNRootPath());
         return $this->execute($command);
     }
 
@@ -43,7 +43,7 @@ class SVN_Svnlook
      */
     public function getPathLastHistory(Project $project, $svn_path)
     {
-        $command = 'history --limit 1 '.escapeshellarg($project->getSVNRootPath()).' '.escapeshellarg($svn_path);
+        $command = 'history --limit 1 ' . escapeshellarg($project->getSVNRootPath()) . ' ' . escapeshellarg($svn_path);
         return $this->execute($command);
     }
 
@@ -58,7 +58,7 @@ class SVN_Svnlook
      */
     public function getTransactionPath(Project $project, $transaction)
     {
-        $command = 'changed -t ' . escapeshellarg($transaction) . ' ' .escapeshellarg($project->getSVNRootPath());
+        $command = 'changed -t ' . escapeshellarg($transaction) . ' ' . escapeshellarg($project->getSVNRootPath());
         return $this->execute($command);
     }
 

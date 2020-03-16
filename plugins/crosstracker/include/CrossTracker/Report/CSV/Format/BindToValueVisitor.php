@@ -90,7 +90,7 @@ class BindToValueVisitor implements BindVisitor
             throw new BindValueIsEmptyException();
         }
         $bind_value_id = $selected_bind_value_ids[0];
-        if ((int)$bind_value_id === \Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
+        if ((int) $bind_value_id === \Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
             throw new BindValueIsEmptyException();
         }
 

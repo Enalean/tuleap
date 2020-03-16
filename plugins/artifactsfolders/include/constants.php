@@ -18,4 +18,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('ARTIFACTSFOLDERS_TEMPLATE_DIR', dirname(__FILE__).'/../templates');
+define('ARTIFACTSFOLDERS_TEMPLATE_DIR', dirname(__FILE__) . '/../templates');

@@ -198,7 +198,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     public static function buildSelfRegularValidation(): self
     {
         return self::buildSelf(
-            (bool)ForgeConfig::get(\ProjectManager::CONFIG_PROJECT_APPROVAL, true) === false,
+            (bool) ForgeConfig::get(\ProjectManager::CONFIG_PROJECT_APPROVAL, true) === false,
             true
         );
     }
@@ -481,13 +481,13 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      */
     protected function createGroupEntry(ProjectCreationData $data)
     {
-        srand((double)microtime()*1000000);
-        $random_num=rand(0, 1000000);
+        srand((double) microtime() * 1000000);
+        $random_num = rand(0, 1000000);
 
         if (isset($GLOBALS['sys_disable_subdomains']) && $GLOBALS['sys_disable_subdomains']) {
-            $http_domain=$GLOBALS['sys_default_domain'];
+            $http_domain = $GLOBALS['sys_default_domain'];
         } else {
-            $http_domain=$data->getUnixName().'.'.$GLOBALS['sys_default_domain'];
+            $http_domain = $data->getUnixName() . '.' . $GLOBALS['sys_default_domain'];
         }
 
         $access = $data->getAccess();
@@ -501,21 +501,21 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
         // make group entry
         $insert_data = array(
-            'group_name'          => "'". db_es($data->getFullName()) ."'",
-            'access'              => "'".$access."'",
-            'unix_group_name'     => "'". db_es($data->getUnixName()) ."'",
-            'http_domain'         => "'". db_es($http_domain) ."'",
+            'group_name'          => "'" . db_es($data->getFullName()) . "'",
+            'access'              => "'" . $access . "'",
+            'unix_group_name'     => "'" . db_es($data->getUnixName()) . "'",
+            'http_domain'         => "'" . db_es($http_domain) . "'",
             'status'              => "'P'",
             'unix_box'            => "'shell1'",
             'cvs_box'             => "'cvs1'",
-            'short_description'   => "'". db_es($data->getShortDescription()) ."'",
+            'short_description'   => "'" . db_es($data->getShortDescription()) . "'",
             'register_time'       => time(),
-            'rand_hash'           => "'". md5($random_num) ."'",
+            'rand_hash'           => "'" . md5($random_num) . "'",
             'built_from_template' => db_ei($data->getBuiltFromTemplateProject()->getProject()->getID()),
             'type'                => db_ei($type)
         );
-        $sql = 'INSERT INTO groups('. implode(', ', array_keys($insert_data)) .') VALUES ('. implode(', ', array_values($insert_data)) .')';
-        $result=db_query($sql);
+        $sql = 'INSERT INTO groups(' . implode(', ', array_keys($insert_data)) . ') VALUES (' . implode(', ', array_values($insert_data)) . ')';
+        $result = db_query($sql);
 
         if (!$result) {
             exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'upd_fail', array($GLOBALS['sys_email_admin'],db_error())));
@@ -535,7 +535,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         foreach ($data->getTroveData() as $root => $values) {
             foreach ($values as $value) {
                 db_query("INSERT INTO trove_group_link (trove_cat_id,trove_cat_version,"
-                         ."group_id,trove_cat_root) VALUES (". db_ei($value) .",". time() .",". db_ei($group_id) .",". db_ei($root) .")");
+                         . "group_id,trove_cat_root) VALUES (" . db_ei($value) . "," . time() . "," . db_ei($group_id) . "," . db_ei($root) . ")");
             }
         }
     }
@@ -545,9 +545,9 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      */
     protected function initFileModule($group_id)
     {
-        $result=db_query("INSERT INTO filemodule (group_id,module_name) VALUES ('$group_id','".$this->project_manager->getProject($group_id)->getUnixName()."')");
+        $result = db_query("INSERT INTO filemodule (group_id,module_name) VALUES ('$group_id','" . $this->project_manager->getProject($group_id)->getUnixName() . "')");
         if (!$result) {
-            [$host,$port] = explode(':', $GLOBALS['sys_default_domain']);
+            [$host, $port] = explode(':', $GLOBALS['sys_default_domain']);
             exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'ins_file_fail', array($host,db_error())));
         }
     }
@@ -558,7 +558,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      */
     protected function setProjectAdmin($group_id, PFUser $user)
     {
-        $result=db_query("INSERT INTO user_group (user_id,group_id,admin_flags,bug_flags,forum_flags,project_flags,patch_flags,support_flags,file_flags,wiki_flags,svn_flags,news_flags) VALUES ("
+        $result = db_query("INSERT INTO user_group (user_id,group_id,admin_flags,bug_flags,forum_flags,project_flags,patch_flags,support_flags,file_flags,wiki_flags,svn_flags,news_flags) VALUES ("
             . $user->getId() . ","
             . $group_id . ","
             . "'A'," // admin flags
@@ -603,7 +603,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     protected function initForumModuleFromTemplate($group_id, $template_id)
     {
         $sql = "SELECT forum_name, is_public, description FROM forum_group_list WHERE group_id=$template_id ";
-        $result=db_query($sql);
+        $result = db_query($sql);
         while ($arr = db_fetch_array($result)) {
             $fid = forum_create_forum(
                 $group_id,
@@ -628,13 +628,13 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $result = db_query($sql);
         $arr = db_fetch_array($result);
         $query = "UPDATE groups
-                  SET cvs_tracker='".db_ei($arr['cvs_tracker'])."',
-                      cvs_watch_mode='".db_ei($arr['cvs_watch_mode'])."' ,
-                      cvs_preamble='".db_escape_string($arr['cvs_preamble'])."',
-                      cvs_is_private = ".db_escape_int($arr['cvs_is_private']) ."
+                  SET cvs_tracker='" . db_ei($arr['cvs_tracker']) . "',
+                      cvs_watch_mode='" . db_ei($arr['cvs_watch_mode']) . "' ,
+                      cvs_preamble='" . db_escape_string($arr['cvs_preamble']) . "',
+                      cvs_is_private = " . db_escape_int($arr['cvs_is_private']) . "
                   WHERE group_id = '$group_id'";
 
-        $result=db_query($query);
+        $result = db_query($query);
         if (!$result) {
             exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'cant_copy_cvs_infos'));
         }
@@ -659,15 +659,15 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $result = db_query($sql);
         $arr = db_fetch_array($result);
         $query = "UPDATE groups, svn_accessfile_history
-                  SET svn_tracker='".db_ei($arr['svn_tracker'])."',
-                      svn_mandatory_ref='".db_ei($arr['svn_mandatory_ref'])."',
-                      svn_preamble='".db_escape_string($arr['svn_preamble'])."',
-                      svn_commit_to_tag_denied='".db_ei($arr['svn_commit_to_tag_denied'])."',
+                  SET svn_tracker='" . db_ei($arr['svn_tracker']) . "',
+                      svn_mandatory_ref='" . db_ei($arr['svn_mandatory_ref']) . "',
+                      svn_preamble='" . db_escape_string($arr['svn_preamble']) . "',
+                      svn_commit_to_tag_denied='" . db_ei($arr['svn_commit_to_tag_denied']) . "',
                       svn_accessfile_version_id = svn_accessfile_history.id
                   WHERE groups.group_id = $group_id
                       AND groups.group_id = svn_accessfile_history.group_id";
 
-        $result=db_query($query);
+        $result = db_query($query);
         if (!$result) {
             exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'cant_copy_svn_infos'));
         }
@@ -682,13 +682,13 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         if (is_array($ugroup_mapping) && count($ugroup_mapping)) {
             $sql_ugroup_mapping = ' CASE ugroup_id ';
             foreach ($ugroup_mapping as $key => $val) {
-                $sql_ugroup_mapping .= ' WHEN '. $key .' THEN '. $val;
+                $sql_ugroup_mapping .= ' WHEN ' . $key . ' THEN ' . $val;
             }
             $sql_ugroup_mapping .= ' ELSE ugroup_id END ';
         }
         //Copy packages from template project
         $packages_mapping = [];
-        $sql  = "SELECT package_id, name, status_id, rank, approve_license FROM frs_package WHERE group_id = ".db_ei($template_project->getID());
+        $sql  = "SELECT package_id, name, status_id, rank, approve_license FROM frs_package WHERE group_id = " . db_ei($template_project->getID());
         if ($result = db_query($sql)) {
             while ($p_data = db_fetch_array($result)) {
                 $template_package_id = $p_data['package_id'];
@@ -802,9 +802,9 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     {
         $sql = "UPDATE groups AS g1
                 JOIN groups AS g2
-                  ON g2.group_id = ".db_ei($template_id)."
+                  ON g2.group_id = " . db_ei($template_id) . "
                 SET g1.truncated_emails = g2.truncated_emails
-                WHERE g1.group_id = ".db_ei($group_id);
+                WHERE g1.group_id = " . db_ei($group_id);
 
         $result = db_query($sql);
         if (!$result) {

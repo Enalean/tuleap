@@ -46,12 +46,12 @@ class Git_HTTP_Wrapper
         );
 
         if (ForgeConfig::get('sys_logger_level') == \Psr\Log\LogLevel::DEBUG) {
-            $descriptorspec[2] = array('file', ForgeConfig::get('codendi_log').'/git_http_error_log', 'a');
+            $descriptorspec[2] = array('file', ForgeConfig::get('codendi_log') . '/git_http_error_log', 'a');
         }
 
         $pipes = array();
-        $this->logger->debug('Command: '.$command->getCommand());
-        $this->logger->debug('Environment: '.print_r($command->getEnvironment(), true));
+        $this->logger->debug('Command: ' . $command->getCommand());
+        $this->logger->debug('Environment: ' . print_r($command->getEnvironment(), true));
         $this->process = proc_open($command->getCommand(), $descriptorspec, $pipes, $cwd, $command->getEnvironment());
         if (is_resource($this->process)) {
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {

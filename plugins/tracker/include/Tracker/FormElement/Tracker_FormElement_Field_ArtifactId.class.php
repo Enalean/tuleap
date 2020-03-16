@@ -39,7 +39,7 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
 
     public function getQuerySelect()
     {
-        return "a.id AS `". $this->name ."`";
+        return "a.id AS `" . $this->name . "`";
     }
 
     public function getQueryFrom()
@@ -62,7 +62,7 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
             $this->getId(),
             Tracker_FormElementFactory::instance()->getType($this),
             $this->getLabel(),
-            (int)$changeset->getArtifact()->getId()
+            (int) $changeset->getArtifact()->getId()
         );
         return $artifact_field_value_full_representation;
     }
@@ -70,9 +70,9 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report = null, $from_aid = null)
     {
         if ($from_aid != null) {
-            return '<a class="direct-link-to-artifact" href="'.TRACKER_BASE_URL.'/?'. http_build_query(array('aid' => (int)$value )).'&from_aid='.$from_aid.'">'. $value .'</a>';
+            return '<a class="direct-link-to-artifact" href="' . TRACKER_BASE_URL . '/?' . http_build_query(array('aid' => (int) $value )) . '&from_aid=' . $from_aid . '">' . $value . '</a>';
         }
-        return '<a class="direct-link-to-artifact" href="'.TRACKER_BASE_URL.'/?'. http_build_query(array('aid' => (int)$value )).'">'. $value .'</a>';
+        return '<a class="direct-link-to-artifact" href="' . TRACKER_BASE_URL . '/?' . http_build_query(array('aid' => (int) $value )) . '">' . $value . '</a>';
     }
 
     /**
@@ -125,7 +125,7 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
-        return '<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array('aid' => (int)$artifact->id )).'">#'. (int)$artifact->id .'</a>';
+        return '<a href="' . TRACKER_BASE_URL . '/?' . http_build_query(array('aid' => (int) $artifact->id )) . '">#' . (int) $artifact->id . '</a>';
     }
 
     /**
@@ -146,10 +146,10 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
         switch ($format) {
             case 'html':
                 $proto = ForgeConfig::get('sys_https_host') ? 'https' : 'http';
-                $output .= '<a href= "'.$proto.'://'. $GLOBALS['sys_default_domain'].TRACKER_BASE_URL.'/?'. http_build_query(array('aid' => (int)$artifact->id )).'">#'. (int)$artifact->id .'</a>';
+                $output .= '<a href= "' . $proto . '://' . $GLOBALS['sys_default_domain'] . TRACKER_BASE_URL . '/?' . http_build_query(array('aid' => (int) $artifact->id )) . '">#' . (int) $artifact->id . '</a>';
                 break;
             default:
-                $output .= '#'.$artifact->id;
+                $output .= '#' . $artifact->id;
                 break;
         }
         return $output;
@@ -170,7 +170,7 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
     protected function fetchAdminFormElement()
     {
         $html = '';
-        $html .= '<a href="#'.TRACKER_BASE_URL.'/?aid=123" onclick="return false;">#42</a>';
+        $html .= '<a href="#' . TRACKER_BASE_URL . '/?aid=123" onclick="return false;">#42</a>';
         return $html;
     }
 

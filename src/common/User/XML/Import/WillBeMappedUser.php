@@ -57,6 +57,6 @@ class WillBeMappedUser implements ReadyToBeImportedUser
 
     public function process(UserManager $user_manager, LoggerInterface $logger)
     {
-        $logger->info($this->username .' will be mapped to '. $this->mapped_user->getUserName());
+        $logger->info($this->username . ' will be mapped to ' . $this->mapped_user->getUserName());
     }
 }

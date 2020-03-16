@@ -253,8 +253,8 @@ abstract class Tracker_FormElement_Field_List_Bind implements
     {
         //Only filter query if criteria is valuated
         if ($criteria_value) {
-            $a = 'A_'. $this->field->id;
-            $b = 'B_'. $this->field->id;
+            $a = 'A_' . $this->field->id;
+            $b = 'B_' . $this->field->id;
             if ($this->isSearchingNone($criteria_value)) {
                 return " LEFT JOIN (
                     tracker_changeset_value AS $a
@@ -262,13 +262,13 @@ abstract class Tracker_FormElement_Field_List_Bind implements
                         $b.changeset_value_id = $a.id
                     )
                 ) ON ($a.changeset_id = c.id
-                    AND $a.field_id = ". $this->field->id ."
+                    AND $a.field_id = " . $this->field->id . "
                 )";
             }
 
             return " INNER JOIN tracker_changeset_value AS $a
                      ON ($a.changeset_id = c.id
-                         AND $a.field_id = ". $this->field->id ."
+                         AND $a.field_id = " . $this->field->id . "
                      )
                      INNER JOIN tracker_changeset_value_list AS $b ON (
                         $b.changeset_value_id = $a.id
@@ -287,15 +287,15 @@ abstract class Tracker_FormElement_Field_List_Bind implements
     {
         //Only filter query if criteria is valuated
         if ($criteria_value) {
-            $a = 'A_'. $this->field->id;
-            $b = 'B_'. $this->field->id;
+            $a = 'A_' . $this->field->id;
+            $b = 'B_' . $this->field->id;
 
             $data_access = CodendiDataAccess::instance();
 
             if ($this->isSearchingNone($criteria_value)) {
                 $values_id = $data_access->escapeIntImplode(array_values($criteria_value));
 
-                return " $b.bindvalue_id IN (". $values_id .") OR $b.bindvalue_id IS NULL ";
+                return " $b.bindvalue_id IN (" . $values_id . ") OR $b.bindvalue_id IS NULL ";
             }
 
             $ids_to_search = $data_access->escapeIntImplode($this->getIdsToSearch($criteria_value));
@@ -304,7 +304,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
                 return '';
             }
 
-            return " $b.bindvalue_id IN(". $ids_to_search .") ";
+            return " $b.bindvalue_id IN(" . $ids_to_search . ") ";
         }
         return '';
     }
@@ -405,10 +405,10 @@ abstract class Tracker_FormElement_Field_List_Bind implements
     {
         $html = '';
         if (is_array($this->decorators) && count($this->decorators)) {
-            $html .= '<script type="text/javascript">'.PHP_EOL;
-            $html .= 'codendi.tracker.decorator.decorators['. $this->field->id .'] = [];'. PHP_EOL;
+            $html .= '<script type="text/javascript">' . PHP_EOL;
+            $html .= 'codendi.tracker.decorator.decorators[' . $this->field->id . '] = [];' . PHP_EOL;
             foreach ($this->decorators as $d) {
-                $html .= 'codendi.tracker.decorator.decorators['. $this->field->id .']['. $d->value_id .'] = '. $d->toJSON() .';'. PHP_EOL;
+                $html .= 'codendi.tracker.decorator.decorators[' . $this->field->id . '][' . $d->value_id . '] = ' . $d->toJSON() . ';' . PHP_EOL;
             }
             $html .= '</script>';
         }
@@ -423,7 +423,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
             if (isset($this->decorators[$value_id])) {
                 return $this->decorators[$value_id]->decorateSelectOptionWithStyles();
             } else {
-                $default_styles[ 'classes' ] = 'select-option-not-colored';
+                $default_styles['classes'] = 'select-option-not-colored';
 
                 return $default_styles;
             }
@@ -472,7 +472,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
                 $GLOBALS['Response']->redirect('/');
                 return true;
             }
-            $GLOBALS['Response']->redirect('?'. http_build_query(array(
+            $GLOBALS['Response']->redirect('?' . http_build_query(array(
                     'tracker'            => $tracker->getId(),
                     'func'               => 'admin-formElements',
             )));

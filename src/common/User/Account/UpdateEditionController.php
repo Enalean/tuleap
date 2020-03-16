@@ -62,7 +62,6 @@ class UpdateEditionController implements DispatchableWithRequest
 
     private function updatePreferences(HTTPRequest $request, BaseLayout $layout, PFUser $user): void
     {
-
         $text_default_format = $user->getPreference(PFUser::PREFERENCE_NAME_EDITION_DEFAULT_FORMAT);
         $csv_separator       = $user->getPreference(PFUser::PREFERENCE_NAME_CSV_SEPARATOR);
         $csv_dateformat      = $user->getPreference(PFUser::PREFERENCE_NAME_CSV_DATEFORMAT);

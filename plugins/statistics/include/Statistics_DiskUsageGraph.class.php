@@ -63,7 +63,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
 
                 $color = $this->_dum->getServiceColor($service);
                 $lineplot->SetColor($color);
-                $lineplot->SetFillColor($color.':1.5');
+                $lineplot->SetFillColor($color . ':1.5');
                 $lineplot->SetLegend($servicesList[$service]);
 
                 //$lineplot->value->show();
@@ -120,7 +120,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
             $ydata = array();
             foreach ($data as $xdate => $values) {
                 $dates[] = $xdate;
-                $ydata[] = (float)$values;
+                $ydata[] = (float) $values;
             }
 
             $lineplot = new BarPlot($ydata);
@@ -181,7 +181,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
 
                     $color = $this->_dum->getServiceColor($service);
                     $lineplot->SetColor($color);
-                    $lineplot->SetFillColor($color.':1.5');
+                    $lineplot->SetFillColor($color . ':1.5');
                     $lineplot->SetLegend($serviceName);
 
                     //$lineplot->value->show();
@@ -249,14 +249,14 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
             $ydata = array();
             foreach ($data as $xdate => $values) {
                 $dates[] = $xdate;
-                $ydata[] = (float)$values;
+                $ydata[] = (float) $values;
             }
 
             $lineplot = new LinePlot($ydata);
 
             $color = '#6BA132';
             $lineplot->SetColor($color);
-            $lineplot->SetFillColor($color.':1.5');
+            $lineplot->SetFillColor($color . ':1.5');
 
             $lineplot->value->SetFont($graph->getFont(), FS_NORMAL, 8);
             $lineplot->value->setFormatCallback(array($this, 'sizeReadable'));
@@ -281,9 +281,9 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
         //Calculate the baseline
         // @see http://www.php.net/manual/fr/function.imagettfbbox.php#75333
         //this should be above baseline
-        $test2="H";
+        $test2 = "H";
         //some of these additional letters should go below it
-        $test3="Hjgqp";
+        $test3 = "Hjgqp";
         //get the dimension for these two:
         $box2 = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $test2);
         $box3 = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $test3);
@@ -302,22 +302,22 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
     public function applyColorModifierRGB($color)
     {
         $jpgraphRgb = new RGB();
-        $newColor   = $jpgraphRgb->color($color.':1.5');
+        $newColor   = $jpgraphRgb->color($color . ':1.5');
 
         unset($newColor[3]);
 
         $col = implode(',', array_map('floor', $newColor));
-        return 'rgb('.$col.')';
+        return 'rgb(' . $col . ')';
     }
 
     public function applyColorModifierRGBA($color)
     {
         $jpgraphRgb = new RGB();
-        $newColor   = $jpgraphRgb->color($color.':1.5');
+        $newColor   = $jpgraphRgb->color($color . ':1.5');
 
         unset($newColor[3]);
 
         $col = implode(',', array_map('floor', $newColor));
-        return 'rgba('.$col.',0.5)';
+        return 'rgba(' . $col . ',0.5)';
     }
 }

@@ -22,7 +22,7 @@ require_once __DIR__ . '/../../../src/www/include/pre.php';
 
 $unsigned_int_validator = new Valid_UInt();
 if ($argc !== 2 || ! $unsigned_int_validator->validate($argv[1])) {
-    fwrite(STDERR, "Usage: {$argv[0]} number_of_months_to_keep". PHP_EOL);
+    fwrite(STDERR, "Usage: {$argv[0]} number_of_months_to_keep" . PHP_EOL);
     exit(1);
 }
 

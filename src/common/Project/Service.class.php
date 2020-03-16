@@ -177,10 +177,10 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         $GLOBALS['HTML']->addBreadcrumbs($breadcrumbs);
 
         foreach ($toolbar as $t) {
-            $class = isset($t['class']) ? 'class="'. $t['class'] .'"' : '';
-            $item_title = isset($t['short_title']) ? $t['short_title'] :$t['title'];
-            $data_test = isset($t['data-test']) ? 'data-test="' .$t['data-test'] .'"' : '';
-            $GLOBALS['HTML']->addToolbarItem('<a href="'. $t['url'] .'" '. $class . ' ' . $data_test .'>'. $item_title .'</a>');
+            $class = isset($t['class']) ? 'class="' . $t['class'] . '"' : '';
+            $item_title = isset($t['short_title']) ? $t['short_title'] : $t['title'];
+            $data_test = isset($t['data-test']) ? 'data-test="' . $t['data-test'] . '"' : '';
+            $GLOBALS['HTML']->addToolbarItem('<a href="' . $t['url'] . '" ' . $class . ' ' . $data_test . '>' . $item_title . '</a>');
         }
         $params['title']  = $title;
         $params['group']  = $this->project->group_id;
@@ -189,10 +189,10 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         if (! isset($params['body_class'])) {
             $params['body_class'] = array();
         }
-        $params['body_class'][] = 'service-'. $this->getShortName();
+        $params['body_class'][] = 'service-' . $this->getShortName();
 
-        if ($pv = (int)HTTPRequest::instance()->get('pv')) {
-            $params['pv'] = (int)$pv;
+        if ($pv = (int) HTTPRequest::instance()->get('pv')) {
+            $params['pv'] = (int) $pv;
         }
 
         $this->displayDuplicateInheritanceWarning();
@@ -215,8 +215,8 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         $params = array(
             'group' => $this->project->group_id,
         );
-        if ($pv = (int)HTTPRequest::instance()->get('pv')) {
-            $params['pv'] = (int)$pv;
+        if ($pv = (int) HTTPRequest::instance()->get('pv')) {
+            $params['pv'] = (int) $pv;
         }
         site_project_footer($params);
     }
@@ -298,6 +298,6 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 
     private function getFontAwesomeIcon(string $icon) : string
     {
-        return 'fa fa-fw '.$icon;
+        return 'fa fa-fw ' . $icon;
     }
 }

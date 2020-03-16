@@ -80,25 +80,25 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
 
         return '
             <div class="tlp-form-element">
-                <label class="tlp-label" for="title-'. $purifier->purify($widget_id) .'">
-                    '. $purifier->purify(_('Title')) .'
+                <label class="tlp-label" for="title-' . $purifier->purify($widget_id) . '">
+                    ' . $purifier->purify(_('Title')) . '
                 </label>
                 <input type="text"
                        class="tlp-input"
-                       id="title-'. $purifier->purify($widget_id) .'"
+                       id="title-' . $purifier->purify($widget_id) . '"
                        name="chart[title]"
-                       value="'. $purifier->purify($this->getTitle()) .'">
+                       value="' . $purifier->purify($this->getTitle()) . '">
             </div>
             <div class="tlp-form-element">
-                <label class="tlp-label" for="chart-id-'. $purifier->purify($widget_id) .'">
+                <label class="tlp-label" for="chart-id-' . $purifier->purify($widget_id) . '">
                     Chart Id <i class="fa fa-asterisk"></i>
                 </label>
                 <input type="number"
                        size="5"
                        class="tlp-input"
-                       id="chart-id-'. $purifier->purify($widget_id) .'"
+                       id="chart-id-' . $purifier->purify($widget_id) . '"
                        name="chart[chart_id]"
-                       value="'. $purifier->purify($this->chart_id) .'"
+                       value="' . $purifier->purify($this->chart_id) . '"
                        required
                        placeholder="123">
             </div>
@@ -111,12 +111,12 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
 
         return '
             <div class="tlp-form-element">
-                <label class="tlp-label" for="widget-chart-title">'. $purifier->purify(_('Title')) .'</label>
+                <label class="tlp-label" for="widget-chart-title">' . $purifier->purify(_('Title')) . '</label>
                 <input type="text"
                        class="tlp-input"
                        id="widget-chart-title"
                        name="chart[title]"
-                       value="'. $purifier->purify($this->getTitle()) .'">
+                       value="' . $purifier->purify($this->getTitle()) . '">
             </div>
             <div class="tlp-form-element">
                 <label class="tlp-label" for="widget-chart-id">
@@ -141,15 +141,15 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
         $owner_type
     ) {
         $sql = "INSERT INTO plugin_graphontrackersv5_widget_chart (owner_id, owner_type, title, chart_id)
-        SELECT  ". $owner_id .", '". $owner_type ."', title, chart_id
+        SELECT  " . $owner_id . ", '" . $owner_type . "', title, chart_id
         FROM plugin_graphontrackersv5_widget_chart
-        WHERE owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' ";
+        WHERE owner_id = " . $this->owner_id . " AND owner_type = '" . $this->owner_type . "' ";
         $res = db_query($sql);
         return db_insertid($res);
     }
     public function loadContent($id)
     {
-        $sql = "SELECT * FROM plugin_graphontrackersv5_widget_chart WHERE owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' AND id = ". $id;
+        $sql = "SELECT * FROM plugin_graphontrackersv5_widget_chart WHERE owner_id = " . $this->owner_id . " AND owner_type = '" . $this->owner_type . "' AND id = " . $id;
         $res = db_query($sql);
         if ($res && db_numrows($res)) {
             $data = db_fetch_array($res);
@@ -166,7 +166,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
         $vId->required();
         if ($request->validInArray('chart', $vId)) {
             $chart = $request->get('chart');
-            $sql = 'INSERT INTO plugin_graphontrackersv5_widget_chart (owner_id, owner_type, title, chart_id) VALUES ('. $this->owner_id .", '". $this->owner_type ."', '". db_escape_string($chart['title']) ."', ". db_escape_int($chart['chart_id']) .")";
+            $sql = 'INSERT INTO plugin_graphontrackersv5_widget_chart (owner_id, owner_type, title, chart_id) VALUES (' . $this->owner_id . ", '" . $this->owner_type . "', '" . db_escape_string($chart['title']) . "', " . db_escape_int($chart['chart_id']) . ")";
             $res = db_query($sql);
             $content_id = db_insertid($res);
         }
@@ -180,20 +180,20 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
         if (($chart = $request->get('chart')) && $request->valid($vContentId)) {
             $vId = new Valid_UInt('chart_id');
             if ($request->validInArray('chart', $vId)) {
-                $id = " chart_id   = ". db_escape_int($chart['chart_id']) ." ";
+                $id = " chart_id   = " . db_escape_int($chart['chart_id']) . " ";
             } else {
                 $id = '';
             }
 
             $vTitle = new Valid_String('title');
             if ($request->validInArray('chart', $vTitle)) {
-                $title = " title = '". db_escape_string($chart['title']) ."' ";
+                $title = " title = '" . db_escape_string($chart['title']) . "' ";
             } else {
                 $title = '';
             }
 
             if ($id || $title) {
-                $sql = "UPDATE plugin_graphontrackersv5_widget_chart SET ". $title .", ". $id ." WHERE owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' AND id = ". (int)$request->get('content_id');
+                $sql = "UPDATE plugin_graphontrackersv5_widget_chart SET " . $title . ", " . $id . " WHERE owner_id = " . $this->owner_id . " AND owner_type = '" . $this->owner_type . "' AND id = " . (int) $request->get('content_id');
                 $res = db_query($sql);
                 $done = true;
             }
@@ -202,7 +202,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
     }
     public function destroy($id)
     {
-        $sql = 'DELETE FROM plugin_graphontrackersv5_widget_chart WHERE id = '. $id .' AND owner_id = '. $this->owner_id ." AND owner_type = '". $this->owner_type ."'";
+        $sql = 'DELETE FROM plugin_graphontrackersv5_widget_chart WHERE id = ' . $id . ' AND owner_id = ' . $this->owner_id . " AND owner_type = '" . $this->owner_type . "'";
         db_query($sql);
     }
     public function isUnique()

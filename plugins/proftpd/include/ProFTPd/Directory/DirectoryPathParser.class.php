@@ -37,10 +37,10 @@ class DirectoryPathParser
         $path_to_part = '';
         foreach (array_filter(explode('/', $path)) as $part_name) {
             if ($path_to_part) {
-                $path_to_part.= '/';
+                $path_to_part .= '/';
             }
 
-            $path_to_part.= $part_name;
+            $path_to_part .= $part_name;
             $parts->add(new DirectoryPathPart($part_name, $path_to_part));
         }
 

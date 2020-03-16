@@ -118,7 +118,7 @@ class Hooks extends Pane
         $csrf = new CSRFSynchronizerToken(self::CSRF_TOKEN_ID);
         $this->addCustomWebhooks($sections, $create_buttons, $csrf);
 
-        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates/settings');
+        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR) . '/templates/settings');
 
         return $renderer->renderToString(
             'hooks',
@@ -184,8 +184,8 @@ class Hooks extends Pane
             $icon      = 'fa fa-exclamation-triangle';
         }
 
-        return '<span class="'. $classname .'" title="'. $this->hp->purify($status) .'">
-            <i class="'. $icon .'"></i> '. $this->hp->purify($status) .'
+        return '<span class="' . $classname . '" title="' . $this->hp->purify($status) . '">
+            <i class="' . $icon . '"></i> ' . $this->hp->purify($status) . '
             </span>';
     }
 }

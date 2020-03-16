@@ -17,7 +17,7 @@ rcs_id('$Id: Buddy.php,v 1.3 2004/11/21 11:59:26 rurban Exp $');
 //       If no homepage, fallback to prefs in cookie as in 1.3.3.
 
 
-require_once(dirname(__FILE__)."/Utils.php");
+require_once(dirname(__FILE__) . "/Utils.php");
 
 /*
 class Buddy extends WikiUserNew {}

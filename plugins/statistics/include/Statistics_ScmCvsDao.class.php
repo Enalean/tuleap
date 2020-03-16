@@ -39,7 +39,7 @@ class Statistics_ScmCvsDao extends DataAccessObject
     {
         parent::__construct($da);
         if ($groupId) {
-            $this->groupFilter = ' AND group_id='.$this->da->escapeInt($groupId);
+            $this->groupFilter = ' AND group_id=' . $this->da->escapeInt($groupId);
         }
     }
 
@@ -59,8 +59,8 @@ class Statistics_ScmCvsDao extends DataAccessObject
                 COUNT(DISTINCT(group_id)) AS projects,
                 COUNT(DISTINCT(user_id)) AS users
                 FROM group_cvs_full_history
-                WHERE day BETWEEN DATE_FORMAT(".$this->da->quoteSmart($startDate).", '%Y%m%d') AND DATE_FORMAT(".$this->da->quoteSmart($endDate).", '%Y%m%d')
-                  ".$this->groupFilter."
+                WHERE day BETWEEN DATE_FORMAT(" . $this->da->quoteSmart($startDate) . ", '%Y%m%d') AND DATE_FORMAT(" . $this->da->quoteSmart($endDate) . ", '%Y%m%d')
+                  " . $this->groupFilter . "
                 GROUP BY YEAR(day), MONTH(day)
                 ORDER BY YEAR(day), MONTH(day)";
 
@@ -83,8 +83,8 @@ class Statistics_ScmCvsDao extends DataAccessObject
                 COUNT(DISTINCT(group_id)) AS projects,
                 COUNT(DISTINCT(user_id)) AS users
                 FROM group_cvs_full_history
-                WHERE day BETWEEN DATE_FORMAT(".$this->da->quoteSmart($startDate).", '%Y%m%d') AND DATE_FORMAT(".$this->da->quoteSmart($endDate).", '%Y%m%d')
-                  ".$this->groupFilter."
+                WHERE day BETWEEN DATE_FORMAT(" . $this->da->quoteSmart($startDate) . ", '%Y%m%d') AND DATE_FORMAT(" . $this->da->quoteSmart($endDate) . ", '%Y%m%d')
+                  " . $this->groupFilter . "
                 GROUP BY YEAR(day), MONTH(day)
                 ORDER BY YEAR(day), MONTH(day)";
 
@@ -104,7 +104,7 @@ class Statistics_ScmCvsDao extends DataAccessObject
         $sql = "SELECT unix_group_name AS project, SUM(cvs_checkouts) + SUM(cvs_browse) AS count
                 FROM group_cvs_full_history
                 JOIN groups g USING (group_id)
-                WHERE day BETWEEN DATE_FORMAT(".$this->da->quoteSmart($startDate).", '%Y%m%d') AND DATE_FORMAT(".$this->da->quoteSmart($endDate).", '%Y%m%d')
+                WHERE day BETWEEN DATE_FORMAT(" . $this->da->quoteSmart($startDate) . ", '%Y%m%d') AND DATE_FORMAT(" . $this->da->quoteSmart($endDate) . ", '%Y%m%d')
                 GROUP BY project
                 ORDER BY count DESC
                 LIMIT 10";
@@ -125,7 +125,7 @@ class Statistics_ScmCvsDao extends DataAccessObject
         $sql = "SELECT unix_group_name AS project, SUM(cvs_commits) + SUM(cvs_adds) AS count
                 FROM group_cvs_full_history
                 JOIN groups g USING (group_id)
-                WHERE day BETWEEN DATE_FORMAT(".$this->da->quoteSmart($startDate).", '%Y%m%d') AND DATE_FORMAT(".$this->da->quoteSmart($endDate).", '%Y%m%d')
+                WHERE day BETWEEN DATE_FORMAT(" . $this->da->quoteSmart($startDate) . ", '%Y%m%d') AND DATE_FORMAT(" . $this->da->quoteSmart($endDate) . ", '%Y%m%d')
                 GROUP BY project
                 ORDER BY count DESC
                 LIMIT 10";
@@ -146,8 +146,8 @@ class Statistics_ScmCvsDao extends DataAccessObject
         $sql = "SELECT user_name AS user, SUM(cvs_checkouts) + SUM(cvs_browse) AS count
                 FROM group_cvs_full_history
                 JOIN user u USING (user_id)
-                WHERE day BETWEEN DATE_FORMAT(".$this->da->quoteSmart($startDate).", '%Y%m%d') AND DATE_FORMAT(".$this->da->quoteSmart($endDate).", '%Y%m%d')
-                  ".$this->groupFilter."
+                WHERE day BETWEEN DATE_FORMAT(" . $this->da->quoteSmart($startDate) . ", '%Y%m%d') AND DATE_FORMAT(" . $this->da->quoteSmart($endDate) . ", '%Y%m%d')
+                  " . $this->groupFilter . "
                 GROUP BY user
                 ORDER BY count DESC
                 LIMIT 10";
@@ -168,8 +168,8 @@ class Statistics_ScmCvsDao extends DataAccessObject
         $sql = "SELECT user_name AS user, SUM(cvs_commits) + SUM(cvs_adds) AS count
                 FROM group_cvs_full_history
                 JOIN user u USING (user_id)
-                WHERE day BETWEEN DATE_FORMAT(".$this->da->quoteSmart($startDate).", '%Y%m%d') AND DATE_FORMAT(".$this->da->quoteSmart($endDate).", '%Y%m%d')
-                  ".$this->groupFilter."
+                WHERE day BETWEEN DATE_FORMAT(" . $this->da->quoteSmart($startDate) . ", '%Y%m%d') AND DATE_FORMAT(" . $this->da->quoteSmart($endDate) . ", '%Y%m%d')
+                  " . $this->groupFilter . "
                 GROUP BY user
                 ORDER BY count DESC
                 LIMIT 10";
@@ -190,7 +190,7 @@ class Statistics_ScmCvsDao extends DataAccessObject
         $sql = "SELECT COUNT(DISTINCT(repositoryid)) AS count
                 From cvs_commits cc
                 JOIN cvs_checkins c ON cc.id = c.commitid
-                WHERE cc.comm_when BETWEEN ".$this->da->quoteSmart($startDate)." AND ".$this->da->quoteSmart($endDate);
+                WHERE cc.comm_when BETWEEN " . $this->da->quoteSmart($startDate) . " AND " . $this->da->quoteSmart($endDate);
 
         return $this->retrieve($sql);
     }

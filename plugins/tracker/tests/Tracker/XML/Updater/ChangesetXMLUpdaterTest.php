@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once __DIR__.'/../../../bootstrap.php';
+require_once __DIR__ . '/../../../bootstrap.php';
 
 class Tracker_XML_Updater_ChangesetXMLUpdaterTest extends TuleapTestCase
 {
@@ -104,14 +104,14 @@ class Tracker_XML_Updater_ChangesetXMLUpdaterTest extends TuleapTestCase
 
         $this->updater->update($this->tracker, $this->artifact_xml, $this->submitted_values, $this->user, $now);
 
-        $this->assertEqual((string)$this->artifact_xml->changeset->submitted_on, date('c', $now));
+        $this->assertEqual((string) $this->artifact_xml->changeset->submitted_on, date('c', $now));
     }
 
     public function itUpdatesTheSubmittedByInformation()
     {
         $this->updater->update($this->tracker, $this->artifact_xml, $this->submitted_values, $this->user, time());
 
-        $this->assertEqual((int)$this->artifact_xml->changeset->submitted_by, $this->user->getId());
+        $this->assertEqual((int) $this->artifact_xml->changeset->submitted_by, $this->user->getId());
     }
 
     public function itAsksToVisitorToUpdateSummary()

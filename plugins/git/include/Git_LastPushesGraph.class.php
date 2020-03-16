@@ -90,8 +90,8 @@ class Git_LastPushesGraph
         // Init some class properties according to 'weeks number' parameter
         $today              = $_SERVER['REQUEST_TIME'];
         $startPeriod        = strtotime("-$this->weeksNumber weeks");
-        $weekInSeconds      = self::WEEKS_IN_SECONDS ;
-        for ($i = $startPeriod+$weekInSeconds; $i < $today+$weekInSeconds; $i += $weekInSeconds) {
+        $weekInSeconds      = self::WEEKS_IN_SECONDS;
+        for ($i = $startPeriod + $weekInSeconds; $i < $today + $weekInSeconds; $i += $weekInSeconds) {
             $this->dates[]   = date('M d', $i);
             $this->weekNum[] = intval(date('W', $i));
             $this->year[]    = intval(date('Y', $i));
@@ -174,7 +174,7 @@ class Git_LastPushesGraph
             if ($this->displayChart) {
                 $b2plot = new BarPlot($pushes);
                 $color  = $colors[$i++ % $nbColors];
-                $b2plot->SetColor($color.':0.7');
+                $b2plot->SetColor($color . ':0.7');
                 $b2plot->setFillColor($color);
                 if (!empty($this->legend)) {
                     $b2plot->SetLegend($this->legend);

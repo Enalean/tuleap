@@ -82,7 +82,7 @@ class Docman_MetadataFactory
      */
     public function getLabelFromId($id)
     {
-        return 'field_'.$id;
+        return 'field_' . $id;
     }
 
     /**

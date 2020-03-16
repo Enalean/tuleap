@@ -109,7 +109,7 @@ class ProjectEditController
                     _('Switching the project status back to "pending" is not possible.')
                 );
 
-                $GLOBALS['Response']->redirect('/admin/groupedit.php?group_id='. urlencode($project_id));
+                $GLOBALS['Response']->redirect('/admin/groupedit.php?group_id=' . urlencode($project_id));
             }
 
             $this->dao->updateProjectStatusAndType($form_status, $project_type, $project_id);
@@ -125,7 +125,7 @@ class ProjectEditController
             $this->project_manager->removeProjectFromCache($project);
         }
 
-        $GLOBALS['Response']->redirect('/admin/groupedit.php?group_id='. urlencode($project_id));
+        $GLOBALS['Response']->redirect('/admin/groupedit.php?group_id=' . urlencode($project_id));
     }
 
     private function propagateStatusChange(Project $project, $form_status)

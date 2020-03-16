@@ -91,7 +91,7 @@ class AgileDashboard_KanbanFactory
         $kanban_tracker_ids = array();
 
         foreach ($rows as $kanban_data) {
-            $kanban_tracker_ids[] = (int)$kanban_data['tracker_id'];
+            $kanban_tracker_ids[] = (int) $kanban_data['tracker_id'];
         }
 
         return $kanban_tracker_ids;

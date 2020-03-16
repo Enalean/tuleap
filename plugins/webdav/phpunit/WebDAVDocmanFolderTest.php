@@ -34,7 +34,7 @@ use Sabre_DAV_Exception_MethodNotAllowed;
 use Sabre_DAV_Exception_RequestedRangeNotSatisfiable;
 use Tuleap\GlobalLanguageMock;
 
-require_once __DIR__.'/bootstrap.php';
+require_once __DIR__ . '/bootstrap.php';
 
 /**
  * This is the unit test of WebDAVDocmanFolder
@@ -376,7 +376,7 @@ class WebDAVDocmanFolderTest extends TestCase
         $webDAVDocmanFolder->shouldReceive('getUtils')->andReturns($utils);
 
         $this->expectException(Sabre_DAV_Exception_Forbidden::class);
-        $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');
+        $data = fopen(dirname(__FILE__) . '/_fixtures/test.txt', 'r');
         $webDAVDocmanFolder->createFile('name', $data);
     }
 
@@ -398,7 +398,7 @@ class WebDAVDocmanFolderTest extends TestCase
         $webDAVDocmanFolder->shouldReceive('getMaxFileSize')->andReturns(23);
 
         $this->expectException(Sabre_DAV_Exception_RequestedRangeNotSatisfiable::class);
-        $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');
+        $data = fopen(dirname(__FILE__) . '/_fixtures/test.txt', 'r');
         $webDAVDocmanFolder->createFile('name', $data);
     }
 
@@ -419,7 +419,7 @@ class WebDAVDocmanFolderTest extends TestCase
 
         $webDAVDocmanFolder->shouldReceive('getMaxFileSize')->andReturns(2000);
 
-        $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');
+        $data = fopen(dirname(__FILE__) . '/_fixtures/test.txt', 'r');
         $webDAVDocmanFolder->createFile('name', $data);
     }
 }

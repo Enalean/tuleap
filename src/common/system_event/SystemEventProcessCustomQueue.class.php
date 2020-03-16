@@ -37,7 +37,7 @@ class SystemEventProcessCustomQueue implements SystemEventProcess
      */
     public function getLockName()
     {
-        return 'tuleap_process_system_events_'. $this->queue;
+        return 'tuleap_process_system_events_' . $this->queue;
     }
 
     public function getQueue()
@@ -47,6 +47,6 @@ class SystemEventProcessCustomQueue implements SystemEventProcess
 
     public function getCommandName()
     {
-        return 'tuleap.php process-system-events '.$this->queue;
+        return 'tuleap.php process-system-events ' . $this->queue;
     }
 }

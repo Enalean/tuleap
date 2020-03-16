@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once TRACKER_BASE_DIR .'/Workflow/PostAction/PostActionSubFactory.class.php';
+require_once TRACKER_BASE_DIR . '/Workflow/PostAction/PostActionSubFactory.class.php';
 
 /**
  * Loads and saves Field post actions
@@ -162,7 +162,7 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
     {
         $xml_tag_name          = $xml->getName();
         $post_action_class     = $this->getPostActionClassFromXmlTagName($xml_tag_name);
-        $field_id              = $xmlMapping[(string)$xml->field_id['REF']];
+        $field_id              = $xmlMapping[(string) $xml->field_id['REF']];
         $postaction_attributes = $xml->attributes();
         $value                 = $this->getPostActionValueFromXmlTagName($xml_tag_name, $postaction_attributes);
 
@@ -240,7 +240,7 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
      */
     private function buildPostAction(Transition $transition, $row, $shortname, $klass)
     {
-        $id    = (int)$row['id'];
+        $id    = (int) $row['id'];
         $field = $this->getFieldFromRow($row);
         $value = $this->getValueFromRow($row, $shortname);
 
@@ -273,7 +273,7 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
      */
     private function getFieldFromRow($row)
     {
-        return $this->element_factory->getFormElementById((int)$row['field_id']);
+        return $this->element_factory->getFormElementById((int) $row['field_id']);
     }
 
     /**

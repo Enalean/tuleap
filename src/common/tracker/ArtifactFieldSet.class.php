@@ -80,7 +80,7 @@ class ArtifactFieldSet
     {
         $sql = "SELECT *
                 FROM artifact_field_set
-                WHERE artifact_field_set_id=". db_ei($this->getID()) ."";
+                WHERE artifact_field_set_id=" . db_ei($this->getID()) . "";
         $res = db_query($sql);
         if (!$res || db_numrows($res) < 1) {
             return false;
@@ -324,12 +324,12 @@ class ArtifactFieldSet
         }
 
         $sql = "UPDATE artifact_field_set
-                SET name='". db_es($name) ."',
-                    description='". db_es($description) ."',
-                    rank='". db_ei($rank) ."'
-                WHERE field_set_id='".  db_ei($this->getID())  ."'";
+                SET name='" . db_es($name) . "',
+                    description='" . db_es($description) . "',
+                    rank='" . db_ei($rank) . "'
+                WHERE field_set_id='" .  db_ei($this->getID())  . "'";
 
-        $res=db_query($sql);
+        $res = db_query($sql);
         if (!$res) {
             return false;
         } else {

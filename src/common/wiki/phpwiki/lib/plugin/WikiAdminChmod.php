@@ -213,7 +213,7 @@ class WikiPlugin_WikiAdminChmod extends WikiPlugin_WikiAdminSelect
         $header->pushContent(_("Chmod to permission:"));
         $header->pushContent(HTML::input(array('name' => 'admin_chmod[perm]',
                                                'value' => $post_args['perm'])));
-        $header->pushContent(' '._("(ugo : rwx)"));
+        $header->pushContent(' ' . _("(ugo : rwx)"));
         $header->pushContent(HTML::p());
         $checkbox = HTML::input(array('type' => 'checkbox',
                                       'name' => 'admin_chmod[updatechildren]',
@@ -245,7 +245,7 @@ class _PageList_Column_chmod_perm extends _PageList_Column
             $page_handle->get('group')
         );
     }
-};
+}
 
 // $Log: WikiAdminChmod.php,v $
 // Revision 1.14  2004/12/13 14:36:35  rurban

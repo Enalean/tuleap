@@ -81,7 +81,7 @@ class Tracker_MasschangeUpdater
             $masschange_aids = $request->get('masschange_aids');
             if (empty($masschange_aids)) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_masschange_detail', 'no_items_selected'));
-                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->tracker->getId());
+                $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId());
             }
 
             $unsubscribe = $request->get('masschange-unsubscribe-option');
@@ -94,7 +94,7 @@ class Tracker_MasschangeUpdater
 
             if (! $unsubscribe && empty($masschange_data)) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_masschange_detail', 'no_items_selected'));
-                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->tracker->getId());
+                $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId());
             }
 
             $comment = $request->get('artifact_masschange_followup_comment');
@@ -121,10 +121,10 @@ class Tracker_MasschangeUpdater
             );
             $this->event_manager->processEvent($event);
 
-            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->tracker->getId());
+            $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId());
         } else {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->tracker_report->getId());
+            $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->tracker_report->getId());
         }
     }
 

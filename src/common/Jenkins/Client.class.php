@@ -126,7 +126,7 @@ class Jenkins_Client
             $separator = '?';
         }
         if ($params) {
-            $params = $separator.$params;
+            $params = $separator . $params;
         }
         return $job_url . $params;
     }

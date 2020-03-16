@@ -48,18 +48,18 @@ class ProjectHistoryDao extends DataAccessObject
      */
     public function groupGetHistory($offset, $limit, $groupId = false, $historyFilter = null)
     {
-        $sql='select SQL_CALC_FOUND_ROWS group_history.field_name,
+        $sql = 'select SQL_CALC_FOUND_ROWS group_history.field_name,
               group_history.old_value,
               group_history.date,
               user.user_name 
-              FROM '.$this->table_name.',user
+              FROM ' . $this->table_name . ',user
               WHERE group_history.mod_by=user.user_id ';
         if ($historyFilter) {
             $sql .= $historyFilter;
         }
-        $sql.=' AND group_id='.$this->da->escapeInt($groupId).' ORDER BY group_history.date DESC';
+        $sql .= ' AND group_id=' . $this->da->escapeInt($groupId) . ' ORDER BY group_history.date DESC';
         if ($offset > 0 || $limit > 0) {
-            $sql .= ' LIMIT '.$this->da->escapeInt($offset).', '.$this->da->escapeInt($limit);
+            $sql .= ' LIMIT ' . $this->da->escapeInt($offset) . ', ' . $this->da->escapeInt($limit);
         }
         return array('history' => $this->retrieve($sql), 'numrows' => $this->foundRows());
     }
@@ -82,15 +82,15 @@ class ProjectHistoryDao extends DataAccessObject
     public function groupAddHistory($fieldName, $oldValue, $groupId, $args = false)
     {
         if ($args) {
-            $fieldName .= " %% ".implode("||", $args);
+            $fieldName .= " %% " . implode("||", $args);
         }
         $userId = UserManager::instance()->getCurrentUser()->getId();
         if ($userId == 0) {
             $userId = 100;
         }
-        $sql= 'insert into '.$this->table_name.'(group_id,field_name,old_value,mod_by,date)
-               VALUES ('.$this->da->escapeInt($groupId).' , '.$this->da->quoteSmart($fieldName). ', '.
-               $this->da->quoteSmart($oldValue).' , '.$this->da->escapeInt($userId).' , '.$this->da->escapeInt($_SERVER['REQUEST_TIME']).')';
+        $sql = 'insert into ' . $this->table_name . '(group_id,field_name,old_value,mod_by,date)
+               VALUES (' . $this->da->escapeInt($groupId) . ' , ' . $this->da->quoteSmart($fieldName) . ', ' .
+               $this->da->quoteSmart($oldValue) . ' , ' . $this->da->escapeInt($userId) . ' , ' . $this->da->escapeInt($_SERVER['REQUEST_TIME']) . ')';
 
         $this->retrieve($sql);
     }

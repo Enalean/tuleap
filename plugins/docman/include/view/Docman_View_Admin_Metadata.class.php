@@ -29,7 +29,7 @@ class Docman_View_Admin_Metadata extends Docman_View_Extra
 
     public function _title($params)
     {
-        echo '<h2>'. $this->_getTitle($params) .' - '. dgettext('tuleap-docman', 'Manage Properties') .'</h2>';
+        echo '<h2>' . $this->_getTitle($params) . ' - ' . dgettext('tuleap-docman', 'Manage Properties') . '</h2>';
     }
 
     /**
@@ -41,9 +41,9 @@ class Docman_View_Admin_Metadata extends Docman_View_Extra
 
         $mdFactory = new Docman_MetadataFactory($groupId);
 
-        $content .= '<h3>'.dgettext('tuleap-docman', 'Available properties').'</h3>'."\n";
+        $content .= '<h3>' . dgettext('tuleap-docman', 'Available properties') . '</h3>' . "\n";
 
-        $content .= dgettext('tuleap-docman', '<p>Define what properties are available in your document manager. Each property can be edited during document submission and updated in the document properties panel.</p><p><strong>Permissions:</strong> The same permissions are applied on a document and its properties.</p>')."\n";
+        $content .= dgettext('tuleap-docman', '<p>Define what properties are available in your document manager. Each property can be edited during document submission and updated in the document properties panel.</p><p><strong>Permissions:</strong> The same permissions are applied on a document and its properties.</p>') . "\n";
 
         $content .= html_build_list_table_top(array(dgettext('tuleap-docman', 'Name'),
                                                     dgettext('tuleap-docman', 'Description'),
@@ -62,17 +62,17 @@ class Docman_View_Admin_Metadata extends Docman_View_Extra
             }
 
             $trclass = html_get_alt_row_color($altRowClass++);
-            $content .= '<tr class="'.$trclass.'">';
+            $content .= '<tr class="' . $trclass . '">';
 
             $nameUrl  = DocmanViewURLBuilder::buildUrl(
                 $defaultUrl,
                 array('action' => 'admin_md_details',
                 'md'     => $md->getLabel())
             );
-            $nameHref = '<a href="'.$nameUrl.'">'.$this->hp->purify($md->getName()).'</a>';
-            $content .= '<td>'.$nameHref.'</td>';
+            $nameHref = '<a href="' . $nameUrl . '">' . $this->hp->purify($md->getName()) . '</a>';
+            $content .= '<td>' . $nameHref . '</td>';
 
-            $content .= '<td>'.$this->hp->purify($md->getDescription()).'</td>';
+            $content .= '<td>' . $this->hp->purify($md->getDescription()) . '</td>';
 
             $content .= '<td>';
             if ($md->isRequired()) {
@@ -98,14 +98,14 @@ class Docman_View_Admin_Metadata extends Docman_View_Extra
                 $alt   = sprintf(dgettext('tuleap-docman', 'Delete the property \'%1$s\''), $this->hp->purify($md->getName()));
                 $trash = html_trash_link($link, $warn, $alt);
             }
-            $content .= '<td>'.$trash.'</td>';
+            $content .= '<td>' . $trash . '</td>';
 
-            $content .= '</tr>'."\n";
+            $content .= '</tr>' . "\n";
 
             $mdIter->next();
         }
 
-        $content .= '</table>'."\n";
+        $content .= '</table>' . "\n";
 
         return $content;
     }
@@ -116,9 +116,9 @@ class Docman_View_Admin_Metadata extends Docman_View_Extra
     public function getNewMetadataForm($groupId)
     {
         $content = '';
-        $content .= '<h3>'.dgettext('tuleap-docman', 'Create a new property').'</h3>'."\n";
+        $content .= '<h3>' . dgettext('tuleap-docman', 'Create a new property') . '</h3>' . "\n";
 
-        $content .= '<form name="admin_create_metadata" data-test="admin_create_metadata" method="post" action="?group_id='.$groupId.'&action=admin_create_metadata" class="docman_form">';
+        $content .= '<form name="admin_create_metadata" data-test="admin_create_metadata" method="post" action="?group_id=' . $groupId . '&action=admin_create_metadata" class="docman_form">';
 
         $content .= '<table>';
 
@@ -142,7 +142,7 @@ class Docman_View_Admin_Metadata extends Docman_View_Extra
 
         $content .= '<tr>';
         $content .= '<td colspan="2">';
-        $content .= '<input type="submit" value="'.dgettext('tuleap-docman', 'Create').'" />';
+        $content .= '<input type="submit" value="' . dgettext('tuleap-docman', 'Create') . '" />';
         $content .= '</td>';
         $content .= '</tr>';
 
@@ -158,15 +158,15 @@ class Docman_View_Admin_Metadata extends Docman_View_Extra
      */
     public function getImportForm($groupId)
     {
-        $GLOBALS['HTML']->includeFooterJavascriptSnippet("new ProjectAutoCompleter('plugin_docman_metadata_import_group', '".util_get_dir_image_theme()."', false);");
+        $GLOBALS['HTML']->includeFooterJavascriptSnippet("new ProjectAutoCompleter('plugin_docman_metadata_import_group', '" . util_get_dir_image_theme() . "', false);");
         $content = '';
-        $content .= '<h3>'.dgettext('tuleap-docman', 'Import properties from another project').'</h3>'."\n";
-        $content .= '<p>'.dgettext('tuleap-docman', 'You can import properties from any public projects or private projects you are member of.').'</p>'."\n";
-        $content .= '<form name="admin_import_metadata" method="post" action="?group_id='.$groupId.'&action=admin_import_metadata_check">';
+        $content .= '<h3>' . dgettext('tuleap-docman', 'Import properties from another project') . '</h3>' . "\n";
+        $content .= '<p>' . dgettext('tuleap-docman', 'You can import properties from any public projects or private projects you are member of.') . '</p>' . "\n";
+        $content .= '<form name="admin_import_metadata" method="post" action="?group_id=' . $groupId . '&action=admin_import_metadata_check">';
         $content .= '<input id="plugin_docman_metadata_import_group" name="plugin_docman_metadata_import_group" type="text" size="60" value="';
         $content .= dgettext('tuleap-docman', 'Enter a project shortname or identifier here.');
         $content .= '" /><br />';
-        $content .= '<input name="submit" type="submit" value="'.dgettext('tuleap-docman', 'Check before import').'" />';
+        $content .= '<input name="submit" type="submit" value="' . dgettext('tuleap-docman', 'Check before import') . '" />';
         $content .= '</form>';
         return $content;
     }

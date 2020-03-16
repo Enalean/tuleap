@@ -25,7 +25,7 @@ class _UserPreference_recengine extends _UserPreference // recommendation engine
             return $value;
         }
     }
-};
+}
 
 class _UserPreference_recalgo extends _UserPreference // recommendation engine algorithm
 {
@@ -46,11 +46,11 @@ class _UserPreference_recalgo extends _UserPreference // recommendation engine a
             return $value;
         }
     }
-};
+}
 
 class _UserPreference_recnnbr extends _UserPreference_numeric
 {
-}; // recommendation engine key clustering, neighborhood size
+}// recommendation engine key clustering, neighborhood size
 
 $WikiTheme->customUserPreferences(array
          (

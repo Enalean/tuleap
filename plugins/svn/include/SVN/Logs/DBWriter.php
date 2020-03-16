@@ -62,9 +62,9 @@ class DBWriter
     public function postrotate()
     {
         if (is_file(self::YESTERDAY_LOG_FILE)) {
-            $this->logger->info('Parse '.self::YESTERDAY_LOG_FILE);
+            $this->logger->info('Parse ' . self::YESTERDAY_LOG_FILE);
             $this->saveFromFile(self::YESTERDAY_LOG_FILE);
-            $this->logger->info('Parse '.self::YESTERDAY_LOG_FILE.' completed');
+            $this->logger->info('Parse ' . self::YESTERDAY_LOG_FILE . ' completed');
         }
     }
 

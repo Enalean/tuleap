@@ -52,7 +52,7 @@ class Admin_Homepage_Dao extends DataAccessObject
             $values[] = "($language_id, $headline)";
         }
 
-        $sql = "REPLACE INTO homepage_headline(language_id, headline) VALUES ". implode(', ', $values);
+        $sql = "REPLACE INTO homepage_headline(language_id, headline) VALUES " . implode(', ', $values);
 
         return $this->update($sql);
     }

@@ -196,11 +196,11 @@ class StatisticsPlugin extends Plugin
     {
         $user_url_params = array(
             'menu' => 'one_user_details',
-            'user' => $params['user']->getRealName().' ('.$params['user']->getUserName() .')'
+            'user' => $params['user']->getRealName() . ' (' . $params['user']->getUserName() . ')'
         );
 
         $params['links'][] = array(
-            'href'  => $this->getPluginPath() . '/disk_usage.php?'.http_build_query($user_url_params),
+            'href'  => $this->getPluginPath() . '/disk_usage.php?' . http_build_query($user_url_params),
             'label' => $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics')
         );
     }
@@ -214,10 +214,10 @@ class StatisticsPlugin extends Plugin
 
         $project_url_params = array(
             'menu'           => 'services',
-            'project_filter' => $params['project']->getPublicName().' ('.$params['project']->getUnixName() .')'
+            'project_filter' => $params['project']->getPublicName() . ' (' . $params['project']->getUnixName() . ')'
         );
         $params['links'][] = array(
-            'href'  => $this->getPluginPath().'/disk_usage.php?'.http_build_query($project_url_params),
+            'href'  => $this->getPluginPath() . '/disk_usage.php?' . http_build_query($project_url_params),
             'label' => $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics')
         );
     }
@@ -260,7 +260,7 @@ class StatisticsPlugin extends Plugin
     {
         $uri           = $this->getSoapUri();
         $service_class = 'Statistics_SOAPServer';
-        require_once $service_class .'.class.php';
+        require_once $service_class . '.class.php';
 
         if ($request->exist('wsdl')) {
             $this->dumpWSDL($uri, $service_class);
@@ -292,7 +292,7 @@ class StatisticsPlugin extends Plugin
         $disk_usage_manager     = $this->getDiskUsageManager();
         $project_quota_manager  = new ProjectQuotaManager();
 
-        $server = new TuleapSOAPServer($uri.'/?wsdl', array('cache_wsdl' => WSDL_CACHE_NONE));
+        $server = new TuleapSOAPServer($uri . '/?wsdl', array('cache_wsdl' => WSDL_CACHE_NONE));
         $server->setClass($service_class, $soap_request_validator, $disk_usage_manager, $project_quota_manager);
         $xml_security = new XML_Security();
         $xml_security->enableExternalLoadOfEntities();
@@ -323,14 +323,14 @@ class StatisticsPlugin extends Plugin
 
     private function getSoapUri()
     {
-        return HTTPRequest::instance()->getServerUrl().'/plugins/statistics/soap';
+        return HTTPRequest::instance()->getServerUrl() . '/plugins/statistics/soap';
     }
 
     public function renderWSDL()
     {
         $uri = $this->getSoapUri();
         $wsdl_renderer = new SOAP_WSDLRenderer();
-        $wsdl_renderer->render($uri .'/?wsdl');
+        $wsdl_renderer->render($uri . '/?wsdl');
     }
 
     public function wsdl_doc2soap_types($params)
@@ -367,7 +367,7 @@ class StatisticsPlugin extends Plugin
     public function burning_parrot_get_javascript_files(array $params)
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $ckeditor_assets = new IncludeAssets(__DIR__. '/../../../src/www/assets', '/assets');
+            $ckeditor_assets = new IncludeAssets(__DIR__ . '/../../../src/www/assets', '/assets');
             $params['javascript_files'][] = $ckeditor_assets->getFileURL('ckeditor.js');
             $params['javascript_files'][] = $this->getAssets()->getFileURL('admin.js');
         }

@@ -51,7 +51,7 @@ class WidgetPermissionChecker
         $widget = $this->cross_tracker_dao->searchCrossTrackerWidgetByCrossTrackerReportId($report_id);
 
         if (isset($widget['dashboard_type']) && $widget['dashboard_type'] === UserDashboardController::DASHBOARD_TYPE) {
-            return $widget['user_id'] === (int)$user->getId();
+            return $widget['user_id'] === (int) $user->getId();
         }
 
         if (isset($widget['dashboard_type']) && $widget['dashboard_type'] === ProjectDashboardController::DASHBOARD_TYPE) {

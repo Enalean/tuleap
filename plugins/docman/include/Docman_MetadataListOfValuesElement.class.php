@@ -107,7 +107,7 @@ class Docman_MetadataListOfValuesElement
 
     public function getMetadataValue(): string
     {
-        if ((int)$this->getId() === PLUGIN_DOCMAN_ITEM_STATUS_NONE) {
+        if ((int) $this->getId() === PLUGIN_DOCMAN_ITEM_STATUS_NONE) {
             return dgettext('tuleap-docman', 'None');
         }
 

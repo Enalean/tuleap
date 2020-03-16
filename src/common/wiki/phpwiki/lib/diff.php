@@ -347,7 +347,7 @@ function showDiff(&$request)
     $current = $page->getCurrentRevision();
     if ($current->getVersion() < 1) {
         $html = HTML::div(
-            array('id'=>'content'),
+            array('id' => 'content'),
             HTML::p(fmt(
                 "I'm sorry, there is no such page as %s.",
                 WikiLink($pagename, 'unknown')
@@ -387,7 +387,7 @@ function showDiff(&$request)
                 $others = array('major', 'minor');
                 break;
             case 'minor':
-                $previous='minor';
+                $previous = 'minor';
                 $old = $page->getRevisionBefore($new);
                 $old_version = _("previous revision");
                 $others = array('major', 'author');
@@ -412,7 +412,7 @@ function showDiff(&$request)
     $page_link = WikiLink($page);
 
     $html = HTML::div(
-        array('id'=>'content'),
+        array('id' => 'content'),
         HTML::p(fmt(
             "Differences between %s and %s of %s.",
             $new_link,
@@ -424,7 +424,7 @@ function showDiff(&$request)
     $otherdiffs = HTML::p(_("Other diffs:"));
     $label = array('major' => _("Previous Major Revision"),
                    'minor' => _("Previous Revision"),
-                   'author'=> _("Previous Author"));
+                   'author' => _("Previous Author"));
     foreach ($others as $other) {
         $args = array('action' => 'diff', 'previous' => $other);
         if ($version) {

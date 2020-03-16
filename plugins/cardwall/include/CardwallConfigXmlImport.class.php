@@ -99,7 +99,7 @@ class CardwallConfigXmlImport
             return;
         }
 
-        $rng_path = realpath(CARDWALL_BASE_DIR.'/../www/resources/xml_project_cardwall.rng');
+        $rng_path = realpath(CARDWALL_BASE_DIR . '/../www/resources/xml_project_cardwall.rng');
         $this->xml_validator->validate($xml_input->{CardwallConfigXml::NODE_CARDWALL}, $rng_path);
 
         $this->cardwall_ontop_dao->startTransaction();
@@ -233,7 +233,7 @@ class CardwallConfigXmlImport
 
     private function getNewColumnId(SimpleXMLElement $xml_value, array $column_mapping)
     {
-        $xml_column_id = (string)$xml_value['column_id'];
+        $xml_column_id = (string) $xml_value['column_id'];
 
         if (isset($column_mapping[$xml_column_id])) {
             return $column_mapping[$xml_column_id];
@@ -247,7 +247,7 @@ class CardwallConfigXmlImport
 
     private function getNewValueId(SimpleXMLElement $xml_value)
     {
-        $xml_value_id = (string)$xml_value['value_id'];
+        $xml_value_id = (string) $xml_value['value_id'];
 
         if ($xml_value_id === Tracker_FormElement_Field_List_Bind_StaticValue_None::XML_VALUE_ID) {
             return Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID;
@@ -274,8 +274,8 @@ class CardwallConfigXmlImport
         $column_mapping = array();
 
         foreach ($xml_columns->{CardwallConfigXml::NODE_COLUMN} as $xml_column) {
-            $label         = (string)$xml_column[CardwallConfigXml::ATTRIBUTE_COLUMN_LABEL];
-            $xml_column_id = (string)$xml_column[CardwallConfigXml::ATTRIBUTE_COLUMN_ID];
+            $label         = (string) $xml_column[CardwallConfigXml::ATTRIBUTE_COLUMN_LABEL];
+            $xml_column_id = (string) $xml_column[CardwallConfigXml::ATTRIBUTE_COLUMN_ID];
 
             $red       = $this->getColorValueFromXML($xml_column, CardwallConfigXml::ATTRIBUTE_COLUMN_BG_RED, $xml_column_id);
             $green     = $this->getColorValueFromXML($xml_column, CardwallConfigXml::ATTRIBUTE_COLUMN_BG_GREEN, $xml_column_id);
@@ -297,7 +297,7 @@ class CardwallConfigXmlImport
     private function getTLPColorNameFromXml(SimpleXMLElement $xml_column, $xml_column_id)
     {
         $color_label = CardwallConfigXml::ATTRIBUTE_COLUMN_TLP_COLOR_NAME;
-        $color_name  = $xml_column[ $color_label ];
+        $color_name  = $xml_column[$color_label];
 
         if (! $color_name) {
             return null;
@@ -314,7 +314,7 @@ class CardwallConfigXmlImport
     private function getColorValueFromXML(SimpleXMLElement $xml_column, $color_label, $xml_column_id)
     {
         if ($xml_column[$color_label]) {
-            $color_value = (int)$xml_column[$color_label];
+            $color_value = (int) $xml_column[$color_label];
 
             if ($color_value >= 0 && $color_value <= 255) {
                 return $color_value;

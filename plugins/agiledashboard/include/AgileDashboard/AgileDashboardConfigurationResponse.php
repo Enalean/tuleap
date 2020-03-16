@@ -126,7 +126,7 @@ class AgileDashboardConfigurationResponse
             'action'   => 'admin',
             'pane'     => $pane
         );
-        $GLOBALS['Response']->redirect('/plugins/agiledashboard/?'. http_build_query($query_parts));
+        $GLOBALS['Response']->redirect('/plugins/agiledashboard/?' . http_build_query($query_parts));
     }
 
     private function redirectToHome()
@@ -134,6 +134,6 @@ class AgileDashboardConfigurationResponse
         $query_parts = array(
             'group_id' => $this->project->getId()
         );
-        $GLOBALS['Response']->redirect('/plugins/agiledashboard/?'. http_build_query($query_parts));
+        $GLOBALS['Response']->redirect('/plugins/agiledashboard/?' . http_build_query($query_parts));
     }
 }

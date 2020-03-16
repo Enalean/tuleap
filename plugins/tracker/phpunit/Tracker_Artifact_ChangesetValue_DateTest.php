@@ -112,7 +112,6 @@ class Tracker_Artifact_ChangesetValue_DateTest extends \PHPUnit\Framework\TestCa
 
     public function testDiffNoValueSubmittedYetBothDatesAreNull(): void
     {
-
         $previous_date = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, null);
         $new_date      = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, null);
         $this->assertEquals('', $new_date->diff($previous_date));

@@ -46,13 +46,13 @@ class MediawikiVersionDao extends DataAccessObject
 
     public function getAllMediawikiToMigrate($from_version)
     {
-        $sql = "SELECT groups.group_id ".$this->getSearchVersionQuery($from_version);
+        $sql = "SELECT groups.group_id " . $this->getSearchVersionQuery($from_version);
         return $this->retrieve($sql);
     }
 
     public function countMediawikiToMigrate($from_version)
     {
-        $sql = "SELECT COUNT(*) as nb ".$this->getSearchVersionQuery($from_version);
+        $sql = "SELECT COUNT(*) as nb " . $this->getSearchVersionQuery($from_version);
         $row = $this->retrieveFirstRow($sql);
         return $row['nb'];
     }

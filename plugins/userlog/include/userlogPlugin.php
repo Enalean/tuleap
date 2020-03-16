@@ -36,7 +36,7 @@ use Tuleap\Userlog\UserLogExporter;
 use Tuleap\Userlog\UserLogRouter;
 
 require_once 'constants.php';
-require_once __DIR__. '/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 class userlogPlugin extends Plugin implements DispatchableWithRequest, DispatchableWithBurningParrot //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {

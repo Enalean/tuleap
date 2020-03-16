@@ -53,15 +53,15 @@ class b201312250950_add_reminder_roles_table extends ForgeUpgrade_Bucket
         }
 
         //Retrieve the index name since it is unnamed
-        $sql ="SELECT CONSTRAINT_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE  WHERE TABLE_NAME ='tracker_reminder' and column_name in('tracker_id', 'field_id') group by CONSTRAINT_NAME;";
+        $sql = "SELECT CONSTRAINT_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE  WHERE TABLE_NAME ='tracker_reminder' and column_name in('tracker_id', 'field_id') group by CONSTRAINT_NAME;";
         $res = $this->db->dbh->query($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while fetching the constraint name: '.implode(', ', $this->db->dbh->errorInfo()));
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while fetching the constraint name: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
         $row = $res->fetch();
         $index = $row['CONSTRAINT_NAME'];
         $res->closeCursor();
-        $sql = "ALTER TABLE `tracker_reminder` DROP INDEX ".$index.";";
+        $sql = "ALTER TABLE `tracker_reminder` DROP INDEX " . $index . ";";
         $result = $this->db->dbh->exec($sql);
         if ($result === false) {
                 $error_message = implode(', ', $this->db->dbh->errorInfo());

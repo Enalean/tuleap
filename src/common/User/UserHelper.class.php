@@ -160,7 +160,7 @@ class UserHelper
         $usersIds     = $user_manager->getUserIdsList($by);
         if (count($usersIds) > 0) {
             $user_ids_escaped = $this->_getUserDao()->getDa()->escapeIntImplode($usersIds);
-            $filter .= ' AND user.user_id IN ('. $user_ids_escaped .')';
+            $filter .= ' AND user.user_id IN (' . $user_ids_escaped . ')';
         } else {
             $by      = $this->_getUserDao()->getDa()->quoteLikeValueSurround($by);
             $filter .= ' AND user.user_name LIKE ' . $by;
@@ -303,16 +303,16 @@ class UserHelper
     {
         $hp = Codendi_HTMLPurifier::instance();
         if ($user && !$user->isNone()) {
-            return '<a href="'.$this->getUserUrl($user).'">'.$hp->purify($this->getDisplayNameFromUser($user), CODENDI_PURIFIER_CONVERT_HTML).'</a>';
+            return '<a href="' . $this->getUserUrl($user) . '">' . $hp->purify($this->getDisplayNameFromUser($user), CODENDI_PURIFIER_CONVERT_HTML) . '</a>';
         } else {
             $username = $user ? $user->getName() : '';
-            return  $hp->purify($username, CODENDI_PURIFIER_CONVERT_HTML) ;
+            return  $hp->purify($username, CODENDI_PURIFIER_CONVERT_HTML);
         }
     }
 
     public function getUserUrl(PFUser $user)
     {
-        return "/users/".urlencode($user->getName());
+        return "/users/" . urlencode($user->getName());
     }
 
     public function getAbsoluteUserURL(PFUser $user): string

@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../bootstrap.php';
+require_once dirname(__FILE__) . '/../../bootstrap.php';
 
 use Tuleap\ProFTPd\Admin\PermissionsManager;
 
@@ -56,7 +56,7 @@ class SystemEvent_PROFTPD_UPDATE_ACLTest extends \PHPUnit\Framework\TestCase
         $this->group_unix_name            = $group_unix_name;
         $this->mixed_case_group_unix_name = $mixed_case_group_unix_name;
 
-        $this->ftp_directory       = dirname(__FILE__).'/../_fixtures';
+        $this->ftp_directory       = dirname(__FILE__) . '/../_fixtures';
         $this->path                = realpath($this->ftp_directory . "/" . $this->group_unix_name);
         $this->not_mixed_case_path = realpath($this->ftp_directory . "/" . strtolower($this->mixed_case_group_unix_name));
 

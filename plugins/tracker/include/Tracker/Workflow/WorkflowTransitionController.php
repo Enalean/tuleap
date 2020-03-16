@@ -73,7 +73,7 @@ class WorkflowTransitionController implements DispatchableWithRequest, Dispatcha
                 \Feedback::ERROR,
                 $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied')
             );
-            $layout->redirect(TRACKER_BASE_URL . '/?tracker=' . urlencode((string)$tracker->getId()));
+            $layout->redirect(TRACKER_BASE_URL . '/?tracker=' . urlencode((string) $tracker->getId()));
         }
 
         $assets = new IncludeAssets(

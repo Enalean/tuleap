@@ -33,7 +33,7 @@ use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\GlobalLanguageMock;
 
-require_once __DIR__.'/bootstrap.php';
+require_once __DIR__ . '/bootstrap.php';
 
 /**
  * This is the unit test of WebDAVFRSRelease
@@ -45,7 +45,7 @@ class WebDAVFRSReleaseTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $GLOBALS['ftp_incoming_dir'] = dirname(__FILE__).'/_fixtures/incoming';
+        $GLOBALS['ftp_incoming_dir'] = dirname(__FILE__) . '/_fixtures/incoming';
     }
 
     protected function tearDown(): void
@@ -867,7 +867,7 @@ class WebDAVFRSReleaseTest extends TestCase
         $webDAVFRSRelease->shouldReceive('getProject')->andReturns($project);
         $webDAVFRSRelease->shouldReceive('getUtils')->andReturns($utils);
         $this->expectException('Sabre_DAV_Exception_RequestedRangeNotSatisfiable');
-        $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');
+        $data = fopen(dirname(__FILE__) . '/_fixtures/test.txt', 'r');
         $webDAVFRSRelease->shouldReceive('getMaxFileSize')->andReturns(64);
 
         $webDAVFRSRelease->createFile('release1', $data);
@@ -905,7 +905,7 @@ class WebDAVFRSReleaseTest extends TestCase
         $webDAVFRSRelease->shouldReceive('getUser')->andReturns($user);
         $webDAVFRSRelease->shouldReceive('getUtils')->andReturns($utils);
 
-        $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');
+        $data = fopen(dirname(__FILE__) . '/_fixtures/test.txt', 'r');
         $webDAVFRSRelease->shouldReceive('getMaxFileSize')->andReturns(64);
 
         $webDAVFRSRelease->createFile('release', $data);
@@ -913,7 +913,7 @@ class WebDAVFRSReleaseTest extends TestCase
 
     public function testcreateFileIntoIncomingUnlinkFail(): void
     {
-        $GLOBALS['ftp_incoming_dir'] = dirname(__FILE__).'/_fixtures';
+        $GLOBALS['ftp_incoming_dir'] = dirname(__FILE__) . '/_fixtures';
 
         $webDAVFRSRelease = \Mockery::mock(\WebDAVFRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -928,7 +928,7 @@ class WebDAVFRSReleaseTest extends TestCase
 
     public function testcreateFileIntoIncomingCreateFail(): void
     {
-        $GLOBALS['ftp_incoming_dir'] = dirname(__FILE__).'/_fixtures';
+        $GLOBALS['ftp_incoming_dir'] = dirname(__FILE__) . '/_fixtures';
 
         $webDAVFRSRelease = \Mockery::mock(\WebDAVFRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -943,7 +943,7 @@ class WebDAVFRSReleaseTest extends TestCase
 
     public function testcreateFileIntoIncomingCloseFail(): void
     {
-        $GLOBALS['ftp_incoming_dir'] = dirname(__FILE__).'/_fixtures';
+        $GLOBALS['ftp_incoming_dir'] = dirname(__FILE__) . '/_fixtures';
 
         $webDAVFRSRelease = \Mockery::mock(\WebDAVFRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -959,7 +959,7 @@ class WebDAVFRSReleaseTest extends TestCase
 
     public function testcreateFileIntoIncomingSucceed(): void
     {
-        $GLOBALS['ftp_incoming_dir'] = dirname(__FILE__).'/_fixtures';
+        $GLOBALS['ftp_incoming_dir'] = dirname(__FILE__) . '/_fixtures';
 
         $webDAVFRSRelease = \Mockery::mock(\WebDAVFRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -973,7 +973,7 @@ class WebDAVFRSReleaseTest extends TestCase
 
     public function testcreateFileIntoIncomingSucceedWithFileExist(): void
     {
-        $GLOBALS['ftp_incoming_dir'] = dirname(__FILE__).'/_fixtures';
+        $GLOBALS['ftp_incoming_dir'] = dirname(__FILE__) . '/_fixtures';
 
         $webDAVFRSRelease = \Mockery::mock(\WebDAVFRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
 

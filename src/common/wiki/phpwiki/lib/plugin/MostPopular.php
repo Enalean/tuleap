@@ -114,7 +114,7 @@ class WikiPlugin_MostPopular extends WikiPlugin
 
         return $pagelist;
     }
-};
+}
 
 // $Log: MostPopular.php,v $
 // Revision 1.32  2004/12/26 17:14:03  rurban

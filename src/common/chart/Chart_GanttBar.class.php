@@ -52,7 +52,7 @@ class Chart_GanttBar
         $colors_for_charts = new ColorsForCharts();
 
         $color      = $colors_for_charts->getGanttBarColor();
-        $color_dark = $color .':0.65';
+        $color_dark = $color . ':0.65';
         $this->jpgraph_instance->progress->SetPattern(BAND_SOLID, $color_dark);
         $this->jpgraph_instance->setColor($color_dark);
         $this->jpgraph_instance->setPattern(GANTT_SOLID, $color);

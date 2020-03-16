@@ -194,7 +194,6 @@ final class OAuth2AccessTokenVerifierTest extends TestCase
 
     public function dataProviderScopeFailures(): array
     {
-
         return [
             'No scopes associated with the access token' => [],
             'None of the scopes covers the required scope' => [$this->buildScopeCoveringNothing(), $this->buildScopeCoveringNothing()],

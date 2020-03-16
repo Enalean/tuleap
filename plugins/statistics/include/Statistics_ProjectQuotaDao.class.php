@@ -83,11 +83,11 @@ class Statistics_ProjectQuotaDao extends DataAccessObject
         $list      = $this->da->escapeIntImplode($list);
 
         if (!empty($list)) {
-            $condition = "WHERE ".self::GROUP_ID." IN ($list)";
+            $condition = "WHERE " . self::GROUP_ID . " IN ($list)";
         }
 
         if (isset($offset) && isset($count)) {
-            $limit = " LIMIT ".$this->da->escapeInt($offset).", ".$this->da->escapeInt($count);
+            $limit = " LIMIT " . $this->da->escapeInt($offset) . ", " . $this->da->escapeInt($count);
         }
 
         if (isset($sort)) {
@@ -95,10 +95,10 @@ class Statistics_ProjectQuotaDao extends DataAccessObject
             $order = 'ORDER BY ';
             switch ($sort) {
                 case 'quota':
-                    $order .= self::REQUEST_SIZE .' '. $sortOrder;
+                    $order .= self::REQUEST_SIZE . ' ' . $sortOrder;
                     break;
                 case 'date':
-                    $order .= self::REQUEST_DATE .' '. $sortOrder;
+                    $order .= self::REQUEST_DATE . ' ' . $sortOrder;
                     break;
                 default:
                     $order .= self::REQUEST_SIZE;
@@ -124,16 +124,16 @@ class Statistics_ProjectQuotaDao extends DataAccessObject
     {
         $groupId = $this->da->escapeInt($groupId);
         $sql = "SELECT *
-                FROM ".$this->getTable()."
-                WHERE ".self::GROUP_ID." = ".$groupId;
+                FROM " . $this->getTable() . "
+                WHERE " . self::GROUP_ID . " = " . $groupId;
         return $this->retrieve($sql);
     }
 
     public function deleteCustomQuota($project_id)
     {
         $project_id = $this->da->escapeInt($project_id);
-        $sql = "DELETE FROM ".$this->getTable()."
-                WHERE ".self::GROUP_ID." = $project_id";
+        $sql = "DELETE FROM " . $this->getTable() . "
+                WHERE " . self::GROUP_ID . " = $project_id";
         return $this->update($sql);
     }
 }

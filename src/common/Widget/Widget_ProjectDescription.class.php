@@ -57,7 +57,7 @@ class Widget_ProjectDescription extends Widget
             $details_prompt = '[' . $GLOBALS['Language']->getText('include_project_home', 'other_info') . '...]';
         }
 
-        $html .= '<a href="/project/showdetails.php?group_id='.$group_id.'"> ' . $details_prompt . '</a>';
+        $html .= '<a href="/project/showdetails.php?group_id=' . $group_id . '"> ' . $details_prompt . '</a>';
 
         return $html;
     }

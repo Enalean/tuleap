@@ -94,8 +94,8 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider
             foreach ($planning_trackers_ids as $index => $id) {
                 $tracker = $this->tracker_factory->getTrackerById($id);
                 if ($tracker->userCanView($user)) {
-                    $milestone_id    = $row['m'. $id .'_id'];
-                    $milestone_title = $row['m'. $id .'_title'];
+                    $milestone_id    = $row['m' . $id . '_id'];
+                    $milestone_title = $row['m' . $id . '_title'];
 
                     if (! $milestone_id) {
                         continue;
@@ -105,10 +105,10 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider
                         continue;
                     }
 
-                    $milestone               = $this->artifact_factory->getArtifactById((int)$milestone_id);
+                    $milestone               = $this->artifact_factory->getArtifactById((int) $milestone_id);
                     $user_can_view_milestone = $milestone->userCanView($user);
                     if ($user_can_view_milestone) {
-                        $content                = str_pad('', $index, '-') .' '. $hp->purify($milestone_title);
+                        $content                = str_pad('', $index, '-') . ' ' . $hp->purify($milestone_title);
                         $options[]              = $this->getOptionForSelectBox($selected_milestone_id, $milestone_id, $content);
                         $current_milestone[$id] = $milestone_id;
                     }
@@ -127,7 +127,7 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider
             $selected = 'selected="selected"';
         }
 
-        $option  = '<option value="'.$milestone_id.'" '. $selected .'>';
+        $option  = '<option value="' . $milestone_id . '" ' . $selected . '>';
         $option .= $content;
         $option .= '</option>';
 
@@ -136,7 +136,6 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider
 
     private function addTopBacklogPlanningEntry($selected_milestone_id, Tracker $backlog_tracker, PFUser $user)
     {
-
         try {
             $top_planning  = $this->planning_factory->getVirtualTopPlanning($user, $backlog_tracker->getGroupId());
         } catch (Planning_NoPlanningsException $exception) {

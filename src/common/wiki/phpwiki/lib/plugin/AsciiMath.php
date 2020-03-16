@@ -80,7 +80,7 @@ class WikiPlugin_AsciiMath extends WikiPlugin
         $ascii_math->genMathML();
         return HTML::Raw($ascii_math->getMathML());
     }
-};
+}
 
 // $Log: AsciiMath.php,v $
 // Revision 1.1  2005/01/29 21:50:38  rurban

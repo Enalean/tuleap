@@ -37,7 +37,7 @@ class JsonCast
     public static function toInt($value)
     {
         if (! is_null($value) && $value !== '') {
-            return (int)$value;
+            return (int) $value;
         }
 
         return null;

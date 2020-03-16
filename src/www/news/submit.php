@@ -74,8 +74,8 @@ if (user_isloggedin()) {
         /*
              Show the submit form
         */
-        news_header(array('title'=>$Language->getText('news_index', 'news'),
-              'help'=>'collaboration.html#news-service'));
+        news_header(array('title' => $Language->getText('news_index', 'news'),
+              'help' => 'collaboration.html#news-service'));
 
         $hp = Codendi_HTMLPurifier::instance();
         $pm = ProjectManager::instance();
@@ -85,58 +85,58 @@ if (user_isloggedin()) {
          if one isn't already there
         */
         echo '
-        <H3>'.$Language->getText('news_submit', 'submit_news_for', $hp->purify($project->getPublicName())).'</H3>
+        <H3>' . $Language->getText('news_submit', 'submit_news_for', $hp->purify($project->getPublicName())) . '</H3>
         <P>
-        '.$Language->getText('news_submit', 'post_explain', $GLOBALS['sys_name']).'
+        ' . $Language->getText('news_submit', 'post_explain', $GLOBALS['sys_name']) . '
         <P>
         <FORM ACTION="" METHOD="POST">
-        <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
-        <B>'.$Language->getText('news_submit', 'for_project', $hp->purify($project->getPublicName())) .'</B>
+        <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $group_id . '">
+        <B>' . $Language->getText('news_submit', 'for_project', $hp->purify($project->getPublicName())) . '</B>
         <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="1">
         <br><br>
         <div class="control-group">
-            <label for="summary">'.$Language->getText('news_admin_index', 'subject').':</label>
+            <label for="summary">' . $Language->getText('news_admin_index', 'subject') . ':</label>
             <div class="controls">
                 <INPUT TYPE="TEXT" NAME="summary" id="summary" VALUE="" CLASS="textfield_medium" required>
             </div>
         </div>
 
         <div class="control-group">
-            <label for="details">'.$Language->getText('news_admin_index', 'details').':</label>
+            <label for="details">' . $Language->getText('news_admin_index', 'details') . ':</label>
             <div class="controls">
                 <TEXTAREA NAME="details" id="details" ROWS="8" COLS="50" WRAP="SOFT"></TEXTAREA>
             </div>
         </div>
 
-        '.$Language->getText('news_submit', 'news_privacy').':
+        ' . $Language->getText('news_submit', 'news_privacy') . ':
         <label class="radio">
             <INPUT TYPE="RADIO" NAME="private_news" VALUE="0" CHECKED>
-            '.$Language->getText('news_submit', 'public_news').'
+            ' . $Language->getText('news_submit', 'public_news') . '
         </label>
         <label class="radio">
             <INPUT TYPE="RADIO" NAME="private_news" VALUE="1">
-            '.$Language->getText('news_submit', 'private_news').'
+            ' . $Language->getText('news_submit', 'private_news') . '
         </label>
 
         <br>
-        '.$Language->getText('news_submit', 'news_promote', $GLOBALS['sys_name']).'
+        ' . $Language->getText('news_submit', 'news_promote', $GLOBALS['sys_name']) . '
         <label class="radio">
             <INPUT TYPE="RADIO" NAME="promote_news" VALUE="3">
-            '.$Language->getText('global', 'yes').'
+            ' . $Language->getText('global', 'yes') . '
         </label>
         <label class="radio">
             <INPUT TYPE="RADIO" NAME="promote_news" VALUE="0" CHECKED>
-            '.$Language->getText('global', 'no').'
+            ' . $Language->getText('global', 'no') . '
         </label>
 
-        '.$Language->getText('news_submit', 'promote_warn', $GLOBALS['sys_name']);
+        ' . $Language->getText('news_submit', 'promote_warn', $GLOBALS['sys_name']);
 
         if ($project->getId() != Project::SITE_NEWS_PROJECT_ID) {
-            echo '<br><br>'.$Language->getText('news_submit', 'send_news_by_email', $GLOBALS['sys_name']).':<br>';
+            echo '<br><br>' . $Language->getText('news_submit', 'send_news_by_email', $GLOBALS['sys_name']) . ':<br>';
             echo news_fetch_ugroups($project);
         }
 
-        echo '<br><br><INPUT CLASS="btn btn-primary" TYPE="SUBMIT" VALUE="'.$Language->getText('global', 'btn_submit').'">
+        echo '<br><br><INPUT CLASS="btn btn-primary" TYPE="SUBMIT" VALUE="' . $Language->getText('global', 'btn_submit') . '">
         </FORM>';
 
         news_footer(array());

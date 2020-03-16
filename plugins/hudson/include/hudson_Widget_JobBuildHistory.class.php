@@ -109,7 +109,7 @@ class hudson_Widget_JobBuildHistory extends HudsonJobWidget
             $job = $this->job;
 
             $buildHistoryRSSWidget = new Widget_ProjectRss();
-            $buildHistoryRSSWidget->rss_url = $job->getUrl().'/rssAll';
+            $buildHistoryRSSWidget->rss_url = $job->getUrl() . '/rssAll';
             $html .= $buildHistoryRSSWidget->getContent();
         } else {
             $html .= $GLOBALS['Language']->getText('plugin_hudson', 'widget_job_not_found');
@@ -125,7 +125,7 @@ class hudson_Widget_JobBuildHistory extends HudsonJobWidget
     public function getRssUrl($owner_id, $owner_type)
     {
         if ($this->job) {
-            return $this->job->getUrl().'/rssAll';
+            return $this->job->getUrl() . '/rssAll';
         } else {
             return '';
         }

@@ -73,13 +73,13 @@ class TemporaryFileManagerSaveTest extends TestCase
 
     public function tearDown(): void
     {
-        exec('rm -rf '. escapeshellarg($this->cache_dir));
+        exec('rm -rf ' . escapeshellarg($this->cache_dir));
         ForgeConfig::restore();
     }
 
     public function testItCanSaveATemporaryFilesIfQuotaIsNotExceeded()
     {
-        file_put_contents($this->cache_dir .'/rest_attachement_temp_101_mona_lisa.png', 'Content');
+        file_put_contents($this->cache_dir . '/rest_attachement_temp_101_mona_lisa.png', 'Content');
 
         $temporary = $this->file_manager->save($this->user, 'jette_lit.png', 'Mugshot', 'image/png');
 
@@ -88,7 +88,7 @@ class TemporaryFileManagerSaveTest extends TestCase
 
     public function testItCanSaveATemporaryFilesIfQuotaIsExceededBySomeoneElse()
     {
-        file_put_contents($this->cache_dir .'/rest_attachement_temp_102_mona_lisa.png', 'Content that exceed quota');
+        file_put_contents($this->cache_dir . '/rest_attachement_temp_102_mona_lisa.png', 'Content that exceed quota');
 
         $temporary = $this->file_manager->save($this->user, 'jette_lit.png', 'Mugshot', 'image/png');
 
@@ -97,7 +97,7 @@ class TemporaryFileManagerSaveTest extends TestCase
 
     public function testItCannotSaveATemporaryFilesIfQuotaIsExceeded()
     {
-        file_put_contents($this->cache_dir .'/rest_attachement_temp_101_mona_lisa.png', 'Content that exceed quota');
+        file_put_contents($this->cache_dir . '/rest_attachement_temp_101_mona_lisa.png', 'Content that exceed quota');
 
         $this->expectException(\Tuleap\Tracker\Artifact\Attachment\QuotaExceededException::class);
 

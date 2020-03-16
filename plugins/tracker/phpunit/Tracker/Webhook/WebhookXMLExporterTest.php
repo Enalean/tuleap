@@ -65,7 +65,7 @@ class WebhookXMLExporterTest extends TestCase
         $this->exporter->exportTrackerWebhooksInXML($xml, $this->tracker);
 
         $this->assertEquals(count($xml->children()), 1);
-        $this->assertEquals((string)$xml->webhooks->webhook[0]['url'], 'https://example.com/01');
-        $this->assertEquals((string)$xml->webhooks->webhook[1]['url'], 'https://example.com/02');
+        $this->assertEquals((string) $xml->webhooks->webhook[0]['url'], 'https://example.com/01');
+        $this->assertEquals((string) $xml->webhooks->webhook[1]['url'], 'https://example.com/02');
     }
 }

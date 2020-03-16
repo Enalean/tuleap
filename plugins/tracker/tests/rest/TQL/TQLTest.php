@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\Tests\REST\TQL;
 
 use RestBase;
 
-require_once dirname(__FILE__).'/../bootstrap.php';
+require_once dirname(__FILE__) . '/../bootstrap.php';
 
 /**
  * @group TrackerTests
@@ -69,7 +69,7 @@ class TQLTest extends RestBase
             'attachment != "document"'                                     => array('bug1', 'bug2', 'bug3'),
         );
         foreach ($tests as $query => $expectation) {
-            $message = "Query $query should returns ". implode(', ', $expectation);
+            $message = "Query $query should returns " . implode(', ', $expectation);
 
             $response = $this->performExpertQuery($query);
             $this->assertEquals($response->getStatusCode(), 200, $message);

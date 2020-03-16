@@ -43,8 +43,7 @@ class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase
             ->withTracker($this->tracker)
             ->withFormElementFactory($this->factory)
             ->withChangesets(array($this->changeset))
-            ->build()
-        ;
+            ->build();
         $hierarchy_factory = \Mockery::spy(\Tracker_HierarchyFactory::class);
         stub($hierarchy_factory)->getChildren()->returns(array());
         $this->artifact->setHierarchyFactory($hierarchy_factory);
@@ -282,7 +281,6 @@ class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase
             ->withFormElementFactory($this->factory)
             ->withChangesets(array($changeset))
             ->withHierarchyFactory($hierarchy_factory)
-            ->build()
-        ;
+            ->build();
     }
 }

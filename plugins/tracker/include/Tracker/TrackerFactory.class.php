@@ -334,7 +334,7 @@ class TrackerFactory
     public function isShortNameExists(string $shortname, $group_id): bool
     {
         $checker = $this->getTrackerChecker();
-        return $checker->doesShortNameExists($shortname, (int)$group_id);
+        return $checker->doesShortNameExists($shortname, (int) $group_id);
     }
 
     /**
@@ -347,7 +347,7 @@ class TrackerFactory
         $checker = $this->getTrackerChecker();
 
         foreach ($trackers as $tracker) {
-            if (! $checker->areMandatoryCreationInformationValid($tracker->getName(), $tracker->getItemName(), (int)$project_id)) {
+            if (! $checker->areMandatoryCreationInformationValid($tracker->getName(), $tracker->getItemName(), (int) $project_id)) {
                 $invalid_trackers_name[] = $tracker->getName();
             }
         }
@@ -361,8 +361,8 @@ class TrackerFactory
      */
     public function create($project_id, $project_id_template, $id_template, $name, $description, $itemname, $ugroup_mapping = false)
     {
-        $this->getTrackerChecker()->checkAtProjectCreation((int)$project_id, $name, $itemname);
-        $template_tracker = $this->getTrackerChecker()->checkAndRetrieveTrackerTemplate((int)$id_template);
+        $this->getTrackerChecker()->checkAtProjectCreation((int) $project_id, $name, $itemname);
+        $template_tracker = $this->getTrackerChecker()->checkAndRetrieveTrackerTemplate((int) $id_template);
 
         //Ask to dao to duplicate the tracker
         $id = $this->getDao()->duplicate($id_template, $project_id, $name, $description, $itemname);

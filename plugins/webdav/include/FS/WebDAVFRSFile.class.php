@@ -44,7 +44,6 @@ class WebDAVFRSFile extends Sabre_DAV_File
      */
     public function __construct($user, $project, $file)
     {
-
         $this->user = $user;
         $this->project = $project;
         $this->file = $file;
@@ -94,7 +93,6 @@ class WebDAVFRSFile extends Sabre_DAV_File
      */
     public function getName()
     {
-
         /* The file name is preceded by its id to keep
          *  the client able to request the file from its id
          */
@@ -109,7 +107,6 @@ class WebDAVFRSFile extends Sabre_DAV_File
      */
     public function getLastModified()
     {
-
         return $this->getFile()->getPostDate();
     }
 
@@ -120,7 +117,6 @@ class WebDAVFRSFile extends Sabre_DAV_File
      */
     public function getSize()
     {
-
         return $this->getFile()->getFileSize();
     }
 
@@ -131,7 +127,7 @@ class WebDAVFRSFile extends Sabre_DAV_File
      */
     public function getETag()
     {
-        return '"'.$this->getUtils()->getIncomingFileMd5Sum($this->getFileLocation()).'"';
+        return '"' . $this->getUtils()->getIncomingFileMd5Sum($this->getFileLocation()) . '"';
     }
 
     /**
@@ -159,7 +155,6 @@ class WebDAVFRSFile extends Sabre_DAV_File
      */
     public function getFileLocation()
     {
-
         return $this->getFile()->getFileLocation();
     }
 
@@ -170,7 +165,6 @@ class WebDAVFRSFile extends Sabre_DAV_File
      */
     public function getFile()
     {
-
         return $this->file;
     }
 
@@ -181,7 +175,6 @@ class WebDAVFRSFile extends Sabre_DAV_File
      */
     public function getFileId()
     {
-
         return $this->getFile()->getFileID();
     }
 
@@ -192,7 +185,6 @@ class WebDAVFRSFile extends Sabre_DAV_File
      */
     public function getReleaseId()
     {
-
         return $this->getFile()->getReleaseID();
     }
 
@@ -203,7 +195,6 @@ class WebDAVFRSFile extends Sabre_DAV_File
      */
     public function getPackageId()
     {
-
         return $this->getFile()->getPackageID();
     }
 
@@ -214,7 +205,6 @@ class WebDAVFRSFile extends Sabre_DAV_File
      */
     public function getProject()
     {
-
         return $this->project;
     }
 
@@ -225,7 +215,6 @@ class WebDAVFRSFile extends Sabre_DAV_File
      */
     public function getUser()
     {
-
         return $this->user;
     }
 
@@ -236,7 +225,6 @@ class WebDAVFRSFile extends Sabre_DAV_File
      */
     public function getUtils()
     {
-
         return WebDAVUtils::getInstance();
     }
 
@@ -247,7 +235,6 @@ class WebDAVFRSFile extends Sabre_DAV_File
      */
     public function isActive()
     {
-
         return $this->getFile()->isActive();
     }
 
@@ -259,7 +246,6 @@ class WebDAVFRSFile extends Sabre_DAV_File
      */
     public function userCanDownload(PFUser $user)
     {
-
         return $this->getFile()->userCanDownload($user);
     }
 
@@ -271,7 +257,6 @@ class WebDAVFRSFile extends Sabre_DAV_File
 
     public function fileExists()
     {
-
         return $this->getFile()->fileExists();
     }
 
@@ -284,7 +269,6 @@ class WebDAVFRSFile extends Sabre_DAV_File
      */
     public function logDownload($user)
     {
-
         return $this->getFile()->LogDownload($user->getId());
     }
 
@@ -308,7 +292,6 @@ class WebDAVFRSFile extends Sabre_DAV_File
      */
     public function delete()
     {
-
         if ($this->userCanWrite()) {
             $utils = $this->getUtils();
             $result = $utils->getFileFactory()->delete_file($this->getProject()->getGroupId(), $this->getFileId());
@@ -330,7 +313,6 @@ class WebDAVFRSFile extends Sabre_DAV_File
      */
     public function copyFile($source, $destination)
     {
-
         return copy($source, $destination);
     }
 }

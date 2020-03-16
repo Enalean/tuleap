@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Git;
 
-require_once __DIR__ .'/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;

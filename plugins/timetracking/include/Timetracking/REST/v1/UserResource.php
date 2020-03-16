@@ -72,8 +72,8 @@ class UserResource extends AuthenticatedResource
         $query_checker = new TimetrackingQueryChecker();
 
         try {
-            $start_date = $query_parameter_parser ->getString($query, 'start_date');
-            $end_date   = $query_parameter_parser ->getString($query, 'end_date');
+            $start_date = $query_parameter_parser->getString($query, 'start_date');
+            $end_date   = $query_parameter_parser->getString($query, 'end_date');
         } catch (QueryParameterException $ex) {
             throw new RestException(400, $ex->getMessage());
         }

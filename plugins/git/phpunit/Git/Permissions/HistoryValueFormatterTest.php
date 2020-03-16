@@ -25,7 +25,7 @@ use Mockery;
 use PHPUnit\Framework\TestCase;
 use Git;
 
-require_once __DIR__.'/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 class HistoryValueFormatterTest extends TestCase
 {

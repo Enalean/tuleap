@@ -32,13 +32,13 @@ class Tracker_FormElement_Field_TextDao extends Tracker_FormElement_SpecificProp
     {
         $field_id  = $this->da->escapeInt($field_id);
 
-        if (isset($row['rows']) && (int)$row['rows']) {
+        if (isset($row['rows']) && (int) $row['rows']) {
             $rows = $this->da->escapeInt($row['rows']);
         } else {
             $rows = 10;
         }
 
-        if (isset($row['cols']) && (int)$row['cols']) {
+        if (isset($row['cols']) && (int) $row['cols']) {
             $cols = $this->da->escapeInt($row['cols']);
         } else {
             $cols = 50;

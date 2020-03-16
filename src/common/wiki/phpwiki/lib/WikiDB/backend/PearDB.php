@@ -22,7 +22,7 @@ class WikiDB_backend_PearDB extends WikiDB_backend
         // which is invalid for "select version()"
         if (!in_array($name, get_class_methods("DB_common"))) {
             $finder = new FileFinder;
-            $dir = dirname(__FILE__)."/../../pear";
+            $dir = dirname(__FILE__) . "/../../pear";
             $finder->_prepend_to_include_path($dir);
             include_once("$dir/DB/common.php"); // use our version instead.
             if (!in_array($name, get_class_methods("DB_common"))) {
@@ -70,7 +70,7 @@ class WikiDB_backend_PearDB extends WikiDB_backend
         $page_tbl = $this->_table_names['page_tbl'];
         $version_tbl = $this->_table_names['version_tbl'];
         $this->page_tbl_fields = "$page_tbl.id AS id, $page_tbl.pagename AS pagename, $page_tbl.hits AS hits, $page_tbl.group_id AS group_id";
-        $this->version_tbl_fields = "$version_tbl.version AS version, $version_tbl.mtime AS mtime, ".
+        $this->version_tbl_fields = "$version_tbl.version AS version, $version_tbl.mtime AS mtime, " .
             "$version_tbl.minor_edit AS minor_edit, $version_tbl.content AS content, $version_tbl.versiondata AS versiondata";
 
         $this->_expressions
@@ -131,7 +131,7 @@ class WikiDB_backend_PearDB extends WikiDB_backend
         return $dbh->getCol("SELECT pagename"
                             . " FROM $nonempty_tbl, $page_tbl"
                             . " WHERE $nonempty_tbl.id=$page_tbl.id"
-                            . "   AND $page_tbl.group_id=".GROUP_ID);
+                            . "   AND $page_tbl.group_id=" . GROUP_ID);
     }
 
     public function numPages($filter = false, $exclude = '')
@@ -141,7 +141,7 @@ class WikiDB_backend_PearDB extends WikiDB_backend
         return $dbh->getOne("SELECT count(*)"
                             . " FROM $nonempty_tbl, $page_tbl"
                             . " WHERE $nonempty_tbl.id=$page_tbl.id"
-                            . "   AND $page_tbl.group_id=".GROUP_ID);
+                            . "   AND $page_tbl.group_id=" . GROUP_ID);
     }
 
     public function increaseHitCount($pagename)
@@ -218,12 +218,12 @@ class WikiDB_backend_PearDB extends WikiDB_backend
             $this->_get_pageid($pagename, true); // Creates page record
         }
 
-        @$hits = (int)$data['hits'];
+        @$hits = (int) $data['hits'];
         unset($data['hits']);
 
         foreach ($newdata as $key => $val) {
             if ($key == 'hits') {
-                $hits = (int)$val;
+                $hits = (int) $val;
             } elseif (empty($val)) {
                 unset($data[$key]);
             } else {
@@ -277,7 +277,6 @@ class WikiDB_backend_PearDB extends WikiDB_backend
 
     public function _get_pageid($pagename, $create_if_missing = false)
     {
-
         // check id_cache
         global $request;
         $cache = $request->_dbi->_cache->_id_cache;
@@ -323,7 +322,7 @@ class WikiDB_backend_PearDB extends WikiDB_backend
         $dbh = &$this->_dbh;
         extract($this->_table_names);
         return
-            (int)$dbh->getOne(sprintf(
+            (int) $dbh->getOne(sprintf(
                 "SELECT latestversion"
                                       . " FROM $page_tbl, $recent_tbl"
                                       . " WHERE $page_tbl.id=$recent_tbl.id"
@@ -340,7 +339,7 @@ class WikiDB_backend_PearDB extends WikiDB_backend
         extract($this->_table_names);
 
         return
-            (int)$dbh->getOne(sprintf(
+            (int) $dbh->getOne(sprintf(
                 "SELECT version"
                                       . " FROM $version_tbl, $page_tbl"
                                       . " WHERE $version_tbl.id=$page_tbl.id"
@@ -446,7 +445,7 @@ class WikiDB_backend_PearDB extends WikiDB_backend
         $minor_edit = (int) !empty($data['is_minor_edit']);
         unset($data['is_minor_edit']);
 
-        $mtime = (int)$data['mtime'];
+        $mtime = (int) $data['mtime'];
         unset($data['mtime']);
         assert(!empty($mtime));
 
@@ -602,9 +601,9 @@ class WikiDB_backend_PearDB extends WikiDB_backend
             $orderby = ' ORDER BY $want.' . $orderby;
         }
         if ($exclude) { // array of pagenames
-            $exclude = " AND $want.pagename NOT IN ".$this->_sql_set($exclude);
+            $exclude = " AND $want.pagename NOT IN " . $this->_sql_set($exclude);
         } else {
-            $exclude='';
+            $exclude = '';
         }
 
         $qpagename = $dbh->escapeSimple($pagename);
@@ -613,8 +612,8 @@ class WikiDB_backend_PearDB extends WikiDB_backend
             . (!$include_empty ? ", $nonempty_tbl" : '')
             . " WHERE linkfrom=linker.id AND linkto=linkee.id"
             . " AND $have.pagename='$qpagename'"
-            . " AND linker.group_id=".GROUP_ID
-            . " AND linkee.group_id=".GROUP_ID
+            . " AND linker.group_id=" . GROUP_ID
+            . " AND linkee.group_id=" . GROUP_ID
             . (!$include_empty ? " AND $nonempty_tbl.id=$want.id" : "")
             //. " GROUP BY $want.id"
             . $exclude
@@ -650,8 +649,8 @@ class WikiDB_backend_PearDB extends WikiDB_backend
              . " WHERE linkfrom=linker.id AND linkto=linkee.id"
              . " AND $have.pagename='$qpagename'"
              . " AND $want.pagename='$qlink'"
-             . " AND $want.group_id=".GROUP_ID
-             . " AND $have.group_id=".GROUP_ID
+             . " AND $want.group_id=" . GROUP_ID
+             . " AND $have.group_id=" . GROUP_ID
         . " LIMIT 1");
         return $row['result'];
     }
@@ -665,9 +664,9 @@ class WikiDB_backend_PearDB extends WikiDB_backend
             $orderby = ' ORDER BY ' . $orderby;
         }
         if ($exclude) { // array of pagenames
-            $exclude = " AND $page_tbl.pagename NOT IN ".$this->_sql_set($exclude);
+            $exclude = " AND $page_tbl.pagename NOT IN " . $this->_sql_set($exclude);
         } else {
-            $exclude='';
+            $exclude = '';
         }
 
         if (strstr($orderby, 'mtime ')) { // multiple columns possible
@@ -676,7 +675,7 @@ class WikiDB_backend_PearDB extends WikiDB_backend
                     . $this->page_tbl_fields
                     . " FROM $page_tbl, $recent_tbl, $version_tbl"
                     . " WHERE $page_tbl.id=$recent_tbl.id"
-                    . " AND $page_tbl.id=$version_tbl.id AND latestversion=version AND $page_tbl.group_id=".GROUP_ID
+                    . " AND $page_tbl.id=$version_tbl.id AND latestversion=version AND $page_tbl.group_id=" . GROUP_ID
                     . $exclude
                     . $orderby;
             } else {
@@ -685,7 +684,7 @@ class WikiDB_backend_PearDB extends WikiDB_backend
                     . " FROM $nonempty_tbl, $page_tbl, $recent_tbl, $version_tbl"
                     . " WHERE $nonempty_tbl.id=$page_tbl.id"
                     . " AND $page_tbl.id=$recent_tbl.id"
-                    . " AND $page_tbl.id=$version_tbl.id AND latestversion=version AND $page_tbl.group_id=".GROUP_ID
+                    . " AND $page_tbl.id=$version_tbl.id AND latestversion=version AND $page_tbl.group_id=" . GROUP_ID
                     . $exclude
                     . $orderby;
             }
@@ -693,15 +692,15 @@ class WikiDB_backend_PearDB extends WikiDB_backend
             if ($include_empty) {
                 $sql = "SELECT "
                     . $this->page_tbl_fields
-                    ." FROM $page_tbl"
-                    . ($exclude ? " WHERE $exclude AND $page_tbl.group_id=".GROUP_ID : " WHERE $page_tbl.group_id=".GROUP_ID)
+                    . " FROM $page_tbl"
+                    . ($exclude ? " WHERE $exclude AND $page_tbl.group_id=" . GROUP_ID : " WHERE $page_tbl.group_id=" . GROUP_ID)
                     . $orderby;
             } else {
                 $sql = "SELECT "
                     . $this->page_tbl_fields
                     . " FROM $nonempty_tbl, $page_tbl"
                     . " WHERE $nonempty_tbl.id=$page_tbl.id"
-                    . "  AND $page_tbl.group_id=".GROUP_ID
+                    . "  AND $page_tbl.group_id=" . GROUP_ID
                     . $exclude
                     . $orderby;
             }
@@ -729,7 +728,7 @@ class WikiDB_backend_PearDB extends WikiDB_backend
         }
         //else " ORDER BY rank($field, to_tsquery('$searchon')) DESC";
 
-        $searchclass = static::class."_search";
+        $searchclass = static::class . "_search";
         // no need to define it everywhere and then fallback. memory!
         if (!class_exists($searchclass)) {
             $searchclass = "WikiDB_backend_PearDB_search";
@@ -738,7 +737,7 @@ class WikiDB_backend_PearDB extends WikiDB_backend
 
         $table = "$nonempty_tbl, $page_tbl";
         $join_clause = "$nonempty_tbl.id=$page_tbl.id";
-        $join_clause .= " AND $page_tbl.group_id=".GROUP_ID;
+        $join_clause .= " AND $page_tbl.group_id=" . GROUP_ID;
         $fields = $this->page_tbl_fields;
 
         if ($fulltext) {
@@ -832,7 +831,7 @@ class WikiDB_backend_PearDB extends WikiDB_backend
             . $this->page_tbl_fields
             . " FROM $nonempty_tbl, $page_tbl"
             . " WHERE $nonempty_tbl.id=$page_tbl.id"
-            . "  AND $page_tbl.group_id=".GROUP_ID
+            . "  AND $page_tbl.group_id=" . GROUP_ID
             . $where
             . $orderby;
         if ($limit) {
@@ -869,7 +868,7 @@ class WikiDB_backend_PearDB extends WikiDB_backend
             // Include all revisions of each page.
             $table = "$page_tbl, $version_tbl";
             $join_clause = "$page_tbl.id=$version_tbl.id";
-            $join_clause .= " AND $page_tbl.group_id=".GROUP_ID;
+            $join_clause .= " AND $page_tbl.group_id=" . GROUP_ID;
             if ($exclude_major_revisions) {
         // Include only minor revisions
                 $pick[] = "minor_edit <> 0";
@@ -880,7 +879,7 @@ class WikiDB_backend_PearDB extends WikiDB_backend
         } else {
             $table = "$page_tbl, $recent_tbl";
             $join_clause = "$page_tbl.id=$recent_tbl.id";
-            $join_clause .= " AND $page_tbl.group_id=".GROUP_ID;
+            $join_clause .= " AND $page_tbl.group_id=" . GROUP_ID;
             $table .= ", $version_tbl";
             $join_clause .= " AND $version_tbl.id=$page_tbl.id";
 
@@ -892,7 +891,7 @@ class WikiDB_backend_PearDB extends WikiDB_backend
                 $pick[] = 'version=latestmajor';
             } else {
                 // Include only the latest revision (whether major or minor).
-                $pick[] ='version=latestversion';
+                $pick[] = 'version=latestversion';
             }
         }
         $order = "DESC";
@@ -933,10 +932,10 @@ class WikiDB_backend_PearDB extends WikiDB_backend
         }
 
         if ($exclude_from) { // array of pagenames
-            $exclude_from = " AND pp.pagename NOT IN ".$this->_sql_set($exclude_from);
+            $exclude_from = " AND pp.pagename NOT IN " . $this->_sql_set($exclude_from);
         }
         if ($exclude) { // array of pagenames
-            $exclude = " AND p.pagename NOT IN ".$this->_sql_set($exclude);
+            $exclude = " AND p.pagename NOT IN " . $this->_sql_set($exclude);
         }
         $sql = "SELECT p.pagename, pp.pagename as wantedfrom"
             . " FROM $page_tbl p, $link_tbl linked "
@@ -944,7 +943,7 @@ class WikiDB_backend_PearDB extends WikiDB_backend
             . " LEFT JOIN $nonempty_tbl ne ON linked.linkto = ne.id"
             . " WHERE ne.id is NULL"
         .       " AND p.id = linked.linkfrom"
-            .       " AND p.group_id = ".GROUP_ID
+            .       " AND p.group_id = " . GROUP_ID
             . $exclude_from
             . $exclude
             . $orderby;
@@ -961,9 +960,9 @@ class WikiDB_backend_PearDB extends WikiDB_backend
     {
         $s = '(';
         foreach ($pagenames as $p) {
-            $s .= ("'".$this->_dbh->escapeSimple($p)."',");
+            $s .= ("'" . $this->_dbh->escapeSimple($p) . "',");
         }
-        return substr($s, 0, -1).")";
+        return substr($s, 0, -1) . ")";
     }
 
     /**
@@ -1003,7 +1002,7 @@ class WikiDB_backend_PearDB extends WikiDB_backend
         extract($this->_table_names);
         extract($this->_expressions);
 
-        $pageid = (int)$pageid;
+        $pageid = (int) $pageid;
 
         $this->lock();
         $dbh->query("DELETE FROM $recent_tbl"
@@ -1022,12 +1021,12 @@ class WikiDB_backend_PearDB extends WikiDB_backend
         $dbh = &$this->_dbh;
         extract($this->_table_names);
 
-        $pageid = (int)$pageid;
+        $pageid = (int) $pageid;
 
         extract($this->_expressions);
         $this->lock();
         $dbh->query("DELETE FROM $nonempty_tbl"
-                    . ( $pageid ? " WHERE id=$pageid" : " USING $nonempty_tbl JOIN $page_tbl USING (id) WHERE $page_tbl.group_id=".GROUP_ID ));
+                    . ( $pageid ? " WHERE id=$pageid" : " USING $nonempty_tbl JOIN $page_tbl USING (id) WHERE $page_tbl.group_id=" . GROUP_ID ));
         $dbh->query("INSERT INTO $nonempty_tbl (id)"
                     . " SELECT $recent_tbl.id"
                     . " FROM $recent_tbl, $version_tbl"
@@ -1037,7 +1036,7 @@ class WikiDB_backend_PearDB extends WikiDB_backend
                     // We have some specifics here (Oracle)
                     //. "  AND content<>''"
                     . "  AND content $notempty"
-                    . ( $pageid ? " AND $recent_tbl.id=$pageid" : " AND $page_tbl.group_id=".GROUP_ID ));
+                    . ( $pageid ? " AND $recent_tbl.id=$pageid" : " AND $page_tbl.group_id=" . GROUP_ID ));
 
         $this->unlock();
     }
@@ -1244,7 +1243,7 @@ class WikiDB_backend_PearDB extends WikiDB_backend
     {
         return $this->_dbh->getListOf('tables');
     }
-};
+}
 
 /**
  * This class is a generic iterator.

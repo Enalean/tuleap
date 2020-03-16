@@ -23,7 +23,7 @@
  */
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
-require_once __DIR__ .'/../include/Statistics_DiskUsageGraph.class.php';
+require_once __DIR__ . '/../include/Statistics_DiskUsageGraph.class.php';
 
 use Tuleap\Statistics\DiskUsage\Subversion\Collector as SVNCollector;
 use Tuleap\Statistics\DiskUsage\Subversion\Retriever as SVNRetriever;
@@ -150,11 +150,11 @@ if (!$error) {
             break;
 
         case 'graph_user':
-            $graph->displayUserGraph($userId, $selectedGroupByDate, $startDate, $endDate, !$relative) ;
+            $graph->displayUserGraph($userId, $selectedGroupByDate, $startDate, $endDate, !$relative);
             break;
 
         case 'graph_project':
-            $graph->displayProjectGraph($groupId, $services, $selectedGroupByDate, $startDate, $endDate, !$relative) ;
+            $graph->displayProjectGraph($groupId, $services, $selectedGroupByDate, $startDate, $endDate, !$relative);
             break;
 
         default:

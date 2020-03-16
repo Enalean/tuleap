@@ -37,7 +37,7 @@ class PostActionCollectionJsonParser
      */
     private $action_parsers;
 
-    public function __construct(PostActionUpdateJsonParser...$action_parsers)
+    public function __construct(PostActionUpdateJsonParser ...$action_parsers)
     {
         $this->action_parsers = $action_parsers;
     }

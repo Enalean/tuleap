@@ -36,7 +36,7 @@ class SVN_Apache_ModPerl extends SVN_Apache
 
     public function getHeaders()
     {
-        $ret = 'PerlLoadModule Apache::Tuleap'.PHP_EOL;
+        $ret = 'PerlLoadModule Apache::Tuleap' . PHP_EOL;
         return $ret;
     }
 
@@ -69,7 +69,7 @@ class SVN_Apache_ModPerl extends SVN_Apache
         $conf = '';
         $redis_server = trim(ForgeConfig::get('redis_server'));
         if ($redis_server) {
-            $redis_server .= ':'.trim(ForgeConfig::get('redis_port'));
+            $redis_server .= ':' . trim(ForgeConfig::get('redis_port'));
             $conf .= '    TuleapRedisServer "' . $this->escapeStringForApacheConf($redis_server) . '"' . "\n";
         }
         $redis_password = trim(ForgeConfig::get('redis_password'));

@@ -36,7 +36,7 @@ class labelPlugin extends Plugin
         parent::__construct($id);
         $this->setScope(self::SCOPE_SYSTEM);
 
-        bindtextdomain('tuleap-label', __DIR__.'/../site-content');
+        bindtextdomain('tuleap-label', __DIR__ . '/../site-content');
     }
 
     public function getHooksAndCallbacks()

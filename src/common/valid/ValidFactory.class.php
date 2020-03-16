@@ -239,7 +239,7 @@ class Valid_GenericUserNameSuffix extends Valid_UserNameFormat
 
     public function validate($value)
     {
-        return parent::validate(self::FAKE_PREFIX.$value);
+        return parent::validate(self::FAKE_PREFIX . $value);
     }
 }
 
@@ -335,8 +335,8 @@ class ValidFactory
     {
         if (is_a($validator, 'Valid')) {
             return $validator;
-        } elseif (is_string($validator) && class_exists('Valid_'.$validator)) {
-            $validator_classname = 'Valid_'.$validator;
+        } elseif (is_string($validator) && class_exists('Valid_' . $validator)) {
+            $validator_classname = 'Valid_' . $validator;
             $v = new $validator_classname($key);
             return $v;
         } else {

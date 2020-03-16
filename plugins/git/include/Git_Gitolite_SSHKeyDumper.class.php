@@ -43,7 +43,7 @@ class Git_Gitolite_SSHKeyDumper implements Dumper
      */
     public function getKeyDirPath()
     {
-        return $this->admin_path.'/'.self::KEYDIR;
+        return $this->admin_path . '/' . self::KEYDIR;
     }
 
     /**
@@ -64,7 +64,7 @@ class Git_Gitolite_SSHKeyDumper implements Dumper
     public function dumpSSHKeys(IHaveAnSSHKey $user, InvalidKeysCollector $invalid_keys_collector)
     {
         $this->dumpSSHKeysWithoutCommit($user);
-        if ($this->commitKeyDir('Update '.$user->getUserName().' SSH keys')) {
+        if ($this->commitKeyDir('Update ' . $user->getUserName() . ' SSH keys')) {
             return $this->git_exec->push();
         }
         return false;
@@ -122,7 +122,7 @@ class Git_Gitolite_SSHKeyDumper implements Dumper
         clearstatcache();
         if (!is_dir($this->getKeyDirPath())) {
             if (!mkdir($this->getKeyDirPath())) {
-                throw new Exception('Unable to create "'.$this->getKeyDirPath().'" directory in ');
+                throw new Exception('Unable to create "' . $this->getKeyDirPath() . '" directory in ');
             }
         }
     }
@@ -133,7 +133,7 @@ class Git_Gitolite_SSHKeyDumper implements Dumper
         $user_name  = $user->getUserName();
 
         foreach ($user->getAuthorizedKeysArray() as $key) {
-            $filePath = $this->getKeyDirPath().'/'.$user_name.'@'.$ssh_key_id.'.pub';
+            $filePath = $this->getKeyDirPath() . '/' . $user_name . '@' . $ssh_key_id . '.pub';
             $this->writeKeyIfChanged($filePath, $key);
             $ssh_key_id++;
         }
@@ -162,8 +162,8 @@ class Git_Gitolite_SSHKeyDumper implements Dumper
     private function removeUserExistingKeysFromAGivenKeyId($user_name, $last_key_id)
     {
         if (is_dir($this->getKeyDirPath())) {
-            $userbase = $user_name.'@';
-            foreach (glob($this->getKeyDirPath()."/$userbase*.pub") as $file) {
+            $userbase = $user_name . '@';
+            foreach (glob($this->getKeyDirPath() . "/$userbase*.pub") as $file) {
                 if ($this->getKeyNumber($userbase, $file) >= $last_key_id) {
                     $this->git_exec->rm($file);
                 }
@@ -174,7 +174,7 @@ class Git_Gitolite_SSHKeyDumper implements Dumper
     private function getKeyNumber($userbase, $file)
     {
         $matches = array();
-        if (preg_match('%^'.$this->getKeyDirPath().'/'.$userbase.'([0-9]+).pub$%', $file, $matches)) {
+        if (preg_match('%^' . $this->getKeyDirPath() . '/' . $userbase . '([0-9]+).pub$%', $file, $matches)) {
             return intval($matches[1]);
         }
         return -1;

@@ -72,7 +72,7 @@ class MilestoneElementRemover
     {
         $ids = [];
         foreach ($removed_items as $removed_item) {
-            $ids[] = (int)$removed_item->id;
+            $ids[] = (int) $removed_item->id;
         }
 
         return $ids;

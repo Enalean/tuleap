@@ -20,11 +20,11 @@
  */
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
-require_once __DIR__ .'/../include/Statistics_ServicesUsageDao.class.php';
-require_once __DIR__ .'/../include/Statistics_Services_UsageFormatter.class.php';
-require_once __DIR__ .'/../include/Statistics_Formatter.class.php';
-require_once __DIR__ .'/../include/Statistics_DiskUsageHtml.class.php';
-require_once __DIR__ .'/../include/CSV/CSVBuilder.php';
+require_once __DIR__ . '/../include/Statistics_ServicesUsageDao.class.php';
+require_once __DIR__ . '/../include/Statistics_Services_UsageFormatter.class.php';
+require_once __DIR__ . '/../include/Statistics_Formatter.class.php';
+require_once __DIR__ . '/../include/Statistics_DiskUsageHtml.class.php';
+require_once __DIR__ . '/../include/CSV/CSVBuilder.php';
 require_once __DIR__ . '/../../../src/www/project/export/project_export_utils.php';
 
 use Tuleap\Statistics\DiskUsage\Subversion\Collector as SVNCollector;
@@ -78,7 +78,7 @@ if ($startDate > $endDate) {
 
 if ($request->exist('export') && $startDate && $endDate) {
     header('Content-Type: text/csv');
-    header('Content-Disposition: filename=services_usage_'.$startDate.'_'.$endDate.'.csv');
+    header('Content-Disposition: filename=services_usage_' . $startDate . '_' . $endDate . '.csv');
     echo "Start date : $startDate \n";
     echo "End date : $endDate \n\n";
 

@@ -34,7 +34,7 @@ class b201411051547_add_fast_compute_option extends ForgeUpgrade_Bucket
         $sql = "ALTER TABLE tracker_field_computed ADD COLUMN fast_compute TINYINT DEFAULT 0";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column fast_compute to tracker_field_computed: '.implode(', ', $this->db->dbh->errorInfo()));
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column fast_compute to tracker_field_computed: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 

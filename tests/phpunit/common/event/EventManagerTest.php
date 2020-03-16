@@ -30,7 +30,6 @@ class EventManagerTest extends TestCase // phpcs:ignore
      */
     public function itCallsAClosure()
     {
-
         $event_manager = new EventManager();
 
         $test = $this;
@@ -55,7 +54,7 @@ class EventManagerTest extends TestCase // phpcs:ignore
 
     public function testProcessEvent1()
     {
-        $params = [ 'foo' => 'bar' ];
+        $params = ['foo' => 'bar'];
 
         //The listeners
         $l1 = Mockery::mock();
@@ -83,7 +82,7 @@ class EventManagerTest extends TestCase // phpcs:ignore
 
     public function testProcessEvent2()
     {
-        $params = [ 'foo' => 'bar' ];
+        $params = ['foo' => 'bar'];
 
         //The listeners
         $l1 = Mockery::mock();

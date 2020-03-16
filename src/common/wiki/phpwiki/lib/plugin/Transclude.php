@@ -164,7 +164,7 @@ class WikiPlugin_Transclude extends WikiPlugin
           }, false);
           ');
     }
-};
+}
 
 // $Log: Transclude.php,v $
 // Revision 1.9  2004/06/14 11:31:39  rurban

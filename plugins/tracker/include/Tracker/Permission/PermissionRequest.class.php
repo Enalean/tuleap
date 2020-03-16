@@ -30,7 +30,7 @@ class Tracker_Permission_PermissionRequest
     public function setFromRequest(Codendi_Request $request, array $ugroup_ids)
     {
         foreach ($ugroup_ids as $id) {
-            $this->permissions[$id] = $request->get(Tracker_Permission_Command::PERMISSION_PREFIX.$id);
+            $this->permissions[$id] = $request->get(Tracker_Permission_Command::PERMISSION_PREFIX . $id);
         }
     }
 

@@ -75,10 +75,10 @@ class TrackerSemanticContributorTest extends TestCase
 
         $this->semantic->exportToXML($root, $array_mapping);
 
-        $this->assertEquals((string)$xml->shortname, (string)$root->semantic->shortname);
-        $this->assertEquals((string)$xml->label, (string)$root->semantic->label);
-        $this->assertEquals((string)$xml->description, (string)$root->semantic->description);
-        $this->assertEquals((string)$xml->field['REF'], (string)$root->semantic->field['REF']);
+        $this->assertEquals((string) $xml->shortname, (string) $root->semantic->shortname);
+        $this->assertEquals((string) $xml->label, (string) $root->semantic->label);
+        $this->assertEquals((string) $xml->description, (string) $root->semantic->description);
+        $this->assertEquals((string) $xml->field['REF'], (string) $root->semantic->field['REF']);
     }
 
     public function testItDoesNotExportIfFieldIsNotExported()

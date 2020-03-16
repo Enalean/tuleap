@@ -49,6 +49,6 @@ class ProjectQuotaChecker
             return true;
         }
 
-        return $project_quota_requester->getProjectQuotainformation()->getDiskUsage() + $wanted_size <=$project_quota_requester->getProjectQuotainformation()->getQuota();
+        return $project_quota_requester->getProjectQuotainformation()->getDiskUsage() + $wanted_size <= $project_quota_requester->getProjectQuotainformation()->getQuota();
     }
 }

@@ -103,22 +103,22 @@ abstract class Tracker_Artifact_ArtifactRenderer
         return '<div class="hidden-artifact-submit-button">
                     <input type="hidden" id="submit-type" />
                     <div class="btn-group dropup">
-                        <button class="btn btn-large btn-primary" type="submit">'. $GLOBALS['Language']->getText('global', 'btn_submit') .'</button>
+                        <button class="btn btn-large btn-primary" type="submit">' . $GLOBALS['Language']->getText('global', 'btn_submit') . '</button>
                         <button class="btn btn-large btn-primary dropdown-toggle" data-toggle="dropdown">
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
-                            <li><input type="submit" name="submit_and_stay" class="btn btn-link" value="'.$GLOBALS['Language']->getText('global', 'btn_submit_and_stay').'" /></li>
+                            <li><input type="submit" name="submit_and_stay" class="btn btn-link" value="' . $GLOBALS['Language']->getText('global', 'btn_submit_and_stay') . '" /></li>
                         </ul>
-                    </div>'.$this->getConcurrentEditMessage().'
+                    </div>' . $this->getConcurrentEditMessage() . '
                 </div>';
     }
 
     protected function getConcurrentEditMessage()
     {
         return '<div id="artifact-submit-keeper-message">
-                    <span class="help_title">'. $GLOBALS['Language']->getText('plugin_tracker_artifact', 'submission_keeper_warning_title') .'</span>
-                    '. $GLOBALS['Language']->getText('plugin_tracker_artifact', 'submission_keeper_warning_msg') .'
+                    <span class="help_title">' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'submission_keeper_warning_title') . '</span>
+                    ' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'submission_keeper_warning_msg') . '
                 </div>';
     }
 
@@ -130,7 +130,7 @@ abstract class Tracker_Artifact_ArtifactRenderer
     public function fetchAnonymousEmailForm()
     {
         $html = '<p>';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact', 'not_logged_in', array('/account/login.php?return_to='.urlencode($_SERVER['REQUEST_URI'])));
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact', 'not_logged_in', array('/account/login.php?return_to=' . urlencode($_SERVER['REQUEST_URI'])));
         $html .= '<br />';
         $html .= '<input type="text" name="email" id="email" size="50" maxsize="100" />';
         $html .= '</p>';
@@ -140,8 +140,8 @@ abstract class Tracker_Artifact_ArtifactRenderer
     public function fetchArtifactForm($html)
     {
         return '
-        <form action="'.$this->redirect->toUrl().'" method="POST" enctype="multipart/form-data" class="artifact-form">
-            '.$html.'
+        <form action="' . $this->redirect->toUrl() . '" method="POST" enctype="multipart/form-data" class="artifact-form">
+            ' . $html . '
         </form>';
     }
 

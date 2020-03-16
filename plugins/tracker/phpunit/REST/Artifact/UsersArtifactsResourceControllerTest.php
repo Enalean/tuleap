@@ -135,8 +135,8 @@ class UsersArtifactsResourceControllerTest extends TestCase
         $tracker_factory->shouldReceive('getTrackerById')->once()->andReturn($tracker);
         Tracker_Semantic_Title::setInstance(M::mock(Tracker_Semantic_Title::class, ['getField' => M::mock(\Tracker_FormElement_Field_String::class, ['userCanRead' => true])]), $tracker);
 
-        $artifact1 = M::mock(\Tracker_Artifact::class, [ 'getId' => 455, 'getTitle' => '', 'getUri' => '', 'getXRef'=> '', 'getTracker' => $tracker, 'userCanView' => true ]);
-        $artifact2 = M::mock(\Tracker_Artifact::class, [ 'getId' => 456, 'getTitle' => 'bar', 'getUri' => '', 'getXRef'=> '', 'getTracker' => $tracker, 'userCanView' => true ]);
+        $artifact1 = M::mock(\Tracker_Artifact::class, ['getId' => 455, 'getTitle' => '', 'getUri' => '', 'getXRef' => '', 'getTracker' => $tracker, 'userCanView' => true]);
+        $artifact2 = M::mock(\Tracker_Artifact::class, ['getId' => 456, 'getTitle' => 'bar', 'getUri' => '', 'getXRef' => '', 'getTracker' => $tracker, 'userCanView' => true]);
 
         $my_artifacts_collection = new MyArtifactsCollection($tracker_factory);
         $my_artifacts_collection->setTotalNumberOfArtifacts(2);

@@ -277,7 +277,7 @@ class VelocityComputationCheckerTest extends \PHPUnit\Framework\TestCase
     {
         $this->setValidSemantics();
 
-        $this->last_changeset_value->shouldReceive('getValue')->andReturn([ 1001]);
+        $this->last_changeset_value->shouldReceive('getValue')->andReturn([1001]);
         $new_changeset[$this->semantic_status_field_id] = [1000, 1002];
         $this->before_event->shouldReceive('getFieldsData')->andReturn($new_changeset);
         $this->semantic_status->shouldReceive('getOpenValues')->andReturn([1000, 1001]);

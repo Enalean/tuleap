@@ -84,8 +84,8 @@ class MinimalUserRepresentation
         $this->username     = ($user->isAnonymous()) ? null : $user->getUserName();
         $this->ldap_id      = ($user->isAnonymous()) ? null : $user->getLdapId();
         $this->avatar_url   = $user->getAvatarUrl();
-        $this->is_anonymous = (bool)$user->isAnonymous();
-        $this->has_avatar   = (bool)$user->hasAvatar();
+        $this->is_anonymous = (bool) $user->isAnonymous();
+        $this->has_avatar   = (bool) $user->hasAvatar();
 
         return $this;
     }

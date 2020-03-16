@@ -51,7 +51,7 @@ final class TourFactoryTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp() : void
     {
-        $this->fixtures_dir    = __DIR__ .'/_fixtures';
+        $this->fixtures_dir    = __DIR__ . '/_fixtures';
         $this->project_manager = \Mockery::spy(\ProjectManager::class);
         $this->factory         = new Tuleap_TourFactory($this->project_manager, \Mockery::spy(\URL::class));
         $this->user            = \Mockery::spy(\PFUser::class);

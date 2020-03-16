@@ -524,7 +524,7 @@ class RepositoryResource extends AuthenticatedResource
     public function postCommitStatus($id_or_path, $commit_reference, $state, $token)
     {
         if (ctype_digit($id_or_path)) {
-            $repository = $this->repository_factory->getRepositoryById((int)$id_or_path);
+            $repository = $this->repository_factory->getRepositoryById((int) $id_or_path);
         } else {
             preg_match("/(.+?)\/(.+)/", $id_or_path, $path);
             if (count($path) !== 3) {
@@ -892,7 +892,7 @@ class RepositoryResource extends AuthenticatedResource
             throw new RestException(
                 400,
                 'Invalid permission provided. Valid values are ' .
-                self::MIGRATE_NO_PERMISSION. ' or ' . self::MIGRATE_PERMISSION_DEFAULT
+                self::MIGRATE_NO_PERMISSION . ' or ' . self::MIGRATE_PERMISSION_DEFAULT
             );
         }
 

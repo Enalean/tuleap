@@ -35,9 +35,9 @@ EOT;
 
     public function up()
     {
-        $sql = 'CREATE TABLE groups_notif_delegation ('.
-               ' group_id int(11) NOT NULL default 0,'.
-               ' ugroup_id int(11) NOT NULL,'.
+        $sql = 'CREATE TABLE groups_notif_delegation (' .
+               ' group_id int(11) NOT NULL default 0,' .
+               ' ugroup_id int(11) NOT NULL,' .
                ' KEY (group_id, ugroup_id))';
         $this->db->createTable('groups_notif_delegation', $sql);
     }

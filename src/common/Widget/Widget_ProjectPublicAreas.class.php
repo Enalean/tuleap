@@ -48,34 +48,34 @@ class Widget_ProjectPublicAreas extends Widget
         $homepage_service = $project->getService(Service::HOMEPAGE);
         if ($homepage_service !== null) {
             $html .= "<p><a ";
-            if (substr($homepage_service->getUrl(), 0, 1)!="/") {
+            if (substr($homepage_service->getUrl(), 0, 1) != "/") {
                 // Absolute link -> open new window on click
                 $html .= 'target="_blank" rel="noreferrer" ';
             }
             $html .= 'href="' . $purifier->purify($homepage_service->getUrl()) . '">';
-            $html .= '<i class="dashboard-widget-content-projectpublicareas '.$purifier->purify($homepage_service->getIcon()).'"></i>';
-            $html .= $GLOBALS['Language']->getText('include_project_home', 'proj_home').'</a></p>';
+            $html .= '<i class="dashboard-widget-content-projectpublicareas ' . $purifier->purify($homepage_service->getIcon()) . '"></i>';
+            $html .= $GLOBALS['Language']->getText('include_project_home', 'proj_home') . '</a></p>';
         }
 
         // ################## forums
 
         $service_forum = $project->getService(Service::FORUM);
         if ($service_forum !== null) {
-            $html .= '<p><a href="'.$purifier->purify($service_forum->getUrl()).'">';
-            $html .= '<i class="dashboard-widget-content-projectpublicareas '.$purifier->purify($service_forum->getIcon()).'"></i>';
-            $html .= $GLOBALS['Language']->getText('include_project_home', 'public_forums').'</A>';
+            $html .= '<p><a href="' . $purifier->purify($service_forum->getUrl()) . '">';
+            $html .= '<i class="dashboard-widget-content-projectpublicareas ' . $purifier->purify($service_forum->getIcon()) . '"></i>';
+            $html .= $GLOBALS['Language']->getText('include_project_home', 'public_forums') . '</A>';
 
             $res_count = db_query("SELECT count(forum.msg_id) AS count FROM forum,forum_group_list WHERE "
                 . "forum_group_list.group_id=" . db_ei($group_id) . " AND forum.group_forum_id=forum_group_list.group_forum_id "
                 . "AND forum_group_list.is_public=1");
             $row_count = db_fetch_array($res_count);
             $pos = strpos($project->getForumPage(), '/forum/');
-            if ($pos ===0) {
-                $html .= ' ( '.$GLOBALS['Language']->getText('include_project_home', 'msg', $row_count['count']).' ';
+            if ($pos === 0) {
+                $html .= ' ( ' . $GLOBALS['Language']->getText('include_project_home', 'msg', $row_count['count']) . ' ';
                 $res_count = db_query("SELECT count(*) AS count FROM forum_group_list WHERE group_id=" . db_ei($group_id) . " "
                 . "AND is_public=1");
                 $row_count = db_fetch_array($res_count);
-                $html .= $GLOBALS['Language']->getText('include_project_home', 'forums', $row_count['count'])." )\n";
+                $html .= $GLOBALS['Language']->getText('include_project_home', 'forums', $row_count['count']) . " )\n";
             }
             $html .= '</p>';
         }
@@ -84,25 +84,25 @@ class Widget_ProjectPublicAreas extends Widget
 
         $mail_service = $project->getService(Service::ML);
         if ($mail_service !== null) {
-            $html .= '<p><a href="'.$purifier->purify($mail_service->getUrl()).'">';
-            $html .= '<i class="dashboard-widget-content-projectpublicareas '.$purifier->purify($mail_service->getIcon()).'"></i>';
-            $html .= $GLOBALS['Language']->getText('include_project_home', 'mail_lists').'</A>';
+            $html .= '<p><a href="' . $purifier->purify($mail_service->getUrl()) . '">';
+            $html .= '<i class="dashboard-widget-content-projectpublicareas ' . $purifier->purify($mail_service->getIcon()) . '"></i>';
+            $html .= $GLOBALS['Language']->getText('include_project_home', 'mail_lists') . '</A>';
             $res_count = db_query("SELECT count(*) AS count FROM mail_group_list WHERE group_id=" . db_ei($group_id) . " AND is_public=1");
             $row_count = db_fetch_array($res_count);
-            $html .= ' ( '.$GLOBALS['Language']->getText('include_project_home', 'public_mail_lists', $row_count['count']).' )</p>';
+            $html .= ' ( ' . $GLOBALS['Language']->getText('include_project_home', 'public_mail_lists', $row_count['count']) . ' )</p>';
         }
 
         // ######################### Wiki (only for Active)
 
         $wiki_service = $project->getService(Service::WIKI);
         if ($wiki_service !== null) {
-            $html .= '<p><a href="'.$purifier->purify($wiki_service->getUrl()).'">';
-            $html .= '<i class="dashboard-widget-content-projectpublicareas '.$purifier->purify($wiki_service->getIcon()).'"></i>';
-            $html .= $GLOBALS['Language']->getText('include_project_home', 'wiki').'</A>';
-                $wiki=new Wiki($group_id);
+            $html .= '<p><a href="' . $purifier->purify($wiki_service->getUrl()) . '">';
+            $html .= '<i class="dashboard-widget-content-projectpublicareas ' . $purifier->purify($wiki_service->getIcon()) . '"></i>';
+            $html .= $GLOBALS['Language']->getText('include_project_home', 'wiki') . '</A>';
+                $wiki = new Wiki($group_id);
             $pos = strpos($project->getWikiPage(), '/wiki/');
             if ($pos === 0) {
-                $html .= ' ( '.$GLOBALS['Language']->getText('include_project_home', 'nb_wiki_pages', $wiki->getProjectPageCount()).' )';
+                $html .= ' ( ' . $GLOBALS['Language']->getText('include_project_home', 'nb_wiki_pages', $wiki->getProjectPageCount()) . ' )';
             }
             $html .= '</p>';
         }
@@ -111,8 +111,8 @@ class Widget_ProjectPublicAreas extends Widget
 
         $cvs_service = $project->getService(Service::CVS);
         if ($cvs_service !== null) {
-            $html .= '<p><a href="'.$purifier->purify($cvs_service->getUrl()).'">';
-            $html .= '<i class="dashboard-widget-content-projectpublicareas '.$purifier->purify($cvs_service->getIcon()).'"></i>';
+            $html .= '<p><a href="' . $purifier->purify($cvs_service->getUrl()) . '">';
+            $html .= '<i class="dashboard-widget-content-projectpublicareas ' . $purifier->purify($cvs_service->getIcon()) . '"></i>';
             $html .= $GLOBALS['Language']->getText('include_project_home', 'cvs_repo') . '</a>';
             // LJ Cvs checkouts added
             $sql = "SELECT SUM(cvs_commits) AS commits, SUM(cvs_adds) AS adds, SUM(cvs_checkouts) AS checkouts from stats_project where group_id='" . db_ei($group_id) . "'";
@@ -142,8 +142,8 @@ class Widget_ProjectPublicAreas extends Widget
 
         $svn_service = $project->getService(Service::SVN);
         if ($svn_service !== null) {
-            $html .= '<p><a href="'.$purifier->purify($svn_service->getUrl()).'">';
-            $html .= '<i class="dashboard-widget-content-projectpublicareas '.$purifier->purify($svn_service->getIcon()).'"></i>';
+            $html .= '<p><a href="' . $purifier->purify($svn_service->getUrl()) . '">';
+            $html .= '<i class="dashboard-widget-content-projectpublicareas ' . $purifier->purify($svn_service->getIcon()) . '"></i>';
             $html .= $GLOBALS['Language']->getText('include_project_home', 'svn_repo') . '</a>';
             $sql = "SELECT SUM(svn_access_count) AS accesses from group_svn_full_history where group_id='" . db_ei($group_id) . "'";
             $result = db_query($sql);
@@ -170,9 +170,9 @@ class Widget_ProjectPublicAreas extends Widget
         // ######################### Trackers (only for Active)
         $trackerv3_service = $project->getService(Service::TRACKERV3);
         if ($trackerv3_service !== null) {
-            $html .= '<p><a href="'.$purifier->purify($trackerv3_service->getUrl()).'">';
-            $html .= '<i class="dashboard-widget-content-projectpublicareas '.$purifier->purify($trackerv3_service->getIcon()).'"></i>';
-            $html .= $GLOBALS['Language']->getText('include_project_home', 'trackers').'</a>';
+            $html .= '<p><a href="' . $purifier->purify($trackerv3_service->getUrl()) . '">';
+            $html .= '<i class="dashboard-widget-content-projectpublicareas ' . $purifier->purify($trackerv3_service->getIcon()) . '"></i>';
+            $html .= $GLOBALS['Language']->getText('include_project_home', 'trackers') . '</a>';
             //  get the Group object
             $pm = ProjectManager::instance();
             $group = $pm->getProject($group_id);
@@ -194,7 +194,7 @@ class Widget_ProjectPublicAreas extends Widget
                 for ($j = 0; $j < count($at_arr); $j++) {
                     if ($at_arr[$j]->userCanView()) {
                         $html .= '<li>
-                        <a href="/tracker/?atid=' . urlencode($at_arr[$j]->getID()).'&group_id=' . urlencode($group_id) . '&func=browse">' .
+                        <a href="/tracker/?atid=' . urlencode($at_arr[$j]->getID()) . '&group_id=' . urlencode($group_id) . '&func=browse">' .
                             $purifier->purify($at_arr[$j]->getName()) . '</a></li>';
                     }
                 }
@@ -214,16 +214,16 @@ class Widget_ProjectPublicAreas extends Widget
             } else {
                 $ftp_subdomain = $project->getUnixName() . ".";
             }
-            $html .= "<a href=\"ftp://" . $ftp_subdomain . $host ."/pub/". urlencode($project->getUnixName(false)) ."/\">";    // keep the first occurence in lower case
+            $html .= "<a href=\"ftp://" . $ftp_subdomain . $host . "/pub/" . urlencode($project->getUnixName(false)) . "/\">";    // keep the first occurence in lower case
             $html .= '<i class="dashboard-widget-content-projectpublicareas fa fa-tlp-folder-globe"></i>';
-            $html .= $GLOBALS['Language']->getText('include_project_home', 'anon_ftp_space').'</a>';
+            $html .= $GLOBALS['Language']->getText('include_project_home', 'anon_ftp_space') . '</a>';
             $html .= '</p>';
         }
 
         $event = new GetPublicAreas($project);
         EventManager::instance()->processEvent($event);
         foreach ($event->getAreas() as $area) {
-            $html .= '<p>'.$area.'</p>';
+            $html .= '<p>' . $area . '</p>';
         }
 
         return $html;

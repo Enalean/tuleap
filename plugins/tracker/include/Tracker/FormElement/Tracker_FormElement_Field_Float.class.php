@@ -34,13 +34,13 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric
             $criteria_value = $this->getCriteriaValue($criteria);
 
             if ($criteria_value !== '' && $criteria_value !== null) {
-                $a = 'A_'. $this->id;
-                $b = 'B_'. $this->id;
+                $a = 'A_' . $this->id;
+                $b = 'B_' . $this->id;
                 return " INNER JOIN tracker_changeset_value AS $a
                          ON ($a.changeset_id = c.id AND $a.field_id = $this->id )
                          INNER JOIN tracker_changeset_value_float AS $b
                          ON ($b.changeset_value_id = $a.id
-                             AND ". $this->buildMatchExpression("$b.value", $criteria_value) ."
+                             AND " . $this->buildMatchExpression("$b.value", $criteria_value) . "
                          ) ";
             }
         }
@@ -49,7 +49,7 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric
 
     public function fetchCriteriaValue($criteria)
     {
-        $html           = '<input type="text" name="criteria['. $this->id .']" id="tracker_report_criteria_'. $this->id .'" value="';
+        $html           = '<input type="text" name="criteria[' . $this->id . ']" id="tracker_report_criteria_' . $this->id . '" value="';
         $criteria_value = $this->getCriteriaValue($criteria);
 
         if ($criteria_value !== '') {
@@ -68,12 +68,12 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric
 
     public function getQueryFrom()
     {
-        $R1 = 'R1_'. $this->id;
-        $R2 = 'R2_'. $this->id;
+        $R1 = 'R1_' . $this->id;
+        $R2 = 'R2_' . $this->id;
 
         return "LEFT JOIN ( tracker_changeset_value AS $R1
                     INNER JOIN tracker_changeset_value_float AS $R2 ON ($R2.changeset_value_id = $R1.id)
-                ) ON ($R1.changeset_id = c.id AND $R1.field_id = ". $this->id ." )";
+                ) ON ($R1.changeset_id = c.id AND $R1.field_id = " . $this->id . " )";
     }
 
     public function canBeUsedToSortReport()
@@ -84,7 +84,7 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric
     protected $pattern = '[+\-]?\d+(?:\.\d+)?(?:[eE][+\-]?\d+)?';
     protected function cast($value)
     {
-        return (float)$value;
+        return (float) $value;
     }
     protected function buildMatchExpression($field_name, $criteria_value)
     {
@@ -181,7 +181,7 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric
         if ($row = $this->getValueDao()->searchById($value_id, $this->id)->getRow()) {
             $float_row_value = $row['value'];
             if ($float_row_value !== null) {
-                $float_row_value = (float)$float_row_value;
+                $float_row_value = (float) $float_row_value;
             }
             $changeset_value = new Tracker_Artifact_ChangesetValue_Float($value_id, $changeset, $this, $has_changed, $float_row_value);
         }

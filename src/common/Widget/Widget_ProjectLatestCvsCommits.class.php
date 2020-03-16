@@ -39,11 +39,11 @@ class Widget_ProjectLatestCvsCommits extends Widget_ProjectLatestCommits
     }
     public function _getLinkToCommit($data)
     {
-        return '/cvs/index.php?func=detailcommit&amp;group_id='.$this->group_id.'&amp;commit_id='.$data['id'];
+        return '/cvs/index.php?func=detailcommit&amp;group_id=' . $this->group_id . '&amp;commit_id=' . $data['id'];
     }
     public function _getLinkToMore()
     {
-        return '/cvs/?func=browse&group_id='.$this->group_id;
+        return '/cvs/?func=browse&group_id=' . $this->group_id;
     }
 
     protected function canBeUsedByProject(Project $project)

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__.'/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
@@ -308,7 +308,7 @@ class Tracker_Artifact_UpdateActionFromOverlay extends Tracker_Artifact_Update_B
         $request      = aRequest()->with('func', 'artifact-update')->with('from_overlay', '1')->build();
 
         $from_overlay = $this->getProccesAndCaptureOutput($this->layout, $request, $this->user);
-        $expected     = '<script>window.parent.tuleap.cardwall.cardsEditInPlace.validateEdition('.$this->task->getId().')</script>';
+        $expected     = '<script>window.parent.tuleap.cardwall.cardsEditInPlace.validateEdition(' . $this->task->getId() . ')</script>';
         $this->assertIdentical($from_overlay, $expected);
     }
 
@@ -345,14 +345,14 @@ class Tracker_Artifact_RedirectUrlTest extends Tracker_Artifact_Update_BaseTest
     {
         $request_data = array();
         $redirect_uri = $this->getRedirectUrlFor($request_data);
-        $this->assertEqual(TRACKER_BASE_URL."/?tracker=$this->tracker_id", $redirect_uri->toUrl());
+        $this->assertEqual(TRACKER_BASE_URL . "/?tracker=$this->tracker_id", $redirect_uri->toUrl());
     }
 
     public function itStaysOnTheCurrentArtifactWhen_submitAndStay_isSpecified()
     {
         $request_data = array('submit_and_stay' => true);
         $redirect_uri = $this->getRedirectUrlFor($request_data);
-        $this->assertEqual(TRACKER_BASE_URL."/?aid=$this->artifact_id", $redirect_uri->toUrl());
+        $this->assertEqual(TRACKER_BASE_URL . "/?aid=$this->artifact_id", $redirect_uri->toUrl());
     }
 
     public function itReturnsToThePreviousArtifactWhen_fromAid_isGiven()
@@ -361,7 +361,7 @@ class Tracker_Artifact_RedirectUrlTest extends Tracker_Artifact_Update_BaseTest
         $request_data = array('from_aid' => $from_aid);
         $artifact_id  = 66;
         $redirect_uri = $this->getRedirectUrlFor($request_data);
-        $this->assertEqual(TRACKER_BASE_URL."/?aid=$from_aid", $redirect_uri->toUrl());
+        $this->assertEqual(TRACKER_BASE_URL . "/?aid=$from_aid", $redirect_uri->toUrl());
     }
 
     public function testSubmitAndStayHasPrecedenceOver_fromAid()

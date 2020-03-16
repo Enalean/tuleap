@@ -183,7 +183,7 @@ class WikiPlugin_Template extends WikiPlugin
             }
             foreach (array("SERVER_URL", "DATA_PATH", "SCRIPT_NAME", "PHPWIKI_BASE_URL") as $c) {
                 // constants are not overridable
-                if (preg_match('/%%'.$c.'%%/', $initial_content)) {
+                if (preg_match('/%%' . $c . '%%/', $initial_content)) {
                     $var[$c] = constant($c);
                 }
             }
@@ -205,7 +205,7 @@ class WikiPlugin_Template extends WikiPlugin
 
         return HTML::div(array('class' => 'template'), $content);
     }
-};
+}
 
 // $Log: Template.php,v $
 // Revision 1.4  2005/09/11 13:30:22  rurban

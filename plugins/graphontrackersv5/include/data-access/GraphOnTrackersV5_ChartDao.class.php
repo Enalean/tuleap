@@ -59,13 +59,13 @@ class GraphOnTrackersV5_ChartDao extends DataAccessObject
     {
         $sql = sprintf(
             "INSERT INTO plugin_graphontrackersv5_chart(report_graphic_id, rank, chart_type, title, description, width, height) VALUES (%d, %d, %s, %s, %s, %d, %d)",
-            (int)$renderer_id,
-            (int)$rank,
+            (int) $renderer_id,
+            (int) $rank,
             $this->da->quoteSmart($chart_type),
             $this->da->quoteSmart($title),
             $this->da->quoteSmart($description),
-            (int)$width,
-            (int)$height
+            (int) $width,
+            (int) $height
         );
         return $this->updateAndGetLastId($sql);
     }
@@ -74,12 +74,12 @@ class GraphOnTrackersV5_ChartDao extends DataAccessObject
     {
         $sql = sprintf(
             "UPDATE plugin_graphontrackersv5_chart SET rank = %d, title = %s, description = %s, width = %d, height = %d WHERE id = %d",
-            (int)$rank,
+            (int) $rank,
             $this->da->quoteSmart($title),
             $this->da->quoteSmart($description),
-            (int)$width,
-            (int)$height,
-            (int)$id
+            (int) $width,
+            (int) $height,
+            (int) $id
         );
         return $this->update($sql);
     }

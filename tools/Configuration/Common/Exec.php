@@ -45,7 +45,7 @@ class Exec
             fclose($pipes[2]);
             $return_value = proc_close($process);
             if ($return_value !== 0) {
-                throw new ExecException("Return code: ".$return_value . PHP_EOL);
+                throw new ExecException("Return code: " . $return_value . PHP_EOL);
             }
         }
     }

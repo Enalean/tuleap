@@ -217,7 +217,7 @@ class WikiPlugin_LinkDatabase extends WikiPluginCached
             return $this->error(fmt("Unsupported format argument %s", $args['format']));
         }
     }
-};
+}
 
 class _PageList_Column_LinkDatabase_links extends _PageList_Column
 {

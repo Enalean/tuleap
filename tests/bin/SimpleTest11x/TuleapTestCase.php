@@ -18,11 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__.'/../../simpletest/common/include/builders/aRequest.php';
-require_once __DIR__.'/../../lib/SimpleMockOngoingInterlligentStub.php';
-require_once __DIR__.'/../../lib/MockeryOngoingIntelligentStub.php';
-require_once __DIR__.'/../../lib/TestHelper.class.php';
-require_once __DIR__.'/../../lib/MockBuilder.php';
+require_once __DIR__ . '/../../simpletest/common/include/builders/aRequest.php';
+require_once __DIR__ . '/../../lib/SimpleMockOngoingInterlligentStub.php';
+require_once __DIR__ . '/../../lib/MockeryOngoingIntelligentStub.php';
+require_once __DIR__ . '/../../lib/TestHelper.class.php';
+require_once __DIR__ . '/../../lib/MockBuilder.php';
 
 abstract class TuleapTestCase extends UnitTestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
@@ -133,7 +133,7 @@ abstract class TuleapTestCase extends UnitTestCase // phpcs:ignore PSR1.Classes.
     protected function assertArrayEmpty($a)
     {
         return $this->assertTrue(is_array($a), "expected an array") &&
-            $this->assertTrue(empty($a), "expected array to be empty, but it contains ". count($a). " elements");
+            $this->assertTrue(empty($a), "expected array to be empty, but it contains " . count($a) . " elements");
     }
 
     protected function assertNotBlank($string)
@@ -219,7 +219,7 @@ abstract class TuleapTestCase extends UnitTestCase // phpcs:ignore PSR1.Classes.
         if (!$this->tmp_dir) {
             clearstatcache();
             do {
-                $this->tmp_dir = '/tmp/tuleap_tests_'.rand(0, 10000);
+                $this->tmp_dir = '/tmp/tuleap_tests_' . rand(0, 10000);
             } while (file_exists($this->tmp_dir));
         }
         if (!is_dir($this->tmp_dir)) {
@@ -255,7 +255,7 @@ abstract class TuleapTestCase extends UnitTestCase // phpcs:ignore PSR1.Classes.
         }
         while (($file = readdir($d)) !== false) {
             if ($file != "." && $file != "..") {
-                $typepath = $mypath . "/" . $file ;
+                $typepath = $mypath . "/" . $file;
 
                 if (is_file($typepath) || is_link($typepath)) {
                     unlink($typepath);

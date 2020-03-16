@@ -78,7 +78,7 @@ class IndexController implements DispatchableWithRequest, DispatchableWithBurnin
 
         $this->admin_page_renderer->renderANoFramedPresenter(
             dgettext('tuleap-gitlfs', 'Git LFS'),
-            __DIR__.'/../../templates',
+            __DIR__ . '/../../templates',
             'config',
             new IndexPresenter($csrf_token, $current_max_file_size)
         );

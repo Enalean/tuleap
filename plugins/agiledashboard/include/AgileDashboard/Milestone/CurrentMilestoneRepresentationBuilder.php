@@ -53,7 +53,6 @@ class CurrentMilestoneRepresentationBuilder implements MilestoneRepresentationBu
         int $offset,
         string $order
     ): AgileDashboard_Milestone_PaginatedMilestonesRepresentations {
-
         $sub_milestones = $this->milestone_factory
             ->getCurrentPaginatedTopMilestones($user, $project, $limit, $offset, $order);
 

@@ -377,7 +377,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         );
 
         $file = $response->json();
-        $this->assertEquals($file['lock_info'] ["locked_by"]["username"], DocmanDataBuilder::ADMIN_USER_NAME);
+        $this->assertEquals($file['lock_info']["locked_by"]["username"], DocmanDataBuilder::ADMIN_USER_NAME);
     }
 
     /**

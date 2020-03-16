@@ -33,7 +33,7 @@ class IssuesTemplate implements TuleapTemplate
     public const NAME = 'issues';
 
     private const PROJECT_XML = __DIR__ . '/../../../../../tools/utils/setup_templates/issues/project.xml';
-    private const KANBAN_XML = __DIR__.'/../../../../../tools/utils/setup_templates/issues/issue_template.xml';
+    private const KANBAN_XML = __DIR__ . '/../../../../../tools/utils/setup_templates/issues/issue_template.xml';
 
     /**
      * @var string

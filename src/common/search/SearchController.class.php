@@ -40,7 +40,7 @@ class Search_SearchController
         $this->event_manager = $event_manager;
         $this->renderer = TemplateRendererFactory::build()->getRenderer(
             array(
-                 ForgeConfig::get('codendi_dir') .'/src/templates/search',
+                 ForgeConfig::get('codendi_dir') . '/src/templates/search',
             )
         );
         $this->search_types = array(
@@ -227,7 +227,7 @@ class Search_SearchController
         $presenter = $this->search_types[$query->getTypeOfSearch()]->search($query, $results);
         if ($presenter) {
             if ($query->isAjax() && $query->getOffset() > 0) {
-                $results->setResultsHtml($this->renderer->renderToString($presenter->getTemplate().'-more', $presenter));
+                $results->setResultsHtml($this->renderer->renderToString($presenter->getTemplate() . '-more', $presenter));
             } else {
                 $results->setResultsHtml($this->renderer->renderToString($presenter->getTemplate(), $presenter));
             }

@@ -24,7 +24,7 @@ use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 
-require_once TRACKER_BASE_DIR .'/Workflow/PostAction/PostActionSubFactory.class.php';
+require_once TRACKER_BASE_DIR . '/Workflow/PostAction/PostActionSubFactory.class.php';
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps,PSR1.Classes.ClassDeclaration.MissingNamespace
 class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFactory
@@ -91,7 +91,7 @@ class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFa
         $postaction_attributes = $xml->attributes();
         $row = array(
             'id'      => 0,
-            'job_url' => (string)$postaction_attributes['job_url'],
+            'job_url' => (string) $postaction_attributes['job_url'],
         );
 
         return $this->buildPostAction($transition, $row);
@@ -109,8 +109,8 @@ class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFa
       */
     private function buildPostAction(Transition $transition, $row)
     {
-        $id                           = (int)$row['id'];
-        $job_url                      = (string)$row['job_url'];
+        $id                           = (int) $row['id'];
+        $job_url                      = (string) $row['job_url'];
         $http_client                  = HttpClientFactory::createClient(new CookiePlugin(new CookieJar()));
         $http_request_factory         = HTTPFactoryBuilder::requestFactory();
         $jenkins_csrf_crumb_retriever = new JenkinsCSRFCrumbRetriever($http_client, $http_request_factory);

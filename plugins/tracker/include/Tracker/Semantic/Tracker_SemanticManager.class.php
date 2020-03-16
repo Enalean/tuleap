@@ -57,11 +57,11 @@ class Tracker_SemanticManager
         echo '</p>';
 
         foreach ($this->getSemantics() as $semantic) {
-            echo '<h3>'. $semantic->getLabel() .' <a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
+            echo '<h3>' . $semantic->getLabel() . ' <a href="' . TRACKER_BASE_URL . '/?' . http_build_query(array(
                 'tracker'  => $this->tracker->getId(),
                 'func'     => 'admin-semantic',
                 'semantic' => $semantic->getShortName(),
-            )) .'">';
+            )) . '">';
             echo $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => 'edit'));
             echo '</a></h3>';
             $semantic->display();
@@ -79,7 +79,7 @@ class Tracker_SemanticManager
             $title
         );
 
-        echo '<h2 class="almost-tlp-title">'. $title .'</h2>';
+        echo '<h2 class="almost-tlp-title">' . $title . '</h2>';
     }
 
     public function displaySemanticFooter(Tracker_Semantic $semantic, TrackerManager $tracker_manager)

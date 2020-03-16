@@ -259,7 +259,7 @@ class RestBase extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
             );
 
             $trackers          = $response->json();
-            $number_of_tracker = (int)(string)$response->getHeader('X-Pagination-Size');
+            $number_of_tracker = (int) (string) $response->getHeader('X-Pagination-Size');
 
             $this->addTrackerIdFromRequestData($trackers, $tracker_ids);
             $this->addTrackerRepresentationFromRequestData($trackers, $tracker_representation);
@@ -428,7 +428,7 @@ class RestBase extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
 
             $projects = $response->json();
 
-            $number_of_project = (int)(string)$response->getHeader('X-Pagination-Size');
+            $number_of_project = (int) (string) $response->getHeader('X-Pagination-Size');
 
             $this->addProjectIdFromRequestData($projects);
 

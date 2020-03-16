@@ -41,10 +41,10 @@ class SystemEvent_MEDIAWIKI_SWITCH_TO_123 extends SystemEvent
 
     public function injectDependencies(
         Mediawiki_Migration_MediawikiMigrator $mediawiki_migrator,
-        ProjectManager                        $project_manager,
-        MediawikiVersionManager               $version_manager,
-        MediawikiMLEBExtensionManager         $mleb_manager,
-        MediawikiSiteAdminResourceRestrictor  $resource_restrictor
+        ProjectManager $project_manager,
+        MediawikiVersionManager $version_manager,
+        MediawikiMLEBExtensionManager $mleb_manager,
+        MediawikiSiteAdminResourceRestrictor $resource_restrictor
     ) {
         $this->project_manager     = $project_manager;
         $this->mediawiki_migrator  = $mediawiki_migrator;
@@ -60,7 +60,7 @@ class SystemEvent_MEDIAWIKI_SWITCH_TO_123 extends SystemEvent
             $nb_projects = count($projects);
             $count       = 0;
             foreach ($projects as $project) {
-                if (file_exists(ForgeConfig::get('codendi_cache_dir').'/STOP_SYSTEM_EVENT')) {
+                if (file_exists(ForgeConfig::get('codendi_cache_dir') . '/STOP_SYSTEM_EVENT')) {
                     break;
                 } else {
                     $this->migrateProject($project);
@@ -117,6 +117,6 @@ class SystemEvent_MEDIAWIKI_SWITCH_TO_123 extends SystemEvent
         if ($this->areAllProjectsMigrated()) {
             return 'All projects';
         }
-        return 'Project: '. $this->getProjectIdFromParameters();
+        return 'Project: ' . $this->getProjectIdFromParameters();
     }
 }

@@ -331,7 +331,7 @@ class ErrorManager
         if ($this->_fatal_handler) {
             $this->_fatal_handler->call($error);
         }
-        exit -1;
+        exit - 1;
     }
 
     /**
@@ -344,7 +344,7 @@ class ErrorManager
             return '';
         }
         $flushed = HTML();
-        for ($i=0; $i<count($errors); $i++) {
+        for ($i = 0; $i < count($errors); $i++) {
             $error = $errors[$i];
             if (!is_object($error)) {
                 continue;
@@ -448,7 +448,7 @@ class PhpError
      */
     public function isFatal()
     {
-        return ($this->errno & (2048|EM_WARNING_ERRORS|EM_NOTICE_ERRORS)) == 0;
+        return ($this->errno & (2048 | EM_WARNING_ERRORS | EM_NOTICE_ERRORS)) == 0;
     }
 
     /**
@@ -566,9 +566,8 @@ class PhpError
 
     public function printSimpleTrace($bt)
     {
-
         $nl = isset($_SERVER['REQUEST_METHOD']) ? "<br />" : "\n";
-        echo $nl."Traceback:".$nl;
+        echo $nl . "Traceback:" . $nl;
         foreach ($bt as $i => $elem) {
             if (!array_key_exists('file', $elem)) {
                 continue;
@@ -634,7 +633,7 @@ class PhpErrorOnce extends PhpError
     // count similar handlers, increase _count and remove the rest
     public function removeDoublettes(&$errors)
     {
-        for ($i=0; $i < count($errors); $i++) {
+        for ($i = 0; $i < count($errors); $i++) {
             if (!isset($errors[$i])) {
                 continue;
             }
@@ -696,7 +695,7 @@ class PhpErrorOnce extends PhpError
     }
 }
 
-require_once(dirname(__FILE__).'/HtmlElement.php');
+require_once(dirname(__FILE__) . '/HtmlElement.php');
 
 if (!isset($GLOBALS['ErrorManager'])) {
     $GLOBALS['ErrorManager'] = new ErrorManager;

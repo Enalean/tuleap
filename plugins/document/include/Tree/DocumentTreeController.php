@@ -73,7 +73,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
             new DocumentTreePresenter(
                 $project,
                 $request->getCurrentUser(),
-                (bool)$this->docman_plugin_info->getPropertyValueForName('embedded_are_allowed'),
+                (bool) $this->docman_plugin_info->getPropertyValueForName('embedded_are_allowed'),
                 $is_item_status_used,
                 $is_obsolescence_date_used,
                 (bool) $this->docman_plugin_info->getPropertyValueForName('only_siteadmin_can_delete'),

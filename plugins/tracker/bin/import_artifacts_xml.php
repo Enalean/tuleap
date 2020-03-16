@@ -34,7 +34,7 @@ try {
 
         $zip = new ZipArchive();
         if ($zip->open($argv[3]) !== true) {
-            echo 'Impossible to open archive '.$argv[3].PHP_EOL;
+            echo 'Impossible to open archive ' . $argv[3] . PHP_EOL;
             exit(1);
         }
         $archive = new Tracker_Artifact_XMLImport_XMLImportZipArchive(
@@ -46,8 +46,8 @@ try {
         $xml_import->importFromArchive($tracker, $archive);
     }
 } catch (XML_ParseException $exception) {
-    echo $exception->getMessage().PHP_EOL;
-    echo $exception->getIndentedXml().PHP_EOL;
-    echo implode(PHP_EOL, $exception->getErrors()).PHP_EOL;
+    echo $exception->getMessage() . PHP_EOL;
+    echo $exception->getIndentedXml() . PHP_EOL;
+    echo implode(PHP_EOL, $exception->getErrors()) . PHP_EOL;
     exit(1);
 }

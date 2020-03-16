@@ -93,7 +93,7 @@ class hudson_gitPlugin extends Plugin
     {
         if (strpos($_SERVER['REQUEST_URI'], '/administration/jenkins') !== false &&
             strpos($_SERVER['REQUEST_URI'], '/plugins/git/') === 0) {
-            echo '<link rel="stylesheet" type="text/css" href="'. $this->getIncludeAssets()->getFileURL('style.css') .'" />';
+            echo '<link rel="stylesheet" type="text/css" href="' . $this->getIncludeAssets()->getFileURL('style.css') . '" />';
         }
     }
 
@@ -219,7 +219,7 @@ class hudson_gitPlugin extends Plugin
                 )
             ),
             $git_plugin->getHeaderRenderer(),
-            TemplateRendererFactory::build()->getRenderer(HUDSON_GIT_BASE_DIR.'/templates/git-administration'),
+            TemplateRendererFactory::build()->getRenderer(HUDSON_GIT_BASE_DIR . '/templates/git-administration'),
             $this->getIncludeAssets()
         );
     }

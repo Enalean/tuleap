@@ -295,9 +295,9 @@ class DocmanFilesResource extends AuthenticatedResource
         return $this->createNewFileVersion(
             $representation,
             $item_request,
-            (int)$item->getStatus(),
-            (int)$item->getObsolescenceDate(),
-            (string)$item->getTitle()
+            (int) $item->getStatus(),
+            (int) $item->getObsolescenceDate(),
+            (string) $item->getTitle()
         );
     }
 
@@ -328,7 +328,6 @@ class DocmanFilesResource extends AuthenticatedResource
         int $id,
         PUTMetadataRepresentation $representation
     ): void {
-
         $this->checkAccess();
         $this->setMetadataHeaders();
 

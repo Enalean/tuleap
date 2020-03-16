@@ -75,7 +75,7 @@ class Feedback
     {
            $txt = '';
         foreach ($this->logs as $log) {
-            $txt .= $log['level'] .': '. $log['msg'] ."\n";
+            $txt .= $log['level'] . ': ' . $log['msg'] . "\n";
         }
         return $txt;
     }
@@ -102,7 +102,7 @@ class Feedback
 
     public function htmlContent()
     {
-        return '<div id="feedback" data-test="feedback">'.$this->fetch().'</div>';
+        return '<div id="feedback" data-test="feedback">' . $this->fetch() . '</div>';
     }
 
     public function hasWarningsOrErrors()

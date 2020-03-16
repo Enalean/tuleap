@@ -57,7 +57,6 @@ class PermissionChangesDetector
         array $added_tags_permissions,
         array $updated_permissions
     ) {
-
         return $this->areThereChangesInFineGrainedPermissionsEnablingForProject($project, $enable_fine_grained_permissions) ||
             $this->areThereChangesInGlobalPermissionsForProject($project, $read_ugroup_ids, $write_ugroup_ids, $rewind_ugroup_ids) ||
             count($added_branches_permissions) > 0 ||
@@ -73,7 +72,6 @@ class PermissionChangesDetector
         array $added_tags_permissions,
         array $updated_permissions
     ) {
-
         return $this->areThereChangesInFineGrainedPermissionsEnablingForRepository($repository, $enable_fine_grained_permissions) ||
             $this->areThereChangesInGlobalPermissionsForRepository($repository, $repoAccess) ||
             count($added_branches_permissions) > 0 ||
@@ -110,7 +108,6 @@ class PermissionChangesDetector
         array $write_ugroup_ids,
         array $rewind_ugroup_ids
     ) {
-
         $all_permissions = $this->buildDefaultPermissions(
             $project,
             $read_ugroup_ids,

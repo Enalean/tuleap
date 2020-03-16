@@ -125,7 +125,7 @@ class StatusPatcher
             default:
                 throw new RestException(
                     400,
-                    'Cannot deal with provided status. Supported statuses are ' . PullRequestRepresentation::STATUS_MERGE . ', '. PullRequestRepresentation::STATUS_ABANDON
+                    'Cannot deal with provided status. Supported statuses are ' . PullRequestRepresentation::STATUS_MERGE . ', ' . PullRequestRepresentation::STATUS_ABANDON
                 );
         }
     }

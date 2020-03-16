@@ -71,7 +71,6 @@ class WikiPlugin_FullTextSearch extends WikiPlugin
 
     public function run($dbi, $argstr, &$request, $basepage)
     {
-
         $args = $this->getArgs($argstr, $request);
         if (empty($args['s'])) {
             return '';
@@ -166,7 +165,7 @@ class WikiPlugin_FullTextSearch extends WikiPlugin
         $html[] = $line;        // postmatch
         return $html;
     }
-};
+}
 
 // $Log: FullTextSearch.php,v $
 // Revision 1.26  2005/11/14 22:33:04  rurban

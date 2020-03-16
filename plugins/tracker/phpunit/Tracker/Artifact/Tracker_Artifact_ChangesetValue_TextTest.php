@@ -62,39 +62,39 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \PHPUnit\Framework\
     {
         $text_1 = new Tracker_Artifact_ChangesetValue_Text(111, $this->changeset, $this->field, false, 'Problems during <ins> installation', 'text');
         $text_2 = new Tracker_Artifact_ChangesetValue_Text(111, $this->changeset, $this->field, false, 'FullTextSearch does not work on Wiki pages', 'text');
-        $this->assertEquals('<button class="btn btn-mini toggle-diff">' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'toggle_diff') . '</button>'.
-                                                    '<div class="diff" style="display: none">'.
-                                                    '<div class="block">'.
-                                                        '<div class="difftext">'.
-                                                            '<div class="original">'.
-                                                                '<tt class="prefix">-</tt>'.
-                                                                '<del>FullTextSearch does not work on Wiki pages</del>&nbsp;'.
-                                                            '</div>'.
-                                                        '</div>'.
-                                                        '<div class="difftext">'.
-                                                            '<div class="final">'.
-                                                                '<tt class="prefix">+</tt>'.
-                                                                '<ins>Problems during &lt;ins&gt; installation</ins>&nbsp;'.
-                                                            '</div>'.
-                                                        '</div>'.
-                                                    '</div>'.
+        $this->assertEquals('<button class="btn btn-mini toggle-diff">' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'toggle_diff') . '</button>' .
+                                                    '<div class="diff" style="display: none">' .
+                                                    '<div class="block">' .
+                                                        '<div class="difftext">' .
+                                                            '<div class="original">' .
+                                                                '<tt class="prefix">-</tt>' .
+                                                                '<del>FullTextSearch does not work on Wiki pages</del>&nbsp;' .
+                                                            '</div>' .
+                                                        '</div>' .
+                                                        '<div class="difftext">' .
+                                                            '<div class="final">' .
+                                                                '<tt class="prefix">+</tt>' .
+                                                                '<ins>Problems during &lt;ins&gt; installation</ins>&nbsp;' .
+                                                            '</div>' .
+                                                        '</div>' .
+                                                    '</div>' .
                                                     '</div>', $text_1->diff($text_2));
-        $this->assertEquals('<button class="btn btn-mini toggle-diff">' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'toggle_diff') . '</button>'.
-                                                    '<div class="diff" style="display: none">'.
-                                                    '<div class="block">'.
-                                                        '<div class="difftext">'.
-                                                            '<div class="original">'.
-                                                                '<tt class="prefix">-</tt>'.
-                                                                '<del>Problems during &lt;ins&gt; installation</del>&nbsp;'.
-                                                            '</div>'.
-                                                        '</div>'.
-                                                        '<div class="difftext">'.
-                                                            '<div class="final">'.
-                                                                '<tt class="prefix">+</tt>'.
-                                                                '<ins>FullTextSearch does not work on Wiki pages</ins>&nbsp;'.
-                                                            '</div>'.
-                                                        '</div>'.
-                                                    '</div>'.
+        $this->assertEquals('<button class="btn btn-mini toggle-diff">' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'toggle_diff') . '</button>' .
+                                                    '<div class="diff" style="display: none">' .
+                                                    '<div class="block">' .
+                                                        '<div class="difftext">' .
+                                                            '<div class="original">' .
+                                                                '<tt class="prefix">-</tt>' .
+                                                                '<del>Problems during &lt;ins&gt; installation</del>&nbsp;' .
+                                                            '</div>' .
+                                                        '</div>' .
+                                                        '<div class="difftext">' .
+                                                            '<div class="final">' .
+                                                                '<tt class="prefix">+</tt>' .
+                                                                '<ins>FullTextSearch does not work on Wiki pages</ins>&nbsp;' .
+                                                            '</div>' .
+                                                        '</div>' .
+                                                    '</div>' .
                                                     '</div>', $text_2->diff($text_1));
     }
 

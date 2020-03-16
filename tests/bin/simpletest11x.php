@@ -19,12 +19,12 @@
  *
  */
 
-require_once __DIR__.'/../../src/vendor/autoload.php';
-require_once __DIR__.'/../../src/common/constants.php';
-require_once __DIR__.'/SimpleTest11x/TuleapTestCase.php';
-require_once __DIR__.'/SimpleTest11x/TuleapColorTextReporter.php';
-require_once __DIR__.'/SimpleTest11x/TuleapJunitXMLReporter.php';
-require_once __DIR__.'/SimpleTest11x/RunTestSuite.php';
+require_once __DIR__ . '/../../src/vendor/autoload.php';
+require_once __DIR__ . '/../../src/common/constants.php';
+require_once __DIR__ . '/SimpleTest11x/TuleapTestCase.php';
+require_once __DIR__ . '/SimpleTest11x/TuleapColorTextReporter.php';
+require_once __DIR__ . '/SimpleTest11x/TuleapJunitXMLReporter.php';
+require_once __DIR__ . '/SimpleTest11x/RunTestSuite.php';
 
 // Tests are like gods, they can run an infinite time, eat all the memory and kill kittens
 ini_set('max_execution_time', '0');
@@ -32,7 +32,7 @@ ini_set('memory_limit', '-1');
 ini_set('display_errors', 'on');
 date_default_timezone_set('Europe/Paris');
 
-require_once __DIR__.'/../../src/etc/local.inc.dist';
+require_once __DIR__ . '/../../src/etc/local.inc.dist';
 
 $cli_args = $argv;
 array_shift($cli_args);
@@ -52,6 +52,6 @@ switch ($command) {
         break;
 
     default:
-        fwrite(STDERR, "Unknown option ".$command."\n");
+        fwrite(STDERR, "Unknown option " . $command . "\n");
         exit(255);
 }

@@ -40,7 +40,7 @@ EOT;
                 ADD COLUMN group_id INT( 11 ) UNSIGNED NOT NULL AFTER name";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column group_id to plugin_agiledashboard_planning: '.implode(', ', $this->db->dbh->errorInfo()));
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column group_id to plugin_agiledashboard_planning: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 

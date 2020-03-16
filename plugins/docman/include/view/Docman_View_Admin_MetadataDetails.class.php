@@ -28,7 +28,7 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra
 
     public function _title($params)
     {
-        echo '<h2>'. $this->_getTitle($params) .' - '. sprintf(dgettext('tuleap-docman', '"%1$s" Property details'), $this->hp->purify($params['md']->getName())) .'</h2>';
+        echo '<h2>' . $this->_getTitle($params) . ' - ' . sprintf(dgettext('tuleap-docman', '"%1$s" Property details'), $this->hp->purify($params['md']->getName())) . '</h2>';
     }
 
     public function _content($params)
@@ -38,7 +38,7 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra
         $sthCanChange = false;
         $mdContent = '';
 
-        $mdContent .= '<h3>'.dgettext('tuleap-docman', 'Property parameters').'</h3>';
+        $mdContent .= '<h3>' . dgettext('tuleap-docman', 'Property parameters') . '</h3>';
 
         $mdContent .= '<table>';
 
@@ -58,11 +58,11 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra
 
         if ($sthCanChange) {
             $act_url = DocmanViewURLBuilder::buildUrl($params['default_url'], array());
-            echo '<form name="md_details_update" method="POST" action="'.$act_url.'" class="docman_form">';
-            echo '<input type="hidden" name="label" value="'.$md->getLabel().'" />';
+            echo '<form name="md_details_update" method="POST" action="' . $act_url . '" class="docman_form">';
+            echo '<input type="hidden" name="label" value="' . $md->getLabel() . '" />';
             echo '<input type="hidden" name="action" value="admin_md_details_update" />';
             echo $mdContent;
-            echo '<input type="submit" name="submit" value="'.dgettext('tuleap-docman', 'Modify').'" />';
+            echo '<input type="submit" name="submit" value="' . dgettext('tuleap-docman', 'Modify') . '" />';
             echo '</form>';
         } else {
             echo $mdContent;
@@ -70,9 +70,9 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra
 
         // Display list of values
         if ($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
-            echo '<h3>'.dgettext('tuleap-docman', 'Property values').'</h3>';
+            echo '<h3>' . dgettext('tuleap-docman', 'Property values') . '</h3>';
 
-            echo '<div class="docman_admin_list_values">'."\n";
+            echo '<div class="docman_admin_list_values">' . "\n";
 
             echo html_build_list_table_top(array(dgettext('tuleap-docman', 'Name'),
                                                  dgettext('tuleap-docman', 'Description'),
@@ -103,8 +103,8 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra
                 }
 
                 if ($displayed) {
-                    $class = ' class="'.html_get_alt_row_color($rowColorIdx++).'"';
-                    echo '<tr'.$class.'>';
+                    $class = ' class="' . html_get_alt_row_color($rowColorIdx++) . '"';
+                    echo '<tr' . $class . '>';
 
                     // Name
                     $name = Docman_MetadataHtmlList::_getElementName($e);
@@ -112,41 +112,41 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra
                         $url = DocmanViewURLBuilder::buildUrl($params['default_url'], array('action' => 'admin_display_love',
                                                                              'md' => $md->getLabel(),
                                                                              'loveid' => $e->getId()));
-                        $href = '<a href="'.$url.'">'.$name.'</a>';
+                        $href = '<a href="' . $url . '">' . $name . '</a>';
                     } else {
                         $href = $name;
                     }
-                    echo '<td>'.$href.'</td>';
+                    echo '<td>' . $href . '</td>';
 
                     // Description
-                    echo '<td>'.Docman_MetadataHtmlList::_getElementDescription($e).'</td>';
+                    echo '<td>' . Docman_MetadataHtmlList::_getElementDescription($e) . '</td>';
 
                     // Status
-                    echo '<td>'.$status.'</td>';
+                    echo '<td>' . $status . '</td>';
 
                     // Delete
                     $trash = '-';
                     if ($canDelete) {
-                        $link = '?group_id='.$params['group_id'].'&action=admin_delete_love&loveid='.$e->getId().'&md='.$md->getLabel();
+                        $link = '?group_id=' . $params['group_id'] . '&action=admin_delete_love&loveid=' . $e->getId() . '&md=' . $md->getLabel();
                         $warn = sprintf(dgettext('tuleap-docman', 'You are about to delete the value \'%1$s\' in the current category. All documents already labeled with this value will be bound to \'None\'. Click on \'Ok\' to proceed otherwise click on \'Cancel\'.'), $name);
                         $alt  = sprintf(dgettext('tuleap-docman', 'Delete value \'%1$s\''), $name);
                         $trash = html_trash_link($link, $warn, $alt);
                     }
-                    echo '<td>'.$trash.'</td>';
+                    echo '<td>' . $trash . '</td>';
 
                     echo '</tr>';
                 }
                 $vIter->next();
             }
             echo '</table>';
-            echo '</div><!--  docman_admin_list_values -->'."\n";
+            echo '</div><!--  docman_admin_list_values -->' . "\n";
 
             if ($md->getLabel() != 'status') {
-                echo '<h3>'.dgettext('tuleap-docman', 'Create a new value').'</h3>';
+                echo '<h3>' . dgettext('tuleap-docman', 'Create a new value') . '</h3>';
 
                 $loveDetailsHtml = new Docman_View_LoveDetails($md);
 
-                echo '<form name="md_create_love" method="POST" action="?group_id='.$params['group_id'].'&action=admin_create_love" class="docman_form">';
+                echo '<form name="md_create_love" method="POST" action="?group_id=' . $params['group_id'] . '&action=admin_create_love" class="docman_form">';
                 echo $loveDetailsHtml->getHiddenFields();
 
                 echo '<table>';
@@ -157,7 +157,7 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra
 
                 echo '</table>';
 
-                echo '<input type="submit" name="submit" value="'.dgettext('tuleap-docman', 'Create').'" />';
+                echo '<input type="submit" name="submit" value="' . dgettext('tuleap-docman', 'Create') . '" />';
 
                 echo '</form>';
             }
@@ -167,6 +167,6 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra
             $params['default_url'],
             array('action' => 'admin_metadata')
         );
-        echo '<p><a href="'.$backUrl.'">'.dgettext('tuleap-docman', 'Back to Properties menu').'</a></p>';
+        echo '<p><a href="' . $backUrl . '">' . dgettext('tuleap-docman', 'Back to Properties menu') . '</a></p>';
     }
 }

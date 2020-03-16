@@ -18,4 +18,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('HUDSON_GIT_BASE_DIR', realpath(__DIR__.'/..'));
+define('HUDSON_GIT_BASE_DIR', realpath(__DIR__ . '/..'));

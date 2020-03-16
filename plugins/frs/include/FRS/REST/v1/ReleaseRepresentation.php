@@ -119,7 +119,7 @@ class ReleaseRepresentation
     public function build(FRSRelease $release, Retriever $link_retriever, PFUser $user, UploadedLinksRetriever $uploaded_links_retriever, ReleasePermissionsForGroupsBuilder $permissions_for_groups_builder)
     {
         $this->id           = JsonCast::toInt($release->getReleaseID());
-        $this->uri          = self::ROUTE ."/". urlencode((string) $release->getReleaseID());
+        $this->uri          = self::ROUTE . "/" . urlencode((string) $release->getReleaseID());
         $this->changelog    = $release->getChanges();
         $this->release_note = $release->getNotes();
         $this->name         = $release->getName();
@@ -130,7 +130,7 @@ class ReleaseRepresentation
         $this->artifact  = $this->getArtifactRepresentation($release, $link_retriever, $user);
         $this->resources = array(
             "artifacts" => array(
-                "uri" => $this->uri ."/artifacts"
+                "uri" => $this->uri . "/artifacts"
             )
         );
         $this->project = new ProjectReference();

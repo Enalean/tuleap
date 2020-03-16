@@ -84,7 +84,7 @@ class PullRequestMinimalRepresentation
      */
     public $status;
 
-    public function __construct(GitoliteAccessURLGenerator$gitolite_access_URL_generator)
+    public function __construct(GitoliteAccessURLGenerator $gitolite_access_URL_generator)
     {
         $this->gitolite_access_URL_generator = $gitolite_access_URL_generator;
     }

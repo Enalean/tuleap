@@ -86,7 +86,7 @@ if ($group_id && user_ismember($group_id, 'A')) {
                     $message = $Language->getText('mail_admin_index', 'list_create_explain', array($GLOBALS['sys_name'], $new_list_name . '@' . $sys_lists_domain, $list_server . "/mailman/listinfo/$new_list_name", $list_server . "/mailman/admin/$new_list_name", $list_password));
 
                     $hdrs = "From: " . $GLOBALS['sys_email_admin'] . $GLOBALS['sys_lf'];
-                    $hdrs .='Content-type: text/plain; charset=utf-8' . $GLOBALS['sys_lf'];
+                    $hdrs .= 'Content-type: text/plain; charset=utf-8' . $GLOBALS['sys_lf'];
 
                     mail($row_email['email'], $GLOBALS['sys_name'] . " " . $Language->getText('mail_admin_index', 'new_mail_list'), $message, $hdrs);
 

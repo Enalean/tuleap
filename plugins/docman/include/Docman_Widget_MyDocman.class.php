@@ -50,13 +50,13 @@ class Docman_Widget_MyDocman extends Widget
         $html .= "
         function plugin_docman_approval_toggle(what, save) {
             if ($(what).visible()) {
-                $(what+'_icon').src = '". util_get_dir_image_theme() ."pointer_right.png';
+                $(what+'_icon').src = '" . util_get_dir_image_theme() . "pointer_right.png';
                 $(what).hide();
                 if (save) {
                     new Ajax.Request('/plugins/docman/?action='+what+'&hide=1');
                 }
             } else {
-                $(what+'_icon').src = '". util_get_dir_image_theme() ."pointer_down.png';
+                $(what+'_icon').src = '" . util_get_dir_image_theme() . "pointer_down.png';
                 $(what).show();
                 if (save) {
                     new Ajax.Request('/plugins/docman/?action='+what+'&hide=0');
@@ -75,7 +75,7 @@ class Docman_Widget_MyDocman extends Widget
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
 
-        $content_html_id = 'plugin_docman_approval_'. ($reviewer ? 'reviewer' : 'requester');
+        $content_html_id = 'plugin_docman_approval_' . ($reviewer ? 'reviewer' : 'requester');
         $html           .= '<div style="font-weight:bold;" class="my-document-under-review">';
 
         if ($reviewer) {
@@ -84,7 +84,7 @@ class Docman_Widget_MyDocman extends Widget
             $html .= dgettext('tuleap-docman', 'Requester');
         }
         $html .= '</div>';
-        $html .= '<div id="'. $content_html_id .'">';
+        $html .= '<div id="' . $content_html_id . '">';
 
         $um   = UserManager::instance();
         $user = $um->getCurrentUser();
@@ -134,10 +134,10 @@ class Docman_Widget_MyDocman extends Widget
                 }
 
                 if (!$hideNow) {
-                    $html .= '<tr class="'. util_get_alt_row_color($i++).'">';
+                    $html .= '<tr class="' . util_get_alt_row_color($i++) . '">';
                     // Document
                     $html .= '<td align="left">';
-                    $html .= '<a href="'.$review['url'].'">'. $hp->purify($review['title'], CODENDI_PURIFIER_CONVERT_HTML) .'</a>';
+                    $html .= '<a href="' . $review['url'] . '">' . $hp->purify($review['title'], CODENDI_PURIFIER_CONVERT_HTML) . '</a>';
                     $html .= '</td>';
 
                     // For requester, precise the status
@@ -166,7 +166,7 @@ class Docman_Widget_MyDocman extends Widget
             }
         }
         $html .= '</div>';
-        if (user_get_preference('hide_plugin_docman_approval_'. ($reviewer ? 'reviewer' : 'requester'))) {
+        if (user_get_preference('hide_plugin_docman_approval_' . ($reviewer ? 'reviewer' : 'requester'))) {
             $html .= '<script type="text/javascript">';
             $html .= "document.observe('dom:loaded', function()
                 {

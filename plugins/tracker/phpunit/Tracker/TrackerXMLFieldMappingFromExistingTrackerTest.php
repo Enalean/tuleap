@@ -114,7 +114,7 @@ class TrackerXMLFieldMappingFromExistingTrackerTest extends TestCase
 
     public function setUp() : void
     {
-        $xml_field_mapping = file_get_contents(dirname(__FILE__).'/_fixtures/TestFieldMapping.xml');
+        $xml_field_mapping = file_get_contents(dirname(__FILE__) . '/_fixtures/TestFieldMapping.xml');
         $this->xml_input = simplexml_load_string($xml_field_mapping);
 
         $this->column_1 = $this->mockAColumn('stepA');

@@ -20,6 +20,6 @@
  */
 
 require_once __DIR__ . '/../../include/crosstrackerPlugin.php';
-require_once __DIR__.'/CrossTrackerDataBuilder.php';
+require_once __DIR__ . '/CrossTrackerDataBuilder.php';
 
 (new Tuleap\CrossTracker\CrossTrackerDataBuilder())->setUp();

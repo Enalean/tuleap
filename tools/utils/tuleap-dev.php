@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 use Symfony\Component\Console\Application;
 
-require_once __DIR__.'/../../src/vendor/autoload.php';
+require_once __DIR__ . '/../../src/vendor/autoload.php';
 require_once __DIR__ . '/TuleapDev/GerritSetupCommand.php';
 require_once __DIR__ . '/TuleapDev/RegisterIPCommand.php';
 

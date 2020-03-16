@@ -29,7 +29,7 @@ use PermissionsManager;
 use PHPUnit\Framework\TestCase;
 use ProjectUGroup;
 
-require_once __DIR__.'/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 class ConfigPermissionsSerializerTest extends TestCase
 {
@@ -109,7 +109,7 @@ class ConfigPermissionsSerializerTest extends TestCase
     {
         $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns(array(ProjectUGroup::REGISTERED));
         $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
-        $this->assertRegExp('/=\s@site_active @'. $this->project->getUnixName() .'_project_members$/', $result);
+        $this->assertRegExp('/=\s@site_active @' . $this->project->getUnixName() . '_project_members$/', $result);
     }
 
     public function testItReturnsProjectNameWithProjectMemberIfUserIsProjectMember()
@@ -117,7 +117,7 @@ class ConfigPermissionsSerializerTest extends TestCase
         $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns(array(ProjectUGroup::PROJECT_MEMBERS));
         $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
         $project_name = 'project' . $this->project_id;
-        $this->assertRegExp('/=\s@'.$project_name.'_project_members$/', $result);
+        $this->assertRegExp('/=\s@' . $project_name . '_project_members$/', $result);
     }
 
     public function testItReturnsProjectNameWithProjectAdminIfUserIsProjectAdmin()
@@ -125,7 +125,7 @@ class ConfigPermissionsSerializerTest extends TestCase
         $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns(array(ProjectUGroup::PROJECT_ADMIN));
         $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
         $project_name = 'project' . $this->project_id;
-        $this->assertRegExp('/=\s@'.$project_name.'_project_admin$/', $result);
+        $this->assertRegExp('/=\s@' . $project_name . '_project_admin$/', $result);
     }
 
     public function testItPrefixesWithRForReaders()
@@ -153,7 +153,7 @@ class ConfigPermissionsSerializerTest extends TestCase
     {
         $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns(array(666, ProjectUGroup::REGISTERED));
         $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
-        $this->assertSame(' R   = @ug_666 @site_active @'. $this->project->getUnixName() .'_project_members' . PHP_EOL, $result);
+        $this->assertSame(' R   = @ug_666 @site_active @' . $this->project->getUnixName() . '_project_members' . PHP_EOL, $result);
     }
 
     public function testItDeniesAllAccessToRepository()

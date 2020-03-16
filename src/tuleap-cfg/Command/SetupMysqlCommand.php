@@ -89,10 +89,10 @@ final class SetupMysqlCommand extends Command
                 'UPDATE user SET password=?, unix_pw=?, email=?, add_date=? WHERE user_id=101',
                 $password_handler->computeHashPassword($admin_password),
                 $password_handler->computeUnixPassword($admin_password),
-                'codendi-admin@'.$domain_name,
+                'codendi-admin@' . $domain_name,
                 time(),
             );
-            $db->run('UPDATE user SET email=? WHERE user_id = 100', 'noreply@'.$domain_name);
+            $db->run('UPDATE user SET email=? WHERE user_id = 100', 'noreply@' . $domain_name);
         }
         return 0;
     }

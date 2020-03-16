@@ -26,9 +26,9 @@ class Docman_ApprovalTableLinkDao extends Docman_ApprovalTableItemDao
 
     public function getTableById($versionId, $fields = '*')
     {
-        $sql = 'SELECT '.$fields.
-            ' FROM plugin_docman_approval'.
-            ' WHERE link_version_id = '.$this->da->escapeInt($versionId);
+        $sql = 'SELECT ' . $fields .
+            ' FROM plugin_docman_approval' .
+            ' WHERE link_version_id = ' . $this->da->escapeInt($versionId);
         return $this->retrieve($sql);
     }
 
@@ -45,7 +45,7 @@ class Docman_ApprovalTableLinkDao extends Docman_ApprovalTableItemDao
     public function getApprovalTableItemId($itemId, $fields = 'app.*', $limit = '', $tableStatus = false)
     {
         $fields .= ', ver.number as version_number';
-        $where = ' ver.item_id = '.$this->da->escapeInt($itemId).
+        $where = ' ver.item_id = ' . $this->da->escapeInt($itemId) .
             ' AND app.wiki_version_id IS NULL';
         $join = ' JOIN plugin_docman_link_version ver ON (ver.id = app.link_version_id)';
         $orderBy = ' ORDER BY ver.number DESC ';

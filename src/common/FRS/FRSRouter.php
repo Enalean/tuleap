@@ -81,7 +81,7 @@ class FRSRouter
 
     private function redirectToDefaultRoute(Project $project)
     {
-        $GLOBALS['Response']->redirect('/file/admin/?'. http_build_query(
+        $GLOBALS['Response']->redirect('/file/admin/?' . http_build_query(
             array(
                 'group_id' => $project->getId(),
                 'action'   => 'edit-permissions'

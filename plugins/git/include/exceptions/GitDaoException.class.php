@@ -27,6 +27,6 @@ class GitDaoException extends Exception
 
     public function __construct($msg)
     {
-        parent::__construct(self::class.' : '.$msg);
+        parent::__construct(self::class . ' : ' . $msg);
     }
 }

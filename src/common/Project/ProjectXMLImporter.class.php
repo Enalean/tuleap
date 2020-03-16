@@ -337,7 +337,7 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
 
     private function importContent(ImportConfig $configuration, Project $project, SimpleXMLElement $xml_element, $extraction_path)
     {
-        $this->logger->info("Importing project in project ".$project->getUnixName());
+        $this->logger->info("Importing project in project " . $project->getUnixName());
 
         $user_creator = $this->user_manager->getCurrentUser();
 
@@ -377,7 +377,7 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
 
         $this->importDashboards($xml_element, $user_creator, $project, $mappings_registery);
 
-        $this->logger->info("Finish importing project in project ".$project->getUnixName() . " id " . $project->getID());
+        $this->logger->info("Finish importing project in project " . $project->getUnixName() . " id " . $project->getID());
     }
 
     /**
@@ -489,7 +489,7 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         $ugroups = array();
         $project_members = array();
 
-        $rng_path = realpath(dirname(__FILE__).'/../xml/resources/ugroups.rng');
+        $rng_path = realpath(dirname(__FILE__) . '/../xml/resources/ugroups.rng');
         $this->xml_validator->validate($xml_element_ugroups, $rng_path);
         $this->logger->debug("XML Ugroups is valid");
 

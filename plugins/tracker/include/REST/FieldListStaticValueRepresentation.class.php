@@ -44,6 +44,6 @@ class FieldListStaticValueRepresentation
     {
         $this->id               = JsonCast::toInt($value->getId());
         $this->label            = $value->getLabel();
-        $this->is_hidden        = (bool)$value->isHidden();
+        $this->is_hidden        = (bool) $value->isHidden();
     }
 }

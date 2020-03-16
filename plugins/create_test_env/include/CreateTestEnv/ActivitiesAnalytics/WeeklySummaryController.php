@@ -61,7 +61,7 @@ class WeeklySummaryController implements DispatchableWithRequest, DispatchableWi
             throw new ForbiddenException();
         }
 
-        $weeks = [ 'weeks' => []];
+        $weeks = ['weeks' => []];
         foreach ($this->getWeeks() as $week) {
             $first_day_of_week = new \DateTimeImmutable($week);
             $last_day_of_week  = $first_day_of_week->add(new \DateInterval('P7D'));

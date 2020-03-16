@@ -94,7 +94,6 @@ class PageEditor
 
     public function editPage()
     {
-
         global $WikiTheme;
         $saveFailed = false;
         $tokens = &$this->tokens;
@@ -216,7 +215,7 @@ class PageEditor
 
     public function updateLock()
     {
-        if ((bool)$this->page->get('locked') == (bool)$this->locked) {
+        if ((bool) $this->page->get('locked') == (bool) $this->locked) {
             return false;       // Not changed.
         }
 
@@ -225,7 +224,7 @@ class PageEditor
             return false;         // not allowed.
         }
 
-        $this->page->set('locked', (bool)$this->locked);
+        $this->page->set('locked', (bool) $this->locked);
         $this->tokens['LOCK_CHANGED_MSG']
             = $this->locked ? _("Page now locked.") : _("Page now unlocked.");
 
@@ -283,7 +282,7 @@ class PageEditor
 
             // Save succeded. We raise an event.
             $new = $this->version + 1;
-            $difflink = WikiURL($page->getName(), array('action'=>'diff'), true);
+            $difflink = WikiURL($page->getName(), array('action' => 'diff'), true);
             $difflink .= "&versions%5b%5d=" . $this->version . "&versions%5b%5d=" . $new;
             $eM = EventManager::instance();
             $uM = UserManager::instance();
@@ -420,8 +419,8 @@ class PageEditor
         if ($unresolved) {
             $message =  HTML::p(fmt(
                 "Some of the changes could not automatically be combined.  Please look for sections beginning with '%s', and ending with '%s'.  You will need to edit those sections by hand before you click Save.",
-                "<<<<<<< ". _("Your version"),
-                ">>>>>>> ". _("Other version")
+                "<<<<<<< " . _("Your version"),
+                ">>>>>>> " . _("Other version")
             ));
         } else {
             $message = HTML::p(_("Please check it through before saving."));
@@ -455,7 +454,7 @@ class PageEditor
         }
 
         $textarea = HTML::textarea(
-            array('class'=> 'wikiedit',
+            array('class' => 'wikiedit',
                                          'name' => 'edit[content]',
                                          'id'   => 'edit[content]',
                                          'rows' => $request->getPref('editHeight'),
@@ -554,7 +553,7 @@ class PageEditor
     public function redirectAfterSavingPage($pagename)
     {
         $url     = WikiURL($this->page, false, 'absolute_url');
-        $link    = '<a href="' . $url . '">'.$pagename.'</a>';
+        $link    = '<a href="' . $url . '">' . $pagename . '</a>';
         $message = fmt("Saved: %s", $link)->asString();
 
         $GLOBALS['Response']->addFeedback('info', $message, CODENDI_PURIFIER_LIGHT);
@@ -643,7 +642,7 @@ class PageEditor
             $is_new_markup = $selected->get('markup') >= 2.0;
         }
 
-        $this->meta['markup'] = $is_new_markup ? 2.0: false;
+        $this->meta['markup'] = $is_new_markup ? 2.0 : false;
         $this->meta['pagetype'] = $selected->get('pagetype');
         if ($this->meta['pagetype'] == 'wikiblog') {
             $this->meta['summary'] = $selected->get('summary'); // keep blog title

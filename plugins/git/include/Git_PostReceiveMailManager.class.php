@@ -101,7 +101,7 @@ class Git_PostReceiveMailManager
 
         $mailList = array();
         foreach ($dar as $row) {
-            $mailList [] = $row['recipient_mail'];
+            $mailList[] = $row['recipient_mail'];
         }
         return $mailList;
     }

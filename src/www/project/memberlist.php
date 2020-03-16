@@ -36,7 +36,7 @@ if ($request->valid($vGroupId)) {
     }
 }
 
-site_project_header(array('title'=>$Language->getText('project_memberlist', 'proj_member_list'),'group'=>$group_id,'toptab'=>'memberlist'));
+site_project_header(array('title' => $Language->getText('project_memberlist', 'proj_member_list'),'group' => $group_id,'toptab' => 'memberlist'));
 
 print $Language->getText('project_memberlist', 'contact_to_become_member');
 
@@ -47,13 +47,13 @@ $query =  "SELECT user.user_name AS user_name,user.user_id AS user_id,"
     . "user.email AS email, "
     . "user_group.admin_flags AS admin_flags "
     . "FROM user,user_group "
-    . "WHERE user.user_id=user_group.user_id AND user_group.group_id=".db_ei($group_id)." AND user.status IN ('A', 'R') "
+    . "WHERE user.user_id=user_group.user_id AND user_group.group_id=" . db_ei($group_id) . " AND user.status IN ('A', 'R') "
     . "ORDER BY user.user_name";
 
 
-$title_arr=array();
-$title_arr[]=$Language->getText('project_memberlist', 'developer');
-$title_arr[]=$Language->getText('project_export_artifact_history_export', 'email');
+$title_arr = array();
+$title_arr[] = $Language->getText('project_memberlist', 'developer');
+$title_arr[] = $Language->getText('project_export_artifact_history_export', 'email');
 
 $user_helper = new UserHelper();
 $hp = Codendi_HTMLPurifier::instance();
@@ -61,17 +61,17 @@ $hp = Codendi_HTMLPurifier::instance();
 echo html_build_list_table_top($title_arr);
 
 $res_memb = db_query($query);
-while ($row_memb=db_fetch_array($res_memb)) {
+while ($row_memb = db_fetch_array($res_memb)) {
     $display_name = $hp->purify($user_helper->getDisplayName($row_memb['user_name'], $row_memb['realname']));
     print "\t<tr>\n";
     print "\t\t";
-    if ($row_memb['admin_flags']=='A') {
-        print '<td><b><A href="/users/'. $row_memb['user_name'] .'/">'. $display_name ."</A></b></td>\n";
+    if ($row_memb['admin_flags'] == 'A') {
+        print '<td><b><A href="/users/' . $row_memb['user_name'] . '/">' . $display_name . "</A></b></td>\n";
     } else {
-        print "\t\t<td>".  $display_name ."</td>\n";
+        print "\t\t<td>" .  $display_name . "</td>\n";
     }
 
-    print "\t\t<td align=\"center\"><A href=\"mailto:".$row_memb['email']."\">".$row_memb['email']."</A></td>\n";
+    print "\t\t<td align=\"center\"><A href=\"mailto:" . $row_memb['email'] . "\">" . $row_memb['email'] . "</A></td>\n";
 
     print "\t<tr>\n";
 }

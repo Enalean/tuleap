@@ -26,6 +26,6 @@ class Tracker_XML_Updater_FieldChange_FieldChangeFloatXMLUpdater implements Trac
      */
     public function update(SimpleXMLElement $field_change_xml, $submitted_value)
     {
-        $field_change_xml->value = (float)$submitted_value;
+        $field_change_xml->value = (float) $submitted_value;
     }
 }

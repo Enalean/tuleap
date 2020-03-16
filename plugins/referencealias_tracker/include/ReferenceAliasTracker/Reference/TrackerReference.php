@@ -34,7 +34,7 @@ class TrackerReference extends Reference
     {
         $base_id     = 0;
         $description = '';
-        $url         = "/plugins/tracker/?tracker=".urlencode($tracker_id);
+        $url         = "/plugins/tracker/?tracker=" . urlencode($tracker_id);
         $visibility  = 'P';
         $is_used     = 1;
 

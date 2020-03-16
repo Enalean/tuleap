@@ -242,7 +242,7 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
 
     private function redirect(Project $project, BaseLayout $layout)
     {
-        $layout->redirect('/project/'.urlencode((string)$project->getID()).'/admin/members');
+        $layout->redirect('/project/' . urlencode((string) $project->getID()) . '/admin/members');
     }
 
     private function display(HTTPRequest $request, BaseLayout $layout, Project $project)

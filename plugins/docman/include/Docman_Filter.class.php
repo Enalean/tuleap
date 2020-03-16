@@ -118,8 +118,8 @@ class Docman_FilterDate extends Docman_Filter
         parent::__construct($md);
         $this->operator = null;
         if ($md !== null) {
-            $this->field_operator_name  = $md->getLabel().'_operator';
-            $this->field_value_name     = $md->getLabel().'_value';
+            $this->field_operator_name  = $md->getLabel() . '_operator';
+            $this->field_value_name     = $md->getLabel() . '_value';
         }
     }
 
@@ -236,9 +236,9 @@ class Docman_FilterDateAdvanced extends Docman_FilterDate
     {
         parent::__construct($md);
 
-        $base = $md->getLabel().'_value';
-        $this->fieldNameStart = $base.'_start';
-        $this->fieldNameEnd   = $base.'_end';
+        $base = $md->getLabel() . '_value';
+        $this->fieldNameStart = $base . '_start';
+        $this->fieldNameEnd   = $base . '_end';
         $this->valueStart = '';
         $this->valueEnd   = '';
     }

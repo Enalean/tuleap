@@ -48,7 +48,7 @@ class b201304230915_create_burndown_field_table extends ForgeUpgrade_Bucket
     {
         $res = $this->db->dbh->query($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while populating tracker_field_burndown: '.implode(', ', $this->db->dbh->errorInfo()));
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while populating tracker_field_burndown: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 

@@ -41,7 +41,7 @@ class OpenGraphPresenter
         $color = ThemeVariantColor::buildFromDefaultVariant();
         $this->properties[] = new OpenGraphPropertyPresenter(
             'image',
-            \HTTPRequest::instance()->getServerUrl() . '/themes/common/images/opengraph/'. $color->getName() .'.png'
+            \HTTPRequest::instance()->getServerUrl() . '/themes/common/images/opengraph/' . $color->getName() . '.png'
         );
     }
 }

@@ -59,28 +59,28 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
     }
     public function getContent($params = [])
     {
-        $content = '<dl><fieldset><legend>'. dgettext('tuleap-docman', 'Notifications') .'</legend>';
+        $content = '<dl><fieldset><legend>' . dgettext('tuleap-docman', 'Notifications') . '</legend>';
         $content .= '<dd>';
         $content .= '<form action="" method="POST">';
         $content .= '<p>';
         if ($this->token) {
-            $content .= '<input type="hidden" name="token" value="'. $this->token .'" />';
+            $content .= '<input type="hidden" name="token" value="' . $this->token . '" />';
         }
         $content .= '<input type="hidden" name="action" value="monitor" />';
-        $content .= '<input type="hidden" name="id" value="'. $this->item->getId() .'" />';
+        $content .= '<input type="hidden" name="id" value="' . $this->item->getId() . '" />';
         $um   = UserManager::instance();
         $user = $um->getCurrentUser();
         $checked  = !$user->isAnonymous() && $this->notificationsManager->userExists($user->getId(), $this->item->getId()) ? 'checked="checked"' : '';
         $disabled = $user->isAnonymous() ? 'disabled="disabled"' : '';
         $content .= '<input type="hidden" name="monitor" value="0" />';
         $content .= '<label class="checkbox" for="plugin_docman_monitor_item">';
-        $content .= '<input type="checkbox" name="monitor" value="1" id="plugin_docman_monitor_item" '. $checked .' '. $disabled .' />'. dgettext('tuleap-docman', 'Send me an email whenever this item is updated.');
+        $content .= '<input type="checkbox" name="monitor" value="1" id="plugin_docman_monitor_item" ' . $checked . ' ' . $disabled . ' />' . dgettext('tuleap-docman', 'Send me an email whenever this item is updated.');
         $content .= '</label></p>';
         $content .= $this->item->accept($this, array('user' => &$user));
-        $content .= '<p><input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /></p>';
+        $content .= '<p><input type="submit" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" /></p>';
         $content .= '</form>';
         $content .= '</dd></fieldset></dl>';
-        $content .= '<dl>'.$this->displayListeningUsers($this->item->getId()).'</dl>';
+        $content .= '<dl>' . $this->displayListeningUsers($this->item->getId()) . '</dl>';
         return $content;
     }
 
@@ -101,7 +101,7 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
             $users   = $this->notificationsManager->getListeningUsers($this->item);
             $ugroups = $this->ugroups_to_be_notified_builder->getCollectionOfUgroupMonitoredItems($this->item);
 
-            $content .= '<fieldset><legend>'. $purifier->purify(dgettext('tuleap-docman', 'Subscribers')) .'</legend>';
+            $content .= '<fieldset><legend>' . $purifier->purify(dgettext('tuleap-docman', 'Subscribers')) . '</legend>';
 
             $renderer = TemplateRendererFactory::build()->getRenderer(
                 dirname(PLUGIN_DOCMAN_BASE_DIR) . '/templates'
@@ -148,8 +148,8 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         $disabled = $params['user']->isAnonymous() ? 'disabled="disabled"' : '';
         $content .= '<input type="hidden" name="cascade" value="0" />';
         $content .= '<label for="plugin_docman_monitor_cascade_item" class="checkbox">';
-        $content .= '<input type="checkbox" name="cascade" value="1" id="plugin_docman_monitor_cascade_item" '. $checked .' '. $disabled .' />';
-        $content .= dgettext('tuleap-docman', '...and for the whole sub-hierarchy.') .'</label>';
+        $content .= '<input type="checkbox" name="cascade" value="1" id="plugin_docman_monitor_cascade_item" ' . $checked . ' ' . $disabled . ' />';
+        $content .= dgettext('tuleap-docman', '...and for the whole sub-hierarchy.') . '</label>';
         $content .= '</blockquote>';
         return $content;
     }

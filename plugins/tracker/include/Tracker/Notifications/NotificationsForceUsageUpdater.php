@@ -44,15 +44,15 @@ class NotificationsForceUsageUpdater
     public function forceUserPreferences(Tracker $tracker, $new_notifications_level)
     {
         foreach ($this->recipients_manager->getAllRecipientsWhoHaveCustomSettingsForATracker($tracker) as $user_id) {
-            if ((int)$new_notifications_level === Tracker::NOTIFICATIONS_LEVEL_DEFAULT) {
+            if ((int) $new_notifications_level === Tracker::NOTIFICATIONS_LEVEL_DEFAULT) {
                 $this->notification_settings->enableNoGlobalNotificationMode($user_id, $tracker->getId());
             }
 
-            if ((int)$new_notifications_level === Tracker::NOTIFICATIONS_LEVEL_DISABLED) {
+            if ((int) $new_notifications_level === Tracker::NOTIFICATIONS_LEVEL_DISABLED) {
                 $this->notification_settings->enableNoNotificationAtAllMode($user_id, $tracker->getId());
             }
 
-            if ((int)$new_notifications_level === Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE) {
+            if ((int) $new_notifications_level === Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE) {
                 $this->notification_settings->enableNotifyOnStatusChangeMode($user_id, $tracker->getId());
             }
         }

@@ -59,7 +59,7 @@ class HTTPUserAccessKeyAuthenticator
     {
         try {
             $access_key = $this->access_key_identifier_unserializer->getSplitToken($potential_access_key_identifier);
-        } catch (InvalidIdentifierFormatException|IncorrectSizeVerificationStringException $ex) {
+        } catch (InvalidIdentifierFormatException | IncorrectSizeVerificationStringException $ex) {
             $this->logger->debug('Given password does not look like an access key, skipping');
             return null;
         }

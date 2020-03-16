@@ -167,12 +167,12 @@ class PluginFactory // phpcs:ignore
 
     public function _getClassNameForPluginName($name)
     {
-        $class_name = $name."Plugin";
+        $class_name = $name . "Plugin";
         $custom     = false;
         $class_path = '';
-        $file_name = '/'.$name.'/include/'.$class_name.'.php';
+        $file_name = '/' . $name . '/include/' . $class_name . '.php';
         if (!class_exists($class_name)) {
-            $this->loadClass($this->_getCustomPluginsRoot().$file_name);
+            $this->loadClass($this->_getCustomPluginsRoot() . $file_name);
         }
         if (empty($this->plugin_class_path[$name])) {
             $class_path = $this->getPluginClassPath($file_name);
@@ -193,8 +193,8 @@ class PluginFactory // phpcs:ignore
 
     private function getPluginClassPath($file_name)
     {
-        if (file_exists($this->_getCustomPluginsRoot().$file_name)) {
-            return $this->_getCustomPluginsRoot().$file_name;
+        if (file_exists($this->_getCustomPluginsRoot() . $file_name)) {
+            return $this->_getCustomPluginsRoot() . $file_name;
         } else {
             return $this->tryPluginPaths($this->getOfficialPluginPaths(), $file_name);
         }
@@ -202,7 +202,7 @@ class PluginFactory // phpcs:ignore
 
     private function classIsCustom($file_name)
     {
-        return file_exists($this->_getCustomPluginsRoot().$file_name);
+        return file_exists($this->_getCustomPluginsRoot() . $file_name);
     }
 
     private function getOfficialPluginPaths()
@@ -221,7 +221,7 @@ class PluginFactory // phpcs:ignore
     private function tryPluginPaths(array $potential_paths, $file_name)
     {
         foreach ($potential_paths as $path) {
-            $full_path = $path.'/'.$file_name;
+            $full_path = $path . '/' . $file_name;
             if ($this->loadClass($full_path)) {
                 return $full_path;
             }
@@ -342,7 +342,7 @@ class PluginFactory // phpcs:ignore
         foreach ($paths as $path) {
             $dir = openDir($path);
             while ($file = readDir($dir)) {
-                if (!in_array($file, $exclude) && is_dir($path.'/'.$file)) {
+                if (!in_array($file, $exclude) && is_dir($path . '/' . $file)) {
                     if (!$this->isPluginInstalled($file) && !in_array($file, $col)) {
                         $plugin     = $this->instantiatePlugin(null, $file);
                         if ($plugin) {
@@ -443,7 +443,7 @@ class PluginFactory // phpcs:ignore
     public function isProjectPluginRestricted($plugin)
     {
         $restricted = false;
-        $dar =$this->plugin_dao->searchProjectPluginRestrictionStatus($plugin->getId());
+        $dar = $this->plugin_dao->searchProjectPluginRestrictionStatus($plugin->getId());
         if ($dar && !$dar->isError()) {
             $row = $dar->getRow();
             $restricted = $row['prj_restricted'];

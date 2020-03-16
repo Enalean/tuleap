@@ -111,7 +111,7 @@ class ListLicenseAgreementsController implements DispatchableWithRequest
             new LicenseAgreementPresenter($project, new DefaultLicenseAgreement(), $license_agreement_default),
         ];
         foreach ($this->factory->getProjectLicenseAgreements($project) as $license_agreement) {
-            $license_agreements []= new LicenseAgreementPresenter($project, $license_agreement, $license_agreement_default);
+            $license_agreements[] = new LicenseAgreementPresenter($project, $license_agreement, $license_agreement_default);
         }
 
         $this->helper->renderHeader($project);

@@ -116,7 +116,7 @@ class RepositoryDeleter
         );
 
         return $this->system_event_manager->createEvent(
-            'Tuleap\\SVN\\Events\\'.SystemEvent_SVN_DELETE_REPOSITORY::NAME,
+            'Tuleap\\SVN\\Events\\' . SystemEvent_SVN_DELETE_REPOSITORY::NAME,
             $repository->getProject()->getID() . SystemEvent::PARAMETER_SEPARATOR . $repository->getId(),
             SystemEvent::PRIORITY_MEDIUM,
             SystemEvent::OWNER_ROOT

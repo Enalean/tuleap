@@ -30,7 +30,7 @@ class Cardwall_UserPreferences_UserPreferencesController extends MVC2_PluginCont
     public function toggleUserDisplay()
     {
         $this->getCurrentUser()->togglePreference(
-            Cardwall_UserPreferences_UserPreferencesDisplayUser::ASSIGNED_TO_USERNAME_PREFERENCE_NAME.$this->request->get('tracker_id'),
+            Cardwall_UserPreferences_UserPreferencesDisplayUser::ASSIGNED_TO_USERNAME_PREFERENCE_NAME . $this->request->get('tracker_id'),
             Cardwall_UserPreferences_UserPreferencesDisplayUser::DISPLAY_AVATARS,
             Cardwall_UserPreferences_UserPreferencesDisplayUser::DISPLAY_USERNAMES
         );

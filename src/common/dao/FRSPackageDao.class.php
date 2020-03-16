@@ -40,21 +40,21 @@ class FRSPackageDao extends DataAccessObject
     public function searchById($id, $extraFlags = 0)
     {
         $_id = (int) $id;
-        return $this->_search(' p.package_id = '.$this->da->escapeInt($_id), '', ' ORDER BY rank DESC LIMIT 1', null, $extraFlags);
+        return $this->_search(' p.package_id = ' . $this->da->escapeInt($_id), '', ' ORDER BY rank DESC LIMIT 1', null, $extraFlags);
     }
 
     public function searchInGroupById($id, $group_id, $extraFlags = 0)
     {
         $_id = (int) $id;
         $_group_id = (int) $group_id;
-        return $this->_search(' p.package_id = '.$this->da->escapeInt($_id).' AND p.group_id = '.$this->da->escapeInt($_group_id), '', ' ORDER BY rank DESC LIMIT 1', null, $extraFlags);
+        return $this->_search(' p.package_id = ' . $this->da->escapeInt($_id) . ' AND p.group_id = ' . $this->da->escapeInt($_group_id), '', ' ORDER BY rank DESC LIMIT 1', null, $extraFlags);
     }
 
     public function searchByFileId($file_id)
     {
         $_file_id = (int) $file_id;
         return $this->_search(
-            ' f.file_id ='.$this->da->escapeInt($_file_id).' AND f.release_id = r.release_id AND r.package_id = p.package_id AND r.status_id!='.$this->da->escapeInt($this->STATUS_DELETED),
+            ' f.file_id =' . $this->da->escapeInt($_file_id) . ' AND f.release_id = r.release_id AND r.package_id = p.package_id AND r.status_id!=' . $this->da->escapeInt($this->STATUS_DELETED),
             '',
             'ORDER BY rank DESC LIMIT 1',
             array('frs_release AS r','frs_file AS f')
@@ -66,7 +66,7 @@ class FRSPackageDao extends DataAccessObject
         $_id = (int) $id;
         $_group_id = (int) $group_id;
         return $this->_search(
-            'p.group_id = '.$this->da->escapeInt($_group_id).' AND r.release_id = '.$this->da->escapeInt($_id).' AND p.package_id = r.package_id AND r.status_id!='.$this->da->escapeInt($this->STATUS_DELETED),
+            'p.group_id = ' . $this->da->escapeInt($_group_id) . ' AND r.release_id = ' . $this->da->escapeInt($_id) . ' AND p.package_id = r.package_id AND r.status_id!=' . $this->da->escapeInt($this->STATUS_DELETED),
             '',
             'ORDER BY rank DESC LIMIT 1',
             array('frs_release AS r')
@@ -89,7 +89,7 @@ class FRSPackageDao extends DataAccessObject
     public function searchByGroupId($id)
     {
         $_id = (int) $id;
-        return $this->_search(' p.group_id = '.$this->da->escapeInt($_id), '', ' ORDER BY rank ASC ');
+        return $this->_search(' p.group_id = ' . $this->da->escapeInt($_id), '', ' ORDER BY rank ASC ');
     }
 
     public function searchActivePackagesByGroupId($id)
@@ -123,15 +123,15 @@ class FRSPackageDao extends DataAccessObject
             $from = [];
         }
         $sql = 'SELECT p.* '
-            .' FROM frs_package AS p '
-            .(count($from) > 0 ? ', ' . implode(', ', $from) : '');
+            . ' FROM frs_package AS p '
+            . (count($from) > 0 ? ', ' . implode(', ', $from) : '');
         if (trim($where) != '') {
-            $sql .= ' WHERE ' . $where. ' ';
+            $sql .= ' WHERE ' . $where . ' ';
             if (($extraFlags & self::INCLUDE_DELETED) == 0) {
-                $sql .= ' AND p.status_id != '.$this->da->escapeInt($this->STATUS_DELETED).' ';
+                $sql .= ' AND p.status_id != ' . $this->da->escapeInt($this->STATUS_DELETED) . ' ';
             }
         }
-        $sql .= $group.$order;
+        $sql .= $group . $order;
 
         return $this->retrieve($sql);
     }
@@ -140,7 +140,7 @@ class FRSPackageDao extends DataAccessObject
     public function searchPackageByName($package_name, $group_id)
     {
         $_group_id = (int) $group_id;
-        return $this->_search(' group_id='.$this->da->escapeInt($_group_id).' AND name='.$this->da->quoteSmart(htmlspecialchars($package_name)), '', '');
+        return $this->_search(' group_id=' . $this->da->escapeInt($_group_id) . ' AND name=' . $this->da->quoteSmart(htmlspecialchars($package_name)), '', '');
     }
 
 
@@ -156,7 +156,6 @@ class FRSPackageDao extends DataAccessObject
         $rank = null,
         $approve_license = null
     ) {
-
         $arg    = array();
         $values = array();
 
@@ -186,8 +185,8 @@ class FRSPackageDao extends DataAccessObject
         }
 
         $sql = 'INSERT INTO frs_package'
-            .'('.implode(', ', $arg).')'
-            .' VALUES ('.implode(', ', $values).')';
+            . '(' . implode(', ', $arg) . ')'
+            . ' VALUES (' . implode(', ', $values) . ')';
         return $this->_createAndReturnId($sql);
     }
 
@@ -207,8 +206,8 @@ class FRSPackageDao extends DataAccessObject
         }
         if (count($arg)) {
             $sql = 'INSERT INTO frs_package '
-                .'('.implode(', ', $arg).')'
-                .' VALUES ('.implode(', ', $values).')';
+                . '(' . implode(', ', $arg) . ')'
+                . ' VALUES (' . implode(', ', $values) . ')';
             return $this->_createAndReturnId($sql);
         } else {
             return false;
@@ -232,32 +231,31 @@ class FRSPackageDao extends DataAccessObject
         $rank = null,
         $approve_license = null
     ) {
-
         $argArray = array();
 
         if ($group_id !== null) {
-            $argArray[] = 'group_id='.($this->da->escapeInt($group_id));
+            $argArray[] = 'group_id=' . ($this->da->escapeInt($group_id));
         }
 
         if ($name !== null) {
-            $argArray[] = 'name='.$this->da->quoteSmart($name, array('force_string' => true));
+            $argArray[] = 'name=' . $this->da->quoteSmart($name, array('force_string' => true));
         }
 
         if ($status_id !== null) {
-            $argArray[] = 'status_id='.($this->da->escapeInt($status_id));
+            $argArray[] = 'status_id=' . ($this->da->escapeInt($status_id));
         }
 
         if ($rank !== null) {
-            $argArray[] = 'rank='. $this->prepareRanking('frs_package', $package_id, $group_id, $rank, 'package_id', 'group_id');
+            $argArray[] = 'rank=' . $this->prepareRanking('frs_package', $package_id, $group_id, $rank, 'package_id', 'group_id');
         }
 
         if ($approve_license !== null) {
-            $argArray[] = 'approve_license='.($approve_license ? 1 : 0);
+            $argArray[] = 'approve_license=' . ($approve_license ? 1 : 0);
         }
 
         $sql = 'UPDATE frs_package'
-            .' SET '.implode(', ', $argArray)
-            .' WHERE  status_id != '.$this->da->escapeInt($this->STATUS_DELETED).' AND package_id='.($this->da->escapeInt($package_id));
+            . ' SET ' . implode(', ', $argArray)
+            . ' WHERE  status_id != ' . $this->da->escapeInt($this->STATUS_DELETED) . ' AND package_id=' . ($this->da->escapeInt($package_id));
 
         $inserted = $this->update($sql);
         return $inserted;
@@ -280,13 +278,13 @@ class FRSPackageDao extends DataAccessObject
                         if ($key == 'rank') {
                             $value = $this->prepareRanking('frs_package', $package_id, $current['group_id'], $value, 'package_id', 'group_id');
                         }
-                        $set_array[] = $key .' = '. $this->da->quoteSmart($value, array('force_string' => ($key == 'name')));
+                        $set_array[] = $key . ' = ' . $this->da->quoteSmart($value, array('force_string' => ($key == 'name')));
                     }
                 }
                 if (count($set_array)) {
                     $sql = 'UPDATE frs_package'
-                        .' SET '.implode(' , ', $set_array)
-                        .' WHERE package_id='. $this->da->quoteSmart($package_id);
+                        . ' SET ' . implode(' , ', $set_array)
+                        . ' WHERE package_id=' . $this->da->quoteSmart($package_id);
                     $updated = $this->update($sql);
                 }
             }
@@ -303,7 +301,7 @@ class FRSPackageDao extends DataAccessObject
     public function delete($package_id, $status_deleted)
     {
         $sql = sprintf(
-            "UPDATE frs_package SET status_id= ".$this->da->escapeInt($status_deleted)." WHERE package_id=%d",
+            "UPDATE frs_package SET status_id= " . $this->da->escapeInt($status_deleted) . " WHERE package_id=%d",
             $this->da->escapeInt($package_id)
         );
 

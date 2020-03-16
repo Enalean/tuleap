@@ -67,11 +67,11 @@ class JsonDecoder
             case JSON_ERROR_STATE_MISMATCH:
             case JSON_ERROR_CTRL_CHAR:
             case JSON_ERROR_SYNTAX:
-                throw new InvalidJsonException('parameter "'.$key.'" syntax error, invalid JSON');
+                throw new InvalidJsonException('parameter "' . $key . '" syntax error, invalid JSON');
             case JSON_ERROR_UTF8:
-                throw new InvalidJsonException('Malformed UTF-8 characters, possibly incorrectly encoded parameter "'.$key.'"');
+                throw new InvalidJsonException('Malformed UTF-8 characters, possibly incorrectly encoded parameter "' . $key . '"');
             default:
-                throw new InvalidJsonException('Unknown JSON parameter "'.$key.'" error');
+                throw new InvalidJsonException('Unknown JSON parameter "' . $key . '" error');
         }
     }
 }

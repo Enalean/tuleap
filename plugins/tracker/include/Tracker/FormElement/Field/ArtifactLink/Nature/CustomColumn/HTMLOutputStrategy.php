@@ -47,7 +47,7 @@ class HTMLOutputStrategy implements OutputStrategy
     /** @return string */
     public function fetchFormatted(Tracker_ArtifactLinkInfo $artifact_link_info, $formatted_value)
     {
-        $artlink_as_html  = '<a href="'. $artifact_link_info->getUrl() .'">';
+        $artlink_as_html  = '<a href="' . $artifact_link_info->getUrl() . '">';
         $artlink_as_html .= $this->purifier->purify($formatted_value);
         $artlink_as_html .= '</a>';
 
@@ -77,6 +77,6 @@ class HTMLOutputStrategy implements OutputStrategy
         $title = $this->purifier->purify($warning);
 
         return $artifact_link_info->getLink() .
-            ' <i class="fa fa-exclamation-triangle format-warning" title="'. $title .'"></i>';
+            ' <i class="fa fa-exclamation-triangle format-warning" title="' . $title . '"></i>';
     }
 }

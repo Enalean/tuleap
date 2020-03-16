@@ -27,7 +27,6 @@ final class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends \PHPUnit\Fra
 
     protected function setUp() : void
     {
-
         parent::setUp();
         $this->field_122    = $this->buildSelectBoxField(122);
         $this->field_123    = $this->buildSelectBoxField(123);

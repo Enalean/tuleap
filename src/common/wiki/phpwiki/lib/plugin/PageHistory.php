@@ -27,7 +27,6 @@ class _PageHistory_PageRevisionIter extends WikiDB_PageRevisionIterator
 {
     public function __construct($rev_iter, $params)
     {
-
         $this->_iter = $rev_iter;
 
         extract($params);
@@ -370,7 +369,7 @@ class WikiPlugin_PageHistory extends WikiPlugin_RecentChanges
         // Hack alert: format() is a NORETURN for rss formatters.
         return $this->format($this->getChanges($dbi, $args), $args);
     }
-};
+}
 
 // $Log: PageHistory.php,v $
 // Revision 1.30  2004/06/14 11:31:39  rurban

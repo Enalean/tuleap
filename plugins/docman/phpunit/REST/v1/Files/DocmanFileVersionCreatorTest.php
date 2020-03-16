@@ -94,8 +94,8 @@ class DocmanFileVersionCreatorTest extends TestCase
             $user,
             $representation,
             $date,
-            (int)$item->getStatus(),
-            (int)$item->getObsolescenceDate(),
+            (int) $item->getStatus(),
+            (int) $item->getObsolescenceDate(),
             $item->getTitle(),
             $item->getDescription()
         );
@@ -131,8 +131,8 @@ class DocmanFileVersionCreatorTest extends TestCase
             $user,
             $representation,
             $date,
-            (int)$item->getStatus(),
-            (int)$item->getObsolescenceDate()
+            (int) $item->getStatus(),
+            (int) $item->getObsolescenceDate()
         );
 
         $this->assertEquals("/uploads/docman/version/1", $created_version_representation->upload_href);

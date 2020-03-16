@@ -175,7 +175,7 @@ class DataAccessObject
     {
         $ids = array();
         foreach ($dar as $row) {
-            $ids[] = (int)$row['id'];
+            $ids[] = (int) $row['id'];
         }
         return $ids;
     }
@@ -221,7 +221,7 @@ class DataAccessObject
     {
         $trace = debug_backtrace();
         $i     = isset($trace[1]) ? 1 : 0;
-        return $dar->isError() .' ==> '. $sql ." @@ ". $trace[$i]['file'] .' at line '. $trace[$i]['line'];
+        return $dar->isError() . ' ==> ' . $sql . " @@ " . $trace[$i]['file'] . ' at line ' . $trace[$i]['line'];
     }
 
     /**
@@ -291,9 +291,9 @@ class DataAccessObject
 
         // First, check if there is already some items
         $sql = sprintf(
-            'SELECT NULL'.
-                       ' FROM '. $this->da->quoteSmartSchema($table_name) .
-                       ' WHERE '. $parent_key .' = %d '.
+            'SELECT NULL' .
+                       ' FROM ' . $this->da->quoteSmartSchema($table_name) .
+                       ' WHERE ' . $parent_key . ' = %d ' .
                        ' %s',
             $parent_id,
             $additional_where_statement
@@ -303,13 +303,13 @@ class DataAccessObject
             // No items: nice, just set the first one to 0.
             $newRank = 0;
         } else {
-            switch ((string)$rank) {
+            switch ((string) $rank) {
                 case '--':
                     $sql = sprintf(
-                        'SELECT '. $rank_key .
-                               ' FROM '. $this->da->quoteSmartSchema($table_name) .
-                               ' WHERE '. $primary_key .' = %d',
-                        (int)$id
+                        'SELECT ' . $rank_key .
+                               ' FROM ' . $this->da->quoteSmartSchema($table_name) .
+                               ' WHERE ' . $primary_key . ' = %d',
+                        (int) $id
                     );
                     $dar = $this->retrieve($sql);
                     if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
@@ -321,9 +321,9 @@ class DataAccessObject
                     // Simple case: just pickup the most high rank in the table
                     // and add 1 to be laster than the first.
                     $sql = sprintf(
-                        'SELECT MAX('. $rank_key .')+1 as '. $rank_key .
-                               ' FROM '. $this->da->quoteSmartSchema($table_name) .
-                               ' WHERE '. $parent_key .' = %d '.
+                        'SELECT MAX(' . $rank_key . ')+1 as ' . $rank_key .
+                               ' FROM ' . $this->da->quoteSmartSchema($table_name) .
+                               ' WHERE ' . $parent_key . ' = %d ' .
                                ' %s',
                         $parent_id,
                         $additional_where_statement
@@ -365,13 +365,13 @@ class DataAccessObject
                     // In your implementation, USING(parent_id) should refer to the field
                     // that group all the items in one list.
                     $sql = sprintf(
-                        'SELECT i1.'. $primary_key .' as id, i1.'. $rank_key .' as '. $rank_key .
-                                   ' FROM '. $this->da->quoteSmartSchema($table_name) .' i1'.
-                                   '  INNER JOIN '. $this->da->quoteSmartSchema($table_name) .' i2 USING('. $parent_key .')'.
-                                   ' WHERE i2.'. $primary_key .' = %d'.
-                                   '   AND i1.'. $parent_key .' = %d'.
-                                   '   AND i1.'. $rank_key .' %s i2.'. $rank_key .
-                                   ' ORDER BY i1.'. $rank_key .' %s'.
+                        'SELECT i1.' . $primary_key . ' as id, i1.' . $rank_key . ' as ' . $rank_key .
+                                   ' FROM ' . $this->da->quoteSmartSchema($table_name) . ' i1' .
+                                   '  INNER JOIN ' . $this->da->quoteSmartSchema($table_name) . ' i2 USING(' . $parent_key . ')' .
+                                   ' WHERE i2.' . $primary_key . ' = %d' .
+                                   '   AND i1.' . $parent_key . ' = %d' .
+                                   '   AND i1.' . $rank_key . ' %s i2.' . $rank_key .
+                                   ' ORDER BY i1.' . $rank_key . ' %s' .
                                    ' LIMIT 1',
                         $id,
                         $parent_id,
@@ -385,10 +385,10 @@ class DataAccessObject
                         // Warning: the order is very important, please check that
                         // your final query work as expected.
                         $sql = sprintf(
-                            'UPDATE '. $this->da->quoteSmartSchema($table_name) .' i1, '. $this->da->quoteSmartSchema($table_name) .' i2'.
-                                   ' SET i1.'. $rank_key .' = i2.'. $rank_key .', i2.'. $rank_key .' = %d'.
-                                   ' WHERE i1.'. $primary_key .' = %d '.
-                                   '  AND i2.'. $primary_key .' = %d',
+                            'UPDATE ' . $this->da->quoteSmartSchema($table_name) . ' i1, ' . $this->da->quoteSmartSchema($table_name) . ' i2' .
+                                   ' SET i1.' . $rank_key . ' = i2.' . $rank_key . ', i2.' . $rank_key . ' = %d' .
+                                   ' WHERE i1.' . $primary_key . ' = %d ' .
+                                   '  AND i2.' . $primary_key . ' = %d',
                             $row[$rank_key],
                             $row['id'],
                             $id
@@ -402,9 +402,9 @@ class DataAccessObject
                     // This first part is quite simple: just pickup the lower rank
                     // in the table
                     $sql = sprintf(
-                        'SELECT MIN('. $rank_key .') as '. $rank_key .
-                               ' FROM '. $this->da->quoteSmartSchema($table_name) .
-                               ' WHERE '. $parent_key .' = %d '.
+                        'SELECT MIN(' . $rank_key . ') as ' . $rank_key .
+                               ' FROM ' . $this->da->quoteSmartSchema($table_name) .
+                               ' WHERE ' . $parent_key . ' = %d ' .
                                ' %s',
                         $parent_id,
                         $additional_where_statement
@@ -424,10 +424,10 @@ class DataAccessObject
                     // The idea is to move up all the ranks upper to this value and to
                     // return the current value as the new rank.
                     $sql = sprintf(
-                        'UPDATE '. $this->da->quoteSmartSchema($table_name) .
-                               ' SET '. $rank_key .' = '. $rank_key .' + 1'.
-                               ' WHERE '. $parent_key .' = %d'.
-                               '  AND '. $rank_key .' >= %d '.
+                        'UPDATE ' . $this->da->quoteSmartSchema($table_name) .
+                               ' SET ' . $rank_key . ' = ' . $rank_key . ' + 1' .
+                               ' WHERE ' . $parent_key . ' = %d' .
+                               '  AND ' . $rank_key . ' >= %d ' .
                                ' %s',
                         $parent_id,
                         $rank,

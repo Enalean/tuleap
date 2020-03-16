@@ -23,7 +23,7 @@ use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalResponseMock;
 
-require_once __DIR__.'/bootstrap.php';
+require_once __DIR__ . '/bootstrap.php';
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class GitRepositoryManagerForkTest extends TestCase
@@ -386,7 +386,7 @@ class GitRepositoryManagerForkTest extends TestCase
         $repo2 = $this->givenARepository(456);
         $repo2->setName('megaRepoGit');
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with('warning', "Got an unexpected error while forking ".$repo2->getName().": ".$errorMessage)->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->with('warning', "Got an unexpected error while forking " . $repo2->getName() . ": " . $errorMessage)->once();
 
         $this->backend->shouldReceive('fork')->andReturn(667)->once();
         $this->backend->shouldReceive('fork')->andThrow(new Exception($errorMessage))->once();

@@ -135,12 +135,12 @@ class WikiPlugin_CreatePage extends WikiPlugin
                     unset($param['template']);
                     $url = WikiURL($s, $param, 'absurl');
                 }
-                $page->save($initial_content, $version+1, $meta);
+                $page->save($initial_content, $version + 1, $meta);
             }
         }
         return HTML($request->redirect($url, true));
     }
-};
+}
 
 // $Log: CreatePage.php,v $
 // Revision 1.7  2004/09/06 10:22:15  rurban

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/../../constants.php';
+require_once dirname(__FILE__) . '/../../constants.php';
 
 /**
  * Provides the Cardwall_OnTop configured field for an artifact, and fallbacks on the status field if
@@ -38,17 +38,15 @@ class Cardwall_OnTop_Config_MappedFieldProvider implements Cardwall_FieldProvide
     private $config;
 
     public function __construct(
-        Cardwall_OnTop_Config                         $config,
+        Cardwall_OnTop_Config $config,
         Cardwall_FieldProviders_SemanticStatusFieldRetriever $semantic_status_provider
     ) {
-
         $this->semantic_status_provider = $semantic_status_provider;
         $this->config                   = $config;
     }
 
     public function getField(Tracker $tracker)
     {
-
         $mapping = $this->config->getMappingFor($tracker);
         if ($mapping) {
             return $mapping->getField();

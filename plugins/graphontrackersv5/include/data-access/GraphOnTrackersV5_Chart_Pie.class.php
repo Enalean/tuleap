@@ -172,15 +172,15 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
      */
     public function setSpecificPropertiesFromXML($xml, $formsMapping)
     {
-        if (isset($formsMapping[(string)$xml['base']])) {
-            $this->setField_base($formsMapping[(string)$xml['base']]);
+        if (isset($formsMapping[(string) $xml['base']])) {
+            $this->setField_base($formsMapping[(string) $xml['base']]);
         }
     }
 
     public function exportToXml(SimpleXMLElement $root, $formsMapping)
     {
         parent::exportToXML($root, $formsMapping);
-        if ($mapping = (string)array_search($this->field_base, $formsMapping)) {
+        if ($mapping = (string) array_search($this->field_base, $formsMapping)) {
             $root->addAttribute('base', $mapping);
         }
     }

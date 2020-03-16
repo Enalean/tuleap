@@ -259,7 +259,7 @@ class _DiffEngine
         }
 
             $this->lcs = 0;
-            $this->seq[0]= $yoff - 1;
+            $this->seq[0] = $yoff - 1;
             $this->in_seq = array();
             $ymids[0] = array();
 
@@ -268,11 +268,11 @@ class _DiffEngine
         for ($chunk = 0; $chunk < $nchunks; $chunk++) {
             if ($chunk > 0) {
                 for ($i = 0; $i <= $this->lcs; $i++) {
-                    $ymids[$i][$chunk-1] = $this->seq[$i];
+                    $ymids[$i][$chunk - 1] = $this->seq[$i];
                 }
             }
 
-            $x1 = $xoff + (int)(($numer + ($xlim-$xoff)*$chunk) / $nchunks);
+            $x1 = $xoff + (int) (($numer + ($xlim - $xoff) * $chunk) / $nchunks);
             for (; $x < $x1; $x++) {
                 $line = $flip ? $this->yv[$x] : $this->xv[$x];
                 if (empty($ymatches[$line])) {
@@ -288,7 +288,7 @@ class _DiffEngine
                     }
                 }
                 foreach ($matches as $y) {
-                    if ($y > $this->seq[$k-1]) {
+                    if ($y > $this->seq[$k - 1]) {
                         USE_ASSERTS && assert($y < $this->seq[$k]);
                        // Optimization: this is a common case:
                        //  next match is just replacing previous match.
@@ -298,7 +298,7 @@ class _DiffEngine
                     } elseif (empty($this->in_seq[$y])) {
                         $k = $this->_lcs_pos($y);
                         USE_ASSERTS && assert($k > 0);
-                        $ymids[$k] = $ymids[$k-1];
+                        $ymids[$k] = $ymids[$k - 1];
                     }
                 }
             }
@@ -307,7 +307,7 @@ class _DiffEngine
             $seps[] = $flip ? array($yoff, $xoff) : array($xoff, $yoff);
             $ymid = $ymids[$this->lcs];
         for ($n = 0; $n < $nchunks - 1; $n++) {
-            $x1 = $xoff + (int)(($numer + ($xlim - $xoff) * $n) / $nchunks);
+            $x1 = $xoff + (int) (($numer + ($xlim - $xoff) * $n) / $nchunks);
             $y1 = $ymid[$n] + 1;
             $seps[] = $flip ? array($y1, $x1) : array($x1, $y1);
         }
@@ -327,7 +327,7 @@ class _DiffEngine
 
         $beg = 1;
         while ($beg < $end) {
-            $mid = (int)(($beg + $end) / 2);
+            $mid = (int) (($beg + $end) / 2);
             if ($ypos > $this->seq[$mid]) {
                 $beg = $mid + 1;
             } else {
@@ -711,7 +711,6 @@ class MappedDiff extends Diff
         $mapped_from_lines,
         $mapped_to_lines
     ) {
-
         assert(sizeof($from_lines) == sizeof($mapped_from_lines));
         assert(sizeof($to_lines) == sizeof($mapped_to_lines));
 
@@ -770,7 +769,6 @@ class DiffFormatter
      */
     public function format($diff)
     {
-
         $xi = $yi = 1;
         $block = false;
         $context = array();

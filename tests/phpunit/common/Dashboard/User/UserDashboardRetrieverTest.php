@@ -69,7 +69,6 @@ class UserDashboardRetrieverTest extends TestCase
 
     public function testItReturnNothingIfThereAreNoDashboards()
     {
-
         $result = $this->user_retriever->getAllUserDashboards($this->user_without_dashboard);
 
         $this->assertEmpty($result);

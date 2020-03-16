@@ -62,7 +62,7 @@ class ReviewerChangeDAO extends DataAccessObject
             WHERE pull_request_id = ?
             ',
             [$pull_request_id],
-            \PDO::FETCH_GROUP|\PDO::FETCH_ASSOC
+            \PDO::FETCH_GROUP | \PDO::FETCH_ASSOC
         );
     }
 }

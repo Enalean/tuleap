@@ -42,7 +42,7 @@ class BackgroundColorSemanticFactory implements IDuplicateSemantic
         }
 
         foreach ($field_mapping as $mapping) {
-            if ((int)$mapping['from'] === $old_background_field) {
+            if ((int) $mapping['from'] === $old_background_field) {
                 $to_field_id = $mapping['to'];
                 $this->background_color_dao->save($to_tracker_id, $to_field_id);
             }

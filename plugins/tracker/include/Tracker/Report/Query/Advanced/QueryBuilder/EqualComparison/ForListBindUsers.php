@@ -92,7 +92,7 @@ class ForListBindUsers implements FieldFromWhereBuilder, ListBindUsersFromWhereB
     private function getFromWhereForEmptyCondition(QueryListFieldPresenter $parameter_collection)
     {
         $condition = "($parameter_collection->changeset_value_alias.changeset_id IS NULL OR $parameter_collection->changeset_value_list_alias.bindvalue_id =" .
-            $this->escapeInt(Tracker_FormElement_Field_List::NONE_VALUE).")";
+            $this->escapeInt(Tracker_FormElement_Field_List::NONE_VALUE) . ")";
 
         $parameter_collection->setCondition($condition);
 

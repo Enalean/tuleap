@@ -96,7 +96,7 @@ class SystemEventProcessorMutex
     {
         $current_process_username = $this->getCurrentProcessUserName();
         if ($current_process_username != $this->process_owner) {
-            throw new Exception("Must be ".$this->process_owner." to run this script (currently:$current_process_username)\n");
+            throw new Exception("Must be " . $this->process_owner . " to run this script (currently:$current_process_username)\n");
         }
         return true;
     }

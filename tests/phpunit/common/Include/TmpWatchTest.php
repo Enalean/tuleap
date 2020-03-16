@@ -37,7 +37,7 @@ class TmpWatchTest extends TestCase
 
     public function testItReportsAnErrorWhenDirectoryDoesntExist(): void
     {
-        $tmp_watch = new TmpWatch($this->target_dir.'/foo', 5);
+        $tmp_watch = new TmpWatch($this->target_dir . '/foo', 5);
 
         $this->expectException(InvalidDirectoryException::class);
         $tmp_watch->run();
@@ -61,80 +61,80 @@ class TmpWatchTest extends TestCase
 
     public function testItRemovesFilesInDirectory(): void
     {
-        mkdir($this->target_dir.'/foo', 0755, true);
-        touch($this->target_dir.'/foo/bar', (new \DatetimeImmutable('5 hours ago'))->getTimestamp());
+        mkdir($this->target_dir . '/foo', 0755, true);
+        touch($this->target_dir . '/foo/bar', (new \DatetimeImmutable('5 hours ago'))->getTimestamp());
 
-        $tmp_watch = new TmpWatch($this->target_dir.'/foo', 1);
+        $tmp_watch = new TmpWatch($this->target_dir . '/foo', 1);
         $tmp_watch->run();
 
-        $this->assertFileNotExists($this->target_dir.'/foo/bar');
+        $this->assertFileNotExists($this->target_dir . '/foo/bar');
     }
 
     public function testItDoesntRemovesFilesThatAreNotExpired(): void
     {
-        mkdir($this->target_dir.'/foo', 0755, true);
-        touch($this->target_dir.'/foo/bar', (new \DatetimeImmutable('5 hours ago'))->getTimestamp());
+        mkdir($this->target_dir . '/foo', 0755, true);
+        touch($this->target_dir . '/foo/bar', (new \DatetimeImmutable('5 hours ago'))->getTimestamp());
 
-        $tmp_watch = new TmpWatch($this->target_dir.'/foo', 12);
+        $tmp_watch = new TmpWatch($this->target_dir . '/foo', 12);
         $tmp_watch->run();
 
-        $this->assertFileExists($this->target_dir.'/foo/bar');
+        $this->assertFileExists($this->target_dir . '/foo/bar');
     }
 
 
     public function testItRemovesFilesWithLongTimes(): void
     {
-        mkdir($this->target_dir.'/foo', 0755, true);
-        touch($this->target_dir.'/foo/bar', (new \DatetimeImmutable('15 days ago'))->getTimestamp());
+        mkdir($this->target_dir . '/foo', 0755, true);
+        touch($this->target_dir . '/foo/bar', (new \DatetimeImmutable('15 days ago'))->getTimestamp());
 
-        $tmp_watch = new TmpWatch($this->target_dir.'/foo', 14 * 24);
+        $tmp_watch = new TmpWatch($this->target_dir . '/foo', 14 * 24);
         $tmp_watch->run();
 
-        $this->assertFileNotExists($this->target_dir.'/foo/bar');
+        $this->assertFileNotExists($this->target_dir . '/foo/bar');
     }
 
     public function testItRemovesSeveralFiles(): void
     {
-        mkdir($this->target_dir.'/foo', 0755, true);
+        mkdir($this->target_dir . '/foo', 0755, true);
 
-        touch($this->target_dir.'/foo/bar', (new \DatetimeImmutable('5 hours ago'))->getTimestamp());
-        touch($this->target_dir.'/foo/baz', (new \DatetimeImmutable('6 hours ago'))->getTimestamp());
-        touch($this->target_dir.'/foo/bur', (new \DatetimeImmutable('7 hours ago'))->getTimestamp());
+        touch($this->target_dir . '/foo/bar', (new \DatetimeImmutable('5 hours ago'))->getTimestamp());
+        touch($this->target_dir . '/foo/baz', (new \DatetimeImmutable('6 hours ago'))->getTimestamp());
+        touch($this->target_dir . '/foo/bur', (new \DatetimeImmutable('7 hours ago'))->getTimestamp());
 
-        $tmp_watch = new TmpWatch($this->target_dir.'/foo', 1);
+        $tmp_watch = new TmpWatch($this->target_dir . '/foo', 1);
         $tmp_watch->run();
 
-        $this->assertFileNotExists($this->target_dir.'/foo/bar');
-        $this->assertFileNotExists($this->target_dir.'/foo/baz');
-        $this->assertFileNotExists($this->target_dir.'/foo/bur');
+        $this->assertFileNotExists($this->target_dir . '/foo/bar');
+        $this->assertFileNotExists($this->target_dir . '/foo/baz');
+        $this->assertFileNotExists($this->target_dir . '/foo/bur');
     }
 
     public function testItRemovesOnlyExpiredFiles(): void
     {
-        mkdir($this->target_dir.'/foo', 0755, true);
+        mkdir($this->target_dir . '/foo', 0755, true);
 
-        touch($this->target_dir.'/foo/bar', (new \DatetimeImmutable('5 hours ago'))->getTimestamp());
-        touch($this->target_dir.'/foo/baz', (new \DatetimeImmutable('1 hour ago'))->getTimestamp());
-        touch($this->target_dir.'/foo/bur', (new \DatetimeImmutable('7 hours ago'))->getTimestamp());
+        touch($this->target_dir . '/foo/bar', (new \DatetimeImmutable('5 hours ago'))->getTimestamp());
+        touch($this->target_dir . '/foo/baz', (new \DatetimeImmutable('1 hour ago'))->getTimestamp());
+        touch($this->target_dir . '/foo/bur', (new \DatetimeImmutable('7 hours ago'))->getTimestamp());
 
-        $tmp_watch = new TmpWatch($this->target_dir.'/foo', 2);
+        $tmp_watch = new TmpWatch($this->target_dir . '/foo', 2);
         $tmp_watch->run();
 
-        $this->assertFileNotExists($this->target_dir.'/foo/bar');
-        $this->assertFileExists($this->target_dir.'/foo/baz');
-        $this->assertFileNotExists($this->target_dir.'/foo/bur');
+        $this->assertFileNotExists($this->target_dir . '/foo/bar');
+        $this->assertFileExists($this->target_dir . '/foo/baz');
+        $this->assertFileNotExists($this->target_dir . '/foo/bur');
     }
 
     public function testItDoesntRemoveDirectories(): void
     {
-        mkdir($this->target_dir.'/foo', 0755, true);
+        mkdir($this->target_dir . '/foo', 0755, true);
 
-        mkdir($this->target_dir.'/foo/fii', 0755, true);
-        touch($this->target_dir.'/foo/fii', (new \DatetimeImmutable('7 hours ago'))->getTimestamp());
+        mkdir($this->target_dir . '/foo/fii', 0755, true);
+        touch($this->target_dir . '/foo/fii', (new \DatetimeImmutable('7 hours ago'))->getTimestamp());
 
-        $tmp_watch = new TmpWatch($this->target_dir.'/foo', 2);
+        $tmp_watch = new TmpWatch($this->target_dir . '/foo', 2);
         $tmp_watch->run();
 
-        $this->assertFileExists($this->target_dir.'/foo/fii');
+        $this->assertFileExists($this->target_dir . '/foo/fii');
     }
 }

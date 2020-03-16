@@ -44,7 +44,7 @@ class AgileDashboard_KanbanDao extends DataAccessObject
     private function duplicateReports($old_kanban_id, $new_kanban_id, array $report_mapping)
     {
         array_walk($report_mapping, array($this, 'convertValueIdToWhenThenStatement'));
-        $new_report_id = "CASE report_id ". implode(' ', $report_mapping) ." END";
+        $new_report_id = "CASE report_id " . implode(' ', $report_mapping) . " END";
 
         $sql = "INSERT INTO plugin_agiledashboard_kanban_tracker_reports (kanban_id, report_id)
                 SELECT $new_kanban_id, $new_report_id
@@ -71,7 +71,7 @@ class AgileDashboard_KanbanDao extends DataAccessObject
                 $this->convertValueIdToWhenThenStatement($new_value_id, $old_value_id);
             }
         );
-        $new_value_id = "CASE value_id ". implode(' ', $value_mapping) ." END";
+        $new_value_id = "CASE value_id " . implode(' ', $value_mapping) . " END";
 
         $sql = "INSERT INTO plugin_agiledashboard_kanban_configuration_column (kanban_id, value_id, wip_limit)
                 SELECT $new_kanban_id, $new_value_id, wip_limit
@@ -223,7 +223,7 @@ class AgileDashboard_KanbanDao extends DataAccessObject
 
         $res = $this->retrieveFirstRow($sql);
 
-        return (!$res)? 0 : (int)$res['nb'];
+        return (!$res) ? 0 : (int) $res['nb'];
     }
 
     public function countKanbanCardsAfter(int $timestamp): int
@@ -232,10 +232,10 @@ class AgileDashboard_KanbanDao extends DataAccessObject
                 FROM plugin_agiledashboard_kanban_configuration AS kanban
                 INNER JOIN tracker_artifact
                   ON kanban.tracker_id = tracker_artifact.tracker_id
-                AND tracker_artifact.submitted_on > '.$this->da->escapeInt($timestamp);
+                AND tracker_artifact.submitted_on > ' . $this->da->escapeInt($timestamp);
 
         $res = $this->retrieveFirstRow($sql);
 
-        return (!$res)? 0 : (int)$res['nb'];
+        return (!$res) ? 0 : (int) $res['nb'];
     }
 }

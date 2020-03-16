@@ -53,7 +53,7 @@ class _PageList_Column_numbacklinks extends _PageList_Column_custom
     {
         return $this->_getValue($page_handle, $revision_handle);
     }
-};
+}
 
 class _PageList_Column_coagreement extends _PageList_Column_custom
 {

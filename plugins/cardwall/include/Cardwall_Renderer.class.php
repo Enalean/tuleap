@@ -111,13 +111,13 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
     {
         $total_rows = $matching_ids['id'] ? substr_count($matching_ids['id'], ',') + 1 : 0;
         if (!$total_rows) {
-            return '<p>'. $GLOBALS['Language']->getText('plugin_tracker', 'no_artifacts') .'</p>';
+            return '<p>' . $GLOBALS['Language']->getText('plugin_tracker', 'no_artifacts') . '</p>';
         }
 
         $artifact_ids     = explode(',', $matching_ids['id']);
         $presenter = $this->getPresenter($artifact_ids, $user, $form);
 
-        $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../templates');
+        $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__) . '/../templates');
 
         return $renderer->renderToString('renderer', $presenter);
     }
@@ -127,7 +127,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
      */
     private function getPresenter(array $artifact_ids, PFUser $user, $form = null)
     {
-        $redirect_parameter = 'cardwall[renderer]['. $this->report->id .']='. $this->id;
+        $redirect_parameter = 'cardwall[renderer][' . $this->report->id . ']=' . $this->id;
 
         if ($this->field === null) {
             $board = new Cardwall_Board(array(), new Cardwall_OnTop_Config_ColumnCollection(), new Cardwall_MappingCollection());
@@ -199,7 +199,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
         if ($renderer_parameters && is_array($renderer_parameters)) {
             //Update the field_id parameter
             if (isset($renderer_parameters['columns'])) {
-                $new_columns_field = (int)$renderer_parameters['columns'];
+                $new_columns_field = (int) $renderer_parameters['columns'];
                 if ($new_columns_field && (
                         ($this->field !== null && ($this->field->getId() !== $new_columns_field))
                     ||
@@ -228,7 +228,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
             false
         );
 
-        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../templates');
+        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__) . '/../templates');
 
         $html .= $renderer->renderToString('additional-button', $additional_button_presenter);
         $html .= $this->fetchCards($this->report->getMatchingIds(), $user);
@@ -308,7 +308,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
     public function exportToXml(SimpleXMLElement $root, array $formsMapping)
     {
         parent::exportToXml($root, $formsMapping);
-        if ($this->field !== null && ($mapping = (string)array_search($this->field->getId(), $formsMapping))) {
+        if ($this->field !== null && ($mapping = (string) array_search($this->field->getId(), $formsMapping))) {
             $root->addAttribute('field_id', $mapping);
         }
     }

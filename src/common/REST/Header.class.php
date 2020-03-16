@@ -247,6 +247,6 @@ class Header
 
     private static function sendHeader($name, $value)
     {
-        header($name .': '. $value);
+        header($name . ': ' . $value);
     }
 }

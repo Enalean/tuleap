@@ -22,7 +22,7 @@
 
 define('LDAP_BASE_URL', '/plugins/ldap');
 define('LDAP_BASE_DIR', dirname(__FILE__));
-define('LDAP_TEMPLATE_DIR', realpath(dirname(__FILE__).'/../templates'));
+define('LDAP_TEMPLATE_DIR', realpath(dirname(__FILE__) . '/../templates'));
 define('LDAP_SITE_CONTENT_DIR', LDAP_BASE_DIR . '/../site-content');
 
 /**

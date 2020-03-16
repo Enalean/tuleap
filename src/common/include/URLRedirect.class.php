@@ -76,9 +76,9 @@ class URLRedirect
 
         $server_url = '';
         if (array_key_exists('host', $urlToken) && $urlToken['host']) {
-            $server_url = $urlToken['scheme'].'://'.$urlToken['host'];
+            $server_url = $urlToken['scheme'] . '://' . $urlToken['host'];
             if (array_key_exists('port', $urlToken) && $urlToken['port']) {
-                $server_url .= ':'.$urlToken['port'];
+                $server_url .= ':' . $urlToken['port'];
             }
         }
 
@@ -102,21 +102,21 @@ class URLRedirect
             }
 
             if (array_key_exists('query', $urlToken) && $urlToken['query']) {
-                $finaleUrl .= '?'.$urlToken['query'].'&amp;'.$return_to_parameter;
+                $finaleUrl .= '?' . $urlToken['query'] . '&amp;' . $return_to_parameter;
             } else {
-                $finaleUrl .= '?'.$return_to_parameter;
+                $finaleUrl .= '?' . $return_to_parameter;
             }
             if (strstr($return_to, 'pv=2')) {
                 $finaleUrl .= '&pv=2';
             }
         } else {
             if (array_key_exists('query', $urlToken) && $urlToken['query']) {
-                $finaleUrl .= '?'.$urlToken['query'];
+                $finaleUrl .= '?' . $urlToken['query'];
             }
         }
 
         if (array_key_exists('fragment', $urlToken) && $urlToken['fragment']) {
-            $finaleUrl .= '#'.$urlToken['fragment'];
+            $finaleUrl .= '#' . $urlToken['fragment'];
         }
 
         return $finaleUrl;

@@ -72,7 +72,7 @@ class Docman_HtmlFilter
         $html = '';
         $value = $this->filter->getValue();
         if ($value !== null) {
-            $html .= '<input type="hidden" name="'.$this->filter->md->getLabel().'" value="'.$this->hp->purify($value).'" />';
+            $html .= '<input type="hidden" name="' . $this->filter->md->getLabel() . '" value="' . $this->hp->purify($value) . '" />';
             $html .= "\n";
         }
         return $html;
@@ -82,7 +82,7 @@ class Docman_HtmlFilter
     {
         $trashLink = '';
         if ($trashLinkBase) {
-            $trashLink = $trashLinkBase.$this->filter->md->getLabel();
+            $trashLink = $trashLinkBase . $this->filter->md->getLabel();
             $trashWarn = $this->hp->purify(dgettext('tuleap-docman', 'Are you sure you want to remove this filter from the list?'));
             $trashAlt  = $this->hp->purify(dgettext('tuleap-docman', 'Remove the filter'));
             $trashLink = html_trash_link($trashLink, $trashWarn, $trashAlt);
@@ -232,7 +232,7 @@ class Docman_HtmlFilterText extends Docman_HtmlFilter
     public function _valueSelectorHtml($formName = 0)
     {
         $html = '';
-        $html .= '<input type="text" name="'.$this->filter->md->getLabel().'" value="'.$this->hp->purify($this->filter->getValue()).'" class="text_field"/>';
+        $html .= '<input type="text" name="' . $this->filter->md->getLabel() . '" value="' . $this->hp->purify($this->filter->getValue()) . '" class="text_field"/>';
         return $html;
     }
 }

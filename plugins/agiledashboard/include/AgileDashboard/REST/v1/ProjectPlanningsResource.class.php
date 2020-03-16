@@ -34,7 +34,6 @@ class ProjectPlanningsResource
 
     public function get(PFUser $user, Project $project, $limit, $offset)
     {
-
         if (! $this->limitValueIsAcceptable($limit)) {
              throw new RestException(406, 'Maximum value for limit exceeded');
         }

@@ -37,16 +37,16 @@ function define_f() {
 }
 function undo_enable(bool) {
    if (bool) {
-     sr_undo.src='".$undo_btn."';
+     sr_undo.src='" . $undo_btn . "';
      sr_undo.alt='"
-            ._("Undo")
-            ."';
+            . _("Undo")
+            . "';
      sr_undo.disabled = false;
    } else {
-     sr_undo.src='".$undo_d_btn."';
+     sr_undo.src='" . $undo_d_btn . "';
      sr_undo.alt='"
-            ._("Undo disabled")
-            ."';
+            . _("Undo disabled")
+            . "';
      sr_undo.disabled = true;
      if(sr_undo.blur) sr_undo.blur();
   }
@@ -54,16 +54,16 @@ function undo_enable(bool) {
 function replace() {
    replacewin = window.open('','','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,height=90,width=450');
    replacewin.window.document.write('<html><head><title>"
-            ._("Search & Replace")
-            ."</title><style type=\"text/css\"><'+'!'+'-- body, input {font-family:Tahoma,Arial,Helvetica,sans-serif;font-size:10pt;font-weight:bold;} td {font-size:9pt}  --'+'></style></head><body bgcolor=\"#dddddd\" onload=\"if(document.forms[0].ein.focus) document.forms[0].ein.focus(); return false;\"><form><center><table><tr><td align=\"right\">'+'"
-            ._("Search")
-            .":</td><td align=\"left\"><input type=\"text\" name=\"ein\" size=\"45\" maxlength=\"500\"></td></tr><tr><td align=\"right\">'+' "
-            ._("Replace with")
-            .":</td><td align=\"left\"><input type=\"text\" name=\"aus\" size=\"45\" maxlength=\"500\"></td></tr><tr><td colspan=\"2\" align=\"center\"><input type=\"button\" value=\" "
-            ._("OK")
-            ." \" onclick=\"if(self.opener)self.opener.do_replace(); return false;\">&nbsp;&nbsp;&nbsp;<input type=\"button\" value=\""
-            ._("Close")
-            ."\" onclick=\"self.close(); return false;\"></td></tr></table></center></form></body></html>');
+            . _("Search & Replace")
+            . "</title><style type=\"text/css\"><'+'!'+'-- body, input {font-family:Tahoma,Arial,Helvetica,sans-serif;font-size:10pt;font-weight:bold;} td {font-size:9pt}  --'+'></style></head><body bgcolor=\"#dddddd\" onload=\"if(document.forms[0].ein.focus) document.forms[0].ein.focus(); return false;\"><form><center><table><tr><td align=\"right\">'+'"
+            . _("Search")
+            . ":</td><td align=\"left\"><input type=\"text\" name=\"ein\" size=\"45\" maxlength=\"500\"></td></tr><tr><td align=\"right\">'+' "
+            . _("Replace with")
+            . ":</td><td align=\"left\"><input type=\"text\" name=\"aus\" size=\"45\" maxlength=\"500\"></td></tr><tr><td colspan=\"2\" align=\"center\"><input type=\"button\" value=\" "
+            . _("OK")
+            . " \" onclick=\"if(self.opener)self.opener.do_replace(); return false;\">&nbsp;&nbsp;&nbsp;<input type=\"button\" value=\""
+            . _("Close")
+            . "\" onclick=\"self.close(); return false;\"></td></tr></table></center></form></body></html>');
    replacewin.window.document.close();
    return false;
 }
@@ -77,10 +77,10 @@ function do_replace() {
    txt=txt.replace(ein,aus);
    ein=ein.toString().substring(1,ein.toString().length-2);
    result(z_repl, '"
-            .sprintf(_("Substring \"%s\" found %s times. Replace with \"%s\"?"), "'+ein+'", "'+z_repl+'", "'+aus+'")
-            ."', txt, '"
-            .sprintf(_("String \"%s\" not found."), "'+ein+'")
-            ."');
+            . sprintf(_("Substring \"%s\" found %s times. Replace with \"%s\"?"), "'+ein+'", "'+z_repl+'", "'+aus+'")
+            . "', txt, '"
+            . sprintf(_("String \"%s\" not found."), "'+ein+'")
+            . "');
    replacewin.window.focus();
    replacewin.window.document.forms[0].ein.focus();
    return false;
@@ -101,9 +101,9 @@ function do_undo() {
       undo_buffer[undo_buffer_index]=null;
       undo_buffer_index--;
       if(undo_buffer_index==0) {
-         alert('".
+         alert('" .
             _("Operation undone")
-            ."');
+            . "');
          undo_enable(false);
       }
    }
@@ -141,51 +141,51 @@ function undo_save() {
         if (ENABLE_EDIT_TOOLBAR) {
             $toolarray = array(
                            array(
-                                 "image"=>"ed_format_bold.png",
-                                 "open"=>"*",
-                                 "close"=>"*",
-                                 "sample"=>_("Bold text"),
-                                 "tip"=>_("Bold text")),
-                           array("image"=>"ed_format_italic.png",
-                                 "open"=>"_",
-                                 "close"=>"_",
-                                 "sample"=>_("Italic text"),
-                                 "tip"=>_("Italic text")),
-                           array("image"=>"ed_pagelink.png",
-                                 "open"=>"[",
-                                 "close"=>"]",
-                                 "sample"=>_("optional label | PageName"),
-                                 "tip"=>_("Link to page")),
-                           array("image"=>"ed_link.png",
-                                 "open"=>"[",
-                                 "close"=>"]",
-                                 "sample"=>_("optional label | http://www.example.com"),
-                                 "tip"=>_("External link (remember http:// prefix)")),
-                           array("image"=>"ed_headline.png",
-                                 "open"=>"\\n!!! ",
-                                 "close"=>"\\n",
-                                 "sample"=>_("Headline text"),
-                                 "tip"=>_("Level 1 headline")),
-                           array("image"=>"ed_image.png",
-                                 "open"=>"[ ",
-                                 "close"=>" ]",
-                                 "sample"=>_("Example.jpg"),
-                                 "tip"=>_("Embedded image")),
-                           array("image"=>"ed_nowiki.png",
-                                 "open"=>"\\n\\<verbatim\\>\\n",
-                                 "close"=>"\\n\\</verbatim\\>\\n",
-                                 "sample"=>_("Insert non-formatted text here"),
-                                 "tip"=>_("Ignore wiki formatting")),
-                           array("image"=>"ed_sig.png",
+                                 "image" => "ed_format_bold.png",
+                                 "open" => "*",
+                                 "close" => "*",
+                                 "sample" => _("Bold text"),
+                                 "tip" => _("Bold text")),
+                           array("image" => "ed_format_italic.png",
+                                 "open" => "_",
+                                 "close" => "_",
+                                 "sample" => _("Italic text"),
+                                 "tip" => _("Italic text")),
+                           array("image" => "ed_pagelink.png",
+                                 "open" => "[",
+                                 "close" => "]",
+                                 "sample" => _("optional label | PageName"),
+                                 "tip" => _("Link to page")),
+                           array("image" => "ed_link.png",
+                                 "open" => "[",
+                                 "close" => "]",
+                                 "sample" => _("optional label | http://www.example.com"),
+                                 "tip" => _("External link (remember http:// prefix)")),
+                           array("image" => "ed_headline.png",
+                                 "open" => "\\n!!! ",
+                                 "close" => "\\n",
+                                 "sample" => _("Headline text"),
+                                 "tip" => _("Level 1 headline")),
+                           array("image" => "ed_image.png",
+                                 "open" => "[ ",
+                                 "close" => " ]",
+                                 "sample" => _("Example.jpg"),
+                                 "tip" => _("Embedded image")),
+                           array("image" => "ed_nowiki.png",
+                                 "open" => "\\n\\<verbatim\\>\\n",
+                                 "close" => "\\n\\</verbatim\\>\\n",
+                                 "sample" => _("Insert non-formatted text here"),
+                                 "tip" => _("Ignore wiki formatting")),
+                           array("image" => "ed_sig.png",
                                  "open" => " --" . $GLOBALS['request']->_user->UserName(),
                                  "close" => "",
-                                 "sample"=>"",
-                                 "tip"=>_("Your signature")),
-                           array("image"=>"ed_hr.png",
-                                 "open"=>"\\n----\\n",
-                                 "close"=>"",
-                                 "sample"=>"",
-                                 "tip"=>_("Horizontal line"))
+                                 "sample" => "",
+                                 "tip" => _("Your signature")),
+                           array("image" => "ed_hr.png",
+                                 "open" => "\\n----\\n",
+                                 "close" => "",
+                                 "sample" => "",
+                                 "tip" => _("Horizontal line"))
                            );
             $btn = new SubmitImageButton(
                 _("Save"),
@@ -194,7 +194,7 @@ function undo_save() {
                 $WikiTheme->getImageURL("ed_save.png")
             );
             $btn->addTooltip(_("Save"));
-            $toolbar .= ('document.writeln("'.addslashes($btn->asXml()).'");'."\n");
+            $toolbar .= ('document.writeln("' . addslashes($btn->asXml()) . '");' . "\n");
             $btn = new SubmitImageButton(
                 _("Preview"),
                 "edit[preview]",
@@ -202,7 +202,7 @@ function undo_save() {
                 $WikiTheme->getImageURL("ed_preview.png")
             );
             $btn->addTooltip(_("Preview"));
-            $toolbar .= ('document.writeln("'.addslashes($btn->asXml()).'");'."\n");
+            $toolbar .= ('document.writeln("' . addslashes($btn->asXml()) . '");' . "\n");
 
             foreach ($toolarray as $tool) {
                 $image = $WikiTheme->getImageURL($tool["image"]);
@@ -227,19 +227,19 @@ function undo_save() {
             $sr_btn   = $WikiTheme->getImageURL("ed_replace.png");
             //TODO: generalize the UNDO button and fix it for Search & Replace
             $sr_html = HTML(
-                HTML::img(array('class'=>"toolbar",
-                                   'id'   =>"sr_undo",
-                                   'src'  =>$undo_d_btn,
-                                   'title'=>_("Undo Search & Replace"),
-                                   'alt'  =>_("Undo Search & Replace"),
+                HTML::img(array('class' => "toolbar",
+                                   'id'   => "sr_undo",
+                                   'src'  => $undo_d_btn,
+                                   'title' => _("Undo Search & Replace"),
+                                   'alt'  => _("Undo Search & Replace"),
                                    //'disabled'=>"disabled",   //non-XHTML conform
                                    //'onfocus' =>"if(this.blur && undo_buffer_index==0) this.blur()",
-                'onclick' =>"do_undo()")),
-                HTML::img(array('class'=>"toolbar",
+                'onclick' => "do_undo()")),
+                HTML::img(array('class' => "toolbar",
                                    'src'  => $sr_btn,
-                                   'alt'  =>_("Search & Replace"),
-                                   'title'=>_("Search & Replace"),
-                'onclick'=>"replace()"))
+                                   'alt'  => _("Search & Replace"),
+                                   'title' => _("Search & Replace"),
+                'onclick' => "replace()"))
             );
         } else {
             $sr_html = '';
@@ -295,15 +295,15 @@ function undo_save() {
             if (!$categories) {
                 return '';
             }
-            $more_buttons = HTML::img(array('class'=>"toolbar",
+            $more_buttons = HTML::img(array('class' => "toolbar",
                                             'src'  => $WikiTheme->getImageURL("ed_category.png"),
-                                            'title'=>_("AddCategory"),
-                                            'alt'=>_("AddCategory"),
-                                            'onclick'=>"showPulldown('".
+                                            'title' => _("AddCategory"),
+                                            'alt' => _("AddCategory"),
+                                            'onclick' => "showPulldown('" .
                                             _("Insert Categories (double-click)")
-                                            ."',['".join("','", $categories)."'],'"
-                                            ._("Insert")."','"
-                                            ._("Close")."')"));
+                                            . "',['" . join("','", $categories) . "'],'"
+                                            . _("Insert") . "','"
+                                            . _("Close") . "')"));
             return HTML("\n", $more_buttons);
         }
         return '';
@@ -337,22 +337,22 @@ function undo_save() {
                     $replace = array('%0A','%22','%27','%7C','%5B','%5D','%5C');
                     $desc = str_replace("<br />", ' ', $desc->asXML());
                     if ($desc) {
-                        $plugin_args = '\n'.str_replace($src, $replace, $desc);
+                        $plugin_args = '\n' . str_replace($src, $replace, $desc);
                     }
-                    $toinsert = "%0A<?plugin ".$pluginName.$plugin_args."?>"; // args?
+                    $toinsert = "%0A<?plugin " . $pluginName . $plugin_args . "?>"; // args?
                     $plugin_js .= ",['$pluginName','$toinsert']";
                 }
             }
             $plugin_js = substr($plugin_js, 1);
-            $more_buttons = HTML::img(array('class'=>"toolbar",
+            $more_buttons = HTML::img(array('class' => "toolbar",
                                             'src'  => $WikiTheme->getImageURL("ed_plugins.png"),
-                                            'title'=>_("AddPlugin"),
-                                            'alt'=>_("AddPlugin"),
-                                            'onclick'=>"showPulldown('".
+                                            'title' => _("AddPlugin"),
+                                            'alt' => _("AddPlugin"),
+                                            'onclick' => "showPulldown('" .
                                             _("Insert Plugin (double-click)")
-                                            ."',[".$plugin_js."],'"
-                                            ._("Insert")."','"
-                                            ._("Close")."')"));
+                                            . "',[" . $plugin_js . "],'"
+                                            . _("Insert") . "','"
+                                            . _("Close") . "')"));
             return HTML("\n", $more_buttons);
         }
         return '';
@@ -369,15 +369,15 @@ function undo_save() {
             while ($p = $page_iter->next()) {
                 $pages[] = $p->getName();
             }
-            return HTML("\n", HTML::img(array('class'=>"toolbar",
+            return HTML("\n", HTML::img(array('class' => "toolbar",
                                               'src'  => $WikiTheme->getImageURL("ed_pages.png"),
-                                              'title'=>_("AddPageLink"),
-                                              'alt'=>_("AddPageLink"),
-                                              'onclick'=>"showPulldown('".
+                                              'title' => _("AddPageLink"),
+                                              'alt' => _("AddPageLink"),
+                                              'onclick' => "showPulldown('" .
                                               _("Insert PageLink (double-click)")
-                                              ."',['".join("','", $pages)."'],'"
-                                              ._("Insert")."','"
-                                              ._("Close")."')")));
+                                              . "',['" . join("','", $pages) . "'],'"
+                                              . _("Insert") . "','"
+                                              . _("Close") . "')")));
         }
         return '';
     }
@@ -398,19 +398,19 @@ function undo_save() {
                 $replace = array('_nl','_quot');
                 $toinsert = str_replace($src, $replace, $rev->_get_content());
                 //$toinsert = str_replace("\n",'\n',addslashes($rev->_get_content()));
-                $pages_js .= ",['".$p->getName()."','_nl$toinsert']";
+                $pages_js .= ",['" . $p->getName() . "','_nl$toinsert']";
             }
             $pages_js = substr($pages_js, 1);
             if (!empty($pages_js)) {
-                return HTML("\n", HTML::img(array('class'=>"toolbar",
+                return HTML("\n", HTML::img(array('class' => "toolbar",
                                    'src'  => $WikiTheme->getImageURL("ed_template.png"),
-                                   'title'=>_("AddTemplate"),
-                                   'alt'=>_("AddTemplate"),
-                                   'onclick'=>"showPulldown('".
+                                   'title' => _("AddTemplate"),
+                                   'alt' => _("AddTemplate"),
+                                   'onclick' => "showPulldown('" .
                                    _("Insert Template (double-click)")
-                                   ."',[".$pages_js."],'"
-                                   ._("Insert")."','"
-                ._("Close")."')")));
+                                   . "',[" . $pages_js . "],'"
+                                   . _("Insert") . "','"
+                . _("Close") . "')")));
             }
         }
         return '';

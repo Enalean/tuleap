@@ -49,7 +49,7 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
         $sql = "SELECT *
                 FROM $this->table_name
                 WHERE field_id = $field_id
-                ORDER BY ". ($is_rank_alpha ? 'label' : 'rank');
+                ORDER BY " . ($is_rank_alpha ? 'label' : 'rank');
         return $this->retrieve($sql);
     }
     public function duplicate($from_value_id, $to_field_id, $by_reference)
@@ -164,7 +164,7 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
                       AND c.changeset_id = $changeset_id
                       AND c.field_id = $field_id
                      )
-                ORDER BY f.". ($is_rank_alpha ? 'label' : 'rank');
+                ORDER BY f." . ($is_rank_alpha ? 'label' : 'rank');
         return $this->retrieve($sql);
     }
 

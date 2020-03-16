@@ -70,7 +70,6 @@ final class DisplaySecurityController implements DispatchableWithRequest, Dispat
         PasswordSanityChecker $password_sanity_checker,
         UserManager $user_manager
     ) {
-
         $this->dispatcher = $dispatcher;
         $this->renderer   = $renderer_factory->getRenderer(__DIR__ . '/templates');
         $this->csrf_token = $csrf_token;
@@ -117,7 +116,7 @@ final class DisplaySecurityController implements DispatchableWithRequest, Dispat
         $passwords_validators = [];
         foreach ($this->password_sanity_checker->getValidators() as $key => $validator) {
             $passwords_validators[] = new PasswordValidatorPresenter(
-                'password_validator_msg_'. $purifier->purify($key),
+                'password_validator_msg_' . $purifier->purify($key),
                 $purifier->purify($key, CODENDI_PURIFIER_JS_QUOTE),
                 $purifier->purify($validator->description())
             );

@@ -62,10 +62,10 @@ class Tracker_TooltipFactory implements IBuildSemanticFromXML
         $row = array();
         foreach ($xml->field as $field) {
             $att = $field->attributes();
-            if (!isset($xml_mapping[(string)$att['REF']])) {
+            if (!isset($xml_mapping[(string) $att['REF']])) {
                 continue;
             }
-            $row[] = $xml_mapping[(string)$att['REF']];
+            $row[] = $xml_mapping[(string) $att['REF']];
         }
 
         return $this->getInstanceFromRow($row, $tracker);

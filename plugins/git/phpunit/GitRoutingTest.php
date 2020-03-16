@@ -21,7 +21,7 @@
 
 namespace Tuleap\Git;
 
-require_once __DIR__.'/bootstrap.php';
+require_once __DIR__ . '/bootstrap.php';
 
 use FastRoute;
 use Git_Mirror_MirrorDataMapper;

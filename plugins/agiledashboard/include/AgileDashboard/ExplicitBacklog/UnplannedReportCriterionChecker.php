@@ -46,9 +46,7 @@ class UnplannedReportCriterionChecker
             return null;
         }
 
-        $additional_criterion_value = $this->additional_criteria[
-            AgileDashboard_Milestone_MilestoneReportCriterionProvider::FIELD_NAME
-        ];
+        $additional_criterion_value = $this->additional_criteria[AgileDashboard_Milestone_MilestoneReportCriterionProvider::FIELD_NAME];
 
         assert($additional_criterion_value instanceof Tracker_Report_AdditionalCriterion);
 

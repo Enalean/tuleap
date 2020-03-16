@@ -34,18 +34,18 @@ class JenkinsWebhookPresenter extends GenericWebhookPresenter
         $use_default_edit_modal = false;
         parent::__construct($repository, 'jenkins', $url, array(), $csrf, $use_default_edit_modal);
 
-        $this->remove_form_action   = '/plugins/hudson_git/?group_id='. (int)$repository->getProjectId();
+        $this->remove_form_action   = '/plugins/hudson_git/?group_id=' . (int) $repository->getProjectId();
 
         $this->remove_webhook_desc   = $GLOBALS['Language']->getText('plugin_hudson_git', 'remove_jenkins_desc');
         $this->modal_logs_time_label = $GLOBALS['Language']->getText('plugin_hudson_git', 'label_push_date');
         $this->modal_logs_info_label = dgettext('tuleap-hudson_git', 'Logs');
         $this->empty_logs            = $GLOBALS['Language']->getText('plugin_hudson_git', 'empty_jobs');
 
-        $this->purified_last_push_info = '<span class="text-info">'. $GLOBALS['Language']->getText(
+        $this->purified_last_push_info = '<span class="text-info">' . $GLOBALS['Language']->getText(
             'plugin_hudson_git',
             'n_jobs_triggered',
             $this->countNumberOfPollingJobsTriggeredOnLastPush($hooklogs)
-        ) .'</span>';
+        ) . '</span>';
 
         $this->generateHooklogs($hooklogs);
     }
@@ -61,17 +61,17 @@ class JenkinsWebhookPresenter extends GenericWebhookPresenter
             $job_list = $log->getJobUrlList();
             if (count($job_list) > 0) {
                 $purified_information .= '<div class="hooks-jobs-triggered-jobs-list">';
-                $purified_information .= '<h4>'.dgettext("tuleap-hudson_git", "Git plugin triggered jobs:").'</h4>';
+                $purified_information .= '<h4>' . dgettext("tuleap-hudson_git", "Git plugin triggered jobs:") . '</h4>';
                 foreach ($job_list as $triggered_job_url) {
                     $purfied_job_url = $hp->purify($triggered_job_url);
-                    $purified_information .= '<a href="'. $purfied_job_url .'">'. $purfied_job_url .'</a><br>';
+                    $purified_information .= '<a href="' . $purfied_job_url . '">' . $purfied_job_url . '</a><br>';
                 }
                 $purified_information .= '</div>';
             }
 
             if ($log->getStatusCode() !== null) {
                 $purified_information .= '<div class="hooks-jobs-branch-source-status">';
-                $purified_information .= '<h4>'.dgettext("tuleap-hudson_git", "Branch source plugin:").'</h4>';
+                $purified_information .= '<h4>' . dgettext("tuleap-hudson_git", "Branch source plugin:") . '</h4>';
                 $purified_information .= $log->getStatusCode();
                 $purified_information .= '</div>';
             }

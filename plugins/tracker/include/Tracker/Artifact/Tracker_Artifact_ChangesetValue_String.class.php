@@ -48,7 +48,7 @@ class Tracker_Artifact_ChangesetValue_String extends Tracker_Artifact_ChangesetV
      */
     protected function fetchDiffInFollowUp($formated_diff)
     {
-        return '<div class="diff">'. $formated_diff .'</div>';
+        return '<div class="diff">' . $formated_diff . '</div>';
     }
 
     protected function getFullRESTRepresentation($value)

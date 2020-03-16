@@ -35,7 +35,7 @@ class Views
     public function View(&$controler, $view = null, $params = array())
     {
         $this->_controler =& $controler;
-        $this->view=$view;
+        $this->view = $view;
     }
 
     public function getControler()

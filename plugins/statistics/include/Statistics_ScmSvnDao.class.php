@@ -37,7 +37,7 @@ class Statistics_ScmSvnDao extends DataAccessObject
     {
         parent::__construct($da);
         if ($groupId) {
-            $this->groupFilter = ' AND group_id='.$this->da->escapeInt($groupId);
+            $this->groupFilter = ' AND group_id=' . $this->da->escapeInt($groupId);
         }
     }
 
@@ -57,8 +57,8 @@ class Statistics_ScmSvnDao extends DataAccessObject
                 COUNT(DISTINCT(group_id)) AS projects,
                 COUNT(DISTINCT(user_id)) AS users
                 FROM group_svn_full_history
-                WHERE day BETWEEN DATE_FORMAT(".$this->da->quoteSmart($startDate).", '%Y%m%d') AND DATE_FORMAT(".$this->da->quoteSmart($endDate).", '%Y%m%d')
-                  ".$this->groupFilter."
+                WHERE day BETWEEN DATE_FORMAT(" . $this->da->quoteSmart($startDate) . ", '%Y%m%d') AND DATE_FORMAT(" . $this->da->quoteSmart($endDate) . ", '%Y%m%d')
+                  " . $this->groupFilter . "
                 GROUP BY YEAR(day), MONTH(day)
                 ORDER BY YEAR(day), MONTH(day)";
 
@@ -81,8 +81,8 @@ class Statistics_ScmSvnDao extends DataAccessObject
                 COUNT(DISTINCT(group_id)) AS projects,
                 COUNT(DISTINCT(whoid)) AS users
                 FROM svn_commits
-                WHERE date BETWEEN UNIX_TIMESTAMP(".$this->da->quoteSmart($startDate).") AND UNIX_TIMESTAMP(".$this->da->quoteSmart($endDate).")
-                  ".$this->groupFilter."
+                WHERE date BETWEEN UNIX_TIMESTAMP(" . $this->da->quoteSmart($startDate) . ") AND UNIX_TIMESTAMP(" . $this->da->quoteSmart($endDate) . ")
+                  " . $this->groupFilter . "
                 GROUP BY year, month
                 ORDER BY year, STR_TO_DATE(month, '%M')";
 
@@ -102,7 +102,7 @@ class Statistics_ScmSvnDao extends DataAccessObject
         $sql = "SELECT unix_group_name AS project, SUM(svn_access_count) AS count
                 FROM group_svn_full_history
                 JOIN groups g USING (group_id)
-                WHERE day BETWEEN DATE_FORMAT(".$this->da->quoteSmart($startDate).", '%Y%m%d') AND DATE_FORMAT(".$this->da->quoteSmart($endDate).", '%Y%m%d')
+                WHERE day BETWEEN DATE_FORMAT(" . $this->da->quoteSmart($startDate) . ", '%Y%m%d') AND DATE_FORMAT(" . $this->da->quoteSmart($endDate) . ", '%Y%m%d')
                 GROUP BY project
                 ORDER BY count DESC
                 LIMIT 10";
@@ -123,7 +123,7 @@ class Statistics_ScmSvnDao extends DataAccessObject
         $sql = "SELECT unix_group_name AS project, COUNT(c.id) AS count
                 FROM svn_commits c
                 JOIN groups g USING (group_id)
-                WHERE date BETWEEN UNIX_TIMESTAMP(".$this->da->quoteSmart($startDate).") AND UNIX_TIMESTAMP(".$this->da->quoteSmart($endDate).")
+                WHERE date BETWEEN UNIX_TIMESTAMP(" . $this->da->quoteSmart($startDate) . ") AND UNIX_TIMESTAMP(" . $this->da->quoteSmart($endDate) . ")
                 GROUP BY project
                 ORDER BY count DESC
                 LIMIT 10";
@@ -144,8 +144,8 @@ class Statistics_ScmSvnDao extends DataAccessObject
         $sql = "SELECT user_name AS user, SUM(svn_access_count) AS count
                 FROM group_svn_full_history
                 JOIN user u USING (user_id)
-                WHERE day BETWEEN DATE_FORMAT(".$this->da->quoteSmart($startDate).", '%Y%m%d') AND DATE_FORMAT(".$this->da->quoteSmart($endDate).", '%Y%m%d')
-                  ".$this->groupFilter."
+                WHERE day BETWEEN DATE_FORMAT(" . $this->da->quoteSmart($startDate) . ", '%Y%m%d') AND DATE_FORMAT(" . $this->da->quoteSmart($endDate) . ", '%Y%m%d')
+                  " . $this->groupFilter . "
                 GROUP BY user
                 ORDER BY count DESC
                 LIMIT 10";
@@ -166,8 +166,8 @@ class Statistics_ScmSvnDao extends DataAccessObject
         $sql = "SELECT user_name AS user, COUNT(c.id) AS count
                 FROM svn_commits c
                 JOIN user u ON user_id = whoid
-                WHERE date BETWEEN UNIX_TIMESTAMP(".$this->da->quoteSmart($startDate).") AND UNIX_TIMESTAMP(".$this->da->quoteSmart($endDate).")
-                  ".$this->groupFilter."
+                WHERE date BETWEEN UNIX_TIMESTAMP(" . $this->da->quoteSmart($startDate) . ") AND UNIX_TIMESTAMP(" . $this->da->quoteSmart($endDate) . ")
+                  " . $this->groupFilter . "
                 GROUP BY user
                 ORDER BY count DESC
                 LIMIT 10";
@@ -187,7 +187,7 @@ class Statistics_ScmSvnDao extends DataAccessObject
     {
         $sql = "SELECT COUNT(DISTINCT(group_id)) AS count
                 FROM svn_commits
-                WHERE date BETWEEN UNIX_TIMESTAMP(".$this->da->quoteSmart($startDate).") AND UNIX_TIMESTAMP(".$this->da->quoteSmart($endDate).")";
+                WHERE date BETWEEN UNIX_TIMESTAMP(" . $this->da->quoteSmart($startDate) . ") AND UNIX_TIMESTAMP(" . $this->da->quoteSmart($endDate) . ")";
 
         return $this->retrieve($sql);
     }

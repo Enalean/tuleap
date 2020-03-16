@@ -7,7 +7,7 @@ require_once __DIR__ . '/../../../src/www/include/pre.php';
 $posix_user = posix_getpwuid(posix_geteuid());
 $sys_user = $posix_user['name'];
 if ($sys_user !== 'root' && $sys_user !== 'codendiadm') {
-    die('Unsufficient privileges for user '.$sys_user.PHP_EOL);
+    die('Unsufficient privileges for user ' . $sys_user . PHP_EOL);
 }
 
 // ARGS RETRIEVAL
@@ -18,7 +18,7 @@ $GLOBALS['Response'] = new Response();
 $user = UserManager::instance()->forceLogin('admin');
 
 if (!is_readable($xmlFile)) {
-    die('Unable to read xml file'.PHP_EOL);
+    die('Unable to read xml file' . PHP_EOL);
 }
 
 // FILE PROCESSING
@@ -40,16 +40,16 @@ try {
             echo $GLOBALS['Response']->getRawFeedback();
             exit(2);
         }
-        echo 'Import succeeded'.PHP_EOL;
+        echo 'Import succeeded' . PHP_EOL;
         exit(0);
     } else {
-        fwrite(STDERR, "invalid project".PHP_EOL);
+        fwrite(STDERR, "invalid project" . PHP_EOL);
         exit(1);
     }
 } catch (XML_ParseException $exception) {
     foreach ($exception->getErrors() as $parse_error) {
-        fwrite(STDERR, $parse_error.PHP_EOL);
+        fwrite(STDERR, $parse_error . PHP_EOL);
     }
-    echo 'Invalid XML format'.PHP_EOL;
+    echo 'Invalid XML format' . PHP_EOL;
     exit(1);
 }

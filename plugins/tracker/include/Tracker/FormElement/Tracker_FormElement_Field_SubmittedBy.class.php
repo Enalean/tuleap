@@ -47,17 +47,17 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
     public function getCriteriaWhere($criteria)
     {
         //Only filter query if criteria is valuated
-        if ($criteria_value= $this->getCriteriaValue($criteria)) {
-            $a = 'A_'. $this->id;
-            $b = 'B_'. $this->id;
+        if ($criteria_value = $this->getCriteriaValue($criteria)) {
+            $a = 'A_' . $this->id;
+            $b = 'B_' . $this->id;
             $ids_to_search = array_intersect(
                 array_values($criteria_value),
                 array_merge(array(100), array_keys($this->getBind()->getAllValues()))
             );
             if (count($ids_to_search) > 1) {
-                return " artifact.submitted_by IN(". $this->getCriteriaDao()->getDa()->escapeIntImplode($ids_to_search) .") ";
+                return " artifact.submitted_by IN(" . $this->getCriteriaDao()->getDa()->escapeIntImplode($ids_to_search) . ") ";
             } elseif (count($ids_to_search)) {
-                return " artifact.submitted_by = ". $this->getCriteriaDao()->getDa()->escapeInt($ids_to_search[0]) ." ";
+                return " artifact.submitted_by = " . $this->getCriteriaDao()->getDa()->escapeInt($ids_to_search[0]) . " ";
             }
         }
         return '';
@@ -66,7 +66,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
     public function getQuerySelect()
     {
         // SubmittedOn is stored in the artifact
-        return "a.submitted_by AS `". $this->name ."`";
+        return "a.submitted_by AS `" . $this->name . "`";
     }
 
     public function getQueryFrom()
@@ -76,8 +76,8 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
     }
     public function getQueryFromAggregate()
     {
-        $R1 = 'R1_'. $this->id;
-        $R2 = 'R2_'. $this->id;
+        $R1 = 'R1_' . $this->id;
+        $R2 = 'R2_' . $this->id;
         return " LEFT JOIN  user AS $R2 ON ($R2.user_id = a.submitted_by ) ";
     }
 
@@ -303,8 +303,8 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
         if ($last_changeset_value === null && $submitted_value === null && $this->isRequired()) {
             $is_valid = false;
             $this->setHasErrors(true);
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'err_required', $this->getLabel(). ' ('. $this->getName() .')'));
-        } elseif ($submitted_value !== null &&  ! $this->userCanUpdate()) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'err_required', $this->getLabel() . ' (' . $this->getName() . ')'));
+        } elseif ($submitted_value !== null && ! $this->userCanUpdate()) {
             $is_valid = true;
             $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'field_not_taken_account', array($this->getName())));
         }

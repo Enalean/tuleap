@@ -74,9 +74,9 @@ class SystemEvent_GIT_REPO_FORK extends SystemEvent
         $new_repository = $this->getNewRepositoryFromParameters();
         if ($old_repository && $new_repository) {
             if ($with_link) {
-                return 'Fork '.$this->getLinkToRepositoryManagement($old_repository).' => '.$this->getLinkToRepositoryManagement($new_repository);
+                return 'Fork ' . $this->getLinkToRepositoryManagement($old_repository) . ' => ' . $this->getLinkToRepositoryManagement($new_repository);
             } else {
-                return $old_repository->getId(). ' => '.$new_repository->getId();
+                return $old_repository->getId() . ' => ' . $new_repository->getId();
             }
         } else {
             return $this->getOldRepositoryIdFromParameters();
@@ -86,6 +86,6 @@ class SystemEvent_GIT_REPO_FORK extends SystemEvent
     private function getLinkToRepositoryManagement(GitRepository $repository)
     {
         $project = $repository->getProject();
-        return '<a href="/plugins/git/?action=repo_management&group_id='.$project->getId().'&repo_id='.$repository->getId().'">'.$project->getUnixName().'/'.$repository->getFullName().'</a>';
+        return '<a href="/plugins/git/?action=repo_management&group_id=' . $project->getId() . '&repo_id=' . $repository->getId() . '">' . $project->getUnixName() . '/' . $repository->getFullName() . '</a>';
     }
 }

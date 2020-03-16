@@ -95,7 +95,7 @@ class HTTPAccessControl
     {
         $user = null;
         if ($this->needAuthentication($repository, $git_operation)) {
-            $this->logger->debug('Repository '.$repository->getFullName().' need authentication');
+            $this->logger->debug('Repository ' . $repository->getFullName() . ' need authentication');
             $user = $this->authenticate($repository);
         }
         return $user;

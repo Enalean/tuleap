@@ -26,6 +26,6 @@ class ArtifactDoesNotExistException extends Exception
 
     public function __construct($potential_backlog_item_id)
     {
-        parent::__construct('Artifact '. $potential_backlog_item_id .' does not exist');
+        parent::__construct('Artifact ' . $potential_backlog_item_id . ' does not exist');
     }
 }

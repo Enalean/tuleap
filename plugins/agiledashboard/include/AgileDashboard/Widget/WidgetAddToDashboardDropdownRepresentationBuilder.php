@@ -111,7 +111,7 @@ class WidgetAddToDashboardDropdownRepresentationBuilder
         $user_dashboards_representation = array();
         $user_dashboards                = $this->user_dashboard_retriever->getAllUserDashboards($user);
         foreach ($user_dashboards as $user_dashboard) {
-            $user_dashboards_representation [] = new DashboardRepresentation($user_dashboard->getId(), $user_dashboard->getName());
+            $user_dashboards_representation[] = new DashboardRepresentation($user_dashboard->getId(), $user_dashboard->getName());
         }
 
         return $user_dashboards_representation;
@@ -122,7 +122,7 @@ class WidgetAddToDashboardDropdownRepresentationBuilder
         $project_dashboards_representation = array();
         $project_dashboards                = $this->project_dashboard_retriever->getAllProjectDashboards($project);
         foreach ($project_dashboards as $user_dashboard) {
-            $project_dashboards_representation [] = new DashboardRepresentation($user_dashboard->getId(), $user_dashboard->getName());
+            $project_dashboards_representation[] = new DashboardRepresentation($user_dashboard->getId(), $user_dashboard->getName());
         }
 
         return $project_dashboards_representation;

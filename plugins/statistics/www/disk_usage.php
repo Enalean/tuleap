@@ -36,7 +36,7 @@ use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\Collector as CVSCollect
 use Tuleap\Statistics\DiskUsage\ConcurrentVersionsSystem\FullHistoryDao;
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
-require_once __DIR__ .'/../include/Statistics_DiskUsageHtml.class.php';
+require_once __DIR__ . '/../include/Statistics_DiskUsageHtml.class.php';
 
 // First, check plugin availability
 $pluginManager = PluginManager::instance();

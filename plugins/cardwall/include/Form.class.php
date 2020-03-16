@@ -66,9 +66,9 @@ class Cardwall_Form
 
     public function __construct($report_id, $renderer_id, $printer_version, $field, array $selectboxes)
     {
-        $this->report_id           = (int)$report_id;
-        $this->renderer_id         = (int)$renderer_id;
-        $this->printer_version     = (int)$printer_version;
+        $this->report_id           = (int) $report_id;
+        $this->renderer_id         = (int) $renderer_id;
+        $this->printer_version     = (int) $printer_version;
         $this->has_printer_version = $printer_version === false;
         $this->possible_columns    = array();
         $this->one_selected        = false;

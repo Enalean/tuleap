@@ -44,7 +44,7 @@ class Git_HTTP_CommandGitolite extends Git_HTTP_Command
 
     protected function sudo($command)
     {
-        return 'sudo -E -u gitolite '.$command;
+        return 'sudo -E -u gitolite ' . $command;
     }
 
     public function getCommand()

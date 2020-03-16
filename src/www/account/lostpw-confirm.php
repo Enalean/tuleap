@@ -61,7 +61,7 @@ $message = stripcslashes($Language->getText(
     'account_lostpw-confirm',
     'mail_body',
     array($GLOBALS['sys_name'],
-    $request->getServerUrl(). '/account/lostlogin.php?confirm_hash=' . urlencode($identifier))
+    $request->getServerUrl() . '/account/lostlogin.php?confirm_hash=' . urlencode($identifier))
 ));
 
 $mail = new Codendi_Mail();
@@ -73,9 +73,9 @@ $mail_is_sent = $mail->send();
 if (!$mail_is_sent) {
     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])), CODENDI_PURIFIER_FULL);
 }
-site_header(array('title'=>$Language->getText('account_lostpw-confirm', 'title')));
+site_header(array('title' => $Language->getText('account_lostpw-confirm', 'title')));
 if ($mail_is_sent) {
-    echo '<p>'. $Language->getText('account_lostpw-confirm', 'msg_confirm') .'</p>';
+    echo '<p>' . $Language->getText('account_lostpw-confirm', 'msg_confirm') . '</p>';
 }
-echo '<p><a href="/">['. $Language->getText('global', 'back_home'). ']</a></p>';
+echo '<p><a href="/">[' . $Language->getText('global', 'back_home') . ']</a></p>';
 site_footer(array());

@@ -88,7 +88,7 @@ class GerritSetupCommand extends Command
             'POST',
             $gerrit_server . '/login',
             ['Content-type' => 'application/x-www-form-urlencoded'],
-            'username='.urlencode($input->getOption('gerrit-admin-login')).'&password='.urlencode($input->getOption('gerrit-admin-password'))
+            'username=' . urlencode($input->getOption('gerrit-admin-login')) . '&password=' . urlencode($input->getOption('gerrit-admin-password'))
         );
         $response = $client->sendRequest($request);
         if ($response->getStatusCode() !== 302) {
@@ -105,9 +105,9 @@ class GerritSetupCommand extends Command
         if (! file_exists($ssh_key_path)) {
             $cmd_output = [];
             $return_value = -1;
-            exec('ssh-keygen -P "" -f '.escapeshellarg($ssh_key_path), $output_cmd, $return_value);
+            exec('ssh-keygen -P "" -f ' . escapeshellarg($ssh_key_path), $output_cmd, $return_value);
             if ($return_value !== 0) {
-                throw new RuntimeException('Unable to generate ssh key '.$ssh_key_path.': '.implode(PHP_EOL, $cmd_output));
+                throw new RuntimeException('Unable to generate ssh key ' . $ssh_key_path . ': ' . implode(PHP_EOL, $cmd_output));
             }
             $output->writeln('SSH key for Tuleap -> Gerrit connexion generated');
         }
@@ -167,7 +167,6 @@ class GerritSetupCommand extends Command
         string $gerrit_server,
         ClientInterface $plugin_client
     ): void {
-
         $admin_group_uuid = $this->getAdministratorGroupUUID($message_factory, $gerrit_server, $plugin_client);
         $permission = [
             'add' => [
@@ -228,7 +227,7 @@ class GerritSetupCommand extends Command
 
     private function getAdministratorGroupUUID(MessageFactory $message_factory, string $gerrit_server, ClientInterface $plugin_client) : string
     {
-        $request  = $message_factory->createRequest('GET', $gerrit_server.'/a/groups/Administrators');
+        $request  = $message_factory->createRequest('GET', $gerrit_server . '/a/groups/Administrators');
         $response = $plugin_client->sendRequest($request);
         if ($response->getStatusCode() !== 200) {
             throw new RuntimeException(
@@ -273,13 +272,13 @@ class GerritSetupCommand extends Command
         $cmd_output = [];
         $return_value = -1;
         exec(
-            'ssh -i ' . escapeshellarg($input->getOption('ssh-private-key-path')) . ' -oStrictHostKeyChecking=no -p 29418 ' . escapeshellarg($input->getOption('gerrit-admin-login') . '@'.$url_parts['host']) . ' gerrit version',
+            'ssh -i ' . escapeshellarg($input->getOption('ssh-private-key-path')) . ' -oStrictHostKeyChecking=no -p 29418 ' . escapeshellarg($input->getOption('gerrit-admin-login') . '@' . $url_parts['host']) . ' gerrit version',
             $cmd_output,
             $return_value
         );
         if ($return_value !== 0) {
-            throw new RuntimeException('Unable to connect to gerrit via ssh '.implode(PHP_EOL, $cmd_output));
+            throw new RuntimeException('Unable to connect to gerrit via ssh ' . implode(PHP_EOL, $cmd_output));
         }
-        $output->writeln('SSH connection done with '.$cmd_output[0]);
+        $output->writeln('SSH connection done with ' . $cmd_output[0]);
     }
 }

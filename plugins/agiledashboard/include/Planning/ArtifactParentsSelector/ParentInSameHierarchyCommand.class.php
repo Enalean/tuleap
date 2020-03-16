@@ -36,7 +36,7 @@ class Planning_ArtifactParentsSelector_ParentInSameHierarchyCommand extends Plan
 
     private function getParentInSameHierarchy(Tracker $expected_parent_tracker, Tracker_Artifact $source_artifact, PFUser $user)
     {
-        if ((int)$source_artifact->getTracker()->getId() === (int)$expected_parent_tracker->getId()) {
+        if ((int) $source_artifact->getTracker()->getId() === (int) $expected_parent_tracker->getId()) {
             return $source_artifact;
         } else {
             $parent = $source_artifact->getParent($user);

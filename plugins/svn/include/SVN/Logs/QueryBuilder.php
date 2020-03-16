@@ -110,9 +110,9 @@ class QueryBuilder extends DataAccessObject
             $time_back["tm_hour"],
             $time_back["tm_min"],
             $time_back["tm_sec"],
-            $time_back["tm_mon"]+1,
+            $time_back["tm_mon"] + 1,
             $time_back["tm_mday"],
-            $time_back["tm_year"]+1900
+            $time_back["tm_year"] + 1900
         );
 
         return date('Ymd', $begin_date);

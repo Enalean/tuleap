@@ -38,11 +38,11 @@ class TimetrackingTest extends TimetrackingBase
         );
         $response = $this->getResponseByName(
             TimetrackingDataBuilder::USER_TESTER_NAME,
-            $this->client->get("users/".$this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME]."/timetracking?query=$query")
+            $this->client->get("users/" . $this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME] . "/timetracking?query=$query")
         );
         $times_by_artifact = $response->json();
         $current_artifact_id = key($times_by_artifact);
-        $times               = $times_by_artifact[ $current_artifact_id ];
+        $times               = $times_by_artifact[$current_artifact_id];
 
         $this->assertTrue(count($times_by_artifact) === 2);
         $this->assertTrue(count($times) === 1);
@@ -79,11 +79,11 @@ class TimetrackingTest extends TimetrackingBase
 
         $response = $this->getResponseByName(
             TimetrackingDataBuilder::USER_TESTER_NAME,
-            $this->client->get("users/".$this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME]."/timetracking?query=$query")
+            $this->client->get("users/" . $this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME] . "/timetracking?query=$query")
         );
         $times_by_artifact = $response->json();
         $current_artifact_id = key($times_by_artifact);
-        $times               = $times_by_artifact[ $current_artifact_id ];
+        $times               = $times_by_artifact[$current_artifact_id];
 
         $this->assertTrue(count($times_by_artifact) === 2);
         $this->assertTrue(count($times) === 1);
@@ -103,7 +103,7 @@ class TimetrackingTest extends TimetrackingBase
 
         $response = $this->getResponseByName(
             TimetrackingDataBuilder::USER_TESTER_NAME,
-            $this->client->get('users/'.$this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME]."/timetracking?query=$query")
+            $this->client->get('users/' . $this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME] . "/timetracking?query=$query")
         );
         $body     = $response->json();
 
@@ -124,7 +124,7 @@ class TimetrackingTest extends TimetrackingBase
 
         $response = $this->getResponseByName(
             TimetrackingDataBuilder::USER_TESTER_NAME,
-            $this->client->get('users/'.$this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME]."/timetracking?query=$query")
+            $this->client->get('users/' . $this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME] . "/timetracking?query=$query")
         );
         $body     = $response->json();
 
@@ -146,7 +146,7 @@ class TimetrackingTest extends TimetrackingBase
 
         $response = $this->getResponseByName(
             TimetrackingDataBuilder::USER_TESTER_NAME,
-            $this->client->get('users/'.$this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME]."/timetracking?query=$query")
+            $this->client->get('users/' . $this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME] . "/timetracking?query=$query")
         );
         $body     = $response->json();
 
@@ -168,7 +168,7 @@ class TimetrackingTest extends TimetrackingBase
 
         $response = $this->getResponseByName(
             TimetrackingDataBuilder::USER_TESTER_NAME,
-            $this->client->get('users/'.$this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME]."/timetracking?query=$query")
+            $this->client->get('users/' . $this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME] . "/timetracking?query=$query")
         );
         $body     = $response->json();
 
@@ -192,7 +192,7 @@ class TimetrackingTest extends TimetrackingBase
 
         $response = $this->getResponseByName(
             TimetrackingDataBuilder::USER_TESTER_NAME,
-            $this->client->get('users/'.$this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME]."/timetracking?query=$query")
+            $this->client->get('users/' . $this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME] . "/timetracking?query=$query")
         );
         $body     = $response->json();
 
@@ -212,22 +212,22 @@ class TimetrackingTest extends TimetrackingBase
             ])
         );
 
-        $times_ids = [ 1, 2 ];
+        $times_ids = [1, 2];
 
         for ($offset = 0; $offset <= 1; $offset ++) {
             $response = $this->getResponseByName(
                 TimetrackingDataBuilder::USER_TESTER_NAME,
-                $this->client->get('users/'.$this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME]."/timetracking?limit=1&offset=$offset&query=$query")
+                $this->client->get('users/' . $this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME] . "/timetracking?limit=1&offset=$offset&query=$query")
             );
 
             $artifact_times      = $response->json();
             $current_artifact_id = key($artifact_times);
-            $times               = $artifact_times[ $current_artifact_id ];
+            $times               = $artifact_times[$current_artifact_id];
 
             $this->assertTrue(count($artifact_times) === 1);
             $this->assertTrue(count($times) === 1);
             $this->assertEquals($times[0]['artifact']['id'], $current_artifact_id);
-            $this->assertEquals($times[0]['id'], $times_ids[ $offset ]);
+            $this->assertEquals($times[0]['id'], $times_ids[$offset]);
         }
     }
     public function testAddTimeSuccess()
@@ -250,7 +250,7 @@ class TimetrackingTest extends TimetrackingBase
         $query = urlencode(json_encode([
             "artifact_id" => $this->timetracking_artifact_ids[1]["id"],
         ], JSON_FORCE_OBJECT));
-        $response = $this->getResponse($this->client->get('/api/v1/timetracking?query='.$query), TimetrackingDataBuilder::USER_TESTER_NAME);
+        $response = $this->getResponse($this->client->get('/api/v1/timetracking?query=' . $query), TimetrackingDataBuilder::USER_TESTER_NAME);
         $this->assertEquals($response->getStatusCode(), 200);
         $payload = $response->json();
         $this->assertTrue(count($payload) >= 2);
@@ -334,7 +334,7 @@ class TimetrackingTest extends TimetrackingBase
         );
 
         $this->initUserId(TimetrackingDataBuilder::USER_TESTER_NAME);
-        $response = $this->getResponse($this->client->get("projects/".$this->timetracking_project_id."/trackers?query=$query"));
+        $response = $this->getResponse($this->client->get("projects/" . $this->timetracking_project_id . "/trackers?query=$query"));
 
         $this->assertEquals(400, $response->getStatusCode());
     }

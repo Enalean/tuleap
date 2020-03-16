@@ -45,7 +45,6 @@ class GenericUserFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 
     public function testCreateReturnsGenericUserWithCorrectId() : void
     {
-
         $group_id = '120';
         $password = 'my_password';
 

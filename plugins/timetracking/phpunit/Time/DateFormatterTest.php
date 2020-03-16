@@ -23,7 +23,7 @@ namespace Tuleap\Timetracking\Time;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__.'/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 class DateFormatterTest extends TestCase
 {
@@ -67,7 +67,7 @@ class DateFormatterTest extends TestCase
 
     public function testItCanReturnsMoreThan24Hours()
     {
-        $minutes = 26*60 + 59;
+        $minutes = 26 * 60 + 59;
         $this->assertEquals("26:59", $this->formatter->formatMinutes($minutes));
     }
 }

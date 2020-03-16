@@ -95,14 +95,14 @@ class Tracker_Artifact_SubmitOverlayRenderer extends Tracker_Artifact_SubmitAbst
     {
         $html = '';
 
-        $html .= '<input type="hidden" name="link-artifact-id" value="'. $this->source_artifact->getId() .'" />';
+        $html .= '<input type="hidden" name="link-artifact-id" value="' . $this->source_artifact->getId() . '" />';
         if ($request->get('immediate')) {
             $html .= '<input type="hidden" name="immediate" value="1" />';
         }
 
         $html .= $this->fetchFormElements($request, $current_user);
 
-        $html .= '<input class="btn btn-primary" type="submit" id="tracker_artifact_submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
+        $html .= '<input class="btn btn-primary" type="submit" id="tracker_artifact_submit" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" />';
 
         return $html;
     }

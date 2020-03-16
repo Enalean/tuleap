@@ -71,7 +71,7 @@ class TemporaryFileManagerGetDiskUsageTest extends TestCase
 
     public function tearDown(): void
     {
-        exec('rm -rf '. escapeshellarg($this->cache_dir));
+        exec('rm -rf ' . escapeshellarg($this->cache_dir));
         ForgeConfig::restore();
     }
 
@@ -82,24 +82,24 @@ class TemporaryFileManagerGetDiskUsageTest extends TestCase
 
     public function testItReturnsTheSizeOfTheOnlyFile()
     {
-        file_put_contents($this->cache_dir .'/rest_attachement_temp_101_mona_lisa.png', 'Content');
+        file_put_contents($this->cache_dir . '/rest_attachement_temp_101_mona_lisa.png', 'Content');
 
         $this->assertEquals(7, $this->file_manager->getDiskUsage($this->user));
     }
 
     public function testItSumsUpAllTheFiles()
     {
-        file_put_contents($this->cache_dir .'/rest_attachement_temp_101_mona_lisa.png', 'Content');
-        file_put_contents($this->cache_dir .'/rest_attachement_temp_101_liza_monet.png', 'Another content');
+        file_put_contents($this->cache_dir . '/rest_attachement_temp_101_mona_lisa.png', 'Content');
+        file_put_contents($this->cache_dir . '/rest_attachement_temp_101_liza_monet.png', 'Another content');
 
         $this->assertEquals(22, $this->file_manager->getDiskUsage($this->user));
     }
 
     public function testItSumsOnlyCurrentUserFiles()
     {
-        file_put_contents($this->cache_dir .'/rest_attachement_temp_101_mona_lisa.png', 'Content');
-        file_put_contents($this->cache_dir .'/rest_attachement_temp_101_liza_monet.png', 'Another content');
-        file_put_contents($this->cache_dir .'/rest_attachement_temp_102_hannibal_lecteur.png', 'Whatever');
+        file_put_contents($this->cache_dir . '/rest_attachement_temp_101_mona_lisa.png', 'Content');
+        file_put_contents($this->cache_dir . '/rest_attachement_temp_101_liza_monet.png', 'Another content');
+        file_put_contents($this->cache_dir . '/rest_attachement_temp_102_hannibal_lecteur.png', 'Whatever');
 
         $this->assertEquals(22, $this->file_manager->getDiskUsage($this->user));
     }

@@ -38,8 +38,8 @@ class Git_ExecTest extends TestCase
     {
         parent::setUp();
 
-        $this->symlink_repo = $this->getTmpDir().'/tuleap-git-exec-test_'.rand(0, 99999999);
-        $this->fixture_dir = $this->getTmpDir().'/tuleap-git-exec-test_'.rand(0, 99999999);
+        $this->symlink_repo = $this->getTmpDir() . '/tuleap-git-exec-test_' . rand(0, 99999999);
+        $this->fixture_dir = $this->getTmpDir() . '/tuleap-git-exec-test_' . rand(0, 99999999);
         mkdir($this->fixture_dir);
         symlink($this->fixture_dir, $this->symlink_repo);
         system("cd $this->fixture_dir && git init 2>&1 >/dev/null");
@@ -83,8 +83,8 @@ class Git_ExecTest extends TestCase
 
     public function testItMovesTheFilesInSymlinkedRepo(): void
     {
-        $file_orig_path = $this->symlink_repo.'/file1';
-        $file_dest_path = $this->symlink_repo.'/file with spaces';
+        $file_orig_path = $this->symlink_repo . '/file1';
+        $file_dest_path = $this->symlink_repo . '/file with spaces';
         file_put_contents($file_orig_path, 'bla');
         $git_exec = new Git_Exec($this->symlink_repo);
         $git_exec->add($file_orig_path);

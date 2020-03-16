@@ -29,10 +29,10 @@ class CardFieldXmlExtractor
         $fields = [];
         foreach ($xml->field as $field) {
             $att      = $field->attributes();
-            if (! isset($xml_mapping[(string)$att['REF']])) {
+            if (! isset($xml_mapping[(string) $att['REF']])) {
                 continue;
             }
-            $fields[] = $xml_mapping[(string)$att['REF']];
+            $fields[] = $xml_mapping[(string) $att['REF']];
         }
         return $fields;
     }
@@ -44,9 +44,9 @@ class CardFieldXmlExtractor
             return null;
         }
         $att = $background_color_field->attributes();
-        if (! isset($xml_mapping[(string)$att['REF']])) {
+        if (! isset($xml_mapping[(string) $att['REF']])) {
             return null;
         }
-        return $xml_mapping[(string)$att['REF']];
+        return $xml_mapping[(string) $att['REF']];
     }
 }

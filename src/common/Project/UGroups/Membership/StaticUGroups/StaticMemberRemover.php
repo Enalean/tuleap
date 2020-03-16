@@ -32,7 +32,7 @@ class StaticMemberRemover
 
     public function removeUserFromStaticGroup(int $group_id, int $ugroup_id, int $user_id) : void
     {
-        include_once __DIR__.'/../../../../../www/project/admin/ugroup_utils.php';
+        include_once __DIR__ . '/../../../../../www/project/admin/ugroup_utils.php';
         ugroup_remove_user_from_ugroup($group_id, $ugroup_id, $user_id);
     }
 }

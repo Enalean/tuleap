@@ -111,7 +111,7 @@ class PreferencesController
             $GLOBALS['Response']->send400JSONErrors(_('You must be a project admin to edit this widget.'));
         }
 
-        if ($row['dashboard_type'] === 'user' && (int)$user->getId() !== (int)$row['user_id']) {
+        if ($row['dashboard_type'] === 'user' && (int) $user->getId() !== (int) $row['user_id']) {
             $GLOBALS['Response']->send400JSONErrors(_('You can only edit your own widgets.'));
         }
     }
@@ -152,7 +152,7 @@ class PreferencesController
     private function redirectToDashboard(array $row)
     {
         if ($row['dashboard_type'] === 'project') {
-            $url = '/projects/' . $row['unix_group_name'] .'/';
+            $url = '/projects/' . $row['unix_group_name'] . '/';
         } else {
             $url = '/my/';
         }

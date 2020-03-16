@@ -36,9 +36,9 @@ class CrossReferenceFactory
      */
     public function __construct($entity_id, $entity_type, $entity_group_id)
     {
-        $this->entity_id=$entity_id;
-        $this->entity_type=$entity_type;
-        $this->entity_gid=$entity_group_id;
+        $this->entity_id = $entity_id;
+        $this->entity_type = $entity_type;
+        $this->entity_gid = $entity_group_id;
     }
 
     /**
@@ -50,36 +50,36 @@ class CrossReferenceFactory
         $sql = "SELECT *
                 FROM cross_references
                 WHERE  (target_gid=" . db_ei($this->entity_gid) . " AND target_id='" . db_es($this->entity_id) . "' AND target_type='" . db_es($this->entity_type) . "' )
-                     OR (source_gid=" . db_ei($this->entity_gid) ." AND source_id='" . db_es($this->entity_id) . "' AND source_type='" . db_es($this->entity_type) . "' )";
+                     OR (source_gid=" . db_ei($this->entity_gid) . " AND source_id='" . db_es($this->entity_id) . "' AND source_type='" . db_es($this->entity_type) . "' )";
 
         $res = db_query($sql);
         if ($res && db_numrows($res) > 0) {
-            $this->source_refs_datas=array();
-            $this->target_refs_datas=array();
+            $this->source_refs_datas = array();
+            $this->target_refs_datas = array();
 
             while ($field_array = db_fetch_array($res)) {
-                $target_id=$field_array['target_id'];
-                $target_gid=$field_array['target_gid'];
-                $target_type=$field_array['target_type'];
-                $target_key=$field_array['target_keyword'];
+                $target_id = $field_array['target_id'];
+                $target_gid = $field_array['target_gid'];
+                $target_type = $field_array['target_type'];
+                $target_key = $field_array['target_keyword'];
 
-                $source_id=$field_array['source_id'];
-                $source_gid=$field_array['source_gid'];
-                $source_type=$field_array['source_type'];
-                $source_key=$field_array['source_keyword'];
+                $source_id = $field_array['source_id'];
+                $source_gid = $field_array['source_gid'];
+                $source_type = $field_array['source_type'];
+                $source_key = $field_array['source_keyword'];
 
-                $user_id=$field_array['user_id'];
-                $created_at=$field_array['created_at'];
+                $user_id = $field_array['user_id'];
+                $created_at = $field_array['created_at'];
 
-                if (($target_id==$this->entity_id) &&
-                     ($target_gid==$this->entity_gid) &&
-                     ($target_type==$this->entity_type)
+                if (($target_id == $this->entity_id) &&
+                     ($target_gid == $this->entity_gid) &&
+                     ($target_type == $this->entity_type)
                     ) {
                     $this->source_refs_datas[] = new CrossReference($source_id, $source_gid, $source_type, $source_key, $target_id, $target_gid, $target_type, $target_key, $user_id);
                 }
-                if (($source_id==$this->entity_id) &&
-                     ($source_gid==$this->entity_gid) &&
-                     ($source_type==$this->entity_type)
+                if (($source_id == $this->entity_id) &&
+                     ($source_gid == $this->entity_gid) &&
+                     ($source_type == $this->entity_type)
                     ) {
                     $this->target_refs_datas[] = new CrossReference($source_id, $source_gid, $source_type, $source_key, $target_id, $target_gid, $target_type, $target_key, $user_id);
                 }
@@ -110,14 +110,14 @@ class CrossReferenceFactory
 
     public function getParams($currRef)
     {
-        $params = "?target_id=".$currRef->getRefTargetId();
-        $params.= "&target_gid=".$currRef->getRefTargetGid();
-        $params.= "&target_type=".$currRef->getRefTargetType();
-        $params.= "&target_key=".$currRef->getRefTargetKey() ;
-        $params.= "&source_id=".$currRef->getRefSourceId();
-        $params.= "&source_gid=".$currRef->getRefSourceGid();
-        $params.= "&source_type=".$currRef->getRefSourceType();
-        $params.= "&source_key=".$currRef->getRefSourceKey() ;
+        $params = "?target_id=" . $currRef->getRefTargetId();
+        $params .= "&target_gid=" . $currRef->getRefTargetGid();
+        $params .= "&target_type=" . $currRef->getRefTargetType();
+        $params .= "&target_key=" . $currRef->getRefTargetKey();
+        $params .= "&source_id=" . $currRef->getRefSourceId();
+        $params .= "&source_gid=" . $currRef->getRefSourceGid();
+        $params .= "&source_type=" . $currRef->getRefSourceType();
+        $params .= "&source_key=" . $currRef->getRefSourceKey();
         return $params;
     }
 
@@ -135,13 +135,13 @@ class CrossReferenceFactory
                 if (array_key_exists($key, $refArraySourceTarget)) {
                     foreach ($refArraySourceTarget[$key] as $currRef) {
                         if ($key === 'source') {
-                            $ref = $currRef->getRefSourceKey() ." #". $currRef->getRefSourceId();
+                            $ref = $currRef->getRefSourceKey() . " #" . $currRef->getRefSourceId();
                             $url = $currRef->getRefSourceUrl();
                         } else {
-                            $ref = $currRef->getRefTargetKey() ." #". $currRef->getRefTargetId();
+                            $ref = $currRef->getRefTargetKey() . " #" . $currRef->getRefTargetId();
                             $url = $currRef->getRefTargetUrl();
                         }
-                        $refs[$key][] = array( 'ref'=>$ref, 'url'=>$url);
+                        $refs[$key][] = array( 'ref' => $ref, 'url' => $url);
                     }
                 }
             }
@@ -223,7 +223,7 @@ class CrossReferenceFactory
                 $div_classes .= " not-condensed";
             }
 
-            $display .= '<div class="'. $div_classes .'">';
+            $display .= '<div class="' . $div_classes . '">';
             if (!$condensed) {
                 $display .= "<p><b>" . $available_natures[$nature]['label'] . "</b>";
             }
@@ -233,9 +233,9 @@ class CrossReferenceFactory
             foreach (array('both', 'target', 'source') as $key) {
                 if (array_key_exists($key, $refArraySourceTarget)) {
                     // one li for one type of ref (both, target, source)
-                    $display .= '<li class="'. $classes[$key] .'">';
+                    $display .= '<li class="' . $classes[$key] . '">';
                     $display .= $GLOBALS['HTML']->getImage(
-                        'ic/'. $img[$key][0] .'.png',
+                        'ic/' . $img[$key][0] . '.png',
                         array(
                             'alt'    => $Language->getText('cross_ref_fact_include', $img[$key][1]),
                             'align'  => 'top-left',
@@ -249,28 +249,28 @@ class CrossReferenceFactory
                     foreach ($refArraySourceTarget[$key] as $currRef) {
                         $span = '';
                         if ($key === 'source') {
-                            $id  = $currRef->getRefSourceKey() ."_".  $currRef->getRefSourceId();
-                            $ref = $currRef->getRefSourceKey() ." #". $currRef->getRefSourceId();
+                            $id  = $currRef->getRefSourceKey() . "_" .  $currRef->getRefSourceId();
+                            $ref = $currRef->getRefSourceKey() . " #" . $currRef->getRefSourceId();
                             $url = $currRef->getRefSourceUrl();
                         } else {
-                            $id  = $currRef->getRefTargetKey() ."_".  $currRef->getRefTargetId();
-                            $ref = $currRef->getRefTargetKey() ." #". $currRef->getRefTargetId();
+                            $id  = $currRef->getRefTargetKey() . "_" .  $currRef->getRefTargetId();
+                            $ref = $currRef->getRefTargetKey() . " #" . $currRef->getRefTargetId();
                             $url = $currRef->getRefTargetUrl();
                         }
-                        $span .= '<span id="' .$id .'" class="link_to_ref">';
+                        $span .= '<span id="' . $id . '" class="link_to_ref">';
                         if ($with_links) {
                             $span .= '<a class="cross-reference"
-                                            title="'. $available_natures[$nature]['label'] .'"
-                                            href="'. $url .'">';
-                            $span .= $ref .'</a>';
+                                            title="' . $available_natures[$nature]['label'] . '"
+                                            href="' . $url . '">';
+                            $span .= $ref . '</a>';
                         } else {
-                            $span.= $ref;
+                            $span .= $ref;
                         }
                         if ($with_links && $can_delete && !$condensed) {
                             $params = $this->getParams($currRef);
                             $span .= '<a class="delete_ref"
-                                           href="/reference/rmreference.php'. $params .'"
-                                           onClick="return delete_ref(\''. $id .'\', \''. $message .'\');">';
+                                           href="/reference/rmreference.php' . $params . '"
+                                           onClick="return delete_ref(\'' . $id . '\', \'' . $message . '\');">';
                             $span .= $GLOBALS['HTML']->getImage(
                                 'ic/cross.png',
                                 array(
@@ -282,7 +282,7 @@ class CrossReferenceFactory
                         }
                         $spans[] = $span;
                     }
-                    $display .= implode(', </span>', $spans) .'</span>';
+                    $display .= implode(', </span>', $spans) . '</span>';
                     $display .= '</li>';
                 }
             }
@@ -307,14 +307,14 @@ class CrossReferenceFactory
             foreach ($references_by_destination as $key => $references) {
                 foreach ($references as $reference) {
                     if ($key === 'source') {
-                        $ref = $reference->getRefSourceKey() ." #". $reference->getRefSourceId();
+                        $ref = $reference->getRefSourceKey() . " #" . $reference->getRefSourceId();
                         $url = $reference->getRefSourceUrl();
                     } else {
-                        $ref = $reference->getRefTargetKey() ." #". $reference->getRefTargetId();
+                        $ref = $reference->getRefTargetKey() . " #" . $reference->getRefTargetId();
                         $url = $reference->getRefTargetUrl();
                     }
                     $title = $available_natures[$nature]['label'];
-                    $refs[] = '<a title="'. $title .'" href="'. $url .'">'. $ref .'</a>';
+                    $refs[] = '<a title="' . $title . '" href="' . $url . '">' . $ref . '</a>';
                 }
             }
             $html .= implode(', ', $refs);
@@ -335,9 +335,9 @@ class CrossReferenceFactory
             foreach ($references_by_destination as $key => $references) {
                 foreach ($references as $reference) {
                     if ($key === 'source') {
-                        $ref = $reference->getRefSourceKey() ." #". $reference->getRefSourceId();
+                        $ref = $reference->getRefSourceKey() . " #" . $reference->getRefSourceId();
                     } else {
-                        $ref = $reference->getRefTargetKey() ." #". $reference->getRefTargetId();
+                        $ref = $reference->getRefTargetKey() . " #" . $reference->getRefTargetId();
                     }
                     $refs[] =  $ref;
                 }
@@ -357,7 +357,7 @@ class CrossReferenceFactory
         $crossRefArray = array();
 
         // Walk the target ref array in order to fill the crossRefArray array
-        for ($i=0, $nb_target_refs = count($this->target_refs_datas); $i< $nb_target_refs; $i++) {
+        for ($i = 0, $nb_target_refs = count($this->target_refs_datas); $i < $nb_target_refs; $i++) {
             $is_cross = false;
             // Check if the ref is cross referenced (means referenced by a source)
             $j = 0;
@@ -386,7 +386,7 @@ class CrossReferenceFactory
         }
 
         // Walk the source ref array in order to fill the crossRefArray array
-        for ($i=0, $nb_source_refs = count($this->source_refs_datas); $i < $nb_source_refs; $i++) {
+        for ($i = 0, $nb_source_refs = count($this->source_refs_datas); $i < $nb_source_refs; $i++) {
             $is_cross = false;
             // Check if the ref is cross referenced (means referenced by a target)
             foreach ($this->target_refs_datas as $target_refs) {

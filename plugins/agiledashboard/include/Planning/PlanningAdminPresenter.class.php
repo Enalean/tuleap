@@ -33,7 +33,7 @@ class Planning_PlanningAdminPresenter
 
     public function edit_url()
     {
-        return AGILEDASHBOARD_BASE_URL.'/?'.http_build_query(array(
+        return AGILEDASHBOARD_BASE_URL . '/?' . http_build_query(array(
             'group_id' => $this->planning->getGroupId(),
             'planning_id' => $this->planning->getId(),
             'action' => 'edit',
@@ -42,7 +42,7 @@ class Planning_PlanningAdminPresenter
 
     public function delete_url()
     {
-        return AGILEDASHBOARD_BASE_URL.'/?'.http_build_query(array(
+        return AGILEDASHBOARD_BASE_URL . '/?' . http_build_query(array(
             'group_id' => $this->planning->getGroupId(),
             'planning_id' => $this->planning->getId(),
             'action' => 'delete',

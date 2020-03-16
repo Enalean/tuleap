@@ -24,7 +24,7 @@ declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 use Tuleap\Git\Driver\Gerrit\GerritUnsupportedVersionDriver;
 
-require_once __DIR__ .'/../../../bootstrap.php';
+require_once __DIR__ . '/../../../bootstrap.php';
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class GerritDriverFactoryTest extends TestCase

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__.'/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_Test extends TuleapTestCase
 {
@@ -39,7 +39,7 @@ class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_Test extends Tule
         $rules_manager = mock('Tracker_Workflow_Trigger_RulesManager');
         $this->validator = mock('Tracker_Workflow_Trigger_TriggerValidator');
         $this->factory = new Tracker_Workflow_Trigger_RulesFactory($this->formelement_factory, $this->validator);
-        $this->json_input = json_decode(file_get_contents(dirname(__FILE__).'/_fixtures/add_rule.json'));
+        $this->json_input = json_decode(file_get_contents(dirname(__FILE__) . '/_fixtures/add_rule.json'));
     }
 }
 

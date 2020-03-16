@@ -89,7 +89,7 @@ class SystemEvent_SVN_DELETE_REPOSITORY extends SystemEvent //phpcs:ignore
         $project    = $this->getProject($project_id);
         $repository = $this->getRepository($project, $repository_id);
 
-        if ((int)$repository->getProject()->getID() !== (int)$project_id) {
+        if ((int) $repository->getProject()->getID() !== (int) $project_id) {
             $this->error('Bad project id');
             return false;
         }
@@ -109,8 +109,8 @@ class SystemEvent_SVN_DELETE_REPOSITORY extends SystemEvent //phpcs:ignore
         $project_id    = $this->getRequiredParameter(0);
         $repository_id = $this->getRequiredParameter(1);
 
-        return 'project: '. $this->verbalizeProjectId($project_id, $with_link) .
-            ', repository: '. $repository_id;
+        return 'project: ' . $this->verbalizeProjectId($project_id, $with_link) .
+            ', repository: ' . $repository_id;
     }
 
     protected function getRepository(Project $project, $repository_id)

@@ -230,7 +230,7 @@ class WikiPlugin_WikiBlog extends WikiPlugin
             if (!$dbi->isWikiPage($redirected)) {
                 require_once('lib/loadsave.php');
                 $pageinfo = array('pagename' => $redirected,
-                                  'content'  => '<?plugin RedirectTo page='.$parent.' ?>',
+                                  'content'  => '<?plugin RedirectTo page=' . $parent . ' ?>',
                                   'pagedata' => array(),
                                   'versiondata' => array('author' => $blog_meta['creator']),
                                   );
@@ -240,7 +240,7 @@ class WikiPlugin_WikiBlog extends WikiPlugin
             if (!$dbi->isWikiPage($redirected)) {
                 require_once('lib/loadsave.php');
                 $pageinfo = array('pagename' => $redirected,
-                                  'content'  => '<?plugin RedirectTo page='.$parent.' ?>',
+                                  'content'  => '<?plugin RedirectTo page=' . $parent . ' ?>',
                                   'pagedata' => array(),
                                   'versiondata' => array('author' => $blog_meta['creator']),
                                   );
@@ -352,7 +352,7 @@ class WikiPlugin_WikiBlog extends WikiPlugin
     public function findBlogs(&$dbi, $parent, $type = 'wikiblog')
     {
         $prefix = (empty($parent) ? "" :  $parent . SUBPAGE_SEPARATOR) . $this->_blogPrefix($type);
-        $pages = $dbi->titleSearch(new TextSearchQuery("^".$prefix, true, 'posix'));
+        $pages = $dbi->titleSearch(new TextSearchQuery("^" . $prefix, true, 'posix'));
 
         $blogs = array();
         while ($page = $pages->next()) {
@@ -389,7 +389,7 @@ class WikiPlugin_WikiBlog extends WikiPlugin
     public function _monthTitle($month)
     {
         //list($year,$mon) = explode("-",$month);
-        return strftime("%B %Y", strtotime($month."-01"));
+        return strftime("%B %Y", strtotime($month . "-01"));
     }
 
     // "User/Blog/2004-12-13/12:28:50+01:00" => array('month' => "2004-12", ...)
@@ -413,7 +413,7 @@ class WikiPlugin_WikiBlog extends WikiPlugin
     {
         return array_diff_assoc($args, $this->getDefaultArguments());
     }
-};
+}
 
 // $Log: WikiBlog.php,v $
 // Revision 1.23  2005/10/29 09:06:37  rurban

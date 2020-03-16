@@ -158,7 +158,7 @@ if ($action == 'permissions_frs_package') {
                     $available_ftp_files = implode(",", $file_list);
                     $purifier = Codendi_HTMLPurifier::instance();
                     $available_ftp_files = $purifier->purify($available_ftp_files, CODENDI_PURIFIER_JS_DQUOTE);
-                    echo '{"valid":true, "msg":"'.$available_ftp_files.'"}';
+                    echo '{"valid":true, "msg":"' . $available_ftp_files . '"}';
                 }
             }
         }

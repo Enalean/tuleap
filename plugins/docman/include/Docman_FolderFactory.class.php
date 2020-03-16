@@ -40,7 +40,7 @@ class Docman_FolderFactory extends Docman_ItemFactory
      */
     public function collapse($folder)
     {
-        user_del_preference(PLUGIN_DOCMAN_EXPAND_FOLDER_PREF.'_'.$folder->getGroupId().'_'.$folder->getId());
+        user_del_preference(PLUGIN_DOCMAN_EXPAND_FOLDER_PREF . '_' . $folder->getGroupId() . '_' . $folder->getId());
     }
 
     /**
@@ -51,7 +51,7 @@ class Docman_FolderFactory extends Docman_ItemFactory
     public function expand($folder)
     {
         user_set_preference(
-            PLUGIN_DOCMAN_EXPAND_FOLDER_PREF.'_'.$folder->getGroupId().'_'.$folder->getId(),
+            PLUGIN_DOCMAN_EXPAND_FOLDER_PREF . '_' . $folder->getGroupId() . '_' . $folder->getId(),
             PLUGIN_DOCMAN_EXPAND_FOLDER
         );
     }

@@ -55,7 +55,7 @@ class User_SSHKeyDumper
             if ($user->getUnixStatus() != 'A') {
                 return true;
             }
-            $ssh_dir  = $user->getUnixHomeDir().'/.ssh';
+            $ssh_dir  = $user->getUnixHomeDir() . '/.ssh';
 
             // Subtlety: between the 2 process owner change, there is no way to
             // write any logs because the process is owned by a mere user but
@@ -69,7 +69,7 @@ class User_SSHKeyDumper
             $this->backend->changeOwnerGroupMode($ssh_dir, $user->getUserName(), $user->getUserName(), 0700);
             $this->backend->changeOwnerGroupMode("$ssh_dir/authorized_keys", $user->getUserName(), $user->getUserName(), 0600);
 
-            $this->backend->log("Authorized_keys for ".$user->getUserName()." written.", Backend::LOG_INFO);
+            $this->backend->log("Authorized_keys for " . $user->getUserName() . " written.", Backend::LOG_INFO);
             return true;
         } catch (Exception $exception) {
             $this->restoreRootUidGid();
@@ -82,10 +82,10 @@ class User_SSHKeyDumper
     {
         $user_unix_info = posix_getpwnam($user->getUserName());
         if (empty($user_unix_info['uid']) || empty($user_unix_info['gid'])) {
-            throw new RuntimeException("User ".$user->getUserName()." has no uid/gid");
+            throw new RuntimeException("User " . $user->getUserName() . " has no uid/gid");
         }
         if (!(posix_setegid($user_unix_info['gid']) && posix_seteuid($user_unix_info['uid']))) {
-            throw new RuntimeException("Cannot change current process uid/gid for ".$user->getUserName());
+            throw new RuntimeException("Cannot change current process uid/gid for " . $user->getUserName());
         }
     }
 
@@ -100,13 +100,13 @@ class User_SSHKeyDumper
         if (is_link($ssh_dir)) {
             $link_path = readlink($ssh_dir);
             unlink($ssh_dir);
-            throw new RuntimeException('SECURITY ISSUE! User "'.$user->getUserName().'" made a symbolic link on it\'s .ssh dir (was a link to "'.$link_path.'"). Link was deleted but you should investigate.');
+            throw new RuntimeException('SECURITY ISSUE! User "' . $user->getUserName() . '" made a symbolic link on it\'s .ssh dir (was a link to "' . $link_path . '"). Link was deleted but you should investigate.');
         }
         if (!is_dir($ssh_dir)) {
             if (mkdir($ssh_dir)) {
                 $this->backend->chmod($ssh_dir, 0700);
             } else {
-                throw new RuntimeException("Unable to create user home ssh directory for ".$user->getUserName());
+                throw new RuntimeException("Unable to create user home ssh directory for " . $user->getUserName());
             }
         }
     }
@@ -119,10 +119,10 @@ class User_SSHKeyDumper
 
         $ssh_keys = implode("\n", $user->getAuthorizedKeysArray());
         if (file_put_contents($authorized_keys_new, $ssh_keys) === false) {
-            throw new RuntimeException("Unable to write authorized_keys_new file for ".$user->getUserName());
+            throw new RuntimeException("Unable to write authorized_keys_new file for " . $user->getUserName());
         }
         if (rename($authorized_keys_new, "$ssh_dir/authorized_keys") === false) {
-            throw new RuntimeException("Unable to rename $authorized_keys_new file for ".$user->getUserName());
+            throw new RuntimeException("Unable to rename $authorized_keys_new file for " . $user->getUserName());
         }
     }
 }

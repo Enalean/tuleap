@@ -68,7 +68,7 @@ class UserSuspensionManagerTest extends TestCase
 
         $this->query = array(array('user_id' => 102, 'last_access_date' => 1579267252));
         $this->email = "jane.doe@domain.com";
-        $this->user_info = array('user_id'=>102, 'user_name'=>'janedoe');
+        $this->user_info = array('user_id' => 102, 'user_name' => 'janedoe');
 
         $this->mail_account_suspension_alert_presenter = Mockery::mock(MailAccountSuspensionAlertPresenter::class);
         $this->mail_presenter_factory = Mockery::mock(MailPresenterFactory::class);
@@ -142,7 +142,6 @@ class UserSuspensionManagerTest extends TestCase
         $this->dao->shouldReceive('verifySuspension')->with($non_project_member_1)->andReturn(true);
         $this->dao->shouldReceive('suspendAccount')->with($non_project_member_2);
         $this->dao->shouldReceive('verifySuspension')->with($non_project_member_2)->andReturn(true);
-        ;
 
         $this->dao->shouldReceive('suspendInactiveAccounts')->with(Matchers::equalTo($last_valid_access))->once();
         $this->dao->shouldReceive('suspendExpiredAccounts')->with($test_date)->once();

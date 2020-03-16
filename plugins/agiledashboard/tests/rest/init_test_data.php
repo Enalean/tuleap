@@ -18,8 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ .'/../../include/agiledashboardPlugin.php';
-require_once __DIR__ .'/DataBuilder.php';
+require_once __DIR__ . '/../../include/agiledashboardPlugin.php';
+require_once __DIR__ . '/DataBuilder.php';
 
 use Tuleap\AgileDashboard\REST\DataBuilder;
 

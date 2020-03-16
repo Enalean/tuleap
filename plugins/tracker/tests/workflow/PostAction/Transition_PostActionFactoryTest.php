@@ -21,7 +21,7 @@
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsFactory;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsFactory;
 
-require_once __DIR__.'/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 class Transition_PostActionFactory_BaseTest extends TuleapTestCase
 {
@@ -89,8 +89,8 @@ class Transition_PostActionFactory_DuplicateTest extends Transition_PostActionFa
     public function itDelegatesDuplicationToTheOtherPostActionFactories()
     {
         $field_mapping = array(
-            1 => array('from'=>2066, 'to'=>3066),
-            2 => array('from'=>2067, 'to'=>3067),
+            1 => array('from' => 2066, 'to' => 3066),
+            2 => array('from' => 2067, 'to' => 3067),
         );
 
         stub($this->field_factory)->duplicate($this->transition, 2, $field_mapping)->once();

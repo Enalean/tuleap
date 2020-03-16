@@ -54,7 +54,7 @@ class LDAPDirectorySynchronizationTest extends TestCase
         $GLOBALS = [];
 
         $GLOBALS['Language'] = \Mockery::spy(\BaseLanguage::class);
-        $GLOBALS['Language']->shouldReceive('getContent')->andReturns(dirname(__FILE__).'/empty.txt');
+        $GLOBALS['Language']->shouldReceive('getContent')->andReturns(dirname(__FILE__) . '/empty.txt');
         ForgeConfig::set('codendi_log', '/tmp');
         ForgeConfig::set('sys_logger_level', 'debug');
     }

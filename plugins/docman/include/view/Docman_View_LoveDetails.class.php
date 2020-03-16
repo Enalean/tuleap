@@ -39,9 +39,9 @@ class Docman_View_LoveDetails
         $html = '';
 
         $html .=  '<tr>';
-        $html .=  '<td>'.dgettext('tuleap-docman', 'Name:').'</td>';
+        $html .=  '<td>' . dgettext('tuleap-docman', 'Name:') . '</td>';
         $html .=  '<td>';
-        $html .=  '<input name="name" type="text" value="'.$this->hp->purify($value).'" class="text_field" />';
+        $html .=  '<input name="name" type="text" value="' . $this->hp->purify($value) . '" class="text_field" />';
         $html .=  '</td>';
         $html .=  '</tr>';
 
@@ -53,9 +53,9 @@ class Docman_View_LoveDetails
         $html = '';
 
         $html .=  '<tr>';
-        $html .=  '<td>'.dgettext('tuleap-docman', 'Description:').'</td>';
+        $html .=  '<td>' . dgettext('tuleap-docman', 'Description:') . '</td>';
         $html .=  '<td>';
-        $html .=  '<textarea name="descr">'.$this->hp->purify($value).'</textarea>';
+        $html .=  '<textarea name="descr">' . $this->hp->purify($value) . '</textarea>';
         $html .=  '</td>';
         $html .=  '</tr>';
 
@@ -67,7 +67,7 @@ class Docman_View_LoveDetails
         $html = '';
 
         $html .=  '<tr>';
-        $html .=  '<td>'.dgettext('tuleap-docman', 'Rank:').'</td>';
+        $html .=  '<td>' . dgettext('tuleap-docman', 'Rank:') . '</td>';
 
         $vals = array('beg', 'end', '--');
         $texts = array(dgettext('tuleap-docman', 'At the beginning'),
@@ -82,8 +82,8 @@ class Docman_View_LoveDetails
 
             if ($e->getStatus() == 'A'
                || $e->getStatus() == 'P') {
-                $vals[$i]  = $e->getRank()+1;
-                $texts[$i] = dgettext('tuleap-docman', 'After').' '.Docman_MetadataHtmlList::_getElementName($e);
+                $vals[$i]  = $e->getRank() + 1;
+                $texts[$i] = dgettext('tuleap-docman', 'After') . ' ' . Docman_MetadataHtmlList::_getElementName($e);
                 $i++;
             }
 
@@ -101,10 +101,10 @@ class Docman_View_LoveDetails
     {
         $html = '';
 
-        $html .= '<input type="hidden" name="md" value="'.$this->md->getLabel().'" />';
+        $html .= '<input type="hidden" name="md" value="' . $this->md->getLabel() . '" />';
 
         if ($loveId !== null) {
-            $html .= '<input type="hidden" name="loveid" value="'.$loveId.'" />';
+            $html .= '<input type="hidden" name="loveid" value="' . $loveId . '" />';
         }
 
         return $html;

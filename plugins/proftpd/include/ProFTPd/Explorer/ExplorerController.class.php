@@ -118,7 +118,7 @@ class ExplorerController
 
         $service->renderInPage(
             $request,
-            $project->getPublicName().' / '.$path,
+            $project->getPublicName() . ' / ' . $path,
             'index',
             new ExplorerPresenter(
                 $path_parser->getPathParts($path),

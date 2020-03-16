@@ -157,7 +157,6 @@ class MediawikiUserGroupsMapper
 
     private function checkThereIsNoMappingsChanges(array $added_groups, array $removed_groups)
     {
-
         foreach (self::$MEDIAWIKI_GROUPS_NAME as $group_name) {
             if (! (empty($added_groups[$group_name]) && empty($removed_groups[$group_name]))) {
                 return false;

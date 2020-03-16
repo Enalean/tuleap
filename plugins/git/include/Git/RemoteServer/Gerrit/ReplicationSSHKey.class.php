@@ -84,7 +84,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKey implements IHaveAnSSHKey
      */
     public function getUserName()
     {
-        return Rule_UserName::RESERVED_PREFIX.self::KEYNAME_PREFIX.$this->getGerritHostId();
+        return Rule_UserName::RESERVED_PREFIX . self::KEYNAME_PREFIX . $this->getGerritHostId();
     }
 
     /**
@@ -94,6 +94,6 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKey implements IHaveAnSSHKey
      */
     public function getGitoliteKeyFile()
     {
-        return $this->getUserName().self::KEYNAME_SUFFIX;
+        return $this->getUserName() . self::KEYNAME_SUFFIX;
     }
 }

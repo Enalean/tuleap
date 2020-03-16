@@ -27,7 +27,7 @@ class HttpUserValidator
 {
     public function isLoginAnHTTPUserLogin($login)
     {
-        $pattern = '/^'.Rule_UserName::RESERVED_PREFIX.Git_RemoteServer_GerritServer::GENERIC_USER_PREFIX.'[0-9]+$/';
+        $pattern = '/^' . Rule_UserName::RESERVED_PREFIX . Git_RemoteServer_GerritServer::GENERIC_USER_PREFIX . '[0-9]+$/';
 
         return preg_match($pattern, $login);
     }

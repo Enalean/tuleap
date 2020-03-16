@@ -98,7 +98,7 @@ class Tracker_Workflow_Trigger_FieldValue
     {
         return $GLOBALS['Language']->getText(
             'workflow_trigger_rules_processor',
-            'rule_comment_'.$condition,
+            'rule_comment_' . $condition,
             array(
                 $this->getField()->getTracker()->getName(),
                 $this->getField()->getLabel(),

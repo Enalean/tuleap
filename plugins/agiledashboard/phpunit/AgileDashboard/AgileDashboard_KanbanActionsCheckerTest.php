@@ -56,7 +56,6 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \PHPUnit\Framework\T
 
     protected function setUp(): void
     {
-
         $this->field_string = \Mockery::spy(\Tracker_FormElement_Field_String::class)->shouldReceive('getId')->andReturns(201)->getMock();
         $this->field_text   = \Mockery::spy(\Tracker_FormElement_Field_Text::class)->shouldReceive('getId')->andReturns(20)->getMock();
         $this->field_int    = \Mockery::spy(\Tracker_FormElement_Field_Integer::class)->shouldReceive('getId')->andReturns(30)->getMock();

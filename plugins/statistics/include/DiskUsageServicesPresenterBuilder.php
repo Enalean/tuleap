@@ -80,7 +80,7 @@ class DiskUsageServicesPresenterBuilder
         if ($project_id) {
             $project = $this->project_manager->getProject($project_id);
             if (! $project->isError()) {
-                $selected_project = $project->getPublicName().' ('.$project->getUnixName().')';
+                $selected_project = $project->getPublicName() . ' (' . $project->getUnixName() . ')';
             }
         } elseif ($selected_project) {
             $project = $this->project_manager->getProjectFromAutocompleter($selected_project);
@@ -131,7 +131,7 @@ class DiskUsageServicesPresenterBuilder
             $params['graph_type'] = 'graph_service';
         }
 
-        return $page.'?'.http_build_query($params);
+        return $page . '?' . http_build_query($params);
     }
 
     private function buildDataServices($project_id, DiskUsageServicesSearchFieldsPresenter $search_fields)

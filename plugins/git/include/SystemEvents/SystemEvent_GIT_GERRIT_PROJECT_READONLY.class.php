@@ -97,9 +97,9 @@ class SystemEvent_GIT_GERRIT_PROJECT_READONLY extends SystemEvent
         Project $project
     ) {
         try {
-            $this->driver_factory->getDriver($server)->makeGerritProjectReadOnly($server, $project->getUnixName().'/'.$repository->getName());
+            $this->driver_factory->getDriver($server)->makeGerritProjectReadOnly($server, $project->getUnixName() . '/' . $repository->getName());
         } catch (Exception $e) {
-            $this->error($e->getMessage().$e->getTraceAsString());
+            $this->error($e->getMessage() . $e->getTraceAsString());
             return false;
         }
 

@@ -228,19 +228,19 @@ class SemanticTimeframe extends Tracker_Semantic
     public function isEndDateField(Tracker_FormElement_Field $field): bool
     {
         return $this->end_date_field !== null &&
-            (int)$field->getId() === (int)$this->end_date_field->getId();
+            (int) $field->getId() === (int) $this->end_date_field->getId();
     }
 
     public function isDurationField(Tracker_FormElement_Field $field): bool
     {
         return $this->duration_field !== null &&
-            (int)$field->getId() === (int)$this->duration_field->getId();
+            (int) $field->getId() === (int) $this->duration_field->getId();
     }
 
     public function isStartDateField(Tracker_FormElement_Field $field): bool
     {
         return $this->start_date_field !== null &&
-            (int)$field->getId() === (int)$this->start_date_field->getId();
+            (int) $field->getId() === (int) $this->start_date_field->getId();
     }
 
     public function save(): bool

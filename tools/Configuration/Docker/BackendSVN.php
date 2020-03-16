@@ -31,6 +31,6 @@ class BackendSVN
 
     public function configure()
     {
-        copy($this->tuleap_base_dir.'/tools/distlp/backend-svn/supervisord.conf', '/etc/supervisord.conf');
+        copy($this->tuleap_base_dir . '/tools/distlp/backend-svn/supervisord.conf', '/etc/supervisord.conf');
     }
 }

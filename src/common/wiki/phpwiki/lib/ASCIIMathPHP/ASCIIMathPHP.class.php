@@ -275,7 +275,7 @@ class XMLNode
     public function removeLastChild()
     {
         $key_arr = array_keys($this->_child_arr);
-        unset($this->_child_arr[$key_arr[count($key_arr)-1]]);
+        unset($this->_child_arr[$key_arr[count($key_arr) - 1]]);
     }
 
     public function dumpXML($indent_str = "\t")
@@ -533,8 +533,8 @@ class ASCIIMathPHP
             $key_node_arr = array_keys($node_arr);
 
             if ($node_cnt > 1) {
-                $node_5 = $node_arr[$key_node_arr[$node_cnt-1]];
-                $node_6 = $node_arr[$key_node_arr[$node_cnt-2]];
+                $node_5 = $node_arr[$key_node_arr[$node_cnt - 1]];
+                $node_6 = $node_arr[$key_node_arr[$node_cnt - 2]];
             } else {
                 $node_5 = false;
                 $node_6 = false;
@@ -586,8 +586,8 @@ class ASCIIMathPHP
                                         $tnlc = false;
                             }
 
-                            if (isset($key_node_arr[$i+1])) {
-                                    $next_tmp_node = $node_arr[$key_node_arr[$i+1]];
+                            if (isset($key_node_arr[$i + 1])) {
+                                    $next_tmp_node = $node_arr[$key_node_arr[$i + 1]];
                                     $ntnn = $next_tmp_node->getName();
                                     $ntnc = $next_tmp_node->getContent();
                             } else {
@@ -598,7 +598,7 @@ class ASCIIMathPHP
                               // Checking each node in node array for matrix criteria
                             if ($is_mtrx_flg) {
                                                      $is_mtrx_flg = $tmp_node->getName() == 'mrow' &&
-                                                      ($i == $node_cnt-1 || $ntnn == 'mo' && $ntnc == ',') &&
+                                                      ($i == $node_cnt - 1 || $ntnn == 'mo' && $ntnc == ',') &&
                                                       $tnfc == $node_8_cntnt && $tnlc == $node_7_cntnt;
                             }
 
@@ -614,7 +614,7 @@ class ASCIIMathPHP
 
                             if ($is_mtrx_flg && $i > 1) {
                                                      $cnt_cpan = isset($comma_pos_arr[$i]) ? count($comma_pos_arr[$i]) : null;
-                                                     $cnt_cpap = isset($comma_pos_arr[$i-2]) ? count($comma_pos_arr[$i-2]) : null;
+                                                     $cnt_cpap = isset($comma_pos_arr[$i - 2]) ? count($comma_pos_arr[$i - 2]) : null;
                                                      $is_mtrx_flg = $cnt_cpan == $cnt_cpap;
                             }
 
@@ -638,7 +638,7 @@ class ASCIIMathPHP
                                 $row_node_arr = array();
                                 $row_frag_node_arr = array();
 
-                                for ($j = 1; $j < ($num_child-1); $j++) {
+                                for ($j = 1; $j < ($num_child - 1); $j++) {
                                     if (isset($comma_pos_arr[$i][$k]) &&
                                     $j == $comma_pos_arr[$i][$k]) {
                                         $tmp_node->removeFirstChild();
@@ -766,7 +766,7 @@ class ASCIIMathPHP
                         break;
                 }
 
-                $txt = substr($expr, 1, strpos($expr, $end_brckt)-1);
+                $txt = substr($expr, 1, strpos($expr, $end_brckt) - 1);
                 $len = strlen($txt);
 
                 $node_0 = $this->createNode();
@@ -787,7 +787,7 @@ class ASCIIMathPHP
 
                     $node_0->addChild($node_3);
 
-                    if ($len > 1 && $txt[$len-1] == " ") {
+                    if ($len > 1 && $txt[$len - 1] == " ") {
                          $node_2 = $this->createNode();
                          $node_2->setName('mspace');
                          $node_2->setAttr('width', '1ex');
@@ -795,7 +795,7 @@ class ASCIIMathPHP
                          $node_0->addChild($node_2);
                     }
 
-                    $this->chopExpr($len+2);
+                    $this->chopExpr($len + 2);
                 }
                 return($node_0);
             } elseif (isset($sym['acc'])) {
@@ -915,16 +915,16 @@ class ASCIIMathPHP
 
         for ($i = 1; $i < $chr_cnt; $i++) {
             $sym_0 = substr($this->_curr_expr, 0, $i);
-            $sym_1 = substr($this->_curr_expr, 0, $i+1);
+            $sym_1 = substr($this->_curr_expr, 0, $i + 1);
 
          // Reading string for numeric values
             if (is_numeric($sym_0)) {
                 if (!is_numeric($sym_1)) {
                     $chop_flg ? $this->chopExpr($i) : 0;
-                    return(array('input'=>$sym_0, 'tag'=>'mn', 'output'=>$sym_0, 'symlen'=>$i));
+                    return(array('input' => $sym_0, 'tag' => 'mn', 'output' => $sym_0, 'symlen' => $i));
                 } elseif (is_numeric($sym_1) && $i == ($chr_cnt - 1)) {
-                    $chop_flg ? $this->chopExpr($i+1) : 0;
-                    return(array('input'=>$sym_1, 'tag'=>'mn', 'output'=>$sym_1, 'symlen'=>($i+1)));
+                    $chop_flg ? $this->chopExpr($i + 1) : 0;
+                    return(array('input' => $sym_1, 'tag' => 'mn', 'output' => $sym_1, 'symlen' => ($i + 1)));
                 }
             } elseif (isset($this->_symbol_arr[$sym_0]) && !isset($this->_symbol_arr[$sym_1])) {
                 $chop_flg ? $this->chopExpr($i) : 0;
@@ -932,16 +932,16 @@ class ASCIIMathPHP
                 $sym_arr['symlen'] = $i;
                 return($sym_arr);
             } elseif (isset($this->_symbol_arr[$sym_1]) && $i == ($chr_cnt - 1)) {
-                $chop_flg ? $this->chopExpr($i+1) : 0;
+                $chop_flg ? $this->chopExpr($i + 1) : 0;
                 $sym_arr = $this->_symbol_arr[$sym_1];
-                $sym_arr['symlen'] = $i+1;
+                $sym_arr['symlen'] = $i + 1;
                 return($sym_arr);
             }
         }
 
      // Reading string for alphabetic constants and the minus sign
         $char = $this->_curr_expr[0];
-        $len_left = $chop_flg ? $this->chopExpr(1) : strlen($this->_curr_expr)-1;
+        $len_left = $chop_flg ? $this->chopExpr(1) : strlen($this->_curr_expr) - 1;
 
      // Deals with expressions of length 1
         if ($len_left == 0 && isset($this->_symbol_arr[$char])) {
@@ -950,7 +950,7 @@ class ASCIIMathPHP
             return($sym_arr);
         } else {
             $tag = preg_match('/[a-z]/i', $char) ? 'mi' : 'mo';
-            return(array('input'=>$char, 'tag'=>$tag, 'output'=>$char, 'symlen'=>1));
+            return(array('input' => $char, 'tag' => $tag, 'output' => $char, 'symlen' => 1));
         }
     }
 

@@ -74,7 +74,7 @@ class FileInfoRepresentation
         $this->type             = $filetype;
         $this->html_url         = $html_url;
         $this->html_preview_url = $html_preview_url;
-        $this->uri              = 'artifact_files/'.$this->id;
+        $this->uri              = 'artifact_files/' . $this->id;
 
         return $this;
     }

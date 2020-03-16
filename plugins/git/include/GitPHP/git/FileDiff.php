@@ -747,7 +747,7 @@ class FileDiff
                         $diffs[] = $currentDiff;
                     }
                     $comma = strpos($d, ",");
-                    $line = -intval(substr($d, 2, $comma-2));
+                    $line = -intval(substr($d, 2, $comma - 2));
                     $currentDiff = array("line" => $line,
                         "left" => array(), "right" => array());
                     break;
@@ -782,7 +782,7 @@ class FileDiff
         $output = array();
         $idx = 0;
         foreach ($diffs as $d) {
-            while ($idx+1 < $d['line']) {
+            while ($idx + 1 < $d['line']) {
                 $h = $blob[$idx];
                 $output[] = array('', $h, $h);
                 $idx ++;

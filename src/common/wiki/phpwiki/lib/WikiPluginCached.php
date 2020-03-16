@@ -87,8 +87,8 @@ class WikiPluginCached extends WikiPlugin
         }
         if (strlen($plugincall_arg) > PLUGIN_CACHED_MAXARGLEN) {
             // we can't send the data as URL so we just send the id
-            if (!$request->getSessionVar('imagecache'.$id)) {
-                $request->setSessionVar('imagecache'.$id, $plugincall);
+            if (!$request->getSessionVar('imagecache' . $id)) {
+                $request->setSessionVar('imagecache' . $id, $plugincall);
             }
             $plugincall_arg = false; // not needed anymore
         }
@@ -96,7 +96,7 @@ class WikiPluginCached extends WikiPlugin
         if ($lastchar == '?') {
             // this indicates that a direct call of the image creation
             // script is wished ($url is assumed to link to the script)
-            $url .= "id=$id" . ($plugincall_arg ? '&args='.$plugincall_arg : '');
+            $url .= "id=$id" . ($plugincall_arg ? '&args=' . $plugincall_arg : '');
         } else {
             // Not yet supported.
             // We are supposed to use the indirect 404 ErrorDocument method
@@ -104,7 +104,7 @@ class WikiPluginCached extends WikiPlugin
             //  cache_dir and the image creation script is referred to in the
             //  ErrorDocument 404 directive.)
             $url .= '/' . PLUGIN_CACHED_FILENAME_PREFIX . $id . '.img'
-                . ($plugincall_arg ? '?args='.$plugincall_arg : '');
+                . ($plugincall_arg ? '?args=' . $plugincall_arg : '');
         }
         if ($request->getArg("start_debug")) {
             $url .= "&start_debug=1";
@@ -219,7 +219,7 @@ class WikiPluginCached extends WikiPlugin
      */
     public function getAlt($dbi, $argarray, $request)
     {
-        return '<?plugin '.$this->getName().' '.$this->glueArgs($argarray).'?>';
+        return '<?plugin ' . $this->getName() . ' ' . $this->glueArgs($argarray) . '?>';
     }
 
     /**
@@ -287,14 +287,14 @@ class WikiPluginCached extends WikiPlugin
     public function embedMap($id, $url, $map, &$dbi, $argarray, &$request)
     {
         // id is not unique if the same map is produced twice
-        $key = substr($id, 0, 8).substr(microtime(), 0, 6);
+        $key = substr($id, 0, 8) . substr(microtime(), 0, 6);
         return HTML(
             HTML::map(array( 'name' => $key ), $map),
             HTML::img(array(
                    'src'    => $url,
                    'border' => 0,
                    //  'alt'    => htmlspecialchars($this->getAlt($dbi,$argarray,$request))
-                   'usemap' => '#'.$key ))
+                   'usemap' => '#' . $key ))
         );
     }
 
@@ -371,11 +371,11 @@ class WikiPluginCached extends WikiPlugin
         if (!empty($argarray)) {
             $argstr = '';
             foreach ($argarray as $key => $value) {
-                $argstr .= $key. '=' . '"' . $value . '" ';
+                $argstr .= $key . '=' . '"' . $value . '" ';
                 // FIXME: How are values quoted? Can a value contain '"'?
                 // TODO: rawurlencode(value)
             }
-            return substr($argstr, 0, strlen($argstr)-1);
+            return substr($argstr, 0, strlen($argstr) - 1);
         }
         return '';
     } // glueArgs

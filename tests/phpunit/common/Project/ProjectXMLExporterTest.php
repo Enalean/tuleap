@@ -46,14 +46,14 @@ final class ProjectXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->ugroup_manager = M::spy(UGroupManager::class);
         $xml_validator        = new XML_RNGValidator();
         $user_xml_exporter    = new UserXMLExporter(M::spy(UserManager::class), M::spy(UserXMLExportedCollection::class));
-        $this->project        = M::spy(Project::class, [ 'getPublicName' => 'Project01']);
+        $this->project        = M::spy(Project::class, ['getPublicName' => 'Project01']);
 
         $this->xml_exporter   = new ProjectXMLExporter(
             $this->event_manager,
             $this->ugroup_manager,
             $xml_validator,
             $user_xml_exporter,
-            M::mock(SynchronizedProjectMembershipDetector::class, [ 'isSynchronizedWithProjectMembers' => false ]),
+            M::mock(SynchronizedProjectMembershipDetector::class, ['isSynchronizedWithProjectMembers' => false]),
             M::spy(\Psr\Log\LoggerInterface::class)
         );
 
@@ -129,24 +129,24 @@ final class ProjectXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertNotNull($xml_objet->ugroups->ugroup[3]);
         $this->assertNotNull($xml_objet->ugroups->ugroup[4]);
 
-        $this->assertEquals((string)$xml_objet->ugroups->ugroup[2]['name'], 'ugroup_01');
-        $this->assertEquals((string)$xml_objet->ugroups->ugroup[2]['description'], 'descr01');
+        $this->assertEquals((string) $xml_objet->ugroups->ugroup[2]['name'], 'ugroup_01');
+        $this->assertEquals((string) $xml_objet->ugroups->ugroup[2]['description'], 'descr01');
         $this->assertNotNull($xml_objet->ugroups->ugroup[2]->members);
-        $this->assertEquals((string)$xml_objet->ugroups->ugroup[2]->members->member[0], 'ldap_01');
-        $this->assertEquals((string)$xml_objet->ugroups->ugroup[2]->members->member[0]['format'], 'ldap');
-        $this->assertEquals((string)$xml_objet->ugroups->ugroup[2]->members->member[1], 'ldap_02');
-        $this->assertEquals((string)$xml_objet->ugroups->ugroup[2]->members->member[1]['format'], 'ldap');
-        $this->assertEquals((string)$xml_objet->ugroups->ugroup[2]->members->member[2], 'user_04');
-        $this->assertEquals((string)$xml_objet->ugroups->ugroup[2]->members->member[2]['format'], 'username');
+        $this->assertEquals((string) $xml_objet->ugroups->ugroup[2]->members->member[0], 'ldap_01');
+        $this->assertEquals((string) $xml_objet->ugroups->ugroup[2]->members->member[0]['format'], 'ldap');
+        $this->assertEquals((string) $xml_objet->ugroups->ugroup[2]->members->member[1], 'ldap_02');
+        $this->assertEquals((string) $xml_objet->ugroups->ugroup[2]->members->member[1]['format'], 'ldap');
+        $this->assertEquals((string) $xml_objet->ugroups->ugroup[2]->members->member[2], 'user_04');
+        $this->assertEquals((string) $xml_objet->ugroups->ugroup[2]->members->member[2]['format'], 'username');
 
-        $this->assertEquals((string)$xml_objet->ugroups->ugroup[3]['name'], 'ugroup_02');
-        $this->assertEquals((string)$xml_objet->ugroups->ugroup[3]['description'], 'descr02');
+        $this->assertEquals((string) $xml_objet->ugroups->ugroup[3]['name'], 'ugroup_02');
+        $this->assertEquals((string) $xml_objet->ugroups->ugroup[3]['description'], 'descr02');
         $this->assertNotNull($xml_objet->ugroups->ugroup[3]->members);
-        $this->assertEquals((string)$xml_objet->ugroups->ugroup[3]->members->member[0], 'ldap_03');
-        $this->assertEquals((string)$xml_objet->ugroups->ugroup[3]->members->member[0]['format'], 'ldap');
+        $this->assertEquals((string) $xml_objet->ugroups->ugroup[3]->members->member[0], 'ldap_03');
+        $this->assertEquals((string) $xml_objet->ugroups->ugroup[3]->members->member[0]['format'], 'ldap');
 
-        $this->assertEquals((string)$xml_objet->ugroups->ugroup[4]['name'], 'ugroup_03');
-        $this->assertEquals((string)$xml_objet->ugroups->ugroup[4]['description'], 'descr03');
+        $this->assertEquals((string) $xml_objet->ugroups->ugroup[4]['name'], 'ugroup_03');
+        $this->assertEquals((string) $xml_objet->ugroups->ugroup[4]['description'], 'descr03');
         $this->assertNotNull($xml_objet->ugroups->ugroup[4]->members);
         $this->assertNull($xml_objet->ugroups->ugroup[4]->members->member[0]);
     }
@@ -191,24 +191,24 @@ final class ProjectXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertNotNull($xml_objet->ugroups->ugroup[1]);
 
         $this->assertEquals(
-            (string)$xml_objet->ugroups->ugroup[0]['name'],
+            (string) $xml_objet->ugroups->ugroup[0]['name'],
             ProjectUGroup::$normalized_names[ProjectUGroup::PROJECT_ADMIN]
         );
         $this->assertNotNull($xml_objet->ugroups->ugroup[0]->members);
-        $this->assertEquals((string)$xml_objet->ugroups->ugroup[0]->members->member[0], 'ldap_01');
-        $this->assertEquals((string)$xml_objet->ugroups->ugroup[0]->members->member[0]['format'], 'ldap');
+        $this->assertEquals((string) $xml_objet->ugroups->ugroup[0]->members->member[0], 'ldap_01');
+        $this->assertEquals((string) $xml_objet->ugroups->ugroup[0]->members->member[0]['format'], 'ldap');
 
         $this->assertEquals(
-            (string)$xml_objet->ugroups->ugroup[1]['name'],
+            (string) $xml_objet->ugroups->ugroup[1]['name'],
             ProjectUGroup::$normalized_names[ProjectUGroup::PROJECT_MEMBERS]
         );
         $this->assertNotNull($xml_objet->ugroups->ugroup[1]->members);
-        $this->assertEquals((string)$xml_objet->ugroups->ugroup[1]->members->member[0], 'ldap_02');
-        $this->assertEquals((string)$xml_objet->ugroups->ugroup[1]->members->member[0]['format'], 'ldap');
-        $this->assertEquals((string)$xml_objet->ugroups->ugroup[1]->members->member[1], 'ldap_03');
-        $this->assertEquals((string)$xml_objet->ugroups->ugroup[1]->members->member[1]['format'], 'ldap');
-        $this->assertEquals((string)$xml_objet->ugroups->ugroup[1]->members->member[2], 'user_04');
-        $this->assertEquals((string)$xml_objet->ugroups->ugroup[1]->members->member[2]['format'], 'username');
+        $this->assertEquals((string) $xml_objet->ugroups->ugroup[1]->members->member[0], 'ldap_02');
+        $this->assertEquals((string) $xml_objet->ugroups->ugroup[1]->members->member[0]['format'], 'ldap');
+        $this->assertEquals((string) $xml_objet->ugroups->ugroup[1]->members->member[1], 'ldap_03');
+        $this->assertEquals((string) $xml_objet->ugroups->ugroup[1]->members->member[1]['format'], 'ldap');
+        $this->assertEquals((string) $xml_objet->ugroups->ugroup[1]->members->member[2], 'user_04');
+        $this->assertEquals((string) $xml_objet->ugroups->ugroup[1]->members->member[2]['format'], 'username');
     }
 
     public function testItExportsProjectInfo() : void
@@ -230,7 +230,7 @@ final class ProjectXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->project->shouldReceive('getDescription')->andReturns('my short desc');
         $this->project->shouldReceive('getServices')->andReturns(array($service_01, $service_02));
         $this->project->shouldReceive('getAccess')->andReturns('public');
-        $project_ugroup_dynamic = M::spy(ProjectUGroup::class, [ 'getNormalizedName' => 'ugroup_dynamic' ]);
+        $project_ugroup_dynamic = M::spy(ProjectUGroup::class, ['getNormalizedName' => 'ugroup_dynamic']);
         $project_ugroup_dynamic->shouldReceive('getMembers')->andReturns(array());
         $this->ugroup_manager->shouldReceive('getProjectAdminsUGroup')->with($this->project)->andReturns($project_ugroup_dynamic);
         $this->ugroup_manager->shouldReceive('getProjectMembersUGroup')->with($this->project)->andReturns($project_ugroup_dynamic);
@@ -239,15 +239,15 @@ final class ProjectXMLExporterTest extends \PHPUnit\Framework\TestCase
         $xml       = $this->xml_exporter->export($this->project, $this->options, $this->user, $this->archive, $this->export_dir);
         $xml_objet = simplexml_load_string($xml);
 
-        $this->assertEquals((string)$xml_objet['unix-name'], 'myproject');
-        $this->assertEquals((string)$xml_objet['full-name'], 'Project01');
-        $this->assertEquals((string)$xml_objet['description'], 'my short desc');
-        $this->assertEquals((string)$xml_objet['access'], 'public');
+        $this->assertEquals((string) $xml_objet['unix-name'], 'myproject');
+        $this->assertEquals((string) $xml_objet['full-name'], 'Project01');
+        $this->assertEquals((string) $xml_objet['description'], 'my short desc');
+        $this->assertEquals((string) $xml_objet['access'], 'public');
 
         $this->assertNotNull($xml_objet->services);
-        $this->assertEquals((string)$xml_objet->services->service[0]['enabled'], '1');
-        $this->assertEquals((string)$xml_objet->services->service[0]['shortname'], 's01');
-        $this->assertEquals((string)$xml_objet->services->service[1]['enabled'], '0');
-        $this->assertEquals((string)$xml_objet->services->service[1]['shortname'], 's02');
+        $this->assertEquals((string) $xml_objet->services->service[0]['enabled'], '1');
+        $this->assertEquals((string) $xml_objet->services->service[0]['shortname'], 's01');
+        $this->assertEquals((string) $xml_objet->services->service[1]['enabled'], '0');
+        $this->assertEquals((string) $xml_objet->services->service[1]['shortname'], 's02');
     }
 }

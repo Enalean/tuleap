@@ -23,4 +23,4 @@ require_once __DIR__ . '/../include/pre.php';
 
 HTTPRequest::instance()->checkUserIsSuperUser();
 
-require_once __DIR__. '/../account/register.php';
+require_once __DIR__ . '/../account/register.php';

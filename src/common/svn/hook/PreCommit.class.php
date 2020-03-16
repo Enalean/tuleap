@@ -188,7 +188,7 @@ class SVN_Hook_PreCommit extends SVN_Hook
             (?:U|D)\s+$immutable_path_regexp            # U  moduleA/tags/v1
                                                         # U  moduleA/tags/v1/toto
             |
-            A\s+".$immutable_path_regexp."/[^/]+/[^/]+  # A  moduleA/tags/v1/toto
+            A\s+" . $immutable_path_regexp . "/[^/]+/[^/]+  # A  moduleA/tags/v1/toto
             )%x";
 
         if (preg_match($pattern, $path)) {

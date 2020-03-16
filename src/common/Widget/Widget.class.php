@@ -102,7 +102,7 @@ use Tuleap\Layout\CssAssetCollection;
     public function getRssUrl($owner_id, $owner_type)
     {
         if ($this->hasRss()) {
-            return '/widgets/?'. http_build_query(
+            return '/widgets/?' . http_build_query(
                 array(
                     'owner'  => $owner_type . $owner_id,
                     'action' => 'rss',
@@ -195,7 +195,7 @@ use Tuleap\Layout\CssAssetCollection;
             $additional_parameters = array('group_id' => $owner_id);
         }
 
-        return $request->getServerUrl(). '/widgets/?'.http_build_query(
+        return $request->getServerUrl() . '/widgets/?' . http_build_query(
             array_merge(
                 array(
                     'dashboard_id' => $dashboard_id,

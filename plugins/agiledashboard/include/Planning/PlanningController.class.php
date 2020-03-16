@@ -445,7 +445,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     private function redirectNonAdmin()
     {
         if (! $this->isUserAdmin()) {
-            $this->redirect(array('group_id'=>$this->group_id));
+            $this->redirect(array('group_id' => $this->group_id));
         }
     }
 
@@ -506,7 +506,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
             $xml = $this->getFullConfigurationAsXML($project);
         } catch (Exception $e) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_agiledashboard', 'export_failed'));
-            $this->redirect(array('group_id'=>$this->group_id, 'action'=>'admin'));
+            $this->redirect(array('group_id' => $this->group_id, 'action' => 'admin'));
         }
 
         $GLOBALS['Response']->sendXMLAttachementFile($xml, self::AGILE_DASHBOARD_TEMPLATE_NAME);

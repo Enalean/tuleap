@@ -21,7 +21,7 @@
 
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 
-require_once __DIR__.'/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 Mock::generate('Transition');
 
@@ -250,8 +250,8 @@ class WorkflowTest extends TuleapTestCase
                                    );
         $workflow->exportToXML($root, $array_xml_mapping);
 
-        $this->assertEqual((string)$xml->field_id['REF'], (string)$root->field_id['REF']);
-        $this->assertEqual((int)$xml->is_used, (int)$root->is_used);
+        $this->assertEqual((string) $xml->field_id['REF'], (string) $root->field_id['REF']);
+        $this->assertEqual((int) $xml->is_used, (int) $root->is_used);
         $this->assertEqual(count($xml->transitions), count($root->transitions));
     }
 
@@ -575,7 +575,7 @@ class Workflow_checkGlobalRulesTest extends TuleapTestCase
         try {
             $workflow->checkGlobalRules($fields_data);
         } catch (Exception $e) {
-            $this->fail('Should not throw an exception: '. get_class($e));
+            $this->fail('Should not throw an exception: ' . get_class($e));
         }
     }
 }
@@ -639,7 +639,7 @@ class Workflow_DisableTest extends TuleapTestCase
         try {
             $workflow->checkGlobalRules($fields_data);
         } catch (Exception $e) {
-            $this->fail('Should not throw an exception: '. get_class($e));
+            $this->fail('Should not throw an exception: ' . get_class($e));
         }
     }
 }

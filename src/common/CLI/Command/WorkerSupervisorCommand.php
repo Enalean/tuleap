@@ -168,7 +168,7 @@ class WorkerSupervisorCommand extends Command
 
     private function startNewWorker(int $i): Process
     {
-        $worker = $this->process_factory->getProcess(['/usr/share/tuleap/src/utils/worker.php', '-v', '--id='.$i]);
+        $worker = $this->process_factory->getProcess(['/usr/share/tuleap/src/utils/worker.php', '-v', '--id=' . $i]);
         $worker->setTimeout(0);
         $worker->start();
         return $worker;

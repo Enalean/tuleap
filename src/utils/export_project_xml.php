@@ -28,7 +28,7 @@ use Tuleap\Project\XML\Export;
 $posix_user = posix_getpwuid(posix_geteuid());
 $sys_user   = $posix_user['name'];
 if ($sys_user !== 'root' && $sys_user !== 'codendiadm') {
-    fwrite(STDERR, 'Unsufficient privileges for user '.$sys_user.PHP_EOL);
+    fwrite(STDERR, 'Unsufficient privileges for user ' . $sys_user . PHP_EOL);
     exit(1);
 }
 
@@ -100,7 +100,7 @@ if (isset($arguments['x'])) {
 
 $options = array();
 if (isset($arguments['t'])) {
-    $options['tracker_id'] = (int)$arguments['t'];
+    $options['tracker_id'] = (int) $arguments['t'];
 }
 
 $options['force'] = isset($arguments['f']);
@@ -160,17 +160,17 @@ try {
 
     exit(0);
 } catch (XML_ParseException $exception) {
-    fwrite(STDERR, "*** PARSE ERROR: ".$exception->getIndentedXml().PHP_EOL);
+    fwrite(STDERR, "*** PARSE ERROR: " . $exception->getIndentedXml() . PHP_EOL);
     foreach ($exception->getErrors() as $parse_error) {
-        fwrite(STDERR, "*** PARSE ERROR: ".$parse_error.PHP_EOL);
+        fwrite(STDERR, "*** PARSE ERROR: " . $parse_error . PHP_EOL);
     }
-    fwrite(STDERR, "RNG path: ". $exception->getRngPath() . PHP_EOL);
+    fwrite(STDERR, "RNG path: " . $exception->getRngPath() . PHP_EOL);
     exit(1);
 } catch (Project_NotFoundException $exception) {
-    fwrite(STDERR, "*** ERROR: Invalid -p <project> parameter: project not found".PHP_EOL);
+    fwrite(STDERR, "*** ERROR: Invalid -p <project> parameter: project not found" . PHP_EOL);
     exit(1);
 } catch (Exception $exception) {
-    fwrite(STDERR, "*** ERROR: ".$exception->getMessage().PHP_EOL);
+    fwrite(STDERR, "*** ERROR: " . $exception->getMessage() . PHP_EOL);
     exit(1);
 }
 
@@ -192,20 +192,20 @@ class ProjectXMLExport_Archive extends ZipArchive
 
     public function addEmptyDir($dirname)
     {
-        if (!is_dir($this->archive_path.DIRECTORY_SEPARATOR.$dirname)) {
-            return mkdir($this->archive_path.DIRECTORY_SEPARATOR.$dirname, 0700);
+        if (!is_dir($this->archive_path . DIRECTORY_SEPARATOR . $dirname)) {
+            return mkdir($this->archive_path . DIRECTORY_SEPARATOR . $dirname, 0700);
         }
         return true;
     }
 
     public function addFile($filename, $localname = null, $start = 0, $length = 0)
     {
-        return copy($filename, $this->archive_path.DIRECTORY_SEPARATOR.$localname);
+        return copy($filename, $this->archive_path . DIRECTORY_SEPARATOR . $localname);
     }
 
     public function addFromString($localname, $contents)
     {
-        file_put_contents($this->archive_path.DIRECTORY_SEPARATOR.$localname, $contents);
+        file_put_contents($this->archive_path . DIRECTORY_SEPARATOR . $localname, $contents);
         return true;
     }
 }

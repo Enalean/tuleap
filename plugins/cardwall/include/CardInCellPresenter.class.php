@@ -41,7 +41,7 @@ class Cardwall_CardInCellPresenter
     {
         $classes = array();
         foreach (array_unique($this->swimline_field_values) as $id) {
-            $classes[] = 'drop-into-'.$this->swimline_id.'-'.$id;
+            $classes[] = 'drop-into-' . $this->swimline_id . '-' . $id;
         }
         return $classes;
     }

@@ -98,7 +98,7 @@ class HardcodedMetdataObsolescenceDateCheckerTest extends TestCase
 
         $this->docman_settings_bo->shouldReceive('getMetadataUsage')
                                  ->with('obsolescence_date')
-                                 ->andReturn((int)ItemRepresentation::OBSOLESCENCE_DATE_NONE);
+                                 ->andReturn((int) ItemRepresentation::OBSOLESCENCE_DATE_NONE);
 
         $this->expectException(HardCodedMetadataException::class);
         $this->expectExceptionMessage('obsolescence date is not enabled for project');
@@ -151,7 +151,7 @@ class HardcodedMetdataObsolescenceDateCheckerTest extends TestCase
                                  ->never();
 
         $checker->checkDateValidity(
-            (int)ItemRepresentation::OBSOLESCENCE_DATE_NONE,
+            (int) ItemRepresentation::OBSOLESCENCE_DATE_NONE,
             $obsolescence_date->getTimestamp(),
             PLUGIN_DOCMAN_ITEM_TYPE_EMPTY
         );

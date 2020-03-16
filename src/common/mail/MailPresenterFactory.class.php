@@ -132,7 +132,7 @@ class MailPresenterFactory
         $confirm_hash   = $attributes_presenter["confirm_hash"];
 
         include($GLOBALS['Language']->getContent('include/new_user_email'));
-        $redirect_url = $base_url ."/account/login.php?confirm_hash=$confirm_hash";
+        $redirect_url = $base_url . "/account/login.php?confirm_hash=$confirm_hash";
 
         $presenter = new MailRegisterByUserPresenter(
             $attributes_presenter["logo_url"],
@@ -161,7 +161,7 @@ class MailPresenterFactory
     private function createAdminNotificationPresenter(array $attributes_presenter)
     {
         $base_url     = $attributes_presenter["base_url"];
-        $redirect_url = $base_url ."/admin/approve_pending_users.php?page=pending";
+        $redirect_url = $base_url . "/admin/approve_pending_users.php?page=pending";
 
         $presenter = new MailRegisterByAdminNotificationPresenter(
             $attributes_presenter["logo_url"],

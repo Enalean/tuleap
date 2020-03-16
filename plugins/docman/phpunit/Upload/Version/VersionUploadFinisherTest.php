@@ -169,7 +169,7 @@ class VersionUploadFinisherTest extends TestCase
             ->with('copy')
             ->andReturn(true);
 
-        $this->approval_table_updater->shouldReceive('updateApprovalTable')->withArgs([$item,$user,'copy'])->once();
+        $this->approval_table_updater->shouldReceive('updateApprovalTable')->withArgs([$item, $user, 'copy'])->once();
 
         $upload_finisher->finishUpload($file_information);
 

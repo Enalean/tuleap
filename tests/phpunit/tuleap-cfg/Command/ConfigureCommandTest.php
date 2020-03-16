@@ -58,8 +58,8 @@ class ConfigureCommandTest extends \PHPUnit\Framework\TestCase
     public function testHTTPConf()
     {
         $base = vfsStream::url('slash');
-        mkdir($base.'/etc/httpd/conf', 0777, true);
-        copy(__DIR__ . '/../../../../src/tuleap-cfg/resources/httpd.conf', $base.'/etc/httpd/conf/httpd.conf');
+        mkdir($base . '/etc/httpd/conf', 0777, true);
+        copy(__DIR__ . '/../../../../src/tuleap-cfg/resources/httpd.conf', $base . '/etc/httpd/conf/httpd.conf');
         $command = new \TuleapCfg\Command\ConfigureCommand($base);
         $command_tester = new CommandTester($command);
         $command_tester->execute([
@@ -67,15 +67,15 @@ class ConfigureCommandTest extends \PHPUnit\Framework\TestCase
         ]);
 
         $this->assertEquals(0, $command_tester->getStatusCode());
-        $this->assertEquals(file_get_contents(__DIR__ . '/_fixtures/httpd.conf'), file_get_contents($base.'/etc/httpd/conf/httpd.conf'));
+        $this->assertEquals(file_get_contents(__DIR__ . '/_fixtures/httpd.conf'), file_get_contents($base . '/etc/httpd/conf/httpd.conf'));
         $this->assertStringContainsString('Apache has been configured', $command_tester->getDisplay());
     }
 
     public function testSSLConf()
     {
         $base = vfsStream::url('slash');
-        mkdir($base.'/etc/httpd/conf.d', 0777, true);
-        copy(__DIR__ . '/../../../../src/tuleap-cfg/resources/ssl.conf', $base.'/etc/httpd/conf.d/ssl.conf');
+        mkdir($base . '/etc/httpd/conf.d', 0777, true);
+        copy(__DIR__ . '/../../../../src/tuleap-cfg/resources/ssl.conf', $base . '/etc/httpd/conf.d/ssl.conf');
         $command = new \TuleapCfg\Command\ConfigureCommand($base);
         $command_tester = new CommandTester($command);
         $command_tester->execute([
@@ -83,17 +83,17 @@ class ConfigureCommandTest extends \PHPUnit\Framework\TestCase
         ]);
 
         $this->assertEquals(0, $command_tester->getStatusCode());
-        $this->assertEquals(file_get_contents(__DIR__ . '/_fixtures/ssl.conf'), file_get_contents($base.'/etc/httpd/conf.d/ssl.conf'));
+        $this->assertEquals(file_get_contents(__DIR__ . '/_fixtures/ssl.conf'), file_get_contents($base . '/etc/httpd/conf.d/ssl.conf'));
         $this->assertStringContainsString('Apache has been configured', $command_tester->getDisplay());
     }
 
     public function testAlreadyConfigured()
     {
         $base = vfsStream::url('slash');
-        mkdir($base.'/etc/httpd/conf', 0777, true);
-        mkdir($base.'/etc/httpd/conf.d', 0777, true);
-        copy(__DIR__ . '/_fixtures/httpd.conf', $base.'/etc/httpd/conf/httpd.conf');
-        copy(__DIR__ . '/_fixtures/ssl.conf', $base.'/etc/httpd/conf.d/ssl.conf');
+        mkdir($base . '/etc/httpd/conf', 0777, true);
+        mkdir($base . '/etc/httpd/conf.d', 0777, true);
+        copy(__DIR__ . '/_fixtures/httpd.conf', $base . '/etc/httpd/conf/httpd.conf');
+        copy(__DIR__ . '/_fixtures/ssl.conf', $base . '/etc/httpd/conf.d/ssl.conf');
         $command = new \TuleapCfg\Command\ConfigureCommand($base);
         $command_tester = new CommandTester($command);
         $command_tester->execute([

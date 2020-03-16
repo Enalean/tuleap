@@ -80,10 +80,10 @@ class Tracker_Semantic_StatusTest extends TestCase
 
         $semantic->exportToXML($root, $array_xml_mapping);
 
-        $this->assertEquals((string)$xml->shortname, (string)$root->semantic->shortname);
-        $this->assertEquals((string)$xml->label, (string)$root->semantic->label);
-        $this->assertEquals((string)$xml->description, (string)$root->semantic->description);
-        $this->assertEquals((string)$xml->field['REF'], (string)$root->semantic->field['REF']);
+        $this->assertEquals((string) $xml->shortname, (string) $root->semantic->shortname);
+        $this->assertEquals((string) $xml->label, (string) $root->semantic->label);
+        $this->assertEquals((string) $xml->description, (string) $root->semantic->description);
+        $this->assertEquals((string) $xml->field['REF'], (string) $root->semantic->field['REF']);
         $this->assertEquals(count($xml->open_values), count($root->semantic->open_values));
     }
 

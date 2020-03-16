@@ -30,7 +30,7 @@ class HTML_Element_Selectbox_TrackerFields_Int_TextFieldsV5 extends HTML_Element
     {
         parent::__construct($label, $name, $value, $with_none, $onchange, $desc);
 
-        require_once(TRACKER_BASE_DIR. '/Tracker/FormElement/Tracker_FormElementFactory.class.php');
+        require_once(TRACKER_BASE_DIR . '/Tracker/FormElement/Tracker_FormElementFactory.class.php');
         $aff = Tracker_FormElementFactory::instance();
 
         foreach ($aff->getUsedIntFields($tracker) as $field) {

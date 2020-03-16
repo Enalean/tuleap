@@ -143,7 +143,7 @@ class TemplateFactory
         $project_templates = $this->project_manager->getSiteTemplates();
 
         foreach ($project_templates as $project_template) {
-            if ((int)$project_template->getGroupId() === \Project::ADMIN_PROJECT_ID) {
+            if ((int) $project_template->getGroupId() === \Project::ADMIN_PROJECT_ID) {
                 continue;
             }
             $company_templates[] = new CompanyTemplate($project_template, $this->glyph_finder);

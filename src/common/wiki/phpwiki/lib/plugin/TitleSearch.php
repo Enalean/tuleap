@@ -122,7 +122,7 @@ class WikiPlugin_TitleSearch extends WikiPlugin
 
         return $pagelist;
     }
-};
+}
 
 // $Log: TitleSearch.php,v $
 // Revision 1.28  2005/09/10 21:33:08  rurban

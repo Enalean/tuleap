@@ -165,7 +165,7 @@ class Response
     {
         header('Content-Description: File Transfer');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-        header('Content-Disposition: attachment; filename="'.$output_filename.'"');
+        header('Content-Disposition: attachment; filename="' . $output_filename . '"');
         header('Content-Type: application/xml');
 
         echo $xml;

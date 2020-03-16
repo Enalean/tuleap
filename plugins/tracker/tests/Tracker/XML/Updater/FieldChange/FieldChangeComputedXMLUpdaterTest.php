@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\XML\Updater\FieldChange;
 
 use Tracker_FormElement_Field_Computed;
 
-require_once __DIR__.'/../../../../bootstrap.php';
+require_once __DIR__ . '/../../../../bootstrap.php';
 
 class FieldChangeComputedXMLUpdaterTest extends \TuleapTestCase
 {

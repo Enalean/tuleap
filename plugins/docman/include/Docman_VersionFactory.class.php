@@ -148,7 +148,7 @@ class Docman_VersionFactory
     public function deleteSpecificVersion($item, $number)
     {
         // The event must be processed before the version is deleted
-        $version = $this->getSpecificVersion($item, $number) ;
+        $version = $this->getSpecificVersion($item, $number);
         $user    = $this->_getUserManager()->getCurrentUser();
         $version->fireDeleteEvent($item, $user);
         $dao = $this->_getVersionDao();
@@ -186,7 +186,7 @@ class Docman_VersionFactory
     public function archiveBeforePurge(Docman_Version $version) : bool
     {
         $item    = $this->_getItemFactory()->getItemFromDb($version->getItemId(), array('ignore_deleted' => true));
-        $prefix  = $item->getGroupId().'_i'.$version->getItemId().'_v'.$version->getNumber();
+        $prefix  = $item->getGroupId() . '_i' . $version->getItemId() . '_v' . $version->getNumber();
 
         $event = new ArchiveDeletedItemEvent(new ArchiveDeletedItemFileProvider($version->getPath(), $prefix));
 
@@ -238,7 +238,7 @@ class Docman_VersionFactory
                     $user  = $this->_getUserManager()->getCurrentUser();
                     $value = $version->getNumber();
                     if ($row['label'] !== '') {
-                        $value .= ' ('.$row['label'].')';
+                        $value .= ' (' . $row['label'] . ')';
                     }
                     $this->_getEventManager()->processEvent('plugin_docman_event_restore_version', array(
                           'group_id'   => $item->getGroupId(),
@@ -260,7 +260,7 @@ class Docman_VersionFactory
      */
     public function renameProject($docman_path, $project, $new_name)
     {
-        $updateSystem = rename($docman_path.$project->getUnixName(true), $docman_path.strtolower($new_name));
+        $updateSystem = rename($docman_path . $project->getUnixName(true), $docman_path . strtolower($new_name));
         if ($updateSystem) {
             $dao = $this->_getVersionDao();
             return $dao->renameProject($docman_path, $project, $new_name);

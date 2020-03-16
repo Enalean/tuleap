@@ -104,7 +104,7 @@ class MilestoneElementAdder
     {
         $added_artifact_ids = [];
         foreach ($add as $added_artifact) {
-            $added_artifact_ids[] = (int)$added_artifact->id;
+            $added_artifact_ids[] = (int) $added_artifact->id;
         }
 
         $this->top_backlog_elements_to_add_checker->checkAddedIdsBelongToTheProjectTopBacklogTrackers(

@@ -66,7 +66,7 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
 
         $this->sprints = $this->getArtifactIdsIndexedByTitle('dragndrop', 'sprint');
 
-        $this->uri     = 'milestones/'.$this->release['id'].'/backlog';
+        $this->uri     = 'milestones/' . $this->release['id'] . '/backlog';
     }
 
     public function testPatchBacklogForbiddenForRESTReadOnlyUserNotInvolvedInProject(): void
@@ -159,7 +159,7 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
 
     public function testPatchContentBefore()
     {
-        $uri = 'milestones/'.$this->release['id'].'/content';
+        $uri = 'milestones/' . $this->release['id'] . '/content';
 
         $response = $this->getResponse($this->client->patch($uri, null, json_encode(array(
             'order' => array(
@@ -184,7 +184,7 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
 
     public function testPatchContentAfter()
     {
-        $uri = 'milestones/'.$this->release['id'].'/content';
+        $uri = 'milestones/' . $this->release['id'] . '/content';
 
         $response = $this->getResponse($this->client->patch($uri, null, json_encode(array(
             'order' => array(
@@ -209,7 +209,7 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
 
     public function testPatchContentWithoutPermission()
     {
-        $uri = 'milestones/'.$this->release['id'].'/content';
+        $uri = 'milestones/' . $this->release['id'] . '/content';
 
         $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->patch($uri, null, json_encode(array(
             'order' => array(
@@ -234,10 +234,10 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
 
     public function testPatchContentReMove()
     {
-        $uri = 'milestones/'.$this->release['id'].'/content';
+        $uri = 'milestones/' . $this->release['id'] . '/content';
 
         $another_release_id = $this->releases['Another release'];
-        $another_release_uri = 'milestones/'.$another_release_id.'/content';
+        $another_release_uri = 'milestones/' . $another_release_id . '/content';
 
         $response = $this->getResponse($this->client->patch($another_release_uri, null, json_encode(array(
             'add' => array(
@@ -273,7 +273,7 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
      */
     public function testPatchAddAndOrder()
     {
-        $uri = 'milestones/'.$this->release['id'].'/content';
+        $uri = 'milestones/' . $this->release['id'] . '/content';
 
         $response = $this->getResponse($this->client->patch($uri, null, json_encode(array(
             'order'  => array(
@@ -336,7 +336,7 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
             $this->getIdsOrderedByPriority($this->uri)
         );
 
-        $this->assertCount(0, $this->getResponse($this->client->get('milestones/'.$sprint_id.'/backlog'))->json());
+        $this->assertCount(0, $this->getResponse($this->client->get('milestones/' . $sprint_id . '/backlog'))->json());
     }
 
     private function getIdsOrderedByPriority($uri)

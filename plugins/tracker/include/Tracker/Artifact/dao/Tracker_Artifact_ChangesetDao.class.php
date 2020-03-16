@@ -135,8 +135,8 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject
         $sql        = "SELECT MAX(c.id) AS id, c.artifact_id FROM
                          tracker_changeset c
                          JOIN tracker_artifact a ON c.artifact_id = a.id
-                         WHERE DATE(FROM_UNIXTIME(c.submitted_on)) BETWEEN DATE(FROM_UNIXTIME(".$minDate.")) AND DATE(FROM_UNIXTIME(".$maxDate."))
-                           AND a.tracker_id = ".$trackerId."
+                         WHERE DATE(FROM_UNIXTIME(c.submitted_on)) BETWEEN DATE(FROM_UNIXTIME(" . $minDate . ")) AND DATE(FROM_UNIXTIME(" . $maxDate . "))
+                           AND a.tracker_id = " . $trackerId . "
                          GROUP BY c.artifact_id";
         return $this->retrieve($sql);
     }

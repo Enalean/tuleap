@@ -52,7 +52,7 @@ class UserDao extends DataAccessObject
     public function searchByStatus($status)
     {
         if (is_array($status)) {
-            $where_status=$this->da->quoteSmartImplode(" OR status = ", $status);
+            $where_status = $this->da->quoteSmartImplode(" OR status = ", $status);
         } else {
             $where_status = $this->da->quoteSmart($status);
         }
@@ -166,7 +166,7 @@ class UserDao extends DataAccessObject
      */
     public function searchByConfirmHash($hash)
     {
-        $sql = 'SELECT * FROM user WHERE confirm_hash='.$this->da->quoteSmart($hash);
+        $sql = 'SELECT * FROM user WHERE confirm_hash=' . $this->da->quoteSmart($hash);
         return $this->retrieve($sql);
     }
 
@@ -198,7 +198,6 @@ class UserDao extends DataAccessObject
      */
     public function create($user_name, $email, $user_pw, $realname, $register_purpose, $status, $shell, $unix_status, $unix_uid, $unix_box, $ldap_id, $add_date, $confirm_hash, $mail_siteupdates, $mail_va, $sticky_login, $authorized_keys, $email_new, $timezone, $language_id, $expiry_date, $last_pwd_update)
     {
-
         $columns = array();
         $values  = array();
 
@@ -299,13 +298,13 @@ class UserDao extends DataAccessObject
             $values[]  = $last_pwd_update;
         }
 
-        $sql = 'INSERT INTO user ('.implode(',', $columns).') VALUES ('.$this->da->quoteSmartImplode(',', $values).')';
+        $sql = 'INSERT INTO user (' . implode(',', $columns) . ') VALUES (' . $this->da->quoteSmartImplode(',', $values) . ')';
         $inserted = $this->update($sql);
         if ($inserted) {
             $dar = $this->retrieve("SELECT LAST_INSERT_ID() AS id");
             if ($row = $dar->getRow()) {
                 $inserted = $row['id'];
-                $sql = 'INSERT INTO user_access (user_id) VALUES ('.$this->da->quoteSmart($inserted).')';
+                $sql = 'INSERT INTO user_access (user_id) VALUES (' . $this->da->quoteSmart($inserted) . ')';
                 $this->update($sql);
             } else {
                 $inserted = $dar->isError();
@@ -318,18 +317,18 @@ class UserDao extends DataAccessObject
     {
         $stmt = array();
         if (isset($user['clear_password'])) {
-            $stmt[] = 'password='.$this->da->quoteSmart($this->password_handler->computeHashPassword($user['clear_password']));
+            $stmt[] = 'password=' . $this->da->quoteSmart($this->password_handler->computeHashPassword($user['clear_password']));
             /*
              * Legacy column that was used to store password hashed with MD5
              * We need to keep it for old instances with non migrated accounts yet
              */
             $stmt[] = 'user_pw=""';
             if (ForgeConfig::areUnixUsersAvailableOnSystem()) {
-                $stmt[] = 'unix_pw='.$this->da->quoteSmart($this->password_handler->computeUnixPassword($user['clear_password']));
+                $stmt[] = 'unix_pw=' . $this->da->quoteSmart($this->password_handler->computeUnixPassword($user['clear_password']));
             } else {
                 $stmt[] = 'unix_pw=' . $this->da->quoteSmart(self::NOT_VALID_UNIX_PASSWORD_HASH);
             }
-            $stmt[] = 'last_pwd_update='.$_SERVER['REQUEST_TIME'];
+            $stmt[] = 'last_pwd_update=' . $_SERVER['REQUEST_TIME'];
             unset($user['clear_password']);
         }
         $dar = $this->searchByUserId($user['user_id']);
@@ -337,11 +336,11 @@ class UserDao extends DataAccessObject
             $current = $dar->current();
             foreach ($user as $field => $value) {
                 if ($field != 'user_id' && $value != $current[$field] && $value !== null) {
-                    $stmt[] = $field.' = '.$this->da->quoteSmart($value);
+                    $stmt[] = $field . ' = ' . $this->da->quoteSmart($value);
                 }
             }
             if (count($stmt) > 0) {
-                $sql = 'UPDATE user SET '.implode(', ', $stmt).' WHERE user_id = '.db_ei($user['user_id']);
+                $sql = 'UPDATE user SET ' . implode(', ', $stmt) . ' WHERE user_id = ' . db_ei($user['user_id']);
                 return $this->update($sql);
             }
         }
@@ -357,11 +356,11 @@ class UserDao extends DataAccessObject
      */
     public function assignNextUnixUid($userId)
     {
-        $sql = 'UPDATE user, (SELECT MAX(unix_uid)+1 AS max_uid FROM user) AS R'.
-               ' SET unix_uid = max_uid'.
-               ' WHERE user_id = '.$this->da->quoteSmart($userId);
+        $sql = 'UPDATE user, (SELECT MAX(unix_uid)+1 AS max_uid FROM user) AS R' .
+               ' SET unix_uid = max_uid' .
+               ' WHERE user_id = ' . $this->da->quoteSmart($userId);
         if ($this->update($sql)) {
-            $sql = 'SELECT unix_uid FROM user WHERE user_id = '.$this->da->quoteSmart($userId);
+            $sql = 'SELECT unix_uid FROM user WHERE user_id = ' . $this->da->quoteSmart($userId);
             $dar = $this->retrieve($sql);
             if ($dar && !$dar->isError()) {
                 $row = $dar->current();
@@ -403,9 +402,9 @@ class UserDao extends DataAccessObject
         $sql = 'UPDATE user_access
                 SET nb_auth_failure = 0,
                     prev_auth_success = last_auth_success,
-                    last_auth_success = '. $this->da->escapeInt($time).',
-                    last_access_date ='.$this->da->escapeInt($time).'
-                WHERE user_id = '. $this->da->escapeInt($user_id);
+                    last_auth_success = ' . $this->da->escapeInt($time) . ',
+                    last_access_date =' . $this->da->escapeInt($time) . '
+                WHERE user_id = ' . $this->da->escapeInt($user_id);
         $this->update($sql);
     }
 
@@ -439,8 +438,8 @@ class UserDao extends DataAccessObject
     {
         $sql = "UPDATE user_access
                 SET nb_auth_failure = IF(last_auth_success >= last_auth_failure, 1, nb_auth_failure + 1),
-                last_auth_failure = ". $this->da->escapeInt($time) ."
-                WHERE user_id = (SELECT user_id from user WHERE user_name = ". $this->da->quoteSmart($login).")";
+                last_auth_failure = " . $this->da->escapeInt($time) . "
+                WHERE user_id = (SELECT user_id from user WHERE user_name = " . $this->da->quoteSmart($login) . ")";
         $this->update($sql);
     }
 
@@ -454,14 +453,14 @@ class UserDao extends DataAccessObject
     {
         $name = $this->getDa()->quoteLikeValueSurround($name);
 
-        $sql = "SELECT SQL_CALC_FOUND_ROWS *".
-            " FROM user".
-            " WHERE (realname LIKE $name".
-            " OR user_name LIKE $name)".
+        $sql = "SELECT SQL_CALC_FOUND_ROWS *" .
+            " FROM user" .
+            " WHERE (realname LIKE $name" .
+            " OR user_name LIKE $name)" .
             " AND status IN ('A', 'R')";
         $sql .= "ORDER BY realname";
         if ($limit > 0) {
-            $sql .= " LIMIT ".db_ei($limit);
+            $sql .= " LIMIT " . db_ei($limit);
 
             if ($offset > 0) {
                 $sql .= ' OFFSET ' . db_ei($offset);
@@ -508,7 +507,7 @@ class UserDao extends DataAccessObject
     {
         $tokens = explode(',', $subject);
         foreach ($tokens as $k => $str) {
-            $tokens[$k] = preg_replace('%^(\s*)' . preg_quote($search, '%') . '(\s*)$%', '$1'.$replace.'$2', $str);
+            $tokens[$k] = preg_replace('%^(\s*)' . preg_quote($search, '%') . '(\s*)$%', '$1' . $replace . '$2', $str);
         }
         return implode(',', $tokens);
     }
@@ -525,19 +524,19 @@ class UserDao extends DataAccessObject
             return true;
         }
 
-        $sqlArtcc = ' UPDATE artifact_cc SET email ='.$this->da->quoteSmart($newName).
-                     ' WHERE email = '.$this->da->quoteSmart($user->getUserName());
+        $sqlArtcc = ' UPDATE artifact_cc SET email =' . $this->da->quoteSmart($newName) .
+                     ' WHERE email = ' . $this->da->quoteSmart($user->getUserName());
         if ($this->update($sqlArtcc)) {
             $sqlSel = 'SELECT addresses, id FROM artifact_global_notification
-                       WHERE addresses LIKE '. $this->getDa()->quoteLikeValueSurround($user->getUserName());
+                       WHERE addresses LIKE ' . $this->getDa()->quoteLikeValueSurround($user->getUserName());
 
             $dar = $this->retrieve($sqlSel);
-            if ($dar && !$dar->isError() && $dar->rowCount()> 0) {
+            if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
                 $res = true;
                 foreach ($dar as $row) {
                     $row['addresses'] = $this->replaceStringInList($row['addresses'], $user->getUserName(), $newName);
-                    $sqlArtgn = 'UPDATE artifact_global_notification SET addresses = '.$this->da->quoteSmart($row['addresses']).'
-                                 WHERE id = '.$this->da->escapeInt($row['id']);
+                    $sqlArtgn = 'UPDATE artifact_global_notification SET addresses = ' . $this->da->quoteSmart($row['addresses']) . '
+                                 WHERE id = ' . $this->da->escapeInt($row['id']);
                     $res = $res & $this->update($sqlArtgn);
                 }
                 return $res;
@@ -574,12 +573,12 @@ class UserDao extends DataAccessObject
         $limit    = $this->da->escapeInt($limit);
         $stmLimit = "";
         if ($limit != 0) {
-            $stmLimit .= ' LIMIT '.$offset.', '.$limit;
+            $stmLimit .= ' LIMIT ' . $offset . ', ' . $limit;
         }
         $where  = "";
         $status = "";
         if (!empty($status_values)) {
-            $status =$this->da->quoteSmartImplode(',', $status_values);
+            $status = $this->da->quoteSmartImplode(',', $status_values);
         }
         if ($pattern) {
             $pattern = $this->getDa()->quoteLikeValueSurround($pattern);
@@ -589,10 +588,10 @@ class UserDao extends DataAccessObject
                     OR user.realname LIKE $pattern
                     OR user.email LIKE $pattern)";
             if ($status != "") {
-                $where .= ' AND (status IN ('.$status.'))';
+                $where .= ' AND (status IN (' . $status . '))';
             }
         } elseif ($status != "") {
-            $where .= ' WHERE status IN ('.$status.')';
+            $where .= ' WHERE status IN (' . $status . ')';
         }
 
         $from = 'FROM user';
@@ -618,7 +617,7 @@ class UserDao extends DataAccessObject
                     GROUP BY user_id
                 ) as member_of ON (member_of.user_id = user.user_id)
             $where
-            ORDER BY ".$sort_header." ".$sort_order.$stmLimit;
+            ORDER BY " . $sort_header . " " . $sort_order . $stmLimit;
 
         return array(
             'users'   => $this->retrieve($sql),
@@ -635,7 +634,7 @@ class UserDao extends DataAccessObject
      */
     public function getUserAccessInfo($userId)
     {
-        $sql = 'SELECT * FROM user_access WHERE user_id = '.$this->da->escapeInt($userId);
+        $sql = 'SELECT * FROM user_access WHERE user_id = ' . $this->da->escapeInt($userId);
         $dar  = $this->retrieve($sql);
         if ($dar && !$dar->isError()) {
             $row = $dar->getRow();

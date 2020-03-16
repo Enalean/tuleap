@@ -44,8 +44,8 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
             $version = false;
         }
         $content = '';
-        $content .= '<dl><dt>'. dgettext('tuleap-docman', 'Delete') .'</dt><dd>';
-        $content .= '<form action="'. $this->url .'" method="POST">';
+        $content .= '<dl><dt>' . dgettext('tuleap-docman', 'Delete') . '</dt><dd>';
+        $content .= '<form action="' . $this->url . '" method="POST">';
         $content .= '<div class="docman_confirm_delete">';
         if ($version !== false) {
             $content .= sprintf(dgettext('tuleap-docman', '<h3>Confirm deletion of version %2$s of document %1$s</h3><p>You are going to delete a version of file. </p><p>Are you sure that you want to delete this version?</p>'), $this->hp->purify($this->item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML), $version);
@@ -61,19 +61,19 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
         }
         $content .= '<div class="docman_confirm_delete_buttons">';
         if ($this->token) {
-            $content .= '<input type="hidden" name="token" value="'. $this->token .'" />';
+            $content .= '<input type="hidden" name="token" value="' . $this->token . '" />';
         }
         $content .= '     <input type="hidden" name="section" value="actions" />';
 
         if ($version !== false) {
             $content .= '     <input type="hidden" name="action" value="deleteVersion" />';
-            $content .= '     <input type="hidden" name="version" value="'.$version.'" />';
+            $content .= '     <input type="hidden" name="version" value="' . $version . '" />';
         } else {
             $content .= '     <input type="hidden" name="action" value="delete" />';
         }
-        $content .= '     <input type="hidden" name="id" value="'. $this->item->getId() .'" />';
-        $content .= '     <input type="submit" tabindex="2" name="confirm" value="'. dgettext('tuleap-docman', 'Yes, I am sure!') .'" />';
-        $content .= '     <input type="submit" tabindex="1" name="cancel" value="'. dgettext('tuleap-docman', 'No, I do not want to delete it') .'" />';
+        $content .= '     <input type="hidden" name="id" value="' . $this->item->getId() . '" />';
+        $content .= '     <input type="submit" tabindex="2" name="confirm" value="' . dgettext('tuleap-docman', 'Yes, I am sure!') . '" />';
+        $content .= '     <input type="submit" tabindex="1" name="cancel" value="' . dgettext('tuleap-docman', 'No, I do not want to delete it') . '" />';
         $content .= '</div>';
         $content .= '</div>';
         $content .= '</form>';
@@ -127,16 +127,16 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
         $parents = array_reverse($parents);
         $item_url = '/plugins/docman/?group_id=' . urlencode($item->getGroupId()) . '&sort_update_date=0&action=show&id=';
         foreach ($parents as $parent) {
-            $html .= '<a href="'. $item_url. urlencode($parent['id']). '">'. $purifier->purify($parent['title']) . '</a>';
+            $html .= '<a href="' . $item_url . urlencode($parent['id']) . '">' . $purifier->purify($parent['title']) . '</a>';
             $html .= ' / ';
         }
 
         $md_uri = '/plugins/docman/?group_id=' . urlencode($item->getGroupId()) . '&action=details&id=' . urlencode($item->getId());
 
         //Add a pen icon linked to document properties.
-        $pen_icon = '<a href="'. $md_uri . '"><img src="' . util_get_image_theme("ic/edit.png") . '" /></a>';
+        $pen_icon = '<a href="' . $md_uri . '"><img src="' . util_get_image_theme("ic/edit.png") . '" /></a>';
 
-        $html .= '<a href="'. $item_url . $reference->getId() . '">'. $purifier->purify($reference->getTitle()) . '</a>';
+        $html .= '<a href="' . $item_url . $reference->getId() . '">' . $purifier->purify($reference->getTitle()) . '</a>';
         $html .= $pen_icon;
         $html .= '<br>';
 

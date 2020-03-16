@@ -41,13 +41,13 @@ class SectionsPresenter
         $this->natures             = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'title');
         $this->report_config_panel = $GLOBALS['Language']->getText('plugin_tracker_report_config', 'report_config_panel');
 
-        $this->emailgateway_url = TRACKER_BASE_URL .'/config.php?'. http_build_query(array(
+        $this->emailgateway_url = TRACKER_BASE_URL . '/config.php?' . http_build_query(array(
             'action'   => 'emailgateway'
         ));
-        $this->natures_url = TRACKER_BASE_URL .'/config.php?'. http_build_query(array(
+        $this->natures_url = TRACKER_BASE_URL . '/config.php?' . http_build_query(array(
             'action'   => 'natures'
         ));
-        $this->report_config_url = TRACKER_BASE_URL .'/config.php?'. http_build_query(array(
+        $this->report_config_url = TRACKER_BASE_URL . '/config.php?' . http_build_query(array(
             'action' => 'report-config'
         ));
 

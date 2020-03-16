@@ -57,12 +57,12 @@ final class BasicAuthLoginExtractorTest extends TestCase
         $expected_password_with_colon = 'pass:word';
 
         return [
-            ['Basic ' .base64_encode($expected_username . ':' . $expected_password), $expected_password],
-            ["Basic\t" .base64_encode($expected_username . ':' . $expected_password), $expected_password],
-            ['Basic        ' .base64_encode($expected_username . ':' . $expected_password), $expected_password],
-            ["Basic\t " .base64_encode($expected_username . ':' . $expected_password), $expected_password],
-            ['basic ' .base64_encode($expected_username . ':' . $expected_password), $expected_password],
-            ['Basic ' .base64_encode($expected_username . ':' . $expected_password_with_colon), $expected_password_with_colon],
+            ['Basic ' . base64_encode($expected_username . ':' . $expected_password), $expected_password],
+            ["Basic\t" . base64_encode($expected_username . ':' . $expected_password), $expected_password],
+            ['Basic        ' . base64_encode($expected_username . ':' . $expected_password), $expected_password],
+            ["Basic\t " . base64_encode($expected_username . ':' . $expected_password), $expected_password],
+            ['basic ' . base64_encode($expected_username . ':' . $expected_password), $expected_password],
+            ['Basic ' . base64_encode($expected_username . ':' . $expected_password_with_colon), $expected_password_with_colon],
         ];
     }
 

@@ -24,7 +24,7 @@
 
     /* protected */ public function _scripts($params)
     {
-        echo '<script type="text/javascript"> var docman = new com.xerox.codendi.Docman('. $params['group_id'] .', ';
+        echo '<script type="text/javascript"> var docman = new com.xerox.codendi.Docman(' . $params['group_id'] . ', ';
         $di = $this->_getDocmanIcons($params);
         echo json_encode(array_merge(
             array(

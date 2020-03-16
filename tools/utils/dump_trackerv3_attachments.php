@@ -105,7 +105,7 @@ function dump_attachments(array $attachments)
             if (! is_dir($parent_path)) {
                 mkdir($parent_path, 0750, true);
             }
-            $res = db_query('SELECT bin_data FROM artifact_file WHERE id = '.$attachment_id);
+            $res = db_query('SELECT bin_data FROM artifact_file WHERE id = ' . $attachment_id);
             if ($res && !db_error($res)) {
                 echo "Create $attachment_path\n";
                 file_put_contents($attachment_path, db_result($res, 0, 0));
@@ -125,7 +125,7 @@ function check_attachments(array $attachments)
         if (! is_file($attachment_path)) {
             echo "$attachment_id doesn't exist on file system\n";
         } else {
-            $res = db_query('SELECT filesize, md5(bin_data) as md5 FROM artifact_file WHERE id = '.$attachment_id);
+            $res = db_query('SELECT filesize, md5(bin_data) as md5 FROM artifact_file WHERE id = ' . $attachment_id);
             if ($res && !db_error($res)) {
                 $row = db_fetch_array($res);
                 if (md5_file($attachment_path) !== $row['md5']) {
@@ -153,7 +153,7 @@ function delete_equal_attachments(array $attachments)
         $parent_path = ArtifactFile::getParentDirectoryForArtifactTypeId($artifact_type_id);
         $attachment_path = $parent_path . DIRECTORY_SEPARATOR . $attachment_id;
         if (is_file($attachment_path)) {
-            $res = db_query('SELECT filesize, md5(bin_data) as md5 FROM artifact_file WHERE id = '.$attachment_id);
+            $res = db_query('SELECT filesize, md5(bin_data) as md5 FROM artifact_file WHERE id = ' . $attachment_id);
             if ($res && !db_error($res)) {
                 $row = db_fetch_array($res);
                 if (md5_file($attachment_path) === $row['md5']) {

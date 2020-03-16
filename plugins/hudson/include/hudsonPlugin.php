@@ -38,7 +38,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
     {
         parent::__construct($id);
 
-        bindtextdomain('tuleap-hudson', __DIR__.'/../site-content');
+        bindtextdomain('tuleap-hudson', __DIR__ . '/../site-content');
 
         $this->addHook('javascript_file', 'jsFile', false);
         $this->addHook('cssfile', 'cssFile', false);
@@ -94,7 +94,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
                 __DIR__ . '/../../../src/www/assets/hudson/themes',
                 '/assets/hudson/themes'
             );
-            echo '<link rel="stylesheet" type="text/css" href="'. $asset->getFileURL('default-style.css') .'" />';
+            echo '<link rel="stylesheet" type="text/css" href="' . $asset->getFileURL('default-style.css') . '" />';
         }
     }
 
@@ -103,9 +103,9 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
         // Only include the js files if we're actually in the IM pages.
         // This stops styles inadvertently clashing with the main site.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            echo '<script type="text/javascript" src="/scripts/scriptaculous/scriptaculous.js"></script>'."\n";
-            echo '<script type="text/javascript" src="js/hudson_tab.js"></script>'."\n";
-            echo '<script type="text/javascript" src="js/form.js"></script>'."\n";
+            echo '<script type="text/javascript" src="/scripts/scriptaculous/scriptaculous.js"></script>' . "\n";
+            echo '<script type="text/javascript" src="js/hudson_tab.js"></script>' . "\n";
+            echo '<script type="text/javascript" src="js/form.js"></script>' . "\n";
         }
     }
 
@@ -271,11 +271,11 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
                         HTTPFactoryBuilder::requestFactory()
                     );
                     $event->setOutput(
-                        '<strong>' . $GLOBALS['Language']->getText('plugin_hudson', 'build_time') . '</strong> ' . $html_purifier->purify($build->getBuildTime()) . '<br />'.
+                        '<strong>' . $GLOBALS['Language']->getText('plugin_hudson', 'build_time') . '</strong> ' . $html_purifier->purify($build->getBuildTime()) . '<br />' .
                         '<strong>' . $GLOBALS['Language']->getText('plugin_hudson', 'status') . '</strong> ' . $html_purifier->purify($build->getResult())
                     );
                 } else {
-                    $event->setOutput('<span class="error">'.$GLOBALS['Language']->getText('plugin_hudson', 'error_object_not_found').'</span>');
+                    $event->setOutput('<span class="error">' . $GLOBALS['Language']->getText('plugin_hudson', 'error_object_not_found') . '</span>');
                 }
                 break;
             case 'hudson_job':
@@ -297,23 +297,23 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
                         $html .= '<table>';
                         $html .= ' <tr>';
                         $html .= '  <td colspan="2">';
-                        $html .= '   <img src="'.$job->getStatusIcon().'" width="10" height="10" /> '.$html_purifier->purify($job->getName()).':';
+                        $html .= '   <img src="' . $job->getStatusIcon() . '" width="10" height="10" /> ' . $html_purifier->purify($job->getName()) . ':';
                         $html .= '  </td>';
                         $html .= ' </tr>';
                         $html .= ' <tr>';
                         $html .= '  <td>';
                         $html .= '   <ul>';
                         if ($job->hasBuilds()) {
-                            $html .= ' <li>'.$GLOBALS['Language']->getText('plugin_hudson', 'last_build').' <a href="/plugins/hudson/?action=view_build&group_id='.$group_id.'&job_id='.$job_id.'&build_id='.$job->getLastBuildNumber().'"># '.$job->getLastBuildNumber().'</a></li>';
-                            $html .= ' <li>'.$GLOBALS['Language']->getText('plugin_hudson', 'last_build_success').' <a href="/plugins/hudson/?action=view_build&group_id='.$group_id.'&job_id='.$job_id.'&build_id='.$job->getLastSuccessfulBuildNumber().'"># '.$job->getLastSuccessfulBuildNumber().'</a></li>';
-                            $html .= ' <li>'.$GLOBALS['Language']->getText('plugin_hudson', 'last_build_failure').' <a href="/plugins/hudson/?action=view_build&group_id='.$group_id.'&job_id='.$job_id.'&build_id='.$job->getLastFailedBuildNumber().'"># '.$job->getLastFailedBuildNumber().'</a></li>';
+                            $html .= ' <li>' . $GLOBALS['Language']->getText('plugin_hudson', 'last_build') . ' <a href="/plugins/hudson/?action=view_build&group_id=' . $group_id . '&job_id=' . $job_id . '&build_id=' . $job->getLastBuildNumber() . '"># ' . $job->getLastBuildNumber() . '</a></li>';
+                            $html .= ' <li>' . $GLOBALS['Language']->getText('plugin_hudson', 'last_build_success') . ' <a href="/plugins/hudson/?action=view_build&group_id=' . $group_id . '&job_id=' . $job_id . '&build_id=' . $job->getLastSuccessfulBuildNumber() . '"># ' . $job->getLastSuccessfulBuildNumber() . '</a></li>';
+                            $html .= ' <li>' . $GLOBALS['Language']->getText('plugin_hudson', 'last_build_failure') . ' <a href="/plugins/hudson/?action=view_build&group_id=' . $group_id . '&job_id=' . $job_id . '&build_id=' . $job->getLastFailedBuildNumber() . '"># ' . $job->getLastFailedBuildNumber() . '</a></li>';
                         } else {
-                            $html .= ' <li>'. $GLOBALS['Language']->getText('plugin_hudson', 'widget_build_not_found') . '</li>';
+                            $html .= ' <li>' . $GLOBALS['Language']->getText('plugin_hudson', 'widget_build_not_found') . '</li>';
                         }
                         $html .= '   </ul>';
                         $html .= '  </td>';
                         $html .= '  <td class="widget_lastbuilds_weather">';
-                        $html .= $GLOBALS['Language']->getText('plugin_hudson', 'weather_report').'<img src="'.$job->getWeatherReportIcon().'" align="middle" />';
+                        $html .= $GLOBALS['Language']->getText('plugin_hudson', 'weather_report') . '<img src="' . $job->getWeatherReportIcon() . '" align="middle" />';
                         $html .= '  </td>';
                         $html .= ' </tr>';
                         $html .= '</table>';
@@ -321,7 +321,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
                     } catch (Exception $e) {
                     }
                 } else {
-                    $event->setOutput('<span class="error">'.$GLOBALS['Language']->getText('plugin_hudson', 'error_object_not_found').'</span>');
+                    $event->setOutput('<span class="error">' . $GLOBALS['Language']->getText('plugin_hudson', 'error_object_not_found') . '</span>');
                 }
                 break;
         }

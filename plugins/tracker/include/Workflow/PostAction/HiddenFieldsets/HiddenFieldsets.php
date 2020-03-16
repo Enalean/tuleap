@@ -94,7 +94,7 @@ class HiddenFieldsets extends Transition_PostAction
      */
     public function exportToXml(SimpleXMLElement $root, $xmlMapping)
     {
-        if (count($this->getFieldsets()) >0) {
+        if (count($this->getFieldsets()) > 0) {
             $child = $root->addChild(self::XML_TAG_NAME);
             foreach ($this->getFieldsets() as $fieldset) {
                 $fieldset_id = array_search((int) $fieldset->getID(), $xmlMapping);

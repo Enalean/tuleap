@@ -119,7 +119,7 @@ final class PullRequestNotificationSendMail implements PullRequestNotificationSt
         foreach ($notification->getRecipients() as $recipient) {
             try {
                 $this->pull_request_permission_checker->checkPullRequestIsReadableByUser($notification->getPullRequest(), $recipient);
-            } catch (\GitRepoNotFoundException|Project_AccessException|UserCannotReadGitRepositoryException $e) {
+            } catch (\GitRepoNotFoundException | Project_AccessException | UserCannotReadGitRepositoryException $e) {
                 continue;
             }
             $recipients[$recipient->getEmail()] = $recipient->getLocale();

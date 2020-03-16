@@ -90,7 +90,7 @@ class MailProjectNotificationMustBeApprovedPresenter extends MailOutlinePresente
 
     public function get_url()
     {
-        return HTTPRequest::instance()->getServerUrl() .'/admin/approve-pending.php';
+        return HTTPRequest::instance()->getServerUrl() . '/admin/approve-pending.php';
     }
 
     public function getMessageText()
@@ -99,7 +99,7 @@ class MailProjectNotificationMustBeApprovedPresenter extends MailOutlinePresente
                . $this->get_section_one() . "\n\n"
                . $this->get_section_two() . "\n\n"
                . $this->get_section_three() . "\n\n"
-               . "<". $this->get_url(). ">\n\n"
+               . "<" . $this->get_url() . ">\n\n"
                . $this->get_thanks() . "\n\n"
                . $this->get_signature() . "\n\n";
         return $message;

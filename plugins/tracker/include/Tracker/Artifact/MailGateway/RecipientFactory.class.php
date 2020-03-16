@@ -93,8 +93,8 @@ class Tracker_Artifact_MailGateway_RecipientFactory
     public function getFromEmail($email)
     {
         preg_match(self::EMAIL_PATTERN, $email, $email_parts);
-        $artifact = $this->getArtifact((int)$email_parts[self::ARTIFACT_ID_INDEX]);
-        $user     = $this->getUser((int)$email_parts[self::USER_ID_INDEX]);
+        $artifact = $this->getArtifact((int) $email_parts[self::ARTIFACT_ID_INDEX]);
+        $user     = $this->getUser((int) $email_parts[self::USER_ID_INDEX]);
 
         $this->checkHash($user, $artifact, $email_parts[self::HASH_INDEX]);
 

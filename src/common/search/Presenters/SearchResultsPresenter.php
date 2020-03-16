@@ -60,7 +60,7 @@ class Search_SearchResultsPresenter
 
     public function getTemplate()
     {
-        return self::TEMPLATE_PREFIX.$this->template;
+        return self::TEMPLATE_PREFIX . $this->template;
     }
 
     public function no_more_results()

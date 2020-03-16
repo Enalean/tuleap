@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__.'/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 class SystemEvent_GIT_EDIT_SSH_KEYSTest extends \PHPUnit\Framework\TestCase
 {
@@ -110,7 +110,7 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends \PHPUnit\Framework\TestCase
             'wxyz',
         );
 
-        $event = new SystemEvent_GIT_EDIT_SSH_KEYS('', '', '', '105::'.'abcdefg'.PFUser::SSH_KEY_SEPARATOR.'wxyz', '', '', '', '', '', '');
+        $event = new SystemEvent_GIT_EDIT_SSH_KEYS('', '', '', '105::' . 'abcdefg' . PFUser::SSH_KEY_SEPARATOR . 'wxyz', '', '', '', '', '', '');
         $event->injectDependencies(
             $this->user_manager,
             $this->sshkey_dumper,

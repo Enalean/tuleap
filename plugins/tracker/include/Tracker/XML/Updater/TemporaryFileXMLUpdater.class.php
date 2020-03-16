@@ -39,7 +39,7 @@ class Tracker_XML_Updater_TemporaryFileXMLUpdater
     public function update(SimpleXMLElement $xml_artifact)
     {
         foreach ($xml_artifact->file as $file) {
-            $path = (string)$file->path;
+            $path = (string) $file->path;
             $temporary_path = $this->temporary_file_creator->createTemporaryFile($path);
             $file->path = $temporary_path;
         }

@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once __DIR__.'/../../../bootstrap.php';
+require_once __DIR__ . '/../../../bootstrap.php';
 
 class Tracker_XML_Updater_TemporaryFileXMLUpdaterTest extends TuleapTestCase
 {
@@ -54,7 +54,7 @@ class Tracker_XML_Updater_TemporaryFileXMLUpdaterTest extends TuleapTestCase
     {
         $this->updater->update($this->artifact_xml);
 
-        $this->assertEqual((string)$this->artifact_xml->file[0]->path, '/tmp/toto.txt');
-        $this->assertEqual((string)$this->artifact_xml->file[1]->path, '/tmp/Spec.doc');
+        $this->assertEqual((string) $this->artifact_xml->file[0]->path, '/tmp/toto.txt');
+        $this->assertEqual((string) $this->artifact_xml->file[1]->path, '/tmp/Spec.doc');
     }
 }

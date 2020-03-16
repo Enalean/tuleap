@@ -52,7 +52,6 @@ class FutureMilestoneRepresentationBuilder implements MilestoneRepresentationBui
         int $offset,
         string $order
     ): AgileDashboard_Milestone_PaginatedMilestonesRepresentations {
-
         $sub_milestones = $this->milestone_factory
             ->getPaginatedTopMilestonesInTheFuture($user, $project, $limit, $offset, $order);
 

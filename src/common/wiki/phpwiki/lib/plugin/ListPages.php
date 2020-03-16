@@ -130,7 +130,7 @@ class WikiPlugin_ListPages extends WikiPlugin
         $pagelist->addPageList($pages_array);
         return $pagelist;
     }
-};
+}
 
 // how many back-/forwardlinks for this page
 class _PageList_Column_ListPages_count extends _PageList_Column

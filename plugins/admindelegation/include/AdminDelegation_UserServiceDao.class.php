@@ -29,16 +29,16 @@ class AdminDelegation_UserServiceDao extends DataAccessObject
 
     public function searchUser($userId)
     {
-        $sql = 'SELECT service_id FROM plugin_admindelegation_service_user'.
-               ' WHERE user_id = '.$this->da->escapeInt($userId);
+        $sql = 'SELECT service_id FROM plugin_admindelegation_service_user' .
+               ' WHERE user_id = ' . $this->da->escapeInt($userId);
         return $this->retrieve($sql);
     }
 
     public function isUserGrantedForService($userId, $serviceId)
     {
-        $sql = 'SELECT NULL FROM plugin_admindelegation_service_user'.
-               ' WHERE user_id = '.$this->da->escapeInt($userId).
-               ' AND service_id = '.$this->da->escapeInt($serviceId);
+        $sql = 'SELECT NULL FROM plugin_admindelegation_service_user' .
+               ' WHERE user_id = ' . $this->da->escapeInt($userId) .
+               ' AND service_id = ' . $this->da->escapeInt($serviceId);
         $dar = $this->retrieve($sql);
         if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
             return true;
@@ -55,15 +55,15 @@ class AdminDelegation_UserServiceDao extends DataAccessObject
      */
     public function searchAllUserService($serviceId)
     {
-        $sql = 'SELECT user_id FROM plugin_admindelegation_service_user'.
-               ' WHERE service_id = '.$this->da->escapeInt($serviceId);
+        $sql = 'SELECT user_id FROM plugin_admindelegation_service_user' .
+               ' WHERE service_id = ' . $this->da->escapeInt($serviceId);
         return $this->retrieve($sql);
     }
 
     public function isUserGranted($userId)
     {
-        $sql = 'SELECT NULL FROM plugin_admindelegation_service_user'.
-               ' WHERE user_id = '.$this->da->escapeInt($userId).
+        $sql = 'SELECT NULL FROM plugin_admindelegation_service_user' .
+               ' WHERE user_id = ' . $this->da->escapeInt($userId) .
                ' LIMIT 1';
         $dar = $this->retrieve($sql);
         if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
@@ -75,15 +75,15 @@ class AdminDelegation_UserServiceDao extends DataAccessObject
 
     public function addUserService($userId, $serviceId)
     {
-        $sql = 'INSERT INTO plugin_admindelegation_service_user (service_id, user_id)'.
-               ' VALUES ('.$this->da->escapeInt($serviceId).', '.$this->da->escapeInt($userId).')';
+        $sql = 'INSERT INTO plugin_admindelegation_service_user (service_id, user_id)' .
+               ' VALUES (' . $this->da->escapeInt($serviceId) . ', ' . $this->da->escapeInt($userId) . ')';
         return $this->update($sql);
     }
 
     public function removeUser($userId)
     {
-        $sql = 'DELETE FROM plugin_admindelegation_service_user'.
-               ' WHERE user_id = '.$this->da->escapeInt($userId);
+        $sql = 'DELETE FROM plugin_admindelegation_service_user' .
+               ' WHERE user_id = ' . $this->da->escapeInt($userId);
         return $this->update($sql);
     }
 }

@@ -63,6 +63,6 @@ class GitoliteAdmin extends ArrayIterator implements IProvideKey
                 return $file_path;
             }
         }
-        throw new AccessException("No valid ".self::GITOLITE_ADMIN_KEY_FILE." found");
+        throw new AccessException("No valid " . self::GITOLITE_ADMIN_KEY_FILE . " found");
     }
 }

@@ -79,7 +79,7 @@ class WikiPlugin_BlogJournal extends WikiPlugin_WikiBlog
         if ($args['month']) {
             $prefix .= (SUBPAGE_SEPARATOR . $args['month']);
         }
-        $pages = $dbi->titleSearch(new TextSearchQuery("^".$prefix, true, 'posix'));
+        $pages = $dbi->titleSearch(new TextSearchQuery("^" . $prefix, true, 'posix'));
         $html = HTML();
         $i = 0;
         while (($page = $pages->next()) and $i < $args['count']) {
@@ -107,7 +107,7 @@ class WikiPlugin_BlogJournal extends WikiPlugin_WikiBlog
             return $html;
         }
     }
-};
+}
 
 // $Log: BlogJournal.php,v $
 // Revision 1.4  2005/11/21 20:56:23  rurban

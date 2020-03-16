@@ -125,7 +125,7 @@ class CompleteTrackerRepresentation implements TrackerRepresentation
         $this->resources   = array(
             array(
                 'type' => 'reports',
-                'uri'  => $this->uri .'/'. ReportRepresentation::ROUTE
+                'uri'  => $this->uri . '/' . ReportRepresentation::ROUTE
             )
         );
         $this->color_name  = $tracker->getColor()->getName();

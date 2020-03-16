@@ -36,10 +36,10 @@ class ProjectLinksDao extends DataAccessObject
      */
     public function searchLinksByType($linkTypeId)
     {
-        $sql = 'SELECT rel.*, g.group_name'.
-               ' FROM plugin_projectlinks_relationship rel'.
-               '  JOIN groups g ON (g.group_id = rel.target_group_id)'.
-               ' WHERE link_type_id = '.db_ei($linkTypeId).
+        $sql = 'SELECT rel.*, g.group_name' .
+               ' FROM plugin_projectlinks_relationship rel' .
+               '  JOIN groups g ON (g.group_id = rel.target_group_id)' .
+               ' WHERE link_type_id = ' . db_ei($linkTypeId) .
                ' ORDER BY g.group_name';
         return $this->retrieve($sql);
     }
@@ -60,7 +60,7 @@ class ProjectLinksDao extends DataAccessObject
                     USING (link_type_id)
                   INNER JOIN groups
                     ON (groups.group_id = rel.target_group_id)
-                WHERE master_group_id = '.db_ei($groupId).'
+                WHERE master_group_id = ' . db_ei($groupId) . '
                   AND status = "A"
                 ORDER BY name, type, group_name';
         return $this->retrieve($sql);
@@ -82,7 +82,7 @@ class ProjectLinksDao extends DataAccessObject
                     USING (link_type_id)
                   INNER JOIN groups
                     ON (groups.group_id = rel.master_group_id)
-                WHERE target_group_id = '.db_ei($groupId).'
+                WHERE target_group_id = ' . db_ei($groupId) . '
                   AND status = "A"
             ORDER BY name, type, group_name';
         return $this->retrieve($sql);
@@ -98,18 +98,18 @@ class ProjectLinksDao extends DataAccessObject
      */
     public function projectUsesProjectLinks($groupId)
     {
-        $sql = 'SELECT NULL'.
-               ' FROM plugin_projectlinks_link_type'.
-               ' WHERE group_id = '.$groupId.
+        $sql = 'SELECT NULL' .
+               ' FROM plugin_projectlinks_link_type' .
+               ' WHERE group_id = ' . $groupId .
                ' LIMIT 1';
         $dar = $this->retrieve($sql);
         if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
             return true;
         } else {
-            $sql = 'SELECT NULL'.
-                   ' FROM plugin_projectlinks_relationship'.
-                   ' WHERE target_group_id = '.$groupId.
-                   ' OR master_group_id = '.$groupId.
+            $sql = 'SELECT NULL' .
+                   ' FROM plugin_projectlinks_relationship' .
+                   ' WHERE target_group_id = ' . $groupId .
+                   ' OR master_group_id = ' . $groupId .
                    ' LIMIT 1';
             $dar = $this->retrieve($sql);
             if ($dar && !$dar->isError() && $dar->rowCount() == 1) {

@@ -91,8 +91,8 @@ final class DisplaySecurityControllerTest extends TestCase
             $this->event_manager,
             TemplateRendererFactoryBuilder::get()->withPath($this->getTmpDir())->build(),
             $this->csrf_token,
-            M::mock(PasswordSanityChecker::class, [ 'getValidators' => [] ]),
-            M::mock(\UserManager::class, [ 'getUserAccessInfo' => ['last_auth_success' => 1, 'last_auth_failure' => 1, 'nb_auth_failure' => 1, 'prev_auth_success' => 1]])
+            M::mock(PasswordSanityChecker::class, ['getValidators' => []]),
+            M::mock(\UserManager::class, ['getUserAccessInfo' => ['last_auth_success' => 1, 'last_auth_failure' => 1, 'nb_auth_failure' => 1, 'prev_auth_success' => 1]])
         );
         $this->user = UserTestBuilder::aUser()
             ->withId(110)

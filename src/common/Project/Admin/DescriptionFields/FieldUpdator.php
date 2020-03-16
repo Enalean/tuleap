@@ -61,7 +61,7 @@ class FieldUpdator
         foreach ($description_fields as $field) {
             $field_id    = $field["group_desc_id"];
             $desc_id_val = $data->getField($field_id);
-            $this->storeFieldValue($group_id, $desc_id_val, (int)$field_id);
+            $this->storeFieldValue($group_id, $desc_id_val, (int) $field_id);
         }
     }
 
@@ -73,7 +73,7 @@ class FieldUpdator
             $field_id        = $field["group_desc_id"];
             if (isset($submitted_fields[$field_id])) {
                 $submitted_value = $submitted_fields[$field_id];
-                $this->storeFieldValue((int) $project->getID(), $submitted_value, (int)$field_id);
+                $this->storeFieldValue((int) $project->getID(), $submitted_value, (int) $field_id);
             }
         }
     }

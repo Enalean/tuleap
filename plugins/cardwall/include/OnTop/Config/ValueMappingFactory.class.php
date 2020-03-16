@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__). '/../../constants.php';
+require_once dirname(__FILE__) . '/../../constants.php';
 
 class Cardwall_OnTop_Config_ValueMappingFactory
 {
@@ -65,7 +65,6 @@ class Cardwall_OnTop_Config_ValueMappingFactory
      */
     public function getMappings(Tracker $tracker, Tracker $mapping_tracker, Tracker_FormElement_Field $mapping_field)
     {
-
         // Why does we return a collection indexed on value_id in the case of freestyle mappings, and a collection
         // indexed on column_id in the case of status mappings @see getStatusMappings?????????
         // Shouldn't we let TrackerMapping do the indexing so that code in TrackerMapping might exploit that?

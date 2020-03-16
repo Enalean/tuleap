@@ -60,7 +60,7 @@ final class TaskWorkerProcessCommandTest extends TestCase
         $event_dispatcher->shouldReceive('dispatch')->with(Mockery::type(WorkerEvent::class));
 
         $command_tester = new CommandTester($command);
-        $command_tester->execute(['input_file' =>$path_to_file]);
+        $command_tester->execute(['input_file' => $path_to_file]);
     }
 
     public function testEventNotProperlyJSONSerializedIsRejected() : void
@@ -76,6 +76,6 @@ final class TaskWorkerProcessCommandTest extends TestCase
         $command_tester = new CommandTester($command);
 
         $this->expectException(JsonException::class);
-        $command_tester->execute(['input_file' =>$path_to_file]);
+        $command_tester->execute(['input_file' => $path_to_file]);
     }
 }

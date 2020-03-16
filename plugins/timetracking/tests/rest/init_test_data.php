@@ -24,7 +24,7 @@
 
 use Tuleap\Timetracking\REST\TimetrackingDataBuilder;
 
-require_once dirname(__FILE__).'/TimetrackingDataBuilder.php';
+require_once dirname(__FILE__) . '/TimetrackingDataBuilder.php';
 
 $data_builder = new TimetrackingDataBuilder();
 $data_builder->setUp();

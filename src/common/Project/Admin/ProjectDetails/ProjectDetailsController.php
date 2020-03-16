@@ -259,7 +259,7 @@ class ProjectDetailsController
         $description_fields = $this->description_fields_factory->getAllDescriptionFields();
 
         for ($i = 0; $i < sizeof($description_fields); $i++) {
-            $current_form = trim($request->get("form_".$description_fields[$i]["group_desc_id"]));
+            $current_form = trim($request->get("form_" . $description_fields[$i]["group_desc_id"]));
 
             if (($description_fields[$i]['desc_required'] == 1) && (! $current_form)) {
                 $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('Missing Information. PLEASE fill in all required information.'));

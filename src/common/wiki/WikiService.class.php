@@ -69,7 +69,7 @@ class WikiService extends Controler
 
       // If Wiki for project doesn't exist, propose creation ... if user is project admin or wiki admin
         if (!$this->wiki->exist()) {
-            if ((!user_ismember($this->gid, 'W2'))&&(!user_ismember($this->gid, 'A'))) {
+            if ((!user_ismember($this->gid, 'W2')) && (!user_ismember($this->gid, 'A'))) {
                 exit_wiki_empty();
             }
         }
@@ -98,7 +98,7 @@ class WikiService extends Controler
                 $GLOBALS['Language']->getText(
                     'wiki_wikiservice',
                     'acces_denied_whole',
-                    session_make_url("/project/memberlist.php?group_id=".$this->gid)
+                    session_make_url("/project/memberlist.php?group_id=" . $this->gid)
                 ),
                 CODENDI_PURIFIER_DISABLED
             );
@@ -114,7 +114,7 @@ class WikiService extends Controler
                     $GLOBALS['Language']->getText(
                         'wiki_wikiservice',
                         'acces_denied_page',
-                        session_make_url("/project/memberlist.php?group_id=".$this->gid)
+                        session_make_url("/project/memberlist.php?group_id=" . $this->gid)
                     ),
                     CODENDI_PURIFIER_DISABLED
                 );
@@ -171,9 +171,9 @@ class WikiService extends Controler
       // If Wiki for project doesn't exist, propose creation...
         if (!$this->wiki->exist()) {
             if (! isset($_REQUEST['view']) || $_REQUEST['view'] != 'doinstall') {
-                $this->view='install';
+                $this->view = 'install';
             } else {
-                $this->view='doinstall';
+                $this->view = 'doinstall';
             }
         }
     }

@@ -40,7 +40,7 @@ class RegisterIPCommand extends Command
     {
         $tld          = '.tuleap-aio-dev.docker';
         $service_name = $input->getArgument('service');
-        $full_name    = $service_name.$tld;
+        $full_name    = $service_name . $tld;
         if (gethostbyname($full_name) !== $full_name) {
             $output->writeln("$full_name is already registered");
             return 0;

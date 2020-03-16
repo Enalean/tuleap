@@ -40,6 +40,6 @@ class LFSEndPointDiscovery implements BatchResponseActionHref
      */
     public function getHref()
     {
-        return $this->repository->getFullHTTPUrlWithDotGit().'/info/lfs';
+        return $this->repository->getFullHTTPUrlWithDotGit() . '/info/lfs';
     }
 }

@@ -30,7 +30,7 @@ class Log_ConsoleLogger extends \Psr\Log\AbstractLogger implements \Psr\Log\Logg
 
     public function log($level, $message, array $context = [])
     {
-        fwrite(STDERR, $this->colorize($level, $level.' '.$message).PHP_EOL);
+        fwrite(STDERR, $this->colorize($level, $level . ' ' . $message) . PHP_EOL);
         fflush(STDERR);
     }
 
@@ -61,7 +61,7 @@ class Log_ConsoleLogger extends \Psr\Log\AbstractLogger implements \Psr\Log\Logg
                 break;
         }
         if ($color) {
-            $message = $color.$message.self::NOCOLOR;
+            $message = $color . $message . self::NOCOLOR;
         }
         return $message;
     }

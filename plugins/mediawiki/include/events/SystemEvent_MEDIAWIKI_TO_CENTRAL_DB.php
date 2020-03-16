@@ -70,7 +70,7 @@ class SystemEvent_MEDIAWIKI_TO_CENTRAL_DB extends SystemEvent
         if ($this->areAllProjectsMigrated()) {
             return "All projects";
         } else {
-            return "Project: ".$this->getProjectIdFromParameters();
+            return "Project: " . $this->getProjectIdFromParameters();
         }
     }
 }

@@ -45,7 +45,7 @@ class InvertCommentsController implements DispatchableWithRequest
         $valid = new Valid_UInt('tracker');
         $valid->required();
         if ($request->valid($valid)) {
-            $preference_name = 'tracker_comment_invertorder_'.$request->get('tracker');
+            $preference_name = 'tracker_comment_invertorder_' . $request->get('tracker');
             $request->getCurrentUser()->togglePreference($preference_name, 0, 1);
         }
     }

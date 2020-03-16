@@ -96,16 +96,16 @@ class User_ForgeUserGroupFactory
         $user_groups = array();
 
         if (ForgeConfig::areAnonymousAllowed() && $project->isPublic()) {
-            $user_groups []= $this->getDynamicForgeUserGroupByName(NameTranslator::ANON);
+            $user_groups[] = $this->getDynamicForgeUserGroupByName(NameTranslator::ANON);
         }
         if (ForgeConfig::areRestrictedUsersAllowed() && $project->allowsRestricted()) {
-            $user_groups []= $this->getDynamicForgeUserGroupByName(NameTranslator::AUTHENTICATED);
+            $user_groups[] = $this->getDynamicForgeUserGroupByName(NameTranslator::AUTHENTICATED);
         }
         if ($project->isPublic()) {
-            $user_groups []= $this->getDynamicForgeUserGroupByName(NameTranslator::REGISTERED);
+            $user_groups[] = $this->getDynamicForgeUserGroupByName(NameTranslator::REGISTERED);
         }
-        $user_groups []= $this->getDynamicForgeUserGroupByName(NameTranslator::PROJECT_MEMBERS);
-        $user_groups []= $this->getDynamicForgeUserGroupByName(NameTranslator::PROJECT_ADMINS);
+        $user_groups[] = $this->getDynamicForgeUserGroupByName(NameTranslator::PROJECT_MEMBERS);
+        $user_groups[] = $this->getDynamicForgeUserGroupByName(NameTranslator::PROJECT_ADMINS);
 
         return array_merge($user_groups, $this->getStaticByProject($project), array($this->getDynamicForgeUserGroupByName(NameTranslator::NOBODY)));
     }
@@ -114,8 +114,8 @@ class User_ForgeUserGroupFactory
     {
         $user_groups = array();
 
-        $user_groups []= $this->getDynamicForgeUserGroupByName(NameTranslator::PROJECT_MEMBERS);
-        $user_groups []= $this->getDynamicForgeUserGroupByName(NameTranslator::PROJECT_ADMINS);
+        $user_groups[] = $this->getDynamicForgeUserGroupByName(NameTranslator::PROJECT_MEMBERS);
+        $user_groups[] = $this->getDynamicForgeUserGroupByName(NameTranslator::PROJECT_ADMINS);
 
         return array_merge($user_groups, $this->getStaticByProject($project), array($this->getDynamicForgeUserGroupByName(NameTranslator::NOBODY)));
     }

@@ -47,7 +47,7 @@ class project_ownershipPlugin extends Plugin // phpcs:ignore
         parent::__construct($id);
         $this->setScope(self::SCOPE_SYSTEM);
 
-        bindtextdomain('tuleap-project_ownership', __DIR__.'/../site-content');
+        bindtextdomain('tuleap-project_ownership', __DIR__ . '/../site-content');
     }
 
     public function getPluginInfo()

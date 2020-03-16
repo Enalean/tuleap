@@ -87,7 +87,7 @@ class WikiPlugin_BlogArchives extends WikiPlugin_WikiBlog
         $sp = HTML::Raw('&middot; ');
         if (!empty($args['month'])) {
             $prefix = $parent . $this->_blogPrefix('wikiblog') . SUBPAGE_SEPARATOR . $args['month'];
-            $pages = $dbi->titleSearch(new TextSearchQuery("^".$prefix, true, 'posix'));
+            $pages = $dbi->titleSearch(new TextSearchQuery("^" . $prefix, true, 'posix'));
             $html = HTML::ul();
             while ($page = $pages->next()) {
                 $rev = $page->getCurrentRevision(false);
@@ -137,9 +137,9 @@ class WikiPlugin_BlogArchives extends WikiPlugin_WikiBlog
             }
             foreach ($months as $m) {
                 $html->pushContent(HTML::li(HTML::a(
-                    array('href'=>$m['link'],
+                    array('href' => $m['link'],
                                                           'class' => 'named-wiki'),
-                    $m['title'] . " (".$m['num'].")"
+                    $m['title'] . " (" . $m['num'] . ")"
                 )));
             }
             if (!$args['noheader']) {
@@ -164,7 +164,7 @@ class WikiPlugin_BlogArchives extends WikiPlugin_WikiBlog
         $args['noheader'] = 1;
         return $this->makeBox(_("Archives"), $this->run($request->_dbi, $args, $request, $basepage));
     }
-};
+}
 
 // $Log: BlogArchives.php,v $
 // Revision 1.5  2005/10/29 09:06:37  rurban

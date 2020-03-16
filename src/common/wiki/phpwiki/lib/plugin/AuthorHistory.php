@@ -121,14 +121,14 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
         if (! ($page == 'all')) {
             $p = $dbi->getPage($page);
 
-            $t = HTML::table(array('class'=> 'pagelist',
+            $t = HTML::table(array('class' => 'pagelist',
                                    'style' => 'font-size:smaller'));
             $th = HTML::thead();
             $tb = HTML::tbody();
 
             $th->pushContent(HTML::tr(
                 HTML::td(
-                    array('align'=> 'right'),
+                    array('align' => 'right'),
                     _("Version")
                 ),
                 $includeminor ? HTML::td(_("Minor")) : "",
@@ -151,7 +151,7 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
                     );
                     $tr = HTML::tr(
                         HTML::td(
-                            array('align'=> 'right'),
+                            array('align' => 'right'),
                             $difflink,
                             $nbsp
                         ),
@@ -162,7 +162,7 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
                         ), $nbsp),
                         HTML::td($nbsp, $rev->get('summary')),
                         HTML::td(
-                            array('align'=> 'right'),
+                            array('align' => 'right'),
                             $WikiTheme->formatdatetime($rev->get('mtime'))
                         )
                     );
@@ -185,7 +185,7 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
 
             /////////////////////////////////////////////////////////////
 
-            $t = HTML::table(array('class'=> 'pagelist',
+            $t = HTML::table(array('class' => 'pagelist',
                                    'style' => 'font-size:smaller'));
             $th = HTML::thead();
             $tb = HTML::tbody();
@@ -193,7 +193,7 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
             $th->pushContent(HTML::tr(
                 HTML::td(_("Page Name")),
                 HTML::td(
-                    array('align'=> 'right'),
+                    array('align' => 'right'),
                     _("Version")
                 ),
                 $includeminor ? HTML::td(_("Minor")) : "",
@@ -223,14 +223,14 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
                                 ($isminor ? $rev->_pagename : WikiLink($rev->_pagename, 'auto'))
                             ),
                             HTML::td(
-                                array('align'=> 'right'),
+                                array('align' => 'right'),
                                 $difflink,
                                 $nbsp
                             ),
                             $includeminor ? (HTML::td($nbsp, ($isminor ? "minor" : "major"), $nbsp)) : "",
                             HTML::td($nbsp, $rev->get('summary')),
                             HTML::td(
-                                array('align'=> 'right'),
+                                array('align' => 'right'),
                                 $WikiTheme->formatdatetime($rev->get('mtime')),
                                 $nbsp
                             )
@@ -275,7 +275,7 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
         //
         //        return $pagelist;
     }
-};
+}
 
 // $Log: AuthorHistory.php,v $
 // Revision 1.6  2004/06/14 11:31:38  rurban

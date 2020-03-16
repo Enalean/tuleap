@@ -71,7 +71,7 @@ class SystemEvent_GIT_REPO_UPDATE extends SystemEvent
         }
 
         if (! $repository->getBackend()->updateRepoConf($repository)) {
-            $this->error('Unable to update gitolite configuration for repoistory with ID '.$this->getRepositoryIdFromParameters());
+            $this->error('Unable to update gitolite configuration for repoistory with ID ' . $this->getRepositoryIdFromParameters());
             return;
         }
 
@@ -85,7 +85,7 @@ class SystemEvent_GIT_REPO_UPDATE extends SystemEvent
         if ($with_link) {
             $repository = $this->getRepositoryFromParameters();
             if ($repository) {
-                return '<a href="/plugins/git/?action=repo_management&group_id='.$repository->getProjectId().'&repo_id='.$repository->getId().'">'.$repository->getName().'</a>';
+                return '<a href="/plugins/git/?action=repo_management&group_id=' . $repository->getProjectId() . '&repo_id=' . $repository->getId() . '">' . $repository->getName() . '</a>';
             }
         }
         return $this->getRepositoryIdFromParameters();

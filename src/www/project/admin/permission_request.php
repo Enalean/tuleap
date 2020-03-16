@@ -32,7 +32,7 @@ if (!$request->valid($vGroupId)) {
 $group_id = $request->get('group_id');
 
 
-session_require(array('group'=>$group_id, 'admin_flags'=>'A'));
+session_require(array('group' => $group_id, 'admin_flags' => 'A'));
 
 //  get the Project
 $pm    = ProjectManager::instance();
@@ -104,7 +104,7 @@ if ($request->isPost() && $request->valid($vFunc)) {
                         }
                     }
                     //update group history
-                    (new ProjectHistoryDao())->groupAddHistory('membership_request_updated', implode(',', $oldUgroups).' :: '.implode(',', $newUgroups), $group_id);
+                    (new ProjectHistoryDao())->groupAddHistory('membership_request_updated', implode(',', $oldUgroups) . ' :: ' . implode(',', $newUgroups), $group_id);
                     $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_msg', implode(', ', $addedUgroups)));
                 }
             } else {
@@ -142,14 +142,14 @@ if ($request->isPost() && $request->valid($vFunc)) {
 
 project_admin_header(
     array(
-        'title'=>$Language->getText('project_admin_ugroup', 'permission_request'),
-        'group'=>$group_id
+        'title' => $Language->getText('project_admin_ugroup', 'permission_request'),
+        'group' => $group_id
     ),
     \Tuleap\Project\Admin\Navigation\NavigationPermissionsDropdownPresenterBuilder::PERMISSIONS_ENTRY_SHORTNAME
 );
 
 echo '
-<h2>'.$Language->getText('project_admin_index', 'member_request_delegation_title').'</h2>';
+<h2>' . $Language->getText('project_admin_index', 'member_request_delegation_title') . '</h2>';
 
 echo '<table>';
 echo '<tr><td colspan="2"><p>';
@@ -170,7 +170,7 @@ if ($notices) {
     echo '</div>';
 }
 
-echo '<p>'. $Language->getText('project_admin_index', 'member_request_delegation_desc_selected_group');
+echo '<p>' . $Language->getText('project_admin_index', 'member_request_delegation_desc_selected_group');
 echo '</p></td></tr>';
 
 //Retrieve the saved ugroups for notification from DB
@@ -194,10 +194,10 @@ while ($row = db_fetch_array($res)) {
 echo '<tr><td colspan="2">';
 echo '<form method="post" action="permission_request.php">';
 echo '<input type="hidden" name="func" value="member_req_notif_group" />';
-echo '<input type="hidden" name="group_id" value="'. $group_id .'">';
+echo '<input type="hidden" name="group_id" value="' . $group_id . '">';
 echo html_build_multiple_select_box_from_array($ugroupList, "ugroups[]", $selectedUgroup, 8, false, '', false, '', false, '', false);
 echo '<br />';
-echo '<input type="submit" name="submit" value="'.$Language->getText('global', 'btn_update').'" />';
+echo '<input type="submit" name="submit" value="' . $Language->getText('global', 'btn_update') . '" />';
 echo '</form>';
 echo '</td></tr>';
 
@@ -218,8 +218,8 @@ echo '<tr><td colspan="2">';
 echo '<form method="post" action="permission_request.php">
           <textarea wrap="virtual" rows="5" cols="70" name="text">' . $purifier->purify($message) . '</textarea>
           <input type="hidden" name="func" value="member_req_notif_message">
-          <input type="hidden" name="group_id" value="' .$group_id. '">
-          <br><input name="submit" type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_update').'"/></br>
+          <input type="hidden" name="group_id" value="' . $group_id . '">
+          <br><input name="submit" type="submit" value="' . $GLOBALS['Language']->getText('global', 'btn_update') . '"/></br>
      </form>';
 
 echo '</td></tr>';

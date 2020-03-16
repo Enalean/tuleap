@@ -47,11 +47,10 @@ class NewsItemForWidgetDataMapper
         }
 
         return $items;
-        ;
     }
 
     public function updatePromotedItems(Project $project, $promoted_ids)
     {
-        $this->dao->updatePromotedItems((array)$promoted_ids, $project->getID());
+        $this->dao->updatePromotedItems((array) $promoted_ids, $project->getID());
     }
 }

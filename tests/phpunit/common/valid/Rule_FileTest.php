@@ -31,7 +31,7 @@ class Rule_FileTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $tmpName = $this->getTmpDir().'/_unit_tests_rules_file.txt';
+        $tmpName = $this->getTmpDir() . '/_unit_tests_rules_file.txt';
         $fd = fopen($tmpName, 'w');
         fwrite($fd, 'A test file');
         fclose($fd);
@@ -57,7 +57,7 @@ class Rule_FileTest extends TestCase
         $r->shouldReceive('geti18nError')->with('error_upload_size', UPLOAD_ERR_INI_SIZE)->once()->andReturns(UPLOAD_ERR_INI_SIZE);
         $this->file['error'] = UPLOAD_ERR_INI_SIZE;
         $this->assertFalse($r->isValid($this->file));
-        $this->assertRegExp('/'.UPLOAD_ERR_INI_SIZE.'/', $r->error);
+        $this->assertRegExp('/' . UPLOAD_ERR_INI_SIZE . '/', $r->error);
     }
 
     public function testErrorFormSize(): void
@@ -67,7 +67,7 @@ class Rule_FileTest extends TestCase
         $r->shouldReceive('geti18nError')->with('error_upload_size', UPLOAD_ERR_FORM_SIZE)->once()->andReturns(UPLOAD_ERR_FORM_SIZE);
         $this->file['error'] = UPLOAD_ERR_FORM_SIZE;
         $this->assertFalse($r->isValid($this->file));
-        $this->assertRegExp('/'.UPLOAD_ERR_FORM_SIZE.'/', $r->error);
+        $this->assertRegExp('/' . UPLOAD_ERR_FORM_SIZE . '/', $r->error);
     }
 
     public function testErrorPartial(): void
@@ -77,7 +77,7 @@ class Rule_FileTest extends TestCase
         $r->shouldReceive('geti18nError')->with('error_upload_partial', UPLOAD_ERR_PARTIAL)->once()->andReturns(UPLOAD_ERR_PARTIAL);
         $this->file['error'] = UPLOAD_ERR_PARTIAL;
         $this->assertFalse($r->isValid($this->file));
-        $this->assertRegExp('/'.UPLOAD_ERR_PARTIAL.'/', $r->error);
+        $this->assertRegExp('/' . UPLOAD_ERR_PARTIAL . '/', $r->error);
     }
 
     public function testErrorNoFile(): void
@@ -87,7 +87,7 @@ class Rule_FileTest extends TestCase
         $r->shouldReceive('geti18nError')->with('error_upload_nofile', UPLOAD_ERR_NO_FILE)->once()->andReturns(UPLOAD_ERR_NO_FILE);
         $this->file['error'] = UPLOAD_ERR_NO_FILE;
         $this->assertFalse($r->isValid($this->file));
-        $this->assertRegExp('/'.UPLOAD_ERR_NO_FILE.'/', $r->error);
+        $this->assertRegExp('/' . UPLOAD_ERR_NO_FILE . '/', $r->error);
     }
 
     public function testErrorMaxSize(): void
@@ -96,7 +96,7 @@ class Rule_FileTest extends TestCase
         $r->setMaxSize('5');
         $r->shouldReceive('geti18nError')->with('error_upload_size', UPLOAD_ERR_INI_SIZE)->once()->andReturns(UPLOAD_ERR_INI_SIZE);
         $this->assertFalse($r->isValid($this->file));
-        $this->assertRegExp('/'.UPLOAD_ERR_INI_SIZE.'/', $r->error);
+        $this->assertRegExp('/' . UPLOAD_ERR_INI_SIZE . '/', $r->error);
     }
 
     public function testNoName(): void

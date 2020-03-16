@@ -64,7 +64,7 @@ class Tracker_FormElement_View_Admin_CreateVisitor extends Tracker_FormElement_V
     {
         $hp    = Codendi_HTMLPurifier::instance();
         $title = 'Create a new ' . $this->label;
-        $url   = TRACKER_BASE_URL.'/?tracker='. (int)$this->element->getTracker()->getId() .'&amp;func=admin-formElements&amp;create-formElement['.  $hp->purify($this->type, CODENDI_PURIFIER_CONVERT_HTML) .']=1';
+        $url   = TRACKER_BASE_URL . '/?tracker=' . (int) $this->element->getTracker()->getId() . '&amp;func=admin-formElements&amp;create-formElement[' .  $hp->purify($this->type, CODENDI_PURIFIER_CONVERT_HTML) . ']=1';
 
         echo $this->displayForm($tracker_manager, $request, $url, $title, $this->fetchForm());
     }

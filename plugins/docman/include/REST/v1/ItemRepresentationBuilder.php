@@ -144,7 +144,7 @@ class ItemRepresentationBuilder
 
         $is_expanded = false;
         if ($type === ItemRepresentation::TYPE_FOLDER) {
-            $preference  = $current_user->getPreference("plugin_docman_hide_". $item->getGroupId() . "_" . $item->getId());
+            $preference  = $current_user->getPreference("plugin_docman_hide_" . $item->getGroupId() . "_" . $item->getId());
             $is_expanded = $preference !== false;
         }
 
@@ -190,7 +190,7 @@ class ItemRepresentationBuilder
             return null;
         }
 
-        $lock_owner = $this->getMinimalUserRepresentation((int)$lock_infos['user_id']);
+        $lock_owner = $this->getMinimalUserRepresentation((int) $lock_infos['user_id']);
 
         return new ItemLockInfoRepresentation(
             $lock_owner,

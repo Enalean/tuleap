@@ -114,7 +114,7 @@ class AdminDelegationPlugin extends Plugin
             include_once 'AdminDelegation_UserWidget.class.php';
             $get_widget_event->setWidget(new AdminDelegation_UserWidget($this));
         }
-        if ($get_widget_event->getName() ==='admindelegation_projects' && $this->userCanViewWidget('admindelegation_projects')) {
+        if ($get_widget_event->getName() === 'admindelegation_projects' && $this->userCanViewWidget('admindelegation_projects')) {
             include_once 'AdminDelegation_ShowProjectWidget.class.php';
             $get_widget_event->setWidget(new AdminDelegation_ShowProjectWidget($this));
         }

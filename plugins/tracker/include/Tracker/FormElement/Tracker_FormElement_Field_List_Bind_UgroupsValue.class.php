@@ -53,7 +53,7 @@ class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormEleme
 
     public function __toString()
     {
-        return self::class .' #'. $this->getId();
+        return self::class . ' #' . $this->getId();
     }
 
     /**
@@ -62,7 +62,7 @@ class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormEleme
      */
     public function getMembersName()
     {
-        return  $this->ugroup->getUsers()->getNames();
+        return $this->ugroup->getUsers()->getNames();
     }
 
     public function getAPIValue()
@@ -101,7 +101,7 @@ class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormEleme
     {
         $project_id           = $this->getProject()->getID();
         $representation_class = '\\Tuleap\\Project\\REST\\UserGroupRepresentation';
-        $user_group_id        = call_user_func_array($representation_class.'::getRESTIdForProject', array($project_id, $this->getUgroupId()));
+        $user_group_id        = call_user_func_array($representation_class . '::getRESTIdForProject', array($project_id, $this->getUgroupId()));
 
         return $user_group_id;
     }

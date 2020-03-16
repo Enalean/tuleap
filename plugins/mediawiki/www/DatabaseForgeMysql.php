@@ -47,7 +47,7 @@ class DatabaseForge extends DataBase
     {
         switch ($name) {
             case 'interwiki':
-                return ForgeConfig::get('sys_dbname').'.plugin_mediawiki_interwiki';
+                return ForgeConfig::get('sys_dbname') . '.plugin_mediawiki_interwiki';
             default:
                 return Database::tableName($name);
         }

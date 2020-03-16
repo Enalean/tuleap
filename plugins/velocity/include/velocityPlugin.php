@@ -174,7 +174,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         $variant = $params['variant'];
 
         if ($this->isAPlanningOverviewRequest()) {
-            $params['stylesheets'][] = $include_assets ->getFileURL('velocity-' . $variant->getName() . '.css');
+            $params['stylesheets'][] = $include_assets->getFileURL('velocity-' . $variant->getName() . '.css');
         }
     }
 

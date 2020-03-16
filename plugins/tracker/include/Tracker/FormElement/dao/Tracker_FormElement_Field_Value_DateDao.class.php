@@ -54,7 +54,7 @@ class Tracker_FormElement_Field_Value_DateDao extends Tracker_FormElement_Field_
         }
         $sql = " INSERT INTO $this->table_name(changeset_value_id, value)
                  VALUES
-                  ( ".implode(' , NULL ),'."\n".' ( ', $changeset_value_ids).", NULL)";
+                  ( " . implode(' , NULL ),' . "\n" . ' ( ', $changeset_value_ids) . ", NULL)";
         return $this->update($sql);
     }
 
@@ -88,8 +88,8 @@ class Tracker_FormElement_Field_Value_DateDao extends Tracker_FormElement_Field_
                      tracker_changeset_value_date d
                      JOIN tracker_changeset_value v on v.id = d.changeset_value_id
                      JOIN tracker_artifact t on t.last_changeset_id = v.changeset_id
-                     WHERE d.value BETWEEN ".$minDate." AND ".$maxDate."
-                       AND v.field_id = ".$fieldId;
+                     WHERE d.value BETWEEN " . $minDate . " AND " . $maxDate . "
+                       AND v.field_id = " . $fieldId;
         return $this->retrieve($sql);
     }
 }

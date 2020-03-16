@@ -132,21 +132,21 @@ class Git_Gitolite_ProjectSerializer
     private function fetchSuspendedRepositoryConfiguration(Project $project, GitRepository $repository)
     {
         $repo_full_name = $this->repoFullName($repository, $project->getUnixName());
-        $repo_config  = 'repo '. $repo_full_name . PHP_EOL;
+        $repo_config  = 'repo ' . $repo_full_name . PHP_EOL;
         $repo_config .= $this->permissions_serializer->denyAccessForRepository();
 
-        return $repo_config. PHP_EOL;
+        return $repo_config . PHP_EOL;
     }
 
     protected function fetchReposConfig(Project $project, GitRepository $repository)
     {
         $repo_full_name   = $this->repoFullName($repository, $project->getUnixName());
-        $repo_config  = 'repo '. $repo_full_name . PHP_EOL;
+        $repo_config  = 'repo ' . $repo_full_name . PHP_EOL;
         $repo_config .= $this->fetchMailHookConfig($project, $repository);
         $repo_config .= $this->permissions_serializer->getForRepository($repository);
         $repo_config .= $this->fetchObjectSizeLimit($project);
 
-        return $repo_config. PHP_EOL;
+        return $repo_config . PHP_EOL;
     }
 
     public function repoFullName(GitRepository $repo, $unix_name)
@@ -168,7 +168,7 @@ class Git_Gitolite_ProjectSerializer
         $conf .= '"';
         $conf .= PHP_EOL;
         if ($repository->getMailPrefix() != GitRepository::DEFAULT_MAIL_PREFIX) {
-            $conf .= ' config hooks.emailprefix = "'. $repository->getMailPrefix() .'"';
+            $conf .= ' config hooks.emailprefix = "' . $repository->getMailPrefix() . '"';
             $conf .= PHP_EOL;
         }
         return $conf;
@@ -187,7 +187,7 @@ class Git_Gitolite_ProjectSerializer
             return "";
         }
 
-        return ' - VREF/TULEAP_MAX_NEWBIN_SIZE/' . self::OBJECT_SIZE_LIMIT ." = @all" . PHP_EOL;
+        return ' - VREF/TULEAP_MAX_NEWBIN_SIZE/' . self::OBJECT_SIZE_LIMIT . " = @all" . PHP_EOL;
     }
 
     /**

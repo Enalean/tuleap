@@ -37,9 +37,9 @@ function codendi_main()
     // Postpone warnings
     global $ErrorManager;
     if (defined('E_STRICT')) { // and (E_ALL & E_STRICT)) // strict php5?
-        $ErrorManager->setPostponedErrorMask(E_NOTICE|E_USER_NOTICE|E_USER_WARNING|E_WARNING|E_STRICT);
+        $ErrorManager->setPostponedErrorMask(E_NOTICE | E_USER_NOTICE | E_USER_WARNING | E_WARNING | E_STRICT);
     } else {
-        $ErrorManager->setPostponedErrorMask(E_NOTICE|E_USER_NOTICE|E_USER_WARNING|E_WARNING);
+        $ErrorManager->setPostponedErrorMask(E_NOTICE | E_USER_NOTICE | E_USER_WARNING | E_WARNING);
     }
     $request = new WikiRequest();
 
@@ -84,7 +84,7 @@ function codendi_main()
         $dbi = $request->getDbh();
         $timestamp = $dbi->getTimestamp();
         $validators['mtime'] = $timestamp;
-        $validators['%mtime'] = (int)$timestamp;
+        $validators['%mtime'] = (int) $timestamp;
     }
     // FIXME: we should try to generate strong validators when possible,
     // but for now, our validator is weak, since equal validators do not
@@ -112,6 +112,6 @@ function codendi_main()
     $request->finish();
 }
 
-include_once(PHPWIKI_DIR."/lib/main.php");
+include_once(PHPWIKI_DIR . "/lib/main.php");
 
 codendi_main();

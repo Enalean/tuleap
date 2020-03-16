@@ -113,7 +113,7 @@ class Tracker_Migration_MigrationManager
     public function askForMigration(Project $project, $tracker_id, $name, $description, $short_name)
     {
         try {
-            $this->creation_data_checker->checkAtProjectCreation((int)$project->getID(), $name, $short_name);
+            $this->creation_data_checker->checkAtProjectCreation((int) $project->getID(), $name, $short_name);
         } catch (TrackerIsInvalidException $exception) {
             return false;
         }
@@ -124,7 +124,7 @@ class Tracker_Migration_MigrationManager
 
     public function migrate($username, $project_id, $tv3_id, $tracker_name, $tracker_description, $tracker_short_name)
     {
-        $this->logger->info('-- Beginning of migration of tracker v3 '.$tv3_id.' to '.$tracker_name.' --');
+        $this->logger->info('-- Beginning of migration of tracker v3 ' . $tv3_id . ' to ' . $tracker_name . ' --');
 
         $user         = $this->user_manager->getUserByUserName($username);
         $tracker_id   = $this->createTrackerStructure($user, $project_id, $tv3_id, $tracker_name, $tracker_description, $tracker_short_name);
@@ -132,7 +132,7 @@ class Tracker_Migration_MigrationManager
         $this->importArtifactsData($username, $tracker_id, $xml_path);
         unlink($xml_path);
 
-        $this->logger->info('-- End of migration of tracker v3 '.$tv3_id.' to '.$tracker_name.' --');
+        $this->logger->info('-- End of migration of tracker v3 ' . $tv3_id . ' to ' . $tracker_name . ' --');
         $this->mail_logger->sendMail($user, $this->project_manager->getProject($project_id), $tv3_id, $tracker_name);
     }
 
@@ -148,7 +148,7 @@ class Tracker_Migration_MigrationManager
 
     private function getLogFilePath()
     {
-        return ForgeConfig::get('codendi_log').'/'.self::LOG_FILE;
+        return ForgeConfig::get('codendi_log') . '/' . self::LOG_FILE;
     }
 
     private function importArtifactsData($username, $tracker_id, $xml_file_path)
@@ -162,7 +162,7 @@ class Tracker_Migration_MigrationManager
 
             $xml_import->importFromFile($tracker, $xml_file_path, ForgeConfig::get('sys_data_dir') . DIRECTORY_SEPARATOR . 'trackerv3');
         }
-        $this->logger->info('<-- TV5 imported '.PHP_EOL);
+        $this->logger->info('<-- TV5 imported ' . PHP_EOL);
     }
 
     private function getXMLImporter()
@@ -248,7 +248,7 @@ class Tracker_Migration_MigrationManager
 
         $exporter = new ArtifactXMLExporter($dao, $attachment_exporter, $node_helper, $this->logger);
         $exporter->exportTrackerData($tv3_id);
-        $this->logger->info('<-- TV3 data exported '.PHP_EOL);
+        $this->logger->info('<-- TV3 data exported ' . PHP_EOL);
 
         $xml_security = new XML_Security();
         $xml_security->enableExternalLoadOfEntities();
@@ -262,7 +262,7 @@ class Tracker_Migration_MigrationManager
         $xml_security->disableExternalLoadOfEntities();
 
         if (file_put_contents($xml_path, $xml_string) !== strlen($xml_string)) {
-            throw new Exception('Something went wrong when writing tv3 xml in '.$xml_path);
+            throw new Exception('Something went wrong when writing tv3 xml in ' . $xml_path);
         }
 
         return $xml_path;
@@ -291,7 +291,7 @@ class Tracker_Migration_MigrationManager
         if (! $new_tracker) {
             throw new Tracker_Exception_Migration_StructureCreationException($tracker_name, $tv3_id);
         }
-        $this->logger->info('<-- Structure migrated '.PHP_EOL);
+        $this->logger->info('<-- Structure migrated ' . PHP_EOL);
 
         return $new_tracker->getId();
     }

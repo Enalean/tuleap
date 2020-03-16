@@ -116,7 +116,7 @@ class Tracker_FormElement_Field_List_BindFactory
                 $bind = new Tracker_FormElement_Field_List_Bind_Ugroups($field, array_filter($values), $default_value, $decorators, $this->ugroup_manager, $this->getUgroupsValueDao());
                 break;
             default:
-                trigger_error('Unknown bind "'. $type .'"', E_USER_WARNING);
+                trigger_error('Unknown bind "' . $type . '"', E_USER_WARNING);
                 break;
         }
         return $bind;
@@ -146,7 +146,6 @@ class Tracker_FormElement_Field_List_BindFactory
 
     private function _duplicate($from_field_id, $to_field_id, $by_reference)
     {
-
         //duplicate users info, if any
         $dao = new Tracker_FormElement_Field_List_Bind_UsersDao();
         $dao->duplicate($from_field_id, $to_field_id);
@@ -213,7 +212,7 @@ class Tracker_FormElement_Field_List_BindFactory
                     $this->getUgroupsValueDao()
                 );
             default:
-                trigger_error('Unknown bind "'. $row['type'] .'"', E_USER_WARNING);
+                trigger_error('Unknown bind "' . $row['type'] . '"', E_USER_WARNING);
                 return new Tracker_FormElement_Field_List_Bind_Null($row['field']);
         }
     }
@@ -233,14 +232,14 @@ class Tracker_FormElement_Field_List_BindFactory
         &$xmlMapping,
         User\XML\Import\IFindUserFromXMLReference $user_finder
     ) {
-        $row = array('type' => (string)$xml['type'],
+        $row = array('type' => (string) $xml['type'],
                      'field' => $field,
                      'default_values' => null,
                      'decorators' => null);
         if (isset($xml->decorators)) {
             $row['decorators'] = array();
             foreach ($xml->decorators->decorator as $deco) {
-                $ID = (string)$deco['REF'];
+                $ID = (string) $deco['REF'];
                 $row['decorators'][$ID] = $this->getDecoratorInstance(
                     $field,
                     $ID,
@@ -251,21 +250,21 @@ class Tracker_FormElement_Field_List_BindFactory
                 );
             }
         }
-        $type = (string)$xml['type'];
+        $type = (string) $xml['type'];
         switch ($type) {
             case self::STATIK:
-                $row['is_rank_alpha'] = (int)$xml['is_rank_alpha'];
+                $row['is_rank_alpha'] = (int) $xml['is_rank_alpha'];
                 $values = array();
                 if ($xml->items->item) {
                     $i = 0;
                     foreach ($xml->items->item as $item) {
-                        $ID = (string)$item['ID'];
+                        $ID = (string) $item['ID'];
                         $description = '';
                         if (isset($item->description)) {
-                            $description = (string)$item->description;
+                            $description = (string) $item->description;
                         }
-                        $is_hidden = isset($item['is_hidden']) && (int)$item['is_hidden'] ? 1 : 0;
-                        $values[$ID] = $this->getStaticValueInstance($ID, (string)$item['label'], $description, $i++, $is_hidden);
+                        $is_hidden = isset($item['is_hidden']) && (int) $item['is_hidden'] ? 1 : 0;
+                        $values[$ID] = $this->getStaticValueInstance($ID, (string) $item['label'], $description, $i++, $is_hidden);
 
                         $xmlMapping[$ID] = $values[$ID];
                     }
@@ -277,7 +276,7 @@ class Tracker_FormElement_Field_List_BindFactory
                 $values = array();
                 if ($xml->items->item) {
                     foreach ($xml->items->item as $item) {
-                        $values[] = (string)$item['label'];
+                        $values[] = (string) $item['label'];
                     }
                 }
                 $row['value_function'] = implode(',', $values);
@@ -287,10 +286,10 @@ class Tracker_FormElement_Field_List_BindFactory
                 $values = array();
                 if ($xml->items->item) {
                     foreach ($xml->items->item as $item) {
-                        $ugroup = $this->getUgroupManager()->getUGroupByName($field->getTracker()->getProject(), (string)$item['label']);
+                        $ugroup = $this->getUgroupManager()->getUGroupByName($field->getTracker()->getProject(), (string) $item['label']);
                         if ($ugroup) {
-                            $ID              = (string)$item['ID'];
-                            $is_hidden       = isset($item['is_hidden']) && (int)$item['is_hidden'] ? 1 : 0;
+                            $ID              = (string) $item['ID'];
+                            $is_hidden       = isset($item['is_hidden']) && (int) $item['is_hidden'] ? 1 : 0;
                             $values[$ID]     = new Tracker_FormElement_Field_List_Bind_UgroupsValue($ID, $ugroup, $is_hidden);
                             $xmlMapping[$ID] = $values[$ID];
                         }
@@ -306,7 +305,7 @@ class Tracker_FormElement_Field_List_BindFactory
             $row['default_values'] = array();
             foreach ($xml->default_values->value as $default_value) {
                 if (isset($default_value['REF'])) {
-                    $ID = (string)$default_value['REF'];
+                    $ID = (string) $default_value['REF'];
                     if (isset($xmlMapping[$ID])) {
                         $row['default_values'][$ID] = $xmlMapping[$ID];
                     }
@@ -369,7 +368,7 @@ class Tracker_FormElement_Field_List_BindFactory
     public function fetchCreateABind($field)
     {
         $html = '';
-        $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'values').'</h3>';
+        $html .= '<h3>' . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'values') . '</h3>';
         $html .= '<dl id="tracker-bind-factory">';
 
         $html .= '<dt class="tracker-bind-type">';

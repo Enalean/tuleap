@@ -47,14 +47,14 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5
         $this->observed_field = $form_element_factory->getFormElementById($this->chart->getFieldId());
         $type                 = $form_element_factory->getType($this->observed_field);
         $this->observed_field_id = $this->observed_field->getId();
-        $this->timeFiller = array(GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_DAY => 3600*24,
-            GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_WEEK => 3600*24*7,
-            GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_MONTH => 3600*24*30.45
+        $this->timeFiller = array(GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_DAY => 3600 * 24,
+            GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_WEEK => 3600 * 24 * 7,
+            GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_MONTH => 3600 * 24 * 30.45
         );
         $this->startDate = $this->chart->getStartDate();
         $this->stopDate = $this->chart->getStopDate() ? $this->chart->getStopDate() : time();
         $this->scale = $this->chart->getScale();
-        $this->nbSteps = ceil(($this->stopDate - $this->startDate)/$this->timeFiller[$this->scale]);
+        $this->nbSteps = ceil(($this->stopDate - $this->startDate) / $this->timeFiller[$this->scale]);
 
         if ($this->isValidObservedField($this->observed_field, $type) && $this->isValidType($type)) {
             $engine->data = $this->getCumulativeFlowData($engine);
@@ -79,7 +79,7 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5
         $empty_columns = $this->initEmptyColumns($engine);
 
         for ($i = 0; $i <= $this->nbSteps; $i++) {
-            $timestamp = $this->startDate + ($i * $this->timeFiller[$this->scale]) ;
+            $timestamp = $this->startDate + ($i * $this->timeFiller[$this->scale]);
             $changesets = $this->getLastChangesetsBefore($timestamp);
 
             // Count the number of occurence of each label of the source field at the given date.
@@ -88,8 +88,8 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5
                     FROM `tracker_changeset` as c
                     JOIN `tracker_changeset_value` v ON (v.changeset_id = c.id AND v.field_id = $this->observed_field_id )
                     JOIN tracker_changeset_value_list l ON (l.changeset_value_id = v.id)
-                    WHERE artifact_id in (". $this->artifacts['id'] .")
-                    AND c.id IN (". implode(',', $changesets) .")
+                    WHERE artifact_id in (" . $this->artifacts['id'] . ")
+                    AND c.id IN (" . implode(',', $changesets) . ")
                     GROUP BY l.bindvalue_id";
 
             $res = db_query($sql);
@@ -178,7 +178,6 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5
      */
     private function initEmptyColumns($engine)
     {
-
             //Return {Label, r, g, b}
             $sql = "SELECT val.id, val.label, deco.red, deco.green, deco.blue, deco.tlp_color_name
     FROM  tracker_field_list_bind_static_value val
@@ -225,7 +224,7 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5
         $sql = "SELECT MAX(id) as id
             FROM `tracker_changeset` c
             WHERE c.submitted_on < $timestamp
-            AND c.artifact_id IN (". $this->artifacts['id'] .")
+            AND c.artifact_id IN (" . $this->artifacts['id'] . ")
             GROUP BY artifact_id";
 
         $res = db_query($sql);
