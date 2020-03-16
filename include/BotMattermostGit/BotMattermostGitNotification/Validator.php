@@ -48,7 +48,7 @@ class Validator
         $redirect_to = null;
 
         if ($repository = $repository_factory->getRepositoryById($request->get('repository_id'))) {
-            $redirect_to = GIT_BASE_URL.'/?'.http_build_query(
+            $redirect_to = GIT_BASE_URL . '/?' . http_build_query(
                 array(
                     'group_id' => $repository->getProjectId(),
                     'action'   => 'repo_management',

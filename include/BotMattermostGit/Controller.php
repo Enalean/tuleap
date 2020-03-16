@@ -86,7 +86,7 @@ class Controller
 
     public function render(GitRepository $repository)
     {
-        $renderer      = TemplateRendererFactory::build()->getRenderer(PLUGIN_BOT_MATTERMOST_GIT_BASE_DIR.'/template');
+        $renderer      = TemplateRendererFactory::build()->getRenderer(PLUGIN_BOT_MATTERMOST_GIT_BASE_DIR . '/template');
         $repository_id = $repository->getId();
         $bots          = $this->bot_factory->getBots();
 
@@ -105,8 +105,8 @@ class Controller
         $repository = $this->git_repository_factory->getRepositoryById($this->request->get('repository_id'));
 
         $GLOBALS['Response']->redirect(
-            GIT_BASE_URL.'/?action=repo_management&group_id='.$repository->getProjectId(
-            ).'&repo_id='.$repository->getId().'&pane='.Notification::ID
+            GIT_BASE_URL . '/?action=repo_management&group_id=' . $repository->getProjectId(
+            ) . '&repo_id=' . $repository->getId() . '&pane=' . Notification::ID
         );
     }
 
@@ -146,7 +146,7 @@ class Controller
             $this->bot_git_factory->deleteBotNotificationByBot($bot);
         } catch (CannotDeleteBotNotificationException $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
-            $GLOBALS['Response']->redirect(BOT_MATTERMOST_BASE_URL.'/admin/');
+            $GLOBALS['Response']->redirect(BOT_MATTERMOST_BASE_URL . '/admin/');
         }
     }
 

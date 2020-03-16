@@ -63,7 +63,7 @@ class PullRequestNotificationBuilder
         GitRepository $repository_destination
     ) {
         $renderer =  TemplateRendererFactory::build()->getRenderer(
-            PLUGIN_BOT_MATTERMOST_GIT_BASE_DIR.'/template/attachment'
+            PLUGIN_BOT_MATTERMOST_GIT_BASE_DIR . '/template/attachment'
         );
 
         return $renderer->renderToString(

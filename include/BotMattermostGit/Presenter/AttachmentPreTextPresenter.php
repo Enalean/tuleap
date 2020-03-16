@@ -64,6 +64,6 @@ class AttachmentPreTextPresenter
     {
         $repository_base_url = $this->repository_url_manager->getRepositoryBaseUrl($this->repository_destination);
 
-        return $this->request->getServerUrl().$repository_base_url;
+        return $this->request->getServerUrl() . $repository_base_url;
     }
 }

@@ -156,14 +156,13 @@ class Dao extends DataAccessObject
         }
 
         $sql = "INSERT INTO plugin_botmattermost_git_notification_channel (notification_id, channel_name)
-                VALUES ".implode(',', $channels_value_sql);
+                VALUES " . implode(',', $channels_value_sql);
 
         return $this->update($sql);
     }
 
     private function updateChannels(array $channels, $notification_id)
     {
-
         if (! $this->deleteChannels($notification_id)) {
             return false;
         }

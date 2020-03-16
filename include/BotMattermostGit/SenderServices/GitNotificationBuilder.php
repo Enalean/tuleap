@@ -38,18 +38,18 @@ class GitNotificationBuilder
 
     public function buildNotificationText(GitRepository $repository, PFUser $user, string $newrev, string $refname): string
     {
-        $this->logger->debug('git repository: #'.$repository->getId().' '.$repository->getName());
+        $this->logger->debug('git repository: #' . $repository->getId() . ' ' . $repository->getName());
         $link       = $this->makeLinkReview($repository, $newrev);
 
-        return $user->getName()." ".
-        $GLOBALS['Language']->getText('plugin_botmattermost_git', 'push_notification_text').
-        " : $link ".$refname;
+        return $user->getName() . " " .
+        $GLOBALS['Language']->getText('plugin_botmattermost_git', 'push_notification_text') .
+        " : $link " . $refname;
     }
 
     private function makeLinkReview(GitRepository $repository, $review): string
     {
         $url_review = $repository->getDiffLink($this->git_repository_url_manager, $review);
 
-        return '['.$repository->getName()."]($url_review)";
+        return '[' . $repository->getName() . "]($url_review)";
     }
 }

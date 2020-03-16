@@ -52,7 +52,7 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
         if (defined('PLUGIN_BOT_MATTERMOST_BASE_DIR')) {
-            require_once PLUGIN_BOT_MATTERMOST_BASE_DIR.'/include/autoload.php';
+            require_once PLUGIN_BOT_MATTERMOST_BASE_DIR . '/include/autoload.php';
         }
     }
 
@@ -161,7 +161,7 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
                 __DIR__ . '/../../../src/www/assets/botmattermost_git/',
                 '/assets/botmattermost_git'
             );
-            echo '<link rel="stylesheet" type="text/css" href="'.$asset->getFileURL('style.css').'" />';
+            echo '<link rel="stylesheet" type="text/css" href="' . $asset->getFileURL('style.css') . '" />';
         }
     }
 
@@ -196,7 +196,7 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
 
         return new Controller(
             $request,
-            new CSRFSynchronizerToken('/plugins/botmattermost_git/?group_id='.$request->getProject()->getID()),
+            new CSRFSynchronizerToken('/plugins/botmattermost_git/?group_id=' . $request->getProject()->getID()),
             $this->getGitRepositoryFactory(),
             new Factory(new Dao(), $botFactory),
             $botFactory,
