@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -79,10 +79,13 @@ class ExecutionCreator
         $values  = $this->getFieldValuesForExecutionArtifactCreation($tracker, $user, $definition->getId());
 
         $execution = $this->artifact_creator->create($user, $tracker, $values);
-        $this->execution_dao->updateExecutionToUseLatestVersionOfDefinition(
-            $execution->getArtifact()->getId(),
-            $definition->getLastChangeset()->getId()
-        );
+        $last_changeset = $definition->getLastChangeset();
+        if ($last_changeset) {
+            $this->execution_dao->updateExecutionToUseLatestVersionOfDefinition(
+                $execution->getArtifact()->getId(),
+                $last_changeset->getId()
+            );
+        }
 
         return $execution;
     }
@@ -95,6 +98,9 @@ class ExecutionCreator
         }
 
         $execution_tracker_id = $this->config->getTestExecutionTrackerId($project);
+        if (! $execution_tracker_id) {
+            throw new RestException(400, 'The project does not contain an execution tracker');
+        }
         $execution_tracker    = $this->tracker_factory->getTrackerById($execution_tracker_id);
         if (! $execution_tracker) {
             throw new RestException(400, 'The project does not contain an execution tracker');

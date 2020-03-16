@@ -85,13 +85,16 @@ class DefinitionsResource
      *
      * @param int $id Id of the definition
      *
-     * @return {@type Tuleap\TestManagement\REST\v1\DefinitionRepresentation}
+     * @return DefinitionRepresentation
      *
      * @throws RestException 403
      */
-    protected function getId($id)
+    protected function getId(int $id)
     {
         $user       = $this->user_manager->getCurrentUser();
+        if (! $user) {
+            throw new RestException(404, 'User not found');
+        }
         $definition = $this->testmanagement_artifact_factory->getArtifactByIdUserCanView($user, $id);
         if ($definition === null) {
             throw new RestException(404, 'The test definition does not exist or is not visible');
@@ -101,10 +104,6 @@ class DefinitionsResource
             $user,
             $definition->getTracker()->getProject()
         );
-
-        if (! $definition) {
-            throw new RestException(404, 'The test definition does not exist or is not visible');
-        }
 
         return $this->definition_representation_builder->getDefinitionRepresentation($user, $definition);
     }

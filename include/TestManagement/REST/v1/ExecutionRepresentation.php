@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -75,7 +75,7 @@ class ExecutionRepresentation
     public $definition;
 
     /**
-     * @var array {@type Tuleap\TestManagement\REST\v1\BugRepresentation}
+     * @var array {@type BugRepresentation}
      */
     public $linked_bugs;
 
@@ -85,7 +85,7 @@ class ExecutionRepresentation
     public $time;
 
     /**
-     * @var array {@type Tuleap\TestManagement\REST\v1\StepResultRepresentation}
+     * @var array {@type StepResultRepresentation}
      */
     public $steps_results;
 
@@ -111,6 +111,6 @@ class ExecutionRepresentation
         $this->assigned_to      = $assigned_to;
         $this->time             = $time;
         $this->linked_bugs      = $linked_bug;
-        $this->steps_results    = JsonCast::toObject($steps_results);
+        $this->steps_results    = (array)JsonCast::toObject($steps_results);
     }
 }

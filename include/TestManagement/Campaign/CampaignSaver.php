@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -52,10 +52,6 @@ class CampaignSaver
 
     private function getEncryptedToken(ConcealedString $token)
     {
-        if (! $token) {
-            return '';
-        }
-
         return SymmetricCrypto::encrypt($token, $this->key_factory->getEncryptionKey());
     }
 }

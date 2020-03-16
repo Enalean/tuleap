@@ -27,6 +27,7 @@ use Tracker_Artifact;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_ArtifactFactory;
 use Tracker_Exception;
+use Tracker_FormElement_Field_List_Bind;
 use Tracker_FormElement_InvalidFieldException;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_FormElementFactory;
@@ -85,15 +86,6 @@ class ExecutionsResource
     /** @var ExecutionRepresentationBuilder */
     private $execution_representation_builder;
 
-    /** @var AssignedToRepresentationBuilder */
-    private $assigned_to_representation_builder;
-
-    /** @var NodeJSClient */
-    private $node_js_client;
-
-    /** @var Tracker_Permission_PermissionsSerializer */
-    private $permissions_serializer;
-
     /** @var RealTimeMessageSender  */
     private $realtime_message_sender;
 
@@ -132,7 +124,7 @@ class ExecutionsResource
             $artifact_dao
         );
 
-        $this->assigned_to_representation_builder = new AssignedToRepresentationBuilder(
+        $assigned_to_representation_builder = new AssignedToRepresentationBuilder(
             $this->formelement_factory,
             $this->user_manager
         );
@@ -149,7 +141,7 @@ class ExecutionsResource
             $this->user_manager,
             $this->formelement_factory,
             $conformance_validator,
-            $this->assigned_to_representation_builder,
+            $assigned_to_representation_builder,
             new ArtifactDao(),
             $this->artifact_factory,
             $requirement_retriever,
@@ -159,23 +151,23 @@ class ExecutionsResource
             \Codendi_HTMLPurifier::instance()
         );
 
-        $this->node_js_client         = new NodeJSClient(
+        $node_js_client         = new NodeJSClient(
             HttpClientFactory::createClient(),
             HTTPFactoryBuilder::requestFactory(),
             HTTPFactoryBuilder::streamFactory(),
             new BackendLogger()
         );
-        $this->permissions_serializer = new Tracker_Permission_PermissionsSerializer(
+        $permissions_serializer = new Tracker_Permission_PermissionsSerializer(
             new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
         );
         $artifact_message_sender = new RealTimeArtifactMessageSender(
-            $this->node_js_client,
-            $this->permissions_serializer
+            $node_js_client,
+            $permissions_serializer
         );
 
         $this->realtime_message_sender = new RealTimeMessageSender(
-            $this->node_js_client,
-            $this->permissions_serializer,
+            $node_js_client,
+            $permissions_serializer,
             $artifact_message_sender
         );
 
@@ -240,14 +232,14 @@ class ExecutionsResource
      *
      * @param int $id Id of the execution
      * @return ExecutionRepresentation
-     * @throws 400
-     * @throws 404
+     * @throws RestException 400
+     * @throws RestException 404
      */
-    protected function getId($id)
+    protected function getId(int $id)
     {
         $this->optionsId($id);
 
-        $user     = $this->user_manager->getCurrentUser();
+        $user     = $this->getCurrentUser();
         $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $id);
         if (! $artifact) {
             throw new RestException(404);
@@ -272,10 +264,10 @@ class ExecutionsResource
      * @param string           $results       Result of the execution {@from body}
      * @return ExecutionRepresentation
      *
-     * @throws 400
+     * @throws RestException 400
      * @throws RestException 403
-     * @throws 404
-     * @throws 500
+     * @throws RestException 404
+     * @throws RestException 500
      */
     protected function post(
         TrackerReference $tracker,
@@ -289,7 +281,7 @@ class ExecutionsResource
         );
 
         try {
-            $user    = UserManager::instance()->getCurrentUser();
+            $user    = $this->getCurrentUser();
             $creator = new Tracker_REST_Artifact_ArtifactCreator(
                 new Tracker_REST_Artifact_ArtifactValidator(
                     $this->formelement_factory
@@ -326,15 +318,15 @@ class ExecutionsResource
      * @param string                       $id   Id of the execution artifact
      * @param PATCHExecutionRepresentation $body Actions to performs on the execution {@from body}
      *
-     * @throws 400
-     * @throws 403
-     * @throws 404
-     * @throws 500
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
+     * @throws RestException 500
      */
     public function patchId($id, PATCHExecutionRepresentation $body)
     {
-        $user               = $this->user_manager->getCurrentUser();
-        $execution_artifact = $this->getArtifactById($user, $id);
+        $user               = $this->getCurrentUser();
+        $execution_artifact = $this->getArtifactById($user, (int)$id);
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
             $execution_artifact->getTracker()->getProject()
@@ -346,10 +338,11 @@ class ExecutionsResource
 
         $definition_artifact = $this->getDefinitionOfExecution($user, $execution_artifact);
 
-        if ($body->force_use_latest_definition_version) {
+        $last_changeset = $definition_artifact->getLastChangeset();
+        if ($body->force_use_latest_definition_version && $last_changeset) {
             $this->execution_dao->updateExecutionToUseLatestVersionOfDefinition(
                 $id,
-                $definition_artifact->getLastChangeset()->getId()
+                $last_changeset->getId()
             );
         }
 
@@ -378,14 +371,14 @@ class ExecutionsResource
      * @param string $results Result of the execution {@from body}
      * @return ExecutionRepresentation
      *
-     * @throws 400
+     * @throws RestException 400
      * @throws RestException 403
-     * @throws 500
+     * @throws RestException 500
      */
     protected function putId($id, $status, $time = 0, $results = '')
     {
-        $user     = $this->user_manager->getCurrentUser();
-        $artifact = $this->getArtifactById($user, $id);
+        $user     = $this->getCurrentUser();
+        $artifact = $this->getArtifactById($user, (int)$id);
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
             $artifact->getTracker()->getProject()
@@ -411,23 +404,21 @@ class ExecutionsResource
      * @param string $uuid         Uuid of current user {@from body}
      * @param string $remove_from  Id of the old artifact {@from body}
      *
-     * @throws 404
+     * @throws RestException 404
      */
     protected function presences($id, $uuid, $remove_from = '')
     {
-        $user = UserManager::instance()->getCurrentUser();
-        $artifact = $this->getArtifactById($user, $id);
+        $user = $this->getCurrentUser();
+        $artifact = $this->getArtifactById($user, (int)$id);
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
             $artifact->getTracker()->getProject()
         );
 
-        if (! $artifact) {
-            throw new RestException(404);
-        }
-
         $campaign = $this->testmanagement_artifact_factory->getCampaignForExecution($artifact);
-        $this->realtime_message_sender->sendPresences($campaign, $artifact, $user, $uuid, $remove_from);
+        if ($campaign) {
+            $this->realtime_message_sender->sendPresences($campaign, $artifact, $user, $uuid, $remove_from);
+        }
 
         $this->optionsPresences($id);
     }
@@ -441,20 +432,20 @@ class ExecutionsResource
      * @param string                         $issue_id  Id of the issue artifact {@from body}
      * @param ChangesetCommentRepresentation $comment   Comment describing the test execution {body, format} {@from body}
      *
-     * @throws 400
-     * @throws 404
-     * @throws 500
+     * @throws RestException 400
+     * @throws RestException 404
+     * @throws RestException 500
      */
     protected function patchIssueLink($id, $issue_id, ?ChangesetCommentRepresentation $comment = null)
     {
-        $user               = $this->user_manager->getCurrentUser();
-        $execution_artifact = $this->getArtifactById($user, $id);
+        $user               = $this->getCurrentUser();
+        $execution_artifact = $this->getArtifactById($user, (int)$id);
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
             $execution_artifact->getTracker()->getProject()
         );
 
-        $issue_artifact = $this->getArtifactById($user, $issue_id);
+        $issue_artifact = $this->getArtifactById($user, (int)$issue_id);
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
             $issue_artifact->getTracker()->getProject()
@@ -475,12 +466,14 @@ class ExecutionsResource
         }
 
         $campaign = $this->testmanagement_artifact_factory->getCampaignForExecution($execution_artifact);
-        $this->realtime_message_sender->sendArtifactLinkAdded(
-            $user,
-            $campaign,
-            $execution_artifact,
-            $issue_artifact
-        );
+        if ($campaign) {
+            $this->realtime_message_sender->sendArtifactLinkAdded(
+                $user,
+                $campaign,
+                $execution_artifact,
+                $issue_artifact
+            );
+        }
 
         try {
             $this->artifact_updater->update($user, $issue_artifact, array(), $comment);
@@ -554,7 +547,10 @@ class ExecutionsResource
             return null;
         }
 
-        $binds = $field->getBind()->getValuesByKeyword($value);
+        $binds = [];
+        if ($field->getBind()) {
+            $binds = $field->getBind()->getValuesByKeyword($value);
+        }
         $bind = array_pop($binds);
         if (! $bind) {
             throw new RestException(400, 'Invalid status value');
@@ -615,12 +611,7 @@ class ExecutionsResource
         );
     }
 
-    /**
-     * @param int $id
-     *
-     * @return Tracker_Artifact
-     */
-    private function getArtifactById(PFUser $user, $id)
+    private function getArtifactById(PFUser $user, int $id): Tracker_Artifact
     {
         $artifact = $this->testmanagement_artifact_factory->getArtifactByIdUserCanView($user, $id);
         if ($artifact) {
@@ -648,38 +639,53 @@ class ExecutionsResource
         $results_field        = $this->getFieldByName(ExecutionRepresentation::FIELD_RESULTS, $tracker_id, $user);
         $artifact_links_field = $this->getFieldByName(ExecutionRepresentation::FIELD_ARTIFACT_LINKS, $tracker_id, $user);
 
-        $status_field_binds      = $status_field->getBind()->getValuesByKeyword($status);
-        $status_field_bind       = array_pop($status_field_binds);
-
         $values = array();
 
-        $values[] = $this->createArtifactValuesRepresentation(
-            intval($status_field->getId()),
-            array(
-                (int) $status_field_bind->getId()
-            ),
-            'bind_value_ids'
-        );
+        if ($status_field) {
+            $status_field_binds = [];
+            $bind               = $status_field->getBind();
+            if ($bind) {
+                assert($bind instanceof Tracker_FormElement_Field_List_Bind);
+                $status_field_binds = $bind->getValuesByKeyword($status);
+            }
+            $status_field_bind  = array_pop($status_field_binds);
 
-        $values[] = $this->createArtifactValuesRepresentation(
-            intval($time_field->getId()),
-            $time,
-            'value'
-        );
+            if ($status_field_bind !== null) {
+                $values[] = $this->createArtifactValuesRepresentation(
+                    intval($status_field->getId()),
+                    [
+                        (int) $status_field_bind->getId()
+                    ],
+                    'bind_value_ids'
+                );
+            }
+        }
 
-        $values[] = $this->createArtifactValuesRepresentation(
-            intval($results_field->getId()),
-            $results,
-            'value'
-        );
+        if ($time_field) {
+            $values[] = $this->createArtifactValuesRepresentation(
+                intval($time_field->getId()),
+                $time,
+                'value'
+            );
+        }
 
-        $values[] = $this->createArtifactValuesRepresentation(
-            intval($artifact_links_field->getId()),
-            array(
-                array('id' => $definition_id)
-            ),
-            'links'
-        );
+        if ($results_field) {
+            $values[] = $this->createArtifactValuesRepresentation(
+                intval($results_field->getId()),
+                $results,
+                'value'
+            );
+        }
+
+        if ($artifact_links_field) {
+            $values[] = $this->createArtifactValuesRepresentation(
+                intval($artifact_links_field->getId()),
+                array(
+                    array('id' => $definition_id)
+                ),
+                'links'
+            );
+        }
 
         return $values;
     }
@@ -688,11 +694,11 @@ class ExecutionsResource
     {
         $artifact_values_representation           = new ArtifactValuesRepresentation();
         $artifact_values_representation->field_id = $field_id;
-        if ($key == 'value') {
+        if ($key === 'value') {
             $artifact_values_representation->value = $value;
-        } elseif ($key == 'bind_value_ids') {
+        } elseif ($key === 'bind_value_ids') {
             $artifact_values_representation->bind_value_ids = $value;
-        } elseif ($key == 'links') {
+        } elseif ($key === 'links') {
             $artifact_values_representation->links = $value;
         }
 
@@ -746,5 +752,18 @@ class ExecutionsResource
         } catch (DefinitionNotFoundException $e) {
             throw new RestException(400, 'The execution is not linked to a definition');
         }
+    }
+
+    /**
+     * @throws RestException
+     */
+    private function getCurrentUser(): PFUser
+    {
+        $user = $this->user_manager->getCurrentUser();
+        if (! $user) {
+            throw new RestException(404, "User not found");
+        }
+
+        return $user;
     }
 }

@@ -75,18 +75,33 @@ class IndexController extends TestManagementController
     private function getIssueTrackerConfig(PFUser $current_user)
     {
         $issue_tracker_id = $this->config->getIssueTrackerId($this->project);
-        $issue_tracker    = $this->tracker_factory->getTrackerById($issue_tracker_id);
-        if (! $issue_tracker) {
-            return array(
-                "permissions" => array(
-                    "create" => false,
-                    "link"   => false
-                )
-            );
+        $empty_config              = [
+            "permissions" => [
+                "create" => false,
+                "link"   => false
+            ]
+        ];
+
+        if (! $issue_tracker_id) {
+            return $empty_config;
         }
 
+        $issue_tracker = $this->tracker_factory->getTrackerById($issue_tracker_id);
+        if (! $issue_tracker) {
+            return $empty_config;
+        }
+
+        assert($issue_tracker instanceof \Tracker);
+
         $execution_tracker_id = $this->config->getTestExecutionTrackerId($this->project);
+
+        if(!$execution_tracker_id) {
+            return $empty_config;
+        }
         $execution_tracker    = $this->tracker_factory->getTrackerById($execution_tracker_id);
+        if (! $execution_tracker) {
+            return $empty_config;
+        }
 
         $form_element_factory = Tracker_FormElementFactory::instance();
         $link_field           = $form_element_factory->getAnArtifactLinkField($current_user, $execution_tracker);

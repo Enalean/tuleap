@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -79,18 +79,20 @@ class StepsResultsRepresentationBuilder
             $execution,
             ExecutionRepresentation::FIELD_STEPS_RESULTS
         );
-        if (! $execution_changeset_value) {
+        if ($execution_changeset_value === null) {
             return [];
         }
+        assert($execution_changeset_value instanceof StepExecutionChangesetValue);
 
         $definition_changeset_value = $this->getFieldChangeValue(
             $user,
             $definition,
             DefinitionRepresentation::FIELD_STEPS
         );
-        if (! $definition_changeset_value) {
+        if ($definition_changeset_value === null) {
             return [];
         }
+        assert($definition_changeset_value instanceof StepDefinitionChangesetValue);
 
         return $this->steps_results_filter->filterStepResultsNotInDefinition(
             $definition_changeset_value,
@@ -114,6 +116,9 @@ class StepsResultsRepresentationBuilder
             return null;
         }
 
-        return $execution->getValue($results_field);
+        $value = $execution->getValue($results_field);
+        assert($value instanceof StepDefinitionChangesetValue || $value instanceof StepExecutionChangesetValue);
+
+        return $value;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -33,9 +33,6 @@ class JobConfigurationRepresentation
      */
     public $token;
 
-    /**
-     * @param string $url
-     */
     public function build(JobConfiguration $job_configuration, $is_user_allowed_to_see_token)
     {
         $this->url = $job_configuration->getUrl();

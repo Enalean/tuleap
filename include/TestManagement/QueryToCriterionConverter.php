@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,7 +29,7 @@ use Tuleap\TestManagement\Criterion\MilestoneFilter;
 class QueryToCriterionConverter
 {
     /**
-     * @param string $query
+     * @param string|null $query
      * @return StatusAll|StatusClosed|StatusOpen
      * @throws MalformedQueryParameterException
      */
@@ -61,7 +61,7 @@ class QueryToCriterionConverter
     }
 
     /**
-     * @param string $query
+     * @param string|null $query
      * @return MilestoneAll|MilestoneFilter
      * @throws MalformedQueryParameterException
      */

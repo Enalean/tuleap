@@ -88,6 +88,10 @@ use UserManager;
 class CampaignsResource
 {
     public const MAX_LIMIT = 50;
+    /**
+     * @var CampaignCreator
+     */
+    private $campaign_creator;
 
     /** @var Config */
     private $config;
@@ -97,12 +101,6 @@ class CampaignsResource
 
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
-
-    /** @var ArtifactFactory */
-    private $testmanagement_artifact_factory;
-
-    /** @var Tracker_FormElementFactory */
-    private $formelement_factory;
 
     /** @var ExecutionCreator */
     private $execution_creator;
@@ -118,9 +116,6 @@ class CampaignsResource
 
     /** @var ProjectManager */
     private $project_manager;
-
-    /** @var TrackerFactory */
-    private $tracker_factory;
 
     /** @var ArtifactLinkUpdater */
     private $artifactlink_updater;
@@ -144,16 +139,16 @@ class CampaignsResource
     {
         $this->project_manager       = ProjectManager::instance();
         $this->user_manager          = UserManager::instance();
-        $this->tracker_factory       = TrackerFactory::instance();
+        $tracker_factory       = TrackerFactory::instance();
         $this->artifact_factory      = Tracker_ArtifactFactory::instance();
-        $this->formelement_factory   = Tracker_FormElementFactory::instance();
-        $this->config                = new Config(new Dao(), $this->tracker_factory);
+        $formelement_factory   = Tracker_FormElementFactory::instance();
+        $this->config                = new Config(new Dao(), $tracker_factory);
         $this->conformance_validator = new ConfigConformanceValidator(
             $this->config
         );
         $artifact_dao                = new ArtifactDao();
 
-        $this->testmanagement_artifact_factory = new ArtifactFactory(
+        $testmanagement_artifact_factory = new ArtifactFactory(
             $this->config,
             $this->artifact_factory,
             $artifact_dao
@@ -167,7 +162,7 @@ class CampaignsResource
         );
 
         $assigned_to_representation_builder = new AssignedToRepresentationBuilder(
-            $this->formelement_factory,
+            $formelement_factory,
             $this->user_manager
         );
 
@@ -176,12 +171,12 @@ class CampaignsResource
 
         $this->execution_dao                    = new ExecutionDao();
         $steps_results_representation_builder   = new StepsResultsRepresentationBuilder(
-            $this->formelement_factory,
+            $formelement_factory,
             new StepsResultsFilter()
         );
         $this->execution_representation_builder = new ExecutionRepresentationBuilder(
             $this->user_manager,
-            $this->formelement_factory,
+            $formelement_factory,
             $this->conformance_validator,
             $assigned_to_representation_builder,
             $artifact_dao,
@@ -199,33 +194,33 @@ class CampaignsResource
         $this->campaign_retriever = new CampaignRetriever($this->artifact_factory, $campaign_dao, $key_factory);
 
         $this->campaign_representation_builder = new CampaignRepresentationBuilder(
-            $this->formelement_factory,
-            $this->testmanagement_artifact_factory,
+            $formelement_factory,
+            $testmanagement_artifact_factory,
             $this->campaign_retriever
         );
 
         $artifact_validator = new Tracker_REST_Artifact_ArtifactValidator(
-            $this->formelement_factory
+            $formelement_factory
         );
 
         $artifact_creator = new Tracker_REST_Artifact_ArtifactCreator(
             $artifact_validator,
             $this->artifact_factory,
-            $this->tracker_factory
+            $tracker_factory
         );
 
         $this->execution_creator = new ExecutionCreator(
-            $this->formelement_factory,
+            $formelement_factory,
             $this->config,
             $this->project_manager,
-            $this->tracker_factory,
+            $tracker_factory,
             $artifact_creator,
             $this->execution_dao
         );
 
         $definition_selector = new DefinitionSelector(
             $this->config,
-            $this->testmanagement_artifact_factory,
+            $testmanagement_artifact_factory,
             new ProjectAuthorization(),
             $this->artifact_factory,
             $milestone_items_artifact_factory,
@@ -235,8 +230,8 @@ class CampaignsResource
         $this->campaign_creator = new CampaignCreator(
             $this->config,
             $this->project_manager,
-            $this->formelement_factory,
-            $this->tracker_factory,
+            $formelement_factory,
+            $tracker_factory,
             $definition_selector,
             $artifact_creator,
             $this->execution_creator
@@ -247,7 +242,7 @@ class CampaignsResource
         );
 
         $this->campaign_updater = new CampaignUpdater(
-            $this->formelement_factory,
+            $formelement_factory,
             $artifact_updater,
             new CampaignSaver($campaign_dao, $key_factory)
         );
@@ -311,7 +306,7 @@ class CampaignsResource
      *
      * @param int $id Id of the campaign
      *
-     * @return Tuleap\TestManagement\REST\v1\CampaignRepresentation
+     * @return CampaignRepresentation
      *
      * @throws RestException 403
      */
@@ -319,7 +314,7 @@ class CampaignsResource
     {
         $this->optionsId($id);
 
-        $user     = $this->user_manager->getCurrentUser();
+        $user     = $this->getCurrentUser();
         $campaign = $this->getCampaignUserCanRead($user, $id);
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
@@ -349,16 +344,16 @@ class CampaignsResource
      * @param int $limit  Number of elements displayed per page {@from path}
      * @param int $offset Position of the first element to display {@from path}
      *
-     * @return array {@type Tuleap\TestManagement\REST\v1\ExecutionRepresentation}
+     * @return array {@type ExecutionRepresentation}
      *
-     * @throws 400
+     * @throws RestException 400
      * @throws RestException 403
      */
     protected function getExecutions($id, $limit = 10, $offset = 0)
     {
         $this->optionsExecutions($id);
 
-        $user     = $this->user_manager->getCurrentUser();
+        $user     = $this->getCurrentUser();
         $campaign = $this->getCampaignUserCanRead($user, $id);
         $artifact = $campaign->getArtifact();
 
@@ -393,14 +388,14 @@ class CampaignsResource
      * @param array  $definition_ids_to_add   Test definition ids for which test executions should be created {@from body}
      * @param array  $execution_ids_to_remove Test execution ids which should be unlinked from the campaign {@from body}
      *
-     * @return array {@type Tuleap\TestManagement\REST\v1\ExecutionRepresentation}
+     * @return array {@type ExecutionRepresentation}
      *
-     * @throws 400
+     * @throws RestException 400
      * @throws RestException 403
      */
     protected function patchExecutions($id, $uuid, $definition_ids_to_add, $execution_ids_to_remove)
     {
-        $user              = $this->user_manager->getCurrentUser();
+        $user              = $this->getCurrentUser();
         $campaign          = $this->getCampaignUserCanRead($user, $id);
         $artifact          = $campaign->getArtifact();
         $project           = $artifact->getTracker()->getProject();
@@ -518,15 +513,15 @@ class CampaignsResource
      * @param string                         $label             New label of the campaign {@from body}
      * @param JobConfigurationRepresentation $job_configuration {@from body}
      *
-     * @return Tuleap\TestManagement\REST\v1\CampaignRepresentation
+     * @return CampaignRepresentation
      *
-     * @throws 400
-     * @throws 403
-     * @throws 500
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 500
      */
     protected function patch($id, $label = null, ?JobConfigurationRepresentation $job_configuration = null)
     {
-        $user     = UserManager::instance()->getCurrentUser();
+        $user     = $this->getCurrentUser();
         $campaign = $this->getUpdatedCampaign($user, $id, $label, $job_configuration);
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
@@ -583,7 +578,7 @@ class CampaignsResource
     {
         $this->options();
 
-        $user     = UserManager::instance()->getCurrentUser();
+        $user     = $this->getCurrentUser();
         $campaign = $this->getCampaignUserCanRead($user, $id);
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
@@ -707,5 +702,19 @@ class CampaignsResource
             );
             $campaign->setJobConfiguration($job_configuration);
         }
+    }
+
+    private function getCurrentUser(): PFUser
+    {
+        $user = $this->user_manager->getCurrentUser();
+
+        if(!$user) {
+            throw new RestException(
+                400,
+                'User not found'
+            );
+        }
+
+        return $user;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -70,7 +70,7 @@ class CampaignRepresentationBuilder
 
     /**
      * @param $campaign_tracker_id
-     * @param ISearchOnMilestoneId $milestone_criterion
+     * @param ISearchOnMilestone $milestone_criterion
      * @param $limit
      * @param $offset
      * @return PaginatedCampaignsRepresentations

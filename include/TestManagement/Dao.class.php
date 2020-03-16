@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -41,8 +41,11 @@ class Dao extends DataAccessObject
                 FROM plugin_testmanagement
                 INNER JOIN tracker_artifact
                     ON plugin_testmanagement.test_execution_tracker_id = tracker_artifact.tracker_id";
-
-        $row = $this->retrieve($sql)->getRow();
+        $rows = $this->retrieve($sql);
+        if (! $rows) {
+            return 0;
+        }
+        $row = $rows->getRow();
 
         return $row['nb'];
     }
@@ -56,7 +59,11 @@ class Dao extends DataAccessObject
                     ON plugin_testmanagement.test_execution_tracker_id = tracker_artifact.tracker_id
                 WHERE submitted_on >= $timestamp";
 
-        $row = $this->retrieve($sql)->getRow();
+        $rows = $this->retrieve($sql);
+        if (! $rows) {
+            return 0;
+        }
+        $row = $rows->getRow();
 
         return $row['nb'];
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -62,7 +62,6 @@ class ArtifactNodeDao extends DataAccessObject
      * Retrieve all artifacts that point to the given one
      *
      * @param int $artifact_id
-     * @return DataAccessResult
      */
     public function getReverseLinkedArtifacts($artifact_id)
     {

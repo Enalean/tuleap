@@ -99,12 +99,9 @@ class Step
         return $this->rank;
     }
 
-    /**
-     * @return string
-     */
-    public function __toString()
+    public function __toString(): string
     {
-        return json_encode(
+        return (string) json_encode(
             [
                 $this->id,
                 $this->description,
@@ -112,7 +109,8 @@ class Step
                 $this->expected_results,
                 $this->expected_results_format,
                 $this->rank
-            ]
+            ],
+            JSON_THROW_ON_ERROR
         );
     }
 }

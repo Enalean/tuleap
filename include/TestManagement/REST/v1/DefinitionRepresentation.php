@@ -40,7 +40,7 @@ class DefinitionRepresentation extends MinimalDefinitionRepresentation
     public $description;
 
     /**
-     * @var array {@type Tuleap\TestManagement\REST\v1\StepDefinitionRepresentation}
+     * @var array {@type StepDefinitionRepresentation}
      */
     public $steps;
 
@@ -82,15 +82,17 @@ class DefinitionRepresentation extends MinimalDefinitionRepresentation
         $this->requirement = $artifact_representation;
 
         $this->steps = [];
-        /** @var StepDefinitionChangesetValue $value */
+        /** @var StepDefinitionChangesetValue|null $value */
         $value = $this->getFieldValue(self::FIELD_STEPS);
-        if ($value) {
-            foreach ($value->getValue() as $step) {
-                $representation = new StepDefinitionRepresentation();
-                $representation->build($step, $this->purifier, $artifact);
+        if (! $value) {
+            return;
+        }
 
-                $this->steps[] = $representation;
-            }
+        foreach ($value->getValue() as $step) {
+            $representation = new StepDefinitionRepresentation();
+            $representation->build($step, $this->purifier, $artifact);
+
+            $this->steps[] = $representation;
         }
     }
 

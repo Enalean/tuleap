@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,6 +23,10 @@ namespace Tuleap\TestManagement\REST\v1;
 use Luracast\Restler\RestException;
 use PFUser;
 use ProjectManager;
+use Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException;
+use Tracker_Artifact_Attachment_FileNotFoundException;
+use Tracker_FormElement_InvalidFieldException;
+use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_FormElementFactory;
 use Tracker_REST_Artifact_ArtifactCreator;
 use TrackerFactory;
@@ -143,6 +147,9 @@ class CampaignCreator
         }
 
         $campaign_tracker_id = $this->config->getCampaignTrackerId($project);
+        if (! $campaign_tracker_id) {
+            throw new RestException(400, 'The project does not contain a campaign tracker');
+        }
         $campaign_tracker    = $this->tracker_factory->getTrackerById($campaign_tracker_id);
         if (! $campaign_tracker) {
             throw new RestException(400, 'The project does not contain a campaign tracker');

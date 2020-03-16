@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,11 +20,11 @@
 
 namespace Tuleap\TestManagement;
 
-use PFUser;
-use Tuleap\User\REST\UserRepresentation;
-use Tuleap\TestManagement\REST\v1\MilestoneRepresentation;
-use stdClass;
 use ForgeConfig as TuleapConfig;
+use PFUser;
+use stdClass;
+use Tuleap\TestManagement\REST\v1\MilestoneRepresentation;
+use Tuleap\User\REST\UserRepresentation;
 
 class IndexPresenter
 {
@@ -62,7 +62,7 @@ class IndexPresenter
     /** @var string */
     public $nodejs_server;
 
-    /** @var  array */
+    /** @var  string */
     public $tracker_ids;
 
     /** @var  array */
@@ -70,6 +70,10 @@ class IndexPresenter
 
     /** @var string */
     public $current_milestone;
+    /**
+     * @var false|string
+     */
+    public $issue_tracker_config;
 
     public function __construct(
         $project_id,
@@ -93,12 +97,14 @@ class IndexPresenter
         $this->campaign_tracker_id        = intval($campaign_tracker_id);
         $this->issue_tracker_id           = $issue_tracker_id ? intval($issue_tracker_id) : null;
         $this->nodejs_server              = TuleapConfig::get('nodejs_server');
-        $this->tracker_ids                = json_encode(array(
-            'definition_tracker_id' => $this->test_definition_tracker_id,
-            'execution_tracker_id'  => $this->test_execution_tracker_id,
-            'campaign_tracker_id'   => $this->campaign_tracker_id,
-            'issue_tracker_id'      => $this->issue_tracker_id
-        ));
+        $this->tracker_ids = json_encode(
+            [
+                'definition_tracker_id' => $this->test_definition_tracker_id,
+                'execution_tracker_id'  => $this->test_execution_tracker_id,
+                'campaign_tracker_id'   => $this->campaign_tracker_id,
+                'issue_tracker_id'      => $this->issue_tracker_id
+            ]
+        );
 
         $this->issue_tracker_config = json_encode($issue_tracker_config);
 
@@ -107,12 +113,12 @@ class IndexPresenter
         } else {
             $milestone_representation = new stdClass();
         }
-        $this->current_milestone          = json_encode($milestone_representation);
+        $this->current_milestone          = json_encode($milestone_representation, JSON_THROW_ON_ERROR);
     }
 
     private function getLanguageAbbreviation($current_user)
     {
-        list($lang, $country) = explode('_', $current_user->getLocale());
+        [$lang, $country] = explode('_', $current_user->getLocale());
 
         return $lang;
     }

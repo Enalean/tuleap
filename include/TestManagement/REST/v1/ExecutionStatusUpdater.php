@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -81,14 +81,16 @@ class ExecutionStatusUpdater
 
             $new_status = $this->getCurrentStatus($execution_artifact);
             $campaign = $this->testmanagement_artifact_factory->getCampaignForExecution($execution_artifact);
-            $this->realtime_message_sender->sendExecutionUpdated(
-                $user,
-                $campaign,
-                $execution_artifact,
-                $new_status,
-                $previous_status,
-                $previous_user
-            );
+            if ($campaign) {
+                $this->realtime_message_sender->sendExecutionUpdated(
+                    $user,
+                    $campaign,
+                    $execution_artifact,
+                    $new_status,
+                    $previous_status,
+                    $previous_user
+                );
+            }
         } catch (Tracker_FormElement_InvalidFieldException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_NoChangeException $exception) {
@@ -101,7 +103,7 @@ class ExecutionStatusUpdater
         }
     }
 
-    /** @return string */
+    /** @return string|null */
     private function getCurrentStatus(Tracker_Artifact $artifact)
     {
         $last_changeset = $artifact->getLastChangeset();
@@ -112,7 +114,7 @@ class ExecutionStatusUpdater
         return $artifact->getStatusForChangeset($last_changeset);
     }
 
-    /** @return UserRepresentation */
+    /** @return UserRepresentation | null */
     private function getCurrentSubmittedBy(Tracker_Artifact $artifact)
     {
         $last_changeset = $artifact->getLastChangeset();
@@ -121,6 +123,9 @@ class ExecutionStatusUpdater
         }
 
         $submitted_by        = $this->user_manager->getUserById($last_changeset->getSubmittedBy());
+        if (! $submitted_by) {
+            return null;
+        }
         $user_representation = new UserRepresentation();
         $user_representation->build($submitted_by);
 
