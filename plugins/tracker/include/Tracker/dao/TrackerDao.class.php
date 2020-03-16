@@ -149,13 +149,14 @@ class TrackerDao extends DataAccessObject
         }
     }
 
-    public function duplicate($atid_template, $group_id, $name, $description, $item_name)
+    public function duplicate($atid_template, $group_id, $name, $description, $item_name, $color)
     {
         $atid_template = $this->da->escapeInt($atid_template);
         $group_id      = $this->da->escapeInt($group_id);
         $name          = $this->da->quoteSmart($name);
         $description   = $this->da->quoteSmart($description);
         $item_name     = $this->da->quoteSmart($item_name);
+        $color_name    = $this->da->quoteSmart($color);
 
         $id_sharing = new TrackerIdSharingDao();
         if ($id = $id_sharing->generateTrackerId()) {
@@ -187,7 +188,7 @@ class TrackerDao extends DataAccessObject
                         browse_instructions,
                         status,
                         notifications_level,
-                        color,
+                        $color_name,
                         enable_emailgateway
                     FROM $this->table_name
                     WHERE id = $atid_template";

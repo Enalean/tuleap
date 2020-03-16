@@ -31,6 +31,7 @@ use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupJSONRetriever;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupPermissionRepresentationBuilder;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupRepresentationBuilder;
+use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\TrackerIsInvalidException;
 
 class TrackerManager implements Tracker_IFetchTrackerSwitcher
@@ -357,6 +358,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         $name          = trim($request->get('name'));
         $description   = trim($request->get('description'));
         $itemname      = trim($request->get('itemname'));
+        $color         = TrackerColor::default()->getName();
         $atid_template = $request->getValidated('atid_template', 'uint', 0);
 
         if (! $request->existAndNonEmpty('create_mode')) {
@@ -401,7 +403,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         } else {
             try {
                 $user = UserManager::instance()->getCurrentUser();
-                $new_tracker = $this->getTrackerCreator()->duplicateTracker($project, $name, $name, $itemname, $atid_template, $user);
+                $new_tracker = $this->getTrackerCreator()->duplicateTracker($project, $name, $name, $itemname, $color, $atid_template, $user);
             } catch (\Tuleap\Tracker\Creation\TrackerCreationHasFailedException $exception) {
                 $GLOBALS['Response']->addFeedback(
                     Feedback::ERROR,

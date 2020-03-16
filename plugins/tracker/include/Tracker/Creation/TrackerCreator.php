@@ -122,6 +122,7 @@ class TrackerCreator
         string $name,
         string $description,
         string $itemname,
+        string $color,
         string $atid_template,
         \PFUser $user
     ): Tracker {
@@ -132,7 +133,8 @@ class TrackerCreator
             $atid_template,
             $name,
             $description,
-            $itemname
+            $itemname,
+            $color
         );
 
         if (! $duplicate || ! $duplicate['tracker']) {

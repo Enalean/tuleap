@@ -84,6 +84,7 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
 
         $tracker_name = $request->get('tracker-name');
         $tracker_shortname = $request->get('tracker-shortname');
+        $tracker_color = $request->get('tracker-color');
         $tracker_description = $request->get('tracker-description') ?? '';
         $tracker_template_id = $request->get('tracker-template-id');
         $from_empty_tracker = $request->get('from-tracker-empty');
@@ -95,6 +96,7 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
                     (string) $tracker_name,
                     (string) $tracker_description,
                     (string) $tracker_shortname,
+                    (string) $tracker_color,
                     (string) $tracker_template_id,
                     $user
                 );
