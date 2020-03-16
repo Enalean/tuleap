@@ -34,6 +34,8 @@ export interface State {
     existing_trackers: ExistingTrackersList;
     trackers_from_other_projects: ProjectWithTrackers[];
     project_id: number;
+    color_picker_data: DataForColorPicker[];
+    default_tracker_color: string;
 }
 
 export interface CSRFToken {
@@ -49,6 +51,7 @@ export interface ProjectTemplate {
 export interface Tracker {
     readonly id: string;
     readonly name: string;
+    readonly tlp_color: string;
 }
 
 export interface ProjectWithTrackers {
@@ -60,11 +63,17 @@ export interface ProjectWithTrackers {
 export interface TrackerToBeCreatedMandatoryData {
     name: string;
     shortname: string;
+    color: string;
 }
 
 export interface ExistingTrackersList {
     names: string[];
     shortnames: string[];
+}
+
+export interface DataForColorPicker {
+    id: string;
+    text: string;
 }
 
 export enum CreationOptions {

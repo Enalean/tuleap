@@ -27,6 +27,7 @@ use Project;
 use ProjectManager;
 use TrackerDao;
 use TrackerFactory;
+use Tuleap\Tracker\TrackerColor;
 
 class TrackerCreationPresenterBuilder
 {
@@ -65,7 +66,7 @@ class TrackerCreationPresenterBuilder
 
             $formatted_tracker = [];
             foreach ($tracker_list as $tracker) {
-                $formatted_tracker[] = new TrackerTemplatesRepresentation($tracker['id'], $tracker['name']);
+                $formatted_tracker[] = new TrackerTemplatesRepresentation($tracker['id'], $tracker['name'], $tracker['color']);
             }
 
             $project_templates[] = new ProjectTemplatesRepresentation(
@@ -77,10 +78,16 @@ class TrackerCreationPresenterBuilder
         $existing_trackers = $this->getExistingTrackersNamesAndShortnamesInProject($current_project);
         $trackers_from_other_projects = $this->getTrackersUserIsAdmin($user);
 
+        $tracker_colors = [
+            'colors_names' => TrackerColor::COLOR_NAMES,
+            'default_color' => TrackerColor::default()->getName()
+        ];
+
         return new TrackerCreationPresenter(
             $project_templates,
             $existing_trackers,
             $trackers_from_other_projects,
+            $tracker_colors,
             $current_project,
             $csrf
         );
@@ -126,7 +133,8 @@ class TrackerCreationPresenterBuilder
 
                 $trackers_base_info[] = [
                     'id' => $tracker->getId(),
-                    'name' => $tracker->getName()
+                    'name' => $tracker->getName(),
+                    'tlp_color' => $tracker->getColor()->getName()
                 ];
             }
 

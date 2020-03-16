@@ -28,7 +28,8 @@ import {
     ExistingTrackersList,
     ProjectWithTrackers,
     ProjectTemplate,
-    State
+    State,
+    DataForColorPicker
 } from "./src/store/type";
 import { createRouter } from "./src/router";
 
@@ -80,11 +81,22 @@ document.addEventListener("DOMContentLoaded", async () => {
             ? JSON.parse(vue_mount_point.dataset.trackersFromOtherProjects)
             : [];
 
+    const tracker_colors: { colors_names: string[]; default_color: string } =
+        typeof vue_mount_point.dataset.trackerColors !== "undefined"
+            ? JSON.parse(vue_mount_point.dataset.trackerColors)
+            : {};
+
+    const color_picker_data: DataForColorPicker[] = tracker_colors.colors_names.map(
+        (color_name: string) => ({ id: color_name, text: "" })
+    );
+
     const initial_state: State = {
         csrf_token,
         project_templates,
         existing_trackers,
         trackers_from_other_projects,
+        color_picker_data,
+        default_tracker_color: tracker_colors.default_color,
         active_option: CreationOptions.NONE_YET,
         selected_tracker_template: null,
         selected_project_tracker_template: null,
@@ -92,7 +104,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         selected_xml_file_input: null,
         tracker_to_be_created: {
             name: "",
-            shortname: ""
+            shortname: "",
+            color: tracker_colors.default_color
         },
         has_form_been_submitted: false,
         is_a_xml_file_selected: false,

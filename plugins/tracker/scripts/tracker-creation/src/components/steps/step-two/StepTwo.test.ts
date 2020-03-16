@@ -53,7 +53,8 @@ describe("StepTwo", () => {
                 "field-description": true,
                 "field-tracker-template-id": true,
                 "router-link": true,
-                "field-tracker-empty": true
+                "field-tracker-empty": true,
+                "field-tracker-color": true
             }
         });
     }

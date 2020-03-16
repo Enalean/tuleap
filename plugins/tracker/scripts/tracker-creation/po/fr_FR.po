@@ -41,6 +41,9 @@ msgstr ""
 msgid "Chosen template"
 msgstr "Modèle choisi"
 
+msgid "Color"
+msgstr "Couleur"
+
 msgid "Create a new tracker"
 msgstr "Créer un nouvel outil de suivi"
 

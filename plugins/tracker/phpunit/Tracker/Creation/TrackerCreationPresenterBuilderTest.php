@@ -27,6 +27,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use ProjectManager;
 use TrackerDao;
+use Tuleap\Tracker\TrackerColor;
 
 final class TrackerCreationPresenterBuilderTest extends TestCase
 {
@@ -96,6 +97,7 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
             [],
             $expected_list_of_existing_trackers,
             [],
+            $this->getTrackerColors(),
             $this->current_project,
             $this->csrf_token
         );
@@ -117,6 +119,7 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
             [],
             $expected_list_of_existing_trackers,
             [],
+            $this->getTrackerColors(),
             $this->current_project,
             $this->csrf_token
         );
@@ -138,6 +141,7 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
             [],
             $expected_list_of_existing_trackers,
             [],
+            $this->getTrackerColors(),
             $this->current_project,
             $this->csrf_token
         );
@@ -155,11 +159,13 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
             [
                 [
                     'id'        => '1',
-                    'name'      => 'request'
+                    'name'      => 'request',
+                    'color'     => 'peggy-pink'
                 ],
                 [
                     'id'        => '2',
-                    'name'      => 'stories'
+                    'name'      => 'stories',
+                    'color'     => 'sherwood-green'
                 ]
             ]
         );
@@ -171,6 +177,7 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
         $tracker_user_admin->shouldReceive('userIsAdmin')->andReturn(true);
         $tracker_user_admin->shouldReceive('getId')->andReturn('4');
         $tracker_user_admin->shouldReceive('getName')->andReturn('MyAwesomeTracker');
+        $tracker_user_admin->shouldReceive('getColor')->andReturn(TrackerColor::fromName('red-wine'));
 
         $this->project_manager->shouldReceive('getProject')->with('101')->andReturn($project);
 
@@ -182,8 +189,8 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
                 $tracker_user_admin
             ]);
 
-        $tracker_bugs = new TrackerTemplatesRepresentation('1', 'request');
-        $tracker_epics = new TrackerTemplatesRepresentation('2', 'stories');
+        $tracker_bugs = new TrackerTemplatesRepresentation('1', 'request', 'peggy-pink');
+        $tracker_epics = new TrackerTemplatesRepresentation('2', 'stories', 'sherwood-green');
 
         $project_template[] = new ProjectTemplatesRepresentation(
             $project,
@@ -217,7 +224,8 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
                 'trackers' => [
                     [
                         'id' => 4,
-                        'name' => 'MyAwesomeTracker'
+                        'name' => 'MyAwesomeTracker',
+                        'tlp_color' => 'red-wine'
                     ]
                 ]
             ]
@@ -227,6 +235,7 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
             $project_template,
             $expected_list_of_existing_trackers,
             $trackers_from_other_projects,
+            $this->getTrackerColors(),
             $this->current_project,
             $this->csrf_token
         );
@@ -234,5 +243,13 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
         $presenter = $this->builder->build($this->current_project, $this->csrf_token, $this->current_user);
 
         $this->assertEquals($expected_template, $presenter);
+    }
+
+    private function getTrackerColors(): array
+    {
+        return [
+            'colors_names' => TrackerColor::COLOR_NAMES,
+            'default_color' => TrackerColor::default()->getName()
+        ];
     }
 }

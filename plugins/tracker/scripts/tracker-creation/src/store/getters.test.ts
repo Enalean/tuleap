@@ -51,7 +51,11 @@ describe("getters", () => {
         it("Is ready if TRACKER_TEMPLATE option is selected along with a tracker", () => {
             const state: State = {
                 active_option: CreationOptions.TRACKER_TEMPLATE,
-                selected_tracker_template: { id: "101", name: "Bugs" } as Tracker,
+                selected_tracker_template: {
+                    id: "101",
+                    name: "Bugs",
+                    tlp_color: "peggy-pink"
+                } as Tracker,
                 is_a_xml_file_selected: false
             } as State;
 
@@ -251,7 +255,7 @@ describe("getters", () => {
             return {
                 tracker_to_be_created: {
                     shortname
-                }
+                } as TrackerToBeCreatedMandatoryData
             } as State;
         }
 
@@ -297,7 +301,8 @@ describe("getters", () => {
         it("Returns true they already exist", () => {
             const state = getState({
                 name: "Epics",
-                shortname: "epic"
+                shortname: "epic",
+                color: "peggy-pink"
             });
 
             expect(getters.is_name_already_used(state)).toBe(true);
@@ -307,7 +312,8 @@ describe("getters", () => {
         it("Returns false otherwise", () => {
             const state = getState({
                 name: "Requirements",
-                shortname: "requirement"
+                shortname: "requirement",
+                color: "peggy-pink"
             });
 
             expect(getters.is_name_already_used(state)).toBe(false);

@@ -39,14 +39,25 @@ export async function extractNameAndShortnameFromXmlFile(
 
     const name: Element | null = xml_file.querySelector("tracker > name");
     const shortname: Element | null = xml_file.querySelector("tracker > item_name");
+    const tlp_color: Element | null = xml_file.querySelector("tracker > color");
 
-    if (name === null || shortname === null || !name.textContent || !shortname.textContent) {
-        return Promise.reject("The provided XML file does not provide any name and/or shortname");
+    if (
+        name === null ||
+        shortname === null ||
+        tlp_color === null ||
+        !name.textContent ||
+        !shortname.textContent ||
+        !tlp_color.textContent
+    ) {
+        return Promise.reject(
+            "The provided XML file does not provide any name and/or shortname and/or color"
+        );
     }
 
     return {
         name: name.textContent,
-        shortname: shortname.textContent
+        shortname: shortname.textContent,
+        color: tlp_color.textContent
     };
 }
 

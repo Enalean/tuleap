@@ -34,10 +34,16 @@ class TrackerTemplatesRepresentation implements \JsonSerializable
      */
     public $name;
 
-    public function __construct(string $id, string $name)
+    /**
+     * @var string
+     */
+    public $tlp_color;
+
+    public function __construct(string $id, string $name, string $tlp_color)
     {
-        $this->id   = $id;
-        $this->name = $name;
+        $this->id        = $id;
+        $this->name      = $name;
+        $this->tlp_color = $tlp_color;
     }
 
     /**
@@ -46,8 +52,9 @@ class TrackerTemplatesRepresentation implements \JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'id'   => $this->id,
-            'name' => $this->name
+            'id'        => $this->id,
+            'name'      => $this->name,
+            'tlp_color' => $this->tlp_color
         ];
     }
 }
