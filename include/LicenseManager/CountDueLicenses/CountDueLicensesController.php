@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Enalean\LicenseManager\CountDueLicenses;
 
@@ -70,7 +70,7 @@ class CountDueLicensesController
         $this->history_exporter = $history_exporter;
     }
 
-    public function countDueLicences(int $project_id) : void
+    public function countDueLicences(int $project_id): void
     {
         $current_timestamp = new DateTimeImmutable("now");
 
@@ -118,7 +118,7 @@ class CountDueLicensesController
         int $nb_active_users,
         int $nb_real_users,
         array $real_users
-    ) : void {
+    ): void {
         $this->output->writeln('###############################################');
         $this->output->writeln('Date: ' . $current_timestamp->format(DateTimeImmutable::ATOM));
         $this->output->writeln('Number of active users: ' . $nb_active_users);

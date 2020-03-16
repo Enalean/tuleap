@@ -295,11 +295,11 @@ class enalean_licensemanagerPlugin extends Plugin
         return $nb_used_users > $nb_max_users;
     }
 
-    public function collectCLICommands(CLICommandsCollector $commands_collector) : void
+    public function collectCLICommands(CLICommandsCollector $commands_collector): void
     {
         $commands_collector->addCommand(
             LicenseManagerCountDueLicensesCommand::NAME,
-            function () : LicenseManagerCountDueLicensesCommand {
+            function (): LicenseManagerCountDueLicensesCommand {
                 return new LicenseManagerCountDueLicensesCommand(
                     new \UserDao(),
                     new DueLicencesDao(),

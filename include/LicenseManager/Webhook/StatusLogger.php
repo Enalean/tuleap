@@ -29,6 +29,6 @@ class StatusLogger implements \Tuleap\Webhook\StatusLogger
     public function log(Webhook $webhook, $status)
     {
         $logger = new BackendLogger();
-        $logger->info('[enalean license manager webhook] '. $status);
+        $logger->info('[enalean license manager webhook] ' . $status);
     }
 }
