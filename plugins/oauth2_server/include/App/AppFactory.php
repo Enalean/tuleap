@@ -68,4 +68,24 @@ class AppFactory
         }
         return $apps;
     }
+
+    /**
+     * @return OAuth2App[]
+     */
+    public function getAppsAuthorizedByUser(\PFUser $user): array
+    {
+        $apps = [];
+        $rows = $this->app_dao->searchAuthorizedAppsByUser($user);
+        foreach ($rows as $row) {
+            try {
+                $project = $this->project_manager->getValidProject($row['project_id']);
+            } catch (\Project_NotFoundException $e) {
+                // Skip apps with invalid projects. Apps from those projects are not listed
+                continue;
+            }
+            $apps[] = new OAuth2App($row['id'], $row['name'], $row['redirect_endpoint'], $project);
+        }
+
+        return $apps;
+    }
 }

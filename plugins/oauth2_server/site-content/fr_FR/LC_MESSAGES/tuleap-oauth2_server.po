@@ -64,6 +64,9 @@ msgid "Please review the permissions you are about to give to %s:"
 msgstr ""
 "Veuillez prendre connaissance des permissions que vous allez accorder à %s :"
 
+msgid "Project"
+msgstr "Projet"
+
 msgid "Redirect endpoint"
 msgstr "Route de redirection"
 
@@ -74,6 +77,9 @@ msgstr ""
 "La route de redirection doit utiliser HTTPS. Elle ne doit pas inclure un "
 "identificateur de fragment (#ancre)"
 
+msgid "Revoke authorization"
+msgstr "Révoquer l'autorisation"
+
 msgid "The App has been successfully deleted."
 msgstr "L'App a correctement été supprimée."
 
@@ -82,6 +88,16 @@ msgstr "L'ID de l'App est obligatoire."
 
 msgid "The provided app data is not valid."
 msgstr "Les informations fournies pour l'app ne sont pas valides."
+
+msgid ""
+"This is a list of OAuth2 apps you have authorized access to Tuleap on your "
+"behalf."
+msgstr ""
+"Voici une liste des apps OAuth2 auxquelles vous avez autorisé l'accès à "
+"Tuleap en votre nom."
+
+msgid "You did not authorize any OAuth2 App yet."
+msgstr "Vous n'avez pas encore autorisé d'app OAuth2."
 
 msgid ""
 "Your new app %s has been created, make sure to copy the following secret. "

@@ -30,6 +30,10 @@ for (const color of colors) {
     entry_points[
         `authorization-form-${color}-condensed`
     ] = `./themes/authorization-form-${color}-condensed.scss`;
+    entry_points[`user-preferences-${color}`] = `./themes/user-preferences-${color}.scss`;
+    entry_points[
+        `user-preferences-${color}-condensed`
+    ] = `./themes/user-preferences-${color}-condensed.scss`;
 }
 
 module.exports = [
