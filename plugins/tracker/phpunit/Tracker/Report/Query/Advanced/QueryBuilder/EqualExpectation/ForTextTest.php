@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,35 +20,35 @@
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualExpression;
 
 use CodendiDataAccess;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualComparison\ForText;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonFieldBuilder;
-use TuleapTestCase;
 
-require_once __DIR__ . '/../../../../../../bootstrap.php';
-
-class ForTextTest extends TuleapTestCase
+final class ForTextTest extends TestCase
 {
-    public function setUp()
+    use MockeryPHPUnitIntegration;
+
+    protected function setUp(): void
     {
-        parent::setUp();
         CodendiDataAccess::setInstance(\Mockery::spy(LegacyDataAccessInterface::class));
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         CodendiDataAccess::clearInstance();
-        parent::tearDown();
     }
 
-    public function itUsesTheComparisonInternalIdAsASuffixInOrderToBeAbleToHaveTheFieldSeveralTimesInTheQuery()
+    public function testItUsesTheComparisonInternalIdAsASuffixInOrderToBeAbleToHaveTheFieldSeveralTimesInTheQuery(): void
     {
         $comparison = new EqualComparison(new Field('field'), new SimpleValueWrapper('value'));
         $field_id   = 101;
-        $field      = aTextField()->withId($field_id)->build();
+        $field      = \Mockery::mock(\Tracker_FormElement_Field_Text::class);
+        $field->shouldReceive('getId')->andReturn($field_id);
 
         $for_text   = new ForText(
             new FromWhereComparisonFieldBuilder()
@@ -57,6 +57,6 @@ class ForTextTest extends TuleapTestCase
 
         $suffix = spl_object_hash($comparison);
 
-        $this->assertPattern("/tracker_changeset_value_text AS CVText_{$field_id}_{$suffix}/", $from_where->getFromAsString());
+        $this->assertRegExp("/tracker_changeset_value_text AS CVText_{$field_id}_{$suffix}/", $from_where->getFromAsString());
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,12 +18,11 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-require_once __DIR__ . '/../../bootstrap.php';
 
-class Tracker_Report_ResultJoinerTest extends TuleapTestCase
+final class Tracker_Report_ResultJoinerTest extends \PHPUnit\Framework\TestCase
 {
-
-    public function itRemovesEntriesWhoseKeysAreNotPresentInOtherResult()
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    public function testItRemovesEntriesWhoseKeysAreNotPresentInOtherResult(): void
     {
         $matching_ids = array(123 => 'whatever', 456 => 'whatever', 789 => 'whatever');
         $other_result = array(456 => 'whatever');
@@ -32,10 +31,10 @@ class Tracker_Report_ResultJoinerTest extends TuleapTestCase
         $results = $john->joinResults($matching_ids, array($other_result));
 
         $expected = array(456 => 'whatever');
-        $this->assertEqual($results, $expected);
+        $this->assertEquals($expected, $results);
     }
 
-    public function itDoesAnIntersectionWithEveryResults()
+    public function testItDoesAnIntersectionWithEveryResults(): void
     {
         $matching_ids = array(123 => 'whatever', 456 => 'whatever', 789 => 'whatever');
         $other_result_1 = array(456 => 'whatever', 789 => 'whatever');
@@ -45,6 +44,6 @@ class Tracker_Report_ResultJoinerTest extends TuleapTestCase
         $results = $john->joinResults($matching_ids, array($other_result_1, $other_result_2));
 
         $expected = array(456 => 'whatever');
-        $this->assertEqual($results, $expected);
+        $this->assertEquals($expected, $results);
     }
 }
