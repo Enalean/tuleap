@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Enalean\LicenseManager\CountDueLicenses;
 
@@ -47,7 +47,7 @@ class UserEvolutionHistoryExporter
         DateTimeImmutable $current_timestamp,
         int $nb_active_users,
         int $nb_real_users
-    ) : void {
+    ): void {
         header('Content-Type: text/csv');
         header('Content-Disposition: attachment; filename="' . $this->history_file_location . '"');
 
@@ -71,7 +71,7 @@ class UserEvolutionHistoryExporter
         $this->output->writeln("<comment>Forge users evolution history saved. You can consult it here : " . $this->history_file_location . "</comment>");
     }
 
-    private function hasScriptBeenRanToday() : bool
+    private function hasScriptBeenRanToday(): bool
     {
         $rows     = file($this->history_file_location);
         $last_row = array_pop($rows);
@@ -87,7 +87,7 @@ class UserEvolutionHistoryExporter
         return ($last_entry_date->diff($today))->days === 0;
     }
 
-    private function removeLastEntry() : void
+    private function removeLastEntry(): void
     {
         $rows = file($this->history_file_location);
         array_pop($rows);

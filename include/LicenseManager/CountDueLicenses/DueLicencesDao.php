@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Enalean\LicenseManager\CountDueLicenses;
 
@@ -27,14 +27,14 @@ use Tuleap\DB\DataAccessObject;
 
 class DueLicencesDao extends DataAccessObject
 {
-    public function doesUserlogTableExists() : bool
+    public function doesUserlogTableExists(): bool
     {
         $result = $this->getDB()->run("SHOW TABLES LIKE 'plugin_userlog_request'");
 
         return count($result) === 1;
     }
 
-    public function getRealUsers($project_id) : array
+    public function getRealUsers($project_id): array
     {
         $projects_id = "0, $project_id";
 
@@ -43,8 +43,7 @@ class DueLicencesDao extends DataAccessObject
                 LEFT OUTER JOIN plugin_userlog_request AS userlog ON (users.user_id = userlog.user_id)
                 WHERE users.status = ?
                 AND userlog.group_id NOT IN (?)
-            GROUP BY users.user_id'
-        ;
+            GROUP BY users.user_id';
 
         return $this->getDB()->run($sql, PFUser::STATUS_ACTIVE, $projects_id);
     }

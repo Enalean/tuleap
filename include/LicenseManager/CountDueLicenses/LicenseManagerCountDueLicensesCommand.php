@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Enalean\LicenseManager\CountDueLicenses;
 
@@ -65,7 +65,7 @@ class LicenseManagerCountDueLicensesCommand extends Command
         $this->config_path  = $etc_root_path . '/visitors_parameters.json';
     }
 
-    public function execute(InputInterface $input, OutputInterface $output) : int
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         if (! $this->licenses_dao->doesUserlogTableExists()) {
             $output->writeln("<error>Plugin userlog must be installed and enabled.</error>");
@@ -80,7 +80,7 @@ class LicenseManagerCountDueLicensesCommand extends Command
         }
 
         $visitors_paramaters   = $this->getVisitorsParameters();
-        $visitors_project_id   = (int)$visitors_paramaters['visitors_project_id'];
+        $visitors_project_id   = (int) $visitors_paramaters['visitors_project_id'];
         $history_file_location = (string) $visitors_paramaters['csv_history_file_location'];
 
         if (! $visitors_project_id || ! $history_file_location) {
@@ -114,7 +114,7 @@ class LicenseManagerCountDueLicensesCommand extends Command
         $this->setDescription('Count the number of active users, visitors and outputs the number of due licenses.');
     }
 
-    private function getVisitorsParameters() : array
+    private function getVisitorsParameters(): array
     {
         return json_decode(
             file_get_contents(
@@ -126,7 +126,7 @@ class LicenseManagerCountDueLicensesCommand extends Command
         );
     }
 
-    private function doesProjectExists(int $project_id) : bool
+    private function doesProjectExists(int $project_id): bool
     {
         $project = (ProjectManager::instance())->getProject($project_id);
 
