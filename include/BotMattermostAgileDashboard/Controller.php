@@ -83,7 +83,7 @@ class Controller
     public function render()
     {
         $renderer   = TemplateRendererFactory::build()->getRenderer(
-            PLUGIN_BOT_MATTERMOST_AGILE_DASHBOARD_BASE_DIR.'/template'
+            PLUGIN_BOT_MATTERMOST_AGILE_DASHBOARD_BASE_DIR . '/template'
         );
         $project_id = $this->request->getProject()->getID();
         $bots       = $this->bot_factory->getBots();
@@ -150,7 +150,7 @@ class Controller
     private function displayIndex()
     {
         $GLOBALS['Response']->redirect(
-            AGILEDASHBOARD_BASE_URL.'/?'.http_build_query(
+            AGILEDASHBOARD_BASE_URL . '/?' . http_build_query(
                 array(
                     'group_id' => $this->request->getProject()->getID(),
                     'action'   => 'admin',

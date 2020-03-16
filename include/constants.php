@@ -18,4 +18,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('PLUGIN_BOT_MATTERMOST_AGILE_DASHBOARD_BASE_DIR', realpath(__DIR__.'/..'));
+define('PLUGIN_BOT_MATTERMOST_AGILE_DASHBOARD_BASE_DIR', realpath(__DIR__ . '/..'));

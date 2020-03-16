@@ -45,10 +45,10 @@ EOT;
                 DROP COLUMN duration;";
 
         if (! $this->db->dbh->exec($sql1)) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while column start_date is replaced by send_time in table plugin_botmattermost_agiledashboard: '.implode(', ', $this->db->dbh->errorInfo()));
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while column start_date is replaced by send_time in table plugin_botmattermost_agiledashboard: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
         if (! $this->db->dbh->exec($sql2)) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while deleting column duration in table plugin_botmattermost_agiledashboard: '.implode(', ', $this->db->dbh->errorInfo()));
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while deleting column duration in table plugin_botmattermost_agiledashboard: ' . implode(', ', $this->db->dbh->errorInfo()));
         }
     }
 }

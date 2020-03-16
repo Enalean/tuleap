@@ -59,7 +59,7 @@ class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacy
     public function getHooksAndCallbacks()
     {
         if (defined('PLUGIN_BOT_MATTERMOST_BASE_DIR')) {
-            require_once PLUGIN_BOT_MATTERMOST_BASE_DIR.'/include/autoload.php';
+            require_once PLUGIN_BOT_MATTERMOST_BASE_DIR . '/include/autoload.php';
         }
         if (defined('AGILEDASHBOARD_BASE_URL')) {
             $this->addHook(GetAdditionalScrumAdminPaneContent::NAME);
@@ -178,7 +178,7 @@ class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacy
 
         return new Controller(
             $request,
-            new CSRFSynchronizerToken(AGILEDASHBOARD_BASE_URL.'/?group_id='.$project_id.'&action=admin&pane=notification'),
+            new CSRFSynchronizerToken(AGILEDASHBOARD_BASE_URL . '/?group_id=' . $project_id . '&action=admin&pane=notification'),
             new Factory(
                 new Dao(),
                 $bot_factory,

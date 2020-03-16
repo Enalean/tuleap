@@ -154,7 +154,7 @@ class StandUpNotificationBuilder
                 )
             );
 
-            return $http_request->getServerUrl().TRACKER_BASE_URL.'/?'.$url_query;
+            return $http_request->getServerUrl() . TRACKER_BASE_URL . '/?' . $url_query;
         }
 
         return null;
@@ -175,7 +175,7 @@ class StandUpNotificationBuilder
 
     private function getPlanningCardwallUrl(HTTPRequest $http_request, Planning_Milestone $milestone)
     {
-        return $http_request->getServerUrl().AGILEDASHBOARD_BASE_URL.'/?'.http_build_query(
+        return $http_request->getServerUrl() . AGILEDASHBOARD_BASE_URL . '/?' . http_build_query(
             array(
                 'group_id'    => $milestone->getGroupId(),
                 'planning_id' => $milestone->getPlanningId(),
@@ -221,7 +221,7 @@ class StandUpNotificationBuilder
     private function buildArtifactLink(HTTPRequest $http_request, Tracker_Artifact $tracker_Artifact)
     {
         return array(
-            'url'  => $http_request->getServerUrl().$tracker_Artifact->getUri(),
+            'url'  => $http_request->getServerUrl() . $tracker_Artifact->getUri(),
             'name' => $tracker_Artifact->getXRef()
         );
     }

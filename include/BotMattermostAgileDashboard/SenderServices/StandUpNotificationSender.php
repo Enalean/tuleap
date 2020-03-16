@@ -68,8 +68,8 @@ class StandUpNotificationSender
                     $this->notification_builder->buildNotificationText($http_request, $admins[0], $project)
                 );
 
-                $this->logger->info('start stand up notification in project '.$project->getPublicName());
-                $this->logger->debug('project: #'.$project_id.' '.$project->getPublicName());
+                $this->logger->info('start stand up notification in project ' . $project->getPublicName());
+                $this->logger->debug('project: #' . $project_id . ' ' . $project->getPublicName());
                 if (! $message->hasText()) {
                     $this->logger->warning('No text');
                 }

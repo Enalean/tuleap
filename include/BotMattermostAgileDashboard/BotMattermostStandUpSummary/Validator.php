@@ -64,7 +64,7 @@ class Validator
 
     private function isValidAddAction(HTTPRequest $request)
     {
-        if ($request->exist('bot_id')&&
+        if ($request->exist('bot_id') &&
             $request->existAndNonEmpty('send_time') &&
             $request->exist('channels')
         ) {
