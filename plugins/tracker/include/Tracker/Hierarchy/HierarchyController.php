@@ -89,15 +89,18 @@ class HierarchyController
 
     public function edit() : void
     {
-        $presenter = new Tracker_Hierarchy_Presenter(
+        $this->render('admin-hierarchy', $this->buildPresenter());
+    }
+
+    public function buildPresenter(): Tracker_Hierarchy_Presenter
+    {
+        return new Tracker_Hierarchy_Presenter(
             $this->tracker,
             $this->factory->getPossibleChildren($this->tracker),
             $this->factory->getHierarchy($this->tracker->getUnhierarchizedTracker()),
             $this->isIsChildTypeDisabledForProject($this->tracker->getProject()),
             $this->getChildrenUsedInTriggerRules()
         );
-
-        $this->render('admin-hierarchy', $presenter);
     }
 
     /**
