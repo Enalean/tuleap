@@ -522,6 +522,11 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
 
         $response_status_code = $response->getStatusCode();
 
+        if ($response_status_code === 404) {
+            $this->logger->info('Gerrit REST driver: Project does not exist maybe it has already been deleted?');
+            return;
+        }
+
         if ($response_status_code >= 400 && $response_status_code < 500) {
             $this->logger->error('Gerrit REST driver: Cannot delete project ' . $gerrit_project_full_name . ': There are open changes');
             throw new ProjectDeletionException(
