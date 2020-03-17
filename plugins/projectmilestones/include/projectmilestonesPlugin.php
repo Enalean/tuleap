@@ -22,6 +22,7 @@ use Tuleap\ProjectMilestones\Widget\ProjectMilestones;
 use Tuleap\Widget\Event\GetProjectWidgetList;
 use Tuleap\Widget\Event\GetWidget;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Request\CurrentPage;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -52,7 +53,9 @@ class projectmilestonesPlugin extends Plugin // phpcs:ignore
             '/assets/projectmilestones'
         );
 
-        $params['javascript_files'][] = $include_assets->getFileURL('projectmilestones-preferences.js');
+        if ($this->isInProjectDashboard()) {
+            $params['javascript_files'][] = $include_assets->getFileURL('projectmilestones-preferences.js');
+        }
     }
 
     /**
@@ -92,5 +95,12 @@ class projectmilestonesPlugin extends Plugin // phpcs:ignore
     public function getDependencies()
     {
         return ['agiledashboard'];
+    }
+
+    private function isInProjectDashboard()
+    {
+        $current_page = new CurrentPage();
+
+        return $current_page->isProjectDashboard();
     }
 }
