@@ -22,6 +22,7 @@ declare(strict_types = 1);
 
 namespace Tuleap\Tracker\Creation;
 
+use ForgeConfig;
 use Project;
 
 class TrackerCreationPresenter
@@ -54,6 +55,10 @@ class TrackerCreationPresenter
      * @var string
      */
     public $trackers_from_other_projects;
+    /**
+     * @var string
+     */
+    public $company_name;
 
     /**
      * @var string
@@ -76,9 +81,10 @@ class TrackerCreationPresenter
         $this->project_id                   = $current_project->getID();
         $this->csrf_token                   = json_encode(
             [
-            'name' => $csrf->getTokenName(),
-            'value' => $csrf->getToken()
+                'name'  => $csrf->getTokenName(),
+                'value' => $csrf->getToken()
             ]
         );
+        $this->company_name                 = (string) ForgeConfig::get('sys_org_name');
     }
 }

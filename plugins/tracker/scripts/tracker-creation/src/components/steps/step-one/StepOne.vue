@@ -25,8 +25,13 @@
         <template v-slot:interactive_content>
             <div class="tracker-creation-starting-point-options">
                 <tracker-template-card />
-                <tracker-xml-file-card />
                 <tracker-from-another-project-card />
+            </div>
+        </template>
+
+        <template v-slot:interactive_content_advanced>
+            <div class="tracker-creation-starting-point-options">
+                <tracker-xml-file-card />
                 <tracker-empty-card />
             </div>
         </template>

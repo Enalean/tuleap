@@ -71,6 +71,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         throw new Error("Project name not provided, app can't be routed.");
     }
 
+    const company_name = vue_mount_point.dataset.companyName;
+
+    if (!company_name) {
+        throw new Error("Company name not provided, app can't be routed.");
+    }
+
     const project_id = vue_mount_point.dataset.projectId;
     if (!project_id) {
         throw new Error("Project id not provided.");
@@ -112,7 +118,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         is_parsing_a_xml_file: false,
         has_xml_file_error: false,
         is_in_slugify_mode: true,
-        project_id: parseInt(project_id, 10)
+        project_id: parseInt(project_id, 10),
+        company_name
     };
 
     new AppComponent({

@@ -62,6 +62,8 @@
 }
 
 .tracker-creation-step-info {
+    margin: 0 0 $tlp-spacing 0;
+
     p {
         margin: 0;
     }
@@ -88,7 +90,11 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    margin: $tlp-spacing 0 0;
+    margin: $tlp-spacing 0;
+
+    &:last-child {
+        margin: $tlp-spacing 0 0;
+    }
 
     @media screen and (max-width: $creation-small-screen-width) {
         flex-direction: column;
