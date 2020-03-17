@@ -45,7 +45,7 @@ class DefinitionRepresentation extends MinimalDefinitionRepresentation
     public $steps;
 
     /**
-     * @var ArtifactRepresentation|null
+     * @var ArtifactRepresentation | null
      */
     public $requirement;
     /**
