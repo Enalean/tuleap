@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,12 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Artifact\MailGateway\IncomingMail;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
-class Tracker_Artifact_MailGateway_MailGatewayBuilderTest extends TuleapTestCase
+class MailGatewayBuilderTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
 
     /** @var Tracker_Artifact_MailGateway_MailGatewayBuilder */
     private $mailgateway_builder;
@@ -31,20 +34,20 @@ class Tracker_Artifact_MailGateway_MailGatewayBuilderTest extends TuleapTestCase
     private $insecure_mail;
     private $token_mail;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->insecure_mail = new IncomingMail(file_get_contents(__DIR__ . '/_fixtures/insecure-reply-comment.plain.eml'));
         $this->token_mail    = new IncomingMail(file_get_contents(__DIR__ . '/_fixtures/reply-comment.plain.eml'));
 
-        $incoming_message_factory = mock('Tracker_Artifact_MailGateway_IncomingMessageFactory');
-        $artifact_factory         = mock('Tracker_ArtifactFactory');
-        $tracker_artifactbyemail  = mock('Tracker_ArtifactByEmailStatus');
-        $logger                   = mock(\Psr\Log\LoggerInterface::class);
-        $notifier                 = mock('Tracker_Artifact_MailGateway_Notifier');
-        $incoming_mail_dao        = mock('Tracker_Artifact_Changeset_IncomingMailDao');
-        $citation_stripper        = mock('Tracker_Artifact_MailGateway_CitationStripper');
+        $incoming_message_factory = \Mockery::spy(\Tracker_Artifact_MailGateway_IncomingMessageFactory::class);
+        $artifact_factory         = \Mockery::spy(\Tracker_ArtifactFactory::class);
+        $tracker_artifactbyemail  = \Mockery::spy(\Tracker_ArtifactByEmailStatus::class);
+        $logger                   = \Mockery::spy(\Psr\Log\LoggerInterface::class);
+        $notifier                 = \Mockery::spy(\Tracker_Artifact_MailGateway_Notifier::class);
+        $incoming_mail_dao        = \Mockery::spy(\Tracker_Artifact_Changeset_IncomingMailDao::class);
+        $citation_stripper        = \Mockery::spy(\Tracker_Artifact_MailGateway_CitationStripper::class);
 
         $this->mailgateway_builder = new Tracker_Artifact_MailGateway_MailGatewayBuilder(
             $incoming_message_factory,
@@ -52,24 +55,24 @@ class Tracker_Artifact_MailGateway_MailGatewayBuilderTest extends TuleapTestCase
             $notifier,
             $incoming_mail_dao,
             $artifact_factory,
-            mock('Tracker_FormElementFactory'),
+            \Mockery::spy(\Tracker_FormElementFactory::class),
             $tracker_artifactbyemail,
             $logger,
-            mock('Tuleap\Tracker\Artifact\MailGateway\MailGatewayFilter')
+            \Mockery::spy(\Tuleap\Tracker\Artifact\MailGateway\MailGatewayFilter::class)
         );
     }
 
-    public function itReturnsAnInsecureMailGateway()
+    public function testItReturnsAnInsecureMailGateway(): void
     {
         $mailgateway = $this->mailgateway_builder->build($this->insecure_mail);
 
-        $this->assertIsA($mailgateway, 'Tracker_Artifact_MailGateway_InsecureMailGateway');
+        $this->assertInstanceOf(Tracker_Artifact_MailGateway_InsecureMailGateway::class, $mailgateway);
     }
 
-    public function itReturnsATokenMailGateway()
+    public function testItReturnsATokenMailGateway(): void
     {
         $mailgateway = $this->mailgateway_builder->build($this->token_mail);
 
-        $this->assertIsA($mailgateway, 'Tracker_Artifact_MailGateway_TokenMailGateway');
+        $this->assertInstanceOf(Tracker_Artifact_MailGateway_TokenMailGateway::class, $mailgateway);
     }
 }
