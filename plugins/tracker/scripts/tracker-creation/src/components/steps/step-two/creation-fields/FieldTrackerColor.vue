@@ -61,8 +61,13 @@ export default class FieldTrackerColor extends Vue {
     readonly color_selector!: HTMLSelectElement;
 
     @Watch("tracker_to_be_created", { deep: true })
-    updateSelectedColor(): void {
-        this.selectColor();
+    updateSelectedColor(
+        old_value: TrackerToBeCreatedMandatoryData,
+        new_value: TrackerToBeCreatedMandatoryData
+    ): void {
+        if (old_value.color !== new_value.color) {
+            this.selectColor();
+        }
     }
 
     private select2_color: Select2Plugin | null = null;
