@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\User\Account;
 
+use Tuleap\OAuth2Server\AuthorizationServer\OAuth2ScopeDefinitionPresenter;
+
 /**
  * @psalm-immutable
  */
@@ -39,11 +41,20 @@ final class AccountAppPresenter
      * @var string
      */
     public $project_name;
+    /**
+     * @var OAuth2ScopeDefinitionPresenter[]
+     */
+    public $scopes;
 
-    public function __construct(int $id, string $name, string $project_name)
-    {
+    public function __construct(
+        int $id,
+        string $name,
+        string $project_name,
+        OAuth2ScopeDefinitionPresenter ...$scope_definition_presenters
+    ) {
         $this->id           = $id;
         $this->name         = $name;
         $this->project_name = $project_name;
+        $this->scopes       = $scope_definition_presenters;
     }
 }

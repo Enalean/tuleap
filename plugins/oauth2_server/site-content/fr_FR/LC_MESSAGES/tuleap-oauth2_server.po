@@ -80,6 +80,9 @@ msgstr ""
 msgid "Revoke authorization"
 msgstr "Révoquer l'autorisation"
 
+msgid "Scopes"
+msgstr "Portées"
+
 msgid "The App has been successfully deleted."
 msgstr "L'App a correctement été supprimée."
 
