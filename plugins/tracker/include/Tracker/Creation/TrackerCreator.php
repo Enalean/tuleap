@@ -94,7 +94,8 @@ class TrackerCreator
         string $file_path,
         string $name,
         string $description,
-        string $itemname
+        string $itemname,
+        ?string $color
     ): Tracker {
         try {
             return $this->tracker_xml_import->createFromXMLFileWithInfo(
@@ -102,7 +103,8 @@ class TrackerCreator
                 $file_path,
                 $name,
                 $description,
-                $itemname
+                $itemname,
+                $color
             );
         } catch (XML_ParseException $exception) {
             $this->xml_error_displayer->displayErrors($project, $exception->getErrors(), $exception->getFileLines());

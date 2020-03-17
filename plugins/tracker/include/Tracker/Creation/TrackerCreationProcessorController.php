@@ -106,7 +106,8 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
                     __DIR__ . '/../../../www/resources/templates/Tracker_Empty.xml',
                     (string) $tracker_name,
                     (string) $tracker_description,
-                    (string) $tracker_shortname
+                    (string) $tracker_shortname,
+                    (string) $tracker_color
                 );
             } else {
                 $file    = $_FILES;
@@ -115,7 +116,8 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
                     $file['tracker-xml-file']['tmp_name'],
                     (string) $tracker_name,
                     (string) $tracker_description,
-                    (string) $tracker_shortname
+                    (string) $tracker_shortname,
+                    (string) $tracker_color
                 );
             }
 

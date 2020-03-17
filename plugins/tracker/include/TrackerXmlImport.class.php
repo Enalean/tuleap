@@ -446,7 +446,8 @@ class TrackerXmlImport
                 $project,
                 $name,
                 $description,
-                $item_name
+                $item_name,
+                TrackerColor::default()->getName()
             );
         }
 
@@ -591,7 +592,8 @@ class TrackerXmlImport
                 $project,
                 (String) $xml_tracker->name,
                 (String) $xml_tracker->description,
-                (String) $xml_tracker->item_name
+                (String) $xml_tracker->item_name,
+                (String) $xml_tracker->color
             );
         } catch (\Tuleap\Tracker\TrackerIsInvalidException $exception) {
             $this->feedback_collector->addErrors($exception->getTranslatedMessage());
@@ -679,7 +681,7 @@ class TrackerXmlImport
             $description = (string) $tracker_xml->description;
             $item_name   = (string) $tracker_xml->item_name;
 
-            return $this->createFromXML($tracker_xml, $project, $name, $description, $item_name);
+            return $this->createFromXML($tracker_xml, $project, $name, $description, $item_name, TrackerColor::default()->getName());
         } catch (\Tuleap\Tracker\TrackerIsInvalidException $exception) {
             $this->feedback_collector->addErrors($exception->getTranslatedMessage());
             $this->feedback_collector->displayErrors($this->logger);
@@ -706,7 +708,8 @@ class TrackerXmlImport
         string $filepath,
         string $name,
         string $description,
-        string $item_name
+        string $item_name,
+        ?string $color
     ): Tracker {
         $tracker_xml = $this->loadXmlFile($filepath);
         if (! $tracker_xml) {
@@ -715,7 +718,7 @@ class TrackerXmlImport
         $event = new CreateTrackerFromXMLEvent($project, $tracker_xml);
         $this->event_manager->processEvent($event);
 
-        return $this->createFromXML($tracker_xml, $project, $name, $description, $item_name);
+        return $this->createFromXML($tracker_xml, $project, $name, $description, $item_name, $color);
     }
 
     /**
@@ -732,7 +735,8 @@ class TrackerXmlImport
         Project $project,
         string $name,
         string $description,
-        string $itemname
+        string $itemname,
+        ?string $color
     ): Tracker {
         $tracker = null;
         $partial_element = new SimpleXMLElement((string) $xml_element->asXML());
@@ -750,7 +754,8 @@ class TrackerXmlImport
             $project,
             $name,
             $description,
-            $itemname
+            $itemname,
+            $color
         );
         //Testing consistency of the imported tracker before updating database
         if ($tracker->testImport()) {
@@ -796,9 +801,10 @@ class TrackerXmlImport
         Project $project,
         string $name,
         string $description,
-        string $itemname
+        string $itemname,
+        ?string $color
     ): Tracker {
-        $row     = $this->setTrackerGeneralInformation($xml, $project, $name, $description, $itemname);
+        $row     = $this->setTrackerGeneralInformation($xml, $project, $name, $description, $itemname, $color);
         $tracker = $this->tracker_factory->getInstanceFromRow($row);
 
         $this->setCannedResponses($xml, $tracker);
@@ -912,9 +918,10 @@ class TrackerXmlImport
         Project $project,
         string $name,
         string $description,
-        string $itemname
+        string $itemname,
+        ?string $color
     ): array {
-        $xml_tracker_color_name = (string) $xml->color;
+        $xml_tracker_color_name = $color ?? (string) $xml->color;
         if ($xml_tracker_color_name === '') {
             $tracker_color = TrackerColor::default();
         } else {
