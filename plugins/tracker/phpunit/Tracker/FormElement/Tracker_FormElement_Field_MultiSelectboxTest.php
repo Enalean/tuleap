@@ -28,6 +28,8 @@ use PermissionsManager;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tracker;
+use Tracker_FormElement_Field_List;
+use Tracker_FormElement_Field_List_Bind;
 use Tracker_FormElement_Field_MultiSelectbox;
 use Tracker_FormElement_RESTValueByField_NotImplementedException;
 use TrackerFactory;
@@ -247,5 +249,86 @@ class Tracker_FormElement_Field_MultiSelectboxTest extends TestCase
         $mandatory_field->augmentDataFromRequest($fields_data);
 
         $this->assertFalse(array_key_exists(1, $fields_data));
+    }
+
+    public function testGetFieldDataFromRESTValueThrowsExceptionIfBindValueIdsAreNotPresent(): void
+    {
+        $this->expectException(\Tracker_FormElement_InvalidFieldValueException::class);
+        $this->field->getFieldDataFromRESTValue([]);
+    }
+
+    public function testGetFieldDataFromRESTValueThrowsExceptionIfBindValueIdsIsAString(): void
+    {
+        $this->expectException(\Tracker_FormElement_InvalidFieldValueException::class);
+        $this->field->getFieldDataFromRESTValue(['bind_value_ids' => '']);
+    }
+
+    public function testGetFieldDataFromRESTValueReturns100IfBindValueIdsIsEmpty(): void
+    {
+        $this->assertEquals(
+            [Tracker_FormElement_Field_List::NONE_VALUE],
+            $this->field->getFieldDataFromRESTValue(['bind_value_ids' => []])
+        );
+    }
+
+    public function testGetFieldDataFromRESTValueReturns100IfValueIs100(): void
+    {
+        $this->assertEquals(
+            [Tracker_FormElement_Field_List::NONE_VALUE],
+            $this->field->getFieldDataFromRESTValue(['bind_value_ids' => [100]])
+        );
+    }
+
+    public function testGetFieldDataFromRESTValueThrowsExceptionIfValueIsUnknown(): void
+    {
+        $this->field->setBind(
+            Mockery::mock(Tracker_FormElement_Field_List_Bind::class)
+                ->shouldReceive(['getFieldDataFromRESTValue' => 0])
+                ->getMock()
+        );
+
+        $this->expectException(\Tracker_FormElement_InvalidFieldValueException::class);
+        $this->field->getFieldDataFromRESTValue(['bind_value_ids' => [112]]);
+    }
+
+    public function testGetFieldDataFromRESTValueReturnsValue(): void
+    {
+        $this->field->setBind(
+            Mockery::mock(Tracker_FormElement_Field_List_Bind::class)
+                ->shouldReceive(['getFieldDataFromRESTValue' => 112])
+                ->getMock()
+        );
+
+        $this->assertEquals(
+            [112],
+            $this->field->getFieldDataFromRESTValue(['bind_value_ids' => [112]])
+        );
+    }
+
+    public function testGetFieldDataFromRESTValueReturnsValueForDynamicGroup(): void
+    {
+        $this->field->setBind(
+            Mockery::mock(Tracker_FormElement_Field_List_Bind::class)
+                ->shouldReceive(['getFieldDataFromRESTValue' => 3])
+                ->getMock()
+        );
+
+        $this->assertEquals(
+            [3],
+            $this->field->getFieldDataFromRESTValue(['bind_value_ids' => ['103_3']])
+        );
+    }
+
+    public function testGetFieldDataFromRESTValueReturnsMultipleValues(): void
+    {
+        $bind = Mockery::mock(Tracker_FormElement_Field_List_Bind::class);
+        $this->field->setBind($bind);
+        $bind->shouldReceive('getFieldDataFromRESTValue')->with('103_3')->andReturn(3);
+        $bind->shouldReceive('getFieldDataFromRESTValue')->with('112')->andReturn(112);
+
+        $this->assertEquals(
+            [3, 112],
+            $this->field->getFieldDataFromRESTValue(['bind_value_ids' => ['103_3', '112']])
+        );
     }
 }
