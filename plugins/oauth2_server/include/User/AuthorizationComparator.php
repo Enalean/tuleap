@@ -23,52 +23,26 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\User;
 
 use Tuleap\Authentication\Scope\AuthenticationScope;
-use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
-use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
+use Tuleap\OAuth2Server\App\OAuth2App;
 
 class AuthorizationComparator
 {
     /**
-     * @var AuthorizationDao
+     * @var AuthorizedScopeFactory
      */
-    private $authorization_dao;
-    /**
-     * @var AuthorizationScopeDao
-     */
-    private $scope_dao;
-    /**
-     * @var AuthenticationScopeBuilder
-     */
-    private $scope_builder;
+    private $scope_factory;
 
-    public function __construct(
-        AuthorizationDao $authorization_dao,
-        AuthorizationScopeDao $scope_dao,
-        AuthenticationScopeBuilder $scope_builder
-    ) {
-        $this->authorization_dao = $authorization_dao;
-        $this->scope_dao         = $scope_dao;
-        $this->scope_builder     = $scope_builder;
+    public function __construct(AuthorizedScopeFactory $scope_factory)
+    {
+        $this->scope_factory = $scope_factory;
     }
 
     public function areRequestedScopesAlreadyGranted(
         \PFUser $user,
-        int $app_id,
+        OAuth2App $app,
         AuthenticationScope ...$requested_scopes
     ): bool {
-        $authorization_id = $this->authorization_dao->searchAuthorization($user, $app_id);
-        if ($authorization_id === null) {
-            return false;
-        }
-        $saved_scope_keys = $this->scope_dao->searchScopes($authorization_id);
-        $saved_scopes     = [];
-        foreach ($saved_scope_keys as $scope_key) {
-            $saved_scopes[] = $this->scope_builder->buildAuthenticationScopeFromScopeIdentifier(
-                OAuth2ScopeIdentifier::fromIdentifierKey($scope_key)
-            );
-        }
-        $saved_scopes = array_values(array_filter($saved_scopes));
-
+        $saved_scopes = $this->scope_factory->getAuthorizedScopes($user, $app);
         return array_reduce(
             $requested_scopes,
             function (bool $accumulator, AuthenticationScope $request_scope) use ($saved_scopes) {

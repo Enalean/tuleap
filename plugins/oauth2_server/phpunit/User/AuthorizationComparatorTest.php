@@ -25,11 +25,9 @@ namespace Tuleap\OAuth2Server\User;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\Authentication\Scope\AuthenticationScope;
-use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
-use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
 use Tuleap\Authentication\Scope\AuthenticationTestCoveringScope;
 use Tuleap\Authentication\Scope\AuthenticationTestScopeIdentifier;
+use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class AuthorizationComparatorTest extends TestCase
@@ -39,52 +37,14 @@ final class AuthorizationComparatorTest extends TestCase
     /** @var AuthorizationComparator */
     private $comparator;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|AuthorizationDao
+     * @var M\LegacyMockInterface|M\MockInterface|AuthorizedScopeFactory
      */
-    private $authorization_dao;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|AuthorizationScopeDao
-     */
-    private $scope_dao;
+    private $factory;
 
     protected function setUp(): void
     {
-        $scope_builder = new class implements AuthenticationScopeBuilder {
-            public function buildAuthenticationScopeFromScopeIdentifier(
-                AuthenticationScopeIdentifier $scope_identifier
-            ): AuthenticationScope {
-                return AuthenticationTestCoveringScope::fromIdentifier($scope_identifier);
-            }
-
-            public function buildAllAvailableAuthenticationScopes(): array
-            {
-                throw new \LogicException('This method is not supposed to be called in the test');
-            }
-        };
-
-        $this->authorization_dao = M::mock(AuthorizationDao::class);
-        $this->scope_dao         = M::mock(AuthorizationScopeDao::class);
-        $this->comparator        = new AuthorizationComparator(
-            $this->authorization_dao,
-            $this->scope_dao,
-            $scope_builder
-        );
-    }
-
-    public function testAreRequestedScopesAlreadyGrantedReturnsFalseWhenNoPreviousAuthorization(): void
-    {
-        $foobar_scope    = M::mock(AuthenticationScope::class);
-        $typevalue_scope = M::mock(AuthenticationScope::class);
-        $user            = UserTestBuilder::anAnonymousUser()->build();
-        $app_id          = 12;
-        $this->authorization_dao->shouldReceive('searchAuthorization')
-            ->once()
-            ->with($user, $app_id)
-            ->andReturnNull();
-
-        $this->assertFalse(
-            $this->comparator->areRequestedScopesAlreadyGranted($user, $app_id, $foobar_scope, $typevalue_scope)
-        );
+        $this->factory    = M::mock(AuthorizedScopeFactory::class);
+        $this->comparator = new AuthorizationComparator($this->factory);
     }
 
     /**
@@ -95,15 +55,15 @@ final class AuthorizationComparatorTest extends TestCase
         array $saved_scopes,
         array $requested_scopes
     ): void {
-        $this->authorization_dao->shouldReceive('searchAuthorization')->once()->andReturn(12);
-        $this->scope_dao->shouldReceive('searchScopes')->once()->with(12)->andReturn($saved_scopes);
+        $user = UserTestBuilder::anAnonymousUser()->build();
+        $app  = new OAuth2App(17, 'Jenkins', 'https://example.com', new \Project(['group_id' => 102]));
+        $this->factory->shouldReceive('getAuthorizedScopes')
+            ->with($user, $app)
+            ->once()
+            ->andReturn($saved_scopes);
         $this->assertSame(
             $expected_result,
-            $this->comparator->areRequestedScopesAlreadyGranted(
-                UserTestBuilder::anAnonymousUser()->build(),
-                12,
-                ...$requested_scopes
-            )
+            $this->comparator->areRequestedScopesAlreadyGranted($user, $app, ...$requested_scopes)
         );
     }
 
@@ -120,14 +80,14 @@ final class AuthorizationComparatorTest extends TestCase
         );
         return [
             'Neither saved nor requested scope'           => [true, [], []],
-            'Saved scope does not match requested scope'  => [false, ['foo:bar'], [$typevalue_scope]],
-            'Fewer saved scopes than requested scopes'    => [false, ['foo:bar'], [$foobar_scope, $typevalue_scope]],
-            'Saved scopes do not include requested scope' => [false, ['foo:bar', 'type:value'], [$flobwobble_scope]],
+            'Saved scope does not match requested scope'  => [false, [$foobar_scope], [$typevalue_scope]],
+            'Fewer saved scopes than requested scopes'    => [false, [$foobar_scope], [$foobar_scope, $typevalue_scope]],
+            'Saved scopes do not include requested scope' => [false, [$foobar_scope, $typevalue_scope], [$flobwobble_scope]],
             'No saved scope'                              => [false, [], [$foobar_scope]],
-            'No requested scope'                          => [true, ['foo:bar'], []],
-            'Saved scope matches requested scope'         => [true, ['foo:bar'], [$foobar_scope]],
-            'Saved scopes match requested scopes'         => [true, ['foo:bar', 'type:value'], [$foobar_scope, $typevalue_scope]],
-            'More saved scopes than requested scopes'     => [true, ['foo:bar', 'type:value'], [$typevalue_scope]],
+            'No requested scope'                          => [true, [$foobar_scope], []],
+            'Saved scope matches requested scope'         => [true, [$foobar_scope], [$foobar_scope]],
+            'Saved scopes match requested scopes'         => [true, [$foobar_scope, $typevalue_scope], [$foobar_scope, $typevalue_scope]],
+            'More saved scopes than requested scopes'     => [true, [$foobar_scope, $typevalue_scope], [$typevalue_scope]],
         ];
     }
 }

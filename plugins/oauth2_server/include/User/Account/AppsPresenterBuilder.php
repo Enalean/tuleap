@@ -24,6 +24,9 @@ namespace Tuleap\OAuth2Server\User\Account;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\OAuth2Server\App\AppFactory;
+use Tuleap\OAuth2Server\App\OAuth2App;
+use Tuleap\OAuth2Server\AuthorizationServer\OAuth2ScopeDefinitionPresenter;
+use Tuleap\OAuth2Server\User\AuthorizedScopeFactory;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 
 class AppsPresenterBuilder
@@ -36,11 +39,19 @@ class AppsPresenterBuilder
      * @var AppFactory
      */
     private $app_factory;
+    /**
+     * @var AuthorizedScopeFactory
+     */
+    private $authorized_scope_factory;
 
-    public function __construct(EventDispatcherInterface $dispatcher, AppFactory $app_factory)
-    {
-        $this->dispatcher  = $dispatcher;
-        $this->app_factory = $app_factory;
+    public function __construct(
+        EventDispatcherInterface $dispatcher,
+        AppFactory $app_factory,
+        AuthorizedScopeFactory $authorized_scope_factory
+    ) {
+        $this->dispatcher               = $dispatcher;
+        $this->app_factory              = $app_factory;
+        $this->authorized_scope_factory = $authorized_scope_factory;
     }
 
     public function build(\PFUser $user): AppsPresenter
@@ -49,11 +60,25 @@ class AppsPresenterBuilder
         assert($tabs instanceof AccountTabPresenterCollection);
 
         $app_presenters = [];
-        $apps = $this->app_factory->getAppsAuthorizedByUser($user);
+        $apps           = $this->app_factory->getAppsAuthorizedByUser($user);
         foreach ($apps as $app) {
-            $app_presenters[] = new AccountAppPresenter($app->getId(), $app->getName(), $app->getProject()->getPublicName());
+            $app_presenters[] = $this->buildApp($user, $app);
         }
-
         return new AppsPresenter($tabs, ...$app_presenters);
+    }
+
+    private function buildApp(\PFUser $user, OAuth2App $app): AccountAppPresenter
+    {
+        $scope_definition_presenters = [];
+        $scopes                      = $this->authorized_scope_factory->getAuthorizedScopes($user, $app);
+        foreach ($scopes as $scope) {
+            $scope_definition_presenters[] = new OAuth2ScopeDefinitionPresenter($scope->getDefinition());
+        }
+        return new AccountAppPresenter(
+            $app->getId(),
+            $app->getName(),
+            $app->getProject()->getPublicName(),
+            ...$scope_definition_presenters
+        );
     }
 }

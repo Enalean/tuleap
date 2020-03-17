@@ -206,9 +206,11 @@ final class oauth2_serverPlugin extends Plugin
                 new \URLRedirect(\EventManager::instance())
             ),
             new \Tuleap\OAuth2Server\User\AuthorizationComparator(
-                new \Tuleap\OAuth2Server\User\AuthorizationDao(),
-                new \Tuleap\OAuth2Server\User\AuthorizationScopeDao(),
-                $scope_builder
+                new \Tuleap\OAuth2Server\User\AuthorizedScopeFactory(
+                    new \Tuleap\OAuth2Server\User\AuthorizationDao(),
+                    new \Tuleap\OAuth2Server\User\AuthorizationScopeDao(),
+                    $scope_builder
+                )
             ),
             new SapiEmitter(),
             new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
@@ -330,7 +332,12 @@ final class oauth2_serverPlugin extends Plugin
             HTTPFactoryBuilder::streamFactory(),
             new \Tuleap\OAuth2Server\User\Account\AppsPresenterBuilder(
                 EventManager::instance(),
-                new AppFactory(new AppDao(), \ProjectManager::instance())
+                new AppFactory(new AppDao(), \ProjectManager::instance()),
+                new \Tuleap\OAuth2Server\User\AuthorizedScopeFactory(
+                    new \Tuleap\OAuth2Server\User\AuthorizationDao(),
+                    new \Tuleap\OAuth2Server\User\AuthorizationScopeDao(),
+                    $this->buildScopeBuilder()
+                )
             ),
             TemplateRendererFactory::build(),
             UserManager::instance(),

@@ -139,11 +139,7 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
             );
         }
 
-        if ($this->authorization_comparator->areRequestedScopesAlreadyGranted(
-            $user,
-            $client_app->getId(),
-            ...$scopes
-        )) {
+        if ($this->authorization_comparator->areRequestedScopesAlreadyGranted($user, $client_app, ...$scopes)) {
             return $this->response_factory->createSuccessfulResponse($client_app, $user, $redirect_uri, $state_value);
         }
 
