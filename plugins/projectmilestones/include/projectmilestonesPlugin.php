@@ -21,6 +21,7 @@
 use Tuleap\ProjectMilestones\Widget\ProjectMilestones;
 use Tuleap\Widget\Event\GetProjectWidgetList;
 use Tuleap\Widget\Event\GetWidget;
+use Tuleap\Layout\IncludeAssets;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -39,7 +40,19 @@ class projectmilestonesPlugin extends Plugin // phpcs:ignore
     {
         $this->addHook(GetWidget::NAME);
         $this->addHook(GetProjectWidgetList::NAME);
+        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
+
         return parent::getHooksAndCallbacks();
+    }
+
+    public function burning_parrot_get_javascript_files(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    {
+        $include_assets = new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/projectmilestones',
+            '/assets/projectmilestones'
+        );
+
+        $params['javascript_files'][] = $include_assets->getFileURL('projectmilestones-preferences.js');
     }
 
     /**

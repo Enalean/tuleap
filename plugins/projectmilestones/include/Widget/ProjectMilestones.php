@@ -85,6 +85,10 @@ class ProjectMilestones extends Widget
      * @var PlanningFactory
      */
     private $planning_factory;
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
 
     public function __construct()
     {
@@ -100,6 +104,7 @@ class ProjectMilestones extends Widget
         $this->http                   = HTTPRequest::instance();
         $this->project_id             = $this->http->getProject()->getID();
         $this->csrf_token             = new CSRFSynchronizerToken('/project/');
+        $this->project_manager        = ProjectManager::instance();
 
         parent::__construct(self::NAME);
     }
@@ -252,26 +257,26 @@ class ProjectMilestones extends Widget
 
         $widget_id = (int) $request->getValidated('content_id', 'uint', 0);
 
-        $project_id = $request->getValidated("projectmilestones-widget-projectid", 'uint');
+        $project_id = $request->getValidated("select-project-milestones-widget", 'string');
 
-        $project = $this->project_retriever->getProjectFromId((string) $project_id);
+        $project = $this->project_manager->getProjectFromAutocompleter($project_id);
 
         $this->project_milestones_dao->updateProjectMilestoneId($widget_id, (int) $project->getID());
     }
 
     /**
-     * @return false|int|void|null
+     * @return false|int|null
      * @throws NotFoundException
      */
     public function create(Codendi_Request $request)
     {
         if ($this->is_multiple_widgets) {
-            $project_id = $request->getValidated("projectmilestones-widget-projectid", 'uint');
+            $project_id = $request->getValidated("select-project-milestones-widget", 'string');
+            $project = $this->project_manager->getProjectFromAutocompleter($project_id);
         } else {
             $project_id = $this->http->getProject()->getID();
+            $project = $this->project_retriever->getProjectFromId((string) $project_id);
         }
-
-        $project = $this->project_retriever->getProjectFromId((string) $project_id);
 
         return (int) $this->project_milestones_dao->create((int) $project->getID());
     }

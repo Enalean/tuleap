@@ -17,14 +17,14 @@ msgstr "Mauvaise configuration de sémantique plage de temps."
 msgid "No root planning is defined."
 msgstr "Aucun planning racine n'est défini."
 
-msgid "Project Id"
-msgstr "Id du projet"
-
 msgid "Project Milestones"
 msgstr "Jalons de projet"
 
 msgid "Project does not exist."
 msgstr "Le project n'existe pas."
+
+msgid "Project name"
+msgstr "Nom du projet"
 
 msgid ""
 "The plugin is not supported under IE11. Please use a more recent browser."

@@ -26,7 +26,8 @@ const output = webpack_configurator.configureOutput(
 );
 
 let entry_points = {
-    projectmilestones: "./scripts/projectmilestones/index.ts"
+    projectmilestones: "./scripts/projectmilestones/index.ts",
+    "projectmilestones-preferences": "./scripts/projectmilestones-preferences/index.ts"
 };
 
 const colors = ["blue", "green", "grey", "orange", "purple", "red"];

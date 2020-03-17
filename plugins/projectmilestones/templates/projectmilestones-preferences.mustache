@@ -3,15 +3,15 @@
         {{> csrf_token_input }}
     {{/ csrf_token }}
     <label class="tlp-label" for="plugin-projectmilestones-widget-projectid-{{ widget_id }}">
-        {{# dgettext }} tuleap-projectmilestones | Project Id  {{/ dgettext }}
+        {{# dgettext }} tuleap-projectmilestones | Project name  {{/ dgettext }}
         <i class="fa fa-asterisk"></i>
     </label>
-    <input type="number"
-           size="5"
-           class="tlp-input"
-           id="plugin-projectmilestones-widget-projectid-{{ widget_id }}"
-           name="projectmilestones-widget-projectid"
-           value="{{ project_id }}"
-           required
-           placeholder="123">
+    <select class="tlp-select select-project-milestones-widget"
+            id="select-project-milestones-widget"
+            name="select-project-milestones-widget"
+            style="width: 100%"
+            data-data="{{ data }}"
+            data-placeholder="{{ placeholder }}"
+            data-widget-id="{{ widget_id }}"
+    ></select>
 </div>
