@@ -717,9 +717,9 @@ abstract class Tracker_FormElement_Field_List_Bind implements
 
     abstract public function getFieldDataFromRESTObject(array $rest_data, Tracker_FormElement_Field_List $field);
 
-    public function getFieldDataFromRESTValue($value)
+    public function getFieldDataFromRESTValue($value): int
     {
-        return intval($value);
+        return (int) $value;
     }
 
     public function addValue($new_value)

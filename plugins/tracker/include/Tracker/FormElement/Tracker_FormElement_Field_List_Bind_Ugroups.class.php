@@ -501,7 +501,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     /**
      * @return Tracker_FormElement_Field_List_Bind_UgroupsValue or null if no match
      */
-    public function getValueByUGroupId($ugroup_id)
+    private function getValueByUGroupId($ugroup_id)
     {
         if (isset($this->values_indexed_by_ugroup_id[$ugroup_id])) {
             return $this->values_indexed_by_ugroup_id[$ugroup_id];
@@ -770,18 +770,17 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         return $ugroup_representation;
     }
 
-    public function getFieldDataFromRESTValue($rest_data)
+    public function getFieldDataFromRESTValue($rest_data): int
     {
-        $representation_class = '\\Tuleap\\Project\\REST\\UserGroupRepresentation';
-        $value                = call_user_func_array($representation_class . '::getProjectAndUserGroupFromRESTId', array($rest_data));
-        $ugroup_id            = $value['user_group_id'];
-        $bind_value           = $this->getValueByUGroupId($ugroup_id);
+        $value      = UserGroupRepresentation::getProjectAndUserGroupFromRESTId($rest_data);
+        $ugroup_id  = $value['user_group_id'];
+        $bind_value = $this->getValueByUGroupId($ugroup_id);
 
         if ($bind_value) {
-            return intval($bind_value->getId());
+            return (int) $bind_value->getId();
         }
 
-        return;
+        return 0;
     }
 
     public function accept(BindVisitor $visitor, BindParameters $parameters)

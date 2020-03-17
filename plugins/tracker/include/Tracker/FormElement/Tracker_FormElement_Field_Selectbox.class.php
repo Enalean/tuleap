@@ -202,15 +202,39 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
     public function getFieldDataFromRESTValue(array $value, ?Tracker_Artifact $artifact = null)
     {
         if (array_key_exists('bind_value_ids', $value) && is_array($value['bind_value_ids'])) {
-            if (count($value['bind_value_ids']) > 1) {
+            $submitted_bind_value_ids = array_filter(array_unique($value['bind_value_ids']));
+            if (count($submitted_bind_value_ids) > 1) {
                 throw new Tracker_FormElement_InvalidFieldValueException('Selectbox fields can only have one value');
             }
 
-            $map = array_map(array($this->getBind(), 'getFieldDataFromRESTValue'), $value['bind_value_ids']);
-            return (int) array_shift($map);
+            if (empty($submitted_bind_value_ids)) {
+                return Tracker_FormElement_Field_List::NONE_VALUE;
+            }
+
+            return $this->getBindValueIdFromSubmittedBindValueId($submitted_bind_value_ids[0]);
         }
+
         throw new Tracker_FormElement_InvalidFieldValueException('List fields values must be passed as an array of ids (integer) in \'bind_value_ids\''
            . ' Expected format for field ' . $this->id . ' : {"field_id": 1548, "bind_value_ids": [457]}');
+    }
+
+    /**
+     * @param string|int $submitted_bind_value_id
+     *
+     * @throws Tracker_FormElement_InvalidFieldValueException
+     */
+    protected function getBindValueIdFromSubmittedBindValueId($submitted_bind_value_id): int
+    {
+        if ((int) $submitted_bind_value_id === Tracker_FormElement_Field_List::NONE_VALUE) {
+            return Tracker_FormElement_Field_List::NONE_VALUE;
+        }
+
+        $bind_value_id = $this->getBind()->getFieldDataFromRESTValue($submitted_bind_value_id);
+        if (empty($bind_value_id)) {
+            throw new Tracker_FormElement_InvalidFieldValueException("The submitted value $submitted_bind_value_id is invalid");
+        }
+
+        return $bind_value_id;
     }
 
     public function getFieldDataFromCSVValue($csv_value, ?Tracker_Artifact $artifact = null)

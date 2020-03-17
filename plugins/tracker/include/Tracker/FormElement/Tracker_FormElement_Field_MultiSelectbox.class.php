@@ -156,9 +156,14 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
     public function getFieldDataFromRESTValue(array $value, ?Tracker_Artifact $artifact = null)
     {
         if (array_key_exists('bind_value_ids', $value) && is_array($value['bind_value_ids'])) {
+            $submitted_bind_value_ids = array_filter(array_unique($value['bind_value_ids']));
+            if (empty($submitted_bind_value_ids)) {
+                return [Tracker_FormElement_Field_List::NONE_VALUE];
+            }
+
             return array_unique(
                 array_map(
-                    array($this->getBind(), 'getFieldDataFromRESTValue'),
+                    array($this, 'getBindValueIdFromSubmittedBindValueId'),
                     $value['bind_value_ids']
                 )
             );
