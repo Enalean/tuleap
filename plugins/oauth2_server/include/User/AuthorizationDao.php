@@ -40,4 +40,15 @@ class AuthorizationDao extends DataAccessObject
                 WHERE user_id = ? AND app_id = ?';
         return $this->getDB()->cell($sql, $user->getId(), $app_id) ?: null;
     }
+
+    public function deleteAuthorizationByAppID(int $app_id): void
+    {
+        $this->getDB()->run(
+            'DELETE plugin_oauth2_authorization.*, plugin_oauth2_authorization_scope.*
+                       FROM plugin_oauth2_authorization
+                       LEFT JOIN plugin_oauth2_authorization_scope ON plugin_oauth2_authorization.id = plugin_oauth2_authorization_scope.authorization_id
+                       WHERE plugin_oauth2_authorization.app_id = ?',
+            $app_id
+        );
+    }
 }
