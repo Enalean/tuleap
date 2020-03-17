@@ -40,7 +40,8 @@ CREATE TABLE plugin_oauth2_authorization(
     id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
     user_id INT(11) NOT NULL,
     app_id INT(11) NOT NULL,
-    UNIQUE (user_id, app_id)
+    UNIQUE (user_id, app_id),
+    INDEX idx_app_id (app_id)
 ) ENGINE=InnoDB;
 
 CREATE TABLE plugin_oauth2_authorization_scope(
