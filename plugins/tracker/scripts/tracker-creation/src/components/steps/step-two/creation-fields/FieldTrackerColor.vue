@@ -78,6 +78,7 @@ export default class FieldTrackerColor extends Vue {
             containerCssClass: "tracker-color-container",
             dropdownCssClass: "tracker-color-results",
             minimumResultsForSearch: Infinity,
+            dropdownAutoWidth: true,
             escapeMarkup: sanitize,
             templateResult: this.formatOptionColor,
             templateSelection: this.formatOptionColor
