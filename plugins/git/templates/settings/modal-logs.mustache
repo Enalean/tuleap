@@ -1,17 +1,17 @@
 <div id="modal-logs-{{ id }}"
-    class="modal hide fade modal-webhook"
+    class="modal hide fade hook-logs-modal"
     tabindex="-1"
     role="dialog"
-    aria-labelledby="modal-logs-title"
+    aria-labelledby="hook-logs-modal-title-{{ id }}"
     aria-hidden="true"
 >
     <div class="modal-header">
         <a role="button" class="close" data-dismiss="modal">×</a>
-        <h3 id="modal-create-logs-title">{{ logs_for }}</h3>
+        <h3 id="hook-logs-modal-title-{{ id }}">{{ logs_for }}</h3>
     </div>
 
     <div class="modal-body">
-        <table class="table hooks-jobs-list">
+        <table class="table hook-logs">
             <thead>
                 <tr>
                     <th>{{ modal_logs_time_label }}</th>
@@ -21,7 +21,7 @@
             <tbody>
                 {{# hooklogs }}
                     <tr>
-                       <td>{{ time }}</td>
+                       <td class="hook-log-date">{{ time }}</td>
                        <td>
                            {{{ purified_information }}}
                        </td>

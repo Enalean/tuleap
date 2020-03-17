@@ -1,17 +1,17 @@
 <div id="modal-logs-{{ jenkins_server_id }}"
-    class="modal hide fade modal-webhook modal-webhook-jenkins"
+    class="modal hide fade hook-logs-modal"
     tabindex="-1"
     role="dialog"
-    aria-labelledby="modal-logs-title"
+    aria-labelledby="hook-logs-modal-title-{{ jenkins_server_id }}"
     aria-hidden="true"
 >
     <div class="modal-header">
         <a role="button" class="close" data-dismiss="modal">×</a>
-        <h3 id="modal-create-logs-title">{{# dgettext }} tuleap-hudson_git | Logs for %s | {{ jenkins_server_url }}{{/ dgettext }}</h3>
+        <h3 id="hook-logs-modal-title-{{ jenkins_server_id }}">{{# dgettext }} tuleap-hudson_git | Logs for %s | {{ jenkins_server_url }}{{/ dgettext }}</h3>
     </div>
 
     <div class="modal-body">
-        <table class="table jenkins-server-jobs-list">
+        <table class="table hook-logs">
             <thead>
                 <tr>
                     <th>{{# dgettext }} tuleap-hudson_git | Repository {{/ dgettext }}</th>
@@ -22,14 +22,14 @@
             <tbody>
                 {{# logs_presenters }}
                     <tr>
-                        <td class="jenkins-server-jobs-list-repository">
+                        <td class="hook-log-repository">
                             {{ repository_name }}
                         </td>
-                        <td class="jenkins-server-jobs-list-date">
+                        <td class="hook-log-date">
                             {{ push_date }}
                         </td>
                         <td>
-                            <div class="jenkins-server-triggered-jobs-list">
+                            <div class="hook-log-triggered-jobs">
                                 <h4>{{# dgettext }} tuleap-hudson_git | Git plugin triggered jobs: {{/ dgettext }}</h4>
                                 {{# triggered_jobs }}
                                     <a href="{{ . }}">{{ . }}</a><br/>
@@ -39,7 +39,7 @@
                                 {{/ triggered_jobs }}
                             </div>
                             {{# status_code }}
-                                <div class="jenkins-server-branch-source-status">
+                                <div class="hook-log-branch-source-status">
                                     <h4>{{# dgettext }} tuleap-hudson_git | Branch source plugin: {{/ dgettext }}</h4>
                                     {{ . }}
                                 </div>
