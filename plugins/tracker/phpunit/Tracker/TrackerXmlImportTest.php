@@ -393,7 +393,8 @@ final class TrackerXmlImportTest extends TestCase
             $this->project,
             "tracker name",
             "trcker description",
-            "bugs"
+            "bugs",
+            "peggy-pink"
         );
     }
 
@@ -486,7 +487,8 @@ final class TrackerXmlImportTest extends TestCase
             $this->project,
             'Tracker public name',
             '',
-            'bugs'
+            'bugs',
+            null
         );
 
         $expected_row = [
@@ -749,6 +751,7 @@ final class TrackerXmlImportTest extends TestCase
             "tracker name",
             "trcker description",
             "bugs",
+            'peggy-pink',
             $feedback_collector
         );
     }
@@ -867,10 +870,10 @@ final class TrackerXmlImportTest extends TestCase
         $tracker_102->shouldReceive('getId')->andReturn(555);
 
         $this->tracker_xml_importer->shouldReceive('createFromXML')
-            ->with(Mockery::type(SimpleXMLElement::class), $this->project, 'name10', 'desc12', 'item11')
+            ->with(Mockery::type(SimpleXMLElement::class), $this->project, 'name10', 'desc12', 'item11', 'inca-silver')
             ->once()->andReturns($tracker_101);
         $this->tracker_xml_importer->shouldReceive('createFromXML')
-            ->with(Mockery::type(SimpleXMLElement::class), $this->project, 'name20', 'desc22', 'item21')
+            ->with(Mockery::type(SimpleXMLElement::class), $this->project, 'name20', 'desc22', 'item21', 'inca-silver')
             ->once()->andReturns($tracker_102);
     }
 
@@ -879,7 +882,7 @@ final class TrackerXmlImportTest extends TestCase
         $tracker_103 = Mockery::mock(Tracker::class);
         $tracker_103->shouldReceive('getId')->andReturn(666);
         $this->tracker_xml_importer->shouldReceive('createFromXML')
-            ->with(Mockery::type(SimpleXMLElement::class), $this->project, 'name30', 'desc32', 'item31')
+            ->with(Mockery::type(SimpleXMLElement::class), $this->project, 'name30', 'desc32', 'item31', 'inca-silver')
             ->once()->andReturns($tracker_103);
     }
 }

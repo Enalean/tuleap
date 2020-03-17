@@ -76,19 +76,21 @@ final class TrackerCreatorTest extends \PHPUnit\Framework\TestCase
         $this->tracker_xml_import->shouldReceive('createFromXMLFileWithInfo')->withArgs(
             [
                 $project,
-                "/var/tmp/tracker_import",
-                "Tracker Name",
-                "",
-                "tracker-shortname"
+                '/var/tmp/tracker_import',
+                'Tracker Name',
+                '',
+                'tracker-shortname',
+                'fiesta-red'
             ]
         )->once()->andReturn($tracker);
 
         $created_tracker = $this->creator->createTrackerFromXml(
             $project,
-            "/var/tmp/tracker_import",
-            "Tracker Name",
-            "",
-            "tracker-shortname"
+            '/var/tmp/tracker_import',
+            'Tracker Name',
+            '',
+            'tracker-shortname',
+            'fiesta-red'
         );
 
         $this->assertEquals($tracker, $created_tracker);

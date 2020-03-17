@@ -383,7 +383,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                     $_FILES["tracker_new_xml_file"]["tmp_name"],
                     $name,
                     $description,
-                    $itemname
+                    $itemname,
+                    null
                 );
             } catch (TrackerIsInvalidException $exception) {
                 $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getTranslatedMessage());
