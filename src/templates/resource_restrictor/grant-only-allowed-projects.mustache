@@ -15,7 +15,7 @@
                         {{> csrf_token_input }}
                     {{/ restricted_resource_action_csrf }}
 
-                    <div class="tlp-form-element">
+                    <div class="tlp-form-element allowed-projects-all-form-switch">
                         <label class="tlp-label" for="allowed-projects-all-allowed">{{ resource_allowed_project_allow_all }}</label>
                         <div class="tlp-switch">
                             <input type="checkbox"
@@ -24,6 +24,7 @@
                                    class="tlp-switch-checkbox"
                                    name="all-allowed"
                                    value="1"
+                                   autocomplete="off"
                                    {{^ is_resource_restricted }}checked{{/ is_resource_restricted }}
                                    {{# can_be_unrestricited }}disabled{{/ can_be_unrestricited}}
                             >

@@ -23,6 +23,10 @@ document.addEventListener("DOMContentLoaded", function() {
     var switches = document.querySelectorAll(".tlp-switch-checkbox");
 
     [].forEach.call(switches, function(switch_button) {
+        if (switch_button.id === "allowed-projects-all-allowed") {
+            return;
+        }
+
         switch_button.addEventListener("change", function() {
             document.getElementById(switch_button.dataset.formId).submit();
         });
