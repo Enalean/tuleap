@@ -21,6 +21,7 @@
 
 namespace Tuleap\CLI\Events;
 
+use BackendLogger;
 use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigManager;
 use Tuleap\Event\Dispatchable;
 use Tuleap\Instrument\Prometheus\Prometheus;
@@ -57,7 +58,8 @@ class GetWhitelistedKeys implements Dispatchable
         ServiceControl::FORGECONFIG_INIT_MODE => true,
         UserSuspensionManager::CONFIG_NOTIFICATION_DELAY => true,
         Widget_MyProjects::CONFIG_DISABLE_CONTACT => true,
-        ProjectRegistrationPresenterBuilder::FORGECONFIG_CAN_USE_DEFAULT_SITE_TEMPLATE => true
+        ProjectRegistrationPresenterBuilder::FORGECONFIG_CAN_USE_DEFAULT_SITE_TEMPLATE => true,
+        BackendLogger::CONFIG_LOGGER => true,
     ];
 
     public function addPluginsKeys($key_name)

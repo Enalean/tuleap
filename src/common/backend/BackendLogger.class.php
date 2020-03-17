@@ -18,8 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Monolog\Handler\SyslogHandler;
+use Psr\Log\LogLevel;
+
 class BackendLogger extends \Psr\Log\AbstractLogger implements \Psr\Log\LoggerInterface
 {
+    public const CONFIG_LOGGER = 'sys_logger';
+
+    private const CONFIG_LOGGER_SYSLOG = 'syslog';
+
     public const FILENAME = 'codendi_syslog';
 
     private $filepath;
@@ -29,15 +36,38 @@ class BackendLogger extends \Psr\Log\AbstractLogger implements \Psr\Log\LoggerIn
         $this->filepath = empty($filename) ? ForgeConfig::get('codendi_log') . '/' . self::FILENAME : $filename;
     }
 
-    /**
-     * @return \Psr\Log\LoggerInterface
-     */
-    public static function getDefaultLogger()
+    public static function getDefaultLogger(): \Psr\Log\LoggerInterface
     {
+        if (ForgeConfig::get(self::CONFIG_LOGGER) === self::CONFIG_LOGGER_SYSLOG) {
+            $logger = new \Monolog\Logger('default');
+            $stream_handler = new SyslogHandler(
+                'tuleap',
+                LOG_USER,
+                \Monolog\Logger::toMonologLevel(self::getPSR3LoggerLevel()),
+            );
+            // Format borrowed from AbstractSyslogHandler::getDefaultFormatter
+            // I considered creating a TuleapSyslogHandler to avoid duplication but I thought that the inheritance of
+            // concrete class would hurt us more than a small duplication.
+            // History will judge :D
+            $line_formatter = new \Monolog\Formatter\LineFormatter('%channel%.%level_name%: %message% %context% %extra%');
+            $line_formatter->includeStacktraces();
+            $stream_handler->setFormatter($line_formatter);
+            $logger->pushHandler($stream_handler);
+            return $logger;
+        }
         return new TruncateLevelLogger(
             new BackendLogger(),
             ForgeConfig::get('sys_logger_level')
         );
+    }
+
+    private static function getPSR3LoggerLevel()
+    {
+        $level = ForgeConfig::get('sys_logger_level');
+        if (! $level || $level === 'warn') {
+            return LogLevel::WARNING;
+        }
+        return $level;
     }
 
     public function getFilepath()
