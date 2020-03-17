@@ -23,12 +23,15 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
 
 use DateInterval;
+use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\OAuth2Server\App\OAuth2App;
+use Tuleap\OAuth2Server\Grant\AuthorizationCode\Scope\OAuth2AuthorizationCodeScopeSaver;
 
 class OAuth2AuthorizationCodeCreator
 {
@@ -45,32 +48,56 @@ class OAuth2AuthorizationCodeCreator
      */
     private $authorization_code_dao;
     /**
+     * @var OAuth2AuthorizationCodeScopeSaver
+     */
+    private $authorization_code_scope_saver;
+    /**
      * @var DateInterval
      */
     private $access_token_expiration_delay;
+    /**
+     * @var DBTransactionExecutor
+     */
+    private $transaction_executor;
 
     public function __construct(
         SplitTokenFormatter $authorization_code_formatter,
         SplitTokenVerificationStringHasher $hasher,
         OAuth2AuthorizationCodeDAO $authorization_code_dao,
-        DateInterval $access_token_expiration_delay
+        OAuth2AuthorizationCodeScopeSaver $authorization_code_scope_saver,
+        DateInterval $access_token_expiration_delay,
+        DBTransactionExecutor $transaction_executor
     ) {
-        $this->authorization_code_formatter  = $authorization_code_formatter;
-        $this->hasher                        = $hasher;
-        $this->authorization_code_dao        = $authorization_code_dao;
-        $this->access_token_expiration_delay = $access_token_expiration_delay;
+        $this->authorization_code_formatter      = $authorization_code_formatter;
+        $this->hasher                            = $hasher;
+        $this->authorization_code_dao            = $authorization_code_dao;
+        $this->authorization_code_scope_saver    = $authorization_code_scope_saver;
+        $this->access_token_expiration_delay     = $access_token_expiration_delay;
+        $this->transaction_executor              = $transaction_executor;
     }
 
-    public function createAuthorizationCodeIdentifier(\DateTimeImmutable $current_time, OAuth2App $app, \PFUser $user): ConcealedString
+    /**
+     * @param AuthenticationScope[] $scopes
+     *
+     * @psalm-param non-empty-array<AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier>> $scopes
+     */
+    public function createAuthorizationCodeIdentifier(\DateTimeImmutable $current_time, OAuth2App $app, array $scopes, \PFUser $user): ConcealedString
     {
         $verification_string = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
         $expiration_date     = $current_time->add($this->access_token_expiration_delay);
 
-        $authorization_code_id = $this->authorization_code_dao->create(
-            $app->getId(),
-            (int) $user->getId(),
-            $this->hasher->computeHash($verification_string),
-            $expiration_date->getTimestamp()
+        $authorization_code_id = $this->transaction_executor->execute(
+            function () use ($app, $user, $verification_string, $expiration_date, $scopes) : int {
+                $authorization_code_id = $this->authorization_code_dao->create(
+                    $app->getId(),
+                    (int) $user->getId(),
+                    $this->hasher->computeHash($verification_string),
+                    $expiration_date->getTimestamp()
+                );
+                $this->authorization_code_scope_saver->saveAuthorizationCodeScopes($authorization_code_id, $scopes);
+
+                return $authorization_code_id;
+            }
         );
 
         return $this->authorization_code_formatter->getIdentifier(new SplitToken($authorization_code_id, $verification_string));

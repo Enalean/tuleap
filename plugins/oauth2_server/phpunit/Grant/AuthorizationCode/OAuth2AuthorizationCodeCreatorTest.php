@@ -25,11 +25,14 @@ namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
+use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OAuth2Server\App\OAuth2App;
+use Tuleap\OAuth2Server\Grant\AuthorizationCode\Scope\OAuth2AuthorizationCodeScopeSaver;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 final class OAuth2AuthorizationCodeCreatorTest extends TestCase
 {
@@ -42,6 +45,10 @@ final class OAuth2AuthorizationCodeCreatorTest extends TestCase
      */
     private $dao;
     /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OAuth2AuthorizationCodeScopeSaver
+     */
+    private $scope_saver;
+    /**
      * @var OAuth2AuthorizationCodeCreator
      */
     private $auth_code_creator;
@@ -49,7 +56,8 @@ final class OAuth2AuthorizationCodeCreatorTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->dao = \Mockery::mock(OAuth2AuthorizationCodeDAO::class);
+        $this->dao         = \Mockery::mock(OAuth2AuthorizationCodeDAO::class);
+        $this->scope_saver = \Mockery::mock(OAuth2AuthorizationCodeScopeSaver::class);
 
         $formatter = new class implements SplitTokenFormatter
         {
@@ -63,7 +71,9 @@ final class OAuth2AuthorizationCodeCreatorTest extends TestCase
             $formatter,
             new SplitTokenVerificationStringHasher(),
             $this->dao,
-            new \DateInterval('PT' . self::EXPECTED_EXPIRATION_DELAY_SECONDS . 'S')
+            $this->scope_saver,
+            new \DateInterval('PT' . self::EXPECTED_EXPIRATION_DELAY_SECONDS . 'S'),
+            new DBTransactionExecutorPassthrough()
         );
     }
 
@@ -74,10 +84,12 @@ final class OAuth2AuthorizationCodeCreatorTest extends TestCase
         $this->dao->shouldReceive('create')
             ->with(12, 102, \Mockery::any(), $current_time->getTimestamp() + self::EXPECTED_EXPIRATION_DELAY_SECONDS)
             ->once()->andReturn(1);
+        $this->scope_saver->shouldReceive('saveAuthorizationCodeScopes')->once();
 
         $auth_code = $this->auth_code_creator->createAuthorizationCodeIdentifier(
             $current_time,
             $this->buildOAuth2App(),
+            [\Mockery::mock(AuthenticationScope::class)],
             new \PFUser(['language_id' => 'en', 'user_id' => '102'])
         );
 
@@ -87,17 +99,21 @@ final class OAuth2AuthorizationCodeCreatorTest extends TestCase
     public function testAuthCodeIdentifierIsDifferentEachTimeAuAuthorizationCodeIsCreated(): void
     {
         $current_time = new \DateTimeImmutable('@10');
+        $auth_scopes  = [\Mockery::mock(AuthenticationScope::class)];
 
         $this->dao->shouldReceive('create')->andReturn(2, 3);
+        $this->scope_saver->shouldReceive('saveAuthorizationCodeScopes');
 
         $auth_code_1 = $this->auth_code_creator->createAuthorizationCodeIdentifier(
             $current_time,
             $this->buildOAuth2App(),
+            $auth_scopes,
             new \PFUser(['language_id' => 'en', 'user_id' => '102'])
         );
         $auth_code_2 = $this->auth_code_creator->createAuthorizationCodeIdentifier(
             $current_time,
             $this->buildOAuth2App(),
+            $auth_scopes,
             new \PFUser(['language_id' => 'en', 'user_id' => '103'])
         );
 

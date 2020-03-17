@@ -29,6 +29,10 @@ interface AuthenticationScopeBuilder
 {
     /**
      * @psalm-pure
+     *
+     * @template TemplateScopeIdentifier of AuthenticationScopeIdentifier
+     * @psalm-param TemplateScopeIdentifier $scope_identifier
+     * @psalm-return null|AuthenticationScope<TemplateScopeIdentifier>
      */
     public function buildAuthenticationScopeFromScopeIdentifier(AuthenticationScopeIdentifier $scope_identifier): ?AuthenticationScope;
 

@@ -25,6 +25,7 @@ namespace Tuleap\OAuth2Server\AuthorizationServer;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeCreator;
 
@@ -59,11 +60,17 @@ class AuthorizationCodeResponseFactory
         $this->login_redirect              = $login_redirect;
     }
 
-    public function createSuccessfulResponse(OAuth2App $app, \PFUser $user, string $redirect_uri, ?string $state): ResponseInterface
+    /**
+     * @param AuthenticationScope[] $scopes
+     *
+     * @psalm-param non-empty-array<AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier>> $scopes
+     */
+    public function createSuccessfulResponse(OAuth2App $app, array $scopes, \PFUser $user, string $redirect_uri, ?string $state): ResponseInterface
     {
         $authorization_code = $this->authorization_code_creator->createAuthorizationCodeIdentifier(
             new \DateTimeImmutable(),
             $app,
+            $scopes,
             $user
         );
 

@@ -44,12 +44,15 @@ final class AuthenticationScopeBuilderFromClassNames implements AuthenticationSc
 
     /**
      * @psalm-pure
+     *
+     * @psalm-suppress InvalidReturnType It's not possible to express templating inside a class-string
      */
     public function buildAuthenticationScopeFromScopeIdentifier(AuthenticationScopeIdentifier $scope_identifier) : ?AuthenticationScope
     {
         foreach ($this->classnames as $classname) {
             $key_scope = $classname::fromIdentifier($scope_identifier);
             if ($key_scope !== null) {
+                /** @psalm-suppress InvalidReturnStatement It's not possible to express templating inside a class-string */
                 return $key_scope;
             }
         }

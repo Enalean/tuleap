@@ -37,10 +37,15 @@ class AuthorizationComparator
         $this->scope_factory = $scope_factory;
     }
 
+    /**
+     * @param AuthenticationScope[] $requested_scopes
+     *
+     * @psalm-param non-empty-list<AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier>> $requested_scopes
+     */
     public function areRequestedScopesAlreadyGranted(
         \PFUser $user,
         OAuth2App $app,
-        AuthenticationScope ...$requested_scopes
+        array $requested_scopes
     ): bool {
         $saved_scopes = $this->scope_factory->getAuthorizedScopes($user, $app);
         return array_reduce(

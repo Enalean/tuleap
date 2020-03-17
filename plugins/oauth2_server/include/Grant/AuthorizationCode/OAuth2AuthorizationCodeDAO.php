@@ -81,8 +81,9 @@ class OAuth2AuthorizationCodeDAO extends DataAccessObject
     private function deleteAuthorizationCode(EasyStatement $filter_statement): void
     {
         $this->getDB()->safeQuery(
-            "DELETE plugin_oauth2_authorization_code.*, plugin_oauth2_access_token.*, plugin_oauth2_access_token_scope.*
+            "DELETE plugin_oauth2_authorization_code.*, plugin_oauth2_authorization_code_scope.*, plugin_oauth2_access_token.*, plugin_oauth2_access_token_scope.*
                        FROM plugin_oauth2_authorization_code
+                       LEFT JOIN plugin_oauth2_authorization_code_scope ON plugin_oauth2_authorization_code.id = plugin_oauth2_authorization_code_scope.auth_code_id
                        LEFT JOIN plugin_oauth2_access_token ON plugin_oauth2_authorization_code.id = plugin_oauth2_access_token.authorization_code_id
                        LEFT JOIN plugin_oauth2_access_token_scope on plugin_oauth2_access_token.id = plugin_oauth2_access_token_scope.access_token_id
                        WHERE $filter_statement",
