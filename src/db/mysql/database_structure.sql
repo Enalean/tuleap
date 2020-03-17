@@ -949,20 +949,6 @@ CREATE TABLE user_access_key_scope (
   PRIMARY KEY (access_key_id, scope_key)
 );
 
-CREATE TABLE oauth2_access_token (
-    id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    user_id INT(11) NOT NULL,
-    verifier VARCHAR(255) NOT NULL,
-    expiration_date INT(11) UNSIGNED NOT NULL,
-    INDEX idx_expiration_date (expiration_date)
-);
-
-CREATE TABLE oauth2_access_token_scope (
-    access_token_id INT(11) NOT NULL,
-    scope_key VARCHAR(255) NOT NULL,
-    PRIMARY KEY (access_token_id, scope_key)
-);
-
 #
 # Table structure for table 'user_bookmarks'
 #

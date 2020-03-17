@@ -26,11 +26,10 @@ use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\DB\DBFactory;
-use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenAuthorizationGrantAssociationDAO;
+use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenDAO;
+use Tuleap\OAuth2Server\AccessToken\Scope\OAuth2AccessTokenScopeDAO;
 use Tuleap\OAuth2Server\App\AppDao;
 use Tuleap\OAuth2Server\App\NewOAuth2App;
-use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenDAO;
-use Tuleap\User\OAuth2\AccessToken\Scope\OAuth2AccessTokenScopeDAO;
 
 final class OAuth2AuthorizationCodeDAOTest extends TestCase
 {
@@ -94,9 +93,8 @@ final class OAuth2AuthorizationCodeDAOTest extends TestCase
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
         $db->delete('plugin_oauth2_authorization_code', []);
-        $db->delete('plugin_oauth2_authorization_code_access_token', []);
-        $db->delete('oauth2_access_token', []);
-        $db->delete('oauth2_access_token_scope', []);
+        $db->delete('plugin_oauth2_access_token', []);
+        $db->delete('plugin_oauth2_access_token_scope', []);
     }
 
     public static function tearDownAfterClass() : void
@@ -137,18 +135,9 @@ final class OAuth2AuthorizationCodeDAOTest extends TestCase
     {
         $auth_code_id = $this->dao->create(self::$active_project_app_id, 102, 'hashed_verification_string_auth', 20);
 
-        $access_token_dao  = new OAuth2AccessTokenDAO();
-        $access_token_id_1 = $access_token_dao->create(102, 'hashed_verification_string_access', 30);
-        $access_token_id_2 = $access_token_dao->create(102, 'hashed_verification_string_access', 30);
-        $grant_auth_access_token_association_dao = new OAuth2AccessTokenAuthorizationGrantAssociationDAO();
-        $grant_auth_access_token_association_dao->createAssociationBetweenAuthorizationGrantAndAccessToken(
-            $auth_code_id,
-            $access_token_id_1
-        );
-        $grant_auth_access_token_association_dao->createAssociationBetweenAuthorizationGrantAndAccessToken(
-            $auth_code_id,
-            $access_token_id_2
-        );
+        $access_token_dao       = new OAuth2AccessTokenDAO();
+        $access_token_id_1      = $access_token_dao->create($auth_code_id, 'hashed_verification_string_access', 30);
+        $access_token_id_2      = $access_token_dao->create($auth_code_id, 'hashed_verification_string_access', 30);
         $access_token_scope_dao = new OAuth2AccessTokenScopeDAO();
         $access_token_scope_dao->saveScopeKeysByOAuth2AccessTokenID($access_token_id_1, 'scope:A', 'scope:B');
 

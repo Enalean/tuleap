@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User\OAuth2\AccessToken\Scope;
+namespace Tuleap\OAuth2Server\AccessToken\Scope;
 
 use Tuleap\DB\DataAccessObject;
 
@@ -34,7 +34,7 @@ class OAuth2AccessTokenScopeDAO extends DataAccessObject
             $data_to_insert[] = ['access_token_id' => $access_token_id, 'scope_key' => $scope_key];
         }
 
-        $this->getDB()->insertMany('oauth2_access_token_scope', $data_to_insert);
+        $this->getDB()->insertMany('plugin_oauth2_access_token_scope', $data_to_insert);
     }
 
     /**
@@ -44,7 +44,7 @@ class OAuth2AccessTokenScopeDAO extends DataAccessObject
     public function searchScopeIdentifiersByAccessTokenID(int $access_token_id): array
     {
         return $this->getDB()->run(
-            'SELECT scope_key FROM oauth2_access_token_scope WHERE access_token_id = ?',
+            'SELECT scope_key FROM plugin_oauth2_access_token_scope WHERE access_token_id = ?',
             $access_token_id
         );
     }

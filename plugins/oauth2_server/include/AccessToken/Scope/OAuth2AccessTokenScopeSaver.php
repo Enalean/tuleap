@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\AccessToken\Scope;
 
 use Tuleap\Authentication\Scope\AuthenticationScope;
-use Tuleap\User\OAuth2\AccessToken\Scope\OAuth2AccessTokenScopeDAO;
 
 class OAuth2AccessTokenScopeSaver
 {

@@ -24,6 +24,7 @@ namespace Tuleap\User\OAuth2\ResourceServer;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Tuleap\Authentication\Scope\AuthenticationScope;
@@ -34,7 +35,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenDoesNotHaveRequiredScopeException;
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenExpiredException;
-use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenVerifier;
+use Tuleap\User\OAuth2\AccessToken\VerifyOAuth2AccessTokenEvent;
 use Tuleap\User\OAuth2\BearerTokenHeaderParser;
 use Tuleap\User\OAuth2\OAuth2Exception;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
@@ -50,9 +51,9 @@ final class OAuth2ResourceServerMiddlewareTest extends TestCase
      */
     private $access_token_unserializer;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OAuth2AccessTokenVerifier
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|EventDispatcherInterface
      */
-    private $access_token_verifier;
+    private $event_dispatcher;
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AuthenticationScope
      */
@@ -70,7 +71,7 @@ final class OAuth2ResourceServerMiddlewareTest extends TestCase
     protected function setUp(): void
     {
         $this->access_token_unserializer = \Mockery::mock(SplitTokenIdentifierTranslator::class);
-        $this->access_token_verifier     = \Mockery::mock(OAuth2AccessTokenVerifier::class);
+        $this->event_dispatcher          = \Mockery::mock(EventDispatcherInterface::class);
         $this->required_scope            = \Mockery::mock(AuthenticationScope::class);
         $this->login_manager             = \Mockery::mock(User_LoginManager::class);
 
@@ -78,7 +79,7 @@ final class OAuth2ResourceServerMiddlewareTest extends TestCase
             HTTPFactoryBuilder::responseFactory(),
             new BearerTokenHeaderParser(),
             $this->access_token_unserializer,
-            $this->access_token_verifier,
+            $this->event_dispatcher,
             $this->required_scope,
             $this->login_manager
         );
@@ -86,10 +87,12 @@ final class OAuth2ResourceServerMiddlewareTest extends TestCase
 
     public function testAccessToTheResourceWhenTheTokenIsValid(): void
     {
+        $event = new VerifyOAuth2AccessTokenEvent(\Mockery::mock(SplitToken::class), $this->required_scope);
         $this->access_token_unserializer->shouldReceive('getSplitToken')->andReturn(
-            \Mockery::mock(SplitToken::class)
+            $event->getAccessToken()
         );
-        $this->access_token_verifier->shouldReceive('getUser')->andReturn(new \PFUser(['language_id' => 'en']));
+        $event->setVerifiedUser(new \PFUser(['language_id' => 'en']));
+        $this->event_dispatcher->shouldReceive('dispatch')->andReturn($event);
         $this->login_manager->shouldReceive('validateAndSetCurrentUser');
         $handler = \Mockery::mock(RequestHandlerInterface::class);
         $expected_response = HTTPFactoryBuilder::responseFactory()->createResponse();
@@ -136,7 +139,7 @@ final class OAuth2ResourceServerMiddlewareTest extends TestCase
         $this->access_token_unserializer->shouldReceive('getSplitToken')->andReturn(
             \Mockery::mock(SplitToken::class)
         );
-        $this->access_token_verifier->shouldReceive('getUser')->andThrow(
+        $this->event_dispatcher->shouldReceive('dispatch')->andThrow(
             new class extends \RuntimeException implements OAuth2Exception {
             }
         );
@@ -181,10 +184,12 @@ final class OAuth2ResourceServerMiddlewareTest extends TestCase
         $handler = \Mockery::mock(RequestHandlerInterface::class);
         $handler->shouldNotReceive('handle');
 
+        $event = new VerifyOAuth2AccessTokenEvent(\Mockery::mock(SplitToken::class), $this->required_scope);
         $this->access_token_unserializer->shouldReceive('getSplitToken')->andReturn(
-            \Mockery::mock(SplitToken::class)
+            $event->getAccessToken()
         );
-        $this->access_token_verifier->shouldReceive('getUser')->andReturn(new \PFUser(['language_id' => 'en']));
+        $event->setVerifiedUser(new \PFUser(['language_id' => 'en']));
+        $this->event_dispatcher->shouldReceive('dispatch')->andReturn($event);
         $this->login_manager->shouldReceive('validateAndSetCurrentUser')->andThrow(
             new class extends User_LoginException {
             }
@@ -213,7 +218,7 @@ final class OAuth2ResourceServerMiddlewareTest extends TestCase
             $split_token
         );
 
-        $this->access_token_verifier->shouldReceive('getUser')->andThrow(
+        $this->event_dispatcher->shouldReceive('dispatch')->andThrow(
             new OAuth2AccessTokenExpiredException($split_token)
         );
 
@@ -252,7 +257,7 @@ final class OAuth2ResourceServerMiddlewareTest extends TestCase
         };
         $this->required_scope->shouldReceive('getIdentifier')->andReturn($scope_identifier);
         $this->required_scope->shouldReceive('getDefinition')->andReturn($scope_definition);
-        $this->access_token_verifier->shouldReceive('getUser')->andThrow(
+        $this->event_dispatcher->shouldReceive('dispatch')->andThrow(
             new OAuth2AccessTokenDoesNotHaveRequiredScopeException($this->required_scope)
         );
 

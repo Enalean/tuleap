@@ -25,7 +25,6 @@ namespace Tuleap\OAuth2Server\AccessToken\Scope;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\Scope\AuthenticationScope;
-use Tuleap\User\OAuth2\AccessToken\Scope\OAuth2AccessTokenScopeDAO;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
 final class OAuth2AccessTokenScopeSaverTest extends TestCase

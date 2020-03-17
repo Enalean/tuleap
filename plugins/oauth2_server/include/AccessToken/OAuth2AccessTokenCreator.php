@@ -30,7 +30,6 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\OAuth2Server\AccessToken\Scope\OAuth2AccessTokenScopeSaver;
-use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenDAO;
 
 class OAuth2AccessTokenCreator
 {
@@ -51,10 +50,6 @@ class OAuth2AccessTokenCreator
      */
     private $scope_saver;
     /**
-     * @var OAuth2AccessTokenAuthorizationGrantAssociationDAO
-     */
-    private $access_token_authorization_grant_association_dao;
-    /**
      * @var DateInterval
      */
     private $access_token_expiration_delay;
@@ -68,17 +63,15 @@ class OAuth2AccessTokenCreator
         SplitTokenVerificationStringHasher $hasher,
         OAuth2AccessTokenDAO $dao,
         OAuth2AccessTokenScopeSaver $scope_saver,
-        OAuth2AccessTokenAuthorizationGrantAssociationDAO $access_token_authorization_grant_association_dao,
         DateInterval $access_token_expiration_delay,
         DBTransactionExecutor $transaction_executor
     ) {
-        $this->access_token_formatter                           = $access_token_formatter;
-        $this->hasher                                           = $hasher;
-        $this->dao                                              = $dao;
-        $this->scope_saver                                      = $scope_saver;
-        $this->access_token_authorization_grant_association_dao = $access_token_authorization_grant_association_dao;
-        $this->access_token_expiration_delay                    = $access_token_expiration_delay;
-        $this->transaction_executor                             = $transaction_executor;
+        $this->access_token_formatter        = $access_token_formatter;
+        $this->hasher                        = $hasher;
+        $this->dao                           = $dao;
+        $this->scope_saver                   = $scope_saver;
+        $this->access_token_expiration_delay = $access_token_expiration_delay;
+        $this->transaction_executor          = $transaction_executor;
     }
 
     /**
@@ -86,23 +79,19 @@ class OAuth2AccessTokenCreator
      *
      * @psalm-param non-empty-array<AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier>> $scopes
      */
-    public function issueAccessToken(\DateTimeImmutable $current_time, int $authorization_grant_id, \PFUser $user, array $scopes): OAuth2AccessTokenWithIdentifier
+    public function issueAccessToken(\DateTimeImmutable $current_time, int $authorization_grant_id, array $scopes): OAuth2AccessTokenWithIdentifier
     {
         $verification_string = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
         $expiration_date     = $current_time->add($this->access_token_expiration_delay);
 
         $access_token_id = $this->transaction_executor->execute(
-            function () use ($user, $verification_string, $expiration_date, $scopes, $authorization_grant_id) : int {
+            function () use ($verification_string, $expiration_date, $scopes, $authorization_grant_id) : int {
                 $access_token_id = $this->dao->create(
-                    (int) $user->getId(),
+                    $authorization_grant_id,
                     $this->hasher->computeHash($verification_string),
                     $expiration_date->getTimestamp()
                 );
                 $this->scope_saver->saveAccessTokenScopes($access_token_id, $scopes);
-                $this->access_token_authorization_grant_association_dao->createAssociationBetweenAuthorizationGrantAndAccessToken(
-                    $authorization_grant_id,
-                    $access_token_id
-                );
 
                 return $access_token_id;
             }

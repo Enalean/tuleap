@@ -20,20 +20,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User\OAuth2\AccessToken;
+namespace Tuleap\OAuth2Server\AccessToken;
 
 use Tuleap\DB\DataAccessObject;
 
 class OAuth2AccessTokenDAO extends DataAccessObject
 {
-    public function create(int $user_id, string $hashed_verification_string, int $expiration_date_timestamp): int
+    public function create(int $authorization_code_id, string $hashed_verification_string, int $expiration_date_timestamp): int
     {
         return (int) $this->getDB()->insertReturnId(
-            'oauth2_access_token',
+            'plugin_oauth2_access_token',
             [
-                'user_id'         => $user_id,
-                'verifier'        => $hashed_verification_string,
-                'expiration_date' => $expiration_date_timestamp
+                'authorization_code_id' => $authorization_code_id,
+                'verifier'              => $hashed_verification_string,
+                'expiration_date'       => $expiration_date_timestamp
             ]
         );
     }
@@ -43,6 +43,12 @@ class OAuth2AccessTokenDAO extends DataAccessObject
      */
     public function searchAccessToken(int $access_token_id): ?array
     {
-        return $this->getDB()->row('SELECT verifier, user_id, expiration_date FROM oauth2_access_token WHERE id = ?', $access_token_id);
+        return $this->getDB()->row(
+            'SELECT plugin_oauth2_access_token.verifier, plugin_oauth2_authorization_code.user_id, plugin_oauth2_access_token.expiration_date
+                       FROM plugin_oauth2_access_token
+                       JOIN plugin_oauth2_authorization_code ON plugin_oauth2_access_token.authorization_code_id = plugin_oauth2_authorization_code.id
+                       WHERE plugin_oauth2_access_token.id = ?',
+            $access_token_id
+        );
     }
 }
