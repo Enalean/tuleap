@@ -15,3 +15,8 @@ msgid "You are about to delete %s. Please, confirm your action."
 msgstr ""
 "Vous êtes sur le point de supprimer %s de manière définitive. Veuillez "
 "confirmer cette action."
+
+msgid "You are about to revoke access to %s. Please, confirm your action."
+msgstr ""
+"Vous êtes sur le point de révoquer l'accès de %s de manière définitive. "
+"Veuillez confirmer cette action."

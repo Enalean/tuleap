@@ -18,16 +18,13 @@
  */
 
 import { initGettext } from "../../../../src/www/scripts/tuleap/gettext/gettext-init";
-import { openModalAndReplacePlaceholders, openModalOnClick } from "./confirmation-modals";
-import { buildDeletionReplaceCallback, hiddenInputReplaceCallback } from "./replacers";
+import { openModalAndReplacePlaceholders } from "./confirmation-modals";
+import { buildRevocationReplaceCallback, hiddenInputReplaceCallback } from "./replacers";
 
-const ADD_BUTTON_ID = "oauth2-server-add-client-button";
-const ADD_MODAL_ID = "oauth2-server-add-client-modal";
-
-const DELETE_BUTTONS_SELECTOR = ".oauth2-server-delete-client-button";
-const DELETE_MODAL_ID = "oauth2-server-delete-client-modal";
-const DELETE_MODAL_HIDDEN_INPUT_ID = "oauth2-server-delete-client-modal-app-id";
-const DELETE_MODAL_DESCRIPTION = "oauth2-server-delete-client-modal-app-name";
+const REVOKE_BUTTONS_SELECTOR = ".oauth2-server-revoke-authorization-button";
+const REVOKE_MODAL_ID = "oauth2-server-revoke-app-modal";
+const REVOKE_MODAL_HIDDEN_INPUT_ID = "oauth2-server-revoke-app-modal-app-id";
+const REVOKE_MODAL_DESCRIPTION = "oauth2-server-revoke-app-modal-app-name";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const language = document.body.dataset.userLocale;
@@ -38,18 +35,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         import(/* webpackChunkName: "oauth2-server-po-" */ `../po/${locale}.po`)
     );
 
-    openModalOnClick(document, ADD_MODAL_ID, ADD_BUTTON_ID);
     openModalAndReplacePlaceholders({
         document: document,
-        buttons_selector: DELETE_BUTTONS_SELECTOR,
-        modal_element_id: DELETE_MODAL_ID,
+        buttons_selector: REVOKE_BUTTONS_SELECTOR,
+        modal_element_id: REVOKE_MODAL_ID,
         hidden_input_replacement: {
-            input_id: DELETE_MODAL_HIDDEN_INPUT_ID,
+            input_id: REVOKE_MODAL_HIDDEN_INPUT_ID,
             hiddenInputReplaceCallback
         },
         paragraph_replacement: {
-            paragraph_id: DELETE_MODAL_DESCRIPTION,
-            paragraphReplaceCallback: buildDeletionReplaceCallback(gettext_provider)
+            paragraph_id: REVOKE_MODAL_DESCRIPTION,
+            paragraphReplaceCallback: buildRevocationReplaceCallback(gettext_provider)
         }
     });
 });
