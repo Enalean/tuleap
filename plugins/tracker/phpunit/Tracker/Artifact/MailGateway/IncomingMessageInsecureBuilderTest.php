@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,12 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Artifact\MailGateway\IncomingMail;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
-class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
+class IncomingMessageInsecureBuilderTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     public const USER_MAIL     = 'user@example.com';
     public const TRACKER_ID    = 1;
     public const TRACKER_MAIL  = 'forge__tracker+1@example.com';
@@ -34,17 +38,18 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
     private $tracker_factory;
     private $artifact_factory;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        $this->user_manager     = mock('UserManager');
-        $this->tracker_factory  = mock('TrackerFactory');
-        $this->artifact_factory = mock('Tracker_ArtifactFactory');
+        parent::setUp();
+        $this->user_manager     = \Mockery::spy(\UserManager::class);
+        $this->tracker_factory  = \Mockery::spy(\TrackerFactory::class);
+        $this->artifact_factory = \Mockery::spy(\Tracker_ArtifactFactory::class);
     }
 
-    public function itDoesNotAcceptInvalidFromHeader()
+    public function testItDoesNotAcceptInvalidFromHeader(): void
     {
-        stub($this->tracker_factory)->getTrackerById(self::TRACKER_ID)->returns(mock('Tracker'));
-        stub($this->user_manager)->getAllUsersByEmail(self::USER_MAIL)->returns(array(mock('PFUser')));
+        $this->tracker_factory->shouldReceive('getTrackerById')->with(self::TRACKER_ID)->andReturns(\Mockery::spy(\Tracker::class));
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns(array(\Mockery::spy(\PFUser::class)));
 
         $incoming_message_builder = new Tracker_Artifact_IncomingMessageInsecureBuilder(
             $this->user_manager,
@@ -57,14 +62,14 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
         $incoming_mail->shouldReceive('getBodyText')->andReturns('Body');
         $incoming_mail->shouldReceive('getFrom')->andReturns([]);
 
-        $this->expectException('Tracker_Artifact_MailGateway_InvalidMailHeadersException');
+        $this->expectException(\Tracker_Artifact_MailGateway_InvalidMailHeadersException::class);
         $incoming_message_builder->build($incoming_mail);
     }
 
-    public function itDoesNotAcceptInvalidToHeader()
+    public function testItDoesNotAcceptInvalidToHeader(): void
     {
-        stub($this->tracker_factory)->getTrackerById(self::TRACKER_ID)->returns(mock('Tracker'));
-        stub($this->user_manager)->getAllUsersByEmail(self::USER_MAIL)->returns(array(mock('PFUser')));
+        $this->tracker_factory->shouldReceive('getTrackerById')->with(self::TRACKER_ID)->andReturns(\Mockery::spy(\Tracker::class));
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns(array(\Mockery::spy(\PFUser::class)));
 
         $incoming_message_builder = new Tracker_Artifact_IncomingMessageInsecureBuilder(
             $this->user_manager,
@@ -79,17 +84,14 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
         $incoming_mail->shouldReceive('getTo')->andReturns([trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_CREATION . '@example.com']);
         $incoming_mail->shouldReceive('getCC')->andReturns([]);
 
-        try {
-            $incoming_message_builder->build($incoming_mail);
-            $this->fail();
-        } catch (Tracker_Artifact_MailGateway_TrackerIdMissingException $e) {
-        }
+        $this->expectException(Tracker_Artifact_MailGateway_TrackerIdMissingException::class);
+        $incoming_message_builder->build($incoming_mail);
     }
 
-    public function itFindsUserAndTrackerToHeader()
+    public function testItFindsUserAndTrackerToHeader(): void
     {
-        stub($this->tracker_factory)->getTrackerById(self::TRACKER_ID)->returns(mock('Tracker'));
-        stub($this->user_manager)->getAllUsersByEmail(self::USER_MAIL)->returns(array(mock('PFUser')));
+        $this->tracker_factory->shouldReceive('getTrackerById')->with(self::TRACKER_ID)->andReturns(\Mockery::spy(\Tracker::class));
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns(array(\Mockery::spy(\PFUser::class)));
 
         $incoming_message_builder = new Tracker_Artifact_IncomingMessageInsecureBuilder(
             $this->user_manager,
@@ -111,10 +113,10 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
         $this->assertNotNull($tracker);
     }
 
-    public function itFindsUserAndTrackerCcHeader()
+    public function testItFindsUserAndTrackerCcHeader(): void
     {
-        stub($this->tracker_factory)->getTrackerById(self::TRACKER_ID)->returns(mock('Tracker'));
-        stub($this->user_manager)->getAllUsersByEmail(self::USER_MAIL)->returns(array(mock('PFUser')));
+        $this->tracker_factory->shouldReceive('getTrackerById')->with(self::TRACKER_ID)->andReturns(\Mockery::spy(\Tracker::class));
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns(array(\Mockery::spy(\PFUser::class)));
 
         $incoming_message_builder = new Tracker_Artifact_IncomingMessageInsecureBuilder(
             $this->user_manager,
@@ -136,10 +138,10 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
         $this->assertNotNull($tracker);
     }
 
-    public function itFindsUserAndTrackerMultipleUsers()
+    public function testItFindsUserAndTrackerMultipleUsers(): void
     {
-        stub($this->tracker_factory)->getTrackerById(self::TRACKER_ID)->returns(mock('Tracker'));
-        stub($this->user_manager)->getAllUsersByEmail(self::USER_MAIL)->returns(array(mock('PFUser')));
+        $this->tracker_factory->shouldReceive('getTrackerById')->with(self::TRACKER_ID)->andReturns(\Mockery::spy(\Tracker::class));
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns(array(\Mockery::spy(\PFUser::class)));
         $incoming_message_builder = new Tracker_Artifact_IncomingMessageInsecureBuilder(
             $this->user_manager,
             $this->tracker_factory,
@@ -160,11 +162,11 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
         $this->assertNotNull($tracker);
     }
 
-    public function itFindsArtifactToHeader()
+    public function testItFindsArtifactToHeader(): void
     {
-        $artifact_mock = stub('Tracker_Artifact')->getTracker()->returns(mock('Tracker'));
-        stub($this->artifact_factory)->getArtifactById(self::ARTIFACT_ID)->returns($artifact_mock);
-        stub($this->user_manager)->getAllUsersByEmail(self::USER_MAIL)->returns(array(mock('PFUser')));
+        $artifact_mock = \Mockery::spy(\Tracker_Artifact::class)->shouldReceive('getTracker')->andReturns(\Mockery::spy(\Tracker::class))->getMock();
+        $this->artifact_factory->shouldReceive('getArtifactById')->with(self::ARTIFACT_ID)->andReturns($artifact_mock);
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns(array(\Mockery::spy(\PFUser::class)));
 
         $incoming_message_builder = new Tracker_Artifact_IncomingMessageInsecureBuilder(
             $this->user_manager,
@@ -184,11 +186,11 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
         $this->assertNotNull($artifact);
     }
 
-    public function itFindsArtifactCcHeader()
+    public function testItFindsArtifactCcHeader(): void
     {
-        $artifact_mock = stub('Tracker_Artifact')->getTracker()->returns(mock('Tracker'));
-        stub($this->artifact_factory)->getArtifactById(self::ARTIFACT_ID)->returns($artifact_mock);
-        stub($this->user_manager)->getAllUsersByEmail(self::USER_MAIL)->returns(array(mock('PFUser')));
+        $artifact_mock = \Mockery::spy(\Tracker_Artifact::class)->shouldReceive('getTracker')->andReturns(\Mockery::spy(\Tracker::class))->getMock();
+        $this->artifact_factory->shouldReceive('getArtifactById')->with(self::ARTIFACT_ID)->andReturns($artifact_mock);
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns(array(\Mockery::spy(\PFUser::class)));
 
         $incoming_message_builder = new Tracker_Artifact_IncomingMessageInsecureBuilder(
             $this->user_manager,
@@ -208,11 +210,11 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
         $this->assertNotNull($artifact);
     }
 
-    public function itFindsArtifactMultipleUsers()
+    public function testItFindsArtifactMultipleUsers(): void
     {
-        $artifact_mock = stub('Tracker_Artifact')->getTracker()->returns(mock('Tracker'));
-        stub($this->artifact_factory)->getArtifactById(self::ARTIFACT_ID)->returns($artifact_mock);
-        stub($this->user_manager)->getAllUsersByEmail(self::USER_MAIL)->returns(array(mock('PFUser')));
+        $artifact_mock = \Mockery::spy(\Tracker_Artifact::class)->shouldReceive('getTracker')->andReturns(\Mockery::spy(\Tracker::class))->getMock();
+        $this->artifact_factory->shouldReceive('getArtifactById')->with(self::ARTIFACT_ID)->andReturns($artifact_mock);
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns(array(\Mockery::spy(\PFUser::class)));
 
         $incoming_message_builder = new Tracker_Artifact_IncomingMessageInsecureBuilder(
             $this->user_manager,
@@ -232,10 +234,10 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
         $this->assertNotNull($artifact);
     }
 
-    public function itRejectsUnknownMail()
+    public function testItRejectsUnknownMail(): void
     {
-        stub($this->tracker_factory)->getTrackerById(self::TRACKER_ID)->returns(mock('Tracker'));
-        stub($this->user_manager)->getAllUsersByEmail()->returns([]);
+        $this->tracker_factory->shouldReceive('getTrackerById')->with(self::TRACKER_ID)->andReturns(\Mockery::spy(\Tracker::class));
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->andReturns([]);
 
         $incoming_message_builder = new Tracker_Artifact_IncomingMessageInsecureBuilder(
             $this->user_manager,
@@ -250,14 +252,14 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
         $incoming_mail->shouldReceive('getTo')->andReturns([self::TRACKER_MAIL]);
         $incoming_mail->shouldReceive('getCC')->andReturns([]);
 
-        $this->expectException('Tracker_Artifact_MailGateway_RecipientUserDoesNotExistException');
+        $this->expectException(\Tracker_Artifact_MailGateway_RecipientUserDoesNotExistException::class);
         $incoming_message_builder->build($incoming_mail);
     }
 
-    public function itRejectsMailWithMultipleUsers()
+    public function testItRejectsMailWithMultipleUsers(): void
     {
-        stub($this->tracker_factory)->getTrackerById(self::TRACKER_ID)->returns(mock('Tracker'));
-        stub($this->user_manager)->getAllUsersByEmail(self::USER_MAIL)->returns(array(mock('PFUser'), mock('PFUser')));
+        $this->tracker_factory->shouldReceive('getTrackerById')->with(self::TRACKER_ID)->andReturns(\Mockery::spy(\Tracker::class));
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns(array(\Mockery::spy(\PFUser::class), \Mockery::spy(\PFUser::class)));
 
         $incoming_message_builder = new Tracker_Artifact_IncomingMessageInsecureBuilder(
             $this->user_manager,
@@ -272,14 +274,14 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
         $incoming_mail->shouldReceive('getTo')->andReturns([self::TRACKER_MAIL]);
         $incoming_mail->shouldReceive('getCC')->andReturns([]);
 
-        $this->expectException('Tracker_Artifact_MailGateway_MultipleUsersExistException');
+        $this->expectException(\Tracker_Artifact_MailGateway_MultipleUsersExistException::class);
         $incoming_message_builder->build($incoming_mail);
     }
 
-    public function itRejectsUnknownTracker()
+    public function testItRejectsUnknownTracker(): void
     {
-        stub($this->tracker_factory)->getTrackerById(self::TRACKER_ID)->returns(mock('Tracker'));
-        stub($this->user_manager)->getAllUsersByEmail(self::USER_MAIL)->returns(array(mock('PFUser')));
+        $this->tracker_factory->shouldReceive('getTrackerById')->with(self::TRACKER_ID)->andReturns(\Mockery::spy(\Tracker::class));
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns(array(\Mockery::spy(\PFUser::class)));
 
         $incoming_message_builder = new Tracker_Artifact_IncomingMessageInsecureBuilder(
             $this->user_manager,
@@ -294,14 +296,14 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
         $incoming_mail->shouldReceive('getTo')->andReturns([trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_CREATION . '+99999999@example.com']);
         $incoming_mail->shouldReceive('getCC')->andReturns([]);
 
-        $this->expectException('Tracker_Artifact_MailGateway_TrackerDoesNotExistException');
+        $this->expectException(\Tracker_Artifact_MailGateway_TrackerDoesNotExistException::class);
         $incoming_message_builder->build($incoming_mail);
     }
 
-    public function itRejectsUnknownArtifact()
+    public function testItRejectsUnknownArtifact(): void
     {
-        stub($this->artifact_factory)->getArtifactById(self::TRACKER_ID)->returns(mock('Tracker_Artifact'));
-        stub($this->user_manager)->getAllUsersByEmail(self::USER_MAIL)->returns(array(mock('PFUser')));
+        $this->artifact_factory->shouldReceive('getArtifactById')->with(self::TRACKER_ID)->andReturns(\Mockery::spy(\Tracker_Artifact::class));
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with(self::USER_MAIL)->andReturns(array(\Mockery::spy(\PFUser::class)));
 
         $incoming_message_builder = new Tracker_Artifact_IncomingMessageInsecureBuilder(
             $this->user_manager,
@@ -316,7 +318,7 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
         $incoming_mail->shouldReceive('getTo')->andReturns([trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_UPDATE . '+99999999@example.com']);
         $incoming_mail->shouldReceive('getCC')->andReturns([]);
 
-        $this->expectException('Tracker_Artifact_MailGateway_ArtifactDoesNotExistException');
+        $this->expectException(\Tracker_Artifact_MailGateway_ArtifactDoesNotExistException::class);
         $incoming_message_builder->build($incoming_mail);
     }
 }
