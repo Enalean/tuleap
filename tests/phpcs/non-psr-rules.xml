@@ -73,6 +73,8 @@
             </property>
         </properties>
     </rule>
+  <!-- Forbid useless inherit doc comment -->
+  <rule ref="SlevomatCodingStandard.Commenting.UselessInheritDocComment"/>
     <!-- Forbid unused use statements -->
     <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses">
         <properties>

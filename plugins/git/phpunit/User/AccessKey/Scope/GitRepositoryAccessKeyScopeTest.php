@@ -31,9 +31,6 @@ final class GitRepositoryAccessKeyScopeTest extends AuthenticationScopeTestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @inheritDoc
-     */
     public function getAuthenticationScopeClassname(): string
     {
         return GitRepositoryAccessKeyScope::class;
