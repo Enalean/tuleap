@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
 
+use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
 
 class OAuth2AuthorizationCodeDAO extends DataAccessObject
@@ -63,15 +64,29 @@ class OAuth2AuthorizationCodeDAO extends DataAccessObject
         );
     }
 
+    public function deleteAuthorizationCodeByAppID(int $app_id): void
+    {
+        $this->deleteAuthorizationCode(
+            EasyStatement::open()->with('plugin_oauth2_authorization_code.app_id = ?', $app_id)
+        );
+    }
+
     public function deleteAuthorizationCodeByID(int $authorization_code_id): void
     {
-        $this->getDB()->run(
-            'DELETE plugin_oauth2_authorization_code.*, plugin_oauth2_access_token.*, plugin_oauth2_access_token_scope.*
+        $this->deleteAuthorizationCode(
+            EasyStatement::open()->with('plugin_oauth2_authorization_code.id = ?', $authorization_code_id)
+        );
+    }
+
+    private function deleteAuthorizationCode(EasyStatement $filter_statement): void
+    {
+        $this->getDB()->safeQuery(
+            "DELETE plugin_oauth2_authorization_code.*, plugin_oauth2_access_token.*, plugin_oauth2_access_token_scope.*
                        FROM plugin_oauth2_authorization_code
                        LEFT JOIN plugin_oauth2_access_token ON plugin_oauth2_authorization_code.id = plugin_oauth2_access_token.authorization_code_id
                        LEFT JOIN plugin_oauth2_access_token_scope on plugin_oauth2_access_token.id = plugin_oauth2_access_token_scope.access_token_id
-                       WHERE plugin_oauth2_authorization_code.id = ?',
-            $authorization_code_id
+                       WHERE $filter_statement",
+            $filter_statement->values()
         );
     }
 }

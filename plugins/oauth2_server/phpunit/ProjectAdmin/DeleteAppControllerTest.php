@@ -26,7 +26,7 @@ use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\OAuth2Server\App\AppDao;
+use Tuleap\OAuth2Server\App\OAuth2AppRemover;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Request\ProjectRetriever;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
@@ -47,9 +47,9 @@ final class DeleteAppControllerTest extends TestCase
      */
     private $administrator_checker;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|AppDao
+     * @var M\LegacyMockInterface|M\MockInterface|OAuth2AppRemover
      */
-    private $app_dao;
+    private $app_remover;
     /**
      * @var \CSRFSynchronizerToken|M\LegacyMockInterface|M\MockInterface
      */
@@ -59,12 +59,12 @@ final class DeleteAppControllerTest extends TestCase
     {
         $this->project_retriever     = M::mock(ProjectRetriever::class);
         $this->administrator_checker = M::mock(ProjectAdministratorChecker::class);
-        $this->app_dao               = M::mock(AppDao::class);
+        $this->app_remover           = M::mock(OAuth2AppRemover::class);
         $this->csrf_token            = M::mock(\CSRFSynchronizerToken::class);
         $this->controller            = new DeleteAppController(
             $this->project_retriever,
             $this->administrator_checker,
-            $this->app_dao,
+            $this->app_remover,
             $this->csrf_token
         );
     }
@@ -82,7 +82,7 @@ final class DeleteAppControllerTest extends TestCase
         $layout->shouldReceive('redirect')
             ->once()
             ->with('/plugins/oauth2_server/project/102/admin');
-        $this->app_dao->shouldNotReceive('delete');
+        $this->app_remover->shouldNotReceive('deleteAppByID');
 
         $this->controller->process($request, $layout, ['project_id' => '102']);
     }
@@ -100,7 +100,7 @@ final class DeleteAppControllerTest extends TestCase
         $layout->shouldReceive('redirect')
             ->once()
             ->with('/plugins/oauth2_server/project/102/admin');
-        $this->app_dao->shouldReceive('delete')
+        $this->app_remover->shouldReceive('deleteAppByID')
             ->once()
             ->with(12);
 
@@ -117,7 +117,7 @@ final class DeleteAppControllerTest extends TestCase
         $this->assertSame('/plugins/oauth2_server/project/102/admin/delete-app', DeleteAppController::getUrl($project));
     }
 
-    private function mockValidProjectAndUserIsProjecTAdmin(\PFUser $current_user): void
+    private function mockValidProjectAndUserIsProjectAdmin(\PFUser $current_user): void
     {
         $project = M::mock(\Project::class)->shouldReceive('getID')
             ->once()

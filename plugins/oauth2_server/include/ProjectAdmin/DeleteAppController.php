@@ -22,8 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\ProjectAdmin;
 
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\OAuth2Server\App\AppDao;
+use Tuleap\OAuth2Server\App\OAuth2AppRemover;
+use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeDAO;
+use Tuleap\OAuth2Server\User\AuthorizationDao;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Project\ServiceInstrumentation;
 use Tuleap\Request\DispatchableWithRequest;
@@ -31,7 +36,6 @@ use Tuleap\Request\ProjectRetriever;
 
 final class DeleteAppController implements DispatchableWithRequest
 {
-
     /**
      * @var ProjectRetriever
      */
@@ -41,9 +45,9 @@ final class DeleteAppController implements DispatchableWithRequest
      */
     private $administrator_checker;
     /**
-     * @var AppDao
+     * @var OAuth2AppRemover
      */
-    private $app_dao;
+    private $app_remover;
     /**
      * @var \CSRFSynchronizerToken
      */
@@ -52,12 +56,12 @@ final class DeleteAppController implements DispatchableWithRequest
     public function __construct(
         ProjectRetriever $project_retriever,
         ProjectAdministratorChecker $administrator_checker,
-        AppDao $app_dao,
+        OAuth2AppRemover $app_remover,
         \CSRFSynchronizerToken $csrf_token
     ) {
         $this->project_retriever     = $project_retriever;
         $this->administrator_checker = $administrator_checker;
-        $this->app_dao               = $app_dao;
+        $this->app_remover           = $app_remover;
         $this->csrf_token            = $csrf_token;
     }
 
@@ -66,7 +70,12 @@ final class DeleteAppController implements DispatchableWithRequest
         return new self(
             ProjectRetriever::buildSelf(),
             new ProjectAdministratorChecker(),
-            new AppDao(),
+            new OAuth2AppRemover(
+                new AppDao(),
+                new OAuth2AuthorizationCodeDAO(),
+                new AuthorizationDao(),
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+            ),
             new \CSRFSynchronizerToken(ListAppsController::CSRF_TOKEN)
         );
     }
@@ -91,7 +100,7 @@ final class DeleteAppController implements DispatchableWithRequest
             $layout->redirect($list_clients_url);
             return;
         }
-        $this->app_dao->delete($app_id);
+        $this->app_remover->deleteAppByID($app_id);
 
         $layout->addFeedback(
             \Feedback::INFO,
