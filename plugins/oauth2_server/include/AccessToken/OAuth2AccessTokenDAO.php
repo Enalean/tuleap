@@ -47,7 +47,9 @@ class OAuth2AccessTokenDAO extends DataAccessObject
             'SELECT plugin_oauth2_access_token.verifier, plugin_oauth2_authorization_code.user_id, plugin_oauth2_access_token.expiration_date
                        FROM plugin_oauth2_access_token
                        JOIN plugin_oauth2_authorization_code ON plugin_oauth2_access_token.authorization_code_id = plugin_oauth2_authorization_code.id
-                       WHERE plugin_oauth2_access_token.id = ?',
+                       JOIN plugin_oauth2_server_app ON plugin_oauth2_authorization_code.app_id = plugin_oauth2_server_app.id
+                       JOIN `groups` ON plugin_oauth2_server_app.project_id = `groups`.group_id
+                       WHERE `groups`.status = "A" AND plugin_oauth2_access_token.id = ?',
             $access_token_id
         );
     }
