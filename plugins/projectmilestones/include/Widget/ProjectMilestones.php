@@ -41,14 +41,13 @@ use Tuleap\Request\NotFoundException;
 use Tuleap\Request\ProjectRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBrokenConfigurationException;
 use Widget;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
+use PermissionsOverrider_PermissionsOverriderManager;
 
 class ProjectMilestones extends Widget
 {
     public const NAME = 'milestone';
-    /**
-     * @var null|string
-     */
-    private $label_tracker_backlog;
     /**
      * @var false|\Planning
      */
@@ -74,10 +73,6 @@ class ProjectMilestones extends Widget
      */
     private $http;
     /**
-     * @var bool
-     */
-    private $is_multiple_widgets;
-    /**
      * @var CSRFSynchronizerToken
      */
     private $csrf_token;
@@ -89,6 +84,10 @@ class ProjectMilestones extends Widget
      * @var ProjectManager
      */
     private $project_manager;
+    /**
+     * @var ProjectAccessChecker
+     */
+    private $project_access_checker;
 
     public function __construct()
     {
@@ -100,26 +99,30 @@ class ProjectMilestones extends Widget
 
         $this->project_milestones_dao = new ProjectMilestonesDao();
         $this->project_retriever      = new ProjectRetriever(ProjectManager::instance());
-        $this->is_multiple_widgets    = \ForgeConfig::get('plugin_projectmilestone_multiple');
         $this->http                   = HTTPRequest::instance();
         $this->project_id             = $this->http->getProject()->getID();
         $this->csrf_token             = new CSRFSynchronizerToken('/project/');
         $this->project_manager        = ProjectManager::instance();
+        $this->project_access_checker = new ProjectAccessChecker(PermissionsOverrider_PermissionsOverriderManager::instance(), new RestrictedUserCanAccessProjectVerifier(), \EventManager::instance());
 
         parent::__construct(self::NAME);
     }
 
     public function getTitle(): string
     {
+        if ($this->project) {
+            try {
+                $this->project_access_checker->checkUserCanAccessProject($this->http->getCurrentUser(), $this->project);
+                return sprintf(dgettext('tuleap-projectmilestones', '%s Project Milestones'), $this->project->getPublicName());
+            } catch (\Project_AccessException $e) {
+                return dgettext('tuleap-projectmilestones', 'Project Milestones');
+            }
+        }
         return dgettext('tuleap-projectmilestones', 'Project Milestones');
     }
 
     public function getDescription(): string
     {
-        if ($this->label_tracker_backlog) {
-            return sprintf(dgettext('tuleap-projectmilestones', 'A widget for %s monitoring.'), $this->label_tracker_backlog);
-        }
-
         return dgettext('tuleap-projectmilestones', 'A widget for milestones monitoring.');
     }
 
@@ -186,47 +189,33 @@ class ProjectMilestones extends Widget
 
     public function loadContent($id)
     {
-        if (! $this->is_multiple_widgets) {
-            $this->project = $this->http->getProject();
-        } else {
-            $this->project_id = $this->project_milestones_dao->searchProjectIdById((int) $id);
+        $this->project_id = $this->project_milestones_dao->searchProjectIdById((int) $id);
 
-            if (!$this->project_id) {
-                return;
-            }
-
-            try {
-                $this->project = $this->project_retriever->getProjectFromId((string) $this->project_id);
-            } catch (NotFoundException $e) {
-                return;
-            }
-        }
-
-        $this->root_planning = $this->planning_factory->getRootPlanning($this->http->getCurrentUser(), $this->project->getID());
-
-        if (!$this->root_planning) {
+        if (!$this->project_id) {
             return;
         }
 
-        $this->label_tracker_backlog = $this->root_planning->getPlanningTracker()->getName();
+        try {
+            $this->project = $this->project_retriever->getProjectFromId((string) $this->project_id);
+        } catch (NotFoundException $e) {
+            return;
+        }
+
+        $this->root_planning = $this->planning_factory->getRootPlanning($this->http->getCurrentUser(), $this->project->getID());
     }
 
     public function isUnique()
     {
-        return !$this->is_multiple_widgets;
+        return false;
     }
 
     public function hasPreferences($widget_id)
     {
-        return $this->is_multiple_widgets;
+        return true;
     }
 
     public function getPreferences($widget_id)
     {
-        if (!$this->is_multiple_widgets) {
-            return;
-        }
-
         if (!$this->project) {
             $this->project = $this->http->getProject();
         }
@@ -239,10 +228,6 @@ class ProjectMilestones extends Widget
 
     public function getInstallPreferences()
     {
-        if (!$this->is_multiple_widgets) {
-            return;
-        }
-
         return $this->getRenderer()->renderToString(
             'projectmilestones-preferences',
             new ProjectMilestonesPreferencesPresenter(0, $this->http->getProject(), $this->csrf_token)
@@ -251,10 +236,6 @@ class ProjectMilestones extends Widget
 
     public function updatePreferences(Codendi_Request $request)
     {
-        if (!$this->is_multiple_widgets) {
-            return;
-        }
-
         $widget_id = (int) $request->getValidated('content_id', 'uint', 0);
 
         $project_id = $request->getValidated("select-project-milestones-widget", 'string');
@@ -264,19 +245,10 @@ class ProjectMilestones extends Widget
         $this->project_milestones_dao->updateProjectMilestoneId($widget_id, (int) $project->getID());
     }
 
-    /**
-     * @return false|int|null
-     * @throws NotFoundException
-     */
     public function create(Codendi_Request $request)
     {
-        if ($this->is_multiple_widgets) {
-            $project_id = $request->getValidated("select-project-milestones-widget", 'string');
-            $project = $this->project_manager->getProjectFromAutocompleter($project_id);
-        } else {
-            $project_id = $this->http->getProject()->getID();
-            $project = $this->project_retriever->getProjectFromId((string) $project_id);
-        }
+        $project_id = $request->getValidated("select-project-milestones-widget", 'string');
+        $project = $this->project_manager->getProjectFromAutocompleter($project_id);
 
         return (int) $this->project_milestones_dao->create((int) $project->getID());
     }
