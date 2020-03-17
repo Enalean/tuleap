@@ -34,8 +34,16 @@ $(RPM_TMP)/SPECS/%.spec: $(BASE_DIR)/%.spec
 		sed -e 's/@@RELEASE@@/$(RELEASE)/g' \
 		> $@
 
+generate-templates:
+	cp -f $(BASE_DIR)/../../tools/utils/setup_templates/generate-templates/trackers/ttm-campaign.xml \
+		$(BASE_DIR)/resources/Tracker_campaign.xml
+	cp -f $(BASE_DIR)/../../tools/utils/setup_templates/generate-templates/trackers/ttm-def.xml \
+		$(BASE_DIR)/resources/Tracker_test_def.xml
+	cp -f $(BASE_DIR)/../../tools/utils/setup_templates/generate-templates/trackers/ttm-exec.xml \
+		$(BASE_DIR)/resources/Tracker_test_exec.xml
+
 .PHONY: build
-build:
+build: generate-templates
 	cd /build/src && npm install && \
 	cd /build/src/src/www/themes/common/tlp && npm install && npm run build && \
 	cd /build/src/src/www/scripts && npm install && npm run build && \
