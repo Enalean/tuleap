@@ -2061,6 +2061,9 @@ msgstr "Cette icône de service n'est pas autorisée."
 msgid "This service is a system service, it cannot be deleted."
 msgstr "Ce service est un service système, il ne peut pas être supprimé."
 
+msgid "This user can't be restricted."
+msgstr "Cet utilisateur ne peut être restreint."
+
 msgid ""
 "This user has the global REST read only administration permission and should "
 "not browse the application."

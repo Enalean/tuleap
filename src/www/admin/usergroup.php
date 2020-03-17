@@ -149,7 +149,13 @@ if ($request->isPost()) {
 
                     case PFUser::STATUS_RESTRICTED:
                         if (! $user_status_checker->doesPlatformAllowRestricted()) {
-                            $GLOBALS['Response']->addFeedback(Feedback::WARN, _('Your platform does not allow restricted users.'));
+                            $GLOBALS['Response']->addFeedback(
+                                Feedback::ERROR,
+                                _('Your platform does not allow restricted users.')
+                            );
+                            $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id=' . $user->getId());
+                        } elseif (! $user_status_checker->isRestrictedStatusAllowedForUser($user)) {
+                            $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('This user can\'t be restricted.'));
                             $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id=' . $user->getId());
                         } elseif (ForgeConfig::areRestrictedUsersAllowed()) {
                             $user->setStatus($request->get('form_status'));

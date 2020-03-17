@@ -502,6 +502,9 @@ class UserResource extends AuthenticatedResource
             if (! $user_status_checker->doesPlatformAllowRestricted()) {
                 throw new RestException(400, "Restricted users are not authorized.");
             }
+            if (! $user_status_checker->isRestrictedStatusAllowedForUser($user_to_update)) {
+                throw new RestException(400, "This user can't be restricted.");
+            }
         }
 
         $user_to_update->setStatus($value);
