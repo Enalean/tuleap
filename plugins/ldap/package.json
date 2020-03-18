@@ -1,0 +1,20 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-ldap",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "dependencies": {
+    "mustache": "^2.3.0",
+    "node-gettext": "^2.0.0",
+    "sprintf-js": "^1.1.1"
+  },
+  "devDependencies": {},
+  "config": {
+    "bin": "../../node_modules/.bin"
+  },
+  "scripts": {
+    "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
+    "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch"
+  }
+}
