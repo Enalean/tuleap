@@ -22,27 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
 
-use PHPUnit\Framework\TestCase;
+namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
+
 use Tuleap\Authentication\SplitToken\SplitToken;
-use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
-use Tuleap\User\OAuth2\Scope\DemoOAuth2Scope;
+use Tuleap\OAuth2Server\OAuth2ServerException;
 
-final class OAuth2AuthorizationCodeTest extends TestCase
+final class OAuth2AuthCodeNoValidScopeFound extends \RuntimeException implements OAuth2ServerException
 {
-    public function testBuildValidAuthorizationCode(): void
+    public function __construct(SplitToken $auth_code)
     {
-        $user      = new \PFUser(['language_id' => 'en']);
-        $scope     = DemoOAuth2Scope::fromItself();
-        $auth_code = OAuth2AuthorizationCode::approveForSetOfScopes(
-            new SplitToken(12, SplitTokenVerificationString::generateNewSplitTokenVerificationString()),
-            $user,
-            [$scope]
-        );
-
-        $this->assertSame(12, $auth_code->getID());
-        $this->assertSame($user, $auth_code->getUser());
-        $scopes = $auth_code->getScopes();
-        $this->assertCount(1, $scopes);
-        $this->assertEquals($scope, $scopes[0]);
+        parent::__construct('No valid scope has been found for the OAuth2 auth code #' . $auth_code->getID());
     }
 }

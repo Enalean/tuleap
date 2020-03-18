@@ -29,6 +29,7 @@ use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\OAuth2Server\Grant\AuthorizationCode\Scope\OAuth2AuthorizationCodeScopeRetriever;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\User\OAuth2\Scope\DemoOAuth2Scope;
 
@@ -49,19 +50,25 @@ final class OAuth2AuthorizationCodeVerifierTest extends TestCase
      */
     private $dao;
     /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OAuth2AuthorizationCodeScopeRetriever
+     */
+    private $scope_retriever;
+    /**
      * @var OAuth2AuthorizationCodeVerifier
      */
     private $verifier;
 
     protected function setUp(): void
     {
-        $this->hasher       = \Mockery::mock(SplitTokenVerificationStringHasher::class);
-        $this->user_manager = \Mockery::mock(\UserManager::class);
-        $this->dao          = \Mockery::mock(OAuth2AuthorizationCodeDAO::class);
-        $this->verifier     = new OAuth2AuthorizationCodeVerifier(
+        $this->hasher          = \Mockery::mock(SplitTokenVerificationStringHasher::class);
+        $this->user_manager    = \Mockery::mock(\UserManager::class);
+        $this->dao             = \Mockery::mock(OAuth2AuthorizationCodeDAO::class);
+        $this->scope_retriever = \Mockery::mock(OAuth2AuthorizationCodeScopeRetriever::class);
+        $this->verifier        = new OAuth2AuthorizationCodeVerifier(
             $this->hasher,
             $this->user_manager,
             $this->dao,
+            $this->scope_retriever,
             new DBTransactionExecutorPassthrough()
         );
     }
@@ -85,6 +92,7 @@ final class OAuth2AuthorizationCodeVerifierTest extends TestCase
         );
         $this->dao->shouldReceive('markAuthorizationCodeAsUsed')->with($auth_code->getID())->once();
         $this->hasher->shouldReceive('verifyHash')->andReturn(true);
+        $this->scope_retriever->shouldReceive('getScopesByAuthorizationCode')->andReturn([DemoOAuth2Scope::fromItself()]);
 
         $verified_authorization = $this->verifier->getAuthorizationCode($auth_code);
 
@@ -189,6 +197,31 @@ final class OAuth2AuthorizationCodeVerifierTest extends TestCase
         $this->hasher->shouldReceive('verifyHash')->andReturn(true);
 
         $this->expectException(OAuth2AuthCodeReusedException::class);
+        $this->verifier->getAuthorizationCode($auth_code);
+    }
+
+    public function testVerificationFailsWhenNoValidScopesCanBeFound(): void
+    {
+        $expected_user = new \PFUser(['user_id' => 102, 'language_id' => 'en']);
+        $this->user_manager->shouldReceive('getUserById')->with($expected_user->getId())->andReturn($expected_user);
+
+        $auth_code = new SplitToken(
+            6,
+            new SplitTokenVerificationString(new ConcealedString('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))
+        );
+        $this->dao->shouldReceive('searchAuthorizationCode')->with($auth_code->getID())->andReturn(
+            [
+                'user_id'               => $expected_user->getId(),
+                'verifier'              => 'expected_hashed_verification_string',
+                'expiration_date'       => (new DateTimeImmutable('tomorrow'))->getTimestamp(),
+                'has_already_been_used' => 0
+            ]
+        );
+        $this->dao->shouldReceive('markAuthorizationCodeAsUsed')->with($auth_code->getID())->once();
+        $this->hasher->shouldReceive('verifyHash')->andReturn(true);
+        $this->scope_retriever->shouldReceive('getScopesByAuthorizationCode')->andReturn([]);
+
+        $this->expectException(OAuth2AuthCodeNoValidScopeFound::class);
         $this->verifier->getAuthorizationCode($auth_code);
     }
 }

@@ -36,4 +36,16 @@ class OAuth2AuthorizationCodeScopeDAO extends DataAccessObject
 
         $this->getDB()->insertMany('plugin_oauth2_authorization_code_scope', $data_to_insert);
     }
+
+    /**
+     * @return string[][]
+     * @psalm-return array<array{scope_key:string}>
+     */
+    public function searchScopeIdentifiersByOAuth2AuthCodeID(int $auth_code_id): array
+    {
+        return $this->getDB()->run(
+            'SELECT scope_key FROM plugin_oauth2_authorization_code_scope WHERE auth_code_id = ?',
+            $auth_code_id
+        );
+    }
 }

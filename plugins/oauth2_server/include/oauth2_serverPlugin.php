@@ -51,6 +51,7 @@ use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeDAO;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeVerifier;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\PrefixOAuth2AuthCode;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\Scope\OAuth2AuthorizationCodeScopeDAO;
+use Tuleap\OAuth2Server\Grant\AuthorizationCode\Scope\OAuth2AuthorizationCodeScopeRetriever;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\Scope\OAuth2AuthorizationCodeScopeSaver;
 use Tuleap\OAuth2Server\Grant\OAuth2ClientAuthenticationMiddleware;
 use Tuleap\OAuth2Server\ProjectAdmin\ListAppsController;
@@ -242,11 +243,6 @@ final class oauth2_serverPlugin extends Plugin
         );
     }
 
-    private function getAuthorizationCodeValidityInterval(): DateInterval
-    {
-        return new DateInterval('PT1M');
-    }
-
     public function routeTestEndpoint(): \Tuleap\OAuth2Server\TestEndpointController
     {
         $response_factory = HTTPFactoryBuilder::responseFactory();
@@ -299,6 +295,7 @@ final class oauth2_serverPlugin extends Plugin
                 new SplitTokenVerificationStringHasher(),
                 UserManager::instance(),
                 new OAuth2AuthorizationCodeDAO(),
+                new OAuth2AuthorizationCodeScopeRetriever(new OAuth2AuthorizationCodeScopeDAO(), $this->buildScopeBuilder()),
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
             ),
             new SapiEmitter(),
@@ -375,7 +372,7 @@ final class oauth2_serverPlugin extends Plugin
             new SplitTokenVerificationStringHasher(),
             new OAuth2AuthorizationCodeDAO(),
             new OAuth2AuthorizationCodeScopeSaver(new OAuth2AuthorizationCodeScopeDAO()),
-            $this->getAuthorizationCodeValidityInterval(),
+            new DateInterval('PT1M'),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
         );
     }

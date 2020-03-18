@@ -30,6 +30,7 @@ use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenDAO;
 use Tuleap\OAuth2Server\AccessToken\Scope\OAuth2AccessTokenScopeDAO;
 use Tuleap\OAuth2Server\App\AppDao;
 use Tuleap\OAuth2Server\App\NewOAuth2App;
+use Tuleap\OAuth2Server\Grant\AuthorizationCode\Scope\OAuth2AuthorizationCodeScopeDAO;
 
 final class OAuth2AuthorizationCodeDAOTest extends TestCase
 {
@@ -93,6 +94,7 @@ final class OAuth2AuthorizationCodeDAOTest extends TestCase
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
         $db->delete('plugin_oauth2_authorization_code', []);
+        $db->delete('plugin_oauth2_authorization_code_scope', []);
         $db->delete('plugin_oauth2_access_token', []);
         $db->delete('plugin_oauth2_access_token_scope', []);
     }
@@ -135,18 +137,22 @@ final class OAuth2AuthorizationCodeDAOTest extends TestCase
     {
         $auth_code_id = $this->dao->create(self::$active_project_app_id, 102, 'hashed_verification_string_auth', 20);
 
+        $auth_code_scope_dao    = new OAuth2AuthorizationCodeScopeDAO();
+        $auth_code_scope_dao->saveScopeKeysByOAuth2AuthCodeID($auth_code_id, 'scope:A', 'scope:B');
         $access_token_dao       = new OAuth2AccessTokenDAO();
         $access_token_id_1      = $access_token_dao->create($auth_code_id, 'hashed_verification_string_access', 30);
         $access_token_id_2      = $access_token_dao->create($auth_code_id, 'hashed_verification_string_access', 30);
         $access_token_scope_dao = new OAuth2AccessTokenScopeDAO();
         $access_token_scope_dao->saveScopeKeysByOAuth2AccessTokenID($access_token_id_1, 'scope:A', 'scope:B');
 
+        $this->assertNotEmpty($auth_code_scope_dao->searchScopeIdentifiersByOAuth2AuthCodeID($auth_code_id));
         $this->assertNotNull($access_token_dao->searchAccessToken($access_token_id_1));
         $this->assertNotNull($access_token_dao->searchAccessToken($access_token_id_2));
         $this->assertNotEmpty($access_token_scope_dao->searchScopeIdentifiersByAccessTokenID($access_token_id_1));
 
         $this->dao->deleteAuthorizationCodeByID($auth_code_id);
 
+        $this->assertEmpty($auth_code_scope_dao->searchScopeIdentifiersByOAuth2AuthCodeID($auth_code_id));
         $this->assertNull($this->dao->searchAuthorizationCode($auth_code_id));
         $this->assertNull($access_token_dao->searchAccessToken($access_token_id_1));
         $this->assertNull($access_token_dao->searchAccessToken($access_token_id_2));
