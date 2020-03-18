@@ -70,11 +70,6 @@ class BackendLogger extends \Psr\Log\AbstractLogger implements \Psr\Log\LoggerIn
         return $level;
     }
 
-    public function getFilepath()
-    {
-        return $this->filepath;
-    }
-
     public function log($level, $message, array $context = [])
     {
         $pid = getmypid();
@@ -94,5 +89,15 @@ class BackendLogger extends \Psr\Log\AbstractLogger implements \Psr\Log\LoggerIn
             $log_string    .= ": $error_message:\n$stack_trace";
         }
         return $log_string;
+    }
+
+    public function restoreOwnership(BackendSystem $backend_system)
+    {
+        $backend_system->changeOwnerGroupMode(
+            $this->filepath,
+            ForgeConfig::get('sys_http_user'),
+            ForgeConfig::get('sys_http_user'),
+            0640
+        );
     }
 }

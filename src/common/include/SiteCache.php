@@ -27,7 +27,7 @@ class SiteCache
 
     public function __construct(?\Psr\Log\LoggerInterface $logger = null)
     {
-        $this->logger = $logger ? $logger : new BackendLogger();
+        $this->logger = $logger ? $logger : BackendLogger::getDefaultLogger();
     }
 
     public function invalidatePluginBasedCaches()

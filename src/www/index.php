@@ -33,7 +33,7 @@ require_once __DIR__ . '/include/pre.php';
 $router = new FrontRouter(
     new RouteCollector($event_manager),
     new URLVerificationFactory($event_manager),
-    new BackendLogger(),
+    BackendLogger::getDefaultLogger(),
     new ErrorRendering(),
     new ThemeManager(
         new BurningParrotCompatiblePageDetector(

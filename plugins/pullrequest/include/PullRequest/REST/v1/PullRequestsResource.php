@@ -211,7 +211,7 @@ class PullRequestsResource extends AuthenticatedResource
         $reference_manager          = ReferenceManager::instance();
         $this->pull_request_factory = new PullRequestFactory($pull_request_dao, $reference_manager);
 
-        $this->logger               = new BackendLogger();
+        $this->logger               = BackendLogger::getDefaultLogger();
 
         $event_dispatcher = PullRequestNotificationSupport::buildDispatcher($this->logger);
 

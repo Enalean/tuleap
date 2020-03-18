@@ -91,7 +91,7 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
 
     public function tracker_encryption_add_key($params)
     {
-        $logger      = new BackendLogger();
+        $logger      = BackendLogger::getDefaultLogger();
         $dao_pub_key = new TrackerPublicKeyDao();
         $value_dao   = new ValueDao();
         $tracker_key = new Tracker_Key($dao_pub_key, $value_dao, $params['tracker_id'], $params['key']);

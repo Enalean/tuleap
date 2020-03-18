@@ -137,7 +137,7 @@ class AgileDashboard_FirstKanbanCreator
         try {
             return $this->xml_import->createFromXMLFile($this->project, $this->template_path);
         } catch (Exception $exception) {
-            $logger = new BackendLogger();
+            $logger = BackendLogger::getDefaultLogger();
             $logger->error('Unable to create first kanban for ' . $this->project->getId() . ': ' . $exception->getMessage());
             return;
         }

@@ -40,7 +40,7 @@ try {
         new SVN_Svnlook(),
         new SVN_Immutable_Tags_Handler(new SVN_Immutable_Tags_DAO()),
         new SHA1CollisionDetector(),
-        new BackendLogger()
+        BackendLogger::getDefaultLogger()
     );
     $hook->assertCommitMessageIsValid($repository, $commit_message);
     $hook->assertCommitToTagIsAllowed($repository, $txn);

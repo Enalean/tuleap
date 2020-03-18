@@ -395,7 +395,7 @@ class Plugin implements PFO_Plugin
     protected function getBackendLogger(): LoggerInterface
     {
         if (! $this->backend_logger) {
-            $this->backend_logger = new BackendLogger();
+            $this->backend_logger = BackendLogger::getDefaultLogger();
         }
         return $this->backend_logger;
     }

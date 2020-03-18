@@ -148,7 +148,7 @@ class MilestoneResource extends AuthenticatedResource
             $scrum_for_mono_milestone_checker,
             new TimeframeBuilder(
                 new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $this->tracker_form_element_factory),
-                new \BackendLogger()
+                \BackendLogger::getDefaultLogger()
             ),
             new MilestoneBurndownFieldChecker($this->tracker_form_element_factory)
         );

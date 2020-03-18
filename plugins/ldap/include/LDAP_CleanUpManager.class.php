@@ -171,6 +171,6 @@ class LDAP_CleanUpManager
      */
     private function getBackendLogger(): \Psr\Log\LoggerInterface
     {
-         return new BackendLogger();
+         return BackendLogger::getDefaultLogger();
     }
 }

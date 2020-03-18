@@ -79,7 +79,7 @@ class DataBuilder extends REST_TestDataBuilder
         $this->system_event_manager     = SystemEventManager::instance();
 
         $console    = new TruncateLevelLogger(new Log_ConsoleLogger(), ForgeConfig::get('sys_logger_level'));
-        $logger     = new BackendLogger();
+        $logger     = BackendLogger::getDefaultLogger();
         $broker_log = new BrokerLogger(array($logger, $console));
 
         $factory                   = new SystemEventProcessor_Factory(

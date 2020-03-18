@@ -335,7 +335,7 @@ class Backend
      */
     public function log($message, $level = 'info')
     {
-        $logger = new BackendLogger();
+        $logger = BackendLogger::getDefaultLogger();
         $logger->log($level, $message);
     }
 

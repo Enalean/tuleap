@@ -439,7 +439,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                     new Tracker_FormElement_Field_BurndownDao(),
                     new FieldCalculator(new BurndownCalculator(new Tracker_FormElement_Field_ComputedDao())),
                     new Tracker_FormElement_Field_ComputedDaoCache(new Tracker_FormElement_Field_ComputedDao()),
-                    new BackendLogger(),
+                    BackendLogger::getDefaultLogger(),
                     new BurndownCacheDateRetriever()
                 );
                 break;
@@ -451,7 +451,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                     new Tracker_FormElement_Field_BurndownDao(),
                     new FieldCalculator(new BurndownCalculator(new Tracker_FormElement_Field_ComputedDao())),
                     new Tracker_FormElement_Field_ComputedDaoCache(new Tracker_FormElement_Field_ComputedDao()),
-                    new BackendLogger(),
+                    BackendLogger::getDefaultLogger(),
                     new BurndownCacheDateRetriever()
                 );
                 break;
@@ -937,7 +937,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         include_once 'Tracker/TrackerManager.class.php';
         $trackerManager = new TrackerManager();
-        $logger = new BackendLogger();
+        $logger = BackendLogger::getDefaultLogger();
         $logger->debug("[TDR] Tuleap daily start event: launch date reminder");
 
         $this->getSystemEventManager()->createEvent(

@@ -210,7 +210,7 @@ class FileResource extends AuthenticatedResource
 
         $file_ongoing_upload_dao = new FileOngoingUploadDao();
 
-        $logger                = new \BackendLogger();
+        $logger                = \BackendLogger::getDefaultLogger();
         $upload_path_allocator = new UploadPathAllocator();
         $file_item_creator     = new FileCreator(
             new FileToUploadCreator(

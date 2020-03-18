@@ -187,7 +187,7 @@ class ProjectMilestonesPresenterBuilder
             new PlanningPermissionsManager(),
             new AgileDashboard_Milestone_MilestoneDao(),
             $scrum_mono_milestone_checker,
-            new TimeframeBuilder(new SemanticTimeframeBuilder(new SemanticTimeframeDao(), Tracker_FormElementFactory::instance()), new \BackendLogger()),
+            new TimeframeBuilder(new SemanticTimeframeBuilder(new SemanticTimeframeDao(), Tracker_FormElementFactory::instance()), \BackendLogger::getDefaultLogger()),
             new MilestoneBurndownFieldChecker(Tracker_FormElementFactory::instance())
         );
 

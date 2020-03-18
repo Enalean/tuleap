@@ -134,16 +134,11 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent
             }
         }
 
-        $backend_logger = new BackendLogger();
+        $backend_logger = BackendLogger::getDefaultLogger();
         $logger         = new SystemCheckLogger($backend_logger, 'system_check');
 
-        if (is_file($backend_logger->getFilepath())) {
-            $backendSystem->changeOwnerGroupMode(
-                $backend_logger->getFilepath(),
-                ForgeConfig::get('sys_http_user'),
-                ForgeConfig::get('sys_http_user'),
-                0640
-            );
+        if ($backend_logger instanceof BackendLogger) {
+            $backend_logger->restoreOwnership($backendSystem);
         }
 
         // If no codendi_svnroot.conf file, force recreate.
