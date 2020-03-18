@@ -425,6 +425,22 @@ describe("InPropertiesItemFilter", () => {
                     "toto"
                 ).length
             ).toBe(1);
+            expect(
+                in_properties_filter(
+                    [
+                        {
+                            id: null,
+                            label: null,
+                            card_fields: [
+                                {
+                                    type: list_type
+                                }
+                            ]
+                        }
+                    ],
+                    "toto"
+                ).length
+            ).toBe(0);
         });
         ["date", "lud", "subon"].forEach(function(date_type) {
             var today = new Date();
