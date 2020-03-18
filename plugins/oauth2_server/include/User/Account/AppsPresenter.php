@@ -22,10 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\User\Account;
 
+use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 
 final class AppsPresenter
 {
+    /**
+     * @var CSRFSynchronizerTokenPresenter
+     *
+     * @psalm-readonly
+     */
+    public $csrf_token;
     /**
      * @var AccountTabPresenterCollection
      *
@@ -45,10 +52,14 @@ final class AppsPresenter
      */
     public $has_apps;
 
-    public function __construct(AccountTabPresenterCollection $tabs, AccountAppPresenter ...$app_presenters)
-    {
-        $this->tabs     = $tabs;
-        $this->apps     = $app_presenters;
-        $this->has_apps = count($this->apps) > 0;
+    public function __construct(
+        CSRFSynchronizerTokenPresenter $csrf_token,
+        AccountTabPresenterCollection $tabs,
+        AccountAppPresenter ...$app_presenters
+    ) {
+        $this->csrf_token = $csrf_token;
+        $this->tabs       = $tabs;
+        $this->apps       = $app_presenters;
+        $this->has_apps   = count($this->apps) > 0;
     }
 }

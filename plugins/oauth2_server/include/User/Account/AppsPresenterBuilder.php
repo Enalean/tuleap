@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\User\Account;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\OAuth2Server\App\AppFactory;
 use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\OAuth2Server\AuthorizationServer\OAuth2ScopeDefinitionPresenter;
@@ -54,7 +55,7 @@ class AppsPresenterBuilder
         $this->authorized_scope_factory = $authorized_scope_factory;
     }
 
-    public function build(\PFUser $user): AppsPresenter
+    public function build(\PFUser $user, CSRFSynchronizerTokenPresenter $csrf_token_presenter): AppsPresenter
     {
         $tabs = $this->dispatcher->dispatch(new AccountTabPresenterCollection($user, AccountAppsController::URL));
         assert($tabs instanceof AccountTabPresenterCollection);
@@ -64,7 +65,7 @@ class AppsPresenterBuilder
         foreach ($apps as $app) {
             $app_presenters[] = $this->buildApp($user, $app);
         }
-        return new AppsPresenter($tabs, ...$app_presenters);
+        return new AppsPresenter($csrf_token_presenter, $tabs, ...$app_presenters);
     }
 
     private function buildApp(\PFUser $user, OAuth2App $app): AccountAppPresenter

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\User;
 
+use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
 
 class AuthorizationDao extends DataAccessObject
@@ -43,12 +44,28 @@ class AuthorizationDao extends DataAccessObject
 
     public function deleteAuthorizationByAppID(int $app_id): void
     {
-        $this->getDB()->run(
-            'DELETE plugin_oauth2_authorization.*, plugin_oauth2_authorization_scope.*
+        $this->deleteAuthorization(EasyStatement::open()->with('plugin_oauth2_authorization.app_id = ?', $app_id));
+    }
+
+    public function deleteAuthorizationByUserAndAppID(\PFUser $user, int $app_id): void
+    {
+        $this->deleteAuthorization(
+            EasyStatement::open()->with(
+                'plugin_oauth2_authorization.user_id = ? AND plugin_oauth2_authorization.app_id = ?',
+                $user->getId(),
+                $app_id
+            )
+        );
+    }
+
+    private function deleteAuthorization(EasyStatement $filter_statement): void
+    {
+        $this->getDB()->safeQuery(
+            "DELETE plugin_oauth2_authorization.*, plugin_oauth2_authorization_scope.*
                        FROM plugin_oauth2_authorization
                        LEFT JOIN plugin_oauth2_authorization_scope ON plugin_oauth2_authorization.id = plugin_oauth2_authorization_scope.authorization_id
-                       WHERE plugin_oauth2_authorization.app_id = ?',
-            $app_id
+                       WHERE $filter_statement",
+            $filter_statement->values()
         );
     }
 }

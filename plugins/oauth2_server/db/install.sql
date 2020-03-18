@@ -34,7 +34,8 @@ CREATE TABLE plugin_oauth2_authorization_code(
     expiration_date INT(11) UNSIGNED NOT NULL,
     has_already_been_used BOOLEAN NOT NULL,
     INDEX idx_expiration_date (expiration_date),
-    INDEX idx_app_id (app_id)
+    INDEX idx_app_id (app_id),
+    INDEX idx_user_app_id (user_id, app_id)
 ) ENGINE=InnoDB;
 
 CREATE TABLE plugin_oauth2_authorization_code_scope (

@@ -28,6 +28,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
@@ -79,6 +80,11 @@ final class AccountAppsController extends DispatchablePSR15Compatible implements
         $this->user_manager      = $user_manager;
     }
 
+    public static function getCSRFToken(): \CSRFSynchronizerToken
+    {
+        return new \CSRFSynchronizerToken(self::URL);
+    }
+
     /**
      * @throws ForbiddenException
      */
@@ -92,11 +98,11 @@ final class AccountAppsController extends DispatchablePSR15Compatible implements
         $layout = $request->getAttribute(BaseLayout::class);
         assert($layout instanceof BaseLayout);
 
-        $presenter = $this->presenter_builder->build($user);
 
         $assets = new IncludeAssets(__DIR__ . '/../../../../../src/www/assets/oauth2_server', '/assets/oauth2_server');
         $layout->addJavascriptAsset(new JavascriptAsset($assets, 'user-preferences.js'));
         $layout->addCssAsset(new CssAsset($assets, 'user-preferences'));
+        $presenter = $this->presenter_builder->build($user, CSRFSynchronizerTokenPresenter::fromToken(self::getCSRFToken()));
         ob_start();
         (new UserPreferencesHeader())->display(dgettext('tuleap-oauth2_server', 'OAuth2 Apps'), $layout);
         $this->renderer->renderToPage('account-apps', $presenter);
