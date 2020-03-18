@@ -1,0 +1,45 @@
+<div id="modal-add-jenkins-server"
+     class="modal hide fade modal-jenkins"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="modal-add-jenkins-server-title"
+     aria-hidden="true"
+>
+    <div class="modal-header">
+        <a role="button" class="close" data-dismiss="modal">×</a>
+        <h3 id="modal-add-jenkins-server-title">{{# dgettext }} tuleap-hudson_git | Add a Jenkins server{{/ dgettext }}</h3>
+    </div>
+    <form method="POST" action="/plugins/hudson_git/jenkins_server">
+        <input type="hidden" name="project_id" value="{{ project_id }}" />
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
+
+        <div class="modal-body">
+
+            <p>{{# dgettext }} tuleap-hudson_git | Jenkins server will be notified about git activity on any repository in the project.{{/ dgettext }}</p>
+            <p>
+                <label for="jenkins-server-url">{{# dgettext }} tuleap-hudson_git | Jenkins URL{{/ dgettext }}</label>
+                <input type="url"
+                       id="jenkins-server-url"
+                       class="create-hook-url"
+                       name="url"
+                       value=""
+                       placeholder="https://example.com/jenkins"
+                       required
+                       pattern="https?://.+"
+                />
+            </p>
+            <div id="jenkins-server-test-feedback">
+                <button class="btn" type="button" id="jenkins-server-test">
+                    <i class="fa fa-play" aria-hidden="true"></i> {{# dgettext }} tuleap-hudson_git | Test the server{{/ dgettext }}
+                </button>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">{{# dgettext }} tuleap-hudson_git | Cancel{{/ dgettext }}</button>
+            <input type="submit" class="btn btn-primary" value="{{# dgettext }} tuleap-hudson_git | Save{{/ dgettext }}">
+        </div>
+    </form>
+</div>
