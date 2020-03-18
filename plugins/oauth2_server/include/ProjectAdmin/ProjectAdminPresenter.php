@@ -22,20 +22,32 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\ProjectAdmin;
 
-/**
- * @psalm-immutable
- */
 final class ProjectAdminPresenter
 {
-    /** @var AppPresenter[] */
+    /**
+     * @var AppPresenter[]
+     * @psalm-readonly
+     */
     public $apps;
-    /** @var \CSRFSynchronizerToken */
+    /**
+     * @var \CSRFSynchronizerToken
+     * @psalm-readonly
+     */
     public $csrf_token;
-    /** @var string */
+    /**
+     * @var string
+     * @psalm-readonly
+     */
     public $add_client_url;
-    /** @var string */
+    /**
+     * @var string
+     * @psalm-readonly
+     */
     public $delete_client_url;
-    /** @var LastCreatedOAuth2AppPresenter|null */
+    /**
+     * @var LastCreatedOAuth2AppPresenter|null
+     * @psalm-readonly
+     */
     public $last_created_app;
 
     /**

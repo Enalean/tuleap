@@ -24,23 +24,23 @@ namespace Tuleap\HudsonGit\Git\Administration;
 
 use Project;
 
-/**
- * @psalm-immutable
- */
 class JenkinsServer
 {
     /**
      * @var int
+     * @psalm-readonly
      */
     private $id;
 
     /**
      * @var string
+     * @psalm-readonly
      */
     private $jenkins_server_url;
 
     /**
      * @var Project
+     * @psalm-readonly
      */
     private $project;
 
@@ -51,16 +51,25 @@ class JenkinsServer
         $this->project = $project;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getId(): int
     {
         return $this->id;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getServerURL(): string
     {
         return $this->jenkins_server_url;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getProject(): Project
     {
         return $this->project;

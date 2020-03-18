@@ -21,7 +21,7 @@
 
 namespace Tuleap\Admin;
 
-use CSRFSynchronizerToken;
+use Tuleap\CSRFSynchronizerTokenPresenter;
 
 /**
  * @psalm-immutable
@@ -39,7 +39,7 @@ class ProjectCreationModerationPresenter
 
     public function __construct(
         ProjectCreationNavBarPresenter $navbar,
-        CSRFSynchronizerToken $csrf_token,
+        CSRFSynchronizerTokenPresenter $csrf_token,
         bool $must_be_approved,
         int $max_global,
         int $max_per_user,

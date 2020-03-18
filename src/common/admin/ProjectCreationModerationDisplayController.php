@@ -24,6 +24,7 @@ namespace Tuleap\Admin;
 use CSRFSynchronizerToken;
 use ForgeConfig;
 use HTTPRequest;
+use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -48,7 +49,7 @@ class ProjectCreationModerationDisplayController implements DispatchableWithRequ
 
         $presenter = new ProjectCreationModerationPresenter(
             new ProjectCreationNavBarPresenter('moderation'),
-            new CSRFSynchronizerToken('/admin/project-creation/moderation'),
+            CSRFSynchronizerTokenPresenter::fromToken(new CSRFSynchronizerToken('/admin/project-creation/moderation')),
             ForgeConfig::get(\ProjectManager::CONFIG_PROJECT_APPROVAL, true),
             ForgeConfig::get(\ProjectManager::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION, -1),
             ForgeConfig::get(\ProjectManager::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION_PER_USER, -1),

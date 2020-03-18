@@ -27,23 +27,23 @@ use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\User\OAuth2\Scope\DemoOAuth2Scope;
 
-/**
- * @psalm-immutable
- */
 final class OAuth2AuthorizationCode
 {
     /**
      * @var int
+     * @psalm-readonly
      */
     private $authorization_code_id;
     /**
      * @var AuthenticationScope[]
      *
      * @psalm-var non-empty-array<AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier>>
+     * @psalm-readonly
      */
     private $scopes;
     /**
      * @var PFUser
+     * @psalm-readonly
      */
     private $user;
 
@@ -68,11 +68,17 @@ final class OAuth2AuthorizationCode
         );
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getID() : int
     {
         return $this->authorization_code_id;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getUser(): PFUser
     {
         return $this->user;
@@ -82,6 +88,7 @@ final class OAuth2AuthorizationCode
      * @return AuthenticationScope[]
      *
      * @psalm-return non-empty-array<AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier>>
+     * @psalm-mutation-free
      */
     public function getScopes(): array
     {

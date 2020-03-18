@@ -25,15 +25,13 @@ namespace Tuleap\svn\Event;
 use Project;
 use Tuleap\Event\Dispatchable;
 
-/**
- * @psalm-immutable
- */
 final class UpdateProjectAccessFilesEvent implements Dispatchable
 {
     public const NAME = 'updateProjectAccessFiles';
 
     /**
      * @var Project
+     * @psalm-readonly
      */
     private $project;
 
@@ -42,6 +40,9 @@ final class UpdateProjectAccessFilesEvent implements Dispatchable
         $this->project = $project;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getProject(): Project
     {
         return $this->project;

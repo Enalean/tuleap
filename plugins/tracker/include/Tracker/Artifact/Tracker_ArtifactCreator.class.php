@@ -201,7 +201,7 @@ class Tracker_ArtifactCreator //phpcs:ignore
 
     /**
      * Inserts the artifact into the database and returns it with its id set.
-     * @return true on success or false if an error occured
+     * @return bool true on success or false if an error occurred
      */
     private function insertArtifact(
         Tracker $tracker,

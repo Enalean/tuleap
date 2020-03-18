@@ -366,6 +366,7 @@ if ($group_id && !$atid) {
                // Event/Role specific settings
                //echo "num_roles : ".$ath->num_roles.", num_events : ".$ath->num_events." <br>";
 
+                $arr_notif = [];
                 for ($i = 0; $i < $ath->num_roles; $i++) {
                     $role_id = $ath->arr_roles[$i]['role_id'];
                     for ($j = 0; $j < $ath->num_events; $j++) {

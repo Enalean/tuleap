@@ -26,40 +26,43 @@ use GitRepository;
 use PFUser;
 use Tuleap\Event\Dispatchable;
 
-/**
- * @psalm-immutable
- */
 class PostReceiveExecuteEvent implements Dispatchable
 {
     public const NAME = 'postReceiveExecuteEvent';
 
     /**
      * @var GitRepository
+     * @psalm-readonly
      */
     private $repository;
 
     /**
      * @var PFUser
+     * @psalm-readonly
      */
     private $user;
 
     /**
      * @var string
+     * @psalm-readonly
      */
     private $oldrev;
 
     /**
      * @var string
+     * @psalm-readonly
      */
     private $newrev;
 
     /**
      * @var string
+     * @psalm-readonly
      */
     private $refname;
 
     /**
      * @var bool
+     * @psalm-readonly
      */
     private $is_technical_reference;
 
@@ -79,31 +82,49 @@ class PostReceiveExecuteEvent implements Dispatchable
         $this->is_technical_reference = $is_technical_reference;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getRepository(): GitRepository
     {
         return $this->repository;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getUser(): PFUser
     {
         return $this->user;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getOldrev(): string
     {
         return $this->oldrev;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getNewrev(): string
     {
         return $this->newrev;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getRefname(): string
     {
         return $this->refname;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function isATechnicalReference(): bool
     {
         return $this->is_technical_reference;

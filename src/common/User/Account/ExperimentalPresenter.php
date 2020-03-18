@@ -25,21 +25,21 @@ namespace Tuleap\User\Account;
 
 use CSRFSynchronizerToken;
 
-/**
- * @psalm-immutable
- */
 final class ExperimentalPresenter
 {
     /**
      * @var CSRFSynchronizerToken
+     * @psalm-readonly
      */
     public $csrf_token;
     /**
      * @var AccountTabPresenterCollection
+     * @psalm-readonly
      */
     public $tabs;
     /**
      * @var bool
+     * @psalm-readonly
      */
     public $lab_features_checked;
 

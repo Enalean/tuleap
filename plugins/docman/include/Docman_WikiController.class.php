@@ -209,7 +209,7 @@ class Docman_WikiController extends Docman_Controller
         } else {
             $this->request->params['response'] = false;
             if (isset($lockInfos) && $lockInfos) { // User can NOT edit the page because there is a lock on the page and user is not page locker
-                $this->feedback->log('warning', $message);
+                $this->feedback->log('warning', $message ?? '');
             } else { // User can NOT edit the page because he don't have write permission on it.
                 $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to edit this item.'));
             }

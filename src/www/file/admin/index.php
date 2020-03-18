@@ -35,6 +35,7 @@ if ($request->valid($vGroupId)) {
     $group_id = $request->get('group_id');
 } else {
     exit_error($Language->getText('file_file_utils', 'g_id_err'), $Language->getText('file_file_utils', 'g_id_err'));
+    exit();
 }
 
 $permission_dao     = new FRSPermissionDao();

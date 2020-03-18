@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,30 +20,40 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\PullRequest\Notification;
+namespace Tuleap;
 
-use Tuleap\PullRequest\PullRequest;
-
-interface NotificationToProcess
+/**
+ * @psalm-immutable
+ */
+final class CSRFSynchronizerTokenPresenter
 {
     /**
-     * @psalm-mutation-free
+     * @var string
      */
-    public function getPullRequest(): PullRequest;
-
+    private $name;
     /**
-     * @return \PFUser[]
-     * @psalm-mutation-free
+     * @var string
      */
-    public function getRecipients(): array;
+    private $token;
 
-    /**
-     * @psalm-mutation-free
-     */
-    public function asPlaintext(): string;
+    private function __construct(string $name, string $token)
+    {
+        $this->name  = $name;
+        $this->token = $token;
+    }
 
-    /**
-     * @psalm-mutation-free
-     */
-    public function asEnhancedContent(): NotificationEnhancedContent;
+    public static function fromToken(\CSRFSynchronizerToken $token): self
+    {
+        return new self($token->getTokenName(), $token->getToken());
+    }
+
+    public function getToken(): string
+    {
+        return $this->token;
+    }
+
+    public function getTokenName(): string
+    {
+        return $this->name;
+    }
 }

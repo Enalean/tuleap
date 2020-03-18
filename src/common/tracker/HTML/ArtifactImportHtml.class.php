@@ -289,6 +289,8 @@ class ArtifactImportHtml extends ArtifactImport
         'help' => 'tracker-v3.html#tracker-artifact-import'));
         echo '<div id="tracker_toolbar_clear"></div>' . PHP_EOL;
 
+        $fields = $col_list = $multiple_queries = $all_queries = [];
+        $select = $from = $where = '';
         $sql = $this->ath->buildExportQuery($fields, $col_list, $this->lbl_list, $this->dsc_list, $select, $from, $where, $multiple_queries, $all_queries);
 
       //we need only one single record

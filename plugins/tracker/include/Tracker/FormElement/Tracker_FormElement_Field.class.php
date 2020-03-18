@@ -936,7 +936,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     /**
      * Verifies the consistency of the imported Tracker
      *
-     * @return true if Tracler is ok
+     * @return bool true if Tracler is ok
      */
     public function testImport()
     {

@@ -253,7 +253,7 @@ class FRSXMLImporter
 
         $release = new FRSRelease();
         $release->setProject($project);
-        $release->setReleaseDate(strtotime($attrs['time']));
+        $release->setReleaseDate(strtotime((string) $attrs['time']));
         $release->setName((string) $attrs['name']);
         $release->setStatusID(FRSRelease::STATUS_ACTIVE);
         $release->setPackageID($package->getPackageID());
@@ -307,8 +307,8 @@ class FRSXMLImporter
         $src   = $extraction_path . '/' . $attrs['src'];
         $name  = isset($attrs['name']) ? (string) $attrs['name'] : basename($src);
         $md5   = strtolower(md5_file($src));
-        $time  = strtotime($attrs['release-time']);
-        $date  = strtotime($attrs['post-date']);
+        $time  = strtotime((string) $attrs['release-time']);
+        $date  = strtotime((string) $attrs['post-date']);
         $desc  = "";
 
         $this->logger->debug('metadata gathered for file ' . $name);
@@ -337,7 +337,7 @@ class FRSXMLImporter
         }
 
         if (isset($attrs['md5sum'])) {
-            $expected_md5 = strtolower($attrs['md5sum']);
+            $expected_md5 = strtolower((string) $attrs['md5sum']);
             if ($expected_md5 != $md5) {
                 throw new Exception(
                     "Import of file $src failed because the file is corrupted " .
@@ -388,6 +388,6 @@ class FRSXMLImporter
             )
         );
 
-        $this->links_updater->update($release_links, $user, $release, strtotime($attrs['release-time']));
+        $this->links_updater->update($release_links, $user, $release, strtotime((string) $attrs['release-time']));
     }
 }

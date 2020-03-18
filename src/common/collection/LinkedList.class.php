@@ -42,7 +42,7 @@ class LinkedList extends Collection
     /**
      * Compares the specified object with this LinkedList for equality.
      * @param obj the reference object with which to compare.
-     * @return true if this object is the same as the obj argument; false otherwise.
+     * @return bool true if this object is the same as the obj argument; false otherwise.
      */
     public function equals($obj)
     {

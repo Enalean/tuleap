@@ -34,6 +34,10 @@ if (!$ath->isValid()) {
 $export_aids = $request->get('export_aids');
 $constraint = 'AND a.artifact_id IN (' . db_es($export_aids) . ')';
 
+$export_select = $export_from = $export_where = '';
+$multiple_queries = false;
+$fields = $col_list = $lbl_list = $dsc_list = $all_queries      = [];
+
 $sql = $ath->buildExportQuery($fields, $col_list, $lbl_list, $dsc_list, $export_select, $export_from, $export_where, $multiple_queries, $all_queries, $constraint);
 
 // Normally these two fields should be part of the artifact_fields.

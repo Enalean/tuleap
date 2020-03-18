@@ -28,6 +28,9 @@ $vTitle->required();
 $bookmark_url_id = '/my/bookmark_edit.php?bookmark_id=' . $bookmark_id;
 $csrf_token      = new CSRFSynchronizerToken($bookmark_url_id);
 
+$bookmark_url   = '';
+$bookmark_title = '';
+
 if ($request->isPost() &&
     $request->valid($vUrl) &&
     $request->valid($vTitle)) {

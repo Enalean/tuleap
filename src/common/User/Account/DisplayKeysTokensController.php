@@ -106,7 +106,7 @@ final class DisplayKeysTokensController implements DispatchableWithRequest, Disp
             new KeysTokensPresenter(
                 $this->csrf_token,
                 $tabs,
-                new SSHKeysPresenter($user),
+                SSHKeysPresenter::fromUser($user),
                 $this->access_key_presenter_builder->getForUser($user, $_SESSION),
                 $this->svn_tokens_presenter_builder->getForUser($user, $_SESSION),
             )

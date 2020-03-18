@@ -940,7 +940,7 @@ class Docman_Actions extends Actions
                     }
                 }
             }
-            $newParentItem = $item_factory->getItemFromDb($new_parent_id);
+            $newParentItem = $item_factory->getItemFromDb($new_parent_id ?? 0);
             $user          = $this->_controler->getUser();
             $this->_doCutPaste($item, $newParentItem, $user, $ordering);
         }

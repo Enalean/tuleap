@@ -32,25 +32,26 @@ use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\Reference\HTMLURLBuilder;
 use UserHelper;
 
-/**
- * @psalm-immutable
- */
 final class PullRequestAbandonedNotification implements NotificationToProcess
 {
     /**
      * @var PullRequest
+     * @psalm-readonly
      */
     private $pull_request;
     /**
      * @var string
+     * @psalm-readonly
      */
     private $change_user_display_name;
     /**
-     * @var array
+     * @var PFUser[]
+     * @psalm-readonly
      */
     private $owners;
     /**
      * @var NotificationEnhancedContent
+     * @psalm-readonly
      */
     private $enhanced_content;
 
@@ -101,16 +102,25 @@ final class PullRequestAbandonedNotification implements NotificationToProcess
         );
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getPullRequest(): PullRequest
     {
         return $this->pull_request;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getRecipients(): array
     {
         return $this->owners;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function asPlaintext(): string
     {
         return sprintf(
@@ -121,6 +131,9 @@ final class PullRequestAbandonedNotification implements NotificationToProcess
         );
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function asEnhancedContent(): NotificationEnhancedContent
     {
         return $this->enhanced_content;

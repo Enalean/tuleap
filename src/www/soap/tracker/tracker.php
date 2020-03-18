@@ -683,6 +683,9 @@ if (defined('NUSOAP')) {
         )
     );
 
+    if (! isset($uri)) {
+        $uri = '';
+    }
 // Function definition
     $server->register(
         'getTrackerList', // method name

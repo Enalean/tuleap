@@ -57,7 +57,7 @@ class AppDao extends DataAccessObject
     }
 
     /**
-     * @psalm-return array<array{id:int, project_id:int, name:string}>
+     * @psalm-return array<array{id:int, project_id:int, name:string, redirect_endpoint:string}>
      */
     public function searchAuthorizedAppsByUser(\PFUser $user): array
     {

@@ -20,6 +20,7 @@ $art_field_fact = new ArtifactFieldFactory($ath);
 $art_fieldset_fact = new ArtifactFieldSetFactory($ath);
 
 // Printer version ?
+$ro = false;
 if (!$request->exist('pv')) {
     $pv = false;
     $ro = !user_isloggedin();

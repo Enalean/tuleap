@@ -27,6 +27,9 @@ use Tuleap\FRS\FRSPermissionManager;
 
 //  get the Group object
 $pm = ProjectManager::instance();
+if (! isset($group_id)) {
+    $group_id = 0;
+}
 $group = $pm->getProject($group_id);
 if (!$group || !is_object($group) || $group->isError()) {
     exit_no_group();

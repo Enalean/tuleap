@@ -155,6 +155,7 @@ if ($func == 'gotoid') {
                 if (!$ah->create()) {
                         exit_error($Language->getText('global', 'error'), $ah->getErrorMessage());
                 } else {
+                    $changes = [];
                         //      Attach file to this Artifact.
                     if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE) {
                             $afh = new ArtifactFileHtml($ah);
@@ -233,6 +234,7 @@ if ($func == 'gotoid') {
                 if (!$ah->create()) {
                         exit_error($Language->getText('global', 'error'), $ah->getErrorMessage());
                 } else {
+                    $changes = [];
                         //      Attach file to this Artifact.
                     if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE) {
                             $afh = new ArtifactFileHtml($ah);
@@ -299,6 +301,7 @@ if ($func == 'gotoid') {
             } elseif ($ah->isError()) {
                     exit_error($Language->getText('global', 'error'), $ah->getErrorMessage());
             } else {
+                $changes        = [];
                 $artifact_cc_id = $request->get('artifact_cc_id');
                     $cc_array = $ah->getCC($artifact_cc_id);
                     $user_id  = UserManager::instance()->getCurrentUser()->getId();
@@ -365,6 +368,8 @@ if ($func == 'gotoid') {
                         return;
             }
 
+            $changes = [];
+
                 $ah = new ArtifactHtml($ath, $aid);
             if (!$ah || !is_object($ah)) {
                 exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'not_create_art'));
@@ -412,6 +417,7 @@ if ($func == 'gotoid') {
 
             break;
         case 'postmod':
+            $changes = [];
                 //      Modify an Artifact
                 $ah = new ArtifactHtml($ath, $aid);
             if (!$ah || !is_object($ah)) {
@@ -534,6 +540,8 @@ if ($func == 'gotoid') {
                 return;
             }
 
+            $changes = [];
+
          // First check parameters
 
                 // CC
@@ -554,6 +562,8 @@ if ($func == 'gotoid') {
                 $art_report_html = $report_fact->getArtifactReportHtml($report_id, $atid);
                 $query = $art_field_fact->extractFieldList(true, 'query_');
                 $advsrch = $request->get('advsrch');
+                $from    = '';
+                $where   = '';
                 $art_report_html->getQueryElements($query, $advsrch, $from, $where);
                 $sql = "select distinct a.artifact_id " . $from . " " . $where;
 
@@ -669,6 +679,7 @@ if ($func == 'gotoid') {
 
             $comment = $request->get('comment');
             $email   = $request->get('email');
+            $changes = [];
             if ($comment) {
                 $vFormat = new Valid_WhiteList('comment_format', array(Artifact::FORMAT_HTML, Artifact::FORMAT_TEXT));
                 $comment_format = $request->getValidated('comment_format', $vFormat, Artifact::FORMAT_TEXT);
@@ -752,8 +763,9 @@ if ($func == 'gotoid') {
 
 
             if ($group_id && $atid && $user_id) {
-                $import = new ArtifactImportHtml($ath, $art_field_fact, $group);
-                 $mode = $request->get('mode');
+                $import          = new ArtifactImportHtml($ath, $art_field_fact, $group);
+                 $mode           = $request->get('mode');
+                 $artifacts_data = [];
                 if ($mode == "parse") {
                     $import->displayParse($_FILES['csv_filename']['tmp_name']);
                 } elseif ($mode == "import") {
@@ -790,6 +802,7 @@ if ($func == 'gotoid') {
                 $ah = new ArtifactHtml($ath, $artifact_id);
                 $vFormat = new Valid_WhiteList('comment_format', array(Artifact::FORMAT_HTML, Artifact::FORMAT_TEXT));
                 $comment_format = $request->getValidated('comment_format', $vFormat, Artifact::FORMAT_TEXT);
+                $changes        = [];
                 if ($ah->updateFollowupComment($request->get('artifact_history_id'), $followup_update, $changes, $comment_format)) {
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('tracker_common_artifact', 'followup_upd_succ'));
                     $agnf = new ArtifactGlobalNotificationFactory();

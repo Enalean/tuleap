@@ -156,7 +156,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         $is_disabled = false;
         $is_checked  = ($this->getPermissionsValidator()->isArtifactPermissionChecked($value) === true);
 
-        return $this->getArtifactValueHTML($this->getId(), $is_checked, $is_disabled);
+        return  $this->getArtifactValueHTML($this->getId(), $is_checked, $is_disabled);
     }
 
     /**
@@ -533,7 +533,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         $user_groups = $this->getAllUserGroups();
 
         if (! $user_groups) {
-            $html .= "<p><b>" . $GLOBALS['Language']->getText('global', 'error') . "</b>: " . $GLOBALS['Language']->getText('project_admin_permissions', 'perm_type_not_def', $permission_type);
+            $html .= "<p><b>" . $GLOBALS['Language']->getText('global', 'error') . "</b>: " . $GLOBALS['Language']->getText('project_admin_permissions', 'perm_type_not_def', '');
             return $html;
         }
 

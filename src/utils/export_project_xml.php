@@ -45,7 +45,10 @@ $long_options = array(
     'dir', 'all'
 );
 
-function usage()
+/**
+ * @psalm-return never-return
+ */
+function usage(): void
 {
     global $argv;
 
@@ -91,6 +94,7 @@ if (! isset($arguments['o'])) {
     usage();
 } else {
     $output = $arguments['o'];
+    assert(is_string($output));
 }
 
 $display_xml = false;

@@ -75,7 +75,7 @@ class Collection
     /**
      * Compares the specified object with this collection for equality.
      * @param obj the reference object with which to compare.
-     * @return true if this object is the same as the obj argument; false otherwise.
+     * @return bool true if this object is the same as the obj argument; false otherwise.
      */
     public function equals($obj)
     {
@@ -131,7 +131,7 @@ class Collection
      * Removes a single instance of the specified element from this collection,
      * if it is present
      * @param element element to be removed from this collection, if present.
-     * @return true if this collection changed as a result of the call
+     * @return bool true if this collection changed as a result of the call
      */
     public function remove($wanted)
     {

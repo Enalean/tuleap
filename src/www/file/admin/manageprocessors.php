@@ -34,6 +34,7 @@ if ($request->valid($vGroupId)) {
     $group_id = $request->get('group_id');
 } else {
     exit_no_group();
+    exit();
 }
 
 $permission_manager = FRSPermissionManager::build();

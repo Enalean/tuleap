@@ -25,15 +25,13 @@ namespace Tuleap\Tracker\Workflow\PostAction;
 use Transition_PostAction;
 use Tuleap\Event\Dispatchable;
 
-/**
- * @psalm-immutable
- */
 class ExternalPostActionSaveObjectEvent implements Dispatchable
 {
     public const NAME = 'externalPostActionSaveObjectEvent';
 
     /**
      * @var Transition_PostAction
+     * @psalm-readonly
      */
     private $post_action;
 
@@ -42,6 +40,9 @@ class ExternalPostActionSaveObjectEvent implements Dispatchable
         $this->post_action = $post_action;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getPostAction(): Transition_PostAction
     {
         return $this->post_action;

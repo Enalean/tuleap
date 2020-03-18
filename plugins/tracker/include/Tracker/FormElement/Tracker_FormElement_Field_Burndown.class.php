@@ -319,7 +319,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $child->addAttribute('use_cache', '1');
     }
 
-    public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
+    public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset): ArtifactFieldValueFullRepresentation
     {
         $artifact = $changeset->getArtifact();
         $form_element = $this->getFormElementFactory()->getFormElementById($this->getId());

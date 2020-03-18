@@ -24,6 +24,9 @@ namespace Tuleap\Admin;
 use Exception;
 use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigDisplayController;
 
+/**
+ * @psalm-immutable
+ */
 class ProjectCreationNavBarPresenter
 {
     public $moderation_is_active = false;

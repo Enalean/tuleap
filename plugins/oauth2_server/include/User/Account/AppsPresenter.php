@@ -24,21 +24,24 @@ namespace Tuleap\OAuth2Server\User\Account;
 
 use Tuleap\User\Account\AccountTabPresenterCollection;
 
-/**
- * @psalm-immutable
- */
 final class AppsPresenter
 {
     /**
      * @var AccountTabPresenterCollection
+     *
+     * @psalm-readonly
      */
     public $tabs;
     /**
      * @var AccountAppPresenter[]
+     *
+     * @psalm-readonly
      */
     public $apps;
     /**
      * @var bool
+     *
+     * @psalm-readonly
      */
     public $has_apps;
 

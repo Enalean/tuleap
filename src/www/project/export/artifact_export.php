@@ -55,6 +55,9 @@ if ($atid) {
         exit_error($Language->getText('global', 'error'), $art_fieldset_fact->getErrorMessage());
     }
 
+    $fields = $col_list = $lbl_list = $dsc_list = $multiple_queries = $all_queries = [];
+    $select = $from = $where = '';
+
     $sql = $at->buildExportQuery($fields, $col_list, $lbl_list, $dsc_list, $select, $from, $where, $multiple_queries, $all_queries);
 
     // Normally these two fields should be part of the artifact_fields.

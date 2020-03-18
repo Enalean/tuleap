@@ -2119,6 +2119,7 @@ EOS;
         $group_id = $group->getGroupId();
 
         if ($query) {
+            $from = $where = '';
             $art_report_html->getQueryElements($query, $advsrch, $from, $where);
             $sql = "select distinct a.artifact_id " . $from . " " . $where;
             $result = db_query($sql);

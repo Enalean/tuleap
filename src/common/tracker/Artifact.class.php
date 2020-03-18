@@ -965,6 +965,7 @@ class Artifact
                 if ($differ) {
                     // The userCanUpdate test is only done on modified fields
                     if ($field->userCanUpdate($this->ArtifactType->getGroupID(), $this->ArtifactType->getID())) {
+                        $update_value = '';
                         if ($is_text) {
                             if ($field->isStandardField()) {
                                 $upd_list .= "$field_name='" . db_es(htmlspecialchars($value)) . "',";
@@ -1083,7 +1084,7 @@ class Artifact
         }
 
         if (!$res_upd) {
-            exit_error($Language->getText('tracker_common_artifact', 'upd_fail') . ': ' . $sql, $Language->getText('tracker_common_artifact', 'upd_fail'));
+            exit_error($Language->getText('tracker_common_artifact', 'upd_fail') . ': ' . ($sql ?? ''), $Language->getText('tracker_common_artifact', 'upd_fail'));
             return false;
         } else {
             if (!$request->exist('change_permissions') || $request->get('change_permissions')) {

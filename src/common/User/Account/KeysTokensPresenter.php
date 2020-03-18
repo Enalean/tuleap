@@ -25,29 +25,31 @@ namespace Tuleap\User\Account;
 
 use CSRFSynchronizerToken;
 
-/**
- * @psalm-immutable
- */
 final class KeysTokensPresenter
 {
     /**
      * @var CSRFSynchronizerToken
+     * @psalm-readonly
      */
     public $csrf_token;
     /**
      * @var SSHKeysPresenter
+     * @psalm-readonly
      */
     public $ssh_keys_presenter;
     /**
      * @var AccessKeyPresenter
+     * @psalm-readonly
      */
     public $access_key_presenter;
     /**
      * @var SVNTokensPresenter
+     * @psalm-readonly
      */
     public $svn_tokens_presenter;
     /**
      * @var AccountTabPresenterCollection
+     * @psalm-readonly
      */
     public $tabs;
 

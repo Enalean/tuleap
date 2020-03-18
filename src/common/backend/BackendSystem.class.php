@@ -152,7 +152,7 @@ class BackendSystem extends Backend
      *
      * @param PFUser $user the user we want to create a home
      *
-     * @return true if directory is successfully created, false otherwise
+     * @return bool true if directory is successfully created, false otherwise
      */
     public function createUserHome(PFUser $user)
     {
@@ -235,7 +235,7 @@ class BackendSystem extends Backend
      *
      * @param int $group_id a group id
      *
-     * @return true if directory is successfully created, false otherwise
+     * @return bool true if directory is successfully created, false otherwise
      */
     public function createProjectHome($group_id)
     {
@@ -416,7 +416,7 @@ class BackendSystem extends Backend
      *
      * @param int $user_id a user id needed to find the home dir to archive
      *
-     * @return true if directory is successfully archived, false otherwise
+     * @return bool true if directory is successfully archived, false otherwise
      */
     public function archiveUserHome($user_id)
     {
@@ -447,7 +447,7 @@ class BackendSystem extends Backend
      *
      * @param int $group_id the group id used to find the home directory to archive
      *
-     * @return true if directory is successfully archived, false otherwise
+     * @return bool true if directory is successfully archived, false otherwise
      */
     public function archiveProjectHome($group_id)
     {
@@ -574,7 +574,7 @@ class BackendSystem extends Backend
      *
      * @param Project $project project to test if home exist
      *
-     * @return true is repository already exists, false otherwise
+     * @return bool true is repository already exists, false otherwise
      */
     public function projectHomeExists($project)
     {

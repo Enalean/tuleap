@@ -102,7 +102,7 @@ class Workflow_Transition_ConditionsCollection implements ArrayAccess
     /**
      * Validates all conditions in the collections
      *
-     * @return true if all conditions are satisfied
+     * @return bool true if all conditions are satisfied
      */
     public function validate($fields_data, Tracker_Artifact $artifact, $comment_body)
     {

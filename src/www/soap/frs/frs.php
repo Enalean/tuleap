@@ -121,6 +121,10 @@ if (defined('NUSOAP')) {
         'tns:FRSFile'
     );
 
+    if (! isset($uri)) {
+        $uri = '';
+    }
+
 // Function definition
     $server->register(
         'getPackages',

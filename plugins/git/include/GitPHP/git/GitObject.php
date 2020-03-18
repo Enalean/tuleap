@@ -85,7 +85,7 @@ abstract class GitObject
      * Gets the project
      *
      * @access public
-     * @return mixed project
+     * @return Project
      */
     public function GetProject() // @codingStandardsIgnoreLine
     {

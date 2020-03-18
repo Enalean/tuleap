@@ -36,22 +36,27 @@ class AddLicenseAgreementController implements DispatchableWithRequest
 {
     /**
      * @var ProjectRetriever
+     * @psalm-readonly
      */
     private $project_retriever;
     /**
      * @var \TemplateRenderer
+     * @psalm-readonly
      */
     private $content_renderer;
     /**
      * @var \CSRFSynchronizerToken
+     * @psalm-readonly
      */
     private $csrf_token;
     /**
      * @var IncludeAssets
+     * @psalm-readonly
      */
     private $assets;
     /**
      * @var LicenseAgreementControllersHelper
+     * @psalm-readonly
      */
     private $helper;
 

@@ -3021,7 +3021,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     /**
      * Verifies the consistency of the imported Tracker
      *
-     * @return true if Tracker is ok
+     * @return bool true if Tracker is ok
      */
     public function testImport()
     {

@@ -25,29 +25,31 @@ namespace Tuleap\OAuth2Server\AuthorizationServer;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\OAuth2Server\App\OAuth2App;
 
-/**
- * @psalm-immutable
- */
 final class AuthorizationFormData
 {
     /**
      * @var OAuth2App
+     * @psalm-readonly
      */
     private $app;
     /**
      * @var \CSRFSynchronizerToken
+     * @psalm-readonly
      */
     private $csrf_token;
     /**
      * @var string | null
+     * @psalm-readonly
      */
     private $state;
     /**
      * @var string
+     * @psalm-readonly
      */
     private $redirect_uri;
     /**
      * @var AuthenticationScope[]
+     * @psalm-readonly
      */
     private $scopes;
 
@@ -65,21 +67,33 @@ final class AuthorizationFormData
         $this->scopes       = $scopes;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getApp(): OAuth2App
     {
         return $this->app;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getCSRFToken(): \CSRFSynchronizerToken
     {
         return $this->csrf_token;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getState(): ?string
     {
         return $this->state;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getRedirectUri(): string
     {
         return $this->redirect_uri;
@@ -87,6 +101,7 @@ final class AuthorizationFormData
 
     /**
      * @return AuthenticationScope[]
+     * @psalm-mutation-free
      */
     public function getScopes(): array
     {

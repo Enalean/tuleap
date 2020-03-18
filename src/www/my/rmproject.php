@@ -32,6 +32,7 @@ if (user_isloggedin()) {
         $group_id = $request->get('group_id');
     } else {
         exit_no_group();
+        exit();
     }
 
     $user_remover = new \Tuleap\Project\UserRemover(

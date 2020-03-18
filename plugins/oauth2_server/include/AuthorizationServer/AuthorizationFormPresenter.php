@@ -25,9 +25,6 @@ namespace Tuleap\OAuth2Server\AuthorizationServer;
 use Psr\Http\Message\UriInterface;
 use Tuleap\OAuth2Server\App\ClientIdentifier;
 
-/**
- * @psalm-immutable
- */
 final class AuthorizationFormPresenter
 {
     /**
@@ -36,30 +33,37 @@ final class AuthorizationFormPresenter
     public $app_identifier;
     /**
      * @var string
+     * @psalm-readonly
      */
     public $app_name;
     /**
      * @var string
+     * @psalm-readonly
      */
     public $project_name;
     /**
      * @var UriInterface
+     * @psalm-readonly
      */
     public $deny_authorization_uri;
     /**
      * @var \CSRFSynchronizerToken
+     * @psalm-readonly
      */
     public $csrf_token;
     /**
      * @var string | null
+     * @psalm-readonly
      */
     public $state;
     /**
      * @var string
+     * @psalm-readonly
      */
     public $redirect_uri;
     /**
      * @var OAuth2ScopeDefinitionPresenter[]
+     * @psalm-readonly
      */
     public $scope_definition_presenters;
     /**

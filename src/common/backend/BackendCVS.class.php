@@ -58,7 +58,7 @@ class BackendCVS extends Backend
      *
      * @param Project $project Project for wich repository will be checked
      *
-     * @return true is repository already exists, false otherwise
+     * @return bool true is repository already exists, false otherwise
      */
     public function repositoryExists($project)
     {
@@ -77,7 +77,7 @@ class BackendCVS extends Backend
      *
      * @param int $group_id project id for wic CVS repository will be created
      *
-     * @return true if repo is successfully created, false otherwise
+     * @return bool true if repo is successfully created, false otherwise
      */
     public function createProjectCVS($group_id)
     {

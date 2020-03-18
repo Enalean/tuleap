@@ -27,15 +27,13 @@ use Project;
 use SimpleXMLElement;
 use Tuleap\Event\Dispatchable;
 
-/**
- * @psalm-immutable
- */
 class CreateTrackerFromXMLEvent implements Dispatchable
 {
     public const NAME = 'createTrackerFromXMLEvent';
 
     /**
      * @var Project
+     * @psalm-readonly
      */
     private $project;
 
@@ -50,11 +48,17 @@ class CreateTrackerFromXMLEvent implements Dispatchable
         $this->tracker_xml = $tracker_xml;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getProject(): Project
     {
         return $this->project;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getTrackerXml(): SimpleXMLElement
     {
         return $this->tracker_xml;

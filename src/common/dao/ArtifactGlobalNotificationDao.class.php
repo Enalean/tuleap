@@ -102,7 +102,7 @@ class ArtifactGlobalNotificationDao extends DataAccessObject
 
     /**
     * create a row in the table artifact_global_notification
-    * @return true or id(auto_increment) if there is no error
+    * @return false|string|int true or id(auto_increment) if there is no error
     */
     public function create($tracker_id, $addresses, $all_updates, $check_permissions)
     {

@@ -190,7 +190,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
     /**
      * Verifies the consistency of the imported Tracker
      *
-     * @return true if Tracker is ok
+     * @return bool true if Tracker is ok
      */
     public function testImport()
     {
