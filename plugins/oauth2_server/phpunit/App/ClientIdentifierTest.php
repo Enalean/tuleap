@@ -58,7 +58,7 @@ final class ClientIdentifierTest extends TestCase
 
     public function testClientIdentifierCanBeBuiltFromTheApp(): void
     {
-        $app = new OAuth2App(8, 'Name', 'https://example.com', new \Project(['group_id' => 102]));
+        $app = new OAuth2App(8, 'Name', 'https://example.com', false, new \Project(['group_id' => 102]));
 
         $identifier = ClientIdentifier::fromOAuth2App($app);
 

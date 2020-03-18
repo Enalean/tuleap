@@ -116,7 +116,7 @@ final class OAuth2AppCredentialVerifierTest extends TestCase
 
     private function buildApp(): OAuth2App
     {
-        $app = new OAuth2App(1, 'Name', 'https://example.com', \Mockery::mock(\Project::class));
+        $app = new OAuth2App(1, 'Name', 'https://example.com', true, \Mockery::mock(\Project::class));
         $this->app_factory->shouldReceive('getAppMatchingClientId')
             ->with(
                 \Mockery::on(

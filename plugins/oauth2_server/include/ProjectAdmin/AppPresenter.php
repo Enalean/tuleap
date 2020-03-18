@@ -35,12 +35,15 @@ final class AppPresenter
     public $redirect_endpoint;
     /** @var string */
     public $client_id;
+    /** @var bool */
+    public $use_pkce;
 
-    public function __construct(int $id, string $name, string $redirect_endpoint, string $client_id)
+    public function __construct(int $id, string $name, string $redirect_endpoint, string $client_id, bool $use_pkce)
     {
         $this->id                = $id;
         $this->name              = $name;
         $this->redirect_endpoint = $redirect_endpoint;
         $this->client_id         = $client_id;
+        $this->use_pkce          = $use_pkce;
     }
 }

@@ -71,6 +71,7 @@ final class LastCreatedOAuth2AppStoreTest extends TestCase
         return NewOAuth2App::fromAppData(
             'name',
             'https://example.com/redirect',
+            true,
             new Project(['group_id' => 102]),
             new SplitTokenVerificationStringHasher()
         );

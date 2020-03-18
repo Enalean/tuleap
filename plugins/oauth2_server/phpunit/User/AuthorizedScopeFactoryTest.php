@@ -76,7 +76,7 @@ final class AuthorizedScopeFactoryTest extends TestCase
     public function testGetAuthorizedScopesReturnsEmptyWhenNoAuthorizationCanBeFound(): void
     {
         $user = UserTestBuilder::anAnonymousUser()->build();
-        $app  = new OAuth2App(17, 'Jenkins', 'https://example.com', new \Project(['group_id' => 102]));
+        $app  = new OAuth2App(17, 'Jenkins', 'https://example.com', true, new \Project(['group_id' => 102]));
         $this->authorization_dao->shouldReceive('searchAuthorization')
             ->once()
             ->with($user, 17)
@@ -90,7 +90,7 @@ final class AuthorizedScopeFactoryTest extends TestCase
     public function testGetAuthorizedScopesReturnsScopes(): void
     {
         $user = UserTestBuilder::anAnonymousUser()->build();
-        $app  = new OAuth2App(17, 'Jenkins', 'https://example.com', new \Project(['group_id' => 102]));
+        $app  = new OAuth2App(17, 'Jenkins', 'https://example.com', true, new \Project(['group_id' => 102]));
         $this->authorization_dao->shouldReceive('searchAuthorization')
             ->once()
             ->andReturn(12);
@@ -108,7 +108,7 @@ final class AuthorizedScopeFactoryTest extends TestCase
     public function testGetAuthorizedScopesSkipsInvalidSavedScopes(): void
     {
         $user = UserTestBuilder::anAnonymousUser()->build();
-        $app  = new OAuth2App(17, 'Jenkins', 'https://example.com', new \Project(['group_id' => 102]));
+        $app  = new OAuth2App(17, 'Jenkins', 'https://example.com', true, new \Project(['group_id' => 102]));
         $this->authorization_dao->shouldReceive('searchAuthorization')
             ->once()
             ->andReturn(12);

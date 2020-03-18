@@ -124,7 +124,7 @@ final class AuthorizationEndpointGetControllerTest extends TestCase
                     }
                 )
             )
-            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', $project));
+            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
         $this->app_factory->shouldReceive('getAppMatchingClientId')
             ->with(
                 M::on(
@@ -163,7 +163,7 @@ final class AuthorizationEndpointGetControllerTest extends TestCase
         $request = (new NullServerRequest())->withQueryParams($query_parameters);
         $this->app_factory->shouldReceive('getAppMatchingClientId')
             ->once()
-            ->andReturn(new OAuth2App(1, 'Jenkins', $query_parameters['redirect_uri'], $project));
+            ->andReturn(new OAuth2App(1, 'Jenkins', $query_parameters['redirect_uri'], true, $project));
         $this->scope_extractor->shouldReceive('extractScopes')
             ->andThrow(new InvalidOAuth2ScopeException());
 
@@ -213,7 +213,7 @@ final class AuthorizationEndpointGetControllerTest extends TestCase
 
         $this->app_factory->shouldReceive('getAppMatchingClientId')
             ->once()
-            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', $project));
+            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
         $this->scope_extractor->shouldReceive('extractScopes')
             ->once()
             ->andReturn([M::mock(AuthenticationScope::class)]);
@@ -245,7 +245,7 @@ final class AuthorizationEndpointGetControllerTest extends TestCase
         );
         $this->app_factory->shouldReceive('getAppMatchingClientId')
             ->once()
-            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', $project));
+            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
         $this->scope_extractor->shouldReceive('extractScopes')
             ->once()
             ->andReturn([M::mock(AuthenticationScope::class)]);

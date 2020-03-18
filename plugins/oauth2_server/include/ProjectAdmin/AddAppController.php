@@ -105,8 +105,9 @@ final class AddAppController implements DispatchableWithRequest
 
         $raw_app_name          = (string) $request->get('name');
         $raw_redirect_endpoint = (string) $request->get('redirect_uri');
+        $use_pkce              = (bool) $request->get('use_pkce');
         try {
-            $app_to_be_saved = NewOAuth2App::fromAppData($raw_app_name, $raw_redirect_endpoint, $project, $this->hasher);
+            $app_to_be_saved = NewOAuth2App::fromAppData($raw_app_name, $raw_redirect_endpoint, $use_pkce, $project, $this->hasher);
         } catch (InvalidAppDataException $e) {
             $layout->addFeedback(
                 \Feedback::ERROR,

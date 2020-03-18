@@ -69,7 +69,8 @@ class ProjectAdminPresenterBuilder
                 $app->getId(),
                 $app->getName(),
                 $app->getRedirectEndpoint(),
-                ClientIdentifier::fromOAuth2App($app)->toString()
+                ClientIdentifier::fromOAuth2App($app)->toString(),
+                $app->isUsingPKCE()
             );
         }
 

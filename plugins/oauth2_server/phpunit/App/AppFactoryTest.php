@@ -54,8 +54,8 @@ final class AppFactoryTest extends TestCase
     public function testGetAppsForProject(): void
     {
         $rows    = [
-            ['id' => 1, 'name' => 'Jenkins', 'redirect_endpoint' => 'https://jenkins.example.com'],
-            ['id' => 2, 'name' => 'My custom REST client', 'redirect_endpoint' => 'https://my-custom-client.example.com']
+            ['id' => 1, 'name' => 'Jenkins', 'redirect_endpoint' => 'https://jenkins.example.com', 'use_pkce' => 1],
+            ['id' => 2, 'name' => 'My custom REST client', 'redirect_endpoint' => 'https://my-custom-client.example.com', 'use_pkce' => 0]
         ];
         $project = M::mock(\Project::class);
         $this->app_dao->shouldReceive('searchByProject')
@@ -66,8 +66,8 @@ final class AppFactoryTest extends TestCase
         $result = $this->app_factory->getAppsForProject($project);
         $this->assertEquals(
             [
-                new OAuth2App(1, 'Jenkins', 'https://jenkins.example.com', $project),
-                new OAuth2App(2, 'My custom REST client', 'https://my-custom-client.example.com', $project)
+                new OAuth2App(1, 'Jenkins', 'https://jenkins.example.com', true, $project),
+                new OAuth2App(2, 'My custom REST client', 'https://my-custom-client.example.com', false, $project)
             ],
             $result
         );
@@ -106,7 +106,7 @@ final class AppFactoryTest extends TestCase
         $this->app_dao->shouldReceive('searchByClientId')
             ->once()
             ->andReturn(
-                ['id' => 1, 'name' => 'Jenkins', 'project_id' => 102, 'redirect_endpoint' => 'https://jenkins.example.com']
+                ['id' => 1, 'name' => 'Jenkins', 'project_id' => 102, 'redirect_endpoint' => 'https://jenkins.example.com', 'use_pkce' => 1]
             );
         $client_id = ClientIdentifier::fromClientId('tlp-client-id-1');
         $project   = M::mock(\Project::class);
@@ -116,7 +116,7 @@ final class AppFactoryTest extends TestCase
             ->andReturn($project);
 
         $result = $this->app_factory->getAppMatchingClientId($client_id);
-        $this->assertEquals(new OAuth2App(1, 'Jenkins', 'https://jenkins.example.com', $project), $result);
+        $this->assertEquals(new OAuth2App(1, 'Jenkins', 'https://jenkins.example.com', true, $project), $result);
     }
 
     public function testGetAppsAuthorizedByUserReturnsApps(): void
@@ -126,12 +126,14 @@ final class AppFactoryTest extends TestCase
                 'id'                => 1,
                 'name'              => 'Jenkins',
                 'redirect_endpoint' => 'https://jenkins.example.com',
-                'project_id'        => 204
+                'project_id'        => 204,
+                'use_pkce'          => 1
             ], [
                 'id'                => 2,
                 'name'              => 'My custom REST client',
                 'redirect_endpoint' => 'https://my-custom-client.example.com',
-                'project_id'        => 205
+                'project_id'        => 205,
+                'use_pkce'          => 0
             ]
         ];
         $user = UserTestBuilder::aUser()->withId(102)->build();
@@ -147,8 +149,8 @@ final class AppFactoryTest extends TestCase
         $result = $this->app_factory->getAppsAuthorizedByUser($user);
         $this->assertEquals(
             [
-                new OAuth2App(1, 'Jenkins', 'https://jenkins.example.com', $project_204),
-                new OAuth2App(2, 'My custom REST client', 'https://my-custom-client.example.com', $project_205)
+                new OAuth2App(1, 'Jenkins', 'https://jenkins.example.com', true, $project_204),
+                new OAuth2App(2, 'My custom REST client', 'https://my-custom-client.example.com', false, $project_205)
             ],
             $result
         );
@@ -161,12 +163,14 @@ final class AppFactoryTest extends TestCase
                 'id'                => 1,
                 'name'              => 'Jenkins',
                 'redirect_endpoint' => 'https://jenkins.example.com',
-                'project_id'        => 204
+                'project_id'        => 204,
+                'use_pkce'          => 1
             ], [
                 'id'                => 4,
                 'name'              => 'Project is invalid',
                 'redirect_endpoint' => 'https://example.com',
-                'project_id'        => 404
+                'project_id'        => 404,
+                'use_pkce'          => 1
             ]
         ];
         $user = UserTestBuilder::aUser()->withId(102)->build();
@@ -183,7 +187,7 @@ final class AppFactoryTest extends TestCase
 
         $result = $this->app_factory->getAppsAuthorizedByUser($user);
         $this->assertEquals([
-            new OAuth2App(1, 'Jenkins', 'https://jenkins.example.com', $project_204),
+            new OAuth2App(1, 'Jenkins', 'https://jenkins.example.com', true, $project_204),
         ], $result);
     }
 }

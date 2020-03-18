@@ -52,19 +52,26 @@ final class NewOAuth2App
      * @psalm-readonly
      */
     private $project;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    private $use_pkce;
 
     private function __construct(
         string $name,
         string $redirect_endpoint,
         SplitTokenVerificationString $secret,
         string $hashed_secret,
-        \Project $project
+        \Project $project,
+        bool $use_pkce
     ) {
         $this->name              = $name;
         $this->redirect_endpoint = $redirect_endpoint;
         $this->secret            = $secret;
         $this->hashed_secret     = $hashed_secret;
         $this->project           = $project;
+        $this->use_pkce          = $use_pkce;
     }
 
     /**
@@ -73,6 +80,7 @@ final class NewOAuth2App
     public static function fromAppData(
         string $name,
         string $redirect_endpoint,
+        bool $use_pkce,
         \Project $project,
         SplitTokenVerificationStringHasher $hasher
     ): self {
@@ -89,7 +97,8 @@ final class NewOAuth2App
             $redirect_endpoint,
             $secret,
             $hasher->computeHash($secret),
-            $project
+            $project,
+            $use_pkce
         );
     }
 
@@ -143,5 +152,10 @@ final class NewOAuth2App
     public function getHashedSecret(): string
     {
         return $this->hashed_secret;
+    }
+
+    public function isUsingPKCE(): bool
+    {
+        return $this->use_pkce;
     }
 }

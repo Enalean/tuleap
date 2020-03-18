@@ -139,6 +139,6 @@ final class AuthorizationCodeResponseFactoryTest extends TestCase
 
     private function buildOAuth2App(): OAuth2App
     {
-        return new OAuth2App(1, 'Name', 'https://example.com/redirect', new \Project(['group_id' => 102]));
+        return new OAuth2App(1, 'Name', 'https://example.com/redirect', true, new \Project(['group_id' => 102]));
     }
 }

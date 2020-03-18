@@ -27,11 +27,11 @@ use Tuleap\DB\DataAccessObject;
 class AppDao extends DataAccessObject
 {
     /**
-     * @psalm-return array{id:int, project_id:int, name:string, redirect_endpoint: string}
+     * @psalm-return array{id:int, project_id:int, name:string, redirect_endpoint: string, use_pkce:0|1}
      */
     public function searchByClientId(ClientIdentifier $client_id): ?array
     {
-        $sql = 'SELECT id, project_id, name, redirect_endpoint FROM plugin_oauth2_server_app
+        $sql = 'SELECT id, project_id, name, redirect_endpoint, use_pkce FROM plugin_oauth2_server_app
             WHERE id = ?';
         return $this->getDB()->row($sql, $client_id->getInternalId());
     }
@@ -47,21 +47,21 @@ class AppDao extends DataAccessObject
     }
 
     /**
-     * @psalm-return array<array{id:int, project_id:int, name:string, redirect_endpoint: string}>
+     * @psalm-return array<array{id:int, project_id:int, name:string, redirect_endpoint: string, use_pkce:0|1}>
      */
     public function searchByProject(\Project $project): array
     {
-        $sql = "SELECT id, project_id, name, redirect_endpoint FROM plugin_oauth2_server_app
+        $sql = "SELECT id, project_id, name, redirect_endpoint, use_pkce FROM plugin_oauth2_server_app
             WHERE project_id = ?";
         return $this->getDB()->run($sql, $project->getID());
     }
 
     /**
-     * @psalm-return array<array{id:int, project_id:int, name:string, redirect_endpoint:string}>
+     * @psalm-return array<array{id:int, project_id:int, name:string, redirect_endpoint:string, use_pkce:0|1}>
      */
     public function searchAuthorizedAppsByUser(\PFUser $user): array
     {
-        $sql = 'SELECT app.id, project_id, name, redirect_endpoint
+        $sql = 'SELECT app.id, project_id, name, redirect_endpoint, use_pkce
                 FROM plugin_oauth2_server_app AS app
                 JOIN plugin_oauth2_authorization AS authorization ON app.id = authorization.app_id
                 WHERE authorization.user_id = ?';
@@ -77,6 +77,7 @@ class AppDao extends DataAccessObject
                 'name'              => $app->getName(),
                 'redirect_endpoint' => $app->getRedirectEndpoint(),
                 'verifier'          => $app->getHashedSecret(),
+                'use_pkce'          => $app->isUsingPKCE()
             ]
         );
         return (int) $this->getDB()->lastInsertId();

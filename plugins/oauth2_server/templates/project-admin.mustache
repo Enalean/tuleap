@@ -31,6 +31,7 @@
                         <th>{{# dgettext }}tuleap-oauth2_server | App name{{/ dgettext }}</th>
                         <th>{{# dgettext }}tuleap-oauth2_server | Application (client) ID{{/ dgettext }}</th>
                         <th>{{# dgettext }}tuleap-oauth2_server | Redirect endpoint{{/ dgettext }}</th>
+                        <th>{{# dgettext }}tuleap-oauth2_server | Force PKCE usage?{{/ dgettext }}</th>
                         <th></th>
                     </tr>
                     </thead>
@@ -40,6 +41,7 @@
                             <td>{{ name }}</td>
                             <td>{{ client_id }}</td>
                             <td>{{ redirect_endpoint }}</td>
+                            <td>{{# use_pkce }}<i class="fa fa-check"></i>{{/ use_pkce }}</td>
                             <td class="tlp-table-cell-actions">
                                 <button
                                     class="tlp-button-danger tlp-button-outline oauth2-server-delete-client-button"

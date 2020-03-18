@@ -77,12 +77,14 @@ final class AppsPresenterBuilderTest extends TestCase
             1,
             'Jenkins',
             'https://example.com',
+            true,
             new \Project(['group_id' => 101, 'group_name' => 'Public project'])
         );
         $custom_app  = new OAuth2App(
             2,
             'My Custom REST Consumer',
             'https://example.com',
+            true,
             new \Project(['group_id' => 102, 'group_name' => 'Private project'])
         );
         $this->app_factory->shouldReceive('getAppsAuthorizedByUser')

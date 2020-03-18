@@ -122,6 +122,6 @@ final class OAuth2AuthorizationCodeCreatorTest extends TestCase
 
     private function buildOAuth2App(): OAuth2App
     {
-        return new OAuth2App(12, 'Name', 'https://example.com', new Project(['group_id' => 102]));
+        return new OAuth2App(12, 'Name', 'https://example.com', true, new Project(['group_id' => 102]));
     }
 }
