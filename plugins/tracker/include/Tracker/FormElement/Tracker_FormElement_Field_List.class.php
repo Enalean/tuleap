@@ -873,7 +873,10 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         }
     }
 
-    private function getTransitionListValidator()
+    /**
+     * protected for testing purpose
+     */
+    protected function getTransitionListValidator(): TransitionListValidator
     {
         return new TransitionListValidator(TransitionFactory::instance());
     }
@@ -1308,8 +1311,10 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $changeset_value = null;
         $value_ids = $this->getValueDao()->searchById($value_id, $this->id);
         $bindvalue_ids = array();
-        foreach ($value_ids as $v) {
-            $bindvalue_ids[] = $v['bindvalue_id'];
+        if ($value_ids) {
+            foreach ($value_ids as $v) {
+                $bindvalue_ids[] = $v['bindvalue_id'];
+            }
         }
         $bind_values = array();
         if (count($bindvalue_ids)) {
