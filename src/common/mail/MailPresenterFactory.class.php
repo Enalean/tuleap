@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Mail\MailAccountSuspensionAlertPresenter;
+use Tuleap\Mail\MailAccountSuspensionPresenter;
 
 class MailPresenterFactory
 {
@@ -288,5 +289,18 @@ class MailPresenterFactory
         $logo_retriever = new LogoRetriever();
         $logo_url = $logo_retriever->getUrl();
         return new MailAccountSuspensionAlertPresenter($logo_url, $color_logo, $last_access_date, $suspension_date, $language);
+    }
+
+    /**
+     * Creates a presenter for the account suspension email
+     *
+     */
+    public function createMailAccountSuspensionPresenter(DateTimeImmutable $last_access_date, BaseLanguage $language) : MailAccountSuspensionPresenter
+    {
+        $color_logo = "#000";
+        $this->setColorTheme($color_logo);
+        $logo_retriever = new LogoRetriever();
+        $logo_url = $logo_retriever->getUrl();
+        return new MailAccountSuspensionPresenter($logo_url, $color_logo, $last_access_date, $language);
     }
 }

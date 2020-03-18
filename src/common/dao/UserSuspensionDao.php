@@ -118,4 +118,25 @@ class UserSuspensionDao extends DataAccessObject
             return false;
         }
     }
+
+
+    public function getUsersWithoutConnectionOrAccessBetweenDates(DateTimeImmutable $start_date, DateTimeImmutable $end_date) : array
+    {
+        $start_date_timestamp = $start_date->getTimestamp();
+        $end_date_timestamp = $end_date->getTimestamp();
+
+        $sql  = 'SELECT user.user_id, last_access_date FROM user' .
+            ' INNER JOIN user_access AS access ON user.user_id=access.user_id' .
+            ' WHERE (user.status != "S" AND user.status != "D" AND (' .
+            '(access.last_access_date = 0 AND user.add_date BETWEEN ? AND ? ) OR ' .
+            '(access.last_access_date != 0 AND access.last_access_date BETWEEN ? AND ?)))';
+
+        return $this->getDB()->run(
+            $sql,
+            $start_date_timestamp,
+            $end_date_timestamp,
+            $start_date_timestamp,
+            $end_date_timestamp
+        );
+    }
 }

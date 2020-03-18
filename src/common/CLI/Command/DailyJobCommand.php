@@ -85,6 +85,7 @@ class DailyJobCommand extends Command
             $this->db_connection->reconnectAfterALongRunningProcess();
             $this->event_manager->processEvent('codendi_daily_start');
             $this->user_suspension_manager->sendNotificationMailToIdleAccounts();
+            $this->user_suspension_manager->sendSuspensionMailToInactiveAccounts(new \DateTimeImmutable('today'));
             $this->user_suspension_manager->checkUserAccountValidity(new \DateTimeImmutable('today'));
 
             $now = new \DateTimeImmutable();

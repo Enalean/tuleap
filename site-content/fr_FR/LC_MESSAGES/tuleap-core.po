@@ -38,6 +38,10 @@ msgid "%s (opens in a new tab)"
 msgstr "%s (s'ouvre dans un nouvel onglet)"
 
 #, php-format
+msgid "%s - Account suspension"
+msgstr "%s - Suspension de compte"
+
+#, php-format
 msgid "%s - Account suspension notification"
 msgstr "%s - Notification de suspension de compte"
 
@@ -325,6 +329,13 @@ msgstr "Utilisateur anonyme"
 msgid "Appearance & language"
 msgstr "Apparence et langue"
 
+msgid ""
+"As notified %s days ago and without any connection from you since, your user "
+"account is now suspended, in compliance with %s policies."
+msgstr ""
+"Comme notifié(e) il y a %s jours et sans aucune connexion de votre part "
+"depuis, votre compte est suspendu conformément aux règles de %s."
+
 msgid "Ask to join"
 msgstr "Demander à rejoindre"
 
@@ -591,6 +602,9 @@ msgstr "Jour"
 
 msgid "Dear   {{ tuleap_server_name}} user,"
 msgstr "Cher utilisateur {{tuleap_server_name}},"
+
+msgid "Dear %s user,"
+msgstr "Cher utilisateur %s,"
 
 msgid "Default format for trackers text fields"
 msgstr "Format par défaut pour les champs texte des trackers"
@@ -1702,6 +1716,12 @@ msgstr ""
 "automatiquement. Par ailleurs, nous recommandons de profiter cette occasion "
 "pour mettre à jour votre mot de passe."
 
+msgid ""
+"Should you still need your account, please notify your %s contact for this "
+"project."
+msgstr ""
+"Si vous voulez garder votre compte, notifiez votre contact %s pour ce projet."
+
 msgid "Sidebar (project)"
 msgstr "Barre de service (projet)"
 
@@ -1779,6 +1799,9 @@ msgstr "Texte"
 
 msgid "That user does not exist."
 msgstr "Cet utilisateur n'existe pas"
+
+msgid "The %s team."
+msgstr "L'équipe %s."
 
 msgid "The chosen color is not allowed."
 msgstr "La couleur choisie n'est pas autorisée."
@@ -2002,6 +2025,9 @@ msgid ""
 msgstr ""
 "Ce texte de licence ne peut être supprimé car il est utilisé par les paquets "
 "suivants :"
+
+msgid "This mail has been automatically sent from %s application"
+msgstr "Cet e-mail a été envoyé automatiquement par l'application %s"
 
 msgid ""
 "This mail has been automatically sent from {{tuleap_server_name}} application"
@@ -2614,6 +2640,13 @@ msgid ""
 msgstr ""
 "Vous devez fournir un fichier simple, contenant pour chaque ligne l'adresse "
 "email ou le nom de l'utilisateur à importer."
+
+msgid ""
+"You receive this mail because you have not accessed the %s application since "
+"%s."
+msgstr ""
+"Vous recevez ce courriel car vous n'avez pas accédé à l'application %s "
+"depuis %s."
 
 msgid ""
 "You receive this mail because you have not accessed the "
