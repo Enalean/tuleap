@@ -26,6 +26,7 @@ use DateTimeImmutable;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\OAuth2Server\Grant\AuthorizationCode\Scope\OAuth2AuthorizationCodeScopeRetriever;
 use UserManager;
 
 class OAuth2AuthorizationCodeVerifier
@@ -43,6 +44,10 @@ class OAuth2AuthorizationCodeVerifier
      */
     private $authorization_code_dao;
     /**
+     * @var OAuth2AuthorizationCodeScopeRetriever
+     */
+    private $authorization_code_scope_retriever;
+    /**
      * @var DBTransactionExecutor
      */
     private $db_transaction_executor;
@@ -51,12 +56,14 @@ class OAuth2AuthorizationCodeVerifier
         SplitTokenVerificationStringHasher $hasher,
         UserManager $user_manager,
         OAuth2AuthorizationCodeDAO $authorization_code_dao,
+        OAuth2AuthorizationCodeScopeRetriever $authorization_code_scope_retriever,
         DBTransactionExecutor $db_transaction_executor
     ) {
-        $this->hasher                  = $hasher;
-        $this->user_manager            = $user_manager;
-        $this->authorization_code_dao  = $authorization_code_dao;
-        $this->db_transaction_executor = $db_transaction_executor;
+        $this->hasher                             = $hasher;
+        $this->user_manager                       = $user_manager;
+        $this->authorization_code_dao             = $authorization_code_dao;
+        $this->authorization_code_scope_retriever = $authorization_code_scope_retriever;
+        $this->db_transaction_executor            = $db_transaction_executor;
     }
 
     /**
@@ -111,7 +118,13 @@ class OAuth2AuthorizationCodeVerifier
                 if ($user === null) {
                     throw new OAuth2AuthCodeMatchingUnknownUserException($row['user_id']);
                 }
-                return OAuth2AuthorizationCode::approveForDemoScope($auth_code, $user);
+
+                $scopes = $this->authorization_code_scope_retriever->getScopesByAuthorizationCode($auth_code);
+                if (empty($scopes)) {
+                    throw new OAuth2AuthCodeNoValidScopeFound($auth_code);
+                }
+
+                return OAuth2AuthorizationCode::approveForSetOfScopes($auth_code, $user, $scopes);
             }
         );
     }

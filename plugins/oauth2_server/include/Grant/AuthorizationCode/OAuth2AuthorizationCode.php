@@ -25,7 +25,6 @@ namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
 use PFUser;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\SplitToken\SplitToken;
-use Tuleap\User\OAuth2\Scope\DemoOAuth2Scope;
 
 final class OAuth2AuthorizationCode
 {
@@ -59,12 +58,17 @@ final class OAuth2AuthorizationCode
         $this->scopes                = $scopes;
     }
 
-    public static function approveForDemoScope(SplitToken $auth_code_token, PFUser $user): self
+    /**
+     * @param AuthenticationScope[] $scopes
+     *
+     * @psalm-param non-empty-array<AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier>> $scopes
+     */
+    public static function approveForSetOfScopes(SplitToken $auth_code_token, PFUser $user, array $scopes): self
     {
         return new self(
             $auth_code_token->getID(),
             $user,
-            [DemoOAuth2Scope::fromItself()]
+            $scopes
         );
     }
 

@@ -38,6 +38,7 @@ use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AccessTokenSuccessfulReque
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCode;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeVerifier;
 use Tuleap\OAuth2Server\OAuth2ServerException;
+use Tuleap\User\OAuth2\Scope\DemoOAuth2Scope;
 
 final class AccessTokenGrantControllerTest extends TestCase
 {
@@ -239,9 +240,10 @@ final class AccessTokenGrantControllerTest extends TestCase
 
     private function buildAuthorizationCodeGrant(): OAuth2AuthorizationCode
     {
-        return OAuth2AuthorizationCode::approveForDemoScope(
+        return OAuth2AuthorizationCode::approveForSetOfScopes(
             new SplitToken(1, SplitTokenVerificationString::generateNewSplitTokenVerificationString()),
-            new \PFUser(['language_id' => 'en'])
+            new \PFUser(['language_id' => 'en']),
+            [DemoOAuth2Scope::fromItself()]
         );
     }
 }

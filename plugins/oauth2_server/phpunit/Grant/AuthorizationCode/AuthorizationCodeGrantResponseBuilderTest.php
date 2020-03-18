@@ -29,6 +29,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenCreator;
 use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenWithIdentifier;
+use Tuleap\User\OAuth2\Scope\DemoOAuth2Scope;
 
 final class AuthorizationCodeGrantResponseBuilderTest extends TestCase
 {
@@ -45,9 +46,10 @@ final class AuthorizationCodeGrantResponseBuilderTest extends TestCase
 
         $representation = $builder->buildResponse(
             new \DateTimeImmutable('@10'),
-            OAuth2AuthorizationCode::approveForDemoScope(
+            OAuth2AuthorizationCode::approveForSetOfScopes(
                 new SplitToken(1, SplitTokenVerificationString::generateNewSplitTokenVerificationString()),
-                new \PFUser(['language_id' => 'en'])
+                new \PFUser(['language_id' => 'en']),
+                [DemoOAuth2Scope::fromItself()]
             )
         );
 
