@@ -61,7 +61,7 @@ if (is_file($argv[2])) {
 $start = microtime(true);
 
 try {
-    $logger    = new BackendLogger(ForgeConfig::get('codendi_log') . '/DocmanExport.log');
+    $logger    = BackendLogger::getDefaultLogger('DocmanExport.log');
     $XMLExport = new XMLExport($logger);
     $XMLExport->setGroupId($argv[1]);
     $XMLExport->setPackagePath($argv[2]);

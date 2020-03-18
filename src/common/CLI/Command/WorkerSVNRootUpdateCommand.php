@@ -52,7 +52,7 @@ class WorkerSVNRootUpdateCommand extends Command
 
         $is_verbose = (bool) $input->getOption('verbose');
 
-        $logger_backend = new BackendLogger('/var/log/tuleap/svnroot_updater.log');
+        $logger_backend = BackendLogger::getDefaultLogger('svnroot_updater.log');
         if ($is_verbose) {
             $logger_backend = new ConsoleLogger($output);
         }

@@ -36,10 +36,10 @@ class BackendLogger extends \Psr\Log\AbstractLogger implements \Psr\Log\LoggerIn
         $this->filepath = empty($filename) ? ForgeConfig::get('codendi_log') . '/' . self::FILENAME : $filename;
     }
 
-    public static function getDefaultLogger(): \Psr\Log\LoggerInterface
+    public static function getDefaultLogger(string $name = 'default'): \Psr\Log\LoggerInterface
     {
         if (ForgeConfig::get(self::CONFIG_LOGGER) === self::CONFIG_LOGGER_SYSLOG) {
-            $logger = new \Monolog\Logger('default');
+            $logger = new \Monolog\Logger(self::convertLoggerFileNameToTopic($name));
             $stream_handler = new SyslogHandler(
                 'tuleap',
                 LOG_USER,
@@ -55,10 +55,20 @@ class BackendLogger extends \Psr\Log\AbstractLogger implements \Psr\Log\LoggerIn
             $logger->pushHandler($stream_handler);
             return $logger;
         }
+        if ($name === 'default') {
+            $logger = new BackendLogger();
+        } else {
+            $logger = new BackendLogger(ForgeConfig::get('codendi_log') . '/' . $name);
+        }
         return new TruncateLevelLogger(
-            new BackendLogger(),
+            $logger,
             ForgeConfig::get('sys_logger_level')
         );
+    }
+
+    private static function convertLoggerFileNameToTopic(string $name): string
+    {
+        return str_replace(['.log', '_syslog'], '', $name);
     }
 
     private static function getPSR3LoggerLevel()

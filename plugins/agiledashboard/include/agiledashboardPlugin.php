@@ -1342,7 +1342,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
                 Tracker_FormElementFactory::instance()
             )
         );
-        $backend_logger                    = new BackendLogger(ForgeConfig::get('codendi_log') . '/realtime_syslog');
+        $backend_logger                    = BackendLogger::getDefaultLogger('realtime_syslog');
         $realtime_artifact_message_sender  = new RealTimeArtifactMessageSender($node_js_client, $permissions_serializer);
 
         return new KanbanArtifactMessageSender(
