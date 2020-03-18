@@ -41,7 +41,6 @@ class Worker
     public const DEFAULT_LOG_FILE_PATH = '/var/log/tuleap/worker_log';
 
     private $id = 0;
-    private $log_file;
     private $pid_file;
 
     /**
@@ -56,7 +55,6 @@ class Worker
 
     public function __construct()
     {
-        $this->log_file = self::DEFAULT_LOG_FILE_PATH;
         $this->pid_file = self::DEFAULT_PID_FILE_PATH;
     }
 
@@ -119,14 +117,14 @@ class Worker
                 new BrokerLogger(
                     array(
                         new Log_ConsoleLogger(),
-                        new BackendLogger($this->log_file),
+                        BackendLogger::getDefaultLogger(basename(self::DEFAULT_LOG_FILE_PATH)),
                     )
                 )
             );
         } else {
             $this->setLogger(
                 new TruncateLevelLogger(
-                    new BackendLogger($this->log_file),
+                    BackendLogger::getDefaultLogger(basename(self::DEFAULT_LOG_FILE_PATH)),
                     ForgeConfig::get('sys_logger_level')
                 )
             );
@@ -143,7 +141,6 @@ DESCRIPTION
 
     Handle background jobs for Tuleap.
 
-    Logs are available in {$this->log_file}
     On start pid is registered in {$this->pid_file}
 
 OPTIONS

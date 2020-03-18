@@ -91,7 +91,7 @@ class Tracker_Migration_MigrationManager
 
         // Log everything in Backend
         // Only Warn and errors by email
-        $backend_logger    = new BackendLogger($this->getLogFilePath());
+        $backend_logger    = BackendLogger::getDefaultLogger(self::LOG_FILE);
         $this->mail_logger = new Tracker_Migration_MailLogger();
         $this->logger      = new Tracker_Migration_MigrationLogger(
             $backend_logger,
@@ -144,11 +144,6 @@ class Tracker_Migration_MigrationManager
     public function thereAreMigrationsOngoingForProject(Project $project)
     {
         return $this->system_event_manager->isThereAMigrationQueuedForProject($project);
-    }
-
-    private function getLogFilePath()
-    {
-        return ForgeConfig::get('codendi_log') . '/' . self::LOG_FILE;
     }
 
     private function importArtifactsData($username, $tracker_id, $xml_file_path)

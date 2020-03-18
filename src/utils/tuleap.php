@@ -192,7 +192,7 @@ $CLI_command_collector->addCommand(
         return new TaskWorkerProcessCommand(
             $event_manager,
             new TruncateLevelLogger(
-                new BackendLogger(Tuleap\Queue\Worker::DEFAULT_LOG_FILE_PATH),
+                BackendLogger::getDefaultLogger(basename(Tuleap\Queue\Worker::DEFAULT_LOG_FILE_PATH)),
                 ForgeConfig::get('sys_logger_level')
             )
         );
