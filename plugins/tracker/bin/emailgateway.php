@@ -32,7 +32,7 @@ while (!feof($fd)) {
 }
 fclose($fd);
 
-$logger = new BackendLogger();
+$logger = BackendLogger::getDefaultLogger();
 $logger->info("Entering email gateway");
 
 $recipient_factory                 = Tracker_Artifact_MailGateway_RecipientFactory::build();

@@ -38,7 +38,7 @@ class PasswordStrategy // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
             $pwned_password_range_retriever = new PwnedPasswordRangeRetriever(
                 HttpClientFactory::createClient(),
                 HTTPFactoryBuilder::requestFactory(),
-                new BackendLogger()
+                BackendLogger::getDefaultLogger()
             );
             $pwned_password_checker         = new PwnedPasswordChecker($pwned_password_range_retriever);
             $password_compromise_validator  = new PasswordCompromiseValidator($pwned_password_checker);

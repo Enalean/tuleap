@@ -1328,7 +1328,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             HttpClientFactory::createClient(),
             HTTPFactoryBuilder::requestFactory(),
             HTTPFactoryBuilder::streamFactory(),
-            new BackendLogger()
+            BackendLogger::getDefaultLogger()
         );
         $realtime_artifact_message_builder = new KanbanArtifactMessageBuilder(
             $kanban_item_dao,
@@ -1501,7 +1501,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
 
     private function getLogger(): \Psr\Log\LoggerInterface
     {
-        return new BackendLogger();
+        return BackendLogger::getDefaultLogger();
     }
 
     /**

@@ -444,7 +444,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
             $semantic_timeframe_builder,
             new TimeframeBuilder(
                 $semantic_timeframe_builder,
-                new \BackendLogger()
+                \BackendLogger::getDefaultLogger()
             )
         );
     }

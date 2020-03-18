@@ -108,7 +108,7 @@ class ProjectMilestonesResource
             new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $this->planning_factory),
             new TimeframeBuilder(
                 new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $this->tracker_form_element_factory),
-                new \BackendLogger()
+                \BackendLogger::getDefaultLogger()
             ),
             new MilestoneBurndownFieldChecker($this->tracker_form_element_factory)
         );

@@ -1361,7 +1361,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
                     $path_allocator
                 ),
                 new \Tuleap\Docman\Upload\Document\DocumentUploadFinisher(
-                    new BackendLogger(),
+                    BackendLogger::getDefaultLogger(),
                     $path_allocator,
                     $this->getItemFactory(),
                     new Docman_VersionFactory(),
@@ -1405,7 +1405,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
                     DBFactory::getMainTuleapDBConnection()
                 ),
                 new VersionUploadFinisher(
-                    new BackendLogger(),
+                    BackendLogger::getDefaultLogger(),
                     $path_allocator,
                     $this->getItemFactory(),
                     new Docman_VersionFactory(),
@@ -1458,7 +1458,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
                 new Docman_VersionFactory(),
                 new BinaryFileResponseBuilder($response_factory, HTTPFactoryBuilder::streamFactory())
             ),
-            new BackendLogger(),
+            BackendLogger::getDefaultLogger(),
             new SessionWriteCloseMiddleware(),
             new RESTCurrentUserMiddleware(\Tuleap\REST\UserManager::build(), new BasicAuthentication()),
             new TuleapRESTCORSMiddleware(),

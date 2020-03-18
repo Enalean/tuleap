@@ -109,7 +109,7 @@ class ProjectBacklogResource
             $scrum_mono_milestone_checker,
             new TimeframeBuilder(
                 new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $tracker_form_element_factory),
-                new \BackendLogger()
+                \BackendLogger::getDefaultLogger()
             ),
             new MilestoneBurndownFieldChecker($tracker_form_element_factory)
         );

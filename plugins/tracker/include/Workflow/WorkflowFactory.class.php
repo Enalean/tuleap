@@ -98,7 +98,7 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
     {
         if (!isset(self::$_instance)) {
             $formelement_factory = Tracker_FormElementFactory::instance();
-            $logger = new WorkflowBackendLogger(new BackendLogger(), ForgeConfig::get('sys_logger_level'));
+            $logger = new WorkflowBackendLogger(BackendLogger::getDefaultLogger(), ForgeConfig::get('sys_logger_level'));
 
             $trigger_rules_manager = new Tracker_Workflow_Trigger_RulesManager(
                 new Tracker_Workflow_Trigger_RulesDao(),

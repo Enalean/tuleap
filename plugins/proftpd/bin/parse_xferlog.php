@@ -39,7 +39,7 @@ if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
     $errors    = $file_importer->getErrors();
     $nb_errors = count($errors);
     if ($nb_errors) {
-        $logger = new BackendLogger();
+        $logger = BackendLogger::getDefaultLogger();
         echo "$nb_errors errors" . PHP_EOL;
         foreach ($errors as $error) {
             $logger->error('[Proftpd][xferlog parse] ' . $error);

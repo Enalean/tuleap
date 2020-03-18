@@ -144,7 +144,7 @@ class DocmanItemCreatorBuilder
             ),
             new EmptyFileToUploadFinisher(
                 new DocumentUploadFinisher(
-                    new \BackendLogger(),
+                    \BackendLogger::getDefaultLogger(),
                     $document_upload_path_allocator,
                     $item_factory,
                     $version_factory,

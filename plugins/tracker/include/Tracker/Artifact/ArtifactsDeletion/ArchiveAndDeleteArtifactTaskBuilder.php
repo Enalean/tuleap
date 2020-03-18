@@ -70,7 +70,7 @@ class ArchiveAndDeleteArtifactTaskBuilder
             new UserXMLExportedCollection($rng_validator, new XML_SimpleXMLCDATAFactory())
         );
 
-        $workflow_logger = new WorkflowBackendLogger(new \BackendLogger(), ForgeConfig::get('sys_logger_level'));
+        $workflow_logger = new WorkflowBackendLogger(\BackendLogger::getDefaultLogger(), ForgeConfig::get('sys_logger_level'));
 
         return new ArchiveAndDeleteArtifactTask(
             new ArtifactWithTrackerStructureExporter(

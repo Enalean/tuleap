@@ -787,7 +787,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 $action->process($layout, $request, $current_user);
                 break;
             case 'submit-copy-artifact':
-                $logger                    = new Tracker_XML_Importer_CopyArtifactInformationsAggregator(new BackendLogger());
+                $logger                    = new Tracker_XML_Importer_CopyArtifactInformationsAggregator(BackendLogger::getDefaultLogger());
                 $xml_importer              = $this->getArtifactXMLImporterForArtifactCopy($logger);
                 $artifact_factory          = $this->getTrackerArtifactFactory();
                 $file_xml_updater          = $this->getFileXMLUpdater();

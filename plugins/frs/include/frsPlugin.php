@@ -148,7 +148,7 @@ class frsPlugin extends \Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     {
         $file_ongoing_upload_dao = new FileOngoingUploadDao();
         $path_allocator          = new UploadPathAllocator();
-        $logger                  = new BackendLogger();
+        $logger                  = BackendLogger::getDefaultLogger();
         $db_connection           = DBFactory::getMainTuleapDBConnection();
 
         return FileUploadController::build(

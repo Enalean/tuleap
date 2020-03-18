@@ -70,7 +70,7 @@ class MediaWikiInstantiater
         MediawikiVersionManager $version_manager,
         MediawikiMLEBExtensionManager $mleb_manager
     ) {
-        $this->logger              = new BackendLogger();
+        $this->logger              = BackendLogger::getDefaultLogger();
         $this->project             = $project;
         $this->project_name        = $project->getUnixName();
         $this->project_id          = $project->getID();

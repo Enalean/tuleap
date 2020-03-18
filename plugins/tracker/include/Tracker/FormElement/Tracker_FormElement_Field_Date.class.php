@@ -1123,7 +1123,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
             $semantic_timeframe_builder,
             new TimeframeBuilder(
                 $semantic_timeframe_builder,
-                new \BackendLogger()
+                \BackendLogger::getDefaultLogger()
             )
         );
     }

@@ -602,7 +602,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
 
     private function updateMediawikiDirectory(Project $project)
     {
-        $logger         = new BackendLogger();
+        $logger         = BackendLogger::getDefaultLogger();
         $project_id_dir = forge_get_config('projects_path', 'mediawiki') . "/" . $project->getID();
 
         if (is_dir($project_id_dir)) {

@@ -1120,7 +1120,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
      */
     public function sendDateReminder()
     {
-        $logger = new BackendLogger();
+        $logger = BackendLogger::getDefaultLogger();
         $logger->debug("[TDR] Start processing date reminders");
         $trackers       = $this->getTrackersHavingDateReminders();
         foreach ($trackers as $tracker) {

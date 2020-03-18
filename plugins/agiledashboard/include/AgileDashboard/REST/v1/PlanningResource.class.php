@@ -69,7 +69,7 @@ class PlanningResource extends AuthenticatedResource
             new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory),
             new TimeframeBuilder(
                 new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory),
-                new \BackendLogger()
+                \BackendLogger::getDefaultLogger()
             ),
             new MilestoneBurndownFieldChecker($form_element_factory)
         );
