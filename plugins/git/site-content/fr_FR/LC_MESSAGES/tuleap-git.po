@@ -1237,8 +1237,8 @@ msgstr "Tâche crée pour restorer le dépôt"
 msgid "Tags"
 msgstr "Étiquettes"
 
-msgid "Target URL:"
-msgstr "URL cible :"
+msgid "Target URL"
+msgstr "URL cible"
 
 msgid "Template created"
 msgstr "Modèle créé"

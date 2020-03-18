@@ -1,7 +1,7 @@
 plugin_hudson_git	descriptor_description	Intégration continue avec Hudson/Jenkins pour le plugin Git
 plugin_hudson_git	descriptor_name	Intégration Continue pour le plugin Git
 
-plugin_hudson_git	settings_hooks_jenkins_notification_label	Serveur Jenkins :
+plugin_hudson_git	settings_hooks_jenkins_notification_label	Serveur Jenkins
 plugin_hudson_git	settings_hooks_jenkins_notification_desc	Le serveur Jenkins sera notifié à propos de l'activité git sur ce dépôt et déclenchera une opération de 'polling'. Plus de détails dans la
 plugin_hudson_git	settings_hooks_jenkins_link_label	documentation Jenkins
 

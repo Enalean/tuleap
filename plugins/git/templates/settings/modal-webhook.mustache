@@ -12,8 +12,8 @@
 
         <p>{{ desc }}</p>
         <p>
-            <label for="webhook-url">{{ label }}</label>
-            <input type="url" class="create-hook-url" id="webhook-url" name="url" value="{{ webhook_url }}" placeholder="https://example.com/webhook" required pattern="https?://.+" />
+            <label for="webhook-url">{{ label }} <i class="fa fa-asterisk"></i></label>
+            <input type="url" id="webhook-url" name="url" value="{{ webhook_url }}" placeholder="https://example.com/webhook" required pattern="https?://.+" />
         </p>
     </div>
 

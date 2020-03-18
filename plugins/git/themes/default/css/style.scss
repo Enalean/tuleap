@@ -429,6 +429,18 @@ h1, h2, h3 {
   }
 }
 
+#modal-add-jenkins-server,
+#modal-create-jenkins,
+#modal-create-webhook {
+  .fa-asterisk {
+    position: absolute;
+    margin: 0 0 0 3px;
+    color: #da5353;
+    font-size: 10px;
+    vertical-align: text-top;
+  }
+}
+
 .hooks-list {
   max-width: 960px;
 
