@@ -1,9 +1,5 @@
-/**
- * Copyright Enalean (c) 2017 - 2018. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+/*
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,7 +18,7 @@
  */
 
 import { select2 } from "tlp";
-import { escaper } from "escaper";
+import { escaper } from "../../../src/www/scripts/tuleap/escaper";
 
 export { autocomplete_groups_for_select2 };
 
