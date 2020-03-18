@@ -31,6 +31,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\ForbiddenException;
@@ -91,13 +92,11 @@ final class AccountAppsController extends DispatchablePSR15Compatible implements
         $layout = $request->getAttribute(BaseLayout::class);
         assert($layout instanceof BaseLayout);
 
-        $layout->addCssAsset(
-            new CssAsset(
-                new IncludeAssets(__DIR__ . '/../../../../../src/www/assets/oauth2_server', '/assets/oauth2_server'),
-                'user-preferences'
-            )
-        );
         $presenter = $this->presenter_builder->build($user);
+
+        $assets = new IncludeAssets(__DIR__ . '/../../../../../src/www/assets/oauth2_server', '/assets/oauth2_server');
+        $layout->addJavascriptAsset(new JavascriptAsset($assets, 'user-preferences.js'));
+        $layout->addCssAsset(new CssAsset($assets, 'user-preferences'));
         ob_start();
         (new UserPreferencesHeader())->display(dgettext('tuleap-oauth2_server', 'OAuth2 Apps'), $layout);
         $this->renderer->renderToPage('account-apps', $presenter);

@@ -17,18 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.oauth2-server-user-preferences-app {
+.oauth2-server-user-preferences-app-name {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.oauth2-server-user-preferences-app-details {
     display: flex;
     align-items: center;
-    justify-content: space-between;
 }
 
 .oauth2-server-user-preferences-app-information {
     flex: 1 1 auto;
     margin: 0 $tlp-spacing 0 0;
-}
-
-.oauth2-server-user-preferences-app-information-name {
-    font-size: 18px;
-    font-weight: bold;
 }

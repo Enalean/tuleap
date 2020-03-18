@@ -77,6 +77,12 @@ msgstr ""
 "La route de redirection doit utiliser HTTPS. Elle ne doit pas inclure un "
 "identificateur de fragment (#ancre)"
 
+msgid "Revoke access"
+msgstr "Révoquer l'accès"
+
+msgid "Revoke access to this App"
+msgstr "Révoquer l'accès de cette App"
+
 msgid "Revoke authorization"
 msgstr "Révoquer l'autorisation"
 

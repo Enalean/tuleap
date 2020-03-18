@@ -20,8 +20,15 @@
 const path = require("path");
 const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 
+const context = __dirname;
+const output = webpack_configurator.configureOutput(
+    path.resolve(__dirname, "../../src/www/assets/oauth2_server"),
+    "/assets/oauth2_server/"
+);
+
 const entry_points = {
-    "project-administration": "./scripts/src/project-administration.ts"
+    "project-administration": "./scripts/src/project-administration.ts",
+    "user-preferences": "./scripts/src/user-preferences.ts"
 };
 
 const colors = ["blue", "green", "grey", "orange", "purple", "red"];
@@ -39,11 +46,8 @@ for (const color of colors) {
 module.exports = [
     {
         entry: entry_points,
-        context: path.resolve(__dirname),
-        output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../src/www/assets/oauth2_server"),
-            "/assets/oauth2_server/"
-        ),
+        context,
+        output,
         externals: {
             tlp: "tlp"
         },
