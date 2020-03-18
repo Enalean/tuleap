@@ -235,7 +235,7 @@ final class AccessTokenGrantControllerTest extends TestCase
 
     private function buildOAuth2App(): OAuth2App
     {
-        return new OAuth2App(1, 'name', 'https://example.com', \Mockery::mock(\Project::class));
+        return new OAuth2App(1, 'name', 'https://example.com', true, \Mockery::mock(\Project::class));
     }
 
     private function buildAuthorizationCodeGrant(): OAuth2AuthorizationCode

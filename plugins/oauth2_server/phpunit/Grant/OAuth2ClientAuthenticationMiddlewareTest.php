@@ -83,7 +83,7 @@ final class OAuth2ClientAuthenticationMiddlewareTest extends TestCase
             new SplitToken(1, SplitTokenVerificationString::generateNewSplitTokenVerificationString())
         );
 
-        $expected_app = new OAuth2App(1, 'Name', 'https://example.com', \Mockery::mock(\Project::class));
+        $expected_app = new OAuth2App(1, 'Name', 'https://example.com', true, \Mockery::mock(\Project::class));
         $this->verifier->shouldReceive('getApp')->andReturn($expected_app);
 
         $handler = $this->buildHandler($expected_app);

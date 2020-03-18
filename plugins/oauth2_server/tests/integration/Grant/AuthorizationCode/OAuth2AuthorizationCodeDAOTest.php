@@ -71,6 +71,7 @@ final class OAuth2AuthorizationCodeDAOTest extends TestCase
             NewOAuth2App::fromAppData(
                 'Name',
                 'https://example.com',
+                true,
                 new \Project(['group_id' => self::$active_project_id]),
                 new SplitTokenVerificationStringHasher()
             )
@@ -79,6 +80,7 @@ final class OAuth2AuthorizationCodeDAOTest extends TestCase
             NewOAuth2App::fromAppData(
                 'Name',
                 'https://example.com',
+                true,
                 new \Project(['group_id' => self::$deleted_project_id]),
                 new SplitTokenVerificationStringHasher()
             )

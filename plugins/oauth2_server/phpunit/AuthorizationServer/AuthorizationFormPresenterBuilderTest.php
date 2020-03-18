@@ -87,6 +87,7 @@ final class AuthorizationFormPresenterBuilderTest extends TestCase
                 1,
                 'Jenkins',
                 $redirect_uri,
+                true,
                 new \Project(['group_id' => 101, 'group_name' => 'Test Project'])
             ),
             M::mock(\CSRFSynchronizerToken::class),

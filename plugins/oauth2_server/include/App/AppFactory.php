@@ -53,7 +53,7 @@ class AppFactory
         } catch (\Project_NotFoundException $e) {
             throw new OAuth2AppNotFoundException($client_identifier);
         }
-        return new OAuth2App($row['id'], $row['name'], $row['redirect_endpoint'], $project);
+        return new OAuth2App($row['id'], $row['name'], $row['redirect_endpoint'], (bool) $row['use_pkce'], $project);
     }
 
     /**
@@ -64,7 +64,7 @@ class AppFactory
         $apps = [];
         $rows = $this->app_dao->searchByProject($project);
         foreach ($rows as $row) {
-            $apps[] = new OAuth2App($row['id'], $row['name'], $row['redirect_endpoint'], $project);
+            $apps[] = new OAuth2App($row['id'], $row['name'], $row['redirect_endpoint'], (bool) $row['use_pkce'], $project);
         }
         return $apps;
     }
@@ -83,7 +83,7 @@ class AppFactory
                 // Skip apps with invalid projects. Apps from those projects are not listed
                 continue;
             }
-            $apps[] = new OAuth2App($row['id'], $row['name'], $row['redirect_endpoint'], $project);
+            $apps[] = new OAuth2App($row['id'], $row['name'], $row['redirect_endpoint'], (bool) $row['use_pkce'], $project);
         }
 
         return $apps;

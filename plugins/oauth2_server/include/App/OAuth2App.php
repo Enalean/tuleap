@@ -40,15 +40,21 @@ final class OAuth2App
      */
     private $redirect_endpoint;
     /**
+     * @var bool
+     * @psalm-readonly
+     */
+    private $use_pkce;
+    /**
      * @var \Project
      * @psalm-readonly
      */
     private $project;
 
-    public function __construct(int $id, string $name, string $redirect_endpoint, \Project $project)
+    public function __construct(int $id, string $name, string $redirect_endpoint, bool $use_pkce, \Project $project)
     {
         $this->id                = $id;
         $this->name              = $name;
+        $this->use_pkce          = $use_pkce;
         $this->project           = $project;
         $this->redirect_endpoint = $redirect_endpoint;
     }
@@ -83,5 +89,10 @@ final class OAuth2App
     public function getProject(): \Project
     {
         return $this->project;
+    }
+
+    public function isUsingPKCE(): bool
+    {
+        return $this->use_pkce;
     }
 }

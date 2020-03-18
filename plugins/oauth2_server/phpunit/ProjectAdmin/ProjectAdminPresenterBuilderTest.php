@@ -75,16 +75,16 @@ final class ProjectAdminPresenterBuilderTest extends TestCase
             ->with($project)
             ->andReturn(
                 [
-                    new OAuth2App(1, 'Jenkins', 'https://jenkins.example.com', $project),
-                    new OAuth2App(2, 'My custom REST client', 'https://my-custom-client.example.com', $project)
+                    new OAuth2App(1, 'Jenkins', 'https://jenkins.example.com', true, $project),
+                    new OAuth2App(2, 'My custom REST client', 'https://my-custom-client.example.com', true, $project)
                 ]
             );
         $this->last_created_app_store->shouldReceive('getLastCreatedApp')->once()->andReturn($last_created_app);
 
         $expected = new ProjectAdminPresenter(
             [
-                new AppPresenter(1, 'Jenkins', 'https://jenkins.example.com', 'tlp-client-id-1'),
-                new AppPresenter(2, 'My custom REST client', 'https://my-custom-client.example.com', 'tlp-client-id-2')
+                new AppPresenter(1, 'Jenkins', 'https://jenkins.example.com', 'tlp-client-id-1', true),
+                new AppPresenter(2, 'My custom REST client', 'https://my-custom-client.example.com', 'tlp-client-id-2', true)
             ],
             $csrf_token,
             $project,

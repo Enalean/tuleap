@@ -48,6 +48,12 @@ msgstr "Supprimer l'App"
 msgid "Deny"
 msgstr "Refuser"
 
+msgid "Force PKCE usage?"
+msgstr "Force l'utilisation de PKCE ?"
+
+msgid "Force usage of PKCE to authenticate"
+msgstr "Forcer à utiliser PKCE pour s'authentifier"
+
 msgid "My REST API consumer App"
 msgstr "Mon App utilisant l'API REST"
 

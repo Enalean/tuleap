@@ -56,7 +56,7 @@ final class AuthorizationComparatorTest extends TestCase
         array $requested_scopes
     ): void {
         $user = UserTestBuilder::anAnonymousUser()->build();
-        $app  = new OAuth2App(17, 'Jenkins', 'https://example.com', new \Project(['group_id' => 102]));
+        $app  = new OAuth2App(17, 'Jenkins', 'https://example.com', true, new \Project(['group_id' => 102]));
         $this->factory->shouldReceive('getAuthorizedScopes')
             ->with($user, $app)
             ->once()
