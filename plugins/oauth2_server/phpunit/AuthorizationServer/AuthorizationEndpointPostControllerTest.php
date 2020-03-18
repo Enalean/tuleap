@@ -26,6 +26,8 @@ use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Authentication\Scope\AuthenticationScope;
+use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\OAuth2Server\App\AppFactory;
@@ -54,6 +56,10 @@ final class AuthorizationEndpointPostControllerTest extends TestCase
      */
     private $app_factory;
     /**
+     * @var M\LegacyMockInterface|M\MockInterface|AuthenticationScopeBuilder
+     */
+    private $scope_builder;
+    /**
      * @var M\LegacyMockInterface|M\MockInterface|AuthorizationCreator
      */
     private $authorization_creator;
@@ -70,12 +76,14 @@ final class AuthorizationEndpointPostControllerTest extends TestCase
     {
         $this->user_manager          = M::mock(\UserManager::class);
         $this->app_factory           = M::mock(AppFactory::class);
+        $this->scope_builder         = M::mock(AuthenticationScopeBuilder::class);
         $this->authorization_creator = M::mock(AuthorizationCreator::class);
         $this->response_factory      = M::mock(AuthorizationCodeResponseFactory::class);
         $this->csrf_token            = M::mock(\CSRFSynchronizerToken::class);
         $this->controller            = new AuthorizationEndpointPostController(
             $this->user_manager,
             $this->app_factory,
+            $this->scope_builder,
             $this->authorization_creator,
             $this->response_factory,
             $this->csrf_token,
@@ -131,6 +139,23 @@ final class AuthorizationEndpointPostControllerTest extends TestCase
         $this->controller->handle($request);
     }
 
+    public function testHandleThrowsForbiddenWhenNoValidScopeCanBeFound(): void
+    {
+        $user = UserTestBuilder::aUser()->withId(102)->build();
+        $this->user_manager->shouldReceive('getCurrentUser')
+            ->andReturn($user);
+        $this->app_factory->shouldReceive('getAppMatchingClientId')->andReturn($this->buildOAuth2App(78));
+        $this->scope_builder->shouldReceive('buildAuthenticationScopeFromScopeIdentifier')
+            ->andReturn(null);
+        $request = (new NullServerRequest())->withParsedBody(
+            ['redirect_uri' => 'https://example.com', 'app_identifier' => 'tlp-client-id-78', 'scope' => ['not:found']]
+        );
+        $this->csrf_token->shouldReceive('check')->once();
+
+        $this->expectException(ForbiddenException::class);
+        $this->controller->handle($request);
+    }
+
     public function dataProviderInvalidBodyParams(): array
     {
         return [
@@ -162,6 +187,8 @@ final class AuthorizationEndpointPostControllerTest extends TestCase
         $this->user_manager->shouldReceive('getCurrentUser')
             ->andReturn($user);
         $this->app_factory->shouldReceive('getAppMatchingClientId')->andReturn($this->buildOAuth2App(77));
+        $this->scope_builder->shouldReceive('buildAuthenticationScopeFromScopeIdentifier')
+            ->andReturn(M::mock(AuthenticationScope::class));
         $request = (new NullServerRequest())->withParsedBody(
             ['redirect_uri' => 'https://example.com', 'app_identifier' => 'tlp-client-id-77', 'scope' => ['foo:bar', 'type:value']]
         );

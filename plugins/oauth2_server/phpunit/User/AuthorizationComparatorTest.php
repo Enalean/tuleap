@@ -63,7 +63,7 @@ final class AuthorizationComparatorTest extends TestCase
             ->andReturn($saved_scopes);
         $this->assertSame(
             $expected_result,
-            $this->comparator->areRequestedScopesAlreadyGranted($user, $app, ...$requested_scopes)
+            $this->comparator->areRequestedScopesAlreadyGranted($user, $app, $requested_scopes)
         );
     }
 

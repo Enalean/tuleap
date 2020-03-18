@@ -25,6 +25,7 @@ namespace Tuleap\OAuth2Server\AuthorizationServer;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
@@ -68,6 +69,7 @@ final class AuthorizationCodeResponseFactoryTest extends TestCase
 
         $response = $this->authorization_code_response_factory->createSuccessfulResponse(
             $this->buildOAuth2App(),
+            [M::mock(AuthenticationScope::class)],
             UserTestBuilder::aUser()->withId(102)->build(),
             'https://example.com',
             null
@@ -87,6 +89,7 @@ final class AuthorizationCodeResponseFactoryTest extends TestCase
 
         $response = $this->authorization_code_response_factory->createSuccessfulResponse(
             $this->buildOAuth2App(),
+            [M::mock(AuthenticationScope::class)],
             UserTestBuilder::aUser()->withId(102)->build(),
             'https://example.com',
             '6k9Sfw'

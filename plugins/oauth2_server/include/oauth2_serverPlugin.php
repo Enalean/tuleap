@@ -50,6 +50,8 @@ use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeCreator;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeDAO;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeVerifier;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\PrefixOAuth2AuthCode;
+use Tuleap\OAuth2Server\Grant\AuthorizationCode\Scope\OAuth2AuthorizationCodeScopeDAO;
+use Tuleap\OAuth2Server\Grant\AuthorizationCode\Scope\OAuth2AuthorizationCodeScopeSaver;
 use Tuleap\OAuth2Server\Grant\OAuth2ClientAuthenticationMiddleware;
 use Tuleap\OAuth2Server\ProjectAdmin\ListAppsController;
 use Tuleap\Project\Admin\Navigation\NavigationItemPresenter;
@@ -196,12 +198,7 @@ final class oauth2_serverPlugin extends Plugin
             new \Tuleap\OAuth2Server\AuthorizationServer\ScopeExtractor($scope_builder),
             new \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationCodeResponseFactory(
                 $response_factory,
-                new OAuth2AuthorizationCodeCreator(
-                    new PrefixedSplitTokenSerializer(new PrefixOAuth2AuthCode()),
-                    new SplitTokenVerificationStringHasher(),
-                    new OAuth2AuthorizationCodeDAO(),
-                    $this->getAuthorizationCodeValidityInterval()
-                ),
+                $this->buildOAuth2AuthorizationCodeCreator(),
                 $redirect_uri_builder,
                 new \URLRedirect(\EventManager::instance())
             ),
@@ -225,6 +222,7 @@ final class oauth2_serverPlugin extends Plugin
         return new \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationEndpointPostController(
             \UserManager::instance(),
             new AppFactory(new AppDao(), ProjectManager::instance()),
+            $this->buildScopeBuilder(),
             new \Tuleap\OAuth2Server\User\AuthorizationCreator(
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
                 new \Tuleap\OAuth2Server\User\AuthorizationDao(),
@@ -232,12 +230,7 @@ final class oauth2_serverPlugin extends Plugin
             ),
             new \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationCodeResponseFactory(
                 $response_factory,
-                new OAuth2AuthorizationCodeCreator(
-                    new PrefixedSplitTokenSerializer(new PrefixOAuth2AuthCode()),
-                    new SplitTokenVerificationStringHasher(),
-                    new OAuth2AuthorizationCodeDAO(),
-                    $this->getAuthorizationCodeValidityInterval()
-                ),
+                $this->buildOAuth2AuthorizationCodeCreator(),
                 new RedirectURIBuilder(HTTPFactoryBuilder::URIFactory()),
                 new \URLRedirect(\EventManager::instance())
             ),
@@ -372,6 +365,18 @@ final class oauth2_serverPlugin extends Plugin
         return new AuthenticationScopeBuilderFromClassNames(
             DemoOAuth2Scope::class,
             OAuth2ProjectReadScope::class
+        );
+    }
+
+    private function buildOAuth2AuthorizationCodeCreator(): OAuth2AuthorizationCodeCreator
+    {
+        return new OAuth2AuthorizationCodeCreator(
+            new PrefixedSplitTokenSerializer(new PrefixOAuth2AuthCode()),
+            new SplitTokenVerificationStringHasher(),
+            new OAuth2AuthorizationCodeDAO(),
+            new OAuth2AuthorizationCodeScopeSaver(new OAuth2AuthorizationCodeScopeDAO()),
+            $this->getAuthorizationCodeValidityInterval(),
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
         );
     }
 }

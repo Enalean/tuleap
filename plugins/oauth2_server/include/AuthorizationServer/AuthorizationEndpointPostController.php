@@ -26,6 +26,7 @@ use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\OAuth2Server\App\AppFactory;
 use Tuleap\OAuth2Server\App\ClientIdentifier;
 use Tuleap\OAuth2Server\App\InvalidClientIdentifierKey;
@@ -53,6 +54,10 @@ final class AuthorizationEndpointPostController extends DispatchablePSR15Compati
      */
     private $app_factory;
     /**
+     * @var AuthenticationScopeBuilder
+     */
+    private $scope_builder;
+    /**
      * @var AuthorizationCreator
      */
     private $authorization_creator;
@@ -68,6 +73,7 @@ final class AuthorizationEndpointPostController extends DispatchablePSR15Compati
     public function __construct(
         \UserManager $user_manager,
         AppFactory $app_factory,
+        AuthenticationScopeBuilder $scope_builder,
         AuthorizationCreator $authorization_creator,
         AuthorizationCodeResponseFactory $response_creator,
         \CSRFSynchronizerToken $csrf_token,
@@ -77,6 +83,7 @@ final class AuthorizationEndpointPostController extends DispatchablePSR15Compati
         parent::__construct($emitter, ...$middleware_stack);
         $this->user_manager          = $user_manager;
         $this->app_factory           = $app_factory;
+        $this->scope_builder         = $scope_builder;
         $this->authorization_creator = $authorization_creator;
         $this->response_creator      = $response_creator;
         $this->csrf_token            = $csrf_token;
@@ -104,15 +111,24 @@ final class AuthorizationEndpointPostController extends DispatchablePSR15Compati
         }
 
         $scope_identifiers = [];
+        $scopes            = [];
         foreach ($body_params[self::SCOPE] as $scope_key) {
-            $scope_identifiers[] = OAuth2ScopeIdentifier::fromIdentifierKey($scope_key);
+            $scope_identifier = OAuth2ScopeIdentifier::fromIdentifierKey($scope_key);
+            $scope            = $this->scope_builder->buildAuthenticationScopeFromScopeIdentifier($scope_identifier);
+            if ($scope !== null) {
+                $scope_identifiers[] = $scope_identifier;
+                $scopes[]            = $scope;
+            }
+        }
+        if (empty($scopes)) {
+            throw new ForbiddenException();
         }
         $new_authorization = new NewAuthorization($user, $client_app->getId(), ...$scope_identifiers);
         $this->authorization_creator->saveAuthorization($new_authorization);
 
         $redirect_uri = $body_params[self::REDIRECT_URI];
         $state_value  = $body_params[self::STATE] ?? null;
-        return $this->response_creator->createSuccessfulResponse($client_app, $user, $redirect_uri, $state_value);
+        return $this->response_creator->createSuccessfulResponse($client_app, $scopes, $user, $redirect_uri, $state_value);
     }
 
     /**
@@ -138,7 +154,7 @@ final class AuthorizationEndpointPostController extends DispatchablePSR15Compati
      * @psalm-assert string[] $scope_keys
      * @throws ForbiddenException
      */
-    public function validateStringArray(array $scope_keys)
+    public function validateStringArray(array $scope_keys): void
     {
         foreach ($scope_keys as $scope_key) {
             if (! is_string($scope_key)) {
