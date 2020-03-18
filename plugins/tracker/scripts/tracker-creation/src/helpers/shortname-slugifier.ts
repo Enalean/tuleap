@@ -21,22 +21,21 @@ import slugify from "slugify";
 
 export function getSlugifiedShortname(tracker_name: string): string {
     slugify.extend({
-        "+": "_",
-        ".": "_",
-        "~": "_",
-        "(": "_",
-        ")": "_",
-        "!": "_",
-        ":": "_",
-        "@": "_",
-        '"': "_",
-        "'": "_",
-        "*": "_",
-        "©": "_",
-        "®": "_",
-        "-": "_",
-        "<": "_",
-        ">": "_"
+        "+": "-",
+        ".": "-",
+        "~": "-",
+        "(": "-",
+        ")": "-",
+        "!": "-",
+        ":": "-",
+        "@": "-",
+        '"': "-",
+        "'": "-",
+        "*": "-",
+        "©": "-",
+        "®": "-",
+        "<": "-",
+        ">": "-"
     });
 
     const slugified_shortname = slugify(tracker_name, {
