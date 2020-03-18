@@ -33,11 +33,12 @@ use Tracker_FileInfo;
 use Tracker_FileInfoFactory;
 use Tracker_FormElement_Field_File;
 use Tracker_FormElement_Field_Value_FileDao;
+use Tracker_FormElement_RESTValueByField_NotImplementedException;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use Tuleap\TemporaryTestDirectory;
 
-class TrackerFormElementFieldFileTest extends TestCase
+final class TrackerFormElementFieldFileTest extends TestCase
 {
     use MockeryPHPUnitIntegration, GlobalLanguageMock, GlobalResponseMock, TemporaryTestDirectory;
 
@@ -738,5 +739,26 @@ class TrackerFormElementFieldFileTest extends TestCase
         $formelement_field_file->shouldReceive('checkThatAtLeastOneFileIsUploaded')->andReturns(false);
 
         $this->assertTrue($formelement_field_file->isEmpty($submitted_value, $artifact));
+    }
+
+    public function testItThrowsAnExceptionWhenReturningValueIndexedByFieldName(): void
+    {
+        $field = new Tracker_FormElement_Field_File(
+            1,
+            101,
+            null,
+            'field_file',
+            'Field File',
+            '',
+            1,
+            'P',
+            true,
+            '',
+            1
+        );
+
+        $this->expectException(Tracker_FormElement_RESTValueByField_NotImplementedException::class);
+
+        $field->getFieldDataFromRESTValueByField(['some_value']);
     }
 }

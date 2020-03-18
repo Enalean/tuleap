@@ -71,8 +71,8 @@ class Tracker_Hierarchy
     /**
      * Return True if given tracker is at the root of the Hierarchy
      *
-     * @param type $tracker_id
-     * @return type
+     * @param int $tracker_id
+     * @return bool
      */
     public function isRoot($tracker_id)
     {

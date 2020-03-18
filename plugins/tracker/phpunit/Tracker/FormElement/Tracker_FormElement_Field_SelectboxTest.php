@@ -29,6 +29,7 @@ use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind;
 use Tracker_FormElement_Field_List_Bind_StaticValue_None;
 use Tracker_FormElement_Field_Selectbox;
+use Tracker_FormElement_RESTValueByField_NotImplementedException;
 use Tuleap\GlobalLanguageMock;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
@@ -146,5 +147,28 @@ final class Tracker_FormElement_Field_SelectboxTest extends TestCase
             3,
             $this->field->getFieldDataFromRESTValue(['bind_value_ids' => ['103_3']])
         );
+    }
+
+    public function testItThrowsAnExceptionWhenReturningValueIndexedByFieldName(): void
+    {
+        $field = new Tracker_FormElement_Field_Selectbox(
+            1,
+            101,
+            null,
+            'field_sb',
+            'Field SB',
+            '',
+            1,
+            'P',
+            true,
+            '',
+            1
+        );
+
+        $this->expectException(Tracker_FormElement_RESTValueByField_NotImplementedException::class);
+
+        $value = ['some_value'];
+
+        $field->getFieldDataFromRESTValueByField($value);
     }
 }
