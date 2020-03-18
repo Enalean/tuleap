@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Event\ExternalStrategiesGetter;
 use Tuleap\Tracker\Artifact\XMLImport\XMLImportFieldStrategyComputed;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 
@@ -103,8 +104,18 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
                 $tracker_artifact_factory,
                 $nature_dao,
             ),
-            self::FIELDTYPE_COMPUTED      => new XMLImportFieldStrategyComputed()
+            self::FIELDTYPE_COMPUTED => new XMLImportFieldStrategyComputed()
         );
+
+        $this->getExternalStrategies();
+    }
+
+    protected function getExternalStrategies()
+    {
+        $event_manager     = EventManager::instance();
+        $strategies_getter = new ExternalStrategiesGetter();
+        $event_manager->processEvent($strategies_getter);
+        $this->strategies = array_merge($this->strategies, $strategies_getter->getStrategies());
     }
 
     /**
@@ -114,11 +125,23 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
     {
         $data = array();
 
-        if (! $xml_field_change->field_change) {
+        if (! $xml_field_change->field_change && ! $xml_field_change->external_field_change) {
             return $data;
         }
 
-        foreach ($xml_field_change->field_change as $field_change) {
+        $data = $this->getChangesetData($xml_field_change->field_change, $submitted_by, $artifact, $data);
+        $data = $this->getChangesetData($xml_field_change->external_field_change, $submitted_by, $artifact, $data);
+
+        return $data;
+    }
+
+    private function getChangesetData(
+        SimpleXMLElement $xml_field_change,
+        PFUser $submitted_by,
+        Tracker_Artifact $artifact,
+        array $data
+    ) {
+        foreach ($xml_field_change as $field_change) {
             $field = $this->formelement_factory->getUsedFieldByName(
                 $this->tracker->getId(),
                 (string) $field_change['field_name']
