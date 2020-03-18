@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TestManagement When component is renderer, Then there is a div element with id of release 1`] = `
+<div
+  class="release-widget-pie-chart-ttm"
+  data-test="display-ttm"
+  id="release-widget-pie-chart-ttm-2"
+/>
+`;

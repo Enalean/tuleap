@@ -18,16 +18,24 @@
   -->
 
 <template>
-    <div
-        v-if="is_testmanagement_available && project_milestone_activate_ttm"
-        class="release-ttm-section"
-    >
-        <h2 class="tlp-pane-subtitle" v-translate>Tests Results</h2>
+    <div v-if="is_testmanagement_available" class="release-ttm-section">
         <div v-if="is_loading" class="release-loader" data-test="loading-data"></div>
-        <div v-else-if="has_rest_error" class="tlp-alert-danger" data-test="error-rest">
-            {{ message_error_rest }}
+        <div v-else>
+            <h2
+                v-if="has_rest_error || are_some_tests_to_display"
+                class="tlp-pane-subtitle"
+                v-translate
+            >
+                Tests Results
+            </h2>
+            <div v-if="has_rest_error" class="tlp-alert-danger" data-test="error-rest">
+                {{ message_error_rest }}
+            </div>
+            <test-management
+                v-else-if="are_some_tests_to_display"
+                v-bind:release_data="release_data"
+            />
         </div>
-        <test-management v-else v-bind:release_data="release_data" />
     </div>
 </template>
 
@@ -48,8 +56,6 @@ export default class TestManagementDisplayer extends Vue {
     readonly release_data!: MilestoneData;
     @State
     readonly project_id!: number;
-    @State
-    readonly project_milestone_activate_ttm!: boolean;
     @Action
     getTestManagementCampaigns!: (release_data: MilestoneData) => Promise<TestManagementCampaign>;
 
@@ -88,6 +94,19 @@ export default class TestManagementDisplayer extends Vue {
 
     get is_testmanagement_available(): boolean {
         return is_testmanagement_activated(this.release_data);
+    }
+
+    get are_some_tests_to_display(): boolean {
+        if (!this.release_data.campaign) {
+            return false;
+        }
+
+        return (
+            this.release_data.campaign.nb_of_notrun > 0 ||
+            this.release_data.campaign.nb_of_failed > 0 ||
+            this.release_data.campaign.nb_of_passed > 0 ||
+            this.release_data.campaign.nb_of_blocked > 0
+        );
     }
 }
 </script>

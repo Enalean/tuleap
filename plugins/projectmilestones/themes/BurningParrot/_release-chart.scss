@@ -76,3 +76,100 @@
 .project-milestones-chart-label {
     margin: $tlp-spacing 0 $tlp-spacing 0;
 }
+
+.release-widget-pie-chart-ttm-slice-blocked {
+    > path {
+        fill: $blocked;
+    }
+
+    > text {
+        fill: darken($blocked, 10%);
+    }
+}
+
+.release-widget-pie-chart-ttm-slice-notrun {
+    > path {
+        fill: $notrun;
+    }
+
+    > text {
+        fill: darken($notrun, 10%);
+    }
+}
+
+.release-widget-pie-chart-ttm-slice-passed {
+    > path {
+        fill: $passed;
+    }
+
+    > text {
+        fill: darken($passed, 10%);
+    }
+}
+
+.release-widget-pie-chart-ttm-slice-failed {
+    > path {
+        fill: $failed;
+    }
+
+    > text {
+        fill: darken($failed, 10%);
+    }
+}
+
+.release-widget-pie-chart-ttm-slice-text {
+    font-size: 20px;
+}
+
+.release-widget-pie-chart-ttm-legend {
+    width: 100px;
+    color: $tlp-ui-dimmed;
+    font-size: 12px;
+    line-height: 18px;
+    cursor: default;
+}
+
+.release-widget-pie-chart-ttm,
+.release-widget-pie-chart-ttm-legend.release-widget-pie-chart-ttm-legend-notrun,
+.release-widget-pie-chart-ttm-legend.release-widget-pie-chart-ttm-legend-passed,
+.release-widget-pie-chart-ttm-legend.release-widget-pie-chart-ttm-legend-blocked,
+.release-widget-pie-chart-ttm-legend.release-widget-pie-chart-ttm-legend-failed {
+    display: flex;
+    align-items: center;
+    width: max-content;
+}
+
+.release-widget-pie-chart-ttm-legend-color-span {
+    flex: 0 0 auto;
+    width: 12px;
+    height: 12px;
+    margin: 0 5px 0 0;
+    border-radius: 50%;
+    opacity: .8;
+
+    &.release-widget-pie-chart-ttm-legend-color-passed {
+        background-color: $passed;
+    }
+
+    &.release-widget-pie-chart-ttm-legend-color-blocked {
+        background-color: $blocked;
+    }
+
+    &.release-widget-pie-chart-ttm-legend-color-notrun {
+        background-color: $notrun;
+    }
+
+    &.release-widget-pie-chart-ttm-legend-color-failed {
+        background-color: $failed;
+    }
+}
+
+.release-widget-pie-chart-ttm-legend-selected {
+    font-weight: 600;
+}
+
+.release-ttm-section {
+    width: 200 + $tlp-double-spacing;
+    margin: 0 $tlp-spacing 0 auto;
+    padding: 0 0 0 $tlp-half-spacing;
+}

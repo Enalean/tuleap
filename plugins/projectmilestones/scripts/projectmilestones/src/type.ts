@@ -113,7 +113,6 @@ export interface StoreOptions {
         user_can_view_sub_milestones_planning?: boolean;
         burnup_mode?: string;
         last_release?: MilestoneData | null;
-        project_milestone_activate_ttm?: boolean;
     };
     getters?: {
         has_rest_error?: boolean;
@@ -138,7 +137,6 @@ export interface State {
     burnup_mode: BurnupMode;
     nb_past_releases: number;
     last_release: MilestoneData | null;
-    project_milestone_activate_ttm: boolean;
 }
 
 export interface Context {

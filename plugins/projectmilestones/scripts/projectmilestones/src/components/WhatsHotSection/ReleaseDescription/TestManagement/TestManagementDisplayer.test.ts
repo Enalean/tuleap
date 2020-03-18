@@ -49,7 +49,6 @@ describe("TestManagementDisplayer", () => {
             state: {
                 label_tracker_planning: "Releases",
                 project_id,
-                project_milestone_activate_ttm: true,
             },
         };
 
@@ -68,6 +67,7 @@ describe("TestManagementDisplayer", () => {
                     },
                 ],
             },
+            campaign: null,
         } as MilestoneData;
 
         component_options.propsData = {
@@ -102,19 +102,30 @@ describe("TestManagementDisplayer", () => {
         expect(wrapper.find("[data-test=error-rest]").text()).toBe("404 Error");
     });
 
-    it("When user can see TTM and TTM plugin is activated, Then TestManagement component is rendered", async () => {
+    it("When TTM plugin is activated and there is some tests, Then TestManagement component is rendered", async () => {
         component_options.data = (): DefaultData<TestManagementDisplayer> => {
             return {
                 is_loading: false,
                 error_message: null,
             };
+        };
+
+        release_data.campaign = {
+            nb_of_blocked: 1,
+            nb_of_passed: 2,
+            nb_of_failed: 3,
+            nb_of_notrun: 4,
+        };
+
+        component_options.propsData = {
+            release_data,
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
         expect(wrapper.contains(TestManagement)).toBe(true);
     });
 
-    it("When the project has not activated project_milestone_activate_ttm, Then there is no message", async () => {
+    it("When there is no tests, Then TestManagement component is not rendered", async () => {
         component_options.data = (): DefaultData<TestManagementDisplayer> => {
             return {
                 is_loading: false,
@@ -122,7 +133,16 @@ describe("TestManagementDisplayer", () => {
             };
         };
 
-        store_options.state.project_milestone_activate_ttm = false;
+        release_data.campaign = {
+            nb_of_blocked: 0,
+            nb_of_passed: 0,
+            nb_of_failed: 0,
+            nb_of_notrun: 0,
+        };
+
+        component_options.propsData = {
+            release_data,
+        };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
         expect(wrapper.contains(TestManagement)).toBe(false);
