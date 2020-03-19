@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.2.4\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #, php-format
 msgid ""
@@ -252,11 +252,17 @@ msgstr "Tous les groupes"
 msgid "All members of %s will remain project members."
 msgstr "Tous les membres de %s resteront membres du projet."
 
+msgid "Allow for all projects"
+msgstr "Autoriser pour tous les projets"
+
 msgid "Allow restricted users to be added to the project"
 msgstr "Autoriser l'ajout d'utilisateurs restreints dans ce projet."
 
 msgid "Allow to write informations for users on your dashboards using Markdown"
 msgstr "Permet d'écrire des informations en markdown sur les dashboards"
+
+msgid "Allowing for all projects"
+msgstr "Autorisation pour tous les projets"
 
 msgid "Already used"
 msgstr "Déjà utilisé"
@@ -648,6 +654,12 @@ msgstr "Description"
 
 msgid "Details"
 msgstr "Détails"
+
+msgid "Disallow for all projects"
+msgstr "Restreindre pour tous les projets"
+
+msgid "Disallowing for all projects"
+msgstr "Restriction pour tous les projets"
 
 msgid "Display density"
 msgstr "Densité d'affichage"
@@ -1301,6 +1313,9 @@ msgstr ""
 msgid "Please choose a valid text file"
 msgstr "Veuillez choisir un fichier texte valide"
 
+msgid "Please confirm your action."
+msgstr "Merci de confirmer votre action."
+
 msgid ""
 "Please make sure the users who will be imported are already registered and "
 "have an active account."
@@ -1860,6 +1875,13 @@ msgid ""
 msgstr ""
 "L'ancien modèle par défaut. Ne sera bientôt plus disponible. A recréer en "
 "tant que \"Modèle de projet personnalisé\""
+
+msgid ""
+"The list of projects that were previously whitelisted will be permanently "
+"lost."
+msgstr ""
+"La liste des projets qui étaient explicitement autorisés sera définitivement "
+"perdue."
 
 #, php-format
 msgid ""
@@ -2425,6 +2447,13 @@ msgstr "Année"
 msgid "Yesterday"
 msgstr "Hier"
 
+msgid ""
+"You are about to allow access to a resource for every projects on the "
+"platform."
+msgstr ""
+"Vous êtes sur le point d'autoriser l'accès à une ressource pour tous les "
+"projets de la plateforme."
+
 msgid "You are about to delete <b>%s</b> binding. Please, confirm your action."
 msgstr ""
 "Vous êtes sur le point de supprimer le lien <b>%s</b>. Merci de confirmer "
@@ -2451,6 +2480,13 @@ msgid ""
 msgstr ""
 "Vous êtes sur le point de supprimer le widget \"%s\". Cette action est "
 "irréversible. Merci de confirmer cette suppression."
+
+msgid ""
+"You are about to disallow access to a resource for every projects on the "
+"platform."
+msgstr ""
+"Vous êtes sur le point de restreindre l'accès à une ressource pour tous les "
+"projets de la plateforme."
 
 msgid ""
 "You are about to download software from this site. Software re-use and "

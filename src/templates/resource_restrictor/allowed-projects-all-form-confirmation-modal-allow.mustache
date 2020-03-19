@@ -1,0 +1,28 @@
+<div id="allowed-projects-all-form-confirmation-modal-allow"
+     class="tlp-modal tlp-modal-danger"
+     role="dialog"
+     aria-labelledby="allowed-projects-all-form-confirmation-modal-allow-label"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="allowed-projects-all-form-confirmation-modal-allow-label">
+            {{# gettext }}Allowing for all projects{{/ gettext }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">
+            ×
+        </div>
+    </div>
+    <div class="tlp-modal-body">
+        <p>
+            {{# gettext }}You are about to allow access to a resource for every projects on the platform.{{/ gettext }}
+            {{# gettext }}The list of projects that were previously whitelisted will be permanently lost.{{/ gettext }}
+        </p>
+        <p>{{# gettext }}Please confirm your action.{{/ gettext }}</p>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="reset" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="tlp-button-danger tlp-modal-action">
+            <i class="tlp-button-icon fa fa-save" aria-hidden="true"></i>
+            {{# gettext }}Allow for all projects{{/ gettext }}
+        </button>
+    </div>
+</div>
