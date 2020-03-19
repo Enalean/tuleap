@@ -31,6 +31,8 @@ use Tuleap\OAuth2Server\App\AppFactory;
 use Tuleap\OAuth2Server\App\ClientIdentifier;
 use Tuleap\OAuth2Server\App\InvalidClientIdentifierKey;
 use Tuleap\OAuth2Server\App\OAuth2AppNotFoundException;
+use Tuleap\OAuth2Server\AuthorizationServer\PKCE\OAuth2PKCEInformationExtractionException;
+use Tuleap\OAuth2Server\AuthorizationServer\PKCE\PKCEInformationExtractor;
 use Tuleap\OAuth2Server\User\AuthorizationComparator;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -76,6 +78,10 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
      * @var AuthorizationComparator
      */
     private $authorization_comparator;
+    /**
+     * @var PKCEInformationExtractor
+     */
+    private $pkce_information_extractor;
 
     public function __construct(
         AuthorizationFormRenderer $form_renderer,
@@ -84,16 +90,18 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
         ScopeExtractor $scope_extractor,
         AuthorizationCodeResponseFactory $response_factory,
         AuthorizationComparator $authorization_comparator,
+        PKCEInformationExtractor $pkce_information_extractor,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack
     ) {
         parent::__construct($emitter, ...$middleware_stack);
-        $this->form_renderer            = $form_renderer;
-        $this->user_manager             = $user_manager;
-        $this->app_factory              = $app_factory;
-        $this->scope_extractor          = $scope_extractor;
-        $this->response_factory         = $response_factory;
-        $this->authorization_comparator = $authorization_comparator;
+        $this->form_renderer              = $form_renderer;
+        $this->user_manager               = $user_manager;
+        $this->app_factory                = $app_factory;
+        $this->scope_extractor            = $scope_extractor;
+        $this->response_factory           = $response_factory;
+        $this->authorization_comparator   = $authorization_comparator;
+        $this->pkce_information_extractor = $pkce_information_extractor;
     }
 
     /**
@@ -139,14 +147,31 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
             );
         }
 
+        try {
+            $code_challenge = $this->pkce_information_extractor->extractCodeChallenge($client_app, $query_params);
+        } catch (OAuth2PKCEInformationExtractionException $exception) {
+            return $this->response_factory->createErrorResponse(
+                self::ERROR_CODE_INVALID_REQUEST,
+                $redirect_uri,
+                $state_value
+            );
+        }
+
         if ($this->authorization_comparator->areRequestedScopesAlreadyGranted($user, $client_app, $scopes)) {
-            return $this->response_factory->createSuccessfulResponse($client_app, $scopes, $user, $redirect_uri, $state_value);
+            return $this->response_factory->createSuccessfulResponse(
+                $client_app,
+                $scopes,
+                $user,
+                $redirect_uri,
+                $state_value,
+                $code_challenge
+            );
         }
 
         $layout = $request->getAttribute(BaseLayout::class);
         assert($layout instanceof BaseLayout);
         $csrf_token = new \CSRFSynchronizerToken(self::CSRF_TOKEN);
-        $data       = new AuthorizationFormData($client_app, $csrf_token, $redirect_uri, $state_value, ...$scopes);
+        $data       = new AuthorizationFormData($client_app, $csrf_token, $redirect_uri, $state_value, $code_challenge, ...$scopes);
         return $this->form_renderer->renderForm($data, $layout);
     }
 }

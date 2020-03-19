@@ -27,8 +27,13 @@ use Tuleap\DB\DataAccessObject;
 
 class OAuth2AuthorizationCodeDAO extends DataAccessObject
 {
-    public function create(int $app_id, int $user_id, string $hashed_verification_string, int $expiration_date_timestamp): int
-    {
+    public function create(
+        int $app_id,
+        int $user_id,
+        string $hashed_verification_string,
+        int $expiration_date_timestamp,
+        ?string $pkce_code_challenge
+    ): int {
         return (int) $this->getDB()->insertReturnId(
             'plugin_oauth2_authorization_code',
             [
@@ -36,6 +41,7 @@ class OAuth2AuthorizationCodeDAO extends DataAccessObject
                 'user_id'               => $user_id,
                 'verifier'              => $hashed_verification_string,
                 'expiration_date'       => $expiration_date_timestamp,
+                'pkce_code_challenge'   => $pkce_code_challenge,
                 'has_already_been_used' => false
             ]
         );

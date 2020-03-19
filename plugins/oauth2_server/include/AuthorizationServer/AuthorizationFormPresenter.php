@@ -57,6 +57,11 @@ final class AuthorizationFormPresenter
      */
     public $state;
     /**
+     * @var string|null
+     * @psalm-readonly
+     */
+    public $pkce_code_challenge;
+    /**
      * @var string
      * @psalm-readonly
      */
@@ -68,6 +73,7 @@ final class AuthorizationFormPresenter
     public $scope_definition_presenters;
     /**
      * @var OAuth2ScopeIdentifierPresenter[]
+     * @psalm-readonly
      */
     public $scope_identifier_presenters;
 
@@ -88,6 +94,8 @@ final class AuthorizationFormPresenter
         $this->project_name                = $app->getProject()->getPublicName();
         $this->csrf_token                  = $data->getCSRFToken();
         $this->state                       = $data->getState();
+        $pkce_code_challenge               = $data->getPKCECodeChallenge();
+        $this->pkce_code_challenge         = $pkce_code_challenge === null ? null : bin2hex($pkce_code_challenge);
         $this->redirect_uri                = $data->getRedirectUri();
         $this->deny_authorization_uri      = $deny_authorization_uri;
         $this->scope_definition_presenters = $scope_definition_presenters;

@@ -48,6 +48,11 @@ final class AuthorizationFormData
      */
     private $redirect_uri;
     /**
+     * @var string|null
+     * @psalm-readonly
+     */
+    private $pkce_code_challenge;
+    /**
      * @var AuthenticationScope[]
      * @psalm-readonly
      */
@@ -58,13 +63,15 @@ final class AuthorizationFormData
         \CSRFSynchronizerToken $csrf_token,
         string $redirect_uri,
         ?string $state,
+        ?string $pkce_code_challenge,
         AuthenticationScope ...$scopes
     ) {
-        $this->app          = $app;
-        $this->csrf_token   = $csrf_token;
-        $this->redirect_uri = $redirect_uri;
-        $this->state        = $state;
-        $this->scopes       = $scopes;
+        $this->app                 = $app;
+        $this->csrf_token          = $csrf_token;
+        $this->redirect_uri        = $redirect_uri;
+        $this->state               = $state;
+        $this->pkce_code_challenge = $pkce_code_challenge;
+        $this->scopes              = $scopes;
     }
 
     /**
@@ -97,6 +104,14 @@ final class AuthorizationFormData
     public function getRedirectUri(): string
     {
         return $this->redirect_uri;
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function getPKCECodeChallenge(): ?string
+    {
+        return $this->pkce_code_challenge;
     }
 
     /**

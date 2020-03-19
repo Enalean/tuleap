@@ -79,8 +79,9 @@ final class AuthorizationFormPresenterBuilderTest extends TestCase
         $typevalue_scope      = M::mock(AuthenticationScope::class);
         $typevalue_scope->shouldReceive('getDefinition')->once()->andReturn($typevalue_definition);
         $typevalue_scope->shouldReceive('getIdentifier')->once()->andReturn($typevalue_identifier);
-        $redirect_uri = 'https://example.com';
-        $state_value  = 'xyz';
+        $redirect_uri        = 'https://example.com';
+        $state_value         = 'xyz';
+        $pkce_code_challenge = 'pkce_code_challenge';
 
         $form_data = new AuthorizationFormData(
             new OAuth2App(
@@ -93,6 +94,7 @@ final class AuthorizationFormPresenterBuilderTest extends TestCase
             M::mock(\CSRFSynchronizerToken::class),
             $redirect_uri,
             $state_value,
+            $pkce_code_challenge,
             $foobar_scope,
             $typevalue_scope
         );
@@ -117,6 +119,7 @@ final class AuthorizationFormPresenterBuilderTest extends TestCase
         $this->assertSame('Test Project', $presenter->project_name);
         $this->assertSame($redirect_uri, $presenter->redirect_uri);
         $this->assertSame($state_value, $presenter->state);
+        $this->assertSame(bin2hex($pkce_code_challenge), $presenter->pkce_code_challenge);
         $this->assertNotNull($presenter->csrf_token);
         $this->assertSame(
             'https://example.com?state=xyz&error=access_denied',

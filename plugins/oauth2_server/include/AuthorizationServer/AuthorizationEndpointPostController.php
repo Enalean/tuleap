@@ -40,10 +40,11 @@ use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 final class AuthorizationEndpointPostController extends DispatchablePSR15Compatible
 {
     // We can name those however we want, they are not constrained by the spec.
-    private const REDIRECT_URI   = 'redirect_uri';
-    private const STATE          = 'state';
-    private const APP_IDENTIFIER = 'app_identifier';
-    private const SCOPE          = 'scope';
+    private const REDIRECT_URI        = 'redirect_uri';
+    private const STATE               = 'state';
+    private const APP_IDENTIFIER      = 'app_identifier';
+    private const SCOPE               = 'scope';
+    private const PKCE_CODE_CHALLENGE = 'pkce_code_challenge';
 
     /**
      * @var \UserManager
@@ -123,12 +124,18 @@ final class AuthorizationEndpointPostController extends DispatchablePSR15Compati
         if (empty($scopes)) {
             throw new ForbiddenException();
         }
+
+        $pkce_code_challenge = isset($body_params[self::PKCE_CODE_CHALLENGE]) ? @hex2bin($body_params[self::PKCE_CODE_CHALLENGE]) : null;
+        if ($pkce_code_challenge === false) {
+            throw new ForbiddenException();
+        }
+
         $new_authorization = new NewAuthorization($user, $client_app->getId(), ...$scope_identifiers);
         $this->authorization_creator->saveAuthorization($new_authorization);
 
         $redirect_uri = $body_params[self::REDIRECT_URI];
         $state_value  = $body_params[self::STATE] ?? null;
-        return $this->response_creator->createSuccessfulResponse($client_app, $scopes, $user, $redirect_uri, $state_value);
+        return $this->response_creator->createSuccessfulResponse($client_app, $scopes, $user, $redirect_uri, $state_value, $pkce_code_challenge);
     }
 
     /**

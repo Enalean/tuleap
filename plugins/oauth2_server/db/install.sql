@@ -33,6 +33,7 @@ CREATE TABLE plugin_oauth2_authorization_code(
     verifier VARCHAR(255) NOT NULL,
     expiration_date INT(11) UNSIGNED NOT NULL,
     has_already_been_used BOOLEAN NOT NULL,
+    pkce_code_challenge BINARY(32),
     INDEX idx_expiration_date (expiration_date),
     INDEX idx_app_id (app_id)
 ) ENGINE=InnoDB;
