@@ -122,10 +122,15 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
         if ($dar->rowCount() > 0) {
             $linkTypeCmdId   = 'plugin_project_links_type_' . $way;
 
+            $title = $GLOBALS['Language']->getText('plugin_plinks', 'links');
+            if ($way === 'back_links') {
+                $title = $GLOBALS['Language']->getText('plugin_plinks', 'back_links');
+            }
+
             $cssClass = Toggler::getClassName($linkTypeCmdId);
             $titleSpan = "<span id=\"" . $this->html_purifier->purify($linkTypeCmdId) .
                 "\" class=\"" . $this->html_purifier->purify($cssClass) . "\">" .
-                $this->html_purifier->purify($GLOBALS['Language']->getText('plugin_plinks', $way)) .
+                $this->html_purifier->purify($title) .
                 '</span>';
 
             $html .= "<li>" . $titleSpan;

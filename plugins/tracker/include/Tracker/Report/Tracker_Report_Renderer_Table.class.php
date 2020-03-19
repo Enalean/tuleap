@@ -776,11 +776,17 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             'prev'  => 'fa fa-angle-left',
             'next'  => 'fa fa-angle-right',
         );
+        $title = [
+            'begin' => $GLOBALS['Language']->getText('global', 'begin'),
+            'end'   => $GLOBALS['Language']->getText('global', 'end'),
+            'prev'  => $GLOBALS['Language']->getText('global', 'prev'),
+            'next'  => $GLOBALS['Language']->getText('global', 'next'),
+        ];
         $html  = '';
         $html .= '<button
             class="btn disabled"
             type="button"
-            title="' . $GLOBALS['Language']->getText('global', $direction) . '"
+            title="' . $title[$direction] . '"
             >';
         $html .= '<i class="' . $icons[$direction] . '"></i>';
         $html .= '</button> ';
@@ -796,11 +802,17 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             'prev'  => 'fa fa-angle-left',
             'next'  => 'fa fa-angle-right',
         );
+        $title = [
+            'begin' => $GLOBALS['Language']->getText('global', 'begin'),
+            'end'   => $GLOBALS['Language']->getText('global', 'end'),
+            'prev'  => $GLOBALS['Language']->getText('global', 'prev'),
+            'next'  => $GLOBALS['Language']->getText('global', 'next'),
+        ];
         $html  = '';
         $html .= '<a
             href="' . $url . '"
             class="btn"
-            title="' . $GLOBALS['Language']->getText('global', $direction) . '"
+            title="' . $title[$direction] . '"
             >';
         $html .= '<i class="' . $icons[$direction] . '"></i>';
         $html .= '</a> ';
@@ -1344,11 +1356,32 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             }
 
             $html .= '<th>';
-            $html .= $GLOBALS['Language']->getText('plugin_tracker_aggregate', $function);
+            $html .= $this->getAggregateLabel($function);
             $html .= '</th>';
         }
 
         return $html;
+    }
+
+    private function getAggregateLabel(string $function): string
+    {
+        switch ($function) {
+            case 'AVG':
+                return $GLOBALS['Language']->getText('plugin_tracker_aggregate', 'AVG');
+            case 'COUNT':
+                return $GLOBALS['Language']->getText('plugin_tracker_aggregate', 'COUNT');
+            case 'COUNT_GRBY':
+                return $GLOBALS['Language']->getText('plugin_tracker_aggregate', 'COUNT_GRBY');
+            case 'MAX':
+                return $GLOBALS['Language']->getText('plugin_tracker_aggregate', 'MAX');
+            case 'MIN':
+                return $GLOBALS['Language']->getText('plugin_tracker_aggregate', 'MIN');
+            case 'STD':
+                return $GLOBALS['Language']->getText('plugin_tracker_aggregate', 'STD');
+            case 'SUM':
+            default:
+                return $GLOBALS['Language']->getText('plugin_tracker_aggregate', 'SUM');
+        }
     }
 
     private function fetchAddAggregatesUsedFunctionsValue(
@@ -1441,7 +1474,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             if ($is_used) {
                 $html .= '<i class="fa fa-check"></i> ';
             }
-            $html .= $GLOBALS['Language']->getText('plugin_tracker_aggregate', $function);
+            $html .= $this->getAggregateLabel($function);
             $html .= '</a>';
             $html .= '</li>';
         }

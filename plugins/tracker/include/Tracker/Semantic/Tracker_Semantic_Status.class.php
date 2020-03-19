@@ -168,7 +168,11 @@ class Tracker_Semantic_Status extends Tracker_Semantic
      */
     public function getLocalizedStatusLabel(Tracker_Artifact $artifact)
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'status_' . $this->getNormalizedStatusLabel($artifact));
+        if ($this->isOpen($artifact)) {
+            return $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'status_Open');
+        }
+
+        return $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'status_Closed');
     }
 
     /**

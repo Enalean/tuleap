@@ -97,7 +97,14 @@ abstract class Transition_PostAction_Field extends Transition_PostAction
                 $already_used = $this->getDao()->searchByTransitionIdAndFieldId($this->transition->getId(), $new_field->getId());
 
                 if (count($already_used)) {
-                    $this->addFeedback('error', 'workflow_admin', 'postaction_on_field_already_exist', array($new_field->getLabel()));
+                    $this->addFeedback(
+                        'error',
+                        $GLOBALS['Language']->getText(
+                            'workflow_admin',
+                            'postaction_on_field_already_exist',
+                            [$new_field->getLabel()]
+                        )
+                    );
                 } else {
                     $field_id = $new_field->getId();
                     return $field_id;

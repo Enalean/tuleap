@@ -34,8 +34,8 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
     $permissions_updated = false;
 
     //some special ugroup names
-    $anonymous_name  = $GLOBALS['Language']->getText('project_ugroup', ugroup_get_name_from_id($GLOBALS['UGROUP_ANONYMOUS']));
-    $registered_name = $GLOBALS['Language']->getText('project_ugroup', ugroup_get_name_from_id($GLOBALS['UGROUP_REGISTERED']));
+    $anonymous_name  = $GLOBALS['Language']->getText('project_ugroup', 'ugroup_anonymous_users_name_key');
+    $registered_name = $GLOBALS['Language']->getText('project_ugroup', 'ugroup_registered_users_name_key');
 
     //We process the request
     foreach ($permissions_wanted_by_user as $field_id => $ugroups_permissions) {

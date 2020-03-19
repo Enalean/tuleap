@@ -19,7 +19,7 @@
  */
 require_once __DIR__ . '/../../../bootstrap.php';
 
-Mock::generatePartial('Transition_PostAction_Field_Float', 'Transition_PostAction_Field_FloatTestVersion', array('getDao', 'addFeedback', 'getFormElementFactory', 'isDefined', 'getFieldIdOfPostActionToUpdate'));
+Mock::generatePartial('Transition_PostAction_Field_Float', 'Transition_PostAction_Field_FloatTestVersion', array('getDao', 'getFormElementFactory', 'isDefined', 'getFieldIdOfPostActionToUpdate'));
 
 class Transition_PostAction_Field_FloatTest extends TuleapTestCase
 {
@@ -38,6 +38,16 @@ class Transition_PostAction_Field_FloatTest extends TuleapTestCase
         $this->post_action->__construct($this->transition, $this->post_action_id, $this->field, $this->value);
         stub($this->post_action)->getDao()->returns($this->dao);
         stub($this->post_action)->isDefined()->returns($this->field);
+
+        $GLOBALS['Language']->setReturnValue(
+            'getText',
+            'field_value_set',
+            [
+                'workflow_postaction',
+                'field_value_set',
+                ['Remaining Effort', 1.5]
+            ]
+        );
     }
 
     public function testBeforeShouldSetTheFloatField()
@@ -52,8 +62,6 @@ class Transition_PostAction_Field_FloatTest extends TuleapTestCase
         $fields_data = array(
             'field_id' => 'value',
         );
-
-        $this->post_action->expectOnce('addFeedback', array('info', 'workflow_postaction', 'field_value_set', array($this->field->getLabel(), $expected)));
 
         $this->post_action->before($fields_data, $user);
         $this->assertEqual($expected, $fields_data[$this->field->getId()]);
@@ -72,7 +80,6 @@ class Transition_PostAction_Field_FloatTest extends TuleapTestCase
             'field_id' => 'value',
         );
 
-        $this->post_action->expectOnce('addFeedback', array('info', 'workflow_postaction', 'field_value_set', array($this->field->getLabel(), $expected)));
         $this->post_action->before($fields_data, $user);
         $this->assertEqual($expected, $fields_data[$this->field->getId()]);
     }
@@ -89,7 +96,6 @@ class Transition_PostAction_Field_FloatTest extends TuleapTestCase
             'field_id' => 'value',
         );
 
-        $this->post_action->expectNever('addFeedback');
         $this->post_action->before($fields_data, $user);
         $this->assertEqual($expected, $fields_data[$this->field->getId()]);
     }

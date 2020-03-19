@@ -140,23 +140,23 @@ class ReferenceManager
     public function getAvailableNatures()
     {
         $core_natures = array(
-            self::REFERENCE_NATURE_ARTIFACT => array('keyword' => 'art', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_' . self::REFERENCE_NATURE_ARTIFACT . '_nature_key')),
-            self::REFERENCE_NATURE_DOCUMENT => array('keyword' => 'doc', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_' . self::REFERENCE_NATURE_DOCUMENT . '_nature_key')),
-            self::REFERENCE_NATURE_CVSCOMMIT => array('keyword' => 'cvs', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_' . self::REFERENCE_NATURE_CVSCOMMIT . '_nature_key')),
-            self::REFERENCE_NATURE_SVNREVISION => array('keyword' => 'svn', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_' . self::REFERENCE_NATURE_SVNREVISION . '_nature_key')),
-            self::REFERENCE_NATURE_FILE => array('keyword' => 'file', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_' . self::REFERENCE_NATURE_FILE . '_nature_key')),
-            self::REFERENCE_NATURE_RELEASE => array('keyword' => 'release', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_' . self::REFERENCE_NATURE_RELEASE . '_nature_key')),
-            self::REFERENCE_NATURE_FORUM => array('keyword' => 'forum', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_' . self::REFERENCE_NATURE_FORUM . '_nature_key')),
-            self::REFERENCE_NATURE_FORUMMESSAGE => array('keyword' => 'msg', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_' . self::REFERENCE_NATURE_FORUMMESSAGE . '_nature_key')),
-            self::REFERENCE_NATURE_NEWS => array('keyword' => 'news', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_' . self::REFERENCE_NATURE_NEWS . '_nature_key')),
-            self::REFERENCE_NATURE_WIKIPAGE => array('keyword' => 'wiki', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_' . self::REFERENCE_NATURE_WIKIPAGE . '_nature_key')),
+            self::REFERENCE_NATURE_ARTIFACT => array('keyword' => 'art', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_artifact_nature_key')),
+            self::REFERENCE_NATURE_DOCUMENT => array('keyword' => 'doc', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_document_nature_key')),
+            self::REFERENCE_NATURE_CVSCOMMIT => array('keyword' => 'cvs', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_cvs_commit_nature_key')),
+            self::REFERENCE_NATURE_SVNREVISION => array('keyword' => 'svn', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_svn_revision_nature_key')),
+            self::REFERENCE_NATURE_FILE => array('keyword' => 'file', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_file_nature_key')),
+            self::REFERENCE_NATURE_RELEASE => array('keyword' => 'release', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_release_nature_key')),
+            self::REFERENCE_NATURE_FORUM => array('keyword' => 'forum', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_forum_nature_key')),
+            self::REFERENCE_NATURE_FORUMMESSAGE => array('keyword' => 'msg', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_forum_message_nature_key')),
+            self::REFERENCE_NATURE_NEWS => array('keyword' => 'news', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_news_nature_key')),
+            self::REFERENCE_NATURE_WIKIPAGE => array('keyword' => 'wiki', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_wiki_page_nature_key')),
         );
 
         $plugins_natures = array();
         $this->eventManager->processEvent('get_available_reference_natures', array('natures' => &$plugins_natures));
 
         $natures = array_merge($core_natures, $plugins_natures);
-        $natures[self::REFERENCE_NATURE_OTHER] = array('keyword' => 'other', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_' . self::REFERENCE_NATURE_OTHER . '_nature_key'));
+        $natures[self::REFERENCE_NATURE_OTHER] = array('keyword' => 'other', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_other_nature_key'));
         return $natures;
     }
 

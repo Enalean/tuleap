@@ -50,6 +50,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetrie
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
+use Tuleap\Tracker\FormElement\Field\Date\CSVFormatter;
 use Tuleap\Tracker\FormElement\View\Admin\DisplayAdminFormElementsWarningsEvent;
 use Tuleap\Tracker\Hierarchy\HierarchyController;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
@@ -2556,7 +2557,13 @@ class Tracker implements Tracker_Dispatchable_Interface
 
                             echo '<p>';
                             echo $GLOBALS['Language']->getText('plugin_tracker_import', 'check_data') . '<br />';
-                            echo $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'date_format_help', array($GLOBALS['Language']->getText('account_preferences', $this->_getCSVDateformat($current_user))));
+
+                            $expected_format = 'MM/DD/YYYY';
+                            if ($this->_getCSVDateformat($current_user) === CSVFormatter::DAY_MONTH_YEAR) {
+                                $expected_format = 'DD/MM/YYYY';
+                            }
+
+                            echo $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'date_format_help', [$expected_format]);
                             echo '</p>';
 
                             if ($is_valid) {

@@ -49,7 +49,20 @@ class Tracker_Widget_MyArtifacts extends Widget
 
     public function getTitle()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts', 'my_arts') . ' [' . $GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts', strtolower($this->artifact_show)) . ']';
+        switch (strtolower($this->artifact_show)) {
+            case 'a':
+                $abbreviation = $GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts', 'a');
+                break;
+            case 's':
+                $abbreviation = $GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts', 's');
+                break;
+            case 'as':
+            default:
+                $abbreviation = $GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts', 'as');
+                break;
+        }
+
+        return $GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts', 'my_arts') . ' [' . $abbreviation . ']';
     }
 
     public function updatePreferences(Codendi_Request $request)

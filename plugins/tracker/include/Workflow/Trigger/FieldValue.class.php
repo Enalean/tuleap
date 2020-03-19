@@ -96,14 +96,28 @@ class Tracker_Workflow_Trigger_FieldValue
      */
     public function getAsChangesetComment($condition)
     {
+        $tracker = $this->getField()->getTracker();
+        assert($tracker instanceof \Tracker);
+        if ($condition === 'all_of') {
+            return $GLOBALS['Language']->getText(
+                'workflow_trigger_rules_processor',
+                'rule_comment_all_of',
+                [
+                    $tracker->getName(),
+                    $this->getField()->getLabel(),
+                    $this->getValue()->getLabel(),
+                ]
+            );
+        }
+
         return $GLOBALS['Language']->getText(
             'workflow_trigger_rules_processor',
-            'rule_comment_' . $condition,
-            array(
-                $this->getField()->getTracker()->getName(),
+            'rule_comment_at_least_one',
+            [
+                $tracker->getName(),
                 $this->getField()->getLabel(),
                 $this->getValue()->getLabel(),
-            )
+            ]
         );
     }
 }

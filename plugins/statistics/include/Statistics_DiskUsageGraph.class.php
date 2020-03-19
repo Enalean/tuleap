@@ -83,7 +83,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
                 $graph->Add($accLineplot);
             }
             $graph->legend->SetReverse();
-            $graph->xaxis->title->Set($GLOBALS['Language']->getText('plugin_statistics', $groupBy));
+            $graph->xaxis->title->Set($this->getXaxisTitle($groupBy));
             $graph->xaxis->SetTitleMargin(35);
             $graph->xaxis->SetTickLabels($dates);
 
@@ -130,13 +130,28 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
             $lineplot->value->setFormatCallback(array($this, 'sizeReadable'));
             $graph->Add($lineplot);
 
-            $graph->xaxis->title->Set($GLOBALS['Language']->getText('plugin_statistics', $groupBy));
+            $graph->xaxis->title->Set($this->getXaxisTitle($groupBy));
             $graph->xaxis->SetTitleMargin(35);
             $graph->xaxis->SetTickLabels($dates);
 
             $graph->Stroke();
         } else {
             $this->displayError($GLOBALS['Language']->getText('plugin_statistics', 'no_data_error'));
+        }
+    }
+
+    private function getXaxisTitle($groupBy): string
+    {
+        switch ($groupBy) {
+            case 'day':
+                return $GLOBALS['Language']->getText('plugin_statistics', 'day');
+            case 'month':
+                return $GLOBALS['Language']->getText('plugin_statistics', 'month');
+            case 'year':
+                return $GLOBALS['Language']->getText('plugin_statistics', 'year');
+            case 'week':
+            default:
+                return $GLOBALS['Language']->getText('plugin_statistics', 'week');
         }
     }
 
@@ -209,7 +224,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
 
             if ($lineAdded) {
                 $graph->legend->SetReverse();
-                $graph->xaxis->title->Set($GLOBALS['Language']->getText('plugin_statistics', $groupBy));
+                $graph->xaxis->title->Set($this->getXaxisTitle($groupBy));
                 $graph->xaxis->SetTitleMargin(35);
                 $graph->xaxis->SetTickLabels($dates);
                 $graph->Stroke();

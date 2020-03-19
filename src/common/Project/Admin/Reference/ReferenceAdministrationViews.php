@@ -194,7 +194,11 @@ class ReferenceAdministrationViews extends Views
 
         echo '<TD align="center">' . ( $ref->isActive() ? $GLOBALS['Language']->getText('project_reference', 'enabled') : $GLOBALS['Language']->getText('project_reference', 'disabled') ) . '</TD>';
         if ($ref->getGroupId() == 100) {
-            echo'<TD align="center">' . $purifier->purify($GLOBALS['Language']->getText('project_reference', 'ref_scope_' . $ref->getScope())) . '</TD>';
+            $scope = $GLOBALS['Language']->getText('project_reference', 'ref_scope_S');
+            if ($ref->getScope() === 'P') {
+                $scope = $GLOBALS['Language']->getText('project_reference', 'ref_scope_P');
+            }
+            echo'<TD align="center">' . $purifier->purify($scope) . '</TD>';
             echo'<TD align="center">' . $purifier->purify($ref->getServiceShortName()) . '</TD>';
         }
 

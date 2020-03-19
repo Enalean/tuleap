@@ -168,40 +168,32 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent
 
     private function getBody(Project $project, BaseLanguage $user_language): string
     {
-        if (ForgeConfig::areRestrictedUsersAllowed()) {
-            switch ($project->getAccess()) {
-                case Project::ACCESS_PUBLIC:
-                    return $user_language->getText(
-                        'project_privacy',
-                        'email_visibility_change_body_public',
-                        $project->getPublicName()
-                    );
-                case Project::ACCESS_PUBLIC_UNRESTRICTED:
-                    return $user_language->getText(
-                        'project_privacy',
-                        'email_visibility_change_body_unrestricted',
-                        $project->getPublicName()
-                    );
-                case Project::ACCESS_PRIVATE_WO_RESTRICTED:
-                    return $user_language->getText(
-                        'project_privacy',
-                        'email_visibility_change_body_private',
-                        $project->getPublicName()
-                    );
-                case Project::ACCESS_PRIVATE:
-                default:
-                    return $user_language->getText(
-                        'project_privacy',
-                        'email_visibility_change_body_private_unrestricted',
-                        $project->getPublicName()
-                    );
-            }
-        } else {
-            return $user_language->getText(
-                'project_privacy',
-                'email_visibility_change_body_' . $project->getAccess(),
-                $project->getPublicName()
-            );
+        switch ($project->getAccess()) {
+            case Project::ACCESS_PUBLIC:
+                return $user_language->getText(
+                    'project_privacy',
+                    'email_visibility_change_body_public',
+                    $project->getPublicName()
+                );
+            case Project::ACCESS_PUBLIC_UNRESTRICTED:
+                return $user_language->getText(
+                    'project_privacy',
+                    'email_visibility_change_body_unrestricted',
+                    $project->getPublicName()
+                );
+            case Project::ACCESS_PRIVATE_WO_RESTRICTED:
+                return $user_language->getText(
+                    'project_privacy',
+                    'email_visibility_change_body_private',
+                    $project->getPublicName()
+                );
+            case Project::ACCESS_PRIVATE:
+            default:
+                return $user_language->getText(
+                    'project_privacy',
+                    'email_visibility_change_body_private_unrestricted',
+                    $project->getPublicName()
+                );
         }
     }
 }

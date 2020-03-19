@@ -36,6 +36,12 @@ class Tracker_FormElement_View_Admin_Field_Selectbox extends Tracker_FormElement
 
             $change_links = array();
 
+            $labels = [
+                'msb' => $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'switch_msb'),
+                'sb' => $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'switch_sb'),
+                'cb' => $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'switch_cb'),
+                'rb' => $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'switch_rb'),
+            ];
             foreach ($this->getAvailableTypes() as $type) {
                 $change_links[] = '<a href="' . TRACKER_BASE_URL . '/?' . http_build_query(array(
                         'tracker'            => $this->formElement->tracker_id,
@@ -43,7 +49,7 @@ class Tracker_FormElement_View_Admin_Field_Selectbox extends Tracker_FormElement
                         'formElement'        => $this->formElement->id,
                         'change-type'        => $type
                     )) . '" onclick="return confirm(\'' . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'switch_type_confirm') . '\');">'
-                       . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'switch_' . $type) . '</a> ';
+                       . $labels[$type] . '</a> ';
             }
             $html .= implode(', ', $change_links);
             $html .= ')';

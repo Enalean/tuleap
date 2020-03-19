@@ -50,10 +50,32 @@ if ($request->valid($vGroupId)) {
 
 $project = $pm->getProject($group_id);
 if (! $project->isActive()) {
-    $GLOBALS['Response']->addFeedback(
-        Feedback::ERROR,
-        $GLOBALS['Language']->getText('include_exit', 'project_status_' . $project->getStatus())
-    );
+    switch ($project->getStatus()) {
+        case Project::STATUS_DELETED:
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('include_exit', 'project_status_D')
+            );
+            break;
+        case Project::STATUS_PENDING:
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('include_exit', 'project_status_P')
+            );
+            break;
+        case Project::STATUS_SUSPENDED:
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('include_exit', 'project_status_H')
+            );
+            break;
+        case Project::STATUS_SYSTEM:
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('include_exit', 'project_status_s')
+            );
+            break;
+    }
     $GLOBALS['Response']->redirect('/admin/groupedit.php?group_id=' . (int) $group_id);
 }
 

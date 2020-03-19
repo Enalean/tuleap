@@ -76,22 +76,9 @@ abstract class Transition_PostAction
         return $this->transition;
     }
 
-    /**
-     * Log feedback to be displayed to the user
-     *
-     * @param string $level    One of info|warning|error
-     * @param string $pagename The primary key for BaseLanguage::getText()
-     * @param string $category The secondary key for BaseLanguage::getText()
-     * @param string $args     The args for BaseLanguage::getText()
-     *
-     * @see Response::addFeedback()
-     *
-     * @return void
-     */
-    protected function addFeedback($level, $pagename, $category, $args)
+    protected function addFeedback(string $level, string $message)
     {
-        $feedback = $GLOBALS['Language']->getText($pagename, $category, $args);
-        $GLOBALS['Response']->addUniqueFeedback($level, $feedback);
+        $GLOBALS['Response']->addUniqueFeedback($level, $message);
     }
 
     /**
