@@ -28,7 +28,6 @@ TULEAP_CACHE_DIR="/var/tmp/tuleap_cache"
 # services name
 CROND_SERVICE="crond"
 HTTPD_SERVICE="httpd"
-MYSQLD_SERVICE="mysqld"
 NAMED_SERVICE="named"
 PROJECT_ADMIN="codendiadm"
 SSHD_SERVICE="sshd"
@@ -52,8 +51,6 @@ LN='/bin/ln'
 LS='/bin/ls'
 MKDIR='/bin/mkdir'
 MV='/bin/mv'
-MYSQL='/usr/bin/mysql'
-MYSQLSHOW='/usr/bin/mysqlshow'
 PERL='/usr/bin/perl'
 PHP='/opt/remi/php73/root/usr/bin/php'
 RM='/bin/rm'
@@ -68,7 +65,7 @@ USERMOD='/usr/sbin/usermod'
 
 CMD_LIST=('AWK' 'CAT' 'CHGRP' 'CHKCONFIG' 'CHMOD' 'CHOWN' 'CP' 'DIG' 'FIND'
           'GREP' 'GROUPADD' 'GROUPDEL' 'INSTALL' 'IPCALC' 'LN' 'LS' 'MKDIR'
-          'MV' 'MYSQL' 'MYSQLSHOW' 'PERL' 'PHP' 'RM' 'RPM' 'SERVICE' 'SESTATUS'
+          'MV' 'PERL' 'PHP' 'RM' 'RPM' 'SERVICE' 'SESTATUS'
           'TAIL' 'TOUCH' 'USERADD' 'USERDEL' 'USERMOD')
 
 # default parameter
@@ -453,137 +450,6 @@ EOF
 
 ###############################################################################
 #
-# Mysql configuration
-#
-setup_mysql_cnf() {
-    echo "Creating MySQL conf file..."
-    local template_file
-	template_file="my.cnf.rhel6.dist"
-
-    install_dist_conf "/etc/my.cnf" "$template_file"
-    substitute "/etc/my.cnf" '%PROJECT_NAME%' "$PROJECT_NAME"
-
-    if [ -z "$mysql_remote_server" ]; then
-	echo "Initializing MySQL: You can ignore additionnal messages on MySQL below this line:"
-	echo "***************************************"
-	control_service $MYSQLD_SERVICE restart
-	echo "***************************************"
-    fi
-}
-
-check_mysql_sql_mode() {
-    sql_mode=$($MYSQL $pass_opt --skip-column-names --batch  -e 'SHOW VARIABLES LIKE "sql_mode"' | cut -f2)
-    if echo $sql_mode | egrep -q 'STRICT_.*_TABLES'; then
-	recoverable_error "MySQL: unsupported sql_mode: $sql_mode. Please remove STRICT_ALL_TABLES or STRICT_TRANS_TABLES from my.cnf"
-    fi
-}
-
-setup_mysql() {
-
-    if [ "$mysql_my_cnf" = "y" ]; then
-        setup_mysql_cnf
-    fi
-
-    echo "Creating the Tuleap database..."
-
-    # If DB is local, mysql password where not already tested
-    pass_opt=""
-    if [ -z "$mysql_remote_server" ]; then
-        # See if MySQL root account is password protected
-        $MYSQLSHOW -u$mysql_user 2>&1 | grep password
-        while [ $? -eq 0 ]; do
-            read -s -p "Existing DB is password protected. What is the Mysql $mysql_user password?: " old_passwd
-            echo
-            $MYSQLSHOW -u$mysql_user --password=$old_passwd 2>&1 | grep password
-        done
-        if [ "X$old_passwd" != "X" ]; then
-            pass_opt="-u$mysql_user --password=$old_passwd"
-        else
-            pass_opt="-u$mysql_user"
-        fi
-    else
-        pass_opt="-u$mysql_user --password=$rt_passwd"
-    fi
-
-    check_mysql_sql_mode
-
-    # Test if tuleap DB already exists
-    yn="-"
-    freshdb=0
-    if $MYSQLSHOW $pass_opt | $GREP $PROJECT_NAME 2>&1 >/dev/null; then
-        read -p "Tuleap Database already exists. Overwrite? [y|n]:" yn
-    fi
-
-    # Delete the Tuleap DB if asked for
-    if [ "$yn" = "y" ]; then
-        $MYSQL $pass_opt -e "DROP DATABASE $PROJECT_NAME"
-    fi
-
-    # If no $PROJECT_NAME, create it!
-    if ! $MYSQLSHOW $pass_opt | $GREP $PROJECT_NAME 2>&1 >/dev/null; then
-        freshdb=1
-        $MYSQL $pass_opt -e "CREATE DATABASE $PROJECT_NAME DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci"
-        $CAT <<EOF | $MYSQL $pass_opt mysql
-GRANT ALL PRIVILEGES on $PROJECT_NAME.* TO '$PROJECT_ADMIN'@'$mysql_httpd_host' identified by '$codendiadm_passwd';
-GRANT ALL PRIVILEGES ON \`plugin_mediawiki_%\` . * TO '$PROJECT_ADMIN'@'$mysql_httpd_host' identified by '$codendiadm_passwd';
-GRANT ALL PRIVILEGES on *.* to '$mysql_user'@'$mysql_httpd_host' identified by '$rt_passwd';
-FLUSH PRIVILEGES;
-EOF
-    fi
-    # Password has changed
-    pass_opt="-u$mysql_user --password=$rt_passwd"
-
-    if [ $freshdb -eq 1 ]; then
-        tuleap_installed_version=$(cat "/usr/share/tuleap/VERSION")
-        echo "Populating the Tuleap database..."
-        cd $INSTALL_DIR/src/db/mysql/
-        $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd < database_structure.sql   # create the DB
-        $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd -e "INSERT INTO tuleap.tuleap_installed_version VALUES ('${tuleap_installed_version}')"
-        cp database_initvalues.sql /tmp/database_initvalues.sql
-	if [ ! -z "$siteadmin_password" ]; then
-	    admin_password_db=$("$PHP" "$INSTALL_DIR"/tools/utils/password_hasher.php -p "$siteadmin_password")
-	    sed -i "s@SITEADMIN_PASSWORD@$admin_password_db@" /tmp/database_initvalues.sql
-	    admin_password_unix_db=$("$PHP" "$INSTALL_DIR"/tools/utils/password_hasher.php -p "$siteadmin_password" -u)
-	    sed -i "s@SITEADMIN_UNIX_PASSWORD@$admin_password_unix_db@" /tmp/database_initvalues.sql
-	fi
-        substitute '/tmp/database_initvalues.sql' '_DOMAIN_NAME_' "$sys_default_domain"
-        $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd < /tmp/database_initvalues.sql  # populate with init values.
-        rm -f /tmp/database_initvalues.sql
-
-        # Create dbauthuser
-        $CAT <<EOF | $MYSQL $pass_opt mysql
-GRANT SELECT ON $PROJECT_NAME.user to dbauthuser@'$mysql_httpd_host' identified by '$dbauth_passwd';
-GRANT SELECT ON $PROJECT_NAME.groups to dbauthuser@'$mysql_httpd_host';
-GRANT SELECT ON $PROJECT_NAME.user_group to dbauthuser@'$mysql_httpd_host';
-GRANT SELECT,UPDATE ON $PROJECT_NAME.svn_token to dbauthuser@'$mysql_httpd_host';
-FLUSH PRIVILEGES;
-EOF
-    fi
-}
-
-###############################################################################
-#
-# Mysql sanity check
-#
-test_mysql_host() {
-    info "You might get MySQL message like 'Using a password on the command line interface can be insecure'"
-    info "It's actully harmless in this context"
-
-    echo -n "Testing Mysql connexion means... "
-    # Root access: w/o password
-    if [ -z "$rt_passwd" ]; then
-        if ! $MYSQLSHOW -u$mysql_user >/dev/null 2>&1; then
-            die "You didn't provide any $mysql_user password for $mysql_host but one seems required"
-        fi
-    fi
-    if ! $MYSQLSHOW -u$mysql_user -p$rt_passwd >/dev/null 2>&1; then
-        die "The Mysql $mysql_user password you provided for $mysql_host doesn't work"
-    fi
-    echo "[OK]"
-}
-
-###############################################################################
-#
 # Apache setup
 #
 setup_apache() {
@@ -706,12 +572,12 @@ setup_nss() {
     # replace strings in libnss-mysql config files
     substitute '/etc/libnss-mysql.cfg' '%sys_dbhost%' "$mysql_host"
     substitute '/etc/libnss-mysql.cfg' '%sys_dbname%' "$PROJECT_NAME"
-    substitute '/etc/libnss-mysql.cfg' '%sys_dbauth_passwd%' "$dbauth_passwd" 
+    substitute '/etc/libnss-mysql.cfg' '%sys_dbauth_passwd%' "$dbauth_passwd"
     substitute '/etc/libnss-mysql.cfg' '%sys_dbport%' "$mysql_port"
     if [ ! -z "$mysql_port" ]; then
         substitute '/etc/libnss-mysql.cfg' '#port' 'port'
     fi
-    substitute '/etc/libnss-mysql-root.cfg' '%sys_dbauth_passwd%' "$dbauth_passwd" 
+    substitute '/etc/libnss-mysql-root.cfg' '%sys_dbauth_passwd%' "$dbauth_passwd"
     $CHOWN root:root /etc/libnss-mysql.cfg /etc/libnss-mysql-root.cfg
     $CHMOD 644 /etc/libnss-mysql.cfg
     $CHMOD 600 /etc/libnss-mysql-root.cfg
@@ -728,11 +594,11 @@ setup_tuleap() {
 	install_dist_conf $f
     done
     # replace string patterns in local.inc
-    substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_default_domain%' "$sys_default_domain" 
+    substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_default_domain%' "$sys_default_domain"
     substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_org_name%' "$sys_org_name"
-    substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_long_org_name%' "$sys_long_org_name" 
-    substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_fullname%' "$sys_fullname" 
-    substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_dbauth_passwd%' "$dbauth_passwd" 
+    substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_long_org_name%' "$sys_long_org_name"
+    substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_fullname%' "$sys_fullname"
+    substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_dbauth_passwd%' "$dbauth_passwd"
     substitute "/etc/$PROJECT_NAME/conf/local.inc" 'sys_mail_secure_mode = 0' 'sys_mail_secure_mode = 1'
     substitute "/etc/$PROJECT_NAME/conf/local.inc" 'sys_create_project_in_one_step = 0' 'sys_create_project_in_one_step = 1'
     substitute "/etc/$PROJECT_NAME/conf/local.inc" 'sys_plugins_editable_configuration = 1' 'sys_plugins_editable_configuration = 0'
@@ -745,8 +611,8 @@ setup_tuleap() {
     fix_paths "/etc/$PROJECT_NAME/conf/local.inc"
 
     # replace string patterns in database.inc
-    substitute "/etc/$PROJECT_NAME/conf/database.inc" '%sys_dbpasswd%' "$codendiadm_passwd" 
-    substitute "/etc/$PROJECT_NAME/conf/database.inc" '%sys_dbuser%' "$PROJECT_ADMIN" 
+    substitute "/etc/$PROJECT_NAME/conf/database.inc" '%sys_dbpasswd%' "$codendiadm_passwd"
+    substitute "/etc/$PROJECT_NAME/conf/database.inc" '%sys_dbuser%' "$PROJECT_ADMIN"
     substitute "/etc/$PROJECT_NAME/conf/database.inc" '%sys_dbname%' "$PROJECT_NAME"
     substitute "/etc/$PROJECT_NAME/conf/database.inc" 'localhost' "$mysql_host_and_port"
 }
@@ -851,8 +717,6 @@ do
         sys_long_org_name="Tuleap ALM"
         auto_passwd="true"
         mysql_host="localhost"
-        MYSQL="$MYSQL -h$mysql_host"
-        MYSQLSHOW="$MYSQLSHOW -h$mysql_host"
         shift 1 ;;
     --password-file)
         passwd_file="$2"
@@ -889,13 +753,9 @@ do
         sys_long_org_name="$2"; shift 2 ;;
     --mysql-host)
         mysql_host="$2";shift 2
-        MYSQL="$MYSQL -h$mysql_host"
-        MYSQLSHOW="$MYSQLSHOW -h$mysql_host"
         mysql_remote_server=true ;;
     --mysql-port)
         mysql_port="$2";shift 2
-        MYSQL="$MYSQL -P$mysql_port"
-        MYSQLSHOW="$MYSQLSHOW -P$mysql_port"
         mysql_remote_server=true ;;
     --mysql-user)
         mysql_user="$2"; shift 2 ;;
@@ -919,12 +779,8 @@ if [ ! -z "$mysql_port" ]; then
     mysql_host_and_port="$mysql_host_and_port:$mysql_port"
 fi
 
-if [ ! -z "$mysql_remote_server" ]; then
-    test_mysql_host
-else
-    if ! has_package $mysql_package_name; then
-        die "No --mysql-host nor local mysql server installed, exit. Please install '$mysql_package_name' package"
-    fi
+if [ -z "$mysql_remote_server" ]; then
+    die "You must provide a --mysql-host"
 fi
 
 # SELinux status
@@ -1112,6 +968,28 @@ else
     dbauth_passwd=$(input_password "DB Authentication user")
 fi
 
+set -e
+
+echo "Initialize MySQL database"
+/usr/bin/tuleap-cfg setup:mysql-init \
+    --host="${mysql_host}" \
+    --user="${mysql_user}" \
+    --password="${rt_passwd}" \
+     "${codendiadm_passwd}" \
+     "${PROJECT_NAME}" \
+     "${PROJECT_ADMIN}@%"
+
+echo "Load MySQL database"
+/usr/bin/tuleap-cfg setup:mysql \
+    --host="${mysql_host}" \
+    --user="${PROJECT_ADMIN}" \
+    --password="${codendiadm_passwd}" \
+    --dbname="${PROJECT_NAME}" \
+    "${siteadmin_password}" \
+    "${sys_default_domain}"
+
+set +e
+
 # Update codendiadm user password
 echo "$codendiadm_passwd" | passwd --stdin $PROJECT_ADMIN
 build_dir /home/$PROJECT_ADMIN $PROJECT_ADMIN $PROJECT_ADMIN 700
@@ -1130,7 +1008,7 @@ build_dir /var/lib/$PROJECT_NAME/ftp/pub ftpadmin ftpadmin 755
 build_dir /var/lib/$PROJECT_NAME/ftp/incoming ftpadmin ftpadmin 3777
 build_dir /var/lib/$PROJECT_NAME/wiki $PROJECT_ADMIN $PROJECT_ADMIN 700
 build_dir /var/lib/$PROJECT_NAME/backup $PROJECT_ADMIN $PROJECT_ADMIN 711
-build_dir /var/lib/$PROJECT_NAME/backup/mysql mysql mysql 770 
+build_dir /var/lib/$PROJECT_NAME/backup/mysql mysql mysql 770
 build_dir /var/lib/$PROJECT_NAME/backup/mysql/old root root 700
 build_dir /var/lib/$PROJECT_NAME/backup/subversion root root 700
 build_dir /var/lib/$PROJECT_NAME/docman $PROJECT_ADMIN $PROJECT_ADMIN 700
@@ -1167,7 +1045,7 @@ $CHMOD 750 /var/lib/$PROJECT_NAME/ftp/incoming/.delete_files.work
 build_dir /var/lib/$PROJECT_NAME/ftp/$PROJECT_NAME/DELETED $PROJECT_ADMIN $PROJECT_ADMIN 750
 
 ##############################################
-# Install the Tuleap software 
+# Install the Tuleap software
 #
 
 setup_tuleap
@@ -1200,7 +1078,7 @@ fi
 # fi
 # $CP $INSTALL_DIR/src/utils/svn/Codendi.pm $codendi_perl_module_dir/Codendi.pm
 # TODO: /etc/httpd/conf.d/perl.conf
-# TODO: mod_perl perl-BSD-Resource libdbi-dbd-mysql libdbi libdbi-drivers 
+# TODO: mod_perl perl-BSD-Resource libdbi-dbd-mysql libdbi libdbi-drivers
 
 todo "Customize /etc/$PROJECT_NAME/conf/local.inc and /etc/$PROJECT_NAME/conf/database.inc"
 todo "You may also want to customize /etc/httpd/conf/httpd.conf"
@@ -1211,12 +1089,6 @@ todo "You may also want to customize /etc/httpd/conf/httpd.conf"
 
 # Allow read/write access to DAV lock dir for $PROJECT_ADMIN in case we want ot enable WebDAV.
 $CHMOD 770 /var/lib/dav/
-
-##############################################
-# Installing the Tuleap database
-#
-setup_mysql
-
 
 ##############################################
 # Mailman configuration
@@ -1267,12 +1139,6 @@ if has_package vsftpd; then
     setup_vsftpd
 fi
 
-
-if [ "$disable_subdomains" = "y" ]; then
-  echo "Use same-host project web sites"
-  $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd -e "UPDATE service SET link = IF(group_id = 1, '/www/$PROJECT_NAME', '/www/\$projectname/') WHERE short_name = 'homepage' "
-fi
-
 todo "Customize /etc/$PROJECT_NAME/site-content information for your site."
 todo "  For instance: contact/contact.txt "
 todo ""
@@ -1299,12 +1165,12 @@ $CAT <<'EOF' | sed -e "s/@@PROJECT_NAME@@/$PROJECT_NAME/" >/etc/profile_$PROJECT
 # /etc/profile_@@PROJECT_NAME@@
 #
 # Specific login set up and messages for Tuleap users`
- 
+
 # All projects this user belong to
- 
+
 grplist_id=`id -G`;
 grplist_name=`id -Gn`;
- 
+
 idx=1
 for i in $grplist_id
 do
@@ -1318,9 +1184,9 @@ done
 field_list=`echo $field_list | sed 's/,$//'`
 
 grplist=`echo $grplist_name | cut -f$field_list -d" "`;
- 
+
 cat <<EOM
- 
+
 -----------------------------------
 W E L C O M E   T O   T U L E A P !
 -----------------------------------
@@ -1352,7 +1218,6 @@ fi
 #
 enable_service $SSHD_SERVICE
 enable_service $HTTPD_SERVICE
-enable_service $MYSQLD_SERVICE
 enable_service $CROND_SERVICE
 
 /etc/init.d/$PROJECT_NAME start
@@ -1379,7 +1244,6 @@ fi
 # Install & configure forgeupgrade for Tuleap
 #
 
-$MYSQL -u$PROJECT_ADMIN -p$codendiadm_passwd $PROJECT_NAME < /usr/share/forgeupgrade/db/install-mysql.sql
 $INSTALL --group=$PROJECT_ADMIN --owner=$PROJECT_ADMIN --mode=0755 --directory /etc/$PROJECT_NAME/forgeupgrade
 $INSTALL --group=$PROJECT_ADMIN --owner=$PROJECT_ADMIN --mode=0644 $INSTALL_DIR/src/etc/forgeupgrade-config.ini.dist /etc/$PROJECT_NAME/forgeupgrade/config.ini
 substitute /etc/$PROJECT_NAME/forgeupgrade/config.ini "%project_name%" "$PROJECT_NAME"

@@ -48,13 +48,10 @@ def runDBTests(String db, String php) {
     """
 }
 
-def runSOAPTests(String name, String imageVersion) {
+def runSOAPTests(String db, String php) {
     sh """
-    cid="\$(docker create -v \$WORKSPACE/sources:/usr/share/tuleap:ro --network none \$DOCKER_REGISTRY/enalean/tuleap-test-soap:${imageVersion})"
-    docker start --attach "\$cid" || true
-    mkdir -p 'results/api-soap/${name}/'
-    docker cp "\$cid":/output/soap_tests.xml results/api-soap/${name}/soap_tests.xml || true
-    docker rm -fv "\$cid"
+    mkdir -p \$WORKSPACE/results/soap/php${php}-${db}
+    TESTS_RESULT=\$WORKSPACE/results/soap/php${php}-${db} sources/tests/soap/bin/run-compose.sh "${php}" "${db}"
     """
 }
 
