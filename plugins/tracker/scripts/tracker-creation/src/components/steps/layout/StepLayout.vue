@@ -28,9 +28,7 @@
                 <slot name="step_info"></slot>
             </div>
             <div class="tracker-creation-step-interactive-content">
-                <h3 data-test="platform-template-name">{{ platform_template_name }}</h3>
                 <slot name="interactive_content"></slot>
-                <h3 v-translate>For advanced users</h3>
                 <slot name="interactive_content_advanced"></slot>
             </div>
             <step-navigation-buttons
@@ -45,8 +43,6 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import StepLayoutSvgIllustration from "./StepLayoutSvgIllustration.vue";
 import StepNavigationButtons from "./StepNavigationButtons.vue";
-import { sprintf } from "sprintf-js";
-import { State } from "vuex-class";
 
 @Component({
     components: {
@@ -60,15 +56,5 @@ export default class StepLayout extends Vue {
 
     @Prop({ required: false })
     readonly previousStepName!: string;
-
-    @State
-    company_name!: string;
-
-    get platform_template_name(): string {
-        if (this.company_name === "Tuleap") {
-            return this.$gettext("Custom templates");
-        }
-        return sprintf(this.$gettext("%s templates"), this.company_name);
-    }
 }
 </script>

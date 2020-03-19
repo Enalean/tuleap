@@ -65,7 +65,6 @@ msgstr ""
 msgid "Create your new tracker without any configuration."
 msgstr "Créez votre nouvel outil de suivi sans aucune configuration."
 
-
 msgid "Custom templates"
 msgstr "Modèles personnalisés"
 
