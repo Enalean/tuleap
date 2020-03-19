@@ -59,4 +59,31 @@ class ProjectMilestonesDao extends DataAccessObject
                 WHERE id = ?';
         $this->getDB()->run($sql, $widget_id);
     }
+
+    public function deleteAllPluginWithProject(int $group_id): void
+    {
+        $this->getDB()->beginTransaction();
+
+        try {
+            $sql_delete_dashboard_widgets = 'DELETE
+                                             FROM dashboards_lines_columns_widgets
+                                             WHERE content_id IN (
+                                                SELECT id
+                                                FROM plugin_projectmilestones_widget
+                                                WHERE group_id = ?
+                                             )';
+
+            $this->getDB()->run($sql_delete_dashboard_widgets, $group_id);
+
+            $sql_delete_widget_project_milestones = 'DELETE
+                                                     FROM plugin_projectmilestones_widget
+                                                     WHERE group_id = ?';
+
+            $this->getDB()->run($sql_delete_widget_project_milestones, $group_id);
+        } catch (\PDOException $exception) {
+            $this->getDB()->rollBack();
+        }
+
+        $this->getDB()->commit();
+    }
 }

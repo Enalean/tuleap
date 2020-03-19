@@ -51,6 +51,7 @@ class projectmilestonesPlugin extends Plugin // phpcs:ignore
         $this->addHook(GetProjectWidgetList::NAME);
         $this->addHook(GetUserWidgetList::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
+        $this->addHook('project_is_deleted');
 
         return parent::getHooksAndCallbacks();
     }
@@ -89,6 +90,13 @@ class projectmilestonesPlugin extends Plugin // phpcs:ignore
         $event->addWidget(MyProjectMilestones::NAME);
     }
 
+    public function project_is_deleted($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    {
+        if (! empty($params['group_id'])) {
+            $milestone_dao = new ProjectMilestonesDao();
+            $milestone_dao->deleteAllPluginWithProject((int) $params['group_id']);
+        }
+    }
     /**
      * Hook: event raised when widget are instanciated
      *
