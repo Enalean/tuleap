@@ -105,29 +105,7 @@ class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacy
         $planning_factory = PlanningFactory::build();
         $logger = new BotMattermostLogger();
 
-        $tracker_form_element_factory = Tracker_FormElementFactory::instance();
-
-        $planning_milestone_factory = new Planning_MilestoneFactory(
-            $planning_factory,
-            $artifact_factory,
-            $tracker_form_element_factory,
-            TrackerFactory::instance(),
-            $milestone_status_counter,
-            new PlanningPermissionsManager(),
-            new AgileDashboard_Milestone_MilestoneDao(),
-            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory),
-            new TimeframeBuilder(
-                $tracker_form_element_factory,
-                new SemanticTimeframeBuilder(
-                    new SemanticTimeframeDao(),
-                    $tracker_form_element_factory
-                ),
-                new \BackendLogger()
-            ),
-            new MilestoneBurndownFieldChecker(
-                $tracker_form_element_factory
-            )
-        );
+        $planning_milestone_factory = Planning_MilestoneFactory::build();
 
         $stand_up_notification_builder = new StandUpNotificationBuilder(
             $planning_milestone_factory,
