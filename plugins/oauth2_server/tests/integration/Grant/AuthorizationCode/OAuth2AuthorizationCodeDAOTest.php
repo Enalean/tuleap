@@ -121,7 +121,8 @@ final class OAuth2AuthorizationCodeDAOTest extends TestCase
             self::$active_project_app_id,
             $user_id,
             $verification_string,
-            $expiration_timestamp
+            $expiration_timestamp,
+            null
         );
 
         $authorization_code_row = $this->dao->searchAuthorizationCode($auth_code_id);
@@ -137,7 +138,7 @@ final class OAuth2AuthorizationCodeDAOTest extends TestCase
 
     public function testDeletingAnAuthorizationCodeDeletesTheAssociatedTokens(): void
     {
-        $auth_code_id = $this->dao->create(self::$active_project_app_id, 102, 'hashed_verification_string_auth', 20);
+        $auth_code_id = $this->dao->create(self::$active_project_app_id, 102, 'hashed_verification_string_auth', 20, null);
 
         $auth_code_scope_dao    = new OAuth2AuthorizationCodeScopeDAO();
         $auth_code_scope_dao->saveScopeKeysByOAuth2AuthCodeID($auth_code_id, 'scope:A', 'scope:B');
@@ -171,7 +172,8 @@ final class OAuth2AuthorizationCodeDAOTest extends TestCase
             self::$deleted_project_app_id,
             $user_id,
             $verification_string,
-            $expiration_timestamp
+            $expiration_timestamp,
+            null
         );
 
         $this->assertNull($this->dao->searchAuthorizationCode($auth_code_id));

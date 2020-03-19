@@ -43,6 +43,7 @@ use Tuleap\OAuth2Server\App\AppFactory;
 use Tuleap\OAuth2Server\App\OAuth2AppCredentialVerifier;
 use Tuleap\OAuth2Server\App\PrefixOAuth2ClientSecret;
 use Tuleap\OAuth2Server\AuthorizationServer\AuthorizationEndpointGetController;
+use Tuleap\OAuth2Server\AuthorizationServer\PKCE\PKCEInformationExtractor;
 use Tuleap\OAuth2Server\AuthorizationServer\RedirectURIBuilder;
 use Tuleap\OAuth2Server\Grant\AccessTokenGrantController;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\AuthorizationCodeGrantResponseBuilder;
@@ -212,6 +213,7 @@ final class oauth2_serverPlugin extends Plugin
                     $scope_builder
                 )
             ),
+            new PKCEInformationExtractor(),
             new SapiEmitter(),
             new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
             new RejectNonHTTPSRequestMiddleware($response_factory, $stream_factory),

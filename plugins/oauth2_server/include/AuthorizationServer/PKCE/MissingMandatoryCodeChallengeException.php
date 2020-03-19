@@ -20,10 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\AuthorizationServer;
+namespace Tuleap\OAuth2Server\AuthorizationServer\PKCE;
 
-use Tuleap\OAuth2Server\OAuth2ServerException;
+use Tuleap\OAuth2Server\App\OAuth2App;
 
-final class InvalidOAuth2ScopeException extends \RuntimeException implements OAuth2ServerException
+final class MissingMandatoryCodeChallengeException extends \RuntimeException implements OAuth2PKCEInformationExtractionException
 {
+    public function __construct(OAuth2App $app)
+    {
+        parent::__construct('No code_challenge has been provided when requesting authorization for app #' . $app->getId());
+    }
 }

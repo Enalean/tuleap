@@ -95,6 +95,7 @@ final class AuthorizationFormRendererTest extends TestCase
             M::mock(\CSRFSynchronizerToken::class),
             $redirect_uri,
             'xyz',
+            'pkce_chall',
             $foobar_scope,
             $typevalue_scope
         );

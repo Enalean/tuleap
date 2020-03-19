@@ -81,18 +81,24 @@ class OAuth2AuthorizationCodeCreator
      *
      * @psalm-param non-empty-array<AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier>> $scopes
      */
-    public function createAuthorizationCodeIdentifier(\DateTimeImmutable $current_time, OAuth2App $app, array $scopes, \PFUser $user): ConcealedString
-    {
+    public function createAuthorizationCodeIdentifier(
+        \DateTimeImmutable $current_time,
+        OAuth2App $app,
+        array $scopes,
+        \PFUser $user,
+        ?string $pkce_code_challenge
+    ): ConcealedString {
         $verification_string = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
         $expiration_date     = $current_time->add($this->access_token_expiration_delay);
 
         $authorization_code_id = $this->transaction_executor->execute(
-            function () use ($app, $user, $verification_string, $expiration_date, $scopes) : int {
+            function () use ($app, $user, $verification_string, $expiration_date, $scopes, $pkce_code_challenge) : int {
                 $authorization_code_id = $this->authorization_code_dao->create(
                     $app->getId(),
                     (int) $user->getId(),
                     $this->hasher->computeHash($verification_string),
-                    $expiration_date->getTimestamp()
+                    $expiration_date->getTimestamp(),
+                    $pkce_code_challenge
                 );
                 $this->authorization_code_scope_saver->saveAuthorizationCodeScopes($authorization_code_id, $scopes);
 

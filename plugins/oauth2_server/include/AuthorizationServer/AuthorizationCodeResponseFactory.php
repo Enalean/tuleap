@@ -65,13 +65,20 @@ class AuthorizationCodeResponseFactory
      *
      * @psalm-param non-empty-array<AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier>> $scopes
      */
-    public function createSuccessfulResponse(OAuth2App $app, array $scopes, \PFUser $user, string $redirect_uri, ?string $state): ResponseInterface
-    {
+    public function createSuccessfulResponse(
+        OAuth2App $app,
+        array $scopes,
+        \PFUser $user,
+        string $redirect_uri,
+        ?string $state,
+        ?string $pkce_code_challenge
+    ): ResponseInterface {
         $authorization_code = $this->authorization_code_creator->createAuthorizationCodeIdentifier(
             new \DateTimeImmutable(),
             $app,
             $scopes,
-            $user
+            $user,
+            $pkce_code_challenge
         );
 
         $success_redirect_uri = $this->client_uri_redirect_builder->buildSuccessURI(

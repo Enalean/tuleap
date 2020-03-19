@@ -20,10 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\AuthorizationServer;
+namespace Tuleap\OAuth2Server\AuthorizationServer\PKCE;
 
-use Tuleap\OAuth2Server\OAuth2ServerException;
-
-final class InvalidOAuth2ScopeException extends \RuntimeException implements OAuth2ServerException
+final class NotSupportedChallengeMethodException extends \RuntimeException implements OAuth2PKCEInformationExtractionException
 {
+    public function __construct(string $requested_challenge_method)
+    {
+        parent::__construct(sprintf('The challenge method "%s" is not supported', $requested_challenge_method));
+    }
 }
