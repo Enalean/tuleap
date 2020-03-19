@@ -72,7 +72,6 @@ use Tuleap\PullRequest\InlineComment\Dao as InlineCommentDao;
 use Tuleap\PullRequest\InlineComment\InlineCommentUpdater;
 use Tuleap\PullRequest\Label\LabeledItemCollector;
 use Tuleap\PullRequest\Label\PullRequestLabelDao;
-use Tuleap\PullRequest\Logger;
 use Tuleap\PullRequest\MergeSetting\MergeSettingDAO;
 use Tuleap\PullRequest\MergeSetting\MergeSettingRetriever;
 use Tuleap\PullRequest\NavigationTab\NavigationTabPresenterBuilder;
@@ -292,7 +291,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
                         new GitPullRequestReferenceDAO(),
                         new GitPullRequestReferenceNamespaceAvailabilityChecker()
                     ),
-                    PullRequestNotificationSupport::buildDispatcher(new Logger())
+                    PullRequestNotificationSupport::buildDispatcher(self::getLogger())
                 );
                 $pull_request_updater->updatePullRequests($user, $repository, $branch_name, $new_rev);
             }
@@ -343,7 +342,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
                 new MergeSettingRetriever(new MergeSettingDAO())
             ),
             $this->getTimelineEventCreator(),
-            PullRequestNotificationSupport::buildDispatcher(new Logger())
+            PullRequestNotificationSupport::buildDispatcher(self::getLogger())
         );
     }
 
@@ -532,6 +531,11 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         (new GitPullRequestReferenceRemover)->removeAll(GitExec::buildFromRepository($event->getRepository()));
     }
 
+    public static function getLogger()
+    {
+        return BackendLogger::getDefaultLogger('pullrequest_syslog');
+    }
+
     public function dailyExecution()
     {
         $pull_request_git_reference_dao            = new GitPullRequestReferenceDAO();
@@ -543,7 +547,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
             ),
             $this->getPullRequestFactory(),
             $this->getRepositoryFactory(),
-            new Logger()
+            self::getLogger(),
         );
         $pull_request_git_reference_bulk_converter->convertAllPullRequestsWithoutAGitReference();
     }

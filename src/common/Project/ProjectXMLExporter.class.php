@@ -28,6 +28,8 @@ class ProjectXMLExporter
 {
     public const UGROUPS_MODE_SYNCHRONIZED = 'synchronized';
 
+    public const LOG_IDENTIFIER = 'project_xml_export_syslog';
+
     /** @var EventManager */
     private $event_manager;
 
@@ -61,6 +63,11 @@ class ProjectXMLExporter
         $this->user_xml_exporter                        = $user_xml_exporter;
         $this->synchronized_project_membership_detector = $synchronized_project_membership_detector;
         $this->logger                                   = $logger;
+    }
+
+    public static function getLogger(): \Psr\Log\LoggerInterface
+    {
+        return BackendLogger::getDefaultLogger('project_xml_export_syslog');
     }
 
     private function exportProjectInfo(Project $project, SimpleXMLElement $project_node)

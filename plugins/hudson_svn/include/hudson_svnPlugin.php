@@ -34,7 +34,6 @@ use Tuleap\HudsonSvn\Job\Factory;
 use Tuleap\HudsonSvn\Job\Launcher;
 use Tuleap\HudsonSvn\Job\Manager;
 use Tuleap\HudsonSvn\Plugin\HudsonSvnPluginInfo;
-use Tuleap\HudsonSvn\SvnBackendLogger;
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\SVN\AccessControl\AccessFileHistoryDao;
@@ -44,7 +43,6 @@ use Tuleap\SVN\Hooks\PostCommit;
 use Tuleap\SVN\Repository\Destructor;
 use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\SVN\SvnAdmin;
-use Tuleap\SVN\SvnLogger;
 
 class hudson_svnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -146,7 +144,7 @@ class hudson_svnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclarati
             $dao,
             $this->getProjectManager(),
             $this->getSvnAdmin(),
-            $this->getLogger(),
+            SvnPlugin::getLogger(),
             $this->getSystemCommand(),
             $this->getDestructor(),
             EventManager::instance(),
@@ -167,7 +165,7 @@ class hudson_svnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclarati
     {
         return new Destructor(
             new SvnDao(),
-            $this->getLogger()
+            SvnPlugin::getLogger()
         );
     }
 
@@ -176,14 +174,9 @@ class hudson_svnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclarati
         return new System_Command();
     }
 
-    private function getLogger()
-    {
-        return new SvnLogger();
-    }
-
     private function getSvnAdmin()
     {
-        return new SvnAdmin($this->getSystemCommand(), $this->getLogger(), Backend::instance(Backend::SVN));
+        return new SvnAdmin($this->getSystemCommand(), SvnPlugin::getLogger(), Backend::instance(Backend::SVN));
     }
 
     private function getProjectManager()
@@ -250,7 +243,7 @@ class hudson_svnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclarati
         $jenkins_csrf_crumb_retriever = new JenkinsCSRFCrumbRetriever($http_client, $http_request_factory);
         $launcher                     = new Launcher(
             $this->getJobFactory(),
-            new SvnBackendLogger(),
+            \BackendLogger::getDefaultLogger('hudson_svn_syslog'),
             new Jenkins_Client($http_client, $http_request_factory, HTTPFactoryBuilder::streamFactory(), $jenkins_csrf_crumb_retriever),
             new BuildParams()
         );

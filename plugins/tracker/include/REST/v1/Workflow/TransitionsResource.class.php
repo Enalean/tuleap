@@ -477,7 +477,7 @@ class TransitionsResource extends AuthenticatedResource
 
     private function getRESTLogger(): LoggerInterface
     {
-        return new RESTLogger();
+        return RESTLogger::getLogger();
     }
 
     private function getPostActionCollectionJsonParser(): PostActionCollectionJsonParser

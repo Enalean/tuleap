@@ -19,9 +19,10 @@
  */
 
 use Monolog\Handler\SyslogHandler;
+use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
-class BackendLogger extends \Psr\Log\AbstractLogger implements \Psr\Log\LoggerInterface
+class BackendLogger extends \Psr\Log\AbstractLogger implements LoggerInterface
 {
     public const CONFIG_LOGGER = 'sys_logger';
 
@@ -36,7 +37,7 @@ class BackendLogger extends \Psr\Log\AbstractLogger implements \Psr\Log\LoggerIn
         $this->filepath = empty($filename) ? ForgeConfig::get('codendi_log') . '/' . self::FILENAME : $filename;
     }
 
-    public static function getDefaultLogger(string $name = 'default'): \Psr\Log\LoggerInterface
+    public static function getDefaultLogger(string $name = 'default'): LoggerInterface
     {
         if (ForgeConfig::get(self::CONFIG_LOGGER) === self::CONFIG_LOGGER_SYSLOG) {
             $logger = new \Monolog\Logger(self::convertLoggerFileNameToTopic($name));

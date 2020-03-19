@@ -125,7 +125,7 @@ try {
         $rng_validator,
         new UserXMLExporter(UserManager::instance(), $users_collection),
         new SynchronizedProjectMembershipDetector(new SynchronizedProjectMembershipDao()),
-        new ProjectXMLExporterLogger()
+        ProjectXMLExporter::getLogger(),
     );
 
     if (isset($arguments['dir'])) {

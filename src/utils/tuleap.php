@@ -39,7 +39,6 @@ use Tuleap\CLI\DelayExecution\ExecutionDelayerRandomizedSleep;
 use Tuleap\DB\DBFactory;
 use Tuleap\FRS\CorrectFrsRepositoryPermissionsCommand;
 use Tuleap\Language\LocaleSwitcher;
-use Tuleap\User\UserSuspensionLogger;
 use Tuleap\User\UserSuspensionManager;
 use Tuleap\Password\PasswordSanityChecker;
 use Tuleap\Queue\TaskWorker\TaskWorkerProcessCommand;
@@ -179,7 +178,7 @@ $CLI_command_collector->addCommand(
                 new UserSuspensionDao(),
                 $user_manager,
                 new BaseLanguageFactory(),
-                new UserSuspensionLogger(),
+                BackendLogger::getDefaultLogger('usersuspension_syslog'),
                 new LocaleSwitcher()
             )
         );

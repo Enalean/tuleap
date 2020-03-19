@@ -41,7 +41,6 @@ use Tuleap\SVN\Repository\HookDao;
 use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\Svn\SHA1CollisionDetector;
 use Tuleap\SVN\SvnAdmin;
-use Tuleap\SVN\SvnLogger;
 
 try {
     $repository_path = $argv[1];
@@ -54,12 +53,12 @@ try {
         new RepositoryManager(
             new Dao(),
             ProjectManager::instance(),
-            new SvnAdmin(new System_Command(), new SvnLogger(), Backend::instance(Backend::SVN)),
-            new SvnLogger(),
+            new SvnAdmin(new System_Command(), \SvnPlugin::getLogger(), Backend::instance(Backend::SVN)),
+            \SvnPlugin::getLogger(),
             new System_Command(),
             new Destructor(
                 new Dao(),
-                new SvnLogger()
+                \SvnPlugin::getLogger()
             ),
             EventManager::instance(),
             Backend::instance(Backend::SVN),
@@ -69,7 +68,7 @@ try {
         new ImmutableTagFactory(new ImmutableTagDao()),
         $svnlook,
         new SHA1CollisionDetector(),
-        new SvnLogger(),
+        \SvnPlugin::getLogger(),
         new HookConfigRetriever(new HookDao(), new HookConfigSanitizer())
     );
 

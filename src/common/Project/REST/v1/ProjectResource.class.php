@@ -31,7 +31,6 @@ use ProjectCreator;
 use ProjectManager;
 use ProjectUGroup;
 use ProjectXMLImporter;
-use ProjectXMLImporterLogger;
 use ServiceManager;
 use Tuleap\Label\Label;
 use Tuleap\Label\PaginatedCollectionsOfLabelsBuilder;
@@ -1385,7 +1384,7 @@ class ProjectResource extends AuthenticatedResource
             new FieldUpdator(
                 new DescriptionFieldsFactory(new DescriptionFieldsDao()),
                 new ProjectDetailsDAO(),
-                new ProjectXMLImporterLogger()
+                ProjectXMLImporter::getLogger(),
             )
         );
     }

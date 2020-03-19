@@ -26,7 +26,7 @@ require_once __DIR__ . '/../include/gitPlugin.php';
 
 
 $console    = new Log_ConsoleLogger();
-$logger     = new GitBackendLogger();
+$logger     = \BackendLogger::getDefaultLogger(GitPlugin::LOG_IDENTIFIER);
 $broker_log = new BrokerLogger(array($logger, $console));
 
 $broker_log->info("Starting transfer from plugin_git_full_history to plugin_git_log_read_daily");

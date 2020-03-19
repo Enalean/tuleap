@@ -49,7 +49,6 @@ use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldsWithoutRequiredValidatio
 use Tuleap\Tracker\Artifact\PermissionsCache;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
-use Tuleap\Tracker\FormElement\BurndownLogger;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
@@ -2158,7 +2157,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     private function getBurndownCacheChecker()
     {
         $event_manager              = SystemEventManager::instance();
-        $logger                     = new BurndownLogger();
+        $logger                     = \BackendLogger::getDefaultLogger(Tracker_FormElement_Field_Burndown::LOG_IDENTIFIER);
         $computed_dao               = new Tracker_FormElement_Field_ComputedDao();
         $form_element_factory       = Tracker_FormElementFactory::instance();
         $semantic_timeframe_builder = new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory);

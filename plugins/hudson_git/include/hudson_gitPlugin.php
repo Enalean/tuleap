@@ -58,7 +58,6 @@ use Tuleap\HudsonGit\Job\JobDao;
 use Tuleap\HudsonGit\Job\ProjectJobDao;
 use Tuleap\HudsonGit\Log\LogCreator;
 use Tuleap\HudsonGit\Log\LogFactory;
-use Tuleap\HudsonGit\Logger;
 use Tuleap\HudsonGit\Plugin\PluginInfo;
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 use Tuleap\Layout\IncludeAssets;
@@ -185,7 +184,7 @@ class hudson_gitPlugin extends Plugin
         return new AjaxController(
             HttpClientFactory::createClient(new CookiePlugin(new CookieJar())),
             HTTPFactoryBuilder::requestFactory(),
-            new WrapperLogger(new Logger(), 'hudson_git')
+            new WrapperLogger(self::getHudsonGitLogger(), 'hudson_git')
         );
     }
 
@@ -339,9 +338,14 @@ class hudson_gitPlugin extends Plugin
         return new CSRFSynchronizerToken('hudson-git-hook-management');
     }
 
-    private function getLogger()
+    private function getLogger(): \Psr\Log\LoggerInterface
     {
-        return new WrapperLogger(new Logger(), 'hudson_git');
+        return new WrapperLogger(self::getHudsonGitLogger(), 'hudson_git');
+    }
+
+    private static function getHudsonGitLogger(): \Psr\Log\LoggerInterface
+    {
+        return \BackendLogger::getDefaultLogger('hudson_git_syslog');
     }
 
     public function gitAdminGetExternalPanePresenters(GitAdminGetExternalPanePresenters $event): void

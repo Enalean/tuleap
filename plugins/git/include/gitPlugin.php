@@ -176,6 +176,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
  */
 class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
+    public const LOG_IDENTIFIER = 'git_syslog';
+
     /**
      *
      * @var \Psr\Log\LoggerInterface
@@ -1890,7 +1892,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     public function getLogger()
     {
         if (!$this->logger) {
-            $this->logger = new GitBackendLogger();
+            $this->logger = \BackendLogger::getDefaultLogger(self::LOG_IDENTIFIER);
         }
 
         return $this->logger;
@@ -2372,7 +2374,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     private function getGitolite3Parser()
     {
         return new Gitolite3LogParser(
-            new GitBackendLogger(),
+            $this->getLogger(),
             new HttpUserValidator(),
             new HistoryDao(),
             $this->getRepositoryFactory(),

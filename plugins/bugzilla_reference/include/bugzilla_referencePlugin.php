@@ -24,7 +24,6 @@ use Tuleap\Bugzilla\Administration\Controller;
 use Tuleap\Bugzilla\Administration\Router;
 use Tuleap\Bugzilla\CrossReferenceCreator;
 use Tuleap\Bugzilla\Plugin\Info;
-use Tuleap\Bugzilla\BugzillaLogger;
 use Tuleap\Bugzilla\Reference\Dao;
 use Tuleap\Bugzilla\Reference\ReferenceDestructor;
 use Tuleap\Bugzilla\Reference\ReferenceRetriever;
@@ -166,7 +165,7 @@ class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassD
             HttpClientFactory::createClient(),
             HTTPFactoryBuilder::requestFactory(),
             HTTPFactoryBuilder::streamFactory(),
-            new BugzillaLogger()
+            \BackendLogger::getDefaultLogger('bugzilla_syslog')
         );
     }
 

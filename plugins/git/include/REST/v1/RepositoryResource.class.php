@@ -33,7 +33,6 @@ use Git_RemoteServer_Dao;
 use Git_RemoteServer_GerritServerFactory;
 use Git_RemoteServer_NotFoundException;
 use Git_SystemEventManager;
-use GitBackendLogger;
 use GitDao;
 use GitPermissionsManager;
 use GitRepoNotFoundException;
@@ -201,7 +200,7 @@ class RepositoryResource extends AuthenticatedResource
                 new \Tuleap\Git\Driver\GerritHTTPClientFactory(HttpClientFactory::createClient()),
                 \Tuleap\Http\HTTPFactoryBuilder::requestFactory(),
                 \Tuleap\Http\HTTPFactoryBuilder::streamFactory(),
-                new GitBackendLogger()
+                \BackendLogger::getDefaultLogger(\GitPlugin::LOG_IDENTIFIER),
             ),
             $project_history_dao,
             new Git_Driver_Gerrit_ProjectCreatorStatus(new Git_Driver_Gerrit_ProjectCreatorStatusDao()),
@@ -234,7 +233,7 @@ class RepositoryResource extends AuthenticatedResource
             $regexp_retriever
         );
         $sorter               = new FineGrainedPermissionSorter();
-        $xml_ugroup_retriever = new XmlUgroupRetriever(new GitBackendLogger(), $ugroup_manager);
+        $xml_ugroup_retriever = new XmlUgroupRetriever(\BackendLogger::getDefaultLogger(\GitPlugin::LOG_IDENTIFIER), $ugroup_manager);
 
         $fine_grained_permission_factory    = new FineGrainedPermissionFactory(
             $fine_grained_dao,
@@ -286,7 +285,7 @@ class RepositoryResource extends AuthenticatedResource
             $this->repository_factory,
             new \Git_Backend_Gitolite(
                 new \Git_GitoliteDriver(
-                    new GitBackendLogger(),
+                    \BackendLogger::getDefaultLogger(\GitPlugin::LOG_IDENTIFIER),
                     $this->git_system_event_manager,
                     $url_manager,
                     $git_dao,
@@ -305,7 +304,7 @@ class RepositoryResource extends AuthenticatedResource
                     new VersionDetector()
                 ),
                 new GitoliteAccessURLGenerator($git_plugin->getPluginInfo()),
-                new GitBackendLogger()
+                \BackendLogger::getDefaultLogger(\GitPlugin::LOG_IDENTIFIER),
             ),
             $mirror_data_mapper,
             new \GitRepositoryManager(

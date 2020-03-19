@@ -32,7 +32,7 @@ class TuleapRESTAuthentication implements iAuthenticate
 
     public function __isAllowed() // phpcs:ignore
     {
-        $rest_authentication_flow = new RESTAuthenticationFlowIsAllowed(UserManager::build(), new RESTLogger());
+        $rest_authentication_flow = new RESTAuthenticationFlowIsAllowed(UserManager::build(), RESTLogger::getLogger());
         return $rest_authentication_flow->isAllowed($this->restler->apiMethodInfo ?? null);
     }
 

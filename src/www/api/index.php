@@ -92,7 +92,7 @@ $restler->onComplete(static function () use ($restler, $request_instrumentation)
     if ($initial_exception === null) {
         return;
     }
-    $logger = new \Tuleap\REST\RESTLogger();
+    $logger = \Tuleap\REST\RESTLogger::getLogger();
     $logger->error('Unhandled exception', ['exception' => $initial_exception]);
 });
 

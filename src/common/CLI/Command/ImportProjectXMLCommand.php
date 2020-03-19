@@ -22,7 +22,6 @@ namespace Tuleap\CLI\Command;
 
 use BrokerLogger;
 use ProjectXMLImporter;
-use ProjectXMLImporterLogger;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputInterface;
@@ -157,7 +156,7 @@ class ImportProjectXMLCommand extends Command
 
         $transformer    = new \User\XML\Import\MappingFileOptimusPrimeTransformer($user_manager, $use_lame_password);
         $console_logger = new ConsoleLogger($output);
-        $file_logger    = new ProjectXMLImporterLogger();
+        $file_logger    = ProjectXMLImporter::getLogger();
         $broker_log  = new BrokerLogger(array($file_logger, $console_logger));
         $builder     = new \User\XML\Import\UsersToBeImportedCollectionBuilder(
             $user_manager,

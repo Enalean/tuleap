@@ -172,7 +172,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
             ProjectManager::instance()->getProject($group_id),
             new MediawikiManager(new MediawikiDao()),
             new UGroupManager(),
-            new ProjectXMLExporterLogger(),
+            ProjectXMLExporter::getLogger(),
             new MediawikiMaintenanceWrapper($sys_command),
             new MediawikiLanguageManager(new MediawikiLanguageDao()),
             new MediawikiDataDir()
