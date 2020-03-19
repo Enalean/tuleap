@@ -28,6 +28,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeDefinition;
+use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\OAuth2Server\App\AppFactory;
 use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\OAuth2Server\AuthorizationServer\OAuth2ScopeDefinitionPresenter;
@@ -66,6 +67,11 @@ final class AppsPresenterBuilderTest extends TestCase
         );
     }
 
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['_SESSION']);
+    }
+
     public function testBuildTransformsAppsIntoPresenters(): void
     {
         $user = UserTestBuilder::anAnonymousUser()->build();
@@ -102,9 +108,11 @@ final class AppsPresenterBuilderTest extends TestCase
             ->once()
             ->with($user, $custom_app)
             ->andReturn([$foobar_scope, $typevalue_scope]);
+        $csrf_presenter = CSRFSynchronizerTokenPresenter::fromToken(AccountAppsController::getCSRFToken());
 
         $this->assertEquals(
             new AppsPresenter(
+                $csrf_presenter,
                 new AccountTabPresenterCollection($user, AccountAppsController::URL),
                 new AccountAppPresenter(
                     1,
@@ -120,7 +128,7 @@ final class AppsPresenterBuilderTest extends TestCase
                     new OAuth2ScopeDefinitionPresenter($typevalue_scope->getDefinition())
                 )
             ),
-            $this->builder->build($user)
+            $this->builder->build($user, $csrf_presenter)
         );
     }
 

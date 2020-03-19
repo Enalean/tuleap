@@ -55,6 +55,7 @@ use Tuleap\OAuth2Server\Grant\AuthorizationCode\Scope\OAuth2AuthorizationCodeSco
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\Scope\OAuth2AuthorizationCodeScopeSaver;
 use Tuleap\OAuth2Server\Grant\OAuth2ClientAuthenticationMiddleware;
 use Tuleap\OAuth2Server\ProjectAdmin\ListAppsController;
+use Tuleap\OAuth2Server\User\Account\AccountAppsController;
 use Tuleap\Project\Admin\Navigation\NavigationItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenter;
 use Tuleap\Request\CollectRoutesEvent;
@@ -141,6 +142,7 @@ final class oauth2_serverPlugin extends Plugin
                     $this->getRouteHandler('routeDeleteProjectAdmin')
                 );
                 $r->get('/account/apps', $this->getRouteHandler('routeGetAccountApps'));
+                $r->post('/account/apps/revoke', $this->getRouteHandler('routePostAccountAppRevoke'));
                 $r->get(
                     '/testendpoint',
                     $this->getRouteHandler('routeTestEndpoint')
@@ -317,7 +319,7 @@ final class oauth2_serverPlugin extends Plugin
 
     public function routeGetAccountApps(): DispatchableWithRequest
     {
-        return new \Tuleap\OAuth2Server\User\Account\AccountAppsController(
+        return new AccountAppsController(
             HTTPFactoryBuilder::responseFactory(),
             HTTPFactoryBuilder::streamFactory(),
             new \Tuleap\OAuth2Server\User\Account\AppsPresenterBuilder(
@@ -332,7 +334,28 @@ final class oauth2_serverPlugin extends Plugin
             TemplateRendererFactory::build(),
             UserManager::instance(),
             new SapiEmitter(),
-            new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
+            new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION)
+        );
+    }
+
+    public function routePostAccountAppRevoke(): DispatchableWithRequest
+    {
+        $response_factory = HTTPFactoryBuilder::responseFactory();
+        return new Tuleap\OAuth2Server\User\Account\AppRevocationController(
+            $response_factory,
+            AccountAppsController::getCSRFToken(),
+            UserManager::instance(),
+            new \Tuleap\OAuth2Server\User\AuthorizationRevoker(
+                new OAuth2AuthorizationCodeDAO(),
+                new \Tuleap\OAuth2Server\User\AuthorizationDao(),
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+            ),
+            new \Tuleap\Http\Response\RedirectWithFeedbackFactory(
+                $response_factory,
+                new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())
+            ),
+            new SapiEmitter(),
+            new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION)
         );
     }
 

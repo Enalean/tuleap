@@ -26,6 +26,7 @@ use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Layout\BaseLayout;
@@ -67,6 +68,11 @@ final class AccountAppsControllerTest extends TestCase
         );
     }
 
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['_SESSION']);
+    }
+
     public function testHandleForbidsAnonymousUsers(): void
     {
         $user = UserTestBuilder::anAnonymousUser()->build();
@@ -80,11 +86,12 @@ final class AccountAppsControllerTest extends TestCase
     {
         $user = UserTestBuilder::aUser()->withId(101)->build();
         $this->user_manager->shouldReceive('getCurrentUser')->once()->andReturn($user);
+        $csrf_presenter = CSRFSynchronizerTokenPresenter::fromToken(AccountAppsController::getCSRFToken());
 
         $this->presenter_builder->shouldReceive('build')
-            ->with($user)
+            ->with($user, M::type(CSRFSynchronizerTokenPresenter::class))
             ->once()
-            ->andReturn(new AppsPresenter(M::mock(AccountTabPresenterCollection::class)));
+            ->andReturn(new AppsPresenter($csrf_presenter, M::mock(AccountTabPresenterCollection::class)));
 
         $response = $this->controller->handle(
             (new NullServerRequest())->withAttribute(BaseLayout::class, LayoutBuilder::build())

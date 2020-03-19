@@ -15,6 +15,9 @@ msgstr ""
 msgid "%s by project %s wants to connect to your Tuleap account."
 msgstr "%s du projet %s souhaite se connecter à votre compte Tuleap."
 
+msgid "Access has been revoked."
+msgstr "L'accès a été révoqué."
+
 msgid "Add an App"
 msgstr "Ajouter une App"
 
@@ -23,6 +26,10 @@ msgstr "Nom de l'App"
 
 msgid "Application (client) ID"
 msgstr "ID de l'application (client)"
+
+msgid "Authorization not found for this App, aborting revocation."
+msgstr ""
+"Aucune autorisation trouvée pour cette App, annulation de la révocation."
 
 msgid "Authorize"
 msgstr "Autoriser"

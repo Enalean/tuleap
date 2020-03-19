@@ -71,6 +71,17 @@ class OAuth2AuthorizationCodeDAO extends DataAccessObject
         );
     }
 
+    public function deleteAuthorizationCodeByUserAndAppID(\PFUser $user, int $app_id): void
+    {
+        $this->deleteAuthorizationCode(
+            EasyStatement::open()->with(
+                'plugin_oauth2_authorization_code.user_id = ? AND plugin_oauth2_authorization_code.app_id = ?',
+                $user->getId(),
+                $app_id
+            )
+        );
+    }
+
     public function deleteAuthorizationCodeByID(int $authorization_code_id): void
     {
         $this->deleteAuthorizationCode(
