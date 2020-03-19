@@ -43,6 +43,10 @@ function InPropertiesFilter($filter) {
                         case "tbl":
                         case "msb":
                         case "shared":
+                            if (typeof card_field.values === "undefined") {
+                                return false;
+                            }
+
                             return card_field.values.some(function(value) {
                                 if (typeof value.display_name !== "undefined") {
                                     return match(value.display_name);

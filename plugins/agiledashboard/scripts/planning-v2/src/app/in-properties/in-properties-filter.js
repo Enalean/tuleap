@@ -70,6 +70,10 @@ function InPropertiesFilter($filter) {
                     case "tbl":
                     case "msb":
                     case "shared":
+                        if (typeof card_field.values === "undefined") {
+                            return false;
+                        }
+
                         return card_field.values.some(function(value) {
                             if (angular.isDefined(value.display_name)) {
                                 return match(value.display_name);

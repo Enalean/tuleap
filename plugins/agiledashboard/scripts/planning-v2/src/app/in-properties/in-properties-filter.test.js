@@ -617,6 +617,24 @@ describe("InPropertiesItemFilter", () => {
 
                 expect(filtered_items).toEqual(items);
             });
+
+            it("when there is no values provided by the api, then it does not encounter an error", function() {
+                var items = [
+                    {
+                        id: null,
+                        label: null,
+                        card_fields: [
+                            {
+                                type: "tbl"
+                            }
+                        ]
+                    }
+                ];
+
+                var filtered_items = in_properties_filter(items, "toto");
+
+                expect(filtered_items).toEqual([]);
+            });
         });
 
         describe("Given an item with a shared card field", function() {
