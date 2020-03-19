@@ -35,8 +35,6 @@ import { initGettext } from "../../../../src/www/scripts/tuleap/gettext/gettext-
         $(".remove-jenkins-server").each(function() {
             const id = $(this).data("popover-id");
 
-            // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-            // @ts-ignore
             $(this).popover({
                 container: ".git-administration-jenkins-server",
                 title: gettext_provider.gettext("Wait a minute..."),
@@ -46,8 +44,6 @@ import { initGettext } from "../../../../src/www/scripts/tuleap/gettext/gettext-
     }
 
     function dismissPopover(): void {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-        // @ts-ignore
         $(".remove-jenkins-server").popover("hide");
     }
 
@@ -57,8 +53,6 @@ import { initGettext } from "../../../../src/www/scripts/tuleap/gettext/gettext-
 
             dismissPopover();
 
-            // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-            // @ts-ignore
             $(this).popover("show");
         });
     }

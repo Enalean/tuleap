@@ -13,6 +13,7 @@
     "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch"
   },
   "devDependencies": {
+    "@types/bootstrap": "^3.4.0",
     "@types/jquery": "^3.3.32",
     "jquery": "^3.4.1"
   }
