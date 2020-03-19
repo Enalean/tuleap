@@ -22,30 +22,30 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\ProjectAdmin;
 
+use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\Layout\BaseLayout;
+use Psr\Http\Message\ServerRequestInterface;
+use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Response\RedirectWithFeedbackFactory;
+use Tuleap\Http\Server\NullServerRequest;
+use Tuleap\Layout\Feedback\NewFeedback;
 use Tuleap\OAuth2Server\App\OAuth2AppRemover;
-use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
-use Tuleap\Request\ProjectRetriever;
-use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class DeleteAppControllerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /** @var DeleteAppController */
+    /**
+     * @var DeleteAppController
+     */
     private $controller;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|ProjectRetriever
+     * @var M\LegacyMockInterface|M\MockInterface|RedirectWithFeedbackFactory
      */
-    private $project_retriever;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|ProjectAdministratorChecker
-     */
-    private $administrator_checker;
+    private $redirector;
     /**
      * @var M\LegacyMockInterface|M\MockInterface|OAuth2AppRemover
      */
@@ -57,54 +57,58 @@ final class DeleteAppControllerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->project_retriever     = M::mock(ProjectRetriever::class);
-        $this->administrator_checker = M::mock(ProjectAdministratorChecker::class);
-        $this->app_remover           = M::mock(OAuth2AppRemover::class);
-        $this->csrf_token            = M::mock(\CSRFSynchronizerToken::class);
-        $this->controller            = new DeleteAppController(
-            $this->project_retriever,
-            $this->administrator_checker,
+        $this->redirector  = M::mock(RedirectWithFeedbackFactory::class);
+        $this->app_remover = M::mock(OAuth2AppRemover::class);
+        $this->csrf_token  = M::mock(\CSRFSynchronizerToken::class);
+        $this->controller  = new DeleteAppController(
+            $this->redirector,
             $this->app_remover,
-            $this->csrf_token
+            $this->csrf_token,
+            M::mock(EmitterInterface::class)
         );
+        $this->csrf_token->shouldReceive('check');
     }
 
-    public function testProcessRedirectsWithErrorWhenAppIdIsOmitted(): void
+    /**
+     * @dataProvider dataProviderInvalidBody
+     * @param array|null $parsed_body
+     */
+    public function testHandleRedirectsWithErrorWhenDataIsInvalid($parsed_body): void
     {
-        $current_user = UserTestBuilder::aUser()->build();
-        $request      = HTTPRequestBuilder::get()->withUser($current_user)->withParam('app_id', '')->build();
-        $layout       = M::mock(BaseLayout::class);
-        $this->mockValidProjectAndUserIsProjecTAdmin($current_user);
-
-        $layout->shouldReceive('addFeedback')
+        $request  = $this->buildRequest()->withParsedBody($parsed_body);
+        $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
+        $this->redirector->shouldReceive('createResponseForUser')
+            ->with(M::type(\PFUser::class), '/plugins/oauth2_server/project/102/admin', M::type(NewFeedback::class))
             ->once()
-            ->with(\Feedback::ERROR, M::type('string'));
-        $layout->shouldReceive('redirect')
-            ->once()
-            ->with('/plugins/oauth2_server/project/102/admin');
+            ->andReturn($response);
         $this->app_remover->shouldNotReceive('deleteAppByID');
 
-        $this->controller->process($request, $layout, ['project_id' => '102']);
+        $this->assertSame($response, $this->controller->handle($request));
     }
 
-    public function testProcessDeletesAppAndRedirects(): void
+    public function dataProviderInvalidBody(): array
     {
-        $current_user = UserTestBuilder::aUser()->build();
-        $request      = HTTPRequestBuilder::get()->withUser($current_user)->withParam('app_id', '12')->build();
-        $layout       = M::mock(BaseLayout::class);
-        $this->mockValidProjectAndUserIsProjecTAdmin($current_user);
+        return [
+            'No body' => [null],
+            'No name' => [['not_app_id' => '12']]
+        ];
+    }
 
-        $layout->shouldReceive('addFeedback')
-            ->once()
-            ->with(\Feedback::INFO, M::type('string'));
-        $layout->shouldReceive('redirect')
-            ->once()
-            ->with('/plugins/oauth2_server/project/102/admin');
+    public function testHandleDeletesAppAndRedirects(): void
+    {
+        $request = $this->buildRequest()->withParsedBody(['app_id' => '12']);
         $this->app_remover->shouldReceive('deleteAppByID')
             ->once()
             ->with(12);
 
-        $this->controller->process($request, $layout, ['project_id' => '102']);
+        $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
+        $this->redirector->shouldReceive('createResponseForUser')
+            ->with(M::type(\PFUser::class), '/plugins/oauth2_server/project/102/admin', M::type(NewFeedback::class))
+            ->once()
+            ->andReturn($response);
+        $this->app_remover->shouldNotReceive('deleteAppByID');
+
+        $this->assertSame($response, $this->controller->handle($request));
     }
 
     public function testGetUrl(): void
@@ -117,18 +121,9 @@ final class DeleteAppControllerTest extends TestCase
         $this->assertSame('/plugins/oauth2_server/project/102/admin/delete-app', DeleteAppController::getUrl($project));
     }
 
-    private function mockValidProjectAndUserIsProjectAdmin(\PFUser $current_user): void
+    private function buildRequest(): ServerRequestInterface
     {
-        $project = M::mock(\Project::class)->shouldReceive('getID')
-            ->once()
-            ->andReturn(102)
-            ->getMock();
-        $this->project_retriever->shouldReceive('getProjectFromId')
-            ->once()
-            ->andReturn($project);
-        $this->administrator_checker->shouldReceive('checkUserIsProjectAdministrator')
-            ->with($current_user, $project)
-            ->once();
-        $this->csrf_token->shouldReceive('check')->once();
+        return (new NullServerRequest())->withAttribute(\Project::class, new \Project(['group_id' => 102]))
+            ->withAttribute(\PFUser::class, UserTestBuilder::aUser()->build());
     }
 }

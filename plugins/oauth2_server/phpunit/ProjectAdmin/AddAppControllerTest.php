@@ -22,33 +22,29 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\ProjectAdmin;
 
+use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
-use Tuleap\Layout\BaseLayout;
+use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Response\RedirectWithFeedbackFactory;
+use Tuleap\Http\Server\NullServerRequest;
+use Tuleap\Layout\Feedback\NewFeedback;
 use Tuleap\OAuth2Server\App\AppDao;
 use Tuleap\OAuth2Server\App\LastCreatedOAuth2AppStore;
 use Tuleap\OAuth2Server\App\NewOAuth2App;
-use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
-use Tuleap\Request\ProjectRetriever;
-use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class AddAppControllerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /** @var AddAppController */
+    /**
+     * @var AddAppController
+     */
     private $controller;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|ProjectRetriever
-     */
-    private $project_retriever;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|ProjectAdministratorChecker
-     */
-    private $administrator_checker;
     /**
      * @var M\LegacyMockInterface|M\MockInterface|AppDao
      */
@@ -58,56 +54,64 @@ final class AddAppControllerTest extends TestCase
      */
     private $last_created_app_store;
     /**
+     * @var M\LegacyMockInterface|M\MockInterface|RedirectWithFeedbackFactory
+     */
+    private $redirector;
+    /**
      * @var \CSRFSynchronizerToken|M\LegacyMockInterface|M\MockInterface
      */
     private $csrf_token;
 
     protected function setUp(): void
     {
-        $this->project_retriever      = M::mock(ProjectRetriever::class);
-        $this->administrator_checker  = M::mock(ProjectAdministratorChecker::class);
         $this->app_dao                = M::mock(AppDao::class);
         $this->last_created_app_store = M::mock(LastCreatedOAuth2AppStore::class);
+        $this->redirector             = M::mock(RedirectWithFeedbackFactory::class);
         $this->csrf_token             = M::mock(\CSRFSynchronizerToken::class);
         $this->controller             = new AddAppController(
-            $this->project_retriever,
-            $this->administrator_checker,
+            HTTPFactoryBuilder::responseFactory(),
             $this->app_dao,
             new SplitTokenVerificationStringHasher(),
             $this->last_created_app_store,
-            $this->csrf_token
+            $this->redirector,
+            $this->csrf_token,
+            M::mock(EmitterInterface::class)
         );
+        $this->csrf_token->shouldReceive('check');
     }
 
-    public function testProcessRedirectsWithFeedbackWhenDataIsInvalid(): void
+    /**
+     * @dataProvider dataProviderInvalidBody
+     * @param array|null $parsed_body
+     */
+    public function testHandleRedirectsWithErrorWhenDataIsInvalid($parsed_body): void
     {
-        $current_user = UserTestBuilder::aUser()->build();
-        $request      = HTTPRequestBuilder::get()->withUser($current_user)->withParam('name', '')->build();
-        $layout       = M::mock(BaseLayout::class);
-        $this->mockValidProjectAndUserIsProjectAdmin($current_user);
-
-        $layout->shouldReceive('addFeedback')
+        $request  = $this->buildRequest()->withParsedBody($parsed_body);
+        $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
+        $this->redirector->shouldReceive('createResponseForUser')
+            ->with(M::type(\PFUser::class), '/plugins/oauth2_server/project/102/admin', M::type(NewFeedback::class))
             ->once()
-            ->with(\Feedback::ERROR, M::type('string'));
-        $layout->shouldReceive('redirect')
-            ->once()
-            ->with('/plugins/oauth2_server/project/102/admin');
+            ->andReturn($response);
         $this->app_dao->shouldNotReceive('create');
 
-        $this->controller->process($request, $layout, ['project_id' => '102']);
+        $this->assertSame($response, $this->controller->handle($request));
     }
 
-    public function testProcessCreatesAppAndRedirects(): void
+    public function dataProviderInvalidBody(): array
     {
-        $current_user = UserTestBuilder::aUser()->build();
-        $request      = HTTPRequestBuilder::get()
-            ->withUser($current_user)
-            ->withParam('name', 'overdeliciously')
-            ->withParam('redirect_uri', 'https://example.com/redirect')
-            ->build();
-        $layout       = M::mock(BaseLayout::class);
-        $this->mockValidProjectAndUserIsProjectAdmin($current_user);
+        return [
+            'No body'         => [null],
+            'No name'         => [['not_name' => 'Jenkins']],
+            'No redirect_uri' => [['name' => 'Jenkins']],
+            'No use_pkce'     => [['name' => 'Jenkins', 'redirect_uri' => 'https://example.com']]
+        ];
+    }
 
+    public function testHandleCreatesAppAndRedirects(): void
+    {
+        $request = $this->buildRequest()->withParsedBody(
+            ['name' => 'Jenkins', 'redirect_uri' => 'https://example.com', 'use_pkce' => 'true']
+        );
         $this->app_dao->shouldReceive('create')
             ->once()
             ->with(M::type(NewOAuth2App::class))
@@ -115,11 +119,10 @@ final class AddAppControllerTest extends TestCase
         $this->last_created_app_store->shouldReceive('storeLastCreatedApp')
             ->once()
             ->with(1, M::type(NewOAuth2App::class));
-        $layout->shouldReceive('redirect')
-            ->once()
-            ->with('/plugins/oauth2_server/project/102/admin');
 
-        $this->controller->process($request, $layout, ['project_id' => '102']);
+        $response = $this->controller->handle($request);
+        $this->assertEquals(302, $response->getStatusCode());
+        $this->assertEquals('/plugins/oauth2_server/project/102/admin', $response->getHeaderLine('Location'));
     }
 
     public function testGetUrl(): void
@@ -132,18 +135,9 @@ final class AddAppControllerTest extends TestCase
         $this->assertSame('/plugins/oauth2_server/project/102/admin/add-app', AddAppController::getUrl($project));
     }
 
-    private function mockValidProjectAndUserIsProjectAdmin(\PFUser $current_user): void
+    private function buildRequest(): ServerRequestInterface
     {
-        $project = M::mock(\Project::class)->shouldReceive('getID')
-            ->once()
-            ->andReturn(102)
-            ->getMock();
-        $this->project_retriever->shouldReceive('getProjectFromId')
-            ->once()
-            ->andReturn($project);
-        $this->administrator_checker->shouldReceive('checkUserIsProjectAdministrator')
-            ->with($current_user, $project)
-            ->once();
-        $this->csrf_token->shouldReceive('check')->once();
+        return (new NullServerRequest())->withAttribute(\Project::class, new \Project(['group_id' => 102]))
+            ->withAttribute(\PFUser::class, UserTestBuilder::aUser()->build());
     }
 }

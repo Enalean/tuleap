@@ -25,6 +25,7 @@ use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\Cryptography\KeyFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -40,7 +41,9 @@ use Tuleap\OAuth2Server\AccessToken\Scope\OAuth2AccessTokenScopeRetriever;
 use Tuleap\OAuth2Server\AccessToken\Scope\OAuth2AccessTokenScopeSaver;
 use Tuleap\OAuth2Server\App\AppDao;
 use Tuleap\OAuth2Server\App\AppFactory;
+use Tuleap\OAuth2Server\App\LastCreatedOAuth2AppStore;
 use Tuleap\OAuth2Server\App\OAuth2AppCredentialVerifier;
+use Tuleap\OAuth2Server\App\OAuth2AppRemover;
 use Tuleap\OAuth2Server\App\PrefixOAuth2ClientSecret;
 use Tuleap\OAuth2Server\AuthorizationServer\AuthorizationEndpointGetController;
 use Tuleap\OAuth2Server\AuthorizationServer\PKCE\PKCEInformationExtractor;
@@ -57,10 +60,13 @@ use Tuleap\OAuth2Server\Grant\AuthorizationCode\Scope\OAuth2AuthorizationCodeSco
 use Tuleap\OAuth2Server\Grant\OAuth2ClientAuthenticationMiddleware;
 use Tuleap\OAuth2Server\ProjectAdmin\ListAppsController;
 use Tuleap\OAuth2Server\User\Account\AccountAppsController;
+use Tuleap\OAuth2Server\User\AuthorizationDao;
 use Tuleap\Project\Admin\Navigation\NavigationItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenter;
+use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Request\ProjectRetriever;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 use Tuleap\User\OAuth2\AccessToken\PrefixOAuth2AccessToken;
 use Tuleap\User\OAuth2\AccessToken\VerifyOAuth2AccessTokenEvent;
@@ -176,12 +182,54 @@ final class oauth2_serverPlugin extends Plugin
 
     public function routePostProjectAdmin(): DispatchableWithRequest
     {
-        return \Tuleap\OAuth2Server\ProjectAdmin\AddAppController::buildSelf();
+        $storage =& $_SESSION ?? [];
+        $response_factory = HTTPFactoryBuilder::responseFactory();
+        return new \Tuleap\OAuth2Server\ProjectAdmin\AddAppController(
+            $response_factory,
+            new AppDao(),
+            new SplitTokenVerificationStringHasher(),
+            new LastCreatedOAuth2AppStore(
+                new PrefixedSplitTokenSerializer(new PrefixOAuth2ClientSecret()),
+                (new KeyFactory())->getEncryptionKey(),
+                $storage
+            ),
+            new \Tuleap\Http\Response\RedirectWithFeedbackFactory(
+                $response_factory,
+                new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())
+            ),
+            new \CSRFSynchronizerToken(ListAppsController::CSRF_TOKEN),
+            new SapiEmitter(),
+            new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
+            new \Tuleap\Project\Routing\ProjectRetrieverMiddleware(ProjectRetriever::buildSelf()),
+            new \Tuleap\Project\Admin\Routing\RejectNonProjectAdministratorMiddleware(
+                UserManager::instance(),
+                new ProjectAdministratorChecker()
+            )
+        );
     }
 
     public function routeDeleteProjectAdmin(): DispatchableWithRequest
     {
-        return \Tuleap\OAuth2Server\ProjectAdmin\DeleteAppController::buildSelf();
+        return new \Tuleap\OAuth2Server\ProjectAdmin\DeleteAppController(
+            new \Tuleap\Http\Response\RedirectWithFeedbackFactory(
+                HTTPFactoryBuilder::responseFactory(),
+                new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())
+            ),
+            new OAuth2AppRemover(
+                new AppDao(),
+                new OAuth2AuthorizationCodeDAO(),
+                new AuthorizationDao(),
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+            ),
+            new \CSRFSynchronizerToken(ListAppsController::CSRF_TOKEN),
+            new SapiEmitter(),
+            new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
+            new \Tuleap\Project\Routing\ProjectRetrieverMiddleware(ProjectRetriever::buildSelf()),
+            new \Tuleap\Project\Admin\Routing\RejectNonProjectAdministratorMiddleware(
+                UserManager::instance(),
+                new ProjectAdministratorChecker()
+            )
+        );
     }
 
     public function routeAuthorizationEndpointGet(): DispatchableWithRequest
