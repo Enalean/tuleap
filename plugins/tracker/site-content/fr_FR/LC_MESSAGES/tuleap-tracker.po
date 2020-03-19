@@ -735,8 +735,8 @@ msgstr "Valider"
 msgid "Submit permissions"
 msgstr "Valider les permissions"
 
-msgid "Target URL:"
-msgstr "URL cible :"
+msgid "Target URL"
+msgstr "URL cible"
 
 msgid "That tracker does not exist."
 msgstr "Cet outil de suivi n'existe pas."

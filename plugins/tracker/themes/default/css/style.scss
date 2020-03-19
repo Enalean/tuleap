@@ -3246,6 +3246,14 @@ td.tracker-unsubscriber-actions {
             margin-bottom: 30px;
         }
 
+        .fa-asterisk {
+            position: absolute;
+            margin: 0 0 0 3px;
+            color: #da5353;
+            font-size: 10px;
+            vertical-align: text-top;
+        }
+
         input[type=url] {
             box-sizing: border-box;
             width: 100%;

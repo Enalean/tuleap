@@ -19,7 +19,7 @@
 
             <p>{{# dgettext }} tuleap-tracker | Add a target which will be called everytime an artifact is created or updated. The URL will be called using HTTP POST method. {{/ dgettext }}</p>
             <p>
-                <label for="webhook-url">{{# dgettext }} tuleap-tracker | Target URL: {{/ dgettext }}</label>
+                <label for="webhook-url">{{# dgettext }} tuleap-tracker | Target URL {{/ dgettext }} <i class="fa fa-asterisk"></i></label>
                 <input type="url" id="webhook-url" name="webhook_url" value="" placeholder="https://example.com/webhook" required pattern="https?://.+" />
             </p>
         </div>
