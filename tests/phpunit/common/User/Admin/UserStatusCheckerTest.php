@@ -63,6 +63,24 @@ class UserStatusCheckerTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($this->status_checker->isRestrictedStatusAllowedForUser($this->user));
     }
 
+    public function testItReturnsFalseWhenUserIsSuperUser() : void
+    {
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
+        $this->user->shouldReceive('isSuperUser')->andReturn(true);
+        $this->user->shouldReceive('isRestricted')->andReturns(false);
+
+        $this->assertFalse($this->status_checker->isRestrictedStatusAllowedForUser($this->user));
+    }
+
+    public function testItReturnsTrueWhenUserIsSuperUserAndHeIsRestricted() : void
+    {
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
+        $this->user->shouldReceive('isSuperUser')->andReturn(true);
+        $this->user->shouldReceive('isRestricted')->andReturns(true);
+
+        $this->assertTrue($this->status_checker->isRestrictedStatusAllowedForUser($this->user));
+    }
+
     public function testItReturnsFalseWhenUserIsNotRestrictedAndPlatformDontAllowRestricted() : void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
