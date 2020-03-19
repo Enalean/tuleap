@@ -190,4 +190,16 @@ class CrossReferenceDao extends DataAccessObject
 
         return (bool) $res;
     }
+
+    /**
+     * @return array|false
+     */
+    public function getReferenceByKeyword(string $keyword)
+    {
+        $sql = "SELECT *
+            FROM $this->table_name
+            WHERE source_keyword = '$keyword'";
+
+        return $this->retrieveFirstRow($sql);
+    }
 }

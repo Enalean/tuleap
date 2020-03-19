@@ -1276,4 +1276,15 @@ class ReferenceManager
     {
         return new ReservedKeywordsRetriever($this->eventManager);
     }
+
+    public function getCrossReferenceByKeyword(string $keyword): array
+    {
+        $result = $this->_getCrossReferenceDao()->getReferenceByKeyword($keyword);
+
+        if (! $result) {
+            return [];
+        }
+
+        return $result;
+    }
 }
