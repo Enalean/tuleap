@@ -263,7 +263,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             new \Tuleap\Project\Admin\DescriptionFields\FieldUpdator(
                 new DescriptionFieldsFactory(new DescriptionFieldsDao()),
                 new \Tuleap\Project\Admin\ProjectDetails\ProjectDetailsDAO(),
-                new ProjectXMLImporterLogger()
+                ProjectXMLImporter::getLogger(),
             ),
             new ProjectServiceActivator(
                 new ServiceCreator($service_dao),

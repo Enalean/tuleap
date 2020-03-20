@@ -436,7 +436,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
 
     private function getLogger(): LoggerInterface
     {
-        return new BurnupLogger();
+        return \BackendLogger::getDefaultLogger('burnup_syslog');
     }
 
     /**

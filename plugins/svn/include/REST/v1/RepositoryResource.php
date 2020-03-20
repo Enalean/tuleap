@@ -68,7 +68,6 @@ use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\SVN\Repository\RepositoryRegexpBuilder;
 use Tuleap\SVN\Repository\Settings;
 use Tuleap\SVN\SvnAdmin;
-use Tuleap\SVN\SvnLogger;
 use Tuleap\SVN\SvnPermissionManager;
 use UGroupManager;
 
@@ -146,7 +145,7 @@ class RepositoryResource extends AuthenticatedResource
     public function __construct()
     {
         $dao                        = new Dao();
-        $logger                     = new SvnLogger();
+        $logger                     = \SvnPlugin::getLogger();
         $system_command             = new \System_Command();
         /**
          * @var \BackendSVN $backend_svn

@@ -107,7 +107,6 @@ use Tuleap\SVN\Repository\RepositoryRegexpBuilder;
 use Tuleap\SVN\Repository\RuleName;
 use Tuleap\SVN\Service\ServiceActivator;
 use Tuleap\SVN\SvnAdmin;
-use Tuleap\SVN\SvnLogger;
 use Tuleap\SVN\SvnPermissionManager;
 use Tuleap\SVN\SvnRouter;
 use Tuleap\SVN\ViewVC\AccessHistoryDao;
@@ -207,6 +206,11 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         return parent::getHooksAndCallbacks();
     }
 
+    public static function getLogger(): \Psr\Log\LoggerInterface
+    {
+        return BackendLogger::getDefaultLogger('svn_syslog');
+    }
+
     public function exportXmlProject(ExportXmlProject $event): void
     {
         if (! isset($event->getOptions()['all']) || $event->getOptions()['all'] === false) {
@@ -225,10 +229,10 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         return new XMLSvnExporter(
             $this->getRepositoryManager(),
             $project,
-            new SvnAdmin(new System_Command(), new SvnLogger(), Backend::instance(Backend::SVN)),
+            new SvnAdmin(new System_Command(), \SvnPlugin::getLogger(), Backend::instance(Backend::SVN)),
             new XML_SimpleXMLCDATAFactory(),
             $this->getMailNotificationManager(),
-            new SvnLogger(),
+            \SvnPlugin::getLogger(),
             new AccessFileReader()
         );
     }
@@ -364,7 +368,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                     ProjectManager::instance(),
                     $this->getApacheConfGenerator(),
                     $this->getRepositoryDeleter(),
-                    new SvnAdmin(new System_Command(), new SvnLogger(), Backend::instance(Backend::SVN))
+                    new SvnAdmin(new System_Command(), \SvnPlugin::getLogger(), Backend::instance(Backend::SVN))
                 );
                 break;
         }
@@ -382,12 +386,12 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             $this->repository_manager = new RepositoryManager(
                 new Dao(),
                 ProjectManager::instance(),
-                new SvnAdmin(new System_Command(), new SvnLogger(), Backend::instance(Backend::SVN)),
-                new SvnLogger(),
+                new SvnAdmin(new System_Command(), \SvnPlugin::getLogger(), Backend::instance(Backend::SVN)),
+                \SvnPlugin::getLogger(),
                 new System_Command(),
                 new Destructor(
                     new Dao(),
-                    new SvnLogger()
+                    \SvnPlugin::getLogger()
                 ),
                 EventManager::instance(),
                 Backend::instance(Backend::SVN),
@@ -580,7 +584,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                 new MailHeaderManager(new MailHeaderDao()),
                 $repository_manager,
                 $this->getMailNotificationManager(),
-                new SvnLogger(),
+                \SvnPlugin::getLogger(),
                 new NotificationListBuilder(
                     new UGroupDao(),
                     new CollectionOfUserToBeNotifiedPresenterBuilder($this->getUserNotifyDao()),
@@ -900,7 +904,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             $disk_usage_manager,
             new DiskUsageDao(),
             new Statistics_DiskUsageDao(),
-            new SvnLogger()
+            \SvnPlugin::getLogger()
         );
     }
 

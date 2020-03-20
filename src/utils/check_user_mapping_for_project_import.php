@@ -84,7 +84,7 @@ if (! isset($arguments['i'])) {
 $security      = new XML_Security();
 $xml_validator = new XML_RNGValidator();
 $user_manager  = UserManager::instance();
-$logger        = new ProjectXMLImporterLogger();
+$logger        = ProjectXMLImporter::getLogger();
 $transformer   = new User\XML\Import\MappingFileOptimusPrimeTransformer($user_manager);
 $console       = new Log_ConsoleLogger();
 $builder       = new User\XML\Import\UsersToBeImportedCollectionBuilder(

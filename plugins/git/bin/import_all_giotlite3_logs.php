@@ -30,7 +30,7 @@ use Tuleap\Git\History\Dao;
 use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
 
 $console    = new Log_ConsoleLogger();
-$logger     = new GitBackendLogger();
+$logger     = \BackendLogger::getDefaultLogger(GitPlugin::LOG_IDENTIFIER);
 $broker_log = new BrokerLogger(array($logger, $console));
 
 $detector = new VersionDetector();

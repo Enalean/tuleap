@@ -145,7 +145,7 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         $event_manager           = EventManager::instance();
         $user_manager            = UserManager::instance();
         $ugroup_manager          = new UGroupManager();
-        $logger                  = new ProjectXMLImporterLogger();
+        $logger                  = self::getLogger();
         $frs_permissions_creator = new FRSPermissionCreator(
             new FRSPermissionDao(),
             new UGroupDao(),
@@ -196,6 +196,11 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
             $synchronized_project_membership_dao,
             new XMLFileContentRetriever()
         );
+    }
+
+    public static function getLogger(): \Psr\Log\LoggerInterface
+    {
+        return BackendLogger::getDefaultLogger('project_xml_import_syslog');
     }
 
     /**

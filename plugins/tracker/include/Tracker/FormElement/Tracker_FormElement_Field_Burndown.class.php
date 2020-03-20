@@ -21,7 +21,6 @@
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\FormElement\BurndownCacheIsCurrentlyCalculatedException;
 use Tuleap\Tracker\FormElement\BurndownFieldPresenter;
-use Tuleap\Tracker\FormElement\BurndownLogger;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
@@ -44,6 +43,7 @@ use Tuleap\Tracker\UserWithReadAllPermissionBuilder;
 
 class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly
 {
+    public const LOG_IDENTIFIER = 'burndown_syslog';
 
     /**
      * Request parameter to display burndown image
@@ -346,9 +346,9 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return $builder->buildTimePeriodWithoutWeekendForArtifactForREST($artifact, $user);
     }
 
-    protected function getLogger()
+    protected function getLogger(): \Psr\Log\LoggerInterface
     {
-        return new BurndownLogger();
+        return \BackendLogger::getDefaultLogger(self::LOG_IDENTIFIER);
     }
 
     /**

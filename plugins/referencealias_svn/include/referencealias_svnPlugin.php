@@ -31,7 +31,6 @@ use Tuleap\SVN\Repository\Destructor;
 use Tuleap\SVN\Dao as SVNPluginDao;
 use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\SVN\SvnAdmin;
-use Tuleap\SVN\SvnLogger;
 use Tuleap\SVN\XMLRepositoryImporter;
 
 class referencealias_svnPlugin extends Plugin //phpcs:ignore
@@ -135,7 +134,7 @@ class referencealias_svnPlugin extends Plugin //phpcs:ignore
 
     private function getLogger()
     {
-        return new SvnLogger();
+        return SvnPlugin::getLogger();
     }
 
     private function getSvnAdmin()

@@ -34,7 +34,6 @@ use Git_PermissionsDao;
 use Git_RemoteServer_Dao;
 use Git_RemoteServer_GerritServerFactory;
 use Git_SystemEventManager;
-use GitBackendLogger;
 use GitDao;
 use GitPermissionsManager;
 use GitRepositoryFactory;
@@ -153,7 +152,7 @@ class GitRepositoryHeaderDisplayerBuilder
             new \Tuleap\Git\Driver\GerritHTTPClientFactory(HttpClientFactory::createClient()),
             \Tuleap\Http\HTTPFactoryBuilder::requestFactory(),
             \Tuleap\Http\HTTPFactoryBuilder::streamFactory(),
-            new GitBackendLogger()
+            \BackendLogger::getDefaultLogger(\GitPlugin::LOG_IDENTIFIER),
         );
     }
 

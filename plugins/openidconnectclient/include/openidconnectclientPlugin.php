@@ -49,7 +49,6 @@ use Tuleap\OpenIDConnectClient\Login;
 use Tuleap\OpenIDConnectClient\Login\ConnectorPresenterBuilder;
 use Tuleap\OpenIDConnectClient\Login\IncoherentDataUniqueProviderException;
 use Tuleap\OpenIDConnectClient\LoginController;
-use Tuleap\OpenIDConnectClient\OpenIDConnectClientLogger;
 use Tuleap\OpenIDConnectClient\OpenIDConnectClientPluginInfo;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProviderDao;
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProviderManager;
@@ -361,6 +360,11 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         }
     }
 
+    private function getLogger(): \Psr\Log\LoggerInterface
+    {
+        return \BackendLogger::getDefaultLogger('openid_connect_client.log');
+    }
+
     public function accountTabPresenterCollection(AccountTabPresenterCollection $collection): void
     {
         if ($this->canPluginAuthenticateUser()) {
@@ -429,7 +433,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
                 $unlinked_account_manager,
                 $automatic_user_registration,
                 $flow,
-                new OpenIDConnectClientLogger()
+                $this->getLogger(),
             )
         );
     }
@@ -461,7 +465,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
             $unlinked_account_manager,
             $automatic_user_registration,
             $flow,
-            new OpenIDConnectClientLogger()
+            $this->getLogger(),
         );
         $account_linker_controller = new AccountLinker\Controller(
             $user_manager,

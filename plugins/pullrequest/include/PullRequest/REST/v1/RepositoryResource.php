@@ -30,7 +30,6 @@ use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 use Tuleap\PullRequest\Dao as PullRequestDao;
 use Tuleap\PullRequest\Exception\MalformedQueryParameterException;
 use Tuleap\PullRequest\Factory as PullRequestFactory;
-use Tuleap\PullRequest\Logger;
 
 class RepositoryResource
 {
@@ -69,7 +68,7 @@ class RepositoryResource
         $git_plugin                          = \PluginFactory::instance()->getPluginByName('git');
         $this->gitolite_access_URL_generator = new GitoliteAccessURLGenerator($git_plugin->getPluginInfo());
 
-        $this->logger = new Logger();
+        $this->logger = \pullrequestPlugin::getLogger();
     }
 
     public function getPaginatedPullRequests(GitRepository $repository, $query, $limit, $offset)

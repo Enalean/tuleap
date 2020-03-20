@@ -20,16 +20,10 @@
 
 namespace Tuleap\REST;
 
-use BackendLogger;
-use ForgeConfig;
-
-class RESTLogger extends \TruncateLevelLogger
+final class RESTLogger
 {
-    public function __construct()
+    public static function getLogger()
     {
-        parent::__construct(
-            new BackendLogger(ForgeConfig::get('codendi_log') . '/rest_api_log'),
-            ForgeConfig::get('sys_logger_level')
-        );
+        return \BackendLogger::getDefaultLogger('rest_api_log');
     }
 }
