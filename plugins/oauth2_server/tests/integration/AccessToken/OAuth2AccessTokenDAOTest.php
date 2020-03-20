@@ -147,4 +147,20 @@ final class OAuth2AccessTokenDAOTest extends TestCase
 
         $this->assertNull($this->dao->searchAccessToken($access_token_id));
     }
+
+    public function testCanFindAnAccessTokenByApp(): void
+    {
+        $access_token_id = $this->dao->create(self::$active_project_auth_code_id, 'hashed_verification_string', 30);
+
+        $row = $this->dao->searchAccessTokenByApp($access_token_id, self::$active_project_app_id);
+
+        $this->assertEquals(['authorization_code_id' => self::$active_project_auth_code_id, 'verifier' => 'hashed_verification_string'], $row);
+    }
+
+    public function testAccessTokenInADeletedProjectCannotBeFoundByApp(): void
+    {
+        $access_token_id = $this->dao->create(self::$deleted_project_auth_code_id, 'hashed_verification_string', 30);
+
+        $this->assertNull($this->dao->searchAccessTokenByApp($access_token_id, self::$deleted_project_app_id));
+    }
 }
