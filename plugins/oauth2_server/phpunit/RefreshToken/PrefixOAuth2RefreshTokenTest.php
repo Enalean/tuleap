@@ -1,4 +1,5 @@
-/*
+<?php
+/**
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,12 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-DROP TABLE IF EXISTS plugin_oauth2_server_app;
-DROP TABLE IF EXISTS plugin_oauth2_authorization_code;
-DROP TABLE IF EXISTS plugin_oauth2_authorization_code_scope;
-DROP TABLE IF EXISTS plugin_oauth2_authorization;
-DROP TABLE IF EXISTS plugin_oauth2_authorization_scope;
-DROP TABLE IF EXISTS plugin_oauth2_access_token;
-DROP TABLE IF EXISTS plugin_oauth2_access_token_scope;
-DROP TABLE IF EXISTS plugin_oauth2_refresh_token;
-DROP TABLE IF EXISTS plugin_oauth2_refresh_token_scope;
+declare(strict_types=1);
+
+namespace Tuleap\OAuth2Server\RefreshToken;
+
+use PHPUnit\Framework\TestCase;
+
+final class PrefixOAuth2RefreshTokenTest extends TestCase
+{
+    public function testHasSpecificPrefix(): void
+    {
+        $prefix = new PrefixOAuth2RefreshToken();
+        $this->assertStringContainsString('oauth2', $prefix->getString());
+        $this->assertStringContainsString('rt1', $prefix->getString());
+    }
+}

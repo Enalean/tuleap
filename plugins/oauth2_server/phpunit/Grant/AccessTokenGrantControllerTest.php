@@ -93,8 +93,9 @@ final class AccessTokenGrantControllerTest extends TestCase
         );
         $this->pkce_code_verifier->shouldReceive('verifyCode')->once();
         $this->response_builder->shouldReceive('buildResponse')->andReturn(
-            OAuth2AccessTokenSuccessfulRequestRepresentation::fromAccessToken(
+            OAuth2AccessTokenSuccessfulRequestRepresentation::fromAccessTokenAndRefreshToken(
                 new OAuth2AccessTokenWithIdentifier(new ConcealedString('identifier'), new \DateTimeImmutable('@20')),
+                null,
                 new \DateTimeImmutable('@10')
             )
         );

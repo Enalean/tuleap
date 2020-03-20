@@ -1,4 +1,5 @@
-/*
+<?php
+/**
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,12 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-DROP TABLE IF EXISTS plugin_oauth2_server_app;
-DROP TABLE IF EXISTS plugin_oauth2_authorization_code;
-DROP TABLE IF EXISTS plugin_oauth2_authorization_code_scope;
-DROP TABLE IF EXISTS plugin_oauth2_authorization;
-DROP TABLE IF EXISTS plugin_oauth2_authorization_scope;
-DROP TABLE IF EXISTS plugin_oauth2_access_token;
-DROP TABLE IF EXISTS plugin_oauth2_access_token_scope;
-DROP TABLE IF EXISTS plugin_oauth2_refresh_token;
-DROP TABLE IF EXISTS plugin_oauth2_refresh_token_scope;
+declare(strict_types=1);
+
+namespace Tuleap\OAuth2Server\RefreshToken\Scope;
+
+use Tuleap\DB\DataAccessObject;
+
+class OAuth2RefreshTokenScopeDAO extends DataAccessObject
+{
+    public function saveScopeKeysByOAuth2RefreshTokenID(int $access_token_id, string ...$scope_keys): void
+    {
+        $data_to_insert = [];
+
+        foreach ($scope_keys as $scope_key) {
+            $data_to_insert[] = ['refresh_token_id' => $access_token_id, 'scope_key' => $scope_key];
+        }
+
+        $this->getDB()->insertMany('plugin_oauth2_refresh_token_scope', $data_to_insert);
+    }
+}

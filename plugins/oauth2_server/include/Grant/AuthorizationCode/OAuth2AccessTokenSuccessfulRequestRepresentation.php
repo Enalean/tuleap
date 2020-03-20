@@ -30,35 +30,54 @@ use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenWithIdentifier;
  *
  * @see https://tools.ietf.org/html/rfc6749#section-5.1
  */
-final class OAuth2AccessTokenSuccessfulRequestRepresentation
+final class OAuth2AccessTokenSuccessfulRequestRepresentation implements \JsonSerializable
 {
     /**
-     * @var string
+     * @var ConcealedString
      */
-    public $access_token;
+    private $access_token;
     /**
-     * @var string
+     * @var ConcealedString|null
      */
-    public $token_type = 'bearer';
+    private $refresh_token;
     /**
      * @var int
      */
-    public $expires_in;
+    private $expires_in;
 
-    private function __construct(ConcealedString $access_token_identifier, int $expires_in_seconds)
+    private function __construct(ConcealedString $access_token_identifier, ?ConcealedString $refresh_token, int $expires_in_seconds)
     {
-        $this->access_token = $access_token_identifier->getString();
+        $this->access_token  = $access_token_identifier;
+        $this->refresh_token = $refresh_token;
         if ($expires_in_seconds <= 0) {
             throw new CannotSetANegativeExpirationDelayOnAccessTokenException($expires_in_seconds);
         }
         $this->expires_in = $expires_in_seconds;
     }
 
-    public static function fromAccessToken(OAuth2AccessTokenWithIdentifier $access_token, \DateTimeImmutable $current_time): self
-    {
+    public static function fromAccessTokenAndRefreshToken(
+        OAuth2AccessTokenWithIdentifier $access_token,
+        ?ConcealedString $refresh_token,
+        \DateTimeImmutable $current_time
+    ): self {
         return new self(
             $access_token->getIdentifier(),
+            $refresh_token,
             $access_token->getExpiration()->getTimestamp() - $current_time->getTimestamp()
         );
+    }
+
+    public function jsonSerialize(): array
+    {
+        $json_encoded = [
+            'token_type'   => 'bearer',
+            'access_token' => $this->access_token->getString(),
+            'expires_in'   => $this->expires_in,
+        ];
+        if ($this->refresh_token !== null) {
+            $json_encoded['refresh_token'] = $this->refresh_token->getString();
+        }
+
+        return $json_encoded;
     }
 }

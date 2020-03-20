@@ -20,43 +20,34 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User\OAuth2\Scope;
+namespace Tuleap\OAuth2Server\RefreshToken\Scope;
 
-use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
+use Tuleap\Authentication\Scope\AuthenticationScope;
 
-/**
- * @psalm-immutable
- */
-final class OAuth2ScopeIdentifier implements AuthenticationScopeIdentifier
+class OAuth2RefreshTokenScopeSaver
 {
     /**
-     * @var string
+     * @var OAuth2RefreshTokenScopeDAO
      */
-    private $identifier;
+    private $dao;
 
-    private function __construct(string $identifier_key)
+    public function __construct(OAuth2RefreshTokenScopeDAO $dao)
     {
-        $this->identifier = $identifier_key;
+        $this->dao = $dao;
     }
 
     /**
-     * @psalm-pure
+     * @param AuthenticationScope[] $scopes
      *
-     * @psalm-return self
-     *
-     * @throws InvalidOAuth2ScopeIdentifierException
+     * @psalm-param non-empty-array<AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier>> $scopes
      */
-    public static function fromIdentifierKey(string $identifier_key): AuthenticationScopeIdentifier
+    public function saveRefreshTokenScopes(int $oauth2_refresh_token_id, array $scopes): void
     {
-        if (preg_match('/^(?:[a-z]|:|_)+$/', $identifier_key) !== 1) {
-            throw new InvalidOAuth2ScopeIdentifierException($identifier_key);
+        $scope_identifier_keys = [];
+        foreach ($scopes as $scope) {
+            $scope_identifier_keys[] = $scope->getIdentifier()->toString();
         }
 
-        return new self($identifier_key);
-    }
-
-    public function toString(): string
-    {
-        return $this->identifier;
+        $this->dao->saveScopeKeysByOAuth2RefreshTokenID($oauth2_refresh_token_id, ...$scope_identifier_keys);
     }
 }

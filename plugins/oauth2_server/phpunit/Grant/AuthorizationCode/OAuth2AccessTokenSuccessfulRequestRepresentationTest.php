@@ -30,8 +30,9 @@ final class OAuth2AccessTokenSuccessfulRequestRepresentationTest extends TestCas
 {
     public function testBuildsSuccessfulRequestRepresentationThatCanBeJSONEncoded(): void
     {
-        $representation = OAuth2AccessTokenSuccessfulRequestRepresentation::fromAccessToken(
+        $representation = OAuth2AccessTokenSuccessfulRequestRepresentation::fromAccessTokenAndRefreshToken(
             new OAuth2AccessTokenWithIdentifier(new ConcealedString('identifier'), new \DateTimeImmutable('@20')),
+            null,
             new \DateTimeImmutable('@10')
         );
 
@@ -41,11 +42,26 @@ final class OAuth2AccessTokenSuccessfulRequestRepresentationTest extends TestCas
         );
     }
 
+    public function testBuildsSuccessfulRequestRepresentationIncludingARefreshTokenThatCanBeJSONEncoded(): void
+    {
+        $representation = OAuth2AccessTokenSuccessfulRequestRepresentation::fromAccessTokenAndRefreshToken(
+            new OAuth2AccessTokenWithIdentifier(new ConcealedString('identifier'), new \DateTimeImmutable('@20')),
+            new ConcealedString('refresh_identifier'),
+            new \DateTimeImmutable('@10')
+        );
+
+        $this->assertJsonStringEqualsJsonString(
+            '{"access_token":"identifier","refresh_token":"refresh_identifier","token_type":"bearer","expires_in":10}',
+            json_encode($representation, JSON_THROW_ON_ERROR)
+        );
+    }
+
     public function testDoesNotBuildRequestRepresentationWhenTheAccessTokenHaveAlreadyExpired(): void
     {
         $this->expectException(CannotSetANegativeExpirationDelayOnAccessTokenException::class);
-        OAuth2AccessTokenSuccessfulRequestRepresentation::fromAccessToken(
+        OAuth2AccessTokenSuccessfulRequestRepresentation::fromAccessTokenAndRefreshToken(
             new OAuth2AccessTokenWithIdentifier(new ConcealedString('identifier'), new \DateTimeImmutable('@10')),
+            null,
             new \DateTimeImmutable('@20')
         );
     }
@@ -54,8 +70,9 @@ final class OAuth2AccessTokenSuccessfulRequestRepresentationTest extends TestCas
     {
         $current_time = new \DateTimeImmutable('@10');
         $this->expectException(CannotSetANegativeExpirationDelayOnAccessTokenException::class);
-        OAuth2AccessTokenSuccessfulRequestRepresentation::fromAccessToken(
+        OAuth2AccessTokenSuccessfulRequestRepresentation::fromAccessTokenAndRefreshToken(
             new OAuth2AccessTokenWithIdentifier(new ConcealedString('identifier'), $current_time),
+            null,
             $current_time
         );
     }

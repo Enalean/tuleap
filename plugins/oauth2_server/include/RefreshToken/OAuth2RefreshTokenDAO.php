@@ -1,4 +1,5 @@
-/*
+<?php
+/**
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,12 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-DROP TABLE IF EXISTS plugin_oauth2_server_app;
-DROP TABLE IF EXISTS plugin_oauth2_authorization_code;
-DROP TABLE IF EXISTS plugin_oauth2_authorization_code_scope;
-DROP TABLE IF EXISTS plugin_oauth2_authorization;
-DROP TABLE IF EXISTS plugin_oauth2_authorization_scope;
-DROP TABLE IF EXISTS plugin_oauth2_access_token;
-DROP TABLE IF EXISTS plugin_oauth2_access_token_scope;
-DROP TABLE IF EXISTS plugin_oauth2_refresh_token;
-DROP TABLE IF EXISTS plugin_oauth2_refresh_token_scope;
+declare(strict_types=1);
+
+namespace Tuleap\OAuth2Server\RefreshToken;
+
+use Tuleap\DB\DataAccessObject;
+
+class OAuth2RefreshTokenDAO extends DataAccessObject
+{
+    public function create(int $authorization_code_id, string $hashed_verification_string, int $expiration_date_timestamp): int
+    {
+        return (int) $this->getDB()->insertReturnId(
+            'plugin_oauth2_refresh_token',
+            [
+                'authorization_code_id' => $authorization_code_id,
+                'verifier'              => $hashed_verification_string,
+                'expiration_date'       => $expiration_date_timestamp,
+                'has_already_been_used' => false,
+            ]
+        );
+    }
+}
