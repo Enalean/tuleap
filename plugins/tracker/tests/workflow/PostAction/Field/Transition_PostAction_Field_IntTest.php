@@ -38,6 +38,16 @@ class Transition_PostAction_Field_IntTest extends TuleapTestCase
         $this->post_action->__construct($this->transition, $this->post_action_id, $this->field, $this->value);
         stub($this->post_action)->getDao()->returns($this->dao);
         stub($this->post_action)->isDefined()->returns($this->field);
+
+        $GLOBALS['Language']->setReturnValue(
+            'getText',
+            'field_value_set',
+            [
+                'workflow_postaction',
+                'field_value_set',
+                ['Remaining Effort', 0]
+            ]
+        );
     }
 
     public function testBeforeShouldSetTheIntegerField()
@@ -52,8 +62,6 @@ class Transition_PostAction_Field_IntTest extends TuleapTestCase
         $fields_data = array(
             'field_id' => 'value',
         );
-
-        $this->post_action->expectOnce('addFeedback', array('info', 'workflow_postaction', 'field_value_set', array($this->field->getLabel(), $expected)));
 
         $this->post_action->before($fields_data, $user);
         $this->assertEqual($expected, $fields_data[$this->field->getId()]);
@@ -72,7 +80,6 @@ class Transition_PostAction_Field_IntTest extends TuleapTestCase
             'field_id' => 'value',
         );
 
-        $this->post_action->expectOnce('addFeedback', array('info', 'workflow_postaction', 'field_value_set', array($this->field->getLabel(), $expected)));
         $this->post_action->before($fields_data, $user);
         $this->assertEqual($expected, $fields_data[$this->field->getId()]);
     }
@@ -89,7 +96,6 @@ class Transition_PostAction_Field_IntTest extends TuleapTestCase
             'field_id' => 'value',
         );
 
-        $this->post_action->expectNever('addFeedback');
         $this->post_action->before($fields_data, $user);
         $this->assertEqual($expected, $fields_data[$this->field->getId()]);
     }

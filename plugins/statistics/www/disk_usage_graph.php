@@ -101,7 +101,7 @@ switch ($graphType) {
 }
 
 
-$groupByDate = array('day', 'deek', 'month', 'year');
+$groupByDate = array('day', 'week', 'month', 'year');
 $vGroupBy = new Valid_WhiteList('group_by', $groupByDate);
 $vGroupBy->required();
 if ($request->valid($vGroupBy)) {

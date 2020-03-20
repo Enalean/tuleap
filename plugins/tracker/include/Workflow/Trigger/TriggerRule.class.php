@@ -135,6 +135,10 @@ class Tracker_Workflow_Trigger_TriggerRule implements Tracker_IProvideJsonFormat
 
     private function getConditionOperatorLabel()
     {
-        return $GLOBALS['Language']->getText('workflow_trigger_rules_processor', 'condition_operator_' . $this->getCondition());
+        if ($this->getCondition() === 'all_of') {
+            return $GLOBALS['Language']->getText('workflow_trigger_rules_processor', 'condition_operator_all_of');
+        }
+
+        return $GLOBALS['Language']->getText('workflow_trigger_rules_processor', 'condition_operator_at_least_one');
     }
 }

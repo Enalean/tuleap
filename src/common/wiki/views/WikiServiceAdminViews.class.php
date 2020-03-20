@@ -106,8 +106,12 @@ class WikiServiceAdminViews extends WikiViews
              <td>' . $GLOBALS['Language']->getText('wiki_views_wkserviews', 'rank_screen_em') . '</td>
            </tr>';
 
+        $label = $GLOBALS['Language']->getText('wiki_views_wkserviews', 'act_create');
+        if ($act === 'update') {
+            $label = $GLOBALS['Language']->getText('wiki_views_wkserviews', 'act_update');
+        }
         print '<tr>
-             <td colspan="3"><input type="submit" value="' . $GLOBALS['Language']->getText('wiki_views_wkserviews', 'act_' . $act) . '" /></td>
+             <td colspan="3"><input type="submit" value="' . $label . '" /></td>
            </tr>';
 
         print '</table>

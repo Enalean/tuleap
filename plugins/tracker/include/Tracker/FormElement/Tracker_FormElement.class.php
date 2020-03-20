@@ -754,7 +754,39 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      */
     public function getPropertyLabel($key)
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_property', $key);
+        switch ($key) {
+            case 'hint':
+                return $GLOBALS['Language']->getText('plugin_tracker_formelement_property', 'hint');
+            case 'default_value_type':
+                return $GLOBALS['Language']->getText('plugin_tracker_formelement_property', 'default_value_type');
+            case 'size':
+                return $GLOBALS['Language']->getText('plugin_tracker_formelement_property', 'size');
+            case 'maxchars':
+                return $GLOBALS['Language']->getText('plugin_tracker_formelement_property', 'maxchars');
+            case 'rows':
+                return $GLOBALS['Language']->getText('plugin_tracker_formelement_property', 'rows');
+            case 'cols':
+                return $GLOBALS['Language']->getText('plugin_tracker_formelement_property', 'cols');
+            case 'static_value':
+                return $GLOBALS['Language']->getText('plugin_tracker_formelement_property', 'static_value');
+            case 'default_value_today':
+                return $GLOBALS['Language']->getText('plugin_tracker_formelement_property', 'default_value_today');
+            case 'target_field_name':
+                return $GLOBALS['Language']->getText('plugin_tracker_formelement_property', 'target_field_name');
+            case 'use_capacity':
+                return $GLOBALS['Language']->getText('plugin_tracker_formelement_property', 'use_capacity');
+            case 'include_weekends':
+                return $GLOBALS['Language']->getText('plugin_tracker_formelement_property', 'include_weekends');
+            case 'display_time':
+                return $GLOBALS['Language']->getText('plugin_tracker_formelement_property', 'display_time');
+            case 'use_cache':
+                return $GLOBALS['Language']->getText('plugin_tracker_formelement_property', 'use_cache');
+            case 'fast_compute':
+                return $GLOBALS['Language']->getText('plugin_tracker_formelement_property', 'fast_compute');
+            case 'default_value':
+            default:
+                return $GLOBALS['Language']->getText('plugin_tracker_formelement_property', 'default_value');
+        }
     }
 
     /**

@@ -47,7 +47,15 @@ class TemplateSingleton
 
     public function getLabel($proj_type)
     {
-        return $GLOBALS['Language']->getText('include_common_template', $this->data_array[$proj_type]);
+        switch ($proj_type) {
+            case self::TEST_PROJECT:
+                return $GLOBALS['Language']->getText('include_common_template', 'test_project');
+            case self::TEMPLATE:
+                return $GLOBALS['Language']->getText('include_common_template', 'template');
+            case self::PROJECT:
+            default:
+                return $GLOBALS['Language']->getText('include_common_template', 'project');
+        }
     }
 
     public function update()

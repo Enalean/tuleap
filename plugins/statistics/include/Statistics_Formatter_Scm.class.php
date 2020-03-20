@@ -50,10 +50,19 @@ class Statistics_Formatter_Scm extends Statistics_Formatter
      */
     public function calculateReadStats()
     {
+        $read_user_label    = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_read_user');
+        $total_read_label   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_total_read');
+        $read_project_label = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_read_project');
+        if ($this->scm === 'cvs') {
+            $read_user_label    = $GLOBALS['Language']->getText('plugin_statistics', 'scm_cvs_read_user');
+            $total_read_label   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_cvs_total_read');
+            $read_project_label = $GLOBALS['Language']->getText('plugin_statistics', 'scm_cvs_read_project');
+        }
+
         $readIndex[]          = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
-        $totalRead[]          = $GLOBALS['Language']->getText('plugin_statistics', 'scm_' . $this->scm . '_total_read');
-        $readProjectsNumber[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_' . $this->scm . '_read_project');
-        $readUsersNumber[]    = $GLOBALS['Language']->getText('plugin_statistics', 'scm_' . $this->scm . '_read_user');
+        $totalRead[]          = $total_read_label;
+        $readProjectsNumber[] = $read_project_label;
+        $readUsersNumber[]    = $read_user_label;
         $readDar              = $this->dao->totalRead($this->startDate, $this->endDate);
         if ($readDar && !$readDar->isError()) {
             foreach ($readDar as $row) {
@@ -77,11 +86,20 @@ class Statistics_Formatter_Scm extends Statistics_Formatter
      */
     public function calculateCommitsStats()
     {
+        $commit_user_label    = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_commit_user');
+        $total_commit_label   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_total_commit');
+        $commit_project_label = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_commit_project');
+        if ($this->scm === 'cvs') {
+            $commit_user_label    = $GLOBALS['Language']->getText('plugin_statistics', 'scm_cvs_commit_user');
+            $total_commit_label   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_cvs_total_commit');
+            $commit_project_label = $GLOBALS['Language']->getText('plugin_statistics', 'scm_cvs_commit_project');
+        }
+
         $commitsIndex[]         = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
-        $totalCommits[]         = $GLOBALS['Language']->getText('plugin_statistics', 'scm_' . $this->scm . '_total_commit');
-        $commitProjectsNumber[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_' . $this->scm . '_commit_project');
-        $commitUsersNumber[]    = $GLOBALS['Language']->getText('plugin_statistics', 'scm_' . $this->scm . '_commit_user');
-        $commitsDar = $this->dao->totalCommits($this->startDate, $this->endDate);
+        $totalCommits[]         = $total_commit_label;
+        $commitProjectsNumber[] = $commit_project_label;
+        $commitUsersNumber[]    = $commit_user_label;
+        $commitsDar             = $this->dao->totalCommits($this->startDate, $this->endDate);
         if ($commitsDar && !$commitsDar->isError()) {
             foreach ($commitsDar as $row) {
                 $commitsIndex[]         = $row['month'] . " " . $row['year'];

@@ -317,16 +317,15 @@ if ($request->isPost() && $request->exist('Register')) {
 
             if ($admin_creation) {
                 $title  = $Language->getText('account_register', 'title_confirm_admin');
-                $content_title = 'msg_confirm_admin';
-                $content           = $Language->getText(
+                $content = $Language->getText(
                     'account_register',
-                    $content_title,
-                    array(
-                                                                    $hp->purify($request->get('form_realname')),
-                                                                    $GLOBALS['sys_name'],
-                                                                    $hp->purify($request->get('form_loginname')),
-                                                                    $hp->purify($request->get('form_pw'))
-                                                            )
+                    'msg_confirm_admin',
+                    [
+                        $hp->purify($request->get('form_realname')),
+                        $GLOBALS['sys_name'],
+                        $hp->purify($request->get('form_loginname')),
+                        $hp->purify($request->get('form_pw'))
+                    ]
                 );
                 $thanks             = '';
                 $is_thanks           = false;

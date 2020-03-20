@@ -116,12 +116,22 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field
             if ($this->value_type === self::FILL_CURRENT_TIME) {
                 $new_date_timestamp = $field->formatDate($_SERVER['REQUEST_TIME']);
                 if ($field->userCanRead($current_user)) {
-                    $this->addFeedback('info', 'workflow_postaction', 'field_value_set', array($field->getLabel(), $new_date_timestamp));
+                    $this->addFeedback(
+                        'info',
+                        $GLOBALS['Language']->getText(
+                            'workflow_postaction',
+                            'field_value_set',
+                            [$field->getLabel(), $new_date_timestamp]
+                        )
+                    );
                 }
             } else {
                 $new_date_timestamp = $field->formatDate(null);
                 if ($field->userCanRead($current_user)) {
-                    $this->addFeedback('info', 'workflow_postaction', 'field_clear', array($field->getLabel()));
+                    $this->addFeedback(
+                        'info',
+                        $GLOBALS['Language']->getText('workflow_postaction', 'field_clear', [$field->getLabel()])
+                    );
                 }
             }
             $fields_data[$this->field->getId()] = $new_date_timestamp;

@@ -69,7 +69,14 @@ class SystemEventPresenter
         $this->owner     = $sysevent->getOwner();
         $this->log       = $sysevent->getLog() ? $sysevent->getLog() : '';
 
-        $this->priority = $GLOBALS['Language']->getText('admin_system_events', 'priority_' . $sysevent->getPriority());
+        if ($sysevent->getPriority() === SystemEvent::PRIORITY_HIGH) {
+            $this->priority = $GLOBALS['Language']->getText('admin_system_events', 'priority_1');
+        } elseif ($sysevent->getPriority() === SystemEvent::PRIORITY_MEDIUM) {
+            $this->priority = $GLOBALS['Language']->getText('admin_system_events', 'priority_2');
+        } else {
+            $this->priority = $GLOBALS['Language']->getText('admin_system_events', 'priority_3');
+        }
+
         $this->is_high  = (int) $sysevent->getPriority() === SystemEvent::PRIORITY_HIGH;
         $this->is_low   = (int) $sysevent->getPriority() === SystemEvent::PRIORITY_LOW;
 

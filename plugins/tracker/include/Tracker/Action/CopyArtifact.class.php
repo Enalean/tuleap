@@ -92,24 +92,32 @@ class Tracker_Action_CopyArtifact
         PFUser $current_user
     ) {
         if (! $this->tracker->userCanSubmitArtifact($current_user)) {
-            $this->logsErrorAndRedirectToTracker('plugin_tracker_admin', 'access_denied');
+            $this->logsErrorAndRedirectToTracker(
+                $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied')
+            );
             return;
         }
         $from_artifact = $this->artifact_factory->getArtifactByIdUserCanView($current_user, $request->get('from_artifact_id'));
         if (! $from_artifact || $from_artifact->getTracker() !== $this->tracker) {
-            $this->logsErrorAndRedirectToTracker('plugin_tracker_include_type', 'error_missing_param');
+            $this->logsErrorAndRedirectToTracker(
+                $GLOBALS['Language']->getText('plugin_tracker_include_type', 'error_missing_param')
+            );
             return;
         }
 
         $from_changeset = $from_artifact->getChangeset($request->get('from_changeset_id'));
         if (! $from_changeset) {
-            $this->logsErrorAndRedirectToTracker('plugin_tracker_include_type', 'error_missing_param');
+            $this->logsErrorAndRedirectToTracker(
+                $GLOBALS['Language']->getText('plugin_tracker_include_type', 'error_missing_param')
+            );
             return;
         }
 
         $submitted_values = $request->get('artifact');
         if (! is_array($submitted_values)) {
-            $this->logsErrorAndRedirectToTracker('plugin_tracker_include_type', 'error_missing_param');
+            $this->logsErrorAndRedirectToTracker(
+                $GLOBALS['Language']->getText('plugin_tracker_include_type', 'error_missing_param')
+            );
             return;
         }
 
@@ -147,9 +155,11 @@ class Tracker_Action_CopyArtifact
 
         if (count($xml_artifacts->artifact) < 1) {
             $this->logsErrorAndRedirectToTracker(
-                'plugin_tracker',
-                'error_create_copy',
-                $from_changeset->getArtifact()->getId()
+                $GLOBALS['Language']->getText(
+                    'plugin_tracker',
+                    'error_create_copy',
+                    $from_changeset->getArtifact()->getId()
+                )
             );
             return;
         }
@@ -165,9 +175,11 @@ class Tracker_Action_CopyArtifact
 
         if ($new_artifacts == null) {
             $this->logsErrorAndRedirectToTracker(
-                'plugin_tracker',
-                'error_create_copy',
-                $from_changeset->getArtifact()->getId()
+                $GLOBALS['Language']->getText(
+                    'plugin_tracker',
+                    'error_create_copy',
+                    $from_changeset->getArtifact()->getId()
+                )
             );
             return;
         }
@@ -279,15 +291,9 @@ class Tracker_Action_CopyArtifact
         return new SimpleXMLElement($xml);
     }
 
-    private function logsErrorAndRedirectToTracker(
-        $language_first_key,
-        $language_second_key,
-        $language_params = array()
-    ) {
-        $GLOBALS['Response']->addFeedback(
-            Feedback::ERROR,
-            $GLOBALS['Language']->getText($language_first_key, $language_second_key, $language_params)
-        );
+    private function logsErrorAndRedirectToTracker($message)
+    {
+        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $message);
         $this->redirectToTracker();
     }
 }

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once __DIR__ . '/../../../bootstrap.php';
-Mock::generatePartial('Transition_PostAction_Field_Date', 'Transition_PostAction_Field_DateTestVersion', array('addFeedback', 'getFormElementFactory'));
+Mock::generatePartial('Transition_PostAction_Field_Date', 'Transition_PostAction_Field_DateTestVersion', array('getFormElementFactory'));
 Mock::generate('Transition');
 Mock::generate('BaseLanguage');
 Mock::generate('Tracker_FormElementFactory');
@@ -31,7 +31,29 @@ class Transition_PostAction_Field_DateTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
-        $GLOBALS['Language']->setReturnValue('getText', Tracker_FormElement_DateFormatter::DATE_FORMAT, array('system', 'datefmt_short'));
+        $GLOBALS['Language']->setReturnValue(
+            'getText',
+            Tracker_FormElement_DateFormatter::DATE_FORMAT,
+            ['system', 'datefmt_short']
+        );
+        $GLOBALS['Language']->setReturnValue(
+            'getText',
+            'field_value_set',
+            [
+                'workflow_postaction',
+                'field_value_set',
+                ['Close Date', 'date-of-today']
+            ]
+        );
+        $GLOBALS['Language']->setReturnValue(
+            'getText',
+            'field_clear',
+            [
+                'workflow_postaction',
+                'field_clear',
+                ['Close Date']
+            ]
+        );
     }
 
     public function testBeforeShouldSetTheDate()
@@ -57,7 +79,6 @@ class Transition_PostAction_Field_DateTest extends TuleapTestCase
         $value_type  = Transition_PostAction_Field_Date::FILL_CURRENT_TIME;
 
         $post_action = new Transition_PostAction_Field_DateTestVersion();
-        $post_action->expectOnce('addFeedback', array('info', 'workflow_postaction', 'field_value_set', array($field->getLabel(), $expected)));
         $post_action->setReturnReference('getFormElementFactory', $factory);
 
         $post_action->__construct($transition, $id, $field, $value_type);
@@ -88,7 +109,6 @@ class Transition_PostAction_Field_DateTest extends TuleapTestCase
         $value_type = Transition_PostAction_Field_Date::CLEAR_DATE;
 
         $post_action = new Transition_PostAction_Field_DateTestVersion();
-        $post_action->expectOnce('addFeedback', array('info', 'workflow_postaction', 'field_clear', array($field->getLabel())));
         $post_action->setReturnReference('getFormElementFactory', $factory);
 
         $post_action->__construct($transition, $id, $field, $value_type);
@@ -105,11 +125,11 @@ class Transition_PostAction_Field_DateTest extends TuleapTestCase
         $field->setReturnValue('getLabel', 'Close Date');
         $field->setReturnValue('userCanRead', true, array($current_user));
         $field->setReturnValue('userCanUpdate', false, array($current_user));
+        $field->setReturnValue('formatDate', 'date-of-today', array($_SERVER['REQUEST_TIME']));
 
         $factory = new MockTracker_FormElementFactory();
         $factory->setReturnReference('getFormElementById', $field, array($field->getId()));
 
-        $expected    = $field->formatDate($_SERVER['REQUEST_TIME']);
         $fields_data = array('field_id' => 'value');
         $transition  = new MockTransition();
         $field_id    = $field->getId();
@@ -117,12 +137,11 @@ class Transition_PostAction_Field_DateTest extends TuleapTestCase
         $value_type  = Transition_PostAction_Field_Date::FILL_CURRENT_TIME;
 
         $post_action = new Transition_PostAction_Field_DateTestVersion();
-        $post_action->expectOnce('addFeedback', array('info', 'workflow_postaction', 'field_value_set', array($field->getLabel(), $expected)));
         $post_action->setReturnReference('getFormElementFactory', $factory);
 
         $post_action->__construct($transition, $id, $field, $value_type);
         $post_action->before($fields_data, $current_user);
-        $this->assertEqual($expected, $fields_data[$field_id]);
+        $this->assertEqual("date-of-today", $fields_data[$field_id]);
     }
 
     public function testBeforeShouldBypassAndClearTheDate()
@@ -149,7 +168,6 @@ class Transition_PostAction_Field_DateTest extends TuleapTestCase
         $value_type = Transition_PostAction_Field_Date::CLEAR_DATE;
 
         $post_action = new Transition_PostAction_Field_DateTestVersion();
-        $post_action->expectOnce('addFeedback', array('info', 'workflow_postaction', 'field_clear', array($field->getLabel())));
         $post_action->setReturnReference('getFormElementFactory', $factory);
 
         $post_action->__construct($transition, $id, $field, $value_type);
@@ -179,7 +197,6 @@ class Transition_PostAction_Field_DateTest extends TuleapTestCase
         $value_type = Transition_PostAction_Field_Date::CLEAR_DATE;
 
         $post_action = new Transition_PostAction_Field_DateTestVersion();
-        $post_action->expectNever('addFeedback');
         $post_action->setReturnReference('getFormElementFactory', $factory);
 
         $post_action->__construct($transition, $id, $field, $value_type);

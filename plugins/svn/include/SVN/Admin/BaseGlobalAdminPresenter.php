@@ -34,11 +34,6 @@ class BaseGlobalAdminPresenter
     public $submit;
     public $title;
 
-    public function text($prefix, $name)
-    {
-        return $GLOBALS['Language']->getText($prefix, $name);
-    }
-
     public function __construct(Project $project, CSRFSynchronizerToken $token)
     {
         $this->project_id = $project->getId();

@@ -71,11 +71,37 @@ class Sender
             'email_status_change_title'
         );
 
-        $body = $user_language->getText(
-            'plugin_project_ownership',
-            "email_status_change_body_status_$status",
-            $project->getPublicName()
-        );
+        switch ($status) {
+            case 'H':
+                $body = $user_language->getText(
+                    'plugin_project_ownership',
+                    'email_status_change_body_status_H',
+                    $project->getPublicName()
+                );
+                break;
+            case 'P':
+                $body = $user_language->getText(
+                    'plugin_project_ownership',
+                    'email_status_change_body_status_P',
+                    $project->getPublicName()
+                );
+                break;
+            case 'D':
+                $body = $user_language->getText(
+                    'plugin_project_ownership',
+                    'email_status_change_body_status_D',
+                    $project->getPublicName()
+                );
+                break;
+            case 'A':
+            default:
+                $body = $user_language->getText(
+                    'plugin_project_ownership',
+                    'email_status_change_body_status_A',
+                    $project->getPublicName()
+                );
+                break;
+        }
 
         $body_text = $purifier->purify($body, CODENDI_PURIFIER_STRIP_HTML);
 

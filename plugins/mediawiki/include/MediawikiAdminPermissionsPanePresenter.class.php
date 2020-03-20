@@ -73,8 +73,11 @@ class MediawikiAdminPermissionsPanePresenter extends MediawikiAdminPanePresenter
 
     public function help_project()
     {
-        $type = $this->project->isPublic() ? 'public' : 'private';
-        return $GLOBALS['Language']->getText('plugin_mediawiki', 'group_mapping_help_project_' . $type);
+        if ($this->project->isPublic()) {
+            return $GLOBALS['Language']->getText('plugin_mediawiki', 'group_mapping_help_project_public');
+        }
+
+        return $GLOBALS['Language']->getText('plugin_mediawiki', 'group_mapping_help_project_private');
     }
 
     private function getMWUrl($page)
