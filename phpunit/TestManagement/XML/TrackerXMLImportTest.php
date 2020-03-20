@@ -111,6 +111,18 @@ final class TrackerXMLImportTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
+    public function testValidateChangesetXMLImportThrowsExceptionIfNoStepsOnExternalChangeset(): void
+    {
+        $xml_input = new SimpleXMLElement(
+            '<?xml version="1.0" encoding="UTF-8"?>
+                  <external_field_change field_name="steps" type="ttmstepdef">
+                  </external_field_change>'
+        );
+
+        $this->expectException('XML_ParseException');
+        $this->xml_validator->validateChangesetXMLImport($xml_input);
+    }
+
     public function testGetInstanceFromXML()
     {
         $xml_input = new SimpleXMLElement(

@@ -3,16 +3,16 @@
   <start>
     <element name="external_field_change">
       <attribute name="field_name">
-        <value>steps</value>
+        <data type="string"/>
       </attribute>
       <attribute name="type">
         <value>ttmstepdef</value>
       </attribute>
-      <zeroOrMore>
+      <oneOrMore>
         <element name="step">
           <ref name="step_value"/>
         </element>
-      </zeroOrMore>
+      </oneOrMore>
     </element>
   </start>
   <define name="step_value">

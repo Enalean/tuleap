@@ -37,6 +37,7 @@ use Tuleap\TestManagement\Nature\NatureCoveredByOverrider;
 use Tuleap\TestManagement\Nature\NatureCoveredByPresenter;
 use Tuleap\TestManagement\REST\ResourcesInjector;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
+use Tuleap\TestManagement\Step\Definition\Field\StepDefinitionChangesetValue;
 use Tuleap\TestManagement\Step\Execution\Field\StepExecution;
 use Tuleap\TestManagement\TestManagementPluginInfo;
 use Tuleap\TestManagement\TrackerComesFromLegacyEngineException;
@@ -44,6 +45,7 @@ use Tuleap\TestManagement\TrackerNotCreatedException;
 use Tuleap\TestManagement\XML\Exporter;
 use Tuleap\TestManagement\XML\ImportXMLFromTracker;
 use Tuleap\TestManagement\XML\TrackerArtifactXMLImportXMLImportFieldStrategySteps;
+use Tuleap\TestManagement\XML\TrackerXMLExporterChangesetValueStepDefinitionXMLExporter;
 use Tuleap\TestManagement\XML\XMLImport;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
@@ -65,6 +67,7 @@ use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 use Tuleap\AgileDashboard\REST\v1\PaneInfoRepresentation;
 use Tuleap\AgileDashboard\REST\v1\AdditionalPanesForMilestoneEvent;
 use Tuleap\TestManagement\AgileDashboardPaneInfo;
+use Tuleap\Tracker\XML\Exporter\ChangesetValue\GetExternalExporter;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
@@ -95,6 +98,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         $this->addHook(ImportExternalElement::NAME);
         $this->addHook(ImportValidateChangesetExternalField::NAME);
         $this->addHook(ExternalStrategiesGetter::NAME);
+        $this->addHook(GetExternalExporter::NAME);
 
         $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
 
@@ -529,6 +533,14 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
     public function getExternalStrategies(ExternalStrategiesGetter $event): void
     {
         $event->addStrategies(StepDefinition::TYPE, new TrackerArtifactXMLImportXMLImportFieldStrategySteps());
+    }
+
+    public function getExternalExporter(GetExternalExporter $get_external_exporter): void
+    {
+        $changeset_value = $get_external_exporter->getChangesetValue();
+        if ($changeset_value instanceof StepDefinitionChangesetValue) {
+            $get_external_exporter->addExporter(new TrackerXMLExporterChangesetValueStepDefinitionXMLExporter(new XML_SimpleXMLCDATAFactory()));
+        }
     }
 
     public function project_service_before_activation(ProjectServiceBeforeActivation $event) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
