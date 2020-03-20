@@ -199,7 +199,7 @@ class TrackerFactory
     /**
      * @param Tracker $tracker
      *
-     * @return Children trackers of the given tracker.
+     * @return Tracker[] Children trackers of the given tracker.
      */
     public function getPossibleChildren($tracker)
     {
