@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project unix-name="test-jenkins-servers" full-name="Test Jenkins Servers" description="Test Jenkins Servers" access="public">
+  <long-description>Test Jenkins Servers for REST</long-description>
+  <services>
+    <service shortname="plugin_git" enabled="true" />
+  </services>
+  <ugroups>
+    <ugroup name="project_admins" description="Project administrators">
+      <members>
+        <member format="username">rest_api_tester_1</member>
+      </members>
+    </ugroup>
+    <ugroup name="project_members" description="Project members">
+      <members>
+        <member format="username">rest_api_tester_1</member>
+      </members>
+    </ugroup>
+  </ugroups>
+  <git>
+    <ugroups-admin>
+      <ugroup>project_admins</ugroup>
+    </ugroups-admin>
+    <jenkins-servers-admin>
+      <jenkins-server url="https://example.com/foo"/>
+      <jenkins-server url="https://example.com/bar"/>
+    </jenkins-servers-admin>
+  </git>
+</project>
