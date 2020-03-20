@@ -22,28 +22,29 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\ProjectAdmin;
 
-use HTTPRequest;
-use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
+use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
-use Tuleap\Cryptography\KeyFactory;
-use Tuleap\Layout\BaseLayout;
+use Tuleap\Http\Response\RedirectWithFeedbackFactory;
+use Tuleap\Layout\Feedback\NewFeedback;
 use Tuleap\OAuth2Server\App\AppDao;
 use Tuleap\OAuth2Server\App\InvalidAppDataException;
 use Tuleap\OAuth2Server\App\LastCreatedOAuth2AppStore;
 use Tuleap\OAuth2Server\App\NewOAuth2App;
-use Tuleap\OAuth2Server\App\PrefixOAuth2ClientSecret;
-use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
-use Tuleap\Project\ServiceInstrumentation;
-use Tuleap\Request\DispatchableWithRequest;
-use Tuleap\Request\ProjectRetriever;
+use Tuleap\Request\DispatchablePSR15Compatible;
 
-final class AddAppController implements DispatchableWithRequest
+final class AddAppController extends DispatchablePSR15Compatible
 {
-    /** @var ProjectRetriever */
-    private $project_retriever;
-    /** @var ProjectAdministratorChecker */
-    private $administrator_checker;
-    /** @var AppDao */
+    /**
+     * @var ResponseFactoryInterface
+     */
+    private $response_factory;
+    /**
+     * @var AppDao
+     */
     private $app_dao;
     /**
      * @var SplitTokenVerificationStringHasher
@@ -53,40 +54,32 @@ final class AddAppController implements DispatchableWithRequest
      * @var LastCreatedOAuth2AppStore
      */
     private $last_created_app_store;
-    /** @var \CSRFSynchronizerToken */
+    /**
+     * @var RedirectWithFeedbackFactory
+     */
+    private $redirector;
+    /**
+     * @var \CSRFSynchronizerToken
+     */
     private $csrf_token;
 
     public function __construct(
-        ProjectRetriever $project_retriever,
-        ProjectAdministratorChecker $administrator_checker,
+        ResponseFactoryInterface $response_factory,
         AppDao $app_dao,
         SplitTokenVerificationStringHasher $hasher,
         LastCreatedOAuth2AppStore $last_created_app_store,
-        \CSRFSynchronizerToken $csrf_token
+        RedirectWithFeedbackFactory $redirector,
+        \CSRFSynchronizerToken $csrf_token,
+        EmitterInterface $emitter,
+        MiddlewareInterface ...$middleware_stack
     ) {
-        $this->project_retriever      = $project_retriever;
-        $this->administrator_checker  = $administrator_checker;
+        parent::__construct($emitter, ...$middleware_stack);
+        $this->response_factory       = $response_factory;
         $this->app_dao                = $app_dao;
         $this->hasher                 = $hasher;
         $this->last_created_app_store = $last_created_app_store;
+        $this->redirector             = $redirector;
         $this->csrf_token             = $csrf_token;
-    }
-
-    public static function buildSelf(): self
-    {
-        $storage =& $_SESSION ?? [];
-        return new self(
-            ProjectRetriever::buildSelf(),
-            new ProjectAdministratorChecker(),
-            new AppDao(),
-            new SplitTokenVerificationStringHasher(),
-            new LastCreatedOAuth2AppStore(
-                new PrefixedSplitTokenSerializer(new PrefixOAuth2ClientSecret()),
-                (new KeyFactory())->getEncryptionKey(),
-                $storage
-            ),
-            new \CSRFSynchronizerToken(ListAppsController::CSRF_TOKEN)
-        );
     }
 
     public static function getUrl(\Project $project): string
@@ -94,32 +87,54 @@ final class AddAppController implements DispatchableWithRequest
         return sprintf('/plugins/oauth2_server/project/%d/admin/add-app', $project->getID());
     }
 
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        ServiceInstrumentation::increment(\oauth2_serverPlugin::SERVICE_NAME_INSTRUMENTATION);
-        $project = $this->project_retriever->getProjectFromId($variables['project_id']);
-        $this->administrator_checker->checkUserIsProjectAdministrator($request->getCurrentUser(), $project);
+        $project = $request->getAttribute(\Project::class);
+        assert($project instanceof \Project);
+        $user = $request->getAttribute(\PFUser::class);
+        assert($user instanceof \PFUser);
 
         $list_clients_url = ListAppsController::getUrl($project);
         $this->csrf_token->check($list_clients_url);
 
-        $raw_app_name          = (string) $request->get('name');
-        $raw_redirect_endpoint = (string) $request->get('redirect_uri');
-        $use_pkce              = (bool) $request->get('use_pkce');
+        $parsed_body = $request->getParsedBody();
+        if (! is_array($parsed_body)
+            || ! isset($parsed_body['name'])
+            || ! isset($parsed_body['redirect_uri'])
+            || ! isset($parsed_body['use_pkce'])
+        ) {
+            return $this->redirectWithError($user, $list_clients_url);
+        }
+        $raw_app_name          = $parsed_body['name'];
+        $raw_redirect_endpoint = $parsed_body['redirect_uri'];
+        $use_pkce              = (bool) $parsed_body['use_pkce'];
         try {
-            $app_to_be_saved = NewOAuth2App::fromAppData($raw_app_name, $raw_redirect_endpoint, $use_pkce, $project, $this->hasher);
-        } catch (InvalidAppDataException $e) {
-            $layout->addFeedback(
-                \Feedback::ERROR,
-                dgettext('tuleap-oauth2_server', 'The provided app data is not valid.')
+            $app_to_be_saved = NewOAuth2App::fromAppData(
+                $raw_app_name,
+                $raw_redirect_endpoint,
+                $use_pkce,
+                $project,
+                $this->hasher
             );
-            $layout->redirect($list_clients_url);
-            return;
+        } catch (InvalidAppDataException $e) {
+            return $this->redirectWithError($user, $list_clients_url);
         }
         $app_id = $this->app_dao->create($app_to_be_saved);
 
         $this->last_created_app_store->storeLastCreatedApp($app_id, $app_to_be_saved);
 
-        $layout->redirect($list_clients_url);
+        return $this->response_factory->createResponse(302)->withHeader('Location', $list_clients_url);
+    }
+
+    private function redirectWithError(\PFUser $user, string $list_clients_url): ResponseInterface
+    {
+        return $this->redirector->createResponseForUser(
+            $user,
+            $list_clients_url,
+            new NewFeedback(
+                \Feedback::ERROR,
+                dgettext('tuleap-oauth2_server', 'The provided app data is not valid.')
+            )
+        );
     }
 }

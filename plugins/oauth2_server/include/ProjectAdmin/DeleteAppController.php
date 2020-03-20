@@ -22,28 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\ProjectAdmin;
 
-use Tuleap\DB\DBFactory;
-use Tuleap\DB\DBTransactionExecutorWithConnection;
-use Tuleap\Layout\BaseLayout;
-use Tuleap\OAuth2Server\App\AppDao;
+use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Tuleap\Http\Response\RedirectWithFeedbackFactory;
+use Tuleap\Layout\Feedback\NewFeedback;
 use Tuleap\OAuth2Server\App\OAuth2AppRemover;
-use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeDAO;
-use Tuleap\OAuth2Server\User\AuthorizationDao;
-use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
-use Tuleap\Project\ServiceInstrumentation;
-use Tuleap\Request\DispatchableWithRequest;
-use Tuleap\Request\ProjectRetriever;
+use Tuleap\Request\DispatchablePSR15Compatible;
 
-final class DeleteAppController implements DispatchableWithRequest
+final class DeleteAppController extends DispatchablePSR15Compatible
 {
     /**
-     * @var ProjectRetriever
+     * @var RedirectWithFeedbackFactory
      */
-    private $project_retriever;
-    /**
-     * @var ProjectAdministratorChecker
-     */
-    private $administrator_checker;
+    private $redirector;
     /**
      * @var OAuth2AppRemover
      */
@@ -54,30 +47,16 @@ final class DeleteAppController implements DispatchableWithRequest
     private $csrf_token;
 
     public function __construct(
-        ProjectRetriever $project_retriever,
-        ProjectAdministratorChecker $administrator_checker,
+        RedirectWithFeedbackFactory $redirector,
         OAuth2AppRemover $app_remover,
-        \CSRFSynchronizerToken $csrf_token
+        \CSRFSynchronizerToken $csrf_token,
+        EmitterInterface $emitter,
+        MiddlewareInterface ...$middleware_stack
     ) {
-        $this->project_retriever     = $project_retriever;
-        $this->administrator_checker = $administrator_checker;
-        $this->app_remover           = $app_remover;
-        $this->csrf_token            = $csrf_token;
-    }
-
-    public static function buildSelf(): self
-    {
-        return new self(
-            ProjectRetriever::buildSelf(),
-            new ProjectAdministratorChecker(),
-            new OAuth2AppRemover(
-                new AppDao(),
-                new OAuth2AuthorizationCodeDAO(),
-                new AuthorizationDao(),
-                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
-            ),
-            new \CSRFSynchronizerToken(ListAppsController::CSRF_TOKEN)
-        );
+        parent::__construct($emitter, ...$middleware_stack);
+        $this->redirector  = $redirector;
+        $this->app_remover = $app_remover;
+        $this->csrf_token  = $csrf_token;
     }
 
     public static function getUrl(\Project $project)
@@ -85,27 +64,31 @@ final class DeleteAppController implements DispatchableWithRequest
         return sprintf('/plugins/oauth2_server/project/%d/admin/delete-app', $project->getID());
     }
 
-    public function process(\HTTPRequest $request, BaseLayout $layout, array $variables): void
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        ServiceInstrumentation::increment(\oauth2_serverPlugin::SERVICE_NAME_INSTRUMENTATION);
-        $project = $this->project_retriever->getProjectFromId($variables['project_id']);
-        $this->administrator_checker->checkUserIsProjectAdministrator($request->getCurrentUser(), $project);
+        $project = $request->getAttribute(\Project::class);
+        assert($project instanceof \Project);
+        $user = $request->getAttribute(\PFUser::class);
+        assert($user instanceof \PFUser);
 
         $list_clients_url = ListAppsController::getUrl($project);
         $this->csrf_token->check($list_clients_url);
 
-        $app_id = (int) $request->getValidated('app_id', 'uint', 0);
-        if (! $app_id) {
-            $layout->addFeedback(\Feedback::ERROR, dgettext('tuleap-oauth2_server', "The App's ID is required."));
-            $layout->redirect($list_clients_url);
-            return;
+        $parsed_body = $request->getParsedBody();
+        if (! is_array($parsed_body) || ! isset($parsed_body['app_id']) || ! is_numeric($parsed_body['app_id'])) {
+            return $this->redirector->createResponseForUser(
+                $user,
+                $list_clients_url,
+                new NewFeedback(\Feedback::ERROR, dgettext('tuleap-oauth2_server', "The App's ID is required."))
+            );
         }
-        $this->app_remover->deleteAppByID($app_id);
 
-        $layout->addFeedback(
-            \Feedback::INFO,
-            dgettext('tuleap-oauth2_server', 'The App has been successfully deleted.')
+        $this->app_remover->deleteAppByID((int) $parsed_body['app_id']);
+
+        return $this->redirector->createResponseForUser(
+            $user,
+            $list_clients_url,
+            new NewFeedback(\Feedback::INFO, dgettext('tuleap-oauth2_server', 'The App has been successfully deleted.'))
         );
-        $layout->redirect($list_clients_url);
     }
 }
