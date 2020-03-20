@@ -1002,8 +1002,9 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
      */
     private function getTrackerXmlExport(UserXMLExporter $user_xml_exporter, $can_bypass_threshold)
     {
-        $rng_validator           = new XML_RNGValidator();
-        $artifact_link_usage_dao = new ArtifactLinksUsageDao();
+        $rng_validator            = new XML_RNGValidator();
+        $artifact_link_usage_dao  = new ArtifactLinksUsageDao();
+        $external_field_extractor = new ExternalFieldsExtractor(EventManager::instance());
 
         return new TrackerXmlExport(
             $this->getTrackerFactory(),
@@ -1013,13 +1014,14 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                 $rng_validator,
                 $this->getArtifactFactory(),
                 $can_bypass_threshold,
-                $user_xml_exporter
+                $user_xml_exporter,
+                $external_field_extractor
             ),
             $user_xml_exporter,
             EventManager::instance(),
             new NaturePresenterFactory(new NatureDao(), $artifact_link_usage_dao),
             $artifact_link_usage_dao,
-            new ExternalFieldsExtractor(EventManager::instance())
+            $external_field_extractor
         );
     }
 

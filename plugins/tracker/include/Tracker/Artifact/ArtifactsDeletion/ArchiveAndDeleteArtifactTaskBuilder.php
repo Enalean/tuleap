@@ -65,6 +65,7 @@ class ArchiveAndDeleteArtifactTaskBuilder
         $formelement_factory      = Tracker_FormElementFactory::instance();
         $event_manager            = EventManager::instance();
         $rng_validator            = new XML_RNGValidator();
+        $external_field_extractor = new ExternalFieldsExtractor($event_manager);
         $user_xml_exporter        = new UserXMLExporter(
             $user_manager,
             new UserXMLExportedCollection($rng_validator, new XML_SimpleXMLCDATAFactory())
@@ -89,13 +90,14 @@ class ArchiveAndDeleteArtifactTaskBuilder
                         $rng_validator,
                         $tracker_artifact_factory,
                         false,
-                        $user_xml_exporter
+                        $user_xml_exporter,
+                        $external_field_extractor
                     ),
                     $user_xml_exporter,
                     $event_manager,
                     new NaturePresenterFactory(new NatureDao(), new ArtifactLinksUsageDao()),
                     new ArtifactLinksUsageDao(),
-                    new ExternalFieldsExtractor($event_manager)
+                    $external_field_extractor
                 ),
                 new \Tuleap\XMLConvertor()
             ),
