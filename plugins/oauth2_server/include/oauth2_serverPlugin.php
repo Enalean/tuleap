@@ -50,6 +50,7 @@ use Tuleap\OAuth2Server\Grant\AuthorizationCode\AuthorizationCodeGrantResponseBu
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeCreator;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeDAO;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeVerifier;
+use Tuleap\OAuth2Server\Grant\AuthorizationCode\PKCE\PKCECodeVerifier;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\PrefixOAuth2AuthCode;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\Scope\OAuth2AuthorizationCodeScopeDAO;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\Scope\OAuth2AuthorizationCodeScopeRetriever;
@@ -302,6 +303,7 @@ final class oauth2_serverPlugin extends Plugin
                 new OAuth2AuthorizationCodeScopeRetriever(new OAuth2AuthorizationCodeScopeDAO(), $this->buildScopeBuilder()),
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
             ),
+            new PKCECodeVerifier(),
             new SapiEmitter(),
             new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
             new RejectNonHTTPSRequestMiddleware($response_factory, $stream_factory),

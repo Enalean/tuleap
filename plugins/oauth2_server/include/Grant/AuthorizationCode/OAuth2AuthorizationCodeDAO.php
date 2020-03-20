@@ -48,12 +48,12 @@ class OAuth2AuthorizationCodeDAO extends DataAccessObject
     }
 
     /**
-     * @psalm-return null|array{verifier:string,user_id:int,expiration_date:int,has_already_been_used:0|1}
+     * @psalm-return null|array{verifier:string,user_id:int,expiration_date:int,has_already_been_used:0|1,pkce_code_challenge:?string}
      */
     public function searchAuthorizationCode(int $authorization_code_id): ?array
     {
         return $this->getDB()->row(
-            'SELECT plugin_oauth2_authorization_code.verifier, user_id, expiration_date, has_already_been_used
+            'SELECT plugin_oauth2_authorization_code.verifier, user_id, expiration_date, has_already_been_used, pkce_code_challenge
                        FROM plugin_oauth2_authorization_code
                        JOIN plugin_oauth2_server_app ON plugin_oauth2_authorization_code.app_id = plugin_oauth2_server_app.id
                        JOIN `groups` ON plugin_oauth2_server_app.project_id = `groups`.group_id

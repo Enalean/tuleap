@@ -34,6 +34,8 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\AuthorizationCodeGrantResponseBuilder;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeVerifier;
+use Tuleap\OAuth2Server\Grant\AuthorizationCode\PKCE\OAuth2PKCEVerificationException;
+use Tuleap\OAuth2Server\Grant\AuthorizationCode\PKCE\PKCECodeVerifier;
 use Tuleap\OAuth2Server\OAuth2ServerException;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
@@ -45,6 +47,7 @@ final class AccessTokenGrantController extends DispatchablePSR15Compatible imple
     private const GRANT_TYPE_PARAMETER    = 'grant_type';
     private const AUTH_CODE_PARAMETER     = 'code';
     private const REDIRECT_URI_PARAMETER  = 'redirect_uri';
+    private const CODE_VERIFIER_PARAMETER = 'code_verifier';
     private const ALLOWED_GRANT_TYPES     = ['authorization_code'];
 
     private const ERROR_CODE_INVALID_REQUEST = 'invalid_request';
@@ -71,6 +74,10 @@ final class AccessTokenGrantController extends DispatchablePSR15Compatible imple
      * @var OAuth2AuthorizationCodeVerifier
      */
     private $authorization_code_verifier;
+    /**
+     * @var PKCECodeVerifier
+     */
+    private $pkce_code_verifier;
 
     public function __construct(
         ResponseFactoryInterface $response_factory,
@@ -78,6 +85,7 @@ final class AccessTokenGrantController extends DispatchablePSR15Compatible imple
         AuthorizationCodeGrantResponseBuilder $response_builder,
         SplitTokenIdentifierTranslator $access_token_identifier_unserializer,
         OAuth2AuthorizationCodeVerifier $authorization_code_verifier,
+        PKCECodeVerifier $pkce_code_verifier,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack
     ) {
@@ -87,6 +95,7 @@ final class AccessTokenGrantController extends DispatchablePSR15Compatible imple
         $this->response_builder                     = $response_builder;
         $this->access_token_identifier_unserializer = $access_token_identifier_unserializer;
         $this->authorization_code_verifier          = $authorization_code_verifier;
+        $this->pkce_code_verifier                   = $pkce_code_verifier;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -118,6 +127,12 @@ final class AccessTokenGrantController extends DispatchablePSR15Compatible imple
             return $this->buildErrorResponse(self::ERROR_CODE_INVALID_GRANT);
         } finally {
             \sodium_memzero($body_params[self::AUTH_CODE_PARAMETER]);
+        }
+
+        try {
+            $this->pkce_code_verifier->verifyCode($authorization_code, $body_params[self::CODE_VERIFIER_PARAMETER] ?? null);
+        } catch (OAuth2PKCEVerificationException $exception) {
+            return $this->buildErrorResponse(self::ERROR_CODE_INVALID_GRANT);
         }
 
         if (! isset($body_params[self::REDIRECT_URI_PARAMETER])) {
