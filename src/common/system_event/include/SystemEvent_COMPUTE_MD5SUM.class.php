@@ -70,16 +70,23 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent
         if ($fileId > 0) {
             $fileFactory = $this->getFileFactory();
             $file        = $fileFactory->getFRSFileFromDb($fileId);
-            $user = $this->getUser($file->getUserID());
+            $user        = $this->getUser($file->getUserID());
+
+            $language = $this->getBaseLanguageFactory()->getBaseLanguage($user->getLocale());
 
             //Compute Md5sum for files
             $md5Computed = $this->computeFRSMd5Sum($file->getFileLocation());
             if (!$md5Computed) {
-                if (!$this->sendNotificationMail($user, $file, 'md5_compute_error', array($file->getFileLocation()))) {
+                $body = $language->getText(
+                    'mail_system_event',
+                    'md5_compute_error',
+                    [$file->getFileLocation()]
+                );
+                if (! $this->sendNotificationMail($user, $file, $body)) {
                     $this->error('Could not send mail to inform user that computing md5sum failed');
                     return false;
                 }
-                $this->error('Computing md5sum failed ');
+                $this->error('Computing md5sum failed');
                 return false;
             }
             // Update DB
@@ -91,7 +98,12 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent
             //Compare file checksum
             $file = $fileFactory->getFRSFileFromDb($fileId);
             if (!$this->compareMd5Checksums($file)) {
-                if (!$this->sendNotificationMail($user, $file, 'md5_compare_error', array($file->getFileLocation(), $md5Computed))) {
+                $body = $language->getText(
+                    'mail_system_event',
+                    'md5_compare_error',
+                    [$file->getFileLocation(), $md5Computed]
+                );
+                if (! $this->sendNotificationMail($user, $file, $body)) {
                     $this->error('Could not send mail to inform user that comparing md5sum failed');
                     return false;
                 }
@@ -134,28 +146,30 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent
     {
         return new FRSFileFactory();
     }
+
+    protected function getBaseLanguageFactory(): BaseLanguageFactory
+    {
+        return new BaseLanguageFactory();
+    }
+
     /**
      * Manage the mail content and send it
      *
      * @param PFUser    $user
      * @param FRSFile $file
-     * @param String  $bodyContent
-     * @param Array   $option
+     * @param String  $body
      *
      * @return bool
      */
-    public function sendNotificationMail($user, $file, $bodyContent, $option)
+    protected function sendNotificationMail($user, $file, $body)
     {
         $mail =  new Codendi_Mail();
-
-        $factory  = new BaseLanguageFactory();
-        $language = $factory->getBaseLanguage($user->getLocale());
 
         $subject = $GLOBALS['sys_name'] . ' Error in ' . $file->getFileLocation();
         $mail->setFrom($GLOBALS['sys_noreply']);
         $mail->setBcc($user->getEmail());
         $mail->setSubject($subject);
-        $mail->setBodyText($language->getText('mail_system_event', $bodyContent, $option));
+        $mail->setBodyText($body);
         return $mail->send();
     }
 

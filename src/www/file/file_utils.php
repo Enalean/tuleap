@@ -96,11 +96,11 @@ function frs_show_status_popup($name = 'status_id', $checked_val = "xzxz")
 
     $package_factory = new FRSPackageFactory();
     $arr_id = array($package_factory->STATUS_ACTIVE,$package_factory->STATUS_HIDDEN);
-    $arr_status = array("STATUS_ACTIVE","STATUS_HIDDEN");
+    $arr_status = [
+        $Language->getText('file_admin_editpackages', 'status_active'),
+        $Language->getText('file_admin_editpackages', 'status_hidden')
+    ];
 
-    for ($i = 0; $i < count($arr_status); $i++) {
-        $arr_status[$i] = $Language->getText('file_admin_editpackages', strtolower($arr_status[$i]));
-    }
     return html_build_select_box_from_arrays($arr_id, $arr_status, $name, $checked_val, false);
 }
 
@@ -1158,7 +1158,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
             if ($request->get('ugroups')) {
                 $ugroups = $request->get('ugroups');
             }
-            list ($return_code, $feedbacks) = permission_process_selection_form($group_id, 'RELEASE_READ', $release_id, $ugroups);
+            [$return_code, $feedbacks] = permission_process_selection_form($group_id, 'RELEASE_READ', $release_id, $ugroups);
             if (!$return_code) {
                 $error[] = $GLOBALS['Language']->getText('file_admin_editpackages', 'perm_update_err');
                 $error[] = $feedbacks;

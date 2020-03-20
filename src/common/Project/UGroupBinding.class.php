@@ -164,11 +164,12 @@ class UGroupBinding //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespac
     {
         $ugroup = new ProjectUGroup(array('ugroup_id' => $ugroupId));
         if ($ugroup->isBound()) {
-            $action = 'update_binding';
+            $text = $GLOBALS['Language']->getText('project_ugroup_binding', 'update_binding');
         } else {
-            $action = 'add_binding';
+            $text = $GLOBALS['Language']->getText('project_ugroup_binding', 'add_binding');
         }
-        return '- ' . $GLOBALS['Language']->getText('project_ugroup_binding', $action);
+
+        return '- ' . $text;
     }
 
     /**

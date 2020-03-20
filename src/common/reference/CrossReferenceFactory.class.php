@@ -203,11 +203,6 @@ class CrossReferenceFactory
             'source' => 'referenced_by',
             'target' => 'reference_to',
         );
-        $img = array(
-            'both'   => array('both_arrows', 'cross_referenced'),
-            'source' => array('left_arrow', 'referenced_in'),
-            'target' => array('right_arrow', 'reference_to'),
-        );
         $message = addslashes($GLOBALS['Language']->getText('cross_ref_fact_include', 'confirm_delete'));
 
          // HTML part (stored in $display)
@@ -234,15 +229,41 @@ class CrossReferenceFactory
                 if (array_key_exists($key, $refArraySourceTarget)) {
                     // one li for one type of ref (both, target, source)
                     $display .= '<li class="' . $classes[$key] . '">';
-                    $display .= $GLOBALS['HTML']->getImage(
-                        'ic/' . $img[$key][0] . '.png',
-                        array(
-                            'alt'    => $Language->getText('cross_ref_fact_include', $img[$key][1]),
-                            'align'  => 'top-left',
-                            'hspace' => '5',
-                            'title'  => $Language->getText('cross_ref_fact_include', $img[$key][1])
-                        )
-                    );
+                    switch ($key) {
+                        case 'both':
+                            $display .= $GLOBALS['HTML']->getImage(
+                                'ic/both_arrows.png',
+                                array(
+                                    'alt'    => $Language->getText('cross_ref_fact_include', 'cross_referenced'),
+                                    'align'  => 'top-left',
+                                    'hspace' => '5',
+                                    'title'  => $Language->getText('cross_ref_fact_include', 'cross_referenced')
+                                )
+                            );
+                            break;
+                        case 'target':
+                            $display .= $GLOBALS['HTML']->getImage(
+                                'ic/right_arrow.png',
+                                array(
+                                    'alt'    => $Language->getText('cross_ref_fact_include', 'reference_to'),
+                                    'align'  => 'top-left',
+                                    'hspace' => '5',
+                                    'title'  => $Language->getText('cross_ref_fact_include', 'reference_to')
+                                )
+                            );
+                            break;
+                        default:
+                            $display .= $GLOBALS['HTML']->getImage(
+                                'ic/left_arrow.png',
+                                array(
+                                    'alt'    => $Language->getText('cross_ref_fact_include', 'referenced_in'),
+                                    'align'  => 'top-left',
+                                    'hspace' => '5',
+                                    'title'  => $Language->getText('cross_ref_fact_include', 'referenced_in')
+                                )
+                            );
+                            break;
+                    }
 
                     // the refs
                     $spans = array();

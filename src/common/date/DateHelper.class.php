@@ -21,32 +21,24 @@
 
 class DateHelper
 {
-
-    public const INCLUDE_SECONDS = 1;
-    public const WITH_TITLE      = 1;
-
     public const SECONDS_IN_A_DAY = 86400;
 
-    /**
-     * Give the apporximate distance between a time and now
-     *
-     * inspired from ActionView::Helpers::DateHelper in RubyOnRails
-     *
-     * @return string
-     */
-    public static function timeAgoInWords($time, $include_seconds = false, $with_title = false)
+    public static function timeAgoInWords($time, $include_seconds = false, $with_title = false): string
     {
-        $str = '-';
-        if ($time) {
-            $string_key = 'time_ago';
-            if ($time > $_SERVER['REQUEST_TIME']) {
-                $string_key = 'time_in_future';
-            }
-            $str = $GLOBALS['Language']->getText('include_utils', $string_key, self::distanceOfTimeInWords($time, $_SERVER['REQUEST_TIME'], $include_seconds));
-            if ($with_title) {
-                $str = '<span title="' . date($GLOBALS['Language']->getText('system', 'datefmt'), $time) . '">' . $str . '</span>';
-            }
+        if (! $time) {
+            return '-';
         }
+
+        $distance_of_time_in_words = self::distanceOfTimeInWords($time, $_SERVER['REQUEST_TIME'], $include_seconds);
+        $str = sprintf(_('%s ago'), $distance_of_time_in_words);
+        if ($time > $_SERVER['REQUEST_TIME']) {
+            $str = sprintf(_('in %s'), $distance_of_time_in_words);
+        }
+
+        if ($with_title) {
+            return '<span title="' . date($GLOBALS['Language']->getText('system', 'datefmt'), $time) . '">' . $str . '</span>';
+        }
+
         return $str;
     }
 
@@ -67,7 +59,11 @@ class DateHelper
     {
         if ($distance_in_minutes <= 1) {
             if (!$include_seconds) {
-                return $GLOBALS['Language']->getText('include_utils', ($distance_in_minutes == 0) ? 'less_1_minute' : '1_minute');
+                if ($distance_in_minutes) {
+                    return $GLOBALS['Language']->getText('include_utils', 'less_1_minute');
+                }
+
+                return $GLOBALS['Language']->getText('include_utils', '1_minute');
             } else {
                 if ($distance_in_seconds < 1) {
                     return $GLOBALS['Language']->getText('include_utils', 'less_than_one_second', 1);

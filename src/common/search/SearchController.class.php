@@ -183,11 +183,11 @@ class Search_SearchController
         $search_types = array(
             new Search_SearchTypePresenter(
                 Search_SearchProject::NAME,
-                $GLOBALS['Language']->getText('search_index', Search_SearchProject::NAME)
+                $GLOBALS['Language']->getText('search_index', 'soft')
             ),
             new Search_SearchTypePresenter(
                 Search_SearchPeople::NAME,
-                $GLOBALS['Language']->getText('search_index', Search_SearchPeople::NAME)
+                $GLOBALS['Language']->getText('search_index', 'people')
             ),
         );
 
