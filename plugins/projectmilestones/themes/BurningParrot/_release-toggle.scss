@@ -65,7 +65,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 }
 
 .release-planning-link {
-    margin: 0 0 0 $tlp-spacing;
+    margin: 0 0 0 $tlp-half-spacing;
 }
 
 .release-planning-link-item:hover {
@@ -79,7 +79,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 .release-description-row {
     flex: 1 0 0;
     min-width: 200px;
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0;
 }
 
 .release-description-row .tlp-tooltip.tlp-tooltip-top::before {

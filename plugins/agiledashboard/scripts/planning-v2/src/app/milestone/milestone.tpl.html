@@ -100,7 +100,7 @@
            class="milestone-info-link"
         ><i class="fa fa-table"></i><span translate>Cardwall</span></a>
 
-        <a ng-repeat="pane in milestoneController.milestone.resources.additional_panes"
+        <a ng-repeat="pane in milestoneController.additionalPanesToDisplay()"
            href="{{ pane.uri }}"
            title="{{ pane.title }}"
            class="milestone-info-link"
