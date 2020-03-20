@@ -29,12 +29,14 @@ use Tuleap\Mediawiki\ForgeUserGroupPermission\MediawikiAdminAllProjects;
 use Tuleap\Mediawiki\Maintenance\CleanUnused;
 use Tuleap\Mediawiki\Maintenance\CleanUnusedDao;
 use Tuleap\Mediawiki\MediawikiDataDir;
+use Tuleap\MediaWiki\MediawikiMaintenanceWrapper;
 use Tuleap\Mediawiki\Migration\MoveToCentralDbDao;
 use Tuleap\Mediawiki\PermissionsPerGroup\PermissionPerGroupPaneBuilder;
+use Tuleap\MediaWiki\XMLMediaWikiExporter;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
-use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\ProjectUGroup\UserAndProjectUGroupRelationshipEvent;
 use Tuleap\Project\Admin\ProjectUGroup\UserBecomesForumAdmin;
 use Tuleap\Project\Admin\ProjectUGroup\UserBecomesNewsAdministrator;
@@ -46,8 +48,6 @@ use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerNewsAdministrator;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerNewsWriter;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerProjectAdmin;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerWikiAdmin;
-use Tuleap\MediaWiki\MediawikiMaintenanceWrapper;
-use Tuleap\MediaWiki\XMLMediaWikiExporter;
 use Tuleap\Project\DelegatedUserAccessForProject;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
@@ -278,18 +278,24 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
         return null;
     }
 
-    public function cssFile($params)
+    public function cssFile($params): void
     {
         // Only show the stylesheet if we're actually in the Mediawiki pages.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0) {
-            $asset = new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/mediawiki/themes',
-                '/assets/mediawiki/themes'
-            );
-
-            echo '<link rel="stylesheet" type="text/css" href="' . $asset->getFileURL('style.css') . '" />';
+            echo '<link rel="stylesheet" type="text/css" href="' . $this->getAssets()->getFileURL('style.css') . '" />';
         }
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    private function getAssets(): IncludeAssets
+    {
+        return new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/mediawiki',
+            '/assets/mediawiki'
+        );
     }
 
     public function showImage(Codendi_Request $request)

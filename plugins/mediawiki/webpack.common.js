@@ -18,17 +18,21 @@
  */
 
 const path = require("path");
-const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
+const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 
 module.exports = [
     {
         entry: {
-            style: "./default/style.scss"
+            style: "./themes/default/style.scss",
+            admin: "./scripts/admin.js"
         },
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../../src/www/assets/mediawiki/themes/")
+            path.resolve(__dirname, "../../src/www/assets/mediawiki/")
         ),
+        externals: {
+            jquery: "jQuery"
+        },
         module: {
             rules: [webpack_configurator.rule_scss_loader]
         },
