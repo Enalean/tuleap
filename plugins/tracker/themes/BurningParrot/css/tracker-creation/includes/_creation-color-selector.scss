@@ -18,35 +18,103 @@
  */
 
 
-%color-area {
+.tracker-color-selector {
+    width: 75px;
+}
+
+.select2-container--open.select2-container--tlp-select2 > .select2-dropdown.tracker-color-results {
+    height: 250px;
+    border: 0;
+    border-radius: 0 3px 3px;
+
+    /* stylelint-disable selector-class-pattern,selector-no-qualifying-type*/
+    .select2-results__option[aria-selected=true]::before,
+    span.select2-container--tlp-select2-large .select2-dropdown .select2-results__option[aria-selected=true]::before,
+    span.select2-container--tlp-select2-small .select2-dropdown .select2-results__option[aria-selected=true]::before {
+        top: 15px;
+    }
+    /* stylelint-enable selector-class-pattern,selector-no-qualifying-type*/
+
+    &.select2-dropdown--above #select2-tracker-creation-field-color-results {
+        margin-top: 1px;
+        border-radius: 3px 3px 3px 0;
+    }
+}
+
+#select2-tracker-creation-field-color-results {
+    min-width: 110px;
+    margin-top: -1px;
+    border: 1px solid $tlp-theme-color;
+    border-radius: 0 3px 3px;
+}
+
+#select2-tracker-creation-field-color-container {
+    width: 32px;
+    height: 32px;
+    overflow: auto;
+}
+
+#select2-tracker-creation-field-color-container > span,
+#select2-tracker-creation-field-color-results > li > span {
     display: block;
-    height: 25px;
-    border-radius: 3px;
+    position: relative;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+
+    &::before {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 1px;
+        left: 1px;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+    }
+
+    &::after {
+        content: '';
+        display: block;
+        position: absolute;
+        width: 26px;
+        height: 26px;
+        border: 3px solid transparent;
+        border-radius: 50%;
+    }
 
     @each $color-name, $colors in $tlp-swatch-color-map {
         &.#{$color-name} {
-            border-color: map-get($colors, 'primary');
-            background: map-get($colors, 'primary');
+            background: map-get($colors, 'secondary');
 
-            &:hover:not(:disabled):not(.disabled):not(:active) {
-                border-color: darken(map-get($colors, 'primary'), 5%);
-                background: darken(map-get($colors, 'primary'), 5%);
+            &::after {
+                border-color: map-get($colors, 'primary');
             }
         }
     }
 }
 
-.tracker-color-results,
-.tracker-color-container {
-    span {
-        @extend %color-area;
+
+body[data-user-has-accessibility-mode='1'] {
+    #select2-tracker-creation-field-color-container > span,
+    #select2-tracker-creation-field-color-results > li > span {
+        @each $color-name, $colors in $tlp-swatch-color-map {
+            &.#{$color-name} {
+                &::before {
+                    background: map-get($colors, 'primary');
+                    /* stylelint-disable function-url-quotes */
+                    /* stylelint-disable-next-line property-no-vendor-prefix */
+                    -webkit-mask-image: url(map-get($colors, 'pattern'));
+                    mask-image: url(map-get($colors, 'pattern'));
+                    /* stylelint-enable function-url-quotes */
+                }
+            }
+        }
     }
 }
 
-.tracker-color-results {
-    height: 250px;
-}
-
-.tracker-color-selector {
-    width: 80px;
+/* stylelint-disable-next-line selector-no-qualifying-type */
+span.select2-container--tlp-select2 .select2-selection--single.tracker-color-container {
+    height: 46px;
+    padding: 7px 32px 7px 9px;
 }
