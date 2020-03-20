@@ -31,7 +31,7 @@ class PluginPropertiesPresenter
     public $description;
     public $scope;
     public $is_there_enable_switch;
-    public $enable_switch;
+    public $enable_url;
     public $are_there_dependencies;
     public $dependencies;
     public $is_there_readme;
@@ -45,6 +45,10 @@ class PluginPropertiesPresenter
      * @var \CSRFSynchronizerToken
      */
     public $csrf_token;
+    /**
+     * @var bool
+     */
+    public $is_enabled;
 
     public function __construct(
         $id,
@@ -53,7 +57,7 @@ class PluginPropertiesPresenter
         $description,
         $scope,
         $is_there_enable_switch,
-        $enable_switch,
+        $enable_url,
         $are_there_dependencies,
         $dependencies,
         $is_there_readme,
@@ -62,7 +66,8 @@ class PluginPropertiesPresenter
         $properties,
         $are_there_additional_options,
         $additional_options,
-        \CSRFSynchronizerToken $csrf_token
+        \CSRFSynchronizerToken $csrf_token,
+        bool $is_enabled
     ) {
         $this->id                           = $id;
         $this->name                         = $name;
@@ -70,7 +75,7 @@ class PluginPropertiesPresenter
         $this->description                  = $description;
         $this->scope                        = $this->getScopeLabel((int) $scope);
         $this->is_there_enable_switch       = $is_there_enable_switch;
-        $this->enable_switch                = $enable_switch;
+        $this->enable_url                   = $enable_url;
         $this->are_there_dependencies       = $are_there_dependencies;
         $this->dependencies                 = $dependencies;
         $this->is_there_readme              = $is_there_readme;
@@ -80,6 +85,7 @@ class PluginPropertiesPresenter
         $this->are_there_additional_options = $are_there_additional_options;
         $this->additional_options           = $additional_options;
         $this->csrf_token                   = $csrf_token;
+        $this->is_enabled                   = $is_enabled;
 
         $this->properties_pane_title              = dgettext('tuleap-pluginsadministration', 'Properties');
         $this->properties_pane_name               = dgettext('tuleap-pluginsadministration', 'Name');

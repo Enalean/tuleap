@@ -22,8 +22,8 @@
             </div>
             {{# is_there_enable_switch }}
             <div class="tlp-property">
-                <label class="tlp-label">{{ properties_pane_enabled }}</label>
-                {{{ enable_switch }}}
+                <label class="tlp-label" for="plugin-switch-toggler-{{ id }}">{{ properties_pane_enabled }}</label>
+                {{> enable-disable-plugin-switch }}
             </div>
             {{/ is_there_enable_switch }}
         </section>

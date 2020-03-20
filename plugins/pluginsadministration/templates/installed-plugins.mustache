@@ -56,10 +56,10 @@
                                         <i class="fa fa-ellipsis-h"></i>
                                     </span>
                                 </td>
-                                <td>{{{ flags }}}</td>
+                                <td>{{> enable-disable-plugin-switch }}</td>
                                 <td>{{ scope }}</td>
                                 <td class="tlp-table-cell-actions pluginsadministration-list-actions-cell">
-                                    <a href="?view=properties&plugin_id={{ plugin_id }}"
+                                    <a href="?view=properties&plugin_id={{ id }}"
                                         class="tlp-table-cell-actions-button tlp-button-primary tlp-button-outline tlp-button-small"
                                     >
                                         <i class="fa fa-list tlp-button-icon"></i> {{ icon_label }}
@@ -74,7 +74,7 @@
                                         </a>
                                     {{/ dont_restrict }}
                                     {{^ dont_restrict }}
-                                        <a href="?view=restrict&plugin_id={{ plugin_id }}"
+                                        <a href="?view=restrict&plugin_id={{ id }}"
                                             class="tlp-table-cell-actions-button tlp-button-primary tlp-button-outline tlp-button-small">
                                             <i class="fa fa-lock tlp-button-icon"></i> {{ restrict_icon_label }}
                                         </a>
@@ -82,7 +82,7 @@
 
                                     {{^ dont_touch }}
                                         <button class="tlp-table-cell-actions-button tlp-button-danger tlp-button-outline tlp-button-small uninstall-plugin-button"
-                                            data-modal-id="uninstall-plugin-{{ plugin_id }}"
+                                            data-modal-id="uninstall-plugin-{{ id }}"
                                         >
                                             <i class="fa fa-trash-o tlp-button-icon"></i> {{ uninstall_icon_label }}
                                         </button>
