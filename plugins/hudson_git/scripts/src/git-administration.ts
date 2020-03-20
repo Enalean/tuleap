@@ -58,14 +58,24 @@ import { initGettext } from "../../../../src/www/scripts/tuleap/gettext/gettext-
     }
 
     function testJenkinsServer(url: string): void {
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+        const button = document.querySelector("#jenkins-server-test > .fa") as HTMLButtonElement;
+
         $.ajax({
             url: "/plugins/hudson_git/test_jenkins_server?jenkins_url_to_test=" + encodeURI(url),
             type: "POST",
-            dataType: "json"
+            dataType: "json",
+            beforeSend: () => {
+                button.classList.remove("fa-play");
+                button.classList.add("fa-circle-o-notch", "fa-spin");
+            }
         }).done(function(data) {
+            button.classList.add("fa-play");
+            button.classList.remove("fa-circle-o-notch", "fa-spin");
+
             const test_feedback_element = $("#jenkins-server-test-feedback");
 
-            test_feedback_element.children("span").remove();
+            removeJenkinsFeedback();
 
             let css_class = "";
             if (data.type === "success") {
@@ -77,6 +87,14 @@ import { initGettext } from "../../../../src/www/scripts/tuleap/gettext/gettext-
                 "<span class='" + css_class + "'>" + data.message + "</span>"
             );
         });
+    }
+
+    function removeJenkinsFeedback(): void {
+        const feedback = document.querySelector("#jenkins-server-test-feedback > span");
+
+        if (feedback) {
+            feedback.remove();
+        }
     }
 
     $(function(): void {
@@ -98,10 +116,29 @@ import { initGettext } from "../../../../src/www/scripts/tuleap/gettext/gettext-
             }
         });
 
-        $("#jenkins-server-test").on("click", function() {
-            const url_val = $("#jenkins-server-url").val();
-            if (url_val) {
-                testJenkinsServer(url_val.toString());
+        const jenkins_url = document.getElementById("jenkins-server-url");
+        if (!(jenkins_url instanceof HTMLInputElement)) {
+            throw new Error("#jenkins-server-url not found or is not an input");
+        }
+
+        const test_button = document.getElementById("jenkins-server-test");
+        if (!(test_button instanceof HTMLButtonElement)) {
+            throw new Error("#jenkins-server-test not found or is not a button");
+        }
+
+        jenkins_url.addEventListener("keyup", () => {
+            removeJenkinsFeedback();
+
+            if (jenkins_url.checkValidity()) {
+                test_button.disabled = false;
+            } else {
+                test_button.disabled = true;
+            }
+        });
+
+        test_button.addEventListener("click", () => {
+            if (jenkins_url.checkValidity()) {
+                testJenkinsServer(jenkins_url.value);
             }
         });
     });
