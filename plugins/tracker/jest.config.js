@@ -24,6 +24,7 @@ module.exports = {
     displayName: "tracker",
     moduleNameMapper: {
         ...base_config.moduleNameMapper,
-        "^.+\\.html$": "identity-obj-proxy"
+        "^.+\\.html$": "identity-obj-proxy",
+        "^jquery$": "<rootDir>/node_modules/jquery/dist/jquery.js"
     }
 };
