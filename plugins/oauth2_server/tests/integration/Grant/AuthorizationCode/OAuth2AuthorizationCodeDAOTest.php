@@ -127,7 +127,13 @@ final class OAuth2AuthorizationCodeDAOTest extends TestCase
 
         $authorization_code_row = $this->dao->searchAuthorizationCode($auth_code_id);
         $this->assertEquals(
-            ['user_id' => $user_id, 'verifier' => $verification_string, 'expiration_date' => $expiration_timestamp, 'has_already_been_used' => 0],
+            [
+                'user_id'               => $user_id,
+                'verifier'              => $verification_string,
+                'expiration_date'       => $expiration_timestamp,
+                'has_already_been_used' => 0,
+                'pkce_code_challenge'   => null
+            ],
             $authorization_code_row
         );
 

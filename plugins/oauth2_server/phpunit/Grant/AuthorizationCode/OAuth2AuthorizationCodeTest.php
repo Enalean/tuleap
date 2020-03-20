@@ -31,16 +31,19 @@ final class OAuth2AuthorizationCodeTest extends TestCase
 {
     public function testBuildValidAuthorizationCode(): void
     {
-        $user      = new \PFUser(['language_id' => 'en']);
-        $scope     = DemoOAuth2Scope::fromItself();
+        $user                = new \PFUser(['language_id' => 'en']);
+        $scope               = DemoOAuth2Scope::fromItself();
+        $pkce_code_challenge = 'code_chall';
         $auth_code = OAuth2AuthorizationCode::approveForSetOfScopes(
             new SplitToken(12, SplitTokenVerificationString::generateNewSplitTokenVerificationString()),
             $user,
+            $pkce_code_challenge,
             [$scope]
         );
 
         $this->assertSame(12, $auth_code->getID());
         $this->assertSame($user, $auth_code->getUser());
+        $this->assertSame($pkce_code_challenge, $auth_code->getPKCECodeChallenge());
         $scopes = $auth_code->getScopes();
         $this->assertCount(1, $scopes);
         $this->assertEquals($scope, $scopes[0]);

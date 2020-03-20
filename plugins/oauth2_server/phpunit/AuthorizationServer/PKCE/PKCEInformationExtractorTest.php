@@ -42,7 +42,10 @@ final class PKCEInformationExtractorTest extends TestCase
         $expected_code_challenge = hash('sha256', 'random_data', true);
         $code_challenge          = $this->pkce_information_extractor->extractCodeChallenge(
             $this->buildApp(true),
-            ['code_challenge' => base64_encode($expected_code_challenge), 'code_challenge_method' => 'S256']
+            [
+                'code_challenge' => sodium_bin2base64($expected_code_challenge, SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING),
+                'code_challenge_method' => 'S256'
+            ]
         );
 
         $this->assertEquals($expected_code_challenge, $code_challenge);
@@ -73,7 +76,10 @@ final class PKCEInformationExtractorTest extends TestCase
         $this->expectException(NotSupportedChallengeMethodException::class);
         $this->pkce_information_extractor->extractCodeChallenge(
             $this->buildApp(true),
-            ['code_challenge' => base64_encode(hash('sha256', 'random_data', true)), 'code_challenge_method' => 'plain']
+            [
+                'code_challenge'        => sodium_bin2base64(hash('sha256', 'random_data', true), SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING),
+                'code_challenge_method' => 'plain'
+            ]
         );
     }
 
@@ -91,7 +97,10 @@ final class PKCEInformationExtractorTest extends TestCase
         $this->expectException(IncorrectSizeCodeChallengeException::class);
         $this->pkce_information_extractor->extractCodeChallenge(
             $this->buildApp(true),
-            ['code_challenge' => base64_encode('not_sha256_length'), 'code_challenge_method' => 'S256']
+            [
+                'code_challenge'        => sodium_bin2base64('not_sha256_length', SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING),
+                'code_challenge_method' => 'S256'
+            ]
         );
     }
 

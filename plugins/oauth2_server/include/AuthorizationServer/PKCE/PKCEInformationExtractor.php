@@ -54,23 +54,16 @@ class PKCEInformationExtractor
             throw new NotSupportedChallengeMethodException($challenge_method);
         }
 
-        $decoded_challenge = $this->base64URLDecode($query_params[self::CODE_CHALLENGE_PARAMETER]);
+        try {
+            /** @psalm-suppress TooFewArguments https://github.com/vimeo/psalm/pull/2997 */
+            $decoded_challenge = sodium_base642bin($query_params[self::CODE_CHALLENGE_PARAMETER], SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING);
+        } catch (\SodiumException $exception) {
+            throw new CodeChallengeNotBase64URLEncodedException();
+        }
         if (mb_strlen($decoded_challenge, '8bit') !== self::SIZE_SHA256_CODE_CHALLENGE) {
             throw new IncorrectSizeCodeChallengeException();
         }
 
         return $decoded_challenge;
-    }
-
-    /**
-     * @throws CodeChallengeNotBase64URLEncodedException
-     */
-    private function base64URLDecode(string $base64_encoded_challenge): string
-    {
-        $decoded = base64_decode(strtr($base64_encoded_challenge, '-_', '+/'), true);
-        if ($decoded === false) {
-            throw new CodeChallengeNotBase64URLEncodedException();
-        }
-        return $decoded;
     }
 }

@@ -49,6 +49,7 @@ final class AuthorizationCodeGrantResponseBuilderTest extends TestCase
             OAuth2AuthorizationCode::approveForSetOfScopes(
                 new SplitToken(1, SplitTokenVerificationString::generateNewSplitTokenVerificationString()),
                 new \PFUser(['language_id' => 'en']),
+                'pkce_code_challenge',
                 [DemoOAuth2Scope::fromItself()]
             )
         );
