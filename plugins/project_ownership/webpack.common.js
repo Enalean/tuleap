@@ -18,7 +18,7 @@
  */
 
 const path = require("path");
-const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
+const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 
 const entry_points = {};
 
@@ -26,10 +26,10 @@ const colors = ["blue", "green", "grey", "orange", "purple", "red"];
 for (const color of colors) {
     entry_points[
         `project-ownership-project-admin-${color}`
-    ] = `./BurningParrot/project-ownership-project-admin-${color}.scss`;
+    ] = `./themes/BurningParrot/project-ownership-project-admin-${color}.scss`;
     entry_points[
         `project-ownership-project-admin-${color}-condensed`
-    ] = `./BurningParrot/project-ownership-project-admin-${color}-condensed.scss`;
+    ] = `./themes/BurningParrot/project-ownership-project-admin-${color}-condensed.scss`;
 }
 
 module.exports = [
@@ -37,7 +37,7 @@ module.exports = [
         entry: entry_points,
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../../src/www/assets/project_ownership/themes/")
+            path.resolve(__dirname, "../../src/www/assets/project_ownership/")
         ),
         module: {
             rules: [webpack_configurator.rule_scss_loader]
