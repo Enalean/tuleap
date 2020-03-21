@@ -18,28 +18,40 @@
  */
 
 const path = require("path");
-const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
+const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
+
+const entry_points = {
+    pluginsadministration: "./scripts/pluginsadministration.js"
+};
+
+const colors = ["blue", "green", "grey", "orange", "purple", "red"];
+for (const color of colors) {
+    entry_points[`style-${color}`] = `./themes/BurningParrot/css/style-${color}.scss`;
+    entry_points[
+        `style-${color}-condensed`
+    ] = `./themes/BurningParrot/css/style-${color}-condensed.scss`;
+}
 
 module.exports = [
     {
-        entry: {
-            pluginsadministration: "./pluginsadministration.js"
-        },
+        entry: entry_points,
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../../src/www/assets/pluginsadministration/scripts/")
+            path.resolve(__dirname, "../../src/www/assets/pluginsadministration/")
         ),
         externals: {
             tlp: "tlp"
         },
         module: {
             rules: [
-                webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11)
+                webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+                webpack_configurator.rule_scss_loader
             ]
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
-            webpack_configurator.getManifestPlugin()
+            webpack_configurator.getManifestPlugin(),
+            ...webpack_configurator.getCSSExtractionPlugins()
         ]
     }
 ];
