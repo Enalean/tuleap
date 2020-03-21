@@ -2,8 +2,8 @@
     "name": "velocity",
     "gettext-js": {
         "velocity-chart": {
-            "src": "www/scripts/velocity-chart/src",
-            "po": "www/scripts/velocity-chart/po"
+            "src": "scripts/velocity-chart/src",
+            "po": "scripts/velocity-chart/po"
         }
     }
 }
