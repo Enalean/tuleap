@@ -2,14 +2,14 @@
     "name": "pullrequest",
     "gettext-vue": {
         "create-pullrequest-button": {
-            "src": "www/scripts/create-pullrequest-button",
-            "po": "www/scripts/create-pullrequest-button/po"
+            "src": "scripts/create-pullrequest-button",
+            "po": "scripts/create-pullrequest-button/po"
         }
     },
     "gettext-angularjs": {
         "pullrequest": {
-            "src": "www/scripts/src/app",
-            "po": "www/scripts/po"
+            "src": "scripts/src/app",
+            "po": "scripts/po"
         }
     }
 }
