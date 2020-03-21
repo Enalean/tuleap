@@ -18,16 +18,16 @@
  */
 
 const path = require("path");
-const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
+const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 
 module.exports = [
     {
         entry: {
-            projectlinks: "./projectlinks.scss"
+            projectlinks: "./themes/projectlinks.scss"
         },
         context: __dirname,
         output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../../src/www/assets/projectlinks/themes")
+            path.resolve(__dirname, "../../src/www/assets/projectlinks")
         ),
         module: {
             rules: [webpack_configurator.rule_scss_loader]

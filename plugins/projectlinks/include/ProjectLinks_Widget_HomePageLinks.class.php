@@ -226,8 +226,8 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
     public function getStylesheetDependencies()
     {
         $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/projectlinks/themes',
-            '/assets/projectlinks/themes'
+            __DIR__ . '/../../../src/www/assets/projectlinks',
+            '/assets/projectlinks'
         );
         return new CssAssetCollection([new CssAssetWithoutVariantDeclinaisons($include_assets, 'projectlinks')]);
     }
