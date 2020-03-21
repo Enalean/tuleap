@@ -18,12 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap;
+namespace Tuleap\Backend;
 
 use BackendLogger;
 use ForgeConfig;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LogLevel;
+use Tuleap\ForgeConfigSandbox;
+use Tuleap\TemporaryTestDirectory;
 
 class BackendLoggerTest extends TestCase
 {
