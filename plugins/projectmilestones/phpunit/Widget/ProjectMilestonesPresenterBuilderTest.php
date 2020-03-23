@@ -685,7 +685,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
         $this->http_request->shouldReceive("getBrowser")->andReturn(Mockery::mock(\Browser::class, ["isIE11" => false]));
         $this->expectException(ProjectMilestonesException::class);
         $this->expectExceptionMessage(ProjectMilestonesException::buildProjectDontExist()->getTranslatedMessage());
-        $this->builder->getProjectMilestonePresenter(false, $this->root_planning);
+        $this->builder->getProjectMilestonePresenter(null, $this->root_planning);
     }
 
     public function testThrowExceptionWhenNoRootPlanning(): void
@@ -694,7 +694,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
         $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
         $this->expectException(ProjectMilestonesException::class);
         $this->expectExceptionMessage(ProjectMilestonesException::buildRootPlanningDontExist()->getTranslatedMessage());
-        $this->builder->getProjectMilestonePresenter($this->project, false);
+        $this->builder->getProjectMilestonePresenter($this->project, null);
 
         $this->http_request->shouldReceive("getCurrentUser")->andReturn($this->john_doe);
     }

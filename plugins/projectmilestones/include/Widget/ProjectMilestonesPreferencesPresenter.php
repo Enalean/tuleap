@@ -30,10 +30,6 @@ class ProjectMilestonesPreferencesPresenter
     /**
      * @var int
      */
-    public $project_id;
-    /**
-     * @var int
-     */
     public $widget_id;
     /**
      * @var CSRFSynchronizerToken
@@ -48,13 +44,15 @@ class ProjectMilestonesPreferencesPresenter
      */
     public $placeholder;
 
-    public function __construct(int $widget_id, Project $project, CSRFSynchronizerToken $csrf_token)
+    public function __construct(int $widget_id, ?Project $project, CSRFSynchronizerToken $csrf_token)
     {
-        $this->project_id  = $project->getID();
         $this->widget_id   = $widget_id;
         $this->csrf_token  = $csrf_token;
-        $data              = array(["id" => (int) $project->getID(), "text" => $project->getPublicName(), "selected" => true, "disabled" => false]);
-        $this->data        = (string) json_encode($data, JSON_THROW_ON_ERROR);
         $this->placeholder = dgettext('tuleap-projectmilestones', 'Project name');
+        $data = [];
+        if ($project) {
+            $data = array(["id" => (int) $project->getID(), "text" => $project->getPublicName(), "selected" => true, "disabled" => false]);
+        }
+        $this->data = (string) json_encode($data, JSON_THROW_ON_ERROR);
     }
 }
