@@ -27,15 +27,13 @@ use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
-use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenException;
-use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
-use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
-use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenRevocationVerifier;
+use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenRevoker;
 use Tuleap\OAuth2Server\App\OAuth2App;
-use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeRevoker;
+use Tuleap\OAuth2Server\OAuth2ServerException;
+use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenRevoker;
 use Tuleap\User\OAuth2\OAuth2Exception;
 
 final class TokenRevocationControllerTest extends TestCase
@@ -47,29 +45,23 @@ final class TokenRevocationControllerTest extends TestCase
      */
     private $controller;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|SplitTokenIdentifierTranslator
+     * @var M\LegacyMockInterface|M\MockInterface|OAuth2RefreshTokenRevoker
      */
-    private $access_token_unserializer;
+    private $refresh_token_revoker;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|OAuth2AccessTokenRevocationVerifier
+     * @var M\LegacyMockInterface|M\MockInterface|OAuth2AccessTokenRevoker
      */
-    private $access_token_verifier;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|OAuth2AuthorizationCodeRevoker
-     */
-    private $authorization_code_revoker;
+    private $access_token_revoker;
 
     protected function setUp(): void
     {
-        $this->authorization_code_revoker = M::mock(OAuth2AuthorizationCodeRevoker::class);
-        $this->access_token_unserializer  = M::mock(SplitTokenIdentifierTranslator::class);
-        $this->access_token_verifier      = M::mock(OAuth2AccessTokenRevocationVerifier::class);
-        $this->controller                 = new TokenRevocationController(
+        $this->refresh_token_revoker = M::mock(OAuth2RefreshTokenRevoker::class);
+        $this->access_token_revoker  = M::mock(OAuth2AccessTokenRevoker::class);
+        $this->controller            = new TokenRevocationController(
             HTTPFactoryBuilder::responseFactory(),
             HTTPFactoryBuilder::streamFactory(),
-            $this->access_token_unserializer,
-            $this->access_token_verifier,
-            $this->authorization_code_revoker,
+            $this->refresh_token_revoker,
+            $this->access_token_revoker,
             M::mock(EmitterInterface::class)
         );
     }
@@ -79,7 +71,8 @@ final class TokenRevocationControllerTest extends TestCase
         $response = $this->controller->handle(new NullServerRequest());
 
         $this->assertSame(401, $response->getStatusCode());
-        $this->authorization_code_revoker->shouldNotHaveReceived('revokeForApp');
+        $this->refresh_token_revoker->shouldNotHaveReceived('revokeGrantOfRefreshToken');
+        $this->access_token_revoker->shouldNotHaveReceived('revokeGrantOfAccessToken');
         $this->assertTrue($response->hasHeader('WWW-Authenticate'));
         $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));
         $this->assertJsonStringEqualsJsonString('{"error":"invalid_client"}', $response->getBody()->getContents());
@@ -91,11 +84,12 @@ final class TokenRevocationControllerTest extends TestCase
      */
     public function testHandleReturnsErrorWhenDataIsInvalid($parsed_body): void
     {
-        $request = $this->buildRequest()->withParsedBody($parsed_body);
+        $request  = $this->buildRequest()->withParsedBody($parsed_body);
         $response = $this->controller->handle($request);
 
         $this->assertSame(400, $response->getStatusCode());
-        $this->authorization_code_revoker->shouldNotHaveReceived('revokeForApp');
+        $this->refresh_token_revoker->shouldNotHaveReceived('revokeGrantOfRefreshToken');
+        $this->access_token_revoker->shouldNotHaveReceived('revokeGrantOfAccessToken');
         $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));
         $this->assertJsonStringEqualsJsonString('{"error":"invalid_request"}', $response->getBody()->getContents());
     }
@@ -111,7 +105,13 @@ final class TokenRevocationControllerTest extends TestCase
     public function testHandleSilentlyIgnoresBadlyFormattedToken(): void
     {
         $request = $this->buildRequest()->withParsedBody(['token' => 'valid_access_token']);
-        $this->access_token_unserializer->shouldReceive('getSplitToken')
+        $this->refresh_token_revoker->shouldReceive('revokeGrantOfRefreshToken')
+            ->once()
+            ->andThrow(
+                new class extends SplitTokenException {
+                }
+            );
+        $this->access_token_revoker->shouldReceive('revokeGrantOfAccessToken')
             ->once()
             ->andThrow(
                 new class extends SplitTokenException {
@@ -120,16 +120,33 @@ final class TokenRevocationControllerTest extends TestCase
 
         $response = $this->controller->handle($request);
         $this->assertSame(200, $response->getStatusCode());
-        $this->authorization_code_revoker->shouldNotHaveReceived('revokeForApp');
     }
 
-    public function testHandleSilentlyIgnoresTokenNotAssociatedToThisClientOrInvalidToken(): void
+    public function testHandleSilentlyIgnoresRefreshTokenNotAssociatedToThisClient(): void
     {
         $request = $this->buildRequest()->withParsedBody(['token' => 'valid_access_token']);
-        $this->access_token_unserializer->shouldReceive('getSplitToken')
+        $this->refresh_token_revoker->shouldReceive('revokeGrantOfRefreshToken')
             ->once()
-            ->andReturn(new SplitToken(12, SplitTokenVerificationString::generateNewSplitTokenVerificationString()));
-        $this->access_token_verifier->shouldReceive('getAssociatedAuthorizationCodeID')
+            ->andThrow(
+                new class extends \RuntimeException implements OAuth2ServerException {
+                }
+            );
+        $this->access_token_revoker->shouldNotReceive('revokeGrantOfAccessToken');
+
+        $response = $this->controller->handle($request);
+        $this->assertSame(200, $response->getStatusCode());
+    }
+
+    public function testHandleSilentlyIgnoresAccessTokenNotAssociatedToThisClient(): void
+    {
+        $request = $this->buildRequest()->withParsedBody(['token' => 'valid_access_token']);
+        $this->refresh_token_revoker->shouldReceive('revokeGrantOfRefreshToken')
+            ->once()
+            ->andThrow(
+                new class extends SplitTokenException {
+                }
+            );
+        $this->access_token_revoker->shouldReceive('revokeGrantOfAccessToken')
             ->once()
             ->andThrow(
                 new class extends \RuntimeException implements OAuth2Exception {
@@ -138,21 +155,28 @@ final class TokenRevocationControllerTest extends TestCase
 
         $response = $this->controller->handle($request);
         $this->assertSame(200, $response->getStatusCode());
-        $this->authorization_code_revoker->shouldNotHaveReceived('revokeForApp');
     }
 
-    public function testHandleRevokesAccessTokenAndAssociatedAuthorizationCode(): void
+    public function testHandleRevokesGrantOfRefreshToken(): void
     {
         $request = $this->buildRequest()->withParsedBody(['token' => 'valid_access_token']);
-        $this->access_token_unserializer->shouldReceive('getSplitToken')
+        $this->refresh_token_revoker->shouldReceive('revokeGrantOfRefreshToken')->once();
+        $this->access_token_revoker->shouldNotReceive('revokeGrantOfAccessToken');
+
+        $response = $this->controller->handle($request);
+        $this->assertSame(200, $response->getStatusCode());
+    }
+
+    public function testHandleFallsbackToRevokingGrantOfAccessToken(): void
+    {
+        $request = $this->buildRequest()->withParsedBody(['token' => 'valid_access_token']);
+        $this->refresh_token_revoker->shouldReceive('revokeGrantOfRefreshToken')
             ->once()
-            ->andReturn(new SplitToken(12, SplitTokenVerificationString::generateNewSplitTokenVerificationString()));
-        $this->access_token_verifier->shouldReceive('getAssociatedAuthorizationCodeID')
-            ->once()
-            ->andReturn(38);
-        $this->authorization_code_revoker->shouldReceive('revokeByAuthCodeId')
-            ->once()
-            ->with(38);
+            ->andThrow(
+                new class extends SplitTokenException {
+                }
+            );
+        $this->access_token_revoker->shouldReceive('revokeGrantOfAccessToken')->once();
 
         $response = $this->controller->handle($request);
         $this->assertSame(200, $response->getStatusCode());

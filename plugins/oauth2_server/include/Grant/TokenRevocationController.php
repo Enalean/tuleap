@@ -29,11 +29,11 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Authentication\SplitToken\SplitTokenException;
-use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenRevocationVerifier;
+use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenRevoker;
 use Tuleap\OAuth2Server\App\OAuth2App;
-use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeRevoker;
+use Tuleap\OAuth2Server\OAuth2ServerException;
+use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenRevoker;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\User\OAuth2\OAuth2Exception;
@@ -54,33 +54,27 @@ final class TokenRevocationController extends DispatchablePSR15Compatible implem
      */
     private $stream_factory;
     /**
-     * @var SplitTokenIdentifierTranslator
+     * @var OAuth2RefreshTokenRevoker
      */
-    private $access_token_identifier_unserializer;
+    private $refresh_token_revoker;
     /**
-     * @var OAuth2AccessTokenRevocationVerifier
+     * @var OAuth2AccessTokenRevoker
      */
-    private $access_token_verifier;
-    /**
-     * @var OAuth2AuthorizationCodeRevoker
-     */
-    private $authorization_code_revoker;
+    private $access_token_revoker;
 
     public function __construct(
         ResponseFactoryInterface $response_factory,
         StreamFactoryInterface $stream_factory,
-        SplitTokenIdentifierTranslator $access_token_identifier_unserializer,
-        OAuth2AccessTokenRevocationVerifier $access_token_verifier,
-        OAuth2AuthorizationCodeRevoker $authorization_code_revoker,
+        OAuth2RefreshTokenRevoker $refresh_token_revoker,
+        OAuth2AccessTokenRevoker $access_token_revoker,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack
     ) {
         parent::__construct($emitter, ...$middleware_stack);
-        $this->response_factory                     = $response_factory;
-        $this->stream_factory                       = $stream_factory;
-        $this->access_token_identifier_unserializer = $access_token_identifier_unserializer;
-        $this->access_token_verifier                = $access_token_verifier;
-        $this->authorization_code_revoker           = $authorization_code_revoker;
+        $this->response_factory      = $response_factory;
+        $this->stream_factory        = $stream_factory;
+        $this->refresh_token_revoker = $refresh_token_revoker;
+        $this->access_token_revoker  = $access_token_revoker;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -96,28 +90,20 @@ final class TokenRevocationController extends DispatchablePSR15Compatible implem
             return $this->buildErrorResponse(self::ERROR_CODE_INVALID_REQUEST);
         }
 
+        $token_identifier = new ConcealedString($body_params[self::TOKEN_PARAMETER]);
         try {
-            $access_token = $this->access_token_identifier_unserializer->getSplitToken(
-                new ConcealedString($body_params[self::TOKEN_PARAMETER])
-            );
+            $this->refresh_token_revoker->revokeGrantOfRefreshToken($app, $token_identifier);
         } catch (SplitTokenException $e) {
-            // It is maybe a refresh token. This part remains to be done.
+            $this->access_token_revoker->revokeGrantOfAccessToken($app, $token_identifier);
+        } catch (OAuth2ServerException | OAuth2Exception $e) {
+            // Invalid tokens do not cause an error response
             // see https://tools.ietf.org/html/rfc7009#section-2.2
-            return $this->response_factory->createResponse(200);
-        }
-        try {
-            $authorization_code_id = $this->access_token_verifier->getAssociatedAuthorizationCodeID(
-                $access_token,
-                $app
-            );
-        } catch (OAuth2Exception $e) {
+            // Just ignore the error to go into finally
+        } finally {
             // Invalid tokens do not cause an error response
             // see https://tools.ietf.org/html/rfc7009#section-2.2
             return $this->response_factory->createResponse(200);
         }
-
-        $this->authorization_code_revoker->revokeByAuthCodeId($authorization_code_id);
-        return $this->response_factory->createResponse(200);
     }
 
     /**

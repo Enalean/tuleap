@@ -397,16 +397,24 @@ final class oauth2_serverPlugin extends Plugin
         $response_factory = HTTPFactoryBuilder::responseFactory();
         $stream_factory   = HTTPFactoryBuilder::streamFactory();
         $app_dao          = new AppDao();
+        $authorization_code_revoker = new \Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeRevoker(
+            new OAuth2AuthorizationCodeDAO()
+        );
+        $split_token_hasher = new SplitTokenVerificationStringHasher();
         return new \Tuleap\OAuth2Server\Grant\TokenRevocationController(
             $response_factory,
             $stream_factory,
-            new PrefixedSplitTokenSerializer(new PrefixOAuth2AccessToken()),
-            new \Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenRevocationVerifier(
-                new OAuth2AccessTokenDAO(),
-                new SplitTokenVerificationStringHasher()
+            new \Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenRevoker(
+                new PrefixedSplitTokenSerializer(new PrefixOAuth2RefreshToken()),
+                $authorization_code_revoker,
+                new OAuth2RefreshTokenDAO(),
+                $split_token_hasher
             ),
-            new \Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeRevoker(
-                new OAuth2AuthorizationCodeDAO()
+            new \Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenRevoker(
+                new PrefixedSplitTokenSerializer(new PrefixOAuth2AccessToken()),
+                $authorization_code_revoker,
+                new OAuth2AccessTokenDAO(),
+                $split_token_hasher
             ),
             new SapiEmitter(),
             new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
