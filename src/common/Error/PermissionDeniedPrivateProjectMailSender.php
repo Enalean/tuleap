@@ -20,15 +20,39 @@
 
 namespace Tuleap\Error;
 
+use PFUser;
+use Project;
+
 final class PermissionDeniedPrivateProjectMailSender extends PermissionDeniedMailSender
 {
-    /**
-     * Returns the type of the error to manage
-     *
-     * @return String
-     */
-    public function getType()
+    protected function getPermissionDeniedMailBody(
+        Project $project,
+        PFUser $user,
+        string $href_approval,
+        string $message_to_admin,
+        string $link
+    ): string {
+        return $GLOBALS['Language']->getText(
+            'include_exit',
+            'mail_content_private_project',
+            [
+                $user->getRealName(),
+                $user->getName(),
+                $link,
+                $project->getPublicName(),
+                $href_approval,
+                $message_to_admin,
+                $user->getEmail()
+            ]
+        );
+    }
+
+    protected function getPermissionDeniedMailSubject(Project $project, PFUser $user): string
     {
-        return 'private_project';
+        return $GLOBALS['Language']->getText(
+            'include_exit',
+            'mail_subject_private_project',
+            [$project->getPublicName(), $user->getRealName()]
+        );
     }
 }
