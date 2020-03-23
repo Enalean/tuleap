@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014, 2015, 2016, 2017. All rights reserved
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -11,14 +11,14 @@
  *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class MediawikiAdminController
+class MediawikiAdminController //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
 
     /** @var MediawikiUserGroupsMapper */
@@ -54,7 +54,10 @@ class MediawikiAdminController
     public function index(ServiceMediawiki $service, HTTPRequest $request)
     {
         $this->assertUserIsProjectAdmin($service, $request);
-        $GLOBALS['HTML']->includeFooterJavascriptFile(MEDIAWIKI_BASE_URL . '/forgejs/admin.js');
+
+        $assets = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../../src/www/assets/mediawiki', '/assets/mediawiki');
+
+        $GLOBALS['HTML']->includeFooterJavascriptFile($assets->getFileURL('admin.js'));
 
         $project = $request->getProject();
 
@@ -193,7 +196,7 @@ class MediawikiAdminController
         }
     }
 
-    public function save_language(ServiceMediawiki $service, HTTPRequest $request)
+    public function save_language(ServiceMediawiki $service, HTTPRequest $request) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $this->assertUserIsProjectAdmin($service, $request);
         if ($request->isPost()) {
@@ -215,7 +218,7 @@ class MediawikiAdminController
         ));
     }
 
-    public function save_permissions(ServiceMediawiki $service, HTTPRequest $request)
+    public function save_permissions(ServiceMediawiki $service, HTTPRequest $request) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $this->assertUserIsProjectAdmin($service, $request);
         if ($request->isPost()) {
