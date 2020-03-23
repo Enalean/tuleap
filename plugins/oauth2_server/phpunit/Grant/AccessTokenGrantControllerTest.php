@@ -26,94 +26,56 @@ use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
-use Tuleap\Authentication\SplitToken\SplitToken;
-use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
-use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
-use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Http\HTTPFactoryBuilder;
-use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenWithIdentifier;
 use Tuleap\OAuth2Server\App\OAuth2App;
-use Tuleap\OAuth2Server\Grant\AuthorizationCode\AuthorizationCodeGrantResponseBuilder;
-use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AccessTokenSuccessfulRequestRepresentation;
-use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCode;
-use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeVerifier;
-use Tuleap\OAuth2Server\Grant\AuthorizationCode\PKCE\OAuth2PKCEVerificationException;
-use Tuleap\OAuth2Server\Grant\AuthorizationCode\PKCE\PKCECodeVerifier;
-use Tuleap\OAuth2Server\OAuth2ServerException;
-use Tuleap\User\OAuth2\Scope\DemoOAuth2Scope;
+use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2GrantAccessTokenFromAuthorizationCode;
 
 final class AccessTokenGrantControllerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AuthorizationCodeGrantResponseBuilder
-     */
-    private $response_builder;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|SplitTokenIdentifierTranslator
-     */
-    private $auth_code_unserializer;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OAuth2AuthorizationCodeVerifier
-     */
-    private $auth_code_verifier;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PKCECodeVerifier
-     */
-    private $pkce_code_verifier;
-    /**
      * @var AccessTokenGrantController
      */
     private $controller;
+    /**
+     * @var \Psr\Http\Message\ResponseFactoryInterface
+     */
+    private $response_factory;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OAuth2GrantAccessTokenFromAuthorizationCode
+     */
+    private $grant_access_token_from_auth_code;
 
     protected function setUp(): void
     {
-        $this->response_builder       = \Mockery::mock(AuthorizationCodeGrantResponseBuilder::class);
-        $this->auth_code_unserializer = \Mockery::mock(SplitTokenIdentifierTranslator::class);
-        $this->auth_code_verifier     = \Mockery::mock(OAuth2AuthorizationCodeVerifier::class);
-        $this->pkce_code_verifier     = \Mockery::mock(PKCECodeVerifier::class);
+        $this->grant_access_token_from_auth_code = \Mockery::mock(OAuth2GrantAccessTokenFromAuthorizationCode::class);
+
+        $this->response_factory = HTTPFactoryBuilder::responseFactory();
+        $stream_factory   = HTTPFactoryBuilder::streamFactory();
 
         $this->controller = new AccessTokenGrantController(
-            HTTPFactoryBuilder::responseFactory(),
-            HTTPFactoryBuilder::streamFactory(),
-            $this->response_builder,
-            $this->auth_code_unserializer,
-            $this->auth_code_verifier,
-            $this->pkce_code_verifier,
+            new AccessTokenGrantErrorResponseBuilder($this->response_factory, $stream_factory),
+            $this->grant_access_token_from_auth_code,
             \Mockery::mock(EmitterInterface::class)
         );
     }
 
-    public function testBuildsHTTPResponse(): void
+    public function testSuccessfullyGrantAccessTokenWithAnAuthorizationCode(): void
     {
-        $this->auth_code_unserializer->shouldReceive('getSplitToken')->andReturn(\Mockery::mock(SplitToken::class));
-        $this->auth_code_verifier->shouldReceive('getAuthorizationCode')->andReturn(
-            $this->buildAuthorizationCodeGrant()
-        );
-        $this->pkce_code_verifier->shouldReceive('verifyCode')->once();
-        $this->response_builder->shouldReceive('buildResponse')->andReturn(
-            OAuth2AccessTokenSuccessfulRequestRepresentation::fromAccessTokenAndRefreshToken(
-                new OAuth2AccessTokenWithIdentifier(new ConcealedString('identifier'), new \DateTimeImmutable('@20')),
-                null,
-                new \DateTimeImmutable('@10')
-            )
-        );
+        $expected_response = $this->response_factory->createResponse();
+
+        $this->grant_access_token_from_auth_code->shouldReceive('grantAccessToken')->once()->andReturn($expected_response);
 
         $request = \Mockery::mock(ServerRequestInterface::class);
         $app     = $this->buildOAuth2App();
         $request->shouldReceive('getAttribute')->with(OAuth2ClientAuthenticationMiddleware::class)->andReturn($app);
         $request->shouldReceive('getParsedBody')->andReturn(
-            [
-                'grant_type'   => 'authorization_code',
-                'code'         => 'tlp-oauth2-ac1-1.6161616161616161616161616161616161616161616161616161616161616161',
-                'redirect_uri' => $app->getRedirectEndpoint()
-            ]
+            ['grant_type' => 'authorization_code']
         );
 
         $response = $this->controller->handle($request);
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));
+        $this->assertSame($expected_response, $response);
     }
 
     public function testRejectsRequestThatDoesNotHaveAnExplicitGrantType(): void
@@ -122,7 +84,6 @@ final class AccessTokenGrantControllerTest extends TestCase
         $request->shouldReceive('getAttribute')->with(OAuth2ClientAuthenticationMiddleware::class)->andReturn($this->buildOAuth2App());
         $request->shouldReceive('getParsedBody')->andReturn(null);
 
-        $this->response_builder->shouldNotReceive('buildResponse');
         $response = $this->controller->handle($request);
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));
@@ -135,7 +96,6 @@ final class AccessTokenGrantControllerTest extends TestCase
         $request->shouldReceive('getAttribute')->with(OAuth2ClientAuthenticationMiddleware::class)->andReturn($this->buildOAuth2App());
         $request->shouldReceive('getParsedBody')->andReturn(['grant_type' => 'password']);
 
-        $this->response_builder->shouldNotReceive('buildResponse');
         $response = $this->controller->handle($request);
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));
@@ -147,7 +107,6 @@ final class AccessTokenGrantControllerTest extends TestCase
         $request = \Mockery::mock(ServerRequestInterface::class);
         $request->shouldReceive('getAttribute')->with(OAuth2ClientAuthenticationMiddleware::class)->andReturn(null);
 
-        $this->response_builder->shouldNotReceive('buildResponse');
         $response = $this->controller->handle($request);
         $this->assertEquals(401, $response->getStatusCode());
         $this->assertTrue($response->hasHeader('WWW-Authenticate'));
@@ -155,138 +114,8 @@ final class AccessTokenGrantControllerTest extends TestCase
         $this->assertJsonStringEqualsJsonString('{"error":"invalid_client"}', $response->getBody()->getContents());
     }
 
-    public function testRejectsRequestWithoutAnAuthCode(): void
-    {
-        $this->auth_code_unserializer->shouldReceive('getSplitToken')->andReturn(\Mockery::mock(SplitToken::class));
-        $this->auth_code_verifier->shouldReceive('getAuthorizationCode')->andReturn(
-            $this->buildAuthorizationCodeGrant()
-        );
-
-        $request = \Mockery::mock(ServerRequestInterface::class);
-        $request->shouldReceive('getAttribute')->with(OAuth2ClientAuthenticationMiddleware::class)->andReturn($this->buildOAuth2App());
-        $request->shouldReceive('getParsedBody')->andReturn(
-            ['grant_type' => 'authorization_code']
-        );
-
-        $this->response_builder->shouldNotReceive('buildResponse');
-        $response = $this->controller->handle($request);
-        $this->assertEquals(400, $response->getStatusCode());
-        $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));
-        $this->assertJsonStringEqualsJsonString('{"error":"invalid_request"}', $response->getBody()->getContents());
-    }
-
-    public function testRejectsWithANotValidAuthCode(): void
-    {
-        $this->auth_code_unserializer->shouldReceive('getSplitToken')->andReturn(\Mockery::mock(SplitToken::class));
-        $this->auth_code_verifier->shouldReceive('getAuthorizationCode')->andThrow(
-            new class extends \RuntimeException implements OAuth2ServerException {
-            }
-        );
-
-        $request = \Mockery::mock(ServerRequestInterface::class);
-        $request->shouldReceive('getAttribute')->with(OAuth2ClientAuthenticationMiddleware::class)->andReturn($this->buildOAuth2App());
-        $request->shouldReceive('getParsedBody')->andReturn(
-            ['grant_type' => 'authorization_code', 'code' => 'not_valid_auth_code']
-        );
-
-        $this->response_builder->shouldNotReceive('buildResponse');
-        $response = $this->controller->handle($request);
-        $this->assertEquals(400, $response->getStatusCode());
-        $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));
-        $this->assertJsonStringEqualsJsonString('{"error":"invalid_grant"}', $response->getBody()->getContents());
-    }
-
-    public function testRejectsRequestWithoutARedirectURI(): void
-    {
-        $this->auth_code_unserializer->shouldReceive('getSplitToken')->andReturn(\Mockery::mock(SplitToken::class));
-        $this->auth_code_verifier->shouldReceive('getAuthorizationCode')->andReturn(
-            $this->buildAuthorizationCodeGrant()
-        );
-        $this->pkce_code_verifier->shouldReceive('verifyCode');
-
-        $request = \Mockery::mock(ServerRequestInterface::class);
-        $request->shouldReceive('getAttribute')->with(OAuth2ClientAuthenticationMiddleware::class)->andReturn($this->buildOAuth2App());
-        $request->shouldReceive('getParsedBody')->andReturn(
-            [
-                'grant_type' => 'authorization_code',
-                'code'       => 'tlp-oauth2-ac1-1.6161616161616161616161616161616161616161616161616161616161616161'
-            ]
-        );
-
-        $this->response_builder->shouldNotReceive('buildResponse');
-        $response = $this->controller->handle($request);
-        $this->assertEquals(400, $response->getStatusCode());
-        $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));
-        $this->assertJsonStringEqualsJsonString('{"error":"invalid_request"}', $response->getBody()->getContents());
-    }
-
-    public function testRejectsRequestThatDoesNotTheExpectedRedirectURI(): void
-    {
-        $this->auth_code_unserializer->shouldReceive('getSplitToken')->andReturn(\Mockery::mock(SplitToken::class));
-        $this->auth_code_verifier->shouldReceive('getAuthorizationCode')->andReturn(
-            $this->buildAuthorizationCodeGrant()
-        );
-        $this->pkce_code_verifier->shouldReceive('verifyCode');
-
-        $request = \Mockery::mock(ServerRequestInterface::class);
-        $request->shouldReceive('getAttribute')->with(OAuth2ClientAuthenticationMiddleware::class)->andReturn($this->buildOAuth2App());
-        $request->shouldReceive('getParsedBody')->andReturn(
-            [
-                'grant_type'   => 'authorization_code',
-                'code'         => 'tlp-oauth2-ac1-1.6161616161616161616161616161616161616161616161616161616161616161',
-                'redirect_uri' => 'https://evil.example.com'
-            ]
-        );
-
-        $this->response_builder->shouldNotReceive('buildResponse');
-        $response = $this->controller->handle($request);
-        $this->assertEquals(400, $response->getStatusCode());
-        $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));
-        $this->assertJsonStringEqualsJsonString('{"error":"invalid_grant"}', $response->getBody()->getContents());
-    }
-
-    public function testRejectsRequestWithAInvalidPKCECodeVerifier(): void
-    {
-        $this->auth_code_unserializer->shouldReceive('getSplitToken')->andReturn(\Mockery::mock(SplitToken::class));
-        $this->auth_code_verifier->shouldReceive('getAuthorizationCode')->andReturn(
-            $this->buildAuthorizationCodeGrant()
-        );
-        $this->pkce_code_verifier->shouldReceive('verifyCode')->andThrow(
-            new class extends \RuntimeException implements OAuth2PKCEVerificationException
-            {
-            }
-        );
-
-        $request = \Mockery::mock(ServerRequestInterface::class);
-        $app     = $this->buildOAuth2App();
-        $request->shouldReceive('getAttribute')->with(OAuth2ClientAuthenticationMiddleware::class)->andReturn($app);
-        $request->shouldReceive('getParsedBody')->andReturn(
-            [
-                'grant_type'   => 'authorization_code',
-                'code'         => 'tlp-oauth2-ac1-1.6161616161616161616161616161616161616161616161616161616161616161',
-                'redirect_uri' => $app->getRedirectEndpoint()
-            ]
-        );
-
-        $this->response_builder->shouldNotReceive('buildResponse');
-        $response = $this->controller->handle($request);
-        $this->assertEquals(400, $response->getStatusCode());
-        $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));
-        $this->assertJsonStringEqualsJsonString('{"error":"invalid_grant"}', $response->getBody()->getContents());
-    }
-
     private function buildOAuth2App(): OAuth2App
     {
         return new OAuth2App(1, 'name', 'https://example.com', true, \Mockery::mock(\Project::class));
-    }
-
-    private function buildAuthorizationCodeGrant(): OAuth2AuthorizationCode
-    {
-        return OAuth2AuthorizationCode::approveForSetOfScopes(
-            new SplitToken(1, SplitTokenVerificationString::generateNewSplitTokenVerificationString()),
-            new \PFUser(['language_id' => 'en']),
-            'pkce_code_challenge',
-            [DemoOAuth2Scope::fromItself()],
-        );
     }
 }

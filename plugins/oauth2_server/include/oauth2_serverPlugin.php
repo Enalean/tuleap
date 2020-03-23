@@ -49,10 +49,12 @@ use Tuleap\OAuth2Server\AuthorizationServer\AuthorizationEndpointGetController;
 use Tuleap\OAuth2Server\AuthorizationServer\PKCE\PKCEInformationExtractor;
 use Tuleap\OAuth2Server\AuthorizationServer\RedirectURIBuilder;
 use Tuleap\OAuth2Server\Grant\AccessTokenGrantController;
+use Tuleap\OAuth2Server\Grant\AccessTokenGrantErrorResponseBuilder;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\AuthorizationCodeGrantResponseBuilder;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeCreator;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeDAO;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeVerifier;
+use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2GrantAccessTokenFromAuthorizationCode;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\PKCE\PKCECodeVerifier;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\PrefixOAuth2AuthCode;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\Scope\OAuth2AuthorizationCodeScopeDAO;
@@ -331,40 +333,48 @@ final class oauth2_serverPlugin extends Plugin
 
     public function routeAccessTokenCreation(): AccessTokenGrantController
     {
-        $response_factory = HTTPFactoryBuilder::responseFactory();
-        $stream_factory   = HTTPFactoryBuilder::streamFactory();
-        $app_dao          = new AppDao();
-        return new AccessTokenGrantController(
+        $response_factory                          = HTTPFactoryBuilder::responseFactory();
+        $stream_factory                            = HTTPFactoryBuilder::streamFactory();
+        $app_dao                                   = new AppDao();
+        $access_token_grant_error_response_builder = new AccessTokenGrantErrorResponseBuilder(
             $response_factory,
-            $stream_factory,
-            new AuthorizationCodeGrantResponseBuilder(
-                new OAuth2AccessTokenCreator(
-                    new PrefixedSplitTokenSerializer(new PrefixOAuth2AccessToken()),
+            $stream_factory
+        );
+        return new AccessTokenGrantController(
+            $access_token_grant_error_response_builder,
+            new OAuth2GrantAccessTokenFromAuthorizationCode(
+                $response_factory,
+                $stream_factory,
+                $access_token_grant_error_response_builder,
+                new AuthorizationCodeGrantResponseBuilder(
+                    new OAuth2AccessTokenCreator(
+                        new PrefixedSplitTokenSerializer(new PrefixOAuth2AccessToken()),
+                        new SplitTokenVerificationStringHasher(),
+                        new OAuth2AccessTokenDAO(),
+                        new OAuth2AccessTokenScopeSaver(new OAuth2AccessTokenScopeDAO()),
+                        new DateInterval('PT1H'),
+                        new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+                    ),
+                    new OAuth2RefreshTokenCreator(
+                        OAuth2OfflineAccessScope::fromItself(),
+                        new PrefixedSplitTokenSerializer(new PrefixOAuth2RefreshToken()),
+                        new SplitTokenVerificationStringHasher(),
+                        new OAuth2RefreshTokenDAO(),
+                        new OAuth2RefreshTokenScopeSaver(new OAuth2RefreshTokenScopeDAO()),
+                        new DateInterval('PT6H'),
+                        new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+                    )
+                ),
+                new PrefixedSplitTokenSerializer(new PrefixOAuth2AuthCode()),
+                new OAuth2AuthorizationCodeVerifier(
                     new SplitTokenVerificationStringHasher(),
-                    new OAuth2AccessTokenDAO(),
-                    new OAuth2AccessTokenScopeSaver(new OAuth2AccessTokenScopeDAO()),
-                    new DateInterval('PT1H'),
+                    UserManager::instance(),
+                    new OAuth2AuthorizationCodeDAO(),
+                    new OAuth2AuthorizationCodeScopeRetriever(new OAuth2AuthorizationCodeScopeDAO(), $this->buildScopeBuilder()),
                     new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
                 ),
-                new OAuth2RefreshTokenCreator(
-                    OAuth2OfflineAccessScope::fromItself(),
-                    new PrefixedSplitTokenSerializer(new PrefixOAuth2RefreshToken()),
-                    new SplitTokenVerificationStringHasher(),
-                    new OAuth2RefreshTokenDAO(),
-                    new OAuth2RefreshTokenScopeSaver(new OAuth2RefreshTokenScopeDAO()),
-                    new DateInterval('PT6H'),
-                    new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
-                )
+                new PKCECodeVerifier()
             ),
-            new PrefixedSplitTokenSerializer(new PrefixOAuth2AuthCode()),
-            new OAuth2AuthorizationCodeVerifier(
-                new SplitTokenVerificationStringHasher(),
-                UserManager::instance(),
-                new OAuth2AuthorizationCodeDAO(),
-                new OAuth2AuthorizationCodeScopeRetriever(new OAuth2AuthorizationCodeScopeDAO(), $this->buildScopeBuilder()),
-                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
-            ),
-            new PKCECodeVerifier(),
             new SapiEmitter(),
             new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
             new RejectNonHTTPSRequestMiddleware($response_factory, $stream_factory),

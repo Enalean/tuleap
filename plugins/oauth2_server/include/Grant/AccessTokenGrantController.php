@@ -23,154 +23,58 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\Grant;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
-use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Server\MiddlewareInterface;
-use Tuleap\Authentication\SplitToken\SplitTokenException;
-use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
-use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OAuth2Server\App\OAuth2App;
-use Tuleap\OAuth2Server\Grant\AuthorizationCode\AuthorizationCodeGrantResponseBuilder;
-use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeVerifier;
-use Tuleap\OAuth2Server\Grant\AuthorizationCode\PKCE\OAuth2PKCEVerificationException;
-use Tuleap\OAuth2Server\Grant\AuthorizationCode\PKCE\PKCECodeVerifier;
-use Tuleap\OAuth2Server\OAuth2ServerException;
+use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2GrantAccessTokenFromAuthorizationCode;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 
 final class AccessTokenGrantController extends DispatchablePSR15Compatible implements DispatchableWithRequestNoAuthz
 {
-    private const CONTENT_TYPE_RESPONSE = 'application/json;charset=UTF-8';
+    public const CONTENT_TYPE_RESPONSE = 'application/json;charset=UTF-8';
 
-    private const GRANT_TYPE_PARAMETER    = 'grant_type';
-    private const AUTH_CODE_PARAMETER     = 'code';
-    private const REDIRECT_URI_PARAMETER  = 'redirect_uri';
-    private const CODE_VERIFIER_PARAMETER = 'code_verifier';
-    private const ALLOWED_GRANT_TYPES     = ['authorization_code'];
-
-    private const ERROR_CODE_INVALID_REQUEST = 'invalid_request';
-    private const ERROR_CODE_INVALID_GRANT   = 'invalid_grant';
-    private const ERROR_CODE_INVALID_CLIENT  = 'invalid_client';
+    private const GRANT_TYPE_PARAMETER     = 'grant_type';
+    private const GRANT_AUTHORIZATION_CODE = 'authorization_code';
 
     /**
-     * @var ResponseFactoryInterface
+     * @var AccessTokenGrantErrorResponseBuilder
      */
-    private $response_factory;
+    private $access_token_grant_error_response_builder;
     /**
-     * @var StreamFactoryInterface
+     * @var OAuth2GrantAccessTokenFromAuthorizationCode
      */
-    private $stream_factory;
-    /**
-     * @var AuthorizationCodeGrantResponseBuilder
-     */
-    private $response_builder;
-    /**
-     * @var SplitTokenIdentifierTranslator
-     */
-    private $access_token_identifier_unserializer;
-    /**
-     * @var OAuth2AuthorizationCodeVerifier
-     */
-    private $authorization_code_verifier;
-    /**
-     * @var PKCECodeVerifier
-     */
-    private $pkce_code_verifier;
+    private $access_token_from_authorization_code;
 
     public function __construct(
-        ResponseFactoryInterface $response_factory,
-        StreamFactoryInterface $stream_factory,
-        AuthorizationCodeGrantResponseBuilder $response_builder,
-        SplitTokenIdentifierTranslator $access_token_identifier_unserializer,
-        OAuth2AuthorizationCodeVerifier $authorization_code_verifier,
-        PKCECodeVerifier $pkce_code_verifier,
+        AccessTokenGrantErrorResponseBuilder $access_token_grant_error_response_builder,
+        OAuth2GrantAccessTokenFromAuthorizationCode $access_token_from_authorization_code,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack
     ) {
         parent::__construct($emitter, ...$middleware_stack);
-        $this->response_factory                     = $response_factory;
-        $this->stream_factory                       = $stream_factory;
-        $this->response_builder                     = $response_builder;
-        $this->access_token_identifier_unserializer = $access_token_identifier_unserializer;
-        $this->authorization_code_verifier          = $authorization_code_verifier;
-        $this->pkce_code_verifier                   = $pkce_code_verifier;
+        $this->access_token_grant_error_response_builder = $access_token_grant_error_response_builder;
+        $this->access_token_from_authorization_code      = $access_token_from_authorization_code;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $app = $request->getAttribute(OAuth2ClientAuthenticationMiddleware::class);
         if (! $app instanceof OAuth2App) {
-            return $this->buildErrorResponse(self::ERROR_CODE_INVALID_CLIENT);
+            return $this->access_token_grant_error_response_builder->buildInvalidClientResponse();
         }
 
         $body_params = $request->getParsedBody();
 
         if (! is_array($body_params) || ! isset($body_params[self::GRANT_TYPE_PARAMETER])) {
-            return $this->buildErrorResponse(self::ERROR_CODE_INVALID_REQUEST);
+            return $this->access_token_grant_error_response_builder->buildInvalidRequestResponse();
         }
 
-        if (! in_array($body_params[self::GRANT_TYPE_PARAMETER], self::ALLOWED_GRANT_TYPES, true)) {
-            return $this->buildErrorResponse(self::ERROR_CODE_INVALID_GRANT);
+        if ($body_params[self::GRANT_TYPE_PARAMETER] === self::GRANT_AUTHORIZATION_CODE) {
+            return $this->access_token_from_authorization_code->grantAccessToken($app, $body_params);
         }
 
-        if (! isset($body_params[self::AUTH_CODE_PARAMETER])) {
-            return $this->buildErrorResponse(self::ERROR_CODE_INVALID_REQUEST);
-        }
-
-        try {
-            $authorization_code = $this->authorization_code_verifier->getAuthorizationCode(
-                $this->access_token_identifier_unserializer->getSplitToken(new ConcealedString($body_params[self::AUTH_CODE_PARAMETER]))
-            );
-        } catch (OAuth2ServerException | SplitTokenException $exception) {
-            return $this->buildErrorResponse(self::ERROR_CODE_INVALID_GRANT);
-        } finally {
-            \sodium_memzero($body_params[self::AUTH_CODE_PARAMETER]);
-        }
-
-        try {
-            $this->pkce_code_verifier->verifyCode($authorization_code, $body_params[self::CODE_VERIFIER_PARAMETER] ?? null);
-        } catch (OAuth2PKCEVerificationException $exception) {
-            return $this->buildErrorResponse(self::ERROR_CODE_INVALID_GRANT);
-        }
-
-        if (! isset($body_params[self::REDIRECT_URI_PARAMETER])) {
-            return $this->buildErrorResponse(self::ERROR_CODE_INVALID_REQUEST);
-        }
-        if (! \hash_equals($app->getRedirectEndpoint(), $body_params[self::REDIRECT_URI_PARAMETER])) {
-            return $this->buildErrorResponse(self::ERROR_CODE_INVALID_GRANT);
-        }
-
-        $representation = $this->response_builder->buildResponse(
-            new \DateTimeImmutable(),
-            $authorization_code
-        );
-
-        return $this->response_factory->createResponse()
-            ->withHeader('Content-Type', self::CONTENT_TYPE_RESPONSE)
-            ->withBody(
-                $this->stream_factory->createStream(
-                    json_encode($representation, JSON_THROW_ON_ERROR)
-                )
-            );
-    }
-
-    /**
-     * @psalm-param self::ERROR_CODE_* $error_code See https://tools.ietf.org/html/rfc6749#section-5.2
-     */
-    private function buildErrorResponse(string $error_code): ResponseInterface
-    {
-        if ($error_code === self::ERROR_CODE_INVALID_CLIENT) {
-            $response = $this->response_factory->createResponse(401)
-                ->withHeader('WWW-Authenticate', 'Basic realm="Tuleap OAuth2 Token Endpoint"');
-        } else {
-            $response = $this->response_factory->createResponse(400);
-        }
-        return $response
-            ->withHeader('Content-Type', self::CONTENT_TYPE_RESPONSE)
-            ->withBody(
-                $this->stream_factory->createStream(json_encode(['error' => $error_code], JSON_THROW_ON_ERROR))
-            );
+        return $this->access_token_grant_error_response_builder->buildInvalidGrantResponse();
     }
 }
