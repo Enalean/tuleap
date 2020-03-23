@@ -17,25 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const path = require("path");
-const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
+const common = require("./webpack.common.js");
+const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 
-module.exports = [
-    {
-        entry: {
-            style: "./default/style.scss"
-        },
-        context: path.resolve(__dirname),
-        output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../../src/www/assets/proftpd/themes/")
-        ),
-        module: {
-            rules: [webpack_configurator.rule_scss_loader]
-        },
-        plugins: [
-            webpack_configurator.getCleanWebpackPlugin(),
-            webpack_configurator.getManifestPlugin(),
-            ...webpack_configurator.getCSSExtractionPlugins()
-        ]
-    }
-];
+module.exports = webpack_configurator.extendProdConfiguration(common);
