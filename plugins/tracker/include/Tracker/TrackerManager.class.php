@@ -455,12 +455,13 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
 
         $hp = Codendi_HTMLPurifier::instance();
 
-        echo '<div class="tracker-creation-header">';
-        echo '<h2>' . $Language->getText('plugin_tracker_include_type', 'create_tracker') . '</h2>';
+        echo '<div class="alert alert-error">';
+        echo dgettext('tuleap-tracker', 'This page is deprecated and will be removed soon. You should switch to the new tracker creation flow.');
         echo '<a href="' . TrackerCreationController::getRouteToTrackerCreationController($project) . '" class="btn btn-primary tracker-creation-link">
-                <i class="fa fa-flask"></i> ' . dgettext('tuleap-tracker', 'Try new tracker creation flow') .
+                <i class="fa fa-long-arrow-right"></i> ' . dgettext('tuleap-tracker', 'Switch to new tracker creation flow') .
             '</a>';
         echo '</div>';
+        echo '<h2>' . $Language->getText('plugin_tracker_include_type', 'create_tracker') . '</h2>';
 
         echo '<form name="form_create" method="post" enctype="multipart/form-data" id="tracker_create_new">
           <input type="hidden" name="group_id" value="' . $project->getId() . '">
@@ -719,8 +720,9 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                 $html .= $GLOBALS['Language']->getText('plugin_tracker_index', 'no_accessible_trackers_msg');
             }
             if ($this->userCanCreateTracker($project->group_id, $user)) {
-                $html .= '<br /><a id="tracker_createnewlink" href="' . TRACKER_BASE_URL . '/?group_id=' . $project->group_id . '&amp;func=create">';
-                $html .= $GLOBALS['HTML']->getImage('ic/add.png', array('alt' => 'add')) . ' ';
+                $html .= '<br /><a id="tracker_createnewlink" href="' . TRACKER_BASE_URL . '/' .
+                    urlencode($project->getUnixNameLowerCase()) . '/new">';
+                $html .= $GLOBALS['HTML']->getImage('ic/add.png', ['alt' => 'add']) . ' ';
                 $html .= $GLOBALS['Language']->getText('plugin_tracker_index', 'create_new_tracker');
                 $html .= '</a>';
             }
