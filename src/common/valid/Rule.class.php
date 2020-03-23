@@ -806,29 +806,16 @@ class Rule_ProjectFullName extends Rule_UserName
  * size because MAX_FILE_SIZE (used by PHP to check allowed size) is submitted
  * by the client.
  *
- * By default the maxSize is defined by 'sys_max_size_upload' Codendi
- * variable but may be customized with setMaxSize.
+ * By default the maxSize is defined by 'sys_max_size_upload'
  */
 require_once __DIR__ . '/../../www/file/file_utils.php'; // Needed for 2 GB workaround
 class Rule_File extends Rule
 {
     public $maxSize;
-    public $i18nPageName;
 
     public function __construct()
     {
         $this->maxSize = ForgeConfig::get('sys_max_size_upload');
-        $this->i18nPageName = 'rule_file';
-    }
-
-    public function setMaxSize($max)
-    {
-        $this->maxSize = $max;
-    }
-
-    public function geti18nError($key, $params = "")
-    {
-        return $GLOBALS['Language']->getText($this->i18nPageName, $key, $params);
     }
 
     /**
@@ -848,29 +835,26 @@ class Rule_File extends Rule
                     break;
                 case UPLOAD_ERR_INI_SIZE:
                 case UPLOAD_ERR_FORM_SIZE:
-                    $this->error = $this->geti18nError('error_upload_size', $file['error']);
+                    $this->error = $GLOBALS['Language']->getText('rule_file', 'error_upload_size', $file['error']);
                     break;
                 case UPLOAD_ERR_PARTIAL:
-                    $this->error = $this->geti18nError('error_upload_partial', $file['error']);
+                    $this->error = $GLOBALS['Language']->getText('rule_file', 'error_upload_partial', $file['error']);
                     break;
                 case UPLOAD_ERR_NO_FILE:
-                    $this->error = $this->geti18nError('error_upload_nofile', $file['error']);
+                    $this->error = $GLOBALS['Language']->getText('rule_file', 'error_upload_nofile', $file['error']);
                     break;
-                //case UPLOAD_ERR_NO_TMP_DIR: PHP 5.0.3
-                //case UPLOAD_ERR_CANT_WRITE: PHP 5.1.0
-                //case UPLOAD_ERR_EXTENSION: PHP 5.2.0
                 default:
-                    $this->error = $this->geti18nError('error_upload_unknown', $file['error']);
+                    $this->error = $GLOBALS['Language']->getText('rule_file', 'error_upload_unknown', $file['error']);
             }
             if ($ok && $file['name'] == '') {
                 $ok = false;
-                $this->error = $this->geti18nError('error_upload');
+                $this->error = $GLOBALS['Language']->getText('rule_file', 'error_upload');
             }
             if ($ok) {
                 // Re-check filesize (do not trust uploaded MAX_FILE_SIZE)
                 if (file_utils_get_size($file['tmp_name']) > $this->maxSize) {
                     $ok = false;
-                    $this->error = $this->geti18nError('error_upload_size', 1);
+                    $this->error = $GLOBALS['Language']->getText('rule_file', 'error_upload_size', 1);
                 }
             }
         }

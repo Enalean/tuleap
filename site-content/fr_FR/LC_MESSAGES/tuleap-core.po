@@ -46,6 +46,10 @@ msgid "%s - Account suspension notification"
 msgstr "%s - Notification de suspension de compte"
 
 #, php-format
+msgid "%s ago"
+msgstr "il y a %s"
+
+#, php-format
 msgid "%s full project listing"
 msgstr "Liste complète des projets %s"
 
@@ -2756,6 +2760,10 @@ msgstr "[%s] Confirmation de changement d'e-mail"
 
 msgid "edit"
 msgstr "éditer"
+
+#, php-format
+msgid "in %s"
+msgstr "dans %s"
 
 msgid "last<br>month"
 msgstr "le mois<br>dernier"

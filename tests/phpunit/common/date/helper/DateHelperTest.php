@@ -136,4 +136,40 @@ final class DateHelperTest extends TestCase
         $firstOfDecember2011_12_01 = 1322752769;
         return DateHelper::formatForLanguage($lang, $firstOfDecember2011_12_01, $dayOnly);
     }
+
+    public function testDateInPast(): void
+    {
+        $GLOBALS['Language']
+            ->shouldReceive('getText')
+            ->with(
+                'include_utils',
+                'X_minutes',
+                8
+            )
+            ->once()
+            ->andReturns('8 minutes');
+
+        $this->assertEquals(
+            '8 minutes ago',
+            DateHelper::timeAgoInWords($_SERVER['REQUEST_TIME'] - 500)
+        );
+    }
+
+    public function testDateInFuture()
+    {
+        $GLOBALS['Language']
+            ->shouldReceive('getText')
+            ->with(
+                'include_utils',
+                'X_minutes',
+                8
+            )
+            ->once()
+            ->andReturns('8 minutes');
+
+        $this->assertEquals(
+            'in 8 minutes',
+            DateHelper::timeAgoInWords($_SERVER['REQUEST_TIME'] + 500)
+        );
+    }
 }
