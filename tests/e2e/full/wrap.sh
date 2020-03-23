@@ -17,19 +17,11 @@ clean_env() {
     $DOCKERCOMPOSE down --remove-orphans --volumes || true
 }
 
-wait_until_tests_are_executed() {
-    local test_container_id="$($DOCKERCOMPOSE ps -q test)"
-    timeout "$MAX_TEST_EXECUTION_TIME" docker wait "$test_container_id" || \
-        echo 'Tests take to much time to execute. End of execution will not be waited for!'
-}
-
 mkdir -p "$test_results_folder" || true
 rm -rf "$test_results_folder/*" || true
 clean_env
 
-TEST_RESULT_OUTPUT="$test_results_folder" $DOCKERCOMPOSE up -d --build
-
-wait_until_tests_are_executed
+TEST_RESULT_OUTPUT="$test_results_folder" timeout "$MAX_TEST_EXECUTION_TIME" $DOCKERCOMPOSE up --build --abort-on-container-exit --exit-code-from=test
 
 tuleap_container_id="$($DOCKERCOMPOSE ps -q tuleap)"
 mkdir -p "$test_results_folder/logs"

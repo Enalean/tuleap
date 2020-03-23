@@ -2,10 +2,6 @@
 
 set -ex
 
-if [ -z "$MYSQL_DAEMON" ]; then
-    MYSQL_DAEMON=mysqld
-fi
-
 setup_tuleap() {
     echo "Setup Tuleap"
     mkdir -p \

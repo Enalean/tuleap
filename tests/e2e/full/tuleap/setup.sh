@@ -2,6 +2,8 @@
 
 set -euxo pipefail
 
+DB_HOST="mysql57"
+
 setup_lhs() {
     touch /etc/aliases.codendi
 
@@ -29,6 +31,7 @@ setup_tuleap() {
 
     cat /usr/share/tuleap/src/etc/database.inc.dist | \
         sed \
+         -e "s/localhost/$DB_HOST/" \
          -e "s/%sys_dbname%/tuleap/" \
          -e "s/%sys_dbuser%/tuleapadm/" \
          -e "s/%sys_dbpasswd%/welcome0/" > /etc/tuleap/conf/database.inc
@@ -54,29 +57,27 @@ setup_tuleap() {
 }
 
 setup_database() {
-    MYSQL_HOST=localhost
     MYSQL_USER=tuleapadm
     MYSQL_PASSWORD=welcome0
     MYSQL_DBNAME=tuleap
-    MYSQL="mysql -h$MYSQL_HOST -u$MYSQL_USER -p$MYSQL_PASSWORD"
 
-    echo "Setup database"
-    mkdir -p /tmp/mysql
-    chown mysql:mysql /tmp/mysql
+    MYSQLROOT="mysql -h$DB_HOST -uroot -pwelcome0"
 
-    service mysqld start
-    mysql -e "GRANT ALL PRIVILEGES on *.* to '$MYSQL_USER'@'$MYSQL_HOST' identified by '$MYSQL_PASSWORD'"
-    $MYSQL -e "DROP DATABASE IF EXISTS $MYSQL_DBNAME"
-    $MYSQL -e "CREATE DATABASE $MYSQL_DBNAME CHARACTER SET utf8"
-    $MYSQL $MYSQL_DBNAME < "/usr/share/tuleap/src/db/mysql/database_structure.sql"
-    $MYSQL $MYSQL_DBNAME < "/usr/share/tuleap/src/db/mysql/database_initvalues.sql"
-    $MYSQL $MYSQL_DBNAME < "/usr/share/tuleap/tests/e2e/full/tuleap/cypress_database_init_values.sql"
+    /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:mysql-init --host="$DB_HOST" --user=root --password=welcome0 "$MYSQL_PASSWORD" "$MYSQL_DBNAME" "$MYSQL_USER@%"
+    /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:mysql --host="$DB_HOST" --user="$MYSQL_USER" --dbname="$MYSQL_DBNAME" --password="$MYSQL_PASSWORD" welcome0 localhost
+    $MYSQLROOT -e "DELETE FROM tuleap.password_configuration"
+    $MYSQLROOT -e "INSERT INTO tuleap.password_configuration values (0)"
 
-    mysql -e "GRANT SELECT ON $MYSQL_DBNAME.user to dbauthuser@'localhost' identified by '$MYSQL_PASSWORD';"
-    mysql -e "GRANT SELECT ON $MYSQL_DBNAME.groups to dbauthuser@'localhost';"
-    mysql -e "GRANT SELECT ON $MYSQL_DBNAME.user_group to dbauthuser@'localhost';"
-    mysql -e "GRANT SELECT,UPDATE ON $MYSQL_DBNAME.svn_token to dbauthuser@'localhost';"
-    mysql -e "FLUSH PRIVILEGES;"
+    $MYSQLROOT -e "GRANT ALL PRIVILEGES ON \`plugin_mediawiki_%\`.* TO '${MYSQL_USER}'@'%'"
+
+    $MYSQLROOT $MYSQL_DBNAME < "/usr/share/tuleap/tests/e2e/full/tuleap/cypress_database_init_values.sql"
+
+    $MYSQLROOT -e "GRANT SELECT ON $MYSQL_DBNAME.user to dbauthuser@'%' identified by '$MYSQL_PASSWORD';"
+    $MYSQLROOT -e "GRANT SELECT ON $MYSQL_DBNAME.groups to dbauthuser@'%';"
+    $MYSQLROOT -e "GRANT SELECT ON $MYSQL_DBNAME.user_group to dbauthuser@'%';"
+    $MYSQLROOT -e "GRANT SELECT,UPDATE ON $MYSQL_DBNAME.svn_token to dbauthuser@'%';"
+    $MYSQLROOT -e "FLUSH PRIVILEGES;"
+
 }
 
 load_project() {
@@ -94,7 +95,6 @@ load_project() {
 }
 
 seed_data() {
-    mysql -e "DELETE FROM tuleap.password_configuration;"
     su -c "/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php tracker" -l codendiadm
     su -c "/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php cardwall" -l codendiadm
     su -c "/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php agiledashboard" -l codendiadm
@@ -123,7 +123,6 @@ seed_data
 
 /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/tuleap.php config-set sys_project_approval 0
 /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/tuleap.php config-set project_admin_can_choose_visibility 1
-/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/tuleap.php set-user-password admin welcome0
 
 service php73-php-fpm start
 service nginx start
