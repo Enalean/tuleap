@@ -16,8 +16,7 @@ _infoMessage() {
 _optionMessages() {
     local -a selectedOptions=("${@}")
 
-    _warningMessage "Options selected:  ${selectedOptions[*]\
-        /--mysql-password=*/--mysql-password=****}"
+    _warningMessage "Options selected:  ${selectedOptions[*]/--mysql-password=*/--mysql-password=****}"
 
     if [ ${assumeyes} = "false" ]; then
         _questionMessage "Do you want to continue? [y/N] "
@@ -42,7 +41,7 @@ _questionMessage() {
 _warningMessage() {
     # ${1}: message to sent
 
-    ${printf} "\033[33m * \033[0m${1}\n"
+    echo " * ${1}"
     _logMessages "Warning: ${1}"
 }
 
