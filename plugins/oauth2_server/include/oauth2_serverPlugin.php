@@ -174,10 +174,8 @@ final class oauth2_serverPlugin extends Plugin
                     '/authorize',
                     $this->getRouteHandler('routeAuthorizationEndpointPost')
                 );
-                $r->post(
-                    '/token',
-                    $this->getRouteHandler('routeAccessTokenCreation')
-                );
+                $r->post('/token', $this->getRouteHandler('routeAccessTokenCreation'));
+                $r->post('/token/revoke', $this->getRouteHandler('routeTokenRevocation'));
             }
         );
     }
@@ -367,6 +365,39 @@ final class oauth2_serverPlugin extends Plugin
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
             ),
             new PKCECodeVerifier(),
+            new SapiEmitter(),
+            new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
+            new RejectNonHTTPSRequestMiddleware($response_factory, $stream_factory),
+            new DisableCacheMiddleware(),
+            new OAuth2ClientAuthenticationMiddleware(
+                new PrefixedSplitTokenSerializer(new PrefixOAuth2ClientSecret()),
+                new OAuth2AppCredentialVerifier(
+                    new AppFactory($app_dao, ProjectManager::instance()),
+                    $app_dao,
+                    new SplitTokenVerificationStringHasher()
+                ),
+                new BasicAuthLoginExtractor(),
+                BackendLogger::getDefaultLogger()
+            )
+        );
+    }
+
+    public function routeTokenRevocation(): DispatchableWithRequest
+    {
+        $response_factory = HTTPFactoryBuilder::responseFactory();
+        $stream_factory   = HTTPFactoryBuilder::streamFactory();
+        $app_dao          = new AppDao();
+        return new \Tuleap\OAuth2Server\Grant\TokenRevocationController(
+            $response_factory,
+            $stream_factory,
+            new PrefixedSplitTokenSerializer(new PrefixOAuth2AccessToken()),
+            new \Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenRevocationVerifier(
+                new OAuth2AccessTokenDAO(),
+                new SplitTokenVerificationStringHasher()
+            ),
+            new \Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeRevoker(
+                new OAuth2AuthorizationCodeDAO()
+            ),
             new SapiEmitter(),
             new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
             new RejectNonHTTPSRequestMiddleware($response_factory, $stream_factory),
