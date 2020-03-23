@@ -109,6 +109,9 @@ class TemplateFactory
      */
     public function getTemplate(string $name): TuleapTemplate
     {
+        if ($name === EmptyTemplate::NAME && isset($this->templates[$name])) {
+            return $this->templates[EmptyTemplate::NAME];
+        }
         if (! isset($this->templates[$name]) || ! $this->templates[$name]->isAvailable()) {
             throw new InvalidXMLTemplateNameException();
         }

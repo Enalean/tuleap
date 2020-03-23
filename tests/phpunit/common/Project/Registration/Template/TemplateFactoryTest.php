@@ -82,6 +82,12 @@ class TemplateFactoryTest extends TestCase
         $this->assertInstanceOf(ScrumTemplate::class, $template);
     }
 
+    public function testItReturnsEmptyTemplate(): void
+    {
+        $template = $this->factory->getTemplate(EmptyTemplate::NAME);
+        $this->assertInstanceOf(EmptyTemplate::class, $template);
+    }
+
     public function testItReturnsScrumTemplateXML(): void
     {
         $template = $this->factory->getTemplate(ScrumTemplate::NAME);
