@@ -58,10 +58,9 @@ class PluginsAdministrationPlugin extends PluginWithLegacyInternalRouting
     public function burning_parrot_get_stylesheets($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $assets = $this->getThemesIncludeAssets();
             /** @var ThemeVariantColor $variant */
             $variant                 = $params['variant'];
-            $params['stylesheets'][] = $assets->getFileURL('style-' . $variant->getName() . '.css');
+            $params['stylesheets'][] = $this->getAssets()->getFileURL('style-' . $variant->getName() . '.css');
         }
     }
 
@@ -69,11 +68,7 @@ class PluginsAdministrationPlugin extends PluginWithLegacyInternalRouting
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             $params['javascript_files'][] = '/scripts/tuleap/manage-allowed-projects-on-resource.js';
-            $js_assets                    = new IncludeAssets(
-                __DIR__ . "/../../../src/www/assets/pluginsadministration/scripts",
-                "/assets/pluginsadministration/scripts"
-            );
-            $params['javascript_files'][] = $js_assets->getFileURL('pluginsadministration.js');
+            $params['javascript_files'][] = $this->getAssets()->getFileURL('pluginsadministration.js');
         }
     }
 
@@ -84,11 +79,11 @@ class PluginsAdministrationPlugin extends PluginWithLegacyInternalRouting
         $controler->process();
     }
 
-    private function getThemesIncludeAssets(): IncludeAssets
+    private function getAssets(): IncludeAssets
     {
         return new IncludeAssets(
-            __DIR__ . "/../../../src/www/assets/pluginsadministration/themes",
-            "/assets/pluginsadministration/themes"
+            __DIR__ . '/../../../src/www/assets/pluginsadministration/',
+            '/assets/pluginsadministration/'
         );
     }
 }
