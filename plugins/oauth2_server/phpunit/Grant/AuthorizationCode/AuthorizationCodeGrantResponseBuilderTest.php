@@ -29,6 +29,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenCreator;
 use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenWithIdentifier;
+use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenCreator;
 use Tuleap\User\OAuth2\Scope\DemoOAuth2Scope;
 
 final class AuthorizationCodeGrantResponseBuilderTest extends TestCase
@@ -37,12 +38,14 @@ final class AuthorizationCodeGrantResponseBuilderTest extends TestCase
 
     public function testGeneratesSuccessfulRequestRepresentation(): void
     {
-        $access_token_creator = \Mockery::mock(OAuth2AccessTokenCreator::class);
-        $builder              = new AuthorizationCodeGrantResponseBuilder($access_token_creator);
+        $access_token_creator  = \Mockery::mock(OAuth2AccessTokenCreator::class);
+        $refresh_token_creator = \Mockery::mock(OAuth2RefreshTokenCreator::class);
+        $builder               = new AuthorizationCodeGrantResponseBuilder($access_token_creator, $refresh_token_creator);
 
         $access_token_creator->shouldReceive('issueAccessToken')->andReturn(
             new OAuth2AccessTokenWithIdentifier(new ConcealedString('identifier'), new \DateTimeImmutable('@20'))
         );
+        $refresh_token_creator->shouldReceive('issueRefreshTokenIdentifier')->andReturn(new ConcealedString('rt_token'));
 
         $representation = $builder->buildResponse(
             new \DateTimeImmutable('@10'),
@@ -54,6 +57,6 @@ final class AuthorizationCodeGrantResponseBuilderTest extends TestCase
             )
         );
 
-        $this->assertEquals($representation->access_token, 'identifier');
+        $this->assertNotEmpty(json_encode($representation, JSON_THROW_ON_ERROR));
     }
 }

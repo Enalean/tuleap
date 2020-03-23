@@ -26,12 +26,23 @@ use PHPUnit\Framework\TestCase;
 
 final class OAuth2ScopeIdentifierTest extends TestCase
 {
-    public function testIdentifierKeyIsNotModified(): void
+    /**
+     * @dataProvider dataProviderValidIdentifierKey
+     */
+    public function testIdentifierKeyIsNotModified(string $identifier_key): void
     {
-        $identifier_key = 'profile:foo';
         $identifier     = OAuth2ScopeIdentifier::fromIdentifierKey($identifier_key);
 
         $this->assertEquals($identifier_key, $identifier->toString());
+    }
+
+    public function dataProviderValidIdentifierKey(): array
+    {
+        return [
+            ['profile:foo'],
+            ['profile'],
+            ['profile_foo'],
+        ];
     }
 
     /**
