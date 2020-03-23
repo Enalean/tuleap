@@ -873,12 +873,9 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         $xmlMapping[$ID] = $this->id;
         $root->addAttribute('ID', $ID);
         $root->addAttribute('rank', $this->rank);
-        // if old ids are important, modify code here
-        if (false) {
-            $root->addAttribute('id', $this->id);
-            $root->addAttribute('tracker_id', $this->tracker_id);
-            $root->addAttribute('parent_id', $this->parent_id);
-        }
+        $root->addAttribute('id', $this->id);
+        $root->addAttribute('tracker_id', $this->tracker_id);
+        $root->addAttribute('parent_id', $this->parent_id);
         // ony add if values are different from default
         if (!$this->use_it) {
             $root->addAttribute('use_it', $this->use_it);

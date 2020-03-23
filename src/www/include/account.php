@@ -146,7 +146,7 @@ function account_redirect_after_login($return_to)
 
     if ($return_to) {
         $returnToToken = parse_url($return_to);
-        if (preg_match('{/my(/|/index.php|)}i', $returnToToken['path'])) {
+        if (preg_match('{/my(/|/index.php|)}i', $returnToToken['path'] ?? '')) {
             $url = '/my/index.php';
         } else {
             $url = '/my/redirect.php';

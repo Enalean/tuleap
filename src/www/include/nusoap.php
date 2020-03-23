@@ -2077,7 +2077,7 @@ class soap_transport_http extends nusoap_base
 
      // set default port
         if (!isset($u['port'])) {
-            if ($u['scheme'] == 'https') {
+            if (($u['scheme'] ?? '') === 'https') {
                 $this->port = 443;
             } else {
                 $this->port = 80;
@@ -4094,8 +4094,8 @@ class wsdl extends nusoap_base
                                 if ($url != '') {
                                             $urlparts = parse_url($url);
                                     if (!isset($urlparts['host'])) {
-                                        $url = $wsdlparts['scheme'] . '://' . $wsdlparts['host'] . (isset($wsdlparts['port']) ? ':' . $wsdlparts['port'] : '') .
-                                        substr($wsdlparts['path'], 0, strrpos($wsdlparts['path'], '/') + 1) . $urlparts['path'];
+                                        $url = ($wsdlparts['scheme'] ?? '') . '://' . ($wsdlparts['host'] ?? '') . (isset($wsdlparts['port']) ? ':' . $wsdlparts['port'] : '') .
+                                        substr($wsdlparts['path'] ?? '', 0, (int) strrpos($wsdlparts['path'] ?? '', '/') + 1) . ($urlparts['path'] ?? '');
                                     }
                                     if (! in_array($url, $imported_urls)) {
                                         $this->parseWSDL($url);
@@ -4120,8 +4120,8 @@ class wsdl extends nusoap_base
                         if ($url != '') {
                                       $urlparts = parse_url($url);
                             if (!isset($urlparts['host'])) {
-                                $url = $wsdlparts['scheme'] . '://' . $wsdlparts['host'] . (isset($wsdlparts['port']) ? ':' . $wsdlparts['port'] : '') .
-                                substr($wsdlparts['path'], 0, strrpos($wsdlparts['path'], '/') + 1) . $urlparts['path'];
+                                $url = ($wsdlparts['scheme'] ?? '') . '://' . ($wsdlparts['host'] ?? '') . (isset($wsdlparts['port']) ? ':' . $wsdlparts['port'] : '') .
+                                substr($wsdlparts['path'] ?? '', 0, (int) strrpos($wsdlparts['path'] ?? '', '/') + 1) . ($urlparts['path'] ?? '');
                             }
                             if (! in_array($url, $imported_urls)) {
                                 $this->parseWSDL($url);
@@ -4208,7 +4208,7 @@ class wsdl extends nusoap_base
             $this->debug("got WSDL URL");
         } else {
             // $wsdl is not http(s), so treat it as a file URL or plain file path
-            if (isset($wsdl_props['scheme']) && ($wsdl_props['scheme'] == 'file') && isset($wsdl_props['path'])) {
+            if (($wsdl_props['scheme'] ?? '') === 'file' && isset($wsdl_props['path'])) {
                 $path = isset($wsdl_props['host']) ? ($wsdl_props['host'] . ':' . $wsdl_props['path']) : $wsdl_props['path'];
             } else {
                 $path = $wsdl;

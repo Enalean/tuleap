@@ -25,21 +25,21 @@ namespace Tuleap\User\Account;
 
 use SVN_TokenPresenter;
 
-/**
- * @psalm-immutable
- */
 final class SVNTokensPresenter
 {
     /**
      * @var SVN_TokenPresenter[]
+     * @psalm-readonly
      */
     public $svn_tokens = [];
     /**
      * @var bool
+     * @psalm-readonly
      */
     public $has_svn_tokens;
     /**
      * @var string|null
+     * @psalm-readonly
      */
     public $last_svn_token;
 

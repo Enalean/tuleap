@@ -49,10 +49,11 @@ class URLVerificationFactory
      */
     public function getURLVerification($server)
     {
+        $urlVerification = null;
         $this->event_manager->processEvent('url_verification_instance', array('server_param' => $server,
                                                     'url_verification' => &$urlVerification));
-        if (isset($urlVerification)) {
-            return ($urlVerification);
+        if ($urlVerification !== null) {
+            return $urlVerification;
         } else {
             return (new URLVerification());
         }

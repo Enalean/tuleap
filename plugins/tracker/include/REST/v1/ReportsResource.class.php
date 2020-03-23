@@ -89,7 +89,7 @@ class ReportsResource extends AuthenticatedResource
      *
      * @param int $id Id of the report
      *
-     * @return Tuleap\Tracker\REST\ReportRepresentation
+     * @return ReportRepresentation
      * @throws RestException 403
      * @throws RestException 404
      */
@@ -220,7 +220,7 @@ class ReportsResource extends AuthenticatedResource
         return array_values(array_filter($list_of_artifact_representation));
     }
 
-    /** @return Tracker_Report */
+    /** @return \Tracker_Report */
     private function getReportById(\PFUser $user, $id)
     {
         $store_in_session = false;

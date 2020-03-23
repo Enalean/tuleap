@@ -26,7 +26,7 @@ class ToBeMappedUser extends ActionToBeTakenForUser
 
     public const ACTION = 'map';
 
-    /** @var PFUser[] */
+    /** @var \PFUser[] */
     private $matching_users;
 
     public function __construct(

@@ -78,15 +78,8 @@ class Tracker_Report_CriteriaFactory
             'rank' => (int) $att['rank']
         );
         $row['is_advanced'] = isset($att['is_advanced']) ? (int) $att['is_advanced'] : 0;
-        // in case old id values are important modify code here
-        if (false) {
-            foreach ($xml->attributes() as $key => $value) {
-                $row[$key] = (int) $value;
-            }
-        } else {
-            $row['id']     = 0;
-            $row['report'] = $report;
-        }
+        $row['id']          = 0;
+        $row['report']      = $report;
 
         return $this->getInstanceFromRow($row);
     }

@@ -149,7 +149,7 @@ class URL
             )
         );
 
-        if ($group_id) {
+        if (isset($group_id) && $group_id) {
             return $group_id;
         } elseif (isset($_REQUEST['group_id'])) {
             return $_REQUEST['group_id'];

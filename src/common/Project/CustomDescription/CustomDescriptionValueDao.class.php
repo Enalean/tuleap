@@ -35,8 +35,6 @@ class Project_CustomDescription_CustomDescriptionValueDao extends DataAccessObje
 
     private function updateDescriptionFieldValue($id, $value)
     {
-        $group_id             = $this->da->escapeInt($group_id);
-        $description_field_id = $this->da->escapeInt($description_field_id);
         $value                = $this->da->quoteSmart($value);
 
         $sql = "UPDATE group_desc_value

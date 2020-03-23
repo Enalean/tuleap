@@ -38,7 +38,7 @@ class PaginatedUserCollection implements Countable
     }
 
     /**
-     * @return PFUsers[]
+     * @return PFUser[]
      */
     public function getUsers()
     {

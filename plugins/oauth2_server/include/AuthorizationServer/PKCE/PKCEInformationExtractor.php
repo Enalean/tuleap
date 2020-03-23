@@ -55,7 +55,6 @@ class PKCEInformationExtractor
         }
 
         try {
-            /** @psalm-suppress TooFewArguments https://github.com/vimeo/psalm/pull/2997 */
             $decoded_challenge = sodium_base642bin($query_params[self::CODE_CHALLENGE_PARAMETER], SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING);
         } catch (\SodiumException $exception) {
             throw new CodeChallengeNotBase64URLEncodedException();

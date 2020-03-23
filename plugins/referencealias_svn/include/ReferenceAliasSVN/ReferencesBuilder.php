@@ -57,7 +57,7 @@ class ReferencesBuilder
     /**
      * Get a reference given a project, keyword and value (number after '#')
      *
-     * @return Reference or null
+     * @return Reference|null
      */
     public function getReference($keyword, $value)
     {
@@ -88,7 +88,7 @@ class ReferencesBuilder
 
     /**
      * Callback for when references are matched in a text
-     * @return ReferenceInstance or null
+     * @return ReferenceInstance|null
      */
     public function referenceFromMatch($match, $project_id)
     {
@@ -110,7 +110,7 @@ class ReferencesBuilder
 
     /**
      * Find a reference given a keyword and the original complete reference
-     * @return Reference or null
+     * @return Reference|null
      */
     private function findReference($keyword, $reference)
     {

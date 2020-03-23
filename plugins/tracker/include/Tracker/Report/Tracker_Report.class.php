@@ -88,6 +88,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
 
     public $renderers;
     public $criteria;
+    public $criterias;
     public $report_session;
     /**
      * @var ParserCacheProxy
@@ -1709,14 +1710,6 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     public function exportToXml(SimpleXMLElement $roott, $xmlMapping)
     {
         $root = $roott->addChild('report');
-        // if old ids are important, modify code here
-        if (false) {
-            $root->addAttribute('id', $this->id);
-            $root->addAttribute('tracker_id', $this->tracker_id);
-            $root->addAttribute('current_renderer_id', $this->current_renderer_id);
-            $root->addAttribute('user_id', $this->user_id);
-            $root->addAttribute('parent_report_id', $this->parent_report_id);
-        }
         // only add if different from default values
         if (!$this->is_default) {
             $root->addAttribute('is_default', $this->is_default);

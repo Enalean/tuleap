@@ -798,6 +798,7 @@ class Codendi_DiffFormatter
 
         $this->_start_diff();
 
+        $x0 = $y0 = 0;
         foreach ($diff->edits as $edit) {
             if ($edit->type == 'copy') {
                 if (is_array($block)) {
@@ -825,6 +826,7 @@ class Codendi_DiffFormatter
                     $x0 = $xi - sizeof($context);
                     $y0 = $yi - sizeof($context);
                     $block = array();
+                    assert(is_array($context));
                     if ($context) {
                         $block[] = new Codendi_DiffOp_Copy($context);
                     }

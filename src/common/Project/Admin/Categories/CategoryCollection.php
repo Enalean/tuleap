@@ -25,13 +25,11 @@ namespace Tuleap\Project\Admin\Categories;
 
 use TroveCat;
 
-/**
- * @psalm-immutable
- */
 final class CategoryCollection
 {
     /**
      * @psalm-var array<int, TroveCat> $root_categories
+     * @psalm-readonly
      */
     private $root_categories = [];
 
@@ -70,12 +68,17 @@ final class CategoryCollection
 
     /**
      * @return TroveCat[]
+     *
+     * @psalm-mutation-free
      */
     public function getRootCategories(): array
     {
         return array_values($this->root_categories);
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getCategory(TroveCat $category): TroveCat
     {
         return $this->root_categories[$category->getId()];

@@ -46,7 +46,11 @@ class PaginatedCommentsRepresentationsBuilder
 
         foreach ($paginated_comments->getComments() as $comment) {
             $user_representation = new MinimalUserRepresentation();
-            $user_representation->build($this->user_manager->getUserById($comment->getUserId()));
+            $user = $this->user_manager->getUserById($comment->getUserId());
+            if ($user === null) {
+                continue;
+            }
+            $user_representation->build($user);
 
             $comment_representation = new CommentRepresentation();
             $comment_representation->build($comment->getId(), $project_id, $user_representation, $comment->getPostDate(), $comment->getContent());

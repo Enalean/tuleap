@@ -1215,7 +1215,7 @@ class KanbanResource extends AuthenticatedResource
      * @throws RestException 403
      * @throws RestException 404
      *
-     * @return Tuleap\AgileDashboard\REST\v1\Kanban\KanbanColumnRepresentation
+     * @return \Tuleap\AgileDashboard\REST\v1\Kanban\KanbanColumnRepresentation
      */
     protected function postColumns($id, KanbanColumnPOSTRepresentation $column)
     {

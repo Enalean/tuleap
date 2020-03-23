@@ -75,17 +75,17 @@ class URLRedirect
         $urlToken = parse_url($url);
 
         $server_url = '';
-        if (array_key_exists('host', $urlToken) && $urlToken['host']) {
-            $server_url = $urlToken['scheme'] . '://' . $urlToken['host'];
-            if (array_key_exists('port', $urlToken) && $urlToken['port']) {
-                $server_url .= ':' . $urlToken['port'];
+        if (($urlToken['host'] ?? '') !== '') {
+            $server_url = ($urlToken['scheme'] ?? '') . '://' . ($urlToken['host'] ?? '');
+            if (($urlToken['port'] ?? '') !== '') {
+                $server_url .= ':' . ($urlToken['port'] ?? '');
             }
         }
 
         $finaleUrl = $server_url;
 
-        if (array_key_exists('path', $urlToken) && $urlToken['path']) {
-            $finaleUrl .= $urlToken['path'];
+        if (($urlToken['path'] ?? '') !== '') {
+            $finaleUrl .= ($urlToken['path'] ?? '');
         }
 
         if ($return_to) {
@@ -101,8 +101,8 @@ class URLRedirect
                 $return_to_parameter .= '/';
             }
 
-            if (array_key_exists('query', $urlToken) && $urlToken['query']) {
-                $finaleUrl .= '?' . $urlToken['query'] . '&amp;' . $return_to_parameter;
+            if (($urlToken['query'] ?? '') !== '') {
+                $finaleUrl .= '?' . ($urlToken['query'] ?? '') . '&amp;' . $return_to_parameter;
             } else {
                 $finaleUrl .= '?' . $return_to_parameter;
             }
@@ -110,13 +110,13 @@ class URLRedirect
                 $finaleUrl .= '&pv=2';
             }
         } else {
-            if (array_key_exists('query', $urlToken) && $urlToken['query']) {
-                $finaleUrl .= '?' . $urlToken['query'];
+            if (($urlToken['query'] ?? '') !== '') {
+                $finaleUrl .= '?' . ($urlToken['query'] ?? '');
             }
         }
 
-        if (array_key_exists('fragment', $urlToken) && $urlToken['fragment']) {
-            $finaleUrl .= '#' . $urlToken['fragment'];
+        if (($urlToken['fragment'] ?? '') !== '') {
+            $finaleUrl .= '#' . ($urlToken['fragment'] ?? '');
         }
 
         return $finaleUrl;

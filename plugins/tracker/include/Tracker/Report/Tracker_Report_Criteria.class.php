@@ -107,11 +107,6 @@ class Tracker_Report_Criteria
         if ($this->is_advanced) {
             $root->addAttribute('is_advanced', $this->is_advanced);
         }
-        // if old ids are important, modify code here
-        if (false) {
-            $root->addAttribute('id', $this->id);
-            $root->addAttribute('report', $this->report->id);
-        }
 
         $root->addChild('field')->addAttribute('REF', array_search($this->field->id, $xmlMapping));
         $this->field->exportCriteriaValueToXML($this, $root);

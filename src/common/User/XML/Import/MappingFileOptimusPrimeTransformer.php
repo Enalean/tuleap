@@ -48,7 +48,7 @@ class MappingFileOptimusPrimeTransformer
         $this->use_lame_password = $use_lame_password;
     }
 
-    /** @return User\XML\Import\ReadyToBeImportedUsersCollection */
+    /** @return \User\XML\Import\ReadyToBeImportedUsersCollection */
     public function transform(UsersToBeImportedCollection $collection_from_archive, $filename)
     {
         $csv_lines = $this->parseCSVFile($filename);

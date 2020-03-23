@@ -40,7 +40,7 @@ final class UserCannotBeAddedAsReviewerException extends \RuntimeException
         parent::__construct(
             'User #' . $user->getId() . ' cannot be added as reviewer because it cannot access the PR #' . $pull_request->getId()
         );
-        $this->user = $user;
+        $this->user = clone $user;
     }
 
     public function getUser(): PFUser

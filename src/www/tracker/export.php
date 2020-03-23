@@ -20,7 +20,6 @@
  */
 
 require_once __DIR__ . '/../project/export/project_export_utils.php';
-
 //  make sure this person has permission to view artifacts
 if (!$ath->userCanView()) {
     exit_permission_denied();
@@ -28,9 +27,10 @@ if (!$ath->userCanView()) {
 
 // Check if this tracker is valid (not deleted)
 if (!$ath->isValid()) {
-    exit_error($Language->getText('global', 'error'), $Language->getText('tracker_add', 'invalid'));
+    exit_error($Language->getText('global', 'error'), $GLOBALS['Language']->getText('tracker_add', 'invalid'));
 }
 
+$request     = HTTPRequest::instance();
 $export_aids = $request->get('export_aids');
 $constraint = 'AND a.artifact_id IN (' . db_es($export_aids) . ')';
 
@@ -39,18 +39,19 @@ $multiple_queries = false;
 $fields = $col_list = $lbl_list = $dsc_list = $all_queries      = [];
 
 $sql = $ath->buildExportQuery($fields, $col_list, $lbl_list, $dsc_list, $export_select, $export_from, $export_where, $multiple_queries, $all_queries, $constraint);
+assert(is_bool($multiple_queries));
 
 // Normally these two fields should be part of the artifact_fields.
 // For now big hack:
 // As we don't know the projects language, we export it according to the user language preferences
 
-$lbl_list['follow_ups']      = $Language->getText('project_export_artifact_export', 'follow_up_comments');
-$lbl_list['is_dependent_on'] = $Language->getText('project_export_artifact_export', 'depend_on');
-$lbl_list['cc']              = $Language->getText('project_export_artifact_export', 'add_cc_lbl');
+$lbl_list['follow_ups']      = $GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments');
+$lbl_list['is_dependent_on'] = $GLOBALS['Language']->getText('project_export_artifact_export', 'depend_on');
+$lbl_list['cc']              = $GLOBALS['Language']->getText('project_export_artifact_export', 'add_cc_lbl');
 
-$dsc_list['follow_ups']      = $Language->getText('project_export_artifact_export', 'all_followup_comments');
-$dsc_list['is_dependent_on'] = $Language->getText('project_export_artifact_export', 'depend_on_list');
-$dsc_list['cc']              = $Language->getText('project_export_artifact_export', 'add_cc_dsc');
+$dsc_list['follow_ups']      = $GLOBALS['Language']->getText('project_export_artifact_export', 'all_followup_comments');
+$dsc_list['is_dependent_on'] = $GLOBALS['Language']->getText('project_export_artifact_export', 'depend_on_list');
+$dsc_list['cc']              = $GLOBALS['Language']->getText('project_export_artifact_export', 'add_cc_dsc');
 
 // Add the 2 fields that we build ourselves for user convenience
 // - All follow-up comments
@@ -68,6 +69,7 @@ $eol = "\n";
 // Basically, these arrays contain all the fields of the tracker,
 // so we simply remove the non-displayed fields from these arrays.
 if ($request->get('only_displayed_fields') == 'on') {
+    assert(isset($atid));
     $artifact_report = new ArtifactReport($request->get('report_id'), $atid);
     $displayed_fields = $artifact_report->getResultFields();
     // array_intersect_key is a PHP 5 function (implemented here in src/www/include/utils.php)
