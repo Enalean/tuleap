@@ -183,9 +183,20 @@ _pluginSVN() {
         if [ ${mysql_user:-NULL} != "NULL" ] && \
            [ ${mysql_password:-NULL} != "NULL" ]; then
             dbauthuser_password="$(_setupRandomPassword)"
-            _mysqlExecute "${mysql_user}" "${mysql_password:-NULL}" \
-                "$(_sqlDbauthuserPrivileges ${web_server_ip:-localhost} \
-                ${dbauthuser_password})"
+
+            dbauthuser_grant="dbauthuser@localhost"
+            if [ "${web_server_ip:-NULL}" != "NULL" ]; then
+                dbauthuser_grant="dbauthuser@${web_server_ip}"
+            fi
+
+            ${tuleapcfg} setup:mysql-init \
+                --host="${mysql_server}" \
+                --admin-user="${mysql_user}" \
+                --admin-password="${mysql_password}" \
+                --db-name="${sys_db_name}" \
+                --nss-user="${dbauthuser_grant}" \
+                --nss-password="${dbauthuser_password}"
+
             ${sed} --in-place \
                 "s|sys_dbauth_passwd.*|sys_dbauth_passwd = '${dbauthuser_password}';|g" \
                 "${tuleap_conf}/${local_inc}"

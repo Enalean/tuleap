@@ -44,30 +44,30 @@ setup_database() {
     MYSQL_DBNAME=tuleap
     MYSQL="mysql -h$DB_HOST -u$MYSQL_USER -p$MYSQL_PASSWORD"
 
-    MYSQLROOT="mysql -h$DB_HOST -uroot -pwelcome0"
     echo "Use remote db $DB_HOST"
-    while ! $MYSQLROOT -e "show databases" >/dev/null; do
-        echo "Wait for the db";
-        sleep 1
-    done
 
-    $MYSQLROOT -e "GRANT ALL PRIVILEGES on *.* to '$MYSQL_USER'@'%' identified by '$MYSQL_PASSWORD'"
-    $MYSQL -e "DROP DATABASE IF EXISTS $MYSQL_DBNAME"
-    $MYSQL -e "CREATE DATABASE $MYSQL_DBNAME CHARACTER SET utf8"
-    $MYSQL $MYSQL_DBNAME < "/usr/share/tuleap/src/db/mysql/database_structure.sql"
-    $MYSQL $MYSQL_DBNAME < "/usr/share/tuleap/src/db/mysql/database_initvalues.sql"
+    /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:mysql-init \
+        --host="$DB_HOST" \
+        --admin-user=root \
+        --admin-password=welcome0 \
+        --db-name="$MYSQL_DBNAME" \
+        --app-user="$MYSQL_USER@%" \
+        --app-password="$MYSQL_PASSWORD"
+
+    /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:mysql \
+        --host="$DB_HOST" \
+        --user="$MYSQL_USER" \
+        --dbname="$MYSQL_DBNAME" \
+        --password="$MYSQL_PASSWORD" \
+        welcome0 \
+        localhost
+
     $MYSQL $MYSQL_DBNAME < "/usr/share/tuleap/src/db/mysql/trackerv3structure.sql"
     $MYSQL $MYSQL_DBNAME < "/usr/share/tuleap/src/db/mysql/trackerv3values.sql"
     # Need the raw import (instead of std activate of plugin) because we need to load
     # example.sql for Tv3->Tv5 migration tests
     $MYSQL $MYSQL_DBNAME < "/usr/share/tuleap/plugins/tracker_date_reminder/db/install.sql"
     $MYSQL $MYSQL_DBNAME < "/usr/share/tuleap/plugins/tracker_date_reminder/db/examples.sql"
-
-    $MYSQLROOT -e "GRANT SELECT ON $MYSQL_DBNAME.user to dbauthuser@'localhost' identified by '$MYSQL_PASSWORD';"
-    $MYSQLROOT -e "GRANT SELECT ON $MYSQL_DBNAME.groups to dbauthuser@'localhost';"
-    $MYSQLROOT -e "GRANT SELECT ON $MYSQL_DBNAME.user_group to dbauthuser@'localhost';"
-    $MYSQLROOT -e "GRANT SELECT,UPDATE ON $MYSQL_DBNAME.svn_token to dbauthuser@'localhost';"
-    $MYSQLROOT -e "FLUSH PRIVILEGES;"
 }
 
 seed_data() {

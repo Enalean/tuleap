@@ -64,8 +64,21 @@ setup_database() {
 
     MYSQLROOT="mysql -h$DB_HOST -uroot -pwelcome0"
 
-    /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:mysql-init --host="$DB_HOST" --user=root --password=welcome0 "$MYSQL_PASSWORD" "$MYSQL_DBNAME" "$MYSQL_USER@%"
-    /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:mysql --host="$DB_HOST" --user="$MYSQL_USER" --dbname="$MYSQL_DBNAME" --password="$MYSQL_PASSWORD" welcome0 localhost
+    /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:mysql-init \
+        --host="${DB_HOST}" \
+        --admin-user="root" \
+        --admin-password="welcome0" \
+        --db-name="${MYSQL_DBNAME}" \
+        --app-user="${MYSQL_USER}@%" \
+        --app-password="${MYSQL_PASSWORD}"
+
+    /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:mysql \
+        --host="$DB_HOST" \
+        --user="$MYSQL_USER" \
+        --dbname="$MYSQL_DBNAME" \
+        --password="$MYSQL_PASSWORD" \
+        welcome0 \
+        localhost
 
     $MYSQLROOT $MYSQL_DBNAME < "/usr/share/tuleap/src/db/mysql/trackerv3structure.sql"
     $MYSQLROOT $MYSQL_DBNAME < "/usr/share/tuleap/src/db/mysql/trackerv3values.sql"

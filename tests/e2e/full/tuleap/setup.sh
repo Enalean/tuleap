@@ -63,8 +63,22 @@ setup_database() {
 
     MYSQLROOT="mysql -h$DB_HOST -uroot -pwelcome0"
 
-    /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:mysql-init --host="$DB_HOST" --user=root --password=welcome0 "$MYSQL_PASSWORD" "$MYSQL_DBNAME" "$MYSQL_USER@%"
-    /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:mysql --host="$DB_HOST" --user="$MYSQL_USER" --dbname="$MYSQL_DBNAME" --password="$MYSQL_PASSWORD" welcome0 localhost
+    /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:mysql-init \
+        --host="$DB_HOST" \
+        --admin-user=root \
+        --admin-password=welcome0 \
+        --db-name="$MYSQL_DBNAME" \
+        --app-user="$MYSQL_USER@%" \
+        --app-password="$MYSQL_PASSWORD"
+
+    /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:mysql \
+        --host="$DB_HOST" \
+        --user="$MYSQL_USER" \
+        --dbname="$MYSQL_DBNAME" \
+        --password="$MYSQL_PASSWORD" \
+        welcome0 \
+        localhost
+
     $MYSQLROOT -e "DELETE FROM tuleap.password_configuration"
     $MYSQLROOT -e "INSERT INTO tuleap.password_configuration values (0)"
 
@@ -72,10 +86,6 @@ setup_database() {
 
     $MYSQLROOT $MYSQL_DBNAME < "/usr/share/tuleap/tests/e2e/full/tuleap/cypress_database_init_values.sql"
 
-    $MYSQLROOT -e "GRANT SELECT ON $MYSQL_DBNAME.user to dbauthuser@'%' identified by '$MYSQL_PASSWORD';"
-    $MYSQLROOT -e "GRANT SELECT ON $MYSQL_DBNAME.groups to dbauthuser@'%';"
-    $MYSQLROOT -e "GRANT SELECT ON $MYSQL_DBNAME.user_group to dbauthuser@'%';"
-    $MYSQLROOT -e "GRANT SELECT,UPDATE ON $MYSQL_DBNAME.svn_token to dbauthuser@'%';"
     $MYSQLROOT -e "FLUSH PRIVILEGES;"
 
 }
