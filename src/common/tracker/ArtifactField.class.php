@@ -1355,7 +1355,7 @@ class ArtifactField
                             break;
                     } // switch
 
-                    $sql .= $name . ") VALUES (" . $values . ")";
+                    $sql .= ($name ?? '') . ") VALUES (" . $values . ")";
 
                     $result = db_query($sql);
                 }
@@ -1470,7 +1470,7 @@ class ArtifactField
 
         $res = db_query($sql);
         if (!$res) {
-            $this->setError($Language->getText('tracker_common_field', 'del_err', array($field_id,$group_artifact_id,db_error())));
+            $this->setError($Language->getText('tracker_common_field', 'del_err', array($this->field_id,$group_artifact_id,db_error())));
             return false;
         }
 
@@ -1480,7 +1480,7 @@ class ArtifactField
 
         $res = db_query($sql);
         if (!$res) {
-            $this->setError($Language->getText('tracker_common_field', 'use_del_err', array($field_id,$group_artifact_id,db_error())));
+            $this->setError($Language->getText('tracker_common_field', 'use_del_err', array($this->field_id,$group_artifact_id,db_error())));
             return false;
         }
 
@@ -1490,7 +1490,7 @@ class ArtifactField
 
         $res = db_query($sql);
         if (!$res) {
-            $this->setError($Language->getText('tracker_common_field', 'del_err', array($field_id,$group_artifact_id,db_error())));
+            $this->setError($Language->getText('tracker_common_field', 'del_err', array($this->field_id,$group_artifact_id,db_error())));
             return false;
         }
 

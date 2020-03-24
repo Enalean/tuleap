@@ -840,7 +840,7 @@ class FileDiff
         if (empty($this->status) || ($this->status == 'M') || ($this->status == 'D')) {
             $fromBlob = $this->GetFromBlob();
             $fromData = $fromBlob->GetData(false);
-            $isBinary = $isBinary || BinaryDetector::isBinary($fromData);
+            $isBinary = BinaryDetector::isBinary($fromData);
             $fromName = 'a/';
             if (!empty($file)) {
                 $fromName .= $file;

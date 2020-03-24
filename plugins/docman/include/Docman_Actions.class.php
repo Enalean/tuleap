@@ -249,10 +249,10 @@ class Docman_Actions extends Actions
                             'user_id'   => $versionAuthor,
                             'label'     => $_label,
                             'changelog' => $_changelog,
-                            'filename'  => $_filename,
-                            'filesize'  => $_filesize,
-                            'filetype'  => $_filetype,
-                            'path'      => $path,
+                            'filename'  => $_filename ?? '',
+                            'filesize'  => $_filesize ?? 0,
+                            'filetype'  => $_filetype ?? '',
+                            'path'      => $path ?? '',
                             'date'      => $date);
             $vId = $vFactory->create($vArray);
 
@@ -297,24 +297,6 @@ class Docman_Actions extends Actions
                     break;
                 case 'newversion':
                     dgettext('tuleap-docman', 'Error while creating new version.');
-                    break;
-                case 'news':
-                    dgettext(
-                        'tuleap-docman',
-                        'Error while creating news. Check that you have right permissions.'
-                    );
-                    break;
-                case 'news_details':
-                    dgettext(
-                        'tuleap-docman',
-                        'Error while creating news. Check that details field is not empty.'
-                    );
-                    break;
-                case 'news_summary':
-                    dgettext(
-                        'tuleap-docman',
-                        'Error while creating news. Check that subject field is not empty.'
-                    );
                     break;
             }
         }
@@ -654,19 +636,19 @@ class Docman_Actions extends Actions
                     'user'     => &$user));
             }
 
-            if ($ownerChanged) {
+            if ($ownerChanged && isset($_oldowner, $_newowner)) {
                 $this->_raiseMetadataChangeEvent($user, $item, $request->get('group_id'), $_oldowner, $_newowner, 'owner');
             }
 
-            if ($statusChanged) {
+            if ($statusChanged && isset($old_st)) {
                 $this->_raiseMetadataChangeEvent($user, $item, $request->get('group_id'), $old_st, $data['status'], 'status');
             }
 
-            if ($create_date_changed) {
+            if ($create_date_changed && isset($old_create_date)) {
                 $this->_raiseMetadataChangeEvent($user, $item, $request->get('group_id'), $old_create_date, $data['create_date'], 'create_date');
             }
 
-            if ($update_date_changed) {
+            if ($update_date_changed && isset($old_update_date)) {
                 $this->_raiseMetadataChangeEvent($user, $item, $request->get('group_id'), $old_update_date, $data['update_date'], 'update_date');
             }
 

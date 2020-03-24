@@ -212,7 +212,7 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
                 return;
         }
 
-        $response->permanentRedirect($parsed_url['path'] . '?' . http_build_query($query_parameters));
+        $response->permanentRedirect(($parsed_url['path'] ?? '') . '?' . http_build_query($query_parameters));
     }
 
     /**

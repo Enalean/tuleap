@@ -25,6 +25,7 @@ use GitRepository;
 use GitRepositoryFactory;
 use Luracast\Restler\RestException;
 use ProjectManager;
+use Psr\Log\LoggerInterface;
 use ReferenceManager;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 use Tuleap\PullRequest\Dao as PullRequestDao;
@@ -33,10 +34,10 @@ use Tuleap\PullRequest\Factory as PullRequestFactory;
 
 class RepositoryResource
 {
-    /** @var Tuleap\PullRequest\Dao */
+    /** @var \Tuleap\PullRequest\Dao */
     private $pull_request_dao;
 
-    /** @var Tuleap\PullRequest\Factory */
+    /** @var \Tuleap\PullRequest\Factory */
     private $pull_request_factory;
 
     /** @var GitRepositoryFactory */
@@ -51,7 +52,7 @@ class RepositoryResource
     private $gitolite_access_URL_generator;
 
     /**
-     * @var Tuleap\PullRequest\Logger
+     * @var LoggerInterface
      */
     private $logger;
 

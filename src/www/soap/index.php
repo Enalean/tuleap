@@ -28,8 +28,6 @@ require_once __DIR__ . '/../include/pre.php';
 
 define('CODENDI_WS_API_VERSION', file_get_contents(dirname(__FILE__) . '/VERSION'));
 
-define('LOG_SOAP_REQUESTS', false);
-
 // Check if we the server is in secure mode or not.
 $request = HTTPRequest::instance();
 if ($request->isSecure()) {
@@ -69,10 +67,6 @@ try {
 // if POST was used to send this request, we handle it
 // else, we display a list of available methods
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (LOG_SOAP_REQUESTS) {
-        error_log('SOAP Request :');
-        error_log(file_get_contents('php://input'));
-    }
     $xml_security = new XML_Security();
     $xml_security->enableExternalLoadOfEntities();
     $server->handle();

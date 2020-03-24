@@ -2235,7 +2235,7 @@ if (defined('NUSOAP')) {
  * @param string $details the details (original submission) of the artifact
  * @param int $severity the severity of the artifact
  * @param array $extra_fields the extra_fields of the artifact (non standard fields)
- * @return int the ID of the artifact,
+ * @return SoapFault|int the ID of the artifact,
  *              or a soap fault if :
  *              - group_id does not match with a valid project,
  *              - group_artifact_id does not match with a valid tracker,
@@ -2287,6 +2287,7 @@ if (defined('NUSOAP')) {
                 return new SoapFault(INVALID_FIELD_DEPENDENCY_FAULT, 'Invalid Field Dependency', 'updateArtifact');
             }
 
+            $changes = [];
             if (! $a->handleUpdate($artifact_id_dependent, $canned_response, $changes, false, $data, true)) {
                 return new SoapFault(UPDATE_ARTIFACT_FAULT, $a->getErrorMessage(), 'updateArtifact');
             } else {
@@ -2295,6 +2296,7 @@ if (defined('NUSOAP')) {
                 }
                 // Update last_update_date field
                 $a->update_last_update_date();
+                assert(is_array($changes));
                 // Send the notification
                 if ($changes) {
                     $agnf = new ArtifactGlobalNotificationFactory();
@@ -2322,7 +2324,7 @@ if (defined('NUSOAP')) {
  * @param string $details the details (original submission) of the artifact
  * @param int $severity the severity of the artifact
  * @param array $extra_fields the extra_fields of the artifact (non standard fields)
- * @return int the ID of the artifact,
+ * @return SoapFault|int the ID of the artifact,
  *              or a soap fault if :
  *              - group_id does not match with a valid project,
  *              - trackr_name does not match with a valid tracker,

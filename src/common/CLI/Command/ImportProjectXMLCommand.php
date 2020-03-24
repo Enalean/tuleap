@@ -223,7 +223,7 @@ class ImportProjectXMLCommand extends Command
         } catch (\Exception $exception) {
             $broker_log->error(get_class($exception) . ': ' . $exception->getMessage() . ' in ' . $exception->getFile() . ' L' . $exception->getLine());
         } finally {
-            if ($archive) {
+            if (isset($archive) && $archive) {
                 $archive->cleanUp();
             }
         }

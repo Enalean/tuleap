@@ -25,14 +25,12 @@ namespace Tuleap\PullRequest\REST\v1\Reviewer;
 use PFUser;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
-/**
- * @psalm-immutable
- */
 final class ReviewersRepresentation
 {
     /**
      * @var MinimalUserRepresentation[]
      * @psalm-var list<MinimalUserRepresentation>
+     * @psalm-readonly
      */
     public $users;
 

@@ -459,7 +459,7 @@ class TrackerFactory
     * @param int $id          the id of the new tracker
     * @param array $ugroup_mapping
     * @param array $field_mapping
-    * @param bool $duplicate_type
+    * @param int $duplicate_type
     *
     * @return bool
     */

@@ -46,7 +46,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      * Constructor
      *
      * @param int $id the id of the renderer
-     * @param Report $report the id of the report
+     * @param Tracker_Report $report the id of the report
      * @param string $name the name of the renderer
      * @param string $description the description of the renderer
      * @param int $rank the rank

@@ -41,7 +41,7 @@ class PermissionController extends BaseFrsPresenter
     private $permission_creator;
     /** @var FRSPermissionManager */
     private $permission_manager;
-    /** @var UGr */
+    /** @var User_ForgeUserGroupFactory */
     private $ugroup_factory;
 
     public function __construct(

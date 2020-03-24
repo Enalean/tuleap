@@ -1126,6 +1126,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
         if ($is_update) {
             $array['release_id'] = $release['release_id'];
         }
+        $release_id = 0;
 
         if ($is_update) {
             $res = $release_factory->update($array);
@@ -1147,7 +1148,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                 $info_success = $GLOBALS['Language']->getText('file_admin_editreleases', 'rel_added');
             }
         }
-        if ($res) {
+        if ($res && isset($rel)) {
             // extract cross references
             $reference_manager = ReferenceManager::instance();
             $reference_manager->extractCrossRef($release['release_notes'], $release_id, ReferenceManager::REFERENCE_NATURE_RELEASE, $group_id);
@@ -1158,6 +1159,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
             if ($request->get('ugroups')) {
                 $ugroups = $request->get('ugroups');
             }
+            /** @psalm-suppress DeprecatedFunction */
             [$return_code, $feedbacks] = permission_process_selection_form($group_id, 'RELEASE_READ', $release_id, $ugroups);
             if (!$return_code) {
                 $error[] = $GLOBALS['Language']->getText('file_admin_editpackages', 'perm_update_err');
@@ -1166,6 +1168,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
 
             //submit news if requested
             if ($release_id && user_ismember($group_id, 'A') && $release_submit_news) {
+                require_once __DIR__ . '/../news/news_utils.php';
                 news_submit($group_id, $release_news_subject, $release_news_details, $private_news, false);
             }
 
@@ -1183,7 +1186,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                 }
             }
 
-            if ($is_update) {
+            if (isset($release_files_to_delete, $release_files) && $is_update) {
                 $files = $rel->getFiles();
 
                 //remove files
@@ -1206,6 +1209,9 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                         $fname = $files[$index]->getFileName();
                         $list  = explode('/', $fname);
                         $fname = $list[sizeof($list) - 1];
+                        if (! isset($new_release_id)) {
+                            continue;
+                        }
                         if ($new_release_id[$index] != $release_id) {
                             //changing to a different release for this file
                             //see if the new release is valid for this project
@@ -1217,7 +1223,13 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                 $package_id = $res2->getPackageID();
                             }
                         }
+                        if (! isset($res2)) {
+                            continue;
+                        }
                         if ($new_release_id[$index] == $release_id || $res2) {
+                            if (! isset($release_time)) {
+                                continue;
+                            }
                             if (! preg_match("/[0-9]{4}-[0-9]{2}-[0-9]{2}/", $release_time[$index])) {
                                 $warning[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'data_not_parsed_file', $fname);
                             } else {
@@ -1227,7 +1239,11 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                                     $unix_release_time = $res2->getReleaseTime();
                                 } else {
                                     $date_list = explode("-", $release_time[$index], 3);
-                                    $unix_release_time = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
+                                    assert(isset($date_list[1], $date_list[2], $date_list[0]));
+                                    $unix_release_time = mktime(0, 0, 0, (int) $date_list[1], (int) $date_list[2], (int) $date_list[0]);
+                                }
+                                if (! isset($release_file_type, $release_file_processor, $release_comment, $release_reference_md5)) {
+                                    continue;
                                 }
 
                                 $array = array (
@@ -1402,7 +1418,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                         }
                     }
                 }
-                if ($addingFiles) {
+                if (isset($addingFiles) && $addingFiles) {
                     $info[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'add_files');
                 }
             }
@@ -1435,7 +1451,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
         $GLOBALS['Response']->addFeedback('info', $info_message);
     }
 
-    if (count($error) === 0) {
+    if (count($error) === 0 && isset($info_success)) {
         $GLOBALS['Response']->addFeedback('info', $info_success);
         http_build_query(array('group_id' => $group_id));
         $GLOBALS['Response']->redirect('/file/showfiles.php?' . http_build_query(

@@ -39,6 +39,10 @@ abstract class Pane
      * @var Codendi_Request
      */
     protected $request;
+    /**
+     * @var Codendi_HTMLPurifier
+     */
+    protected $hp;
 
     public function __construct(GitRepository $repository, Codendi_Request $request)
     {

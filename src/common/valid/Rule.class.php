@@ -701,6 +701,7 @@ class Rule_ProjectName extends Rule_UserName
                 } else {
                     $result = true;
                     // Add Hook for plugins to check the name validity under plugins directories
+                    $error = '';
                     $this->getEventManager()->processEvent(
                         'file_exists_in_data_dir',
                         array('new_name'  => $val,

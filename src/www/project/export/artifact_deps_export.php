@@ -27,20 +27,21 @@ if (!$group || !is_object($group) || $group->isError()) {
     exit_no_group();
 }
 
+assert(isset($atid));
 if ($atid) {
     //    Create the ArtifactType object
     $at = new ArtifactType($group, $atid);
     if (!$at || !is_object($at)) {
-        exit_error($Language->getText('global', 'error'), $Language->getText('project_export_artifact_deps_export', 'at_not_created'));
+        exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('project_export_artifact_deps_export', 'at_not_created'));
     }
     if ($at->isError()) {
-        exit_error($Language->getText('global', 'error'), $at->getErrorMessage());
+        exit_error($GLOBALS['Language']->getText('global', 'error'), $at->getErrorMessage());
     }
 
     // Create field factory
     $art_field_fact = new ArtifactFieldFactory($at);
     if ($art_field_fact->isError()) {
-        exit_error($Language->getText('global', 'error'), $art_field_fact->getErrorMessage());
+        exit_error($GLOBALS['Language']->getText('global', 'error'), $art_field_fact->getErrorMessage());
     }
 }
 
@@ -53,10 +54,10 @@ $sql = 'SELECT ad.artifact_id,' .
 'ad.is_dependent_on_artifact_id <> 100';
 
 $col_list = array('artifact_id','is_dependent_on_artifact_id');
-$lbl_list = array('artifact_id' => $Language->getText('project_export_artifact_history_export', 'art_id'),
-         'is_dependent_on_artifact_id' => $Language->getText('project_export_artifact_deps_export', 'depend_on_art'));
-$dsc_list = array('artifact_id' => $Language->getText('project_export_artifact_deps_export', 'art_id_desc'),
-         'is_dependent_on_artifact_id' => $Language->getText('project_export_artifact_deps_export', 'depend_on_art'));
+$lbl_list = array('artifact_id' => $GLOBALS['Language']->getText('project_export_artifact_history_export', 'art_id'),
+         'is_dependent_on_artifact_id' => $GLOBALS['Language']->getText('project_export_artifact_deps_export', 'depend_on_art'));
+$dsc_list = array('artifact_id' => $GLOBALS['Language']->getText('project_export_artifact_deps_export', 'art_id_desc'),
+         'is_dependent_on_artifact_id' => $GLOBALS['Language']->getText('project_export_artifact_deps_export', 'depend_on_art'));
 
 $eol = "\n";
 
@@ -65,13 +66,16 @@ $eol = "\n";
 $result = db_query($sql);
 $rows = db_numrows($result);
 
+require_once __DIR__ . '/project_export_utils.php';
+
 $export = isset($export) ? (string) $export : '';
 if ($export == 'artifact_deps') {
     // Send the result in CSV format
     if ($result && $rows > 0) {
+        assert(isset($at));
             $tbl_name = str_replace(' ', '_', 'artifact_deps_' . $at->getItemName());
         header('Content-Type: text/csv');
-        header('Content-Disposition: filename=' . $tbl_name . '_' . $dbname . '.csv');
+        header('Content-Disposition: filename=' . $tbl_name . '.csv');
 
         echo build_csv_header($col_list, $lbl_list) . $eol;
 
@@ -79,20 +83,21 @@ if ($export == 'artifact_deps') {
             echo build_csv_record($col_list, $arr) . $eol;
         }
     } else {
+        assert(isset($pg_title));
         project_admin_header(array('title' => $pg_title), 'data');
 
-        echo '<h3>' . $Language->getText('project_export_artifact_deps_export', 'art_deps_export') . '</h3>';
+        echo '<h3>' . $GLOBALS['Language']->getText('project_export_artifact_deps_export', 'art_deps_export') . '</h3>';
         if ($result) {
-            echo '<P>' . $Language->getText('project_export_artifact_deps_export', 'no_deps_found');
+            echo '<P>' . $GLOBALS['Language']->getText('project_export_artifact_deps_export', 'no_deps_found');
         } else {
-            echo '<P>' . $Language->getText('project_export_artifact_deps_export', 'db_access_err', $GLOBALS['sys_name']);
+            echo '<P>' . $GLOBALS['Language']->getText('project_export_artifact_deps_export', 'db_access_err', $GLOBALS['sys_name']);
             echo '<br>' . db_error();
         }
         site_project_footer(array());
     }
 } elseif ($export == "artifact_deps_format") {
-    echo '<h3>' . $Language->getText('project_export_artifact_deps_export', 'deps_export_format') . '</h3>';
-    echo '<p>' . $Language->getText('project_export_artifact_deps_export', 'deps_export_format_msg') . '</p>';
+    echo '<h3>' . $GLOBALS['Language']->getText('project_export_artifact_deps_export', 'deps_export_format') . '</h3>';
+    echo '<p>' . $GLOBALS['Language']->getText('project_export_artifact_deps_export', 'deps_export_format_msg') . '</p>';
 
     $record = pick_a_record_at_random($result, $rows, $col_list);
 

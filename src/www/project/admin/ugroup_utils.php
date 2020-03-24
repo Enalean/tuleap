@@ -196,11 +196,9 @@ function ugroup_db_list_tracker_ugroups_for_user($group_id, $group_artifact_id, 
 /** Return array of ugroup_id for all dynamic ugoups like
  * (anonymous_user, registered_user, project_member,
  * project_admins, tracker_admins) that user is part of */
-function ugroup_db_list_dynamic_ugroups_for_user($group_id, $instances, $user)
+function ugroup_db_list_dynamic_ugroups_for_user($group_id, $instances, $user_id)
 {
-    if (!is_a($user, 'User')) {
-        $user = UserManager::instance()->getUserById($user);
-    }
+    $user = UserManager::instance()->getUserById($user_id);
 
     if ($user->isAnonymous()) {
         return array($GLOBALS['UGROUP_ANONYMOUS']);

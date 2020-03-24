@@ -2447,6 +2447,7 @@ EOS;
             $email = "";
             $row_color = 0;
             $i = 0;
+            $delete_ids = '';
             while ($row = db_fetch_array($result)) {
                 if ($row['email'] != $email) {
                     if ($email != "") {
@@ -2455,7 +2456,7 @@ EOS;
                         $out .= sprintf(
                             $fmt,
                             util_get_alt_row_color($row_color),
-                            $href_cc,
+                            $href_cc ?? '',
                             $i,
                             $html_delete
                         );
@@ -2480,7 +2481,7 @@ EOS;
             $out .= sprintf(
                 $fmt,
                 util_get_alt_row_color($row_color),
-                $href_cc,
+                $href_cc ?? '',
                 $i,
                 $html_delete
             );
@@ -2519,6 +2520,7 @@ EOS;
             $rowcolor = 0;
             $filename = "";
             $filesize = -1;
+            $delete_ids = '';
             while ($row = db_fetch_array($result)) {
                 if ($row['filename'] != $filename || $row['filesize'] != $filesize) {
                     if ($filename != "") {
@@ -2589,6 +2591,8 @@ EOS;
             $occ = 0;
             $dependent_on_artifact_id = -1;
             $row_color = 0;
+            $depend_ids = '';
+            $group_id   = 0;
             for ($i = 0; $i < $rows; $i++) {
                 if ($dependent_on_artifact_id != db_result($result, $i, 'is_dependent_on_artifact_id')) {
                     if ($dependent_on_artifact_id != -1) {
@@ -2598,9 +2602,9 @@ EOS;
                             $fmt,
                             util_get_alt_row_color($row_color),
                             '<a href="/tracker/?func=gotoid&group_id=' . (int) $group_id . '&aid=' . (int) $dependent_on_artifact_id . '">' .  $hp->purify($dependent_on_artifact_id, CODENDI_PURIFIER_CONVERT_HTML)  . "</a>",
-                            $hp->purify(util_unconvert_htmlspecialchars($summary), CODENDI_PURIFIER_BASIC, $this->getGroupId()),
-                            $hp->purify($tracker_label, CODENDI_PURIFIER_CONVERT_HTML),
-                            $hp->purify($group_label, CODENDI_PURIFIER_CONVERT_HTML),
+                            $hp->purify(util_unconvert_htmlspecialchars($summary ?? ''), CODENDI_PURIFIER_BASIC, $this->getGroupId()),
+                            $hp->purify($tracker_label ?? '', CODENDI_PURIFIER_CONVERT_HTML),
+                            $hp->purify($group_label ?? '', CODENDI_PURIFIER_CONVERT_HTML),
                             $occ,
                             $html_delete
                         );
@@ -2624,9 +2628,9 @@ EOS;
                 $fmt,
                 util_get_alt_row_color($row_color),
                 '<a href="/tracker/?func=gotoid&group_id=' . (int) $group_id . '&aid=' . (int) $dependent_on_artifact_id . '">' .  $hp->purify($dependent_on_artifact_id, CODENDI_PURIFIER_CONVERT_HTML)  . "</a>",
-                $hp->purify(util_unconvert_htmlspecialchars($summary), CODENDI_PURIFIER_BASIC, $this->getGroupId()),
-                $hp->purify($tracker_label, CODENDI_PURIFIER_CONVERT_HTML),
-                $hp->purify($group_label, CODENDI_PURIFIER_CONVERT_HTML),
+                $hp->purify(util_unconvert_htmlspecialchars($summary ?? ''), CODENDI_PURIFIER_BASIC, $this->getGroupId()),
+                $hp->purify($tracker_label ?? '', CODENDI_PURIFIER_CONVERT_HTML),
+                $hp->purify($group_label ?? '', CODENDI_PURIFIER_CONVERT_HTML),
                 $occ,
                 $html_delete
             );

@@ -34,7 +34,7 @@ class DiskUsageUserDetailsPresenterBuilder
      */
     private $disk_usage_manager;
     /**
-     * @var DiskUsageOutput
+     * @var Statistics_DiskUsageOutput
      */
     private $disk_usage_output;
     /**

@@ -595,9 +595,9 @@ class Git extends PluginController
                     $valid_url->required();
                     if ($this->request->valid($valid_url)) {
                         $parentId = (int) $this->request->get('parent_id');
+                        $this->addAction('cloneRepository', array($this->groupId, $repositoryName, $parentId));
+                        $this->addAction('getRepositoryDetails', array($this->groupId, $parentId));
                     }
-                    $this->addAction('cloneRepository', array($this->groupId, $repositoryName, $parentId));
-                    $this->addAction('getRepositoryDetails', array($this->groupId, $parentId));
                     $this->addView('view');
                 } elseif ($this->isAPermittedAction('save') && $this->request->get('save')) {
                     $repoAccess = null;
@@ -783,6 +783,7 @@ class Git extends PluginController
                 }
 
                 if ($this->request->get('go-to-mass-change')) {
+                    assert(isset($repositories));
                     $this->addAction('setSelectedRepositories', array($repositories));
                     $this->setDefaultPageRendering(false);
                     $this->addView('adminMassUpdateView');
@@ -790,6 +791,7 @@ class Git extends PluginController
                 }
 
                 if ($this->request->get('save-mass-change')) {
+                    assert(isset($repositories));
                     $this->addAction('updateMirroring', array(
                         $this->request->getProject(),
                         $repositories,

@@ -37,7 +37,7 @@ class Tracker_CannedResponseFactory
     /**
      * The singleton method
      *
-     * @return Tracker_ResponseFactory An instance of canned response factory
+     * @return self An instance of canned response factory
      */
     public static function instance()
     {
@@ -100,7 +100,7 @@ class Tracker_CannedResponseFactory
      * @param Tracker $tracker the tracker
      * @param int     $id      the id of the canned response
      *
-     * @return CannedResponse or null if not found
+     * @return Tracker_CannedResponse|null or null if not found
      */
     public function getCannedResponse($tracker, $id)
     {

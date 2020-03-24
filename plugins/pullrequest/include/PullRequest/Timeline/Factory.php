@@ -31,13 +31,13 @@ use Tuleap\PullRequest\Timeline\Dao as TimeLineDao;
 class Factory
 {
 
-    /** @var Tuleap\PullRequest\Comment\Dao */
+    /** @var \Tuleap\PullRequest\Comment\Dao */
     private $comments_dao;
 
-    /** @var Tuleap\PullRequest\InlineComment\Dao */
+    /** @var \Tuleap\PullRequest\InlineComment\Dao */
     private $inline_comments_dao;
 
-    /** @var Tuleap\PullRequest\Timeline\Dao */
+    /** @var \Tuleap\PullRequest\Timeline\Dao */
     private $timeline_dao;
     /**
      * @var ReviewerChangeRetriever

@@ -56,7 +56,7 @@ class Gerrit extends Pane
     private $gerrit_can_migrate_checker;
 
     /**
-     * @var Git_Drive_Gerrit_Template_Template[]
+     * @var \Git_Driver_Gerrit_Template_Template[]
      */
     private $templates;
     /**

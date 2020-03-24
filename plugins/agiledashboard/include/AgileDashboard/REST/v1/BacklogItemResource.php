@@ -349,7 +349,7 @@ class BacklogItemResource extends AuthenticatedResource
                 $order_validator->validate($order);
 
                 $orderer = ArtifactsRankOrderer::build();
-                $orderer->reorder($order, $id, $project);
+                $orderer->reorder($order, (string) $id, $project);
             }
         } catch (IdsFromBodyAreNotUniqueException $exception) {
             throw new RestException(409, $exception->getMessage());

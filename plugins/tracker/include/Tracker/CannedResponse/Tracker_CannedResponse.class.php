@@ -71,11 +71,6 @@ class Tracker_CannedResponse
      */
     public function exportToXml(SimpleXMLElement $root)
     {
-        // if old ids are important, modify code here
-        if (false) {
-            $root->addAttribute('id', $this->id);
-            $root->addAttribute('tracker', $this->tracker->id);
-        }
         $cdata = new XML_SimpleXMLCDATAFactory();
         $cdata->insert($root, 'title', $this->title);
         $cdata->insert($root, 'body', $this->body);

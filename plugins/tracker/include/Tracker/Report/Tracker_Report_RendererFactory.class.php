@@ -462,7 +462,7 @@ class Tracker_Report_RendererFactory
             $this->renderers[$row['id']] = $instance;
 
             if ($instance) {
-                if ($store_in_session) {
+                if ($store_in_session && isset($this->report_session)) {
                     //override the row in the current session
                     //do not traverse the row with a foreach since some info should not be put in the session
                     // (like SimpleXMLElement during an xml import)

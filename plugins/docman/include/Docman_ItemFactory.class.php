@@ -675,7 +675,7 @@ class Docman_ItemFactory
     /**
      * Build a list of items
      *
-     * @return ItemNode
+     * @return Iterator
      */
     public function getItemList($id, &$nbItemsFound, $params = null)
     {
@@ -1041,7 +1041,7 @@ class Docman_ItemFactory
      * Returns an item tree build from leaves to root ("bottom -> top").
      *
      * @param  Array of items.
-     * @return Item_Folder A sub tree or null if root node was not found.
+     * @return Docman_Folder|null A sub tree or null if root node was not found.
      */
     public function &getItemTreeFromLeaves($itemArray, $user)
     {
@@ -1086,6 +1086,9 @@ class Docman_ItemFactory
                     while ($dar->valid()) {
                         $row = $dar->current();
                         $item = $this->getItemFromRow($row);
+                        if ($item === null) {
+                            continue;
+                        }
                         if ($dpm->userCanRead($user, $item->getId())) {
                             $itemList[$item->getId()] = $item;
                             $orphans[$item->getId()] = $item->getId();

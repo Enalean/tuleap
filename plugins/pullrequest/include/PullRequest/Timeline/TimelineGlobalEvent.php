@@ -51,7 +51,7 @@ class TimelineGlobalEvent implements TimelineEvent
         $this->type            = $type;
     }
 
-    public function buildFromRow(array $row)
+    public static function buildFromRow(array $row)
     {
         return new TimelineGlobalEvent(
             $row['id'],
