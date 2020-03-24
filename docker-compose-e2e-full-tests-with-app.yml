@@ -8,6 +8,18 @@ services:
       - .:/usr/share/tuleap
     networks:
       - tuleap
+    depends_on:
+      - mysql57
+
+  mysql57:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=welcome0
+    volumes:
+      - ./tests/etc/DBConfig/mysql-server.cnf:/etc/mysql/mysql.conf.d/mysql-server.cnf:ro,cached
+    tmpfs: /tmp
+    networks:
+      - tuleap
 
 networks:
   tuleap:
