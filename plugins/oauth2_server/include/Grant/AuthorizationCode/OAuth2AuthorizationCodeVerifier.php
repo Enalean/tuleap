@@ -26,7 +26,7 @@ use DateTimeImmutable;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\DB\DBTransactionExecutor;
-use Tuleap\OAuth2Server\Grant\AuthorizationCode\Scope\OAuth2AuthorizationCodeScopeRetriever;
+use Tuleap\OAuth2Server\Scope\OAuth2ScopeRetriever;
 use UserManager;
 
 class OAuth2AuthorizationCodeVerifier
@@ -44,7 +44,7 @@ class OAuth2AuthorizationCodeVerifier
      */
     private $authorization_code_dao;
     /**
-     * @var OAuth2AuthorizationCodeScopeRetriever
+     * @var OAuth2ScopeRetriever
      */
     private $authorization_code_scope_retriever;
     /**
@@ -56,7 +56,7 @@ class OAuth2AuthorizationCodeVerifier
         SplitTokenVerificationStringHasher $hasher,
         UserManager $user_manager,
         OAuth2AuthorizationCodeDAO $authorization_code_dao,
-        OAuth2AuthorizationCodeScopeRetriever $authorization_code_scope_retriever,
+        OAuth2ScopeRetriever $authorization_code_scope_retriever,
         DBTransactionExecutor $db_transaction_executor
     ) {
         $this->hasher                             = $hasher;
@@ -119,7 +119,7 @@ class OAuth2AuthorizationCodeVerifier
                     throw new OAuth2AuthCodeMatchingUnknownUserException($row['user_id']);
                 }
 
-                $scopes = $this->authorization_code_scope_retriever->getScopesByAuthorizationCode($auth_code);
+                $scopes = $this->authorization_code_scope_retriever->getScopesBySplitToken($auth_code);
                 if (empty($scopes)) {
                     throw new OAuth2AuthCodeNoValidScopeFound($auth_code);
                 }

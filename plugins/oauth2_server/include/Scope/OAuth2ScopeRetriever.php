@@ -20,17 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\Grant\AuthorizationCode\Scope;
+namespace Tuleap\OAuth2Server\Scope;
 
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
-class OAuth2AuthorizationCodeScopeRetriever
+class OAuth2ScopeRetriever
 {
     /**
-     * @var OAuth2AuthorizationCodeScopeDAO
+     * @var OAuth2ScopeIdentifierSearcherDAO
      */
     private $dao;
     /**
@@ -38,7 +38,7 @@ class OAuth2AuthorizationCodeScopeRetriever
      */
     private $oauth2_scope_builder;
 
-    public function __construct(OAuth2AuthorizationCodeScopeDAO $dao, AuthenticationScopeBuilder $oauth2_scope_builder)
+    public function __construct(OAuth2ScopeIdentifierSearcherDAO $dao, AuthenticationScopeBuilder $oauth2_scope_builder)
     {
         $this->dao                  = $dao;
         $this->oauth2_scope_builder = $oauth2_scope_builder;
@@ -48,9 +48,9 @@ class OAuth2AuthorizationCodeScopeRetriever
      * @return AuthenticationScope[]
      * @psalm-return AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier>[]
      */
-    public function getScopesByAuthorizationCode(SplitToken $auth_code): array
+    public function getScopesBySplitToken(SplitToken $token): array
     {
-        $scope_key_rows = $this->dao->searchScopeIdentifiersByOAuth2AuthCodeID($auth_code->getID());
+        $scope_key_rows = $this->dao->searchScopeIdentifiersByOAuth2SplitTokenID($token->getID());
 
         $scopes = [];
 

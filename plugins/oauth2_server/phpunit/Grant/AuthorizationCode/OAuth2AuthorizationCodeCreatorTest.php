@@ -31,7 +31,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OAuth2Server\App\OAuth2App;
-use Tuleap\OAuth2Server\Grant\AuthorizationCode\Scope\OAuth2AuthorizationCodeScopeSaver;
+use Tuleap\OAuth2Server\Scope\OAuth2ScopeSaver;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 final class OAuth2AuthorizationCodeCreatorTest extends TestCase
@@ -45,7 +45,7 @@ final class OAuth2AuthorizationCodeCreatorTest extends TestCase
      */
     private $dao;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OAuth2AuthorizationCodeScopeSaver
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OAuth2ScopeSaver
      */
     private $scope_saver;
     /**
@@ -57,7 +57,7 @@ final class OAuth2AuthorizationCodeCreatorTest extends TestCase
     protected function setUp(): void
     {
         $this->dao         = \Mockery::mock(OAuth2AuthorizationCodeDAO::class);
-        $this->scope_saver = \Mockery::mock(OAuth2AuthorizationCodeScopeSaver::class);
+        $this->scope_saver = \Mockery::mock(OAuth2ScopeSaver::class);
 
         $formatter = new class implements SplitTokenFormatter
         {
@@ -84,7 +84,7 @@ final class OAuth2AuthorizationCodeCreatorTest extends TestCase
         $this->dao->shouldReceive('create')
             ->with(12, 102, \Mockery::any(), $current_time->getTimestamp() + self::EXPECTED_EXPIRATION_DELAY_SECONDS, 'pkce_code_chall')
             ->once()->andReturn(1);
-        $this->scope_saver->shouldReceive('saveAuthorizationCodeScopes')->once();
+        $this->scope_saver->shouldReceive('saveScopes')->once();
 
         $auth_code = $this->auth_code_creator->createAuthorizationCodeIdentifier(
             $current_time,
@@ -103,7 +103,7 @@ final class OAuth2AuthorizationCodeCreatorTest extends TestCase
         $auth_scopes  = [\Mockery::mock(AuthenticationScope::class)];
 
         $this->dao->shouldReceive('create')->andReturn(2, 3);
-        $this->scope_saver->shouldReceive('saveAuthorizationCodeScopes');
+        $this->scope_saver->shouldReceive('saveScopes');
 
         $auth_code_1 = $this->auth_code_creator->createAuthorizationCodeIdentifier(
             $current_time,

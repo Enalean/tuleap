@@ -147,25 +147,25 @@ final class OAuth2AuthorizationCodeDAOTest extends TestCase
         $auth_code_id = $this->dao->create(self::$active_project_app_id, 102, 'hashed_verification_string_auth', 20, null);
 
         $auth_code_scope_dao    = new OAuth2AuthorizationCodeScopeDAO();
-        $auth_code_scope_dao->saveScopeKeysByOAuth2AuthCodeID($auth_code_id, 'scope:A', 'scope:B');
+        $auth_code_scope_dao->saveScopeKeysByID($auth_code_id, 'scope:A', 'scope:B');
         $access_token_dao       = new OAuth2AccessTokenDAO();
         $access_token_id_1      = $access_token_dao->create($auth_code_id, 'hashed_verification_string_access', 30);
         $access_token_id_2      = $access_token_dao->create($auth_code_id, 'hashed_verification_string_access', 30);
         $access_token_scope_dao = new OAuth2AccessTokenScopeDAO();
-        $access_token_scope_dao->saveScopeKeysByOAuth2AccessTokenID($access_token_id_1, 'scope:A', 'scope:B');
+        $access_token_scope_dao->saveScopeKeysByID($access_token_id_1, 'scope:A', 'scope:B');
 
-        $this->assertNotEmpty($auth_code_scope_dao->searchScopeIdentifiersByOAuth2AuthCodeID($auth_code_id));
+        $this->assertNotEmpty($auth_code_scope_dao->searchScopeIdentifiersByOAuth2SplitTokenID($auth_code_id));
         $this->assertNotNull($access_token_dao->searchAccessToken($access_token_id_1));
         $this->assertNotNull($access_token_dao->searchAccessToken($access_token_id_2));
-        $this->assertNotEmpty($access_token_scope_dao->searchScopeIdentifiersByAccessTokenID($access_token_id_1));
+        $this->assertNotEmpty($access_token_scope_dao->searchScopeIdentifiersByOAuth2SplitTokenID($access_token_id_1));
 
         $this->dao->deleteAuthorizationCodeByID($auth_code_id);
 
-        $this->assertEmpty($auth_code_scope_dao->searchScopeIdentifiersByOAuth2AuthCodeID($auth_code_id));
+        $this->assertEmpty($auth_code_scope_dao->searchScopeIdentifiersByOAuth2SplitTokenID($auth_code_id));
         $this->assertNull($this->dao->searchAuthorizationCode($auth_code_id));
         $this->assertNull($access_token_dao->searchAccessToken($access_token_id_1));
         $this->assertNull($access_token_dao->searchAccessToken($access_token_id_2));
-        $this->assertEmpty($access_token_scope_dao->searchScopeIdentifiersByAccessTokenID($access_token_id_1));
+        $this->assertEmpty($access_token_scope_dao->searchScopeIdentifiersByOAuth2SplitTokenID($access_token_id_1));
     }
 
     public function testAnAuthorizationCodeOfDeletedProjectCannotBeFound(): void

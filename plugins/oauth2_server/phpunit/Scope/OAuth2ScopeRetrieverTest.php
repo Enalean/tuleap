@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\AccessToken\Scope;
+namespace Tuleap\OAuth2Server\Scope;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -30,12 +30,12 @@ use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 
-final class OAuth2AccessTokenScopeRetrieverTest extends TestCase
+final class OAuth2ScopeRetrieverTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OAuth2AccessTokenScopeDAO
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OAuth2ScopeIdentifierSearcherDAO
      */
     private $scope_dao;
     /**
@@ -43,21 +43,21 @@ final class OAuth2AccessTokenScopeRetrieverTest extends TestCase
      */
     private $scope_builder;
     /**
-     * @var OAuth2AccessTokenScopeRetriever
+     * @var OAuth2ScopeRetriever
      */
     private $retriever;
 
     protected function setUp(): void
     {
-        $this->scope_dao     = \Mockery::mock(OAuth2AccessTokenScopeDAO::class);
+        $this->scope_dao     = \Mockery::mock(OAuth2ScopeIdentifierSearcherDAO::class);
         $this->scope_builder = \Mockery::mock(AuthenticationScopeBuilder::class);
 
-        $this->retriever = new OAuth2AccessTokenScopeRetriever($this->scope_dao, $this->scope_builder);
+        $this->retriever = new OAuth2ScopeRetriever($this->scope_dao, $this->scope_builder);
     }
 
-    public function testRetrievesScopesAssociatedWithAnAccessToken(): void
+    public function testRetrievesScopesAssociatedWithAToken(): void
     {
-        $this->scope_dao->shouldReceive('searchScopeIdentifiersByAccessTokenID')->andReturn([
+        $this->scope_dao->shouldReceive('searchScopeIdentifiersByOAuth2SplitTokenID')->andReturn([
             ['scope_key' => 'profile'],
             ['scope_key' => 'somethingspecific:read'],
         ]);
@@ -73,26 +73,26 @@ final class OAuth2AccessTokenScopeRetrieverTest extends TestCase
             })
         )->once()->andReturn(\Mockery::mock(AuthenticationScope::class));
 
-        $scopes = $this->retriever->getScopesByAccessToken($this->buildToken());
+        $scopes = $this->retriever->getScopesBySplitToken($this->buildToken());
 
         $this->assertCount(2, $scopes);
     }
 
     public function testOnlyRetrievesBuildableScopes(): void
     {
-        $this->scope_dao->shouldReceive('searchScopeIdentifiersByAccessTokenID')->andReturn([
+        $this->scope_dao->shouldReceive('searchScopeIdentifiersByOAuth2SplitTokenID')->andReturn([
             ['scope_key' => 'unknown']
         ]);
 
         $this->scope_builder->shouldReceive('buildAuthenticationScopeFromScopeIdentifier')->andReturn(null);
 
-        $scopes = $this->retriever->getScopesByAccessToken($this->buildToken());
+        $scopes = $this->retriever->getScopesBySplitToken($this->buildToken());
 
         $this->assertEmpty($scopes);
     }
 
     private function buildToken(): SplitToken
     {
-        return new SplitToken(98, \Mockery::mock(SplitTokenVerificationString::class));
+        return new SplitToken(10, SplitTokenVerificationString::generateNewSplitTokenVerificationString());
     }
 }
