@@ -23,6 +23,7 @@ import { createStoreMock } from "../../../../../../../../src/scripts/vue-compone
 import { MilestoneData, Pane, StoreOptions, TrackerProjectLabel } from "../../../type";
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
 import ChartDisplayer from "./Chart/ChartDisplayer.vue";
+import TestManagementDisplayer from "./TestManagement/TestManagementDisplayer.vue";
 
 let release_data: MilestoneData;
 const component_options: ShallowMountOptions<ReleaseDescription> = {};
@@ -47,6 +48,7 @@ describe("ReleaseDescription", () => {
         store_options = {
             state: {
                 label_tracker_planning: "Releases",
+                project_milestone_activate_ttm: true,
             },
         };
 
@@ -72,6 +74,12 @@ describe("ReleaseDescription", () => {
                         uri: "/taskboard/project/6",
                         identifier: "taskboard",
                     },
+                    {
+                        icon_name: "fa-external-link",
+                        identifier: "testmgmt",
+                        title: "Test Campaigns",
+                        uri: "plugin/testmanagement",
+                    },
                 ],
                 cardwall: {
                     uri: "/cardwall/",
@@ -93,6 +101,7 @@ describe("ReleaseDescription", () => {
             description,
             resources: {
                 burndown: null,
+                additional_panes: [] as Pane[],
             },
         } as MilestoneData;
 
@@ -111,6 +120,7 @@ describe("ReleaseDescription", () => {
                 burndown: {
                     uri: "/burndown",
                 },
+                additional_panes: [] as Pane[],
             },
         } as MilestoneData;
 
@@ -169,5 +179,41 @@ describe("ReleaseDescription", () => {
 
         const wrapper = await getPersonalWidgetInstance(store_options);
         expect(wrapper.contains("[data-test=planning-link]")).toBe(false);
+    });
+
+    it("When plugin testmanagement is activated, Then TestManagementDisplayer is rendered", async () => {
+        const wrapper = await getPersonalWidgetInstance(store_options);
+        expect(wrapper.contains(TestManagementDisplayer)).toBe(true);
+    });
+
+    it("When plugin testmanagement is disabled, Then TestManagementDisplayer is not rendered", async () => {
+        release_data = {
+            id: 2,
+            planning: {
+                id: "100",
+            },
+            resources: {
+                milestones: {
+                    accept: {
+                        trackers: [] as TrackerProjectLabel[],
+                    },
+                },
+                additional_panes: [] as Pane[],
+            },
+        } as MilestoneData;
+
+        component_options.propsData = {
+            release_data,
+        };
+
+        const wrapper = await getPersonalWidgetInstance(store_options);
+        expect(wrapper.contains(TestManagementDisplayer)).toBe(false);
+    });
+
+    it("When the project has not activated project_milestone_activate_ttm, Then TestManagementDisplayer is not rendered", async () => {
+        store_options.state.project_milestone_activate_ttm = false;
+
+        const wrapper = await getPersonalWidgetInstance(store_options);
+        expect(wrapper.contains(TestManagementDisplayer)).toBe(false);
     });
 });

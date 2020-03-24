@@ -25,6 +25,7 @@ import {
     getNbOfClosedSprints,
     getNbOfPastRelease,
     getLastRelease,
+    getTestManagementCampaigns,
 } from "./rest-querier";
 
 import * as tlp from "tlp";
@@ -35,6 +36,7 @@ import {
     MilestoneContent,
     MilestoneData,
     ParametersRequestWithId,
+    TestManagementCampaign,
 } from "../type";
 
 jest.mock("tlp");
@@ -281,5 +283,38 @@ describe("getProject() -", () => {
 
             expect(result).toEqual(null);
         });
+    });
+
+    it("the REST API will be queried and all testmanagement campaigns will be returned", async () => {
+        const testmanagement_campaigns: TestManagementCampaign[] = [
+            { nb_of_blocked: 10 } as TestManagementCampaign,
+            { nb_of_notrun: 2 } as TestManagementCampaign,
+        ];
+
+        const tlpRecursiveGetMock = jest.spyOn(tlp, "recursiveGet");
+        tlpRecursiveGetMock.mockReturnValue(Promise.resolve(testmanagement_campaigns));
+
+        const result = await getTestManagementCampaigns(milestone_id, {
+            limit,
+            offset,
+            project_id,
+        });
+
+        const query = JSON.stringify({
+            milestone_id,
+        });
+
+        expect(tlpRecursiveGetMock).toHaveBeenCalledWith(
+            "/api/v1/projects/" + project_id + "/testmanagement_campaigns",
+            {
+                params: {
+                    limit,
+                    offset,
+                    query,
+                },
+            }
+        );
+
+        expect(result).toEqual(testmanagement_campaigns);
     });
 });

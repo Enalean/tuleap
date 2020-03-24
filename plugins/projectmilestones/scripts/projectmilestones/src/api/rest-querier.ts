@@ -24,6 +24,7 @@ import {
     ParametersRequestWithId,
     ParametersRequestWithoutId,
     ArtifactMilestone,
+    TestManagementCampaign,
 } from "../type";
 
 export {
@@ -34,6 +35,7 @@ export {
     getNbOfClosedSprints,
     getNbOfPastRelease,
     getLastRelease,
+    getTestManagementCampaigns,
 };
 
 function recursiveGetProjectMilestonesWithQuery(
@@ -157,4 +159,24 @@ async function getLastRelease(
     });
 
     return milestones.json();
+}
+
+function getTestManagementCampaigns(
+    release_id: number,
+    { limit, offset, project_id }: ParametersRequestWithId
+): Promise<TestManagementCampaign[]> {
+    const query = JSON.stringify({
+        milestone_id: release_id,
+    });
+
+    return recursiveGet(
+        `/api/v1/projects/${encodeURIComponent(project_id)}/testmanagement_campaigns`,
+        {
+            params: {
+                query,
+                limit,
+                offset,
+            },
+        }
+    );
 }

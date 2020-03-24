@@ -263,7 +263,8 @@ class ProjectMilestonesPresenterBuilder
             $this->getLabelStartDateField(),
             $this->getLabelTimeframeField(),
             $this->userCanViewSubMilestonesPlanning(),
-            $this->getBurnupMode()
+            $this->getBurnupMode(),
+            $this->activateTTM()
         );
     }
 
@@ -384,5 +385,14 @@ class ProjectMilestonesPresenterBuilder
             $this->semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($this->root_planning->getPlanningTracker());
         }
         return $this->semantic_timeframe;
+    }
+
+    private function activateTTM(): bool
+    {
+        if (! \ForgeConfig::get('project_milestones_activate_ttm')) {
+            return false;
+        }
+
+        return true;
     }
 }

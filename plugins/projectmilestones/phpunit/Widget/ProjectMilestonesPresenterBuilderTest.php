@@ -47,6 +47,7 @@ use Tuleap\Tracker\TrackerColor;
 use Tuleap\Project\ProjectAccessChecker;
 use Project_AccessProjectNotFoundException;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use ForgeConfig;
 
 class ProjectMilestonesPresenterBuilderTest extends TestCase
 {
@@ -652,6 +653,40 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
         $this->assertEquals($built_presenter->burnup_mode, "count");
+    }
+
+    public function testUserCanSeeTTM(): void
+    {
+        $this->mockPlanningTopMilestoneEmpty($this->planning_virtual_top_milestone);
+
+        $this->mockAgiledashboardBacklogFactory($this->agiledashboard_milestone_backlog_factory);
+
+        $this->mockAgiledashboardBacklogItemFactory($this->agiledashboard_milestone_backlog_item_collection_factory);
+
+        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(false)->once();
+
+        $this->agileDashboard_milestone_backlog_item_collection->shouldReceive('count')->once()->andReturn(0);
+
+        $this->mockTimeframe($this->semantic_timeframe);
+
+        $this->planning_milestone_factory
+            ->shouldReceive('getAllFutureMilestones')
+            ->once()
+            ->andReturn([Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class)]);
+
+        $this->tracker->shouldReceive('getChildren')->andReturn([]);
+
+        $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
+
+        $this->http_request->shouldReceive("getBrowser")->andReturn(Mockery::mock(\Browser::class, ["isIE11" => false]));
+
+        $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
+
+        ForgeConfig::set("project_milestones_activate_ttm", 1);
+
+        $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
+
+        $this->assertTrue($built_presenter->project_milestone_activate_ttm);
     }
 
     public function testThrowExceptionWhenIsIE11(): void
