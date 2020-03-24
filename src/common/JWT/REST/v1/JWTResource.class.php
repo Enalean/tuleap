@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,9 @@
 
 namespace Tuleap\JWT\REST\v1;
 
+use Lcobucci\JWT\Builder;
+use Lcobucci\JWT\Signer\Hmac\Sha512;
+use Lcobucci\JWT\Signer\Key;
 use Tuleap\REST\Header;
 use Tuleap\JWT\REST\JWTRepresentation;
 use Tuleap\JWT\Generators\JWTGenerator;
@@ -38,7 +41,9 @@ class JWTResource
     public function get()
     {
         $jwt_generator = new JWTGenerator(
-            ForgeConfig::get('nodejs_server_jwt_private_key'),
+            new Key(ForgeConfig::get('nodejs_server_jwt_private_key')),
+            new Builder(),
+            new Sha512(),
             UserManager::instance(),
             new UGroupLiteralizer()
         );

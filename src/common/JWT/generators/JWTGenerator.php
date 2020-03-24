@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,10 +16,15 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
+declare(strict_types=1);
+
 namespace Tuleap\JWT\Generators;
 
+use Lcobucci\JWT\Builder;
+use Lcobucci\JWT\Signer;
+use Lcobucci\JWT\Signer\Key;
 use UserManager;
-use Firebase\JWT\JWT;
 use UGroupLiteralizer;
 
 class JWTGenerator
@@ -31,12 +36,22 @@ class JWTGenerator
     /** @var UGroupLiteralizer */
     private $ugroup_literalizer;
 
-    /** @var string */
+    /** @var Key */
     private $private_key;
+    /**
+     * @var Builder
+     */
+    private $builder;
+    /**
+     * @var Signer
+     */
+    private $signer;
 
-    public function __construct($private_key, $user_manager, $ugroup_literalizer)
+    public function __construct(Key $private_key, Builder $builder, Signer $signer, UserManager $user_manager, UGroupLiteralizer $ugroup_literalizer)
     {
         $this->private_key        = $private_key;
+        $this->builder            = $builder;
+        $this->signer             = $signer;
         $this->user_manager       = $user_manager;
         $this->ugroup_literalizer = $ugroup_literalizer;
     }
@@ -44,27 +59,24 @@ class JWTGenerator
     /**
      * Generate a json web token
      * for the current user
-     *
-     * @return string
      */
-    public function getToken()
+    public function getToken(): string
     {
         $current_user = $this->user_manager->getCurrentUser();
         $data = array(
-            'user_id'     => intval($current_user->getId()),
+            'user_id'     => (int) $current_user->getId(),
             'user_rights' => $this->ugroup_literalizer->getUserGroupsForUserWithArobase($current_user)
         );
 
-        $token = array(
-            'exp' => $this->getExpireDate(),
-            'data' => $data
-        );
+        $token = $this->builder
+            ->withClaim('data', $data)
+            ->expiresAt($this->getExpireDate())
+            ->getToken($this->signer, $this->private_key);
 
-        $encoded = JWT::encode($token, $this->private_key, 'HS512');
-        return $encoded;
+        return (string) $token;
     }
 
-    private function getExpireDate()
+    private function getExpireDate(): int
     {
         $issuedAt  = new \DateTime();
         $notBefore = $issuedAt;

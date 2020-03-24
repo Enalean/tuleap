@@ -20,7 +20,6 @@
 
 namespace Tuleap\OpenIDConnectClient\Authentication;
 
-use Firebase\JWT\JWT;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 
 class IDTokenVerifier
@@ -69,8 +68,8 @@ class IDTokenVerifier
         $encoded_payload = $jwt_parts[1];
 
         try {
-            $payload = JWT::jsonDecode(JWT::urlsafeB64Decode($encoded_payload));
-        } catch (\DomainException $ex) {
+            $payload = json_decode(sodium_base642bin($encoded_payload, SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING), true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException | \SodiumException $ex) {
             throw new MalformedIDTokenException('ID token parts must be an URL safe base64 encoded JSON');
         }
 

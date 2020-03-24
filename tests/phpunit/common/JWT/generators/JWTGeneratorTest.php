@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,12 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\JWT\Generators;
 
+use Lcobucci\JWT\Builder;
+use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Signer\Hmac\Sha512;
+use Lcobucci\JWT\Signer\Key;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Firebase\JWT\JWT;
 use UGroupLiteralizer;
 use UserManager;
 
@@ -40,10 +45,18 @@ class JWTGeneratorTest extends TestCase
     /** @var  JWTGenerator */
     private $jwt_generator;
 
-    /** @var string */
+    /** @var Key */
     private $private_key;
+    /**
+     * @var Builder
+     */
+    private $builder;
+    /**
+     * @var Sha512
+     */
+    private $signer;
 
-    public function setUp() : void
+    protected function setUp() : void
     {
         parent::setUp();
 
@@ -58,20 +71,20 @@ class JWTGeneratorTest extends TestCase
         $this->ugroup_literalizer = \Mockery::mock(\UGroupLiteralizer::class);
         $this->ugroup_literalizer->shouldReceive('getUserGroupsForUserWithArobase')->andReturn($u_groups);
 
-        $this->private_key   = "private_key_test";
-        $this->jwt_generator = new JWTGenerator($this->private_key, $this->user_manager, $this->ugroup_literalizer);
+        $this->private_key   = new Key('private_key_test');
+        $this->builder       = new Builder();
+        $this->signer        = new Sha512();
+        $this->jwt_generator = new JWTGenerator($this->private_key, $this->builder, $this->signer, $this->user_manager, $this->ugroup_literalizer);
     }
 
-    public function testJWTDecodedWithAlgorithmHS512()
+    public function testJWTDecodedWithAlgorithmHS512(): void
     {
         $token   = $this->jwt_generator->getToken();
-        $decoded = null;
-        $decoded = JWT::decode($token, $this->private_key, array('HS512'));
-
-        $this->assertTrue(is_object($decoded));
+        $decoded = (new Parser())->parse($token);
+        $this->assertTrue($decoded->verify($this->signer, $this->private_key));
     }
 
-    public function testContentJWT()
+    public function testContentJWT(): void
     {
         $expected = array(
             'user_id'     => 9,
@@ -79,9 +92,8 @@ class JWTGeneratorTest extends TestCase
         );
 
         $token        = $this->jwt_generator->getToken();
-        $decoded      = JWT::decode($token, $this->private_key, array('HS512'));
-        $decoded_data = (array) $decoded->data;
+        $decoded      = (new Parser())->parse($token);
 
-        $this->assertSame($decoded_data, $expected);
+        $this->assertSame($expected, (array) $decoded->getClaim('data'));
     }
 }
