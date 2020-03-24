@@ -708,7 +708,22 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
         } elseif ($group->isError()) {
             throw new SoapFault('GET_GROUP_FAULT', $group->getErrorMessage(), $method);
         } elseif (!$group->isActive()) {
-            throw new SoapFault('GET_GROUP_FAULT', $group->getUnixName() . ' : ' . $GLOBALS['Language']->getText('include_exit', 'project_status_' . $group->getStatus()), $method);
+            $status = '';
+            switch ($group->getStatus()) {
+                case Project::STATUS_DELETED:
+                    $status = $GLOBALS['Language']->getText('include_exit', 'project_status_D');
+                    break;
+                case Project::STATUS_PENDING:
+                    $status = $GLOBALS['Language']->getText('include_exit', 'project_status_P');
+                    break;
+                case Project::STATUS_SUSPENDED:
+                    $status = $GLOBALS['Language']->getText('include_exit', 'project_status_H');
+                    break;
+                case Project::STATUS_SYSTEM:
+                    $status = $GLOBALS['Language']->getText('include_exit', 'project_status_s');
+                    break;
+            }
+            throw new SoapFault('GET_GROUP_FAULT', $group->getUnixName() . ' : ' . $status, $method);
         }
         if (!$this->checkRestrictedAccess($group, $this->_getUserManager()->getCurrentUser())) {
             throw new SoapFault('GET_GROUP_FAULT', 'Restricted user: permission denied.', $method);
