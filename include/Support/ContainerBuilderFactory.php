@@ -83,7 +83,7 @@ class ContainerBuilderFactory
                 },
                 TrackerFactory::class                    => factory([TrackerFactory::class, 'instance']),
                 Tracker_FormElementFactory::class        => factory([Tracker_FormElementFactory::class, 'instance']),
-                LoggerInterface::class                   => autowire(RESTLogger::class)
+                LoggerInterface::class                   => factory([RESTLogger::class, 'getLogger']),
             ]
         );
     }
