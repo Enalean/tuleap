@@ -97,4 +97,19 @@ final class ScopeExtractorTest extends TestCase
         $scopes = $this->scope_extractor->extractScopes(['scope' => 'foo:bar type:value']);
         $this->assertEquals([$foobar_scope, $typevalue_scope], $scopes);
     }
+
+    public function testExtractScopeFromQueryWithoutDuplicates(): void
+    {
+        $foobar_scope    = M::mock(AuthenticationScope::class);
+        $this->scope_builder->shouldReceive('buildAuthenticationScopeFromScopeIdentifier')->with(
+            M::on(
+                static function (AuthenticationScopeIdentifier $scope_identifier): bool {
+                    return 'foo:bar' === $scope_identifier->toString();
+                }
+            )
+        )->once()->andReturn($foobar_scope);
+
+        $scopes = $this->scope_extractor->extractScopes(['scope' => 'foo:bar foo:bar']);
+        $this->assertEquals([$foobar_scope], $scopes);
+    }
 }
