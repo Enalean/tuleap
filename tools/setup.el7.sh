@@ -34,7 +34,6 @@ declare -r include="${tools_dir}/setup/el7/include"
 . ${include}/logger.sh
 . ${include}/php.sh
 . ${include}/mysqlcli.sh
-. ${include}/sql.sh
 . ${include}/core.sh
 . ${include}/plugins.sh
 
@@ -90,8 +89,22 @@ if [ ${tuleap_installed:-false} = "false" ] || \
     if [ "${web_server_ip:-NULL}" != "NULL" ]; then
         mysql_app_user_grant="${sys_db_user}@${web_server_ip}"
     fi
-    ${tuleapcfg} setup:mysql-init --host="${mysql_server}" --user="${mysql_user}" --password="${mysql_password}" ${sys_db_password} "${sys_db_name}" "${mysql_app_user_grant}"
-    ${tuleapcfg} setup:mysql --host="${mysql_server}" --user="${sys_db_user}" --dbname="${sys_db_name}" --password="${sys_db_password}" "${admin_password}" "${server_name}"
+
+    ${tuleapcfg} setup:mysql-init \
+        --host="${mysql_server}" \
+        --admin-user="${mysql_user}" \
+        --admin-password="${mysql_password}" \
+        --db-name="${sys_db_name}" \
+        --app-user="${mysql_app_user_grant}" \
+        --app-password="${sys_db_password}"
+
+    ${tuleapcfg} setup:mysql \
+        --host="${mysql_server}" \
+        --user="${sys_db_user}" \
+        --dbname="${sys_db_name}" \
+        --password="${sys_db_password}" \
+        "${admin_password}" \
+        "${server_name}"
 
     for directory in ${tuleap_conf} ${tuleap_plugins} ${pluginsadministration}; do
         if [ ! -d ${directory} ]; then

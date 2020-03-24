@@ -24,11 +24,11 @@ use Tuleap\Configuration\Vars;
 
 class BackendSVN
 {
-
     private $ip_address;
     private $dbauthuser_password;
     private $db_host;
     private $db_password;
+    private $app_dir;
 
     public function __construct(Vars $vars, $ip_address)
     {
@@ -36,26 +36,31 @@ class BackendSVN
         $this->db_password         = $vars->getDatabaseRootPassword();
         $this->ip_address          = $ip_address;
         $this->dbauthuser_password = $vars->getDbauthuserPassword();
+        $this->app_dir             = $vars->getApplicationBaseDir();
     }
 
     public function configure()
     {
-        $this->grantDBAuthUserAccessToTablesNeedBySVN();
-    }
-
-    private function grantDBAuthUserAccessToTablesNeedBySVN()
-    {
-        $mysqli = new \mysqli($this->db_host, 'root', $this->db_password, 'mysql');
-        if ($mysqli->connect_error) {
-            throw new \Exception('Unable to connect to DB (' . $mysqli->connect_errno . ') ' . $mysqli->connect_error);
+        $output = [];
+        $return_value = 0;
+        $command = sprintf(
+            '%s/src/tuleap-cfg/tuleap-cfg.php setup:mysql-init --host=%s --admin-user=%s --admin-password=%s --db-name=%s --nss-user=%s@%s --nss-password=%s 2>&1',
+            escapeshellarg($this->app_dir),
+            escapeshellarg($this->db_host),
+            escapeshellarg('root'),
+            escapeshellarg($this->db_password),
+            escapeshellarg('tuleap'),
+            escapeshellarg('dbauthuser'),
+            escapeshellarg($this->ip_address),
+            escapeshellarg($this->dbauthuser_password),
+        );
+        exec(
+            $command,
+            $output,
+            $return_value,
+        );
+        if ($return_value !== 0) {
+            throw new \Exception("setup:mysql-init failed:\n" . implode("\n", $output));
         }
-
-        $mysqli->query('GRANT SELECT ON tuleap.user to dbauthuser@\'' . $this->ip_address . '\' identified by \'' . $this->dbauthuser_password . '\'');
-        $mysqli->query('GRANT SELECT ON tuleap.user_group to dbauthuser@\'' . $this->ip_address . '\'');
-        $mysqli->query('GRANT SELECT ON tuleap.groups to dbauthuser@\'' . $this->ip_address . '\'');
-        $mysqli->query('GRANT SELECT ON tuleap.svn_token to dbauthuser@\'' . $this->ip_address . '\'');
-        $mysqli->query('GRANT SELECT ON tuleap.plugin_ldap_user to dbauthuser@\'' . $this->ip_address . '\'');
-        $mysqli->query('FLUSH PRIVILEGES');
-        $mysqli->close();
     }
 }

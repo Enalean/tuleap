@@ -973,11 +973,11 @@ set -e
 echo "Initialize MySQL database"
 /usr/bin/tuleap-cfg setup:mysql-init \
     --host="${mysql_host}" \
-    --user="${mysql_user}" \
-    --password="${rt_passwd}" \
-     "${codendiadm_passwd}" \
-     "${PROJECT_NAME}" \
-     "${PROJECT_ADMIN}@%"
+    --admin-user="${mysql_user}" \
+    --admin-password="${rt_passwd}" \
+    --db-name="${PROJECT_NAME}" \
+    --app-user="${PROJECT_ADMIN}@%" \
+    --app-password="${codendiadm_passwd}"
 
 echo "Load MySQL database"
 /usr/bin/tuleap-cfg setup:mysql \
