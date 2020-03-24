@@ -101,13 +101,12 @@ final class AddAppController extends DispatchablePSR15Compatible
         if (! is_array($parsed_body)
             || ! isset($parsed_body['name'])
             || ! isset($parsed_body['redirect_uri'])
-            || ! isset($parsed_body['use_pkce'])
         ) {
             return $this->redirectWithError($user, $list_clients_url);
         }
         $raw_app_name          = $parsed_body['name'];
         $raw_redirect_endpoint = $parsed_body['redirect_uri'];
-        $use_pkce              = (bool) $parsed_body['use_pkce'];
+        $use_pkce              = (bool) ($parsed_body['use_pkce'] ?? false);
         try {
             $app_to_be_saved = NewOAuth2App::fromAppData(
                 $raw_app_name,
