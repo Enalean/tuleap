@@ -27,6 +27,9 @@
 
     function bindAllowAllEvent() {
         const switch_button = document.getElementById("allowed-projects-all-allowed");
+        if (!switch_button) {
+            return;
+        }
         const restrict_modal_id = switch_button.dataset.targetRestrictModalId;
         const allow_modal_id = switch_button.dataset.targetAllowModalId;
         const form = switch_button.form;
