@@ -141,7 +141,6 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         $this->addHook('permission_get_name', 'permission_get_name', false);
         $this->addHook('permission_get_object_type', 'permission_get_object_type', false);
         $this->addHook('permission_get_object_name', 'permission_get_object_name', false);
-        $this->addHook('permission_get_object_fullname', 'permission_get_object_fullname', false);
         $this->addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change', false);
         $this->addHook(GetPublicAreas::NAME);
         $this->addHook(Event::REGISTER_PROJECT_CREATION, 'installNewDocman', false);
@@ -291,21 +290,6 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
                 $item = $if->getItemFromDb($params['object_id']);
                 if ($item) {
                     $params['object_name'] = $item->getTitle();
-                }
-            }
-        }
-    }
-    public function permission_get_object_fullname($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        if (!$params['object_fullname']) {
-            if (in_array($params['permission_type'], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'))) {
-                require_once('Docman_ItemFactory.class.php');
-                $if = new Docman_ItemFactory();
-                $item = $if->getItemFromDb($params['object_id']);
-                if ($item) {
-                    $type = is_a($item, 'Docman_Folder') ? 'folder' : 'document';
-                    $name = $item->getTitle();
-                    $params['object_fullname'] = $type . ' ' . $name; //TODO i18n
                 }
             }
         }

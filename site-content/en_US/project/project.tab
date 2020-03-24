@@ -129,15 +129,8 @@ project_admin_permissions	doc_access	Document Access
 project_admin_permissions	docgroup_access	Document Group Access
 project_admin_permissions	wiki_access	Wiki Access
 project_admin_permissions	wiki_attachment_access	Wiki Attachment Access
-# message key below must comply with values returned by
-# the permission_get_object_type function
-project_admin_permissions	package	package $1
-project_admin_permissions	release	release $1
-project_admin_permissions	document	document $1
-project_admin_permissions	docgroup	document group $1
-project_admin_permissions	wiki	wiki $1
-project_admin_permissions	wikipage	wiki page $1
-project_admin_permissions	wikiattachment	wiki attachment $1
+project_admin_permissions	wiki	wiki
+project_admin_permissions	wikiattachment	wiki attachment
 project_admin_permissions	tracker_artifact_access	Access to an artifact
 project_admin_permissions	tracker_full_access	Access to all tracker artifacts
 project_admin_permissions	tracker_submitter_access	Access to tracker artifacts submitted by group
@@ -145,11 +138,6 @@ project_admin_permissions	tracker_assignee_access	Access to tracker artifacts as
 project_admin_permissions	tracker_field_submit	Can submit tracker field
 project_admin_permissions	tracker_field_read	Can read tracker field
 project_admin_permissions	tracker_field_update	Can update tracker field
-project_admin_permissions	tracker	tracker $1
-project_admin_permissions	tracker_field	tracker field $1
-project_admin_permissions	object	object $1
-project_admin_permissions	artifact	Artifact $1
-# ...end of values
 project_admin_permissions	perm_type_not_def	permission_type '$1' is not defined
 project_admin_permissions	submit_perm	Submit Permissions
 project_admin_permissions	admins_create_modify_ug	Project admins can also <a href="$1">create or modify</a> user groups.

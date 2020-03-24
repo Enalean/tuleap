@@ -201,25 +201,6 @@ function permission_get_object_name($permission_type, $object_id)
 }
 
 /**
- * Return the full name for a given object
- */
-function permission_get_object_fullname($permission_type, $object_id)
-{
-    $em = EventManager::instance();
-    $object_fullname = false;
-    $em->processEvent('permission_get_object_fullname', array(
-        'permission_type' => $permission_type,
-        'object_id'       => $object_id,
-        'object_fullname' => &$object_fullname));
-    if (!$object_fullname) {
-        $type = permission_get_object_type($permission_type, $object_id);
-        $name = permission_get_object_name($permission_type, $object_id);
-        $object_fullname = $GLOBALS['Language']->getText('project_admin_permissions', $type, $name);
-    }
-    return $object_fullname;
-}
-
-/**
  * Check if the current user is allowed to change permissions, depending on the permission_type
  *
  * @param int $project_id Id of the project
