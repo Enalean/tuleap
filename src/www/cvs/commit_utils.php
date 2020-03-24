@@ -487,7 +487,14 @@ function show_commit_details($group_id, $commit_id, $result)
         $removed = db_result($result, $i, 'removedlines');
         $revision = db_result($result, $i, 'revision');
         $filename = db_result($result, $i, 'dir') . '/' . db_result($result, $i, 'file');
-        $type_text = $GLOBALS['Language']->getText('cvs_commit_utils', strtolower($type));
+
+        if ('remove' === strtolower($type)) {
+            $type_text = $GLOBALS['Language']->getText('cvs_commit_utils', 'remove');
+        } elseif ('add' === strtolower($type)) {
+            $type_text = $GLOBALS['Language']->getText('cvs_commit_utils', 'add');
+        } else {
+            $type_text = $GLOBALS['Language']->getText('cvs_commit_utils', 'change');
+        }
 
         if (($type == "Change") &&
         ($added == 999) &&
