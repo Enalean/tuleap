@@ -136,19 +136,8 @@ project_admin_permissions	tracker_assignee_access	Accès à tous les artefacts c
 project_admin_permissions	tracker_field_submit	Peut soumettre ce champ dans l'outil de suivi
 project_admin_permissions	tracker_field_read	Peut lire ce champ dans l'outil de suivi
 project_admin_permissions	tracker_field_update	Peut éditer ce champ dans l'outil de suivi
-# message key below must comply with values returned by
-# the permission_get_object_type function
-project_admin_permissions	package	paquet $1
-project_admin_permissions	release	version $1
-project_admin_permissions	document	document $1
-project_admin_permissions	docgroup	groupe de document $1
-project_admin_permissions	wiki	wiki $1
-project_admin_permissions	wikipage	page wiki $1
-project_admin_permissions	wikiattachment	fichier joint du wiki $1
-project_admin_permissions	tracker	outil de suivi $1
-project_admin_permissions	tracker_field	champ d'outil de suivi $1
-project_admin_permissions	object	objet $1
-# ...end of values
+project_admin_permissions	wiki	wiki
+project_admin_permissions	wikiattachment	fichier joint du wiki
 project_admin_permissions	perm_type_not_def	permission_type '$1' indéfini
 project_admin_permissions	submit_perm	Valider les permissions
 project_admin_permissions	admins_create_modify_ug	Les administrateurs de projet peuvent aussi <a href="$1">créer ou modifier</a> des groupes d'utilisateurs.

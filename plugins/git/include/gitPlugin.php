@@ -239,7 +239,6 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->addHook('permission_get_name', 'permission_get_name', false);
         $this->addHook('permission_get_object_type', 'permission_get_object_type', false);
         $this->addHook('permission_get_object_name', 'permission_get_object_name', false);
-        $this->addHook('permission_get_object_fullname', 'permission_get_object_fullname', false);
         $this->addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change', false);
 
         $this->addHook('statistics_collector', 'statistics_collector', false);
@@ -1069,21 +1068,6 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                 try {
                     $repository->load();
                     $params['object_name'] = $repository->getName();
-                } catch (Exception $e) {
-                    // do nothing
-                }
-            }
-        }
-    }
-    public function permission_get_object_fullname($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        if (!$params['object_fullname']) {
-            if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
-                $repository = new GitRepository();
-                $repository->setId($params['object_id']);
-                try {
-                    $repository->load();
-                    $params['object_name'] = 'git repository ' . $repository->getName();
                 } catch (Exception $e) {
                     // do nothing
                 }
