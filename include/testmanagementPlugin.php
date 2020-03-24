@@ -63,6 +63,9 @@ use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForT
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\CheckPostActionsForTracker;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
+use Tuleap\AgileDashboard\REST\v1\PaneInfoRepresentation;
+use Tuleap\AgileDashboard\REST\v1\AdditionalPanesForMilestoneEvent;
+use Tuleap\TestManagement\AgileDashboardPaneInfo;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
@@ -98,6 +101,7 @@ class testmanagementPlugin extends Plugin
 
         if (defined('AGILEDASHBOARD_BASE_URL')) {
             $this->addHook(PaneInfoCollector::NAME);
+            $this->addHook(AdditionalPanesForMilestoneEvent::NAME);
         }
 
         if (defined('TRACKER_BASE_URL')) {
@@ -361,6 +365,20 @@ class testmanagementPlugin extends Plugin
         $project   = $milestone->getProject();
         if ($project->usesService($this->getServiceShortname())) {
             $collector->addPane(new Tuleap\TestManagement\AgileDashboardPaneInfo($milestone));
+        }
+    }
+
+    public function additionalPanesForMilestoneEvent(AdditionalPanesForMilestoneEvent $event): void
+    {
+        $milestone = $event->getMilestone();
+        $project   = $milestone->getProject();
+        if ($project->usesService($this->getServiceShortname())) {
+            $pane = new AgileDashboardPaneInfo($milestone);
+
+            $representation = new PaneInfoRepresentation();
+            $representation->build($pane);
+
+            $event->add($representation);
         }
     }
 
