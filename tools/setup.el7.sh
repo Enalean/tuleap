@@ -33,7 +33,6 @@ declare -r include="${tools_dir}/setup/el7/include"
 . ${include}/helper.sh
 . ${include}/logger.sh
 . ${include}/php.sh
-. ${include}/mysqlcli.sh
 . ${include}/core.sh
 . ${include}/plugins.sh
 
@@ -76,8 +75,6 @@ if [ ${tuleap_installed:-false} = "false" ] || \
         _infoMessage "Set MySQL password for ${mysql_user}"
         _setupMysqlPassword "${mysql_user}" ${mysql_password}
         _logPassword "MySQL system user password (${mysql_user}): ${mysql_password}"
-    else
-        _checkMysqlStatus "${mysql_user}" "${mysql_password}"
     fi
 
     admin_password="$(_setupRandomPassword)"

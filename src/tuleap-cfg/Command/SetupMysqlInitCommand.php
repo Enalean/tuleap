@@ -40,6 +40,9 @@ final class SetupMysqlInitCommand extends Command
     private const OPT_APP_PASSWORD   = 'app-password';
     private const OPT_NSS_USER       = 'nss-user';
     private const OPT_NSS_PASSWORD   = 'nss-password';
+    private const OPT_MEDIAWIKI      = 'mediawiki';
+    private const OPT_MEDIAWIKI_VALUE_PER_PROJECT = 'per-project';
+    private const OPT_MEDIAWIKI_VALUE_CENTRAL     = 'central';
 
     public function getHelp()
     {
@@ -70,7 +73,8 @@ final class SetupMysqlInitCommand extends Command
             ->addOption(self::OPT_APP_USER, '', InputOption::VALUE_REQUIRED, 'Name of the DB user to be used for Tuleap (`tuleapadm`) by default', 'tuleapadm')
             ->addOption(self::OPT_APP_PASSWORD, '', InputOption::VALUE_REQUIRED, 'Password for the application dbuser (typically tuleapadm)')
             ->addOption(self::OPT_NSS_USER, '', InputOption::VALUE_REQUIRED, 'Name of the DB user that will be used for libnss-mysql or http authentication', 'dbauthuser')
-            ->addOption(self::OPT_NSS_PASSWORD, '', InputOption::VALUE_REQUIRED, 'Password for nss-user');
+            ->addOption(self::OPT_NSS_PASSWORD, '', InputOption::VALUE_REQUIRED, 'Password for nss-user')
+            ->addOption(self::OPT_MEDIAWIKI, '', InputOption::VALUE_REQUIRED, 'Grant permissions for mediawiki. Possible values: `per-project` or `central`');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -115,6 +119,11 @@ final class SetupMysqlInitCommand extends Command
                 $input->getOption(self::OPT_NSS_USER),
                 $nss_password,
             );
+        }
+
+        $mediawiki = $input->getOption(self::OPT_MEDIAWIKI);
+        if ($mediawiki) {
+            $this->setUpMediawiki($io, $db, $mediawiki, $input->getOption(self::OPT_APP_USER));
         }
 
         $db->run('FLUSH PRIVILEGES');
@@ -206,5 +215,41 @@ final class SetupMysqlInitCommand extends Command
                 explode('@', $user_identifier)
             )
         );
+    }
+
+    private function setUpMediawiki(SymfonyStyle $io, EasyDB $db, string $mediawiki, string $app_user): void
+    {
+        if ($mediawiki !== self::OPT_MEDIAWIKI_VALUE_CENTRAL && $mediawiki !== self::OPT_MEDIAWIKI_VALUE_PER_PROJECT) {
+            throw new \RuntimeException(sprintf('Invalid --mediawiki value. Valid values are `%s` or `%s`', self::OPT_MEDIAWIKI_VALUE_PER_PROJECT, self::OPT_MEDIAWIKI_VALUE_CENTRAL));
+        }
+        $io->writeln(sprintf('<info>Configure mediawiki permissions %s</info>', $mediawiki));
+        if ($mediawiki === self::OPT_MEDIAWIKI_VALUE_PER_PROJECT) {
+            $db->run(
+                sprintf(
+                    'GRANT ALL PRIVILEGES ON `plugin_mediawiki_%%`.* TO %s',
+                    $this->quoteDbUser($app_user),
+                )
+            );
+        } else {
+            $mediawiki_database = 'tuleap_mediawiki';
+            $existing_db = $db->single(sprintf('SHOW DATABASES LIKE "%s"', $db->escapeIdentifier($mediawiki_database, false)));
+            if ($existing_db) {
+                $io->writeln(sprintf('<info>Database %s already exists</info>', $mediawiki_database));
+            } else {
+                $db->run(
+                    sprintf(
+                        'CREATE DATABASE %s',
+                        $db->escapeIdentifier($mediawiki_database)
+                    )
+                );
+            }
+            $db->run(
+                sprintf(
+                    'GRANT ALL PRIVILEGES on %s.* TO %s',
+                    $db->escapeIdentifier($mediawiki_database),
+                    $this->quoteDbUser($app_user)
+                )
+            );
+        }
     }
 }

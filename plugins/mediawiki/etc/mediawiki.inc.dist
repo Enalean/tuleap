@@ -32,8 +32,6 @@ $extension_mleb_path = '/usr/share/mediawiki-mleb-tuleap';
 // Uncomment the variable below if you want to have one central DB for all
 // Mediawiki instances (they will be split with table prefix)
 //
-// CREATE DATABASE 'tuleap_mediawiki';
-// GRANT ALL PRIVILEGES on tuleap_mediawiki.* TO 'codendiadm'@'%';
-// FLUSH PRIVILEGES
+// tuleap-cfg setup:mysql-init --host=<DB_HOST> --admin-password=<DB_ROOT_PASSWORD> --mediawiki=central
 //
 // $central_database = "tuleap_mediawiki";
