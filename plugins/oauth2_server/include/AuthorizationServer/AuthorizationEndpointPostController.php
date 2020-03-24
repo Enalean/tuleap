@@ -113,7 +113,7 @@ final class AuthorizationEndpointPostController extends DispatchablePSR15Compati
 
         $scope_identifiers = [];
         $scopes            = [];
-        foreach ($body_params[self::SCOPE] as $scope_key) {
+        foreach (array_unique($body_params[self::SCOPE]) as $scope_key) {
             $scope_identifier = OAuth2ScopeIdentifier::fromIdentifierKey($scope_key);
             $scope            = $this->scope_builder->buildAuthenticationScopeFromScopeIdentifier($scope_identifier);
             if ($scope !== null) {

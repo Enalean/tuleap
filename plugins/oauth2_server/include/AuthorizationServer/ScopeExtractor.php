@@ -51,6 +51,7 @@ class ScopeExtractor
         }
         $scopes_string = (string) $query_params[AuthorizationEndpointGetController::SCOPE_PARAMETER];
         $scope_keys    = explode(' ', $scopes_string);
+        $scope_keys    = array_unique($scope_keys);
         $scope_list    = [];
         foreach ($scope_keys as $scope_key) {
             try {

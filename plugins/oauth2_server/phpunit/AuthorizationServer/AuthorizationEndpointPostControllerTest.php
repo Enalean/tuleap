@@ -207,7 +207,7 @@ final class AuthorizationEndpointPostControllerTest extends TestCase
         $this->scope_builder->shouldReceive('buildAuthenticationScopeFromScopeIdentifier')
             ->andReturn(M::mock(AuthenticationScope::class));
         $request = (new NullServerRequest())->withParsedBody(
-            ['redirect_uri' => 'https://example.com', 'app_identifier' => 'tlp-client-id-77', 'scope' => ['foo:bar', 'type:value']]
+            ['redirect_uri' => 'https://example.com', 'app_identifier' => 'tlp-client-id-77', 'scope' => ['foo:bar', 'type:value', 'foo:bar']]
         );
         $this->csrf_token->shouldReceive('check')->once();
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
@@ -220,6 +220,7 @@ final class AuthorizationEndpointPostControllerTest extends TestCase
                         $identifiers = $new_authorization->getScopeIdentifiers();
                         return $new_authorization->getAppId() === 77
                             && $new_authorization->getUser() === $user
+                            && count($identifiers) === 2
                             && $identifiers[0]->toString() === 'foo:bar'
                             && $identifiers[1]->toString() === 'type:value';
                     }
