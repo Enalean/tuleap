@@ -25,25 +25,45 @@ require_once('Docman_ItemFactory.class.php');
 
 class Docman_Error_PermissionDenied extends Error_PermissionDenied
 {
-
-        /**
-     * Constructor of the class
-     *
-     * @return void
-     */
-    public function __construct()
+    public function buildInterface(PFUser $user, Project $project)
     {
-        parent::__construct();
+        if ($user->isAnonymous()) {
+            $event_manager = EventManager::instance();
+            $redirect = new URLRedirect($event_manager);
+            $redirect->redirectToLogin();
+        } else {
+            $this->buildPermissionDeniedInterface($project);
+        }
     }
 
-    public function getType()
+    private function buildPermissionDeniedInterface(Project $project)
     {
-        return 'docman_permission_denied';
-    }
+        $purifier = Codendi_HTMLPurifier::instance();
+        site_header(array('title' => $GLOBALS['Language']->getText('include_exit', 'exit_error')));
+        echo "<b>" . $purifier->purify(dgettext('tuleap-docman', 'You do not have the permission to access the document')) . "</b>";
+        echo '<br>';
+        echo "<br>" . $purifier->purify(dgettext('tuleap-docman', 'Permission denied set on documents. You can not view this documents unless administrator grant you access.'));
 
-    public function getTextBase()
-    {
-        return 'plugin_docman';
+        $message = $GLOBALS['Language']->getText('project_admin_index', 'member_request_delegation_msg_to_requester');
+        $pm = ProjectManager::instance();
+        $dar = $pm->getMessageToRequesterForAccessProject($project->getID());
+        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            $row = $dar->current();
+            if ($row['msg_to_requester'] != "member_request_delegation_msg_to_requester") {
+                $message = $row['msg_to_requester'];
+            }
+        }
+        echo dgettext('tuleap-docman', '<br><a href="/my/">Back to your personal page</a><em> or you can request it to him.</em></br> Write your message below and click on the button to send your request to the project administrators.');
+        echo '<br>';
+        echo '<form action="' . $purifier->purify('/plugins/docman/sendmessage.php') . '" method="post" name="display_form">
+              <textarea wrap="virtual" rows="5" cols="70" name="' . $purifier->purify('msg_docman_access') . '">' . $purifier->purify($message) . ' </textarea></p>
+              <input type="hidden" id="func" name="func" value="' . $purifier->purify('docman_access_request') . '">
+              <input type="hidden" id="groupId" name="groupId" value="' . $purifier->purify($project->getID()) . '">
+              <input type="hidden" id="data" name="url_data" value="' . $purifier->purify($_SERVER['REQUEST_URI']) . '">
+              <br><input name="Submit" type="submit" value="' . $purifier->purify($GLOBALS['Language']->getText('include_exit', 'send_mail')) . '"/></br>
+          </form>';
+
+        $GLOBALS['HTML']->footer(array('showfeedback' => false));
     }
 
     /**
@@ -171,5 +191,32 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied
     public function _getItemFactoryInstance($groupId)
     {
         return Docman_ItemFactory::instance($groupId);
+    }
+
+    protected function getPermissionDeniedMailBody(
+        Project $project,
+        PFUser $user,
+        string $href_approval,
+        string $message_to_admin,
+        string $link
+    ): string {
+        return sprintf(dgettext('tuleap-docman', 'Dear document manager,
+
+%1$s (login: %2$s) requests access to the following document in project "%4$s":
+<%3$s>
+
+%1$s wrote a message for you:
+%6$s
+
+Someone set permissions on this item, preventing users of having access to this resource.
+If you decide to accept the request, please take the appropriate actions to grant him permission and communicate that information to the requester.
+Otherwise, please inform the requester (%7$s) that he will not get access to the requested data.
+--
+%1$s.'), $user->getRealName(), $user->getName(), $link, $project->getPublicName(), $href_approval, $message_to_admin, $user->getEmail());
+    }
+
+    protected function getPermissionDeniedMailSubject(Project $project, PFUser $user): string
+    {
+        return sprintf(dgettext('tuleap-docman', '%2$s requests access to a document in "%1$s"'), $project->getPublicName(), $user->getRealName());
     }
 }

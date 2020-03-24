@@ -39,13 +39,6 @@ abstract class Error_PermissionDenied // phpcs:ignore PSR1.Classes.ClassDeclarat
     }
 
     /**
-     * Returns the type of the error to manage
-     *
-     * @return String
-     */
-    abstract function getType(); // phpcs:ignore Squiz.Scope.MethodScope.Missing
-
-    /**
      * Returns the base on language file
      *
      * @return String
@@ -185,7 +178,7 @@ abstract class Error_PermissionDenied // phpcs:ignore PSR1.Classes.ClassDeclarat
         $link = $this->getRedirectLink($urlData, $GLOBALS['Language']);
         $body = $this->getPermissionDeniedMailBody($project, $user, $hrefApproval, $messageToAdmin, $link);
         if ($adminList['status'] == false) {
-            $body .= "\n\n" . $GLOBALS['Language']->getText($this->getTextBase(), 'mail_content_unvalid_ugroup', array($project->getPublicName()));
+            $body .= "\n\n" . $GLOBALS['Language']->getText('include_exit', 'mail_content_unvalid_ugroup', array($project->getPublicName()));
         }
         $mail->setBodyText($body);
 
@@ -228,34 +221,13 @@ abstract class Error_PermissionDenied // phpcs:ignore PSR1.Classes.ClassDeclarat
         return new ProjectUGroup();
     }
 
-    protected function getPermissionDeniedMailBody(
+    abstract protected function getPermissionDeniedMailBody(
         Project $project,
         PFUser $user,
         string $href_approval,
         string $message_to_admin,
         string $link
-    ) {
-        return $GLOBALS['Language']->getText(
-            $this->getTextBase(),
-            'mail_content_' . $this->getType(),
-            [
-                $user->getRealName(),
-                $user->getName(),
-                $link,
-                $project->getPublicName(),
-                $href_approval,
-                $message_to_admin,
-                $user->getEmail()
-            ]
-        );
-    }
+    ): string;
 
-    protected function getPermissionDeniedMailSubject(Project $project, PFUser $user)
-    {
-        return $GLOBALS['Language']->getText(
-            $this->getTextBase(),
-            'mail_subject_' . $this->getType(),
-            [$project->getPublicName(), $user->getRealName()]
-        );
-    }
+    abstract protected function getPermissionDeniedMailSubject(Project $project, PFUser $user): string;
 }
