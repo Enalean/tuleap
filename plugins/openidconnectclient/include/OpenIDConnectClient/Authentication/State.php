@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,12 +20,13 @@
 
 namespace Tuleap\OpenIDConnectClient\Authentication;
 
-use Firebase\JWT\JWT;
+use Lcobucci\JWT\Builder;
+use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Signer\Hmac\Sha256;
+use Lcobucci\JWT\Signer\Key;
 
 class State
 {
-    public const SIGNATURE_ALGORITHM = 'HS256';
-
     /**
      * @var int
      */
@@ -51,21 +52,19 @@ class State
         $this->nonce       = $nonce;
     }
 
-    /**
-     * @return State
-     */
-    public static function createFromSignature($signed_state, $return_to, $secret_key, $nonce)
+    public static function createFromSignature($signed_state, $return_to, $secret_key, $nonce): self
     {
-        $provider_id = JWT::decode($signed_state, $secret_key, array(self::SIGNATURE_ALGORITHM));
-        return new State($provider_id, $return_to, $secret_key, $nonce);
+        $token = (new Parser())->parse($signed_state);
+        if (! $token->verify(new Sha256(), $secret_key)) {
+            throw new \RuntimeException('Signed state cannot be verifier');
+        }
+        $provider_id = (int) $token->getClaim('provider_id');
+        return new self($provider_id, $return_to, $secret_key, $nonce);
     }
 
-    /**
-     * @return string
-     */
-    public function getSignedState()
+    public function getSignedState(): string
     {
-        return JWT::encode($this->provider_id, $this->secret_key, self::SIGNATURE_ALGORITHM);
+        return (string) (new Builder())->withClaim('provider_id', $this->provider_id)->getToken(new Sha256(), new Key($this->secret_key));
     }
 
     public function getProviderId()

@@ -25,8 +25,6 @@ namespace Tuleap\OpenIDConnectClient\Authentication;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
-require_once(__DIR__ . '/../bootstrap.php');
-
 class StateTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -42,5 +40,14 @@ class StateTest extends TestCase
         $signed_state = $state->getSignedState();
 
         $this->assertEquals($state, State::createFromSignature($signed_state, $return_to, $secret_key, $nonce));
+    }
+
+    public function testCannotCreateFromSignatureWithInvalidSecretKey(): void
+    {
+        $state        = new State(12, '/return_to', 'key', 'random');
+        $signed_state = $state->getSignedState();
+
+        $this->expectException(\RuntimeException::class);
+        State::createFromSignature($signed_state, '/return_to', 'invalid_key', 'random');
     }
 }
