@@ -7,6 +7,7 @@
 set -ex
 
 MAX_TEST_EXECUTION_TIME='30m'
+TIMEOUT="$(command -v gtimeout || echo timeout)"
 DOCKERCOMPOSE="docker-compose -f docker-compose-distlp-tests.yml -p distlp-tests-${BUILD_TAG:-dev}"
 
 test_results_folder='./test_results_distlp'
@@ -22,7 +23,7 @@ wait_until_tests_are_executed() {
     local test_cli_container_id="$($DOCKERCOMPOSE ps -q test-cli)"
     local test_cypress_container_id="$($DOCKERCOMPOSE ps -q test-cypress)"
 
-    timeout "$MAX_TEST_EXECUTION_TIME" docker wait "$test_cli_container_id" "$test_cypress_container_id" || \
+    $TIMEOUT "$MAX_TEST_EXECUTION_TIME" docker wait "$test_cli_container_id" "$test_cypress_container_id" || \
         echo 'Tests take to much time to execute. End of execution will not be waited for!'
 }
 

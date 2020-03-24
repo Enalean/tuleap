@@ -6,6 +6,7 @@
 set -euxo pipefail
 
 MAX_TEST_EXECUTION_TIME='30m'
+TIMEOUT="$(command -v gtimeout || echo timeout)"
 DOCKERCOMPOSE="docker-compose -f docker-compose-e2e-full-tests.yml -p e2e-tests-${BUILD_TAG:-'dev'}"
 
 test_results_folder='./test_results_e2e_full'
@@ -21,7 +22,7 @@ mkdir -p "$test_results_folder" || true
 rm -rf "$test_results_folder/*" || true
 clean_env
 
-TEST_RESULT_OUTPUT="$test_results_folder" timeout "$MAX_TEST_EXECUTION_TIME" $DOCKERCOMPOSE up --build --abort-on-container-exit --exit-code-from=test
+TEST_RESULT_OUTPUT="$test_results_folder" $TIMEOUT "$MAX_TEST_EXECUTION_TIME" $DOCKERCOMPOSE up --build --abort-on-container-exit --exit-code-from=test
 
 tuleap_container_id="$($DOCKERCOMPOSE ps -q tuleap)"
 mkdir -p "$test_results_folder/logs"
