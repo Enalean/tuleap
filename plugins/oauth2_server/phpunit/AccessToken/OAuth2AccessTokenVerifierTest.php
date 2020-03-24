@@ -33,7 +33,7 @@ use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\OAuth2Server\AccessToken\Scope\OAuth2AccessTokenScopeRetriever;
+use Tuleap\OAuth2Server\Scope\OAuth2ScopeRetriever;
 use Tuleap\User\OAuth2\AccessToken\InvalidOAuth2AccessTokenException;
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenDoesNotHaveRequiredScopeException;
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenExpiredException;
@@ -50,7 +50,7 @@ final class OAuth2AccessTokenVerifierTest extends TestCase
      */
     private $dao;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OAuth2AccessTokenScopeRetriever
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OAuth2ScopeRetriever
      */
     private $scope_retriever;
     /**
@@ -69,7 +69,7 @@ final class OAuth2AccessTokenVerifierTest extends TestCase
     protected function setUp(): void
     {
         $this->dao             = \Mockery::mock(OAuth2AccessTokenDAO::class);
-        $this->scope_retriever = \Mockery::mock(OAuth2AccessTokenScopeRetriever::class);
+        $this->scope_retriever = \Mockery::mock(OAuth2ScopeRetriever::class);
         $this->user_manager    = \Mockery::mock(\UserManager::class);
         $this->hasher          = \Mockery::mock(SplitTokenVerificationStringHasher::class);
 
@@ -94,7 +94,7 @@ final class OAuth2AccessTokenVerifierTest extends TestCase
         );
         $this->hasher->shouldReceive('verifyHash')->andReturn(true);
         $required_scope = $this->buildRequiredScope();
-        $this->scope_retriever->shouldReceive('getScopesByAccessToken')->andReturn([$required_scope]);
+        $this->scope_retriever->shouldReceive('getScopesBySplitToken')->andReturn([$required_scope]);
 
         $user = $this->verifier->getUser($access_token, $required_scope);
 
@@ -165,7 +165,7 @@ final class OAuth2AccessTokenVerifierTest extends TestCase
         );
         $this->hasher->shouldReceive('verifyHash')->andReturn(true);
         $required_scope = $this->buildRequiredScope();
-        $this->scope_retriever->shouldReceive('getScopesByAccessToken')->andReturn([$required_scope]);
+        $this->scope_retriever->shouldReceive('getScopesBySplitToken')->andReturn([$required_scope]);
 
         $this->expectException(OAuth2AccessTokenMatchingUnknownUserException::class);
         $this->verifier->getUser($access_token, $required_scope);
@@ -191,7 +191,7 @@ final class OAuth2AccessTokenVerifierTest extends TestCase
             ]
         );
         $this->hasher->shouldReceive('verifyHash')->andReturn(true);
-        $this->scope_retriever->shouldReceive('getScopesByAccessToken')->andReturn($scopes_matching_access_token);
+        $this->scope_retriever->shouldReceive('getScopesBySplitToken')->andReturn($scopes_matching_access_token);
 
         $this->expectException(OAuth2AccessTokenDoesNotHaveRequiredScopeException::class);
         $this->verifier->getUser($access_token, $this->buildRequiredScope());

@@ -20,21 +20,13 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\RefreshToken\Scope;
+namespace Tuleap\OAuth2Server\Scope;
 
-use Tuleap\DB\DataAccessObject;
-use Tuleap\OAuth2Server\Scope\OAuth2ScopeIdentifierSaverDAO;
-
-class OAuth2RefreshTokenScopeDAO extends DataAccessObject implements OAuth2ScopeIdentifierSaverDAO
+interface OAuth2ScopeIdentifierSearcherDAO
 {
-    public function saveScopeKeysByID(int $access_token_id, string ...$scope_keys): void
-    {
-        $data_to_insert = [];
-
-        foreach ($scope_keys as $scope_key) {
-            $data_to_insert[] = ['refresh_token_id' => $access_token_id, 'scope_key' => $scope_key];
-        }
-
-        $this->getDB()->insertMany('plugin_oauth2_refresh_token_scope', $data_to_insert);
-    }
+    /**
+     * @return string[][]
+     * @psalm-return array<array{scope_key:string}>
+     */
+    public function searchScopeIdentifiersByOAuth2SplitTokenID(int $id): array;
 }

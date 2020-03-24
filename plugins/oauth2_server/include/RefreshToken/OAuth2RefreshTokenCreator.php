@@ -31,7 +31,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCode;
-use Tuleap\OAuth2Server\RefreshToken\Scope\OAuth2RefreshTokenScopeSaver;
+use Tuleap\OAuth2Server\Scope\OAuth2ScopeSaver;
 
 class OAuth2RefreshTokenCreator
 {
@@ -52,7 +52,7 @@ class OAuth2RefreshTokenCreator
      */
     private $dao;
     /**
-     * @var OAuth2RefreshTokenScopeSaver
+     * @var OAuth2ScopeSaver
      */
     private $scope_saver;
     /**
@@ -69,7 +69,7 @@ class OAuth2RefreshTokenCreator
         SplitTokenFormatter $refresh_token_formatter,
         SplitTokenVerificationStringHasher $hasher,
         OAuth2RefreshTokenDAO $dao,
-        OAuth2RefreshTokenScopeSaver $scope_saver,
+        OAuth2ScopeSaver $scope_saver,
         DateInterval $refresh_token_expiration_delay,
         DBTransactionExecutor $transaction_executor
     ) {
@@ -98,14 +98,14 @@ class OAuth2RefreshTokenCreator
 
         $refresh_token_id = $this->transaction_executor->execute(
             function () use ($verification_string, $expiration_date, $authorization_code) : int {
-                $access_token_id = $this->dao->create(
+                $refresh_token_id = $this->dao->create(
                     $authorization_code->getID(),
                     $this->hasher->computeHash($verification_string),
                     $expiration_date->getTimestamp()
                 );
-                $this->scope_saver->saveRefreshTokenScopes($access_token_id, $authorization_code->getScopes());
+                $this->scope_saver->saveScopes($refresh_token_id, $authorization_code->getScopes());
 
-                return $access_token_id;
+                return $refresh_token_id;
             }
         );
 

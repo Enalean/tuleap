@@ -37,8 +37,6 @@ use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenCreator;
 use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenDAO;
 use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenVerifier;
 use Tuleap\OAuth2Server\AccessToken\Scope\OAuth2AccessTokenScopeDAO;
-use Tuleap\OAuth2Server\AccessToken\Scope\OAuth2AccessTokenScopeRetriever;
-use Tuleap\OAuth2Server\AccessToken\Scope\OAuth2AccessTokenScopeSaver;
 use Tuleap\OAuth2Server\App\AppDao;
 use Tuleap\OAuth2Server\App\AppFactory;
 use Tuleap\OAuth2Server\App\LastCreatedOAuth2AppStore;
@@ -58,8 +56,6 @@ use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2GrantAccessTokenFromAuthor
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\PKCE\PKCECodeVerifier;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\PrefixOAuth2AuthCode;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\Scope\OAuth2AuthorizationCodeScopeDAO;
-use Tuleap\OAuth2Server\Grant\AuthorizationCode\Scope\OAuth2AuthorizationCodeScopeRetriever;
-use Tuleap\OAuth2Server\Grant\AuthorizationCode\Scope\OAuth2AuthorizationCodeScopeSaver;
 use Tuleap\OAuth2Server\Grant\OAuth2ClientAuthenticationMiddleware;
 use Tuleap\OAuth2Server\ProjectAdmin\ListAppsController;
 use Tuleap\OAuth2Server\RefreshToken\OAuth2OfflineAccessScope;
@@ -67,7 +63,8 @@ use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenCreator;
 use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenDAO;
 use Tuleap\OAuth2Server\RefreshToken\PrefixOAuth2RefreshToken;
 use Tuleap\OAuth2Server\RefreshToken\Scope\OAuth2RefreshTokenScopeDAO;
-use Tuleap\OAuth2Server\RefreshToken\Scope\OAuth2RefreshTokenScopeSaver;
+use Tuleap\OAuth2Server\Scope\OAuth2ScopeRetriever;
+use Tuleap\OAuth2Server\Scope\OAuth2ScopeSaver;
 use Tuleap\OAuth2Server\User\Account\AccountAppsController;
 use Tuleap\OAuth2Server\User\AuthorizationDao;
 use Tuleap\Project\Admin\Navigation\NavigationItemPresenter;
@@ -351,7 +348,7 @@ final class oauth2_serverPlugin extends Plugin
                         new PrefixedSplitTokenSerializer(new PrefixOAuth2AccessToken()),
                         new SplitTokenVerificationStringHasher(),
                         new OAuth2AccessTokenDAO(),
-                        new OAuth2AccessTokenScopeSaver(new OAuth2AccessTokenScopeDAO()),
+                        new OAuth2ScopeSaver(new OAuth2AccessTokenScopeDAO()),
                         new DateInterval('PT1H'),
                         new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
                     ),
@@ -360,7 +357,7 @@ final class oauth2_serverPlugin extends Plugin
                         new PrefixedSplitTokenSerializer(new PrefixOAuth2RefreshToken()),
                         new SplitTokenVerificationStringHasher(),
                         new OAuth2RefreshTokenDAO(),
-                        new OAuth2RefreshTokenScopeSaver(new OAuth2RefreshTokenScopeDAO()),
+                        new OAuth2ScopeSaver(new OAuth2RefreshTokenScopeDAO()),
                         new DateInterval('PT6H'),
                         new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
                     )
@@ -370,7 +367,7 @@ final class oauth2_serverPlugin extends Plugin
                     new SplitTokenVerificationStringHasher(),
                     UserManager::instance(),
                     new OAuth2AuthorizationCodeDAO(),
-                    new OAuth2AuthorizationCodeScopeRetriever(new OAuth2AuthorizationCodeScopeDAO(), $this->buildScopeBuilder()),
+                    new OAuth2ScopeRetriever(new OAuth2AuthorizationCodeScopeDAO(), $this->buildScopeBuilder()),
                     new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
                 ),
                 new PKCECodeVerifier()
@@ -476,7 +473,7 @@ final class oauth2_serverPlugin extends Plugin
     {
         $verifier = new OAuth2AccessTokenVerifier(
             new OAuth2AccessTokenDAO(),
-            new OAuth2AccessTokenScopeRetriever(
+            new OAuth2ScopeRetriever(
                 new OAuth2AccessTokenScopeDAO(),
                 $this->buildScopeBuilder()
             ),
@@ -503,7 +500,7 @@ final class oauth2_serverPlugin extends Plugin
             new PrefixedSplitTokenSerializer(new PrefixOAuth2AuthCode()),
             new SplitTokenVerificationStringHasher(),
             new OAuth2AuthorizationCodeDAO(),
-            new OAuth2AuthorizationCodeScopeSaver(new OAuth2AuthorizationCodeScopeDAO()),
+            new OAuth2ScopeSaver(new OAuth2AuthorizationCodeScopeDAO()),
             new DateInterval('PT1M'),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
         );

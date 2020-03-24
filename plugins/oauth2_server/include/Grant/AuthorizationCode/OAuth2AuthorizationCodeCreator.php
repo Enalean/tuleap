@@ -31,7 +31,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\OAuth2Server\App\OAuth2App;
-use Tuleap\OAuth2Server\Grant\AuthorizationCode\Scope\OAuth2AuthorizationCodeScopeSaver;
+use Tuleap\OAuth2Server\Scope\OAuth2ScopeSaver;
 
 class OAuth2AuthorizationCodeCreator
 {
@@ -48,7 +48,7 @@ class OAuth2AuthorizationCodeCreator
      */
     private $authorization_code_dao;
     /**
-     * @var OAuth2AuthorizationCodeScopeSaver
+     * @var OAuth2ScopeSaver
      */
     private $authorization_code_scope_saver;
     /**
@@ -64,7 +64,7 @@ class OAuth2AuthorizationCodeCreator
         SplitTokenFormatter $authorization_code_formatter,
         SplitTokenVerificationStringHasher $hasher,
         OAuth2AuthorizationCodeDAO $authorization_code_dao,
-        OAuth2AuthorizationCodeScopeSaver $authorization_code_scope_saver,
+        OAuth2ScopeSaver $authorization_code_scope_saver,
         DateInterval $access_token_expiration_delay,
         DBTransactionExecutor $transaction_executor
     ) {
@@ -100,7 +100,7 @@ class OAuth2AuthorizationCodeCreator
                     $expiration_date->getTimestamp(),
                     $pkce_code_challenge
                 );
-                $this->authorization_code_scope_saver->saveAuthorizationCodeScopes($authorization_code_id, $scopes);
+                $this->authorization_code_scope_saver->saveScopes($authorization_code_id, $scopes);
 
                 return $authorization_code_id;
             }

@@ -29,7 +29,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\DB\DBTransactionExecutor;
-use Tuleap\OAuth2Server\AccessToken\Scope\OAuth2AccessTokenScopeSaver;
+use Tuleap\OAuth2Server\Scope\OAuth2ScopeSaver;
 
 class OAuth2AccessTokenCreator
 {
@@ -46,7 +46,7 @@ class OAuth2AccessTokenCreator
      */
     private $dao;
     /**
-     * @var OAuth2AccessTokenScopeSaver
+     * @var OAuth2ScopeSaver
      */
     private $scope_saver;
     /**
@@ -62,7 +62,7 @@ class OAuth2AccessTokenCreator
         SplitTokenFormatter $access_token_formatter,
         SplitTokenVerificationStringHasher $hasher,
         OAuth2AccessTokenDAO $dao,
-        OAuth2AccessTokenScopeSaver $scope_saver,
+        OAuth2ScopeSaver $scope_saver,
         DateInterval $access_token_expiration_delay,
         DBTransactionExecutor $transaction_executor
     ) {
@@ -91,7 +91,7 @@ class OAuth2AccessTokenCreator
                     $this->hasher->computeHash($verification_string),
                     $expiration_date->getTimestamp()
                 );
-                $this->scope_saver->saveAccessTokenScopes($access_token_id, $scopes);
+                $this->scope_saver->saveScopes($access_token_id, $scopes);
 
                 return $access_token_id;
             }

@@ -20,18 +20,18 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\RefreshToken\Scope;
+namespace Tuleap\OAuth2Server\Scope;
 
 use Tuleap\Authentication\Scope\AuthenticationScope;
 
-class OAuth2RefreshTokenScopeSaver
+class OAuth2ScopeSaver
 {
     /**
-     * @var OAuth2RefreshTokenScopeDAO
+     * @var OAuth2ScopeIdentifierSaverDAO
      */
     private $dao;
 
-    public function __construct(OAuth2RefreshTokenScopeDAO $dao)
+    public function __construct(OAuth2ScopeIdentifierSaverDAO $dao)
     {
         $this->dao = $dao;
     }
@@ -41,13 +41,13 @@ class OAuth2RefreshTokenScopeSaver
      *
      * @psalm-param non-empty-array<AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier>> $scopes
      */
-    public function saveRefreshTokenScopes(int $oauth2_refresh_token_id, array $scopes): void
+    public function saveScopes(int $id, array $scopes): void
     {
         $scope_identifier_keys = [];
         foreach ($scopes as $scope) {
             $scope_identifier_keys[] = $scope->getIdentifier()->toString();
         }
 
-        $this->dao->saveScopeKeysByOAuth2RefreshTokenID($oauth2_refresh_token_id, ...$scope_identifier_keys);
+        $this->dao->saveScopeKeysByID($id, ...$scope_identifier_keys);
     }
 }

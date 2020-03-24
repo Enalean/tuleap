@@ -31,7 +31,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCode;
-use Tuleap\OAuth2Server\RefreshToken\Scope\OAuth2RefreshTokenScopeSaver;
+use Tuleap\OAuth2Server\Scope\OAuth2ScopeSaver;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
@@ -47,7 +47,7 @@ final class OAuth2RefreshTokenCreatorTest extends TestCase
      */
     private $refresh_token_dao;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OAuth2RefreshTokenScopeSaver
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OAuth2ScopeSaver
      */
     private $scope_saver;
     /**
@@ -58,7 +58,7 @@ final class OAuth2RefreshTokenCreatorTest extends TestCase
     protected function setUp(): void
     {
         $this->refresh_token_dao = \Mockery::mock(OAuth2RefreshTokenDAO::class);
-        $this->scope_saver       = \Mockery::mock(OAuth2RefreshTokenScopeSaver::class);
+        $this->scope_saver       = \Mockery::mock(OAuth2ScopeSaver::class);
 
         $formatter = new class implements SplitTokenFormatter
         {
@@ -87,7 +87,7 @@ final class OAuth2RefreshTokenCreatorTest extends TestCase
         $this->refresh_token_dao->shouldReceive('create')->once()
             ->with($auth_code->getID(), \Mockery::type('string'), $current_time->getTimestamp() + self::EXPECTED_EXPIRATION_DELAY_SECONDS)
             ->andReturn(2);
-        $this->scope_saver->shouldReceive('saveRefreshTokenScopes')->once();
+        $this->scope_saver->shouldReceive('saveScopes')->once();
 
         $refresh_token = $this->refresh_token_creator->issueRefreshTokenIdentifier(
             $current_time,
@@ -102,7 +102,7 @@ final class OAuth2RefreshTokenCreatorTest extends TestCase
         $current_time = new \DateTimeImmutable('@10');
 
         $this->refresh_token_dao->shouldReceive('create')->andReturn(1);
-        $this->scope_saver->shouldReceive('saveRefreshTokenScopes');
+        $this->scope_saver->shouldReceive('saveScopes');
 
         $refresh_token_1 = $this->refresh_token_creator->issueRefreshTokenIdentifier($current_time, $this->getAuthorizationCode([OAuth2OfflineAccessScope::fromItself()]));
         $refresh_token_2 = $this->refresh_token_creator->issueRefreshTokenIdentifier($current_time, $this->getAuthorizationCode([OAuth2OfflineAccessScope::fromItself()]));

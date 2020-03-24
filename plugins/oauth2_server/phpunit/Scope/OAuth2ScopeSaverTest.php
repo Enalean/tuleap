@@ -20,32 +20,32 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\Grant\AuthorizationCode\Scope;
+namespace Tuleap\OAuth2Server\Scope;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
-final class OAuth2AuthorizationCodeScopeSaverTest extends TestCase
+final class OAuth2ScopeSaverTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OAuth2AuthorizationCodeScopeDAO
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OAuth2ScopeIdentifierSaverDAO
      */
     private $dao;
 
     /**
-     * @var OAuth2AuthorizationCodeScopeSaver
+     * @var OAuth2ScopeSaver
      */
     private $saver;
 
     protected function setUp(): void
     {
-        $this->dao = \Mockery::mock(OAuth2AuthorizationCodeScopeDAO::class);
+        $this->dao = \Mockery::mock(OAuth2ScopeIdentifierSaverDAO::class);
 
-        $this->saver = new OAuth2AuthorizationCodeScopeSaver($this->dao);
+        $this->saver = new OAuth2ScopeSaver($this->dao);
     }
 
     public function testScopesAreSaved(): void
@@ -58,8 +58,8 @@ final class OAuth2AuthorizationCodeScopeSaverTest extends TestCase
         $scope_b = \Mockery::mock(AuthenticationScope::class);
         $scope_b->shouldReceive('getIdentifier')->andReturn($identifier_b);
 
-        $this->dao->shouldReceive('saveScopeKeysByOAuth2AuthCodeID')->with(12, 'foobar', 'barbaz')->once();
+        $this->dao->shouldReceive('saveScopeKeysByID')->with(12, 'foobar', 'barbaz')->once();
 
-        $this->saver->saveAuthorizationCodeScopes(12, [$scope_a, $scope_b]);
+        $this->saver->saveScopes(12, [$scope_a, $scope_b]);
     }
 }

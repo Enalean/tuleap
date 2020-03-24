@@ -26,7 +26,7 @@ use DateTimeImmutable;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
-use Tuleap\OAuth2Server\AccessToken\Scope\OAuth2AccessTokenScopeRetriever;
+use Tuleap\OAuth2Server\Scope\OAuth2ScopeRetriever;
 use Tuleap\User\OAuth2\AccessToken\InvalidOAuth2AccessTokenException;
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenDoesNotHaveRequiredScopeException;
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenExpiredException;
@@ -40,7 +40,7 @@ class OAuth2AccessTokenVerifier
      */
     private $access_token_dao;
     /**
-     * @var OAuth2AccessTokenScopeRetriever
+     * @var OAuth2ScopeRetriever
      */
     private $scope_retriever;
     /**
@@ -54,7 +54,7 @@ class OAuth2AccessTokenVerifier
 
     public function __construct(
         OAuth2AccessTokenDAO $access_token_dao,
-        OAuth2AccessTokenScopeRetriever $scope_retriever,
+        OAuth2ScopeRetriever $scope_retriever,
         \UserManager $user_manager,
         SplitTokenVerificationStringHasher $hasher
     ) {
@@ -112,7 +112,7 @@ class OAuth2AccessTokenVerifier
      */
     private function hasNeededScopes(SplitToken $access_token, AuthenticationScope $required_scope): bool
     {
-        $access_token_scopes = $this->scope_retriever->getScopesByAccessToken($access_token);
+        $access_token_scopes = $this->scope_retriever->getScopesBySplitToken($access_token);
         foreach ($access_token_scopes as $access_token_scope) {
             if ($access_token_scope->covers($required_scope)) {
                 return true;

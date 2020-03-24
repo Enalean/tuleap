@@ -29,7 +29,7 @@ use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\OAuth2Server\AccessToken\Scope\OAuth2AccessTokenScopeSaver;
+use Tuleap\OAuth2Server\Scope\OAuth2ScopeSaver;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 final class OAuth2AccessTokenCreatorTest extends TestCase
@@ -43,7 +43,7 @@ final class OAuth2AccessTokenCreatorTest extends TestCase
      */
     private $access_token_dao;
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OAuth2AccessTokenScopeSaver
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OAuth2ScopeSaver
      */
     private $scope_saver;
 
@@ -55,7 +55,7 @@ final class OAuth2AccessTokenCreatorTest extends TestCase
     protected function setUp(): void
     {
         $this->access_token_dao                                 = \Mockery::mock(OAuth2AccessTokenDAO::class);
-        $this->scope_saver                                      = \Mockery::mock(OAuth2AccessTokenScopeSaver::class);
+        $this->scope_saver                                      = \Mockery::mock(OAuth2ScopeSaver::class);
 
         $formatter = new class implements SplitTokenFormatter
         {
@@ -82,7 +82,7 @@ final class OAuth2AccessTokenCreatorTest extends TestCase
         $generated_access_token_id = 1;
 
         $this->access_token_dao->shouldReceive('create')->once()->andReturn($generated_access_token_id);
-        $this->scope_saver->shouldReceive('saveAccessTokenScopes')->once();
+        $this->scope_saver->shouldReceive('saveScopes')->once();
 
         $access_token = $this->token_creator->issueAccessToken(
             $current_time,
@@ -101,7 +101,7 @@ final class OAuth2AccessTokenCreatorTest extends TestCase
         $current_time = new \DateTimeImmutable('@10');
 
         $this->access_token_dao->shouldReceive('create')->andReturn(1);
-        $this->scope_saver->shouldReceive('saveAccessTokenScopes');
+        $this->scope_saver->shouldReceive('saveScopes');
         $scopes = [\Mockery::mock(AuthenticationScope::class)];
 
         $access_token_1 = $this->token_creator->issueAccessToken($current_time, 1, $scopes);
