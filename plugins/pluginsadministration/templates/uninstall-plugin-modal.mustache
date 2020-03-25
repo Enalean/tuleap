@@ -1,10 +1,10 @@
 <form action="?" method="POST">
-    <div id="uninstall-plugin-{{ plugin_id }}" class="tlp-modal tlp-modal-danger install-plugin-modal" role="dialog" aria-labelledby="uninstall-plugin-{{ plugin_id }}-label">
+    <div id="uninstall-plugin-{{ id }}" class="tlp-modal tlp-modal-danger install-plugin-modal" role="dialog" aria-labelledby="uninstall-plugin-{{ id }}-label">
         {{# csrf_token }}
             {{> csrf_token_input }}
         {{/ csrf_token }}
         <div class="tlp-modal-header">
-            <h1 class="tlp-modal-title" id="uninstall-plugin-{{ plugin_id }}-label">
+            <h1 class="tlp-modal-title" id="uninstall-plugin-{{ id }}-label">
                 <i class="fa fa-trash-o tlp-modal-title-icon"></i> {{ uninstall_modal_title }} {{ name }}
             </h1>
             <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
@@ -13,7 +13,7 @@
         </div>
         <div class="tlp-modal-body">
             <input type="hidden" name="action" value="uninstall">
-            <input type="hidden" name="plugin_id" value="{{ plugin_id }}">
+            <input type="hidden" name="plugin_id" value="{{ id }}">
             <input type="hidden" name="confirm" value="1">
 
             {{# is_there_unmet_dependencies }}

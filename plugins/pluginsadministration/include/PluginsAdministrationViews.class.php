@@ -28,6 +28,7 @@ use Tuleap\PluginsAdministration\AvailablePluginsPresenter;
 use Tuleap\PluginsAdministration\PluginDisablerVerifier;
 use Tuleap\PluginsAdministration\PluginPropertiesPresenter;
 
+// phpcs:ignore SlevomatCodingStandard.Classes.UnusedPrivateElements.UnusedMethod
 class PluginsAdministrationViews extends Views
 {
 
@@ -193,17 +194,10 @@ class PluginsAdministrationViews extends Views
         $additional_options           = $plugin->getAdministrationOptions();
         $are_there_additional_options = ! empty($additional_options);
 
-        $enable_switch = $this->getFlag(
-            $plugin->getId(),
-            $this->plugin_manager->isPluginAvailable($plugin),
-            (strcasecmp(get_class($plugin), 'PluginsAdministrationPlugin') === 0),
-            'properties'
-        );
-        $is_there_enable_switch = ! empty($enable_switch);
+        $is_enabled             = (bool) $this->plugin_manager->isPluginAvailable($plugin);
+        $is_there_enable_switch = (strcasecmp(get_class($plugin), 'PluginsAdministrationPlugin') !== 0);
 
-        $csrf_token = new CSRFSynchronizerToken(
-            '/plugins/pluginsadministration/?view=properties&plugin_id=' . urlencode($plugin->getId())
-        );
+        $csrf_token = new CSRFSynchronizerToken('/plugins/pluginsadministration/');
 
         return new PluginPropertiesPresenter(
             $plugin->getId(),
@@ -212,7 +206,7 @@ class PluginsAdministrationViews extends Views
             $descriptor->getDescription(),
             $plugin->getScope(),
             $is_there_enable_switch,
-            $enable_switch,
+            $this->getEnableUrl((int) $plugin->getId(), $is_enabled, 'properties'),
             $are_there_dependencies,
             $dependencies,
             $is_there_readme,
@@ -221,8 +215,23 @@ class PluginsAdministrationViews extends Views
             $properties,
             $are_there_additional_options,
             $additional_options,
-            $csrf_token
+            $csrf_token,
+            $is_enabled
         );
+    }
+
+    private function getEnableUrl(int $id, bool $is_enabled, string $view): string
+    {
+        $action = $is_enabled ? 'unavailable' : 'available';
+
+        return '?' .
+            http_build_query(
+                [
+                    'action'    => $action,
+                    'plugin_id' => $id,
+                    'view'      => $view
+                ]
+            );
     }
 
     private function getPluginResourceRestrictorPresenter(
@@ -244,14 +253,6 @@ class PluginsAdministrationViews extends Views
     }
 
     public $_plugins;
-
-    public function _emphasis($name, $enable)
-    {
-        if (!$enable) {
-            $name = '<span class="pluginsadministration_unavailable">' . $name . '</span>';
-        }
-        return $name;
-    }
 
     public function _searchPlugins()
     {
@@ -280,7 +281,7 @@ class PluginsAdministrationViews extends Views
                 $dont_restrict = $plugin->getScope() !== Plugin::SCOPE_PROJECT;
 
                 $this->_plugins[] = array(
-                    'plugin_id'     => $plugin->getId(),
+                    'id'            => $plugin->getId(),
                     'name'          => $name,
                     'description'   => $descriptor->getDescription(),
                     'version'       => $descriptor->getVersion(),
@@ -314,33 +315,30 @@ class PluginsAdministrationViews extends Views
             }
         );
 
-        $i       = 0;
         $plugins = array();
         foreach ($this->_plugins as $plugin) {
             $is_there_unmet_dependencies = false;
             $unmet_dependencies          = $this->dependency_solver->getInstalledDependencies(
-                $this->plugin_manager->getPluginById($plugin['plugin_id'])
+                $this->plugin_manager->getPluginById($plugin['id'])
             );
 
             if ($unmet_dependencies) {
                 $is_there_unmet_dependencies = true;
             }
             $plugins[] = array(
-                'available'                   => $plugin['available'] ? '' : 'pluginsadministration_unavailable',
+                'id'                          => $plugin['id'],
                 'name'                        => $plugin['name'],
                 'version'                     => $plugin['version'],
                 'description'                 => $plugin['description'],
-                'flags'                       => $this->getFlag($plugin['plugin_id'], $plugin['available'], $plugin['dont_touch'], 'installed'),
+                'enable_url'                  => $this->getEnableUrl($plugin['id'], $plugin['available'], 'installed'),
                 'scope'                       => $this->getScopeLabel((int) $plugin['scope']),
-                'plugin_id'                   => $plugin['plugin_id'],
                 'dont_touch'                  => $plugin['dont_touch'],
                 'dont_restrict'               => $plugin['dont_restrict'],
                 'is_there_unmet_dependencies' => $is_there_unmet_dependencies,
                 'unmet_dependencies'          => $unmet_dependencies,
-                'csrf_token'                  => new CSRFSynchronizerToken('/plugins/pluginsadministration/')
+                'csrf_token'                  => new CSRFSynchronizerToken('/plugins/pluginsadministration/'),
+                'is_enabled'                  => $plugin['available']
             );
-
-            $i++;
         }
 
         return new PluginsAdministration_Presenter_InstalledPluginsPresenter($plugins);
@@ -353,34 +351,6 @@ class PluginsAdministrationViews extends Views
         }
 
         return dgettext('tuleap-pluginsadministration', 'System');
-    }
-
-    private function getFlag($plugin_id, $is_active, $dont_touch, $view)
-    {
-        $output  = '';
-        $checked = '';
-        $title   = dgettext('tuleap-pluginsadministration', 'Do not avail this plugin');
-        $action  = 'available';
-
-        if ($is_active) {
-            $checked = 'checked';
-            $title   = dgettext('tuleap-pluginsadministration', 'Avail this plugin');
-            $action  = 'unavailable';
-        }
-
-        if (! $dont_touch) {
-            $csrf_token = new CSRFSynchronizerToken('/plugins/pluginsadministration/');
-            $output = '
-            <form id="plugin-switch-form-' . $plugin_id . '" action="?action=' . $action . '&plugin_id=' . $plugin_id . '&view=' . $view . '" method="POST">
-                ' . $csrf_token->fetchHTMLInput() . '
-                <div class="tlp-switch tlp-table-cell-actions-button">
-                    <input type="checkbox" data-form-id="plugin-switch-form-' . $plugin_id . '" id="plugin-switch-toggler-' . $plugin_id . '" class="tlp-switch-checkbox" ' . $checked . '>
-                    <label for="plugin-switch-toggler-' . $plugin_id . '" class="tlp-switch-button">' . $title . '</label>
-                </div>
-            </form>';
-        }
-
-        return $output;
     }
 
     private function getAvailablePluginsPresenter()

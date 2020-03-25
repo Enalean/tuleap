@@ -20,15 +20,34 @@
 import { modal as createModal, filterInlineTable } from "tlp";
 
 document.addEventListener("DOMContentLoaded", function() {
-    var switches = document.querySelectorAll(".tlp-switch-checkbox");
+    var switches = document.querySelectorAll(".enable-plugin-switch");
 
     [].forEach.call(switches, function(switch_button) {
-        if (switch_button.id === "allowed-projects-all-allowed") {
+        const modal_id = switch_button.dataset.targetModalId;
+        const form = switch_button.form;
+
+        if (!form) {
             return;
         }
 
+        let modal = null;
+        if (modal_id) {
+            const modal_element = document.getElementById(modal_id);
+            if (!modal_element) {
+                throw Error("Unable to find confirmation modal " + modal_id);
+            }
+            modal = createModal(modal_element);
+            modal.addEventListener("tlp-modal-hidden", function() {
+                form.reset();
+            });
+        }
+
         switch_button.addEventListener("change", function() {
-            document.getElementById(switch_button.dataset.formId).submit();
+            if (!switch_button.checked && modal) {
+                modal.show();
+            } else {
+                form.submit();
+            }
         });
     });
 

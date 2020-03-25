@@ -44,11 +44,19 @@ msgstr "Utiliser le plugin"
 msgid "Available plugins"
 msgstr "Plugins disponibles"
 
+msgid "Be aware it's likely to impact end user's day to day activity."
+msgstr ""
+"Veuillez noter que ceci pourrait impacter les activités quotidiennes des "
+"utilisateurs."
+
 msgid "Can't restrict this plugin because of its system scope"
 msgstr "Impossible de restreindre ce plugin car il a une portée système"
 
 msgid "Cancel"
 msgstr "Annuler"
+
+msgid "Confirm disable of plugin"
+msgstr "Confirmez la désactivation du plugin"
 
 msgid "Currently, there are no projects allowed to use this plugin."
 msgstr "Actuellement, il n'y a aucun projet autorisé à utiliser ce plugin."
@@ -61,6 +69,9 @@ msgstr "Description"
 
 msgid "Details"
 msgstr "Détails"
+
+msgid "Disabling a plugin"
+msgstr "Désactivation d'un plugin"
 
 msgid "Do not avail this plugin"
 msgstr "Ne pas utiliser le plugin"
@@ -114,6 +125,9 @@ msgstr ""
 
 msgid "Offers a web interface for managing plugins."
 msgstr "Interface web d'administration des plugins."
+
+msgid "Please confirm that you want to disable %s."
+msgstr "Merci de confirmer que vous voulez désactiver %s."
 
 #, php-format
 msgid "Plugin \"%1$s\" have been uninstalled."
@@ -175,6 +189,9 @@ msgstr "Les projets soumis ne pourront plus utiliser ce plugin."
 msgid "System"
 msgstr "Système"
 
+msgid "The feature will be desactivated for all users."
+msgstr "La fonctionnalité sera désactivée pour tous les utilisateurs."
+
 msgid "The plugin has been successfully installed"
 msgstr "Le plugin a été installé avec succès"
 
@@ -221,6 +238,9 @@ msgstr "Attention"
 msgid "Yes, revoke access"
 msgstr "Oui, interdire l'accès"
 
+msgid "You are about to disable a plugin."
+msgstr "Vous êtes sur le point de désactiver un plugin."
+
 msgid ""
 "You are about to revoke the access to this plugin to one or several "
 "projects. Are you sure you want to do this?"
@@ -258,3 +278,12 @@ msgid ""
 msgstr ""
 "l'espace web et les scripts cgi de ce plugin resteront accessible tant que "
 "vous ne supprimerez pas ou ne déplacerez pas les répertoires correspondants"
+
+#~ msgid ""
+#~ "Depending on the plugin, it may lead to misconfigurations or data loss."
+#~ msgstr ""
+#~ "En fonction du plugin, cela peut conduire à un problème de configuration "
+#~ "ou des pertes de données."
+
+#~ msgid "The plugin will stop listening to events."
+#~ msgstr "Le plugin arrêtera d'écouter les événements."
