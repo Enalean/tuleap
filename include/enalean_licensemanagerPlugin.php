@@ -204,8 +204,8 @@ class enalean_licensemanagerPlugin extends Plugin
      */
     private function getNbUsedUsersFromEventParams(array $params)
     {
-        /** @var Tuleap\Admin\Homepage\NbUsersByStatus $users_by_status */
         $users_by_status = $params['nb_users_by_status'];
+        \assert($users_by_status instanceof Tuleap\Admin\Homepage\NbUsersByStatus);
         $nb_used_users   = $users_by_status->getNbActive()
             + $users_by_status->getNbPending()
             + $users_by_status->getNbRestricted()
