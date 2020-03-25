@@ -141,11 +141,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
     public function cssfile($params)
     {
         if ($this->isInAdminSemantics()) {
-            $theme_include_assets = new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/velocity/themes',
-                '/assets/velocity/themes'
-            );
-            $css_file_url         = $theme_include_assets->getFileURL('style-fp.css');
+            $css_file_url         = $this->getAssets()->getFileURL('style-fp.css');
 
             echo '<link rel="stylesheet" type="text/css" href="' . $css_file_url . '" />';
         }
@@ -153,28 +149,18 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
 
     public function burningParrotGetJavascriptFiles(array $params)
     {
-        $include_assets = new IncludeAssets(
-            __DIR__ . "/../../../src/www/assets/velocity/scripts",
-            "/assets/velocity/scripts"
-        );
-
         if ($this->isAPlanningOverviewRequest()) {
-            $params['javascript_files'][] = $include_assets->getFileURL('velocity-chart.js');
+            $params['javascript_files'][] = $this->getAssets()->getFileURL('velocity-chart.js');
         }
     }
 
     /** @see Event::BURNING_PARROT_GET_STYLESHEETS */
     public function burningParrotGetStylesheets(array $params)
     {
-        $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/velocity/themes',
-            '/assets/velocity/themes'
-        );
-
         $variant = $params['variant'];
 
         if ($this->isAPlanningOverviewRequest()) {
-            $params['stylesheets'][] = $include_assets->getFileURL('velocity-' . $variant->getName() . '.css');
+            $params['stylesheets'][] = $this->getAssets()->getFileURL('velocity-' . $variant->getName() . '.css');
         }
     }
 
@@ -311,5 +297,13 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         if ($semantic_velocity->getVelocityField() !== null) {
             $event->setItRendersAChartForTracker();
         }
+    }
+
+    private function getAssets(): IncludeAssets
+    {
+        return new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/velocity',
+            '/assets/velocity'
+        );
     }
 }
