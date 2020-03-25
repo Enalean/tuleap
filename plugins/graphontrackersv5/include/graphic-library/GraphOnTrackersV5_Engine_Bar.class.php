@@ -21,6 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Chart\Chart;
+
 class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine
 {
 

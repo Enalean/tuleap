@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2009. All Rights Reserved.
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * Originally written by Nouha Terzi, 2009
  *
@@ -22,6 +22,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Chart\Chart;
+
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
 {
 
@@ -289,29 +292,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
 
     public function displayError($msg)
     {
-        //ttf from jpgraph
-        $ttf = new TTF();
-        Chart_TTFFactory::setUserFont($ttf);
-
-        //Calculate the baseline
-        // @see http://www.php.net/manual/fr/function.imagettfbbox.php#75333
-        //this should be above baseline
-        $test2 = "H";
-        //some of these additional letters should go below it
-        $test3 = "Hjgqp";
-        //get the dimension for these two:
-        $box2 = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $test2);
-        $box3 = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $test3);
-        $baseline = abs((abs($box2[5]) + abs($box2[1])) - (abs($box3[5]) + abs($box3[1])));
-        $bbox = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $msg);
-        if ($im = @imagecreate($bbox[2] - $bbox[6], $bbox[3] - $bbox[5])) {
-            $background_color = imagecolorallocate($im, 255, 255, 255);
-            $text_color       = imagecolorallocate($im, 64, 64, 64);
-            imagettftext($im, 10, 0, 0, $bbox[3] - $bbox[5] - $baseline, $text_color, $ttf->File(FF_USERFONT), $msg);
-            header("Content-type: image/png");
-            imagepng($im);
-            imagedestroy($im);
-        }
+        (new Chart())->displayMessage($msg);
     }
 
     public function applyColorModifierRGB($color)
