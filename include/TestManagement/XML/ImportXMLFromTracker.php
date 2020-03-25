@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement\XML;
 
 use SimpleXMLElement;
-use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
 use XML_RNGValidator;
 
@@ -34,17 +33,10 @@ class ImportXMLFromTracker
      */
     private $rng_validator;
 
-    /**
-     * @var UGroupRetrieverWithLegacy
-     */
-    private $ugroup_retriever_with_legacy;
-
     public function __construct(
-        XML_RNGValidator $rng_validator,
-        UGroupRetrieverWithLegacy $ugroup_retriever_with_legacy
+        XML_RNGValidator $rng_validator
     ) {
         $this->rng_validator                = $rng_validator;
-        $this->ugroup_retriever_with_legacy = $ugroup_retriever_with_legacy;
     }
 
     public function validateXMLImport(SimpleXMLElement $xml): void

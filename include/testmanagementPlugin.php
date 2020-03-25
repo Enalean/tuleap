@@ -25,7 +25,6 @@ use Tuleap\Event\Events\ImportValidateExternalFields;
 use Tuleap\layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
-use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\TestManagement\Administration\StepFieldUsageDetector;
@@ -796,6 +795,6 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
 
     private function getImportXmlFromTracker(): ImportXMLFromTracker
     {
-        return new ImportXMLFromTracker(new XML_RNGValidator(), new UGroupRetrieverWithLegacy(new UGroupManager()));
+        return new ImportXMLFromTracker(new XML_RNGValidator());
     }
 }

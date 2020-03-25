@@ -163,8 +163,8 @@ class StepsResultsChangesBuilder
         }
 
         $indexed_by_id = [];
-        /** @var StepResult $step_result */
         foreach ($changeset_value->getValue() as $step_result) {
+            \assert($step_result instanceof StepResult);
             $id                 = $step_result->getStep()->getId();
             $indexed_by_id[$id] = $step_result;
         }
