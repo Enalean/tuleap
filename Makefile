@@ -17,9 +17,9 @@ DOCKER=$(SUDO) docker
 DOCKER_COMPOSE=$(SUDO) docker-compose $(DOCKER_COMPOSE_FILE)
 
 ifeq ($(MODE),Prod)
-COMPOSER_INSTALL=composer --quiet install --classmap-authoritative --no-dev --no-interaction --no-scripts
+COMPOSER_INSTALL=composer --quiet install --classmap-authoritative --no-dev --no-interaction --no-scripts --prefer-dist
 else
-COMPOSER_INSTALL=composer --quiet install
+COMPOSER_INSTALL=composer --quiet install --prefer-dist
 endif
 
 PHP=php
