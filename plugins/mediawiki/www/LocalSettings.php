@@ -50,8 +50,8 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
     require_once MEDIAWIKI_BASE_DIR . '/../fusionforge/compat/load_compatibilities_method.php';
 
     $plugin_manager = PluginManager::instance();
-/** @var mediawikiPlugin $mw_plugin */
     $mw_plugin = $plugin_manager->getPluginByName('mediawiki');
+    \assert($mw_plugin instanceof mediawikiPlugin);
     if (! $mw_plugin || ! $plugin_manager->isPluginAvailable($mw_plugin)) {
         die('Mediawiki plugin not available');
     }

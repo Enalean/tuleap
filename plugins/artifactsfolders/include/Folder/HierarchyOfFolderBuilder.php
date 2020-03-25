@@ -95,8 +95,8 @@ class HierarchyOfFolderBuilder
     private function getFirstParentThatIsAFolder($ancestors)
     {
         $parent_folder = null;
-        /** @var Tracker_Artifact $parent */
         foreach ($ancestors as $parent) {
+            \assert($parent instanceof Tracker_Artifact);
             if ($this->folder_dao->isTrackerConfiguredToContainFolders($parent->getTrackerId())) {
                 $parent_folder = $parent;
             }

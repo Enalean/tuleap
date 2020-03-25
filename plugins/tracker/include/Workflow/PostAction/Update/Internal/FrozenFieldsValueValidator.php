@@ -71,8 +71,8 @@ class FrozenFieldsValueValidator
     {
         $used_fields    = $this->form_element_factory->getUsedFields($tracker);
         $used_field_ids = [];
-        /** @var \Tracker_FormElement_Field $used_field */
         foreach ($used_fields as $used_field) {
+            \assert($used_field instanceof \Tracker_FormElement_Field);
             $used_field_ids[] = (int) $used_field->getId();
         }
 

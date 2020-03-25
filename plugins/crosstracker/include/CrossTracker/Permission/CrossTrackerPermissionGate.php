@@ -50,8 +50,8 @@ class CrossTrackerPermissionGate
      */
     private function checkProjectsAuthorization(\PFUser $user, array $projects)
     {
-        /** @var \Project $project */
         foreach ($projects as $project) {
+            \assert($project instanceof \Project);
             try {
                 $this->url_verification->userCanAccessProject($user, $project);
             } catch (\Project_AccessException $ex) {
@@ -65,8 +65,8 @@ class CrossTrackerPermissionGate
      */
     private function checkTrackersAuthorization(\PFUser $user, array $trackers)
     {
-        /** @var \Tracker $tracker */
         foreach ($trackers as $tracker) {
+            \assert($tracker instanceof \Tracker);
             if (! $tracker->userCanView($user)) {
                 throw new CrossTrackerUnauthorizedTrackerException();
             }
@@ -85,8 +85,8 @@ class CrossTrackerPermissionGate
 
     private function checkFieldsAuthorization(\PFUser $user, array $fields, CrossTrackerUnauthorizedException $exception_to_throw)
     {
-        /** @var \Tracker_FormElement_Field $field */
         foreach ($fields as $field) {
+            \assert($field instanceof \Tracker_FormElement_Field);
             if (! $field->userCanRead($user)) {
                 throw $exception_to_throw;
             }

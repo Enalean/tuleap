@@ -82,8 +82,8 @@ class GitViewsRepositoriesTraversalStrategySelectboxTest extends TestCase
         //go find the variable $repositories
         $repositories = $this->getFLatTreeOfRepositories();
         foreach ($repositories as $row) {
-            /** @var GitRepository $repository */
             $repository = \Mockery::mock(\GitRepository::class)->makePartial()->shouldAllowMockingProtectedMethods();
+            \assert($repository instanceof GitRepository);
             $repository->setId($row['repository_id']);
             $repository->setName($row['repository_name']);
             $repository->setDescription($row['repository_description']);

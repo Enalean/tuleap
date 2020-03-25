@@ -64,8 +64,8 @@ class CommitPresenter
 
         $this->stats_added   = 0;
         $this->stats_removed = 0;
-        /** @var FileDiff $line_diff */
         foreach ($tree_diff as $line_diff) {
+            \assert($line_diff instanceof FileDiff);
             if ($line_diff->hasStats()) {
                 $this->stats_added   += (int) $line_diff->getAddedStats();
                 $this->stats_removed += (int) $line_diff->getRemovedStats();

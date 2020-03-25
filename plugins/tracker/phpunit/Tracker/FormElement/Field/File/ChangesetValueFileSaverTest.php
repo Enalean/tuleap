@@ -50,8 +50,8 @@ class ChangesetValueFileSaverTest extends TestCase
 
         $value = [];
 
-        /** @var ChangesetValueFileSaver|\Mockery\MockInterface $savior */
         $savior = \Mockery::mock(ChangesetValueFileSaver::class . '[initFolder]', [$dao, $attachment_creator]);
+        \assert($savior instanceof ChangesetValueFileSaver || $savior instanceof \Mockery\MockInterface);
         $savior->shouldAllowMockingProtectedMethods();
 
         $savior->shouldReceive('initFolder');
@@ -95,8 +95,8 @@ class ChangesetValueFileSaverTest extends TestCase
 
         $value = [];
 
-        /** @var ChangesetValueFileSaver|\Mockery\MockInterface $savior */
         $savior = \Mockery::mock(ChangesetValueFileSaver::class . '[initFolder]', [$dao, $attachment_creator]);
+        \assert($savior instanceof ChangesetValueFileSaver || $savior instanceof \Mockery\MockInterface);
         $savior->shouldAllowMockingProtectedMethods();
 
         $savior->shouldReceive('initFolder');
@@ -142,8 +142,8 @@ class ChangesetValueFileSaverTest extends TestCase
 
         $value = [];
 
-        /** @var ChangesetValueFileSaver|\Mockery\MockInterface $savior */
         $savior = \Mockery::mock(ChangesetValueFileSaver::class . '[initFolder]', [$dao, $attachment_creator]);
+        \assert($savior instanceof ChangesetValueFileSaver || $savior instanceof \Mockery\MockInterface);
         $savior->shouldAllowMockingProtectedMethods();
 
         $savior->shouldReceive('initFolder');
@@ -191,8 +191,8 @@ class ChangesetValueFileSaverTest extends TestCase
             'delete' => [70]
         ];
 
-        /** @var ChangesetValueFileSaver|\Mockery\MockInterface $savior */
         $savior = \Mockery::mock(ChangesetValueFileSaver::class . '[initFolder]', [$dao, $attachment_creator]);
+        \assert($savior instanceof ChangesetValueFileSaver || $savior instanceof \Mockery\MockInterface);
         $savior->shouldAllowMockingProtectedMethods();
 
         $savior->shouldReceive('initFolder');
@@ -247,8 +247,8 @@ class ChangesetValueFileSaverTest extends TestCase
         $attachment_2 = \Mockery::mock(\Tracker_FileInfo::class);
         $attachment_2->shouldReceive('getId')->andReturn(2);
 
-        /** @var ChangesetValueFileSaver|\Mockery\MockInterface $savior */
         $savior = \Mockery::mock(ChangesetValueFileSaver::class . '[initFolder]', [$dao, $attachment_creator]);
+        \assert($savior instanceof ChangesetValueFileSaver || $savior instanceof \Mockery\MockInterface);
         $savior->shouldAllowMockingProtectedMethods();
 
         $savior->shouldReceive('initFolder');
@@ -309,8 +309,8 @@ class ChangesetValueFileSaverTest extends TestCase
         $attachment_2 = \Mockery::mock(\Tracker_FileInfo::class);
         $attachment_2->shouldReceive('getId')->andReturn(2);
 
-        /** @var ChangesetValueFileSaver|\Mockery\MockInterface $savior */
         $savior = \Mockery::mock(ChangesetValueFileSaver::class . '[initFolder]', [$dao, $attachment_creator]);
+        \assert($savior instanceof ChangesetValueFileSaver || $savior instanceof \Mockery\MockInterface);
         $savior->shouldAllowMockingProtectedMethods();
 
         $savior->shouldReceive('initFolder');
@@ -369,8 +369,8 @@ class ChangesetValueFileSaverTest extends TestCase
         $attachment_2 = \Mockery::mock(\Tracker_FileInfo::class);
         $attachment_2->shouldReceive('getId')->andReturn(2);
 
-        /** @var ChangesetValueFileSaver|\Mockery\MockInterface $savior */
         $savior = \Mockery::mock(ChangesetValueFileSaver::class . '[initFolder]', [$dao, $attachment_creator]);
+        \assert($savior instanceof ChangesetValueFileSaver || $savior instanceof \Mockery\MockInterface);
         $savior->shouldAllowMockingProtectedMethods();
 
         $savior->shouldReceive('initFolder');

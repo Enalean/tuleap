@@ -79,8 +79,8 @@ final class FRSFileDownloadController extends DispatchablePSR15Compatible implem
             throw new NotFoundException(_('The file cannot be found'));
         }
 
-        /** @var PFUser $current_user */
         $current_user = $request->getAttribute(RESTCurrentUserMiddleware::class);
+        \assert($current_user instanceof PFUser);
 
         try {
             $this->url_verification->userCanAccessProject($current_user, $file->getGroup());

@@ -296,8 +296,8 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
     public function tracker_event_manage_semantics($parameters) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $tracker   = $parameters['tracker'];
-        /** @var Tracker_SemanticCollection $semantics */
         $semantics = $parameters['semantics'];
+        \assert($semantics instanceof Tracker_SemanticCollection);
 
         $semantics->add(Cardwall_Semantic_CardFields::load($tracker));
     }

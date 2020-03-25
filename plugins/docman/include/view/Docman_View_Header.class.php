@@ -46,8 +46,8 @@
         } else {
             $project = $this->getProjectFromParams($params);
             if ($project) {
-                /** @var Tuleap\Docman\ServiceDocman $service */
                 $service = $project->getService($htmlParams['service_name']);
+                \assert($service instanceof Tuleap\Docman\ServiceDocman);
                 if ($service) {
                     $service->displayHeader($htmlParams['title'], [], $this->getToolbar($params));
                 } else {

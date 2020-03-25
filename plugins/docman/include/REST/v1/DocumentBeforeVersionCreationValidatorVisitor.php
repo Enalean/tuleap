@@ -85,10 +85,8 @@ class DocumentBeforeVersionCreationValidatorVisitor implements ItemVisitor
     {
         $this->checkExpectedType($item, $params['document_type']);
 
-        /**
-         * @var Project $project
-         */
         $project = $params['project'];
+        \assert($project instanceof Project);
         if (! $project->usesWiki()) {
             throw new RestException(
                 400,

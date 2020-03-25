@@ -115,8 +115,8 @@ class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
 
     public function checkCaptchaBeforeSubmission(array $params)
     {
-        /** @var HTTPRequest $request */
         $request = $params['request'];
+        \assert($request instanceof HTTPRequest);
         if ($request->getCurrentUser()->isSuperUser()) {
             return;
         }

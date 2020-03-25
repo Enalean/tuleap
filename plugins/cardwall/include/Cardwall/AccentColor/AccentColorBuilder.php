@@ -52,12 +52,12 @@ class AccentColorBuilder
     ) {
         $no_color = new AccentColor('', true);
 
-        /** @var \Tracker_FormElement_Field_List $selectbox */
         $selectbox = $this->form_element_factory->getSelectboxFieldByNameForUser(
             $artifact->getTracker()->getId(),
             Tracker::TYPE_FIELD_NAME,
             $current_user
         );
+        \assert($selectbox instanceof \Tracker_FormElement_Field_List);
         if (! $selectbox) {
             return $no_color;
         }

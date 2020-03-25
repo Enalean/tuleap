@@ -93,8 +93,8 @@ class AttachmentController extends DispatchablePSR15Compatible implements Dispat
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        /** @var PFUser $current_user */
         $current_user = $request->getAttribute(RESTCurrentUserMiddleware::class);
+        \assert($current_user instanceof PFUser);
 
         $fileinfo = $this->getAlreadyLinkedFileInfo($current_user, $request);
         if (! $fileinfo) {

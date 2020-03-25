@@ -21,6 +21,7 @@
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 use Tuleap\Tracker\Workflow\WorkflowRulesManagerLoopSafeGuard;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_Workflow_Trigger_RulesManager
 {
     /** @var Tracker_Workflow_Trigger_RulesDao */
@@ -73,7 +74,7 @@ class Tracker_Workflow_Trigger_RulesManager
         $trigger_rule_collection = $this->getForTargetTracker($tracker);
 
         foreach ($trigger_rule_collection as $trigger_rule) {
-            /** @var Tracker_Workflow_Trigger_TriggerRule $trigger_rule */
+            \assert($trigger_rule instanceof Tracker_Workflow_Trigger_TriggerRule);
 
             $trigger_rule_xml = $root->addChild('trigger_rule');
 

@@ -900,8 +900,8 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     public function tracker_event_manage_semantics($parameters) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $tracker   = $parameters['tracker'];
-        /** @var Tracker_SemanticCollection $semantics */
         $semantics = $parameters['semantics'];
+        \assert($semantics instanceof Tracker_SemanticCollection);
 
         $semantics->add(AgileDashBoard_Semantic_InitialEffort::load($tracker));
         $semantics->insertAfter(Tracker_Semantic_Status::NAME, SemanticDone::load($tracker));

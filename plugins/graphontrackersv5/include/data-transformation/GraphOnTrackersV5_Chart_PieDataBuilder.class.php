@@ -36,8 +36,8 @@ class GraphOnTrackersV5_Chart_PieDataBuilder extends ChartDataBuilderV5
         $engine->legend = null;
         $result = array();
         $ff = Tracker_FormElementFactory::instance();
-        /** @var Tracker_FormElement_Field_List $af */
         $af = $ff->getUsedListFieldById($this->getTracker(), $this->chart->getField_base());
+        \assert($af instanceof Tracker_FormElement_Field_List);
         if (! $af) {
             $this->displayNoFieldError();
             return $result;

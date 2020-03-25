@@ -58,8 +58,8 @@ class PluginsAdministrationPlugin extends PluginWithLegacyInternalRouting
     public function burning_parrot_get_stylesheets($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            /** @var ThemeVariantColor $variant */
             $variant                 = $params['variant'];
+            \assert($variant instanceof ThemeVariantColor);
             $params['stylesheets'][] = $this->getAssets()->getFileURL('style-' . $variant->getName() . '.css');
         }
     }

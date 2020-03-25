@@ -76,8 +76,8 @@ final class UploadPathAllocator implements PathAllocator
 
     private function getFileField(int $field_id): Tracker_FormElement_Field_File
     {
-        /** @var Tracker_FormElement_Field_File $field */
         $field = $this->form_element_factory->getFieldById($field_id);
+        \assert($field instanceof Tracker_FormElement_Field_File);
 
         if (! $field) {
             throw new \RuntimeException('Unable to find field for the file.');

@@ -46,8 +46,8 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent
      */
     public function process()
     {
-        /** @var BackendSystem $backendSystem */
         $backendSystem      = Backend::instance('System');
+        \assert($backendSystem instanceof BackendSystem);
         $backendAliases     = Backend::instance('Aliases');
         $backendSVN         = Backend::instance('SVN');
         $backendCVS         = Backend::instance('CVS');

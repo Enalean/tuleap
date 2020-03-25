@@ -97,8 +97,8 @@ class SystemEvents_adminPresenter
     private function groupByCreatedDate(array $events)
     {
         $grouped_events = array();
-        /** @var \Tuleap\SystemEvent\SystemEventPresenter $event */
         foreach ($events as $event) {
+            \assert($event instanceof \Tuleap\SystemEvent\SystemEventPresenter);
             $prefix = substr($event->raw_create_date, 0, 10);
             if (! isset($grouped_events[$prefix])) {
                 $grouped_events[$prefix] = array(

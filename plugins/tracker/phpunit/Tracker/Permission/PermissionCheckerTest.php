@@ -333,8 +333,8 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
 
     public function testAccessPermsAnonymousFullAccess() : void
     {
-        /** @var Tracker $t_access_anonymous */
         $t_access_anonymous = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        \assert($t_access_anonymous instanceof Tracker);
         $t_access_anonymous->shouldReceive('getId')->andReturns(1);
         $t_access_anonymous->shouldReceive('getGroupId')->andReturns(101);
         $t_access_anonymous->shouldReceive('getProject')->andReturns($this->project);
