@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
+namespace Tuleap\OAuth2Server\Grant\RefreshToken;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -32,15 +32,13 @@ use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\OAuth2Server\Grant\AccessTokenGrantController;
 use Tuleap\OAuth2Server\Grant\AccessTokenGrantErrorResponseBuilder;
 use Tuleap\OAuth2Server\Grant\AccessTokenGrantRepresentationBuilder;
-use Tuleap\OAuth2Server\Grant\AuthorizationCode\PKCE\OAuth2PKCEVerificationException;
-use Tuleap\OAuth2Server\Grant\AuthorizationCode\PKCE\PKCECodeVerifier;
 use Tuleap\OAuth2Server\OAuth2ServerException;
+use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenVerifier;
 
-class OAuth2GrantAccessTokenFromAuthorizationCode
+class OAuth2GrantAccessTokenFromRefreshToken
 {
-    private const AUTH_CODE_PARAMETER     = 'code';
-    private const REDIRECT_URI_PARAMETER  = 'redirect_uri';
-    private const CODE_VERIFIER_PARAMETER = 'code_verifier';
+    private const REFRESH_TOKEN_PARAMETER = 'refresh_token';
+
     /**
      * @var ResponseFactoryInterface
      */
@@ -54,72 +52,54 @@ class OAuth2GrantAccessTokenFromAuthorizationCode
      */
     private $access_token_grant_error_response_builder;
     /**
-     * @var AccessTokenGrantRepresentationBuilder
-     */
-    private $response_builder;
-    /**
      * @var SplitTokenIdentifierTranslator
      */
     private $access_token_identifier_unserializer;
     /**
-     * @var OAuth2AuthorizationCodeVerifier
+     * @var OAuth2RefreshTokenVerifier
      */
-    private $authorization_code_verifier;
+    private $refresh_token_verifier;
     /**
-     * @var PKCECodeVerifier
+     * @var AccessTokenGrantRepresentationBuilder
      */
-    private $pkce_code_verifier;
+    private $access_token_grant_representation_builder;
 
     public function __construct(
         ResponseFactoryInterface $response_factory,
         StreamFactoryInterface $stream_factory,
         AccessTokenGrantErrorResponseBuilder $access_token_grant_error_response_builder,
-        AccessTokenGrantRepresentationBuilder $representation_builder,
-        SplitTokenIdentifierTranslator $access_token_identifier_unserializer,
-        OAuth2AuthorizationCodeVerifier $authorization_code_verifier,
-        PKCECodeVerifier $pkce_code_verifier
+        SplitTokenIdentifierTranslator $refresh_token_identifier_unserializer,
+        OAuth2RefreshTokenVerifier $refresh_token_verifier,
+        AccessTokenGrantRepresentationBuilder $access_token_grant_representation_builder
     ) {
-        $this->response_factory = $response_factory;
-        $this->stream_factory = $stream_factory;
+        $this->response_factory                          = $response_factory;
+        $this->stream_factory                            = $stream_factory;
         $this->access_token_grant_error_response_builder = $access_token_grant_error_response_builder;
-        $this->response_builder = $representation_builder;
-        $this->access_token_identifier_unserializer = $access_token_identifier_unserializer;
-        $this->authorization_code_verifier = $authorization_code_verifier;
-        $this->pkce_code_verifier = $pkce_code_verifier;
+        $this->access_token_identifier_unserializer      = $refresh_token_identifier_unserializer;
+        $this->refresh_token_verifier                    = $refresh_token_verifier;
+        $this->access_token_grant_representation_builder = $access_token_grant_representation_builder;
     }
 
     public function grantAccessToken(OAuth2App $app, array $body_params): ResponseInterface
     {
-        if (! isset($body_params[self::AUTH_CODE_PARAMETER])) {
+        if (! isset($body_params[self::REFRESH_TOKEN_PARAMETER])) {
             return $this->access_token_grant_error_response_builder->buildInvalidRequestResponse();
         }
 
         try {
-            $authorization_code = $this->authorization_code_verifier->getAuthorizationCode(
-                $this->access_token_identifier_unserializer->getSplitToken(new ConcealedString($body_params[self::AUTH_CODE_PARAMETER]))
+            $refresh_token = $this->refresh_token_verifier->getRefreshToken(
+                $app,
+                $this->access_token_identifier_unserializer->getSplitToken(new ConcealedString($body_params[self::REFRESH_TOKEN_PARAMETER]))
             );
         } catch (OAuth2ServerException | SplitTokenException $exception) {
             return $this->access_token_grant_error_response_builder->buildInvalidGrantResponse();
         } finally {
-            \sodium_memzero($body_params[self::AUTH_CODE_PARAMETER]);
+            \sodium_memzero($body_params[self::REFRESH_TOKEN_PARAMETER]);
         }
 
-        try {
-            $this->pkce_code_verifier->verifyCode($authorization_code, $body_params[self::CODE_VERIFIER_PARAMETER] ?? null);
-        } catch (OAuth2PKCEVerificationException $exception) {
-            return $this->access_token_grant_error_response_builder->buildInvalidGrantResponse();
-        }
-
-        if (! isset($body_params[self::REDIRECT_URI_PARAMETER])) {
-            return $this->access_token_grant_error_response_builder->buildInvalidRequestResponse();
-        }
-        if (! \hash_equals($app->getRedirectEndpoint(), $body_params[self::REDIRECT_URI_PARAMETER])) {
-            return $this->access_token_grant_error_response_builder->buildInvalidGrantResponse();
-        }
-
-        $representation = $this->response_builder->buildRepresentationFromAuthorizationCode(
+        $representation = $this->access_token_grant_representation_builder->buildRepresentationFromRefreshToken(
             new \DateTimeImmutable(),
-            $authorization_code
+            $refresh_token
         );
 
         return $this->response_factory->createResponse()

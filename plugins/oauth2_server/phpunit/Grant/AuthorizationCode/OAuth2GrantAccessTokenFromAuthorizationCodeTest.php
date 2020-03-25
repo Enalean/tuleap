@@ -32,8 +32,10 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenWithIdentifier;
 use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\OAuth2Server\Grant\AccessTokenGrantErrorResponseBuilder;
+use Tuleap\OAuth2Server\Grant\AccessTokenGrantRepresentationBuilder;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\PKCE\OAuth2PKCEVerificationException;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\PKCE\PKCECodeVerifier;
+use Tuleap\OAuth2Server\Grant\OAuth2AccessTokenSuccessfulRequestRepresentation;
 use Tuleap\OAuth2Server\OAuth2ServerException;
 use Tuleap\User\OAuth2\Scope\DemoOAuth2Scope;
 
@@ -42,9 +44,9 @@ final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AuthorizationCodeGrantResponseBuilder
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AccessTokenGrantRepresentationBuilder
      */
-    private $response_builder;
+    private $representation_builder;
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|SplitTokenIdentifierTranslator
      */
@@ -64,7 +66,7 @@ final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->response_builder       = \Mockery::mock(AuthorizationCodeGrantResponseBuilder::class);
+        $this->representation_builder = \Mockery::mock(AccessTokenGrantRepresentationBuilder::class);
         $this->auth_code_unserializer = \Mockery::mock(SplitTokenIdentifierTranslator::class);
         $this->auth_code_verifier     = \Mockery::mock(OAuth2AuthorizationCodeVerifier::class);
         $this->pkce_code_verifier     = \Mockery::mock(PKCECodeVerifier::class);
@@ -76,7 +78,7 @@ final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends TestCase
             $response_factory,
             $stream_factory,
             new AccessTokenGrantErrorResponseBuilder($response_factory, $stream_factory),
-            $this->response_builder,
+            $this->representation_builder,
             $this->auth_code_unserializer,
             $this->auth_code_verifier,
             $this->pkce_code_verifier
@@ -90,7 +92,7 @@ final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends TestCase
             $this->buildAuthorizationCodeGrant()
         );
         $this->pkce_code_verifier->shouldReceive('verifyCode')->once();
-        $this->response_builder->shouldReceive('buildResponse')->andReturn(
+        $this->representation_builder->shouldReceive('buildRepresentationFromAuthorizationCode')->andReturn(
             OAuth2AccessTokenSuccessfulRequestRepresentation::fromAccessTokenAndRefreshToken(
                 new OAuth2AccessTokenWithIdentifier(new ConcealedString('identifier'), new \DateTimeImmutable('@20')),
                 null,
@@ -119,7 +121,7 @@ final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends TestCase
 
         $body_params = ['grant_type' => 'authorization_code'];
 
-        $this->response_builder->shouldNotReceive('buildResponse');
+        $this->representation_builder->shouldNotReceive('buildResponse');
         $response = $this->grant_access_token_from_auth_code->grantAccessToken($this->buildOAuth2App(), $body_params);
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));
@@ -136,7 +138,7 @@ final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends TestCase
 
         $body_params = ['grant_type' => 'authorization_code', 'code' => 'not_valid_auth_code'];
 
-        $this->response_builder->shouldNotReceive('buildResponse');
+        $this->representation_builder->shouldNotReceive('buildResponse');
         $response = $this->grant_access_token_from_auth_code->grantAccessToken($this->buildOAuth2App(), $body_params);
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));
@@ -156,7 +158,7 @@ final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends TestCase
             'code'       => 'tlp-oauth2-ac1-1.6161616161616161616161616161616161616161616161616161616161616161'
         ];
 
-        $this->response_builder->shouldNotReceive('buildResponse');
+        $this->representation_builder->shouldNotReceive('buildResponse');
         $response = $this->grant_access_token_from_auth_code->grantAccessToken($this->buildOAuth2App(), $body_params);
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));
@@ -177,7 +179,7 @@ final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends TestCase
             'redirect_uri' => 'https://evil.example.com'
         ];
 
-        $this->response_builder->shouldNotReceive('buildResponse');
+        $this->representation_builder->shouldNotReceive('buildResponse');
         $response = $this->grant_access_token_from_auth_code->grantAccessToken($this->buildOAuth2App(), $body_params);
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));
@@ -203,7 +205,7 @@ final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends TestCase
             'redirect_uri' => $app->getRedirectEndpoint()
         ];
 
-        $this->response_builder->shouldNotReceive('buildResponse');
+        $this->representation_builder->shouldNotReceive('buildResponse');
         $response = $this->grant_access_token_from_auth_code->grantAccessToken($app, $body_params);
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));

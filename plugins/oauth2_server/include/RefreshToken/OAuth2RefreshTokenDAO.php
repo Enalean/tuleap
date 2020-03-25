@@ -40,6 +40,22 @@ class OAuth2RefreshTokenDAO extends DataAccessObject
     }
 
     /**
+     * @psalm-return null|array{authorization_code_id:int,verifier:string,expiration_date:int,has_already_been_used:0|1,app_id:int}
+     */
+    public function searchRefreshTokenByID(int $refresh_token_id): ?array
+    {
+        return $this->getDB()->row(
+            'SELECT token.authorization_code_id, token.verifier, token.expiration_date, token.has_already_been_used, auth_code.app_id
+                       FROM plugin_oauth2_refresh_token AS token
+                       JOIN plugin_oauth2_authorization_code AS auth_code ON auth_code.id = token.authorization_code_id
+                       JOIN plugin_oauth2_server_app AS app ON app.id = auth_code.app_id
+                       JOIN `groups` ON app.project_id = `groups`.group_id
+                       WHERE `groups`.status = "A" AND token.id = ?',
+            $refresh_token_id
+        );
+    }
+
+    /**
      * @psalm-return null|array{authorization_code_id:int,verifier:string}
      */
     public function searchRefreshTokenByApp(int $refresh_token_id, int $app_id): ?array
@@ -53,6 +69,14 @@ class OAuth2RefreshTokenDAO extends DataAccessObject
                        WHERE `groups`.status = "A" AND token.id = ? AND app.id = ?',
             $refresh_token_id,
             $app_id
+        );
+    }
+
+    public function markRefreshTokenAsUsed(int $refresh_token_id): void
+    {
+        $this->getDB()->run(
+            'UPDATE plugin_oauth2_refresh_token SET has_already_been_used=TRUE WHERE id=?',
+            $refresh_token_id
         );
     }
 }

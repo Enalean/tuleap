@@ -31,6 +31,8 @@ use Tuleap\OAuth2Server\AccessToken\Scope\OAuth2AccessTokenScopeDAO;
 use Tuleap\OAuth2Server\App\AppDao;
 use Tuleap\OAuth2Server\App\NewOAuth2App;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\Scope\OAuth2AuthorizationCodeScopeDAO;
+use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenDAO;
+use Tuleap\OAuth2Server\RefreshToken\Scope\OAuth2RefreshTokenScopeDAO;
 
 final class OAuth2AuthorizationCodeDAOTest extends TestCase
 {
@@ -99,6 +101,8 @@ final class OAuth2AuthorizationCodeDAOTest extends TestCase
         $db->delete('plugin_oauth2_authorization_code_scope', []);
         $db->delete('plugin_oauth2_access_token', []);
         $db->delete('plugin_oauth2_access_token_scope', []);
+        $db->delete('plugin_oauth2_refresh_token', []);
+        $db->delete('plugin_oauth2_refresh_token_scope', []);
     }
 
     public static function tearDownAfterClass() : void
@@ -153,11 +157,17 @@ final class OAuth2AuthorizationCodeDAOTest extends TestCase
         $access_token_id_2      = $access_token_dao->create($auth_code_id, 'hashed_verification_string_access', 30);
         $access_token_scope_dao = new OAuth2AccessTokenScopeDAO();
         $access_token_scope_dao->saveScopeKeysByID($access_token_id_1, 'scope:A', 'scope:B');
+        $refresh_token_dao       = new OAuth2RefreshTokenDAO();
+        $refresh_token_id        = $refresh_token_dao->create($auth_code_id, 'hashed_verification_string_refresh', 30);
+        $refresh_token_scope_dao = new OAuth2RefreshTokenScopeDAO();
+        $refresh_token_scope_dao->saveScopeKeysByID($refresh_token_id, 'scope:A', 'scope:B');
 
         $this->assertNotEmpty($auth_code_scope_dao->searchScopeIdentifiersByOAuth2SplitTokenID($auth_code_id));
         $this->assertNotNull($access_token_dao->searchAccessToken($access_token_id_1));
         $this->assertNotNull($access_token_dao->searchAccessToken($access_token_id_2));
         $this->assertNotEmpty($access_token_scope_dao->searchScopeIdentifiersByOAuth2SplitTokenID($access_token_id_1));
+        $this->assertNotNull($refresh_token_dao->searchRefreshTokenByID($refresh_token_id));
+        $this->assertNotEmpty($refresh_token_scope_dao->searchScopeIdentifiersByOAuth2SplitTokenID($refresh_token_id));
 
         $this->dao->deleteAuthorizationCodeByID($auth_code_id);
 
@@ -166,6 +176,8 @@ final class OAuth2AuthorizationCodeDAOTest extends TestCase
         $this->assertNull($access_token_dao->searchAccessToken($access_token_id_1));
         $this->assertNull($access_token_dao->searchAccessToken($access_token_id_2));
         $this->assertEmpty($access_token_scope_dao->searchScopeIdentifiersByOAuth2SplitTokenID($access_token_id_1));
+        $this->assertNull($refresh_token_dao->searchRefreshTokenByID($refresh_token_id));
+        $this->assertEmpty($refresh_token_scope_dao->searchScopeIdentifiersByOAuth2SplitTokenID($refresh_token_id));
     }
 
     public function testAnAuthorizationCodeOfDeletedProjectCannotBeFound(): void

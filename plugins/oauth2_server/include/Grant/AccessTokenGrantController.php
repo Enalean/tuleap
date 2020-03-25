@@ -28,6 +28,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2GrantAccessTokenFromAuthorizationCode;
+use Tuleap\OAuth2Server\Grant\RefreshToken\OAuth2GrantAccessTokenFromRefreshToken;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 
@@ -37,6 +38,7 @@ final class AccessTokenGrantController extends DispatchablePSR15Compatible imple
 
     private const GRANT_TYPE_PARAMETER     = 'grant_type';
     private const GRANT_AUTHORIZATION_CODE = 'authorization_code';
+    private const GRANT_REFRESH_TOKEN      = 'refresh_token';
 
     /**
      * @var AccessTokenGrantErrorResponseBuilder
@@ -46,16 +48,22 @@ final class AccessTokenGrantController extends DispatchablePSR15Compatible imple
      * @var OAuth2GrantAccessTokenFromAuthorizationCode
      */
     private $access_token_from_authorization_code;
+    /**
+     * @var OAuth2GrantAccessTokenFromRefreshToken
+     */
+    private $access_token_from_refresh_token;
 
     public function __construct(
         AccessTokenGrantErrorResponseBuilder $access_token_grant_error_response_builder,
         OAuth2GrantAccessTokenFromAuthorizationCode $access_token_from_authorization_code,
+        OAuth2GrantAccessTokenFromRefreshToken $access_token_from_refresh_token,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack
     ) {
         parent::__construct($emitter, ...$middleware_stack);
         $this->access_token_grant_error_response_builder = $access_token_grant_error_response_builder;
         $this->access_token_from_authorization_code      = $access_token_from_authorization_code;
+        $this->access_token_from_refresh_token           = $access_token_from_refresh_token;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -73,6 +81,9 @@ final class AccessTokenGrantController extends DispatchablePSR15Compatible imple
 
         if ($body_params[self::GRANT_TYPE_PARAMETER] === self::GRANT_AUTHORIZATION_CODE) {
             return $this->access_token_from_authorization_code->grantAccessToken($app, $body_params);
+        }
+        if ($body_params[self::GRANT_TYPE_PARAMETER] === self::GRANT_REFRESH_TOKEN) {
+            return $this->access_token_from_refresh_token->grantAccessToken($app, $body_params);
         }
 
         return $this->access_token_grant_error_response_builder->buildInvalidGrantResponse();

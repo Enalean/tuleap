@@ -20,16 +20,31 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
+namespace Tuleap\OAuth2Server\RefreshToken;
 
+use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\OAuth2Server\OAuth2ServerException;
 
-final class CannotSetANegativeExpirationDelayOnAccessTokenException extends \LogicException implements OAuth2ServerException
+final class OAuth2RefreshTokenReusedException extends \RuntimeException implements OAuth2ServerException
 {
-    public function __construct(int $invalid_expiration_delay)
+    /**
+     * @var int
+     *
+     * @psalm-readonly
+     */
+    private $authorization_code_id;
+
+    public function __construct(SplitToken $refresh_token, int $authorization_code_id)
     {
-        parent::__construct(
-            sprintf('Cannot set a negative delay (or expiring now), got %d', $invalid_expiration_delay)
-        );
+        parent::__construct(sprintf('The OAuth2 refresh token #%d has already been used once', $refresh_token->getID()));
+        $this->authorization_code_id = $authorization_code_id;
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function getAuthorizationCodeID(): int
+    {
+        return $this->authorization_code_id;
     }
 }

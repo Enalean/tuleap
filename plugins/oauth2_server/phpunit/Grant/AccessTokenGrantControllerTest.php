@@ -29,6 +29,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2GrantAccessTokenFromAuthorizationCode;
+use Tuleap\OAuth2Server\Grant\RefreshToken\OAuth2GrantAccessTokenFromRefreshToken;
 
 final class AccessTokenGrantControllerTest extends TestCase
 {
@@ -46,10 +47,15 @@ final class AccessTokenGrantControllerTest extends TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OAuth2GrantAccessTokenFromAuthorizationCode
      */
     private $grant_access_token_from_auth_code;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OAuth2GrantAccessTokenFromRefreshToken
+     */
+    private $grant_access_token_from_refresh_token;
 
     protected function setUp(): void
     {
-        $this->grant_access_token_from_auth_code = \Mockery::mock(OAuth2GrantAccessTokenFromAuthorizationCode::class);
+        $this->grant_access_token_from_auth_code     = \Mockery::mock(OAuth2GrantAccessTokenFromAuthorizationCode::class);
+        $this->grant_access_token_from_refresh_token = \Mockery::mock(OAuth2GrantAccessTokenFromRefreshToken::class);
 
         $this->response_factory = HTTPFactoryBuilder::responseFactory();
         $stream_factory   = HTTPFactoryBuilder::streamFactory();
@@ -57,6 +63,7 @@ final class AccessTokenGrantControllerTest extends TestCase
         $this->controller = new AccessTokenGrantController(
             new AccessTokenGrantErrorResponseBuilder($this->response_factory, $stream_factory),
             $this->grant_access_token_from_auth_code,
+            $this->grant_access_token_from_refresh_token,
             \Mockery::mock(EmitterInterface::class)
         );
     }
@@ -72,6 +79,23 @@ final class AccessTokenGrantControllerTest extends TestCase
         $request->shouldReceive('getAttribute')->with(OAuth2ClientAuthenticationMiddleware::class)->andReturn($app);
         $request->shouldReceive('getParsedBody')->andReturn(
             ['grant_type' => 'authorization_code']
+        );
+
+        $response = $this->controller->handle($request);
+        $this->assertSame($expected_response, $response);
+    }
+
+    public function testSuccessfullyGrantAccessTokenWithRefreshToken(): void
+    {
+        $expected_response = $this->response_factory->createResponse();
+
+        $this->grant_access_token_from_refresh_token->shouldReceive('grantAccessToken')->once()->andReturn($expected_response);
+
+        $request = \Mockery::mock(ServerRequestInterface::class);
+        $app     = $this->buildOAuth2App();
+        $request->shouldReceive('getAttribute')->with(OAuth2ClientAuthenticationMiddleware::class)->andReturn($app);
+        $request->shouldReceive('getParsedBody')->andReturn(
+            ['grant_type' => 'refresh_token']
         );
 
         $response = $this->controller->handle($request);

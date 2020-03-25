@@ -82,14 +82,25 @@ class OAuth2RefreshTokenCreator
         $this->transaction_executor           = $transaction_executor;
     }
 
+
+    public function issueRefreshTokenIdentifierFromAuthorizationCode(\DateTimeImmutable $current_time, OAuth2AuthorizationCode $authorization_code): ?ConcealedString
+    {
+        return $this->issueRefreshTokenIdentifier($current_time, $authorization_code->getID(), $authorization_code->getScopes());
+    }
+
+    public function issueRefreshTokenIdentifierFromExistingRefreshToken(\DateTimeImmutable $current_time, OAuth2RefreshToken $refresh_token): ?ConcealedString
+    {
+        return $this->issueRefreshTokenIdentifier($current_time, $refresh_token->getAssociatedAuthorizationCodeID(), $refresh_token->getScopes());
+    }
+
     /**
      * @param AuthenticationScope[] $scopes
      *
      * @psalm-param non-empty-array<AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier>> $scopes
      */
-    public function issueRefreshTokenIdentifier(\DateTimeImmutable $current_time, OAuth2AuthorizationCode $authorization_code): ?ConcealedString
+    private function issueRefreshTokenIdentifier(\DateTimeImmutable $current_time, int $authorization_code_id, array $scopes): ?ConcealedString
     {
-        if (! $this->hasNeededScopeToObtainARefreshToken($authorization_code)) {
+        if (! $this->hasNeededScopeToObtainARefreshToken($scopes)) {
             return null;
         }
 
@@ -97,13 +108,13 @@ class OAuth2RefreshTokenCreator
         $expiration_date     = $current_time->add($this->refresh_token_expiration_delay);
 
         $refresh_token_id = $this->transaction_executor->execute(
-            function () use ($verification_string, $expiration_date, $authorization_code) : int {
+            function () use ($verification_string, $expiration_date, $authorization_code_id, $scopes) : int {
                 $refresh_token_id = $this->dao->create(
-                    $authorization_code->getID(),
+                    $authorization_code_id,
                     $this->hasher->computeHash($verification_string),
                     $expiration_date->getTimestamp()
                 );
-                $this->scope_saver->saveScopes($refresh_token_id, $authorization_code->getScopes());
+                $this->scope_saver->saveScopes($refresh_token_id, $scopes);
 
                 return $refresh_token_id;
             }
@@ -114,9 +125,14 @@ class OAuth2RefreshTokenCreator
         );
     }
 
-    private function hasNeededScopeToObtainARefreshToken(OAuth2AuthorizationCode $authorization_code): bool
+    /**
+     * @param AuthenticationScope[] $scopes
+     *
+     * @psalm-param array<AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier>> $scopes
+     */
+    private function hasNeededScopeToObtainARefreshToken(array $scopes): bool
     {
-        foreach ($authorization_code->getScopes() as $scope) {
+        foreach ($scopes as $scope) {
             if ($this->offline_access_scope->covers($scope)) {
                 return true;
             }

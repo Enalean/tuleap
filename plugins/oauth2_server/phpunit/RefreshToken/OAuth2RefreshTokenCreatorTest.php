@@ -79,7 +79,7 @@ final class OAuth2RefreshTokenCreatorTest extends TestCase
         );
     }
 
-    public function testCanIssueANewRefreshToken(): void
+    public function testCanIssueANewRefreshTokenFromAuthorizationCode(): void
     {
         $current_time  = new \DateTimeImmutable('@10');
         $auth_code     = $this->getAuthorizationCode([OAuth2OfflineAccessScope::fromItself()]);
@@ -89,12 +89,30 @@ final class OAuth2RefreshTokenCreatorTest extends TestCase
             ->andReturn(2);
         $this->scope_saver->shouldReceive('saveScopes')->once();
 
-        $refresh_token = $this->refresh_token_creator->issueRefreshTokenIdentifier(
+        $refresh_token = $this->refresh_token_creator->issueRefreshTokenIdentifierFromAuthorizationCode(
             $current_time,
-            $this->getAuthorizationCode([OAuth2OfflineAccessScope::fromItself()])
+            $auth_code
         );
 
         $this->assertNotNull($refresh_token);
+    }
+
+    public function testCanIssueANewRefreshTokenIdentifierFromRefreshToken(): void
+    {
+        $current_time  = new \DateTimeImmutable('@10');
+        $refresh_token = OAuth2RefreshToken::createWithASetOfScopes(12, [OAuth2OfflineAccessScope::fromItself()]);
+
+        $this->refresh_token_dao->shouldReceive('create')->once()
+            ->with($refresh_token->getAssociatedAuthorizationCodeID(), \Mockery::type('string'), $current_time->getTimestamp() + self::EXPECTED_EXPIRATION_DELAY_SECONDS)
+            ->andReturn(3);
+        $this->scope_saver->shouldReceive('saveScopes')->once();
+
+        $new_refresh_token_identifier = $this->refresh_token_creator->issueRefreshTokenIdentifierFromExistingRefreshToken(
+            $current_time,
+            $refresh_token
+        );
+
+        $this->assertNotNull($new_refresh_token_identifier);
     }
 
     public function testIssueNewRefreshTokenIdentifierEachTime(): void
@@ -104,8 +122,8 @@ final class OAuth2RefreshTokenCreatorTest extends TestCase
         $this->refresh_token_dao->shouldReceive('create')->andReturn(1);
         $this->scope_saver->shouldReceive('saveScopes');
 
-        $refresh_token_1 = $this->refresh_token_creator->issueRefreshTokenIdentifier($current_time, $this->getAuthorizationCode([OAuth2OfflineAccessScope::fromItself()]));
-        $refresh_token_2 = $this->refresh_token_creator->issueRefreshTokenIdentifier($current_time, $this->getAuthorizationCode([OAuth2OfflineAccessScope::fromItself()]));
+        $refresh_token_1 = $this->refresh_token_creator->issueRefreshTokenIdentifierFromAuthorizationCode($current_time, $this->getAuthorizationCode([OAuth2OfflineAccessScope::fromItself()]));
+        $refresh_token_2 = $this->refresh_token_creator->issueRefreshTokenIdentifierFromAuthorizationCode($current_time, $this->getAuthorizationCode([OAuth2OfflineAccessScope::fromItself()]));
 
         $this->assertFalse($refresh_token_1->isIdenticalTo($refresh_token_2));
     }
@@ -117,7 +135,7 @@ final class OAuth2RefreshTokenCreatorTest extends TestCase
         $scope->shouldReceive('getIdentifier')->andReturn(OAuth2ScopeIdentifier::fromIdentifierKey('notoffline'));
         $auth_code     = $this->getAuthorizationCode([$scope]);
 
-        $refresh_token = $this->refresh_token_creator->issueRefreshTokenIdentifier(
+        $refresh_token = $this->refresh_token_creator->issueRefreshTokenIdentifierFromAuthorizationCode(
             $current_time,
             $auth_code
         );
