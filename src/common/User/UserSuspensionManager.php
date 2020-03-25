@@ -109,16 +109,15 @@ class UserSuspensionManager
     /**
      * Sends email alerts for all idle user accounts
      */
-    public function sendNotificationMailToIdleAccounts() : bool
+    public function sendNotificationMailToIdleAccounts(DateTimeImmutable $date)
     {
         $inactive_delay = (int) ForgeConfig::get(self::CONFIG_INACTIVE_DELAY);
         $notification_delay = (int) ForgeConfig::get(self::CONFIG_NOTIFICATION_DELAY);
-        $result = true;
 
         if (($notification_delay > 0) && ($inactive_delay > 0)) {
-            $idle_users = $this->getIdleAccounts($notification_delay, $inactive_delay);
-
+            $idle_users = $this->getIdleAccounts($notification_delay, $inactive_delay, $date);
             $users = array_column($idle_users, 'user_id');
+
             if ($users) {
                 $this->logger->info(
                     "Sending the suspension notification to the following users (ID): " .
@@ -128,33 +127,41 @@ class UserSuspensionManager
                 $this->logger->info("No users to notify (suspension notification).");
             }
 
-
             foreach ($idle_users as $idle_user) {
                 $user = $this->user_manager->getUserbyId($idle_user['user_id']);
                 if ($user) {
-                    $suspension_date = $this->getSuspensionDate($notification_delay);
+                    $locale = $user->getLocale();
+                    $suspension_date = $this->getSuspensionDate($notification_delay, $date);
                     $last_access_date = new DateTimeImmutable('@' . $idle_user['last_access_date']);
-                    $language = $this->lang_factory->getBaseLanguage(ForgeConfig::get('sys_lang'));
-                    $status = $this->sendNotificationMail($user, $last_access_date, $suspension_date, $language);
-                    if ($status) {
-                        $this->logger->info(
-                            "Suspension notification is sent to user: ID=" .
-                            $user->getId() . " username=" . $user->getUserName() .
-                            " email=" . $user->getEmail() . " last_access_date=" .
-                            date('Y-m-d\TH:i:sO', $idle_user['last_access_date'])
-                        );
-                    } else {
-                        $this->logger->error(
-                            "Unable to send suspension notification to user: ID=" .
-                            $user->getId() . " username=" . $user->getUserName() .
-                            " email=" . $user->getEmail()
-                        );
-                    }
-                    $result = $result && $status;
+                    $language = $this->lang_factory->getBaseLanguage($locale);
+
+                    $this->locale_switcher->setLocaleForSpecificExecutionContext(
+                        $locale,
+                        function () use ($user, $last_access_date, $suspension_date, $language, $idle_user) {
+                            $this->sendAndLogNotificationMailToUser($user, $last_access_date, $suspension_date, $language, $idle_user);
+                        }
+                    );
                 }
             }
         }
-        return $result;
+    }
+
+    private function sendAndLogNotificationMailToUser(PFUser $user, DateTimeImmutable $last_access_date, DateTimeImmutable $suspension_date, BaseLanguage $language, array $idle_user)
+    {
+        if ($this->sendNotificationMail($user, $last_access_date, $suspension_date, $language)) {
+            $this->logger->info(
+                "Suspension notification is sent to user: ID=" .
+                $user->getId() . " username=" . $user->getUserName() .
+                " email=" . $user->getEmail() . " last_access_date=" .
+                date('Y-m-d\TH:i:sO', $idle_user['last_access_date'])
+            );
+        } else {
+            $this->logger->error(
+                "Unable to send suspension notification to user: ID=" .
+                $user->getId() . " username=" . $user->getUserName() .
+                " email=" . $user->getEmail()
+            );
+        }
     }
 
     /**
@@ -176,10 +183,11 @@ class UserSuspensionManager
     /**
      * @param int $notification_delay Suspension notification delay (number of days before suspension)
      * @param int $inactive_delay Inactive accounts delay (number of days after since login)
+     * @param DateTimeImmutable $date Execution date
      */
-    private function getIdleAccounts(int $notification_delay, int $inactive_delay) : array
+    private function getIdleAccounts(int $notification_delay, int $inactive_delay, DateTimeImmutable $date) : array
     {
-        $start_date = $this->getLastAccessDate($notification_delay, $inactive_delay);
+        $start_date = $this->getLastAccessDate($notification_delay, $inactive_delay, $date);
         $end_date = $start_date->modify('+23hours 59 minutes 59 seconds');
         $this->logger->info(
             "Idle accounts: querying users that last accessed " . ForgeConfig::get('sys_name') .
@@ -191,10 +199,10 @@ class UserSuspensionManager
     /**
      * @param int $notification_delay Suspension notification delay (number of days before suspension)
      * @param int $inactive_delay   Inactive accounts delay (number of days after last login)
+     * @param DateTimeImmutable $date Execution date
      */
-    private function getLastAccessDate(int $notification_delay, int $inactive_delay) : DateTimeImmutable
+    private function getLastAccessDate(int $notification_delay, int $inactive_delay, DateTimeImmutable $date) : DateTimeImmutable
     {
-        $date = new DateTimeImmutable('today');
         $date_param = '- ' . ($inactive_delay - $notification_delay) . ' day';
         return $date->modify($date_param);
     }
@@ -202,9 +210,8 @@ class UserSuspensionManager
     /**
      * @param int $notification_delay Suspension notification delay (number of days before suspension)
      */
-    private function getSuspensionDate(int $notification_delay) : DateTimeImmutable
+    private function getSuspensionDate(int $notification_delay, DateTimeImmutable $date) : DateTimeImmutable
     {
-        $date = new DateTimeImmutable('today');
         $date_param = '+ ' .  $notification_delay . ' day';
         return $date->modify($date_param);
     }
