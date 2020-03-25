@@ -26,8 +26,31 @@ export function openModalOnClick(doc: Document, modal_element_id: string, button
         return;
     }
 
-    const modal = createModal(modal_element, { keyboard: true });
+    const modal = createModal(modal_element);
+    button.addEventListener("click", () => modal.show());
+}
+
+export function openTargetModalIdOnClick(
+    doc: Document,
+    button_id: string,
+    beforeModalOpenCallback?: (clicked_button: HTMLElement) => void
+): void {
+    const button = doc.getElementById(button_id);
+    if (!button || !(button instanceof HTMLElement)) {
+        return;
+    }
+    if (!button.dataset.targetModalId) {
+        throw new Error("Missing data-target-modal-id attribute on button");
+    }
+    const modal_element = doc.getElementById(button.dataset.targetModalId);
+    if (!modal_element) {
+        throw new Error("Could not find the element referenced by data-target-modal-id");
+    }
+    const modal = createModal(modal_element);
     button.addEventListener("click", () => {
+        if (beforeModalOpenCallback !== undefined) {
+            beforeModalOpenCallback(button);
+        }
         modal.show();
     });
 }

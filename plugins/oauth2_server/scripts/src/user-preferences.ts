@@ -18,7 +18,7 @@
  */
 
 import { initGettext } from "../../../../src/www/scripts/tuleap/gettext/gettext-init";
-import { openModalAndReplacePlaceholders } from "./confirmation-modals";
+import { openModalAndReplacePlaceholders } from "../../../../src/www/scripts/tuleap/modals/modal-opener";
 import { buildRevocationReplaceCallback, hiddenInputReplaceCallback } from "./replacers";
 
 const REVOKE_BUTTONS_SELECTOR = ".oauth2-server-revoke-authorization-button";

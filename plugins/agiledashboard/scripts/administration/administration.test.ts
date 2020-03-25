@@ -50,7 +50,7 @@ describe("administration", () => {
 
             const submit_with_modal = document.createElement("button");
             submit_with_modal.setAttribute("id", "scrum-configuration-edit-options-button");
-            submit_with_modal.dataset.targetModal = "scrum-explicit-backlog-switch-usage-modal";
+            submit_with_modal.dataset.targetModalId = "scrum-explicit-backlog-switch-usage-modal";
             submit_with_modal.classList.add("scrum-administration-submit-hidden");
 
             const modal = document.createElement("div");
@@ -141,7 +141,7 @@ describe("administration", () => {
 
             const submit_with_modal = document.createElement("button");
             submit_with_modal.setAttribute("id", "scrum-configuration-edit-options-button");
-            submit_with_modal.dataset.targetModal = modal_id;
+            submit_with_modal.dataset.targetModalId = modal_id;
 
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             let submit_click_event;

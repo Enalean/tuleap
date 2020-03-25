@@ -17,13 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { modal as createModal, datePicker } from "tlp";
+import { datePicker } from "tlp";
+import { openTargetModalIdOnClick } from "../tuleap/modals/modal-opener";
 
 document.addEventListener("DOMContentLoaded", () => {
     handleSSHKeys();
     handleAccessKeys();
     handleSVNTokens();
 });
+
+const ADD_SSH_KEY_BUTTON_ID = "add-ssh-key-button";
+const addSSHKeyButton = (): void => openTargetModalIdOnClick(document, ADD_SSH_KEY_BUTTON_ID);
+const GENERATE_ACCESS_KEY_BUTTON_ID = "generate-access-key-button";
+const addAccessKeyButton = (): void =>
+    openTargetModalIdOnClick(document, GENERATE_ACCESS_KEY_BUTTON_ID);
+const GENERATE_SVN_TOKEN_BUTTON_ID = "generate-svn-token-button";
+const addSVNTokenButton = (): void =>
+    openTargetModalIdOnClick(document, GENERATE_SVN_TOKEN_BUTTON_ID);
 
 function handleSSHKeys(): void {
     addSSHKeyButton();
@@ -53,16 +63,6 @@ function handleSSHKeys(): void {
     });
 }
 
-function addSSHKeyButton(): void {
-    const button = document.getElementById("add-ssh-key-button");
-
-    if (!(button instanceof HTMLButtonElement)) {
-        throw new Error("#add-ssh-key-button not found or is not a button");
-    }
-
-    popupModal(button);
-}
-
 function handleAccessKeys(): void {
     addAccessKeyButton();
     addAccessKeyDatePicker();
@@ -75,16 +75,6 @@ function handleAccessKeys(): void {
         "generate-new-access-key-button",
         "access-key-scopes[]"
     );
-}
-
-function addAccessKeyButton(): void {
-    const button = document.getElementById("generate-access-key-button");
-
-    if (!(button instanceof HTMLButtonElement)) {
-        throw new Error("#generate-access-key-button not found or is not a button");
-    }
-
-    popupModal(button);
 }
 
 function addAccessKeyDatePicker(): void {
@@ -104,36 +94,6 @@ function handleSVNTokens(): void {
         "button-revoke-svn-tokens",
         "svn-tokens-selected[]"
     );
-}
-
-function addSVNTokenButton(): void {
-    const button = document.getElementById("generate-svn-token-button");
-
-    if (!(button instanceof HTMLButtonElement)) {
-        throw new Error("#generate-svn-token-button not found or is not a button");
-    }
-
-    popupModal(button);
-}
-
-function popupModal(button: HTMLButtonElement): void {
-    if (button && button.dataset) {
-        const modal_target_id = button.dataset.targetModalId;
-
-        if (!modal_target_id) {
-            return;
-        }
-
-        const modal_element = document.getElementById(modal_target_id);
-        if (!modal_element) {
-            return;
-        }
-        const modal = createModal(modal_element);
-
-        button.addEventListener("click", () => {
-            modal.show();
-        });
-    }
 }
 
 function toggleButtonAccordingToCheckBoxesStateWithIds(

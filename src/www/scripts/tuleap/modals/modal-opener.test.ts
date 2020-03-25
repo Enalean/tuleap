@@ -18,15 +18,20 @@
  */
 
 import * as tlp from "tlp";
-import { openModalAndReplacePlaceholders, openModalOnClick } from "./confirmation-modals";
+import {
+    openModalAndReplacePlaceholders,
+    openModalOnClick,
+    openTargetModalIdOnClick
+} from "./modal-opener";
 
 jest.mock("tlp");
 
-describe(`Confirmation modals`, () => {
+describe(`Modal Opener`, () => {
     let doc: Document, createModal: jest.SpyInstance;
     beforeEach(() => {
         doc = createLocalDocument();
         createModal = jest.spyOn(tlp, "modal");
+        jest.resetAllMocks();
     });
 
     describe(`openModalOnClick()`, () => {
@@ -54,6 +59,60 @@ describe(`Confirmation modals`, () => {
             openModalOnClick(doc, "modal_id", "button_id");
             expect(createModal).toHaveBeenCalled();
             expect(modal.show).toHaveBeenCalled();
+        });
+    });
+
+    describe(`openTargetModalIdOnClick()`, () => {
+        it(`does not crash when the button can't be found`, () => {
+            openTargetModalIdOnClick(doc, "unknown_button_id");
+            expect(createModal).not.toHaveBeenCalled();
+        });
+
+        it(`throws when the button does not have a data-target-modal-id attribute`, () => {
+            createAndAppendElementById(doc, "button", "button_id");
+
+            expect(() => openTargetModalIdOnClick(doc, "button_id")).toThrow(
+                "Missing data-target-modal-id attribute on button"
+            );
+        });
+
+        it(`throws when the element referenced by data-target-modal-id can't be found`, () => {
+            const button = createAndAppendElementById(doc, "button", "button_id");
+            button.dataset.targetModalId = "unknown_modal_id";
+
+            expect(() => openTargetModalIdOnClick(doc, "button_id")).toThrow(
+                "Could not find the element referenced by data-target-modal-id"
+            );
+        });
+
+        describe(`when I click on the button`, () => {
+            let button: HTMLElement;
+            beforeEach(() => {
+                button = createAndAppendElementById(doc, "button", "button_id");
+                button.dataset.targetModalId = "modal_id";
+                createAndAppendElementById(doc, "div", "modal_id");
+                simulateClick(button);
+
+                createModal.mockImplementation(() => ({ show: jest.fn() }));
+            });
+
+            it(`when the button is clicked, it will create a modal from the data-target-modal-id and show it`, () => {
+                const modal = { show: jest.fn() };
+                createModal.mockImplementation(() => modal);
+
+                openTargetModalIdOnClick(doc, "button_id");
+
+                expect(createModal).toHaveBeenCalled();
+                expect(modal.show).toHaveBeenCalled();
+            });
+
+            it(`Given that a callback has been passed, when the button is clicked, it will call it before opening the modal`, () => {
+                const callback = jest.fn();
+
+                openTargetModalIdOnClick(doc, "button_id", callback);
+
+                expect(callback).toHaveBeenCalledWith(button);
+            });
         });
     });
 
