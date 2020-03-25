@@ -38,4 +38,21 @@ class OAuth2RefreshTokenDAO extends DataAccessObject
             ]
         );
     }
+
+    /**
+     * @psalm-return null|array{authorization_code_id:int,verifier:string}
+     */
+    public function searchRefreshTokenByApp(int $refresh_token_id, int $app_id): ?array
+    {
+        return $this->getDB()->row(
+            'SELECT token.authorization_code_id, token.verifier
+                       FROM plugin_oauth2_refresh_token AS token
+                       JOIN plugin_oauth2_authorization_code AS auth_code ON auth_code.id = token.authorization_code_id
+                       JOIN plugin_oauth2_server_app AS app ON app.id = auth_code.app_id
+                       JOIN `groups` ON app.project_id = `groups`.group_id
+                       WHERE `groups`.status = "A" AND token.id = ? AND app.id = ?',
+            $refresh_token_id,
+            $app_id
+        );
+    }
 }

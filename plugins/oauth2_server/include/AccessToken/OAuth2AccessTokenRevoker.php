@@ -23,13 +23,25 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\AccessToken;
 
 use Tuleap\Authentication\SplitToken\SplitToken;
+use Tuleap\Authentication\SplitToken\SplitTokenException;
+use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OAuth2Server\App\OAuth2App;
+use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeRevoker;
 use Tuleap\User\OAuth2\AccessToken\InvalidOAuth2AccessTokenException;
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenNotFoundException;
 
-class OAuth2AccessTokenRevocationVerifier
+class OAuth2AccessTokenRevoker
 {
+    /**
+     * @var SplitTokenIdentifierTranslator
+     */
+    private $access_token_identifier_unserializer;
+    /**
+     * @var OAuth2AuthorizationCodeRevoker
+     */
+    private $authorization_code_revoker;
     /**
      * @var OAuth2AccessTokenDAO
      */
@@ -40,18 +52,34 @@ class OAuth2AccessTokenRevocationVerifier
     private $hasher;
 
     public function __construct(
+        SplitTokenIdentifierTranslator $access_token_identifier_unserializer,
+        OAuth2AuthorizationCodeRevoker $authorization_code_revoker,
         OAuth2AccessTokenDAO $access_token_dao,
         SplitTokenVerificationStringHasher $hasher
     ) {
-        $this->access_token_dao = $access_token_dao;
-        $this->hasher           = $hasher;
+        $this->access_token_identifier_unserializer = $access_token_identifier_unserializer;
+        $this->authorization_code_revoker           = $authorization_code_revoker;
+        $this->access_token_dao                     = $access_token_dao;
+        $this->hasher                               = $hasher;
+    }
+
+    /**
+     * @throws SplitTokenException
+     * @throws OAuth2AccessTokenNotFoundException
+     * @throws InvalidOAuth2AccessTokenException
+     */
+    public function revokeGrantOfAccessToken(OAuth2App $app, ConcealedString $token_identifier): void
+    {
+        $access_token          = $this->access_token_identifier_unserializer->getSplitToken($token_identifier);
+        $authorization_code_id = $this->getAuthorizationCodeIDFromAccessToken($access_token, $app);
+        $this->authorization_code_revoker->revokeByAuthCodeId($authorization_code_id);
     }
 
     /**
      * @throws OAuth2AccessTokenNotFoundException
      * @throws InvalidOAuth2AccessTokenException
      */
-    public function getAssociatedAuthorizationCodeID(SplitToken $access_token, OAuth2App $app): int
+    private function getAuthorizationCodeIDFromAccessToken(SplitToken $access_token, OAuth2App $app): int
     {
         $row = $this->access_token_dao->searchAccessTokenByApp($access_token->getID(), $app->getId());
         if ($row === null) {
