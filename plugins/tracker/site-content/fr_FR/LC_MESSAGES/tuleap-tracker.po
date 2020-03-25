@@ -735,6 +735,9 @@ msgstr "Valider"
 msgid "Submit permissions"
 msgstr "Valider les permissions"
 
+msgid "Switch to new tracker creation flow"
+msgstr "Basculer sur le nouveau flux de création d'outil de suivi"
+
 msgid "Target URL"
 msgstr "URL cible"
 
@@ -1268,6 +1271,13 @@ msgstr ""
 "Ce champ est partagé depuis l'outil de suivi <a href=\"%s\">%s</a> du projet "
 "%s"
 
+msgid ""
+"This page is deprecated and will be removed soon. You should switch to the "
+"new tracker creation flow."
+msgstr ""
+"Cette page est dépréciée et sera bientôt supprimée. Vous devriez utiliser le "
+"nouveau flux de création des outils de suivi."
+
 msgid "This semantic is not defined yet."
 msgstr "Cette sémantique n'est pas encore définie."
 
@@ -1358,9 +1368,6 @@ msgstr "Règles de Transitions"
 
 msgid "Triggers"
 msgstr "Déclenchements"
-
-msgid "Try new tracker creation flow"
-msgstr "Essayer le nouveau flux de création d'outil de suivi"
 
 #, php-format
 msgid ""
