@@ -1,0 +1,17 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-tuleap-synchro",
+  "version": "0.1.0",
+  "homepage": "https://www.enalean.com",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {},
+  "config": {
+    "bin": "../../node_modules/.bin"
+  },
+  "scripts": {
+    "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
+    "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch"
+  }
+}

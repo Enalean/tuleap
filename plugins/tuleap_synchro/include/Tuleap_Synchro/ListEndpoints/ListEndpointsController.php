@@ -65,17 +65,14 @@ class ListEndpointsController implements DispatchableWithRequest, DispatchableWi
             throw new ForbiddenException();
         }
 
-        $include_assets = new IncludeAssets(__DIR__ . '/../../../../../src/www/assets/tuleap_synchro/scripts', '/assets/tuleap_synchro/scripts');
+        $include_assets = new IncludeAssets(__DIR__ . '/../../../../../src/www/assets/tuleap_synchro', '/assets/tuleap_synchro');
         $layout->includeFooterJavascriptFile(
             $include_assets->getFileURL('tuleap_synchro.js')
         );
 
         $layout->addCssAsset(
             new CssAsset(
-                new IncludeAssets(
-                    __DIR__ . '/../../../../../src/www/assets/tuleap_synchro/themes',
-                    '/assets/tuleap_synchro/themes'
-                ),
+                $include_assets,
                 'tuleap-synchro'
             )
         );
