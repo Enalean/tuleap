@@ -169,21 +169,20 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
 
     public function collectAssets(CollectAssets $retriever)
     {
+        $assets = new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/pullrequest',
+            '/assets/pullrequest'
+        );
+
         $css_assets = new CssAsset(
-            new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/pullrequest/themes',
-                '/assets/pullrequest/themes'
-            ),
+            $assets,
             'repository'
         );
         $retriever->addStylesheet($css_assets);
 
-        $scripts_assets = new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/pullrequest/scripts',
-            '/assets/pullrequest/scripts'
-        );
 
-        $create_pullrequest = new ScriptAsset($scripts_assets, 'create-pullrequest-button.js');
+
+        $create_pullrequest = new ScriptAsset($assets, 'create-pullrequest-button.js');
         $retriever->addScript($create_pullrequest);
     }
 

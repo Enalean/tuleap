@@ -18,7 +18,7 @@
  */
 
 @import './inline-comment';
-@import '../../www/scripts/node_modules/codemirror/addon/scroll/simplescrollbars';
+@import '../../node_modules/codemirror/addon/scroll/simplescrollbars';
 
 .pull-request-unidiff {
     height: 50vh;

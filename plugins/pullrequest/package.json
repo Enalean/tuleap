@@ -1,5 +1,5 @@
 {
-  "name": "tuleap-pullrequest",
+  "name": "@tuleap/plugin-pullrequest",
   "author": "Enalean Team",
   "version": "0.0.1",
   "homepage": "https://www.enalean.com",
@@ -23,11 +23,11 @@
     "jquery": "^3.3.1"
   },
   "config": {
-    "bin": "../../../../node_modules/.bin/"
+    "bin": "../../node_modules/.bin/"
   },
   "scripts": {
-    "build": "rm -rf ../../../../src/www/assets/pullrequest/scripts/ && NODE_ENV=production $npm_package_config_bin/webpack --mode=production",
+    "build": "rm -rf ../../src/www/assets/pullrequest/ && $npm_package_config_bin/webpack --config webpack.prod.js",
     "test": "$npm_package_config_bin/jest",
-    "watch": "NODE_ENV=watch $npm_package_config_bin/concurrently --raw --kill-others '$npm_package_config_bin/webpack --watch --mode=development' 'CI=true npm test -- --watch'"
+    "watch": "NODE_ENV=watch $npm_package_config_bin/concurrently --raw --kill-others '$npm_package_config_bin/webpack --config webpack.dev.js --watch' 'CI=true npm test -- --watch'"
   }
 }

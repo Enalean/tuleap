@@ -75,12 +75,14 @@ class PullrequestDisplayer
 
             $GLOBALS['HTML'] = $GLOBALS['Response'] = $layout;
 
+            $assets = new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/pullrequest',
+                '/assets/pullrequest'
+            );
+
             $layout->addCssAsset(
                 new CssAsset(
-                    new IncludeAssets(
-                        __DIR__ . '/../../../src/www/assets/pullrequest/themes',
-                        '/assets/pullrequest/themes'
-                    ),
+                    $assets,
                     'pull-requests'
                 )
             );
@@ -92,12 +94,9 @@ class PullrequestDisplayer
                 $repository
             );
 
-            $scripts_assets = new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/pullrequest/scripts',
-                '/assets/pullrequest/scripts'
-            );
 
-            $pull_requests_app = new ScriptAsset($scripts_assets, 'tuleap-pullrequest.js');
+
+            $pull_requests_app = new ScriptAsset($assets, 'tuleap-pullrequest.js');
             $layout->includeFooterJavascriptFile($pull_requests_app->getFileURL());
 
             $presenter = new PullRequestPresenter(

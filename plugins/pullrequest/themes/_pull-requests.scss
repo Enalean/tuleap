@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../www/scripts/node_modules/codemirror/lib/codemirror';
-@import '../www/scripts/node_modules/codemirror/addon/merge/merge';
+@import '../node_modules/codemirror/lib/codemirror';
+@import '../node_modules/codemirror/addon/merge/merge';
 
 @import './includes/dashboard';
 @import './includes/pull-request';
