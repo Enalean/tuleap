@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const base_config = require("../../../tests/jest/jest.base.config.js");
+const base_config = require("../../tests/jest/jest.base.config.js");
 
 module.exports = {
     ...base_config,
     displayName: "testmanagement",
-    setupFiles: ["./angular/tests/jest.setup.js"],
+    setupFiles: ["./scripts/testmanagement/tests/jest.setup.js"],
     moduleNameMapper: {
         ...base_config.moduleNameMapper,
         "^.+\\.html$": "identity-obj-proxy",

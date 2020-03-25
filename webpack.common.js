@@ -19,8 +19,75 @@
 
 const path = require("path");
 const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
+const context = __dirname;
+const output = webpack_configurator.configureOutput(
+    path.resolve(__dirname, "../../src/www/assets/testmanagement/")
+);
+const manifest_plugin = webpack_configurator.getManifestPlugin();
 
-let entry_points = {
+const webpack_config_for_angular = {
+    entry: {
+        testmanagement: "./scripts/testmanagement/src/app.js"
+    },
+    context,
+    output,
+    externals: {
+        tlp: "tlp",
+        jquery: "jQuery",
+        ckeditor: "CKEDITOR"
+    },
+    resolve: {
+        alias: webpack_configurator.extendAliases(
+            webpack_configurator.tlp_fetch_alias,
+            webpack_configurator.angular_tlp_alias,
+            {
+                // angular-tlp
+                angular$: path.resolve(__dirname, "node_modules/angular")
+            }
+        )
+    },
+    module: {
+        rules: [
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+            webpack_configurator.rule_ng_cache_loader,
+            webpack_configurator.rule_vue_loader,
+            webpack_configurator.rule_angular_mixed_vue_gettext,
+            webpack_configurator.rule_angular_gettext_loader
+        ]
+    },
+    plugins: [
+        manifest_plugin,
+        webpack_configurator.getMomentLocalePlugin(),
+        webpack_configurator.getVueLoaderPlugin()
+    ],
+    resolveLoader: {
+        alias: webpack_configurator.easygettext_loader_alias
+    }
+};
+
+const webpack_config_for_vue_components = {
+    entry: {
+        "step-definition-field": "./scripts/step-definition-field/index.js"
+    },
+    context,
+    output,
+    externals: {
+        codendi: "codendi"
+    },
+    module: {
+        rules: [
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+            webpack_configurator.rule_easygettext_loader,
+            webpack_configurator.rule_vue_loader
+        ]
+    },
+    plugins: [manifest_plugin, webpack_configurator.getVueLoaderPlugin()],
+    resolveLoader: {
+        alias: webpack_configurator.easygettext_loader_alias
+    }
+};
+
+const entry_points = {
     flamingparrot: "./themes/FlamingParrot/css/style.scss"
 };
 
@@ -32,20 +99,18 @@ for (const color of colors_burning_parrot) {
     ] = `./themes/BurningParrot/css/style-${color}-condensed.scss`;
 }
 
+const webpack_config_for_themes = {
+    entry: entry_points,
+    context,
+    output,
+    module: {
+        rules: [webpack_configurator.rule_scss_loader, webpack_configurator.rule_css_assets]
+    },
+    plugins: [manifest_plugin, ...webpack_configurator.getCSSExtractionPlugins()]
+};
+
 module.exports = [
-    {
-        entry: entry_points,
-        context: path.resolve(__dirname),
-        output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../src/www/assets/testmanagement/css/")
-        ),
-        module: {
-            rules: [webpack_configurator.rule_scss_loader, webpack_configurator.rule_css_assets]
-        },
-        plugins: [
-            webpack_configurator.getCleanWebpackPlugin(),
-            webpack_configurator.getManifestPlugin(),
-            ...webpack_configurator.getCSSExtractionPlugins()
-        ]
-    }
+    webpack_config_for_angular,
+    webpack_config_for_vue_components,
+    webpack_config_for_themes
 ];

@@ -2,8 +2,8 @@
     "name": "testmanagement",
     "gettext-angularjs": {
         "testmanagement": {
-            "src": "scripts/angular/src/app",
-            "po": "scripts/angular/po"
+            "src": "scripts/testmanagement/src/",
+            "po": "scripts/testmanagement/po"
         }
     },
     "gettext-vue": {

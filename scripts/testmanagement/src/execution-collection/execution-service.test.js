@@ -21,7 +21,7 @@ import _ from "lodash";
 import execution_collection_module from "./execution-collection.js";
 import angular from "angular";
 import "angular-mocks";
-import { createAngularPromiseWrapper } from "../../../../../../../tests/jest/angular-promise-wrapper.js";
+import { createAngularPromiseWrapper } from "../../../../../../tests/jest/angular-promise-wrapper.js";
 
 describe("ExecutionService", () => {
     let $q,

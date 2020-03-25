@@ -24,7 +24,7 @@ import campaign_module from "./campaign.js";
 import angular from "angular";
 import "angular-mocks";
 import BaseController from "./campaign-list-controller.js";
-import { createAngularPromiseWrapper } from "../../../../../../../tests/jest/angular-promise-wrapper.js";
+import { createAngularPromiseWrapper } from "../../../../../../tests/jest/angular-promise-wrapper.js";
 
 describe("CampaignListController -", () => {
     const project_id = 68;

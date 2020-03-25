@@ -39,33 +39,27 @@ final class LegacyRoutingController implements DispatchableWithRequest, Dispatch
     /**
      * @var IncludeAssets
      */
-    private $include_js_assets;
+    private $testmanagement_assets;
     /**
      * @var IncludeAssets
      */
     private $include_core_js_assets;
-    /**
-     * @var IncludeAssets
-     */
-    private $include_css_assets;
 
     public function __construct(
         Router $legacy_router,
-        IncludeAssets $include_js_assets,
-        IncludeAssets $include_core_js_assets,
-        IncludeAssets $include_css_assets
+        IncludeAssets $testmanagement_assets,
+        IncludeAssets $include_core_js_assets
     ) {
         $this->legacy_router          = $legacy_router;
-        $this->include_js_assets      = $include_js_assets;
         $this->include_core_js_assets = $include_core_js_assets;
-        $this->include_css_assets     = $include_css_assets;
+        $this->testmanagement_assets  = $testmanagement_assets;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $layout->includeFooterJavascriptFile($this->include_core_js_assets->getFileURL('ckeditor.js'));
-        $layout->includeFooterJavascriptFile($this->include_js_assets->getFileURL('testmanagement.js'));
-        $layout->addCssAsset(new CssAsset($this->include_css_assets, 'burningparrot'));
+        $layout->includeFooterJavascriptFile($this->testmanagement_assets->getFileURL('testmanagement.js'));
+        $layout->addCssAsset(new CssAsset($this->testmanagement_assets, 'burningparrot'));
 
         try {
             $this->legacy_router->route($request);
