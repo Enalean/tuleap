@@ -60,18 +60,6 @@ _checkMandatoryOptions() {
 
 }
 
-_checkMysqlStatus() {
-    # ${1}: mysql user
-    # ${2}: mysql password
-
-    if ! _mysqlExecute ${1} ${2} ";"; then
-        _errorMessage "MySQL server is not accessible or bad password"
-        exit 1
-    else
-        _infoMessage "MySQL server is accessible"
-    fi
-}
-
 _checkOsVersion() {
     if [ -e "${rh_release}" ]; then
 

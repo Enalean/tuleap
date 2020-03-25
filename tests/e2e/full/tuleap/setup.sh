@@ -69,7 +69,8 @@ setup_database() {
         --admin-password=welcome0 \
         --db-name="$MYSQL_DBNAME" \
         --app-user="$MYSQL_USER@%" \
-        --app-password="$MYSQL_PASSWORD"
+        --app-password="$MYSQL_PASSWORD" \
+        --mediawiki="per-project"
 
     /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:mysql \
         --host="$DB_HOST" \
@@ -82,12 +83,7 @@ setup_database() {
     $MYSQLROOT -e "DELETE FROM tuleap.password_configuration"
     $MYSQLROOT -e "INSERT INTO tuleap.password_configuration values (0)"
 
-    $MYSQLROOT -e "GRANT ALL PRIVILEGES ON \`plugin_mediawiki_%\`.* TO '${MYSQL_USER}'@'%'"
-
     $MYSQLROOT $MYSQL_DBNAME < "/usr/share/tuleap/tests/e2e/full/tuleap/cypress_database_init_values.sql"
-
-    $MYSQLROOT -e "FLUSH PRIVILEGES;"
-
 }
 
 load_project() {

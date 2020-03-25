@@ -233,6 +233,9 @@ _pluginSVN() {
 }
 
 _pluginMediawiki() {
-    _mysqlExecute "${mysql_user}" "${mysql_password:-NULL}" \
-        "GRANT ALL PRIVILEGES ON \`plugin_mediawiki_%\`.* TO '${sys_db_user}'@'${web_server_ip:-localhost}'; FLUSH PRIVILEGES;"
+    ${tuleapcfg} setup:mysql-init \
+        --host="${mysql_server}" \
+        --admin-user="${mysql_user}" \
+        --admin-password="${mysql_password}" \
+        --mediawiki=per-project
 }
