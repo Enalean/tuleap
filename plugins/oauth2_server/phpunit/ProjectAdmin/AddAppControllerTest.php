@@ -103,15 +103,15 @@ final class AddAppControllerTest extends TestCase
             'No body'         => [null],
             'No name'         => [['not_name' => 'Jenkins']],
             'No redirect_uri' => [['name' => 'Jenkins']],
-            'No use_pkce'     => [['name' => 'Jenkins', 'redirect_uri' => 'https://example.com']]
         ];
     }
 
-    public function testHandleCreatesAppAndRedirects(): void
+    /**
+     * @dataProvider dataProviderValidBody
+     */
+    public function testHandleCreatesAppAndRedirects(array $body): void
     {
-        $request = $this->buildRequest()->withParsedBody(
-            ['name' => 'Jenkins', 'redirect_uri' => 'https://example.com', 'use_pkce' => 'true']
-        );
+        $request = $this->buildRequest()->withParsedBody($body);
         $this->app_dao->shouldReceive('create')
             ->once()
             ->with(M::type(NewOAuth2App::class))
@@ -123,6 +123,14 @@ final class AddAppControllerTest extends TestCase
         $response = $this->controller->handle($request);
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertEquals('/plugins/oauth2_server/project/102/admin', $response->getHeaderLine('Location'));
+    }
+
+    public function dataProviderValidBody(): array
+    {
+        return [
+            'With "Use PKCE" checked'    => [['name' => 'Jenkins', 'redirect_uri' => 'https://example.com', 'use_pkce' => 'true']],
+            'Without "Use PKCE" checked' => [['name' => 'Jenkins', 'redirect_uri' => 'https://example.com']],
+        ];
     }
 
     public function testGetUrl(): void
