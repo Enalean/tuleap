@@ -17,17 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.oauth2-server-user-preferences-app-name {
-    font-size: 18px;
-    font-weight: bold;
-}
+.oauth2-server-revoke-authorization-scopes {
+    width: 40%;
 
-.oauth2-server-user-preferences-app-details {
-    display: flex;
-    align-items: center;
-}
-
-.oauth2-server-user-preferences-app-information {
-    flex: 1 1 auto;
-    margin: 0 $tlp-spacing 0 0;
+    > .oauth2-server-revoke-authorization-scope.tlp-badge-secondary {
+        margin: 1px 0;
+    }
 }
