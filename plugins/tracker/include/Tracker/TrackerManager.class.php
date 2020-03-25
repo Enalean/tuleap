@@ -607,7 +607,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         $radio = $this->getCreateTrackerRadio('xml', $requested_create_mode);
         echo '<h3><label>' . $radio . $GLOBALS['Language']->getText('plugin_tracker_include_type', 'from_xml') . '</label></h3>
               <div class="tracker_create_mode">
-                <p>' . $GLOBALS['Language']->getText('plugin_tracker_include_type', 'from_xml_desc', TRACKER_BASE_URL . '/resources/templates/') . '</p>
+                <p>' . $GLOBALS['Language']->getText('plugin_tracker_include_type', 'from_xml_desc') . '</p>
                 <input type="file" name="tracker_new_xml_file" id="tracker_new_xml_file" />
 
               </div>';

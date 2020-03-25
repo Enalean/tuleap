@@ -95,6 +95,10 @@ generate-templates:
 		plugins/tracker/www/resources/templates/Tracker_Tasks.xml
 	cp -f tools/utils/setup_templates/generate-templates/trackers/story.xml \
 		plugins/tracker/www/resources/templates/Tracker_UserStories.xml
+	cp -f tools/utils/setup_templates/generate-templates/trackers/activity.xml \
+		plugins/tracker/www/resources/templates/Tracker_Activity.xml
+	cp -f tools/utils/setup_templates/generate-templates/trackers/activity.xml \
+		plugins/agiledashboard/www/resources/Tracker_activity.xml
 
 #
 # Tests and all

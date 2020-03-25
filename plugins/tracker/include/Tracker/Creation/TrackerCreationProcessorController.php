@@ -103,7 +103,7 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
             } elseif ($from_empty_tracker) {
                 $tracker = $this->tracker_creator->createTrackerFromXml(
                     $project,
-                    __DIR__ . '/../../../www/resources/templates/Tracker_Empty.xml',
+                    __DIR__ . '/Tracker_Empty.xml',
                     (string) $tracker_name,
                     (string) $tracker_description,
                     (string) $tracker_shortname,
