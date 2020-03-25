@@ -1,0 +1,8 @@
+{
+    "name": "tuleap/plugin-tee-container",
+    "autoload": {
+        "psr-4": {
+            "Tuleap\\TEEContainer\\": "include/"
+        }
+    }
+}

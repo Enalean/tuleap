@@ -546,6 +546,7 @@ done
 %{__cp} -a ENTERPRISE_BUILD $RPM_BUILD_ROOT/%{APP_DIR}
 %endif
 # No need of template
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tee_container
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mfa
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tuleap_synchro
