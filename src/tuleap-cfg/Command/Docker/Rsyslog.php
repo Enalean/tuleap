@@ -1,4 +1,3 @@
-#!/opt/remi/php73/root/usr/bin/php
 <?php
 /**
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
@@ -22,9 +21,21 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../../../src/vendor/autoload.php';
-require_once __DIR__ . '/../vendor/autoload.php';
+namespace TuleapCfg\Command\Docker;
 
-$application = new \Symfony\Component\Console\Application();
-$application->add(new \Tuleap\TEEContainer\StartContainerCommand(new \TuleapCfg\Command\ProcessFactory()));
-$application->run();
+use Symfony\Component\Console\Output\OutputInterface;
+
+final class Rsyslog
+{
+    /**
+     * @see https://www.projectatomic.io/blog/2014/09/running-syslog-within-a-docker-container/
+     *      https://github.com/rsyslog/rsyslog-docker/blob/master/base/centos7/Dockerfile
+     */
+    public function setup(OutputInterface $output): void
+    {
+        $output->writeln('Setup Rsyslog');
+        unlink('/etc/rsyslog.d/listen.conf');
+        unlink('/etc/rsyslog.conf');
+        copy(__DIR__ . '/../../../../tools/docker/tuleap-aio-c7/rsyslog.conf', '/etc/rsyslog.conf');
+    }
+}

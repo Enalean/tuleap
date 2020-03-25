@@ -141,7 +141,7 @@ final class SetupMysqlInitCommand extends Command
             $db->run(sprintf('CREATE DATABASE %s DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci', $db->escapeIdentifier($target_dbname)));
         }
 
-        $io->writeln(sprintf('<info>Grant privileges to %s</info>', $target_dbuser));
+        $io->writeln(sprintf('<info>Grant privileges on %s to %s</info>', $target_dbname, $target_dbuser));
         $this->createUser($db, $target_dbuser, $target_password);
         $db->run(sprintf(
             'GRANT ALL PRIVILEGES ON %s.* TO %s',
@@ -222,8 +222,8 @@ final class SetupMysqlInitCommand extends Command
         if ($mediawiki !== self::OPT_MEDIAWIKI_VALUE_CENTRAL && $mediawiki !== self::OPT_MEDIAWIKI_VALUE_PER_PROJECT) {
             throw new \RuntimeException(sprintf('Invalid --mediawiki value. Valid values are `%s` or `%s`', self::OPT_MEDIAWIKI_VALUE_PER_PROJECT, self::OPT_MEDIAWIKI_VALUE_CENTRAL));
         }
-        $io->writeln(sprintf('<info>Configure mediawiki permissions %s</info>', $mediawiki));
         if ($mediawiki === self::OPT_MEDIAWIKI_VALUE_PER_PROJECT) {
+            $io->writeln(sprintf('<info>Configure mediawiki per-project permissions on %s to %s</info>', 'plugin_mediawiki_%', $app_user));
             $db->run(
                 sprintf(
                     'GRANT ALL PRIVILEGES ON `plugin_mediawiki_%%`.* TO %s',
@@ -232,6 +232,7 @@ final class SetupMysqlInitCommand extends Command
             );
         } else {
             $mediawiki_database = 'tuleap_mediawiki';
+            $io->writeln(sprintf('<info>Configure mediawiki central permissions on %s to %s</info>', $mediawiki_database, $app_user));
             $existing_db = $db->single(sprintf('SHOW DATABASES LIKE "%s"', $db->escapeIdentifier($mediawiki_database, false)));
             if ($existing_db) {
                 $io->writeln(sprintf('<info>Database %s already exists</info>', $mediawiki_database));

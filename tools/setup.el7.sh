@@ -47,6 +47,11 @@ _optionsSelected "${@}"
 ${tuleapcfg} systemctl mask "php73-php-fpm.service"
 _checkIfTuleapInstalled
 
+mysql_app_user_grant="${sys_db_user}@localhost"
+if [ "${web_server_ip:-NULL}" != "NULL" ]; then
+    mysql_app_user_grant="${sys_db_user}@${web_server_ip}"
+fi
+
 if [ ${tuleap_installed:-false} = "false" ] || \
     [ ${reinstall:-false} = "true" ]; then
     _checkMandatoryOptions "${@}"
@@ -81,11 +86,6 @@ if [ ${tuleap_installed:-false} = "false" ] || \
     sys_db_password="$(_setupRandomPassword)"
     _logPassword "MySQL system user password (${sys_db_user}): ${sys_db_password}"
     _logPassword "Site admin password (${project_admin}): ${admin_password}"
-
-    mysql_app_user_grant="${sys_db_user}@localhost"
-    if [ "${web_server_ip:-NULL}" != "NULL" ]; then
-        mysql_app_user_grant="${sys_db_user}@${web_server_ip}"
-    fi
 
     ${tuleapcfg} setup:mysql-init \
         --host="${mysql_server}" \
