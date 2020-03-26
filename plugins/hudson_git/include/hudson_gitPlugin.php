@@ -59,6 +59,7 @@ use Tuleap\HudsonGit\Job\ProjectJobDao;
 use Tuleap\HudsonGit\Log\LogCreator;
 use Tuleap\HudsonGit\Log\LogFactory;
 use Tuleap\HudsonGit\Plugin\PluginInfo;
+use Tuleap\HudsonGit\REST\ResourcesInjector;
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CollectRoutesEvent;
@@ -86,6 +87,7 @@ class hudson_gitPlugin extends Plugin
             $this->addHook(CollectGitRoutesEvent::NAME);
             $this->addHook(XMLImportExternalContentEvent::NAME);
             $this->addHook(XMLExportExternalContentEvent::NAME);
+            $this->addHook(Event::REST_RESOURCES);
         }
     }
 
@@ -398,5 +400,12 @@ class hudson_gitPlugin extends Plugin
             $project,
             $event->getXMLGit()
         );
+    }
+
+    /** @see Event::REST_RESOURCES */
+    public function restResources(array $params)
+    {
+        $injector = new ResourcesInjector();
+        $injector->populate($params['restler']);
     }
 }

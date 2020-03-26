@@ -49,6 +49,20 @@ class JenkinsServerDao extends DataAccessObject
         return $this->getDB()->run($sql, $project_id);
     }
 
+    public function getPaginatedJenkinsServerOfProject(
+        int $project_id,
+        int $limit,
+        int $offset
+    ) : array {
+        $sql = "SELECT SQL_CALC_FOUND_ROWS *
+                FROM plugin_hudson_git_project_server
+                WHERE project_id = ?
+                LIMIT ? OFFSET ?
+                ";
+
+        return $this->getDB()->run($sql, $project_id, $limit, $offset);
+    }
+
     public function isJenkinsServerAlreadyDefinedInProject(int $project_id, string $jenkins_server_url): bool
     {
         $sql = "SELECT NULL
