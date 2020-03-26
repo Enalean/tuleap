@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
+namespace Tuleap\OAuth2Server\Grant;
 
 use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\ConcealedString;
