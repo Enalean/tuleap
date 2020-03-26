@@ -98,12 +98,13 @@ final class oauth2_serverPlugin extends Plugin
         bindtextdomain('tuleap-oauth2_server', __DIR__ . '/../site-content');
     }
 
-    public function getHooksAndCallbacks()
+    public function getHooksAndCallbacks(): Collection
     {
         $this->addHook(NavigationPresenter::NAME);
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(AccountTabPresenterCollection::NAME);
         $this->addHook(VerifyOAuth2AccessTokenEvent::NAME);
+        $this->addHook('codendi_daily_start', 'dailyCleanup');
 
         return parent::getHooksAndCallbacks();
     }
@@ -530,5 +531,12 @@ final class oauth2_serverPlugin extends Plugin
             new DateInterval('PT1M'),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
         );
+    }
+
+    public function dailyCleanup(): void
+    {
+        $current_time = (new DateTimeImmutable())->getTimestamp();
+        (new OAuth2AccessTokenDAO())->deleteByExpirationDate($current_time);
+        (new OAuth2AuthorizationCodeDAO())->deleteAuthorizationCodeByExpirationDate($current_time);
     }
 }

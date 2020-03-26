@@ -163,4 +163,16 @@ final class OAuth2AccessTokenDAOTest extends TestCase
 
         $this->assertNull($this->dao->searchAccessTokenByApp($access_token_id, self::$deleted_project_app_id));
     }
+
+    public function testRemovesExpiredAccessTokens(): void
+    {
+        $current_time    = 60;
+        $expired_access_token_id = $this->dao->create(self::$active_project_auth_code_id, 'hashed_verification_string', 30);
+        $active_access_token_id  = $this->dao->create(self::$active_project_auth_code_id, 'hashed_verification_string', 120);
+
+        $this->dao->deleteByExpirationDate($current_time);
+
+        $this->assertNull($this->dao->searchAccessToken($expired_access_token_id));
+        $this->assertNotNull($this->dao->searchAccessToken($active_access_token_id));
+    }
 }

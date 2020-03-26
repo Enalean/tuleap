@@ -70,4 +70,15 @@ class OAuth2AccessTokenDAO extends DataAccessObject
             $app_id
         );
     }
+
+    public function deleteByExpirationDate(int $current_time): void
+    {
+        $this->getDB()->run(
+            'DELETE plugin_oauth2_access_token.*, plugin_oauth2_access_token_scope.*
+            FROM plugin_oauth2_access_token
+            LEFT JOIN plugin_oauth2_access_token_scope ON plugin_oauth2_access_token.id = plugin_oauth2_access_token_scope.access_token_id
+            WHERE ? > plugin_oauth2_access_token.expiration_date',
+            $current_time
+        );
+    }
 }
