@@ -1,4 +1,3 @@
-#!/opt/remi/php73/root/usr/bin/php
 <?php
 /**
  * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
@@ -22,9 +21,18 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../../../src/vendor/autoload.php';
-require_once __DIR__ . '/../vendor/autoload.php';
+namespace TuleapCfg\Command\Docker;
 
-$application = new \Symfony\Component\Console\Application();
-$application->add(new \Tuleap\TEEContainer\StartContainerCommand(new \TuleapCfg\Command\ProcessFactory()));
-$application->run();
+use Symfony\Component\Console\Output\OutputInterface;
+
+final class Postfix
+{
+    public function setup(OutputInterface $output)
+    {
+        $output->writeln('Setup Postfix');
+        $file_path = '/etc/postfix/main.cf';
+        $content = file_get_contents($file_path);
+        $new_content = preg_replace('/^inet_interfaces = localhost$/m', 'inet_interfaces = all', $content);
+        file_put_contents($file_path, $new_content);
+    }
+}

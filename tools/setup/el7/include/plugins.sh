@@ -237,5 +237,6 @@ _pluginMediawiki() {
         --host="${mysql_server}" \
         --admin-user="${mysql_user}" \
         --admin-password="${mysql_password}" \
+        --app-user="${mysql_app_user_grant}" \
         --mediawiki=per-project
 }
