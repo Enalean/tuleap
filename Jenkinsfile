@@ -23,7 +23,7 @@ pipeline {
                 }
                 script {
                     actions = load 'sources/tests/actions.groovy'
-                    actions.prepareSources('nexus.enalean.com_readonly')
+                    actions.prepareSources('nexus.enalean.com_readonly', 'github-token-composer')
                 }
             }
         }
