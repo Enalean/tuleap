@@ -20,7 +20,7 @@
 import { shallowMount, Wrapper } from "@vue/test-utils";
 import FieldTrackerTemplateId from "./FieldTrackerTemplateId.vue";
 import { State } from "../../../../store/type";
-import { createStoreMock } from "../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 
 describe("FieldTrackerTemplateId", () => {
     function getWrapper(is_a_duplication: boolean): Wrapper<FieldTrackerTemplateId> {

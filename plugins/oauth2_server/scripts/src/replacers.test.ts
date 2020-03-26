@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { GetText } from "src/www/scripts/tuleap/gettext/gettext-init";
+import { GetText } from "src/scripts/tuleap/gettext/gettext-init";
 import {
     hiddenInputReplaceCallback,
     buildRevocationReplaceCallback,

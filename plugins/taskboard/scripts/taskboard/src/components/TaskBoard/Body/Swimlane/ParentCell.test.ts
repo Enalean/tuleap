@@ -20,7 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import ParentCell from "./ParentCell.vue";
 import NoMappingMessage from "./Header/NoMappingMessage.vue";
-import { createStoreMock } from "../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import { Swimlane } from "../../../../type";
 import CardWithRemainingEffort from "./Card/CardWithRemainingEffort.vue";
 

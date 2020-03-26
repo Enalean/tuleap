@@ -35,7 +35,7 @@ const webpack_config_for_burndown_chart = {
     output,
     resolve: {
         alias: {
-            "charts-builders": path.resolve(__dirname, "../../src/www/scripts/charts-builders/"),
+            "charts-builders": path.resolve(__dirname, "../../src/scripts/charts-builders/"),
             "d3-array$": path.resolve(__dirname, "node_modules/d3-array"),
             "d3-scale$": path.resolve(__dirname, "node_modules/d3-scale"),
             "d3-axis$": path.resolve(__dirname, "node_modules/d3-axis"),

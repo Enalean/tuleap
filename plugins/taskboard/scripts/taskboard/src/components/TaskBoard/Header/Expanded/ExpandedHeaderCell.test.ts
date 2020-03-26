@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import ExpandedHeaderCell from "./ExpandedHeaderCell.vue";
-import { createStoreMock } from "../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import { UserState } from "../../../../store/user/type";
 import { ColumnDefinition } from "../../../../type";
 import WrongColorPopover from "./WrongColorPopover.vue";

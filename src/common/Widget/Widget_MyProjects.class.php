@@ -45,8 +45,7 @@ class Widget_MyProjects extends Widget
     public function getContent()
     {
         $hp = Codendi_HTMLPurifier::instance();
-        $assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
-        $include_assets = new IncludeAssets($assets_path, '/assets');
+        $include_assets = new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core');
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('ckeditor.js'));
         $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/tuleap-ckeditor-toolbar.js');
         $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/widgets/contact-modal.js');

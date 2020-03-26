@@ -49,10 +49,7 @@ module.exports = [
         resolve: {
             modules: [path.resolve(__dirname, "node_modules")],
             alias: {
-                "charts-builders": path.resolve(
-                    __dirname,
-                    "../../src/www/scripts/charts-builders/"
-                ),
+                "charts-builders": path.resolve(__dirname, "../../src/scripts/charts-builders/"),
             },
         },
         module: {

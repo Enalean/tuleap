@@ -18,7 +18,7 @@
  *
  */
 
-import { createStoreMock } from "../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest.js";
+import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import { shallowMount } from "@vue/test-utils";
 import AddToBacklogPostActionOption from "./AddToBacklogPostActionOption.vue";
 import localVue from "../../../support/local-vue.js";

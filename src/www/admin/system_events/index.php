@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2012 – 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 – Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -132,8 +132,7 @@ if ($id_to_replay) {
 
 $title = $Language->getText('admin_system_events', 'title');
 
-$assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
-$include_assets = new IncludeAssets($assets_path, '/assets');
+$include_assets = new IncludeAssets(__DIR__ . '/../../assets/core', '/assets/core');
 
 $GLOBALS['HTML']->includeFooterJavascriptFile(
     $include_assets->getFileURL('site-admin-system-events.js')

@@ -1,7 +1,7 @@
 {
     "packages": [
         "src/www/themes/**/",
-        "src/www/scripts/",
+        "src/",
         "plugins/**/"
     ],
     "version": "independent"

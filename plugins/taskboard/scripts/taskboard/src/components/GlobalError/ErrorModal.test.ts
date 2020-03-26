@@ -20,7 +20,7 @@
 import { Vue } from "vue/types/vue";
 import { shallowMount, Wrapper } from "@vue/test-utils";
 import { createTaskboardLocalVue } from "../../helpers/local-vue-for-test";
-import { createStoreMock } from "../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import ErrorModal from "./ErrorModal.vue";
 import * as tlp from "tlp";
 import { Modal } from "tlp";

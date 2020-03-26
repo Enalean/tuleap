@@ -22,7 +22,7 @@ import DetailsItemButton from "./DetailsItemButton.vue";
 
 import localVue from "../../../helpers/local-vue.js";
 import * as location_helper from "../../../helpers/location-helper.js";
-import { createStoreMock } from "../../../../../../../src/www/scripts/vue-components/store-wrapper-jest.js";
+import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 
 describe("CreateNewItemVersionButton", () => {
     let factory;

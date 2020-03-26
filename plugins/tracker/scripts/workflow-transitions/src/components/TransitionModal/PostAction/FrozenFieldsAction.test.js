@@ -22,7 +22,7 @@ import { mount } from "@vue/test-utils";
 import FrozenFieldsAction from "./FrozenFieldsAction.vue";
 import localVue from "../../../support/local-vue.js";
 import { create } from "../../../support/factories.js";
-import { createStoreMock } from "../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 
 describe("FrozenFieldsAction", () => {
     let store;

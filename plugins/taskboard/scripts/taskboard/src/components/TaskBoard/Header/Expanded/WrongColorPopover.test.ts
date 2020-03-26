@@ -18,7 +18,7 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import WrongColorPopover from "./WrongColorPopover.vue";
 import { createTaskboardLocalVue } from "../../../../helpers/local-vue-for-test";
 import * as tlp from "tlp";

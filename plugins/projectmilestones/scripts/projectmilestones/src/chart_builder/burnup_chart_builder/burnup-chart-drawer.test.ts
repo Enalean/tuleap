@@ -18,12 +18,12 @@
  */
 
 import { createBurnupChart, getTotal } from "./burnup-chart-drawer";
-import { ChartPropsWhithoutTooltip } from "../../../../../../../src/www/scripts/charts-builders/type";
+import { ChartPropsWhithoutTooltip } from "../../../../../../../src/scripts/charts-builders/type";
 import {
     GenericBurnupData,
     PointsWithDateForGenericBurnup,
 } from "../../../../../../agiledashboard/scripts/burnup-chart/src/type";
-jest.mock("../../../../../../../src/www/scripts/charts-builders/time-scale-labels-formatter");
+jest.mock("../../../../../../../src/scripts/charts-builders/time-scale-labels-formatter");
 jest.mock("../time-scale-label-formatter");
 
 describe("BurnupChartDrawer", () => {

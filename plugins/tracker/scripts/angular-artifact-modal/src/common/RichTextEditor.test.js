@@ -19,13 +19,13 @@
 
 import CKEDITOR from "ckeditor";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "../../../../../../src/www/scripts/vue-components/store-wrapper-jest.js";
+import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import {
     MaxSizeUploadExceededError,
     UploadError,
-} from "../../../../../../src/www/scripts/tuleap/ckeditor/file-upload-handler-factory.js";
-import * as file_upload_handler_factory from "../../../../../../src/www/scripts/tuleap/ckeditor/file-upload-handler-factory.js";
-import * as image_urls_finder from "../../../../../../src/www/scripts/tuleap/ckeditor/image-urls-finder.js";
+} from "../../../../../../src/scripts/tuleap/ckeditor/file-upload-handler-factory.js";
+import * as file_upload_handler_factory from "../../../../../../src/scripts/tuleap/ckeditor/file-upload-handler-factory.js";
+import * as image_urls_finder from "../../../../../../src/scripts/tuleap/ckeditor/image-urls-finder.js";
 import * as is_uploading_in_ckeditor_state from "../tuleap-artifact-modal-fields/file-field/is-uploading-in-ckeditor-state.js";
 import store_options from "../store/index.js";
 import localVue from "../helpers/local-vue.js";

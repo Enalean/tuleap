@@ -73,7 +73,7 @@ $index_controller = new IndexController(
         new MembersPresenterBuilder($event_manager, new UserHelper(), $synchronized_project_membership_detector),
         new PermissionsDelegationPresenterBuilder($membership_delegation_dao)
     ),
-    new IncludeAssets(ForgeConfig::get('tuleap_dir') . '/src/www/assets', '/assets'),
+    new IncludeAssets(__DIR__ . '/../../assets/core', '/assets/core'),
     new HeaderNavigationDisplayer()
 );
 

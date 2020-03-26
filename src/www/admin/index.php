@@ -1,7 +1,7 @@
 <?php
 /**
-  * Copyright 1999-2000 (c) The SourceForge Crew
   * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
+  * Copyright 1999-2000 (c) The SourceForge Crew
   *
   * This file is a part of Tuleap.
   *
@@ -32,8 +32,7 @@ require_once __DIR__ . '/admin_utils.php';
 $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 
-$assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
-$include_assets = new IncludeAssets($assets_path, '/assets');
+$include_assets = new IncludeAssets(__DIR__ . '/../assets/core', '/assets/core');
 
 $GLOBALS['HTML']->includeFooterJavascriptFile(
     $include_assets->getFileURL('site-admin-system-events-admin-homepage.js')

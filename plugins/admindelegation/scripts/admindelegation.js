@@ -18,7 +18,7 @@
  */
 
 import { modal } from "tlp";
-import { autocomplete_users_for_select2 } from "../../../src/www/scripts/tuleap/autocomplete-for-select2.js";
+import { autocomplete_users_for_select2 } from "../../../src/scripts/tuleap/autocomplete-for-select2.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     const user_to_grant_element = document.getElementById("permission-delegation-add-user");

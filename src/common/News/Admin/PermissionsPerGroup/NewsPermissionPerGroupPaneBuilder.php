@@ -24,7 +24,6 @@
 
 namespace Tuleap\News\Admin\PermissionsPerGroup;
 
-use ForgeConfig;
 use Project;
 use TemplateRendererFactory;
 use Tuleap\Layout\IncludeAssets;
@@ -50,16 +49,15 @@ class NewsPermissionPerGroupPaneBuilder
             return;
         }
 
-        $tuleap_base_dir = ForgeConfig::get('tuleap_dir');
         $include_assets  = new IncludeAssets(
-            $tuleap_base_dir . '/src/www/assets',
-            '/assets'
+            __DIR__ . '/../../../../www/assets/core',
+            '/assets/core'
         );
 
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('news-permissions.js'));
 
         $ugroup        = $this->ugroup_manager->getUGroup($project, $selected_ugroup_id);
-        $templates_dir = $tuleap_base_dir . '/src/templates/news/';
+        $templates_dir = __DIR__ . '/../../../../templates/news/';
         $presenter     = new PermissionPerGroupLoadAllButtonPresenter(
             $project,
             $ugroup

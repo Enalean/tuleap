@@ -20,7 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../../helpers/local-vue.js";
 import { TYPE_WIKI } from "../../../../constants.js";
-import { createStoreMock } from "../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest.js";
+import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import WikiCheckbox from "./DeleteAssociatedWikiPageCheckbox.vue";
 
 describe("ModalConfirmationDeletion", () => {

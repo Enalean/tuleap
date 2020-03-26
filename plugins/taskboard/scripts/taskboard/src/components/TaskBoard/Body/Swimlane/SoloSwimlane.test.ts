@@ -19,7 +19,7 @@
 
 import { shallowMount, Wrapper } from "@vue/test-utils";
 import SoloSwimlane from "./SoloSwimlane.vue";
-import { createStoreMock } from "../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import { ColumnDefinition, Swimlane } from "../../../../type";
 import { createTaskboardLocalVue } from "../../../../helpers/local-vue-for-test";
 import { RootState } from "../../../../store/type";

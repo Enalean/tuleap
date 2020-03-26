@@ -22,8 +22,7 @@ use Tuleap\Layout\IncludeAssets;
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
 
-$assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
-$include_assets = new IncludeAssets($assets_path, '/assets');
+$include_assets = new IncludeAssets(__DIR__ . '/../../../src/www/assets/core', '/assets/core');
 
 $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('ckeditor.js'));
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/tuleap-ckeditor-toolbar.js');

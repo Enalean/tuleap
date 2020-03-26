@@ -19,7 +19,7 @@
 
 import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import PastSection from "./PastSection.vue";
-import { createStoreMock } from "../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import { MilestoneData, StoreOptions } from "../../type";
 import ReleaseDisplayer from "../WhatsHotSection/ReleaseDisplayer.vue";
 import { createReleaseWidgetLocalVue } from "../../helpers/local-vue-for-test";

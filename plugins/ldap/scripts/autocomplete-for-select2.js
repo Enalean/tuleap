@@ -18,7 +18,7 @@
  */
 
 import { select2 } from "tlp";
-import { escaper } from "../../../src/www/scripts/tuleap/escaper";
+import { escaper } from "../../../src/scripts/tuleap/escaper";
 
 export { autocomplete_groups_for_select2 };
 

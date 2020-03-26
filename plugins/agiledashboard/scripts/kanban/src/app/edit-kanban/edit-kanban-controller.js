@@ -20,7 +20,7 @@
 import { element } from "angular";
 // eslint-disable-next-line you-dont-need-lodash-underscore/map
 import { map } from "lodash";
-import { escaper } from "../../../../../../../src/www/scripts/tuleap/escaper.js";
+import { escaper } from "../../../../../../../src/scripts/tuleap/escaper.js";
 
 export default EditKanbanCtrl;
 

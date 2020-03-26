@@ -20,7 +20,7 @@
 import { shallowMount, Wrapper } from "@vue/test-utils";
 import CollapsedLabel from "./CollapsedLabel.vue";
 import { ColumnDefinition } from "../../../../type";
-import { createStoreMock } from "../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import { RootState } from "../../../../store/type";
 import CardsInColumnCount from "../Expanded/CardsInColumnCount.vue";
 

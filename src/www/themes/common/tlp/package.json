@@ -17,7 +17,6 @@
     "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {
-    "@types/select2": "^4.0.48",
     "codemirror": "^5.48.4",
     "dompurify": "^2.0.8"
   },

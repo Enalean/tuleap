@@ -48,10 +48,7 @@ module.exports = [
                 "d3-selection": path.resolve(__dirname, "./node_modules/d3-selection"),
                 "d3-shape": path.resolve(__dirname, "./node_modules/d3-shape"),
                 "d3-transition": path.resolve(__dirname, "./node_modules/d3-transition"),
-                "charts-builders": path.resolve(
-                    __dirname,
-                    "../../src/www/scripts/charts-builders/"
-                ),
+                "charts-builders": path.resolve(__dirname, "../../src/scripts/charts-builders/"),
             },
         },
         module: {

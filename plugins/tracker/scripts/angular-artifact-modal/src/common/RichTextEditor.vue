@@ -43,8 +43,8 @@ import {
     buildFileUploadHandler,
     MaxSizeUploadExceededError,
     UploadError,
-} from "../../../../../../src/www/scripts/tuleap/ckeditor/file-upload-handler-factory.js";
-import { isThereAnImageWithDataURI } from "../../../../../../src/www/scripts/tuleap/ckeditor/image-urls-finder.js";
+} from "../../../../../../src/scripts/tuleap/ckeditor/file-upload-handler-factory.js";
+import { isThereAnImageWithDataURI } from "../../../../../../src/scripts/tuleap/ckeditor/image-urls-finder.js";
 import { TEXT_FORMAT_HTML, TEXT_FORMAT_TEXT } from "../../../constants/fields-constants.js";
 import {
     setIsNotUploadingInCKEditor,

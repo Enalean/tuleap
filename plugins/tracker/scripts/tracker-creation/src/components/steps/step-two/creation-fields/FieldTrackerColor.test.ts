@@ -18,7 +18,7 @@
  */
 
 import { shallowMount, Wrapper } from "@vue/test-utils";
-import { createStoreMock } from "../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import { State } from "../../../../store/type";
 import FieldTrackerColor from "./FieldTrackerColor.vue";
 import { createTrackerCreationLocalVue } from "../../../../helpers/local-vue-for-tests";

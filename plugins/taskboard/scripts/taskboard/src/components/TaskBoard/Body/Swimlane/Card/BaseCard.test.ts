@@ -19,7 +19,7 @@
 
 import { shallowMount, Slots, Wrapper } from "@vue/test-utils";
 import BaseCard from "./BaseCard.vue";
-import { createStoreMock } from "../../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "../../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import { Card, TaskboardEvent, Tracker, User } from "../../../../../type";
 import EventBus from "../../../../../helpers/event-bus";
 import LabelEditor from "./Editor/Label/LabelEditor.vue";

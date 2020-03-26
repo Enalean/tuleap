@@ -20,7 +20,7 @@
 const path = require("path");
 
 const base_config = require("./jest.base.config.js");
-const tuleap_core_config = require("../../src/www/scripts/jest.config.js");
+const tuleap_core_config = require("../../src/jest.config.js");
 
 module.exports = {
     rootDir: path.resolve(__dirname, "../../"),

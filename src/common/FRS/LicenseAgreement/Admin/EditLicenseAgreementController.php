@@ -92,7 +92,7 @@ class EditLicenseAgreementController implements DispatchableWithRequest
                 new LicenseAgreementDao()
             ),
             SaveLicenseAgreementController::getCSRFTokenSynchronizer(),
-            new IncludeAssets(__DIR__ . '/../../../../www/assets', '/assets'),
+            new IncludeAssets(__DIR__ . '/../../../../www/assets/core', '/assets/core'),
         );
     }
 

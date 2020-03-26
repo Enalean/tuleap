@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { findImageUrls } from "../../../../../../../src/www/scripts/tuleap/ckeditor/image-urls-finder.js";
+import { findImageUrls } from "../../../../../../../src/scripts/tuleap/ckeditor/image-urls-finder.js";
 import { TEXT_FORMAT_HTML } from "../../../../constants/fields-constants.js";
 
 export function validateFileField(file_value_model, text_field_value_models, followup_value_model) {

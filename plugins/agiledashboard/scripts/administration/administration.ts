@@ -18,7 +18,7 @@
  */
 
 import { createPopover } from "tlp";
-import { openTargetModalIdOnClick } from "../../../../src/www/scripts/tuleap/modals/modal-opener";
+import { openTargetModalIdOnClick } from "../../../../src/scripts/tuleap/modals/modal-opener";
 
 document.addEventListener("DOMContentLoaded", () => {
     canNotCreatePlanningPopover();

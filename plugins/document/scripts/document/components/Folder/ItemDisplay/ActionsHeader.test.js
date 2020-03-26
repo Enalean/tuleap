@@ -21,7 +21,7 @@ import { shallowMount } from "@vue/test-utils";
 import ActionsHeader from "./ActionsHeader.vue";
 
 import localVue from "../../../helpers/local-vue.js";
-import { createStoreMock } from "../../../../../../../src/www/scripts/vue-components/store-wrapper-jest.js";
+import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 
 describe("QuickLookDocumentPreview", () => {
     let action_header_factory;

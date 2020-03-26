@@ -23,7 +23,7 @@ import TransitionMatrixColumnHeader from "./TransitionMatrixColumnHeader.vue";
 import ConfigureStateButton from "./ConfigureStateButton.vue";
 import localVue from "../support/local-vue.js";
 import store_options from "../store/index.js";
-import { createStoreMock } from "../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest";
 
 describe("TransitionMatrixColumnHeader", () => {
     let store, wrapper;

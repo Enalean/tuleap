@@ -155,10 +155,10 @@ module.exports = {
                 "plugins/baseline/**/*.vue",
                 "plugins/create_test_env/**/*.vue",
                 "plugins/crosstracker/**/*.vue",
-                "plugins/agiledashboard/www/js/permissions-per-group/**/*.vue",
-                "src/www/scripts/project/admin/services/**/*.vue",
-                "src/www/scripts/*/permissions-per-group/**/*.vue",
-                "src/www/scripts/vue-components/skeletons/SkeletonTable.vue"
+                "plugins/agiledashboard/scripts/permissions-per-group/**/*.vue",
+                "src/scripts/project/admin/services/**/*.vue",
+                "src/scripts/*/permissions-per-group/**/*.vue",
+                "src/scripts/vue-components/skeletons/SkeletonTable.vue"
             ],
             rules: {
                 "@typescript-eslint/explicit-function-return-type": "off",
