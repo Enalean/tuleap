@@ -22,9 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\App;
 
-/**
- * @psalm-immutable
- */
 final class InvalidClientIdentifierKey extends \RuntimeException
 {
     public function __construct(string $invalid_identifier_key)

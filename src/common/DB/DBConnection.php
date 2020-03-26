@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,7 +27,7 @@ use ParagonIE\EasyDB\EasyDB;
 class DBConnection
 {
     /**
-     * @var $db_creator
+     * @var DBCreator
      */
     private $db_creator;
     /**
