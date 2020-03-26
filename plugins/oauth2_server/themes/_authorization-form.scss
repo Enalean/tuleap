@@ -33,6 +33,10 @@
     margin: 0 0 0 $tlp-spacing;
 }
 
+.oauth2-server-scope-label {
+    font-weight: 600;
+}
+
 .oauth2-server-scope-description {
     display: block;
     color: $tlp-ui-dimmed;

@@ -28,6 +28,9 @@ msgstr ""
 "Autoriser l'application à accéder aux ressources en votre nom pendant une "
 "période prolongée même lorsque vous êtes déconnecté"
 
+msgid "App"
+msgstr "App"
+
 msgid "App name"
 msgstr "Nom de l'App"
 

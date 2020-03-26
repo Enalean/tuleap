@@ -104,7 +104,7 @@ final class AccountAppsController extends DispatchablePSR15Compatible implements
         $layout->addCssAsset(new CssAsset($assets, 'user-preferences'));
         $presenter = $this->presenter_builder->build($user, CSRFSynchronizerTokenPresenter::fromToken(self::getCSRFToken()));
         ob_start();
-        (new UserPreferencesHeader())->display(dgettext('tuleap-oauth2_server', 'OAuth2 Apps'), $layout);
+        (new UserPreferencesHeader())->display(dgettext('tuleap-oauth2_server', 'OAuth2 Apps'), $layout, ['user-preferences-frame-wide']);
         $this->renderer->renderToPage('account-apps', $presenter);
         $layout->footer([]);
 
