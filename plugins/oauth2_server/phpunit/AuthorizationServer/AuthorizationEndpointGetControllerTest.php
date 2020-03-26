@@ -36,6 +36,8 @@ use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\OAuth2Server\App\OAuth2AppNotFoundException;
 use Tuleap\OAuth2Server\AuthorizationServer\PKCE\OAuth2PKCEInformationExtractionException;
 use Tuleap\OAuth2Server\AuthorizationServer\PKCE\PKCEInformationExtractor;
+use Tuleap\OAuth2Server\Scope\InvalidOAuth2ScopeException;
+use Tuleap\OAuth2Server\Scope\ScopeExtractor;
 use Tuleap\OAuth2Server\User\AuthorizationComparator;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\LayoutBuilder;
@@ -196,6 +198,10 @@ final class AuthorizationEndpointGetControllerTest extends TestCase
                 ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/redirect?key=value', 'response_type' => 'invalid_response_type', 'state' => 'xyz'],
                 'https://example.com/redirect?key=value&state=xyz&error=invalid_request'
             ],
+            'Scope is not given'                   => [
+                ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/redirect?key=value', 'response_type' => 'code', 'state' => 'xyz'],
+                'https://example.com/redirect?key=value&state=xyz&error=invalid_scope'
+            ],
             'Scope is unknown'                     => [
                 ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/redirect?key=value', 'response_type' => 'code', 'state' => 'xyz', 'scope' => 'invalid_scope'],
                 'https://example.com/redirect?key=value&state=xyz&error=invalid_scope'
@@ -215,6 +221,7 @@ final class AuthorizationEndpointGetControllerTest extends TestCase
                 'response_type'  => 'code',
                 'state'          => 'xyz',
                 'code_challenge' => 'failure',
+                'scope'          => 'scopename:read'
             ]
         );
         $this->app_factory->shouldReceive('getAppMatchingClientId')
@@ -248,7 +255,8 @@ final class AuthorizationEndpointGetControllerTest extends TestCase
                 'client_id'     => 'tlp-client-id-1',
                 'redirect_uri'  => 'https://example.com/redirect',
                 'response_type' => 'code',
-                'state'         => 'xyz'
+                'state'         => 'xyz',
+                'scope'         => 'scopename:read',
             ]
         );
 
@@ -282,7 +290,8 @@ final class AuthorizationEndpointGetControllerTest extends TestCase
                 'client_id'     => 'tlp-client-id-1',
                 'redirect_uri'  => 'https://example.com/redirect',
                 'response_type' => 'code',
-                'state'         => 'xyz'
+                'state'         => 'xyz',
+                'scope'         => 'scopename:read',
             ]
         );
         $this->app_factory->shouldReceive('getAppMatchingClientId')

@@ -37,6 +37,8 @@ use Tuleap\OAuth2Server\Grant\OAuth2AccessTokenSuccessfulRequestRepresentation;
 use Tuleap\OAuth2Server\OAuth2ServerException;
 use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshToken;
 use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenVerifier;
+use Tuleap\OAuth2Server\Scope\InvalidOAuth2ScopeException;
+use Tuleap\OAuth2Server\Scope\ScopeExtractor;
 use Tuleap\User\OAuth2\Scope\DemoOAuth2Scope;
 
 final class OAuth2GrantAccessTokenFromRefreshTokenTest extends TestCase
@@ -59,12 +61,17 @@ final class OAuth2GrantAccessTokenFromRefreshTokenTest extends TestCase
      * @var OAuth2GrantAccessTokenFromRefreshToken
      */
     private $grant_access_from_refresh_token;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ScopeExtractor
+     */
+    private $scope_extractor;
 
     protected function setUp(): void
     {
         $this->representation_builder     = \Mockery::mock(AccessTokenGrantRepresentationBuilder::class);
         $this->refresh_token_unserializer = \Mockery::mock(SplitTokenIdentifierTranslator::class);
         $this->refresh_token_verifier     = \Mockery::mock(OAuth2RefreshTokenVerifier::class);
+        $this->scope_extractor            = \Mockery::mock(ScopeExtractor::class);
 
         $response_factory = HTTPFactoryBuilder::responseFactory();
         $stream_factory   = HTTPFactoryBuilder::streamFactory();
@@ -75,7 +82,8 @@ final class OAuth2GrantAccessTokenFromRefreshTokenTest extends TestCase
             new AccessTokenGrantErrorResponseBuilder($response_factory, $stream_factory),
             $this->refresh_token_unserializer,
             $this->refresh_token_verifier,
-            $this->representation_builder
+            $this->representation_builder,
+            $this->scope_extractor
         );
     }
 
@@ -94,6 +102,28 @@ final class OAuth2GrantAccessTokenFromRefreshTokenTest extends TestCase
         );
 
         $body_params = ['refresh_token' => 'valid_refresh_token',];
+
+        $response = $this->grant_access_from_refresh_token->grantAccessToken($this->buildOAuth2App(), $body_params);
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('application/json;charset=UTF-8', $response->getHeaderLine('Content-Type'));
+    }
+
+    public function testBuildsSuccessfulResponseWithLessScopes(): void
+    {
+        $this->refresh_token_unserializer->shouldReceive('getSplitToken')->andReturn(\Mockery::mock(SplitToken::class));
+        $this->refresh_token_verifier->shouldReceive('getRefreshToken')->andReturn(
+            $this->buildRefreshToken()
+        );
+        $this->representation_builder->shouldReceive('buildRepresentationFromRefreshToken')->andReturn(
+            OAuth2AccessTokenSuccessfulRequestRepresentation::fromAccessTokenAndRefreshToken(
+                new OAuth2AccessTokenWithIdentifier(new ConcealedString('identifier'), new \DateTimeImmutable('@20')),
+                null,
+                new \DateTimeImmutable('@10')
+            )
+        );
+        $this->scope_extractor->shouldReceive('extractScopes')->andReturn([DemoOAuth2Scope::fromItself()]);
+
+        $body_params = ['refresh_token' => 'valid_refresh_token', 'scope' => 'already_covered'];
 
         $response = $this->grant_access_from_refresh_token->grantAccessToken($this->buildOAuth2App(), $body_params);
         $this->assertEquals(200, $response->getStatusCode());
@@ -138,6 +168,28 @@ final class OAuth2GrantAccessTokenFromRefreshTokenTest extends TestCase
         $response = $this->grant_access_from_refresh_token->grantAccessToken($this->buildOAuth2App(), $body_params);
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertJsonStringEqualsJsonString('{"error":"invalid_grant"}', $response->getBody()->getContents());
+    }
+
+    public function testRejectsWhenScopeCannotBeProperlyExtracted(): void
+    {
+        $this->refresh_token_unserializer->shouldReceive('getSplitToken')->andReturn(\Mockery::mock(SplitToken::class));
+        $this->refresh_token_verifier->shouldReceive('getRefreshToken')->andReturn(
+            $this->buildRefreshToken()
+        );
+        $this->representation_builder->shouldReceive('buildRepresentationFromRefreshToken')->andReturn(
+            OAuth2AccessTokenSuccessfulRequestRepresentation::fromAccessTokenAndRefreshToken(
+                new OAuth2AccessTokenWithIdentifier(new ConcealedString('identifier'), new \DateTimeImmutable('@20')),
+                null,
+                new \DateTimeImmutable('@10')
+            )
+        );
+        $this->scope_extractor->shouldReceive('extractScopes')->andThrow(new InvalidOAuth2ScopeException());
+
+        $body_params = ['refresh_token' => 'valid_refresh_token', 'scope' => ''];
+
+        $response = $this->grant_access_from_refresh_token->grantAccessToken($this->buildOAuth2App(), $body_params);
+        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertJsonStringEqualsJsonString('{"error":"invalid_scope"}', $response->getBody()->getContents());
     }
 
     private function buildOAuth2App(): OAuth2App

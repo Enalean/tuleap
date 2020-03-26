@@ -68,6 +68,7 @@ use Tuleap\OAuth2Server\RefreshToken\PrefixOAuth2RefreshToken;
 use Tuleap\OAuth2Server\RefreshToken\Scope\OAuth2RefreshTokenScopeDAO;
 use Tuleap\OAuth2Server\Scope\OAuth2ScopeRetriever;
 use Tuleap\OAuth2Server\Scope\OAuth2ScopeSaver;
+use Tuleap\OAuth2Server\Scope\ScopeExtractor;
 use Tuleap\OAuth2Server\User\Account\AccountAppsController;
 use Tuleap\OAuth2Server\User\AuthorizationDao;
 use Tuleap\Project\Admin\Navigation\NavigationItemPresenter;
@@ -254,7 +255,7 @@ final class oauth2_serverPlugin extends Plugin
             ),
             \UserManager::instance(),
             new AppFactory(new AppDao(), \ProjectManager::instance()),
-            new \Tuleap\OAuth2Server\AuthorizationServer\ScopeExtractor($scope_builder),
+            new ScopeExtractor($scope_builder),
             new \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationCodeResponseFactory(
                 $response_factory,
                 $this->buildOAuth2AuthorizationCodeCreator(),
@@ -388,7 +389,8 @@ final class oauth2_serverPlugin extends Plugin
                     new OAuth2AuthorizationCodeRevoker(new OAuth2AuthorizationCodeDAO()),
                     new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
                 ),
-                $access_token_grant_representation_builder
+                $access_token_grant_representation_builder,
+                new ScopeExtractor($this->buildScopeBuilder())
             ),
             new SapiEmitter(),
             new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
