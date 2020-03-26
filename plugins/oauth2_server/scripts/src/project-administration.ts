@@ -18,7 +18,10 @@
  */
 
 import { initGettext } from "../../../../src/www/scripts/tuleap/gettext/gettext-init";
-import { openModalAndReplacePlaceholders, openModalOnClick } from "./confirmation-modals";
+import {
+    openModalAndReplacePlaceholders,
+    openModalOnClick
+} from "../../../../src/www/scripts/tuleap/modals/modal-opener";
 import { buildDeletionReplaceCallback, hiddenInputReplaceCallback } from "./replacers";
 
 const ADD_BUTTON_ID = "oauth2-server-add-client-button";
