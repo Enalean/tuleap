@@ -28,7 +28,8 @@ const output = webpack_configurator.configureOutput(
 
 const entry_points = {
     "project-administration": "./scripts/src/project-administration.ts",
-    "user-preferences": "./scripts/src/user-preferences.ts"
+    "user-preferences": "./scripts/src/user-preferences.ts",
+    "user-preferences-style": "./themes/user-preferences.scss"
 };
 
 const colors = ["blue", "green", "grey", "orange", "purple", "red"];
@@ -37,10 +38,6 @@ for (const color of colors) {
     entry_points[
         `authorization-form-${color}-condensed`
     ] = `./themes/authorization-form-${color}-condensed.scss`;
-    entry_points[`user-preferences-${color}`] = `./themes/user-preferences-${color}.scss`;
-    entry_points[
-        `user-preferences-${color}-condensed`
-    ] = `./themes/user-preferences-${color}-condensed.scss`;
 }
 
 module.exports = [

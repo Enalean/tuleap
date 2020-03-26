@@ -30,7 +30,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Request\DispatchablePSR15Compatible;
@@ -101,8 +101,11 @@ final class AccountAppsController extends DispatchablePSR15Compatible implements
 
         $assets = new IncludeAssets(__DIR__ . '/../../../../../src/www/assets/oauth2_server', '/assets/oauth2_server');
         $layout->addJavascriptAsset(new JavascriptAsset($assets, 'user-preferences.js'));
-        $layout->addCssAsset(new CssAsset($assets, 'user-preferences'));
-        $presenter = $this->presenter_builder->build($user, CSRFSynchronizerTokenPresenter::fromToken(self::getCSRFToken()));
+        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($assets, 'user-preferences-style'));
+        $presenter = $this->presenter_builder->build(
+            $user,
+            CSRFSynchronizerTokenPresenter::fromToken(self::getCSRFToken())
+        );
         ob_start();
         (new UserPreferencesHeader())->display(dgettext('tuleap-oauth2_server', 'OAuth2 Apps'), $layout, ['user-preferences-frame-wide']);
         $this->renderer->renderToPage('account-apps', $presenter);
