@@ -70,6 +70,12 @@ describe("ReleaseButtonsDescription", () => {
                         title: "Taskboard",
                         uri: "/taskboard/project/6",
                         identifier: "taskboard"
+                    },
+                    {
+                        icon_name: "fa-external-link",
+                        title: "Test Campaigns",
+                        uri: "/plugin/testmanagement/project/6",
+                        identifier: "testmgmt"
                     }
                 ],
                 cardwall: {
@@ -85,14 +91,28 @@ describe("ReleaseButtonsDescription", () => {
         store_options.state.user_can_view_sub_milestones_planning = true;
     });
 
+    it("Given user display widget, Then a good link to testmanagement is renderer", async () => {
+        store_options.state.project_id = project_id;
+
+        const wrapper = await getPersonalWidgetInstance(store_options);
+        const ttm_element = wrapper.find("[data-test=pane-link-testmgmt]");
+        expect(ttm_element.attributes("href")).toEqual("/plugin/testmanagement/project/6");
+        expect(ttm_element.text()).toEqual("Test Campaigns");
+        expect(wrapper.find("[data-test=pane-icon-testmgmt]").classes()).toContain(
+            "fa-external-link"
+        );
+    });
+
     it("Given user display widget, Then a good link to taskboard is renderer", async () => {
         store_options.state.project_id = project_id;
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        const taskboard_element = wrapper.find("[data-test=taskboard-link]");
+        const taskboard_element = wrapper.find("[data-test=pane-link-taskboard]");
         expect(taskboard_element.attributes("href")).toEqual("/taskboard/project/6");
         expect(taskboard_element.text()).toEqual("Taskboard");
-        expect(wrapper.find("[data-test=taskboard-icon]").classes()).toContain("fa-tlp-taskboard");
+        expect(wrapper.find("[data-test=pane-icon-taskboard]").classes()).toContain(
+            "fa-tlp-taskboard"
+        );
     });
 
     it("Given user display widget, Then a good link to overview is renderer", async () => {

@@ -41,7 +41,8 @@ function MilestoneController(
         toggleMilestone,
         milestone: $scope.milestone, // inherited from parent scope
         dragular_instance_for_milestone: undefined,
-        get_content_promise: $q.when()
+        get_content_promise: $q.when(),
+        additionalPanesToDisplay
     });
 
     self.init();
@@ -349,5 +350,11 @@ function MilestoneController(
 
     function ancestorCannotBeDragged(handle_element) {
         return angular.element(handle_element).closest('[data-nodrag="true"]').length > 0;
+    }
+
+    function additionalPanesToDisplay() {
+        return self.milestone.resources.additional_panes.filter(
+            pane => pane.identifier === "taskboard"
+        );
     }
 }

@@ -39,17 +39,18 @@
             <span class="release-planning-link-item-text"><translate>Cardwall</translate></span>
         </a>
         <a
-            v-if="get_taskboard_pane"
-            v-bind:href="get_taskboard_pane.uri"
-            data-test="taskboard-link"
+            v-for="pane in get_additional_panes"
+            v-bind:key="pane.identifier"
+            v-bind:href="pane.uri"
+            v-bind:data-test="`pane-link-${pane.identifier}`"
             class="release-planning-link release-planning-link-item"
         >
             <i
                 class="release-description-link-icon fa"
-                data-test="taskboard-icon"
-                v-bind:class="get_taskboard_pane.icon_name"
+                v-bind:data-test="`pane-icon-${pane.identifier}`"
+                v-bind:class="pane.icon_name"
             ></i>
-            <span class="release-planning-link-item-text">{{ get_taskboard_pane.title }}</span>
+            <span class="release-planning-link-item-text">{{ pane.title }}</span>
         </a>
     </div>
 </template>
@@ -95,9 +96,9 @@ export default class ReleaseButtonsDescription extends Vue {
         );
     }
 
-    get get_taskboard_pane(): undefined | Pane {
-        return this.release_data.resources.additional_panes.find(
-            pane => pane.identifier === "taskboard"
+    get get_additional_panes(): undefined | Pane[] {
+        return this.release_data.resources.additional_panes.filter(pane =>
+            ["taskboard", "testmgmt"].includes(pane.identifier)
         );
     }
 }
