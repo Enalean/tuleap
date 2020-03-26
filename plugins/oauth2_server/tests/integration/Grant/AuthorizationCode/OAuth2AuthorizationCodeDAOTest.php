@@ -223,4 +223,18 @@ final class OAuth2AuthorizationCodeDAOTest extends TestCase
         $this->assertNotNull($this->dao->searchAuthorizationCode($auth_code_id));
         $this->assertNotNull($access_token_dao->searchAccessToken($access_token_id));
     }
+
+    public function testDeletesAuthorizationCodeOfDeletedProject(): void
+    {
+        $auth_code_id = $this->dao->create(self::$deleted_project_app_id, 102, 'hashed_verification_string', 357, null);
+
+        $this->dao->deleteAuthorizationCodeInNonExistingOrDeletedProject();
+
+        $this->assertNull(
+            DBFactory::getMainTuleapDBConnection()->getDB()->row(
+                'SELECT id FROM plugin_oauth2_authorization_code WHERE id = ?',
+                $auth_code_id
+            )
+        );
+    }
 }

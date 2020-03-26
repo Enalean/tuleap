@@ -109,6 +109,13 @@ class OAuth2AuthorizationCodeDAO extends DataAccessObject
         );
     }
 
+    public function deleteAuthorizationCodeInNonExistingOrDeletedProject(): void
+    {
+        $this->deleteAuthorizationCode(
+            EasyStatement::open()->with('`groups`.group_id IS NULL OR `groups`.status = "D"')
+        );
+    }
+
     private function deleteAuthorizationCode(EasyStatement $filter_statement): void
     {
         $this->getDB()->safeQuery(
@@ -124,6 +131,8 @@ class OAuth2AuthorizationCodeDAO extends DataAccessObject
                        LEFT JOIN plugin_oauth2_access_token_scope on plugin_oauth2_access_token.id = plugin_oauth2_access_token_scope.access_token_id
                        LEFT JOIN plugin_oauth2_refresh_token ON plugin_oauth2_authorization_code.id = plugin_oauth2_refresh_token.authorization_code_id
                        LEFT JOIN plugin_oauth2_refresh_token_scope ON plugin_oauth2_refresh_token.id = plugin_oauth2_refresh_token_scope.refresh_token_id
+                       LEFT JOIN plugin_oauth2_server_app ON plugin_oauth2_authorization_code.app_id = plugin_oauth2_server_app.id
+                       LEFT JOIN `groups` ON plugin_oauth2_server_app.project_id = `groups`.group_id
                        WHERE $filter_statement",
             $filter_statement->values()
         );
