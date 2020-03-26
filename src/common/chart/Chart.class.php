@@ -19,7 +19,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Chart\ColorsForCharts;
+namespace Tuleap\Chart;
+
+use Chart_TTFFactory;
+use Feedback;
+use TTF;
 
 /**
 * Chart
@@ -66,7 +70,7 @@ class Chart
         //Fix margin
         try {
             $this->jpgraph_instance->img->SetMargin(70, 160, 30, 70);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             // do nothing, JPGraph displays the error by itself
         }
 
@@ -165,7 +169,7 @@ class Chart
     {
         try {
             $result = call_user_func_array(array($this->jpgraph_instance, $method), $args);
-        } catch (Exception $exc) {
+        } catch (\Exception $exc) {
             $error_message = sprintf(
                 _('JpGraph error for graph "%s": %s'),
                 $this->title->t,
@@ -246,14 +250,23 @@ class Chart
      * Diplay a given message as png image
      *
      * @param String $msg Message to display
-     *
-     * @return Void
      */
-    public function displayMessage($msg)
+    public function displayMessage($msg): void
     {
         //ttf from jpgraph
         $ttf = new TTF();
         Chart_TTFFactory::setUserFont($ttf);
+
+        if ($msg === '') { // Workaround for an issue with gd 2.3.0, see https://tuleap.net/plugins/tracker/?aid=14721
+            $im = @imagecreate(2, 2);
+            if ($im !== false) {
+                header('Content-type: image/png');
+                imagecolorallocate($im, 0, 0, 0);
+                imagepng($im);
+                imagedestroy($im);
+            }
+            return;
+        }
 
         //Calculate the baseline
         // @see http://www.php.net/manual/fr/function.imagettfbbox.php#75333
