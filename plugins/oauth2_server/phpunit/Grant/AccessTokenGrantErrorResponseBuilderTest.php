@@ -67,4 +67,13 @@ final class AccessTokenGrantErrorResponseBuilderTest extends TestCase
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertJsonStringEqualsJsonString('{"error":"invalid_grant"}', $response->getBody()->getContents());
     }
+
+    public function testBuildsInvalidScopeResponse(): void
+    {
+        $response = $this->response_builder->buildInvalidScopeResponse();
+
+        $this->assertEquals(AccessTokenGrantController::CONTENT_TYPE_RESPONSE, $response->getHeaderLine('Content-Type'));
+        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertJsonStringEqualsJsonString('{"error":"invalid_scope"}', $response->getBody()->getContents());
+    }
 }

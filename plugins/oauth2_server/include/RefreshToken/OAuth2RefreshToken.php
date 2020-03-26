@@ -61,6 +61,37 @@ final class OAuth2RefreshToken
         return new self($authorization_code_id, $scopes);
     }
 
+    /**
+     * @param AuthenticationScope[] $reduced_scopes
+     *
+     * @psalm-param non-empty-array<AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier>> $reduced_scopes
+     *
+     * @throws OAuth2ScopeNotCoveredByOneOfTheScopeAssociatedWithTheRefreshTokenException
+     */
+    public static function createWithAReducedSetOfScopes(self $refresh_token, array $reduced_scopes): self
+    {
+        foreach ($reduced_scopes as $scope) {
+            if (! self::isScopeCoveredByTheExistingOnes($refresh_token, $scope)) {
+                throw new OAuth2ScopeNotCoveredByOneOfTheScopeAssociatedWithTheRefreshTokenException($scope);
+            }
+        }
+
+        return new self($refresh_token->getAssociatedAuthorizationCodeID(), $reduced_scopes);
+    }
+
+    /**
+     * @psalm-param AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier> $scope
+     */
+    private static function isScopeCoveredByTheExistingOnes(self $refresh_token, AuthenticationScope $scope): bool
+    {
+        foreach ($refresh_token->getScopes() as $existing_scope) {
+            if ($existing_scope->covers($scope)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function getAssociatedAuthorizationCodeID(): int
     {
         return $this->authorization_code_id;

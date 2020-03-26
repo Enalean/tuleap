@@ -33,6 +33,8 @@ use Tuleap\OAuth2Server\App\InvalidClientIdentifierKey;
 use Tuleap\OAuth2Server\App\OAuth2AppNotFoundException;
 use Tuleap\OAuth2Server\AuthorizationServer\PKCE\OAuth2PKCEInformationExtractionException;
 use Tuleap\OAuth2Server\AuthorizationServer\PKCE\PKCEInformationExtractor;
+use Tuleap\OAuth2Server\Scope\InvalidOAuth2ScopeException;
+use Tuleap\OAuth2Server\Scope\ScopeExtractor;
 use Tuleap\OAuth2Server\User\AuthorizationComparator;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithBurningParrot;
@@ -137,8 +139,15 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
             );
         }
 
+        if (! isset($query_params[self::SCOPE_PARAMETER])) {
+            return $this->response_factory->createErrorResponse(
+                self::ERROR_CODE_INVALID_SCOPE,
+                $redirect_uri,
+                $state_value
+            );
+        }
         try {
-            $scopes = $this->scope_extractor->extractScopes($query_params);
+            $scopes = $this->scope_extractor->extractScopes((string) $query_params[self::SCOPE_PARAMETER]);
         } catch (InvalidOAuth2ScopeException $e) {
             return $this->response_factory->createErrorResponse(
                 self::ERROR_CODE_INVALID_SCOPE,

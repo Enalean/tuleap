@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\AuthorizationServer;
+namespace Tuleap\OAuth2Server\Scope;
 
 use Tuleap\OAuth2Server\OAuth2ServerException;
 

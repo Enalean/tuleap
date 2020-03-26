@@ -33,11 +33,17 @@ use Tuleap\OAuth2Server\Grant\AccessTokenGrantController;
 use Tuleap\OAuth2Server\Grant\AccessTokenGrantErrorResponseBuilder;
 use Tuleap\OAuth2Server\Grant\AccessTokenGrantRepresentationBuilder;
 use Tuleap\OAuth2Server\OAuth2ServerException;
+use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshToken;
 use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenVerifier;
+use Tuleap\OAuth2Server\RefreshToken\OAuth2ScopeNotCoveredByOneOfTheScopeAssociatedWithTheRefreshTokenException;
+use Tuleap\OAuth2Server\Scope\InvalidOAuth2ScopeException;
+use Tuleap\OAuth2Server\Scope\ScopeExtractor;
 
 class OAuth2GrantAccessTokenFromRefreshToken
 {
+    // See https://tools.ietf.org/html/rfc6749#section-6
     private const REFRESH_TOKEN_PARAMETER = 'refresh_token';
+    private const SCOPE_PARAMETER         = 'scope';
 
     /**
      * @var ResponseFactoryInterface
@@ -63,6 +69,10 @@ class OAuth2GrantAccessTokenFromRefreshToken
      * @var AccessTokenGrantRepresentationBuilder
      */
     private $access_token_grant_representation_builder;
+    /**
+     * @var ScopeExtractor
+     */
+    private $scope_extractor;
 
     public function __construct(
         ResponseFactoryInterface $response_factory,
@@ -70,7 +80,8 @@ class OAuth2GrantAccessTokenFromRefreshToken
         AccessTokenGrantErrorResponseBuilder $access_token_grant_error_response_builder,
         SplitTokenIdentifierTranslator $refresh_token_identifier_unserializer,
         OAuth2RefreshTokenVerifier $refresh_token_verifier,
-        AccessTokenGrantRepresentationBuilder $access_token_grant_representation_builder
+        AccessTokenGrantRepresentationBuilder $access_token_grant_representation_builder,
+        ScopeExtractor $scope_extractor
     ) {
         $this->response_factory                          = $response_factory;
         $this->stream_factory                            = $stream_factory;
@@ -78,6 +89,7 @@ class OAuth2GrantAccessTokenFromRefreshToken
         $this->access_token_identifier_unserializer      = $refresh_token_identifier_unserializer;
         $this->refresh_token_verifier                    = $refresh_token_verifier;
         $this->access_token_grant_representation_builder = $access_token_grant_representation_builder;
+        $this->scope_extractor                           = $scope_extractor;
     }
 
     public function grantAccessToken(OAuth2App $app, array $body_params): ResponseInterface
@@ -95,6 +107,17 @@ class OAuth2GrantAccessTokenFromRefreshToken
             return $this->access_token_grant_error_response_builder->buildInvalidGrantResponse();
         } finally {
             \sodium_memzero($body_params[self::REFRESH_TOKEN_PARAMETER]);
+        }
+
+        if (isset($body_params[self::SCOPE_PARAMETER])) {
+            try {
+                $refresh_token = OAuth2RefreshToken::createWithAReducedSetOfScopes(
+                    $refresh_token,
+                    $this->scope_extractor->extractScopes((string) $body_params[self::SCOPE_PARAMETER])
+                );
+            } catch (OAuth2ScopeNotCoveredByOneOfTheScopeAssociatedWithTheRefreshTokenException | InvalidOAuth2ScopeException $exception) {
+                return $this->access_token_grant_error_response_builder->buildInvalidScopeResponse();
+            }
         }
 
         $representation = $this->access_token_grant_representation_builder->buildRepresentationFromRefreshToken(

@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\AuthorizationServer;
+namespace Tuleap\OAuth2Server\Scope;
 
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
@@ -43,13 +43,12 @@ class ScopeExtractor
      * @return AuthenticationScope[]
      *
      * @psalm-return non-empty-list<AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier>>
+     *
+     * @throws InvalidOAuth2ScopeException
      */
-    public function extractScopes(array $query_params): array
+    public function extractScopes(string $scope_list_from_query): array
     {
-        if (! isset($query_params[AuthorizationEndpointGetController::SCOPE_PARAMETER])) {
-            throw new InvalidOAuth2ScopeException();
-        }
-        $scopes_string = (string) $query_params[AuthorizationEndpointGetController::SCOPE_PARAMETER];
+        $scopes_string = $scope_list_from_query;
         $scope_keys    = explode(' ', $scopes_string);
         $scope_keys    = array_unique($scope_keys);
         $scope_list    = [];

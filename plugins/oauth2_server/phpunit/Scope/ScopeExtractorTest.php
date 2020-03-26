@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OAuth2Server\AuthorizationServer;
+namespace Tuleap\OAuth2Server\Scope;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -46,16 +46,10 @@ final class ScopeExtractorTest extends TestCase
         $this->scope_extractor = new ScopeExtractor($this->scope_builder);
     }
 
-    public function testExtractScopesThrowsWhenQueryHasNoScopeParameter(): void
-    {
-        $this->expectException(InvalidOAuth2ScopeException::class);
-        $this->scope_extractor->extractScopes(['key' => 'value']);
-    }
-
     public function testExtractScopesThrowsWhenScopeHasInvalidFormat(): void
     {
         $this->expectException(InvalidOAuth2ScopeException::class);
-        $this->scope_extractor->extractScopes(['scope' => '@invalid_scope_format#']);
+        $this->scope_extractor->extractScopes('@invalid_scope_format#');
     }
 
     public function testExtractScopesThrowsWhenScopeHasUnknownIdentifier(): void
@@ -72,7 +66,7 @@ final class ScopeExtractorTest extends TestCase
             ->andReturnNull();
 
         $this->expectException(InvalidOAuth2ScopeException::class);
-        $this->scope_extractor->extractScopes(['scope' => 'unknown:scope']);
+        $this->scope_extractor->extractScopes('unknown:scope');
     }
 
     public function testExtractScopesFromQueryAndSplitsOnSpaceCharacter(): void
@@ -94,7 +88,7 @@ final class ScopeExtractorTest extends TestCase
             )
         )->once()->andReturn($foobar_scope);
 
-        $scopes = $this->scope_extractor->extractScopes(['scope' => 'foo:bar type:value']);
+        $scopes = $this->scope_extractor->extractScopes('foo:bar type:value');
         $this->assertEquals([$foobar_scope, $typevalue_scope], $scopes);
     }
 
@@ -109,7 +103,7 @@ final class ScopeExtractorTest extends TestCase
             )
         )->once()->andReturn($foobar_scope);
 
-        $scopes = $this->scope_extractor->extractScopes(['scope' => 'foo:bar foo:bar']);
+        $scopes = $this->scope_extractor->extractScopes('foo:bar foo:bar');
         $this->assertEquals([$foobar_scope], $scopes);
     }
 }

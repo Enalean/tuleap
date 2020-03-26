@@ -31,6 +31,7 @@ final class AccessTokenGrantErrorResponseBuilder
     private const ERROR_CODE_INVALID_REQUEST = 'invalid_request';
     private const ERROR_CODE_INVALID_GRANT   = 'invalid_grant';
     private const ERROR_CODE_INVALID_CLIENT  = 'invalid_client';
+    private const ERROR_CODE_INVALID_SCOPE   = 'invalid_scope';
 
     /**
      * @var ResponseFactoryInterface
@@ -60,6 +61,11 @@ final class AccessTokenGrantErrorResponseBuilder
     public function buildInvalidClientResponse(): ResponseInterface
     {
         return $this->buildErrorResponse(self::ERROR_CODE_INVALID_CLIENT);
+    }
+
+    public function buildInvalidScopeResponse(): ResponseInterface
+    {
+        return $this->buildErrorResponse(self::ERROR_CODE_INVALID_SCOPE);
     }
 
     /**
