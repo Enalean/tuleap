@@ -47,7 +47,7 @@ def runRESTTests(String db, String php) {
 def runDBTests(String db, String php) {
     sh """
     mkdir -p \$WORKSPACE/results/db/php${php}-${db}
-    TESTS_RESULT=\$WORKSPACE/results/db/php${php}-${db} sources/tests/integration/bin/run-compose.sh "${db}"
+    TESTS_RESULT=\$WORKSPACE/results/db/php${php}-${db} sources/tests/integration/bin/run-compose.sh "${php}" "${db}"
     """
 }
 
