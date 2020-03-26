@@ -86,19 +86,21 @@ generate-templates-docker: ## Generate XML templates
 
 generate-templates:
 	xsltproc tools/utils/setup_templates/generate-templates/generate-scrum_dashboard.xml \
-		-o plugins/agiledashboard/www/resources/scrum_dashboard_template.xml
+		-o plugins/agiledashboard/resources/templates/scrum_dashboard_template.xml
 	xsltproc tools/utils/setup_templates/generate-templates/generate-agile_alm.xml \
 		-o tools/utils/setup_templates/agile_alm/agile_alm_template.xml
 	cp -f tools/utils/setup_templates/generate-templates/trackers/bug.xml \
-		plugins/tracker/www/resources/templates/Tracker_Bugs.xml
+		plugins/tracker/resources/templates/Tracker_Bugs.xml
 	cp -f tools/utils/setup_templates/generate-templates/trackers/task.xml \
-		plugins/tracker/www/resources/templates/Tracker_Tasks.xml
+		plugins/agiledashboard/resources/templates/Tracker_Tasks.xml
 	cp -f tools/utils/setup_templates/generate-templates/trackers/story.xml \
-		plugins/tracker/www/resources/templates/Tracker_UserStories.xml
+		plugins/agiledashboard/resources/templates/Tracker_UserStories.xml
 	cp -f tools/utils/setup_templates/generate-templates/trackers/activity.xml \
-		plugins/tracker/www/resources/templates/Tracker_Activity.xml
-	cp -f tools/utils/setup_templates/generate-templates/trackers/activity.xml \
-		plugins/agiledashboard/www/resources/Tracker_activity.xml
+		plugins/agiledashboard/resources/templates/Tracker_activity.xml
+	cp -f tools/utils/setup_templates/generate-templates/trackers/rel.xml \
+		plugins/agiledashboard/resources/templates/Tracker_release.xml
+	cp -f tools/utils/setup_templates/generate-templates/trackers/sprint.xml \
+		plugins/agiledashboard/resources/templates/Tracker_sprint.xml
 
 #
 # Tests and all

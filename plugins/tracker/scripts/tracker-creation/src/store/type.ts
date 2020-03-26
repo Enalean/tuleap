@@ -19,6 +19,7 @@
 
 export interface State {
     csrf_token: CSRFToken;
+    default_templates: Tracker[];
     project_templates: ProjectTemplate[];
     active_option: CreationOptions;
     selected_tracker_template: Tracker | null;

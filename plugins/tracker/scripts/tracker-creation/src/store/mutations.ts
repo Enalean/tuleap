@@ -41,6 +41,10 @@ export function setSelectedTrackerTemplate(state: State, tracker_id: string): vo
     }
 
     if (!tracker) {
+        tracker = state.default_templates.find(tracker => tracker.id === tracker_id);
+    }
+
+    if (!tracker) {
         throw new Error("Tracker not found in store");
     }
 

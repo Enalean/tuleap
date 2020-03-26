@@ -78,6 +78,7 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigController;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Config\ConfigController;
+use Tuleap\Tracker\Creation\DefaultTemplatesCollectionBuilder;
 use Tuleap\Tracker\Creation\TrackerCreationBreadCrumbsBuilder;
 use Tuleap\Tracker\Creation\TrackerCreationController;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
@@ -1950,7 +1951,8 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             new TrackerCreationPresenterBuilder(
                 $this->getProjectManager(),
                 new TrackerDao(),
-                \TrackerFactory::instance()
+                \TrackerFactory::instance(),
+                new DefaultTemplatesCollectionBuilder(\EventManager::instance())
             ),
             new TrackerCreationPermissionChecker(new TrackerManager())
         );
@@ -1964,7 +1966,8 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $user_manager,
             \ProjectManager::instance(),
             TrackerCreator::build(),
-            new TrackerCreationPermissionChecker(new TrackerManager())
+            new TrackerCreationPermissionChecker(new TrackerManager()),
+            new DefaultTemplatesCollectionBuilder(\EventManager::instance())
         );
     }
 

@@ -26,6 +26,7 @@ describe("mutations", () => {
 
         beforeEach(() => {
             state = {
+                default_templates: [{ id: "default-bug", name: "Bugs" }],
                 project_templates: [
                     {
                         project_name: "Scrum template",
@@ -48,6 +49,12 @@ describe("mutations", () => {
             mutations.setSelectedTrackerTemplate(state, "13");
 
             expect(state.selected_tracker_template).toEqual({ id: "13", name: "Requests" });
+        });
+
+        it("Given a tracker id, it finds the tracker in the default trackers, then it stores it", () => {
+            mutations.setSelectedTrackerTemplate(state, "default-bug");
+
+            expect(state.selected_tracker_template).toEqual({ id: "default-bug", name: "Bugs" });
         });
 
         it("throws an error when the tracker has not been found", () => {

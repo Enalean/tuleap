@@ -64,8 +64,13 @@ class TrackerCreationPresenter
      * @var string
      */
     public $tracker_colors;
+    /**
+     * @var false|string
+     */
+    public $default_templates;
 
     public function __construct(
+        array $default_templates,
         array $project_templates,
         array $existing_trackers,
         array $trackers_from_other_projects,
@@ -73,6 +78,7 @@ class TrackerCreationPresenter
         Project $current_project,
         \CSRFSynchronizerToken $csrf
     ) {
+        $this->default_templates            = json_encode($default_templates, JSON_THROW_ON_ERROR);
         $this->project_templates            = json_encode($project_templates, JSON_THROW_ON_ERROR);
         $this->existing_trackers            = json_encode($existing_trackers, JSON_THROW_ON_ERROR);
         $this->trackers_from_other_projects = json_encode($trackers_from_other_projects, JSON_THROW_ON_ERROR);

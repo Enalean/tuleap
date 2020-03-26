@@ -53,17 +53,23 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
      * @var TrackerCreationPermissionChecker
      */
     private $permission_checker;
+    /**
+     * @var DefaultTemplatesCollectionBuilder
+     */
+    private $default_templates_collection_builder;
 
     public function __construct(
         \UserManager $user_manager,
         \ProjectManager $project_manager,
         TrackerCreator $tracker_creator,
-        TrackerCreationPermissionChecker $permission_checker
+        TrackerCreationPermissionChecker $permission_checker,
+        DefaultTemplatesCollectionBuilder $default_templates_collection_builder
     ) {
-        $this->user_manager       = $user_manager;
-        $this->project_manager    = $project_manager;
-        $this->tracker_creator    = $tracker_creator;
-        $this->permission_checker = $permission_checker;
+        $this->user_manager                         = $user_manager;
+        $this->project_manager                      = $project_manager;
+        $this->tracker_creator                      = $tracker_creator;
+        $this->permission_checker                   = $permission_checker;
+        $this->default_templates_collection_builder = $default_templates_collection_builder;
     }
 
     /**
@@ -89,8 +95,20 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
         $tracker_template_id = $request->get('tracker-template-id');
         $from_empty_tracker = $request->get('from-tracker-empty');
 
+        $default_templates_collection = $this->default_templates_collection_builder->build();
+        $is_from_default_tracker = $default_templates_collection->has($tracker_template_id);
+
         try {
-            if ($tracker_template_id) {
+            if ($is_from_default_tracker) {
+                $tracker = $this->tracker_creator->createTrackerFromXml(
+                    $project,
+                    $default_templates_collection->getXmlFile((string) $tracker_template_id),
+                    (string) $tracker_name,
+                    (string) $tracker_description,
+                    (string) $tracker_shortname,
+                    (string) $tracker_color
+                );
+            } elseif ($tracker_template_id) {
                 $tracker = $this->tracker_creator->duplicateTracker(
                     $project,
                     (string) $tracker_name,

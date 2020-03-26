@@ -21,7 +21,7 @@
 class Planning_ImportTemplateFormPresenter
 {
 
-    public const TULEAP_TEMPLATE_URL = AGILEDASHBOARD_BASE_URL . '/resources/scrum_dashboard_template.xml';
+    public const TULEAP_TEMPLATE_URL = __DIR__ . '/../../resources/templates/scrum_dashboard_template.xml';
 
     public $group_id;
 

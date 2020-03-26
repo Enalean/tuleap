@@ -18,20 +18,6 @@ A powerful tracking system with extensive configuration capabilities to manage a
  - **Import-export** data from or to third tool
  - Keep up-to-date with **email notification alerts**
 
-Installation
-============
-
-Templates
----------
-
-You may need to define templates in your template project(s).
-
-A cli script will help you in this task. As codendiadm:
-
-    $ cd /usr/share/codendi/
-    $ vi plugins/tracker/bin/import_tracker_xml_template.php (if you need to change the admin login and password, modify lines 19 and 20)
-    $ src/utils/php-launcher.sh plugins/tracker/bin/import_tracker_xml_template.php plugins/tracker/www/resources/templates/choose_a_template.xml
-
 Dependencies
 ------------
 

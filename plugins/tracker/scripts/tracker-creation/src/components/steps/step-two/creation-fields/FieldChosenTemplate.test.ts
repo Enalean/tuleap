@@ -73,6 +73,19 @@ describe("FieldChosenTemplate", () => {
     });
 
     describe("It displays the right template name when", () => {
+        it("is a default template", async () => {
+            state = {
+                selected_tracker_template: {
+                    id: "default-bug",
+                    name: "Bugs"
+                }
+            } as State;
+
+            const wrapper = await getWrapper(state);
+            expect(wrapper.find("[data-test=project-of-chosen-template]").exists()).toBe(false);
+            expect(wrapper.find("[data-test=chosen-template]").text()).toEqual("Bugs");
+        });
+
         it("is a tracker duplication", async () => {
             const wrapper = await getWrapper(state, true, false, false, false, {
                 project_name: "Default Site Template",
