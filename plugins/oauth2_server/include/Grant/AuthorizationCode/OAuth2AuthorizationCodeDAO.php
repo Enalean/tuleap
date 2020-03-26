@@ -95,6 +95,20 @@ class OAuth2AuthorizationCodeDAO extends DataAccessObject
         );
     }
 
+    public function deleteAuthorizationCodeByExpirationDate(int $current_time): void
+    {
+        $this->deleteAuthorizationCode(
+            EasyStatement::open()->with(
+                '? > plugin_oauth2_authorization_code.expiration_date
+                AND (plugin_oauth2_refresh_token.id IS NULL OR ? > plugin_oauth2_refresh_token.expiration_date)
+                AND (plugin_oauth2_access_token.id IS NULL OR ? > plugin_oauth2_access_token.expiration_date)',
+                $current_time,
+                $current_time,
+                $current_time
+            )
+        );
+    }
+
     private function deleteAuthorizationCode(EasyStatement $filter_statement): void
     {
         $this->getDB()->safeQuery(

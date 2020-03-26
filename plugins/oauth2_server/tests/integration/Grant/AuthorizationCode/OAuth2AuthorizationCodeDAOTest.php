@@ -196,4 +196,31 @@ final class OAuth2AuthorizationCodeDAOTest extends TestCase
 
         $this->assertNull($this->dao->searchAuthorizationCode($auth_code_id));
     }
+
+    public function testDeletesExpiredAuthorizationCodeAndTokens(): void
+    {
+        $auth_code_id = $this->dao->create(self::$active_project_app_id, 102, 'hashed_verification_string_auth', 30, null);
+        $access_token_dao  = new OAuth2AccessTokenDAO();
+        $access_token_id   = $access_token_dao->create($auth_code_id, 'hashed_verification_string_access', 30);
+        $refresh_token_dao = new OAuth2RefreshTokenDAO();
+        $refresh_token_id  = $refresh_token_dao->create($auth_code_id, 'hashed_verification_string_refresh', 30);
+
+        $this->dao->deleteAuthorizationCodeByExpirationDate(60);
+
+        $this->assertNull($this->dao->searchAuthorizationCode($auth_code_id));
+        $this->assertNull($access_token_dao->searchAccessToken($access_token_id));
+        $this->assertNull($refresh_token_dao->searchRefreshTokenByID($refresh_token_id));
+    }
+
+    public function testDoesNotDeletedExpiredAuthorizationCodeWhenThereIsStillAnActiveTokenAssociatedToIt(): void
+    {
+        $auth_code_id = $this->dao->create(self::$active_project_app_id, 102, 'hashed_verification_string_auth', 5, null);
+        $access_token_dao  = new OAuth2AccessTokenDAO();
+        $access_token_id   = $access_token_dao->create($auth_code_id, 'hashed_verification_string_access', 30);
+
+        $this->dao->deleteAuthorizationCodeByExpirationDate(10);
+
+        $this->assertNotNull($this->dao->searchAuthorizationCode($auth_code_id));
+        $this->assertNotNull($access_token_dao->searchAccessToken($access_token_id));
+    }
 }
