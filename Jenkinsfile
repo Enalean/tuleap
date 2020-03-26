@@ -23,7 +23,7 @@ pipeline {
                 }
                 script {
                     actions = load 'sources/tests/actions.groovy'
-                    actions.prepareSources('nexus.enalean.com_readonly')
+                    actions.prepareSources('nexus.enalean.com_readonly', 'github-token-composer')
                 }
             }
         }
@@ -66,9 +66,9 @@ pipeline {
                 }
                 stage('SOAP') {
                     stages {
-                        stage('SOAP PHP 7.3') { steps { script { actions.runSOAPTests('php-73', '5') } } }
+                        stage('SOAP PHP 7.3') { steps { script { actions.runSOAPTests('mysql57', '73') } } }
                     }
-                    post { always { junit "results/api-soap/*/soap_tests.xml" } }
+                    post { always { junit "results/soap/*/soap_tests.xml" } }
                 }
                 stage('Distributed SVN integration') {
                     steps { script { actions.runEndToEndTests('distlp') } }
