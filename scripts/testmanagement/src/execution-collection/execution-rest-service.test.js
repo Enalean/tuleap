@@ -20,7 +20,7 @@
 import execution_module from "./execution-collection.js";
 import angular from "angular";
 import "angular-mocks";
-import { createAngularPromiseWrapper } from "../../../../../../../tests/jest/angular-promise-wrapper.js";
+import { createAngularPromiseWrapper } from "../../../../../../tests/jest/angular-promise-wrapper.js";
 
 describe("ExecutionRestService", () => {
     let mockBackend, wrapPromise, ExecutionRestService, SharedPropertiesService;

@@ -20,12 +20,12 @@
 import angular from "angular";
 import ngSanitize from "angular-sanitize";
 import ui_router from "angular-ui-router";
-import angular_artifact_modal from "../../../../../tracker/scripts/angular-artifact-modal/index.js";
+import angular_artifact_modal from "../../../../tracker/scripts/angular-artifact-modal/index.js";
 import angular_tlp from "angular-tlp";
 
 import "angular-breadcrumb";
 import "angular-gettext";
-import translations from "../../po/fr.po";
+import translations from "../po/fr.po";
 import "angular-moment";
 import "d3-selection-multi";
 
