@@ -2,7 +2,7 @@ version: "2.1"
 
 services:
   tests:
-    image: ${DOCKER_REGISTRY:-docker.io}/enalean/tuleap-test-soap:5
+    image: ${DOCKER_REGISTRY:-docker.io}/enalean/tuleap-test-rest:c7-${PHP_VERSION}
     environment:
       - DB_HOST=${DB_HOST}
     volumes:
@@ -11,6 +11,7 @@ services:
       default:
         aliases:
           - mail
+    command: /usr/share/tuleap/tests/soap/bin/run.sh
 
   mysql57:
     image: ${DOCKER_REGISTRY:-docker.io}/mysql:5.7

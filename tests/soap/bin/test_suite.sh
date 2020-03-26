@@ -3,11 +3,11 @@
 set -ex
 
 generate_testsuite() {
-    /opt/remi/php"$PHP_VERSION"/root/usr/bin/php /usr/share/tuleap/tests/soap/bin/generate-testsuite.php /tmp /output
+    "$PHP_CLI" /usr/share/tuleap/tests/soap/bin/generate-testsuite.php /tmp /output
 }
 
 run_testsuite() {
-    /opt/remi/php"$PHP_VERSION"/root/usr/bin/php /usr/share/tuleap/src/vendor/bin/phpunit --do-not-cache-result --configuration /tmp/suite.xml
+    "$PHP_CLI" /usr/share/tuleap/src/vendor/bin/phpunit --do-not-cache-result --configuration /tmp/suite.xml
 }
 
 generate_testsuite

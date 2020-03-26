@@ -87,7 +87,7 @@ setup_database() {
 load_project() {
     base_dir=$1
 
-    PHP=/opt/remi/php"$PHP_VERSION"/root/usr/bin/php /usr/share/tuleap/src/utils/tuleap import-project-xml \
+    PHP="$PHP_CLI" /usr/share/tuleap/src/utils/tuleap import-project-xml \
         -u admin \
         -i $base_dir \
         -m $base_dir/user_map.csv
@@ -101,12 +101,21 @@ seed_data() {
     su -c "/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php tracker" -l codendiadm
 
     echo "Load initial data"
-    /opt/remi/php"$PHP_VERSION"/root/usr/bin/php /usr/share/tuleap/tests/soap/bin/init_data.php
+    "$PHP_CLI" /usr/share/tuleap/tests/soap/bin/init_data.php
 }
 
 setup_tuleap
-/usr/share/tuleap/tools/utils/php"$PHP_VERSION"/run.php --modules=nginx,fpm
-service php"$PHP_VERSION"-php-fpm start
-service nginx start
+case "$PHP_FPM" in
+    '/opt/remi/php73/root/usr/sbin/php-fpm')
+    echo "Deploy PHP FPM 7.3"
+    "$PHP_CLI" /usr/share/tuleap/tools/utils/php73/run.php --modules=nginx,fpm
+    ;;
+    '/opt/remi/php74/root/usr/sbin/php-fpm')
+    echo "Deploy PHP FPM 7.4"
+    "$PHP_CLI" /usr/share/tuleap/tools/utils/php74/run.php --modules=nginx,fpm
+    ;;
+esac
+"$PHP_FPM" --daemonize
+nginx
 setup_database
 seed_data
