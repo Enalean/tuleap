@@ -29,9 +29,9 @@ use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\OAuth2Server\OAuth2TestScope;
 use Tuleap\OAuth2Server\Scope\OAuth2ScopeRetriever;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
-use Tuleap\User\OAuth2\Scope\DemoOAuth2Scope;
 
 final class OAuth2AuthorizationCodeVerifierTest extends TestCase
 {
@@ -93,12 +93,12 @@ final class OAuth2AuthorizationCodeVerifierTest extends TestCase
         );
         $this->dao->shouldReceive('markAuthorizationCodeAsUsed')->with($auth_code->getID())->once();
         $this->hasher->shouldReceive('verifyHash')->andReturn(true);
-        $this->scope_retriever->shouldReceive('getScopesBySplitToken')->andReturn([DemoOAuth2Scope::fromItself()]);
+        $this->scope_retriever->shouldReceive('getScopesBySplitToken')->andReturn([OAuth2TestScope::fromItself()]);
 
         $verified_authorization = $this->verifier->getAuthorizationCode($auth_code);
 
         $this->assertSame($expected_user, $verified_authorization->getUser());
-        $this->assertEquals([DemoOAuth2Scope::fromItself()], $verified_authorization->getScopes());
+        $this->assertEquals([OAuth2TestScope::fromItself()], $verified_authorization->getScopes());
     }
 
     public function testVerificationFailsWhenAuthCodeCannotBeFound(): void

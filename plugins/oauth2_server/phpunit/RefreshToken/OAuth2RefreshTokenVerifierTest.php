@@ -31,9 +31,9 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeRevoker;
+use Tuleap\OAuth2Server\OAuth2TestScope;
 use Tuleap\OAuth2Server\Scope\OAuth2ScopeRetriever;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
-use Tuleap\User\OAuth2\Scope\DemoOAuth2Scope;
 
 final class OAuth2RefreshTokenVerifierTest extends TestCase
 {
@@ -93,12 +93,12 @@ final class OAuth2RefreshTokenVerifierTest extends TestCase
         );
         $this->dao->shouldReceive('markRefreshTokenAsUsed')->with($refresh_token->getID())->once();
         $this->hasher->shouldReceive('verifyHash')->andReturn(true);
-        $this->scope_retriever->shouldReceive('getScopesBySplitToken')->andReturn([DemoOAuth2Scope::fromItself()]);
+        $this->scope_retriever->shouldReceive('getScopesBySplitToken')->andReturn([OAuth2TestScope::fromItself()]);
 
         $verified_refresh_token = $this->verifier->getRefreshToken($app, $refresh_token);
 
         $this->assertSame(12, $verified_refresh_token->getAssociatedAuthorizationCodeID());
-        $this->assertEquals([DemoOAuth2Scope::fromItself()], $verified_refresh_token->getScopes());
+        $this->assertEquals([OAuth2TestScope::fromItself()], $verified_refresh_token->getScopes());
     }
 
     public function testVerificationFailsWhenRefreshTokenCannotBeFound(): void

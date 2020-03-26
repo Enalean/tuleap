@@ -20,18 +20,19 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User\OAuth2\Scope;
+namespace Tuleap\OAuth2Server;
 
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeDefinition;
 use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
+use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
 /**
  * @psalm-immutable
  *
  * @implements AuthenticationScope<OAuth2ScopeIdentifier>
  */
-final class DemoOAuth2Scope implements AuthenticationScope
+final class OAuth2TestScope implements AuthenticationScope
 {
     private const IDENTIFIER_KEY = 'demo';
 
@@ -48,12 +49,12 @@ final class DemoOAuth2Scope implements AuthenticationScope
         {
             public function getName(): string
             {
-                return 'Demo scope';
+                return 'Test scope';
             }
 
             public function getDescription(): string
             {
-                return 'Scope to demonstrate how OAuth2 scopes can be used';
+                return 'Scope test purposes';
             }
         };
     }

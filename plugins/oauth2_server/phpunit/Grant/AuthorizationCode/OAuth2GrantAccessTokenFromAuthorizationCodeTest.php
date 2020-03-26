@@ -37,7 +37,7 @@ use Tuleap\OAuth2Server\Grant\AuthorizationCode\PKCE\OAuth2PKCEVerificationExcep
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\PKCE\PKCECodeVerifier;
 use Tuleap\OAuth2Server\Grant\OAuth2AccessTokenSuccessfulRequestRepresentation;
 use Tuleap\OAuth2Server\OAuth2ServerException;
-use Tuleap\User\OAuth2\Scope\DemoOAuth2Scope;
+use Tuleap\OAuth2Server\OAuth2TestScope;
 
 final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends TestCase
 {
@@ -223,7 +223,7 @@ final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends TestCase
             new SplitToken(1, SplitTokenVerificationString::generateNewSplitTokenVerificationString()),
             new \PFUser(['language_id' => 'en']),
             'pkce_code_challenge',
-            [DemoOAuth2Scope::fromItself()],
+            [OAuth2TestScope::fromItself()],
         );
     }
 }

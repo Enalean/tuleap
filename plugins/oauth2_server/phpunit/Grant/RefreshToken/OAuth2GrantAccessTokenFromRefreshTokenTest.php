@@ -35,11 +35,11 @@ use Tuleap\OAuth2Server\Grant\AccessTokenGrantErrorResponseBuilder;
 use Tuleap\OAuth2Server\Grant\AccessTokenGrantRepresentationBuilder;
 use Tuleap\OAuth2Server\Grant\OAuth2AccessTokenSuccessfulRequestRepresentation;
 use Tuleap\OAuth2Server\OAuth2ServerException;
+use Tuleap\OAuth2Server\OAuth2TestScope;
 use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshToken;
 use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenVerifier;
 use Tuleap\OAuth2Server\Scope\InvalidOAuth2ScopeException;
 use Tuleap\OAuth2Server\Scope\ScopeExtractor;
-use Tuleap\User\OAuth2\Scope\DemoOAuth2Scope;
 
 final class OAuth2GrantAccessTokenFromRefreshTokenTest extends TestCase
 {
@@ -121,7 +121,7 @@ final class OAuth2GrantAccessTokenFromRefreshTokenTest extends TestCase
                 new \DateTimeImmutable('@10')
             )
         );
-        $this->scope_extractor->shouldReceive('extractScopes')->andReturn([DemoOAuth2Scope::fromItself()]);
+        $this->scope_extractor->shouldReceive('extractScopes')->andReturn([OAuth2TestScope::fromItself()]);
 
         $body_params = ['refresh_token' => 'valid_refresh_token', 'scope' => 'already_covered'];
 
@@ -207,7 +207,7 @@ final class OAuth2GrantAccessTokenFromRefreshTokenTest extends TestCase
     {
         return OAuth2RefreshToken::createWithASetOfScopes(
             1,
-            [DemoOAuth2Scope::fromItself()],
+            [OAuth2TestScope::fromItself()],
         );
     }
 }

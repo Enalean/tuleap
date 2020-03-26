@@ -29,8 +29,8 @@ use Tuleap\OAuth2Server\Grant\AuthorizationCode\PKCE\CodeVerifierDoesNotMatchCha
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\PKCE\InvalidFormatCodeVerifierException;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\PKCE\MissingExpectedCodeVerifierException;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\PKCE\PKCECodeVerifier;
+use Tuleap\OAuth2Server\OAuth2TestScope;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\User\OAuth2\Scope\DemoOAuth2Scope;
 
 final class PKCECodeVerifierTest extends TestCase
 {
@@ -105,7 +105,7 @@ final class PKCECodeVerifierTest extends TestCase
             new SplitToken(1, SplitTokenVerificationString::generateNewSplitTokenVerificationString()),
             UserTestBuilder::aUser()->build(),
             $code_challenge,
-            [DemoOAuth2Scope::fromItself()]
+            [OAuth2TestScope::fromItself()]
         );
     }
 }
