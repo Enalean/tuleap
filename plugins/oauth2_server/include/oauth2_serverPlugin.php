@@ -80,10 +80,7 @@ use Tuleap\Request\ProjectRetriever;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 use Tuleap\User\OAuth2\AccessToken\PrefixOAuth2AccessToken;
 use Tuleap\User\OAuth2\AccessToken\VerifyOAuth2AccessTokenEvent;
-use Tuleap\User\OAuth2\BearerTokenHeaderParser;
-use Tuleap\User\OAuth2\Scope\DemoOAuth2Scope;
 use Tuleap\User\OAuth2\Scope\OAuth2ProjectReadScope;
-use Tuleap\User\PasswordVerifier;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -160,10 +157,6 @@ final class oauth2_serverPlugin extends Plugin
                 );
                 $r->get('/account/apps', $this->getRouteHandler('routeGetAccountApps'));
                 $r->post('/account/apps/revoke', $this->getRouteHandler('routePostAccountAppRevoke'));
-                $r->get(
-                    '/testendpoint',
-                    $this->getRouteHandler('routeTestEndpoint')
-                );
             }
         );
         $route_collector->addGroup(
@@ -300,35 +293,6 @@ final class oauth2_serverPlugin extends Plugin
             new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
             new RejectNonHTTPSRequestMiddleware($response_factory, HTTPFactoryBuilder::streamFactory()),
             new DisableCacheMiddleware()
-        );
-    }
-
-    public function routeTestEndpoint(): \Tuleap\OAuth2Server\TestEndpointController
-    {
-        $response_factory = HTTPFactoryBuilder::responseFactory();
-        $stream_factory   = HTTPFactoryBuilder::streamFactory();
-        $password_handler = \PasswordHandlerFactory::getPasswordHandler();
-        return new \Tuleap\OAuth2Server\TestEndpointController(
-            $response_factory,
-            $stream_factory,
-            UserManager::instance(),
-            new SapiEmitter(),
-            new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
-            new RejectNonHTTPSRequestMiddleware($response_factory, $stream_factory),
-            new \Tuleap\User\OAuth2\ResourceServer\OAuth2ResourceServerMiddleware(
-                $response_factory,
-                new BearerTokenHeaderParser(),
-                new PrefixedSplitTokenSerializer(new PrefixOAuth2AccessToken()),
-                EventManager::instance(),
-                DemoOAuth2Scope::fromItself(),
-                new User_LoginManager(
-                    EventManager::instance(),
-                    UserManager::instance(),
-                    new PasswordVerifier($password_handler),
-                    new User_PasswordExpirationChecker(),
-                    $password_handler
-                )
-            )
         );
     }
 
@@ -516,7 +480,6 @@ final class oauth2_serverPlugin extends Plugin
     private function buildScopeBuilder(): AuthenticationScopeBuilder
     {
         return new AuthenticationScopeBuilderFromClassNames(
-            DemoOAuth2Scope::class,
             OAuth2ProjectReadScope::class,
             OAuth2OfflineAccessScope::class
         );

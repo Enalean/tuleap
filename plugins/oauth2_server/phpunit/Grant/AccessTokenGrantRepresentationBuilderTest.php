@@ -30,8 +30,8 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenCreator;
 use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenWithIdentifier;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCode;
+use Tuleap\OAuth2Server\OAuth2TestScope;
 use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenCreator;
-use Tuleap\User\OAuth2\Scope\DemoOAuth2Scope;
 
 final class AccessTokenGrantRepresentationBuilderTest extends TestCase
 {
@@ -54,7 +54,7 @@ final class AccessTokenGrantRepresentationBuilderTest extends TestCase
                 new SplitToken(1, SplitTokenVerificationString::generateNewSplitTokenVerificationString()),
                 new \PFUser(['language_id' => 'en']),
                 'pkce_code_challenge',
-                [DemoOAuth2Scope::fromItself()]
+                [OAuth2TestScope::fromItself()]
             )
         );
 

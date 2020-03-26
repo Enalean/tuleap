@@ -26,14 +26,14 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\Scope\AuthenticationScopeDefinition;
 use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
-use Tuleap\User\OAuth2\Scope\DemoOAuth2Scope;
+use Tuleap\OAuth2Server\OAuth2TestScope;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
 final class OAuth2RefreshTokenTest extends TestCase
 {
     public function testBuildsValidRefreshToken(): void
     {
-        $scope         = DemoOAuth2Scope::fromItself();
+        $scope         = OAuth2TestScope::fromItself();
         $refresh_token = OAuth2RefreshToken::createWithASetOfScopes(
             12,
             [$scope]
@@ -45,7 +45,7 @@ final class OAuth2RefreshTokenTest extends TestCase
 
     public function testBuildsRefreshTokenWithAReducedSetOfScopes(): void
     {
-        $scope              = DemoOAuth2Scope::fromItself();
+        $scope              = OAuth2TestScope::fromItself();
         $scope_test_refresh = $this->buildTestScopeRefreshToken();
         $initial_refresh_token = OAuth2RefreshToken::createWithASetOfScopes(
             13,
@@ -65,7 +65,7 @@ final class OAuth2RefreshTokenTest extends TestCase
     {
         $refresh_token = OAuth2RefreshToken::createWithASetOfScopes(
             14,
-            [DemoOAuth2Scope::fromItself()]
+            [OAuth2TestScope::fromItself()]
         );
 
         $this->expectException(OAuth2ScopeNotCoveredByOneOfTheScopeAssociatedWithTheRefreshTokenException::class);

@@ -25,14 +25,14 @@ namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
-use Tuleap\User\OAuth2\Scope\DemoOAuth2Scope;
+use Tuleap\OAuth2Server\OAuth2TestScope;
 
 final class OAuth2AuthorizationCodeTest extends TestCase
 {
     public function testBuildValidAuthorizationCode(): void
     {
         $user                = new \PFUser(['language_id' => 'en']);
-        $scope               = DemoOAuth2Scope::fromItself();
+        $scope               = OAuth2TestScope::fromItself();
         $pkce_code_challenge = 'code_chall';
         $auth_code = OAuth2AuthorizationCode::approveForSetOfScopes(
             new SplitToken(12, SplitTokenVerificationString::generateNewSplitTokenVerificationString()),
