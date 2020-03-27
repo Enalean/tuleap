@@ -2583,7 +2583,8 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             new ListPresenterBuilder(
                 $this->getGitPermissionsManager(),
                 $this->getGitDao(),
-                UserManager::instance()
+                UserManager::instance(),
+                EventManager::instance()
             ),
             $this->getIncludeAssets(),
             EventManager::instance()

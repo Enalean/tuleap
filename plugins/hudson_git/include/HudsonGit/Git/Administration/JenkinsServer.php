@@ -24,7 +24,7 @@ namespace Tuleap\HudsonGit\Git\Administration;
 
 use Project;
 
-class JenkinsServer
+class JenkinsServer implements \JsonSerializable
 {
     /**
      * @var int
@@ -73,5 +73,13 @@ class JenkinsServer
     public function getProject(): Project
     {
         return $this->project;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id'  => $this->getId(),
+            'url' => $this->getServerURL()
+        ];
     }
 }

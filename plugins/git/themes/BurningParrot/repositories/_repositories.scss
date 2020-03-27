@@ -40,6 +40,26 @@
     flex-wrap: wrap;
 }
 
+.git-repository-list-header {
+    display: flex;
+    align-items: center;
+    margin: 0 0 $tlp-spacing + $tlp-half-spacing;
+
+    > h1 {
+        margin: 0 $tlp-spacing 0 0;
+    }
+}
+
+.git-repository-list-header-badge {
+    position: relative;
+    top: 2px;
+    cursor: pointer;
+}
+
+.git-repository-list-header-popover {
+    z-index: 2010;
+}
+
 .git-repository-list-loading {
     width: 250px;
     height: 200px;

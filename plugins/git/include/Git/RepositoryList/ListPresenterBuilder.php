@@ -20,10 +20,12 @@
 
 namespace Tuleap\Git\RepositoryList;
 
+use EventManager;
 use GitDao;
 use GitPermissionsManager;
 use PFUser;
 use Project;
+use Tuleap\Git\Events\GetExternalGitHomepagePluginsEvent;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use UserManager;
 
@@ -41,21 +43,30 @@ class ListPresenterBuilder
      * @var UserManager
      */
     private $user_manager;
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
 
-    public function __construct(GitPermissionsManager $git_permissions_manager, GitDao $dao, UserManager $user_manager)
+    public function __construct(GitPermissionsManager $git_permissions_manager, GitDao $dao, UserManager $user_manager, EventManager $event_manager)
     {
         $this->git_permissions_manager = $git_permissions_manager;
         $this->dao                     = $dao;
         $this->user_manager            = $user_manager;
+        $this->event_manager            = $event_manager;
     }
 
     public function build(Project $project, PFUser $current_user)
     {
+        $event = new GetExternalGitHomepagePluginsEvent($project);
+        $this->event_manager->processEvent($event);
+
         return new GitRepositoryListPresenter(
             $current_user,
             $project,
             $this->git_permissions_manager->userIsGitAdmin($current_user, $project),
-            $this->getRepositoriesOwnersRepresentations($project)
+            $this->getRepositoriesOwnersRepresentations($project),
+            $event->getExternalPluginsInfos()
         );
     }
 

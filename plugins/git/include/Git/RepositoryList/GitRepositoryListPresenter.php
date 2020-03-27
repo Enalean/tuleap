@@ -26,20 +26,21 @@ class GitRepositoryListPresenter
     public $repositories_fork_url;
     public $repositories_list_url;
     public $project_id;
-    /**
-     * @var bool
-     */
+    /** @var bool */
     public $is_admin;
     /** @var string */
     public $json_encoded_repositories_owners;
     /** @var string */
     public $display_mode;
+    /** @var string */
+    public $external_plugins;
 
     public function __construct(
         \PFUser $current_user,
         \Project $project,
         $is_git_administrator,
-        array $repositories_owners
+        array $repositories_owners,
+        array $external_plugins
     ) {
         $this->repositories_administration_url = GIT_BASE_URL . "/?" . http_build_query(
             [
@@ -62,5 +63,6 @@ class GitRepositoryListPresenter
         $this->json_encoded_repositories_owners = json_encode($repositories_owners);
 
         $this->display_mode = $current_user->getPreference("are_git_repositories_sorted_by_path");
+        $this->external_plugins = json_encode($external_plugins);
     }
 }

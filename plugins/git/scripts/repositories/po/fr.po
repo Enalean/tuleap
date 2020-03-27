@@ -12,6 +12,11 @@ msgstr ""
 "X-Generator: Poedit 2.0.6\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "%{ countJenkinsServers } Jenkins server setup"
+msgid_plural "%{ countJenkinsServers } Jenkins servers setup"
+msgstr[0] "%{ countJenkinsServers } serveur Jenkins configuré"
+msgstr[1] "%{ countJenkinsServers } serveurs Jenkins configurés"
+
 msgid "%{ numberPullRequest } pull request"
 msgid_plural "%{ numberPullRequest } pull requests"
 msgstr[0] "%{ numberPullRequest } pull request"
@@ -62,6 +67,9 @@ msgstr "Dépôts Git"
 msgid "Go to repository administration"
 msgstr "Aller à l'administration du dépôt"
 
+msgid "Jenkins servers"
+msgstr "Serveurs Jenkins"
+
 msgid "Last update %{ formatted_last_update_date }"
 msgstr "Dernière mise à jour %{ formatted_last_update_date }"
 
@@ -97,6 +105,12 @@ msgstr "Trier les dépôts par leur date de dernière mise à jour"
 
 msgid "There are no repositories in this project"
 msgstr "Il n'y a aucun dépôt dans ce projet"
+
+msgid ""
+"Theses servers are triggered at each push in any repository of the project:"
+msgstr ""
+"Ces serveurs seront appelés lors de chaque push fait dans les dépôts du "
+"projet :"
 
 msgid "Users forks"
 msgstr "Forks des utilisateurs"
