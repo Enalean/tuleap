@@ -22,8 +22,8 @@ import jQuery from "jquery";
 export function contactSupportModalShown() {
     var contact_support_modal_forms = document.querySelectorAll(".contact-support-modal-form");
 
-    [].forEach.call(contact_support_modal_forms, function(contact_support_modal_form) {
-        contact_support_modal_form.addEventListener("submit", function(event) {
+    [].forEach.call(contact_support_modal_forms, function (contact_support_modal_form) {
+        contact_support_modal_form.addEventListener("submit", function (event) {
             event.preventDefault();
 
             var contact_support_modal_submit = contact_support_modal_form.querySelector(
@@ -43,18 +43,18 @@ export function contactSupportModalShown() {
                     contact_support_modal_form.getAttribute("action"),
                     jQuery(contact_support_modal_form).serialize()
                 )
-                .success(function() {
+                .success(function () {
                     hideErrorMessage(contact_support_modal_error_message);
                     switchSubmitButtonToThankYouState(contact_support_modal_submit);
                     showSuccessMessage(contact_support_modal_success_message);
 
-                    setTimeout(function() {
+                    setTimeout(function () {
                         contact_support_modal_form.reset();
                         switchSubmitButtonToNormalState(contact_support_modal_submit);
                         hideSuccessMessage(contact_support_modal_success_message);
                     }, 5000);
                 })
-                .error(function() {
+                .error(function () {
                     switchSubmitButtonToNormalState(contact_support_modal_submit);
                     showErrorMessage(contact_support_modal_error_message);
                 });

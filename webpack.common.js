@@ -24,7 +24,7 @@ let entry_points = {
     "style-flamingparrot": "./themes/FlamingParrot/css/style.scss",
     "help-page": "./scripts/help-page.js",
     "modal-burning-parrot": "./scripts/modal-burning-parrot.js",
-    "modal-flaming-parrot": "./scripts/modal-flaming-parrot.js"
+    "modal-flaming-parrot": "./scripts/modal-flaming-parrot.js",
 };
 
 const colors_burning_parrot = ["orange", "blue", "green", "red", "grey", "purple"];
@@ -44,18 +44,18 @@ module.exports = [
         ),
         externals: {
             jquery: "jQuery",
-            tlp: "tlp"
+            tlp: "tlp",
         },
         module: {
             rules: [
                 webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
-                webpack_configurator.rule_scss_loader
-            ]
+                webpack_configurator.rule_scss_loader,
+            ],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
-            ...webpack_configurator.getCSSExtractionPlugins()
-        ]
-    }
+            ...webpack_configurator.getCSSExtractionPlugins(),
+        ],
+    },
 ];
