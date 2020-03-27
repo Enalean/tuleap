@@ -74,6 +74,7 @@ class ArtifactTemporaryFilesResource
      * For now, only temporary files created by the user can be retrieved
      *
      * @url GET
+     * @oauth2-scope read:tracker
      *
      * @return array {@type \Tuleap\Tracker\REST\Artifact\FileInfoRepresentation}
      * @param int    $limit  Number of elements displayed per page {@from path}{@min 1}
@@ -106,6 +107,7 @@ class ArtifactTemporaryFilesResource
      * A user can only access their own temporary files
      *
      * @url GET {id}
+     * @oauth2-scope read:tracker
      * @param int $id     Id of the file
      * @param int $offset Where to start to read the file
      * @param int $limit  How much to read the file

@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Tuleap\Authentication\Scope\AggregateAuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
@@ -80,7 +81,8 @@ use Tuleap\Request\ProjectRetriever;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 use Tuleap\User\OAuth2\AccessToken\PrefixOAuth2AccessToken;
 use Tuleap\User\OAuth2\AccessToken\VerifyOAuth2AccessTokenEvent;
-use Tuleap\User\OAuth2\Scope\OAuth2ProjectReadScope;
+use Tuleap\User\OAuth2\Scope\CoreOAuth2ScopeBuilderFactory;
+use Tuleap\User\OAuth2\Scope\OAuth2ScopeBuilderCollector;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -102,6 +104,7 @@ final class oauth2_serverPlugin extends Plugin
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(AccountTabPresenterCollection::NAME);
         $this->addHook(VerifyOAuth2AccessTokenEvent::NAME);
+        $this->addHook(OAuth2ScopeBuilderCollector::NAME);
         $this->addHook('codendi_daily_start', 'dailyCleanup');
         $this->addHook('project_is_deleted', 'projectIsDeleted');
 
@@ -479,11 +482,20 @@ final class oauth2_serverPlugin extends Plugin
         $event->setVerifiedUser($user);
     }
 
+    public function collectOAuth2ScopeBuilder(OAuth2ScopeBuilderCollector $collector): void
+    {
+        $collector->addOAuth2ScopeBuilder(
+            new AuthenticationScopeBuilderFromClassNames(
+                OAuth2OfflineAccessScope::class
+            )
+        );
+    }
+
     private function buildScopeBuilder(): AuthenticationScopeBuilder
     {
-        return new AuthenticationScopeBuilderFromClassNames(
-            OAuth2ProjectReadScope::class,
-            OAuth2OfflineAccessScope::class
+        return AggregateAuthenticationScopeBuilder::fromBuildersList(
+            CoreOAuth2ScopeBuilderFactory::buildCoreOAuth2ScopeBuilder(),
+            AggregateAuthenticationScopeBuilder::fromEventDispatcher(\EventManager::instance(), new OAuth2ScopeBuilderCollector())
         );
     }
 

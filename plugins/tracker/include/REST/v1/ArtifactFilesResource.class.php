@@ -60,6 +60,7 @@ class ArtifactFilesResource
      * A user can only access the attached files they can view.
      *
      * @url GET {id}
+     * @oauth2-scope read:tracker
      * @param int $id     Id of the file
      * @param int $offset Where to start to read the file
      * @param int $limit  How much to read the file

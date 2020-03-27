@@ -280,6 +280,7 @@ class ArtifactsResource extends AuthenticatedResource
      *
      * @url GET
      * @access hybrid
+     * @oauth2-scope read:tracker
      *
      * @param string $query JSON object of search criteria properties {@from query}
      * @param int $limit Number of elements displayed per page {@from path}{@min 1}{@max 100}
@@ -390,6 +391,7 @@ class ArtifactsResource extends AuthenticatedResource
      *
      * @url GET {id}
      * @access hybrid
+     * @oauth2-scope read:tracker
      *
      * @param int $id Id of the artifact
      * @param string $values_format The format of the value {@from query} {@choice ,collection,by_field,all}
@@ -441,6 +443,7 @@ class ArtifactsResource extends AuthenticatedResource
      *
      * @url GET {id}/links
      * @access hybrid
+     * @oauth2-scope read:tracker
      *
      * @param int $id Id of the artifact
      *
@@ -486,6 +489,7 @@ class ArtifactsResource extends AuthenticatedResource
      * @url GET {id}/linked_artifacts
      *
      * @access hybrid
+     * @oauth2-scope read:tracker
      *
      * @param int $id Id of the artifact
      * @param string $direction The artifact link direction {@from query} {@choice forward,reverse}
@@ -571,6 +575,7 @@ class ArtifactsResource extends AuthenticatedResource
      *
      * @url GET {id}/changesets
      * @access hybrid
+     * @oauth2-scope read:tracker
      *
      * @param int $id Id of the artifact
      * @param string $fields Whether you want to fetch all fields or just comments {@from path}{@choice all,comments}

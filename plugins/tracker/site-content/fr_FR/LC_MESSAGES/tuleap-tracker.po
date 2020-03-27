@@ -651,6 +651,9 @@ msgstr ""
 msgid "Read only"
 msgstr "Lecture seule"
 
+msgid "Read only access to information about trackers"
+msgstr "Accès en lecture seule aux informations concernant les outils de suivi"
+
 msgid "Remove"
 msgstr "Enlever"
 
@@ -1318,6 +1321,9 @@ msgstr ""
 
 msgid "Tracker"
 msgstr "Tracker"
+
+msgid "Tracker (read only)"
+msgstr "Tracker (lecture seule)"
 
 msgid ""
 "Tracker configuration permission and artifacts permissions are not listed."

@@ -19,6 +19,7 @@
 
 use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
@@ -140,6 +141,7 @@ use Tuleap\Tracker\Reference\ReferenceCreator;
 use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigController;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
+use Tuleap\Tracker\REST\OAuth2\OAuth2TrackerReadScope;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Service\ServiceActivator;
@@ -157,6 +159,7 @@ use Tuleap\Upload\FileBeingUploadedWriter;
 use Tuleap\Upload\FileUploadController;
 use Tuleap\User\History\HistoryEntryCollection;
 use Tuleap\User\History\HistoryRetriever;
+use Tuleap\User\OAuth2\Scope\OAuth2ScopeBuilderCollector;
 use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 use Tuleap\Widget\Event\ConfigureAtXMLImport;
 use Tuleap\Widget\Event\GetPublicAreas;
@@ -285,6 +288,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $this->addHook(HeartbeatsEntryCollection::NAME);
         $this->addHook(StatisticsCollectionCollector::NAME);
         $this->addHook(ServiceEnableForXmlImportRetriever::NAME);
+        $this->addHook(OAuth2ScopeBuilderCollector::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -2065,5 +2069,14 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     private function getAssets(): IncludeAssets
     {
         return new IncludeAssets(__DIR__ . '/../../../src/www/assets/trackers', '/assets/trackers');
+    }
+
+    public function collectOAuth2ScopeBuilder(OAuth2ScopeBuilderCollector $collector): void
+    {
+        $collector->addOAuth2ScopeBuilder(
+            new AuthenticationScopeBuilderFromClassNames(
+                OAuth2TrackerReadScope::class
+            )
+        );
     }
 }
