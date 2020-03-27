@@ -23,7 +23,8 @@ CREATE TABLE plugin_oauth2_server_app(
     name VARCHAR(255) NOT NULL,
     redirect_endpoint TEXT NOT NULL,
     verifier VARCHAR(255) NOT NULL,
-    use_pkce BOOLEAN NOT NULL
+    use_pkce BOOLEAN NOT NULL,
+    INDEX idx_project_id(project_id)
 ) ENGINE=InnoDB;
 
 CREATE TABLE plugin_oauth2_authorization_code(
