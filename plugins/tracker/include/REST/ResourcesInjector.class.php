@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\REST\ProjectRepresentation;
 use Tuleap\Project\REST\ProjectResourceReference;
 use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
 use Tuleap\Tracker\REST\ReportRepresentation;
@@ -25,6 +26,7 @@ use Tuleap\Tracker\REST\Artifact\UsersArtifactsResource;
 use Tuleap\Tracker\REST\v1\ArtifactFilesResource;
 use Tuleap\Tracker\REST\v1\ArtifactsResource;
 use Tuleap\Tracker\REST\v1\ArtifactTemporaryFilesResource;
+use Tuleap\Tracker\REST\v1\ProjectTrackersResource;
 use Tuleap\Tracker\REST\v1\ReportsResource;
 use Tuleap\Tracker\REST\v1\TrackerFieldsResource;
 use Tuleap\Tracker\REST\v1\TrackersResource;
@@ -38,6 +40,7 @@ class Tracker_REST_ResourcesInjector
 {
     public function populate(Luracast\Restler\Restler $restler)
     {
+        $restler->addAPIClass(ProjectTrackersResource::class, ProjectRepresentation::ROUTE);
         $restler->addAPIClass(TrackersResource::class, 'trackers');
         $restler->addAPIClass(ArtifactsResource::class, 'artifacts');
         $restler->addAPIClass(ArtifactFilesResource::class, 'artifact_files');

@@ -446,17 +446,6 @@ class ProjectResource extends AuthenticatedResource
     }
 
     /**
-     * Used when the resource manages its own special access permissions
-     * e.g. trackers
-     *
-     * @return Project
-     */
-    private function getProjectWithoutAuthorisation($id)
-    {
-        return $this->project_manager->getProject($id);
-    }
-
-    /**
      * Get a ProjectRepresentation
      *
      *
@@ -592,92 +581,6 @@ class ProjectResource extends AuthenticatedResource
     public function optionsLabels($id)
     {
         $this->sendAllowHeadersForLabels();
-    }
-
-    /**
-     * Get trackers
-     *
-     * Get the trackers of a given project.
-     *
-     * Fetching reference representations can be helpful if you encounter performance issues with complex trackers.
-     *
-     * <br/>
-     * query is optional. When filled, it is a json object with a property "is_tracker_admin" or "with_time_tracking" to filter trackers.
-     * <br/>
-     * <br/>
-     * Example: <pre>{"is_tracker_admin": true}</pre>
-     *          <pre>{"with_time_tracking": true}</pre>
-     * <br/>
-     * <p>
-     *   <strong>/!\</strong> Please note that {"is_tracker_admin": false} is not supported and will result
-     *   in a 400 Bad Request error.
-     * </p>
-     *
-     * @url    GET {id}/trackers
-     * @access hybrid
-     *
-     * @param int    $id             Id of the project
-     * @param string $representation Whether you want to fetch full or reference only representations {@from path}{@choice full,minimal}
-     * @param int    $limit          Number of elements displayed per page {@from path}
-     * @param int    $offset         Position of the first element to display {@from path}
-     * @param string $query          JSON object of search criteria properties {@from path}
-     *
-     * @return array {@type Tuleap\Tracker\REST\TrackerRepresentation}
-     *
-     * @throws RestException 400
-     * @throws RestException 403
-     * @throws RestException 404
-     */
-    public function getTrackers($id, $representation = 'full', $limit = 10, $offset = 0, $query = '')
-    {
-        $this->checkAccess();
-
-        $trackers = $this->getRepresentationsForTrackers(
-            $id,
-            $representation,
-            $limit,
-            $offset,
-            $query
-        );
-
-        $this->sendAllowHeadersForTracker();
-
-        return $trackers;
-    }
-
-    /**
-     * @url OPTIONS {id}/trackers
-     *
-     * @param int $id Id of the project
-     */
-    public function optionsTrackers($id)
-    {
-        $this->sendAllowHeadersForTracker();
-    }
-
-    /**
-     * @throws RestException
-     * @throws \Tuleap\REST\Exceptions\InvalidJsonException
-     */
-    private function getRepresentationsForTrackers($id, $representation, $limit, $offset, $query)
-    {
-        $project = $this->getProjectWithoutAuthorisation($id);
-        $result  = [];
-
-        $this->event_manager->processEvent(
-            Event::REST_GET_PROJECT_TRACKERS,
-            [
-                'version'        => 'v1',
-                'project'        => $project,
-                'representation' => $representation,
-                'limit'          => $limit,
-                'query'          => $query,
-                'offset'         => $offset,
-                'result'         => &$result,
-            ]
-        );
-
-        return $result;
     }
 
     /**
@@ -1290,11 +1193,6 @@ class ProjectResource extends AuthenticatedResource
     }
 
     private function sendAllowHeadersForSvn()
-    {
-        Header::allowOptionsGet();
-    }
-
-    private function sendAllowHeadersForTracker()
     {
         Header::allowOptionsGet();
     }

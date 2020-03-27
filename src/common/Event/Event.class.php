@@ -723,31 +723,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const REST_PROJECT_RESOURCES = 'rest_project_resources';
 
     /**
-     * Event raised to get trackers from a project with REST
-     *
-     * Parameters:
-     *     'version'        => String
-     *     'representation' => String
-     *     'project'        => Project
-     *     'limit'          => int
-     *     'offset'         => int
-     *     'result'         => array
-     */
-    public const REST_GET_PROJECT_TRACKERS = 'rest_get_project_trackers';
-
-    /**
-     * Event raised to get trackers options from a project with REST
-     *
-     * Parameters:
-     *     'version' => String
-     *     'project' => Project
-     *     'limit'   => int
-     *     'offset'  => int
-     *     'result'  => array
-     */
-    public const REST_OPTIONS_PROJECT_TRACKERS = 'rest_options_project_trackers';
-
-    /**
      * Detect the project id in a url
      *
      * Parameters:
