@@ -27,11 +27,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (select_bot) {
         select2(select_bot, {
             minimumResultsForSearch: -1,
-            escapeMarkup: function(markup) {
+            escapeMarkup: function (markup) {
                 return markup;
             },
             templateResult: formatBot,
-            templateSelection: formatBot
+            templateSelection: formatBot,
         });
     }
 
@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
         for (const option of inputs_channels.options) {
             selected_channels.push({
                 id: option.value,
-                text: option.text
+                text: option.text,
             });
         }
 
@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
             placeholder: inputs_channels.dataset.placeholder,
             tags: [],
             minimumResultsForSearch: Infinity,
-            initSelection: (container, callback) => callback(selected_channels)
+            initSelection: (container, callback) => callback(selected_channels),
         });
     }
 

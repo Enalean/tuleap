@@ -24,7 +24,7 @@ module.exports = [
     {
         entry: {
             autocompleter: "./scripts/autocompleter.js",
-            modal: "./scripts/modal.js"
+            modal: "./scripts/modal.js",
         },
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(
@@ -32,15 +32,15 @@ module.exports = [
         ),
         module: {
             rules: [
-                webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11)
-            ]
+                webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+            ],
         },
         externals: {
-            tlp: "tlp"
+            tlp: "tlp",
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
-            webpack_configurator.getManifestPlugin()
-        ]
-    }
+            webpack_configurator.getManifestPlugin(),
+        ],
+    },
 ];
