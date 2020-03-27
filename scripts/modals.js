@@ -27,14 +27,14 @@ document.addEventListener("DOMContentLoaded", () => {
         var modal_element = document.getElementById("modal-add-bot");
 
         var modal_simple_content = tlp.modal(modal_element, {});
-        document.getElementById("button-modal-add-bot").addEventListener("click", function() {
+        document.getElementById("button-modal-add-bot").addEventListener("click", function () {
             modal_simple_content.toggle();
         });
     }
 
     function initModalsWithId() {
         var modal_buttons = document.querySelectorAll("[data-modal-id]");
-        [].forEach.call(modal_buttons, function(button) {
+        [].forEach.call(modal_buttons, function (button) {
             var modal_element = document.getElementById(button.dataset.modalId);
             if (!modal_element) {
                 throw new Error(
@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             var modal = tlp.modal(modal_element);
 
-            button.addEventListener("click", function() {
+            button.addEventListener("click", function () {
                 modal.toggle();
             });
         });
