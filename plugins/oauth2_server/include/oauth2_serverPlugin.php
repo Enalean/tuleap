@@ -103,6 +103,7 @@ final class oauth2_serverPlugin extends Plugin
         $this->addHook(AccountTabPresenterCollection::NAME);
         $this->addHook(VerifyOAuth2AccessTokenEvent::NAME);
         $this->addHook('codendi_daily_start', 'dailyCleanup');
+        $this->addHook('project_is_deleted', 'projectIsDeleted');
 
         return parent::getHooksAndCallbacks();
     }
@@ -503,5 +504,12 @@ final class oauth2_serverPlugin extends Plugin
         $current_time = (new DateTimeImmutable())->getTimestamp();
         (new OAuth2AccessTokenDAO())->deleteByExpirationDate($current_time);
         (new OAuth2AuthorizationCodeDAO())->deleteAuthorizationCodeByExpirationDate($current_time);
+    }
+
+    public function projectIsDeleted(): void
+    {
+        (new OAuth2AuthorizationCodeDAO())->deleteAuthorizationCodeInNonExistingOrDeletedProject();
+        (new AuthorizationDao())->deleteAuthorizationsInNonExistingOrDeletedProject();
+        (new AppDao())->deleteAppsInNonExistingOrDeletedProject();
     }
 }

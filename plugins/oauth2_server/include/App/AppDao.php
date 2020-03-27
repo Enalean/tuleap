@@ -87,4 +87,14 @@ class AppDao extends DataAccessObject
     {
         $this->getDB()->run('DELETE FROM plugin_oauth2_server_app WHERE id = ?', $app_id);
     }
+
+    public function deleteAppsInNonExistingOrDeletedProject(): void
+    {
+        $this->getDB()->run(
+            'DELETE plugin_oauth2_server_app.*
+            FROM plugin_oauth2_server_app
+            LEFT JOIN `groups` ON plugin_oauth2_server_app.project_id = `groups`.group_id
+            WHERE `groups`.status = "D" OR `groups`.group_id IS NULL'
+        );
+    }
 }

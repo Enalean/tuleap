@@ -58,12 +58,21 @@ class AuthorizationDao extends DataAccessObject
         );
     }
 
+    public function deleteAuthorizationsInNonExistingOrDeletedProject(): void
+    {
+        $this->deleteAuthorization(
+            EasyStatement::open()->with('`groups`.group_id IS NULL OR `groups`.status = "D"')
+        );
+    }
+
     private function deleteAuthorization(EasyStatement $filter_statement): void
     {
         $this->getDB()->safeQuery(
             "DELETE plugin_oauth2_authorization.*, plugin_oauth2_authorization_scope.*
                        FROM plugin_oauth2_authorization
                        LEFT JOIN plugin_oauth2_authorization_scope ON plugin_oauth2_authorization.id = plugin_oauth2_authorization_scope.authorization_id
+                       LEFT JOIN plugin_oauth2_server_app on plugin_oauth2_authorization.app_id = plugin_oauth2_server_app.id
+                       LEFT JOIN `groups` ON plugin_oauth2_server_app.project_id = `groups`.group_id
                        WHERE $filter_statement",
             $filter_statement->values()
         );
