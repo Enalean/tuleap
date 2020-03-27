@@ -30,7 +30,7 @@ export default {
         removed_artifacts_count: null,
         modified_artifacts_count: null,
         initial_effort_difference: null,
-        hidden_tracker_ids: []
+        hidden_tracker_ids: [],
     },
 
     actions: {
@@ -41,7 +41,7 @@ export default {
                 dispatch("loadBaseline", { baseline_id: base_baseline_id }, { root: true }),
                 dispatch("loadBaseline", { baseline_id: compared_to_baseline_id }, { root: true }),
                 dispatch("base/loadAllArtifacts"),
-                dispatch("compared_to/loadAllArtifacts")
+                dispatch("compared_to/loadAllArtifacts"),
             ]);
 
             await dispatch("computeStatistics");
@@ -56,7 +56,7 @@ export default {
         async computeStatistics({ dispatch, state }) {
             await dispatch("compareArtifacts", {
                 base_artifacts: state.base.first_depth_artifacts,
-                compared_to_artifacts: state.compared_to.first_depth_artifacts
+                compared_to_artifacts: state.compared_to.first_depth_artifacts,
             });
         },
 
@@ -78,16 +78,16 @@ export default {
 
                     await dispatch("compareArtifacts", {
                         base_artifacts: linked_base_artifacts,
-                        compared_to_artifacts: linked_compared_to_artifacts
+                        compared_to_artifacts: linked_compared_to_artifacts,
                     });
                 }
             );
             await Promise.all(comparisons);
-        }
+        },
     },
 
     mutations: {
-        reset: state => {
+        reset: (state) => {
             state.added_artifacts_count = 0;
             state.removed_artifacts_count = 0;
             state.modified_artifacts_count = 0;
@@ -104,7 +104,7 @@ export default {
             });
         },
         filterTrackers: (state, hidden_trackers) =>
-            (state.hidden_tracker_ids = ArrayUtils.mapAttribute(hidden_trackers, "id"))
+            (state.hidden_tracker_ids = ArrayUtils.mapAttribute(hidden_trackers, "id")),
     },
 
     getters: {
@@ -113,10 +113,10 @@ export default {
                 [...getters["base/all_trackers"], ...getters["compared_to/all_trackers"]],
                 "id"
             ),
-        filterArtifacts: state => artifacts =>
+        filterArtifacts: (state) => (artifacts) =>
             artifacts.filter(
-                artifact => state.hidden_tracker_ids.indexOf(artifact.tracker_id) === -1
-            )
+                (artifact) => state.hidden_tracker_ids.indexOf(artifact.tracker_id) === -1
+            ),
     },
 
     modules: {
@@ -124,11 +124,11 @@ export default {
             ...abstract_baseline_content,
             // This is necessary because state is mutable (whereas others attributes of abstract_baseline_content), and
             // modules may not share the same state.
-            state: { ...abstract_baseline_content.state }
+            state: { ...abstract_baseline_content.state },
         },
         compared_to: {
             ...abstract_baseline_content,
-            state: { ...abstract_baseline_content.state }
-        }
-    }
+            state: { ...abstract_baseline_content.state },
+        },
+    },
 };

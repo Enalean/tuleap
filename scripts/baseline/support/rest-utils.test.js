@@ -23,7 +23,7 @@ import { getMessageFromException } from "./rest-utils";
 describe("RestUtils:", () => {
     describe("getErrorMessage()", () => {
         const exception = {
-            response: {}
+            response: {},
         };
         describe("with no error in exception", () => {
             let result;
@@ -42,7 +42,7 @@ describe("RestUtils:", () => {
             beforeEach(async () => {
                 exception.response.json = () =>
                     Promise.resolve({
-                        error: { message: "non internationalized" }
+                        error: { message: "non internationalized" },
                     });
                 result = await getMessageFromException(exception);
             });
@@ -58,8 +58,8 @@ describe("RestUtils:", () => {
                 exception.response.json = () =>
                     Promise.resolve({
                         error: {
-                            i18n_error_message: "internationalized message"
-                        }
+                            i18n_error_message: "internationalized message",
+                        },
                     });
                 result = await getMessageFromException(exception);
             });

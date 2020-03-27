@@ -28,13 +28,13 @@ export default {
     props: {
         notification: {
             required: true,
-            type: Object
-        }
+            type: Object,
+        },
     },
     computed: {
         notification_class() {
             return `tlp-alert-${this.notification.class}`;
-        }
-    }
+        },
+    },
 };
 </script>

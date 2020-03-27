@@ -43,7 +43,7 @@ describe("Artifact", () => {
     beforeEach(() => {
         const linked_artifact = create("baseline_artifact", { title: "Story" });
 
-        isLimitReachedOnArtifact = jest.fn().mockImplementation(value => {
+        isLimitReachedOnArtifact = jest.fn().mockImplementation((value) => {
             return value === artifact_where_limit_reached;
         });
 
@@ -54,21 +54,21 @@ describe("Artifact", () => {
                 "semantics/is_field_label_available": () => true,
                 "current_baseline/findArtifactsByIds": () => [linked_artifact],
                 "current_baseline/isLimitReachedOnArtifact": isLimitReachedOnArtifact,
-                "current_baseline/filterArtifacts": () => []
-            }
+                "current_baseline/filterArtifacts": () => [],
+            },
         });
 
         wrapper = shallowMount(Artifact, {
             propsData: {
                 artifact: create("baseline_artifact", {
                     title: "Epic",
-                    linked_artifact_ids: [linked_artifact.id]
-                })
+                    linked_artifact_ids: [linked_artifact.id],
+                }),
             },
             localVue,
             mocks: {
-                $store
-            }
+                $store,
+            },
         });
     });
 
@@ -76,8 +76,8 @@ describe("Artifact", () => {
         beforeEach(() => {
             wrapper.setProps({
                 artifact: create("baseline_artifact", {
-                    description: "my description"
-                })
+                    description: "my description",
+                }),
             });
         });
 
@@ -89,7 +89,7 @@ describe("Artifact", () => {
     describe("when artifact has no description", () => {
         beforeEach(async () => {
             wrapper.setProps({
-                artifact: create("baseline_artifact", { description: null })
+                artifact: create("baseline_artifact", { description: null }),
             });
             await wrapper.vm.$nextTick();
         });
@@ -104,7 +104,7 @@ describe("Artifact", () => {
     describe("when artifact has status", () => {
         beforeEach(() => {
             wrapper.setProps({
-                artifact: create("baseline_artifact", { status: "my status" })
+                artifact: create("baseline_artifact", { status: "my status" }),
             });
         });
 
@@ -116,7 +116,7 @@ describe("Artifact", () => {
     describe("when artifact has no status", () => {
         beforeEach(async () => {
             wrapper.setProps({
-                artifact: create("baseline_artifact", { status: null })
+                artifact: create("baseline_artifact", { status: null }),
             });
             await wrapper.vm.$nextTick();
         });

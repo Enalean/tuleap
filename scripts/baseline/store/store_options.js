@@ -34,7 +34,7 @@ export default {
         current_baseline,
         baselines,
         semantics,
-        comparisons
+        comparisons,
     },
-    strict: process.env.NODE_ENV !== "production" // eslint-disable-line no-undef
+    strict: process.env.NODE_ENV !== "production", // eslint-disable-line no-undef
 };

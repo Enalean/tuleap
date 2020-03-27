@@ -28,7 +28,7 @@ describe("Field", () => {
     beforeEach(() => {
         wrapper = shallowMount(Field, {
             localVue,
-            propsData: { semantic: "description", tracker_id: 1, value: "My description" }
+            propsData: { semantic: "description", tracker_id: 1, value: "My description" },
         });
     });
 

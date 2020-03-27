@@ -32,7 +32,7 @@ export default {
         artifacts_where_depth_limit_reached: null,
         artifacts_by_id: {},
 
-        loaded_depths_count: null
+        loaded_depths_count: null,
     },
 
     actions: {
@@ -62,7 +62,7 @@ export default {
                 linked_artifact_ids
             );
             await dispatch("addArtifacts", linked_artifacts);
-        }
+        },
     },
 
     mutations: {
@@ -79,27 +79,27 @@ export default {
             state.artifacts_where_depth_limit_reached = artifacts;
         },
         addArtifacts: (state, artifacts) => {
-            artifacts.forEach(artifact => Vue.set(state.artifacts_by_id, artifact.id, artifact));
+            artifacts.forEach((artifact) => Vue.set(state.artifacts_by_id, artifact.id, artifact));
         },
-        incrementLoadedDepthsCount: state => state.loaded_depths_count++
+        incrementLoadedDepthsCount: (state) => state.loaded_depths_count++,
     },
 
     getters: {
-        findArtifactsByIds: state => ids =>
-            ids.map(id => state.artifacts_by_id[id]).filter(artifact => artifact !== undefined),
-        is_depth_limit_reached: state =>
+        findArtifactsByIds: (state) => (ids) =>
+            ids.map((id) => state.artifacts_by_id[id]).filter((artifact) => artifact !== undefined),
+        is_depth_limit_reached: (state) =>
             state.artifacts_where_depth_limit_reached !== null &&
             state.artifacts_where_depth_limit_reached.length > 0,
-        isLimitReachedOnArtifact: (state, getters) => artifact =>
+        isLimitReachedOnArtifact: (state, getters) => (artifact) =>
             getters.is_depth_limit_reached &&
             state.artifacts_where_depth_limit_reached.indexOf(artifact) !== -1,
-        all_trackers: state =>
+        all_trackers: (state) =>
             ArrayUtils.uniqueByAttribute(
-                Object.values(state.artifacts_by_id).map(artifact => ({
+                Object.values(state.artifacts_by_id).map((artifact) => ({
                     id: artifact.tracker_id,
-                    name: artifact.tracker_name
+                    name: artifact.tracker_name,
                 })),
                 "id"
-            )
-    }
+            ),
+    },
 };

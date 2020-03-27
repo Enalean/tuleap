@@ -75,19 +75,19 @@ export default {
         ArtifactLabel,
         ArtifactsList,
         Field,
-        DepthLimitReachedMessage
+        DepthLimitReachedMessage,
     },
 
     props: {
         artifact: {
             type: Object,
-            required: true
-        }
+            required: true,
+        },
     },
 
     data() {
         return {
-            is_collapsed: false
+            is_collapsed: false,
         };
     },
 
@@ -95,7 +95,7 @@ export default {
         ...mapGetters("current_baseline", [
             "findArtifactsByIds",
             "isLimitReachedOnArtifact",
-            "filterArtifacts"
+            "filterArtifacts",
         ]),
         is_description_available() {
             return this.artifact.description !== null && this.artifact.description.length > 0;
@@ -115,7 +115,7 @@ export default {
 
         is_limit_reached() {
             return this.isLimitReachedOnArtifact(this.artifact);
-        }
+        },
     },
 
     beforeCreate() {
@@ -125,7 +125,7 @@ export default {
     methods: {
         toggleCollapse() {
             this.is_collapsed = !this.is_collapsed;
-        }
-    }
+        },
+    },
 };
 </script>

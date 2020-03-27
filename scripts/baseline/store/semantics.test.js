@@ -134,7 +134,7 @@ describe("Semantics store:", () => {
             describe("when tracker has semantics defined", () => {
                 const description_field = create("field", {
                     field_id: 22,
-                    label: "Description"
+                    label: "Description",
                 });
 
                 beforeEach(() => {
@@ -145,9 +145,9 @@ describe("Semantics store:", () => {
                             fields: [description_field],
                             semantics: {
                                 description: {
-                                    field_id: 22
-                                }
-                            }
+                                    field_id: 22,
+                                },
+                            },
                         })
                     );
                 });
@@ -155,8 +155,8 @@ describe("Semantics store:", () => {
                 it("updates state with semantic field", () => {
                     expect(state.fields_by_tracker_id).toEqual({
                         1: {
-                            description: description_field
-                        }
+                            description: description_field,
+                        },
                     });
                 });
             });
@@ -168,7 +168,7 @@ describe("Semantics store:", () => {
 
                 it("updates state with no semantic field", () => {
                     expect(state.fields_by_tracker_id).toEqual({
-                        1: {}
+                        1: {},
                     });
                 });
             });
@@ -177,7 +177,7 @@ describe("Semantics store:", () => {
 
     describe("getters", () => {
         let getters = {
-            field_label: () => {}
+            field_label: () => {},
         };
 
         describe("#is_field_label_available", () => {
@@ -235,7 +235,7 @@ describe("Semantics store:", () => {
             describe("when given semantic does not exist on given tracker", () => {
                 beforeEach(() => {
                     state.fields_by_tracker_id = {
-                        1: { title: { label: "My title" } }
+                        1: { title: { label: "My title" } },
                     };
                 });
                 it("returns corresponding semantic label of given tracker", () => {
@@ -244,7 +244,7 @@ describe("Semantics store:", () => {
             });
             beforeEach(() => {
                 state.fields_by_tracker_id = {
-                    1: { description: { label: "My description" } }
+                    1: { description: { label: "My description" } },
                 };
             });
             it("returns corresponding semantic label of given tracker", () => {

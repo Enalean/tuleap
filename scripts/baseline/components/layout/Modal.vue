@@ -64,7 +64,7 @@ export default {
                 return this.modal_content.class;
             }
             return null;
-        }
+        },
     },
 
     watch: {
@@ -89,7 +89,7 @@ export default {
                     this.modal = null;
                 }
             });
-        }
-    }
+        },
+    },
 };
 </script>

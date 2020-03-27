@@ -52,7 +52,7 @@ export default {
         },
         tasks_label() {
             return this.$gettext("Tasks");
-        }
-    }
+        },
+    },
 };
 </script>

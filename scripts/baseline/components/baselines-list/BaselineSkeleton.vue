@@ -53,6 +53,6 @@
 import ActionButton from "../common/ActionButton.vue";
 export default {
     name: "BaselineSkeleton",
-    components: { ActionButton }
+    components: { ActionButton },
 };
 </script>

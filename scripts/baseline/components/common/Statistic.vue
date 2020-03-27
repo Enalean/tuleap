@@ -34,7 +34,7 @@ export default {
     name: "Statistic",
 
     props: {
-        label: { required: true, type: String }
-    }
+        label: { required: true, type: String },
+    },
 };
 </script>

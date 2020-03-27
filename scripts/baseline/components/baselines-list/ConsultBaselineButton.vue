@@ -30,16 +30,16 @@ export default {
     props: {
         baseline: {
             required: true,
-            type: Object
-        }
+            type: Object,
+        },
     },
     methods: {
         showBaseline() {
             this.$router.push({
                 name: "BaselineContentPage",
-                params: { baseline_id: this.baseline.id }
+                params: { baseline_id: this.baseline.id },
             });
-        }
-    }
+        },
+    },
 };
 </script>

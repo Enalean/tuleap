@@ -50,6 +50,6 @@
 import ActionButton from "../common/ActionButton.vue";
 export default {
     name: "ComparisonSkeleton",
-    components: { ActionButton }
+    components: { ActionButton },
 };
 </script>

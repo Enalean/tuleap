@@ -39,17 +39,17 @@ describe("NewComparisonModal", () => {
         const localVue = createLocalVue();
         localVue.use(GettextPlugin, {
             translations: {},
-            silent: true
+            silent: true,
         });
 
         wrapper = shallowMount(NewComparisonModal, {
             propsData: {
-                baselines: [baseline, baseline_on_other_artifact, baseline_on_same_artifact]
+                baselines: [baseline, baseline_on_other_artifact, baseline_on_same_artifact],
             },
             localVue,
             mocks: {
-                $router
-            }
+                $router,
+            },
         });
     });
 

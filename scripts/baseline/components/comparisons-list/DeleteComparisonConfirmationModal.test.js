@@ -49,12 +49,12 @@ describe("DeleteComparisonConfirmationModal", () => {
             propsData: {
                 comparison,
                 base_baseline: create("baseline"),
-                compared_to_baseline: create("baseline")
+                compared_to_baseline: create("baseline"),
             },
             localVue,
             mocks: {
-                $store
-            }
+                $store,
+            },
         });
     });
 

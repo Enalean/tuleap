@@ -26,7 +26,7 @@ export default {
     state: {
         baselines: null,
         are_baselines_loading: false,
-        is_baselines_loading_failed: false
+        is_baselines_loading_failed: false,
     },
 
     actions: {
@@ -35,10 +35,10 @@ export default {
             try {
                 const baselines = await getBaselines(project_id);
 
-                const user_ids = baselines.map(baseline => baseline.author_id);
+                const user_ids = baselines.map((baseline) => baseline.author_id);
                 const users_loading = dispatch("loadUsers", { user_ids }, { root: true });
 
-                const artifact_ids = baselines.map(baseline => baseline.artifact_id);
+                const artifact_ids = baselines.map((baseline) => baseline.artifact_id);
                 const artifacts_loading = dispatch(
                     "loadArtifacts",
                     { artifact_ids },
@@ -53,19 +53,19 @@ export default {
             } finally {
                 commit("stopBaselinesLoading");
             }
-        }
+        },
     },
 
     mutations: {
-        startBaselinesLoading: state => {
+        startBaselinesLoading: (state) => {
             state.is_baselines_loading_failed = false;
             state.are_baselines_loading = true;
         },
-        failBaselinesLoading: state => {
+        failBaselinesLoading: (state) => {
             state.is_baselines_loading_failed = true;
             state.are_baselines_loading = false;
         },
-        stopBaselinesLoading: state => {
+        stopBaselinesLoading: (state) => {
             state.is_baselines_loading_failed = false;
             state.are_baselines_loading = false;
         },
@@ -74,12 +74,12 @@ export default {
         },
         delete: (state, baseline_to_delete) => {
             state.baselines = state.baselines.filter(
-                baseline => baseline.id !== baseline_to_delete.id
+                (baseline) => baseline.id !== baseline_to_delete.id
             );
-        }
+        },
     },
 
     getters: {
-        are_baselines_available: state => state.baselines !== null && state.baselines.length > 0
-    }
+        are_baselines_available: (state) => state.baselines !== null && state.baselines.length > 0,
+    },
 };

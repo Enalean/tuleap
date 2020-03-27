@@ -40,17 +40,17 @@ class ArtifactsListComparison {
      */
     get identical_or_modified() {
         return this.base_artifacts
-            .map(base => {
+            .map((base) => {
                 const compared_to = ArrayUtils.find(
                     this.compared_to_artifacts,
-                    compared => base.id === compared.id
+                    (compared) => base.id === compared.id
                 );
                 if (!compared_to) {
                     return null;
                 }
                 return { base, compared_to };
             })
-            .filter(comparison => comparison !== null);
+            .filter((comparison) => comparison !== null);
     }
 
     /**
@@ -64,14 +64,14 @@ class ArtifactsListComparison {
     }
 
     get removed() {
-        return this.base_artifacts.filter(base =>
-            this.compared_to_artifacts.every(compared_to => base.id !== compared_to.id)
+        return this.base_artifacts.filter((base) =>
+            this.compared_to_artifacts.every((compared_to) => base.id !== compared_to.id)
         );
     }
 
     get added() {
-        return this.compared_to_artifacts.filter(compared_to =>
-            this.base_artifacts.every(base => base.id !== compared_to.id)
+        return this.compared_to_artifacts.filter((compared_to) =>
+            this.base_artifacts.every((base) => base.id !== compared_to.id)
         );
     }
 }

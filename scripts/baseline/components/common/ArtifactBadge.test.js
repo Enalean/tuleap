@@ -31,8 +31,8 @@ describe("ArtifactBadge", () => {
             localVue,
             propsData: {
                 artifact: create("artifact"),
-                tracker: create("tracker", { color_name: "blue_cyan" })
-            }
+                tracker: create("tracker", { color_name: "blue_cyan" }),
+            },
         });
     });
 

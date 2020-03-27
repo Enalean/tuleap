@@ -81,16 +81,16 @@ export default {
     components: { BaselineSkeleton, Baseline },
 
     props: {
-        project_id: { required: true, type: Number }
+        project_id: { required: true, type: Number },
     },
 
     computed: {
         ...mapState("baselines", ["baselines", "are_baselines_loading"]),
-        ...mapGetters("baselines", ["are_baselines_available"])
+        ...mapGetters("baselines", ["are_baselines_available"]),
     },
 
     mounted() {
         this.$store.dispatch("baselines/load", { project_id: this.project_id });
-    }
+    },
 };
 </script>

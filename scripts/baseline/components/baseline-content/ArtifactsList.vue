@@ -37,11 +37,11 @@ export default {
     components: { Artifact },
 
     props: {
-        artifacts: { required: true, type: Array }
+        artifacts: { required: true, type: Array },
     },
 
     beforeCreate() {
         this.$options.components.Artifact = Artifact;
-    }
+    },
 };
 </script>

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const getMessageFromException = async exception => {
+const getMessageFromException = async (exception) => {
     let response = await exception.response.json();
 
     if (Object.prototype.hasOwnProperty.call(response, "error")) {

@@ -68,17 +68,17 @@ export default {
         BaselineContentFilters,
         BaselineContentFiltersSkeleton,
         BaselineLabel,
-        ContentBody
+        ContentBody,
     },
 
     props: {
-        baseline_id: { required: true, type: Number }
+        baseline_id: { required: true, type: Number },
     },
 
     data() {
         return {
             is_loading: true,
-            is_loading_failed: false
+            is_loading_failed: false,
         };
     },
 
@@ -86,7 +86,7 @@ export default {
         ...mapGetters(["findBaselineById"]),
         baseline() {
             return this.findBaselineById(this.baseline_id);
-        }
+        },
     },
 
     created() {
@@ -109,7 +109,7 @@ export default {
             } finally {
                 this.is_loading = false;
             }
-        }
-    }
+        },
+    },
 };
 </script>

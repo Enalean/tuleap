@@ -17,14 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const identity = i => i;
+const identity = (i) => i;
 
 const factories = {
     milestone: {
         default: {
             id: identity,
-            label: "Milestone label"
-        }
+            label: "Milestone label",
+        },
     },
     baseline: {
         default: {
@@ -32,8 +32,8 @@ const factories = {
             name: "Baseline label",
             artifact_id: 9,
             snapshot_date: "2019-03-22T10:01:48+00:00",
-            author_id: 3
-        }
+            author_id: 3,
+        },
     },
     tracker: {
         default: {
@@ -43,32 +43,32 @@ const factories = {
             fields: [
                 {
                     field_id: 22,
-                    label: "Description"
-                }
+                    label: "Description",
+                },
             ],
             semantics: {
                 description: {
-                    field_id: 22
-                }
-            }
+                    field_id: 22,
+                },
+            },
         },
         without_semantic: {
-            semantics: {}
-        }
+            semantics: {},
+        },
     },
     field: {
         default: {
             field_id: 1,
-            label: "Description"
-        }
+            label: "Description",
+        },
     },
     artifact: {
         default: {
             id: 1,
             tracker: {
-                id: 9
-            }
-        }
+                id: 9,
+            },
+        },
     },
     baseline_artifact: {
         default: {
@@ -80,12 +80,12 @@ const factories = {
             tracker_name: "Sprint",
             description:
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
-            linked_artifact_ids: []
+            linked_artifact_ids: [],
         },
         without_linked_artifacts: {
             linked_artifact_ids: [],
-            linked_artifacts: []
-        }
+            linked_artifacts: [],
+        },
     },
     user: {
         default: {
@@ -93,27 +93,27 @@ const factories = {
             display_name: "John Doe",
             has_avatar: false,
             is_anonymous: false,
-            user_url: "http://example.com/user/1"
-        }
+            user_url: "http://example.com/user/1",
+        },
     },
     notification: {
         default: {
             text: "This is a failure notification",
-            class: "danger"
-        }
+            class: "danger",
+        },
     },
     comparison: {
         default: {
             base_baseline_id: 1,
-            compared_to_baseline_id: 2
+            compared_to_baseline_id: 2,
         },
         saved: {
             id: identity,
             name: null,
             comment: null,
             author_id: 1,
-            creation_date: "2019-03-22T10:01:48+00:00"
-        }
+            creation_date: "2019-03-22T10:01:48+00:00",
+        },
     },
     artifacts_comparison: {
         default: {
@@ -122,23 +122,23 @@ const factories = {
             modified: () => [
                 {
                     base: create("baseline_artifact"),
-                    compared_to: create("baseline_artifact")
-                }
+                    compared_to: create("baseline_artifact"),
+                },
             ],
             identical_or_modified: () => [
                 {
                     base: create("baseline_artifact"),
-                    compared_to: create("baseline_artifact")
-                }
-            ]
+                    compared_to: create("baseline_artifact"),
+                },
+            ],
         },
         empty: {
             added: [],
             removed: [],
             modified: [],
-            identical_or_modified: []
-        }
-    }
+            identical_or_modified: [],
+        },
+    },
 };
 
 let instance_index = 1;
@@ -147,7 +147,7 @@ function associationList(factory_name, ...trait_or_attributes) {
     return () => createList(factory_name, 2, ...trait_or_attributes);
 }
 
-const evaluateAttributesAsFunction = instance =>
+const evaluateAttributesAsFunction = (instance) =>
     Object.keys(instance).reduce((evaluatedInstance, key) => {
         const attribute_or_function = instance[key];
         if (attribute_or_function && typeof attribute_or_function === "function") {

@@ -33,9 +33,9 @@ describe("MilestonesSelect", () => {
         wrapper = shallowMount(MilestoneList, {
             localVue,
             propsData: {
-                milestones: []
+                milestones: [],
             },
-            sync: false
+            sync: false,
         });
     });
 
@@ -46,7 +46,7 @@ describe("MilestonesSelect", () => {
 
         beforeEach(async () => {
             wrapper.setProps({
-                milestones: [milestone_2, milestone_1, milestone_3]
+                milestones: [milestone_2, milestone_1, milestone_3],
             });
             await Vue.nextTick();
         });
@@ -61,7 +61,7 @@ describe("MilestonesSelect", () => {
                 expect(wrapper.vm.sorted_milestones).toEqual([
                     milestone_3,
                     milestone_2,
-                    milestone_1
+                    milestone_1,
                 ]);
             });
         });
@@ -70,8 +70,8 @@ describe("MilestonesSelect", () => {
             beforeEach(() => {
                 const event = {
                     target: {
-                        value: "1"
-                    }
+                        value: "1",
+                    },
                 };
                 wrapper.vm.onMilestoneSelected(event);
             });

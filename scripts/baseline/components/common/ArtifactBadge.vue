@@ -28,18 +28,18 @@ export default {
     props: {
         artifact: {
             required: true,
-            type: Object
+            type: Object,
         },
         tracker: {
             required: true,
-            type: Object
-        }
+            type: Object,
+        },
     },
     computed: {
         tlp_badge_class() {
             const normalized_color = this.tracker.color_name.replace("_", "-");
             return `tlp-badge-${normalized_color}`;
-        }
-    }
+        },
+    },
 };
 </script>

@@ -31,7 +31,7 @@ export default {
 
     props: {
         date: { required: true, type: String },
-        start_with_capital: { type: Boolean, default: false }
+        start_with_capital: { type: Boolean, default: false },
     },
 
     computed: {
@@ -47,12 +47,12 @@ export default {
             } else {
                 return this.interval_from_now;
             }
-        }
+        },
     },
     methods: {
         capitalizeFirstLetter(string) {
             return string.charAt(0).toUpperCase() + string.slice(1);
-        }
-    }
+        },
+    },
 };
 </script>

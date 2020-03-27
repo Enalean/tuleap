@@ -29,7 +29,7 @@ describe("Comparisons store:", () => {
         beforeEach(() => {
             context = {
                 commit: jest.fn(),
-                dispatch: jest.fn()
+                dispatch: jest.fn(),
             };
             context.dispatch.mockReturnValue(Promise.resolve());
         });
@@ -38,12 +38,12 @@ describe("Comparisons store:", () => {
             const comparison1 = create("comparison", {
                 base_baseline_id: 1,
                 compared_to_baseline_id: 2,
-                author_id: 4
+                author_id: 4,
             });
             const comparison2 = create("comparison", {
                 base_baseline_id: 1,
                 compared_to_baseline_id: 3,
-                author_id: 5
+                author_id: 5,
             });
 
             beforeEach(() => {
@@ -64,7 +64,7 @@ describe("Comparisons store:", () => {
             it("updated comparisons", () => {
                 expect(context.commit).toHaveBeenCalledWith("updateComparisons", [
                     comparison1,
-                    comparison2
+                    comparison2,
                 ]);
             });
         });

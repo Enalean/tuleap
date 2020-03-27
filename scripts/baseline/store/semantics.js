@@ -24,7 +24,7 @@ export default {
 
     state: {
         fields_by_tracker_id: {},
-        is_field_by_tracker_id_loading: {}
+        is_field_by_tracker_id_loading: {},
     },
 
     actions: {
@@ -39,7 +39,7 @@ export default {
             } finally {
                 commit("stopLoading", tracker_id);
             }
-        }
+        },
     },
 
     mutations: {
@@ -49,7 +49,7 @@ export default {
         startLoading(state, tracker_id) {
             state.is_field_by_tracker_id_loading = {
                 ...state.is_field_by_tracker_id_loading,
-                [tracker_id]: true
+                [tracker_id]: true,
             };
         },
         update(state, tracker) {
@@ -65,7 +65,7 @@ export default {
                     continue;
                 }
                 const matching_semantic_field = tracker.fields.filter(
-                    field => field.field_id === semantic_field_id
+                    (field) => field.field_id === semantic_field_id
                 );
                 if (matching_semantic_field.length === 0) {
                     continue;
@@ -78,9 +78,9 @@ export default {
         stopLoading(state, tracker_id) {
             state.is_field_by_tracker_id_loading = {
                 ...state.is_field_by_tracker_id_loading,
-                [tracker_id]: false
+                [tracker_id]: false,
             };
-        }
+        },
     },
 
     getters: {
@@ -88,7 +88,7 @@ export default {
             state.is_field_by_tracker_id_loading[tracker_id] === false &&
             getters.field_label(tracker_id, semantic) !== null,
 
-        field_label: state => (tracker_id, semantic) => {
+        field_label: (state) => (tracker_id, semantic) => {
             if (
                 !Object.prototype.hasOwnProperty.call(state.fields_by_tracker_id, tracker_id) ||
                 !Object.prototype.hasOwnProperty.call(
@@ -99,6 +99,6 @@ export default {
                 return null;
             }
             return state.fields_by_tracker_id[tracker_id][semantic].label;
-        }
-    }
+        },
+    },
 };

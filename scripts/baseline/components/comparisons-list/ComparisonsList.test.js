@@ -36,16 +36,16 @@ describe("ComparisonsList", () => {
         $store = createStoreMock({
             ...store_options,
             getters: {
-                "comparisons/are_some_available": false
-            }
+                "comparisons/are_some_available": false,
+            },
         });
 
         wrapper = shallowMount(ComparisonsList, {
             propsData: {
-                project_id: 102
+                project_id: 102,
             },
             localVue,
-            mocks: { $store }
+            mocks: { $store },
         });
     });
 

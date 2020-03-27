@@ -39,8 +39,8 @@ describe("IndexPage", () => {
             localVue,
             router,
             mocks: {
-                $store
-            }
+                $store,
+            },
         });
     });
 

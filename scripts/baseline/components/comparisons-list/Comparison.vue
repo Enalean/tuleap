@@ -64,11 +64,11 @@ export default {
         ConsultComparisonButton,
         DeleteComparisonButton,
         ArtifactLink,
-        ArtifactBadge
+        ArtifactBadge,
     },
 
     props: {
-        comparison: { required: true, type: Object }
+        comparison: { required: true, type: Object },
     },
 
     computed: {
@@ -84,16 +84,16 @@ export default {
         },
         milestone_tracker() {
             return this.findTrackerById(this.milestone.tracker.id);
-        }
+        },
     },
 
     methods: {
         showComparison() {
             this.$router.push({
                 name: "ComparisonPage",
-                params: { comparison_id: this.comparison.id }
+                params: { comparison_id: this.comparison.id },
             });
-        }
-    }
+        },
+    },
 };
 </script>

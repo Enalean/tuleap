@@ -53,7 +53,7 @@ export default {
         ...mapGetters("current_baseline", ["filterArtifacts"]),
         filtered_artifacts() {
             return this.filterArtifacts(this.first_depth_artifacts);
-        }
-    }
+        },
+    },
 };
 </script>

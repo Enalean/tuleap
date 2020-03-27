@@ -45,13 +45,13 @@ describe("SaveComparisonModal", () => {
         const localVue = createLocalVue();
         localVue.use(GettextPlugin, {
             translations: {},
-            silent: true
+            silent: true,
         });
 
         wrapper = shallowMount(SaveComparisonModal, {
             propsData: { base_baseline_id: 1, compared_to_baseline_id: 2 },
             localVue,
-            mocks: { $store, $router }
+            mocks: { $store, $router },
         });
     });
 
@@ -98,8 +98,8 @@ describe("SaveComparisonModal", () => {
                 expect($router.push).toHaveBeenCalledWith({
                     name: "ComparisonPage",
                     params: {
-                        comparison_id: 10
-                    }
+                        comparison_id: 10,
+                    },
                 });
             });
             it("notify user with successful message", () => {

@@ -34,7 +34,7 @@ export default {
     name: "ArtifactLabel",
     components: { ArtifactLink },
     props: {
-        artifact: { required: true, type: Object }
-    }
+        artifact: { required: true, type: Object },
+    },
 };
 </script>

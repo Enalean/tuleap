@@ -31,8 +31,8 @@ describe("ActionButton", () => {
         wrapper = mount(ActionButton, {
             localVue,
             propsData: {
-                icon: "delete"
-            }
+                icon: "delete",
+            },
         });
     });
 

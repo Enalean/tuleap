@@ -31,9 +31,9 @@ document.addEventListener("DOMContentLoaded", () => {
     Vue.use(VueDOMPurifyHTML);
     Vue.use(GetTextPlugin, {
         translations: {
-            fr: french_translations.messages
+            fr: french_translations.messages,
         },
-        silent: true
+        silent: true,
     });
 
     let user_locale = document.body.dataset.userLocale;
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
     DateUtils.setOptions({
         user_locale,
         user_timezone: document.body.dataset.userTimezone,
-        format: document.body.dataset.dateTimeFormat
+        format: document.body.dataset.dateTimeFormat,
     });
 
     const vue_mount_point = document.getElementById("baseline-container");
@@ -57,6 +57,6 @@ document.addEventListener("DOMContentLoaded", () => {
     new AppComponent({
         store,
         propsData: { project_id },
-        router
+        router,
     }).$mount(vue_mount_point);
 });

@@ -35,24 +35,18 @@ export default {
     },
 
     format(date) {
-        return moment(date)
-            .tz(time_zone)
-            .format(format);
+        return moment(date).tz(time_zone).format(format);
     },
 
     humanFormat(date) {
-        return moment(date)
-            .tz(time_zone)
-            .format("LLL");
+        return moment(date).tz(time_zone).format("LLL");
     },
 
     getFromNow(date) {
-        return moment(date)
-            .tz(time_zone)
-            .fromNow();
+        return moment(date).tz(time_zone).fromNow();
     },
 
     formatToISO(date) {
         return moment.tz(date, time_zone).format();
-    }
+    },
 };

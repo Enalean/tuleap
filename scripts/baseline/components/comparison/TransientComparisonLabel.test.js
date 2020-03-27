@@ -36,10 +36,10 @@ describe("TransientComparisonLabel", () => {
         wrapper = shallowMount(TransientComparisonLabel, {
             propsData: {
                 base_baseline_id: 1,
-                compared_to_baseline_id: 2
+                compared_to_baseline_id: 2,
             },
             localVue,
-            mocks: { $store }
+            mocks: { $store },
         });
     });
 
@@ -52,8 +52,8 @@ describe("TransientComparisonLabel", () => {
                 component: SaveComparisonModal,
                 props: {
                     base_baseline_id: 1,
-                    compared_to_baseline_id: 2
-                }
+                    compared_to_baseline_id: 2,
+                },
             });
         });
     });

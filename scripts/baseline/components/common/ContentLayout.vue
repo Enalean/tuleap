@@ -64,7 +64,7 @@ export default {
     computed: {
         has_comment_slot() {
             return Boolean(this.$slots.comment);
-        }
-    }
+        },
+    },
 };
 </script>

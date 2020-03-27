@@ -36,12 +36,12 @@ describe("HumanizedDate", () => {
         DateFormatter.setOptions({
             user_locale: "fr_FR",
             user_timezone: "Europe/Paris",
-            format: "d/m/Y H:i"
+            format: "d/m/Y H:i",
         });
 
         wrapper = mount(HumanizedDate, {
             propsData: { date: "2019-03-22T10:01:48+00:00" },
-            localVue
+            localVue,
         });
     });
 

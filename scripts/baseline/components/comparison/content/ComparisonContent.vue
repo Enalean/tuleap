@@ -54,9 +54,9 @@ export default {
 
     computed: {
         ...mapState({
-            first_depth_base_artifacts: state => state.comparison.base.first_depth_artifacts,
-            first_depth_compared_to_artifacts: state =>
-                state.comparison.compared_to.first_depth_artifacts
+            first_depth_base_artifacts: (state) => state.comparison.base.first_depth_artifacts,
+            first_depth_compared_to_artifacts: (state) =>
+                state.comparison.compared_to.first_depth_artifacts,
         }),
         ...mapGetters("comparison", ["filterArtifacts"]),
         filtered_first_depth_base_artifacts() {
@@ -76,7 +76,7 @@ export default {
                 this.first_depth_base_artifacts.length > 0 ||
                 this.first_depth_compared_to_artifacts.length > 0
             );
-        }
-    }
+        },
+    },
 };
 </script>

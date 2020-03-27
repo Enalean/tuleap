@@ -37,11 +37,11 @@ describe("DeleteBaselineButton", () => {
         wrapper = mount(DeleteBaselineButton, {
             localVue,
             mocks: {
-                $store
+                $store,
             },
             propsData: {
-                baseline
-            }
+                baseline,
+            },
         });
     });
 

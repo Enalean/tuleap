@@ -35,6 +35,6 @@ import ComparisonLabelSkeleton from "./ComparisonLabelSkeleton.vue";
 export default {
     name: "ComparisonHeaderSkeleton",
 
-    components: { ComparisonLabelSkeleton }
+    components: { ComparisonLabelSkeleton },
 };
 </script>

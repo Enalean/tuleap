@@ -18,8 +18,6 @@
  *
  */
 
-/* global jest:readonly */
-
 import { Store } from "vuex-mock-store";
 
 /**
@@ -36,14 +34,14 @@ export function createStoreMock(store_options, custom_state = {}) {
     appendModuleStates(store_options.modules, state_with_modules);
     const state = Object.assign(state_with_modules, store_options.state, custom_state);
     const options = Object.assign({}, store_options, {
-        state
+        state,
     });
 
     return new Store(options);
 }
 
 function appendModuleStates(modules, state) {
-    Object.keys(modules).forEach(module_name => {
+    Object.keys(modules).forEach((module_name) => {
         const module = modules[module_name];
         state[module_name] = module.state;
         if (module.modules) {

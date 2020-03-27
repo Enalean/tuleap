@@ -133,13 +133,13 @@ import ArrayUtils from "../../support/array-utils";
 export default {
     name: "NewComparisonModal",
     props: {
-        baselines: { required: true, type: Array }
+        baselines: { required: true, type: Array },
     },
 
     data() {
         return {
             base_baseline_id: null,
-            baseline_to_compare_id: null
+            baseline_to_compare_id: null,
         };
     },
 
@@ -152,20 +152,20 @@ export default {
                 return null;
             }
             return this.baselines
-                .filter(baseline => baseline.artifact_id === this.base_baseline.artifact_id)
-                .filter(baseline => baseline !== this.base_baseline);
+                .filter((baseline) => baseline.artifact_id === this.base_baseline.artifact_id)
+                .filter((baseline) => baseline !== this.base_baseline);
         },
         base_baseline() {
             return this.findBaselineById(this.base_baseline_id);
         },
         baseline_to_compare() {
             return this.findBaselineById(this.baseline_to_compare_id);
-        }
+        },
     },
 
     methods: {
         findBaselineById(id) {
-            let found_baseline = ArrayUtils.find(this.baselines, baseline => baseline.id === id);
+            let found_baseline = ArrayUtils.find(this.baselines, (baseline) => baseline.id === id);
             return found_baseline || null;
         },
         openComparison() {
@@ -173,10 +173,10 @@ export default {
                 name: "TransientComparisonPage",
                 params: {
                     from_baseline_id: this.base_baseline.id,
-                    to_baseline_id: this.baseline_to_compare.id
-                }
+                    to_baseline_id: this.baseline_to_compare.id,
+                },
             });
-        }
-    }
+        },
+    },
 };
 </script>

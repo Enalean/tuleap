@@ -37,7 +37,7 @@ describe("BaselineLabel", () => {
         DateFormatter.setOptions({
             user_locale: "en_EN",
             user_timezone: "Europe/London",
-            format: "d/m/Y H:i"
+            format: "d/m/Y H:i",
         });
 
         const past_snapshot_date = new Date("2019-05-02T06:48:22+00:00");
@@ -48,11 +48,11 @@ describe("BaselineLabel", () => {
                     id: 1,
                     name: "Baseline V1",
                     snapshot_date: past_snapshot_date.toISOString(),
-                    author_id: 9
-                })
+                    author_id: 9,
+                }),
             },
             localVue,
-            mocks: { $store }
+            mocks: { $store },
         });
     });
 

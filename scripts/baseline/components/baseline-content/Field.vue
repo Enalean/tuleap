@@ -42,20 +42,20 @@ export default {
     props: {
         semantic: {
             required: true,
-            type: String
+            type: String,
         },
         tracker_id: {
             required: true,
-            type: Number
+            type: Number,
         },
         value: {
             required: true,
-            type: String
+            type: String,
         },
         html_content: {
             default: false,
-            type: Boolean
-        }
-    }
+            type: Boolean,
+        },
+    },
 };
 </script>

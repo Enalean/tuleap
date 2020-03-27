@@ -58,25 +58,25 @@ export default {
     props: {
         project_id: {
             required: false,
-            type: Number
-        }
+            type: Number,
+        },
     },
     data() {
         return {
-            current_page_title: null
+            current_page_title: null,
         };
     },
     computed: {
         ...mapState("dialog_interface", ["notification"]),
         is_current_page_root() {
             return this.$route.name === "IndexPage";
-        }
+        },
     },
     methods: {
         changeTitle(title) {
             this.current_page_title = title;
             document.title = `${title} - Tuleap`;
-        }
-    }
+        },
+    },
 };
 </script>

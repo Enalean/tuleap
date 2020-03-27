@@ -32,7 +32,7 @@ describe("DeleteConfirmationModal", () => {
 
     beforeEach(() => {
         confirm = jest.fn().mockReturnValue(
-            new Promise(resolve => {
+            new Promise((resolve) => {
                 confirmResolve = resolve;
             })
         );
@@ -41,9 +41,9 @@ describe("DeleteConfirmationModal", () => {
             propsData: {
                 submit_label: "Confirmation message",
                 default_failed_message: "Failed message",
-                on_submit: confirm
+                on_submit: confirm,
             },
-            localVue
+            localVue,
         });
     });
 
@@ -71,7 +71,7 @@ describe("DeleteConfirmationModal", () => {
         });
     });
 
-    describe("when deletion is completed ", () => {
+    describe("when deletion is completed", () => {
         beforeEach(async () => {
             wrapper.find(confirm_selector).trigger("click");
             confirmResolve("resolved");

@@ -35,24 +35,24 @@ describe("ComparisonContent", () => {
             {
                 ...store_options,
                 getters: {
-                    "comparison/filterArtifacts": () => []
-                }
+                    "comparison/filterArtifacts": () => [],
+                },
             },
             {
                 comparison: {
                     base: {
-                        first_depth_artifacts: []
+                        first_depth_artifacts: [],
                     },
                     compared_to: {
-                        first_depth_artifacts: []
-                    }
-                }
+                        first_depth_artifacts: [],
+                    },
+                },
             }
         );
 
         wrapper = shallowMount(ComparisonContent, {
             localVue,
-            mocks: { $store }
+            mocks: { $store },
         });
     });
 

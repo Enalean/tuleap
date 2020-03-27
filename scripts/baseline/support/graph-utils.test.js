@@ -33,19 +33,19 @@ describe("GraphUtils:", () => {
         });
 
         it("returns elements which match given predicate", () => {
-            const nodes = GraphUtils.findAllNodes(first_level_node, "links", obj => obj.id <= 2);
+            const nodes = GraphUtils.findAllNodes(first_level_node, "links", (obj) => obj.id <= 2);
             const nodes_ids = ArrayUtils.mapAttribute(nodes, "id");
             expect(nodes_ids).toEqual([1, 2]);
         });
 
         it("returns empty array when no element match with given predicate", () => {
-            const nodes = GraphUtils.findAllNodes(first_level_node, "links", obj => obj.id <= 0);
+            const nodes = GraphUtils.findAllNodes(first_level_node, "links", (obj) => obj.id <= 0);
             const nodes_ids = ArrayUtils.mapAttribute(nodes, "id");
             expect(nodes_ids).toEqual([]);
         });
 
         it("returns empty array when array is empty", () => {
-            const nodes = GraphUtils.findAllNodes([], "links", obj => obj.id <= 10);
+            const nodes = GraphUtils.findAllNodes([], "links", (obj) => obj.id <= 10);
             const nodes_ids = ArrayUtils.mapAttribute(nodes, "id");
             expect(nodes_ids).toEqual([]);
         });

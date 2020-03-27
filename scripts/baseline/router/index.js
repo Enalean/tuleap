@@ -38,44 +38,44 @@ const router = new VueRouter({
     routes: [
         {
             path: "*",
-            component: NotFoundPage
+            component: NotFoundPage,
         },
 
         {
             path: "/plugins/baseline/:project_name",
             name: "IndexPage",
-            component: IndexPage
+            component: IndexPage,
         },
 
         {
             path: "/plugins/baseline/:project_name/baselines/:baseline_id",
             name: "BaselineContentPage",
             component: BaselineContentPage,
-            props: route => ({
-                baseline_id: toInt(route.params.baseline_id)
-            })
+            props: (route) => ({
+                baseline_id: toInt(route.params.baseline_id),
+            }),
         },
 
         {
             path: "/plugins/baseline/:project_name/comparisons/:from_baseline_id/:to_baseline_id",
             name: "TransientComparisonPage",
             component: ComparisonPage,
-            props: route => ({
+            props: (route) => ({
                 comparison: {
                     base_baseline_id: toInt(route.params.from_baseline_id),
-                    compared_to_baseline_id: toInt(route.params.to_baseline_id)
-                }
-            })
+                    compared_to_baseline_id: toInt(route.params.to_baseline_id),
+                },
+            }),
         },
 
         {
             path: "/plugins/baseline/:project_name/comparisons/:comparison_id",
             name: "ComparisonPage",
             component: ComparisonPageAsync,
-            props: route => ({
-                comparison_id: toInt(route.params.comparison_id)
-            })
-        }
+            props: (route) => ({
+                comparison_id: toInt(route.params.comparison_id),
+            }),
+        },
     ],
     scrollBehavior: (to, from, savedPosition) => {
         if (savedPosition) {
@@ -83,7 +83,7 @@ const router = new VueRouter({
         }
 
         return { x: 0, y: 0 };
-    }
+    },
 });
 
 router.beforeEach((to, from, next) => {

@@ -30,9 +30,9 @@ describe("ArtifactsList", () => {
     beforeEach(() => {
         wrapper = shallowMount(ArtifactsList, {
             propsData: {
-                artifacts: createList("baseline_artifact", 3)
+                artifacts: createList("baseline_artifact", 3),
             },
-            localVue
+            localVue,
         });
     });
 

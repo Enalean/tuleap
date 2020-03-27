@@ -41,12 +41,12 @@ export default {
     props: {
         icon: { required: true, type: String },
         loading: { type: Boolean, default: false },
-        disabled: { type: Boolean, default: false }
+        disabled: { type: Boolean, default: false },
     },
     computed: {
         icon_class() {
             return `fa-${this.icon}`;
-        }
-    }
+        },
+    },
 };
 </script>

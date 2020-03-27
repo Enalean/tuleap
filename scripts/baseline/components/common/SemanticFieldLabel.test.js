@@ -35,18 +35,18 @@ describe("SemanticFieldLabel", () => {
             ...store_options,
             getters: {
                 "semantics/field_label": () => "My description",
-                "semantics/is_field_label_available": () => true
-            }
+                "semantics/is_field_label_available": () => true,
+            },
         });
         wrapper = shallowMount(SemanticFieldLabel, {
             propsData: {
                 semantic: "description",
-                tracker_id: 1
+                tracker_id: 1,
             },
             localVue,
             mocks: {
-                $store
-            }
+                $store,
+            },
         });
     });
 

@@ -39,7 +39,7 @@ export default {
     name: "BaselineLabel",
     components: { UserBadge },
     props: {
-        baseline: { required: true, type: Object }
+        baseline: { required: true, type: Object },
     },
     computed: {
         ...mapGetters(["findUserById"]),
@@ -48,7 +48,7 @@ export default {
         },
         humanized_snapshot_date() {
             return DateUtils.humanFormat(this.baseline.snapshot_date);
-        }
-    }
+        },
+    },
 };
 </script>

@@ -40,6 +40,6 @@ import ArtifactSkeleton from "../../common/ArtifactSkeleton.vue";
 export default {
     name: "ComparisonContentSkeleton",
 
-    components: { ArtifactSkeleton }
+    components: { ArtifactSkeleton },
 };
 </script>

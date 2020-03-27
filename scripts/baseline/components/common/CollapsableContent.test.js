@@ -34,8 +34,8 @@ describe("CollapsableContent", () => {
             localVue,
             slots: {
                 default: '<div data-test-type="default-slot">Default slot</div>',
-                header: '<div data-test-type="header-slot">Header slot</div>'
-            }
+                header: '<div data-test-type="header-slot">Header slot</div>',
+            },
         });
     });
 

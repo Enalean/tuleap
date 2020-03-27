@@ -135,7 +135,7 @@ export default {
     components: { MilestonesSelect, MilestonesSelectSkeleton },
 
     props: {
-        project_id: { mandatory: true, type: Number }
+        project_id: { mandatory: true, type: Number },
     },
 
     data() {
@@ -147,7 +147,7 @@ export default {
             is_loading_failed: false,
             is_loading: false,
             is_creating_failed: false,
-            is_creating: false
+            is_creating: false,
         };
     },
 
@@ -162,7 +162,7 @@ export default {
             return this.$gettext(
                 "Without date, the baseline will be created with the current date"
             );
-        }
+        },
     },
 
     mounted() {
@@ -197,7 +197,7 @@ export default {
                 await createBaseline(this.name, this.milestone, this.snapshot_date);
                 const notification = {
                     text: this.$gettext("The baseline was created"),
-                    class: "success"
+                    class: "success",
                 };
                 this.$store.commit("dialog_interface/notify", notification);
                 this.$store.dispatch("baselines/load", { project_id: this.project_id });
@@ -214,9 +214,9 @@ export default {
                 maxDate: "today",
                 onValueUpdate: (_, date) => {
                     this.snapshot_date = date;
-                }
+                },
             });
-        }
-    }
+        },
+    },
 };
 </script>

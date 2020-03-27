@@ -42,7 +42,7 @@ export default {
 
     props: {
         base_baseline_id: { required: true, type: Number },
-        compared_to_baseline_id: { required: true, type: Number }
+        compared_to_baseline_id: { required: true, type: Number },
     },
 
     methods: {
@@ -52,10 +52,10 @@ export default {
                 component: SaveComparisonModal,
                 props: {
                     base_baseline_id: this.base_baseline_id,
-                    compared_to_baseline_id: this.compared_to_baseline_id
-                }
+                    compared_to_baseline_id: this.compared_to_baseline_id,
+                },
             });
-        }
-    }
+        },
+    },
 };
 </script>

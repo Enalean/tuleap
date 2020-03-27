@@ -31,6 +31,6 @@ import ComparisonStatisticSkeleton from "./ComparisonStatisticSkeleton.vue";
 
 export default {
     name: "ComparisonStatisticsSkeleton",
-    components: { ComparisonStatisticSkeleton }
+    components: { ComparisonStatisticSkeleton },
 };
 </script>

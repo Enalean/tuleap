@@ -35,32 +35,32 @@ export default {
     name: "FieldComparison",
 
     components: {
-        SemanticFieldLabel
+        SemanticFieldLabel,
     },
 
     props: {
         semantic: {
             required: true,
-            type: String
+            type: String,
         },
         tracker_id: {
             required: true,
-            type: Number
+            type: Number,
         },
         base: {
             required: false,
-            type: String
+            type: String,
         },
         compared_to: {
             required: false,
-            type: String
-        }
+            type: String,
+        },
     },
 
     computed: {
         value_diff() {
             return diff(this.base || "", this.compared_to || "");
-        }
-    }
+        },
+    },
 };
 </script>

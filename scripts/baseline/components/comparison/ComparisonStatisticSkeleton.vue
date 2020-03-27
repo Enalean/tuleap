@@ -30,6 +30,6 @@
 </template>
 <script>
 export default {
-    name: "ComparisonStatisticSkeleton"
+    name: "ComparisonStatisticSkeleton",
 };
 </script>

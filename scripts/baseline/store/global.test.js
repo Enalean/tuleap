@@ -31,8 +31,8 @@ describe("Global store:", () => {
             dispatch: jest.fn(),
             getters: {
                 findArtifactById: jest.fn(),
-                findBaselineById: jest.fn()
-            }
+                findBaselineById: jest.fn(),
+            },
         };
         context.dispatch.mockReturnValue(Promise.resolve());
     });
@@ -40,7 +40,7 @@ describe("Global store:", () => {
     describe("actions", () => {
         describe("#loadBaselines", () => {
             beforeEach(() => {
-                context.getters.findBaselineById.mockImplementation(id => {
+                context.getters.findBaselineById.mockImplementation((id) => {
                     if (id === 1) {
                         return create("baseline", { artifact_id: 10 });
                     }
@@ -60,7 +60,7 @@ describe("Global store:", () => {
 
             it("dispatches 'loadTrackers'", () => {
                 expect(context.dispatch).toHaveBeenCalledWith("loadArtifacts", {
-                    artifact_ids: [10, 20]
+                    artifact_ids: [10, 20],
                 });
             });
 
@@ -72,7 +72,7 @@ describe("Global store:", () => {
 
                 it("dispatches 'loadBaseline' once", () => {
                     const loadBaseline_calls = context.dispatch.mock.calls.filter(
-                        call => call[0] === "loadBaseline"
+                        (call) => call[0] === "loadBaseline"
                     );
                     expect(loadBaseline_calls.length).toEqual(1);
                 });
@@ -129,7 +129,7 @@ describe("Global store:", () => {
 
         describe("#loadArtifacts", () => {
             beforeEach(() => {
-                context.getters.findArtifactById.mockImplementation(id => {
+                context.getters.findArtifactById.mockImplementation((id) => {
                     if (id === 1) {
                         return create("artifact", { tracker: { id: 10 } });
                     }
@@ -149,7 +149,7 @@ describe("Global store:", () => {
 
             it("dispatches 'loadTrackers'", () => {
                 expect(context.dispatch).toHaveBeenCalledWith("loadTrackers", {
-                    tracker_ids: [10, 20]
+                    tracker_ids: [10, 20],
                 });
             });
 
@@ -162,7 +162,7 @@ describe("Global store:", () => {
                 it("dispatches 'loadArtifact' once", () => {
                     expect(context.dispatch.mock.calls).toEqual([
                         ["loadArtifact", expect.any(Object)],
-                        ["loadTrackers", expect.any(Object)]
+                        ["loadTrackers", expect.any(Object)],
                     ]);
                 });
             });
@@ -256,7 +256,7 @@ describe("Global store:", () => {
             beforeEach(
                 () =>
                     (state.users_by_id = {
-                        1: user
+                        1: user,
                     })
             );
 
@@ -270,7 +270,7 @@ describe("Global store:", () => {
             beforeEach(
                 () =>
                     (state.artifacts_by_id = {
-                        1: artifact
+                        1: artifact,
                     })
             );
 
@@ -284,7 +284,7 @@ describe("Global store:", () => {
             beforeEach(
                 () =>
                     (state.trackers_by_id = {
-                        1: tracker
+                        1: tracker,
                     })
             );
 

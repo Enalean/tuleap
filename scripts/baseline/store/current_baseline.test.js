@@ -27,7 +27,7 @@ describe("Current baseline store:", () => {
         beforeEach(() => {
             context = {
                 commit: jest.fn(),
-                dispatch: jest.fn()
+                dispatch: jest.fn(),
             };
             context.dispatch.mockReturnValue(Promise.resolve());
         });
@@ -40,7 +40,7 @@ describe("Current baseline store:", () => {
             });
             it("reset semantics", () => {
                 expect(context.commit).toHaveBeenCalledWith("semantics/reset", null, {
-                    root: true
+                    root: true,
                 });
             });
             it("loads baseline with author", () => {

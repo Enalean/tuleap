@@ -29,7 +29,7 @@ describe("Baselines store:", () => {
         beforeEach(() => {
             context = {
                 commit: jest.fn(),
-                dispatch: jest.fn()
+                dispatch: jest.fn(),
             };
             context.dispatch.mockReturnValue(Promise.resolve());
         });
@@ -63,7 +63,7 @@ describe("Baselines store:", () => {
             it("updated baselines", () => {
                 expect(context.commit).toHaveBeenCalledWith("updateBaselines", [
                     baseline1,
-                    baseline2
+                    baseline2,
                 ]);
             });
         });

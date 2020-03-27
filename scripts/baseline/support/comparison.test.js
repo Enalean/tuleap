@@ -64,11 +64,11 @@ describe("comparison :", () => {
         describe("when one artifact was modified", () => {
             const base_artifact = create("baseline_artifact", {
                 id: 1,
-                description: "old description"
+                description: "old description",
             });
             const compared_to_artifact = create("baseline_artifact", {
                 id: 1,
-                description: "new description"
+                description: "new description",
             });
 
             beforeEach(
@@ -77,12 +77,12 @@ describe("comparison :", () => {
 
             it("#identical_or_modified returns old and new artifact", () => {
                 expect(comparison.identical_or_modified).toEqual([
-                    { base: base_artifact, compared_to: compared_to_artifact }
+                    { base: base_artifact, compared_to: compared_to_artifact },
                 ]);
             });
             it("#modified returns old and new artifact", () => {
                 expect(comparison.modified).toEqual([
-                    { base: base_artifact, compared_to: compared_to_artifact }
+                    { base: base_artifact, compared_to: compared_to_artifact },
                 ]);
             });
             it("#removed returns empty array", () => {

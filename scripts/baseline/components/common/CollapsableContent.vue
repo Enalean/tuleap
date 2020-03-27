@@ -44,14 +44,14 @@ export default {
 
     data() {
         return {
-            is_collapsed: false
+            is_collapsed: false,
         };
     },
 
     methods: {
         toggleCollapse() {
             this.is_collapsed = !this.is_collapsed;
-        }
-    }
+        },
+    },
 };
 </script>

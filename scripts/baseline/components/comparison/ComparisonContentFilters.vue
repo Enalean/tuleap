@@ -41,7 +41,7 @@ export default {
     methods: {
         onChange(trackers) {
             this.$store.commit("comparison/filterTrackers", trackers);
-        }
-    }
+        },
+    },
 };
 </script>

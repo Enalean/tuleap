@@ -26,7 +26,7 @@ export default {
     state: {
         comparisons: null,
         is_loading: false,
-        is_loading_failed: false
+        is_loading_failed: false,
     },
 
     actions: {
@@ -36,9 +36,9 @@ export default {
                 const comparisons = await getComparisons(project_id);
 
                 const baseline_ids = comparisons
-                    .map(comparison => [
+                    .map((comparison) => [
                         comparison.base_baseline_id,
-                        comparison.compared_to_baseline_id
+                        comparison.compared_to_baseline_id,
                     ])
                     .flat();
                 const baselines_loading = dispatch(
@@ -55,18 +55,18 @@ export default {
             } finally {
                 commit("stopLoading");
             }
-        }
+        },
     },
 
     mutations: {
-        startLoading: state => {
+        startLoading: (state) => {
             state.is_loading_failed = false;
             state.is_loading = true;
         },
-        failLoading: state => {
+        failLoading: (state) => {
             state.is_loading_failed = true;
         },
-        stopLoading: state => {
+        stopLoading: (state) => {
             state.is_loading_failed = false;
             state.is_loading = false;
         },
@@ -75,11 +75,11 @@ export default {
         },
         delete: (state, comparison_to_delete) => {
             state.comparisons = state.comparisons.filter(
-                comparison => comparison.id !== comparison_to_delete.id
+                (comparison) => comparison.id !== comparison_to_delete.id
             );
-        }
+        },
     },
     getters: {
-        are_some_available: state => state.comparisons !== null && state.comparisons.length > 0
-    }
+        are_some_available: (state) => state.comparisons !== null && state.comparisons.length > 0,
+    },
 };

@@ -74,14 +74,14 @@ export default {
     props: {
         submit_label: { required: true, type: String },
         default_failed_message: { required: true, type: String },
-        on_submit: { required: true, type: Function }
+        on_submit: { required: true, type: Function },
     },
 
     data() {
         return {
             is_deleting: false,
             is_deleting_failed: false,
-            failed_message: null
+            failed_message: null,
         };
     },
 
@@ -97,7 +97,7 @@ export default {
             } finally {
                 this.is_deleting = false;
             }
-        }
-    }
+        },
+    },
 };
 </script>

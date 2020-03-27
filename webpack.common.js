@@ -24,13 +24,15 @@ const assets_dir_path = path.resolve(__dirname, "../../src/www/assets/baseline")
 const assets_public_path = "/assets/baseline/";
 
 const entry_points = {
-    baseline: "./scripts/baseline/index.js"
+    baseline: "./scripts/baseline/index.js",
 };
 
 const colors = ["blue", "green", "grey", "orange", "purple", "red"];
 for (const color of colors) {
     entry_points[`baseline-${color}`] = `./themes/BurningParrot/baseline-${color}.scss`;
-    entry_points[`baseline-${color}-condensed`] = `./themes/BurningParrot/baseline-${color}-condensed.scss`;
+    entry_points[
+        `baseline-${color}-condensed`
+    ] = `./themes/BurningParrot/baseline-${color}-condensed.scss`;
 }
 
 module.exports = [
@@ -39,27 +41,27 @@ module.exports = [
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(assets_dir_path, assets_public_path),
         externals: {
-            tlp: "tlp"
+            tlp: "tlp",
         },
         resolve: {
-            alias: webpack_configurator.extendAliases(webpack_configurator.tlp_fetch_alias)
+            alias: webpack_configurator.extendAliases(webpack_configurator.tlp_fetch_alias),
         },
         module: {
             rules: [
                 webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
                 webpack_configurator.rule_easygettext_loader,
                 webpack_configurator.rule_vue_loader,
-                webpack_configurator.rule_scss_loader
-            ]
+                webpack_configurator.rule_scss_loader,
+            ],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
             webpack_configurator.getVueLoaderPlugin(),
-            ...webpack_configurator.getCSSExtractionPlugins()
+            ...webpack_configurator.getCSSExtractionPlugins(),
         ],
         resolveLoader: {
-            alias: webpack_configurator.easygettext_loader_alias
-        }
-    }
+            alias: webpack_configurator.easygettext_loader_alias,
+        },
+    },
 ];

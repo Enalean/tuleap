@@ -48,12 +48,12 @@ describe("DeleteBaselineConfirmationModal", () => {
 
         wrapper = shallowMount(DeleteBaselineConfirmationModal, {
             propsData: {
-                baseline
+                baseline,
             },
             localVue,
             mocks: {
-                $store
-            }
+                $store,
+            },
         });
     });
 

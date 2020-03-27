@@ -55,16 +55,16 @@ export default {
         ComparisonHeader,
         ComparisonStatistics,
         ComparisonContentFilters,
-        ComparisonContent
+        ComparisonContent,
     },
     props: {
-        comparison: { required: true, type: Object }
+        comparison: { required: true, type: Object },
     },
 
     data() {
         return {
             is_loading: true,
-            is_loading_failed: false
+            is_loading_failed: false,
         };
     },
 
@@ -78,7 +78,7 @@ export default {
         },
         has_comparison_comment() {
             return Boolean(this.comparison.comment);
-        }
+        },
     },
 
     mounted() {
@@ -106,7 +106,7 @@ export default {
             } finally {
                 this.is_loading = false;
             }
-        }
-    }
+        },
+    },
 };
 </script>

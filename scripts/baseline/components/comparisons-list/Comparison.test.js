@@ -42,18 +42,18 @@ describe("Comparison", () => {
             findBaselineById: jest.fn(),
             findArtifactById: jest.fn(),
             findTrackerById: jest.fn(),
-            findUserById: jest.fn()
+            findUserById: jest.fn(),
         };
 
         localVue = createLocalVue();
         localVue.use(GettextPlugin, {
             translations: {},
-            silent: true
+            silent: true,
         });
     });
 
     beforeEach(() => {
-        $store.getters.findBaselineById.mockImplementation(id => {
+        $store.getters.findBaselineById.mockImplementation((id) => {
             if (id === 11) {
                 return create("baseline", { artifact_id: 22 });
             }
@@ -62,7 +62,7 @@ describe("Comparison", () => {
             }
             throw new Error("Not expected ID: " + id);
         });
-        $store.getters.findArtifactById.mockImplementation(id => {
+        $store.getters.findArtifactById.mockImplementation((id) => {
             if (id === 22) {
                 return base_baseline_artifact;
             }
@@ -75,11 +75,11 @@ describe("Comparison", () => {
                 comparison: create("comparison", "saved", {
                     id: 1,
                     base_baseline_id: 11,
-                    compared_to_baseline_id: 12
-                })
+                    compared_to_baseline_id: 12,
+                }),
             },
             localVue,
-            mocks: { $store, $router }
+            mocks: { $store, $router },
         });
     });
 

@@ -34,16 +34,16 @@ export default {
     props: {
         comparison: {
             required: true,
-            type: Object
-        }
+            type: Object,
+        },
     },
     methods: {
         showComparison() {
             this.$router.push({
                 name: "ComparisonPage",
-                params: { comparison_id: this.comparison.id }
+                params: { comparison_id: this.comparison.id },
             });
-        }
-    }
+        },
+    },
 };
 </script>

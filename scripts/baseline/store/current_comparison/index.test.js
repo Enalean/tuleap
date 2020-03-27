@@ -27,7 +27,7 @@ describe("Current comparison store:", () => {
         let context;
         let getters = {
             "base/findArtifactsByIds": () => {},
-            "compared_to/findArtifactsByIds": () => {}
+            "compared_to/findArtifactsByIds": () => {},
         };
 
         beforeEach(() => {
@@ -35,7 +35,7 @@ describe("Current comparison store:", () => {
                 state: { ...store.state },
                 commit: jest.fn(),
                 dispatch: jest.fn(),
-                getters
+                getters,
             };
             context.dispatch.mockReturnValue(Promise.resolve());
         });
@@ -48,7 +48,7 @@ describe("Current comparison store:", () => {
             it("commits 'startNewComparison'", () => {
                 expect(context.dispatch).toHaveBeenCalledWith("startNewComparison", {
                     base_baseline_id: 1,
-                    compared_to_baseline_id: 2
+                    compared_to_baseline_id: 2,
                 });
             });
             it("dispatches 'loadBaseline' with baseline ids", () => {
@@ -73,16 +73,16 @@ describe("Current comparison store:", () => {
             beforeEach(() =>
                 store.actions.startNewComparison(context, {
                     base_baseline_id: 1,
-                    compared_to_baseline_id: 2
+                    compared_to_baseline_id: 2,
                 })
             );
 
             it("commit 'rest' on compared baseline", () => {
                 expect(context.commit).toHaveBeenCalledWith("base/reset", {
-                    baseline_id: 1
+                    baseline_id: 1,
                 });
                 expect(context.commit).toHaveBeenCalledWith("compared_to/reset", {
-                    baseline_id: 2
+                    baseline_id: 2,
                 });
             });
         });
@@ -90,7 +90,7 @@ describe("Current comparison store:", () => {
         describe("#compareArtifacts", () => {
             const base_artifact = create("baseline_artifact", { linked_artifact_ids: [1] });
             const compared_to_artifact = create("baseline_artifact", {
-                linked_artifact_ids: [1, 2]
+                linked_artifact_ids: [1, 2],
             });
 
             const linked_base_artifacts = createList("baseline_artifact", 1);
@@ -100,20 +100,20 @@ describe("Current comparison store:", () => {
                 identical_or_modified: [
                     {
                         base: base_artifact,
-                        compared_to: compared_to_artifact
-                    }
-                ]
+                        compared_to: compared_to_artifact,
+                    },
+                ],
             };
 
             beforeEach(() => {
-                jest.spyOn(getters, "base/findArtifactsByIds").mockImplementation(ids => {
+                jest.spyOn(getters, "base/findArtifactsByIds").mockImplementation((ids) => {
                     if (JSON.stringify([1]) === JSON.stringify(ids)) {
                         return linked_base_artifacts;
                     }
                     throw new Error("Not expected IDs");
                 });
 
-                jest.spyOn(getters, "compared_to/findArtifactsByIds").mockImplementation(ids => {
+                jest.spyOn(getters, "compared_to/findArtifactsByIds").mockImplementation((ids) => {
                     if (JSON.stringify([1, 2]) === JSON.stringify(ids)) {
                         return linked_compared_to_artifacts;
                     }
@@ -124,7 +124,7 @@ describe("Current comparison store:", () => {
 
                 return store.actions.compareArtifacts(context, {
                     base_artifacts: [base_artifact],
-                    compared_to_artifacts: [compared_to_artifact]
+                    compared_to_artifacts: [compared_to_artifact],
                 });
             });
 
@@ -137,7 +137,7 @@ describe("Current comparison store:", () => {
             it("compares linked artifacts", () => {
                 expect(context.dispatch).toHaveBeenCalledWith("compareArtifacts", {
                     base_artifacts: linked_base_artifacts,
-                    compared_to_artifacts: linked_compared_to_artifacts
+                    compared_to_artifacts: linked_compared_to_artifacts,
                 });
             });
         });
@@ -155,7 +155,7 @@ describe("Current comparison store:", () => {
                     const artifacts_comparison = create("artifacts_comparison", "empty", {
                         added: createList("baseline_artifact", 1),
                         removed: createList("baseline_artifact", 2),
-                        modified: createList("baseline_artifact", 3)
+                        modified: createList("baseline_artifact", 3),
                     });
                     store.mutations.incrementStatistics(state, artifacts_comparison);
                 });
@@ -174,10 +174,10 @@ describe("Current comparison store:", () => {
                                     {
                                         base: create("baseline_artifact", { initial_effort: 3 }),
                                         compared_to: create("baseline_artifact", {
-                                            initial_effort: 3
-                                        })
-                                    }
-                                ]
+                                            initial_effort: 3,
+                                        }),
+                                    },
+                                ],
                             });
                             store.mutations.incrementStatistics(state, artifacts_comparison);
                         });
@@ -193,10 +193,10 @@ describe("Current comparison store:", () => {
                                     {
                                         base: create("baseline_artifact", { initial_effort: 3 }),
                                         compared_to: create("baseline_artifact", {
-                                            initial_effort: 5
-                                        })
-                                    }
-                                ]
+                                            initial_effort: 5,
+                                        }),
+                                    },
+                                ],
                             });
                             store.mutations.incrementStatistics(state, artifacts_comparison);
                         });

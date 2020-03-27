@@ -21,17 +21,17 @@
 const find = (values, predicate) => values.filter(predicate)[0];
 
 const mapAttribute = (values, attribute) =>
-    values.map(value => value[attribute] || null).filter(Boolean);
+    values.map((value) => value[attribute] || null).filter(Boolean);
 
-const unique = values => [...new Set(values)];
+const unique = (values) => [...new Set(values)];
 
 const uniqueByAttribute = (values, attribute) =>
-    unique(mapAttribute(values, attribute)).map(attribute_value =>
-        find(values, value => value[attribute] === attribute_value)
+    unique(mapAttribute(values, attribute)).map((attribute_value) =>
+        find(values, (value) => value[attribute] === attribute_value)
     );
 
-const clone = values =>
-    values.map(value => {
+const clone = (values) =>
+    values.map((value) => {
         return { ...value };
     });
 

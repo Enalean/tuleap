@@ -29,6 +29,6 @@ export default {
     name: "NotFoundPage",
     created() {
         this.$emit("title", this.$gettext("Page not found"));
-    }
+    },
 };
 </script>

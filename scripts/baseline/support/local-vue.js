@@ -29,7 +29,7 @@ localVue.use(Vuex);
 localVue.use(VueDOMPurifyHTML);
 localVue.use(GettextPlugin, {
     translations: {},
-    silent: true
+    silent: true,
 });
 localVue.use(VueRouter);
 

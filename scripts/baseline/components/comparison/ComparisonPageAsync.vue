@@ -37,13 +37,13 @@ export default {
     components: { ComparisonPageSkeleton, ComparisonPage },
 
     props: {
-        comparison_id: { required: true, type: Number }
+        comparison_id: { required: true, type: Number },
     },
 
     data() {
         return {
             comparison: null,
-            is_fetching: true
+            is_fetching: true,
         };
     },
 
@@ -64,7 +64,7 @@ export default {
             } finally {
                 this.is_fetching = false;
             }
-        }
-    }
+        },
+    },
 };
 </script>

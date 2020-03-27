@@ -36,6 +36,6 @@ import ArtifactSkeleton from "../common/ArtifactSkeleton.vue";
 
 export default {
     name: "ContentBodySkeleton",
-    components: { ArtifactSkeleton }
+    components: { ArtifactSkeleton },
 };
 </script>

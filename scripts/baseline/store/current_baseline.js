@@ -27,7 +27,7 @@ export default {
 
     state: {
         ...abstract_baseline_content.state,
-        hidden_tracker_ids: []
+        hidden_tracker_ids: [],
     },
 
     actions: {
@@ -37,22 +37,22 @@ export default {
             commit("semantics/reset", null, { root: true });
             await Promise.all([
                 dispatch("loadBaselineWithAuthor", { baseline_id }, { root: true }),
-                dispatch("loadAllArtifacts")
+                dispatch("loadAllArtifacts"),
             ]);
-        }
+        },
     },
 
     mutations: {
         ...abstract_baseline_content.mutations,
         filterTrackers: (state, hidden_trackers) =>
-            (state.hidden_tracker_ids = ArrayUtils.mapAttribute(hidden_trackers, "id"))
+            (state.hidden_tracker_ids = ArrayUtils.mapAttribute(hidden_trackers, "id")),
     },
 
     getters: {
         ...abstract_baseline_content.getters,
-        filterArtifacts: state => artifacts =>
+        filterArtifacts: (state) => (artifacts) =>
             artifacts.filter(
-                artifact => state.hidden_tracker_ids.indexOf(artifact.tracker_id) === -1
-            )
-    }
+                (artifact) => state.hidden_tracker_ids.indexOf(artifact.tracker_id) === -1
+            ),
+    },
 };

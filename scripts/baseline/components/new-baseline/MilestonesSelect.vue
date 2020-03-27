@@ -50,12 +50,12 @@ export default {
     name: "NewBaselineMilestoneSelect",
 
     props: {
-        milestones: { mandatory: true, type: Array }
+        milestones: { mandatory: true, type: Array },
     },
 
     computed: {
         sorted_milestones() {
-            return [...this.milestones].sort(function(milestone_a, milestone_b) {
+            return [...this.milestones].sort(function (milestone_a, milestone_b) {
                 const id_a = milestone_a.id;
                 const id_b = milestone_b.id;
 
@@ -67,15 +67,15 @@ export default {
                 }
                 return 0;
             });
-        }
+        },
     },
 
     methods: {
         onMilestoneSelected(event) {
             const milestone_id = Number(event.target.value);
-            const milestone = this.milestones.find(milestone => milestone.id === milestone_id);
+            const milestone = this.milestones.find((milestone) => milestone.id === milestone_id);
             this.$emit("change", milestone);
-        }
-    }
+        },
+    },
 };
 </script>

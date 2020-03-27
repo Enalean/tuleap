@@ -26,6 +26,6 @@
 
 <script>
 export default {
-    name: "ComparisonLabelSkeleton"
+    name: "ComparisonLabelSkeleton",
 };
 </script>

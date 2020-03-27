@@ -35,7 +35,7 @@ export default {
     name: "DeleteBaselineConfirmationModal",
     components: { DeleteConfirmationModal },
     props: {
-        baseline: { required: true, type: Object }
+        baseline: { required: true, type: Object },
     },
     computed: {
         label() {
@@ -49,9 +49,9 @@ export default {
                 "You are about to delete the baseline <strong>%{ baseline_name }</strong>."
             );
             return this.$gettextInterpolate(translated, {
-                baseline_name: this.baseline.name
+                baseline_name: this.baseline.name,
             });
-        }
+        },
     },
     methods: {
         async confirm() {
@@ -65,10 +65,10 @@ export default {
             this.$store.commit("baselines/delete", this.baseline);
             this.$store.commit("dialog_interface/notify", {
                 text: this.$gettext("The baseline was deleted"),
-                class: "success"
+                class: "success",
             });
             this.$store.commit("dialog_interface/hideModal");
-        }
-    }
+        },
+    },
 };
 </script>

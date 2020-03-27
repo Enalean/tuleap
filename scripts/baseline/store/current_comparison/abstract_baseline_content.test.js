@@ -35,7 +35,7 @@ describe("Compared baseline store:", () => {
             context = {
                 state: { ...state, baseline_id: 1 },
                 commit: jest.fn(),
-                dispatch: jest.fn()
+                dispatch: jest.fn(),
             };
             context.dispatch.mockReturnValue(Promise.resolve());
 
@@ -46,7 +46,7 @@ describe("Compared baseline store:", () => {
         describe("#loadAllArtifacts", () => {
             const artifacts = createList("baseline_artifact", 2);
             beforeEach(() => {
-                getBaselineArtifacts.mockImplementation(id => {
+                getBaselineArtifacts.mockImplementation((id) => {
                     if (id === 1) {
                         return Promise.resolve(artifacts);
                     }
@@ -67,7 +67,7 @@ describe("Compared baseline store:", () => {
             describe("when some linked artifacts", () => {
                 const artifacts = [
                     create("baseline_artifact", { linked_artifact_ids: [1] }),
-                    create("baseline_artifact", { linked_artifact_ids: [2, 3] })
+                    create("baseline_artifact", { linked_artifact_ids: [2, 3] }),
                 ];
 
                 const linked_artifacts = createList("baseline_artifact", 3);
@@ -104,7 +104,7 @@ describe("Compared baseline store:", () => {
                 beforeEach(() => {
                     const artifacts = [
                         create("baseline_artifact", { linked_artifact_ids: [] }),
-                        create("baseline_artifact", { linked_artifact_ids: [] })
+                        create("baseline_artifact", { linked_artifact_ids: [] }),
                     ];
                     return store.actions.addArtifacts(context, artifacts);
                 });
@@ -141,13 +141,13 @@ describe("Compared baseline store:", () => {
                 () =>
                     (state.artifacts_by_id = {
                         1: artifact1,
-                        2: artifact2
+                        2: artifact2,
                     })
             );
             it("returns all base artifacts with given ids", () => {
                 expect(store.getters.findArtifactsByIds(state)([1, 2])).toEqual([
                     artifact1,
-                    artifact2
+                    artifact2,
                 ]);
             });
         });
@@ -217,14 +217,14 @@ describe("Compared baseline store:", () => {
                     (state.artifacts_by_id = {
                         1: create("baseline_artifact", { tracker_id: 1, tracker_name: "Epic" }),
                         2: create("baseline_artifact", { tracker_id: 2, tracker_name: "Story" }),
-                        3: create("baseline_artifact", { tracker_id: 1, tracker_name: "Epic" })
+                        3: create("baseline_artifact", { tracker_id: 1, tracker_name: "Epic" }),
                     })
             );
 
             it("returns all distinct trackers", () => {
                 expect(store.getters.all_trackers(state)).toEqual([
                     { id: 1, name: "Epic" },
-                    { id: 2, name: "Story" }
+                    { id: 2, name: "Story" },
                 ]);
             });
         });

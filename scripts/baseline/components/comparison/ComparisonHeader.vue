@@ -45,11 +45,11 @@ export default {
     name: "ComparisonHeader",
 
     components: {
-        TransientComparisonLabel
+        TransientComparisonLabel,
     },
 
     props: {
-        comparison: { required: true, type: Object }
+        comparison: { required: true, type: Object },
     },
 
     computed: {
@@ -59,7 +59,7 @@ export default {
         },
         compared_to_baseline() {
             return this.findBaselineById(this.comparison.compared_to_baseline_id);
-        }
-    }
+        },
+    },
 };
 </script>

@@ -38,19 +38,19 @@ describe("ContentBody", () => {
             {
                 ...store_options,
                 getters: {
-                    "current_baseline/filterArtifacts": () => []
-                }
+                    "current_baseline/filterArtifacts": () => [],
+                },
             },
             {
-                current_baseline: { first_depth_artifacts: [] }
+                current_baseline: { first_depth_artifacts: [] },
             }
         );
 
         wrapper = shallowMount(ContentBody, {
             localVue,
             mocks: {
-                $store
-            }
+                $store,
+            },
         });
     });
 

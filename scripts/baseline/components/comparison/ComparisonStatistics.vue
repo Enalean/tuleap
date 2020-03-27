@@ -56,14 +56,14 @@ export default {
             } else {
                 return `- ${Math.abs(value)}`;
             }
-        }
+        },
     },
 
     computed: {
         ...mapState("comparison", [
             "added_artifacts_count",
             "removed_artifacts_count",
-            "modified_artifacts_count"
+            "modified_artifacts_count",
         ]),
         added_artifact_label() {
             if (this.added_artifacts_count > 1) {
@@ -82,7 +82,7 @@ export default {
                 return this.$gettext("Artifacts modified");
             }
             return this.$gettext("Artifact modified");
-        }
-    }
+        },
+    },
 };
 </script>

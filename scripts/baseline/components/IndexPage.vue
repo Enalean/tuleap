@@ -107,13 +107,13 @@ export default {
     components: { BaselinesList, ComparisonsList },
 
     props: {
-        project_id: { mandatory: true, type: Number }
+        project_id: { mandatory: true, type: Number },
     },
 
     data() {
         return {
             new_baseline_modal: null,
-            new_comparison_modal: null
+            new_comparison_modal: null,
         };
     },
 
@@ -130,7 +130,7 @@ export default {
             return (
                 !this.are_baselines_loading && this.baselines !== null && this.baselines.length > 0
             );
-        }
+        },
     },
 
     created() {
@@ -142,7 +142,7 @@ export default {
             this.$store.commit("dialog_interface/showModal", {
                 component: NewBaselineModal,
                 title: this.$gettext("New baseline"),
-                props: { project_id: this.project_id }
+                props: { project_id: this.project_id },
             });
         },
 
@@ -150,9 +150,9 @@ export default {
             this.$store.commit("dialog_interface/showModal", {
                 component: NewComparisonModal,
                 title: this.$gettext("New comparison"),
-                props: { baselines: this.baselines }
+                props: { baselines: this.baselines },
             });
-        }
-    }
+        },
+    },
 };
 </script>

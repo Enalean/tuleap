@@ -36,12 +36,12 @@ export default {
     props: {
         semantic: {
             required: true,
-            type: String
+            type: String,
         },
         tracker_id: {
             required: true,
-            type: Number
-        }
+            type: Number,
+        },
     },
 
     computed: {
@@ -51,7 +51,7 @@ export default {
         },
         label() {
             return this.field_label(this.tracker_id, this.semantic);
-        }
+        },
     },
 
     mounted() {
@@ -61,7 +61,7 @@ export default {
     methods: {
         loadSemanticField() {
             this.$store.dispatch("semantics/loadByTrackerId", this.tracker_id);
-        }
-    }
+        },
+    },
 };
 </script>

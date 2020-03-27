@@ -35,20 +35,20 @@ export default {
     props: {
         trackers: {
             required: true,
-            type: Array
-        }
+            type: Array,
+        },
     },
 
     data() {
         return {
-            select2_control: null
+            select2_control: null,
         };
     },
 
     mounted() {
         this.select2_control = select2(this.$refs.input, {
             placeholder: this.$gettext("Choose a tracker…"),
-            multiple: true
+            multiple: true,
         }).on("change", this.onChange);
     },
 
@@ -65,16 +65,16 @@ export default {
             if (!values) {
                 return values;
             }
-            return values.map(value => Number(value));
+            return values.map((value) => Number(value));
         },
         findTrackerById(id) {
-            return ArrayUtils.find(this.trackers, tracker => tracker.id === id);
+            return ArrayUtils.find(this.trackers, (tracker) => tracker.id === id);
         },
         onChange() {
             const tracker_ids = this.convertToInts(this.select2_control.val()) || [];
-            const trackers = tracker_ids.map(id => this.findTrackerById(id));
+            const trackers = tracker_ids.map((id) => this.findTrackerById(id));
             this.$emit("change", trackers);
-        }
-    }
+        },
+    },
 };
 </script>

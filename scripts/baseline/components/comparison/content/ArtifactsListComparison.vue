@@ -56,13 +56,13 @@ export default {
 
     props: {
         base_artifacts: { require: true, type: Array },
-        compared_to_artifacts: { require: true, type: Array }
+        compared_to_artifacts: { require: true, type: Array },
     },
 
     computed: {
         comparison() {
             return compareArtifacts(this.base_artifacts, this.compared_to_artifacts);
-        }
-    }
+        },
+    },
 };
 </script>

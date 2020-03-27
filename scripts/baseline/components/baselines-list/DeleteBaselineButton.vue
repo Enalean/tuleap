@@ -35,7 +35,7 @@ export default {
     components: { ActionButton },
 
     props: {
-        baseline: { required: true, type: Object }
+        baseline: { required: true, type: Object },
     },
 
     methods: {
@@ -44,9 +44,9 @@ export default {
                 class: "tlp-modal-danger",
                 component: DeleteBaselineConfirmationModal,
                 title: this.$gettext("Delete baseline"),
-                props: { baseline: this.baseline }
+                props: { baseline: this.baseline },
             });
-        }
-    }
+        },
+    },
 };
 </script>

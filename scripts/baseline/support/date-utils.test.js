@@ -31,7 +31,7 @@ describe("DateUtils:", () => {
         DateFormatter.setOptions({
             user_locale: "de",
             user_timezone: "America/Chicago",
-            format: "d/m/Y H:i"
+            format: "d/m/Y H:i",
         });
     });
 

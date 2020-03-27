@@ -64,8 +64,8 @@ describe("NewBaselineModal", () => {
             propsData: { project_id: 1 },
             localVue,
             mocks: {
-                $store
-            }
+                $store,
+            },
         });
         await wrapper.vm.$nextTick();
     });

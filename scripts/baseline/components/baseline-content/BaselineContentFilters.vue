@@ -41,7 +41,7 @@ export default {
     methods: {
         onChange(trackers) {
             this.$store.commit("current_baseline/filterTrackers", trackers);
-        }
-    }
+        },
+    },
 };
 </script>

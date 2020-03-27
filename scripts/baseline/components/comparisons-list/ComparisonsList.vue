@@ -78,16 +78,16 @@ export default {
     components: { ComparisonSkeleton, Comparison },
 
     props: {
-        project_id: { required: true, type: Number }
+        project_id: { required: true, type: Number },
     },
 
     computed: {
         ...mapState("comparisons", ["comparisons", "is_loading"]),
-        ...mapGetters("comparisons", ["are_some_available"])
+        ...mapGetters("comparisons", ["are_some_available"]),
     },
 
     mounted() {
         this.$store.dispatch("comparisons/load", { project_id: this.project_id });
-    }
+    },
 };
 </script>

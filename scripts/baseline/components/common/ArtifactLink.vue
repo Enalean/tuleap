@@ -27,12 +27,12 @@
 export default {
     name: "ArtifactLink",
     props: {
-        artifact: { required: true, type: Object }
+        artifact: { required: true, type: Object },
     },
     computed: {
         url() {
             return `/plugins/tracker/?aid=${this.artifact.id}`;
-        }
-    }
+        },
+    },
 };
 </script>

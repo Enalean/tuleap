@@ -36,7 +36,7 @@ export default {
     props: {
         comparison: { required: true, type: Object },
         base_baseline: { required: true, type: Object },
-        compared_to_baseline: { required: true, type: Object }
+        compared_to_baseline: { required: true, type: Object },
     },
     computed: {
         label() {
@@ -51,9 +51,9 @@ export default {
                 and <strong>%{ compared_to_baseline_name }</strong>.`);
             return this.$gettextInterpolate(translated, {
                 base_baseline_name: this.base_baseline.name,
-                compared_to_baseline_name: this.compared_to_baseline.name
+                compared_to_baseline_name: this.compared_to_baseline.name,
             });
-        }
+        },
     },
     methods: {
         async confirm() {
@@ -66,10 +66,10 @@ export default {
             this.$store.commit("comparisons/delete", this.comparison);
             this.$store.commit("dialog_interface/notify", {
                 text: this.$gettext("The comparison was deleted"),
-                class: "success"
+                class: "success",
             });
             this.$store.commit("dialog_interface/hideModal");
-        }
-    }
+        },
+    },
 };
 </script>

@@ -68,10 +68,10 @@ export default {
         ArtifactBadge,
         HumanizedDate,
         UserBadge,
-        DeleteBaselineButton
+        DeleteBaselineButton,
     },
     props: {
-        baseline: { required: true, type: Object }
+        baseline: { required: true, type: Object },
     },
     computed: {
         ...mapGetters(["findArtifactById", "findTrackerById", "findUserById"]),
@@ -83,15 +83,15 @@ export default {
         },
         author() {
             return this.findUserById(this.baseline.author_id);
-        }
+        },
     },
     methods: {
         showBaseline(baseline) {
             this.$router.push({
                 name: "BaselineContentPage",
-                params: { baseline_id: baseline.id }
+                params: { baseline_id: baseline.id },
             });
-        }
-    }
+        },
+    },
 };
 </script>

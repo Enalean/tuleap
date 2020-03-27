@@ -39,8 +39,8 @@ describe("ArtifactComparison", () => {
                 "comparison/base/findArtifactsByIds": () => [linked_artifact],
                 "comparison/base/isLimitReachedOnArtifact": () => false,
                 "comparison/compared_to/findArtifactsByIds": () => [],
-                "comparison/compared_to/isLimitReachedOnArtifact": () => false
-            }
+                "comparison/compared_to/isLimitReachedOnArtifact": () => false,
+            },
         });
         linked_artifact = create("baseline_artifact", { id: 2 });
 
@@ -48,11 +48,11 @@ describe("ArtifactComparison", () => {
             localVue,
             propsData: {
                 base: create("baseline_artifact", {
-                    linked_artifact_ids: [2]
+                    linked_artifact_ids: [2],
                 }),
-                compared_to: create("baseline_artifact")
+                compared_to: create("baseline_artifact"),
             },
-            mocks: { $store }
+            mocks: { $store },
         });
     });
 
@@ -68,7 +68,7 @@ describe("ArtifactComparison", () => {
         beforeEach(async () => {
             wrapper.setProps({
                 base: create("baseline_artifact", "without_linked_artifacts"),
-                compared_to: create("baseline_artifact", "without_linked_artifacts")
+                compared_to: create("baseline_artifact", "without_linked_artifacts"),
             });
 
             await wrapper.vm.$nextTick();
@@ -88,7 +88,7 @@ describe("ArtifactComparison", () => {
             $store.getters["comparison/base/isLimitReachedOnArtifact"] = () => true;
             wrapper.setProps({
                 reference: create("baseline_artifact"),
-                compared_to: create("baseline_artifact")
+                compared_to: create("baseline_artifact"),
             });
 
             await wrapper.vm.$nextTick();

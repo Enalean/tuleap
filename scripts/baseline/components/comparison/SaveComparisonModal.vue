@@ -86,7 +86,7 @@ export default {
     name: "SaveComparisonModal",
     props: {
         base_baseline_id: { required: true, type: Number },
-        compared_to_baseline_id: { required: true, type: Number }
+        compared_to_baseline_id: { required: true, type: Number },
     },
 
     data() {
@@ -94,7 +94,7 @@ export default {
             name: null,
             comment: null,
             is_saving: false,
-            is_saving_failed: false
+            is_saving_failed: false,
         };
     },
 
@@ -113,12 +113,12 @@ export default {
                 this.$router.push({
                     name: "ComparisonPage",
                     params: {
-                        comparison_id: comparison.id
-                    }
+                        comparison_id: comparison.id,
+                    },
                 });
                 const notification = {
                     text: this.$gettext("The comparison was saved"),
-                    class: "success"
+                    class: "success",
                 };
                 this.$store.commit("dialog_interface/notify", notification);
                 this.$store.commit("dialog_interface/hideModal");
@@ -127,7 +127,7 @@ export default {
             } finally {
                 this.is_saving = false;
             }
-        }
-    }
+        },
+    },
 };
 </script>

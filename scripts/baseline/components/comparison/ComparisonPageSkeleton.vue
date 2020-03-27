@@ -41,7 +41,7 @@ export default {
         ComparisonContentSkeleton,
         ComparisonHeaderSkeleton,
         ComparisonContentFiltersSkeleton,
-        ComparisonStatisticsSkeleton
-    }
+        ComparisonStatisticsSkeleton,
+    },
 };
 </script>

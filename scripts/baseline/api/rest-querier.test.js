@@ -24,7 +24,7 @@ import {
     getBaselines,
     getComparisons,
     getBaselineArtifactsByIds,
-    createBaseline
+    createBaseline,
 } from "./rest-querier";
 import { create, createList } from "../support/factories";
 
@@ -91,12 +91,12 @@ describe("Rest queries:", () => {
 
         const baseline = create("baseline");
         const headers = {
-            "content-type": "application/json"
+            "content-type": "application/json",
         };
         const body = JSON.stringify({
             name: "My first baseline",
             artifact_id: 3,
-            snapshot_date: null
+            snapshot_date: null,
         });
 
         beforeEach(async () => {
@@ -106,7 +106,7 @@ describe("Rest queries:", () => {
             result = await createBaseline("My first baseline", {
                 id: 3,
                 label: "milestone Label",
-                snapshot_date: null
+                snapshot_date: null,
             });
         });
 

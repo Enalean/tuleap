@@ -36,16 +36,16 @@ describe("BaselinesList", () => {
         $store = createStoreMock({
             ...store_options,
             getters: {
-                "baselines/are_baselines_available": false
-            }
+                "baselines/are_baselines_available": false,
+            },
         });
 
         wrapper = shallowMount(BaselinesList, {
             propsData: {
-                project_id: 102
+                project_id: 102,
             },
             localVue,
-            mocks: { $store }
+            mocks: { $store },
         });
     });
 

@@ -36,7 +36,7 @@ export default {
     props: {
         comparison: { required: true, type: Object },
         base_baseline: { required: true, type: Object },
-        compared_to_baseline: { required: true, type: Object }
+        compared_to_baseline: { required: true, type: Object },
     },
 
     methods: {
@@ -48,10 +48,10 @@ export default {
                 props: {
                     comparison: this.comparison,
                     base_baseline: this.base_baseline,
-                    compared_to_baseline: this.compared_to_baseline
-                }
+                    compared_to_baseline: this.compared_to_baseline,
+                },
             });
-        }
-    }
+        },
+    },
 };
 </script>

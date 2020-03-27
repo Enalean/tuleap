@@ -68,12 +68,12 @@ export default {
         DepthLimitReachedMessage,
         ArtifactLabel,
         FieldComparison,
-        ArtifactsListComparison
+        ArtifactsListComparison,
     },
 
     props: {
         base: { require: true, type: Object },
-        compared_to: { required: true, type: Object }
+        compared_to: { required: true, type: Object },
     },
 
     computed: {
@@ -82,7 +82,7 @@ export default {
             findBaseArtifactsByIds: "comparison/base/findArtifactsByIds",
             isLimitReachedOnBaseArtifact: "comparison/base/isLimitReachedOnArtifact",
             findComparedToArtifactsByIds: "comparison/compared_to/findArtifactsByIds",
-            isLimitReachedOnComparedToArtifact: "comparison/compared_to/isLimitReachedOnArtifact"
+            isLimitReachedOnComparedToArtifact: "comparison/compared_to/isLimitReachedOnArtifact",
         }),
         base_linked_artifacts() {
             return this.findBaseArtifactsByIds(this.base.linked_artifact_ids);
@@ -107,11 +107,11 @@ export default {
                 this.isLimitReachedOnBaseArtifact(this.base) ||
                 this.isLimitReachedOnComparedToArtifact(this.compared_to)
             );
-        }
+        },
     },
 
     beforeCreate() {
         this.$options.components.ArtifactsListComparison = ArtifactsListComparison;
-    }
+    },
 };
 </script>
