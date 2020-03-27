@@ -46,6 +46,6 @@ import PreConditionsSection from "../PreConditionsSection.vue";
 
 export default {
     name: "PreConditionsSkeleton",
-    components: { PreConditionsSection }
+    components: { PreConditionsSection },
 };
 </script>

@@ -42,7 +42,7 @@ export function cumulativeflow(id, graph) {
         "#bcbddc",
         "#636363",
         "#969696",
-        "#bdbdbd"
+        "#bdbdbd",
     ];
 
     const margin = { top: 20, right: 20, bottom: 60, left: 40 },
@@ -70,7 +70,7 @@ export function cumulativeflow(id, graph) {
             .data(stacks(parseData()))
             .enter()
             .append("path")
-            .attr("id", d => `area_${d.key}`)
+            .attr("id", (d) => `area_${d.key}`)
             .attr("class", (d, i) => {
                 const column_color = getColumnColor(d) || color(i);
 
@@ -98,9 +98,7 @@ export function cumulativeflow(id, graph) {
             .attr("transform", `translate(0, ${height - margin.bottom})`)
             .call(x_axis);
 
-        svg.append("g")
-            .attr("class", "axis y-axis")
-            .call(y_axis);
+        svg.append("g").attr("class", "axis y-axis").call(y_axis);
 
         svg.selectAll(".y-axis .tick:not(:first-of-type) line")
             .attr("stroke", "#777")
@@ -117,7 +115,7 @@ export function cumulativeflow(id, graph) {
 
         items
             .append("span")
-            .attr("class", d => {
+            .attr("class", (d) => {
                 const legend_class = "cumulative-flowchart-legend-color";
 
                 if (!d.color || d.color.includes("#")) {
@@ -136,23 +134,20 @@ export function cumulativeflow(id, graph) {
                 return "";
             });
 
-        items.append("span").text(d => d.label);
+        items.append("span").text((d) => d.label);
     }
 
     function initAreas() {
         return area()
-            .x(d => x_scale(new Date(d.data.date * 1000)))
-            .y0(d => y_scale(d[0]))
-            .y1(d => y_scale(d[1]));
+            .x((d) => x_scale(new Date(d.data.date * 1000)))
+            .y0((d) => y_scale(d[0]))
+            .y1((d) => y_scale(d[1]));
     }
 
     function initStacks() {
-        const keys = graph.data.map(column => column.id);
+        const keys = graph.data.map((column) => column.id);
 
-        return stack()
-            .keys(keys)
-            .order(stackOrderNone)
-            .offset(stackOffsetNone);
+        return stack().keys(keys).order(stackOrderNone).offset(stackOffsetNone);
     }
 
     function initLegend() {
@@ -176,17 +171,15 @@ export function cumulativeflow(id, graph) {
     function initX() {
         const { extent, ticks } = getTimeFrame();
 
-        const x_scale = scaleTime()
-            .domain(extent)
-            .range([0, width]);
+        const x_scale = scaleTime().domain(extent).range([0, width]);
 
         const x_axis = axisBottom()
             .scale(x_scale)
-            .tickFormat(date =>
+            .tickFormat((date) =>
                 date.toLocaleDateString(locale, {
                     month: "2-digit",
                     day: "2-digit",
-                    year: "2-digit"
+                    year: "2-digit",
                 })
             )
             .tickValues(ticks);
@@ -201,14 +194,12 @@ export function cumulativeflow(id, graph) {
             .domain([0, max_y])
             .range([height - margin.bottom, 0]);
 
-        const y_axis = axisLeft()
-            .scale(y_scale)
-            .tickSize(-width);
+        const y_axis = axisLeft().scale(y_scale).tickSize(-width);
         return { y_scale, y_axis };
     }
 
     function getColumnColor(d) {
-        return graph.data.find(column => column.id === d.key).color;
+        return graph.data.find((column) => column.id === d.key).color;
     }
 
     function getMaxY() {
@@ -236,15 +227,15 @@ export function cumulativeflow(id, graph) {
 
     function getTimeFrame() {
         const first_column_values = graph.data[0].values;
-        const all_dates = first_column_values.map(value => new Date(value.date * 1000));
+        const all_dates = first_column_values.map((value) => new Date(value.date * 1000));
         const ticks = getTicksToDisplayAccordingToGranularity(all_dates);
 
         return {
             extent: [
                 new Date(first_column_values[0].date * 1000),
-                new Date(first_column_values[first_column_values.length - 1].date * 1000)
+                new Date(first_column_values[first_column_values.length - 1].date * 1000),
             ],
-            ticks
+            ticks,
         };
     }
 
@@ -260,7 +251,7 @@ export function cumulativeflow(id, graph) {
 
     function parseData() {
         const parsed_data = [];
-        graph.data.forEach(column => {
+        graph.data.forEach((column) => {
             column.values.forEach((value, value_index) => {
                 if (!parsed_data[value_index]) {
                     parsed_data[value_index] = {};

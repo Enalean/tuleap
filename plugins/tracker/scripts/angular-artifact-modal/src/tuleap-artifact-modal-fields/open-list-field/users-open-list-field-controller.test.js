@@ -33,7 +33,7 @@ describe("UsersOpenListFieldController", () => {
         angular.mock.module(open_list_field_module);
 
         var $controller;
-        angular.mock.inject(function(_$controller_, _$rootScope_) {
+        angular.mock.inject(function (_$controller_, _$rootScope_) {
             $controller = _$controller_;
             $rootScope = _$rootScope_;
 
@@ -49,22 +49,22 @@ describe("UsersOpenListFieldController", () => {
             $element,
             $scope,
             $rootScope,
-            $compile
+            $compile,
         });
 
         UsersOpenListFieldController.field = {
             hint: "abnormalness",
-            loading: false
+            loading: false,
         };
         UsersOpenListFieldController.value_model = {
             value: {
-                bind_value_objects: []
-            }
+                bind_value_objects: [],
+            },
         };
     });
 
-    describe("init() -", function() {
-        it("When initializing the controller, then a select2 will be created and its events will be listened", function() {
+    describe("init() -", function () {
+        it("When initializing the controller, then a select2 will be created and its events will be listened", function () {
             $element.append(
                 angular.element('<select class="tuleap-artifact-modal-open-list-users"></select>')
             );
@@ -79,15 +79,15 @@ describe("UsersOpenListFieldController", () => {
         });
     });
 
-    describe("isRequiredAndEmpty() -", function() {
-        it("Given that the field was required and the value model empty, then it will return true", function() {
+    describe("isRequiredAndEmpty() -", function () {
+        it("Given that the field was required and the value model empty, then it will return true", function () {
             UsersOpenListFieldController.field.required = true;
             UsersOpenListFieldController.value_model.value.bind_value_objects = [];
 
             expect(UsersOpenListFieldController.isRequiredAndEmpty()).toBe(true);
         });
 
-        it("Given that the field was required and the value model had a value, then it will return false", function() {
+        it("Given that the field was required and the value model had a value, then it will return false", function () {
             UsersOpenListFieldController.value_model.value.bind_value_objects = [
                 {
                     avatar_url:
@@ -100,15 +100,15 @@ describe("UsersOpenListFieldController", () => {
                     real_name: "Damaris Rubison",
                     status: "A",
                     uri: "/users/drubison",
-                    username: "drubison"
-                }
+                    username: "drubison",
+                },
             ];
             UsersOpenListFieldController.field.required = true;
 
             expect(UsersOpenListFieldController.isRequiredAndEmpty()).toBe(false);
         });
 
-        it("Given that the field was not required and the value model empty, then it will return false", function() {
+        it("Given that the field was not required and the value model empty, then it will return false", function () {
             UsersOpenListFieldController.field.required = false;
             UsersOpenListFieldController.value_model.value.bind_value_objects = [];
 
@@ -116,11 +116,11 @@ describe("UsersOpenListFieldController", () => {
         });
     });
 
-    describe("templateUserResult() -", function() {
-        it("Given a 'searching' result, then the result text will be returned", function() {
+    describe("templateUserResult() -", function () {
+        it("Given a 'searching' result, then the result text will be returned", function () {
             var searching_result = {
                 loading: true,
-                text: "searching..."
+                text: "searching...",
             };
 
             var result = UsersOpenListFieldController.templateUserResult(searching_result);
@@ -128,13 +128,13 @@ describe("UsersOpenListFieldController", () => {
             expect(result).toEqual("searching...");
         });
 
-        it("Given a user result coming from the REST route, a class will be added to the container and a template will be rendered for it", function() {
+        it("Given a user result coming from the REST route, a class will be added to the container and a template will be rendered for it", function () {
             jest.spyOn($rootScope, "$new").mockImplementation(() => {});
             var classList_add = jest.fn();
             var container = {
                 classList: {
-                    add: classList_add
-                }
+                    add: classList_add,
+                },
             };
 
             var user_representation = {
@@ -148,11 +148,11 @@ describe("UsersOpenListFieldController", () => {
                 real_name: "Sally Sadak",
                 status: "A",
                 uri: "/users/ssadak",
-                username: "ssadak"
+                username: "ssadak",
             };
 
             var isolate_scope = {
-                result: user_representation
+                result: user_representation,
             };
             $rootScope.$new.mockReturnValue(isolate_scope);
 
@@ -169,12 +169,12 @@ describe("UsersOpenListFieldController", () => {
         });
     });
 
-    describe("templateUserSelection() -", function() {
-        beforeEach(function() {
+    describe("templateUserSelection() -", function () {
+        beforeEach(function () {
             jest.spyOn($rootScope, "$new").mockImplementation(() => {});
         });
 
-        it("Given a user selection coming from the REST route, then a template will be rendered for it", function() {
+        it("Given a user selection coming from the REST route, then a template will be rendered for it", function () {
             var user_representation = {
                 avatar_url:
                     "https://pharmacopsychology.com/dephysicalize/aberdeen?a=diffarreation&b=shutoff#conchoid",
@@ -186,11 +186,11 @@ describe("UsersOpenListFieldController", () => {
                 real_name: "Sally Sadak",
                 status: "A",
                 uri: "/users/ssadak",
-                username: "ssadak"
+                username: "ssadak",
             };
 
             var isolate_scope = {
-                result: user_representation
+                result: user_representation,
             };
             $rootScope.$new.mockReturnValue(isolate_scope);
 
@@ -202,7 +202,7 @@ describe("UsersOpenListFieldController", () => {
             expect(result).toEqual("compiled template");
         });
 
-        it("Given a user selection with only an ID (coming from the template ng-repeat), then the user's data from the value model will be used and a template will be rendered with it", function() {
+        it("Given a user selection with only an ID (coming from the template ng-repeat), then the user's data from the value model will be used and a template will be rendered with it", function () {
             var user_representation = {
                 avatar_url: "http://compulsitor.com/formulae/gearbox?a=balanus&b=tuna#chirotony",
                 display_name: "Odessa Chmielewski (ochmielewski)",
@@ -213,15 +213,15 @@ describe("UsersOpenListFieldController", () => {
                 real_name: "Odessa Chmielewski",
                 status: "A",
                 uri: "/users/ochmielewski",
-                username: "ochmielewski"
+                username: "ochmielewski",
             };
 
             UsersOpenListFieldController.value_model.value.bind_value_objects = [
-                user_representation
+                user_representation,
             ];
 
             var isolate_scope = {
-                result: user_representation
+                result: user_representation,
             };
             $rootScope.$new.mockReturnValue(isolate_scope);
 
@@ -233,7 +233,7 @@ describe("UsersOpenListFieldController", () => {
             expect(result).toEqual("compiled template");
         });
 
-        it("Given a user selection with only a text (anonymous user coming from the template ng-repeat), then the user's data from the value model will be used and a template will be rendered with it", function() {
+        it("Given a user selection with only a text (anonymous user coming from the template ng-repeat), then the user's data from the value model will be used and a template will be rendered with it", function () {
             var user_representation = {
                 id: null,
                 avatar_url: "http://Dioon.com/themes/common/images/avatar_default.png",
@@ -244,20 +244,20 @@ describe("UsersOpenListFieldController", () => {
                 real_name: null,
                 status: null,
                 uri: null,
-                username: null
+                username: null,
             };
 
             UsersOpenListFieldController.value_model.value.bind_value_objects = [
-                user_representation
+                user_representation,
             ];
 
             var isolate_scope = {
-                result: user_representation
+                result: user_representation,
             };
             $rootScope.$new.mockReturnValue(isolate_scope);
 
             var result = UsersOpenListFieldController.templateUserSelection({
-                text: "archprelatical@sublinear.net"
+                text: "archprelatical@sublinear.net",
             });
 
             expect($rootScope.$new).toHaveBeenCalled();
@@ -267,8 +267,8 @@ describe("UsersOpenListFieldController", () => {
         });
     });
 
-    describe("handleUsersValueSelection() -", function() {
-        it("Given an event with a user selection, then it will be pushed in the value_model", function() {
+    describe("handleUsersValueSelection() -", function () {
+        it("Given an event with a user selection, then it will be pushed in the value_model", function () {
             var event = {
                 params: {
                     name: "select",
@@ -284,10 +284,10 @@ describe("UsersOpenListFieldController", () => {
                             real_name: "Regina Gogel",
                             status: "A",
                             uri: "/users/rgogel",
-                            username: "rgogel"
-                        }
-                    }
-                }
+                            username: "rgogel",
+                        },
+                    },
+                },
             };
 
             UsersOpenListFieldController.handleUsersValueSelection(event);
@@ -304,14 +304,14 @@ describe("UsersOpenListFieldController", () => {
                     real_name: "Regina Gogel",
                     status: "A",
                     uri: "/users/rgogel",
-                    username: "rgogel"
-                }
+                    username: "rgogel",
+                },
             ]);
         });
     });
 
-    describe("handleUsersValueUnselection() -", function() {
-        it("Given an event with a user unselection, then it will be removed from the value model", function() {
+    describe("handleUsersValueUnselection() -", function () {
+        it("Given an event with a user unselection, then it will be removed from the value model", function () {
             UsersOpenListFieldController.value_model.value.bind_value_objects = [
                 {
                     avatar_url:
@@ -324,8 +324,8 @@ describe("UsersOpenListFieldController", () => {
                     real_name: "Gene Telman",
                     status: "A",
                     uri: "/users/gtelman",
-                    username: "gtelman"
-                }
+                    username: "gtelman",
+                },
             ];
             var event = {
                 params: {
@@ -333,10 +333,10 @@ describe("UsersOpenListFieldController", () => {
                     args: {
                         data: {
                             id: "887",
-                            is_anonymous: false
-                        }
-                    }
-                }
+                            is_anonymous: false,
+                        },
+                    },
+                },
             };
 
             UsersOpenListFieldController.handleUsersValueUnselection(event);
@@ -344,7 +344,7 @@ describe("UsersOpenListFieldController", () => {
             expect(UsersOpenListFieldController.value_model.value.bind_value_objects).toEqual([]);
         });
 
-        it("Given an event with a user unselection (at the first index), then it will be removed from the value model", function() {
+        it("Given an event with a user unselection (at the first index), then it will be removed from the value model", function () {
             UsersOpenListFieldController.value_model.value.bind_value_objects = [
                 {
                     avatar_url:
@@ -357,7 +357,7 @@ describe("UsersOpenListFieldController", () => {
                     real_name: "Gene Telman",
                     status: "A",
                     uri: "/users/gtelman",
-                    username: "gtelman"
+                    username: "gtelman",
                 },
                 {
                     avatar_url:
@@ -370,8 +370,8 @@ describe("UsersOpenListFieldController", () => {
                     real_name: "Gene Telman2",
                     status: "A",
                     uri: "/users/gtelman2",
-                    username: "gtelman2"
-                }
+                    username: "gtelman2",
+                },
             ];
             var event = {
                 params: {
@@ -379,10 +379,10 @@ describe("UsersOpenListFieldController", () => {
                     args: {
                         data: {
                             id: "887",
-                            is_anonymous: false
-                        }
-                    }
-                }
+                            is_anonymous: false,
+                        },
+                    },
+                },
             };
 
             UsersOpenListFieldController.handleUsersValueUnselection(event);
@@ -399,12 +399,12 @@ describe("UsersOpenListFieldController", () => {
                     real_name: "Gene Telman2",
                     status: "A",
                     uri: "/users/gtelman2",
-                    username: "gtelman2"
-                }
+                    username: "gtelman2",
+                },
             ]);
         });
 
-        it("Given an event with an anonymous user unselection (only email), then it will be removed from the value model", function() {
+        it("Given an event with an anonymous user unselection (only email), then it will be removed from the value model", function () {
             UsersOpenListFieldController.value_model.value.bind_value_objects = [
                 {
                     id: "",
@@ -416,8 +416,8 @@ describe("UsersOpenListFieldController", () => {
                     real_name: null,
                     status: null,
                     uri: null,
-                    username: null
-                }
+                    username: null,
+                },
             ];
             var event = {
                 params: {
@@ -425,10 +425,10 @@ describe("UsersOpenListFieldController", () => {
                     args: {
                         data: {
                             id: "ithomiinae@heaper.net",
-                            is_anonymous: true
-                        }
-                    }
-                }
+                            is_anonymous: true,
+                        },
+                    },
+                },
             };
 
             UsersOpenListFieldController.handleUsersValueUnselection(event);
@@ -436,7 +436,7 @@ describe("UsersOpenListFieldController", () => {
             expect(UsersOpenListFieldController.value_model.value.bind_value_objects).toEqual([]);
         });
 
-        it("Given an event with an anonymous user unselection (only email, at the first index), then it will be removed from the value model", function() {
+        it("Given an event with an anonymous user unselection (only email, at the first index), then it will be removed from the value model", function () {
             UsersOpenListFieldController.value_model.value.bind_value_objects = [
                 {
                     avatar_url:
@@ -449,7 +449,7 @@ describe("UsersOpenListFieldController", () => {
                     real_name: "Gene Telman",
                     status: "A",
                     uri: "/users/gtelman",
-                    username: "gtelman"
+                    username: "gtelman",
                 },
                 {
                     id: "",
@@ -461,8 +461,8 @@ describe("UsersOpenListFieldController", () => {
                     real_name: null,
                     status: null,
                     uri: null,
-                    username: null
-                }
+                    username: null,
+                },
             ];
             var event = {
                 params: {
@@ -470,10 +470,10 @@ describe("UsersOpenListFieldController", () => {
                     args: {
                         data: {
                             id: "ithomiinae@heaper.net",
-                            is_anonymous: true
-                        }
-                    }
-                }
+                            is_anonymous: true,
+                        },
+                    },
+                },
             };
 
             UsersOpenListFieldController.handleUsersValueUnselection(event);
@@ -490,12 +490,12 @@ describe("UsersOpenListFieldController", () => {
                     real_name: "Gene Telman",
                     status: "A",
                     uri: "/users/gtelman",
-                    username: "gtelman"
-                }
+                    username: "gtelman",
+                },
             ]);
         });
 
-        it("Given an event with an anonymous user unselection (only email, already in the DOM), then it will be removed from the value model", function() {
+        it("Given an event with an anonymous user unselection (only email, already in the DOM), then it will be removed from the value model", function () {
             UsersOpenListFieldController.value_model.value.bind_value_objects = [
                 {
                     id: "",
@@ -507,8 +507,8 @@ describe("UsersOpenListFieldController", () => {
                     real_name: null,
                     status: null,
                     uri: null,
-                    username: null
-                }
+                    username: null,
+                },
             ];
             var event = {
                 params: {
@@ -519,13 +519,13 @@ describe("UsersOpenListFieldController", () => {
                             element: {
                                 attributes: {
                                     "is-anonymous": {
-                                        value: "true"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                                        value: "true",
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
             };
 
             UsersOpenListFieldController.handleUsersValueUnselection(event);
@@ -534,10 +534,10 @@ describe("UsersOpenListFieldController", () => {
         });
     });
 
-    describe("newAnonymousUser() -", function() {
-        it("Given blank space, then it returns null", function() {
+    describe("newAnonymousUser() -", function () {
+        it("Given blank space, then it returns null", function () {
             var new_open_value = {
-                term: "   "
+                term: "   ",
             };
 
             var result = UsersOpenListFieldController.newAnonymousUser(new_open_value);
@@ -545,9 +545,9 @@ describe("UsersOpenListFieldController", () => {
             expect(result).toBe(null);
         });
 
-        it("Given a string, then it returns an object with 'id', 'display_name', 'email' and 'is_anonymous' attributes", function() {
+        it("Given a string, then it returns an object with 'id', 'display_name', 'email' and 'is_anonymous' attributes", function () {
             var new_open_value = {
-                term: "besiegingly@discovery.com"
+                term: "besiegingly@discovery.com",
             };
 
             var result = UsersOpenListFieldController.newAnonymousUser(new_open_value);
@@ -556,13 +556,13 @@ describe("UsersOpenListFieldController", () => {
                 id: "besiegingly@discovery.com",
                 display_name: "besiegingly@discovery.com",
                 email: "besiegingly@discovery.com",
-                is_anonymous: true
+                is_anonymous: true,
             });
         });
 
-        it("Given a string with blank space, it trims it and returns an object", function() {
+        it("Given a string with blank space, it trims it and returns an object", function () {
             var new_open_value = {
-                term: " synangium@alchemy.com  "
+                term: " synangium@alchemy.com  ",
             };
 
             var result = UsersOpenListFieldController.newAnonymousUser(new_open_value);
@@ -571,7 +571,7 @@ describe("UsersOpenListFieldController", () => {
                 id: "synangium@alchemy.com",
                 display_name: "synangium@alchemy.com",
                 email: "synangium@alchemy.com",
-                is_anonymous: true
+                is_anonymous: true,
             });
         });
     });

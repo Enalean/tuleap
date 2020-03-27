@@ -6,25 +6,25 @@ describe("KanbanColumnService -", () => {
     let $filter, $q, $rootScope, KanbanItemRestService, KanbanColumnService, KanbanFilterValue;
 
     beforeEach(() => {
-        angular.mock.module(kanban_module, function($provide) {
-            $provide.decorator("$filter", function() {
+        angular.mock.module(kanban_module, function ($provide) {
+            $provide.decorator("$filter", function () {
                 return jest.fn(() => () => []);
             });
 
-            $provide.decorator("KanbanFilterValue", function() {
+            $provide.decorator("KanbanFilterValue", function () {
                 return {
-                    terms: ""
+                    terms: "",
                 };
             });
 
-            $provide.decorator("KanbanItemRestService", function($delegate) {
+            $provide.decorator("KanbanItemRestService", function ($delegate) {
                 jest.spyOn($delegate, "getItem").mockImplementation(() => {});
 
                 return $delegate;
             });
         });
 
-        angular.mock.inject(function(
+        angular.mock.inject(function (
             _$filter_,
             _$q_,
             _$rootScope_,
@@ -41,16 +41,16 @@ describe("KanbanColumnService -", () => {
         });
     });
 
-    describe("moveItem() -", function() {
-        describe("Given an item to move, a source column object, a destination column object and a compared_to object", function() {
+    describe("moveItem() -", function () {
+        describe("Given an item to move, a source column object, a destination column object and a compared_to object", function () {
             var item, source_column, destination_column;
-            beforeEach(function() {
+            beforeEach(function () {
                 item = {
                     id: 27,
                     in_column: 4,
                     timeinfo: {
-                        4: "some previous date"
-                    }
+                        4: "some previous date",
+                    },
                 };
 
                 source_column = {
@@ -58,7 +58,7 @@ describe("KanbanColumnService -", () => {
                     is_open: true,
                     fully_loaded: true,
                     content: [{ id: 79 }, item, { id: 100 }],
-                    filtered_content: [{ id: 79 }, item, { id: 100 }]
+                    filtered_content: [{ id: 79 }, item, { id: 100 }],
                 };
 
                 destination_column = {
@@ -66,15 +66,15 @@ describe("KanbanColumnService -", () => {
                     is_open: true,
                     fully_loaded: true,
                     content: [{ id: 56 }, { id: 21 }],
-                    filtered_content: [{ id: 56 }, { id: 21 }]
+                    filtered_content: [{ id: 56 }, { id: 21 }],
                 };
             });
 
-            describe("and given both columns were open and fully loaded", function() {
-                it("and were unfiltered, when I move the item from the source column to the destination column, then the item's time and column properties will be updated and the source and destination columns will be updated", function() {
+            describe("and given both columns were open and fully loaded", function () {
+                it("and were unfiltered, when I move the item from the source column to the destination column, then the item's time and column properties will be updated and the source and destination columns will be updated", function () {
                     var compared_to = {
                         direction: "after",
-                        item_id: 21
+                        item_id: 21,
                     };
 
                     KanbanColumnService.moveItem(
@@ -93,17 +93,17 @@ describe("KanbanColumnService -", () => {
                     expect(destination_column.filtered_content).toEqual([
                         { id: 56 },
                         { id: 21 },
-                        item
+                        item,
                     ]);
                     expect(destination_column.filtered_content).not.toBe(
                         destination_column.content
                     );
                 });
 
-                it("and were filtered and the item was in the filter, when I move the item from the source column to the destination column, then the item's time and column properties will be updated and the source and destination columns will be updated", function() {
+                it("and were filtered and the item was in the filter, when I move the item from the source column to the destination column, then the item's time and column properties will be updated and the source and destination columns will be updated", function () {
                     var compared_to = {
                         direction: "before",
-                        item_id: 56
+                        item_id: 56,
                     };
                     source_column.filtered_content = [item];
                     destination_column.filtered_content = [{ id: 21 }];
@@ -128,10 +128,10 @@ describe("KanbanColumnService -", () => {
                 });
             });
 
-            it("and given the source column was closed, when I move the item from the source column to the destination column, then the item's time and column properties will be updated and the source and destination columns will be updated", function() {
+            it("and given the source column was closed, when I move the item from the source column to the destination column, then the item's time and column properties will be updated and the source and destination columns will be updated", function () {
                 var compared_to = {
                     direction: "after",
-                    item_id: 21
+                    item_id: 21,
                 };
                 source_column.is_open = false;
                 source_column.filtered_content = [];
@@ -148,10 +148,10 @@ describe("KanbanColumnService -", () => {
                 expect(destination_column.filtered_content).not.toBe(destination_column.content);
             });
 
-            it("and given the destination column was closed, when I move the item from the source column to the destination column, then the item's time and column properties will be updated and the source and destination columns will be updated", function() {
+            it("and given the destination column was closed, when I move the item from the source column to the destination column, then the item's time and column properties will be updated and the source and destination columns will be updated", function () {
                 var compared_to = {
                     direction: "before",
-                    item_id: 56
+                    item_id: 56,
                 };
                 destination_column.is_open = false;
                 destination_column.filtered_content = [];
@@ -168,10 +168,10 @@ describe("KanbanColumnService -", () => {
                 expect(destination_column.filtered_content).not.toBe(destination_column.content);
             });
 
-            it("and given the destination column was closed and not fully loaded, when I move the item from the source column to the destination column, then the item's time and column properties will be updated, the source column will be updated and the destination's nb_items_at_kanban_init property will be updated", function() {
+            it("and given the destination column was closed and not fully loaded, when I move the item from the source column to the destination column, then the item's time and column properties will be updated, the source column will be updated and the destination's nb_items_at_kanban_init property will be updated", function () {
                 var compared_to = {
                     direction: "after",
-                    item_id: 21
+                    item_id: 21,
                 };
                 destination_column.is_open = false;
                 destination_column.fully_loaded = false;
@@ -192,10 +192,10 @@ describe("KanbanColumnService -", () => {
                 expect(destination_column.nb_items_at_kanban_init).toEqual(3);
             });
 
-            it("and given the source column was closed and not fully loaded, when I move the item from the source column to the destination column, then the item's time and column properties will be updated, the source column's nb_items_at_kanban_init property will be updated and the destination column will be updated", function() {
+            it("and given the source column was closed and not fully loaded, when I move the item from the source column to the destination column, then the item's time and column properties will be updated, the source column's nb_items_at_kanban_init property will be updated and the destination column will be updated", function () {
                 var compared_to = {
                     direction: "after",
-                    item_id: 56
+                    item_id: 56,
                 };
                 source_column.is_open = false;
                 source_column.fully_loaded = false;
@@ -216,10 +216,10 @@ describe("KanbanColumnService -", () => {
                 expect(destination_column.filtered_content).not.toBe(destination_column.content);
             });
 
-            it("and given the item was already in the destination column's filtered content (because it was drag and dropped there), when I move the item from the source column to the destination column, then the item will not exist twice in the destination column", function() {
+            it("and given the item was already in the destination column's filtered content (because it was drag and dropped there), when I move the item from the source column to the destination column, then the item will not exist twice in the destination column", function () {
                 var compared_to = {
                     direction: "after",
-                    item_id: 21
+                    item_id: 21,
                 };
                 destination_column.filtered_content = [{ id: 56 }, { id: 21 }, item];
 
@@ -228,14 +228,14 @@ describe("KanbanColumnService -", () => {
                 expect(destination_column.filtered_content).toEqual([{ id: 56 }, { id: 21 }, item]);
             });
 
-            it("and given the source column was the backlog, when I move the item from the backlog to the destination column, then the item's kanban time info will also be updated", function() {
+            it("and given the source column was the backlog, when I move the item from the backlog to the destination column, then the item's kanban time info will also be updated", function () {
                 var compared_to = {
                     direction: "after",
-                    item_id: 56
+                    item_id: 56,
                 };
                 item.in_column = "backlog";
                 item.timeinfo = {
-                    backlog: "some previous date"
+                    backlog: "some previous date",
                 };
 
                 KanbanColumnService.moveItem(item, source_column, destination_column, compared_to);
@@ -246,13 +246,13 @@ describe("KanbanColumnService -", () => {
             });
         });
 
-        it("Given an item to move, a source column object, a destination column object and NO compared_to object, when I move the item from the source column to the destination column, then the item's time and column properties will be updated, the item will be removed from the source column and appended to the destination column", function() {
+        it("Given an item to move, a source column object, a destination column object and NO compared_to object, when I move the item from the source column to the destination column, then the item's time and column properties will be updated, the item will be removed from the source column and appended to the destination column", function () {
             var item = {
                 id: 90,
                 in_column: 8,
                 timeinfo: {
-                    8: "some previous date"
-                }
+                    8: "some previous date",
+                },
             };
 
             var source_column = {
@@ -260,7 +260,7 @@ describe("KanbanColumnService -", () => {
                 is_open: true,
                 fully_loaded: true,
                 content: [item, { id: 10 }, { id: 88 }],
-                filtered_content: [item, { id: 10 }, { id: 88 }]
+                filtered_content: [item, { id: 10 }, { id: 88 }],
             };
 
             var destination_column = {
@@ -268,7 +268,7 @@ describe("KanbanColumnService -", () => {
                 is_open: true,
                 fully_loaded: true,
                 content: [],
-                filtered_content: []
+                filtered_content: [],
             };
 
             var compared_to = null;
@@ -284,11 +284,11 @@ describe("KanbanColumnService -", () => {
         });
     });
 
-    describe("filterItems() -", function() {
-        it("Given filter terms that did not match anything, when I filter a column's items, then the InPropertiesFilter will be called and the column's filtered content collection will be emptied", function() {
+    describe("filterItems() -", function () {
+        it("Given filter terms that did not match anything, when I filter a column's items, then the InPropertiesFilter will be called and the column's filtered content collection will be emptied", function () {
             var column = {
                 content: [{ id: 37 }],
-                filtered_content: [{ id: 37 }]
+                filtered_content: [{ id: 37 }],
             };
             var filtered_content_ref = column.filtered_content;
 
@@ -300,13 +300,13 @@ describe("KanbanColumnService -", () => {
             expect(column.filtered_content.length).toEqual(0);
         });
 
-        it("Given filter terms that matched items, when I filter a column's items, then the InPropertiesFilter will be called and the column's filtered content collection will be updated", function() {
+        it("Given filter terms that matched items, when I filter a column's items, then the InPropertiesFilter will be called and the column's filtered content collection will be updated", function () {
             var column = {
                 content: [{ id: 46 }, { id: 37 }, { id: 62 }],
-                filtered_content: [{ id: 46 }, { id: 37 }, { id: 62 }]
+                filtered_content: [{ id: 46 }, { id: 37 }, { id: 62 }],
             };
-            $filter.mockImplementation(function() {
-                return function() {
+            $filter.mockImplementation(function () {
+                return function () {
                     return [{ id: 46 }, { id: 62 }];
                 };
             });
@@ -319,19 +319,19 @@ describe("KanbanColumnService -", () => {
         });
     });
 
-    describe("findItemAndReorderItems()", function() {
-        it("Given an item id, a source column and a destination column, when I move an item from a column not loaded, then the item REST route is called", function() {
+    describe("findItemAndReorderItems()", function () {
+        it("Given an item id, a source column and a destination column, when I move an item from a column not loaded, then the item REST route is called", function () {
             const item = {
-                id: 50
+                id: 50,
             };
             const source_column = {
-                content: []
+                content: [],
             };
             const destination_column = {
                 content: [{ id: 46 }, { id: 37 }, { id: 62 }],
                 is_open: false,
                 fully_loaded: false,
-                filtered_content: []
+                filtered_content: [],
             };
 
             KanbanItemRestService.getItem.mockReturnValue($q.when(item));
@@ -343,7 +343,7 @@ describe("KanbanColumnService -", () => {
                 46,
                 50,
                 37,
-                62
+                62,
             ]);
             $rootScope.$apply();
 
@@ -359,18 +359,18 @@ describe("KanbanColumnService -", () => {
             expect(destination_column.filtered_content).not.toBe(destination_column.content);
         });
 
-        it("Given an item id, a source column and a destination column, when I move an item from a column loaded, then the item REST route is not called", function() {
+        it("Given an item id, a source column and a destination column, when I move an item from a column loaded, then the item REST route is not called", function () {
             const item = {
-                id: 50
+                id: 50,
             };
             const source_column = {
-                content: [item]
+                content: [item],
             };
             const destination_column = {
                 content: [{ id: 46 }, { id: 37 }, { id: 62 }],
                 is_open: true,
                 fully_loaded: true,
-                filtered_content: [{ id: 46 }, { id: 37 }, { id: 62 }]
+                filtered_content: [{ id: 46 }, { id: 37 }, { id: 62 }],
             };
             jest.spyOn(KanbanColumnService, "moveItem").mockImplementation(() => {});
             jest.spyOn(KanbanColumnService, "filterItems").mockImplementation(() => {});
@@ -379,7 +379,7 @@ describe("KanbanColumnService -", () => {
                 46,
                 50,
                 37,
-                62
+                62,
             ]);
             $rootScope.$apply();
 
@@ -394,19 +394,19 @@ describe("KanbanColumnService -", () => {
             expect(destination_column.filtered_content).toEqual(destination_column.content);
         });
 
-        it("Given an item id, a source column and a destination column, when I move an item from a column not loaded, then the item is added to the new", function() {
+        it("Given an item id, a source column and a destination column, when I move an item from a column not loaded, then the item is added to the new", function () {
             const item = {
-                id: 50
+                id: 50,
             };
             const source_column = {
                 content: [],
-                fully_loaded: false
+                fully_loaded: false,
             };
             const destination_column = {
                 content: [{ id: 46 }, { id: 37 }, { id: 62 }],
                 is_open: true,
                 fully_loaded: true,
-                filtered_content: [{ id: 46 }, { id: 37 }, { id: 62 }]
+                filtered_content: [{ id: 46 }, { id: 37 }, { id: 62 }],
             };
 
             KanbanItemRestService.getItem.mockReturnValue($q.when(item));
@@ -415,37 +415,37 @@ describe("KanbanColumnService -", () => {
                 46,
                 50,
                 37,
-                62
+                62,
             ]);
             $rootScope.$apply();
             expect(source_column.content).toEqual([]);
-            expect(destination_column.content.map(item => item.id)).toEqual([46, 50, 37, 62]);
+            expect(destination_column.content.map((item) => item.id)).toEqual([46, 50, 37, 62]);
         });
 
-        it("Given an item id, a source column and a destination column, when I move an item from a column loaded, then the item is removed from old column and added to the new", function() {
+        it("Given an item id, a source column and a destination column, when I move an item from a column loaded, then the item is removed from old column and added to the new", function () {
             const item = {
-                id: 50
+                id: 50,
             };
             const source_column = {
                 content: [item],
-                fully_loaded: true
+                fully_loaded: true,
             };
             const destination_column = {
                 content: [{ id: 46 }, { id: 37 }, { id: 62 }],
                 is_open: true,
                 fully_loaded: true,
-                filtered_content: [{ id: 46 }, { id: 37 }, { id: 62 }]
+                filtered_content: [{ id: 46 }, { id: 37 }, { id: 62 }],
             };
 
             KanbanColumnService.findItemAndReorderItems(50, source_column, destination_column, [
                 46,
                 50,
                 37,
-                62
+                62,
             ]);
             $rootScope.$apply();
             expect(source_column.content).toEqual([]);
-            expect(destination_column.content.map(item => item.id)).toEqual([46, 50, 37, 62]);
+            expect(destination_column.content.map((item) => item.id)).toEqual([46, 50, 37, 62]);
         });
     });
 
@@ -461,7 +461,7 @@ describe("KanbanColumnService -", () => {
                 in_column: "archive",
                 is_collapsed: true,
                 updating: true,
-                timeinfo: {}
+                timeinfo: {},
             };
 
             const updated_item = {
@@ -473,8 +473,8 @@ describe("KanbanColumnService -", () => {
                 in_column: "archive",
                 card_fields: [
                     { field_id: 60, label: "Marssonina", value: "downgrowth" },
-                    { field_id: 57, label: "suffect", value: 51 }
-                ]
+                    { field_id: 57, label: "suffect", value: 51 },
+                ],
             };
 
             KanbanColumnService.updateItemContent(item, updated_item);
@@ -487,14 +487,14 @@ describe("KanbanColumnService -", () => {
                 label: "wheem",
                 card_fields: [
                     { field_id: 60, label: "Marssonina", value: "downgrowth" },
-                    { field_id: 57, label: "suffect", value: 51 }
+                    { field_id: 57, label: "suffect", value: 51 },
                 ],
                 in_column: "archive",
                 is_collapsed: true,
                 updating: true,
                 timeinfo: {
-                    archive: expect.any(Date)
-                }
+                    archive: expect.any(Date),
+                },
             });
         });
 
@@ -502,12 +502,12 @@ describe("KanbanColumnService -", () => {
             const item = {
                 id: 30,
                 in_column: "backlog",
-                timeinfo: {}
+                timeinfo: {},
             };
 
             const updated_item = {
                 id: 30,
-                in_column: 28
+                in_column: 28,
             };
 
             KanbanColumnService.updateItemContent(item, updated_item);
@@ -515,7 +515,7 @@ describe("KanbanColumnService -", () => {
             expect(item.in_column).toEqual(28);
             expect(item.timeinfo).toEqual({
                 kanban: expect.any(Date),
-                28: expect.any(Date)
+                28: expect.any(Date),
             });
         });
 
@@ -523,19 +523,19 @@ describe("KanbanColumnService -", () => {
             const item = {
                 id: 10,
                 in_column: 45,
-                timeinfo: {}
+                timeinfo: {},
             };
 
             const updated_item = {
                 id: 10,
-                in_column: "backlog"
+                in_column: "backlog",
             };
 
             KanbanColumnService.updateItemContent(item, updated_item);
 
             expect(item.in_column).toEqual("backlog");
             expect(item.timeinfo).toEqual({
-                backlog: expect.any(Date)
+                backlog: expect.any(Date),
             });
         });
     });

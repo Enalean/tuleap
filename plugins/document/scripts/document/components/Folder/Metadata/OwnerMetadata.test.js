@@ -28,7 +28,7 @@ describe("OwnerMetadata", () => {
         owner_factory = (props = {}) => {
             return shallowMount(OwnerMetadata, {
                 localVue,
-                propsData: { ...props }
+                propsData: { ...props },
             });
         };
     });
@@ -38,12 +38,12 @@ describe("OwnerMetadata", () => {
         const wrapper = owner_factory({
             currentlyUpdatedItem: {
                 owner: {
-                    id: 137
+                    id: 137,
                 },
                 status: 100,
                 type: TYPE_FILE,
-                title: "title"
-            }
+                title: "title",
+            },
         });
 
         wrapper.vm.owner_id = 102;

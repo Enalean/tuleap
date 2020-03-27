@@ -29,12 +29,12 @@ document.addEventListener("DOMContentLoaded", () => {
         displayCurrentSubEventsPanel();
 
         events.addEventListener("change", () => {
-            [].forEach.call(sub_events_panels, panel => {
+            [].forEach.call(sub_events_panels, (panel) => {
                 const box = panel.querySelector("select");
 
                 panel.style.display = "none";
                 box.disabled = true;
-                [].forEach.call(box.options, option => {
+                [].forEach.call(box.options, (option) => {
                     option.selected = false;
                 });
             });
@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const datepickers = document.querySelectorAll(".tlp-input-date");
-    [].forEach.call(datepickers, element => {
+    [].forEach.call(datepickers, (element) => {
         datePicker(element);
     });
 
@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function initSelect2(box) {
         select2(box, {
             placeholder: box.dataset.placeholder,
-            allowClear: true
+            allowClear: true,
         });
     }
 });

@@ -35,12 +35,12 @@
 <script>
 export default {
     props: {
-        value: String
+        value: String,
     },
     computed: {
         placeholder() {
             return this.$gettext("Please describe the changes of the new version here");
-        }
-    }
+        },
+    },
 };
 </script>

@@ -27,7 +27,7 @@ describe("CustomMetadataComponentTypeRenderer", () => {
         factory = (props = {}) => {
             return shallowMount(CustomMetadataComponentTypeRenderer, {
                 localVue,
-                propsData: { ...props }
+                propsData: { ...props },
             });
         };
     });
@@ -36,7 +36,7 @@ describe("CustomMetadataComponentTypeRenderer", () => {
         Then it renders the corresponding component`, () => {
         const itemMetadata = {
             short_name: "string",
-            type: "string"
+            type: "string",
         };
         const wrapper = factory({ itemMetadata });
 
@@ -50,7 +50,7 @@ describe("CustomMetadataComponentTypeRenderer", () => {
         Then it renders the corresponding component`, () => {
         const itemMetadata = {
             short_name: "text",
-            type: "text"
+            type: "text",
         };
         const wrapper = factory({ itemMetadata });
 
@@ -65,7 +65,7 @@ describe("CustomMetadataComponentTypeRenderer", () => {
         const itemMetadata = {
             short_name: "list",
             type: "list",
-            is_multiple_value_allowed: false
+            is_multiple_value_allowed: false,
         };
         const wrapper = factory({ itemMetadata });
 
@@ -81,7 +81,7 @@ describe("CustomMetadataComponentTypeRenderer", () => {
         const itemMetadata = {
             short_name: "list",
             type: "list",
-            is_multiple_value_allowed: true
+            is_multiple_value_allowed: true,
         };
         const wrapper = factory({ itemMetadata });
 
@@ -98,7 +98,7 @@ describe("CustomMetadataComponentTypeRenderer", () => {
             short_name: "date",
             type: "date",
             is_multiple_value_allowed: false,
-            value: ""
+            value: "",
         };
         const wrapper = factory({ itemMetadata });
 

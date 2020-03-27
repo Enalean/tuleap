@@ -9,7 +9,7 @@ InPropertiesFilter.$inject = ["$filter"];
 function InPropertiesFilter($filter) {
     const HTML_FORMAT = "html";
 
-    return function(list, terms) {
+    return function (list, terms) {
         if (!terms || terms === "") {
             return list;
         }
@@ -18,13 +18,13 @@ function InPropertiesFilter($filter) {
             keywords = terms.split(" "),
             filtered_list = list;
 
-        keywords.forEach(function(keyword) {
+        keywords.forEach(function (keyword) {
             const regexp = new RegExp(keyword, "gi");
             const encoded_regexp = new RegExp(_.escape(keyword), "gi");
 
-            filtered_list = $filter("filter")(filtered_list, function(item) {
+            filtered_list = $filter("filter")(filtered_list, function (item) {
                 if (
-                    properties.some(function(property) {
+                    properties.some(function (property) {
                         return match(item[property]);
                     })
                 ) {
@@ -74,7 +74,7 @@ function InPropertiesFilter($filter) {
                             return false;
                         }
 
-                        return card_field.values.some(function(value) {
+                        return card_field.values.some(function (value) {
                             if (angular.isDefined(value.display_name)) {
                                 return match(value.display_name);
                             }
@@ -92,15 +92,15 @@ function InPropertiesFilter($filter) {
                             ? matchEncoded(card_field.value)
                             : match(card_field.value);
                     case "file":
-                        return card_field.file_descriptions.some(function(file) {
+                        return card_field.file_descriptions.some(function (file) {
                             return match(file.name);
                         });
                     case "cross":
-                        return card_field.value.some(function(link) {
+                        return card_field.value.some(function (link) {
                             return match(link.ref);
                         });
                     case "perm":
-                        return card_field.granted_groups.some(function(group) {
+                        return card_field.granted_groups.some(function (group) {
                             return match(group);
                         });
                     case "subby":

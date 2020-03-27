@@ -47,7 +47,7 @@ import BurndownDisplayer from "./Burndown/BurndownDisplayer.vue";
 import BurnupDisplayer from "./Burnup/BurnupDisplayer.vue";
 
 @Component({
-    components: { BurnupDisplayer, BurndownDisplayer }
+    components: { BurnupDisplayer, BurndownDisplayer },
 })
 export default class ChartDisplayer extends Vue {
     @Prop()

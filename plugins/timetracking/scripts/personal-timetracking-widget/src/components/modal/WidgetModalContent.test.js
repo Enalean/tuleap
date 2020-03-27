@@ -25,7 +25,7 @@ import { createStoreMock } from "../../../../../../../src/www/scripts/vue-compon
 function getWidgetModalContentInstance(store) {
     const component_options = {
         localVue,
-        mocks: { $store: store }
+        mocks: { $store: store },
     };
     return shallowMount(WidgetModalContent, component_options);
 }
@@ -36,11 +36,11 @@ describe("Given a personal timetracking widget modal", () => {
         store_options = {
             state: {
                 rest_feedback: "",
-                is_add_mode: false
+                is_add_mode: false,
             },
             getters: {
-                current_artifact: { artifact: "artifact" }
-            }
+                current_artifact: { artifact: "artifact" },
+            },
         };
         store = createStoreMock(store_options);
 

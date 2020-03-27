@@ -20,7 +20,7 @@
 import { SELECTBOX_FIELD, LIST_BIND_STATIC } from "../../../constants/fields-constants.js";
 import { compare } from "../support/string.js";
 
-export const current_workflow_field = state => {
+export const current_workflow_field = (state) => {
     if (state.current_tracker === null) {
         return null;
     }
@@ -29,7 +29,7 @@ export const current_workflow_field = state => {
     }
 
     return state.current_tracker.fields.find(
-        field => field.field_id === state.current_tracker.workflow.field_id
+        (field) => field.field_id === state.current_tracker.workflow.field_id
     );
 };
 
@@ -37,7 +37,7 @@ export const workflow_field_label = (state, getters) => {
     return !getters.current_workflow_field ? null : getters.current_workflow_field.label;
 };
 
-export const are_transition_rules_enforced = state => {
+export const are_transition_rules_enforced = (state) => {
     if (!state.current_tracker) {
         return null;
     }
@@ -45,7 +45,7 @@ export const are_transition_rules_enforced = state => {
     return Boolean(parseInt(state.current_tracker.workflow.is_used, 10));
 };
 
-export const is_workflow_legacy = state => {
+export const is_workflow_legacy = (state) => {
     if (!state.current_tracker) {
         return null;
     }
@@ -53,7 +53,7 @@ export const is_workflow_legacy = state => {
     return state.current_tracker.workflow.is_legacy;
 };
 
-export const is_workflow_advanced = state => {
+export const is_workflow_advanced = (state) => {
     if (!state.current_tracker) {
         return null;
     }
@@ -61,25 +61,27 @@ export const is_workflow_advanced = state => {
     return state.current_tracker.workflow.is_advanced;
 };
 
-export const current_tracker_id = state => {
+export const current_tracker_id = (state) => {
     if (state.current_tracker === null) {
         return null;
     }
     return state.current_tracker.id;
 };
 
-export const current_project_id = state => {
+export const current_project_id = (state) => {
     return state.current_tracker !== null ? state.current_tracker.project.id : null;
 };
 
-export const selectbox_fields = state => {
+export const selectbox_fields = (state) => {
     if (!state.current_tracker) {
         return [];
     }
 
     return state.current_tracker.fields
-        .filter(field => field.type === SELECTBOX_FIELD && field.bindings.type === LIST_BIND_STATIC)
-        .map(field => ({ id: field.field_id, label: field.label }))
+        .filter(
+            (field) => field.type === SELECTBOX_FIELD && field.bindings.type === LIST_BIND_STATIC
+        )
+        .map((field) => ({ id: field.field_id, label: field.label }))
         .sort((field1, field2) => compare(field1.label, field2.label));
 };
 
@@ -94,10 +96,10 @@ export const all_target_states = (state, getters) => {
         return [];
     }
 
-    return all_target_values.filter(value => value.is_hidden === false);
+    return all_target_values.filter((value) => value.is_hidden === false);
 };
 
-export const current_workflow_transitions = state => {
+export const current_workflow_transitions = (state) => {
     if (state.current_tracker === null) {
         return [];
     }

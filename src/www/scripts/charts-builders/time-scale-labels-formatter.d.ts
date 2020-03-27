@@ -23,7 +23,7 @@ export class TimeScaleLabelsFormatter {
     constructor({
         layout,
         first_date,
-        last_date
+        last_date,
     }: {
         layout: Selection<SVGSVGElement, unknown, null, undefined>;
         first_date: string;

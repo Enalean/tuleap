@@ -42,15 +42,15 @@ export default {
     name: "ExportCSVButton",
     data() {
         return {
-            is_loading: false
+            is_loading: false,
         };
     },
     computed: {
         ...mapState(["report_id"]),
-        ...mapGetters(["should_display_export_button"])
+        ...mapGetters(["should_display_export_button"]),
     },
     methods: {
-        exportCSV: async function() {
+        exportCSV: async function () {
             this.is_loading = true;
             this.$store.commit("resetFeedbacks");
             try {
@@ -71,7 +71,7 @@ export default {
             } finally {
                 this.is_loading = false;
             }
-        }
-    }
+        },
+    },
 };
 </script>

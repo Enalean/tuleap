@@ -22,7 +22,7 @@ const webpack_configurator = require("../../tools/utils/scripts/webpack-configur
 
 let entry_points = {
     null: "null_entry",
-    "default-style": "./themes/default/css/style.scss"
+    "default-style": "./themes/default/css/style.scss",
 };
 
 const colors = ["blue", "green", "grey", "orange", "purple", "red"];
@@ -41,7 +41,7 @@ module.exports = [
             path.resolve(__dirname, "../../src/www/assets/docman/")
         ),
         module: {
-            rules: [webpack_configurator.rule_scss_loader, webpack_configurator.rule_css_assets]
+            rules: [webpack_configurator.rule_scss_loader, webpack_configurator.rule_css_assets],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
@@ -51,10 +51,10 @@ module.exports = [
                     "./scripts/docman.js",
                     "./scripts/embedded_file.js",
                     "./scripts/ApprovalTableReminder.js",
-                    "./scripts/notifications.js"
-                ]
+                    "./scripts/notifications.js",
+                ],
             }),
-            webpack_configurator.getManifestPlugin()
-        ]
-    }
+            webpack_configurator.getManifestPlugin(),
+        ],
+    },
 ];

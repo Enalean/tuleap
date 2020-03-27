@@ -47,7 +47,7 @@ import { TYPE_WIKI } from "../../../constants.js";
 export default {
     props: {
         value: Object,
-        item: Object
+        item: Object,
     },
     computed: {
         is_displayed() {
@@ -55,7 +55,7 @@ export default {
         },
         placeholder() {
             return this.$gettext("My wiki page");
-        }
-    }
+        },
+    },
 };
 </script>

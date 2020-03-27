@@ -26,7 +26,7 @@
 
         <div class="project-registration-content">
             <form v-on:submit.prevent="createProject" data-test="project-registration-form">
-                <div class="register-new-project-section ">
+                <div class="register-new-project-section">
                     <project-information-svg />
                     <div class="register-new-project-list register-new-project-information">
                         <h1 class="project-registration-title" v-translate>Start a new project</h1>
@@ -98,7 +98,7 @@ import {
     ProjectVisibilityProperties,
     TemplateData,
     TroveCatData,
-    TroveCatProperties
+    TroveCatProperties,
 } from "../../type";
 import { Getter, State } from "vuex-class";
 import EventBus from "../../helpers/event-bus";
@@ -111,7 +111,7 @@ import {
     ACCESS_PRIVATE,
     ACCESS_PRIVATE_WO_RESTRICTED,
     ACCESS_PUBLIC,
-    ACCESS_PUBLIC_UNRESTRICTED
+    ACCESS_PUBLIC_UNRESTRICTED,
 } from "../../constant";
 
 const DEFAULT_PROJECT_ID = "100";
@@ -125,8 +125,8 @@ const DEFAULT_PROJECT_ID = "100";
         ProjectInformationInputPrivacyList,
         ProjectName,
         ProjectInformationFooter,
-        ProjectInformationSvg
-    }
+        ProjectInformationSvg,
+    },
 })
 export default class ProjectInformation extends Vue {
     @Getter
@@ -166,7 +166,7 @@ export default class ProjectInformation extends Vue {
 
     name_properties: ProjectNameProperties = {
         slugified_name: "",
-        name: ""
+        name: "",
     };
 
     field_description = "";
@@ -210,7 +210,7 @@ export default class ProjectInformation extends Vue {
     }
 
     updateTroveCat(event: TroveCatProperties): void {
-        const index = this.trove_cats.findIndex(trove => trove.category_id === event.category_id);
+        const index = this.trove_cats.findIndex((trove) => trove.category_id === event.category_id);
         if (index === -1) {
             this.trove_cats.push(event);
         } else {
@@ -219,7 +219,7 @@ export default class ProjectInformation extends Vue {
     }
 
     updateFieldList(event: FieldProperties): void {
-        const index = this.field_list.findIndex(field => field.field_id === event.field_id);
+        const index = this.field_list.findIndex((field) => field.field_id === event.field_id);
         if (index === -1) {
             this.field_list.push(event);
         } else {
@@ -254,7 +254,7 @@ export default class ProjectInformation extends Vue {
             label: this.name_properties.name,
             is_public: !this.is_private,
             categories: this.trove_cats,
-            fields: this.field_list
+            fields: this.field_list,
         };
         if (
             this.selected_tuleap_template &&

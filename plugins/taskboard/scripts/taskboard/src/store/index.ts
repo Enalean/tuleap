@@ -48,8 +48,8 @@ export function createStore(
             swimlane,
             user,
             fullscreen,
-            column
-        }
+            column,
+        },
     };
 
     return new Store(store_options);

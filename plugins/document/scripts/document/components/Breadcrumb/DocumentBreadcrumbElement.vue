@@ -32,7 +32,7 @@
 export default {
     name: "DocumentBreadcrumbElement",
     props: {
-        item: Object
-    }
+        item: Object,
+    },
 };
 </script>

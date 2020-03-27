@@ -57,7 +57,7 @@ export default {
     },
     setIsFirstLoadDone(state, is_first_load_done) {
         state.is_first_load_done = is_first_load_done;
-    }
+    },
 };
 
 function isUnknownMode(mode) {

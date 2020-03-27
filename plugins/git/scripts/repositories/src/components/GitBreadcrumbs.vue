@@ -57,7 +57,7 @@
 import {
     getAdministrationUrl,
     getForkRepositoriesUrl,
-    getRepositoryListUrl
+    getRepositoryListUrl,
 } from "../breadcrumb-presenter.js";
 import { getUserIsAdmin } from "../repository-list-presenter.js";
 
@@ -84,7 +84,7 @@ export default {
         },
         is_admin() {
             return getUserIsAdmin();
-        }
-    }
+        },
+    },
 };
 </script>

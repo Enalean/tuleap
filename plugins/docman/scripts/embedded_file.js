@@ -19,8 +19,8 @@
 
 var codendi = codendi || {};
 
-(function($, codendi) {
-    $(document).ready(function() {
+(function ($, codendi) {
+    $(document).ready(function () {
         var embedded_content = $("#embedded_content"),
             //eslint-disable-next-line @typescript-eslint/no-unused-vars
             rte = null,
@@ -31,7 +31,7 @@ var codendi = codendi || {};
                 toolbar: "advanced",
                 onLoad: $.noop(),
                 toggle: false,
-                default_in_html: true
+                default_in_html: true,
             };
 
             rte = new codendi.RTE(embedded_content.attr("id"), options);

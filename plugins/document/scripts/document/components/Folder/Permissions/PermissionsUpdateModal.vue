@@ -76,10 +76,10 @@ export default {
         ModalFeedback,
         ModalFooter,
         PermissionsForGroupsSelector,
-        PermissionsUpdateFolderSubItems
+        PermissionsUpdateFolderSubItems,
     },
     props: {
-        item: Object
+        item: Object,
     },
     data: () => {
         return {
@@ -90,8 +90,8 @@ export default {
                 apply_permissions_on_children: false,
                 can_read: [],
                 can_write: [],
-                can_manage: []
-            }
+                can_manage: [],
+            },
         };
     },
     computed: {
@@ -105,12 +105,12 @@ export default {
         },
         can_be_submitted() {
             return this.project_ugroups !== null && this.is_submitting_new_permissions === false;
-        }
+        },
     },
     watch: {
-        item: function() {
+        item: function () {
             this.setPermissionsToUpdateFromItem();
-        }
+        },
     },
     beforeMount() {
         this.setPermissionsToUpdateFromItem();
@@ -133,7 +133,7 @@ export default {
                 apply_permissions_on_children: false,
                 can_read: JSON.parse(JSON.stringify(this.item.permissions_for_groups.can_read)),
                 can_write: JSON.parse(JSON.stringify(this.item.permissions_for_groups.can_write)),
-                can_manage: JSON.parse(JSON.stringify(this.item.permissions_for_groups.can_manage))
+                can_manage: JSON.parse(JSON.stringify(this.item.permissions_for_groups.can_manage)),
             };
         },
         async show() {
@@ -157,7 +157,7 @@ export default {
             if (this.has_modal_error === false) {
                 this.modal.hide();
             }
-        }
-    }
+        },
+    },
 };
 </script>

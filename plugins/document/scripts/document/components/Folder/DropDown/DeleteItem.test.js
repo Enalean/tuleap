@@ -38,7 +38,7 @@ describe("DeleteItem", () => {
             return shallowMount(DeleteItem, {
                 localVue,
                 propsData: { item: { id: 1, user_can_write: user_can_write, type: item_type } },
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
     });
@@ -65,7 +65,7 @@ describe("DeleteItem", () => {
         wrapper.find("[data-test=document-delete-item]").trigger("click");
 
         expect(event_bus_emit).toHaveBeenCalledWith("show-confirm-item-deletion-modal", {
-            detail: { current_item: { id: 1, user_can_write: true, type: TYPE_FILE } }
+            detail: { current_item: { id: 1, user_can_write: true, type: TYPE_FILE } },
         });
     });
 });

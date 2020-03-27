@@ -27,28 +27,28 @@ import { formatDatetimeToISO } from "../../../time-formatters.js";
 export { getTrackedTimes, addTime, updateTime, deleteTime };
 
 const headers = {
-    "content-type": "application/json"
+    "content-type": "application/json",
 };
 
 async function getTrackedTimes(user_id, start_date, end_date, limit, offset) {
     const query = JSON.stringify({
         start_date: formatDatetimeToISO(start_date),
-        end_date: formatDatetimeToISO(end_date)
+        end_date: formatDatetimeToISO(end_date),
     });
 
     const response = await get(`/api/v1/users/${user_id}/timetracking`, {
         params: {
             limit,
             offset,
-            query
-        }
+            query,
+        },
     });
     const total = response.headers.get("X-PAGINATION-SIZE");
     const times = await response.json();
 
     return {
         times,
-        total
+        total,
     };
 }
 async function addTime(date, artifact_id, time_value, step) {
@@ -56,12 +56,12 @@ async function addTime(date, artifact_id, time_value, step) {
         date_time: date,
         artifact_id: artifact_id,
         time_value: time_value,
-        step
+        step,
     });
 
     const response = await post("/api/v1/timetracking", {
         headers,
-        body
+        body,
     });
 
     const time = await response.json();
@@ -72,11 +72,11 @@ async function updateTime(date_time, time_id, time_value, step) {
     const body = JSON.stringify({
         date_time,
         time_value,
-        step
+        step,
     });
     const response = await put("/api/v1/timetracking/" + time_id, {
         headers,
-        body
+        body,
     });
     const time = await response.json();
     return time;
@@ -84,6 +84,6 @@ async function updateTime(date_time, time_id, time_value, step) {
 
 async function deleteTime(time_id) {
     await del("/api/v1/timetracking/" + time_id, {
-        headers
+        headers,
     });
 }

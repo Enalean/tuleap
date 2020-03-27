@@ -11,13 +11,13 @@ describe("ItemProgressController -", () => {
         angular.mock.module(planning_module);
 
         let $controller;
-        angular.mock.inject(function(_$controller_) {
+        angular.mock.inject(function (_$controller_) {
             $controller = _$controller_;
         });
 
         ItemProgressController = $controller(BaseController, {
             value,
-            max_value
+            max_value,
         });
     });
 

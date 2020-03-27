@@ -44,6 +44,6 @@ import { add_modal_mixin } from "./add-modal-mixin.js";
 export default {
     name: "BaseProjectAdminAddModal",
     components: { AddModal, SidebarPreviewer, InCreationCustomService },
-    mixins: [service_modal_mixin, add_modal_mixin]
+    mixins: [service_modal_mixin, add_modal_mixin],
 };
 </script>

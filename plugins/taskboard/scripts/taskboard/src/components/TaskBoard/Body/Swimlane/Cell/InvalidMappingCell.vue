@@ -39,7 +39,7 @@ import AddCard from "../Card/Add/AddCard.vue";
 import { Swimlane } from "plugins/taskboard/scripts/taskboard/src/type";
 
 @Component({
-    components: { AddCard }
+    components: { AddCard },
 })
 export default class InvalidMappingCell extends Mixins(
     HoveringStateForCollapsedColumnMixin,

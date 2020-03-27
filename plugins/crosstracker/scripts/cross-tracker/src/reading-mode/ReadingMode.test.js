@@ -32,7 +32,7 @@ describe("ReadingMode", () => {
     beforeEach(() => {
         Vue.use(GetTextPlugin, {
             translations: {},
-            silent: true
+            silent: true,
         });
         ReadingModeElement = Vue.extend(ReadingMode);
         backendCrossTrackerReport = new BackendCrossTrackerReport();
@@ -44,8 +44,8 @@ describe("ReadingMode", () => {
             store: createStore(),
             propsData: {
                 backendCrossTrackerReport,
-                readingCrossTrackerReport
-            }
+                readingCrossTrackerReport,
+            },
         });
         vm.$mount();
 
@@ -57,7 +57,7 @@ describe("ReadingMode", () => {
             const vm = instantiateComponent();
             jest.spyOn(vm, "$emit").mockImplementation(() => {});
             vm.$store.replaceState({
-                is_user_admin: true
+                is_user_admin: true,
             });
 
             vm.switchToWritingMode();
@@ -68,7 +68,7 @@ describe("ReadingMode", () => {
         it("Given I am browsing as project member, when I try to switch to writing mode, nothing will happen", () => {
             const vm = instantiateComponent();
             vm.$store.replaceState({
-                is_user_admin: false
+                is_user_admin: false,
             });
             jest.spyOn(vm, "$emit").mockImplementation(() => {});
 
@@ -94,7 +94,7 @@ describe("ReadingMode", () => {
             updateReport.mockImplementation(() =>
                 Promise.resolve({
                     trackers,
-                    expert_query
+                    expert_query,
                 })
             );
             const vm = instantiateComponent();
@@ -116,7 +116,7 @@ describe("ReadingMode", () => {
         it("Given the report is in error, then nothing will happen", async () => {
             const vm = instantiateComponent();
             vm.$store.replaceState({
-                error_message: "Error"
+                error_message: "Error",
             });
 
             await vm.saveReport();
@@ -126,8 +126,8 @@ describe("ReadingMode", () => {
         it("When there is a REST error, then it will be shown", () => {
             const error_json = {
                 error: {
-                    message: "Report not found"
-                }
+                    message: "Report not found",
+                },
             };
             mockFetchError(updateReport, { error_json });
             const vm = instantiateComponent();

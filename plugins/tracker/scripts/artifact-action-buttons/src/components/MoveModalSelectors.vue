@@ -34,7 +34,7 @@ export default {
     name: "MoveModalSelectors",
     components: {
         ProjectSelector,
-        TrackerSelector
+        TrackerSelector,
     },
     computed: {
         ...mapState(["is_loading_initial", "are_trackers_loading", "has_processed_dry_run"]),
@@ -50,7 +50,7 @@ export default {
             }
 
             return "move-artifact-selectors";
-        }
-    }
+        },
+    },
 };
 </script>

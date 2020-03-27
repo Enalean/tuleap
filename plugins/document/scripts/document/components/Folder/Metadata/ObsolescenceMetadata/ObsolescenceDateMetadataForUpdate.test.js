@@ -28,7 +28,7 @@ describe("ObsolescenceDateMetadataForUpdate", () => {
     let metadata_factory, state, store;
     beforeEach(() => {
         state = {
-            is_obsolescence_date_metadata_used: false
+            is_obsolescence_date_metadata_used: false,
         };
 
         const store_options = { state };
@@ -39,7 +39,7 @@ describe("ObsolescenceDateMetadataForUpdate", () => {
             return shallowMount(ObsolescenceDateMetadataUpdate, {
                 localVue,
                 propsData: { ...props },
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
     });

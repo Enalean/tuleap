@@ -30,10 +30,10 @@ describe("TrackerTemplateSelector", () => {
         return shallowMount(TrackerTemplateSelector, {
             mocks: {
                 $store: createStoreMock({
-                    state
-                })
+                    state,
+                }),
             },
-            localVue: await createTrackerCreationLocalVue()
+            localVue: await createTrackerCreationLocalVue(),
         });
     }
 
@@ -45,10 +45,10 @@ describe("TrackerTemplateSelector", () => {
                     tracker_list: [
                         { id: "10", name: "Bug" },
                         { id: "11", name: "Stories" },
-                        { id: "12", name: "Releases" }
-                    ]
-                }
-            ]
+                        { id: "12", name: "Releases" },
+                    ],
+                },
+            ],
         } as State);
 
         wrapper.find("[data-test=template-selector]").setValue("10");
@@ -68,11 +68,11 @@ describe("TrackerTemplateSelector", () => {
                     tracker_list: [
                         { id: "10", name: "Bug" },
                         story_tracker,
-                        { id: "12", name: "Releases" }
-                    ]
-                }
+                        { id: "12", name: "Releases" },
+                    ],
+                },
             ],
-            selected_tracker_template: story_tracker
+            selected_tracker_template: story_tracker,
         } as State);
 
         const selectbox: HTMLInputElement = wrapper.find("[data-test=template-selector]")
@@ -92,11 +92,11 @@ describe("TrackerTemplateSelector", () => {
                     tracker_list: [
                         { id: "10", name: "Bug" },
                         { id: "11", name: "Stories" },
-                        { id: "12", name: "Releases" }
-                    ]
-                }
+                        { id: "12", name: "Releases" },
+                    ],
+                },
             ],
-            selected_tracker_template: story_tracker
+            selected_tracker_template: story_tracker,
         } as State);
 
         const selectbox: HTMLInputElement = wrapper.find("[data-test=template-selector]")

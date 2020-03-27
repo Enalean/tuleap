@@ -23,7 +23,7 @@ import {
     transformCustomMetadataForItemUpdate,
     transformDocumentMetadataForUpdate,
     transformFolderMetadataForRecursionAtUpdate,
-    transformItemMetadataForCreation
+    transformItemMetadataForCreation,
 } from "./data-transformatter-helper.js";
 
 describe("transformFolderMetadataForRecursionAtUpdate", () => {
@@ -36,19 +36,19 @@ describe("transformFolderMetadataForRecursionAtUpdate", () => {
                     short_name: "status",
                     list_value: [
                         {
-                            id: 103
-                        }
-                    ]
-                }
-            ]
+                            id: 103,
+                        },
+                    ],
+                },
+            ],
         };
 
         const item_to_update = {
             ...item,
             status: {
                 value: "rejected",
-                recursion: "none"
-            }
+                recursion: "none",
+            },
         };
 
         expect(transformFolderMetadataForRecursionAtUpdate(item)).toEqual(item_to_update);
@@ -59,7 +59,7 @@ describe("transformDocumentMetadataForCreation", () => {
     it("Given an existing document, then the default status metadata is the parent one", () => {
         const item = {
             id: 7,
-            type: "file"
+            type: "file",
         };
 
         const parent = {
@@ -70,11 +70,11 @@ describe("transformDocumentMetadataForCreation", () => {
                     short_name: "status",
                     list_value: [
                         {
-                            id: 103
-                        }
-                    ]
-                }
-            ]
+                            id: 103,
+                        },
+                    ],
+                },
+            ],
         };
 
         transformItemMetadataForCreation(item, parent, true);
@@ -85,7 +85,7 @@ describe("transformDocumentMetadataForCreation", () => {
     it("Given an existing document, when status is not used, default status is not set regardless of parent configuration", () => {
         const item = {
             id: 7,
-            type: "file"
+            type: "file",
         };
 
         const parent = {
@@ -96,11 +96,11 @@ describe("transformDocumentMetadataForCreation", () => {
                     short_name: "status",
                     list_value: [
                         {
-                            id: 103
-                        }
-                    ]
-                }
-            ]
+                            id: 103,
+                        },
+                    ],
+                },
+            ],
         };
 
         transformItemMetadataForCreation(item, parent, false);
@@ -119,11 +119,11 @@ describe("transformDocumentMetadataForUpdate", () => {
                     short_name: "status",
                     list_value: [
                         {
-                            id: 103
-                        }
-                    ]
-                }
-            ]
+                            id: 103,
+                        },
+                    ],
+                },
+            ],
         };
 
         transformDocumentMetadataForUpdate(item, true);
@@ -140,11 +140,11 @@ describe("transformDocumentMetadataForUpdate", () => {
                     short_name: "status",
                     list_value: [
                         {
-                            id: 103
-                        }
-                    ]
-                }
-            ]
+                            id: 103,
+                        },
+                    ],
+                },
+            ],
         };
 
         transformDocumentMetadataForUpdate(item, false);
@@ -171,8 +171,8 @@ describe("transformCustomMetadataForItemCreation", () => {
                 value: "value",
                 type: "text",
                 is_multiple_value_allowed: false,
-                is_required: false
-            }
+                is_required: false,
+            },
         ];
 
         const expected_list = [
@@ -182,8 +182,8 @@ describe("transformCustomMetadataForItemCreation", () => {
                 name: "field_1",
                 is_multiple_value_allowed: false,
                 value: "value",
-                is_required: false
-            }
+                is_required: false,
+            },
         ];
 
         const formatted_list = transformCustomMetadataForItemCreation(parent_metadata);
@@ -200,8 +200,8 @@ describe("transformCustomMetadataForItemCreation", () => {
                 value: "value",
                 type: "string",
                 is_multiple_value_allowed: false,
-                is_required: false
-            }
+                is_required: false,
+            },
         ];
 
         const expected_list = [
@@ -211,8 +211,8 @@ describe("transformCustomMetadataForItemCreation", () => {
                 name: "field_1",
                 is_multiple_value_allowed: false,
                 value: "value",
-                is_required: false
-            }
+                is_required: false,
+            },
         ];
 
         const formatted_list = transformCustomMetadataForItemCreation(parent_metadata);
@@ -229,13 +229,13 @@ describe("transformCustomMetadataForItemCreation", () => {
                 list_value: [
                     {
                         id: 110,
-                        value: "My value to display"
-                    }
+                        value: "My value to display",
+                    },
                 ],
                 is_multiple_value_allowed: false,
                 type: "list",
-                is_required: false
-            }
+                is_required: false,
+            },
         ];
 
         const expected_list = [
@@ -245,8 +245,8 @@ describe("transformCustomMetadataForItemCreation", () => {
                 name: "field_1",
                 is_multiple_value_allowed: false,
                 value: 110,
-                is_required: false
-            }
+                is_required: false,
+            },
         ];
 
         const formatted_list = transformCustomMetadataForItemCreation(parent_metadata);
@@ -263,8 +263,8 @@ describe("transformCustomMetadataForItemCreation", () => {
                 list_value: [],
                 is_multiple_value_allowed: false,
                 type: "list",
-                is_required: false
-            }
+                is_required: false,
+            },
         ];
 
         const expected_list = [
@@ -274,8 +274,8 @@ describe("transformCustomMetadataForItemCreation", () => {
                 name: "field_1",
                 is_multiple_value_allowed: false,
                 value: 100,
-                is_required: false
-            }
+                is_required: false,
+            },
         ];
 
         const formatted_list = transformCustomMetadataForItemCreation(parent_metadata);
@@ -292,17 +292,17 @@ describe("transformCustomMetadataForItemCreation", () => {
                 list_value: [
                     {
                         id: 110,
-                        value: "My value to display"
+                        value: "My value to display",
                     },
                     {
                         id: 120,
-                        value: "My other value to display"
-                    }
+                        value: "My other value to display",
+                    },
                 ],
                 is_multiple_value_allowed: true,
                 type: "list",
-                is_required: false
-            }
+                is_required: false,
+            },
         ];
 
         const expected_list = [
@@ -312,8 +312,8 @@ describe("transformCustomMetadataForItemCreation", () => {
                 name: "field_1",
                 is_multiple_value_allowed: true,
                 list_value: [110, 120],
-                is_required: false
-            }
+                is_required: false,
+            },
         ];
 
         const formatted_list = transformCustomMetadataForItemCreation(parent_metadata);
@@ -330,8 +330,8 @@ describe("transformCustomMetadataForItemCreation", () => {
                 list_value: [],
                 is_multiple_value_allowed: true,
                 type: "list",
-                is_required: false
-            }
+                is_required: false,
+            },
         ];
 
         const expected_list = [
@@ -341,8 +341,8 @@ describe("transformCustomMetadataForItemCreation", () => {
                 name: "field_1",
                 is_multiple_value_allowed: true,
                 list_value: [100],
-                is_required: false
-            }
+                is_required: false,
+            },
         ];
 
         const formatted_list = transformCustomMetadataForItemCreation(parent_metadata);
@@ -358,8 +358,8 @@ describe("transformCustomMetadataForItemCreation", () => {
                 value: "2019-08-30T00:00:00+02:00",
                 type: "date",
                 is_multiple_value_allowed: false,
-                is_required: false
-            }
+                is_required: false,
+            },
         ];
 
         const expected_list = [
@@ -369,8 +369,8 @@ describe("transformCustomMetadataForItemCreation", () => {
                 name: "field_1",
                 is_multiple_value_allowed: false,
                 value: "2019-08-30",
-                is_required: false
-            }
+                is_required: false,
+            },
         ];
 
         const formatted_list = transformCustomMetadataForItemCreation(parent_metadata);
@@ -386,8 +386,8 @@ describe("transformCustomMetadataForItemCreation", () => {
                 value: null,
                 type: "date",
                 is_multiple_value_allowed: false,
-                is_required: false
-            }
+                is_required: false,
+            },
         ];
 
         const expected_list = [
@@ -397,8 +397,8 @@ describe("transformCustomMetadataForItemCreation", () => {
                 name: "field_1",
                 is_multiple_value_allowed: false,
                 value: "",
-                is_required: false
-            }
+                is_required: false,
+            },
         ];
 
         const formatted_list = transformCustomMetadataForItemCreation(parent_metadata);
@@ -417,8 +417,8 @@ describe("transformCustomMetadataForItemUpdate", () => {
                 value: "value",
                 type: "text",
                 is_multiple_value_allowed: false,
-                is_required: false
-            }
+                is_required: false,
+            },
         ];
 
         transformCustomMetadataForItemUpdate(parent_metadata);
@@ -435,8 +435,8 @@ describe("transformCustomMetadataForItemUpdate", () => {
                 value: "value",
                 type: "string",
                 is_multiple_value_allowed: false,
-                is_required: false
-            }
+                is_required: false,
+            },
         ];
 
         transformCustomMetadataForItemUpdate(parent_metadata);
@@ -453,13 +453,13 @@ describe("transformCustomMetadataForItemUpdate", () => {
                 list_value: [
                     {
                         id: 110,
-                        value: "My value to display"
-                    }
+                        value: "My value to display",
+                    },
                 ],
                 is_multiple_value_allowed: false,
                 type: "list",
-                is_required: false
-            }
+                is_required: false,
+            },
         ];
 
         const expected_list = [
@@ -470,8 +470,8 @@ describe("transformCustomMetadataForItemUpdate", () => {
                 is_multiple_value_allowed: false,
                 value: 110,
                 is_required: false,
-                list_value: null
-            }
+                list_value: null,
+            },
         ];
 
         transformCustomMetadataForItemUpdate(parent_metadata);
@@ -488,8 +488,8 @@ describe("transformCustomMetadataForItemUpdate", () => {
                 list_value: [],
                 is_multiple_value_allowed: false,
                 type: "list",
-                is_required: false
-            }
+                is_required: false,
+            },
         ];
 
         const expected_list = [
@@ -500,8 +500,8 @@ describe("transformCustomMetadataForItemUpdate", () => {
                 is_multiple_value_allowed: false,
                 value: 100,
                 is_required: false,
-                list_value: null
-            }
+                list_value: null,
+            },
         ];
 
         transformCustomMetadataForItemUpdate(parent_metadata);
@@ -518,17 +518,17 @@ describe("transformCustomMetadataForItemUpdate", () => {
                 list_value: [
                     {
                         id: 110,
-                        value: "My value to display"
+                        value: "My value to display",
                     },
                     {
                         id: 120,
-                        value: "My other value to display"
-                    }
+                        value: "My other value to display",
+                    },
                 ],
                 is_multiple_value_allowed: true,
                 type: "list",
-                is_required: false
-            }
+                is_required: false,
+            },
         ];
 
         const expected_list = [
@@ -539,8 +539,8 @@ describe("transformCustomMetadataForItemUpdate", () => {
                 is_multiple_value_allowed: true,
                 list_value: [110, 120],
                 is_required: false,
-                value: null
-            }
+                value: null,
+            },
         ];
 
         transformCustomMetadataForItemUpdate(parent_metadata);
@@ -557,8 +557,8 @@ describe("transformCustomMetadataForItemUpdate", () => {
                 list_value: [],
                 is_multiple_value_allowed: true,
                 type: "list",
-                is_required: false
-            }
+                is_required: false,
+            },
         ];
 
         const expected_list = [
@@ -569,8 +569,8 @@ describe("transformCustomMetadataForItemUpdate", () => {
                 is_multiple_value_allowed: true,
                 list_value: [100],
                 is_required: false,
-                value: null
-            }
+                value: null,
+            },
         ];
 
         transformCustomMetadataForItemUpdate(parent_metadata);
@@ -586,8 +586,8 @@ describe("transformCustomMetadataForItemUpdate", () => {
                 value: "2019-08-30T00:00:00+02:00",
                 type: "date",
                 is_multiple_value_allowed: false,
-                is_required: false
-            }
+                is_required: false,
+            },
         ];
 
         const expected_list = [
@@ -597,8 +597,8 @@ describe("transformCustomMetadataForItemUpdate", () => {
                 name: "field_1",
                 is_multiple_value_allowed: false,
                 value: "2019-08-30",
-                is_required: false
-            }
+                is_required: false,
+            },
         ];
 
         transformCustomMetadataForItemUpdate(parent_metadata);
@@ -614,8 +614,8 @@ describe("transformCustomMetadataForItemUpdate", () => {
                 value: null,
                 type: "date",
                 is_multiple_value_allowed: false,
-                is_required: false
-            }
+                is_required: false,
+            },
         ];
 
         const expected_list = [
@@ -625,8 +625,8 @@ describe("transformCustomMetadataForItemUpdate", () => {
                 name: "field_1",
                 is_multiple_value_allowed: false,
                 value: "",
-                is_required: false
-            }
+                is_required: false,
+            },
         ];
 
         transformCustomMetadataForItemUpdate(parent_metadata);
@@ -644,8 +644,8 @@ describe("formatCustomMetadataForFolderUpdate", () => {
                 { short_name: "field_1" },
                 { short_name: "field_2" },
                 { short_name: "field_3" },
-                { short_name: "field_4" }
-            ]
+                { short_name: "field_4" },
+            ],
         };
 
         const metadata_list_to_update = ["field_2", "field_4"];
@@ -657,8 +657,8 @@ describe("formatCustomMetadataForFolderUpdate", () => {
                 { short_name: "field_1", recursion: "none" },
                 { short_name: "field_2", recursion: "folders" },
                 { short_name: "field_3", recursion: "none" },
-                { short_name: "field_4", recursion: "folders" }
-            ]
+                { short_name: "field_4", recursion: "folders" },
+            ],
         };
 
         formatCustomMetadataForFolderUpdate(

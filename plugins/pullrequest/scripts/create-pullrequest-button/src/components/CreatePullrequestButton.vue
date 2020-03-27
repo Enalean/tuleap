@@ -33,7 +33,7 @@
 export default {
     name: "CreatePullrequestButton",
     props: {
-        showModal: Function
+        showModal: Function,
     },
     computed: {
         is_button_disabled() {
@@ -46,7 +46,7 @@ export default {
             return this.is_button_disabled
                 ? this.$gettext("No pull request can currently be created")
                 : "";
-        }
-    }
+        },
+    },
 };
 </script>

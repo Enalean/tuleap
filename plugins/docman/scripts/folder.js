@@ -88,7 +88,7 @@ function HTTPRequest() {
     }
 }
 
-HTTPRequest.prototype.get = function(param) {
+HTTPRequest.prototype.get = function (param) {
     return this.params[param];
 };
 

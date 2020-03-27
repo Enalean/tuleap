@@ -19,9 +19,9 @@
 
 import jQuery from "jquery";
 
-!(function($) {
-    $(document).ready(function() {
-        $('#tracker-artifact-link-type-usages input[type="checkbox"]').on("change", function() {
+!(function ($) {
+    $(document).ready(function () {
+        $('#tracker-artifact-link-type-usages input[type="checkbox"]').on("change", function () {
             $("#" + $(this).attr("data-form-id")).submit();
         });
     });

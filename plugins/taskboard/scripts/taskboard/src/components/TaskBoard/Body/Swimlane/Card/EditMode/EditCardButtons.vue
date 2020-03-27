@@ -33,7 +33,7 @@ import { Card, TaskboardEvent } from "../../../../../../type";
 import EventBus from "../../../../../../helpers/event-bus";
 
 @Component({
-    components: { CancelSaveButtons }
+    components: { CancelSaveButtons },
 })
 export default class EditCardButtons extends Vue {
     @Prop({ required: true })

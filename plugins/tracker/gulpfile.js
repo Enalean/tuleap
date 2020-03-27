@@ -28,11 +28,11 @@ function extractGettext() {
     return gulp
         .src([templates_with_translated_strings_glob, javascript_with_translated_strings_glob], {
             cwd: path.resolve("./scripts/angular-artifact-modal"),
-            cwdbase: true
+            cwdbase: true,
         })
         .pipe(
             gettext.extract("template.pot", {
-                lineNumbers: false
+                lineNumbers: false,
             })
         )
         .pipe(gulp.dest("scripts/angular-artifact-modal/po/"));
@@ -47,5 +47,5 @@ function watchTask() {
 }
 
 module.exports = {
-    watch: watchTask
+    watch: watchTask,
 };

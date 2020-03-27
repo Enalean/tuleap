@@ -28,7 +28,7 @@ KanbanColumnController.$inject = [
     "DroppedService",
     "KanbanColumnService",
     "SharedPropertiesService",
-    "ColumnCollectionService"
+    "ColumnCollectionService",
 ];
 
 function KanbanColumnController(
@@ -52,7 +52,7 @@ function KanbanColumnController(
             scope: $scope,
             revertOnSpill: true,
             moves: isItemDraggable,
-            onInit: initDragular
+            onInit: initDragular,
         };
     }
 
@@ -137,7 +137,7 @@ function KanbanColumnController(
             );
         }
 
-        promise.then(function() {
+        promise.then(function () {
             dropped_item.updating = false;
         });
 

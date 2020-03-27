@@ -26,7 +26,7 @@ Cypress.Commands.overwrite("visit", (originalFn, url, options = {}) => {
             if (options.onBeforeLoad) {
                 return options.onBeforeLoad(window, ...args);
             }
-        }
+        },
     });
     return originalFn(url, opts);
 });
@@ -80,7 +80,7 @@ Cypress.Commands.add("visitProjectService", (project_unixname, service_label) =>
     cy.get("[data-test=project-sidebar]")
         .contains(service_label)
         .should("have.attr", "href")
-        .then(href => {
+        .then((href) => {
             cache_service_urls[project_unixname] = cache_service_urls[project_unixname] || {};
             cache_service_urls[project_unixname][service_label] = href;
             cy.visit(href);
@@ -108,7 +108,7 @@ Cypress.Commands.add("updatePlatformVisibilityAndAllowRestricted", () => {
     cy.userLogout();
 });
 
-Cypress.Commands.add("getProjectId", project_shortname => {
+Cypress.Commands.add("getProjectId", (project_shortname) => {
     cy.visit(`/projects/${project_shortname}/`);
     return cy.get("[data-test=project-sidebar]").should("have.attr", "data-project-id");
 });

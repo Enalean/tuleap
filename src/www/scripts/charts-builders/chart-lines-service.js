@@ -28,12 +28,12 @@ function drawIdealLine(container, { x_scale, y_scale }, { line_start, line_end }
     const coordinates = [
         {
             x_coordinate: x_scale(x_minimum),
-            y_coordinate: y_scale(line_start)
+            y_coordinate: y_scale(line_start),
         },
         {
             x_coordinate: x_scale(x_maximum),
-            y_coordinate: y_scale(line_end)
-        }
+            y_coordinate: y_scale(line_end),
+        },
     ];
 
     const ideal_line = container.append("g").attr("class", "ideal-line");
@@ -52,16 +52,13 @@ function drawIdealLine(container, { x_scale, y_scale }, { line_start, line_end }
         .attr("cy", ({ y_coordinate }) => y_coordinate)
         .attr("r", 4);
 
-    ideal_line
-        .append("path")
-        .datum(coordinates)
-        .attr("d", ideal_line_generator);
+    ideal_line.append("path").datum(coordinates).attr("d", ideal_line_generator);
 }
 
 function drawCurve(container, { x_scale, y_scale }, dataset, line_name) {
     const lines = line()
         .x(({ date }) => x_scale(date))
-        .y(point => y_scale(point[line_name]));
+        .y((point) => y_scale(point[line_name]));
 
     const class_name = line_name.replace("_", "-");
     container

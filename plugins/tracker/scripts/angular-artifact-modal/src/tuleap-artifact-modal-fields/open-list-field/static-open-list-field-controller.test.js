@@ -7,14 +7,14 @@ import * as tlp from "tlp";
 
 jest.mock("tlp");
 
-describe("StaticOpenListFieldController", function() {
+describe("StaticOpenListFieldController", function () {
     var $scope, $rootScope, $element, StaticOpenListFieldController;
 
-    beforeEach(function() {
+    beforeEach(function () {
         angular.mock.module(open_list_field_module);
 
         var $controller;
-        angular.mock.inject(function(_$controller_, _$rootScope_) {
+        angular.mock.inject(function (_$controller_, _$rootScope_) {
             $controller = _$controller_;
             $rootScope = _$rootScope_;
 
@@ -25,22 +25,22 @@ describe("StaticOpenListFieldController", function() {
 
         StaticOpenListFieldController = $controller(BaseStaticOpenListController, {
             $element: $element,
-            $scope: $scope
+            $scope: $scope,
         });
 
         StaticOpenListFieldController.field = {
             hint: "tottery",
-            values: []
+            values: [],
         };
         StaticOpenListFieldController.value_model = {
             value: {
-                bind_value_objects: []
-            }
+                bind_value_objects: [],
+            },
         };
     });
 
-    describe("init() -", function() {
-        it("When initializing the controller, then a select2 will be created and its events will be listened", function() {
+    describe("init() -", function () {
+        it("When initializing the controller, then a select2 will be created and its events will be listened", function () {
             $element.append(
                 angular.element('<select class="tuleap-artifact-modal-open-list-static"></select>')
             );
@@ -55,28 +55,28 @@ describe("StaticOpenListFieldController", function() {
         });
     });
 
-    describe("isRequiredAndEmpty() -", function() {
-        it("Given that the field was required and the value model empty, then it will return true", function() {
+    describe("isRequiredAndEmpty() -", function () {
+        it("Given that the field was required and the value model empty, then it will return true", function () {
             StaticOpenListFieldController.field.required = true;
             StaticOpenListFieldController.value_model.value.bind_value_objects = [];
 
             expect(StaticOpenListFieldController.isRequiredAndEmpty()).toBe(true);
         });
 
-        it("Given that the field was required and the value model had a value, then it will return false", function() {
+        it("Given that the field was required and the value model had a value, then it will return false", function () {
             StaticOpenListFieldController.value_model.value.bind_value_objects = [
                 {
                     id: "565",
                     label: "pembina",
-                    color: null
-                }
+                    color: null,
+                },
             ];
             StaticOpenListFieldController.field.required = true;
 
             expect(StaticOpenListFieldController.isRequiredAndEmpty()).toBe(false);
         });
 
-        it("Given that the field was not required and the value model empty, then it will return false", function() {
+        it("Given that the field was not required and the value model empty, then it will return false", function () {
             StaticOpenListFieldController.field.required = false;
             StaticOpenListFieldController.value_model.value.bind_value_objects = [];
 
@@ -84,20 +84,20 @@ describe("StaticOpenListFieldController", function() {
         });
     });
 
-    describe("isStaticValueSelected() -", function() {
-        it("Given a value from the field's possible values that was in the value model, then it will return true", function() {
+    describe("isStaticValueSelected() -", function () {
+        it("Given a value from the field's possible values that was in the value model, then it will return true", function () {
             StaticOpenListFieldController.value_model.value.bind_value_objects = [
                 {
                     id: "640",
                     label: "subsecretarial",
-                    color: null
-                }
+                    color: null,
+                },
             ];
 
             var field_value = {
                 id: 640,
                 label: "subsecretarial",
-                is_hidden: false
+                is_hidden: false,
             };
 
             var result = StaticOpenListFieldController.isStaticValueSelected(field_value);
@@ -105,13 +105,13 @@ describe("StaticOpenListFieldController", function() {
             expect(result).toBe(true);
         });
 
-        it("Given a value that was not in the value model, then it will return false", function() {
+        it("Given a value that was not in the value model, then it will return false", function () {
             StaticOpenListFieldController.value_model.value.bind_value_objects = [];
 
             var field_value = {
                 id: 902,
                 label: "banket",
-                is_hidden: false
+                is_hidden: false,
             };
 
             var result = StaticOpenListFieldController.isStaticValueSelected(field_value);
@@ -120,22 +120,22 @@ describe("StaticOpenListFieldController", function() {
         });
     });
 
-    describe("handleStaticValueSelection() -", function() {
-        beforeEach(function() {
+    describe("handleStaticValueSelection() -", function () {
+        beforeEach(function () {
             jest.spyOn($scope, "$apply");
         });
 
-        it("Given an event with a selection, then an object with 'id' and 'label' properties will be pushed in the value model", function() {
+        it("Given an event with a selection, then an object with 'id' and 'label' properties will be pushed in the value model", function () {
             var event = {
                 params: {
                     name: "select",
                     args: {
                         data: {
                             id: 979,
-                            text: "palpate"
-                        }
-                    }
-                }
+                            text: "palpate",
+                        },
+                    },
+                },
             };
 
             StaticOpenListFieldController.handleStaticValueSelection(event);
@@ -143,12 +143,12 @@ describe("StaticOpenListFieldController", function() {
             expect(StaticOpenListFieldController.value_model.value.bind_value_objects).toEqual([
                 {
                     id: 979,
-                    label: "palpate"
-                }
+                    label: "palpate",
+                },
             ]);
         });
 
-        it("Given an event with a new 'tag' (not in possible values) selection, then an object with 'label' property will be pushed in the value model", function() {
+        it("Given an event with a new 'tag' (not in possible values) selection, then an object with 'label' property will be pushed in the value model", function () {
             var event = {
                 params: {
                     name: "select",
@@ -156,28 +156,28 @@ describe("StaticOpenListFieldController", function() {
                         data: {
                             id: "peptonuria",
                             text: "peptonuria",
-                            isTag: true
-                        }
-                    }
-                }
+                            isTag: true,
+                        },
+                    },
+                },
             };
 
             StaticOpenListFieldController.handleStaticValueSelection(event);
 
             expect(StaticOpenListFieldController.value_model.value.bind_value_objects).toEqual([
-                { label: "peptonuria" }
+                { label: "peptonuria" },
             ]);
         });
     });
 
-    describe("handleStaticValueUnselection() -", function() {
-        it("Given an event with a static value unselection, then it will be removed from the value model", function() {
+    describe("handleStaticValueUnselection() -", function () {
+        it("Given an event with a static value unselection, then it will be removed from the value model", function () {
             StaticOpenListFieldController.value_model.value.bind_value_objects = [
                 {
                     id: "470",
                     label: "unriddleable",
-                    color: null
-                }
+                    color: null,
+                },
             ];
 
             var event = {
@@ -186,10 +186,10 @@ describe("StaticOpenListFieldController", function() {
                     args: {
                         data: {
                             id: "470",
-                            text: "unriddleable"
-                        }
-                    }
-                }
+                            text: "unriddleable",
+                        },
+                    },
+                },
             };
 
             StaticOpenListFieldController.handleStaticValueUnselection(event);
@@ -197,11 +197,11 @@ describe("StaticOpenListFieldController", function() {
             expect(StaticOpenListFieldController.value_model.value.bind_value_objects).toEqual([]);
         });
 
-        it("Given an event with a 'tag' (not in possible values) unselection, then it will be removed from the value model", function() {
+        it("Given an event with a 'tag' (not in possible values) unselection, then it will be removed from the value model", function () {
             StaticOpenListFieldController.value_model.value.bind_value_objects = [
                 {
-                    label: "raticide"
-                }
+                    label: "raticide",
+                },
             ];
 
             var event = {
@@ -211,10 +211,10 @@ describe("StaticOpenListFieldController", function() {
                         data: {
                             id: "raticide",
                             text: "raticide",
-                            isTag: true
-                        }
-                    }
-                }
+                            isTag: true,
+                        },
+                    },
+                },
             };
 
             StaticOpenListFieldController.handleStaticValueUnselection(event);
@@ -223,10 +223,10 @@ describe("StaticOpenListFieldController", function() {
         });
     });
 
-    describe("newOpenListStaticValue() -", function() {
-        it("Given blank space, then it returns null", function() {
+    describe("newOpenListStaticValue() -", function () {
+        it("Given blank space, then it returns null", function () {
             var new_open_value = {
-                term: "   "
+                term: "   ",
             };
 
             var result = StaticOpenListFieldController.newOpenListStaticValue(new_open_value);
@@ -234,9 +234,9 @@ describe("StaticOpenListFieldController", function() {
             expect(result).toBe(null);
         });
 
-        it("Given a string, then it returns an object with 'id', 'text', and 'isTag' attributes", function() {
+        it("Given a string, then it returns an object with 'id', 'text', and 'isTag' attributes", function () {
             var new_open_value = {
-                term: "slopshop"
+                term: "slopshop",
             };
 
             var result = StaticOpenListFieldController.newOpenListStaticValue(new_open_value);
@@ -244,13 +244,13 @@ describe("StaticOpenListFieldController", function() {
             expect(result).toEqual({
                 id: "slopshop",
                 text: "slopshop",
-                isTag: true
+                isTag: true,
             });
         });
 
-        it("Given a string with blank space, it trims it and returns an object", function() {
+        it("Given a string with blank space, it trims it and returns an object", function () {
             var new_open_value = {
-                term: " slopshop  "
+                term: " slopshop  ",
             };
 
             var result = StaticOpenListFieldController.newOpenListStaticValue(new_open_value);
@@ -258,24 +258,24 @@ describe("StaticOpenListFieldController", function() {
             expect(result).toEqual({
                 id: "slopshop",
                 text: "slopshop",
-                isTag: true
+                isTag: true,
             });
         });
 
-        it("Given a string that already exists in the field's possible values, then it returns null", function() {
+        it("Given a string that already exists in the field's possible values, then it returns null", function () {
             StaticOpenListFieldController.field.values = [
                 {
                     id: 682,
-                    label: "magnetotherapy"
+                    label: "magnetotherapy",
                 },
                 {
                     id: 815,
-                    label: "extensometer"
-                }
+                    label: "extensometer",
+                },
             ];
 
             var new_open_value = {
-                term: "extensometer"
+                term: "extensometer",
             };
 
             var result = StaticOpenListFieldController.newOpenListStaticValue(new_open_value);

@@ -32,7 +32,7 @@ describe("cards-reordering", () => {
             { id: 101 } as Card,
             card,
             { id: 102 } as Card,
-            { id: 103 } as Card
+            { id: 103 } as Card,
         ];
     });
 
@@ -41,21 +41,21 @@ describe("cards-reordering", () => {
             expect(getCardPosition(card, null, cards_in_cell)).toEqual({
                 ids: [card.id],
                 direction: "after",
-                compared_to: 103
+                compared_to: 103,
             });
         });
         it("If card has been dropped at the first position, then it should be placed before the second item of the list", () => {
             expect(getCardPosition(card, { id: 100 } as Card, cards_in_cell)).toEqual({
                 ids: [card.id],
                 direction: "before",
-                compared_to: 100
+                compared_to: 100,
             });
         });
         it("If the card has been dropped between the second and the third position, then it should be placed after the second item of the list", () => {
             expect(getCardPosition(card, { id: 103 } as Card, cards_in_cell)).toEqual({
                 ids: [card.id],
                 direction: "after",
-                compared_to: 102
+                compared_to: 102,
             });
         });
     });

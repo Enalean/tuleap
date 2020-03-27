@@ -22,7 +22,7 @@ import {
     findClosestDraggable,
     findClosestDropzone,
     findNextGhostSibling,
-    insertAfter
+    insertAfter,
 } from "./dom-manipulation";
 import { DrekkenovInitOptions } from "./types";
 
@@ -58,7 +58,7 @@ describe(`dom-manipulation`, () => {
             const options = ({
                 isDraggable() {
                     return false;
-                }
+                },
             } as unknown) as DrekkenovInitOptions;
             const element = doc.createElement("div");
 
@@ -73,7 +73,7 @@ describe(`dom-manipulation`, () => {
             const options = ({
                 isDraggable() {
                     return true;
-                }
+                },
             } as unknown) as DrekkenovInitOptions;
 
             const element = doc.createElement("div");
@@ -90,7 +90,7 @@ describe(`dom-manipulation`, () => {
             const options = ({
                 isDraggable(element: HTMLElement): boolean {
                     return element === parent;
-                }
+                },
             } as unknown) as DrekkenovInitOptions;
 
             const closest_draggable = findClosestDraggable(options, child);
@@ -107,7 +107,7 @@ describe(`dom-manipulation`, () => {
             const options = ({
                 isDraggable(element: HTMLElement): boolean {
                     return element === grandpa;
-                }
+                },
             } as unknown) as DrekkenovInitOptions;
 
             const closest_draggable = findClosestDraggable(options, child);
@@ -121,7 +121,7 @@ describe(`dom-manipulation`, () => {
             const options = ({
                 isDropZone() {
                     return false;
-                }
+                },
             } as unknown) as DrekkenovInitOptions;
             const element = doc.createTextNode("I am a text node");
 
@@ -135,7 +135,7 @@ describe(`dom-manipulation`, () => {
             const options = ({
                 isDropZone() {
                     return false;
-                }
+                },
             } as unknown) as DrekkenovInitOptions;
             const element = doc.createElement("div");
 
@@ -148,7 +148,7 @@ describe(`dom-manipulation`, () => {
             const options = ({
                 isDropZone() {
                     return true;
-                }
+                },
             } as unknown) as DrekkenovInitOptions;
             const element = doc.createElement("div");
 
@@ -164,7 +164,7 @@ describe(`dom-manipulation`, () => {
             const options = {
                 isDropZone(element: HTMLElement): boolean {
                     return element === parent;
-                }
+                },
             } as DrekkenovInitOptions;
 
             const closest_dropzone = findClosestDropzone(options, child);
@@ -181,7 +181,7 @@ describe(`dom-manipulation`, () => {
             const options = {
                 isDropZone(element: HTMLElement): boolean {
                     return element === grandpa;
-                }
+                },
             } as DrekkenovInitOptions;
 
             const closest_dropzone = findClosestDropzone(options, child);
@@ -263,19 +263,19 @@ function createChildrenWithRects(
     const first_child = doc.createElement("div");
     const first_rect = {
         top: first_middle_coordinate - 25,
-        bottom: first_middle_coordinate + 25
+        bottom: first_middle_coordinate + 25,
     } as DOMRect;
     jest.spyOn(first_child, "getBoundingClientRect").mockReturnValue(first_rect);
     const second_child = doc.createElement("div");
     const second_rect = {
         top: second_middle_coordinate - 25,
-        bottom: second_middle_coordinate + 25
+        bottom: second_middle_coordinate + 25,
     } as DOMRect;
     jest.spyOn(second_child, "getBoundingClientRect").mockReturnValue(second_rect);
     const third_child = doc.createElement("div");
     const third_rect = {
         top: third_middle_coordinate - 25,
-        bottom: third_middle_coordinate + 25
+        bottom: third_middle_coordinate + 25,
     } as DOMRect;
     jest.spyOn(third_child, "getBoundingClientRect").mockReturnValue(third_rect);
     return [first_child, second_child, third_child];

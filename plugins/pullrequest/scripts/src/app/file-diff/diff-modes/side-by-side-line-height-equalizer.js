@@ -63,11 +63,11 @@ function getNumberOfCommentsWidgets(handle) {
         return 0;
     }
 
-    return handle.widgets.filter(widget => isCommentWidget(widget)).length;
+    return handle.widgets.filter((widget) => isCommentWidget(widget)).length;
 }
 
 function getSumOfWidgetsHeights(widgets) {
-    return widgets.map(widget => widget.height).reduce((sum, value) => sum + value, 0);
+    return widgets.map((widget) => widget.height).reduce((sum, value) => sum + value, 0);
 }
 
 function hasNoWidgets(handle) {
@@ -84,7 +84,7 @@ function getTotalHeight(handle) {
     }
 
     const widgets = handle.widgets.filter(
-        widget => isCommentWidget(widget) || isCommentPlaceholderWidget(widget)
+        (widget) => isCommentWidget(widget) || isCommentPlaceholderWidget(widget)
     );
 
     return getSumOfWidgetsHeights(widgets);
@@ -95,7 +95,7 @@ function getCommentsHeight(handle) {
         return 0;
     }
 
-    const comments_widgets = handle.widgets.filter(widget => isCommentWidget(widget));
+    const comments_widgets = handle.widgets.filter((widget) => isCommentWidget(widget));
 
     if (!comments_widgets.length) {
         return 0;
@@ -146,7 +146,7 @@ function adjustHeights(
                 handle: opposite_handle,
                 widget_height: optimum_height,
                 display_above_line,
-                is_comment_placeholder: true
+                is_comment_placeholder: true,
             };
         }
 

@@ -31,14 +31,14 @@ describe("Card getters", () => {
             is_loading_swimlanes: false,
             dropzone_rejecting_drop: undefined,
             is_card_creation_blocked_due_to_ongoing_creation: false,
-            possible_assignees: new Map<number, UserForPeoplePicker[]>()
+            possible_assignees: new Map<number, UserForPeoplePicker[]>(),
         };
     });
 
     describe("have_possible_assignees_been_loaded_for_tracker", () => {
         it("Returns true when the tracker has no assigned_to field", () => {
             const tracker = {
-                assigned_to_field: null
+                assigned_to_field: null,
             } as Tracker;
 
             expect(getters.have_possible_assignees_been_loaded_for_tracker(state)(tracker)).toBe(
@@ -49,8 +49,8 @@ describe("Card getters", () => {
         it("Returns true when the assignees of the tracker have already been loaded", () => {
             const tracker = {
                 assigned_to_field: {
-                    id: 1234
-                }
+                    id: 1234,
+                },
             } as Tracker;
 
             state.possible_assignees.set(1234, [{ id: 1 } as UserForPeoplePicker]);
@@ -63,8 +63,8 @@ describe("Card getters", () => {
         it("Returns false when the assignees of the tracker have not been loaded yet", () => {
             const tracker = {
                 assigned_to_field: {
-                    id: 1234
-                }
+                    id: 1234,
+                },
             } as Tracker;
 
             expect(getters.have_possible_assignees_been_loaded_for_tracker(state)(tracker)).toBe(
@@ -76,7 +76,7 @@ describe("Card getters", () => {
     describe("assignable_users", () => {
         it("Returns an empty list when the tracker has no assigned_to field", () => {
             const tracker = {
-                assigned_to_field: null
+                assigned_to_field: null,
             } as Tracker;
 
             expect(getters.assignable_users(state)(tracker)).toEqual([]);
@@ -85,8 +85,8 @@ describe("Card getters", () => {
         it("Returns an empty list when tracker assignees have not been loaded yet", () => {
             const tracker = {
                 assigned_to_field: {
-                    id: 1234
-                }
+                    id: 1234,
+                },
             } as Tracker;
 
             expect(getters.assignable_users(state)(tracker)).toEqual([]);
@@ -95,8 +95,8 @@ describe("Card getters", () => {
         it("Returns the list of assignale users", () => {
             const tracker = {
                 assigned_to_field: {
-                    id: 1234
-                }
+                    id: 1234,
+                },
             } as Tracker;
 
             state.possible_assignees.set(1234, [{ id: 1 } as UserForPeoplePicker]);

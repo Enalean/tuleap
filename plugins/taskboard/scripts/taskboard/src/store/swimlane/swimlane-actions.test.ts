@@ -38,14 +38,14 @@ describe("Swimlane state actions", () => {
             commit: jest.fn(),
             dispatch: jest.fn(),
             getters: {
-                is_drop_accepted_in_target: (): boolean => true
+                is_drop_accepted_in_target: (): boolean => true,
             },
             rootState: {
                 milestone_id: 42,
                 user: {
-                    user_id: 101
-                }
-            } as RootState
+                    user_id: 101,
+                },
+            } as RootState,
         } as unknown) as ActionContext<SwimlaneState, RootState>;
         tlpRecursiveGetMock = jest.spyOn(tlp, "recursiveGet");
     });
@@ -57,7 +57,7 @@ describe("Swimlane state actions", () => {
             expect(context.commit).toHaveBeenCalledWith("endLoadingSwimlanes");
             expect(tlpRecursiveGetMock).toHaveBeenCalledWith(`/api/v1/taskboard/42/cards`, {
                 params: { limit: 100 },
-                getCollectionCallback: expect.any(Function)
+                getCollectionCallback: expect.any(Function),
             });
         });
 
@@ -80,36 +80,36 @@ describe("Swimlane state actions", () => {
                         id: 43,
                         is_in_edit_mode: false,
                         is_being_saved: false,
-                        is_just_saved: false
+                        is_just_saved: false,
                     },
                     children_cards: [] as Card[],
-                    is_loading_children_cards: false
+                    is_loading_children_cards: false,
                 } as Swimlane,
                 {
                     card: {
                         id: 44,
                         is_in_edit_mode: false,
                         is_being_saved: false,
-                        is_just_saved: false
+                        is_just_saved: false,
                     },
                     children_cards: [] as Card[],
-                    is_loading_children_cards: false
-                } as Swimlane
+                    is_loading_children_cards: false,
+                } as Swimlane,
             ]);
         });
 
         it(`when top-level cards have children, it will load their children`, async () => {
             const card_with_children = {
                 id: 43,
-                has_children: true
+                has_children: true,
             } as Card;
             const other_card_with_children = {
                 id: 44,
-                has_children: true
+                has_children: true,
             } as Card;
             const card_without_children = {
                 id: 45,
-                has_children: false
+                has_children: false,
             } as Card;
             tlpRecursiveGetMock = jest.spyOn(tlp, "recursiveGet").mockImplementation(
                 <T>(url: string, init?: RecursiveGetInit<Card[], T>): Promise<T[]> => {
@@ -121,7 +121,7 @@ describe("Swimlane state actions", () => {
                         init.getCollectionCallback([
                             card_with_children,
                             other_card_with_children,
-                            card_without_children
+                            card_without_children,
                         ])
                     );
                 }
@@ -134,8 +134,8 @@ describe("Swimlane state actions", () => {
                         ...card_with_children,
                         is_in_edit_mode: false,
                         is_being_saved: false,
-                        is_just_saved: false
-                    }
+                        is_just_saved: false,
+                    },
                 })
             );
             expect(context.dispatch).toHaveBeenCalledWith(
@@ -145,8 +145,8 @@ describe("Swimlane state actions", () => {
                         ...other_card_with_children,
                         is_in_edit_mode: false,
                         is_being_saved: false,
-                        is_just_saved: false
-                    }
+                        is_just_saved: false,
+                    },
                 })
             );
             expect(context.dispatch).not.toHaveBeenCalledWith(
@@ -156,8 +156,8 @@ describe("Swimlane state actions", () => {
                         ...card_without_children,
                         is_in_edit_mode: false,
                         is_being_saved: false,
-                        is_just_saved: false
-                    }
+                        is_just_saved: false,
+                    },
                 })
             );
         });
@@ -168,7 +168,7 @@ describe("Swimlane state actions", () => {
             await actions.loadSwimlanes(context);
             expect(context.dispatch).toHaveBeenCalledTimes(1);
             expect(context.dispatch).toHaveBeenCalledWith("error/handleGlobalError", error, {
-                root: true
+                root: true,
             });
             expect(context.commit).toHaveBeenCalledWith("endLoadingSwimlanes");
         });
@@ -180,7 +180,7 @@ describe("Swimlane state actions", () => {
             swimlane = {
                 card: { id: 197 } as Card,
                 children_cards: [],
-                is_loading_children_cards: false
+                is_loading_children_cards: false,
             };
         });
 
@@ -194,9 +194,9 @@ describe("Swimlane state actions", () => {
                 {
                     params: {
                         milestone_id: 42,
-                        limit: 100
+                        limit: 100,
                     },
-                    getCollectionCallback: expect.any(Function)
+                    getCollectionCallback: expect.any(Function),
                 }
             );
         });
@@ -216,7 +216,7 @@ describe("Swimlane state actions", () => {
             await actions.loadChildrenCards(context, swimlane);
             expect(context.commit).toHaveBeenCalledWith("addChildrenToSwimlane", {
                 swimlane,
-                children_cards
+                children_cards,
             });
         });
 
@@ -225,7 +225,7 @@ describe("Swimlane state actions", () => {
             tlpRecursiveGetMock.mockRejectedValue(error);
             await loadChildrenCards(context, swimlane);
             expect(context.dispatch).toHaveBeenCalledWith("error/handleModalError", error, {
-                root: true
+                root: true,
             });
             expect(context.commit).toHaveBeenCalledWith("endLoadingChildren", swimlane);
         });
@@ -234,7 +234,7 @@ describe("Swimlane state actions", () => {
     describe("expandSwimlane", () => {
         it(`When the swimlane is expanded, the user pref is stored`, async () => {
             const swimlane: Swimlane = {
-                card: { id: 69 } as Card
+                card: { id: 69 } as Card,
             } as Swimlane;
 
             const tlpDeleteMock = jest.spyOn(tlp, "del");
@@ -253,7 +253,7 @@ describe("Swimlane state actions", () => {
     describe("collapseSwimlane", () => {
         it(`When the swimlane is collapsed, the user pref is stored`, async () => {
             const swimlane: Swimlane = {
-                card: { id: 69 } as Card
+                card: { id: 69 } as Card,
             } as Swimlane;
 
             const tlpPatchMock = jest.spyOn(tlp, "patch");
@@ -276,7 +276,7 @@ describe("Swimlane state actions", () => {
                 swimlane = {
                     card: { id: 104, label: "Solo card in state", has_children: false } as Card,
                     children_cards: [],
-                    is_loading_children_cards: false
+                    is_loading_children_cards: false,
                 };
                 payload = { swimlane, card: swimlane.card };
             });
@@ -284,7 +284,7 @@ describe("Swimlane state actions", () => {
                 const refreshed_card = {
                     id: 104,
                     label: "Refreshed solo card",
-                    has_children: false
+                    has_children: false,
                 } as Card;
                 const tlpGetMock = jest.spyOn(tlp, "get");
                 mockFetchSuccess(tlpGetMock, { return_json: refreshed_card });
@@ -292,10 +292,10 @@ describe("Swimlane state actions", () => {
                 await actions.refreshCardAndParent(context, payload);
 
                 expect(tlpGetMock).toHaveBeenCalledWith("/api/v1/taskboard_cards/104", {
-                    params: { milestone_id: 42 }
+                    params: { milestone_id: 42 },
                 });
                 expect(context.commit).toHaveBeenCalledWith("refreshCard", {
-                    refreshed_card
+                    refreshed_card,
                 });
             });
 
@@ -308,7 +308,7 @@ describe("Swimlane state actions", () => {
                 await actions.refreshCardAndParent(context, payload);
 
                 expect(context.dispatch).toHaveBeenCalledWith("error/handleModalError", error, {
-                    root: true
+                    root: true,
                 });
             });
         });
@@ -320,7 +320,7 @@ describe("Swimlane state actions", () => {
                 swimlane = {
                     card: { id: 78, label: "Parent card", has_children: true } as Card,
                     children_cards: [card],
-                    is_loading_children_cards: false
+                    is_loading_children_cards: false,
                 };
                 payload = { swimlane, card };
             });
@@ -330,30 +330,30 @@ describe("Swimlane state actions", () => {
                 const refreshed_parent_card = {
                     id: 78,
                     label: "Refreshed parent card",
-                    has_children: true
+                    has_children: true,
                 } as Card;
                 const tlpGetMock = jest.spyOn(tlp, "get");
                 tlpGetMock.mockResolvedValueOnce({
-                    json: () => Promise.resolve(refreshed_child_card)
+                    json: () => Promise.resolve(refreshed_child_card),
                 } as Response);
                 tlpGetMock.mockResolvedValueOnce({
-                    json: () => Promise.resolve(refreshed_parent_card)
+                    json: () => Promise.resolve(refreshed_parent_card),
                 } as Response);
 
                 await actions.refreshCardAndParent(context, payload);
 
                 expect(tlpGetMock).toHaveBeenCalledWith("/api/v1/taskboard_cards/59", {
-                    params: { milestone_id: 42 }
+                    params: { milestone_id: 42 },
                 });
                 expect(context.commit).toHaveBeenCalledWith("refreshCard", {
-                    refreshed_card: refreshed_child_card
+                    refreshed_card: refreshed_child_card,
                 });
 
                 expect(tlpGetMock).toHaveBeenCalledWith("/api/v1/taskboard_cards/78", {
-                    params: { milestone_id: 42 }
+                    params: { milestone_id: 42 },
                 });
                 expect(context.commit).toHaveBeenCalledWith("refreshCard", {
-                    refreshed_card: refreshed_parent_card
+                    refreshed_card: refreshed_parent_card,
                 });
             });
 
@@ -366,7 +366,7 @@ describe("Swimlane state actions", () => {
                 await actions.refreshCardAndParent(context, payload);
 
                 expect(context.dispatch).toHaveBeenCalledWith("error/handleModalError", error, {
-                    root: true
+                    root: true,
                 });
             });
         });

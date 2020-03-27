@@ -25,7 +25,7 @@ describe(`form-adapter`, () => {
         let form;
         beforeEach(() => {
             form = {
-                querySelectorAll: jest.fn()
+                querySelectorAll: jest.fn(),
             };
         });
 
@@ -57,7 +57,7 @@ describe(`form-adapter`, () => {
         beforeEach(() => {
             form = {
                 querySelectorAll: jest.fn(() => []),
-                addEventListener: jest.fn()
+                addEventListener: jest.fn(),
             };
         });
 
@@ -81,7 +81,7 @@ describe(`form-adapter`, () => {
             disableFormSubmit(form);
             const submit_event = {
                 preventDefault: jest.fn(),
-                stopPropagation: jest.fn()
+                stopPropagation: jest.fn(),
             };
             triggerSubmit(submit_event);
 
@@ -106,7 +106,7 @@ describe(`form-adapter`, () => {
         beforeEach(() => {
             form = {
                 querySelectorAll: jest.fn(() => []),
-                removeEventListener: jest.fn()
+                removeEventListener: jest.fn(),
             };
         });
 

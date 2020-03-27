@@ -33,8 +33,8 @@ import { Card, Tracker, User } from "../../../../../type";
 
 @Component({
     components: {
-        CardAssignees
-    }
+        CardAssignees,
+    },
 })
 export default class CardInfo extends Vue {
     @Prop({ required: true })

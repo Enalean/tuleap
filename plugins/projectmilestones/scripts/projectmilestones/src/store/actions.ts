@@ -23,7 +23,7 @@ import {
     getNbOfClosedSprints,
     getOpenSprints,
     getNbOfPastRelease,
-    getLastRelease as getLast
+    getLastRelease as getLast,
 } from "../api/rest-querier";
 
 import { Context, MilestoneContent, MilestoneData, TrackerNumberArtifacts } from "../type";
@@ -37,7 +37,7 @@ async function getCurrentMilestones(context: Context): Promise<void> {
         milestones = await getAllCurrentMilestones({
             project_id,
             limit: context.state.limit,
-            offset: context.state.offset
+            offset: context.state.offset,
         });
     }
     return context.commit("setCurrentMilestones", milestones);
@@ -56,7 +56,7 @@ export function getEnhancedMilestones(
             ...milestone,
             total_sprint,
             total_closed_sprint,
-            open_sprints
+            open_sprints,
         };
     };
     return milestone_data();
@@ -83,7 +83,7 @@ async function getNumberOfPastRelease(context: Context): Promise<void> {
         total = await getNbOfPastRelease({
             project_id,
             limit: context.state.limit,
-            offset: context.state.offset
+            offset: context.state.offset,
         });
     }
 
@@ -135,16 +135,16 @@ function getNumberArtifactsInTrackerOfAgileDashboard(
 ): void {
     const trackers_with_number_artifacts: TrackerNumberArtifacts[] = [];
 
-    context.state.trackers_agile_dashboard.forEach(tracker => {
+    context.state.trackers_agile_dashboard.forEach((tracker) => {
         trackers_with_number_artifacts.push({
             ...tracker,
-            total_artifact: 0
+            total_artifact: 0,
         });
     });
 
-    milestone_contents.forEach(content => {
+    milestone_contents.forEach((content) => {
         const tracker_with_number_artifacts = trackers_with_number_artifacts.find(
-            tracker => tracker.id === content.artifact.tracker.id
+            (tracker) => tracker.id === content.artifact.tracker.id
         );
 
         if (tracker_with_number_artifacts) {

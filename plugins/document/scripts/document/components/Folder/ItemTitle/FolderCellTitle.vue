@@ -33,7 +33,7 @@
             v-bind:class="{
                 'fa-folder': is_closed,
                 'fa-folder-open': is_folder_open,
-                'fa-circle-o-notch fa-spin': is_loading
+                'fa-circle-o-notch fa-spin': is_loading,
             }"
         ></i>
         <a
@@ -55,13 +55,13 @@ import { getTitleWithElipsisIfNeeded } from "../../../helpers/cell-title-formatt
 export default {
     name: "FolderCellTitle",
     props: {
-        item: Object
+        item: Object,
     },
     data() {
         return {
             is_closed: true,
             is_loading: false,
-            have_children_been_loaded: false
+            have_children_been_loaded: false,
         };
     },
     computed: {
@@ -70,7 +70,7 @@ export default {
         folder_href() {
             const { href } = this.$router.resolve({
                 name: "folder",
-                params: { item_id: this.item.id }
+                params: { item_id: this.item.id },
             });
 
             return href;
@@ -86,11 +86,11 @@ export default {
         },
         has_uploading_content() {
             const uploading_content = this.files_uploads_list.find(
-                file => file.parent_id === this.item.id && file.progress > 0
+                (file) => file.parent_id === this.item.id && file.progress > 0
             );
 
             return uploading_content;
-        }
+        },
     },
     mounted() {
         this.$store.commit("initializeFolderProperties", this.item);
@@ -133,14 +133,14 @@ export default {
                 this.$store.commit("foldFolderContent", this.item.id);
                 this.$store.commit("toggleCollapsedFolderHasUploadingContent", [
                     this.item,
-                    this.has_uploading_content
+                    this.has_uploading_content,
                 ]);
 
                 this.is_closed = true;
             }
 
             this.$store.dispatch("setUserPreferenciesForFolder", [this.item.id, this.is_closed]);
-        }
-    }
+        },
+    },
 };
 </script>

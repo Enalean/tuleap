@@ -44,14 +44,14 @@ import {
     ICON_LINK,
     TYPE_EMBEDDED,
     TYPE_LINK,
-    TYPE_FILE
+    TYPE_FILE,
 } from "../../../constants.js";
 import { mapState } from "vuex";
 
 export default {
     name: "TypeSelectorForEmptyModal",
     props: {
-        value: String
+        value: String,
     },
     computed: {
         ...mapState(["embedded_are_allowed"]),
@@ -61,25 +61,30 @@ export default {
                     identifier: TYPE_FILE,
                     is_checked: this.value === TYPE_FILE,
                     label: this.$gettext("File"),
-                    icons: ["fa-file-excel-o", "fa-file-word-o", "fa-file-pdf-o", "fa-file-image-o"]
+                    icons: [
+                        "fa-file-excel-o",
+                        "fa-file-word-o",
+                        "fa-file-pdf-o",
+                        "fa-file-image-o",
+                    ],
                 },
                 {
                     identifier: TYPE_LINK,
                     is_checked: this.value === TYPE_LINK,
                     label: this.$gettext("Link"),
-                    icons: [ICON_LINK]
-                }
+                    icons: [ICON_LINK],
+                },
             ];
             if (this.embedded_are_allowed) {
                 types.push({
                     identifier: TYPE_EMBEDDED,
                     is_checked: this.value === TYPE_EMBEDDED,
                     label: this.$gettext("Embedded"),
-                    icons: [ICON_EMBEDDED]
+                    icons: [ICON_EMBEDDED],
                 });
             }
             return types;
-        }
-    }
+        },
+    },
 };
 </script>

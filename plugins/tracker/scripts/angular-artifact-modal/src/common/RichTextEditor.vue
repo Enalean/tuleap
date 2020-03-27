@@ -42,13 +42,13 @@ import prettyKibibytes from "pretty-kibibytes";
 import {
     buildFileUploadHandler,
     MaxSizeUploadExceededError,
-    UploadError
+    UploadError,
 } from "../../../../../../src/www/scripts/tuleap/ckeditor/file-upload-handler-factory.js";
 import { isThereAnImageWithDataURI } from "../../../../../../src/www/scripts/tuleap/ckeditor/image-urls-finder.js";
 import { TEXT_FORMAT_HTML, TEXT_FORMAT_TEXT } from "../../../constants/fields-constants.js";
 import {
     setIsNotUploadingInCKEditor,
-    setIsUploadingInCKEditor
+    setIsUploadingInCKEditor,
 } from "../tuleap-artifact-modal-fields/file-field/is-uploading-in-ckeditor-state.js";
 
 export default {
@@ -59,22 +59,22 @@ export default {
             type: String,
             validator(value) {
                 return [TEXT_FORMAT_HTML, TEXT_FORMAT_TEXT].includes(value);
-            }
+            },
         },
         value: {
             type: String,
-            default: ""
+            default: "",
         },
         disabled: Boolean,
         required: Boolean,
         rows: {
             type: String,
-            default: "5"
-        }
+            default: "5",
+        },
     },
     data() {
         return {
-            editor: null
+            editor: null,
         };
     },
     computed: {
@@ -104,7 +104,7 @@ export default {
             // This is only called by the textarea directly, not by CKEditor
             set(value) {
                 this.$emit("input", value);
-            }
+            },
         },
 
         ckeditor_config() {
@@ -112,7 +112,7 @@ export default {
             if (this.is_upload_possible) {
                 additional_options = {
                     extraPlugins: "uploadimage",
-                    uploadUrl: "/api/v1/" + this.first_file_field.file_creation_uri
+                    uploadUrl: "/api/v1/" + this.first_file_field.file_creation_uri,
                 };
             }
 
@@ -121,13 +121,13 @@ export default {
                     ["Bold", "Italic", "Underline"],
                     ["NumberedList", "BulletedList", "-", "Blockquote", "Format"],
                     ["Link", "Unlink", "Anchor", "Image"],
-                    ["Source"]
+                    ["Source"],
                 ],
                 height: "100px",
                 readOnly: this.disabled,
-                ...additional_options
+                ...additional_options,
             };
-        }
+        },
     },
     watch: {
         format(new_format) {
@@ -136,7 +136,7 @@ export default {
             } else {
                 this.destroyCKEditor();
             }
-        }
+        },
     },
     beforeDestroy() {
         this.destroyCKEditor();
@@ -189,7 +189,7 @@ export default {
             }
 
             const onStartCallback = setIsUploadingInCKEditor;
-            const onErrorCallback = error => {
+            const onErrorCallback = (error) => {
                 if (error instanceof MaxSizeUploadExceededError) {
                     error.loader.message = sprintf(
                         this.$gettext("You are not allowed to upload files bigger than %s."),
@@ -210,14 +210,14 @@ export default {
                 max_size_upload: this.first_file_field.max_size_upload,
                 onStartCallback,
                 onErrorCallback,
-                onSuccessCallback
+                onSuccessCallback,
             });
 
             this.editor.on("fileUploadRequest", fileUploadRequestHandler, null, null, 4);
         },
 
         disablePasteOfImages() {
-            this.editor.on("paste", event => {
+            this.editor.on("paste", (event) => {
                 if (isThereAnImageWithDataURI(event.data.dataValue)) {
                     event.data.dataValue = "";
                     event.cancel();
@@ -226,7 +226,7 @@ export default {
                     );
                 }
             });
-        }
-    }
+        },
+    },
 };
 </script>

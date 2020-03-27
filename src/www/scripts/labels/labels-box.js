@@ -29,9 +29,9 @@ export async function create(
 ) {
     const existing_labels = await recursiveGet(labels_endpoint, {
         params: {
-            limit: 50
+            limit: 50,
         },
-        getCollectionCallback: ({ labels }) => labels.map(convertLabelToSelect2Entry)
+        getCollectionCallback: ({ labels }) => labels.map(convertLabelToSelect2Entry),
     });
 
     initiateSelect2(
@@ -48,7 +48,7 @@ const convertLabelToSelect2Entry = ({ id, label, is_outline, color }) => ({
     id,
     text: label,
     is_outline,
-    color
+    color,
 });
 
 function initiateSelect2(
@@ -59,7 +59,7 @@ function initiateSelect2(
     is_update_allowed,
     placeholder
 ) {
-    existing_labels.forEach(label => {
+    existing_labels.forEach((label) => {
         const option = createOption(label);
         container.append(option);
     });
@@ -74,7 +74,7 @@ function initiateSelect2(
         templateResult: formatLabel,
         templateSelection: formatLabelSelected,
         width: "100%",
-        escapeMarkup: function(markup) {
+        escapeMarkup: function (markup) {
             return markup;
         },
         ajax: {
@@ -82,14 +82,14 @@ function initiateSelect2(
             dataType: "json",
             delay: 250,
             cache: true,
-            data: data => ({ query: data.term }),
-            processResults: data => ({ results: data.labels.map(convertLabelToSelect2Entry) })
-        }
+            data: (data) => ({ query: data.term }),
+            processResults: (data) => ({ results: data.labels.map(convertLabelToSelect2Entry) }),
+        },
     })
-        .on("select2:unselect", event => {
+        .on("select2:unselect", (event) => {
             removeLabel(labels_endpoint, event.params.data);
         })
-        .on("select2:select", event => {
+        .on("select2:select", (event) => {
             addLabel(labels_endpoint, event.params.data);
         });
 }
@@ -114,7 +114,7 @@ function formatLabel(label, li_element) {
     }
 
     return render('<span class="select-item-label-title">{{ label }}</span>', {
-        label: label.text
+        label: label.text,
     });
 }
 
@@ -166,7 +166,7 @@ function removeLabel(labels_endpoint, { id }) {
 
     patch(labels_endpoint, {
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ remove: [label] })
+        body: JSON.stringify({ remove: [label] }),
     });
 }
 
@@ -176,6 +176,6 @@ function addLabel(labels_endpoint, { id, text }) {
 
     return patch(labels_endpoint, {
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ add: [label] })
+        body: JSON.stringify({ add: [label] }),
     });
 }

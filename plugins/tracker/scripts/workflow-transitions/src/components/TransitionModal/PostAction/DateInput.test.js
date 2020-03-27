@@ -29,7 +29,7 @@ describe("DateInput", () => {
     beforeEach(() => {
         wrapper = shallowMount(DateInput, {
             propsData: { value: DATE_FIELD_VALUE.CLEAR },
-            localVue
+            localVue,
         });
     });
 

@@ -35,11 +35,11 @@ export default {
     name: "FloatInput",
     props: {
         value: {
-            type: Number
+            type: Number,
         },
         disabled: {
-            type: Boolean
-        }
+            type: Boolean,
+        },
     },
     methods: {
         onInput(event) {
@@ -48,7 +48,7 @@ export default {
                 return;
             }
             return this.$emit("input", float_value);
-        }
-    }
+        },
+    },
 };
 </script>

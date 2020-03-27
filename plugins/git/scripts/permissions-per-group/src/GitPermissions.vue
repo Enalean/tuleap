@@ -55,12 +55,12 @@ export default {
     name: "GitPermissions",
     components: {
         GitInlineFilter,
-        GitPermissionsTable
+        GitPermissionsTable,
     },
     props: {
         selectedUgroupId: String,
         selectedProjectId: String,
-        selectedUgroupName: String
+        selectedUgroupName: String,
     },
     data() {
         return {
@@ -68,7 +68,7 @@ export default {
             is_loading: false,
             repositories: [],
             error: null,
-            filter: ""
+            filter: "",
         };
     },
     computed: {
@@ -77,7 +77,7 @@ export default {
         },
         displayButtonLoadAll() {
             return !this.is_loaded && !this.is_loading;
-        }
+        },
     },
     methods: {
         async loadAll() {
@@ -95,7 +95,7 @@ export default {
             } finally {
                 this.is_loading = false;
             }
-        }
-    }
+        },
+    },
 };
 </script>

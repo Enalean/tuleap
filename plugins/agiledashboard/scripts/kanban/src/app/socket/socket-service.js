@@ -16,7 +16,7 @@ SocketService.$inject = [
     "SharedPropertiesService",
     "JWTService",
     "KanbanFilteredUpdatedAlertService",
-    "KanbanItemRestService"
+    "KanbanItemRestService",
 ];
 
 function SocketService(
@@ -48,7 +48,7 @@ function SocketService(
         listenKanbanColumnMove,
         listenKanbanColumnEdit,
         listenKanbanColumnDelete,
-        listenKanban
+        listenKanban,
     });
 
     function listenTokenExpired() {
@@ -67,7 +67,7 @@ function SocketService(
         if (SharedPropertiesService.getNodeServerAddress()) {
             listenToDisconnect();
             listenToError();
-            return JWTService.getJWT().then(data => {
+            return JWTService.getJWT().then((data) => {
                 locker.put("token", data.token);
                 locker.put("token-expired-date", JWTService.getTokenExpiredDate(data.token));
                 return subscribe();
@@ -83,14 +83,14 @@ function SocketService(
                 nodejs_server_version: SharedPropertiesService.getNodeServerVersion(),
                 token: locker.get("token"),
                 room_id: kanban.id,
-                uuid: SharedPropertiesService.getUUID()
+                uuid: SharedPropertiesService.getUUID(),
             });
         }
     }
 
     function refreshToken() {
         SocketFactory.emit("token", {
-            token: locker.get("token")
+            token: locker.get("token"),
         });
     }
 
@@ -105,9 +105,9 @@ function SocketService(
     }
 
     function listenToError() {
-        SocketFactory.on("error-jwt", error => {
+        SocketFactory.on("error-jwt", (error) => {
             if (error === "JWTExpired") {
-                JWTService.getJWT().then(data => {
+                JWTService.getJWT().then((data) => {
                     locker.put("token", data.token);
                     subscribe();
                 });
@@ -116,7 +116,7 @@ function SocketService(
     }
 
     function requestJWTToRefreshToken() {
-        JWTService.getJWT().then(data => {
+        JWTService.getJWT().then((data) => {
             locker.put("token", data.token);
             locker.put("token-expired-date", JWTService.getTokenExpiredDate(data.token));
             refreshToken();
@@ -146,14 +146,14 @@ function SocketService(
          * }
          */
         SocketFactory.on("kanban_item:create", ({ artifact_id }) => {
-            KanbanItemRestService.getItem(artifact_id).then(new_item => {
+            KanbanItemRestService.getItem(artifact_id).then((new_item) => {
                 if (!new_item) {
                     return;
                 }
 
                 Object.assign(new_item, {
                     updating: false,
-                    is_collapsed: SharedPropertiesService.doesUserPrefersCompactCards()
+                    is_collapsed: SharedPropertiesService.doesUserPrefersCompactCards(),
                 });
 
                 const column = ColumnCollectionService.getColumn(new_item.in_column),
@@ -176,7 +176,7 @@ function SocketService(
          *  }
          *
          */
-        SocketFactory.on("kanban_item:move", data => {
+        SocketFactory.on("kanban_item:move", (data) => {
             const source_column = ColumnCollectionService.getColumn(data.from_column),
                 destination_column = ColumnCollectionService.getColumn(data.in_column);
 
@@ -207,14 +207,14 @@ function SocketService(
                 return;
             }
 
-            KanbanItemRestService.getItem(artifact_id).then(new_item => {
+            KanbanItemRestService.getItem(artifact_id).then((new_item) => {
                 if (!new_item) {
                     return;
                 }
 
                 Object.assign(new_item, {
                     updating: false,
-                    is_collapsed: item.is_collapsed
+                    is_collapsed: item.is_collapsed,
                 });
 
                 const destination_column = ColumnCollectionService.getColumn(new_item.in_column);
@@ -241,7 +241,7 @@ function SocketService(
          *      ...
          * }
          */
-        SocketFactory.on("kanban_column:create", data => {
+        SocketFactory.on("kanban_column:create", (data) => {
             ColumnCollectionService.addColumn(data);
         });
     }
@@ -251,7 +251,7 @@ function SocketService(
          * Data received looks like:
          * [15333, 15334, 15335, 15338]
          */
-        SocketFactory.on("kanban_column:move", data => {
+        SocketFactory.on("kanban_column:move", (data) => {
             ColumnCollectionService.reorderColumns(data);
         });
     }
@@ -265,7 +265,7 @@ function SocketService(
          *      wip_limit: 0
          * }
          */
-        SocketFactory.on("kanban_column:edit", data => {
+        SocketFactory.on("kanban_column:edit", (data) => {
             var column = ColumnCollectionService.getColumn(data.id);
 
             if (column) {
@@ -280,7 +280,7 @@ function SocketService(
         /**
          * Data received looks like: 15233
          */
-        SocketFactory.on("kanban_column:delete", data => {
+        SocketFactory.on("kanban_column:delete", (data) => {
             ColumnCollectionService.removeColumn(data);
         });
     }
@@ -289,7 +289,7 @@ function SocketService(
         /**
          * Data received looks like: "New Kanban Name"
          */
-        SocketFactory.on("kanban:edit", data => {
+        SocketFactory.on("kanban:edit", (data) => {
             KanbanService.updateKanbanName(data);
         });
 

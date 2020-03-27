@@ -27,7 +27,7 @@ describe("adjustItemToContentAfterItemCreationInAFolder", () => {
     beforeEach(() => {
         context = {
             commit: jest.fn(),
-            state: {}
+            state: {},
         };
 
         flagItemAsCreated = jest.spyOn(flag_item_as_created, "flagItemAsCreated");
@@ -40,18 +40,18 @@ describe("adjustItemToContentAfterItemCreationInAFolder", () => {
             id: 10,
             title: "folder",
             owner: {
-                id: 101
+                id: 101,
             },
-            last_update_date: "2018-10-03T11:16:11+02:00"
+            last_update_date: "2018-10-03T11:16:11+02:00",
         };
 
         const parent = {
             id: 10,
-            is_expanded: false
+            is_expanded: false,
         };
 
         const current_folder = {
-            id: 1
+            id: 1,
         };
 
         const item_id = 10;
@@ -70,7 +70,7 @@ describe("adjustItemToContentAfterItemCreationInAFolder", () => {
         expect(context.commit).toHaveBeenCalledWith("addDocumentToFoldedFolder", [
             parent,
             created_item,
-            false
+            false,
         ]);
         expect(context.commit).toHaveBeenCalledWith(
             "addJustCreatedItemToFolderContent",
@@ -83,18 +83,18 @@ describe("adjustItemToContentAfterItemCreationInAFolder", () => {
             id: 10,
             title: "folder",
             owner: {
-                id: 101
+                id: 101,
             },
-            last_update_date: "2018-10-03T11:16:11+02:00"
+            last_update_date: "2018-10-03T11:16:11+02:00",
         };
 
         const parent = {
             id: 10,
-            is_expanded: true
+            is_expanded: true,
         };
 
         const current_folder = {
-            id: 1
+            id: 1,
         };
 
         const item_id = 10;
@@ -122,18 +122,18 @@ describe("adjustItemToContentAfterItemCreationInAFolder", () => {
             id: 10,
             title: "folder",
             owner: {
-                id: 101
+                id: 101,
             },
-            last_update_date: "2018-10-03T11:16:11+02:00"
+            last_update_date: "2018-10-03T11:16:11+02:00",
         };
 
         const parent = {
             id: 10,
-            is_expanded: true
+            is_expanded: true,
         };
 
         const current_folder = {
-            id: 1
+            id: 1,
         };
 
         const item_id = 10;

@@ -24,7 +24,7 @@ import CardWithRemainingEffort from "../Card/CardWithRemainingEffort.vue";
 
 function createWrapper(column: ColumnDefinition, swimlane: Swimlane): Wrapper<SoloSwimlaneCell> {
     return shallowMount(SoloSwimlaneCell, {
-        propsData: { column, swimlane }
+        propsData: { column, swimlane },
     });
 }
 
@@ -34,7 +34,7 @@ describe(`SoloSwimlaneCell`, () => {
             id: 3,
             label: "Done",
             is_collapsed: false,
-            mappings: [{ accepts: [{ id: 103 }, { id: 104 }] }]
+            mappings: [{ accepts: [{ id: 103 }, { id: 104 }] }],
         } as ColumnDefinition;
 
         const swimlane = { card: { id: 43, mapped_list_value: { id: 103 } } } as Swimlane;
@@ -52,14 +52,14 @@ describe(`SoloSwimlaneCell`, () => {
                 assignees: [] as User[],
                 is_open: true,
                 is_in_edit_mode: true,
-                mapped_list_value: { id: 103 }
+                mapped_list_value: { id: 103 },
             } as Card;
 
             done_column = {
                 id: 3,
                 label: "Done",
                 is_collapsed: false,
-                mappings: [{ accepts: [{ id: 103 }] }]
+                mappings: [{ accepts: [{ id: 103 }] }],
             } as ColumnDefinition;
 
             swimlane = { card } as Swimlane;

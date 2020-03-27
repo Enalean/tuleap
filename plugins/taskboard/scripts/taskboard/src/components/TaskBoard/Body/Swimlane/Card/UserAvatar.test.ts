@@ -28,9 +28,9 @@ describe("UserAvatar", () => {
                 user: {
                     id: 101,
                     display_name: "Steeve",
-                    avatar_url: "steeve.png"
-                } as User
-            }
+                    avatar_url: "steeve.png",
+                } as User,
+            },
         });
 
         expect(wrapper.element).toMatchSnapshot();

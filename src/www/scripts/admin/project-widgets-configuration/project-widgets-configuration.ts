@@ -21,8 +21,8 @@
 export function initProjectWidgetsConfigurationFormSubmission(mount_point: Document): void {
     const switches = mount_point.querySelectorAll(".tlp-switch-checkbox");
 
-    [].forEach.call(switches, function(switch_button: HTMLFormElement) {
-        switch_button.addEventListener("change", function() {
+    [].forEach.call(switches, function (switch_button: HTMLFormElement) {
+        switch_button.addEventListener("change", function () {
             if (!switch_button.dataset.formId) {
                 return;
             }

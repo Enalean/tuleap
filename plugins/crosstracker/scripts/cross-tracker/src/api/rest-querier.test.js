@@ -24,7 +24,7 @@ import {
     updateReport,
     getSortedProjectsIAmMemberOf,
     getTrackersOfProject,
-    getCSVReport
+    getCSVReport,
 } from "./rest-querier.js";
 import { mockFetchSuccess } from "../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper.js";
 import * as tlp from "tlp";
@@ -37,10 +37,10 @@ describe("rest-querier", () => {
             const tlpGet = jest.spyOn(tlp, "get");
             const report = {
                 trackers: [{ id: 63 }, { id: 100 }],
-                expert_query: '@title = "bla"'
+                expert_query: '@title = "bla"',
             };
             mockFetchSuccess(tlpGet, {
-                return_json: report
+                return_json: report,
             });
 
             const result = await getReport(16);
@@ -57,11 +57,11 @@ describe("rest-querier", () => {
             const total = 91;
             const headers = {
                 /** 'X-PAGINATION-SIZE' */
-                get: () => total
+                get: () => total,
             };
             mockFetchSuccess(tlpGet, {
                 headers,
-                return_json: { artifacts }
+                return_json: { artifacts },
             });
             const limit = 30;
             const offset = 30;
@@ -69,7 +69,7 @@ describe("rest-querier", () => {
             const result = await getReportContent(57, limit, offset);
 
             expect(tlpGet).toHaveBeenCalledWith("/api/v1/cross_tracker_reports/57/content", {
-                params: { limit, offset }
+                params: { limit, offset },
             });
             expect(result).toEqual({ artifacts, total });
         });
@@ -82,11 +82,11 @@ describe("rest-querier", () => {
             const total = 69;
             const headers = {
                 /** 'X-PAGINATION-SIZE' */
-                get: () => total
+                get: () => total,
             };
             mockFetchSuccess(tlpGet, {
                 headers,
-                return_json: { artifacts }
+                return_json: { artifacts },
             });
             const limit = 30;
             const offset = 30;
@@ -99,8 +99,8 @@ describe("rest-querier", () => {
                 params: {
                     limit,
                     offset,
-                    query: JSON.stringify({ trackers_id, expert_query })
-                }
+                    query: JSON.stringify({ trackers_id, expert_query }),
+                },
             });
             expect(result).toEqual({ artifacts, total });
         });
@@ -113,8 +113,8 @@ describe("rest-querier", () => {
                 mockFetchSuccess(tlpPut, {
                     return_json: {
                         trackers_id,
-                        expert_query
-                    }
+                        expert_query,
+                    },
                 });
 
                 const result = await updateReport(59, trackers_id, expert_query);
@@ -133,7 +133,7 @@ describe("rest-querier", () => {
                 const projects = [
                     { id: 765, label: "physicianless" },
                     { id: 239, label: "spur" },
-                    { id: 487, label: "castellano" }
+                    { id: 487, label: "castellano" },
                 ];
                 tlpRecursiveGet.mockReturnValue(projects);
 
@@ -142,13 +142,13 @@ describe("rest-querier", () => {
                 expect(tlpRecursiveGet).toHaveBeenCalledWith("/api/v1/projects", {
                     params: {
                         limit: 50,
-                        query: JSON.stringify({ is_member_of: true })
-                    }
+                        query: JSON.stringify({ is_member_of: true }),
+                    },
                 });
                 expect(result).toEqual([
                     { id: 487, label: "castellano" },
                     { id: 765, label: "physicianless" },
-                    { id: 239, label: "spur" }
+                    { id: 239, label: "spur" },
                 ]);
             });
         });
@@ -168,8 +168,8 @@ describe("rest-querier", () => {
                 expect(tlpRecursiveGet).toHaveBeenCalledWith("/api/v1/projects/444/trackers", {
                     params: {
                         limit: 50,
-                        representation: "minimal"
-                    }
+                        representation: "minimal",
+                    },
                 });
                 expect(result).toEqual(trackers);
             });
@@ -188,9 +188,9 @@ describe("rest-querier", () => {
                     Promise.resolve({
                         headers: {
                             /** 'X-PAGINATION-SIZE' */
-                            get: () => "2"
+                            get: () => "2",
                         },
-                        text: () => Promise.resolve(csv)
+                        text: () => Promise.resolve(csv),
                     })
                 );
 
@@ -198,8 +198,8 @@ describe("rest-querier", () => {
                 expect(tlpGet).toHaveBeenCalledWith("/plugins/crosstracker/csv_export/72", {
                     params: {
                         limit: 50,
-                        offset: 0
-                    }
+                        offset: 0,
+                    },
                 });
                 expect(tlpGet).toHaveBeenCalledTimes(1);
 
@@ -213,9 +213,9 @@ describe("rest-querier", () => {
                     Promise.resolve({
                         headers: {
                             /** 'X-PAGINATION-SIZE' */
-                            get: () => "70"
+                            get: () => "70",
                         },
-                        text: () => Promise.resolve(csv)
+                        text: () => Promise.resolve(csv),
                     })
                 );
 
@@ -223,14 +223,14 @@ describe("rest-querier", () => {
                 expect(tlpGet).toHaveBeenCalledWith("/plugins/crosstracker/csv_export/81", {
                     params: {
                         limit: 50,
-                        offset: 0
-                    }
+                        offset: 0,
+                    },
                 });
                 expect(tlpGet).toHaveBeenCalledWith("/plugins/crosstracker/csv_export/81", {
                     params: {
                         limit: 50,
-                        offset: 50
-                    }
+                        offset: 50,
+                    },
                 });
                 expect(tlpGet).toHaveBeenCalledTimes(2);
 

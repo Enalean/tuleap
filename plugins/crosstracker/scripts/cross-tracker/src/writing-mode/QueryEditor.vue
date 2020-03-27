@@ -64,22 +64,22 @@
 <script>
 import {
     TQL_cross_tracker_autocomplete_keywords,
-    TQL_cross_tracker_mode_definition
+    TQL_cross_tracker_mode_definition,
 } from "./tql-configuration.js";
 import { insertAllowedFieldInCodeMirror } from "../../../../../tracker/scripts/report/TQL-CodeMirror/allowed-field-inserter.js";
 import {
     initializeTQLMode,
-    codeMirrorify
+    codeMirrorify,
 } from "../../../../../tracker/scripts/report/TQL-CodeMirror/builder.js";
 
 export default {
     name: "QueryEditor",
     props: {
-        writingCrossTrackerReport: Object
+        writingCrossTrackerReport: Object,
     },
     data() {
         return {
-            code_mirror_instance: null
+            code_mirror_instance: null,
         };
     },
     computed: {
@@ -109,7 +109,7 @@ export default {
         },
         placeholder() {
             return this.$gettext("Example: @title = 'value'");
-        }
+        },
     },
     created() {
         initializeTQLMode(TQL_cross_tracker_mode_definition);
@@ -122,7 +122,7 @@ export default {
         this.code_mirror_instance = codeMirrorify({
             textarea_element: this.$refs.query_textarea,
             autocomplete_keywords: TQL_cross_tracker_autocomplete_keywords,
-            submitFormCallback
+            submitFormCallback,
         });
 
         this.code_mirror_instance.on("change", () => {
@@ -135,7 +135,7 @@ export default {
         },
         search() {
             this.$emit("triggerSearch");
-        }
-    }
+        },
+    },
 };
 </script>

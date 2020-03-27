@@ -10,7 +10,7 @@ export default () => {
         templateUrl: "column-wip-header.tpl.html",
         scope: {
             column: "=",
-            isColumnWipReached: "&"
-        }
+            isColumnWipReached: "&",
+        },
     };
 };

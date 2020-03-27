@@ -47,13 +47,13 @@ describe("Chart Helpers", () => {
 
     function getArtifact(): ArtifactMilestone {
         const burndown_data = {
-            start_date: new Date("2017-01-22T13:42:08+02:00").toDateString()
+            start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
         } as BurndownData;
 
         const label_burndown = "Burndown";
 
         const burnup_data = {
-            start_date: new Date("2017-01-22T13:42:08+02:00").toDateString()
+            start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
         } as BurnupData;
 
         const label_burnup = "Burnup";
@@ -64,15 +64,15 @@ describe("Chart Helpers", () => {
                     field_id: 10,
                     label: label_burndown,
                     value: burndown_data,
-                    type: "burndown"
+                    type: "burndown",
                 },
                 {
                     field_id: 122,
                     label: label_burnup,
                     value: burnup_data,
-                    type: "burnup"
-                }
-            ]
+                    type: "burnup",
+                },
+            ],
         } as ArtifactMilestone;
     }
 });

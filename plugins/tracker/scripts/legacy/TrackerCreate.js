@@ -19,11 +19,9 @@
 
 /* global $:readonly $$:readonly */
 
-document.observe("dom:loaded", function() {
+document.observe("dom:loaded", function () {
     function displayMode(mode) {
-        mode.up("h3")
-            .next(".tracker_create_mode")
-            .show();
+        mode.up("h3").next(".tracker_create_mode").show();
     }
 
     function hideAllModes() {
@@ -31,11 +29,11 @@ document.observe("dom:loaded", function() {
     }
 
     hideAllModes();
-    $$("input[name=create_mode]").each(function(mode) {
+    $$("input[name=create_mode]").each(function (mode) {
         if (mode.checked) {
             displayMode(mode);
         }
-        mode.observe("click", function() {
+        mode.observe("click", function () {
             hideAllModes();
             displayMode(mode);
         });
@@ -48,7 +46,7 @@ document.observe("dom:loaded", function() {
         var file_reader = new FileReader(),
             filter = /^text\/xml$/;
 
-        file_reader.onload = function(event) {
+        file_reader.onload = function (event) {
             var parsed = new DOMParser().parseFromString(event.target.result, "text/xml"),
                 trackers = parsed.getElementsByTagName("tracker"),
                 tracker = trackers[0] || undefined;
@@ -70,7 +68,7 @@ document.observe("dom:loaded", function() {
             )[0].textContent;
         };
 
-        input_file.observe("change", function() {
+        input_file.observe("change", function () {
             if (input_file.files.length === 0) {
                 return;
             }

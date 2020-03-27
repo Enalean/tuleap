@@ -32,7 +32,7 @@ export default {
     name: "UserBadge",
     components: { UserName },
     computed: {
-        ...mapState(["currently_previewed_item"])
-    }
+        ...mapState(["currently_previewed_item"]),
+    },
 };
 </script>

@@ -129,20 +129,20 @@ export default {
         ServiceDescription,
         ServiceLink,
         ServiceLabel,
-        IconSelector
+        IconSelector,
     },
     mixins: [service_mixin],
     props: {
         allowed_icons: {
             type: Object,
-            required: true
-        }
+            required: true,
+        },
     },
     data() {
         return {
             has_used_iframe: this.service.is_in_iframe,
             is_new_tab_warning_shown: false,
-            is_iframe_deprecation_warning_shown: false
+            is_iframe_deprecation_warning_shown: false,
         };
     },
     watch: {
@@ -151,7 +151,7 @@ export default {
             if (new_value === false) {
                 this.scrollWarningsIntoView();
             }
-        }
+        },
     },
     methods: {
         onNewTabChange($event) {
@@ -173,7 +173,7 @@ export default {
             ) {
                 this.$refs.warnings.scrollIntoView(false);
             }
-        }
-    }
+        },
+    },
 };
 </script>

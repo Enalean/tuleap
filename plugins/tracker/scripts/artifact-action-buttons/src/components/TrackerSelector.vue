@@ -37,7 +37,7 @@
                     tracker_id: tracker.id,
                     label: tracker.label,
                     project: tracker.project,
-                    color_name: tracker.color_name
+                    color_name: tracker.color_name,
                 }"
                 v-bind:disabled="tracker.disabled"
             >
@@ -66,13 +66,13 @@ export default {
             },
             set(tracker) {
                 this.$store.commit("saveSelectedTracker", tracker);
-            }
+            },
         },
         selector_title() {
             return this.does_tracker_list_contain_from_tracker
                 ? this.$gettext("An artifact cannot be moved in the same tracker")
                 : "";
-        }
-    }
+        },
+    },
 };
 </script>

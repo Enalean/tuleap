@@ -32,14 +32,14 @@ infiniteScroll.$inject = ["$window"];
 function infiniteScroll($window) {
     return {
         restrict: "A",
-        link: link
+        link: link,
     };
 
     function link(scope, element, attrs) {
         var threshold = parseInt(attrs.scrollThreshold, 10) || 0,
             callback = attrs.scrollCallback;
 
-        angular.element($window).bind("scroll", function() {
+        angular.element($window).bind("scroll", function () {
             if (element[0].getBoundingClientRect().bottom < $window.innerHeight + threshold) {
                 scope.$apply(callback);
             }

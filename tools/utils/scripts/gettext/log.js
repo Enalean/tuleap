@@ -19,4 +19,4 @@
 
 const { PROGRAM_NAME } = module.require("./constants.js");
 
-module.exports.log = message => console.log("[" + PROGRAM_NAME + "] " + message);
+module.exports.log = (message) => console.log("[" + PROGRAM_NAME + "] " + message);

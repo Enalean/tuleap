@@ -46,7 +46,7 @@ export async function init(
             display_name: branch.name,
             repository_id,
             project_id,
-            ...branch
+            ...branch,
         };
     }
 
@@ -55,7 +55,7 @@ export async function init(
             display_name: `${parent_repository_name} : ${branch.name}`,
             repository_id: parent_repository_id,
             project_id: parent_project_id,
-            ...branch
+            ...branch,
         };
     }
 }

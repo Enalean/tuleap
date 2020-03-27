@@ -51,7 +51,7 @@ export default {
         ...mapState(["selected_trackers"]),
         has_no_trackers_in_report() {
             return this.selected_trackers.length === 0;
-        }
-    }
+        },
+    },
 };
 </script>

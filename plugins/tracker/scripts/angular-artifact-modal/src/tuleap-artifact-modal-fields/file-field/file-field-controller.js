@@ -28,7 +28,7 @@ function FileFieldController() {
     Object.assign(self, {
         addTemporaryFileInput,
         resetTemporaryFileInput,
-        toggleMarkedForRemoval
+        toggleMarkedForRemoval,
     });
 
     function addTemporaryFileInput() {
@@ -42,7 +42,7 @@ function FileFieldController() {
 
         self.value_model.temporary_files[index] = {
             file: {},
-            description: ""
+            description: "",
         };
     }
 
@@ -55,7 +55,7 @@ function FileFieldController() {
     }
 
     function markFileForRemoval(file_to_mark) {
-        remove(self.value_model.value, function(id) {
+        remove(self.value_model.value, function (id) {
             return id === file_to_mark.id;
         });
 

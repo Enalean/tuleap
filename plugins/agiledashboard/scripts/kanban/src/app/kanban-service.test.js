@@ -12,7 +12,7 @@ describe("KanbanService -", () => {
         angular.mock.module(kanban_module);
 
         let $rootScope;
-        angular.mock.inject(function(
+        angular.mock.inject(function (
             _$rootScope_,
             _$httpBackend_,
             _KanbanService_,
@@ -46,7 +46,7 @@ describe("KanbanService -", () => {
             const kanban_id = 40;
             const column_size = 27;
             $httpBackend.expectHEAD("/api/v1/kanban/" + kanban_id + "/backlog").respond(200, "", {
-                "X-PAGINATION-SIZE": column_size
+                "X-PAGINATION-SIZE": column_size,
             });
 
             const promise = KanbanService.getBacklogSize(kanban_id);
@@ -67,7 +67,7 @@ describe("KanbanService -", () => {
             $httpBackend
                 .expectHEAD("/api/v1/kanban/" + kanban_id + "/backlog?query=" + encoded_query)
                 .respond(200, "", {
-                    "X-PAGINATION-SIZE": column_size
+                    "X-PAGINATION-SIZE": column_size,
                 });
 
             const promise = KanbanService.getBacklogSize(kanban_id);
@@ -82,7 +82,7 @@ describe("KanbanService -", () => {
             const kanban_id = 7;
             const column_size = 17;
             $httpBackend.expectHEAD("/api/v1/kanban/" + kanban_id + "/archive").respond(200, "", {
-                "X-PAGINATION-SIZE": column_size
+                "X-PAGINATION-SIZE": column_size,
             });
 
             const promise = KanbanService.getArchiveSize(kanban_id);
@@ -103,7 +103,7 @@ describe("KanbanService -", () => {
             $httpBackend
                 .expectHEAD("/api/v1/kanban/" + kanban_id + "/archive?query=" + encoded_query)
                 .respond(200, "", {
-                    "X-PAGINATION-SIZE": column_size
+                    "X-PAGINATION-SIZE": column_size,
                 });
 
             const promise = KanbanService.getArchiveSize(kanban_id);
@@ -121,7 +121,7 @@ describe("KanbanService -", () => {
             $httpBackend
                 .expectHEAD("/api/v1/kanban/" + kanban_id + "/items?column_id=" + column_id)
                 .respond(200, "", {
-                    "X-PAGINATION-SIZE": column_size
+                    "X-PAGINATION-SIZE": column_size,
                 });
 
             const promise = KanbanService.getColumnContentSize(kanban_id, column_id);
@@ -150,7 +150,7 @@ describe("KanbanService -", () => {
                         encoded_query
                 )
                 .respond(200, "", {
-                    "X-PAGINATION-SIZE": column_size
+                    "X-PAGINATION-SIZE": column_size,
                 });
 
             const promise = KanbanService.getColumnContentSize(kanban_id, column_id);
@@ -159,16 +159,16 @@ describe("KanbanService -", () => {
         });
     });
 
-    describe("reorderColumn() -", function() {
+    describe("reorderColumn() -", function () {
         var kanban_id, column_id, kanban_item_id, compared_to;
 
-        beforeEach(function() {
+        beforeEach(function () {
             kanban_id = 7;
             column_id = 66;
             kanban_item_id = 996;
             compared_to = {
                 direction: "after",
-                item_id: 268
+                item_id: 268,
             };
         });
 
@@ -180,8 +180,8 @@ describe("KanbanService -", () => {
                     order: {
                         ids: [kanban_item_id],
                         direction: "after",
-                        compared_to: 268
-                    }
+                        compared_to: 268,
+                    },
                 })
                 .respond(200);
 
@@ -213,8 +213,8 @@ describe("KanbanService -", () => {
                     expect.objectContaining({
                         data: {
                             error: 401,
-                            message: "Unauthorized"
-                        }
+                            message: "Unauthorized",
+                        },
                     })
                 );
             });
@@ -224,15 +224,15 @@ describe("KanbanService -", () => {
         });
     });
 
-    describe("reorderBacklog() -", function() {
+    describe("reorderBacklog() -", function () {
         var kanban_id, kanban_item_id, compared_to;
 
-        beforeEach(function() {
+        beforeEach(function () {
             kanban_id = 10;
             kanban_item_id = 194;
             compared_to = {
                 direction: "before",
-                item_id: 181
+                item_id: 181,
             };
         });
 
@@ -244,8 +244,8 @@ describe("KanbanService -", () => {
                     order: {
                         ids: [kanban_item_id],
                         direction: "before",
-                        compared_to: 181
-                    }
+                        compared_to: 181,
+                    },
                 })
                 .respond(200);
 
@@ -271,8 +271,8 @@ describe("KanbanService -", () => {
                     expect.objectContaining({
                         data: {
                             error: 401,
-                            message: "Unauthorized"
-                        }
+                            message: "Unauthorized",
+                        },
                     })
                 );
             });
@@ -282,15 +282,15 @@ describe("KanbanService -", () => {
         });
     });
 
-    describe("reorderArchive() -", function() {
+    describe("reorderArchive() -", function () {
         var kanban_id, kanban_item_id, compared_to;
 
-        beforeEach(function() {
+        beforeEach(function () {
             kanban_id = 6;
             kanban_item_id = 806;
             compared_to = {
                 direction: "after",
-                item_id: 620
+                item_id: 620,
             };
         });
 
@@ -303,8 +303,8 @@ describe("KanbanService -", () => {
                     order: {
                         ids: [kanban_item_id],
                         direction: "after",
-                        compared_to: 620
-                    }
+                        compared_to: 620,
+                    },
                 })
                 .respond(200);
 
@@ -330,8 +330,8 @@ describe("KanbanService -", () => {
                     expect.objectContaining({
                         data: {
                             error: 401,
-                            message: "Unauthorized"
-                        }
+                            message: "Unauthorized",
+                        },
                     })
                 );
             });
@@ -341,16 +341,16 @@ describe("KanbanService -", () => {
         });
     });
 
-    describe("moveInColumn() -", function() {
+    describe("moveInColumn() -", function () {
         var kanban_id, column_id, kanban_item_id, compared_to, from_column;
 
-        beforeEach(function() {
+        beforeEach(function () {
             kanban_id = 1;
             column_id = 88;
             kanban_item_id = 911;
             compared_to = {
                 direction: "before",
-                item_id: 537
+                item_id: 537,
             };
             from_column = 912;
         });
@@ -362,14 +362,14 @@ describe("KanbanService -", () => {
             $httpBackend
                 .expectPATCH("/api/v1/kanban/" + kanban_id + "/items?column_id=" + column_id, {
                     add: {
-                        ids: [kanban_item_id]
+                        ids: [kanban_item_id],
                     },
                     order: {
                         ids: [kanban_item_id],
                         direction: "before",
-                        compared_to: 537
+                        compared_to: 537,
                     },
-                    from_column: 912
+                    from_column: 912,
                 })
                 .respond(200);
 
@@ -391,9 +391,9 @@ describe("KanbanService -", () => {
             $httpBackend
                 .expectPATCH("/api/v1/kanban/" + kanban_id + "/items?column_id=" + column_id, {
                     add: {
-                        ids: [kanban_item_id]
+                        ids: [kanban_item_id],
                     },
-                    from_column: 912
+                    from_column: 912,
                 })
                 .respond(200);
 
@@ -427,8 +427,8 @@ describe("KanbanService -", () => {
                     expect.objectContaining({
                         data: {
                             error: 401,
-                            message: "Unauthorized"
-                        }
+                            message: "Unauthorized",
+                        },
                     })
                 );
             });
@@ -438,15 +438,15 @@ describe("KanbanService -", () => {
         });
     });
 
-    describe("moveInBacklog() -", function() {
+    describe("moveInBacklog() -", function () {
         var kanban_id, kanban_item_id, compared_to, from_column;
 
-        beforeEach(function() {
+        beforeEach(function () {
             kanban_id = 9;
             kanban_item_id = 931;
             compared_to = {
                 direction: "after",
-                item_id: 968
+                item_id: 968,
             };
             from_column = 912;
         });
@@ -458,14 +458,14 @@ describe("KanbanService -", () => {
             $httpBackend
                 .expectPATCH("/api/v1/kanban/" + kanban_id + "/backlog", {
                     add: {
-                        ids: [kanban_item_id]
+                        ids: [kanban_item_id],
                     },
                     order: {
                         ids: [kanban_item_id],
                         direction: "after",
-                        compared_to: 968
+                        compared_to: 968,
                     },
-                    from_column: 912
+                    from_column: 912,
                 })
                 .respond(200);
 
@@ -486,9 +486,9 @@ describe("KanbanService -", () => {
             $httpBackend
                 .expectPATCH("/api/v1/kanban/" + kanban_id + "/backlog", {
                     add: {
-                        ids: [kanban_item_id]
+                        ids: [kanban_item_id],
                     },
-                    from_column: 912
+                    from_column: 912,
                 })
                 .respond(200);
 
@@ -520,8 +520,8 @@ describe("KanbanService -", () => {
                     expect.objectContaining({
                         data: {
                             error: 401,
-                            message: "Unauthorized"
-                        }
+                            message: "Unauthorized",
+                        },
                     })
                 );
             });
@@ -531,15 +531,15 @@ describe("KanbanService -", () => {
         });
     });
 
-    describe("moveInArchive() -", function() {
+    describe("moveInArchive() -", function () {
         var kanban_id, kanban_item_id, compared_to;
 
-        beforeEach(function() {
+        beforeEach(function () {
             kanban_id = 4;
             kanban_item_id = 598;
             compared_to = {
                 direction: "before",
-                item_id: 736
+                item_id: 736,
             };
         });
 
@@ -550,13 +550,13 @@ describe("KanbanService -", () => {
             $httpBackend
                 .expectPATCH("/api/v1/kanban/" + kanban_id + "/archive", {
                     add: {
-                        ids: [kanban_item_id]
+                        ids: [kanban_item_id],
                     },
                     order: {
                         ids: [kanban_item_id],
                         direction: "before",
-                        compared_to: 736
-                    }
+                        compared_to: 736,
+                    },
                 })
                 .respond(200);
 
@@ -572,8 +572,8 @@ describe("KanbanService -", () => {
             $httpBackend
                 .expectPATCH("/api/v1/kanban/" + kanban_id + "/archive", {
                     add: {
-                        ids: [kanban_item_id]
-                    }
+                        ids: [kanban_item_id],
+                    },
                 })
                 .respond(200);
 
@@ -599,8 +599,8 @@ describe("KanbanService -", () => {
                     expect.objectContaining({
                         data: {
                             error: 401,
-                            message: "Unauthorized"
-                        }
+                            message: "Unauthorized",
+                        },
                     })
                 );
             });
@@ -618,7 +618,7 @@ describe("KanbanService -", () => {
 
             $httpBackend
                 .expectPUT("/api/v1/kanban/" + kanban_id + "/tracker_reports", {
-                    tracker_report_ids: selectable_report_ids
+                    tracker_report_ids: selectable_report_ids,
                 })
                 .respond(200);
 

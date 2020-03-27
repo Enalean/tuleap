@@ -23,7 +23,7 @@ function TuleapHighlightFilter() {
         return text && (search || isNumber(search));
     }
 
-    return function(text, search) {
+    return function (text, search) {
         if (!isTextSearchable(text, search)) {
             return text !== null ? encode(text.toString()) : text;
         }
@@ -34,7 +34,7 @@ function TuleapHighlightFilter() {
         const regex = new RegExp("(" + or_search + ")", "gi");
 
         const split_html = text.toString().split(regex);
-        const encoded_parts = split_html.map(part => {
+        const encoded_parts = split_html.map((part) => {
             if (regex.test(part)) {
                 return `<span class="highlight">${encode(part)}</span>`;
             }

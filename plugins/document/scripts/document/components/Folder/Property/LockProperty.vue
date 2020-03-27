@@ -41,7 +41,7 @@
 export default {
     name: "LockProperty",
     props: {
-        item: Object
+        item: Object,
     },
     computed: {
         is_checked() {
@@ -51,7 +51,7 @@ export default {
             return this.is_checked
                 ? this.$gettext("Keep lock?")
                 : this.$gettext("Lock new version");
-        }
-    }
+        },
+    },
 };
 </script>

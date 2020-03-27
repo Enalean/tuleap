@@ -37,7 +37,7 @@ describe("CardWithChildren", () => {
         return shallowMount(TemplateCard, {
             localVue: local_vue,
             propsData: { template: tuleap_template },
-            mocks: { $store: store }
+            mocks: { $store: store },
         });
     }
 
@@ -47,7 +47,7 @@ describe("CardWithChildren", () => {
             description: "scrum desc",
             id: "scrum_template",
             glyph: "<svg></svg>",
-            is_built_in: true
+            is_built_in: true,
         };
         const wrapper = createWrapper(tuleap_template);
 
@@ -60,7 +60,7 @@ describe("CardWithChildren", () => {
             description: "scrum desc",
             id: "scrum_template",
             glyph: "<svg></svg>",
-            is_built_in: true
+            is_built_in: true,
         };
         const wrapper = createWrapper(tuleap_template);
 
@@ -77,7 +77,7 @@ describe("CardWithChildren", () => {
             description: "scrum desc",
             id: "scrum_template",
             glyph: "<svg></svg>",
-            is_built_in: true
+            is_built_in: true,
         };
 
         const wrapper = createWrapper(tuleap_template);

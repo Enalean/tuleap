@@ -26,12 +26,12 @@ const babel_preset_env_ie_config = [
     BabelPresetEnv,
     {
         targets: {
-            ie: 11
+            ie: 11,
         },
         modules: false,
         useBuiltIns: "entry",
-        corejs: "3"
-    }
+        corejs: "3",
+    },
 ];
 
 const babel_preset_env_chrome_config = [
@@ -42,21 +42,21 @@ const babel_preset_env_chrome_config = [
                 "last 2 Chrome versions",
                 "last 2 Firefox versions",
                 "Firefox ESR",
-                "last 2 Edge versions"
-            ]
+                "last 2 Edge versions",
+            ],
         },
         modules: false,
         useBuiltIns: "usage",
-        corejs: "3"
-    }
+        corejs: "3",
+    },
 ];
 
 const babel_options_ie11 = {
-    presets: [babel_preset_env_ie_config]
+    presets: [babel_preset_env_ie_config],
 };
 
 const babel_options_chrome_firefox = {
-    presets: [babel_preset_env_chrome_config]
+    presets: [babel_preset_env_chrome_config],
 };
 
 const babel_options_jest = {
@@ -65,14 +65,14 @@ const babel_options_jest = {
             BabelPresetEnv,
             {
                 targets: {
-                    node: "8"
+                    node: "8",
                 },
                 corejs: "3",
-                useBuiltIns: "usage"
-            }
-        ]
+                useBuiltIns: "usage",
+            },
+        ],
     ],
-    plugins: [BabelPluginDynamicImportNode]
+    plugins: [BabelPluginDynamicImportNode],
 };
 
 function configureBabelRule(babel_options) {
@@ -82,9 +82,9 @@ function configureBabelRule(babel_options) {
         use: [
             {
                 loader: "babel-loader",
-                options: babel_options
-            }
-        ]
+                options: babel_options,
+            },
+        ],
     };
 }
 
@@ -96,42 +96,42 @@ function configureTypescriptRules(babel_options) {
             use: [
                 {
                     loader: "babel-loader",
-                    options: babel_options
+                    options: babel_options,
                 },
                 {
                     loader: "ts-loader",
                     options: {
                         appendTsSuffixTo: ["\\.vue$"],
-                        transpileOnly: true
-                    }
-                }
-            ]
-        }
+                        transpileOnly: true,
+                    },
+                },
+            ],
+        },
     ];
 }
 
 const rule_vue_loader = {
     test: /\.vue$/,
     exclude: /node_modules/,
-    use: [{ loader: "vue-loader" }]
+    use: [{ loader: "vue-loader" }],
 };
 
 const rule_file_loader_images = {
     test: /\.svg$/,
     exclude: /node_modules/,
-    use: [{ loader: "file-loader" }]
+    use: [{ loader: "file-loader" }],
 };
 
 const rule_po_files = {
     test: /\.po$/,
     exclude: /node_modules/,
-    use: [{ loader: "json-loader" }, { loader: "po-gettext-loader" }]
+    use: [{ loader: "json-loader" }, { loader: "po-gettext-loader" }],
 };
 
 const rule_mustache_files = {
     test: /\.mustache$/,
     exclude: /node_modules/,
-    use: { loader: "raw-loader" }
+    use: { loader: "raw-loader" },
 };
 
 const rule_ng_cache_loader = {
@@ -140,9 +140,9 @@ const rule_ng_cache_loader = {
     use: [
         {
             loader: "ng-cache-loader",
-            query: "-url"
-        }
-    ]
+            query: "-url",
+        },
+    ],
 };
 
 const artifact_modal_vue_initializer_path = path.resolve(
@@ -154,15 +154,15 @@ const rule_angular_gettext_loader = {
     test: /\.po$/,
     exclude: [/node_modules/, /vendor/],
     issuer: {
-        not: [artifact_modal_vue_initializer_path]
+        not: [artifact_modal_vue_initializer_path],
     },
     use: [
         { loader: "json-loader" },
         {
             loader: "angular-gettext-loader",
-            query: "browserify=true&format=json"
-        }
-    ]
+            query: "browserify=true&format=json",
+        },
+    ],
 };
 
 // This rule is only intended for the progressive migration of an AngularJS App to Vue
@@ -170,13 +170,13 @@ const rule_angular_mixed_vue_gettext = {
     test: /\.po$/,
     exclude: [/node_modules/],
     issuer: artifact_modal_vue_initializer_path,
-    use: [{ loader: "json-loader" }, { loader: "easygettext-loader" }]
+    use: [{ loader: "json-loader" }, { loader: "easygettext-loader" }],
 };
 
 const rule_easygettext_loader = {
     test: /\.po$/,
     exclude: /node_modules/,
-    use: [{ loader: "json-loader" }, { loader: "easygettext-loader" }]
+    use: [{ loader: "json-loader" }, { loader: "easygettext-loader" }],
 };
 
 const rule_scss_loader = {
@@ -186,17 +186,17 @@ const rule_scss_loader = {
         {
             loader: "css-loader",
             options: {
-                url: url => {
+                url: (url) => {
                     // Organization logos might be customized by administrators, let's exclude them for now
                     return (
                         !url.endsWith("organization_logo.png") &&
                         !url.endsWith("organization_logo_small.png")
                     );
-                }
-            }
+                },
+            },
         },
-        "sass-loader"
-    ]
+        "sass-loader",
+    ],
 };
 
 const rule_css_assets = {
@@ -205,10 +205,10 @@ const rule_css_assets = {
         {
             loader: "file-loader",
             options: {
-                name: "css-assets/[name]-[sha256:hash:hex:16].[ext]"
-            }
-        }
-    ]
+                name: "css-assets/[name]-[sha256:hash:hex:16].[ext]",
+            },
+        },
+    ],
 };
 
 module.exports = {
@@ -226,5 +226,5 @@ module.exports = {
     rule_easygettext_loader,
     rule_scss_loader,
     rule_css_assets,
-    rule_file_loader_images
+    rule_file_loader_images,
 };

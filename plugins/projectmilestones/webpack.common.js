@@ -27,7 +27,7 @@ const output = webpack_configurator.configureOutput(
 
 let entry_points = {
     projectmilestones: "./scripts/projectmilestones/index.ts",
-    "projectmilestones-preferences": "./scripts/projectmilestones-preferences/index.ts"
+    "projectmilestones-preferences": "./scripts/projectmilestones-preferences/index.ts",
 };
 
 const colors = ["blue", "green", "grey", "orange", "purple", "red"];
@@ -44,10 +44,10 @@ module.exports = [
         context,
         output,
         resolve: {
-            extensions: [".js", ".ts", ".vue"]
+            extensions: [".js", ".ts", ".vue"],
         },
         externals: {
-            tlp: "tlp"
+            tlp: "tlp",
         },
         module: {
             rules: [
@@ -57,26 +57,26 @@ module.exports = [
                 {
                     test: /\.po$/,
                     include: /scripts\/charts-builders\/po/,
-                    use: [{ loader: "json-loader" }, { loader: "po-gettext-loader" }]
+                    use: [{ loader: "json-loader" }, { loader: "po-gettext-loader" }],
                 },
                 {
                     test: /\.po$/,
                     include: /projectmilestones\/po\//,
-                    use: [{ loader: "json-loader" }, { loader: "easygettext-loader" }]
+                    use: [{ loader: "json-loader" }, { loader: "easygettext-loader" }],
                 },
                 webpack_configurator.rule_vue_loader,
-                webpack_configurator.rule_scss_loader
-            ]
+                webpack_configurator.rule_scss_loader,
+            ],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
             webpack_configurator.getVueLoaderPlugin(),
             webpack_configurator.getTypescriptCheckerPlugin(true),
-            ...webpack_configurator.getCSSExtractionPlugins()
+            ...webpack_configurator.getCSSExtractionPlugins(),
         ],
         resolveLoader: {
-            alias: webpack_configurator.easygettext_loader_alias
-        }
-    }
+            alias: webpack_configurator.easygettext_loader_alias,
+        },
+    },
 ];

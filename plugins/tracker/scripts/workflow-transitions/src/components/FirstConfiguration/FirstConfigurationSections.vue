@@ -71,7 +71,7 @@
                     class="tlp-button-icon fa"
                     v-bind:class="{
                         'fa-circle-o-notch fa-spin': is_operation_running,
-                        'fa-long-arrow-right': !is_operation_running
+                        'fa-long-arrow-right': !is_operation_running,
                     }"
                 ></i>
                 <span v-translate>Save and start configuration</span>
@@ -88,13 +88,13 @@ export default {
 
     data() {
         return {
-            selected_field: null
+            selected_field: null,
         };
     },
 
     computed: {
         ...mapState(["is_operation_running"]),
-        ...mapGetters(["selectbox_fields"])
+        ...mapGetters(["selectbox_fields"]),
     },
 
     methods: {
@@ -105,7 +105,7 @@ export default {
                     feedback_box.removeChild(feedback_box.firstChild);
                 }
             });
-        }
-    }
+        },
+    },
 };
 </script>

@@ -19,15 +19,15 @@
 
 /* global codendi:readonly jQuery:readonly */
 
-(function($) {
+(function ($) {
     function confirmDeletionPopover() {
-        $(".remove-hook").each(function() {
+        $(".remove-hook").each(function () {
             var id = $(this).data("popover-id");
 
             $(this).popover({
                 container: ".git_webhook",
                 title: codendi.getText("git", "remove_webhook_title"),
-                content: $("#" + id).html()
+                content: $("#" + id).html(),
             });
         });
     }
@@ -37,7 +37,7 @@
     }
 
     function bindShowPopover() {
-        $(".remove-hook").click(function(event) {
+        $(".remove-hook").click(function (event) {
             event.preventDefault();
 
             dismissPopover();
@@ -46,14 +46,14 @@
         });
     }
 
-    $(function() {
+    $(function () {
         $(".only-one-webhook").tooltip();
 
         confirmDeletionPopover();
 
         bindShowPopover();
 
-        $("body").on("click", function(event) {
+        $("body").on("click", function (event) {
             if ($(event.target).hasClass("dismiss-popover")) {
                 dismissPopover();
             }

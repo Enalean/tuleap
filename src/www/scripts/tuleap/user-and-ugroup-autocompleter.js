@@ -29,7 +29,7 @@ if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
         loadUserAndUgroupAutocompleter: loadUserAndUgroupAutocompleter,
         addDataToAutocompleter: addDataToAutocompleter,
         enableAutocompleter: enableAutocompleter,
-        resetPlaceholder: resetPlaceholder
+        resetPlaceholder: resetPlaceholder,
     };
 } else {
     var tuleap = window.tuleap || {};
@@ -74,14 +74,14 @@ function formatUser(user) {
 }
 
 function createSearchChoice(term, data) {
-    var data_that_matches_term = jQuery(data).filter(function() {
+    var data_that_matches_term = jQuery(data).filter(function () {
         return this.text == term;
     });
 
     if (data_that_matches_term.length === 0) {
         return {
             id: term,
-            text: term
+            text: term,
         };
     }
 }
@@ -115,25 +115,25 @@ function loadUserAndUgroupAutocompleter(input) {
             url: "/user/autocomplete.php",
             dataType: "json",
             quietMillis: 250,
-            data: function(term) {
+            data: function (term) {
                 return {
                     return_type: "json_for_select_2",
                     "with-groups-of-user-in-project-id": input.dataset.projectId,
                     "additional-information": input.dataset.additionalInfo,
-                    name: term
+                    name: term,
                 };
             },
-            results: function(data) {
+            results: function (data) {
                 return {
-                    results: data.results
+                    results: data.results,
                 };
-            }
+            },
         },
         createSearchChoice: createSearchChoice,
         formatResult: formatItem,
         formatSelection: formatItem,
-        escapeMarkup: function(m) {
+        escapeMarkup: function (m) {
             return m;
-        }
+        },
     });
 }

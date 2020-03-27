@@ -29,7 +29,7 @@ const {
     ALLOWED_EXTENSIONS,
     DIRECTIVE_NAME,
     COMPONENT_NAME,
-    PLURAL_STRING_DIRECTIVE_NAME
+    PLURAL_STRING_DIRECTIVE_NAME,
 } = require("./constants.js");
 
 const INTERPOLATED_TEXT_NODE = 2;
@@ -60,30 +60,30 @@ function createParser(gettext_extractor) {
                 "[this].$gettext",
                 "$gettext",
                 "gettext_provider.$gettext",
-                "gettext_provider.gettext"
+                "gettext_provider.gettext",
             ],
             {
-                arguments: { text: 0 }
+                arguments: { text: 0 },
             }
         ),
         JsExtractors.callExpression(
             ["[this].$ngettext", "$ngettext", "gettext_provider.$ngettext"],
             {
-                arguments: { text: 0, textPlural: 1 }
+                arguments: { text: 0, textPlural: 1 },
             }
         ),
         JsExtractors.callExpression(
             ["[this].$pgettext", "$pgettext", "gettext_provider.$pgettext"],
             {
-                arguments: { context: 0, text: 1 }
+                arguments: { context: 0, text: 1 },
             }
         ),
         JsExtractors.callExpression(
             ["[this].$npgettext", "$npgettext", "gettext_provider.$npgettext"],
             {
-                arguments: { context: 0, text: 1, textPlural: 2 }
+                arguments: { context: 0, text: 1, textPlural: 2 },
             }
-        )
+        ),
     ]);
 }
 
@@ -92,7 +92,7 @@ function extractFromVueFile(file, file_path, gettext_extractor, gettext_parser) 
         source: file,
         filename: file_path,
         compiler: vueTemplateCompiler,
-        needMap: false
+        needMap: false,
     });
 
     if (sfc_descriptor.script !== null) {
@@ -107,14 +107,14 @@ function extractFromVueFile(file, file_path, gettext_extractor, gettext_parser) 
         const scriptKind = lang === "ts" ? ts.ScriptKind.TS : ts.ScriptKind.JS;
 
         gettext_parser.parseString(script_block.content, undefined, {
-            scriptKind
+            scriptKind,
         });
     }
 
     function extractFromTemplate(template_block) {
         const compiled = vueTemplateCompiler.compile(template_block.content);
         if (compiled.errors.length > 0) {
-            compiled.errors.forEach(error => log(error));
+            compiled.errors.forEach((error) => log(error));
             throw new Error(`Error during Vue template compilation for file: ${file_path}`);
         }
         parseNode(compiled.ast);
@@ -134,20 +134,20 @@ function extractFromVueFile(file, file_path, gettext_extractor, gettext_parser) 
         }
 
         if ("attrs" in node) {
-            node.attrs.forEach(attr => {
+            node.attrs.forEach((attr) => {
                 gettext_parser.parseString(attr.value);
             });
         }
 
         if ("ifConditions" in node) {
             node.ifConditions
-                .map(condition => condition.block)
-                .filter(block => block !== node)
+                .map((condition) => condition.block)
+                .filter((block) => block !== node)
                 .forEach(parseNode);
         }
 
         if ("children" in node) {
-            node.children.filter(node => !isTextOrInterpolatedTextNode(node)).forEach(parseNode);
+            node.children.filter((node) => !isTextOrInterpolatedTextNode(node)).forEach(parseNode);
         }
     }
 }
@@ -171,19 +171,19 @@ function extractComponent(node, gettext_extractor) {
         const plural_string = node.attrsMap[PLURAL_STRING_DIRECTIVE_NAME];
         gettext_extractor.addMessage({
             text,
-            textPlural: plural_string.trim()
+            textPlural: plural_string.trim(),
         });
         return;
     }
     gettext_extractor.addMessage({ text });
 }
 
-const isTextOrInterpolatedTextNode = node =>
+const isTextOrInterpolatedTextNode = (node) =>
     node.type === TEXT_NODE || node.type === INTERPOLATED_TEXT_NODE;
 
-const doesNodeHaveAnySupportedDirective = node =>
-    node.directives.some(directive => directive.rawName === DIRECTIVE_NAME);
+const doesNodeHaveAnySupportedDirective = (node) =>
+    node.directives.some((directive) => directive.rawName === DIRECTIVE_NAME);
 
 module.exports = {
-    extractFileSync
+    extractFileSync,
 };

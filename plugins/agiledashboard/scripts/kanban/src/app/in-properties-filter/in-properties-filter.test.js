@@ -8,36 +8,36 @@ describe("InPropertiesItemFilter", () => {
             {
                 label: "Riri",
                 id: "nephew",
-                card_fields: []
+                card_fields: [],
             },
             {
                 label: "Fifi",
                 id: "nephew",
-                card_fields: []
+                card_fields: [],
             },
             {
                 label: "Loulou",
                 id: "nephew",
-                card_fields: []
+                card_fields: [],
             },
             {
                 label: "Donald",
                 id: "uncle",
                 card_fields: [],
-                internal_property: "has nephews"
+                internal_property: "has nephews",
             },
             {
                 label: "Donald & Daisy",
                 id: "significant others",
-                card_fields: []
-            }
+                card_fields: [],
+            },
         ];
 
     beforeEach(() => {
         angular.mock.module(kanban_module);
 
         var $filter, moment;
-        angular.mock.inject(function(_$filter_, _moment_) {
+        angular.mock.inject(function (_$filter_, _moment_) {
             $filter = _$filter_;
             moment = _moment_;
         });
@@ -46,99 +46,99 @@ describe("InPropertiesItemFilter", () => {
         (moment.locale || moment.lang)("en");
     });
 
-    it("has a InPropertiesFilter filter", function() {
+    it("has a InPropertiesFilter filter", function () {
         expect(in_properties_filter).not.toBeNull();
     });
 
-    it("filters on label", function() {
+    it("filters on label", function () {
         expect(in_properties_filter(list, "Donald")).toContainEqual({
             label: "Donald",
             id: "uncle",
             card_fields: [],
-            internal_property: "has nephews"
+            internal_property: "has nephews",
         });
         expect(in_properties_filter(list, "Donald")).toContainEqual({
             label: "Donald & Daisy",
             id: "significant others",
-            card_fields: []
+            card_fields: [],
         });
         expect(in_properties_filter(list, "Donald")).not.toContain({
             label: "Riri",
             id: "nephew",
-            card_fields: []
+            card_fields: [],
         });
     });
 
-    it("is case insensitive", function() {
+    it("is case insensitive", function () {
         expect(in_properties_filter(list, "RIRI")).toContainEqual({
             label: "Riri",
             id: "nephew",
-            card_fields: []
+            card_fields: [],
         });
     });
 
-    it("filters on id", function() {
+    it("filters on id", function () {
         expect(in_properties_filter(list, "nephew")).toContainEqual({
             label: "Riri",
             id: "nephew",
-            card_fields: []
+            card_fields: [],
         });
         expect(in_properties_filter(list, "nephew")).toContainEqual({
             label: "Fifi",
             id: "nephew",
-            card_fields: []
+            card_fields: [],
         });
         expect(in_properties_filter(list, "nephew")).toContainEqual({
             label: "Loulou",
             id: "nephew",
-            card_fields: []
+            card_fields: [],
         });
         expect(in_properties_filter(list, "nephew")).not.toContain({
             label: "Donald & Daisy",
             id: "significant others",
-            card_fields: []
+            card_fields: [],
         });
     });
 
-    it("does not filter on private properties", function() {
+    it("does not filter on private properties", function () {
         expect(in_properties_filter(list, "nephew")).not.toContain({
             label: "Donald",
             id: "uncle",
             card_fields: [],
-            internal_property: "has nephews"
+            internal_property: "has nephews",
         });
     });
 
-    it("filters on both label and id", function() {
+    it("filters on both label and id", function () {
         expect(in_properties_filter(list, "nephew riri")).toContainEqual({
             label: "Riri",
             id: "nephew",
-            card_fields: []
+            card_fields: [],
         });
     });
 
-    it("returns items that match all criteria", function() {
+    it("returns items that match all criteria", function () {
         expect(in_properties_filter(list, "donald daisy")).toContainEqual({
             label: "Donald & Daisy",
             id: "significant others",
-            card_fields: []
+            card_fields: [],
         });
         expect(in_properties_filter(list, "donald daisy")).not.toContain({
             label: "Donald",
             id: "uncle",
             card_fields: [],
-            internal_property: "has nephews"
+            internal_property: "has nephews",
         });
         expect(in_properties_filter(list, "daisy donald")).toContainEqual({
             label: "Donald & Daisy",
             id: "significant others",
-            card_fields: []
+            card_fields: [],
         });
         expect(in_properties_filter(list, "daisy donald")).not.toContain({
             label: "Donald",
             id: "uncle",
             card_fields: [],
-            internal_property: "has nephews"
+            internal_property: "has nephews",
         });
     });
 
@@ -147,8 +147,8 @@ describe("InPropertiesItemFilter", () => {
             {
                 id: null,
                 label: null,
-                card_fields: [{ type: "text", format: "text", value: "Histoire de Toto" }]
-            }
+                card_fields: [{ type: "text", format: "text", value: "Histoire de Toto" }],
+            },
         ];
 
         const filtered_items = in_properties_filter(items, "toto");
@@ -162,9 +162,9 @@ describe("InPropertiesItemFilter", () => {
                 id: null,
                 label: null,
                 card_fields: [
-                    { type: "text", format: "html", value: "Histoire <strong>de TOTO</strong>" }
-                ]
-            }
+                    { type: "text", format: "html", value: "Histoire <strong>de TOTO</strong>" },
+                ],
+            },
         ];
 
         expect(in_properties_filter(items, "toto")).toEqual(items);
@@ -175,14 +175,14 @@ describe("InPropertiesItemFilter", () => {
             {
                 id: null,
                 label: null,
-                card_fields: [{ type: "text", format: "html", value: "William&nbspWallace" }]
-            }
+                card_fields: [{ type: "text", format: "html", value: "William&nbspWallace" }],
+            },
         ];
 
         expect(in_properties_filter(items, "&")).toEqual([]);
     });
 
-    it("returns items that have matching card_fields", function() {
+    it("returns items that have matching card_fields", function () {
         expect(
             in_properties_filter(
                 [
@@ -192,10 +192,10 @@ describe("InPropertiesItemFilter", () => {
                         card_fields: [
                             {
                                 type: "string",
-                                value: "Histoire de Toto"
-                            }
-                        ]
-                    }
+                                value: "Histoire de Toto",
+                            },
+                        ],
+                    },
                 ],
                 "toto"
             ).length
@@ -209,10 +209,10 @@ describe("InPropertiesItemFilter", () => {
                         card_fields: [
                             {
                                 type: "int",
-                                value: 123
-                            }
-                        ]
-                    }
+                                value: 123,
+                            },
+                        ],
+                    },
                 ],
                 "123"
             ).length
@@ -226,10 +226,10 @@ describe("InPropertiesItemFilter", () => {
                         card_fields: [
                             {
                                 type: "float",
-                                value: 3.14
-                            }
-                        ]
-                    }
+                                value: 3.14,
+                            },
+                        ],
+                    },
                 ],
                 "3.14"
             ).length
@@ -243,10 +243,10 @@ describe("InPropertiesItemFilter", () => {
                         card_fields: [
                             {
                                 type: "aid",
-                                value: 42
-                            }
-                        ]
-                    }
+                                value: 42,
+                            },
+                        ],
+                    },
                 ],
                 "42"
             ).length
@@ -260,10 +260,10 @@ describe("InPropertiesItemFilter", () => {
                         card_fields: [
                             {
                                 type: "atid",
-                                value: 42
-                            }
-                        ]
-                    }
+                                value: 42,
+                            },
+                        ],
+                    },
                 ],
                 "42"
             ).length
@@ -277,10 +277,10 @@ describe("InPropertiesItemFilter", () => {
                         card_fields: [
                             {
                                 type: "priority",
-                                value: 42
-                            }
-                        ]
-                    }
+                                value: 42,
+                            },
+                        ],
+                    },
                 ],
                 "42"
             ).length
@@ -296,12 +296,12 @@ describe("InPropertiesItemFilter", () => {
                                 type: "file",
                                 file_descriptions: [
                                     {
-                                        name: "Photo de Toto.png"
-                                    }
-                                ]
-                            }
-                        ]
-                    }
+                                        name: "Photo de Toto.png",
+                                    },
+                                ],
+                            },
+                        ],
+                    },
                 ],
                 "toto"
             ).length
@@ -317,12 +317,12 @@ describe("InPropertiesItemFilter", () => {
                                 type: "cross",
                                 value: [
                                     {
-                                        ref: "release #42"
-                                    }
-                                ]
-                            }
-                        ]
-                    }
+                                        ref: "release #42",
+                                    },
+                                ],
+                            },
+                        ],
+                    },
                 ],
                 "42"
             ).length
@@ -336,10 +336,10 @@ describe("InPropertiesItemFilter", () => {
                         card_fields: [
                             {
                                 type: "perm",
-                                granted_groups: ["toto"]
-                            }
-                        ]
-                    }
+                                granted_groups: ["toto"],
+                            },
+                        ],
+                    },
                 ],
                 "toto"
             ).length
@@ -354,11 +354,11 @@ describe("InPropertiesItemFilter", () => {
                             {
                                 type: "subby",
                                 value: {
-                                    display_name: "Mr Toto"
-                                }
-                            }
-                        ]
-                    }
+                                    display_name: "Mr Toto",
+                                },
+                            },
+                        ],
+                    },
                 ],
                 "toto"
             ).length
@@ -373,16 +373,16 @@ describe("InPropertiesItemFilter", () => {
                             {
                                 type: "luby",
                                 value: {
-                                    display_name: "Mr Pototo"
-                                }
-                            }
-                        ]
-                    }
+                                    display_name: "Mr Pototo",
+                                },
+                            },
+                        ],
+                    },
                 ],
                 "toto"
             ).length
         ).toBe(1);
-        ["sb", "rb", "cb", "msb", "tbl", "shared"].forEach(function(list_type) {
+        ["sb", "rb", "cb", "msb", "tbl", "shared"].forEach(function (list_type) {
             expect(
                 in_properties_filter(
                     [
@@ -394,12 +394,12 @@ describe("InPropertiesItemFilter", () => {
                                     type: list_type,
                                     values: [
                                         {
-                                            label: "Reopen"
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
+                                            label: "Reopen",
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
                     ],
                     "open"
                 ).length
@@ -415,12 +415,12 @@ describe("InPropertiesItemFilter", () => {
                                     type: list_type,
                                     values: [
                                         {
-                                            display_name: "Mr Toto"
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
+                                            display_name: "Mr Toto",
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
                     ],
                     "toto"
                 ).length
@@ -433,16 +433,16 @@ describe("InPropertiesItemFilter", () => {
                             label: null,
                             card_fields: [
                                 {
-                                    type: list_type
-                                }
-                            ]
-                        }
+                                    type: list_type,
+                                },
+                            ],
+                        },
                     ],
                     "toto"
                 ).length
             ).toBe(0);
         });
-        ["date", "lud", "subon"].forEach(function(date_type) {
+        ["date", "lud", "subon"].forEach(function (date_type) {
             var today = new Date();
 
             expect(
@@ -454,10 +454,10 @@ describe("InPropertiesItemFilter", () => {
                             card_fields: [
                                 {
                                     type: date_type,
-                                    value: today.toJSON()
-                                }
-                            ]
-                        }
+                                    value: today.toJSON(),
+                                },
+                            ],
+                        },
                     ],
                     "today"
                 ).length
@@ -473,10 +473,10 @@ describe("InPropertiesItemFilter", () => {
                             {
                                 type: "computed",
                                 manual_value: null,
-                                value: 42
-                            }
-                        ]
-                    }
+                                value: 42,
+                            },
+                        ],
+                    },
                 ],
                 "42"
             ).length
@@ -491,17 +491,17 @@ describe("InPropertiesItemFilter", () => {
                             {
                                 type: "computed",
                                 manual_value: 42,
-                                value: null
-                            }
-                        ]
-                    }
+                                value: null,
+                            },
+                        ],
+                    },
                 ],
                 "42"
             ).length
         ).toBe(1);
     });
 
-    it("Given no terms to filter with, when I filter a list of items, then a copy of this list with the same items will be returned", function() {
+    it("Given no terms to filter with, when I filter a list of items, then a copy of this list with the same items will be returned", function () {
         var list = [{ id: 28 }, { id: 94 }, { id: 69 }];
 
         var filtered_list = in_properties_filter(list, "");

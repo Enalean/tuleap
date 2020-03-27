@@ -23,32 +23,32 @@ import pullrequest_refs_controller from "./pull-request-refs-controller.js";
 
 import "angular-mocks";
 
-describe("PullRequestRefsController -", function() {
+describe("PullRequestRefsController -", function () {
     let SharedPropertiesService, PullRequestRefsController;
 
-    beforeEach(function() {
+    beforeEach(function () {
         let $controller;
 
         angular.mock.module(tuleap_pullrequest_module);
 
-        angular.mock.inject(function(_$controller_, _SharedPropertiesService_) {
+        angular.mock.inject(function (_$controller_, _SharedPropertiesService_) {
             $controller = _$controller_;
             SharedPropertiesService = _SharedPropertiesService_;
         });
 
         PullRequestRefsController = $controller(pullrequest_refs_controller, {
-            SharedPropertiesService: SharedPropertiesService
+            SharedPropertiesService: SharedPropertiesService,
         });
 
         jest.spyOn(SharedPropertiesService, "getRepositoryId").mockImplementation(() => {});
     });
 
-    describe("isCurrentRepository()", function() {
-        it("Given the current repository id in SharedPropertiesService and given a repository object with the same id, when I check if it is the current repository, then it will return true", function() {
+    describe("isCurrentRepository()", function () {
+        it("Given the current repository id in SharedPropertiesService and given a repository object with the same id, when I check if it is the current repository, then it will return true", function () {
             SharedPropertiesService.getRepositoryId.mockReturnValue(14);
 
             const repository = {
-                id: 14
+                id: 14,
             };
 
             const result = PullRequestRefsController.isCurrentRepository(repository);
@@ -56,7 +56,7 @@ describe("PullRequestRefsController -", function() {
             expect(result).toBe(true);
         });
 
-        it("Given no repository, when I check if it is the current repository, then it will return false", function() {
+        it("Given no repository, when I check if it is the current repository, then it will return false", function () {
             SharedPropertiesService.getRepositoryId.mockReturnValue(14);
 
             const result = PullRequestRefsController.isCurrentRepository();
@@ -65,15 +65,15 @@ describe("PullRequestRefsController -", function() {
         });
     });
 
-    describe("isRepositoryAFork()", function() {
-        it("Given a pull request with a repository id different of its repository_dest id, when I check if the repository is a fork, then it will return true", function() {
+    describe("isRepositoryAFork()", function () {
+        it("Given a pull request with a repository id different of its repository_dest id, when I check if the repository is a fork, then it will return true", function () {
             PullRequestRefsController.pull_request = {
                 repository: {
-                    id: 22
+                    id: 22,
                 },
                 repository_dest: {
-                    id: 61
-                }
+                    id: 61,
+                },
             };
 
             const result = PullRequestRefsController.isRepositoryAFork();
@@ -81,7 +81,7 @@ describe("PullRequestRefsController -", function() {
             expect(result).toBe(true);
         });
 
-        it("Given a pull request with no repository, when I check if the repository is a fork, then it will return false", function() {
+        it("Given a pull request with no repository, when I check if the repository is a fork, then it will return false", function () {
             PullRequestRefsController.pull_request = {};
 
             const result = PullRequestRefsController.isRepositoryAFork();

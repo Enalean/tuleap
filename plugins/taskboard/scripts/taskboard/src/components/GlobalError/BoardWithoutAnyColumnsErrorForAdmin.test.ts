@@ -33,7 +33,7 @@ describe("BoardWithoutAnyColumnsError", () => {
     it("is displays misconfiguration error for admin user", () => {
         const wrapper = shallowMount(BoardWithoutAnyColumnsErrorForAdmin, {
             localVue: local_vue,
-            mocks: { $store: createStoreMock({ state: { admin_url: "/path/to/admin" } }) }
+            mocks: { $store: createStoreMock({ state: { admin_url: "/path/to/admin" } }) },
         });
         expect(wrapper.element).toMatchSnapshot();
     });

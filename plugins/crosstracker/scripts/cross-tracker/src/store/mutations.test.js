@@ -25,7 +25,7 @@ describe("mutations", () => {
             const state = {
                 is_report_saved: false,
                 error_message: "Bad request",
-                success_message: "Hurrah"
+                success_message: "Hurrah",
             };
 
             mutations.discardUnsavedReport(state);
@@ -42,7 +42,7 @@ describe("mutations", () => {
                 reading_mode: false,
                 is_report_saved: false,
                 error_message: "Bad request",
-                success_message: "Yay"
+                success_message: "Yay",
             };
 
             mutations.switchToReadingMode(state, { saved_state: true });
@@ -59,7 +59,7 @@ describe("mutations", () => {
             const state = {
                 reading_mode: true,
                 error_message: "Forbidden",
-                success_message: "Huzzah"
+                success_message: "Huzzah",
             };
 
             mutations.switchToWritingMode(state);
@@ -75,7 +75,7 @@ describe("mutations", () => {
             const state = {
                 is_report_saved: false,
                 error_message: "impeccant",
-                success_message: null
+                success_message: null,
             };
 
             mutations.switchReportToSaved(state, "Great success");

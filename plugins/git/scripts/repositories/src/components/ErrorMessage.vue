@@ -39,7 +39,7 @@ export default {
                     return "";
             }
         },
-        ...mapGetters(["hasError"])
-    }
+        ...mapGetters(["hasError"]),
+    },
 };
 </script>

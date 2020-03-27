@@ -6,7 +6,7 @@ function controller() {
     const self = this;
     Object.assign(self, {
         getStyle,
-        $onChanges
+        $onChanges,
     });
 
     function $onChanges(changes) {

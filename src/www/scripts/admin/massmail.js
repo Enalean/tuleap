@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function initHTMLEditor() {
         editor = CKEDITOR.replace("mail_message", {
-            toolbar: tuleap.ckeditor.toolbar
+            toolbar: tuleap.ckeditor.toolbar,
         });
     }
 

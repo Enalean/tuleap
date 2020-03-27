@@ -29,17 +29,17 @@ describe("TaskBoardHeader", () => {
         const todo: ColumnDefinition = {
             id: 2,
             label: "To do",
-            is_collapsed: false
+            is_collapsed: false,
         } as ColumnDefinition;
         const ongoing: ColumnDefinition = {
             id: 3,
             label: "Ongoing",
-            is_collapsed: false
+            is_collapsed: false,
         } as ColumnDefinition;
         const done: ColumnDefinition = {
             id: 4,
             label: "Done",
-            is_collapsed: true
+            is_collapsed: true,
         } as ColumnDefinition;
 
         const wrapper = shallowMount(TaskBoardHeader, {
@@ -47,15 +47,15 @@ describe("TaskBoardHeader", () => {
                 $store: createStoreMock({
                     state: {
                         column: {
-                            columns: [todo, ongoing, done]
+                            columns: [todo, ongoing, done],
                         },
-                        swimlane: {}
+                        swimlane: {},
                     },
                     getters: {
-                        "swimlane/taskboard_cell_swimlane_header_classes": []
-                    }
-                })
-            }
+                        "swimlane/taskboard_cell_swimlane_header_classes": [],
+                    },
+                }),
+            },
         });
 
         const children = wrapper.findAll("*");

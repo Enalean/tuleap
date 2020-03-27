@@ -26,10 +26,10 @@ describe("CreationModalPermissionsSection", () => {
     let factory;
 
     beforeEach(() => {
-        factory = props => {
+        factory = (props) => {
             return shallowMount(CreationModalPermissionsSection, {
                 localVue,
-                propsData: { ...props }
+                propsData: { ...props },
             });
         };
     });
@@ -40,8 +40,8 @@ describe("CreationModalPermissionsSection", () => {
             value: {
                 can_read: [],
                 can_write: [],
-                can_manage: []
-            }
+                can_manage: [],
+            },
         });
 
         expect(wrapper.find(".document-permissions-creation-modal-title-spinner").exists()).toBe(
@@ -58,8 +58,8 @@ describe("CreationModalPermissionsSection", () => {
             value: {
                 can_read: [],
                 can_write: [],
-                can_manage: []
-            }
+                can_manage: [],
+            },
         });
 
         expect(wrapper.find(".document-permissions-creation-modal-title-spinner").exists()).toBe(

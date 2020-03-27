@@ -31,7 +31,7 @@ import CardsInColumnCount from "../Expanded/CardsInColumnCount.vue";
 import CollapsedLabel from "./CollapsedLabel.vue";
 
 @Component({
-    components: { CollapsedLabel, CardsInColumnCount, ExpandButton }
+    components: { CollapsedLabel, CardsInColumnCount, ExpandButton },
 })
 export default class CollapsedHeaderCell extends Mixins(HeaderCellMixin) {
     get classes(): string {

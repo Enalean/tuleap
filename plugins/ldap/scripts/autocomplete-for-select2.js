@@ -31,15 +31,15 @@ function autocomplete_groups_for_select2(element, options) {
             url: "/plugins/ldap/autocomplete",
             dataType: "json",
             delay: 250,
-            data: function({ term, page = 1 }) {
+            data: function ({ term, page = 1 }) {
                 return {
                     ldap_group_name: term,
-                    page
+                    page,
                 };
-            }
+            },
         },
-        escapeMarkup: markup => markup,
-        templateResult: ldap_group => {
+        escapeMarkup: (markup) => markup,
+        templateResult: (ldap_group) => {
             if (ldap_group.loading) {
                 return ldap_group.text;
             }
@@ -54,7 +54,7 @@ function autocomplete_groups_for_select2(element, options) {
                 ldap_group.text
             )} <span style="float:right"> ${escaper.html(ldap_group.id)} </span>`;
         },
-        ...options
+        ...options,
     };
 
     return select2(element, real_options);

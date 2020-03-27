@@ -77,19 +77,19 @@ export default {
         ServiceDescription,
         ServiceLink,
         ServiceLabel,
-        IconSelector
+        IconSelector,
     },
     mixins: [service_mixin],
     props: {
         allowed_icons: {
             type: Object,
-            required: true
-        }
+            required: true,
+        },
     },
     methods: {
         onNewTabChange($event) {
             this.service.is_in_new_tab = $event.target.checked;
-        }
-    }
+        },
+    },
 };
 </script>

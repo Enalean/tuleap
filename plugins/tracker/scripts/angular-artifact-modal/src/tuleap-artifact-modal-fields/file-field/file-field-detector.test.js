@@ -20,7 +20,7 @@
 import {
     isThereAtLeastOneFileField,
     getAllFileFields,
-    getFirstFileField
+    getFirstFileField,
 } from "./file-field-detector.js";
 import * as disabled_field_detector from "../disabled-field-detector.js";
 
@@ -35,7 +35,7 @@ describe("file-field-detector", () => {
             const tracker_fields = [
                 { field_id: 95, type: "file" },
                 { field_id: 72, type: "int" },
-                { field_id: 64, type: "file" }
+                { field_id: 64, type: "file" },
             ];
             isDisabled.mockReturnValue(false);
 
@@ -63,7 +63,7 @@ describe("file-field-detector", () => {
             const tracker_fields = [
                 { field_id: 62, type: "file" },
                 { field_id: 43, type: "string" },
-                { field_id: 38, type: "file" }
+                { field_id: 38, type: "file" },
             ];
             isDisabled.mockReturnValue(false);
 
@@ -71,7 +71,7 @@ describe("file-field-detector", () => {
 
             expect(result).toEqual([
                 { field_id: 62, type: "file" },
-                { field_id: 38, type: "file" }
+                { field_id: 38, type: "file" },
             ]);
         });
 
@@ -81,7 +81,7 @@ describe("file-field-detector", () => {
             const enabled_field = { field_id: 62, type: "file" };
             const disabled_field = { field_id: 38, type: "file " };
             const tracker_fields = [enabled_field, disabled_field];
-            isDisabled.mockImplementation(field => field === disabled_field);
+            isDisabled.mockImplementation((field) => field === disabled_field);
 
             const result = getAllFileFields(tracker_fields);
 
@@ -95,7 +95,7 @@ describe("file-field-detector", () => {
             const tracker_fields = [
                 { field_id: 85, type: "file" },
                 { field_id: 96, type: "float" },
-                { field_id: 45, type: "file" }
+                { field_id: 45, type: "file" },
             ];
             isDisabled.mockReturnValue(false);
 
@@ -109,7 +109,7 @@ describe("file-field-detector", () => {
             const enabled_field = { field_id: 62, type: "file" };
             const disabled_field = { field_id: 38, type: "file " };
             const tracker_fields = [enabled_field, disabled_field];
-            isDisabled.mockImplementation(field => field === disabled_field);
+            isDisabled.mockImplementation((field) => field === disabled_field);
 
             const result = getFirstFileField(tracker_fields);
 
@@ -120,7 +120,7 @@ describe("file-field-detector", () => {
             then it will return null`, () => {
             const disabled_field = { field_id: 64, type: "file" };
             const tracker_fields = [disabled_field];
-            isDisabled.mockImplementation(field => field === disabled_field);
+            isDisabled.mockImplementation((field) => field === disabled_field);
 
             const result = getFirstFileField(tracker_fields);
 

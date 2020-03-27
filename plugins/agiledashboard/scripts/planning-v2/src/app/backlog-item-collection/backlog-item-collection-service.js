@@ -31,7 +31,7 @@ function BacklogItemCollectionService(BacklogItemService, ItemAnimatorService) {
         refreshBacklogItem,
         removeBacklogItemsFromCollection,
         addOrReorderBacklogItemsInCollection,
-        removeExplicitBacklogElement
+        removeExplicitBacklogElement,
     });
 
     function refreshBacklogItem(backlog_item_id) {
@@ -46,7 +46,7 @@ function BacklogItemCollectionService(BacklogItemService, ItemAnimatorService) {
                 card_fields,
                 status,
                 has_children,
-                parent
+                parent,
             } = backlog_item;
 
             Object.assign(self.items[backlog_item_id], {
@@ -58,7 +58,7 @@ function BacklogItemCollectionService(BacklogItemService, ItemAnimatorService) {
                 updating: false,
                 status,
                 has_children,
-                parent
+                parent,
             });
 
             ItemAnimatorService.animateUpdated(self.items[backlog_item_id]);
@@ -70,7 +70,7 @@ function BacklogItemCollectionService(BacklogItemService, ItemAnimatorService) {
     }
 
     function removeBacklogItemsFromCollection(backlog_items_collection, backlog_items_to_remove) {
-        remove(backlog_items_collection, function(item) {
+        remove(backlog_items_collection, function (item) {
             return some(backlog_items_to_remove, item);
         });
     }
@@ -88,7 +88,7 @@ function BacklogItemCollectionService(BacklogItemService, ItemAnimatorService) {
         );
 
         if (compared_to) {
-            index = backlog_items_collection.findIndex(item => item.id === compared_to.item_id);
+            index = backlog_items_collection.findIndex((item) => item.id === compared_to.item_id);
 
             if (compared_to.direction === "after") {
                 index = index + 1;

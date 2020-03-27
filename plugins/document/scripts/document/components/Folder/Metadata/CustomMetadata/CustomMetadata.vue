@@ -35,10 +35,10 @@ import CustomMetadataComponentTypeRenderer from "./CustomMetadataComponentTypeRe
 export default {
     name: "CustomMetadata",
     components: {
-        CustomMetadataComponentTypeRenderer
+        CustomMetadataComponentTypeRenderer,
     },
     props: {
-        itemMetadata: Array
-    }
+        itemMetadata: Array,
+    },
 };
 </script>

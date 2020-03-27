@@ -4,7 +4,7 @@ WipHeaderCtrl.$inject = [
     "KanbanService",
     "FilterTrackerReportService",
     "SharedPropertiesService",
-    "RestErrorService"
+    "RestErrorService",
 ];
 
 function WipHeaderCtrl(
@@ -18,7 +18,7 @@ function WipHeaderCtrl(
         isWipBadgeShown,
         isColumnLoaded,
         setWipLimit,
-        isUserAdmin: SharedPropertiesService.getUserIsAdmin
+        isUserAdmin: SharedPropertiesService.getUserIsAdmin,
     });
 
     function isWipBadgeShown() {
@@ -45,7 +45,7 @@ function WipHeaderCtrl(
                 self.column.wip_in_edit = false;
                 self.column.saving_wip = false;
             },
-            response => {
+            (response) => {
                 RestErrorService.reload(response);
             }
         );

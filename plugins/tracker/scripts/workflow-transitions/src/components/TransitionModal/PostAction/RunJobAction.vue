@@ -70,8 +70,8 @@ export default {
     props: {
         post_action: {
             type: Object,
-            mandatory: true
-        }
+            mandatory: true,
+        },
     },
     computed: {
         ...mapState(["current_tracker"]),
@@ -86,10 +86,10 @@ export default {
             set(job_url) {
                 this.$store.commit("transitionModal/updateRunJobPostActionJobUrl", {
                     post_action: this.post_action,
-                    job_url
+                    job_url,
                 });
-            }
-        }
-    }
+            },
+        },
+    },
 };
 </script>

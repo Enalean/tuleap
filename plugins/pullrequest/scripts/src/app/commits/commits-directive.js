@@ -11,6 +11,6 @@ function CommitsDirective() {
         templateUrl: "commits.tpl.html",
         controller: CommitsController,
         controllerAs: "commits",
-        bindToController: true
+        bindToController: true,
     };
 }

@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
             data: JSON.parse(pie_chart_mount_point.dataset.diskUsage),
             width: pie_chart_element_sizes.width,
             height: pie_chart_element_sizes.height,
-            radius: pie_chart_element_sizes.radius
+            radius: pie_chart_element_sizes.radius,
         });
 
         pie_chart.init();

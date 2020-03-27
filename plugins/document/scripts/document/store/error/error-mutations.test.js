@@ -25,7 +25,7 @@ describe("Store mutations", () => {
             const state = {
                 has_folder_permission_error: true,
                 has_folder_loading_error: true,
-                folder_loading_error: "Not found"
+                folder_loading_error: "Not found",
             };
 
             mutations.resetErrors(state);
@@ -38,7 +38,7 @@ describe("Store mutations", () => {
 
     it("switchFolderPermissionError", () => {
         const state = {
-            has_folder_permission_error: false
+            has_folder_permission_error: false,
         };
 
         mutations.switchFolderPermissionError(state);
@@ -47,7 +47,7 @@ describe("Store mutations", () => {
 
     it("switchItemPermissionError", () => {
         const state = {
-            has_document_permission_error: false
+            has_document_permission_error: false,
         };
 
         mutations.switchItemPermissionError(state);
@@ -57,7 +57,7 @@ describe("Store mutations", () => {
     it("setFolderLoadingError", () => {
         const state = {
             has_folder_loading_error: false,
-            folder_loading_error: ""
+            folder_loading_error: "",
         };
 
         mutations.setFolderLoadingError(state, "my error message");
@@ -68,7 +68,7 @@ describe("Store mutations", () => {
     it("setItemLoadingError", () => {
         const state = {
             has_document_loading_error: false,
-            document_loading_error: ""
+            document_loading_error: "",
         };
 
         mutations.setItemLoadingError(state, "my error message");
@@ -79,7 +79,7 @@ describe("Store mutations", () => {
     it("setModalError", () => {
         const state = {
             has_modal_error: false,
-            modal_error: ""
+            modal_error: "",
         };
 
         mutations.setModalError(state, "my modal error message");
@@ -90,7 +90,7 @@ describe("Store mutations", () => {
     it("resetModalError", () => {
         const state = {
             has_modal_error: true,
-            modal_error: "previous error"
+            modal_error: "previous error",
         };
 
         mutations.resetModalError(state);
@@ -101,7 +101,7 @@ describe("Store mutations", () => {
     it("setLockError", () => {
         const state = {
             has_document_lock_error: false,
-            document_lock_error: ""
+            document_lock_error: "",
         };
 
         mutations.setLockError(state, "error lock");

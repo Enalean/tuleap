@@ -30,12 +30,12 @@ export function enforceWorkflowTransitions(source_value_id, field, workflow) {
 function getPossibleValues(source_value_id, field_values, transitions) {
     const possible_value_ids = getPossibleValueIds(source_value_id, transitions);
 
-    return field_values.filter(value => possible_value_ids.includes(value.id));
+    return field_values.filter((value) => possible_value_ids.includes(value.id));
 }
 
 function getPossibleValueIds(source_value_id, transitions) {
     const possible_values = transitions
-        .filter(transition => transition.from_id === source_value_id)
+        .filter((transition) => transition.from_id === source_value_id)
         .map(({ to_id }) => to_id);
 
     return [source_value_id, ...possible_values];

@@ -28,7 +28,7 @@ import {
     TYPE_FOLDER,
     TYPE_EMPTY,
     CLIPBOARD_OPERATION_COPY,
-    CLIPBOARD_OPERATION_CUT
+    CLIPBOARD_OPERATION_CUT,
 } from "../../../constants.js";
 
 describe("PasteItem", () => {
@@ -40,7 +40,7 @@ describe("PasteItem", () => {
             return shallowMount(PasteItem, {
                 localVue,
                 propsData: { ...props },
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
     });
@@ -54,7 +54,7 @@ describe("PasteItem", () => {
         store.getters.is_item_a_folder = () => true;
 
         const destination = {
-            user_can_write: true
+            user_can_write: true,
         };
         const event_bus_emit = jest.spyOn(EventBus, "$emit");
         const wrapper = paste_item_factory({ destination });
@@ -66,7 +66,7 @@ describe("PasteItem", () => {
         expect(store.dispatch).toHaveBeenCalledWith("clipboard/pasteItem", [
             destination,
             current_folder,
-            store
+            store,
         ]);
         expect(event_bus_emit).toHaveBeenCalledWith("hide-action-menu");
     });
@@ -78,8 +78,8 @@ describe("PasteItem", () => {
 
         const wrapper = paste_item_factory({
             destination: {
-                user_can_write: true
-            }
+                user_can_write: true,
+            },
         });
 
         expect(wrapper.html()).toBeFalsy();
@@ -93,8 +93,8 @@ describe("PasteItem", () => {
 
         const wrapper = paste_item_factory({
             destination: {
-                user_can_write: true
-            }
+                user_can_write: true,
+            },
         });
 
         expect(wrapper.html()).toBeFalsy();
@@ -108,8 +108,8 @@ describe("PasteItem", () => {
 
         const wrapper = paste_item_factory({
             destination: {
-                user_can_write: false
-            }
+                user_can_write: false,
+            },
         });
 
         expect(wrapper.html()).toBeFalsy();
@@ -121,15 +121,15 @@ describe("PasteItem", () => {
         store.state.clipboard = {
             item_title: "My item",
             operation_type: CLIPBOARD_OPERATION_COPY,
-            pasting_in_progress: true
+            pasting_in_progress: true,
         };
         store.getters.is_item_a_folder = () => true;
         const event_bus_emit = jest.spyOn(EventBus, "$emit");
 
         const wrapper = paste_item_factory({
             destination: {
-                user_can_write: true
-            }
+                user_can_write: true,
+            },
         });
 
         expect(wrapper.attributes().disabled).toBeTruthy();
@@ -146,7 +146,7 @@ describe("PasteItem", () => {
         store.state.clipboard = {
             item_title: "My item",
             item_type: TYPE_EMPTY,
-            operation_type: CLIPBOARD_OPERATION_CUT
+            operation_type: CLIPBOARD_OPERATION_CUT,
         };
         store.state.folder_content = [];
         store.getters.is_item_a_folder = () => true;
@@ -155,8 +155,8 @@ describe("PasteItem", () => {
 
         const wrapper = paste_item_factory({
             destination: {
-                user_can_write: true
-            }
+                user_can_write: true,
+            },
         });
 
         expect(wrapper.html()).toBeFalsy();
@@ -168,7 +168,7 @@ describe("PasteItem", () => {
         store.state.clipboard = {
             item_title: "My item",
             item_type: TYPE_FOLDER,
-            operation_type: CLIPBOARD_OPERATION_CUT
+            operation_type: CLIPBOARD_OPERATION_CUT,
         };
         store.state.folder_content = [];
         store.getters.is_item_a_folder = () => true;
@@ -177,8 +177,8 @@ describe("PasteItem", () => {
 
         const wrapper = paste_item_factory({
             destination: {
-                user_can_write: true
-            }
+                user_can_write: true,
+            },
         });
 
         expect(wrapper.html()).toBeFalsy();
@@ -190,7 +190,7 @@ describe("PasteItem", () => {
         store.state.clipboard = {
             item_title: "My item",
             item_type: TYPE_FOLDER,
-            operation_type: CLIPBOARD_OPERATION_CUT
+            operation_type: CLIPBOARD_OPERATION_CUT,
         };
         store.state.folder_content = [];
         store.getters.is_item_a_folder = () => true;
@@ -200,8 +200,8 @@ describe("PasteItem", () => {
 
         const wrapper = paste_item_factory({
             destination: {
-                user_can_write: true
-            }
+                user_can_write: true,
+            },
         });
 
         expect(wrapper.html()).toBeFalsy();

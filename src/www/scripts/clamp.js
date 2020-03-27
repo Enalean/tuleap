@@ -5,18 +5,18 @@
  * Released under the WTFPL license
  * http://sam.zoy.org/wtfpl/
  */
-(function() {
-    window.$clamp = function(c, d) {
+(function () {
+    window.$clamp = function (c, d) {
         function s(a, b) {
             n.getComputedStyle ||
-                (n.getComputedStyle = function(a) {
+                (n.getComputedStyle = function (a) {
                     this.el = a;
-                    this.getPropertyValue = function(b) {
+                    this.getPropertyValue = function (b) {
                         //eslint-disable-next-line no-useless-escape
                         var c = /(\-([a-z]){1})/g;
                         "float" == b && (b = "styleFloat");
                         c.test(b) &&
-                            (b = b.replace(c, function(a, b, c) {
+                            (b = b.replace(c, function (a, b, c) {
                                 return c.toUpperCase();
                             }));
                         return a.currentStyle && a.currentStyle[b] ? a.currentStyle[b] : null;
@@ -79,7 +79,7 @@
                 }
                 if (b.animate) {
                     setTimeout(
-                        function() {
+                        function () {
                             p(a, d);
                         },
                         !0 === b.animate ? 10 : b.animate
@@ -100,7 +100,7 @@
                 splitOnChars: d.splitOnChars || [".", "-", "\u2013", "\u2014", " "],
                 animate: d.animate || !1,
                 truncationChar: d.truncationChar || "\u2026",
-                truncationHTML: d.truncationHTML
+                truncationHTML: d.truncationHTML,
             },
             e = c.style,
             y = c.innerHTML,

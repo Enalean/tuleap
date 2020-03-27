@@ -20,41 +20,37 @@
 
 /* global $$:readonly codendi:readonly $:readonly tuleap:readonly Ajax:readonly */
 
-document.observe("dom:loaded", function() {
+document.observe("dom:loaded", function () {
     $$(".tracker-field-richtext").each(function define_rich_text(elem) {
         var r = new codendi.RTE(elem); //eslint-disable-line @typescript-eslint/no-unused-vars
     });
 
-    $$("input[type=checkbox][name^=remove_rule]").each(function(elem) {
-        elem.observe("click", function() {
+    $$("input[type=checkbox][name^=remove_rule]").each(function (elem) {
+        elem.observe("click", function () {
             if (elem.checked) {
-                elem.up("tr")
-                    .down("div")
-                    .addClassName("deleted");
+                elem.up("tr").down("div").addClassName("deleted");
                 elem.up("tr")
                     .select("select")
-                    .each(function(e) {
+                    .each(function (e) {
                         e.disabled = true;
                         e.readOnly = true;
                     });
                 elem.up("tr")
                     .select("input")
-                    .each(function(e) {
+                    .each(function (e) {
                         e.required = false;
                     });
             } else {
-                elem.up("tr")
-                    .down("div")
-                    .removeClassName("deleted");
+                elem.up("tr").down("div").removeClassName("deleted");
                 elem.up("tr")
                     .select("select")
-                    .each(function(e) {
+                    .each(function (e) {
                         e.disabled = false;
                         e.readOnly = false;
                     });
                 elem.up("tr")
                     .select("input")
-                    .each(function(e) {
+                    .each(function (e) {
                         if (e.hasClassName("required")) {
                             e.required = true;
                         }
@@ -63,10 +59,10 @@ document.observe("dom:loaded", function() {
         });
     });
 
-    $$(".add_new_rule_title").each(function(add) {
+    $$(".add_new_rule_title").each(function (add) {
         var link = new Element("a", { href: "#add_new_rule" })
             .update(add.innerHTML)
-            .observe("click", function(evt) {
+            .observe("click", function (evt) {
                 add.next().toggle();
                 Event.stop(evt);
                 return false;
@@ -95,7 +91,7 @@ document.observe("dom:loaded", function() {
                 return;
             }
 
-            tuleap.trackers.trigger.existing.each(function(trigger) {
+            tuleap.trackers.trigger.existing.each(function (trigger) {
                 displayTrigger(trigger);
             });
         }
@@ -111,7 +107,7 @@ document.observe("dom:loaded", function() {
                 .down(".trigger_description_target_field_value")
                 .update(trigger_as_JSON.target.field_value_label);
 
-            trigger_as_JSON.triggering_fields.each(function(triggering_field) {
+            trigger_as_JSON.triggering_fields.each(function (triggering_field) {
                 addTriggeringField(triggering_field, trigger_element);
             });
             removeFirstOperator(trigger_element);
@@ -171,7 +167,7 @@ document.observe("dom:loaded", function() {
             }
 
             function bindRemove(trigger_element, trigger_id) {
-                Event.observe(trigger_element.down(".trigger_remove"), "click", function() {
+                Event.observe(trigger_element.down(".trigger_remove"), "click", function () {
                     var query_params = window.location.href.toQueryParams();
                     new Ajax.Request(
                         codendi.tracker.base_url +
@@ -182,12 +178,12 @@ document.observe("dom:loaded", function() {
                             "&func=admin-workflow-delete-trigger",
                         {
                             method: "POST",
-                            onSuccess: function() {
+                            onSuccess: function () {
                                 trigger_element.remove();
                             },
-                            onFailure: function(response) {
+                            onFailure: function (response) {
                                 alert(response.responseText); //eslint-disable-line no-alert
-                            }
+                            },
                         }
                     );
                 });
@@ -195,7 +191,7 @@ document.observe("dom:loaded", function() {
         }
 
         function reset() {
-            trigger.getTriggeringFields().each(function(triggering_field) {
+            trigger.getTriggeringFields().each(function (triggering_field) {
                 if (
                     triggering_field
                         .getContainer()
@@ -214,7 +210,7 @@ document.observe("dom:loaded", function() {
             $("trigger_create_new").hide();
 
             (function bindAddNewTrigger() {
-                Event.observe($("add_new_trigger_title"), "click", function(evt) {
+                Event.observe($("add_new_trigger_title"), "click", function (evt) {
                     $("add_new_trigger_title").hide();
                     $("trigger_create_new").show();
                     Event.stop(evt);
@@ -225,7 +221,7 @@ document.observe("dom:loaded", function() {
         })();
 
         (function bindAddExtraTriggeringField() {
-            Event.observe($("trigger_add_condition"), "click", function(evt) {
+            Event.observe($("trigger_add_condition"), "click", function (evt) {
                 var triggering_field = trigger.addTriggeringField();
 
                 triggering_field.activateDeleteButton(trigger);
@@ -235,7 +231,7 @@ document.observe("dom:loaded", function() {
         })();
 
         (function bindCancelAddNewTrigger() {
-            Event.observe($("trigger_add_cancel"), "click", function(evt) {
+            Event.observe($("trigger_add_cancel"), "click", function (evt) {
                 $("trigger_create_new").hide();
                 $("add_new_trigger_title").show();
                 reset();
@@ -244,13 +240,13 @@ document.observe("dom:loaded", function() {
         })();
 
         (function bindSubmitNewTrigger() {
-            var callback = function() {
+            var callback = function () {
                 $("trigger_create_new").hide();
                 $("add_new_trigger_title").show();
                 displayNewTrigger(trigger);
             };
 
-            Event.observe($("trigger_submit_new"), "click", function() {
+            Event.observe($("trigger_submit_new"), "click", function () {
                 trigger.save(callback);
             });
 

@@ -25,8 +25,8 @@ async function getSVNPermissions(project_id) {
     const response = await get("/plugins/svn/", {
         params: {
             group_id: project_id,
-            action: "permission-per-group"
-        }
+            action: "permission-per-group",
+        },
     });
 
     return response.json();

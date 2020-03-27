@@ -43,10 +43,10 @@ export default {
     name: "QuickLookLink",
     components: { DropDownQuickLook, QuickLookDeleteButton },
     props: {
-        item: Object
+        item: Object,
     },
     computed: {
-        ...mapState(["project_id"])
+        ...mapState(["project_id"]),
     },
     methods: {
         redirectUrl() {
@@ -55,7 +55,7 @@ export default {
                     `/plugins/docman/?group_id=${this.project_id}&action=show&id=${this.item.id}`
                 )
             );
-        }
-    }
+        },
+    },
 };
 </script>

@@ -22,7 +22,7 @@ function CardFieldsService($sce, $filter) {
         getCardFieldFileValue,
         getCardFieldPermissionsValue,
         getCardFieldUserValue,
-        isListBoundToAValueDifferentFromNone
+        isListBoundToAValueDifferentFromNone,
     };
 
     function cardFieldIsSimpleValue(type) {
@@ -172,6 +172,6 @@ function CardFieldsService($sce, $filter) {
     }
 
     function isListBoundToAValueDifferentFromNone(values) {
-        return values.find(value => value.id !== null);
+        return values.find((value) => value.id !== null);
     }
 }

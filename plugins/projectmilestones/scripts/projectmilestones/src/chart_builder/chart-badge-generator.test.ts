@@ -26,7 +26,7 @@ jest.mock("./chart-badge-services", () => ({
         (): XYSizeElement => {
             return { x: 10, y: 10, width: 10, height: 10 };
         }
-    )
+    ),
 }));
 
 describe("ChartBadgeGenerator -", () => {
@@ -44,9 +44,6 @@ describe("ChartBadgeGenerator -", () => {
     function getSelectionSVG(
         chart_div: HTMLElement
     ): Selection<SVGSVGElement, unknown, null, undefined> {
-        return select(chart_div)
-            .append("svg")
-            .attr("width", 100)
-            .attr("height", 100);
+        return select(chart_div).append("svg").attr("width", 100).attr("height", 100);
     }
 });

@@ -29,10 +29,10 @@
  * Link user status and Unix status: if admin turns account "Deleted" the
  * unix status is deleted as well.
  */
-document.observe("dom:loaded", function() {
+document.observe("dom:loaded", function () {
     // Observe form elements to show the previous value if there is a change
     var form = $(document["forms"]["update_user"]);
-    form.getElements().each(function(elt) {
+    form.getElements().each(function (elt) {
         // Get inital value
         var span = new Element("span", { class: "highlight" });
         var txt;
@@ -50,7 +50,7 @@ document.observe("dom:loaded", function() {
 
         // When something change display original value if the new value is
         // different.
-        var displaySpan = function() {
+        var displaySpan = function () {
             var value;
             if (elt.tagName.toUpperCase() == "SELECT") {
                 value = elt.options[elt.selectedIndex].text;
@@ -73,7 +73,7 @@ document.observe("dom:loaded", function() {
 
     // Bind account status and unix status.
     var form_status = $(document["forms"]["update_user"]["form_status"]);
-    form_status.observe("change", function() {
+    form_status.observe("change", function () {
         var form_unixstatus = $(document["forms"]["update_user"]["form_unixstatus"]);
         var val = $F(form_status);
         switch (val) {

@@ -58,8 +58,8 @@ describe("Transition getters:", () => {
                 state = {
                     post_actions_by_unique_id: {
                         "post-action-1": action1,
-                        "post-action-2": action2
-                    }
+                        "post-action-2": action2,
+                    },
                 };
             });
 
@@ -76,23 +76,23 @@ describe("Transition getters:", () => {
                     id: 48,
                     type: "set_field_value",
                     field_type: "float",
-                    field_id: 24
-                }
+                    field_id: 24,
+                },
             ];
             const field_in_post_action = {
                 field_id: 24,
                 label: "seaquake",
-                type: "float"
+                type: "float",
             };
             const field_not_in_post_action = {
                 field_id: 32,
                 label: "cain",
-                type: "int"
+                type: "int",
             };
             const root_state = {
                 current_tracker: {
-                    fields: [field_in_post_action, field_not_in_post_action]
-                }
+                    fields: [field_in_post_action, field_not_in_post_action],
+                },
             };
 
             const fields = getters.set_value_action_fields({}, { post_actions }, root_state);

@@ -55,13 +55,13 @@ export function createStore(
         user_can_view_sub_milestones_planning,
         burnup_mode,
         nb_past_releases: 0,
-        last_release: null
+        last_release: null,
     };
 
     return new Vuex.Store({
         getters,
         actions,
         state,
-        mutations
+        mutations,
     });
 }

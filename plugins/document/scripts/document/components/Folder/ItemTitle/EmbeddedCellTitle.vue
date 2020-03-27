@@ -40,7 +40,7 @@ export default {
     name: "EmbeddedCellTitle",
     components: { FakeCaret },
     props: {
-        item: Object
+        item: Object,
     },
     computed: {
         ...mapState(["project_id", "current_folder"]),
@@ -58,12 +58,12 @@ export default {
                 name: "item",
                 params: {
                     folder_id: this.current_folder.id,
-                    item_id: this.item.id
-                }
+                    item_id: this.item.id,
+                },
             });
 
             return href;
-        }
-    }
+        },
+    },
 };
 </script>

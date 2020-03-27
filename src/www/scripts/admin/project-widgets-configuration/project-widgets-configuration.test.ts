@@ -40,7 +40,7 @@ describe("Project widgets configuration form", () => {
         return {
             document: local_document,
             form_element: form_element,
-            switch_element: switch_element
+            switch_element: switch_element,
         };
     }
 

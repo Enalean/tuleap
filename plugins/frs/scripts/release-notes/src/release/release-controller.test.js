@@ -31,7 +31,7 @@ describe("ReleaseController", () => {
         let $controller, $rootScope;
         angular.mock.module(tuleap_frs_module);
 
-        angular.mock.inject(function(
+        angular.mock.inject(function (
             _$q_,
             _$rootScope_,
             _$controller_,
@@ -64,14 +64,14 @@ describe("ReleaseController", () => {
                 id: 44,
                 name: "v0.1.5 priceable-disconnectedness",
                 package: {
-                    label: "Axopodium"
+                    label: "Axopodium",
                 },
                 project: {
-                    id: project_id
+                    id: project_id,
                 },
                 artifact: {
-                    id: 230
-                }
+                    id: 230,
+                },
             };
 
             SharedPropertiesService.getProjectId.mockReturnValue(project_id);
@@ -93,9 +93,9 @@ describe("ReleaseController", () => {
             const release = {
                 id: 92,
                 package: {
-                    label: "Axopodium"
+                    label: "Axopodium",
                 },
-                artifact: null
+                artifact: null,
             };
             SharedPropertiesService.getRelease.mockReturnValue(release);
 
@@ -110,9 +110,9 @@ describe("ReleaseController", () => {
             const release = {
                 id: 92,
                 package: {
-                    label: "Axopodium"
+                    label: "Axopodium",
                 },
-                artifact: null
+                artifact: null,
             };
             SharedPropertiesService.getRelease.mockReturnValue(release);
 
@@ -127,14 +127,14 @@ describe("ReleaseController", () => {
             const release = {
                 id: 44,
                 package: {
-                    label: "Axopodium"
+                    label: "Axopodium",
                 },
                 artifact: {
-                    id: 230
-                }
+                    id: 230,
+                },
             };
             const milestone = {
-                id: 230
+                id: 230,
             };
             SharedPropertiesService.getRelease.mockReturnValue(release);
             const promise = $q.when(milestone);

@@ -30,14 +30,14 @@ describe("PermissionsUpdateFolderSubItems", () => {
         factory = (props = {}) => {
             return shallowMount(PermissionsUpdateFolderSubItems, {
                 localVue,
-                propsData: { ...props }
+                propsData: { ...props },
             });
         };
     });
 
     it("Visible when item is a folder", () => {
         const wrapper = factory({
-            item: { type: TYPE_FOLDER }
+            item: { type: TYPE_FOLDER },
         });
 
         expect(wrapper.html()).toBeTruthy();
@@ -45,7 +45,7 @@ describe("PermissionsUpdateFolderSubItems", () => {
 
     it("Not visible when item is not a folder", () => {
         const wrapper = factory({
-            item: { type: TYPE_EMPTY }
+            item: { type: TYPE_EMPTY },
         });
 
         expect(wrapper.html()).toBeFalsy();

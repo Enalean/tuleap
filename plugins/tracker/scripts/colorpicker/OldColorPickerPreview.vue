@@ -32,7 +32,7 @@
 export default {
     name: "OldColorPickerPreview",
     props: {
-        color: String
+        color: String,
     },
     computed: {
         previewImage() {
@@ -43,7 +43,7 @@ export default {
             }
 
             return base_url + "ic/layer-transparent.png";
-        }
+        },
     },
     methods: {
         setTransparent() {
@@ -52,7 +52,7 @@ export default {
             }
 
             this.$emit("color-update");
-        }
-    }
+        },
+    },
 };
 </script>

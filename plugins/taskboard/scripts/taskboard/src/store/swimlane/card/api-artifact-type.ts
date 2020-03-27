@@ -19,7 +19,7 @@
 
 export enum TextFormat {
     TEXT = "text",
-    HTML = "html"
+    HTML = "html",
 }
 
 export interface TextValue {

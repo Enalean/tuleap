@@ -37,29 +37,29 @@ export default {
         value: {
             // only ints are allowed here
             type: Array,
-            default: () => []
+            default: () => [],
         },
         configuration: {
             // select2 configuration
             type: Object,
             default: () => {
                 return {};
-            }
+            },
         },
         disabled: {
             type: Boolean,
-            default: () => false
-        }
+            default: () => false,
+        },
     },
     data() {
         return {
-            select2_control: null
+            select2_control: null,
         };
     },
     watch: {
         value(value) {
             this.select2_control.val(this.convertToStrings(value)).trigger("change");
-        }
+        },
     },
     mounted() {
         this.select2_control = select2(this.$el, { ...this.configuration, multiple: true })
@@ -79,14 +79,14 @@ export default {
             if (!values) {
                 return values;
             }
-            return values.map(value => Number(value));
+            return values.map((value) => Number(value));
         },
         // Used to converted received values to select2
         convertToStrings(values) {
             if (!values) {
                 return values;
             }
-            return values.map(value => value.toString());
+            return values.map((value) => value.toString());
         },
         onChange() {
             const new_value = this.convertToInts(this.select2_control.val());
@@ -108,7 +108,7 @@ export default {
                 return true;
             }
             return values1.every((value1, index) => values2[index] === value1);
-        }
-    }
+        },
+    },
 };
 </script>

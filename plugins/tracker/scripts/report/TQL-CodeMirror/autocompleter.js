@@ -42,9 +42,9 @@ function getAutocompletableHint(editor, options, cursor, token) {
     const text = new RegExp(token.string.trim(), "i");
 
     return {
-        list: options.words.filter(field_name => text.test(field_name)),
+        list: options.words.filter((field_name) => text.test(field_name)),
         from,
-        to
+        to,
     };
 }
 

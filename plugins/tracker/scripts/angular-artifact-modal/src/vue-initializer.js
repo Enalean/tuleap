@@ -23,9 +23,9 @@ import french_translations from "../po/fr.po";
 
 Vue.use(GettextPlugin, {
     translations: {
-        fr: french_translations.messages
+        fr: french_translations.messages,
     },
-    silent: true
+    silent: true,
 });
 
 Vue.config.language = document.body.dataset.userLocale;

@@ -9,25 +9,25 @@ function MergeModalService(TlpModalService) {
     const self = this;
 
     Object.assign(self, {
-        showMergeModal
+        showMergeModal,
     });
 
     function showMergeModal() {
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
             TlpModalService.open({
                 templateUrl: "merge-modal.tpl.html",
                 controller,
                 controllerAs: "merge_modal",
                 tlpModalOptions: {
                     keyboard: false,
-                    backdrop: "static"
+                    backdrop: "static",
                 },
                 resolve: {
-                    shouldMergeCallback: should_merge => {
+                    shouldMergeCallback: (should_merge) => {
                         resolve(should_merge);
-                    }
-                }
+                    },
+                },
             });
-        }).then(should_merge => should_merge);
+        }).then((should_merge) => should_merge);
     }
 }

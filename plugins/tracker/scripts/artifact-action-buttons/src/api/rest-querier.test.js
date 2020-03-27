@@ -22,7 +22,7 @@ import {
     getProjectList,
     getTrackerList,
     moveArtifact,
-    moveDryRunArtifact
+    moveDryRunArtifact,
 } from "./rest-querier.js";
 import * as tlp_fetch from "tlp-fetch";
 
@@ -41,8 +41,8 @@ describe("API querier", () => {
             const return_json = [
                 {
                     id: 102,
-                    label: "Project name"
-                }
+                    label: "Project name",
+                },
             ];
 
             mockFetchSuccess(recursiveGet, { return_json });
@@ -52,8 +52,8 @@ describe("API querier", () => {
                 params: {
                     query: '{"is_tracker_admin":"true"}',
                     limit: 50,
-                    offset: 0
-                }
+                    offset: 0,
+                },
             });
         });
     });
@@ -63,8 +63,8 @@ describe("API querier", () => {
             const return_json = [
                 {
                     id: 10,
-                    label: "Tracker name"
-                }
+                    label: "Tracker name",
+                },
             ];
 
             mockFetchSuccess(recursiveGet, { return_json });
@@ -76,8 +76,8 @@ describe("API querier", () => {
                 params: {
                     query: '{"is_tracker_admin":"true"}',
                     limit: 50,
-                    offset: 0
-                }
+                    offset: 0,
+                },
             });
         });
     });
@@ -93,7 +93,7 @@ describe("API querier", () => {
 
             expect(patch).toHaveBeenCalledWith("/api/artifacts/" + artifact_id, {
                 headers: { "content-type": "application/json" },
-                body: `{"move":{"tracker_id":${tracker_id},"dry_run":false,"should_populate_feedback_on_success":true}}`
+                body: `{"move":{"tracker_id":${tracker_id},"dry_run":false,"should_populate_feedback_on_success":true}}`,
             });
         });
     });
@@ -109,7 +109,7 @@ describe("API querier", () => {
 
             expect(patch).toHaveBeenCalledWith("/api/artifacts/" + artifact_id, {
                 headers: { "content-type": "application/json" },
-                body: `{"move":{"tracker_id":${tracker_id},"dry_run":true,"should_populate_feedback_on_success":false}}`
+                body: `{"move":{"tracker_id":${tracker_id},"dry_run":true,"should_populate_feedback_on_success":false}}`,
             });
         });
     });

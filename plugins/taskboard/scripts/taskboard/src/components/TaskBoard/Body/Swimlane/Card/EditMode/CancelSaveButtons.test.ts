@@ -27,8 +27,8 @@ async function createWrapper(is_action_ongoing: boolean): Promise<Wrapper<Cancel
     return shallowMount(CancelSaveButtons, {
         localVue: await createTaskboardLocalVue(),
         propsData: {
-            is_action_ongoing
-        }
+            is_action_ongoing,
+        },
     });
 }
 

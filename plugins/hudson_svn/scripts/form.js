@@ -19,7 +19,7 @@
 
 import jQuery from "jquery";
 
-!(function($) {
+!(function ($) {
     var svn_checkbox, form;
 
     function changeSVNFormVisibility() {
@@ -30,13 +30,13 @@ import jQuery from "jquery";
         }
     }
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         svn_checkbox = $("#hudson_use_plugin_svn_trigger_checkbox");
         form = $("#hudson_use_plugin_svn_trigger_form");
 
         changeSVNFormVisibility();
 
-        svn_checkbox.change(function() {
+        svn_checkbox.change(function () {
             changeSVNFormVisibility();
         });
     });

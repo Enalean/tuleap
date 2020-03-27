@@ -47,8 +47,8 @@ import StepNavigationButtons from "./StepNavigationButtons.vue";
 @Component({
     components: {
         StepLayoutSvgIllustration,
-        StepNavigationButtons
-    }
+        StepNavigationButtons,
+    },
 })
 export default class StepLayout extends Vue {
     @Prop({ required: false })

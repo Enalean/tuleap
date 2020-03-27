@@ -3,7 +3,7 @@ import { isInCreationMode } from "../../modal-creation-mode-state.js";
 import {
     getArtifact,
     getAllOpenParentArtifacts,
-    getFirstReverseIsChildLink
+    getFirstReverseIsChildLink,
 } from "../../rest/rest-service.js";
 
 export default LinkFieldController;
@@ -20,13 +20,13 @@ function LinkFieldController($q) {
         hasArtifactAlreadyAParent,
         is_loading: false,
         parent_artifact: null,
-        possible_parent_artifacts: []
+        possible_parent_artifacts: [],
     });
 
     function init() {
         self.is_loading = true;
         getParentArtifact()
-            .then(linked_artifact => {
+            .then((linked_artifact) => {
                 self.parent_artifact = linked_artifact;
 
                 const canChoose = canChooseArtifactsParent(self.tracker, self.parent_artifact);
@@ -57,18 +57,18 @@ function LinkFieldController($q) {
     }
 
     function loadParentArtifactsTitle() {
-        return $q.when(getAllOpenParentArtifacts(self.tracker.id, 1000, 0)).then(artifacts => {
-            self.possible_parent_artifacts = artifacts.map(artifact => {
+        return $q.when(getAllOpenParentArtifacts(self.tracker.id, 1000, 0)).then((artifacts) => {
+            self.possible_parent_artifacts = artifacts.map((artifact) => {
                 return {
                     id: artifact.id,
-                    formatted_ref: formatArtifact(artifact)
+                    formatted_ref: formatArtifact(artifact),
                 };
             });
         });
     }
 
     function hasArtifactAlreadyAParent() {
-        return $q.when(getFirstReverseIsChildLink(self.artifact_id)).then(parent_artifacts => {
+        return $q.when(getFirstReverseIsChildLink(self.artifact_id)).then((parent_artifacts) => {
             if (parent_artifacts.length > 0) {
                 return parent_artifacts[0];
             }

@@ -26,8 +26,8 @@ jest.mock("vue", () => {
         __esModule: true,
         default: {
             use: jest.fn(),
-            config: {}
-        }
+            config: {},
+        },
     };
 });
 jest.mock("vue-gettext");
@@ -43,8 +43,8 @@ describe(`vue-gettext-init`, () => {
         const callback = (): Promise<POFile> =>
             Promise.resolve({
                 messages: {
-                    "Hello world": "Bonjour monde"
-                }
+                    "Hello world": "Bonjour monde",
+                },
             });
         beforeEach(async () => {
             document.body.dataset.userLocale = "fr_FR";
@@ -57,9 +57,9 @@ describe(`vue-gettext-init`, () => {
                 expect.objectContaining({
                     translations: {
                         fr_FR: {
-                            "Hello world": "Bonjour monde"
-                        }
-                    }
+                            "Hello world": "Bonjour monde",
+                        },
+                    },
                 })
             ));
 
@@ -79,7 +79,7 @@ describe(`vue-gettext-init`, () => {
             expect(Vue.use).toHaveBeenCalledWith(
                 GettextPlugin,
                 expect.objectContaining({
-                    translations: {}
+                    translations: {},
                 })
             ));
     });

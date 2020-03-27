@@ -69,10 +69,10 @@ export default {
         ModalFeedback,
         ModalHeader,
         ModalFooter,
-        FileProperties
+        FileProperties,
     },
     props: {
-        item: Object
+        item: Object,
     },
     data() {
         return {
@@ -80,7 +80,7 @@ export default {
             version: {},
             is_loading: false,
             is_displayed: false,
-            modal: null
+            modal: null,
         };
     },
     computed: {
@@ -93,7 +93,7 @@ export default {
         },
         aria_labelled_by() {
             return "document-new-item-version-modal";
-        }
+        },
     },
     mounted() {
         this.modal = createModal(this.$el);
@@ -112,11 +112,11 @@ export default {
             this.version = {
                 title: "",
                 changelog: "",
-                is_file_locked: this.item.lock_info !== null
+                is_file_locked: this.item.lock_info !== null,
             };
             this.uploaded_item = {
                 type: this.item.type,
-                file_properties: {}
+                file_properties: {},
             };
             this.is_displayed = true;
             this.modal.show();
@@ -138,14 +138,14 @@ export default {
                 this.version.title,
                 this.version.changelog,
                 this.version.is_file_locked,
-                this.item.approval_table_action
+                this.item.approval_table_action,
             ]);
             this.is_loading = false;
             if (this.has_modal_error === false) {
                 this.uploaded_item = {};
                 this.modal.hide();
             }
-        }
-    }
+        },
+    },
 };
 </script>

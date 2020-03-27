@@ -32,17 +32,9 @@ export function bar(id, graph) {
 
     const y = d3.scale.linear().range([height, 0]);
 
-    const xAxis = d3.svg
-        .axis()
-        .scale(x)
-        .orient("bottom");
+    const xAxis = d3.svg.axis().scale(x).orient("bottom");
 
-    const yAxis = d3.svg
-        .axis()
-        .scale(y)
-        .ticks(5)
-        .tickSize(width)
-        .orient("right");
+    const yAxis = d3.svg.axis().scale(y).ticks(5).tickSize(width).orient("right");
 
     const svg = d3
         .selectAll('.plugin_graphontrackersv5_chart[data-graph-id="' + id + '"]')
@@ -62,7 +54,7 @@ export function bar(id, graph) {
         data.push({
             label: graph.legend[i],
             value: parseFloat(graph.data[i]),
-            color: c
+            color: c,
         });
     }
 
@@ -73,20 +65,12 @@ export function bar(id, graph) {
 
     alternateXAxisLabels(svg, height, xAxis, graph.legend);
 
-    const gy = svg
-        .append("g")
-        .attr("class", "y axis")
-        .call(yAxis);
+    const gy = svg.append("g").attr("class", "y axis").call(yAxis);
 
     // Set the label on the left of the y axis
-    gy.selectAll("text")
-        .attr("x", -30)
-        .attr("dx", ".71em");
+    gy.selectAll("text").attr("x", -30).attr("dx", ".71em");
 
-    const bar = svg
-        .selectAll(".bar")
-        .data(data)
-        .enter();
+    const bar = svg.selectAll(".bar").data(data).enter();
 
     bar.append("path")
         .style("fill", (d, i) => {
@@ -96,7 +80,7 @@ export function bar(id, graph) {
 
             return "url(#" + getGradientId(i) + ")";
         })
-        .attr("class", d => {
+        .attr("class", (d) => {
             if (!isHexaColor(d.color)) {
                 return "bar graph-element-" + d.color;
             }
@@ -108,7 +92,7 @@ export function bar(id, graph) {
         .attrTween("d", ({ value }, j) => {
             const i = d3.interpolateNumber(height, y(value));
 
-            return t => topRoundedRect(x(j), i(t), x.rangeBand(), height - i(t), 3);
+            return (t) => topRoundedRect(x(j), i(t), x.rangeBand(), height - i(t), 3);
         });
 
     bar.append("text")

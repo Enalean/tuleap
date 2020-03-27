@@ -30,12 +30,12 @@ describe("FieldShortnameSlugified", () => {
                     state: {
                         tracker_to_be_created: {
                             name: "Kanban in the trees",
-                            shortname: "kanban_in_the_trees"
-                        }
-                    }
-                })
+                            shortname: "kanban_in_the_trees",
+                        },
+                    },
+                }),
             },
-            localVue: await createTrackerCreationLocalVue()
+            localVue: await createTrackerCreationLocalVue(),
         });
     }
 

@@ -28,7 +28,7 @@ export default {
         show_spinner() {
             return !this.hasError && this.isLoading;
         },
-        ...mapGetters(["hasError", "isLoading"])
-    }
+        ...mapGetters(["hasError", "isLoading"]),
+    },
 };
 </script>

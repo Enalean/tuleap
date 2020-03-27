@@ -31,19 +31,19 @@ describe("FolderHeader", () => {
     beforeEach(() => {
         const general_store = {
             state: {
-                is_loading_ascendant_hierarchy: false
+                is_loading_ascendant_hierarchy: false,
             },
             getters: {
                 current_folder_title: "My folder title",
-                is_folder_empty: true
-            }
+                is_folder_empty: true,
+            },
         };
 
         store = createStoreMock(general_store);
 
         const dynamic_import_stubs = {
             permissionsUpdateModal: "<div></div>",
-            confirmDeletionModal: "<div></div>"
+            confirmDeletionModal: "<div></div>",
         };
 
         factory = (props = {}) => {
@@ -51,7 +51,7 @@ describe("FolderHeader", () => {
                 localVue,
                 mocks: { $store: store },
                 propsData: { ...props },
-                stubs: dynamic_import_stubs
+                stubs: dynamic_import_stubs,
             });
         };
     });

@@ -74,20 +74,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         are_closed_items_displayed,
         card_being_dragged: null,
         trackers,
-        is_a_cell_adding_in_place: false
+        is_a_cell_adding_in_place: false,
     } as RootState;
 
     const initial_user_state: UserState = {
         user_is_admin,
         user_id,
-        user_has_accessibility_mode
+        user_has_accessibility_mode,
     };
 
     const initial_column_state: ColumnState = {
-        columns
+        columns,
     };
 
     new AppComponent({
-        store: createStore(initial_root_state, initial_user_state, initial_column_state)
+        store: createStore(initial_root_state, initial_user_state, initial_column_state),
     }).$mount(vue_mount_point);
 });

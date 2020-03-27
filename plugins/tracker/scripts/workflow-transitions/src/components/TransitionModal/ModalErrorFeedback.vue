@@ -30,9 +30,9 @@ export default {
     name: "ModalErrorFeedback",
     computed: {
         ...mapState("transitionModal", {
-            is_error: state => state.is_modal_operation_failed,
-            error_message: state => state.modal_operation_failure_message
-        })
-    }
+            is_error: (state) => state.is_modal_operation_failed,
+            error_message: (state) => state.modal_operation_failure_message,
+        }),
+    },
 };
 </script>

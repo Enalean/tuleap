@@ -32,7 +32,7 @@ export {
     replaceLinkWithNewVersion,
     replaceWikiWithNewVersion,
     replaceEmbeddedFilesWithNewVersion,
-    replaceLockInfoWithNewVersion
+    replaceLockInfoWithNewVersion,
 };
 
 function addFileInUploadsList(state, file) {
@@ -47,7 +47,7 @@ function removeVersionUploadProgress(state, uploaded_item) {
 }
 
 function removeFileFromUploadsList(state, uploaded_file) {
-    const file_index = state.files_uploads_list.findIndex(file => file.id === uploaded_file.id);
+    const file_index = state.files_uploads_list.findIndex((file) => file.id === uploaded_file.id);
     if (file_index === -1) {
         return;
     }
@@ -56,14 +56,14 @@ function removeFileFromUploadsList(state, uploaded_file) {
 
     if (state.files_uploads_list.length === 0) {
         const folder_index = state.folder_content.findIndex(
-            item => item.id === uploaded_file.parent_id
+            (item) => item.id === uploaded_file.parent_id
         );
         if (folder_index === -1) {
             return;
         }
         toggleCollapsedFolderHasUploadingContent(state, [
             state.folder_content[folder_index],
-            false
+            false,
         ]);
     }
 }
@@ -73,7 +73,7 @@ function emptyFilesUploadsList(state) {
 }
 
 function initializeFolderProperties(state, folder) {
-    const folder_index = state.folder_content.findIndex(item => item.id === folder.id);
+    const folder_index = state.folder_content.findIndex((item) => item.id === folder.id);
     if (folder_index === -1) {
         return;
     }
@@ -83,7 +83,7 @@ function initializeFolderProperties(state, folder) {
 }
 
 function toggleCollapsedFolderHasUploadingContent(state, [collapsed_folder, toggle]) {
-    const folder_index = state.folder_content.findIndex(item => item.id === collapsed_folder.id);
+    const folder_index = state.folder_content.findIndex((item) => item.id === collapsed_folder.id);
     if (folder_index === -1) {
         return;
     }
@@ -95,12 +95,12 @@ function toggleCollapsedFolderHasUploadingContent(state, [collapsed_folder, togg
 }
 
 function updateFolderProgressbar(state, collapsed_folder) {
-    const folder_index = state.folder_content.findIndex(item => item.id === collapsed_folder.id);
+    const folder_index = state.folder_content.findIndex((item) => item.id === collapsed_folder.id);
     if (folder_index === -1) {
         return;
     }
 
-    const children = state.files_uploads_list.reduce(function(progresses, item) {
+    const children = state.files_uploads_list.reduce(function (progresses, item) {
         if (item.parent_id === collapsed_folder.id) {
             progresses.push(item.progress);
         }
@@ -118,7 +118,7 @@ function updateFolderProgressbar(state, collapsed_folder) {
 }
 
 function resetFolderIsUploading(state, folder) {
-    const folder_index = state.folder_content.findIndex(item => item.id === folder.id);
+    const folder_index = state.folder_content.findIndex((item) => item.id === folder.id);
     if (folder_index === -1) {
         return;
     }

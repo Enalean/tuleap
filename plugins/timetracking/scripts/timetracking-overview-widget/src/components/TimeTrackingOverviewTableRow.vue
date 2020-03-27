@@ -39,7 +39,7 @@ import { mapGetters, mapState } from "vuex";
 export default {
     name: "TimeTrackingOverviewTableRow",
     props: {
-        time: Object
+        time: Object,
     },
     computed: {
         ...mapState(["are_void_trackers_hidden"]),
@@ -55,7 +55,7 @@ export default {
                 this.are_void_trackers_hidden &&
                 this.is_tracker_total_sum_equals_zero(this.time.time_per_user)
             );
-        }
-    }
+        },
+    },
 };
 </script>

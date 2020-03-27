@@ -31,8 +31,8 @@ function getInstance() {
             label: "My translated label",
             value,
             disabled,
-            required
-        }
+            required,
+        },
     });
 }
 

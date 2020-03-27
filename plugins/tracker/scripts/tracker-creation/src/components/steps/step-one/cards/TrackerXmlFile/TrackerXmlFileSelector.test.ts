@@ -30,10 +30,10 @@ describe("TrackerXmlFileSelector", () => {
         const wrapper = shallowMount(TrackerXmlFileSelector, {
             mocks: {
                 $store: createStoreMock({
-                    state
-                })
+                    state,
+                }),
             },
-            localVue: await createTrackerCreationLocalVue()
+            localVue: await createTrackerCreationLocalVue(),
         });
 
         jest.spyOn(wrapper.vm.$el, "appendChild");
@@ -43,7 +43,7 @@ describe("TrackerXmlFileSelector", () => {
 
     it("renders a fresh input[type=file] when no selection has been made before", async () => {
         const wrapper = await getWrapper({
-            selected_xml_file_input: null
+            selected_xml_file_input: null,
         } as State);
 
         const file_input = wrapper.find("[data-test=tracker-creation-xml-file-selector]");
@@ -65,7 +65,7 @@ describe("TrackerXmlFileSelector", () => {
         file_input.setAttribute("data-test", "injected-file-input");
 
         const state: State = {
-            selected_xml_file_input: file_input
+            selected_xml_file_input: file_input,
         } as State;
 
         const wrapper = await getWrapper(state);
@@ -83,7 +83,7 @@ describe("TrackerXmlFileSelector", () => {
 
         const state: State = {
             selected_xml_file_input: file_input,
-            has_xml_file_error: true
+            has_xml_file_error: true,
         } as State;
 
         const wrapper = await getWrapper(state);

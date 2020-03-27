@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-describe("Mediawiki", function() {
+describe("Mediawiki", function () {
     before(() => {
         cy.clearCookie("__Host-TULEAP_session_hash");
     });
 
-    it("project is imported", function() {
+    it("project is imported", function () {
         cy.ProjectAdministratorLogin();
 
         cy.visit("/plugins/mediawiki/wiki/mediawiki-public-project/");

@@ -9,7 +9,7 @@ function ErrorModalService(TlpModalService) {
     const self = this;
 
     Object.assign(self, {
-        showError
+        showError,
     });
 
     function showError(response) {
@@ -21,9 +21,9 @@ function ErrorModalService(TlpModalService) {
             controllerAs: "error_modal",
             tlpModalOptions: {
                 keyboard: false,
-                backdrop: "static"
+                backdrop: "static",
             },
-            resolve: { message }
+            resolve: { message },
         });
     }
 

@@ -24,7 +24,7 @@ if (!Element.prototype.matches) {
         Element.prototype.msMatchesSelector ||
         Element.prototype.oMatchesSelector ||
         Element.prototype.webkitMatchesSelector ||
-        function(s) {
+        function (s) {
             var matches = (this.document || this.ownerDocument).querySelectorAll(s),
                 i = matches.length;
             //eslint-disable-next-line no-empty

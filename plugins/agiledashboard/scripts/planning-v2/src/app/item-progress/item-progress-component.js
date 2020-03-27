@@ -6,6 +6,6 @@ export default {
     bindings: {
         color_name: "@colorName",
         value: "<",
-        max_value: "<maxValue"
-    }
+        max_value: "<maxValue",
+    },
 };

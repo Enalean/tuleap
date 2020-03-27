@@ -67,7 +67,7 @@ import {
     IdTextPair,
     Options,
     select2,
-    Select2Plugin
+    Select2Plugin,
 } from "tlp";
 import { VisibilityForVisibilitySelector } from "./type";
 import { sanitize } from "dompurify";
@@ -79,7 +79,7 @@ import {
     ACCESS_PRIVATE,
     ACCESS_PRIVATE_WO_RESTRICTED,
     ACCESS_PUBLIC,
-    ACCESS_PUBLIC_UNRESTRICTED
+    ACCESS_PUBLIC_UNRESTRICTED,
 } from "../../../constant";
 import { State } from "vuex-class";
 
@@ -104,7 +104,7 @@ export default class ProjectInformationInputPrivacyList extends Vue {
         const configuration: Options = {
             minimumResultsForSearch: Infinity,
             templateResult: this.formatVisibilityOption,
-            escapeMarkup: sanitize
+            escapeMarkup: sanitize,
         };
 
         setTimeout(() => {
@@ -122,9 +122,7 @@ export default class ProjectInformationInputPrivacyList extends Vue {
 
     destroyed(): void {
         if (this.select2_visibility_select !== null) {
-            $(this.$el)
-                .off()
-                .select2("destroy");
+            $(this.$el).off().select2("destroy");
         }
     }
 
@@ -140,7 +138,7 @@ export default class ProjectInformationInputPrivacyList extends Vue {
             </div>`,
             {
                 label: visibility.text,
-                description: this.translatedVisibilityDetails(visibility.element.value)
+                description: this.translatedVisibilityDetails(visibility.element.value),
             }
         );
     }

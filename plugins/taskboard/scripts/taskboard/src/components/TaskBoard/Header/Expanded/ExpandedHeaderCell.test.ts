@@ -28,15 +28,15 @@ describe("ExpandedHeaderCell", () => {
     it("displays a cell with the column label", () => {
         const wrapper = shallowMount(ExpandedHeaderCell, {
             mocks: {
-                $store: createStoreMock({ state: { user: { user_is_admin: false } as UserState } })
+                $store: createStoreMock({ state: { user: { user_is_admin: false } as UserState } }),
             },
             propsData: {
                 column: {
                     id: 2,
                     label: "To do",
-                    color: ""
-                } as ColumnDefinition
-            }
+                    color: "",
+                } as ColumnDefinition,
+            },
         });
 
         const label = wrapper.find("[data-test=label]");
@@ -47,15 +47,15 @@ describe("ExpandedHeaderCell", () => {
     it("displays a cell without color", () => {
         const wrapper = shallowMount(ExpandedHeaderCell, {
             mocks: {
-                $store: createStoreMock({ state: { user: { user_is_admin: false } as UserState } })
+                $store: createStoreMock({ state: { user: { user_is_admin: false } as UserState } }),
             },
             propsData: {
                 column: {
                     id: 2,
                     label: "To do",
-                    color: ""
-                } as ColumnDefinition
-            }
+                    color: "",
+                } as ColumnDefinition,
+            },
         });
 
         expect(wrapper.classes("tlp-swatch-fiesta-red")).toBe(false);
@@ -64,15 +64,15 @@ describe("ExpandedHeaderCell", () => {
     it("displays a cell with color", () => {
         const wrapper = shallowMount(ExpandedHeaderCell, {
             mocks: {
-                $store: createStoreMock({ state: { user: { user_is_admin: false } as UserState } })
+                $store: createStoreMock({ state: { user: { user_is_admin: false } as UserState } }),
             },
             propsData: {
                 column: {
                     id: 2,
                     label: "To do",
-                    color: "fiesta-red"
-                } as ColumnDefinition
-            }
+                    color: "fiesta-red",
+                } as ColumnDefinition,
+            },
         });
 
         expect(wrapper.classes("tlp-swatch-fiesta-red")).toBe(true);
@@ -81,15 +81,15 @@ describe("ExpandedHeaderCell", () => {
     it("displays a cell with default color", () => {
         const wrapper = shallowMount(ExpandedHeaderCell, {
             mocks: {
-                $store: createStoreMock({ state: { user: { user_is_admin: false } as UserState } })
+                $store: createStoreMock({ state: { user: { user_is_admin: false } as UserState } }),
             },
             propsData: {
                 column: {
                     id: 2,
                     label: "To do",
-                    color: "#F8F8F8"
-                } as ColumnDefinition
-            }
+                    color: "#F8F8F8",
+                } as ColumnDefinition,
+            },
         });
 
         expect(wrapper.classes("tlp-swatch-fiesta-red")).toBe(false);
@@ -98,15 +98,15 @@ describe("ExpandedHeaderCell", () => {
     it("displays a cell with legacy color to regular users", () => {
         const wrapper = shallowMount(ExpandedHeaderCell, {
             mocks: {
-                $store: createStoreMock({ state: { user: { user_is_admin: false } as UserState } })
+                $store: createStoreMock({ state: { user: { user_is_admin: false } as UserState } }),
             },
             propsData: {
                 column: {
                     id: 2,
                     label: "To do",
-                    color: "#87DBEF"
-                } as ColumnDefinition
-            }
+                    color: "#87DBEF",
+                } as ColumnDefinition,
+            },
         });
 
         expect(wrapper.classes("tlp-swatch-fiesta-red")).toBe(false);
@@ -116,15 +116,15 @@ describe("ExpandedHeaderCell", () => {
     it("displays a cell with legacy color to admin users", () => {
         const wrapper = shallowMount(ExpandedHeaderCell, {
             mocks: {
-                $store: createStoreMock({ state: { user: { user_is_admin: true } as UserState } })
+                $store: createStoreMock({ state: { user: { user_is_admin: true } as UserState } }),
             },
             propsData: {
                 column: {
                     id: 2,
                     label: "To do",
-                    color: "#87DBEF"
-                } as ColumnDefinition
-            }
+                    color: "#87DBEF",
+                } as ColumnDefinition,
+            },
         });
 
         expect(wrapper.classes("tlp-swatch-fiesta-red")).toBe(false);

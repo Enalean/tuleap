@@ -39,14 +39,14 @@ describe("Widget", () => {
                         {
                             artifact: {},
                             project: {},
-                            minutes: 20
+                            minutes: 20,
                         },
                         {
                             artifact: {},
                             project: {},
-                            minutes: 20
-                        }
-                    ]
+                            minutes: 20,
+                        },
+                    ],
                 ];
 
                 mutations.loadAChunkOfTimes(state, [times, times.length]);
@@ -58,13 +58,13 @@ describe("Widget", () => {
                     {
                         artifact: {},
                         project: {},
-                        minutes: 20
+                        minutes: 20,
                     },
                     {
                         artifact: {},
                         project: {},
-                        minutes: 20
-                    }
+                        minutes: 20,
+                    },
                 ];
 
                 expect(getters.get_formatted_aggregated_time()(times)).toBe("00:40");

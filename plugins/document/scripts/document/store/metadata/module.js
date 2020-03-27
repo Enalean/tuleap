@@ -25,5 +25,5 @@ export default {
     namespaced: true,
     state: defaultState(),
     mutations,
-    actions
+    actions,
 };

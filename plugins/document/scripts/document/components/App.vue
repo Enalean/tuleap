@@ -54,7 +54,7 @@ export default {
         LoadingError,
         SwitchToOldUI,
         ItemPermissionError,
-        PostItemDeletionNotification
+        PostItemDeletionNotification,
     },
     props: {
         user_id: Number,
@@ -69,7 +69,7 @@ export default {
         is_item_status_metadata_used: Boolean,
         is_obsolescence_date_metadata_used: Boolean,
         csrf_token: String,
-        csrf_token_name: String
+        csrf_token_name: String,
     },
     computed: {
         ...mapState("error", [
@@ -77,9 +77,9 @@ export default {
             "has_folder_loading_error",
             "has_document_permission_error",
             "has_document_loading_error",
-            "has_document_lock_error"
+            "has_document_lock_error",
         ]),
-        ...mapGetters(["is_uploading"])
+        ...mapGetters(["is_uploading"]),
     },
     created() {
         const base_title = document.title;
@@ -106,15 +106,15 @@ export default {
             this.embedded_are_allowed,
             this.is_deletion_allowed,
             this.is_item_status_metadata_used,
-            this.is_obsolescence_date_metadata_used
+            this.is_obsolescence_date_metadata_used,
         ]);
 
-        window.addEventListener("beforeunload", event => {
+        window.addEventListener("beforeunload", (event) => {
             if (this.is_uploading) {
                 event.returnValue = true;
                 event.preventDefault();
             }
         });
-    }
+    },
 };
 </script>

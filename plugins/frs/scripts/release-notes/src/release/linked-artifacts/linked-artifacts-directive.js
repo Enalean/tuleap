@@ -11,6 +11,6 @@ function linkedArtifactsDirective() {
         templateUrl: "linked-artifacts.tpl.html",
         controller: LinkedArtifactsController,
         controllerAs: "$ctrl",
-        bindToController: true
+        bindToController: true,
     };
 }

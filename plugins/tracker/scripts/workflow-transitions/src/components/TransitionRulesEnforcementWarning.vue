@@ -41,11 +41,11 @@ export default {
     name: "TransitionRulesEnforcementWarning",
     data() {
         return {
-            is_loading: false
+            is_loading: false,
         };
     },
     computed: {
-        ...mapGetters(["are_transition_rules_enforced", "is_workflow_legacy"])
+        ...mapGetters(["are_transition_rules_enforced", "is_workflow_legacy"]),
     },
     methods: {
         async deactivateLegacyTransitions() {
@@ -54,7 +54,7 @@ export default {
             await this.$store.dispatch("deactivateLegacyTransitions");
 
             this.is_loading = false;
-        }
-    }
+        },
+    },
 };
 </script>

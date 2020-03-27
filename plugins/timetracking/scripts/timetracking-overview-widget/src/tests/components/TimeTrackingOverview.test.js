@@ -26,7 +26,7 @@ function getTimetrackingOverviewInstance(store_options) {
     const store = createStoreMock(store_options);
     const component_options = {
         reportId,
-        mocks: { $store: store }
+        mocks: { $store: store },
     };
     return shallowMount(TimeTrackingOverview, component_options);
 }
@@ -37,11 +37,11 @@ describe("Given a timetracking overview widget", () => {
         store_options = {
             state: {
                 reading_mode: true,
-                success_message: null
+                success_message: null,
             },
             getters: {
-                has_success_message: false
-            }
+                has_success_message: false,
+            },
         };
         getTimetrackingOverviewInstance(store_options);
     });

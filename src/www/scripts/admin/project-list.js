@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ".siteadmin-projectlist-result-project-more"
     );
 
-    [].forEach.call(dropdown_triggers, dropdown_trigger => {
+    [].forEach.call(dropdown_triggers, (dropdown_trigger) => {
         dropdown(dropdown_trigger);
     });
 });

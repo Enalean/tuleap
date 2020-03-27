@@ -29,7 +29,7 @@ describe("ReviewersService", () => {
     beforeEach(() => {
         angular.mock.module(tuleap_pullrequest_module);
 
-        angular.mock.inject(function(
+        angular.mock.inject(function (
             _$rootScope_,
             _$httpBackend_,
             _ReviewersService_,
@@ -44,7 +44,7 @@ describe("ReviewersService", () => {
         wrapPromise = createAngularPromiseWrapper($rootScope);
 
         pull_request = {
-            id: 1
+            id: 1,
         };
     });
 
@@ -57,7 +57,7 @@ describe("ReviewersService", () => {
 
         it("Given a pull request with no reviewer, then it will return an empty array", async () => {
             $httpBackend.expectGET(expected_url).respond({
-                users: []
+                users: [],
             });
 
             const promise = wrapPromise(ReviewersService.getReviewers(pull_request));
@@ -71,13 +71,13 @@ describe("ReviewersService", () => {
                 users: [
                     {
                         id: 1,
-                        username: "lorem"
+                        username: "lorem",
                     },
                     {
                         id: 2,
-                        username: "ipsum"
-                    }
-                ]
+                        username: "ipsum",
+                    },
+                ],
             });
 
             const promise = wrapPromise(ReviewersService.getReviewers(pull_request));
@@ -103,7 +103,7 @@ describe("ReviewersService", () => {
                     real_name: "Bob Lemoche",
                     uri: "users/102",
                     user_url: "/users/bob",
-                    username: "bob"
+                    username: "bob",
                 },
                 {
                     avatar_url: "https://example.com/avatar.png",
@@ -118,8 +118,8 @@ describe("ReviewersService", () => {
                     status: "A",
                     uri: "users/103",
                     user_url: "/users/woody",
-                    username: "woody"
-                }
+                    username: "woody",
+                },
             ];
 
             const small_representations = ReviewersService.buildUserRepresentationsForPut(
@@ -140,7 +140,7 @@ describe("ReviewersService", () => {
         it("Give a pull request and user representations with merge permissions, then it will call a REST route and return a 204 status", async () => {
             $httpBackend
                 .expectPUT(expected_url, {
-                    users: user_representations
+                    users: user_representations,
                 })
                 .respond(204);
 
@@ -155,7 +155,7 @@ describe("ReviewersService", () => {
             jest.spyOn(TlpModalService, "open").mockImplementation(() => {});
 
             $httpBackend.expectPUT(expected_url, { users: user_representations }).respond(400, {
-                error: "Nope"
+                error: "Nope",
             });
 
             const promise = ReviewersService.updateReviewers(pull_request, user_representations);

@@ -52,14 +52,14 @@ function initAddWidgetModal() {
     var modal_content = getModalContent(buttons[0], buttons_class);
     var modal = createModal(modal_content);
 
-    [].forEach.call(buttons, function(button) {
-        button.addEventListener("click", function(event) {
+    [].forEach.call(buttons, function (button) {
+        button.addEventListener("click", function (event) {
             event.preventDefault();
             modal.toggle();
         });
     });
 
-    modal.addEventListener("tlp-modal-shown", function() {
+    modal.addEventListener("tlp-modal-shown", function () {
         loadDynamicallyWidgetsContent(modal, modal_content, buttons[0].dataset.href);
     });
 }
@@ -72,11 +72,11 @@ function initSingleButtonModals() {
             "#edit-dashboard-button",
             "#no-widgets-edit-dashboard-button",
             ".delete-widget-button",
-            ".edit-widget-button"
+            ".edit-widget-button",
         ].join(", ")
     );
 
-    [].forEach.call(buttons, function(button) {
+    [].forEach.call(buttons, function (button) {
         if (!button) {
             return;
         }
@@ -84,13 +84,13 @@ function initSingleButtonModals() {
         var modal_content = getModalContent(button, button.id);
         var modal = createModal(modal_content);
 
-        button.addEventListener("click", function(event) {
+        button.addEventListener("click", function (event) {
             event.preventDefault();
             modal.toggle();
         });
 
         if (button.classList.contains("edit-widget-button")) {
-            modal.addEventListener("tlp-modal-shown", function() {
+            modal.addEventListener("tlp-modal-shown", function () {
                 loadDynamicallyEditModalContent(modal, modal_content);
             });
         }
@@ -108,22 +108,22 @@ function loadDynamicallyEditModalContent(modal, modal_content) {
     }
 
     get("/widgets/?widget-id=" + encodeURIComponent(widget_id) + "&action=get-edit-modal-content")
-        .done(function(html) {
+        .done(function (html) {
             button.disabled = false;
             container.innerHTML = sanitize(html);
 
             document.dispatchEvent(
                 new CustomEvent("dashboard-edit-widget-modal-content-loaded", {
-                    detail: { target: container }
+                    detail: { target: container },
                 })
             );
         })
-        .fail(function(data) {
+        .fail(function (data) {
             container.innerHTML = sanitize(
                 '<div class="tlp-alert-danger">' + data.responseJSON + "</div>"
             );
         })
-        .always(function() {
+        .always(function () {
             container.classList.remove("edit-widget-modal-content-loading");
             modal.removeEventListener("tlp-modal-shown", loadDynamicallyEditModalContent);
         });
@@ -138,11 +138,11 @@ function loadDynamicallyWidgetsContent(modal, modal_content, url) {
     var container = modal_content.querySelector(".dashboard-add-widget-content-container");
 
     get(url)
-        .done(function(data) {
+        .done(function (data) {
             const filter = filterInlineTable(
                 document.getElementById("dashboard-add-widget-list-header-filter-table")
             );
-            modal.addEventListener("tlp-modal-hidden", function() {
+            modal.addEventListener("tlp-modal-hidden", function () {
                 filter.filterTable();
             });
 
@@ -151,7 +151,7 @@ function loadDynamicallyWidgetsContent(modal, modal_content, url) {
                 initializeWidgets(table, data);
             }
         })
-        .fail(function(data) {
+        .fail(function (data) {
             var alert = document.getElementById("dashboard-add-widget-error-message");
 
             alert.classList.add("tlp-alert-danger");
@@ -160,18 +160,18 @@ function loadDynamicallyWidgetsContent(modal, modal_content, url) {
             document.getElementById("dashboard-add-widget-list-header-filter").remove();
             document.getElementById("dashboard-add-widget-list-table").remove();
         })
-        .always(function() {
+        .always(function () {
             modal.removeEventListener("tlp-modal-shown", loadDynamicallyWidgetsContent);
         });
 }
 
 function initializeWidgets(table, data) {
-    const data_widgets = flatMapDeep(data, function(category) {
-        return category.map(cat => cat.widgets);
+    const data_widgets = flatMapDeep(data, function (category) {
+        return category.map((cat) => cat.widgets);
     });
     const widgets_element = table.querySelectorAll(".dashboard-add-widget-list-table-widget");
-    [].forEach.call(widgets_element, function(widget_element) {
-        widget_element.addEventListener("click", function() {
+    [].forEach.call(widgets_element, function (widget_element) {
+        widget_element.addEventListener("click", function () {
             displayWidgetSettings(table, widget_element, data_widgets);
         });
     });
@@ -182,7 +182,9 @@ function displayWidgetSettings(table, widget_element, data_widgets) {
         "dashboard-add-widget-settings-placeholder"
     ).textContent;
 
-    const widget_data = data_widgets.find(widget => widget.id === widget_element.dataset.widgetId);
+    const widget_data = data_widgets.find(
+        (widget) => widget.id === widget_element.dataset.widgetId
+    );
     if (widget_data === undefined) {
         return;
     }
@@ -192,7 +194,7 @@ function displayWidgetSettings(table, widget_element, data_widgets) {
     settings.innerHTML = sanitize(render(widget_settings_template, widget_data));
     document.dispatchEvent(
         new CustomEvent("dashboard-add-widget-settings-loaded", {
-            detail: { target: settings }
+            detail: { target: settings },
         })
     );
 

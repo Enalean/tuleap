@@ -28,7 +28,7 @@ export default {
     name: "ErrorMessage",
     computed: {
         ...mapState(["error_message", "rest_error"]),
-        ...mapGetters(["has_error_message"])
-    }
+        ...mapGetters(["has_error_message"]),
+    },
 };
 </script>

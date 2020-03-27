@@ -48,7 +48,7 @@ import { Component } from "vue-property-decorator";
 import { TrackerToBeCreatedMandatoryData } from "../../../../store/type";
 
 @Component({
-    components: {}
+    components: {},
 })
 export default class FieldShortnameSlugified extends Vue {
     @State

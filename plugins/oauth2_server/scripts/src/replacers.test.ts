@@ -21,7 +21,7 @@ import { GetText } from "src/www/scripts/tuleap/gettext/gettext-init";
 import {
     hiddenInputReplaceCallback,
     buildRevocationReplaceCallback,
-    buildDeletionReplaceCallback
+    buildDeletionReplaceCallback,
 } from "./replacers";
 
 describe(`replacers`, () => {
@@ -30,7 +30,7 @@ describe(`replacers`, () => {
     beforeEach(() => {
         doc = createLocalDocument();
         gettext_provider = {
-            gettext: (english: string) => english
+            gettext: (english: string) => english,
         } as GetText;
     });
 

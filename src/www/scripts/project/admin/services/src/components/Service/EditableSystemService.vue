@@ -83,8 +83,8 @@ export default {
         ReadOnlyServiceRank,
         ServiceLink,
         ServiceDescription,
-        ReadOnlyServiceIcon
+        ReadOnlyServiceIcon,
     },
-    mixins: [service_mixin, system_service_mixin]
+    mixins: [service_mixin, system_service_mixin],
 };
 </script>

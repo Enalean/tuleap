@@ -38,12 +38,12 @@
 export default {
     name: "FRSPackagePermissionsTablePackageEmptyState",
     props: {
-        selectedUgroupName: String
+        selectedUgroupName: String,
     },
     computed: {
         hasASelectedUserGroup() {
             return this.selectedUgroupName !== "";
-        }
-    }
+        },
+    },
 };
 </script>

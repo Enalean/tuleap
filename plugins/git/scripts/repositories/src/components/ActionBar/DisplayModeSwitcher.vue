@@ -65,7 +65,7 @@
 import { mapGetters } from "vuex";
 import {
     REPOSITORIES_SORTED_BY_LAST_UPDATE,
-    REPOSITORIES_SORTED_BY_PATH
+    REPOSITORIES_SORTED_BY_PATH,
 } from "../../constants.js";
 
 export default {
@@ -89,9 +89,9 @@ export default {
             },
             set(value) {
                 return this.$store.dispatch("setDisplayMode", value);
-            }
+            },
         },
-        ...mapGetters(["isLoading"])
-    }
+        ...mapGetters(["isLoading"]),
+    },
 };
 </script>

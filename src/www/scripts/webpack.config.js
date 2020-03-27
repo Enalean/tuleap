@@ -43,16 +43,16 @@ const manifest_plugin = new WebpackAssetsManifest({
 
         return {
             key: entry.key,
-            value: `ckeditor-${ckeditor_version}/ckeditor.js`
+            value: `ckeditor-${ckeditor_version}/ckeditor.js`,
         };
-    }
+    },
 });
 
 const pkg = loadJsonFile.sync(path.resolve(__dirname, "package-lock.json"));
 const ckeditor_version = pkg.dependencies.ckeditor.version;
 const webpack_config_for_ckeditor = {
     entry: {
-        ckeditor: "./node_modules/ckeditor/ckeditor.js"
+        ckeditor: "./node_modules/ckeditor/ckeditor.js",
     },
     output: webpack_configurator.configureOutput(assets_dir_path),
     plugins: [
@@ -62,38 +62,38 @@ const webpack_config_for_ckeditor = {
                 from: path.resolve(__dirname, "node_modules/ckeditor"),
                 to: path.resolve(__dirname, `../assets/ckeditor-${ckeditor_version}/`),
                 toType: "dir",
-                ignore: ["**/samples/**", "**/.github/**", "**/*.!(js|css|png)"]
-            }
-        ])
-    ]
+                ignore: ["**/samples/**", "**/.github/**", "**/*.!(js|css|png)"],
+            },
+        ]),
+    ],
 };
 
 const webpack_config_for_dashboards = {
     entry: {
         dashboard: "./dashboards/dashboard.js",
-        "widget-project-heartbeat": "./dashboards/widgets/project-heartbeat/index.js"
+        "widget-project-heartbeat": "./dashboards/widgets/project-heartbeat/index.js",
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),
     externals: {
         jquery: "jQuery",
-        tlp: "tlp"
+        tlp: "tlp",
     },
     module: {
-        rules: [webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11)]
+        rules: [webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11)],
     },
-    plugins: [manifest_plugin, webpack_configurator.getMomentLocalePlugin()]
+    plugins: [manifest_plugin, webpack_configurator.getMomentLocalePlugin()],
 };
 
 const webpack_config_for_flaming_parrot_code = {
     entry: {
-        "flamingparrot-with-polyfills": polyfills_for_fetch.concat(["./FlamingParrot/index.js"])
+        "flamingparrot-with-polyfills": polyfills_for_fetch.concat(["./FlamingParrot/index.js"]),
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),
     externals: {
         jquery: "jQuery",
-        tuleap: "tuleap"
+        tuleap: "tuleap",
     },
     resolve: {
         alias: {
@@ -103,19 +103,19 @@ const webpack_config_for_flaming_parrot_code = {
                 "./FlamingParrot/keymaster-sequence/keymaster.sequence.min.js"
             ),
             // navbar-history-flamingparrot needs this because TLP is not included in FlamingParrot
-            "tlp-fetch": path.resolve(__dirname, "../themes/common/tlp/src/js/fetch-wrapper.js")
-        }
+            "tlp-fetch": path.resolve(__dirname, "../themes/common/tlp/src/js/fetch-wrapper.js"),
+        },
     },
     module: {
         rules: [
             webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
             {
                 test: /keymaster\.sequence\.min\.js$/,
-                use: "imports-loader?key=keymaster"
-            }
-        ]
+                use: "imports-loader?key=keymaster",
+            },
+        ],
     },
-    plugins: [manifest_plugin]
+    plugins: [manifest_plugin],
 };
 
 const webpack_config_for_burning_parrot_code = {
@@ -138,14 +138,14 @@ const webpack_config_for_burning_parrot_code = {
         "site-admin-user-details": "./admin/userdetails.js",
         "site-admin-generate-pie-charts": "./admin/generate-pie-charts.js",
         "access-denied-error": "./BurningParrot/access-denied-error.js",
-        "trovecat-admin": "./tuleap/trovecat.js"
+        "trovecat-admin": "./tuleap/trovecat.js",
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),
     externals: {
         tlp: "tlp",
         tuleap: "tuleap",
-        ckeditor: "CKEDITOR"
+        ckeditor: "CKEDITOR",
     },
     module: {
         rules: [
@@ -154,64 +154,24 @@ const webpack_config_for_burning_parrot_code = {
             ),
             webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
             webpack_configurator.rule_po_files,
-            webpack_configurator.rule_mustache_files
-        ]
+            webpack_configurator.rule_mustache_files,
+        ],
     },
     plugins: [manifest_plugin],
     resolve: {
-        extensions: [".ts", ".js"]
-    }
+        extensions: [".ts", ".js"],
+    },
 };
 
 const webpack_config_for_project_banner = {
     entry: {
         "project-banner-bp": "./project/banner/index-bp.ts",
-        "project-banner-fp": "./project/banner/index-fp.ts"
+        "project-banner-fp": "./project/banner/index-fp.ts",
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),
     externals: {
-        tlp: "tlp"
-    },
-    module: {
-        rules: [
-            ...webpack_configurator.configureTypescriptRules(
-                webpack_configurator.babel_options_ie11
-            ),
-            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11)
-        ]
-    },
-    plugins: [webpack_configurator.getTypescriptCheckerPlugin(false)],
-    resolve: {
-        extensions: [".ts", ".js"]
-    }
-};
-
-const webpack_config_for_frs_admin = {
-    entry: {
-        "frs-admin-license-agreement": "./frs/admin/license-agreement.js"
-    },
-    context: path.resolve(__dirname),
-    output: webpack_configurator.configureOutput(assets_dir_path),
-    externals: {
-        tuleap: "tuleap",
-        ckeditor: "CKEDITOR"
-    },
-    module: {
-        rules: [webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11)]
-    }
-};
-
-const webpack_config_for_project_registration_modal = {
-    entry: {
-        "project-registration-creation": "./project/registration/index-for-modal.ts"
-    },
-    context: path.resolve(__dirname),
-    output: webpack_configurator.configureOutput(
-        assets_dir_path + "/project-registration/creation/scripts/"
-    ),
-    externals: {
-        tlp: "tlp"
+        tlp: "tlp",
     },
     module: {
         rules: [
@@ -219,16 +179,56 @@ const webpack_config_for_project_registration_modal = {
                 webpack_configurator.babel_options_ie11
             ),
             webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
-            webpack_configurator.rule_mustache_files
-        ]
+        ],
+    },
+    plugins: [webpack_configurator.getTypescriptCheckerPlugin(false)],
+    resolve: {
+        extensions: [".ts", ".js"],
+    },
+};
+
+const webpack_config_for_frs_admin = {
+    entry: {
+        "frs-admin-license-agreement": "./frs/admin/license-agreement.js",
+    },
+    context: path.resolve(__dirname),
+    output: webpack_configurator.configureOutput(assets_dir_path),
+    externals: {
+        tuleap: "tuleap",
+        ckeditor: "CKEDITOR",
+    },
+    module: {
+        rules: [webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11)],
+    },
+};
+
+const webpack_config_for_project_registration_modal = {
+    entry: {
+        "project-registration-creation": "./project/registration/index-for-modal.ts",
+    },
+    context: path.resolve(__dirname),
+    output: webpack_configurator.configureOutput(
+        assets_dir_path + "/project-registration/creation/scripts/"
+    ),
+    externals: {
+        tlp: "tlp",
+    },
+    module: {
+        rules: [
+            ...webpack_configurator.configureTypescriptRules(
+                webpack_configurator.babel_options_ie11
+            ),
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+            webpack_configurator.rule_mustache_files,
+        ],
     },
     plugins: [
         webpack_configurator.getManifestPlugin(),
-        webpack_configurator.getTypescriptCheckerPlugin(false)
+        webpack_configurator.getTypescriptCheckerPlugin(false),
     ],
     resolve: {
-        extensions: [".ts", ".js"]
-    }
+        extensions: [".ts", ".js"],
+    },
 };
 
 const webpack_config_for_account = {
@@ -238,29 +238,29 @@ const webpack_config_for_account = {
         appearance: "./account/appearance.ts",
         security: "./account/security.ts",
         avatar: "./account/avatar.ts",
-        timezone: "./account/timezone.ts"
+        timezone: "./account/timezone.ts",
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path + "/account/scripts/"),
     externals: {
         tlp: "tlp",
-        jquery: "jQuery"
+        jquery: "jQuery",
     },
     module: {
         rules: [
             ...webpack_configurator.configureTypescriptRules(
                 webpack_configurator.babel_options_ie11
             ),
-            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11)
-        ]
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+        ],
     },
     plugins: [
         webpack_configurator.getManifestPlugin(),
-        webpack_configurator.getTypescriptCheckerPlugin(false)
+        webpack_configurator.getTypescriptCheckerPlugin(false),
     ],
     resolve: {
-        extensions: [".ts", ".js"]
-    }
+        extensions: [".ts", ".js"],
+    },
 };
 
 const fat_combined_files = [
@@ -323,14 +323,14 @@ const fat_combined_files = [
         "./tuleap/tuleap-mention.js",
         "./tuleap/project-privacy-tooltip.js",
         "./tuleap/massmail_project_members.js",
-        "./tuleap/tuleap-ckeditor-toolbar.js"
+        "./tuleap/tuleap-ckeditor-toolbar.js",
     ],
     subset_combined_files = [
         "./jquery/jquery-2.1.1.min.js",
         "./bootstrap/bootstrap-tooltip.js",
         "./bootstrap/bootstrap-popover.js",
         "./bootstrap/bootstrap-button.js",
-        "./tuleap/project-privacy-tooltip.js"
+        "./tuleap/project-privacy-tooltip.js",
     ],
     subset_combined_flamingparrot_files = [
         "./bootstrap/bootstrap-dropdown.js",
@@ -340,12 +340,12 @@ const fat_combined_files = [
         "./jscrollpane/jquery.jscrollpane.min.js",
         "./tuleap/tuleap-tours.js",
         "./tuleap/listFilter.js",
-        "./codendi/Tooltip.js"
+        "./codendi/Tooltip.js",
     ];
 
 const webpack_config_legacy_combined = {
     entry: {
-        null: "null_entry"
+        null: "null_entry",
     },
     output: webpack_configurator.configureOutput(assets_dir_path),
     plugins: [
@@ -354,20 +354,20 @@ const webpack_config_legacy_combined = {
             "tuleap_subset.js": subset_combined_files,
             "tuleap_subset_flamingparrot.js": subset_combined_files.concat(
                 subset_combined_flamingparrot_files
-            )
+            ),
         }),
-        manifest_plugin
-    ]
+        manifest_plugin,
+    ],
 };
 
 const configs_with_manifest = [
     webpack_config_for_vue_components,
     webpack_config_for_rich_text_editor,
     webpack_config_for_project_banner,
-    webpack_config_for_frs_admin
-].map(config =>
+    webpack_config_for_frs_admin,
+].map((config) =>
     merge(config, {
-        plugins: [manifest_plugin]
+        plugins: [manifest_plugin],
     })
 );
 
@@ -380,5 +380,5 @@ module.exports = [
     webpack_config_for_burning_parrot_code,
     ...configs_with_manifest,
     webpack_config_for_project_registration_modal,
-    webpack_config_for_account
+    webpack_config_for_account,
 ];

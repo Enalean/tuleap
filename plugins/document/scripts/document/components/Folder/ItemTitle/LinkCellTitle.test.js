@@ -30,14 +30,14 @@ describe("LinkCellTitle", () => {
             id: 42,
             title: "my link",
             link_properties: null,
-            type: TYPE_LINK
+            type: TYPE_LINK,
         };
 
         const component_options = {
             localVue,
             propsData: {
-                item
-            }
+                item,
+            },
         };
 
         const store = new Vuex.Store();

@@ -24,11 +24,11 @@ import { isDisabled } from "./tuleap-artifact-modal-fields/disabled-field-detect
 import { createArtifact, editArtifact, getFollowupsComments } from "./rest/rest-service.js";
 import {
     getAllFileFields,
-    isThereAtLeastOneFileField
+    isThereAtLeastOneFileField,
 } from "./tuleap-artifact-modal-fields/file-field/file-field-detector.js";
 import {
     isUploadingInCKEditor,
-    setIsNotUploadingInCKEditor
+    setIsNotUploadingInCKEditor,
 } from "./tuleap-artifact-modal-fields/file-field/is-uploading-in-ckeditor-state.js";
 import { uploadAllTemporaryFiles } from "./tuleap-artifact-modal-fields/file-field/file-uploader.js";
 
@@ -44,7 +44,7 @@ ArtifactModalController.$inject = [
     "displayItemCallback",
     "TuleapArtifactModalValidateService",
     "TuleapArtifactModalLoading",
-    "TuleapArtifactModalFieldDependenciesService"
+    "TuleapArtifactModalFieldDependenciesService",
 ];
 
 function ArtifactModalController(
@@ -76,11 +76,11 @@ function ArtifactModalController(
         followups_comments: {
             content: [],
             loading_comments: true,
-            invert_order: modal_model.invert_followups_comments_order ? "asc" : "desc"
+            invert_order: modal_model.invert_followups_comments_order ? "asc" : "desc",
         },
         new_followup_comment: {
             body: "",
-            format: modal_model.text_fields_format
+            format: modal_model.text_fields_format,
         },
         hidden_fieldsets: extractHiddenFieldsets(modal_model.ordered_fields),
         formatColor,
@@ -99,7 +99,7 @@ function ArtifactModalController(
         setFollowupComment,
         toggleFieldset,
         hasHiddenFieldsets,
-        showHiddenFieldsets
+        showHiddenFieldsets,
     });
 
     function init() {
@@ -115,7 +115,7 @@ function ArtifactModalController(
     }
 
     function setupTooltips() {
-        $timeout(function() {
+        $timeout(function () {
             loadTooltips();
         }, 0);
     }
@@ -137,7 +137,7 @@ function ArtifactModalController(
     function fetchFollowupsComments(artifact_id, limit, offset, order) {
         return $q
             .when(getFollowupsComments(artifact_id, limit, offset, order))
-            .then(function(data) {
+            .then(function (data) {
                 self.followups_comments.content = self.followups_comments.content.concat(
                     data.results
                 );
@@ -158,7 +158,7 @@ function ArtifactModalController(
         TuleapArtifactModalLoading.loading = true;
 
         uploadAllFileFields()
-            .then(function() {
+            .then(function () {
                 var validated_values = TuleapArtifactModalValidateService.validateArtifactFieldsValues(
                     self.values,
                     isInCreationMode(),
@@ -178,7 +178,7 @@ function ArtifactModalController(
 
                 return $q.when(promise);
             })
-            .then(function(new_artifact) {
+            .then(function (new_artifact) {
                 modal_instance.tlp_modal.hide();
 
                 return displayItemCallback(new_artifact.id);
@@ -189,13 +189,13 @@ function ArtifactModalController(
                 }
                 setError(gettextCatalog.getString("An error occurred while saving the artifact."));
             })
-            .finally(function() {
+            .finally(function () {
                 TuleapArtifactModalLoading.loading = false;
             });
     }
 
     function uploadAllFileFields() {
-        const promises = getAllFileFields(Object.values(self.values)).map(file_field_value =>
+        const promises = getAllFileFields(Object.values(self.values)).map((file_field_value) =>
             uploadFileField(file_field_value)
         );
 
@@ -204,12 +204,12 @@ function ArtifactModalController(
 
     function uploadFileField(file_field_value) {
         const promise = $q.when(uploadAllTemporaryFiles(file_field_value.temporary_files)).then(
-            temporary_files_ids => {
-                const uploaded_files_ids = temporary_files_ids.filter(id => Number.isInteger(id));
+            (temporary_files_ids) => {
+                const uploaded_files_ids = temporary_files_ids.filter((id) => Number.isInteger(id));
 
                 file_field_value.value = file_field_value.value.concat(uploaded_files_ids);
             },
-            error => {
+            (error) => {
                 if (isUploadQuotaExceeded(error)) {
                     setError(
                         gettextCatalog.getString(
@@ -261,10 +261,10 @@ function ArtifactModalController(
 
     function setFieldDependenciesWatcher(source_field_id, target_field, field_dependencies_rules) {
         $scope.$watch(
-            function() {
+            function () {
                 return self.values[source_field_id].bind_value_ids;
             },
-            function(new_value, old_value) {
+            function (new_value, old_value) {
                 if (new_value === old_value) {
                     return;
                 }
@@ -311,7 +311,7 @@ function ArtifactModalController(
     }
 
     function setFieldValue(field_id) {
-        return value => {
+        return (value) => {
             self.values[field_id].value = value;
         };
     }
@@ -333,7 +333,7 @@ function ArtifactModalController(
             return [];
         }
 
-        return fields.filter(field => field.is_hidden);
+        return fields.filter((field) => field.is_hidden);
     }
 
     function hasHiddenFieldsets() {
@@ -341,7 +341,7 @@ function ArtifactModalController(
     }
 
     function showHiddenFieldsets(is_visible) {
-        self.hidden_fieldsets.forEach(function(field) {
+        self.hidden_fieldsets.forEach(function (field) {
             field.is_hidden = !is_visible;
         });
     }

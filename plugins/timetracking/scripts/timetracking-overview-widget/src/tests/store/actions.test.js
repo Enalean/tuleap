@@ -28,7 +28,7 @@ describe("Store actions", () => {
     beforeEach(() => {
         context = {
             commit: jest.fn(),
-            state: { ...initial_state }
+            state: { ...initial_state },
         };
     });
 
@@ -38,8 +38,8 @@ describe("Store actions", () => {
                 {
                     id: 1,
                     uri: "timetracking_reports/1",
-                    trackers: [{ id: 1, label: "timetracking_tracker" }]
-                }
+                    trackers: [{ id: 1, label: "timetracking_tracker" }],
+                },
             ];
 
             jest.spyOn(rest_querier, "getTrackersFromReport").mockReturnValue(
@@ -68,28 +68,28 @@ describe("Store actions", () => {
                 {
                     artifacts: [
                         {
-                            minutes: 20
+                            minutes: 20,
                         },
                         {
-                            minutes: 40
-                        }
+                            minutes: 40,
+                        },
                     ],
                     id: "16",
                     label: "tracker",
                     project: {},
-                    uri: ""
+                    uri: "",
                 },
                 {
                     artifacts: [
                         {
-                            minutes: 20
-                        }
+                            minutes: 20,
+                        },
                     ],
                     id: "18",
                     label: "tracker 2",
                     project: {},
-                    uri: ""
-                }
+                    uri: "",
+                },
             ];
             context.state.trackers_times = trackers;
 
@@ -110,9 +110,9 @@ describe("Store actions", () => {
                 error_json: {
                     error: {
                         code: 403,
-                        message: "Forbidden"
-                    }
-                }
+                        message: "Forbidden",
+                    },
+                },
             });
 
             await actions.initWidgetWithReport(context);
@@ -133,7 +133,7 @@ describe("Store actions", () => {
         it("Given a success response, When projects are received, Then no message error is received", async () => {
             const projects = [
                 { id: 765, label: "timetracking" },
-                { id: 239, label: "projectTest" }
+                { id: 239, label: "projectTest" },
             ];
 
             jest.spyOn(rest_querier, "getProjectsWithTimetracking").mockReturnValue(
@@ -150,7 +150,7 @@ describe("Store actions", () => {
         it("Given a success response, When trackers are received, Then no message error is received", async () => {
             const trackers = [
                 { id: 16, label: "tracker_1" },
-                { id: 18, label: "tracker_2" }
+                { id: 18, label: "tracker_2" },
             ];
 
             jest.spyOn(rest_querier, "getTrackersWithTimetracking").mockReturnValue(
@@ -171,9 +171,9 @@ describe("Store actions", () => {
                     uri: "timetracking_reports/1",
                     trackers: [
                         { id: 1, label: "timetracking_tracker" },
-                        { id: 2, label: "timetracking_tracker_2" }
-                    ]
-                }
+                        { id: 2, label: "timetracking_tracker_2" },
+                    ],
+                },
             ];
 
             jest.spyOn(rest_querier, "saveNewReport").mockReturnValue(Promise.resolve(report));

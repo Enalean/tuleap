@@ -23,14 +23,14 @@ import tuleap_pullrequest_module from "../app.js";
 import "angular-mocks";
 import { createAngularPromiseWrapper } from "../../../../../../tests/jest/angular-promise-wrapper.js";
 
-describe("PullRequestRestService -", function() {
+describe("PullRequestRestService -", function () {
     var $httpBackend, PullRequestRestService, ErrorModalService, wrapPromise;
 
-    beforeEach(function() {
+    beforeEach(function () {
         let $rootScope;
         angular.mock.module(tuleap_pullrequest_module);
 
-        angular.mock.inject(function(
+        angular.mock.inject(function (
             _$rootScope_,
             _$httpBackend_,
             _ErrorModalService_,
@@ -47,13 +47,13 @@ describe("PullRequestRestService -", function() {
         wrapPromise = createAngularPromiseWrapper($rootScope);
     });
 
-    afterEach(function() {
+    afterEach(function () {
         $httpBackend.verifyNoOutstandingExpectation();
         $httpBackend.verifyNoOutstandingRequest();
     });
 
-    describe("getPullRequest()", function() {
-        it("Given a pull_request id, when I get it, then a GET request will be sent to Tuleap and a promise will be resolved with a pull_request object", async function() {
+    describe("getPullRequest()", function () {
+        it("Given a pull_request id, when I get it, then a GET request will be sent to Tuleap and a promise will be resolved with a pull_request object", async function () {
             var pull_request_id = 83;
 
             var pull_request = {
@@ -63,13 +63,13 @@ describe("PullRequestRestService -", function() {
                 branch_src: "sample-pr",
                 branch_dest: "master",
                 repository: {
-                    id: 1
+                    id: 1,
                 },
                 repository_dest: {
-                    id: 2
+                    id: 2,
                 },
                 status: "review",
-                creation_date: "2016-04-19T09:20:21+00:00"
+                creation_date: "2016-04-19T09:20:21+00:00",
             };
 
             $httpBackend
@@ -82,7 +82,7 @@ describe("PullRequestRestService -", function() {
             expect(await promise).toEqual(pull_request);
         });
 
-        it("when the server responds with an error, then the error modal will be shown", async function() {
+        it("when the server responds with an error, then the error modal will be shown", async function () {
             var pull_request_id = 48;
 
             $httpBackend
@@ -93,12 +93,12 @@ describe("PullRequestRestService -", function() {
             $httpBackend.flush();
 
             await expect(promise).rejects.toMatchObject({
-                status: 403
+                status: 403,
             });
             expect(ErrorModalService.showError).toHaveBeenCalledWith(
                 expect.objectContaining({
                     status: 403,
-                    statusText: ""
+                    statusText: "",
                 })
             );
         });

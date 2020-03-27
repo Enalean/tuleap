@@ -37,15 +37,15 @@
 <script>
 export default {
     props: {
-        value: String
+        value: String,
     },
     computed: {
         placeholder() {
             return this.$gettext("My new version name");
-        }
+        },
     },
     mounted() {
         this.$refs.input.focus();
-    }
+    },
 };
 </script>

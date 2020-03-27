@@ -46,7 +46,7 @@
             ></path>
             <g opacity="0.472238">
                 <path
-                    style="mix-blend-mode:overlay"
+                    style="mix-blend-mode: overlay;"
                     stroke-linecap="round"
                     stroke-width="1.5"
                     stroke="white"
@@ -118,7 +118,7 @@
             ></path>
             <g opacity="0.6">
                 <path
-                    style="mix-blend-mode:overlay"
+                    style="mix-blend-mode: overlay;"
                     stroke-width="5"
                     stroke="white"
                     d="M70.3186 104.251H220.656C221.208 104.251 221.656 104.699 221.656 105.251V162.917"
@@ -249,7 +249,7 @@
             ></path>
             <g opacity="0.472238">
                 <path
-                    style="mix-blend-mode:overlay"
+                    style="mix-blend-mode: overlay;"
                     stroke-linecap="round"
                     stroke-width="2.1"
                     stroke="white"

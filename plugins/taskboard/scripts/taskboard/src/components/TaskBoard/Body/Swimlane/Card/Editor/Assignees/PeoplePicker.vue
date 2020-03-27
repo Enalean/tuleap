@@ -34,7 +34,7 @@ import {
     LoadingData,
     Options,
     select2,
-    Select2Plugin
+    Select2Plugin,
 } from "tlp";
 import $ from "jquery";
 import { sanitize } from "dompurify";
@@ -66,21 +66,17 @@ export default class PeoplePicker extends Vue {
             placeholder,
             escapeMarkup: sanitize,
             templateResult: this.formatUser,
-            templateSelection: this.formatUserWhenSelected
+            templateSelection: this.formatUserWhenSelected,
         };
 
         this.select2_people_picker = select2(this.$el, configuration);
 
-        $(this.$el)
-            .on("change", this.onChange)
-            .select2("open");
+        $(this.$el).on("change", this.onChange).select2("open");
     }
 
     destroyed(): void {
         if (this.select2_people_picker !== null) {
-            $(this.$el)
-                .off()
-                .select2("destroy");
+            $(this.$el).off().select2("destroy");
         }
     }
 
@@ -95,7 +91,7 @@ export default class PeoplePicker extends Vue {
             selected_ids = val;
         }
 
-        const selected_ids_as_number: number[] = selected_ids.map(id => Number(id));
+        const selected_ids_as_number: number[] = selected_ids.map((id) => Number(id));
 
         this.$emit("input", selected_ids_as_number);
     }

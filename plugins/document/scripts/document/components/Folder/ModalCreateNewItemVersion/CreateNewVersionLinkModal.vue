@@ -71,10 +71,10 @@ export default {
         ItemUpdateProperties,
         ModalFeedback,
         ModalHeader,
-        ModalFooter
+        ModalFooter,
     },
     props: {
-        item: Object
+        item: Object,
     },
     data() {
         return {
@@ -82,7 +82,7 @@ export default {
             version: {},
             is_loading: false,
             is_displayed: false,
-            modal: null
+            modal: null,
         };
     },
     computed: {
@@ -95,7 +95,7 @@ export default {
         },
         aria_labelled_by() {
             return "document-new-item-version-modal";
-        }
+        },
     },
     mounted() {
         this.modal = createModal(this.$el);
@@ -114,7 +114,7 @@ export default {
             this.version = {
                 title: "",
                 changelog: "",
-                is_file_locked: this.item.lock_info !== null
+                is_file_locked: this.item.lock_info !== null,
             };
 
             this.link_model = this.item.link_properties;
@@ -139,7 +139,7 @@ export default {
                 this.version.title,
                 this.version.changelog,
                 this.version.is_file_locked,
-                this.approval_table_action
+                this.approval_table_action,
             ]);
 
             this.is_loading = false;
@@ -148,7 +148,7 @@ export default {
                 this.link_model = null;
                 this.modal.hide();
             }
-        }
-    }
+        },
+    },
 };
 </script>

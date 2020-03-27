@@ -20,47 +20,47 @@
 function getReleaseIdFromREST() {
     return cy
         .getProjectId("taskboard-project")
-        .then(project_id =>
+        .then((project_id) =>
             cy.getFromTuleapAPI(`/api/projects/${project_id}/milestones?fields=slim`)
         )
-        .then(response => response.body[0].id);
+        .then((response) => response.body[0].id);
 }
 
-describe(`Taskboard`, function() {
-    before(function() {
+describe(`Taskboard`, function () {
+    before(function () {
         cy.clearCookie("__Host-TULEAP_session_hash");
         cy.projectMemberLogin();
         getReleaseIdFromREST()
             .as("release_id")
-            .then(release_id => {
+            .then((release_id) => {
                 cy.visit(`/taskboard/taskboard-project/${release_id}`);
             });
     });
 
-    beforeEach(function() {
+    beforeEach(function () {
         Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
     });
 
-    it(`loads`, function() {
+    it(`loads`, function () {
         cy.get("[data-test=taskboard-body]");
     });
 
-    context(`Cell functionalities`, function() {
-        before(function() {
+    context(`Cell functionalities`, function () {
+        before(function () {
             cy.getFromTuleapAPI(`/api/taskboard/${this.release_id}/columns`)
-                .then(response => response.body)
+                .then((response) => response.body)
                 .as("taskboard_columns");
             cy.getFromTuleapAPI(`/api/taskboard/${this.release_id}/cards?limit=100`)
-                .then(response => response.body)
+                .then((response) => response.body)
                 .as("taskboard_swimlanes");
         });
 
-        it(`adds a card in a swimlane`, function() {
+        it(`adds a card in a swimlane`, function () {
             const on_going_column = this.taskboard_columns.find(
-                column => column.label === "On Going"
+                (column) => column.label === "On Going"
             );
             const quality_sunshine_swimlane = this.taskboard_swimlanes.find(
-                swimlane => swimlane.label === "Quality Sunshine"
+                (swimlane) => swimlane.label === "Quality Sunshine"
             );
             cy.get(
                 `[data-column-id=${on_going_column.id}][data-swimlane-id=${quality_sunshine_swimlane.id}]`
@@ -76,42 +76,38 @@ describe(`Taskboard`, function() {
             });
         });
 
-        it(`edits the title of a card`, function() {
+        it(`edits the title of a card`, function () {
             cy.get("[data-card-id]")
                 .contains("Lonesome Galaxy")
                 .parents("[data-card-id]")
                 .as("card")
                 .within(() => {
                     cy.get("[data-test=card-edit-button]").click();
-                    cy.get("[data-test=label-editor]").then($label_editor => {
+                    cy.get("[data-test=label-editor]").then(($label_editor) => {
                         expect($label_editor.val()).to.equal("Lonesome Galaxy");
-                        cy.wrap($label_editor)
-                            .clear()
-                            .type("Deserted Torpedo{enter}");
+                        cy.wrap($label_editor).clear().type("Deserted Torpedo{enter}");
                     });
                 });
             cy.get("[data-card-id]").contains("Deserted Torpedo");
             // Edit back the name for re-playability
             cy.get("@card").within(() => {
                 cy.get("[data-test=card-edit-button]").click();
-                cy.get("[data-test=label-editor]")
-                    .clear()
-                    .type("Lonesome Galaxy{enter}");
+                cy.get("[data-test=label-editor]").clear().type("Lonesome Galaxy{enter}");
             });
         });
 
-        it(`hides the swimlanes and cards that are "Done"`, function() {
+        it(`hides the swimlanes and cards that are "Done"`, function () {
             cy.get("[data-test=hide-closed-items]").click();
-            cy.get("[data-card-id]").then($body => {
+            cy.get("[data-card-id]").then(($body) => {
                 expect($body).not.to.contain("Elastic Notorious");
                 expect($body).not.to.contain("Grim Crayon");
                 expect($body).not.to.contain("Severe Storm");
             });
         });
 
-        it(`show the swimlanes and cards that are "Done"`, function() {
+        it(`show the swimlanes and cards that are "Done"`, function () {
             cy.get("[data-test=show-closed-items]").click();
-            cy.get("[data-card-id]").then($body => {
+            cy.get("[data-card-id]").then(($body) => {
                 expect($body).to.contain("Elastic Notorious");
                 expect($body).to.contain("Grim Crayon");
                 expect($body).to.contain("Severe Storm");

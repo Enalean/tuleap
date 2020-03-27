@@ -60,10 +60,10 @@ export default {
         CustomMetadataListMultipleValue,
         CustomMetadataListSingleValue,
         CustomMetadataString,
-        CustomMetadataText
+        CustomMetadataText,
     },
     props: {
-        itemMetadata: Object
-    }
+        itemMetadata: Object,
+    },
 };
 </script>

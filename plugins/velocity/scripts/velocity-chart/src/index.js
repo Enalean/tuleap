@@ -49,14 +49,14 @@ document.addEventListener("DOMContentLoaded", () => {
             top: 50,
             right: 80,
             bottom: 100,
-            left: 80
-        }
+            left: 80,
+        },
     };
 
     const chart = new VelocityChartDrawer({
         mount_point,
         chart_props,
-        sprints_data
+        sprints_data,
     });
 
     chart.draw();

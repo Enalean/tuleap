@@ -22,7 +22,7 @@
         class="project-release"
         v-bind:class="{
             'project-release-toggle-closed': !is_open,
-            'tlp-tooltip tlp-tooltip-top': is_loading
+            'tlp-tooltip tlp-tooltip-top': is_loading,
         }"
         v-bind:data-tlp-tooltip="$gettext('Loading data...')"
     >
@@ -62,8 +62,8 @@ import { FetchWrapperError } from "tlp";
     components: {
         ReleaseHeader,
         ReleaseDescription,
-        ReleaseBadgesDisplayer
-    }
+        ReleaseBadgesDisplayer,
+    },
 })
 export default class ReleaseDisplayer extends Vue {
     @Prop()

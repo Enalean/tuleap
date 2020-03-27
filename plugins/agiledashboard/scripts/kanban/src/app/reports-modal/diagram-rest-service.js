@@ -13,7 +13,7 @@ function DiagramRestService($http, SharedPropertiesService, FilterTrackerReportS
         let query_params = {
             start_date,
             end_date,
-            interval_between_point
+            interval_between_point,
         };
 
         augmentQueryParamsWithFilterTrackerReport(query_params);
@@ -21,10 +21,10 @@ function DiagramRestService($http, SharedPropertiesService, FilterTrackerReportS
         return $http
             .get("/api/v1/kanban/" + kanban_id + "/cumulative_flow", {
                 headers: {
-                    "X-Client-UUID": SharedPropertiesService.getUUID()
+                    "X-Client-UUID": SharedPropertiesService.getUUID(),
                 },
                 params: query_params,
-                timeout: TIMEOUT_IN_MILLISECONDS
+                timeout: TIMEOUT_IN_MILLISECONDS,
             })
             .then(({ data }) => data);
     }

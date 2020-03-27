@@ -20,7 +20,7 @@
 import { initGettext } from "../../../../src/www/scripts/tuleap/gettext/gettext-init";
 import {
     openModalAndReplacePlaceholders,
-    openModalOnClick
+    openModalOnClick,
 } from "../../../../src/www/scripts/tuleap/modals/modal-opener";
 import { buildDeletionReplaceCallback, hiddenInputReplaceCallback } from "./replacers";
 
@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (language === undefined) {
         throw new Error("Not able to find the user language.");
     }
-    const gettext_provider = await initGettext(language, "tuleap-oauth2_server", locale =>
+    const gettext_provider = await initGettext(language, "tuleap-oauth2_server", (locale) =>
         import(/* webpackChunkName: "oauth2-server-po-" */ `../po/${locale}.po`)
     );
 
@@ -48,11 +48,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         modal_element_id: DELETE_MODAL_ID,
         hidden_input_replacement: {
             input_id: DELETE_MODAL_HIDDEN_INPUT_ID,
-            hiddenInputReplaceCallback
+            hiddenInputReplaceCallback,
         },
         paragraph_replacement: {
             paragraph_id: DELETE_MODAL_DESCRIPTION,
-            paragraphReplaceCallback: buildDeletionReplaceCallback(gettext_provider)
-        }
+            paragraphReplaceCallback: buildDeletionReplaceCallback(gettext_provider),
+        },
     });
 });

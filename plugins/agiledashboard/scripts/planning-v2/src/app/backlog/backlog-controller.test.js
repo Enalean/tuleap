@@ -42,27 +42,27 @@ describe("BacklogController -", () => {
             resources: {
                 backlog: {
                     accept: {
-                        trackers: [{ id: 99, label: "story" }]
-                    }
+                        trackers: [{ id: 99, label: "story" }],
+                    },
                 },
                 content: {
                     accept: {
-                        trackers: [{ id: 99, label: "story" }]
-                    }
-                }
+                        trackers: [{ id: 99, label: "story" }],
+                    },
+                },
             },
-            sub_milestone_type: { id: 66, label: "sprints" }
+            sub_milestone_type: { id: 66, label: "sprints" },
         },
         initial_backlog_items = {
             backlog_items_representations: [{ id: 7 }],
-            total_size: 104
+            total_size: 104,
         };
 
     beforeEach(() => {
         angular.mock.module(planning_module);
 
         let $rootScope;
-        angular.mock.inject(function(
+        angular.mock.inject(function (
             _$q_,
             _$document_,
             _$rootScope_,
@@ -85,7 +85,7 @@ describe("BacklogController -", () => {
             $rootScope = _$rootScope_;
             dragularService = _dragularService_;
 
-            var returnPromise = function(method) {
+            var returnPromise = function (method) {
                 var self = this;
                 jest.spyOn(self, method).mockReturnValue($q.defer().promise);
             };
@@ -118,7 +118,7 @@ describe("BacklogController -", () => {
                 "putSubMilestones",
                 "removeAddReorderToBacklog",
                 "removeAddToBacklog",
-                "updateInitialEffort"
+                "updateInitialEffort",
             ]).forEach(returnPromise, MilestoneService);
 
             BacklogItemService = _BacklogItemService_;
@@ -127,7 +127,7 @@ describe("BacklogController -", () => {
                 "getMilestoneBacklogItems",
                 "getProjectBacklogItems",
                 "getBacklogItem",
-                "removeAddBacklogItemChildren"
+                "removeAddBacklogItemChildren",
             ]).forEach(returnPromise, BacklogItemService);
 
             BacklogItemCollectionService = _BacklogItemCollectionService_;
@@ -141,7 +141,7 @@ describe("BacklogController -", () => {
                 "getProjectBacklog",
                 "getProject",
                 "removeAddToBacklog",
-                "removeAddReorderToBacklog"
+                "removeAddReorderToBacklog",
             ]).forEach(returnPromise, ProjectService);
 
             DroppedService = _DroppedService_;
@@ -211,14 +211,14 @@ describe("BacklogController -", () => {
             BacklogItemSelectedService,
             SharedPropertiesService,
             NewTuleapArtifactModalService,
-            ItemAnimatorService
+            ItemAnimatorService,
         });
         BacklogController.$onInit();
     });
 
-    describe("$onInit() -", function() {
-        describe("Given we are in a top backlog context", function() {
-            it("When I load the controller, then the project's backlog will be retrieved and the backlog updated", function() {
+    describe("$onInit() -", function () {
+        describe("Given we are in a top backlog context", function () {
+            it("When I load the controller, then the project's backlog will be retrieved and the backlog updated", function () {
                 BacklogController.milestone_id = undefined;
                 BacklogController.$onInit();
 
@@ -226,10 +226,10 @@ describe("BacklogController -", () => {
             });
         });
 
-        describe("Given we are in a milestone context", function() {
+        describe("Given we are in a milestone context", function () {
             it(
                 "If a milestone has been injected, then use it",
-                angular.mock.inject(function() {
+                angular.mock.inject(function () {
                     jest.spyOn(BacklogController, "loadBacklog");
 
                     BacklogController.$onInit();
@@ -251,7 +251,7 @@ describe("BacklogController -", () => {
 
                 BacklogController.$onInit();
                 milestone_request.resolve({
-                    results: milestone
+                    results: milestone,
                 });
                 $scope.$apply();
 
@@ -270,17 +270,17 @@ describe("BacklogController -", () => {
                 initial_backlog_items
             );
             expect(BacklogController.all_backlog_items).toEqual({
-                7: { id: 7 }
+                7: { id: 7 },
             });
             expect(BacklogService.appendBacklogItems).toHaveBeenCalledWith([{ id: 7 }]);
             expect(BacklogService.filterItems).toHaveBeenCalledWith("");
         });
     });
 
-    describe("displayBacklogItems() -", function() {
+    describe("displayBacklogItems() -", function () {
         var fetch_backlog_items_request;
 
-        beforeEach(function() {
+        beforeEach(function () {
             fetch_backlog_items_request = $q.defer();
             jest.spyOn(BacklogController, "fetchBacklogItems").mockReturnValue(
                 fetch_backlog_items_request.promise
@@ -288,7 +288,7 @@ describe("BacklogController -", () => {
             BacklogController.backlog_items = {
                 loading: false,
                 fully_loaded: false,
-                pagination: { limit: 50, offset: 50 }
+                pagination: { limit: 50, offset: 50 },
             };
         });
 
@@ -329,17 +329,17 @@ describe("BacklogController -", () => {
         });
     });
 
-    describe("fetchAllBacklogItems() -", function() {
+    describe("fetchAllBacklogItems() -", function () {
         var fetch_backlog_items_request;
 
-        beforeEach(function() {
+        beforeEach(function () {
             fetch_backlog_items_request = $q.defer();
             jest.spyOn(BacklogController, "fetchBacklogItems").mockReturnValue(
                 fetch_backlog_items_request.promise
             );
             BacklogController.backlog_items = {
                 loading: false,
-                fully_loaded: false
+                fully_loaded: false,
             };
         });
 
@@ -409,7 +409,7 @@ describe("BacklogController -", () => {
             BacklogItemService.getProjectBacklogItems.mockReturnValue(
                 $q.resolve({
                     results: [{ id: 734 }],
-                    total: 34
+                    total: 34,
                 })
             );
 
@@ -420,7 +420,7 @@ describe("BacklogController -", () => {
             expect(BacklogItemService.getProjectBacklogItems).toHaveBeenCalledWith(736, 60, 25);
             expect(BacklogController.all_backlog_items).toEqual({
                 7: { id: 7 },
-                734: { id: 734 }
+                734: { id: 734 },
             });
             expect(BacklogService.appendBacklogItems).toHaveBeenCalledWith([{ id: 734 }]);
             expect(BacklogService.filterItems).toHaveBeenCalledWith("");
@@ -436,7 +436,7 @@ describe("BacklogController -", () => {
             BacklogItemService.getMilestoneBacklogItems.mockReturnValue(
                 $q.resolve({
                     results: [{ id: 836 }],
-                    total: 85
+                    total: 85,
                 })
             );
 
@@ -447,7 +447,7 @@ describe("BacklogController -", () => {
             expect(BacklogItemService.getMilestoneBacklogItems).toHaveBeenCalledWith(592, 60, 25);
             expect(BacklogController.all_backlog_items).toEqual({
                 7: { id: 7 },
-                836: { id: 836 }
+                836: { id: 836 },
             });
             expect(BacklogService.appendBacklogItems).toHaveBeenCalledWith([{ id: 836 }]);
             expect(BacklogService.filterItems).toHaveBeenCalledWith("");
@@ -537,7 +537,7 @@ describe("BacklogController -", () => {
         let event, item_type;
         beforeEach(() => {
             event = {
-                preventDefault: jest.fn()
+                preventDefault: jest.fn(),
             };
             item_type = { id: 50 };
         });
@@ -563,8 +563,8 @@ describe("BacklogController -", () => {
                 );
                 artifact = {
                     backlog_item: {
-                        id: 5202
-                    }
+                        id: 5202,
+                    },
                 };
             });
 
@@ -572,7 +572,7 @@ describe("BacklogController -", () => {
                 beforeEach(() => {
                     BacklogController.details = {
                         rest_route_id: 80,
-                        rest_base_route: "projects"
+                        rest_base_route: "projects",
                     };
 
                     jest.spyOn(BacklogController, "isMilestoneContext").mockReturnValue(false);
@@ -593,18 +593,18 @@ describe("BacklogController -", () => {
                         [5202],
                         {
                             direction: "before",
-                            item_id: 3894
+                            item_id: 3894,
                         }
                     );
                     expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(5202);
                     expect(BacklogController.all_backlog_items[5202]).toEqual({ id: 5202 });
                     expect(BacklogController.backlog_items.content).toEqual([
                         { id: 5202 },
-                        { id: 3894 }
+                        { id: 3894 },
                     ]);
                     expect(BacklogController.backlog_items.filtered_content).toEqual([
                         { id: 5202 },
-                        { id: 3894 }
+                        { id: 3894 },
                     ]);
                 });
 
@@ -620,7 +620,7 @@ describe("BacklogController -", () => {
 
                     expect(BacklogController.backlog_items.content).toEqual([
                         { id: 5202 },
-                        { id: 7453 }
+                        { id: 7453 },
                     ]);
                     expect(BacklogController.backlog_items.filtered_content).toEqual([]);
                 });
@@ -634,7 +634,7 @@ describe("BacklogController -", () => {
                     $scope.$apply();
 
                     expect(ProjectService.removeAddToBacklog).toHaveBeenCalledWith(undefined, 80, [
-                        5202
+                        5202,
                     ]);
                     expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(5202);
                     expect(BacklogController.backlog_items.content).toEqual([{ id: 5202 }]);
@@ -645,7 +645,7 @@ describe("BacklogController -", () => {
                 beforeEach(() => {
                     BacklogController.details = {
                         rest_route_id: 26,
-                        rest_base_route: "milestones"
+                        rest_base_route: "milestones",
                     };
                 });
 
@@ -663,14 +663,14 @@ describe("BacklogController -", () => {
                         [5202],
                         {
                             direction: "before",
-                            item_id: 6240
+                            item_id: 6240,
                         }
                     );
                     expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(5202);
                     expect(BacklogController.all_backlog_items[5202]).toEqual({ id: 5202 });
                     expect(BacklogController.backlog_items.content).toEqual([
                         { id: 5202 },
-                        { id: 6240 }
+                        { id: 6240 },
                     ]);
                 });
 
@@ -694,8 +694,8 @@ describe("BacklogController -", () => {
         });
     });
 
-    describe("displayUserCantPrioritize() -", function() {
-        it("Given that the user cannot move cards in the backlog and the backlog is empty, when I check, then it will return false", function() {
+    describe("displayUserCantPrioritize() -", function () {
+        it("Given that the user cannot move cards in the backlog and the backlog is empty, when I check, then it will return false", function () {
             BacklogService.backlog.user_can_move_cards = false;
             BacklogService.items.content = [];
 
@@ -704,7 +704,7 @@ describe("BacklogController -", () => {
             expect(result).toBeFalsy();
         });
 
-        it("Given that the user cannot move cards in the backlog and the backlog is not empty, when I check, then it will return true", function() {
+        it("Given that the user cannot move cards in the backlog and the backlog is not empty, when I check, then it will return true", function () {
             BacklogService.backlog.user_can_move_cards = false;
             BacklogService.items.content = [{ id: 448 }];
 
@@ -714,8 +714,8 @@ describe("BacklogController -", () => {
         });
     });
 
-    describe("isBacklogLoadedAndEmpty() -", function() {
-        it("Given that the backlog was loaded and had no children backlog items, when I check if the backlog is loaded and empty, then it will return true", function() {
+    describe("isBacklogLoadedAndEmpty() -", function () {
+        it("Given that the backlog was loaded and had no children backlog items, when I check if the backlog is loaded and empty, then it will return true", function () {
             BacklogService.items.loading = false;
             BacklogService.items.fully_loaded = true;
             BacklogService.items.content = [];
@@ -725,7 +725,7 @@ describe("BacklogController -", () => {
             expect(result).toBeTruthy();
         });
 
-        it("Given that the backlog was loading, when I check if the backlog is loaded and empty, then it will return false", function() {
+        it("Given that the backlog was loading, when I check if the backlog is loaded and empty, then it will return false", function () {
             BacklogService.items.loading = true;
 
             var result = BacklogController.isBacklogLoadedAndEmpty();
@@ -733,7 +733,7 @@ describe("BacklogController -", () => {
             expect(result).toBeFalsy();
         });
 
-        it("Given that the backlog was loaded and had children backlog items, when I check if the backlog is loaded and empty, then it will return false", function() {
+        it("Given that the backlog was loaded and had children backlog items, when I check if the backlog is loaded and empty, then it will return false", function () {
             BacklogService.items.loading = false;
             BacklogService.items.fully_loaded = true;
             BacklogService.items.content = [{ id: 92 }];
@@ -744,7 +744,7 @@ describe("BacklogController -", () => {
         });
     });
 
-    describe("dragularDrop() -", function() {
+    describe("dragularDrop() -", function () {
         var $dropped_item_element,
             dropped_item_ids,
             dropped_items,
@@ -757,7 +757,7 @@ describe("BacklogController -", () => {
             compared_to,
             move_request;
 
-        beforeEach(function() {
+        beforeEach(function () {
             dropped_item_ids = [78];
             dropped_items = [{ id: 78 }];
             $dropped_item_element = createElement("li");
@@ -767,7 +767,7 @@ describe("BacklogController -", () => {
             target_index = 0;
             compared_to = {
                 direction: "before",
-                item_id: 53
+                item_id: 53,
             };
 
             move_request = $q.defer();
@@ -845,8 +845,8 @@ describe("BacklogController -", () => {
         });
     });
 
-    describe("reorderBacklogItems() -", function() {
-        it("reorder the content of a milestone", function() {
+    describe("reorderBacklogItems() -", function () {
+        it("reorder the content of a milestone", function () {
             var dropped_request = $q.defer(),
                 backlog_items = [{ id: 1 }, { id: 2 }],
                 compared_to = { item_id: 3, direction: "before" };
@@ -869,18 +869,18 @@ describe("BacklogController -", () => {
         });
     });
 
-    describe("moveToTop() -", function() {
-        beforeEach(function() {
+    describe("moveToTop() -", function () {
+        beforeEach(function () {
             jest.spyOn(BacklogController, "reorderBacklogItems").mockReturnValue(
                 $q.defer().promise
             );
         });
 
-        it("move one item to the top of the backlog", function() {
+        it("move one item to the top of the backlog", function () {
             var moved_backlog_item = { id: 69 };
 
             BacklogController.backlog_items = {
-                content: [{ id: 50 }, { id: 61 }, moved_backlog_item, { id: 88 }]
+                content: [{ id: 50 }, { id: 61 }, moved_backlog_item, { id: 88 }],
             };
 
             BacklogController.moveToTop(moved_backlog_item);
@@ -895,7 +895,7 @@ describe("BacklogController -", () => {
             );
         });
 
-        it("move multiple items to the top of the backlog", function() {
+        it("move multiple items to the top of the backlog", function () {
             var moved_backlog_item = { id: 50 };
             var selected_backlog_items = [{ id: 50 }, { id: 69 }];
 
@@ -909,8 +909,8 @@ describe("BacklogController -", () => {
                     selected_backlog_items[0],
                     { id: 61 },
                     selected_backlog_items[1],
-                    { id: 88 }
-                ]
+                    { id: 88 },
+                ],
             };
 
             BacklogController.moveToTop(moved_backlog_item);
@@ -924,7 +924,7 @@ describe("BacklogController -", () => {
             ).toHaveBeenCalledWith(selected_backlog_items, { direction: "before", item_id: 61 });
         });
 
-        it("move multiple items to the top of the backlog, even if the backlog is filtered", function() {
+        it("move multiple items to the top of the backlog, even if the backlog is filtered", function () {
             var moved_backlog_item = { id: 50 };
             var selected_backlog_items = [{ id: 50 }, { id: 69 }];
 
@@ -938,9 +938,13 @@ describe("BacklogController -", () => {
                     selected_backlog_items[0],
                     { id: 61 },
                     selected_backlog_items[1],
-                    { id: 88 }
+                    { id: 88 },
                 ],
-                filtered_content: [selected_backlog_items[0], selected_backlog_items[1], { id: 88 }]
+                filtered_content: [
+                    selected_backlog_items[0],
+                    selected_backlog_items[1],
+                    { id: 88 },
+                ],
             };
 
             BacklogController.moveToTop(moved_backlog_item);
@@ -955,10 +959,10 @@ describe("BacklogController -", () => {
         });
     });
 
-    describe("moveToBottom() -", function() {
+    describe("moveToBottom() -", function () {
         var fetch_all_backlog_items_request;
 
-        beforeEach(function() {
+        beforeEach(function () {
             fetch_all_backlog_items_request = $q.defer();
             jest.spyOn(BacklogController, "reorderBacklogItems").mockReturnValue(
                 $q.defer().promise
@@ -968,15 +972,15 @@ describe("BacklogController -", () => {
             );
         });
 
-        it("move one item to the bottom of the fully loaded backlog", function() {
+        it("move one item to the bottom of the fully loaded backlog", function () {
             var moved_backlog_item = { id: 69 };
 
             BacklogController.backlog_items = {
                 content: [{ id: 50 }, { id: 61 }, moved_backlog_item, { id: 88 }],
                 pagination: {
                     limit: 50,
-                    offset: 0
-                }
+                    offset: 0,
+                },
             };
 
             BacklogController.moveToBottom(moved_backlog_item);
@@ -994,7 +998,7 @@ describe("BacklogController -", () => {
             );
         });
 
-        it("move multiple items to the bottom of the fully loaded backlog, even if the backlog is filtered", function() {
+        it("move multiple items to the bottom of the fully loaded backlog, even if the backlog is filtered", function () {
             var moved_backlog_item = { id: 50 };
             var selected_backlog_items = [{ id: 50 }, { id: 69 }];
 
@@ -1008,12 +1012,12 @@ describe("BacklogController -", () => {
                 filtered_content: [
                     selected_backlog_items[0],
                     selected_backlog_items[1],
-                    { id: 88 }
+                    { id: 88 },
                 ],
                 pagination: {
                     limit: 50,
-                    offset: 0
-                }
+                    offset: 0,
+                },
             };
 
             BacklogController.moveToBottom(moved_backlog_item);
@@ -1030,7 +1034,7 @@ describe("BacklogController -", () => {
             ).toHaveBeenCalledWith(selected_backlog_items, { direction: "after", item_id: 88 });
         });
 
-        it("move multiple items to the bottom of the not fully loaded backlog", function() {
+        it("move multiple items to the bottom of the not fully loaded backlog", function () {
             var moved_backlog_item = { id: 50 };
             var selected_backlog_items = [{ id: 50 }, { id: 69 }];
 
@@ -1043,8 +1047,8 @@ describe("BacklogController -", () => {
                 content: [{ id: 50 }, { id: 61 }, moved_backlog_item, { id: 88 }],
                 pagination: {
                     limit: 2,
-                    offset: 0
-                }
+                    offset: 0,
+                },
             };
 
             BacklogController.moveToBottom(moved_backlog_item);
@@ -1070,8 +1074,8 @@ describe("BacklogController -", () => {
                 $target_container_element = createElement("ul");
             });
 
-            describe("Given an element to drop and a target container element", function() {
-                it("and given that the element's type was in the container's accepted types, when I check if the element can be dropped, then it will return true", function() {
+            describe("Given an element to drop and a target container element", function () {
+                it("and given that the element's type was in the container's accepted types, when I check if the element can be dropped, then it will return true", function () {
                     angular.element($element_to_drop).data("type", "trackerId49");
                     angular
                         .element($target_container_element)
@@ -1085,7 +1089,7 @@ describe("BacklogController -", () => {
                     expect(result).toBeTruthy();
                 });
 
-                it("and given that the element's type was not in the container's accepted types, when I check if the element can be dropped, then it will return false", function() {
+                it("and given that the element's type was not in the container's accepted types, when I check if the element can be dropped, then it will return false", function () {
                     angular.element($element_to_drop).data("type", "trackerId49");
                     angular.element($target_container_element).data("accept", "trackerId38");
 
@@ -1097,7 +1101,7 @@ describe("BacklogController -", () => {
                     expect(result).toBeFalsy();
                 });
 
-                it("and given that the container had nodrop data, when I check if the element can be dropped, then it will return false", function() {
+                it("and given that the container had nodrop data, when I check if the element can be dropped, then it will return false", function () {
                     angular.element($target_container_element).data("nodrop", true);
 
                     var result = BacklogController.dragularOptionsForBacklog().accepts(
@@ -1152,7 +1156,7 @@ describe("BacklogController -", () => {
                     expect(result).toBeFalsy();
                 });
 
-                it("and given that the element had nodrag data, when I check if the element can be dragged, then it will return false", function() {
+                it("and given that the element had nodrag data, when I check if the element can be dragged, then it will return false", function () {
                     angular.element($element_to_drag).data("nodrag", true);
 
                     var result = BacklogController.dragularOptionsForBacklog().moves(

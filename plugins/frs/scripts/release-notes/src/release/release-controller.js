@@ -28,16 +28,16 @@ function ReleaseController(gettextCatalog, ReleaseRestService, SharedPropertiesS
         error_no_release_artifact: false,
         milestone: null,
         translated_package_name: "",
-        $onInit: init
+        $onInit: init,
     });
 
     function init() {
         Object.assign(self, {
             project_id: SharedPropertiesService.getProjectId(),
-            release: SharedPropertiesService.getRelease()
+            release: SharedPropertiesService.getRelease(),
         });
         self.translated_package_name = gettextCatalog.getString("Package {{ package_name }}", {
-            package_name: self.release.package.label
+            package_name: self.release.package.label,
         });
 
         if (!doesReleaseArtifactExist()) {
@@ -45,7 +45,7 @@ function ReleaseController(gettextCatalog, ReleaseRestService, SharedPropertiesS
             return;
         }
 
-        ReleaseRestService.getMilestone(self.release.artifact.id).then(function(milestone) {
+        ReleaseRestService.getMilestone(self.release.artifact.id).then(function (milestone) {
             self.milestone = milestone;
         });
     }

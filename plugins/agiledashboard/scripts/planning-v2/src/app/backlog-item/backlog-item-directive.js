@@ -8,6 +8,6 @@ export default function BacklogItem() {
         controller: BacklogItemController,
         controllerAs: "backlogItemController",
         bindToController: true,
-        templateUrl: "backlog-item.tpl.html"
+        templateUrl: "backlog-item.tpl.html",
     };
 }

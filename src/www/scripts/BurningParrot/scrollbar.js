@@ -25,6 +25,6 @@ function init() {
     Scrollbar.initAll({
         damping: 1,
         continuousScrolling: false,
-        alwaysShowTracks: true
+        alwaysShowTracks: true,
     });
 }

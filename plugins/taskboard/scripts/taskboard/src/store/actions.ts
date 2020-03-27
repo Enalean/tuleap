@@ -24,7 +24,7 @@ import { UserPreference, UserPreferenceValue } from "./user/type";
 export function displayClosedItems(context: ActionContext<State, RootState>): Promise<void> {
     context.commit("displayClosedItems");
     const payload: UserPreference = {
-        key: getHideClosedPreferenceName(context)
+        key: getHideClosedPreferenceName(context),
     };
 
     return context.dispatch("user/deletePreference", payload, { root: true });
@@ -34,7 +34,7 @@ export function hideClosedItems(context: ActionContext<State, RootState>): Promi
     context.commit("hideClosedItems");
     const payload: UserPreferenceValue = {
         key: getHideClosedPreferenceName(context),
-        value: "1"
+        value: "1",
     };
 
     return context.dispatch("user/setPreference", payload, { root: true });

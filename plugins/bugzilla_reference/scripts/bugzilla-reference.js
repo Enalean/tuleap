@@ -19,35 +19,35 @@
 
 import { modal } from "tlp";
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     var add_reference = document.querySelector("#bugzilla-add-reference"),
         add_reference_bugzilla = document.querySelector("#bugzilla-add-reference-modal");
     const modal_add_reference = modal(add_reference_bugzilla, { keyboard: true });
 
-    add_reference.addEventListener("click", function() {
+    add_reference.addEventListener("click", function () {
         modal_add_reference.toggle();
     });
 
     var bugzilla_modals_edit_buttons = document.querySelectorAll(".bugzilla-edit-modal");
-    [].forEach.call(bugzilla_modals_edit_buttons, function(bugzilla_modals_edit_button) {
+    [].forEach.call(bugzilla_modals_edit_buttons, function (bugzilla_modals_edit_button) {
         var dom_bugzilla_modal_edit = document.getElementById(
             bugzilla_modals_edit_button.getAttribute("data-edit-modal-id")
         );
         var tlp_bugzilla_modal_edit = modal(dom_bugzilla_modal_edit);
 
-        bugzilla_modals_edit_button.addEventListener("click", function() {
+        bugzilla_modals_edit_button.addEventListener("click", function () {
             tlp_bugzilla_modal_edit.toggle();
         });
     });
 
     var bugzilla_modals_delete_buttons = document.querySelectorAll(".bugzilla-delete-modal");
-    [].forEach.call(bugzilla_modals_delete_buttons, function(bugzilla_modals_delete_button) {
+    [].forEach.call(bugzilla_modals_delete_buttons, function (bugzilla_modals_delete_button) {
         var dom_bugzilla_modal_delete = document.getElementById(
             bugzilla_modals_delete_button.getAttribute("data-delete-modal-id")
         );
         var tlp_bugzilla_modal_delete = modal(dom_bugzilla_modal_delete);
 
-        bugzilla_modals_delete_button.addEventListener("click", function() {
+        bugzilla_modals_delete_button.addEventListener("click", function () {
             tlp_bugzilla_modal_delete.toggle();
         });
     });

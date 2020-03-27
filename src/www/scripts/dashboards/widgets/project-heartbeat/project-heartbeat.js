@@ -31,7 +31,7 @@ function init() {
         ".dashboard-widget-content-projectheartbeat-content"
     );
 
-    [].forEach.call(heartbeat_widgets, async widget_content => {
+    [].forEach.call(heartbeat_widgets, async (widget_content) => {
         try {
             const response = await get(
                 "/api/v1/projects/" + widget_content.dataset.projectId + "/heartbeats"
@@ -77,7 +77,7 @@ function getGroupedEntries(widget_content, entries) {
     const datetime_format = phptomoment(widget_content.dataset.dateTimeFormat);
     const date_format = phptomoment(widget_content.dataset.dateFormat);
 
-    entries.forEach(entry => {
+    entries.forEach((entry) => {
         const updated_at = moment(entry.updated_at);
 
         if (updated_at.isSame(today, "day")) {
@@ -96,17 +96,17 @@ function getGroupedEntries(widget_content, entries) {
         groups: [
             {
                 label: widget_content.dataset.today,
-                entries: today_entries
+                entries: today_entries,
             },
             {
                 label: widget_content.dataset.yesterday,
-                entries: yesterday_entries
+                entries: yesterday_entries,
             },
             {
                 label: widget_content.dataset.recently,
-                entries: recently_entries
-            }
-        ]
+                entries: recently_entries,
+            },
+        ],
     };
 }
 
@@ -144,5 +144,5 @@ function displayEmptyState(widget_content, json) {
 }
 
 function hideEverything(widget_content) {
-    [].forEach.call(widget_content.children, child => child.classList.remove("shown"));
+    [].forEach.call(widget_content.children, (child) => child.classList.remove("shown"));
 }

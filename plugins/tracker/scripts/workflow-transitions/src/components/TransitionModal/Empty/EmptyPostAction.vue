@@ -41,8 +41,8 @@ export default {
     name: "EmptyPostAction",
     methods: {
         ...mapMutations({
-            addNewPostAction: "transitionModal/addPostAction"
-        })
-    }
+            addNewPostAction: "transitionModal/addPostAction",
+        }),
+    },
 };
 </script>

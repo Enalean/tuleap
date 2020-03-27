@@ -33,7 +33,7 @@
 export default {
     name: "LockItem",
     props: {
-        item: Object
+        item: Object,
     },
     computed: {
         can_lock_document() {
@@ -42,12 +42,12 @@ export default {
             }
 
             return this.item.user_can_write;
-        }
+        },
     },
     methods: {
         async lockDocument() {
             await this.$store.dispatch("lockDocument", this.item);
-        }
-    }
+        },
+    },
 };
 </script>

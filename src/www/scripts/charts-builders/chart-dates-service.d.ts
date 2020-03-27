@@ -24,7 +24,7 @@ export function getDaysToDisplay({
     opening_days,
     duration,
     points_with_date,
-    start_date
+    start_date,
 }: DaysDisplayingBurndownData): string[] | [];
 
 export function getFormattedDates(dataset: PointsWithDate[]): PointsWithDate[];

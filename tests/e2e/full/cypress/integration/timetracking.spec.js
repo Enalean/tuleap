@@ -18,8 +18,8 @@
  *
  */
 
-describe("Time tracking", function() {
-    it("Project administrator must be able to configure timetracking", function() {
+describe("Time tracking", function () {
+    it("Project administrator must be able to configure timetracking", function () {
         cy.ProjectAdministratorLogin();
 
         cy.visitProjectService("timetracking", "Trackers");
@@ -38,7 +38,7 @@ describe("Time tracking", function() {
         cy.get("[data-test=timetracking-save-configuration]").click();
     });
 
-    it("regular user should be able to track his time in artifact", function() {
+    it("regular user should be able to track his time in artifact", function () {
         cy.projectMemberLogin();
 
         // create an artifact
@@ -55,58 +55,40 @@ describe("Time tracking", function() {
         cy.get("[data-test=timetracking-add-button]").click();
 
         cy.get("[data-test=timetracking-new-row-step]").type("My time");
-        cy.get("[data-test=timetracking-new-row-date]")
-            .clear()
-            .type("2020-02-06");
+        cy.get("[data-test=timetracking-new-row-date]").clear().type("2020-02-06");
         cy.get("[data-test=timetracking-new-row-time]").type("03:00");
 
         cy.get("[data-test=timetracking-add-time]").click();
 
-        cy.get("[data-test=timetracking-times]")
-            .find("tr")
-            .should("have.length", 2);
+        cy.get("[data-test=timetracking-times]").find("tr").should("have.length", 2);
 
         cy.get("[data-test=timetracking-add-button]").click();
 
         cy.get("[data-test=timetracking-new-row-step]").type("My time");
-        cy.get("[data-test=timetracking-new-row-date]")
-            .clear()
-            .type("2020-02-07");
+        cy.get("[data-test=timetracking-new-row-date]").clear().type("2020-02-07");
         cy.get("[data-test=timetracking-new-row-time]").type("04:00");
 
         cy.get("[data-test=timetracking-add-time]").click();
 
-        cy.get("[data-test=timetracking-times]")
-            .find("tr")
-            .should("have.length", 3);
+        cy.get("[data-test=timetracking-times]").find("tr").should("have.length", 3);
 
         cy.get("[data-test=total-timetracking-row]").contains("7");
 
-        cy.get("[data-test=timetracking-delete-time]")
-            .first()
-            .click();
-        cy.get("[data-test=timetracking-delete-confirm]")
-            .first()
-            .click();
+        cy.get("[data-test=timetracking-delete-time]").first().click();
+        cy.get("[data-test=timetracking-delete-confirm]").first().click();
 
         cy.get("[data-test=timetracking-update-time]").click();
-        cy.get("[data-test=timetracking-edit-row-time]")
-            .clear()
-            .type("01:00");
-        cy.get("[data-test=timetracking-edit-row-date]")
-            .clear()
-            .type("2020-03-02");
+        cy.get("[data-test=timetracking-edit-row-time]").clear().type("01:00");
+        cy.get("[data-test=timetracking-edit-row-date]").clear().type("2020-03-02");
 
         cy.get("[data-test=timetracking-edit-time]").click();
 
-        cy.get("[data-test=timetracking-times]")
-            .find("tr")
-            .should("have.length", 2);
+        cy.get("[data-test=timetracking-times]").find("tr").should("have.length", 2);
 
         cy.get("[data-test=total-timetracking-row]").contains("1");
     });
 
-    it("regular user should be able to track his time in his personal widget", function() {
+    it("regular user should be able to track his time in his personal widget", function () {
         cy.projectMemberLogin();
 
         cy.visit("/my");
@@ -129,30 +111,20 @@ describe("Time tracking", function() {
 
         cy.get("[data-test=timetracking-details]").click();
 
-        cy.get("[data-test=timetracking-edit-time]")
-            .first()
-            .click();
-        cy.get("[data-test=timetracking-time]")
-            .clear()
-            .type("04:00");
+        cy.get("[data-test=timetracking-edit-time]").first().click();
+        cy.get("[data-test=timetracking-time]").clear().type("04:00");
         cy.get("[data-test=timetracking-submit-time]").click();
 
         cy.get("[data-test=button-set-add-mode]").click();
-        cy.get("[data-test=timetracking-time]")
-            .clear()
-            .type("04:00");
+        cy.get("[data-test=timetracking-time]").clear().type("04:00");
         cy.get("[data-test=timetracking-submit-time]").click();
 
-        cy.get("[data-test=timetracking-delete-time]")
-            .first()
-            .click();
+        cy.get("[data-test=timetracking-delete-time]").first().click();
         // even if the modal is open, the button might be invisible
-        cy.get("[data-test=timetracking-confirm-time-deletion]")
-            .first()
-            .click({ force: true });
+        cy.get("[data-test=timetracking-confirm-time-deletion]").first().click({ force: true });
     });
 
-    it("manager should be able to track time of his subordinates", function() {
+    it("manager should be able to track time of his subordinates", function () {
         cy.ProjectAdministratorLogin();
         cy.server();
         cy.visit("/my");
@@ -162,7 +134,7 @@ describe("Time tracking", function() {
         cy.get("[data-test=dashboard-add-widget-button-submit]").click();
 
         // select some trackers
-        cy.getProjectId("timetracking").then(project_id => {
+        cy.getProjectId("timetracking").then((project_id) => {
             cy.visit("/my/");
 
             cy.route(
@@ -181,9 +153,7 @@ describe("Time tracking", function() {
 
         cy.get("[data-test=overview-search-times]").click();
         //check that at least one time correspond to query
-        cy.get("[data-test=overview-table]")
-            .find("tr")
-            .should("have.length", 3);
+        cy.get("[data-test=overview-table]").find("tr").should("have.length", 3);
 
         //check that user can save report
         cy.get("[data-test=save-overview-report]").click();

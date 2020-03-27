@@ -25,7 +25,7 @@ function mockFetchSuccess(spy_function, { headers, return_json } = {}) {
     spy_function.mockReturnValue(
         Promise.resolve({
             headers,
-            json: () => Promise.resolve(return_json)
+            json: () => Promise.resolve(return_json),
         })
     );
 }
@@ -37,8 +37,8 @@ function mockFetchError(spy_function, { status, statusText, error_json } = {}) {
                 ok: false,
                 status,
                 statusText,
-                json: () => Promise.resolve(error_json)
-            }
+                json: () => Promise.resolve(error_json),
+            },
         })
     );
 }

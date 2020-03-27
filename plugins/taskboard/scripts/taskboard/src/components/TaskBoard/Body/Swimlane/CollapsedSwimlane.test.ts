@@ -30,9 +30,9 @@ describe("CollapsedSwimlane", () => {
             state: {
                 swimlane: {},
                 column: {
-                    columns: [] as ColumnDefinition[]
-                }
-            } as RootState
+                    columns: [] as ColumnDefinition[],
+                },
+            } as RootState,
         });
         const wrapper = shallowMount(CollapsedSwimlane, {
             localVue: await createTaskboardLocalVue(),
@@ -40,10 +40,10 @@ describe("CollapsedSwimlane", () => {
             propsData: {
                 swimlane: {
                     card: {
-                        color: "fiesta-red"
-                    }
-                } as Swimlane
-            }
+                        color: "fiesta-red",
+                    },
+                } as Swimlane,
+            },
         });
 
         expect(wrapper.element).toMatchSnapshot();
@@ -54,19 +54,19 @@ describe("CollapsedSwimlane", () => {
             state: {
                 swimlane: {},
                 column: {
-                    columns: [] as ColumnDefinition[]
-                }
-            } as RootState
+                    columns: [] as ColumnDefinition[],
+                },
+            } as RootState,
         });
         const swimlane: Swimlane = {
             card: {
-                color: "fiesta-red"
-            }
+                color: "fiesta-red",
+            },
         } as Swimlane;
         const wrapper = shallowMount(CollapsedSwimlane, {
             localVue: await createTaskboardLocalVue(),
             mocks: { $store },
-            propsData: { swimlane }
+            propsData: { swimlane },
         });
         wrapper.find(".taskboard-swimlane-toggle").trigger("click");
         expect($store.dispatch).toHaveBeenCalledWith("swimlane/expandSwimlane", swimlane);

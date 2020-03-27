@@ -25,29 +25,29 @@ const public_assets_path = "/assets/";
 
 module.exports = {
     entry: {
-        "rich-text-editor": "./tuleap/textarea_rte.js"
+        "rich-text-editor": "./tuleap/textarea_rte.js",
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path, public_assets_path),
     externals: {
         ckeditor: "CKEDITOR",
-        tuleap: "tuleap"
+        tuleap: "tuleap",
     },
     module: {
         rules: [
             webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
-            webpack_configurator.rule_po_files
-        ]
+            webpack_configurator.rule_po_files,
+        ],
     },
     resolve: {
         alias: {
-            "tlp-fetch": path.resolve(__dirname, "../themes/common/tlp/src/js/fetch-wrapper.js")
-        }
+            "tlp-fetch": path.resolve(__dirname, "../themes/common/tlp/src/js/fetch-wrapper.js"),
+        },
     },
     optimization: {
         // Prototype doesn't like minimization due to the fact
         // that it checks for the presence of "$super" argument
         // during class initialization.
-        minimize: false
-    }
+        minimize: false,
+    },
 };

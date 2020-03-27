@@ -24,7 +24,7 @@ describe("Milestones Sprints Helper", () => {
     describe("openSprintsExists", () => {
         it("When total_sprints is undefined, Then false returned", () => {
             const release_data: MilestoneData = {
-                id: 10
+                id: 10,
             } as MilestoneData;
 
             const exists = openSprintsExist(release_data);
@@ -33,7 +33,7 @@ describe("Milestones Sprints Helper", () => {
         it("When total_sprints is null, Then false returned", () => {
             const release_data: MilestoneData = {
                 id: 10,
-                total_sprint: null
+                total_sprint: null,
             } as MilestoneData;
 
             const exists = openSprintsExist(release_data);
@@ -42,7 +42,7 @@ describe("Milestones Sprints Helper", () => {
         it("When total_sprints is defined but open_sprints is undefined, Then false returned", () => {
             const release_data: MilestoneData = {
                 id: 10,
-                total_sprint: 10
+                total_sprint: 10,
             } as MilestoneData;
 
             const exists = openSprintsExist(release_data);
@@ -52,7 +52,7 @@ describe("Milestones Sprints Helper", () => {
             const release_data: MilestoneData = {
                 id: 10,
                 total_sprint: 10,
-                open_sprints: null
+                open_sprints: null,
             } as MilestoneData;
 
             const exists = openSprintsExist(release_data);
@@ -62,7 +62,7 @@ describe("Milestones Sprints Helper", () => {
             const release_data: MilestoneData = {
                 id: 10,
                 total_sprint: 10,
-                open_sprints: [] as MilestoneData[]
+                open_sprints: [] as MilestoneData[],
             } as MilestoneData;
 
             const exists = openSprintsExist(release_data);
@@ -72,7 +72,7 @@ describe("Milestones Sprints Helper", () => {
             const release_data: MilestoneData = {
                 id: 10,
                 total_sprint: 10,
-                open_sprints: [{ id: 1 } as MilestoneData]
+                open_sprints: [{ id: 1 } as MilestoneData],
             } as MilestoneData;
 
             const exists = openSprintsExist(release_data);

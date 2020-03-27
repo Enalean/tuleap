@@ -20,5 +20,5 @@
 const polyfills_for_fetch = ["whatwg-fetch"];
 
 module.exports = {
-    polyfills_for_fetch
+    polyfills_for_fetch,
 };

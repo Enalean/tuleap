@@ -65,7 +65,7 @@ export default {
     name: "GitRepositoryTableSimplePermissions",
     components: { GitPermissionsBadge },
     props: {
-        repositoryPermission: Object
-    }
+        repositoryPermission: Object,
+    },
 };
 </script>

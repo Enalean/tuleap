@@ -20,6 +20,6 @@
 export default () => {
     return {
         project_metadata_list: [],
-        has_loaded_metadata: false
+        has_loaded_metadata: false,
     };
 };

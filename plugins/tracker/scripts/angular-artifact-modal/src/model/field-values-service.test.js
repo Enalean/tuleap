@@ -27,7 +27,7 @@ describe("TuleapArtifactFieldValuesService", () => {
     beforeEach(() => {
         angular.mock.module(model_module);
 
-        angular.mock.inject(function(_TuleapArtifactFieldValuesService_) {
+        angular.mock.inject(function (_TuleapArtifactFieldValuesService_) {
             FieldValuesService = _TuleapArtifactFieldValuesService_;
 
             jest.spyOn(moment.fn, "format").mockImplementation(() => {});
@@ -42,8 +42,8 @@ describe("TuleapArtifactFieldValuesService", () => {
                     378: { field_id: 378, bind_value_ids: [667, 967] },
                     320: {
                         field_id: 320,
-                        links: [{ id: 158 }, { id: 434 }]
-                    }
+                        links: [{ id: 158 }, { id: 434 }],
+                    },
                 };
                 const tracker = {
                     fields: [
@@ -53,7 +53,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                             name: "arbusterol",
                             type: "string",
                             permissions: ["read", "update", "create"],
-                            default_value: "yogasana"
+                            default_value: "yogasana",
                         },
                         {
                             field_id: 728,
@@ -61,7 +61,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                             name: "hemicycle",
                             type: "rb",
                             permissions: ["read", "update", "create"],
-                            default_value: [{ id: 422, label: "unilinear" }]
+                            default_value: [{ id: 422, label: "unilinear" }],
                         },
                         {
                             field_id: 378,
@@ -69,16 +69,16 @@ describe("TuleapArtifactFieldValuesService", () => {
                             name: "awaredom",
                             type: "sb",
                             permissions: ["read", "update", "create"],
-                            default_value: [{ id: 967, label: "intertransmission" }]
+                            default_value: [{ id: 967, label: "intertransmission" }],
                         },
                         {
                             field_id: 320,
                             label: "rani",
                             name: "troot",
                             type: "art_link",
-                            permissions: ["read", "update", "create"]
-                        }
-                    ]
+                            permissions: ["read", "update", "create"],
+                        },
+                    ],
                 };
 
                 const output = FieldValuesService.getSelectedValues(artifact_values, tracker);
@@ -88,31 +88,31 @@ describe("TuleapArtifactFieldValuesService", () => {
                         field_id: 655,
                         type: "string",
                         permissions: ["read", "update", "create"],
-                        value: "alumna Aurora Arpin"
+                        value: "alumna Aurora Arpin",
                     },
                     728: {
                         field_id: 728,
                         bind_value_ids: [422],
                         type: "rb",
-                        permissions: ["read", "update", "create"]
+                        permissions: ["read", "update", "create"],
                     },
                     378: {
                         field_id: 378,
                         bind_value_ids: [667, 967],
                         type: "sb",
-                        permissions: ["read", "update", "create"]
+                        permissions: ["read", "update", "create"],
                     },
                     320: {
                         field_id: 320,
                         links: [{}],
                         unformatted_links: "158, 434",
                         type: "art_link",
-                        permissions: ["read", "update", "create"]
-                    }
+                        permissions: ["read", "update", "create"],
+                    },
                 });
             });
 
-            it("containing read-only fields such as aid, atid, lud, burndown, priority, subby, luby, subon, cross or tbl and given a tracker, when I get the fields' selected values, then those fields won't have a value in the returned map", function() {
+            it("containing read-only fields such as aid, atid, lud, burndown, priority, subby, luby, subon, cross or tbl and given a tracker, when I get the fields' selected values, then those fields won't have a value in the returned map", function () {
                 var artifact_values = {
                     280: { field_id: 280, value: 271 },
                     973: { field_id: 973, value: 436 },
@@ -122,8 +122,8 @@ describe("TuleapArtifactFieldValuesService", () => {
                         value: {
                             duration: 85,
                             capacity: 79,
-                            points: [11.52, 87.5, 70.65]
-                        }
+                            points: [11.52, 87.5, 70.65],
+                        },
                     },
                     188: { field_id: 188, value: 691 },
                     183: { field_id: 183, value: "Juli Devens" },
@@ -135,10 +135,10 @@ describe("TuleapArtifactFieldValuesService", () => {
                             {
                                 ref: "story #973",
                                 url:
-                                    "https://onychotrophy.com/wealden/organing?a=pharmacometer&b=terribleness#viscid"
-                            }
-                        ]
-                    }
+                                    "https://onychotrophy.com/wealden/organing?a=pharmacometer&b=terribleness#viscid",
+                            },
+                        ],
+                    },
                 };
                 var tracker = {
                     fields: [
@@ -150,8 +150,8 @@ describe("TuleapArtifactFieldValuesService", () => {
                         { field_id: 183, type: "subby" },
                         { field_id: 586, type: "luby" },
                         { field_id: 89, type: "subon" },
-                        { field_id: 906, type: "cross" }
-                    ]
+                        { field_id: 906, type: "cross" },
+                    ],
                 };
                 var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
                 expect(output).toEqual({
@@ -163,13 +163,13 @@ describe("TuleapArtifactFieldValuesService", () => {
                     183: { field_id: 183, type: "subby" },
                     586: { field_id: 586, type: "luby" },
                     89: { field_id: 89, type: "subon" },
-                    906: { field_id: 906, type: "cross" }
+                    906: { field_id: 906, type: "cross" },
                 });
             });
         });
 
-        describe("Given a tracker containing a string field,", function() {
-            it("and that it didn't have a default value, when I get the fields' selected values, then a map of objects containing the field's id and a null value will be returned", function() {
+        describe("Given a tracker containing a string field,", function () {
+            it("and that it didn't have a default value, when I get the fields' selected values, then a map of objects containing the field's id and a null value will be returned", function () {
                 var tracker = {
                     fields: [
                         {
@@ -177,9 +177,9 @@ describe("TuleapArtifactFieldValuesService", () => {
                             label: "Mammilloid",
                             name: "coquelicot",
                             permissions: ["read", "update", "create"],
-                            type: "string"
-                        }
-                    ]
+                            type: "string",
+                        },
+                    ],
                 };
                 var output = FieldValuesService.getSelectedValues({}, tracker);
                 expect(output).toEqual({
@@ -187,12 +187,12 @@ describe("TuleapArtifactFieldValuesService", () => {
                         field_id: 870,
                         permissions: ["read", "update", "create"],
                         type: "string",
-                        value: null
-                    }
+                        value: null,
+                    },
                 });
             });
 
-            it("and that it had a default value, when I get the fields' selected values, then a map of objects containing the field's id and its default value will be returned", function() {
+            it("and that it had a default value, when I get the fields' selected values, then a map of objects containing the field's id and its default value will be returned", function () {
                 var tracker = {
                     fields: [
                         {
@@ -201,9 +201,9 @@ describe("TuleapArtifactFieldValuesService", () => {
                             name: "idolatrize",
                             permissions: ["read", "update", "create"],
                             type: "string",
-                            default_value: "Despina Pistorius chronoisothermal"
-                        }
-                    ]
+                            default_value: "Despina Pistorius chronoisothermal",
+                        },
+                    ],
                 };
                 var output = FieldValuesService.getSelectedValues([], tracker);
                 expect(output).toEqual({
@@ -211,21 +211,21 @@ describe("TuleapArtifactFieldValuesService", () => {
                         field_id: 175,
                         permissions: ["read", "update", "create"],
                         type: "string",
-                        value: "Despina Pistorius chronoisothermal"
-                    }
+                        value: "Despina Pistorius chronoisothermal",
+                    },
                 });
             });
         });
 
-        describe("Given a tracker containing a text field,", function() {
-            it("and given a map of artifact field values containing that field, when I get the fields' selected values, then a map of objects containing the formatted artifact value will be returned", function() {
+        describe("Given a tracker containing a text field,", function () {
+            it("and given a map of artifact field values containing that field, when I get the fields' selected values, then a map of objects containing the formatted artifact value will be returned", function () {
                 var artifact_values = {
                     901: {
                         field_id: 901,
                         format: "HTML",
                         type: "text",
-                        value: "<p><b>Cleta</b> Goetsch bicipital <em>xylophagid</em></p>"
-                    }
+                        value: "<p><b>Cleta</b> Goetsch bicipital <em>xylophagid</em></p>",
+                    },
                 };
                 var tracker = {
                     fields: [
@@ -234,9 +234,9 @@ describe("TuleapArtifactFieldValuesService", () => {
                             label: "holard",
                             name: "flueless",
                             permissions: ["read", "update", "create"],
-                            type: "text"
-                        }
-                    ]
+                            type: "text",
+                        },
+                    ],
                 };
                 var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
                 expect(output).toEqual({
@@ -246,13 +246,13 @@ describe("TuleapArtifactFieldValuesService", () => {
                         permissions: ["read", "update", "create"],
                         value: {
                             content: "<p><b>Cleta</b> Goetsch bicipital <em>xylophagid</em></p>",
-                            format: "HTML"
-                        }
-                    }
+                            format: "HTML",
+                        },
+                    },
                 });
             });
 
-            it("and that it didn't have a default value, when I get the fields' selected values, then a map of objects containing the field's id, the 'text' format and a null value", function() {
+            it("and that it didn't have a default value, when I get the fields' selected values, then a map of objects containing the field's id, the 'text' format and a null value", function () {
                 var tracker = {
                     fields: [
                         {
@@ -260,9 +260,9 @@ describe("TuleapArtifactFieldValuesService", () => {
                             label: "heritage",
                             name: "forbidder",
                             permissions: ["read", "update", "create"],
-                            type: "text"
-                        }
-                    ]
+                            type: "text",
+                        },
+                    ],
                 };
                 var output = FieldValuesService.getSelectedValues({}, tracker);
                 expect(output).toEqual({
@@ -272,13 +272,13 @@ describe("TuleapArtifactFieldValuesService", () => {
                         type: "text",
                         value: {
                             content: null,
-                            format: "text"
-                        }
-                    }
+                            format: "text",
+                        },
+                    },
                 });
             });
 
-            it("and that it had a default value, when I get the fields' selected values, then a map of objects containing the field's id, the default format and the default value", function() {
+            it("and that it had a default value, when I get the fields' selected values, then a map of objects containing the field's id, the default format and the default value", function () {
                 var tracker = {
                     fields: [
                         {
@@ -289,10 +289,10 @@ describe("TuleapArtifactFieldValuesService", () => {
                             type: "text",
                             default_value: {
                                 format: "HTML",
-                                content: "<p>quartane <b>Christel</b> Kalchik roentgentherapy</p>"
-                            }
-                        }
-                    ]
+                                content: "<p>quartane <b>Christel</b> Kalchik roentgentherapy</p>",
+                            },
+                        },
+                    ],
                 };
                 var output = FieldValuesService.getSelectedValues({}, tracker);
                 expect(output).toEqual({
@@ -302,15 +302,15 @@ describe("TuleapArtifactFieldValuesService", () => {
                         permissions: ["read", "update", "create"],
                         value: {
                             content: "<p>quartane <b>Christel</b> Kalchik roentgentherapy</p>",
-                            format: "HTML"
-                        }
-                    }
+                            format: "HTML",
+                        },
+                    },
                 });
             });
         });
 
-        describe("Given a tracker containing an int field and a float field,", function() {
-            it("and that those fields didn't have a default value, when I get the fields' selected values, then a map of objects containing only the fields' id and a null value will be returned", function() {
+        describe("Given a tracker containing an int field and a float field,", function () {
+            it("and that those fields didn't have a default value, when I get the fields' selected values, then a map of objects containing only the fields' id and a null value will be returned", function () {
                 var tracker = {
                     fields: [
                         {
@@ -318,16 +318,16 @@ describe("TuleapArtifactFieldValuesService", () => {
                             label: "raiiform",
                             name: "loft",
                             permissions: ["read", "update", "create"],
-                            type: "int"
+                            type: "int",
                         },
                         {
                             field_id: 775,
                             label: "phalacrocoracine",
                             name: "unvariant",
                             permissions: ["read", "update", "create"],
-                            type: "float"
-                        }
-                    ]
+                            type: "float",
+                        },
+                    ],
                 };
                 var output = FieldValuesService.getSelectedValues({}, tracker);
                 expect(output).toEqual({
@@ -335,18 +335,18 @@ describe("TuleapArtifactFieldValuesService", () => {
                         field_id: 685,
                         type: "int",
                         permissions: ["read", "update", "create"],
-                        value: null
+                        value: null,
                     },
                     775: {
                         field_id: 775,
                         type: "float",
                         permissions: ["read", "update", "create"],
-                        value: null
-                    }
+                        value: null,
+                    },
                 });
             });
 
-            it("and that those fields had a default value, when I get the fields' selected values, then a map of objects containing only the fields' id and their default value will be returned", function() {
+            it("and that those fields had a default value, when I get the fields' selected values, then a map of objects containing only the fields' id and their default value will be returned", function () {
                 var tracker = {
                     fields: [
                         {
@@ -355,7 +355,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                             name: "priestless",
                             permissions: ["read", "update", "create"],
                             type: "float",
-                            default_value: "68.8596"
+                            default_value: "68.8596",
                         },
                         {
                             field_id: 220,
@@ -363,9 +363,9 @@ describe("TuleapArtifactFieldValuesService", () => {
                             name: "hodograph",
                             permissions: ["read", "update", "create"],
                             type: "int",
-                            default_value: "236"
-                        }
-                    ]
+                            default_value: "236",
+                        },
+                    ],
                 };
                 var output = FieldValuesService.getSelectedValues({}, tracker);
                 expect(output).toEqual({
@@ -373,24 +373,24 @@ describe("TuleapArtifactFieldValuesService", () => {
                         field_id: 163,
                         type: "float",
                         permissions: ["read", "update", "create"],
-                        value: 68.8596
+                        value: 68.8596,
                     },
                     220: {
                         field_id: 220,
                         type: "int",
                         permissions: ["read", "update", "create"],
-                        value: 236
-                    }
+                        value: 236,
+                    },
                 });
                 expect(typeof output[163].value).toBe("number");
                 expect(typeof output[220].value).toBe("number");
             });
         });
 
-        describe("Given a tracker containing a date field", function() {
-            it("without the time displayed and given a map of artifact field values containing that field, when I get the fields' selected values, then a map of objects containing the formatted artifact value will be returned", function() {
+        describe("Given a tracker containing a date field", function () {
+            it("without the time displayed and given a map of artifact field values containing that field, when I get the fields' selected values, then a map of objects containing the formatted artifact value will be returned", function () {
                 var artifact_values = {
-                    824: { field_id: 824, value: "2015-05-29T00:00:00+02:00" }
+                    824: { field_id: 824, value: "2015-05-29T00:00:00+02:00" },
                 };
                 var tracker = {
                     fields: [
@@ -399,9 +399,9 @@ describe("TuleapArtifactFieldValuesService", () => {
                             label: "nondrying",
                             name: "indisciplined",
                             permissions: ["read", "update", "create"],
-                            type: "date"
-                        }
-                    ]
+                            type: "date",
+                        },
+                    ],
                 };
                 var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
                 expect(moment.fn.format).toHaveBeenCalledWith("YYYY-MM-DD");
@@ -409,9 +409,9 @@ describe("TuleapArtifactFieldValuesService", () => {
                 expect(output[824].permissions).toEqual(["read", "update", "create"]);
             });
 
-            it("with the time displayed and given a map of artifact field values containing that field, when I get the fields' selected values, then a map of objects containing the formatted artifact value will be returned", function() {
+            it("with the time displayed and given a map of artifact field values containing that field, when I get the fields' selected values, then a map of objects containing the formatted artifact value will be returned", function () {
                 var artifact_values = {
-                    609: { field_id: 609, value: "2015-06-02T18:09:43+03:00" }
+                    609: { field_id: 609, value: "2015-06-02T18:09:43+03:00" },
                 };
                 var tracker = {
                     fields: [
@@ -421,9 +421,9 @@ describe("TuleapArtifactFieldValuesService", () => {
                             name: "",
                             permissions: ["read", "update", "create"],
                             type: "date",
-                            is_time_displayed: "true"
-                        }
-                    ]
+                            is_time_displayed: "true",
+                        },
+                    ],
                 };
                 var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
                 expect(moment.fn.format).toHaveBeenCalledWith("YYYY-MM-DD HH:mm");
@@ -432,13 +432,13 @@ describe("TuleapArtifactFieldValuesService", () => {
             });
         });
 
-        describe("Given a tracker containing a selectbox field", function() {
-            it("and given a map of artifact field values containing that field, when I get the fields' selected values, then a map of objects containing the artifact values will be returned", function() {
+        describe("Given a tracker containing a selectbox field", function () {
+            it("and given a map of artifact field values containing that field, when I get the fields' selected values, then a map of objects containing the artifact values will be returned", function () {
                 var artifact_values = {
                     613: {
                         field_id: 613,
-                        bind_value_ids: [557]
-                    }
+                        bind_value_ids: [557],
+                    },
                 };
                 var tracker = {
                     fields: [
@@ -447,9 +447,9 @@ describe("TuleapArtifactFieldValuesService", () => {
                             label: "heritor",
                             name: "theow",
                             permissions: ["read", "update", "create"],
-                            type: "sb"
-                        }
-                    ]
+                            type: "sb",
+                        },
+                    ],
                 };
                 var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
                 expect(output).toEqual({
@@ -457,12 +457,12 @@ describe("TuleapArtifactFieldValuesService", () => {
                         field_id: 613,
                         bind_value_ids: [557],
                         type: "sb",
-                        permissions: ["read", "update", "create"]
-                    }
+                        permissions: ["read", "update", "create"],
+                    },
                 });
             });
 
-            it("and that it didn't have a default value, when I get the fields' selected values, then a map of objects containing the field's id and bind_value_ids array [100] will be returned", function() {
+            it("and that it didn't have a default value, when I get the fields' selected values, then a map of objects containing the field's id and bind_value_ids array [100] will be returned", function () {
                 var tracker = {
                     fields: [
                         {
@@ -470,9 +470,9 @@ describe("TuleapArtifactFieldValuesService", () => {
                             label: "monarchist",
                             name: "artophorion",
                             permissions: ["read", "update", "create"],
-                            type: "sb"
-                        }
-                    ]
+                            type: "sb",
+                        },
+                    ],
                 };
                 var output = FieldValuesService.getSelectedValues({}, tracker);
                 expect(output).toEqual({
@@ -480,12 +480,12 @@ describe("TuleapArtifactFieldValuesService", () => {
                         field_id: 87,
                         bind_value_ids: [100],
                         type: "sb",
-                        permissions: ["read", "update", "create"]
-                    }
+                        permissions: ["read", "update", "create"],
+                    },
                 });
             });
 
-            it("and that it had a default value, when I get the fields' selected values, then a map of objects containing the field's id and a bind_value_ids array containing its default value will be returned", function() {
+            it("and that it had a default value, when I get the fields' selected values, then a map of objects containing the field's id and a bind_value_ids array containing its default value will be returned", function () {
                 var tracker = {
                     fields: [
                         {
@@ -494,9 +494,9 @@ describe("TuleapArtifactFieldValuesService", () => {
                             name: "boatmaster",
                             permissions: ["read", "update", "create"],
                             type: "sb",
-                            default_value: [{ id: 941, label: "hair" }]
-                        }
-                    ]
+                            default_value: [{ id: 941, label: "hair" }],
+                        },
+                    ],
                 };
                 var output = FieldValuesService.getSelectedValues({}, tracker);
                 expect(output).toEqual({
@@ -504,12 +504,12 @@ describe("TuleapArtifactFieldValuesService", () => {
                         field_id: 622,
                         bind_value_ids: [941],
                         type: "sb",
-                        permissions: ["read", "update", "create"]
-                    }
+                        permissions: ["read", "update", "create"],
+                    },
                 });
             });
 
-            it("and that it had a default value that wasn't in the available transitions values, when I get the fields' selected values, then a map of objects containing the field's id and a bind_value_ids array containing the first available transition value will be returned", function() {
+            it("and that it had a default value that wasn't in the available transitions values, when I get the fields' selected values, then a map of objects containing the field's id and a bind_value_ids array containing the first available transition value will be returned", function () {
                 var tracker = {
                     fields: [
                         {
@@ -521,11 +521,11 @@ describe("TuleapArtifactFieldValuesService", () => {
                             default_value: [{ id: 807, label: "uniflow" }],
                             values: [
                                 { id: 412, label: "entosphenoid" },
-                                { id: 182, label: "trisul" }
+                                { id: 182, label: "trisul" },
                             ],
-                            has_transitions: true
-                        }
-                    ]
+                            has_transitions: true,
+                        },
+                    ],
                 };
                 var output = FieldValuesService.getSelectedValues({}, tracker);
                 expect(output).toEqual({
@@ -533,19 +533,19 @@ describe("TuleapArtifactFieldValuesService", () => {
                         field_id: 90,
                         bind_value_ids: [412],
                         type: "sb",
-                        permissions: ["read", "update", "create"]
-                    }
+                        permissions: ["read", "update", "create"],
+                    },
                 });
             });
         });
 
-        describe("Given a tracker containing a multiselectbox field", function() {
-            it("and given a map of artifact field values containing that field, when I get the fields' selected values, then a map of objects containing the artifact value will be returned", function() {
+        describe("Given a tracker containing a multiselectbox field", function () {
+            it("and given a map of artifact field values containing that field, when I get the fields' selected values, then a map of objects containing the artifact value will be returned", function () {
                 var artifact_values = {
                     383: {
                         field_id: 383,
-                        bind_value_ids: [971, 679]
-                    }
+                        bind_value_ids: [971, 679],
+                    },
                 };
                 var tracker = {
                     fields: [
@@ -554,9 +554,9 @@ describe("TuleapArtifactFieldValuesService", () => {
                             label: "hospodar",
                             name: "babyship",
                             permissions: ["read", "update", "create"],
-                            type: "msb"
-                        }
-                    ]
+                            type: "msb",
+                        },
+                    ],
                 };
                 var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
                 expect(output).toEqual({
@@ -564,12 +564,12 @@ describe("TuleapArtifactFieldValuesService", () => {
                         field_id: 383,
                         bind_value_ids: [971, 679],
                         type: "msb",
-                        permissions: ["read", "update", "create"]
-                    }
+                        permissions: ["read", "update", "create"],
+                    },
                 });
             });
 
-            it("and that it didn't have a default value, when I get the fields' selected values, then a map of objects containing the field's id and a bind_value_ids array [100] will be returned", function() {
+            it("and that it didn't have a default value, when I get the fields' selected values, then a map of objects containing the field's id and a bind_value_ids array [100] will be returned", function () {
                 var tracker = {
                     fields: [
                         {
@@ -577,9 +577,9 @@ describe("TuleapArtifactFieldValuesService", () => {
                             label: "gorilline",
                             name: "beefer",
                             permissions: ["read", "update", "create"],
-                            type: "msb"
-                        }
-                    ]
+                            type: "msb",
+                        },
+                    ],
                 };
                 var output = FieldValuesService.getSelectedValues({}, tracker);
                 expect(output).toEqual({
@@ -587,12 +587,12 @@ describe("TuleapArtifactFieldValuesService", () => {
                         field_id: 860,
                         bind_value_ids: [100],
                         type: "msb",
-                        permissions: ["read", "update", "create"]
-                    }
+                        permissions: ["read", "update", "create"],
+                    },
                 });
             });
 
-            it("and that it had a default value, when I get the fields' selected values, then a map of objects containing the field's id and a bind_value_ids array filled with the 2 default values will be returned", function() {
+            it("and that it had a default value, when I get the fields' selected values, then a map of objects containing the field's id and a bind_value_ids array filled with the 2 default values will be returned", function () {
                 var tracker = {
                     fields: [
                         {
@@ -603,10 +603,10 @@ describe("TuleapArtifactFieldValuesService", () => {
                             type: "msb",
                             default_value: [
                                 { id: 196, label: "Polythalamia" },
-                                { id: 800, label: "teleanemograph" }
-                            ]
-                        }
-                    ]
+                                { id: 800, label: "teleanemograph" },
+                            ],
+                        },
+                    ],
                 };
                 var output = FieldValuesService.getSelectedValues({}, tracker);
                 expect(output).toEqual({
@@ -614,16 +614,16 @@ describe("TuleapArtifactFieldValuesService", () => {
                         field_id: 698,
                         bind_value_ids: [196, 800],
                         type: "msb",
-                        permissions: ["read", "update", "create"]
-                    }
+                        permissions: ["read", "update", "create"],
+                    },
                 });
             });
         });
 
-        describe("Given a tracker containing a checkbox field with 3 possible values,", function() {
-            it("and given a map of artifact field values containing that field, when I get the fields' selected values, then a map of objects containing an array of 3 elements including the values in the artifact field value will be returned", function() {
+        describe("Given a tracker containing a checkbox field with 3 possible values,", function () {
+            it("and given a map of artifact field values containing that field, when I get the fields' selected values, then a map of objects containing an array of 3 elements including the values in the artifact field value will be returned", function () {
                 var artifact_values = {
-                    137: { field_id: 137, type: "cb", bind_value_ids: [498, 443] }
+                    137: { field_id: 137, type: "cb", bind_value_ids: [498, 443] },
                 };
                 var tracker = {
                     fields: [
@@ -636,10 +636,10 @@ describe("TuleapArtifactFieldValuesService", () => {
                             values: [
                                 { id: 498, label: "uncommendable", is_hidden: false },
                                 { id: 248, label: "Aleurodes", is_hidden: false },
-                                { id: 443, label: "thinglike", is_hidden: false }
-                            ]
-                        }
-                    ]
+                                { id: 443, label: "thinglike", is_hidden: false },
+                            ],
+                        },
+                    ],
                 };
                 var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
                 expect(output).toEqual({
@@ -647,12 +647,12 @@ describe("TuleapArtifactFieldValuesService", () => {
                         field_id: 137,
                         bind_value_ids: [498, null, 443],
                         type: "cb",
-                        permissions: ["read", "update", "create"]
-                    }
+                        permissions: ["read", "update", "create"],
+                    },
                 });
             });
 
-            it("and that it didn't have a default value, when I get the fields' selected values, then a map of objects containing only the field's id and a bind_value_ids array filled with 3 nulls will be returned", function() {
+            it("and that it didn't have a default value, when I get the fields' selected values, then a map of objects containing only the field's id and a bind_value_ids array filled with 3 nulls will be returned", function () {
                 var tracker = {
                     fields: [
                         {
@@ -664,10 +664,10 @@ describe("TuleapArtifactFieldValuesService", () => {
                             values: [
                                 { id: 842, label: "mussal", is_hidden: false },
                                 { id: 733, label: "Nepenthaceae", is_hidden: false },
-                                { id: 833, label: "Vaticanize", is_hidden: false }
-                            ]
-                        }
-                    ]
+                                { id: 833, label: "Vaticanize", is_hidden: false },
+                            ],
+                        },
+                    ],
                 };
                 var output = FieldValuesService.getSelectedValues({}, tracker);
                 expect(output).toEqual({
@@ -675,12 +675,12 @@ describe("TuleapArtifactFieldValuesService", () => {
                         field_id: 607,
                         bind_value_ids: [null, null, null],
                         type: "cb",
-                        permissions: ["read", "update", "create"]
-                    }
+                        permissions: ["read", "update", "create"],
+                    },
                 });
             });
 
-            it("and that it had 2 default values, when I get the fields' selected values, then a map of objects containing the field's id and a bind_value_ids array filled with the 2 default values and a null will be returned", function() {
+            it("and that it had 2 default values, when I get the fields' selected values, then a map of objects containing the field's id and a bind_value_ids array filled with the 2 default values and a null will be returned", function () {
                 var tracker = {
                     fields: [
                         {
@@ -692,14 +692,14 @@ describe("TuleapArtifactFieldValuesService", () => {
                             values: [
                                 { id: 477, label: "Reuel", is_hidden: false },
                                 { id: 440, label: "espalier", is_hidden: false },
-                                { id: 848, label: "overtrust", is_hidden: false }
+                                { id: 848, label: "overtrust", is_hidden: false },
                             ],
                             default_value: [
                                 { id: 477, label: "crestfallen", is_hidden: false },
-                                { id: 848, label: "Afrikanderism", is_hidden: false }
-                            ]
-                        }
-                    ]
+                                { id: 848, label: "Afrikanderism", is_hidden: false },
+                            ],
+                        },
+                    ],
                 };
                 var output = FieldValuesService.getSelectedValues({}, tracker);
                 expect(output).toEqual({
@@ -707,16 +707,16 @@ describe("TuleapArtifactFieldValuesService", () => {
                         field_id: 910,
                         bind_value_ids: [477, null, 848],
                         type: "cb",
-                        permissions: ["read", "update", "create"]
-                    }
+                        permissions: ["read", "update", "create"],
+                    },
                 });
             });
         });
 
-        describe("Given a tracker containing a radiobutton field,", function() {
-            it("and given a map of artifact field values containing that field and that field's bind_value_ids array was empty, when I get the fields' selected values, then a map of objects containing the field's id and a bind_value_ids array [100] will be returned", function() {
+        describe("Given a tracker containing a radiobutton field,", function () {
+            it("and given a map of artifact field values containing that field and that field's bind_value_ids array was empty, when I get the fields' selected values, then a map of objects containing the field's id and a bind_value_ids array [100] will be returned", function () {
                 var artifact_values = {
-                    430: { field_id: 430, type: "rb", bind_value_ids: [] }
+                    430: { field_id: 430, type: "rb", bind_value_ids: [] },
                 };
                 var tracker = {
                     fields: [
@@ -725,9 +725,9 @@ describe("TuleapArtifactFieldValuesService", () => {
                             label: "parascene",
                             name: "gap",
                             permissions: ["read", "update", "create"],
-                            type: "rb"
-                        }
-                    ]
+                            type: "rb",
+                        },
+                    ],
                 };
                 var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
                 expect(output).toEqual({
@@ -735,12 +735,12 @@ describe("TuleapArtifactFieldValuesService", () => {
                         field_id: 430,
                         bind_value_ids: [100],
                         type: "rb",
-                        permissions: ["read", "update", "create"]
-                    }
+                        permissions: ["read", "update", "create"],
+                    },
                 });
             });
 
-            it("and that it didn't have a default value, when I get the fields' selected values, then a map of objects containing the field's id and a bind_value_ids array [100] will be returned", function() {
+            it("and that it didn't have a default value, when I get the fields' selected values, then a map of objects containing the field's id and a bind_value_ids array [100] will be returned", function () {
                 var tracker = {
                     fields: [
                         {
@@ -748,9 +748,9 @@ describe("TuleapArtifactFieldValuesService", () => {
                             label: "haruspicy",
                             name: "Taraktogenos",
                             permissions: ["read", "update", "create"],
-                            type: "rb"
-                        }
-                    ]
+                            type: "rb",
+                        },
+                    ],
                 };
                 var output = FieldValuesService.getSelectedValues({}, tracker);
                 expect(output).toEqual({
@@ -758,12 +758,12 @@ describe("TuleapArtifactFieldValuesService", () => {
                         field_id: 242,
                         bind_value_ids: [100],
                         type: "rb",
-                        permissions: ["read", "update", "create"]
-                    }
+                        permissions: ["read", "update", "create"],
+                    },
                 });
             });
 
-            it("and that it had a default value, when I get the fields' selected values, then a map of objects containing the field's id and an array of its default values will be returned", function() {
+            it("and that it had a default value, when I get the fields' selected values, then a map of objects containing the field's id and an array of its default values will be returned", function () {
                 var tracker = {
                     fields: [
                         {
@@ -774,10 +774,10 @@ describe("TuleapArtifactFieldValuesService", () => {
                             type: "rb",
                             default_value: [
                                 { id: 931, label: "parisyllabic", is_hidden: false },
-                                { id: 410, label: "prosodiacal", is_hidden: false }
-                            ]
-                        }
-                    ]
+                                { id: 410, label: "prosodiacal", is_hidden: false },
+                            ],
+                        },
+                    ],
                 };
                 var output = FieldValuesService.getSelectedValues({}, tracker);
                 expect(output).toEqual({
@@ -785,13 +785,13 @@ describe("TuleapArtifactFieldValuesService", () => {
                         field_id: 897,
                         bind_value_ids: [931, 410],
                         type: "rb",
-                        permissions: ["read", "update", "create"]
-                    }
+                        permissions: ["read", "update", "create"],
+                    },
                 });
             });
         });
 
-        it("Given a tracker containing an artifact links field, when I get the fields' selected values, then a map of objects containing the fields' id, an empty string that will contain the list of ids to link to and an empty links array will be returned", function() {
+        it("Given a tracker containing an artifact links field, when I get the fields' selected values, then a map of objects containing the fields' id, an empty string that will contain the list of ids to link to and an empty links array will be returned", function () {
             var tracker = {
                 fields: [
                     {
@@ -799,9 +799,9 @@ describe("TuleapArtifactFieldValuesService", () => {
                         label: "inspectrix",
                         name: "isonomic",
                         permissions: ["read", "update", "create"],
-                        type: "art_link"
-                    }
-                ]
+                        type: "art_link",
+                    },
+                ],
             };
             var output = FieldValuesService.getSelectedValues({}, tracker);
             expect(output).toEqual({
@@ -810,19 +810,19 @@ describe("TuleapArtifactFieldValuesService", () => {
                     type: "art_link",
                     permissions: ["read", "update", "create"],
                     unformatted_links: "",
-                    links: [{ id: "" }]
-                }
+                    links: [{ id: "" }],
+                },
             });
         });
     });
 
-    describe("Given a tracker containing a permissions field,", function() {
-        it("and given a map of artifact field values containing that field, when I get the fields' selected values, then a map of objects containing the artifact's granted groups and is_used_by_default will be returned", function() {
+    describe("Given a tracker containing a permissions field,", function () {
+        it("and given a map of artifact field values containing that field, when I get the fields' selected values, then a map of objects containing the artifact's granted groups and is_used_by_default will be returned", function () {
             var artifact_values = {
                 904: {
                     field_id: 904,
-                    granted_groups: ["2", "101_3", "103"]
-                }
+                    granted_groups: ["2", "101_3", "103"],
+                },
             };
             var tracker = {
                 fields: [
@@ -833,10 +833,10 @@ describe("TuleapArtifactFieldValuesService", () => {
                         permissions: ["read", "update", "create"],
                         type: "perm",
                         values: {
-                            is_used_by_default: false
-                        }
-                    }
-                ]
+                            is_used_by_default: false,
+                        },
+                    },
+                ],
             };
             var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
             expect(output).toEqual({
@@ -846,13 +846,13 @@ describe("TuleapArtifactFieldValuesService", () => {
                     permissions: ["read", "update", "create"],
                     value: {
                         is_used_by_default: false,
-                        granted_groups: ["2", "101_3", "103"]
-                    }
-                }
+                        granted_groups: ["2", "101_3", "103"],
+                    },
+                },
             });
         });
 
-        it("when I get the fields' selected values, then a map of objects containing the field's id and value with an empty granted_groups array and is_used_by_default will be returned", function() {
+        it("when I get the fields' selected values, then a map of objects containing the field's id and value with an empty granted_groups array and is_used_by_default will be returned", function () {
             var tracker = {
                 fields: [
                     {
@@ -862,10 +862,10 @@ describe("TuleapArtifactFieldValuesService", () => {
                         permissions: ["read", "update", "create"],
                         type: "perm",
                         values: {
-                            is_used_by_default: true
-                        }
-                    }
-                ]
+                            is_used_by_default: true,
+                        },
+                    },
+                ],
             };
             var output = FieldValuesService.getSelectedValues({}, tracker);
             expect(output).toEqual({
@@ -875,9 +875,9 @@ describe("TuleapArtifactFieldValuesService", () => {
                     permissions: ["read", "update", "create"],
                     value: {
                         is_used_by_default: true,
-                        granted_groups: []
-                    }
-                }
+                        granted_groups: [],
+                    },
+                },
             });
         });
     });
@@ -890,8 +890,8 @@ describe("TuleapArtifactFieldValuesService", () => {
                 103: {
                     field_id: 103,
                     file_descriptions: [{ id: 4 }, { id: 9 }],
-                    type: "file"
-                }
+                    type: "file",
+                },
             };
             const tracker = {
                 fields: [
@@ -900,9 +900,9 @@ describe("TuleapArtifactFieldValuesService", () => {
                         label: "sevenbark",
                         name: "Aglypha",
                         permissions: ["read", "update", "create"],
-                        type: "file"
-                    }
-                ]
+                        type: "file",
+                    },
+                ],
             };
             const output = FieldValuesService.getSelectedValues(artifact_values, tracker);
             expect(output).toEqual({
@@ -914,12 +914,12 @@ describe("TuleapArtifactFieldValuesService", () => {
                     temporary_files: [
                         {
                             file: {},
-                            description: ""
-                        }
+                            description: "",
+                        },
                     ],
                     permissions: ["read", "update", "create"],
-                    value: [4, 9]
-                }
+                    value: [4, 9],
+                },
             });
         });
 
@@ -933,9 +933,9 @@ describe("TuleapArtifactFieldValuesService", () => {
                         label: "Afrasia",
                         name: "gridelin",
                         permissions: ["read", "update", "create"],
-                        type: "file"
-                    }
-                ]
+                        type: "file",
+                    },
+                ],
             };
             const output = FieldValuesService.getSelectedValues({}, tracker);
             expect(output).toEqual({
@@ -946,26 +946,26 @@ describe("TuleapArtifactFieldValuesService", () => {
                     temporary_files: [
                         {
                             file: {},
-                            description: ""
-                        }
+                            description: "",
+                        },
                     ],
                     permissions: ["read", "update", "create"],
-                    value: []
-                }
+                    value: [],
+                },
             });
         });
     });
 
-    describe("Given a tracker containing a computed field,", function() {
-        it("and given a map of artifact field values containing that field, when I get the field's selected values, then a map of objects containing the fields' id and its value will be returned", function() {
+    describe("Given a tracker containing a computed field,", function () {
+        it("and given a map of artifact field values containing that field, when I get the field's selected values, then a map of objects containing the fields' id and its value will be returned", function () {
             const artifact_values = {
                 665: {
                     field_id: 665,
                     is_autocomputed: false,
                     manual_value: 5,
                     type: "computed",
-                    value: null
-                }
+                    value: null,
+                },
             };
             const tracker = {
                 fields: [
@@ -974,9 +974,9 @@ describe("TuleapArtifactFieldValuesService", () => {
                         label: "propolis",
                         name: "chrysobull",
                         permissions: ["read", "update", "create"],
-                        type: "computed"
-                    }
-                ]
+                        type: "computed",
+                    },
+                ],
             };
             const output = FieldValuesService.getSelectedValues(artifact_values, tracker);
             expect(output).toEqual({
@@ -985,12 +985,12 @@ describe("TuleapArtifactFieldValuesService", () => {
                     is_autocomputed: false,
                     manual_value: 5,
                     permissions: ["read", "update", "create"],
-                    type: "computed"
-                }
+                    type: "computed",
+                },
             });
         });
 
-        it("when I get the fields' selected values, then a map of objects containing the fields' id, the is_autocomputed property set to true, and manual_value set to null will be returned", function() {
+        it("when I get the fields' selected values, then a map of objects containing the fields' id, the is_autocomputed property set to true, and manual_value set to null will be returned", function () {
             const tracker = {
                 fields: [
                     {
@@ -999,9 +999,9 @@ describe("TuleapArtifactFieldValuesService", () => {
                         name: "peepy",
                         permissions: ["read", "update", "create"],
                         type: "computed",
-                        default_value: null
-                    }
-                ]
+                        default_value: null,
+                    },
+                ],
             };
             const output = FieldValuesService.getSelectedValues({}, tracker);
             expect(output).toEqual({
@@ -1010,12 +1010,12 @@ describe("TuleapArtifactFieldValuesService", () => {
                     is_autocomputed: true,
                     permissions: ["read", "update", "create"],
                     type: "computed",
-                    manual_value: null
-                }
+                    manual_value: null,
+                },
             });
         });
 
-        it("when I get the fields' default values and a default value is set, then a map of objects containing the fields' id, the is_autocomputed property set to false, and manual_value set to the float value will be returned", function() {
+        it("when I get the fields' default values and a default value is set, then a map of objects containing the fields' id, the is_autocomputed property set to false, and manual_value set to the float value will be returned", function () {
             const tracker = {
                 fields: [
                     {
@@ -1026,10 +1026,10 @@ describe("TuleapArtifactFieldValuesService", () => {
                         type: "computed",
                         default_value: {
                             type: "manual_value",
-                            value: 4.2
-                        }
-                    }
-                ]
+                            value: 4.2,
+                        },
+                    },
+                ],
             };
             const output = FieldValuesService.getSelectedValues({}, tracker);
             expect(output).toEqual({
@@ -1038,12 +1038,12 @@ describe("TuleapArtifactFieldValuesService", () => {
                     is_autocomputed: false,
                     permissions: ["read", "update", "create"],
                     type: "computed",
-                    manual_value: 4.2
-                }
+                    manual_value: 4.2,
+                },
             });
         });
 
-        it("when I get the fields' default values and a default value is not set, then a map of objects containing the fields' id, the is_autocomputed property set to true, and manual_value set to null will be returned", function() {
+        it("when I get the fields' default values and a default value is not set, then a map of objects containing the fields' id, the is_autocomputed property set to true, and manual_value set to null will be returned", function () {
             const tracker = {
                 fields: [
                     {
@@ -1052,9 +1052,9 @@ describe("TuleapArtifactFieldValuesService", () => {
                         name: "peepy",
                         permissions: ["read", "update", "create"],
                         type: "computed",
-                        default_value: null
-                    }
-                ]
+                        default_value: null,
+                    },
+                ],
             };
             const output = FieldValuesService.getSelectedValues({}, tracker);
             expect(output).toEqual({
@@ -1063,8 +1063,8 @@ describe("TuleapArtifactFieldValuesService", () => {
                     is_autocomputed: true,
                     permissions: ["read", "update", "create"],
                     type: "computed",
-                    manual_value: null
-                }
+                    manual_value: null,
+                },
             });
         });
     });
@@ -1078,23 +1078,23 @@ describe("TuleapArtifactFieldValuesService", () => {
                         {
                             id: 689,
                             label: "periscopism",
-                            is_hidden: false
+                            is_hidden: false,
                         },
                         {
                             id: 145,
                             label: "distinguisher",
-                            is_hidden: false
-                        }
+                            is_hidden: false,
+                        },
                     ],
-                    bind_value_ids: ["periscopism", "distinguisher"]
-                }
+                    bind_value_ids: ["periscopism", "distinguisher"],
+                },
             };
             const tracker = {
                 fields: [
                     {
                         field_id: 319,
                         bindings: {
-                            type: "static"
+                            type: "static",
                         },
                         label: "sneeshing",
                         name: "developoid",
@@ -1102,10 +1102,10 @@ describe("TuleapArtifactFieldValuesService", () => {
                         type: "tbl",
                         values: [
                             { id: 689, label: "periscopism", is_hidden: false },
-                            { id: 145, label: "distinguisher", is_hidden: false }
-                        ]
-                    }
-                ]
+                            { id: 145, label: "distinguisher", is_hidden: false },
+                        ],
+                    },
+                ],
             };
             const output = FieldValuesService.getSelectedValues(artifact_values, tracker);
             expect(output).toEqual({
@@ -1119,16 +1119,16 @@ describe("TuleapArtifactFieldValuesService", () => {
                             {
                                 id: 689,
                                 label: "periscopism",
-                                is_hidden: false
+                                is_hidden: false,
                             },
                             {
                                 id: 145,
                                 label: "distinguisher",
-                                is_hidden: false
-                            }
-                        ]
-                    }
-                }
+                                is_hidden: false,
+                            },
+                        ],
+                    },
+                },
             });
         });
 
@@ -1138,7 +1138,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                     {
                         field_id: 378,
                         bindings: {
-                            type: "static"
+                            type: "static",
                         },
                         label: "nonfriction",
                         name: "ablactation",
@@ -1146,10 +1146,10 @@ describe("TuleapArtifactFieldValuesService", () => {
                         type: "tbl",
                         values: [
                             { id: 216, label: "phenaceturic", is_hidden: false },
-                            { id: 801, label: "undershrieve", is_hidden: false }
-                        ]
-                    }
-                ]
+                            { id: 801, label: "undershrieve", is_hidden: false },
+                        ],
+                    },
+                ],
             };
             const output = FieldValuesService.getSelectedValues({}, tracker);
             expect(output).toEqual({
@@ -1159,9 +1159,9 @@ describe("TuleapArtifactFieldValuesService", () => {
                     permissions: ["read", "update", "create"],
                     bindings: { type: "static" },
                     value: {
-                        bind_value_objects: []
-                    }
-                }
+                        bind_value_objects: [],
+                    },
+                },
             });
         });
 
@@ -1171,7 +1171,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                     {
                         field_id: 667,
                         bindings: {
-                            type: "static"
+                            type: "static",
                         },
                         label: "nonfriction",
                         name: "ablactation",
@@ -1179,14 +1179,14 @@ describe("TuleapArtifactFieldValuesService", () => {
                         type: "tbl",
                         values: [
                             { id: 378, label: "Linda", is_hidden: false },
-                            { id: 544, label: "squamosomaxillary", is_hidden: false }
+                            { id: 544, label: "squamosomaxillary", is_hidden: false },
                         ],
                         default_value: [
                             { id: 378, label: "Linda", is_hidden: false },
-                            { id: 544, label: "squamosomaxillary", is_hidden: false }
-                        ]
-                    }
-                ]
+                            { id: 544, label: "squamosomaxillary", is_hidden: false },
+                        ],
+                    },
+                ],
             };
             const output = FieldValuesService.getSelectedValues({}, tracker);
             expect(output).toEqual({
@@ -1198,10 +1198,10 @@ describe("TuleapArtifactFieldValuesService", () => {
                     value: {
                         bind_value_objects: [
                             { id: 378, label: "Linda", is_hidden: false },
-                            { id: 544, label: "squamosomaxillary", is_hidden: false }
-                        ]
-                    }
-                }
+                            { id: 544, label: "squamosomaxillary", is_hidden: false },
+                        ],
+                    },
+                },
             });
         });
     });

@@ -35,7 +35,7 @@ export async function getProjectUserGroupsWithoutServiceSpecialUGroups(project_i
 
     const filtered_groups = [];
 
-    ugroups.forEach(ugroup => {
+    ugroups.forEach((ugroup) => {
         if (isUGroupAServiceSpecialUGroup(project_id, ugroup)) {
             return;
         }

@@ -19,7 +19,7 @@
 
 import tuleap from "tuleap";
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     var input = document.querySelector("#add_mail");
 
     if (!input) {

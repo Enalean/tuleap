@@ -25,13 +25,13 @@ function doesTitleAlreadyExists(text_value, item, parent_folder) {
 }
 
 export function doesFolderNameAlreadyExist(text_value, folder_content, parent_folder) {
-    return folder_content.some(item => {
+    return folder_content.some((item) => {
         return doesTitleAlreadyExists(text_value, item, parent_folder) && item.type === TYPE_FOLDER;
     });
 }
 
 export function doesDocumentNameAlreadyExist(text_value, folder_content, parent_folder) {
-    return folder_content.some(item => {
+    return folder_content.some((item) => {
         return doesTitleAlreadyExists(text_value, item, parent_folder) && item.type !== TYPE_FOLDER;
     });
 }
@@ -42,7 +42,7 @@ export function doesDocumentAlreadyExistsAtUpdate(
     item_to_update,
     parent_folder
 ) {
-    return folder_content.some(item => {
+    return folder_content.some((item) => {
         return (
             doesTitleAlreadyExists(text_value, item, parent_folder) &&
             item.type !== TYPE_FOLDER &&
@@ -57,7 +57,7 @@ export function doesFolderAlreadyExistsAtUpdate(
     item_to_update,
     parent_folder
 ) {
-    return folder_content.some(item => {
+    return folder_content.some((item) => {
         return (
             doesTitleAlreadyExists(text_value, item, parent_folder) &&
             item.type === TYPE_FOLDER &&

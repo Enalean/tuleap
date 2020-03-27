@@ -41,31 +41,31 @@ export default {
     name: "PeoplePicker",
     props: {
         value: Number,
-        currently_selected_user: Object
+        currently_selected_user: Object,
     },
     data() {
         return {
-            select2_people_picker: null
+            select2_people_picker: null,
         };
     },
     mounted() {
         const current_user = {
             id: this.currently_selected_user.id,
-            text: this.currently_selected_user.name
+            text: this.currently_selected_user.name,
         };
 
         const configuration = {
             data: { ...current_user },
             codendiUserOnly: true,
-            use_tuleap_id: true
+            use_tuleap_id: true,
         };
 
         this.select2_people_picker = autocomplete_users_for_select2(this.$el, {
             ...configuration,
-            multiple: false
+            multiple: false,
         })
             .trigger("change")
-            .on("change", event => {
+            .on("change", (event) => {
                 const updated_value = parseInt(event.target.value, 10);
                 this.$emit("input", updated_value);
                 this.currently_selected_user.id = updated_value;
@@ -73,6 +73,6 @@ export default {
     },
     destroyed() {
         this.select2_people_picker.off().select2("destroy");
-    }
+    },
 };
 </script>

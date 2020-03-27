@@ -24,7 +24,7 @@ const assets_public_path = "/assets/document/";
 const MomentTimezoneDataPlugin = require("moment-timezone-data-webpack-plugin");
 
 const entry_points = {
-    document: "./scripts/document/index.js"
+    document: "./scripts/document/index.js",
 };
 
 const colors = ["blue", "green", "grey", "orange", "purple", "red"];
@@ -41,18 +41,18 @@ module.exports = [
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(assets_dir_path, assets_public_path),
         externals: {
-            tlp: "tlp"
+            tlp: "tlp",
         },
         resolve: {
-            alias: webpack_configurator.tlp_fetch_alias
+            alias: webpack_configurator.tlp_fetch_alias,
         },
         module: {
             rules: [
                 webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
                 webpack_configurator.rule_easygettext_loader,
                 webpack_configurator.rule_vue_loader,
-                webpack_configurator.rule_scss_loader
-            ]
+                webpack_configurator.rule_scss_loader,
+            ],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
@@ -61,12 +61,12 @@ module.exports = [
             webpack_configurator.getMomentLocalePlugin(),
             new MomentTimezoneDataPlugin({
                 startYear: 1970,
-                endYear: new Date().getFullYear() + 1
+                endYear: new Date().getFullYear() + 1,
             }),
-            ...webpack_configurator.getCSSExtractionPlugins()
+            ...webpack_configurator.getCSSExtractionPlugins(),
         ],
         resolveLoader: {
-            alias: webpack_configurator.easygettext_loader_alias
-        }
-    }
+            alias: webpack_configurator.easygettext_loader_alias,
+        },
+    },
 ];

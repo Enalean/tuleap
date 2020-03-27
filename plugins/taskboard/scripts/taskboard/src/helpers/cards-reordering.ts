@@ -43,18 +43,18 @@ function getCardToCompareWith(
     cards_in_cell: Card[],
     sibling: Card
 ): { direction: Direction; compared_to: number } {
-    const index = cards_in_cell.findIndex(column_card => column_card.id === sibling.id);
+    const index = cards_in_cell.findIndex((column_card) => column_card.id === sibling.id);
 
     if (index === 0) {
         return {
             direction: Direction.BEFORE,
-            compared_to: cards_in_cell[0].id
+            compared_to: cards_in_cell[0].id,
         };
     }
 
     return {
         direction: Direction.AFTER,
-        compared_to: cards_in_cell[index - 1].id
+        compared_to: cards_in_cell[index - 1].id,
     };
 }
 
@@ -62,6 +62,6 @@ function formatOrdering(ids: number[], direction: Direction, compared_to: number
     return {
         ids,
         direction,
-        compared_to
+        compared_to,
     };
 }

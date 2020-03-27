@@ -30,17 +30,17 @@ describe("ProjectInformationFooter", () => {
 
     beforeEach(async () => {
         const state: State = {
-            is_creating_project: false
+            is_creating_project: false,
         } as State;
 
         const store_options = {
-            state
+            state,
         };
         store = createStoreMock(store_options);
 
         factory = shallowMount(ProjectInformationFooter, {
             localVue: await createProjectRegistrationLocalVue(),
-            mocks: { $store: store }
+            mocks: { $store: store },
         });
     });
 
@@ -57,7 +57,7 @@ describe("ProjectInformationFooter", () => {
             "fa",
             "tlp-button-icon-right",
             "fa-spin",
-            "fa-circle-o-notch"
+            "fa-circle-o-notch",
         ]);
     });
 
@@ -68,7 +68,7 @@ describe("ProjectInformationFooter", () => {
         expect(factory.find("[data-test=project-submission-icon]").classes()).toEqual([
             "fa",
             "tlp-button-icon-right",
-            "fa-arrow-circle-o-right"
+            "fa-arrow-circle-o-right",
         ]);
     });
 });

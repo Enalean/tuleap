@@ -24,11 +24,11 @@ export {
     getUnchangedSections,
     getPaddedCollapsibleSections,
     isThereACommentOnThisLine,
-    getCollapsibleSectionsSideBySide
+    getCollapsibleSectionsSideBySide,
 };
 
 function isThereACommentOnThisLine(line_number, inline_comments) {
-    return Boolean(inline_comments.find(comment => comment.unidiff_offset === line_number));
+    return Boolean(inline_comments.find((comment) => comment.unidiff_offset === line_number));
 }
 
 function getUnchangedSections(code, inline_comments) {
@@ -57,14 +57,14 @@ function getUnchangedSections(code, inline_comments) {
 
             collapsible_sections.push({
                 start: next_section_beginning,
-                end
+                end,
             });
 
             next_section_beginning = line_number + 1;
         } else if (nb_lines_unchanged >= COLLAPSE_THRESHOLD) {
             collapsible_sections.push({
                 start: next_section_beginning,
-                end: line_number - 1
+                end: line_number - 1,
             });
 
             next_section_beginning = line_number;
@@ -79,7 +79,7 @@ function getUnchangedSections(code, inline_comments) {
     if (nb_lines_unchanged >= COLLAPSE_THRESHOLD) {
         collapsible_sections.push({
             start: next_section_beginning,
-            end: code.length - 1
+            end: code.length - 1,
         });
     }
 
@@ -97,7 +97,7 @@ function getPaddedCollapsibleSections(collapsible_sections, file_length) {
         if (start === 0 && end - COLLAPSE_THRESHOLD > start) {
             sections_to_collapse.push({
                 start,
-                end: end - COLLAPSE_THRESHOLD
+                end: end - COLLAPSE_THRESHOLD,
             });
 
             return;
@@ -106,7 +106,7 @@ function getPaddedCollapsibleSections(collapsible_sections, file_length) {
         if (end === file_length && end > start + COLLAPSE_THRESHOLD) {
             sections_to_collapse.push({
                 start: start + COLLAPSE_THRESHOLD,
-                end
+                end,
             });
 
             return;
@@ -115,7 +115,7 @@ function getPaddedCollapsibleSections(collapsible_sections, file_length) {
         if (start + COLLAPSE_THRESHOLD < end - COLLAPSE_THRESHOLD) {
             sections_to_collapse.push({
                 start: start + COLLAPSE_THRESHOLD,
-                end: end - COLLAPSE_THRESHOLD
+                end: end - COLLAPSE_THRESHOLD,
             });
         }
     });
@@ -127,28 +127,28 @@ function getDiffSideBySideSection(line_start, line_end) {
     return {
         left: {
             start: line_start.old_offset,
-            end: line_end.old_offset
+            end: line_end.old_offset,
         },
         right: {
             start: line_start.new_offset,
-            end: line_end.new_offset
-        }
+            end: line_end.new_offset,
+        },
     };
 }
 
 function getCollapsibleSectionsSideBySide(code, comments) {
-    return getCollapsibleCodeSections(code, comments).map(section => {
+    return getCollapsibleCodeSections(code, comments).map((section) => {
         let line_start, line_end;
 
         if (section.start === 0) {
             line_start = { old_offset: 0, new_offset: 0 };
-            line_end = code.find(line => line.unidiff_offset === section.end);
+            line_end = code.find((line) => line.unidiff_offset === section.end);
 
             return getDiffSideBySideSection(line_start, line_end);
         }
 
-        line_start = code.find(line => line.unidiff_offset === section.start);
-        line_end = code.find(line => line.unidiff_offset === section.end);
+        line_start = code.find((line) => line.unidiff_offset === section.start);
+        line_end = code.find((line) => line.unidiff_offset === section.end);
 
         return getDiffSideBySideSection(line_start, line_end);
     });

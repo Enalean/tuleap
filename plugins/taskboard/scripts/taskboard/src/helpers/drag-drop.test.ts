@@ -82,16 +82,16 @@ describe(`drag-drop helper`, () => {
 
         beforeEach(() => {
             swimlane_state = {
-                dropzone_rejecting_drop: undefined
+                dropzone_rejecting_drop: undefined,
             } as SwimlaneState;
 
             store = ({
                 modules: {
                     swimlane: {
-                        state: swimlane_state
-                    }
+                        state: swimlane_state,
+                    },
                 },
-                commit: jest.fn()
+                commit: jest.fn(),
             } as unknown) as Store<RootState>;
         });
 

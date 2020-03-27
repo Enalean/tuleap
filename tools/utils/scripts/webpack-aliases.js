@@ -23,15 +23,15 @@ const path_to_tuleap_root = path.resolve(__dirname, "../../../");
 const path_to_tlp = path.join(path_to_tuleap_root, "src/www/themes/common/tlp/");
 
 const tlp_fetch_alias = {
-    "tlp-fetch": path.join(path_to_tlp, "src/js/fetch-wrapper.js")
+    "tlp-fetch": path.join(path_to_tlp, "src/js/fetch-wrapper.js"),
 };
 
 const angular_tlp_alias = {
-    "angular-tlp": path.join(path_to_tlp, "angular-tlp/index.js")
+    "angular-tlp": path.join(path_to_tlp, "angular-tlp/index.js"),
 };
 
 const easygettext_loader_alias = {
-    "easygettext-loader": path.resolve(__dirname, "./easygettext-loader.js")
+    "easygettext-loader": path.resolve(__dirname, "./easygettext-loader.js"),
 };
 
 function extendAliases(...aliases) {
@@ -42,5 +42,5 @@ module.exports = {
     extendAliases,
     angular_tlp_alias,
     easygettext_loader_alias,
-    tlp_fetch_alias
+    tlp_fetch_alias,
 };

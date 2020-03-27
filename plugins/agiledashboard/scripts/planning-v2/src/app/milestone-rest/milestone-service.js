@@ -4,7 +4,7 @@ MilestoneService.$inject = ["Restangular", "BacklogItemFactory"];
 
 function MilestoneService(Restangular, BacklogItemFactory) {
     var self = this,
-        rest = Restangular.withConfig(function(RestangularConfigurer) {
+        rest = Restangular.withConfig(function (RestangularConfigurer) {
             RestangularConfigurer.setFullResponse(true);
             RestangularConfigurer.setBaseUrl("/api/v1");
         });
@@ -29,19 +29,19 @@ function MilestoneService(Restangular, BacklogItemFactory) {
         removeAddToContent: removeAddToContent,
         updateInitialEffort: updateInitialEffort,
         defineAllowedBacklogItemTypes: defineAllowedBacklogItemTypes,
-        augmentMilestone: augmentMilestone
+        augmentMilestone: augmentMilestone,
     });
 
     function getMilestone(milestone_id, scope_items) {
         var promise = rest
             .one("milestones", milestone_id)
             .get()
-            .then(function(response) {
+            .then(function (response) {
                 defineAllowedBacklogItemTypes(response.data);
                 augmentMilestone(response.data, scope_items);
 
                 var result = {
-                    results: response.data
+                    results: response.data,
                 };
 
                 return result;
@@ -91,16 +91,16 @@ function MilestoneService(Restangular, BacklogItemFactory) {
                 offset: offset,
                 order: order,
                 query: {
-                    status: status
+                    status: status,
                 },
-                fields: "slim"
+                fields: "slim",
             })
-            .then(function(response) {
-                response.data.forEach(milestone => augmentMilestone(milestone, scope_items));
+            .then(function (response) {
+                response.data.forEach((milestone) => augmentMilestone(milestone, scope_items));
 
                 var result = {
                     results: response.data,
-                    total: response.headers("X-PAGINATION-SIZE")
+                    total: response.headers("X-PAGINATION-SIZE"),
                 };
 
                 return result;
@@ -113,7 +113,7 @@ function MilestoneService(Restangular, BacklogItemFactory) {
         return rest.one("milestones", milestone_id).customPUT(
             {
                 id: milestone_id,
-                ids: submilestone_ids
+                ids: submilestone_ids,
             },
             "milestones"
         );
@@ -124,7 +124,7 @@ function MilestoneService(Restangular, BacklogItemFactory) {
             .one("milestones", milestone_id)
             .all("milestones")
             .patch({
-                add: submilestone_ids.map(id => ({ id }))
+                add: submilestone_ids.map((id) => ({ id })),
             });
     }
 
@@ -134,12 +134,12 @@ function MilestoneService(Restangular, BacklogItemFactory) {
             .all("content")
             .getList({
                 limit: limit,
-                offset: offset
+                offset: offset,
             })
-            .then(function(response) {
+            .then(function (response) {
                 var result = {
                     results: response.data,
-                    total: response.headers("X-PAGINATION-SIZE")
+                    total: response.headers("X-PAGINATION-SIZE"),
                 };
 
                 return result;
@@ -160,7 +160,7 @@ function MilestoneService(Restangular, BacklogItemFactory) {
         function addContentDataToMilestone(milestone) {
             milestone.content = [];
             milestone.initialEffort = 0;
-            milestone.getContent = function() {
+            milestone.getContent = function () {
                 milestone.loadingContent = true;
                 milestone.alreadyLoaded = true;
 
@@ -171,8 +171,8 @@ function MilestoneService(Restangular, BacklogItemFactory) {
             };
 
             function fetchMilestoneContent(limit, offset) {
-                return getContent(milestone.id, limit, offset).then(data => {
-                    data.results.forEach(backlog_item => {
+                return getContent(milestone.id, limit, offset).then((data) => {
+                    data.results.forEach((backlog_item) => {
                         scope_items[backlog_item.id] = backlog_item;
                         augmentBacklogItem(backlog_item);
 
@@ -210,9 +210,9 @@ function MilestoneService(Restangular, BacklogItemFactory) {
             parent_trackers,
             toString() {
                 return this.content
-                    .map(allowed_tracker => "trackerId" + allowed_tracker.id)
+                    .map((allowed_tracker) => "trackerId" + allowed_tracker.id)
                     .join("|");
-            }
+            },
         };
     }
 
@@ -223,9 +223,9 @@ function MilestoneService(Restangular, BacklogItemFactory) {
             content: allowed_trackers,
             toString() {
                 return this.content
-                    .map(allowed_tracker => "trackerId" + allowed_tracker.id)
+                    .map((allowed_tracker) => "trackerId" + allowed_tracker.id)
                     .join("|");
-            }
+            },
         };
     }
 
@@ -237,8 +237,8 @@ function MilestoneService(Restangular, BacklogItemFactory) {
                 order: {
                     ids: dropped_item_ids,
                     direction: compared_to.direction,
-                    compared_to: compared_to.item_id
-                }
+                    compared_to: compared_to.item_id,
+                },
             });
     }
 
@@ -255,12 +255,12 @@ function MilestoneService(Restangular, BacklogItemFactory) {
                 order: {
                     ids: dropped_item_ids,
                     direction: compared_to.direction,
-                    compared_to: compared_to.item_id
+                    compared_to: compared_to.item_id,
                 },
-                add: dropped_item_ids.map(dropped_item_id => ({
+                add: dropped_item_ids.map((dropped_item_id) => ({
                     id: dropped_item_id,
-                    remove_from: source_milestone_id
-                }))
+                    remove_from: source_milestone_id,
+                })),
             });
     }
 
@@ -269,10 +269,10 @@ function MilestoneService(Restangular, BacklogItemFactory) {
             .one("milestones", dest_milestone_id)
             .all("backlog")
             .patch({
-                add: dropped_item_ids.map(dropped_item_id => ({
+                add: dropped_item_ids.map((dropped_item_id) => ({
                     id: dropped_item_id,
-                    remove_from: source_milestone_id
-                }))
+                    remove_from: source_milestone_id,
+                })),
             });
     }
 
@@ -284,8 +284,8 @@ function MilestoneService(Restangular, BacklogItemFactory) {
                 order: {
                     ids: dropped_item_ids,
                     direction: compared_to.direction,
-                    compared_to: compared_to.item_id
-                }
+                    compared_to: compared_to.item_id,
+                },
             });
     }
 
@@ -297,9 +297,9 @@ function MilestoneService(Restangular, BacklogItemFactory) {
                 order: {
                     ids: dropped_item_ids,
                     direction: compared_to.direction,
-                    compared_to: compared_to.item_id
+                    compared_to: compared_to.item_id,
                 },
-                add: dropped_item_ids.map(id => ({ id }))
+                add: dropped_item_ids.map((id) => ({ id })),
             });
     }
 
@@ -308,7 +308,7 @@ function MilestoneService(Restangular, BacklogItemFactory) {
             .one("milestones", milestone_id)
             .all("content")
             .patch({
-                add: dropped_item_ids.map(id => ({ id }))
+                add: dropped_item_ids.map((id) => ({ id })),
             });
     }
 
@@ -325,12 +325,12 @@ function MilestoneService(Restangular, BacklogItemFactory) {
                 order: {
                     ids: dropped_item_ids,
                     direction: compared_to.direction,
-                    compared_to: compared_to.item_id
+                    compared_to: compared_to.item_id,
                 },
-                add: dropped_item_ids.map(dropped_item_id => ({
+                add: dropped_item_ids.map((dropped_item_id) => ({
                     id: dropped_item_id,
-                    remove_from: source_milestone_id
-                }))
+                    remove_from: source_milestone_id,
+                })),
             });
     }
 
@@ -339,10 +339,10 @@ function MilestoneService(Restangular, BacklogItemFactory) {
             .one("milestones", dest_milestone_id)
             .all("content")
             .patch({
-                add: dropped_item_ids.map(dropped_item_id => ({
+                add: dropped_item_ids.map((dropped_item_id) => ({
                     id: dropped_item_id,
-                    remove_from: source_milestone_id
-                }))
+                    remove_from: source_milestone_id,
+                })),
             });
     }
 }

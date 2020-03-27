@@ -8,11 +8,11 @@ export default function PermissionFieldDirective() {
         scope: {
             field: "=tuleapArtifactModalPermissionField",
             isDisabled: "&isDisabled",
-            value_model: "=valueModel"
+            value_model: "=valueModel",
         },
         controller: PermissionFieldController,
         controllerAs: "permission_field",
         bindToController: true,
-        templateUrl: "permission-field.tpl.html"
+        templateUrl: "permission-field.tpl.html",
     };
 }

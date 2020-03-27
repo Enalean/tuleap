@@ -30,8 +30,8 @@ let right_lines;
 
 function initDataAndCodeMirrors(file_lines, left_code_mirror, right_code_mirror) {
     diff_lines = file_lines;
-    left_lines = file_lines.filter(line => line.old_offset !== null);
-    right_lines = file_lines.filter(line => line.new_offset !== null);
+    left_lines = file_lines.filter((line) => line.old_offset !== null);
+    right_lines = file_lines.filter((line) => line.new_offset !== null);
 
     const maps = buildLineGroups(diff_lines);
     first_line_to_group_map = maps.first_line_to_group_map;
@@ -126,5 +126,5 @@ export {
     getNextLine,
     getRightLine,
     getLeftLine,
-    getLineOfHandle
+    getLineOfHandle,
 };

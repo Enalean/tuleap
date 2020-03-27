@@ -20,7 +20,7 @@
 
 /* global codendi:readonly jQuery:readonly */
 
-(function($, window, document) {
+(function ($, window, document) {
     var popovers = [];
 
     /**
@@ -75,7 +75,7 @@
             trigger: "click",
             container: "#submit-new-by-mail-popover-container",
             title: title,
-            content: buildPopoverContent
+            content: buildPopoverContent,
         });
 
         popovers.push(envelope);
@@ -111,7 +111,7 @@
 
             button;
 
-            input.click(function() {
+            input.click(function () {
                 $(this).select();
             });
 
@@ -120,9 +120,9 @@
             button
                 .tooltip({
                     title: codendi.getText("tracker_email", "copy"),
-                    placement: "bottom"
+                    placement: "bottom",
                 })
-                .click(function(evt) {
+                .click(function (evt) {
                     evt.preventDefault();
                     input.select();
                     document.execCommand("copy");
@@ -132,15 +132,15 @@
         }
     }
 
-    $(function() {
+    $(function () {
         $(".email-tracker").each(initTrackerEmail);
 
-        $("body").click(function(event) {
+        $("body").click(function (event) {
             if (
                 $(event.target).parents(".email-tracker").length === 0 &&
                 $(event.target).parents(".popover.in").length === 0
             ) {
-                popovers.forEach(function(popover) {
+                popovers.forEach(function (popover) {
                     popover.popover("hide");
                 });
                 return;
@@ -148,7 +148,7 @@
 
             if ($(event.target).parents(".email-tracker").length === 1) {
                 var clicked = $(event.target).parents(".email-tracker")[0];
-                $(".email-tracker").each(function(index, element) {
+                $(".email-tracker").each(function (index, element) {
                     if (element !== clicked) {
                         $(element).popover("hide");
                     }

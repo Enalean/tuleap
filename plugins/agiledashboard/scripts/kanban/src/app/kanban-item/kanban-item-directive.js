@@ -10,6 +10,6 @@ function KanbanItem() {
         controller: KanbanItemController,
         controllerAs: "$ctrl",
         bindToController: true,
-        templateUrl: "kanban-item.tpl.html"
+        templateUrl: "kanban-item.tpl.html",
     };
 }

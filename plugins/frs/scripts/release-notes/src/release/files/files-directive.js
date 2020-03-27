@@ -11,6 +11,6 @@ function filesDirective() {
         templateUrl: "files.tpl.html",
         controller: FilesController,
         controllerAs: "$ctrl",
-        bindToController: true
+        bindToController: true,
     };
 }

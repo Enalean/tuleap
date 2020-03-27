@@ -32,7 +32,7 @@ describe("DropDownMenu", () => {
             return shallowMount(DropDownMenu, {
                 localVue,
                 propsData: { ...props },
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
         store.getters.is_item_an_empty_document = () => false;
@@ -47,8 +47,8 @@ describe("DropDownMenu", () => {
                     id: 4,
                     title: "my item title",
                     type: "empty",
-                    can_user_manage: false
-                }
+                    can_user_manage: false,
+                },
             });
             store.getters.is_item_an_empty_document = () => true;
             expect(wrapper.contains("[data-test=document-dropdown-approval-tables]")).toBeFalsy();
@@ -61,8 +61,8 @@ describe("DropDownMenu", () => {
                     id: 4,
                     title: "my item title",
                     type: "file",
-                    can_user_manage: false
-                }
+                    can_user_manage: false,
+                },
             });
             expect(wrapper.contains("[data-test=document-dropdown-approval-tables]")).toBeTruthy();
         });

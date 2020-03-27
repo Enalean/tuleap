@@ -28,7 +28,7 @@ describe("Error modules actions", () => {
 
     beforeEach(() => {
         context = ({
-            commit: jest.fn()
+            commit: jest.fn(),
         } as unknown) as ActionContext<ErrorState, RootState>;
     });
 
@@ -38,8 +38,8 @@ describe("Error modules actions", () => {
             error.response = {
                 json: () =>
                     Promise.resolve({
-                        error: { code: 500, message: "Internal Server Error" }
-                    })
+                        error: { code: 500, message: "Internal Server Error" },
+                    }),
             } as Response;
 
             await actions.handleGlobalError(context, error);
@@ -54,7 +54,7 @@ describe("Error modules actions", () => {
         it("leaves the global error message empty when a message can not be extracted from the FetchWrapperError instance", async () => {
             const error = new Error() as FetchWrapperError;
             error.response = {
-                json: () => Promise.reject()
+                json: () => Promise.reject(),
             } as Response;
 
             await actions.handleGlobalError(context, error);
@@ -71,8 +71,8 @@ describe("Error modules actions", () => {
             error.response = {
                 json: () =>
                     Promise.resolve({
-                        error: { code: 500, message: "Internal Server Error" }
-                    })
+                        error: { code: 500, message: "Internal Server Error" },
+                    }),
             } as Response;
 
             await actions.handleModalError(context, error);
@@ -87,7 +87,7 @@ describe("Error modules actions", () => {
             it will leave the modal error message empty`, async () => {
             const error = new Error() as FetchWrapperError;
             error.response = {
-                json: () => Promise.reject()
+                json: () => Promise.reject(),
             } as Response;
 
             await actions.handleModalError(context, error);

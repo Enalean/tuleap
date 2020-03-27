@@ -29,6 +29,6 @@ export function init() {
 
     createPopover(project_title_element, popover_content, {
         anchor: project_title_element.querySelector(".current-project-icon"),
-        placement: "bottom-start"
+        placement: "bottom-start",
     });
 }

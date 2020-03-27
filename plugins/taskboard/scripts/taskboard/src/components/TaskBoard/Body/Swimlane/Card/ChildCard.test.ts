@@ -26,15 +26,15 @@ import BaseCard from "./BaseCard.vue";
 function getWrapper(card: Card, are_closed_items_displayed: boolean): Wrapper<ChildCard> {
     return shallowMount(ChildCard, {
         propsData: {
-            card
+            card,
         },
         mocks: {
             $store: createStoreMock({
                 state: {
-                    are_closed_items_displayed
-                }
-            })
-        }
+                    are_closed_items_displayed,
+                },
+            }),
+        },
     });
 }
 
@@ -46,7 +46,7 @@ describe("ChildCard", () => {
             const card: Card = {
                 id: 43,
                 assignees: [] as User[],
-                is_open: false
+                is_open: false,
             } as Card;
 
             const wrapper = getWrapper(card, false);
@@ -60,7 +60,7 @@ describe("ChildCard", () => {
             const card: Card = {
                 id: 43,
                 assignees: [] as User[],
-                is_open: false
+                is_open: false,
             } as Card;
 
             const wrapper = getWrapper(card, true);
@@ -74,7 +74,7 @@ describe("ChildCard", () => {
                 id: 43,
                 tracker_id: 69,
                 assignees: [] as User[],
-                is_open: false
+                is_open: false,
             } as Card;
 
             const wrapper = getWrapper(card, true);
@@ -91,7 +91,7 @@ describe("ChildCard", () => {
                 id: 43,
                 assignees: [] as User[],
                 is_open: true,
-                is_in_edit_mode: false
+                is_in_edit_mode: false,
             } as Card;
 
             const wrapper = getWrapper(card, true);
@@ -105,7 +105,7 @@ describe("ChildCard", () => {
                 id: 43,
                 assignees: [] as User[],
                 is_open: true,
-                is_in_edit_mode: true
+                is_in_edit_mode: true,
             } as Card;
 
             const wrapper = getWrapper(card, true);

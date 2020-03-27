@@ -31,7 +31,7 @@
                 required
                 v-bind:configuration="{
                     width: '100%',
-                    placeholder: hidden_fieldsets_select_placeholder
+                    placeholder: hidden_fieldsets_select_placeholder,
                 }"
                 v-model="hidden_fieldset_ids"
                 v-bind:disabled="is_modal_save_running"
@@ -65,8 +65,8 @@ export default {
     props: {
         post_action: {
             type: Object,
-            mandatory: true
-        }
+            mandatory: true,
+        },
     },
     computed: {
         ...mapState(["current_tracker"]),
@@ -78,9 +78,9 @@ export default {
                     return [];
                 }
                 return state.current_tracker.fields
-                    .filter(field => field.type === CONTAINER_FIELDSET)
+                    .filter((field) => field.type === CONTAINER_FIELDSET)
                     .sort((field1, field2) => compare(field1.label, field2.label));
-            }
+            },
         }),
         hidden_fieldsets_select_placeholder() {
             return this.$gettext("Choose a fieldset");
@@ -92,10 +92,10 @@ export default {
             set(fieldset_ids) {
                 this.$store.commit("transitionModal/updateHiddenFieldsetsPostActionFieldsetIds", {
                     post_action: this.post_action,
-                    fieldset_ids
+                    fieldset_ids,
                 });
-            }
-        }
-    }
+            },
+        },
+    },
 };
 </script>

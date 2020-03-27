@@ -27,7 +27,7 @@ describe("StatusMetadataWithCustomBindingForFolderUpdate", () => {
     let status_metadata, state, store;
     beforeEach(() => {
         state = {
-            is_item_status_metadata_used: false
+            is_item_status_metadata_used: false,
         };
 
         const store_options = { state };
@@ -38,7 +38,7 @@ describe("StatusMetadataWithCustomBindingForFolderUpdate", () => {
             return shallowMount(StatusMetadataWithCustomBindingForFolderUpdate, {
                 localVue,
                 propsData: { ...props },
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
     });
@@ -51,15 +51,15 @@ describe("StatusMetadataWithCustomBindingForFolderUpdate", () => {
                         short_name: "status",
                         list_value: [
                             {
-                                id: 100
-                            }
-                        ]
-                    }
+                                id: 100,
+                            },
+                        ],
+                    },
                 ],
                 status: 100,
                 type: TYPE_FILE,
-                title: "title"
-            }
+                title: "title",
+            },
         });
 
         store.state.is_item_status_metadata_used = true;
@@ -77,15 +77,15 @@ describe("StatusMetadataWithCustomBindingForFolderUpdate", () => {
                         short_name: "status",
                         list_value: [
                             {
-                                id: 100
-                            }
-                        ]
-                    }
+                                id: 100,
+                            },
+                        ],
+                    },
                 ],
                 status: 100,
                 type: TYPE_FILE,
-                title: "title"
-            }
+                title: "title",
+            },
         });
 
         store.state.is_item_status_metadata_used = false;
@@ -103,18 +103,18 @@ describe("StatusMetadataWithCustomBindingForFolderUpdate", () => {
                         short_name: "status",
                         list_value: [
                             {
-                                id: 100
-                            }
-                        ]
-                    }
+                                id: 100,
+                            },
+                        ],
+                    },
                 ],
                 status: {
                     name: "",
-                    recursion: ""
+                    recursion: "",
                 },
                 type: TYPE_FILE,
-                title: "title"
-            }
+                title: "title",
+            },
         });
 
         store.state.is_item_status_metadata_used = true;

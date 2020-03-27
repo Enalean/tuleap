@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const types_selectors = document.querySelectorAll(".systemevents-types");
-    document.getElementById("queue").addEventListener("change", function() {
+    document.getElementById("queue").addEventListener("change", function () {
         const selected_queue = this.value;
         for (const selector of types_selectors) {
             if (selector.dataset.queue === selected_queue) {

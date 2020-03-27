@@ -37,7 +37,7 @@ export default {
     name: "UserBadge",
     components: { UserName },
     props: {
-        user: Object
-    }
+        user: Object,
+    },
 };
 </script>

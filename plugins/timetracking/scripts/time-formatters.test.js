@@ -27,7 +27,7 @@ import {
     formatMinutes,
     formatDatetimeToISO,
     formatDateDayMonthYear,
-    sortTimesChronologically
+    sortTimesChronologically,
 } from "./time-formatters.js";
 
 describe("Time formatters", () => {
@@ -64,20 +64,20 @@ describe("Time formatters", () => {
                     artifact: {},
                     project: {},
                     minutes: 20,
-                    date: "2018-03-01"
+                    date: "2018-03-01",
                 },
                 {
                     artifact: {},
                     project: {},
                     minutes: 20,
-                    date: "2018-02-01"
+                    date: "2018-02-01",
                 },
                 {
                     artifact: {},
                     project: {},
                     minutes: 20,
-                    date: "2018-01-01"
-                }
+                    date: "2018-01-01",
+                },
             ];
             const sorted_times = sortTimesChronologically([times[1], times[0], times[2]]);
             expect(sorted_times).toEqual(times);

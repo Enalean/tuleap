@@ -25,16 +25,16 @@ import "./display-angular-feedback.js";
 /*
  * Requires jQuery and d3.js
  */
-(function($) {
-    $(document).ready(function() {
-        $(".data-burndown-json").each(function() {
+(function ($) {
+    $(document).ready(function () {
+        $(".data-burndown-json").each(function () {
             var json = JSON.parse($(this).html()),
                 placeholder = $(this).attr("data-for"),
                 burndown;
 
             burndown = new tuleap.agiledashboard.Burndown(d3, json, {
                 width: 310,
-                height: 140
+                height: 140,
             });
             burndown.display(d3.select("#" + placeholder));
         });

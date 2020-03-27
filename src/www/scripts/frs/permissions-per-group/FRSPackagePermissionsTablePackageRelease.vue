@@ -41,10 +41,10 @@ import UgroupBadge from "../../project/admin/permissions-per-group/PermissionsPe
 export default {
     name: "FRSPackagePermissionsTablePackageRelease",
     components: {
-        UgroupBadge
+        UgroupBadge,
     },
     props: {
-        release: Object
-    }
+        release: Object,
+    },
 };
 </script>

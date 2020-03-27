@@ -24,7 +24,7 @@ module.exports = [
     {
         entry: {
             "api-explorer": "./scripts/index.tsx",
-            "style-api-explorer": "./themes/style.scss"
+            "style-api-explorer": "./themes/style.scss",
         },
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(
@@ -36,14 +36,14 @@ module.exports = [
                 ...webpack_configurator.configureTypescriptRules(
                     webpack_configurator.babel_options_ie11
                 ),
-                webpack_configurator.rule_scss_loader
-            ]
+                webpack_configurator.rule_scss_loader,
+            ],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
             webpack_configurator.getTypescriptCheckerPlugin(false),
-            ...webpack_configurator.getCSSExtractionPlugins()
-        ]
-    }
+            ...webpack_configurator.getCSSExtractionPlugins(),
+        ],
+    },
 ];

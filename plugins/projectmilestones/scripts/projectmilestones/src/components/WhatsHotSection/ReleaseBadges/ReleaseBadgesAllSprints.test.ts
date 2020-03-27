@@ -48,8 +48,8 @@ describe("ReleaseBadgesAllSprints", () => {
     beforeEach(() => {
         store_options = {
             state: {
-                project_id: project_id
-            }
+                project_id: project_id,
+            },
         };
 
         release_data = {
@@ -61,12 +61,12 @@ describe("ReleaseBadgesAllSprints", () => {
                     accept: {
                         trackers: [
                             {
-                                label: "Sprint1"
-                            }
-                        ]
-                    }
-                }
-            }
+                                label: "Sprint1",
+                            },
+                        ],
+                    },
+                },
+            },
         } as MilestoneData;
 
         component_options.propsData = { release_data };
@@ -88,14 +88,14 @@ describe("ReleaseBadgesAllSprints", () => {
                 resources: {
                     milestones: {
                         accept: {
-                            trackers: [] as TrackerProjectLabel[]
-                        }
-                    }
-                }
+                            trackers: [] as TrackerProjectLabel[],
+                        },
+                    },
+                },
             } as MilestoneData;
 
             component_options.propsData = {
-                release_data
+                release_data,
             };
             store_options.state.user_can_view_sub_milestones_planning = true;
             const wrapper = await getPersonalWidgetInstance(store_options);

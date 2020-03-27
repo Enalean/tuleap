@@ -28,7 +28,7 @@ describe("DateFlatPicker", () => {
         factory = (props = {}) => {
             return shallowMount(DateFlatPicker, {
                 localVue,
-                propsData: { ...props }
+                propsData: { ...props },
             });
         };
     });

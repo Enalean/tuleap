@@ -22,8 +22,8 @@
 codendi.locales["cardwall_field_validation"] = {
     error_message: {
         float_type: "the value must be a decimal",
-        int_type: "the value must be an integer"
-    }
+        int_type: "the value must be an integer",
+    },
 };
 
 codendi.locales["cardwall"] = {
@@ -33,5 +33,5 @@ codendi.locales["cardwall"] = {
     no_fullscreen_title: "Oooooooooops!",
     no_fullscreen_content:
         "Dear Internet Explorer user,<br/><br/>We inform you the fullscreen feature is not available on your browser.<br/><br/>Best regards,<br/>The Tuleap team",
-    autocomputed_label: "autocomputed"
+    autocomputed_label: "autocomputed",
 };

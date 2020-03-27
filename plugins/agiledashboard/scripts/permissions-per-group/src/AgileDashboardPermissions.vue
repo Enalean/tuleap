@@ -96,14 +96,14 @@ export default {
     props: {
         selectedUgroupId: String,
         selectedProjectId: String,
-        selectedUgroupName: String
+        selectedUgroupName: String,
     },
     data() {
         return {
             is_loaded: false,
             is_loading: false,
             permissions: [],
-            error: null
+            error: null,
         };
     },
     computed: {
@@ -118,7 +118,7 @@ export default {
         },
         has_a_selected_u_group() {
             return this.selectedUgroupName !== "";
-        }
+        },
     },
     methods: {
         async loadAll() {
@@ -136,7 +136,7 @@ export default {
             } finally {
                 this.is_loading = false;
             }
-        }
-    }
+        },
+    },
 };
 </script>

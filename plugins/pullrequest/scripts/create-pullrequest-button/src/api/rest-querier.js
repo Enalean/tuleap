@@ -22,8 +22,8 @@ import { post, recursiveGet } from "tlp";
 export function getBranches(repository_id) {
     return recursiveGet("/api/git/" + repository_id + "/branches", {
         params: {
-            limit: 50
-        }
+            limit: 50,
+        },
     });
 }
 
@@ -34,14 +34,14 @@ export async function createPullrequest(
     destination_branch_name
 ) {
     const headers = {
-        "content-type": "application/json"
+        "content-type": "application/json",
     };
 
     const body = JSON.stringify({
         repository_id: source_repository_id,
         branch_src: source_branch_name,
         repository_dest_id: destination_repository_id,
-        branch_dest: destination_branch_name
+        branch_dest: destination_branch_name,
     });
 
     const response = await post("/api/pull_requests", { headers, body });

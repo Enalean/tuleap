@@ -71,7 +71,7 @@ import {
     TYPE_FILE,
     TYPE_FOLDER,
     TYPE_LINK,
-    TYPE_WIKI
+    TYPE_WIKI,
 } from "../../constants.js";
 import SearchBox from "./SearchBox.vue";
 import FileUploadManager from "./FilesUploads/FilesUploadsManager.vue";
@@ -96,7 +96,7 @@ export default {
         "permissions-update-modal": () =>
             import(
                 /* webpackChunkName: "document-permissions-update-modal" */ "./Permissions/PermissionsUpdateModal.vue"
-            )
+            ),
     },
     data() {
         return {
@@ -105,7 +105,7 @@ export default {
             updated_item: null,
             updated_metadata: null,
             item_to_delete: null,
-            item_to_update_permissions: {}
+            item_to_update_permissions: {},
         };
     },
     computed: {
@@ -124,7 +124,7 @@ export default {
         },
         can_display_new_document_button() {
             return this.current_folder;
-        }
+        },
     },
     created() {
         EventBus.$on("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
@@ -201,7 +201,7 @@ export default {
         },
         isItemAFolder(item) {
             return item.type === TYPE_FOLDER;
-        }
-    }
+        },
+    },
 };
 </script>

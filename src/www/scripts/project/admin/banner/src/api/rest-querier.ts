@@ -20,7 +20,7 @@
 import { del, put } from "tlp";
 
 const headers = {
-    "content-type": "application/json"
+    "content-type": "application/json",
 };
 
 export async function deleteBannerForProject(project_id: number): Promise<void> {
@@ -29,11 +29,11 @@ export async function deleteBannerForProject(project_id: number): Promise<void> 
 
 export async function saveBannerForProject(project_id: number, new_message: string): Promise<void> {
     const body = JSON.stringify({
-        message: new_message
+        message: new_message,
     });
 
     await put(`/api/projects/${project_id}/banner`, {
         headers,
-        body
+        body,
     });
 }

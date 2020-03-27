@@ -46,11 +46,11 @@ export default {
     components: {
         StatusMetadataWithCustomBindingForDocumentCreate,
         DescriptionMetadata,
-        TitleMetadata
+        TitleMetadata,
     },
     props: {
         currentlyUpdatedItem: Object,
-        parent: Object
-    }
+        parent: Object,
+    },
 };
 </script>

@@ -22,11 +22,11 @@ import {
     resetPlaceholder,
     addDataToAutocompleter,
     enableAutocompleter,
-    loadUserAndUgroupAutocompleter
+    loadUserAndUgroupAutocompleter,
 } from "../../../src/www/scripts/tuleap/user-and-ugroup-autocompleter";
 
-(function($) {
-    document.addEventListener("DOMContentLoaded", function() {
+(function ($) {
+    document.addEventListener("DOMContentLoaded", function () {
         var add_button = document.getElementById("svn-notifications-add"),
             add_row = document.getElementById("svn-notifications-row-add");
 
@@ -35,28 +35,28 @@ import {
         }
 
         var show_edit_mode_buttons = document.querySelectorAll(".svn-notification-edit-show");
-        [].forEach.call(show_edit_mode_buttons, function(button) {
+        [].forEach.call(show_edit_mode_buttons, function (button) {
             button.addEventListener("click", showEditMode);
         });
 
         var hide_edit_mode_buttons = document.querySelectorAll(".svn-notification-edit-hide");
-        [].forEach.call(hide_edit_mode_buttons, function(button) {
+        [].forEach.call(hide_edit_mode_buttons, function (button) {
             button.addEventListener("click", hideEditMode);
         });
 
         var timeouts = [];
         var all_existing_paths = [];
         var paths = document.getElementsByClassName("input-path");
-        [].forEach.call(paths, function(path) {
+        [].forEach.call(paths, function (path) {
             if (path.classList.contains("edit-path")) {
                 all_existing_paths.push({
                     notification_id: path.dataset.notificationId,
-                    value: path.value
+                    value: path.value,
                 });
             }
-            path.addEventListener("input", function(event) {
+            path.addEventListener("input", function (event) {
                 timeouts.push(
-                    setTimeout(function() {
+                    setTimeout(function () {
                         clearTimeouts();
                         checkPathExists(event);
                     }, 1000)
@@ -69,7 +69,7 @@ import {
         initializeAddNotification();
 
         function initializeAddNotification() {
-            add_button.addEventListener("click", function() {
+            add_button.addEventListener("click", function () {
                 hideEditMode();
                 add_row.classList.remove("svn-notifications-row-add-hidden");
                 add_button.classList.add("svn-notifications-add-hidden");
@@ -85,13 +85,13 @@ import {
 
             form.reset();
 
-            [].forEach.call(read_cells, function(cell) {
+            [].forEach.call(read_cells, function (cell) {
                 cell.classList.remove("svn-notifications-checkbox-cell-hidden");
             });
-            [].forEach.call(edit_cells, function(cell) {
+            [].forEach.call(edit_cells, function (cell) {
                 cell.classList.add("svn-notifications-checkbox-cell-hidden");
             });
-            [].forEach.call(buttons_save, function(button_save) {
+            [].forEach.call(buttons_save, function (button_save) {
                 button_save.disabled = false;
             });
             add_row.classList.add("svn-notifications-row-add-hidden");
@@ -105,13 +105,13 @@ import {
                 read_cells = tr.querySelectorAll(".svn-notifications-checkbox-cell-read"),
                 edit_cells = tr.querySelectorAll(".svn-notifications-checkbox-cell-write");
 
-            [].forEach.call(read_cells, function(cell) {
+            [].forEach.call(read_cells, function (cell) {
                 cell.classList.add("svn-notifications-checkbox-cell-hidden");
             });
-            [].forEach.call(edit_cells, function(cell) {
+            [].forEach.call(edit_cells, function (cell) {
                 cell.classList.remove("svn-notifications-checkbox-cell-hidden");
                 var inputs = cell.getElementsByTagName("input");
-                [].forEach.call(inputs, function(input) {
+                [].forEach.call(inputs, function (input) {
                     input.disabled = false;
                 });
             });
@@ -134,7 +134,7 @@ import {
                 return;
             }
 
-            [].forEach.call(inputs, function(input) {
+            [].forEach.call(inputs, function (input) {
                 loadUserAndUgroupAutocompleter(input);
                 addDataToAutocompleter(input);
             });

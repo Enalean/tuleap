@@ -20,7 +20,7 @@
 import {
     isDraggedOverTheSourceCell,
     getCardFromSwimlane,
-    isDraggedOverAnotherSwimlane
+    isDraggedOverAnotherSwimlane,
 } from "./html-to-item";
 import { Card, Swimlane } from "../type";
 
@@ -86,8 +86,8 @@ describe("html-to-item helper", () => {
                 children_cards: [
                     { id: 145 } as Card,
                     { id: 146 } as Card,
-                    { id: 150, label: "I am the card you look for" } as Card
-                ]
+                    { id: 150, label: "I am the card you look for" } as Card,
+                ],
             } as Swimlane;
 
             const card = getCardFromSwimlane(swimlane, card_element);
@@ -107,8 +107,8 @@ describe("html-to-item helper", () => {
                 children_cards: [
                     { id: 145 } as Card,
                     { id: 146 } as Card,
-                    { id: 150, label: "I am the card you look for" } as Card
-                ]
+                    { id: 150, label: "I am the card you look for" } as Card,
+                ],
             } as Swimlane;
 
             const card = getCardFromSwimlane(swimlane, card_element); // card_element is undefined
@@ -126,8 +126,8 @@ describe("html-to-item helper", () => {
                 children_cards: [
                     { id: 145 } as Card,
                     { id: 146 } as Card,
-                    { id: 150, label: "I am the card you look for" } as Card
-                ]
+                    { id: 150, label: "I am the card you look for" } as Card,
+                ],
             } as Swimlane;
 
             const card = getCardFromSwimlane(swimlane, card_element);
@@ -177,6 +177,6 @@ function getSourceAndTargetCellsAndCard(): {
     return {
         target_cell,
         source_cell,
-        card_element
+        card_element,
     };
 }

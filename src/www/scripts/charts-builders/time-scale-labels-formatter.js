@@ -40,13 +40,13 @@ export class TimeScaleLabelsFormatter {
             month: gettext_provider.gettext("MMM YYYY"),
             week: gettext_provider.gettext("WW"),
             /// Week format prefix. Chart ticks will be rendered like W01 for week 01, W02 for week 02 and so on.
-            week_prefix: gettext_provider.gettext("W %s")
+            week_prefix: gettext_provider.gettext("W %s"),
         };
 
         Object.assign(this, {
             layout,
             localized_date_formats,
-            timeframe_granularity: getGranularity(first_date, last_date)
+            timeframe_granularity: getGranularity(first_date, last_date),
         });
     }
 
@@ -54,7 +54,7 @@ export class TimeScaleLabelsFormatter {
         const all_ticks = this.layout.selectAll(`.chart-x-axis > .tick`).nodes();
         const format = this.getFormatter();
 
-        all_ticks.forEach(function(tick) {
+        all_ticks.forEach(function (tick) {
             const text_element = select(tick).select("text");
             const formatted_label = format(text_element.text());
 
@@ -69,7 +69,7 @@ export class TimeScaleLabelsFormatter {
 
         let previous_label;
 
-        all_ticks.forEach(node => {
+        all_ticks.forEach((node) => {
             const label = select(node).text();
 
             if (!previous_label) {
@@ -94,7 +94,7 @@ export class TimeScaleLabelsFormatter {
 
     getFormatter() {
         if (!this.timeframe_granularity) {
-            return tick_label => tick_label;
+            return (tick_label) => tick_label;
         }
 
         const tick_format = this.localized_date_formats[this.timeframe_granularity];
@@ -102,12 +102,12 @@ export class TimeScaleLabelsFormatter {
         if (this.timeframe_granularity === WEEK) {
             const prefix = this.localized_date_formats.week_prefix;
 
-            return function(date) {
+            return function (date) {
                 return sprintf(prefix, moment(date, moment.ISO_8601).format(tick_format));
             };
         }
 
-        return function(date) {
+        return function (date) {
             return moment(date, moment.ISO_8601).format(tick_format);
         };
     }

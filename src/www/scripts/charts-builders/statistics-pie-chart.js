@@ -35,7 +35,7 @@ export class StatisticsPieChart {
             div_graph: select("#" + id),
             group: null,
             svg: null,
-            arc_text: null
+            arc_text: null,
         });
     }
 
@@ -68,7 +68,7 @@ export class StatisticsPieChart {
         this.arc_over = arc()
             .innerRadius(this.radius / 4.25)
             .outerRadius(this.radius / 2.75)
-            .padAngle(slice_data => (sliceEqualsTo180Degrees(slice_data) ? 0 : 0.05));
+            .padAngle((slice_data) => (sliceEqualsTo180Degrees(slice_data) ? 0 : 0.05));
 
         this.arc_over_text = arc()
             .innerRadius(this.radius / 2.75)
@@ -77,7 +77,7 @@ export class StatisticsPieChart {
 
     initPie() {
         this.pie = pie()
-            .value(function(d) {
+            .value(function (d) {
                 return d.count;
             })
             .sort(null);
@@ -95,34 +95,32 @@ export class StatisticsPieChart {
             .data(this.data)
             .enter()
             .append("li")
-            .attr("class", d => {
+            .attr("class", (d) => {
                 return this.getLegendClass() + " " + this.getLegendClassByKey(d.key);
             });
 
-        legend.append("span").attr("class", d => {
+        legend.append("span").attr("class", (d) => {
             return this.getLegendColorSpanClass() + " " + this.getLegendColorClassByKey(d.key);
         });
 
         legend
             .append("span")
             .attr("class", this.getLegendTextSpanClass())
-            .text(function(d) {
+            .text(function (d) {
                 return d.label;
             });
 
         legend
-            .on("mouseover", d => {
+            .on("mouseover", (d) => {
                 this.onSliceAndTextOver(d.key);
                 this.replaceText(this.group.select("." + this.getSliceClassByKey(d.key)).datum());
             })
-            .on("mouseout", d => {
+            .on("mouseout", (d) => {
                 this.onSliceAndTextOut(d.key);
             });
 
-        legend.each(function() {
-            const li_width = select(this)
-                .node()
-                .getBoundingClientRect().width;
+        legend.each(function () {
+            const li_width = select(this).node().getBoundingClientRect().width;
             select(this).style("width", li_width + 10 + "px");
         });
     }
@@ -133,23 +131,20 @@ export class StatisticsPieChart {
             .data(this.pie(this.data))
             .enter()
             .append("g")
-            .attr("class", d => {
+            .attr("class", (d) => {
                 return this.getSliceClass() + " " + this.getSliceClassByKey(d.data.key);
             });
 
-        arc_elements
-            .append("path")
-            .attr("class", this.getSlicePathClass())
-            .attr("d", this.arc);
+        arc_elements.append("path").attr("class", this.getSlicePathClass()).attr("d", this.arc);
 
         arc_elements
             .append("text")
             .attr("class", this.getSliceTextClass())
-            .attr("transform", d => {
+            .attr("transform", (d) => {
                 return "translate(" + this.arc_text.centroid(d) + ")";
             })
             .attr("dy", ".35em")
-            .text(d => {
+            .text((d) => {
                 if (d.data.value && d.data.value.length > 0) {
                     return d.data.value;
                 }
@@ -162,11 +157,11 @@ export class StatisticsPieChart {
             });
 
         arc_elements
-            .on("mouseover", d => {
+            .on("mouseover", (d) => {
                 this.onSliceAndTextOver(d.data.key);
                 this.replaceText(d);
             })
-            .on("mouseout", d => {
+            .on("mouseout", (d) => {
                 this.onSliceAndTextOut(d.data.key);
             });
     }
@@ -174,21 +169,17 @@ export class StatisticsPieChart {
     initText() {
         const slices = this.svg.selectAll("." + this.getSliceClass());
 
-        slices.each(function(d) {
+        slices.each(function (d) {
             const angle = (d.startAngle + d.endAngle) / 2;
 
             if (angle > Math.PI) {
-                select(this)
-                    .select("text")
-                    .style("text-anchor", "end");
+                select(this).select("text").style("text-anchor", "end");
             } else {
-                select(this)
-                    .select("text")
-                    .style("text-anchor", "start");
+                select(this).select("text").style("text-anchor", "start");
             }
         });
 
-        slices.each(d => {
+        slices.each((d) => {
             this.displayText(d);
         });
     }
@@ -197,7 +188,7 @@ export class StatisticsPieChart {
         Object.assign(this, {
             width,
             height,
-            radius
+            radius,
         });
 
         this.svg.attr("width", this.width).attr("height", this.height);
@@ -208,7 +199,7 @@ export class StatisticsPieChart {
 
         this.group.selectAll("path").attr("d", this.arc);
 
-        this.group.selectAll("text").attr("transform", d => {
+        this.group.selectAll("text").attr("transform", (d) => {
             return "translate(" + this.arc_text.centroid(d) + ")";
         });
 
@@ -268,10 +259,7 @@ export class StatisticsPieChart {
 
         const arc_element = this.group.select("." + this.getSliceClassByKey(arc_data.data.key));
 
-        const text_element_client = arc_element
-            .select("text")
-            .node()
-            .getBoundingClientRect();
+        const text_element_client = arc_element.select("text").node().getBoundingClientRect();
         const text_element_width = text_element_client.width;
         const text_element_left = text_element_client.left;
         const text_element_right = text_element_client.right;
@@ -280,14 +268,8 @@ export class StatisticsPieChart {
         const svg_element_left = svg_element_client.left;
         const svg_element_right = svg_element_client.right;
 
-        const path_width = arc_element
-            .select("path")
-            .node()
-            .getBoundingClientRect().width;
-        const path_height = arc_element
-            .select("path")
-            .node()
-            .getBoundingClientRect().height;
+        const path_width = arc_element.select("path").node().getBoundingClientRect().width;
+        const path_height = arc_element.select("path").node().getBoundingClientRect().height;
 
         if (path_width < text_element_width || path_height < text_element_width) {
             arc_data.displayed = false;
@@ -319,10 +301,7 @@ export class StatisticsPieChart {
         const arc_element = this.group.select("." + this.getSliceClassByKey(arc_data.data.key));
         const angle = (arc_data.startAngle + arc_data.endAngle) / 2;
 
-        const text_element_client = arc_element
-            .select("text")
-            .node()
-            .getBoundingClientRect();
+        const text_element_client = arc_element.select("text").node().getBoundingClientRect();
         const text_element_left = text_element_client.left;
         const text_element_right = text_element_client.right;
 
@@ -346,7 +325,7 @@ export class StatisticsPieChart {
             .select("." + this.getSliceClassByKey(key) + " path")
             .transition()
             .attr("d", this.arc_over)
-            .attr("transform", d => {
+            .attr("transform", (d) => {
                 if (sliceEqualsTo180Degrees(d)) {
                     const angle = d.startAngle + d.endAngle / 2;
 
@@ -363,7 +342,7 @@ export class StatisticsPieChart {
             .select("." + this.getSliceClassByKey(key) + " text")
             .classed(this.getSliceTextUndisplayedClass(), false)
             .transition()
-            .attr("transform", d => {
+            .attr("transform", (d) => {
                 return "translate(" + this.arc_over_text.centroid(d) + ")";
             });
 
@@ -377,7 +356,7 @@ export class StatisticsPieChart {
             .select("." + this.getSliceClassByKey(key) + " path")
             .transition()
             .attr("d", this.arc)
-            .attr("transform", d => {
+            .attr("transform", (d) => {
                 if (sliceEqualsTo180Degrees(d)) {
                     return "translate(0,0)";
                 }
@@ -387,9 +366,9 @@ export class StatisticsPieChart {
 
         this.group
             .select("." + this.getSliceClassByKey(key) + " text")
-            .classed(this.getSliceTextUndisplayedClass(), d => !d.displayed)
+            .classed(this.getSliceTextUndisplayedClass(), (d) => !d.displayed)
             .transition()
-            .attr("transform", d => {
+            .attr("transform", (d) => {
                 return "translate(" + this.arc_text.centroid(d) + ")";
             });
 

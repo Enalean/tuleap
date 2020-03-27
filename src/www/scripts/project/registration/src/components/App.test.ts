@@ -25,7 +25,7 @@ describe("App", () => {
     let factory: Wrapper<App>;
     beforeEach(async () => {
         factory = shallowMount(App, {
-            localVue: await createProjectRegistrationLocalVue()
+            localVue: await createProjectRegistrationLocalVue(),
         });
     });
     it("Spawns the app", () => {

@@ -34,7 +34,7 @@ export function setIdOfCardBeingDragged(state: State, card: Element): void {
 
     state.card_being_dragged = {
         tracker_id: Number(card.dataset.trackerId),
-        card_id: Number(card.dataset.cardId)
+        card_id: Number(card.dataset.cardId),
     };
 }
 

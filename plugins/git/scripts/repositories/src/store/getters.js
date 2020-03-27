@@ -19,13 +19,14 @@
 
 import { ERROR_TYPE_NO_ERROR, REPOSITORIES_SORTED_BY_PATH } from "../constants.js";
 
-export const currentRepositoryList = state => state.repositories_for_owner[state.selected_owner_id];
+export const currentRepositoryList = (state) =>
+    state.repositories_for_owner[state.selected_owner_id];
 
 export const isCurrentRepositoryListEmpty = (state, getters) =>
     getters.areRepositoriesAlreadyLoadedForCurrentOwner &&
     getters.currentRepositoryList.length === 0;
 
-export const areRepositoriesAlreadyLoadedForCurrentOwner = state => {
+export const areRepositoriesAlreadyLoadedForCurrentOwner = (state) => {
     return Object.prototype.hasOwnProperty.call(
         state.repositories_for_owner,
         state.selected_owner_id
@@ -37,7 +38,7 @@ export const filteredRepositoriesByLastUpdateDate = (state, getters) => {
         return [];
     }
 
-    return sortByLastUpdateDate(getters.currentRepositoryList).filter(repository =>
+    return sortByLastUpdateDate(getters.currentRepositoryList).filter((repository) =>
         filterRepositoriesOnName(repository, state.filter)
     );
 };
@@ -45,7 +46,7 @@ export const filteredRepositoriesByLastUpdateDate = (state, getters) => {
 const filterRepositoriesOnName = (repository, query) =>
     repository.normalized_path.toLowerCase().includes(query.toLowerCase());
 
-const sortByLastUpdateDate = repositories =>
+const sortByLastUpdateDate = (repositories) =>
     repositories.sort((a, b) => new Date(b.last_update_date) - new Date(a.last_update_date));
 
 export const filteredRepositoriesGroupedByPath = (state, getters) => {
@@ -59,7 +60,7 @@ export const filteredRepositoriesGroupedByPath = (state, getters) => {
 const root_folder = {
     is_folder: true,
     label: "root",
-    children: []
+    children: [],
 };
 
 const filterAFolder = (folder, query) => {
@@ -73,7 +74,7 @@ const filterAFolder = (folder, query) => {
 
     return {
         ...folder,
-        children: filtered_children
+        children: filtered_children,
     };
 };
 
@@ -92,7 +93,7 @@ const filterAChild = (child, query) => {
     return child;
 };
 
-const groupRepositoriesByPath = repositories => {
+const groupRepositoriesByPath = (repositories) => {
     const grouped = repositories.reduce(
         (accumulator, repository) => {
             if (repository.path_without_project) {
@@ -109,20 +110,20 @@ const groupRepositoriesByPath = repositories => {
         {
             is_folder: true,
             label: "root",
-            children: new Map()
+            children: new Map(),
         }
     );
 
     return recursivelySortAlphabetically(grouped);
 };
 
-const sortByLabelAlphabetically = items =>
+const sortByLabelAlphabetically = (items) =>
     items.sort((a, b) => a.label.localeCompare(b.label, undefined, { numeric: true }));
 
-const recursivelySortAlphabetically = folder => {
+const recursivelySortAlphabetically = (folder) => {
     let folders = [];
     let repositories = [];
-    folder.children.forEach(value => {
+    folder.children.forEach((value) => {
         if (value.is_folder) {
             const sorted_folder = recursivelySortAlphabetically(value);
             folders.push(sorted_folder);
@@ -132,12 +133,12 @@ const recursivelySortAlphabetically = folder => {
     });
     const sorted_children = [
         ...sortByLabelAlphabetically(folders),
-        ...sortByLabelAlphabetically(repositories)
+        ...sortByLabelAlphabetically(repositories),
     ];
 
     return {
         ...folder,
-        children: sorted_children
+        children: sorted_children,
     };
 };
 
@@ -146,7 +147,7 @@ const createHierarchy = (hierarchy, path_part) => {
         hierarchy.children.set(path_part, {
             is_folder: true,
             label: path_part,
-            children: new Map()
+            children: new Map(),
         });
     }
 
@@ -159,13 +160,13 @@ export const isThereAResultInCurrentFilteredList = (state, getters) => {
         : getters.filteredRepositoriesByLastUpdateDate.length > 0;
 };
 
-export const hasError = state => state.error_message_type !== ERROR_TYPE_NO_ERROR;
+export const hasError = (state) => state.error_message_type !== ERROR_TYPE_NO_ERROR;
 
 export const isInitialLoadingDoneWithoutError = (state, getters) =>
     !state.is_loading_initial && !getters.hasError;
 
-export const isFolderDisplayMode = state => state.display_mode === REPOSITORIES_SORTED_BY_PATH;
+export const isFolderDisplayMode = (state) => state.display_mode === REPOSITORIES_SORTED_BY_PATH;
 
-export const isLoading = state => state.is_loading_initial || state.is_loading_next;
+export const isLoading = (state) => state.is_loading_initial || state.is_loading_next;
 
-export const isFiltering = state => state.filter.length > 0;
+export const isFiltering = (state) => state.filter.length > 0;

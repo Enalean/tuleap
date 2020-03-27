@@ -54,23 +54,23 @@ export default {
     name: "WidgetArtifactTableRow",
     components: {
         WidgetLinkToArtifact,
-        WidgetModalTimes
+        WidgetModalTimes,
     },
     props: {
-        timeData: Array
+        timeData: Array,
     },
     data() {
         return {
             artifact: this.timeData[0].artifact,
             project: this.timeData[0].project,
-            modal_simple_content: null
+            modal_simple_content: null,
         };
     },
     computed: {
         ...mapGetters(["get_formatted_aggregated_time"]),
         link_to_artifact_timetracking() {
             return this.artifact.html_url + "&view=timetracking";
-        }
+        },
     },
     mounted() {
         const modal = this.$refs.timetracking_modal.$el;
@@ -85,7 +85,7 @@ export default {
         show_modal() {
             this.$store.commit("setCurrentTimes", this.timeData);
             this.modal_simple_content.toggle();
-        }
-    }
+        },
+    },
 };
 </script>

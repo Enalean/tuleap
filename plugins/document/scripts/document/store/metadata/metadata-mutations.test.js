@@ -25,8 +25,8 @@ describe("Metadata mutations", () => {
             {
                 short_name: "status",
                 name: "status",
-                list_value: [100]
-            }
+                list_value: [100],
+            },
         ];
 
         const state = { project_metadata_list: [], has_loaded_metadata: false };

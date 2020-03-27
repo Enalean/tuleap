@@ -42,7 +42,7 @@ import { Component, Prop } from "vue-property-decorator";
 import { MilestoneData } from "../../../type";
 import ReleaseButtonsDescription from "../ReleaseDescription/ReleaseButtonsDescription.vue";
 @Component({
-    components: { ReleaseButtonsDescription }
+    components: { ReleaseButtonsDescription },
 })
 export default class ReleaseBadgesOpenSprint extends Vue {
     @Prop()

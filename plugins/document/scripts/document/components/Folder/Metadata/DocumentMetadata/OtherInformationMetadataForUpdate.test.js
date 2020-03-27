@@ -36,7 +36,7 @@ describe("OtherInformationMetadataForUpdate", () => {
             return shallowMount(OtherInformationMetadataForUpdate, {
                 localVue,
                 propsData: { ...props },
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
     });
@@ -48,17 +48,17 @@ describe("OtherInformationMetadataForUpdate", () => {
                     metadata: [],
                     status: 100,
                     type: TYPE_FILE,
-                    title: "title"
+                    title: "title",
                 },
                 metadataToUpdate: [],
-                value: ""
+                value: "",
             });
 
             store.state = {
                 is_obsolescence_date_metadata_used: true,
                 metadata: {
-                    has_loaded_metadata: false
-                }
+                    has_loaded_metadata: false,
+                },
             };
 
             expect(wrapper.find("[data-test=document-other-information]").exists()).toBeTruthy();
@@ -69,7 +69,7 @@ describe("OtherInformationMetadataForUpdate", () => {
 
         it("Load project metadata at first load", async () => {
             store.state.metadata = {
-                has_loaded_metadata: false
+                has_loaded_metadata: false,
             };
 
             const wrapper = other_metadata({
@@ -77,14 +77,14 @@ describe("OtherInformationMetadataForUpdate", () => {
                     metadata: [],
                     status: 100,
                     type: TYPE_FILE,
-                    title: "title"
+                    title: "title",
                 },
                 metadataToUpdate: [],
-                value: ""
+                value: "",
             });
 
             EventBus.$emit("show-new-document-modal", {
-                detail: { parent: store.state.current_folder }
+                detail: { parent: store.state.current_folder },
             });
             await wrapper.vm.$nextTick().then(() => {});
 
@@ -100,22 +100,22 @@ describe("OtherInformationMetadataForUpdate", () => {
                     metadata: [
                         {
                             short_name: "obsolescence_date",
-                            value: null
-                        }
+                            value: null,
+                        },
                     ],
                     obsolescence_date: null,
                     type: TYPE_FILE,
-                    title: "title"
+                    title: "title",
                 },
                 metadataToUpdate: [],
-                value: ""
+                value: "",
             });
 
             store.state = {
                 is_obsolescence_date_metadata_used: true,
                 metadata: {
-                    has_loaded_metadata: true
-                }
+                    has_loaded_metadata: true,
+                },
             };
 
             expect(wrapper.find("[data-test=document-other-information]").exists()).toBeTruthy();
@@ -130,26 +130,26 @@ describe("OtherInformationMetadataForUpdate", () => {
                             short_name: "field_1234",
                             list_value: [
                                 {
-                                    id: 103
-                                }
+                                    id: 103,
+                                },
                             ],
                             type: "list",
-                            is_multiple_value_allowed: false
-                        }
+                            is_multiple_value_allowed: false,
+                        },
                     ],
                     status: 100,
                     type: TYPE_FILE,
-                    title: "title"
+                    title: "title",
                 },
                 metadataToUpdate: [{ id: 1 }],
-                value: ""
+                value: "",
             });
 
             store.state = {
                 is_obsolescence_date_metadata_used: false,
                 metadata: {
-                    has_loaded_metadata: true
-                }
+                    has_loaded_metadata: true,
+                },
             };
 
             expect(wrapper.find("[data-test=document-other-information]").exists()).toBeTruthy();
@@ -162,17 +162,17 @@ describe("OtherInformationMetadataForUpdate", () => {
                     metadata: [],
                     status: 100,
                     type: TYPE_FILE,
-                    title: "title"
+                    title: "title",
                 },
                 metadataToUpdate: [],
-                value: ""
+                value: "",
             });
 
             store.state = {
                 is_obsolescence_date_metadata_used: false,
                 metadata: {
-                    has_loaded_metadata: true
-                }
+                    has_loaded_metadata: true,
+                },
             };
 
             expect(wrapper.find("[data-test=document-other-information]").exists()).toBeFalsy();

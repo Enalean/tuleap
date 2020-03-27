@@ -24,7 +24,7 @@
             key="transition_label"
             v-bind:translate-params="{
                 from_state_label,
-                to_state_label
+                to_state_label,
             }"
         >
             Configure transition from %{from_state_label} to %{to_state_label}
@@ -51,7 +51,7 @@ export default {
                     return this.$gettext("(New artifact)");
                 }
                 return this.all_target_states.find(
-                    from_state => from_state.id === state.current_transition.from_id
+                    (from_state) => from_state.id === state.current_transition.from_id
                 ).label;
             },
             to_state_label(state) {
@@ -59,10 +59,10 @@ export default {
                     return null;
                 }
                 return this.all_target_states.find(
-                    to_state => to_state.id === state.current_transition.to_id
+                    (to_state) => to_state.id === state.current_transition.to_id
                 ).label;
-            }
-        })
-    }
+            },
+        }),
+    },
 };
 </script>

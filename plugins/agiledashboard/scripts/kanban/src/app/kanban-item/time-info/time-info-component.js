@@ -8,7 +8,7 @@ function controller($sce, gettextCatalog) {
 
     Object.assign(self, {
         isBacklog,
-        getTimeInfo
+        getTimeInfo,
     });
 
     function getTimeInfo(item) {
@@ -50,6 +50,6 @@ export default {
         </span>`,
     controller,
     bindings: {
-        item: "<"
-    }
+        item: "<",
+    },
 };

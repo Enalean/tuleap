@@ -24,6 +24,6 @@ NgVueConfig.$inject = ["$ngVueProvider"];
 
 function NgVueConfig($ngVueProvider) {
     $ngVueProvider.setRootVueInstanceProps({
-        store
+        store,
     });
 }

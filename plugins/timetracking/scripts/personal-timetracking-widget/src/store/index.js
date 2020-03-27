@@ -31,6 +31,6 @@ export function createStore() {
         getters,
         actions,
         state,
-        mutations
+        mutations,
     });
 }

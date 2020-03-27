@@ -29,7 +29,7 @@ describe("ScaleDrawer -", () => {
                 x_coordinate_minimum: 0,
                 y_coordinate_minimum: 100,
                 x_coordinate_maximum: 200,
-                y_coordinate_maximum: 500
+                y_coordinate_maximum: 500,
             };
 
             addScaleLines(chart_div, coordinate);
@@ -41,9 +41,6 @@ describe("ScaleDrawer -", () => {
     function getDocument(): Selection<SVGSVGElement, unknown, null, undefined> {
         const local_document = document.implementation.createHTMLDocument();
         const chart_div = local_document.createElement("svg");
-        return select(chart_div)
-            .append("svg")
-            .attr("width", 100)
-            .attr("height", 100);
+        return select(chart_div).append("svg").attr("width", 100).attr("height", 100);
     }
 });

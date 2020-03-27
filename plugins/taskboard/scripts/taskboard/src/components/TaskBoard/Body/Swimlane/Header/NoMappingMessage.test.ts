@@ -28,9 +28,9 @@ describe("NoMappingMessage", () => {
             localVue: await createTaskboardLocalVue(),
             propsData: {
                 card: {
-                    mapped_list_value: { label: "YOLO" }
-                } as Card
-            }
+                    mapped_list_value: { label: "YOLO" },
+                } as Card,
+            },
         });
 
         expect(wrapper.element).toMatchSnapshot();
@@ -40,9 +40,9 @@ describe("NoMappingMessage", () => {
             localVue: await createTaskboardLocalVue(),
             propsData: {
                 card: {
-                    mapped_list_value: null
-                } as Card
-            }
+                    mapped_list_value: null,
+                } as Card,
+            },
         });
 
         expect(wrapper.element).toMatchSnapshot();

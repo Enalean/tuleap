@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     new AppComponent({
         propsData: {
             message: vue_mount_point.dataset.bannerMessage || "",
-            project_id: parseInt(vue_mount_point.dataset.projectId, 10)
-        }
+            project_id: parseInt(vue_mount_point.dataset.projectId, 10),
+        },
     }).$mount(vue_mount_point);
 });

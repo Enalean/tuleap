@@ -27,15 +27,15 @@ document.addEventListener("DOMContentLoaded", () => {
     Vue.use(VueDOMPurifyHTML, {
         namedConfigurations: {
             svg: {
-                USE_PROFILES: { svg: true }
-            }
-        }
+                USE_PROFILES: { svg: true },
+            },
+        },
     });
     Vue.use(GetTextPlugin, {
         translations: {
-            fr: french_translations.messages
+            fr: french_translations.messages,
         },
-        silent: true
+        silent: true,
     });
 
     const locale = document.body.dataset.userLocale;
@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const widgets_array = [...widgets];
     for (const widget of widgets_array) {
         new RootComponent({
-            propsData: { ...widget.dataset }
+            propsData: { ...widget.dataset },
         }).$mount(widget);
     }
 });

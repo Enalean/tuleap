@@ -27,7 +27,7 @@ describe(`OngoingDrag`, () => {
     beforeEach(() => {
         mock_event_source = {
             attachAfterDropListener: jest.fn(),
-            dispatchAfterDropEvent: jest.fn()
+            dispatchAfterDropEvent: jest.fn(),
         };
     });
 
@@ -63,7 +63,7 @@ describe(`OngoingDrag`, () => {
             const drag_start_context = createDragStartContext(doc, true);
             ongoing_drag = new OngoingDrag(mock_event_source, drag_start_context);
             options = ({
-                mirror_container
+                mirror_container,
             } as unknown) as DrekkenovInitOptions;
         });
 
@@ -152,6 +152,6 @@ function createDragStartContext(doc: Document, has_sibling: boolean): DragStartC
     return {
         initial_sibling,
         source_dropzone,
-        dragged_element
+        dragged_element,
     };
 }

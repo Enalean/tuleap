@@ -32,7 +32,7 @@ export {
     replaceUploadingFileWithActualFile,
     removeItemFromFolderContent,
     addDocumentToFoldedFolder,
-    updateCurrentItemForQuickLokDisplay
+    updateCurrentItemForQuickLokDisplay,
 };
 
 function saveFolderContent(state, folder_content) {
@@ -41,11 +41,11 @@ function saveFolderContent(state, folder_content) {
 
 function addDocumentToTheRightPlace(state, new_item, parent) {
     const near_sibling_index = state.folder_content.findIndex(
-        sibling =>
+        (sibling) =>
             sibling.type !== TYPE_FOLDER &&
             sibling.parent_id === new_item.parent_id &&
             sibling.title.localeCompare(new_item.title, undefined, {
-                numeric: true
+                numeric: true,
             }) >= 0
     );
 
@@ -58,7 +58,7 @@ function addDocumentToTheRightPlace(state, new_item, parent) {
         return;
     } else if (has_a_parent_but_no_siblings) {
         const document_siblings = state.folder_content.filter(
-            item => item.parent_id === new_item.parent_id
+            (item) => item.parent_id === new_item.parent_id
         );
 
         let nearest_sibling;
@@ -70,7 +70,7 @@ function addDocumentToTheRightPlace(state, new_item, parent) {
         }
 
         const nearest_sibling_index = state.folder_content.findIndex(
-            item => item.id === nearest_sibling.id
+            (item) => item.id === nearest_sibling.id
         );
 
         state.folder_content.splice(nearest_sibling_index + 1, 0, new_item);
@@ -83,13 +83,13 @@ function addDocumentToTheRightPlace(state, new_item, parent) {
 
 function addFolderToTheRightPlace(state, new_item, parent) {
     const folder_siblings = state.folder_content.filter(
-        item => item.type === TYPE_FOLDER && item.parent_id === new_item.parent_id
+        (item) => item.type === TYPE_FOLDER && item.parent_id === new_item.parent_id
     );
 
-    let nearest_sibling = folder_siblings.find(sibling => {
+    let nearest_sibling = folder_siblings.find((sibling) => {
         return (
             sibling.title.localeCompare(new_item.title, undefined, {
-                numeric: true
+                numeric: true,
             }) >= 0
         );
     });
@@ -100,19 +100,19 @@ function addFolderToTheRightPlace(state, new_item, parent) {
         nearest_sibling = folder_siblings[folder_siblings.length - 1];
 
         const nearest_sibling_index = state.folder_content.findIndex(
-            item => item.id === nearest_sibling.id
+            (item) => item.id === nearest_sibling.id
         );
 
         state.folder_content.splice(nearest_sibling_index + 1, 0, new_item);
     } else if (nearest_sibling) {
         const nearest_sibling_index = state.folder_content.findIndex(
-            item => item.id === nearest_sibling.id
+            (item) => item.id === nearest_sibling.id
         );
 
         state.folder_content.splice(nearest_sibling_index, 0, new_item);
     } else {
         if (parent) {
-            const parent_index = state.folder_content.findIndex(item => item.id === parent.id);
+            const parent_index = state.folder_content.findIndex((item) => item.id === parent.id);
 
             state.folder_content.splice(parent_index + 1, 0, new_item);
         } else {
@@ -122,7 +122,7 @@ function addFolderToTheRightPlace(state, new_item, parent) {
 }
 
 function addJustCreatedItemToFolderContent(state, new_item) {
-    const parent = state.folder_content.find(parent => parent.id === new_item.parent_id);
+    const parent = state.folder_content.find((parent) => parent.id === new_item.parent_id);
 
     if (parent && !parent.level) {
         parent.level = 0;
@@ -138,24 +138,25 @@ function addJustCreatedItemToFolderContent(state, new_item) {
 }
 
 function appendSubFolderContent(state, [folder_id, sub_items]) {
-    const folder_index = state.folder_content.findIndex(folder => folder.id === folder_id);
+    const folder_index = state.folder_content.findIndex((folder) => folder.id === folder_id);
     const parent_folder = state.folder_content[folder_index];
 
     if (!parent_folder.level) {
         parent_folder.level = 0;
     }
 
-    sub_items.forEach(item => {
+    sub_items.forEach((item) => {
         item.level = parent_folder.level + 1;
     });
 
     const filtered_sub_items = sub_items.filter(
-        item => state.folder_content.findIndex(existing_item => item.id === existing_item.id) === -1
+        (item) =>
+            state.folder_content.findIndex((existing_item) => item.id === existing_item.id) === -1
     );
 
     state.folder_content.splice(folder_index + 1, 0, ...filtered_sub_items);
 
-    const children_ids = filtered_sub_items.map(item => item.id);
+    const children_ids = filtered_sub_items.map((item) => item.id);
 
     if (isParentFoldedByOnOfIsAncestors(state, parent_folder)) {
         state.folded_items_ids.push(...children_ids);
@@ -175,17 +176,17 @@ function findAncestorFoldingFolder(state, folder_id) {
 }
 
 function isParentFoldedByOnOfIsAncestors(state, parent_folder) {
-    return state.folded_items_ids.find(folded_item_id => folded_item_id === parent_folder.id);
+    return state.folded_items_ids.find((folded_item_id) => folded_item_id === parent_folder.id);
 }
 
 function foldFolderContent(state, folder_id) {
-    const index = state.folder_content.findIndex(item => item.id === folder_id);
+    const index = state.folder_content.findIndex((item) => item.id === folder_id);
 
     if (index !== -1) {
         state.folder_content[index].is_expanded = false;
     }
     const children = getFolderUnfoldedDescendants(state, folder_id);
-    const folded_content = children.map(item => item.id);
+    const folded_content = children.map((item) => item.id);
 
     state.folded_items_ids = state.folded_items_ids.concat(folded_content);
 
@@ -204,7 +205,7 @@ function addDocumentToFoldedFolder(state, [parent, item, should_display_fake_ite
 }
 
 function unfoldFolderContent(state, folder_id) {
-    const index = state.folder_content.findIndex(item => item.id === folder_id);
+    const index = state.folder_content.findIndex((item) => item.id === folder_id);
 
     if (index !== -1) {
         state.folder_content[index].is_expanded = true;
@@ -216,7 +217,9 @@ function unfoldFolderContent(state, folder_id) {
         return;
     }
 
-    state.folded_items_ids = state.folded_items_ids.filter(item => !items_to_unfold.includes(item));
+    state.folded_items_ids = state.folded_items_ids.filter(
+        (item) => !items_to_unfold.includes(item)
+    );
 
     delete state.folded_by_map[folder_id];
 }
@@ -227,11 +230,11 @@ function resetFoldedLists(state) {
 }
 
 function getFolderUnfoldedDescendants(state, folder_id) {
-    const children = state.folder_content.filter(item => item.parent_id === folder_id);
+    const children = state.folder_content.filter((item) => item.parent_id === folder_id);
 
     const unfolded_descendants = [];
 
-    children.forEach(child => {
+    children.forEach((child) => {
         if (Object.prototype.hasOwnProperty.call(state.folded_by_map, child.id)) {
             return;
         }
@@ -247,7 +250,7 @@ function removeCreatedPropertyOnItem(state, item) {
 }
 
 function replaceUploadingFileWithActualFile(state, [uploading_file, actual_file]) {
-    const index = state.folder_content.findIndex(item => item.id === uploading_file.id);
+    const index = state.folder_content.findIndex((item) => item.id === uploading_file.id);
     if (index === -1) {
         return;
     }
@@ -256,7 +259,7 @@ function replaceUploadingFileWithActualFile(state, [uploading_file, actual_file]
 }
 
 function removeItemFromFolderContent(state, item_to_remove) {
-    const index = state.folder_content.findIndex(item => item.id === item_to_remove.id);
+    const index = state.folder_content.findIndex((item) => item.id === item_to_remove.id);
     if (index === -1) {
         return;
     }
@@ -266,7 +269,7 @@ function removeItemFromFolderContent(state, item_to_remove) {
 
         const children = getFolderSubtree(state.folder_content, item_to_remove.id);
 
-        children.forEach(child => {
+        children.forEach((child) => {
             if (child.type === TYPE_FOLDER) {
                 unfoldFolderContent(state, child.id);
             }

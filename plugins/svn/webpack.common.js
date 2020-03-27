@@ -29,44 +29,44 @@ const webpack_config_for_vue_and_themes = {
     entry: {
         "permission-per-group": "./scripts/permissions-per-group/src/index.js",
         "style-fp": "./themes/FlamingParrot/css/style.scss",
-        "style-bp": "./themes/BurningParrot/css/style.scss"
+        "style-bp": "./themes/BurningParrot/css/style.scss",
     },
     context,
     output,
     externals: {
-        tlp: "tlp"
+        tlp: "tlp",
     },
     module: {
         rules: [
             webpack_configurator.rule_scss_loader,
             webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
             webpack_configurator.rule_easygettext_loader,
-            webpack_configurator.rule_vue_loader
-        ]
+            webpack_configurator.rule_vue_loader,
+        ],
     },
     plugins: [
         manifest_plugin,
         webpack_configurator.getVueLoaderPlugin(),
-        ...webpack_configurator.getCSSExtractionPlugins()
+        ...webpack_configurator.getCSSExtractionPlugins(),
     ],
-    resolveLoader: { alias: webpack_configurator.easygettext_loader_alias }
+    resolveLoader: { alias: webpack_configurator.easygettext_loader_alias },
 };
 
 const webpack_config_for_vanilla = {
     entry: {
         svn: "./scripts/svn.js",
-        "svn-admin": "./scripts/svn-admin.js"
+        "svn-admin": "./scripts/svn-admin.js",
     },
     context,
     output,
     externals: {
         codendi: "codendi",
-        jquery: "jQuery"
+        jquery: "jQuery",
     },
     module: {
-        rules: [webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11)]
+        rules: [webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11)],
     },
-    plugins: [manifest_plugin]
+    plugins: [manifest_plugin],
 };
 
 module.exports = [webpack_config_for_vue_and_themes, webpack_config_for_vanilla];

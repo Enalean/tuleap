@@ -38,7 +38,7 @@ const user = namespace("user");
 const DEFAULT_COLOR = "#F8F8F8";
 
 @Component({
-    components: { CardsInColumnCount, CollapseButton, WrongColorPopover }
+    components: { CardsInColumnCount, CollapseButton, WrongColorPopover },
 })
 export default class ExpandedHeaderCell extends Mixins(HeaderCellMixin) {
     @user.State

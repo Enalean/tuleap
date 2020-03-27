@@ -5,7 +5,7 @@ DroppedService.$inject = [
     "ProjectService",
     "MilestoneService",
     "BacklogItemService",
-    "RestErrorService"
+    "RestErrorService",
 ];
 
 function DroppedService(
@@ -25,18 +25,18 @@ function DroppedService(
         moveFromBacklogToSubmilestone: moveFromBacklogToSubmilestone,
         moveFromChildrenToChildren: moveFromChildrenToChildren,
         moveFromSubmilestoneToBacklog: moveFromSubmilestoneToBacklog,
-        moveFromSubmilestoneToSubmilestone: moveFromSubmilestoneToSubmilestone
+        moveFromSubmilestoneToSubmilestone: moveFromSubmilestoneToSubmilestone,
     };
 
     function defineComparedTo(item_list, dragged_item, dropped_items) {
         const diff_item_list = item_list.filter(
-            item =>
-                !dropped_items.some(dropped_item => dropped_item.id === item.id) ||
+            (item) =>
+                !dropped_items.some((dropped_item) => dropped_item.id === item.id) ||
                 dragged_item.id === item.id
         );
         var compared_to = {};
 
-        const index = diff_item_list.findIndex(item => dragged_item.id === item.id);
+        const index = diff_item_list.findIndex((item) => dragged_item.id === item.id);
 
         if (diff_item_list.length === 1) {
             return null;
@@ -64,7 +64,7 @@ function DroppedService(
 
         return {
             direction: "before",
-            item_id: diff_item_list[0].id
+            item_id: diff_item_list[0].id,
         };
     }
 
@@ -77,12 +77,12 @@ function DroppedService(
 
         return {
             direction: "after",
-            item_id: diff_item_list[diff_item_list.length - 1].id
+            item_id: diff_item_list[diff_item_list.length - 1].id,
         };
     }
 
     function removeAllGivenItemInList(list, items) {
-        return list.filter(list_item => !items.some(item => item.id === list_item.id));
+        return list.filter((list_item) => !items.some((item) => item.id === list_item.id));
     }
 
     function reorderBacklog(dropped_item_ids, compared_to, backlog) {
@@ -253,7 +253,7 @@ function DroppedService(
     }
 
     function catchRestError(promise) {
-        return promise.catch(function(data) {
+        return promise.catch(function (data) {
             RestErrorService.setError(data.data.error);
         });
     }

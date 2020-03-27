@@ -21,7 +21,7 @@ import {
     BurnupData,
     MilestoneData,
     PointsWithDateForBurnup,
-    StoreOptions
+    StoreOptions,
 } from "../../../../../type";
 import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import { createStoreMock } from "../../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
@@ -53,8 +53,8 @@ describe("BurnupDisplayer", () => {
         store_options = {
             state: {
                 project_id,
-                is_timeframe_duration: true
-            }
+                is_timeframe_duration: true,
+            },
         };
 
         release_data = {
@@ -69,12 +69,12 @@ describe("BurnupDisplayer", () => {
                 opening_days: [] as number[],
                 points_with_date: [] as PointsWithDateForBurnup[],
                 label: "burnup",
-                points_with_date_count_elements: []
-            } as BurnupData
+                points_with_date_count_elements: [],
+            } as BurnupData,
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
         };
 
         getPersonalWidgetInstance(store_options);
@@ -82,7 +82,7 @@ describe("BurnupDisplayer", () => {
 
     it("When the burnup is under calculation, Then ChartError component is rendered", async () => {
         component_options.propsData = {
-            release_data
+            release_data,
         };
         const wrapper = await getPersonalWidgetInstance(store_options);
         const chart_error = wrapper.find(ChartError);
@@ -105,12 +105,12 @@ describe("BurnupDisplayer", () => {
                 opening_days: [] as number[],
                 points_with_date: [] as PointsWithDateForBurnup[],
                 label: "burup",
-                points_with_date_count_elements: []
-            } as BurnupData
+                points_with_date_count_elements: [],
+            } as BurnupData,
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -134,12 +134,12 @@ describe("BurnupDisplayer", () => {
                 opening_days: [] as number[],
                 points_with_date: [] as PointsWithDateForBurnup[],
                 label: "burup",
-                points_with_date_count_elements: []
-            } as BurnupData
+                points_with_date_count_elements: [],
+            } as BurnupData,
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -163,12 +163,12 @@ describe("BurnupDisplayer", () => {
                 opening_days: [] as number[],
                 points_with_date: [] as PointsWithDateForBurnup[],
                 label: "burup",
-                points_with_date_count_elements: []
-            } as BurnupData
+                points_with_date_count_elements: [],
+            } as BurnupData,
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -192,12 +192,12 @@ describe("BurnupDisplayer", () => {
                 opening_days: [] as number[],
                 points_with_date: [] as PointsWithDateForBurnup[],
                 label: "burup",
-                points_with_date_count_elements: []
-            } as BurnupData
+                points_with_date_count_elements: [],
+            } as BurnupData,
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -221,12 +221,12 @@ describe("BurnupDisplayer", () => {
                 opening_days: [] as number[],
                 points_with_date: [] as PointsWithDateForBurnup[],
                 label: "burup",
-                points_with_date_count_elements: []
-            } as BurnupData
+                points_with_date_count_elements: [],
+            } as BurnupData,
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -250,12 +250,12 @@ describe("BurnupDisplayer", () => {
                 opening_days: [] as number[],
                 points_with_date: [] as PointsWithDateForBurnup[],
                 label: "burup",
-                points_with_date_count_elements: []
-            } as BurnupData
+                points_with_date_count_elements: [],
+            } as BurnupData,
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -278,12 +278,12 @@ describe("BurnupDisplayer", () => {
                 opening_days: [] as number[],
                 points_with_date: [] as PointsWithDateForBurnup[],
                 label: "burup",
-                points_with_date_count_elements: []
-            } as BurnupData
+                points_with_date_count_elements: [],
+            } as BurnupData,
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -297,7 +297,7 @@ describe("BurnupDisplayer", () => {
         release_data = {
             id: 2,
             planning: {
-                id: "100"
+                id: "100",
             },
             start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
             end_date: new Date("2019-02-05T11:41:01+02:00").toDateString(),
@@ -310,12 +310,12 @@ describe("BurnupDisplayer", () => {
                 opening_days: [] as number[],
                 points_with_date: [] as PointsWithDateForBurnup[],
                 label: "burup",
-                points_with_date_count_elements: []
-            } as BurnupData
+                points_with_date_count_elements: [],
+            } as BurnupData,
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);

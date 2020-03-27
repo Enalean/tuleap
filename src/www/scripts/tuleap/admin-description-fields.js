@@ -20,7 +20,7 @@
 
 /* global tlp:readonly */
 
-(function() {
+(function () {
     "use strict";
 
     handleAddModal();
@@ -34,7 +34,7 @@
 
         document
             .getElementById("add-description-field-button")
-            .addEventListener("click", function() {
+            .addEventListener("click", function () {
                 add_description_field_modal_content.toggle();
             });
     }
@@ -44,13 +44,13 @@
             ".edit-description-field-button"
         );
 
-        [].forEach.call(edit_description_field_buttons, function(edit_button) {
+        [].forEach.call(edit_description_field_buttons, function (edit_button) {
             var dom_edit_description_field_modal = document.getElementById(
                 edit_button.dataset.modalId
             );
             var tlp_edit_description_field_modal = tlp.modal(dom_edit_description_field_modal);
 
-            edit_button.addEventListener("click", function() {
+            edit_button.addEventListener("click", function () {
                 tlp_edit_description_field_modal.toggle();
             });
         });
@@ -61,13 +61,13 @@
             ".delete-description-field-button"
         );
 
-        [].forEach.call(delete_description_field_buttons, function(delete_button) {
+        [].forEach.call(delete_description_field_buttons, function (delete_button) {
             var dom_delete_description_field_modal = document.getElementById(
                 delete_button.dataset.modalId
             );
             var tlp_delete_description_field_modal = tlp.modal(dom_delete_description_field_modal);
 
-            delete_button.addEventListener("click", function() {
+            delete_button.addEventListener("click", function () {
                 tlp_delete_description_field_modal.toggle();
             });
         });
@@ -76,8 +76,8 @@
     function handleRequiredSwitches() {
         var required_switches = document.querySelectorAll(".description-field-required-switch");
 
-        [].forEach.call(required_switches, function(required_switch) {
-            required_switch.addEventListener("change", function() {
+        [].forEach.call(required_switches, function (required_switch) {
+            required_switch.addEventListener("change", function () {
                 document.getElementById(required_switch.dataset.formId).submit();
             });
         });

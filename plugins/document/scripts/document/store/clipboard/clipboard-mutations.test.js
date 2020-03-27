@@ -23,7 +23,7 @@ import {
     emptyClipboardAfterItemDeletion,
     emptyClipboard,
     startPasting,
-    pastingHasFailed
+    pastingHasFailed,
 } from "./clipboard-mutations.js";
 import { TYPE_EMPTY, CLIPBOARD_OPERATION_CUT, CLIPBOARD_OPERATION_COPY } from "../../constants.js";
 import defaultState from "./clipboard-default-state.js";
@@ -33,7 +33,7 @@ describe("Clipboard mutations", () => {
         const item = {
             id: 3,
             title: "My doc",
-            type: TYPE_EMPTY
+            type: TYPE_EMPTY,
         };
 
         const state = { pasting_in_progress: false, operation_type: null };
@@ -48,7 +48,7 @@ describe("Clipboard mutations", () => {
         const item = {
             id: 3,
             title: "My doc",
-            type: TYPE_EMPTY
+            type: TYPE_EMPTY,
         };
 
         const state = { pasting_in_progress: true, item_id: null };
@@ -60,7 +60,7 @@ describe("Clipboard mutations", () => {
         const item = {
             id: 3,
             title: "My doc",
-            type: TYPE_EMPTY
+            type: TYPE_EMPTY,
         };
 
         const state = { pasting_in_progress: false, operation_type: null };
@@ -75,7 +75,7 @@ describe("Clipboard mutations", () => {
         const item = {
             id: 3,
             title: "My doc",
-            type: TYPE_EMPTY
+            type: TYPE_EMPTY,
         };
 
         const state = { pasting_in_progress: true, item_id: null };
@@ -87,7 +87,7 @@ describe("Clipboard mutations", () => {
         const state = {
             item_id: 147,
             item_title: "My title",
-            item_type: TYPE_EMPTY
+            item_type: TYPE_EMPTY,
         };
         emptyClipboard(state);
         expect(state).toEqual(defaultState());
@@ -95,7 +95,7 @@ describe("Clipboard mutations", () => {
 
     it("Mark paste in progress", () => {
         const state = {
-            pasting_in_progress: false
+            pasting_in_progress: false,
         };
 
         startPasting(state);
@@ -104,7 +104,7 @@ describe("Clipboard mutations", () => {
 
     it("Unmark paste in progress when pasting has failed", () => {
         const state = {
-            pasting_in_progress: true
+            pasting_in_progress: true,
         };
 
         pastingHasFailed(state);
@@ -113,7 +113,7 @@ describe("Clipboard mutations", () => {
 
     it("Clears the clipboard when the item in it is deleted", () => {
         const state = {
-            item_id: 741
+            item_id: 741,
         };
 
         emptyClipboardAfterItemDeletion(state, { id: 741 });
@@ -122,7 +122,7 @@ describe("Clipboard mutations", () => {
 
     it("Keeps the clipboard intact when another item is deleted", () => {
         const state = {
-            item_id: 741
+            item_id: 741,
         };
 
         emptyClipboardAfterItemDeletion(state, { id: 999 });

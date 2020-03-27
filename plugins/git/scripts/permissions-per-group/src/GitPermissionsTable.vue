@@ -55,16 +55,16 @@ import { sprintf } from "sprintf-js";
 export default {
     name: "GitPermissionsTable",
     components: {
-        GitPermissionsTableRepository
+        GitPermissionsTableRepository,
     },
     props: {
         repositories: Array,
         selectedUgroupName: String,
-        filter: String
+        filter: String,
     },
     data() {
         return {
-            nb_repo_hidden: 0
+            nb_repo_hidden: 0,
         };
     },
     computed: {
@@ -98,19 +98,19 @@ export default {
                 : this.has_a_selected_ugroup
                 ? this.ugroup_empty_state
                 : this.no_repo_empty_state;
-        }
+        },
     },
     watch: {
         filter() {
             this.nb_repo_hidden = 0;
-        }
+        },
     },
     methods: {
         togglePermission(event) {
             if (event.hidden) {
                 this.nb_repo_hidden++;
             }
-        }
-    }
+        },
+    },
 };
 </script>

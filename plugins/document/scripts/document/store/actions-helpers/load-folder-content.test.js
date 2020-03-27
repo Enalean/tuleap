@@ -30,8 +30,8 @@ describe("loadFolderContent", () => {
             commit: jest.fn(),
             state: {
                 project_id,
-                current_folder_ascendant_hierarchy: []
-            }
+                current_folder_ascendant_hierarchy: [],
+            },
         };
 
         getFolderContent = jest.spyOn(rest_querier, "getFolderContent");
@@ -43,18 +43,18 @@ describe("loadFolderContent", () => {
                 id: 1,
                 title: "folder",
                 owner: {
-                    id: 101
+                    id: 101,
                 },
-                last_update_date: "2018-10-03T11:16:11+02:00"
+                last_update_date: "2018-10-03T11:16:11+02:00",
             },
             {
                 id: 2,
                 title: "item",
                 owner: {
-                    id: 101
+                    id: 101,
                 },
-                last_update_date: "2018-08-07T16:42:49+02:00"
-            }
+                last_update_date: "2018-08-07T16:42:49+02:00",
+            },
         ];
 
         getFolderContent.mockReturnValue(folder_content);
@@ -72,9 +72,9 @@ describe("loadFolderContent", () => {
             status: 404,
             error_json: {
                 error: {
-                    i18n_error_message: error_message
-                }
-            }
+                    i18n_error_message: error_message,
+                },
+            },
         });
 
         await loadFolderContent(context);
@@ -89,9 +89,9 @@ describe("loadFolderContent", () => {
             status: 403,
             error_json: {
                 error: {
-                    i18n_error_message: "No you cannot"
-                }
-            }
+                    i18n_error_message: "No you cannot",
+                },
+            },
         });
 
         await loadFolderContent(context);

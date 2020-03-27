@@ -33,15 +33,15 @@ describe("TransitionMatrixColumnHeader", () => {
         store.getters.current_workflow_transitions = [];
         wrapper = shallowMount(TransitionMatrixColumnHeader, {
             mocks: {
-                $store: store
+                $store: store,
             },
             localVue,
             propsData: {
                 column: {
                     id: 476,
-                    label: "On Going"
-                }
-            }
+                    label: "On Going",
+                },
+            },
         });
     });
 
@@ -51,12 +51,12 @@ describe("TransitionMatrixColumnHeader", () => {
         const transition_from_new = {
             id: 663,
             from_id: null,
-            to_id: 476
+            to_id: 476,
         };
         const other_transition = {
             id: 575,
             from_id: 77,
-            to_id: 476
+            to_id: 476,
         };
 
         beforeEach(() => {
@@ -67,7 +67,7 @@ describe("TransitionMatrixColumnHeader", () => {
             beforeEach(() => {
                 store.getters.current_workflow_transitions = [
                     transition_from_new,
-                    other_transition
+                    other_transition,
                 ];
             });
             it("shows the configure state button and passes that transition to it", () => {

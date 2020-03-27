@@ -39,6 +39,6 @@ export function expiringLocalStorage(expirationTimeoutSeconds) {
         removeItem(key) {
             window.localStorage.removeItem(getExpirationKey(key));
             window.localStorage.removeItem(key);
-        }
+        },
     };
 }

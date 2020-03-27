@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-describe("Docman", function() {
-    before(function() {
+describe("Docman", function () {
+    before(function () {
         cy.clearCookie("__Host-TULEAP_session_hash");
         cy.ProjectAdministratorLogin();
 
@@ -29,22 +29,20 @@ describe("Docman", function() {
         Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
     });
 
-    context("document properties", function() {
-        it("switch back on legacy ui", function() {
+    context("document properties", function () {
+        it("switch back on legacy ui", function () {
             //document is available on new instance, so we must switch back to old UI
             //because, even if we call old UI, as the project has no custom metadata we'll be redirected on new UI
             cy.visit(`/plugins/docman/?group_id=${this.docman_project_id}`);
             cy.get("[data-test=document-switch-to-old-ui]").click();
 
-            cy.get(".toolbar")
-                .contains("Admin")
-                .click();
+            cy.get(".toolbar").contains("Admin").click();
             cy.contains("Manage Properties")
                 .should("have.attr", "href")
                 .as("manage_properties_url");
         });
 
-        it("cannot create a document when a mandatory property is not filled", function() {
+        it("cannot create a document when a mandatory property is not filled", function () {
             cy.visit(this.manage_properties_url);
 
             cy.get("[data-test=metadata_name]").type("my custom property");
@@ -64,7 +62,7 @@ describe("Docman", function() {
             );
         });
 
-        it("cannot create a property with an empty name", function() {
+        it("cannot create a property with an empty name", function () {
             cy.visit(this.manage_properties_url);
 
             cy.get("[data-test=metadata_name]").type("  ");
@@ -77,7 +75,7 @@ describe("Docman", function() {
             );
         });
 
-        it("create a folder with mandatory properties", function() {
+        it("create a folder with mandatory properties", function () {
             cy.contains("New document").click();
             cy.get("[data-test=document_type]").select("1");
             cy.get("[data-test=create_document_next]").click();
@@ -85,7 +83,7 @@ describe("Docman", function() {
             cy.get("[data-test=docman_new_item]").contains("my custom property");
         });
 
-        it("remove a property", function() {
+        it("remove a property", function () {
             cy.visit(this.manage_properties_url);
             cy.get('[href*="action=admin_delete_metadata"]').click();
 
@@ -93,13 +91,13 @@ describe("Docman", function() {
         });
     });
 
-    context("document versioning", function() {
-        it("create an embed document", function() {
+    context("document versioning", function () {
+        it("create an embed document", function () {
             cy.contains("New document").click();
             cy.get("[data-test=create_document_next]").click();
             cy.get("#title").type("my document title");
 
-            cy.on("uncaught:exception", err => {
+            cy.on("uncaught:exception", (err) => {
                 // the message bellow is only thown by ckeditor, if any other js exception is thrown
                 // the test will fail
                 expect(err.message).to.include("Cannot read property 'compatMode' of undefined");
@@ -107,7 +105,7 @@ describe("Docman", function() {
             });
 
             cy.get('[type="radio"]').check("4");
-            cy.window().then(win => {
+            cy.window().then((win) => {
                 win.CKEDITOR.instances.embedded_content.setData("<p>my content</p>");
             });
             cy.get("#docman_new_form").submit();
@@ -115,18 +113,16 @@ describe("Docman", function() {
             cy.get("[data-test=feedback]").contains("Document successfully created.");
             cy.contains("my document title").click();
 
-            cy.get("[data-test=document_item]").then($new_document_id => {
+            cy.get("[data-test=document_item]").then(($new_document_id) => {
                 cy.wrap($new_document_id.data("test-document-id")).as("embedded_document_id");
             });
         });
 
-        it("create a new version of a document", function() {
+        it("create a new version of a document", function () {
             cy.get(
                 `[data-test=document_item][data-test-document-id=${this.embedded_document_id}]`
             ).click();
-            cy.get(".docman_item_menu")
-                .contains("New version")
-                .click();
+            cy.get(".docman_item_menu").contains("New version").click();
             cy.get("[data-test=docman_changelog]").type("new version");
 
             cy.get("[data-test=docman_create_new_version]").click();
@@ -134,31 +130,23 @@ describe("Docman", function() {
             cy.get("[data-test=feedback]").contains("New version successfully created.");
         });
 
-        it("delete a given version of a document", function() {
+        it("delete a given version of a document", function () {
             cy.get(
                 `[data-test=document_item][data-test-document-id=${this.embedded_document_id}]`
             ).click();
-            cy.get(".docman_item_menu")
-                .contains("History")
-                .click();
-            cy.get('[href*="action=confirmDelete"]')
-                .first()
-                .click();
+            cy.get(".docman_item_menu").contains("History").click();
+            cy.get('[href*="action=confirmDelete"]').first().click();
             cy.get('[name="confirm"]').click();
 
             cy.get("[data-test=feedback]").contains("successfully deleted");
         });
 
-        it("throw an error when you try to delete the last version of a document", function() {
+        it("throw an error when you try to delete the last version of a document", function () {
             cy.get(
                 `[data-test=document_item][data-test-document-id=${this.embedded_document_id}]`
             ).click();
-            cy.get(".docman_item_menu")
-                .contains("History")
-                .click();
-            cy.get('[href*="action=confirmDelete"]')
-                .first()
-                .click();
+            cy.get(".docman_item_menu").contains("History").click();
+            cy.get('[href*="action=confirmDelete"]').first().click();
             cy.get('[name="confirm"]').click();
 
             cy.get("[data-test=feedback]").contains(
@@ -167,8 +155,8 @@ describe("Docman", function() {
         });
     });
 
-    context("folder creation", function() {
-        it("create a folder", function() {
+    context("folder creation", function () {
+        it("create a folder", function () {
             cy.contains("New document").click();
             cy.get("[data-test=document_type]").select("1");
             cy.get("[data-test=create_document_next]").click();
@@ -182,15 +170,15 @@ describe("Docman", function() {
         });
     });
 
-    context("easy search", function() {
-        it("should search items by name", function() {
+    context("easy search", function () {
+        it("should search items by name", function () {
             cy.get("[data-test=docman_search]").type("folder");
             cy.get("[data-test=docman_search_button]").click();
 
             cy.get("[data-test=docman_report_table]").contains("my folder name");
         });
 
-        it("should expand result", function() {
+        it("should expand result", function () {
             cy.get("[data-test=docman_report_search]").click();
             cy.get("[data-test=docman_search]").should("be.disabled");
             cy.get("[data-test=docman_form_table]").contains("Global text search");

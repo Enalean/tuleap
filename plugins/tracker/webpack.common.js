@@ -29,7 +29,7 @@ const output = webpack_configurator.configureOutput(
 
 const webpack_config_for_burndown_chart = {
     entry: {
-        "burndown-chart": "./scripts/burndown-chart/src/burndown-chart.js"
+        "burndown-chart": "./scripts/burndown-chart/src/burndown-chart.js",
     },
     context,
     output,
@@ -38,16 +38,16 @@ const webpack_config_for_burndown_chart = {
             "charts-builders": path.resolve(__dirname, "../../src/www/scripts/charts-builders/"),
             "d3-array$": path.resolve(__dirname, "node_modules/d3-array"),
             "d3-scale$": path.resolve(__dirname, "node_modules/d3-scale"),
-            "d3-axis$": path.resolve(__dirname, "node_modules/d3-axis")
-        }
+            "d3-axis$": path.resolve(__dirname, "node_modules/d3-axis"),
+        },
     },
     module: {
         rules: [
             webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
-            webpack_configurator.rule_po_files
-        ]
+            webpack_configurator.rule_po_files,
+        ],
     },
-    plugins: [manifest_plugin, webpack_configurator.getMomentLocalePlugin()]
+    plugins: [manifest_plugin, webpack_configurator.getMomentLocalePlugin()],
 };
 
 const webpack_config_for_vue = {
@@ -59,44 +59,45 @@ const webpack_config_for_vue = {
         "tracker-workflow-transitions": "./scripts/workflow-transitions/src/index.js",
         MoveArtifactModal: "./scripts/artifact-action-buttons/src/index.js",
         TrackerAdminFields: "./scripts/TrackerAdminFields.js",
-        "tracker-semantic-timeframe-option-selector": "./scripts/semantic-timeframe-option-selector"
+        "tracker-semantic-timeframe-option-selector":
+            "./scripts/semantic-timeframe-option-selector",
     },
     context,
     output,
     externals: {
         codendi: "codendi",
         jquery: "jQuery",
-        tlp: "tlp"
+        tlp: "tlp",
     },
     resolve: {
-        alias: webpack_configurator.tlp_fetch_alias
+        alias: webpack_configurator.tlp_fetch_alias,
     },
     module: {
         rules: [
             webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
             webpack_configurator.rule_easygettext_loader,
-            webpack_configurator.rule_vue_loader
-        ]
+            webpack_configurator.rule_vue_loader,
+        ],
     },
     plugins: [manifest_plugin, webpack_configurator.getVueLoaderPlugin()],
     resolveLoader: {
-        alias: webpack_configurator.easygettext_loader_alias
-    }
+        alias: webpack_configurator.easygettext_loader_alias,
+    },
 };
 
 const webpack_for_vue_plus_typescript = {
     entry: {
         "tracker-creation": "./scripts/tracker-creation/index.ts",
-        "tracker-creation-success": "./scripts/tracker-creation-success-modal/index.ts"
+        "tracker-creation-success": "./scripts/tracker-creation-success-modal/index.ts",
     },
     context,
     output,
     resolve: {
-        extensions: [".js", ".ts", ".vue"]
+        extensions: [".js", ".ts", ".vue"],
     },
     externals: {
         tlp: "tlp",
-        jquery: "jQuery"
+        jquery: "jQuery",
     },
     module: {
         rules: [
@@ -104,27 +105,27 @@ const webpack_for_vue_plus_typescript = {
                 webpack_configurator.babel_options_ie11
             ),
             webpack_configurator.rule_easygettext_loader,
-            webpack_configurator.rule_vue_loader
-        ]
+            webpack_configurator.rule_vue_loader,
+        ],
     },
     plugins: [
         manifest_plugin,
         webpack_configurator.getVueLoaderPlugin(),
-        webpack_configurator.getTypescriptCheckerPlugin(true)
+        webpack_configurator.getTypescriptCheckerPlugin(true),
     ],
     resolveLoader: {
-        alias: webpack_configurator.easygettext_loader_alias
-    }
+        alias: webpack_configurator.easygettext_loader_alias,
+    },
 };
 
 const config_for_legacy_scripts = {
     entry: {
-        null: "null_entry"
+        null: "null_entry",
     },
     context,
     output,
     externals: {
-        tuleap: "tuleap"
+        tuleap: "tuleap",
     },
     plugins: [
         ...webpack_configurator.getLegacyConcatenatedScriptsPlugins({
@@ -160,18 +161,18 @@ const config_for_legacy_scripts = {
                 "./scripts/legacy/tracker-report-nature-column.js",
                 "./scripts/legacy/tracker-admin-notifications.js",
                 "./scripts/legacy/tracker-admin-notifications-popover.js",
-                "./scripts/legacy/tracker-webhooks.js"
-            ]
+                "./scripts/legacy/tracker-webhooks.js",
+            ],
         }),
-        manifest_plugin
-    ]
+        manifest_plugin,
+    ],
 };
 
 let entry_points = {
     "style-fp": "./themes/FlamingParrot/css/style.scss",
     print: "./themes/default/css/print.scss",
     "burndown-chart": "./themes/burndown-chart.scss",
-    colorpicker: "./themes/FlamingParrot/css/colorpicker.scss"
+    colorpicker: "./themes/FlamingParrot/css/colorpicker.scss",
 };
 
 const colors_burning_parrot = ["orange", "blue", "green", "red", "grey", "purple"];
@@ -198,9 +199,9 @@ const config_for_themes = {
     context,
     output,
     module: {
-        rules: [webpack_configurator.rule_scss_loader, webpack_configurator.rule_css_assets]
+        rules: [webpack_configurator.rule_scss_loader, webpack_configurator.rule_css_assets],
     },
-    plugins: [manifest_plugin, ...webpack_configurator.getCSSExtractionPlugins()]
+    plugins: [manifest_plugin, ...webpack_configurator.getCSSExtractionPlugins()],
 };
 
 module.exports = [
@@ -208,5 +209,5 @@ module.exports = [
     webpack_config_for_vue,
     webpack_for_vue_plus_typescript,
     config_for_legacy_scripts,
-    config_for_themes
+    config_for_themes,
 ];

@@ -25,7 +25,7 @@ describe(`consistent-uploaded-files-before-submit-checker`, () => {
     describe(`addInstance()`, () => {
         let form, triggerFormSubmit;
         const ckeditor_instance = {
-            getData: () => ""
+            getData: () => "",
         };
         const field_name = "Attachments";
 
@@ -34,7 +34,7 @@ describe(`consistent-uploaded-files-before-submit-checker`, () => {
                 addEventListener: jest.fn((event_name, handler) => {
                     triggerFormSubmit = handler.bind(form);
                 }),
-                querySelectorAll: jest.fn(() => [])
+                querySelectorAll: jest.fn(() => []),
             };
         });
 
@@ -43,21 +43,21 @@ describe(`consistent-uploaded-files-before-submit-checker`, () => {
             const file_input = {
                 dataset: { url: "https://example.com/advertently.jpg" },
                 parentNode: {
-                    removeChild: jest.fn()
-                }
+                    removeChild: jest.fn(),
+                },
             };
             const unused_file_input = {
                 dataset: { url: "http://example.com/hypersystole.png" },
                 parentNode: {
-                    removeChild: jest.fn()
-                }
+                    removeChild: jest.fn(),
+                },
             };
             jest.spyOn(form_adapter, "findAllHiddenInputByNames").mockReturnValue([
                 file_input,
-                unused_file_input
+                unused_file_input,
             ]);
             jest.spyOn(image_urls_finder, "findImageUrls").mockReturnValue([
-                "https://example.com/advertently.jpg"
+                "https://example.com/advertently.jpg",
             ]);
 
             addInstance(form, ckeditor_instance, field_name);
@@ -74,7 +74,7 @@ describe(`consistent-uploaded-files-before-submit-checker`, () => {
                 addEventListener: jest.fn((event_name, handler) => {
                     triggerSecondFormSubmit = handler.bind(other_form);
                 }),
-                querySelectorAll: jest.fn(() => [])
+                querySelectorAll: jest.fn(() => []),
             };
 
             addInstance(form, ckeditor_instance, field_name);
@@ -91,7 +91,7 @@ describe(`consistent-uploaded-files-before-submit-checker`, () => {
         it(`takes into account images from multiple CKEditor instances`, () => {
             const findImageUrls = jest.spyOn(image_urls_finder, "findImageUrls");
             const other_ckeditor_instance = {
-                getData: () => ""
+                getData: () => "",
             };
             const other_field_name = "anisopodal";
 

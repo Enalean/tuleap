@@ -43,11 +43,11 @@ export default {
     props: {
         item: Object,
         buttonClasses: String,
-        iconClasses: String
+        iconClasses: String,
     },
     data() {
         return {
-            is_loading_item: false
+            is_loading_item: false,
         };
     },
     computed: {
@@ -66,7 +66,7 @@ export default {
             }
 
             return classes;
-        }
+        },
     },
     methods: {
         async goToUpdate() {
@@ -83,7 +83,7 @@ export default {
                 );
 
                 EventBus.$emit("show-create-new-item-version-modal", {
-                    detail: { current_item: link_with_all_properties }
+                    detail: { current_item: link_with_all_properties },
                 });
 
                 this.is_loading_item = false;
@@ -91,9 +91,9 @@ export default {
             }
 
             EventBus.$emit("show-create-new-item-version-modal", {
-                detail: { current_item: this.item }
+                detail: { current_item: this.item },
             });
-        }
-    }
+        },
+    },
 };
 </script>

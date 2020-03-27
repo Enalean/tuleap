@@ -26,19 +26,19 @@ describe("CardsInColumnCount", () => {
     it("Displays the number of cards in the given column", () => {
         const wrapper = shallowMount(CardsInColumnCount, {
             propsData: {
-                column: {} as ColumnDefinition
+                column: {} as ColumnDefinition,
             },
             mocks: {
                 $store: createStoreMock({
                     state: {
-                        swimlane: {}
+                        swimlane: {},
                     },
                     getters: {
                         "swimlane/is_loading_cards": false,
-                        "swimlane/nb_cards_in_column": (): number => 4
-                    }
-                })
-            }
+                        "swimlane/nb_cards_in_column": (): number => 4,
+                    },
+                }),
+            },
         });
 
         expect(wrapper.classes("taskboard-header-count")).toBe(true);
@@ -49,19 +49,19 @@ describe("CardsInColumnCount", () => {
     it("Add loading class if we are still counting elements", () => {
         const wrapper = shallowMount(CardsInColumnCount, {
             propsData: {
-                column: {} as ColumnDefinition
+                column: {} as ColumnDefinition,
             },
             mocks: {
                 $store: createStoreMock({
                     state: {
-                        swimlane: {}
+                        swimlane: {},
                     },
                     getters: {
                         "swimlane/is_loading_cards": true,
-                        "swimlane/nb_cards_in_column": (): number => 4
-                    }
-                })
-            }
+                        "swimlane/nb_cards_in_column": (): number => 4,
+                    },
+                }),
+            },
         });
 
         expect(wrapper.classes("taskboard-header-count")).toBe(true);

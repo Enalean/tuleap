@@ -60,13 +60,13 @@ import {
     formatDateUsingPreferredUserFormat,
     getElapsedTimeFromNow,
     isDateValid,
-    isToday
+    isToday,
 } from "../../../helpers/date-formatter.js";
 import { METADATA_OBSOLESCENCE_DATE_SHORT_NAME } from "../../../constants.js";
 export default {
     name: "QuickLookMetadataDate",
     props: {
-        metadata: Object
+        metadata: Object,
     },
     computed: {
         ...mapState(["date_time_format"]),
@@ -85,7 +85,7 @@ export default {
         },
         getFormattedDate() {
             return formatDateUsingPreferredUserFormat(this.metadata.value, this.date_time_format);
-        }
+        },
     },
     methods: {
         getFormattedDateForDisplay(date) {
@@ -93,7 +93,7 @@ export default {
         },
         isMetadataObsolescenceDate() {
             return this.metadata.short_name === METADATA_OBSOLESCENCE_DATE_SHORT_NAME;
-        }
-    }
+        },
+    },
 };
 </script>

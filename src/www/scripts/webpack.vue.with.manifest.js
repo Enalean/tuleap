@@ -23,7 +23,7 @@ const webpack_configurator = require("../../../tools/utils/scripts/webpack-confi
 const assets_dir_path = path.resolve(__dirname, "../assets/project-registration/scripts");
 module.exports = {
     entry: {
-        "project-registration": "./project/registration/index.ts"
+        "project-registration": "./project/registration/index.ts",
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(
@@ -32,7 +32,7 @@ module.exports = {
     ),
     externals: {
         tlp: "tlp",
-        jquery: "jQuery"
+        jquery: "jQuery",
     },
     module: {
         rules: [
@@ -41,18 +41,18 @@ module.exports = {
             ),
             webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
             webpack_configurator.rule_easygettext_loader,
-            webpack_configurator.rule_vue_loader
-        ]
+            webpack_configurator.rule_vue_loader,
+        ],
     },
     plugins: [
         webpack_configurator.getManifestPlugin(),
         webpack_configurator.getVueLoaderPlugin(),
-        webpack_configurator.getTypescriptCheckerPlugin(true)
+        webpack_configurator.getTypescriptCheckerPlugin(true),
     ],
     resolveLoader: {
-        alias: webpack_configurator.easygettext_loader_alias
+        alias: webpack_configurator.easygettext_loader_alias,
     },
     resolve: {
-        extensions: [".js", ".ts", ".vue"]
-    }
+        extensions: [".js", ".ts", ".vue"],
+    },
 };

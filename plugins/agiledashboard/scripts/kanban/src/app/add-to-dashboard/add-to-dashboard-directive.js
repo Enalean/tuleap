@@ -9,6 +9,6 @@ function AddToDashboard() {
         controller: AddToDashboardCtrl,
         controllerAs: "add_to_dashboard",
         templateUrl: "add-to-dashboard.tpl.html",
-        scope: {}
+        scope: {},
     };
 }

@@ -8,11 +8,11 @@ export default function UsersOpenListFieldDirective() {
         scope: {
             field: "=tuleapArtifactModalUsersOpenListField",
             isDisabled: "&isDisabled",
-            value_model: "=valueModel"
+            value_model: "=valueModel",
         },
         controller: UsersOpenListFieldController,
         controllerAs: "users_open_list_field",
         bindToController: true,
-        templateUrl: "users-open-list-field.tpl.html"
+        templateUrl: "users-open-list-field.tpl.html",
     };
 }

@@ -28,17 +28,17 @@ describe("Given a timetracking overview widget on reading mode", () => {
         store_options = {
             state: {
                 is_loading: false,
-                is_report_saved: false
+                is_report_saved: false,
             },
             getters: {
-                has_success_message: false
-            }
+                has_success_message: false,
+            },
         };
         store = createStoreMock(store_options);
 
         component_options = {
             localVue,
-            mocks: { $store: store }
+            mocks: { $store: store },
         };
     });
 

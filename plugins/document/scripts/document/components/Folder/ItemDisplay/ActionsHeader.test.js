@@ -34,7 +34,7 @@ describe("QuickLookDocumentPreview", () => {
             return shallowMount(ActionsHeader, {
                 localVue,
                 propsData: { ...props },
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
     });
@@ -47,8 +47,8 @@ describe("QuickLookDocumentPreview", () => {
                 id: 1,
                 title: "my item title",
                 type: "file",
-                user_can_write: true
-            }
+                user_can_write: true,
+            },
         });
 
         expect(
@@ -65,8 +65,8 @@ describe("QuickLookDocumentPreview", () => {
                 id: 1,
                 title: "my item title",
                 type: "file",
-                user_can_write: false
-            }
+                user_can_write: false,
+            },
         });
 
         expect(

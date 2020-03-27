@@ -31,9 +31,9 @@ import CrossTrackerWidget from "./CrossTrackerWidget.vue";
 document.addEventListener("DOMContentLoaded", () => {
     Vue.use(GettextPlugin, {
         translations: {
-            fr: french_translations.messages
+            fr: french_translations.messages,
         },
-        silent: true
+        silent: true,
     });
     const locale = document.body.dataset.userLocale;
     Vue.config.language = locale;
@@ -63,8 +63,8 @@ document.addEventListener("DOMContentLoaded", () => {
             propsData: {
                 backendCrossTrackerReport: backend_cross_tracker_report,
                 readingCrossTrackerReport: reading_cross_tracker_report,
-                writingCrossTrackerReport: writing_cross_tracker_report
-            }
+                writingCrossTrackerReport: writing_cross_tracker_report,
+            },
         }).$mount(vue_mount_point);
     }
 });

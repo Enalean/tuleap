@@ -51,7 +51,7 @@ function handleSSHKeys(): void {
     changeButtonStatusDependingTextareaStatus(button, ssh_key);
 
     const ssh_keys_list = document.querySelectorAll<HTMLElement>("[data-ssh_key_value]");
-    ssh_keys_list.forEach(row => {
+    ssh_keys_list.forEach((row) => {
         row.addEventListener("click", () => {
             const full_ssh_key = row.getAttribute("data-ssh_key_value");
             if (!full_ssh_key) {
@@ -119,7 +119,7 @@ function toggleButtonAccordingToCheckBoxesState(
 ): void {
     changeButtonStatusDependingCheckboxesStatus(button, checkboxes);
 
-    checkboxes.forEach(function(checkbox) {
+    checkboxes.forEach(function (checkbox) {
         checkbox.addEventListener("change", () => {
             changeButtonStatusDependingCheckboxesStatus(button, checkboxes);
         });
@@ -130,7 +130,7 @@ function changeButtonStatusDependingCheckboxesStatus(
     button: HTMLButtonElement,
     checkboxes: HTMLInputElement[]
 ): void {
-    const at_least_one_checkbox_is_checked = checkboxes.some(checkbox => checkbox.checked);
+    const at_least_one_checkbox_is_checked = checkboxes.some((checkbox) => checkbox.checked);
 
     if (at_least_one_checkbox_is_checked) {
         button.disabled = false;

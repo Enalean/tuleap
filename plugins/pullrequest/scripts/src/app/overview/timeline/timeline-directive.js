@@ -11,6 +11,6 @@ function TimelineDirective() {
         templateUrl: "timeline.tpl.html",
         controller: TimelineController,
         controllerAs: "timeline_controller",
-        bindToController: true
+        bindToController: true,
     };
 }

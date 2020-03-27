@@ -37,8 +37,8 @@ import TrackerEmptyCardDescription from "./TrackerEmptyCardDescription.vue";
     components: {
         SvgTrackerEmpty,
         TrackerBaseCard,
-        TrackerEmptyCardDescription
-    }
+        TrackerEmptyCardDescription,
+    },
 })
 export default class TrackerEmptyCard extends Vue {
     private option_name: CreationOptions = CreationOptions.TRACKER_EMPTY;

@@ -36,15 +36,15 @@ import EventBus from "../../../helpers/event-bus.js";
 export default {
     name: "NewDocument",
     props: {
-        item: Object
+        item: Object,
     },
     computed: {
-        ...mapGetters(["is_item_a_folder"])
+        ...mapGetters(["is_item_a_folder"]),
     },
     methods: {
         showNewDocumentModal() {
             EventBus.$emit("show-new-document-modal", { detail: { parent: this.item } });
-        }
-    }
+        },
+    },
 };
 </script>

@@ -35,7 +35,7 @@ import AgreementModal from "./AgreementModal.vue";
 import EventBus from "../../../helpers/event-bus";
 
 @Component({
-    components: { AgreementModal }
+    components: { AgreementModal },
 })
 export default class PolicyAgreement extends Vue {
     is_loading = false;

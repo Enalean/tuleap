@@ -44,9 +44,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     Vue.use(GetTextPlugin, {
         translations: {
-            fr: french_translations.messages
+            fr: french_translations.messages,
         },
-        silent: true
+        silent: true,
     });
 
     Vue.config.language = document.body.dataset.userLocale;
@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
             project_id,
             parent_repository_id,
             parent_repository_name,
-            parent_project_id
-        }
+            parent_project_id,
+        },
     }).$mount(mount_point);
 });

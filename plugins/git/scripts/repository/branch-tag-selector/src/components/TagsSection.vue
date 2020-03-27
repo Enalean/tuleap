@@ -74,7 +74,7 @@ export default {
         is_displaying_branches: Boolean,
         is_tag: Boolean,
         current_ref_name: String,
-        url_parameters: Object
+        url_parameters: Object,
     },
     data() {
         return {
@@ -82,34 +82,34 @@ export default {
             are_tags_loaded: false,
             has_error_while_loading_tags: false,
             tags: [],
-            filter_text: ""
+            filter_text: "",
         };
     },
     computed: {
         filtered_tags() {
-            return this.tags.filter(tag => tag.name.toLowerCase().indexOf(this.filter) !== -1);
+            return this.tags.filter((tag) => tag.name.toLowerCase().indexOf(this.filter) !== -1);
         },
         filter() {
             return this.filter_text.toLowerCase();
         },
         placeholder() {
             return this.$gettext("Tag name");
-        }
+        },
     },
     watch: {
         is_displaying_branches(is_displaying_branches) {
             if (!is_displaying_branches && !this.are_tags_loaded) {
                 this.loadTags();
             }
-        }
+        },
     },
     methods: {
         async loadTags() {
             try {
                 this.tags = await recursiveGet(`/api/git/${this.repository_id}/tags`, {
                     params: {
-                        limit: 50
-                    }
+                        limit: 50,
+                    },
                 });
             } catch (e) {
                 this.has_error_while_loading_tags = true;
@@ -120,7 +120,7 @@ export default {
         },
         url(ref) {
             return this.repository_url + "?" + encodeData({ ...this.url_parameters, hb: ref });
-        }
-    }
+        },
+    },
 };
 </script>

@@ -34,7 +34,7 @@ UpdateReviewersModalController.$inject = [
     "ReviewersRestService",
     "gettextCatalog",
     "pull_request",
-    "reviewers"
+    "reviewers",
 ];
 
 function UpdateReviewersModalController(
@@ -65,7 +65,7 @@ function UpdateReviewersModalController(
         isClearModal,
         isAddModal,
         isEditModalAtStart,
-        isEditModal
+        isEditModal,
     });
 
     function init() {
@@ -78,23 +78,23 @@ function UpdateReviewersModalController(
             allowClear: true,
             minimumInputLength: 3,
             ajax: {
-                transport: function(params, success, failure) {
+                transport: function (params, success, failure) {
                     // Pagination has been intentionally not managed at all
                     return ReviewersRestService.searchUsers(pull_request.id, params.data.term).then(
-                        function(response) {
+                        function (response) {
                             success({
-                                results: response.data
+                                results: response.data,
                             });
                         },
-                        function(error) {
+                        function (error) {
                             failure(error);
                         }
                     );
-                }
+                },
             },
             templateResult: self.templateUserResult,
             templateSelection: self.templateUserSelection,
-            width: "100%"
+            width: "100%",
         });
 
         angular.element(user_autocompleter).on("select2:selecting", self.handleUsersValueSelection);
@@ -115,7 +115,7 @@ function UpdateReviewersModalController(
         const removed_selection = event.params.args.data;
 
         self.reviewers_selection = self.reviewers_selection.filter(
-            user => parseInt(user.id, 10) !== parseInt(removed_selection.id, 10)
+            (user) => parseInt(user.id, 10) !== parseInt(removed_selection.id, 10)
         );
 
         // Without this call, sometimes the template isn't updated
@@ -154,7 +154,7 @@ function UpdateReviewersModalController(
     }
 
     function getUserRepresentationForInitialSelection(result) {
-        return reviewers.find(user => {
+        return reviewers.find((user) => {
             return result.id === user.id.toString();
         });
     }

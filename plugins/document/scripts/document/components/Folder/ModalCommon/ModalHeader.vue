@@ -43,7 +43,7 @@ export default {
     props: {
         modalTitle: String,
         ariaLabelledBy: String,
-        iconHeaderClass: String
-    }
+        iconHeaderClass: String,
+    },
 };
 </script>

@@ -24,7 +24,7 @@ import {
     MilestoneData,
     MilestoneResourcesData,
     StoreOptions,
-    TrackerProjectLabel
+    TrackerProjectLabel,
 } from "../../../type";
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
 import ReleaseOthersBadges from "./ReleaseOthersBadges.vue";
@@ -56,8 +56,8 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
     beforeEach(() => {
         store_options = {
             state: {
-                project_id: project_id
-            }
+                project_id: project_id,
+            },
         };
 
         release_data = {
@@ -68,12 +68,12 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
                     accept: {
                         trackers: [
                             {
-                                label: "Sprint1"
-                            }
-                        ]
-                    }
-                }
-            }
+                                label: "Sprint1",
+                            },
+                        ],
+                    },
+                },
+            },
         } as MilestoneData;
 
         component_options.propsData = { release_data, isOpen: true };
@@ -89,11 +89,11 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
         it("When there are not sprints, Then ReleaseBadgesSprints is not rendered", async () => {
             release_data = {
                 id: 2,
-                total_sprint: 0
+                total_sprint: 0,
             } as MilestoneData;
 
             component_options.propsData = {
-                release_data
+                release_data,
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -104,11 +104,11 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
         it("When total_sprints is null, Then ReleaseBadgesSprints is not rendered", async () => {
             release_data = {
                 id: 2,
-                total_sprint: null
+                total_sprint: null,
             } as MilestoneData;
 
             component_options.propsData = {
-                release_data
+                release_data,
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -122,24 +122,24 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
                 total_sprint: 10,
                 open_sprints: [
                     {
-                        id: 10
-                    } as MilestoneData
+                        id: 10,
+                    } as MilestoneData,
                 ],
                 resources: {
                     milestones: {
                         accept: {
                             trackers: [
                                 {
-                                    label: "Sprint1"
-                                }
-                            ]
-                        }
-                    }
-                }
+                                    label: "Sprint1",
+                                },
+                            ],
+                        },
+                    },
+                },
             } as MilestoneData;
 
             component_options.propsData = {
-                release_data
+                release_data,
             };
 
             store_options.state.user_can_view_sub_milestones_planning = true;
@@ -156,14 +156,14 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
                 resources: {
                     milestones: {
                         accept: {
-                            trackers: [] as TrackerProjectLabel[]
-                        }
-                    }
-                } as MilestoneResourcesData
+                            trackers: [] as TrackerProjectLabel[],
+                        },
+                    },
+                } as MilestoneResourcesData,
             } as MilestoneData;
 
             component_options.propsData = {
-                release_data
+                release_data,
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -177,24 +177,24 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
                 total_sprint: 10,
                 open_sprints: [
                     {
-                        id: 10
-                    } as MilestoneData
+                        id: 10,
+                    } as MilestoneData,
                 ],
                 resources: {
                     milestones: {
                         accept: {
                             trackers: [
                                 {
-                                    label: "Sprint1"
-                                }
-                            ]
-                        }
-                    }
-                }
+                                    label: "Sprint1",
+                                },
+                            ],
+                        },
+                    },
+                },
             } as MilestoneData;
 
             component_options.propsData = {
-                release_data
+                release_data,
             };
 
             store_options.state.user_can_view_sub_milestones_planning = false;
@@ -240,25 +240,25 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
             total_sprint: 10,
             open_sprints: [
                 {
-                    id: 10
-                } as MilestoneData
+                    id: 10,
+                } as MilestoneData,
             ],
             resources: {
                 milestones: {
                     accept: {
                         trackers: [
                             {
-                                label: "Sprint1"
-                            }
-                        ]
-                    }
-                }
-            }
+                                label: "Sprint1",
+                            },
+                        ],
+                    },
+                },
+            },
         } as MilestoneData;
 
         component_options.propsData = {
             release_data,
-            isOpen: true
+            isOpen: true,
         };
 
         store_options.state.user_can_view_sub_milestones_planning = true;
@@ -274,25 +274,25 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
             total_sprint: 10,
             open_sprints: [
                 {
-                    id: 10
-                } as MilestoneData
+                    id: 10,
+                } as MilestoneData,
             ],
             resources: {
                 milestones: {
                     accept: {
                         trackers: [
                             {
-                                label: "Sprint1"
-                            }
-                        ]
-                    }
-                }
-            }
+                                label: "Sprint1",
+                            },
+                        ],
+                    },
+                },
+            },
         } as MilestoneData;
 
         component_options.propsData = {
             release_data,
-            isOpen: false
+            isOpen: false,
         };
 
         store_options.state.user_can_view_sub_milestones_planning = true;
@@ -308,25 +308,25 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
             total_sprint: 10,
             open_sprints: [
                 {
-                    id: 10
-                } as MilestoneData
+                    id: 10,
+                } as MilestoneData,
             ],
             resources: {
                 milestones: {
                     accept: {
                         trackers: [
                             {
-                                label: "Sprint1"
-                            }
-                        ]
-                    }
-                }
-            }
+                                label: "Sprint1",
+                            },
+                        ],
+                    },
+                },
+            },
         } as MilestoneData;
 
         component_options.propsData = {
             release_data,
-            isOpen: false
+            isOpen: false,
         };
 
         store_options.state.user_can_view_sub_milestones_planning = true;

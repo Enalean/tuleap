@@ -19,9 +19,9 @@
 
 /* global jQuery:readonly codendi:readonly */
 
-(function($) {
+(function ($) {
     function bindAddPermission() {
-        $(".add-fine-grained-permission").click(function(event) {
+        $(".add-fine-grained-permission").click(function (event) {
             event.preventDefault();
 
             $(this).blur();
@@ -72,19 +72,19 @@
     }
 
     function bindToggleFineGrainedPermissions() {
-        $(".toggle-fine-grained-permissions").change(function() {
+        $(".toggle-fine-grained-permissions").change(function () {
             $(".plugin_git_write_permissions_select, .plugin_git_rewind_permissions_select")
-                .prop("disabled", function(index, value) {
+                .prop("disabled", function (index, value) {
                     return !value;
                 })
-                .filter(function() {
+                .filter(function () {
                     if (isViewingDefaultAccessControlAdmin()) {
                         return $(this).hasClass("plugin_git_write_permissions_select");
                     }
 
                     return true;
                 })
-                .prop("required", function(index, value) {
+                .prop("required", function (index, value) {
                     return !value;
                 });
         });
@@ -99,7 +99,7 @@
     }
 
     function confirmDeletionPopover() {
-        $(".remove-fine-grained-permission").each(function() {
+        $(".remove-fine-grained-permission").each(function () {
             var id = $(this).data("popover-id");
             var form_action = $(this).data("form-action");
 
@@ -111,7 +111,7 @@
                     form_action +
                     '">' +
                     $("#" + id).html() +
-                    "</form>"
+                    "</form>",
             });
 
             $("#" + id).remove();
@@ -123,7 +123,7 @@
     }
 
     function bindShowPopover() {
-        $(".remove-fine-grained-permission").click(function(event) {
+        $(".remove-fine-grained-permission").click(function (event) {
             event.preventDefault();
 
             dismissPopover();
@@ -133,7 +133,7 @@
     }
 
     function bindToggleEnableRegexp() {
-        $("#use-fine-grained-permissions").change(function() {
+        $("#use-fine-grained-permissions").change(function () {
             if ($(this).is(":checked")) {
                 $(".regexp_permission_activated").show();
             } else {
@@ -145,7 +145,7 @@
     function bindToogleModalWarningDisableRegexp() {
         var already_check_modal = false;
 
-        $(".save-permissions-with-regexp").click(function(event) {
+        $(".save-permissions-with-regexp").click(function (event) {
             if (already_check_modal === true) {
                 return;
             }
@@ -168,12 +168,12 @@
             }
         });
 
-        $(".dismiss-popover").click(function() {
+        $(".dismiss-popover").click(function () {
             $("#modal-regexp-delete").modal("toggle");
         });
     }
 
-    $(function() {
+    $(function () {
         bindAddPermission();
         bindToggleFineGrainedPermissions();
         bindToggleEnableRegexp();
@@ -184,7 +184,7 @@
 
         bindShowPopover();
 
-        $("body").on("click", function(event) {
+        $("body").on("click", function (event) {
             if ($(event.target).hasClass("dismiss-popover")) {
                 dismissPopover();
             }

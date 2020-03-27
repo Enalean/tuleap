@@ -34,9 +34,9 @@ export async function createWorkflowTransitions(tracker_id, field_id) {
     const query = JSON.stringify({
         workflow: {
             set_transitions_rules: {
-                field_id
-            }
-        }
+                field_id,
+            },
+        },
     });
     const response = await patch(`/api/trackers/${tracker_id}?query=${encodeURIComponent(query)}`);
     return response.json();
@@ -45,8 +45,8 @@ export async function createWorkflowTransitions(tracker_id, field_id) {
 export async function resetWorkflowTransitions(tracker_id) {
     const query = JSON.stringify({
         workflow: {
-            delete_transitions_rules: true
-        }
+            delete_transitions_rules: true,
+        },
     });
 
     const response = await patch(`/api/trackers/${tracker_id}?query=${encodeURIComponent(query)}`);
@@ -57,9 +57,9 @@ export async function updateTransitionRulesEnforcement(tracker_id, are_transitio
     const query = JSON.stringify({
         workflow: {
             set_transitions_rules: {
-                is_used: are_transition_rules_enforced
-            }
-        }
+                is_used: are_transition_rules_enforced,
+            },
+        },
     });
     const response = await patch(`/api/trackers/${tracker_id}?query=${encodeURIComponent(query)}`);
     return response.json();
@@ -70,7 +70,7 @@ export async function createTransition(tracker_id, from_id, to_id) {
 
     const response = await post("/api/tracker_workflow_transitions", {
         headers: JSON_HEADERS,
-        body
+        body,
     });
     return response.json();
 }
@@ -96,7 +96,7 @@ export function patchTransition({
     id,
     authorized_user_group_ids,
     not_empty_field_ids,
-    is_comment_required
+    is_comment_required,
 }) {
     const normalized_authorized_user_group_ids = !authorized_user_group_ids
         ? []
@@ -108,8 +108,8 @@ export function patchTransition({
         body: JSON.stringify({
             authorized_user_group_ids: normalized_authorized_user_group_ids,
             not_empty_field_ids: normalized_not_empty_field_ids,
-            is_comment_required
-        })
+            is_comment_required,
+        }),
     });
 }
 
@@ -119,21 +119,21 @@ export async function getPostActions(transition_id) {
 }
 
 export function putPostActions(transition_id, presented_post_actions) {
-    const post_actions = presented_post_actions.map(presented_post_action => ({
+    const post_actions = presented_post_actions.map((presented_post_action) => ({
         ...presented_post_action,
-        unique_id: undefined
+        unique_id: undefined,
     }));
     return put(`/api/tracker_workflow_transitions/${transition_id}/actions`, {
         headers: JSON_HEADERS,
-        body: JSON.stringify({ post_actions })
+        body: JSON.stringify({ post_actions }),
     });
 }
 
 export async function deactivateLegacyTransitions(tracker_id) {
     const query = JSON.stringify({
         workflow: {
-            is_legacy: false
-        }
+            is_legacy: false,
+        },
     });
     const response = await patch(`/api/trackers/${tracker_id}?query=${encodeURIComponent(query)}`);
     return response.json();
@@ -142,8 +142,8 @@ export async function deactivateLegacyTransitions(tracker_id) {
 export async function changeWorkflowMode(tracker_id, is_workflow_advanced) {
     const query = JSON.stringify({
         workflow: {
-            is_advanced: is_workflow_advanced
-        }
+            is_advanced: is_workflow_advanced,
+        },
     });
     const response = await patch(`/api/trackers/${tracker_id}?query=${encodeURIComponent(query)}`);
     return response.json();

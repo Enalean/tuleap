@@ -35,9 +35,7 @@ describe("getObsolescenceDateValueInput", () => {
     });
     it(`Given a number of month after the current date
     Then the returned date should be the current + 6 months`, () => {
-        const expected_date = moment()
-            .add(6, "M")
-            .format("YYYY-MM-DD");
+        const expected_date = moment().add(6, "M").format("YYYY-MM-DD");
         const date_result = getObsolescenceDateValueInput("6");
         expect(expected_date).toEqual(date_result);
     });

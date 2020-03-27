@@ -46,7 +46,7 @@ export default {
     name: "FolderHeaderAction",
     components: { DropDownCurrentFolder, DropDownButton, DetailsItemButton, NewItemButton },
     props: {
-        item: Object
-    }
+        item: Object,
+    },
 };
 </script>

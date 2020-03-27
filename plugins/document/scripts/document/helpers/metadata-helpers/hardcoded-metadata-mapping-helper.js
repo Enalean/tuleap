@@ -18,7 +18,7 @@
  */
 
 export function getStatusMetadata(all_metadata) {
-    return all_metadata.find(metadata => metadata.short_name === "status");
+    return all_metadata.find((metadata) => metadata.short_name === "status");
 }
 
 export function getStatusFromMapping(value) {
@@ -26,7 +26,7 @@ export function getStatusFromMapping(value) {
         100: "none",
         101: "draft",
         102: "approved",
-        103: "rejected"
+        103: "rejected",
     };
 
     const status_string = status_mapping[parseInt(value, 10)];
@@ -42,7 +42,7 @@ export function getStatusIdFromName(value) {
         none: 100,
         draft: 101,
         approved: 102,
-        rejected: 103
+        rejected: 103,
     };
 
     const status_int = status_mapping[value];

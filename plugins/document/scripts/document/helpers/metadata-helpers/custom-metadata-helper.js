@@ -29,7 +29,7 @@ export function getCustomMetadata(metadata_list) {
         "create_date",
         "update_date",
         "status",
-        "obsolescence_date"
+        "obsolescence_date",
     ];
 
     return metadata_list.filter(({ short_name }) => !hardcoded_metadata.includes(short_name));

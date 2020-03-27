@@ -46,7 +46,7 @@ describe("ChartError", () => {
 
     beforeEach(() => {
         store_options = {
-            state: {}
+            state: {},
         };
 
         component_options.propsData = {
@@ -55,7 +55,7 @@ describe("ChartError", () => {
             is_under_calculation: true,
             message_error_duration,
             message_error_start_date,
-            message_error_under_calculation
+            message_error_under_calculation,
         };
 
         getPersonalWidgetInstance(store_options);
@@ -76,7 +76,7 @@ describe("ChartError", () => {
             is_under_calculation: false,
             message_error_duration,
             message_error_start_date,
-            message_error_under_calculation
+            message_error_under_calculation,
         };
         const wrapper = await getPersonalWidgetInstance(store_options);
 
@@ -92,7 +92,7 @@ describe("ChartError", () => {
             is_under_calculation: true,
             message_error_duration,
             message_error_start_date,
-            message_error_under_calculation
+            message_error_under_calculation,
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -109,7 +109,7 @@ describe("ChartError", () => {
             is_under_calculation: true,
             message_error_duration,
             message_error_start_date,
-            message_error_under_calculation
+            message_error_under_calculation,
         };
         const wrapper = await getPersonalWidgetInstance(store_options);
 
@@ -125,7 +125,7 @@ describe("ChartError", () => {
             is_under_calculation: true,
             message_error_duration,
             message_error_start_date,
-            message_error_under_calculation
+            message_error_under_calculation,
         };
         const wrapper = await getPersonalWidgetInstance(store_options);
 
@@ -141,7 +141,7 @@ describe("ChartError", () => {
             is_under_calculation: false,
             message_error_duration,
             message_error_start_date,
-            message_error_under_calculation
+            message_error_under_calculation,
         };
         const wrapper = await getPersonalWidgetInstance(store_options);
 
@@ -157,7 +157,7 @@ describe("ChartError", () => {
             is_under_calculation: false,
             message_error_duration,
             message_error_start_date,
-            message_error_under_calculation
+            message_error_under_calculation,
         };
         const wrapper = await getPersonalWidgetInstance(store_options);
 

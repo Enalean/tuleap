@@ -17,62 +17,62 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const identity = i => i;
-const identityAsString = i => `${i}`;
+const identity = (i) => i;
+const identityAsString = (i) => `${i}`;
 
 const factories = {
     tracker: {
         default: {
             id: identity,
             fields: [],
-            workflow: null
-        }
+            workflow: null,
+        },
     },
     workflow: {
         default: {
             is_used: 1,
-            field_id: 9
+            field_id: 9,
         },
         active: {
             is_used: 1,
-            field_id: 3
+            field_id: 3,
         },
         inactive: {
-            is_used: 0
+            is_used: 0,
         },
         field_not_defined: {
             is_used: 0,
-            field_id: null
+            field_id: null,
         },
         field_defined: {
-            field_id: 3
-        }
+            field_id: 3,
+        },
     },
     field: {
         default: {
             field_id: identity,
             label: "Field label",
             type: "sb",
-            bindings: { type: "static" }
+            bindings: { type: "static" },
         },
         workflow_compliant: {
             type: "sb",
-            bindings: { type: "static" }
+            bindings: { type: "static" },
         },
         selectbox_users: {
             type: "sb",
-            bindings: { type: "users" }
-        }
+            bindings: { type: "users" },
+        },
     },
     field_value: {
         default: {
             id: identity,
             label: "Value label",
-            is_hidden: false
+            is_hidden: false,
         },
         hidden: {
-            is_hidden: true
-        }
+            is_hidden: true,
+        },
     },
     transition: {
         default: {
@@ -81,33 +81,33 @@ const factories = {
             to_id: 2,
             authorized_user_group_ids: [],
             not_empty_field_ids: [],
-            is_comment_required: false
+            is_comment_required: false,
         },
         presented: {
-            updated: false
-        }
+            updated: false,
+        },
     },
     user_group: {
         default: {
             id: identity,
-            label: "Group label"
-        }
+            label: "Group label",
+        },
     },
     post_action: {
         default: {
             id: identity,
             type: "run_job",
-            job_url: index => `http://ci.example${index}.test`
+            job_url: (index) => `http://ci.example${index}.test`,
         },
         presented: {
-            unique_id: identityAsString
-        }
-    }
+            unique_id: identityAsString,
+        },
+    },
 };
 
 let instance_index = 0;
 
-const evaluateAttributesAsFunction = instance =>
+const evaluateAttributesAsFunction = (instance) =>
     Object.keys(instance).reduce((evaluatedInstance, key) => {
         const attribute_or_function = instance[key];
         if (attribute_or_function && typeof attribute_or_function === "function") {

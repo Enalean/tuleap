@@ -48,17 +48,17 @@ import { TYPE_FOLDER } from "../../../constants.js";
 
 export default {
     props: {
-        item: Object
+        item: Object,
     },
     data() {
         return {
-            is_canceled: false
+            is_canceled: false,
         };
     },
     computed: {
         cancel_title() {
             return this.$gettext("Cancel upload");
-        }
+        },
     },
     methods: {
         ...mapActions(["cancelFileUpload", "cancelFolderUpload", "cancelVersionUpload"]),
@@ -73,7 +73,7 @@ export default {
                     this.cancelFolderUpload(this.item);
                 }
             }
-        }
-    }
+        },
+    },
 };
 </script>

@@ -24,22 +24,22 @@ module.exports = [
     {
         entry: {
             style: "./themes/css/style.scss",
-            null: "null_entry"
+            null: "null_entry",
         },
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(
             path.resolve(__dirname, "../../src/www/assets/forumml/")
         ),
         module: {
-            rules: [webpack_configurator.rule_scss_loader]
+            rules: [webpack_configurator.rule_scss_loader],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             ...webpack_configurator.getCSSExtractionPlugins(),
             ...webpack_configurator.getLegacyConcatenatedScriptsPlugins({
-                "forumml.js": ["./scripts/forumml.js", "./scripts/cc_attach.js"]
+                "forumml.js": ["./scripts/forumml.js", "./scripts/cc_attach.js"],
             }),
-            webpack_configurator.getManifestPlugin()
-        ]
-    }
+            webpack_configurator.getManifestPlugin(),
+        ],
+    },
 ];

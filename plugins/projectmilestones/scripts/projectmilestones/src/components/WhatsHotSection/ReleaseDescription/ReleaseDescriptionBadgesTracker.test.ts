@@ -43,26 +43,26 @@ describe("ReleaseDescriptionBadgesTracker", () => {
 
     beforeEach(() => {
         store_options = {
-            state: {}
+            state: {},
         };
 
         release_data = {
             id: 2,
             planning: {
-                id: "100"
+                id: "100",
             },
             number_of_artifact_by_trackers: [
                 {
                     label: "Bug",
                     id: 1,
                     total_artifact: 2,
-                    color_name: "red-fiesta"
-                }
-            ]
+                    color_name: "red-fiesta",
+                },
+            ],
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
         };
     });
 
@@ -73,7 +73,7 @@ describe("ReleaseDescriptionBadgesTracker", () => {
 
         expect(wrapper.find("[data-test=color-name-tracker").classes()).toEqual([
             "release-number-artifacts-tracker",
-            "release-number-artifacts-tracker-red-fiesta"
+            "release-number-artifacts-tracker-red-fiesta",
         ]);
 
         expect(wrapper.find("[data-test=total-artifact-tracker").text()).toEqual("2");

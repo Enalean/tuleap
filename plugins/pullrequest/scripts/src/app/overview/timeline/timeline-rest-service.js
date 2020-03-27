@@ -7,7 +7,7 @@ function TimelineRestService($http, $q, ErrorModalService) {
 
     Object.assign(self, {
         getTimeline,
-        addComment
+        addComment,
     });
 
     function getTimeline(pull_request_id, limit, offset) {
@@ -20,7 +20,7 @@ function TimelineRestService($http, $q, ErrorModalService) {
                     "&offset=" +
                     offset
             )
-            .catch(function(response) {
+            .catch(function (response) {
                 ErrorModalService.showError(response);
                 return $q.reject(response);
             });
@@ -29,15 +29,15 @@ function TimelineRestService($http, $q, ErrorModalService) {
     function addComment(pull_request_id, comment) {
         var data = {
             content: comment.content,
-            user_id: comment.user_id
+            user_id: comment.user_id,
         };
 
         return $http
             .post("/api/v1/pull_requests/" + pull_request_id + "/comments", data)
-            .then(function(response) {
+            .then(function (response) {
                 return response.data;
             })
-            .catch(function(response) {
+            .catch(function (response) {
                 ErrorModalService.showError(response);
                 return $q.reject(response);
             });

@@ -30,25 +30,25 @@ module.exports = [
         entry: {
             graphontrackersv5: "./scripts/src/loadGraphs.js",
             dependencies: "./scripts/dependencies.js",
-            style: "./themes/default/css/style.scss"
+            style: "./themes/default/css/style.scss",
         },
         context,
         output,
         resolve: {
-            alias: webpack_configurator.tlp_fetch_alias
+            alias: webpack_configurator.tlp_fetch_alias,
         },
         module: {
             rules: [
                 webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
                 webpack_configurator.rule_po_files,
-                webpack_configurator.rule_scss_loader
-            ]
+                webpack_configurator.rule_scss_loader,
+            ],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
             webpack_configurator.getMomentLocalePlugin(),
-            ...webpack_configurator.getCSSExtractionPlugins()
-        ]
-    }
+            ...webpack_configurator.getCSSExtractionPlugins(),
+        ],
+    },
 ];

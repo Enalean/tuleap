@@ -54,7 +54,7 @@ import CancelSaveButtons from "../EditMode/CancelSaveButtons.vue";
 const swimlane = namespace("swimlane");
 
 @Component({
-    components: { LabelEditor, AddButton, CancelSaveButtons }
+    components: { LabelEditor, AddButton, CancelSaveButtons },
 })
 export default class AddCard extends Vue {
     @Prop({ required: true })
@@ -97,7 +97,7 @@ export default class AddCard extends Vue {
         const payload: NewCardPayload = {
             swimlane: this.swimlane,
             column: this.column,
-            label: this.label
+            label: this.label,
         };
         this.addCard(payload);
         this.deferResetOfLabel();

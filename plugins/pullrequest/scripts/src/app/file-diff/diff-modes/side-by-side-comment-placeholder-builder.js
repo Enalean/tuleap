@@ -22,7 +22,7 @@ import {
     getGroupLines,
     getGroupOfLine,
     getLineHandles,
-    getLineOfHandle
+    getLineOfHandle,
 } from "./side-by-side-lines-state.js";
 import { NAME as INLINE_COMMENT_NAME } from "../inline-comment-component.js";
 import { NAME as NEW_INLINE_COMMENT_NAME } from "../new-inline-comment-component.js";
@@ -182,7 +182,7 @@ function buildCommentPlaceholderParams(
             handle: right_handle,
             widget_height,
             display_above_line,
-            is_comment_placeholder: true
+            is_comment_placeholder: true,
         };
     }
 
@@ -194,7 +194,7 @@ function buildCommentPlaceholderParams(
         handle: left_handle,
         widget_height,
         display_above_line: false,
-        is_comment_placeholder: true
+        is_comment_placeholder: true,
     };
 }
 
@@ -233,7 +233,7 @@ function sumCommentsHeight(handle) {
         return 0;
     }
 
-    const comments_widgets = handle.widgets.filter(widget => isCommentWidget(widget));
+    const comments_widgets = handle.widgets.filter((widget) => isCommentWidget(widget));
 
     if (!comments_widgets.length) {
         return 0;
@@ -250,7 +250,7 @@ function isCommentWidget(line_widget) {
 }
 
 function getSumOfWidgetsHeights(widgets) {
-    return widgets.map(widget => widget.height).reduce((sum, value) => sum + value, 0);
+    return widgets.map((widget) => widget.height).reduce((sum, value) => sum + value, 0);
 }
 
 function hasNoWidgets(handle) {

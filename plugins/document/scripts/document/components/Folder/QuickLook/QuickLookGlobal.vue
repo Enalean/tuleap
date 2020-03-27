@@ -70,7 +70,7 @@ import {
     TYPE_FOLDER,
     TYPE_LINK,
     TYPE_WIKI,
-    TYPE_EMPTY
+    TYPE_EMPTY,
 } from "../../../constants.js";
 import { iconForMimeType } from "../../../helpers/icon-for-mime-type.js";
 import QuickLookDocumentMetadata from "./QuickLookDocumentMetadata.vue";
@@ -82,7 +82,7 @@ export default {
     components: {
         QuickLookItemIsLockedMessage,
         QuickLookDocumentPreview,
-        QuickLookDocumentMetadata
+        QuickLookDocumentMetadata,
     },
     computed: {
         ...mapState(["currently_previewed_item"]),
@@ -128,12 +128,12 @@ export default {
                     return null;
             }
             return () => import(/* webpackChunkName: "quick-look-" */ `./QuickLook${name}.vue`);
-        }
+        },
     },
     methods: {
         closeQuickLookEvent() {
             this.$emit("closeQuickLookEvent");
-        }
-    }
+        },
+    },
 };
 </script>

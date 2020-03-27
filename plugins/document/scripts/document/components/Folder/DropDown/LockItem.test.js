@@ -33,7 +33,7 @@ describe("LockItem", () => {
             return shallowMount(LockItem, {
                 localVue,
                 propsData: { ...props },
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
     });
@@ -48,9 +48,9 @@ describe("LockItem", () => {
                 type: "file",
                 user_can_write: true,
                 lock_info: {
-                    id: 101
-                }
-            }
+                    id: 101,
+                },
+            },
         });
 
         expect(wrapper.contains("[data-test=document-dropdown-menu-lock-item]")).toBeFalsy();
@@ -65,8 +65,8 @@ describe("LockItem", () => {
                 title: "my item title",
                 type: "file",
                 user_can_write: true,
-                lock_info: null
-            }
+                lock_info: null,
+            },
         });
 
         expect(wrapper.contains("[data-test=document-dropdown-menu-lock-item]")).toBeTruthy();
@@ -81,8 +81,8 @@ describe("LockItem", () => {
                 title: "my item title",
                 type: "file",
                 user_can_write: false,
-                lock_info: null
-            }
+                lock_info: null,
+            },
         });
 
         expect(wrapper.contains("[data-test=document-dropdown-menu-lock-item]")).toBeFalsy();
@@ -96,8 +96,8 @@ describe("LockItem", () => {
                 title: "my file",
                 type: "file",
                 user_can_write: true,
-                lock_info: null
-            }
+                lock_info: null,
+            },
         });
 
         expect(wrapper.contains("[data-test=document-dropdown-menu-lock-item]")).toBeTruthy();
@@ -109,10 +109,10 @@ describe("LockItem", () => {
             title: "my file",
             type: "file",
             user_can_write: true,
-            lock_info: null
+            lock_info: null,
         };
         const wrapper = lock_factory({
-            item
+            item,
         });
 
         wrapper.find("[data-test=document-dropdown-menu-lock-item]").trigger("click");

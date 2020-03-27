@@ -27,11 +27,11 @@ describe("NewItemButton", () => {
     let factory;
     beforeEach(() => {
         const state = {
-            project_id: 101
+            project_id: 101,
         };
 
         const store_options = {
-            state
+            state,
         };
 
         const store = createStoreMock(store_options);
@@ -40,7 +40,7 @@ describe("NewItemButton", () => {
             return shallowMount(NewItemButton, {
                 localVue,
                 propsData: { ...props },
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
     });
@@ -53,8 +53,8 @@ describe("NewItemButton", () => {
                 id: 1,
                 title: "my item title",
                 type: "file",
-                user_can_write: true
-            }
+                user_can_write: true,
+            },
         });
 
         wrapper.find("[data-test=docman-new-item-button]").trigger("click");

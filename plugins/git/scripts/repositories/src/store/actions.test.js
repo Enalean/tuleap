@@ -19,7 +19,7 @@
 
 import {
     mockFetchSuccess,
-    mockFetchError
+    mockFetchError,
 } from "../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper.js";
 import {
     PROJECT_KEY,
@@ -27,7 +27,7 @@ import {
     ERROR_TYPE_UNKNOWN_ERROR,
     REPOSITORIES_SORTED_BY_LAST_UPDATE,
     REPOSITORIES_SORTED_BY_PATH,
-    ANONYMOUS_USER_ID
+    ANONYMOUS_USER_ID,
 } from "../constants.js";
 import { setDisplayMode, getAsyncRepositoryList, changeRepositories } from "./actions.js";
 import * as repository_list_presenter from "../repository-list-presenter.js";
@@ -41,7 +41,7 @@ describe("Store actions", () => {
 
         beforeEach(() => {
             context = {
-                commit: jest.fn()
+                commit: jest.fn(),
             };
 
             setRepositoriesSortedByPathUserPreference = jest.spyOn(
@@ -124,8 +124,8 @@ describe("Store actions", () => {
             const context = {
                 commit: jest.fn(),
                 getters: {
-                    areRepositoriesAlreadyLoadedForCurrentOwner: true
-                }
+                    areRepositoriesAlreadyLoadedForCurrentOwner: true,
+                },
             };
 
             const new_owner_id = 101;
@@ -144,8 +144,8 @@ describe("Store actions", () => {
                 commit: jest.fn(),
                 getters: {
                     areRepositoriesAlreadyLoadedForCurrentOwner: false,
-                    isFolderDisplayMode: false
-                }
+                    isFolderDisplayMode: false,
+                },
             };
 
             mockFetchSuccess(getRepositoryList);
@@ -169,11 +169,11 @@ describe("Store actions", () => {
                 commit: jest.fn(),
                 getters: {
                     areRepositoriesAlreadyLoadedForCurrentOwner: false,
-                    isFolderDisplayMode: false
+                    isFolderDisplayMode: false,
                 },
                 state: {
-                    selected_owner_id
-                }
+                    selected_owner_id,
+                },
             };
 
             mockFetchSuccess(getForkedRepositoryList);
@@ -204,7 +204,7 @@ describe("Store actions", () => {
 
         it("When I want to load the project repositories, Then it should fetch them asynchronously and put them in the store.", async () => {
             const repositories = [{ name: "VueX" }];
-            getRepositories.mockImplementation(callback => callback(repositories));
+            getRepositories.mockImplementation((callback) => callback(repositories));
 
             await getAsyncRepositoryList(commit, getRepositories);
 
@@ -220,8 +220,8 @@ describe("Store actions", () => {
         it("When the server responds with a 404, then the error for 'No git service' will be committed", async () => {
             const error_json = {
                 error: {
-                    code: "404"
-                }
+                    code: "404",
+                },
             };
             mockFetchError(getRepositories, { error_json });
 
@@ -233,8 +233,8 @@ describe("Store actions", () => {
         it("When the server responds with another error code, then the unknown error will be committed", async () => {
             const error_json = {
                 error: {
-                    code: "403"
-                }
+                    code: "403",
+                },
             };
             mockFetchError(getRepositories, { error_json });
 

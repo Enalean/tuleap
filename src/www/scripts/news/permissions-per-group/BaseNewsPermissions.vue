@@ -89,19 +89,19 @@ import VisibilityLabel from "./NewsPermissionsVisibilityLabel.vue";
 export default {
     name: "BaseNewsPermissions",
     components: {
-        VisibilityLabel
+        VisibilityLabel,
     },
     props: {
         selectedUgroupId: String,
         selectedProjectId: String,
-        selectedUgroupName: String
+        selectedUgroupName: String,
     },
     data() {
         return {
             is_loaded: false,
             is_loading: false,
             rest_error: null,
-            news_list: []
+            news_list: [],
         };
     },
     computed: {
@@ -116,7 +116,7 @@ export default {
         },
         news_are_loading() {
             return this.$gettext("News are loading");
-        }
+        },
     },
     methods: {
         async loadAll() {
@@ -135,7 +135,7 @@ export default {
             } finally {
                 this.is_loading = false;
             }
-        }
-    }
+        },
+    },
 };
 </script>

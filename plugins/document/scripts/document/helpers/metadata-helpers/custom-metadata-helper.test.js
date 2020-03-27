@@ -29,13 +29,13 @@ describe("getCustomMetadata", () => {
             { short_name: "update_date" },
             { short_name: "field_1" },
             { short_name: "field_2" },
-            { short_name: "field_3" }
+            { short_name: "field_3" },
         ];
 
         expect(getCustomMetadata(metadata)).toEqual([
             { short_name: "field_1" },
             { short_name: "field_2" },
-            { short_name: "field_3" }
+            { short_name: "field_3" },
         ]);
     });
     it("Returns empty array if metadata is not defined", () => {

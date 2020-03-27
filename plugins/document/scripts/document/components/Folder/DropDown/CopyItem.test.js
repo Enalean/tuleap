@@ -32,7 +32,7 @@ describe("CopyItem", () => {
             return shallowMount(CopyItem, {
                 localVue,
                 propsData: { ...props },
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
     });

@@ -36,7 +36,7 @@ export default function init(get, put, user_history_dropdown_trigger) {
     );
 
     const clear_button = document.getElementById("nav-dropdown-content-user-history-clear-button");
-    clear_button.addEventListener("click", event => {
+    clear_button.addEventListener("click", (event) => {
         event.stopPropagation();
         clear_button.disabled = true;
         controller.clearHistory().then(() => {
@@ -65,8 +65,8 @@ class NavbarHistoryController {
     loadHistoryAsynchronously() {
         const url = this.getUserHistoryUrl();
         return this.get(url)
-            .then(response => response.json())
-            .then(data => {
+            .then((response) => response.json())
+            .then((data) => {
                 if (data.entries.length > 0) {
                     buildHistoryItems(data.entries, this.history_content);
                     this.switchToLoadedState();
@@ -81,9 +81,9 @@ class NavbarHistoryController {
         const url = this.getUserHistoryUrl();
         return this.put(url, {
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
             },
-            body: JSON.stringify({ history_entries: [] })
+            body: JSON.stringify({ history_entries: [] }),
         })
             .then(() => this.switchToEmptyState())
             .catch(() => this.switchToErrorStateForClear());

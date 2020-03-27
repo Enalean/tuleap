@@ -30,10 +30,10 @@ describe("ItemUpdateProperties", () => {
                     version: {
                         title: "Not idea",
                         is_file_locked: false,
-                        changelog: ""
+                        changelog: "",
                     },
-                    item: { ...item }
-                }
+                    item: { ...item },
+                },
             });
         };
     });

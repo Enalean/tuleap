@@ -32,8 +32,8 @@ describe("mutation", () => {
                     description: "I have got whole lot",
                     id: "10",
                     glyph: "<svg></svg>",
-                    is_built_in: false
-                } as TemplateData
+                    is_built_in: false,
+                } as TemplateData,
             } as State;
 
             const selected_template = {
@@ -41,7 +41,7 @@ describe("mutation", () => {
                 description: "scrum desc",
                 id: "scrum",
                 glyph: "<svg></svg>",
-                is_built_in: true
+                is_built_in: true,
             };
             mutations.setSelectedTemplate(state, selected_template);
             expect(state.selected_tuleap_template).toStrictEqual(selected_template);
@@ -55,9 +55,9 @@ describe("mutation", () => {
                     description: "scrum desc",
                     id: "scrum",
                     glyph: "<svg></svg>",
-                    is_built_in: true
+                    is_built_in: true,
                 } as TemplateData,
-                selected_company_template: null
+                selected_company_template: null,
             } as State;
 
             const selected_template = {
@@ -65,7 +65,7 @@ describe("mutation", () => {
                 description: "I have got whole lot",
                 id: "10",
                 glyph: "<svg></svg>",
-                is_built_in: false
+                is_built_in: false,
             };
             mutations.setSelectedTemplate(state, selected_template);
             expect(state.selected_company_template).toStrictEqual(selected_template);
@@ -80,15 +80,15 @@ describe("mutation", () => {
                     description: "scrum desc",
                     id: "scrum",
                     glyph: "<svg></svg>",
-                    is_built_in: true
+                    is_built_in: true,
                 } as TemplateData,
                 selected_company_template: {
                     title: "Whole lot company",
                     description: "I have got whole lot",
                     id: "10",
                     glyph: "<svg></svg>",
-                    is_built_in: false
-                } as TemplateData
+                    is_built_in: false,
+                } as TemplateData,
             } as State;
 
             mutations.resetSelectedTemplate(state);

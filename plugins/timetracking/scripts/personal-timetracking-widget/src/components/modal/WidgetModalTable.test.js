@@ -27,7 +27,7 @@ function getWidgetModalTableInstance(store_options) {
 
     const component_options = {
         localVue,
-        mocks: { $store: store }
+        mocks: { $store: store },
     };
     return shallowMount(WidgetModalTable, component_options);
 }
@@ -38,11 +38,11 @@ describe("Given a personal timetracking widget modal", () => {
         store_options = {
             state: {
                 is_add_mode: false,
-                current_times: [{ minutes: 660 }]
+                current_times: [{ minutes: 660 }],
             },
             getters: {
-                get_formatted_aggregated_time: () => "11:00"
-            }
+                get_formatted_aggregated_time: () => "11:00",
+            },
         };
 
         getWidgetModalTableInstance(store_options);

@@ -22,7 +22,7 @@ import {
     APPROVAL_COMMENTED,
     APPROVAL_DECLINED,
     APPROVAL_NOT_YET,
-    APPROVAL_REJECTED
+    APPROVAL_REJECTED,
 } from "../constants.js";
 
 export function extractApprovalTableData(
@@ -39,38 +39,38 @@ export function extractApprovalTableData(
             return {
                 icon_badge: "fa-tlp-gavel-pending",
                 badge_label: translated_states[APPROVAL_NOT_YET],
-                badge_class: `tlp-badge-chrome-silver ${additional_class}`
+                badge_class: `tlp-badge-chrome-silver ${additional_class}`,
             };
         case APPROVAL_APPROVED:
             return {
                 icon_badge: "fa-tlp-gavel-approved",
                 badge_label: translated_states[APPROVAL_APPROVED],
-                badge_class: `tlp-badge-success ${additional_class}`
+                badge_class: `tlp-badge-success ${additional_class}`,
             };
         case APPROVAL_REJECTED:
             return {
                 icon_badge: "fa-tlp-gavel-rejected",
                 badge_label: translated_states[APPROVAL_REJECTED],
-                badge_class: `tlp-badge-danger ${additional_class}`
+                badge_class: `tlp-badge-danger ${additional_class}`,
             };
         case APPROVAL_DECLINED:
             return {
                 icon_badge: "fa-tlp-gavel-rejected",
                 badge_label: translated_states[APPROVAL_DECLINED],
-                badge_class: `tlp-badge-danger ${additional_class}`
+                badge_class: `tlp-badge-danger ${additional_class}`,
             };
         case APPROVAL_COMMENTED:
             return {
                 icon_badge: "fa-tlp-gavel-comment",
                 badge_label: translated_states[APPROVAL_COMMENTED],
-                badge_class: `tlp-badge-info ${additional_class}`
+                badge_class: `tlp-badge-info ${additional_class}`,
             };
 
         default:
             return {
                 icon_badge: "fa-tlp-gavel-pending",
                 badge_label: translated_states[APPROVAL_NOT_YET],
-                badge_class: `tlp-badge-secondary ${additional_class}`
+                badge_class: `tlp-badge-secondary ${additional_class}`,
             };
     }
 }

@@ -27,7 +27,7 @@ describe("QuickLookGlobal", () => {
     it(`Displays the description of the item observed in the QuickLook`, () => {
         const state = {};
         const store_options = {
-            state
+            state,
         };
         const store = createStoreMock(store_options);
 
@@ -37,14 +37,14 @@ describe("QuickLookGlobal", () => {
             type: TYPE_EMPTY,
             description: "description with ref #1",
             post_processed_description:
-                'description with <a href="https://example.com/goto">ref #1</a>'
+                'description with <a href="https://example.com/goto">ref #1</a>',
         };
 
         store.state.currently_previewed_item = item;
 
         const wrapper = shallowMount(QuickLookGlobal, {
             localVue,
-            mocks: { $store: store }
+            mocks: { $store: store },
         });
 
         const displayed_description = wrapper.find("[id=item-description]");

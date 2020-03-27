@@ -26,6 +26,6 @@ export function buildItemPath(item, parents) {
 
     return {
         path: path + `/${item.item_name}`,
-        id: item.item_id
+        id: item.item_id,
     };
 }

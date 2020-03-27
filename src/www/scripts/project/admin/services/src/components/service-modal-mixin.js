@@ -21,19 +21,19 @@ export const service_modal_mixin = {
     props: {
         minimal_rank: {
             type: Number,
-            required: true
+            required: true,
         },
         csrf_token: {
             type: String,
-            required: true
+            required: true,
         },
         csrf_token_name: {
             type: String,
-            required: true
+            required: true,
         },
         allowed_icons: {
             type: Object,
-            required: true
-        }
-    }
+            required: true,
+        },
+    },
 };

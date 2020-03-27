@@ -57,8 +57,8 @@ import PastReleaseHeaderInitialPoints from "./PastReleaseHeaderInitialPoints.vue
     components: {
         PastReleaseHeaderInitialPoints,
         ReleaseHeaderRemainingPoints,
-        ReleaseHeaderRemainingDays
-    }
+        ReleaseHeaderRemainingDays,
+    },
 })
 export default class ReleaseHeader extends Vue {
     @Prop()

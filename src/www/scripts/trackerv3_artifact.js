@@ -22,13 +22,13 @@
 var tuleap = tuleap || {};
 tuleap.textarea = tuleap.textarea || {};
 
-document.observe("dom:loaded", function() {
+document.observe("dom:loaded", function () {
     var newFollowup = $("tracker_artifact_comment");
     if (newFollowup) {
         new tuleap.textarea.RTE(newFollowup, {
             toggle: true,
             default_in_html: false,
-            id: ""
+            id: "",
         });
     }
 });

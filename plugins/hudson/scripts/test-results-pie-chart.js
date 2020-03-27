@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const config = { childList: true, subtree: true };
 
     for (const widget of widgets) {
-        const observer = new MutationObserver(mutationsList => {
+        const observer = new MutationObserver((mutationsList) => {
             for (const mutation of mutationsList) {
                 if (mutation.type === "childList") {
                     observer.disconnect();
@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
             data: JSON.parse(pie_chart_mount_point.dataset.testResults),
             width: pie_chart_element_sizes.width,
             height: pie_chart_element_sizes.height,
-            radius: pie_chart_element_sizes.radius
+            radius: pie_chart_element_sizes.radius,
         });
 
         pie_chart.init();

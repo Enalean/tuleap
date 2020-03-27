@@ -41,7 +41,7 @@ export {
     updatePostActionType,
     updateFrozenFieldsPostActionFieldIds,
     updateHiddenFieldsetsPostActionFieldsetIds,
-    setUsedServiceName
+    setUsedServiceName,
 };
 
 function showModal(state) {
@@ -99,7 +99,7 @@ function updateAuthorizedUserGroupIds(state, authorized_user_group_ids) {
 
 function savePostActions(state, actions) {
     const post_actions = {};
-    actions.forEach(post_action => {
+    actions.forEach((post_action) => {
         const presented_post_action = presentPostAction(post_action);
         post_actions[presented_post_action.unique_id] = presented_post_action;
     });
@@ -120,14 +120,14 @@ function presentPostAction(post_action) {
 function updatePostActionType(state, { post_action, type }) {
     updatePostAction(state, {
         unique_id: post_action.unique_id,
-        type
+        type,
     });
 }
 
 function updateSetValuePostActionField(state, { post_action, new_field }) {
     const new_post_action = {
         ...post_action,
-        field_id: new_field.field_id
+        field_id: new_field.field_id,
     };
 
     if (new_field.type !== new_post_action.field_type) {
@@ -149,28 +149,28 @@ function updateSetValuePostActionField(state, { post_action, new_field }) {
 function updateSetValuePostActionValue(state, { post_action, value }) {
     updatePostAction(state, {
         ...post_action,
-        value
+        value,
     });
 }
 
 function updateRunJobPostActionJobUrl(state, { post_action, job_url }) {
     updatePostAction(state, {
         ...post_action,
-        job_url
+        job_url,
     });
 }
 
 function updateFrozenFieldsPostActionFieldIds(state, { post_action, field_ids }) {
     updatePostAction(state, {
         ...post_action,
-        field_ids
+        field_ids,
     });
 }
 
 function updateHiddenFieldsetsPostActionFieldsetIds(state, { post_action, fieldset_ids }) {
     updatePostAction(state, {
         ...post_action,
-        fieldset_ids
+        fieldset_ids,
     });
 }
 
@@ -184,7 +184,7 @@ function addPostAction(state) {
     state.new_post_action_unique_id_index += 1;
     updatePostAction(state, {
         unique_id: `new_${state.new_post_action_unique_id_index}`,
-        type: "run_job"
+        type: "run_job",
     });
 }
 

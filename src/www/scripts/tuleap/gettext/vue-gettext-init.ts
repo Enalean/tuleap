@@ -47,7 +47,7 @@ export async function initVueGettext(
     }
     vue_instance.use(VueGettext, {
         translations,
-        silent: true
+        silent: true,
     });
     if (locale) {
         vue_instance.config.language = locale;

@@ -36,7 +36,8 @@
                     v-bind:value="project"
                     v-bind:key="project.id"
                     v-bind:selected="{
-                        selected: selected_project_model && project.id === selected_project_model.id
+                        selected:
+                            selected_project_model && project.id === selected_project_model.id,
                     }"
                 >
                     {{ project.name }}
@@ -46,7 +47,7 @@
         <div
             class="tlp-form-element"
             v-bind:class="{
-                'tlp-form-element-disabled': selected_project === null
+                'tlp-form-element-disabled': selected_project === null,
             }"
         >
             <label class="tlp-label" for="template-selector" v-translate>Template</label>
@@ -83,7 +84,7 @@ import { ProjectWithTrackers, Tracker } from "../../../../../store/type";
 import { State, Mutation } from "vuex-class";
 
 @Component({
-    components: {}
+    components: {},
 })
 export default class TrackerFromAnotherProjectSelector extends Vue {
     @State

@@ -24,7 +24,7 @@ export const STRUCTURAL_FIELDS = [
     CONTAINER_FIELDSET,
     "linebreak",
     "separator",
-    "staticrichtext"
+    "staticrichtext",
 ];
 
 export const READ_ONLY_FIELDS = [
@@ -36,7 +36,7 @@ export const READ_ONLY_FIELDS = [
     "lud",
     "priority",
     "subby",
-    "subon"
+    "subon",
 ];
 
 export const COMPUTED_FIELD = "computed";

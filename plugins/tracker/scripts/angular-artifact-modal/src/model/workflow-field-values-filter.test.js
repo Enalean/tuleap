@@ -29,7 +29,7 @@ describe("workflow-field-values-filter", () => {
                 field_id: 764,
                 permissions: ["read", "update", "create"],
                 type: "sb",
-                values: [{ id: 448 }, { id: 6 }, { id: 23 }, { id: 908 }, { id: 71 }]
+                values: [{ id: 448 }, { id: 6 }, { id: 23 }, { id: 908 }, { id: 71 }],
             };
             const workflow = {
                 field_id: 764,
@@ -37,17 +37,17 @@ describe("workflow-field-values-filter", () => {
                 transitions: [
                     {
                         from_id: 448,
-                        to_id: 6
+                        to_id: 6,
                     },
                     {
                         from_id: 448,
-                        to_id: 23
+                        to_id: 23,
                     },
                     {
                         from_id: 908,
-                        to_id: 71
-                    }
-                ]
+                        to_id: 71,
+                    },
+                ],
             };
 
             enforceWorkflowTransitions(448, field, workflow);

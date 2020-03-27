@@ -30,7 +30,7 @@ describe("getSortedProjectsIAmMemberOf", () => {
 
         const expected_project_list = [
             { id: 101, label: "project A" },
-            { id: 102, label: "project B" }
+            { id: 102, label: "project B" },
         ];
 
         spyRESTgetSortedProjectsIAmMemberOf.mockImplementation(() =>

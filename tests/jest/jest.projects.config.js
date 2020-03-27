@@ -27,6 +27,6 @@ module.exports = {
     projects: ["<rootDir>/plugins/**/jest.config.js", "<rootDir>/src/**/jest.config.js"],
     collectCoverageFrom: [
         ...base_config.collectCoverageFrom,
-        ...tuleap_core_config.collectCoverageFrom
-    ]
+        ...tuleap_core_config.collectCoverageFrom,
+    ],
 };

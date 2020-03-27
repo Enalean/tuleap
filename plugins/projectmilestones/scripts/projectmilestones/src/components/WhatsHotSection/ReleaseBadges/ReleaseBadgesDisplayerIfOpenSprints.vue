@@ -79,8 +79,8 @@ import ReleaseBadgesOpenSprint from "./ReleaseBadgesOpenSprint.vue";
         ReleaseBadgesOpenSprint,
         ReleaseBadgesClosedSprints,
         ReleaseOthersBadges,
-        ReleaseBadgesAllSprints
-    }
+        ReleaseBadgesAllSprints,
+    },
 })
 export default class ReleaseBadgesDisplayerIfOpenSprints extends Vue {
     @Prop()

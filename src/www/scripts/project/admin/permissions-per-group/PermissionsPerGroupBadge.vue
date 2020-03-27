@@ -22,7 +22,7 @@
         v-bind:class="{
             'tlp-badge-danger tlp-badge-outline': isProjectAdmin,
             'tlp-badge-primary tlp-badge-outline': isStatic,
-            'tlp-badge-secondary': isCustom
+            'tlp-badge-secondary': isCustom,
         }"
     >
         {{ groupName }}
@@ -35,7 +35,7 @@ export default {
         isProjectAdmin: Boolean,
         isStatic: Boolean,
         isCustom: Boolean,
-        groupName: String
-    }
+        groupName: String,
+    },
 };
 </script>

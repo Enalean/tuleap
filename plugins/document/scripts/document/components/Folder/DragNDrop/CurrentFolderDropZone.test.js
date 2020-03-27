@@ -27,11 +27,11 @@ describe("CurrentFolderDropZone", () => {
     beforeEach(() => {
         const state = {
             max_files_dragndrop: 10,
-            max_size_upload: 10000
+            max_size_upload: 10000,
         };
 
         const store_options = {
-            state
+            state,
         };
 
         store = createStoreMock(store_options);
@@ -42,7 +42,7 @@ describe("CurrentFolderDropZone", () => {
             return shallowMount(CurrentFolderDropZone, {
                 localVue,
                 propsData: { ...props },
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
     });
@@ -52,7 +52,7 @@ describe("CurrentFolderDropZone", () => {
             When we display the drop zone
             Then user should have a success message`, () => {
             const wrapper = current_folder_drop_zone_factory({
-                user_can_dragndrop_in_current_folder: true
+                user_can_dragndrop_in_current_folder: true,
             });
 
             expect(
@@ -67,7 +67,7 @@ describe("CurrentFolderDropZone", () => {
             When we display the drop zone
             Then user should have an error message`, () => {
             const wrapper = current_folder_drop_zone_factory({
-                user_can_dragndrop_in_current_folder: false
+                user_can_dragndrop_in_current_folder: false,
             });
 
             expect(
@@ -85,7 +85,7 @@ describe("CurrentFolderDropZone", () => {
                 Then the highlighted zone has success class`, () => {
             const wrapper = current_folder_drop_zone_factory({
                 is_dropzone_highlighted: true,
-                user_can_dragndrop_in_current_folder: true
+                user_can_dragndrop_in_current_folder: true,
             });
 
             const current_folder_drop_zone = wrapper.find(
@@ -99,7 +99,7 @@ describe("CurrentFolderDropZone", () => {
                 Then the highlighted zone has error class`, () => {
             const wrapper = current_folder_drop_zone_factory({
                 is_dropzone_highlighted: true,
-                user_can_dragndrop_in_current_folder: false
+                user_can_dragndrop_in_current_folder: false,
             });
 
             const current_folder_drop_zone = wrapper.find(
@@ -113,14 +113,14 @@ describe("CurrentFolderDropZone", () => {
                 Then the highlighted zone has no specific class`, () => {
             const wrapper = current_folder_drop_zone_factory({
                 is_dropzone_highlighted: false,
-                user_can_dragndrop_in_current_folder: true
+                user_can_dragndrop_in_current_folder: true,
             });
 
             const current_folder_drop_zone = wrapper.find(
                 "[data-test=document-current-folder-dropzone]"
             );
             expect(current_folder_drop_zone.classes()).toEqual([
-                "document-upload-to-current-folder"
+                "document-upload-to-current-folder",
             ]);
         });
 
@@ -129,14 +129,14 @@ describe("CurrentFolderDropZone", () => {
                 Then the highlighted zone has no specific class`, () => {
             const wrapper = current_folder_drop_zone_factory({
                 is_dropzone_highlighted: false,
-                user_can_dragndrop_in_current_folder: false
+                user_can_dragndrop_in_current_folder: false,
             });
 
             const current_folder_drop_zone = wrapper.find(
                 "[data-test=document-current-folder-dropzone]"
             );
             expect(current_folder_drop_zone.classes()).toEqual([
-                "document-upload-to-current-folder"
+                "document-upload-to-current-folder",
             ]);
         });
     });

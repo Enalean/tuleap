@@ -29,7 +29,7 @@
     tuleap:readonly
 */
 
-document.observe("dom:loaded", function() {
+document.observe("dom:loaded", function () {
     setTrackerInSelectorUrl();
     codendi.tracker.artifact.artifactLink.showReverseArtifactLinks();
     initTabs();
@@ -42,7 +42,7 @@ document.observe("dom:loaded", function() {
     }
 
     function initTabs() {
-        $$(".tracker-form-element-artifactlink-list").each(function(artifact_link) {
+        $$(".tracker-form-element-artifactlink-list").each(function (artifact_link) {
             var id = artifact_link.identify();
             codendi.tracker.artifact.artifactLink.tabs[
                 id
@@ -53,7 +53,7 @@ document.observe("dom:loaded", function() {
     function initExpandCollapseChildrenInArtifactLinkTable() {
         $$(
             "#tracker_report_table_nature__is_child > tbody > tr > td.tracker-artifact-rollup-view > a.direct-link-to-artifact"
-        ).each(function(link) {
+        ).each(function (link) {
             initRollupViewOfLink(link, 1);
         });
 
@@ -79,15 +79,15 @@ document.observe("dom:loaded", function() {
                 new Ajax.Request("/api/artifacts/" + artifact_id + "/linked_artifacts", {
                     method: "GET",
                     requestHeaders: {
-                        Accept: "application/json"
+                        Accept: "application/json",
                     },
                     parameters: {
                         direction: "forward",
                         nature: "_is_child",
                         offset: offset,
-                        limit: limit
+                        limit: limit,
                     },
-                    onSuccess: function(transport) {
+                    onSuccess: function (transport) {
                         children = children.concat(transport.responseJSON.collection);
 
                         if (offset + limit < transport.getResponseHeader("X-Pagination-Size")) {
@@ -95,14 +95,14 @@ document.observe("dom:loaded", function() {
                         } else if (children.length > 0) {
                             injectChildrenInTable(children);
                         }
-                    }
+                    },
                 });
             }
 
             function injectChildrenInTable(children_to_inject) {
                 icon.classList.add("fa-caret-right");
 
-                icon.addEventListener("click", function() {
+                icon.addEventListener("click", function () {
                     simpleExpandCollapse(this, children_to_inject);
                 });
             }
@@ -117,7 +117,7 @@ document.observe("dom:loaded", function() {
 
                 if (subrows.length <= 0) {
                     subrows = children_to_inject.map(injectChildInTable);
-                    subrows.forEach(function(row) {
+                    subrows.forEach(function (row) {
                         initRollupViewOfLink(
                             row.querySelector("a.direct-link-to-artifact"),
                             depth + 1
@@ -237,7 +237,7 @@ document.observe("dom:loaded", function() {
             resizeSpeed: 10,
             delay: 0,
             finalAnimationDuration: 0,
-            finalAnimationDelay: 0
+            finalAnimationDelay: 0,
         });
 
         $$("input.tracker-form-element-artifactlink-new").each(injectLinkAndCreateButtons);
@@ -248,7 +248,7 @@ document.observe("dom:loaded", function() {
                 "#tracker-link-artifact-slow-way-content a.cross-reference",
                 "#tracker-link-artifact-slow-way-content a.direct-link-to-artifact",
                 "#tracker-link-artifact-slow-way-content a.link-to-user"
-            ).each(function(a) {
+            ).each(function (a) {
                 a.target = "_blank";
                 a.rel = "noreferrer";
             });
@@ -258,23 +258,23 @@ document.observe("dom:loaded", function() {
             $("tracker_report_renderer_view_controls").hide();
 
             //links to switch among renderers should load via ajax
-            $$(".tracker_report_renderer_tab a").each(function(a) {
-                a.observe("click", function(evt) {
+            $$(".tracker_report_renderer_tab a").each(function (a) {
+                a.observe("click", function (evt) {
                     new Ajax.Updater(renderer_panel, a.href, {
-                        onComplete: function() {
+                        onComplete: function () {
                             a.up("ul")
                                 .childElements()
                                 .invoke("removeClassName", "tracker_report_renderers-current");
                             a.up("li").addClassName("tracker_report_renderers-current");
                             load_behavior_in_renderer_panel();
-                        }
+                        },
                     });
                     Event.stop(evt);
                     return false;
                 });
             });
 
-            $("tracker_select_tracker").observe("change", function() {
+            $("tracker_select_tracker").observe("change", function () {
                 new Ajax.Updater(
                     "tracker-link-artifact-slow-way-content",
                     codendi.tracker.base_url,
@@ -282,18 +282,18 @@ document.observe("dom:loaded", function() {
                         parameters: {
                             tracker: $F("tracker_select_tracker"),
                             "link-artifact-id": $F("link-artifact-id"),
-                            "report-only": 1
+                            "report-only": 1,
                         },
                         method: "GET",
-                        onComplete: function() {
+                        onComplete: function () {
                             load_behaviors_in_slow_ways_panel();
-                        }
+                        },
                     }
                 );
             });
 
             if ($("tracker_select_report")) {
-                $("tracker_select_report").observe("change", function() {
+                $("tracker_select_report").observe("change", function () {
                     new Ajax.Updater(
                         "tracker-link-artifact-slow-way-content",
                         codendi.tracker.base_url,
@@ -301,12 +301,12 @@ document.observe("dom:loaded", function() {
                             parameters: {
                                 tracker: $F("tracker_select_tracker"),
                                 report: $F("tracker_select_report"),
-                                "link-artifact-id": $F("link-artifact-id")
+                                "link-artifact-id": $F("link-artifact-id"),
                             },
                             method: "GET",
-                            onComplete: function() {
+                            onComplete: function () {
                                 load_behaviors_in_slow_ways_panel();
-                            }
+                            },
                         }
                     );
                 });
@@ -314,20 +314,20 @@ document.observe("dom:loaded", function() {
 
             codendi.Toggler.init($("tracker_report_query_form"), "hide", "noajax");
 
-            $("tracker_report_query_form").observe("submit", function(evt) {
+            $("tracker_report_query_form").observe("submit", function (evt) {
                 $("tracker_report_query_form").request({
                     parameters: {
                         aid: 0,
                         "only-renderer": 1,
-                        "link-artifact-id": $F("link-artifact-id")
+                        "link-artifact-id": $F("link-artifact-id"),
                     },
-                    onSuccess: function(transport) {
+                    onSuccess: function (transport) {
                         var renderer_panel = $("tracker-link-artifact-slow-way-content")
                             .up()
                             .down(".tracker_report_renderer");
                         renderer_panel.update(transport.responseText);
                         load_behavior_in_renderer_panel(renderer_panel);
-                    }
+                    },
                 });
                 Event.stop(evt);
                 return false;
@@ -354,7 +354,7 @@ document.observe("dom:loaded", function() {
         function load_behavior_in_renderer_panel(renderer_panel) {
             codendi.tracker.artifact.editor.disableWarnOnPageLeave();
 
-            $("lightwindow_title_bar_close_link").observe("click", function() {
+            $("lightwindow_title_bar_close_link").observe("click", function () {
                 window.onbeforeunload = codendi.tracker.artifact.editor.warnOnPageLeave;
             });
 
@@ -362,12 +362,12 @@ document.observe("dom:loaded", function() {
             tuleap.dateTimePicker.init();
 
             //pager links should load via ajax
-            $$(".tracker_report_table_pager a").each(function(a) {
-                a.observe("click", function(evt) {
+            $$(".tracker_report_table_pager a").each(function (a) {
+                a.observe("click", function (evt) {
                     new Ajax.Updater(renderer_panel, a.href, {
-                        onComplete: function() {
+                        onComplete: function () {
                             load_behavior_in_renderer_panel(renderer_panel);
-                        }
+                        },
                     });
                     Event.stop(evt);
                     return false;
@@ -379,7 +379,7 @@ document.observe("dom:loaded", function() {
             );
             $("lightwindow_contents")
                 .select('input[name^="link-artifact[search]"]')
-                .each(function(elem) {
+                .each(function (elem) {
                     add_remove_selected(elem, input_to_link);
                 });
 
@@ -389,7 +389,7 @@ document.observe("dom:loaded", function() {
                 .each(force_check);
 
             //check manually added artifact in the renderer
-            input_to_link.value.split(",").each(function(link) {
+            input_to_link.value.split(",").each(function (link) {
                 checked_values_panels(link);
             });
 
@@ -404,15 +404,15 @@ document.observe("dom:loaded", function() {
                 var previous_contents_width = $("lightwindow_contents").offsetWidth;
 
                 $("lightwindow").setStyle({
-                    left: Math.round($("lightwindow").offsetLeft - diff / 2) + "px"
+                    left: Math.round($("lightwindow").offsetLeft - diff / 2) + "px",
                 });
 
                 $("lightwindow_container").setStyle({
-                    width: Math.round(previous_container_width + diff + 30) + "px"
+                    width: Math.round(previous_container_width + diff + 30) + "px",
                 });
 
                 $("lightwindow_contents").setStyle({
-                    width: Math.round(previous_contents_width + diff + 30) + "px"
+                    width: Math.round(previous_contents_width + diff + 30) + "px",
                 });
             }
 
@@ -422,7 +422,7 @@ document.observe("dom:loaded", function() {
         function resize_lightwindow() {
             var effective_height = $("lightwindow_contents")
                 .childElements()
-                .inject(0, function(acc, elem) {
+                .inject(0, function (acc, elem) {
                     return acc + (elem.visible() ? elem.getHeight() : 0);
                 });
             if (
@@ -431,7 +431,7 @@ document.observe("dom:loaded", function() {
                     effective_height + 100 < document.documentElement.clientHeight)
             ) {
                 $("lightwindow_contents").setStyle({
-                    height: effective_height + 20 + "px"
+                    height: effective_height + 20 + "px",
                 });
             }
         }
@@ -444,7 +444,7 @@ document.observe("dom:loaded", function() {
         function checked_values_panel_recent(artifact_link_id, checked) {
             $("lightwindow_contents")
                 .select('input[name^="link-artifact[recent]"]')
-                .each(function(elem) {
+                .each(function (elem) {
                     if (elem.value == artifact_link_id) {
                         elem.checked = checked;
                     }
@@ -454,7 +454,7 @@ document.observe("dom:loaded", function() {
         function checked_values_panel_search(artifact_link_id, checked) {
             $("lightwindow_contents")
                 .select('input[name^="link-artifact[search]"]')
-                .each(function(elem) {
+                .each(function (elem) {
                     if (elem.value == artifact_link_id) {
                         elem.checked = checked;
                     }
@@ -462,7 +462,7 @@ document.observe("dom:loaded", function() {
         }
 
         function add_remove_selected(elem, input_to_link) {
-            elem.observe("change", function() {
+            elem.observe("change", function () {
                 if (elem.checked) {
                     if (input_to_link.value) {
                         input_to_link.value += ",";
@@ -471,7 +471,7 @@ document.observe("dom:loaded", function() {
                 } else {
                     input_to_link.value = input_to_link.value
                         .split(",")
-                        .reject(function(link) {
+                        .reject(function (link) {
                             return link.strip() == elem.value;
                         })
                         .join(",");
@@ -507,7 +507,7 @@ document.observe("dom:loaded", function() {
             ) {
                 if (!location.href.toQueryParams().modal) {
                     var link = new Element("a", {
-                        title: codendi.locales.tracker_artifact_link.select
+                        title: codendi.locales.tracker_artifact_link.select,
                     })
                         .addClassName("tracker-form-element-artifactlink-selector btn")
                         .update(
@@ -516,7 +516,7 @@ document.observe("dom:loaded", function() {
 
                     var link_create = new Element("a", {
                         title: codendi.locales.tracker_artifact_link.create,
-                        href: "#"
+                        href: "#",
                     })
                         .addClassName("tracker-form-element-artifactlink-selector btn")
                         .update(
@@ -530,7 +530,7 @@ document.observe("dom:loaded", function() {
                     preview_button.classList.add("tracker-form-element-artifactlink-add");
                     preview_button.type = "button";
                     preview_button.innerText = input.dataset.previewLabel;
-                    preview_button.addEventListener("click", function() {
+                    preview_button.addEventListener("click", function () {
                         codendi.tracker.artifact.artifactLink.addTemporaryArtifactLinks();
                     });
 
@@ -576,7 +576,7 @@ document.observe("dom:loaded", function() {
                 .select("td input[type=checkbox]")
                 .inject(
                     artifact_links_values[codendi.tracker.artifact.artifactLinker_currentField_id],
-                    function(acc, e) {
+                    function (acc, e) {
                         acc[e.name.split("[")[3].gsub("]", "")] = 1;
                         return acc;
                     }
@@ -588,7 +588,7 @@ document.observe("dom:loaded", function() {
             function openCreateArtifactModalOnClickOnCreateButton(evt) {
                 //create a new artifact via artifact links
                 //tracker='.$tracker_id.'&func=new-artifact-link&id='.$artifact->getId().
-                codendi.tracker.artifact.artifactLink.overlay_window.options.afterFinishWindow = function() {};
+                codendi.tracker.artifact.artifactLink.overlay_window.options.afterFinishWindow = function () {};
                 codendi.tracker.artifact.artifactLink.overlay_window.activateWindow({
                     href:
                         codendi.tracker.base_url +
@@ -600,10 +600,10 @@ document.observe("dom:loaded", function() {
                                 codendi.tracker.artifact.artifactLink.selector_url[
                                     "link-artifact-id"
                                 ],
-                            modal: 1
+                            modal: 1,
                         }).toQueryString(),
                     title: link.title,
-                    iframeEmbed: true
+                    iframeEmbed: true,
                 });
 
                 Event.stop(evt);
@@ -612,7 +612,7 @@ document.observe("dom:loaded", function() {
 
             function openSearchArtifactModalOnClickOnLinkButton(evt) {
                 $$("button.tracker-form-element-artifactlink-selector");
-                codendi.tracker.artifact.artifactLink.overlay_window.options.afterFinishWindow = function() {
+                codendi.tracker.artifact.artifactLink.overlay_window.options.afterFinishWindow = function () {
                     if ($("tracker-link-artifact-fast-ways")) {
                         //Tooltips. load only in fast ways panels
                         // since report table are loaded later in
@@ -626,7 +626,7 @@ document.observe("dom:loaded", function() {
                             "#tracker-link-artifact-fast-ways a.cross-reference",
                             "#tracker-link-artifact-fast-ways a.direct-link-to-artifact",
                             "#tracker-link-artifact-fast-ways a.link-to-user"
-                        ).each(function(a) {
+                        ).each(function (a) {
                             a.target = "_blank";
                             a.rel = "noreferrer";
                         });
@@ -638,7 +638,7 @@ document.observe("dom:loaded", function() {
                         //Checked/unchecked values are added/removed in the manual panel
                         $("lightwindow_contents")
                             .select('input[name^="link-artifact[recent]"]')
-                            .each(function(elem) {
+                            .each(function (elem) {
                                 add_remove_selected(elem, input_to_link);
                             });
 
@@ -651,7 +651,7 @@ document.observe("dom:loaded", function() {
                             //unchecked values from recent panel
                             $("lightwindow_contents")
                                 .select('input[name^="link-artifact[recent]"]')
-                                .each(function(elem) {
+                                .each(function (elem) {
                                     if (!elem.disabled) {
                                         elem.checked = false;
                                     }
@@ -660,13 +660,13 @@ document.observe("dom:loaded", function() {
                             //unchecked values from search panel
                             $("lightwindow_contents")
                                 .select('input[name^="link-artifact[search]"]')
-                                .each(function(elem) {
+                                .each(function (elem) {
                                     if (!elem.disabled) {
                                         elem.checked = false;
                                     }
                                 });
 
-                            links_array.each(function(link) {
+                            links_array.each(function (link) {
                                 checked_values_panels(link.strip());
                             });
                         }
@@ -682,7 +682,7 @@ document.observe("dom:loaded", function() {
                         var button = $("lightwindow_contents").down(
                             "button[name=link-artifact-submit]"
                         );
-                        button.observe("click", function(evt) {
+                        button.observe("click", function (evt) {
                             var to_add = [];
 
                             //manual ones
@@ -720,7 +720,7 @@ document.observe("dom:loaded", function() {
                         location.href.split("?")[0] +
                         "?" +
                         $H(codendi.tracker.artifact.artifactLink.selector_url).toQueryString(),
-                    title: ""
+                    title: "",
                 });
                 Event.stop(evt);
                 return false;
@@ -729,7 +729,7 @@ document.observe("dom:loaded", function() {
     }
 
     function init() {
-        Object.values(codendi.tracker.artifact.artifactLink.tabs).forEach(function(tab) {
+        Object.values(codendi.tracker.artifact.artifactLink.tabs).forEach(function (tab) {
             tab.loadNbArtifacts();
         });
 
@@ -755,7 +755,7 @@ document.observe("dom:loaded", function() {
     }
 
     function addGlobalLoadingIndicator() {
-        $$(".tracker-form-element-artifactlink-section").each(function(section) {
+        $$(".tracker-form-element-artifactlink-section").each(function (section) {
             if (!section.querySelector(".tracker-form-element-artifactlink-section-loading")) {
                 var spinner = document.createElement("i");
                 spinner.classList.add("fa");
@@ -782,7 +782,7 @@ document.observe("dom:loaded", function() {
     }
 
     function removeGlobalLoadingIndicator() {
-        $$(".tracker-form-element-artifactlink-section-loading").each(function(section) {
+        $$(".tracker-form-element-artifactlink-section-loading").each(function (section) {
             section.parentNode.removeChild(section);
         });
     }
@@ -790,12 +790,12 @@ document.observe("dom:loaded", function() {
     function loadAsyncRenderers(list_of_renderers_to_load) {
         var nb_to_fetch = list_of_renderers_to_load.size();
 
-        list_of_renderers_to_load.each(function(renderer_to_load) {
+        list_of_renderers_to_load.each(function (renderer_to_load) {
             new Ajax.Updater(renderer_to_load, getUrl(renderer_to_load), {
-                onComplete: function() {
+                onComplete: function () {
                     markRendererAsLoaded(renderer_to_load);
                     lauchInitIfAllRenderersAreLoaded();
-                }
+                },
             });
         });
 
@@ -814,7 +814,7 @@ document.observe("dom:loaded", function() {
             evt.initCustomEvent("renderer-async-loaded", false, false, {
                 tracker_panel: renderer_to_load.up(
                     ".tracker-form-element-artifactlink-trackerpanel"
-                )
+                ),
             });
             document.dispatchEvent(evt);
         }

@@ -30,12 +30,12 @@ export const init = (element, force_display, force_ajax) => {
     const togglers = element.querySelectorAll(
         ".toggler, .toggler-hide, .toggler-noajax, .toggler-hide-noajax"
     );
-    [].forEach.call(togglers, toggler => {
+    [].forEach.call(togglers, (toggler) => {
         load(toggler, force_display, force_ajax);
     });
 };
 
-export const addBeforeListener = callback => {
+export const addBeforeListener = (callback) => {
     before_listeners.push(callback);
 };
 
@@ -125,7 +125,7 @@ function listenClickOnToggle(evt) {
 }
 
 function before(evt, toggler, is_collapsing) {
-    before_listeners.forEach(callback => {
+    before_listeners.forEach((callback) => {
         callback(evt, toggler, is_collapsing);
     });
 }

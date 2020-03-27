@@ -40,17 +40,17 @@ export default {
     props: {
         value: {
             type: String,
-            required: true
+            required: true,
         },
         id: {
             type: String,
-            required: true
-        }
+            required: true,
+        },
     },
     computed: {
         description_placeholder() {
             return this.$gettext("Awesome service to manage extra stuff");
-        }
-    }
+        },
+    },
 };
 </script>

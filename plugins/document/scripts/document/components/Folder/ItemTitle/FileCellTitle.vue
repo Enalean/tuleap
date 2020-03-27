@@ -42,7 +42,7 @@ export default {
     name: "FileCellTitle",
     components: { FakeCaret },
     props: {
-        item: Object
+        item: Object,
     },
     computed: {
         icon_class() {
@@ -63,7 +63,7 @@ export default {
         },
         is_corrupted() {
             return !this.item.file_properties;
-        }
-    }
+        },
+    },
 };
 </script>

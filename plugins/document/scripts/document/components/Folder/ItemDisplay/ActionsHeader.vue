@@ -53,10 +53,10 @@ export default {
         DropDownDisplayedEmbedded,
         DropDownButton,
         DetailsItemButton,
-        CreateNewItemVersionButton
+        CreateNewItemVersionButton,
     },
     props: {
-        item: Object
-    }
+        item: Object,
+    },
 };
 </script>

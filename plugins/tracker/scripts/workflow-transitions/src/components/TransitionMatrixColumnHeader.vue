@@ -35,8 +35,8 @@ export default {
     props: {
         column: {
             type: Object,
-            required: true
-        }
+            required: true,
+        },
     },
     computed: {
         ...mapGetters(["is_workflow_advanced", "current_workflow_transitions"]),
@@ -55,7 +55,7 @@ export default {
                 }
             }
             return transition_from_new;
-        }
-    }
+        },
+    },
 };
 </script>

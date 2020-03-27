@@ -1,4 +1,4 @@
-export default function() {
+export default function () {
     return {
         restrict: "A",
         replace: false,
@@ -9,6 +9,6 @@ export default function() {
                 const [file] = element.files;
                 ngModelController.$setViewValue(file, "change");
             });
-        }
+        },
     };
 }

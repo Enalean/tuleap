@@ -28,14 +28,14 @@ describe("UpdatePermissions", () => {
         document_action_button_factory = (props = {}) => {
             return shallowMount(UpdatePermissions, {
                 localVue,
-                propsData: { ...props }
+                propsData: { ...props },
             });
         };
     });
 
     it(`Given a user can not manage the item then the corresponding option is not shown`, () => {
         const item = {
-            can_user_manage: false
+            can_user_manage: false,
         };
         const wrapper = document_action_button_factory({ item });
 
@@ -44,7 +44,7 @@ describe("UpdatePermissions", () => {
 
     it(`Given a user click on the element then the corresponding modal is opened`, () => {
         const item = {
-            can_user_manage: true
+            can_user_manage: true,
         };
         const event_bus_emit = jest.spyOn(EventBus, "$emit");
         const wrapper = document_action_button_factory({ item });
@@ -54,7 +54,7 @@ describe("UpdatePermissions", () => {
         wrapper.trigger("click");
 
         expect(event_bus_emit).toHaveBeenCalledWith("show-update-permissions-modal", {
-            detail: { current_item: item }
+            detail: { current_item: item },
         });
     });
 });

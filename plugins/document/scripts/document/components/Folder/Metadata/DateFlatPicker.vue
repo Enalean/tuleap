@@ -35,22 +35,22 @@ import { datePicker } from "tlp";
 export default {
     name: "DateFlatPicker",
     model: {
-        prop: "value"
+        prop: "value",
     },
     props: {
         id: {
             type: String,
-            required: true
+            required: true,
         },
         required: {
             type: Boolean,
-            default: false
+            default: false,
         },
         value: {
             default: null,
             required: true,
-            validator: value => typeof value === "string" || value === null
-        }
+            validator: (value) => typeof value === "string" || value === null,
+        },
     },
     data() {
         return { datepicker: null, input_value: this.value };
@@ -63,12 +63,12 @@ export default {
             if (newValue) {
                 this.datepicker.setDate(newValue, false);
             }
-        }
+        },
     },
     mounted() {
         this.datepicker = datePicker(this.$el, {
             defaultDate: this.value,
-            onChange: this.onDatePickerChange
+            onChange: this.onDatePickerChange,
         });
     },
     beforeDestroy() {
@@ -86,7 +86,7 @@ export default {
             this.$nextTick(() => {
                 this.$emit("input", this.$el.value);
             });
-        }
-    }
+        },
+    },
 };
 </script>

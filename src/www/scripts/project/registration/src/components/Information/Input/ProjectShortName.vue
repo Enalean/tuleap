@@ -35,7 +35,7 @@
             class="tlp-form-element"
             v-bind:class="[
                 has_slug_error ? 'tlp-form-element-error' : '',
-                should_user_correct_shortname
+                should_user_correct_shortname,
             ]"
             data-test="project-shortname-edit-section"
         >
@@ -133,7 +133,7 @@ export default class ProjectShortName extends Vue {
             "'": "-",
             "*": "-",
             "©": "-",
-            "®": "-"
+            "®": "-",
         });
         this.slugified_project_name = slugify(value, { lower: true });
         this.checkValidity(this.slugified_project_name);
@@ -142,7 +142,7 @@ export default class ProjectShortName extends Vue {
 
         EventBus.$emit("update-project-name", {
             slugified_name: this.slugified_project_name,
-            name: this.project_name
+            name: this.project_name,
         });
     }
 
@@ -152,7 +152,7 @@ export default class ProjectShortName extends Vue {
 
         EventBus.$emit("update-project-name", {
             slugified_name: value,
-            name: this.project_name
+            name: this.project_name,
         });
     }
 

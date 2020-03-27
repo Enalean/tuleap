@@ -34,24 +34,24 @@ export function createRouter(store, project_name) {
             {
                 path: "/",
                 name: "root_folder",
-                component: RootFolder
+                component: RootFolder,
             },
             {
                 path: "/folder/:item_id",
                 name: "folder",
-                component: ChildFolder
+                component: ChildFolder,
             },
             {
                 path: "/folder/:folder_id/:item_id",
                 name: "item",
-                component: DisplayEmbedded
+                component: DisplayEmbedded,
             },
             {
                 path: "/preview/:preview_item_id",
                 name: "preview",
-                component: ChildFolder
-            }
-        ]
+                component: ChildFolder,
+            },
+        ],
     });
 
     router.beforeEach((to, from, next) => {

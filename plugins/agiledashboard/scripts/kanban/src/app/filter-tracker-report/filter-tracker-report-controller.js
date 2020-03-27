@@ -3,7 +3,7 @@ export default FilterTrackerReportController;
 FilterTrackerReportController.$inject = [
     "$window",
     "FilterTrackerReportService",
-    "SharedPropertiesService"
+    "SharedPropertiesService",
 ];
 
 function FilterTrackerReportController(
@@ -18,13 +18,13 @@ function FilterTrackerReportController(
 
         changeFilter,
         displaySelectbox,
-        getSelectableReports: FilterTrackerReportService.getSelectableReports
+        getSelectableReports: FilterTrackerReportService.getSelectableReports,
     });
 
     function changeFilter() {
         const params = $window.location.search.split("?")[1];
         let search_params = params.split("&");
-        let index = search_params.findIndex(search_param => {
+        let index = search_params.findIndex((search_param) => {
             return search_param.split("=")[0] === "tracker_report_id";
         });
 

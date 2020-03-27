@@ -19,7 +19,7 @@
 import {
     REPOSITORIES_SORTED_BY_LAST_UPDATE,
     ERROR_TYPE_NO_ERROR,
-    PROJECT_KEY
+    PROJECT_KEY,
 } from "../constants.js";
 
 const state = {
@@ -31,6 +31,6 @@ const state = {
     is_loading_next: true,
     add_repository_modal: null,
     display_mode: REPOSITORIES_SORTED_BY_LAST_UPDATE,
-    is_first_load_done: false
+    is_first_load_done: false,
 };
 export default state;

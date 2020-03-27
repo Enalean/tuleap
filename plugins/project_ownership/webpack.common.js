@@ -40,12 +40,12 @@ module.exports = [
             path.resolve(__dirname, "../../src/www/assets/project_ownership/")
         ),
         module: {
-            rules: [webpack_configurator.rule_scss_loader]
+            rules: [webpack_configurator.rule_scss_loader],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
-            ...webpack_configurator.getCSSExtractionPlugins()
-        ]
-    }
+            ...webpack_configurator.getCSSExtractionPlugins(),
+        ],
+    },
 ];

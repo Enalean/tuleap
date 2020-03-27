@@ -40,13 +40,11 @@ function setSidebarUserPreference(new_width) {
         url: "/account/update-sidebar-preference.php",
         data: {
             user_preference_name: "sidebar_state",
-            sidebar_state: state
-        }
+            sidebar_state: state,
+        },
     });
 
-    $("body")
-        .removeClass("sidebar-expanded sidebar-collapsed")
-        .addClass(state);
+    $("body").removeClass("sidebar-expanded sidebar-collapsed").addClass(state);
 }
 
 function updateSidebarWidth(new_width, duration) {
@@ -54,16 +52,16 @@ function updateSidebarWidth(new_width, duration) {
 
     $(".sidebar-nav").animate(
         {
-            width: new_width
+            width: new_width,
         },
         duration
     );
     $(".sidebar-nav li a").css({
-        width: new_width
+        width: new_width,
     });
     $(".main").animate(
         {
-            marginLeft: new_width
+            marginLeft: new_width,
         },
         duration
     );
@@ -97,11 +95,11 @@ function updateSidebarIcon(direction) {
 function updateSidebarTitle(show_only_icon) {
     if (show_only_icon) {
         $(".project-title-container").css({
-            visibility: "hidden"
+            visibility: "hidden",
         });
     } else {
         $(".project-title-container").css({
-            visibility: "visible"
+            visibility: "visible",
         });
     }
 }
@@ -150,21 +148,21 @@ function initCustomScrollbar() {
         .jScrollPane({
             verticalGutter: 0,
             hideFocus: true,
-            contentWidth: getSidebarUserPreference()
+            contentWidth: getSidebarUserPreference(),
         })
-        .bind("mousewheel", function(e) {
+        .bind("mousewheel", function (e) {
             e.preventDefault();
         });
     api = $(".sidebar-nav").data("jsp");
 
-    $(window).bind("resize", function() {
+    $(window).bind("resize", function () {
         if (!throttleTimeout) {
             throttleTimeout = setTimeout(updateCustomScrollbar, 50);
         }
     });
 }
 
-$(window).load(function() {
+$(window).load(function () {
     var current_size = getSidebarUserPreference();
 
     if ($(".sidebar-nav").length > 0) {
@@ -172,7 +170,7 @@ $(window).load(function() {
 
         $(".sidebar-nav li a").tooltip({
             placement: "right",
-            container: "body"
+            container: "body",
         });
 
         if (current_size === null || current_size === width_expanded) {
@@ -183,7 +181,7 @@ $(window).load(function() {
             updateSidebarServices(true, 100);
         }
 
-        $(".sidebar-collapse").click(function() {
+        $(".sidebar-collapse").click(function () {
             sidebarCollapseEvent(100);
         });
     }

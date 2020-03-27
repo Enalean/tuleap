@@ -23,7 +23,7 @@ export function initAddModal() {
     const modal_add_mirror_element = document.getElementById("modal-add-mirror");
     const modal_add_mirror = tlp.modal(modal_add_mirror_element, {});
 
-    document.getElementById("button-modal-add-mirror").addEventListener("click", function() {
+    document.getElementById("button-modal-add-mirror").addEventListener("click", function () {
         modal_add_mirror.toggle();
     });
 }

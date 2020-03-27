@@ -106,8 +106,8 @@ export default class BannerPresenter extends Vue {
         this.editor = CKEDITOR.replace(text_area, {
             toolbar: [
                 ["Cut", "Copy", "Paste", "Undo", "Redo", "Link", "Unlink"],
-                ["Bold", "Italic"]
-            ]
+                ["Bold", "Italic"],
+            ],
         });
 
         this.editor.on("instanceReady", this.onInstanceReady);
@@ -156,7 +156,7 @@ export default class BannerPresenter extends Vue {
 
         const banner_save_payload: BannerState = {
             message: this.current_message,
-            activated: this.banner_is_activated
+            activated: this.banner_is_activated,
         };
 
         this.$emit("save-banner", banner_save_payload);

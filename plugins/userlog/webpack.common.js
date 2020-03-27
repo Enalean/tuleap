@@ -21,7 +21,7 @@ const path = require("path");
 const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 
 let entry_points = {
-    "user-logging-date-picker": "./scripts/user-logging-date-picker.ts"
+    "user-logging-date-picker": "./scripts/user-logging-date-picker.ts",
 };
 
 const colors_burning_parrot = ["orange", "blue", "green", "red", "grey", "purple"];
@@ -38,21 +38,21 @@ module.exports = [
             path.resolve(__dirname, "../../src/www/assets/userlog")
         ),
         externals: {
-            tlp: "tlp"
+            tlp: "tlp",
         },
         module: {
             rules: [
                 ...webpack_configurator.configureTypescriptRules(
                     webpack_configurator.babel_options_ie11
                 ),
-                webpack_configurator.rule_scss_loader
-            ]
+                webpack_configurator.rule_scss_loader,
+            ],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
             webpack_configurator.getTypescriptCheckerPlugin(false),
-            ...webpack_configurator.getCSSExtractionPlugins()
-        ]
-    }
+            ...webpack_configurator.getCSSExtractionPlugins(),
+        ],
+    },
 ];

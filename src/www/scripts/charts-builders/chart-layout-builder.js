@@ -42,10 +42,7 @@ function buildChartLayout(
 }
 
 function drawSVG(element, width, height) {
-    return select(element)
-        .append("svg")
-        .attr("width", width)
-        .attr("height", height);
+    return select(element).append("svg").attr("width", width).attr("height", height);
 }
 
 function initAxis(graph_width, margins, { x_scale, y_scale }, nb_ticks, tick_padding) {
@@ -53,7 +50,7 @@ function initAxis(graph_width, margins, { x_scale, y_scale }, nb_ticks, tick_pad
 
     return {
         x_axis: initXAxis(x_scale, tick_padding),
-        y_axis: initYAxis(y_scale, y_ticks_size, nb_ticks, tick_padding)
+        y_axis: initYAxis(y_scale, y_ticks_size, nb_ticks, tick_padding),
     };
 }
 
@@ -62,10 +59,7 @@ function initXAxis(x_scale, tick_padding) {
 }
 
 function initYAxis(y_scale, y_ticks_size, nb_ticks, tick_padding) {
-    return axisLeft(y_scale)
-        .ticks(nb_ticks)
-        .tickSize(-y_ticks_size)
-        .tickPadding(tick_padding);
+    return axisLeft(y_scale).ticks(nb_ticks).tickSize(-y_ticks_size).tickPadding(tick_padding);
 }
 
 function drawAxis(layout, { x_axis, y_axis }, graph_height, { left, bottom }) {

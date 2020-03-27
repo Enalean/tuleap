@@ -16,7 +16,7 @@ import ExpandCollapsedColumnMixin from "../../Body/Swimlane/Cell/expand-collapse
 import HoveringStateForCollapsedColumnMixin from "../../Body/Swimlane/Cell/hovering-state-for-collapsed-column-mixin";
 
 @Component({
-    components: { CardsInColumnCount }
+    components: { CardsInColumnCount },
 })
 export default class CollapsedLabel extends Mixins(
     ExpandCollapsedColumnMixin,

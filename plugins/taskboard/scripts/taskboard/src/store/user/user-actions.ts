@@ -33,9 +33,9 @@ export async function setPreference(
 
     await patch(`/api/v1/users/${encodeURIComponent(user_id)}/preferences`, {
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
         },
-        body: JSON.stringify(preference)
+        body: JSON.stringify(preference),
     }).catch(() => {
         // no display of error
         // we don't need to stop the flow of the users just because a user pref has not been saved

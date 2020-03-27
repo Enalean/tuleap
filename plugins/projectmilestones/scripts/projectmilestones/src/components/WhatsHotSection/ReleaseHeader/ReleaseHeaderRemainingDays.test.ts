@@ -43,13 +43,13 @@ describe("ReleaseHeaderRemainingDays", () => {
 
     beforeEach(() => {
         store_options = {
-            state: {}
+            state: {},
         };
 
         component_options = {
             propsData: {
-                release_data
-            }
+                release_data,
+            },
         };
     });
 
@@ -58,11 +58,11 @@ describe("ReleaseHeaderRemainingDays", () => {
             release_data = {
                 id: 2,
                 number_days_until_end: 10,
-                number_days_since_start: 0
+                number_days_since_start: 0,
             } as MilestoneData;
 
             component_options.propsData = {
-                release_data
+                release_data,
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -81,11 +81,11 @@ describe("ReleaseHeaderRemainingDays", () => {
         it("When there number of start days but null, Then 0 is displayed and a message in tooltip", async () => {
             release_data = {
                 id: 2,
-                number_days_since_start: null
+                number_days_since_start: null,
             } as MilestoneData;
 
             component_options.propsData = {
-                release_data
+                release_data,
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -105,11 +105,11 @@ describe("ReleaseHeaderRemainingDays", () => {
             release_data = {
                 id: 2,
                 number_days_until_end: -10,
-                number_days_since_start: -10
+                number_days_since_start: -10,
             } as MilestoneData;
 
             component_options.propsData = {
-                release_data
+                release_data,
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -130,11 +130,11 @@ describe("ReleaseHeaderRemainingDays", () => {
             release_data = {
                 id: 2,
                 number_days_until_end: -10,
-                number_days_since_start: 10
+                number_days_since_start: 10,
             } as MilestoneData;
 
             component_options.propsData = {
-                release_data
+                release_data,
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -155,11 +155,11 @@ describe("ReleaseHeaderRemainingDays", () => {
             release_data = {
                 id: 2,
                 number_days_until_end: 0,
-                number_days_since_start: 10
+                number_days_since_start: 10,
             } as MilestoneData;
 
             component_options.propsData = {
-                release_data
+                release_data,
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -183,11 +183,11 @@ describe("ReleaseHeaderRemainingDays", () => {
             release_data = {
                 id: 2,
                 number_days_since_start: 10,
-                number_days_until_end: null
+                number_days_until_end: null,
             } as MilestoneData;
 
             component_options.propsData = {
-                release_data
+                release_data,
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -207,11 +207,11 @@ describe("ReleaseHeaderRemainingDays", () => {
             release_data = {
                 id: 2,
                 number_days_until_end: 5,
-                number_days_since_start: 5
+                number_days_since_start: 5,
             } as MilestoneData;
 
             component_options.propsData = {
-                release_data
+                release_data,
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -231,11 +231,11 @@ describe("ReleaseHeaderRemainingDays", () => {
             release_data = {
                 id: 2,
                 number_days_until_end: 2,
-                number_days_since_start: 8
+                number_days_since_start: 8,
             } as MilestoneData;
 
             component_options.propsData = {
-                release_data
+                release_data,
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -255,11 +255,11 @@ describe("ReleaseHeaderRemainingDays", () => {
             release_data = {
                 id: 2,
                 number_days_until_end: 1,
-                number_days_since_start: 10
+                number_days_since_start: 10,
             } as MilestoneData;
 
             component_options.propsData = {
-                release_data
+                release_data,
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);

@@ -30,7 +30,7 @@ export function validateFileField(file_value_model, text_field_value_models, fol
         return { field_id, value: [] };
     }
 
-    const filtered_value = value.filter(file_id => {
+    const filtered_value = value.filter((file_id) => {
         const file_added_by_text_field = findFileThatWasAddedByATextField(
             file_value_model.images_added_by_text_fields,
             file_id

@@ -28,24 +28,24 @@ describe("FieldDescription -", () => {
     let factory: Wrapper<FieldDescription>;
     beforeEach(async () => {
         const state: State = {
-            is_description_required: false
+            is_description_required: false,
         } as State;
 
         const getters = {
             has_error: false,
-            is_template_selected: false
+            is_template_selected: false,
         };
 
         const store_options = {
             state,
-            getters
+            getters,
         };
 
         const store = createStoreMock(store_options);
 
         factory = shallowMount(FieldDescription, {
             localVue: await createProjectRegistrationLocalVue(),
-            mocks: { $store: store }
+            mocks: { $store: store },
         });
     });
     it("add correct attribute when description is required", () => {

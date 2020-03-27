@@ -28,7 +28,7 @@ describe("CustomMetadataDate", () => {
         factory = (props = {}) => {
             return shallowMount(CustomMetadataDate, {
                 localVue,
-                propsData: { ...props }
+                propsData: { ...props },
             });
         };
     });
@@ -37,7 +37,7 @@ describe("CustomMetadataDate", () => {
             value: "2019-06-30T00:00:00+03:00",
             is_required: true,
             name: "date field",
-            type: "text"
+            type: "text",
         };
 
         const wrapper = factory({ currentlyUpdatedItemMetadata, value: "" });
@@ -49,7 +49,7 @@ describe("CustomMetadataDate", () => {
             value: "2019-06-30T00:00:00+03:00",
             is_required: true,
             name: "date field",
-            type: "text"
+            type: "text",
         };
 
         const wrapper = factory({ currentlyUpdatedItemMetadata, value: "" });

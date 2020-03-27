@@ -27,7 +27,7 @@ describe("Persistent storage with an expiration", () => {
         date_now_spy = jest.spyOn(Date, "now").mockImplementation(() => current_time);
     });
 
-    afterEach(function() {
+    afterEach(function () {
         localStorage.clear();
     });
 

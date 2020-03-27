@@ -22,12 +22,12 @@ function FilterTrackerReportService(SharedPropertiesService) {
         },
         getSelectableReports() {
             return self.selectable_reports;
-        }
+        },
     });
 
     function initTrackerReports(tracker_reports) {
         self.tracker_reports = tracker_reports;
-        self.selectable_reports = self.tracker_reports.filter(report => report.selectable);
+        self.selectable_reports = self.tracker_reports.filter((report) => report.selectable);
     }
 
     function getSelectedFilterTrackerReportId() {
@@ -36,7 +36,7 @@ function FilterTrackerReportService(SharedPropertiesService) {
         }
 
         const selected_filter_tracker_report = self.selectable_reports.find(
-            report => report.selected
+            (report) => report.selected
         );
 
         if (selected_filter_tracker_report) {
@@ -50,7 +50,7 @@ function FilterTrackerReportService(SharedPropertiesService) {
         if (self.selectable_reports.length === 0) {
             return false;
         }
-        return self.selectable_reports.some(report => report.selected);
+        return self.selectable_reports.some((report) => report.selected);
     }
 
     function changeSelectableReports(report_ids) {

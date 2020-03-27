@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-!(function($) {
-    $(function() {
+!(function ($) {
+    $(function () {
         var form = $("#siteadmin-access-anonymous");
         if (form.length === 0) {
             return;
@@ -27,7 +27,7 @@
         var current_access_mode = form.attr("data-current-access-mode"),
             nb_restricted_users = form.attr("data-nb-restricted-users");
 
-        form.find("[name=access_mode]").click(function() {
+        form.find("[name=access_mode]").click(function () {
             enableSubmitButton();
 
             if (current_access_mode === "restricted" && nb_restricted_users > 0) {
@@ -45,7 +45,7 @@
             }
         });
 
-        form.find("[type=text]").keydown(function() {
+        form.find("[type=text]").keydown(function () {
             enableSubmitButton();
         });
 
@@ -53,11 +53,11 @@
             $("#siteadmin-access-customize-ugroup-labels").show();
         }
 
-        $("#toggle-anonymous-can-see-site-homepage").change(function() {
+        $("#toggle-anonymous-can-see-site-homepage").change(function () {
             $(this)[0].form.submit();
         });
 
-        $("#toggle-anonymous-can-see-contact").change(function() {
+        $("#toggle-anonymous-can-see-contact").change(function () {
             $(this)[0].form.submit();
         });
 

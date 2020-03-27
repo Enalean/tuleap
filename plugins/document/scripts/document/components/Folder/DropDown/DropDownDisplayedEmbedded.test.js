@@ -28,19 +28,19 @@ describe("DropDownDisplayedEmbedded", () => {
         state = {
             currently_previewed_item: {
                 id: 42,
-                title: "current folder title"
-            }
+                title: "current folder title",
+            },
         };
 
         store_options = {
-            state
+            state,
         };
         store = createStoreMock(store_options);
         factory = (props = {}) => {
             return shallowMount(DropDownDisplayedEmbedded, {
                 localVue,
                 propsData: { ...props },
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
     });

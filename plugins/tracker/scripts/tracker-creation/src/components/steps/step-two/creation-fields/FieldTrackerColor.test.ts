@@ -28,7 +28,7 @@ const mocked_jquery = {
     on: jest.fn(),
     off: jest.fn(),
     val: jest.fn(),
-    trigger: jest.fn()
+    trigger: jest.fn(),
 };
 
 jest.mock("jquery", () => {
@@ -43,11 +43,11 @@ describe("FieldTrackerColor", () => {
                     state: {
                         tracker_to_be_created,
                         color_picker_data: [{ id: "peggy-pink", text: "" }],
-                        default_tracker_color: "inca-silver"
-                    } as State
-                })
+                        default_tracker_color: "inca-silver",
+                    } as State,
+                }),
             },
-            localVue: await createTrackerCreationLocalVue()
+            localVue: await createTrackerCreationLocalVue(),
         });
     }
 
@@ -62,7 +62,7 @@ describe("FieldTrackerColor", () => {
         await getWrapper({
             name: "Bugs",
             shortname: "bugs",
-            color: "peggy-pink"
+            color: "peggy-pink",
         });
 
         expect(mocked_jquery.val).toHaveBeenCalledWith("peggy-pink");
@@ -72,7 +72,7 @@ describe("FieldTrackerColor", () => {
         await getWrapper({
             name: "Bugs",
             shortname: "bugs",
-            color: "jône et rôse"
+            color: "jône et rôse",
         });
 
         expect(mocked_jquery.val).toHaveBeenCalledWith("inca-silver");

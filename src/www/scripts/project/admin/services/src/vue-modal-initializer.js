@@ -28,7 +28,7 @@ export function buildCreateModalCallback(vue_mount_point_id, RootComponent) {
         minimalRank,
         csrfToken,
         csrfTokenName,
-        allowedIcons
+        allowedIcons,
     } = vue_mount_point.dataset;
 
     return () => {
@@ -38,8 +38,8 @@ export function buildCreateModalCallback(vue_mount_point_id, RootComponent) {
                 minimal_rank: Number.parseInt(minimalRank, 10),
                 csrf_token_name: csrfTokenName,
                 csrf_token: csrfToken,
-                allowed_icons: JSON.parse(allowedIcons)
-            }
+                allowed_icons: JSON.parse(allowedIcons),
+            },
         }).$mount(vue_mount_point);
     };
 }

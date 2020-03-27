@@ -43,25 +43,25 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function initModals() {
-    document.addEventListener("click", event => {
+    document.addEventListener("click", (event) => {
         const button = event.target;
         const allowed_ids = [
             "project-admin-ugroup-add-binding",
             "project-admin-ugroups-modal",
-            "project-admin-delete-binding"
+            "project-admin-delete-binding",
         ];
         const is_button_id_allowed = allowed_ids.includes(button.id);
         const allowed_classes = [
             "project-admin-delete-ugroups-modal",
-            "project-admin-remove-user-from-group"
+            "project-admin-remove-user-from-group",
         ];
-        const is_button_classlist_contain_allowed_class = allowed_classes.some(classname =>
+        const is_button_classlist_contain_allowed_class = allowed_classes.some((classname) =>
             button.classList.contains(classname)
         );
 
         if (is_button_id_allowed || is_button_classlist_contain_allowed_class) {
             const modal = createModal(document.getElementById(button.dataset.targetModalId), {
-                destroy_on_hide: true
+                destroy_on_hide: true,
             });
 
             if (button.classList.contains("project-admin-remove-user-from-group")) {
@@ -167,8 +167,8 @@ async function initModalOrSendForm(identifier) {
 
     const response = await get("/api/v1/user_groups/" + ugroup_identifier + "/users", {
         params: {
-            query: JSON.stringify({ identifier })
-        }
+            query: JSON.stringify({ identifier }),
+        },
     });
     const users = await response.json();
 

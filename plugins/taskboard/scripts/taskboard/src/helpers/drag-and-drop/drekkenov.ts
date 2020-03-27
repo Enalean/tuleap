@@ -26,7 +26,7 @@ export {
     DragCallbackParameter,
     DragDropCallbackParameter,
     PossibleDropCallbackParameter,
-    SuccessfulDropCallbackParameter
+    SuccessfulDropCallbackParameter,
 } from "./types";
 
 /**
@@ -46,7 +46,7 @@ export function init(options: DrekkenovInitOptions): Drekkenov {
         destroy(): void {
             state.cleanup();
             document.removeEventListener("dragstart", dragStart);
-        }
+        },
     };
     return drekkenov;
 }

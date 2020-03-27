@@ -30,10 +30,10 @@ describe("TrackerFromAnotherProject", () => {
         return shallowMount(TrackerFromAnotherProjectSelector, {
             mocks: {
                 $store: createStoreMock({
-                    state
-                })
+                    state,
+                }),
             },
-            localVue: await createTrackerCreationLocalVue()
+            localVue: await createTrackerCreationLocalVue(),
         });
     }
 
@@ -42,7 +42,7 @@ describe("TrackerFromAnotherProject", () => {
         const helpdesk_project: ProjectWithTrackers = {
             id: "101",
             name: "Helpdesk",
-            trackers: [{ id: "103", name: "SLA", tlp_color: "peggy-pink" }, bugs_tracker]
+            trackers: [{ id: "103", name: "SLA", tlp_color: "peggy-pink" }, bugs_tracker],
         };
 
         const wrapper = await getWrapper({
@@ -55,23 +55,20 @@ describe("TrackerFromAnotherProject", () => {
                     name: "Scrum",
                     trackers: [
                         { id: "105", name: "Sprints", tlp_color: "peggy-pink" },
-                        { id: "106", name: "User stories", tlp_color: "peggy-pink" }
-                    ]
-                }
-            ]
+                        { id: "106", name: "User stories", tlp_color: "peggy-pink" },
+                    ],
+                },
+            ],
         } as State);
 
         const project_select = wrapper.find("[data-test=project-select]");
 
-        project_select
-            .findAll("option")
-            .at(1)
-            .setSelected();
+        project_select.findAll("option").at(1).setSelected();
 
         const tracker_select = wrapper.find("[data-test=project-tracker-select]");
         const tracker_option_names = tracker_select
             .findAll("option")
-            .wrappers.map(wrapper => wrapper.text());
+            .wrappers.map((wrapper) => wrapper.text());
 
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
             "setSelectedProject",
@@ -93,7 +90,7 @@ describe("TrackerFromAnotherProject", () => {
         const helpdesk_project: ProjectWithTrackers = {
             id: "101",
             name: "Helpdesk",
-            trackers: [sla_tracker, bugs_tracker]
+            trackers: [sla_tracker, bugs_tracker],
         };
 
         const wrapper = await getWrapper({
@@ -106,18 +103,15 @@ describe("TrackerFromAnotherProject", () => {
                     name: "Scrum",
                     trackers: [
                         { id: "105", name: "Sprints", tlp_color: "peggy-pink" },
-                        { id: "106", name: "User stories", tlp_color: "peggy-pink" }
-                    ]
-                }
-            ]
+                        { id: "106", name: "User stories", tlp_color: "peggy-pink" },
+                    ],
+                },
+            ],
         } as State);
 
         const tracker_select = wrapper.find("[data-test=project-tracker-select]");
 
-        tracker_select
-            .findAll("option")
-            .at(1)
-            .setSelected();
+        tracker_select.findAll("option").at(1).setSelected();
 
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
             "setSelectedProjectTrackerTemplate",

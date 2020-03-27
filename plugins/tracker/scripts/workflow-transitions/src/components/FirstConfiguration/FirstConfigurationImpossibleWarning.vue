@@ -40,7 +40,7 @@ export default {
                 .$gettext(`There is no selectbox bound to static values in your tracker! Please
             <a href="%{ url }">add one</a> before configuring the workflow.`);
             return this.$gettextInterpolate(translated, { url: this.edit_fields_url });
-        }
-    }
+        },
+    },
 };
 </script>

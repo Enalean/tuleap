@@ -31,9 +31,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     Vue.use(GettextPlugin, {
         translations: {
-            fr: french_translations.messages
+            fr: french_translations.messages,
         },
-        silent: true
+        silent: true,
     });
 
     const locale = document.body.dataset.userLocale;
@@ -41,6 +41,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const RootComponent = Vue.extend(SvnPermissions);
     new RootComponent({
-        propsData: { ...vue_mount_point.dataset }
+        propsData: { ...vue_mount_point.dataset },
     }).$mount(vue_mount_point);
 });

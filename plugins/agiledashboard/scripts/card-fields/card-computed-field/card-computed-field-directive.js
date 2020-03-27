@@ -7,8 +7,8 @@ function cardComputedField() {
         restrict: "AE",
         scope: {
             card_field: "=field",
-            filter_terms: "=filterTerms"
+            filter_terms: "=filterTerms",
         },
-        templateUrl: "card-computed-field.tpl.html"
+        templateUrl: "card-computed-field.tpl.html",
     };
 }

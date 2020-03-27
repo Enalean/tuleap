@@ -22,9 +22,7 @@
         <div class="tlp-dropdown-split-button">
             <create-new-item-version-button
                 v-bind:item="item"
-                v-bind:button-classes="
-                    'tlp-button-primary tlp-button-outline tlp-button-small tlp-dropdown-split-button-main'
-                "
+                v-bind:button-classes="'tlp-button-primary tlp-button-outline tlp-button-small tlp-dropdown-split-button-main'"
                 v-bind:icon-classes="'fa fa-mail-forward tlp-button-icon'"
                 v-if="!is_item_a_wiki_with_approval_table && !is_item_a_folder(item)"
                 data-test="document-quicklook-action-button-new-version"
@@ -90,16 +88,16 @@ export default {
         DropDownButton,
         CreateNewItemVersionButton,
         NewItemButton,
-        DropDownMenu
+        DropDownMenu,
     },
     props: {
-        item: Object
+        item: Object,
     },
     computed: {
         ...mapGetters(["is_item_a_folder"]),
         is_item_a_wiki_with_approval_table() {
             return this.item.type === TYPE_WIKI && this.item.approval_table !== null;
-        }
-    }
+        },
+    },
 };
 </script>

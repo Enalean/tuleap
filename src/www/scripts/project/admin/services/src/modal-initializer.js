@@ -73,16 +73,16 @@ function setupDeleteButtons() {
 function initVueGettext() {
     Vue.use(GettextPlugin, {
         translations: {
-            fr: french_translations.messages
+            fr: french_translations.messages,
         },
-        silent: true
+        silent: true,
     });
     Vue.config.language = document.body.dataset.userLocale;
 }
 
 function createAndShowModal(button) {
     const modal = createModal(document.getElementById(button.dataset.targetModalId), {
-        destroy_on_hide: true
+        destroy_on_hide: true,
     });
 
     modal.show();

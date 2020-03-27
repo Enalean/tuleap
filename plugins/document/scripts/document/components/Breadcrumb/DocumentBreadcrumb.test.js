@@ -27,14 +27,14 @@ describe("DocumentBreadcrumb", () => {
     beforeEach(() => {
         state = {};
         store_options = {
-            state
+            state,
         };
         store = createStoreMock(store_options);
 
         component_options = {
             localVue,
             propsData: {},
-            mocks: { $store: store }
+            mocks: { $store: store },
         };
     });
     it(`Given user is docman administrator
@@ -69,7 +69,7 @@ describe("DocumentBreadcrumb", () => {
             { id: 4, title: "My fourth folder" },
             { id: 5, title: "My fifth folder" },
             { id: 6, title: "My sixth folder" },
-            { id: 7, title: "My seventh folder" }
+            { id: 7, title: "My seventh folder" },
         ];
 
         const wrapper = shallowMount(DocumentBreadcrumb, component_options);
@@ -89,7 +89,7 @@ describe("DocumentBreadcrumb", () => {
             { id: 4, title: "My fourth folder" },
             { id: 5, title: "My fifth folder" },
             { id: 6, title: "My sixth folder" },
-            { id: 7, title: "My seventh folder" }
+            { id: 7, title: "My seventh folder" },
         ];
 
         const wrapper = shallowMount(DocumentBreadcrumb, component_options);
@@ -108,7 +108,7 @@ describe("DocumentBreadcrumb", () => {
             { id: 2, title: "My second folder", parent_id: 0 },
             { id: 3, title: "My third folder", parent_id: 1 },
             { id: 4, title: "My fourth folder", parent_id: 2 },
-            { id: 5, title: "My fifth folder", parent_id: 2 }
+            { id: 5, title: "My fifth folder", parent_id: 2 },
         ];
 
         const wrapper = shallowMount(DocumentBreadcrumb, component_options);
@@ -129,7 +129,7 @@ describe("DocumentBreadcrumb", () => {
             { id: 2, title: "My second folder", parent_id: 0 },
             { id: 3, title: "My third folder", parent_id: 1 },
             { id: 4, title: "My fourth folder", parent_id: 2 },
-            { id: 5, title: "My fifth folder", parent_id: 2 }
+            { id: 5, title: "My fifth folder", parent_id: 2 },
         ];
 
         const wrapper = shallowMount(DocumentBreadcrumb, component_options);
@@ -144,7 +144,7 @@ describe("DocumentBreadcrumb", () => {
         store.state.currently_previewed_item = {
             id: 6,
             title: "My embedded content",
-            parent_id: 0
+            parent_id: 0,
         };
         store.state.is_user_administrator = false;
         store.state.is_loading_ascendant_hierarchy = false;
@@ -153,7 +153,7 @@ describe("DocumentBreadcrumb", () => {
             { id: 2, title: "My second folder", parent_id: 0 },
             { id: 3, title: "My third folder", parent_id: 1 },
             { id: 4, title: "My fourth folder", parent_id: 2 },
-            { id: 5, title: "My fifth folder", parent_id: 2 }
+            { id: 5, title: "My fifth folder", parent_id: 2 },
         ];
 
         const wrapper = shallowMount(DocumentBreadcrumb, component_options);

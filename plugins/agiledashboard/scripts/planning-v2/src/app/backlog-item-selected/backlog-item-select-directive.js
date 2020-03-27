@@ -9,13 +9,13 @@ function BacklogItemSelect($timeout, BacklogItemSelectedService) {
         restrict: "A",
         scope: {
             backlog_item: "=backlogItemSelect",
-            backlog_item_index: "=backlogItemIndex"
+            backlog_item_index: "=backlogItemIndex",
         },
-        link: link
+        link: link,
     };
 
     function link(scope, element) {
-        element.bind("click", function(event) {
+        element.bind("click", function (event) {
             if (event.ctrlKey || event.metaKey) {
                 event.stopPropagation();
                 backlogItemCtrlClicked(element);
@@ -66,7 +66,7 @@ function BacklogItemSelect($timeout, BacklogItemSelectedService) {
             scope.backlog_item.shaking = true;
             help_text.addClass("focus");
 
-            $timeout(function() {
+            $timeout(function () {
                 scope.backlog_item.shaking = false;
                 help_text.removeClass("focus");
             }, 750);

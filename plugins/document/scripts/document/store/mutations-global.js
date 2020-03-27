@@ -35,7 +35,7 @@ export {
     setProjectUserGroups,
     toggleQuickLook,
     beginLoadingCurrentlyPreviewedItem,
-    stopLoadingCurrentlyPreviewedItem
+    stopLoadingCurrentlyPreviewedItem,
 };
 
 function initApp(
@@ -52,7 +52,7 @@ function initApp(
         embedded_are_allowed,
         is_deletion_allowed,
         is_item_status_metadata_used,
-        is_obsolescence_date_metadata_used
+        is_obsolescence_date_metadata_used,
     ]
 ) {
     state.user_id = user_id;
@@ -95,7 +95,7 @@ function stopLoadingAscendantHierarchy(state) {
 
 function appendFolderToAscendantHierarchy(state, folder) {
     const parent_index_in_hierarchy = state.current_folder_ascendant_hierarchy.findIndex(
-        item => item.id === folder.parent_id
+        (item) => item.id === folder.parent_id
     );
 
     if (parent_index_in_hierarchy !== -1) {
@@ -103,7 +103,7 @@ function appendFolderToAscendantHierarchy(state, folder) {
         return;
     }
 
-    const folder_index = state.folder_content.findIndex(item => item.id === folder.id);
+    const folder_index = state.folder_content.findIndex((item) => item.id === folder.id);
     const ascendants = state.folder_content.slice(0, folder_index);
 
     let next_parent_id = folder.parent_id;
@@ -127,7 +127,7 @@ function setCurrentFolder(state, folder) {
 function replaceCurrentFolder(state, folder) {
     state.current_folder = folder;
     const folder_in_hierarchy_index = state.current_folder_ascendant_hierarchy.findIndex(
-        item => item.id === folder.id
+        (item) => item.id === folder.id
     );
     if (folder_in_hierarchy_index >= 0) {
         state.current_folder_ascendant_hierarchy[folder_in_hierarchy_index] = folder;

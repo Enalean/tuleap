@@ -35,16 +35,16 @@ describe("Column module actions", () => {
             rootState: {
                 milestone_id: 42,
                 user: {
-                    user_id: 101
-                }
-            } as RootState
+                    user_id: 101,
+                },
+            } as RootState,
         } as unknown) as ActionContext<ColumnState, RootState>;
     });
 
     describe("expandColumn", () => {
         it(`When the column is expanded, the user pref is stored`, async () => {
             const column: ColumnDefinition = {
-                id: 69
+                id: 69,
             } as ColumnDefinition;
 
             await actions.expandColumn(context, column);
@@ -60,7 +60,7 @@ describe("Column module actions", () => {
     describe("collapseColumn", () => {
         it(`When the column is collapsed, the user pref is stored`, async () => {
             const column: ColumnDefinition = {
-                id: 69
+                id: 69,
             } as ColumnDefinition;
 
             await actions.collapseColumn(context, column);

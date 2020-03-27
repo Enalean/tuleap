@@ -23,7 +23,7 @@ import {
     getGroupOfLine,
     getLineHandles,
     getNextLine,
-    hasNextLine
+    hasNextLine,
 } from "./side-by-side-lines-state.js";
 
 export { buildCodePlaceholderWidget };
@@ -43,7 +43,7 @@ function buildCodePlaceholderWidget(line, left_code_mirror, right_code_mirror) {
         handle,
         widget_height,
         display_above_line,
-        is_comment_placeholder: false
+        is_comment_placeholder: false,
     };
 }
 

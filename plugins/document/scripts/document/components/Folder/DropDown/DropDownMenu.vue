@@ -22,7 +22,7 @@
         class="tlp-dropdown-menu document-dropdown-menu"
         v-bind:class="{
             'tlp-dropdown-menu-large tlp-dropdown-menu-top': isInFolderEmptyState,
-            'tlp-dropdown-menu-right': isInQuickLookMode
+            'tlp-dropdown-menu-right': isInQuickLookMode,
         }"
         role="menu"
     >
@@ -96,30 +96,30 @@ export default {
         DropDownSeparator,
         CutItem,
         CopyItem,
-        PasteItem
+        PasteItem,
     },
     props: {
         isInFolderEmptyState: Boolean,
         isInQuickLookMode: Boolean,
         hideItemTitle: Boolean,
         hideDetailsEntry: Boolean,
-        item: Object
+        item: Object,
     },
     data() {
         return {
             NOTIFS_PANE_NAME: "notifications",
             HISTORY_PANE_NAME: "history",
-            APPROVAL_TABLES_PANE_NAME: "approval"
+            APPROVAL_TABLES_PANE_NAME: "approval",
         };
     },
     computed: {
         ...mapState(["project_id", "is_deletion_allowed"]),
-        ...mapGetters(["is_item_an_empty_document"])
+        ...mapGetters(["is_item_an_empty_document"]),
     },
     methods: {
         getUrlForPane(pane_name) {
             return `/plugins/docman/?group_id=${this.project_id}&id=${this.item.id}&action=details&section=${pane_name}`;
-        }
-    }
+        },
+    },
 };
 </script>

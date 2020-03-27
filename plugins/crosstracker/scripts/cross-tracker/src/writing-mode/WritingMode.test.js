@@ -23,7 +23,7 @@ import { createStore } from "../store/index.js";
 import WritingMode from "./WritingMode.vue";
 import {
     default as WritingCrossTrackerReport,
-    TooManyTrackersSelectedError
+    TooManyTrackersSelectedError,
 } from "./writing-cross-tracker-report.js";
 import * as rest_querier from "../api/rest-querier.js";
 
@@ -37,7 +37,7 @@ describe("WritingMode", () => {
 
         Vue.use(GetTextPlugin, {
             translations: {},
-            silent: true
+            silent: true,
         });
         Writing = Vue.extend(WritingMode);
         writingCrossTrackerReport = new WritingCrossTrackerReport();
@@ -47,8 +47,8 @@ describe("WritingMode", () => {
         const vm = new Writing({
             store: createStore(),
             propsData: {
-                writingCrossTrackerReport
-            }
+                writingCrossTrackerReport,
+            },
         });
         vm.$mount();
 
@@ -72,13 +72,13 @@ describe("WritingMode", () => {
                 {
                     tracker_id: 29,
                     tracker_label: "charry",
-                    project_label: "fanatical"
+                    project_label: "fanatical",
                 },
                 {
                     tracker_id: 51,
                     tracker_label: "monodynamism",
-                    project_label: "surly"
-                }
+                    project_label: "surly",
+                },
             ]);
         });
     });
@@ -128,8 +128,8 @@ describe("WritingMode", () => {
                 {
                     tracker_id: 61,
                     tracker_label: "Dipneumona",
-                    project_label: "undiuretic"
-                }
+                    project_label: "undiuretic",
+                },
             ]);
         });
     });
@@ -143,7 +143,7 @@ describe("WritingMode", () => {
 
             vm.addTrackerToSelection({
                 selected_project,
-                selected_tracker
+                selected_tracker,
             });
 
             expect(writingCrossTrackerReport.addTracker).toHaveBeenCalledWith(
@@ -154,8 +154,8 @@ describe("WritingMode", () => {
                 {
                     tracker_id: 53,
                     tracker_label: "observingly",
-                    project_label: "ergatogyne"
-                }
+                    project_label: "ergatogyne",
+                },
             ]);
         });
 
@@ -170,7 +170,7 @@ describe("WritingMode", () => {
 
             vm.addTrackerToSelection({
                 selected_project,
-                selected_tracker
+                selected_tracker,
             });
 
             expect(storeCommitSpy).toHaveBeenCalledWith("setErrorMessage", expect.any(String));

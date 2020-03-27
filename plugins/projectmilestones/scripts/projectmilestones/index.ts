@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 label_timeframe,
                 user_can_view_sub_milestones_planning,
                 burnup_mode === "count" ? BurnupMode.COUNT : BurnupMode.EFFORT
-            )
+            ),
         }).$mount(widget);
     }
 });

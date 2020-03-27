@@ -28,7 +28,7 @@ function UpdateReviewersModalService(TlpModalService) {
     const self = this;
 
     Object.assign(self, {
-        showModal
+        showModal,
     });
 
     function showModal(pull_request, reviewers) {
@@ -38,9 +38,9 @@ function UpdateReviewersModalService(TlpModalService) {
             controllerAs: "update_reviewers_modal",
             tlpModalOptions: {
                 keyboard: true,
-                backdrop: "static"
+                backdrop: "static",
             },
-            resolve: { pull_request, reviewers }
+            resolve: { pull_request, reviewers },
         });
     }
 }

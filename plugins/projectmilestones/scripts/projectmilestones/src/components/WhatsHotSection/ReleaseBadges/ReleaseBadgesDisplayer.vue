@@ -47,8 +47,8 @@ import { openSprintsExist } from "../../../helpers/milestones-sprints-helper";
         ReleaseBadgesDisplayerIfOpenSprints,
         ReleaseBadgesClosedSprints,
         ReleaseOthersBadges,
-        ReleaseBadgesAllSprints
-    }
+        ReleaseBadgesAllSprints,
+    },
 })
 export default class ReleaseBadgesDisplayer extends Vue {
     @Prop()

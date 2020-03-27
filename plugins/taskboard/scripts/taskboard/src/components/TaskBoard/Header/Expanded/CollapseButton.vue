@@ -49,7 +49,7 @@ export default class CollapseButton extends Vue {
 
     get title(): string {
         return this.$gettextInterpolate(this.$gettext('Collapse "%{ label }" column'), {
-            label: this.column.label
+            label: this.column.label,
         });
     }
 }

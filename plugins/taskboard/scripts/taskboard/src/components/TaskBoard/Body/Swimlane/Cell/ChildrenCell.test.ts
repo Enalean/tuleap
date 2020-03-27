@@ -34,14 +34,14 @@ function createWrapper(
         id: 2,
         label: "To do",
         mappings: [{ tracker_id: 7, accepts: [{ id: 49 }] }],
-        is_collapsed
+        is_collapsed,
     } as ColumnDefinition;
 
     const done: ColumnDefinition = {
         id: 3,
         label: "Done",
         mappings: [{ tracker_id: 7, accepts: [{ id: 50 }] }],
-        is_collapsed
+        is_collapsed,
     } as ColumnDefinition;
 
     return shallowMount(ChildrenCell, {
@@ -49,14 +49,14 @@ function createWrapper(
             $store: createStoreMock({
                 state: {
                     column: { columns: [todo, done] },
-                    swimlane: {}
+                    swimlane: {},
                 } as RootState,
                 getters: {
-                    "swimlane/cards_in_cell": (): Card[] => cards_in_cell
-                }
-            })
+                    "swimlane/cards_in_cell": (): Card[] => cards_in_cell,
+                },
+            }),
         },
-        propsData: { swimlane, column: todo, column_index: 0 }
+        propsData: { swimlane, column: todo, column_index: 0 },
     });
 }
 
@@ -67,7 +67,7 @@ describe("ChildrenCell", () => {
         const swimlane: Swimlane = {
             card: { id: 43 } as Card,
             children_cards: [{ id: 104, tracker_id: 7, mapped_list_value: { id: 50 } } as Card],
-            is_loading_children_cards: true
+            is_loading_children_cards: true,
         } as Swimlane;
         const wrapper = createWrapper(swimlane, false, []);
 
@@ -82,9 +82,9 @@ describe("ChildrenCell", () => {
             children_cards: [
                 { id: 95, tracker_id: 7, mapped_list_value: { id: 49 } } as Card,
                 { id: 102, tracker_id: 7, mapped_list_value: { id: 49 } } as Card,
-                { id: 104, tracker_id: 7, mapped_list_value: { id: 49 } } as Card
+                { id: 104, tracker_id: 7, mapped_list_value: { id: 49 } } as Card,
             ],
-            is_loading_children_cards: true
+            is_loading_children_cards: true,
         } as Swimlane;
         const wrapper = createWrapper(swimlane, false, swimlane.children_cards);
 
@@ -99,9 +99,9 @@ describe("ChildrenCell", () => {
             children_cards: [
                 { id: 95, tracker_id: 7, mapped_list_value: { id: 49 } } as Card,
                 { id: 102, tracker_id: 7, mapped_list_value: { id: 49 } } as Card,
-                { id: 104, tracker_id: 7, mapped_list_value: { id: 49 } } as Card
+                { id: 104, tracker_id: 7, mapped_list_value: { id: 49 } } as Card,
             ],
-            is_loading_children_cards: false
+            is_loading_children_cards: false,
         } as Swimlane;
         const wrapper = createWrapper(swimlane, false, swimlane.children_cards);
 

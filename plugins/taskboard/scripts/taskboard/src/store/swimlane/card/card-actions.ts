@@ -24,7 +24,7 @@ import { RefreshCardMutationPayload, SwimlaneState } from "../type";
 import {
     getPostArtifactBody,
     getPutArtifactBody,
-    getPutArtifactBodyToAddChild
+    getPutArtifactBodyToAddChild,
 } from "../../../helpers/update-artifact";
 import { injectDefaultPropertiesInCard } from "../../../helpers/card-default";
 import { Card, Swimlane, Tracker, User } from "../../../type";
@@ -32,13 +32,13 @@ import pRetry from "p-retry";
 import { UserForPeoplePicker } from "./type";
 
 const headers = {
-    "Content-Type": "application/json"
+    "Content-Type": "application/json",
 };
 
 const retry_options = {
     minTimeout: 100,
     maxTimeout: 10000,
-    randomize: true
+    randomize: true,
 };
 
 export async function saveRemainingEffort(
@@ -50,7 +50,7 @@ export async function saveRemainingEffort(
     try {
         await patch(`/api/v1/taskboard_cards/${encodeURIComponent(card.id)}`, {
             headers,
-            body: JSON.stringify({ remaining_effort: new_remaining_effort.value })
+            body: JSON.stringify({ remaining_effort: new_remaining_effort.value }),
         });
         context.commit("resetSavingRemainingEffort", card);
     } catch (error) {
@@ -68,11 +68,11 @@ export async function saveCard(
     try {
         await put(`/api/v1/artifacts/${encodeURIComponent(card.id)}`, {
             headers,
-            body: JSON.stringify(getPutArtifactBody(payload))
+            body: JSON.stringify(getPutArtifactBody(payload)),
         });
         context.commit("finishSavingCard", payload);
         const refreshed_card_response = await get(`/api/v1/taskboard_cards/${card.id}`, {
-            params: { milestone_id: context.rootState.milestone_id }
+            params: { milestone_id: context.rootState.milestone_id },
         });
         const refreshed_card = await refreshed_card_response.json();
         const refresh_payload: RefreshCardMutationPayload = { refreshed_card };
@@ -91,13 +91,13 @@ export async function addCard(
     try {
         const new_artifact_response = await post(`/api/v1/artifacts`, {
             headers,
-            body: JSON.stringify(getPostArtifactBody(payload, context.rootState.trackers))
+            body: JSON.stringify(getPostArtifactBody(payload, context.rootState.trackers)),
         });
         const new_artifact = await new_artifact_response.json();
 
         const [new_card] = await Promise.all([
             injectNewCardInStore(context, new_artifact.id, payload.swimlane),
-            linkCardToItsParent(context, new_artifact.id, payload)
+            linkCardToItsParent(context, new_artifact.id, payload),
         ]);
         context.commit("finishCreatingCard", new_card);
     } catch (error) {
@@ -120,7 +120,7 @@ async function injectNewCardInStore(
     card.is_being_saved = true;
     context.commit("addChildrenToSwimlane", {
         swimlane,
-        children_cards: [card]
+        children_cards: [card],
     });
     context.commit("cardIsHalfwayCreated");
 
@@ -134,7 +134,7 @@ function linkCardToItsParent(
 ): Promise<void> {
     return pRetry(
         () =>
-            tryToLinkCardToItsParent(context, new_artifact_id, payload).catch(error => {
+            tryToLinkCardToItsParent(context, new_artifact_id, payload).catch((error) => {
                 if (error.response.status !== 412) {
                     throw new pRetry.AbortError(error);
                 }
@@ -170,7 +170,7 @@ async function tryToLinkCardToItsParent(
                 new_artifact_id,
                 values
             )
-        )
+        ),
     });
 }
 
@@ -199,9 +199,9 @@ export async function loadPossibleAssignees(
                 (user): UserForPeoplePicker => ({
                     ...user,
                     text: user.display_name,
-                    id: Number(user.id)
+                    id: Number(user.id),
                 })
-            )
+            ),
         });
     } catch (error) {
         await context.dispatch("error/handleModalError", error, { root: true });

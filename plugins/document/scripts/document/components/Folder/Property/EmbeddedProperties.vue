@@ -43,11 +43,11 @@ export default {
     name: "EmbeddedProperties",
     props: {
         value: Object,
-        item: Object
+        item: Object,
     },
     data() {
         return {
-            editor: null
+            editor: null,
         };
     },
     computed: {
@@ -56,7 +56,7 @@ export default {
         },
         placeholder() {
             return this.$gettext("My content...");
-        }
+        },
     },
     mounted() {
         const text_area = this.$refs.embedded_editor;
@@ -78,13 +78,13 @@ export default {
                     "Redo",
                     "Link",
                     "Unlink",
-                    "Anchor"
+                    "Anchor",
                 ],
                 ["Image", "Table", "HorizontalRule", "SpecialChar", "-", "Source"],
                 "/",
                 ["Bold", "Italic", "Underline", "Strike", "Subscript", "Superscript", "-"],
-                ["RemoveFormat", "NumberedList", "BulletedList", "Format"]
-            ]
+                ["RemoveFormat", "NumberedList", "BulletedList", "Format"],
+            ],
         });
 
         this.editor.on("instanceReady", this.onInstanceReady);
@@ -110,7 +110,7 @@ export default {
             if (this.editor) {
                 this.editor.destroy();
             }
-        }
-    }
+        },
+    },
 };
 </script>

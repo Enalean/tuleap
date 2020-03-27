@@ -33,18 +33,18 @@ export function createRouter(): VueRouter {
             {
                 path: "/new",
                 name: "template",
-                component: AllProjectTemplates
+                component: AllProjectTemplates,
             },
             {
                 path: "/new-information",
                 name: "information",
-                component: ProjectInformation
+                component: ProjectInformation,
             },
             {
                 path: "/approval",
                 name: "approval",
-                component: ProjectApproval
-            }
-        ]
+                component: ProjectApproval,
+            },
+        ],
     });
 }

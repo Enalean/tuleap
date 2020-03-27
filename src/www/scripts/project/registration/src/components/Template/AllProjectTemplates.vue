@@ -58,8 +58,8 @@ import AdvancedTemplateList from "./Advanced/AdvancedTemplateList.vue";
         CompanyTemplatesList,
         TemplateFooter,
         NewProjectBoxes,
-        TuleapTemplateList
-    }
+        TuleapTemplateList,
+    },
 })
 export default class ProjectList extends Vue {}
 </script>

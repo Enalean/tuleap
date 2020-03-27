@@ -20,7 +20,7 @@ import { modal as createModal } from "tlp";
 document.addEventListener("DOMContentLoaded", () => {
     const matching_buttons = document.querySelectorAll(".delete-tv3-button");
 
-    [].forEach.call(matching_buttons, button => {
+    [].forEach.call(matching_buttons, (button) => {
         const modal_element = document.getElementById(button.dataset.modalId);
 
         if (modal_element) {

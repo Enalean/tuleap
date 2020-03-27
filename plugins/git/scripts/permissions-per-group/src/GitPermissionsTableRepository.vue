@@ -48,15 +48,15 @@ export default {
     components: {
         GitRepositoryTableSimplePermissions,
         GitRepositoryTableFineGrainedPermissionsRepository,
-        GitRepositoryTableFineGrainedPermission
+        GitRepositoryTableFineGrainedPermission,
     },
     props: {
         repository: Object,
-        filter: String
+        filter: String,
     },
     data() {
         return {
-            is_hidden: false
+            is_hidden: false,
         };
     },
     watch: {
@@ -69,7 +69,7 @@ export default {
 
             this.is_hidden = true;
             this.$emit("filtered", { hidden: this.is_hidden });
-        }
-    }
+        },
+    },
 };
 </script>

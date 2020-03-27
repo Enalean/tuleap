@@ -31,7 +31,7 @@ import { namespace } from "vuex-class";
 const user = namespace("user");
 
 @Component({
-    components: { BoardWithoutAnyColumnsErrorForUsers, BoardWithoutAnyColumnsErrorForAdmin }
+    components: { BoardWithoutAnyColumnsErrorForUsers, BoardWithoutAnyColumnsErrorForAdmin },
 })
 export default class BoardWithoutAnyColumnsError extends Vue {
     @user.State

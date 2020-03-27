@@ -45,11 +45,11 @@ export default {
     components: {
         FolderDefaultPropertiesForCreate,
         DescriptionMetadata,
-        TitleMetadata
+        TitleMetadata,
     },
     props: {
         currentlyUpdatedItem: Object,
-        parent: Object
-    }
+        parent: Object,
+    },
 };
 </script>

@@ -26,7 +26,7 @@ describe("ApprovalUpdateProperties", () => {
     beforeEach(() => {
         approval_update_factory = () => {
             return shallowMount(ApprovalUpdateProperties, {
-                localVue
+                localVue,
             });
         };
     });

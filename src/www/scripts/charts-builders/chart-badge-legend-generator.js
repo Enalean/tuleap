@@ -57,6 +57,6 @@ function getBadgeProperties(badge_value_selection, padding_width, padding_height
         width: width + 2 * padding_width,
         height: height + 2 * padding_height,
         x: x - padding_width,
-        y: -height + padding_height
+        y: -height + padding_height,
     };
 }

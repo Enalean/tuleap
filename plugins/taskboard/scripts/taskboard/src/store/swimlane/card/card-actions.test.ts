@@ -26,7 +26,7 @@ import { Card, Swimlane, Tracker, User } from "../../../type";
 import * as actions from "./card-actions";
 import {
     mockFetchError,
-    mockFetchSuccess
+    mockFetchSuccess,
 } from "../../../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper";
 import { ListField, TextField } from "./api-artifact-type";
 
@@ -43,23 +43,23 @@ describe("Card actions", () => {
             rootState: {
                 milestone_id: 42,
                 user: {
-                    user_id: 101
+                    user_id: 101,
                 },
                 trackers: [
                     {
                         id: 42,
-                        add_in_place: { child_tracker_id: 69, parent_artifact_link_field_id: 103 }
+                        add_in_place: { child_tracker_id: 69, parent_artifact_link_field_id: 103 },
                     } as Tracker,
                     {
                         id: 69,
                         title_field: { id: 123, is_string_field: true },
-                        artifact_link_field: { id: 111 }
-                    } as Tracker
-                ]
+                        artifact_link_field: { id: 111 },
+                    } as Tracker,
+                ],
             } as RootState,
             getters: {
-                have_possible_assignees_been_loaded_for_tracker: (): boolean => false
-            }
+                have_possible_assignees_been_loaded_for_tracker: (): boolean => false,
+            },
         } as unknown) as ActionContext<SwimlaneState, RootState>;
     });
 
@@ -68,7 +68,7 @@ describe("Card actions", () => {
             const card: Card = { id: 123 } as Card;
             const new_remaining_effort: NewRemainingEffortPayload = {
                 card,
-                value: 42
+                value: 42,
             };
 
             const tlpPatchMock = jest.spyOn(tlp, "patch");
@@ -81,11 +81,11 @@ describe("Card actions", () => {
             );
             expect(tlpPatchMock).toHaveBeenCalledWith(`/api/v1/taskboard_cards/123`, {
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    remaining_effort: 42
-                })
+                    remaining_effort: 42,
+                }),
             });
             expect(context.commit).toHaveBeenCalledWith("resetSavingRemainingEffort", card);
         });
@@ -94,7 +94,7 @@ describe("Card actions", () => {
             const card: Card = { id: 123 } as Card;
             const new_remaining_effort: NewRemainingEffortPayload = {
                 card,
-                value: 42
+                value: 42,
             };
 
             const tlpPatchMock = jest.spyOn(tlp, "patch");
@@ -117,13 +117,13 @@ describe("Card actions", () => {
             const tracker = {
                 id: 1,
                 title_field: { id: 1355, is_string_field: true },
-                assigned_to_field: { id: 1356 }
+                assigned_to_field: { id: 1356 },
             } as Tracker;
             const payload: UpdateCardPayload = {
                 card,
                 label: "Lorem",
                 assignees: [{ id: 123 }] as User[],
-                tracker: tracker
+                tracker: tracker,
             };
 
             const tlpPutMock = jest.spyOn(tlp, "put");
@@ -131,35 +131,35 @@ describe("Card actions", () => {
 
             const refreshed_card = { id: 123 } as Card;
             mockFetchSuccess(tlpGetMock, {
-                return_json: refreshed_card
+                return_json: refreshed_card,
             });
 
             await actions.saveCard(context, payload);
 
             expect(tlpPutMock).toHaveBeenCalledWith("/api/v1/artifacts/123", {
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
                     values: [
                         {
                             field_id: 1355,
-                            value: "Lorem"
+                            value: "Lorem",
                         } as TextField,
                         {
                             field_id: 1356,
-                            bind_value_ids: [123]
-                        } as ListField
-                    ]
-                })
+                            bind_value_ids: [123],
+                        } as ListField,
+                    ],
+                }),
             });
             expect(tlpGetMock).toHaveBeenCalledWith("/api/v1/taskboard_cards/123", {
                 params: {
-                    milestone_id: 42
-                }
+                    milestone_id: 42,
+                },
             });
             expect(context.commit).toHaveBeenCalledWith("refreshCard", {
-                refreshed_card
+                refreshed_card,
             } as RefreshCardMutationPayload);
             expect(context.commit).toHaveBeenCalledWith("startSavingCard", card);
             expect(context.commit).toHaveBeenCalledWith("finishSavingCard", payload);
@@ -172,7 +172,7 @@ describe("Card actions", () => {
                 card,
                 label: "Lorem",
                 assignees: [],
-                tracker
+                tracker,
             };
 
             const tlpPutMock = jest.spyOn(tlp, "put");
@@ -185,7 +185,7 @@ describe("Card actions", () => {
             expect(context.commit).not.toHaveBeenCalledWith("finishSavingCard", payload);
             expect(context.commit).toHaveBeenCalledWith("resetSavingCard", card);
             expect(context.dispatch).toHaveBeenCalledWith("error/handleModalError", error, {
-                root: true
+                root: true,
             });
         });
     });
@@ -195,9 +195,9 @@ describe("Card actions", () => {
             const payload: NewCardPayload = {
                 swimlane: { card: { id: 74, tracker_id: 42 } },
                 column: {
-                    mappings: [{ tracker_id: 69, field_id: 666, accepts: [{ id: 101 }] }]
+                    mappings: [{ tracker_id: 69, field_id: 666, accepts: [{ id: 101 }] }],
                 },
-                label: "Lorem"
+                label: "Lorem",
             } as NewCardPayload;
 
             await actions.addCard(context, payload);
@@ -209,9 +209,9 @@ describe("Card actions", () => {
             const payload: NewCardPayload = {
                 swimlane: { card: { id: 74, tracker_id: 42 } },
                 column: {
-                    mappings: [{ tracker_id: 69, field_id: 666, accepts: [{ id: 101 }] }]
+                    mappings: [{ tracker_id: 69, field_id: 666, accepts: [{ id: 101 }] }],
                 },
-                label: "Lorem"
+                label: "Lorem",
             } as NewCardPayload;
 
             const tlpPostMock = jest.spyOn(tlp, "post");
@@ -220,23 +220,23 @@ describe("Card actions", () => {
 
             expect(tlpPostMock).toHaveBeenCalledWith("/api/v1/artifacts", {
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
                     tracker: {
-                        id: 69
+                        id: 69,
                     },
                     values: [
                         {
                             field_id: 123,
-                            value: "Lorem"
+                            value: "Lorem",
                         },
                         {
                             field_id: 666,
-                            bind_value_ids: [101]
-                        }
-                    ]
-                })
+                            bind_value_ids: [101],
+                        },
+                    ],
+                }),
             });
         });
 
@@ -245,9 +245,9 @@ describe("Card actions", () => {
             const payload: NewCardPayload = {
                 swimlane: swimlane,
                 column: {
-                    mappings: [{ tracker_id: 69, field_id: 666, accepts: [{ id: 101 }] }]
+                    mappings: [{ tracker_id: 69, field_id: 666, accepts: [{ id: 101 }] }],
                 },
-                label: "Lorem"
+                label: "Lorem",
             } as NewCardPayload;
 
             const tlpPostMock = jest.spyOn(tlp, "post");
@@ -258,12 +258,12 @@ describe("Card actions", () => {
                 (uri: string): Promise<Response> => {
                     if (uri === "/api/v1/artifacts/74") {
                         return Promise.resolve({
-                            json: () => Promise.resolve({ values: [] })
+                            json: () => Promise.resolve({ values: [] }),
                         } as Response);
                     }
                     if (uri === "/api/v1/taskboard_cards/1001?milestone_id=42") {
                         return Promise.resolve({
-                            json: () => Promise.resolve({ id: 1001, color: "fiesta-red" })
+                            json: () => Promise.resolve({ id: 1001, color: "fiesta-red" }),
                         } as Response);
                     }
                     throw new Error();
@@ -280,9 +280,9 @@ describe("Card actions", () => {
                         color: "fiesta-red",
                         is_being_saved: true,
                         is_in_edit_mode: false,
-                        is_just_saved: false
-                    } as Card
-                ]
+                        is_just_saved: false,
+                    } as Card,
+                ],
             });
             expect(context.commit).toHaveBeenNthCalledWith(3, "cardIsHalfwayCreated");
         });
@@ -291,9 +291,9 @@ describe("Card actions", () => {
             const payload: NewCardPayload = {
                 swimlane: { card: { tracker_id: 42 } },
                 column: {
-                    mappings: [{ tracker_id: 69, field_id: 666, accepts: [{ id: 101 }] }]
+                    mappings: [{ tracker_id: 69, field_id: 666, accepts: [{ id: 101 }] }],
                 },
-                label: "Lorem"
+                label: "Lorem",
             } as NewCardPayload;
 
             const tlpPostMock = jest.spyOn(tlp, "post");
@@ -303,7 +303,7 @@ describe("Card actions", () => {
             await actions.addCard(context, payload);
 
             expect(context.dispatch).toHaveBeenCalledWith("error/handleModalError", error, {
-                root: true
+                root: true,
             });
         });
 
@@ -315,16 +315,16 @@ describe("Card actions", () => {
                 payload = {
                     swimlane: { card: { id: 74, tracker_id: 42 } },
                     column: {
-                        mappings: [{ tracker_id: 69, field_id: 666, accepts: [{ id: 101 }] }]
+                        mappings: [{ tracker_id: 69, field_id: 666, accepts: [{ id: 101 }] }],
                     },
-                    label: "Lorem"
+                    label: "Lorem",
                 } as NewCardPayload;
                 const tlpPostMock = jest.spyOn(tlp, "post");
                 mockFetchSuccess(tlpPostMock, { return_json: { id: 1001 } });
                 tlpGetMock = jest.spyOn(tlp, "get");
                 mockFetchSuccess(tlpGetMock, {
                     headers: new Headers({ "Last-Modified": "Mon, 09 Dec 2019 10:11:35 GMT" }),
-                    return_json: { values: [] }
+                    return_json: { values: [] },
                 });
             });
 
@@ -337,11 +337,11 @@ describe("Card actions", () => {
                 expect(tlpPutMock).toHaveBeenCalledWith("/api/v1/artifacts/74", {
                     headers: {
                         "Content-Type": "application/json",
-                        "If-Unmodified-Since": "Mon, 09 Dec 2019 10:11:35 GMT"
+                        "If-Unmodified-Since": "Mon, 09 Dec 2019 10:11:35 GMT",
                     },
                     body: JSON.stringify({
-                        values: [{ field_id: 103, links: [{ id: 1001, type: "_is_child" }] }]
-                    })
+                        values: [{ field_id: 103, links: [{ id: 1001, type: "_is_child" }] }],
+                    }),
                 });
             });
 
@@ -355,7 +355,7 @@ describe("Card actions", () => {
                     "error/handleModalError",
                     expect.any(Error),
                     {
-                        root: true
+                        root: true,
                     }
                 );
             });
@@ -371,7 +371,7 @@ describe("Card actions", () => {
 
         it("Does nothing if the tracker has no assigned_to field", async () => {
             const tracker = {
-                assigned_to_field: null
+                assigned_to_field: null,
             } as Tracker;
 
             await actions.loadPossibleAssignees(context, tracker);
@@ -383,8 +383,8 @@ describe("Card actions", () => {
         it("Does nothing if potential assignees are already in cache", async () => {
             const tracker = {
                 assigned_to_field: {
-                    id: 1234
-                }
+                    id: 1234,
+                },
             } as Tracker;
 
             context.getters.have_possible_assignees_been_loaded_for_tracker = (): boolean => true;
@@ -398,8 +398,8 @@ describe("Card actions", () => {
         it("Loads assignees otherwise, and cast their ids to number", async () => {
             const tracker = {
                 assigned_to_field: {
-                    id: 1234
-                }
+                    id: 1234,
+                },
             } as Tracker;
 
             context.getters.have_possible_assignees_been_loaded_for_tracker = (): boolean => false;
@@ -408,8 +408,8 @@ describe("Card actions", () => {
                 return_json: [
                     { display_name: "John", id: "123" },
                     { display_name: "Steeve", id: "124" },
-                    { display_name: "Bob", id: "125" }
-                ]
+                    { display_name: "Bob", id: "125" },
+                ],
             });
 
             await actions.loadPossibleAssignees(context, tracker);
@@ -421,27 +421,27 @@ describe("Card actions", () => {
                     {
                         id: 123,
                         display_name: "John",
-                        text: "John"
+                        text: "John",
                     },
                     {
                         id: 124,
                         display_name: "Steeve",
-                        text: "Steeve"
+                        text: "Steeve",
                     },
                     {
                         id: 125,
                         display_name: "Bob",
-                        text: "Bob"
-                    }
-                ]
+                        text: "Bob",
+                    },
+                ],
             });
         });
 
         it("Error modal is shown on error", async () => {
             const tracker = {
                 assigned_to_field: {
-                    id: 1234
-                }
+                    id: 1234,
+                },
             } as Tracker;
 
             context.getters.have_possible_assignees_been_loaded_for_tracker = (): boolean => false;

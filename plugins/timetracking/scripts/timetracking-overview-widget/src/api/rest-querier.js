@@ -31,11 +31,11 @@ export {
     getProjectsWithTimetracking,
     getTrackersWithTimetracking,
     saveNewReport,
-    setDisplayPreference
+    setDisplayPreference,
 };
 
 const headers = {
-    "content-type": "application/json"
+    "content-type": "application/json",
 };
 
 async function getTrackersFromReport(report_id) {
@@ -47,13 +47,13 @@ async function getTimes(report_id, trackers_id, start_date, end_date) {
     const query = JSON.stringify({
         trackers_id: trackers_id,
         start_date: formatDatetimeToISO(start_date),
-        end_date: formatDatetimeToISO(end_date)
+        end_date: formatDatetimeToISO(end_date),
     });
 
     const response = await get("/api/v1/timetracking_reports/" + encodeURI(report_id) + "/times", {
         params: {
-            query
-        }
+            query,
+        },
     });
     return response.json();
 }
@@ -61,13 +61,13 @@ async function getTimes(report_id, trackers_id, start_date, end_date) {
 async function getTimesFromReport(report_id, start_date, end_date) {
     const query = JSON.stringify({
         start_date: formatDatetimeToISO(start_date),
-        end_date: formatDatetimeToISO(end_date)
+        end_date: formatDatetimeToISO(end_date),
     });
 
     const response = await get("/api/v1/timetracking_reports/" + encodeURI(report_id) + "/times", {
         params: {
-            query
-        }
+            query,
+        },
     });
     return response.json();
 }
@@ -77,8 +77,8 @@ async function getProjectsWithTimetracking() {
         params: {
             limit: 50,
             offset: 0,
-            query: JSON.stringify({ with_time_tracking: true })
-        }
+            query: JSON.stringify({ with_time_tracking: true }),
+        },
     });
 
     return response.json();
@@ -90,8 +90,8 @@ async function getTrackersWithTimetracking(project_id) {
             representation: "minimal",
             limit: 50,
             offset: 0,
-            query: JSON.stringify({ with_time_tracking: true })
-        }
+            query: JSON.stringify({ with_time_tracking: true }),
+        },
     });
 
     return response.json();
@@ -99,12 +99,12 @@ async function getTrackersWithTimetracking(project_id) {
 
 async function saveNewReport(report_id, trackers_id) {
     const body = JSON.stringify({
-        trackers_id: trackers_id
+        trackers_id: trackers_id,
     });
 
     const response = await put("/api/v1/timetracking_reports/" + report_id, {
         headers,
-        body
+        body,
     });
 
     return response.json();
@@ -113,10 +113,10 @@ async function saveNewReport(report_id, trackers_id) {
 async function setDisplayPreference(report_id, user_id, are_void_trackers_hidden) {
     const body = JSON.stringify({
         key: "timetracking_overview_display_trackers_without_time_" + report_id,
-        value: are_void_trackers_hidden.toString()
+        value: are_void_trackers_hidden.toString(),
     });
     await patch("/api/v1/users/" + encodeURI(user_id) + "/preferences", {
         headers,
-        body
+        body,
     });
 }

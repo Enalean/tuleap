@@ -22,7 +22,7 @@ const webpack_configurator = require("../../tools/utils/scripts/webpack-configur
 
 let entry_points = {
     "velocity-chart": "./scripts/velocity-chart/src/index.js",
-    "style-fp": "./themes/FlamingParrot/css/style.scss"
+    "style-fp": "./themes/FlamingParrot/css/style.scss",
 };
 
 const colors_burning_parrot = ["orange", "blue", "green", "red", "grey", "purple"];
@@ -39,21 +39,24 @@ module.exports = [
         ),
         resolve: {
             alias: {
-                "charts-builders": path.resolve(__dirname, "../../src/www/scripts/charts-builders/")
-            }
+                "charts-builders": path.resolve(
+                    __dirname,
+                    "../../src/www/scripts/charts-builders/"
+                ),
+            },
         },
         module: {
             rules: [
                 webpack_configurator.rule_scss_loader,
                 webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
-                webpack_configurator.rule_po_files
-            ]
+                webpack_configurator.rule_po_files,
+            ],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             ...webpack_configurator.getCSSExtractionPlugins(),
             webpack_configurator.getManifestPlugin(),
-            webpack_configurator.getMomentLocalePlugin()
-        ]
-    }
+            webpack_configurator.getMomentLocalePlugin(),
+        ],
+    },
 ];

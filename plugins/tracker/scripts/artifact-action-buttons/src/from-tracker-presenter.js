@@ -23,7 +23,7 @@ export {
     getTrackerName,
     getTrackerColor,
     getArtifactId,
-    getProjectId
+    getProjectId,
 };
 
 let tracker_id, tracker_name, tracker_color, artifact_id, project_id;

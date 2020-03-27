@@ -40,8 +40,8 @@ import { Card } from "../../../../../type";
 @Component({
     components: {
         BaseCard,
-        CardInitialEffort
-    }
+        CardInitialEffort,
+    },
 })
 export default class ParentCard extends Vue {
     @Prop({ required: true })

@@ -25,7 +25,7 @@ import {
     current_tracker_id,
     selectbox_fields,
     all_target_states,
-    current_workflow_transitions
+    current_workflow_transitions,
 } from "./getters.js";
 import initial_state from "./state.js";
 import { create } from "../support/factories.js";
@@ -45,8 +45,8 @@ describe("Store getters:", () => {
             state.current_tracker = {
                 fields: [create("field"), workflow_field],
                 workflow: {
-                    field_id: 13
-                }
+                    field_id: 13,
+                },
             };
 
             expect(current_workflow_field(state)).toEqual(workflow_field);
@@ -61,8 +61,8 @@ describe("Store getters:", () => {
         it("when workflow field_id is 0, it will return null", () => {
             state.current_tracker = {
                 workflow: {
-                    field_id: 0
-                }
+                    field_id: 0,
+                },
             };
 
             expect(current_workflow_field(state)).toBeNull();
@@ -87,7 +87,7 @@ describe("Store getters:", () => {
         describe("when tracker workflow is inactive", () => {
             beforeEach(() => {
                 state.current_tracker = {
-                    workflow: create("workflow", "inactive")
+                    workflow: create("workflow", "inactive"),
                 };
             });
             it("returns false", () => {
@@ -98,7 +98,7 @@ describe("Store getters:", () => {
         describe("when tracker workflow is active", () => {
             beforeEach(() => {
                 state.current_tracker = {
-                    workflow: create("workflow", "active")
+                    workflow: create("workflow", "active"),
                 };
             });
             it("returns false", () => {
@@ -135,7 +135,7 @@ describe("Store getters:", () => {
                 create("field", "workflow_compliant", { field_id: 64 }),
                 create("field", "selectbox_users", { field_id: 20 }),
                 create("field", { field_id: 93, type: "column" }),
-                create("field", "workflow_compliant", { field_id: 55 })
+                create("field", "workflow_compliant", { field_id: 55 }),
             ];
             state.current_tracker = create("tracker", { id: 85, fields });
         });
@@ -154,12 +154,12 @@ describe("Store getters:", () => {
             state.current_tracker.fields = [
                 create("field", "workflow_compliant", { label: "second" }),
                 create("field", "workflow_compliant", { label: "First" }),
-                create("field", "workflow_compliant", { label: "Third" })
+                create("field", "workflow_compliant", { label: "Third" }),
             ];
-            expect(selectbox_fields(state).map(field => field.label)).toEqual([
+            expect(selectbox_fields(state).map((field) => field.label)).toEqual([
                 "First",
                 "second",
-                "Third"
+                "Third",
             ]);
         });
 
@@ -179,7 +179,7 @@ describe("Store getters:", () => {
             value = create("field_value");
             hidden_value = create("field_value", "hidden");
             getters.current_workflow_field = create("field", {
-                values: [value, hidden_value]
+                values: [value, hidden_value],
             });
         });
 
@@ -209,22 +209,22 @@ describe("Store getters:", () => {
             const first_transition = {
                 id: 70,
                 from_id: 295,
-                to_id: 683
+                to_id: 683,
             };
             const second_transition = {
                 id: 709,
                 from_id: 318,
-                to_id: 99
+                to_id: 99,
             };
             state.current_tracker = create("tracker", {
                 workflow: {
-                    transitions: [first_transition, second_transition]
-                }
+                    transitions: [first_transition, second_transition],
+                },
             });
 
             expect(current_workflow_transitions(state)).toEqual([
                 first_transition,
-                second_transition
+                second_transition,
             ]);
         });
 

@@ -26,7 +26,7 @@ describe("getters", () => {
         it(`Should return false when there is no selected template`, () => {
             const state: State = {
                 selected_tuleap_template: null,
-                selected_company_template: null
+                selected_company_template: null,
             } as State;
             expect(getters.is_template_selected(state)).toBe(false);
         });
@@ -37,9 +37,9 @@ describe("getters", () => {
                     description: "scrum desc",
                     id: "scrum_template",
                     glyph: "<svg></svg>",
-                    is_built_in: true
+                    is_built_in: true,
                 } as TemplateData,
-                selected_company_template: null
+                selected_company_template: null,
             } as State;
             expect(getters.is_template_selected(state)).toBe(true);
         });
@@ -51,8 +51,8 @@ describe("getters", () => {
                     description: "scrum desc",
                     id: "10",
                     glyph: "<svg></svg>",
-                    is_built_in: false
-                } as TemplateData
+                    is_built_in: false,
+                } as TemplateData,
             } as State;
             expect(getters.is_template_selected(state)).toBe(true);
         });
@@ -61,13 +61,13 @@ describe("getters", () => {
     describe("has_error", () => {
         it(`Should return false when no error message is stored`, () => {
             const state: State = {
-                error: null
+                error: null,
             } as State;
             expect(getters.has_error(state)).toBe(false);
         });
         it(`Should return true when a template is choosen`, () => {
             const state: State = {
-                error: "Ho snap!"
+                error: "Ho snap!",
             } as State;
             expect(getters.has_error(state)).toBe(true);
         });

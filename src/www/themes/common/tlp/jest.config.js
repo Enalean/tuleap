@@ -19,5 +19,5 @@
 
 module.exports = {
     ...require("../../../../../tests/jest/jest.base.config.js"),
-    displayName: "tlp"
+    displayName: "tlp",
 };

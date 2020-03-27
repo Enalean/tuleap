@@ -20,7 +20,7 @@
 import jQuery from "jquery";
 import codendi from "codendi";
 
-!(function($) {
+!(function ($) {
     function initAccessControlsVersionDisplayer() {
         var version_selected = $("#version-selected");
         var version_displayer = $("#other-version-content");
@@ -42,7 +42,7 @@ import codendi from "codendi";
             version_displayer.text(response.content);
         }
 
-        version_selected.change(function() {
+        version_selected.change(function () {
             if (this.value === "0") {
                 version_displayer.text("");
                 version_displayer.attr("disabled", "");
@@ -56,19 +56,19 @@ import codendi from "codendi";
                         project_id +
                         "&repo_id=" +
                         repo_id,
-                    dataType: "json"
+                    dataType: "json",
                 }).success(updateVersionDisplayer);
             }
         });
     }
 
     function toggleSvnHelp() {
-        $("#toggle-svn-help").click(function() {
+        $("#toggle-svn-help").click(function () {
             $("#svn-repository-help").toggle();
         });
     }
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         initAccessControlsVersionDisplayer();
         toggleSvnHelp();
     });

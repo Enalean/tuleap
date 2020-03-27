@@ -6,6 +6,6 @@ function KanbanConfig(RestangularProvider) {
     RestangularProvider.setFullResponse(true);
     RestangularProvider.setBaseUrl("/api/v1");
     RestangularProvider.setDefaultHeaders({
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
     });
 }

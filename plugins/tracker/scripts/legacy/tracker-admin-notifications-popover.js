@@ -19,15 +19,15 @@
 
 /* global jQuery:readonly */
 
-(function($) {
+(function ($) {
     function confirmDeletionPopover() {
-        $(".tracker-notification-delete").each(function() {
+        $(".tracker-notification-delete").each(function () {
             var id = $(this).data("popover-id");
 
             $(this).popover({
                 container: $(".tracker-global-notifications"),
                 title: $("#" + id).data("title"),
-                content: $("#" + id).html()
+                content: $("#" + id).html(),
             });
         });
     }
@@ -37,7 +37,7 @@
     }
 
     function bindShowPopover() {
-        $(".tracker-notification-delete").click(function(event) {
+        $(".tracker-notification-delete").click(function (event) {
             event.preventDefault();
 
             dismissPopover();
@@ -46,12 +46,12 @@
         });
     }
 
-    $(function() {
+    $(function () {
         confirmDeletionPopover();
 
         bindShowPopover();
 
-        $("body").on("click", function(event) {
+        $("body").on("click", function (event) {
             if ($(event.target).hasClass("dismiss-popover")) {
                 dismissPopover();
             }

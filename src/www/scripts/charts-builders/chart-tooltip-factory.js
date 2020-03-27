@@ -25,7 +25,7 @@ export class TooltipFactory {
         tooltip_padding_width,
         tooltip_padding_height,
         tooltip_arrow_size,
-        tooltip_font_size
+        tooltip_font_size,
     }) {
         Object.assign(this, {
             tooltip_width: 0,
@@ -35,7 +35,7 @@ export class TooltipFactory {
             tooltip_padding_width,
             tooltip_padding_height,
             tooltip_arrow_size,
-            tooltip_font_size
+            tooltip_font_size,
         });
     }
 
@@ -86,9 +86,7 @@ export class TooltipFactory {
     }
 
     getTooltipArrow() {
-        return symbol()
-            .type(symbolTriangle)
-            .size(this.tooltip_arrow_size);
+        return symbol().type(symbolTriangle).size(this.tooltip_arrow_size);
     }
 
     resizeTheBubble() {
@@ -112,7 +110,7 @@ export class TooltipFactory {
             tooltip_y,
             arrow_x,
             arrow_y,
-            arrow_angle
+            arrow_angle,
         } = this.getTooltipCoordinates();
 
         this.tooltip.attr("transform", `translate(${tooltip_x}, ${tooltip_y})`);
@@ -127,11 +125,7 @@ export class TooltipFactory {
     }
 
     addTextLine(text) {
-        this.tooltip_text
-            .append("tspan")
-            .attr("text-anchor", "middle")
-            .attr("dy", 15)
-            .text(text);
+        this.tooltip_text.append("tspan").attr("text-anchor", "middle").attr("dy", 15).text(text);
 
         this.centerText();
         this.resizeTheBubble();
@@ -145,7 +139,7 @@ export class TooltipFactory {
         x: target_x,
         y: target_y,
         width: target_width,
-        height: target_height
+        height: target_height,
     }) {
         if (this.shouldTooltipBeAtTheBottom(target_y)) {
             return this.getBottomOrientedTooltipCoordinates(
@@ -169,7 +163,7 @@ export class TooltipFactory {
             tooltip_y: y + this.tooltip_margin_bottom + height,
             arrow_x: this.tooltip_middle,
             arrow_y: this.tooltip_height - this.tooltip_height,
-            arrow_angle: 0
+            arrow_angle: 0,
         };
     }
 
@@ -179,7 +173,7 @@ export class TooltipFactory {
             tooltip_y: y - this.tooltip_margin_bottom - this.tooltip_height,
             arrow_x: this.tooltip_middle,
             arrow_y: this.tooltip_height,
-            arrow_angle: 180
+            arrow_angle: 180,
         };
     }
 }

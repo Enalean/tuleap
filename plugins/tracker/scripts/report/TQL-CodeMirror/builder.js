@@ -37,13 +37,13 @@ function codeMirrorify({ textarea_element, autocomplete_keywords, submitFormCall
         lineNumbers: false,
         lineWrapping: true,
         mode: "tql",
-        readOnly: textarea_element.readOnly ? "nocursor" : false
+        readOnly: textarea_element.readOnly ? "nocursor" : false,
     });
 
     function autocomplete(editor) {
         editor.showHint({
             words: autocomplete_keywords,
-            hint: getHint
+            hint: getHint,
         });
     }
 }

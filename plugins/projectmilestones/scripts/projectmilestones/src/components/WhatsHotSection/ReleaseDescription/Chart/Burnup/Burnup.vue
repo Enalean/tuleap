@@ -48,8 +48,8 @@ export default class Burnup extends Vue {
                 top: 25,
                 right: 30,
                 bottom: 30,
-                left: 35
-            }
+                left: 35,
+            },
         };
     }
 

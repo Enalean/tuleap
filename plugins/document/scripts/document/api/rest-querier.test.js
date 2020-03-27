@@ -51,7 +51,7 @@ import {
     putLinkPermissions,
     putWikiPermissions,
     putEmptyDocumentPermissions,
-    putFolderPermissions
+    putFolderPermissions,
 } from "./rest-querier.js";
 
 import { mockFetchSuccess } from "../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper.js";
@@ -68,9 +68,9 @@ describe("rest-querier", () => {
                 title: "Project Documentation",
                 owner: {
                     id: 101,
-                    display_name: "user (login)"
+                    display_name: "user (login)",
                 },
-                last_update_date: "2018-08-21T17:01:49+02:00"
+                last_update_date: "2018-08-21T17:01:49+02:00",
             };
             const tlpGet = jest.spyOn(tlp, "get");
             mockFetchSuccess(tlpGet, { return_json: item });
@@ -90,10 +90,10 @@ describe("rest-querier", () => {
                     title: "Project Documentation",
                     owner: {
                         id: 101,
-                        display_name: "user (login)"
+                        display_name: "user (login)",
                     },
-                    last_update_date: "2018-08-21T17:01:49+02:00"
-                }
+                    last_update_date: "2018-08-21T17:01:49+02:00",
+                },
             };
             const tlpGet = jest.spyOn(tlp, "get");
             mockFetchSuccess(tlpGet, { return_json: service });
@@ -113,19 +113,19 @@ describe("rest-querier", () => {
                     title: "folder",
                     owner: {
                         id: 101,
-                        display_name: "username (userlogin)"
+                        display_name: "username (userlogin)",
                     },
-                    last_update_date: "2018-10-03T11:16:11+02:00"
+                    last_update_date: "2018-10-03T11:16:11+02:00",
                 },
                 {
                     id: 2,
                     title: "folder",
                     owner: {
                         id: 101,
-                        display_name: "docmanusername (docmanuserlogin)"
+                        display_name: "docmanusername (docmanuserlogin)",
                     },
-                    last_update_date: "2018-10-03T11:16:11+02:00"
-                }
+                    last_update_date: "2018-10-03T11:16:11+02:00",
+                },
             ];
             const tlpRecursiveGet = jest.spyOn(tlp, "recursiveGet");
             tlpRecursiveGet.mockReturnValue(items);
@@ -135,8 +135,8 @@ describe("rest-querier", () => {
             expect(tlpRecursiveGet).toHaveBeenCalledWith("/api/docman_items/3/docman_items", {
                 params: {
                     limit: 50,
-                    offset: 0
-                }
+                    offset: 0,
+                },
             });
             expect(tlpRecursiveGet.mock.calls.length).toEqual(1);
             expect(result).toEqual(items);
@@ -151,19 +151,19 @@ describe("rest-querier", () => {
                     name: "folder A",
                     owner: {
                         id: 101,
-                        display_name: "username (userlogin)"
+                        display_name: "username (userlogin)",
                     },
-                    last_update_date: "2018-10-03T11:16:11+02:00"
+                    last_update_date: "2018-10-03T11:16:11+02:00",
                 },
                 {
                     item_id: 2,
                     name: "folder B",
                     owner: {
                         id: 101,
-                        display_name: "docmanusername (docmanuserlogin)"
+                        display_name: "docmanusername (docmanuserlogin)",
                     },
-                    last_update_date: "2018-10-03T11:16:11+02:00"
-                }
+                    last_update_date: "2018-10-03T11:16:11+02:00",
+                },
             ];
             const tlpRecursiveGet = jest.spyOn(tlp, "recursiveGet");
             tlpRecursiveGet.mockReturnValue(parents);
@@ -173,8 +173,8 @@ describe("rest-querier", () => {
             expect(tlpRecursiveGet).toHaveBeenCalledWith("/api/docman_items/3/parents", {
                 params: {
                     limit: 50,
-                    offset: 0
-                }
+                    offset: 0,
+                },
             });
             expect(tlpRecursiveGet.mock.calls.length).toEqual(2);
             expect(result).toEqual(parents);
@@ -188,8 +188,8 @@ describe("rest-querier", () => {
         const preference_key = "plugin_docman_hide_110_30";
         const headers = {
             headers: {
-                "Content-Type": "application/json"
-            }
+                "Content-Type": "application/json",
+            },
         };
 
         describe("patchUserPreferenciesForFolderInProject() -", () => {
@@ -201,8 +201,8 @@ describe("rest-querier", () => {
                     ...headers,
                     body: JSON.stringify({
                         key: preference_key,
-                        value: DOCMAN_FOLDER_EXPANDED_VALUE
-                    })
+                        value: DOCMAN_FOLDER_EXPANDED_VALUE,
+                    }),
                 });
             });
         });
@@ -236,12 +236,12 @@ describe("rest-querier", () => {
                 changelog: "",
                 file_properties: {
                     filename: "file",
-                    filesize: 123
-                }
+                    filesize: 123,
+                },
             });
             const dropped_file = {
                 filename: "file",
-                filesize: 123
+                filesize: 123,
             };
             const tlpPost = jest.spyOn(tlp, "post");
 
@@ -257,7 +257,7 @@ describe("rest-querier", () => {
             const item = JSON.stringify({
                 title: "my new folder",
                 description: "",
-                type: "folder"
+                type: "folder",
             });
             const tlpPost = jest.spyOn(tlp, "post");
             mockFetchSuccess(tlpPost, { return_json: { id: 66, uri: "path/to/66" } });
@@ -266,14 +266,14 @@ describe("rest-querier", () => {
                 {
                     title: "my new folder",
                     description: "",
-                    type: "folder"
+                    type: "folder",
                 },
                 2
             );
 
             expect(tlpPost).toHaveBeenCalledWith("/api/docman_folders/2/folders", {
                 headers: expect.objectContaining({ "content-type": "application/json" }),
-                body: item
+                body: item,
             });
         });
     });
@@ -283,7 +283,7 @@ describe("rest-querier", () => {
             const item = JSON.stringify({
                 title: "my empty document",
                 description: "",
-                type: "empty"
+                type: "empty",
             });
             const tlpPost = jest.spyOn(tlp, "post");
             mockFetchSuccess(tlpPost, { return_json: { id: 66, uri: "path/to/66" } });
@@ -292,14 +292,14 @@ describe("rest-querier", () => {
                 {
                     title: "my empty document",
                     description: "",
-                    type: "empty"
+                    type: "empty",
                 },
                 2
             );
 
             expect(tlpPost).toHaveBeenCalledWith("/api/docman_folders/2/empties", {
                 headers: expect.objectContaining({ "content-type": "application/json" }),
-                body: item
+                body: item,
             });
         });
     });
@@ -309,7 +309,7 @@ describe("rest-querier", () => {
             const item = JSON.stringify({
                 title: "my wiki document",
                 description: "",
-                type: "wiki"
+                type: "wiki",
             });
             const tlpPost = jest.spyOn(tlp, "post");
             mockFetchSuccess(tlpPost, { return_json: { id: 66, uri: "path/to/66" } });
@@ -318,14 +318,14 @@ describe("rest-querier", () => {
                 {
                     title: "my wiki document",
                     description: "",
-                    type: "wiki"
+                    type: "wiki",
                 },
                 2
             );
 
             expect(tlpPost).toHaveBeenCalledWith("/api/docman_folders/2/wikis", {
                 headers: expect.objectContaining({ "content-type": "application/json" }),
-                body: item
+                body: item,
             });
         });
     });
@@ -336,7 +336,7 @@ describe("rest-querier", () => {
                 title: "my link document",
                 description: "",
                 type: "link",
-                link_properties: { link_url: "http://example.test" }
+                link_properties: { link_url: "http://example.test" },
             });
             const tlpPost = jest.spyOn(tlp, "post");
             mockFetchSuccess(tlpPost, { return_json: { id: 66, uri: "path/to/66" } });
@@ -346,14 +346,14 @@ describe("rest-querier", () => {
                     title: "my link document",
                     description: "",
                     type: "link",
-                    link_properties: { link_url: "http://example.test" }
+                    link_properties: { link_url: "http://example.test" },
                 },
                 2
             );
 
             expect(tlpPost).toHaveBeenCalledWith("/api/docman_folders/2/links", {
                 headers: expect.objectContaining({ "content-type": "application/json" }),
-                body: item
+                body: item,
             });
         });
     });
@@ -363,7 +363,7 @@ describe("rest-querier", () => {
             const item = JSON.stringify({
                 title: "Hello",
                 description: "Howdy!",
-                type: "embedded"
+                type: "embedded",
             });
 
             const content = "<h1>Hello world!</h1>";
@@ -390,7 +390,7 @@ describe("rest-querier", () => {
             const item = JSON.stringify({
                 title: "Kinky wiki",
                 description: "Not for children",
-                type: "wiki"
+                type: "wiki",
             });
 
             const page_name = "nsfw";
@@ -409,7 +409,7 @@ describe("rest-querier", () => {
             const item = JSON.stringify({
                 title: "A link to the past",
                 description: "Time travel machine is here",
-                type: "link"
+                type: "link",
             });
 
             const link_url = "https://archive.org/web/web.php";
@@ -446,7 +446,7 @@ describe("rest-querier", () => {
 
             expect(tlpPatch).toHaveBeenCalledWith(`/api/docman_files/${moved_item_id}`, {
                 headers: expect.objectContaining({ "content-type": "application/json" }),
-                body: JSON.stringify({ move: { destination_folder_id: destination_folder_id } })
+                body: JSON.stringify({ move: { destination_folder_id: destination_folder_id } }),
             });
         });
 
@@ -455,7 +455,7 @@ describe("rest-querier", () => {
 
             expect(tlpPatch).toHaveBeenCalledWith(`/api/docman_empty_documents/${moved_item_id}`, {
                 headers: expect.objectContaining({ "content-type": "application/json" }),
-                body: JSON.stringify({ move: { destination_folder_id: destination_folder_id } })
+                body: JSON.stringify({ move: { destination_folder_id: destination_folder_id } }),
             });
         });
 
@@ -464,7 +464,7 @@ describe("rest-querier", () => {
 
             expect(tlpPatch).toHaveBeenCalledWith(`/api/docman_embedded_files/${moved_item_id}`, {
                 headers: expect.objectContaining({ "content-type": "application/json" }),
-                body: JSON.stringify({ move: { destination_folder_id: destination_folder_id } })
+                body: JSON.stringify({ move: { destination_folder_id: destination_folder_id } }),
             });
         });
 
@@ -473,7 +473,7 @@ describe("rest-querier", () => {
 
             expect(tlpPatch).toHaveBeenCalledWith(`/api/docman_wikis/${moved_item_id}`, {
                 headers: expect.objectContaining({ "content-type": "application/json" }),
-                body: JSON.stringify({ move: { destination_folder_id: destination_folder_id } })
+                body: JSON.stringify({ move: { destination_folder_id: destination_folder_id } }),
             });
         });
 
@@ -482,7 +482,7 @@ describe("rest-querier", () => {
 
             expect(tlpPatch).toHaveBeenCalledWith(`/api/docman_links/${moved_item_id}`, {
                 headers: expect.objectContaining({ "content-type": "application/json" }),
-                body: JSON.stringify({ move: { destination_folder_id: destination_folder_id } })
+                body: JSON.stringify({ move: { destination_folder_id: destination_folder_id } }),
             });
         });
 
@@ -491,7 +491,7 @@ describe("rest-querier", () => {
 
             expect(tlpPatch).toHaveBeenCalledWith(`/api/docman_folders/${moved_item_id}`, {
                 headers: expect.objectContaining({ "content-type": "application/json" }),
-                body: JSON.stringify({ move: { destination_folder_id: destination_folder_id } })
+                body: JSON.stringify({ move: { destination_folder_id: destination_folder_id } }),
             });
         });
     });
@@ -513,7 +513,7 @@ describe("rest-querier", () => {
                 `/api/docman_folders/${destination_folder_id}/files`,
                 {
                     headers: expect.objectContaining({ "content-type": "application/json" }),
-                    body: JSON.stringify({ copy: { item_id: copied_item_id } })
+                    body: JSON.stringify({ copy: { item_id: copied_item_id } }),
                 }
             );
         });
@@ -525,7 +525,7 @@ describe("rest-querier", () => {
                 `/api/docman_folders/${destination_folder_id}/empties`,
                 {
                     headers: expect.objectContaining({ "content-type": "application/json" }),
-                    body: JSON.stringify({ copy: { item_id: copied_item_id } })
+                    body: JSON.stringify({ copy: { item_id: copied_item_id } }),
                 }
             );
         });
@@ -537,7 +537,7 @@ describe("rest-querier", () => {
                 `/api/docman_folders/${destination_folder_id}/embedded_files`,
                 {
                     headers: expect.objectContaining({ "content-type": "application/json" }),
-                    body: JSON.stringify({ copy: { item_id: copied_item_id } })
+                    body: JSON.stringify({ copy: { item_id: copied_item_id } }),
                 }
             );
         });
@@ -549,7 +549,7 @@ describe("rest-querier", () => {
                 `/api/docman_folders/${destination_folder_id}/wikis`,
                 {
                     headers: expect.objectContaining({ "content-type": "application/json" }),
-                    body: JSON.stringify({ copy: { item_id: copied_item_id } })
+                    body: JSON.stringify({ copy: { item_id: copied_item_id } }),
                 }
             );
         });
@@ -561,7 +561,7 @@ describe("rest-querier", () => {
                 `/api/docman_folders/${destination_folder_id}/links`,
                 {
                     headers: expect.objectContaining({ "content-type": "application/json" }),
-                    body: JSON.stringify({ copy: { item_id: copied_item_id } })
+                    body: JSON.stringify({ copy: { item_id: copied_item_id } }),
                 }
             );
         });
@@ -573,7 +573,7 @@ describe("rest-querier", () => {
                 `/api/docman_folders/${destination_folder_id}/folders`,
                 {
                     headers: expect.objectContaining({ "content-type": "application/json" }),
-                    body: JSON.stringify({ copy: { item_id: copied_item_id } })
+                    body: JSON.stringify({ copy: { item_id: copied_item_id } }),
                 }
             );
         });
@@ -584,7 +584,7 @@ describe("rest-querier", () => {
         const permissions = {
             can_read: [],
             can_write: [],
-            can_manage: []
+            can_manage: [],
         };
         let tlpPut;
 
@@ -598,7 +598,7 @@ describe("rest-querier", () => {
 
             expect(tlpPut).toHaveBeenCalledWith(`/api/docman_files/${item_id}/permissions`, {
                 headers: expect.objectContaining({ "Content-Type": "application/json" }),
-                body: JSON.stringify(permissions)
+                body: JSON.stringify(permissions),
             });
         });
 
@@ -609,7 +609,7 @@ describe("rest-querier", () => {
                 `/api/docman_embedded_files/${item_id}/permissions`,
                 {
                     headers: expect.objectContaining({ "Content-Type": "application/json" }),
-                    body: JSON.stringify(permissions)
+                    body: JSON.stringify(permissions),
                 }
             );
         });
@@ -619,7 +619,7 @@ describe("rest-querier", () => {
 
             expect(tlpPut).toHaveBeenCalledWith(`/api/docman_links/${item_id}/permissions`, {
                 headers: expect.objectContaining({ "Content-Type": "application/json" }),
-                body: JSON.stringify(permissions)
+                body: JSON.stringify(permissions),
             });
         });
 
@@ -628,7 +628,7 @@ describe("rest-querier", () => {
 
             expect(tlp.put).toHaveBeenCalledWith(`/api/docman_wikis/${item_id}/permissions`, {
                 headers: expect.objectContaining({ "Content-Type": "application/json" }),
-                body: JSON.stringify(permissions)
+                body: JSON.stringify(permissions),
             });
         });
 
@@ -639,7 +639,7 @@ describe("rest-querier", () => {
                 `/api/docman_empty_documents/${item_id}/permissions`,
                 {
                     headers: expect.objectContaining({ "Content-Type": "application/json" }),
-                    body: JSON.stringify(permissions)
+                    body: JSON.stringify(permissions),
                 }
             );
         });
@@ -649,7 +649,7 @@ describe("rest-querier", () => {
 
             expect(tlpPut).toHaveBeenCalledWith(`/api/docman_folders/${item_id}/permissions`, {
                 headers: expect.objectContaining({ "Content-Type": "application/json" }),
-                body: JSON.stringify(permissions)
+                body: JSON.stringify(permissions),
             });
         });
     });

@@ -34,6 +34,6 @@ import GoBackToRootButton from "./GoBackToRootButton.vue";
 
 export default {
     name: "LoadingError",
-    components: { GoBackToRootButton, LoadingErrorSvg, ShowErrorDetails }
+    components: { GoBackToRootButton, LoadingErrorSvg, ShowErrorDetails },
 };
 </script>

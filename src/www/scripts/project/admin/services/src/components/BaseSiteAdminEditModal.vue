@@ -63,8 +63,8 @@ export default {
         EditModal,
         InEditionCustomService,
         ServiceIsActive,
-        SidebarPreviewer
+        SidebarPreviewer,
     },
-    mixins: [service_modal_mixin, edit_modal_mixin]
+    mixins: [service_modal_mixin, edit_modal_mixin],
 };
 </script>

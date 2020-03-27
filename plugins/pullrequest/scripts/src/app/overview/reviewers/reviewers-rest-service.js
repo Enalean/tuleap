@@ -27,13 +27,13 @@ function ReviewersRestService($http, $q, ErrorModalService) {
     Object.assign(self, {
         getReviewers,
         updateReviewers,
-        searchUsers
+        searchUsers,
     });
 
     function getReviewers(pull_request_id) {
         return $http
             .get("/api/v1/pull_requests/" + encodeURIComponent(pull_request_id) + "/reviewers")
-            .catch(response => {
+            .catch((response) => {
                 ErrorModalService.showError(response);
             });
     }
@@ -41,9 +41,9 @@ function ReviewersRestService($http, $q, ErrorModalService) {
     function updateReviewers(pull_request_id, reviewer_representations) {
         return $http
             .put("/api/v1/pull_requests/" + encodeURIComponent(pull_request_id) + "/reviewers", {
-                users: reviewer_representations
+                users: reviewer_representations,
             })
-            .catch(response => {
+            .catch((response) => {
                 ErrorModalService.showError(response);
             });
     }
@@ -55,10 +55,10 @@ function ReviewersRestService($http, $q, ErrorModalService) {
                     encodeURIComponent(pull_request_id),
                 { params: { name: query } }
             )
-            .then(response => {
+            .then((response) => {
                 return response;
             })
-            .catch(response => {
+            .catch((response) => {
                 ErrorModalService.showError(response);
             });
     }

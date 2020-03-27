@@ -26,7 +26,7 @@ export {
     switchReportToSaved,
     discardUnsavedReport,
     setInvalidTrackers,
-    resetInvalidTrackerList
+    resetInvalidTrackerList,
 };
 
 function initWithDataset(state, dataset) {

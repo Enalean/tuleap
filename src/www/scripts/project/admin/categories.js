@@ -38,14 +38,14 @@ function instantiateSelect2(select_category) {
         placeholder: select_category.dataset.placeholder,
         allowClear: true,
         maximumSelectionLength: select_category.dataset.maximumSelectionLength,
-        templateSelection: state => {
+        templateSelection: (state) => {
             if (!state.element) {
                 return state.text;
             }
 
             return state.element.dataset.label;
-        }
-    }).on("change", function() {
+        },
+    }).on("change", function () {
         checkMultipleSelectRespectsMaximumSelectionLength(select_category);
     });
 }

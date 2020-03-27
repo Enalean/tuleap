@@ -38,18 +38,18 @@ describe("CompanyTemplateList", () => {
             const state: State = {
                 company_templates: company_templates,
                 default_project_template: null,
-                company_name: ""
+                company_name: "",
             } as State;
 
             const store_options = {
-                state
+                state,
             };
             store = createStoreMock(store_options);
             local_vue = await createProjectRegistrationLocalVue();
 
             wrapper = shallowMount(CompanyTemplateList, {
                 localVue: local_vue,
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         });
 
@@ -68,32 +68,32 @@ describe("CompanyTemplateList", () => {
                     title: "scrum",
                     description: "scrum desc",
                     glyph: "<svg></svg>",
-                    is_built_in: false
+                    is_built_in: false,
                 },
                 {
                     id: "11",
                     title: "kanban",
                     description: "kanban desc",
                     glyph: "<svg>kanban</svg>",
-                    is_built_in: false
-                }
+                    is_built_in: false,
+                },
             ];
 
             const state: State = {
                 company_templates: company_templates,
                 default_project_template: null,
-                company_name: ""
+                company_name: "",
             } as State;
 
             const store_options = {
-                state
+                state,
             };
             store = createStoreMock(store_options);
             local_vue = await createProjectRegistrationLocalVue();
 
             wrapper = shallowMount(CompanyTemplateList, {
                 localVue: local_vue,
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         });
 

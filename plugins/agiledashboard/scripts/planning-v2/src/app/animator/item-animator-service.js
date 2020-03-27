@@ -6,7 +6,7 @@ function ItemAnimatorService($timeout) {
     const self = this;
     Object.assign(self, {
         animateUpdated,
-        animateCreated
+        animateCreated,
     });
 
     function animateUpdated(backlog_item) {

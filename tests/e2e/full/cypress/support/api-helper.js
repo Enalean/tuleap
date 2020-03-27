@@ -18,13 +18,13 @@
  *
  */
 
-Cypress.Commands.add("getFromTuleapAPI", url => {
+Cypress.Commands.add("getFromTuleapAPI", (url) => {
     return cy.request({
         url,
         headers: {
             accept: "application/json",
-            referer: Cypress.config("baseUrl")
-        }
+            referer: Cypress.config("baseUrl"),
+        },
     });
 });
 
@@ -35,7 +35,7 @@ Cypress.Commands.add("postFromTuleapApi", (url, payload) => {
         body: payload,
         headers: {
             accept: "application/json",
-            referer: Cypress.config("baseUrl")
-        }
+            referer: Cypress.config("baseUrl"),
+        },
     });
 });

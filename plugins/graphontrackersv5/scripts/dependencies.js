@@ -125,7 +125,7 @@ function sortSelect(obj) {
     if (o.length == 0) {
         return;
     }
-    o = o.sort(function(a, b) {
+    o = o.sort(function (a, b) {
         if (String(a.text) < String(b.text)) {
             return -1;
         }

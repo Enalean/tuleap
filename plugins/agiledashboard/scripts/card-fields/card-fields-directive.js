@@ -10,7 +10,7 @@ export default () => {
         templateUrl: "card-fields.tpl.html",
         scope: {
             item: "=item",
-            filter_terms: "=filterTerms"
-        }
+            filter_terms: "=filterTerms",
+        },
     };
 };

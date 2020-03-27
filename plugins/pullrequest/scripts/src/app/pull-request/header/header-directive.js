@@ -10,6 +10,6 @@ function PullRequestHeaderDirective() {
         templateUrl: "header.tpl.html",
         controller: PullRequestHeaderController,
         controllerAs: "pull_request_controller",
-        bindToController: true
+        bindToController: true,
     };
 }

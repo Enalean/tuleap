@@ -32,7 +32,7 @@ describe("CutItem", () => {
             return shallowMount(CutItem, {
                 localVue,
                 propsData: { ...props },
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
     });
@@ -45,7 +45,7 @@ describe("CutItem", () => {
             type: "item_type",
             title: "My item",
             parent_id: 146,
-            user_can_write: true
+            user_can_write: true,
         };
         const event_bus_emit = jest.spyOn(EventBus, "$emit");
         const wrapper = cut_item_factory({ item });
@@ -64,7 +64,7 @@ describe("CutItem", () => {
             type: "item_type",
             title: "My item",
             parent_id: 146,
-            user_can_write: true
+            user_can_write: true,
         };
         store.state.clipboard.pasting_in_progress = true;
         const event_bus_emit = jest.spyOn(EventBus, "$emit");
@@ -85,7 +85,7 @@ describe("CutItem", () => {
             type: "item_type",
             title: "My item",
             parent_id: 0,
-            user_can_write: true
+            user_can_write: true,
         };
         const wrapper = cut_item_factory({ item });
 
@@ -99,7 +99,7 @@ describe("CutItem", () => {
             type: "item_type",
             title: "My item",
             parent_id: 146,
-            user_can_write: false
+            user_can_write: false,
         };
         const wrapper = cut_item_factory({ item });
 

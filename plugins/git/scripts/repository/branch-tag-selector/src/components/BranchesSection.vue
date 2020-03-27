@@ -74,7 +74,7 @@ export default {
         is_displaying_branches: Boolean,
         is_tag: Boolean,
         current_ref_name: String,
-        url_parameters: Object
+        url_parameters: Object,
     },
     data() {
         return {
@@ -82,13 +82,13 @@ export default {
             are_branches_loaded: false,
             has_error_while_loading_branches: false,
             branches: [],
-            filter_text: ""
+            filter_text: "",
         };
     },
     computed: {
         filtered_branches() {
             return this.branches.filter(
-                branch => branch.name.toLowerCase().indexOf(this.filter) !== -1
+                (branch) => branch.name.toLowerCase().indexOf(this.filter) !== -1
             );
         },
         filter() {
@@ -96,7 +96,7 @@ export default {
         },
         placeholder() {
             return this.$gettext("Branch name");
-        }
+        },
     },
     mounted() {
         this.loadBranches();
@@ -106,8 +106,8 @@ export default {
             try {
                 this.branches = await recursiveGet(`/api/git/${this.repository_id}/branches`, {
                     params: {
-                        limit: 50
-                    }
+                        limit: 50,
+                    },
                 });
                 this.branches.sort((branch_a, branch_b) =>
                     branch_a.name.localeCompare(branch_b.name)
@@ -121,7 +121,7 @@ export default {
         },
         url(ref) {
             return this.repository_url + "?" + encodeData({ ...this.url_parameters, hb: ref });
-        }
-    }
+        },
+    },
 };
 </script>

@@ -22,8 +22,8 @@
 codendi.locales["cardwall_field_validation"] = {
     error_message: {
         float_type: "la valeur doit être de type décimal",
-        int_type: "la valeur doit être un entier"
-    }
+        int_type: "la valeur doit être un entier",
+    },
 };
 
 codendi.locales["cardwall"] = {
@@ -33,5 +33,5 @@ codendi.locales["cardwall"] = {
     no_fullscreen_title: "Ouuuuuuups !",
     no_fullscreen_content:
         "Cher utilisateur d'Internet Explorer,<br/><br/>Nous vous informons que la fonctionnalité \"Plein écran\" n' est pas disponible sur votre navigateur.<br/><br/>Bien cordialement,<br/>L'équipe Tuleap",
-    autocomputed_label: "valeur calculée"
+    autocomputed_label: "valeur calculée",
 };

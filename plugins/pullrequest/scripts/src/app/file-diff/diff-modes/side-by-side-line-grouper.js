@@ -28,7 +28,7 @@ function buildLineGroups(lines) {
     const first_line_to_group_map = buildFirstLineToGroupMap(groups);
     return {
         line_to_group_map,
-        first_line_to_group_map
+        first_line_to_group_map,
     };
 }
 
@@ -48,7 +48,7 @@ const buildGroups = (accumulator, line, index, array) => {
     }
     const new_group = {
         type: change_type,
-        unidiff_offsets: [line.unidiff_offset]
+        unidiff_offsets: [line.unidiff_offset],
     };
     line.group = new_group;
     accumulator.push(new_group);
@@ -69,7 +69,7 @@ function buildFirstLineToGroupMap(groups) {
 
 function buildLinesToGroupMap(groups) {
     return groups.reduce((accumulator, group) => {
-        group.unidiff_offsets.forEach(offset => {
+        group.unidiff_offsets.forEach((offset) => {
             accumulator.set(offset, group);
         });
         return accumulator;

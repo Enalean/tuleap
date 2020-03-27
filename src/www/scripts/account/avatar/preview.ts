@@ -27,7 +27,7 @@ export function loadAvatarPreview(): void {
         );
     }
 
-    input_file.addEventListener("change", function() {
+    input_file.addEventListener("change", function () {
         if (!input_file.files) {
             return;
         }
@@ -40,7 +40,7 @@ export function loadAvatarPreview(): void {
 function useImageInPreviewIfItIsValid(url: string): void {
     const img = document.createElement("img");
 
-    img.onload = function(): void {
+    img.onload = function (): void {
         const preview = getPreviewContainer();
         const resized_image_url = getResizedImageUrl(url);
         setAvatarPreviewUrl(resized_image_url);

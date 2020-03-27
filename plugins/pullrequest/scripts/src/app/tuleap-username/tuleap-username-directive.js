@@ -6,8 +6,8 @@ function TuleapUsernameDirective() {
     return {
         restrict: "AE",
         scope: {
-            username: "="
+            username: "=",
         },
-        templateUrl: "tuleap-username.tpl.html"
+        templateUrl: "tuleap-username.tpl.html",
     };
 }

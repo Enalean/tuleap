@@ -34,19 +34,19 @@
 export default {
     name: "OldColorPickerPaletteRow",
     props: {
-        shades: Array
+        shades: Array,
     },
     methods: {
         getStyle(shade) {
             return {
                 "background-color": shade,
                 color: shade,
-                background: shade
+                background: shade,
             };
         },
         updateColor(color) {
             this.$emit("color-update", color);
-        }
-    }
+        },
+    },
 };
 </script>

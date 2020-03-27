@@ -45,11 +45,11 @@ describe("PastSection", () => {
             state: {
                 is_loading: false,
                 current_milestones: [],
-                project_id: project_id
+                project_id: project_id,
             },
             getters: {
-                has_rest_error: false
-            }
+                has_rest_error: false,
+            },
         };
 
         getPersonalWidgetInstance(store_options);
@@ -72,7 +72,7 @@ describe("PastSection", () => {
 
     it("When there is one last_milestone, then ReleaseDisplayer Component is displayed", async () => {
         store_options.state.last_release = {
-            id: 1
+            id: 1,
         } as MilestoneData;
         const wrapper = await getPersonalWidgetInstance(store_options);
 

@@ -36,14 +36,14 @@ import EventBus from "../../../helpers/event-bus.js";
 export default {
     name: "UpdateProperties",
     props: {
-        item: Object
+        item: Object,
     },
     methods: {
         showUpdateModal() {
             EventBus.$emit("show-update-item-metadata-modal", {
-                detail: { current_item: this.item }
+                detail: { current_item: this.item },
             });
-        }
-    }
+        },
+    },
 };
 </script>

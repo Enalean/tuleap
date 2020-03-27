@@ -35,17 +35,17 @@ async function getWrapper(is_being_saved = false): Promise<Wrapper<EditRemaining
                 remaining_effort: {
                     value: 3.14,
                     is_in_edit_mode: true,
-                    is_being_saved
-                }
-            } as Card
+                    is_being_saved,
+                },
+            } as Card,
         },
         mocks: {
             $store: createStoreMock({
                 state: {
-                    swimlane: {}
-                } as RootState
-            })
-        }
+                    swimlane: {},
+                } as RootState,
+            }),
+        },
     });
 }
 
@@ -86,7 +86,7 @@ describe("EditRemainingEffort", () => {
         const card = wrapper.props("card");
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("swimlane/saveRemainingEffort", {
             card,
-            value
+            value,
         });
         expect(card.remaining_effort.is_in_edit_mode).toBe(true);
     });
@@ -102,7 +102,7 @@ describe("EditRemainingEffort", () => {
 
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("swimlane/saveRemainingEffort", {
             card,
-            value
+            value,
         });
     });
 

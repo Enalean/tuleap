@@ -57,7 +57,7 @@ import ModalFooter from "../ModalCommon/ModalFooter.vue";
 import FolderGlobalMetadataForUpdate from "../Metadata/FolderMetadata/FolderGlobalMetadataForUpdate.vue";
 import {
     transformCustomMetadataForItemUpdate,
-    transformFolderMetadataForRecursionAtUpdate
+    transformFolderMetadataForRecursionAtUpdate,
 } from "../../../helpers/metadata-helpers/data-transformatter-helper.js";
 import EventBus from "../../../helpers/event-bus.js";
 import { getCustomMetadata } from "../../../helpers/metadata-helpers/custom-metadata-helper.js";
@@ -68,10 +68,10 @@ export default {
         FolderGlobalMetadataForUpdate,
         ModalFeedback,
         ModalHeader,
-        ModalFooter
+        ModalFooter,
     },
     props: {
-        item: Object
+        item: Object,
     },
     data() {
         return {
@@ -80,7 +80,7 @@ export default {
             modal: null,
             recursion_option: "none",
             metadata_list_to_update: [],
-            formatted_item_metadata: []
+            formatted_item_metadata: [],
         };
     },
     computed: {
@@ -94,7 +94,7 @@ export default {
         },
         aria_labelled_by() {
             return "document-update-folder-metadata-modal";
-        }
+        },
     },
     beforeMount() {
         this.item_to_update = transformFolderMetadataForRecursionAtUpdate(this.item);
@@ -132,7 +132,7 @@ export default {
                 this.item_to_update,
                 this.current_folder,
                 this.metadata_list_to_update,
-                this.recursion_option
+                this.recursion_option,
             ]);
             this.is_loading = false;
             if (this.has_modal_error === false) {
@@ -150,10 +150,10 @@ export default {
                 return;
             }
             const item_metadata = this.formatted_item_metadata.find(
-                metadata => metadata.short_name === event.detail.id
+                (metadata) => metadata.short_name === event.detail.id
             );
             item_metadata.list_value = event.detail.value;
-        }
-    }
+        },
+    },
 };
 </script>

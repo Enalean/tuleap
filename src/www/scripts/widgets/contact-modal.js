@@ -19,11 +19,11 @@
 
 /* global CKEDITOR:readonly tlp:readonly tuleap:readonly */
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     var massmail_project_member_links = document.querySelectorAll(".massmail-project-member-link");
 
-    [].forEach.call(massmail_project_member_links, function(massmail_project_member_link) {
-        massmail_project_member_link.addEventListener("click", function() {
+    [].forEach.call(massmail_project_member_links, function (massmail_project_member_link) {
+        massmail_project_member_link.addEventListener("click", function () {
             document.getElementById("massmail-project-members-project-id").value =
                 massmail_project_member_link.dataset.projectId;
 
@@ -38,6 +38,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     CKEDITOR.replace(textarea, {
-        toolbar: tuleap.ckeditor.toolbar
+        toolbar: tuleap.ckeditor.toolbar,
     });
 });

@@ -34,6 +34,6 @@ function FilesController(SharedPropertiesService) {
                 !self.release.release_note &&
                 !self.release.changelog
             );
-        }
+        },
     });
 }

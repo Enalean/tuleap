@@ -29,7 +29,7 @@ import { getUploadImageOptions, initiateUploadImage } from "./get-upload-image-o
 describe(`get-upload-image-options`, () => {
     let isUploadEnabled,
         gettext_provider = {
-            gettext: () => ""
+            gettext: () => "",
         };
 
     beforeEach(() => {
@@ -46,7 +46,7 @@ describe(`get-upload-image-options`, () => {
         beforeEach(() => {
             ckeditor_instance = {
                 on: jest.fn(),
-                showNotification: jest.fn()
+                showNotification: jest.fn(),
             };
         });
 
@@ -54,7 +54,7 @@ describe(`get-upload-image-options`, () => {
             and show a notification`, async () => {
             isUploadEnabled.mockReturnValue(false);
             const element = {
-                dataset: { uploadUrl: "https://example.com/disprobabilize/gavyuti" }
+                dataset: { uploadUrl: "https://example.com/disprobabilize/gavyuti" },
             };
             let triggerPaste;
             ckeditor_instance.on.mockImplementation((event_name, handler) => {
@@ -66,7 +66,7 @@ describe(`get-upload-image-options`, () => {
 
             const event = {
                 cancel: jest.fn(),
-                data: { dataValue: `<p></p>` }
+                data: { dataValue: `<p></p>` },
             };
             triggerPaste(event);
 
@@ -80,15 +80,15 @@ describe(`get-upload-image-options`, () => {
                 form = {
                     querySelectorAll: jest.fn(),
                     addEventListener: jest.fn(),
-                    appendChild: jest.fn()
+                    appendChild: jest.fn(),
                 };
                 element = {
                     dataset: {
                         uploadUrl: "https://example.com/disprobabilize/gavyuti",
                         uploadFieldName: "satrapess",
-                        uploadMaxSize: "1024"
+                        uploadMaxSize: "1024",
                     },
-                    form
+                    form,
                 };
             });
 
@@ -116,7 +116,7 @@ describe(`get-upload-image-options`, () => {
                     max_size_upload: 1024,
                     onStartCallback: expect.any(Function),
                     onErrorCallback: expect.any(Function),
-                    onSuccessCallback: expect.any(Function)
+                    onSuccessCallback: expect.any(Function),
                 };
                 expect(buildFileUploadHandler).toHaveBeenCalledWith(expected_options);
             });
@@ -233,15 +233,15 @@ describe(`get-upload-image-options`, () => {
         it(`when upload is enabled, it returns CKEditor options`, () => {
             element = {
                 dataset: {
-                    uploadUrl: "https://example.com/disprobabilize/gavyuti"
-                }
+                    uploadUrl: "https://example.com/disprobabilize/gavyuti",
+                },
             };
 
             const result = getUploadImageOptions(element);
 
             expect(result).toEqual({
                 extraPlugins: "uploadimage",
-                uploadUrl: "https://example.com/disprobabilize/gavyuti"
+                uploadUrl: "https://example.com/disprobabilize/gavyuti",
             });
         });
     });

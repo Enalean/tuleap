@@ -9,7 +9,7 @@ function formatExistingValue(field, artifact_value) {
         field_id,
         type,
         permissions,
-        value: getValue(artifact_value.value, is_time_displayed)
+        value: getValue(artifact_value.value, is_time_displayed),
     };
 }
 

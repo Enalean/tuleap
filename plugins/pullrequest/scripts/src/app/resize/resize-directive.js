@@ -8,7 +8,7 @@ function resize($timeout, $window) {
     return {
         restrict: "AE",
         scope: false,
-        link: link
+        link: link,
     };
 
     function link(scope, element) {
@@ -22,13 +22,13 @@ function resize($timeout, $window) {
         }
 
         function bindWindowResizeEvent() {
-            return angularElement($window).bind("resize", function() {
+            return angularElement($window).bind("resize", function () {
                 scope.$apply();
             });
         }
 
         function listener() {
-            $timeout(function() {
+            $timeout(function () {
                 var children = element.children();
                 if (children.length === 0) {
                     return;

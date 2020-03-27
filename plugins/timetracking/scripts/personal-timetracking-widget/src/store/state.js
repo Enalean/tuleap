@@ -20,9 +20,7 @@ import { DateTime } from "luxon";
 
 const state = {
     user_id: null,
-    start_date: DateTime.local()
-        .minus({ weeks: 1 })
-        .toISODate(),
+    start_date: DateTime.local().minus({ weeks: 1 }).toISODate(),
     end_date: DateTime.local().toISODate(),
     reading_mode: true,
     total_times: 0,
@@ -35,9 +33,9 @@ const state = {
     is_add_mode: false,
     rest_feedback: {
         message: null,
-        type: null
+        type: null,
     },
-    is_loading: false
+    is_loading: false,
 };
 
 export default state;

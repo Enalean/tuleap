@@ -22,7 +22,7 @@ import {
     DragDropHandlers,
     DragHandler,
     DragStartContext,
-    DrekkenovInitOptions
+    DrekkenovInitOptions,
 } from "./types";
 import { DrekkenovState } from "./DrekkenovState";
 import * as handlers_factory_module from "./event-handler-factory";
@@ -34,7 +34,7 @@ jest.mock("./OngoingDrag", () => {
     return {
         OngoingDrag: jest.fn().mockImplementation(() => {
             return {} as OngoingDrag;
-        })
+        }),
     };
 });
 jest.mock("./DropGhost");
@@ -42,9 +42,9 @@ jest.mock("./DocumentEventsHandler", () => {
     return {
         DocumentEventsHandler: jest.fn().mockImplementation(() => {
             return ({
-                attachDragDropListeners: jest.fn()
+                attachDragDropListeners: jest.fn(),
             } as unknown) as DocumentEventsHandler;
-        })
+        }),
     };
 });
 
@@ -55,7 +55,7 @@ describe(`DrekkenovState`, () => {
     beforeEach(() => {
         doc = createLocalDocument();
         options = ({
-            cleanupAfterDragCallback: jest.fn()
+            cleanupAfterDragCallback: jest.fn(),
         } as unknown) as DrekkenovInitOptions;
         state = new DrekkenovState(options, doc);
     });
@@ -72,10 +72,10 @@ describe(`DrekkenovState`, () => {
             and calls options' cleanupAfterDragCallback()
             and detaches all listeners`, () => {
             const fake_listener: AfterDropListener = {
-                afterDrop: jest.fn()
+                afterDrop: jest.fn(),
             };
             const other_fake_listener: AfterDropListener = {
-                afterDrop: jest.fn()
+                afterDrop: jest.fn(),
             };
 
             state.attachAfterDropListener(fake_listener);
@@ -121,7 +121,7 @@ describe(`DrekkenovState`, () => {
             const drag_start_context: DragStartContext = {
                 dragged_element,
                 initial_sibling,
-                source_dropzone
+                source_dropzone,
             };
 
             state.startDrag(drag_start_context);

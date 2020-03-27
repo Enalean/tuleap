@@ -32,7 +32,7 @@ export default class BackendCrossTrackerReport {
                 const light_project = { id: project.id, label: project.label };
                 this.trackers.set(id, {
                     project: light_project,
-                    tracker
+                    tracker,
                 });
             }
         }

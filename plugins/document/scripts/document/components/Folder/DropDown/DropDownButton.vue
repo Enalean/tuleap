@@ -25,7 +25,7 @@
             v-bind:class="{
                 'tlp-button-large': isInLargeMode,
                 'tlp-button-small tlp-button-outline': isInQuickLookMode,
-                'tlp-append tlp-dropdown-split-button-caret': isAppended
+                'tlp-append tlp-dropdown-split-button-caret': isAppended,
             }"
             ref="dropdownButton"
             type="button"
@@ -49,8 +49,8 @@ export default {
         isInQuickLookMode: Boolean,
         isAppended: {
             type: Boolean,
-            default: true
-        }
+            default: true,
+        },
     },
     data() {
         return { dropdown: null };
@@ -68,7 +68,7 @@ export default {
             if (this.dropdown && this.dropdown.is_shown) {
                 this.dropdown.hide();
             }
-        }
-    }
+        },
+    },
 };
 </script>

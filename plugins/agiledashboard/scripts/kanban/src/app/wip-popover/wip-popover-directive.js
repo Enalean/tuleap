@@ -12,10 +12,10 @@ function WipPopover($timeout) {
         templateUrl: "wip-popover.tpl.html",
         scope: {
             column: "=",
-            setWipLimit: "&setWipLimit"
+            setWipLimit: "&setWipLimit",
         },
-        link: function(scope) {
-            $timeout(function() {
+        link: function (scope) {
+            $timeout(function () {
                 createDropdown(
                     document.getElementById("kanban-column-header-wip-limit-" + scope.column.id)
                 );
@@ -23,23 +23,23 @@ function WipPopover($timeout) {
             });
 
             function toggleWipPopover() {
-                angular.element("body").click(function(event) {
+                angular.element("body").click(function (event) {
                     var clicked_element = angular.element(event.target),
                         clicked_column_id = clicked_element
                             .parents(".column")
                             .attr("data-column-id");
 
                     if (!relatesTo("wip-limit-form")) {
-                        $timeout(function() {
+                        $timeout(function () {
                             scope.column.wip_in_edit = false;
                         });
 
                         if (relatesTo("wip-limit") && clicked_column_id === scope.column.id) {
-                            $timeout(function() {
+                            $timeout(function () {
                                 scope.column.limit_input = scope.column.limit;
                                 scope.column.wip_in_edit = true;
 
-                                $timeout(function() {
+                                $timeout(function () {
                                     if (
                                         angular.element("#wip-limit-input-" + clicked_column_id)[0]
                                     ) {
@@ -60,6 +60,6 @@ function WipPopover($timeout) {
                     }
                 });
             }
-        }
+        },
     };
 }

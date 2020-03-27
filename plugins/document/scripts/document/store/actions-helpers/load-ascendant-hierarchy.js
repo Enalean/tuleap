@@ -27,7 +27,7 @@ export async function loadAscendantHierarchy(context, folder_id, loading_current
 
         const [parents, current_folder] = await Promise.all([
             getParents(folder_id),
-            loading_current_folder_promise
+            loading_current_folder_promise,
         ]);
 
         parents.shift();

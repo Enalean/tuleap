@@ -73,14 +73,14 @@ export default {
     name: "ObsolescenceDateMetadataForUpdate",
     components: { DateFlatPicker },
     props: {
-        value: String
+        value: String,
     },
     data() {
         return {
             date_value: this.value,
             selected_value: "",
             error_message: "",
-            uses_helper_validity: false
+            uses_helper_validity: false,
         };
     },
     computed: {
@@ -97,7 +97,7 @@ export default {
                 this.$emit("input", value);
 
                 this.uses_helper_validity = false;
-            }
+            },
         },
         selected_date_value: {
             get() {
@@ -105,8 +105,8 @@ export default {
             },
             set(value) {
                 this.selected_value = value;
-            }
-        }
+            },
+        },
     },
     mounted() {
         if (this.value !== "") {
@@ -123,7 +123,7 @@ export default {
 
             this.selected_value = event.target.value;
             this.obsolescence_date = input_date_value;
-        }
-    }
+        },
+    },
 };
 </script>

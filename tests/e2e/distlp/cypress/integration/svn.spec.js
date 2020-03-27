@@ -25,13 +25,11 @@ describe("SVN", () => {
     it("should display display repository content", () => {
         cy.getProjectId("svn-project-01")
             .as("project_id")
-            .then(project_id => {
+            .then((project_id) => {
                 cy.visit(`/plugins/svn/?group_id=${project_id}`);
                 cy.title().should("contain", "SVN");
 
-                cy.get("a", { timeout: 30000 })
-                    .contains("sample")
-                    .click();
+                cy.get("a", { timeout: 30000 }).contains("sample").click();
 
                 cy.get(".tuleap-viewvc-body")
                     .should("be.visible")

@@ -23,14 +23,14 @@ import { createAngularPromiseWrapper } from "../../../../../../tests/jest/angula
 
 import "angular-mocks";
 
-describe("ReleaseRestService -", function() {
+describe("ReleaseRestService -", function () {
     var $rootScope, $q, $httpBackend, ReleaseRestService, RestErrorService;
     let wrapPromise;
 
-    beforeEach(function() {
+    beforeEach(function () {
         angular.mock.module(tuleap_frs_module);
 
-        angular.mock.inject(function(
+        angular.mock.inject(function (
             _$rootScope_,
             _$httpBackend_,
             _$q_,
@@ -49,34 +49,34 @@ describe("ReleaseRestService -", function() {
         wrapPromise = createAngularPromiseWrapper($rootScope);
     });
 
-    afterEach(function() {
+    afterEach(function () {
         $httpBackend.verifyNoOutstandingExpectation();
         $httpBackend.verifyNoOutstandingRequest();
     });
 
-    describe("getReleaseLinkNatures() -", function() {
+    describe("getReleaseLinkNatures() -", function () {
         it(`Given an artifact id,
             when I get the link natures of an artifact,
             then a GET request will be sent to Tuleap
-            and an array of link nature objects will be returned`, async function() {
+            and an array of link nature objects will be returned`, async function () {
             var natures = [
                 {
                     shortname: "_is_child",
                     direction: "forward",
                     label: "Is Child",
-                    uri: "feminity/unman?a=taysaam&b=hebdomadally#downstreet"
+                    uri: "feminity/unman?a=taysaam&b=hebdomadally#downstreet",
                 },
                 {
                     shortname: "",
                     direction: "reverse",
                     label: "",
-                    uri: "subcentral/updraw?a=enmoss&b=monoicous#masterlily"
-                }
+                    uri: "subcentral/updraw?a=enmoss&b=monoicous#masterlily",
+                },
             ];
 
             $httpBackend.expectGET("/api/v1/artifacts/752/links").respond(
                 angular.toJson({
-                    natures: natures
+                    natures: natures,
                 })
             );
 
@@ -86,7 +86,7 @@ describe("ReleaseRestService -", function() {
             expect(await promise).toEqual(natures);
         });
 
-        it("when the server responds with an error, then the error will be set in the error service", async function() {
+        it("when the server responds with an error, then the error will be set in the error service", async function () {
             $httpBackend.expectGET("/api/v1/artifacts/286/links").respond(403, "Forbidden");
 
             var promise = wrapPromise(ReleaseRestService.getReleaseLinkNatures(286));
@@ -94,30 +94,30 @@ describe("ReleaseRestService -", function() {
 
             expect(RestErrorService.setError).toHaveBeenCalledWith({
                 code: 403,
-                message: "Forbidden"
+                message: "Forbidden",
             });
 
             await expect(promise).rejects.toBeDefined();
         });
     });
 
-    describe("getLinkedArtifacts() -", function() {
+    describe("getLinkedArtifacts() -", function () {
         it(`Given a URI, a limit and offset,
             when I get the linked artifacts at the URI,
             then a GET request will be sent to Tuleap
-            and an object containing the total number of artifacts and a collection of artifacts will be returned`, async function() {
+            and an object containing the total number of artifacts and a collection of artifacts will be returned`, async function () {
             var total_linked_artifacts = 21;
             var headers = {
-                "X-Pagination-Size": total_linked_artifacts
+                "X-Pagination-Size": total_linked_artifacts,
             };
 
             var linked_artifacts = [
                 {
-                    id: 459
+                    id: 459,
                 },
                 {
-                    id: 194
-                }
+                    id: 194,
+                },
             ];
 
             $httpBackend
@@ -126,7 +126,7 @@ describe("ReleaseRestService -", function() {
                 )
                 .respond(
                     angular.toJson({
-                        collection: linked_artifacts
+                        collection: linked_artifacts,
                     }),
                     headers
                 );
@@ -138,11 +138,11 @@ describe("ReleaseRestService -", function() {
 
             expect(await promise).toEqual({
                 results: linked_artifacts,
-                total: total_linked_artifacts
+                total: total_linked_artifacts,
             });
         });
 
-        it("when the server responds with an error, then the error will be set in the error service", async function() {
+        it("when the server responds with an error, then the error will be set in the error service", async function () {
             $httpBackend
                 .expectGET(
                     "/api/v1/artifacts/676/linked_artifacts?nature=elflock&direction=forward&limit=50&offset=0"
@@ -156,38 +156,38 @@ describe("ReleaseRestService -", function() {
 
             expect(RestErrorService.setError).toHaveBeenCalledWith({
                 code: 403,
-                message: "Forbidden"
+                message: "Forbidden",
             });
             await expect(promise).rejects.toBeDefined();
         });
     });
 
-    describe("getAllLinkedArtifacts() -", function() {
+    describe("getAllLinkedArtifacts() -", function () {
         it(`Given a URI and a progress callback,
             given a pagination limit of 2
             and given there were 4 linked artifacts,
             when I get the linked artifacts at the URI,
             then two requests will be sent to Tuleap,
             for each resolved request the progress callback will be called with the results
-            and a promise will be resolved with a single array containing all results`, async function() {
+            and a promise will be resolved with a single array containing all results`, async function () {
             var first_artifacts = [
                 {
-                    id: 153
+                    id: 153,
                 },
                 {
-                    id: 356
-                }
+                    id: 356,
+                },
             ];
 
             var second_artifacts = [
                 {
-                    id: 433
+                    id: 433,
                 },
                 {
-                    id: 422
-                }
+                    id: 422,
+                },
             ];
-            jest.spyOn(ReleaseRestService, "getLinkedArtifacts").mockImplementation(function(
+            jest.spyOn(ReleaseRestService, "getLinkedArtifacts").mockImplementation(function (
                 uri,
                 limit,
                 offset
@@ -195,12 +195,12 @@ describe("ReleaseRestService -", function() {
                 if (offset === 0) {
                     return $q.when({
                         results: first_artifacts,
-                        total: 4
+                        total: 4,
                     });
                 } else if (offset === 2) {
                     return $q.when({
                         results: second_artifacts,
-                        total: 4
+                        total: 4,
                     });
                 }
             });

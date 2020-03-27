@@ -19,7 +19,7 @@
 
 /* global tuleap:readonly */
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     var add_button_global_notif = document.getElementById("tracker-global-notifications-add"),
         add_row_global_notif = document.getElementById("tracker-global-notifications-row-add"),
         add_button_unsubscriber = document.getElementById("tracker-unsubcriber-add"),
@@ -35,12 +35,12 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     var show_edit_mode_buttons = document.querySelectorAll(".tracker-notification-edit-show");
-    [].forEach.call(show_edit_mode_buttons, function(button) {
+    [].forEach.call(show_edit_mode_buttons, function (button) {
         button.addEventListener("click", showEditMode);
     });
 
     var hide_edit_mode_buttons = document.querySelectorAll(".tracker-notification-edit-hide");
-    [].forEach.call(hide_edit_mode_buttons, function(button) {
+    [].forEach.call(hide_edit_mode_buttons, function (button) {
         button.addEventListener("click", hideEditMode);
     });
 
@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function() {
     initializeAddUnsubscriber();
 
     function initializeAddNotification() {
-        add_button_global_notif.addEventListener("click", function() {
+        add_button_global_notif.addEventListener("click", function () {
             hideEditMode();
             add_row_global_notif.classList.remove("tracker-global-notifications-row-add-hidden");
             add_button_global_notif.classList.add("tracker-global-notifications-add-hidden");
@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function initializeAddUnsubscriber() {
-        add_button_unsubscriber.addEventListener("click", function() {
+        add_button_unsubscriber.addEventListener("click", function () {
             add_row_unsubscriber.classList.remove("tracker-unsubscriber-row-add-hidden");
             add_button_unsubscriber.classList.add("tracker-unsubcriber-add-hidden");
             tuleap.resetPlaceholder("#add_unsubscriber");
@@ -78,10 +78,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
         form.reset();
 
-        [].forEach.call(read_cells, function(cell) {
+        [].forEach.call(read_cells, function (cell) {
             cell.classList.remove("tracker-global-notifications-checkbox-cell-hidden");
         });
-        [].forEach.call(edit_cells, function(cell) {
+        [].forEach.call(edit_cells, function (cell) {
             cell.classList.add("tracker-global-notifications-checkbox-cell-hidden");
         });
         add_row_global_notif.classList.add("tracker-global-notifications-row-add-hidden");
@@ -97,13 +97,13 @@ document.addEventListener("DOMContentLoaded", function() {
             read_cells = tr.querySelectorAll(".tracker-global-notifications-checkbox-cell-read"),
             edit_cells = tr.querySelectorAll(".tracker-global-notifications-checkbox-cell-write");
 
-        [].forEach.call(read_cells, function(cell) {
+        [].forEach.call(read_cells, function (cell) {
             cell.classList.add("tracker-global-notifications-checkbox-cell-hidden");
         });
-        [].forEach.call(edit_cells, function(cell) {
+        [].forEach.call(edit_cells, function (cell) {
             cell.classList.remove("tracker-global-notifications-checkbox-cell-hidden");
             var inputs = cell.getElementsByTagName("input");
-            [].forEach.call(inputs, function(input) {
+            [].forEach.call(inputs, function (input) {
                 input.disabled = false;
             });
         });
@@ -126,7 +126,7 @@ document.addEventListener("DOMContentLoaded", function() {
             return;
         }
 
-        [].forEach.call(inputs, function(input) {
+        [].forEach.call(inputs, function (input) {
             tuleap.loadUserAndUgroupAutocompleter(input);
             tuleap.addDataToAutocompleter(input);
         });

@@ -7,7 +7,7 @@ function MergeModalController(modal_instance, shouldMergeCallback) {
 
     Object.assign(self, {
         proceed,
-        cancel
+        cancel,
     });
 
     function cancel() {

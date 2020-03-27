@@ -47,8 +47,8 @@ import { BannerState } from "../type";
 
 @Component({
     components: {
-        BannerPresenter
-    }
+        BannerPresenter,
+    },
 })
 export default class App extends Vue {
     @Prop({ required: true, type: String })
@@ -76,7 +76,7 @@ export default class App extends Vue {
             .then(() => {
                 location.reload();
             })
-            .catch(error => {
+            .catch((error) => {
                 this.error_message = error.message;
                 this.banner_presenter_is_loading = false;
             });
@@ -87,7 +87,7 @@ export default class App extends Vue {
             .then(() => {
                 location.reload();
             })
-            .catch(error => {
+            .catch((error) => {
                 this.error_message = error.message;
                 this.banner_presenter_is_loading = false;
             });

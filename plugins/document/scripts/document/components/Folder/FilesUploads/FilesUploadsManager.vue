@@ -44,7 +44,7 @@ export default {
     data() {
         return {
             modal: null,
-            nb_uploads_in_error: 0
+            nb_uploads_in_error: 0,
         };
     },
     computed: {
@@ -56,15 +56,15 @@ export default {
             );
         },
         should_display_progress_bar() {
-            return this.files_uploads_list.filter(file => file.upload_error === null).length > 0;
-        }
+            return this.files_uploads_list.filter((file) => file.upload_error === null).length > 0;
+        },
     },
     mounted() {
         this.modal = createModal(this.$refs.uploads_modal.$el);
 
         this.$store.watch(
-            state => state.files_uploads_list.filter(file => file.upload_error !== null),
-            uploads_in_error => {
+            (state) => state.files_uploads_list.filter((file) => file.upload_error !== null),
+            (uploads_in_error) => {
                 if (uploads_in_error.length > this.nb_uploads_in_error && !this.modal.is_shown) {
                     this.modal.show();
                 }
@@ -72,6 +72,6 @@ export default {
                 this.nb_uploads_in_error = uploads_in_error.length;
             }
         );
-    }
+    },
 };
 </script>

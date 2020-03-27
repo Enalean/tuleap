@@ -16,15 +16,15 @@
  */
 
 /* global jQuery:readonly codendi:readonly */
-(function($, codendi) {
-    $(document).ready(function() {
-        $(".widget_myprojects_editor").each(function() {
+(function ($, codendi) {
+    $(document).ready(function () {
+        $(".widget_myprojects_editor").each(function () {
             var element = $(this),
                 options = {
                     toolbar: "minimal",
                     onLoad: $.noop(),
                     toggle: false,
-                    default_in_html: true
+                    default_in_html: true,
                 };
             new codendi.RTE(element.attr("id"), options);
         });

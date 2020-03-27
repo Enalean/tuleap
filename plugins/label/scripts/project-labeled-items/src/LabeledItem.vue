@@ -26,7 +26,7 @@
 export default {
     name: "LabeledItem",
     props: {
-        item: Object
-    }
+        item: Object,
+    },
 };
 </script>

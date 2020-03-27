@@ -11,25 +11,25 @@ function TimelineController(SharedPropertiesService, TimelineService, TooltipSer
         loading_timeline: true,
         new_comment: {
             content: "",
-            user_id: SharedPropertiesService.getUserId()
+            user_id: SharedPropertiesService.getUserId(),
         },
         addComment,
-        $onInit: init
+        $onInit: init,
     });
 
     function init() {
-        SharedPropertiesService.whenReady().then(function() {
+        SharedPropertiesService.whenReady().then(function () {
             self.pull_request = SharedPropertiesService.getPullRequest();
             TimelineService.getTimeline(
                 self.pull_request,
                 TimelineService.timeline_pagination.limit,
                 TimelineService.timeline_pagination.offset
             )
-                .then(function(timeline) {
+                .then(function (timeline) {
                     self.timeline = timeline;
                     TooltipService.setupTooltips();
                 })
-                .finally(function() {
+                .finally(function () {
                     self.loading_timeline = false;
                 });
         });
@@ -37,7 +37,7 @@ function TimelineController(SharedPropertiesService, TimelineService, TooltipSer
 
     function addComment() {
         TimelineService.addComment(self.pull_request, self.timeline, self.new_comment).then(
-            function() {
+            function () {
                 self.new_comment.content = "";
                 TooltipService.setupTooltips();
             }

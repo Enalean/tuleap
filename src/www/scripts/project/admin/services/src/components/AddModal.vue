@@ -59,18 +59,18 @@ export default {
     props: {
         form_url: {
             type: String,
-            required: true
-        }
+            required: true,
+        },
     },
     data() {
         return {
-            modal: null
+            modal: null,
         };
     },
     computed: {
         close_label() {
             return this.$gettext("Close");
-        }
+        },
     },
     mounted() {
         this.modal = createModal(this.$el);
@@ -86,7 +86,7 @@ export default {
     methods: {
         show() {
             this.modal.show();
-        }
-    }
+        },
+    },
 };
 </script>

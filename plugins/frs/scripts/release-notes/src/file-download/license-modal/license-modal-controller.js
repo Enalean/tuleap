@@ -31,7 +31,7 @@ function LicenseModalController(modal_instance, acceptCallback, SharedProperties
 
         exchange_policy_url: platform_license_info.exchange_policy_url,
         organisation_name: platform_license_info.organisation_name,
-        contact_email: platform_license_info.contact_email
+        contact_email: platform_license_info.contact_email,
     });
 
     function accept() {

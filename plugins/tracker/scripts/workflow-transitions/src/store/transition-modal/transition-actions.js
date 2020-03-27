@@ -23,7 +23,7 @@ import {
     getUserGroups,
     patchTransition,
     getPostActions,
-    putPostActions
+    putPostActions,
 } from "../../api/rest-querier.js";
 import { animateUpdated } from "../../helpers/item-animator.js";
 
@@ -33,7 +33,7 @@ export {
     loadUserGroupsIfNotCached,
     loadPostActions,
     saveTransitionRules,
-    setUsedServiceName
+    setUsedServiceName,
 };
 
 async function showTransitionConfigurationModal({ dispatch, commit }, transition) {
@@ -42,7 +42,7 @@ async function showTransitionConfigurationModal({ dispatch, commit }, transition
         await Promise.all([
             dispatch("loadTransition", transition.id),
             dispatch("loadUserGroupsIfNotCached"),
-            dispatch("loadPostActions", transition.id)
+            dispatch("loadPostActions", transition.id),
         ]);
     } catch (error) {
         const error_message = await getErrorMessage(error);
@@ -76,7 +76,7 @@ async function saveTransitionRules({ commit, state, getters }) {
         commit("beginModalSave");
         await Promise.all([
             patchTransition(state.current_transition),
-            putPostActions(state.current_transition.id, getters.post_actions)
+            putPostActions(state.current_transition.id, getters.post_actions),
         ]);
         const transition = { ...state.current_transition };
         animateUpdated(

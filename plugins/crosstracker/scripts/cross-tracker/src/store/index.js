@@ -30,7 +30,7 @@ export function createStore() {
         getters,
         mutations,
         state: {
-            ...state
-        }
+            ...state,
+        },
     });
 }

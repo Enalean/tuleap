@@ -42,7 +42,7 @@ import ChildrenCell from "./Cell/ChildrenCell.vue";
 const column = namespace("column");
 
 @Component({
-    components: { ChildrenCell, ParentCell }
+    components: { ChildrenCell, ParentCell },
 })
 export default class ChildrenSwimlane extends Vue {
     @Prop({ required: true })

@@ -25,7 +25,7 @@ describe(`ChangeFieldConfirmationModal`, () => {
     function createWrapper(props) {
         return shallowMount(ChangeFieldConfirmationModal, {
             localVue,
-            propsData: props
+            propsData: props,
         });
     }
 
@@ -33,7 +33,7 @@ describe(`ChangeFieldConfirmationModal`, () => {
         let wrapper;
         beforeEach(() => {
             wrapper = createWrapper({
-                is_operation_running: true
+                is_operation_running: true,
             });
         });
 

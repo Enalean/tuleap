@@ -24,7 +24,7 @@ import {
     getProjectsWithTimetracking,
     getTrackersFromReport,
     getTrackersWithTimetracking,
-    saveNewReport
+    saveNewReport,
 } from "./rest-querier.js";
 
 jest.mock("tlp");
@@ -35,12 +35,12 @@ describe("Get Report() -", () => {
             {
                 id: 1,
                 uri: "timetracking_reports/1",
-                trackers: [{ id: 1, label: "timetracking_tracker" }]
-            }
+                trackers: [{ id: 1, label: "timetracking_tracker" }],
+            },
         ];
         const tlpGet = jest.spyOn(tlp, "get");
         mockFetchSuccess(tlpGet, {
-            return_json: report
+            return_json: report,
         });
 
         const result = await getTrackersFromReport(1);
@@ -50,8 +50,8 @@ describe("Get Report() -", () => {
             {
                 id: 1,
                 uri: "timetracking_reports/1",
-                trackers: [{ id: 1, label: "timetracking_tracker" }]
-            }
+                trackers: [{ id: 1, label: "timetracking_tracker" }],
+            },
         ]);
     });
 });
@@ -62,32 +62,32 @@ describe("Get Report's times() -", () => {
             {
                 artifacts: [
                     {
-                        minutes: 20
+                        minutes: 20,
                     },
                     {
-                        minutes: 40
-                    }
+                        minutes: 40,
+                    },
                 ],
                 id: "16",
                 label: "tracker",
                 project: {},
-                uri: ""
+                uri: "",
             },
             {
                 artifacts: [
                     {
-                        minutes: 20
-                    }
+                        minutes: 20,
+                    },
                 ],
                 id: "18",
                 label: "tracker 2",
                 project: {},
-                uri: ""
-            }
+                uri: "",
+            },
         ];
         const tlpGet = jest.spyOn(tlp, "get");
         mockFetchSuccess(tlpGet, {
-            return_json: trackers
+            return_json: trackers,
         });
 
         const result = await getTrackersFromReport(1);
@@ -101,11 +101,11 @@ describe("getProjects() -", () => {
     it("the REST route projects will be queried with with_time_tracking parameter and the projects returned", async () => {
         const projects = [
             { id: 765, label: "timetracking" },
-            { id: 239, label: "projectTest" }
+            { id: 239, label: "projectTest" },
         ];
         const tlpGet = jest.spyOn(tlp, "get");
         mockFetchSuccess(tlpGet, {
-            return_json: projects
+            return_json: projects,
         });
 
         const result = await getProjectsWithTimetracking();
@@ -114,12 +114,12 @@ describe("getProjects() -", () => {
             params: {
                 limit: 50,
                 offset: 0,
-                query: JSON.stringify({ with_time_tracking: true })
-            }
+                query: JSON.stringify({ with_time_tracking: true }),
+            },
         });
         expect(result).toEqual([
             { id: 765, label: "timetracking" },
-            { id: 239, label: "projectTest" }
+            { id: 239, label: "projectTest" },
         ]);
     });
 });
@@ -128,11 +128,11 @@ describe("getTrackers() -", () => {
     it("the  REST route projects/id/trackers will be queried project id and with_time_tracking parameter and the trackers returned", async () => {
         const trackers = [
             { id: 16, label: "tracker_1" },
-            { id: 18, label: "tracker_2" }
+            { id: 18, label: "tracker_2" },
         ];
         const tlpGet = jest.spyOn(tlp, "get");
         mockFetchSuccess(tlpGet, {
-            return_json: trackers
+            return_json: trackers,
         });
 
         const result = await getTrackersWithTimetracking(102);
@@ -142,12 +142,12 @@ describe("getTrackers() -", () => {
                 representation: "minimal",
                 limit: 50,
                 offset: 0,
-                query: JSON.stringify({ with_time_tracking: true })
-            }
+                query: JSON.stringify({ with_time_tracking: true }),
+            },
         });
         expect(result).toEqual([
             { id: 16, label: "tracker_1" },
-            { id: 18, label: "tracker_2" }
+            { id: 18, label: "tracker_2" },
         ]);
     });
 });
@@ -160,27 +160,27 @@ describe("Save new Report() -", () => {
                 uri: "timetracking_reports/1",
                 trackers: [
                     { id: 1, label: "timetracking_tracker" },
-                    { id: 2, label: "timetracking_tracker_2" }
-                ]
-            }
+                    { id: 2, label: "timetracking_tracker_2" },
+                ],
+            },
         ];
 
         const tlpPut = jest.spyOn(tlp, "put");
         mockFetchSuccess(tlpPut, {
-            return_json: report
+            return_json: report,
         });
         const headers = {
-            "content-type": "application/json"
+            "content-type": "application/json",
         };
         const body = JSON.stringify({
-            trackers_id: [1, 2]
+            trackers_id: [1, 2],
         });
 
         const result = await saveNewReport(1, [1, 2]);
 
         expect(tlpPut).toHaveBeenCalledWith("/api/v1/timetracking_reports/1", {
             headers,
-            body
+            body,
         });
         expect(result).toEqual([
             {
@@ -188,9 +188,9 @@ describe("Save new Report() -", () => {
                 uri: "timetracking_reports/1",
                 trackers: [
                     { id: 1, label: "timetracking_tracker" },
-                    { id: 2, label: "timetracking_tracker_2" }
-                ]
-            }
+                    { id: 2, label: "timetracking_tracker_2" },
+                ],
+            },
         ]);
     });
 });

@@ -38,29 +38,29 @@ function getWrapper(
                 state: {
                     user: { user_has_accessibility_mode },
                     swimlane: {},
-                    fullscreen: {}
+                    fullscreen: {},
                 },
                 getters: {
-                    tracker_of_card: (): Tracker => tracker_of_card
-                }
-            })
+                    tracker_of_card: (): Tracker => tracker_of_card,
+                },
+            }),
         },
         propsData: { card },
-        slots
+        slots,
     });
 }
 
 function getCard(
     definition: Card = {
         background_color: "",
-        is_in_edit_mode: false
+        is_in_edit_mode: false,
     } as Card
 ): Card {
     return {
         id: 43,
         color: "lake-placid-blue",
         assignees: [] as User[],
-        ...definition
+        ...definition,
     } as Card;
 }
 
@@ -87,7 +87,7 @@ describe("BaseCard", () => {
 
     it("includes the remaining effort slot", () => {
         const wrapper = getWrapper(getCard(), {
-            remaining_effort: '<div class="my-remaining-effort"></div>'
+            remaining_effort: '<div class="my-remaining-effort"></div>',
         });
 
         expect(wrapper.contains(".taskboard-card > .my-remaining-effort")).toBe(true);
@@ -198,7 +198,7 @@ describe("BaseCard", () => {
                 card,
                 label,
                 tracker: { title_field: { id: 1212 } } as Tracker,
-                assignees: []
+                assignees: [],
             } as UpdateCardPayload);
         });
 
@@ -219,7 +219,7 @@ describe("BaseCard", () => {
                 card,
                 label,
                 tracker: { title_field: { id: 1212 } } as Tracker,
-                assignees: []
+                assignees: [],
             } as UpdateCardPayload);
         });
 
@@ -251,7 +251,7 @@ describe("BaseCard", () => {
                 card,
                 label: "toto",
                 tracker: { title_field: { id: 1212 } } as Tracker,
-                assignees: [{ id: 123 }, { id: 234 }]
+                assignees: [{ id: 123 }, { id: 234 }],
             } as UpdateCardPayload);
         });
 
@@ -259,7 +259,7 @@ describe("BaseCard", () => {
             const card = getCard({
                 is_in_edit_mode: true,
                 is_being_saved: true,
-                is_just_saved: true
+                is_just_saved: true,
             } as Card);
             const wrapper = getWrapper(card);
 
@@ -272,7 +272,7 @@ describe("BaseCard", () => {
             const card = getCard({
                 is_in_edit_mode: false,
                 is_being_saved: true,
-                is_just_saved: true
+                is_just_saved: true,
             } as Card);
             const wrapper = getWrapper(card);
 
@@ -285,7 +285,7 @@ describe("BaseCard", () => {
             const card = getCard({
                 is_in_edit_mode: false,
                 is_being_saved: false,
-                is_just_saved: true
+                is_just_saved: true,
             } as Card);
             const wrapper = getWrapper(card);
 
@@ -298,7 +298,7 @@ describe("BaseCard", () => {
             const card = getCard({
                 is_in_edit_mode: false,
                 is_being_saved: false,
-                is_just_saved: true
+                is_just_saved: true,
             } as Card);
 
             jest.useFakeTimers();

@@ -34,25 +34,25 @@ const webpack_config_for_vue = {
         repository: "./scripts/repository/src/index.js",
         "repository-blob": [
             "./scripts/repository/file/syntax-highlight.js",
-            "./scripts/repository/file/line-highlight.js"
-        ]
+            "./scripts/repository/file/line-highlight.js",
+        ],
     },
     context,
     output,
     externals: {
-        tlp: "tlp"
+        tlp: "tlp",
     },
     module: {
         rules: [
             webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
             webpack_configurator.rule_easygettext_loader,
-            webpack_configurator.rule_vue_loader
-        ]
+            webpack_configurator.rule_vue_loader,
+        ],
     },
     plugins: [manifest_plugin, webpack_configurator.getVueLoaderPlugin()],
     resolveLoader: {
-        alias: webpack_configurator.easygettext_loader_alias
-    }
+        alias: webpack_configurator.easygettext_loader_alias,
+    },
 };
 
 const webpack_config_for_vanilla = {
@@ -60,31 +60,31 @@ const webpack_config_for_vanilla = {
         "siteadmin-gitolite": "./scripts/siteadmin/gitolite.js",
         "siteadmin-gerrit": "./scripts/siteadmin/gerrit/index.js",
         "siteadmin-mirror": "./scripts/siteadmin/mirror/index.js",
-        "repo-admin-notifications": "./scripts/admin-notifications.js"
+        "repo-admin-notifications": "./scripts/admin-notifications.js",
     },
     context,
     output,
     externals: {
         tlp: "tlp",
-        tuleap: "tuleap"
+        tuleap: "tuleap",
     },
     module: {
         rules: [
             webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
-            webpack_configurator.rule_po_files
-        ]
+            webpack_configurator.rule_po_files,
+        ],
     },
-    plugins: [manifest_plugin, webpack_configurator.getMomentLocalePlugin()]
+    plugins: [manifest_plugin, webpack_configurator.getMomentLocalePlugin()],
 };
 
 const webpack_config_for_legacy_scripts = {
     entry: {
-        null: "null_entry"
+        null: "null_entry",
     },
     context,
     output,
     externals: {
-        tuleap: "tuleap"
+        tuleap: "tuleap",
     },
     plugins: [
         ...webpack_configurator.getLegacyConcatenatedScriptsPlugins({
@@ -92,16 +92,16 @@ const webpack_config_for_legacy_scripts = {
                 "./scripts/git.js",
                 "./scripts/mass-update.js",
                 "./scripts/webhooks.js",
-                "./scripts/permissions.js"
-            ]
+                "./scripts/permissions.js",
+            ],
         }),
-        manifest_plugin
-    ]
+        manifest_plugin,
+    ],
 };
 
 const entry_points = {
     default: "./themes/default/css/style.scss",
-    "syntax-highlight": "./themes/BurningParrot/syntax-highlight.scss"
+    "syntax-highlight": "./themes/BurningParrot/syntax-highlight.scss",
 };
 
 const colors = ["blue", "green", "grey", "orange", "purple", "red"];
@@ -121,14 +121,14 @@ const webpack_config_for_themes = {
     context,
     output,
     module: {
-        rules: [webpack_configurator.rule_scss_loader, webpack_configurator.rule_css_assets]
+        rules: [webpack_configurator.rule_scss_loader, webpack_configurator.rule_css_assets],
     },
-    plugins: [manifest_plugin, ...webpack_configurator.getCSSExtractionPlugins()]
+    plugins: [manifest_plugin, ...webpack_configurator.getCSSExtractionPlugins()],
 };
 
 module.exports = [
     webpack_config_for_vue,
     webpack_config_for_vanilla,
     webpack_config_for_legacy_scripts,
-    webpack_config_for_themes
+    webpack_config_for_themes,
 ];

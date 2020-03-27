@@ -66,7 +66,7 @@ import ProjectShortName from "./ProjectShortName.vue";
 import EventBus from "../../../helpers/event-bus";
 
 @Component({
-    components: { ProjectShortName }
+    components: { ProjectShortName },
 })
 export default class ProjectName extends Vue {
     $refs!: {

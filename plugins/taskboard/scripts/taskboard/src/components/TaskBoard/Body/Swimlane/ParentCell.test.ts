@@ -31,22 +31,22 @@ describe("ParentCell", () => {
                 $store: createStoreMock({
                     state: {
                         fullscreen: {
-                            is_taskboard_in_fullscreen_mode: false
-                        }
+                            is_taskboard_in_fullscreen_mode: false,
+                        },
                     },
                     getters: {
-                        "fullscreen/fullscreen_class": ""
-                    }
-                })
+                        "fullscreen/fullscreen_class": "",
+                    },
+                }),
             },
             propsData: {
                 swimlane: {
                     card: {
                         id: 43,
-                        has_children: true
-                    }
-                } as Swimlane
-            }
+                        has_children: true,
+                    },
+                } as Swimlane,
+            },
         });
 
         expect(wrapper.contains(CardWithRemainingEffort)).toBe(true);
@@ -59,22 +59,22 @@ describe("ParentCell", () => {
                 $store: createStoreMock({
                     state: {
                         fullscreen: {
-                            is_taskboard_in_fullscreen_mode: false
-                        }
+                            is_taskboard_in_fullscreen_mode: false,
+                        },
                     },
                     getters: {
-                        "fullscreen/fullscreen_class": ""
-                    }
-                })
+                        "fullscreen/fullscreen_class": "",
+                    },
+                }),
             },
             propsData: {
                 swimlane: {
                     card: {
                         id: 43,
-                        has_children: false
-                    }
-                } as Swimlane
-            }
+                        has_children: false,
+                    },
+                } as Swimlane,
+            },
         });
 
         expect(wrapper.contains(CardWithRemainingEffort)).toBe(true);
@@ -87,23 +87,23 @@ describe("ParentCell", () => {
                 $store: createStoreMock({
                     state: {
                         fullscreen: {
-                            is_taskboard_in_fullscreen_mode: false
-                        }
+                            is_taskboard_in_fullscreen_mode: false,
+                        },
                     },
                     getters: {
-                        "fullscreen/fullscreen_class": ""
-                    }
-                })
+                        "fullscreen/fullscreen_class": "",
+                    },
+                }),
             },
             propsData: {
                 swimlane: {
                     card: {
                         id: 43,
                         has_children: false,
-                        is_in_edit_mode: true
-                    }
-                } as Swimlane
-            }
+                        is_in_edit_mode: true,
+                    },
+                } as Swimlane,
+            },
         });
 
         expect(wrapper.find(CardWithRemainingEffort).classes()).toContain(

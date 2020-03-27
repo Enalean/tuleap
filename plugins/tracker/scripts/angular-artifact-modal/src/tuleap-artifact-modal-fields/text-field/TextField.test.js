@@ -32,8 +32,8 @@ function getInstance() {
         localVue,
         propsData: {
             field,
-            value
-        }
+            value,
+        },
     });
 }
 
@@ -43,7 +43,7 @@ describe(`TextField`, () => {
 
         value = {
             format: "text",
-            content: ""
+            content: "",
         };
     });
 
@@ -70,8 +70,8 @@ describe(`TextField`, () => {
         expect(wrapper.emitted("input")[0]).toEqual([
             {
                 format: "text",
-                content: "caramba"
-            }
+                content: "caramba",
+            },
         ]);
     });
 
@@ -82,8 +82,8 @@ describe(`TextField`, () => {
         expect(wrapper.emitted("input")[0]).toEqual([
             {
                 format: "html",
-                content: ""
-            }
+                content: "",
+            },
         ]);
     });
 

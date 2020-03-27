@@ -56,7 +56,7 @@ export default {
     components: { LabeledItem },
     props: {
         labelsId: String,
-        projectId: String
+        projectId: String,
     },
     data() {
         return {
@@ -67,7 +67,7 @@ export default {
             offset: 0,
             limit: 50,
             has_more_items: false,
-            is_loading_more: false
+            is_loading_more: false,
         };
     },
     computed: {
@@ -76,7 +76,7 @@ export default {
         },
         empty() {
             return this.items.length === 0;
-        }
+        },
     },
     mounted() {
         this.loadLabeledItems();
@@ -94,7 +94,7 @@ export default {
                     labeled_items,
                     are_there_items_user_cannot_see,
                     has_more,
-                    offset
+                    offset,
                 } = await getLabeledItems(this.projectId, this.labels_id, this.offset, this.limit);
 
                 this.offset = offset;
@@ -116,7 +116,7 @@ export default {
             await this.loadLabeledItems();
 
             this.is_loading_more = false;
-        }
-    }
+        },
+    },
 };
 </script>

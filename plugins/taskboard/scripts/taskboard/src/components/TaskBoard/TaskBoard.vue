@@ -37,7 +37,7 @@ import {
     Drekkenov,
     init,
     PossibleDropCallbackParameter,
-    SuccessfulDropCallbackParameter
+    SuccessfulDropCallbackParameter,
 } from "../../helpers/drag-and-drop/drekkenov";
 import { Card, ColumnDefinition, Swimlane } from "../../type";
 import {
@@ -45,7 +45,7 @@ import {
     checkCellAcceptsDrop,
     isContainer,
     isConsideredInDropzone,
-    invalid
+    invalid,
 } from "../../helpers/drag-drop";
 import { HandleDropPayload } from "../../store/swimlane/type";
 import TaskBoardHeader from "./Header/TaskBoardHeader.vue";
@@ -58,7 +58,7 @@ const column = namespace("column");
 const swimlane = namespace("swimlane");
 
 @Component({
-    components: { TaskBoardBody, TaskBoardHeader, TaskboardButtonBar, ErrorModal }
+    components: { TaskBoardBody, TaskBoardHeader, TaskboardButtonBar, ErrorModal },
 })
 export default class TaskBoard extends Vue {
     @error.State
@@ -118,7 +118,7 @@ export default class TaskBoard extends Vue {
                 return checkCellAcceptsDrop(this.$store, {
                     dropped_card: context.dragged_element,
                     source_cell: context.source_dropzone,
-                    target_cell: context.target_dropzone
+                    target_cell: context.target_dropzone,
                 });
             },
             onDragStart: (context: DragCallbackParameter): void => {
@@ -153,13 +153,13 @@ export default class TaskBoard extends Vue {
                     dropped_card: context.dropped_element,
                     target_cell: context.target_dropzone,
                     source_cell: context.source_dropzone,
-                    sibling_card
+                    sibling_card,
                 });
             },
             cleanupAfterDragCallback: (): void => {
                 this.resetIdOfCardBeingDragged();
                 this.unsetDropZoneRejectingDrop();
-            }
+            },
         });
     }
 }

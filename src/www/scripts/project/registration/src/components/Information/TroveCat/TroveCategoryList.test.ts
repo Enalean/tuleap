@@ -35,21 +35,21 @@ describe("TroveCategoryList -", () => {
                     id: "10",
                     shortname: "MIT",
                     fullname: "MIT Licence",
-                    children: []
+                    children: [],
                 },
                 {
                     id: "20",
                     shortname: "GPL",
                     fullname: "GNU General Public License ",
-                    children: []
-                }
+                    children: [],
+                },
             ],
-            is_description_required: false
+            is_description_required: false,
         };
 
         factory = shallowMount(TroveCategoryList, {
             localVue: await createProjectRegistrationLocalVue(),
-            propsData: { trovecat: trove_categories }
+            propsData: { trovecat: trove_categories },
         });
     });
 
@@ -69,7 +69,7 @@ describe("TroveCategoryList -", () => {
 
         expect(event_bus_emit).toHaveBeenCalledWith("choose-trove-cat", {
             category_id: "1",
-            value_id: "20"
+            value_id: "20",
         });
     });
 });

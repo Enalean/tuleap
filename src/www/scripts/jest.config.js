@@ -38,6 +38,6 @@ module.exports = {
         "!**/viewportchecker/**",
         "!**/bootstrap/**",
         "!**/datepicker/**",
-        "!**/FlamingParrot/keymaster-sequence/**"
-    ]
+        "!**/FlamingParrot/keymaster-sequence/**",
+    ],
 };

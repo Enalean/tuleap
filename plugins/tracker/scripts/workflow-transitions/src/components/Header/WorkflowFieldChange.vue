@@ -62,12 +62,12 @@ export default {
     components: { ChangeFieldConfirmationModal },
     data() {
         return {
-            modal: null
+            modal: null,
         };
     },
     computed: {
         ...mapState(["is_operation_running"]),
-        ...mapGetters(["workflow_field_label", "current_tracker_id"])
+        ...mapGetters(["workflow_field_label", "current_tracker_id"]),
     },
     mounted() {
         this.modal = createModal(this.$refs.modal);
@@ -87,7 +87,7 @@ export default {
             );
             feedback_box.appendChild(feedback_section_content);
             this.modal.hide();
-        }
-    }
+        },
+    },
 };
 </script>

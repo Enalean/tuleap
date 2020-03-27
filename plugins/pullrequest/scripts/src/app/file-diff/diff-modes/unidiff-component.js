@@ -30,8 +30,8 @@ export default {
     bindings: {
         diff: "<",
         filePath: "@",
-        pullRequestId: "@"
-    }
+        pullRequestId: "@",
+    },
 };
 
 controller.$inject = [
@@ -39,7 +39,7 @@ controller.$inject = [
     "$scope",
     "FileDiffRestService",
     "TooltipService",
-    "CodeMirrorHelperService"
+    "CodeMirrorHelperService",
 ];
 
 function controller(
@@ -55,7 +55,7 @@ function controller(
     const GUTTER_OLDLINES = "gutter-oldlines";
 
     Object.assign(self, {
-        $onInit: init
+        $onInit: init,
     });
 
     function init() {
@@ -64,7 +64,7 @@ function controller(
             readOnly: true,
             lineWrapping: true,
             gutters: [GUTTER_OLDLINES, GUTTER_NEWLINES],
-            mode: self.diff.mime_type
+            mode: self.diff.mime_type,
         };
 
         const unidiff_codemirror = CodeMirror(codemirror_area, unidiff_options);
@@ -78,7 +78,7 @@ function controller(
             collapsible_sections
         );
 
-        getComments().forEach(comment => {
+        getComments().forEach((comment) => {
             CodeMirrorHelperService.displayInlineComment(
                 unidiff_codemirror,
                 comment,

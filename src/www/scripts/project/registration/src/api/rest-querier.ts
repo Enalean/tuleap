@@ -24,11 +24,11 @@ export { postProject, getProjectUserIsAdminOf, getTermOfService };
 
 async function postProject(project_properties: ProjectProperties): Promise<string> {
     const headers = {
-        "content-type": "application/json"
+        "content-type": "application/json",
     };
 
     const json_body = {
-        ...project_properties
+        ...project_properties,
     };
     const body = JSON.stringify(json_body);
 
@@ -44,20 +44,20 @@ async function getProjectUserIsAdminOf(): Promise<TemplateData[]> {
             params: {
                 limit: 50,
                 offset: 0,
-                query: JSON.stringify({ is_admin_of: true })
-            }
+                query: JSON.stringify({ is_admin_of: true }),
+            },
         }
     );
 
     return minimal_project_representations
-        .filter(project => !project.is_template)
-        .map(project => {
+        .filter((project) => !project.is_template)
+        .map((project) => {
             return {
                 title: project.label,
                 description: "",
                 id: project.id,
                 glyph: "",
-                is_built_in: false
+                is_built_in: false,
             };
         })
         .sort((a, b) => a.title.localeCompare(b.title, undefined, { numeric: true }));

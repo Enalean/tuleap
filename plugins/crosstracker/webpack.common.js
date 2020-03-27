@@ -21,7 +21,7 @@ const path = require("path");
 const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 
 let entry_points = {
-    "cross-tracker": "./scripts/cross-tracker/src/index.js"
+    "cross-tracker": "./scripts/cross-tracker/src/index.js",
 };
 
 const colors = ["blue", "green", "grey", "orange", "purple", "red"];
@@ -40,25 +40,25 @@ module.exports = [
             path.resolve(__dirname, "../../src/www/assets/crosstracker/")
         ),
         externals: {
-            tlp: "tlp"
+            tlp: "tlp",
         },
         module: {
             rules: [
                 webpack_configurator.rule_scss_loader,
                 webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
                 webpack_configurator.rule_easygettext_loader,
-                webpack_configurator.rule_vue_loader
-            ]
+                webpack_configurator.rule_vue_loader,
+            ],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
             webpack_configurator.getVueLoaderPlugin(),
             webpack_configurator.getMomentLocalePlugin(),
-            ...webpack_configurator.getCSSExtractionPlugins()
+            ...webpack_configurator.getCSSExtractionPlugins(),
         ],
         resolveLoader: {
-            alias: webpack_configurator.easygettext_loader_alias
-        }
-    }
+            alias: webpack_configurator.easygettext_loader_alias,
+        },
+    },
 ];

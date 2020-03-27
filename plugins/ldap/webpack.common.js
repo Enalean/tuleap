@@ -27,7 +27,7 @@ const output = webpack_configurator.configureOutput(
 
 const entry_points = {
     "project-admin-members": "./scripts/project-admin/project-admin-members.js",
-    "project-admin-ugroups": "./scripts/project-admin/project-admin-ugroups.js"
+    "project-admin-ugroups": "./scripts/project-admin/project-admin-ugroups.js",
 };
 
 const colors = ["blue", "green", "grey", "orange", "purple", "red"];
@@ -44,7 +44,7 @@ module.exports = [
         context,
         output,
         externals: {
-            tlp: "tlp"
+            tlp: "tlp",
         },
         module: {
             rules: [
@@ -52,13 +52,13 @@ module.exports = [
                 webpack_configurator.rule_mustache_files,
                 webpack_configurator.rule_po_files,
                 webpack_configurator.rule_scss_loader,
-                webpack_configurator.rule_css_assets
-            ]
+                webpack_configurator.rule_css_assets,
+            ],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
-            ...webpack_configurator.getCSSExtractionPlugins()
-        ]
-    }
+            ...webpack_configurator.getCSSExtractionPlugins(),
+        ],
+    },
 ];

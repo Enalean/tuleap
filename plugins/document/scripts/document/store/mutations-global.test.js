@@ -23,7 +23,7 @@ describe("Store mutations", () => {
     describe("beginLoading()", () => {
         it("sets loading to true", () => {
             const state = {
-                is_loading_folder: false
+                is_loading_folder: false,
             };
 
             mutations.beginLoading(state);
@@ -35,7 +35,7 @@ describe("Store mutations", () => {
     describe("stopLoading()", () => {
         it("sets loading to false", () => {
             const state = {
-                is_loading_folder: true
+                is_loading_folder: true,
             };
 
             mutations.stopLoading(state);
@@ -63,8 +63,8 @@ describe("Store mutations", () => {
                     { id: 41, parent_id: 33 },
                     target_folder,
                     { id: 42, parent_id: 33 },
-                    { id: 31, parent_id: 0 }
-                ]
+                    { id: 31, parent_id: 0 },
+                ],
             };
 
             mutations.appendFolderToAscendantHierarchy(state, target_folder);
@@ -72,14 +72,14 @@ describe("Store mutations", () => {
                 { id: 30, parent_id: 0 },
                 { id: 33, parent_id: 30 },
                 { id: 41, parent_id: 33 },
-                target_folder
+                target_folder,
             ]);
         });
     });
 
     it("store project user groups", () => {
         const state = {
-            project_ugroups: null
+            project_ugroups: null,
         };
 
         const retrieved_project_ugroups = [{ id: "102_3", label: "Project members" }];
@@ -90,7 +90,7 @@ describe("Store mutations", () => {
     describe("toggle quick look", () => {
         it("toggle quick look to true", () => {
             const state = {
-                toggle_quick_look: false
+                toggle_quick_look: false,
             };
             mutations.toggleQuickLook(state, true);
 
@@ -99,7 +99,7 @@ describe("Store mutations", () => {
 
         it("toggle quick look to false", () => {
             const state = {
-                toggle_quick_look: true
+                toggle_quick_look: true,
             };
             mutations.toggleQuickLook(state, false);
 

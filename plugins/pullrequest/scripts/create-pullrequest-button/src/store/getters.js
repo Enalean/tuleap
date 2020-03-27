@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const can_create_pullrequest = state => {
+export const can_create_pullrequest = (state) => {
     const has_an_unique_branch =
         state.source_branches.length === 1 && state.destination_branches.length === 1;
 

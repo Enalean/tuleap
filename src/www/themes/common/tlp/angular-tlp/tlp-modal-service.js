@@ -9,7 +9,7 @@ TlpModalService.$inject = [
     "$document",
     "$q",
     "$rootScope",
-    "$templateCache"
+    "$templateCache",
 ];
 
 function TlpModalService($compile, $controller, $document, $q, $rootScope, $templateCache) {
@@ -67,7 +67,7 @@ function TlpModalService($compile, $controller, $document, $q, $rootScope, $temp
         var resolved_promises = getResolvePromises(options.resolve);
         resolved_promises.unshift(template_promise);
 
-        var promise = $q.all(resolved_promises).then(function(template_and_resolved_dependencies) {
+        var promise = $q.all(resolved_promises).then(function (template_and_resolved_dependencies) {
             var template = template_and_resolved_dependencies.shift();
             var resolved_dependencies = template_and_resolved_dependencies;
             return createAndOpenModal(options, template, resolved_dependencies);
@@ -101,7 +101,7 @@ function TlpModalService($compile, $controller, $document, $q, $rootScope, $temp
 
         modal_instance.tlp_modal.show();
 
-        modal_instance.tlp_modal.addEventListener("tlp-modal-hidden", function() {
+        modal_instance.tlp_modal.addEventListener("tlp-modal-hidden", function () {
             compiled_modal.remove();
             scope.$destroy();
             delete modal_instance.tlp_modal;
@@ -116,11 +116,11 @@ function TlpModalService($compile, $controller, $document, $q, $rootScope, $temp
 
         var controller_injected_variables = {
             $scope: scope,
-            modal_instance: modal_instance
+            modal_instance: modal_instance,
         };
 
         var i = 0;
-        forEach(options.resolve, function(value, key) {
+        forEach(options.resolve, function (value, key) {
             controller_injected_variables[key] = resolved_dependencies[i];
             i++;
         });
@@ -154,7 +154,7 @@ function TlpModalService($compile, $controller, $document, $q, $rootScope, $temp
         }
 
         var promises = [];
-        forEach(resolve_options, function(value) {
+        forEach(resolve_options, function (value) {
             promises.push($q.when(value));
         });
 

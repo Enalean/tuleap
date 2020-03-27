@@ -34,7 +34,7 @@ describe("EmbeddedFileEditionSwitcher", () => {
             return shallowMount(EmbeddedFileEditionSwitcher, {
                 localVue,
                 propsData: { ...props },
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
     });

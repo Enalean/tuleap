@@ -24,14 +24,14 @@ module.exports = [
     {
         entry: {
             "flamingparrot-theme": "./themes/FlamingParrot/css/style.scss",
-            null: "null_entry"
+            null: "null_entry",
         },
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(
             path.resolve(__dirname, "../../src/www/assets/cardwall/")
         ),
         module: {
-            rules: [webpack_configurator.rule_scss_loader, webpack_configurator.rule_css_assets]
+            rules: [webpack_configurator.rule_scss_loader, webpack_configurator.rule_css_assets],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
@@ -43,10 +43,10 @@ module.exports = [
                     "./scripts/script.js",
                     "./scripts/custom-mapping.js",
                     "./scripts/CardsEditInPlace.js",
-                    "./scripts/fullscreen.js"
-                ]
+                    "./scripts/fullscreen.js",
+                ],
             }),
-            webpack_configurator.getManifestPlugin()
-        ]
-    }
+            webpack_configurator.getManifestPlugin(),
+        ],
+    },
 ];

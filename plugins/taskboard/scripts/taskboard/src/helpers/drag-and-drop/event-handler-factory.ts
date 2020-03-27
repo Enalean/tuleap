@@ -22,7 +22,7 @@ import {
     DragDropHandlers,
     DragHandler,
     DragStartContext,
-    DrekkenovInitOptions
+    DrekkenovInitOptions,
 } from "./types";
 import { OngoingDrag } from "./OngoingDrag";
 import { findClosestDraggable, findClosestDropzone } from "./dom-manipulation";
@@ -61,7 +61,7 @@ export function dragStartFactory(
         const internal_context: DragStartContext = {
             dragged_element: closest_draggable,
             source_dropzone: closest_dropzone,
-            initial_sibling: closest_draggable.nextElementSibling
+            initial_sibling: closest_draggable.nextElementSibling,
         };
         state.startDrag(internal_context);
         event.dataTransfer.setData(DREKKENOV_DRAG_DROP_TYPE, DREKKENOV_DRAG_DROP_VALUE);
@@ -95,7 +95,7 @@ function dragEnterFactory(
         const context = {
             dragged_element,
             source_dropzone: ongoing_drag.source_dropzone,
-            target_dropzone: closest_dropzone
+            target_dropzone: closest_dropzone,
         };
         if (!options.doesDropzoneAcceptDraggable(context)) {
             drop_ghost.revertAtInitialPlace();
@@ -124,7 +124,7 @@ function dragLeaveFactory(
         }
         const context = {
             dragged_element: ongoing_drag.dragged_element,
-            target_dropzone: closest_dropzone
+            target_dropzone: closest_dropzone,
         };
         options.onDragLeave(context);
     };
@@ -146,7 +146,7 @@ function dragOverFactory(
         const context = {
             dragged_element: ongoing_drag.dragged_element,
             source_dropzone: ongoing_drag.source_dropzone,
-            target_dropzone: closest_dropzone
+            target_dropzone: closest_dropzone,
         };
         if (!options.doesDropzoneAcceptDraggable(context)) {
             return;
@@ -184,7 +184,7 @@ function dropFactory(
             dropped_element: ongoing_drag.dragged_element,
             next_sibling: drop_ghost.getSibling(),
             source_dropzone: ongoing_drag.source_dropzone,
-            target_dropzone: closest_dropzone
+            target_dropzone: closest_dropzone,
         });
         // Let the browser know the drop is successful
         event.preventDefault();
@@ -218,6 +218,6 @@ export function handlersFactory(
         dragLeaveHandler: dragLeaveFactory(options, ongoing_drag, drop_ghost),
         dragOverHandler: dragOverFactory(options, ongoing_drag, drop_ghost),
         dropHandler: dropFactory(options, after_drop_event_source, ongoing_drag, drop_ghost),
-        dragEndHandler: dragEndFactory(options, after_drop_event_source)
+        dragEndHandler: dragEndFactory(options, after_drop_event_source),
     };
 }

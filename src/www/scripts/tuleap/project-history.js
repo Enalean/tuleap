@@ -15,9 +15,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-!(function($) {
-    $(document).ready(function() {
-        $("#events_box").change(function() {
+!(function ($) {
+    $(document).ready(function () {
+        $("#events_box").change(function () {
             if (this.value === "any") {
                 hideSubEventsBox();
             } else {

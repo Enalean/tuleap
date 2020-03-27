@@ -11,7 +11,7 @@ describe("AddToDashboardController -", () => {
 
         let $controller, $element;
 
-        angular.mock.inject(function(_$controller_, _SharedPropertiesService_) {
+        angular.mock.inject(function (_$controller_, _SharedPropertiesService_) {
             $controller = _$controller_;
             SharedPropertiesService = _SharedPropertiesService_;
         });
@@ -19,11 +19,11 @@ describe("AddToDashboardController -", () => {
         $element = angular.element("div");
         AddToDashboardCtrl = $controller(AddToDashboardBaseController, {
             $element: $element,
-            SharedPropertiesService: SharedPropertiesService
+            SharedPropertiesService: SharedPropertiesService,
         });
         AddToDashboardCtrl.dashboard_dropdown = {
             project_dashboards: [],
-            user_dashboards: []
+            user_dashboards: [],
         };
     });
 
@@ -32,12 +32,12 @@ describe("AddToDashboardController -", () => {
             AddToDashboardCtrl.dashboard_dropdown.user_dashboards = [
                 {
                     id: "10",
-                    name: "dashboard 1"
+                    name: "dashboard 1",
                 },
                 {
                     id: "11",
-                    name: "dashboard 2"
-                }
+                    name: "dashboard 2",
+                },
             ];
             jest.spyOn(SharedPropertiesService, "getUserIsAdmin").mockReturnValue(false);
             jest.spyOn(SharedPropertiesService, "getUserIsOnWidget").mockReturnValue(false);
@@ -50,12 +50,12 @@ describe("AddToDashboardController -", () => {
             AddToDashboardCtrl.dashboard_dropdown.project_dashboards = [
                 {
                     id: "20",
-                    name: "project dashboard 1"
+                    name: "project dashboard 1",
                 },
                 {
                     id: "21",
-                    name: "project dashboard 2"
-                }
+                    name: "project dashboard 2",
+                },
             ];
             jest.spyOn(SharedPropertiesService, "getUserIsAdmin").mockReturnValue(true);
             jest.spyOn(SharedPropertiesService, "getUserIsOnWidget").mockReturnValue(false);
@@ -68,12 +68,12 @@ describe("AddToDashboardController -", () => {
             AddToDashboardCtrl.dashboard_dropdown.user_dashboards = [
                 {
                     id: "10",
-                    name: "dashboard 1"
+                    name: "dashboard 1",
                 },
                 {
                     id: "11",
-                    name: "dashboard 2"
-                }
+                    name: "dashboard 2",
+                },
             ];
             jest.spyOn(SharedPropertiesService, "getUserIsAdmin").mockReturnValue(true);
             jest.spyOn(SharedPropertiesService, "getUserIsOnWidget").mockReturnValue(false);
@@ -86,12 +86,12 @@ describe("AddToDashboardController -", () => {
             AddToDashboardCtrl.dashboard_dropdown.project_dashboards = [
                 {
                     id: "20",
-                    name: "project dashboard 1"
+                    name: "project dashboard 1",
                 },
                 {
                     id: "21",
-                    name: "project dashboard 2"
-                }
+                    name: "project dashboard 2",
+                },
             ];
             jest.spyOn(SharedPropertiesService, "getUserIsAdmin").mockReturnValue(false);
             jest.spyOn(SharedPropertiesService, "getUserIsOnWidget").mockReturnValue(false);

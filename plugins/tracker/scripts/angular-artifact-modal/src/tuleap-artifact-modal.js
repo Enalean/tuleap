@@ -54,21 +54,21 @@ export default angular
         model,
         ngSanitize,
         quota_display,
-        tuleap_highlight
+        tuleap_highlight,
     ])
     .run([
         "gettextCatalog",
-        function(gettextCatalog) {
+        function (gettextCatalog) {
             for (const [language, strings] of Object.entries(translations)) {
                 const short_language = language.split("_")[0];
                 gettextCatalog.setStrings(short_language, strings);
             }
-        }
+        },
     ])
     .config(NgVueConfig)
     .controller("TuleapArtifactModalController", ArtifactModalController)
     .value("TuleapArtifactModalLoading", {
-        loading: false
+        loading: false,
     })
     .service("TuleapArtifactModalFieldDependenciesService", FieldDependenciesService)
     .service("TuleapArtifactModalValidateService", ValidateService)

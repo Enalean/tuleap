@@ -32,14 +32,14 @@ describe("FileCellTitle", () => {
             id: 42,
             title: "my corrupted embedded document",
             file_properties: null,
-            type: TYPE_FILE
+            type: TYPE_FILE,
         };
 
         const component_options = {
             localVue,
             propsData: {
-                item
-            }
+                item,
+            },
         };
 
         const store = new Vuex.Store();
@@ -57,16 +57,16 @@ describe("FileCellTitle", () => {
             file_properties: {
                 file_type: "image/png",
                 download_href: "/plugins/docman/download/119/42",
-                file_size: "109768"
+                file_size: "109768",
             },
-            type: TYPE_FILE
+            type: TYPE_FILE,
         };
 
         const component_options = {
             localVue,
             propsData: {
-                item
-            }
+                item,
+            },
         };
 
         const store = new Vuex.Store();

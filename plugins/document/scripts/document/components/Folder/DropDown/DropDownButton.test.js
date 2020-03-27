@@ -28,7 +28,7 @@ describe("DropDownButton", () => {
         dropdown_factory = (props = {}) => {
             return shallowMount(DropDownButton, {
                 localVue,
-                propsData: { ...props }
+                propsData: { ...props },
             });
         };
     });
@@ -67,7 +67,7 @@ describe("DropDownButton", () => {
         const wrapper = dropdown_factory({
             isAppended: true,
             isInQuickLookMode: true,
-            isInLargeMode: true
+            isInLargeMode: true,
         });
 
         expect(wrapper.contains(".tlp-button-large")).toBeTruthy();
@@ -78,7 +78,7 @@ describe("DropDownButton", () => {
         const wrapper = dropdown_factory({
             isAppended: true,
             isInQuickLookMode: true,
-            isInLargeMode: true
+            isInLargeMode: true,
         });
 
         const event_bus_off = jest.spyOn(EventBus, "$off");

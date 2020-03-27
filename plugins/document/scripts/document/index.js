@@ -32,9 +32,9 @@ document.addEventListener("DOMContentLoaded", () => {
     Vue.use(VueDOMPurifyHTML);
     Vue.use(GetTextPlugin, {
         translations: {
-            fr: french_translations.messages
+            fr: french_translations.messages,
         },
-        silent: true
+        silent: true,
     });
 
     let user_locale = document.body.dataset.userLocale;
@@ -88,7 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
             is_item_status_metadata_used,
             is_obsolescence_date_metadata_used,
             csrf_token_name,
-            csrf_token
-        }
+            csrf_token,
+        },
     }).$mount(vue_mount_point);
 });

@@ -30,18 +30,18 @@ describe("FieldTrackerTemplateId", () => {
                     state: {
                         selected_tracker_template: {
                             id: "100",
-                            name: "bugs"
+                            name: "bugs",
                         },
                         selected_project_tracker_template: {
                             id: "101",
-                            name: "Kanban"
-                        }
+                            name: "Kanban",
+                        },
                     } as State,
                     getters: {
-                        is_a_duplication
-                    }
-                })
-            }
+                        is_a_duplication,
+                    },
+                }),
+            },
         });
     }
 

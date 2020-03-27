@@ -21,11 +21,11 @@ export const service_mixin = {
     props: {
         minimal_rank: {
             type: Number,
-            required: true
+            required: true,
         },
         service: {
             type: Object,
-            required: true
-        }
-    }
+            required: true,
+        },
+    },
 };

@@ -54,7 +54,7 @@ export function addBadgeCaption(
             .attr("class", "release-chart-end-icon fa")
             .attr("x", badge_props.x + badge_props.width / 2 - X_AXIS_TO_CENTER_FLAG)
             .attr("y", badge_props.y - Y_AXIS_TO_CENTER_FLAG)
-            .text(function() {
+            .text(function () {
                 return "\uf11e";
             }); // fa-flag-checkered
     }

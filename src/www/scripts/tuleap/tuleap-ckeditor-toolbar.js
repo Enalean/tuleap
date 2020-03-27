@@ -22,5 +22,5 @@ tuleap.ckeditor.toolbar = [
     ["Bold", "Italic", "Underline"],
     ["NumberedList", "BulletedList", "-", "Blockquote", "Format"],
     ["Link", "Unlink", "Anchor", "Image"],
-    ["Source"]
+    ["Source"],
 ];

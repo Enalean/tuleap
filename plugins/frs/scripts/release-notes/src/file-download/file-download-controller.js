@@ -33,7 +33,7 @@ function FileDownloadController(TlpModalService, $window) {
         $onInit: init,
         downloadFile,
 
-        file_download_url: null
+        file_download_url: null,
     });
 
     function init() {
@@ -69,7 +69,7 @@ function FileDownloadController(TlpModalService, $window) {
             controller: LicenseModalController,
             controllerAs: "$ctrl",
             tlpModalOptions: { destroy_on_hide: true },
-            resolve: { acceptCallback }
+            resolve: { acceptCallback },
         });
     }
 
@@ -79,7 +79,7 @@ function FileDownloadController(TlpModalService, $window) {
             controller: CustomLicenseModalController,
             controllerAs: "$ctrl",
             tlpModalOptions: { destroy_on_hide: true },
-            resolve: { acceptCallback }
+            resolve: { acceptCallback },
         });
     }
 }

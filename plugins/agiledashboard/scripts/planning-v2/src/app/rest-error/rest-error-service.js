@@ -8,12 +8,12 @@ function RestErrorService() {
     var self = this;
     _.extend(self, {
         getError: getError,
-        setError: setError
+        setError: setError,
     });
 
     var error = {
         rest_error: "",
-        rest_error_occured: false
+        rest_error_occured: false,
     };
 
     function getError() {

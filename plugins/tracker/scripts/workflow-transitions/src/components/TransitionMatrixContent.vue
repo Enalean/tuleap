@@ -21,7 +21,7 @@
     <td
         class="tracker-workflow-transition-cell"
         v-bind:class="{
-            'tracker-workflow-transition-action-updated': is_transition_updated
+            'tracker-workflow-transition-action-updated': is_transition_updated,
         }"
     >
         <i
@@ -38,7 +38,7 @@
             v-else-if="is_empty"
             class="tracker-workflow-transition-cell-empty"
             v-bind:class="{
-                'tracker-workflow-transition-action-disabled': is_another_operation_running
+                'tracker-workflow-transition-action-disabled': is_another_operation_running,
             }"
             v-on:click="is_another_operation_running || createTransition()"
             data-test-action="create-transition"
@@ -73,26 +73,27 @@ export default {
     props: {
         from: {
             type: Object,
-            required: true
+            required: true,
         },
         to: {
             type: Object,
-            required: true
-        }
+            required: true,
+        },
     },
     data() {
         return {
-            is_operation_running: false
+            is_operation_running: false,
         };
     },
     computed: {
         ...mapState({
-            is_another_operation_running: "is_operation_running"
+            is_another_operation_running: "is_operation_running",
         }),
         ...mapGetters(["is_workflow_advanced", "current_workflow_transitions"]),
         transition() {
             return this.current_workflow_transitions.find(
-                transition => transition.from_id === this.from.id && transition.to_id === this.to.id
+                (transition) =>
+                    transition.from_id === this.from.id && transition.to_id === this.to.id
             );
         },
         is_allowed() {
@@ -107,14 +108,14 @@ export default {
             }
 
             return this.transition.updated;
-        }
+        },
     },
     methods: {
         async createTransition() {
             this.is_operation_running = true;
             const new_transition = {
                 from_id: this.from.id,
-                to_id: this.to.id
+                to_id: this.to.id,
             };
             try {
                 await this.$store.dispatch("createTransition", new_transition);
@@ -135,7 +136,7 @@ export default {
                 "transitionModal/showTransitionConfigurationModal",
                 this.transition
             );
-        }
-    }
+        },
+    },
 };
 </script>

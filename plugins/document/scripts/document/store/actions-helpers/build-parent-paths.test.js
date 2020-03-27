@@ -23,32 +23,32 @@ describe("buildItemPath", () => {
     it("Build item parent path", () => {
         const item = {
             item_id: 10,
-            item_name: "my item"
+            item_name: "my item",
         };
 
         const parents = [
             {
                 item_id: 1,
-                title: "folder A"
+                title: "folder A",
             },
             {
                 item_id: 2,
-                title: "folder B"
+                title: "folder B",
             },
             {
                 item_id: 3,
-                title: "folder C"
+                title: "folder C",
             },
             {
                 item_id: 4,
-                title: "folder D"
-            }
+                title: "folder D",
+            },
         ];
 
         const item_path = buildItemPath(item, parents);
         expect(item_path).toEqual({
             path: "/folder A/folder B/folder C/folder D/my item",
-            id: 10
+            id: 10,
         });
     });
 });

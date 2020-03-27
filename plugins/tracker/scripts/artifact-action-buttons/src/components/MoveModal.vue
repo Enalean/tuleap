@@ -87,7 +87,7 @@ export default {
     components: {
         DryRunPreview,
         MoveModalTitle,
-        MoveModalSelectors
+        MoveModalSelectors,
     },
     computed: {
         ...mapState([
@@ -95,12 +95,12 @@ export default {
             "error_message",
             "has_processed_dry_run",
             "selected_tracker",
-            "is_processing_move"
+            "is_processing_move",
         ]),
         ...mapGetters(["has_error"]),
         has_no_selected_tracker() {
             return this.selected_tracker.tracker_id === null;
-        }
+        },
     },
     mounted() {
         const $modal = $(this.$el);
@@ -118,7 +118,7 @@ export default {
         },
         moveArtifact() {
             return this.$store.dispatch("move", getArtifactId());
-        }
-    }
+        },
+    },
 };
 </script>

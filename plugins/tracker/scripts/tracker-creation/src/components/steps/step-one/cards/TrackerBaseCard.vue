@@ -21,7 +21,7 @@
     <div
         class="tracker-creation-template-card"
         v-bind:class="{
-            'tracker-creation-template-card-active': is_option_active
+            'tracker-creation-template-card-active': is_option_active,
         }"
     >
         <label class="tlp-card tlp-card-selectable tracker-creation-template-card-label">

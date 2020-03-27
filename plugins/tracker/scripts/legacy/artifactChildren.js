@@ -23,7 +23,7 @@ var tuleap = tuleap || {};
 tuleap.artifact = tuleap.artifact || {};
 
 tuleap.artifact.HierarchyViewer = Class.create({
-    initialize: function(base_url, container, locales, imgroot, artifact_id) {
+    initialize: function (base_url, container, locales, imgroot, artifact_id) {
         var renderer = new tuleap.artifact.HierarchyViewer.Renderer(container, locales, imgroot),
             provider = new tuleap.artifact.HierarchyViewer.ItemProvider(base_url, renderer),
             root = renderer.insertRoot({
@@ -31,19 +31,19 @@ tuleap.artifact.HierarchyViewer = Class.create({
                 parent_id: null,
                 xref: null,
                 title: null,
-                status: null
+                status: null,
             }),
             top_item = new tuleap.artifact.HierarchyViewer.Item(artifact_id, root, provider);
 
         top_item.open();
-    }
+    },
 });
 
 /**
  * Display children and subchildren in the page
  */
 tuleap.artifact.HierarchyViewer.Renderer = Class.create({
-    initialize: function(container, locales, imgroot) {
+    initialize: function (container, locales, imgroot) {
         this.container = container;
         this.locales = locales;
         this.imgroot = imgroot;
@@ -63,7 +63,7 @@ tuleap.artifact.HierarchyViewer.Renderer = Class.create({
         );
     },
 
-    insertTable: function() {
+    insertTable: function () {
         var title = this.locales.tracker_hierarchy.title_column_name,
             status = this.locales.tracker_hierarchy.status_column_name;
 
@@ -88,7 +88,7 @@ tuleap.artifact.HierarchyViewer.Renderer = Class.create({
         );
     },
 
-    insertRoot: function(root) {
+    insertRoot: function (root) {
         this.body.insert(this.row_template.evaluate(this.escapeTemplateItem(root)));
         var element = this.body.childElements().last();
         element.setAttribute("data-is-root", 1);
@@ -96,16 +96,16 @@ tuleap.artifact.HierarchyViewer.Renderer = Class.create({
         return element;
     },
 
-    insertChildAfter: function(parent_element, child) {
+    insertChildAfter: function (parent_element, child) {
         var element;
         parent_element.insert({
-            after: this.row_template.evaluate(this.escapeTemplateItem(child))
+            after: this.row_template.evaluate(this.escapeTemplateItem(child)),
         });
 
         element = parent_element.next();
         if (!child.has_children) {
             element.down("a.toggle-child").setStyle({
-                visibility: "hidden"
+                visibility: "hidden",
             });
         }
         this.adjustPadding(parent_element, element);
@@ -113,90 +113,86 @@ tuleap.artifact.HierarchyViewer.Renderer = Class.create({
         return element;
     },
 
-    adjustPadding: function(parent, child) {
+    adjustPadding: function (parent, child) {
         var padding_left = 0;
         if (!parent.getAttribute("data-is-root")) {
-            padding_left =
-                ~~parent
-                    .down("td")
-                    .getStyle("padding-left")
-                    .sub("px", "") + 24;
+            padding_left = ~~parent.down("td").getStyle("padding-left").sub("px", "") + 24;
         }
         child.down("td").setStyle({
-            paddingLeft: padding_left + "px"
+            paddingLeft: padding_left + "px",
         });
     },
 
-    startSpinner: function() {
+    startSpinner: function () {
         this.container.up("body").setStyle({
-            cursor: "progress"
+            cursor: "progress",
         });
     },
 
-    stopSpinner: function() {
+    stopSpinner: function () {
         this.container.up("body").setStyle({
-            cursor: "default"
+            cursor: "default",
         });
     },
 
-    escapeTemplateItem: function(item) {
+    escapeTemplateItem: function (item) {
         return {
             id: tuleap.escaper.html(item.id),
             parent_id: tuleap.escaper.html(item.parent_id),
             url: tuleap.escaper.html(item.url),
             xref: tuleap.escaper.html(item.xref),
             title: tuleap.escaper.html(item.title),
-            status: tuleap.escaper.html(item.status)
+            status: tuleap.escaper.html(item.status),
         };
-    }
+    },
 });
 
 /**
  * Provide children of an item
  */
 tuleap.artifact.HierarchyViewer.ItemProvider = Class.create({
-    initialize: function(base_url, renderer) {
+    initialize: function (base_url, renderer) {
         this.base_url = base_url;
         this.renderer = renderer;
         this.nb_request = 0;
     },
 
-    injectChildren: function(item) {
+    injectChildren: function (item) {
         this.nb_request--;
         this.renderer.startSpinner();
         new Ajax.Request(this.base_url, {
             method: "GET",
             parameters: {
                 aid: item.getId(),
-                func: "get-children"
+                func: "get-children",
             },
-            onSuccess: function(transport) {
+            onSuccess: function (transport) {
                 this.receiveChildren(item, transport.responseJSON);
             }.bind(this),
-            onComplete: function() {
+            onComplete: function () {
                 if (this.nb_request--) {
                     this.renderer.stopSpinner();
                 }
-            }.bind(this)
+            }.bind(this),
         });
     },
 
-    receiveChildren: function(parent, children) {
+    receiveChildren: function (parent, children) {
         children.map(
-            function(child) {
+            function (child) {
                 var element = this.renderer.insertChildAfter(parent.getElement(), child),
                     item = new tuleap.artifact.HierarchyViewer.Item(child.id, element, this);
                 parent.addChild(item);
             }.bind(this)
         );
-    }
+    },
 });
 
 /**
  * A child
  */
 tuleap.artifact.HierarchyViewer.Item = Class.create({
-    initialize: function(id, element, item_provider) {
+    initialize: function (id, element, item_provider) {
         this.id = id;
         this.element = element;
         this.item_provider = item_provider;
@@ -206,7 +202,7 @@ tuleap.artifact.HierarchyViewer.Item = Class.create({
         this.icon = element.down("a.toggle-child > i");
         this.icon.observe(
             "click",
-            function(evt) {
+            function (evt) {
                 if (this.is_open) {
                     this.close();
                 } else {
@@ -217,15 +213,15 @@ tuleap.artifact.HierarchyViewer.Item = Class.create({
         );
     },
 
-    getElement: function() {
+    getElement: function () {
         return this.element;
     },
 
-    getId: function() {
+    getId: function () {
         return this.id;
     },
 
-    addChild: function(child) {
+    addChild: function (child) {
         if (!this.children) {
             this.children = [];
         }
@@ -233,7 +229,7 @@ tuleap.artifact.HierarchyViewer.Item = Class.create({
         this.children.push(child);
     },
 
-    open: function() {
+    open: function () {
         this.is_open = true;
         this.useHideIcon();
         if (this.children.size()) {
@@ -243,43 +239,43 @@ tuleap.artifact.HierarchyViewer.Item = Class.create({
         }
     },
 
-    close: function() {
+    close: function () {
         this.is_open = false;
         this.useShowIcon();
         this.hideChildren();
     },
 
-    show: function() {
+    show: function () {
         this.element.show();
         if (this.is_open) {
             this.showChildren();
         }
     },
 
-    hide: function() {
+    hide: function () {
         this.element.hide();
         this.hideChildren();
     },
 
-    hideChildren: function() {
-        this.children.each(function(child) {
+    hideChildren: function () {
+        this.children.each(function (child) {
             child.hide();
         });
     },
 
-    showChildren: function() {
-        this.children.each(function(child) {
+    showChildren: function () {
+        this.children.each(function (child) {
             child.show();
         });
     },
 
-    useShowIcon: function() {
+    useShowIcon: function () {
         this.icon.classList.remove("fa-caret-down");
         this.icon.classList.add("fa-caret-right");
     },
 
-    useHideIcon: function() {
+    useHideIcon: function () {
         this.icon.classList.add("fa-caret-down");
         this.icon.classList.remove("fa-caret-right");
-    }
+    },
 });

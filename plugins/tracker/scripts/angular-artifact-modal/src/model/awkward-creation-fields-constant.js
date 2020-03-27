@@ -7,7 +7,7 @@ var AwkwardCreationFields = [
     "subby",
     "luby",
     "subon",
-    "cross"
+    "cross",
 ];
 
 export default AwkwardCreationFields;

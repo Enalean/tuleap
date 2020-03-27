@@ -11,6 +11,6 @@ function OverviewDirective() {
         templateUrl: "overview.tpl.html",
         controller: OverviewController,
         controllerAs: "overview",
-        bindToController: true
+        bindToController: true,
     };
 }

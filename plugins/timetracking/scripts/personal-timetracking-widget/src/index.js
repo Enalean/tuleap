@@ -29,9 +29,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (vue_mount_point) {
         Vue.use(GetTextPlugin, {
             translations: {
-                fr: french_translations.messages
+                fr: french_translations.messages,
             },
-            silent: true
+            silent: true,
         });
 
         const locale = document.body.dataset.userLocale;
@@ -44,8 +44,8 @@ document.addEventListener("DOMContentLoaded", () => {
         new rootComponent({
             store,
             propsData: {
-                userId: user_id
-            }
+                userId: user_id,
+            },
         }).$mount(vue_mount_point);
     }
 });

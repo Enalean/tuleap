@@ -28,7 +28,7 @@ describe(`swimlane-helpers`, () => {
         second_swimlane = { card: { id: 24 } } as Swimlane;
         const third_swimlane = { card: { id: 35 } } as Swimlane;
         state = {
-            swimlanes: [first_swimlane, second_swimlane, third_swimlane]
+            swimlanes: [first_swimlane, second_swimlane, third_swimlane],
         } as SwimlaneState;
     });
 
@@ -67,7 +67,7 @@ describe(`swimlane-helpers`, () => {
             it will find it in the state and replace it with the parameter`, () => {
             const replacement = ({
                 card: { id: 24 },
-                children_cards: [{ card: { id: 473 } }]
+                children_cards: [{ card: { id: 473 } }],
             } as unknown) as Swimlane;
             helpers.replaceSwimlane(state, replacement);
 
@@ -95,18 +95,18 @@ describe(`swimlane-helpers`, () => {
             const card_from_state = {
                 id: 24,
                 label: "Card from state",
-                has_children: false
+                has_children: false,
             } as Card;
             const swimlane = {
                 card: card_from_state,
                 children_cards: [],
-                is_loading_children_cards: false
+                is_loading_children_cards: false,
             } as Swimlane;
             const state = {
                 swimlanes: [
                     { card: { id: 99, label: "Unrelated swimlane" }, children_cards: [] },
-                    swimlane
-                ]
+                    swimlane,
+                ],
             } as SwimlaneState;
 
             const result = helpers.findCard(state, solo_card);
@@ -120,13 +120,13 @@ describe(`swimlane-helpers`, () => {
             const card_from_state = { id: 1, label: "Card from state", has_children: true };
             const swimlane = {
                 card: card_from_state,
-                children_cards: [{ id: 19, label: "Unrelated child" }]
+                children_cards: [{ id: 19, label: "Unrelated child" }],
             };
             const state = {
                 swimlanes: [
                     { card: { id: 99, label: "Unrelated swimlane" }, children_cards: [] },
-                    swimlane
-                ]
+                    swimlane,
+                ],
             } as SwimlaneState;
 
             const result = helpers.findCard(state, parent_card);
@@ -140,13 +140,13 @@ describe(`swimlane-helpers`, () => {
             const card_from_state = { id: 10, label: "Card from state" };
             const swimlane = {
                 card: { id: 1, has_children: true },
-                children_cards: [{ id: 19, label: "Unrelated child" }, card_from_state]
+                children_cards: [{ id: 19, label: "Unrelated child" }, card_from_state],
             };
             const state = {
                 swimlanes: [
                     { card: { id: 99, label: "Unrelated swimlane" }, children_cards: [] },
-                    swimlane
-                ]
+                    swimlane,
+                ],
             } as SwimlaneState;
 
             const result = helpers.findCard(state, child_card);
@@ -162,10 +162,10 @@ describe(`swimlane-helpers`, () => {
                     {
                         card: { id: 99, label: "Unrelated swimlane" } as Card,
                         children_cards: [] as Card[],
-                        is_loading_children_cards: false
-                    }
+                        is_loading_children_cards: false,
+                    },
                 ],
-                is_loading_swimlanes: false
+                is_loading_swimlanes: false,
             } as SwimlaneState;
             expect(() => helpers.findCard(state, unknown_card)).toThrow();
         });
@@ -176,7 +176,7 @@ describe(`swimlane-helpers`, () => {
             const swimlane: Swimlane = {
                 card: { id: 13, has_children: true },
                 children_cards: [{ id: 104 }, { id: 125 }],
-                is_loading_children_cards: false
+                is_loading_children_cards: false,
             } as Swimlane;
 
             expect(helpers.isSoloCard(swimlane)).toBe(false);
@@ -187,7 +187,7 @@ describe(`swimlane-helpers`, () => {
             const swimlane: Swimlane = {
                 card: { id: 45, has_children: true } as Card,
                 children_cards: [],
-                is_loading_children_cards: false
+                is_loading_children_cards: false,
             } as Swimlane;
 
             expect(helpers.isSoloCard(swimlane)).toBe(false);
@@ -197,7 +197,7 @@ describe(`swimlane-helpers`, () => {
             const swimlane: Swimlane = {
                 card: { id: 14, has_children: false } as Card,
                 children_cards: [],
-                is_loading_children_cards: false
+                is_loading_children_cards: false,
             };
 
             expect(helpers.isSoloCard(swimlane)).toBe(true);

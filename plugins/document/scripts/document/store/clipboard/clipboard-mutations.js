@@ -26,7 +26,7 @@ export {
     emptyClipboardAfterItemDeletion,
     emptyClipboard,
     startPasting,
-    pastingHasFailed
+    pastingHasFailed,
 };
 
 function cutItem(state, item) {

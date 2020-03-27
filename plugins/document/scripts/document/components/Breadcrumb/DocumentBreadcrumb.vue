@@ -85,7 +85,7 @@ export default {
     components: { DocumentBreadcrumbElement, DocumentBreadcrumbDocument },
     data() {
         return {
-            max_nb_to_display: 5
+            max_nb_to_display: 5,
         };
     },
     computed: {
@@ -95,7 +95,7 @@ export default {
             "current_folder_ascendant_hierarchy",
             "is_loading_ascendant_hierarchy",
             "currently_previewed_item",
-            "current_folder"
+            "current_folder",
         ]),
         document_tree_title() {
             return this.$gettext("Project documentation");
@@ -128,12 +128,12 @@ export default {
         },
         current_folder_ascendant_hierarchy_to_display() {
             return this.current_folder_ascendant_hierarchy
-                .filter(parent => parent.parent_id !== 0)
+                .filter((parent) => parent.parent_id !== 0)
                 .slice(-this.max_nb_to_display);
         },
         is_current_document_displayed() {
             return this.currently_previewed_item !== null && this.current_folder !== null;
-        }
-    }
+        },
+    },
 };
 </script>

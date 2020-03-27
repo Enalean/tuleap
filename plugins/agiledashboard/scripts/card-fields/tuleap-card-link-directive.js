@@ -4,10 +4,10 @@ export default () => {
         scope: {
             text: "@",
             url: "@",
-            filter_terms: "@filterTerms"
+            filter_terms: "@filterTerms",
         },
         template: `<a data-nodrag="true" ng-href="{{ url }}"
                         ng-bind-html="text | tuleapHighlight:filter_terms"
-                    ></a>`
+                    ></a>`,
     };
 };

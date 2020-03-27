@@ -36,7 +36,7 @@ export default {
     name: "DocumentCellTitle",
     components: { FakeCaret },
     props: {
-        item: Object
+        item: Object,
     },
     computed: {
         icon_class() {
@@ -44,7 +44,7 @@ export default {
         },
         title() {
             return getTitleWithElipsisIfNeeded(this.item);
-        }
-    }
+        },
+    },
 };
 </script>

@@ -52,7 +52,7 @@ export default {
     name: "GitRepositoryTableFineGrainedPermission",
     components: { GitPermissionsBadge },
     props: {
-        fineGrainedPermissions: Object
-    }
+        fineGrainedPermissions: Object,
+    },
 };
 </script>

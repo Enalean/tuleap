@@ -33,15 +33,15 @@ describe("column_and_swimlane_of_cell", () => {
 
         root_state = {
             column: {
-                columns: [column_to_find]
+                columns: [column_to_find],
             },
             swimlane: {
-                swimlanes: [swimlane_to_find]
+                swimlanes: [swimlane_to_find],
             },
             trackers: [
                 { id: 1, add_in_place: { child_tracker_id: 1533 } },
-                { id: 2, add_in_place: null }
-            ]
+                { id: 2, add_in_place: null },
+            ],
         } as RootState;
     });
 

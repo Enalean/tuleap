@@ -8,11 +8,11 @@ export default function StaticOpenListFieldDirective() {
         scope: {
             field: "=tuleapArtifactModalStaticOpenListField",
             isDisabled: "&isDisabled",
-            value_model: "=valueModel"
+            value_model: "=valueModel",
         },
         controller: StaticOpenListFieldController,
         controllerAs: "static_open_list_field",
         bindToController: true,
-        templateUrl: "static-open-list-field.tpl.html"
+        templateUrl: "static-open-list-field.tpl.html",
     };
 }

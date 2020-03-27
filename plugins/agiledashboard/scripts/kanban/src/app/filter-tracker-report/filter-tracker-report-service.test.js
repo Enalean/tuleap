@@ -8,7 +8,7 @@ describe("FilterTrackerReportService -", () => {
     beforeEach(() => {
         angular.mock.module(kanban_module);
 
-        angular.mock.inject(function(_FilterTrackerReportService_, _SharedPropertiesService_) {
+        angular.mock.inject(function (_FilterTrackerReportService_, _SharedPropertiesService_) {
             FilterTrackerReportService = _FilterTrackerReportService_;
             SharedPropertiesService = _SharedPropertiesService_;
         });
@@ -21,15 +21,15 @@ describe("FilterTrackerReportService -", () => {
                     id: 305,
                     description: "The system default artifact report",
                     name: "Default",
-                    selectable: true
+                    selectable: true,
                 },
                 {
                     id: 306,
                     description: "Custom Assigned to me report",
                     name: "Assigned to me",
                     selectable: true,
-                    selected: true
-                }
+                    selected: true,
+                },
             ]);
             const selected_tracker_report_id = FilterTrackerReportService.getSelectedFilterTrackerReportId();
             expect(selected_tracker_report_id).toEqual(306);
@@ -41,14 +41,14 @@ describe("FilterTrackerReportService -", () => {
                     id: 305,
                     description: "The system default artifact report",
                     name: "Default",
-                    selectable: true
+                    selectable: true,
                 },
                 {
                     id: 306,
                     description: "Custom Assigned to me report",
                     name: "Assigned to me",
-                    selectable: true
-                }
+                    selectable: true,
+                },
             ]);
             const selected_tracker_report_id = FilterTrackerReportService.getSelectedFilterTrackerReportId();
             expect(selected_tracker_report_id).toEqual(0);
@@ -62,15 +62,15 @@ describe("FilterTrackerReportService -", () => {
                     id: 305,
                     description: "The system default artifact report",
                     name: "Default",
-                    selectable: true
+                    selectable: true,
                 },
                 {
                     id: 306,
                     description: "Custom Assigned to me report",
                     name: "Assigned to me",
                     selectable: true,
-                    selected: true
-                }
+                    selected: true,
+                },
             ]);
             expect(FilterTrackerReportService.isFiltersTrackerReportSelected()).toEqual(true);
         });
@@ -81,14 +81,14 @@ describe("FilterTrackerReportService -", () => {
                     id: 305,
                     description: "The system default artifact report",
                     name: "Default",
-                    selectable: true
+                    selectable: true,
                 },
                 {
                     id: 306,
                     description: "Custom Assigned to me report",
                     name: "Assigned to me",
-                    selectable: true
-                }
+                    selectable: true,
+                },
             ]);
             expect(FilterTrackerReportService.isFiltersTrackerReportSelected()).toEqual(false);
         });
@@ -102,15 +102,15 @@ describe("FilterTrackerReportService -", () => {
                     id: 305,
                     description: "The system default artifact report",
                     name: "Default",
-                    selectable: true
+                    selectable: true,
                 },
                 {
                     id: 306,
                     description: "Custom Assigned to me report",
                     name: "Assigned to me",
                     selectable: true,
-                    selected: true
-                }
+                    selected: true,
+                },
             ]);
             expect(FilterTrackerReportService.areCardsAndWIPUpdated()).toEqual(false);
         });
@@ -122,15 +122,15 @@ describe("FilterTrackerReportService -", () => {
                     id: 305,
                     description: "The system default artifact report",
                     name: "Default",
-                    selectable: true
+                    selectable: true,
                 },
                 {
                     id: 306,
                     description: "Custom Assigned to me report",
                     name: "Assigned to me",
                     selectable: true,
-                    selected: true
-                }
+                    selected: true,
+                },
             ]);
             expect(FilterTrackerReportService.areCardsAndWIPUpdated()).toEqual(false);
         });
@@ -142,14 +142,14 @@ describe("FilterTrackerReportService -", () => {
                     id: 305,
                     description: "The system default artifact report",
                     name: "Default",
-                    selectable: true
+                    selectable: true,
                 },
                 {
                     id: 306,
                     description: "Custom Assigned to me report",
                     name: "Assigned to me",
-                    selectable: true
-                }
+                    selectable: true,
+                },
             ]);
             expect(FilterTrackerReportService.areCardsAndWIPUpdated()).toEqual(false);
         });
@@ -161,14 +161,14 @@ describe("FilterTrackerReportService -", () => {
                     id: 305,
                     description: "The system default artifact report",
                     name: "Default",
-                    selectable: true
+                    selectable: true,
                 },
                 {
                     id: 306,
                     description: "Custom Assigned to me report",
                     name: "Assigned to me",
-                    selectable: true
-                }
+                    selectable: true,
+                },
             ]);
             expect(FilterTrackerReportService.areCardsAndWIPUpdated()).toEqual(true);
         });
@@ -182,15 +182,15 @@ describe("FilterTrackerReportService -", () => {
                     id: 305,
                     description: "The system default artifact report",
                     name: "Default",
-                    selectable: true
+                    selectable: true,
                 },
                 {
                     id: 306,
                     description: "Custom Assigned to me report",
                     name: "Assigned to me",
                     selectable: true,
-                    selected: true
-                }
+                    selected: true,
+                },
             ]);
             expect(FilterTrackerReportService.isWIPUpdated()).toEqual(false);
         });
@@ -202,14 +202,14 @@ describe("FilterTrackerReportService -", () => {
                     id: 305,
                     description: "The system default artifact report",
                     name: "Default",
-                    selectable: true
+                    selectable: true,
                 },
                 {
                     id: 306,
                     description: "Custom Assigned to me report",
                     name: "Assigned to me",
-                    selectable: true
-                }
+                    selectable: true,
+                },
             ]);
             expect(FilterTrackerReportService.isWIPUpdated()).toEqual(true);
         });
@@ -221,15 +221,15 @@ describe("FilterTrackerReportService -", () => {
                     id: 305,
                     description: "The system default artifact report",
                     name: "Default",
-                    selectable: true
+                    selectable: true,
                 },
                 {
                     id: 306,
                     description: "Custom Assigned to me report",
                     name: "Assigned to me",
                     selectable: true,
-                    selected: true
-                }
+                    selected: true,
+                },
             ]);
             expect(FilterTrackerReportService.isWIPUpdated()).toEqual(false);
         });
@@ -241,14 +241,14 @@ describe("FilterTrackerReportService -", () => {
                     id: 305,
                     description: "The system default artifact report",
                     name: "Default",
-                    selectable: true
+                    selectable: true,
                 },
                 {
                     id: 306,
                     description: "Custom Assigned to me report",
                     name: "Assigned to me",
-                    selectable: true
-                }
+                    selectable: true,
+                },
             ]);
             expect(FilterTrackerReportService.isWIPUpdated()).toEqual(false);
         });
@@ -262,15 +262,15 @@ describe("FilterTrackerReportService -", () => {
                     id: 305,
                     description: "The system default artifact report",
                     name: "Default",
-                    selectable: true
+                    selectable: true,
                 },
                 {
                     id: 306,
                     description: "Custom Assigned to me report",
                     name: "Assigned to me",
                     selectable: true,
-                    selected: true
-                }
+                    selected: true,
+                },
             ]);
             expect(FilterTrackerReportService.areNotCardsAndWIPUpdated()).toEqual(true);
         });
@@ -282,15 +282,15 @@ describe("FilterTrackerReportService -", () => {
                     id: 305,
                     description: "The system default artifact report",
                     name: "Default",
-                    selectable: true
+                    selectable: true,
                 },
                 {
                     id: 306,
                     description: "Custom Assigned to me report",
                     name: "Assigned to me",
                     selectable: true,
-                    selected: true
-                }
+                    selected: true,
+                },
             ]);
             expect(FilterTrackerReportService.areNotCardsAndWIPUpdated()).toEqual(false);
         });
@@ -302,14 +302,14 @@ describe("FilterTrackerReportService -", () => {
                     id: 305,
                     description: "The system default artifact report",
                     name: "Default",
-                    selectable: true
+                    selectable: true,
                 },
                 {
                     id: 306,
                     description: "Custom Assigned to me report",
                     name: "Assigned to me",
-                    selectable: true
-                }
+                    selectable: true,
+                },
             ]);
             expect(FilterTrackerReportService.areNotCardsAndWIPUpdated()).toEqual(false);
         });
@@ -321,14 +321,14 @@ describe("FilterTrackerReportService -", () => {
                     id: 305,
                     description: "The system default artifact report",
                     name: "Default",
-                    selectable: true
+                    selectable: true,
                 },
                 {
                     id: 306,
                     description: "Custom Assigned to me report",
                     name: "Assigned to me",
-                    selectable: true
-                }
+                    selectable: true,
+                },
             ]);
             expect(FilterTrackerReportService.areNotCardsAndWIPUpdated()).toEqual(false);
         });
@@ -342,15 +342,15 @@ describe("FilterTrackerReportService -", () => {
                     id: 305,
                     description: "The system default artifact report",
                     name: "Default",
-                    selectable: true
+                    selectable: true,
                 },
                 {
                     id: 306,
                     description: "Custom Assigned to me report",
                     name: "Assigned to me",
                     selectable: true,
-                    selected: true
-                }
+                    selected: true,
+                },
             ]);
             expect(FilterTrackerReportService.isNotWIPUpdated()).toEqual(true);
         });
@@ -362,14 +362,14 @@ describe("FilterTrackerReportService -", () => {
                     id: 305,
                     description: "The system default artifact report",
                     name: "Default",
-                    selectable: true
+                    selectable: true,
                 },
                 {
                     id: 306,
                     description: "Custom Assigned to me report",
                     name: "Assigned to me",
-                    selectable: true
-                }
+                    selectable: true,
+                },
             ]);
             expect(FilterTrackerReportService.isNotWIPUpdated()).toEqual(false);
         });
@@ -381,15 +381,15 @@ describe("FilterTrackerReportService -", () => {
                     id: 305,
                     description: "The system default artifact report",
                     name: "Default",
-                    selectable: true
+                    selectable: true,
                 },
                 {
                     id: 306,
                     description: "Custom Assigned to me report",
                     name: "Assigned to me",
                     selectable: true,
-                    selected: true
-                }
+                    selected: true,
+                },
             ]);
             expect(FilterTrackerReportService.isNotWIPUpdated()).toEqual(false);
         });
@@ -401,14 +401,14 @@ describe("FilterTrackerReportService -", () => {
                     id: 305,
                     description: "The system default artifact report",
                     name: "Default",
-                    selectable: true
+                    selectable: true,
                 },
                 {
                     id: 306,
                     description: "Custom Assigned to me report",
                     name: "Assigned to me",
-                    selectable: true
-                }
+                    selectable: true,
+                },
             ]);
             expect(FilterTrackerReportService.isNotWIPUpdated()).toEqual(false);
         });
@@ -421,30 +421,30 @@ describe("FilterTrackerReportService -", () => {
                     id: 305,
                     description: "The system default artifact report",
                     name: "Default",
-                    selectable: true
+                    selectable: true,
                 },
                 {
                     id: 306,
                     description: "Custom Assigned to me report",
-                    name: "Assigned to me"
+                    name: "Assigned to me",
                 },
                 {
                     id: 307,
                     description: "cacoethic anazoturia",
-                    name: "Achill rorqual"
+                    name: "Achill rorqual",
                 },
                 {
                     id: 308,
                     description: "fundable ironheartedly",
                     name: "Paratactically",
-                    selectable: true
+                    selectable: true,
                 },
                 {
                     id: 309,
                     description: "Diplochlamydeous",
                     name: "Reopposition",
-                    selectable: true
-                }
+                    selectable: true,
+                },
             ]);
         });
 

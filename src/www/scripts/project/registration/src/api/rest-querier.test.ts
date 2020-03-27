@@ -35,7 +35,7 @@ describe("rest-querier", () => {
             xml_template_name: "scrum",
             categories: [],
             description: "",
-            fields: []
+            fields: [],
         };
 
         const tlpPost = jest.spyOn(tlp, "post");
@@ -56,7 +56,7 @@ describe("rest-querier", () => {
             shortname: "My A project",
             status: "A",
             access: "public",
-            is_template: false
+            is_template: false,
         };
 
         const project_b: MinimalProjectRepresentation = {
@@ -68,7 +68,7 @@ describe("rest-querier", () => {
             shortname: "My B project",
             status: "B",
             access: "public",
-            is_template: true
+            is_template: true,
         };
 
         const project_list = [project_a, project_b];
@@ -85,7 +85,7 @@ describe("rest-querier", () => {
             description: "",
             id: "101",
             glyph: "",
-            is_built_in: false
+            is_built_in: false,
         };
 
         expect(formatted_projects).toEqual([formatted_project_a]);
@@ -95,7 +95,7 @@ describe("rest-querier", () => {
         const response_text = jest.fn();
         jest.spyOn(tlp, "get").mockImplementation(() => {
             return ({
-                text: response_text
+                text: response_text,
             } as unknown) as Promise<Response>;
         });
 

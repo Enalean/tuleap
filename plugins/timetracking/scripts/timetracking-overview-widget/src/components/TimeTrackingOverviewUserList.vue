@@ -40,12 +40,12 @@ import { mapState } from "vuex";
 export default {
     name: "TimeTrackingOverviewUserList",
     computed: {
-        ...mapState(["users"])
+        ...mapState(["users"]),
     },
     methods: {
         setSelected() {
             this.$store.commit("setSelectedUser", this.$refs.select.value);
-        }
-    }
+        },
+    },
 };
 </script>

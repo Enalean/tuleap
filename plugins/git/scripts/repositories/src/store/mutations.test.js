@@ -21,7 +21,7 @@ import mutations from "./mutations.js";
 import {
     PROJECT_KEY,
     REPOSITORIES_SORTED_BY_LAST_UPDATE,
-    REPOSITORIES_SORTED_BY_PATH
+    REPOSITORIES_SORTED_BY_PATH,
 } from "../constants.js";
 
 describe("Store mutations", () => {
@@ -48,7 +48,7 @@ describe("Store mutations", () => {
         it("Given some repositories and that the selected owner has no repositories loaded yet, then It should create an entry for him in the list, and push them in it.", () => {
             const state = {
                 repositories_for_owner: {},
-                selected_owner_id: 101
+                selected_owner_id: 101,
             };
 
             mutations.pushRepositoriesForCurrentOwner(state, []);
@@ -66,13 +66,13 @@ describe("Store mutations", () => {
                     name: "archiplasm",
                     label: "archiplasm",
                     path_without_project: "",
-                    path: "myproject/archiplasm.git"
-                }
+                    path: "myproject/archiplasm.git",
+                },
             ];
 
             const state = {
                 repositories_for_owner: {},
-                selected_owner_id: PROJECT_KEY
+                selected_owner_id: PROJECT_KEY,
             };
 
             mutations.pushRepositoriesForCurrentOwner(state, repositories);
@@ -88,14 +88,14 @@ describe("Store mutations", () => {
                     name: "boobs/straps/boobstrap4",
                     label: "boobstrap4",
                     path_without_project: "boobs/straps",
-                    path: "myproject/boobs/straps/boobstrap4.git"
+                    path: "myproject/boobs/straps/boobstrap4.git",
                 },
                 {
                     name: "angular.js",
                     label: "angular.js",
                     path_without_project: "u/johnpapa",
-                    path: "myproject/u/johnpapa/angular.js.git"
-                }
+                    path: "myproject/u/johnpapa/angular.js.git",
+                },
             ];
 
             const state = {
@@ -106,11 +106,11 @@ describe("Store mutations", () => {
                             name: "vuex",
                             path: "myproject/vuex.git",
                             path_without_project: "",
-                            normalized_path: "vuex"
-                        }
-                    ]
+                            normalized_path: "vuex",
+                        },
+                    ],
                 },
-                selected_owner_id: 101
+                selected_owner_id: 101,
             };
 
             mutations.pushRepositoriesForCurrentOwner(state, repositories);
@@ -122,23 +122,23 @@ describe("Store mutations", () => {
                         name: "vuex",
                         path: "myproject/vuex.git",
                         path_without_project: "",
-                        normalized_path: "vuex"
+                        normalized_path: "vuex",
                     },
                     {
                         label: "boobstrap4",
                         name: "boobs/straps/boobstrap4",
                         path: "myproject/boobs/straps/boobstrap4.git",
                         path_without_project: "boobs/straps",
-                        normalized_path: "boobs/straps/boobstrap4"
+                        normalized_path: "boobs/straps/boobstrap4",
                     },
                     {
                         label: "angular.js",
                         name: "angular.js",
                         path: "myproject/u/johnpapa/angular.js.git",
                         path_without_project: "u/johnpapa",
-                        normalized_path: "u/johnpapa/angular.js"
-                    }
-                ]
+                        normalized_path: "u/johnpapa/angular.js",
+                    },
+                ],
             });
         });
     });

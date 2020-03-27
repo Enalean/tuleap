@@ -32,7 +32,7 @@ describe("NewDocument", () => {
             return shallowMount(NewDocument, {
                 localVue,
                 propsData: { ...props },
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
     });
@@ -41,7 +41,7 @@ describe("NewDocument", () => {
         store.getters.is_item_a_folder = () => true;
         const item = {
             type: TYPE_FOLDER,
-            user_can_write: true
+            user_can_write: true,
         };
 
         const wrapper = new_item({ item });
@@ -51,7 +51,7 @@ describe("NewDocument", () => {
         store.getters.is_item_a_folder = () => true;
         const item = {
             type: TYPE_FOLDER,
-            user_can_write: false
+            user_can_write: false,
         };
 
         const wrapper = new_item({ item });
@@ -61,14 +61,14 @@ describe("NewDocument", () => {
         store.getters.is_item_a_folder = () => true;
         const item = {
             type: TYPE_FOLDER,
-            user_can_write: true
+            user_can_write: true,
         };
         const event_bus_emit = jest.spyOn(EventBus, "$emit");
 
         const wrapper = new_item({ item });
         wrapper.find("[data-test=document-new-item]").trigger("click");
         expect(event_bus_emit).toHaveBeenCalledWith("show-new-document-modal", {
-            detail: { parent: item }
+            detail: { parent: item },
         });
     });
 });

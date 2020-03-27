@@ -51,12 +51,12 @@ export default {
     name: "ArtifactTableRow",
     components: { ListBindUser },
     props: {
-        artifact: Object
+        artifact: Object,
     },
     computed: {
         badge_color() {
             return "tlp-badge-" + this.artifact.badge.color;
-        }
-    }
+        },
+    },
 };
 </script>

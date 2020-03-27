@@ -33,7 +33,7 @@ describe("QuickLookButton", () => {
             return shallowMount(QuickLookButton, {
                 localVue,
                 propsData: { ...props },
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
     });
@@ -45,7 +45,7 @@ describe("QuickLookButton", () => {
 
         wrapper.find("[data-test=document-quick-look-button]").trigger("click");
         expect(event_bus_emit).toHaveBeenCalledWith("toggle-quick-look", {
-            details: { item }
+            details: { item },
         });
     });
 });

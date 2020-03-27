@@ -28,7 +28,7 @@ describe("ObsolescenceDateMetadataForCreate", () => {
     let metadata_factory, state, store;
     beforeEach(() => {
         state = {
-            is_obsolescence_date_metadata_used: false
+            is_obsolescence_date_metadata_used: false,
         };
 
         const store_options = { state };
@@ -39,7 +39,7 @@ describe("ObsolescenceDateMetadataForCreate", () => {
             return shallowMount(ObsolescenceDateMetadataForCreate, {
                 localVue,
                 propsData: { ...props },
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
     });
@@ -113,7 +113,7 @@ describe("ObsolescenceDateMetadataForCreate", () => {
         it(`date is valid for today`, () => {
             const props = {
                 isInUpdateContext: false,
-                value: ""
+                value: "",
             };
             const wrapper = metadata_factory(props);
             store.state.is_obsolescence_date_metadata_used = true;
@@ -130,9 +130,7 @@ describe("ObsolescenceDateMetadataForCreate", () => {
 
             expect(wrapper.vm.selected_value).toEqual("permanent");
 
-            wrapper.vm.obsolescence_date = moment()
-                .add(3, "day")
-                .format("YYYY-MM-DD");
+            wrapper.vm.obsolescence_date = moment().add(3, "day").format("YYYY-MM-DD");
 
             expect(wrapper.contains("[data-test=obsolescence-date-error-message]")).toBeFalsy();
         });

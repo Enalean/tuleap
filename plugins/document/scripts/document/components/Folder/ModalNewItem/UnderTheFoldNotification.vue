@@ -41,16 +41,16 @@ export default {
             is_fadeout: false,
             is_fast_fadeout: false,
             fadeout_timeout_id: null,
-            hidden_timeout_id: null
+            hidden_timeout_id: null,
         };
     },
     computed: {
         notification_class() {
             return {
                 "document-notification-fadeout": this.is_fadeout,
-                "document-notification-fast-fadeout": this.is_fast_fadeout
+                "document-notification-fast-fadeout": this.is_fast_fadeout,
             };
-        }
+        },
     },
     created() {
         EventBus.$on("item-has-been-created-under-the-fold", this.show);
@@ -89,7 +89,7 @@ export default {
             this.hidden_timeout_id = setTimeout(() => {
                 this.is_displayed = false;
             }, 250);
-        }
-    }
+        },
+    },
 };
 </script>

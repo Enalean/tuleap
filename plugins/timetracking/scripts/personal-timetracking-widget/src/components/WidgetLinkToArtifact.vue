@@ -36,12 +36,12 @@
 export default {
     name: "WidgetLinkToArtifact",
     props: {
-        artifact: Object
+        artifact: Object,
     },
     computed: {
         badge_color() {
             return "tlp-badge-" + this.artifact.badge_color;
-        }
-    }
+        },
+    },
 };
 </script>

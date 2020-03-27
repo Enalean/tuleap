@@ -33,15 +33,15 @@ describe("mutations", () => {
                         tracker_list: [
                             { id: "11", name: "Bugs" },
                             { id: "12", name: "Releases" },
-                            { id: "13", name: "Requests" }
-                        ]
+                            { id: "13", name: "Requests" },
+                        ],
                     },
                     {
                         project_name: "Default template",
-                        tracker_list: [{ id: "14", name: "Activities" }]
-                    }
+                        tracker_list: [{ id: "14", name: "Activities" }],
+                    },
                 ],
-                selected_tracker_template: null
+                selected_tracker_template: null,
             } as State;
         });
 
@@ -71,8 +71,8 @@ describe("mutations", () => {
                 tracker_to_be_created: {
                     name: "",
                     shortname: "",
-                    color: ""
-                }
+                    color: "",
+                },
             } as State;
 
             mutations.initTrackerNameWithTheSelectedTemplateName(state);
@@ -80,7 +80,7 @@ describe("mutations", () => {
             expect(state.tracker_to_be_created).toEqual({
                 name: "",
                 shortname: "",
-                color: ""
+                color: "",
             });
         });
 
@@ -88,13 +88,13 @@ describe("mutations", () => {
             const state: State = {
                 selected_tracker_template: {
                     name: "Bug tracker",
-                    tlp_color: "peggy-pink"
+                    tlp_color: "peggy-pink",
                 },
                 tracker_to_be_created: {
                     name: "",
                     shortname: "",
-                    color: ""
-                }
+                    color: "",
+                },
             } as State;
 
             mutations.initTrackerNameWithTheSelectedTemplateName(state);
@@ -102,7 +102,7 @@ describe("mutations", () => {
             expect(state.tracker_to_be_created).toEqual({
                 name: "Bug tracker",
                 shortname: "bug_tracker",
-                color: "peggy-pink"
+                color: "peggy-pink",
             });
         });
     });
@@ -114,8 +114,8 @@ describe("mutations", () => {
                 tracker_to_be_created: {
                     name: "",
                     shortname: "",
-                    color: ""
-                }
+                    color: "",
+                },
             } as State;
 
             mutations.initTrackerNameWithTheSelectedProjectTrackerTemplateName(state);
@@ -123,7 +123,7 @@ describe("mutations", () => {
             expect(state.tracker_to_be_created).toEqual({
                 name: "",
                 shortname: "",
-                color: ""
+                color: "",
             });
         });
 
@@ -131,13 +131,13 @@ describe("mutations", () => {
             const state: State = {
                 selected_project_tracker_template: {
                     name: "Bug tracker",
-                    tlp_color: "peggy-pink"
+                    tlp_color: "peggy-pink",
                 },
                 tracker_to_be_created: {
                     name: "",
                     shortname: "",
-                    color: ""
-                }
+                    color: "",
+                },
             } as State;
 
             mutations.initTrackerNameWithTheSelectedProjectTrackerTemplateName(state);
@@ -145,7 +145,7 @@ describe("mutations", () => {
             expect(state.tracker_to_be_created).toEqual({
                 name: "Bug tracker",
                 shortname: "bug_tracker",
-                color: "peggy-pink"
+                color: "peggy-pink",
             });
         });
     });
@@ -155,15 +155,15 @@ describe("mutations", () => {
             const state: State = {
                 tracker_to_be_created: {
                     name: "",
-                    shortname: ""
-                }
+                    shortname: "",
+                },
             } as State;
 
             mutations.setTrackerName(state, "Kanban in the trees");
 
             expect(state.tracker_to_be_created).toEqual({
                 name: "Kanban in the trees",
-                shortname: ""
+                shortname: "",
             });
         });
 
@@ -171,16 +171,16 @@ describe("mutations", () => {
             const state: State = {
                 tracker_to_be_created: {
                     name: "",
-                    shortname: ""
+                    shortname: "",
                 },
-                is_in_slugify_mode: true
+                is_in_slugify_mode: true,
             } as State;
 
             mutations.setTrackerName(state, "Kanban in the trees");
 
             expect(state.tracker_to_be_created).toEqual({
                 name: "Kanban in the trees",
-                shortname: "kanban_in_the_trees"
+                shortname: "kanban_in_the_trees",
             });
         });
     });

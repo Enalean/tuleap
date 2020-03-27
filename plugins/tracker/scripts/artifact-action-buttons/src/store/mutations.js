@@ -30,7 +30,7 @@ export default {
         state.selected_project_id = project_id;
         state.trackers = [];
         state.selected_tracker = {
-            tracker_id: null
+            tracker_id: null,
         };
         state.has_processed_dry_run = false;
     },
@@ -64,7 +64,7 @@ export default {
     },
     resetState(state) {
         Object.assign(state, initial_state);
-    }
+    },
 };
 
 function resetError(state) {

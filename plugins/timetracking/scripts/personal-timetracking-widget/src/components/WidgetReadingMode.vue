@@ -41,10 +41,10 @@ import { mapState, mapMutations } from "vuex";
 export default {
     name: "WidgetReadingMode",
     computed: {
-        ...mapState(["start_date", "end_date"])
+        ...mapState(["start_date", "end_date"]),
     },
     methods: {
-        ...mapMutations(["toggleReadingMode"])
-    }
+        ...mapMutations(["toggleReadingMode"]),
+    },
 };
 </script>

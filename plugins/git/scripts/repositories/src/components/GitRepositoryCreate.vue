@@ -100,7 +100,7 @@ export default {
         return {
             error: "",
             is_loading: false,
-            repository_name: ""
+            repository_name: "",
         };
     },
     computed: {
@@ -112,7 +112,7 @@ export default {
         },
         close_label() {
             return this.$gettext("Close");
-        }
+        },
     },
     mounted() {
         const create_modal = tlpModal(this.$refs.create_modal);
@@ -151,7 +151,7 @@ export default {
                 }
                 this.is_loading = false;
             }
-        }
-    }
+        },
+    },
 };
 </script>

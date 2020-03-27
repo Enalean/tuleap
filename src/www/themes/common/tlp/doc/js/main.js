@@ -21,8 +21,8 @@
     var color_switchers = document.querySelectorAll(".color-switcher > a"),
         stylesheet = document.getElementById("tlp-stylesheet");
 
-    [].forEach.call(color_switchers, function(color_switcher) {
-        color_switcher.addEventListener("click", function() {
+    [].forEach.call(color_switchers, function (color_switcher) {
+        color_switcher.addEventListener("click", function () {
             if (!this.classList.contains("active")) {
                 var color = this.classList[0].replace("switch-to-", "");
                 var active_color_switcher = document.querySelector(".color-switcher > a.active");
@@ -47,7 +47,7 @@
         var new_stylesheet = document.createElement("link");
         new_stylesheet.rel = "stylesheet";
         new_stylesheet.href = "../dist/" + manifest["tlp-" + color + ".css"];
-        new_stylesheet.onload = function() {
+        new_stylesheet.onload = function () {
             if (new_stylesheet.sheet.cssRules.length) {
                 stylesheet.remove();
                 stylesheet = new_stylesheet;
@@ -89,7 +89,7 @@
     }
 })();
 
-window.toggleMargins = function(id) {
+window.toggleMargins = function (id) {
     document.getElementById(id).classList.toggle("example-hide-margins");
 };
 
@@ -109,10 +109,10 @@ function showAtTopLink(scroll_pos) {
     }
 }
 
-window.addEventListener("scroll", function() {
+window.addEventListener("scroll", function () {
     last_known_scroll_position = window.scrollY;
     if (!ticking) {
-        window.requestAnimationFrame(function() {
+        window.requestAnimationFrame(function () {
             showAtTopLink(last_known_scroll_position);
             ticking = false;
         });

@@ -47,10 +47,10 @@ export default {
     name: "WidgetModalTimes",
     components: { WidgetModalContent },
     computed: {
-        ...mapGetters(["current_artifact"])
+        ...mapGetters(["current_artifact"]),
     },
     methods: {
-        ...mapActions(["reloadTimes"])
-    }
+        ...mapActions(["reloadTimes"]),
+    },
 };
 </script>

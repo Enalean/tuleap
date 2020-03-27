@@ -19,23 +19,23 @@
 
 import jQuery from "jquery";
 
-(function($) {
+(function ($) {
     function confirmDeletionPopover() {
-        $(".svn-notification-delete").each(function() {
+        $(".svn-notification-delete").each(function () {
             var id = $(this).data("popover-id");
 
             $(this)
                 .popover({
                     container: $("#svn-admin-notifications-form"),
                     title: $("#" + id).data("title"),
-                    content: $("#" + id).html()
+                    content: $("#" + id).html(),
                 })
                 .addClass("popover-danger");
         });
     }
 
     function cannotSavePopover() {
-        $(".svn-notification-save").each(function() {
+        $(".svn-notification-save").each(function () {
             var id = $(this).data("popover-id");
             var popover_content = $("#" + id);
 
@@ -43,7 +43,7 @@ import jQuery from "jquery";
                 .popover({
                     container: $("#svn-notification-cannot-save-popover-container"),
                     title: popover_content.data("title"),
-                    content: popover_content.html()
+                    content: popover_content.html(),
                 })
                 .addClass("popover-warning");
         });
@@ -55,7 +55,7 @@ import jQuery from "jquery";
     }
 
     function bindShowPopover() {
-        $(".svn-notification-delete").click(function(event) {
+        $(".svn-notification-delete").click(function (event) {
             event.preventDefault();
 
             dismissPopover();
@@ -64,13 +64,13 @@ import jQuery from "jquery";
         });
     }
 
-    $(function() {
+    $(function () {
         confirmDeletionPopover();
         cannotSavePopover();
 
         bindShowPopover();
 
-        $("body").on("click", function(event) {
+        $("body").on("click", function (event) {
             if ($(event.target).hasClass("dismiss-popover")) {
                 dismissPopover();
             }

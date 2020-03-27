@@ -54,7 +54,7 @@
 export default {
     name: "WidgetModalDeletePopover",
     props: {
-        timeId: Number
+        timeId: Number,
     },
     mounted() {
         this.$emit("createDeletePopover");
@@ -62,7 +62,7 @@ export default {
     methods: {
         removeTime() {
             this.$store.dispatch("deleteTime", this.timeId);
-        }
-    }
+        },
+    },
 };
 </script>

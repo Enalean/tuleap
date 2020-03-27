@@ -65,7 +65,7 @@ export default {
     name: "TimeTrackingOverviewReadingMode",
     components: { TimeTrackingOverviewTrackerList, TimeTrackingOverviewReadingDates },
     computed: {
-        ...mapState(["is_report_saved", "is_loading"])
+        ...mapState(["is_report_saved", "is_loading"]),
     },
     methods: {
         ...mapMutations(["toggleReadingMode"]),
@@ -75,7 +75,7 @@ export default {
         async discardReport() {
             await this.$store.dispatch("initWidgetWithReport");
             this.$store.commit("setIsReportSave", true);
-        }
-    }
+        },
+    },
 };
 </script>

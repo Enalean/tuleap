@@ -42,7 +42,7 @@ var tuleap = tuleap || {};
 tuleap.tracker = tuleap.tracker || {};
 tuleap.tracker.report = tuleap.tracker.report || {};
 
-codendi.tracker.report.setHasChanged = function() {
+codendi.tracker.report.setHasChanged = function () {
     var save_or_revert = $("tracker_report_save_or_revert");
     save_or_revert.setStyle("display: inline;");
     if (
@@ -58,7 +58,7 @@ codendi.tracker.report.setHasChanged = function() {
     }
 };
 Ajax.Responders.register({
-    onComplete: function(response) {
+    onComplete: function (response) {
         if (response.getHeader("X-Codendi-Tracker-Report-IsObsolete")) {
             var save_or_revert = $("tracker_report_save_or_revert");
             if (save_or_revert) {
@@ -79,16 +79,16 @@ Ajax.Responders.register({
                 }
             }
         }
-    }
+    },
 });
 
 codendi.tracker.report.table = codendi.tracker.report.table || {};
 
-codendi.tracker.report.table.saveColumnsWidth = function(table, onComplete) {
+codendi.tracker.report.table.saveColumnsWidth = function (table, onComplete) {
     var total = table.offsetWidth - 16;
     var parameters = {
         func: "renderer",
-        renderer: $("tracker_report_renderer_current").readAttribute("data-renderer-id")
+        renderer: $("tracker_report_renderer_current").readAttribute("data-renderer-id"),
     };
     var cells = table.rows[0].cells;
     var n = cells.length;
@@ -104,10 +104,10 @@ codendi.tracker.report.table.saveColumnsWidth = function(table, onComplete) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     var req = new Ajax.Request(location.href, {
         parameters: parameters,
-        onComplete: function() {
+        onComplete: function () {
             onCompleteFunction();
             codendi.tracker.report.setHasChanged();
-        }
+        },
     });
 };
 
@@ -115,13 +115,13 @@ tuleap.tracker.report.FieldsDropDown = Class.create({
     /**
      * Constructor
      */
-    initialize: function(selectbox, actions) {
+    initialize: function (selectbox, actions) {
         this.actions = actions;
         selectbox.select("li").each(
-            function(criterion) {
+            function (criterion) {
                 criterion.observe(
                     "click",
-                    function(event) {
+                    function (event) {
                         this.toggle(criterion);
                         event.stop();
                     }.bind(this)
@@ -132,7 +132,7 @@ tuleap.tracker.report.FieldsDropDown = Class.create({
     /**
      * event listener to toggle a column
      */
-    toggle: function(li) {
+    toggle: function (li) {
         if (li.readAttribute("data-field-is-used") === "0") {
             this.actions.add(this, li);
         } else {
@@ -142,28 +142,28 @@ tuleap.tracker.report.FieldsDropDown = Class.create({
     /**
      * Set the class name of the li to used and clear waiting
      */
-    setUsed: function(li) {
+    setUsed: function (li) {
         li.writeAttribute("data-field-is-used", "1");
-        li.select("a").each(function(element) {
+        li.select("a").each(function (element) {
             element.insert({ top: new Element("i", { class: "fa fa-check" }) });
         });
     },
     /**
      * Set the class name of the li to unused and clear waiting
      */
-    setUnused: function(li) {
+    setUnused: function (li) {
         li.writeAttribute("data-field-is-used", "0");
-        li.select("i").each(function(element) {
+        li.select("i").each(function (element) {
             element.remove();
         });
-    }
+    },
 });
 
 codendi.tracker.report.table.AddRemoveColumn = Class.create({
     /**
      * Add a column to the table
      */
-    add: function(dropdown, li) {
+    add: function (dropdown, li) {
         var column_id = li.readAttribute("data-column-id"),
             field_id = li.readAttribute("data-field-id"),
             artlink_nature = li.readAttribute("data-field-artlink-nature"),
@@ -188,7 +188,7 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
                     renderer: $("tracker_report_renderer_current").readAttribute(
                         "data-renderer-id"
                     ),
-                    "renderer_table[add-column][field-id]": field_id
+                    "renderer_table[add-column][field-id]": field_id,
                 };
             if (artlink_nature !== null) {
                 parameters["renderer_table[add-column][artlink-nature]"] = artlink_nature;
@@ -204,17 +204,14 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
                         .down("thead")
                         .down("tr")
                         .insert({ bottom: new_column });
-                    var new_trs = div
-                        .down("tbody")
-                        .childElements()
-                        .reverse();
-                    $$("#tracker_report_table > tbody > tr").each(function(tr) {
+                    var new_trs = div.down("tbody").childElements().reverse();
+                    $$("#tracker_report_table > tbody > tr").each(function (tr) {
                         if (!tr.hasClassName("tracker_report_table_no_result")) {
                             tr.insert(new_trs.pop().down("td"));
                         }
                     });
 
-                    $$("tr.tracker_report_table_no_result td").each(function(td) {
+                    $$("tr.tracker_report_table_no_result td").each(function (td) {
                         td.colSpan = td.up("table").rows[0].cells.length;
                     });
 
@@ -255,14 +252,14 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
                             new_column.down(".nature-column-editor")
                         );
                     }
-                }
+                },
             });
         }
     },
     /**
      * remove a column to the table
      */
-    remove: function(dropdown, li) {
+    remove: function (dropdown, li) {
         var column_id = li.readAttribute("data-column-id"),
             field_id = li.readAttribute("data-field-id");
         if ($("tracker_report_table_sort_by_" + field_id)) {
@@ -272,17 +269,17 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
             var col = $("tracker_report_table_column_" + field_id);
             if (col.nextSiblings()[0]) {
                 col.nextSiblings()[0].setStyle({
-                    width: col.nextSiblings()[0].offsetWidth + col.offsetWidth + "px"
+                    width: col.nextSiblings()[0].offsetWidth + col.offsetWidth + "px",
                 });
             } else if (col.previousSiblings()[0].id) {
                 col.previousSiblings()[0].setStyle({
-                    width: col.previousSiblings()[0].offsetWidth + col.offsetWidth + "px"
+                    width: col.previousSiblings()[0].offsetWidth + col.offsetWidth + "px",
                 });
             }
             col.hide();
             $$(".tracker_report_table_column_" + field_id).invoke("hide");
 
-            codendi.tracker.report.table.saveColumnsWidth($("tracker_report_table"), function() {
+            codendi.tracker.report.table.saveColumnsWidth($("tracker_report_table"), function () {
                 location.href =
                     location.href +
                     "&func=renderer" +
@@ -305,21 +302,21 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
                         renderer: $("tracker_report_renderer_current").readAttribute(
                             "data-renderer-id"
                         ),
-                        "renderer_table[remove-column]": column_id
+                        "renderer_table[remove-column]": column_id,
                     },
-                    onSuccess: function() {
-                        $$("th[data-column-id=" + column_id + "]").each(function(col) {
+                    onSuccess: function () {
+                        $$("th[data-column-id=" + column_id + "]").each(function (col) {
                             if (col.nextSiblings()[0]) {
                                 col.nextSiblings()[0].setStyle({
                                     width:
-                                        col.nextSiblings()[0].offsetWidth + col.offsetWidth + "px"
+                                        col.nextSiblings()[0].offsetWidth + col.offsetWidth + "px",
                                 });
                             } else if (col.previousSiblings()[0].id) {
                                 col.previousSiblings()[0].setStyle({
                                     width:
                                         col.previousSiblings()[0].offsetWidth +
                                         col.offsetWidth +
-                                        "px"
+                                        "px",
                                 });
                             }
                             col.hide();
@@ -332,21 +329,21 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
 
                         dropdown.setUnused(li);
                         codendi.tracker.report.setHasChanged();
-                    }
+                    },
                 }
             );
         }
-    }
+    },
 });
 
 codendi.tracker.report.AddRemoveCriteria = Class.create({
-    initialize: function() {
+    initialize: function () {
         this.request_sent = false;
     },
     /**
      * Add a column to the table: criterion
      */
-    add: function(dropdown, li) {
+    add: function (dropdown, li) {
         var self = this;
 
         if (!this.request_sent) {
@@ -360,24 +357,24 @@ codendi.tracker.report.AddRemoveCriteria = Class.create({
                 new Ajax.Request(location.href, {
                     parameters: {
                         func: "add-criteria",
-                        field: field_id
+                        field: field_id,
                     },
-                    onComplete: function() {
+                    onComplete: function () {
                         self.request_sent = false;
-                    }
+                    },
                 });
             } else {
                 new Ajax.Request(location.href, {
                     parameters: {
                         func: "add-criteria",
-                        field: field_id
+                        field: field_id,
                     },
-                    onComplete: function() {
+                    onComplete: function () {
                         self.request_sent = false;
                     },
-                    onSuccess: function(transport) {
+                    onSuccess: function (transport) {
                         var crit = new Element("li", {
-                            id: "tracker_report_crit_" + field_id
+                            id: "tracker_report_crit_" + field_id,
                         }).update(transport.responseText);
                         $("tracker_query").insert(crit);
 
@@ -395,7 +392,7 @@ codendi.tracker.report.AddRemoveCriteria = Class.create({
                         );
 
                         tuleap.dateTimePicker.init();
-                    }
+                    },
                 });
             }
         }
@@ -403,29 +400,29 @@ codendi.tracker.report.AddRemoveCriteria = Class.create({
     /**
      * remove a criteria
      */
-    remove: function(dropdown, li) {
+    remove: function (dropdown, li) {
         var field_id = li.readAttribute("data-field-id");
         new Ajax.Request(location.href, {
             parameters: {
                 func: "remove-criteria",
-                field: field_id
+                field: field_id,
             },
-            onSuccess: function() {
+            onSuccess: function () {
                 $$(".tracker_report_crit_" + field_id).invoke("hide");
                 $("tracker_report_crit_" + field_id).hide();
                 dropdown.setUnused(li);
 
                 codendi.tracker.report.setHasChanged();
-            }
+            },
         });
-    }
+    },
 });
 
 // Advanced criteria
-codendi.tracker.report.loadAdvancedCriteria = function(element) {
+codendi.tracker.report.loadAdvancedCriteria = function (element) {
     if (element) {
         var li = element.up("li");
-        element.observe("click", function(evt) {
+        element.observe("click", function (evt) {
             if (/toggle_plus.png$/.test(element.src)) {
                 //switch to advanced
                 element.src = element.src.gsub("toggle_plus.png", "toggle_minus.png");
@@ -442,11 +439,11 @@ codendi.tracker.report.loadAdvancedCriteria = function(element) {
             var req = new Ajax.Updater(li, location.href, {
                 parameters: {
                     func: "toggle-advanced",
-                    field: field_id
+                    field: field_id,
                 },
-                onComplete: function(transport) {
+                onComplete: function (transport) {
                     //Force refresh of decorators and calendar
-                    li.select("input", "select").each(function(el) {
+                    li.select("input", "select").each(function (el) {
                         if (el.id && $("fd-" + el.id)) {
                             delete $("fd-" + el.id).remove();
                             //delete datePickerController.datePickers[el.id];
@@ -463,7 +460,7 @@ codendi.tracker.report.loadAdvancedCriteria = function(element) {
                         li.down("img.tracker_report_criteria_advanced_toggle")
                     );
                     tuleap.dateTimePicker.init();
-                }
+                },
             });
             Event.stop(evt);
             return false;
@@ -472,15 +469,15 @@ codendi.tracker.report.loadAdvancedCriteria = function(element) {
 };
 
 //Aggregates
-codendi.tracker.report.loadAggregates = function(selectbox, report_id, renderer_id) {
+codendi.tracker.report.loadAggregates = function (selectbox, report_id, renderer_id) {
     var prefix = "tracker_aggregate_function_add_",
         parameters = {
             func: "renderer",
             report: report_id,
-            renderer: renderer_id
+            renderer: renderer_id,
         },
         field_id = selectbox.name.split("[")[1].gsub(/\]/, ""),
-        toggle = function(evt) {
+        toggle = function (evt) {
             var li = evt.element();
             li.addClassName(prefix + "waiting");
             parameters["renderer_table[add_aggregate][" + field_id + "]"] = li.id.match(
@@ -489,15 +486,15 @@ codendi.tracker.report.loadAggregates = function(selectbox, report_id, renderer_
             new Ajax.Request(location.href, {
                 method: "POST",
                 parameters: parameters,
-                onComplete: function() {
+                onComplete: function () {
                     window.location.reload(true);
-                }
+                },
             });
         }.bindAsEventListener();
 
     function buildCol(id, className, label) {
         return new Element("li", {
-            id: prefix + id
+            id: prefix + id,
         })
             .addClassName(className)
             .update(label)
@@ -506,11 +503,11 @@ codendi.tracker.report.loadAggregates = function(selectbox, report_id, renderer_
 
     var panel = new Element("table").addClassName("dropdown_panel").setStyle({
         textAlign: "left",
-        opacity: 0.9
+        opacity: 0.9,
     });
     var ul = new Element("ul");
     var btn_label = "";
-    selectbox.childElements().each(function(el, index) {
+    selectbox.childElements().each(function (el, index) {
         if (index) {
             if (el.tagName.toLowerCase() === "option") {
                 ul.appendChild(buildCol(field_id + "_" + el.value, el.className, el.innerHTML));
@@ -523,14 +520,14 @@ codendi.tracker.report.loadAggregates = function(selectbox, report_id, renderer_
     var handle = new Element("a", {
         href: "#",
         title: btn_label,
-        style: "font-size: 0.8em;"
+        style: "font-size: 0.8em;",
     }).update(
         '<img src="' + codendi.imgroot + 'ic/sum--plus.png" style="vertical-align: middle;" />'
     );
 
     Element.remove(
         selectbox.insert({
-            after: handle
+            after: handle,
         })
     );
     ul.id = selectbox.id;
@@ -541,12 +538,12 @@ codendi.tracker.report.loadAggregates = function(selectbox, report_id, renderer_
                     new Element("td").insert(new Element("strong").update(btn_label)).insert(ul)
                 )
             )
-        )
+        ),
     });
     new codendi.DropDownPanel(panel, handle);
 };
 
-document.observe("dom:loaded", function() {
+document.observe("dom:loaded", function () {
     if ($("tracker_query")) {
         $$("img.tracker_report_criteria_advanced_toggle").map(
             codendi.tracker.report.loadAdvancedCriteria
@@ -582,48 +579,48 @@ document.observe("dom:loaded", function() {
             $$(".tracker_report_table_masschange").invoke("hide");
             mc_panel
                 .insert({
-                    top: new Element("br")
+                    top: new Element("br"),
                 })
                 .insert({
                     top: new Element("a", {
-                        href: "#uncheck-all"
+                        href: "#uncheck-all",
                     })
-                        .observe("click", function(evt) {
+                        .observe("click", function (evt) {
                             $$(".tracker_report_table_masschange input[type=checkbox]").each(
-                                function(cb) {
+                                function (cb) {
                                     cb.checked = false;
                                 }
                             );
                             Event.stop(evt);
                         })
-                        .update(codendi.locales.tracker_artifact.masschange_uncheck_all)
+                        .update(codendi.locales.tracker_artifact.masschange_uncheck_all),
                 })
                 .insert({
-                    top: new Element("span").update("&nbsp;|&nbsp;")
+                    top: new Element("span").update("&nbsp;|&nbsp;"),
                 })
                 .insert({
                     top: new Element("a", {
-                        href: "#check-all"
+                        href: "#check-all",
                     })
-                        .observe("click", function(evt) {
+                        .observe("click", function (evt) {
                             $$(".tracker_report_table_masschange input[type=checkbox]").each(
-                                function(cb) {
+                                function (cb) {
                                     cb.checked = true;
                                 }
                             );
                             Event.stop(evt);
                         })
-                        .update(codendi.locales.tracker_artifact.masschange_check_all)
+                        .update(codendi.locales.tracker_artifact.masschange_check_all),
                 });
             //get checked artifacts
-            $("masschange_btn_checked").observe("click", function() {
-                $$('input[name="masschange_aids[]"]').each(function(e) {
+            $("masschange_btn_checked").observe("click", function () {
+                $$('input[name="masschange_aids[]"]').each(function (e) {
                     if ($(e).checked) {
                         mc_all_form.appendChild(
                             new Element("input", {
                                 type: "hidden",
                                 name: "masschange_aids[]",
-                                value: $(e).value
+                                value: $(e).value,
                             })
                         );
                     }
@@ -643,10 +640,10 @@ document.observe("dom:loaded", function() {
             } else {
                 var masschange_button = new Element("div", { className: "btn-group" }).update(
                     new Element("a", {
-                        href: "#masschange"
+                        href: "#masschange",
                     })
                         .addClassName("btn btn-mini")
-                        .observe("click", function(evt) {
+                        .observe("click", function (evt) {
                             codendi.dropdown_panels.invoke("reset");
                             $$(".tracker_report_table_masschange").invoke("show");
                             mc_panel
@@ -681,9 +678,9 @@ document.observe("dom:loaded", function() {
             export_panel.childElements().invoke("hide");
             export_panel.up("form").insert({
                 before: new Element("a", {
-                    href: "#export"
+                    href: "#export",
                 })
-                    .observe("click", function(evt) {
+                    .observe("click", function (evt) {
                         export_panel.childElements().invoke("toggle");
                         Event.stop(evt);
                     })
@@ -693,13 +690,13 @@ document.observe("dom:loaded", function() {
                             'ic/clipboard-paste.png" style="vertical-align:top" /> export'
                     )
                     .setStyle({
-                        marginLeft: "1em"
-                    })
+                        marginLeft: "1em",
+                    }),
             });
         }
 
         if (TableKit) {
-            TableKit.options.observers.onResizeEnd = function(table) {
+            TableKit.options.observers.onResizeEnd = function (table) {
                 if (
                     TableKit.Resizable._cell &&
                     TableKit.Resizable._cell.readAttribute("data-column-id")
@@ -712,7 +709,7 @@ document.observe("dom:loaded", function() {
     }
 
     if ($("tracker_select_report")) {
-        $("tracker_select_report").observe("change", function() {
+        $("tracker_select_report").observe("change", function () {
             this.form.submit();
         });
     }
@@ -725,7 +722,7 @@ document.observe("dom:loaded", function() {
             Sortable.create("tracker_report_renderers", {
                 constraint: "horizontal",
                 only: "tracker_report_renderer_tab",
-                onUpdate: function(container) {
+                onUpdate: function (container) {
                     renderers_sorting = true;
                     var parameters =
                         Sortable.serialize(container) +
@@ -737,14 +734,14 @@ document.observe("dom:loaded", function() {
                     //eslint-disable-next-line @typescript-eslint/no-unused-vars
                     var req = new Ajax.Request(location.href, {
                         parameters: parameters,
-                        onComplete: function() {
+                        onComplete: function () {
                             codendi.tracker.report.setHasChanged();
-                        }
+                        },
                     });
-                }
+                },
             });
-            $$("#tracker_report_renderers li a").each(function(a) {
-                a.observe("click", function(evt) {
+            $$("#tracker_report_renderers li a").each(function (a) {
+                a.observe("click", function (evt) {
                     if (renderers_sorting) {
                         evt.stop();
                         renderers_sorting = false;
@@ -753,13 +750,13 @@ document.observe("dom:loaded", function() {
             });
         }
 
-        $$("select[name^=tracker_aggregate_function_add]").each(function(selectbox) {
+        $$("select[name^=tracker_aggregate_function_add]").each(function (selectbox) {
             codendi.tracker.report.loadAggregates(selectbox, report_id, renderer_id);
         });
     }
 
     if ($("tracker_report_updater_delete")) {
-        $("tracker_report_updater_delete").observe("click", function(event) {
+        $("tracker_report_updater_delete").observe("click", function (event) {
             //eslint-disable-next-line no-alert
             if (!confirm(codendi.locales.tracker_report.delete_report)) {
                 event.stop();

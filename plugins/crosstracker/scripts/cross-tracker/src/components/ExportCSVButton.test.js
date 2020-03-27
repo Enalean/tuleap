@@ -36,11 +36,11 @@ describe("ExportCSVButton", () => {
     function instantiateComponent() {
         Vue.use(GetTextPlugin, {
             translations: {},
-            silent: true
+            silent: true,
         });
         const Component = Vue.extend(ExportCSVButton);
         const vm = new Component({
-            store: createStore()
+            store: createStore(),
         });
         jest.spyOn(vm.$store, "commit").mockImplementation(() => {});
         return vm;
@@ -50,11 +50,11 @@ describe("ExportCSVButton", () => {
         it("When the server responds, then it will hide feedbacks, show a spinner and offer to download a CSV file with the results", async () => {
             const vm = instantiateComponent();
             vm.$store.replaceState({
-                report_id: 36
+                report_id: 36,
             });
             const csv = `"id"\r\n72\r\n17\r\n`;
             getCSVReport.mockImplementation(() => Promise.resolve(csv));
-            addBOM.mockImplementation(csv => csv);
+            addBOM.mockImplementation((csv) => csv);
 
             const promise = vm.exportCSV();
 
@@ -73,8 +73,8 @@ describe("ExportCSVButton", () => {
                 Promise.reject({
                     response: {
                         status: 404,
-                        text: () => Promise.resolve("Report with id 90 not found")
-                    }
+                        text: () => Promise.resolve("Report with id 90 not found"),
+                    },
                 })
             );
 
@@ -92,8 +92,8 @@ describe("ExportCSVButton", () => {
             getCSVReport.mockImplementation(() =>
                 Promise.reject({
                     response: {
-                        status: 503
-                    }
+                        status: 503,
+                    },
                 })
             );
 

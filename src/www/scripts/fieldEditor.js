@@ -40,7 +40,7 @@ if (!com.xerox.codendi.tracker) {
 
 com.xerox.codendi.FieldEditor = Class.create();
 Object.extend(com.xerox.codendi.FieldEditor.prototype, {
-    initialize: function(element, options) {
+    initialize: function (element, options) {
         this.element = $(element);
         this.options = Object.extend(
             {
@@ -48,7 +48,7 @@ Object.extend(com.xerox.codendi.FieldEditor.prototype, {
                 preview: "preview",
                 warning: "Your modifications are not saved. Do not forget to submit the form!",
                 highlightcolor: Ajax.InPlaceEditor.defaultHighlightColor,
-                highlightendcolor: "#FFFFFF"
+                highlightendcolor: "#FFFFFF",
             },
             options || {}
         );
@@ -78,12 +78,12 @@ Object.extend(com.xerox.codendi.FieldEditor.prototype, {
 
         if (this.preview.offsetHeight > element_offsetHeight) {
             Element.setStyle(this.element, {
-                height: this.preview.offsetHeight + "px"
+                height: this.preview.offsetHeight + "px",
             });
         }
         if (this.preview.offsetWidth > element_offsetWidth) {
             Element.setStyle(this.element, {
-                width: this.preview.offsetWidth + "px"
+                width: this.preview.offsetWidth + "px",
             });
         }
         this.updatePreview(false);
@@ -91,7 +91,7 @@ Object.extend(com.xerox.codendi.FieldEditor.prototype, {
         this.onclickListener = this.toggleEditMode.bindAsEventListener(this);
         Event.observe(this.edit_cancel, "click", this.onclickListener);
     },
-    toggleEditMode: function(evt) {
+    toggleEditMode: function (evt) {
         if (this.is_in_edit_mode) {
             this.updatePreview(true);
         } else {
@@ -103,12 +103,12 @@ Object.extend(com.xerox.codendi.FieldEditor.prototype, {
         Event.stop(evt);
         return false;
     },
-    updatePreview: function(display_warning) {
+    updatePreview: function (display_warning) {
         new Ajax.Updater(this.preview, "/make_links.php?group_id=" + this.options.group_id, {
             parameters: {
-                text: $F(this.element)
+                text: $F(this.element),
             },
-            onComplete: function() {
+            onComplete: function () {
                 Element.show(this.preview);
                 Element.hide(this.element);
                 this.edit_cancel.innerText = "[" + this.options.edit + "]";
@@ -118,7 +118,7 @@ Object.extend(com.xerox.codendi.FieldEditor.prototype, {
                     this.warning_displayed = true;
                 }
                 codendi.Tooltip.load(this.preview);
-            }.bind(this)
+            }.bind(this),
         });
-    }
+    },
 });

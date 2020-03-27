@@ -48,12 +48,12 @@ describe("ReleaseBadgesDisplayerIfOnlyClosedSprints", () => {
     beforeEach(() => {
         store_options = {
             state: {
-                project_id: project_id
-            }
+                project_id: project_id,
+            },
         };
 
         release_data = {
-            id: 2
+            id: 2,
         } as MilestoneData;
 
         component_options.propsData = { release_data };

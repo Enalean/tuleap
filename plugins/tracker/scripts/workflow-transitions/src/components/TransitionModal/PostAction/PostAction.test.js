@@ -41,23 +41,23 @@ describe("PostAction", () => {
 
     beforeEach(() => {
         const current_tracker = {
-            fields: [date_field, int_field, float_field, status_field, fieldset]
+            fields: [date_field, int_field, float_field, status_field, fieldset],
         };
 
         const store_options = {
             state: {
                 transitionModal: {
                     current_transition: create("transition"),
-                    is_modal_save_running: false
+                    is_modal_save_running: false,
                 },
-                current_tracker: current_tracker
+                current_tracker: current_tracker,
             },
             getters: {
                 "transitionModal/set_value_action_fields": [date_field, int_field, float_field],
                 "transitionModal/post_actions": [],
                 current_workflow_field: status_field,
-                is_workflow_advanced: false
-            }
+                is_workflow_advanced: false,
+            },
         };
 
         store = createStoreMock(store_options);
@@ -65,7 +65,7 @@ describe("PostAction", () => {
         wrapper = shallowMount(PostAction, {
             mocks: { $store: store },
             propsData: { post_action: create("post_action", "presented") },
-            localVue
+            localVue,
         });
     });
 
@@ -84,7 +84,7 @@ describe("PostAction", () => {
 
         it("should be false if the post action is already present once", () => {
             store.getters["transitionModal/post_actions"] = [
-                create("post_action", { type: "frozen_fields" })
+                create("post_action", { type: "frozen_fields" }),
             ];
             expect(wrapper.vm.frozen_fields_is_valid).toBe(false);
         });
@@ -107,7 +107,7 @@ describe("PostAction", () => {
 
         it("should be false if the post action is already present once", () => {
             store.getters["transitionModal/post_actions"] = [
-                create("post_action", { type: "hidden_fieldsets" })
+                create("post_action", { type: "hidden_fieldsets" }),
             ];
             expect(wrapper.vm.hidden_fieldsets_is_valid).toBe(false);
         });

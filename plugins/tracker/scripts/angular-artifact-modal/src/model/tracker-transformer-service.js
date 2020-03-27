@@ -25,7 +25,7 @@ export default TuleapArtifactModalTrackerTransformerService;
 TuleapArtifactModalTrackerTransformerService.$inject = [
     "$filter",
     "TuleapArtifactModalAwkwardCreationFields",
-    "TuleapArtifactModalStructuralFields"
+    "TuleapArtifactModalStructuralFields",
 ];
 
 function TuleapArtifactModalTrackerTransformerService(
@@ -56,7 +56,7 @@ function TuleapArtifactModalTrackerTransformerService(
     }
 
     function excludeFieldsForCreationMode(all_fields) {
-        var filtered_fields = _.reject(all_fields, function(field) {
+        var filtered_fields = _.reject(all_fields, function (field) {
             return _(TuleapArtifactModalAwkwardCreationFields).contains(field.type);
         });
         var filtered_fields_without_creation_permissions = excludeFieldsWithoutCreationPermissions(
@@ -67,7 +67,7 @@ function TuleapArtifactModalTrackerTransformerService(
     }
 
     function excludeFieldsWithoutCreationPermissions(fields) {
-        return fields.filter(field => {
+        return fields.filter((field) => {
             const is_structural_field = fieldIsAStructuralField(field);
             if (is_structural_field) {
                 return true;
@@ -124,14 +124,14 @@ function TuleapArtifactModalTrackerTransformerService(
     }
 
     function displayI18NLabelIfAvailable(field_values) {
-        return field_values.map(value => {
+        return field_values.map((value) => {
             if (value.user_reference !== undefined) {
                 return { ...value, label: value.user_reference.real_name };
             } else if (value.ugroup_reference !== undefined) {
                 return {
                     ...value,
                     id: value.ugroup_reference.id,
-                    label: value.ugroup_reference.label
+                    label: value.ugroup_reference.label,
                 };
             }
             return value;
@@ -143,7 +143,7 @@ function TuleapArtifactModalTrackerTransformerService(
             var translateFilter = $filter("translate");
             field.values.unshift({
                 id: 100,
-                label: translateFilter("None")
+                label: translateFilter("None"),
             });
         }
 
@@ -163,7 +163,7 @@ function TuleapArtifactModalTrackerTransformerService(
         var fields = copy(tracker.fields);
         var fields_bound_to_ugroups = getListFieldsBoundToUgroups(fields);
 
-        return new_rules.map(rule => {
+        return new_rules.map((rule) => {
             const source_field = fields_bound_to_ugroups[rule.source_field_id];
             const replaced_source_field_rule = replaceSourceFieldValueIdWithUgroupReferenceId(
                 rule,
@@ -182,7 +182,7 @@ function TuleapArtifactModalTrackerTransformerService(
     function getListFieldsBoundToUgroups(fields) {
         return _(fields)
             .filter({ bindings: { type: "ugroups" } })
-            .map(function(field) {
+            .map(function (field) {
                 field.values = _.indexBy(field.values, "id");
 
                 return field;
@@ -210,7 +210,7 @@ function TuleapArtifactModalTrackerTransformerService(
     }
 
     function addFieldValuesToTracker(artifact_values, tracker) {
-        const transformed_fields = tracker.fields.map(field => {
+        const transformed_fields = tracker.fields.map((field) => {
             var artifact_value = artifact_values[field.field_id];
 
             if (!artifact_value) {
@@ -266,7 +266,7 @@ function TuleapArtifactModalTrackerTransformerService(
 
         field.file_descriptions = artifact_value.file_descriptions;
 
-        field.file_descriptions = field.file_descriptions.map(file => {
+        field.file_descriptions = field.file_descriptions.map((file) => {
             const display_as_image = /^image/.test(file.type);
             return { ...file, display_as_image };
         });

@@ -24,6 +24,6 @@ module.exports = {
     displayName: "pullrequest",
     moduleNameMapper: {
         ...base_config.moduleNameMapper,
-        "^.+\\.html$": "identity-obj-proxy"
-    }
+        "^.+\\.html$": "identity-obj-proxy",
+    },
 };

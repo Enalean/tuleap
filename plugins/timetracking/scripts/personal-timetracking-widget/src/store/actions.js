@@ -21,13 +21,13 @@ import {
     addTime as addTimeQuerrier,
     deleteTime as deleteTimeQuerrier,
     getTrackedTimes,
-    updateTime as updateTimeQuerrier
+    updateTime as updateTimeQuerrier,
 } from "../api/rest-querier.js";
 import {
     ERROR_OCCURRED,
     REST_FEEDBACK_ADD,
     REST_FEEDBACK_EDIT,
-    REST_FEEDBACK_DELETE
+    REST_FEEDBACK_DELETE,
 } from "../../../constants.js";
 import { updateEvent } from "../../../TimetrackingEvents.js";
 
@@ -93,7 +93,7 @@ export async function loadFirstBatchOfTimes(context) {
 
 export async function reloadTimes(context) {
     context.commit("resetTimes");
-    await getTimes(context).finally(function() {
+    await getTimes(context).finally(function () {
         context.commit("setIsLoading", false);
     });
 }

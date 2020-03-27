@@ -8,8 +8,8 @@ function FilesConfig($stateProvider) {
         parent: "pull-request",
         views: {
             "files@pull-request": {
-                template: '<div files id="files"></div>'
-            }
-        }
+                template: '<div files id="files"></div>',
+            },
+        },
     });
 }

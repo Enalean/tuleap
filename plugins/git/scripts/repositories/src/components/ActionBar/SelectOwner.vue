@@ -59,7 +59,7 @@ export default {
             return getRepositoriesOwners().length > 0;
         },
         sorted_repositories_owners() {
-            return getRepositoriesOwners().sort(function(user_a, user_b) {
+            return getRepositoriesOwners().sort(function (user_a, user_b) {
                 return user_a.display_name.localeCompare(user_b.display_name);
             });
         },
@@ -69,12 +69,12 @@ export default {
             },
             set(value) {
                 this.$store.dispatch("changeRepositories", value);
-            }
+            },
         },
         project_key() {
             return PROJECT_KEY;
         },
-        ...mapGetters(["isLoading"])
-    }
+        ...mapGetters(["isLoading"]),
+    },
 };
 </script>

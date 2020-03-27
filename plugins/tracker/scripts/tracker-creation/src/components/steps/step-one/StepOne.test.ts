@@ -28,10 +28,10 @@ describe("StepOne", () => {
         const wrapper: Wrapper<StepOne> = shallowMount(StepOne, {
             mocks: {
                 $store: createStoreMock({
-                    state: {} as State
-                })
+                    state: {} as State,
+                }),
             },
-            localVue: await createTrackerCreationLocalVue()
+            localVue: await createTrackerCreationLocalVue(),
         });
 
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("setSlugifyShortnameMode", true);
@@ -42,11 +42,11 @@ describe("StepOne", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
-                        company_name: "Nichya company"
-                    } as State
-                })
+                        company_name: "Nichya company",
+                    } as State,
+                }),
             },
-            localVue: await createTrackerCreationLocalVue()
+            localVue: await createTrackerCreationLocalVue(),
         });
 
         expect(wrapper.vm.$data.title_company_name).toEqual("Nichya company templates");
@@ -57,11 +57,11 @@ describe("StepOne", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
-                        company_name: "Tuleap"
-                    } as State
-                })
+                        company_name: "Tuleap",
+                    } as State,
+                }),
             },
-            localVue: await createTrackerCreationLocalVue()
+            localVue: await createTrackerCreationLocalVue(),
         });
 
         expect(wrapper.vm.$data.title_company_name).toEqual("Custom templates");

@@ -50,14 +50,14 @@ import {
     TYPE_EMPTY,
     TYPE_LINK,
     TYPE_WIKI,
-    TYPE_FILE
+    TYPE_FILE,
 } from "../../../constants.js";
 import { mapState } from "vuex";
 
 export default {
     name: "TypeSelector",
     props: {
-        value: String
+        value: String,
     },
     computed: {
         ...mapState(["user_can_create_wiki", "embedded_are_allowed"]),
@@ -67,27 +67,32 @@ export default {
                     identifier: TYPE_FILE,
                     is_checked: this.value === TYPE_FILE,
                     label: this.$gettext("File"),
-                    icons: ["fa-file-excel-o", "fa-file-word-o", "fa-file-pdf-o", "fa-file-image-o"]
+                    icons: [
+                        "fa-file-excel-o",
+                        "fa-file-word-o",
+                        "fa-file-pdf-o",
+                        "fa-file-image-o",
+                    ],
                 },
                 {
                     identifier: TYPE_LINK,
                     is_checked: this.value === TYPE_LINK,
                     label: this.$gettext("Link"),
-                    icons: [ICON_LINK]
+                    icons: [ICON_LINK],
                 },
                 {
                     identifier: TYPE_EMPTY,
                     is_checked: this.value === TYPE_EMPTY,
                     label: this.$gettext("Empty"),
-                    icons: [ICON_EMPTY]
-                }
+                    icons: [ICON_EMPTY],
+                },
             ];
             if (this.user_can_create_wiki) {
                 types.push({
                     identifier: TYPE_WIKI,
                     is_checked: this.value === TYPE_WIKI,
                     label: this.$gettext("Wiki page"),
-                    icons: [ICON_WIKI]
+                    icons: [ICON_WIKI],
                 });
             }
             if (this.embedded_are_allowed) {
@@ -95,11 +100,11 @@ export default {
                     identifier: TYPE_EMBEDDED,
                     is_checked: this.value === TYPE_EMBEDDED,
                     label: this.$gettext("Embedded"),
-                    icons: [ICON_EMBEDDED]
+                    icons: [ICON_EMBEDDED],
                 });
             }
             return types;
-        }
-    }
+        },
+    },
 };
 </script>

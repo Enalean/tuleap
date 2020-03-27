@@ -25,7 +25,7 @@ export class ColumnFactory {
             x_domain: x_scale.domain(),
             y_domain: y_scale.domain(),
             column_width,
-            column_height
+            column_height,
         });
     }
 

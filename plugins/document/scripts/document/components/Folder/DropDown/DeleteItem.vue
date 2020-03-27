@@ -37,17 +37,17 @@ import { mapState } from "vuex";
 export default {
     name: "DeleteItem",
     props: {
-        item: Object
+        item: Object,
     },
     computed: {
-        ...mapState(["is_deletion_allowed"])
+        ...mapState(["is_deletion_allowed"]),
     },
     methods: {
         processDeletion() {
             EventBus.$emit("show-confirm-item-deletion-modal", {
-                detail: { current_item: this.item }
+                detail: { current_item: this.item },
             });
-        }
-    }
+        },
+    },
 };
 </script>

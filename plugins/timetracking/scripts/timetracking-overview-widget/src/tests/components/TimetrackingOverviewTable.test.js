@@ -26,7 +26,7 @@ function getTimeTrackingOverviewTableInstance(store_options) {
     const store = createStoreMock(store_options);
     const component_options = {
         localVue,
-        mocks: { $store: store }
+        mocks: { $store: store },
     };
     return shallowMount(TimeTrackingOverviewTable, component_options);
 }
@@ -40,14 +40,14 @@ describe("Given a timetracking overview widget", () => {
                 error_message: null,
                 are_void_trackers_hidden: false,
                 trackers_times: [{ tracker_id: 1 }],
-                users: [1, 2]
+                users: [1, 2],
             },
             getters: {
                 can_results_be_displayed: true,
                 has_error: false,
                 get_formatted_total_sum: "10:20",
-                is_sum_of_times_equals_zero: true
-            }
+                is_sum_of_times_equals_zero: true,
+            },
         };
     });
 

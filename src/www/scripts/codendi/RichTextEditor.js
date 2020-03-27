@@ -20,7 +20,7 @@
 
 import {
     getUploadImageOptions,
-    initiateUploadImage
+    initiateUploadImage,
 } from "../tuleap/ckeditor/get-upload-image-options.js";
 import CKEDITOR from "ckeditor";
 import tuleap from "tuleap";
@@ -30,7 +30,7 @@ import tuleap from "tuleap";
 var codendi = window.codendi || {};
 
 codendi.RTE = Class.create({
-    initialize: function(element, options) {
+    initialize: function (element, options) {
         this.element = $(element);
         this.options = Object.extend(
             {
@@ -38,7 +38,7 @@ codendi.RTE = Class.create({
                 onLoad: Prototype.emptyFunction,
                 toggle: false,
                 default_in_html: true,
-                autoresize_when_ready: true
+                autoresize_when_ready: true,
             },
             options || {}
         );
@@ -50,15 +50,15 @@ codendi.RTE = Class.create({
         }
     },
 
-    can_be_resized: function() {
+    can_be_resized: function () {
         var resize_enabled = this.options.resize_enabled;
         return typeof resize_enabled === "undefined" || resize_enabled;
     },
 
-    init_rte: function() {
+    init_rte: function () {
         var replace_options = {
             resize_enabled: true,
-            language: document.body.dataset.userLocale
+            language: document.body.dataset.userLocale,
         };
 
         if (CKEDITOR.instances && CKEDITOR.instances[this.element.id]) {
@@ -75,20 +75,20 @@ codendi.RTE = Class.create({
                 ["TextColor", "BGColor"],
                 ["NumberedList", "BulletedList", "-", "Outdent", "Indent", "Blockquote"],
                 ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"],
-                ["Link", "Unlink", "Anchor", "Image"]
+                ["Link", "Unlink", "Anchor", "Image"],
             ];
         } else if (this.options.toolbar === "minimal") {
             toolbar = [
                 ["Bold", "Italic", "Underline"],
                 ["NumberedList", "BulletedList", "-", "Blockquote", "Format"],
-                ["Link", "Unlink", "Anchor", "Image"]
+                ["Link", "Unlink", "Anchor", "Image"],
             ];
         } else if (this.options.toolbar === "tuleap") {
             toolbar = [
                 ["Bold", "Italic", "Underline"],
                 ["NumberedList", "BulletedList", "-", "Blockquote", "Format"],
                 ["Link", "Unlink", "Anchor", "Image"],
-                ["Source"]
+                ["Source"],
             ];
         } else if (this.options.toolbar === "advanced") {
             toolbar = [
@@ -109,7 +109,7 @@ codendi.RTE = Class.create({
                     "HorizontalRule",
                     "SpecialChar",
                     "-",
-                    "Source"
+                    "Source",
                 ],
                 "/",
                 [
@@ -123,8 +123,8 @@ codendi.RTE = Class.create({
                     "RemoveFormat",
                     "NumberedList",
                     "BulletedList",
-                    "Format"
-                ]
+                    "Format",
+                ],
             ];
         }
 
@@ -141,7 +141,7 @@ codendi.RTE = Class.create({
         }
 
         replace_options = Object.assign(replace_options, {
-            ...getUploadImageOptions(this.element)
+            ...getUploadImageOptions(this.element),
         });
         this.rte = CKEDITOR.replace(this.element.id, replace_options);
         initiateUploadImage(this.rte, replace_options, this.element);
@@ -157,7 +157,7 @@ codendi.RTE = Class.create({
             this.rte.setData(escaped_value);
         }
 
-        CKEDITOR.on("dialogDefinition", function(ev) {
+        CKEDITOR.on("dialogDefinition", function (ev) {
             var tab,
                 dialog = ev.data.name,
                 definition = ev.data.definition;
@@ -172,14 +172,14 @@ codendi.RTE = Class.create({
             }
         });
 
-        this.rte.on("instanceReady", function() {
+        this.rte.on("instanceReady", function () {
             this.document.getBody().$.contentEditable = true;
             tuleap.mention.init(this.document.getBody().$);
         });
 
         CKEDITOR.on(
             "instanceCreated",
-            function(evt) {
+            function (evt) {
                 if (evt.editor === this.rte) {
                     this.options.onLoad();
                 }
@@ -192,7 +192,7 @@ codendi.RTE = Class.create({
 
         CKEDITOR.on(
             "instanceReady",
-            function(evt) {
+            function (evt) {
                 if (evt.editor !== this.rte) {
                     return;
                 }
@@ -212,7 +212,7 @@ codendi.RTE = Class.create({
             }.bind(this)
         );
     },
-    toggle: function(evt, option) {
+    toggle: function (evt, option) {
         if (option == "html" && !this.rte) {
             this.init_rte();
         } else {
@@ -222,7 +222,7 @@ codendi.RTE = Class.create({
         Event.stop(evt);
         return false;
     },
-    destroy: function() {
+    destroy: function () {
         try {
             this.rte.destroy(false);
         } catch (e) {
@@ -230,10 +230,10 @@ codendi.RTE = Class.create({
         }
         this.rte = null;
     },
-    getContent: function() {
+    getContent: function () {
         return this.rte.getData();
     },
-    isInstantiated: function() {
+    isInstantiated: function () {
         return typeof this.rte === "object";
-    }
+    },
 });

@@ -37,13 +37,13 @@ import FieldErrorMessage from "./FieldErrorMessage.vue";
 export default {
     name: "DryRunFullyMigratedFieldState",
     components: {
-        FieldErrorMessage
+        FieldErrorMessage,
     },
     computed: {
         ...mapState({
-            fully_migrated_fields: state => state.dry_run_fields.fields_migrated
+            fully_migrated_fields: (state) => state.dry_run_fields.fields_migrated,
         }),
-        ...mapGetters(["fully_migrated_fields_count"])
-    }
+        ...mapGetters(["fully_migrated_fields_count"]),
+    },
 };
 </script>

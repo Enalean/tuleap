@@ -36,12 +36,12 @@ tuleap.agiledashboard.cardwall.cards = tuleap.agiledashboard.cardwall.cards || {
 tuleap.agiledashboard.cardwall.cards.selectEditors =
     tuleap.agiledashboard.cardwall.cards.selectEditors || [];
 
-tuleap.agiledashboard.cardwall.card.updateAfterAjax = function(transport) {
+tuleap.agiledashboard.cardwall.card.updateAfterAjax = function (transport) {
     var artifacts_modifications = $H(transport.responseJSON);
     var milestone_id;
     var rest_route_url;
 
-    artifacts_modifications.each(function(artifact) {
+    artifacts_modifications.each(function (artifact) {
         updateArtifact(artifact);
     });
 
@@ -54,14 +54,14 @@ tuleap.agiledashboard.cardwall.card.updateAfterAjax = function(transport) {
 
     new Ajax.Request(rest_route_url, {
         method: "GET",
-        onComplete: updateEffortViewValue
+        onComplete: updateEffortViewValue,
     });
 
     function updateArtifact(artifact) {
         var artifact_id = artifact.key,
             values = artifact.value;
 
-        $H(values).each(function(field) {
+        $H(values).each(function (field) {
             updateArtifactField(artifact_id, field);
         });
     }
@@ -71,7 +71,7 @@ tuleap.agiledashboard.cardwall.card.updateAfterAjax = function(transport) {
                 ".card[data-artifact-id=" + artifact_id + "] .valueOf_" + field.key,
             field_value = field.value === "" ? " - " : field.value;
 
-        $$(field_to_update_selector).each(function(element_to_update) {
+        $$(field_to_update_selector).each(function (element_to_update) {
             updateFieldValue(element_to_update, field_value);
         });
     }
@@ -166,7 +166,7 @@ tuleap.agiledashboard.cardwall.card.updateAfterAjax = function(transport) {
 tuleap.agiledashboard.cardwall.card.AbstractElementEditor = Class.create({
     field_id: null,
 
-    fail: function(transport) {
+    fail: function (transport) {
         if (typeof transport === "undefined") {
             return;
         }
@@ -177,15 +177,15 @@ tuleap.agiledashboard.cardwall.card.AbstractElementEditor = Class.create({
         }
     },
 
-    userCanEdit: function() {
+    userCanEdit: function () {
         return this.field_id !== null;
-    }
+    },
 });
 
 tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
     tuleap.agiledashboard.cardwall.card.AbstractElementEditor,
     {
-        initialize: function(element) {
+        initialize: function (element) {
             this.options = {};
             this.element = element;
             this.field_id = element.readAttribute("data-field-id");
@@ -215,35 +215,27 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
             this.in_place_editor = new Ajax.InPlaceEditor(container, this.update_url, this.options);
         },
 
-        appendAutocomputedOverrideDiv: function(in_place_editor) {
+        appendAutocomputedOverrideDiv: function (in_place_editor) {
             var self = this;
             var autocompute_override_div = new Element("div");
 
             autocompute_override_div.writeAttribute("class", "autocomputed_override");
-            autocompute_override_div.update(
-                $(in_place_editor.element)
-                    .up()
-                    .previous().innerHTML
-            );
+            autocompute_override_div.update($(in_place_editor.element).up().previous().innerHTML);
 
-            autocompute_override_div.select("a")[0].observe("click", function(event) {
+            autocompute_override_div.select("a")[0].observe("click", function (event) {
                 event.preventDefault();
 
                 self.bindAutocomputeLink.bind(self)(this.readAttribute("data-field-id"));
             });
 
-            $(in_place_editor.element)
-                .up()
-                .insert({ top: autocompute_override_div });
+            $(in_place_editor.element).up().insert({ top: autocompute_override_div });
         },
 
-        removeAutocomputedOverrideDiv: function(in_place_editor) {
-            $(in_place_editor.element)
-                .previous()
-                .remove();
+        removeAutocomputedOverrideDiv: function (in_place_editor) {
+            $(in_place_editor.element).previous().remove();
         },
 
-        bindAutocomputeLink: function(field_id) {
+        bindAutocomputeLink: function (field_id) {
             var parameters = {},
                 linked_field = "artifact[" + field_id + "]";
 
@@ -251,20 +243,20 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
 
             var post_value = {
                 is_autocomputed: 1,
-                manual_value: ""
+                manual_value: "",
             };
             parameters[linked_field] = JSON.stringify(post_value);
 
             new Ajax.Request(self.update_url, {
                 parameters: parameters,
-                onComplete: function(transport) {
+                onComplete: function (transport) {
                     self.in_place_editor.wrapUp(transport);
                 },
-                onFailure: self.fail
+                onFailure: self.fail,
             });
         },
 
-        createAndInjectTemporaryContainer: function() {
+        createAndInjectTemporaryContainer: function () {
             var clickable = this.getClickableArea(),
                 clickable_div = document.createElement("div");
 
@@ -274,7 +266,7 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
             return clickable_div;
         },
 
-        getClickableArea: function() {
+        getClickableArea: function () {
             var autocompute_label = "";
 
             if (this.element.readAttribute("data-field-is-autocomputed") === "1") {
@@ -288,7 +280,7 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
             return this.element.textContent + autocompute_label;
         },
 
-        ajaxCallback: function() {
+        ajaxCallback: function () {
             var field_id = this.field_id;
             var is_computed_field = this.is_computed_field;
 
@@ -302,7 +294,7 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
 
                     var post_value = {
                         is_autocomputed: 0,
-                        manual_value: value
+                        manual_value: value,
                     };
 
                     parameters[linked_field] = JSON.stringify(post_value);
@@ -314,7 +306,7 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
             };
         },
 
-        success: function() {
+        success: function () {
             return function updateCardInfo(transport) {
                 if (typeof transport != "undefined") {
                     tuleap.agiledashboard.cardwall.card.updateAfterAjax(transport);
@@ -322,7 +314,7 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
             };
         },
 
-        addValidationOnTextEditor: function(in_place_editor) {
+        addValidationOnTextEditor: function (in_place_editor) {
             var pattern, message;
 
             switch (this.artifact_type) {
@@ -342,7 +334,7 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
 
             in_place_editor._controls.editor.pattern = pattern;
             in_place_editor._controls.editor.title = message;
-        }
+        },
     }
 );
 
@@ -351,7 +343,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
     {
         null_user_id: 100,
 
-        initialize: function(element) {
+        initialize: function (element) {
             this.setProperties(element);
 
             if (!this.userCanEdit()) {
@@ -373,7 +365,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
             this.bindSelectedElementsToEditor(editor);
         },
 
-        setProperties: function(element) {
+        setProperties: function (element) {
             this.element = element;
             this.options = {};
             this.tracker_user_data = [];
@@ -393,15 +385,15 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
                 .readAttribute("data-display-avatar");
         },
 
-        fetchUserData: function() {
+        fetchUserData: function () {
             this.tracker_user_data = tuleap.agiledashboard.cardwall.tracker_user_data;
         },
 
-        isMultipleSelect: function() {
+        isMultipleSelect: function () {
             return this.artifact_type === "msb";
         },
 
-        addOptions: function() {
+        addOptions: function () {
             this.options["multiple"] = this.isMultipleSelect();
             this.options["collection"] = this.getAvailableUsers();
             this.options["element"] = this.element;
@@ -410,8 +402,8 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
             this.options["onFailure"] = this.fail;
         },
 
-        bindSelectedElementsToEditor: function(editor) {
-            editor.getSelectedUsers = function() {
+        bindSelectedElementsToEditor: function (editor) {
+            editor.getSelectedUsers = function () {
                 if (editor.element.select(".avatar").length == 0) {
                     this.options.selected = getSelectedUsersByDisplayType("realname");
                 } else {
@@ -423,7 +415,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
                 var values = editor.element.select("." + classname);
                 var users = {};
 
-                values.each(function(classname) {
+                values.each(function (classname) {
                     var id = classname.readAttribute("data-user-id");
                     users[id] = classname.readAttribute("title");
                 });
@@ -432,7 +424,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
             }
         },
 
-        createAndInjectTemporaryContainer: function() {
+        createAndInjectTemporaryContainer: function () {
             if (this.element.innerHTML === "") {
                 this.element.textContent = " - ";
             }
@@ -441,7 +433,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
             return this.element;
         },
 
-        getAvailableUsers: function() {
+        getAvailableUsers: function () {
             var user_collection = [];
 
             if (this.users.size === 0) {
@@ -452,24 +444,24 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
                 this.fetchUsers();
             }
 
-            this.users.forEach(function(user_details) {
+            this.users.forEach(function (user_details) {
                 user_collection.push([user_details.id, user_details.label]);
             });
 
             return user_collection;
         },
 
-        fetchUsers: function() {
+        fetchUsers: function () {
             var users = this.getDefaultUsers();
 
             new Ajax.Request(this.collection_url, {
                 method: "GET",
                 asynchronous: false,
-                onSuccess: function(data) {
-                    data.responseJSON.forEach(function(user_details) {
+                onSuccess: function (data) {
+                    data.responseJSON.forEach(function (user_details) {
                         users.set(user_details["id"], user_details);
                     });
-                }
+                },
             });
 
             this.users = users;
@@ -478,20 +470,20 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
             tuleap.agiledashboard.cardwall.tracker_user_data[this.field_id] = users;
         },
 
-        getDefaultUsers: function() {
+        getDefaultUsers: function () {
             var users = new Map();
             var none_id = this.null_user_id;
             users.set(none_id, {
                 id: none_id,
                 label: "None",
                 username: "None",
-                realname: "None"
+                realname: "None",
             });
 
             return users;
         },
 
-        preRequestCallback: function() {
+        preRequestCallback: function () {
             var field_id = this.field_id,
                 is_multi_select = this.isMultipleSelect();
 
@@ -510,7 +502,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
             };
         },
 
-        success: function() {
+        success: function () {
             var field_id = this.field_id,
                 is_multi_select = this.isMultipleSelect() === true;
 
@@ -541,7 +533,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
             };
         },
 
-        updateAssignedToValue: function(assigned_to_div, new_values) {
+        updateAssignedToValue: function (assigned_to_div, new_values) {
             var updateFunction = addUsername,
                 field_id = this.field_id,
                 tracker_user_data = this.tracker_user_data;
@@ -593,9 +585,9 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
                 avatar_div.writeAttribute("data-user-id", user_id);
 
                 avatar_img = new Element("img", {
-                    src: user.avatar_url
+                    src: user.avatar_url,
                 });
-                avatar_img.observe("load", function() {
+                avatar_img.observe("load", function () {
                     if (this.width == 0 || this.height == 0) {
                         return;
                     }
@@ -608,16 +600,16 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
                 container.insert(user_div);
                 container.insert(" ");
             }
-        }
+        },
     }
 );
 
-tuleap.agiledashboard.cardwall.updateBurndown = function() {
+tuleap.agiledashboard.cardwall.updateBurndown = function () {
     new Ajax.Request("/api/v1/milestones/" + $F("milestone_id") + "/burndown", {
         method: "GET",
-        onSuccess: function(response) {
+        onSuccess: function (response) {
             tuleap.agiledashboard.cardwall.burndown.update(response.responseJSON);
-        }
+        },
     });
 };
 
@@ -626,7 +618,7 @@ tuleap.agiledashboard.Burndown = Class.create({
     width: 300,
     height: 85,
 
-    initialize: function(d3, data, options) {
+    initialize: function (d3, data, options) {
         this.d3 = d3;
         this.data = data;
 
@@ -643,7 +635,7 @@ tuleap.agiledashboard.Burndown = Class.create({
         this.ideal_data = [this.data.capacity, 0];
     },
 
-    display: function(append_element_selector) {
+    display: function (append_element_selector) {
         this.defineAbscissas();
         this.defineOrdinates();
         this.defineLineFunctions();
@@ -655,31 +647,31 @@ tuleap.agiledashboard.Burndown = Class.create({
         this.paintTheDots();
     },
 
-    update: function(data) {
+    update: function (data) {
         this.data = data;
         this.repaintActual();
         this.repaintDots();
     },
 
-    getXCoordinateForAGivenBurndownPoint: function(d, index) {
+    getXCoordinateForAGivenBurndownPoint: function (d, index) {
         return this.x(index) / this.data.duration;
     },
 
-    defineAbscissas: function() {
+    defineAbscissas: function () {
         this.x = this.d3.scale.linear().range([0, this.width]);
         this.x.domain(
-            this.d3.extent(this.ideal_data, function(d, index) {
+            this.d3.extent(this.ideal_data, function (d, index) {
                 return index;
             })
         );
     },
 
-    defineOrdinates: function() {
+    defineOrdinates: function () {
         this.y = this.d3.scale.linear().range([this.height, 0]);
         this.y.domain(this.d3.extent(this.data.points.concat(this.ideal_data), Number));
     },
 
-    bootstrapTheChart: function(append_element_selector) {
+    bootstrapTheChart: function (append_element_selector) {
         var svg = append_element_selector
             .append("svg")
             .attr("class", "chart")
@@ -691,11 +683,11 @@ tuleap.agiledashboard.Burndown = Class.create({
             .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
     },
 
-    defineLineFunctions: function() {
+    defineLineFunctions: function () {
         this.ideal_line = this.d3.svg
             .line()
             .x(
-                function(d, index) {
+                function (d, index) {
                     return this.x(index);
                 }.bind(this)
             )
@@ -706,7 +698,7 @@ tuleap.agiledashboard.Burndown = Class.create({
             .y(this.y);
     },
 
-    paintAbscissas: function() {
+    paintAbscissas: function () {
         this.chart
             .append("line")
             .attr("class", "line ordinates")
@@ -716,7 +708,7 @@ tuleap.agiledashboard.Burndown = Class.create({
             .attr("y2", this.height);
     },
 
-    paintOrdinates: function() {
+    paintOrdinates: function () {
         this.chart
             .append("line")
             .attr("class", "line abscissas")
@@ -726,7 +718,7 @@ tuleap.agiledashboard.Burndown = Class.create({
             .attr("y2", this.height);
     },
 
-    paintTheIdealLine: function() {
+    paintTheIdealLine: function () {
         this.chart
             .append("path")
             .datum(this.ideal_data)
@@ -734,7 +726,7 @@ tuleap.agiledashboard.Burndown = Class.create({
             .attr("d", this.ideal_line);
     },
 
-    paintTheActualLine: function() {
+    paintTheActualLine: function () {
         this.chart
             .append("path")
             .datum(this.data.points)
@@ -742,7 +734,7 @@ tuleap.agiledashboard.Burndown = Class.create({
             .attr("d", this.actual_line);
     },
 
-    paintTheDots: function() {
+    paintTheDots: function () {
         this.chart
             .selectAll("circle")
             .data(this.data.points)
@@ -753,20 +745,17 @@ tuleap.agiledashboard.Burndown = Class.create({
             .attr("cx", this.getXCoordinateForAGivenBurndownPoint.bind(this))
             .attr("cy", this.y)
             .append("title")
-            .text(function(d) {
+            .text(function (d) {
                 return d;
             });
     },
 
-    repaintActual: function() {
-        this.chart
-            .select(".actual")
-            .datum(this.data.points)
-            .attr("d", this.actual_line);
+    repaintActual: function () {
+        this.chart.select(".actual").datum(this.data.points).attr("d", this.actual_line);
     },
 
-    repaintDots: function() {
+    repaintDots: function () {
         this.chart.selectAll("circle").remove();
         this.paintTheDots();
-    }
+    },
 });

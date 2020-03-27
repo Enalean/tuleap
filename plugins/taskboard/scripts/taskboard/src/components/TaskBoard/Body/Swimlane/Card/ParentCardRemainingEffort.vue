@@ -43,7 +43,7 @@ import { Component, Prop } from "vue-property-decorator";
 import { Card } from "../../../../../type";
 import EditRemainingEffort from "./RemainingEffort/EditRemainingEffort.vue";
 @Component({
-    components: { EditRemainingEffort }
+    components: { EditRemainingEffort },
 })
 export default class ParentCardRemainingEffort extends Vue {
     @Prop({ required: true })

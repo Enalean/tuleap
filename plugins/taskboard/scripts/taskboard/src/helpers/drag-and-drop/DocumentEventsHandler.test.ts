@@ -29,14 +29,14 @@ describe(`DocumentEventsHandler`, () => {
     beforeEach(() => {
         mock_event_source = {
             attachAfterDropListener: jest.fn(),
-            dispatchAfterDropEvent: jest.fn()
+            dispatchAfterDropEvent: jest.fn(),
         };
         handlers = {
             dragOverHandler: jest.fn(),
             dropHandler: jest.fn(),
             dragEnterHandler: jest.fn(),
             dragEndHandler: jest.fn(),
-            dragLeaveHandler: jest.fn()
+            dragLeaveHandler: jest.fn(),
         };
         doc = createLocalDocument();
         events_handler = new DocumentEventsHandler(mock_event_source, handlers, doc);

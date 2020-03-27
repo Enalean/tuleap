@@ -30,16 +30,16 @@ describe(`WorkflowFieldChange`, () => {
     function createWrapper() {
         store = createStoreMock({
             state: {
-                is_operation_running: false
+                is_operation_running: false,
             },
             getters: {
                 workflow_field_label: "Status",
-                current_tracker_id: 145
-            }
+                current_tracker_id: 145,
+            },
         });
         wrapper = shallowMount(WorkflowFieldChange, {
             localVue,
-            mocks: { $store: store }
+            mocks: { $store: store },
         });
     }
 
@@ -50,7 +50,7 @@ describe(`WorkflowFieldChange`, () => {
 
     it(`when I click the "Change or remove" button, it will open a confirmation modal`, () => {
         const modal = {
-            show: jest.fn()
+            show: jest.fn(),
         };
         jest.spyOn(tlp, "modal").mockReturnValue(modal);
         createWrapper();

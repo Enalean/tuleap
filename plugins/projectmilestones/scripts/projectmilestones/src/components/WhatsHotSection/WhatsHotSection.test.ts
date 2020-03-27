@@ -31,10 +31,10 @@ async function getPersonalWidgetInstance(
     const store = createStoreMock(store_options);
     const component_options = {
         propsData: {
-            project_id
+            project_id,
         },
         mocks: { $store: store },
-        localVue: await createReleaseWidgetLocalVue()
+        localVue: await createReleaseWidgetLocalVue(),
     };
 
     return shallowMount(WhatsHotSection, component_options);
@@ -43,18 +43,18 @@ async function getPersonalWidgetInstance(
 describe("What'sHotSection", () => {
     let store_options: StoreOptions = {
         state: {},
-        getters: {}
+        getters: {},
     };
 
     beforeEach(() => {
         store_options = {
             state: {
                 is_loading: false,
-                current_milestones: []
+                current_milestones: [],
             },
             getters: {
-                has_rest_error: false
-            }
+                has_rest_error: false,
+            },
         };
     });
 
@@ -67,12 +67,12 @@ describe("What'sHotSection", () => {
     it("When there are some current_milestones, then ReleaseDisplayer Component is displayed", async () => {
         const release1: MilestoneData = {
             label: "release_1",
-            id: 1
+            id: 1,
         } as MilestoneData;
 
         const release2: MilestoneData = {
             label: "release_2",
-            id: 2
+            id: 2,
         } as MilestoneData;
 
         store_options.state.current_milestones = [release1, release2];

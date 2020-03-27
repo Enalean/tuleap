@@ -61,7 +61,7 @@
                 type="submit"
                 data-test="timetracking-submit-time"
                 v-bind:class="{
-                    'tlp-tooltip tlp-tooltip-bottom timetracking-tooltip': error_message
+                    'tlp-tooltip tlp-tooltip-bottom timetracking-tooltip': error_message,
                 }"
                 v-bind:data-tlp-tooltip="error_message"
                 v-on:click="validateNewTime()"
@@ -88,7 +88,7 @@ import { mapGetters } from "vuex";
 export default {
     name: "WidgetModalEditTime",
     props: {
-        timeData: Object
+        timeData: Object,
     },
     data() {
         const data = this.timeData || {};
@@ -97,18 +97,18 @@ export default {
             date,
             step,
             time: this.timeData ? formatMinutes(this.timeData.minutes) : "",
-            error_message: null
+            error_message: null,
         };
     },
     computed: {
-        ...mapGetters(["current_artifact"])
+        ...mapGetters(["current_artifact"]),
     },
     mounted() {
         datePicker(this.$refs.date_field, {
             static: true,
             onValueUpdate: (date, string_value) => {
                 this.date = string_value;
-            }
+            },
         });
     },
     methods: {
@@ -125,7 +125,7 @@ export default {
                     this.error_message = this.$gettext("Time is required");
                 }
             }
-        }
-    }
+        },
+    },
 };
 </script>

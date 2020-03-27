@@ -23,7 +23,7 @@ export {
     getProjectId,
     getUserIsAdmin,
     getDashCasedLocale,
-    getRepositoriesOwners
+    getRepositoriesOwners,
 };
 
 let current_user_id;

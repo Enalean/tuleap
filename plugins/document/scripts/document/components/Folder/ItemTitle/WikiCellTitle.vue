@@ -39,7 +39,7 @@ export default {
     name: "WikiCellTitle",
     components: { FakeCaret },
     props: {
-        item: Object
+        item: Object,
     },
     computed: {
         ...mapState(["project_id"]),
@@ -51,7 +51,7 @@ export default {
         },
         title() {
             return getTitleWithElipsisIfNeeded(this.item);
-        }
-    }
+        },
+    },
 };
 </script>

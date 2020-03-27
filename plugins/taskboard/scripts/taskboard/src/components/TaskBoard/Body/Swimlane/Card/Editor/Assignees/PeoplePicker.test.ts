@@ -26,7 +26,7 @@ const mocked_jquery = {
     select2: jest.fn(),
     on: jest.fn(),
     off: jest.fn(),
-    val: jest.fn()
+    val: jest.fn(),
 };
 
 jest.mock("jquery", () => {
@@ -42,11 +42,11 @@ async function getWrapper(is_multiple = true): Promise<Wrapper<PeoplePicker>> {
                 {
                     id: 101,
                     avatar_url: "steeve.png",
-                    display_name: "Steeve"
-                } as UserForPeoplePicker
+                    display_name: "Steeve",
+                } as UserForPeoplePicker,
             ],
-            value: []
-        }
+            value: [],
+        },
     });
 }
 

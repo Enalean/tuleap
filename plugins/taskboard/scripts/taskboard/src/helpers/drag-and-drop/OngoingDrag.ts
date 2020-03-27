@@ -21,7 +21,7 @@ import {
     AfterDropEventSource,
     AfterDropListener,
     DragStartContext,
-    DrekkenovInitOptions
+    DrekkenovInitOptions,
 } from "./types";
 import { HIDE_CSS_CLASS } from "./constants";
 

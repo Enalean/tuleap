@@ -24,7 +24,7 @@ import { HandleDropPayload, MoveCardsPayload, ReorderCardsPayload, SwimlaneState
 import {
     getCardFromSwimlane,
     isDraggedOverAnotherSwimlane,
-    isDraggedOverTheSourceCell
+    isDraggedOverTheSourceCell,
 } from "../../helpers/html-to-item";
 import { getCardPosition } from "../../helpers/cards-reordering";
 import { Card, ColumnDefinition, Swimlane } from "../../type";
@@ -89,7 +89,7 @@ function getReorderCardsPayload(
     const reoder_payload: ReorderCardsPayload = {
         swimlane,
         column,
-        position
+        position,
     };
     return reoder_payload;
 }
@@ -111,7 +111,7 @@ function getMoveCardsPayload(
         card,
         column,
         swimlane,
-        position
+        position,
     };
 }
 
@@ -124,7 +124,7 @@ export async function reorderCardsInCell(
         const url = getPATCHCellUrl(payload.swimlane, payload.column);
         await patch(url, {
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ order: payload.position })
+            body: JSON.stringify({ order: payload.position }),
         });
     } catch (error) {
         await context.dispatch("error/handleModalError", error, { root: true });
@@ -141,11 +141,11 @@ export async function moveCardToCell(
         const body = getMoveCardBody(payload);
         await patch(url, {
             headers: { "Content-Type": "application/json" },
-            body
+            body,
         });
         await context.dispatch("refreshCardAndParent", {
             swimlane: payload.swimlane,
-            card: payload.card
+            card: payload.card,
         });
     } catch (error) {
         await context.dispatch("error/handleModalError", error, { root: true });
@@ -154,7 +154,7 @@ export async function moveCardToCell(
 
 function getMoveCardBody(payload: MoveCardsPayload): string {
     const body = {
-        add: payload.card.id
+        add: payload.card.id,
     };
 
     if (payload.position) {

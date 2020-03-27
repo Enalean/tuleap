@@ -28,7 +28,7 @@ describe("Swimlane state getters", () => {
     describe("is_loading_cards", () => {
         it("returns true if swimlanes are still loading", () => {
             const state: SwimlaneState = {
-                is_loading_swimlanes: true
+                is_loading_swimlanes: true,
             } as SwimlaneState;
 
             expect(getters.is_loading_cards(state)).toBe(true);
@@ -40,8 +40,8 @@ describe("Swimlane state getters", () => {
                 swimlanes: [
                     { is_loading_children_cards: false } as Swimlane,
                     { is_loading_children_cards: true } as Swimlane,
-                    { is_loading_children_cards: false } as Swimlane
-                ]
+                    { is_loading_children_cards: false } as Swimlane,
+                ],
             } as SwimlaneState;
 
             expect(getters.is_loading_cards(state)).toBe(true);
@@ -53,8 +53,8 @@ describe("Swimlane state getters", () => {
                 swimlanes: [
                     { is_loading_children_cards: false } as Swimlane,
                     { is_loading_children_cards: false } as Swimlane,
-                    { is_loading_children_cards: false } as Swimlane
-                ]
+                    { is_loading_children_cards: false } as Swimlane,
+                ],
             } as SwimlaneState;
 
             expect(getters.is_loading_cards(state)).toBe(false);
@@ -67,14 +67,14 @@ describe("Swimlane state getters", () => {
             column = {
                 mappings: [
                     { tracker_id: 45, accepts: [{ id: 7546 }] },
-                    { tracker_id: 46, accepts: [{ id: 4366 }] }
-                ]
+                    { tracker_id: 46, accepts: [{ id: 4366 }] },
+                ],
             } as ColumnDefinition;
         });
 
         it("returns 0 if no swimlanes", () => {
             const state: SwimlaneState = {
-                swimlanes: [] as Swimlane[]
+                swimlanes: [] as Swimlane[],
             } as SwimlaneState;
 
             expect(getters.nb_cards_in_column(state)(column)).toBe(0);
@@ -89,22 +89,22 @@ describe("Swimlane state getters", () => {
                             label: "parent 1 is in column 7546 but has children",
                             tracker_id: 45,
                             mapped_list_value: { id: 7546 },
-                            has_children: true
+                            has_children: true,
                         },
                         children_cards: [
                             {
                                 id: 2,
                                 label: "children 2 is in column 7546",
                                 tracker_id: 45,
-                                mapped_list_value: { id: 7546 }
+                                mapped_list_value: { id: 7546 },
                             },
                             {
                                 id: 3,
                                 label: "children 3 is in column 7546",
                                 tracker_id: 45,
-                                mapped_list_value: { id: 7546 }
-                            }
-                        ]
+                                mapped_list_value: { id: 7546 },
+                            },
+                        ],
                     },
                     {
                         card: {
@@ -112,24 +112,24 @@ describe("Swimlane state getters", () => {
                             label: "parent 4 is in column 7546 but has children",
                             tracker_id: 45,
                             mapped_list_value: { id: 7546 },
-                            has_children: true
+                            has_children: true,
                         },
                         children_cards: [
                             {
                                 id: 5,
                                 label: "children 5 is in column 7546",
                                 tracker_id: 45,
-                                mapped_list_value: { id: 7546 }
+                                mapped_list_value: { id: 7546 },
                             },
                             {
                                 id: 6,
                                 label: "children 6 is in column 7546",
                                 tracker_id: 45,
-                                mapped_list_value: { id: 7546 }
-                            }
-                        ]
-                    }
-                ]
+                                mapped_list_value: { id: 7546 },
+                            },
+                        ],
+                    },
+                ],
             } as SwimlaneState;
 
             expect(getters.nb_cards_in_column(state)(column)).toBe(4);
@@ -144,22 +144,22 @@ describe("Swimlane state getters", () => {
                             label: "parent 1 is in column 7546 but has children",
                             tracker_id: 45,
                             mapped_list_value: { id: 7546 },
-                            has_children: true
+                            has_children: true,
                         },
                         children_cards: [
                             {
                                 id: 2,
                                 label: "children 2 is in column 7546",
                                 tracker_id: 45,
-                                mapped_list_value: { id: 7546 }
+                                mapped_list_value: { id: 7546 },
                             },
                             {
                                 id: 3,
                                 label: "children 3 is in column 7546",
                                 tracker_id: 45,
-                                mapped_list_value: { id: 7546 }
-                            }
-                        ]
+                                mapped_list_value: { id: 7546 },
+                            },
+                        ],
                     },
                     {
                         card: {
@@ -167,8 +167,8 @@ describe("Swimlane state getters", () => {
                             label: "parent 4 is in column 7546 and has no children",
                             tracker_id: 45,
                             mapped_list_value: { id: 7546 },
-                            has_children: false
-                        }
+                            has_children: false,
+                        },
                     },
                     {
                         card: {
@@ -176,10 +176,10 @@ describe("Swimlane state getters", () => {
                             label: "parent 5 is NOT in column",
                             tracker_id: 45,
                             mapped_list_value: { id: 8000 },
-                            has_children: false
-                        }
-                    }
-                ]
+                            has_children: false,
+                        },
+                    },
+                ],
             } as SwimlaneState;
 
             expect(getters.nb_cards_in_column(state)(column)).toBe(3);
@@ -194,24 +194,24 @@ describe("Swimlane state getters", () => {
                             label: "parent 1 is in column 7546 but has children",
                             tracker_id: 45,
                             mapped_list_value: { id: 7546 },
-                            has_children: true
+                            has_children: true,
                         },
                         children_cards: [
                             {
                                 id: 2,
                                 label: "children 2 is NOT in column",
                                 tracker_id: 45,
-                                mapped_list_value: { id: 8000 }
+                                mapped_list_value: { id: 8000 },
                             },
                             {
                                 id: 3,
                                 label: "children 3 is in column 7546",
                                 tracker_id: 45,
-                                mapped_list_value: { id: 7546 }
-                            }
-                        ]
-                    }
-                ]
+                                mapped_list_value: { id: 7546 },
+                            },
+                        ],
+                    },
+                ],
             } as SwimlaneState;
 
             expect(getters.nb_cards_in_column(state)(column)).toBe(1);
@@ -227,15 +227,15 @@ describe("Swimlane state getters", () => {
             column_todo = {
                 id: 2,
                 label: "To do",
-                mappings: [{ tracker_id: 7, accepts: [{ id: 49 }] }]
+                mappings: [{ tracker_id: 7, accepts: [{ id: 49 }] }],
             } as ColumnDefinition;
 
             swimlane_state = { swimlanes: [] as Swimlane[] } as SwimlaneState;
 
             root_state = {
                 column: {
-                    columns: [column_todo]
-                }
+                    columns: [column_todo],
+                },
             } as RootState;
         });
 
@@ -245,9 +245,9 @@ describe("Swimlane state getters", () => {
                 children_cards: [
                     { id: 95, tracker_id: 7, mapped_list_value: { id: 49 } } as Card,
                     { id: 102, tracker_id: 7, mapped_list_value: { id: 49 } } as Card,
-                    { id: 104, tracker_id: 7, mapped_list_value: { id: 50 } } as Card
+                    { id: 104, tracker_id: 7, mapped_list_value: { id: 50 } } as Card,
                 ],
-                is_loading_children_cards: false
+                is_loading_children_cards: false,
             } as Swimlane;
 
             swimlane_state.swimlanes.push(swimlane);
@@ -256,7 +256,7 @@ describe("Swimlane state getters", () => {
                 getters.cards_in_cell(swimlane_state, [], root_state)(swimlane, column_todo)
             ).toEqual([
                 { id: 95, tracker_id: 7, mapped_list_value: { id: 49 } },
-                { id: 102, tracker_id: 7, mapped_list_value: { id: 49 } }
+                { id: 102, tracker_id: 7, mapped_list_value: { id: 49 } },
             ]);
         });
 
@@ -264,7 +264,7 @@ describe("Swimlane state getters", () => {
             const swimlane: Swimlane = {
                 card: { id: 43, has_children: false } as Card,
                 children_cards: [],
-                is_loading_children_cards: false
+                is_loading_children_cards: false,
             } as Swimlane;
 
             swimlane_state.swimlanes.push(swimlane);
@@ -281,13 +281,13 @@ describe("Swimlane state getters", () => {
                 swimlanes: [
                     {
                         card: {},
-                        children_cards: [{} as Card, {} as Card]
+                        children_cards: [{} as Card, {} as Card],
                     } as Swimlane,
                     {
                         card: { remaining_effort: { is_in_edit_mode: false } },
-                        children_cards: [{} as Card, {} as Card]
-                    } as Swimlane
-                ]
+                        children_cards: [{} as Card, {} as Card],
+                    } as Swimlane,
+                ],
             } as SwimlaneState;
             expect(getters.has_at_least_one_card_in_edit_mode(state)).toBe(false);
         });
@@ -296,13 +296,13 @@ describe("Swimlane state getters", () => {
                 swimlanes: [
                     {
                         card: {},
-                        children_cards: [{} as Card, {} as Card]
+                        children_cards: [{} as Card, {} as Card],
                     } as Swimlane,
                     {
                         card: { remaining_effort: { is_in_edit_mode: true } },
-                        children_cards: [{} as Card, {} as Card]
-                    } as Swimlane
-                ]
+                        children_cards: [{} as Card, {} as Card],
+                    } as Swimlane,
+                ],
             } as SwimlaneState;
             expect(getters.has_at_least_one_card_in_edit_mode(state)).toBe(true);
         });
@@ -311,13 +311,13 @@ describe("Swimlane state getters", () => {
                 swimlanes: [
                     {
                         card: {},
-                        children_cards: [{} as Card, {} as Card]
+                        children_cards: [{} as Card, {} as Card],
                     } as Swimlane,
                     {
                         card: { is_in_edit_mode: true },
-                        children_cards: [{} as Card, {} as Card]
-                    } as Swimlane
-                ]
+                        children_cards: [{} as Card, {} as Card],
+                    } as Swimlane,
+                ],
             } as SwimlaneState;
             expect(getters.has_at_least_one_card_in_edit_mode(state)).toBe(true);
         });
@@ -326,13 +326,13 @@ describe("Swimlane state getters", () => {
                 swimlanes: [
                     {
                         card: {},
-                        children_cards: [{} as Card, {} as Card]
+                        children_cards: [{} as Card, {} as Card],
                     } as Swimlane,
                     {
                         card: {},
-                        children_cards: [{} as Card, { is_in_edit_mode: true } as Card]
-                    } as Swimlane
-                ]
+                        children_cards: [{} as Card, { is_in_edit_mode: true } as Card],
+                    } as Swimlane,
+                ],
             } as SwimlaneState;
             expect(getters.has_at_least_one_card_in_edit_mode(state)).toBe(true);
         });
@@ -344,8 +344,8 @@ describe("Swimlane state getters", () => {
                 swimlanes: [
                     { card: { is_in_edit_mode: false } },
                     { card: { is_in_edit_mode: false } },
-                    { card: { is_in_edit_mode: false } }
-                ]
+                    { card: { is_in_edit_mode: false } },
+                ],
             } as SwimlaneState;
 
             expect(getters.is_a_parent_card_in_edit_mode(state)).toBe(false);
@@ -356,8 +356,8 @@ describe("Swimlane state getters", () => {
                 swimlanes: [
                     { card: { is_in_edit_mode: false } },
                     { card: { is_in_edit_mode: true } },
-                    { card: { is_in_edit_mode: false } }
-                ]
+                    { card: { is_in_edit_mode: false } },
+                ],
             } as SwimlaneState;
 
             expect(getters.is_a_parent_card_in_edit_mode(state)).toBe(true);

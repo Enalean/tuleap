@@ -21,19 +21,19 @@ export const edit_modal_mixin = {
     props: {
         project_id: {
             type: String,
-            required: true
-        }
+            required: true,
+        },
     },
     data() {
         return {
             is_shown: false,
-            service: this.resetService()
+            service: this.resetService(),
         };
     },
     computed: {
         form_url() {
             return `/project/${encodeURIComponent(this.project_id)}/admin/services/edit`;
-        }
+        },
     },
     methods: {
         show(button) {
@@ -57,8 +57,8 @@ export const edit_modal_mixin = {
                 is_in_iframe: false,
                 is_in_new_tab: false,
                 rank: this.minimal_rank,
-                is_project_scope: true
+                is_project_scope: true,
             };
-        }
-    }
+        },
+    },
 };

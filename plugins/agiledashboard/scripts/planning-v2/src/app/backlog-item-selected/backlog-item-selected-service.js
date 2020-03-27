@@ -20,7 +20,7 @@ function BacklogItemSelectedService() {
         isDraggedBacklogItemSelected: isDraggedBacklogItemSelected,
         multipleBacklogItemsAreDragged: multipleBacklogItemsAreDragged,
         deselectAllBacklogItems: deselectAllBacklogItems,
-        reselectBacklogItems: reselectBacklogItems
+        reselectBacklogItems: reselectBacklogItems,
     });
 
     function getCompactedSelectedBacklogItem() {
@@ -61,7 +61,7 @@ function BacklogItemSelectedService() {
     function multipleBacklogItemsAreDragged(dragged_element) {
         var dragged_backlog_item_id = angular.element(dragged_element).data("item-id");
 
-        getCompactedSelectedBacklogItem().forEach(backlog_item => {
+        getCompactedSelectedBacklogItem().forEach((backlog_item) => {
             backlog_item.hidden = true;
 
             if (backlog_item.id === dragged_backlog_item_id) {
@@ -73,7 +73,7 @@ function BacklogItemSelectedService() {
     }
 
     function deselectAllBacklogItems() {
-        getCompactedSelectedBacklogItem().forEach(backlog_item => {
+        getCompactedSelectedBacklogItem().forEach((backlog_item) => {
             backlog_item.hidden = false;
             backlog_item.selected = false;
             backlog_item.multiple = false;
@@ -83,7 +83,7 @@ function BacklogItemSelectedService() {
     }
 
     function reselectBacklogItems() {
-        getCompactedSelectedBacklogItem().forEach(backlog_item => {
+        getCompactedSelectedBacklogItem().forEach((backlog_item) => {
             if (backlog_item.selected && backlog_item.hidden) {
                 backlog_item.hidden = false;
             } else if (backlog_item.multiple) {

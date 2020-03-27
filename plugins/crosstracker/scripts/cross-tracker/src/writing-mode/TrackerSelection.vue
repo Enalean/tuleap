@@ -98,7 +98,7 @@ import { getTrackersOfProject } from "../api/rest-querier.js";
 export default {
     name: "TrackerSelection",
     props: {
-        selectedTrackers: Array
+        selectedTrackers: Array,
     },
     data() {
         return {
@@ -106,7 +106,7 @@ export default {
             selected_tracker: null,
             projects: [],
             trackers: [],
-            is_loader_shown: false
+            is_loader_shown: false,
         };
     },
     computed: {
@@ -127,17 +127,17 @@ export default {
                 return {
                     id,
                     label,
-                    disabled: is_already_selected !== undefined
+                    disabled: is_already_selected !== undefined,
                 };
             });
-        }
+        },
     },
     watch: {
-        selected_project: function(new_value) {
+        selected_project: function (new_value) {
             this.selected_tracker = null;
             this.trackers = [];
             this.loadTrackers(new_value.id);
-        }
+        },
     },
     mounted() {
         this.loadProjects();
@@ -175,10 +175,10 @@ export default {
         addTrackerToSelection() {
             this.$emit("trackerAdded", {
                 selected_project: this.selected_project,
-                selected_tracker: this.selected_tracker
+                selected_tracker: this.selected_tracker,
             });
             this.selected_tracker = null;
-        }
-    }
+        },
+    },
 };
 </script>

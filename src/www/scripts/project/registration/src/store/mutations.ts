@@ -55,5 +55,5 @@ export default {
 
     resetError(state: State): void {
         state.error = null;
-    }
+    },
 };

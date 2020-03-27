@@ -29,7 +29,7 @@ import { Modal } from "tlp";
 jest.mock("tlp", () => {
     return {
         __esModule: true,
-        modal: jest.fn()
+        modal: jest.fn(),
     };
 });
 
@@ -39,7 +39,7 @@ describe("AgreementModal -", () => {
 
         jest.spyOn(tlp, "modal").mockImplementation(() => {
             return ({
-                show: modal_show
+                show: modal_show,
             } as unknown) as Modal;
         });
 
@@ -48,7 +48,7 @@ describe("AgreementModal -", () => {
             .mockReturnValue(Promise.resolve("My custom tos"));
 
         shallowMount(AgreementModal, {
-            localVue: await createProjectRegistrationLocalVue()
+            localVue: await createProjectRegistrationLocalVue(),
         });
 
         EventBus.$emit("show-agreement");

@@ -29,7 +29,7 @@ CodeMirrorHelperService.$inject = [
     "$timeout",
     "FileDiffRestService",
     "TooltipService",
-    "gettextCatalog"
+    "gettextCatalog",
 ];
 
 function CodeMirrorHelperService(
@@ -47,7 +47,7 @@ function CodeMirrorHelperService(
         collapseCommonSectionsUnidiff,
         displayInlineComment,
         showCommentForm,
-        displayPlaceholderWidget
+        displayPlaceholderWidget,
     });
 
     function displayInlineComment(code_mirror, comment, line_number) {
@@ -74,9 +74,9 @@ function CodeMirrorHelperService(
         position
     ) {
         const child_scope = $rootScope.$new(true);
-        child_scope.submitCallback = comment_text => {
+        child_scope.submitCallback = (comment_text) => {
             return postComment(unidiff_offset, comment_text, file_path, pull_request_id, position)
-                .then(comment => {
+                .then((comment) => {
                     addComment(comment);
                     return self.displayInlineComment(code_mirror, comment, display_line_number);
                 })
@@ -105,7 +105,7 @@ function CodeMirrorHelperService(
 
     function getWidgetPlacementOptions(code_mirror, display_line_number) {
         const options = {
-            coverGutter: true
+            coverGutter: true,
         };
         const line_handle = code_mirror.getLineHandle(display_line_number);
         const placeholder_index = getPlaceholderWidgetIndex(line_handle);
@@ -119,7 +119,7 @@ function CodeMirrorHelperService(
         if (!handle.widgets) {
             return -1;
         }
-        return handle.widgets.findIndex(widget => {
+        return handle.widgets.findIndex((widget) => {
             return widget.node.classList.contains("pull-request-file-diff-placeholder-block");
         });
     }
@@ -130,12 +130,12 @@ function CodeMirrorHelperService(
             handle,
             widget_height,
             display_above_line,
-            is_comment_placeholder
+            is_comment_placeholder,
         } = widget_params;
 
         const options = {
             coverGutter: true,
-            above: display_above_line
+            above: display_above_line,
         };
         const elem = $document[0].createElement("div");
         elem.classList.add("pull-request-file-diff-placeholder-block");
@@ -178,7 +178,7 @@ function CodeMirrorHelperService(
     }
 
     function collapseCommonSectionsUnidiff(unidiff_codemirror, sections) {
-        sections.forEach(section => appendCollapsedSectionLabel(unidiff_codemirror, section));
+        sections.forEach((section) => appendCollapsedSectionLabel(unidiff_codemirror, section));
     }
 
     function appendCollapsedSectionLabel(codemirror, section) {
@@ -194,7 +194,7 @@ function CodeMirrorHelperService(
             CodeMirror.Pos(section.start, 0),
             CodeMirror.Pos(section.end, last_line_length),
             {
-                replacedWith: collapsed_label
+                replacedWith: collapsed_label,
             }
         );
 
@@ -215,9 +215,9 @@ function CodeMirrorHelperService(
     }
 
     function collapseCommonSectionsSideBySide(left_codemirror, right_codemirror, sections) {
-        sections.forEach(section => appendCollapsedSectionLabel(left_codemirror, section.left));
+        sections.forEach((section) => appendCollapsedSectionLabel(left_codemirror, section.left));
 
-        sections.forEach(section => appendCollapsedSectionLabel(right_codemirror, section.right));
+        sections.forEach((section) => appendCollapsedSectionLabel(right_codemirror, section.right));
 
         synchronizeExpandCollapsedSectionsSideBySide(left_codemirror, right_codemirror);
     }

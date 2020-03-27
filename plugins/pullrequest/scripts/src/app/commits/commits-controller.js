@@ -8,7 +8,7 @@ CommitsController.$inject = [
     "gettextCatalog",
     "moment",
     "CommitsRestService",
-    "SharedPropertiesService"
+    "SharedPropertiesService",
 ];
 
 function CommitsController(
@@ -28,7 +28,7 @@ function CommitsController(
         is_loading_commits: true,
         shouldDisplayWarningMessage,
         shouldDisplayListOfCommits,
-        $onInit: init
+        $onInit: init,
     });
 
     function init() {
@@ -37,7 +37,7 @@ function CommitsController(
                 self.pull_request = SharedPropertiesService.getPullRequest();
                 return getCommits();
             })
-            .catch(function() {
+            .catch(function () {
                 //Do nothing
             })
             .finally(() => {
@@ -62,7 +62,7 @@ function CommitsController(
     }
 
     function getCommits() {
-        return CommitsRestService.getPaginatedCommits(self.pull_request.id, 50, 0, response => {
+        return CommitsRestService.getPaginatedCommits(self.pull_request.id, 50, 0, (response) => {
             self.list = self.list.concat(response.data.map(augmentMetadata));
         });
     }
@@ -76,12 +76,12 @@ function CommitsController(
             display_name = commit.author.display_name;
         }
 
-        const goToAuthor = $event => {
+        const goToAuthor = ($event) => {
             $event.preventDefault();
             $window.location.href = commit.author.user_url;
         };
 
-        const isCommitStatus = name => commit.commit_status && commit.commit_status.name === name;
+        const isCommitStatus = (name) => commit.commit_status && commit.commit_status.name === name;
         const isCommitStatusASuccess = () => isCommitStatus("success");
         const isCommitStatusAFailure = () => isCommitStatus("failure");
         const getCommitStatusMessage = () => {
@@ -100,7 +100,7 @@ function CommitsController(
             isCommitStatusASuccess,
             isCommitStatusAFailure,
             getCommitStatusMessage,
-            ...commit
+            ...commit,
         };
     }
 }

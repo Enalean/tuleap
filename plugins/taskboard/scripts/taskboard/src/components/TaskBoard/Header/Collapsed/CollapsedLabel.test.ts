@@ -29,9 +29,9 @@ function getWrapper(column: ColumnDefinition): Wrapper<CollapsedLabel> {
         propsData: { column },
         mocks: {
             $store: createStoreMock({
-                state: { card_being_dragged: null, column: {} } as RootState
-            })
-        }
+                state: { card_being_dragged: null, column: {} } as RootState,
+            }),
+        },
     });
 }
 
@@ -95,7 +95,7 @@ describe("CollapsedLabel", () => {
         const wrapper = getWrapper(column);
         wrapper.vm.$store.state.card_being_dragged = {
             tracker_id: 12,
-            card_id: 15
+            card_id: 15,
         };
 
         wrapper.trigger("pointerleave");

@@ -25,6 +25,6 @@
 
 <script>
 export default {
-    name: "DropDownItemTitle"
+    name: "DropDownItemTitle",
 };
 </script>

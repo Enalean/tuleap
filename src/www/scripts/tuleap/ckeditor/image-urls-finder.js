@@ -20,7 +20,7 @@
 export function findImageUrls(html_string) {
     return Array.from(
         new DOMParser().parseFromString(html_string, "text/html").querySelectorAll("img")
-    ).map(img => img.getAttribute("src"));
+    ).map((img) => img.getAttribute("src"));
 }
 
 export function isThereAnImageWithDataURI(html_string) {

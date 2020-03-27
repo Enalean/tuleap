@@ -23,7 +23,7 @@
             v-if="!is_confirmation_needed"
             class="tracker-workflow-transition-mark"
             v-bind:class="{
-                'tracker-workflow-transition-action-disabled': is_operation_running
+                'tracker-workflow-transition-action-disabled': is_operation_running,
             }"
             v-on:click="deleteTransitionIfNothingElseIsRunning()"
             data-test-action="delete-transition"
@@ -35,7 +35,7 @@
                 class="tracker-workflow-transition-mark"
                 v-bind:class="{
                     'tracker-workflow-transition-action-disabled': is_operation_running,
-                    'tracker-workflow-transition-action-updated': is_transition_updated
+                    'tracker-workflow-transition-action-updated': is_transition_updated,
                 }"
                 ref="transition_mark"
                 data-placement="top-start"
@@ -62,20 +62,20 @@ export default {
     props: {
         transition: {
             type: Object,
-            required: true
+            required: true,
         },
         deleteTransition: {
             type: Function,
-            required: true
+            required: true,
         },
         is_transition_updated: {
             type: Boolean,
-            required: true
-        }
+            required: true,
+        },
     },
     data() {
         return {
-            popover: null
+            popover: null,
         };
     },
     computed: {
@@ -89,7 +89,7 @@ export default {
         },
         transitions_of_the_same_column() {
             return this.current_workflow_transitions.filter(
-                transition => transition.to_id === this.transition.to_id
+                (transition) => transition.to_id === this.transition.to_id
             );
         },
         is_last_transition_of_column() {
@@ -97,14 +97,14 @@ export default {
                 this.transitions_of_the_same_column.length === 1 &&
                 this.transitions_of_the_same_column[0].id === this.transition.id
             );
-        }
+        },
     },
     watch: {
         is_confirmation_needed(new_value) {
             if (new_value === true) {
                 this.createPopoverIfNotExists();
             }
-        }
+        },
     },
     mounted() {
         if (this.is_confirmation_needed === true) {
@@ -132,7 +132,7 @@ export default {
                 return;
             }
             this.deleteTransition();
-        }
-    }
+        },
+    },
 };
 </script>

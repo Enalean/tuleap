@@ -30,17 +30,17 @@ const time = {
         {
             user_name: "user",
             user_id: 102,
-            minutes: 120
-        }
-    ]
+            minutes: 120,
+        },
+    ],
 };
 function getTimeTrackingOverviewTableRowInstance(store_options) {
     const store = createStoreMock(store_options);
     const component_options = {
         propsData: {
-            time
+            time,
         },
-        mocks: { $store: store }
+        mocks: { $store: store },
     };
     return shallowMount(TimeTrackingOverviewTableRow, component_options);
 }
@@ -50,12 +50,12 @@ describe("Given a timetracking overview widget", () => {
     beforeEach(() => {
         store_options = {
             state: {
-                are_void_trackers_hidden: false
+                are_void_trackers_hidden: false,
             },
             getters: {
                 get_formatted_time: () => "10:30",
-                is_tracker_total_sum_equals_zero: () => false
-            }
+                is_tracker_total_sum_equals_zero: () => false,
+            },
         };
     });
 

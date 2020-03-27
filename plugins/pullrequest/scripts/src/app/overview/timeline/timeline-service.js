@@ -8,15 +8,15 @@ function TimelineService($sce, TimelineRestService, gettextCatalog) {
     Object.assign(self, {
         timeline_pagination: {
             limit: 50,
-            offset: 0
+            offset: 0,
         },
         getTimeline,
         addComment,
-        formatEvent
+        formatEvent,
     });
 
     function getPaginatedTimeline(pull_request, accTimeline, limit, offset) {
-        return TimelineRestService.getTimeline(pull_request.id, limit, offset).then(function(
+        return TimelineRestService.getTimeline(pull_request.id, limit, offset).then(function (
             response
         ) {
             accTimeline.push.apply(accTimeline, response.data.collection);
@@ -34,11 +34,11 @@ function TimelineService($sce, TimelineRestService, gettextCatalog) {
 
     function getTimeline(pull_request, limit, offset) {
         var initialTimeline = [];
-        return getPaginatedTimeline(pull_request, initialTimeline, limit, offset).then(function(
+        return getPaginatedTimeline(pull_request, initialTimeline, limit, offset).then(function (
             timeline
         ) {
-            timeline = timeline.filter(event => event.type !== "reviewer-change");
-            timeline.forEach(event => {
+            timeline = timeline.filter((event) => event.type !== "reviewer-change");
+            timeline.forEach((event) => {
                 self.formatEvent(event, pull_request);
             });
             return timeline;
@@ -46,7 +46,7 @@ function TimelineService($sce, TimelineRestService, gettextCatalog) {
     }
 
     function addComment(pullRequest, timeline, newComment) {
-        return TimelineRestService.addComment(pullRequest.id, newComment).then(function(event) {
+        return TimelineRestService.addComment(pullRequest.id, newComment).then(function (event) {
             self.formatEvent(event, pullRequest);
             timeline.push(event);
         });
@@ -54,24 +54,24 @@ function TimelineService($sce, TimelineRestService, gettextCatalog) {
 
     function getContentMessage(event) {
         var eventMessages = {
-            comment: function(content) {
+            comment: function (content) {
                 return content.replace(/(?:\r\n|\r|\n)/g, "<br/>");
             },
-            "inline-comment": function(content) {
+            "inline-comment": function (content) {
                 return content.replace(/(?:\r\n|\r|\n)/g, "<br/>");
             },
-            update: function() {
+            update: function () {
                 return gettextCatalog.getString("Has updated the pull request.");
             },
-            rebase: function() {
+            rebase: function () {
                 return gettextCatalog.getString("Has rebased the pull request.");
             },
-            merge: function() {
+            merge: function () {
                 return gettextCatalog.getString("Has merged the pull request.");
             },
-            abandon: function() {
+            abandon: function () {
                 return gettextCatalog.getString("Has abandoned the pull request.");
-            }
+            },
         };
 
         var content = eventMessages[event.event_type || event.type](event.content);

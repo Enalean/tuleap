@@ -9,6 +9,6 @@ function KanbanColumn() {
         templateUrl: "kanban-column.tpl.html",
         controller: "KanbanColumnController",
         controllerAs: "$ctrl",
-        bindToController: true
+        bindToController: true,
     };
 }

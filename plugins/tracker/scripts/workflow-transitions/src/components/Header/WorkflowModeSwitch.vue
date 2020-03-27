@@ -102,7 +102,7 @@ export default {
     components: { WorkflowModeSwitchModal },
     data() {
         return {
-            modal: null
+            modal: null,
         };
     },
     computed: {
@@ -112,7 +112,7 @@ export default {
             return this.$gettext(
                 "Use advanced configuration if you want to configure each transition independently."
             );
-        }
+        },
     },
     mounted() {
         this.modal = createModal(this.$refs.modal);
@@ -124,7 +124,7 @@ export default {
         async confirm() {
             await this.$store.dispatch("changeWorkflowMode", !this.is_workflow_advanced);
             this.modal.hide();
-        }
-    }
+        },
+    },
 };
 </script>

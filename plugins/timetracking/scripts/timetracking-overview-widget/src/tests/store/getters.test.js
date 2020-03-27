@@ -57,9 +57,9 @@ describe("Getters Timetracking Overview", () => {
                         {
                             user_name: "user",
                             user_id: 102,
-                            minutes: 60
-                        }
-                    ]
+                            minutes: 60,
+                        },
+                    ],
                 },
                 {
                     id: "18",
@@ -70,10 +70,10 @@ describe("Getters Timetracking Overview", () => {
                         {
                             user_name: "user",
                             user_id: 102,
-                            minutes: 20
-                        }
-                    ]
-                }
+                            minutes: 20,
+                        },
+                    ],
+                },
             ];
             mutations.setTrackersTimes(state, trackers);
             expect(getters.get_formatted_total_sum(state)).toBe("01:20");
@@ -91,9 +91,9 @@ describe("Getters Timetracking Overview", () => {
                         {
                             user_name: "user",
                             user_id: 102,
-                            minutes: 60
-                        }
-                    ]
+                            minutes: 60,
+                        },
+                    ],
                 },
                 {
                     id: "18",
@@ -104,10 +104,10 @@ describe("Getters Timetracking Overview", () => {
                         {
                             user_name: "user_2",
                             user_id: 103,
-                            minutes: 60
-                        }
-                    ]
-                }
+                            minutes: 60,
+                        },
+                    ],
+                },
             ];
             mutations.setTrackersTimes(state, trackers);
             expect(getters.get_formatted_total_sum(state)).toBe("01:00");
@@ -123,9 +123,9 @@ describe("Getters Timetracking Overview", () => {
                     {
                         user_name: "user",
                         user_id: 102,
-                        minutes: 120
-                    }
-                ]
+                        minutes: 120,
+                    },
+                ],
             };
             mutations.setTrackersTimes(state, [trackers]);
             expect(getters.get_formatted_time(state)(trackers)).toBe("02:00");
@@ -141,9 +141,9 @@ describe("Getters Timetracking Overview", () => {
                     {
                         user_name: "user",
                         user_id: 102,
-                        minutes: 0
-                    }
-                ]
+                        minutes: 0,
+                    },
+                ],
             };
             mutations.setTrackersTimes(state, [trackers]);
             expect(
@@ -161,9 +161,9 @@ describe("Getters Timetracking Overview", () => {
                     {
                         user_name: "user",
                         user_id: 102,
-                        minutes: 120
-                    }
-                ]
+                        minutes: 120,
+                    },
+                ],
             };
             mutations.setTrackersTimes(state, [trackers]);
             expect(
@@ -182,9 +182,9 @@ describe("Getters Timetracking Overview", () => {
                         {
                             user_name: "user",
                             user_id: 102,
-                            minutes: 60
-                        }
-                    ]
+                            minutes: 60,
+                        },
+                    ],
                 },
                 {
                     id: "18",
@@ -195,10 +195,10 @@ describe("Getters Timetracking Overview", () => {
                         {
                             user_name: "user",
                             user_id: 102,
-                            minutes: 20
-                        }
-                    ]
-                }
+                            minutes: 20,
+                        },
+                    ],
+                },
             ];
             mutations.setTrackersTimes(state, trackers);
             expect(getters.is_sum_of_times_equals_zero(state)).toBe(false);
@@ -215,9 +215,9 @@ describe("Getters Timetracking Overview", () => {
                         {
                             user_name: "user",
                             user_id: 102,
-                            minutes: 0
-                        }
-                    ]
+                            minutes: 0,
+                        },
+                    ],
                 },
                 {
                     id: "18",
@@ -228,10 +228,10 @@ describe("Getters Timetracking Overview", () => {
                         {
                             user_name: "user",
                             user_id: 102,
-                            minutes: 0
-                        }
-                    ]
-                }
+                            minutes: 0,
+                        },
+                    ],
+                },
             ];
             mutations.setTrackersTimes(state, trackers);
             expect(getters.is_sum_of_times_equals_zero(state)).toBe(true);

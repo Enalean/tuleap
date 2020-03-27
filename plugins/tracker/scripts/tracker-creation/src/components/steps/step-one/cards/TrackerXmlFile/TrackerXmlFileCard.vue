@@ -40,8 +40,8 @@ import TrackerXmlFileSelector from "./TrackerXmlFileSelector.vue";
         SvgTrackerXmlFile,
         TrackerBaseCard,
         TrackerXmlFileCardDescription,
-        TrackerXmlFileSelector
-    }
+        TrackerXmlFileSelector,
+    },
 })
 export default class TrackerXmlFileCard extends Vue {
     private option_name: CreationOptions = CreationOptions.TRACKER_XML_FILE;

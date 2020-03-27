@@ -36,7 +36,7 @@ export function allowUnclampingProjectBannerMessage(mount_point: Document): void
     observer.observe(project_banner_message_wrapper, { attributes: true });
 
     let ticking = false;
-    const resize_event_listener = function(): void {
+    const resize_event_listener = function (): void {
         if (!ticking) {
             window.requestAnimationFrame(() => {
                 addHintMessageIsClampedIfNeeded(project_banner_message);
@@ -45,7 +45,7 @@ export function allowUnclampingProjectBannerMessage(mount_point: Document): void
             ticking = true;
         }
     };
-    const fully_display_message_event_listener = function(): void {
+    const fully_display_message_event_listener = function (): void {
         fullyDisplayProjectBannerMessage(
             project_banner_message,
             fully_display_message_event_listener,

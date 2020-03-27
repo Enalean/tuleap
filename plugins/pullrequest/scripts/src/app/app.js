@@ -87,7 +87,7 @@ export default angular
         ui_router,
         ng_sanitize,
         SharedProperties,
-        TuleapResize
+        TuleapResize,
     ])
     .controller("MainController", MainController)
 
@@ -140,9 +140,9 @@ export default angular
     .config(PullRequestConfig)
     .run([
         "gettextCatalog",
-        function(gettextCatalog) {
+        function (gettextCatalog) {
             for (const [language, strings] of Object.entries(translations)) {
                 gettextCatalog.setStrings(language, strings);
             }
-        }
+        },
     ]).name;

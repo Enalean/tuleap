@@ -32,7 +32,7 @@ export default function initShortlog() {
         dropdown.addEventListener("tlp-dropdown-hidden", decrementNbShownDropdown);
     }
 
-    shortlog.addEventListener("click", event => {
+    shortlog.addEventListener("click", (event) => {
         redirectUserIfClickOnACard(event, shortlog, nb_shown_dropdown);
     });
 

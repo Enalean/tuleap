@@ -42,6 +42,6 @@ export function getCoordinatesScaleLines(
         x_coordinate_minimum: x_scale_minimum,
         y_coordinate_minimum: y_scale(0),
         x_coordinate_maximum: x_scale_maximum,
-        y_coordinate_maximum: y_scale(y_axis_maximum)
+        y_coordinate_maximum: y_scale(y_axis_maximum),
     };
 }

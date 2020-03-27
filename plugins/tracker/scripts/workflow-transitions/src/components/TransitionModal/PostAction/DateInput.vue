@@ -38,15 +38,15 @@ export default {
     name: "DateInput",
     props: {
         value: {
-            type: String
+            type: String,
         },
         disabled: {
-            type: Boolean
-        }
+            type: Boolean,
+        },
     },
     data() {
         return {
-            DATE_FIELD_VALUE
+            DATE_FIELD_VALUE,
         };
     },
     computed: {
@@ -56,8 +56,8 @@ export default {
             },
             set(value) {
                 this.$emit("input", value);
-            }
-        }
-    }
+            },
+        },
+    },
 };
 </script>

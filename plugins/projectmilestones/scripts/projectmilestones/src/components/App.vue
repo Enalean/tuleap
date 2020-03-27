@@ -44,7 +44,7 @@ import { TrackerAgileDashboard } from "../type";
 import PastSection from "./PastSection/PastSection.vue";
 
 @Component({
-    components: { PastSection, WhatsHotSection, RoadmapSection }
+    components: { PastSection, WhatsHotSection, RoadmapSection },
 })
 export default class App extends Vue {
     @State

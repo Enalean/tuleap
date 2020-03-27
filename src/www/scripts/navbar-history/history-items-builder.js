@@ -31,7 +31,7 @@ export default function buildHistoryItems(entries, history_content) {
 function normalize(entries) {
     const all_underscores = /_/g;
 
-    entries.forEach(function(entry) {
+    entries.forEach(function (entry) {
         entry.color_name = entry.color_name.replace(all_underscores, "-");
         entry.has_quick_links = entry.quick_links.length > 0;
     });
@@ -47,8 +47,8 @@ function insertRenderedHistoryInDOM(rendered_history, history_content) {
 
 function addHistoryItemListeners(history_content) {
     const extra_links = history_content.querySelectorAll(".history-item-extra-link");
-    [].forEach.call(extra_links, extra_link => {
-        extra_link.addEventListener("click", event => {
+    [].forEach.call(extra_links, (extra_link) => {
+        extra_link.addEventListener("click", (event) => {
             event.stopPropagation();
             event.preventDefault();
             window.location.href = extra_link.dataset.href;

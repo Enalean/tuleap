@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-describe("Project admin", function() {
+describe("Project admin", function () {
     before(() => {
         cy.clearCookie("__Host-TULEAP_session_hash");
         cy.ProjectAdministratorLogin();
@@ -27,13 +27,11 @@ describe("Project admin", function() {
         Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
     });
 
-    context("project basic administration", function() {
-        it("should be able to create a new public project", function() {
+    context("project basic administration", function () {
+        it("should be able to create a new public project", function () {
             cy.visit("/project/new");
 
-            cy.get("[data-test=project-registration-card-label")
-                .first()
-                .click();
+            cy.get("[data-test=project-registration-card-label").first().click();
 
             cy.get("[data-test=project-registration-next-button").click();
 
@@ -43,7 +41,7 @@ describe("Project admin", function() {
             cy.get("[data-test=project-registration-next-button]").click();
         });
 
-        it("should be able to add users to a public project", function() {
+        it("should be able to add users to a public project", function () {
             cy.visitProjectService("project-admin-test", "Admin");
             cy.contains("Members").click();
 
@@ -55,14 +53,14 @@ describe("Project admin", function() {
             cy.get('[data-test="project-admin-submit-add-member"]').click();
 
             cy.get("[data-test=feedback]").contains("User added", {
-                timeout: 40000
+                timeout: 40000,
             });
         });
 
-        it("should verify that icon for project visibility is correct", function() {
+        it("should verify that icon for project visibility is correct", function () {
             cy.visitProjectService("project-admin-test", "Admin");
 
-            cy.get(".project-sidebar-title-icon").then($icon => {
+            cy.get(".project-sidebar-title-icon").then(($icon) => {
                 expect($icon[0].className).to.contains("fa-unlock");
             });
         });
@@ -79,7 +77,7 @@ describe("Project admin", function() {
             });
 
             cy.get("[data-test=feedback]").contains("Successfully Updated Service", {
-                timeout: 40000
+                timeout: 40000,
             });
         });
     });

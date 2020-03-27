@@ -30,7 +30,7 @@ describe(`Card mutations`, () => {
         it("switch is_in_edit_mode to true", () => {
             const card: Card = { id: 123, is_in_edit_mode: false } as Card;
             const state: SwimlaneState = {
-                swimlanes: [{ card } as Swimlane]
+                swimlanes: [{ card } as Swimlane],
             } as SwimlaneState;
 
             mutations.addCardToEditMode(state, card);
@@ -43,7 +43,7 @@ describe(`Card mutations`, () => {
         it("switch is_in_edit_mode to false", () => {
             const card: Card = { id: 123, is_in_edit_mode: true } as Card;
             const state: SwimlaneState = {
-                swimlanes: [{ card } as Swimlane]
+                swimlanes: [{ card } as Swimlane],
             } as SwimlaneState;
 
             mutations.removeCardFromEditMode(state, card);
@@ -57,10 +57,10 @@ describe(`Card mutations`, () => {
             and switches is_being_saved to true
             and is_in_edit_mode to false`, () => {
             const card: Card = {
-                remaining_effort: { value: 3.14, is_being_saved: false, is_in_edit_mode: true }
+                remaining_effort: { value: 3.14, is_being_saved: false, is_in_edit_mode: true },
             } as Card;
             const state: SwimlaneState = {
-                swimlanes: [{ card } as Swimlane]
+                swimlanes: [{ card } as Swimlane],
             } as SwimlaneState;
             const payload: NewRemainingEffortPayload = { card, value: 42 };
 
@@ -78,10 +78,10 @@ describe(`Card mutations`, () => {
     describe("resetSavingRemainingEffort", () => {
         it("switches is_being_saved to false", () => {
             const card: Card = {
-                remaining_effort: { is_being_saved: true, is_in_edit_mode: false }
+                remaining_effort: { is_being_saved: true, is_in_edit_mode: false },
             } as Card;
             const state: SwimlaneState = {
-                swimlanes: [{ card } as Swimlane]
+                swimlanes: [{ card } as Swimlane],
             } as SwimlaneState;
 
             mutations.resetSavingRemainingEffort(state, card);
@@ -97,7 +97,7 @@ describe(`Card mutations`, () => {
     describe(`removeRemainingEffortFromEditMode`, () => {
         it(`switches is_in_edit_mode to false`, () => {
             const card = {
-                remaining_effort: { is_in_edit_mode: true, is_being_saved: false }
+                remaining_effort: { is_in_edit_mode: true, is_being_saved: false },
             } as Card;
             const state = { swimlanes: [{ card } as Swimlane] } as SwimlaneState;
 
@@ -116,7 +116,7 @@ describe(`Card mutations`, () => {
         it("exits edit mode in order to save the card", () => {
             const card: Card = { is_being_saved: false, is_in_edit_mode: true } as Card;
             const state: SwimlaneState = {
-                swimlanes: [{ card } as Swimlane]
+                swimlanes: [{ card } as Swimlane],
             } as SwimlaneState;
 
             mutations.startSavingCard(state, card);
@@ -130,7 +130,7 @@ describe(`Card mutations`, () => {
         it("switch is_being_saved to false", () => {
             const card: Card = { is_being_saved: true } as Card;
             const state: SwimlaneState = {
-                swimlanes: [{ card } as Swimlane]
+                swimlanes: [{ card } as Swimlane],
             } as SwimlaneState;
 
             mutations.resetSavingCard(state, card);
@@ -145,16 +145,16 @@ describe(`Card mutations`, () => {
                 label: "Lorem ipsum",
                 is_being_saved: true,
                 is_just_saved: false,
-                assignees: [{ id: 123 }]
+                assignees: [{ id: 123 }],
             } as Card;
             const state: SwimlaneState = {
-                swimlanes: [{ card } as Swimlane]
+                swimlanes: [{ card } as Swimlane],
             } as SwimlaneState;
             const payload: UpdateCardPayload = {
                 card,
                 label: "Lorem",
                 tracker: {} as Tracker,
-                assignees: [{ id: 234 }] as User[]
+                assignees: [{ id: 234 }] as User[],
             };
 
             mutations.finishSavingCard(state, payload);
@@ -173,7 +173,7 @@ describe(`Card mutations`, () => {
     describe("startCreatingCard", () => {
         it("Informs the store that the process of creating a new card has begun", () => {
             const state: SwimlaneState = {
-                is_card_creation_blocked_due_to_ongoing_creation: false
+                is_card_creation_blocked_due_to_ongoing_creation: false,
             } as SwimlaneState;
 
             mutations.startCreatingCard(state);
@@ -185,7 +185,7 @@ describe(`Card mutations`, () => {
     describe("cardIsHalfwayCreated", () => {
         it("Informs the store that the process of creating a new card is advanced enough to allow creation of another one", () => {
             const state: SwimlaneState = {
-                is_card_creation_blocked_due_to_ongoing_creation: true
+                is_card_creation_blocked_due_to_ongoing_creation: true,
             } as SwimlaneState;
 
             mutations.cardIsHalfwayCreated(state);
@@ -199,11 +199,11 @@ describe(`Card mutations`, () => {
             const card: Card = {
                 label: "Lorem ipsum",
                 is_being_saved: true,
-                is_just_saved: false
+                is_just_saved: false,
             } as Card;
             const state: SwimlaneState = {
                 swimlanes: [{ card } as Swimlane],
-                is_card_creation_blocked_due_to_ongoing_creation: true
+                is_card_creation_blocked_due_to_ongoing_creation: true,
             } as SwimlaneState;
 
             mutations.finishCreatingCard(state, card);
@@ -220,7 +220,7 @@ describe(`Card mutations`, () => {
     describe("setPossibleAssigneesForFieldId", () => {
         it("Caches the assignees indexed by the assigned_to field id", () => {
             const state: SwimlaneState = {
-                possible_assignees: new Map<number, UserForPeoplePicker[]>()
+                possible_assignees: new Map<number, UserForPeoplePicker[]>(),
             } as SwimlaneState;
 
             mutations.setPossibleAssigneesForFieldId(state, {
@@ -228,8 +228,8 @@ describe(`Card mutations`, () => {
                 users: [
                     { id: 1, display_name: "John" },
                     { id: 2, display_name: "Steeve" },
-                    { id: 3, display_name: "Bob" }
-                ] as UserForPeoplePicker[]
+                    { id: 3, display_name: "Bob" },
+                ] as UserForPeoplePicker[],
             });
 
             expect(state.possible_assignees).toEqual(
@@ -239,9 +239,9 @@ describe(`Card mutations`, () => {
                         [
                             { id: 1, display_name: "John" },
                             { id: 2, display_name: "Steeve" },
-                            { id: 3, display_name: "Bob" }
-                        ]
-                    ]
+                            { id: 3, display_name: "Bob" },
+                        ],
+                    ],
                 ])
             );
         });

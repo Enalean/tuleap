@@ -7,7 +7,7 @@ function PullRequestController($state, PullRequestRestService, SharedPropertiesS
 
     Object.assign(self, {
         $state,
-        $onInit: init
+        $onInit: init,
     });
 
     function init() {
@@ -16,7 +16,7 @@ function PullRequestController($state, PullRequestRestService, SharedPropertiesS
 
         SharedPropertiesService.setReadyPromise(promise);
 
-        promise.then(function(pullrequest) {
+        promise.then(function (pullrequest) {
             SharedPropertiesService.setPullRequest(pullrequest);
         });
     }

@@ -23,7 +23,7 @@
         <router-link
             v-bind:to="{
                 name: 'item',
-                params: { folder_id: parent_folder.id, item_id: current_document.id }
+                params: { folder_id: parent_folder.id, item_id: current_document.id },
             }"
             class="breadcrumb-link"
         >
@@ -37,7 +37,7 @@ export default {
     name: "DocumentBreadcrumbElement",
     props: {
         parent_folder: Object,
-        current_document: Object
-    }
+        current_document: Object,
+    },
 };
 </script>

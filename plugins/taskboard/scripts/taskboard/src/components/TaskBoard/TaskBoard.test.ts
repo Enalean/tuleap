@@ -38,10 +38,10 @@ async function createWrapper(
                     are_closed_items_displayed,
                     swimlane: { swimlanes },
                     column: {},
-                    error: { has_modal_error: false, modal_error_message: "" }
-                } as RootState
-            })
-        }
+                    error: { has_modal_error: false, modal_error_message: "" },
+                } as RootState,
+            }),
+        },
     });
 }
 
@@ -53,12 +53,12 @@ describe("TaskBoard", () => {
                     state: {
                         columns: [
                             { id: 2, label: "To do" },
-                            { id: 3, label: "Done" }
+                            { id: 3, label: "Done" },
                         ],
-                        error: { has_modal_error: false, modal_error_message: "" }
-                    }
-                })
-            }
+                        error: { has_modal_error: false, modal_error_message: "" },
+                    },
+                }),
+            },
         });
         expect(wrapper.element).toMatchSnapshot();
     });
@@ -70,12 +70,12 @@ describe("TaskBoard", () => {
                     state: {
                         columns: [
                             { id: 2, label: "To do" },
-                            { id: 3, label: "Done" }
+                            { id: 3, label: "Done" },
                         ],
-                        error: { has_modal_error: true, modal_error_message: "Ooooops" }
-                    }
-                })
-            }
+                        error: { has_modal_error: true, modal_error_message: "Ooooops" },
+                    },
+                }),
+            },
         });
         expect(wrapper.contains(ErrorModal)).toBe(true);
     });
@@ -100,11 +100,11 @@ describe("TaskBoard", () => {
             const getters = { column_of_cell: undefined };
             const store = createStoreMock({
                 state: { column: {}, error: {} },
-                getters
+                getters,
             });
             wrapper = shallowMount(TaskBoard, {
                 localVue: await createTaskboardLocalVue(),
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
 
             doc = createLocalDocument();
@@ -120,7 +120,7 @@ describe("TaskBoard", () => {
                 payload = {
                     dragged_element: doc.createElement("div"),
                     source_dropzone: doc.createElement("div"),
-                    target_dropzone
+                    target_dropzone,
                 };
             });
 
@@ -205,7 +205,7 @@ describe("TaskBoard", () => {
     describe(`destroy()`, () => {
         it(`will destroy the "drek"`, async () => {
             const mock_drek = {
-                destroy: jest.fn()
+                destroy: jest.fn(),
             };
             jest.spyOn(drekkenov, "init").mockImplementation(() => mock_drek);
             const wrapper = await createWrapper([], false);

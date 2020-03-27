@@ -30,17 +30,17 @@ describe("Given a timetracking overview widget on writing mode", () => {
             state: {
                 projects: ["leprojet"],
                 trackers: ["letracker"],
-                is_loading_tracker: false
+                is_loading_tracker: false,
             },
             getters: {
-                has_success_message: false
-            }
+                has_success_message: false,
+            },
         };
         store = createStoreMock(store_options);
 
         component_options = {
             localVue,
-            mocks: { $store: store }
+            mocks: { $store: store },
         };
     });
 

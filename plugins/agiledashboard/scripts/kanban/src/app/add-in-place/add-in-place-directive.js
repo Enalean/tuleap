@@ -10,11 +10,11 @@ function AddInPlace() {
         restrict: "E",
         scope: {
             column: "=",
-            createItem: "="
+            createItem: "=",
         },
         templateUrl: "add-in-place.tpl.html",
         controller: AddInPlaceController,
         controllerAs: "addInPlace",
-        bindToController: true
+        bindToController: true,
     };
 }

@@ -25,7 +25,7 @@ if (!com.xerox.codendi) {
 
 com.xerox.codendi.Docman = Class.create();
 Object.extend(com.xerox.codendi.Docman.prototype, {
-    initialize: function(group_id, options) {
+    initialize: function (group_id, options) {
         if (!group_id) {
             throw new Error("group_id is mandatory!");
         }
@@ -34,7 +34,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
             {
                 spinner: false,
                 folderSpinner: false,
-                action: "browse"
+                action: "browse",
             },
             options || {}
         );
@@ -44,7 +44,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
                     update_permissions_on_init: true,
                     hide_permissions: true,
                     hide_news: true,
-                    default_position: false
+                    default_position: false,
                 },
                 options.newItem || {}
             );
@@ -107,14 +107,14 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
             document.observe("dom:loaded", this.toggleMultipleValuesChoiceEvent, true);
         }
     },
-    dispose: function() {
+    dispose: function () {
         // ShowOptions
         document.stopObserving("dom:loaded", this.initShowOptionsEvent);
         // NewDocument
         document.stopObserving("dom:loaded", this.initNewItemEvent);
         $H(this.newItem.specificProperties)
             .values()
-            .each(function(properties) {
+            .each(function (properties) {
                 properties.checkbox.stopObserving("click", this.onNewItemCheckboxChangeEvent);
             });
         // Expand/Collapse
@@ -128,7 +128,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
         //itemHighlight
         $H(this.itemHighlight)
             .keys()
-            .each(function(item_id) {
+            .each(function (item_id) {
                 var node = $("item_" + item_id);
                 node.stopObserving("mouseover", this.itemHighlight[item_id].mouseover);
                 node.stopObserving("mouseout", this.itemHighlight[item_id].mouseout);
@@ -138,17 +138,17 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
         document.stopObserving("dom:loaded", this.toggleMultipleValuesChoiceEvent);
     },
     //{{{------------------------------ Focus
-    focus: function() {
+    focus: function () {
         if ($("docman_new_form")) {
             Form.focusFirstElement("docman_new_form");
         }
     },
     //}}}
     //{{{------------------------------ Actions
-    addActionForItem: function(item_id, action) {
+    addActionForItem: function (item_id, action) {
         this.actionsForItem[item_id] = action;
     },
-    initShowOptions: function() {
+    initShowOptions: function () {
         this.initShowOptions_already_done = true;
         //{{{ IE Hack
         // Microsoft said:
@@ -170,12 +170,12 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
                 scrolling: "no",
                 marginwidth: 0,
                 marginheight: 0,
-                src: "/plugins/docman/blank.htm"
+                src: "/plugins/docman/blank.htm",
             });
             // Without "dom:loaded" IE may crash when attempt to append
             // the iframe to the document. See:
             // http://www.garyharan.com/index.php/2008/04/22/internet-explorer-cannot-open-the-internet-site-operation-aborted/
-            document.observe("dom:loaded", function() {
+            document.observe("dom:loaded", function () {
                 document.body.appendChild(invisible_iframe);
             });
         }
@@ -186,7 +186,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
         $H(this.actionsForItem)
             .keys()
             .each(
-                function(item_id) {
+                function (item_id) {
                     if (!this.showOptions_Menus[item_id]) {
                         this.showOptions_Menus[item_id] = new com.xerox.codendi.Menu(
                             item_id,
@@ -200,14 +200,14 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
                         var node = $("item_" + item_id);
                         if (node) {
                             this.itemHighlight[item_id] = {
-                                mouseover: function(event) {
+                                mouseover: function (event) {
                                     node.addClassName("docman_item_highlight");
                                     event.stop();
                                 }.bindAsEventListener(this),
-                                mouseout: function(event) {
+                                mouseout: function (event) {
                                     node.removeClassName("docman_item_highlight");
                                     event.stop();
-                                }.bindAsEventListener(this)
+                                }.bindAsEventListener(this),
                             };
                             node.observe("mouseover", this.itemHighlight[item_id].mouseover);
                             node.observe("mouseout", this.itemHighlight[item_id].mouseout);
@@ -218,15 +218,15 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
     },
     //}}}
     //{{{------------------------------ NewDocument
-    addParentFoldersForNewItem: function(id, parent_id, title) {
+    addParentFoldersForNewItem: function (id, parent_id, title) {
         this.parentFoldersForNewItem[id] = {
             id: id,
             parent_id: parent_id,
-            title: title
+            title: title,
         };
     },
-    initNewItem: function() {
-        var checkboxes = [6, 3, 5, 2, 4].inject([], function(checkboxes, type) {
+    initNewItem: function () {
+        var checkboxes = [6, 3, 5, 2, 4].inject([], function (checkboxes, type) {
             const el = $("item_item_type_" + type);
             if (el) {
                 checkboxes.push(el);
@@ -234,14 +234,14 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
             return checkboxes;
         });
         this.newItem = {
-            specificProperties: {}
+            specificProperties: {},
         };
         checkboxes.each(
-            function(checkbox) {
+            function (checkbox) {
                 const panel = $(checkbox.id + "_specific_properties");
                 this.newItem.specificProperties[checkbox.id] = {
                     checkbox: checkbox,
-                    panel: panel
+                    panel: panel,
                 };
                 if (panel && !checkbox.checked) {
                     Element.hide(panel);
@@ -258,7 +258,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
             //1. search for the preselected parent
             var folder_id = $H(this.parentFoldersForNewItem)
                 .keys()
-                .find(function(folder_id) {
+                .find(function (folder_id) {
                     return $F("item_parent_id_" + folder_id);
                 });
 
@@ -285,7 +285,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
                 "[" + this.options.language.new_other_folders + "]"
             );
             $("docman_new_item_location_current_folder").appendChild(a);
-            Event.observe(a, "click", function(evt) {
+            Event.observe(a, "click", function (evt) {
                 Element.hide("docman_new_item_location_current_folder");
                 Element.show("docman_new_item_location_other_folders");
 
@@ -309,11 +309,11 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
             $H(this.parentFoldersForNewItem)
                 .keys()
                 .each(
-                    function(folder_id) {
+                    function (folder_id) {
                         Event.observe(
                             $("item_parent_id_" + folder_id),
                             "change",
-                            function() {
+                            function () {
                                 return this.onNewItemParentChange(folder_id);
                             }.bind(this)
                         );
@@ -378,11 +378,11 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
         }
         //}}}
     },
-    onNewItemParentChange: function(folder_id) {
+    onNewItemParentChange: function (folder_id) {
         this.newItem_update_permissions(folder_id);
         this.newItem_update_position(folder_id);
     },
-    newItem_update_position: function(folder_id, default_position) {
+    newItem_update_position: function (folder_id, default_position) {
         var parameters = "";
         if (default_position) {
             parameters += "&default_position=" + default_position;
@@ -398,29 +398,29 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
                 folder_id +
                 parameters,
             {
-                onComplete: function() {
+                onComplete: function () {
                     Element.hide("docman_new_item_location_spinner");
                 },
-                onLoading: function() {
+                onLoading: function () {
                     Element.show("docman_new_item_location_spinner");
-                }
+                },
             }
         );
     },
-    newItem_update_permissions: function(folder_id) {
+    newItem_update_permissions: function (folder_id) {
         new Ajax.Updater(
             "docman_new_permissions_panel",
             "?group_id=" + this.group_id + "&action=permissionsForItem&id=" + folder_id
         );
     },
-    _highlight: function(element_name) {
+    _highlight: function (element_name) {
         if (!this["_highlight_" + element_name]) {
             this["_highlight_" + element_name] = new Effect.Highlight(element_name);
         } else {
             this["_highlight_" + element_name].start(this["_highlight_" + element_name].options);
         }
     },
-    onNewItemCheckboxChange: function(event) {
+    onNewItemCheckboxChange: function (event) {
         var selected_checkbox = Event.element(event);
         if (selected_checkbox.htmlFor) {
             //The user has click on the label
@@ -428,7 +428,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
         }
         $H(this.newItem.specificProperties)
             .values()
-            .each(function(properties) {
+            .each(function (properties) {
                 if (properties.panel) {
                     if (properties.checkbox.id == selected_checkbox.id) {
                         Element.show(properties.panel);
@@ -442,10 +442,10 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
     },
     //}}}
     //{{{----------------------------- Expand/Collapse
-    initExpandCollapse: function() {
+    initExpandCollapse: function () {
         this._expandCollapse(document.body);
     },
-    toggleMultipleValuesChoice: function() {
+    toggleMultipleValuesChoice: function () {
         var type = $("type");
         var mulVal = $("multiplevalues_allowed");
 
@@ -463,7 +463,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
             _toggleCheckBox();
         }
     },
-    _expandCollapse: function(parent_element) {
+    _expandCollapse: function (parent_element) {
         var docman_item_type_folder = new RegExp("(^|\\s)docman_item_type_folder(\\s|$)");
         var item_ = new RegExp("^item_.*");
 
@@ -472,11 +472,11 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
         );
         [].forEach.call(
             folders,
-            function(element) {
+            function (element) {
                 Event.observe(
                     element,
                     "click",
-                    function(event) {
+                    function (event) {
                         var element = Event.element(event).parentNode; //element == image, element.parentNode == link
                         //We search the first parent which has id == "item_%"
                         var node = element.parentNode.parentNode;
@@ -499,7 +499,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
                                         "&action=expandFolder&view=none&id=" +
                                         node.id.split("_")[1],
                                     {
-                                        asynchronous: true
+                                        asynchronous: true,
                                     }
                                 );
                             } else {
@@ -522,10 +522,10 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
                                 new Ajax.Updater(target, expandUrl, {
                                     asynchronous: true,
                                     evalScripts: true,
-                                    onComplete: function(transport) {
+                                    onComplete: function (transport) {
                                         if (!transport.responseText.length) {
                                             const fake = Builder.node("div", {
-                                                id: "subitems_" + node.id.split("_")[1]
+                                                id: "subitems_" + node.id.split("_")[1],
                                             });
                                             target.appendChild(fake);
                                         }
@@ -534,7 +534,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
                                         Element.setStyle(document.body, { cursor: "default" });
                                         outer.show();
                                         icon.src = old_icon_src;
-                                    }.bind(this)
+                                    }.bind(this),
                                 });
                             }
                         } else {
@@ -553,7 +553,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
                                     "&action=collapseFolder&view=none&id=" +
                                     node.id.split("_")[1],
                                 {
-                                    asynchronous: true
+                                    asynchronous: true,
                                 }
                             );
                         }
@@ -567,7 +567,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
     //}}}
 
     //{{{----------------------------- Table report
-    initTableReport: function() {
+    initTableReport: function () {
         if ($("docman_filters_fieldset")) {
             // Setup event observe
             var icon = $("docman_toggle_filters");
@@ -589,14 +589,14 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
             }
         }
     },
-    toggleReport: function() {
+    toggleReport: function () {
         if ($("docman_filters_fieldset").visible()) {
             this.hideReport();
         } else {
             this.showReport();
         }
     },
-    showReport: function() {
+    showReport: function () {
         $("docman_filters_fieldset").show();
         $("docman_toggle_filters").src = $("docman_toggle_filters").src.replace(
             "toggle_plus.png",
@@ -604,12 +604,12 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
         );
         $("plugin_docman_report_form_global")
             .select("input")
-            .each(function(elem) {
+            .each(function (elem) {
                 elem.disabled = true;
                 elem.readonly = true;
             });
     },
-    hideReport: function() {
+    hideReport: function () {
         $("docman_filters_fieldset").hide();
         $("docman_toggle_filters").src = $("docman_toggle_filters").src.replace(
             "toggle_minus.png",
@@ -617,12 +617,12 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
         );
         $("plugin_docman_report_form_global")
             .select("input")
-            .each(function(elem) {
+            .each(function (elem) {
                 elem.disabled = false;
                 elem.readonly = false;
             });
     },
-    reportSelectSavedReport: function(event) {
+    reportSelectSavedReport: function (event) {
         var form = $("plugin_docman_select_report_id");
         var select = form.report_id;
         if (select[select.selectedIndex].value != "-1") {
@@ -631,7 +631,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
         Event.stop(event);
         return false;
     },
-    reportSelectAddFilter: function(event) {
+    reportSelectAddFilter: function (event) {
         var form = $("plugin_docman_report_form");
         var select = form.plugin_docman_report_add_filter;
         if (select[select.selectedIndex].value != "-1") {
@@ -642,7 +642,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
     },
     // Warning: The 2 "Insersion after" should have their values (name) escaped to avoid XSS.
     // But I think this kind of attack cannot be used against codendi.
-    reportSelectSave: function(event) {
+    reportSelectSave: function (event) {
         var form = $("plugin_docman_report_form");
         var select = form.plugin_docman_report_save;
         var value = select[select.selectedIndex].value;
@@ -677,7 +677,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
     },
     //}}}
     //{{{----------------------------- Approval table create
-    approvalTableCreate: function(form) {
+    approvalTableCreate: function (form) {
         var selected;
         var len = form.app_table_import.length;
         for (var i = 0; i < len; i++) {
@@ -710,7 +710,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
     },
     //}}}
     //{{{----------------------------- Approval table check
-    approvalTableCheck: function(form) {
+    approvalTableCheck: function (form) {
         if (!form.app_table_import) {
             return true;
         }
@@ -745,13 +745,13 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
             feedback.show();
         }
         return res;
-    }
+    },
 });
 
 com.xerox.codendi.openedMenu = null;
 com.xerox.codendi.Menu = Class.create();
 Object.extend(com.xerox.codendi.Menu.prototype, {
-    initialize: function(item_id, docman, options) {
+    initialize: function (item_id, docman, options) {
         this.item_id = item_id;
         this.docman = docman;
         this.close = options.close;
@@ -764,27 +764,27 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         Event.observe($("docman_item_show_menu_" + item_id), "click", this.show.bind(this));
         this._lockIcon();
     },
-    _createLi: function(element) {
+    _createLi: function (element) {
         var li = Builder.node("li");
         li.appendChild(element);
         return li;
     },
-    _createQuickMoveIcon: function(icon) {
+    _createQuickMoveIcon: function (icon) {
         var im = Builder.node("img", {
             src: this.docman.options.themePath + "/images/ic/" + icon + ".png",
-            title: icon
+            title: icon,
         });
 
         Event.observe(
             im,
             "click",
-            function(evt) {
+            function (evt) {
                 if (icon) {
                     new Ajax.Request(this.defaultUrl + "&action=move&quick_move=" + icon, {
-                        onComplete: function() {
+                        onComplete: function () {
                             //eslint-disable-next-line no-self-assign
                             window.location.href = window.location.href;
-                        }
+                        },
                     });
                     Event.stop(evt);
                     return false;
@@ -793,62 +793,62 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         );
 
         // Display the pointer when the mouse is over the image (as a link does)
-        Event.observe(im, "mouseover", function() {
+        Event.observe(im, "mouseover", function () {
             Element.setStyle(document.body, { cursor: "pointer" });
         });
-        Event.observe(im, "mouseout", function() {
+        Event.observe(im, "mouseout", function () {
             Element.setStyle(document.body, { cursor: "default" });
         });
 
         return im;
     },
-    _appendQuickMoveIcon: function(element, action) {
+    _appendQuickMoveIcon: function (element, action) {
         var sep = Builder.node("span");
         sep.innerHTML = "&nbsp;&nbsp;";
         element.appendChild(sep);
         element.appendChild(this._createQuickMoveIcon(action));
     },
-    _getNewFolder: function() {
+    _getNewFolder: function () {
         var a = Builder.node("a", {
             href: this.defaultUrl + "&action=newFolder",
             class: "docman_item_option_newfolder",
-            title: this.docman.options.language.action_newfolder
+            title: this.docman.options.language.action_newfolder,
         });
         var title_txt = document.createTextNode(this.docman.options.language.action_newfolder);
         a.appendChild(title_txt);
         return this._createLi(a);
     },
-    _getNewDocument: function() {
+    _getNewDocument: function () {
         var a = Builder.node("a", {
             href: this.defaultUrl + "&action=newDocument",
             class: "docman_item_option_newdocument",
-            title: this.docman.options.language.action_newdocument
+            title: this.docman.options.language.action_newdocument,
         });
         var title_txt = document.createTextNode(this.docman.options.language.action_newdocument);
         a.appendChild(title_txt);
         return this._createLi(a);
     },
-    _getProperties: function() {
+    _getProperties: function () {
         var a = Builder.node("a", {
             href: this.defaultUrl + "&action=details",
             class: "docman_item_option_details",
-            title: this.docman.options.language.action_details
+            title: this.docman.options.language.action_details,
         });
         var title_txt = document.createTextNode(this.docman.options.language.action_details);
         a.appendChild(title_txt);
         return this._createLi(a);
     },
-    _getNewVersion: function() {
+    _getNewVersion: function () {
         var a = Builder.node("a", {
             href: this.defaultUrl + "&action=action_new_version",
             class: "docman_item_option_newversion",
-            title: this.docman.options.language.action_newversion
+            title: this.docman.options.language.action_newversion,
         });
         var title_txt = document.createTextNode(this.docman.options.language.action_newversion);
         a.appendChild(title_txt);
         return this._createLi(a);
     },
-    _getMove: function() {
+    _getMove: function () {
         var txtNode = Builder.node("span", { class: "docman_item_option_move" });
         txtNode.appendChild(document.createTextNode(this.docman.options.language.action_move));
         var li = this._createLi(txtNode);
@@ -858,70 +858,70 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         this._appendQuickMoveIcon(li, "move-end");
         return li;
     },
-    _getPermissions: function() {
+    _getPermissions: function () {
         var a = Builder.node("a", {
             href: this.defaultUrl + "&action=details&section=permissions",
             class: "docman_item_option_permissions",
-            title: this.docman.options.language.action_permissions
+            title: this.docman.options.language.action_permissions,
         });
         var title_txt = document.createTextNode(this.docman.options.language.action_permissions);
         a.appendChild(title_txt);
         return this._createLi(a);
     },
-    _getHistory: function() {
+    _getHistory: function () {
         var a = Builder.node("a", {
             href: this.defaultUrl + "&action=details&section=history",
             class: "docman_item_option_history",
-            title: this.docman.options.language.action_history
+            title: this.docman.options.language.action_history,
         });
         var title_txt = document.createTextNode(this.docman.options.language.action_history);
         a.appendChild(title_txt);
         return this._createLi(a);
     },
-    _getNotification: function() {
+    _getNotification: function () {
         var a = Builder.node("a", {
             href: this.defaultUrl + "&action=details&section=notifications",
             class: "docman_item_option_notifications",
-            title: this.docman.options.language.action_notifications
+            title: this.docman.options.language.action_notifications,
         });
         var title_txt = document.createTextNode(this.docman.options.language.action_notifications);
         a.appendChild(title_txt);
         return this._createLi(a);
     },
-    _getDelete: function() {
+    _getDelete: function () {
         var a = Builder.node("a", {
             href: this.defaultUrl + "&action=confirmDelete",
             class: "docman_item_option_delete",
-            title: this.docman.options.language.action_delete
+            title: this.docman.options.language.action_delete,
         });
         var title_txt = document.createTextNode(this.docman.options.language.action_delete);
         a.appendChild(title_txt);
         return this._createLi(a);
     },
-    _getUpdate: function() {
+    _getUpdate: function () {
         var a = Builder.node("a", {
             href: this.defaultUrl + "&action=action_update",
             class: "docman_item_option_update",
-            title: this.docman.options.language.action_update
+            title: this.docman.options.language.action_update,
         });
         var title_txt = document.createTextNode(this.docman.options.language.action_update);
         a.appendChild(title_txt);
         return this._createLi(a);
     },
-    _getLock: function() {
+    _getLock: function () {
         var a = Builder.node("a", {
             href: this.defaultUrl + "&action=action_lock_add",
             class: "docman_item_option_lock_add",
-            title: this.docman.options.language.action_lock_add
+            title: this.docman.options.language.action_lock_add,
         });
         var title_txt = document.createTextNode(this.docman.options.language.action_lock_add);
         a.appendChild(title_txt);
         Event.observe(
             a,
             "click",
-            function(evt) {
+            function (evt) {
                 new Ajax.Request(this.defaultUrl + "&action=action_lock_add&ajax=true", {
-                    onComplete: function() {
+                    onComplete: function () {
                         this.docman.actionsForItem[this.item_id].isLocked = true;
                         this.docman.actionsForItem[this.item_id].canUnlock = true;
                         this.docman.actionsForItem[this.item_id].canLockInfo = true;
@@ -935,7 +935,7 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
 
                         // Hide menu
                         this.hide();
-                    }.bindAsEventListener(this)
+                    }.bindAsEventListener(this),
                 });
                 Event.stop(evt);
                 return false;
@@ -943,20 +943,20 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         );
         return this._createLi(a);
     },
-    _getUnlock: function() {
+    _getUnlock: function () {
         var a = Builder.node("a", {
             href: this.defaultUrl + "&action=action_lock_del",
             class: "docman_item_option_lock_del",
-            title: this.docman.options.language.action_lock_del
+            title: this.docman.options.language.action_lock_del,
         });
         var title_txt = document.createTextNode(this.docman.options.language.action_lock_del);
         a.appendChild(title_txt);
         Event.observe(
             a,
             "click",
-            function(evt) {
+            function (evt) {
                 new Ajax.Request(this.defaultUrl + "&action=action_lock_del&ajax=true", {
-                    onComplete: function() {
+                    onComplete: function () {
                         this.docman.actionsForItem[this.item_id].isLocked = false;
                         this.docman.actionsForItem[this.item_id].canLock = true;
                         this.docman.actionsForItem[this.item_id].canLockInfo = false;
@@ -964,7 +964,7 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
 
                         // Hide menu
                         this.hide();
-                    }.bindAsEventListener(this)
+                    }.bindAsEventListener(this),
                 });
                 Event.stop(evt);
                 return false;
@@ -972,20 +972,20 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         );
         return this._createLi(a);
     },
-    _getCut: function() {
+    _getCut: function () {
         var a = Builder.node("a", {
             href: this.defaultUrl + "&action=action_cut",
             class: "docman_item_option_cut",
-            title: this.docman.options.language.action_cut
+            title: this.docman.options.language.action_cut,
         });
         var title_txt = document.createTextNode(this.docman.options.language.action_cut);
         a.appendChild(title_txt);
         Event.observe(
             a,
             "click",
-            function(evt) {
+            function (evt) {
                 new Ajax.Request(this.defaultUrl + "&action=action_cut&ajax_cut=true", {
-                    onComplete: function() {
+                    onComplete: function () {
                         // Hide menu
                         this.hide();
 
@@ -1019,7 +1019,7 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
                         $H(this.docman.actionsForItem)
                             .keys()
                             .each(
-                                function(id) {
+                                function (id) {
                                     if (this.docman.actionsForItem[id].canNewDocument) {
                                         const parents = this.docman.actionsForItem[id].parents;
                                         if (this.item_id == id || parents[this.item_id] == true) {
@@ -1030,7 +1030,7 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
                                     }
                                 }.bind(this)
                             );
-                    }.bindAsEventListener(this)
+                    }.bindAsEventListener(this),
                 });
                 Event.stop(evt);
                 return false;
@@ -1038,20 +1038,20 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         );
         return this._createLi(a);
     },
-    _getCopy: function() {
+    _getCopy: function () {
         var a = Builder.node("a", {
             href: this.defaultUrl + "&action=action_copy",
             class: "docman_item_option_copy",
-            title: this.docman.options.language.action_copy
+            title: this.docman.options.language.action_copy,
         });
         var title_txt = document.createTextNode(this.docman.options.language.action_copy);
         a.appendChild(title_txt);
         Event.observe(
             a,
             "click",
-            function(evt) {
+            function (evt) {
                 new Ajax.Request(this.defaultUrl + "&action=action_copy&ajax_copy=true", {
-                    onComplete: function() {
+                    onComplete: function () {
                         // Hide menu
                         this.hide();
 
@@ -1089,13 +1089,13 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
                         $H(this.docman.actionsForItem)
                             .keys()
                             .each(
-                                function(id) {
+                                function (id) {
                                     if (this.docman.actionsForItem[id].canNewDocument) {
                                         this.docman.actionsForItem[id].canPaste = true;
                                     }
                                 }.bind(this)
                             );
-                    }.bindAsEventListener(this)
+                    }.bindAsEventListener(this),
                 });
                 Event.stop(evt);
                 return false;
@@ -1103,17 +1103,17 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         );
         return this._createLi(a);
     },
-    _getPaste: function() {
+    _getPaste: function () {
         var title_txt = document.createTextNode(this.docman.options.language.action_paste);
         var a = Builder.node("a", {
             href: this.defaultUrl + "&action=action_paste",
             class: "docman_item_option_paste",
-            title: this.docman.options.language.action_paste
+            title: this.docman.options.language.action_paste,
         });
         a.appendChild(title_txt);
 
         const spanCancel = Builder.node("span", {
-            style: "width:100%; align: right; vertical-align: middle;"
+            style: "width:100%; align: right; vertical-align: middle;",
         });
         spanCancel.appendChild(this._getCancelPaste());
 
@@ -1121,20 +1121,20 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         li.appendChild(spanCancel);
         return li;
     },
-    _getCancelPaste: function() {
+    _getCancelPaste: function () {
         this.docman.options.language.action_paste_cancel = "Cancel paste";
         var im = Builder.node("img", {
             src: this.docman.options.themePath + "/images/ic/cancel.png",
             style: "margin:0; padding:0, border:0;",
-            title: ""
+            title: "",
         });
 
         Event.observe(
             im,
             "click",
-            function(evt) {
+            function (evt) {
                 new Ajax.Request(this.defaultUrl + "&action=paste_cancel", {
-                    onComplete: function() {
+                    onComplete: function () {
                         // Hide menu
                         this.hide();
 
@@ -1142,7 +1142,7 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
                         $H(this.docman.actionsForItem)
                             .keys()
                             .each(
-                                function(id) {
+                                function (id) {
                                     this.docman.actionsForItem[id].canPaste = false;
                                 }.bind(this)
                             );
@@ -1154,7 +1154,7 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
                         if ($("item_cut")) {
                             $("item_cut").remove();
                         }
-                    }.bindAsEventListener(this)
+                    }.bindAsEventListener(this),
                 });
                 Event.stop(evt);
                 return false;
@@ -1162,36 +1162,36 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         );
 
         // Display the pointer when the mouse is over the image (as a link does)
-        Event.observe(im, "mouseover", function() {
+        Event.observe(im, "mouseover", function () {
             Element.setStyle(document.body, { cursor: "pointer" });
         });
-        Event.observe(im, "mouseout", function() {
+        Event.observe(im, "mouseout", function () {
             Element.setStyle(document.body, { cursor: "default" });
         });
 
         return im;
     },
-    _getApproval: function() {
+    _getApproval: function () {
         var a = Builder.node("a", {
             href: this.defaultUrl + "&action=details&section=approval",
             class: "docman_item_option_approval",
-            title: this.docman.options.language.action_approval
+            title: this.docman.options.language.action_approval,
         });
         var title_txt = document.createTextNode(this.docman.options.language.action_approval);
         a.appendChild(title_txt);
         return this._createLi(a);
     },
-    _getSeparator: function() {
+    _getSeparator: function () {
         var sepLi = Builder.node("li");
         sepLi.appendChild(Builder.node("hr", { class: "docman_item_option_separator" }));
         return sepLi;
     },
-    _lockIcon: function() {
+    _lockIcon: function () {
         if (this.docman.actionsForItem[this.item_id].isLocked) {
             if (!$("docman_item_icon_locked_" + this.item_id)) {
                 var lock_icon = new Element("i", {
                     id: "docman_item_icon_locked_" + this.item_id,
-                    title: this.docman.options.language.event_lock_add
+                    title: this.docman.options.language.event_lock_add,
                 }).addClassName("fa fa-lock");
                 $("docman_item_title_link_" + this.item_id)
                     .up()
@@ -1203,7 +1203,7 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
             }
         }
     },
-    show: function(evt) {
+    show: function (evt) {
         this._lockIcon();
         var menu = "docman_item_menu_" + this.item_id;
         // In the previous version of the menu, once a menu was built for an
@@ -1220,18 +1220,18 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         var actions_panel = Builder.node("div", {
             style: "display:none;top:0px;left:0px;z-index:1001",
             id: menu,
-            class: "docman_item_menu"
+            class: "docman_item_menu",
         });
 
         document.body.appendChild(actions_panel);
         var ul = Builder.node("ul", {
-            id: "docman_item_menu_ul_" + this.item_id
+            id: "docman_item_menu_ul_" + this.item_id,
         });
         var li = Builder.node("li", {
-            class: "docman_item_menu_close"
+            class: "docman_item_menu_close",
         });
         var close = Builder.node("a", {
-            href: "#close-menu"
+            href: "#close-menu",
         });
         var close_txt = document.createTextNode("[" + this.close + "]");
         close.appendChild(close_txt);
@@ -1343,13 +1343,13 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
             com.xerox.codendi.openedMenu = menu;
             Element.setStyle("docman_item_menu_invisible_iframe", {
                 width: this.dimensions.width + "px",
-                height: this.dimensions.height + "px"
+                height: this.dimensions.height + "px",
             });
             var pos = {
                 left: Event.pointerX(evt) + "px",
-                top: Event.pointerY(evt) + "px"
+                top: Event.pointerY(evt) + "px",
             };
-            ["docman_item_menu_invisible_iframe", menu].each(function(element) {
+            ["docman_item_menu_invisible_iframe", menu].each(function (element) {
                 Element.setStyle(element, pos);
                 Element.show(element);
             });
@@ -1357,7 +1357,7 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         Event.stop(evt);
         return false;
     },
-    hide: function(evt) {
+    hide: function (evt) {
         this._lockIcon();
         if (com.xerox.codendi.openedMenu) {
             $("docman_item_menu_invisible_iframe").hide();
@@ -1368,7 +1368,7 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
             Event.stop(evt);
         }
         return false;
-    }
+    },
 });
 
 if (!init_obsolescence_date) {

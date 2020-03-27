@@ -45,7 +45,7 @@ describe("ReleaseDisplayer", () => {
 
     beforeEach(() => {
         store_options = {
-            state: {}
+            state: {},
         };
 
         release_data = {
@@ -54,21 +54,21 @@ describe("ReleaseDisplayer", () => {
             start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
             capacity: 10,
             total_sprint: 20,
-            initial_effort: 10
+            initial_effort: 10,
         } as MilestoneData;
 
         component_options = {
             propsData: {
                 release_data,
-                isOpen: true
+                isOpen: true,
             },
             data(): DefaultData<ReleaseDisplayer> {
                 return {
                     is_open: false,
                     is_loading: false,
-                    error_message: null
+                    error_message: null,
                 };
-            }
+            },
         };
     });
 
@@ -77,7 +77,7 @@ describe("ReleaseDisplayer", () => {
             return {
                 is_open: true,
                 is_loading: false,
-                error_message: "404"
+                error_message: "404",
             };
         };
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -89,7 +89,7 @@ describe("ReleaseDisplayer", () => {
             return {
                 is_open: false,
                 is_loading: false,
-                error_message: null
+                error_message: null,
             };
         };
 
@@ -102,15 +102,15 @@ describe("ReleaseDisplayer", () => {
             return {
                 is_open: false,
                 is_loading: false,
-                error_message: null
+                error_message: null,
             };
         };
 
         component_options = {
             propsData: {
                 release_data,
-                isOpen: false
-            }
+                isOpen: false,
+            },
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -122,7 +122,7 @@ describe("ReleaseDisplayer", () => {
             return {
                 is_open: true,
                 is_loading: false,
-                error_message: null
+                error_message: null,
             };
         };
 
@@ -138,7 +138,7 @@ describe("ReleaseDisplayer", () => {
             return {
                 is_open: false,
                 is_loading: true,
-                error_message: null
+                error_message: null,
             };
         };
 
@@ -152,7 +152,7 @@ describe("ReleaseDisplayer", () => {
             return {
                 is_open: true,
                 is_loading: false,
-                error_message: null
+                error_message: null,
             };
         };
 

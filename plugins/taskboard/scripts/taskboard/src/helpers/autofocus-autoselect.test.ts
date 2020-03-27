@@ -25,7 +25,7 @@ describe("autoFocusAutoSelect", () => {
     it("Focus the element", () => {
         const element = ({
             focus: jest.fn(),
-            select: jest.fn()
+            select: jest.fn(),
         } as unknown) as HTMLInputElement;
 
         autoFocusAutoSelect(element);
@@ -35,7 +35,7 @@ describe("autoFocusAutoSelect", () => {
     it("Defers the selection of the content", () => {
         const element = ({
             focus: jest.fn(),
-            select: jest.fn()
+            select: jest.fn(),
         } as unknown) as HTMLInputElement;
 
         autoFocusAutoSelect(element);

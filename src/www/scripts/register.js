@@ -19,54 +19,42 @@
 
 var tuleap = tuleap || {};
 
-(function($) {
+(function ($) {
     tuleap.register = {
-        handleTooltip: function() {
-            $("input, textarea").each(function() {
+        handleTooltip: function () {
+            $("input, textarea").each(function () {
                 var helper = $("#" + $(this).attr("id") + "-tooltip");
                 if (helper.length > 0) {
                     $(this).popover({
                         html: true,
                         trigger: "focus",
                         container: "#register-background",
-                        content: helper.html()
+                        content: helper.html(),
                     });
 
-                    $(this).on("shown.bs.popover", function() {
-                        $(this)
-                            .data("popover")
-                            .$tip.find(".popover-content")
-                            .html(helper.html());
+                    $(this).on("shown.bs.popover", function () {
+                        $(this).data("popover").$tip.find(".popover-content").html(helper.html());
                     });
                 }
             });
         },
 
-        handleDatepicker: function() {
+        handleDatepicker: function () {
             $(".datetimepicker").datetimepicker({
-                pickTime: false
+                pickTime: false,
             });
         },
 
-        handleUsername: function() {
-            $("#form_loginname").keyup(function() {
-                if (
-                    $(this).val() !==
-                    $(this)
-                        .val()
-                        .toLowerCase()
-                ) {
-                    $(this).val(
-                        $(this)
-                            .val()
-                            .toLowerCase()
-                    );
+        handleUsername: function () {
+            $("#form_loginname").keyup(function () {
+                if ($(this).val() !== $(this).val().toLowerCase()) {
+                    $(this).val($(this).val().toLowerCase());
                 }
             });
-        }
+        },
     };
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         tuleap.register.handleTooltip();
         tuleap.register.handleDatepicker();
         tuleap.register.handleUsername();

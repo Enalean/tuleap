@@ -102,9 +102,9 @@ export default {
         NewFolderSecondaryAction,
         DeleteItem,
         CreateNewItemVersionButton,
-        DropDownMenu
+        DropDownMenu,
     },
     props: { item: Object },
-    computed: { ...mapGetters(["is_item_a_folder"]) }
+    computed: { ...mapGetters(["is_item_a_folder"]) },
 };
 </script>

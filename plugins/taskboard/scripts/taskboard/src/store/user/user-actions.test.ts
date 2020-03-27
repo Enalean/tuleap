@@ -21,7 +21,7 @@ import * as actions from "./user-actions";
 import * as tlp from "tlp";
 import {
     mockFetchError,
-    mockFetchSuccess
+    mockFetchSuccess,
 } from "../../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper";
 import { ActionContext } from "vuex";
 import { RootState } from "../type";
@@ -31,7 +31,7 @@ jest.mock("tlp");
 
 function getContext(user_id: number): ActionContext<UserState, RootState> {
     return {
-        state: { user_id } as UserState
+        state: { user_id } as UserState,
     } as ActionContext<UserState, RootState>;
 }
 
@@ -72,16 +72,16 @@ describe("User state actions", () => {
 
             await actions.setPreference(getContext(101), {
                 key: "my-key",
-                value: "my-value"
+                value: "my-value",
             } as UserPreferenceValue);
             expect(tlpPatchMock).toHaveBeenCalledWith(`/api/v1/users/101/preferences`, {
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
                     key: "my-key",
-                    value: "my-value"
-                })
+                    value: "my-value",
+                }),
             });
         });
 
@@ -91,7 +91,7 @@ describe("User state actions", () => {
 
             await actions.setPreference(getContext(101), {
                 key: "my-key",
-                value: "my-value"
+                value: "my-value",
             } as UserPreferenceValue);
         });
 
@@ -100,7 +100,7 @@ describe("User state actions", () => {
 
             await actions.setPreference(getContext(0), {
                 key: "my-key",
-                value: "my-value"
+                value: "my-value",
             } as UserPreferenceValue);
 
             expect(tlpPatchMock).not.toHaveBeenCalled();

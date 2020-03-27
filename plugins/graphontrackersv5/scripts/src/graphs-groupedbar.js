@@ -23,7 +23,7 @@ import {
     topRoundedRect,
     alternateXAxisLabels,
     addLegendBox,
-    defineGradients
+    defineGradients,
 } from "./graphs-layout-helper.js";
 
 // Inspired from  http://bl.ocks.org/mbostock/3887051
@@ -53,17 +53,9 @@ export function groupedbar(id, graph) {
 
     const y = d3.scale.linear().range([height, 0]);
 
-    const xAxis = d3.svg
-        .axis()
-        .scale(x)
-        .orient("bottom");
+    const xAxis = d3.svg.axis().scale(x).orient("bottom");
 
-    const yAxis = d3.svg
-        .axis()
-        .scale(y)
-        .ticks(5)
-        .tickSize(chart_width)
-        .orient("right");
+    const yAxis = d3.svg.axis().scale(y).ticks(5).tickSize(chart_width).orient("right");
     const svg = d3
         .selectAll('.plugin_graphontrackersv5_chart[data-graph-id="' + id + '"]')
         .append("svg")
@@ -84,20 +76,15 @@ export function groupedbar(id, graph) {
         0,
         d3.max(graph.values, ({ values }) =>
             d3.max(d3.values(values).map(({ value }) => parseFloat(value)))
-        )
+        ),
     ]);
 
     alternateXAxisLabels(chart, height, xAxis, xAxisLabels);
 
-    const gy = chart
-        .append("g")
-        .attr("class", "y axis")
-        .call(yAxis);
+    const gy = chart.append("g").attr("class", "y axis").call(yAxis);
 
     // Set the label on the left of the y axis
-    gy.selectAll("text")
-        .attr("x", -30)
-        .attr("dx", ".71em");
+    gy.selectAll("text").attr("x", -30).attr("dx", ".71em");
 
     const bar = chart
         .selectAll(".bar")
@@ -140,7 +127,7 @@ export function groupedbar(id, graph) {
         .attrTween("d", ({ value }, i) => {
             const interpolate = d3.interpolateNumber(height, y(value));
 
-            return t =>
+            return (t) =>
                 topRoundedRect(
                     xGrouped(i),
                     interpolate(t),

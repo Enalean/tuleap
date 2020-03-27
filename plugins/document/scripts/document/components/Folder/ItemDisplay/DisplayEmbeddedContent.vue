@@ -98,14 +98,14 @@ export default {
         "update-metadata-modal": () =>
             import(
                 /* webpackChunkName: "update-metadata-modal" */ "../ModalUpdateMetadata/UpdateMetadataModal.vue"
-            )
+            ),
     },
     data() {
         return {
             is_modal_shown: false,
             show_confirm_deletion_modal: false,
             show_update_metadata_modal: false,
-            is_in_large_view: false
+            is_in_large_view: false,
         };
     },
     computed: {
@@ -116,7 +116,7 @@ export default {
             }
 
             return this.currently_previewed_item.embedded_file_properties.content;
-        }
+        },
     },
     created() {
         EventBus.$on("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
@@ -146,7 +146,7 @@ export default {
         },
         hideUpdateMetadataModal() {
             this.show_update_metadata_modal = false;
-        }
-    }
+        },
+    },
 };
 </script>

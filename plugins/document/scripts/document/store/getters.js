@@ -19,9 +19,9 @@
 
 import { TYPE_EMBEDDED, TYPE_EMPTY, TYPE_FOLDER, TYPE_WIKI } from "../constants.js";
 
-export const is_folder_empty = state => state.folder_content.length === 0;
+export const is_folder_empty = (state) => state.folder_content.length === 0;
 
-export const current_folder_title = state => {
+export const current_folder_title = (state) => {
     const hierarchy = state.current_folder_ascendant_hierarchy;
 
     if (hierarchy.length === 0) {
@@ -31,10 +31,10 @@ export const current_folder_title = state => {
     return hierarchy[hierarchy.length - 1] ? hierarchy[hierarchy.length - 1].title : "";
 };
 
-export const user_can_dragndrop = state => state.max_files_dragndrop > 0;
+export const user_can_dragndrop = (state) => state.max_files_dragndrop > 0;
 
-export const global_upload_progress = state => {
-    const ongoing_uploads = state.folder_content.filter(item => {
+export const global_upload_progress = (state) => {
+    const ongoing_uploads = state.folder_content.filter((item) => {
         return Object.prototype.hasOwnProperty.call(item, "progress") && item.upload_error === null;
     });
 
@@ -49,22 +49,22 @@ export const global_upload_progress = state => {
     return Math.trunc(total_progress / ongoing_uploads.length);
 };
 
-export const is_uploading = state => {
-    return Boolean(state.folder_content.find(item => item.is_uploading));
+export const is_uploading = (state) => {
+    return Boolean(state.folder_content.find((item) => item.is_uploading));
 };
 
-export const is_item_a_wiki = () => item => {
+export const is_item_a_wiki = () => (item) => {
     return item.type === TYPE_WIKI;
 };
 
-export const is_item_a_folder = () => item => {
+export const is_item_a_folder = () => (item) => {
     return item.type === TYPE_FOLDER;
 };
 
-export const is_item_an_empty_document = () => item => {
+export const is_item_an_empty_document = () => (item) => {
     return item.type === TYPE_EMPTY;
 };
 
-export const is_item_an_embedded_file = () => item => {
+export const is_item_an_embedded_file = () => (item) => {
     return item.type === TYPE_EMBEDDED;
 };

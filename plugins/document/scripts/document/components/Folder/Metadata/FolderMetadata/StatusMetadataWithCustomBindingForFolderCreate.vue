@@ -33,11 +33,11 @@ import { transformItemMetadataForCreation } from "../../../../helpers/metadata-h
 export default {
     name: "StatusMetadataWithCustomBindingForFolderCreate",
     components: {
-        StatusMetadata
+        StatusMetadata,
     },
     props: {
         currentlyUpdatedItem: Object,
-        parent: Object
+        parent: Object,
     },
     computed: {
         ...mapState(["is_item_status_metadata_used"]),
@@ -52,8 +52,8 @@ export default {
             },
             set(value) {
                 this.currentlyUpdatedItem.status = value;
-            }
-        }
-    }
+            },
+        },
+    },
 };
 </script>

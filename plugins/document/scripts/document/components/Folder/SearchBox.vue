@@ -41,7 +41,7 @@ export default {
     name: "SearchBox",
     data() {
         return {
-            search_query: ""
+            search_query: "",
         };
     },
     computed: {
@@ -62,7 +62,7 @@ export default {
         },
         advanced_title() {
             return this.$gettext("Advanced");
-        }
+        },
     },
     methods: {
         searchUrl() {
@@ -75,7 +75,7 @@ export default {
                 encodeURIComponent(this.search_query) +
                 "&global_filtersubmit=Apply";
             window.location.assign(encoded_url);
-        }
-    }
+        },
+    },
 };
 </script>

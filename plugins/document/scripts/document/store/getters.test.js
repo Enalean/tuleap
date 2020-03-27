@@ -28,21 +28,21 @@ describe("Store getters", () => {
                         id: 2,
                         title: "folder A",
                         owner: {
-                            id: 101
+                            id: 101,
                         },
-                        last_update_date: "2018-08-07T16:42:49+02:00"
+                        last_update_date: "2018-08-07T16:42:49+02:00",
                     },
                     {
                         id: 3,
                         title: "Current folder",
                         owner: {
                             id: 101,
-                            display_name: "user (login)"
+                            display_name: "user (login)",
                         },
-                        last_update_date: "2018-08-21T17:01:49+02:00"
-                    }
+                        last_update_date: "2018-08-21T17:01:49+02:00",
+                    },
                 ],
-                root_title: "Documents"
+                root_title: "Documents",
             });
 
             expect(title).toBe("Current folder");
@@ -51,7 +51,7 @@ describe("Store getters", () => {
         it("returns the root title if the ascendant hierarchy is empty", () => {
             const title = getters.current_folder_title({
                 current_folder_ascendant_hierarchy: [],
-                root_title: "Documents"
+                root_title: "Documents",
             });
 
             expect(title).toBe("Documents");
@@ -67,8 +67,8 @@ describe("Store getters", () => {
                     { id: 3, progress: 25, upload_error: null },
                     { id: 4 },
                     { id: 5, progress: 75, upload_error: null },
-                    { id: 6 }
-                ]
+                    { id: 6 },
+                ],
             });
 
             expect(global_progress).toEqual(50);
@@ -76,7 +76,7 @@ describe("Store getters", () => {
 
         it("returns 0 if no upload is in progress", () => {
             const global_progress = getters.global_upload_progress({
-                folder_content: [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }]
+                folder_content: [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }],
             });
 
             expect(global_progress).toEqual(0);

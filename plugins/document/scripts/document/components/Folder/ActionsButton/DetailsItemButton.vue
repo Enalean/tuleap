@@ -35,17 +35,17 @@ import { redirectToUrl } from "../../../helpers/location-helper.js";
 export default {
     props: {
         item: Object,
-        buttonClass: String
+        buttonClass: String,
     },
     computed: {
-        ...mapState(["project_id"])
+        ...mapState(["project_id"]),
     },
     methods: {
         goToDetails() {
             redirectToUrl(
                 `/plugins/docman/?group_id=${this.project_id}&id=${this.item.id}&action=details&section=details`
             );
-        }
-    }
+        },
+    },
 };
 </script>

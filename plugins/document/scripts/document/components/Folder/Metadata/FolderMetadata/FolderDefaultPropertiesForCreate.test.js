@@ -34,7 +34,7 @@ describe("FolderDefaultPropertiesForCreate", () => {
             return shallowMount(FolderDefaultPropertiesForCreate, {
                 localVue,
                 propsData: { ...props },
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
     });
@@ -44,8 +44,8 @@ describe("FolderDefaultPropertiesForCreate", () => {
             store.state = {
                 is_item_status_metadata_used: true,
                 metadata: {
-                    has_loaded_metadata: true
-                }
+                    has_loaded_metadata: true,
+                },
             };
 
             const wrapper = default_property({
@@ -54,23 +54,23 @@ describe("FolderDefaultPropertiesForCreate", () => {
                     title: "My title",
                     description: "My description",
                     owner: {
-                        id: 102
+                        id: 102,
                     },
                     metadata: [
                         {
                             short_name: "status",
                             list_value: [
                                 {
-                                    id: 103
-                                }
-                            ]
-                        }
+                                    id: 103,
+                                },
+                            ],
+                        },
                     ],
                     status: {
                         value: "rejected",
-                        recursion: "none"
-                    }
-                }
+                        recursion: "none",
+                    },
+                },
             });
 
             expect(
@@ -81,8 +81,8 @@ describe("FolderDefaultPropertiesForCreate", () => {
             store.state = {
                 is_item_status_metadata_used: true,
                 metadata: {
-                    has_loaded_metadata: true
-                }
+                    has_loaded_metadata: true,
+                },
             };
 
             const wrapper = default_property({
@@ -91,19 +91,19 @@ describe("FolderDefaultPropertiesForCreate", () => {
                     title: "My title",
                     description: "My description",
                     owner: {
-                        id: 102
+                        id: 102,
                     },
                     metadata: [
                         {
                             short_name: "field_",
                             list_value: [
                                 {
-                                    id: 103
-                                }
-                            ]
-                        }
-                    ]
-                }
+                                    id: 103,
+                                },
+                            ],
+                        },
+                    ],
+                },
             });
 
             expect(
@@ -117,8 +117,8 @@ describe("FolderDefaultPropertiesForCreate", () => {
             store.state = {
                 is_item_status_metadata_used: false,
                 metadata: {
-                    has_loaded_metadata: true
-                }
+                    has_loaded_metadata: true,
+                },
             };
 
             const wrapper = default_property({
@@ -127,10 +127,10 @@ describe("FolderDefaultPropertiesForCreate", () => {
                     title: "My title",
                     description: "My description",
                     owner: {
-                        id: 102
+                        id: 102,
                     },
-                    metadata: null
-                }
+                    metadata: null,
+                },
             });
 
             expect(

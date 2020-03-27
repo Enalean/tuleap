@@ -30,7 +30,7 @@ describe("DropDownMenuTreeView", () => {
             return shallowMount(DropDownMenuTreeView, {
                 localVue,
                 propsData: { ...props },
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
     });
@@ -42,8 +42,8 @@ describe("DropDownMenuTreeView", () => {
                 id: 1,
                 title: "my item title",
                 type: "folder",
-                user_can_write: true
-            }
+                user_can_write: true,
+            },
         });
         expect(wrapper.contains("[data-test=document-folder-title]")).toBeTruthy();
         expect(wrapper.contains("[data-test=document-folder-content-creation]")).toBeTruthy();
@@ -62,8 +62,8 @@ describe("DropDownMenuTreeView", () => {
                 id: 1,
                 title: "my item title",
                 type: "file",
-                user_can_write: true
-            }
+                user_can_write: true,
+            },
         });
         expect(wrapper.contains("[data-test=document-folder-title]")).toBeTruthy();
         expect(wrapper.contains("[data-test=document-folder-content-creation]")).toBeFalsy();
@@ -82,8 +82,8 @@ describe("DropDownMenuTreeView", () => {
                 id: 1,
                 title: "my item title",
                 type: "file",
-                user_can_write: true
-            }
+                user_can_write: true,
+            },
         });
         expect(wrapper.contains("[data-test=document-folder-title]")).toBeTruthy();
         expect(wrapper.contains("[data-test=document-folder-content-creation]")).toBeFalsy();
@@ -102,8 +102,8 @@ describe("DropDownMenuTreeView", () => {
                 id: 1,
                 title: "my item title",
                 type: "file",
-                user_can_write: true
-            }
+                user_can_write: true,
+            },
         });
         expect(wrapper.contains("[data-test=document-folder-title]")).toBeTruthy();
         expect(wrapper.contains("[data-test=document-folder-content-creation]")).toBeFalsy();
@@ -122,8 +122,8 @@ describe("DropDownMenuTreeView", () => {
                 id: 1,
                 title: "my item title",
                 type: "file",
-                user_can_write: false
-            }
+                user_can_write: false,
+            },
         });
         expect(wrapper.contains("[data-test=document-folder-title]")).toBeTruthy();
         expect(wrapper.contains("[data-test=document-folder-content-creation]")).toBeFalsy();
@@ -142,8 +142,8 @@ describe("DropDownMenuTreeView", () => {
                 id: 1,
                 title: "my item title",
                 type: "folder",
-                user_can_write: false
-            }
+                user_can_write: false,
+            },
         });
         expect(wrapper.contains("[data-test=document-folder-title]")).toBeTruthy();
         expect(wrapper.contains("[data-test=document-folder-content-creation]")).toBeFalsy();

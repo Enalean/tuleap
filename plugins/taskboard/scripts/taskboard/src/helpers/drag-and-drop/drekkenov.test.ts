@@ -27,9 +27,9 @@ jest.mock("./DrekkenovState", () => {
         DrekkenovState: jest.fn().mockImplementation(() => {
             return {
                 createDragStartHandler: jest.fn().mockReturnValue(noop_function),
-                cleanup: jest.fn()
+                cleanup: jest.fn(),
             };
-        })
+        }),
     };
 });
 

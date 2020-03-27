@@ -9,17 +9,17 @@ function BacklogItemSelectedBarController($scope, BacklogItemSelectedService) {
 
     _.extend(self, {
         nb_selected_backlog_items: BacklogItemSelectedService.getNumberOfSelectedBacklogItem(),
-        init: init
+        init: init,
     });
 
     self.init();
 
     function init() {
         $scope.$watch(
-            function() {
+            function () {
                 return BacklogItemSelectedService.getNumberOfSelectedBacklogItem();
             },
-            function() {
+            function () {
                 self.nb_selected_backlog_items = BacklogItemSelectedService.getNumberOfSelectedBacklogItem();
             },
             true

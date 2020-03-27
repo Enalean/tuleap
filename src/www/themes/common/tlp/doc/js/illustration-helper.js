@@ -37,7 +37,7 @@ if (illustration_helper_button) {
         document.getElementById("doc-colors-illustration-helper-modal"),
         {}
     );
-    illustration_helper_button.addEventListener("click", function() {
+    illustration_helper_button.addEventListener("click", function () {
         illustration_helper_modal.toggle();
     });
 
@@ -46,7 +46,7 @@ if (illustration_helper_button) {
 
 function generateSVG() {
     illustration_helper_preview.innerHTML = sanitize(illustration_helper_source.value, {
-        USE_PROFILES: { svg: true, svgFilters: true }
+        USE_PROFILES: { svg: true, svgFilters: true },
     });
     injectClasses(illustration_helper_preview.children);
     illustration_helper_target.value = illustration_helper_preview.innerHTML;

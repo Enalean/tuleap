@@ -33,7 +33,7 @@ describe("DocumentTitleLockInfo", () => {
             return shallowMount(DocumentTitleLockInfo, {
                 localVue,
                 propsData: { ...props },
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
     });
@@ -44,12 +44,12 @@ describe("DocumentTitleLockInfo", () => {
         const item = {
             id: 42,
             title: "my unlocked document",
-            type: TYPE_EMBEDDED
+            type: TYPE_EMBEDDED,
         };
 
         const wrapper = document_locked_factory({
             item,
-            isDisplayingItem: true
+            isDisplayingItem: true,
         });
 
         expect(wrapper.contains("[data-test=document-lock-information]")).toBeFalsy();
@@ -64,14 +64,14 @@ describe("DocumentTitleLockInfo", () => {
             type: TYPE_EMBEDDED,
             lock_info: {
                 locked_by: {
-                    display_name: "lock owner name"
-                }
-            }
+                    display_name: "lock owner name",
+                },
+            },
         };
 
         const wrapper = document_locked_factory({
             item,
-            isDisplayingItem: true
+            isDisplayingItem: true,
         });
 
         expect(wrapper.contains("[data-test=document-lock-information]")).toBeTruthy();
@@ -86,14 +86,14 @@ describe("DocumentTitleLockInfo", () => {
             type: TYPE_EMBEDDED,
             lock_info: {
                 locked_by: {
-                    display_name: "lock owner name"
-                }
-            }
+                    display_name: "lock owner name",
+                },
+            },
         };
 
         const wrapper = document_locked_factory({
             item,
-            isDisplayingInHeader: true
+            isDisplayingInHeader: true,
         });
 
         expect(wrapper.contains(".document-display-lock")).toBeTruthy();
@@ -110,14 +110,14 @@ describe("DocumentTitleLockInfo", () => {
             type: TYPE_EMBEDDED,
             lock_info: {
                 locked_by: {
-                    display_name: "lock owner name"
-                }
-            }
+                    display_name: "lock owner name",
+                },
+            },
         };
 
         const wrapper = document_locked_factory({
             item,
-            isDisplayingInHeader: false
+            isDisplayingInHeader: false,
         });
 
         expect(wrapper.contains(".document-display-lock")).toBeFalsy();

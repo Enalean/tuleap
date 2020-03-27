@@ -20,8 +20,8 @@
 import { FILE_FIELD } from "../../../../constants/fields-constants.js";
 import { isDisabled } from "../disabled-field-detector.js";
 
-const isFileField = field => field.type === FILE_FIELD;
-const isEnabledFileField = field => isFileField(field) && !isDisabled(field);
+const isFileField = (field) => field.type === FILE_FIELD;
+const isEnabledFileField = (field) => isFileField(field) && !isDisabled(field);
 
 export function getAllFileFields(tracker_fields) {
     return tracker_fields.filter(isEnabledFileField);

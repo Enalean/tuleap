@@ -26,19 +26,19 @@ describe("TrackerBaseCard", () => {
     function getWrapper(state: State = {} as State): Wrapper<TrackerBaseCard> {
         return shallowMount(TrackerBaseCard, {
             propsData: {
-                optionName: CreationOptions.TRACKER_TEMPLATE
+                optionName: CreationOptions.TRACKER_TEMPLATE,
             },
             mocks: {
                 $store: createStoreMock({
-                    state
-                })
-            }
+                    state,
+                }),
+            },
         });
     }
 
     it("Should tell the store it has been selected", () => {
         const state: State = {
-            active_option: CreationOptions.NONE_YET
+            active_option: CreationOptions.NONE_YET,
         } as State;
 
         const wrapper: Wrapper<TrackerBaseCard> = getWrapper(state);

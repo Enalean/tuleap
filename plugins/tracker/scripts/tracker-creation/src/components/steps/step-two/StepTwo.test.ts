@@ -40,9 +40,9 @@ describe("StepTwo", () => {
                         is_a_xml_import,
                         is_created_from_empty,
                         is_a_duplication_of_a_tracker_from_another_project,
-                        is_ready_to_submit: true
-                    }
-                })
+                        is_ready_to_submit: true,
+                    },
+                }),
             },
             localVue: await createTrackerCreationLocalVue(),
             stubs: {
@@ -54,8 +54,8 @@ describe("StepTwo", () => {
                 "field-tracker-template-id": true,
                 "router-link": true,
                 "field-tracker-empty": true,
-                "field-tracker-color": true
-            }
+                "field-tracker-color": true,
+            },
         });
     }
 
@@ -117,9 +117,9 @@ describe("StepTwo", () => {
             const state = {
                 tracker_to_be_created: {
                     name: "Kanban in the trees",
-                    shortname: "kanban_in_the_trees"
+                    shortname: "kanban_in_the_trees",
                 },
-                selected_xml_file_input: file_input
+                selected_xml_file_input: file_input,
             } as State;
 
             wrapper = await getWrapper(state, false, true);
@@ -148,9 +148,9 @@ describe("StepTwo", () => {
                 {
                     tracker_to_be_created: {
                         name: "Kanban in the trees",
-                        shortname: "kanban_in_the_trees"
+                        shortname: "kanban_in_the_trees",
                     },
-                    selected_xml_file_input: file_input
+                    selected_xml_file_input: file_input,
                 } as State,
                 false,
                 false,

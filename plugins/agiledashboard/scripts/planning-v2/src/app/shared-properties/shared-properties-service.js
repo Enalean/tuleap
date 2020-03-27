@@ -7,7 +7,7 @@ export default function SharedPropertiesService() {
         milestone: undefined,
         initial_backlog_items: undefined,
         initial_milestones: undefined,
-        is_in_explicit_top_backlog: undefined
+        is_in_explicit_top_backlog: undefined,
     };
 
     return {
@@ -26,7 +26,7 @@ export default function SharedPropertiesService() {
         getInitialMilestones: getInitialMilestones,
         setInitialMilestones: setInitialMilestones,
         isInExplicitTopBacklogManagement: isInExplicitTopBacklogManagement,
-        setIsInExplicitTopBacklogManagement: setIsInExplicitTopBacklogManagement
+        setIsInExplicitTopBacklogManagement: setIsInExplicitTopBacklogManagement,
     };
 
     function getUserId() {

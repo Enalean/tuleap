@@ -3,12 +3,12 @@ import angular from "angular";
 import "angular-mocks";
 import { createAngularPromiseWrapper } from "../../../../../../tests/jest/angular-promise-wrapper.js";
 
-describe("DroppedService -", function() {
+describe("DroppedService -", function () {
     let wrapPromise, DroppedService, KanbanService;
 
-    beforeEach(function() {
-        angular.mock.module("kanban", function($provide) {
-            $provide.decorator("KanbanService", function($delegate, $q) {
+    beforeEach(function () {
+        angular.mock.module("kanban", function ($provide) {
+            $provide.decorator("KanbanService", function ($delegate, $q) {
                 jest.spyOn($delegate, "moveInArchive").mockReturnValue($q.when());
                 jest.spyOn($delegate, "moveInBacklog").mockReturnValue($q.when());
                 jest.spyOn($delegate, "moveInColumn").mockReturnValue($q.when());
@@ -21,7 +21,7 @@ describe("DroppedService -", function() {
         });
 
         let $rootScope;
-        angular.mock.inject(function(_$rootScope_, _DroppedService_, _KanbanService_) {
+        angular.mock.inject(function (_$rootScope_, _DroppedService_, _KanbanService_) {
             $rootScope = _$rootScope_;
             DroppedService = _DroppedService_;
             KanbanService = _KanbanService_;
@@ -30,15 +30,15 @@ describe("DroppedService -", function() {
         wrapPromise = createAngularPromiseWrapper($rootScope);
     });
 
-    describe("moveToColumn() -", function() {
+    describe("moveToColumn() -", function () {
         var kanban_id, kanban_item_id, column_id, compared_to, from_column;
 
-        beforeEach(function() {
+        beforeEach(function () {
             kanban_id = 1;
             kanban_item_id = 997;
             compared_to = {
                 direction: "after",
-                item_id: 423
+                item_id: 423,
             };
             from_column = 912;
         });
@@ -114,15 +114,15 @@ describe("DroppedService -", function() {
         });
     });
 
-    describe("reorderColumn() -", function() {
+    describe("reorderColumn() -", function () {
         var kanban_id, kanban_item_id, column_id, compared_to;
 
-        beforeEach(function() {
+        beforeEach(function () {
             kanban_id = 3;
             kanban_item_id = 367;
             compared_to = {
                 direction: "before",
-                item_id: 539
+                item_id: 539,
             };
         });
 
@@ -191,8 +191,8 @@ describe("DroppedService -", function() {
         });
     });
 
-    describe("getComparedTo() -", function() {
-        it("Given an empty item list, when I drop an item in it, then null will be returned", function() {
+    describe("getComparedTo() -", function () {
+        it("Given an empty item list, when I drop an item in it, then null will be returned", function () {
             var item_list = [{ id: 687 }];
             var index = 0;
 
@@ -201,7 +201,7 @@ describe("DroppedService -", function() {
             expect(compared_to).toBe(null);
         });
 
-        it("Given an item list, when I drop an item before its first element, then an object with direction 'before' and item_id equal to the id of the second element will be returned", function() {
+        it("Given an item list, when I drop an item before its first element, then an object with direction 'before' and item_id equal to the id of the second element will be returned", function () {
             var item_list = [{ id: 996 }, { id: 743 }];
             var index = 0;
 
@@ -209,11 +209,11 @@ describe("DroppedService -", function() {
 
             expect(compared_to).toEqual({
                 direction: "before",
-                item_id: 743
+                item_id: 743,
             });
         });
 
-        it("Given an item list, when I drop an item after its second element, then an object with direction 'after' and item_id equal to the id of the second element will be returned", function() {
+        it("Given an item list, when I drop an item after its second element, then an object with direction 'after' and item_id equal to the id of the second element will be returned", function () {
             var item_list = [{ id: 386 }, { id: 896 }, { id: 255 }];
             var index = 2;
 
@@ -221,15 +221,15 @@ describe("DroppedService -", function() {
 
             expect(compared_to).toEqual({
                 direction: "after",
-                item_id: 896
+                item_id: 896,
             });
         });
     });
 
-    describe("getComparedToBeFirstItemOfColumn() -", function() {
-        it("Given an empty column, when I move an item to be first of it, then null will be returned", function() {
+    describe("getComparedToBeFirstItemOfColumn() -", function () {
+        it("Given an empty column, when I move an item to be first of it, then null will be returned", function () {
             var column = {
-                content: []
+                content: [],
             };
 
             var compared_to = DroppedService.getComparedToBeFirstItemOfColumn(column);
@@ -237,24 +237,24 @@ describe("DroppedService -", function() {
             expect(compared_to).toBe(null);
         });
 
-        it("Given a column, when I move an item to be first of it, then an object with direction 'before' and item_id equal to the id of the current first element will be returned", function() {
+        it("Given a column, when I move an item to be first of it, then an object with direction 'before' and item_id equal to the id of the current first element will be returned", function () {
             var column = {
-                content: [{ id: 398 }, { id: 952 }]
+                content: [{ id: 398 }, { id: 952 }],
             };
 
             var compared_to = DroppedService.getComparedToBeFirstItemOfColumn(column);
 
             expect(compared_to).toEqual({
                 direction: "before",
-                item_id: 398
+                item_id: 398,
             });
         });
     });
 
-    describe("getComparedToBeLastItemOfColumn() -", function() {
-        it("Given an empty column, when I move an item to be last of it, then null will be returned", function() {
+    describe("getComparedToBeLastItemOfColumn() -", function () {
+        it("Given an empty column, when I move an item to be last of it, then null will be returned", function () {
             var column = {
-                content: []
+                content: [],
             };
 
             var compared_to = DroppedService.getComparedToBeLastItemOfColumn(column);
@@ -262,16 +262,16 @@ describe("DroppedService -", function() {
             expect(compared_to).toBe(null);
         });
 
-        it("Given a column, when I move an item to be last of it, then an object with direction 'after' and item_id equal to the id of the current last element will be returned", function() {
+        it("Given a column, when I move an item to be last of it, then an object with direction 'after' and item_id equal to the id of the current last element will be returned", function () {
             var column = {
-                content: [{ id: 289 }, { id: 204 }]
+                content: [{ id: 289 }, { id: 204 }],
             };
 
             var compared_to = DroppedService.getComparedToBeLastItemOfColumn(column);
 
             expect(compared_to).toEqual({
                 direction: "after",
-                item_id: 204
+                item_id: 204,
             });
         });
     });

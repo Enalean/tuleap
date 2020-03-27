@@ -27,7 +27,7 @@
         <translate
             v-bind:translate-params="{
                 total_closed_sprint: release_data.total_closed_sprint,
-                tracker_label: tracker_submilestone_label
+                tracker_label: tracker_submilestone_label,
             }"
             v-bind:translate-n="release_data.total_closed_sprint"
             translate-plural="%{ total_closed_sprint } closed %{tracker_label}"

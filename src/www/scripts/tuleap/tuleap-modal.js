@@ -19,13 +19,13 @@
 /**
  * Handle Tuleap modal
  */
-(function($) {
+(function ($) {
     tuleap.modal = {
         settings: {
-            beforeClose: function() {}
+            beforeClose: function () {},
         },
 
-        init: function(settings) {
+        init: function (settings) {
             var self = this;
             Object.extend(this.settings, settings);
 
@@ -33,35 +33,35 @@
             this.setPanelHeight();
 
             $(".tuleap-modal-side-panel:first-child .tuleap-modal-side-panel-grip").click(
-                function() {
+                function () {
                     self.toggleLeftSidePanel($(this));
                 }
             );
             $(".tuleap-modal-side-panel:last-child .tuleap-modal-side-panel-grip").click(
-                function() {
+                function () {
                     self.toggleRightSidePanel($(this));
                 }
             );
-            $(".tuleap-modal-close").click(function() {
+            $(".tuleap-modal-close").click(function () {
                 self.closeModal();
             });
 
             return this;
         },
 
-        getDOMElement: function() {
+        getDOMElement: function () {
             return $(".tuleap-modal")[0];
         },
 
-        showLoad: function() {
+        showLoad: function () {
             $("body").append('<div class="tuleap-modal-loading"></div>');
         },
 
-        hideLoad: function() {
+        hideLoad: function () {
             $(".tuleap-modal-loading").remove();
         },
 
-        toggleLeftSidePanel: function(grip) {
+        toggleLeftSidePanel: function (grip) {
             var panel_content = grip.siblings(".tuleap-modal-side-panel-content");
             panel_content.toggle();
             var new_margin_left;
@@ -79,11 +79,11 @@
             }
         },
 
-        toggleRightSidePanel: function(grip) {
+        toggleRightSidePanel: function (grip) {
             grip.siblings(".tuleap-modal-side-panel-content").toggle();
         },
 
-        setPanelHeight: function() {
+        setPanelHeight: function () {
             var computed_height = $(".tuleap-modal-main-panel").outerHeight();
             if (computed_height >= $(window).height()) {
                 computed_height = $(window).height();
@@ -99,12 +99,12 @@
             );
         },
 
-        resizeContentPanels: function(computed_height) {
+        resizeContentPanels: function (computed_height) {
             if (computed_height < $(window).height()) {
                 $(".tuleap-modal").css({
                     height: computed_height + "px",
                     top: "50%",
-                    marginTop: "-" + computed_height / 2 + "px"
+                    marginTop: "-" + computed_height / 2 + "px",
                 });
             } else {
                 var content_height =
@@ -113,28 +113,26 @@
                     $(".tuleap-modal-title").outerHeight() -
                     2 * parseInt($(".tuleap-modal-actions").css("padding-left"), 10);
                 $(".tuleap-modal-content, .tuleap-modal-side-panel-content-content").css({
-                    height: content_height + "px"
+                    height: content_height + "px",
                 });
 
                 $(".tuleap-modal").css({
                     height: computed_height + "px",
                     top: "0",
-                    marginTop: "0"
+                    marginTop: "0",
                 });
             }
         },
 
-        closeModal: function() {
+        closeModal: function () {
             this.settings.beforeClose();
 
-            $(".tuleap-modal-background, .tuleap-modal")
-                .fadeOut(150)
-                .remove();
-        }
+            $(".tuleap-modal-background, .tuleap-modal").fadeOut(150).remove();
+        },
     };
 
-    $(document).ready(function() {
-        $(window).resize(function() {
+    $(document).ready(function () {
+        $(window).resize(function () {
             if ($(".tuleap-modal").length > 0) {
                 tuleap.modal.setPanelHeight();
             }

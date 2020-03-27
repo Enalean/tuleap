@@ -30,6 +30,6 @@ module.exports = {
         "^angular-mocks$": "<rootDir>/node_modules/angular-mocks/angular-mocks.js",
         "^angular$": "<rootDir>/node_modules/angular/index.js",
         "^angular-sanitize$": "<rootDir>/node_modules/angular-sanitize/index.js",
-        "^jquery$": "<rootDir>/node_modules/jquery/dist/jquery.js"
-    }
+        "^jquery$": "<rootDir>/node_modules/jquery/dist/jquery.js",
+    },
 };

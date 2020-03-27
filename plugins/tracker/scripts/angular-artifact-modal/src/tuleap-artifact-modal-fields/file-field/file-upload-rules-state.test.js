@@ -13,13 +13,13 @@ describe("FileUploadRulesUpdater() -", () => {
     describe("updateFileUploadRulesWhenNeeded() -", () => {
         it("Given there was one file field, then the File upload rules will be queried and stored and the query promise will be returned", async () => {
             const field_values = {
-                22: { field_id: 22, type: "file" }
+                22: { field_id: 22, type: "file" },
             };
             isThereAtLeastOneFileField.mockReturnValue(true);
             const rules = {
                 disk_quota: 64,
                 disk_usage: 57,
-                max_chunk_size: 96
+                max_chunk_size: 96,
             };
             getFileUploadRules.mockReturnValue(Promise.resolve(rules));
 
@@ -32,7 +32,7 @@ describe("FileUploadRulesUpdater() -", () => {
 
         it("Given there was no file filed, then the File upload rules won't be queried and a promise will be resolved", async () => {
             const field_values = {
-                27: { field_id: 27, type: "string" }
+                27: { field_id: 27, type: "string" },
             };
             isThereAtLeastOneFileField.mockReturnValue(false);
 

@@ -42,12 +42,12 @@ describe("initGettext", () => {
     });
 
     it("calls function to load external translation", async () => {
-        const gettext_provider = await initGettext("fr_FR", "my-domain", locale =>
+        const gettext_provider = await initGettext("fr_FR", "my-domain", (locale) =>
             Promise.resolve({ headers: { Language: locale } })
         );
 
         expect(gettext_provider.addTranslations).toHaveBeenCalledWith("fr_FR", "my-domain", {
-            headers: { Language: "fr_FR" }
+            headers: { Language: "fr_FR" },
         });
     });
 });

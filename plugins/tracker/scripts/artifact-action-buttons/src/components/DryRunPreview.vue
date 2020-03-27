@@ -35,7 +35,7 @@ export default {
     components: {
         DryRunNotMigratedFieldState,
         DryRunPartiallyMigratedFieldState,
-        DryRunFullyMigratedFieldState
-    }
+        DryRunFullyMigratedFieldState,
+    },
 };
 </script>

@@ -19,14 +19,14 @@
 
 /* global jQuery:readonly tuleap:readonly codendi:readonly */
 
-(function($) {
-    $(document).ready(function() {
+(function ($) {
+    $(document).ready(function () {
         var hierarchy_containers = $(".artifact-hierarchy");
         var nature_containers = $(".artifact-nature");
 
         var containers = hierarchy_containers.add(nature_containers);
 
-        containers.each(function() {
+        containers.each(function () {
             var container = $(this),
                 artifact_id = container.data("artifactId"),
                 //eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -29,6 +29,6 @@ export function init() {
 
     createPopover(project_flags_element, popover_content, {
         anchor: project_flags_element.querySelector("svg"),
-        placement: "bottom-start"
+        placement: "bottom-start",
     });
 }

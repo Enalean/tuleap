@@ -33,13 +33,13 @@ describe("ChildFolder", () => {
             routes: [
                 {
                     path: "/folder/10",
-                    name: "folder"
+                    name: "folder",
                 },
                 {
                     path: "/preview/20",
-                    name: "preview"
-                }
-            ]
+                    name: "preview",
+                },
+            ],
         });
 
         factory = (props = {}) => {
@@ -47,7 +47,7 @@ describe("ChildFolder", () => {
                 localVue,
                 propsData: { ...props },
                 mocks: { $store: store },
-                router
+                router,
             });
         };
     });
@@ -59,8 +59,8 @@ describe("ChildFolder", () => {
         router.push({
             name: "folder",
             params: {
-                item_id: 10
-            }
+                item_id: 10,
+            },
         });
 
         factory();
@@ -73,14 +73,14 @@ describe("ChildFolder", () => {
         router.push({
             name: "preview",
             params: {
-                preview_item_id: 20
-            }
+                preview_item_id: 20,
+            },
         });
         const wrapper = factory();
 
         store.state.currently_previewed_item = {
             id: 20,
-            parent_id: 10
+            parent_id: 10,
         };
 
         expect(store.dispatch).toHaveBeenCalledWith("toggleQuickLook", 20);
@@ -96,8 +96,8 @@ describe("ChildFolder", () => {
         router.push({
             name: "preview",
             params: {
-                preview_item_id: 20
-            }
+                preview_item_id: 20,
+            },
         });
         factory();
 
@@ -112,16 +112,16 @@ describe("ChildFolder", () => {
         router.push({
             name: "preview",
             params: {
-                preview_item_id: 10
-            }
+                preview_item_id: 10,
+            },
         });
         factory();
 
         router.push({
             name: "folder",
             params: {
-                item_id: 20
-            }
+                item_id: 20,
+            },
         });
 
         expect(store.dispatch).toHaveBeenCalledWith("removeQuickLook");
@@ -135,16 +135,16 @@ describe("ChildFolder", () => {
         router.push({
             name: "preview",
             params: {
-                preview_item_id: 20
-            }
+                preview_item_id: 20,
+            },
         });
         factory();
 
         router.push({
             name: "folder",
             params: {
-                preview_item_id: 20
-            }
+                preview_item_id: 20,
+            },
         });
 
         expect(store.dispatch).toHaveBeenCalledWith("removeQuickLook");

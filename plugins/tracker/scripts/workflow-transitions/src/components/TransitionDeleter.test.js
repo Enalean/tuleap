@@ -34,12 +34,12 @@ describe("TransitionDeleter", () => {
     beforeEach(() => {
         destroyPopover = jest.fn();
         jest.spyOn(tlp, "createPopover").mockImplementation(() => ({
-            destroy: destroyPopover
+            destroy: destroyPopover,
         }));
 
         transition = {
             from_id: 18,
-            to_id: 83
+            to_id: 83,
         };
         deleteTransition = jest.fn();
         is_transition_updated = false;
@@ -50,14 +50,14 @@ describe("TransitionDeleter", () => {
         //mount() is needed because we use a ref from a child functional component
         wrapper = mount(TransitionDeleter, {
             mocks: {
-                $store: store
+                $store: store,
             },
             localVue,
             propsData: {
                 transition,
                 deleteTransition,
-                is_transition_updated
-            }
+                is_transition_updated,
+            },
         });
     });
 
@@ -118,7 +118,7 @@ describe("TransitionDeleter", () => {
             beforeEach(() => {
                 store.getters.current_workflow_transitions = [
                     transition,
-                    { from_id: 30, to_id: 19 }
+                    { from_id: 30, to_id: 19 },
                 ];
             });
 
@@ -146,7 +146,7 @@ describe("TransitionDeleter", () => {
             beforeEach(() => {
                 store.getters.current_workflow_transitions = [
                     transition,
-                    { from_id: 92, to_id: 83 }
+                    { from_id: 92, to_id: 83 },
                 ];
             });
 

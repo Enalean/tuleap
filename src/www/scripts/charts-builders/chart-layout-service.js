@@ -35,7 +35,7 @@ function getElementSpacing(elements_widths, element_index, element_padding, base
 
 function getElementsWidth(selection) {
     const nodes = selection.nodes();
-    return nodes.map(node => node.getBBox().width);
+    return nodes.map((node) => node.getBBox().width);
 }
 
 function getYAxisTicksSize(graph_width, margins_right, margins_left) {

@@ -19,7 +19,7 @@
 var tuleap = tuleap || {};
 
 // Search for a class in loaded stylesheets
-tuleap.getStyleClass = function(className) {
+tuleap.getStyleClass = function (className) {
     var s, r;
     var re = new RegExp("\\." + className + "$", "gi");
     if (document.all) {
@@ -53,7 +53,7 @@ tuleap.getStyleClass = function(className) {
 };
 
 // Search for a property for a class in loaded stylesheets
-tuleap.getStyleClassProperty = function(className, propertyName) {
+tuleap.getStyleClassProperty = function (className, propertyName) {
     var styleClass = tuleap.getStyleClass(className);
     if (styleClass) {
         return styleClass[propertyName];

@@ -45,7 +45,7 @@ import {
     TrackerToBeCreatedMandatoryData,
     Tracker,
     ProjectWithTrackers,
-    ProjectTemplate
+    ProjectTemplate,
 } from "../../../../store/type";
 
 @Component

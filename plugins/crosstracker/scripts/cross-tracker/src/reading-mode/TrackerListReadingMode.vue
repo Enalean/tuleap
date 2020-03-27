@@ -45,7 +45,7 @@
 export default {
     name: "TrackerListReadingMode",
     props: {
-        readingCrossTrackerReport: Object
+        readingCrossTrackerReport: Object,
     },
     computed: {
         no_trackers_in_report() {
@@ -57,10 +57,10 @@ export default {
                 return {
                     id: tracker.id,
                     tracker_label: tracker.label,
-                    project_label: project.label
+                    project_label: project.label,
                 };
             });
-        }
-    }
+        },
+    },
 };
 </script>

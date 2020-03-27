@@ -45,47 +45,47 @@ describe("ReleaseButtonsDescription", () => {
     beforeEach(() => {
         store_options = {
             state: {
-                label_tracker_planning: "Releases"
-            }
+                label_tracker_planning: "Releases",
+            },
         };
 
         release_data = {
             id: 2,
             planning: {
-                id: "100"
+                id: "100",
             },
             resources: {
                 milestones: {
                     accept: {
                         trackers: [
                             {
-                                label: "Sprint1"
-                            }
-                        ]
-                    }
+                                label: "Sprint1",
+                            },
+                        ],
+                    },
                 },
                 additional_panes: [
                     {
                         icon_name: "fa-tlp-taskboard",
                         title: "Taskboard",
                         uri: "/taskboard/project/6",
-                        identifier: "taskboard"
+                        identifier: "taskboard",
                     },
                     {
                         icon_name: "fa-external-link",
                         title: "Test Campaigns",
                         uri: "/plugin/testmanagement/project/6",
-                        identifier: "testmgmt"
-                    }
+                        identifier: "testmgmt",
+                    },
                 ],
                 cardwall: {
-                    uri: "/cardwall/"
-                }
-            }
+                    uri: "/cardwall/",
+                },
+            },
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
         };
 
         store_options.state.user_can_view_sub_milestones_planning = true;
@@ -149,32 +149,32 @@ describe("ReleaseButtonsDescription", () => {
         release_data = {
             id: 2,
             planning: {
-                id: "100"
+                id: "100",
             },
             resources: {
                 milestones: {
                     accept: {
                         trackers: [
                             {
-                                label: "Sprint1"
-                            }
-                        ]
-                    }
+                                label: "Sprint1",
+                            },
+                        ],
+                    },
                 },
                 additional_panes: [
                     {
                         title: "random",
                         identifier: "random",
                         icon_name: "fa-random",
-                        uri: "/project/random"
-                    }
+                        uri: "/project/random",
+                    },
                 ],
-                cardwall: null
-            }
+                cardwall: null,
+            },
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -185,25 +185,25 @@ describe("ReleaseButtonsDescription", () => {
         release_data = {
             id: 2,
             planning: {
-                id: "100"
+                id: "100",
             },
             resources: {
                 milestones: {
                     accept: {
                         trackers: [
                             {
-                                label: "Sprint1"
-                            }
-                        ]
-                    }
+                                label: "Sprint1",
+                            },
+                        ],
+                    },
                 },
                 additional_panes: [] as Pane[],
-                cardwall: null
-            }
+                cardwall: null,
+            },
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);

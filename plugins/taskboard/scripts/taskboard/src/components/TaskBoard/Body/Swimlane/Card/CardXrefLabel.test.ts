@@ -31,10 +31,10 @@ describe("CardXrefLabel", () => {
                     xref: "story #43",
                     color: "lake-placid-blue",
                     artifact_html_uri: "/path/to/43",
-                    is_in_edit_mode: false
+                    is_in_edit_mode: false,
                 } as Card,
-                label: "Story 2"
-            }
+                label: "Story 2",
+            },
         });
         expect(wrapper.element).toMatchSnapshot();
     });
@@ -49,10 +49,10 @@ describe("CardXrefLabel", () => {
                     color: "lake-placid-blue",
                     background_color: "fiesta-red",
                     artifact_html_uri: "/path/to/43",
-                    is_in_edit_mode: false
+                    is_in_edit_mode: false,
                 } as Card,
-                label: "Story 2"
-            }
+                label: "Story 2",
+            },
         });
         expect(wrapper.find("[data-test=xref]").classes("tlp-swatch-fiesta-red")).toBe(true);
     });
@@ -67,10 +67,10 @@ describe("CardXrefLabel", () => {
                     color: "lake-placid-blue",
                     background_color: "fiesta-red",
                     artifact_html_uri: "/path/to/43",
-                    is_in_edit_mode: true
+                    is_in_edit_mode: true,
                 } as Card,
-                label: "Story 2"
-            }
+                label: "Story 2",
+            },
         });
         expect(wrapper.text()).toBe("story #43");
     });

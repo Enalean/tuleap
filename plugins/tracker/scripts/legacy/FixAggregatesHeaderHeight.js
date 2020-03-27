@@ -22,7 +22,7 @@ tuleap.trackers = tuleap.trackers || {};
 tuleap.trackers.report = tuleap.trackers.report || {};
 tuleap.trackers.report.table = tuleap.trackers.report.table || {};
 
-!(function($) {
+!(function ($) {
     function fixAggregatesHeight(container) {
         var container_selector = ".tracker_report_table_aggregates > td > table > " + container,
             tr_selector = container_selector + " > tr",
@@ -32,7 +32,7 @@ tuleap.trackers.report.table = tuleap.trackers.report.table || {};
 
         $(tr_selector).height(0);
 
-        all_heights = $.map($elements, function(el) {
+        all_heights = $.map($elements, function (el) {
             return $(el).height();
         });
         max_height = Math.max.apply(Math, all_heights);
@@ -40,7 +40,7 @@ tuleap.trackers.report.table = tuleap.trackers.report.table || {};
         $(tr_selector).height(max_height);
     }
 
-    tuleap.trackers.report.table.fixAggregatesHeights = function() {
+    tuleap.trackers.report.table.fixAggregatesHeights = function () {
         fixAggregatesHeight("thead");
         fixAggregatesHeight("tbody");
     };
@@ -48,7 +48,7 @@ tuleap.trackers.report.table = tuleap.trackers.report.table || {};
     var resize_timeout;
 
     $(document).ready(tuleap.trackers.report.table.fixAggregatesHeights);
-    $(window).resize(function() {
+    $(window).resize(function () {
         clearTimeout(resize_timeout);
         resize_timeout = setTimeout(tuleap.trackers.report.table.fixAggregatesHeights, 10);
     });

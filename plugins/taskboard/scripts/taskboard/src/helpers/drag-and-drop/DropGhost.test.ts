@@ -29,7 +29,7 @@ describe(`DropGhost`, () => {
     beforeEach(() => {
         mock_event_source = {
             attachAfterDropListener: jest.fn(),
-            dispatchAfterDropEvent: jest.fn()
+            dispatchAfterDropEvent: jest.fn(),
         };
         doc = createLocalDocument();
     });
@@ -139,7 +139,7 @@ describe(`DropGhost`, () => {
                 dragged_element.classList.add(HIDE_CSS_CLASS);
                 ongoing_drag = ({
                     dragged_element,
-                    hideDraggedElement: jest.fn()
+                    hideDraggedElement: jest.fn(),
                 } as unknown) as OngoingDrag;
                 ghost = new DropGhost(mock_event_source, ongoing_drag, ghost_element);
                 target_dropzone = doc.createElement("div");
@@ -161,7 +161,7 @@ describe(`DropGhost`, () => {
                 const options = {
                     isConsideredInDropzone(element: HTMLElement): boolean {
                         return element !== ignored_element;
-                    }
+                    },
                 } as DrekkenovInitOptions;
 
                 ghost.update(target_dropzone, options, y_coordinate);
@@ -176,7 +176,7 @@ describe(`DropGhost`, () => {
                 const options = ({
                     isConsideredInDropzone() {
                         return false;
-                    }
+                    },
                 } as unknown) as DrekkenovInitOptions;
                 target_dropzone.append(ghost_element);
 
@@ -192,7 +192,7 @@ describe(`DropGhost`, () => {
                 const options = {
                     isConsideredInDropzone(element: HTMLElement): boolean {
                         return element !== ignored_element;
-                    }
+                    },
                 } as DrekkenovInitOptions;
                 target_dropzone.append(ignored_element, next_sibling);
                 jest.spyOn(dom_manipulation, "findNextGhostSibling").mockReturnValue(next_sibling);
@@ -211,7 +211,7 @@ describe(`DropGhost`, () => {
                     options = ({
                         isConsideredInDropzone() {
                             return true;
-                        }
+                        },
                     } as unknown) as DrekkenovInitOptions;
                     first_child = doc.createElement("div");
                     last_child = doc.createElement("div");
@@ -273,7 +273,7 @@ describe(`DropGhost`, () => {
                 source_dropzone.append(ghost_element, initial_sibling);
                 const ongoing_drag = ({
                     source_dropzone,
-                    initial_sibling
+                    initial_sibling,
                 } as unknown) as OngoingDrag;
                 const ghost = new DropGhost(mock_event_source, ongoing_drag, ghost_element);
 
@@ -288,7 +288,7 @@ describe(`DropGhost`, () => {
                 source_dropzone.append(initial_sibling);
                 const ongoing_drag = ({
                     source_dropzone,
-                    initial_sibling
+                    initial_sibling,
                 } as unknown) as OngoingDrag;
                 const ghost = new DropGhost(mock_event_source, ongoing_drag, ghost_element);
 
@@ -319,7 +319,7 @@ describe(`DropGhost`, () => {
             const ongoing_drag = ({
                 dragged_element,
                 source_dropzone,
-                initial_sibling
+                initial_sibling,
             } as unknown) as OngoingDrag;
             const ghost = new DropGhost(mock_event_source, ongoing_drag, ghost_element);
             const other_dropzone = doc.createElement("div");
@@ -332,7 +332,7 @@ describe(`DropGhost`, () => {
             const ongoing_drag = ({
                 dragged_element,
                 source_dropzone,
-                initial_sibling: null
+                initial_sibling: null,
             } as unknown) as OngoingDrag;
             const ghost = new DropGhost(mock_event_source, ongoing_drag, ghost_element);
             const ghost_sibling = doc.createElement("div");
@@ -345,7 +345,7 @@ describe(`DropGhost`, () => {
             const ongoing_drag = ({
                 dragged_element,
                 source_dropzone,
-                initial_sibling: null
+                initial_sibling: null,
             } as unknown) as OngoingDrag;
             const unrelated_element = doc.createElement("span");
             const ghost = new DropGhost(mock_event_source, ongoing_drag, ghost_element);
@@ -359,7 +359,7 @@ describe(`DropGhost`, () => {
             const ongoing_drag = ({
                 dragged_element,
                 source_dropzone,
-                initial_sibling
+                initial_sibling,
             } as unknown) as OngoingDrag;
             const ghost = new DropGhost(mock_event_source, ongoing_drag, ghost_element);
             source_dropzone.append(ghost_element);
@@ -372,7 +372,7 @@ describe(`DropGhost`, () => {
             const ongoing_drag = ({
                 dragged_element,
                 source_dropzone,
-                initial_sibling
+                initial_sibling,
             } as unknown) as OngoingDrag;
             const ghost = new DropGhost(mock_event_source, ongoing_drag, ghost_element);
             const ghost_sibling = doc.createElement("span");
@@ -386,7 +386,7 @@ describe(`DropGhost`, () => {
             const ongoing_drag = ({
                 dragged_element,
                 source_dropzone,
-                initial_sibling
+                initial_sibling,
             } as unknown) as OngoingDrag;
             const ghost = new DropGhost(mock_event_source, ongoing_drag, ghost_element);
             source_dropzone.append(ghost_element, initial_sibling);
@@ -424,7 +424,7 @@ function createOngoingDrag(doc: Document): OngoingDrag {
     const dragged_element = doc.createElement("div");
     dragged_element.classList.add(HIDE_CSS_CLASS);
     return ({
-        dragged_element
+        dragged_element,
     } as unknown) as OngoingDrag;
 }
 

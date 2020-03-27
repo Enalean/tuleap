@@ -39,10 +39,10 @@ async function createWrapper(
                 state: {
                     are_closed_items_displayed,
                     swimlane: { swimlanes },
-                    column: {}
-                } as RootState
-            })
-        }
+                    column: {},
+                } as RootState,
+            }),
+        },
     });
 }
 
@@ -58,21 +58,21 @@ describe("TaskBoardBody", () => {
                     id: 43,
                     has_children: false,
                     is_open: true,
-                    is_collapsed: false
-                }
+                    is_collapsed: false,
+                },
             } as Swimlane,
             {
                 card: {
                     id: 44,
                     has_children: true,
                     is_open: true,
-                    is_collapsed: false
-                }
-            } as Swimlane
+                    is_collapsed: false,
+                },
+            } as Swimlane,
         ];
         jest.spyOn(mapper, "getColumnOfCard").mockReturnValue({
             id: 21,
-            label: "Todo"
+            label: "Todo",
         } as ColumnDefinition);
         const wrapper = await createWrapper(swimlanes, true);
         expect(wrapper.element).toMatchSnapshot();
@@ -85,9 +85,9 @@ describe("TaskBoardBody", () => {
                     id: 43,
                     has_children: false,
                     is_open: true,
-                    is_collapsed: true
-                }
-            } as Swimlane
+                    is_collapsed: true,
+                },
+            } as Swimlane,
         ];
         const wrapper = await createWrapper(swimlanes, true);
         expect(wrapper.contains(CollapsedSwimlane)).toBe(true);
@@ -100,9 +100,9 @@ describe("TaskBoardBody", () => {
                     id: 43,
                     has_children: false,
                     is_open: true,
-                    is_collapsed: false
-                }
-            } as Swimlane
+                    is_collapsed: false,
+                },
+            } as Swimlane,
         ];
         jest.spyOn(mapper, "getColumnOfCard").mockReturnValue(undefined);
         const wrapper = await createWrapper(swimlanes, true);
@@ -116,9 +116,9 @@ describe("TaskBoardBody", () => {
                     id: 43,
                     has_children: false,
                     is_open: false,
-                    is_collapsed: true
-                }
-            } as Swimlane
+                    is_collapsed: true,
+                },
+            } as Swimlane,
         ];
         const wrapper = await createWrapper(swimlanes, false);
         expect(wrapper.element.children.length).toBe(0);
@@ -128,7 +128,7 @@ describe("TaskBoardBody", () => {
         const $store = createStoreMock({ state: { swimlane: {} } });
         shallowMount(TaskBoardBody, {
             mocks: { $store },
-            localVue: await createTaskboardLocalVue()
+            localVue: await createTaskboardLocalVue(),
         });
         expect($store.dispatch).toHaveBeenCalledWith("swimlane/loadSwimlanes");
     });
@@ -137,7 +137,7 @@ describe("TaskBoardBody", () => {
         const $store = createStoreMock({ state: { swimlane: { is_loading_swimlanes: true } } });
         const wrapper = shallowMount(TaskBoardBody, {
             mocks: { $store },
-            localVue: await createTaskboardLocalVue()
+            localVue: await createTaskboardLocalVue(),
         });
         expect(wrapper.contains(SwimlaneSkeleton)).toBe(true);
     });

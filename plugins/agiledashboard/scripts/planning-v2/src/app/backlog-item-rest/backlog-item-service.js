@@ -3,7 +3,7 @@ export default BacklogItemService;
 BacklogItemService.$inject = ["Restangular", "BacklogItemFactory"];
 
 function BacklogItemService(Restangular, BacklogItemFactory) {
-    var rest = Restangular.withConfig(function(RestangularConfigurer) {
+    var rest = Restangular.withConfig(function (RestangularConfigurer) {
         RestangularConfigurer.setFullResponse(true);
         RestangularConfigurer.setBaseUrl("/api/v1");
     });
@@ -17,18 +17,18 @@ function BacklogItemService(Restangular, BacklogItemFactory) {
         reorderBacklogItemChildren: reorderBacklogItemChildren,
         removeAddReorderBacklogItemChildren: removeAddReorderBacklogItemChildren,
         removeAddBacklogItemChildren: removeAddBacklogItemChildren,
-        removeItemFromExplicitBacklog: removeItemFromExplicitBacklog
+        removeItemFromExplicitBacklog: removeItemFromExplicitBacklog,
     });
 
     function getBacklogItem(backlog_item_id) {
         var promise = rest
             .one("backlog_items", backlog_item_id)
             .get()
-            .then(function(response) {
+            .then(function (response) {
                 augmentBacklogItem(response.data);
 
                 var result = {
-                    backlog_item: response.data
+                    backlog_item: response.data,
                 };
 
                 return result;
@@ -43,14 +43,14 @@ function BacklogItemService(Restangular, BacklogItemFactory) {
             .all("backlog")
             .getList({
                 limit: limit,
-                offset: offset
+                offset: offset,
             })
-            .then(function(response) {
+            .then(function (response) {
                 response.data.forEach(augmentBacklogItem);
 
                 var result = {
                     results: response.data,
-                    total: response.headers("X-PAGINATION-SIZE")
+                    total: response.headers("X-PAGINATION-SIZE"),
                 };
 
                 return result;
@@ -65,14 +65,14 @@ function BacklogItemService(Restangular, BacklogItemFactory) {
             .all("backlog")
             .getList({
                 limit: limit,
-                offset: offset
+                offset: offset,
             })
-            .then(function(response) {
+            .then(function (response) {
                 response.data.forEach(augmentBacklogItem);
 
                 var result = {
                     results: response.data,
-                    total: response.headers("X-PAGINATION-SIZE")
+                    total: response.headers("X-PAGINATION-SIZE"),
                 };
 
                 return result;
@@ -87,14 +87,14 @@ function BacklogItemService(Restangular, BacklogItemFactory) {
             .all("children")
             .getList({
                 limit: limit,
-                offset: offset
+                offset: offset,
             })
-            .then(function(response) {
+            .then(function (response) {
                 response.data.forEach(augmentBacklogItem);
 
                 var result = {
                     results: response.data,
-                    total: response.headers("X-PAGINATION-SIZE")
+                    total: response.headers("X-PAGINATION-SIZE"),
                 };
 
                 return result;
@@ -115,8 +115,8 @@ function BacklogItemService(Restangular, BacklogItemFactory) {
                 order: {
                     ids: dropped_item_ids,
                     direction: compared_to.direction,
-                    compared_to: compared_to.item_id
-                }
+                    compared_to: compared_to.item_id,
+                },
             });
     }
 
@@ -133,12 +133,12 @@ function BacklogItemService(Restangular, BacklogItemFactory) {
                 order: {
                     ids: dropped_item_ids,
                     direction: compared_to.direction,
-                    compared_to: compared_to.item_id
+                    compared_to: compared_to.item_id,
                 },
-                add: dropped_item_ids.map(dropped_item_id => ({
+                add: dropped_item_ids.map((dropped_item_id) => ({
                     id: dropped_item_id,
-                    remove_from: source_backlog_item_id
-                }))
+                    remove_from: source_backlog_item_id,
+                })),
             });
     }
 
@@ -151,10 +151,10 @@ function BacklogItemService(Restangular, BacklogItemFactory) {
             .one("backlog_items", dest_backlog_item_id)
             .all("children")
             .patch({
-                add: dropped_item_ids.map(dropped_item_id => ({
+                add: dropped_item_ids.map((dropped_item_id) => ({
                     id: dropped_item_id,
-                    remove_from: source_backlog_item_id
-                }))
+                    remove_from: source_backlog_item_id,
+                })),
             });
     }
 
@@ -163,9 +163,9 @@ function BacklogItemService(Restangular, BacklogItemFactory) {
             .one("projects", project_id)
             .all("backlog")
             .patch({
-                remove: backlog_items.map(backlog_item => ({
-                    id: backlog_item.id
-                }))
+                remove: backlog_items.map((backlog_item) => ({
+                    id: backlog_item.id,
+                })),
             });
     }
 }

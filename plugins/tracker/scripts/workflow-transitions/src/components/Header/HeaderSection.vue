@@ -55,7 +55,7 @@ export default {
     name: "HeaderSection",
     components: {
         WorkflowFieldChange,
-        WorkflowModeSwitch
+        WorkflowModeSwitch,
     },
     computed: {
         ...mapState(["is_operation_running", "is_rules_enforcement_running"]),
@@ -69,8 +69,8 @@ export default {
                     "updateTransitionRulesEnforcement",
                     !this.are_transition_rules_enforced
                 );
-            }
-        }
-    }
+            },
+        },
+    },
 };
 </script>

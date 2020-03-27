@@ -4,7 +4,7 @@ import {
     UNIFIED_DIFF,
     setMode,
     isUnifiedMode,
-    isSideBySideMode
+    isSideBySideMode,
 } from "../file-diff/diff-mode-state.js";
 
 export default FilesController;
@@ -14,7 +14,7 @@ FilesController.$inject = [
     "SharedPropertiesService",
     "FilesRestService",
     "FilepathsService",
-    "UserRestService"
+    "UserRestService",
 ];
 
 function FilesController(
@@ -42,7 +42,7 @@ function FilesController(
         isSideBySideMode,
         isFileSelected,
         switchDiffDisplayMode,
-        $onInit: init
+        $onInit: init,
     });
 
     function init() {
@@ -71,7 +71,7 @@ function FilesController(
 
     function getFiles() {
         FilesRestService.getFiles(self.pull_request.id)
-            .then(files => {
+            .then((files) => {
                 self.files = files;
                 FilepathsService.setFilepaths(files);
 
@@ -86,7 +86,7 @@ function FilesController(
         self.selected_file = self.files[0];
 
         if ($state.includes("diff")) {
-            self.selected_file = self.files.find(file => file.path === $state.params.file_path);
+            self.selected_file = self.files.find((file) => file.path === $state.params.file_path);
         }
 
         loadFile(self.selected_file);
@@ -97,7 +97,7 @@ function FilesController(
 
         $state.go("diff", {
             id: self.pull_request.id,
-            file_path: file.path
+            file_path: file.path,
         });
 
         self.file_selector.hide();
@@ -105,7 +105,7 @@ function FilesController(
 
     function initFileDropdown() {
         self.file_selector = dropdown(document.getElementById("file-switcher-dropdown-button"), {
-            keyboard: false
+            keyboard: false,
         });
     }
 

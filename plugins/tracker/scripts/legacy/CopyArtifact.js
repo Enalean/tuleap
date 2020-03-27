@@ -19,9 +19,9 @@
 
 /* global jQuery:readonly */
 
-(function($) {
-    $(document).ready(function() {
-        $("#copy_children_button").on("click", function(e) {
+(function ($) {
+    $(document).ready(function () {
+        $("#copy_children_button").on("click", function (e) {
             e.preventDefault();
             activateCopyChildrenOption();
             submitForm();
@@ -31,9 +31,7 @@
             }
 
             function submitForm() {
-                $("#copy_children")
-                    .closest("form")
-                    .submit();
+                $("#copy_children").closest("form").submit();
             }
         });
     });

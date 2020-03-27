@@ -27,7 +27,7 @@ describe("AddToBacklogPostAction", () => {
     it("spawns the component", () => {
         const wrapper = shallowMount(AddToBacklogPostAction, {
             propsData: { post_action: { type: "add_to_backlog" } },
-            localVue
+            localVue,
         });
         expect(wrapper.contains(PostAction)).toBe(true);
         expect(wrapper.contains("[data-test=add-to-backlog-post-action-description]")).toBe(true);

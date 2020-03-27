@@ -28,7 +28,7 @@ function filterInlineTable(filter) {
     filter.addEventListener("input", filterTable);
 
     return {
-        filterTable: filterTable
+        filterTable: filterTable,
     };
 
     function handleEscape(event) {

@@ -31,8 +31,8 @@ describe("column-getters", () => {
             trackers: [
                 { id: 11, can_update_mapped_field: true },
                 { id: 12, can_update_mapped_field: true },
-                { id: 13, can_update_mapped_field: false }
-            ]
+                { id: 13, can_update_mapped_field: false },
+            ],
         } as RootState;
     });
 
@@ -42,18 +42,18 @@ describe("column-getters", () => {
                 mappings: [
                     {
                         tracker_id: 11,
-                        accepts: [{ id: 1 }, { id: 2 }]
+                        accepts: [{ id: 1 }, { id: 2 }],
                     },
                     {
                         tracker_id: 12,
-                        accepts: [{ id: 3 }, { id: 4 }]
-                    }
-                ]
+                        accepts: [{ id: 3 }, { id: 4 }],
+                    },
+                ],
             } as ColumnDefinition;
 
             expect(getters.accepted_trackers_ids(column_state, [], root_state)(column)).toEqual([
                 11,
-                12
+                12,
             ]);
         });
 
@@ -62,13 +62,13 @@ describe("column-getters", () => {
                 mappings: [
                     {
                         tracker_id: 11,
-                        accepts: [] as ListValue[]
+                        accepts: [] as ListValue[],
                     },
                     {
                         tracker_id: 12,
-                        accepts: [] as ListValue[]
-                    }
-                ]
+                        accepts: [] as ListValue[],
+                    },
+                ],
             } as ColumnDefinition;
 
             expect(getters.accepted_trackers_ids(column_state, [], root_state)(column)).toEqual([]);
@@ -79,9 +79,9 @@ describe("column-getters", () => {
                 mappings: [
                     {
                         tracker_id: 13,
-                        accepts: [{ id: 1 }] as ListValue[]
-                    }
-                ]
+                        accepts: [{ id: 1 }] as ListValue[],
+                    },
+                ],
             } as ColumnDefinition;
 
             expect(getters.accepted_trackers_ids(column_state, [], root_state)(column)).toEqual([]);
@@ -89,7 +89,7 @@ describe("column-getters", () => {
 
         it("will return an empty array if the column has no mapping", () => {
             const column = {
-                mappings: [] as Mapping[]
+                mappings: [] as Mapping[],
             } as ColumnDefinition;
 
             expect(getters.accepted_trackers_ids(column_state, [], root_state)(column)).toEqual([]);

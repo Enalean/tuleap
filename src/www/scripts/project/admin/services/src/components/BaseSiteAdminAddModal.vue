@@ -64,13 +64,13 @@ export default {
         SidebarPreviewer,
         InCreationCustomService,
         ServiceIsActive,
-        ServiceShortname
+        ServiceShortname,
     },
     mixins: [service_modal_mixin, add_modal_mixin],
     computed: {
         is_default_template() {
             return this.project_id === ADMIN_PROJECT_ID;
-        }
-    }
+        },
+    },
 };
 </script>

@@ -37,13 +37,13 @@ import EventBus from "../../../helpers/event-bus.js";
 export default {
     name: "CutItem",
     props: {
-        item: Object
+        item: Object,
     },
     computed: {
         ...mapState("clipboard", ["pasting_in_progress"]),
         can_cut_item() {
             return this.item.user_can_write && this.item.parent_id !== 0;
-        }
+        },
     },
     methods: {
         cutItem() {
@@ -51,7 +51,7 @@ export default {
                 EventBus.$emit("hide-action-menu");
             }
             this.$store.commit("clipboard/cutItem", this.item);
-        }
-    }
+        },
+    },
 };
 </script>

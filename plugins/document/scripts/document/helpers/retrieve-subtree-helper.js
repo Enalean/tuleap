@@ -20,11 +20,11 @@
 import { TYPE_FOLDER } from "../constants.js";
 
 export function getFolderSubtree(folder_content, subtree_root_folder_id) {
-    const children = folder_content.filter(item => item.parent_id === subtree_root_folder_id);
+    const children = folder_content.filter((item) => item.parent_id === subtree_root_folder_id);
 
     const undirect_children = [];
 
-    children.forEach(child => {
+    children.forEach((child) => {
         if (child.type === TYPE_FOLDER) {
             undirect_children.push(...getFolderSubtree(folder_content, child.id));
         }

@@ -12,7 +12,7 @@ describe("PullRequestSummaryController -", () => {
 
         angular.mock.module(tuleap_pullrequest_module);
 
-        angular.mock.inject(function(
+        angular.mock.inject(function (
             _$controller_,
             _$q_,
             _$rootScope_,
@@ -27,7 +27,7 @@ describe("PullRequestSummaryController -", () => {
         });
 
         $state = {
-            go: () => {}
+            go: () => {},
         };
         jest.spyOn(UserRestService, "getUser").mockReturnValue($q.when());
 
@@ -35,12 +35,12 @@ describe("PullRequestSummaryController -", () => {
             pullrequest_summary_controller,
             {
                 $state,
-                PullRequestService
+                PullRequestService,
             },
             {
                 pull_request: {
-                    user_id: 134
-                }
+                    user_id: 134,
+                },
             }
         );
     });
@@ -50,12 +50,12 @@ describe("PullRequestSummaryController -", () => {
             const user_id = 112;
             const user = {
                 id: 112,
-                display_name: "Oliver Haglund"
+                display_name: "Oliver Haglund",
             };
 
             UserRestService.getUser.mockReturnValue($q.when(user));
             PullRequestSummaryController.pull_request = {
-                user_id: user_id
+                user_id: user_id,
             };
 
             PullRequestSummaryController.$onInit();

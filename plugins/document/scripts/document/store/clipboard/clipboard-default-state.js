@@ -23,6 +23,6 @@ export default () => {
         item_title: null,
         item_type: null,
         operation_type: null,
-        pasting_in_progress: false
+        pasting_in_progress: false,
     };
 };

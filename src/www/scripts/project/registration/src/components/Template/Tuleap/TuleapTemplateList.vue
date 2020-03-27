@@ -43,7 +43,7 @@ import { State } from "vuex-class";
 import { TemplateData } from "../../../type";
 
 @Component({
-    components: { TemplateCard }
+    components: { TemplateCard },
 })
 export default class TuleapTemplateList extends Vue {
     @State

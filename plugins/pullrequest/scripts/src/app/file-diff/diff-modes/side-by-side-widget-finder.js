@@ -23,7 +23,7 @@ function getCommentPlaceholderWidget(handle) {
     if (!handle.widgets) {
         return null;
     }
-    return handle.widgets.find(widget => {
+    return handle.widgets.find((widget) => {
         return widget.node.classList.contains("pull-request-file-diff-comment-placeholder-block");
     });
 }

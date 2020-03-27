@@ -19,6 +19,6 @@
 
 import loadHeartbeat from "./project-heartbeat.js";
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     loadHeartbeat();
 });

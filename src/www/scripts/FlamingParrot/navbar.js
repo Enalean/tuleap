@@ -28,21 +28,21 @@ function initCustomScrollbar() {
         .jScrollPane({
             autoReinitialise: true,
             hideFocus: true,
-            verticalGutter: 0
+            verticalGutter: 0,
         })
-        .bind("mousewheel", function(e) {
+        .bind("mousewheel", function (e) {
             e.preventDefault();
         });
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
     var input_filter = document.getElementById("filter-projects");
     var list_element_selector = ".projects-nav .dropdown-menu li.project";
     var filter = new tuleap.core.listFilter();
 
     filter.init(input_filter, list_element_selector);
 
-    $(".projects-nav").click(function() {
+    $(".projects-nav").click(function () {
         if (!$(this).hasClass("open")) {
             input_filter.focus();
             initCustomScrollbar();

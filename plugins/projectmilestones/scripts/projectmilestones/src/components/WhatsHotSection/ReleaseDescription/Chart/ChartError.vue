@@ -32,8 +32,8 @@
         <div
             v-if="
                 !props.has_error_duration &&
-                    !props.has_error_start_date &&
-                    props.is_under_calculation
+                !props.has_error_start_date &&
+                props.is_under_calculation
             "
             class="tlp-alert-warning"
             data-test="error-calculation"

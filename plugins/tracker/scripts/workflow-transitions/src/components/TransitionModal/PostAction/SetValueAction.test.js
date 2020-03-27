@@ -42,24 +42,24 @@ describe("SetValueAction", () => {
 
     beforeEach(() => {
         const current_tracker = {
-            fields: [date_field, int_field, float_field]
+            fields: [date_field, int_field, float_field],
         };
 
         const store_options = {
             state: {
                 transitionModal: {
                     current_transition: create("transition"),
-                    is_modal_save_running: false
+                    is_modal_save_running: false,
                 },
-                current_tracker: current_tracker
+                current_tracker: current_tracker,
             },
             getters: {
                 "transitionModal/set_value_action_fields": [date_field, int_field, float_field],
                 "transitionModal/post_actions": [],
                 current_workflow_field: create("field", { field_id: 455, type: "sb" }),
                 is_workflow_advanced: false,
-                "transitionModal/is_agile_dashboard_used": false
-            }
+                "transitionModal/is_agile_dashboard_used": false,
+            },
         };
 
         store = createStoreMock(store_options);
@@ -67,7 +67,7 @@ describe("SetValueAction", () => {
         wrapper = mount(SetValueAction, {
             mocks: { $store: store },
             propsData: { post_action: create("post_action", "presented") },
-            localVue
+            localVue,
         });
     });
 
@@ -83,12 +83,12 @@ describe("SetValueAction", () => {
         beforeEach(() => {
             const used_date_field = {
                 ...date_field,
-                disabled: true
+                disabled: true,
             };
             store.getters["transitionModal/set_value_action_fields"] = [
                 used_date_field,
                 int_field,
-                float_field
+                float_field,
             ];
         });
 
@@ -111,7 +111,7 @@ describe("SetValueAction", () => {
             type: "set_field_value",
             field_type: "date",
             field_id: date_field_id,
-            value: "current"
+            value: "current",
         });
         beforeEach(() => wrapper.setProps({ post_action }));
 
@@ -129,7 +129,7 @@ describe("SetValueAction", () => {
             type: "set_field_value",
             field_type: "int",
             field_id: int_field_id,
-            value: 200
+            value: 200,
         });
         beforeEach(() => wrapper.setProps({ post_action }));
 
@@ -144,7 +144,7 @@ describe("SetValueAction", () => {
             type: "set_field_value",
             field_type: "float",
             field_id: float_field_id,
-            value: 12.34
+            value: 12.34,
         });
         beforeEach(() => wrapper.setProps({ post_action }));
 

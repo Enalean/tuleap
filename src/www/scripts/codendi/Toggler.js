@@ -20,16 +20,16 @@
 
 /* global jQuery:readonly codendi:readonly */
 
-(function($, codendi) {
+(function ($, codendi) {
     codendi.Toggler = {
-        init: function(element, force_display, force_ajax) {
+        init: function (element, force_display, force_ajax) {
             $(element)
                 .find(".toggler, .toggler-hide, .toggler-noajax, .toggler-hide-noajax")
-                .each(function() {
+                .each(function () {
                     codendi.Toggler.load($(this), force_display, force_ajax);
                 });
         },
-        load: function(toggler, force_display, force_ajax) {
+        load: function (toggler, force_display, force_ajax) {
             if (force_display) {
                 var was_noajax =
                     toggler.hasClass("toggler-hide-noajax") || toggler.hasClass("toggler-noajax");
@@ -80,7 +80,7 @@
                 toggler.hasClass("toggler-hide") || toggler.hasClass("toggler-hide-noajax")
             );
 
-            toggler.on("click", function(evt) {
+            toggler.on("click", function (evt) {
                 var is_collapsing =
                     toggler.hasClass("toggler") || toggler.hasClass("toggler-noajax");
 
@@ -97,7 +97,7 @@
                     //save the state with ajax only if the toggler has an id
                     if (toggler.attr("id")) {
                         $.get("/toggler.php", {
-                            id: toggler.attr("id")
+                            id: toggler.attr("id"),
                         });
                     }
                 }
@@ -112,17 +112,17 @@
             }
         },
         before_listeners: [],
-        addBeforeListener: function(callback) {
+        addBeforeListener: function (callback) {
             codendi.Toggler.before_listeners.push(callback);
         },
-        before: function(evt, toggler, is_collapsing) {
-            codendi.Toggler.before_listeners.forEach(function(callback) {
+        before: function (evt, toggler, is_collapsing) {
+            codendi.Toggler.before_listeners.forEach(function (callback) {
                 callback(evt, toggler, is_collapsing);
             });
-        }
+        },
     };
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         codendi.Toggler.init(document.body);
     });
 })(jQuery, codendi);

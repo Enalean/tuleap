@@ -18,11 +18,11 @@
  */
 import jQuery from "jquery";
 
-(function($) {
-    $().ready(function() {
+(function ($) {
+    $().ready(function () {
         function get_selected_ids(selected_elements) {
             var selected_ids = [];
-            selected_elements.each(function(i, element) {
+            selected_elements.each(function (i, element) {
                 selected_ids.push(element.value);
             });
             return selected_ids;
@@ -30,34 +30,28 @@ import jQuery from "jquery";
 
         function add_selected_element_to_field(container, selected_elements) {
             var selected_ids = get_selected_ids(selected_elements);
-            container.find(".forge_mw_hidden_selected_groups").val(function(i, val) {
+            container.find(".forge_mw_hidden_selected_groups").val(function (i, val) {
                 return selected_ids.concat(val.split(",")).join(",");
             });
         }
 
         function remove_selected_element_to_field(container, selected_elements) {
             var selected_ids = get_selected_ids(selected_elements);
-            container.find(".forge_mw_hidden_selected_groups").val(function(i, val) {
-                return $(val.split(","))
-                    .not(selected_ids)
-                    .get();
+            container.find(".forge_mw_hidden_selected_groups").val(function (i, val) {
+                return $(val.split(",")).not(selected_ids).get();
             });
         }
 
-        $(".forge_mw_add_ugroup").click(function() {
-            var container = $(this)
-                .parent(".forge_mw_btn")
-                .parent();
+        $(".forge_mw_add_ugroup").click(function () {
+            var container = $(this).parent(".forge_mw_btn").parent();
             var selected_elements = container.find(".forge_mw_available_groups option:selected");
             add_selected_element_to_field(container, selected_elements);
             return !selected_elements
                 .remove()
                 .appendTo(container.find(".forge_mw_selected_groups"));
         });
-        $(".forge_mw_remove_ugroup").click(function() {
-            var container = $(this)
-                .parent(".forge_mw_btn")
-                .parent();
+        $(".forge_mw_remove_ugroup").click(function () {
+            var container = $(this).parent(".forge_mw_btn").parent();
             var selected_elements = container.find(".forge_mw_selected_groups option:selected");
             remove_selected_element_to_field(container, selected_elements);
             return !selected_elements

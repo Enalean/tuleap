@@ -46,7 +46,7 @@ export function pie(id, graph) {
             label: graph.legend[i],
             value,
             percentage: ((value / total_values) * 100).toFixed(0),
-            color: c
+            color: c,
         };
 
         data.push(line);
@@ -112,16 +112,16 @@ export function pie(id, graph) {
             .on("mouseout", onOutValue)
             .transition()
             .duration(750)
-            .attrTween("d", b => {
+            .attrTween("d", (b) => {
                 const i = d3.interpolate(
                     {
                         startAngle: 0,
-                        endAngle: 0
+                        endAngle: 0,
                     },
                     b
                 );
 
-                return t => arc(i(t));
+                return (t) => arc(i(t));
             });
     }
 
@@ -145,7 +145,7 @@ export function pie(id, graph) {
 
         slice
             .append("text")
-            .attr("transform", d => "translate(" + arc.centroid(d) + ")")
+            .attr("transform", (d) => "translate(" + arc.centroid(d) + ")")
             .attr("transform", ({ startAngle, endAngle }, i) => {
                 let dist;
                 if (i % 2 === 0) {
@@ -170,7 +170,7 @@ export function pie(id, graph) {
                 }
                 return "start";
             })
-            .text(d => d.data.percentage + "%");
+            .text((d) => d.data.percentage + "%");
     }
 
     addLegendBox(svg, graph, margin, width / 3, data, onOverValue, onOutValue, getLegendClass);

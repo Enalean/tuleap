@@ -37,14 +37,14 @@ describe("ShowErrorDetails", () => {
             state = {
                 error: {
                     has_folder_loading_error: true,
-                    folder_loading_error
-                }
+                    folder_loading_error,
+                },
             };
             const store_options = {
                 state,
                 getters: {
-                    "error/has_any_loading_error": true
-                }
+                    "error/has_any_loading_error": true,
+                },
             };
 
             store = createStoreMock(store_options);
@@ -53,7 +53,7 @@ describe("ShowErrorDetails", () => {
                 return shallowMount(ShowErrorDetails, {
                     localVue,
                     propsData: { ...props },
-                    mocks: { $store: store }
+                    mocks: { $store: store },
                 });
             };
         });
@@ -96,14 +96,14 @@ describe("ShowErrorDetails", () => {
             state = {
                 error: {
                     has_document_loading_error: true,
-                    document_loading_error: document_loading_error
-                }
+                    document_loading_error: document_loading_error,
+                },
             };
             const store_options = {
                 state,
                 getters: {
-                    "error/has_any_loading_error": true
-                }
+                    "error/has_any_loading_error": true,
+                },
             };
 
             const store = createStoreMock(store_options);
@@ -112,7 +112,7 @@ describe("ShowErrorDetails", () => {
                 return shallowMount(ShowErrorDetails, {
                     localVue,
                     propsData: { ...props },
-                    mocks: { $store: store }
+                    mocks: { $store: store },
                 });
             };
         });
@@ -136,14 +136,14 @@ describe("ShowErrorDetails", () => {
             state = {
                 error: {
                     has_document_lock_error: true,
-                    document_lock_error
-                }
+                    document_lock_error,
+                },
             };
             const store_options = {
                 state,
                 getters: {
-                    "error/has_any_loading_error": true
-                }
+                    "error/has_any_loading_error": true,
+                },
             };
 
             store = createStoreMock(store_options);
@@ -152,7 +152,7 @@ describe("ShowErrorDetails", () => {
                 return shallowMount(ShowErrorDetails, {
                     localVue,
                     propsData: { ...props },
-                    mocks: { $store: store }
+                    mocks: { $store: store },
                 });
             };
         });

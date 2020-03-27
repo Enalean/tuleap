@@ -34,15 +34,15 @@ function getWrapper(swimlane_state: SwimlaneState = {} as SwimlaneState): Wrappe
     return shallowMount(AddCard, {
         propsData: {
             column: { id: 42 } as ColumnDefinition,
-            swimlane: { card: { id: 69 } } as Swimlane
+            swimlane: { card: { id: 69 } } as Swimlane,
         },
         mocks: {
             $store: createStoreMock({
                 state: {
-                    swimlane: swimlane_state
-                } as RootState
-            })
-        }
+                    swimlane: swimlane_state,
+                } as RootState,
+            }),
+        },
     });
 }
 
@@ -91,7 +91,7 @@ describe("AddCard", () => {
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("swimlane/addCard", {
             swimlane: wrapper.vm.$props.swimlane,
             column: wrapper.vm.$props.column,
-            label: "Lorem ipsum"
+            label: "Lorem ipsum",
         } as NewCardPayload);
 
         jest.spyOn(window, "scrollTo").mockImplementation();
@@ -118,7 +118,7 @@ describe("AddCard", () => {
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("swimlane/addCard", {
             swimlane: wrapper.vm.$props.swimlane,
             column: wrapper.vm.$props.column,
-            label: "Lorem ipsum"
+            label: "Lorem ipsum",
         } as NewCardPayload);
 
         jest.spyOn(window, "scrollTo").mockImplementation();
@@ -132,7 +132,7 @@ describe("AddCard", () => {
 
     it("Blocks the creation of a new card if one is ongoing", () => {
         const wrapper = getWrapper({
-            is_card_creation_blocked_due_to_ongoing_creation: true
+            is_card_creation_blocked_due_to_ongoing_creation: true,
         } as SwimlaneState);
         wrapper.find(AddButton).vm.$emit("click");
 

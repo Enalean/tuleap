@@ -62,11 +62,11 @@ export default {
     components: { TrackerListReadingMode },
     props: {
         backendCrossTrackerReport: Object,
-        readingCrossTrackerReport: Object
+        readingCrossTrackerReport: Object,
     },
     data() {
         return {
-            is_loading: false
+            is_loading: false,
         };
     },
     computed: {
@@ -76,7 +76,7 @@ export default {
         },
         is_save_disabled() {
             return this.is_loading || this.$store.getters.has_error_message;
-        }
+        },
     },
     methods: {
         switchToWritingMode() {
@@ -119,7 +119,7 @@ export default {
         cancelReport() {
             this.readingCrossTrackerReport.duplicateFromReport(this.backendCrossTrackerReport);
             this.$store.commit("discardUnsavedReport");
-        }
-    }
+        },
+    },
 };
 </script>

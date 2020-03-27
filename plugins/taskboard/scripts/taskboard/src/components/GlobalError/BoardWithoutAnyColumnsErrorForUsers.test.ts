@@ -31,7 +31,7 @@ describe("BoardWithoutAnyColumnsError", () => {
 
     it("is displays misconfiguration error for regular user", () => {
         const wrapper = shallowMount(BoardWithoutAnyColumnsErrorForUsers, {
-            localVue: local_vue
+            localVue: local_vue,
         });
         expect(wrapper.element).toMatchSnapshot();
     });

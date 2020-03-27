@@ -43,7 +43,7 @@ import { Card } from "../../../../../type";
 import EditCardButtons from "./EditMode/EditCardButtons.vue";
 
 @Component({
-    components: { EditCardButtons, BaseCard }
+    components: { EditCardButtons, BaseCard },
 })
 export default class ChildCard extends Vue {
     @State

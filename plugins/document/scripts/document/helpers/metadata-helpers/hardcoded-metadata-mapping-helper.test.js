@@ -20,7 +20,7 @@
 import {
     getStatusFromMapping,
     getStatusMetadata,
-    getStatusIdFromName
+    getStatusIdFromName,
 } from "./hardcoded-metadata-mapping-helper.js";
 
 describe("getStatusMetadata", () => {

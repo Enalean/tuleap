@@ -19,11 +19,11 @@
 
 /* global codendi:readonly jQuery:readonly */
 
-(function($, window) {
-    $(function() {
+(function ($, window) {
+    $(function () {
         $(
             ".artifact-incoming-mail-button, .tracker_artifact_followup_comment_controls_raw_email"
-        ).click(function(event) {
+        ).click(function (event) {
             event.stopPropagation();
             event.preventDefault();
 
@@ -32,22 +32,22 @@
             $(new_window.document.getElementsByTagName("pre")).text($(this).attr("data-raw-email"));
         });
 
-        $(".tracker-artifact-notification").click(function(event) {
+        $(".tracker-artifact-notification").click(function (event) {
             event.preventDefault();
 
             var button = $(this);
             var artifact_id = $("#artifact_informations").attr("data-artifact-id");
 
             $.get(codendi.tracker.base_url + "?aid=" + artifact_id + "&func=manage-subscription", {
-                artifact: artifact_id
+                artifact: artifact_id,
             })
-                .done(function(data) {
+                .done(function (data) {
                     codendi.feedback.clear();
                     codendi.feedback.log("info", data.message);
 
                     updateButtonLabel(button, data.notification);
                 })
-                .fail(function() {
+                .fail(function () {
                     codendi.feedback.clear();
                     codendi.feedback.log(
                         "error",

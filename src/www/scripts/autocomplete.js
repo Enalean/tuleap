@@ -6,13 +6,13 @@ var AutoCompleter = Class.create({
     /**
      * Constructor
      */
-    initialize: function(elementId, imgPath, multiple, options) {
+    initialize: function (elementId, imgPath, multiple, options) {
         this.elementId = elementId;
         this.options = Object.extend(
             {
                 autoLoad: true,
                 imgPath: imgPath,
-                multiple: multiple
+                multiple: multiple,
             },
             options || {}
         );
@@ -29,7 +29,7 @@ var AutoCompleter = Class.create({
      * Attach a listen to the given element (input text) to perfom
      *   autocompletion.
      */
-    registerOnLoad: function() {
+    registerOnLoad: function () {
         this.element = $(this.elementId);
 
         if (this.element === null) {
@@ -37,7 +37,7 @@ var AutoCompleter = Class.create({
         }
 
         if (this.options["allowNull"]) {
-            this.element.observe("click", function() {
+            this.element.observe("click", function () {
                 this.stopObserving("blur");
             });
         }
@@ -51,7 +51,7 @@ var AutoCompleter = Class.create({
             // Spinner
             var img = Builder.node("img", {
                 src: this.options.imgPath + "/ic/spinner.gif",
-                alt: "Working..."
+                alt: "Working...",
             });
             var span_img = Builder.node("span", { id: "search_indicator" });
             span_img.appendChild(img);
@@ -65,7 +65,7 @@ var AutoCompleter = Class.create({
             // List div
             var update = Builder.node("div", {
                 id: "search_choices",
-                class: "searchAsYouType"
+                class: "searchAsYouType",
             });
             Element.hide(update);
 
@@ -81,16 +81,16 @@ var AutoCompleter = Class.create({
                 minChars: "3",
                 paramName: "name",
                 indicator: "search_indicator",
-                afterUpdateElement: this.afterUpdateElement
+                afterUpdateElement: this.afterUpdateElement,
             });
         }
     },
     /**
      * Set function executed after autocompletion update
      */
-    setAfterUpdateElement: function(callback) {
+    setAfterUpdateElement: function (callback) {
         this.afterUpdateElement = callback;
-    }
+    },
 });
 
 /**
@@ -102,13 +102,13 @@ window.UserAutoCompleter = Class.create(AutoCompleter, {
     /**
      * Constructor
      */
-    initialize: function($super, elementId, imgPath, multiple, options) {
+    initialize: function ($super, elementId, imgPath, multiple, options) {
         $super(elementId, imgPath, multiple, options);
         this.url = "/user/autocomplete.php";
         if (this.options.codendiUsersOnly == 1) {
             this.url += "?codendi_user_only=1";
         }
-    }
+    },
 });
 
 /**
@@ -120,11 +120,11 @@ window.ProjectAutoCompleter = Class.create(AutoCompleter, {
     /**
      * Constructor
      */
-    initialize: function($super, elementId, imgPath, multiple, options) {
+    initialize: function ($super, elementId, imgPath, multiple, options) {
         $super(elementId, imgPath, multiple, options);
         this.url = "/project/autocomplete.php";
         if (this.options.private == 1) {
             this.url += "?private=1";
         }
-    }
+    },
 });

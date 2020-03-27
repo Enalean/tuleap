@@ -46,7 +46,7 @@
 export default {
     name: "CustomMetadataString",
     props: {
-        currentlyUpdatedItemMetadata: Object
-    }
+        currentlyUpdatedItemMetadata: Object,
+    },
 };
 </script>

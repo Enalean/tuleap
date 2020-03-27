@@ -18,7 +18,7 @@
  */
 
 /* global jQuery:readonly */
-!(function($) {
+!(function ($) {
     $(document).ready(createTooltipForProjectPrivacy);
 
     function createTooltipForProjectPrivacy() {
@@ -26,7 +26,7 @@
             html: true,
             container: "body",
             trigger: "hover",
-            delay: { show: 1000, hide: 300 }
+            delay: { show: 1000, hide: 300 },
         });
     }
 })(jQuery);

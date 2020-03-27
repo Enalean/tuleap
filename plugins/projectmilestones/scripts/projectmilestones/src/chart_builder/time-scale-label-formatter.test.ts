@@ -129,7 +129,7 @@ describe("BurndownTimeScaleLabelFormatter -", () => {
         node.getBoundingClientRect = (): DOMRect => {
             return {
                 left: left_padding,
-                right: right_padding
+                right: right_padding,
             } as DOMRect;
         };
 

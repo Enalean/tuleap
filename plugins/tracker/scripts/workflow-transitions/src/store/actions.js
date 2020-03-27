@@ -25,7 +25,7 @@ import {
     updateTransitionRulesEnforcement as restUpdateTransitionRulesEnforcement,
     deleteTransition as restDeleteTransition,
     deactivateLegacyTransitions as restDeactivateLegacyTransitions,
-    changeWorkflowMode as restChangeWorkflowMode
+    changeWorkflowMode as restChangeWorkflowMode,
 } from "../api/rest-querier.js";
 import { getErrorMessage } from "./exception-handler.js";
 
@@ -113,7 +113,7 @@ export async function createTransition(context, transition) {
         );
         const new_transition = {
             id: response.id,
-            ...transition
+            ...transition,
         };
         context.commit("addTransition", new_transition);
     } catch (exception) {

@@ -12,22 +12,22 @@ function ReleaseRestService($http, $q, RestErrorService) {
         getMilestone,
 
         linked_artifacts_pagination_limit: 50,
-        linked_artifacts_pagination_offset: 0
+        linked_artifacts_pagination_offset: 0,
     });
 
     function getReleaseLinkNatures(artifact_id) {
         return $http
             .get("/api/v1/artifacts/" + artifact_id + "/links", {
                 cache: true,
-                timeout: 10000
+                timeout: 10000,
             })
-            .then(function(response) {
+            .then(function (response) {
                 return response.data.natures;
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 RestErrorService.setError({
                     code: error.status,
-                    message: error.data
+                    message: error.data,
                 });
                 return $q.reject(error);
             });
@@ -38,28 +38,28 @@ function ReleaseRestService($http, $q, RestErrorService) {
             .get("/api/v1/" + uri, {
                 params: {
                     limit: limit,
-                    offset: offset
+                    offset: offset,
                 },
                 cache: true,
-                timeout: 20000
+                timeout: 20000,
             })
-            .then(function(response) {
+            .then(function (response) {
                 return {
                     results: response.data.collection,
-                    total: Number.parseInt(response.headers("X-PAGINATION-SIZE"), 10)
+                    total: Number.parseInt(response.headers("X-PAGINATION-SIZE"), 10),
                 };
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 RestErrorService.setError({
                     code: error.status,
-                    message: error.data
+                    message: error.data,
                 });
                 return $q.reject(error);
             });
     }
 
     function recursiveGetLinkedArtifacts(uri, limit, offset, progress_callback) {
-        return self.getLinkedArtifacts(uri, limit, offset).then(function(response) {
+        return self.getLinkedArtifacts(uri, limit, offset).then(function (response) {
             var results = [].concat(response.results);
 
             progress_callback(results);
@@ -69,7 +69,7 @@ function ReleaseRestService($http, $q, RestErrorService) {
             }
 
             return recursiveGetLinkedArtifacts(uri, limit, offset + limit, progress_callback).then(
-                function(second_response) {
+                function (second_response) {
                     return results.concat(second_response);
                 }
             );
@@ -84,7 +84,7 @@ function ReleaseRestService($http, $q, RestErrorService) {
     }
 
     function getMilestone(id) {
-        return $http.get("/api/v1/milestones/" + id).then(function(response) {
+        return $http.get("/api/v1/milestones/" + id).then(function (response) {
             return response.data;
         });
     }

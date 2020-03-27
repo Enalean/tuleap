@@ -34,7 +34,7 @@ describe("QuickLookDocumentMetadata", () => {
             return shallowMount(QuickLookDocumentMetadata, {
                 localVue,
                 propsData: { ...props },
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
 
@@ -48,13 +48,13 @@ describe("QuickLookDocumentMetadata", () => {
             title: "file",
             type: TYPE_FILE,
             owner: {
-                id: 102
+                id: 102,
             },
             metadata: [
                 { title: "custom", short_name: "custom metadata" },
-                { title: "other", short_name: "other metadata" }
+                { title: "other", short_name: "other metadata" },
             ],
-            creation_date: "2019-06-25T16:56:22+04:00"
+            creation_date: "2019-06-25T16:56:22+04:00",
         };
 
         const wrapper = metadata_factory({ item });
@@ -70,10 +70,10 @@ describe("QuickLookDocumentMetadata", () => {
             title: "file",
             type: TYPE_FILE,
             owner: {
-                id: 102
+                id: 102,
             },
             metadata: [{ title: "title document", short_name: "title" }],
-            creation_date: "2019-06-25T16:56:22+04:00"
+            creation_date: "2019-06-25T16:56:22+04:00",
         };
 
         const wrapper = metadata_factory({ item });
@@ -89,10 +89,10 @@ describe("QuickLookDocumentMetadata", () => {
             title: "folder",
             type: TYPE_FOLDER,
             owner: {
-                id: 102
+                id: 102,
             },
             approval_table: null,
-            metadata: [{ title: "title document", short_name: "title" }]
+            metadata: [{ title: "title document", short_name: "title" }],
         };
 
         const wrapper = metadata_factory({ item });
@@ -107,13 +107,13 @@ describe("QuickLookDocumentMetadata", () => {
             title: "file",
             type: TYPE_FILE,
             owner: {
-                id: 102
+                id: 102,
             },
             file_properties: {
-                file_size: 123456
+                file_size: 123456,
             },
             creation_date: "2019-06-25T16:56:22+04:00",
-            metadata: []
+            metadata: [],
         };
 
         const wrapper = metadata_factory({ item });
@@ -127,13 +127,13 @@ describe("QuickLookDocumentMetadata", () => {
             title: "file",
             type: TYPE_FILE,
             owner: {
-                id: 102
+                id: 102,
             },
             approval_table: {
-                approval_state: "Approved"
+                approval_state: "Approved",
             },
             creation_date: "2019-06-25T16:56:22+04:00",
-            metadata: []
+            metadata: [],
         };
 
         const wrapper = metadata_factory({ item });
@@ -149,11 +149,11 @@ describe("QuickLookDocumentMetadata", () => {
             title: "file",
             type: TYPE_FILE,
             owner: {
-                id: 102
+                id: 102,
             },
             approval_table: null,
             creation_date: "2019-06-25T16:56:22+04:00",
-            metadata: []
+            metadata: [],
         };
 
         const wrapper = metadata_factory({ item });

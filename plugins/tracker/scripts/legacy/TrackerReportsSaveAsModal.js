@@ -15,10 +15,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-!(function($) {
-    document.observe("dom:loaded", function() {
+!(function ($) {
+    document.observe("dom:loaded", function () {
         if ($("#tracker_report_updater_saveas-modal") && $("#tracker_report_form")) {
-            $("#tracker_report_updater_saveas-modal").on("hide", function() {
+            $("#tracker_report_updater_saveas-modal").on("hide", function () {
                 $("#report_copy_name_input").val("");
             });
         }

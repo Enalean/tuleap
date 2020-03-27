@@ -6,7 +6,7 @@ import dragDropInit from "./dashboard-drag-drop.js";
 import loadTogglers from "./dashboard-load-togglers.js";
 import { loadTooltips } from "../codendi/Tooltip.js";
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     modalInit();
     dropdownInit();
     dragDropInit();

@@ -8,18 +8,18 @@ function UserRestService($http, $q, ErrorModalService) {
     Object.assign(self, {
         getUser,
         getPreference,
-        setPreference
+        setPreference,
     });
 
     function getUser(user_id) {
         return $http
             .get("/api/v1/users/" + user_id, {
-                cache: true
+                cache: true,
             })
-            .then(function(response) {
+            .then(function (response) {
                 return response.data;
             })
-            .catch(function(response) {
+            .catch(function (response) {
                 ErrorModalService.showError(response);
                 return $q.reject(response);
             });
@@ -28,8 +28,8 @@ function UserRestService($http, $q, ErrorModalService) {
     function getPreference(user_id, key) {
         return $http
             .get(`/api/v1/users/${user_id}/preferences`, { params: { key } })
-            .then(response => response.data)
-            .catch(response => {
+            .then((response) => response.data)
+            .catch((response) => {
                 ErrorModalService.showError(response);
                 return $q.reject(response);
             });
@@ -39,7 +39,7 @@ function UserRestService($http, $q, ErrorModalService) {
         return $http
             .patch(`/api/v1/users/${user_id}/preferences`, {
                 key,
-                value
+                value,
             })
             .catch(() => {
                 // Do nothing

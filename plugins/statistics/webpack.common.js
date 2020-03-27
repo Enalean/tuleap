@@ -23,7 +23,7 @@ const webpack_configurator = require("../../tools/utils/scripts/webpack-configur
 let entry_points = {
     "style-fp": "./themes/FlamingParrot/css/style.scss",
     "disk-usage-pie": "./scripts/disk-usage-pie/src/disk-usage-pie-chart.js",
-    admin: "./scripts/admin.js"
+    admin: "./scripts/admin.js",
 };
 
 const colors_burning_parrot = ["orange", "blue", "green", "red", "grey", "purple"];
@@ -41,29 +41,32 @@ module.exports = [
         externals: {
             tlp: "tlp",
             ckeditor: "CKEDITOR",
-            tuleap: "tuleap"
+            tuleap: "tuleap",
         },
         resolve: {
             alias: {
                 "d3-selection": path.resolve(__dirname, "./node_modules/d3-selection"),
                 "d3-shape": path.resolve(__dirname, "./node_modules/d3-shape"),
                 "d3-transition": path.resolve(__dirname, "./node_modules/d3-transition"),
-                "charts-builders": path.resolve(__dirname, "../../src/www/scripts/charts-builders/")
-            }
+                "charts-builders": path.resolve(
+                    __dirname,
+                    "../../src/www/scripts/charts-builders/"
+                ),
+            },
         },
         module: {
             rules: [
                 webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
                 webpack_configurator.rule_po_files,
                 webpack_configurator.rule_scss_loader,
-                webpack_configurator.rule_css_assets
-            ]
+                webpack_configurator.rule_css_assets,
+            ],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
             webpack_configurator.getMomentLocalePlugin(),
-            ...webpack_configurator.getCSSExtractionPlugins()
-        ]
-    }
+            ...webpack_configurator.getCSSExtractionPlugins(),
+        ],
+    },
 ];

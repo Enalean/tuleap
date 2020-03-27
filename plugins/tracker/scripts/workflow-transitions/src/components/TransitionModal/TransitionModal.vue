@@ -84,10 +84,10 @@ export default {
         FilledPreConditionsSection,
         PreConditionsSkeleton,
         ModalErrorFeedback,
-        PostActionsSection
+        PostActionsSection,
     },
     computed: {
-        ...mapState("transitionModal", ["is_modal_save_running", "is_loading_modal"])
+        ...mapState("transitionModal", ["is_modal_save_running", "is_loading_modal"]),
     },
     mounted() {
         const modal = createModal(this.$el);
@@ -95,8 +95,8 @@ export default {
             this.clearModalShown();
         });
         this.$store.watch(
-            state => state.transitionModal.is_modal_shown,
-            new_value => {
+            (state) => state.transitionModal.is_modal_shown,
+            (new_value) => {
                 if (new_value === true) {
                     modal.show();
                 } else {
@@ -109,7 +109,7 @@ export default {
         ...mapMutations("transitionModal", ["clearModalShown"]),
         saveTransition() {
             this.$store.dispatch("transitionModal/saveTransitionRules");
-        }
-    }
+        },
+    },
 };
 </script>

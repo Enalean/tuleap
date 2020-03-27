@@ -36,13 +36,13 @@ describe("TransitionMatrixContent", () => {
 
         wrapper = shallowMount(TransitionMatrixContent, {
             mocks: {
-                $store: store
+                $store: store,
             },
             localVue,
             propsData: {
                 from: create("field_value"),
-                to: create("field_value")
-            }
+                to: create("field_value"),
+            },
         });
     });
 
@@ -74,7 +74,7 @@ describe("TransitionMatrixContent", () => {
         beforeEach(() => {
             wrapper.setProps({
                 from: create("field_value", { id: 1, label: "first value" }),
-                to: create("field_value", { id: 2, label: "second value" })
+                to: create("field_value", { id: 2, label: "second value" }),
             });
         });
 
@@ -102,7 +102,7 @@ describe("TransitionMatrixContent", () => {
 
                 beforeEach(() => {
                     store.dispatch.mockReturnValue(
-                        new Promise(resolve => {
+                        new Promise((resolve) => {
                             resolveCreateTransition = resolve;
                         })
                     );
@@ -115,7 +115,7 @@ describe("TransitionMatrixContent", () => {
                 it("creates transition", () => {
                     expect(store.dispatch).toHaveBeenCalledWith("createTransition", {
                         from_id: 1,
-                        to_id: 2
+                        to_id: 2,
                     });
                 });
 
@@ -136,7 +136,7 @@ describe("TransitionMatrixContent", () => {
             const transition = {
                 from_id: 1,
                 to_id: 2,
-                updated: false
+                updated: false,
             };
 
             beforeEach(() => {

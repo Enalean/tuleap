@@ -31,9 +31,9 @@ async function getWrapper(
         propsData: {
             card: {
                 remaining_effort,
-                color: "lake-placid-blue"
-            } as Card
-        }
+                color: "lake-placid-blue",
+            } as Card,
+        },
     });
 }
 
@@ -66,7 +66,7 @@ describe("ParentCardRemainingEffort", () => {
         const wrapper = await getWrapper({
             value: 666,
             can_update: true,
-            is_in_edit_mode: false
+            is_in_edit_mode: false,
         } as RemainingEffort);
 
         expect(wrapper.attributes("tabindex")).toBe("0");
@@ -79,7 +79,7 @@ describe("ParentCardRemainingEffort", () => {
         const wrapper = await getWrapper({
             value: 666,
             can_update: false,
-            is_in_edit_mode: false
+            is_in_edit_mode: false,
         } as RemainingEffort);
 
         expect(wrapper.attributes("tabindex")).toBe("-1");

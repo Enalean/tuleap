@@ -1,7 +1,7 @@
 /* global $$:readonly $H:readonly $break:readonly */
 // http://jibbering.com/faq/names/
 // http://thinkweb2.com/projects/prototype/domlint-resolving-name-conflicts/
-document.observe("dom:loaded", function() {
+document.observe("dom:loaded", function () {
     //reserved in opera
     var reserved_names = {
         firefox:
@@ -73,14 +73,14 @@ document.observe("dom:loaded", function() {
             "previousSibling,repeatMax,repeatMin,repeatStart,repetitionBlocks," +
             "repetitionIndex,repetitionTemplate,repetitionType,replace,scrollHeight," +
             "scrollLeft,scrollTop,scrollWidth,sourceIndex,style,tagName,target," +
-            "templateElements,text,textContent,title,unselectable"
+            "templateElements,text,textContent,title,unselectable",
     };
-    $$("input").each(function(element) {
+    $$("input").each(function (element) {
         if (element.name) {
             var name = new RegExp("(^|W)" + element.name + "(W|$)");
             var result = $H(reserved_names)
                 .keys()
-                .inject([], function(result, browser) {
+                .inject([], function (result, browser) {
                     if (reserved_names[browser].match(name)) {
                         result.push(browser);
                     }
@@ -88,7 +88,7 @@ document.observe("dom:loaded", function() {
                 });
             if (result.length) {
                 Element.setStyle(element, {
-                    border: "5px dotted red"
+                    border: "5px dotted red",
                 });
                 if (
                     //eslint-disable-next-line no-alert

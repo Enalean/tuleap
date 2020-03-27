@@ -20,9 +20,9 @@
 /* global codendi:readonly */
 var tuleap = tuleap || {};
 
-!(function($) {
+!(function ($) {
     tuleap.search = {
-        init: function() {
+        init: function () {
             var type_of_search = $("input[name=type_of_search]").val();
 
             if (typeof tuleap.search.fulltext !== "undefined") {
@@ -38,29 +38,29 @@ var tuleap = tuleap || {};
             highlightSearchCategory(type_of_search);
         },
 
-        enableSearchMoreResults: function() {
+        enableSearchMoreResults: function () {
             $("#search-more-button").unbind("click");
-            $("#search-more-button").click(function() {
+            $("#search-more-button").click(function () {
                 tuleap.search.offset += parseInt($("input[name=number_of_page_results]").val(), 10);
                 searchFromSidebar(tuleap.search.type_of_search, true);
             });
         },
 
-        didUserClickOnDefaultSearch: function(link) {
+        didUserClickOnDefaultSearch: function (link) {
             return link.parent().attr("data-search-type") == "default";
         },
 
-        isPaneFullText: function() {
+        isPaneFullText: function () {
             return $("#type_of_search").val() == "fulltext";
-        }
+        },
     };
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         tuleap.search.init();
     });
 
     function switchSearchType() {
-        $("[data-search-type]").click(function(e) {
+        $("[data-search-type]").click(function (e) {
             if ($(this).attr("href") == "#") {
                 e.preventDefault();
 
@@ -83,7 +83,7 @@ var tuleap = tuleap || {};
     function highlightSearchCategory(type_of_search) {
         var highlighted_class = "active";
 
-        $(".search-type, .additional-search-tabs > li").each(function() {
+        $(".search-type, .additional-search-tabs > li").each(function () {
             highlightElement($(this));
         });
 
@@ -101,7 +101,7 @@ var tuleap = tuleap || {};
     }
 
     function handleAdditionalSearchTabs() {
-        $(".additional-search-tabs > li > a").click(function(event) {
+        $(".additional-search-tabs > li > a").click(function (event) {
             event.preventDefault();
 
             if (
@@ -124,7 +124,7 @@ var tuleap = tuleap || {};
             $("#search-results").addClass("loading");
         })();
         $.getJSON(getSearchUrl(element, type_of_search, keywords))
-            .done(function(json) {
+            .done(function (json) {
                 if (append_to_results) {
                     $("#search_results_list").append(json.html);
                 } else {
@@ -149,14 +149,14 @@ var tuleap = tuleap || {};
 
                 tuleap.search.enableSearchMoreResults();
             })
-            .fail(function(error) {
+            .fail(function (error) {
                 codendi.feedback.clear();
                 codendi.feedback.log(
                     "error",
                     codendi.locales.search.error + " : " + JSON.parse(error.responseText)
                 );
             })
-            .always(function() {
+            .always(function () {
                 $("#search-results").removeClass("loading");
                 $('.search-bar input[name="type_of_search"]').attr("value", type_of_search);
                 resetAdditionnalInformations(type_of_search, element);
@@ -166,7 +166,7 @@ var tuleap = tuleap || {};
     function decorRedirectedSearch() {
         var icon_html = ' <i class="fa fa-external-link"></i>';
 
-        $("a.search-type, a.sub-facets").each(function() {
+        $("a.search-type, a.sub-facets").each(function () {
             if ($(this).attr("href") != "#") {
                 $(this).html($(this).html() + icon_html);
             }
@@ -225,10 +225,8 @@ var tuleap = tuleap || {};
     }
 
     function toggleFacets() {
-        $(".search-panes").on("click", ".search-type", function() {
-            $(this)
-                .siblings("ul")
-                .toggle();
+        $(".search-panes").on("click", ".search-type", function () {
+            $(this).siblings("ul").toggle();
         });
     }
 })(window.jQuery);

@@ -37,7 +37,7 @@ import { EXTERNAL_POST_ACTION_TYPE } from "../../../constants/workflow-constants
 export default {
     name: "AddToBacklogPostActionOption",
     props: {
-        post_action_type: String
+        post_action_type: String,
     },
     computed: {
         ...mapGetters("transitionModal", ["is_agile_dashboard_used", "post_actions"]),
@@ -49,22 +49,22 @@ export default {
                 return {
                     valid: false,
                     option: this.$gettext("Add to the top backlog (already used)"),
-                    title: this.$gettext("You can only have this post-action once.")
+                    title: this.$gettext("You can only have this post-action once."),
                 };
             }
             return {
                 valid: true,
                 option: this.$gettext("Add to the top backlog"),
-                title: ""
+                title: "",
             };
         },
         add_to_top_backlog_is_already_present() {
             return (
                 this.post_actions.filter(
-                    post_action => post_action.type === EXTERNAL_POST_ACTION_TYPE.ADD_TO_BACKLOG
+                    (post_action) => post_action.type === EXTERNAL_POST_ACTION_TYPE.ADD_TO_BACKLOG
                 ).length > 0
             );
-        }
-    }
+        },
+    },
 };
 </script>

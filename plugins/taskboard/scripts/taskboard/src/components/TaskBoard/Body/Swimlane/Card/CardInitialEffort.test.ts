@@ -28,9 +28,9 @@ describe("CardInitialEffort", () => {
             propsData: {
                 card: {
                     initial_effort: 666,
-                    color: "lake-placid-blue"
-                }
-            }
+                    color: "lake-placid-blue",
+                },
+            },
         });
         expect(wrapper.element).toMatchSnapshot();
     });
@@ -40,9 +40,9 @@ describe("CardInitialEffort", () => {
             propsData: {
                 card: {
                     initial_effort: null,
-                    color: "lake-placid-blue"
-                }
-            }
+                    color: "lake-placid-blue",
+                },
+            },
         });
         expect(wrapper.isEmpty()).toBe(true);
     });

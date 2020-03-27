@@ -39,7 +39,7 @@ import DropContainerCell from "./DropContainerCell.vue";
 const swimlane = namespace("swimlane");
 
 @Component({
-    components: { DropContainerCell, ChildCard, CardSkeleton }
+    components: { DropContainerCell, ChildCard, CardSkeleton },
 })
 export default class ChildrenCell extends Mixins(SkeletonMixin) {
     @Prop({ required: true })

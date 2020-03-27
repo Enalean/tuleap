@@ -28,7 +28,7 @@ import ErrorModal from "./ErrorModal.vue";
 export default {
     components: { ErrorModal },
     props: {
-        reasons: Array
+        reasons: Array,
     },
     computed: {
         lock_owner() {
@@ -41,14 +41,14 @@ export default {
             return this.$gettextInterpolate(translated, {
                 filename: this.reasons[0].filename,
                 lock_owner_url: this.lock_owner.user_url,
-                lock_owner_name: this.lock_owner.display_name
+                lock_owner_name: this.lock_owner.display_name,
             });
-        }
+        },
     },
     methods: {
         bubbleErrorModalHidden() {
             this.$emit("error-modal-hidden");
-        }
-    }
+        },
+    },
 };
 </script>

@@ -39,7 +39,7 @@ describe("PermissionsUpdateModal", () => {
             return shallowMount(PermissionsUpdateModal, {
                 localVue,
                 propsData: { ...props },
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
 
@@ -56,7 +56,7 @@ describe("PermissionsUpdateModal", () => {
                 if (hideFunction !== null) {
                     hideFunction();
                 }
-            }
+            },
         });
     });
 
@@ -69,7 +69,7 @@ describe("PermissionsUpdateModal", () => {
     });
 
     it("When the modal is first opened the project user groups are loaded and the content populated", async () => {
-        store.dispatch.mockImplementation(name => {
+        store.dispatch.mockImplementation((name) => {
             if (name === "loadProjectUserGroupsIfNeeded") {
                 store.state.project_ugroups = [{ id: "102_3", label: "Project members" }];
             }
@@ -81,8 +81,8 @@ describe("PermissionsUpdateModal", () => {
             permissions_for_groups: {
                 can_read: [],
                 can_write: [],
-                can_manage: [{ id: "102_3" }]
-            }
+                can_manage: [{ id: "102_3" }],
+            },
         };
         const wrapper = factory({ item: item_to_update });
 
@@ -96,7 +96,7 @@ describe("PermissionsUpdateModal", () => {
         const updated_permissions_per_groups = {
             can_read: wrapper.vm.updated_permissions.can_read,
             can_write: wrapper.vm.updated_permissions.can_write,
-            can_manage: wrapper.vm.updated_permissions.can_manage
+            can_manage: wrapper.vm.updated_permissions.can_manage,
         };
         expect(updated_permissions_per_groups).toEqual(item_to_update.permissions_for_groups);
     });
@@ -114,8 +114,8 @@ describe("PermissionsUpdateModal", () => {
             permissions_for_groups: {
                 can_read: [],
                 can_write: [],
-                can_manage: []
-            }
+                can_manage: [],
+            },
         };
         const wrapper = factory({ item: item_to_update });
 
@@ -134,8 +134,8 @@ describe("PermissionsUpdateModal", () => {
             permissions_for_groups: {
                 can_read: [],
                 can_write: [{ id: "102_3" }],
-                can_manage: [{ id: "102_4" }]
-            }
+                can_manage: [{ id: "102_4" }],
+            },
         };
 
         wrapper.setProps({ item: item_to_update });
@@ -143,7 +143,7 @@ describe("PermissionsUpdateModal", () => {
         const updated_permissions_per_groups = {
             can_read: wrapper.vm.updated_permissions.can_read,
             can_write: wrapper.vm.updated_permissions.can_write,
-            can_manage: wrapper.vm.updated_permissions.can_manage
+            can_manage: wrapper.vm.updated_permissions.can_manage,
         };
         expect(updated_permissions_per_groups).toEqual(item_to_update.permissions_for_groups);
     });
@@ -155,15 +155,15 @@ describe("PermissionsUpdateModal", () => {
             permissions_for_groups: {
                 can_read: [],
                 can_write: [],
-                can_manage: []
-            }
+                can_manage: [],
+            },
         };
 
         store.state.project_ugroups = [];
         const wrapper = factory({ item: item_to_update });
 
         const expectedActionName = "updatePermissions";
-        store.dispatch.mockImplementation(function(actionName) {
+        store.dispatch.mockImplementation(function (actionName) {
             if (actionName !== expectedActionName) {
                 return;
             }
@@ -176,11 +176,11 @@ describe("PermissionsUpdateModal", () => {
             apply_permissions_on_children: false,
             can_read: wrapper.vm.updated_permissions.can_read,
             can_write: wrapper.vm.updated_permissions.can_write,
-            can_manage: wrapper.vm.updated_permissions.can_manage
+            can_manage: wrapper.vm.updated_permissions.can_manage,
         };
         expect(store.dispatch).toHaveBeenCalledWith(expectedActionName, [
             item_to_update,
-            permissions_to_update
+            permissions_to_update,
         ]);
         await wrapper.vm.$nextTick().then(() => {});
         expect(wrapper.vm.can_be_submitted).toBe(true);
@@ -193,8 +193,8 @@ describe("PermissionsUpdateModal", () => {
             permissions_for_groups: {
                 can_read: [],
                 can_write: [],
-                can_manage: []
-            }
+                can_manage: [],
+            },
         };
 
         const wrapper = factory({ item });
@@ -204,8 +204,8 @@ describe("PermissionsUpdateModal", () => {
                 apply_permissions_on_children: true,
                 can_read: ["102_3"],
                 can_write: ["102_3", "138"],
-                can_manage: ["102_4"]
-            }
+                can_manage: ["102_4"],
+            },
         });
         wrapper.vm.modal.hide();
 
@@ -213,7 +213,7 @@ describe("PermissionsUpdateModal", () => {
             apply_permissions_on_children: false,
             can_read: item.permissions_for_groups.can_read,
             can_write: item.permissions_for_groups.can_write,
-            can_manage: item.permissions_for_groups.can_manage
+            can_manage: item.permissions_for_groups.can_manage,
         };
         expect(wrapper.vm.updated_permissions).toEqual(expected_permissions_to_update_state);
     });

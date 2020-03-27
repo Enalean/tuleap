@@ -26,7 +26,7 @@ export {
     updateReport,
     getSortedProjectsIAmMemberOf,
     getTrackersOfProject,
-    getCSVReport
+    getCSVReport,
 };
 
 async function getReport(report_id) {
@@ -38,8 +38,8 @@ async function getReportContent(report_id, limit, offset) {
     const response = await get("/api/v1/cross_tracker_reports/" + report_id + "/content", {
         params: {
             limit,
-            offset
-        }
+            offset,
+        },
     });
     const total = response.headers.get("X-PAGINATION-SIZE");
     const { artifacts } = await response.json();
@@ -51,8 +51,8 @@ async function getQueryResult(report_id, trackers_id, expert_query, limit, offse
         params: {
             limit,
             offset,
-            query: JSON.stringify({ trackers_id, expert_query })
-        }
+            query: JSON.stringify({ trackers_id, expert_query }),
+        },
     });
     const total = response.headers.get("X-PAGINATION-SIZE");
     const { artifacts } = await response.json();
@@ -63,9 +63,9 @@ async function getQueryResult(report_id, trackers_id, expert_query, limit, offse
 async function updateReport(report_id, trackers_id, expert_query) {
     const response = await put("/api/v1/cross_tracker_reports/" + report_id, {
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
         },
-        body: JSON.stringify({ trackers_id, expert_query })
+        body: JSON.stringify({ trackers_id, expert_query }),
     });
     return response.json();
 }
@@ -74,8 +74,8 @@ async function getSortedProjectsIAmMemberOf() {
     const json = await recursiveGet("/api/v1/projects", {
         params: {
             limit: 50,
-            query: JSON.stringify({ is_member_of: true })
-        }
+            query: JSON.stringify({ is_member_of: true }),
+        },
     });
 
     return json.sort(({ label: label_a }, { label: label_b }) => label_a.localeCompare(label_b));
@@ -85,14 +85,14 @@ function getTrackersOfProject(project_id) {
     return recursiveGet("/api/v1/projects/" + project_id + "/trackers", {
         params: {
             limit: 50,
-            representation: "minimal"
-        }
+            representation: "minimal",
+        },
     });
 }
 
 function getCSVReport(report_id) {
     return recursiveGetCSV("/plugins/crosstracker/csv_export/" + report_id, {
-        limit: 50
+        limit: 50,
     });
 }
 
@@ -102,8 +102,8 @@ async function recursiveGetCSV(route, params) {
         params: {
             ...params,
             limit,
-            offset
-        }
+            offset,
+        },
     });
     const results = await response.text();
     const total = Number.parseInt(response.headers.get("X-PAGINATION-SIZE"), 10);
@@ -115,7 +115,7 @@ async function recursiveGetCSV(route, params) {
 
     const new_params = {
         ...params,
-        offset: new_offset
+        offset: new_offset,
     };
 
     const second_response = await recursiveGetCSV(route, new_params);
