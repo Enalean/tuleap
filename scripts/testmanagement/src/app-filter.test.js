@@ -7,7 +7,7 @@ describe("InPropertiesFilter", () => {
 
     beforeEach(() => {
         angular.mock.module(testmanagement_module);
-        angular.mock.inject(function($filter) {
+        angular.mock.inject(function ($filter) {
             ngFilter = $filter;
         });
     });
@@ -19,76 +19,76 @@ describe("InPropertiesFilter", () => {
             { id: 3, label: "Valid 8", status: "First status" },
             { id: 4, label: "Valid 8 beta", status: "First status" },
             { id: 5, label: "Valid status", status: "First status" },
-            { id: 6, label: "Valid 9", status: "Plop" }
+            { id: 6, label: "Valid 9", status: "Plop" },
         ];
 
-    it("has a InPropertiesFilter filter", function() {
+    it("has a InPropertiesFilter filter", function () {
         expect(ngFilter("InPropertiesFilter")).not.toBeNull();
     });
 
-    it("filters on campaign label", function() {
+    it("filters on campaign label", function () {
         expect(ngFilter("InPropertiesFilter")(list, "beta", properties)).toContainEqual({
             id: 4,
             label: "Valid 8 beta",
-            status: "First status"
+            status: "First status",
         });
     });
 
-    it("filters on campaign status", function() {
+    it("filters on campaign status", function () {
         expect(ngFilter("InPropertiesFilter")(list, "First", properties)).toContainEqual({
             id: 1,
             label: "Valid 7.11",
-            status: "First status"
+            status: "First status",
         });
         expect(ngFilter("InPropertiesFilter")(list, "First", properties)).toContainEqual({
             id: 3,
             label: "Valid 8",
-            status: "First status"
+            status: "First status",
         });
         expect(ngFilter("InPropertiesFilter")(list, "First", properties)).toContainEqual({
             id: 4,
             label: "Valid 8 beta",
-            status: "First status"
+            status: "First status",
         });
         expect(ngFilter("InPropertiesFilter")(list, "First", properties)).toContainEqual({
             id: 5,
             label: "Valid status",
-            status: "First status"
+            status: "First status",
         });
     });
 
-    it("filters on both status", function() {
+    it("filters on both status", function () {
         expect(ngFilter("InPropertiesFilter")(list, "status", properties)).toContainEqual({
             id: 1,
             label: "Valid 7.11",
-            status: "First status"
+            status: "First status",
         });
         expect(ngFilter("InPropertiesFilter")(list, "status", properties)).toContainEqual({
             id: 2,
             label: "Valid 7.11",
-            status: "Second status"
+            status: "Second status",
         });
         expect(ngFilter("InPropertiesFilter")(list, "status", properties)).toContainEqual({
             id: 3,
             label: "Valid 8",
-            status: "First status"
+            status: "First status",
         });
         expect(ngFilter("InPropertiesFilter")(list, "status", properties)).toContainEqual({
             id: 4,
             label: "Valid 8 beta",
-            status: "First status"
+            status: "First status",
         });
         expect(ngFilter("InPropertiesFilter")(list, "status", properties)).toContainEqual({
             id: 5,
             label: "Valid status",
-            status: "First status"
+            status: "First status",
         });
     });
 
     it("Given 'closed' keyword and given a campaign label containing 'closed', then it will not return duplicates", () => {
         const campaign = [{ id: 21, label: "Closed valid 10.4", status: "closed" }];
         expect(ngFilter("InPropertiesFilter")([campaign], "closed", properties)).toEqual([
-            campaign
+            campaign,
         ]);
     });
 });

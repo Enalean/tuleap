@@ -3,7 +3,7 @@ export default CampaignService;
 CampaignService.$inject = ["$http", "$q", "Restangular", "SharedPropertiesService"];
 
 function CampaignService($http, $q, Restangular, SharedPropertiesService) {
-    var rest = Restangular.withConfig(function(RestangularConfigurer) {
+    var rest = Restangular.withConfig(function (RestangularConfigurer) {
         RestangularConfigurer.setFullResponse(true);
         RestangularConfigurer.setBaseUrl("/api/v1");
     });
@@ -13,14 +13,14 @@ function CampaignService($http, $q, Restangular, SharedPropertiesService) {
         createCampaign,
         patchCampaign,
         patchExecutions,
-        triggerAutomatedTests
+        triggerAutomatedTests,
     };
 
     function getCampaign(campaign_id) {
         return rest
             .one("testmanagement_campaigns", campaign_id)
             .get()
-            .then(response => {
+            .then((response) => {
                 return response.data;
             });
     }
@@ -29,7 +29,7 @@ function CampaignService($http, $q, Restangular, SharedPropertiesService) {
         var queryParams = {
             test_selector: test_selector,
             milestone_id: milestone_id,
-            report_id: report_id
+            report_id: report_id,
         };
         return rest.all("testmanagement_campaigns").post(campaign, queryParams);
     }
@@ -39,9 +39,9 @@ function CampaignService($http, $q, Restangular, SharedPropertiesService) {
             .one("testmanagement_campaigns", campaign_id)
             .patch({
                 label,
-                job_configuration
+                job_configuration,
             })
-            .then(response => response.data);
+            .then((response) => response.data);
     }
 
     function patchExecutions(campaign_id, definition_ids, execution_ids) {
@@ -51,12 +51,12 @@ function CampaignService($http, $q, Restangular, SharedPropertiesService) {
             .patch({
                 uuid: SharedPropertiesService.getUUID(),
                 definition_ids_to_add: definition_ids,
-                execution_ids_to_remove: execution_ids
+                execution_ids_to_remove: execution_ids,
             })
-            .then(function(response) {
+            .then(function (response) {
                 var result = {
                     results: response.data,
-                    total: response.headers("X-PAGINATION-SIZE")
+                    total: response.headers("X-PAGINATION-SIZE"),
                 };
 
                 return result;
@@ -66,7 +66,7 @@ function CampaignService($http, $q, Restangular, SharedPropertiesService) {
     function triggerAutomatedTests(campaign_id) {
         return $http
             .post(`/api/v1/testmanagement_campaigns/${campaign_id}/automated_tests`)
-            .catch(response => {
+            .catch((response) => {
                 return $q.reject(response.data.error);
             });
     }

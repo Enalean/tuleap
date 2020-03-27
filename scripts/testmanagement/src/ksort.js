@@ -20,7 +20,7 @@
 export function sortAlphabetically(initial) {
     const sorted_keys = Object.keys(initial).sort((a, b) => a.localeCompare(b));
     let sorted = {};
-    sorted_keys.forEach(key => {
+    sorted_keys.forEach((key) => {
         sorted[key] = initial[key];
     });
 

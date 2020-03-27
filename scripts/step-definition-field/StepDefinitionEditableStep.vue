@@ -81,14 +81,14 @@ export default {
     components: {
         StepDefinitionArrowExpected,
         StepDefinitionActions,
-        StepDeletionActionButtonMarkAsDeleted
+        StepDeletionActionButtonMarkAsDeleted,
     },
     props: {
-        step: Object
+        step: Object,
     },
     computed: {
         ...mapState(["field_id", "is_dragging"]),
-        ...mapGetters(["is_text"])
+        ...mapGetters(["is_text"]),
     },
     watch: {
         is_dragging(new_value) {
@@ -97,7 +97,7 @@ export default {
             } else {
                 this.getEditorsContent();
             }
-        }
+        },
     },
     mounted() {
         this.loadEditor();
@@ -128,7 +128,7 @@ export default {
                 default_in_html: false,
                 id: element.id,
                 htmlFormat: is_html,
-                autoresize_when_ready: false
+                autoresize_when_ready: false,
             });
 
             if (is_html) {
@@ -139,7 +139,7 @@ export default {
         },
         loadEditor() {
             this.editors = [this.loadRTE("expected_results"), this.loadRTE("description")];
-        }
-    }
+        },
+    },
 };
 </script>

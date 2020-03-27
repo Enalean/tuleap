@@ -24,11 +24,11 @@ export default ExecutionListFilter;
 ExecutionListFilter.$inject = ["$filter"];
 
 function ExecutionListFilter($filter) {
-    return function(list, keywords, status) {
+    return function (list, keywords, status) {
         var keyword_list = _.compact(keywords.split(" ")),
             status_list = _.compact(
                 //eslint-disable-next-line you-dont-need-lodash-underscore/map
-                _.map(status, function(value, key) {
+                _.map(status, function (value, key) {
                     return value ? key : false;
                 })
             ),
@@ -77,8 +77,8 @@ function ExecutionListFilter($filter) {
             lookup = "",
             properties = ["summary", "id", "category", "_uncategorized"];
 
-        keyword_list.forEach(function(keyword) {
-            properties.forEach(function(property) {
+        keyword_list.forEach(function (keyword) {
+            properties.forEach(function (property) {
                 var expression = {};
                 expression[property] = keyword;
 
@@ -96,7 +96,7 @@ function ExecutionListFilter($filter) {
         var result = [],
             lookup = "";
 
-        status_list.forEach(function(status) {
+        status_list.forEach(function (status) {
             lookup = $filter("filter")(list, { status: status });
             if (lookup.length > 0) {
                 result = result.concat(lookup);

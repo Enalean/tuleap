@@ -41,7 +41,7 @@ describe("StepController", () => {
     beforeEach(() => {
         fake_dropdown_object = {
             hide: jest.fn(),
-            show: jest.fn()
+            show: jest.fn(),
         };
 
         jest.spyOn(tlp, "dropdown").mockReturnValue(fake_dropdown_object);
@@ -57,7 +57,7 @@ describe("StepController", () => {
         angular.mock.module(execution_module);
 
         let $controller;
-        angular.mock.inject(function(_$q_, _$rootScope_, _$controller_, _ExecutionRestService_) {
+        angular.mock.inject(function (_$q_, _$rootScope_, _$controller_, _ExecutionRestService_) {
             $q = _$q_;
             $rootScope = _$rootScope_;
             $controller = _$controller_;
@@ -66,7 +66,7 @@ describe("StepController", () => {
 
         StepController = $controller(BaseController, {
             $element,
-            ExecutionRestService
+            ExecutionRestService,
         });
     });
 

@@ -18,7 +18,7 @@ describe("ExecutionListController -", () => {
 
         let $controller;
 
-        angular.mock.inject(function(
+        angular.mock.inject(function (
             _$controller_,
             $rootScope,
             _$q_,
@@ -38,7 +38,7 @@ describe("ExecutionListController -", () => {
             $scope,
             ExecutionService,
             SharedPropertiesService,
-            ExecutionRestService
+            ExecutionRestService,
         });
 
         setError = jest.spyOn(feedback_state, "setError");
@@ -125,9 +125,9 @@ describe("ExecutionListController -", () => {
                     data: {
                         error: {
                             code: 401,
-                            message: "Unauthorized"
-                        }
-                    }
+                            message: "Unauthorized",
+                        },
+                    },
                 })
             );
 

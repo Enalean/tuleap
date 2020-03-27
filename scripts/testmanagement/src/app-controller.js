@@ -7,7 +7,7 @@ TestManagementCtrl.$inject = [
     "amMoment",
     "gettextCatalog",
     "SharedPropertiesService",
-    "UUIDGeneratorService"
+    "UUIDGeneratorService",
 ];
 
 function TestManagementCtrl(
@@ -17,7 +17,7 @@ function TestManagementCtrl(
     SharedPropertiesService,
     UUIDGeneratorService
 ) {
-    this.$onInit = function() {
+    this.$onInit = function () {
         const testmanagement_init_data = $element[0].querySelector(".testmanagement-init-data")
             .dataset;
 

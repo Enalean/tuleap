@@ -37,7 +37,7 @@ describe("ExecutionDetailController -", () => {
 
         let $controller, $rootScope;
 
-        angular.mock.inject(function(
+        angular.mock.inject(function (
             _$controller_,
             _$q_,
             _$rootScope_,
@@ -62,9 +62,9 @@ describe("ExecutionDetailController -", () => {
         jest.spyOn(SharedPropertiesService, "getIssueTrackerConfig").mockReturnValue({
             permissions: {
                 create: true,
-                link: true
+                link: true,
             },
-            xref_color: "acid-green"
+            xref_color: "acid-green",
         });
 
         jest.spyOn(ExecutionService, "loadExecutions").mockImplementation(() => {});
@@ -74,32 +74,32 @@ describe("ExecutionDetailController -", () => {
             ExecutionService,
             TlpModalService,
             NewTuleapArtifactModalService,
-            ExecutionRestService
+            ExecutionRestService,
         });
     });
 
     describe("showLinkToNewBugModal() -", () => {
-        it("when the callback is called from the modal, then the new issue will be linked to the execution and then will be shown in an alert and added to the linked issues dropdown", function() {
+        it("when the callback is called from the modal, then the new issue will be linked to the execution and then will be shown in an alert and added to the linked issues dropdown", function () {
             const artifact = {
                 id: 68,
                 title: "Xanthomelanoi Kate",
                 xref: "bugs #68",
                 tracker: {
-                    id: 4
-                }
+                    id: 4,
+                },
             };
             $scope.execution = {
                 id: 51,
                 definition: {
                     summary: "syrinx",
-                    description: "topping"
+                    description: "topping",
                 },
                 previous_result: {
-                    result: null
-                }
+                    result: null,
+                },
             };
             $scope.campaign = {
-                label: "shirtless"
+                label: "shirtless",
             };
             jest.spyOn(NewTuleapArtifactModalService, "showCreation").mockImplementation(
                 (tracker_id, b, callback) => {
@@ -128,7 +128,7 @@ describe("ExecutionDetailController -", () => {
             const artifact = {
                 id: 70,
                 title: "phalangean authorcraft",
-                xref: "bugs #70"
+                xref: "bugs #70",
             };
             $scope.execution = { id: 26 };
             jest.spyOn(TlpModalService, "open").mockImplementation(({ resolve }) => {
@@ -154,7 +154,7 @@ describe("ExecutionDetailController -", () => {
             id: 8,
             status: "notrun",
             time: "",
-            results: "psychoanalyzer rupture solidish"
+            results: "psychoanalyzer rupture solidish",
         };
         const time = 570;
 

@@ -25,7 +25,7 @@ function ArtifactLinksModelService() {
     var self = this;
 
     _.extend(self, {
-        getGraphStructure: getGraphStructure
+        getGraphStructure: getGraphStructure,
     });
 
     function getGraphStructure(artifact) {
@@ -33,9 +33,9 @@ function ArtifactLinksModelService() {
             errors: [],
             graph: {
                 links: [],
-                nodes: []
+                nodes: [],
             },
-            title: artifact.title
+            title: artifact.title,
         };
 
         if (Object.prototype.hasOwnProperty.call(artifact, "error")) {
@@ -63,11 +63,11 @@ function ArtifactLinksModelService() {
     }
 
     function createNodesAndLinksForOutgoingLinks(model, artifact, outgoing_links) {
-        _(outgoing_links).forEach(function(outgoing_link) {
+        _(outgoing_links).forEach(function (outgoing_link) {
             var link = {
                 source: artifact.id,
                 target: outgoing_link.id,
-                type: "arrow"
+                type: "arrow",
             };
 
             model.graph.links.push(link);
@@ -80,11 +80,11 @@ function ArtifactLinksModelService() {
     }
 
     function createNodesAndLinksForIncomingLinks(model, artifact, incoming_links) {
-        _(incoming_links).forEach(function(incoming_link) {
+        _(incoming_links).forEach(function (incoming_link) {
             var link = {
                 source: incoming_link.id,
                 target: artifact.id,
-                type: "arrow"
+                type: "arrow",
             };
 
             model.graph.links.push(link);

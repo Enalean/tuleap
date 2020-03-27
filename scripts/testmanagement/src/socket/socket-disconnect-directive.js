@@ -9,8 +9,8 @@ function SocketDisconnectDirective(SocketService) {
         restrict: "E",
         scope: {},
         templateUrl: "socket-disconnect.tpl.html",
-        link: function(scope) {
+        link: function (scope) {
             scope.checkDisconnect = SocketService.checkDisconnect;
-        }
+        },
     };
 }

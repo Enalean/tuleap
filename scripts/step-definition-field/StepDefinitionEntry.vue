@@ -54,19 +54,19 @@ export default {
     components: {
         StepDefinitionMarkedAsDeleted,
         StepDefinitionEditableStep,
-        StepDefinitionDraggableComponent
+        StepDefinitionDraggableComponent,
     },
     props: {
         step: Object,
-        dynamic_rank: Number
+        dynamic_rank: Number,
     },
     data() {
         return {
-            is_marked_as_deleted: false
+            is_marked_as_deleted: false,
         };
     },
     computed: {
-        ...mapState(["is_dragging"])
+        ...mapState(["is_dragging"]),
     },
     methods: {
         markAsDeleted() {
@@ -88,7 +88,7 @@ export default {
                     this.$store.commit("deleteStep", this.step);
                 }
             });
-        }
-    }
+        },
+    },
 };
 </script>

@@ -13,8 +13,8 @@ function ExecutionConfig($stateProvider) {
             templateUrl: "execution-list.tpl.html",
             ncyBreadcrumb: {
                 label: "{{ campaign.label }}",
-                parent: "campaigns.list"
-            }
+                parent: "campaigns.list",
+            },
         })
         .state("campaigns.executions.detail", {
             url: "/{execid:int}/{defid:int}",
@@ -22,7 +22,7 @@ function ExecutionConfig($stateProvider) {
             templateUrl: "execution-detail.tpl.html",
             ncyBreadcrumb: {
                 label: "{{ execution.definition.summary }}",
-                parent: "campaigns.executions"
-            }
+                parent: "campaigns.executions",
+            },
         });
 }

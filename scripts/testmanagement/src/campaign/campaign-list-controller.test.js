@@ -44,7 +44,7 @@ describe("CampaignListController -", () => {
 
         let $controller;
 
-        angular.mock.inject(function(
+        angular.mock.inject(function (
             _$q_,
             _$rootScope_,
             _$controller_,
@@ -68,7 +68,7 @@ describe("CampaignListController -", () => {
         $ctrl = $controller(BaseController, {
             TlpModalService,
             SharedPropertiesService,
-            milestone
+            milestone,
         });
 
         setError = jest.spyOn(feedback_state, "setError");
@@ -78,7 +78,7 @@ describe("CampaignListController -", () => {
         it("When the controller is instatiated, then all the open campaigns will be loaded", async () => {
             const open_campaigns = [
                 { id: 60, status: "open" },
-                { id: 80, status: "open" }
+                { id: 80, status: "open" },
             ];
             getCampaigns.mockReturnValue($q.when(open_campaigns));
 
@@ -98,14 +98,14 @@ describe("CampaignListController -", () => {
 
         it("When there is an error, then the error message will be shown", async () => {
             const error_json = {
-                error: { code: 403, message: "Forbidden: Access denied to campaign tracker" }
+                error: { code: 403, message: "Forbidden: Access denied to campaign tracker" },
             };
             const error = {
                 response: {
                     json() {
                         return $q.when(error_json);
-                    }
-                }
+                    },
+                },
             };
             getCampaigns.mockReturnValue($q.reject(error));
 
@@ -121,13 +121,13 @@ describe("CampaignListController -", () => {
         it("The closed campaigns will be loaded", async () => {
             const closed_campaigns = [
                 { id: 13, status: "closed" },
-                { id: 36, status: "closed" }
+                { id: 36, status: "closed" },
             ];
             getCampaigns.mockReturnValue($q.when(closed_campaigns));
 
             const open_campaigns = [
                 { id: 42, status: "open" },
-                { id: 7, status: "open" }
+                { id: 7, status: "open" },
             ];
             $ctrl.open_campaigns = open_campaigns;
             $ctrl.campaigns = open_campaigns;
@@ -142,14 +142,14 @@ describe("CampaignListController -", () => {
 
         it("When there is an error, then the error message will be shown", async () => {
             const error_json = {
-                error: { code: 403, message: "Forbidden: Access denied to campaign tracker" }
+                error: { code: 403, message: "Forbidden: Access denied to campaign tracker" },
             };
             const error = {
                 response: {
                     json() {
                         return $q.when(error_json);
-                    }
-                }
+                    },
+                },
             };
             getCampaigns.mockReturnValue($q.reject(error));
 
@@ -326,7 +326,7 @@ describe("CampaignListController -", () => {
         it("the filtered campaigns will be updated and the boolean flag set to true", () => {
             const open_campaigns = [
                 { id: 70, status: "open" },
-                { id: 10, status: "open" }
+                { id: 10, status: "open" },
             ];
             $ctrl.open_campaigns = open_campaigns;
             $ctrl.campaigns = open_campaigns.concat([{ id: 78, status: "closed" }]);

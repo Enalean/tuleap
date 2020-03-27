@@ -30,9 +30,9 @@ document.addEventListener("DOMContentLoaded", () => {
     Vue.use(VueDOMPurifyHTML);
     Vue.use(GetTextPlugin, {
         translations: {
-            fr: french_translations.messages
+            fr: french_translations.messages,
         },
-        silent: true
+        silent: true,
     });
 
     Vue.config.language = document.body.dataset.userLocale;
@@ -44,8 +44,8 @@ document.addEventListener("DOMContentLoaded", () => {
             propsData: {
                 initial_steps: JSON.parse(mount_point.dataset.steps),
                 artifact_field_id: JSON.parse(mount_point.dataset.fieldId),
-                empty_step: JSON.parse(mount_point.dataset.emptyStep)
-            }
+                empty_step: JSON.parse(mount_point.dataset.emptyStep),
+            },
         }).$mount(mount_point);
     }
 });

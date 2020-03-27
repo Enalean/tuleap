@@ -36,7 +36,9 @@
                     <div
                         v-dompurify-html="step.raw_expected_results"
                         v-bind:class="{
-                            'ttm-definition-step-description-text': is_text(step.description_format)
+                            'ttm-definition-step-description-text': is_text(
+                                step.description_format
+                            ),
                         }"
                     ></div>
                 </div>
@@ -56,18 +58,18 @@ export default {
     components: {
         StepDefinitionArrowExpected,
         StepDeletionActionButtonUnmarkDeletion,
-        StepDefinitionActions
+        StepDefinitionActions,
     },
     props: {
-        step: Object
+        step: Object,
     },
     computed: {
-        ...mapGetters(["is_text"])
+        ...mapGetters(["is_text"]),
     },
     methods: {
         unmarkDeletion() {
             this.$emit("unmarkDeletion");
-        }
-    }
+        },
+    },
 };
 </script>

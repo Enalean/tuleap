@@ -27,6 +27,6 @@ module.exports = {
         ...base_config.moduleNameMapper,
         "^.+\\.html$": "identity-obj-proxy",
         "^angular$": "<rootDir>/node_modules/angular/index.js",
-        "^jquery$": "<rootDir>/node_modules/jquery/dist/jquery.js"
-    }
+        "^jquery$": "<rootDir>/node_modules/jquery/dist/jquery.js",
+    },
 };

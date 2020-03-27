@@ -6,6 +6,6 @@ export default {
     templateUrl: "execution-with-steps.tpl.html",
     controller,
     bindings: {
-        execution: "<"
-    }
+        execution: "<",
+    },
 };

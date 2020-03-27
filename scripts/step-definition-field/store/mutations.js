@@ -20,7 +20,7 @@ import uuid from "uuid/v4";
 import dragula from "dragula";
 
 export function initStepField(state, [steps, field_id, empty_step]) {
-    state.steps = steps.map(step => {
+    state.steps = steps.map((step) => {
         return { ...step, uuid: uuid() };
     });
     state.field_id = field_id;

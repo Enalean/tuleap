@@ -5,7 +5,7 @@ CampaignNewCtrl.$inject = [
     "$state",
     "CampaignService",
     "DefinitionService",
-    "SharedPropertiesService"
+    "SharedPropertiesService",
 ];
 
 function CampaignNewCtrl(
@@ -26,12 +26,12 @@ function CampaignNewCtrl(
         submitting_campaign: false,
         has_milestone: Boolean(milestone_id),
         campaign: {
-            label: ""
+            label: "",
         },
         test_params: {
-            selector: "all"
+            selector: "all",
         },
-        test_reports: []
+        test_reports: [],
     });
 
     function $onInit() {
@@ -43,7 +43,7 @@ function CampaignNewCtrl(
 
         var campaign_data = {
             project_id: project_id,
-            label: self.campaign.label
+            label: self.campaign.label,
         };
 
         var test_selector = self.test_params.selector;
@@ -55,17 +55,17 @@ function CampaignNewCtrl(
         }
 
         CampaignService.createCampaign(campaign_data, test_selector, milestone_id, report_id)
-            .then(function() {
+            .then(function () {
                 modal_instance.tlp_modal.hide();
                 $state.go("campaigns.list", {}, { reload: true });
             })
-            .finally(function() {
+            .finally(function () {
                 self.submitting_campaign = false;
             });
     }
 
     function getDefinitionReports() {
-        DefinitionService.getDefinitionReports().then(function(data) {
+        DefinitionService.getDefinitionReports().then(function (data) {
             // data: [{id: <int>, label: <string>}]
             self.test_reports = data;
         });

@@ -42,7 +42,7 @@ describe("ExecutionLinkIssueController", () => {
 
         let $controller, $rootScope;
 
-        angular.mock.inject(function(
+        angular.mock.inject(function (
             _$controller_,
             _$q_,
             _$rootScope_,
@@ -61,24 +61,24 @@ describe("ExecutionLinkIssueController", () => {
 
         modal_instance = {
             tlp_modal: {
-                hide: jest.fn()
-            }
+                hide: jest.fn(),
+            },
         };
 
         modal_model = {
             test_execution: {
                 id: 21,
                 definition: {
-                    summary: "tempestuous"
-                }
-            }
+                    summary: "tempestuous",
+                },
+            },
         };
 
         modal_callback = jest.fn();
 
         jest.spyOn(SharedPropertiesService, "getIssueTrackerId").mockReturnValue(issue_tracker_id);
         jest.spyOn(SharedPropertiesService, "getIssueTrackerConfig").mockReturnValue({
-            xref_color: "flamingo_pink"
+            xref_color: "flamingo_pink",
         });
 
         ExecutionLinkIssueController = $controller(BaseController, {
@@ -87,7 +87,7 @@ describe("ExecutionLinkIssueController", () => {
             modal_instance,
             modal_model,
             modal_callback,
-            SharedPropertiesService
+            SharedPropertiesService,
         });
     });
 
@@ -95,7 +95,7 @@ describe("ExecutionLinkIssueController", () => {
         beforeEach(() => {
             modal_model.test_execution.linked_bugs = [
                 { id: 39, title: "disklike", xref: "bugs #39" },
-                { id: 80, title: "schoolless", xref: "bugs #80" }
+                { id: 80, title: "schoolless", xref: "bugs #80" },
             ];
         });
 
@@ -121,8 +121,8 @@ describe("ExecutionLinkIssueController", () => {
                 title: "nonreceipt aroxyl",
                 xref: "bug #52",
                 tracker: {
-                    id: issue_tracker_id
-                }
+                    id: issue_tracker_id,
+                },
             };
             jest.spyOn(ExecutionRestService, "getArtifactById").mockReturnValue($q.when(artifact));
 
@@ -144,8 +144,8 @@ describe("ExecutionLinkIssueController", () => {
                 title: "nonprejudicial Elodeaceae",
                 xref: "story #17",
                 tracker: {
-                    id: 10
-                }
+                    id: 10,
+                },
             };
             jest.spyOn(ExecutionRestService, "getArtifactById").mockReturnValue($q.when(artifact));
 
@@ -168,8 +168,8 @@ describe("ExecutionLinkIssueController", () => {
                 xref: "bug #39",
                 tracker: {
                     id: issue_tracker_id,
-                    color_name: "fiesta-red"
-                }
+                    color_name: "fiesta-red",
+                },
             };
             ExecutionLinkIssueController.issue_artifact = issue_artifact;
             ExecutionLinkIssueController.issue.id = issue_artifact.id;

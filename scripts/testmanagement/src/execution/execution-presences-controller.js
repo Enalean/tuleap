@@ -26,7 +26,7 @@ ExecutionPresencesCtrl.$inject = ["modal_model"];
 function ExecutionPresencesCtrl(modal_model) {
     const self = this;
     self.$onInit = () => {
-        modal_model.presences.forEach(function(presence) {
+        modal_model.presences.forEach(function (presence) {
             presence.score = presence.score || 0;
             presence.scoreView = Math.max(presence.score, 0);
         });
@@ -38,7 +38,7 @@ function ExecutionPresencesCtrl(modal_model) {
         Object.assign(self, {
             title: modal_model.title,
             topRanking: top_ranking,
-            restRanking: rest_ranking
+            restRanking: rest_ranking,
         });
     };
 }

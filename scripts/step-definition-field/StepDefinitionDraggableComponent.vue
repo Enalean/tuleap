@@ -26,7 +26,7 @@
         <div
             v-dompurify-html="step.raw_description"
             v-bind:class="{
-                'ttm-definition-step-description-text': is_text(step.description_format)
+                'ttm-definition-step-description-text': is_text(step.description_format),
             }"
             class="draggable-step-description-text"
         ></div>
@@ -39,10 +39,10 @@ export default {
     name: "StepDefinitionDraggableComponent",
     props: {
         step: Object,
-        dynamic_rank: Number
+        dynamic_rank: Number,
     },
     computed: {
-        ...mapGetters(["is_text"])
-    }
+        ...mapGetters(["is_text"]),
+    },
 };
 </script>

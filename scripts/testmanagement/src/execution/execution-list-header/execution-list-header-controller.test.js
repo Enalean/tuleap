@@ -20,7 +20,7 @@ describe("ExecutionListHeaderController -", () => {
 
         let $controller;
 
-        angular.mock.inject(function(
+        angular.mock.inject(function (
             _$controller_,
             _CampaignService_,
             _ExecutionService_,
@@ -36,7 +36,7 @@ describe("ExecutionListHeaderController -", () => {
 
         ExecutionListHeaderController = $controller(BaseController, {
             CampaignService,
-            ExecutionService
+            ExecutionService,
         });
 
         jest.spyOn(CampaignService, "triggerAutomatedTests").mockReturnValue($q.when());
@@ -51,8 +51,8 @@ describe("ExecutionListHeaderController -", () => {
             ExecutionService.campaign = {
                 id: 42,
                 job_configuration: {
-                    url: "https://example.com/doghood/follow?a=menald&b=rebirth#coabode"
-                }
+                    url: "https://example.com/doghood/follow?a=menald&b=rebirth#coabode",
+                },
             };
         });
 
@@ -71,7 +71,7 @@ describe("ExecutionListHeaderController -", () => {
         it("When the REST call fails, then the loader will be hidden and an error message will be shown", () => {
             CampaignService.triggerAutomatedTests.mockReturnValue(
                 $q.reject({
-                    message: "Message: The requested URL returned error: 403 Forbidden"
+                    message: "Message: The requested URL returned error: 403 Forbidden",
                 })
             );
 

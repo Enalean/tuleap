@@ -55,7 +55,7 @@ export default {
     props: {
         initial_steps: Array,
         artifact_field_id: Number,
-        empty_step: Object
+        empty_step: Object,
     },
     computed: {
         ...mapState(["drake", "steps", "field_id", "is_dragging"]),
@@ -64,13 +64,13 @@ export default {
         },
         areThereAtLeastTwoSteps() {
             return this.steps.length > 1;
-        }
+        },
     },
     created() {
         this.$store.commit("initStepField", [
             this.initial_steps,
             this.artifact_field_id,
-            this.empty_step
+            this.empty_step,
         ]);
     },
     destroyed() {
@@ -86,7 +86,7 @@ export default {
         },
         addStep(index) {
             this.$store.commit("addStep", index);
-        }
-    }
+        },
+    },
 };
 </script>

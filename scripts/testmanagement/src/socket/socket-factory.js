@@ -10,12 +10,12 @@ function SocketFactory(socketFactory, SharedPropertiesService) {
             "https://" + SharedPropertiesService.getNodeServerAddress() + "/testmanagement",
             {
                 secure: true,
-                path: "/socket.io"
+                path: "/socket.io",
             }
         );
 
         return socketFactory({
-            ioSocket: io_socket
+            ioSocket: io_socket,
         });
     }
 }

@@ -45,7 +45,7 @@ export default {
     name: "StepDefinitionDragContainer",
     components: { StepDefinitionEntry },
     computed: {
-        ...mapState(["steps", "is_dragging"])
+        ...mapState(["steps", "is_dragging"]),
     },
     watch: {
         is_dragging(new_value) {
@@ -54,7 +54,7 @@ export default {
             } else {
                 window.removeEventListener("mousemove", this.replaceDragulaMirror);
             }
-        }
+        },
     },
     mounted() {
         this.initContainer(this.$refs.dragula_container);
@@ -66,7 +66,7 @@ export default {
             if (mirrors.length > 0) {
                 mirrors[0].style.top = event.pageY + "px";
             }
-        }
-    }
+        },
+    },
 };
 </script>

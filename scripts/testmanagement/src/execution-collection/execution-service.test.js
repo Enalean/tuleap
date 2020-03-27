@@ -34,7 +34,7 @@ describe("ExecutionService", () => {
     beforeEach(() => {
         angular.mock.module(execution_collection_module);
 
-        angular.mock.inject(function(
+        angular.mock.inject(function (
             _$q_,
             _$rootScope_,
             _ExecutionRestService_,
@@ -59,7 +59,7 @@ describe("ExecutionService", () => {
                 id: "6",
                 label: "Release 1",
                 status: "Open",
-                uri: "testmanagement_campaigns/6"
+                uri: "testmanagement_campaigns/6",
             };
 
             const categories_results = {
@@ -73,11 +73,11 @@ describe("ExecutionService", () => {
                                 description: "test",
                                 id: 3,
                                 summary: "My first test",
-                                uri: "testmanagement_definitions/3"
-                            }
-                        }
-                    ]
-                }
+                                uri: "testmanagement_definitions/3",
+                            },
+                        },
+                    ],
+                },
             };
 
             const execution_results = {
@@ -88,13 +88,13 @@ describe("ExecutionService", () => {
                         description: "test",
                         id: 3,
                         summary: "My first test",
-                        uri: "testmanagement_definitions/3"
-                    }
-                }
+                        uri: "testmanagement_definitions/3",
+                    },
+                },
             };
 
             const executions_by_categories_by_campaigns_results = {
-                6: categories_results
+                6: categories_results,
             };
 
             const response = {
@@ -106,11 +106,11 @@ describe("ExecutionService", () => {
                             description: "test",
                             id: 3,
                             summary: "My first test",
-                            uri: "testmanagement_definitions/3"
-                        }
-                    }
+                            uri: "testmanagement_definitions/3",
+                        },
+                    },
                 ],
-                total: 1
+                total: 1,
             };
 
             jest.spyOn(ExecutionService, "getAllRemoteExecutions").mockReturnValue(
@@ -143,7 +143,7 @@ describe("ExecutionService", () => {
                 id: "6",
                 label: "Release 1",
                 status: "Open",
-                uri: "testmanagement_campaigns/6"
+                uri: "testmanagement_campaigns/6",
             };
 
             var remote_executions_count = 2;
@@ -157,11 +157,11 @@ describe("ExecutionService", () => {
                             description: "test",
                             id: 3,
                             summary: "My first test",
-                            uri: "testmanagement_definitions/3"
-                        }
-                    }
+                            uri: "testmanagement_definitions/3",
+                        },
+                    },
                 ],
-                total: remote_executions_count
+                total: remote_executions_count,
             };
 
             var get_remote_executions_request = $q.defer();
@@ -186,12 +186,12 @@ describe("ExecutionService", () => {
             get_remote_executions = null,
             get_all_remote_executions = null;
 
-        var resolveExecutions = function(executions) {
+        var resolveExecutions = function (executions) {
             var data = executions || [];
 
             get_remote_executions.resolve({
                 total: data.length,
-                results: data
+                results: data,
             });
             get_all_remote_executions.resolve(data);
         };
@@ -200,24 +200,24 @@ describe("ExecutionService", () => {
             ExecutionService.campaign_id = campaign_id;
             ExecutionService.executions = {
                 1: execution_1,
-                2: execution_2
+                2: execution_2,
             };
             ExecutionService.executions_by_categories_by_campaigns[campaign_id] = {
                 Security: {
                     label: "Security",
-                    executions: [execution_1]
+                    executions: [execution_1],
                 },
                 NonRegression: {
                     label: "NonRegression",
-                    executions: [execution_2]
-                }
+                    executions: [execution_2],
+                },
             };
 
-            service_executions = function() {
+            service_executions = function () {
                 return ExecutionService.executions;
             };
 
-            service_categories = function() {
+            service_categories = function () {
                 return ExecutionService.executions_by_categories_by_campaigns[campaign_id];
             };
 
@@ -251,7 +251,7 @@ describe("ExecutionService", () => {
 
             ExecutionService.executions = { 1: execution_1 };
             ExecutionService.executions_by_categories_by_campaigns[campaign_id] = {
-                Security: { label: "Security", executions: [execution_1] }
+                Security: { label: "Security", executions: [execution_1] },
             };
 
             const promise = ExecutionService.synchronizeExecutions(campaign_id);
@@ -274,8 +274,8 @@ describe("ExecutionService", () => {
         });
     });
 
-    describe("getExecutionsByDefinitionId() -", function() {
-        it("Given that categories, when I get executions by definition id, then only execution with definition id selected are returned", function() {
+    describe("getExecutionsByDefinitionId() -", function () {
+        it("Given that categories, when I get executions by definition id, then only execution with definition id selected are returned", function () {
             var categories = {
                 Svn: {
                     executions: [
@@ -286,12 +286,12 @@ describe("ExecutionService", () => {
                                 description: "test",
                                 id: 3,
                                 summary: "My first test",
-                                uri: "testmanagement_definitions/3"
-                            }
-                        }
+                                uri: "testmanagement_definitions/3",
+                            },
+                        },
                     ],
-                    label: "Svn"
-                }
+                    label: "Svn",
+                },
             };
 
             var executions_results = [
@@ -302,9 +302,9 @@ describe("ExecutionService", () => {
                         description: "test",
                         id: 3,
                         summary: "My first test",
-                        uri: "testmanagement_definitions/3"
-                    }
-                }
+                        uri: "testmanagement_definitions/3",
+                    },
+                },
             ];
 
             ExecutionService.categories = categories;
@@ -313,8 +313,8 @@ describe("ExecutionService", () => {
         });
     });
 
-    describe("addTestExecution() -", function() {
-        it("Given that campaign, when I add an execution, then it's added with values and campaign with correct numbers", function() {
+    describe("addTestExecution() -", function () {
+        it("Given that campaign, when I add an execution, then it's added with values and campaign with correct numbers", function () {
             var campaign = {
                 id: "6",
                 label: "Release 1",
@@ -323,7 +323,7 @@ describe("ExecutionService", () => {
                 nb_of_failed: 0,
                 nb_of_notrun: 0,
                 nb_of_blocked: 0,
-                total: 0
+                total: 0,
             };
 
             var categories = {};
@@ -332,12 +332,12 @@ describe("ExecutionService", () => {
                 id: 4,
                 status: "notrun",
                 definition: {
-                    category: "Svn"
-                }
+                    category: "Svn",
+                },
             };
 
             var executions_by_categories_by_campaigns = {
-                6: categories
+                6: categories,
             };
 
             ExecutionService.campaign_id = 6;
@@ -349,8 +349,8 @@ describe("ExecutionService", () => {
                 id: 4,
                 status: "notrun",
                 definition: {
-                    category: "Svn"
-                }
+                    category: "Svn",
+                },
             });
             expect(ExecutionService.campaign).toEqual({
                 id: "6",
@@ -360,13 +360,13 @@ describe("ExecutionService", () => {
                 nb_of_failed: 0,
                 nb_of_notrun: 1,
                 nb_of_blocked: 0,
-                total: 1
+                total: 1,
             });
         });
     });
 
-    describe("addTestExecutionWithoutUpdateCampaignStatus() -", function() {
-        it("Given that campaign, when I add an execution, then it's added with values and campaign with correct numbers", function() {
+    describe("addTestExecutionWithoutUpdateCampaignStatus() -", function () {
+        it("Given that campaign, when I add an execution, then it's added with values and campaign with correct numbers", function () {
             var campaign = {
                 id: "6",
                 label: "Release 1",
@@ -375,7 +375,7 @@ describe("ExecutionService", () => {
                 nb_of_failed: 0,
                 nb_of_notrun: 0,
                 nb_of_blocked: 0,
-                total: 0
+                total: 0,
             };
 
             var categories = {};
@@ -384,12 +384,12 @@ describe("ExecutionService", () => {
                 id: 4,
                 status: "notrun",
                 definition: {
-                    category: "Svn"
-                }
+                    category: "Svn",
+                },
             };
 
             var executions_by_categories_by_campaigns = {
-                6: categories
+                6: categories,
             };
 
             ExecutionService.campaign_id = 6;
@@ -401,16 +401,16 @@ describe("ExecutionService", () => {
                 id: 4,
                 status: "notrun",
                 definition: {
-                    category: "Svn"
-                }
+                    category: "Svn",
+                },
             });
             expect(ExecutionService.campaign.nb_of_notrun).toEqual(0);
             expect(ExecutionService.campaign.total).toEqual(0);
         });
     });
 
-    describe("updateTestExecution() -", function() {
-        it("Given that campaign, when I update an execution, then it's updated with new values and campaign with correct numbers", function() {
+    describe("updateTestExecution() -", function () {
+        it("Given that campaign, when I update an execution, then it's updated with new values and campaign with correct numbers", function () {
             var campaign = {
                 id: "6",
                 label: "Release 1",
@@ -419,21 +419,21 @@ describe("ExecutionService", () => {
                 nb_of_failed: 0,
                 nb_of_notrun: 1,
                 nb_of_blocked: 0,
-                total: 1
+                total: 1,
             };
 
             var execution_to_save = {
                 id: 4,
-                status: "failed"
+                status: "failed",
             };
 
             var executions = {
                 4: {
                     id: 4,
                     previous_result: {
-                        status: "notrun"
-                    }
-                }
+                        status: "notrun",
+                    },
+                },
             };
 
             var campaign_results = {
@@ -444,7 +444,7 @@ describe("ExecutionService", () => {
                 nb_of_failed: 1,
                 nb_of_notrun: 0,
                 nb_of_blocked: 0,
-                total: 1
+                total: 1,
             };
 
             ExecutionService.campaign = campaign;
@@ -455,7 +455,7 @@ describe("ExecutionService", () => {
             expect(ExecutionService.campaign).toEqual(campaign_results);
         });
 
-        it("Given that campaign, when I update an execution with different values, then the execution and the campaign must change", function() {
+        it("Given that campaign, when I update an execution with different values, then the execution and the campaign must change", function () {
             var campaign = {
                 id: "6",
                 label: "Release 1",
@@ -464,21 +464,21 @@ describe("ExecutionService", () => {
                 nb_of_failed: 0,
                 nb_of_notrun: 0,
                 nb_of_blocked: 1,
-                total: 1
+                total: 1,
             };
 
             var execution_to_save = {
                 id: 4,
-                status: "notrun"
+                status: "notrun",
             };
 
             var executions = {
                 4: {
                     id: 4,
                     previous_result: {
-                        status: "blocked"
-                    }
-                }
+                        status: "blocked",
+                    },
+                },
             };
 
             var campaign_copy = _.clone(campaign);
@@ -497,7 +497,7 @@ describe("ExecutionService", () => {
             const current_user = {
                 id: 101,
                 uri: "users/101",
-                uuid: "uuid-101"
+                uuid: "uuid-101",
             };
             jest.spyOn(SharedPropertiesService, "getCurrentUser").mockReturnValue(current_user);
 
@@ -509,34 +509,34 @@ describe("ExecutionService", () => {
                 nb_of_failed: 0,
                 nb_of_notrun: 0,
                 nb_of_blocked: 1,
-                total: 1
+                total: 1,
             };
 
             const executions = {
                 4: {
                     id: 4,
                     previous_result: {
-                        status: "blocked"
+                        status: "blocked",
                     },
                     definition: {
-                        description: "Version A"
+                        description: "Version A",
                     },
-                    viewed_by: [current_user]
-                }
+                    viewed_by: [current_user],
+                },
             };
 
             const execution_to_save = {
                 id: 4,
                 status: "notrun",
                 definition: {
-                    description: "Version B"
-                }
+                    description: "Version B",
+                },
             };
 
             const updated_by = {
                 id: 102,
                 uri: "users/102",
-                uuid: "uuid-102"
+                uuid: "uuid-102",
             };
 
             ExecutionService.campaign = campaign;
@@ -557,8 +557,8 @@ describe("ExecutionService", () => {
         });
     });
 
-    describe("removeTestExecution() -", function() {
-        it("Given that campaign, when I remove an execution, then it's removed from executions and categories and campaign numbers are updated", function() {
+    describe("removeTestExecution() -", function () {
+        it("Given that campaign, when I remove an execution, then it's removed from executions and categories and campaign numbers are updated", function () {
             var campaign = {
                 id: "6",
                 label: "Release 1",
@@ -567,26 +567,26 @@ describe("ExecutionService", () => {
                 nb_of_failed: 0,
                 nb_of_notrun: 1,
                 nb_of_blocked: 0,
-                total: 1
+                total: 1,
             };
 
             var execution = {
                 id: 4,
                 status: "notrun",
                 definition: {
-                    category: "Svn"
-                }
+                    category: "Svn",
+                },
             };
 
             var categories = {
                 Svn: {
                     label: "Svn",
-                    executions: [execution]
-                }
+                    executions: [execution],
+                },
             };
 
             var executions_by_categories_by_campaigns = {
-                6: categories
+                6: categories,
             };
 
             ExecutionService.campaign_id = 6;
@@ -606,8 +606,8 @@ describe("ExecutionService", () => {
         });
     });
 
-    describe("removeTestExecutionWithoutUpdateCampaignStatus() -", function() {
-        it("Given that campaign, when I remove an execution, then it's removed from executions and categories and campaign numbers are updated", function() {
+    describe("removeTestExecutionWithoutUpdateCampaignStatus() -", function () {
+        it("Given that campaign, when I remove an execution, then it's removed from executions and categories and campaign numbers are updated", function () {
             var campaign = {
                 id: "6",
                 label: "Release 1",
@@ -616,26 +616,26 @@ describe("ExecutionService", () => {
                 nb_of_failed: 0,
                 nb_of_notrun: 1,
                 nb_of_blocked: 0,
-                total: 1
+                total: 1,
             };
 
             var execution = {
                 id: 4,
                 status: "notrun",
                 definition: {
-                    category: "Svn"
-                }
+                    category: "Svn",
+                },
             };
 
             var categories = {
                 Svn: {
                     label: "Svn",
-                    executions: [execution]
-                }
+                    executions: [execution],
+                },
             };
 
             var executions_by_categories_by_campaigns = {
-                6: categories
+                6: categories,
             };
 
             ExecutionService.campaign_id = 6;
@@ -655,20 +655,20 @@ describe("ExecutionService", () => {
         });
     });
 
-    describe("updateCampaign() -", function() {
-        it("Given that campaign, when I update it, then it's updated with new values", function() {
+    describe("updateCampaign() -", function () {
+        it("Given that campaign, when I update it, then it's updated with new values", function () {
             var campaign = {
                 id: "6",
                 label: "Release 1",
                 status: "Open",
-                uri: "testmanagement_campaigns/6"
+                uri: "testmanagement_campaigns/6",
             };
 
             var campaign_updated = {
                 id: "5",
                 label: "Release 2",
                 status: "Open",
-                uri: "testmanagement_campaigns/6"
+                uri: "testmanagement_campaigns/6",
             };
 
             ExecutionService.campaign = campaign;
@@ -678,8 +678,8 @@ describe("ExecutionService", () => {
         });
     });
 
-    describe("viewTestExecution() -", function() {
-        it("Given that executions with no users on, when I user views a test, then there is user on", function() {
+    describe("viewTestExecution() -", function () {
+        it("Given that executions with no users on, when I user views a test, then there is user on", function () {
             var executions = {
                 4: {
                     id: 4,
@@ -688,16 +688,16 @@ describe("ExecutionService", () => {
                         description: "test",
                         id: 3,
                         summary: "My first test",
-                        uri: "testmanagement_definitions/3"
-                    }
-                }
+                        uri: "testmanagement_definitions/3",
+                    },
+                },
             };
 
             var user = {
                 id: 101,
                 real_name: "Test",
                 avatar_url: "url",
-                score: 0
+                score: 0,
             };
 
             var results = [user];
@@ -708,13 +708,13 @@ describe("ExecutionService", () => {
             expect(ExecutionService.executions[4].viewed_by).toEqual(results);
         });
 
-        it("Given that executions with user_one on, when I user_two views a test, then there is user_one and user_two on", function() {
+        it("Given that executions with user_one on, when I user_two views a test, then there is user_one and user_two on", function () {
             var user_one = {
                 id: 101,
                 real_name: "Test",
                 avatar_url: "url",
                 uuid: "456",
-                score: 0
+                score: 0,
             };
 
             var user_two = {
@@ -722,7 +722,7 @@ describe("ExecutionService", () => {
                 real_name: "Test",
                 avatar_url: "url",
                 uuid: "123",
-                score: 0
+                score: 0,
             };
 
             var executions = {
@@ -733,10 +733,10 @@ describe("ExecutionService", () => {
                         description: "test",
                         id: 3,
                         summary: "My first test",
-                        uri: "testmanagement_definitions/3"
+                        uri: "testmanagement_definitions/3",
                     },
-                    viewed_by: [user_one]
-                }
+                    viewed_by: [user_one],
+                },
             };
 
             var results = [user_one, user_two];
@@ -747,19 +747,19 @@ describe("ExecutionService", () => {
             expect(ExecutionService.executions[4].viewed_by).toEqual(results);
         });
 
-        it("Given that executions with user_one on, when I user_one views a test, then there is twice user_one on but once on campaign", function() {
+        it("Given that executions with user_one on, when I user_one views a test, then there is twice user_one on but once on campaign", function () {
             var user_one = {
                 id: 101,
                 real_name: "Test",
                 avatar_url: "url",
-                uuid: "456"
+                uuid: "456",
             };
 
             var user_one_bis = {
                 id: 101,
                 real_name: "Test",
                 avatar_url: "url",
-                uuid: "123"
+                uuid: "123",
             };
 
             var executions = {
@@ -770,10 +770,10 @@ describe("ExecutionService", () => {
                         description: "test",
                         id: 3,
                         summary: "My first test",
-                        uri: "testmanagement_definitions/3"
+                        uri: "testmanagement_definitions/3",
                     },
-                    viewed_by: [user_one]
-                }
+                    viewed_by: [user_one],
+                },
             };
 
             var results = [user_one, user_one_bis];
@@ -785,18 +785,18 @@ describe("ExecutionService", () => {
         });
     });
 
-    describe("removeViewTestExecution() -", function() {
-        it("Given that executions with two users on, when I remove view of user_one, then there is only user_two on", function() {
+    describe("removeViewTestExecution() -", function () {
+        it("Given that executions with two users on, when I remove view of user_one, then there is only user_two on", function () {
             var user_one = {
                 id: 101,
                 real_name: "Test",
-                avatar_url: "url"
+                avatar_url: "url",
             };
 
             var user_two = {
                 id: 102,
                 real_name: "Test",
-                avatar_url: "url"
+                avatar_url: "url",
             };
 
             var executions = {
@@ -807,10 +807,10 @@ describe("ExecutionService", () => {
                         description: "test",
                         id: 3,
                         summary: "My first test",
-                        uri: "testmanagement_definitions/3"
+                        uri: "testmanagement_definitions/3",
                     },
-                    viewed_by: [user_one, user_two]
-                }
+                    viewed_by: [user_one, user_two],
+                },
             };
 
             var results = [user_two];
@@ -822,20 +822,20 @@ describe("ExecutionService", () => {
         });
     });
 
-    describe("removeViewTestExecutionByUUID() -", function() {
-        it("Given that executions with two users on, when I remove by user uuid, then the corresponding user is removed", function() {
+    describe("removeViewTestExecutionByUUID() -", function () {
+        it("Given that executions with two users on, when I remove by user uuid, then the corresponding user is removed", function () {
             var user_one = {
                 id: 101,
                 real_name: "Test",
                 avatar_url: "url",
-                uuid: "123"
+                uuid: "123",
             };
 
             var user_two = {
                 id: 102,
                 real_name: "Test",
                 avatar_url: "url",
-                uuid: "456"
+                uuid: "456",
             };
 
             var executions = {
@@ -846,9 +846,9 @@ describe("ExecutionService", () => {
                         description: "test",
                         id: 3,
                         summary: "My first test",
-                        uri: "testmanagement_definitions/3"
+                        uri: "testmanagement_definitions/3",
                     },
-                    viewed_by: [user_one, user_two]
+                    viewed_by: [user_one, user_two],
                 },
                 5: {
                     id: 5,
@@ -857,10 +857,10 @@ describe("ExecutionService", () => {
                         description: "test",
                         id: 3,
                         summary: "My first test",
-                        uri: "testmanagement_definitions/3"
+                        uri: "testmanagement_definitions/3",
                     },
-                    viewed_by: [user_one, user_two]
-                }
+                    viewed_by: [user_one, user_two],
+                },
             };
 
             var results = [user_one];
@@ -876,18 +876,18 @@ describe("ExecutionService", () => {
         });
     });
 
-    describe("removeAllViewTestExecution() -", function() {
-        it("Given that executions with two users on, when I remove all views, then there is nobody on executions", function() {
+    describe("removeAllViewTestExecution() -", function () {
+        it("Given that executions with two users on, when I remove all views, then there is nobody on executions", function () {
             var user_one = {
                 id: 101,
                 real_name: "Test",
-                avatar_url: "url"
+                avatar_url: "url",
             };
 
             var user_two = {
                 id: 102,
                 real_name: "Test",
-                avatar_url: "url"
+                avatar_url: "url",
             };
 
             var executions = {
@@ -898,9 +898,9 @@ describe("ExecutionService", () => {
                         description: "test",
                         id: 3,
                         summary: "My first test",
-                        uri: "testmanagement_definitions/3"
+                        uri: "testmanagement_definitions/3",
                     },
-                    viewed_by: [user_one, user_two]
+                    viewed_by: [user_one, user_two],
                 },
                 5: {
                     id: 5,
@@ -909,10 +909,10 @@ describe("ExecutionService", () => {
                         description: "test",
                         id: 3,
                         summary: "My first test",
-                        uri: "testmanagement_definitions/3"
+                        uri: "testmanagement_definitions/3",
                     },
-                    viewed_by: [user_one, user_two]
-                }
+                    viewed_by: [user_one, user_two],
+                },
             };
 
             var results = [];
@@ -925,20 +925,20 @@ describe("ExecutionService", () => {
         });
     });
 
-    describe("addPresenceCampaign() -", function() {
-        it("Given that presences on campaign, when I add user_two with a score, then user_two is on campaign", function() {
+    describe("addPresenceCampaign() -", function () {
+        it("Given that presences on campaign, when I add user_two with a score, then user_two is on campaign", function () {
             var user_one = {
                 id: 101,
                 real_name: "Test",
                 avatar_url: "url",
-                score: 0
+                score: 0,
             };
 
             var user_two = {
                 id: 102,
                 real_name: "Test",
                 avatar_url: "url",
-                score: 0
+                score: 0,
             };
 
             var presences_on_campaign = [user_one];
@@ -951,18 +951,18 @@ describe("ExecutionService", () => {
             expect(ExecutionService.presences_on_campaign).toEqual(results);
         });
 
-        it("Given that presences on campaign, when I add user_two with no score, then user_two is on campaign with score 0", function() {
+        it("Given that presences on campaign, when I add user_two with no score, then user_two is on campaign with score 0", function () {
             var user_one = {
                 id: 101,
                 real_name: "Test",
                 avatar_url: "url",
-                score: 0
+                score: 0,
             };
 
             var user_two = {
                 id: 102,
                 real_name: "Test",
-                avatar_url: "url"
+                avatar_url: "url",
             };
 
             var presences_on_campaign = [user_one];
@@ -976,18 +976,18 @@ describe("ExecutionService", () => {
         });
     });
 
-    describe("removeAllPresencesOnCampaign() -", function() {
-        it("Given that executions with user_two on, when I remove all from campaign, then there is nobody on campaign", function() {
+    describe("removeAllPresencesOnCampaign() -", function () {
+        it("Given that executions with user_two on, when I remove all from campaign, then there is nobody on campaign", function () {
             var user_one = {
                 id: 101,
                 real_name: "Test",
-                avatar_url: "url"
+                avatar_url: "url",
             };
 
             var user_two = {
                 id: 102,
                 real_name: "Test",
-                avatar_url: "url"
+                avatar_url: "url",
             };
 
             ExecutionService.presences_on_campaign = [user_one, user_two];
@@ -997,20 +997,20 @@ describe("ExecutionService", () => {
         });
     });
 
-    describe("updatePresenceOnCampaign() -", function() {
-        it("Given that executions with user_one on, when I update user_one on campaign, then the score is updated", function() {
+    describe("updatePresenceOnCampaign() -", function () {
+        it("Given that executions with user_one on, when I update user_one on campaign, then the score is updated", function () {
             var user_one = {
                 id: 101,
                 real_name: "Test",
                 avatar_url: "url",
-                score: 0
+                score: 0,
             };
 
             var user_one_updated = {
                 id: 101,
                 real_name: "Test",
                 avatar_url: "url",
-                score: 1
+                score: 1,
             };
 
             var executions = {
@@ -1021,17 +1021,17 @@ describe("ExecutionService", () => {
                         description: "test",
                         id: 3,
                         summary: "My first test",
-                        uri: "testmanagement_definitions/3"
+                        uri: "testmanagement_definitions/3",
                     },
-                    viewed_by: [user_one]
-                }
+                    viewed_by: [user_one],
+                },
             };
 
             var user_one_result = {
                 id: 101,
                 real_name: "Test",
                 avatar_url: "url",
-                score: 1
+                score: 1,
             };
 
             ExecutionService.executions = executions;
@@ -1042,20 +1042,20 @@ describe("ExecutionService", () => {
         });
     });
 
-    describe("displayPresencesForAllExecutions() -", function() {
-        it("Given that executions, when I display all users, then there users are on the associate execution", function() {
+    describe("displayPresencesForAllExecutions() -", function () {
+        it("Given that executions, when I display all users, then there users are on the associate execution", function () {
             var user_one = {
                 id: "101",
                 real_name: "name",
                 avatar_url: "avatar",
-                uuid: "1234"
+                uuid: "1234",
             };
 
             var user_two = {
                 id: "102",
                 real_name: "name",
                 avatar_url: "avatar",
-                uuid: "4567"
+                uuid: "4567",
             };
 
             var presences = {
@@ -1064,17 +1064,17 @@ describe("ExecutionService", () => {
                         id: "101",
                         real_name: "name",
                         avatar_url: "avatar",
-                        uuid: "1234"
-                    }
+                        uuid: "1234",
+                    },
                 ],
                 5: [
                     {
                         id: "102",
                         real_name: "name",
                         avatar_url: "avatar",
-                        uuid: "4567"
-                    }
-                ]
+                        uuid: "4567",
+                    },
+                ],
             };
 
             var executions = {
@@ -1085,8 +1085,8 @@ describe("ExecutionService", () => {
                         description: "test",
                         id: 3,
                         summary: "My first test",
-                        uri: "testmanagement_definitions/3"
-                    }
+                        uri: "testmanagement_definitions/3",
+                    },
                 },
                 5: {
                     id: 5,
@@ -1095,9 +1095,9 @@ describe("ExecutionService", () => {
                         description: "test",
                         id: 3,
                         summary: "My first test",
-                        uri: "testmanagement_definitions/3"
-                    }
-                }
+                        uri: "testmanagement_definitions/3",
+                    },
+                },
             };
 
             var results = {
@@ -1108,9 +1108,9 @@ describe("ExecutionService", () => {
                         description: "test",
                         id: 3,
                         summary: "My first test",
-                        uri: "testmanagement_definitions/3"
+                        uri: "testmanagement_definitions/3",
                     },
-                    viewed_by: [user_one]
+                    viewed_by: [user_one],
                 },
                 5: {
                     id: 5,
@@ -1119,10 +1119,10 @@ describe("ExecutionService", () => {
                         description: "test",
                         id: 3,
                         summary: "My first test",
-                        uri: "testmanagement_definitions/3"
+                        uri: "testmanagement_definitions/3",
                     },
-                    viewed_by: [user_two]
-                }
+                    viewed_by: [user_two],
+                },
             };
 
             ExecutionService.executions = executions;
@@ -1135,20 +1135,20 @@ describe("ExecutionService", () => {
         });
     });
 
-    describe("displayPresencesByExecution() -", function() {
-        it("Given that executions, when I display all users on one execution, then there users are on", function() {
+    describe("displayPresencesByExecution() -", function () {
+        it("Given that executions, when I display all users on one execution, then there users are on", function () {
             var user_one = {
                 id: "101",
                 real_name: "name",
                 avatar_url: "avatar",
-                uuid: "1234"
+                uuid: "1234",
             };
 
             var user_two = {
                 id: "102",
                 real_name: "name",
                 avatar_url: "avatar",
-                uuid: "4567"
+                uuid: "4567",
             };
 
             var executions = {
@@ -1159,9 +1159,9 @@ describe("ExecutionService", () => {
                         description: "test",
                         id: 3,
                         summary: "My first test",
-                        uri: "testmanagement_definitions/3"
-                    }
-                }
+                        uri: "testmanagement_definitions/3",
+                    },
+                },
             };
 
             var presences = [user_one, user_two];
@@ -1174,10 +1174,10 @@ describe("ExecutionService", () => {
                         description: "test",
                         id: 3,
                         summary: "My first test",
-                        uri: "testmanagement_definitions/3"
+                        uri: "testmanagement_definitions/3",
                     },
-                    viewed_by: [user_one, user_two]
-                }
+                    viewed_by: [user_one, user_two],
+                },
             };
 
             ExecutionService.executions = executions;
@@ -1191,7 +1191,7 @@ describe("ExecutionService", () => {
         it("Given an execution id and an artifact to link to it, then the artifact will be added to the execution's linked_bugs", () => {
             let execution = {
                 id: 74,
-                linked_bugs: [{ id: 38, title: "thanan" }]
+                linked_bugs: [{ id: 38, title: "thanan" }],
             };
             const artifact_to_link = { id: 88, title: "paragraphically" };
             ExecutionService.executions[74] = execution;

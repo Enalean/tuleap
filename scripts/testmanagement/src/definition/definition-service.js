@@ -28,7 +28,7 @@ export default DefinitionService;
 DefinitionService.$inject = ["Restangular", "$q", "SharedPropertiesService"];
 
 function DefinitionService(Restangular, $q, SharedPropertiesService) {
-    var rest = Restangular.withConfig(function(RestangularConfigurer) {
+    var rest = Restangular.withConfig(function (RestangularConfigurer) {
         RestangularConfigurer.setFullResponse(true);
         RestangularConfigurer.setBaseUrl("/api/v1");
     });
@@ -39,19 +39,19 @@ function DefinitionService(Restangular, $q, SharedPropertiesService) {
         getDefinitionReports,
         getArtifactById,
         getDefinitionById,
-        getTracker
+        getTracker,
     };
 
     function getDefinitions(project_id, report_id) {
-        return tlpGetDefinitions(project_id, report_id).then(definitions =>
+        return tlpGetDefinitions(project_id, report_id).then((definitions) =>
             categorize(definitions)
         );
     }
 
     function categorize(definitions) {
-        return definitions.map(definition => {
+        return definitions.map((definition) => {
             return _.merge(definition, {
-                category: definition.category || UNCATEGORIZED
+                category: definition.category || UNCATEGORIZED,
             });
         });
     }
@@ -62,8 +62,8 @@ function DefinitionService(Restangular, $q, SharedPropertiesService) {
             "/api/v1/trackers/" + encodeURI(def_tracker_id) + "/tracker_reports",
             {
                 params: {
-                    limit: 10
-                }
+                    limit: 10,
+                },
             }
         );
 
@@ -74,7 +74,7 @@ function DefinitionService(Restangular, $q, SharedPropertiesService) {
         return rest
             .one("artifacts", artifact_id)
             .get()
-            .then(function(response) {
+            .then(function (response) {
                 return response.data;
             });
     }
@@ -83,7 +83,7 @@ function DefinitionService(Restangular, $q, SharedPropertiesService) {
         return rest
             .one("testmanagement_definitions", artifact_id)
             .get()
-            .then(function(response) {
+            .then(function (response) {
                 return response.data;
             });
     }
@@ -92,7 +92,7 @@ function DefinitionService(Restangular, $q, SharedPropertiesService) {
         return rest
             .one("trackers", tracker_id)
             .get()
-            .then(function(response) {
+            .then(function (response) {
                 return response.data;
             });
     }

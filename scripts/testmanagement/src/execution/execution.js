@@ -36,7 +36,7 @@ export default angular
         execution_collection_module,
         shared_props_module,
         socket_module,
-        ui_router
+        ui_router,
     ])
     .config(ExecutionConfig)
     .controller("ExecutionListCtrl", ExecutionListCtrl)

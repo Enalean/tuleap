@@ -43,7 +43,7 @@ describe("CampaignEditController -", () => {
 
         let $controller, $httpBackend;
 
-        angular.mock.inject(function(
+        angular.mock.inject(function (
             _$controller_,
             $rootScope,
             _$q_,
@@ -85,7 +85,7 @@ describe("CampaignEditController -", () => {
             DefinitionService,
             ExecutionService,
             NewTuleapArtifactModalService,
-            editCampaignCallback
+            editCampaignCallback,
         });
         $ctrl.$onInit();
     });
@@ -98,22 +98,22 @@ describe("CampaignEditController -", () => {
         it("Given a selected report, then the definitions of that report will be loaded and set to selected and all other tests will be unselected", async () => {
             const definitions = [
                 { id: 85, summary: "AD test" },
-                { id: 3, summary: "Git test" }
+                { id: 3, summary: "Git test" },
             ];
             DefinitionService.getDefinitions.mockReturnValue($q.when(definitions));
             $scope.filters = {
-                selected_report: "31"
+                selected_report: "31",
             };
             $scope.tests_list = {
                 uncategorized: {
                     tests: {
                         85: { definition: { id: 85, summary: "AD test" }, selected: false },
-                        6: { definition: { id: 6, summary: "Other AD test", selected: true } }
-                    }
+                        6: { definition: { id: 6, summary: "Other AD test", selected: true } },
+                    },
                 },
                 git: {
-                    tests: { 3: { definition: { id: 3, summary: "Git test", selected: false } } }
-                }
+                    tests: { 3: { definition: { id: 3, summary: "Git test", selected: false } } },
+                },
             };
 
             await wrapPromise($scope.selectReportTests());
@@ -126,7 +126,7 @@ describe("CampaignEditController -", () => {
 
         it("Given no selected report, nothing happens", () => {
             $scope.filters = {
-                selected_report: ""
+                selected_report: "",
             };
 
             $scope.selectReportTests();

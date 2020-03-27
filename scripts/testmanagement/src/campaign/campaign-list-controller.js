@@ -10,7 +10,7 @@ CampaignListCtrl.$inject = [
     "gettextCatalog",
     "TlpModalService",
     "SharedPropertiesService",
-    "milestone"
+    "milestone",
 ];
 
 function CampaignListCtrl($q, gettextCatalog, TlpModalService, SharedPropertiesService, milestone) {
@@ -34,7 +34,7 @@ function CampaignListCtrl($q, gettextCatalog, TlpModalService, SharedPropertiesS
         shouldShowNoCampaigns,
         shouldShowNoOpenCampaigns,
         showClosedCampaigns,
-        openNewCampaignModal
+        openNewCampaignModal,
     });
 
     function init() {
@@ -46,7 +46,7 @@ function CampaignListCtrl($q, gettextCatalog, TlpModalService, SharedPropertiesS
 
         return $q
             .when(getCampaigns(project_id, milestone.id, "open"))
-            .then(campaigns => {
+            .then((campaigns) => {
                 self.open_campaigns = campaigns;
                 self.campaigns = campaigns;
                 self.filtered_campaigns = campaigns;
@@ -79,7 +79,7 @@ function CampaignListCtrl($q, gettextCatalog, TlpModalService, SharedPropertiesS
 
         return $q
             .when(getCampaigns(project_id, milestone.id, "closed"))
-            .then(campaigns => {
+            .then((campaigns) => {
                 self.campaigns = self.campaigns.concat(campaigns);
                 self.closed_campaigns_loaded = true;
             }, handleRESTErrors)
@@ -134,7 +134,7 @@ function CampaignListCtrl($q, gettextCatalog, TlpModalService, SharedPropertiesS
         return TlpModalService.open({
             templateUrl: "campaign-new.tpl.html",
             controller: "CampaignNewCtrl",
-            controllerAs: "campaign_modal"
+            controllerAs: "campaign_modal",
         });
     }
 }

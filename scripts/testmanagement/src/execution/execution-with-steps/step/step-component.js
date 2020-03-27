@@ -8,6 +8,6 @@ export default {
     bindings: {
         step: "<",
         step_result: "<stepResult",
-        execution: "<"
-    }
+        execution: "<",
+    },
 };

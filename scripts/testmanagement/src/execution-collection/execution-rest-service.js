@@ -4,7 +4,7 @@ ExecutionRestService.$inject = ["$http", "$q", "Restangular", "SharedPropertiesS
 
 function ExecutionRestService($http, $q, Restangular, SharedPropertiesService) {
     Object.assign(Restangular.configuration.defaultHeaders, {
-        "X-Client-UUID": SharedPropertiesService.getUUID()
+        "X-Client-UUID": SharedPropertiesService.getUUID(),
     });
 
     const self = this;
@@ -23,7 +23,7 @@ function ExecutionRestService($http, $q, Restangular, SharedPropertiesService) {
         getLinkedArtifacts,
         getExecution,
         updateExecutionToUseLatestVersionOfDefinition,
-        updateStepStatus
+        updateStepStatus,
     });
 
     function setRestangularConfig(RestangularConfigurer) {
@@ -37,12 +37,12 @@ function ExecutionRestService($http, $q, Restangular, SharedPropertiesService) {
             .all("testmanagement_executions")
             .getList({
                 limit: limit,
-                offset: offset
+                offset: offset,
             })
-            .then(function(response) {
+            .then(function (response) {
                 var result = {
                     results: response.data,
-                    total: response.headers("X-PAGINATION-SIZE")
+                    total: response.headers("X-PAGINATION-SIZE"),
                 };
 
                 return result;
@@ -55,9 +55,9 @@ function ExecutionRestService($http, $q, Restangular, SharedPropertiesService) {
             .post({
                 tracker: { id: tracker_id },
                 definition_id: definition_id,
-                status: status
+                status: status,
             })
-            .then(function(response) {
+            .then(function (response) {
                 return response.data;
             });
     }
@@ -68,27 +68,24 @@ function ExecutionRestService($http, $q, Restangular, SharedPropertiesService) {
             .put({
                 status: new_status,
                 time: time,
-                results: results
+                results: results,
             })
-            .then(function(response) {
+            .then(function (response) {
                 return response.data;
             });
     }
 
     function updateExecutionToUseLatestVersionOfDefinition(execution_id) {
         rest.one("testmanagement_executions", execution_id).patch({
-            force_use_latest_definition_version: true
+            force_use_latest_definition_version: true,
         });
     }
 
     function changePresenceOnTestExecution(execution_id, old_execution_id) {
-        return rest
-            .one("testmanagement_executions", execution_id)
-            .all("presences")
-            .patch({
-                uuid: SharedPropertiesService.getUUID(),
-                remove_from: old_execution_id
-            });
+        return rest.one("testmanagement_executions", execution_id).all("presences").patch({
+            uuid: SharedPropertiesService.getUUID(),
+            remove_from: old_execution_id,
+        });
     }
 
     function leaveTestExecution(execution_id) {
@@ -96,7 +93,7 @@ function ExecutionRestService($http, $q, Restangular, SharedPropertiesService) {
     }
 
     function getArtifactById(artifact_id) {
-        return $http.get("/api/v1/artifacts/" + artifact_id).then(response => {
+        return $http.get("/api/v1/artifacts/" + artifact_id).then((response) => {
             return response.data;
         });
     }
@@ -113,7 +110,7 @@ function ExecutionRestService($http, $q, Restangular, SharedPropertiesService) {
                 "<blockquote>" +
                 test_execution.definition.description +
                 "</blockquote>",
-            format: "html"
+            format: "html",
         };
 
         return linkExecutionToIssue(issue_id, test_execution, comment);
@@ -122,7 +119,7 @@ function ExecutionRestService($http, $q, Restangular, SharedPropertiesService) {
     function linkIssueWithoutComment(issue_id, test_execution) {
         var comment = {
             body: "",
-            format: "text"
+            format: "text",
         };
 
         return linkExecutionToIssue(issue_id, test_execution, comment);
@@ -134,9 +131,9 @@ function ExecutionRestService($http, $q, Restangular, SharedPropertiesService) {
             .all("issues")
             .patch({
                 issue_id: issue_id,
-                comment: comment
+                comment: comment,
             })
-            .catch(function(response) {
+            .catch(function (response) {
                 return Promise.reject(response.data.error);
             });
     }
@@ -149,19 +146,19 @@ function ExecutionRestService($http, $q, Restangular, SharedPropertiesService) {
                     direction: "forward",
                     nature: "",
                     limit,
-                    offset
-                }
+                    offset,
+                },
             })
-            .then(response => {
+            .then((response) => {
                 return {
                     collection: response.data.collection,
-                    total: Number.parseInt(response.headers("X-PAGINATION-SIZE"), 10)
+                    total: Number.parseInt(response.headers("X-PAGINATION-SIZE"), 10),
                 };
             });
     }
 
     function getExecution(execution_id) {
-        return $http.get(`/api/v1/testmanagement_executions/${execution_id}`).then(response => {
+        return $http.get(`/api/v1/testmanagement_executions/${execution_id}`).then((response) => {
             return response.data;
         });
     }
@@ -175,16 +172,16 @@ function ExecutionRestService($http, $q, Restangular, SharedPropertiesService) {
                     steps_results: [
                         {
                             step_id,
-                            status: step_status
-                        }
-                    ]
+                            status: step_status,
+                        },
+                    ],
                 },
                 {
                     headers: {
-                        "X-Client-UUID": SharedPropertiesService.getUUID()
-                    }
+                        "X-Client-UUID": SharedPropertiesService.getUUID(),
+                    },
                 }
             )
-            .catch(response => $q.reject(response.data.error.message));
+            .catch((response) => $q.reject(response.data.error.message));
     }
 }

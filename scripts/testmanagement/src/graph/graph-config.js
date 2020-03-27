@@ -10,7 +10,7 @@ function GraphConfig($stateProvider) {
         controller: "GraphCtrl as graph",
         templateUrl: "graph.tpl.html",
         ncyBreadcrumb: {
-            skip: true
-        }
+            skip: true,
+        },
     });
 }

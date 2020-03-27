@@ -64,16 +64,16 @@ export default angular
         execution,
         definition,
         graph,
-        artifact_links_graph
+        artifact_links_graph,
     ])
     .config(TestManagementConfig)
     .run([
         "gettextCatalog",
-        function(gettextCatalog) {
+        function (gettextCatalog) {
             for (const [language, strings] of Object.entries(translations)) {
                 gettextCatalog.setStrings(language, strings);
             }
-        }
+        },
     ])
     .directive("autoFocus", AutoFocusDirective)
     .directive("enableTlpTableFilter", EnableTlpTableFilterDirective)

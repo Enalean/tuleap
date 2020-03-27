@@ -31,7 +31,7 @@ SocketService.$inject = [
     "SharedPropertiesService",
     "JWTService",
     "ExecutionRestService",
-    "CampaignService"
+    "CampaignService",
 ];
 
 function SocketService(
@@ -50,7 +50,7 @@ function SocketService(
 
     Object.assign(self, {
         checkDisconnect: {
-            disconnect: false
+            disconnect: false,
         },
         listenTokenExpired,
         listenNodeJSServer,
@@ -62,7 +62,7 @@ function SocketService(
         listenToExecutionDeleted,
         listenToCampaignUpdated,
         listenToArtifactLinked,
-        refreshToken
+        refreshToken,
     });
 
     function listenTokenExpired() {
@@ -84,7 +84,7 @@ function SocketService(
             listenPresences();
             listenToUsersScore();
             self.listenToArtifactLinked();
-            return JWTService.getJWT().then(data => {
+            return JWTService.getJWT().then((data) => {
                 locker.put("token", data.token);
                 locker.put("token-expired-date", JWTService.getTokenExpiredDate(data.token));
                 return subscribe();
@@ -99,13 +99,13 @@ function SocketService(
             nodejs_server_version: SharedPropertiesService.getNodeServerVersion(),
             token: locker.get("token"),
             room_id: "testmanagement_" + SharedPropertiesService.getCampaignId(),
-            uuid: SharedPropertiesService.getUUID()
+            uuid: SharedPropertiesService.getUUID(),
         });
     }
 
     function refreshToken() {
         SocketFactory.emit("token", {
-            token: locker.get("token")
+            token: locker.get("token"),
         });
     }
 
@@ -116,9 +116,9 @@ function SocketService(
     }
 
     function listenToError() {
-        SocketFactory.on("error-jwt", error => {
+        SocketFactory.on("error-jwt", (error) => {
             if (error === "JWTExpired") {
-                JWTService.getJWT().then(data => {
+                JWTService.getJWT().then((data) => {
                     locker.put("token", data.token);
                     subscribe();
                     ExecutionService.initialization();
@@ -129,7 +129,7 @@ function SocketService(
     }
 
     function listenPresences() {
-        SocketFactory.on("presences", presences => {
+        SocketFactory.on("presences", (presences) => {
             ExecutionService.presences_loaded = true;
             ExecutionService.presences_by_execution = presences;
             ExecutionService.displayPresencesForAllExecutions();
@@ -137,8 +137,8 @@ function SocketService(
     }
 
     function listenToUsersScore() {
-        SocketFactory.on("users:score", data => {
-            data.forEach(user => {
+        SocketFactory.on("users:score", (data) => {
+            data.forEach((user) => {
                 ExecutionService.updatePresenceOnCampaign(user);
             });
         });
@@ -162,7 +162,7 @@ function SocketService(
                 execution_to_remove,
                 execution_presences_to_remove,
                 execution_to_add,
-                execution_presences_to_add
+                execution_presences_to_add,
             }) => {
                 if (execution_to_remove) {
                     ExecutionService.displayPresencesByExecution(
@@ -182,14 +182,14 @@ function SocketService(
     }
 
     function listenToExecutionLeft() {
-        SocketFactory.on("user:leave", function(uuid) {
+        SocketFactory.on("user:leave", function (uuid) {
             ExecutionService.removeViewTestExecutionByUUID(uuid);
         });
     }
 
     function listenToExecutionCreated() {
         SocketFactory.on("testmanagement_execution:create", ({ artifact_id }) => {
-            ExecutionRestService.getExecution(artifact_id).then(execution => {
+            ExecutionRestService.getExecution(artifact_id).then((execution) => {
                 ExecutionService.addTestExecutionWithoutUpdateCampaignStatus(execution);
             });
         });
@@ -199,7 +199,7 @@ function SocketService(
         SocketFactory.on(
             "testmanagement_execution:update",
             ({ artifact_id, user, previous_user }) => {
-                ExecutionRestService.getExecution(artifact_id).then(execution => {
+                ExecutionRestService.getExecution(artifact_id).then((execution) => {
                     ExecutionService.updateTestExecution(execution, user);
                     ExecutionService.updatePresenceOnCampaign(user);
 
@@ -213,7 +213,7 @@ function SocketService(
 
     function listenToExecutionDeleted(callback) {
         SocketFactory.on("testmanagement_execution:delete", ({ artifact_id }) => {
-            ExecutionRestService.getExecution(artifact_id).then(execution => {
+            ExecutionRestService.getExecution(artifact_id).then((execution) => {
                 ExecutionService.removeTestExecutionWithoutUpdateCampaignStatus(execution);
                 callback(execution);
             });
@@ -222,7 +222,7 @@ function SocketService(
 
     function listenToCampaignUpdated(callback) {
         SocketFactory.on("testmanagement_campaign:update", ({ artifact_id }) => {
-            CampaignService.getCampaign(artifact_id).then(campaign => {
+            CampaignService.getCampaign(artifact_id).then((campaign) => {
                 callback(campaign);
             });
         });
@@ -238,7 +238,7 @@ function SocketService(
     }
 
     function requestJWTToRefreshToken() {
-        JWTService.getJWT().then(data => {
+        JWTService.getJWT().then((data) => {
             locker.put("token", data.token);
             locker.put("token-expired-date", JWTService.getTokenExpiredDate(data.token));
             refreshToken();

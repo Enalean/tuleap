@@ -12,7 +12,7 @@ controller.$inject = [
     "TlpModalService",
     "ExecutionService",
     "SharedPropertiesService",
-    "CampaignService"
+    "CampaignService",
 ];
 
 export default function controller(
@@ -31,7 +31,7 @@ export default function controller(
         isAutomatedTestButtonShown,
         launchAutomatedTests,
         campaign_state: ExecutionService,
-        triggered: false
+        triggered: false,
     });
 
     function openEditCampaignModal() {
@@ -40,13 +40,13 @@ export default function controller(
             controller: CampaignEditCtrl,
             controllerAs: "edit_modal",
             resolve: {
-                editCampaignCallback: campaign => {
+                editCampaignCallback: (campaign) => {
                     ExecutionService.updateCampaign(campaign);
                     ExecutionService.synchronizeExecutions(ExecutionService.campaign.id).then(
                         self.handleRemovedExecutionsCallback
                     );
-                }
-            }
+                },
+            },
         });
     }
 
@@ -58,9 +58,9 @@ export default function controller(
             resolve: {
                 modal_model: {
                     title: ExecutionService.campaign.label,
-                    presences: ExecutionService.presences_on_campaign
-                }
-            }
+                    presences: ExecutionService.presences_on_campaign,
+                },
+            },
         });
     }
 
@@ -89,12 +89,12 @@ export default function controller(
                         gettextCatalog.getString(
                             "The job at URL {{ job_url }} has been succesfully launched.",
                             {
-                                job_url: ExecutionService.campaign.job_configuration.url
+                                job_url: ExecutionService.campaign.job_configuration.url,
                             }
                         )
                     );
                 },
-                error => {
+                (error) => {
                     setError(error.message);
                 }
             )

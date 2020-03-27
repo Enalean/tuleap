@@ -18,7 +18,7 @@
  */
 
 export function moveBreadCrumbs() {
-    window.setTimeout(function() {
+    window.setTimeout(function () {
         const origin = document.getElementById("testmanagement-breadcrumb");
         if (!origin) {
             return;

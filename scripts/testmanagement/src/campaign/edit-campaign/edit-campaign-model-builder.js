@@ -40,9 +40,9 @@ function buildObjectOfCategories(tests) {
 }
 
 function buildCollectionOfTests(definitions, executions) {
-    return definitions.map(definition => {
+    return definitions.map((definition) => {
         const corresponding_execution = executions.find(
-            execution => execution.definition.id === definition.id
+            (execution) => execution.definition.id === definition.id
         );
         if (corresponding_execution) {
             return buildTest(definition, corresponding_execution, true);
@@ -54,7 +54,7 @@ function buildCollectionOfTests(definitions, executions) {
 function buildCategory(category) {
     return {
         tests: {},
-        label: category
+        label: category,
     };
 }
 
@@ -62,6 +62,6 @@ function buildTest(definition, execution, selected) {
     return {
         definition,
         execution,
-        selected
+        selected,
     };
 }

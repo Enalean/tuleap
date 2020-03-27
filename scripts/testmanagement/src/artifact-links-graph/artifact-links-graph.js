@@ -16,10 +16,10 @@ export default angular
     .controller("ArtifactLinksGraphCtrl", ArtifactLinksGraphCtrl)
     .directive("graph", GraphDirective)
     .value("ArtifactLinksArtifactsList", {
-        artifacts: {}
+        artifacts: {},
     })
     .value("ArtifactLinksGraphModalLoading", {
         loading: {
-            is_loading: false
-        }
+            is_loading: false,
+        },
     }).name;

@@ -6,6 +6,6 @@ export default {
     templateUrl: "execution-list-header.tpl.html",
     controller,
     bindings: {
-        handleRemovedExecutionsCallback: "&"
-    }
+        handleRemovedExecutionsCallback: "&",
+    },
 };

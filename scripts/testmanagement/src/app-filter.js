@@ -3,7 +3,7 @@ export default InPropertiesFilter;
 InPropertiesFilter.$inject = ["$filter"];
 
 function InPropertiesFilter($filter) {
-    return function(list, search, properties) {
+    return function (list, search, properties) {
         if (!search) {
             return list;
         }
@@ -12,8 +12,8 @@ function InPropertiesFilter($filter) {
             lookup = "",
             result = [];
 
-        keywords.forEach(function(keyword) {
-            properties.forEach(function(property) {
+        keywords.forEach(function (keyword) {
+            properties.forEach(function (property) {
                 var expression = {};
                 expression[property] = keyword;
                 lookup = $filter("filter")(list, expression);

@@ -16,24 +16,24 @@ function CampaignConfig($stateProvider) {
             resolve: {
                 milestone: [
                     "SharedPropertiesService",
-                    function(SharedPropertiesService) {
+                    function (SharedPropertiesService) {
                         return SharedPropertiesService.getCurrentMilestone();
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         })
         .state("campaigns.milestone", {
             url: "/milestone",
             ncyBreadcrumb: {
-                label: "{{ milestone.label }}"
+                label: "{{ milestone.label }}",
             },
             onEnter: [
                 "$window",
                 "milestone",
-                function($window, milestone) {
+                function ($window, milestone) {
                     $window.open(milestone.uri, "_self");
-                }
-            ]
+                },
+            ],
         })
         .state("campaigns.list", {
             url: "",
@@ -41,7 +41,7 @@ function CampaignConfig($stateProvider) {
             controllerAs: "$ctrl",
             templateUrl: "campaign-list.tpl.html",
             ncyBreadcrumb: {
-                label: "{{ campaign_breadcrumb_label }}"
-            }
+                label: "{{ campaign_breadcrumb_label }}",
+            },
         });
 }

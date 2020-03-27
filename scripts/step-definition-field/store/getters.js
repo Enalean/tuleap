@@ -19,6 +19,6 @@
 
 import { TEXT_FORMAT_TEXT } from "../../../../tracker/scripts/constants/fields-constants.js";
 
-export const is_text = () => format => {
+export const is_text = () => (format) => {
     return format === TEXT_FORMAT_TEXT;
 };

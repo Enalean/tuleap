@@ -30,7 +30,7 @@ describe("CampaignService", () => {
         angular.mock.module(testmanagement_module);
 
         let $rootScope;
-        angular.mock.inject(function(
+        angular.mock.inject(function (
             _$rootScope_,
             _CampaignService_,
             $httpBackend,
@@ -56,7 +56,7 @@ describe("CampaignService", () => {
     it("createCampaign()", async () => {
         var campaign_to_create = {
             label: "Release",
-            project_id: 101
+            project_id: 101,
         };
         var milestone_id = "133";
         var report_id = "24";
@@ -66,9 +66,9 @@ describe("CampaignService", () => {
             tracker: {
                 id: 11,
                 uri: "trackers/11",
-                label: "Validation Campaign"
+                label: "Validation Campaign",
             },
-            uri: "artifacts/17"
+            uri: "artifacts/17",
         };
         var expected_request =
             "/api/v1/testmanagement_campaigns" +
@@ -100,21 +100,21 @@ describe("CampaignService", () => {
         const label = "cloiochoanitic";
         const job_configuration = {
             url: "https://example.com/badan/",
-            token: "phrenicopericardiac"
+            token: "phrenicopericardiac",
         };
         const executions = [
             {
                 id: 4,
                 previous_result: {
-                    status: "notrun"
-                }
-            }
+                    status: "notrun",
+                },
+            },
         ];
 
         mockBackend
             .expectPATCH("/api/v1/testmanagement_campaigns/17", {
                 label,
-                job_configuration
+                job_configuration,
             })
             .respond(executions);
 
@@ -133,22 +133,22 @@ describe("CampaignService", () => {
                 {
                     id: 1,
                     previous_result: {
-                        status: "notrun"
-                    }
+                        status: "notrun",
+                    },
                 },
                 {
                     id: 2,
                     previous_result: {
-                        status: "notrun"
-                    }
-                }
+                        status: "notrun",
+                    },
+                },
             ];
 
         mockBackend
             .expectPATCH("/api/v1/testmanagement_campaigns/17/testmanagement_executions", {
                 uuid: userUUID,
                 definition_ids_to_add: definition_ids,
-                execution_ids_to_remove: execution_ids
+                execution_ids_to_remove: execution_ids,
             })
             .respond(executions);
 
@@ -176,12 +176,12 @@ describe("CampaignService", () => {
             mockBackend
                 .expectPOST("/api/v1/testmanagement_campaigns/31/automated_tests")
                 .respond(500, {
-                    error: { message: "Message: The requested URL returned error: 403 Forbidden" }
+                    error: { message: "Message: The requested URL returned error: 403 Forbidden" },
                 });
 
             expect.assertions(1);
             // eslint-disable-next-line jest/valid-expect-in-promise
-            const promise = CampaignService.triggerAutomatedTests(31).catch(error => {
+            const promise = CampaignService.triggerAutomatedTests(31).catch((error) => {
                 expect(error.message).toEqual(
                     "Message: The requested URL returned error: 403 Forbidden"
                 );

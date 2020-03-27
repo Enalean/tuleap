@@ -27,15 +27,15 @@ function getCampaigns(project_id, milestone_id, campaign_status) {
             limit: 10,
             query: JSON.stringify({
                 status: campaign_status,
-                milestone_id
-            })
-        }
+                milestone_id,
+            }),
+        },
     });
 }
 
 function getDefinitions(project_id, report_id) {
     const params = {
-        limit: 100
+        limit: 100,
     };
 
     if (report_id) {
@@ -43,6 +43,6 @@ function getDefinitions(project_id, report_id) {
     }
 
     return recursiveGet(`/api/v1/projects/${project_id}/testmanagement_definitions`, {
-        params
+        params,
     });
 }

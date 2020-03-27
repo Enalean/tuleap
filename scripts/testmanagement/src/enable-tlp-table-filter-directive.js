@@ -47,12 +47,12 @@ function EnableTlpTableFilter($timeout) {
 
     return {
         restrict: "A",
-        link: function(scope, element) {
-            $timeout(function() {
+        link: function (scope, element) {
+            $timeout(function () {
                 var filterField = element[0];
                 tlp.filterInlineTable(filterField);
                 filterField.addEventListener("keydown", preventSubmit);
             });
-        }
+        },
     };
 }

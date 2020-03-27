@@ -2,25 +2,25 @@ import testmanagement_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
 
-describe("ArtifactLinksModelService", function() {
+describe("ArtifactLinksModelService", function () {
     var gettextCatalog, ArtifactLinksModelService;
 
-    beforeEach(function() {
+    beforeEach(function () {
         gettextCatalog = {
             getString: jest.fn(),
-            setStrings: () => {}
+            setStrings: () => {},
         };
 
-        angular.mock.module(testmanagement_module, function($provide) {
+        angular.mock.module(testmanagement_module, function ($provide) {
             $provide.value("gettextCatalog", gettextCatalog);
         });
 
-        angular.mock.inject(function(_ArtifactLinksModelService_) {
+        angular.mock.inject(function (_ArtifactLinksModelService_) {
             ArtifactLinksModelService = _ArtifactLinksModelService_;
         });
     });
 
-    it("Given an artifact structure, when I transform data then an object with nodes, links, errors and title will be return", function() {
+    it("Given an artifact structure, when I transform data then an object with nodes, links, errors and title will be return", function () {
         gettextCatalog.getString.mockReturnValue("aString");
 
         var artifact = {
@@ -35,8 +35,8 @@ describe("ArtifactLinksModelService", function() {
                     url: "/plugins/tracker/?aid=9",
                     status_semantic: "closed",
                     status_label: null,
-                    nature: "artifact"
-                }
+                    nature: "artifact",
+                },
             ],
             reverse_links: [
                 {
@@ -49,8 +49,8 @@ describe("ArtifactLinksModelService", function() {
                     url: "/plugins/tracker/?aid=6",
                     status_semantic: "open",
                     status_label: "Open",
-                    nature: "artifact"
-                }
+                    nature: "artifact",
+                },
             ],
             id: 1,
             uri: "testmanagement_nodes/1",
@@ -61,7 +61,7 @@ describe("ArtifactLinksModelService", function() {
             url: "/plugins/tracker/?aid=1",
             status_semantic: "open",
             status_label: "notrun",
-            nature: "artifact"
+            nature: "artifact",
         };
 
         var expected_modal_model = {
@@ -71,13 +71,13 @@ describe("ArtifactLinksModelService", function() {
                     {
                         source: 1,
                         target: 9,
-                        type: "arrow"
+                        type: "arrow",
                     },
                     {
                         source: 6,
                         target: 1,
-                        type: "arrow"
-                    }
+                        type: "arrow",
+                    },
                 ],
                 nodes: [
                     {
@@ -90,7 +90,7 @@ describe("ArtifactLinksModelService", function() {
                         url: "/plugins/tracker/?aid=1",
                         status_semantic: "open",
                         status_label: "notrun",
-                        nature: "artifact"
+                        nature: "artifact",
                     },
                     {
                         id: 9,
@@ -102,7 +102,7 @@ describe("ArtifactLinksModelService", function() {
                         url: "/plugins/tracker/?aid=9",
                         status_semantic: "closed",
                         status_label: null,
-                        nature: "artifact"
+                        nature: "artifact",
                     },
                     {
                         id: 6,
@@ -114,17 +114,17 @@ describe("ArtifactLinksModelService", function() {
                         url: "/plugins/tracker/?aid=6",
                         status_semantic: "open",
                         status_label: "Open",
-                        nature: "artifact"
-                    }
-                ]
+                        nature: "artifact",
+                    },
+                ],
             },
-            title: "My first test"
+            title: "My first test",
         };
 
         expect(ArtifactLinksModelService.getGraphStructure(artifact)).toEqual(expected_modal_model);
     });
 
-    it("Given an artifact structure without links, when I transform data then an object with nodes, links, errors and title will be return", function() {
+    it("Given an artifact structure without links, when I transform data then an object with nodes, links, errors and title will be return", function () {
         gettextCatalog.getString.mockReturnValue("aString");
 
         var artifact = {
@@ -139,7 +139,7 @@ describe("ArtifactLinksModelService", function() {
             url: "/plugins/tracker/?aid=1",
             status_semantic: "open",
             status_label: "notrun",
-            nature: "artifact"
+            nature: "artifact",
         };
 
         var expected_modal_model = {
@@ -157,11 +157,11 @@ describe("ArtifactLinksModelService", function() {
                         url: "/plugins/tracker/?aid=1",
                         status_semantic: "open",
                         status_label: "notrun",
-                        nature: "artifact"
-                    }
-                ]
+                        nature: "artifact",
+                    },
+                ],
             },
-            title: "My first test"
+            title: "My first test",
         };
 
         expect(ArtifactLinksModelService.getGraphStructure(artifact)).toEqual(expected_modal_model);

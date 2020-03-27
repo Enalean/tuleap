@@ -20,9 +20,9 @@
 export default function AutoFocus() {
     return {
         link: {
-            post: function(scope, element) {
+            post: function (scope, element) {
                 element[0].focus();
-            }
-        }
+            },
+        },
     };
 }

@@ -23,7 +23,7 @@ import { UNCATEGORIZED } from "../definition/definition-constants.js";
 import {
     buildInitialTestsList,
     buildCategory,
-    buildTest
+    buildTest,
 } from "./edit-campaign/edit-campaign-model-builder.js";
 
 export default CampaignEditCtrl;
@@ -38,7 +38,7 @@ CampaignEditCtrl.$inject = [
     "DefinitionService",
     "ExecutionService",
     "NewTuleapArtifactModalService",
-    "editCampaignCallback"
+    "editCampaignCallback",
 ];
 
 function CampaignEditCtrl(
@@ -57,7 +57,7 @@ function CampaignEditCtrl(
     const self = this;
     Object.assign(self, {
         $onInit: init,
-        loadDefinitions
+        loadDefinitions,
     });
 
     Object.assign($scope, {
@@ -73,7 +73,7 @@ function CampaignEditCtrl(
         editCampaign,
         categoryCheckmark,
         testCheckmark,
-        diffState
+        diffState,
     });
 
     function init() {
@@ -82,13 +82,13 @@ function CampaignEditCtrl(
 
         SharedPropertiesService.setCampaignId(campaign_id);
 
-        CampaignService.getCampaign(campaign_id).then(campaign => {
+        CampaignService.getCampaign(campaign_id).then((campaign) => {
             $scope.campaign = campaign;
             $scope.filters.search = "";
 
             loadTestReports();
 
-            $q.all([loadDefinitions(), loadExecutions()]).then(function(results) {
+            $q.all([loadDefinitions(), loadExecutions()]).then(function (results) {
                 var definitions = results[0],
                     executions = results[1];
                 $scope.tests_list = buildInitialTestsList(definitions, executions);
@@ -97,7 +97,7 @@ function CampaignEditCtrl(
     }
 
     function loadTestReports() {
-        DefinitionService.getDefinitionReports().then(function(reports) {
+        DefinitionService.getDefinitionReports().then(function (reports) {
             // data: [{id: <int>, label: <string>}]
             $scope.test_reports = reports;
         });
@@ -108,14 +108,14 @@ function CampaignEditCtrl(
     }
 
     function loadExecutions() {
-        return ExecutionService.loadExecutions(campaign_id).then(function() {
+        return ExecutionService.loadExecutions(campaign_id).then(function () {
             return ExecutionService.executionsForCampaign(campaign_id);
         });
     }
 
     function selectedTests(category) {
         //eslint-disable-next-line you-dont-need-lodash-underscore/filter
-        return _.filter(category.tests, function(test) {
+        return _.filter(category.tests, function (test) {
             return test.selected;
         });
     }
@@ -125,12 +125,12 @@ function CampaignEditCtrl(
         //eslint-disable-next-line you-dont-need-lodash-underscore/size
         if (selectedTests(category).length === _.size(category.tests)) {
             //eslint-disable-next-line you-dont-need-lodash-underscore/for-each
-            _.forEach(category.tests, function(test) {
+            _.forEach(category.tests, function (test) {
                 test.selected = false;
             });
         } else {
             //eslint-disable-next-line you-dont-need-lodash-underscore/for-each
-            _.forEach(category.tests, function(test) {
+            _.forEach(category.tests, function (test) {
                 test.selected = true;
             });
         }
@@ -170,7 +170,7 @@ function CampaignEditCtrl(
 
     function addedTests() {
         return _($scope.tests_list)
-            .map(function(category) {
+            .map(function (category) {
                 //eslint-disable-next-line you-dont-need-lodash-underscore/select
                 return _.select(category.tests, { execution: null, selected: true });
             })
@@ -180,7 +180,7 @@ function CampaignEditCtrl(
 
     function removedTests() {
         return _($scope.tests_list)
-            .map(function(category) {
+            .map(function (category) {
                 return _(category.tests)
                     .reject({ execution: null })
                     .reject({ selected: true })
@@ -197,11 +197,11 @@ function CampaignEditCtrl(
             return $q.when();
         }
 
-        return $q.when(self.loadDefinitions(selected_report)).then(definitions => {
-            Object.values($scope.tests_list).forEach(category => {
-                Object.values(category.tests).forEach(test => {
+        return $q.when(self.loadDefinitions(selected_report)).then((definitions) => {
+            Object.values($scope.tests_list).forEach((category) => {
+                Object.values(category.tests).forEach((test) => {
                     test.selected = definitions.some(
-                        definition => definition.id === test.definition.id
+                        (definition) => definition.id === test.definition.id
                     );
                 });
             });
@@ -209,7 +209,7 @@ function CampaignEditCtrl(
     }
 
     function showAddTestModal() {
-        var callback = function(definition_id) {
+        var callback = function (definition_id) {
             DefinitionService.getDefinitionById(definition_id).then(addTest);
         };
 
@@ -233,10 +233,10 @@ function CampaignEditCtrl(
     function editCampaign(campaign) {
         $scope.submitting_changes = true;
 
-        const definition_ids = addedTests().map(test => {
+        const definition_ids = addedTests().map((test) => {
             return test.definition.id;
         });
-        const execution_ids = removedTests().map(test => {
+        const execution_ids = removedTests().map((test) => {
             return test.execution.id;
         });
 
@@ -248,7 +248,7 @@ function CampaignEditCtrl(
                     campaign.job_configuration
                 );
             })
-            .then(response => {
+            .then((response) => {
                 $scope.submitting_changes = false;
 
                 if (editCampaignCallback) {

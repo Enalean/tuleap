@@ -30,7 +30,7 @@ describe("ExecutionRestService", () => {
         angular.mock.module(execution_module);
 
         let $rootScope;
-        angular.mock.inject(function(
+        angular.mock.inject(function (
             $httpBackend,
             _$rootScope_,
             _ExecutionRestService_,
@@ -55,11 +55,11 @@ describe("ExecutionRestService", () => {
     it("getRemoteExecutions()", async () => {
         const response = [
             {
-                id: 4
+                id: 4,
             },
             {
-                id: 2
-            }
+                id: 2,
+            },
         ];
 
         mockBackend
@@ -78,7 +78,7 @@ describe("ExecutionRestService", () => {
     it("postTestExecution()", async () => {
         const execution = {
             id: 4,
-            status: "notrun"
+            status: "notrun",
         };
 
         mockBackend.expectPOST("/api/v1/testmanagement_executions").respond(execution);
@@ -97,8 +97,8 @@ describe("ExecutionRestService", () => {
             status: "passed",
             previous_result: {
                 result: "",
-                status: "notrun"
-            }
+                status: "notrun",
+            },
         };
 
         mockBackend
@@ -129,12 +129,12 @@ describe("ExecutionRestService", () => {
         const execution = {
             id: 100,
             previous_result: {
-                result: "Something wrong"
+                result: "Something wrong",
             },
             definition: {
                 summary: "test summary",
-                description: "test description"
-            }
+                description: "test description",
+            },
         };
 
         const expectedBody = new RegExp(
@@ -144,16 +144,16 @@ describe("ExecutionRestService", () => {
             id: issueId,
             comment: {
                 body: "MATCHING TEST SUMMARY + DESCRIPTION",
-                format: "html"
+                format: "html",
             },
-            test: function(data) {
+            test: function (data) {
                 const payload = JSON.parse(data);
                 return (
                     payload.issue_id === issueId &&
                     expectedBody.test(payload.comment.body) &&
                     payload.comment.format === "html"
                 );
-            }
+            },
         };
         mockBackend
             .expectPATCH("/api/v1/testmanagement_executions/100/issues", matchPayload)
@@ -173,14 +173,14 @@ describe("ExecutionRestService", () => {
                 id: 219,
                 xref: "bug #219",
                 title: "mascleless dollhouse",
-                tracker: { id: 23 }
+                tracker: { id: 23 },
             },
             {
                 id: 402,
                 xref: "bug #402",
                 title: "sugar candescent",
-                tracker: { id: 23 }
-            }
+                tracker: { id: 23 },
+            },
         ];
 
         mockBackend
@@ -189,10 +189,10 @@ describe("ExecutionRestService", () => {
             )
             .respond(
                 angular.toJson({
-                    collection: linked_issues
+                    collection: linked_issues,
                 }),
                 {
-                    "X-Pagination-Size": 2
+                    "X-Pagination-Size": 2,
                 }
             );
 
@@ -203,7 +203,7 @@ describe("ExecutionRestService", () => {
         const result = await wrapPromise(promise);
         expect(result).toEqual({
             collection: linked_issues,
-            total: 2
+            total: 2,
         });
     });
 
@@ -212,7 +212,7 @@ describe("ExecutionRestService", () => {
             id: 61,
             xref: "bug #61",
             title: "intercloud haustorium",
-            tracker: { id: 4 }
+            tracker: { id: 4 },
         };
         mockBackend.expectGET("/api/v1/artifacts/61").respond(angular.toJson(artifact));
 
@@ -232,9 +232,9 @@ describe("ExecutionRestService", () => {
                 .expectPATCH(
                     "/api/v1/testmanagement_executions/26",
                     {
-                        steps_results: [{ step_id, status }]
+                        steps_results: [{ step_id, status }],
                     },
-                    headers => headers["X-Client-UUID"] === UUID
+                    (headers) => headers["X-Client-UUID"] === UUID
                 )
                 .respond(200);
 
@@ -249,7 +249,7 @@ describe("ExecutionRestService", () => {
             const step_id = 38;
             const status = "blocked";
             mockBackend.whenPATCH("/api/v1/testmanagement_executions/21").respond(403, {
-                error: { message: "This user cannot update the execution" }
+                error: { message: "This user cannot update the execution" },
             });
 
             // eslint-disable-next-line jest/valid-expect-in-promise
@@ -257,7 +257,7 @@ describe("ExecutionRestService", () => {
                 test_execution,
                 step_id,
                 status
-            ).catch(error => {
+            ).catch((error) => {
                 expect(error).toEqual("This user cannot update the execution");
             });
             mockBackend.flush();

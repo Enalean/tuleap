@@ -21,7 +21,7 @@ import {
     PASSED_STATUS,
     FAILED_STATUS,
     BLOCKED_STATUS,
-    NOT_RUN_STATUS
+    NOT_RUN_STATUS,
 } from "../../execution-constants.js";
 
 function updateStatusWithStepResults(execution) {

@@ -21,7 +21,7 @@ export default angular
         "gettext",
         angular_tlp_module,
         definition_module,
-        shared_properties_module
+        shared_properties_module,
     ])
     .config(CampaignConfig)
     .service("CampaignService", CampaignService)
@@ -37,6 +37,6 @@ export default angular
             removed: "removed",
             all: "all",
             some: "some",
-            none: "none"
-        }
+            none: "none",
+        },
     }).name;

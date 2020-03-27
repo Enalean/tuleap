@@ -7,7 +7,7 @@ ExecutionLinkIssueCtrl.$inject = [
     "modal_model",
     "modal_callback",
     "ExecutionRestService",
-    "SharedPropertiesService"
+    "SharedPropertiesService",
 ];
 
 function ExecutionLinkIssueCtrl(
@@ -27,7 +27,7 @@ function ExecutionLinkIssueCtrl(
 
     Object.assign(self, {
         issue: {
-            id: ""
+            id: "",
         },
         issue_artifact: null,
         error_message: null,
@@ -37,7 +37,7 @@ function ExecutionLinkIssueCtrl(
         $onInit,
         linkIssue,
         validateIssueId,
-        validateIssueIsNotAlreadyLinked
+        validateIssueIsNotAlreadyLinked,
     });
 
     function $onInit() {
@@ -55,13 +55,13 @@ function ExecutionLinkIssueCtrl(
 
     function validateIssueIsNotAlreadyLinked(model_value, view_value) {
         const index = test_execution.linked_bugs.findIndex(
-            artifact => artifact.id === Number.parseInt(view_value, 10)
+            (artifact) => artifact.id === Number.parseInt(view_value, 10)
         );
         return index === -1;
     }
 
     function validateIssueId(model_value, view_value) {
-        return ExecutionRestService.getArtifactById(view_value).then(artifact => {
+        return ExecutionRestService.getArtifactById(view_value).then((artifact) => {
             if (artifact.tracker.id === issue_tracker_id) {
                 artifact.tracker.color_name = issue_xref_color;
                 self.issue_artifact = artifact;
@@ -77,14 +77,14 @@ function ExecutionLinkIssueCtrl(
         self.error_message = null;
 
         ExecutionRestService.linkIssue(self.issue.id, test_execution)
-            .then(function() {
+            .then(function () {
                 modal_instance.tlp_modal.hide();
                 modal_callback(self.issue_artifact);
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 self.error_message = error.message;
             })
-            .finally(function() {
+            .finally(function () {
                 self.linking_in_progress = false;
             });
     }

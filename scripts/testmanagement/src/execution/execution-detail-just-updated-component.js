@@ -5,11 +5,11 @@ controller.$inject = ["$timeout", "$scope"];
 function controller($timeout, $scope) {
     Object.assign(this, {
         isUpdated,
-        $onInit: init
+        $onInit: init,
     });
 
     function init() {
-        $scope.$watch("$ctrl.isUpdated()", new_value => {
+        $scope.$watch("$ctrl.isUpdated()", (new_value) => {
             if (new_value) {
                 $timeout(resetUpdated, 5000);
             }
@@ -23,5 +23,5 @@ export default {
             You have just updated the test definition, so it has been reset. Please start over.
         </div>
     `,
-    controller
+    controller,
 };

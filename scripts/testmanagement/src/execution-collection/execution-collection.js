@@ -12,5 +12,5 @@ export default angular
     .service("ExecutionService", ExecutionService)
     .service("ExecutionRestService", ExecutionRestService)
     .constant("ExecutionConstants", {
-        UNCATEGORIZED: "Uncategorized"
+        UNCATEGORIZED: "Uncategorized",
     }).name;

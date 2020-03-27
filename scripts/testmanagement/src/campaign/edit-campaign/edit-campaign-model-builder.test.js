@@ -25,11 +25,11 @@ describe("Edit campaign model builder -", () => {
         it("Given a list of test definitions, then it will return an object with each definition category as a key and each definition of that category as an entry of a 'tests' property. The categories will be sorted alphabetically.", () => {
             const first_definition = {
                 id: 32,
-                category: UNCATEGORIZED
+                category: UNCATEGORIZED,
             };
             const second_definition = {
                 id: 428,
-                category: "aristocratic"
+                category: "aristocratic",
             };
 
             const result = buildInitialTestsList([first_definition, second_definition], []);
@@ -41,9 +41,9 @@ describe("Edit campaign model builder -", () => {
                         428: {
                             definition: second_definition,
                             execution: null,
-                            selected: false
-                        }
-                    }
+                            selected: false,
+                        },
+                    },
                 },
                 Uncategorized: {
                     label: UNCATEGORIZED,
@@ -51,33 +51,33 @@ describe("Edit campaign model builder -", () => {
                         32: {
                             definition: first_definition,
                             execution: null,
-                            selected: false
-                        }
-                    }
-                }
+                            selected: false,
+                        },
+                    },
+                },
             });
         });
 
         it("Given a lists of test definitions and of test executions, then it will assign the definition's tests object and set it selected", () => {
             const first_definition = {
                 id: 64,
-                category: "misattribution"
+                category: "misattribution",
             };
             const second_definition = {
                 id: 21,
-                category: UNCATEGORIZED
+                category: UNCATEGORIZED,
             };
             const third_definition = {
                 id: 37,
-                category: "undecayableness"
+                category: "undecayableness",
             };
             const first_execution = {
                 id: 233,
-                definition: first_definition
+                definition: first_definition,
             };
             const second_execution = {
                 id: 123,
-                definition: second_definition
+                definition: second_definition,
             };
 
             const result = buildInitialTestsList(
@@ -92,9 +92,9 @@ describe("Edit campaign model builder -", () => {
                         64: {
                             definition: first_definition,
                             execution: first_execution,
-                            selected: true
-                        }
-                    }
+                            selected: true,
+                        },
+                    },
                 },
                 Uncategorized: {
                     label: UNCATEGORIZED,
@@ -102,9 +102,9 @@ describe("Edit campaign model builder -", () => {
                         21: {
                             definition: second_definition,
                             execution: second_execution,
-                            selected: true
-                        }
-                    }
+                            selected: true,
+                        },
+                    },
                 },
                 undecayableness: {
                     label: "undecayableness",
@@ -112,25 +112,25 @@ describe("Edit campaign model builder -", () => {
                         37: {
                             definition: third_definition,
                             execution: null,
-                            selected: false
-                        }
-                    }
-                }
+                            selected: false,
+                        },
+                    },
+                },
             });
         });
 
         it("Given a test definition with a category and a test execution with a different changeset of the definition with a different category, then it will still return the definition as selected", () => {
             const definition = {
                 id: 70,
-                category: "unrewarding"
+                category: "unrewarding",
             };
 
             const execution = {
                 id: 149,
                 definition: {
                     id: 70,
-                    category: "agyria"
-                }
+                    category: "agyria",
+                },
             };
 
             const result = buildInitialTestsList([definition], [execution]);
@@ -142,10 +142,10 @@ describe("Edit campaign model builder -", () => {
                         70: {
                             definition,
                             execution,
-                            selected: true
-                        }
-                    }
-                }
+                            selected: true,
+                        },
+                    },
+                },
             });
         });
     });
@@ -156,7 +156,7 @@ describe("Edit campaign model builder -", () => {
 
             expect(buildCategory(category)).toEqual({
                 tests: {},
-                label: category
+                label: category,
             });
         });
     });
@@ -170,7 +170,7 @@ describe("Edit campaign model builder -", () => {
             expect(buildTest(definition, execution, selected)).toEqual({
                 definition,
                 execution,
-                selected
+                selected,
             });
         });
     });

@@ -8,7 +8,7 @@ describe("SocketService -", () => {
     beforeEach(() => {
         angular.mock.module(testmanagement_module);
 
-        angular.mock.inject(function(_SocketFactory_, _SocketService_, _ExecutionService_) {
+        angular.mock.inject(function (_SocketFactory_, _SocketService_, _ExecutionService_) {
             SocketFactory = _SocketFactory_;
             SocketService = _SocketService_;
             ExecutionService = _ExecutionService_;
@@ -27,7 +27,7 @@ describe("SocketService -", () => {
                 .mockImplementation((event, callback) => {
                     callback({
                         artifact_id,
-                        added_artifact_link
+                        added_artifact_link,
                     });
                 });
 

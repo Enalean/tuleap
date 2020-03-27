@@ -44,18 +44,18 @@ export default {
         value: String,
         disabled: {
             type: Boolean,
-            default: false
-        }
+            default: false,
+        },
     },
     computed: {
         is_text() {
             return this.value === TEXT_FORMAT_TEXT;
-        }
+        },
     },
     methods: {
         input(event) {
             this.$emit("input", event, this.$refs.format.value);
-        }
-    }
+        },
+    },
 };
 </script>

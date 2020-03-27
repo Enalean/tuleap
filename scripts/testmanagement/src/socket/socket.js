@@ -17,7 +17,7 @@ export default angular
         "btford.socket-io",
         execution_collection_module,
         jwt_module,
-        shared_properties_module
+        shared_properties_module,
     ])
     .config(SocketConfig)
     .service("SocketService", SocketService)

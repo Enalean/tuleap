@@ -10,11 +10,11 @@ function GraphCtrl($state, ArtifactLinksGraphService) {
         graphd3: undefined,
         errors: [],
         title: "",
-        $onInit
+        $onInit,
     });
 
     function $onInit() {
-        ArtifactLinksGraphService.showGraph(artifact_id).then(function(model) {
+        ArtifactLinksGraphService.showGraph(artifact_id).then(function (model) {
             self.graphd3 = model.graph;
             self.errors = model.errors;
             self.title = model.title;

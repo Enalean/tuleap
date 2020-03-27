@@ -3,13 +3,13 @@ import angular from "angular";
 import ui_router from "angular-ui-router";
 import "angular-mocks";
 
-describe("ExecutionListFilter", function() {
+describe("ExecutionListFilter", function () {
     var ngFilter;
 
     beforeEach(angular.mock.module(ui_router));
     beforeEach(angular.mock.module(execution_module));
     beforeEach(
-        angular.mock.inject(function($filter) {
+        angular.mock.inject(function ($filter) {
             ngFilter = $filter;
         })
     );
@@ -27,8 +27,8 @@ describe("ExecutionListFilter", function() {
                 id: 24600,
                 uri: "testdef/24600",
                 summary: "Tracker Rule date verifications for a workflow",
-                category: "AgileDashboard"
-            }
+                category: "AgileDashboard",
+            },
         },
         {
             id: 24606,
@@ -43,15 +43,15 @@ describe("ExecutionListFilter", function() {
                 real_name: "rtaupe",
                 username: "rtaupe",
                 ldap_id: "",
-                avatar_url: "https://paelut/users/rtaupe/avatar.png"
+                avatar_url: "https://paelut/users/rtaupe/avatar.png",
             },
             //...
             definition: {
                 id: 24601,
                 uri: "testdef/24601",
                 summary: "Html notification for tracker v5",
-                category: "SOAP"
-            }
+                category: "SOAP",
+            },
         },
         {
             id: 24607,
@@ -66,47 +66,47 @@ describe("ExecutionListFilter", function() {
                 real_name: "jclodo",
                 username: "jclodo",
                 ldap_id: "",
-                avatar_url: "https://paelut/users/jclodo/avatar.png"
+                avatar_url: "https://paelut/users/jclodo/avatar.png",
             },
             //…
             definition: {
                 id: 24602,
                 uri: "testdef/24602",
                 summary: "Git test",
-                category: "GIT"
-            }
-        }
+                category: "GIT",
+            },
+        },
     ];
 
-    it("has a CampaignListFilter filter", function() {
+    it("has a CampaignListFilter filter", function () {
         expect(ngFilter("ExecutionListFilter")).not.toBeNull();
     });
 
-    it("filters on category", function() {
+    it("filters on category", function () {
         var results = ngFilter("ExecutionListFilter")(list, "soap", {}, null);
         expect(results.length).toEqual(1);
         expect(results[0]).toEqual(expect.objectContaining({ id: 24606 }));
     });
 
-    it("filters on summary", function() {
+    it("filters on summary", function () {
         var results = ngFilter("ExecutionListFilter")(list, "workflow", {}, null);
         expect(results.length).toEqual(1);
         expect(results[0]).toEqual(expect.objectContaining({ id: 24605 }));
     });
 
-    it("filters on test def id", function() {
+    it("filters on test def id", function () {
         var results = ngFilter("ExecutionListFilter")(list, "24601", {}, null);
         expect(results.length).toEqual(1);
         expect(results[0]).toEqual(expect.objectContaining({ id: 24606 }));
     });
 
-    it("filters on execution status", function() {
+    it("filters on execution status", function () {
         var results = ngFilter("ExecutionListFilter")(list, "", { passed: true }, null);
         expect(results.length).toEqual(2);
         expect(results[0]).toEqual(expect.objectContaining({ id: 24605 }));
     });
 
-    it("filters on execution multiple status", function() {
+    it("filters on execution multiple status", function () {
         var results = ngFilter("ExecutionListFilter")(
             list,
             "",
@@ -119,7 +119,7 @@ describe("ExecutionListFilter", function() {
         expect(results[2]).toEqual(expect.objectContaining({ id: 24607 }));
     });
 
-    it("filters on summary and execution status", function() {
+    it("filters on summary and execution status", function () {
         var results = ngFilter("ExecutionListFilter")(list, "tracker", { passed: true }, null);
         expect(results.length).toEqual(1);
     });

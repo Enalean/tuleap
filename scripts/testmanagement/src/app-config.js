@@ -8,6 +8,6 @@ function TestManagementConfig($urlRouterProvider, $breadcrumbProvider) {
     $urlRouterProvider.otherwise("/campaigns");
     $breadcrumbProvider.setOptions({
         prefixStateName: "campaigns.milestone",
-        templateUrl: "breadcrumb.tpl.html"
+        templateUrl: "breadcrumb.tpl.html",
     });
 }

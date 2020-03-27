@@ -7,7 +7,7 @@ ArtifactLinksGraphService.$inject = [
     "TlpModalService",
     "ArtifactLinksGraphModalLoading",
     "ArtifactLinksGraphRestService",
-    "ArtifactLinksModelService"
+    "ArtifactLinksModelService",
 ];
 
 function ArtifactLinksGraphService(
@@ -20,7 +20,7 @@ function ArtifactLinksGraphService(
 
     _.extend(self, {
         showGraphModal: showGraphModal,
-        showGraph: showGraph
+        showGraph: showGraph,
     });
 
     function showGraphModal(execution) {
@@ -31,13 +31,15 @@ function ArtifactLinksGraphService(
             controller: "ArtifactLinksGraphCtrl",
             controllerAs: "modal",
             resolve: {
-                modal_model: self.showGraph(execution.id)
-            }
+                modal_model: self.showGraph(execution.id),
+            },
         });
     }
 
     function showGraph(artifact_id) {
-        return ArtifactLinksGraphRestService.getArtifactGraph(artifact_id).then(function(artifact) {
+        return ArtifactLinksGraphRestService.getArtifactGraph(artifact_id).then(function (
+            artifact
+        ) {
             return ArtifactLinksModelService.getGraphStructure(artifact);
         });
     }

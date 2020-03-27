@@ -8,7 +8,7 @@ function SharedPropertiesService() {
         nodejs_server: undefined,
         nodejs_server_version: undefined,
         uuid: undefined,
-        milestone: undefined
+        milestone: undefined,
     };
 
     return {
@@ -35,7 +35,7 @@ function SharedPropertiesService() {
         setIssueTrackerConfig: setIssueTrackerConfig,
         getIssueTrackerConfig: getIssueTrackerConfig,
         getCurrentMilestone: getCurrentMilestone,
-        setCurrentMilestone: setCurrentMilestone
+        setCurrentMilestone: setCurrentMilestone,
     };
 
     function getProjectId() {

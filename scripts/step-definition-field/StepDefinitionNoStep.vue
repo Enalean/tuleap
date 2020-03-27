@@ -37,10 +37,10 @@ import { mapState, mapMutations } from "vuex";
 export default {
     name: "StepDefinitionNoStep",
     computed: {
-        ...mapState(["field_id"])
+        ...mapState(["field_id"]),
     },
     methods: {
-        ...mapMutations(["addStep"])
-    }
+        ...mapMutations(["addStep"]),
+    },
 };
 </script>

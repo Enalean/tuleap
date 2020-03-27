@@ -34,7 +34,7 @@ ExecutionListCtrl.$inject = [
     "CampaignService",
     "SocketService",
     "SharedPropertiesService",
-    "ExecutionRestService"
+    "ExecutionRestService",
 ];
 
 function ExecutionListCtrl(
@@ -51,7 +51,7 @@ function ExecutionListCtrl(
     const self = this;
     Object.assign(self, {
         $onInit: initialization,
-        loadExecutions
+        loadExecutions,
     });
 
     Object.assign($scope, {
@@ -60,13 +60,13 @@ function ExecutionListCtrl(
         viewTestExecution,
         canCategoryBeDisplayed,
         hideDetailsForRemovedTestExecution,
-        shouldShowEmptyState: () => self.should_show_empty_state
+        shouldShowEmptyState: () => self.should_show_empty_state,
     });
 
     function checkActiveClassOnExecution(execution) {
         return $state.includes("campaigns.executions.detail", {
             execid: execution.id,
-            defid: execution.definition.id
+            defid: execution.definition.id,
         });
     }
 
@@ -92,7 +92,7 @@ function ExecutionListCtrl(
         }
     }
 
-    $scope.$on("$destroy", function() {
+    $scope.$on("$destroy", function () {
         var toolbar = angular.element(".toolbar");
         if (toolbar) {
             toolbar.removeClass("hide-toolbar");
@@ -109,26 +109,26 @@ function ExecutionListCtrl(
         ExecutionService.removeAllPresencesOnCampaign();
     });
 
-    $scope.$on("execution-detail-destroy", function() {
+    $scope.$on("execution-detail-destroy", function () {
         $scope.execution_id = "";
     });
 
-    $scope.$on("controller-reload", function() {
+    $scope.$on("controller-reload", function () {
         initialization();
     });
 
     SocketService.listenNodeJSServer().then(
-        function() {
+        function () {
             SocketService.listenToUserScore();
             SocketService.listenTokenExpired();
             SocketService.listenToExecutionViewed();
             SocketService.listenToExecutionCreated();
             SocketService.listenToExecutionUpdated();
-            SocketService.listenToExecutionDeleted(function() {
+            SocketService.listenToExecutionDeleted(function () {
                 hideDetailsForRemovedTestExecution();
             });
             SocketService.listenToExecutionLeft();
-            SocketService.listenToCampaignUpdated(function(campaign) {
+            SocketService.listenToCampaignUpdated(function (campaign) {
                 $scope.campaign = campaign;
                 ExecutionService.updateCampaign(campaign);
             });
@@ -150,7 +150,7 @@ function ExecutionListCtrl(
         SharedPropertiesService.setCampaignId($scope.campaign_id);
 
         self.loadExecutions();
-        CampaignService.getCampaign($scope.campaign_id).then(campaign => {
+        CampaignService.getCampaign($scope.campaign_id).then((campaign) => {
             $scope.campaign = campaign;
             $scope.search = "";
             $scope.loading = loading;
@@ -158,7 +158,7 @@ function ExecutionListCtrl(
                 passed: false,
                 failed: false,
                 blocked: false,
-                notrun: false
+                notrun: false,
             };
 
             ExecutionService.updateCampaign($scope.campaign);
@@ -169,7 +169,7 @@ function ExecutionListCtrl(
     function watchAndSortCategories() {
         $scope.$watch(
             () => ExecutionService.executions_by_categories_by_campaigns[$scope.campaign_id],
-            categories => {
+            (categories) => {
                 $scope.categories = sortAlphabetically(categories);
             },
             true
@@ -178,7 +178,7 @@ function ExecutionListCtrl(
 
     function loadExecutions() {
         return ExecutionService.loadExecutions($scope.campaign_id).then(
-            executions => {
+            (executions) => {
                 if (executions.length === 0) {
                     self.should_show_empty_state = true;
                 }
@@ -191,7 +191,7 @@ function ExecutionListCtrl(
                 ExecutionService.executions_loaded = true;
                 ExecutionService.displayPresencesForAllExecutions();
             },
-            error =>
+            (error) =>
                 setError(
                     gettextCatalog.getString(
                         "An error occurred while loading the tests. {{ error }}",
@@ -207,7 +207,7 @@ function ExecutionListCtrl(
         ExecutionRestService.changePresenceOnTestExecution(
             current_execution_id,
             old_execution_id
-        ).then(function() {
+        ).then(function () {
             ExecutionService.removeViewTestExecution(
                 old_execution_id,
                 SharedPropertiesService.getCurrentUser()

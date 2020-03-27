@@ -33,8 +33,8 @@ describe("rest querier", () => {
                     nb_of_passed: 0,
                     nb_of_failed: 0,
                     nb_of_notrun: 1,
-                    nb_of_blocked: 0
-                }
+                    nb_of_blocked: 0,
+                },
             ];
 
             const tlpRecursiveGetSpy = jest
@@ -51,8 +51,8 @@ describe("rest querier", () => {
                 {
                     params: {
                         limit: 10,
-                        query: '{"status":"open","milestone_id":26}'
-                    }
+                        query: '{"status":"open","milestone_id":26}',
+                    },
                 }
             );
             expect(result).toEqual(campaigns);
@@ -63,7 +63,7 @@ describe("rest querier", () => {
         it("Given a project id and a report id, then the test definitions will be retrieved recursively and a promise will be resolved with all definitions", async () => {
             const definitions = [
                 { id: 1, summary: "plumber" },
-                { id: 86, summary: "disguisement" }
+                { id: 86, summary: "disguisement" },
             ];
 
             const tlpRecursiveGetSpy = jest
@@ -79,8 +79,8 @@ describe("rest querier", () => {
                 {
                     params: {
                         limit: 100,
-                        report_id
-                    }
+                        report_id,
+                    },
                 }
             );
             expect(result).toEqual(definitions);
@@ -89,7 +89,7 @@ describe("rest querier", () => {
         it("Given no report id, then the test definitions will be retrieved without it", async () => {
             const definitions = [
                 { id: 22, summary: "polymazia" },
-                { id: 72, summary: "pilastering" }
+                { id: 72, summary: "pilastering" },
             ];
 
             const tlpRecursiveGetSpy = jest
@@ -103,8 +103,8 @@ describe("rest querier", () => {
                 "/api/v1/projects/6/testmanagement_definitions",
                 {
                     params: {
-                        limit: 100
-                    }
+                        limit: 100,
+                    },
                 }
             );
         });

@@ -23,7 +23,7 @@ const state = {
     field_id: null,
     is_dragging: false,
     drake: null,
-    container: []
+    container: [],
 };
 
 export default state;

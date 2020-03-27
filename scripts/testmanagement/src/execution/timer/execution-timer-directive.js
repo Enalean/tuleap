@@ -12,20 +12,20 @@ function TimerDirective($interval) {
         templateUrl: "execution-timer-directive.tpl.html",
         require: "ngModel",
         scope: {
-            execution_time: "=ngModel"
+            execution_time: "=ngModel",
         },
-        link: linkFunction
+        link: linkFunction,
     };
 
     function linkFunction(scope, iElement, iAttrs, ngModelCtrl) {
         var timer = null;
         startTimeButton();
 
-        scope.$watch("execution_time_format", function() {
+        scope.$watch("execution_time_format", function () {
             ngModelCtrl.$setViewValue(scope.execution_time_format);
         });
 
-        scope.toggleTimer = function() {
+        scope.toggleTimer = function () {
             if (!scope.time_is_started) {
                 startTimeButton();
             } else {
@@ -33,7 +33,7 @@ function TimerDirective($interval) {
             }
         };
 
-        ngModelCtrl.$formatters.push(function(modelValue) {
+        ngModelCtrl.$formatters.push(function (modelValue) {
             var duration = moment.duration(modelValue, "seconds");
             var hours = zeroPadding(duration.hours());
             var minutes = zeroPadding(duration.minutes());
@@ -43,14 +43,14 @@ function TimerDirective($interval) {
             return scope.execution_time_format;
         });
 
-        ngModelCtrl.$parsers.push(function(viewValue) {
+        ngModelCtrl.$parsers.push(function (viewValue) {
             var duration = moment.duration(viewValue);
             return duration.asSeconds();
         });
 
         function startTimeButton() {
             scope.time_is_started = true;
-            timer = $interval(function() {
+            timer = $interval(function () {
                 scope.execution_time++;
             }, 1000);
         }
