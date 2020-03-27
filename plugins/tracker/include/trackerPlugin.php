@@ -50,7 +50,6 @@ use Tuleap\Queue\WorkerEvent;
 use Tuleap\Request\CurrentPage;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\REST\BasicAuthentication;
-use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\RESTCurrentUserMiddleware;
 use Tuleap\REST\TuleapRESTCORSMiddleware;
 use Tuleap\REST\UserManager as RESTUserManager;
@@ -224,8 +223,6 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $this->addHook(Event::USER_MANAGER_GET_USER_INSTANCE);
         $this->addHook('plugin_statistics_service_usage');
         $this->addHook(Event::REST_RESOURCES);
-        $this->addHook(Event::REST_GET_PROJECT_TRACKERS);
-        $this->addHook(Event::REST_OPTIONS_PROJECT_TRACKERS);
         $this->addHook(Event::REST_PROJECT_RESOURCES);
 
         $this->addHook(Event::BACKEND_ALIAS_GET_ALIASES);
@@ -1122,57 +1119,6 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         $injector = new Tracker_REST_ResourcesInjector();
         $injector->populate($params['restler']);
-    }
-
-    /**
-     * @see REST_GET_PROJECT_TRACKERS
-     */
-    public function rest_get_project_trackers($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $user             = UserManager::instance()->getCurrentUser();
-        $tracker_resource = $this->buildRightVersionOfProjectTrackersResource($params['version']);
-        $project          = $params['project'];
-
-        $this->checkProjectRESTAccess($project, $user);
-
-        $params['result'] = $tracker_resource->get(
-            $user,
-            $project,
-            $params['representation'],
-            $params['query'],
-            $params['limit'],
-            $params['offset']
-        );
-    }
-
-    /**
-     * @see REST_OPTIONS_PROJECT_TRACKERS
-     */
-    public function rest_options_project_trackers($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $user             = UserManager::instance()->getCurrentUser();
-        $project          = $params['project'];
-        $tracker_resource = $this->buildRightVersionOfProjectTrackersResource($params['version']);
-
-        $this->checkProjectRESTAccess($project, $user);
-
-        $params['result'] = $tracker_resource->options(
-            $user,
-            $project,
-            $params['limit'],
-            $params['offset']
-        );
-    }
-
-    private function checkProjectRESTAccess(Project $project, PFUser $user)
-    {
-        ProjectAuthorization::userCanAccessProject($user, $project, new Tracker_URLVerification());
-    }
-
-    private function buildRightVersionOfProjectTrackersResource($version)
-    {
-        $class_with_right_namespace = '\\Tuleap\\Tracker\\REST\\' . $version . '\\ProjectTrackersResource';
-        return new $class_with_right_namespace;
     }
 
     public function agiledashboard_event_rest_get_milestone($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
