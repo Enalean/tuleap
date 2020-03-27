@@ -3,8 +3,10 @@
 set -euo pipefail
 
 MAX_TEST_EXECUTION_TIME='30m'
+READLINK="$(command -v greadlink || echo readlink)"
+TIMEOUT="$(command -v gtimeout || echo timeout)"
 
-BASEDIR="$(dirname "$(readlink -f "$0")")/../../../"
+BASEDIR="$(dirname "$($READLINK -f "$0")")/../../../"
 export BASEDIR
 pushd "$BASEDIR"
 DOCKERCOMPOSE="docker-compose --project-name soap-${BUILD_TAG:-$RANDOM} -f tests/soap/docker-compose.yml"
@@ -45,4 +47,4 @@ case "${2:-}" in
     exit 1
 esac
 
-timeout "$MAX_TEST_EXECUTION_TIME" $DOCKERCOMPOSE up --abort-on-container-exit --exit-code-from=tests "$DB_HOST" tests
+$TIMEOUT "$MAX_TEST_EXECUTION_TIME" $DOCKERCOMPOSE up --abort-on-container-exit --exit-code-from=tests "$DB_HOST" tests
