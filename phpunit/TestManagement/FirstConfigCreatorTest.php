@@ -79,7 +79,7 @@ class FirstConfigCreatorTest extends TestCase
         $this->campaign_tracker_xml_path   = TESTMANAGEMENT_RESOURCE_DIR . '/Tracker_campaign.xml';
         $this->definition_tracker_xml_path = TESTMANAGEMENT_RESOURCE_DIR . '/Tracker_test_def.xml';
         $this->execution_tracker_xml_path  = TESTMANAGEMENT_RESOURCE_DIR . '/Tracker_test_exec.xml';
-        $this->issue_tracker_xml_path      = realpath(__DIR__ . '/../../../tracker/www/resources/templates/Tracker_Bugs.xml');
+        $this->issue_tracker_xml_path      = realpath(__DIR__ . '/../../../tracker/resources/templates/Tracker_Bugs.xml');
 
         $this->template = Mockery::spy(\Project::class);
         $this->template->shouldReceive('getID')->andReturn($this->template_id);

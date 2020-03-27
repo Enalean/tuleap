@@ -187,7 +187,7 @@ class FirstConfigCreator
     {
         $template_path = TESTMANAGEMENT_RESOURCE_DIR . '/Tracker_' . $tracker_itemname . '.xml';
         if ($tracker_itemname === ISSUE_TRACKER_SHORTNAME) {
-            $template_path = realpath(__DIR__ . '/../../../tracker/www/resources/templates/Tracker_Bugs.xml');
+            $template_path = realpath(__DIR__ . '/../../../tracker/resources/templates/Tracker_Bugs.xml');
         }
 
         $tracker = $this->importTrackerStructure($project, $template_path);
