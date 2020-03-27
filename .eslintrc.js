@@ -98,6 +98,7 @@ module.exports = {
         "vue/require-direct-export": "off",
         // Typescript
         "@typescript-eslint/camelcase": "off",
+        "@typescript-eslint/class-literal-property-style": "error",
         "@typescript-eslint/consistent-type-assertions": ["error", { assertionStyle: "never" }],
         "@typescript-eslint/explicit-function-return-type": "error",
         "@typescript-eslint/no-explicit-any": "error",
