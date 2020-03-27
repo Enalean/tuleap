@@ -20,7 +20,7 @@
 import $ from "jquery";
 import { escaper } from "../../../src/www/scripts/tuleap/escaper.js";
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     var select_bot = document.querySelector("#select_bot");
     var inputs_channels = document.querySelectorAll(".input_channels");
 
@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (inputs_channels.length === 0) {
         return;
     }
-    [].forEach.call(inputs_channels, function(input) {
+    [].forEach.call(inputs_channels, function (input) {
         loadChannelAutoCompleter(input);
     });
 });
@@ -42,13 +42,13 @@ function loadChannelAutoCompleter(input) {
         tokenSeparators: [",", " "],
         placeholder: input.dataset.placeholder,
         tags: [],
-        initSelection: function(element, callback) {
+        initSelection: function (element, callback) {
             var data = [];
-            $(element.val().split(", ")).each(function() {
+            $(element.val().split(", ")).each(function () {
                 data.push({ id: this, text: this });
             });
             callback(data);
-        }
+        },
     });
 }
 
@@ -58,7 +58,7 @@ function loadBotSelectList(input) {
         placeholder: "Select a bot",
         minimumResultsForSearch: Infinity,
         formatResult: formatItem,
-        formatSelection: formatItem
+        formatSelection: formatItem,
     });
 
     function formatItem(item) {
