@@ -51,13 +51,13 @@ rnc2rng: src/common/xml/resources/project/project.rng \
 	 plugins/svn/resources/svn.rng \
 	 plugins/docman/resources/docman.rng \
 	 src/common/xml/resources/ugroups.rng \
-	 plugins/tracker/www/resources/tracker.rng \
-	 plugins/tracker/www/resources/trackers.rng \
-	 plugins/tracker/www/resources/artifacts.rng \
-	 plugins/agiledashboard/www/resources/xml_project_agiledashboard.rng \
-	 plugins/cardwall/www/resources/xml_project_cardwall.rng
+	 plugins/tracker/resources/tracker.rng \
+	 plugins/tracker/resources/trackers.rng \
+	 plugins/tracker/resources/artifacts.rng \
+	 plugins/agiledashboard/resources/xml_project_agiledashboard.rng \
+	 plugins/cardwall/resources/xml_project_cardwall.rng
 
-src/common/xml/resources/project/project.rng: src/common/xml/resources/project/project.rnc plugins/tracker/www/resources/tracker-definition.rnc plugins/docman/resources/docman-definition.rnc src/common/xml/resources/ugroups-definition.rnc plugins/svn/resources/svn-definition.rnc src/common/xml/resources/frs-definition.rnc src/common/xml/resources/mediawiki-definition.rnc src/common/xml/resources/project-definition.rnc
+src/common/xml/resources/project/project.rng: src/common/xml/resources/project/project.rnc plugins/tracker/resources/tracker-definition.rnc plugins/docman/resources/docman-definition.rnc src/common/xml/resources/ugroups-definition.rnc plugins/svn/resources/svn-definition.rnc src/common/xml/resources/frs-definition.rnc src/common/xml/resources/mediawiki-definition.rnc src/common/xml/resources/project-definition.rnc
 
 plugins/svn/resources/svn.rng: plugins/svn/resources/svn.rnc plugins/svn/resources/svn-definition.rnc
 
@@ -65,11 +65,11 @@ plugins/docman/resources/docman.rng: plugins/docman/resources/docman.rnc plugins
 
 src/common/xml/resources/ugroups.rng: src/common/xml/resources/ugroups.rnc src/common/xml/resources/ugroups-definition.rnc
 
-plugins/tracker/www/resources/trackers.rng: plugins/tracker/www/resources/trackers.rnc plugins/tracker/www/resources/tracker-definition.rnc plugins/tracker/www/resources/artifact-definition.rnc plugins/tracker/www/resources/triggers.rnc plugins/tracker/www/resources/workflow.rnc
+plugins/tracker/resources/trackers.rng: plugins/tracker/resources/trackers.rnc plugins/tracker/resources/tracker-definition.rnc plugins/tracker/resources/artifact-definition.rnc plugins/tracker/resources/triggers.rnc plugins/tracker/resources/workflow.rnc
 
-plugins/tracker/www/resources/tracker.rng: plugins/tracker/www/resources/tracker.rnc plugins/tracker/www/resources/tracker-definition.rng
+plugins/tracker/resources/tracker.rng: plugins/tracker/resources/tracker.rnc plugins/tracker/resources/tracker-definition.rng
 
-plugins/tracker/www/resources/artifacts.rng: plugins/tracker/www/resources/artifacts.rnc plugins/tracker/www/resources/artifact-definition.rng
+plugins/tracker/resources/artifacts.rng: plugins/tracker/resources/artifacts.rnc plugins/tracker/resources/artifact-definition.rng
 
 %.rng: %.rnc
 	trang -I rnc -O rng $< $@

@@ -9,9 +9,9 @@ grammar {
     include "../nature-definition.rnc"
     include "../mediawiki-definition.rnc"
     include "../dashboard.rnc"
-    include "../../../../../plugins/agiledashboard/www/resources/xml_project_agiledashboard_planning.rnc"
-    include "../../../../../plugins/cardwall/www/resources/xml_project_cardwall_data.rnc"
-    include "../../../../../plugins/tracker/www/resources/tracker-definition.rnc"
+    include "../../../../../plugins/agiledashboard/resources/xml_project_agiledashboard_planning.rnc"
+    include "../../../../../plugins/cardwall/resources/xml_project_cardwall_data.rnc"
+    include "../../../../../plugins/tracker/resources/tracker-definition.rnc"
     include "../../../../../plugins/svn/resources/svn-definition.rnc"
     include "../../../../../plugins/docman/resources/docman-definition.rnc"
 

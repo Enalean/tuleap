@@ -174,7 +174,7 @@ class Tracker_Artifact_XMLImport
             $partial_element = new SimpleXMLElement((string) $xml_element->asXML());
             $this->external_fields_extractor->extractExternalFieldsFromArtifact($partial_element);
 
-            $this->rng_validator->validate($xml_element, realpath(dirname(TRACKER_BASE_DIR) . '/www/resources/artifacts.rng'));
+            $this->rng_validator->validate($xml_element, realpath(__DIR__ . '/../../../resources/artifacts.rng'));
             $artifacts = $this->importBareArtifactsFromXML(
                 $tracker,
                 $xml_element,

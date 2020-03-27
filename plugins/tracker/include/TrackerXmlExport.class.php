@@ -191,7 +191,7 @@ class TrackerXmlExport
             foreach ($partial_element->tracker as $xml_tracker) {
                 $this->external_field_extractor->extractExternalFieldsFromTracker($xml_tracker);
             }
-            $this->rng_validator->validate($partial_element, dirname(TRACKER_BASE_DIR) . '/www/resources/trackers.rng');
+            $this->rng_validator->validate($partial_element, __DIR__ . '/../resources/trackers.rng');
             return $xml_trackers;
         } catch (XML_ParseException $exception) {
             foreach ($exception->getErrors() as $parse_error) {
@@ -245,7 +245,7 @@ class TrackerXmlExport
             $this->external_field_extractor->extractExternalFieldsFromTracker($xml_tracker);
         }
 
-        $this->rng_validator->validate($partial_element, dirname(TRACKER_BASE_DIR) . '/www/resources/trackers.rng');
+        $this->rng_validator->validate($partial_element, __DIR__ . '/../resources/trackers.rng');
     }
 
     private function exportMapping(SimpleXMLElement $tracker_xml, Tracker $tracker)
