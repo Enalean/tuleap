@@ -65,6 +65,9 @@ class Plugin implements PFO_Plugin
      */
     protected $allowedForProject = array();
 
+    /**
+     * @param int $id
+     */
     public function __construct($id = -1)
     {
         $this->id            = $id;

@@ -59,7 +59,7 @@ final class DeleteAppController extends DispatchablePSR15Compatible
         $this->csrf_token  = $csrf_token;
     }
 
-    public static function getUrl(\Project $project)
+    public static function getUrl(\Project $project): string
     {
         return sprintf('/plugins/oauth2_server/project/%d/admin/delete-app', $project->getID());
     }

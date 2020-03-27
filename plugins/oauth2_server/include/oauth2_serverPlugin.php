@@ -89,7 +89,7 @@ final class oauth2_serverPlugin extends Plugin
 {
     public const SERVICE_NAME_INSTRUMENTATION = 'oauth2_server';
 
-    public function __construct($id)
+    public function __construct(int $id)
     {
         parent::__construct($id);
         $this->setScope(self::SCOPE_SYSTEM);

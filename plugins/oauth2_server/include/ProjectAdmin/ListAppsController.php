@@ -82,7 +82,7 @@ final class ListAppsController implements DispatchableWithRequest, DispatchableW
     {
         ServiceInstrumentation::increment(\oauth2_serverPlugin::SERVICE_NAME_INSTRUMENTATION);
         $layout->includeFooterJavascriptFile($this->assets->getFileURL('project-administration.js'));
-        $callback = function (\Project $project, \PFUser $user) {
+        $callback = function (\Project $project, \PFUser $user): void {
             $this->renderer->renderToPage(
                 'project-admin',
                 $this->presenter_builder->build($this->csrf_token, $project)

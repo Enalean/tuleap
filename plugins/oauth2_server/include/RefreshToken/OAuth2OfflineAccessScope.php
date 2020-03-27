@@ -41,6 +41,9 @@ final class OAuth2OfflineAccessScope implements AuthenticationScope
      * @var OAuth2ScopeIdentifier
      */
     private $identifier;
+    /**
+     * @var AuthenticationScopeDefinition
+     */
     private $definition;
 
     private function __construct(OAuth2ScopeIdentifier $identifier)
