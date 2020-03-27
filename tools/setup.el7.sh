@@ -126,7 +126,6 @@ if [ ${tuleap_installed:-false} = "false" ] || \
 
     _setupForgeupgrade
     _phpActivePlugin "tracker" "${tuleap_unix_user}"
-    _phpImportTrackerTemplate
     _phpForgeupgrade "record-only"
     ${tuleapcfg} systemctl enable "${timers[@]}"
     ${tuleapcfg} systemctl start "${timers[@]}"

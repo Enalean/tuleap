@@ -1261,12 +1261,6 @@ su -c '/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils
 if [ "$enable_plugin_tracker" = "true" ]; then
     echo "Install tracker"
     su -c '/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php tracker' -l codendiadm
-
-    # Import all templates
-    template_base_dir="$INSTALL_DIR/plugins/tracker/www/resources/templates"
-    /bin/ls $template_base_dir/Tracker_*.xml | while read xml_template; do
-	$INSTALL_DIR/src/utils/php-launcher.sh $INSTALL_DIR/plugins/tracker/bin/import_tracker_xml_template.php "$xml_template"
-    done
 fi
 
 # GraphOnTrackersv5 plugin

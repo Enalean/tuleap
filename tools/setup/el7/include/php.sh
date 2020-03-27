@@ -14,14 +14,6 @@ _phpForgeupgrade() {
         --config="${forgeupgrade_conf}" "${1}" 2> >(_logCatcher)
 }
 
-_phpImportTrackerTemplate() {
-    for template in ${install_dir}/plugins/tracker/www/resources/templates/Tracker_*.xml; do
-        "${php_launcher}" ${install_dir}/plugins/tracker/bin/import_tracker_xml_template.php ${template} \
-            2> >(_logCatcher)
-        echo "${install_dir}/plugins/tracker/bin/import_tracker_xml_template.php ${template}"
-    done
-}
-
 _phpConfigureModule() {
     # ${1}: module name
 

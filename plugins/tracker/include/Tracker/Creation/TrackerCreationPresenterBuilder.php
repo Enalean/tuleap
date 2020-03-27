@@ -44,20 +44,28 @@ class TrackerCreationPresenterBuilder
      * @var TrackerFactory
      */
     private $tracker_factory;
+    /**
+     * @var DefaultTemplatesCollectionBuilder
+     */
+    private $default_templates_collection_builder;
 
     public function __construct(
         ProjectManager $project_manager,
         TrackerDao $tracker_dao,
-        TrackerFactory $tracker_factory
+        TrackerFactory $tracker_factory,
+        DefaultTemplatesCollectionBuilder $default_templates_collection_builder
     ) {
-        $this->project_manager = $project_manager;
-        $this->tracker_dao     = $tracker_dao;
-        $this->tracker_factory = $tracker_factory;
+        $this->project_manager                      = $project_manager;
+        $this->tracker_dao                          = $tracker_dao;
+        $this->tracker_factory                      = $tracker_factory;
+        $this->default_templates_collection_builder = $default_templates_collection_builder;
     }
 
     public function build(\Project $current_project, \CSRFSynchronizerToken $csrf, \PFUser $user): TrackerCreationPresenter
     {
         $project_templates = [];
+
+        $default_templates = $this->default_templates_collection_builder->build()->getSortedDefaultTemplatesRepresentations();
         foreach ($this->project_manager->getSiteTemplates() as $project) {
             $tracker_list = $this->tracker_dao->searchByGroupId($project->getID());
             if (! $tracker_list || count($tracker_list) === 0) {
@@ -69,10 +77,7 @@ class TrackerCreationPresenterBuilder
                 $formatted_tracker[] = new TrackerTemplatesRepresentation($tracker['id'], $tracker['name'], $tracker['color']);
             }
 
-            $project_templates[] = new ProjectTemplatesRepresentation(
-                $project,
-                $formatted_tracker
-            );
+            $project_templates[] = new ProjectTemplatesRepresentation($project, $formatted_tracker);
         }
 
         $existing_trackers = $this->getExistingTrackersNamesAndShortnamesInProject($current_project);
@@ -84,6 +89,7 @@ class TrackerCreationPresenterBuilder
         ];
 
         return new TrackerCreationPresenter(
+            $default_templates,
             $project_templates,
             $existing_trackers,
             $trackers_from_other_projects,

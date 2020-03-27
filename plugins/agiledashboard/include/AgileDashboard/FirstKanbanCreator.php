@@ -70,7 +70,7 @@ class AgileDashboard_FirstKanbanCreator
         $this->kanban_manager   = $kanban_manager;
         $this->tracker_factory  = $tracker_factory;
         $this->xml_import       = $xml_import;
-        $this->template_path    = AGILEDASHBOARD_RESOURCE_DIR . '/Tracker_activity.xml';
+        $this->template_path    = __DIR__ . '/../../resources/templates/Tracker_activity.xml';
         $this->tracker_itemname = $this->xml_import->getTrackerItemNameFromXMLFile($this->template_path);
         $this->tracker_report_updater = $tracker_report_updater;
         $this->kanban_factory = $kanban_factory;

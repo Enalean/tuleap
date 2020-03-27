@@ -27,11 +27,11 @@ use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\CreateTrackerFromXMLChecker;
 use Tuleap\AgileDashboard\ExplicitBacklog\DirectArtifactLinkCleaner;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
+use Tuleap\AgileDashboard\ExplicitBacklog\ProjectNotUsingExplicitBacklogException;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedCriterionOptionsProvider;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedReportCriterionChecker;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedReportCriterionMatchingIdsRetriever;
-use Tuleap\AgileDashboard\ExplicitBacklog\ProjectNotUsingExplicitBacklogException;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCalculator;
 use Tuleap\AgileDashboard\FormElement\Burnup\ProjectsCountModeDao;
@@ -112,6 +112,9 @@ use Tuleap\Tracker\Artifact\RecentlyVisited\HistoryQuickLinkCollection;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\CreateTrackerFromXMLEvent;
+use Tuleap\Tracker\Creation\DefaultTemplate;
+use Tuleap\Tracker\Creation\DefaultTemplatesCollection;
+use Tuleap\Tracker\Creation\TrackerTemplatesRepresentation;
 use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticCheckers;
 use Tuleap\Tracker\Events\MoveArtifactParseFieldChangeNodes;
 use Tuleap\Tracker\FormElement\Event\MessageFetcherAdditionalWarnings;
@@ -262,6 +265,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->addHook(GetExternalPostActionPluginsEvent::NAME);
             $this->addHook(CheckPostActionsForTracker::NAME);
             $this->addHook(GetWorkflowExternalPostActionsValuesForUpdate::NAME);
+            $this->addHook(DefaultTemplatesCollection::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -2152,5 +2156,54 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         if (count($add_to_top_backlog_post_actions) > 0) {
             $event->addExternalValue(new AddToTopBacklogValue());
         }
+    }
+
+    public function defaultTemplatesCollection(DefaultTemplatesCollection $collection): void
+    {
+        $this->addKanbanTemplates($collection);
+        $this->addScrumTemplates($collection);
+    }
+
+    private function addKanbanTemplates(DefaultTemplatesCollection $collection): void
+    {
+        $collection->add(
+            'default-activity',
+            new DefaultTemplate(
+                new TrackerTemplatesRepresentation('default-activity', 'Activities', 'clockwork-orange'),
+                __DIR__ . '/../resources/templates/Tracker_activity.xml'
+            )
+        );
+    }
+
+    private function addScrumTemplates(DefaultTemplatesCollection $collection): void
+    {
+        $collection->add(
+            'default-release',
+            new DefaultTemplate(
+                new TrackerTemplatesRepresentation('default-release', 'Releases', 'clockwork-orange'),
+                __DIR__ . '/../resources/templates/Tracker_release.xml'
+            )
+        );
+        $collection->add(
+            'default-sprint',
+            new DefaultTemplate(
+                new TrackerTemplatesRepresentation('default-sprint', 'Sprints', 'acid-green'),
+                __DIR__ . '/../resources/templates/Tracker_sprint.xml'
+            )
+        );
+        $collection->add(
+            'default-story',
+            new DefaultTemplate(
+                new TrackerTemplatesRepresentation('default-story', 'User Stories', 'lake-placid-blue'),
+                __DIR__ . '/../resources/templates/Tracker_UserStories.xml'
+            )
+        );
+        $collection->add(
+            'default-task',
+            new DefaultTemplate(
+                new TrackerTemplatesRepresentation('default-task', 'Tasks', 'daphne-blue'),
+                __DIR__ . '/../resources/templates/Tracker_Tasks.xml'
+            )
+        );
     }
 }

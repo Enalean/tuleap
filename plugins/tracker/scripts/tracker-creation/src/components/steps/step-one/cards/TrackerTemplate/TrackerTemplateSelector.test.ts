@@ -80,4 +80,28 @@ describe("TrackerTemplateSelector", () => {
 
         expect(selectbox.value).toEqual(story_tracker.id);
     });
+
+    it(`pre-selects the current selected default template if any,
+        so it keeps showing the selected template when user goes back to step 1`, async () => {
+        const story_tracker = { id: "default-story", name: "Stories" };
+        const wrapper = await getWrapper({
+            default_templates: [story_tracker],
+            project_templates: [
+                {
+                    project_name: "Scrum template",
+                    tracker_list: [
+                        { id: "10", name: "Bug" },
+                        { id: "11", name: "Stories" },
+                        { id: "12", name: "Releases" }
+                    ]
+                }
+            ],
+            selected_tracker_template: story_tracker
+        } as State);
+
+        const selectbox: HTMLInputElement = wrapper.find("[data-test=template-selector]")
+            .element as HTMLInputElement;
+
+        expect(selectbox.value).toEqual(story_tracker.id);
+    });
 });

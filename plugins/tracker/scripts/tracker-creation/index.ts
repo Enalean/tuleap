@@ -29,7 +29,8 @@ import {
     ProjectWithTrackers,
     ProjectTemplate,
     State,
-    DataForColorPicker
+    DataForColorPicker,
+    Tracker
 } from "./src/store/type";
 import { createRouter } from "./src/router";
 
@@ -54,6 +55,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!csrf_token) {
         throw new Error("No CSRF token");
     }
+
+    const default_templates: Tracker[] =
+        typeof vue_mount_point.dataset.defaultTemplates !== "undefined"
+            ? JSON.parse(vue_mount_point.dataset.defaultTemplates)
+            : [];
 
     const project_templates: Array<ProjectTemplate> =
         typeof vue_mount_point.dataset.projectTemplates !== "undefined"
@@ -98,6 +104,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const initial_state: State = {
         csrf_token,
+        default_templates,
         project_templates,
         existing_trackers,
         trackers_from_other_projects,
