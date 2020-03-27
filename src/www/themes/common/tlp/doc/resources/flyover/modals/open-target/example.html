@@ -1,0 +1,38 @@
+<p>
+    <button
+        id="delete-button"
+        type="button"
+        class="tlp-button-primary"
+        data-target-modal-id="delete-modal"
+    >
+        Delete
+    </button>
+</p>
+
+<div id="delete-modal" class="tlp-modal" role="dialog" aria-labelledby="delete-modal-label">
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="delete-modal-label">Modal title</h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">&times</div>
+    </div>
+    <div class="tlp-modal-body">
+        <h2 class="tlp-modal-subtitle">Subtitle</h2>
+        <p>One fine body…</p>
+    </div>
+    <div class="tlp-modal-footer">
+        <button
+            type="button"
+            class="tlp-button-primary tlp-button-outline tlp-modal-action"
+            data-dismiss="modal"
+        >
+            Cancel
+        </button>
+        <button type="button" class="tlp-button-primary tlp-modal-action">Action</button>
+    </div>
+</div>
+
+<script>
+    import { openTargetModalIdOnClick } from "../../../../../../../../scripts/tuleap/modals/modal-opener";
+
+    const DELETE_BUTTON_ID = "delete-button";
+    openTargetModalIdOnClick(document, DELETE_BUTTON_ID);
+</script>

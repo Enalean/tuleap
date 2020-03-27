@@ -21,7 +21,12 @@
                     </div>
                 {{/ last_created_app }}
                 <div class="tlp-table-actions">
-                    <button type="button" class="tlp-button-primary tlp-table-actions-element" id="oauth2-server-add-client-button">
+                    <button
+                        type="button"
+                        class="tlp-button-primary tlp-table-actions-element"
+                        data-target-modal-id="oauth2-server-add-client-modal"
+                        id="oauth2-server-add-client-button"
+                    >
                         <i class="fa fa-plus tlp-button-icon"></i> {{# dgettext }}tuleap-oauth2_server | Add an App{{/ dgettext }}
                     </button>
                 </div>

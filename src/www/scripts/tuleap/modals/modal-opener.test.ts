@@ -18,11 +18,7 @@
  */
 
 import * as tlp from "tlp";
-import {
-    openModalAndReplacePlaceholders,
-    openModalOnClick,
-    openTargetModalIdOnClick,
-} from "./modal-opener";
+import { openModalAndReplacePlaceholders, openTargetModalIdOnClick } from "./modal-opener";
 
 jest.mock("tlp");
 
@@ -32,34 +28,6 @@ describe(`Modal Opener`, () => {
         doc = createLocalDocument();
         createModal = jest.spyOn(tlp, "modal");
         jest.resetAllMocks();
-    });
-
-    describe(`openModalOnClick()`, () => {
-        it(`does not crash when the modal element can't be found`, () => {
-            openModalOnClick(doc, "unknown_modal_id", "unknown_button_id");
-            expect(createModal).not.toHaveBeenCalled();
-        });
-
-        it(`does not crash when the button can't be found`, () => {
-            createAndAppendElementById(doc, "div", "modal_id");
-            openModalOnClick(doc, "modal_id", "unknown_button_id");
-            expect(createModal).not.toHaveBeenCalled();
-        });
-
-        it(`creates a modal and shows it when the button is clicked`, () => {
-            createAndAppendElementById(doc, "div", "modal_id");
-            const button = createAndAppendElementById(doc, "button", "button_id");
-
-            simulateClick(button);
-            const modal = {
-                show: jest.fn(),
-            };
-            createModal.mockImplementation(() => modal);
-
-            openModalOnClick(doc, "modal_id", "button_id");
-            expect(createModal).toHaveBeenCalled();
-            expect(modal.show).toHaveBeenCalled();
-        });
     });
 
     describe(`openTargetModalIdOnClick()`, () => {

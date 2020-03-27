@@ -19,17 +19,6 @@
 
 import { modal as createModal } from "tlp";
 
-export function openModalOnClick(doc: Document, modal_element_id: string, button_id: string): void {
-    const button = doc.getElementById(button_id);
-    const modal_element = doc.getElementById(modal_element_id);
-    if (!button || !modal_element) {
-        return;
-    }
-
-    const modal = createModal(modal_element);
-    button.addEventListener("click", () => modal.show());
-}
-
 export function openTargetModalIdOnClick(
     doc: Document,
     button_id: string,

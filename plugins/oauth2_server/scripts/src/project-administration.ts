@@ -20,12 +20,11 @@
 import { initGettext } from "../../../../src/www/scripts/tuleap/gettext/gettext-init";
 import {
     openModalAndReplacePlaceholders,
-    openModalOnClick,
+    openTargetModalIdOnClick,
 } from "../../../../src/www/scripts/tuleap/modals/modal-opener";
 import { buildDeletionReplaceCallback, hiddenInputReplaceCallback } from "./replacers";
 
 const ADD_BUTTON_ID = "oauth2-server-add-client-button";
-const ADD_MODAL_ID = "oauth2-server-add-client-modal";
 
 const DELETE_BUTTONS_SELECTOR = ".oauth2-server-delete-client-button";
 const DELETE_MODAL_ID = "oauth2-server-delete-client-modal";
@@ -41,7 +40,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         import(/* webpackChunkName: "oauth2-server-po-" */ `../po/${locale}.po`)
     );
 
-    openModalOnClick(document, ADD_MODAL_ID, ADD_BUTTON_ID);
+    openTargetModalIdOnClick(document, ADD_BUTTON_ID);
     openModalAndReplacePlaceholders({
         document: document,
         buttons_selector: DELETE_BUTTONS_SELECTOR,
