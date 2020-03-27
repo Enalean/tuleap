@@ -32,7 +32,7 @@ describe("LabeledItemsList", () => {
 
         Vue.use(GetTextPlugin, {
             translations: {},
-            silent: true
+            silent: true,
         });
         Vue.use(VueDOMPurifyHTML);
         LabeledItemsListVueElement = Vue.extend(LabeledItemsList);
@@ -42,8 +42,8 @@ describe("LabeledItemsList", () => {
         const vm = new LabeledItemsListVueElement({
             propsData: {
                 labelsId: "[]",
-                projectId: "101"
-            }
+                projectId: "101",
+            },
         });
 
         vm.$mount();
@@ -55,16 +55,16 @@ describe("LabeledItemsList", () => {
         const error_json = {
             error: {
                 code: 404,
-                message: "Not Found"
-            }
+                message: "Not Found",
+            },
         };
         mockFetchError(getLabeledItems, { error_json });
 
         const vm = new LabeledItemsListVueElement({
             propsData: {
                 labelsId: "[1]",
-                projectId: "101"
-            }
+                projectId: "101",
+            },
         });
 
         vm.$mount();
@@ -80,8 +80,8 @@ describe("LabeledItemsList", () => {
         const vm = new LabeledItemsListVueElement({
             propsData: {
                 labelsId: "[1]",
-                projectId: "101"
-            }
+                projectId: "101",
+            },
         });
 
         vm.$mount();
@@ -95,20 +95,20 @@ describe("LabeledItemsList", () => {
             Promise.resolve({
                 labeled_items: [
                     {
-                        title: "test 1"
+                        title: "test 1",
                     },
                     {
-                        title: "test 2"
-                    }
-                ]
+                        title: "test 2",
+                    },
+                ],
             })
         );
 
         const vm = new LabeledItemsListVueElement({
             propsData: {
                 labelsId: "[3, 4]",
-                projectId: "101"
-            }
+                projectId: "101",
+            },
         });
 
         vm.$mount();
@@ -121,15 +121,15 @@ describe("LabeledItemsList", () => {
         getLabeledItems.mockReturnValue(
             Promise.resolve({
                 labeled_items: [{ title: "test 1" }],
-                has_more: true
+                has_more: true,
             })
         );
 
         const vm = new LabeledItemsListVueElement({
             propsData: {
                 labelsId: "[3, 4]",
-                projectId: "101"
-            }
+                projectId: "101",
+            },
         });
 
         vm.$mount();
@@ -142,15 +142,15 @@ describe("LabeledItemsList", () => {
         getLabeledItems.mockReturnValue(
             Promise.resolve({
                 labeled_items: [{ title: "test 1" }],
-                has_more: false
+                has_more: false,
             })
         );
 
         const vm = new LabeledItemsListVueElement({
             propsData: {
                 labelsId: "[3, 4]",
-                projectId: "101"
-            }
+                projectId: "101",
+            },
         });
 
         vm.$mount();
@@ -165,22 +165,22 @@ describe("LabeledItemsList", () => {
                 Promise.resolve({
                     labeled_items: [{ title: "test 1" }],
                     offset: 0,
-                    has_more: true
+                    has_more: true,
                 })
             )
             .mockReturnValueOnce(
                 Promise.resolve({
                     labeled_items: [{ title: "test 2" }],
                     offset: 50,
-                    has_more: false
+                    has_more: false,
                 })
             );
 
         const vm = new LabeledItemsListVueElement({
             propsData: {
                 labelsId: "[3, 4]",
-                projectId: "101"
-            }
+                projectId: "101",
+            },
         });
 
         vm.$mount();

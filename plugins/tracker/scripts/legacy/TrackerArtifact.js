@@ -30,17 +30,17 @@ var tuleap = tuleap || {};
 tuleap.textarea = tuleap.textarea || {};
 
 codendi.tracker.artifact.editor = {
-    disableWarnOnPageLeave: function() {
-        window.onbeforeunload = function() {};
+    disableWarnOnPageLeave: function () {
+        window.onbeforeunload = function () {};
     },
 
-    warnOnPageLeave: function() {
+    warnOnPageLeave: function () {
         var edition_switcher = new tuleap.tracker.artifact.editionSwitcher();
 
         if (edition_switcher.submissionBarIsAlreadyActive()) {
             return codendi.locales.tracker_formelement_admin.lose_follows;
         }
-    }
+    },
 };
 
 function invertFollowups(followupSection) {
@@ -55,58 +55,54 @@ function invertFollowups(followupSection) {
     }
 }
 
-document.observe("dom:loaded", function() {
+document.observe("dom:loaded", function () {
     function bindShowHideFieldsets() {
-        $$(".show-fieldsets").each(function(button) {
+        $$(".show-fieldsets").each(function (button) {
             function showFieldsets() {
-                $$(".tracker_artifact_fieldset_hidden").each(function(fieldset) {
+                $$(".tracker_artifact_fieldset_hidden").each(function (fieldset) {
                     fieldset.removeClassName("tracker_artifact_fieldset_hidden");
                     fieldset.addClassName("tracker_artifact_fieldset_hidden_visible");
                 });
             }
 
-            button.observe("click", function() {
+            button.observe("click", function () {
                 showFieldsets();
             });
         });
 
-        $$(".hide-fieldsets").each(function(button) {
+        $$(".hide-fieldsets").each(function (button) {
             function hideFieldsets() {
-                $$(".tracker_artifact_fieldset_hidden_visible").each(function(fieldset) {
+                $$(".tracker_artifact_fieldset_hidden_visible").each(function (fieldset) {
                     fieldset.addClassName("tracker_artifact_fieldset_hidden");
                     fieldset.removeClassName("tracker_artifact_fieldset_hidden_visible");
                 });
             }
 
-            button.observe("click", function() {
+            button.observe("click", function () {
                 hideFieldsets();
             });
         });
     }
 
-    document.addEventListener("EditModalLoaded", function() {
+    document.addEventListener("EditModalLoaded", function () {
         bindShowHideFieldsets();
     });
     bindShowHideFieldsets();
 
-    $$(".tracker_statistics").each(function(div) {
+    $$(".tracker_statistics").each(function (div) {
         codendi.Tooltips.push(
-            new codendi.Tooltip(
-                div
-                    .up()
-                    .previous()
-                    .down("a.link-to-tracker"),
-                ""
-            ).createTooltip(div.remove().setStyle({ fontSize: "1.1em" }))
+            new codendi.Tooltip(div.up().previous().down("a.link-to-tracker"), "").createTooltip(
+                div.remove().setStyle({ fontSize: "1.1em" })
+            )
         );
     });
 
-    $$(".tracker_artifact_followup_header").each(function(header) {
+    $$(".tracker_artifact_followup_header").each(function (header) {
         if (header.up().next()) {
-            header.observe("mouseover", function() {
+            header.observe("mouseover", function () {
                 header.setStyle({ cursor: "pointer" });
             });
-            header.observe("click", function(evt) {
+            header.observe("click", function (evt) {
                 if (
                     Event.element(evt).hasClassName("tracker_artifact_followup_permalink") ||
                     Event.element(evt).hasClassName("fa-link")
@@ -121,31 +117,27 @@ document.observe("dom:loaded", function() {
         }
     });
 
-    $$("#tracker_artifact_followup_comments").each(function(followup_section) {
+    $$("#tracker_artifact_followup_comments").each(function (followup_section) {
         //We only have one followup_section but I'm too lazy to do a if()
 
         function toggleCheckForCommentOrder() {
-            $("invert-order-menu-item")
-                .down("i")
-                .toggle();
+            $("invert-order-menu-item").down("i").toggle();
         }
         function toggleCheckForDisplayChanges() {
-            $("display-changes-menu-item")
-                .down("i")
-                .toggle();
+            $("display-changes-menu-item").down("i").toggle();
         }
 
         var display_changes_classname = "tracker_artifact_followup_comments-display_changes";
 
         $("invert-order-menu-item")
             .up()
-            .observe("click", function(evt) {
+            .observe("click", function (evt) {
                 toggleCheckForCommentOrder();
                 invertFollowups(followup_section);
                 new Ajax.Request(codendi.tracker.base_url + "invert_comments_order.php", {
                     parameters: {
-                        tracker: $("tracker_id").value
-                    }
+                        tracker: $("tracker_id").value,
+                    },
                 });
                 Event.stop(evt);
                 return false;
@@ -153,7 +145,7 @@ document.observe("dom:loaded", function() {
 
         $("display-changes-menu-item")
             .up()
-            .observe("click", function(evt) {
+            .observe("click", function (evt) {
                 followup_section.toggleClassName(display_changes_classname);
                 toggleCheckForDisplayChanges();
                 new Ajax.Request(codendi.tracker.base_url + "invert_display_changes.php");
@@ -161,7 +153,7 @@ document.observe("dom:loaded", function() {
             });
     });
 
-    $$(".tracker_artifact_field  textarea").each(function(element) {
+    $$(".tracker_artifact_field  textarea").each(function (element) {
         var html_id = element.id;
         var field_id = html_id.match(/_(\d+)$/)[1];
         var name = element.dataset.formatName || "artifact[" + field_id + "][format]";
@@ -182,7 +174,7 @@ document.observe("dom:loaded", function() {
             default_in_html: false,
             id: html_id,
             name: name,
-            htmlFormat: is_html
+            htmlFormat: is_html,
         });
     });
 
@@ -201,19 +193,19 @@ document.observe("dom:loaded", function() {
         return { value: content, htmlFormat: htmlFormat };
     }
 
-    $$(".tracker_artifact_followup_comment_controls_edit button").each(function(edit) {
+    $$(".tracker_artifact_followup_comment_controls_edit button").each(function (edit) {
         var id = edit.up(".tracker_artifact_followup").id;
         var data;
 
         if (id && id.match(/_\d+$/)) {
             id = id.match(/_(\d+)$/)[1];
-            edit.observe("click", function(evt) {
+            edit.observe("click", function (evt) {
                 Event.stop(evt);
                 var comment_panel = $("followup_" + id).down(".tracker_artifact_followup_comment");
                 if (comment_panel.visible()) {
                     var textarea = new Element("textarea", {
                         id: "tracker_followup_comment_edit_" + id,
-                        class: "user-mention"
+                        class: "user-mention",
                     });
                     var htmlFormat = false;
 
@@ -239,7 +231,7 @@ document.observe("dom:loaded", function() {
                         id: id,
                         name: name,
                         htmlFormat: htmlFormat,
-                        full_width: true
+                        full_width: true,
                     });
 
                     var nb_rows_displayed = 5;
@@ -255,7 +247,7 @@ document.observe("dom:loaded", function() {
 
                     var button = new Element("button", { class: "btn btn-primary" })
                         .update(codendi.locales.tracker_artifact.edit_followup_ok)
-                        .observe("click", function(evt) {
+                        .observe("click", function (evt) {
                             var content;
                             if (
                                 CKEDITOR.instances &&
@@ -274,9 +266,9 @@ document.observe("dom:loaded", function() {
                                     func: "update-comment",
                                     changeset_id: id,
                                     content: content,
-                                    comment_format: format
+                                    comment_format: format,
                                 },
-                                onSuccess: function(transport) {
+                                onSuccess: function (transport) {
                                     if (CKEDITOR.instances["tracker_followup_comment_edit_" + id]) {
                                         CKEDITOR.instances[
                                             "tracker_followup_comment_edit_" + id
@@ -285,7 +277,7 @@ document.observe("dom:loaded", function() {
                                     edit_panel.remove();
                                     comment_panel.update(transport.responseText).show();
                                     var e = new Effect.Highlight(comment_panel); //eslint-disable-line @typescript-eslint/no-unused-vars
-                                }
+                                },
                             });
                             edit.show();
                             Event.stop(evt);
@@ -295,10 +287,10 @@ document.observe("dom:loaded", function() {
                     edit.hide();
                     var cancel = new Element("a", {
                         href: "#cancel",
-                        class: "btn"
+                        class: "btn",
                     })
                         .update(codendi.locales.tracker_artifact.edit_followup_cancel)
-                        .observe("click", function(evt) {
+                        .observe("click", function (evt) {
                             if (CKEDITOR.instances["tracker_followup_comment_edit_" + id]) {
                                 CKEDITOR.instances["tracker_followup_comment_edit_" + id].destroy(
                                     true
@@ -319,18 +311,18 @@ document.observe("dom:loaded", function() {
         }
     });
 
-    $$(".tracker_artifact_showdiff").each(function(link) {
+    $$(".tracker_artifact_showdiff").each(function (link) {
         if (link.next()) {
             link.next().hide();
-            link.observe("click", function(evt) {
+            link.observe("click", function (evt) {
                 link.next().toggle();
                 Event.stop(evt);
             });
         }
     });
 
-    $$(".toggle-diff").each(function(toggle_button) {
-        toggle_button.observe("click", function(event) {
+    $$(".toggle-diff").each(function (toggle_button) {
+        toggle_button.observe("click", function (event) {
             Event.stop(event);
             toggle_button.next().toggle();
         });
@@ -351,19 +343,19 @@ document.observe("dom:loaded", function() {
             .toggle();
     })();
 
-    $$(".tracker_artifact_add_attachment").each(function(attachment) {
+    $$(".tracker_artifact_add_attachment").each(function (attachment) {
         var add = new Element("a", {
-            href: "#add-another-file"
+            href: "#add-another-file",
         })
             .update(codendi.locales.tracker_formelement_admin.add_another_file)
-            .observe("click", function(evt) {
+            .observe("click", function (evt) {
                 Event.stop(evt);
 
                 //clone the first attachment selector (file and description inputs)
                 var new_attachment = $(attachment.cloneNode(true));
 
                 //clear the cloned input
-                new_attachment.select("input").each(function(input) {
+                new_attachment.select("input").each(function (input) {
                     input.value = "";
                 });
 
@@ -373,7 +365,7 @@ document.observe("dom:loaded", function() {
                         new Element("a", { href: "#remove-attachment" })
                             .addClassName("tracker_artifact_remove_attachment")
                             .update("<span>remove</span>")
-                            .observe("click", function(evt) {
+                            .observe("click", function (evt) {
                                 Event.stop(evt);
                                 new_attachment.remove();
                             })
@@ -387,10 +379,10 @@ document.observe("dom:loaded", function() {
 
     if ($("tracker_artifact_canned_response_sb")) {
         var artifact_followup_comment_has_changed = $("tracker_followup_comment_new").value !== "";
-        $("tracker_followup_comment_new").observe("change", function() {
+        $("tracker_followup_comment_new").observe("change", function () {
             artifact_followup_comment_has_changed = $("tracker_followup_comment_new").value !== "";
         });
-        $("tracker_artifact_canned_response_sb").observe("change", function(evt) {
+        $("tracker_artifact_canned_response_sb").observe("change", function (evt) {
             var sb = Event.element(evt);
             var value = "";
             if (artifact_followup_comment_has_changed) {
@@ -417,7 +409,7 @@ document.observe("dom:loaded", function() {
     }
 
     if ($("tracker_select_tracker")) {
-        $("tracker_select_tracker").observe("change", function() {
+        $("tracker_select_tracker").observe("change", function () {
             this.ownerDocument.location.href = this.ownerDocument.location.href.gsub(
                 /tracker=\d+/,
                 "tracker=" + this.value
@@ -427,25 +419,21 @@ document.observe("dom:loaded", function() {
 
     function toggle_tracker_artifact_attachment_delete(elem) {
         if (elem.checked) {
-            elem.up()
-                .siblings()
-                .invoke("addClassName", "tracker_artifact_attachment_deleted");
+            elem.up().siblings().invoke("addClassName", "tracker_artifact_attachment_deleted");
         } else {
-            elem.up()
-                .siblings()
-                .invoke("removeClassName", "tracker_artifact_attachment_deleted");
+            elem.up().siblings().invoke("removeClassName", "tracker_artifact_attachment_deleted");
         }
     }
 
-    $$(".tracker_artifact_attachment_delete > input[type=checkbox]").each(function(elem) {
+    $$(".tracker_artifact_attachment_delete > input[type=checkbox]").each(function (elem) {
         //on load strike (useful when the checkbox is already checked on dom:loaded. (Missing required field for example)
         toggle_tracker_artifact_attachment_delete(elem);
-        elem.observe("click", function() {
+        elem.observe("click", function () {
             toggle_tracker_artifact_attachment_delete(elem);
         });
     });
 
-    $$("div.artifact-submit-button input").each(function(elem) {
+    $$("div.artifact-submit-button input").each(function (elem) {
         elem.observe("click", codendi.tracker.artifact.editor.disableWarnOnPageLeave);
     });
 

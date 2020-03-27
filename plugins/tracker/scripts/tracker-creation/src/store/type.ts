@@ -83,5 +83,5 @@ export enum CreationOptions {
     TRACKER_TEMPLATE = "tracker_template",
     TRACKER_XML_FILE = "tracker_xml_file",
     TRACKER_EMPTY = "tracker_empty",
-    TRACKER_ANOTHER_PROJECT = "tracker_another_project"
+    TRACKER_ANOTHER_PROJECT = "tracker_another_project",
 }

@@ -21,7 +21,7 @@ import {
     getForkedRepositoryList,
     getRepositoryList,
     setRepositoriesSortedByPathUserPreference,
-    deleteRepositoriesSortedByPathUserPreference
+    deleteRepositoriesSortedByPathUserPreference,
 } from "../api/rest-querier.js";
 import { getProjectId, getUserId } from "../repository-list-presenter.js";
 import {
@@ -29,7 +29,7 @@ import {
     ERROR_TYPE_NO_GIT,
     PROJECT_KEY,
     REPOSITORIES_SORTED_BY_PATH,
-    ANONYMOUS_USER_ID
+    ANONYMOUS_USER_ID,
 } from "../constants.js";
 
 export const setDisplayMode = async (context, new_mode) => {
@@ -62,11 +62,11 @@ export const changeRepositories = (context, new_owner_id) => {
 
     const order_by = context.getters.isFolderDisplayMode ? "path" : "push_date";
     if (new_owner_id === PROJECT_KEY) {
-        const getProjectRepositories = callback =>
+        const getProjectRepositories = (callback) =>
             getRepositoryList(getProjectId(), order_by, callback);
         getAsyncRepositoryList(context.commit, getProjectRepositories);
     } else {
-        const getForkedRepositories = callback =>
+        const getForkedRepositories = (callback) =>
             getForkedRepositoryList(
                 getProjectId(),
                 context.state.selected_owner_id,
@@ -81,7 +81,7 @@ export async function getAsyncRepositoryList(commit, getRepositories) {
     commit("setIsLoadingInitial", true);
     commit("setIsLoadingNext", true);
     try {
-        return await getRepositories(repositories => {
+        return await getRepositories((repositories) => {
             commit("pushRepositoriesForCurrentOwner", repositories);
             commit("setIsLoadingInitial", false);
         });

@@ -32,7 +32,7 @@ function init() {
     bindSidebarEvent();
 
     function bindSidebarEvent() {
-        sidebar.addEventListener("click", event => {
+        sidebar.addEventListener("click", (event) => {
             const clicked_element = event.target,
                 is_clicked_element_a_sidebar_collapser = isClickedElementASidebarCollapser(
                     clicked_element
@@ -73,6 +73,6 @@ function updateUserPreferences(user_preference_name, state) {
     const body = `user_preference_name=${user_preference_name}&sidebar_state=${state}`;
     post("/account/update-sidebar-preference.php", {
         headers,
-        body
+        body,
     });
 }

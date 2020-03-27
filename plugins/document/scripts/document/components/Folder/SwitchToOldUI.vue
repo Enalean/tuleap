@@ -59,13 +59,13 @@ export default {
                 );
             }
             return "/plugins/docman/?group_id=" + encoded_project_id;
-        }
+        },
     },
     methods: {
         async redirectUser() {
             await this.$store.dispatch("setUserPreferenciesForUI");
             redirectToUrl(this.redirect_url);
-        }
-    }
+        },
+    },
 };
 </script>

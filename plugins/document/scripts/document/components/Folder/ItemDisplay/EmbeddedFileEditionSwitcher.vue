@@ -70,7 +70,7 @@ export default {
         },
         large_view_title() {
             return this.$gettext("Large view");
-        }
+        },
     },
     methods: {
         switchToLargeView() {
@@ -78,7 +78,7 @@ export default {
         },
         switchToNarrowView() {
             this.$store.dispatch("displayEmbeddedInNarrowMode", this.currently_previewed_item);
-        }
-    }
+        },
+    },
 };
 </script>

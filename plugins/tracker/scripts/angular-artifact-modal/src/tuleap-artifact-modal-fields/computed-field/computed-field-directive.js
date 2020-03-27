@@ -8,11 +8,11 @@ export default function ComputedFieldDirective() {
         scope: {
             field: "=tuleapArtifactModalComputedField",
             isDisabled: "&isDisabled",
-            value_model: "=valueModel"
+            value_model: "=valueModel",
         },
         controller: ComputedFieldController,
         controllerAs: "computed_field",
         bindToController: true,
-        templateUrl: "computed-field.tpl.html"
+        templateUrl: "computed-field.tpl.html",
     };
 }

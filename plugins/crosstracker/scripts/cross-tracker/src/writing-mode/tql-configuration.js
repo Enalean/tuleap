@@ -35,7 +35,7 @@ const TQL_cross_tracker_autocomplete_keywords = [
     "@last_update_by",
     "@submitted_on",
     "@submitted_by",
-    "@assigned_to"
+    "@assigned_to",
 ];
 
 const cross_tracker_allowed_keywords = {
@@ -47,8 +47,8 @@ const cross_tracker_allowed_keywords = {
         "@last_update_by",
         "@submitted_on",
         "@submitted_by",
-        "@assigned_to"
-    ]
+        "@assigned_to",
+    ],
 };
 const TQL_cross_tracker_mode_definition = buildModeDefinition(cross_tracker_allowed_keywords);
 

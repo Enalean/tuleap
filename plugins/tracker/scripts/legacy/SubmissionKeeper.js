@@ -31,7 +31,7 @@
 var tuleap = tuleap || {};
 tuleap.trackers = tuleap.trackers || {};
 
-(function($) {
+(function ($) {
     var submit_buttons = "form div input[type='submit'], .tuleap-modal input[type='submit']",
         infos_element = "input#artifact_informations",
         last_viewed_changeset;
@@ -39,23 +39,23 @@ tuleap.trackers = tuleap.trackers || {};
     tuleap.trackers.submissionKeeper = {
         can_submit: true,
 
-        init: function() {
+        init: function () {
             var self = this;
 
             if (isOnArtifactEditionView()) {
-                $("form").submit(function(event) {
+                $("form").submit(function (event) {
                     return self.isArtifactSubmittable(event);
                 });
             }
         },
 
-        isArtifactSubmittable: function(event) {
+        isArtifactSubmittable: function (event) {
             processSubmitQuery(event);
             return this.can_submit;
-        }
+        },
     };
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         tuleap.trackers.submissionKeeper.init();
     });
 
@@ -80,7 +80,7 @@ tuleap.trackers = tuleap.trackers || {};
     }
 
     function processNewChangesets(changesets) {
-        changesets.each(function(changeset) {
+        changesets.each(function (changeset) {
             $("#notification-placeholder").append(changeset["html"]);
         });
         $(".artifact-event-popup").fadeIn(500);
@@ -92,7 +92,7 @@ tuleap.trackers = tuleap.trackers || {};
 
     function reenableSubmitButtonsIfNeeded() {
         if (!thereAreNotificationsPending()) {
-            $(submit_buttons).each(function() {
+            $(submit_buttons).each(function () {
                 $(this).removeAttr("disabled");
                 tuleap.trackers.submissionKeeper.can_submit = true;
             });
@@ -100,7 +100,7 @@ tuleap.trackers = tuleap.trackers || {};
     }
 
     function disableSubmitButtons() {
-        $(submit_buttons).each(function() {
+        $(submit_buttons).each(function () {
             $(this).attr("disabled", "disabled");
         });
     }
@@ -110,9 +110,7 @@ tuleap.trackers = tuleap.trackers || {};
     }
 
     function detachPopup() {
-        $(this)
-            .parents(".artifact-event-popup")
-            .detach();
+        $(this).parents(".artifact-event-popup").detach();
         reenableSubmitButtonsIfNeeded();
     }
 
@@ -124,14 +122,14 @@ tuleap.trackers = tuleap.trackers || {};
         var params = {
             func: "get-new-changesets",
             aid: artifact_id,
-            changeset_id: last_changeset_id
+            changeset_id: last_changeset_id,
         };
 
         var response = $.ajax({
             url: codendi.tracker.base_url + "?" + $.param(params),
             dataType: "json",
             async: false,
-            cache: false
+            cache: false,
         }).responseText;
 
         return $.parseJSON(response);

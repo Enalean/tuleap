@@ -20,7 +20,7 @@
 
 import {
     addModalListeners,
-    displayButtonSaveWithModalWhenSwitchHasBeenClickedAtLeastOnce
+    displayButtonSaveWithModalWhenSwitchHasBeenClickedAtLeastOnce,
 } from "./administration";
 
 describe("administration", () => {
@@ -39,7 +39,7 @@ describe("administration", () => {
 
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             let click_event: MouseEvent | null;
-            form_element_switch_to_explicit_backlog.addEventListener("click", event => {
+            form_element_switch_to_explicit_backlog.addEventListener("click", (event) => {
                 click_event = event;
             });
 
@@ -74,7 +74,7 @@ describe("administration", () => {
             return {
                 submit_without_modal,
                 submit_with_modal,
-                form_element_switch_to_explicit_backlog
+                form_element_switch_to_explicit_backlog,
             };
         }
         it("does nothing if explicit backlog is not used", () => {
@@ -107,7 +107,7 @@ describe("administration", () => {
             const {
                 submit_without_modal,
                 submit_with_modal,
-                form_element_switch_to_explicit_backlog
+                form_element_switch_to_explicit_backlog,
             } = createLocalButtonElement();
 
             submit_without_modal.dataset.canUseExplicitBacklog = "1";
@@ -145,7 +145,7 @@ describe("administration", () => {
 
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             let submit_click_event;
-            submit_with_modal.addEventListener("click", event => {
+            submit_with_modal.addEventListener("click", (event) => {
                 submit_click_event = event;
             });
 
@@ -164,7 +164,7 @@ describe("administration", () => {
             const {
                 modal_legacy_text,
                 modal_explicit_text,
-                submit_with_modal
+                submit_with_modal,
             } = createModalLocalDom();
             submit_with_modal.dataset.ExplicitBacklogValue = "0";
 
@@ -179,7 +179,7 @@ describe("administration", () => {
             const {
                 modal_legacy_text,
                 modal_explicit_text,
-                submit_with_modal
+                submit_with_modal,
             } = createModalLocalDom();
             submit_with_modal.dataset.ExplicitBacklogValue = "1";
 

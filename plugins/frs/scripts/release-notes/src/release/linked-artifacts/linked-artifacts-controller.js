@@ -3,7 +3,7 @@ export default LinkedArtifactsController;
 LinkedArtifactsController.$inject = [
     "ReleaseRestService",
     "RestErrorService",
-    "SharedPropertiesService"
+    "SharedPropertiesService",
 ];
 
 function LinkedArtifactsController(ReleaseRestService, RestErrorService, SharedPropertiesService) {
@@ -15,7 +15,7 @@ function LinkedArtifactsController(ReleaseRestService, RestErrorService, SharedP
         release: SharedPropertiesService.getRelease(),
 
         init,
-        getError: RestErrorService.getError
+        getError: RestErrorService.getError,
     });
 
     self.init();
@@ -24,12 +24,12 @@ function LinkedArtifactsController(ReleaseRestService, RestErrorService, SharedP
         self.loading_natures = true;
 
         ReleaseRestService.getReleaseLinkNatures(self.release.artifact.id)
-            .then(function(natures) {
+            .then(function (natures) {
                 self.natures = natures
                     .filter(({ label }) => label) // we intentionally omit links with no nature
                     .map(retrieveLinkedArtifactsByNature);
             })
-            .finally(function() {
+            .finally(function () {
                 self.loading_natures = false;
             });
     }
@@ -38,11 +38,11 @@ function LinkedArtifactsController(ReleaseRestService, RestErrorService, SharedP
         nature.loading = true;
         nature.linked_artifacts = [];
 
-        ReleaseRestService.getAllLinkedArtifacts(nature.uri, function(batch_of_artifacts) {
-            batch_of_artifacts.map(artifact => {
+        ReleaseRestService.getAllLinkedArtifacts(nature.uri, function (batch_of_artifacts) {
+            batch_of_artifacts.map((artifact) => {
                 nature.linked_artifacts.push(artifact);
             });
-        }).finally(function() {
+        }).finally(function () {
             nature.loading = false;
         });
 

@@ -27,23 +27,23 @@ export default init;
 
 function init() {
     var drake = dragula({
-        isContainer: function(el) {
+        isContainer: function (el) {
             return el.classList.contains("dragula-container");
         },
-        moves: function(el, source, handle) {
+        moves: function (el, source, handle) {
             return getDataSet(handle).draggable === "true";
-        }
+        },
     });
 
     cancelDropOnEscape(drake);
 
-    drake.on("drop", function(el, target, source) {
+    drake.on("drop", function (el, target, source) {
         updateParent(el, target);
         moveDropdownElementToTheEnd(el.parentElement);
         var source_row = source.closest(".dashboard-widgets-row");
         var target_row = el.parentElement.closest(".dashboard-widgets-row");
 
-        reorderWidget(el, el.parentElement).then(function() {
+        reorderWidget(el, el.parentElement).then(function () {
             applyAutomaticLayoutToRow(source_row);
             applyAutomaticLayoutToRow(target_row);
         });
@@ -51,7 +51,7 @@ function init() {
 }
 
 function cancelDropOnEscape(drake) {
-    document.onkeydown = function(event) {
+    document.onkeydown = function (event) {
         event = event || window.event;
         if (event.keyCode === 27) {
             drake.cancel(true);
@@ -158,9 +158,9 @@ function reorderWidget(widget, column) {
             "widget-id": widget_id,
             "new-widget-rank": new_widget_rank,
             "new-column-rank": new_column_rank,
-            "new-line-rank": new_line_rank
-        }
-    }).then(function(response) {
+            "new-line-rank": new_line_rank,
+        },
+    }).then(function (response) {
         if (response.new_ids && response.new_ids.new_line_id) {
             line.setAttribute("data-line-id", response.new_ids.new_line_id);
         }
@@ -193,7 +193,7 @@ function reorderWidget(widget, column) {
 
 function getRankOfElement(element) {
     var parent = element.parentElement;
-    var children = [].filter.call(parent.children, function(child) {
+    var children = [].filter.call(parent.children, function (child) {
         return (
             child.classList.contains("dashboard-widgets-row") ||
             child.classList.contains("dashboard-widgets-column") ||

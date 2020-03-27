@@ -19,15 +19,15 @@
 
 /* eslint-disable no-undef */
 
-(function($) {
+(function ($) {
     function confirmDeletionPopover() {
-        $(".remove-tracker-webhook").each(function() {
+        $(".remove-tracker-webhook").each(function () {
             var id = $(this).data("popover-id");
 
             $(this).popover({
                 container: "#tracker-webhooks",
                 title: codendi.getText("tracker_webhooks", "title"),
-                content: $("#" + id).html()
+                content: $("#" + id).html(),
             });
         });
     }
@@ -37,7 +37,7 @@
     }
 
     function bindShowPopover() {
-        $(".remove-tracker-webhook").click(function(event) {
+        $(".remove-tracker-webhook").click(function (event) {
             event.preventDefault();
 
             dismissPopover();
@@ -46,14 +46,14 @@
         });
     }
 
-    $(function() {
+    $(function () {
         $(".only-one-webhook").tooltip();
 
         confirmDeletionPopover();
 
         bindShowPopover();
 
-        $("body").on("click", function(event) {
+        $("body").on("click", function (event) {
             if ($(event.target).hasClass("dismiss-popover")) {
                 dismissPopover();
             }

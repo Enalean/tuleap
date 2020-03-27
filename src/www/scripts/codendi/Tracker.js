@@ -35,11 +35,11 @@ function tracker_quote_comment(who, commentId) {
             url += "&aid=" + queryParams["aid"];
             url += "&artifact_history_id=" + commentId;
             new Ajax.Request(url, {
-                onSuccess: function(response) {
+                onSuccess: function (response) {
                     textarea.value += who + ":\n";
                     textarea.value +=
                         "<blockquote>\n" + response.responseText + "\n</blockquote>\n";
-                }
+                },
             });
         } else {
             var str = element.textContent ? element.textContent : element.innerText;

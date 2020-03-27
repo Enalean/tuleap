@@ -19,10 +19,10 @@
 
 import { create } from "./labels-box";
 
-document.addEventListener("dashboard-edit-widget-modal-content-loaded", event =>
+document.addEventListener("dashboard-edit-widget-modal-content-loaded", (event) =>
     initLabelsBox(event.detail.target)
 );
-document.addEventListener("dashboard-add-widget-settings-loaded", event =>
+document.addEventListener("dashboard-add-widget-settings-loaded", (event) =>
     initLabelsBox(event.detail.target)
 );
 
@@ -39,7 +39,7 @@ function initLabelsBox(widget_container) {
             id: option.value,
             text: option.dataset.name,
             is_outline: JSON.parse(option.dataset.isOutline),
-            color: option.dataset.color
+            color: option.dataset.color,
         });
     }
     create(

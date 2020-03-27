@@ -29,20 +29,20 @@ describe("isItemDestinationIntoItself", () => {
         const folder_content = [
             {
                 id: 1,
-                parent_id: 0
+                parent_id: 0,
             },
             {
                 id: 2,
-                parent_id: 1
+                parent_id: 1,
             },
             {
                 id: 3,
-                parent_id: 2
+                parent_id: 2,
             },
             {
                 id: 4,
-                parent_id: 3
-            }
+                parent_id: 3,
+            },
         ];
         expect(isItemDestinationIntoItself(folder_content, 2, 4)).toEqual(true);
     });
@@ -51,8 +51,8 @@ describe("isItemDestinationIntoItself", () => {
         const folder_content = [
             {
                 id: 3,
-                parent_id: 1
-            }
+                parent_id: 1,
+            },
         ];
         expect(isItemDestinationIntoItself(folder_content, 2, 3)).toEqual(false);
     });
@@ -61,12 +61,12 @@ describe("isItemDestinationIntoItself", () => {
         const folder_content = [
             {
                 id: 1,
-                parent_id: 0
+                parent_id: 0,
             },
             {
                 id: 2,
-                parent_id: 1
-            }
+                parent_id: 1,
+            },
         ];
         expect(isItemDestinationIntoItself(folder_content, 3, 2)).toEqual(false);
     });

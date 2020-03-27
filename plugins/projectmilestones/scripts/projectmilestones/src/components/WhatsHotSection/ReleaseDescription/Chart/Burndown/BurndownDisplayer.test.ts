@@ -21,7 +21,7 @@ import {
     BurndownData,
     MilestoneData,
     PointsWithDateForBurndown,
-    StoreOptions
+    StoreOptions,
 } from "../../../../../type";
 import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import { createStoreMock } from "../../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
@@ -53,8 +53,8 @@ describe("BurndownDisplayer", () => {
         store_options = {
             state: {
                 project_id,
-                is_timeframe_duration: true
-            }
+                is_timeframe_duration: true,
+            },
         };
 
         release_data = {
@@ -67,12 +67,12 @@ describe("BurndownDisplayer", () => {
                 points: [] as number[],
                 is_under_calculation: true,
                 opening_days: [] as number[],
-                points_with_date: [] as PointsWithDateForBurndown[]
-            } as BurndownData
+                points_with_date: [] as PointsWithDateForBurndown[],
+            } as BurndownData,
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
         };
 
         getPersonalWidgetInstance(store_options);
@@ -80,7 +80,7 @@ describe("BurndownDisplayer", () => {
 
     it("When the burndown is under calculation, Then ChartError component is rendered", async () => {
         component_options.propsData = {
-            release_data
+            release_data,
         };
         const wrapper = await getPersonalWidgetInstance(store_options);
         const burndown_error = wrapper.find(ChartError);
@@ -101,12 +101,12 @@ describe("BurndownDisplayer", () => {
                 points: [] as number[],
                 is_under_calculation: false,
                 opening_days: [] as number[],
-                points_with_date: [] as PointsWithDateForBurndown[]
-            } as BurndownData
+                points_with_date: [] as PointsWithDateForBurndown[],
+            } as BurndownData,
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -128,12 +128,12 @@ describe("BurndownDisplayer", () => {
                 points: [] as number[],
                 is_under_calculation: false,
                 opening_days: [] as number[],
-                points_with_date: [] as PointsWithDateForBurndown[]
-            } as BurndownData
+                points_with_date: [] as PointsWithDateForBurndown[],
+            } as BurndownData,
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -155,12 +155,12 @@ describe("BurndownDisplayer", () => {
                 points: [] as number[],
                 is_under_calculation: false,
                 opening_days: [] as number[],
-                points_with_date: [] as PointsWithDateForBurndown[]
-            } as BurndownData
+                points_with_date: [] as PointsWithDateForBurndown[],
+            } as BurndownData,
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -182,12 +182,12 @@ describe("BurndownDisplayer", () => {
                 points: [] as number[],
                 is_under_calculation: false,
                 opening_days: [] as number[],
-                points_with_date: [] as PointsWithDateForBurndown[]
-            } as BurndownData
+                points_with_date: [] as PointsWithDateForBurndown[],
+            } as BurndownData,
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -209,12 +209,12 @@ describe("BurndownDisplayer", () => {
                 points: [] as number[],
                 is_under_calculation: true,
                 opening_days: [] as number[],
-                points_with_date: [] as PointsWithDateForBurndown[]
-            } as BurndownData
+                points_with_date: [] as PointsWithDateForBurndown[],
+            } as BurndownData,
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -236,12 +236,12 @@ describe("BurndownDisplayer", () => {
                 points: [] as number[],
                 is_under_calculation: false,
                 opening_days: [] as number[],
-                points_with_date: [] as PointsWithDateForBurndown[]
-            } as BurndownData
+                points_with_date: [] as PointsWithDateForBurndown[],
+            } as BurndownData,
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -262,12 +262,12 @@ describe("BurndownDisplayer", () => {
                 points: [] as number[],
                 is_under_calculation: false,
                 opening_days: [] as number[],
-                points_with_date: [] as PointsWithDateForBurndown[]
-            } as BurndownData
+                points_with_date: [] as PointsWithDateForBurndown[],
+            } as BurndownData,
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -281,7 +281,7 @@ describe("BurndownDisplayer", () => {
         release_data = {
             id: 2,
             planning: {
-                id: "100"
+                id: "100",
             },
             start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
             end_date: new Date("2019-02-05T11:41:01+02:00").toDateString(),
@@ -292,12 +292,12 @@ describe("BurndownDisplayer", () => {
                 points: [] as number[],
                 is_under_calculation: false,
                 opening_days: [] as number[],
-                points_with_date: [] as PointsWithDateForBurndown[]
-            } as BurndownData
+                points_with_date: [] as PointsWithDateForBurndown[],
+            } as BurndownData,
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);

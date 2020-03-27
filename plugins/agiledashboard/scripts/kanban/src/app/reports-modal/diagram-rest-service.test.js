@@ -16,7 +16,7 @@ describe("DiagramRestService -", () => {
         angular.mock.module(kanban_module);
 
         let $rootScope;
-        angular.mock.inject(function(
+        angular.mock.inject(function (
             _$rootScope_,
             _$httpBackend_,
             _SharedPropertiesService_,
@@ -61,7 +61,7 @@ describe("DiagramRestService -", () => {
             const interval_between_points = 73;
 
             const cumulative_flow_data = {
-                columns: [{ id: 37 }, { id: 89 }]
+                columns: [{ id: 37 }, { id: 89 }],
             };
 
             const expected_url = `/api/v1/kanban/${kanban_id}/cumulative_flow?end_date=${end_date}&interval_between_point=${interval_between_points}&start_date=${start_date}`;
@@ -69,7 +69,7 @@ describe("DiagramRestService -", () => {
             $httpBackend
                 .expectGET(expected_url, {
                     Accept: "application/json, text/plain, */*",
-                    "X-Client-UUID": UUID
+                    "X-Client-UUID": UUID,
                 })
                 .respond(cumulative_flow_data);
 
@@ -93,7 +93,7 @@ describe("DiagramRestService -", () => {
             const interval_between_points = 48;
 
             const cumulative_flow_data = {
-                columns: [{ id: 37 }, { id: 89 }]
+                columns: [{ id: 37 }, { id: 89 }],
             };
 
             const expected_query = encodeURI(JSON.stringify({ tracker_report_id: 547 }));
@@ -102,7 +102,7 @@ describe("DiagramRestService -", () => {
             $httpBackend
                 .expectGET(expected_url, {
                     Accept: "application/json, text/plain, */*",
-                    "X-Client-UUID": UUID
+                    "X-Client-UUID": UUID,
                 })
                 .respond(cumulative_flow_data);
 

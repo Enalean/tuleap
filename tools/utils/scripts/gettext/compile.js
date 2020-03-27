@@ -70,11 +70,11 @@ function po2json(poContent) {
     }
     return {
         headers: catalog.headers,
-        messages: sanitizePoData(catalog.items)
+        messages: sanitizePoData(catalog.items),
     };
 }
 
 module.exports = {
     sanitizePoData,
-    po2json
+    po2json,
 };

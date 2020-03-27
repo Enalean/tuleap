@@ -85,16 +85,16 @@ export default angular
         shared_properties,
         socket,
         user_preferences,
-        uuid_generator
+        uuid_generator,
     ])
     .config(KanbanConfig)
     .run([
         "gettextCatalog",
-        function(gettextCatalog) {
+        function (gettextCatalog) {
             for (const [language, strings] of Object.entries(translations)) {
                 gettextCatalog.setStrings(language, strings);
             }
-        }
+        },
     ])
     .controller("MainCtrl", MainCtrl)
     .controller("FilterTrackerReportController", FilterTrackerReportController)
@@ -123,6 +123,6 @@ export default angular
     .component("feedbackMessage", FeedbackComponent).name;
 
 var kanban_elements = document.getElementsByClassName("widget-kanban");
-[].forEach.call(kanban_elements, function(kanban_element) {
+[].forEach.call(kanban_elements, function (kanban_element) {
     angular.bootstrap(kanban_element, ["kanban"]);
 });

@@ -42,8 +42,8 @@ import TrackerTemplateCardDescription from "./TrackerTemplateCardDescription.vue
         SvgTrackerTemplate,
         TrackerBaseCard,
         TrackerTemplateSelector,
-        TrackerTemplateCardDescription
-    }
+        TrackerTemplateCardDescription,
+    },
 })
 export default class TrackerTemplateCard extends Vue {
     private option_name: CreationOptions = CreationOptions.TRACKER_TEMPLATE;

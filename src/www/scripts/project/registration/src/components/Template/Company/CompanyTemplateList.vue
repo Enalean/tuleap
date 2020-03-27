@@ -43,7 +43,7 @@ import { TemplateData } from "../../../type";
 import { sprintf } from "sprintf-js";
 
 @Component({
-    components: { TemplateCard }
+    components: { TemplateCard },
 })
 export default class TuleapCompanyTemplateList extends Vue {
     @State

@@ -23,7 +23,7 @@ import {
     PROJECT_BANNER_HIDDEN_CLASS,
     allowToHideAndShowProjectBanner,
     PROJECT_BANNER_VISIBLE_GLOBAL_CLASS,
-    PROJECT_NAVBAR_TO_BANNER_CLASS
+    PROJECT_NAVBAR_TO_BANNER_CLASS,
 } from "./project-banner-show-hide";
 
 const USER_ID = "1200";
@@ -66,7 +66,7 @@ describe("Show and hide project banner", () => {
             document: local_document,
             project_banner: project_banner,
             close_button: project_banner_close_button,
-            project_banner_navbar_information: navbar_project_banner_info
+            project_banner_navbar_information: navbar_project_banner_info,
         };
     }
 
@@ -118,7 +118,7 @@ describe("Show and hide project banner", () => {
         expect(tlpPatchSpy).toHaveBeenCalledWith(
             `/api/users/${USER_ID}/preferences`,
             expect.objectContaining({
-                body: expect.stringContaining(PROJECT_ID)
+                body: expect.stringContaining(PROJECT_ID),
             })
         );
 
@@ -149,7 +149,7 @@ describe("Show and hide project banner", () => {
     });
 
     it("hides the navbar to banner element when the user scrolls", () => {
-        jest.spyOn(window, "requestAnimationFrame").mockImplementation(cb => {
+        jest.spyOn(window, "requestAnimationFrame").mockImplementation((cb) => {
             cb(1);
             return 1;
         });
@@ -170,7 +170,7 @@ describe("Show and hide project banner", () => {
     });
 
     it("should not the navbar to banner element on first load when the user is not at the top of the page", () => {
-        jest.spyOn(window, "requestAnimationFrame").mockImplementation(cb => {
+        jest.spyOn(window, "requestAnimationFrame").mockImplementation((cb) => {
             cb(1);
             return 1;
         });

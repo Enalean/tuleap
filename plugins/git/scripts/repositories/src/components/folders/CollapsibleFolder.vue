@@ -21,7 +21,7 @@
     <div
         v-bind:class="{
             'git-repository-list-folder': !isRootFolder,
-            'git-repository-list-base-folder': isBaseFolder
+            'git-repository-list-base-folder': isBaseFolder,
         }"
     >
         <div class="git-repository-list-collapsible-folder" v-on:click="collapseFolder()">
@@ -29,7 +29,7 @@
                 v-if="!isRootFolder"
                 v-bind:class="{
                     'fa fa-fw fa-caret-down': !isFolderCollapsed,
-                    'fa fa-fw fa-caret-right': isFolderCollapsed
+                    'fa fa-fw fa-caret-right': isFolderCollapsed,
                 }"
             ></i>
             <h2 class="git-repository-list-folder-label" v-if="!isRootFolder">
@@ -64,17 +64,17 @@ export default {
     props: {
         label: {
             type: String,
-            required: false
+            required: false,
         },
         isRootFolder: {
             type: Boolean,
-            required: false
+            required: false,
         },
         isBaseFolder: {
             type: Boolean,
-            required: false
+            required: false,
         },
-        children: Array
+        children: Array,
     },
     data() {
         return { isFolderCollapsed: false };
@@ -82,7 +82,7 @@ export default {
     methods: {
         collapseFolder() {
             this.isFolderCollapsed = !this.isFolderCollapsed;
-        }
-    }
+        },
+    },
 };
 </script>

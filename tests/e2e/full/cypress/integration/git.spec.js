@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-describe("Git", function() {
+describe("Git", function () {
     before(() => {
         cy.clearCookie("__Host-TULEAP_session_hash");
         cy.ProjectAdministratorLogin();
@@ -27,22 +27,22 @@ describe("Git", function() {
         Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
     });
 
-    context("Git repository list", function() {
-        it("can create a new repository", function() {
+    context("Git repository list", function () {
+        it("can create a new repository", function () {
             cy.visit("/plugins/git/git-project/");
             cy.get("[data-test=empty_state_create_repository]").click();
             cy.get("[data-test=create_repository_name]").type("Aquali");
             cy.get("[data-test=create_repository]").click();
 
             cy.get("[data-test=git_repo_name]").contains("Aquali", {
-                timeout: 20000
+                timeout: 20000,
             });
         });
 
-        it("shows the new repository in the list", function() {
+        it("shows the new repository in the list", function () {
             cy.visit("/plugins/git/git-project/");
             cy.get("[data-test=repository_name]").contains("Aquali", {
-                timeout: 20000
+                timeout: 20000,
             });
         });
     });

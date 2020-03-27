@@ -28,8 +28,5 @@ export function addTextCaption({ legend_y_position, content, layout }) {
 
     const caption_content = caption.append("g").attr("class", "legend-left");
 
-    caption_content
-        .append("text")
-        .attr("y", legend_y_position)
-        .text(content);
+    caption_content.append("text").attr("y", legend_y_position).text(content);
 }

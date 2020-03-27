@@ -33,9 +33,9 @@ export default {
         user_groups: null,
         post_actions_by_unique_id: null,
         new_post_action_unique_id_index: 0,
-        used_services_names: []
+        used_services_names: [],
     },
     getters,
     mutations,
-    actions
+    actions,
 };

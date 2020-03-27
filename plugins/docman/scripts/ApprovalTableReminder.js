@@ -21,8 +21,8 @@
  * Script of the approval table reminder
  */
 
-(function($, codendi) {
-    $(document).ready(function() {
+(function ($, codendi) {
+    $(document).ready(function () {
         var table = $("#docman_approval_table_create_add_reviewers");
 
         if (table.length > 0) {
@@ -33,7 +33,7 @@
                 $("#approval_table_occurence_form").hide();
             }
 
-            $("#approval_table_reminder_checkbox").click(function() {
+            $("#approval_table_reminder_checkbox").click(function () {
                 $("#approval_table_occurence_form").slideToggle(0);
             });
         }

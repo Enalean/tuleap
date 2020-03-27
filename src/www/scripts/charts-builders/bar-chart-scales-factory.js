@@ -31,11 +31,11 @@ function buildBarChartScales({
     graph_height,
     y_axis_maximum,
     x_axis_tick_values,
-    bands_paddings
+    bands_paddings,
 }) {
     return {
         x_scale: initXScale(),
-        y_scale: initYScale()
+        y_scale: initYScale(),
     };
 
     function initXScale() {

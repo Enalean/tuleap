@@ -11,6 +11,6 @@ function DashboardDirective() {
         templateUrl: "dashboard.tpl.html",
         controller: DashboardController,
         controllerAs: "dashboard_controller",
-        bindToController: true
+        bindToController: true,
     };
 }

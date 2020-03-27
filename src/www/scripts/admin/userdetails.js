@@ -17,7 +17,7 @@
 
 import { modal as createModal, datePicker } from "tlp";
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     initExpirationDatepicker();
     initChangePasswordModal();
     initWarningModalRestrictedStatusRemovalFromProjectNotAcceptingRestricted();
@@ -87,7 +87,7 @@ function initWarningModalRestrictedStatusRemovalFromProjectNotAcceptingRestricte
         user_details_form.submit();
     });
 
-    user_details_form.addEventListener("submit", event => {
+    user_details_form.addEventListener("submit", (event) => {
         if (has_submission_been_confirmed) {
             return;
         }
@@ -105,7 +105,7 @@ function initWarningModalRestrictedStatusRemovalFromProjectNotAcceptingRestricte
         event.preventDefault();
 
         const modal = createModal(warning_project_without_restricted_removal_modal_element, {
-            destroy_on_hide: true
+            destroy_on_hide: true,
         });
         modal.show();
     });

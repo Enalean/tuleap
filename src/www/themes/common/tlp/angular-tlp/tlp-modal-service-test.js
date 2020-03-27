@@ -7,13 +7,13 @@ import { createAngularPromiseWrapper } from "../../../../../../tests/jest/angula
 /* eslint-env jest */
 jest.mock("tlp");
 
-describe("TlpModalService -", function() {
+describe("TlpModalService -", function () {
     let wrapPromise, TlpModalService, $templateCache, $document, $rootScope, $q;
 
-    beforeEach(function() {
+    beforeEach(function () {
         angular.mock.module(angular_tlp_module);
 
-        angular.mock.inject(function(
+        angular.mock.inject(function (
             _TlpModalService_,
             _$templateCache_,
             _$document_,
@@ -30,106 +30,106 @@ describe("TlpModalService -", function() {
         wrapPromise = createAngularPromiseWrapper($rootScope);
     });
 
-    describe("open() -", function() {
-        describe("validate options -", function() {
-            it("Given no options were provided, then an error will be thrown with the usage help message", function() {
+    describe("open() -", function () {
+        describe("validate options -", function () {
+            it("Given no options were provided, then an error will be thrown with the usage help message", function () {
                 expect(TlpModalService.open).toThrow();
             });
 
-            it("Given no templateUrl option was provided, then an error will be thrown with the usage help message", function() {
-                expect(function() {
+            it("Given no templateUrl option was provided, then an error will be thrown with the usage help message", function () {
+                expect(function () {
                     TlpModalService.open({
-                        controller: function() {},
-                        controllerAs: "plethora"
+                        controller: function () {},
+                        controllerAs: "plethora",
                     });
                 }).toThrow();
             });
 
-            it("Given no controller option was provided, then an error will be thrown with the usage help message", function() {
-                expect(function() {
-                    TlpModalService.open({
-                        templateUrl: "discord/unmustered.tpl.html",
-                        controllerAs: "plethora"
-                    });
-                }).toThrow();
-            });
-
-            it("Given no controllerAs option was provided, then an error will be thrown with the usage help message", function() {
-                expect(function() {
+            it("Given no controller option was provided, then an error will be thrown with the usage help message", function () {
+                expect(function () {
                     TlpModalService.open({
                         templateUrl: "discord/unmustered.tpl.html",
-                        controller: function() {}
+                        controllerAs: "plethora",
                     });
                 }).toThrow();
             });
 
-            it("Given templateUrl option was provided but was not a string, then an error will be thrown with the usage help message", function() {
-                expect(function() {
+            it("Given no controllerAs option was provided, then an error will be thrown with the usage help message", function () {
+                expect(function () {
+                    TlpModalService.open({
+                        templateUrl: "discord/unmustered.tpl.html",
+                        controller: function () {},
+                    });
+                }).toThrow();
+            });
+
+            it("Given templateUrl option was provided but was not a string, then an error will be thrown with the usage help message", function () {
+                expect(function () {
                     TlpModalService.open({
                         templateUrl: null,
-                        controller: function() {},
-                        controllerAs: "plethora"
-                    });
-                }).toThrow();
-            });
-
-            it("Given controllerAs option was provided but was not a string, then an error will be thrown with the usage help message", function() {
-                expect(function() {
-                    TlpModalService.open({
-                        templateUrl: "discord/unmustered.tpl.html",
-                        controller: function() {},
-                        controllerAs: null
-                    });
-                }).toThrow();
-            });
-
-            it("Given tlpModalOptions was provided but was not an object, then an error will be thrown with the usage help message", function() {
-                expect(function() {
-                    TlpModalService.open({
-                        templateUrl: "discord/unmustered.tpl.html",
-                        controller: function() {},
+                        controller: function () {},
                         controllerAs: "plethora",
-                        tlpModalOptions: null
                     });
                 }).toThrow();
             });
 
-            it("Given resolve option was provided but was not an object, then an error will be thrown with the usage help message", function() {
-                expect(function() {
+            it("Given controllerAs option was provided but was not a string, then an error will be thrown with the usage help message", function () {
+                expect(function () {
                     TlpModalService.open({
                         templateUrl: "discord/unmustered.tpl.html",
-                        controller: function() {},
+                        controller: function () {},
+                        controllerAs: null,
+                    });
+                }).toThrow();
+            });
+
+            it("Given tlpModalOptions was provided but was not an object, then an error will be thrown with the usage help message", function () {
+                expect(function () {
+                    TlpModalService.open({
+                        templateUrl: "discord/unmustered.tpl.html",
+                        controller: function () {},
                         controllerAs: "plethora",
-                        resolve: null
+                        tlpModalOptions: null,
+                    });
+                }).toThrow();
+            });
+
+            it("Given resolve option was provided but was not an object, then an error will be thrown with the usage help message", function () {
+                expect(function () {
+                    TlpModalService.open({
+                        templateUrl: "discord/unmustered.tpl.html",
+                        controller: function () {},
+                        controllerAs: "plethora",
+                        resolve: null,
                     });
                 }).toThrow();
             });
         });
 
-        it("Given a template that was not stored in $templateCache, then an error will be thrown with a message", function() {
-            expect(function() {
+        it("Given a template that was not stored in $templateCache, then an error will be thrown with a message", function () {
+            expect(function () {
                 TlpModalService.open({
                     templateUrl: "discord/unmustered.tpl.html",
-                    controller: function() {},
-                    controllerAs: "plethora"
+                    controller: function () {},
+                    controllerAs: "plethora",
                 });
             }).toThrow(Error, "templateUrl was not stored in templateCache. Did you import it ?");
         });
 
-        describe("Given a template that was stored in $templateCache, a controller and controllerAs", function() {
+        describe("Given a template that was stored in $templateCache, a controller and controllerAs", function () {
             let fake_modal_object, tlp_modal;
 
-            beforeEach(function() {
+            beforeEach(function () {
                 var fake_template = '<div class="tlp-modal"></div>';
                 $templateCache.put("discord/unmustered.tpl.html", fake_template);
                 fake_modal_object = {
                     show: jest.fn(),
-                    addEventListener: jest.fn()
+                    addEventListener: jest.fn(),
                 };
                 tlp_modal = jest.spyOn(tlp, "modal").mockReturnValue(fake_modal_object);
             });
 
-            afterEach(function() {
+            afterEach(function () {
                 $document.find(".tlp-modal").remove();
             });
 
@@ -138,8 +138,8 @@ describe("TlpModalService -", function() {
                 and the modal template will be appended to <body>`, async () => {
                 var promise = TlpModalService.open({
                     templateUrl: "discord/unmustered.tpl.html",
-                    controller: function() {},
-                    controllerAs: "plethora"
+                    controller: function () {},
+                    controllerAs: "plethora",
                 });
 
                 expect(await wrapPromise(promise)).toEqual(fake_modal_object);
@@ -156,8 +156,8 @@ describe("TlpModalService -", function() {
 
                 var promise = TlpModalService.open({
                     templateUrl: "discord/unmustered.tpl.html",
-                    controller: function() {},
-                    controllerAs: "plethora"
+                    controller: function () {},
+                    controllerAs: "plethora",
                 });
 
                 await wrapPromise(promise);
@@ -172,9 +172,9 @@ describe("TlpModalService -", function() {
 
                 var promise = TlpModalService.open({
                     templateUrl: "discord/unmustered.tpl.html",
-                    controller: function() {},
+                    controller: function () {},
                     controllerAs: "plethora",
-                    tlpModalOptions: tlp_modal_options
+                    tlpModalOptions: tlp_modal_options,
                 });
 
                 await wrapPromise(promise);
@@ -183,15 +183,15 @@ describe("TlpModalService -", function() {
 
             it(`and a resolve object,
                 when I open a new modal,
-                then the modal_instance and the resolve functions will be injected in the modal's controller`, async done => {
-                var first_resolve_function = function() {};
-                var second_resolve_function = function() {};
-                var controller = function(modal_instance, noology, incoagulable) {
+                then the modal_instance and the resolve functions will be injected in the modal's controller`, async (done) => {
+                var first_resolve_function = function () {};
+                var second_resolve_function = function () {};
+                var controller = function (modal_instance, noology, incoagulable) {
                     expect(modal_instance).toEqual({});
                     expect(noology).toBe(first_resolve_function);
                     expect(incoagulable).toBe(second_resolve_function);
 
-                    setTimeout(function() {
+                    setTimeout(function () {
                         // The controller is instanciated first, the template is next.
                         // modal_instance receives a tlp_modal property after the template is compiled
                         expect(modal_instance.tlp_modal).toBe(fake_modal_object);
@@ -201,13 +201,13 @@ describe("TlpModalService -", function() {
 
                 var resolve_option = {
                     noology: first_resolve_function,
-                    incoagulable: second_resolve_function
+                    incoagulable: second_resolve_function,
                 };
                 var promise = TlpModalService.open({
                     templateUrl: "discord/unmustered.tpl.html",
                     controller: controller,
                     controllerAs: "plethora",
-                    resolve: resolve_option
+                    resolve: resolve_option,
                 });
 
                 await wrapPromise(promise);
@@ -216,21 +216,21 @@ describe("TlpModalService -", function() {
             it(`and a resolve object with a promise,
                 when I open a new modal,
                 then the modal will only be instanciated after resolving the promise`, () => {
-                var fake_resolve_function = function() {};
+                var fake_resolve_function = function () {};
                 var promise_resolved = $q.when(fake_resolve_function);
 
-                var controller = function(upholden) {
+                var controller = function (upholden) {
                     expect(upholden).toBe(fake_resolve_function);
                 };
 
                 var resolve_option = {
-                    upholden: promise_resolved
+                    upholden: promise_resolved,
                 };
                 var promise = TlpModalService.open({
                     templateUrl: "discord/unmustered.tpl.html",
                     controller: controller,
                     controllerAs: "plethora",
-                    resolve: resolve_option
+                    resolve: resolve_option,
                 });
 
                 return wrapPromise(promise);
@@ -239,24 +239,24 @@ describe("TlpModalService -", function() {
             it(`and a resolve object with a promise,
                 when the resolve is rejected,
                 then the modal will not be opened`, () => {
-                var fake_resolve_function = function() {};
+                var fake_resolve_function = function () {};
                 var promise_resolved = $q.reject(fake_resolve_function);
 
-                var controller = function(upholden) {
+                var controller = function (upholden) {
                     expect(upholden).toBe(fake_resolve_function);
                 };
 
                 var resolve_option = {
-                    upholden: promise_resolved
+                    upholden: promise_resolved,
                 };
                 var promise = TlpModalService.open({
                     templateUrl: "discord/unmustered.tpl.html",
                     controller: controller,
                     controllerAs: "plethora",
-                    resolve: resolve_option
+                    resolve: resolve_option,
                 });
 
-                return wrapPromise(promise).catch(error => {
+                return wrapPromise(promise).catch((error) => {
                     expect(error).toEqual(fake_resolve_function);
                 });
             });
@@ -264,14 +264,14 @@ describe("TlpModalService -", function() {
             it(`and given I had opened a new modal,
                 when I close that modal,
                 then the modal template will be removed from <body>`, async () => {
-                fake_modal_object.addEventListener.mockImplementation(function(event, callback) {
+                fake_modal_object.addEventListener.mockImplementation(function (event, callback) {
                     callback();
                 });
 
                 var promise = TlpModalService.open({
                     templateUrl: "discord/unmustered.tpl.html",
-                    controller: function() {},
-                    controllerAs: "plethora"
+                    controller: function () {},
+                    controllerAs: "plethora",
                 });
 
                 await wrapPromise(promise);

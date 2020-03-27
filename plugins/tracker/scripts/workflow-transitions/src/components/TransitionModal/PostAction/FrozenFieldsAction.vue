@@ -34,7 +34,7 @@
                 required
                 v-bind:configuration="{
                     width: '100%',
-                    placeholder: $gettext('Choose a field')
+                    placeholder: $gettext('Choose a field'),
                 }"
                 v-model="frozen_field_ids"
                 v-bind:disabled="is_modal_save_running"
@@ -67,8 +67,8 @@ export default {
     props: {
         post_action: {
             type: Object,
-            mandatory: true
-        }
+            mandatory: true,
+        },
     },
     computed: {
         ...mapState(["current_tracker"]),
@@ -80,10 +80,10 @@ export default {
                     return [];
                 }
                 return state.current_tracker.fields
-                    .filter(field => !fields_blacklist.includes(field.type))
-                    .filter(field => !(field.field_id === this.current_workflow_field.field_id))
+                    .filter((field) => !fields_blacklist.includes(field.type))
+                    .filter((field) => !(field.field_id === this.current_workflow_field.field_id))
                     .sort((field1, field2) => compare(field1.label, field2.label));
-            }
+            },
         }),
         frozen_field_ids: {
             get() {
@@ -92,10 +92,10 @@ export default {
             set(field_ids) {
                 this.$store.commit("transitionModal/updateFrozenFieldsPostActionFieldIds", {
                     post_action: this.post_action,
-                    field_ids
+                    field_ids,
                 });
-            }
-        }
-    }
+            },
+        },
+    },
 };
 </script>

@@ -19,8 +19,8 @@
 
 /* global $$:readonly, Ajax:readonly, tuleap:readonly */
 
-(function() {
-    $$("td.artifacts-folders-rollup > a.direct-link-to-artifact").each(function(link) {
+(function () {
+    $$("td.artifacts-folders-rollup > a.direct-link-to-artifact").each(function (link) {
         initRollupViewOfLink(link, 1);
     });
 
@@ -45,21 +45,21 @@
                 method: "GET",
                 parameters: {
                     action: "get-children",
-                    aid: artifact_id
+                    aid: artifact_id,
                 },
-                onSuccess: function(transport) {
+                onSuccess: function (transport) {
                     var children = transport.responseJSON;
                     if (children.length) {
                         injectChildrenInTable(children);
                     }
-                }
+                },
             });
         }
 
         function injectChildrenInTable(children_to_inject) {
             icon.classList.add("fa-caret-right");
 
-            icon.addEventListener("click", function() {
+            icon.addEventListener("click", function () {
                 simpleExpandCollapse(this, children_to_inject);
             });
         }
@@ -74,7 +74,7 @@
 
             if (subrows.length <= 0) {
                 subrows = children_to_inject.map(injectChildInTable);
-                subrows.forEach(function(row) {
+                subrows.forEach(function (row) {
                     initRollupViewOfLink(row.querySelector("a.direct-link-to-artifact"), depth + 1);
                 });
             } else {
@@ -140,7 +140,7 @@
     function formatFolders(folder_hierarchy) {
         var html = "";
 
-        folder_hierarchy.forEach(function(folder) {
+        folder_hierarchy.forEach(function (folder) {
             /* eslint-disable no-multi-str */
             html +=
                 '<i class="fa fa-angle-right"></i> \

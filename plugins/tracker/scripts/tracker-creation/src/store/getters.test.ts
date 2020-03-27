@@ -23,7 +23,7 @@ import {
     ProjectTemplate,
     State,
     Tracker,
-    TrackerToBeCreatedMandatoryData
+    TrackerToBeCreatedMandatoryData,
 } from "./type";
 
 describe("getters", () => {
@@ -32,7 +32,7 @@ describe("getters", () => {
             const state: State = {
                 active_option: CreationOptions.NONE_YET,
                 selected_tracker_template: null,
-                is_a_xml_file_selected: false
+                is_a_xml_file_selected: false,
             } as State;
 
             expect(getters.is_ready_for_step_2(state)).toBe(false);
@@ -42,7 +42,7 @@ describe("getters", () => {
             const state: State = {
                 active_option: CreationOptions.TRACKER_TEMPLATE,
                 selected_tracker_template: null,
-                is_a_xml_file_selected: false
+                is_a_xml_file_selected: false,
             } as State;
 
             expect(getters.is_ready_for_step_2(state)).toBe(false);
@@ -54,9 +54,9 @@ describe("getters", () => {
                 selected_tracker_template: {
                     id: "101",
                     name: "Bugs",
-                    tlp_color: "peggy-pink"
+                    tlp_color: "peggy-pink",
                 } as Tracker,
-                is_a_xml_file_selected: false
+                is_a_xml_file_selected: false,
             } as State;
 
             expect(getters.is_ready_for_step_2(state)).toBe(true);
@@ -68,7 +68,7 @@ describe("getters", () => {
                 selected_tracker_template: null,
                 is_a_xml_file_selected: true,
                 has_xml_file_error: true,
-                is_parsing_a_xml_file: false
+                is_parsing_a_xml_file: false,
             } as State;
 
             expect(getters.is_ready_for_step_2(state)).toBe(false);
@@ -80,7 +80,7 @@ describe("getters", () => {
                 selected_tracker_template: null,
                 is_a_xml_file_selected: true,
                 has_xml_file_error: true,
-                is_parsing_a_xml_file: true
+                is_parsing_a_xml_file: true,
             } as State;
 
             expect(getters.is_ready_for_step_2(state)).toBe(false);
@@ -92,7 +92,7 @@ describe("getters", () => {
                 selected_tracker_template: null,
                 is_a_xml_file_selected: true,
                 has_xml_file_error: false,
-                is_parsing_a_xml_file: false
+                is_parsing_a_xml_file: false,
             } as State;
 
             expect(getters.is_ready_for_step_2(state)).toBe(true);
@@ -104,7 +104,7 @@ describe("getters", () => {
                 selected_tracker_template: null,
                 is_a_xml_file_selected: true,
                 has_xml_file_error: false,
-                is_parsing_a_xml_file: false
+                is_parsing_a_xml_file: false,
             } as State;
 
             expect(getters.is_ready_for_step_2(state)).toBe(true);
@@ -117,7 +117,7 @@ describe("getters", () => {
                 is_a_xml_file_selected: true,
                 has_xml_file_error: false,
                 is_parsing_a_xml_file: false,
-                selected_project_tracker_template: null
+                selected_project_tracker_template: null,
             } as State;
 
             expect(getters.is_ready_for_step_2(state)).toBe(false);
@@ -130,7 +130,7 @@ describe("getters", () => {
                 is_a_xml_file_selected: true,
                 has_xml_file_error: false,
                 is_parsing_a_xml_file: false,
-                selected_project_tracker_template: {} as Tracker
+                selected_project_tracker_template: {} as Tracker,
             } as State;
 
             expect(getters.is_ready_for_step_2(state)).toBe(true);
@@ -142,8 +142,8 @@ describe("getters", () => {
             const state: State = {
                 tracker_to_be_created: {
                     name: "",
-                    shortname: ""
-                }
+                    shortname: "",
+                },
             } as State;
 
             expect(getters.is_ready_to_submit(state)).toBe(false);
@@ -153,8 +153,8 @@ describe("getters", () => {
             const state: State = {
                 tracker_to_be_created: {
                     name: "Bugz",
-                    shortname: ""
-                }
+                    shortname: "",
+                },
             } as State;
 
             expect(getters.is_ready_to_submit(state)).toBe(false);
@@ -164,12 +164,12 @@ describe("getters", () => {
             const state: State = {
                 tracker_to_be_created: {
                     name: "Bugz",
-                    shortname: ""
+                    shortname: "",
                 },
                 existing_trackers: {
                     names: ["Bugz"],
-                    shortnames: ["bugz"]
-                }
+                    shortnames: ["bugz"],
+                },
             } as State;
 
             expect(getters.is_ready_to_submit(state)).toBe(false);
@@ -179,12 +179,12 @@ describe("getters", () => {
             const state: State = {
                 tracker_to_be_created: {
                     name: "EPICS",
-                    shortname: "epico"
+                    shortname: "epico",
                 },
                 existing_trackers: {
                     names: ["Bugz"],
-                    shortnames: ["epico"]
-                }
+                    shortnames: ["epico"],
+                },
             } as State;
 
             expect(getters.is_ready_to_submit(state)).toBe(false);
@@ -194,12 +194,12 @@ describe("getters", () => {
             const state: State = {
                 tracker_to_be_created: {
                     name: "EPICS",
-                    shortname: "I dont care the expected format"
+                    shortname: "I dont care the expected format",
                 },
                 existing_trackers: {
                     names: ["Bugz"],
-                    shortnames: ["epico"]
-                }
+                    shortnames: ["epico"],
+                },
             } as State;
 
             expect(getters.is_ready_to_submit(state)).toBe(false);
@@ -209,12 +209,12 @@ describe("getters", () => {
             const state: State = {
                 tracker_to_be_created: {
                     name: "EPICS",
-                    shortname: "epico"
+                    shortname: "epico",
                 },
                 existing_trackers: {
                     names: ["Bugz"],
-                    shortnames: ["bugz"]
-                }
+                    shortnames: ["bugz"],
+                },
             } as State;
 
             expect(getters.is_ready_to_submit(state)).toBe(true);
@@ -225,7 +225,7 @@ describe("getters", () => {
         it("can't be displayed when the user has toggled the shortname input", () => {
             const state = {
                 is_in_slugify_mode: false,
-                active_option: CreationOptions.TRACKER_TEMPLATE
+                active_option: CreationOptions.TRACKER_TEMPLATE,
             } as State;
 
             expect(getters.can_display_slugify_mode(state)).toBe(false);
@@ -234,7 +234,7 @@ describe("getters", () => {
         it("can't be displayed when the user has selected the XML import option (shortname extracted from XML)", () => {
             const state = {
                 is_in_slugify_mode: true,
-                active_option: CreationOptions.TRACKER_XML_FILE
+                active_option: CreationOptions.TRACKER_XML_FILE,
             } as State;
 
             expect(getters.can_display_slugify_mode(state)).toBe(false);
@@ -243,7 +243,7 @@ describe("getters", () => {
         it("can be displayed otherwise", () => {
             const state = {
                 is_in_slugify_mode: true,
-                active_option: CreationOptions.TRACKER_TEMPLATE
+                active_option: CreationOptions.TRACKER_TEMPLATE,
             } as State;
 
             expect(getters.can_display_slugify_mode(state)).toBe(true);
@@ -254,8 +254,8 @@ describe("getters", () => {
         function getStateWithShortname(shortname: string): State {
             return {
                 tracker_to_be_created: {
-                    shortname
-                } as TrackerToBeCreatedMandatoryData
+                    shortname,
+                } as TrackerToBeCreatedMandatoryData,
             } as State;
         }
 
@@ -292,9 +292,9 @@ describe("getters", () => {
             return {
                 existing_trackers: {
                     names: ["bugs", "user stories", "releases", "epics", "activities"],
-                    shortnames: ["bug", "story", "release", "epic", "activity"]
+                    shortnames: ["bug", "story", "release", "epic", "activity"],
                 },
-                tracker_to_be_created
+                tracker_to_be_created,
             } as State;
         }
 
@@ -302,7 +302,7 @@ describe("getters", () => {
             const state = getState({
                 name: "Epics",
                 shortname: "epic",
-                color: "peggy-pink"
+                color: "peggy-pink",
             });
 
             expect(getters.is_name_already_used(state)).toBe(true);
@@ -313,7 +313,7 @@ describe("getters", () => {
             const state = getState({
                 name: "Requirements",
                 shortname: "requirement",
-                color: "peggy-pink"
+                color: "peggy-pink",
             });
 
             expect(getters.is_name_already_used(state)).toBe(false);
@@ -324,7 +324,7 @@ describe("getters", () => {
     describe("project_of_selected_tracker_template", () => {
         it("returns null when no tracker template is selected", () => {
             const state: State = {
-                selected_tracker_template: null
+                selected_tracker_template: null,
             } as State;
 
             expect(getters.project_of_selected_tracker_template(state)).toBeNull();
@@ -334,9 +334,9 @@ describe("getters", () => {
             const state: State = {
                 selected_tracker_template: {
                     id: "5",
-                    name: "Bugs"
+                    name: "Bugs",
                 },
-                project_templates: [] as ProjectTemplate[]
+                project_templates: [] as ProjectTemplate[],
             } as State;
 
             expect(getters.project_of_selected_tracker_template(state)).toBeNull();
@@ -346,23 +346,23 @@ describe("getters", () => {
             const state: State = {
                 selected_tracker_template: {
                     id: "5",
-                    name: "Bugs"
+                    name: "Bugs",
                 },
                 project_templates: [
                     {
                         project_name: "Project 1",
-                        tracker_list: [{ id: "1" } as Tracker]
+                        tracker_list: [{ id: "1" } as Tracker],
                     },
                     {
                         project_name: "Project X",
-                        tracker_list: [{ id: "5" } as Tracker]
-                    }
-                ] as ProjectTemplate[]
+                        tracker_list: [{ id: "5" } as Tracker],
+                    },
+                ] as ProjectTemplate[],
             } as State;
 
             expect(getters.project_of_selected_tracker_template(state)).toEqual({
                 project_name: "Project X",
-                tracker_list: [{ id: "5" }]
+                tracker_list: [{ id: "5" }],
             });
         });
     });

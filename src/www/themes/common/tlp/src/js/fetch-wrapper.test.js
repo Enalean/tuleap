@@ -24,7 +24,7 @@ function mockFetchSuccess(return_json, headers = {}) {
         Promise.resolve({
             headers,
             ok: true,
-            json: () => Promise.resolve(return_json)
+            json: () => Promise.resolve(return_json),
         })
     );
 }
@@ -53,7 +53,7 @@ describe(`fetch-wrapper`, () => {
                 url,
                 expect.objectContaining({
                     method: "GET",
-                    credentials: "same-origin"
+                    credentials: "same-origin",
                 })
             );
         });
@@ -63,7 +63,7 @@ describe(`fetch-wrapper`, () => {
             const params = {
                 quinonyl: "mem",
                 "R&D": 91,
-                Jwahar: false
+                Jwahar: false,
             };
             mockFetchSuccess();
 
@@ -77,7 +77,7 @@ describe(`fetch-wrapper`, () => {
         it(`given Fetch parameters like "cache" or "redirect", it will pass them to Fetch`, async () => {
             const options = {
                 cache: "force-cache",
-                redirect: "error"
+                redirect: "error",
             };
             mockFetchSuccess();
 
@@ -89,7 +89,7 @@ describe(`fetch-wrapper`, () => {
         it(`when the route fails, it will return a rejected promise with the error`, async () => {
             const expected_response = {
                 ok: false,
-                statusText: "Not found"
+                statusText: "Not found",
             };
             window.fetch.mockImplementation(() => Promise.resolve(expected_response));
 
@@ -109,7 +109,7 @@ describe(`fetch-wrapper`, () => {
                         return null;
                     }
                     return total;
-                }
+                },
             });
         }
 
@@ -121,8 +121,8 @@ describe(`fetch-wrapper`, () => {
             const result = await wrapper.recursiveGet(url, {
                 params: {
                     limit: 50,
-                    offset: 0
-                }
+                    offset: 0,
+                },
             });
 
             expect(result).toEqual(expected_result);
@@ -132,7 +132,7 @@ describe(`fetch-wrapper`, () => {
                 expected_url,
                 expect.objectContaining({
                     method: "GET",
-                    credentials: "same-origin"
+                    credentials: "same-origin",
                 })
             );
         });
@@ -140,7 +140,7 @@ describe(`fetch-wrapper`, () => {
         it(`given Fetch parameters like "cache" or "redirect", it will pass them to Fetch`, async () => {
             const options = {
                 cache: "force-cache",
-                redirect: "error"
+                redirect: "error",
             };
             mockFetchSuccessForRecursiveGet({}, "0");
 
@@ -157,7 +157,7 @@ describe(`fetch-wrapper`, () => {
             const params = {
                 quinonyl: "mem",
                 "R&D": 91,
-                Jwahar: false
+                Jwahar: false,
             };
             mockFetchSuccessForRecursiveGet({}, "0");
 
@@ -182,11 +182,11 @@ describe(`fetch-wrapper`, () => {
             deal with getting to the "array of things"
             and calls it after the first GET request`, async () => {
             const options = {
-                getCollectionCallback: jest.fn().mockImplementation(({ collection }) => collection)
+                getCollectionCallback: jest.fn().mockImplementation(({ collection }) => collection),
             };
             const expected_collection = [{ id: 93 }, { id: 53 }];
             const return_json = {
-                collection: expected_collection
+                collection: expected_collection,
             };
             mockFetchSuccessForRecursiveGet(return_json, "0");
 
@@ -201,7 +201,7 @@ describe(`fetch-wrapper`, () => {
             mockFetchSuccess(
                 {},
                 {
-                    get: () => null
+                    get: () => null,
                 }
             );
 
@@ -213,7 +213,7 @@ describe(`fetch-wrapper`, () => {
         it(`when the route fails, it will return a rejected promise with the error`, async () => {
             const expected_response = {
                 ok: false,
-                statusText: "Not found"
+                statusText: "Not found",
             };
             window.fetch.mockImplementation(() => Promise.resolve(expected_response));
 
@@ -233,10 +233,10 @@ describe(`fetch-wrapper`, () => {
                                     return null;
                                 }
                                 return "6";
-                            }
+                            },
                         },
                         ok: true,
-                        json: () => Promise.resolve(return_json)
+                        json: () => Promise.resolve(return_json),
                     };
                 });
             }
@@ -258,7 +258,7 @@ describe(`fetch-wrapper`, () => {
 
                 expect(window.fetch.mock.calls.length).toBe(3);
                 const [, ...later_calls] = window.fetch.mock.calls;
-                later_calls.forEach(call => {
+                later_calls.forEach((call) => {
                     const [, second_parameter] = call;
                     expect(second_parameter.params.limit).toEqual(2);
                     expect([2, 4]).toContain(second_parameter.params.offset);
@@ -275,7 +275,7 @@ describe(`fetch-wrapper`, () => {
 
                 const results = await wrapper.recursiveGet(url, {
                     params: { limit: 2 },
-                    getCollectionCallback: ({ collection }) => collection
+                    getCollectionCallback: ({ collection }) => collection,
                 });
 
                 expect(results).toEqual([
@@ -284,7 +284,7 @@ describe(`fetch-wrapper`, () => {
                     { id: 26 },
                     { id: 27 },
                     { id: 28 },
-                    { id: 40 }
+                    { id: 40 },
                 ]);
             });
         });
@@ -301,7 +301,7 @@ describe(`fetch-wrapper`, () => {
                 url,
                 expect.objectContaining({
                     method: "PUT",
-                    credentials: "same-origin"
+                    credentials: "same-origin",
                 })
             );
             expect(await result.json()).toEqual("success");
@@ -312,7 +312,7 @@ describe(`fetch-wrapper`, () => {
 
             const expected_options = {
                 headers: { "content-type": "application/json" },
-                body: JSON.stringify({ hoodwise: "peripheroneural" })
+                body: JSON.stringify({ hoodwise: "peripheroneural" }),
             };
             await wrapper.put(url, expected_options);
 
@@ -325,7 +325,7 @@ describe(`fetch-wrapper`, () => {
         it(`when the route fails, it will return a rejected promise with the error`, async () => {
             const expected_response = {
                 ok: false,
-                statusText: "Not found"
+                statusText: "Not found",
             };
             window.fetch.mockImplementation(() => Promise.resolve(expected_response));
 
@@ -346,7 +346,7 @@ describe(`fetch-wrapper`, () => {
                 url,
                 expect.objectContaining({
                     method: "PATCH",
-                    credentials: "same-origin"
+                    credentials: "same-origin",
                 })
             );
             expect(await result.json()).toEqual("success");
@@ -357,7 +357,7 @@ describe(`fetch-wrapper`, () => {
 
             const expected_options = {
                 headers: { "content-type": "application/json" },
-                body: JSON.stringify({ hoodwise: "peripheroneural" })
+                body: JSON.stringify({ hoodwise: "peripheroneural" }),
             };
             await wrapper.patch(url, expected_options);
 
@@ -370,7 +370,7 @@ describe(`fetch-wrapper`, () => {
         it(`when the route fails, it will return a rejected promise with the error`, async () => {
             const expected_response = {
                 ok: false,
-                statusText: "Not found"
+                statusText: "Not found",
             };
             window.fetch.mockImplementation(() => Promise.resolve(expected_response));
 
@@ -391,7 +391,7 @@ describe(`fetch-wrapper`, () => {
                 url,
                 expect.objectContaining({
                     method: "POST",
-                    credentials: "same-origin"
+                    credentials: "same-origin",
                 })
             );
             expect(await result.json()).toEqual("success");
@@ -402,7 +402,7 @@ describe(`fetch-wrapper`, () => {
 
             const expected_options = {
                 headers: { "content-type": "application/json" },
-                body: JSON.stringify({ hoodwise: "peripheroneural" })
+                body: JSON.stringify({ hoodwise: "peripheroneural" }),
             };
             await wrapper.post(url, expected_options);
 
@@ -415,7 +415,7 @@ describe(`fetch-wrapper`, () => {
         it(`when the route fails, it will return a rejected promise with the error`, async () => {
             const expected_response = {
                 ok: false,
-                statusText: "Not found"
+                statusText: "Not found",
             };
             window.fetch.mockImplementation(() => Promise.resolve(expected_response));
 
@@ -436,7 +436,7 @@ describe(`fetch-wrapper`, () => {
                 url,
                 expect.objectContaining({
                     method: "DELETE",
-                    credentials: "same-origin"
+                    credentials: "same-origin",
                 })
             );
             expect(await result.json()).toEqual("success");
@@ -454,7 +454,7 @@ describe(`fetch-wrapper`, () => {
         it(`when the route fails, it will return a rejected promise with the error`, async () => {
             const expected_response = {
                 ok: false,
-                statusText: "Not found"
+                statusText: "Not found",
             };
             window.fetch.mockImplementation(() => Promise.resolve(expected_response));
 
@@ -474,7 +474,7 @@ describe(`fetch-wrapper`, () => {
                         return null;
                     }
                     return "2";
-                }
+                },
             });
             const result = await wrapper.options(url);
 
@@ -482,7 +482,7 @@ describe(`fetch-wrapper`, () => {
                 url,
                 expect.objectContaining({
                     method: "OPTIONS",
-                    credentials: "same-origin"
+                    credentials: "same-origin",
                 })
             );
             expect(await result.headers.get("X-PAGINATION-SIZE")).toEqual("2");
@@ -500,7 +500,7 @@ describe(`fetch-wrapper`, () => {
         it(`when the route fails, it will return a rejected promise with the error`, async () => {
             const expected_response = {
                 ok: false,
-                statusText: "Not found"
+                statusText: "Not found",
             };
             window.fetch.mockImplementation(() => Promise.resolve(expected_response));
 

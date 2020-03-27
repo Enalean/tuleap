@@ -48,14 +48,14 @@ describe("TuleapArtifactModalController", () => {
         isUploadingInCKEditor;
 
     beforeEach(() => {
-        angular.mock.module(artifact_modal_module, function($provide) {
-            $provide.decorator("TuleapArtifactModalValidateService", function($delegate) {
+        angular.mock.module(artifact_modal_module, function ($provide) {
+            $provide.decorator("TuleapArtifactModalValidateService", function ($delegate) {
                 jest.spyOn($delegate, "validateArtifactFieldsValues").mockImplementation(() => {});
 
                 return $delegate;
             });
 
-            $provide.decorator("TuleapArtifactModalFieldDependenciesService", function($delegate) {
+            $provide.decorator("TuleapArtifactModalFieldDependenciesService", function ($delegate) {
                 jest.spyOn($delegate, "getTargetFieldPossibleValues").mockImplementation(() => {});
                 jest.spyOn($delegate, "setUpFieldDependenciesActions");
 
@@ -63,7 +63,7 @@ describe("TuleapArtifactModalController", () => {
             });
         });
 
-        angular.mock.inject(function(
+        angular.mock.inject(function (
             _$controller_,
             $rootScope,
             _$q_,
@@ -79,10 +79,10 @@ describe("TuleapArtifactModalController", () => {
 
             tlp_modal = {
                 hide: jest.fn(),
-                addEventListener: jest.fn()
+                addEventListener: jest.fn(),
             };
             const modal_instance = {
-                tlp_modal: tlp_modal
+                tlp_modal: tlp_modal,
             };
 
             mockCallback = jest.fn();
@@ -94,27 +94,27 @@ describe("TuleapArtifactModalController", () => {
                 modal_instance: modal_instance,
                 modal_model: {
                     title: {
-                        content: ""
+                        content: "",
                     },
                     ordered_fields: [
                         {
-                            label: "field01"
+                            label: "field01",
                         },
                         {
                             label: "fieldset01",
-                            is_hidden: true
+                            is_hidden: true,
                         },
                         {
                             label: "fieldset02",
-                            is_hidden: false
-                        }
+                            is_hidden: false,
+                        },
                     ],
-                    color: "inca_silver"
+                    color: "inca_silver",
                 },
                 TuleapArtifactModalValidateService,
                 TuleapArtifactModalLoading,
                 TuleapArtifactModalFieldDependenciesService,
-                displayItemCallback: mockCallback
+                displayItemCallback: mockCallback,
             };
         });
 
@@ -126,12 +126,12 @@ describe("TuleapArtifactModalController", () => {
         isUploadingInCKEditor = jest.spyOn(is_uploading_in_ckeditor_state, "isUploadingInCKEditor");
     });
 
-    describe("init() -", function() {
-        beforeEach(function() {
+    describe("init() -", function () {
+        beforeEach(function () {
             jest.spyOn($scope, "$watch").mockImplementation(() => {});
         });
 
-        it("when I load the controller, then field dependencies watchers will be set once for each different source field", function() {
+        it("when I load the controller, then field dependencies watchers will be set once for each different source field", function () {
             controller_params.modal_model.tracker = {
                 fields: [{ field_id: 22 }],
                 workflow: {
@@ -141,11 +141,11 @@ describe("TuleapArtifactModalController", () => {
                                 source_field_id: 43,
                                 source_value_id: 752,
                                 target_field_id: 22,
-                                target_value_id: 519
-                            }
-                        ]
-                    }
-                }
+                                target_value_id: 519,
+                            },
+                        ],
+                    },
+                },
             };
 
             ArtifactModalController = $controller(BaseModalController, controller_params);
@@ -175,7 +175,7 @@ describe("TuleapArtifactModalController", () => {
             controller_params.modal_instance.tlp_modal = {
                 addEventListener: jest.fn((event_name, handler) => {
                     handler();
-                })
+                }),
             };
 
             ArtifactModalController = $controller(BaseModalController, controller_params);
@@ -188,7 +188,7 @@ describe("TuleapArtifactModalController", () => {
     describe("submit() - Given a tracker id, field values, a callback function", () => {
         beforeEach(() => {
             TuleapArtifactModalValidateService.validateArtifactFieldsValues.mockImplementation(
-                values => values
+                (values) => values
             );
             isUploadingInCKEditor.mockReturnValue(false);
             getAllFileFields.mockReturnValue([]);
@@ -218,7 +218,7 @@ describe("TuleapArtifactModalController", () => {
             ArtifactModalController = $controller(BaseModalController, controller_params);
             const values = [
                 { field_id: 359, value: 907 },
-                { field_id: 613, bind_value_ids: [919] }
+                { field_id: 613, bind_value_ids: [919] },
             ];
             ArtifactModalController.values = values;
             const followup_comment = { body: "My comment", format: "text" };
@@ -252,7 +252,7 @@ describe("TuleapArtifactModalController", () => {
             ArtifactModalController = $controller(BaseModalController, controller_params);
             const values = [
                 { field_id: 983, value: 741 },
-                { field_id: 860, bind_value_ids: [754] }
+                { field_id: 860, bind_value_ids: [754] },
             ];
             const followup_comment = { body: "My comment", format: "text" };
             ArtifactModalController.values = values;
@@ -281,17 +281,17 @@ describe("TuleapArtifactModalController", () => {
                 field_id: 198,
                 temporary_files: first_field_temporary_files,
                 type: "file",
-                value: [66]
+                value: [66],
             };
             var second_file_field_value = {
                 field_id: 277,
                 temporary_files: second_field_temporary_files,
                 type: "file",
-                value: []
+                value: [],
             };
             var first_upload = $q.defer();
             var second_upload = $q.defer();
-            uploadAllTemporaryFiles.mockImplementation(temporary_files => {
+            uploadAllTemporaryFiles.mockImplementation((temporary_files) => {
                 switch (temporary_files[0].description) {
                     case "one":
                         return first_upload.promise;
@@ -334,12 +334,12 @@ describe("TuleapArtifactModalController", () => {
         });
     });
 
-    describe("Field dependency watchers - Given a field dependency rule was defined in the tracker", function() {
-        it("and given there was only one target value, when I change the source field's value, then the field dependencies service will be called to modify the target field and the target field's value will be set according to the dependency rule", function() {
+    describe("Field dependency watchers - Given a field dependency rule was defined in the tracker", function () {
+        it("and given there was only one target value, when I change the source field's value, then the field dependencies service will be called to modify the target field and the target field's value will be set according to the dependency rule", function () {
             var target_field = {
                 field_id: 58,
                 values: [{ id: 694 }, { id: 924 }],
-                filtered_values: [{ id: 694 }, { id: 924 }]
+                filtered_values: [{ id: 694 }, { id: 924 }],
             };
             var target_field_value = [694];
             var field_dependencies_rules = [
@@ -347,8 +347,8 @@ describe("TuleapArtifactModalController", () => {
                     source_field_id: 65,
                     source_value_id: 478,
                     target_field_id: 58,
-                    target_value_id: 924
-                }
+                    target_value_id: 924,
+                },
             ];
             TuleapArtifactModalFieldDependenciesService.getTargetFieldPossibleValues.mockReturnValue(
                 [{ id: 924 }]
@@ -358,17 +358,17 @@ describe("TuleapArtifactModalController", () => {
                 fields: [target_field],
                 workflow: {
                     rules: {
-                        lists: field_dependencies_rules
-                    }
-                }
+                        lists: field_dependencies_rules,
+                    },
+                },
             };
             modal_model.values = {
                 65: {
-                    bind_value_ids: []
+                    bind_value_ids: [],
                 },
                 58: {
-                    bind_value_ids: target_field_value
-                }
+                    bind_value_ids: target_field_value,
+                },
             };
 
             ArtifactModalController = $controller(BaseModalController, controller_params);
@@ -386,11 +386,11 @@ describe("TuleapArtifactModalController", () => {
             expect(target_field_value).toEqual([924]);
         });
 
-        it("and given there were two target values, when I change the source field's value, then the field dependencies service will be called to modify the target field and the target fields's value will be reset", function() {
+        it("and given there were two target values, when I change the source field's value, then the field dependencies service will be called to modify the target field and the target fields's value will be reset", function () {
             var target_field = {
                 field_id: 47,
                 values: [{ id: 412 }, { id: 157 }],
-                filtered_values: [{ id: 412 }]
+                filtered_values: [{ id: 412 }],
             };
             var target_field_value = [412];
             var field_dependencies_rules = [
@@ -398,14 +398,14 @@ describe("TuleapArtifactModalController", () => {
                     source_field_id: 51,
                     source_value_id: 780,
                     target_field_id: 47,
-                    target_value_id: 412
+                    target_value_id: 412,
                 },
                 {
                     source_field_id: 51,
                     source_value_id: 780,
                     target_field_id: 47,
-                    target_value_id: 157
-                }
+                    target_value_id: 157,
+                },
             ];
             TuleapArtifactModalFieldDependenciesService.getTargetFieldPossibleValues.mockReturnValue(
                 [{ id: 412 }, { id: 157 }]
@@ -415,17 +415,17 @@ describe("TuleapArtifactModalController", () => {
                 fields: [target_field],
                 workflow: {
                     rules: {
-                        lists: field_dependencies_rules
-                    }
-                }
+                        lists: field_dependencies_rules,
+                    },
+                },
             };
             modal_model.values = {
                 51: {
-                    bind_value_ids: []
+                    bind_value_ids: [],
                 },
                 47: {
-                    bind_value_ids: target_field_value
-                }
+                    bind_value_ids: target_field_value,
+                },
             };
 
             ArtifactModalController = $controller(BaseModalController, controller_params);
@@ -470,16 +470,16 @@ describe("TuleapArtifactModalController", () => {
                         images_added_by_text_fields: [
                             {
                                 id: 180,
-                                download_href: "https://example.com/sacrilegiously"
+                                download_href: "https://example.com/sacrilegiously",
                             },
-                            { id: 59, download_href: "https://example.com/swinishly" }
-                        ]
-                    }
+                            { id: 59, download_href: "https://example.com/swinishly" },
+                        ],
+                    },
                 };
 
                 const uploaded_file = {
                     id: 16,
-                    download_href: "https://example.com/microthorax"
+                    download_href: "https://example.com/microthorax",
                 };
                 ArtifactModalController.addToFilesAddedByTextField(204, uploaded_file);
 
@@ -494,7 +494,7 @@ describe("TuleapArtifactModalController", () => {
             it(`Given a comment object, it sets the new_followup_comment with the new object`, () => {
                 const comment = {
                     format: "html",
-                    body: `<p>Lorem ipsum dolor sit amet</p>`
+                    body: `<p>Lorem ipsum dolor sit amet</p>`,
                 };
                 ArtifactModalController.setFollowupComment(comment);
 
@@ -535,7 +535,7 @@ describe("TuleapArtifactModalController", () => {
                 ArtifactModalController.$onInit();
 
                 expect(ArtifactModalController.hidden_fieldsets).toEqual([
-                    { label: "fieldset01", is_hidden: true }
+                    { label: "fieldset01", is_hidden: true },
                 ]);
             });
         });

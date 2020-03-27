@@ -18,12 +18,12 @@
  *
  */
 
-describe("Hide widget", function() {
+describe("Hide widget", function () {
     before(() => {
         cy.platformAdminLogin();
     });
 
-    it("given widget is not available on platform, then it must never be displayed", function() {
+    it("given widget is not available on platform, then it must never be displayed", function () {
         cy.visit("/admin/project-creation/widgets");
 
         cy.get("[data-test=project-widgets-checkbox-projectheartbeat]").click({ force: true });

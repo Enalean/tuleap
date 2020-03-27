@@ -32,17 +32,17 @@
 export default {
     name: "ColorPickerNoColorOption",
     props: {
-        selectedColor: String
+        selectedColor: String,
     },
     computed: {
         isSelected() {
             return this.selectedColor === "";
-        }
+        },
     },
     methods: {
         updateColor() {
             this.$emit("color-update");
-        }
-    }
+        },
+    },
 };
 </script>

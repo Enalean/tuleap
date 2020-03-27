@@ -26,7 +26,7 @@ export function buildFileUploadHandler(options) {
         max_size_upload,
         onStartCallback,
         onErrorCallback,
-        onSuccessCallback
+        onSuccessCallback,
     } = options;
 
     return async function handler(event) {
@@ -66,8 +66,8 @@ async function startUpload(loader, onErrorCallback) {
             body: JSON.stringify({
                 name: loader.fileName,
                 file_size: loader.file.size,
-                file_type: loader.file.type
-            })
+                file_type: loader.file.type,
+            }),
         });
         return response.json();
     } catch (exception) {
@@ -104,7 +104,7 @@ function startUploader(loader, upload_href, download_href) {
             retryDelays: [0, 1000, 3000, 5000],
             metadata: {
                 filename: loader.file.name,
-                filetype: loader.file.type
+                filetype: loader.file.type,
             },
             onProgress: (bytes_sent, bytes_total) => {
                 loader.uploadTotal = bytes_total;
@@ -115,10 +115,10 @@ function startUploader(loader, upload_href, download_href) {
                 onSuccess(loader, download_href);
                 return resolve();
             },
-            onError: error => {
+            onError: (error) => {
                 onError(loader, error.originalRequest);
                 return reject(error);
-            }
+            },
         });
 
         uploader.start();
@@ -141,7 +141,7 @@ function onSuccess(loader, download_href) {
         // Using blank width & height inhibits this behavior.
         // See https://github.com/ckeditor/ckeditor-dev/blob/4.11.1/plugins/uploadimage/plugin.js#L84-L86
         width: " ",
-        height: " "
+        height: " ",
     };
     loader.uploaded = 1;
     loader.fileName = loader.file.name;

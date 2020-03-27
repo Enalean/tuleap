@@ -21,7 +21,7 @@ import {
     allowUnclampingProjectBannerMessage,
     PROJECT_BANNER_MESSAGE_ID,
     PROJECT_BANNER_MESSAGE_CLAMP_CLASS,
-    PROJECT_BANNER_MESSAGE_CAN_BE_UNCLAMPED_CLASS
+    PROJECT_BANNER_MESSAGE_CAN_BE_UNCLAMPED_CLASS,
 } from "./project-banner-clamp";
 
 describe("Project banner clamp", () => {
@@ -78,7 +78,7 @@ describe("Project banner clamp", () => {
     });
 
     it("Checks if an hint needs to be displayed to the user that the message is clamped after a resize", () => {
-        jest.spyOn(window, "requestAnimationFrame").mockImplementation(cb => {
+        jest.spyOn(window, "requestAnimationFrame").mockImplementation((cb) => {
             cb(1);
             return 1;
         });
@@ -99,7 +99,7 @@ describe("Project banner clamp", () => {
     });
 
     it("Checks if an hint needs to be displayed to the user when classes on the message parent element changes", () => {
-        return new Promise(done => {
+        return new Promise((done) => {
             const local_document_with_banner = getLocalDocumentWithProjectBannerMessage();
             const banner_message = local_document_with_banner.message;
             allowUnclampingProjectBannerMessage(local_document_with_banner.document);

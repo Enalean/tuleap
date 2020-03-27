@@ -23,6 +23,6 @@
 
 <script>
 export default {
-    name: "DropDownSeparator"
+    name: "DropDownSeparator",
 };
 </script>

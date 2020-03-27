@@ -24,14 +24,14 @@ module.exports = [
     {
         entry: {
             null: "null_entry",
-            style: "./themes/default/css/style.scss"
+            style: "./themes/default/css/style.scss",
         },
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(
             path.resolve(__dirname, "../../src/www/assets/tracker_encryption")
         ),
         module: {
-            rules: [webpack_configurator.rule_scss_loader]
+            rules: [webpack_configurator.rule_scss_loader],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
@@ -39,10 +39,10 @@ module.exports = [
             ...webpack_configurator.getLegacyConcatenatedScriptsPlugins({
                 "tracker_encryption.js": [
                     "./scripts/update_tracker_key_modal.js",
-                    "./scripts/encrypted_field.js"
-                ]
+                    "./scripts/encrypted_field.js",
+                ],
             }),
-            webpack_configurator.getManifestPlugin()
-        ]
-    }
+            webpack_configurator.getManifestPlugin(),
+        ],
+    },
 ];

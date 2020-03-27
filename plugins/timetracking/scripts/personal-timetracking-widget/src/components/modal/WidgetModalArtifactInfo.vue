@@ -65,7 +65,7 @@ export default {
         },
         submission_date() {
             return formatDateDayMonthYear(this.current_artifact.submission_date);
-        }
-    }
+        },
+    },
 };
 </script>

@@ -40,7 +40,7 @@ describe("Store mutations", () => {
         it("When projects are set, state must change too", () => {
             const projects = [
                 { id: 765, label: "timetracking" },
-                { id: 239, label: "projectTest" }
+                { id: 239, label: "projectTest" },
             ];
 
             mutations.setProjects(state, projects);
@@ -58,10 +58,10 @@ describe("Store mutations", () => {
                         {
                             user_name: "user",
                             user_id: 102,
-                            minutes: 60
-                        }
-                    ]
-                }
+                            minutes: 60,
+                        },
+                    ],
+                },
             ];
             mutations.setTrackersTimes(state, times);
             expect(state.trackers_times).toEqual(times);
@@ -127,7 +127,7 @@ describe("Store mutations", () => {
         it("When trackers id are set, state must change too", () => {
             let trackers = [
                 { id: 1, label: "timetracking_tracker" },
-                { id: 2, label: "support_tracker" }
+                { id: 2, label: "support_tracker" },
             ];
 
             mutations.setSelectedTrackers(state, trackers);
@@ -139,7 +139,7 @@ describe("Store mutations", () => {
             const user = {
                 user_name: "user",
                 user_id: 102,
-                minutes: 60
+                minutes: 60,
             };
 
             mutations.setSelectedUser(state, user);
@@ -168,7 +168,7 @@ describe("Store mutations", () => {
                 let trackers = [
                     { id: 1, label: "timetracking_tracker" },
                     { id: 2, label: "support_tracker" },
-                    { id: 3, label: "task_tracker" }
+                    { id: 3, label: "task_tracker" },
                 ];
 
                 mutations.setTrackers(state, trackers);
@@ -193,13 +193,13 @@ describe("Store mutations", () => {
                 let trackers = [
                     { id: 1, label: "timetracking_tracker" },
                     { id: 2, label: "support_tracker" },
-                    { id: 3, label: "task_tracker" }
+                    { id: 3, label: "task_tracker" },
                 ];
 
                 const tracker_temoin = [
                     { id: 1, label: "timetracking_tracker", disabled: false },
                     { id: 2, label: "support_tracker", disabled: false },
-                    { id: 3, label: "task_tracker", disabled: false }
+                    { id: 3, label: "task_tracker", disabled: false },
                 ];
 
                 mutations.setTrackers(state, trackers);
@@ -211,13 +211,13 @@ describe("Store mutations", () => {
                 let trackers = [
                     { id: 1, label: "timetracking_tracker" },
                     { id: 2, label: "support_tracker" },
-                    { id: 3, label: "task_tracker" }
+                    { id: 3, label: "task_tracker" },
                 ];
 
                 const tracker_temoin = [
                     { id: 1, label: "timetracking_tracker", disabled: true },
                     { id: 2, label: "support_tracker", disabled: false },
-                    { id: 3, label: "task_tracker", disabled: false }
+                    { id: 3, label: "task_tracker", disabled: false },
                 ];
 
                 mutations.setTrackers(state, trackers);

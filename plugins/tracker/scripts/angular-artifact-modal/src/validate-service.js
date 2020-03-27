@@ -31,7 +31,7 @@ ValidateService.$inject = [];
 
 function ValidateService() {
     return {
-        validateArtifactFieldsValues
+        validateArtifactFieldsValues,
     };
 
     function validateArtifactFieldsValues(field_values, creation_mode, followup_value_model) {
@@ -39,10 +39,10 @@ function ValidateService() {
             ({ type }) => type === TEXT_FIELD
         );
         var validated_values = _(field_values)
-            .filter(function(field) {
+            .filter(function (field) {
                 return filterFieldPermissions(field, creation_mode);
             })
-            .map(function(field) {
+            .map(function (field) {
                 switch (field.type) {
                     case "computed":
                         return formatComputedFieldValue(field);
@@ -120,7 +120,7 @@ function ValidateService() {
     }
 
     function removeUnusedAttributes(field) {
-        var attributes_to_keep = _.pick(field, function(property, key) {
+        var attributes_to_keep = _.pick(field, function (property, key) {
             switch (key) {
                 case "bind_value_ids":
                 case "field_id":

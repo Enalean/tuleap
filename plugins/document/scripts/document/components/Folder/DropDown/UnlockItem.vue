@@ -35,7 +35,7 @@ import { mapState } from "vuex";
 export default {
     name: "UnlockItem",
     props: {
-        item: Object
+        item: Object,
     },
     computed: {
         ...mapState(["user_id"]),
@@ -45,12 +45,12 @@ export default {
             }
 
             return this.item.user_can_write;
-        }
+        },
     },
     methods: {
         async unlockDocument() {
             await this.$store.dispatch("unlockDocument", this.item);
-        }
-    }
+        },
+    },
 };
 </script>

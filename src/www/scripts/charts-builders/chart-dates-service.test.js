@@ -44,7 +44,7 @@ describe("chartDatesServices", () => {
         function getDataset() {
             return [
                 { date: "2019-08-12T21:59:59+00:00", remaining_effort: 10 },
-                { date: "2019-08-13T12:30:41+00:00", remaining_effort: 10 }
+                { date: "2019-08-13T12:30:41+00:00", remaining_effort: 10 },
             ];
         }
 
@@ -54,21 +54,21 @@ describe("chartDatesServices", () => {
                     date: "2019-08-12T21:59:59+00:00",
                     remaining_effort: 10,
                     total: 20,
-                    progression: 30
+                    progression: 30,
                 },
                 {
                     date: "2019-08-13T12:30:41+00:00",
                     remaining_effort: 100,
                     total: 500,
-                    progression: 200
-                }
+                    progression: 200,
+                },
             ];
         }
 
         function getDatasetWithSomeAttributesAndFormattedDates() {
             return [
                 { date: "2019-08-12", remaining_effort: 10, total: 20, progression: 30 },
-                { date: "2019-08-13", remaining_effort: 100, total: 500, progression: 200 }
+                { date: "2019-08-13", remaining_effort: 100, total: 500, progression: 200 },
             ];
         }
     });

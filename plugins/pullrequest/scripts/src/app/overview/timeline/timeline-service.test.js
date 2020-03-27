@@ -22,28 +22,28 @@ import tuleap_pullrequest_module from "../../app.js";
 
 import "angular-mocks";
 
-describe("TimelineService", function() {
+describe("TimelineService", function () {
     var $httpBackend, $sce, TimelineService;
 
-    beforeEach(function() {
+    beforeEach(function () {
         angular.mock.module(tuleap_pullrequest_module);
 
-        angular.mock.inject(function(_$httpBackend_, _$sce_, _TimelineService_) {
+        angular.mock.inject(function (_$httpBackend_, _$sce_, _TimelineService_) {
             $httpBackend = _$httpBackend_;
             $sce = _$sce_;
             TimelineService = _TimelineService_;
         });
     });
 
-    describe("#getTimeline", function() {
+    describe("#getTimeline", function () {
         var backendData, pullRequest;
         var limit = 50,
             offset = 0;
 
-        beforeEach(function() {
+        beforeEach(function () {
             pullRequest = {
                 id: "1",
-                user_id: 102
+                user_id: 102,
             };
 
             backendData = {
@@ -53,83 +53,83 @@ describe("TimelineService", function() {
                         user: {
                             id: 102,
                             display_name: "Site User (userX)",
-                            avatar_url: "/themes/common/images/avatar_default.png"
+                            avatar_url: "/themes/common/images/avatar_default.png",
                         },
                         post_date: "1970-01-01T00:00:00+00:00",
                         content: "Hello world",
-                        type: "comment"
+                        type: "comment",
                     },
                     {
                         id: "8",
                         user: {
                             id: 101,
                             display_name: "Site Administrator (admin)",
-                            avatar_url: "/themes/common/images/avatar_default.png"
+                            avatar_url: "/themes/common/images/avatar_default.png",
                         },
                         post_date: "1970-01-01T00:00:00+00:00",
                         content: "Hello\nSite User\n",
                         type: "inline-comment",
                         file_path: "Readme.md",
-                        is_outdated: false
+                        is_outdated: false,
                     },
                     {
                         id: "9",
                         user: {
                             id: 101,
                             display_name: "Site Administrator (admin)",
-                            avatar_url: "/themes/common/images/avatar_default.png"
+                            avatar_url: "/themes/common/images/avatar_default.png",
                         },
                         post_date: "1970-01-01T00:00:00+00:00",
                         content: "Obsolete inline comment",
                         type: "inline-comment",
                         file_path: "Readme.md",
-                        is_outdated: true
+                        is_outdated: true,
                     },
                     {
                         user: {
                             id: 102,
                             display_name: "Site User (userX)",
-                            avatar_url: "/themes/common/images/avatar_default.png"
+                            avatar_url: "/themes/common/images/avatar_default.png",
                         },
                         post_date: "1970-01-01T00:00:00+00:00",
                         type: "timeline-event",
-                        event_type: "update"
+                        event_type: "update",
                     },
                     {
                         user: {
                             id: 101,
                             display_name: "Site Administrator (admin)",
-                            avatar_url: "/themes/common/images/avatar_default.png"
+                            avatar_url: "/themes/common/images/avatar_default.png",
                         },
                         post_date: "1970-01-01T00:00:00+00:00",
                         type: "timeline-event",
-                        event_type: "rebase"
+                        event_type: "rebase",
                     },
                     {
                         user: {
                             id: 102,
                             display_name: "Site User (userX)",
-                            avatar_url: "/themes/common/images/avatar_default.png"
+                            avatar_url: "/themes/common/images/avatar_default.png",
                         },
                         post_date: "1970-01-01T00:00:00+00:00",
                         type: "timeline-event",
-                        event_type: "merge"
+                        event_type: "merge",
                     },
                     {
                         user: {
                             id: 101,
                             display_name: "Site Administrator (admin)",
-                            avatar_url: "/themes/common/images/avatar_default.png"
+                            avatar_url: "/themes/common/images/avatar_default.png",
                         },
                         post_date: "1970-01-01T00:00:00+00:00",
                         type: "timeline-event",
-                        event_type: "abandon"
+                        event_type: "abandon",
                     },
                     {
                         user: {
                             id: 102,
                             display_name: "Site User (userX)",
-                            avatar_url: "/themes/common/images/avatar_default.png"
+                            avatar_url: "/themes/common/images/avatar_default.png",
                         },
                         post_date: "2020-01-01T00:00:00+00:00",
                         type: "reviewer-change",
@@ -138,16 +138,16 @@ describe("TimelineService", function() {
                             {
                                 id: 101,
                                 display_name: "Site Administrator (admin)",
-                                avatar_url: "/themes/common/images/avatar_default.png"
-                            }
+                                avatar_url: "/themes/common/images/avatar_default.png",
+                            },
                         ],
-                        removed_reviewers: []
-                    }
-                ]
+                        removed_reviewers: [],
+                    },
+                ],
             };
         });
 
-        it("requests a timeline of pull request events from the REST service", function() {
+        it("requests a timeline of pull request events from the REST service", function () {
             var expectedUrl =
                 "/api/v1/pull_requests/" +
                 pullRequest.id +
@@ -162,11 +162,11 @@ describe("TimelineService", function() {
             $httpBackend.verifyNoOutstandingExpectation();
         });
 
-        it("formats the content of each timeline event", function() {
+        it("formats the content of each timeline event", function () {
             $httpBackend.whenGET().respond(backendData);
 
             var timeline;
-            TimelineService.getTimeline(pullRequest, limit, offset).then(function(tl) {
+            TimelineService.getTimeline(pullRequest, limit, offset).then(function (tl) {
                 timeline = tl;
             });
             $httpBackend.flush();
@@ -189,11 +189,11 @@ describe("TimelineService", function() {
             );
         });
 
-        it("sets author flag for each timeline event", function() {
+        it("sets author flag for each timeline event", function () {
             $httpBackend.whenGET().respond(backendData);
 
             var timeline;
-            TimelineService.getTimeline(pullRequest, limit, offset).then(function(tl) {
+            TimelineService.getTimeline(pullRequest, limit, offset).then(function (tl) {
                 timeline = tl;
             });
             $httpBackend.flush();
@@ -204,11 +204,11 @@ describe("TimelineService", function() {
             expect(timeline[4].isFromPRAuthor).toBe(false);
         });
 
-        it("sets flags for inline comments, both outdated or not", function() {
+        it("sets flags for inline comments, both outdated or not", function () {
             $httpBackend.whenGET().respond(backendData);
 
             var timeline;
-            TimelineService.getTimeline(pullRequest, limit, offset).then(function(tl) {
+            TimelineService.getTimeline(pullRequest, limit, offset).then(function (tl) {
                 timeline = tl;
             });
             $httpBackend.flush();
@@ -219,15 +219,15 @@ describe("TimelineService", function() {
         });
     });
 
-    describe("#addComment", function() {
+    describe("#addComment", function () {
         var pullRequest = {
-            id: "1"
+            id: "1",
         };
 
-        it("sends a request to post a new comment", function() {
+        it("sends a request to post a new comment", function () {
             var newComment = {
                 content: "hello",
-                user_id: 100
+                user_id: 100,
             };
             var expectedUrl = "/api/v1/pull_requests/" + pullRequest.id + "/comments";
             $httpBackend.expectPOST(expectedUrl, newComment).respond(newComment);
@@ -237,19 +237,19 @@ describe("TimelineService", function() {
             $httpBackend.verifyNoOutstandingExpectation();
         });
 
-        it("returns a timeline with the new comment", function() {
+        it("returns a timeline with the new comment", function () {
             var timeline = [];
             var newComment = {
                 content: "hello",
-                user_id: 100
+                user_id: 100,
             };
             var expectedComment = {
                 id: 1,
                 user: {
-                    id: 100
+                    id: 100,
                 },
                 content: "hello",
-                type: "comment"
+                type: "comment",
             };
             var expectedUrl = "/api/v1/pull_requests/" + pullRequest.id + "/comments";
             $httpBackend.expectPOST(expectedUrl, newComment).respond(expectedComment);

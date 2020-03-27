@@ -43,17 +43,17 @@ export default {
     props: {
         value: {
             type: String,
-            required: true
+            required: true,
         },
         id: {
             type: String,
-            required: true
-        }
+            required: true,
+        },
     },
     computed: {
         placeholder() {
             return this.$gettext("my_service");
-        }
-    }
+        },
+    },
 };
 </script>

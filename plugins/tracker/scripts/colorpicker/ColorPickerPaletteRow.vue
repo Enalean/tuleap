@@ -26,8 +26,8 @@
             v-bind:class="[
                 'colorpicker-circular-color-' + color_name,
                 {
-                    'fa fa-check': isCurrentColor(color_name)
-                }
+                    'fa fa-check': isCurrentColor(color_name),
+                },
             ]"
             v-bind:title="color_name"
             v-on:click="updateColor(color_name)"
@@ -40,7 +40,7 @@ export default {
     name: "ColorPickerPaletteRow",
     props: {
         colors: Array,
-        selectedColor: String
+        selectedColor: String,
     },
     methods: {
         updateColor(color) {
@@ -48,7 +48,7 @@ export default {
         },
         isCurrentColor(color_name) {
             return this.selectedColor === color_name;
-        }
-    }
+        },
+    },
 };
 </script>

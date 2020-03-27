@@ -26,7 +26,7 @@ import { sanitize } from "dompurify";
 (function loadCodeMirrorEditors() {
     var demo_panels = document.querySelectorAll(".demo");
 
-    [].forEach.call(demo_panels, function(demo_panel) {
+    [].forEach.call(demo_panels, function (demo_panel) {
         var textarea = demo_panel.querySelector(".code > textarea"),
             example = demo_panel.querySelector(".example");
 
@@ -40,9 +40,9 @@ import { sanitize } from "dompurify";
             lineNumbers: true,
             matchBrackets: true,
             mode: "text/html",
-            scrollbarStyle: "overlay"
+            scrollbarStyle: "overlay",
         });
-        editor.on("change", function() {
+        editor.on("change", function () {
             clearTimeout(delay);
             delay = setTimeout(updatePreview, 300);
         });
@@ -50,127 +50,127 @@ import { sanitize } from "dompurify";
         function updatePreview() {
             example.innerHTML = sanitize(editor.getValue());
             var datepickers = example.querySelectorAll(".tlp-input-date");
-            [].forEach.call(datepickers, function(datepicker) {
+            [].forEach.call(datepickers, function (datepicker) {
                 tlp.datePicker(datepicker);
             });
 
             var filters = example.querySelectorAll(".tlp-search[data-target-table-id]");
-            [].forEach.call(filters, function(filter) {
+            [].forEach.call(filters, function (filter) {
                 tlp.filterInlineTable(filter);
             });
 
             tlp.select2(document.querySelector("#area-select2"), {
                 placeholder: "Choose an area",
-                allowClear: true
+                allowClear: true,
             });
             tlp.select2(document.querySelector("#area-select2-adjusted"), {
                 placeholder: "Choose an area",
-                allowClear: true
+                allowClear: true,
             });
             tlp.select2(document.querySelector("#area-without-autocomplete"), {
                 placeholder: "Choose an area",
                 allowClear: true,
-                minimumResultsForSearch: Infinity
+                minimumResultsForSearch: Infinity,
             });
             tlp.select2(document.querySelector("#area-select2-help"), {
                 placeholder: "Choose an area",
-                allowClear: true
+                allowClear: true,
             });
             tlp.select2(document.querySelector("#area-select2-mandatory"), {
-                placeholder: "Choose an area"
+                placeholder: "Choose an area",
             });
             tlp.select2(document.querySelector("#area-select2-disabled"));
             tlp.select2(document.querySelector("#area-select2-error"), {
                 placeholder: "Choose an area",
-                allowClear: true
+                allowClear: true,
             });
             tlp.select2(document.querySelector("#area-select2-small"), {
                 placeholder: "Choose an area",
-                allowClear: true
+                allowClear: true,
             });
             tlp.select2(document.querySelector("#area-select2-large"), {
                 placeholder: "Choose an area",
-                allowClear: true
+                allowClear: true,
             });
 
             tlp.select2(document.querySelector("#types-select2"), {
                 placeholder: "Choose a type",
-                allowClear: true
+                allowClear: true,
             });
             tlp.select2(document.querySelector("#typess-select2"), {
                 placeholder: "Choose a type",
-                allowClear: true
+                allowClear: true,
             });
             tlp.select2(document.querySelector("#types-select2-adjusted"), {
                 placeholder: "Choose a type",
-                allowClear: true
+                allowClear: true,
             });
             tlp.select2(document.querySelector("#types-select2-help"), {
                 placeholder: "Choose a type",
-                allowClear: true
+                allowClear: true,
             });
             tlp.select2(document.querySelector("#types-select2-mandatory"), {
-                placeholder: "Choose a type"
+                placeholder: "Choose a type",
             });
             tlp.select2(document.querySelector("#types-select2-disabled"), {
                 placeholder: "Choose a type",
-                allowClear: true
+                allowClear: true,
             });
             tlp.select2(document.querySelector("#types-select2-error"), {
                 placeholder: "Choose a type",
-                allowClear: true
+                allowClear: true,
             });
             tlp.select2(document.querySelector("#types-select2-small"), {
                 placeholder: "Choose a type",
-                allowClear: true
+                allowClear: true,
             });
             tlp.select2(document.querySelector("#types-select2-large"), {
                 placeholder: "Choose a type",
-                allowClear: true
+                allowClear: true,
             });
             tlp.select2(document.querySelector("#append-select2"), {
                 placeholder: "Choose an area",
-                allowClear: true
+                allowClear: true,
             });
             tlp.select2(document.querySelector("#append-select2-small"), {
                 placeholder: "Choose an area",
-                allowClear: true
+                allowClear: true,
             });
             tlp.select2(document.querySelector("#append-select2-large"), {
                 placeholder: "Choose an area",
-                allowClear: true
+                allowClear: true,
             });
             tlp.select2(document.querySelector("#select2-prepend"), {
                 placeholder: "Choose an area",
-                allowClear: true
+                allowClear: true,
             });
             tlp.select2(document.querySelector("#select2-prepend-small"), {
                 placeholder: "Choose an area",
-                allowClear: true
+                allowClear: true,
             });
             tlp.select2(document.querySelector("#select2-prepend-large"), {
                 placeholder: "Choose an area",
-                allowClear: true
+                allowClear: true,
             });
 
             const example_links = example.querySelectorAll('a[href="#"]');
-            [].forEach.call(example_links, link => {
+            [].forEach.call(example_links, (link) => {
                 link.addEventListener(
                     "click",
-                    event => event.preventDefault() && event.stopPropagation()
+                    (event) => event.preventDefault() && event.stopPropagation()
                 );
             });
 
             var modal_buttons = example.querySelectorAll("[data-target^=modal-]");
-            [].forEach.call(modal_buttons, function(button) {
+            [].forEach.call(modal_buttons, function (button) {
                 var modal = tlp.modal(document.getElementById(button.dataset.target), {});
-                button.addEventListener("click", function() {
+                button.addEventListener("click", function () {
                     modal.toggle();
                 });
             });
 
             var popover_triggers = document.querySelectorAll(".popover-example");
-            [].forEach.call(popover_triggers, function(trigger) {
+            [].forEach.call(popover_triggers, function (trigger) {
                 tlp.createPopover(trigger, document.getElementById(trigger.id + "-content"));
             });
 
@@ -182,7 +182,7 @@ import { sanitize } from "dompurify";
                     popover_anchor_example_trigger,
                     document.getElementById("popover-anchor-example-content"),
                     {
-                        anchor: document.getElementById("popover-anchor-example")
+                        anchor: document.getElementById("popover-anchor-example"),
                     }
                 );
             }
@@ -191,7 +191,7 @@ import { sanitize } from "dompurify";
                 "popover-example-dom-update-button"
             );
             if (popover_example_dom_update_button) {
-                popover_example_dom_update_button.addEventListener("click", function() {
+                popover_example_dom_update_button.addEventListener("click", function () {
                     popover_example_dom_update_button.classList.toggle("tlp-button-large");
                 });
             }
@@ -205,7 +205,7 @@ import { sanitize } from "dompurify";
             if (dropdown_trigger_options) {
                 tlp.dropdown(dropdown_trigger_options, {
                     keyboard: false,
-                    dropdown_menu: document.getElementById("dropdown-menu-example-options")
+                    dropdown_menu: document.getElementById("dropdown-menu-example-options"),
                 });
             }
 
@@ -215,7 +215,7 @@ import { sanitize } from "dompurify";
             if (dropdown_trigger_disabled_options) {
                 tlp.dropdown(dropdown_trigger_disabled_options, {
                     keyboard: false,
-                    dropdown_menu: document.getElementById("dropdown-menu-disable-options")
+                    dropdown_menu: document.getElementById("dropdown-menu-disable-options"),
                 });
             }
 
@@ -224,7 +224,7 @@ import { sanitize } from "dompurify";
             );
             if (dropdown_trigger_split_example1_options) {
                 tlp.dropdown(dropdown_trigger_split_example1_options, {
-                    dropdown_menu: document.getElementById("dropdown-split-example-menu")
+                    dropdown_menu: document.getElementById("dropdown-split-example-menu"),
                 });
             }
 
@@ -233,7 +233,7 @@ import { sanitize } from "dompurify";
             );
             if (dropdown_trigger_split_example2_options) {
                 tlp.dropdown(dropdown_trigger_split_example2_options, {
-                    dropdown_menu: document.getElementById("dropdown-split-example2-menu")
+                    dropdown_menu: document.getElementById("dropdown-split-example2-menu"),
                 });
             }
 
@@ -242,7 +242,7 @@ import { sanitize } from "dompurify";
             );
             if (dropdown_trigger_large_split_example_options) {
                 tlp.dropdown(dropdown_trigger_large_split_example_options, {
-                    dropdown_menu: document.getElementById("dropdown-large-split-example-menu")
+                    dropdown_menu: document.getElementById("dropdown-large-split-example-menu"),
                 });
             }
 
@@ -252,11 +252,11 @@ import { sanitize } from "dompurify";
                 "dropdown-top-example",
                 "dropdown-top-right-example",
                 "dropdown-icon-right-example",
-                "dropdown-with-tabs-example"
+                "dropdown-with-tabs-example",
             ]
-                .map(id => document.getElementById(id))
-                .filter(element => Boolean(element))
-                .forEach(trigger => tlp.dropdown(trigger));
+                .map((id) => document.getElementById(id))
+                .filter((element) => Boolean(element))
+                .forEach((trigger) => tlp.dropdown(trigger));
         }
         setTimeout(updatePreview, 10);
     });

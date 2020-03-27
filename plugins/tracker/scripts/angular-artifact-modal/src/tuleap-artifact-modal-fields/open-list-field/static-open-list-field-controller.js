@@ -33,7 +33,7 @@ function StaticOpenListFieldController($element) {
         isStaticValueSelected,
         newOpenListStaticValue,
         isRequiredAndEmpty,
-        fieldValues
+        fieldValues,
     });
 
     function init() {
@@ -50,7 +50,7 @@ function StaticOpenListFieldController($element) {
             placeholder: self.field.hint,
             allowClear: true,
             tags: true,
-            createTag: self.newOpenListStaticValue
+            createTag: self.newOpenListStaticValue,
         });
 
         $element.on("select2:selecting", self.handleStaticValueSelection);
@@ -72,14 +72,14 @@ function StaticOpenListFieldController($element) {
 
     function isStaticValueSelected(field_value) {
         return self.value_model.value.bind_value_objects.some(
-            value_object => value_object.id === field_value.id.toString()
+            (value_object) => value_object.id === field_value.id.toString()
         );
     }
 
     function handleStaticValueSelection(event) {
         var new_selection = event.params.args.data;
         var new_value_model_value = {
-            label: new_selection.text
+            label: new_selection.text,
         };
 
         if (new_selection.isTag !== true) {
@@ -92,7 +92,7 @@ function StaticOpenListFieldController($element) {
     function handleStaticValueUnselection(event) {
         var removed_selection = event.params.args.data;
 
-        remove(self.value_model.value.bind_value_objects, function(value_object) {
+        remove(self.value_model.value.bind_value_objects, function (value_object) {
             if (removed_selection.isTag === true) {
                 return value_object.label === removed_selection.text;
             }
@@ -108,7 +108,7 @@ function StaticOpenListFieldController($element) {
         }
 
         const tag_already_exists = self.field.values.some(
-            value => value.label.toLowerCase() === term.toLowerCase()
+            (value) => value.label.toLowerCase() === term.toLowerCase()
         );
         if (tag_already_exists === true) {
             return null;
@@ -117,7 +117,7 @@ function StaticOpenListFieldController($element) {
         return {
             id: term,
             text: term,
-            isTag: true
+            isTag: true,
         };
     }
 }

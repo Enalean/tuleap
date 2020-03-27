@@ -21,48 +21,48 @@ const TQL_mode_definition = {
     start: [
         {
             regex: /"(?:[^\\]|\\.)*?(?:"|$)/, // double quotes
-            token: "string"
+            token: "string",
         },
         {
             regex: /'(?:[^\\]|\\.)*?(?:'|$)/, // single quotes
-            token: "string"
+            token: "string",
         },
         {
             regex: /\d+[dwmy]/i, // Time period
-            token: "variable-3"
+            token: "variable-3",
         },
         {
             regex: /\d+(?:\.\d+)?/i, // Float & integers
-            token: "number"
+            token: "number",
         },
         {
             regex: /(?:and|or)\b/i,
-            token: "keyword"
+            token: "keyword",
         },
         {
             regex: /(?:now|between|in|not|myself|open)\b/i,
-            token: "variable-2"
+            token: "variable-2",
         },
         {
             regex: /[=<>!+-]+/,
-            token: "operator"
+            token: "operator",
         },
         {
             regex: /[(]/,
             token: "operator",
-            indent: true
+            indent: true,
         },
         {
             regex: /[)]/,
             token: "operator",
-            dedent: true
-        }
-    ]
+            dedent: true,
+        },
+    ],
 };
 
 const variable_definition = {
     regex: /@?[a-zA-Z0-9_]+/,
-    token: "variable"
+    token: "variable",
 };
 
 function buildModeDefinition({ additional_keywords = [] }) {
@@ -70,7 +70,7 @@ function buildModeDefinition({ additional_keywords = [] }) {
         const keywords_regex = additional_keywords.join("|");
         const additional_keywords_definition = {
             regex: new RegExp("(?:" + keywords_regex + ")\\b", "i"),
-            token: "variable-2"
+            token: "variable-2",
         };
         TQL_mode_definition.start.push(additional_keywords_definition);
     }
@@ -86,7 +86,7 @@ const TQL_autocomplete_keywords = [
     "IN(",
     "NOT",
     "MYSELF()",
-    "@comments"
+    "@comments",
 ];
 
 export { buildModeDefinition, TQL_autocomplete_keywords };

@@ -56,7 +56,7 @@ export function initArtifactAdditionalAction(mount_point: Document): void {
             const gettext_provider = await initGettext(
                 language,
                 "artifact-additional-action",
-                locale =>
+                (locale) =>
                     import(
                         /* webpackChunkName: "artifact-additional-action-po-" */ `../po/${locale}.po`
                     )
@@ -67,11 +67,11 @@ export function initArtifactAdditionalAction(mount_point: Document): void {
                 try {
                     await patch(`/api/v1/projects/${encodeURIComponent(project_id)}/backlog`, {
                         headers: {
-                            "Content-Type": "application/json"
+                            "Content-Type": "application/json",
                         },
                         body: JSON.stringify({
-                            add: [{ id: Number.parseInt(artifact_id, 10) }]
-                        })
+                            add: [{ id: Number.parseInt(artifact_id, 10) }],
+                        }),
                     });
                 } catch (e) {
                     addFeedback(
@@ -99,11 +99,11 @@ export function initArtifactAdditionalAction(mount_point: Document): void {
                 try {
                     await patch(`/api/v1/projects/${encodeURIComponent(project_id)}/backlog`, {
                         headers: {
-                            "Content-Type": "application/json"
+                            "Content-Type": "application/json",
                         },
                         body: JSON.stringify({
-                            remove: [{ id: Number.parseInt(artifact_id, 10) }]
-                        })
+                            remove: [{ id: Number.parseInt(artifact_id, 10) }],
+                        }),
                     });
                 } catch (e) {
                     addFeedback(

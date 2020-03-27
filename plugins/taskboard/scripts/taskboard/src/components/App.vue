@@ -47,8 +47,8 @@ const swimlane = namespace("swimlane");
         NoContentEmptyState,
         TaskBoard,
         BoardWithoutAnyColumnsError,
-        GlobalAppError
-    }
+        GlobalAppError,
+    },
 })
 export default class App extends Vue {
     @column.State

@@ -44,7 +44,7 @@ export default {
     name: "FollowupEditor",
     components: { RichTextEditor, FormatSelector },
     props: {
-        value: Object
+        value: Object,
     },
     computed: {
         label() {
@@ -56,7 +56,7 @@ export default {
             },
             set(new_content) {
                 this.$emit("input", { format: this.format, body: new_content });
-            }
+            },
         },
         format: {
             get() {
@@ -64,13 +64,13 @@ export default {
             },
             set(new_format) {
                 this.$emit("input", { format: new_format, body: this.content });
-            }
-        }
+            },
+        },
     },
     methods: {
         reemit(...args) {
             this.$emit("upload-image", ...args);
-        }
-    }
+        },
+    },
 };
 </script>

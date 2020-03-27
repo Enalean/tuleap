@@ -9,9 +9,9 @@ function Graph($window, gettextCatalog) {
     return {
         restrict: "E",
         scope: {
-            data: "="
+            data: "=",
         },
-        link: function(scope, element) {
+        link: function (scope, element) {
             var CUMULATIVE_CHART_MARGIN_LEFT = 70;
             var CUMULATIVE_CHART_MARGIN_RIGHT = 50;
             var CUMULATIVE_CHART_MARGIN_TOP = 20;
@@ -25,7 +25,7 @@ function Graph($window, gettextCatalog) {
                 top: CUMULATIVE_CHART_MARGIN_TOP,
                 right: CUMULATIVE_CHART_MARGIN_RIGHT,
                 bottom: CUMULATIVE_CHART_MARGIN_BOTTOM,
-                left: CUMULATIVE_CHART_MARGIN_LEFT
+                left: CUMULATIVE_CHART_MARGIN_LEFT,
             };
 
             var sizes = getSizesElement();
@@ -39,7 +39,7 @@ function Graph($window, gettextCatalog) {
                 height: height,
                 margin: margin,
                 legend_text: gettextCatalog.getString("Nb. of cards"),
-                localized_format: localized_format
+                localized_format: localized_format,
             };
 
             var cumulative_chart = createCumulativeChart(options);
@@ -75,7 +75,7 @@ function Graph($window, gettextCatalog) {
 
             angular.element($window).on("resize", resize);
 
-            scope.$on("$destroy", function() {
+            scope.$on("$destroy", function () {
                 angular.element($window).off("resize", resize);
             });
 
@@ -90,9 +90,9 @@ function Graph($window, gettextCatalog) {
                         angular.element(".chart")[0].clientHeight -
                         CUMULATIVE_CHART_LEGEND_MARGIN_HEIGHT -
                         margin.top -
-                        margin.bottom
+                        margin.bottom,
                 };
             }
-        }
+        },
     };
 }

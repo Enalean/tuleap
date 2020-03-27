@@ -56,7 +56,7 @@ const column_store = namespace("column");
 const swimlane_store = namespace("swimlane");
 
 @Component({
-    components: { SwimlaneHeader, CardXrefLabel }
+    components: { SwimlaneHeader, CardXrefLabel },
 })
 export default class CollapsedSwimlane extends Vue {
     @Prop({ required: true })

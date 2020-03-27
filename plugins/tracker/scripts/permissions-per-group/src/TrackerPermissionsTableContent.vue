@@ -61,16 +61,16 @@ export default {
     name: "TrackerPermissionsTableContent",
     components: {
         TrackerPermissionsUgroupBadge,
-        EmptyState
+        EmptyState,
     },
     props: {
         trackerPermissions: Array,
-        selectedUgroupName: String
+        selectedUgroupName: String,
     },
     computed: {
         hasTrackerPermissions() {
             return this.trackerPermissions.length > 0;
-        }
-    }
+        },
+    },
 };
 </script>

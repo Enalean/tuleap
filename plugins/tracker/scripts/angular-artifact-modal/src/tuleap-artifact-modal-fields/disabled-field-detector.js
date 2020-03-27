@@ -20,7 +20,7 @@
 import { isInCreationMode } from "../modal-creation-mode-state.js";
 import {
     FIELD_PERMISSION_CREATE,
-    FIELD_PERMISSION_UPDATE
+    FIELD_PERMISSION_UPDATE,
 } from "../../../constants/fields-constants.js";
 
 export function isDisabled(field) {

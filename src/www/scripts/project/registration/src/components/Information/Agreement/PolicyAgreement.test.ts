@@ -25,7 +25,7 @@ import PolicyAgreement from "./PolicyAgreement.vue";
 describe("PolicyAgreement -", () => {
     it("Displays text with a clickable link", async () => {
         const wrapper = shallowMount(PolicyAgreement, {
-            localVue: await createProjectRegistrationLocalVue()
+            localVue: await createProjectRegistrationLocalVue(),
         });
 
         expect(wrapper).toMatchSnapshot();

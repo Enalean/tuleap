@@ -37,7 +37,7 @@
                 <translate
                     v-bind:translate-params="{
                         nb_past: nb_past_releases,
-                        label_tracker: label_tracker_planning
+                        label_tracker: label_tracker_planning,
                     }"
                     v-bind:translate-n="nb_past_releases"
                     translate-plural="%{nb_past} past %{label_tracker}"
@@ -58,8 +58,8 @@ import { MilestoneData } from "../../type";
 
 @Component({
     components: {
-        ReleaseDisplayer
-    }
+        ReleaseDisplayer,
+    },
 })
 export default class PastSection extends Vue {
     @State

@@ -26,7 +26,7 @@ describe("Store getters", () => {
     beforeEach(() => {
         mock_getters = {
             areRepositoriesAlreadyLoadedForCurrentOwner: true,
-            currentRepositoryList: []
+            currentRepositoryList: [],
         };
 
         state = { ...initial_state };
@@ -44,11 +44,11 @@ describe("Store getters", () => {
         it("Given project repositories are loaded, then it will return an array sorted by last update date descending", () => {
             const first_repo = {
                 normalized_path: "sequacious/missis",
-                last_update_date: "2019-12-08T07:58:37+01:00"
+                last_update_date: "2019-12-08T07:58:37+01:00",
             };
             const last_repo = {
                 normalized_path: "putridity",
-                last_update_date: "2021-03-24T01:35:50+01:00"
+                last_update_date: "2021-03-24T01:35:50+01:00",
             };
 
             mock_getters.currentRepositoryList = [first_repo, last_repo];
@@ -68,7 +68,7 @@ describe("Store getters", () => {
             expect(result).toEqual({
                 is_folder: true,
                 label: "root",
-                children: []
+                children: [],
             });
         });
 
@@ -76,23 +76,23 @@ describe("Store getters", () => {
             const project_repository_at_root = {
                 path_without_project: "",
                 label: "veiledness",
-                normalized_path: "veiledness"
+                normalized_path: "veiledness",
             };
             const project_repository_with_path = {
                 path_without_project: "sardanapalus/goatish",
                 label: "solidification",
-                normalized_path: "sardanapalus/goatish/solidification"
+                normalized_path: "sardanapalus/goatish/solidification",
             };
             const other_repo_with_path = {
                 path_without_project: "sardanapalus",
                 label: "perform",
-                normalized_path: "sardanapalus/perform"
+                normalized_path: "sardanapalus/perform",
             };
 
             mock_getters.currentRepositoryList = [
                 project_repository_with_path,
                 project_repository_at_root,
-                other_repo_with_path
+                other_repo_with_path,
             ];
 
             const result = getters.filteredRepositoriesGroupedByPath(state, mock_getters);
@@ -100,7 +100,7 @@ describe("Store getters", () => {
             expect(result).toEqual({
                 is_folder: true,
                 label: "root",
-                children: expect.any(Array)
+                children: expect.any(Array),
             });
 
             expect(result.children.length).toEqual(2);
@@ -108,7 +108,7 @@ describe("Store getters", () => {
             expect(first_folder).toEqual({
                 is_folder: true,
                 label: "sardanapalus",
-                children: expect.any(Array)
+                children: expect.any(Array),
             });
             expect(root_repo).toEqual(project_repository_at_root);
 
@@ -117,7 +117,7 @@ describe("Store getters", () => {
             expect(project_path_folder).toEqual({
                 is_folder: true,
                 label: "goatish",
-                children: expect.any(Array)
+                children: expect.any(Array),
             });
             expect(other_leaf_repo).toEqual(other_repo_with_path);
 
@@ -130,7 +130,7 @@ describe("Store getters", () => {
             const forked_repository = {
                 path_without_project: "u/jveloso",
                 label: "unpleadable",
-                normalized_path: "u/jveloso/unpleadable"
+                normalized_path: "u/jveloso/unpleadable",
             };
 
             mock_getters.currentRepositoryList = [forked_repository];
@@ -140,7 +140,7 @@ describe("Store getters", () => {
             expect(result).toEqual({
                 is_folder: true,
                 label: "root",
-                children: expect.any(Array)
+                children: expect.any(Array),
             });
 
             expect(result.children.length).toEqual(1);
@@ -148,7 +148,7 @@ describe("Store getters", () => {
             expect(forks_folder).toEqual({
                 is_folder: true,
                 label: "u",
-                children: expect.any(Array)
+                children: expect.any(Array),
             });
 
             expect(forks_folder.children.length).toEqual(1);
@@ -156,7 +156,7 @@ describe("Store getters", () => {
             expect(user_folder).toEqual({
                 is_folder: true,
                 label: "jveloso",
-                children: expect.any(Array)
+                children: expect.any(Array),
             });
             const fork_leaf_repo = user_folder.children[0];
             expect(fork_leaf_repo).toEqual(forked_repository);
@@ -166,12 +166,12 @@ describe("Store getters", () => {
             const root_repository = {
                 path_without_project: "",
                 label: "acquirability",
-                normalized_path: "acquirability"
+                normalized_path: "acquirability",
             };
             const project_repository_with_path = {
                 path_without_project: "zannichelliaceae",
                 label: "kafta",
-                normalized_path: "zannichelliaceae/kafta"
+                normalized_path: "zannichelliaceae/kafta",
             };
             mock_getters.currentRepositoryList = [root_repository, project_repository_with_path];
 
@@ -186,23 +186,23 @@ describe("Store getters", () => {
             const project_repository_at_root = {
                 path_without_project: "",
                 label: "soldiering",
-                normalized_path: "soldiering"
+                normalized_path: "soldiering",
             };
             const project_repository_with_path = {
                 path_without_project: "sardanapalus/goatish",
                 label: "solidification",
-                normalized_path: "sardanapalus/goatish/solidification"
+                normalized_path: "sardanapalus/goatish/solidification",
             };
             const other_repo_with_path = {
                 path_without_project: "sardanapalus",
                 label: "perform",
-                normalized_path: "sardanapalus/perform"
+                normalized_path: "sardanapalus/perform",
             };
 
             mock_getters.currentRepositoryList = [
                 project_repository_with_path,
                 project_repository_at_root,
-                other_repo_with_path
+                other_repo_with_path,
             ];
             state.filter = "sol";
 
@@ -295,7 +295,7 @@ describe("Store getters", () => {
             mock_getters.filteredRepositoriesGroupedByPath = {
                 is_folder: true,
                 label: "root",
-                children: [{ label: "whulk" }]
+                children: [{ label: "whulk" }],
             };
 
             const result = getters.isThereAResultInCurrentFilteredList(state, mock_getters);

@@ -10,7 +10,7 @@ OverviewController.$inject = [
     "UserRestService",
     "MergeModalService",
     "EditModalService",
-    "TooltipService"
+    "TooltipService",
 ];
 
 function OverviewController(
@@ -33,7 +33,7 @@ function OverviewController(
         valid_status_keys: PullRequestService.valid_status_keys,
         current_checkout_method: "ssh",
 
-        getCloneUrl: method =>
+        getCloneUrl: (method) =>
             self.pull_request.repository_dest
                 ? self.pull_request.repository_dest["clone_" + method + "_url"]
                 : "",
@@ -47,12 +47,12 @@ function OverviewController(
         isNonFastForwardMerge,
         isUnknownMerge,
         showEditionForm,
-        $onInit: init
+        $onInit: init,
     });
 
     function init() {
         SharedPropertiesService.whenReady()
-            .then(function() {
+            .then(function () {
                 self.initCheckoutDropdown();
 
                 self.pull_request = SharedPropertiesService.getPullRequest();
@@ -65,13 +65,13 @@ function OverviewController(
                 self.editionForm.raw_title = self.pull_request.raw_title;
                 self.editionForm.raw_description = self.pull_request.raw_description;
 
-                UserRestService.getUser(self.pull_request.user_id).then(function(user) {
+                UserRestService.getUser(self.pull_request.user_id).then(function (user) {
                     self.author = user;
                 });
 
                 TooltipService.setupTooltips();
             })
-            .catch(function() {
+            .catch(function () {
                 $state.go("dashboard");
             });
     }
@@ -124,21 +124,21 @@ function OverviewController(
 
     function merge() {
         self.operationInProgress = true;
-        PullRequestService.merge(self.pull_request).then(function() {
+        PullRequestService.merge(self.pull_request).then(function () {
             self.operationInProgress = false;
         });
     }
 
     function abandon() {
         self.operationInProgress = true;
-        PullRequestService.abandon(self.pull_request).then(function() {
+        PullRequestService.abandon(self.pull_request).then(function () {
             self.operationInProgress = false;
         });
     }
 
     function initCheckoutDropdown() {
         dropdown(document.getElementById("pull-request-checkout-dropdown"), {
-            keyboard: false
+            keyboard: false,
         });
     }
 }

@@ -24,5 +24,5 @@ export default {
     selected_destination_branch: "",
     create_error_message: "",
     has_error_while_loading_branches: false,
-    is_creating_pullrequest: false
+    is_creating_pullrequest: false,
 };

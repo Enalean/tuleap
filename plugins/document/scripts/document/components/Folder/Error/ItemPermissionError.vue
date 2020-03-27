@@ -75,24 +75,24 @@ export default {
     props: {
         csrf_token: {
             type: String,
-            required: true
+            required: true,
         },
         csrf_token_name: {
             type: String,
-            required: true
-        }
+            required: true,
+        },
     },
     data() {
         return {
             error: "",
-            mail_content: ""
+            mail_content: "",
         };
     },
     computed: {
         ...mapState(["project_id"]),
         placeholder() {
             return this.$gettext("Please write something meaningful for the admin.");
-        }
+        },
     },
     methods: {
         submit() {
@@ -102,7 +102,7 @@ export default {
             }
 
             this.$refs.form.submit();
-        }
-    }
+        },
+    },
 };
 </script>

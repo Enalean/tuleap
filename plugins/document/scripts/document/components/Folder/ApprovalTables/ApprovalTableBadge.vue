@@ -34,17 +34,17 @@ import { extractApprovalTableData } from "../../../helpers/approval-table-helper
 export default {
     props: {
         item: Object,
-        isInFolderContentRow: Boolean
+        isInFolderContentRow: Boolean,
     },
     data() {
         return {
-            approval_data: {}
+            approval_data: {},
         };
     },
     computed: {
         has_an_approval_table() {
             return this.item.approval_table;
-        }
+        },
     },
     mounted() {
         if (this.item.approval_table) {
@@ -53,7 +53,7 @@ export default {
                 Approved: this.$gettext("Approved"),
                 Rejected: this.$gettext("Rejected"),
                 Declined: this.$gettext("Declined"),
-                Commented: this.$gettext("Commented")
+                Commented: this.$gettext("Commented"),
             };
 
             this.approval_data = extractApprovalTableData(
@@ -62,6 +62,6 @@ export default {
                 this.isInFolderContentRow
             );
         }
-    }
+    },
 };
 </script>

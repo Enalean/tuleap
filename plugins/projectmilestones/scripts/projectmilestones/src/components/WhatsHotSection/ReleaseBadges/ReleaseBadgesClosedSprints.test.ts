@@ -47,8 +47,8 @@ describe("ReleaseBadgesClosedSprints", () => {
     beforeEach(() => {
         store_options = {
             state: {
-                project_id: project_id
-            }
+                project_id: project_id,
+            },
         };
 
         component_options.propsData = { release_data };
@@ -65,12 +65,12 @@ describe("ReleaseBadgesClosedSprints", () => {
                         accept: {
                             trackers: [
                                 {
-                                    label: "sprint"
-                                }
-                            ]
-                        }
-                    }
-                }
+                                    label: "sprint",
+                                },
+                            ],
+                        },
+                    },
+                },
             } as MilestoneData;
 
             component_options.propsData = { release_data };
@@ -91,12 +91,12 @@ describe("ReleaseBadgesClosedSprints", () => {
                         accept: {
                             trackers: [
                                 {
-                                    label: "sprint"
-                                }
-                            ]
-                        }
-                    }
-                }
+                                    label: "sprint",
+                                },
+                            ],
+                        },
+                    },
+                },
             } as MilestoneData;
 
             component_options.propsData = { release_data };
@@ -116,12 +116,12 @@ describe("ReleaseBadgesClosedSprints", () => {
                         accept: {
                             trackers: [
                                 {
-                                    label: "sprint"
-                                }
-                            ]
-                        }
-                    }
-                }
+                                    label: "sprint",
+                                },
+                            ],
+                        },
+                    },
+                },
             } as MilestoneData;
 
             component_options.propsData = { release_data };
@@ -139,10 +139,10 @@ describe("ReleaseBadgesClosedSprints", () => {
                 resources: {
                     milestones: {
                         accept: {
-                            trackers: [] as TrackerProjectLabel[]
-                        }
-                    }
-                }
+                            trackers: [] as TrackerProjectLabel[],
+                        },
+                    },
+                },
             } as MilestoneData;
 
             component_options.propsData = { release_data };
@@ -162,12 +162,12 @@ describe("ReleaseBadgesClosedSprints", () => {
                         accept: {
                             trackers: [
                                 {
-                                    label: "sprint"
-                                }
-                            ]
-                        }
-                    }
-                }
+                                    label: "sprint",
+                                },
+                            ],
+                        },
+                    },
+                },
             } as MilestoneData;
 
             component_options.propsData = { release_data };

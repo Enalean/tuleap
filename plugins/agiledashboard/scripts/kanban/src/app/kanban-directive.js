@@ -7,6 +7,6 @@ export default () => {
         controller: KanbanCtrl,
         controllerAs: "kanban",
         templateUrl: "kanban.tpl.html",
-        scope: {}
+        scope: {},
     };
 };

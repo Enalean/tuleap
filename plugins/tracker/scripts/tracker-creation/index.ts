@@ -30,7 +30,7 @@ import {
     ProjectTemplate,
     State,
     DataForColorPicker,
-    Tracker
+    Tracker,
 } from "./src/store/type";
 import { createRouter } from "./src/router";
 
@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         tracker_to_be_created: {
             name: "",
             shortname: "",
-            color: tracker_colors.default_color
+            color: tracker_colors.default_color,
         },
         has_form_been_submitted: false,
         is_a_xml_file_selected: false,
@@ -126,11 +126,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         has_xml_file_error: false,
         is_in_slugify_mode: true,
         project_id: parseInt(project_id, 10),
-        company_name
+        company_name,
     };
 
     new AppComponent({
         store: createStore(initial_state),
-        router: createRouter(project_unix_name)
+        router: createRouter(project_unix_name),
     }).$mount(vue_mount_point);
 });

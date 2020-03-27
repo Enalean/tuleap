@@ -44,8 +44,8 @@ import CardWithRemainingEffort from "./Card/CardWithRemainingEffort.vue";
     components: {
         CardWithRemainingEffort,
         NoMappingMessage,
-        SwimlaneHeader
-    }
+        SwimlaneHeader,
+    },
 })
 export default class ParentCell extends Vue {
     @Prop({ required: true })

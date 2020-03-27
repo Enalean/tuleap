@@ -44,7 +44,7 @@ function createBurndownChart({ chart_container, chart_props, chart_legends, burn
         tooltip_padding_width: 10,
         tooltip_padding_height: 5,
         tooltip_arrow_size: 150,
-        tooltip_font_size: 12
+        tooltip_font_size: 12,
     });
 
     const DEFAULT_REMAINING_EFFORT = 5,
@@ -56,7 +56,7 @@ function createBurndownChart({ chart_container, chart_props, chart_legends, burn
     const properties = {
         ...chart_props,
         x_axis_tick_values,
-        y_axis_maximum
+        y_axis_maximum,
     };
 
     const { x_scale, y_scale } = buildGraphScales(properties);
@@ -65,12 +65,12 @@ function createBurndownChart({ chart_container, chart_props, chart_legends, burn
         x_scale,
         y_scale,
         column_width: x_scale.step(),
-        column_height: y_scale(0) - properties.margins.top
+        column_height: y_scale(0) - properties.margins.top,
     });
 
     const svg_burndown = buildChartLayout(chart_container, chart_props, {
         x_scale,
-        y_scale
+        y_scale,
     });
 
     insertLegend();
@@ -78,7 +78,7 @@ function createBurndownChart({ chart_container, chart_props, chart_legends, burn
     const label_formatter = new TimeScaleLabelsFormatter({
         layout: svg_burndown,
         first_date: x_axis_tick_values[0],
-        last_date: x_axis_tick_values[x_axis_tick_values.length - 1]
+        last_date: x_axis_tick_values[x_axis_tick_values.length - 1],
     });
 
     label_formatter.formatTicks();
@@ -104,7 +104,7 @@ function createBurndownChart({ chart_container, chart_props, chart_legends, burn
             .append("g")
             .attr("class", "chart-datum-column");
 
-        columns.each(function({ date, remaining_effort }) {
+        columns.each(function ({ date, remaining_effort }) {
             const column = select(this);
 
             column_factory.addColumn(column, date);
@@ -123,7 +123,7 @@ function createBurndownChart({ chart_container, chart_props, chart_legends, burn
             svg_burndown,
             {
                 x_scale,
-                y_scale
+                y_scale,
             },
             displayable_data,
             line_name
@@ -131,7 +131,7 @@ function createBurndownChart({ chart_container, chart_props, chart_legends, burn
     }
 
     function setInteraction() {
-        svg_burndown.selectAll(".chart-datum-column").each(function() {
+        svg_burndown.selectAll(".chart-datum-column").each(function () {
             const datum_column = select(this);
             datum_column.on("mouseenter", () => {
                 highlightColumn(datum_column);
@@ -175,11 +175,11 @@ function createBurndownChart({ chart_container, chart_props, chart_legends, burn
             svg_burndown,
             {
                 x_scale,
-                y_scale
+                y_scale,
             },
             {
                 line_start: first_ideal_line_point,
-                line_end: 0
+                line_end: 0,
             }
         );
     }
@@ -230,13 +230,13 @@ function createBurndownChart({ chart_container, chart_props, chart_legends, burn
         addTextCaption({
             layout: svg_burndown,
             content: date_legend_content,
-            legend_y_position
+            legend_y_position,
         });
 
         addBadgeCaption({
             layout: svg_burndown,
             badge_value,
-            legend_y_position
+            legend_y_position,
         });
 
         addContentCaption({
@@ -244,7 +244,7 @@ function createBurndownChart({ chart_container, chart_props, chart_legends, burn
             layout: svg_burndown,
             chart_content_legend: chart_legends,
             chart_width: chart_props.graph_width,
-            chart_margin_right: chart_props.margins.right
+            chart_margin_right: chart_props.margins.right,
         });
     }
 }

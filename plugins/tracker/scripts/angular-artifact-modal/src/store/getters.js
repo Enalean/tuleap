@@ -19,4 +19,4 @@
 
 import { getFirstFileField } from "../tuleap-artifact-modal-fields/file-field/file-field-detector.js";
 
-export const first_file_field = state => getFirstFileField(state.tracker_fields);
+export const first_file_field = (state) => getFirstFileField(state.tracker_fields);

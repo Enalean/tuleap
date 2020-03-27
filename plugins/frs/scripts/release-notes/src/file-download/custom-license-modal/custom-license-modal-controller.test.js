@@ -30,7 +30,7 @@ describe(`CustomLicenseModalController`, () => {
         angular.mock.module(tuleap_frs_module);
 
         let $controller;
-        angular.mock.inject(function(_$controller_, _SharedPropertiesService_) {
+        angular.mock.inject(function (_$controller_, _SharedPropertiesService_) {
             $controller = _$controller_;
             SharedPropertiesService = _SharedPropertiesService_;
         });
@@ -40,13 +40,13 @@ describe(`CustomLicenseModalController`, () => {
 
         jest.spyOn(SharedPropertiesService, "getCustomLicenseAgreement").mockReturnValue({
             title: "Bitterheartedness tacheometer",
-            content: `<p>enwreathe unbordered precatively atypical betimes counterpray faucitis premake unsurging</p>`
+            content: `<p>enwreathe unbordered precatively atypical betimes counterpray faucitis premake unsurging</p>`,
         });
 
         CustomLicenseModalController = $controller(BaseController, {
             modal_instance,
             acceptCallback,
-            SharedPropertiesService
+            SharedPropertiesService,
         });
     });
 

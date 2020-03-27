@@ -24,7 +24,7 @@ import localVue from "../../support/local-vue.js";
 function createWrapper(props) {
     return shallowMount(InEditionCustomService, {
         localVue,
-        propsData: props
+        propsData: props,
     });
 }
 
@@ -45,9 +45,9 @@ describe(`InEditionCustomService`, () => {
                 is_in_iframe: false,
                 is_in_new_tab: false,
                 rank: 11,
-                is_project_scope: true
+                is_project_scope: true,
             },
-            allowed_icons: {}
+            allowed_icons: {},
         };
     });
 

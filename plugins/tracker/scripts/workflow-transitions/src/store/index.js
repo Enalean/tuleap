@@ -29,6 +29,6 @@ export default {
     mutations,
     getters,
     modules: {
-        transitionModal
-    }
+        transitionModal,
+    },
 };

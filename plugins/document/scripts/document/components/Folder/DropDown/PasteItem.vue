@@ -45,14 +45,14 @@ import EventBus from "../../../helpers/event-bus.js";
 import { TYPE_FOLDER, CLIPBOARD_OPERATION_COPY } from "../../../constants.js";
 import {
     doesFolderNameAlreadyExist,
-    doesDocumentNameAlreadyExist
+    doesDocumentNameAlreadyExist,
 } from "../../../helpers/metadata-helpers/check-item-title.js";
 import { isItemDestinationIntoItself } from "../../../helpers/clipboard/clipboard-helpers.js";
 
 export default {
     name: "PasteItem",
     props: {
-        destination: Object
+        destination: Object,
     },
     computed: {
         ...mapState(["folder_content"]),
@@ -61,7 +61,7 @@ export default {
             "pasting_in_progress",
             "operation_type",
             "item_type",
-            "item_id"
+            "item_id",
         ]),
         ...mapGetters(["is_item_a_folder"]),
         can_item_be_pasted() {
@@ -94,7 +94,7 @@ export default {
                 ) &&
                 !isItemDestinationIntoItself(this.folder_content, this.item_id, this.destination.id)
             );
-        }
+        },
     },
     methods: {
         async pasteItem() {
@@ -104,9 +104,9 @@ export default {
             await this.$store.dispatch("clipboard/pasteItem", [
                 this.destination,
                 this.$store.state.current_folder,
-                this.$store
+                this.$store,
             ]);
-        }
-    }
+        },
+    },
 };
 </script>

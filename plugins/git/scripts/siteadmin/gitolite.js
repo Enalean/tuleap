@@ -23,9 +23,9 @@ import tuleap from "tuleap";
 document.addEventListener("DOMContentLoaded", () => {
     const bindProjectSelectors = () => {
         const project_selectors = document.querySelectorAll(".gitolite-project-selector");
-        [].forEach.call(project_selectors, function(project_selector) {
+        [].forEach.call(project_selectors, function (project_selector) {
             tuleap.autocomplete_projects_for_select2(project_selector, {
-                include_private_projects: true
+                include_private_projects: true,
             });
         });
     };
@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        selectboxes.forEach(selectbox => {
+        selectboxes.forEach((selectbox) => {
             selectbox.addEventListener("click", () => {
                 if (
                     document.querySelectorAll(
@@ -73,17 +73,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
         check_all_selectbox.addEventListener("click", () => {
             if (check_all_selectbox.checked) {
-                project_selectboxes.forEach(selectbox => {
+                project_selectboxes.forEach((selectbox) => {
                     selectbox.checked = true;
                 });
             } else {
-                project_selectboxes.forEach(selectbox => {
+                project_selectboxes.forEach((selectbox) => {
                     selectbox.checked = false;
                 });
             }
         });
 
-        project_selectboxes.forEach(selectbox => {
+        project_selectboxes.forEach((selectbox) => {
             selectbox.addEventListener("click", () => {
                 if (
                     document.querySelectorAll(

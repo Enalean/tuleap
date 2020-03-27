@@ -19,7 +19,7 @@
 
 import jQuery from "jquery";
 
-(function($) {
+(function ($) {
     var svn_paths_textarea, svn_checkbox;
 
     function changeSVNPathsTextareVisibility() {
@@ -30,13 +30,13 @@ import jQuery from "jquery";
         }
     }
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         svn_paths_textarea = $("#hudson_svn_paths");
         svn_checkbox = $("#hudson_use_svn_trigger");
 
         changeSVNPathsTextareVisibility();
 
-        svn_checkbox.change(function() {
+        svn_checkbox.change(function () {
             changeSVNPathsTextareVisibility();
         });
     });

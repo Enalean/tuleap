@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    const existing_labels = JSON.parse(labels_table.dataset.existingLabelsNames).map(label =>
+    const existing_labels = JSON.parse(labels_table.dataset.existingLabelsNames).map((label) =>
         label.toLowerCase()
     );
     for (const input of document.querySelectorAll(".project-label-edit-name")) {
@@ -125,7 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 dropdownCssClass: "project-label-color-results",
                 minimumResultsForSearch: Infinity,
                 templateResult: formatOptionColor,
-                templateSelection: formatOptionColor
+                templateSelection: formatOptionColor,
             });
         }
     }

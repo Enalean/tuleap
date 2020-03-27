@@ -41,12 +41,12 @@ describe("side-by-side widget builder", () => {
             describe("when it has a comment on the right side", () => {
                 const fake_widget = {
                     height: 20,
-                    node: { localName: INLINE_COMMENT_NAME }
+                    node: { localName: INLINE_COMMENT_NAME },
                 };
                 const left_handle = {};
                 const right_handle = { widgets: [fake_widget] };
                 beforeEach(() => {
-                    getLineHandles.mockImplementation(value => {
+                    getLineHandles.mockImplementation((value) => {
                         if (value === unmoved_line) {
                             return { left_handle, right_handle };
                         }
@@ -93,19 +93,19 @@ describe("side-by-side widget builder", () => {
                 const left_handle = { widgets: [fake_widget] };
 
                 beforeEach(() => {
-                    getLineHandles.mockImplementation(value => {
+                    getLineHandles.mockImplementation((value) => {
                         if (value === unmoved_line) {
                             return { left_handle, right_handle };
                         }
                         throw new Error(value);
                     });
-                    getLineOfHandle.mockImplementation(value => {
+                    getLineOfHandle.mockImplementation((value) => {
                         if (value === left_handle) {
                             return unmoved_line;
                         }
                         throw new Error(value);
                     });
-                    getLineOfHandle.mockImplementation(value => {
+                    getLineOfHandle.mockImplementation((value) => {
                         if (value === unmoved_line) {
                             return { type: UNMOVED_GROUP };
                         }
@@ -148,7 +148,7 @@ describe("side-by-side widget builder", () => {
             it("When it has no comment, then widget parameters will be null", () => {
                 const left_handle = {};
                 const right_handle = {};
-                getLineHandles.mockImplementation(value => {
+                getLineHandles.mockImplementation((value) => {
                     if (value === unmoved_line) {
                         return { left_handle, right_handle };
                     }
@@ -169,22 +169,22 @@ describe("side-by-side widget builder", () => {
             const second_added_line = { unidiff_offset: 2, old_offset: null, new_offset: 2 };
             const first_widget = {
                 height: 48,
-                node: { localName: INLINE_COMMENT_NAME }
+                node: { localName: INLINE_COMMENT_NAME },
             };
             const second_widget = {
                 height: 95,
-                node: { localName: INLINE_COMMENT_NAME }
+                node: { localName: INLINE_COMMENT_NAME },
             };
             const left_handle = {};
             const first_right_handle = { widgets: [first_widget] };
             const second_right_handle = { widgets: [second_widget] };
             const group = {
                 unidiff_offsets: [1, 2],
-                type: ADDED_GROUP
+                type: ADDED_GROUP,
             };
 
             beforeEach(() => {
-                getLineOfHandle.mockImplementation(value => {
+                getLineOfHandle.mockImplementation((value) => {
                     if (value === left_handle) {
                         return null;
                     }
@@ -193,7 +193,7 @@ describe("side-by-side widget builder", () => {
                     }
                     throw new Error(value);
                 });
-                getLineHandles.mockImplementation(value => {
+                getLineHandles.mockImplementation((value) => {
                     if (value === first_added_line) {
                         return { left_handle, right_handle: first_right_handle };
                     }
@@ -202,13 +202,13 @@ describe("side-by-side widget builder", () => {
                     }
                     throw new Error(value);
                 });
-                getGroupOfLine.mockImplementation(value => {
+                getGroupOfLine.mockImplementation((value) => {
                     if (value === first_added_line) {
                         return group;
                     }
                     throw new Error(value);
                 });
-                getGroupLines.mockImplementation(value => {
+                getGroupLines.mockImplementation((value) => {
                     if (group === value) {
                         return [first_added_line, second_added_line];
                     }
@@ -254,22 +254,22 @@ describe("side-by-side widget builder", () => {
             const second_deleted_line = { unidiff_offset: 56, old_offset: 56, new_offset: null };
             const first_widget = {
                 height: 62,
-                node: { localName: INLINE_COMMENT_NAME }
+                node: { localName: INLINE_COMMENT_NAME },
             };
             const second_widget = {
                 height: 42,
-                node: { localName: INLINE_COMMENT_NAME }
+                node: { localName: INLINE_COMMENT_NAME },
             };
             const first_left_handle = { widgets: [first_widget] };
             const second_left_handle = { widgets: [second_widget] };
             const right_handle = {};
             const group = {
                 unidiff_offsets: [55, 56],
-                type: DELETED_GROUP
+                type: DELETED_GROUP,
             };
 
             beforeEach(() => {
-                getLineHandles.mockImplementation(value => {
+                getLineHandles.mockImplementation((value) => {
                     if (value === first_deleted_line) {
                         return { left_handle: first_left_handle, right_handle };
                     }
@@ -278,7 +278,7 @@ describe("side-by-side widget builder", () => {
                     }
                     throw new Error(value);
                 });
-                getLineOfHandle.mockImplementation(value => {
+                getLineOfHandle.mockImplementation((value) => {
                     if (value === first_left_handle) {
                         return first_deleted_line;
                     }
@@ -287,12 +287,12 @@ describe("side-by-side widget builder", () => {
                     }
                     throw new Error(value);
                 });
-                getGroupOfLine.mockImplementation(value => {
+                getGroupOfLine.mockImplementation((value) => {
                     if (value === first_deleted_line) {
                         return group;
                     }
                 });
-                getGroupLines.mockImplementation(value => {
+                getGroupLines.mockImplementation((value) => {
                     if (value === group) {
                         return [first_deleted_line, second_deleted_line];
                     }
@@ -340,28 +340,28 @@ describe("side-by-side widget builder", () => {
             const fourth_added_line = { unidiff_offset: 8, old_offset: null, new_offset: 8 };
             const first_widget = {
                 height: 89,
-                node: { localName: INLINE_COMMENT_NAME }
+                node: { localName: INLINE_COMMENT_NAME },
             };
             const left_handle = {
-                widgets: [first_widget]
+                widgets: [first_widget],
             };
             const right_handle = {};
             let deleted_group, added_group;
 
             beforeEach(() => {
                 deleted_group = {
-                    type: DELETED_GROUP
+                    type: DELETED_GROUP,
                 };
                 added_group = {
-                    type: ADDED_GROUP
+                    type: ADDED_GROUP,
                 };
-                getLineHandles.mockImplementation(value => {
+                getLineHandles.mockImplementation((value) => {
                     if (value === first_deleted_line) {
                         return { left_handle, right_handle };
                     }
                     return { left_handle: {}, right_handle: {} };
                 });
-                getLineOfHandle.mockImplementation(value => {
+                getLineOfHandle.mockImplementation((value) => {
                     if (value === left_handle) {
                         return first_deleted_line;
                     }
@@ -370,7 +370,7 @@ describe("side-by-side widget builder", () => {
                     }
                     throw new Error(value);
                 });
-                getGroupOfLine.mockImplementation(value => {
+                getGroupOfLine.mockImplementation((value) => {
                     if (value === first_deleted_line) {
                         return deleted_group;
                     }
@@ -379,7 +379,7 @@ describe("side-by-side widget builder", () => {
                     }
                     throw new Error(value);
                 });
-                getGroupLines.mockImplementation(value => {
+                getGroupLines.mockImplementation((value) => {
                     if (value === deleted_group) {
                         return [first_deleted_line, second_deleted_line];
                     }
@@ -441,21 +441,21 @@ describe("side-by-side widget builder", () => {
             const right_handle = {};
             const deleted_group = {
                 type: DELETED_GROUP,
-                has_initial_comment_placeholder: true
+                has_initial_comment_placeholder: true,
             };
             const added_group = {
                 type: ADDED_GROUP,
-                has_initial_comment_placeholder: true
+                has_initial_comment_placeholder: true,
             };
 
             beforeEach(() => {
-                getLineHandles.mockImplementation(value => {
+                getLineHandles.mockImplementation((value) => {
                     if (value === second_added_line) {
                         return { left_handle, right_handle };
                     }
                     throw new Error(value);
                 });
-                getLineOfHandle.mockImplementation(value => {
+                getLineOfHandle.mockImplementation((value) => {
                     if (value === left_handle) {
                         return first_deleted_line;
                     }
@@ -464,7 +464,7 @@ describe("side-by-side widget builder", () => {
                     }
                     throw new Error(value);
                 });
-                getGroupOfLine.mockImplementation(value => {
+                getGroupOfLine.mockImplementation((value) => {
                     if (value === first_deleted_line) {
                         return deleted_group;
                     }

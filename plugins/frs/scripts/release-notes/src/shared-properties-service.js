@@ -5,7 +5,7 @@ function SharedPropertiesService() {
         project_id: null,
         release: null,
         platform_license_info: null,
-        custom_license_agreement: null
+        custom_license_agreement: null,
     };
 
     return {
@@ -16,7 +16,7 @@ function SharedPropertiesService() {
         getPlatformLicenseInfo: getPlatformLicenseInfo,
         setPlatformLicenseInfo: setPlatformLicenseInfo,
         setCustomLicenseAgreement: setCustomLicenseAgreement,
-        getCustomLicenseAgreement: getCustomLicenseAgreement
+        getCustomLicenseAgreement: getCustomLicenseAgreement,
     };
 
     function getProjectId() {
@@ -53,7 +53,7 @@ function SharedPropertiesService() {
     }
 
     function formatLinks() {
-        property.release.links.forEach(function(link) {
+        property.release.links.forEach(function (link) {
             if (link.name) {
                 link.displayed_link = link.name;
                 return;

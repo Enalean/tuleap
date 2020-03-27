@@ -31,19 +31,19 @@ describe("ProjectApproval -", () => {
             routes: [
                 {
                     path: "/new",
-                    name: "template"
-                }
-            ]
+                    name: "template",
+                },
+            ],
         });
     });
     it("Spawns the ProjectApproval component", async () => {
         const getters = {
             has_error: false,
-            is_template_selected: true
+            is_template_selected: true,
         };
 
         const store_options = {
-            getters
+            getters,
         };
 
         const store = createStoreMock(store_options);
@@ -51,7 +51,7 @@ describe("ProjectApproval -", () => {
         const wrapper = shallowMount(ProjectApproval, {
             localVue: await createProjectRegistrationLocalVue(),
             mocks: { $store: store },
-            router
+            router,
         });
 
         expect(wrapper).toMatchSnapshot();
@@ -60,14 +60,14 @@ describe("ProjectApproval -", () => {
     it("redirects user on /new when he does not have all needed information to start his project creation", async () => {
         const getters = {
             has_error: false,
-            is_template_selected: false
+            is_template_selected: false,
         };
 
         const store = createStoreMock({ getters });
         const wrapper = shallowMount(ProjectApproval, {
             localVue: await createProjectRegistrationLocalVue(),
             mocks: { $store: store },
-            router
+            router,
         });
         expect(wrapper.vm.$route.name).toBe("template");
     });

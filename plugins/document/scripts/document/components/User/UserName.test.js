@@ -29,8 +29,8 @@ describe("UserName", () => {
             return shallowMount(UserName, {
                 localVue,
                 context: {
-                    props: { user: user }
-                }
+                    props: { user: user },
+                },
             });
         };
     });
@@ -40,7 +40,7 @@ describe("UserName", () => {
         Then we should be able to click on its name`, () => {
         const wrapper = user_name_factory({
             id: 1,
-            is_anonymous: false
+            is_anonymous: false,
         });
 
         expect(wrapper.find("[data-test=document-user-profile-link]").exists()).toBeTruthy();
@@ -51,7 +51,7 @@ describe("UserName", () => {
         Then we should not be able to click on its name`, () => {
         const wrapper = user_name_factory({
             id: 1,
-            is_anonymous: true
+            is_anonymous: true,
         });
 
         expect(wrapper.find("[data-test=document-user-profile-link]").exists()).toBeFalsy();

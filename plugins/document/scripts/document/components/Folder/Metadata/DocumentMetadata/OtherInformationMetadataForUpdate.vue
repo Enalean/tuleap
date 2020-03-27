@@ -53,15 +53,15 @@ export default {
     name: "OtherInformationMetadataForUpdate",
     components: {
         CustomMetadata,
-        ObsolescenceDateMetadataForUpdate
+        ObsolescenceDateMetadataForUpdate,
     },
     props: {
         currentlyUpdatedItem: Object,
         metadataToUpdate: Array,
         value: {
             type: String,
-            required: true
-        }
+            required: true,
+        },
     },
     computed: {
         ...mapState(["is_obsolescence_date_metadata_used"]),
@@ -75,13 +75,13 @@ export default {
             },
             set(value) {
                 this.$emit("input", value);
-            }
-        }
+            },
+        },
     },
     mounted() {
         if (!this.has_loaded_metadata) {
             this.$store.dispatch("metadata/loadProjectMetadata", [this.$store]);
         }
-    }
+    },
 };
 </script>

@@ -18,41 +18,39 @@
  */
 
 describe("Kanban for the Agile Dashboard service", () => {
-    before(function() {
+    before(function () {
         cy.clearCookie("__Host-TULEAP_session_hash");
     });
 
-    it(`Project administrator can start Kanban`, function() {
+    it(`Project administrator can start Kanban`, function () {
         cy.ProjectAdministratorLogin();
         cy.visitProjectService("kanban-project", "Agile Dashboard");
 
         cy.get("[data-test=start-kanban]").click();
         cy.get("[data-test=feedback]").contains("Kanban successfully activated.", {
-            timeout: 20000
+            timeout: 20000,
         });
 
-        cy.get("[data-test=go-to-kanban]")
-            .first()
-            .click();
+        cy.get("[data-test=go-to-kanban]").first().click();
 
-        cy.get("[data-test=kanban-column-label]").then($column_label => {
+        cy.get("[data-test=kanban-column-label]").then(($column_label) => {
             expect($column_label).to.contain("To be done");
         });
         // Save kanban URL for later tests
         cy.location()
-            .then(location => location.href)
+            .then((location) => location.href)
             .debug()
             .as("kanban_url");
     });
 
-    context("As Project member", function() {
-        beforeEach(function() {
+    context("As Project member", function () {
+        beforeEach(function () {
             cy.projectMemberLogin();
             cy.visit(this.kanban_url);
             cy.server();
         });
 
-        it(`I can manipulate cards`, function() {
+        it(`I can manipulate cards`, function () {
             cy.route("POST", "/api/v1/kanban_items").as("post_kanban_item");
 
             cy.get("[data-test=kanban-column]")
@@ -64,27 +62,17 @@ describe("Kanban for the Agile Dashboard service", () => {
                         .clear()
                         .type("Think about my revenge");
 
-                    cy.get("[data-test=add-in-place-submit]")
-                        .first()
-                        .click({ force: true });
+                    cy.get("[data-test=add-in-place-submit]").first().click({ force: true });
                     cy.wait("@post_kanban_item");
 
-                    cy.get("[data-test=add-in-place-label-input]")
-                        .clear()
-                        .type("Still speedin'");
+                    cy.get("[data-test=add-in-place-label-input]").clear().type("Still speedin'");
 
-                    cy.get("[data-test=add-in-place-submit]")
-                        .first()
-                        .click({ force: true });
+                    cy.get("[data-test=add-in-place-submit]").first().click({ force: true });
                     cy.wait("@post_kanban_item");
 
-                    cy.get("[data-test=add-in-place-label-input]")
-                        .clear()
-                        .type("i30 Namyang");
+                    cy.get("[data-test=add-in-place-label-input]").clear().type("i30 Namyang");
 
-                    cy.get("[data-test=add-in-place-submit]")
-                        .first()
-                        .click({ force: true });
+                    cy.get("[data-test=add-in-place-submit]").first().click({ force: true });
                     cy.wait("@post_kanban_item");
                 });
 

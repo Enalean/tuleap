@@ -1,9 +1,6 @@
 import angular from "angular";
 
-export default angular
-    .module("angularAsync", [])
-    .config(config)
-    .run(run).name;
+export default angular.module("angularAsync", []).config(config).run(run).name;
 
 export let template,
     service,

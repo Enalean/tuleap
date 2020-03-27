@@ -23,7 +23,7 @@ import {
     APPROVAL_COMMENTED,
     APPROVAL_DECLINED,
     APPROVAL_NOT_YET,
-    APPROVAL_REJECTED
+    APPROVAL_REJECTED,
 } from "../constants.js";
 
 describe("extractApprovalTableData", () => {
@@ -34,7 +34,7 @@ describe("extractApprovalTableData", () => {
             Approved: "Approved",
             Rejected: "Rejected",
             Declined: "Declined",
-            Commented: "Commented"
+            Commented: "Commented",
         };
     });
 
@@ -42,7 +42,7 @@ describe("extractApprovalTableData", () => {
         const expected_badge = {
             icon_badge: "fa-tlp-gavel-pending",
             badge_label: translated_states[APPROVAL_NOT_YET],
-            badge_class: `tlp-badge-chrome-silver `
+            badge_class: `tlp-badge-chrome-silver `,
         };
 
         const badge = extractApprovalTableData(translated_states, APPROVAL_NOT_YET, false);
@@ -53,7 +53,7 @@ describe("extractApprovalTableData", () => {
         const expected_badge = {
             icon_badge: "fa-tlp-gavel-approved",
             badge_label: translated_states[APPROVAL_APPROVED],
-            badge_class: `tlp-badge-success `
+            badge_class: `tlp-badge-success `,
         };
         const badge = extractApprovalTableData(translated_states, APPROVAL_APPROVED, false);
         expect(expected_badge).toEqual(badge);
@@ -63,7 +63,7 @@ describe("extractApprovalTableData", () => {
         const expected_badge = {
             icon_badge: "fa-tlp-gavel-rejected",
             badge_label: translated_states[APPROVAL_REJECTED],
-            badge_class: `tlp-badge-danger `
+            badge_class: `tlp-badge-danger `,
         };
         const badge = extractApprovalTableData(translated_states, APPROVAL_REJECTED, false);
         expect(expected_badge).toEqual(badge);
@@ -73,7 +73,7 @@ describe("extractApprovalTableData", () => {
         const expected_badge = {
             icon_badge: "fa-tlp-gavel-rejected",
             badge_label: translated_states[APPROVAL_DECLINED],
-            badge_class: `tlp-badge-danger `
+            badge_class: `tlp-badge-danger `,
         };
         const badge = extractApprovalTableData(translated_states, APPROVAL_DECLINED, false);
         expect(expected_badge).toEqual(badge);
@@ -83,7 +83,7 @@ describe("extractApprovalTableData", () => {
         const expected_badge = {
             icon_badge: "fa-tlp-gavel-comment",
             badge_label: translated_states[APPROVAL_COMMENTED],
-            badge_class: `tlp-badge-info `
+            badge_class: `tlp-badge-info `,
         };
         const badge = extractApprovalTableData(translated_states, APPROVAL_COMMENTED, false);
         expect(expected_badge).toEqual(badge);
@@ -93,7 +93,7 @@ describe("extractApprovalTableData", () => {
         const expected_badge = {
             icon_badge: "fa-tlp-gavel-approved",
             badge_label: translated_states[APPROVAL_APPROVED],
-            badge_class: `tlp-badge-success document-tree-item-toggle-quicklook-approval-badge`
+            badge_class: `tlp-badge-success document-tree-item-toggle-quicklook-approval-badge`,
         };
         const badge = extractApprovalTableData(translated_states, APPROVAL_APPROVED, true);
         expect(expected_badge).toEqual(badge);

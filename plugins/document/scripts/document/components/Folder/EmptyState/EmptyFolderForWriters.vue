@@ -52,10 +52,10 @@ export default {
         DropDownCurrentFolder,
         EmptyFolderForWritersSvg,
         NewItemButton,
-        DropDownButton
+        DropDownButton,
     },
     computed: {
-        ...mapState(["current_folder"])
-    }
+        ...mapState(["current_folder"]),
+    },
 };
 </script>

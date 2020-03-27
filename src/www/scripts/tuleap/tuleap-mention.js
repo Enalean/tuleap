@@ -19,9 +19,9 @@
 /**
  * Handle @user
  */
-(function($) {
+(function ($) {
     tuleap.mention = {
-        init: function(selector) {
+        init: function (selector) {
             $(selector).atwho({
                 at: "@",
                 /* eslint-disable no-template-curly-in-string */
@@ -29,15 +29,15 @@
                     '<li data-value="${atwho-at}${username}"><img class="user-avatar" src="${avatar_url}"> ${real_name} (${username})</li>',
                 /* eslint-enable no-template-curly-in-string */
                 callbacks: {
-                    remote_filter: function(query, callback) {
+                    remote_filter: function (query, callback) {
                         if (query.length > 2) {
-                            $.getJSON("/api/v1/users", { query: query }, function(data) {
+                            $.getJSON("/api/v1/users", { query: query }, function (data) {
                                 let minimal_and_html_sanitized_user_representation = [];
-                                data.forEach(function(user) {
+                                data.forEach(function (user) {
                                     minimal_and_html_sanitized_user_representation.push({
                                         username: tuleap.escaper.html(user.username),
                                         real_name: tuleap.escaper.html(user.real_name),
-                                        avatar_url: tuleap.escaper.html(user.avatar_url)
+                                        avatar_url: tuleap.escaper.html(user.avatar_url),
                                     });
                                 });
 
@@ -45,23 +45,23 @@
                             });
                         }
                     },
-                    sorter: function(query, items) {
+                    sorter: function (query, items) {
                         if (!query) {
                             return items;
                         }
 
-                        return items.sort(function(a, b) {
+                        return items.sort(function (a, b) {
                             return a.atwho_order - b.atwho_order;
                         });
-                    }
-                }
+                    },
+                },
             });
 
             return this;
-        }
+        },
     };
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         tuleap.mention.init('input[type="text"].user-mention, textarea.user-mention');
     });
 })(jQuery);

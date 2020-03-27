@@ -44,7 +44,7 @@ export default {
     name: "GitRepositoryTableFineGrainedPermissionsRepository",
     components: { GitPermissionsBadge },
     props: {
-        repositoryPermission: Object
-    }
+        repositoryPermission: Object,
+    },
 };
 </script>

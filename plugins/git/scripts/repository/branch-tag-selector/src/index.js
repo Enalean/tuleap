@@ -25,9 +25,9 @@ import french_translations from "../po/fr.po";
 export function init(mount_point, button) {
     Vue.use(GetTextPlugin, {
         translations: {
-            fr: french_translations.messages
+            fr: french_translations.messages,
         },
-        silent: true
+        silent: true,
     });
 
     Vue.config.language = document.body.dataset.userLocale;
@@ -47,7 +47,7 @@ export function init(mount_point, button) {
             repository_url,
             is_tag,
             current_ref_name,
-            url_parameters
-        }
+            url_parameters,
+        },
     }).$mount(mount_point);
 }

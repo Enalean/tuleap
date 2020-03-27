@@ -20,7 +20,7 @@
 import { get, put } from "tlp-fetch";
 import initNavbarHistoryController from "./navbar-history-controller.js";
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     const user_history_dropdown_trigger = document.getElementById("nav-dropdown-user-history");
 
     if (!user_history_dropdown_trigger) {

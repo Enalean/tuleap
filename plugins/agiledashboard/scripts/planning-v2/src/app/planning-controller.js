@@ -16,7 +16,7 @@ PlanningController.$inject = [
     "MilestoneCollectionService",
     "BacklogItemSelectedService",
     "EditItemService",
-    "ItemAnimatorService"
+    "ItemAnimatorService",
 ];
 
 function PlanningController(
@@ -66,7 +66,7 @@ function PlanningController(
         switchClosedMilestoneItemsViewMode,
         switchViewMode,
         thereAreClosedMilestonesLoaded,
-        thereAreOpenMilestonesLoaded
+        thereAreOpenMilestonesLoaded,
     });
 
     function init() {
@@ -106,7 +106,7 @@ function PlanningController(
 
     function loadInitialMilestones(initial_milestones) {
         if (initial_milestones) {
-            initial_milestones.milestones_representations.forEach(milestone =>
+            initial_milestones.milestones_representations.forEach((milestone) =>
                 MilestoneService.augmentMilestone(milestone, self.items)
             );
 
@@ -165,7 +165,7 @@ function PlanningController(
         self.milestones.loading = true;
 
         return MilestoneService.getOpenMilestones(project_id, limit, offset, self.items).then(
-            function(data) {
+            function (data) {
                 var milestones = [].concat(self.milestones.content).concat(data.results);
                 self.milestones.content = _.sortBy(milestones, "id").reverse();
 
@@ -183,7 +183,7 @@ function PlanningController(
         self.milestones.loading = true;
 
         return MilestoneService.getOpenSubMilestones(milestone_id, limit, offset, self.items).then(
-            function(data) {
+            function (data) {
                 var milestones = [].concat(self.milestones.content).concat(data.results);
                 self.milestones.content = _.sortBy(milestones, "id").reverse();
 
@@ -201,7 +201,7 @@ function PlanningController(
         self.milestones.loading = true;
 
         return MilestoneService.getClosedMilestones(project_id, limit, offset, self.items).then(
-            function(data) {
+            function (data) {
                 var milestones = [].concat(self.milestones.content).concat(data.results);
                 self.milestones.content = _.sortBy(milestones, "id").reverse();
 
@@ -223,7 +223,7 @@ function PlanningController(
             limit,
             offset,
             self.items
-        ).then(function(data) {
+        ).then(function (data) {
             var milestones = [].concat(self.milestones.content).concat(data.results);
             self.milestones.content = _.sortBy(milestones, "id").reverse();
 
@@ -301,14 +301,14 @@ function PlanningController(
 
     function addSubmilestoneToSubmilestone(submilestone_id) {
         return MilestoneService.patchSubMilestones(self.backlog.rest_route_id, [
-            submilestone_id
-        ]).then(function() {
+            submilestone_id,
+        ]).then(function () {
             return prependSubmilestoneToSubmilestoneList(submilestone_id);
         });
     }
 
     function prependSubmilestoneToSubmilestoneList(submilestone_id) {
-        return MilestoneService.getMilestone(submilestone_id, self.items).then(function(data) {
+        return MilestoneService.getMilestone(submilestone_id, self.items).then(function (data) {
             var milestone = data.results;
 
             if (
@@ -329,7 +329,7 @@ function PlanningController(
         if (!_.isEmpty(parent_item.content)) {
             compared_to = {
                 direction: "before",
-                item_id: parent_item.content[0].id
+                item_id: parent_item.content[0].id,
             };
         }
 
@@ -368,7 +368,7 @@ function PlanningController(
 
         submilestone.updating = true;
 
-        return MilestoneService.getMilestone(submilestone_id).then(function(data) {
+        return MilestoneService.getMilestone(submilestone_id).then(function (data) {
             submilestone.label = data.results.label;
             submilestone.capacity = data.results.capacity;
             submilestone.semantic_status = data.results.semantic_status;

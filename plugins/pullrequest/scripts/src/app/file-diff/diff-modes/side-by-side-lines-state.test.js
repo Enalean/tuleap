@@ -21,7 +21,7 @@ import {
     initDataAndCodeMirrors,
     getCommentLine,
     getGroupLines,
-    getLineOfHandle
+    getLineOfHandle,
 } from "./side-by-side-lines-state.js";
 import * as side_by_side_line_grouper from "./side-by-side-line-grouper.js";
 import * as side_by_side_line_mapper from "./side-by-side-line-mapper.js";
@@ -35,7 +35,7 @@ describe("side-by-side lines state", () => {
             .spyOn(side_by_side_line_grouper, "buildLineGroups")
             .mockImplementation(() => ({
                 first_line_to_group_map: new Map(),
-                line_to_group_map: new Map()
+                line_to_group_map: new Map(),
             }));
         buildLineToLineHandlesMap = jest.spyOn(
             side_by_side_line_mapper,
@@ -52,7 +52,7 @@ describe("side-by-side lines state", () => {
             const lines = [
                 { old_offset: 1, new_offset: 1 },
                 { old_offset: 2, new_offset: null },
-                { old_offset: null, new_offset: 2 }
+                { old_offset: null, new_offset: 2 },
             ];
 
             initDataAndCodeMirrors(lines, left_code_mirror, right_code_mirror);
@@ -67,7 +67,7 @@ describe("side-by-side lines state", () => {
     describe("getCommentLine()", () => {
         it("Given a comment, then it will return its line", () => {
             const comment = {
-                unidiff_offset: 2
+                unidiff_offset: 2,
             };
             const first_line = { unidiff_offset: 1 };
             const second_line = { unidiff_offset: 2 };
@@ -81,7 +81,7 @@ describe("side-by-side lines state", () => {
     describe("getGroupLines()", () => {
         it("Given a group, then it will return the group's lines", () => {
             const group = {
-                unidiff_offsets: [2, 3]
+                unidiff_offsets: [2, 3],
             };
             const first_line = { unidiff_offset: 1 };
             const second_line = { unidiff_offset: 2 };
@@ -102,7 +102,7 @@ describe("side-by-side lines state", () => {
             const right_handle = {};
             const unmoved_group = { type: UNMOVED_GROUP };
             buildLineGroups.mockReturnValue({
-                line_to_group_map: new Map([[line.unidiff_offset, unmoved_group]])
+                line_to_group_map: new Map([[line.unidiff_offset, unmoved_group]]),
             });
             buildLineToLineHandlesMap.mockReturnValue(
                 new Map([
@@ -110,9 +110,9 @@ describe("side-by-side lines state", () => {
                         line,
                         {
                             left_handle,
-                            right_handle
-                        }
-                    ]
+                            right_handle,
+                        },
+                    ],
                 ])
             );
             initDataAndCodeMirrors([line], left_code_mirror, right_code_mirror);
@@ -132,8 +132,8 @@ describe("side-by-side lines state", () => {
             buildLineGroups.mockReturnValue({
                 line_to_group_map: new Map([
                     [added_line.unidiff_offset, added_group],
-                    [opposite_line.unidiff_offset, unmoved_group]
-                ])
+                    [opposite_line.unidiff_offset, unmoved_group],
+                ]),
             });
             buildLineToLineHandlesMap.mockReturnValue(
                 new Map([
@@ -141,16 +141,16 @@ describe("side-by-side lines state", () => {
                         added_line,
                         {
                             left_handle: opposite_left_handle,
-                            right_handle: added_handle
-                        }
+                            right_handle: added_handle,
+                        },
                     ],
                     [
                         opposite_line,
                         {
                             left_handle: opposite_left_handle,
-                            right_handle: opposite_right_handle
-                        }
-                    ]
+                            right_handle: opposite_right_handle,
+                        },
+                    ],
                 ])
             );
             initDataAndCodeMirrors(
@@ -174,8 +174,8 @@ describe("side-by-side lines state", () => {
             buildLineGroups.mockReturnValue({
                 line_to_group_map: new Map([
                     [opposite_line.unidiff_offset, added_group],
-                    [deleted_line.unidiff_offset, deleted_group]
-                ])
+                    [deleted_line.unidiff_offset, deleted_group],
+                ]),
             });
             buildLineToLineHandlesMap.mockReturnValue(
                 new Map([
@@ -183,16 +183,16 @@ describe("side-by-side lines state", () => {
                         opposite_line,
                         {
                             left_handle: opposite_left_handle,
-                            right_handle: opposite_right_handle
-                        }
+                            right_handle: opposite_right_handle,
+                        },
                     ],
                     [
                         deleted_line,
                         {
                             left_handle: deleted_handle,
-                            right_handle: opposite_right_handle
-                        }
-                    ]
+                            right_handle: opposite_right_handle,
+                        },
+                    ],
                 ])
             );
             initDataAndCodeMirrors(
@@ -210,6 +210,6 @@ describe("side-by-side lines state", () => {
 function buildCodeMirrorSpy() {
     return {
         getLineHandle: jest.fn(),
-        setValue: jest.fn()
+        setValue: jest.fn(),
     };
 }

@@ -46,10 +46,10 @@ export default {
             type: String,
             validator(value) {
                 return [TEXT_FORMAT_HTML, TEXT_FORMAT_TEXT].includes(value);
-            }
+            },
         },
         disabled: Boolean,
-        required: Boolean
+        required: Boolean,
     },
     computed: {
         format: {
@@ -58,14 +58,14 @@ export default {
             },
             set(new_format) {
                 this.$emit("input", new_format);
-            }
+            },
         },
         text_format() {
             return TEXT_FORMAT_TEXT;
         },
         html_format() {
             return TEXT_FORMAT_HTML;
-        }
-    }
+        },
+    },
 };
 </script>

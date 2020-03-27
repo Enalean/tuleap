@@ -36,16 +36,16 @@ export default {
     components: {
         WidgetReadingMode,
         WidgetWritingMode,
-        WidgetArtifactTable
+        WidgetArtifactTable,
     },
     props: {
-        userId: Number
+        userId: Number,
     },
     computed: {
-        ...mapState(["reading_mode"])
+        ...mapState(["reading_mode"]),
     },
     created() {
         this.$store.commit("initUserId", this.userId);
-    }
+    },
 };
 </script>

@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const createAngularPromiseWrapper = $rootScope => angular_promise =>
+export const createAngularPromiseWrapper = ($rootScope) => (angular_promise) =>
     new Promise((resolve, reject) => {
         angular_promise
-            .then(result => {
+            .then((result) => {
                 resolve(result);
             })
-            .catch(error => {
+            .catch((error) => {
                 reject(error);
             });
         $rootScope.$apply();

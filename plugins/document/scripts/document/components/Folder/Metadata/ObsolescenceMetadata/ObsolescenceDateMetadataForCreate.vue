@@ -74,7 +74,7 @@ export default {
     name: "ObsolescenceDateMetadataForCreate",
     components: { DateFlatPicker },
     props: {
-        value: String
+        value: String,
     },
     data() {
         return {
@@ -82,7 +82,7 @@ export default {
             selected_value: "permanent",
             error_message: "",
             uses_helper_validity: false,
-            has_custom_error: false
+            has_custom_error: false,
         };
     },
     computed: {
@@ -101,7 +101,7 @@ export default {
                 this.$emit("input", value);
 
                 this.uses_helper_validity = false;
-            }
+            },
         },
         selected_date_value: {
             get() {
@@ -110,8 +110,8 @@ export default {
             set(value) {
                 this.error_message = "";
                 this.selected_value = value;
-            }
-        }
+            },
+        },
     },
     methods: {
         updateDatePickerValue(event) {
@@ -131,7 +131,7 @@ export default {
                 );
                 this.has_custom_error = true;
             }
-        }
-    }
+        },
+    },
 };
 </script>

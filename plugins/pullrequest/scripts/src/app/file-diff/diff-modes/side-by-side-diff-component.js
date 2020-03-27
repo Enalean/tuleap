@@ -26,7 +26,7 @@ import {
     getCommentLine,
     getLineHandles,
     getRightLine,
-    getLeftLine
+    getLeftLine,
 } from "./side-by-side-lines-state.js";
 import { buildCodePlaceholderWidget } from "./side-by-side-code-placeholder-builder.js";
 import { buildCommentsPlaceholderWidget } from "./side-by-side-comment-placeholder-builder.js";
@@ -47,8 +47,8 @@ export default {
     bindings: {
         diff: "<",
         filePath: "@",
-        pullRequestId: "@"
-    }
+        pullRequestId: "@",
+    },
 };
 
 controller.$inject = ["$element", "$scope", "$q", "CodeMirrorHelperService", "TooltipService"];
@@ -66,7 +66,7 @@ function controller($element, $scope, $q, CodeMirrorHelperService, TooltipServic
             lineWrapping: true,
             gutters: ["gutter-lines"],
             mode: self.diff.mime_type,
-            scrollbarStyle: "overlay"
+            scrollbarStyle: "overlay",
         };
 
         const left_code_mirror = CodeMirror(left_element, options);
@@ -89,26 +89,26 @@ function controller($element, $scope, $q, CodeMirrorHelperService, TooltipServic
     function displaySideBySideDiff(file_lines, left_code_mirror, right_code_mirror) {
         initDataAndCodeMirrors(file_lines, left_code_mirror, right_code_mirror);
 
-        const code_placeholders = file_lines.map(line => {
+        const code_placeholders = file_lines.map((line) => {
             displayLine(line, left_code_mirror, right_code_mirror);
             return addCodePlaceholder(line, left_code_mirror, right_code_mirror);
         });
 
-        code_placeholders.forEach(widget_params => {
+        code_placeholders.forEach((widget_params) => {
             if (!widget_params) {
                 return;
             }
             CodeMirrorHelperService.displayPlaceholderWidget(widget_params);
         });
 
-        const promises = getComments().map(comment => {
+        const promises = getComments().map((comment) => {
             return displayInlineComment(comment, left_code_mirror, right_code_mirror);
         });
 
         $q.all(promises).then(() => {
             TooltipService.setupTooltips();
 
-            file_lines.forEach(line => {
+            file_lines.forEach((line) => {
                 addCommentsPlaceholder(line, left_code_mirror, right_code_mirror);
             });
 

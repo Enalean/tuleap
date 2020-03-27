@@ -22,7 +22,7 @@
         class="tlp-form-element"
         v-bind:class="{
             'tlp-form-element-disabled': disabled,
-            'tlp-form-element-error': is_required_and_empty
+            'tlp-form-element-error': is_required_and_empty,
         }"
     >
         <format-selector
@@ -53,7 +53,7 @@ export default {
     components: { FormatSelector, RichTextEditor },
     props: {
         field: Object,
-        value: Object
+        value: Object,
     },
     computed: {
         disabled() {
@@ -65,7 +65,7 @@ export default {
             },
             set(new_content) {
                 this.$emit("input", { format: this.format, content: new_content });
-            }
+            },
         },
         format: {
             get() {
@@ -73,19 +73,19 @@ export default {
             },
             set(new_format) {
                 this.$emit("input", { format: new_format, content: this.content });
-            }
+            },
         },
         id() {
             return "tracker_field_" + this.field.field_id;
         },
         is_required_and_empty() {
             return this.field.required && this.content === "";
-        }
+        },
     },
     methods: {
         reemit(...args) {
             this.$emit("upload-image", ...args);
-        }
-    }
+        },
+    },
 };
 </script>

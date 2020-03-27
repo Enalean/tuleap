@@ -23,7 +23,7 @@
 var tuleap = tuleap || {};
 tuleap.textarea = tuleap.textarea || {};
 
-document.observe("dom:loaded", function() {
+document.observe("dom:loaded", function () {
     var html_by_default = false;
 
     if ($(document.body).hasClassName("default_format_html")) {
@@ -37,7 +37,7 @@ document.observe("dom:loaded", function() {
             default_in_html: false,
             id: "new",
             full_width: true,
-            htmlFormat: html_by_default
+            htmlFormat: html_by_default,
         });
     }
 
@@ -47,7 +47,7 @@ document.observe("dom:loaded", function() {
             toggle: true,
             default_in_html: false,
             id: "mass_change",
-            htmlFormat: html_by_default
+            htmlFormat: html_by_default,
         });
     }
 });

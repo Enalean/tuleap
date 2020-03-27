@@ -34,7 +34,7 @@ describe("DisplayEmbeddedContent", () => {
             return shallowMount(DisplayEmbeddedContent, {
                 localVue,
                 propsData: { ...props },
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
     });
@@ -45,11 +45,11 @@ describe("DisplayEmbeddedContent", () => {
             id: 42,
             title: "My embedded content",
             embedded_file_properties: {
-                content: "My content"
-            }
+                content: "My content",
+            },
         };
         const wrapper = factory({
-            isInLargeView: false
+            isInLargeView: false,
         });
 
         const element = wrapper.find("[data-test=display-embedded-content]");
@@ -62,11 +62,11 @@ describe("DisplayEmbeddedContent", () => {
             id: 42,
             title: "My embedded content",
             embedded_file_properties: {
-                content: "My content"
-            }
+                content: "My content",
+            },
         };
         const wrapper = factory({
-            isInLargeView: true
+            isInLargeView: true,
         });
 
         const element = wrapper.find("[data-test=display-embedded-content]");
@@ -77,10 +77,10 @@ describe("DisplayEmbeddedContent", () => {
         store.state.is_embedded_in_large_view = true;
         store.state.currently_previewed_item = {
             id: 42,
-            title: "My embedded content"
+            title: "My embedded content",
         };
         const wrapper = factory({
-            isInLargeView: true
+            isInLargeView: true,
         });
 
         const element = wrapper.find("[data-test=display-embedded-content]");

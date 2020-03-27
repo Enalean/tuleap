@@ -14,7 +14,7 @@ function createElement(tag_name, class_name) {
     return element;
 }
 
-describe("MilestoneController", function() {
+describe("MilestoneController", function () {
     let $q,
         $scope,
         $document,
@@ -26,10 +26,10 @@ describe("MilestoneController", function() {
         MilestoneCollectionService,
         BacklogItemSelectedService;
 
-    beforeEach(function() {
+    beforeEach(function () {
         angular.mock.module(planning_module);
 
-        angular.mock.inject(function(
+        angular.mock.inject(function (
             _$q_,
             _$document_,
             _$timeout_,
@@ -45,7 +45,7 @@ describe("MilestoneController", function() {
             $scope = $rootScope.$new();
             $scope.milestone = {
                 id: 93849,
-                content: []
+                content: [],
             };
             $document = _$document_;
             $timeout = _$timeout_;
@@ -100,7 +100,7 @@ describe("MilestoneController", function() {
                 BacklogService: BacklogService,
                 DroppedService: DroppedService,
                 MilestoneCollectionService: MilestoneCollectionService,
-                BacklogItemSelectedService: BacklogItemSelectedService
+                BacklogItemSelectedService: BacklogItemSelectedService,
             });
         });
     });
@@ -110,7 +110,7 @@ describe("MilestoneController", function() {
             it("that was already loaded and collapsed, when I toggle a milestone, then it will be un-collapsed", () => {
                 MilestoneController.milestone = {
                     collapsed: true,
-                    alreadyLoaded: true
+                    alreadyLoaded: true,
                 };
 
                 MilestoneController.toggleMilestone();
@@ -121,7 +121,7 @@ describe("MilestoneController", function() {
             it("that was already loaded and was not collapsed, when I toggle a milestone, then it will be collapsed", () => {
                 MilestoneController.milestone = {
                     collapsed: false,
-                    alreadyLoaded: true
+                    alreadyLoaded: true,
                 };
 
                 MilestoneController.toggleMilestone();
@@ -132,7 +132,7 @@ describe("MilestoneController", function() {
             it("that was not already loaded, when I toggle a milestone, then its content will be loaded", () => {
                 MilestoneController.milestone = {
                     content: [],
-                    getContent: jest.fn()
+                    getContent: jest.fn(),
                 };
 
                 var get_content_request = $q.defer();
@@ -141,7 +141,7 @@ describe("MilestoneController", function() {
                 );
                 get_content_request.resolve({
                     results: [],
-                    total: 0
+                    total: 0,
                 });
 
                 MilestoneController.toggleMilestone();
@@ -151,12 +151,12 @@ describe("MilestoneController", function() {
         });
     });
 
-    describe("isMilestoneLoadedAndEmpty() -", function() {
-        it("Given a milestone that was loaded and had no children backlog items, when I check if the milestone is loaded and empty, then it will return true", function() {
+    describe("isMilestoneLoadedAndEmpty() -", function () {
+        it("Given a milestone that was loaded and had no children backlog items, when I check if the milestone is loaded and empty, then it will return true", function () {
             MilestoneController.milestone = {
                 loadingContent: false,
                 alreadyLoaded: true,
-                content: []
+                content: [],
             };
 
             var result = MilestoneController.isMilestoneLoadedAndEmpty();
@@ -164,9 +164,9 @@ describe("MilestoneController", function() {
             expect(result).toBeTruthy();
         });
 
-        it("Given a milestone that was loading, when I check if the milestone is loaded and empty, then it will return false", function() {
+        it("Given a milestone that was loading, when I check if the milestone is loaded and empty, then it will return false", function () {
             MilestoneController.milestone = {
-                loadingContent: true
+                loadingContent: true,
             };
 
             var result = MilestoneController.isMilestoneLoadedAndEmpty();
@@ -174,11 +174,11 @@ describe("MilestoneController", function() {
             expect(result).toBeFalsy();
         });
 
-        it("Given a milestone that was loaded and had children backlog items, when I check if the milestone is loaded and empty, then it will return false", function() {
+        it("Given a milestone that was loaded and had children backlog items, when I check if the milestone is loaded and empty, then it will return false", function () {
             MilestoneController.milestone = {
                 loadingContent: false,
                 alreadyLoaded: true,
-                content: [{ id: 11 }]
+                content: [{ id: 11 }],
             };
 
             var result = MilestoneController.isMilestoneLoadedAndEmpty();
@@ -213,7 +213,7 @@ describe("MilestoneController", function() {
             target_index = 0;
             compared_to = {
                 direction: "before",
-                item_id: 96
+                item_id: 96,
             };
 
             move_request = $q.defer();
@@ -221,8 +221,8 @@ describe("MilestoneController", function() {
             MilestoneController.initDragularForMilestone();
         });
 
-        describe("Given an event, the dropped element, the target element, the source element, the source model, the initial index, the target model and the target index", function() {
-            it("when I reorder an item in the submilestone (e.g. a Sprint), then the item will be reordered using DroppedService", function() {
+        describe("Given an event, the dropped element, the target element, the source element, the source model, the initial index, the target model and the target index", function () {
+            it("when I reorder an item in the submilestone (e.g. a Sprint), then the item will be reordered using DroppedService", function () {
                 DroppedService.reorderSubmilestone.mockReturnValue(move_request.promise);
                 $target_element = $source_element;
                 source_model = [{ id: dropped_item_ids[0] }, { id: 96 }];
@@ -246,7 +246,7 @@ describe("MilestoneController", function() {
                 );
             });
 
-            it("when I move an item from one submilestone (e.g. a Sprint) to another submilestone, then the item will be moved using DroppedService and both the source and target submilestones' initial efforts will be updated", function() {
+            it("when I move an item from one submilestone (e.g. a Sprint) to another submilestone, then the item will be moved using DroppedService and both the source and target submilestones' initial efforts will be updated", function () {
                 DroppedService.moveFromSubmilestoneToSubmilestone.mockReturnValue(
                     move_request.promise
                 );
@@ -283,7 +283,7 @@ describe("MilestoneController", function() {
                 );
             });
 
-            it("when I move an item from a submilestone (e.g. a Sprint) to the backlog, then the item will be moved using DroppedService and the submilestone's initial effort will be updated", function() {
+            it("when I move an item from a submilestone (e.g. a Sprint) to the backlog, then the item will be moved using DroppedService and the submilestone's initial effort will be updated", function () {
                 DroppedService.moveFromSubmilestoneToBacklog.mockReturnValue(move_request.promise);
                 $target_element = createElement("ul", "backlog");
                 source_model = [];
@@ -326,8 +326,8 @@ describe("MilestoneController", function() {
                     $target_container_element = createElement("ul");
                 });
 
-                describe("Given an element to drop and a target container element", function() {
-                    it("and given that the element's type was in the container's accepted types, when I check if the element can be dropped, then it will return true", function() {
+                describe("Given an element to drop and a target container element", function () {
+                    it("and given that the element's type was in the container's accepted types, when I check if the element can be dropped, then it will return true", function () {
                         angular.element($element_to_drop).data("type", "trackerId49");
                         angular
                             .element($target_container_element)
@@ -341,7 +341,7 @@ describe("MilestoneController", function() {
                         expect(result).toBeTruthy();
                     });
 
-                    it("and given that the element's type was not in the container's accepted types, when I check if the element can be dropped, then it will return false", function() {
+                    it("and given that the element's type was not in the container's accepted types, when I check if the element can be dropped, then it will return false", function () {
                         angular.element($element_to_drop).data("type", "trackerId49");
                         angular.element($target_container_element).data("accept", "trackerId38");
 
@@ -353,7 +353,7 @@ describe("MilestoneController", function() {
                         expect(result).toBeFalsy();
                     });
 
-                    it("and given that the container had nodrop data, when I check if the element can be dropped, then it will return false", function() {
+                    it("and given that the container had nodrop data, when I check if the element can be dropped, then it will return false", function () {
                         angular.element($target_container_element).data("nodrop", true);
 
                         var result = MilestoneController.dragularOptionsForMilestone().accepts(
@@ -408,7 +408,7 @@ describe("MilestoneController", function() {
                         expect(result).toBeFalsy();
                     });
 
-                    it("and given that the element had nodrag data, when I check if the element can be dragged, then it will return false", function() {
+                    it("and given that the element had nodrag data, when I check if the element can be dragged, then it will return false", function () {
                         angular.element($element_to_drag).data("nodrag", true);
 
                         var result = MilestoneController.dragularOptionsForMilestone().moves(
@@ -424,8 +424,8 @@ describe("MilestoneController", function() {
         });
     });
 
-    describe("reorderMilestoneContent() -", function() {
-        it("reorder the content of a milestone", function() {
+    describe("reorderMilestoneContent() -", function () {
+        it("reorder the content of a milestone", function () {
             var dropped_request = $q.defer(),
                 milestone_id = 12,
                 backlog_items = [{ id: 1 }, { id: 2 }],
@@ -448,19 +448,19 @@ describe("MilestoneController", function() {
         });
     });
 
-    describe("moveToTop() -", function() {
-        beforeEach(function() {
+    describe("moveToTop() -", function () {
+        beforeEach(function () {
             jest.spyOn(MilestoneController, "reorderMilestoneContent").mockReturnValue(
                 $q.defer().promise
             );
         });
 
-        it("move one item to the top of the milestone", function() {
+        it("move one item to the top of the milestone", function () {
             var moved_backlog_item = { id: 69 };
 
             MilestoneController.milestone = {
                 id: 1234,
-                content: [{ id: 50 }, { id: 61 }, moved_backlog_item, { id: 88 }]
+                content: [{ id: 50 }, { id: 61 }, moved_backlog_item, { id: 88 }],
             };
 
             MilestoneController.moveToTop(moved_backlog_item);
@@ -476,7 +476,7 @@ describe("MilestoneController", function() {
             );
         });
 
-        it("move multiple items to the top of the milestone", function() {
+        it("move multiple items to the top of the milestone", function () {
             var moved_backlog_item = { id: 50 };
             var selected_backlog_items = [{ id: 50 }, { id: 69 }];
 
@@ -491,8 +491,8 @@ describe("MilestoneController", function() {
                     selected_backlog_items[0],
                     { id: 61 },
                     selected_backlog_items[1],
-                    { id: 88 }
-                ]
+                    { id: 88 },
+                ],
             };
 
             MilestoneController.moveToTop(moved_backlog_item);
@@ -509,9 +509,9 @@ describe("MilestoneController", function() {
         });
     });
 
-    describe("moveToBottom() -", function() {
+    describe("moveToBottom() -", function () {
         var get_content_promise_request;
-        beforeEach(function() {
+        beforeEach(function () {
             get_content_promise_request = $q.defer();
             MilestoneController.get_content_promise = get_content_promise_request.promise;
 
@@ -520,7 +520,7 @@ describe("MilestoneController", function() {
             );
         });
 
-        it("move one item to the bottom of the fully loaded milestone", function() {
+        it("move one item to the bottom of the fully loaded milestone", function () {
             var moved_backlog_item = { id: 69 };
 
             MilestoneController.milestone = {
@@ -528,8 +528,8 @@ describe("MilestoneController", function() {
                 content: [{ id: 50 }, { id: 61 }, moved_backlog_item, { id: 88 }],
                 pagination: {
                     limit: 50,
-                    offset: 0
-                }
+                    offset: 0,
+                },
             };
 
             MilestoneController.moveToBottom(moved_backlog_item);
@@ -547,7 +547,7 @@ describe("MilestoneController", function() {
             );
         });
 
-        it("move multiple items to the bottom of the not fully loaded milestone", function() {
+        it("move multiple items to the bottom of the not fully loaded milestone", function () {
             var moved_backlog_item = { id: 50 };
             var selected_backlog_items = [{ id: 50 }, { id: 69 }];
 
@@ -561,8 +561,8 @@ describe("MilestoneController", function() {
                 content: [{ id: 50 }, { id: 61 }, moved_backlog_item, { id: 88 }],
                 pagination: {
                     limit: 2,
-                    offset: 0
-                }
+                    offset: 0,
+                },
             };
 
             MilestoneController.moveToBottom(moved_backlog_item);

@@ -66,7 +66,7 @@ export default {
     name: "App",
     components: {
         BranchesSection,
-        TagsSection
+        TagsSection,
     },
     props: {
         button: HTMLButtonElement,
@@ -74,19 +74,19 @@ export default {
         repository_url: String,
         is_tag: Boolean,
         current_ref_name: String,
-        url_parameters: Object
+        url_parameters: Object,
     },
     data() {
         return {
-            is_displaying_branches: true
+            is_displaying_branches: true,
         };
     },
     mounted() {
         const dropdown = createDropdown(this.button, {
-            dropdown_menu: this.$el
+            dropdown_menu: this.$el,
         });
 
         dropdown.show();
-    }
+    },
 };
 </script>

@@ -11,6 +11,6 @@ function PullRequestDirective() {
         templateUrl: "pull-request.tpl.html",
         controller: PullRequestController,
         controllerAs: "pull_request",
-        bindToController: true
+        bindToController: true,
     };
 }

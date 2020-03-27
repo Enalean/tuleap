@@ -43,11 +43,11 @@ describe("ReleaseHeaderRemainingEffort", () => {
 
     beforeEach(() => {
         store_options = {
-            state: {}
+            state: {},
         };
 
         component_options.propsData = {
-            release_data
+            release_data,
         };
     });
 
@@ -56,11 +56,11 @@ describe("ReleaseHeaderRemainingEffort", () => {
             release_data = {
                 id: 2,
                 remaining_effort: -1,
-                initial_effort: 10
+                initial_effort: 10,
             } as MilestoneData;
 
             component_options.propsData = {
-                release_data
+                release_data,
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -84,11 +84,11 @@ describe("ReleaseHeaderRemainingEffort", () => {
             release_data = {
                 id: 2,
                 remaining_effort: null,
-                initial_effort: 10
+                initial_effort: 10,
             } as MilestoneData;
 
             component_options.propsData = {
-                release_data
+                release_data,
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -108,11 +108,11 @@ describe("ReleaseHeaderRemainingEffort", () => {
             release_data = {
                 id: 2,
                 remaining_effort: 5,
-                initial_effort: 10
+                initial_effort: 10,
             } as MilestoneData;
 
             component_options.propsData = {
-                release_data
+                release_data,
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -132,11 +132,11 @@ describe("ReleaseHeaderRemainingEffort", () => {
             release_data = {
                 id: 2,
                 remaining_effort: 0,
-                initial_effort: 5
+                initial_effort: 5,
             } as MilestoneData;
 
             component_options.propsData = {
-                release_data
+                release_data,
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -159,11 +159,11 @@ describe("ReleaseHeaderRemainingEffort", () => {
             release_data = {
                 id: 2,
                 remaining_effort: 5,
-                initial_effort: null
+                initial_effort: null,
             } as MilestoneData;
 
             component_options.propsData = {
-                release_data
+                release_data,
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -183,11 +183,11 @@ describe("ReleaseHeaderRemainingEffort", () => {
             release_data = {
                 id: 2,
                 remaining_effort: 5,
-                initial_effort: 0
+                initial_effort: 0,
             } as MilestoneData;
 
             component_options.propsData = {
-                release_data
+                release_data,
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -207,11 +207,11 @@ describe("ReleaseHeaderRemainingEffort", () => {
             release_data = {
                 id: 2,
                 remaining_effort: 100,
-                initial_effort: 10
+                initial_effort: 10,
             } as MilestoneData;
 
             component_options.propsData = {
-                release_data
+                release_data,
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -233,11 +233,11 @@ describe("ReleaseHeaderRemainingEffort", () => {
             release_data = {
                 id: 2,
                 remaining_effort: 100,
-                initial_effort: 100
+                initial_effort: 100,
             } as MilestoneData;
 
             component_options.propsData = {
-                release_data
+                release_data,
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);

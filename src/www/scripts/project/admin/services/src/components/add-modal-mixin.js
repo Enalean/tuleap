@@ -21,8 +21,8 @@ export const add_modal_mixin = {
     props: {
         project_id: {
             type: String,
-            required: true
-        }
+            required: true,
+        },
     },
     computed: {
         form_url() {
@@ -30,12 +30,12 @@ export const add_modal_mixin = {
         },
         preview_label() {
             return this.service.label === "" ? this.$gettext("Preview") : this.service.label;
-        }
+        },
     },
     data() {
         return {
             is_shown: false,
-            service: this.resetService()
+            service: this.resetService(),
         };
     },
     methods: {
@@ -58,8 +58,8 @@ export const add_modal_mixin = {
                 is_active: true,
                 is_used: true,
                 is_in_new_tab: false,
-                rank: this.minimal_rank
+                rank: this.minimal_rank,
             };
-        }
-    }
+        },
+    },
 };

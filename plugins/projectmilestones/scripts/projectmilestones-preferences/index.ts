@@ -19,7 +19,7 @@
 
 import { autocomplete_projects_for_select2 } from "../../../../src/www/scripts/tuleap/autocomplete-for-select2";
 
-document.addEventListener("dashboard-edit-widget-modal-content-loaded", event => {
+document.addEventListener("dashboard-edit-widget-modal-content-loaded", (event) => {
     if (!(event instanceof CustomEvent)) {
         return;
     }
@@ -27,7 +27,7 @@ document.addEventListener("dashboard-edit-widget-modal-content-loaded", event =>
     initProjectsForSelect2(event);
 });
 
-document.addEventListener("dashboard-add-widget-settings-loaded", event => {
+document.addEventListener("dashboard-add-widget-settings-loaded", (event) => {
     if (!(event instanceof CustomEvent)) {
         return;
     }

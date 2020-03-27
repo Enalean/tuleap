@@ -64,16 +64,14 @@ function getDifference(start_date, end_date) {
     return {
         days: Math.trunc(difference.as("days")),
         weeks: Math.trunc(difference.as("weeks")),
-        months: Math.trunc(difference.as("months"))
+        months: Math.trunc(difference.as("months")),
     };
 }
 
 function getFormattedDates(dataset) {
-    return dataset.map(data => {
+    return dataset.map((data) => {
         const new_data = Object.assign({}, data);
-        new_data.date = moment(data.date, moment.ISO_8601)
-            .utc()
-            .format("YYYY-MM-DD");
+        new_data.date = moment(data.date, moment.ISO_8601).utc().format("YYYY-MM-DD");
         return new_data;
     });
 }

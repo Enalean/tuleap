@@ -84,13 +84,13 @@ export default {
         ColorPickerPalette,
         ColorPickerPreview,
         OldColorPickerPalette,
-        OldColorPickerPreview
+        OldColorPickerPreview,
     },
     props: {
         inputName: String,
         inputId: String,
         currentColor: String,
-        isSwitchDisabled: String
+        isSwitchDisabled: String,
     },
     data() {
         const is_hexa_color = this.currentColor.includes("#");
@@ -102,13 +102,13 @@ export default {
             color: this.currentColor,
             is_old_palette_shown,
             show_old_preview,
-            is_switch_disabled
+            is_switch_disabled,
         };
     },
     computed: {
         isHexaColor() {
             return this.color.includes("#");
-        }
+        },
     },
     methods: {
         setColor(color = "") {
@@ -121,7 +121,7 @@ export default {
         },
         showRightPalette() {
             this.is_old_palette_shown = this.isHexaColor && !this.is_switch_disabled;
-        }
-    }
+        },
+    },
 };
 </script>

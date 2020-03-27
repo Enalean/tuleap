@@ -19,7 +19,7 @@
 
 /* global codendi:readonly */
 
-!(function($) {
+!(function ($) {
     function forceWidthToCurrentWidth($element) {
         $element.width($element.width());
     }
@@ -35,8 +35,8 @@
         }
 
         $.ajax({
-            url: codendi.tracker.base_url + "?func=toggle-collapse&formElement=" + id
-        }).done(function() {
+            url: codendi.tracker.base_url + "?func=toggle-collapse&formElement=" + id,
+        }).done(function () {
             var $always_collapsed = $(toggler).find(".tracker_artifact_fieldset_alwayscollapsed");
             if (is_collapsing) {
                 $always_collapsed.addClass("active");
@@ -62,10 +62,8 @@
     }
 
     function generateTooltipOnTogglerIcon() {
-        $(".tracker_artifact_fieldset_alwayscollapsed > i").hover(function() {
-            var key = $(this)
-                .parent()
-                .hasClass("active")
+        $(".tracker_artifact_fieldset_alwayscollapsed > i").hover(function () {
+            var key = $(this).parent().hasClass("active")
                 ? "always_expand_fieldset"
                 : "always_collapse_fieldset";
 
@@ -73,7 +71,7 @@
         });
     }
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         codendi.Toggler.addBeforeListener(onTogglerBefore);
         generateTooltipOnTogglerIcon();
     });

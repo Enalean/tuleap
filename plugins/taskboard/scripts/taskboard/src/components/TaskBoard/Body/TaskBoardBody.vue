@@ -65,8 +65,8 @@ const swimlane = namespace("swimlane");
         InvalidMappingSwimlane,
         SoloSwimlane,
         SwimlaneSkeleton,
-        CollapsedSwimlane
-    }
+        CollapsedSwimlane,
+    },
 })
 export default class TaskBoardBody extends Vue {
     @State

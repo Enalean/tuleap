@@ -11,12 +11,12 @@ function MilestoneCollectionService(MilestoneService, BacklogItemCollectionServi
             open_milestones_fully_loaded: false,
             closed_milestones_fully_loaded: false,
             open_milestones_pagination: { limit: 50, offset: 0 },
-            closed_milestones_pagination: { limit: 50, offset: 0 }
+            closed_milestones_pagination: { limit: 50, offset: 0 },
         },
         getMilestone: getMilestone,
         refreshMilestone: refreshMilestone,
         removeBacklogItemsFromMilestoneContent: removeBacklogItemsFromMilestoneContent,
-        addOrReorderBacklogItemsInMilestoneContent: addOrReorderBacklogItemsInMilestoneContent
+        addOrReorderBacklogItemsInMilestoneContent: addOrReorderBacklogItemsInMilestoneContent,
     });
 
     function getMilestone(milestone_id) {

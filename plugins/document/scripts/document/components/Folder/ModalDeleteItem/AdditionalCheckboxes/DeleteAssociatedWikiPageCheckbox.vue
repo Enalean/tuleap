@@ -64,11 +64,11 @@ export default {
     props: {
         item: Object,
         model: Object,
-        wikiPageReferencers: Array
+        wikiPageReferencers: Array,
     },
     data() {
         return {
-            is_option_checked: false
+            is_option_checked: false,
         };
     },
     computed: {
@@ -80,7 +80,7 @@ export default {
                 ),
                 this.item.wiki_properties.page_name
             );
-        }
+        },
     },
     methods: {
         processInput($event) {
@@ -94,7 +94,7 @@ export default {
             return `/plugins/docman/?group_id=${encodeURIComponent(
                 this.project_id
             )}&action=show&id=${encodeURIComponent(referencer.id)}`;
-        }
-    }
+        },
+    },
 };
 </script>

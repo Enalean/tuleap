@@ -54,7 +54,7 @@ export default {
     components: { CustomMetadata, StatusMetadataWithCustomBindingForFolderCreate },
     props: {
         currentlyUpdatedItem: Object,
-        parent: Object
+        parent: Object,
     },
     computed: {
         ...mapState(["is_item_status_metadata_used"]),
@@ -65,12 +65,12 @@ export default {
                 (this.currentlyUpdatedItem.metadata &&
                     this.currentlyUpdatedItem.metadata.length > 0)
             );
-        }
+        },
     },
     mounted() {
         if (!this.has_loaded_metadata) {
             this.$store.dispatch("metadata/loadProjectMetadata", [this.$store]);
         }
-    }
+    },
 };
 </script>

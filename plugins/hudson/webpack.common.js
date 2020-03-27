@@ -27,7 +27,7 @@ const output = webpack_configurator.configureOutput(
 const entry_points = {
     "default-style": "./themes/default/style.scss",
     "test-results-pie": "./scripts/test-results-pie-chart.js",
-    hudson_tab: "./scripts/hudson_tab.js"
+    hudson_tab: "./scripts/hudson_tab.js",
 };
 
 const colors = ["blue", "green", "grey", "orange", "purple", "red"];
@@ -44,26 +44,29 @@ module.exports = [
         context,
         output,
         externals: {
-            jquery: "jQuery"
+            jquery: "jQuery",
         },
         resolve: {
             modules: [path.resolve(__dirname, "node_modules")],
             alias: {
-                "charts-builders": path.resolve(__dirname, "../../src/www/scripts/charts-builders/")
-            }
+                "charts-builders": path.resolve(
+                    __dirname,
+                    "../../src/www/scripts/charts-builders/"
+                ),
+            },
         },
         module: {
             rules: [
                 webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
                 webpack_configurator.rule_po_files,
-                webpack_configurator.rule_scss_loader
-            ]
+                webpack_configurator.rule_scss_loader,
+            ],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
             webpack_configurator.getMomentLocalePlugin(),
-            ...webpack_configurator.getCSSExtractionPlugins()
-        ]
-    }
+            ...webpack_configurator.getCSSExtractionPlugins(),
+        ],
+    },
 ];

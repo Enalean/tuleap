@@ -34,11 +34,11 @@ export {
     uploadAdditionalChunk,
     uploadTemporaryFile,
     getFirstReverseIsChildLink,
-    getArtifactWithCompleteTrackerStructure
+    getArtifactWithCompleteTrackerStructure,
 };
 
 const headers = {
-    "content-type": "application/json"
+    "content-type": "application/json",
 };
 
 function getTracker(tracker_id) {
@@ -63,8 +63,8 @@ async function getAllOpenParentArtifacts(tracker_id, limit, offset) {
             {
                 params: {
                     limit,
-                    offset
-                }
+                    offset,
+                },
             }
         );
         resetError();
@@ -77,14 +77,14 @@ async function getAllOpenParentArtifacts(tracker_id, limit, offset) {
 async function createArtifact(tracker_id, field_values) {
     const body = JSON.stringify({
         tracker: {
-            id: tracker_id
+            id: tracker_id,
         },
-        values: field_values
+        values: field_values,
     });
 
     const response = await post("/api/v1/artifacts", {
         headers,
-        body
+        body,
     });
     const { id } = await responseHandler(response);
     return { id };
@@ -93,12 +93,12 @@ async function createArtifact(tracker_id, field_values) {
 async function editArtifact(artifact_id, field_values, followup_comment) {
     const body = JSON.stringify({
         values: field_values,
-        comment: followup_comment
+        comment: followup_comment,
     });
 
     await put(`/api/v1/artifacts/${artifact_id}`, {
         headers,
-        body
+        body,
     });
     resetError();
     return { id: artifact_id };
@@ -107,7 +107,7 @@ async function editArtifact(artifact_id, field_values, followup_comment) {
 async function searchUsers(query) {
     try {
         const response = await get("/api/v1/users", {
-            params: { query }
+            params: { query },
         });
         const results = await responseHandler(response);
         return { results };
@@ -123,13 +123,13 @@ async function getFollowupsComments(artifact_id, limit, offset, order) {
                 fields: "comments",
                 limit,
                 offset,
-                order
-            }
+                order,
+            },
         });
         const followup_comments = await responseHandler(response);
         return {
             results: followup_comments,
-            total: response.headers.get("X-PAGINATION-SIZE")
+            total: response.headers.get("X-PAGINATION-SIZE"),
         };
     } catch (error) {
         return errorHandler(error);
@@ -141,13 +141,13 @@ async function uploadTemporaryFile(file_name, file_type, first_chunk, descriptio
         name: file_name,
         mimetype: file_type,
         content: first_chunk,
-        description
+        description,
     });
 
     try {
         const response = await post("/api/v1/artifact_temporary_files", {
             headers,
-            body
+            body,
         });
         const { id } = await responseHandler(response);
         return id;
@@ -159,12 +159,12 @@ async function uploadTemporaryFile(file_name, file_type, first_chunk, descriptio
 function uploadAdditionalChunk(temporary_file_id, chunk, chunk_offset) {
     const body = JSON.stringify({
         content: chunk,
-        offset: chunk_offset
+        offset: chunk_offset,
     });
 
     return put(`/api/v1/artifact_temporary_files/${temporary_file_id}`, {
         headers,
-        body
+        body,
     }).catch(errorHandler);
 }
 
@@ -172,8 +172,8 @@ function getUserPreference(user_id, preference_key) {
     return get(`/api/v1/users/${user_id}/preferences`, {
         cache: "force-cache",
         params: {
-            key: preference_key
-        }
+            key: preference_key,
+        },
     }).then(responseHandler, errorHandler);
 }
 
@@ -186,7 +186,7 @@ async function getFileUploadRules() {
     return {
         disk_quota,
         disk_usage,
-        max_chunk_size
+        max_chunk_size,
     };
 }
 
@@ -197,8 +197,8 @@ async function getFirstReverseIsChildLink(artifact_id) {
                 direction: "reverse",
                 nature: "_is_child",
                 limit: 1,
-                offset: 0
-            }
+                offset: 0,
+            },
         });
         const { collection } = await responseHandler(response);
         return collection;

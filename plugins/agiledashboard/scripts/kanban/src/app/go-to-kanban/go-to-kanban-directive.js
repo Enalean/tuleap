@@ -9,6 +9,6 @@ function GoToKanban() {
         controller: GoToKanbanCtrl,
         controllerAs: "go_to_kanban",
         templateUrl: "go-to-kanban.tpl.html",
-        scope: {}
+        scope: {},
     };
 }

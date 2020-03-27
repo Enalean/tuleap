@@ -35,7 +35,7 @@ describe("placeholder positioner", () => {
             const line = { unidiff_offset: 666 };
 
             getLineOfHandle.mockReturnValue(line);
-            getGroupOfLine.mockImplementation(l => {
+            getGroupOfLine.mockImplementation((l) => {
                 if (line === l) {
                     return { type: DELETED_GROUP };
                 }

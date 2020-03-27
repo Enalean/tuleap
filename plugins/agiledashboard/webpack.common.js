@@ -30,7 +30,7 @@ const manifest_plugin = webpack_configurator.getManifestPlugin();
 const entry_points = {
     "burnup-chart": "./themes/FlamingParrot/css/burnup-chart.scss",
     "style-fp": "./themes/FlamingParrot/css/style.scss",
-    "planning-admin-colorpicker": "./themes/FlamingParrot/css/planning-admin-colorpicker.scss"
+    "planning-admin-colorpicker": "./themes/FlamingParrot/css/planning-admin-colorpicker.scss",
 };
 
 const colors_burning_parrot = ["orange", "blue", "green", "red", "grey", "purple"];
@@ -51,20 +51,20 @@ const webpack_config_for_themes = {
     context,
     output,
     module: {
-        rules: [webpack_configurator.rule_scss_loader, webpack_configurator.rule_css_assets]
+        rules: [webpack_configurator.rule_scss_loader, webpack_configurator.rule_css_assets],
     },
-    plugins: [manifest_plugin, ...webpack_configurator.getCSSExtractionPlugins()]
+    plugins: [manifest_plugin, ...webpack_configurator.getCSSExtractionPlugins()],
 };
 
 const webpack_config_for_typescript = {
     entry: {
         "artifact-additional-action": "./scripts/artifact-additional-action/src/index.ts",
-        administration: "./scripts/administration/administration.ts"
+        administration: "./scripts/administration/administration.ts",
     },
     context,
     output,
     externals: {
-        tlp: "tlp"
+        tlp: "tlp",
     },
     module: {
         rules: [
@@ -72,40 +72,40 @@ const webpack_config_for_typescript = {
                 webpack_configurator.babel_options_ie11
             ),
             webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
-            webpack_configurator.rule_po_files
-        ]
+            webpack_configurator.rule_po_files,
+        ],
     },
     plugins: [manifest_plugin, webpack_configurator.getTypescriptCheckerPlugin(false)],
     resolve: {
-        extensions: [".ts", ".js"]
-    }
+        extensions: [".ts", ".js"],
+    },
 };
 
 const webpack_config_for_charts = {
     entry: {
-        "burnup-chart": "./scripts/burnup-chart/src/burnup-chart.js"
+        "burnup-chart": "./scripts/burnup-chart/src/burnup-chart.js",
     },
     context,
     output,
     externals: {
         tuleap: "tuleap",
-        jquery: "jQuery"
+        jquery: "jQuery",
     },
     resolve: {
         alias: {
             "charts-builders": path.resolve(__dirname, "../../src/www/scripts/charts-builders/"),
             "d3-array$": path.resolve(__dirname, "node_modules/d3-array"),
             "d3-scale$": path.resolve(__dirname, "node_modules/d3-scale"),
-            "d3-axis$": path.resolve(__dirname, "node_modules/d3-axis")
-        }
+            "d3-axis$": path.resolve(__dirname, "node_modules/d3-axis"),
+        },
     },
     module: {
         rules: [
             webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
-            webpack_configurator.rule_po_files
-        ]
+            webpack_configurator.rule_po_files,
+        ],
     },
-    plugins: [manifest_plugin, webpack_configurator.getMomentLocalePlugin()]
+    plugins: [manifest_plugin, webpack_configurator.getMomentLocalePlugin()],
 };
 
 const webpack_config_for_javascript = {
@@ -113,7 +113,7 @@ const webpack_config_for_javascript = {
         "home-burndowns": "./scripts/home.js",
         "scrum-header": "./scripts/scrum-header.js",
         "permission-per-group": "./scripts/permissions-per-group/src/index.js",
-        "planning-admin": "./scripts/planning-admin.js"
+        "planning-admin": "./scripts/planning-admin.js",
     },
     context,
     output,
@@ -121,24 +121,24 @@ const webpack_config_for_javascript = {
         tlp: "tlp",
         codendi: "codendi",
         tuleap: "tuleap",
-        jquery: "jQuery"
+        jquery: "jQuery",
     },
     module: {
         rules: [
             webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
             webpack_configurator.rule_easygettext_loader,
-            webpack_configurator.rule_vue_loader
-        ]
+            webpack_configurator.rule_vue_loader,
+        ],
     },
     plugins: [manifest_plugin, webpack_configurator.getVueLoaderPlugin()],
     resolveLoader: {
-        alias: webpack_configurator.easygettext_loader_alias
-    }
+        alias: webpack_configurator.easygettext_loader_alias,
+    },
 };
 
 const webpack_config_for_kanban = {
     entry: {
-        kanban: "./scripts/kanban/src/app/app.js"
+        kanban: "./scripts/kanban/src/app/app.js",
     },
     context,
     output,
@@ -146,7 +146,7 @@ const webpack_config_for_kanban = {
         tlp: "tlp",
         angular: "angular",
         jquery: "jQuery",
-        ckeditor: "CKEDITOR"
+        ckeditor: "CKEDITOR",
     },
     resolve: {
         alias: webpack_configurator.extendAliases(webpack_configurator.tlp_fetch_alias, {
@@ -162,8 +162,8 @@ const webpack_config_for_kanban = {
             ),
             he$: path.resolve(__dirname, "node_modules/he"),
             striptags$: path.resolve(__dirname, "node_modules/striptags"),
-            "escape-string-regexp$": path.resolve(__dirname, "node_modules/escape-string-regexp")
-        })
+            "escape-string-regexp$": path.resolve(__dirname, "node_modules/escape-string-regexp"),
+        }),
     },
     module: {
         rules: [
@@ -171,38 +171,38 @@ const webpack_config_for_kanban = {
             webpack_configurator.rule_ng_cache_loader,
             webpack_configurator.rule_vue_loader,
             webpack_configurator.rule_angular_mixed_vue_gettext,
-            webpack_configurator.rule_angular_gettext_loader
-        ]
+            webpack_configurator.rule_angular_gettext_loader,
+        ],
     },
     plugins: [
         manifest_plugin,
         webpack_configurator.getMomentLocalePlugin(),
-        webpack_configurator.getVueLoaderPlugin()
+        webpack_configurator.getVueLoaderPlugin(),
     ],
     resolveLoader: {
-        alias: webpack_configurator.easygettext_loader_alias
-    }
+        alias: webpack_configurator.easygettext_loader_alias,
+    },
 };
 
 const webpack_config_for_angular = {
     entry: {
-        angular: "./scripts/kanban/node_modules/angular"
+        angular: "./scripts/kanban/node_modules/angular",
     },
     context,
     output,
-    plugins: [manifest_plugin]
+    plugins: [manifest_plugin],
 };
 
 const webpack_config_for_planning_v2 = {
     entry: {
-        "planning-v2": "./scripts/planning-v2/src/app/app.js"
+        "planning-v2": "./scripts/planning-v2/src/app/app.js",
     },
     context,
     output,
     externals: {
         tlp: "tlp",
         jquery: "jQuery",
-        ckeditor: "CKEDITOR"
+        ckeditor: "CKEDITOR",
     },
     resolve: {
         alias: webpack_configurator.extendAliases(
@@ -221,9 +221,9 @@ const webpack_config_for_planning_v2 = {
                 "escape-string-regexp$": path.resolve(
                     __dirname,
                     "node_modules/escape-string-regexp"
-                )
+                ),
             }
-        )
+        ),
     },
     module: {
         rules: [
@@ -231,17 +231,17 @@ const webpack_config_for_planning_v2 = {
             webpack_configurator.rule_ng_cache_loader,
             webpack_configurator.rule_vue_loader,
             webpack_configurator.rule_angular_mixed_vue_gettext,
-            webpack_configurator.rule_angular_gettext_loader
-        ]
+            webpack_configurator.rule_angular_gettext_loader,
+        ],
     },
     plugins: [
         manifest_plugin,
         webpack_configurator.getMomentLocalePlugin(),
-        webpack_configurator.getVueLoaderPlugin()
+        webpack_configurator.getVueLoaderPlugin(),
     ],
     resolveLoader: {
-        alias: webpack_configurator.easygettext_loader_alias
-    }
+        alias: webpack_configurator.easygettext_loader_alias,
+    },
 };
 
 module.exports = [
@@ -251,5 +251,5 @@ module.exports = [
     webpack_config_for_javascript,
     webpack_config_for_kanban,
     webpack_config_for_angular,
-    webpack_config_for_planning_v2
+    webpack_config_for_planning_v2,
 ];

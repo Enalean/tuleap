@@ -19,34 +19,34 @@
 /**
  * Handle Tuleap tours
  */
-(function($) {
-    $(document).ready(function() {
+(function ($) {
+    $(document).ready(function () {
         if (typeof tuleap.tours === "undefined") {
             return;
         }
 
-        tuleap.tours.forEach(function(tour_options) {
+        tuleap.tours.forEach(function (tour_options) {
             var tour;
 
-            tour_options["onEnd"] = function(tour) {
+            tour_options["onEnd"] = function (tour) {
                 $.ajax({
                     type: "POST",
                     url: "/tour/end-tour.php",
                     data: {
                         tour_name: tour_options.name,
-                        current_step: tour.getCurrentStep()
-                    }
+                        current_step: tour.getCurrentStep(),
+                    },
                 });
             };
 
-            tour_options["onShown"] = function(tour) {
+            tour_options["onShown"] = function (tour) {
                 $.ajax({
                     type: "POST",
                     url: "/tour/step-shown.php",
                     data: {
                         tour_name: tour_options.name,
-                        current_step: tour.getCurrentStep()
-                    }
+                        current_step: tour.getCurrentStep(),
+                    },
                 });
             };
 

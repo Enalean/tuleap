@@ -22,7 +22,7 @@ import {
     BurnupData,
     MilestoneData,
     PointsWithDateForBurndown,
-    StoreOptions
+    StoreOptions,
 } from "../../../../type";
 import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import { createStoreMock } from "../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
@@ -55,8 +55,8 @@ describe("ChartDisplayer", () => {
         store_options = {
             state: {
                 project_id,
-                is_timeframe_duration: true
-            }
+                is_timeframe_duration: true,
+            },
         };
 
         release_data = {
@@ -69,14 +69,14 @@ describe("ChartDisplayer", () => {
                 points: [] as number[],
                 is_under_calculation: true,
                 opening_days: [] as number[],
-                points_with_date: [] as PointsWithDateForBurndown[]
+                points_with_date: [] as PointsWithDateForBurndown[],
             } as BurndownData,
             burnup_data: {} as BurnupData,
-            resources: {}
+            resources: {},
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
         };
 
         getPersonalWidgetInstance(store_options);
@@ -85,7 +85,7 @@ describe("ChartDisplayer", () => {
     it("When the burndown can be created, Then component BurndownDisplayer is rendered", async () => {
         component_options.propsData = {
             release_data,
-            is_loading: false
+            is_loading: false,
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -101,11 +101,11 @@ describe("ChartDisplayer", () => {
             points: [] as number[],
             is_under_calculation: true,
             opening_days: [] as number[],
-            points_with_date: [] as PointsWithDateForBurndown[]
+            points_with_date: [] as PointsWithDateForBurndown[],
         } as BurndownData;
 
         const burnup_data = {
-            start_date: new Date().toString()
+            start_date: new Date().toString(),
         } as BurnupData;
 
         jest.spyOn(rest_querier, "getChartData").mockReturnValue(
@@ -115,15 +115,15 @@ describe("ChartDisplayer", () => {
                         value: burndown_data,
                         field_id: 10,
                         label: "burndown",
-                        type: "burndown"
+                        type: "burndown",
                     },
                     {
                         value: burnup_data,
                         field_id: 12,
                         label: "burnup",
-                        type: "burnup"
-                    }
-                ]
+                        type: "burnup",
+                    },
+                ],
             })
         );
 
@@ -131,19 +131,19 @@ describe("ChartDisplayer", () => {
             id: 2,
             start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
             burndown_data: null,
-            resources: {}
+            resources: {},
         } as MilestoneData;
 
         component_options.data = (): DefaultData<BurndownDisplayer> => {
             return {
                 is_open: false,
                 is_loading: true,
-                error_message: null
+                error_message: null,
             };
         };
 
         component_options.propsData = {
-            release_data
+            release_data,
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -158,17 +158,17 @@ describe("ChartDisplayer", () => {
             start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
             burndown_data: null,
             burnup_data: null,
-            resources: {}
+            resources: {},
         } as MilestoneData;
 
         component_options.data = (): DefaultData<BurndownDisplayer> => {
             return {
-                is_loading: false
+                is_loading: false,
             };
         };
 
         component_options.propsData = {
-            release_data
+            release_data,
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -181,12 +181,12 @@ describe("ChartDisplayer", () => {
             return {
                 is_open: false,
                 is_loading: true,
-                error_message: null
+                error_message: null,
             };
         };
 
         component_options.propsData = {
-            release_data
+            release_data,
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -201,12 +201,12 @@ describe("ChartDisplayer", () => {
                 is_open: false,
                 is_loading: false,
                 message_error_rest: "404 Error",
-                has_rest_error: true
+                has_rest_error: true,
             };
         };
 
         component_options.propsData = {
-            release_data
+            release_data,
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);

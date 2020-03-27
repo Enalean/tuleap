@@ -34,10 +34,10 @@ import { transformFolderMetadataForRecursionAtUpdate } from "../../../../helpers
 export default {
     name: "StatusMetadataWithCustomBindingForFolderUpdate",
     components: {
-        StatusMetadata
+        StatusMetadata,
     },
     props: {
-        currentlyUpdatedItem: Object
+        currentlyUpdatedItem: Object,
     },
     computed: {
         ...mapState(["is_item_status_metadata_used"]),
@@ -53,8 +53,8 @@ export default {
             set(value) {
                 this.currentlyUpdatedItem.status.id = getStatusIdFromName(value);
                 this.currentlyUpdatedItem.status.value = value;
-            }
-        }
-    }
+            },
+        },
+    },
 };
 </script>

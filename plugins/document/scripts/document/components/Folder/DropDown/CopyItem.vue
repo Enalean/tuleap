@@ -36,10 +36,10 @@ import EventBus from "../../../helpers/event-bus.js";
 export default {
     name: "CopyItem",
     props: {
-        item: Object
+        item: Object,
     },
     computed: {
-        ...mapState("clipboard", ["pasting_in_progress"])
+        ...mapState("clipboard", ["pasting_in_progress"]),
     },
     methods: {
         copyItem() {
@@ -47,7 +47,7 @@ export default {
                 EventBus.$emit("hide-action-menu");
             }
             this.$store.commit("clipboard/copyItem", this.item);
-        }
-    }
+        },
+    },
 };
 </script>

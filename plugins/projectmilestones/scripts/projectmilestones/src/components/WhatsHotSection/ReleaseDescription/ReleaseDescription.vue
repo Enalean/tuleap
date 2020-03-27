@@ -43,7 +43,7 @@
                     <span class="release-planning-link-item-text">
                         <translate
                             v-bind:translate-params="{
-                                label_submilestone: tracker_submilestone_label
+                                label_submilestone: tracker_submilestone_label,
                             }"
                         >
                             %{label_submilestone} Planning
@@ -68,8 +68,8 @@ import { State } from "vuex-class";
     components: {
         ChartDisplayer,
         ReleaseButtonsDescription,
-        ReleaseDescriptionBadgesTracker
-    }
+        ReleaseDescriptionBadgesTracker,
+    },
 })
 export default class ReleaseDescription extends Vue {
     @Prop()

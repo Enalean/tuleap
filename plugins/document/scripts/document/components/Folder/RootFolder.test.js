@@ -29,11 +29,11 @@ describe("RootFolder", () => {
 
     beforeEach(() => {
         state = {
-            current_folder: null
+            current_folder: null,
         };
 
         const store_options = {
-            state
+            state,
         };
 
         store = createStoreMock(store_options);
@@ -41,7 +41,7 @@ describe("RootFolder", () => {
         factory = () => {
             return shallowMount(RootFolder, {
                 localVue,
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
     });
@@ -60,7 +60,7 @@ describe("RootFolder", () => {
         store.state.current_folder = {
             id: 3,
             title: "root folder",
-            parent_id: 42
+            parent_id: 42,
         };
 
         factory();
@@ -74,7 +74,7 @@ describe("RootFolder", () => {
         store.state.current_folder = {
             id: 3,
             title: "root folder",
-            parent_id: 0
+            parent_id: 0,
         };
 
         factory();

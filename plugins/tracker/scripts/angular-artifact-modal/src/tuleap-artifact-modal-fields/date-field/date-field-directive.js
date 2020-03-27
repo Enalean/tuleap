@@ -8,11 +8,11 @@ export default function DateFieldDirective() {
         scope: {
             field: "=tuleapArtifactModalDateField",
             isDisabled: "&isDisabled",
-            value_model: "=valueModel"
+            value_model: "=valueModel",
         },
         controller: DateFieldController,
         controllerAs: "date_field",
         bindToController: true,
-        templateUrl: "date-field.tpl.html"
+        templateUrl: "date-field.tpl.html",
     };
 }

@@ -22,7 +22,7 @@
 
 import { createColorPicker } from "./colorpicker/index.js";
 
-document.observe("dom:loaded", function() {
+document.observe("dom:loaded", function () {
     function initTextboxlistForDefaultValues() {
         if ($("tracker_artifact_textboxlist_default")) {
             var field_id = $("field_id").value;
@@ -34,17 +34,17 @@ document.observe("dom:loaded", function() {
                         codendi.tracker.base_url + "?formElement=" + field_id + "&func=textboxlist",
                     loadOnInit: false,
                     newValues: false,
-                    newValuePrefix: "!"
+                    newValuePrefix: "!",
                 }
             );
         }
     }
 
     function tracker_register_hide_value() {
-        $$(".tracker_admin_static_value_hidden_chk").each(function(checkbox) {
+        $$(".tracker_admin_static_value_hidden_chk").each(function (checkbox) {
             var img = checkbox.next();
             checkbox.hide();
-            img.setStyle({ cursor: "pointer" }).observe("click", function() {
+            img.setStyle({ cursor: "pointer" }).observe("click", function () {
                 if (checkbox.checked) {
                     //switch to "hidden"
                     checkbox.checked = false;
@@ -67,26 +67,26 @@ document.observe("dom:loaded", function() {
         if (!admin_field_properties) {
             admin_field_properties = new Element("div", {
                 id: "tracker-admin-field-properties",
-                className: "widget"
+                className: "widget",
             })
                 .hide()
                 .update(
                     '<div class="widget_titlebar"><div class="widget_titlebar_title"></div></div><div class="widget_content"></div>'
                 );
             palette.insert({
-                after: admin_field_properties
+                after: admin_field_properties,
             });
         }
 
-        $$("a.button[name^=create]").each(function(button) {
-            button.observe("click", function(evt) {
+        $$("a.button[name^=create]").each(function (button) {
+            button.observe("click", function (evt) {
                 // Replace button icon with spinner
                 var spinnerUrl = codendi.imgroot + "/ic/spinner-16.gif";
                 var buttonImg = button.down("img");
                 var buttonIcon = buttonImg.src;
                 buttonImg.src = spinnerUrl;
 
-                $$(".tracker-admin-field-selected").each(function(selected_element) {
+                $$(".tracker-admin-field-selected").each(function (selected_element) {
                     if (selected_element.visible()) {
                         var element = selected_element.up(".tracker-admin-field");
                         if (element) {
@@ -100,7 +100,7 @@ document.observe("dom:loaded", function() {
                 //eslint-disable-next-line @typescript-eslint/no-unused-vars
                 var req = new Ajax.Request(button.up("form").action, {
                     parameters: parameters,
-                    onComplete: function(transport) {
+                    onComplete: function (transport) {
                         var rtes = [];
 
                         //Don't use directly updater since the form is stripped
@@ -113,10 +113,10 @@ document.observe("dom:loaded", function() {
                             .update("Create an element");
                         admin_field_properties.select("input[type=submit]")[0].insert({
                             before: new Element("a", {
-                                href: "#cancel"
+                                href: "#cancel",
                             })
-                                .observe("click", function(evt) {
-                                    rtes.each(function(rte) {
+                                .observe("click", function (evt) {
+                                    rtes.each(function (rte) {
                                         rte.destroy();
                                     });
                                     rtes = [];
@@ -126,10 +126,10 @@ document.observe("dom:loaded", function() {
                                 })
                                 .update(
                                     "&laquo; " + codendi.locales.tracker_formelement_admin.cancel
-                                )
+                                ),
                         });
                         admin_field_properties.select("input[type=submit]")[0].insert({
-                            before: new Element("span").update(" ")
+                            before: new Element("span").update(" "),
                         });
                         palette.hide();
                         admin_field_properties.show();
@@ -139,19 +139,19 @@ document.observe("dom:loaded", function() {
                         //Richtext editor
                         admin_field_properties
                             .select(".tracker-field-richtext")
-                            .each(function(element) {
+                            .each(function (element) {
                                 rtes.push(
                                     new codendi.RTE(element, {
-                                        onLoad: function() {
+                                        onLoad: function () {
                                             admin_field_properties.setStyle({
                                                 width: "auto",
-                                                height: "auto"
+                                                height: "auto",
                                             });
                                             admin_field_properties.setStyle({
                                                 width: "auto",
-                                                height: "auto"
+                                                height: "auto",
                                             });
-                                        }
+                                        },
                                     })
                                 );
                             });
@@ -161,24 +161,24 @@ document.observe("dom:loaded", function() {
 
                         // Restore button icon
                         buttonImg.src = buttonIcon;
-                    }
+                    },
                 });
                 evt.stop();
             });
         });
 
-        $$("a.button_disabled[name^=create]").each(function(button_disabled) {
-            button_disabled.observe("click", function() {
+        $$("a.button_disabled[name^=create]").each(function (button_disabled) {
+            button_disabled.observe("click", function () {
                 alert(codendi.locales.tracker_formelement_admin.unique_field); //eslint-disable-line no-alert
             });
         });
 
         jQuery("#tracker-admin-new-layout").modal("show"); // eslint-disable-line no-undef
 
-        $$(".tracker-admin-field-controls a.edit-field").each(function(a) {
+        $$(".tracker-admin-field-controls a.edit-field").each(function (a) {
             var selected_element, element;
             var rtes = [];
-            a.observe("click", function(evt) {
+            a.observe("click", function (evt) {
                 if (!selected_element) {
                     selected_element = new Element("div")
                         .hide()
@@ -193,11 +193,11 @@ document.observe("dom:loaded", function() {
                     } else {
                         element = a.up(".tracker-admin-container");
                         element.down().insert({
-                            after: selected_element
+                            after: selected_element,
                         });
                     }
                 }
-                $$(".tracker-admin-field-selected").each(function(selected_element) {
+                $$(".tracker-admin-field-selected").each(function (selected_element) {
                     if (selected_element.visible()) {
                         var element = selected_element.up(".tracker-admin-field");
                         if (element) {
@@ -212,7 +212,7 @@ document.observe("dom:loaded", function() {
                 }
                 //eslint-disable-next-line @typescript-eslint/no-unused-vars
                 var r = new Ajax.Request(a.href, {
-                    onComplete: function(transport) {
+                    onComplete: function (transport) {
                         //Don't use directly updater since the form is stripped
                         selected_element
                             .down(".widget_content")
@@ -222,10 +222,10 @@ document.observe("dom:loaded", function() {
                         var submit_button = selected_element.select("input[type=submit]")[0];
                         submit_button.insert({
                             before: new Element("a", {
-                                href: "#cancel"
+                                href: "#cancel",
                             })
-                                .observe("click", function(evt) {
-                                    rtes.each(function(rte) {
+                                .observe("click", function (evt) {
+                                    rtes.each(function (rte) {
                                         rte.destroy();
                                     });
                                     rtes = [];
@@ -236,16 +236,16 @@ document.observe("dom:loaded", function() {
                                     }
                                     //eslint-disable-next-line @typescript-eslint/no-unused-vars
                                     var e = new Effect.Highlight(element, {
-                                        queue: "end"
+                                        queue: "end",
                                     });
                                     evt.stop();
                                 })
                                 .update(
                                     "&laquo; " + codendi.locales.tracker_formelement_admin.cancel
-                                )
+                                ),
                         });
                         selected_element.select("input[type=submit]")[0].insert({
-                            before: new Element("span").update(" ")
+                            before: new Element("span").update(" "),
                         });
                         if (!element.hasClassName("tracker-admin-container")) {
                             element.childElements().invoke("hide");
@@ -257,24 +257,24 @@ document.observe("dom:loaded", function() {
                         //Color picker
                         selected_element
                             .select(".vue-colorpicker-mount-point")
-                            .each(function(element) {
+                            .each(function (element) {
                                 createColorPicker(element);
                             });
 
                         //Richtext editor
-                        selected_element.select(".tracker-field-richtext").each(function(element) {
+                        selected_element.select(".tracker-field-richtext").each(function (element) {
                             rtes.push(
                                 new codendi.RTE(element, {
-                                    onLoad: function() {
+                                    onLoad: function () {
                                         admin_field_properties.setStyle({
                                             width: "auto",
-                                            height: "auto"
+                                            height: "auto",
                                         });
                                         admin_field_properties.setStyle({
                                             width: "auto",
-                                            height: "auto"
+                                            height: "auto",
                                         });
-                                    }
+                                    },
                                 })
                             );
                         });
@@ -286,7 +286,7 @@ document.observe("dom:loaded", function() {
                         tracker_register_hide_value();
 
                         initTextboxlistForDefaultValues();
-                    }
+                    },
                 });
                 evt.stop();
             });

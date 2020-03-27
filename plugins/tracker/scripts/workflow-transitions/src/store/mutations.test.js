@@ -24,7 +24,7 @@ import {
     createWorkflow,
     saveCurrentTracker,
     markTransitionUpdated,
-    hideTransitionUpdated
+    hideTransitionUpdated,
 } from "./mutations.js";
 import initial_state from "./state.js";
 import { create } from "../support/factories.js";
@@ -42,8 +42,8 @@ describe("Store mutations:", () => {
             const second_transition = { id: 972, from_id: 678, to_id: 501 };
             const tracker = create("tracker", {
                 workflow: {
-                    transitions: [first_transition, second_transition]
-                }
+                    transitions: [first_transition, second_transition],
+                },
             });
 
             saveCurrentTracker(state, tracker);
@@ -51,12 +51,12 @@ describe("Store mutations:", () => {
             expect(state.current_tracker.workflow.transitions).toEqual([
                 {
                     ...first_transition,
-                    updated: false
+                    updated: false,
                 },
                 {
                     ...second_transition,
-                    updated: false
-                }
+                    updated: false,
+                },
             ]);
         });
     });
@@ -68,8 +68,8 @@ describe("Store mutations:", () => {
         beforeEach(() => {
             state.current_tracker = create("tracker", {
                 workflow: {
-                    transitions: [another_transition]
-                }
+                    transitions: [another_transition],
+                },
             });
             addTransition(state, transition_to_add);
         });
@@ -79,8 +79,8 @@ describe("Store mutations:", () => {
                 another_transition,
                 {
                     ...transition_to_add,
-                    updated: false
-                }
+                    updated: false,
+                },
             ]);
         });
 
@@ -105,8 +105,8 @@ describe("Store mutations:", () => {
                 expect(state.current_tracker.workflow.transitions).toEqual([
                     {
                         ...transition_to_add,
-                        updated: false
-                    }
+                        updated: false,
+                    },
                 ]);
             });
         });
@@ -121,8 +121,8 @@ describe("Store mutations:", () => {
             another_transition = create("transition");
             state.current_tracker = create("tracker", {
                 workflow: {
-                    transitions: [transition_to_delete, another_transition]
-                }
+                    transitions: [transition_to_delete, another_transition],
+                },
             });
             deleteTransition(state, transition_to_delete);
         });
@@ -151,8 +151,8 @@ describe("Store mutations:", () => {
             const transition = create("transition", "presented");
             state.current_tracker = create("tracker", {
                 workflow: {
-                    transitions: [transition]
-                }
+                    transitions: [transition],
+                },
             });
 
             markTransitionUpdated(state, transition);
@@ -164,8 +164,8 @@ describe("Store mutations:", () => {
             const transition = create("transition", "presented");
             state.current_tracker = create("tracker", {
                 workflow: {
-                    transitions: []
-                }
+                    transitions: [],
+                },
             });
 
             markTransitionUpdated(state, transition);
@@ -179,8 +179,8 @@ describe("Store mutations:", () => {
             const transition = create("transition", "presented", { updated: true });
             state.current_tracker = create("tracker", {
                 workflow: {
-                    transitions: [transition]
-                }
+                    transitions: [transition],
+                },
             });
 
             hideTransitionUpdated(state, transition);
@@ -192,8 +192,8 @@ describe("Store mutations:", () => {
             const transition = create("transition", "presented", { updated: true });
             state.current_tracker = create("tracker", {
                 workflow: {
-                    transitions: []
-                }
+                    transitions: [],
+                },
             });
 
             hideTransitionUpdated(state, transition);
@@ -208,8 +208,8 @@ describe("Store mutations:", () => {
         beforeEach(() => {
             state.current_tracker = create("tracker", {
                 workflow: {
-                    field_id: 1
-                }
+                    field_id: 1,
+                },
             });
             createWorkflow(state, tracker);
         });

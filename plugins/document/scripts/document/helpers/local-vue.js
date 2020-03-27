@@ -31,7 +31,7 @@ localVue.use(VueRouter);
 localVue.use(VueDOMPurifyHTML);
 localVue.use(GettextPlugin, {
     translations: {},
-    silent: true
+    silent: true,
 });
 
 export default localVue;

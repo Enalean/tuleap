@@ -50,7 +50,7 @@ export const has_at_least_one_card_in_edit_mode = (state: SwimlaneState): boolea
 export const is_loading_cards = (state: SwimlaneState): boolean => {
     return (
         state.is_loading_swimlanes ||
-        state.swimlanes.some(swimlane => swimlane.is_loading_children_cards)
+        state.swimlanes.some((swimlane) => swimlane.is_loading_children_cards)
     );
 };
 
@@ -108,5 +108,5 @@ export function taskboard_cell_swimlane_header_classes(
 }
 
 export function is_a_parent_card_in_edit_mode(state: SwimlaneState): boolean {
-    return state.swimlanes.some(swimlane => swimlane.card.is_in_edit_mode);
+    return state.swimlanes.some((swimlane) => swimlane.card.is_in_edit_mode);
 }

@@ -46,41 +46,41 @@ describe("ReleaseDescription", () => {
     beforeEach(() => {
         store_options = {
             state: {
-                label_tracker_planning: "Releases"
-            }
+                label_tracker_planning: "Releases",
+            },
         };
 
         release_data = {
             id: 2,
             planning: {
-                id: "100"
+                id: "100",
             },
             resources: {
                 milestones: {
                     accept: {
                         trackers: [
                             {
-                                label: "Sprint1"
-                            }
-                        ]
-                    }
+                                label: "Sprint1",
+                            },
+                        ],
+                    },
                 },
                 additional_panes: [
                     {
                         icon_name: "fa-tlp-taskboard",
                         title: "Taskboard",
                         uri: "/taskboard/project/6",
-                        identifier: "taskboard"
-                    }
+                        identifier: "taskboard",
+                    },
                 ],
                 cardwall: {
-                    uri: "/cardwall/"
-                }
-            }
+                    uri: "/cardwall/",
+                },
+            },
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
         };
     });
 
@@ -92,12 +92,12 @@ describe("ReleaseDescription", () => {
             id: 2,
             description,
             resources: {
-                burndown: null
-            }
+                burndown: null,
+            },
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -109,13 +109,13 @@ describe("ReleaseDescription", () => {
             id: 2,
             resources: {
                 burndown: {
-                    uri: "/burndown"
-                }
-            }
+                    uri: "/burndown",
+                },
+            },
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -151,20 +151,20 @@ describe("ReleaseDescription", () => {
         release_data = {
             id: 2,
             planning: {
-                id: "100"
+                id: "100",
             },
             resources: {
                 milestones: {
                     accept: {
-                        trackers: [] as TrackerProjectLabel[]
-                    }
+                        trackers: [] as TrackerProjectLabel[],
+                    },
                 },
-                additional_panes: [] as Pane[]
-            }
+                additional_panes: [] as Pane[],
+            },
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);

@@ -39,7 +39,7 @@ export function getContainerProperties(
         width: getWidth(),
         height: height_box_with_padding,
         x: getX(),
-        y: y - PADDING_HEIGHT
+        y: y - PADDING_HEIGHT,
     };
 
     function getWidth(): number {

@@ -21,7 +21,7 @@ import {
     isItemInTreeViewWithoutUpload,
     isItemUploadingInQuickLookMode,
     isItemUploadingInTreeView,
-    hasNoUploadingContent
+    hasNoUploadingContent,
 } from "./uploading-status-helper.js";
 
 describe("FolderContentRow", () => {
@@ -34,7 +34,7 @@ describe("FolderContentRow", () => {
                 type: "file",
                 is_uploading_in_collapsed_folder: false,
                 is_uploading: false,
-                is_uploading_new_version: false
+                is_uploading_new_version: false,
             };
 
             expect(hasNoUploadingContent(item)).toBe(true);
@@ -48,7 +48,7 @@ describe("FolderContentRow", () => {
                 type: "file",
                 is_uploading_in_collapsed_folder: true,
                 is_uploading: false,
-                is_uploading_new_version: false
+                is_uploading_new_version: false,
             };
 
             expect(hasNoUploadingContent(item)).toBe(false);
@@ -62,7 +62,7 @@ describe("FolderContentRow", () => {
                 type: "file",
                 is_uploading_in_collapsed_folder: false,
                 is_uploading: true,
-                is_uploading_new_version: false
+                is_uploading_new_version: false,
             };
 
             expect(hasNoUploadingContent(item)).toBe(false);
@@ -76,7 +76,7 @@ describe("FolderContentRow", () => {
                 type: "file",
                 is_uploading_in_collapsed_folder: false,
                 is_uploading: false,
-                is_uploading_new_version: true
+                is_uploading_new_version: true,
             };
 
             expect(hasNoUploadingContent(item)).toBe(false);
@@ -91,7 +91,7 @@ describe("FolderContentRow", () => {
                 title: "my item title",
                 type: "file",
                 is_uploading_in_collapsed_folder: true,
-                is_uploading_new_version: false
+                is_uploading_new_version: false,
             };
 
             const quick_look_mode = true;
@@ -106,7 +106,7 @@ describe("FolderContentRow", () => {
                 title: "my item title",
                 type: "file",
                 is_uploading_in_collapsed_folder: false,
-                is_uploading_new_version: true
+                is_uploading_new_version: true,
             };
 
             const quick_look_mode = true;
@@ -119,7 +119,7 @@ describe("FolderContentRow", () => {
             const item = {
                 id: 1,
                 title: "my item title",
-                type: "file"
+                type: "file",
             };
 
             const quick_look_mode = false;
@@ -136,7 +136,7 @@ describe("FolderContentRow", () => {
                 title: "my item title",
                 type: "file",
                 is_uploading_in_collapsed_folder: true,
-                is_uploading_new_version: false
+                is_uploading_new_version: false,
             };
 
             const quick_look_mode = false;
@@ -151,7 +151,7 @@ describe("FolderContentRow", () => {
                 title: "my item title",
                 type: "file",
                 is_uploading_in_collapsed_folder: false,
-                is_uploading_new_version: true
+                is_uploading_new_version: true,
             };
 
             const quick_look_mode = false;
@@ -164,7 +164,7 @@ describe("FolderContentRow", () => {
             const item = {
                 id: 1,
                 title: "my item title",
-                type: "file"
+                type: "file",
             };
 
             const quick_look_mode = true;
@@ -179,7 +179,7 @@ describe("FolderContentRow", () => {
             const item = {
                 id: 1,
                 title: "my item title",
-                type: "file"
+                type: "file",
             };
 
             const quick_look_mode = true;
@@ -193,7 +193,7 @@ describe("FolderContentRow", () => {
                 id: 1,
                 title: "my item title",
                 type: "file",
-                is_uploading_new_version: true
+                is_uploading_new_version: true,
             };
 
             const quick_look_mode = false;
@@ -207,7 +207,7 @@ describe("FolderContentRow", () => {
                 id: 1,
                 title: "my item title",
                 type: "file",
-                is_uploading_new_version: true
+                is_uploading_new_version: true,
             };
 
             const quick_look_mode = true;

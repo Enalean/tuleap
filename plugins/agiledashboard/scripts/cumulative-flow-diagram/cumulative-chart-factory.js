@@ -23,7 +23,7 @@ import moment from "moment";
 /* eslint-disable-next-line you-dont-need-lodash-underscore/map, you-dont-need-lodash-underscore/find, you-dont-need-lodash-underscore/for-each, you-dont-need-lodash-underscore/reduce */
 import { map, find, forEach, defaults, reduce } from "lodash";
 
-export default function(options = {}) {
+export default function (options = {}) {
     let chart = {};
 
     cumulativeFlowChart(chart);
@@ -36,9 +36,9 @@ export default function(options = {}) {
     chart.localizedFormat(options.localized_format);
     chart.divGraph(d3.select("#" + options.graph_id));
 
-    chart.init = function() {
+    chart.init = function () {
         chart.bisectDate(
-            d3.bisector(function(d) {
+            d3.bisector(function (d) {
                 return moment(d.date).valueOf();
             }).left
         );
@@ -75,19 +75,19 @@ export default function(options = {}) {
         chart.initLegendEvents();
     };
 
-    chart.initData = function() {
+    chart.initData = function () {
         var stack_data = parseData(chart.data());
         chart.stackData(stack_data);
         chart.columns(chart.data());
 
-        var keys = map(chart.data(), function(column) {
+        var keys = map(chart.data(), function (column) {
             return column.id;
         });
 
         chart.keys(keys);
     };
 
-    chart.initColor = function() {
+    chart.initColor = function () {
         var schemeCategory20cWithoutLightest = [
             "#3182bd",
             "#6baed6",
@@ -103,37 +103,34 @@ export default function(options = {}) {
             "#bcbddc",
             "#636363",
             "#969696",
-            "#bdbdbd"
+            "#bdbdbd",
         ];
 
         var color_scale = d3.scaleOrdinal().range(schemeCategory20cWithoutLightest);
 
         chart.colorScale(color_scale);
 
-        var color_domain = chart.columns().map(function(data, index, columns) {
+        var color_domain = chart.columns().map(function (data, index, columns) {
             return columns.length - 1 - index;
         });
         chart.colorScale().domain(color_domain);
     };
 
-    chart.initX = function() {
+    chart.initX = function () {
         const first_column = chart.columns()[0];
 
-        var time_scale_extent = d3.extent(first_column.values, function(d) {
+        var time_scale_extent = d3.extent(first_column.values, function (d) {
             return moment(d.start_date).toDate();
         });
 
-        var x_scale = d3
-            .scaleTime()
-            .domain(time_scale_extent)
-            .range([0, chart.width()]);
+        var x_scale = d3.scaleTime().domain(time_scale_extent).range([0, chart.width()]);
 
         chart.xScale(x_scale);
 
         var x_axis = d3
             .axisBottom()
             .scale(x_scale)
-            .tickFormat(function(d) {
+            .tickFormat(function (d) {
                 return moment(d).format(chart.localizedFormat());
             });
 
@@ -144,11 +141,8 @@ export default function(options = {}) {
         chart.xAxis(x_axis);
     };
 
-    chart.initY = function() {
-        var y_scale = d3
-            .scaleLinear()
-            .domain([0, chart.yMax()])
-            .range([chart.height(), 0]);
+    chart.initY = function () {
+        var y_scale = d3.scaleLinear().domain([0, chart.yMax()]).range([chart.height(), 0]);
 
         chart.yScale(y_scale);
 
@@ -161,43 +155,43 @@ export default function(options = {}) {
         chart.yAxis(y_axis);
     };
 
-    chart.initYMax = function() {
+    chart.initYMax = function () {
         const first_column = chart.columns()[0];
 
-        var max_kanban_items_count = d3.max(first_column.values, function(data_point, index) {
+        var max_kanban_items_count = d3.max(first_column.values, function (data_point, index) {
             return sumKanbanItemsCountsForOneDay(index);
         });
 
         chart.yMax(max_kanban_items_count);
 
         function sumKanbanItemsCountsForOneDay(day_index) {
-            const columns_activated = chart.columns().filter(column => column.activated === true);
+            const columns_activated = chart.columns().filter((column) => column.activated === true);
 
-            return columns_activated.reduce(function(previous_sum, current_column) {
+            return columns_activated.reduce(function (previous_sum, current_column) {
                 return previous_sum + current_column.values[day_index].kanban_items_count;
             }, 0);
         }
     };
 
-    chart.initGraph = function() {
+    chart.initGraph = function () {
         chart.drawAxis();
         chart.drawArea();
         chart.drawGuideLine();
         chart.updateGrid();
     };
 
-    chart.initAreaEvents = function() {
+    chart.initAreaEvents = function () {
         chart
             .g()
             .selectAll(".area")
-            .on("mouseover", function(d) {
+            .on("mouseover", function (d) {
                 d3.select("#area_" + d.key).classed("hover", true);
                 var column = find(chart.columns(), { id: d.key });
                 if (column) {
                     column.hover = true;
                 }
             })
-            .on("mousemove", function() {
+            .on("mousemove", function () {
                 var data_set = getDataSet(d3.mouse(this)[0]);
 
                 if (data_set && total(data_set) > 0) {
@@ -225,7 +219,7 @@ export default function(options = {}) {
                         .style("top", position.top + "px");
                 }
             })
-            .on("mouseout", function(d) {
+            .on("mouseout", function (d) {
                 if (
                     d3.event.relatedTarget &&
                     d3.event.relatedTarget.nodeName !== "line" &&
@@ -254,17 +248,14 @@ export default function(options = {}) {
         function getTooltipPosition(mouse_x, mouse_y) {
             var position = {
                 left: mouse_x + 100,
-                top: mouse_y - 50
+                top: mouse_y - 50,
             };
 
             var first_x_date = chart.stackData()[0].date;
             var last_x_date = chart.stackData()[chart.stackData().length - 1].date;
             var position_x_first_date = chart.xScale()(moment(first_x_date).toDate());
             var position_x_last_date = chart.xScale()(moment(last_x_date).toDate());
-            var tooltip_width = d3
-                .select("#tooltip")
-                .node()
-                .getBoundingClientRect().width;
+            var tooltip_width = d3.select("#tooltip").node().getBoundingClientRect().width;
 
             if (
                 position.left + tooltip_width >= position_x_last_date &&
@@ -305,36 +296,36 @@ export default function(options = {}) {
 
             var tooltip_content_row = tooltip
                 .selectAll(".tooltip-content-row")
-                .data(chart.columns().filter(column => column.activated === true))
+                .data(chart.columns().filter((column) => column.activated === true))
                 .enter()
                 .append("div")
-                .attr("id", function(d) {
+                .attr("id", function (d) {
                     return "tooltip_" + d.id;
                 })
                 .attr("class", "tooltip-content-row")
-                .classed("hover", function(d) {
+                .classed("hover", function (d) {
                     return d.hover;
                 });
 
             tooltip_content_row
                 .append("div")
                 .attr("class", "row-legend")
-                .style("background-color", function(d) {
-                    const index = chart.columns().findIndex(column => column.id === d.id);
+                .style("background-color", function (d) {
+                    const index = chart.columns().findIndex((column) => column.id === d.id);
                     return chart.colorScale()(chart.columns().length - 1 - index);
                 });
 
             tooltip_content_row
                 .append("div")
                 .attr("class", "row-label")
-                .text(function(d) {
+                .text(function (d) {
                     return d.label;
                 });
 
             tooltip_content_row
                 .append("div")
                 .attr("class", "row-value")
-                .text(function(d) {
+                .text(function (d) {
                     return data[d.id];
                 });
 
@@ -359,21 +350,21 @@ export default function(options = {}) {
         }
     };
 
-    chart.initLegendEvents = function() {
+    chart.initLegendEvents = function () {
         d3.selectAll(".legend-value")
-            .on("click", function(d) {
+            .on("click", function (d) {
                 updateLegend(d, d3.select(this));
                 chart.redraw();
             })
-            .on("mouseover", function(d) {
+            .on("mouseover", function (d) {
                 d3.select("#area_" + d.id).classed("hover", true);
             })
-            .on("mouseout", function(d) {
+            .on("mouseout", function (d) {
                 d3.select("#area_" + d.id).classed("hover", false);
             });
     };
 
-    chart.initStack = function() {
+    chart.initStack = function () {
         var stack = d3
             .stack()
             .keys(chart.keys())
@@ -383,39 +374,35 @@ export default function(options = {}) {
         chart.stack(stack);
     };
 
-    chart.initArea = function() {
+    chart.initArea = function () {
         var area = d3
             .area()
-            .x(function(d) {
+            .x(function (d) {
                 return chart.xScale()(moment(d.data.date).toDate());
             })
-            .y0(function(d) {
+            .y0(function (d) {
                 return chart.yScale()(d[0]);
             })
-            .y1(function(d) {
+            .y1(function (d) {
                 return chart.yScale()(d[1]);
             });
 
         chart.area(area);
     };
 
-    chart.initLegend = function() {
-        var svg_legend = chart
-            .divGraph()
-            .append("div")
-            .attr("id", "legend")
-            .append("ul");
+    chart.initLegend = function () {
+        var svg_legend = chart.divGraph().append("div").attr("id", "legend").append("ul");
 
         var legend = svg_legend
             .selectAll(".legend-value")
             .data(chart.columns().reverse())
             .enter()
             .append("li")
-            .attr("id", function(d) {
+            .attr("id", function (d) {
                 return "legend_" + d.id;
             })
             .attr("class", "legend-value")
-            .style("text-decoration", function(d) {
+            .style("text-decoration", function (d) {
                 if (d.activated) {
                     return "none";
                 }
@@ -426,16 +413,16 @@ export default function(options = {}) {
         legend
             .append("span")
             .attr("class", "legend-value-color")
-            .style("background-color", function(d, i) {
+            .style("background-color", function (d, i) {
                 return chart.colorScale()(chart.columns().length - 1 - i);
             });
 
-        legend.append("span").text(function(d) {
+        legend.append("span").text(function (d) {
             return d.label;
         });
     };
 
-    chart.initTooltip = function() {
+    chart.initTooltip = function () {
         var tooltip = chart
             .divGraph()
             .append("div")
@@ -446,7 +433,7 @@ export default function(options = {}) {
         chart.tooltip(tooltip);
     };
 
-    chart.drawAxis = function() {
+    chart.drawAxis = function () {
         chart
             .g()
             .append("g")
@@ -454,11 +441,7 @@ export default function(options = {}) {
             .attr("transform", "translate(0, " + chart.height() + ")")
             .call(chart.xAxis());
 
-        chart
-            .g()
-            .append("g")
-            .attr("class", "axis y-axis")
-            .call(chart.yAxis());
+        chart.g().append("g").attr("class", "axis y-axis").call(chart.yAxis());
 
         chart
             .g()
@@ -470,24 +453,24 @@ export default function(options = {}) {
             .text(chart.legendText());
     };
 
-    chart.drawArea = function() {
+    chart.drawArea = function () {
         chart
             .g()
             .selectAll(".area")
             .data(chart.stack()(chart.stackData()))
             .enter()
             .append("path")
-            .attr("id", function(d) {
+            .attr("id", function (d) {
                 return "area_" + d.key;
             })
             .attr("class", "area")
-            .attr("fill", function(d, i) {
+            .attr("fill", function (d, i) {
                 return chart.colorScale()(i);
             })
             .attr("d", chart.area());
     };
 
-    chart.drawGuideLine = function() {
+    chart.drawGuideLine = function () {
         chart
             .g()
             .append("line")
@@ -496,11 +479,8 @@ export default function(options = {}) {
             .classed("guide-line-undisplayed", true);
     };
 
-    chart.updateGrid = function() {
-        chart
-            .g()
-            .selectAll(".x-axis .tick line")
-            .attr("y2", -chart.height());
+    chart.updateGrid = function () {
+        chart.g().selectAll(".x-axis .tick line").attr("y2", -chart.height());
 
         /* eslint-disable */
         chart
@@ -513,15 +493,12 @@ export default function(options = {}) {
             });
         /* eslint-enable */
 
-        chart
-            .g()
-            .selectAll(".x-axis .tick")
-            .attr("class", "tick grid");
+        chart.g().selectAll(".x-axis .tick").attr("class", "tick grid");
 
         chart
             .g()
             .selectAll(".y-axis .tick")
-            .attr("class", function(d, i) {
+            .attr("class", function (d, i) {
                 if (i > 0) {
                     return "tick grid";
                 }
@@ -529,7 +506,7 @@ export default function(options = {}) {
             });
     };
 
-    chart.getXAxisTicks = function(size) {
+    chart.getXAxisTicks = function (size) {
         var ticks = 0;
 
         if (size <= 320) {
@@ -543,7 +520,7 @@ export default function(options = {}) {
         return ticks;
     };
 
-    chart.getYAxisTicks = function(size) {
+    chart.getYAxisTicks = function (size) {
         var ticks = 0;
 
         if (size <= 320) {
@@ -557,7 +534,7 @@ export default function(options = {}) {
         return ticks;
     };
 
-    chart.resize = function(height, width) {
+    chart.resize = function (height, width) {
         if (arguments.length) {
             chart.height(height);
             chart.width(width);
@@ -565,7 +542,7 @@ export default function(options = {}) {
         return chart;
     };
 
-    chart.redraw = function() {
+    chart.redraw = function () {
         chart.initData(chart.columns());
         chart.initYMax();
 
@@ -580,16 +557,9 @@ export default function(options = {}) {
             .attr("transform", "translate(0, " + chart.height() + ")")
             .call(chart.xAxis());
 
-        chart
-            .g()
-            .selectAll(".y-axis")
-            .call(chart.yAxis());
+        chart.g().selectAll(".y-axis").call(chart.yAxis());
 
-        chart
-            .g()
-            .selectAll(".area")
-            .data(chart.stack()(chart.stackData()))
-            .attr("d", chart.area());
+        chart.g().selectAll(".area").data(chart.stack()(chart.stackData())).attr("d", chart.area());
 
         chart
             .g()
@@ -611,10 +581,10 @@ export default function(options = {}) {
 
 function parseData(data) {
     var parsed_data = [];
-    forEach(data, function(column) {
+    forEach(data, function (column) {
         defaults(column, { activated: true });
 
-        forEach(column.values, function(value, value_index) {
+        forEach(column.values, function (value, value_index) {
             if (!parsed_data[value_index]) {
                 parsed_data[value_index] = {};
             }
@@ -634,7 +604,7 @@ function parseData(data) {
 function total(data) {
     return reduce(
         data,
-        function(sum, value) {
+        function (sum, value) {
             return !isNaN(value) ? sum + value : sum;
         },
         0

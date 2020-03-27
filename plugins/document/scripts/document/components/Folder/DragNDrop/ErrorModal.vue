@@ -55,12 +55,12 @@ import { modal as createModal } from "tlp";
 
 export default {
     props: {
-        body_class: String
+        body_class: String,
     },
     computed: {
         close() {
             return this.$gettext("Close");
-        }
+        },
     },
     mounted() {
         const modal = createModal(this.$el);
@@ -68,6 +68,6 @@ export default {
             this.$emit("error-modal-hidden");
         });
         modal.show();
-    }
+    },
 };
 </script>

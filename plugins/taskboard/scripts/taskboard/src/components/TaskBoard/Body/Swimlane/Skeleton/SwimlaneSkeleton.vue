@@ -44,7 +44,7 @@ import ColumnsSkeleton from "./ColumnsSkeleton.vue";
 const column = namespace("column");
 
 @Component({
-    components: { ColumnsSkeleton }
+    components: { ColumnsSkeleton },
 })
 export default class SwimlaneSkeleton extends Vue {
     @column.State

@@ -32,7 +32,7 @@ describe("CreateNewItemVersionButton", () => {
             return shallowMount(CreateNewItemVersionButton, {
                 localVue,
                 propsData: { ...props },
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
     });
@@ -46,8 +46,8 @@ describe("CreateNewItemVersionButton", () => {
                 id: 1,
                 title: "my item title",
                 type: "file",
-                user_can_write: true
-            }
+                user_can_write: true,
+            },
         });
 
         wrapper.find("[data-test=document-new-item-version-button]").trigger("click");
@@ -67,8 +67,8 @@ describe("CreateNewItemVersionButton", () => {
                 id: 1,
                 title: "my item title",
                 type: "embedded",
-                user_can_write: true
-            }
+                user_can_write: true,
+            },
         });
 
         wrapper.find("[data-test=document-new-item-version-button]").trigger("click");
@@ -89,8 +89,8 @@ describe("CreateNewItemVersionButton", () => {
                 title: "my item title",
                 type: "wiki",
                 user_can_write: true,
-                approval_table: null
-            }
+                approval_table: null,
+            },
         });
 
         wrapper.find("[data-test=document-new-item-version-button]").trigger("click");
@@ -112,9 +112,9 @@ describe("CreateNewItemVersionButton", () => {
                 type: "wiki",
                 user_can_write: true,
                 approval_table: {
-                    approval_state: "not yet"
-                }
-            }
+                    approval_state: "not yet",
+                },
+            },
         });
 
         wrapper.find("[data-test=document-new-item-version-button]").trigger("click");
@@ -132,8 +132,8 @@ describe("CreateNewItemVersionButton", () => {
                 id: 1,
                 title: "my item title",
                 type: "empty",
-                user_can_write: true
-            }
+                user_can_write: true,
+            },
         });
 
         wrapper.find("[data-test=document-new-item-version-button]").trigger("click");
@@ -151,7 +151,7 @@ describe("CreateNewItemVersionButton", () => {
             id: 1,
             title: "my item title",
             type: "link",
-            user_can_write: true
+            user_can_write: true,
         };
 
         const wrapper = create_new_item_version_button_factory({ item });
@@ -168,8 +168,8 @@ describe("CreateNewItemVersionButton", () => {
                 id: 1,
                 title: "my item title",
                 type: "file",
-                user_can_write: false
-            }
+                user_can_write: false,
+            },
         });
 
         expect(wrapper.contains("[data-test=document-new-item-version-button]")).toBeFalsy();

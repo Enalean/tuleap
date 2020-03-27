@@ -34,7 +34,7 @@ export default {
     computed: {
         can_go_to_root() {
             return this.$route.name !== "root_folder";
-        }
-    }
+        },
+    },
 };
 </script>

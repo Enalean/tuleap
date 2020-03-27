@@ -43,11 +43,11 @@ describe("FieldChosenTemplate", () => {
                         is_a_duplication,
                         is_a_xml_import,
                         is_a_duplication_of_a_tracker_from_another_project,
-                        project_of_selected_tracker_template
-                    }
-                })
+                        project_of_selected_tracker_template,
+                    },
+                }),
             },
-            localVue: await createTrackerCreationLocalVue()
+            localVue: await createTrackerCreationLocalVue(),
         });
     }
 
@@ -55,20 +55,20 @@ describe("FieldChosenTemplate", () => {
         state = {
             tracker_to_be_created: {
                 name: "Tracker XML structure",
-                shortname: "tracker_to_be_created"
+                shortname: "tracker_to_be_created",
             },
             selected_tracker_template: {
                 id: "1",
-                name: "Tracker from a template project"
+                name: "Tracker from a template project",
             },
             selected_project: {
                 id: "150",
-                name: "Another project"
+                name: "Another project",
             },
             selected_project_tracker_template: {
                 id: "2",
-                name: "Tracker from another project"
-            }
+                name: "Tracker from another project",
+            },
         } as State;
     });
 
@@ -77,8 +77,8 @@ describe("FieldChosenTemplate", () => {
             state = {
                 selected_tracker_template: {
                     id: "default-bug",
-                    name: "Bugs"
-                }
+                    name: "Bugs",
+                },
             } as State;
 
             const wrapper = await getWrapper(state);
@@ -89,7 +89,7 @@ describe("FieldChosenTemplate", () => {
         it("is a tracker duplication", async () => {
             const wrapper = await getWrapper(state, true, false, false, false, {
                 project_name: "Default Site Template",
-                tracker_list: []
+                tracker_list: [],
             });
 
             expect(wrapper.find("[data-test=project-of-chosen-template]").text()).toEqual(

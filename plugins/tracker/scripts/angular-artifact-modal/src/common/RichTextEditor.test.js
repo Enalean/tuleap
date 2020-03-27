@@ -22,7 +22,7 @@ import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "../../../../../../src/www/scripts/vue-components/store-wrapper-jest.js";
 import {
     MaxSizeUploadExceededError,
-    UploadError
+    UploadError,
 } from "../../../../../../src/www/scripts/tuleap/ckeditor/file-upload-handler-factory.js";
 import * as file_upload_handler_factory from "../../../../../../src/www/scripts/tuleap/ckeditor/file-upload-handler-factory.js";
 import * as image_urls_finder from "../../../../../../src/www/scripts/tuleap/ckeditor/image-urls-finder.js";
@@ -47,15 +47,15 @@ function getInstance() {
     return shallowMount(RichTextEditor, {
         localVue,
         mocks: {
-            $store: store
+            $store: store,
         },
         propsData: {
             id: "unique-id",
             format,
             value,
             disabled,
-            required
-        }
+            required,
+        },
     });
 }
 
@@ -79,7 +79,7 @@ describe(`RichTextEditor`, () => {
         editor = {
             on: jest.fn(),
             destroy: jest.fn(),
-            showNotification: jest.fn()
+            showNotification: jest.fn(),
         };
         ckeditorReplaceSpy = jest.fn(() => editor);
         CKEDITOR.replace = ckeditorReplaceSpy;
@@ -143,7 +143,7 @@ describe(`RichTextEditor`, () => {
                 });
                 editor.mode = "source";
                 const editable = {
-                    attachListener: jest.fn()
+                    attachListener: jest.fn(),
                 };
                 editable.attachListener.mockImplementation((element, event_name, handler) => {
                     triggerEditableInput = handler;
@@ -212,7 +212,7 @@ describe(`RichTextEditor`, () => {
                 getInstance();
                 const event = {
                     cancel: jest.fn(),
-                    data: { dataValue: `<p></p>` }
+                    data: { dataValue: `<p></p>` },
                 };
                 triggerPaste(event);
 
@@ -233,7 +233,7 @@ describe(`RichTextEditor`, () => {
             beforeEach(() => {
                 file_field = {
                     field_id: 197,
-                    max_size_upload: 3000
+                    max_size_upload: 3000,
                 };
                 store.getters.first_file_field = file_field;
             });
@@ -264,7 +264,7 @@ describe(`RichTextEditor`, () => {
                         max_size_upload: 3000,
                         onStartCallback: expect.any(Function),
                         onErrorCallback: expect.any(Function),
-                        onSuccessCallback: expect.any(Function)
+                        onSuccessCallback: expect.any(Function),
                     });
                 });
 
@@ -295,7 +295,7 @@ describe(`RichTextEditor`, () => {
                     it(`emits an upload-image event`, () => {
                         const expected_file = {
                             id: 64,
-                            download_href: "http://example.com/sacrilegiously"
+                            download_href: "http://example.com/sacrilegiously",
                         };
                         const event = wrapper.emitted("upload-image")[0];
                         expect(event).toEqual([file_field.field_id, expected_file]);

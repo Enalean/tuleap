@@ -161,7 +161,7 @@ function getNumberValue(element) {
 }
 
 function enableAllOptions(selectboxes) {
-    selectboxes.forEach(selectbox => {
+    selectboxes.forEach((selectbox) => {
         for (const option of selectbox.children) {
             option.disabled = false;
         }

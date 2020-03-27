@@ -12,7 +12,7 @@ MilestoneController.$inject = [
     "BacklogService",
     "DroppedService",
     "MilestoneCollectionService",
-    "BacklogItemSelectedService"
+    "BacklogItemSelectedService",
 ];
 
 function MilestoneController(
@@ -42,7 +42,7 @@ function MilestoneController(
         milestone: $scope.milestone, // inherited from parent scope
         dragular_instance_for_milestone: undefined,
         get_content_promise: $q.when(),
-        additionalPanesToDisplay
+        additionalPanesToDisplay,
     });
 
     self.init();
@@ -61,7 +61,7 @@ function MilestoneController(
         self.milestone.collapsed = !self.milestone.collapsed;
 
         if (!self.dragular_instance_for_milestone) {
-            $timeout(function() {
+            $timeout(function () {
                 self.initDragularForMilestone();
             });
         }
@@ -113,7 +113,7 @@ function MilestoneController(
 
         backlog_item.moving_to = true;
 
-        self.get_content_promise.then(function() {
+        self.get_content_promise.then(function () {
             compared_to = DroppedService.defineComparedToBeLastItem(
                 self.milestone.content,
                 moved_items
@@ -135,7 +135,7 @@ function MilestoneController(
             self.dragularOptionsForMilestone()
         );
 
-        $document.bind("keyup", function(event) {
+        $document.bind("keyup", function (event) {
             var esc_key_code = 27;
 
             if (event.keyCode === esc_key_code) {
@@ -155,7 +155,7 @@ function MilestoneController(
             revertOnSpill: true,
             nameSpace: "dragular-list",
             accepts: isItemDroppable,
-            moves: isItemDraggable
+            moves: isItemDraggable,
         };
     }
 
@@ -244,12 +244,12 @@ function MilestoneController(
                         source_milestone_id,
                         target_milestone_id
                     )
-                        .then(function() {
+                        .then(function () {
                             BacklogItemSelectedService.deselectAllBacklogItems();
                             MilestoneCollectionService.refreshMilestone(source_milestone_id);
                             MilestoneCollectionService.refreshMilestone(target_milestone_id);
                         })
-                        .catch(function() {
+                        .catch(function () {
                             BacklogItemSelectedService.reselectBacklogItems();
                         });
                     break;
@@ -267,11 +267,11 @@ function MilestoneController(
                         source_milestone_id,
                         BacklogService.backlog
                     )
-                        .then(function() {
+                        .then(function () {
                             BacklogItemSelectedService.deselectAllBacklogItems();
                             MilestoneCollectionService.refreshMilestone(source_milestone_id);
                         })
-                        .catch(function() {
+                        .catch(function () {
                             BacklogItemSelectedService.reselectBacklogItems();
                         });
                     break;
@@ -291,10 +291,10 @@ function MilestoneController(
             compared_to,
             milestone_id
         )
-            .then(function() {
+            .then(function () {
                 BacklogItemSelectedService.deselectAllBacklogItems();
             })
-            .catch(function() {
+            .catch(function () {
                 BacklogItemSelectedService.reselectBacklogItems();
             });
     }
@@ -354,7 +354,7 @@ function MilestoneController(
 
     function additionalPanesToDisplay() {
         return self.milestone.resources.additional_panes.filter(
-            pane => pane.identifier === "taskboard"
+            (pane) => pane.identifier === "taskboard"
         );
     }
 }

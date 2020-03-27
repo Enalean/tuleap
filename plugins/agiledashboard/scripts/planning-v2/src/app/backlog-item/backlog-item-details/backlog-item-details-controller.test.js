@@ -4,7 +4,7 @@ import "angular-mocks";
 
 import BaseBacklogItemDetailsController from "./backlog-item-details-controller.js";
 
-describe("BacklogItemDetailsController -", function() {
+describe("BacklogItemDetailsController -", function () {
     var $q,
         $scope,
         BacklogItemDetailsController,
@@ -12,10 +12,10 @@ describe("BacklogItemDetailsController -", function() {
         NewTuleapArtifactModalService,
         BacklogItemService;
 
-    beforeEach(function() {
+    beforeEach(function () {
         angular.mock.module(planning_module);
 
-        angular.mock.inject(function(
+        angular.mock.inject(function (
             _$q_,
             $rootScope,
             $controller,
@@ -46,7 +46,7 @@ describe("BacklogItemDetailsController -", function() {
             BacklogItemDetailsController = $controller(BaseBacklogItemDetailsController, {
                 BacklogItemCollectionService: BacklogItemCollectionService,
                 BacklogItemService: BacklogItemService,
-                NewTuleapArtifactModalService: NewTuleapArtifactModalService
+                NewTuleapArtifactModalService: NewTuleapArtifactModalService,
             });
         });
     });
@@ -55,7 +55,7 @@ describe("BacklogItemDetailsController -", function() {
         let event, item_type;
         beforeEach(() => {
             event = {
-                preventDefault: jest.fn()
+                preventDefault: jest.fn(),
             };
             item_type = { id: 7 };
             BacklogItemDetailsController.backlog_item = {
@@ -63,9 +63,9 @@ describe("BacklogItemDetailsController -", function() {
                 has_children: true,
                 children: {
                     loaded: true,
-                    data: [{ id: 352 }]
+                    data: [{ id: 352 }],
                 },
-                updating: false
+                updating: false,
             };
             BacklogItemCollectionService.items[53] = BacklogItemDetailsController.backlog_item;
         });
@@ -89,8 +89,8 @@ describe("BacklogItemDetailsController -", function() {
                 );
                 artifact = {
                     backlog_item: {
-                        id: 207
-                    }
+                        id: 207,
+                    },
                 };
             });
 
@@ -117,7 +117,7 @@ describe("BacklogItemDetailsController -", function() {
             it("Given that the current backlog item did not have children, when the new artifact modal calls its callback, then the artifact will be appended to the current backlog item's children and the children will be marked as loaded", () => {
                 BacklogItemDetailsController.backlog_item.children = {
                     loaded: false,
-                    data: []
+                    data: [],
                 };
                 BacklogItemDetailsController.backlog_item.has_children = false;
                 BacklogItemService.getBacklogItem.mockReturnValue($q.when(artifact));
@@ -135,14 +135,14 @@ describe("BacklogItemDetailsController -", function() {
         });
     });
 
-    describe("canBeAddedToBacklogItemChildren() -", function() {
-        it("Given that the current backlog item had no child, it appends the newly created child", function() {
+    describe("canBeAddedToBacklogItemChildren() -", function () {
+        it("Given that the current backlog item had no child, it appends the newly created child", function () {
             BacklogItemDetailsController.backlog_item = {
                 has_children: false,
-                children: {}
+                children: {},
             };
             var created_item = {
-                id: 8
+                id: 8,
             };
 
             var result = BacklogItemDetailsController.canBeAddedToChildren(created_item.id);
@@ -150,16 +150,16 @@ describe("BacklogItemDetailsController -", function() {
             expect(result).toBeTruthy();
         });
 
-        it("Given that the current backlog item had already loaded children, it appends the newly created child if not already present", function() {
+        it("Given that the current backlog item had already loaded children, it appends the newly created child if not already present", function () {
             BacklogItemDetailsController.backlog_item = {
                 has_children: true,
                 children: {
                     loaded: true,
-                    data: [{ id: 1 }, { id: 2 }, { id: 3 }]
-                }
+                    data: [{ id: 1 }, { id: 2 }, { id: 3 }],
+                },
             };
             var created_item = {
-                id: 8
+                id: 8,
             };
 
             var result = BacklogItemDetailsController.canBeAddedToChildren(created_item.id);
@@ -167,16 +167,16 @@ describe("BacklogItemDetailsController -", function() {
             expect(result).toBeTruthy();
         });
 
-        it("Given that the current backlog item had already loaded children, it doesn't append the newly created child if already present", function() {
+        it("Given that the current backlog item had already loaded children, it doesn't append the newly created child if already present", function () {
             BacklogItemDetailsController.backlog_item = {
                 has_children: true,
                 children: {
                     loaded: true,
-                    data: [{ id: 1 }, { id: 2 }, { id: 8 }]
-                }
+                    data: [{ id: 1 }, { id: 2 }, { id: 8 }],
+                },
             };
             var created_item = {
-                id: 8
+                id: 8,
             };
 
             var result = BacklogItemDetailsController.canBeAddedToChildren(created_item.id);
@@ -184,16 +184,16 @@ describe("BacklogItemDetailsController -", function() {
             expect(result).toBeFalsy();
         });
 
-        it("Given that the current backlog item didn't have already loaded children, it doesn't append the newly created child", function() {
+        it("Given that the current backlog item didn't have already loaded children, it doesn't append the newly created child", function () {
             BacklogItemDetailsController.backlog_item = {
                 has_children: true,
                 children: {
                     loaded: false,
-                    data: []
-                }
+                    data: [],
+                },
             };
             var created_item = {
-                id: 8
+                id: 8,
             };
 
             expect(BacklogItemDetailsController.canBeAddedToChildren(created_item.id)).toBeFalsy();
@@ -201,7 +201,7 @@ describe("BacklogItemDetailsController -", function() {
     });
 
     describe("canShowRemoveFromExplicitBacklog() -", () => {
-        it("Given that the current top backlog is not explicit, it does not show remove action", function() {
+        it("Given that the current top backlog is not explicit, it does not show remove action", function () {
             BacklogItemDetailsController.is_in_explicit_top_backlog = false;
 
             var result = BacklogItemDetailsController.canShowRemoveFromExplicitBacklog();
@@ -209,7 +209,7 @@ describe("BacklogItemDetailsController -", function() {
             expect(result).toBe(false);
         });
 
-        it("Given that the item is in milestone, it does not show remove action", function() {
+        it("Given that the item is in milestone, it does not show remove action", function () {
             BacklogItemDetailsController.is_in_explicit_top_backlog = true;
             BacklogItemDetailsController.current_milestone = {};
 
@@ -218,7 +218,7 @@ describe("BacklogItemDetailsController -", function() {
             expect(result).toBe(false);
         });
 
-        it("Given that the item is in children context, it does not show remove action", function() {
+        it("Given that the item is in children context, it does not show remove action", function () {
             BacklogItemDetailsController.is_in_explicit_top_backlog = true;
             BacklogItemDetailsController.children_context = "true";
 
@@ -227,7 +227,7 @@ describe("BacklogItemDetailsController -", function() {
             expect(result).toBe(false);
         });
 
-        it("Given that the item is in explicit top backlog, it shows the remove action", function() {
+        it("Given that the item is in explicit top backlog, it shows the remove action", function () {
             BacklogItemDetailsController.is_in_explicit_top_backlog = true;
 
             var result = BacklogItemDetailsController.canShowRemoveFromExplicitBacklog();

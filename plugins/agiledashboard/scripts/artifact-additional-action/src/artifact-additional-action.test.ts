@@ -24,14 +24,14 @@ import * as feedbacks from "../../../../../src/www/scripts/tuleap/feedback";
 import GetText from "node-gettext";
 import {
     mockFetchError,
-    mockFetchSuccess
+    mockFetchSuccess,
 } from "../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper";
 
 describe("Artifact additional action", () => {
     beforeEach(() => {
         jest.spyOn(get_text, "initGettext").mockReturnValue(
             Promise.resolve({
-                gettext: (s: string): string => s
+                gettext: (s: string): string => s,
             } as GetText)
         );
     });
@@ -125,7 +125,7 @@ describe("Artifact additional action", () => {
             document: local_document,
             link_element: link_element,
             title_element: link_element,
-            icon
+            icon,
         };
     }
 
@@ -137,7 +137,7 @@ describe("Artifact additional action", () => {
     }
 
     it("Adds the artifact into top backlog", () => {
-        return new Promise(done => {
+        return new Promise((done) => {
             const local_action = getLocalAddAction();
             const spyPatch = jest.spyOn(fetch_wrapper, "patch");
             mockFetchSuccess(spyPatch, {});
@@ -156,8 +156,8 @@ describe("Artifact additional action", () => {
                 expect(spyPatch).toHaveBeenCalledWith(expect.anything(), {
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        add: [{ id: 201 }]
-                    })
+                        add: [{ id: 201 }],
+                    }),
                 });
                 expect(current_button_title).not.toBe(local_action.title_element.textContent);
                 expect(local_action.icon.classList.contains("fa-tlp-add-to-backlog")).toBe(false);
@@ -170,7 +170,7 @@ describe("Artifact additional action", () => {
     });
 
     it("Removes the artifact from the top backlog", () => {
-        return new Promise(done => {
+        return new Promise((done) => {
             const local_action = getLocalRemoveAction();
             const spyPatch = jest.spyOn(fetch_wrapper, "patch");
             mockFetchSuccess(spyPatch, {});
@@ -189,8 +189,8 @@ describe("Artifact additional action", () => {
                 expect(spyPatch).toHaveBeenCalledWith(expect.anything(), {
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        remove: [{ id: 201 }]
-                    })
+                        remove: [{ id: 201 }],
+                    }),
                 });
                 expect(current_button_title).not.toBe(local_action.title_element.textContent);
                 expect(local_action.icon.classList.contains("fa-tlp-add-to-backlog")).toBe(true);
@@ -203,13 +203,13 @@ describe("Artifact additional action", () => {
     });
 
     it("Deals with error when trying to add the artifact into the top backlog", () => {
-        return new Promise(done => {
+        return new Promise((done) => {
             testActionErrorManagement(getLocalAddAction(), done);
         });
     });
 
     it("Deals with error when trying to remove the artifact from the top backlog", () => {
-        return new Promise(done => {
+        return new Promise((done) => {
             testActionErrorManagement(getLocalRemoveAction(), done);
         });
     });

@@ -52,7 +52,7 @@
                 class="tlp-select"
                 v-bind:configuration="{
                     width: '100%',
-                    placeholder: $gettext('Choose a field')
+                    placeholder: $gettext('Choose a field'),
                 }"
                 v-model="not_empty_field_ids"
                 v-bind:disabled="is_modal_save_running"
@@ -90,7 +90,7 @@ import { mapState, mapGetters } from "vuex";
 import {
     STRUCTURAL_FIELDS,
     READ_ONLY_FIELDS,
-    COMPUTED_FIELD
+    COMPUTED_FIELD,
 } from "../../../../constants/fields-constants.js";
 import MultiSelect from "./MultiSelect.vue";
 import PreConditionsSection from "./PreConditionsSection.vue";
@@ -105,18 +105,18 @@ export default {
         ...mapState("transitionModal", [
             "current_transition",
             "user_groups",
-            "is_modal_save_running"
+            "is_modal_save_running",
         ]),
         ...mapGetters("transitionModal", ["is_transition_from_new_artifact"]),
         ...mapState({
-            writable_fields: state => {
+            writable_fields: (state) => {
                 if (state.current_tracker === null) {
                     return [];
                 }
                 return state.current_tracker.fields
-                    .filter(field => !fields_blacklist.includes(field.type))
+                    .filter((field) => !fields_blacklist.includes(field.type))
                     .sort((field1, field2) => compare(field1.label, field2.label));
-            }
+            },
         }),
         authorized_user_group_ids: {
             get() {
@@ -127,7 +127,7 @@ export default {
             },
             set(value) {
                 this.$store.commit("transitionModal/updateAuthorizedUserGroupIds", value);
-            }
+            },
         },
         not_empty_field_ids: {
             get() {
@@ -138,7 +138,7 @@ export default {
             },
             set(value) {
                 this.$store.commit("transitionModal/updateNotEmptyFieldIds", value);
-            }
+            },
         },
         transition_comment_not_empty: {
             get() {
@@ -149,8 +149,8 @@ export default {
             },
             set(value) {
                 this.$store.commit("transitionModal/updateIsCommentRequired", value);
-            }
-        }
-    }
+            },
+        },
+    },
 };
 </script>

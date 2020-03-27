@@ -28,7 +28,7 @@ import {
     REST_FEEDBACK_ADD,
     REST_FEEDBACK_DELETE,
     REST_FEEDBACK_EDIT,
-    SUCCESS_TYPE
+    SUCCESS_TYPE,
 } from "../../../constants.js";
 
 describe("Store mutations", () => {
@@ -95,14 +95,14 @@ describe("Store mutations", () => {
                         artifact: {},
                         project: {},
                         id: 1,
-                        minutes: 20
-                    }
+                        minutes: 20,
+                    },
                 ];
                 const updated_time = {
                     artifact: {},
                     project: {},
                     id: 1,
-                    minutes: 40
+                    minutes: 40,
                 };
                 mutations.replaceInCurrentTimes(state, [updated_time, REST_FEEDBACK_EDIT]);
                 expect(state.current_times).toEqual([updated_time]);
@@ -116,8 +116,8 @@ describe("Store mutations", () => {
                         artifact: {},
                         project: {},
                         id: 1,
-                        minutes: 20
-                    }
+                        minutes: 20,
+                    },
                 ];
                 const deleted_time_id = 1;
                 mutations.deleteInCurrentTimes(state, [deleted_time_id, REST_FEEDBACK_DELETE]);
@@ -125,8 +125,8 @@ describe("Store mutations", () => {
                     {
                         artifact: {},
                         project: {},
-                        minutes: null
-                    }
+                        minutes: null,
+                    },
                 ]);
                 expect(state.rest_feedback.message).toEqual(REST_FEEDBACK_DELETE);
                 expect(state.rest_feedback.type).toEqual(SUCCESS_TYPE);

@@ -39,7 +39,7 @@ function removeUnusedUploadedFilesFromForm() {
     for (const input of getPotentiallyUsedUploadedFiles(form, instances)) {
         if (
             typeof input.dataset.url === "undefined" ||
-            used_urls.find(used_url => used_url === input.dataset.url)
+            used_urls.find((used_url) => used_url === input.dataset.url)
         ) {
             continue;
         }

@@ -26,7 +26,7 @@ const output = webpack_configurator.configureOutput(
 );
 
 const entry_points = {
-    "tuleap-frs": "./scripts/release-notes/src/app.js"
+    "tuleap-frs": "./scripts/release-notes/src/app.js",
 };
 
 const colors = ["blue", "green", "grey", "orange", "purple", "red"];
@@ -41,13 +41,13 @@ module.exports = [
         context,
         output,
         externals: {
-            tlp: "tlp"
+            tlp: "tlp",
         },
         resolve: {
             alias: webpack_configurator.extendAliases(webpack_configurator.angular_tlp_alias, {
                 // angular-tlp
-                angular$: path.resolve(__dirname, "node_modules/angular")
-            })
+                angular$: path.resolve(__dirname, "node_modules/angular"),
+            }),
         },
         module: {
             rules: [
@@ -55,13 +55,13 @@ module.exports = [
                 webpack_configurator.rule_ng_cache_loader,
                 webpack_configurator.rule_angular_gettext_loader,
                 webpack_configurator.rule_scss_loader,
-                webpack_configurator.rule_css_assets
-            ]
+                webpack_configurator.rule_css_assets,
+            ],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
-            ...webpack_configurator.getCSSExtractionPlugins()
-        ]
-    }
+            ...webpack_configurator.getCSSExtractionPlugins(),
+        ],
+    },
 ];

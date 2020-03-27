@@ -24,7 +24,7 @@
  */
 if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = {
-        listFilter: listFilterFactory
+        listFilter: listFilterFactory,
     };
 } else {
     var tuleap = tuleap || {};
@@ -37,10 +37,10 @@ function listFilterFactory() {
     var list_element;
     var filter_element;
 
-    var filterProjects = function(value) {
+    var filterProjects = function (value) {
         var matching_elements = document.querySelectorAll(list_element);
 
-        [].forEach.call(matching_elements, function(element) {
+        [].forEach.call(matching_elements, function (element) {
             if (caseInsensitiveContains(getChildTagAWithText(element), value)) {
                 element.style.display = "inherit";
             } else {
@@ -49,7 +49,7 @@ function listFilterFactory() {
         });
     };
 
-    var getChildTagAWithText = function(parent) {
+    var getChildTagAWithText = function (parent) {
         var elements_tag_a = parent.getElementsByTagName("a");
         for (var i = 0, n = elements_tag_a.length; i < n; i++) {
             if (elements_tag_a[i].textContent) {
@@ -58,26 +58,26 @@ function listFilterFactory() {
         }
     };
 
-    var caseInsensitiveContains = function(element, value) {
+    var caseInsensitiveContains = function (element, value) {
         return element.toUpperCase().indexOf(value.toUpperCase()) >= 0;
     };
 
-    var clearFilterProjects = function() {
+    var clearFilterProjects = function () {
         filter_element.value = "";
         filterProjects("");
     };
 
-    var bindClickEventOnFilter = function(filter_element_selected) {
+    var bindClickEventOnFilter = function (filter_element_selected) {
         if (filter_element_selected) {
-            filter_element_selected.addEventListener("click", function(event) {
+            filter_element_selected.addEventListener("click", function (event) {
                 event.stopPropagation();
             });
         }
     };
 
-    var bindKeyUpEventOnFilter = function(filter_element_selected) {
+    var bindKeyUpEventOnFilter = function (filter_element_selected) {
         if (filter_element_selected) {
-            filter_element_selected.addEventListener("keyup", function(event) {
+            filter_element_selected.addEventListener("keyup", function (event) {
                 if (event.keyCode === esc_keycode) {
                     clearFilterProjects();
                 } else {
@@ -87,9 +87,9 @@ function listFilterFactory() {
         }
     };
 
-    var bindInputEventOnFilter = function(filter_element_selected) {
+    var bindInputEventOnFilter = function (filter_element_selected) {
         if (filter_element_selected) {
-            filter_element_selected.addEventListener("input", function(event) {
+            filter_element_selected.addEventListener("input", function (event) {
                 if (event.target && event.target.value === "") {
                     clearFilterProjects();
                 }
@@ -97,7 +97,7 @@ function listFilterFactory() {
         }
     };
 
-    var init = function(filter_element_selected, list_element_selector) {
+    var init = function (filter_element_selected, list_element_selector) {
         filter_element = filter_element_selected;
         list_element = list_element_selector;
 

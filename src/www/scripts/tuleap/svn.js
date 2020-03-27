@@ -18,7 +18,7 @@
  */
 
 /* global codendi:readonly */
-!(function($) {
+!(function ($) {
     function initAccessControlsVersionDisplayer() {
         var version_selector = $("#old_access_file_container select");
         var version_displayer = $("#old_access_file_container textarea");
@@ -39,7 +39,7 @@
             version_displayer.text(response.content);
         }
 
-        version_selector.change(function() {
+        version_selector.change(function () {
             if (this.value === "0") {
                 version_displayer.text("");
                 version_displayer.attr("disabled", "");
@@ -51,7 +51,7 @@
                         this.value +
                         "&group_id=" +
                         group_id,
-                    dataType: "json"
+                    dataType: "json",
                 }).success(updateVersionDisplayer);
             }
         });
@@ -78,10 +78,7 @@
             .map(updateImmutablePreviewOnTheFly);
 
         function updateImmutablePreviewOnTheFly() {
-            var immutable_tags = $("#immutable-tags-path")
-                    .val()
-                    .split("\n")
-                    .filter(isNotEmpty),
+            var immutable_tags = $("#immutable-tags-path").val().split("\n").filter(isNotEmpty),
                 whitelist_tags = $("#immutable-tags-whitelist")
                     .val()
                     .split("\n")
@@ -91,12 +88,12 @@
                 whitelist_tags_elements = retrieveElementsMatchingTags(whitelist_tags);
 
             resetTreeState(immutable_tags_elements, whitelist_tags_elements);
-            immutable_tags_elements.forEach(function(immutable_tag_element) {
+            immutable_tags_elements.forEach(function (immutable_tag_element) {
                 immutable_tag_element.children("span").addClass("label label-important");
                 immutable_tag_element.addClass("immutable");
                 immutable_tag_element.parents(".tag").addClass("parent-of-immutable");
             });
-            whitelist_tags_elements.forEach(function(whitelist_tag_element) {
+            whitelist_tags_elements.forEach(function (whitelist_tag_element) {
                 whitelist_tag_element
                     .children("span")
                     .addClass("label label-success")
@@ -109,7 +106,7 @@
         function retrieveElementsMatchingTags(tags) {
             var regex = new RegExp(
                 "^(" +
-                    tags.reduce(function(regex, path) {
+                    tags.reduce(function (regex, path) {
                         if (regex) {
                             regex += "|";
                         }
@@ -121,7 +118,7 @@
                     ")$"
             );
 
-            var tags_elements = Object.keys(direct_access_to_node).reduce(function(
+            var tags_elements = Object.keys(direct_access_to_node).reduce(function (
                 tags_elements,
                 path
             ) {
@@ -173,7 +170,7 @@
                 "whitelist",
                 "parent-of-immutable",
                 "parent-of-whitelist",
-                "active"
+                "active",
             ];
 
             if (immutable_tags_elements.length === 0 && whitelist_tags_elements.length === 0) {
@@ -208,9 +205,7 @@
         function displayTreeNode(element, root) {
             var icon_folder = '<i class="fa fa-folder-open-o"></i> ',
                 children_element = $("<div>").addClass("children"),
-                label_element = $("<span>")
-                    .attr("title", root.path)
-                    .html(basename(root.path)),
+                label_element = $("<span>").attr("title", root.path).html(basename(root.path)),
                 root_element = $("<div>")
                     .attr("data-path", root.path)
                     .addClass("tag")
@@ -222,7 +217,7 @@
 
             label_element.click(onLabelClick);
 
-            root.children.forEach(function(node) {
+            root.children.forEach(function (node) {
                 displayTreeNode(children_element, node);
             });
 
@@ -243,11 +238,7 @@
                 .addClass($(this).hasClass("label-important") ? "label-important" : "label-success")
                 .html(basename($(this).attr("title")));
 
-            $(".tag-path-example").html(
-                $(this)
-                    .attr("title")
-                    .replace(/\/$/, "")
-            );
+            $(".tag-path-example").html($(this).attr("title").replace(/\/$/, ""));
 
             if ($(this).hasClass("label-success") && $(this).parents(".immutable").length === 0) {
                 $("#immutable-tags-console").addClass("whitelist-not-in-immutable");
@@ -259,10 +250,10 @@
         function convertFlatTreeIntoTreeNode() {
             var root;
 
-            immutable_tags_tree.data("existing-tree").forEach(function(path) {
+            immutable_tags_tree.data("existing-tree").forEach(function (path) {
                 var node = {
                     path: path,
-                    children: []
+                    children: [],
                 };
 
                 if (!root) {
@@ -288,7 +279,7 @@
         }
     }
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         initAccessControlsVersionDisplayer();
         initImmutableTags();
     });

@@ -30,8 +30,8 @@ describe("loadAscendantHierarchy", () => {
             commit: jest.fn(),
             state: {
                 project_id,
-                current_folder_ascendant_hierarchy: []
-            }
+                current_folder_ascendant_hierarchy: [],
+            },
         };
 
         getParents = jest.spyOn(rest_querier, "getParents");
@@ -43,18 +43,18 @@ describe("loadAscendantHierarchy", () => {
                 id: 1,
                 title: "Project documentation",
                 owner: {
-                    id: 101
+                    id: 101,
                 },
-                last_update_date: "2018-10-03T11:16:11+02:00"
+                last_update_date: "2018-10-03T11:16:11+02:00",
             },
             {
                 id: 2,
                 title: "folder A",
                 owner: {
-                    id: 101
+                    id: 101,
                 },
-                last_update_date: "2018-08-07T16:42:49+02:00"
-            }
+                last_update_date: "2018-08-07T16:42:49+02:00",
+            },
         ];
 
         const item = {
@@ -62,9 +62,9 @@ describe("loadAscendantHierarchy", () => {
             title: "Current folder",
             owner: {
                 id: 101,
-                display_name: "user (login)"
+                display_name: "user (login)",
             },
-            last_update_date: "2018-08-21T17:01:49+02:00"
+            last_update_date: "2018-08-21T17:01:49+02:00",
         };
 
         const expected_parents = [
@@ -72,19 +72,19 @@ describe("loadAscendantHierarchy", () => {
                 id: 2,
                 title: "folder A",
                 owner: {
-                    id: 101
+                    id: 101,
                 },
-                last_update_date: "2018-08-07T16:42:49+02:00"
+                last_update_date: "2018-08-07T16:42:49+02:00",
             },
             {
                 id: 3,
                 title: "Current folder",
                 owner: {
                     id: 101,
-                    display_name: "user (login)"
+                    display_name: "user (login)",
                 },
-                last_update_date: "2018-08-21T17:01:49+02:00"
-            }
+                last_update_date: "2018-08-21T17:01:49+02:00",
+            },
         ];
 
         getParents.mockReturnValue(parents);
@@ -102,9 +102,9 @@ describe("loadAscendantHierarchy", () => {
             status: 404,
             error_json: {
                 error: {
-                    i18n_error_message: error_message
-                }
-            }
+                    i18n_error_message: error_message,
+                },
+            },
         });
 
         await loadAscendantHierarchy(context);
@@ -128,10 +128,10 @@ describe("loadAscendantHierarchy", () => {
                     json: () =>
                         Promise.resolve({
                             error: {
-                                i18n_error_message: error_message
-                            }
-                        })
-                }
+                                i18n_error_message: error_message,
+                            },
+                        }),
+                },
             })
         );
 
@@ -145,9 +145,9 @@ describe("loadAscendantHierarchy", () => {
             status: 403,
             error_json: {
                 error: {
-                    i18n_error_message: "No you cannot"
-                }
-            }
+                    i18n_error_message: "No you cannot",
+                },
+            },
         });
 
         const item = {
@@ -155,9 +155,9 @@ describe("loadAscendantHierarchy", () => {
             title: "Current folder",
             owner: {
                 id: 101,
-                display_name: "user (login)"
+                display_name: "user (login)",
             },
-            last_update_date: "2018-08-21T17:01:49+02:00"
+            last_update_date: "2018-08-21T17:01:49+02:00",
         };
 
         await loadAscendantHierarchy(context, 3, Promise.resolve(item));

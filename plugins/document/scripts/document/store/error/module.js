@@ -32,8 +32,8 @@ export default {
         has_modal_error: false,
         modal_error: null,
         has_document_lock_error: false,
-        document_lock_error: null
+        document_lock_error: null,
     },
     getters,
-    mutations
+    mutations,
 };

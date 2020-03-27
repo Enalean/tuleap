@@ -33,9 +33,9 @@ describe("State actions", () => {
             rootState: {
                 milestone_id: 42,
                 user: {
-                    user_id: 101
-                }
-            } as RootState
+                    user_id: 101,
+                },
+            } as RootState,
         } as unknown) as ActionContext<State, RootState>;
     });
 

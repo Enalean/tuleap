@@ -38,7 +38,7 @@ export default {
     name: "ErrorInactiveProjectMessage",
     computed: {
         ...mapGetters(["has_invalid_trackers"]),
-        ...mapState(["invalid_trackers", "is_user_admin"])
-    }
+        ...mapState(["invalid_trackers", "is_user_admin"]),
+    },
 };
 </script>

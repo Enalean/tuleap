@@ -17,18 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-(function($) {
-    $(document).ready(function() {
-        $(".tracker_color_selector").on("click", function() {
+(function ($) {
+    $(document).ready(function () {
+        $(".tracker_color_selector").on("click", function () {
             var old_color = $("input[name=tracker_color]").val();
-            var new_color = $(this)
-                .children(".fa-square")
-                .attr("data-color");
+            var new_color = $(this).children(".fa-square").attr("data-color");
 
             $("i.fa-check.selected").removeClass("selected");
-            $(this)
-                .children(".fa-check")
-                .addClass("selected");
+            $(this).children(".fa-check").addClass("selected");
 
             $("input[name=tracker_color]").val(new_color);
             $("span.tracker_color_preview .xref-in-title")

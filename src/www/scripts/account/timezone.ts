@@ -26,5 +26,5 @@ if (!(select instanceof HTMLSelectElement)) {
 }
 
 select2(select, {
-    placeholder: "Choose a timezone"
+    placeholder: "Choose a timezone",
 });

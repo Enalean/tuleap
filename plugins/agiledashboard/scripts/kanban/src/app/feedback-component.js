@@ -25,7 +25,7 @@ import { getError } from "./feedback-state.js";
 
 function controller() {
     Object.assign(this, {
-        getError
+        getError,
     });
 }
 
@@ -35,5 +35,5 @@ export default {
             {{ $ctrl.getError() }}
         </div>
     `,
-    controller
+    controller,
 };

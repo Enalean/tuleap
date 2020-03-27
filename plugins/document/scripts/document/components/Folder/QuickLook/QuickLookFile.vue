@@ -42,12 +42,12 @@ export default {
     name: "QuickLookFile",
     components: { QuickLookDeleteButton, DropDownQuickLook },
     props: {
-        item: Object
+        item: Object,
     },
     methods: {
         downloadFile() {
             window.location.assign(encodeURI(this.item.file_properties.download_href));
-        }
-    }
+        },
+    },
 };
 </script>

@@ -25,19 +25,19 @@ describe("User groups", () => {
         const getProjectUserGroupsSpy = jest.spyOn(rest_querier, "getProjectUserGroups");
 
         const project_members_ugroup = {
-            id: "102_3"
+            id: "102_3",
         };
         const project_special_service_ugroup = {
-            id: "102_17"
+            id: "102_17",
         };
         const project_static_ugroup = {
-            id: "130"
+            id: "130",
         };
 
         getProjectUserGroupsSpy.mockReturnValue([
             project_members_ugroup,
             project_special_service_ugroup,
-            project_static_ugroup
+            project_static_ugroup,
         ]);
 
         const filtered_ugroups = await getProjectUserGroupsWithoutServiceSpecialUGroups(102);

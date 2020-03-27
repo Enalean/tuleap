@@ -42,11 +42,11 @@ describe("side-by-side code placeholder builder", () => {
                 const first_right_handle = {};
                 const first_left_handle = { height: 40 };
                 const second_left_handle = { height: 20 };
-                getLineHandles.mockImplementation(value => {
+                getLineHandles.mockImplementation((value) => {
                     if (value === first_deleted_line) {
                         return {
                             left_handle: first_left_handle,
-                            right_handle: first_right_handle
+                            right_handle: first_right_handle,
                         };
                     }
                     if (value === second_deleted_line) {
@@ -56,15 +56,15 @@ describe("side-by-side code placeholder builder", () => {
                 });
                 const group = {
                     unidiff_offsets: [2, 3],
-                    type: DELETED_GROUP
+                    type: DELETED_GROUP,
                 };
-                getGroupOfLine.mockImplementation(value => {
+                getGroupOfLine.mockImplementation((value) => {
                     if (value === first_deleted_line) {
                         return group;
                     }
                     throw new Error(value);
                 });
-                getGroupLines.mockImplementation(value => {
+                getGroupLines.mockImplementation((value) => {
                     if (value === group) {
                         return [first_deleted_line, second_deleted_line];
                     }
@@ -83,7 +83,7 @@ describe("side-by-side code placeholder builder", () => {
                     handle: first_right_handle,
                     widget_height: 60,
                     display_above_line: true,
-                    is_comment_placeholder: false
+                    is_comment_placeholder: false,
                 });
             });
 
@@ -93,11 +93,11 @@ describe("side-by-side code placeholder builder", () => {
                 const first_right_handle = { height: 20 };
                 const first_left_handle = { height: 20 };
                 const second_left_handle = { height: 57 };
-                getLineHandles.mockImplementation(value => {
+                getLineHandles.mockImplementation((value) => {
                     if (value === first_deleted_line) {
                         return {
                             left_handle: first_left_handle,
-                            right_handle: first_right_handle
+                            right_handle: first_right_handle,
                         };
                     }
                     if (value === second_deleted_line) {
@@ -107,10 +107,10 @@ describe("side-by-side code placeholder builder", () => {
                 });
                 const group = {
                     unidiff_offsets: [1, 2],
-                    type: DELETED_GROUP
+                    type: DELETED_GROUP,
                 };
                 getGroupOfLine.mockReturnValue(group);
-                getGroupLines.mockImplementation(value => {
+                getGroupLines.mockImplementation((value) => {
                     if (value === group) {
                         return [first_deleted_line, second_deleted_line];
                     }
@@ -128,7 +128,7 @@ describe("side-by-side code placeholder builder", () => {
                     handle: first_right_handle,
                     widget_height: 57,
                     display_above_line: true,
-                    is_comment_placeholder: false
+                    is_comment_placeholder: false,
                 });
             });
         });
@@ -140,11 +140,11 @@ describe("side-by-side code placeholder builder", () => {
                 const first_left_handle = {};
                 const first_right_handle = { height: 20 };
                 const second_right_handle = { height: 40 };
-                getLineHandles.mockImplementation(value => {
+                getLineHandles.mockImplementation((value) => {
                     if (value === first_added_line) {
                         return {
                             left_handle: first_left_handle,
-                            right_handle: first_right_handle
+                            right_handle: first_right_handle,
                         };
                     }
                     if (value === second_added_line) {
@@ -154,15 +154,15 @@ describe("side-by-side code placeholder builder", () => {
                 });
                 const group = {
                     unidiff_offsets: [2, 3],
-                    type: ADDED_GROUP
+                    type: ADDED_GROUP,
                 };
-                getGroupOfLine.mockImplementation(value => {
+                getGroupOfLine.mockImplementation((value) => {
                     if (value === first_added_line) {
                         return group;
                     }
                     throw new Error(value);
                 });
-                getGroupLines.mockImplementation(value => {
+                getGroupLines.mockImplementation((value) => {
                     if (value === group) {
                         return [first_added_line, second_added_line];
                     }
@@ -180,7 +180,7 @@ describe("side-by-side code placeholder builder", () => {
                     handle: first_left_handle,
                     widget_height: 60,
                     display_above_line: false,
-                    is_comment_placeholder: false
+                    is_comment_placeholder: false,
                 });
             });
 
@@ -190,11 +190,11 @@ describe("side-by-side code placeholder builder", () => {
                 const first_left_handle = { height: 20 };
                 const first_right_handle = { height: 57 };
                 const second_right_handle = { height: 20 };
-                getLineHandles.mockImplementation(value => {
+                getLineHandles.mockImplementation((value) => {
                     if (value === first_added_line) {
                         return {
                             left_handle: first_left_handle,
-                            right_handle: first_right_handle
+                            right_handle: first_right_handle,
                         };
                     }
                     if (value === second_added_line) {
@@ -204,10 +204,10 @@ describe("side-by-side code placeholder builder", () => {
                 });
                 const group = {
                     unidiff_offsets: [2, 3],
-                    type: ADDED_GROUP
+                    type: ADDED_GROUP,
                 };
                 getGroupOfLine.mockReturnValue(group);
-                getGroupLines.mockImplementation(value => {
+                getGroupLines.mockImplementation((value) => {
                     if (value === group) {
                         return [first_added_line, second_added_line];
                     }
@@ -225,7 +225,7 @@ describe("side-by-side code placeholder builder", () => {
                     handle: first_left_handle,
                     widget_height: 57,
                     display_above_line: false,
-                    is_comment_placeholder: false
+                    is_comment_placeholder: false,
                 });
             });
         });
@@ -234,13 +234,13 @@ describe("side-by-side code placeholder builder", () => {
             it("Given the first line is modified (it will appear as deleted and then added), then the height of the first line will not be subtracted from the height of the widget", () => {
                 const first_deleted_line = { unidiff_offset: 1, old_offset: 1, new_offset: null };
                 const second_added_line = { unidiff_offset: 2, old_offset: null, new_offset: 1 };
-                hasNextLine.mockImplementation(value => {
+                hasNextLine.mockImplementation((value) => {
                     if (value === first_deleted_line) {
                         return true;
                     }
                     throw new Error(value);
                 });
-                getNextLine.mockImplementation(value => {
+                getNextLine.mockImplementation((value) => {
                     if (value === first_deleted_line) {
                         return second_added_line;
                     }
@@ -248,24 +248,24 @@ describe("side-by-side code placeholder builder", () => {
                 });
                 const left_handle = { height: 40 };
                 const right_handle = { height: 40 };
-                getLineHandles.mockImplementation(value => {
+                getLineHandles.mockImplementation((value) => {
                     if (value === first_deleted_line || value === second_added_line) {
                         return {
                             left_handle,
-                            right_handle
+                            right_handle,
                         };
                     }
                     throw new Error(value);
                 });
                 const deleted_group = {
                     unidiff_offsets: [1],
-                    type: DELETED_GROUP
+                    type: DELETED_GROUP,
                 };
                 const added_group = {
                     unidiff_offsets: [2],
-                    type: ADDED_GROUP
+                    type: ADDED_GROUP,
                 };
-                getGroupOfLine.mockImplementation(value => {
+                getGroupOfLine.mockImplementation((value) => {
                     if (value === first_deleted_line) {
                         return deleted_group;
                     }
@@ -274,7 +274,7 @@ describe("side-by-side code placeholder builder", () => {
                     }
                     throw new Error(value);
                 });
-                getGroupLines.mockImplementation(value => {
+                getGroupLines.mockImplementation((value) => {
                     if (value === deleted_group) {
                         return [first_deleted_line];
                     }
@@ -295,7 +295,7 @@ describe("side-by-side code placeholder builder", () => {
                     handle: right_handle,
                     widget_height: 40,
                     display_above_line: true,
-                    is_comment_placeholder: false
+                    is_comment_placeholder: false,
                 });
             });
         });

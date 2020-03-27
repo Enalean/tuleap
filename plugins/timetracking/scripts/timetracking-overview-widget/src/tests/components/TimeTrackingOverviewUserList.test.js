@@ -30,15 +30,15 @@ describe("Given a timetracking overview widget", () => {
                 users: [
                     {
                         user_name: "user_1",
-                        user_id: 100
-                    }
-                ]
-            }
+                        user_id: 100,
+                    },
+                ],
+            },
         };
         store = createStoreMock(store_options);
         const component_options = {
             localVue,
-            mocks: { $store: store }
+            mocks: { $store: store },
         };
 
         wrapper = shallowMount(TimeTrackingOverviewUserList, component_options);

@@ -33,7 +33,7 @@ import CardSkeleton from "./CardSkeleton.vue";
 import { ColumnDefinition } from "../../../../../type";
 
 @Component({
-    components: { CardSkeleton }
+    components: { CardSkeleton },
 })
 export default class ColumnsSkeleton extends Mixins(SkeletonMixin) {
     @Prop({ required: true })

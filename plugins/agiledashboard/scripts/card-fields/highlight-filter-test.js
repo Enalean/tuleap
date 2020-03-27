@@ -16,7 +16,7 @@ describe("tuleapHighlight", () => {
     beforeEach(() => {
         angular.mock.module(card_fields_module);
 
-        angular.mock.inject(function($filter) {
+        angular.mock.inject(function ($filter) {
             highlightFilter = $filter("tuleapHighlight");
         });
 

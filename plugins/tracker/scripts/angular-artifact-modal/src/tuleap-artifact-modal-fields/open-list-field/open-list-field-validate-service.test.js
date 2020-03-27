@@ -19,15 +19,15 @@
 
 import { validateOpenListFieldValue } from "./open-list-field-validate-service.js";
 
-describe("TuleapArtifactModalOpenListFieldValidateService", function() {
-    describe("validateFieldValue() -", function() {
-        it("Given a field value that was undefined, then it will return null", function() {
+describe("TuleapArtifactModalOpenListFieldValidateService", function () {
+    describe("validateFieldValue() -", function () {
+        it("Given a field value that was undefined, then it will return null", function () {
             const result = validateOpenListFieldValue(undefined);
 
             expect(result).toBe(null);
         });
 
-        it("Given an open list value model, then it will return only the 'field_id' an 'value' attributes", function() {
+        it("Given an open list value model, then it will return only the 'field_id' an 'value' attributes", function () {
             const value_model = {
                 bindings: { type: "static" },
                 field_id: 628,
@@ -35,8 +35,8 @@ describe("TuleapArtifactModalOpenListFieldValidateService", function() {
                 permissions: ["read", "update", "create"],
                 type: "tbl",
                 value: {
-                    bind_value_objects: []
-                }
+                    bind_value_objects: [],
+                },
             };
 
             const result = validateOpenListFieldValue(value_model);
@@ -44,12 +44,12 @@ describe("TuleapArtifactModalOpenListFieldValidateService", function() {
             expect(result).toEqual({
                 field_id: 628,
                 value: {
-                    bind_value_objects: []
-                }
+                    bind_value_objects: [],
+                },
             });
         });
 
-        it("Given a static open list value model, then it will return the values with only 'id' and 'label' attributes", function() {
+        it("Given a static open list value model, then it will return the values with only 'id' and 'label' attributes", function () {
             const value_model = {
                 bindings: { type: "static" },
                 value: {
@@ -58,15 +58,15 @@ describe("TuleapArtifactModalOpenListFieldValidateService", function() {
                             id: 127,
                             label: "metallotherapy",
                             color: null,
-                            other_property: "palaeographic"
+                            other_property: "palaeographic",
                         },
                         {
                             id: 126,
                             label: "upshut",
-                            color: [249, 235, 74]
-                        }
-                    ]
-                }
+                            color: [249, 235, 74],
+                        },
+                    ],
+                },
             };
 
             const result = validateOpenListFieldValue(value_model);
@@ -76,18 +76,18 @@ describe("TuleapArtifactModalOpenListFieldValidateService", function() {
                     bind_value_objects: [
                         {
                             id: 127,
-                            label: "metallotherapy"
+                            label: "metallotherapy",
                         },
                         {
                             id: 126,
-                            label: "upshut"
-                        }
-                    ]
-                }
+                            label: "upshut",
+                        },
+                    ],
+                },
             });
         });
 
-        it("Given a ugroups open list value model, then it will return the values with only 'id' and 'short_name' attributes", function() {
+        it("Given a ugroups open list value model, then it will return the values with only 'id' and 'short_name' attributes", function () {
             const value_model = {
                 bindings: { type: "ugroups" },
                 value: {
@@ -99,7 +99,7 @@ describe("TuleapArtifactModalOpenListFieldValidateService", function() {
                             short_name: "frothily",
                             uri: "user_groups/769",
                             users_uri: "user_groups/769/users",
-                            other_property: "togs"
+                            other_property: "togs",
                         },
                         {
                             id: "175_3",
@@ -107,10 +107,10 @@ describe("TuleapArtifactModalOpenListFieldValidateService", function() {
                             short_name: "project_members",
                             label: "Project members",
                             uri: "user_groups/175_3",
-                            users_uri: "user_groups/175_3/users"
-                        }
-                    ]
-                }
+                            users_uri: "user_groups/175_3/users",
+                        },
+                    ],
+                },
             };
 
             const result = validateOpenListFieldValue(value_model);
@@ -120,18 +120,18 @@ describe("TuleapArtifactModalOpenListFieldValidateService", function() {
                     bind_value_objects: [
                         {
                             id: "769",
-                            short_name: "frothily"
+                            short_name: "frothily",
                         },
                         {
                             id: "175_3",
-                            short_name: "project_members"
-                        }
-                    ]
-                }
+                            short_name: "project_members",
+                        },
+                    ],
+                },
             });
         });
 
-        it("Given a users open list value model, then it will return the values with only 'email' for anonymous users and 'id', 'username' and 'email' attributes for registered users", function() {
+        it("Given a users open list value model, then it will return the values with only 'email' for anonymous users and 'id', 'username' and 'email' attributes for registered users", function () {
             const value_model = {
                 bindings: { type: "users" },
                 value: {
@@ -148,7 +148,7 @@ describe("TuleapArtifactModalOpenListFieldValidateService", function() {
                             status: "A",
                             uri: "/users/rzeschke",
                             username: "rzeschke",
-                            other_property: "orotund"
+                            other_property: "orotund",
                         },
                         {
                             id: null,
@@ -162,10 +162,10 @@ describe("TuleapArtifactModalOpenListFieldValidateService", function() {
                             status: null,
                             uri: null,
                             username: null,
-                            other_property: "spiggoty"
-                        }
-                    ]
-                }
+                            other_property: "spiggoty",
+                        },
+                    ],
+                },
             };
 
             const result = validateOpenListFieldValue(value_model);
@@ -176,17 +176,17 @@ describe("TuleapArtifactModalOpenListFieldValidateService", function() {
                         {
                             id: 168,
                             email: "philyra@reoxygenate.net",
-                            username: "rzeschke"
+                            username: "rzeschke",
                         },
                         {
-                            email: "mexica@cadastral.com"
-                        }
-                    ]
-                }
+                            email: "mexica@cadastral.com",
+                        },
+                    ],
+                },
             });
         });
 
-        it("Given a users open list value model with an anonymous user entered through select2, then it will return the value with only the 'email' attribute", function() {
+        it("Given a users open list value model with an anonymous user entered through select2, then it will return the value with only the 'email' attribute", function () {
             const value_model = {
                 bindings: { type: "users" },
                 value: {
@@ -195,10 +195,10 @@ describe("TuleapArtifactModalOpenListFieldValidateService", function() {
                             display_name: "nubbling@thasian.edu",
                             email: "nubbling@thasian.edu",
                             id: "nubbling@thasian.edu",
-                            is_anonymous: true
-                        }
-                    ]
-                }
+                            is_anonymous: true,
+                        },
+                    ],
+                },
             };
 
             const result = validateOpenListFieldValue(value_model);
@@ -207,10 +207,10 @@ describe("TuleapArtifactModalOpenListFieldValidateService", function() {
                 value: {
                     bind_value_objects: [
                         {
-                            email: "nubbling@thasian.edu"
-                        }
-                    ]
-                }
+                            email: "nubbling@thasian.edu",
+                        },
+                    ],
+                },
             });
         });
     });

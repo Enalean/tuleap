@@ -33,7 +33,7 @@ describe("CustomMetadataListMultipleValue", () => {
             return shallowMount(CustomMetadataListMultipleValue, {
                 localVue,
                 propsData: { ...props },
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
     });
@@ -47,14 +47,14 @@ describe("CustomMetadataListMultipleValue", () => {
                     allowed_list_values: [
                         { id: 100, value: "None" },
                         { id: 101, value: "abcde" },
-                        { id: 102, value: "fghij" }
-                    ]
+                        { id: 102, value: "fghij" },
+                    ],
                 },
                 {
                     short_name: "an other list",
-                    allowed_list_values: [{ id: 100, value: "None" }]
-                }
-            ]
+                    allowed_list_values: [{ id: 100, value: "None" }],
+                },
+            ],
         };
 
         const currentlyUpdatedItemMetadata = {
@@ -63,7 +63,7 @@ describe("CustomMetadataListMultipleValue", () => {
             list_value: [101],
             is_required: false,
             type: "list",
-            is_multiple_value_allowed: true
+            is_multiple_value_allowed: true,
         };
         const wrapper = factory({ currentlyUpdatedItemMetadata });
 
@@ -90,9 +90,9 @@ describe("CustomMetadataListMultipleValue", () => {
             project_metadata_list: [
                 {
                     short_name: "list",
-                    allowed_list_values: [{ id: 101, value: "abcde" }]
-                }
-            ]
+                    allowed_list_values: [{ id: 101, value: "abcde" }],
+                },
+            ],
         };
 
         const currentlyUpdatedItemMetadata = {
@@ -101,7 +101,7 @@ describe("CustomMetadataListMultipleValue", () => {
             list_value: [101],
             is_required: true,
             type: "list",
-            is_multiple_value_allowed: true
+            is_multiple_value_allowed: true,
         };
 
         const wrapper = factory({ currentlyUpdatedItemMetadata });
@@ -119,10 +119,10 @@ describe("CustomMetadataListMultipleValue", () => {
                     allowed_list_values: [
                         { id: 100, value: "None" },
                         { id: 101, value: "abcde" },
-                        { id: 102, value: "fghij" }
-                    ]
-                }
-            ]
+                        { id: 102, value: "fghij" },
+                    ],
+                },
+            ],
         };
         const currentlyUpdatedItemMetadata = {
             short_name: "list",
@@ -130,7 +130,7 @@ describe("CustomMetadataListMultipleValue", () => {
             list_value: [101],
             is_required: true,
             type: "list",
-            is_multiple_value_allowed: true
+            is_multiple_value_allowed: true,
         };
 
         const wrapper = factory({ currentlyUpdatedItemMetadata });
@@ -150,10 +150,10 @@ describe("CustomMetadataListMultipleValue", () => {
                     allowed_list_values: [
                         { id: 100, value: "None" },
                         { id: 101, value: "abcde" },
-                        { id: 102, value: "fghij" }
-                    ]
-                }
-            ]
+                        { id: 102, value: "fghij" },
+                    ],
+                },
+            ],
         };
 
         const currentlyUpdatedItemMetadata = {
@@ -162,7 +162,7 @@ describe("CustomMetadataListMultipleValue", () => {
             value: 101,
             is_required: true,
             type: "list",
-            is_multiple_value_allowed: false
+            is_multiple_value_allowed: false,
         };
 
         const wrapper = factory({ currentlyUpdatedItemMetadata });
@@ -178,10 +178,10 @@ describe("CustomMetadataListMultipleValue", () => {
                     allowed_list_values: [
                         { id: 100, value: "None" },
                         { id: 101, value: "abcde" },
-                        { id: 102, value: "fghij" }
-                    ]
-                }
-            ]
+                        { id: 102, value: "fghij" },
+                    ],
+                },
+            ],
         };
 
         const currentlyUpdatedItemMetadata = {
@@ -190,7 +190,7 @@ describe("CustomMetadataListMultipleValue", () => {
             value: 101,
             is_required: true,
             type: "text",
-            is_multiple_value_allowed: true
+            is_multiple_value_allowed: true,
         };
 
         const wrapper = factory({ currentlyUpdatedItemMetadata });
@@ -205,10 +205,10 @@ describe("CustomMetadataListMultipleValue", () => {
                     allowed_list_values: [
                         { id: 100, value: "None" },
                         { id: 101, value: "abcde" },
-                        { id: 102, value: "fghij" }
-                    ]
-                }
-            ]
+                        { id: 102, value: "fghij" },
+                    ],
+                },
+            ],
         };
         const currentlyUpdatedItemMetadata = {
             short_name: "list",
@@ -216,7 +216,7 @@ describe("CustomMetadataListMultipleValue", () => {
             list_value: [101],
             is_required: true,
             type: "list",
-            is_multiple_value_allowed: true
+            is_multiple_value_allowed: true,
         };
 
         const event_bus_emit = jest.spyOn(EventBus, "$emit");
@@ -228,8 +228,8 @@ describe("CustomMetadataListMultipleValue", () => {
         expect(event_bus_emit).toHaveBeenCalledWith("update-multiple-metadata-list-value", {
             detail: {
                 value: wrapper.vm.multiple_list_values,
-                id: "list"
-            }
+                id: "list",
+            },
         });
     });
 });

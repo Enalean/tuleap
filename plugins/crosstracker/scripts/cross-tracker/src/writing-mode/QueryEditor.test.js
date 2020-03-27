@@ -28,7 +28,7 @@ describe("QueryEditor", () => {
     beforeEach(() => {
         Vue.use(GetTextPlugin, {
             translations: {},
-            silent: true
+            silent: true,
         });
         QueryEditorElement = Vue.extend(QueryEditor);
         writingCrossTrackerReport = new WritingCrossTrackerReport();
@@ -37,8 +37,8 @@ describe("QueryEditor", () => {
     function instantiateComponent() {
         const vm = new QueryEditorElement({
             propsData: {
-                writingCrossTrackerReport
-            }
+                writingCrossTrackerReport,
+            },
         });
         vm.$mount();
 
@@ -53,7 +53,7 @@ describe("QueryEditor", () => {
                     getBoundingClientRect: () => {},
                     getClientRects() {
                         return { length: 0 };
-                    }
+                    },
                 };
             };
 

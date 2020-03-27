@@ -30,13 +30,13 @@ function buildLinks(field) {
     // Merge the text field with the selectbox to create the list of links
     if (typeof field.unformatted_links === "string") {
         const ids = field.unformatted_links.split(",");
-        const id_objects = ids.map(link_id => {
+        const id_objects = ids.map((link_id) => {
             return { id: Number.parseInt(link_id, 10) };
         });
         all_links = all_links.concat(id_objects);
     }
     // Then, filter out all the invalid id values (null, undefined, etc)
-    const links = all_links.filter(link => Boolean(link.id));
+    const links = all_links.filter((link) => Boolean(link.id));
 
     return { field_id, links };
 }

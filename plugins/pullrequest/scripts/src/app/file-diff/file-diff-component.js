@@ -23,7 +23,7 @@ import { initComments } from "./comments-state.js";
 
 export default {
     templateUrl: "file-diff.tpl.html",
-    controller
+    controller,
 };
 
 controller.$inject = ["$state", "SharedPropertiesService", "FileDiffRestService"];
@@ -39,12 +39,12 @@ function controller($state, SharedPropertiesService, FileDiffRestService) {
         pull_request_id: SharedPropertiesService.getPullRequest().id,
         shouldShowUnifiedDiff,
         shouldShowSideBySideDiff,
-        $onInit: init
+        $onInit: init,
     });
 
     function init() {
         FileDiffRestService.getUnidiff(self.pull_request_id, self.file_path)
-            .then(diff => {
+            .then((diff) => {
                 self.diff = diff;
                 self.is_binary_file = diff.charset === "binary";
                 self.special_format = diff.special_format;

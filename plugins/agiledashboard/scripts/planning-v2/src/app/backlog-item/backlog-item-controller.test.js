@@ -14,7 +14,7 @@ function createElement(tag_name, class_name) {
     return element;
 }
 
-describe("BacklogItemController -", function() {
+describe("BacklogItemController -", function () {
     var $q,
         $rootScope,
         $scope,
@@ -29,10 +29,10 @@ describe("BacklogItemController -", function() {
         BacklogItemCollectionService,
         dragularService;
 
-    beforeEach(function() {
+    beforeEach(function () {
         angular.mock.module(planning_module);
 
-        angular.mock.inject(function(
+        angular.mock.inject(function (
             _$q_,
             _$rootScope_,
             $controller,
@@ -53,8 +53,8 @@ describe("BacklogItemController -", function() {
                 children: {
                     data: [],
                     loaded: false,
-                    collapsed: false
-                }
+                    collapsed: false,
+                },
             };
             $compile = _$compile_;
             $document = _$document_;
@@ -109,38 +109,38 @@ describe("BacklogItemController -", function() {
                 DroppedService: DroppedService,
                 CardFieldsService: CardFieldsService,
                 BacklogItemCollectionService: BacklogItemCollectionService,
-                BacklogItemSelectedService: BacklogItemSelectedService
+                BacklogItemSelectedService: BacklogItemSelectedService,
             });
         });
     });
 
-    describe("toggleChildrenDisplayed() -", function() {
+    describe("toggleChildrenDisplayed() -", function () {
         var get_backlog_item_children_request;
 
-        beforeEach(function() {
+        beforeEach(function () {
             get_backlog_item_children_request = $q.defer();
             BacklogItemService.getBacklogItemChildren.mockReturnValue(
                 get_backlog_item_children_request.promise
             );
         });
 
-        describe("Given a backlog item", function() {
-            it("with children that were not already loaded, when I show its children, then the item's children will be loaded and un-collapsed", function() {
+        describe("Given a backlog item", function () {
+            it("with children that were not already loaded, when I show its children, then the item's children will be loaded and un-collapsed", function () {
                 BacklogItemController.backlog_item = {
                     id: 352,
                     has_children: true,
                     children: {
                         collapsed: true,
                         data: [],
-                        loaded: false
-                    }
+                        loaded: false,
+                    },
                 };
 
                 BacklogItemController.toggleChildrenDisplayed();
                 expect(BacklogItemController.backlog_item.loading).toBeTruthy();
                 get_backlog_item_children_request.resolve({
                     results: [{ id: 151 }, { id: 857 }],
-                    total: 2
+                    total: 2,
                 });
                 $scope.$apply();
 
@@ -150,16 +150,16 @@ describe("BacklogItemController -", function() {
                 expect(BacklogItemController.backlog_item.children.loaded).toBeTruthy();
                 expect(BacklogItemController.backlog_item.children.data).toEqual([
                     { id: 151 },
-                    { id: 857 }
+                    { id: 857 },
                 ]);
             });
 
-            it("with no children, when I show its children, then BacklogItemService won't be called", function() {
+            it("with no children, when I show its children, then BacklogItemService won't be called", function () {
                 BacklogItemController.backlog_item = {
                     has_children: false,
                     children: {
-                        collapsed: true
-                    }
+                        collapsed: true,
+                    },
                 };
 
                 BacklogItemController.toggleChildrenDisplayed();
@@ -169,13 +169,13 @@ describe("BacklogItemController -", function() {
                 expect(BacklogItemController.backlog_item.children.collapsed).toBeTruthy();
             });
 
-            it("with children that were already loaded and collapsed, when I show its children, then BacklogItemService won't be called and the item's children will be un-collapsed", function() {
+            it("with children that were already loaded and collapsed, when I show its children, then BacklogItemService won't be called and the item's children will be un-collapsed", function () {
                 BacklogItemController.backlog_item = {
                     has_children: true,
                     children: {
                         collapsed: true,
-                        loaded: true
-                    }
+                        loaded: true,
+                    },
                 };
 
                 BacklogItemController.toggleChildrenDisplayed();
@@ -186,7 +186,7 @@ describe("BacklogItemController -", function() {
         });
     });
 
-    describe("dragularEnter() -", function() {
+    describe("dragularEnter() -", function () {
         var $dropped_item_element,
             dropped_item_ids,
             $source_element,
@@ -194,7 +194,7 @@ describe("BacklogItemController -", function() {
             source_backlog_item_id,
             target_backlog_item_id;
 
-        beforeEach(function() {
+        beforeEach(function () {
             dropped_item_ids = [18];
             source_backlog_item_id = 57;
             target_backlog_item_id = 64;
@@ -215,8 +215,8 @@ describe("BacklogItemController -", function() {
             BacklogItemController.initDragularForBacklogItemChildren();
         });
 
-        describe("Given I was dragging a child (e.g. a Task) and given a backlog item (e.g. a User Story)", function() {
-            it("and given I can drop the child on it, when I drag it over the backlog item, then the 'appending-child' css class will be added to the current $element", function() {
+        describe("Given I was dragging a child (e.g. a Task) and given a backlog item (e.g. a User Story)", function () {
+            it("and given I can drop the child on it, when I drag it over the backlog item, then the 'appending-child' css class will be added to the current $element", function () {
                 $target_list_element.data("accept", "trackerId24|trackerId80");
 
                 $element.trigger("dragularenter");
@@ -224,7 +224,7 @@ describe("BacklogItemController -", function() {
                 expect($element.addClass).toHaveBeenCalledWith("appending-child");
             });
 
-            it("and given I can't drop the child on it, when I drag it over the backlog item, then the 'appending-child' css class won't be added to the current $element", function() {
+            it("and given I can't drop the child on it, when I drag it over the backlog item, then the 'appending-child' css class won't be added to the current $element", function () {
                 $target_list_element.data("accept", "trackerId80");
 
                 $element.trigger("dragularenter");
@@ -232,7 +232,7 @@ describe("BacklogItemController -", function() {
                 expect($element.addClass).not.toHaveBeenCalled();
             });
 
-            it("when I drag the child over its current parent (target == source), then the 'appending-child' css class wont't be added to the current $element", function() {
+            it("when I drag the child over its current parent (target == source), then the 'appending-child' css class wont't be added to the current $element", function () {
                 $source_element = $element;
                 dragularService.shared.source = $source_element;
                 $target_list_element.data("accept", "");
@@ -259,8 +259,8 @@ describe("BacklogItemController -", function() {
         });
     });
 
-    describe("dragularRelease() -", function() {
-        it("Given I was dragging something, when I release the item I was dragging, then the 'appending-child' css class will be removed from the current $element", function() {
+    describe("dragularRelease() -", function () {
+        it("Given I was dragging something, when I release the item I was dragging, then the 'appending-child' css class will be removed from the current $element", function () {
             BacklogItemController.initDragularForBacklogItemChildren();
 
             jest.spyOn($element, "removeClass").mockImplementation(() => {});
@@ -301,8 +301,8 @@ describe("BacklogItemController -", function() {
                     has_children: true,
                     children: {
                         collapsed: false,
-                        data: [{ id: dropped_item_ids[0] }]
-                    }
+                        data: [{ id: dropped_item_ids[0] }],
+                    },
                 };
                 $source_element = angular.element(
                     createElement("ul", "backlog-item-children-list")
@@ -316,8 +316,8 @@ describe("BacklogItemController -", function() {
                     has_children: true,
                     children: {
                         collapsed: true,
-                        data: [{ id: 25 }]
-                    }
+                        data: [{ id: 25 }],
+                    },
                 };
                 initial_index = 0;
                 dragularService.shared.initialIndex = initial_index;
@@ -393,7 +393,7 @@ describe("BacklogItemController -", function() {
                     expect(source_backlog_item.children.collapsed).toBeTruthy();
                     expect(target_backlog_item.children.data).toEqual([
                         { id: dropped_item_ids[0] },
-                        { id: 25 }
+                        { id: 25 },
                     ]);
                     expect(target_backlog_item.has_children).toBeTruthy();
                     expect(DroppedService.moveFromChildrenToChildren).toHaveBeenCalledWith(
@@ -410,7 +410,7 @@ describe("BacklogItemController -", function() {
                     );
                 });
 
-                it("and given I can't drop into the target element, when I cancel the drop of a child (e.g. a Task) over an item (e.g. a User Story), then nothing will be changed", function() {
+                it("and given I can't drop into the target element, when I cancel the drop of a child (e.g. a Task) over an item (e.g. a User Story), then nothing will be changed", function () {
                     $target_list_element.data("accept", "trackerId44");
 
                     $scope.$emit("dragularcancel", $dropped_item_element[0], $source_element[0]);
@@ -418,7 +418,7 @@ describe("BacklogItemController -", function() {
                     expectNothingChanged();
                 });
 
-                it("when I cancel the drop of a child (e.g. a Task) at the same place (didn't move), then nothing will be changed", function() {
+                it("when I cancel the drop of a child (e.g. a Task) at the same place (didn't move), then nothing will be changed", function () {
                     dragularService.shared.extra = true;
 
                     $scope.$emit("dragularcancel", $dropped_item_element[0], $source_element[0]);
@@ -427,8 +427,8 @@ describe("BacklogItemController -", function() {
                 });
             });
 
-            describe("and given the target element was not a descendant of a backlog-item", function() {
-                it("when I cancel the drop of a child (e.g. a Task) over an element that isn't a backlog item, then nothing will be changed", function() {
+            describe("and given the target element was not a descendant of a backlog-item", function () {
+                it("when I cancel the drop of a child (e.g. a Task) over an element that isn't a backlog item, then nothing will be changed", function () {
                     $target_element = createElement("div");
                     dragularService.shared.extra = $target_element;
 
@@ -477,7 +477,7 @@ describe("BacklogItemController -", function() {
             target_index = 0;
             compared_to = {
                 direction: "before",
-                item_id: 41
+                item_id: 41,
             };
 
             BacklogItemController.initDragularForBacklogItemChildren();
@@ -485,8 +485,8 @@ describe("BacklogItemController -", function() {
             move_request = $q.defer();
         });
 
-        describe("Given an event, the dropped element, the target element, the source element, the source model, the initial index, the target model and the target index", function() {
-            it("when I reorder a child (e.g. a Task) in the same item (e.g. a User Story), then the child will be reordered using DroppedService", function() {
+        describe("Given an event, the dropped element, the target element, the source element, the source model, the initial index, the target model and the target index", function () {
+            it("when I reorder a child (e.g. a Task) in the same item (e.g. a User Story), then the child will be reordered using DroppedService", function () {
                 DroppedService.reorderBacklogItemChildren.mockReturnValue(move_request.promise);
                 $target_element = $source_element;
                 source_model = [{ id: dropped_item_ids[0] }, { id: 41 }];
@@ -528,15 +528,15 @@ describe("BacklogItemController -", function() {
                     id: source_backlog_item_id,
                     updating: false,
                     children: {
-                        data: []
-                    }
+                        data: [],
+                    },
                 };
                 BacklogItemCollectionService.items[target_backlog_item_id] = {
                     id: target_backlog_item_id,
                     updating: false,
                     children: {
-                        data: []
-                    }
+                        data: [],
+                    },
                 };
 
                 $scope.$emit(
@@ -598,8 +598,8 @@ describe("BacklogItemController -", function() {
                 $target_container_element = createElement("ul");
             });
 
-            describe("Given an element to drop and a target container element", function() {
-                it("and given that the element's type was in the container's accepted types, when I check if the element can be dropped, then it will return true", function() {
+            describe("Given an element to drop and a target container element", function () {
+                it("and given that the element's type was in the container's accepted types, when I check if the element can be dropped, then it will return true", function () {
                     angular.element($element_to_drop).data("type", "trackerId49");
                     angular
                         .element($target_container_element)
@@ -613,7 +613,7 @@ describe("BacklogItemController -", function() {
                     expect(result).toBeTruthy();
                 });
 
-                it("and given that the element's type was not in the container's accepted types, when I check if the element can be dropped, then it will return false", function() {
+                it("and given that the element's type was not in the container's accepted types, when I check if the element can be dropped, then it will return false", function () {
                     angular.element($element_to_drop).data("type", "trackerId49");
                     angular.element($target_container_element).data("accept", "trackerId38");
 
@@ -625,7 +625,7 @@ describe("BacklogItemController -", function() {
                     expect(result).toBeFalsy();
                 });
 
-                it("and given that the container had nodrop data, when I check if the element can be dropped, then it will return false", function() {
+                it("and given that the container had nodrop data, when I check if the element can be dropped, then it will return false", function () {
                     angular.element($target_container_element).data("nodrop", true);
 
                     var result = BacklogItemController.dragularOptionsForBacklogItemChildren().accepts(
@@ -680,7 +680,7 @@ describe("BacklogItemController -", function() {
                     expect(result).toBeFalsy();
                 });
 
-                it("and given that the element had nodrag data, when I check if the element can be dragged, then it will return false", function() {
+                it("and given that the element had nodrag data, when I check if the element can be dragged, then it will return false", function () {
                     angular.element($element_to_drag).data("nodrag", true);
 
                     var result = BacklogItemController.dragularOptionsForBacklogItemChildren().moves(
@@ -695,8 +695,8 @@ describe("BacklogItemController -", function() {
         });
     });
 
-    describe("reorderBacklogItemChildren() -", function() {
-        it("reorder backlog item's children", function() {
+    describe("reorderBacklogItemChildren() -", function () {
+        it("reorder backlog item's children", function () {
             var dropped_request = $q.defer(),
                 backlog_item_id = 8,
                 backlog_items = [{ id: 1 }, { id: 2 }],
@@ -704,8 +704,8 @@ describe("BacklogItemController -", function() {
 
             BacklogItemController.backlog_item = {
                 children: {
-                    data: [{ id: 3 }, backlog_items[0], backlog_items[1]]
-                }
+                    data: [{ id: 3 }, backlog_items[0], backlog_items[1]],
+                },
             };
 
             DroppedService.reorderBacklogItemChildren.mockReturnValue(dropped_request.promise);
@@ -733,21 +733,21 @@ describe("BacklogItemController -", function() {
         });
     });
 
-    describe("moveToTop() -", function() {
-        beforeEach(function() {
+    describe("moveToTop() -", function () {
+        beforeEach(function () {
             jest.spyOn(BacklogItemController, "reorderBacklogItemChildren").mockReturnValue(
                 $q.defer().promise
             );
         });
 
-        it("move one item to the top of the backlog item children list", function() {
+        it("move one item to the top of the backlog item children list", function () {
             var moved_backlog_item = { id: 69 };
 
             BacklogItemController.backlog_item = {
                 id: 1234,
                 children: {
-                    data: [{ id: 50 }, { id: 61 }, moved_backlog_item, { id: 88 }]
-                }
+                    data: [{ id: 50 }, { id: 61 }, moved_backlog_item, { id: 88 }],
+                },
             };
 
             BacklogItemController.moveToTop(moved_backlog_item);
@@ -763,7 +763,7 @@ describe("BacklogItemController -", function() {
             );
         });
 
-        it("move multiple items to the top of the backlog item children list", function() {
+        it("move multiple items to the top of the backlog item children list", function () {
             var moved_backlog_item = { id: 50 };
             var selected_backlog_items = [{ id: 50 }, { id: 69 }];
 
@@ -779,9 +779,9 @@ describe("BacklogItemController -", function() {
                         selected_backlog_items[0],
                         { id: 61 },
                         selected_backlog_items[1],
-                        { id: 88 }
-                    ]
-                }
+                        { id: 88 },
+                    ],
+                },
             };
 
             BacklogItemController.moveToTop(moved_backlog_item);
@@ -798,9 +798,9 @@ describe("BacklogItemController -", function() {
         });
     });
 
-    describe("moveToBottom() -", function() {
+    describe("moveToBottom() -", function () {
         var children_promise_request;
-        beforeEach(function() {
+        beforeEach(function () {
             children_promise_request = $q.defer();
             BacklogItemController.children_promise = children_promise_request.promise;
 
@@ -809,14 +809,14 @@ describe("BacklogItemController -", function() {
             );
         });
 
-        it("move one item to the bottom of the fully loaded backlog item children list", function() {
+        it("move one item to the bottom of the fully loaded backlog item children list", function () {
             var moved_backlog_item = { id: 69 };
 
             BacklogItemController.backlog_item = {
                 id: 1234,
                 children: {
-                    data: [{ id: 50 }, { id: 61 }, moved_backlog_item, { id: 88 }]
-                }
+                    data: [{ id: 50 }, { id: 61 }, moved_backlog_item, { id: 88 }],
+                },
             };
 
             BacklogItemController.moveToBottom(moved_backlog_item);
@@ -834,7 +834,7 @@ describe("BacklogItemController -", function() {
             );
         });
 
-        it("move multiple items to the bottom of the not fully loaded backlog item children list", function() {
+        it("move multiple items to the bottom of the not fully loaded backlog item children list", function () {
             var moved_backlog_item = { id: 50 };
             var selected_backlog_items = [{ id: 50 }, { id: 69 }];
 
@@ -846,8 +846,8 @@ describe("BacklogItemController -", function() {
             BacklogItemController.backlog_item = {
                 id: 1234,
                 children: {
-                    data: [{ id: 50 }, { id: 61 }, moved_backlog_item, { id: 88 }]
-                }
+                    data: [{ id: 50 }, { id: 61 }, moved_backlog_item, { id: 88 }],
+                },
             };
 
             BacklogItemController.moveToBottom(moved_backlog_item);

@@ -115,10 +115,10 @@ import { TYPE_EMBEDDED } from "../../../constants.js";
 export default {
     components: {
         IconQuicklookFolder,
-        IconQuicklookDropIntoFolder
+        IconQuicklookDropIntoFolder,
     },
     props: {
-        iconClass: String
+        iconClass: String,
     },
     computed: {
         ...mapState(["currently_previewed_item", "is_loading_currently_previewed_item"]),
@@ -141,7 +141,7 @@ export default {
         },
         is_an_embedded_file() {
             return this.currently_previewed_item.type === TYPE_EMBEDDED;
-        }
-    }
+        },
+    },
 };
 </script>

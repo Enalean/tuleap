@@ -21,13 +21,13 @@ import * as tlp from "tlp";
 
 export function initDeleteModal() {
     const modal_gerrit_delete_buttons = document.querySelectorAll(".gerrit-action-delete-button");
-    [].forEach.call(modal_gerrit_delete_buttons, function(button) {
+    [].forEach.call(modal_gerrit_delete_buttons, function (button) {
         const modal_element = document.getElementById(button.dataset.modalId);
 
         if (modal_element) {
             const modal = tlp.modal(modal_element);
 
-            button.addEventListener("click", function() {
+            button.addEventListener("click", function () {
                 modal.toggle();
             });
         }

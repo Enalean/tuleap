@@ -5,7 +5,7 @@ EditItemService.$inject = [
     "NewTuleapArtifactModalService",
     "MilestoneService",
     "SharedPropertiesService",
-    "BacklogService"
+    "BacklogService",
 ];
 
 function EditItemService(
@@ -23,7 +23,7 @@ function EditItemService(
         var when_left_mouse_click = 1;
 
         function callback(item_id) {
-            return BacklogItemCollectionService.refreshBacklogItem(item_id).then(function() {
+            return BacklogItemCollectionService.refreshBacklogItem(item_id).then(function () {
                 if (milestone) {
                     MilestoneService.updateInitialEffort(milestone);
                 }

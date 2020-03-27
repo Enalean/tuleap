@@ -37,19 +37,19 @@ describe("PostActionsSection", () => {
             state: {
                 transitionModal: {
                     is_loading_modal: false,
-                    is_modal_save_running: false
-                }
+                    is_modal_save_running: false,
+                },
             },
             getters: {
-                "transitionModal/post_actions": createList("post_action", 2, "presented")
-            }
+                "transitionModal/post_actions": createList("post_action", 2, "presented"),
+            },
         };
         store = createStoreMock(store_options);
         wrapper = shallowMount(PostActionsSection, {
             mocks: {
-                $store: store
+                $store: store,
             },
-            localVue
+            localVue,
         });
     });
 
@@ -117,16 +117,16 @@ describe("PostActionsSection", () => {
             store.getters["transitionModal/post_actions"] = [
                 {
                     type: "run_job",
-                    unique_id: "new_1"
+                    unique_id: "new_1",
                 },
                 {
                     type: "set_field_value",
-                    unique_id: "new_2"
+                    unique_id: "new_2",
                 },
                 {
                     type: "hidden_fieldsets",
-                    unique_id: "new_4"
-                }
+                    unique_id: "new_4",
+                },
             ];
             expect(wrapper.contains(RunJobAction)).toBe(true);
             expect(wrapper.contains(SetValueAction)).toBe(true);
@@ -138,24 +138,24 @@ describe("PostActionsSection", () => {
             store.getters["transitionModal/post_actions"] = [
                 {
                     type: "run_job",
-                    unique_id: "new_1"
+                    unique_id: "new_1",
                 },
                 {
                     type: "set_field_value",
-                    unique_id: "new_2"
+                    unique_id: "new_2",
                 },
                 {
                     type: "hidden_fieldsets",
-                    unique_id: "new_4"
+                    unique_id: "new_4",
                 },
                 {
                     type: "frozen_fields",
-                    unique_id: "new_6"
+                    unique_id: "new_6",
                 },
                 {
                     type: "add_to_top_backlog",
-                    unique_id: "new_10"
-                }
+                    unique_id: "new_10",
+                },
             ];
             expect(wrapper.contains(RunJobAction)).toBe(true);
             expect(wrapper.contains(SetValueAction)).toBe(true);

@@ -22,7 +22,7 @@
     <div
         class="tlp-form-element"
         v-bind:class="{
-            'tlp-form-element-error': !is_shortname_valid || is_shortname_already_used
+            'tlp-form-element-error': !is_shortname_valid || is_shortname_already_used,
         }"
         v-else
     >
@@ -79,8 +79,8 @@ import { TRACKER_SHORTNAME_FORMAT } from "../../../../constants";
 
 @Component({
     components: {
-        FieldShortnameSlugified
-    }
+        FieldShortnameSlugified,
+    },
 })
 export default class FieldShortname extends Vue {
     @State

@@ -32,5 +32,5 @@ export default angular.module("tuleap-artifact-modal-fields", [
     permission_field,
     date_field,
     open_list_field,
-    link_field
+    link_field,
 ]).name;

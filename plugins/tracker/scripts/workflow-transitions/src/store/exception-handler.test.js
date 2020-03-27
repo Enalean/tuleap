@@ -27,10 +27,10 @@ describe("Store fail actions:", () => {
             beforeEach(async () => {
                 const exception = {
                     response: {
-                        json: function() {
+                        json: function () {
                             return Promise.resolve({});
-                        }
-                    }
+                        },
+                    },
                 };
 
                 result = await getErrorMessage(exception);
@@ -45,12 +45,12 @@ describe("Store fail actions:", () => {
             beforeEach(async () => {
                 const exception = {
                     response: {
-                        json: function() {
+                        json: function () {
                             return Promise.resolve({
-                                error: { message: "non internationalized" }
+                                error: { message: "non internationalized" },
                             });
-                        }
-                    }
+                        },
+                    },
                 };
 
                 result = await getErrorMessage(exception);
@@ -66,14 +66,14 @@ describe("Store fail actions:", () => {
             beforeEach(async () => {
                 const exception = {
                     response: {
-                        json: function() {
+                        json: function () {
                             return Promise.resolve({
                                 error: {
-                                    i18n_error_message: "internationalized message"
-                                }
+                                    i18n_error_message: "internationalized message",
+                                },
                             });
-                        }
-                    }
+                        },
+                    },
                 };
 
                 result = await getErrorMessage(exception);

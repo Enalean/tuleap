@@ -49,7 +49,7 @@ describe("xml-data-extractor", () => {
             [
                 `<tracker instantiate_for_new_projects="1">
                     <name>Bugs</name>
-                </tracker>`
+                </tracker>`,
             ],
             "tracker.xml",
             { type: "text/xml" }
@@ -68,7 +68,7 @@ describe("xml-data-extractor", () => {
                 `<tracker instantiate_for_new_projects="1">
                     <name></name>
                     <item_name>bugs_tracker</item_name>
-                </tracker>`
+                </tracker>`,
             ],
             "tracker.xml",
             { type: "text/xml" }
@@ -87,7 +87,7 @@ describe("xml-data-extractor", () => {
                 `<tracker instantiate_for_new_projects="1">
                     <name>Bugs</name>
                     <item_name></item_name>
-                </tracker>`
+                </tracker>`,
             ],
             "tracker.xml",
             { type: "text/xml" }
@@ -106,7 +106,7 @@ describe("xml-data-extractor", () => {
                 `<tracker instantiate_for_new_projects="1">
                     <name>Bugs</name>
                     <item_name>bugs_tracker</item_name>
-                </tracker>`
+                </tracker>`,
             ],
             "tracker.xml",
             { type: "text/xml" }
@@ -126,7 +126,7 @@ describe("xml-data-extractor", () => {
                     <name>Bugs</name>
                     <item_name>bugs_tracker</item_name>
                     <color></color>
-                </tracker>`
+                </tracker>`,
             ],
             "tracker.xml",
             { type: "text/xml" }
@@ -144,7 +144,7 @@ describe("xml-data-extractor", () => {
                     <name>Bugs</name>
                     <item_name>bugs_tracker</item_name>
                     <color>peggy-pink</color>
-                </tracker>`
+                </tracker>`,
             ],
             "tracker.xml",
             { type: "text/xml" }
@@ -155,7 +155,7 @@ describe("xml-data-extractor", () => {
         expect(result).toEqual({
             name: "Bugs",
             shortname: "bugs_tracker",
-            color: "peggy-pink"
+            color: "peggy-pink",
         });
     });
 });

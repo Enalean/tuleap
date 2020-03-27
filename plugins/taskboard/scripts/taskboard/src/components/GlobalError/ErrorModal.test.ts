@@ -28,7 +28,7 @@ import { Modal } from "tlp";
 jest.mock("tlp", () => {
     return {
         __esModule: true,
-        modal: jest.fn()
+        modal: jest.fn(),
     };
 });
 
@@ -44,9 +44,9 @@ describe("ErrorModal", () => {
             localVue: local_vue,
             mocks: {
                 $store: createStoreMock({
-                    state: { error: { modal_error_message: error_message } }
-                })
-            }
+                    state: { error: { modal_error_message: error_message } },
+                }),
+            },
         });
     }
 
@@ -61,7 +61,7 @@ describe("ErrorModal", () => {
         const modal_show = jest.fn();
         jest.spyOn(tlp, "modal").mockImplementation(() => {
             return ({
-                show: modal_show
+                show: modal_show,
             } as unknown) as Modal;
         });
         createWrapper("Full error message with details");

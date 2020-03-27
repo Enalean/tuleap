@@ -21,12 +21,12 @@ import "css.escape"; // Polyfill for css.escape
 import {
     increaseCurrentlyUploadingFilesNumber,
     decreaseCurrentlyUploadingFilesNumber,
-    isThereAFileCurrentlyUploading
+    isThereAFileCurrentlyUploading,
 } from "./forms-being-uploaded-state.js";
 
 export function findAllHiddenInputByNames(form, field_names) {
     const selector = field_names
-        .map(field_name => "input[type=hidden][name=" + CSS.escape(field_name) + "]")
+        .map((field_name) => "input[type=hidden][name=" + CSS.escape(field_name) + "]")
         .join(",");
 
     return form.querySelectorAll(selector);

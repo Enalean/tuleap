@@ -19,7 +19,7 @@
 
 import {
     mockFetchError,
-    mockFetchSuccess
+    mockFetchSuccess,
 } from "../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper.js";
 import * as RestService from "./rest-service.js";
 import * as rest_error_state from "./rest-error-state.js";
@@ -32,7 +32,7 @@ describe("rest-service", () => {
     it("getTracker() - Given a tracker id, when I get the tracker, then a promise will be resolved with the tracker", async () => {
         const return_json = {
             id: 84,
-            label: "Functionize recklessly"
+            label: "Functionize recklessly",
         };
         const tlpGetSpy = jest.spyOn(tlp, "get");
         mockFetchSuccess(tlpGetSpy, { return_json });
@@ -41,7 +41,7 @@ describe("rest-service", () => {
 
         expect(tracker).toEqual({
             id: 84,
-            label: "Functionize recklessly"
+            label: "Functionize recklessly",
         });
         expect(tlpGetSpy).toHaveBeenCalledWith("/api/v1/trackers/84");
     });
@@ -53,14 +53,14 @@ describe("rest-service", () => {
                 {
                     field_id: 74,
                     label: "Kartvel",
-                    value: "ruralize"
+                    value: "ruralize",
                 },
                 {
                     field_id: 31,
                     label: "xenium",
-                    bind_value_ids: [96, 81]
-                }
-            ]
+                    bind_value_ids: [96, 81],
+                },
+            ],
         };
         const tlpGetSpy = jest.spyOn(tlp, "get");
         mockFetchSuccess(tlpGetSpy, { return_json });
@@ -78,15 +78,15 @@ describe("rest-service", () => {
                 {
                     field_id: 866,
                     label: "unpredisposed",
-                    value: "ectogenous"
+                    value: "ectogenous",
                 },
                 {
                     field_id: 468,
                     label: "coracler",
-                    value: "caesaropapism"
-                }
+                    value: "caesaropapism",
+                },
             ],
-            title: "coincoin"
+            title: "coincoin",
         };
         mockFetchSuccess(jest.spyOn(tlp, "get"), { return_json });
 
@@ -102,7 +102,7 @@ describe("rest-service", () => {
             const offset = 0;
             const artifacts = [
                 { id: 21, title: "equationally" },
-                { id: 82, title: "brachiator" }
+                { id: 82, title: "brachiator" },
             ];
             const tlpRecursiveGetSpy = jest.spyOn(tlp, "recursiveGet").mockReturnValue(artifacts);
 
@@ -114,8 +114,8 @@ describe("rest-service", () => {
                 {
                     params: {
                         limit,
-                        offset
-                    }
+                        offset,
+                    },
                 }
             );
         });
@@ -126,8 +126,8 @@ describe("rest-service", () => {
             const offset = 0;
             const error_json = {
                 error: {
-                    message: "No you cannot"
-                }
+                    message: "No you cannot",
+                },
             };
 
             const setErrorSpy = jest
@@ -148,19 +148,19 @@ describe("rest-service", () => {
         it("Given a query, when I search for a username containing the query, then a promise will be resolved with an array of user representations", async () => {
             const return_json = [
                 { id: 629, label: "Blue" },
-                { id: 593, label: "Blurred" }
+                { id: 593, label: "Blurred" },
             ];
             const tlpGetSpy = jest.spyOn(tlp, "get");
             mockFetchSuccess(tlpGetSpy, { return_json });
 
             const {
-                results: [first_user, second_user]
+                results: [first_user, second_user],
             } = await RestService.searchUsers("Blu");
 
             expect(first_user).toEqual({ id: 629, label: "Blue" });
             expect(second_user).toEqual({ id: 593, label: "Blurred" });
             expect(tlpGetSpy).toHaveBeenCalledWith("/api/v1/users", {
-                params: { query: "Blu" }
+                params: { query: "Blu" },
             });
         });
     });
@@ -171,12 +171,12 @@ describe("rest-service", () => {
                 id: 286,
                 tracker: {
                     id: 3,
-                    label: "Enkidu slanderfully"
-                }
+                    label: "Enkidu slanderfully",
+                },
             };
             const field_values = [
                 { field_id: 38, value: "fingerroot" },
-                { field_id: 140, bind_value_ids: [253] }
+                { field_id: 140, bind_value_ids: [253] },
             ];
             const tlpPostSpy = jest.spyOn(tlp, "post");
             mockFetchSuccess(tlpPostSpy, { return_json });
@@ -187,14 +187,14 @@ describe("rest-service", () => {
 
             expect(tlpPostSpy).toHaveBeenCalledWith("/api/v1/artifacts", {
                 headers: {
-                    "content-type": "application/json"
+                    "content-type": "application/json",
                 },
                 body: JSON.stringify({
                     tracker: {
-                        id: 3
+                        id: 3,
                     },
-                    values: field_values
-                })
+                    values: field_values,
+                }),
             });
         });
     });
@@ -206,16 +206,16 @@ describe("rest-service", () => {
                     id: 629,
                     last_comment: {
                         body: "orometer",
-                        format: "text"
-                    }
+                        format: "text",
+                    },
                 },
                 {
                     id: 593,
                     last_comment: {
                         body: "mystagogic",
-                        format: "html"
-                    }
-                }
+                        format: "html",
+                    },
+                },
             ];
             const [first_response, second_response] = return_json;
 
@@ -223,9 +223,9 @@ describe("rest-service", () => {
             mockFetchSuccess(tlpGetSpy, {
                 headers: {
                     /** 'X-PAGINATION-SIZE' */
-                    get: () => 74
+                    get: () => 74,
                 },
-                return_json
+                return_json,
             });
 
             const followup_comments = await RestService.getFollowupsComments(148, 66, 23, "desc");
@@ -238,8 +238,8 @@ describe("rest-service", () => {
                     fields: "comments",
                     limit: 66,
                     offset: 23,
-                    order: "desc"
-                }
+                    order: "desc",
+                },
             });
         });
     });
@@ -264,14 +264,14 @@ describe("rest-service", () => {
             expect(file_upload).toEqual(4);
             expect(tlpPostSpy).toHaveBeenCalledWith("/api/v1/artifact_temporary_files", {
                 headers: {
-                    "content-type": "application/json"
+                    "content-type": "application/json",
                 },
                 body: JSON.stringify({
                     name: "bitterheartedness",
                     mimetype: "image/png",
                     content: "FwnCeTwZcgBOiH",
-                    description: "bullboat metrosteresis classicality"
-                })
+                    description: "bullboat metrosteresis classicality",
+                }),
             });
         });
     });
@@ -285,12 +285,12 @@ describe("rest-service", () => {
 
             expect(tlpPutSpy).toHaveBeenCalledWith("/api/v1/artifact_temporary_files/9", {
                 headers: {
-                    "content-type": "application/json"
+                    "content-type": "application/json",
                 },
                 body: JSON.stringify({
                     content: "rmNcNnltd",
-                    offset: 4
-                })
+                    offset: 4,
+                }),
             });
         });
     });
@@ -299,7 +299,7 @@ describe("rest-service", () => {
         it("Given a key, when I search for a preference, then a promise will be resolved with an object of user preference representation", async () => {
             const return_json = {
                 key: "tracker_comment_invertorder_93",
-                value: "1"
+                value: "1",
             };
             const tlpGetSpy = jest.spyOn(tlp, "get");
             mockFetchSuccess(tlpGetSpy, { return_json });
@@ -313,8 +313,8 @@ describe("rest-service", () => {
             expect(tlpGetSpy).toHaveBeenCalledWith("/api/v1/users/102/preferences", {
                 cache: "force-cache",
                 params: {
-                    key: "tracker_comment_invertorder_93"
-                }
+                    key: "tracker_comment_invertorder_93",
+                },
             });
         });
     });
@@ -323,18 +323,18 @@ describe("rest-service", () => {
         it("Given an artifact id and an array of fields containing their id and selected value, when I edit an artifact, then the field values will be sent using the edit REST route and a promise will be resolved with the edited artifact's id", async () => {
             const followup_comment = {
                 value: "",
-                format: "text"
+                format: "text",
             };
             const field_values = [
                 { field_id: 47, value: "unpensionableness" },
-                { field_id: 71, bind_value_ids: [726, 332] }
+                { field_id: 71, bind_value_ids: [726, 332] },
             ];
             const tlpPutSpy = jest.spyOn(tlp, "put");
             mockFetchSuccess(tlpPutSpy, {
                 return_json: {
                     values: field_values,
-                    comment: followup_comment
-                }
+                    comment: followup_comment,
+                },
             });
 
             const artifact_edition = await RestService.editArtifact(
@@ -344,16 +344,16 @@ describe("rest-service", () => {
             );
 
             expect(artifact_edition).toEqual({
-                id: 8354
+                id: 8354,
             });
             expect(tlpPutSpy).toHaveBeenCalledWith("/api/v1/artifacts/8354", {
                 headers: {
-                    "content-type": "application/json"
+                    "content-type": "application/json",
                 },
                 body: JSON.stringify({
                     values: field_values,
-                    comment: followup_comment
-                })
+                    comment: followup_comment,
+                }),
             });
         });
     });
@@ -363,14 +363,14 @@ describe("rest-service", () => {
             const headers = {
                 "X-QUOTA": "2229535",
                 "X-DISK-USAGE": "596878",
-                "X-UPLOAD-MAX-FILE-CHUNKSIZE": "732798"
+                "X-UPLOAD-MAX-FILE-CHUNKSIZE": "732798",
             };
 
             const tlpOptionsSpy = jest.spyOn(tlp, "options");
             mockFetchSuccess(tlpOptionsSpy, {
                 headers: {
-                    get: header => headers[header]
-                }
+                    get: (header) => headers[header],
+                },
             });
 
             const rules = await RestService.getFileUploadRules();
@@ -379,7 +379,7 @@ describe("rest-service", () => {
             expect(rules).toEqual({
                 disk_quota: 2229535,
                 disk_usage: 596878,
-                max_chunk_size: 732798
+                max_chunk_size: 732798,
             });
             expect(tlpOptionsSpy).toHaveBeenCalledWith("/api/v1/artifact_temporary_files");
         });
@@ -391,7 +391,7 @@ describe("rest-service", () => {
             const collection = [{ id: 46 }];
             const tlpGetSpy = jest.spyOn(tlp, "get");
             mockFetchSuccess(tlpGetSpy, {
-                return_json: { collection }
+                return_json: { collection },
             });
 
             const result = await RestService.getFirstReverseIsChildLink(artifact_id);
@@ -402,8 +402,8 @@ describe("rest-service", () => {
                     direction: "reverse",
                     nature: "_is_child",
                     limit: 1,
-                    offset: 0
-                }
+                    offset: 0,
+                },
             });
         });
 
@@ -411,7 +411,7 @@ describe("rest-service", () => {
             const artifact_id = 78;
             const collection = [];
             mockFetchSuccess(jest.spyOn(tlp, "get"), {
-                return_json: { collection }
+                return_json: { collection },
             });
 
             const result = await RestService.getFirstReverseIsChildLink(artifact_id);
@@ -423,8 +423,8 @@ describe("rest-service", () => {
             const artifact_id = 9;
             const error_json = {
                 error: {
-                    message: "Invalid artifact id"
-                }
+                    message: "Invalid artifact id",
+                },
             };
             const setErrorSpy = jest
                 .spyOn(rest_error_state, "setError")

@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
         {{/ project_flags }}`,
         {
-            project_flags: JSON.parse(project_flags_element.dataset.projectFlags)
+            project_flags: JSON.parse(project_flags_element.dataset.projectFlags),
         }
     );
 
@@ -64,6 +64,6 @@ document.addEventListener("DOMContentLoaded", () => {
         html: true,
         trigger: "hover",
         template,
-        content
+        content,
     });
 });

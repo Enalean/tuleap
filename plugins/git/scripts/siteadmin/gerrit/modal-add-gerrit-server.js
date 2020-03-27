@@ -23,7 +23,9 @@ export function initAddModal() {
     const modal_gerrit_add_server = document.getElementById("modal-add-gerrit-server");
     const modal_gerrit_add_server_content = tlp.modal(modal_gerrit_add_server, {});
 
-    document.getElementById("button-modal-add-gerrit-server").addEventListener("click", function() {
-        modal_gerrit_add_server_content.toggle();
-    });
+    document
+        .getElementById("button-modal-add-gerrit-server")
+        .addEventListener("click", function () {
+            modal_gerrit_add_server_content.toggle();
+        });
 }

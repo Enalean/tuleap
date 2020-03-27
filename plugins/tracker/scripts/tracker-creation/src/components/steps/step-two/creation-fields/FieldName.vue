@@ -22,7 +22,7 @@
         class="tlp-form-element"
         v-bind:class="{
             'tracker-name-above-slugified-shortname': can_display_slugify_mode,
-            'tlp-form-element-error': is_name_already_used
+            'tlp-form-element-error': is_name_already_used,
         }"
     >
         <label class="tlp-label" for="tracker-name">

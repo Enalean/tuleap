@@ -114,7 +114,7 @@ export default {
         WikiProperties,
         TypeSelector,
         CreationModalPermissionsSection,
-        ModalFeedback
+        ModalFeedback,
     },
     data() {
         return {
@@ -122,7 +122,7 @@ export default {
             is_displayed: false,
             is_loading: false,
             modal: null,
-            parent: {}
+            parent: {},
         };
     },
     computed: {
@@ -131,7 +131,7 @@ export default {
             "is_obsolescence_date_metadata_used",
             "is_item_status_metadata_used",
             "project_id",
-            "project_ugroups"
+            "project_ugroups",
         ]),
         ...mapState("error", ["has_modal_error"]),
         ...mapState("metadata", ["has_loaded_metadata"]),
@@ -143,7 +143,7 @@ export default {
         },
         aria_labelled_by() {
             return "document-new-item-modal";
-        }
+        },
     },
     mounted() {
         this.modal = createModal(this.$el);
@@ -163,24 +163,24 @@ export default {
                 description: "",
                 type: TYPE_FILE,
                 link_properties: {
-                    link_url: ""
+                    link_url: "",
                 },
                 wiki_properties: {
-                    page_name: ""
+                    page_name: "",
                 },
                 file_properties: {
-                    file: ""
+                    file: "",
                 },
                 embedded_properties: {
-                    content: ""
+                    content: "",
                 },
                 obsolescence_date: "",
                 metadata: null,
                 permissions_for_groups: {
                     can_read: [],
                     can_write: [],
-                    can_manage: []
-                }
+                    can_manage: [],
+                },
             };
         },
         async show(event) {
@@ -217,7 +217,7 @@ export default {
             await this.$store.dispatch("createNewItem", [
                 this.item,
                 this.parent,
-                this.current_folder
+                this.current_folder,
             ]);
 
             this.is_loading = false;
@@ -238,10 +238,10 @@ export default {
                 return;
             }
             const item_metadata = this.item.metadata.find(
-                metadata => metadata.short_name === event.detail.id
+                (metadata) => metadata.short_name === event.detail.id
             );
             item_metadata.list_value = event.detail.value;
-        }
-    }
+        },
+    },
 };
 </script>

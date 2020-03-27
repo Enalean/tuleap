@@ -23,7 +23,7 @@
 
 /* global $F:readonly $:readonly Ajax:readonly codendi:readonly */
 
-document.observe("dom:loaded", function() {
+document.observe("dom:loaded", function () {
     function disableFeedback(check_consistency_feedback) {
         check_consistency_feedback.hide();
     }
@@ -43,8 +43,8 @@ document.observe("dom:loaded", function() {
     }
 
     function observeCreateModeChanges(modes, check_consistency_feedback) {
-        modes.each(function(mode) {
-            mode.observe("click", function() {
+        modes.each(function (mode) {
+            mode.observe("click", function () {
                 if (mode.value == "gallery" && mode.checked) {
                     disableFeedback(check_consistency_feedback);
                 } else {
@@ -55,7 +55,7 @@ document.observe("dom:loaded", function() {
     }
 
     function observeProjectSelectorChanges(select_project) {
-        select_project.observe("change", function() {
+        select_project.observe("change", function () {
             disableFeedback(check_consistency_feedback);
         });
     }
@@ -68,7 +68,7 @@ document.observe("dom:loaded", function() {
         check_consistency_feedback,
         initial_btn_label
     ) {
-        select_template.observe("change", function() {
+        select_template.observe("change", function () {
             var template_group_id = $F(select_project),
                 template_tracker_id = $F(select_template);
 
@@ -78,9 +78,9 @@ document.observe("dom:loaded", function() {
                     group_id: group_id,
                     func: "check_ugroup_consistency",
                     template_group_id: template_group_id,
-                    template_tracker_id: template_tracker_id
+                    template_tracker_id: template_tracker_id,
                 },
-                onComplete: function(transport) {
+                onComplete: function (transport) {
                     var label = initial_btn_label;
 
                     if (transport.responseText.length) {
@@ -88,7 +88,7 @@ document.observe("dom:loaded", function() {
                     }
                     enableFeedback(check_consistency_feedback);
                     enableCreateBtn(create_new_tracker_btn, label);
-                }
+                },
             });
         });
     }

@@ -27,15 +27,15 @@ function createWrapper(props, stubs) {
     return shallowMount(BaseProjectAdminEditModal, {
         stubs,
         localVue,
-        propsData: props
+        propsData: props,
     });
 }
 
 function createFakeButton(service) {
     return {
         dataset: {
-            serviceJson: JSON.stringify(service)
-        }
+            serviceJson: JSON.stringify(service),
+        },
     };
 }
 
@@ -45,8 +45,8 @@ describe(`BaseProjectAdminEdit`, () => {
         modal = {
             template: `<div><slot name="content"/></div>`,
             methods: {
-                show: jest.fn()
-            }
+                show: jest.fn(),
+            },
         };
 
         wrapper = createWrapper(
@@ -55,10 +55,10 @@ describe(`BaseProjectAdminEdit`, () => {
                 minimal_rank: 10,
                 csrf_token: "csrf",
                 csrf_token_name: "challenge",
-                allowed_icons: {}
+                allowed_icons: {},
             },
             {
-                "edit-modal": modal
+                "edit-modal": modal,
             }
         );
     });

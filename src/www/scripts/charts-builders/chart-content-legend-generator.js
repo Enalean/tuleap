@@ -30,7 +30,7 @@ export function addContentCaption({
     legend_y_position,
     chart_content_legend,
     chart_width,
-    chart_margin_right
+    chart_margin_right,
 }) {
     const caption = getCaptionGroupFromLayout(layout);
     const right_caption = caption.append("g").attr("class", "legend-right");
@@ -47,7 +47,7 @@ export function addContentCaption({
 
     const widths = getElementsWidth(right_caption.selectAll(".chart-curve-label"));
 
-    right_caption.selectAll(".legend-item").each(function(label, index) {
+    right_caption.selectAll(".legend-item").each(function (label, index) {
         const previous_label_width = getElementSpacing(widths, index, 30, 20);
 
         select(this).attr("transform", `translate(${previous_label_width}, 0)`);

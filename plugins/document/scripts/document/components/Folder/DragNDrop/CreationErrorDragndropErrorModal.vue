@@ -51,19 +51,19 @@ import ErrorModal from "./ErrorModal.vue";
 export default {
     components: { ErrorModal },
     props: {
-        reasons: Array
+        reasons: Array,
     },
     computed: {
         sorted_reasons() {
             return [...this.reasons].sort((a, b) =>
                 a.filename.localeCompare(b.filename, undefined, { numeric: true })
             );
-        }
+        },
     },
     methods: {
         bubbleErrorModalHidden() {
             this.$emit("error-modal-hidden");
-        }
-    }
+        },
+    },
 };
 </script>

@@ -31,7 +31,7 @@ import { Store } from "vuex-mock-store";
 export function createStoreMock(store_options, custom_state = {}) {
     const state = Object.assign({}, store_options.state, custom_state);
     const options = Object.assign({}, store_options, {
-        state
+        state,
     });
 
     return new Store(options);

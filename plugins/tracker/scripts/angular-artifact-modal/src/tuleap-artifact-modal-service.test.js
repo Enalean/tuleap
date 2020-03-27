@@ -45,23 +45,25 @@ describe("NewTuleapArtifactModalService", () => {
         wrapPromise;
 
     beforeEach(() => {
-        angular.mock.module(artifact_modal_module, function($provide) {
-            $provide.decorator("TuleapArtifactModalTrackerTransformerService", function($delegate) {
-                jest.spyOn($delegate, "addFieldValuesToTracker").mockImplementation(function(
+        angular.mock.module(artifact_modal_module, function ($provide) {
+            $provide.decorator("TuleapArtifactModalTrackerTransformerService", function (
+                $delegate
+            ) {
+                jest.spyOn($delegate, "addFieldValuesToTracker").mockImplementation(function (
                     artifact_values,
                     tracker
                 ) {
                     return tracker;
                 });
-                jest.spyOn($delegate, "transform").mockImplementation(function(tracker) {
+                jest.spyOn($delegate, "transform").mockImplementation(function (tracker) {
                     return tracker;
                 });
 
                 return $delegate;
             });
 
-            $provide.decorator("TuleapArtifactFieldValuesService", function($delegate) {
-                jest.spyOn($delegate, "getSelectedValues").mockImplementation(function() {
+            $provide.decorator("TuleapArtifactFieldValuesService", function ($delegate) {
+                jest.spyOn($delegate, "getSelectedValues").mockImplementation(function () {
                     return {};
                 });
 
@@ -70,7 +72,7 @@ describe("NewTuleapArtifactModalService", () => {
         });
 
         let $rootScope;
-        angular.mock.inject(function(
+        angular.mock.inject(function (
             _$rootScope_,
             _$q_,
             _TuleapArtifactModalTrackerTransformerService_,
@@ -118,7 +120,7 @@ describe("NewTuleapArtifactModalService", () => {
                 id: tracker_id,
                 color_name: "importer",
                 label: "preinvest",
-                parent: null
+                parent: null,
             };
             getTracker.mockReturnValue($q.when(tracker));
             updateFileUploadRulesWhenNeeded.mockReturnValue($q.when());
@@ -177,7 +179,7 @@ describe("NewTuleapArtifactModalService", () => {
             it("Given a tracker that had workflow transitions, when I create the modal's creation model, then the transitions will be enforced", async () => {
                 const workflow_field = {
                     field_id: 189,
-                    values: []
+                    values: [],
                 };
                 const workflow = {
                     is_used: "1",
@@ -185,14 +187,14 @@ describe("NewTuleapArtifactModalService", () => {
                     transitions: [
                         {
                             from_id: null,
-                            to_id: 511
-                        }
-                    ]
+                            to_id: 511,
+                        },
+                    ],
                 };
                 tracker = {
                     id: tracker_id,
                     fields: [workflow_field],
-                    workflow
+                    workflow,
                 };
                 getTracker.mockReturnValue($q.when(tracker));
                 updateFileUploadRulesWhenNeeded.mockReturnValue($q.when());
@@ -211,7 +213,7 @@ describe("NewTuleapArtifactModalService", () => {
 
             it("Given a tracker that had workflow transitions but were not used, then the transitions won't be enforced", async () => {
                 const workflow_field = {
-                    field_id: tracker_id
+                    field_id: tracker_id,
                 };
                 const workflow = {
                     is_used: "0",
@@ -219,14 +221,14 @@ describe("NewTuleapArtifactModalService", () => {
                     transitions: [
                         {
                             from_id: 326,
-                            to_id: 723
-                        }
-                    ]
+                            to_id: 723,
+                        },
+                    ],
                 };
                 tracker = {
                     id: tracker_id,
                     fields: [workflow_field],
-                    workflow
+                    workflow,
                 };
                 getTracker.mockReturnValue($q.when(tracker));
                 updateFileUploadRulesWhenNeeded.mockReturnValue($q.when());
@@ -241,17 +243,17 @@ describe("NewTuleapArtifactModalService", () => {
 
             it("Given a tracker that didn't have workflow transitions, when I create the modal's creation model, then the transitions won't be enforced", async () => {
                 const workflow_field = {
-                    field_id: tracker_id
+                    field_id: tracker_id,
                 };
                 const workflow = {
                     is_used: "1",
                     field_id: 189,
-                    transitions: []
+                    transitions: [],
                 };
                 tracker = {
                     id: tracker_id,
                     fields: [workflow_field],
-                    workflow
+                    workflow,
                 };
                 getTracker.mockReturnValue($q.when(tracker));
                 updateFileUploadRulesWhenNeeded.mockReturnValue($q.when());
@@ -273,19 +275,19 @@ describe("NewTuleapArtifactModalService", () => {
             TuleapArtifactFieldValuesService.getSelectedValues.mockImplementation(() => {
                 return {
                     113: {
-                        value: "onomatomania"
-                    }
+                        value: "onomatomania",
+                    },
                 };
             });
 
             var comment_order_preference = {
                 key: "tracker_comment_invertorder_93",
-                value: "1"
+                value: "1",
             };
 
             var text_format_preference = {
                 key: "user_edition_default_format",
-                value: "html"
+                value: "html",
             };
 
             user_id = 102;
@@ -308,7 +310,7 @@ describe("NewTuleapArtifactModalService", () => {
                     id: tracker_id,
                     color_name: "slackerism",
                     label: "unstainableness",
-                    parent: null
+                    parent: null,
                 };
                 artifact = {
                     title: "onomatomania",
@@ -316,9 +318,9 @@ describe("NewTuleapArtifactModalService", () => {
                     values: [
                         {
                             field_id: 487,
-                            value: "unwadded"
-                        }
-                    ]
+                            value: "unwadded",
+                        },
+                    ],
                 };
                 getArtifactWithCompleteTrackerStructure.mockReturnValue($q.when(artifact));
             });
@@ -365,7 +367,7 @@ describe("NewTuleapArtifactModalService", () => {
             it("Given that the user didn't have a preference set for text fields format, when I create the modal's edition model, then the default text_field format will be 'text' by default", async () => {
                 var comment_order_preference = {
                     key: "tracker_comment_invertorder_93",
-                    value: "1"
+                    value: "1",
                 };
 
                 getUserPreference.mockImplementation((user_id, preference_key) => {
@@ -374,7 +376,7 @@ describe("NewTuleapArtifactModalService", () => {
                     } else if (preference_key === "user_edition_default_format") {
                         return $q.when({
                             key: "user_edition_default_format",
-                            value: false
+                            value: false,
                         });
                     }
                 });
@@ -398,7 +400,7 @@ describe("NewTuleapArtifactModalService", () => {
             beforeEach(() => {
                 workflow_field = {
                     field_id: 189,
-                    values: []
+                    values: [],
                 };
             });
 
@@ -409,14 +411,14 @@ describe("NewTuleapArtifactModalService", () => {
                     transitions: [
                         {
                             from_id: 757,
-                            to_id: 511
-                        }
-                    ]
+                            to_id: 511,
+                        },
+                    ],
                 };
                 tracker = {
                     id: tracker_id,
                     fields: [workflow_field],
-                    workflow: workflow
+                    workflow: workflow,
                 };
                 artifact = {
                     title: "onomatomania",
@@ -424,9 +426,9 @@ describe("NewTuleapArtifactModalService", () => {
                     values: [
                         {
                             field_id: 189,
-                            bind_value_ids: [757]
-                        }
-                    ]
+                            bind_value_ids: [757],
+                        },
+                    ],
                 };
                 getArtifactWithCompleteTrackerStructure.mockReturnValue($q.when(artifact));
 
@@ -453,14 +455,14 @@ describe("NewTuleapArtifactModalService", () => {
                     transitions: [
                         {
                             from_id: 757,
-                            to_id: 511
-                        }
-                    ]
+                            to_id: 511,
+                        },
+                    ],
                 };
                 tracker = {
                     id: tracker_id,
                     fields: [workflow_field],
-                    workflow: workflow
+                    workflow: workflow,
                 };
                 artifact = {
                     title: "onomatomania",
@@ -468,9 +470,9 @@ describe("NewTuleapArtifactModalService", () => {
                     values: [
                         {
                             field_id: 487,
-                            value: "unwadded"
-                        }
-                    ]
+                            value: "unwadded",
+                        },
+                    ],
                 };
 
                 getArtifactWithCompleteTrackerStructure.mockReturnValue($q.when(artifact));
@@ -494,19 +496,19 @@ describe("NewTuleapArtifactModalService", () => {
                     transitions: [
                         {
                             from_id: 757,
-                            to_id: 511
-                        }
-                    ]
+                            to_id: 511,
+                        },
+                    ],
                 };
                 tracker = {
                     id: tracker_id,
                     fields: [workflow_field],
-                    workflow: workflow
+                    workflow: workflow,
                 };
                 artifact = {
                     title: "onomatomania",
                     tracker,
-                    values: []
+                    values: [],
                 };
                 getArtifactWithCompleteTrackerStructure.mockReturnValue($q.when(artifact));
 

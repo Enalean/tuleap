@@ -9,6 +9,6 @@ export default function Milestone() {
         controller: MilestoneController,
         controllerAs: "milestoneController",
         bindToController: true,
-        templateUrl: "milestone.tpl.html"
+        templateUrl: "milestone.tpl.html",
     };
 }

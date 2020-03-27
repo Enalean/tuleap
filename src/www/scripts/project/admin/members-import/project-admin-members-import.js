@@ -128,7 +128,7 @@ async function uploadFile() {
     const form = document.getElementById("project-admin-user-import-form");
     const form_data = new FormData(form);
     const response = await post("/project/admin/userimport.php", {
-        body: form_data
+        body: form_data,
     });
 
     const json = await response.json();
@@ -140,7 +140,7 @@ function renderImportPreview(import_result) {
     const preview_section = document.getElementById("modal-import-users-preview");
     const import_warnings = [
         ...import_result.warning_multiple_users,
-        ...import_result.warning_inavlid_users
+        ...import_result.warning_inavlid_users,
     ];
 
     removeAllChildren(preview_section);
@@ -158,20 +158,20 @@ function renderImportPreview(import_result) {
             parsed_users: import_result.users,
             empty_preview: gettext_provider.gettext("There isn't any new user to import"),
             table_header_name: gettext_provider.gettext("Name"),
-            table_header_email: gettext_provider.gettext("Email")
+            table_header_email: gettext_provider.gettext("Email"),
         })
     );
 }
 
 function removeAllChildren(element) {
-    [...element.children].forEach(child => child.remove());
+    [...element.children].forEach((child) => child.remove());
 }
 
 function startSpinner(element) {
     element.insertAdjacentHTML(
         "afterbegin",
         render(import_spinner, {
-            loading: gettext_provider.gettext("Preview loading...")
+            loading: gettext_provider.gettext("Preview loading..."),
         })
     );
 }

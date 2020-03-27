@@ -88,7 +88,7 @@ export default {
     components: { ArtifactTableRow },
     data() {
         return {
-            is_loading_more: false
+            is_loading_more: false,
         };
     },
     computed: {
@@ -97,7 +97,7 @@ export default {
             "get_formatted_total_sum",
             "has_rest_error",
             "can_results_be_displayed",
-            "can_load_more"
+            "can_load_more",
         ]),
         has_data_to_display() {
             return this.times.length > 0;
@@ -109,7 +109,7 @@ export default {
             return this.error_message === "error"
                 ? this.$gettext("An error occurred")
                 : this.error_message;
-        }
+        },
     },
     mounted() {
         this.$store.dispatch("loadFirstBatchOfTimes");
@@ -119,7 +119,7 @@ export default {
             this.is_loading_more = true;
             await this.$store.dispatch("getTimes");
             this.is_loading_more = false;
-        }
-    }
+        },
+    },
 };
 </script>

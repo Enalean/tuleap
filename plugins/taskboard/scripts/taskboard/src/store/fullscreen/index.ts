@@ -26,9 +26,9 @@ import * as getters from "./fullscreen-getters";
 const fullscreen_module_default: Module<FullscreenState, RootState> = {
     namespaced: true,
     state: {
-        is_taskboard_in_fullscreen_mode: false
+        is_taskboard_in_fullscreen_mode: false,
     },
     mutations,
-    getters
+    getters,
 };
 export default fullscreen_module_default;

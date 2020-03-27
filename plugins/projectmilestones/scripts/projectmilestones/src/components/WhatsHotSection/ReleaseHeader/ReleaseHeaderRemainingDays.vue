@@ -29,7 +29,7 @@
                 v-bind:class="{
                     'release-remaining-value-danger': date_close_to_end,
                     'release-remaining-value-success': are_dates_correctly_set,
-                    'release-remaining-value-disabled': disabled_date
+                    'release-remaining-value-disabled': disabled_date,
                 }"
                 data-test="display-remaining-day-text"
             >
@@ -49,7 +49,7 @@
                 v-bind:class="{
                     'release-remaining-progress-value-danger': date_close_to_end,
                     'release-remaining-progress-value-success': are_dates_correctly_set,
-                    'release-remaining-progress-value-disabled': disabled_date
+                    'release-remaining-progress-value-disabled': disabled_date,
                 }"
                 v-bind:style="{ width: get_tooltip_effort_date }"
                 data-test="display-remaining-day-value"

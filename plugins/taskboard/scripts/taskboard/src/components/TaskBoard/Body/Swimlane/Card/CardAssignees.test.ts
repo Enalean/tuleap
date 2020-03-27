@@ -38,17 +38,17 @@ async function getWrapper(
         localVue: await createTaskboardLocalVue(),
         mocks: {
             $store: createStoreMock({
-                state: { swimlane: {} } as RootState
+                state: { swimlane: {} } as RootState,
             }),
             getters: {
-                "swimlane/assignable_users": (): UserForPeoplePicker[] => []
-            }
+                "swimlane/assignable_users": (): UserForPeoplePicker[] => [],
+            },
         },
         propsData: {
             card,
             tracker,
-            value: [] as number[]
-        }
+            value: [] as number[],
+        },
     });
 }
 
@@ -64,12 +64,12 @@ describe("CardAssignees", () => {
         const steeve: User = {
             id: 101,
             display_name: "Steeve",
-            avatar_url: "steeve.png"
+            avatar_url: "steeve.png",
         };
         const bob: User = {
             id: 102,
             display_name: "Bob",
-            avatar_url: "Boob.png"
+            avatar_url: "Boob.png",
         };
         const wrapper = await getWrapper({ assignees: [steeve, bob] } as Card);
 
@@ -82,7 +82,7 @@ describe("CardAssignees", () => {
     it("switches the assignee to edit mode if the card is in edit mode", async () => {
         const wrapper = await getWrapper({
             assignees: [] as User[],
-            is_in_edit_mode: true
+            is_in_edit_mode: true,
         } as Card);
 
         expect(wrapper.classes()).toContain("taskboard-card-edit-mode-assignees");
@@ -119,12 +119,12 @@ describe("CardAssignees", () => {
         const steeve: User = {
             id: 101,
             display_name: "Steeve",
-            avatar_url: "steeve.png"
+            avatar_url: "steeve.png",
         };
         const wrapper = await getWrapper(
             {
                 assignees: [steeve],
-                is_in_edit_mode: true
+                is_in_edit_mode: true,
             } as Card,
             { assigned_to_field: { id: 123 } } as Tracker
         );
@@ -140,7 +140,7 @@ describe("CardAssignees", () => {
         const wrapper = await getWrapper(
             {
                 assignees: [] as User[],
-                is_in_edit_mode: true
+                is_in_edit_mode: true,
             } as Card,
             tracker
         );
@@ -169,7 +169,7 @@ describe("CardAssignees", () => {
         const wrapper = await getWrapper(
             {
                 assignees: [] as User[],
-                is_in_edit_mode: false
+                is_in_edit_mode: false,
             } as Card,
             { assigned_to_field: { id: 123 } } as Tracker
         );

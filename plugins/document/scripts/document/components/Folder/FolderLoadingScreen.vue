@@ -38,6 +38,6 @@ import SkeletonTable from "../../../../../../src/www/scripts/vue-components/skel
 
 export default {
     name: "FolderLoadingScreen",
-    components: { SkeletonTable }
+    components: { SkeletonTable },
 };
 </script>

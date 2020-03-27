@@ -87,17 +87,17 @@ export default {
     name: "WidgetWritingMode",
 
     computed: {
-        ...mapState(["start_date", "end_date"])
+        ...mapState(["start_date", "end_date"]),
     },
     mounted() {
-        [this.$refs.start_date, this.$refs.end_date].forEach(element => datePicker(element));
+        [this.$refs.start_date, this.$refs.end_date].forEach((element) => datePicker(element));
     },
     methods: {
         ...mapMutations(["toggleReadingMode"]),
         ...mapActions(["setDatesAndReload"]),
         changeDates() {
             this.setDatesAndReload([this.$refs.start_date.value, this.$refs.end_date.value]);
-        }
-    }
+        },
+    },
 };
 </script>

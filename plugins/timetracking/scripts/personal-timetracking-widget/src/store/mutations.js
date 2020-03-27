@@ -67,7 +67,7 @@ export default {
 
     replaceInCurrentTimes(state, [time, feedback_message]) {
         const time_to_update_index = state.current_times.findIndex(
-            current_time => current_time.id === time.id
+            (current_time) => current_time.id === time.id
         );
         state.current_times[time_to_update_index] = time;
         state.current_times = sortTimesChronologically(state.current_times);
@@ -80,11 +80,11 @@ export default {
             {
                 artifact: state.current_times[0].artifact,
                 project: state.current_times[0].project,
-                minutes: null
-            }
+                minutes: null,
+            },
         ];
         const time_to_delete_index = state.current_times.findIndex(
-            current_time => current_time.id === time_id
+            (current_time) => current_time.id === time_id
         );
 
         state.current_times.splice(time_to_delete_index, 1);
@@ -121,5 +121,5 @@ export default {
     setRestFeedback(state, [message, type]) {
         state.rest_feedback.message = message;
         state.rest_feedback.type = type;
-    }
+    },
 };

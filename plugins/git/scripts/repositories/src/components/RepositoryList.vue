@@ -35,7 +35,7 @@ export default {
     components: { GitRepository },
     computed: {
         ...mapState(["is_loading_initial"]),
-        ...mapGetters(["filteredRepositoriesByLastUpdateDate"])
-    }
+        ...mapGetters(["filteredRepositoriesByLastUpdateDate"]),
+    },
 };
 </script>

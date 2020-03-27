@@ -37,7 +37,7 @@ function OpenListFieldController($element, $compile, $rootScope, $templateCache)
         templateUserResult,
         templateUserSelection,
         isRequiredAndEmpty,
-        getFieldValue
+        getFieldValue,
     });
 
     function init() {
@@ -53,19 +53,19 @@ function OpenListFieldController($element, $compile, $rootScope, $templateCache)
             tags: true,
             createTag: self.newAnonymousUser,
             ajax: {
-                transport: function(params, success, failure) {
+                transport: function (params, success, failure) {
                     return searchUsers(params.data.term).then(
-                        function(response) {
+                        function (response) {
                             success(response);
                         },
-                        function(error) {
+                        function (error) {
                             failure(error);
                         }
                     );
-                }
+                },
             },
             templateResult: self.templateUserResult,
-            templateSelection: self.templateUserSelection
+            templateSelection: self.templateUserSelection,
         });
 
         $element.on("select2:selecting", self.handleUsersValueSelection);
@@ -104,7 +104,7 @@ function OpenListFieldController($element, $compile, $rootScope, $templateCache)
     }
 
     function getUserRepresentationForInitialSelection(result) {
-        return self.value_model.value.bind_value_objects.find(value_object => {
+        return self.value_model.value.bind_value_objects.find((value_object) => {
             if (value_object.id) {
                 return result.id === value_object.id.toString();
             }
@@ -128,7 +128,7 @@ function OpenListFieldController($element, $compile, $rootScope, $templateCache)
             is_anonymous = removed_selection.element.attributes["is-anonymous"].value === "true";
         }
 
-        remove(self.value_model.value.bind_value_objects, function(value_object) {
+        remove(self.value_model.value.bind_value_objects, function (value_object) {
             if (is_anonymous) {
                 return value_object.email === removed_selection.id;
             }
@@ -147,7 +147,7 @@ function OpenListFieldController($element, $compile, $rootScope, $templateCache)
             id: term,
             display_name: term,
             email: term,
-            is_anonymous: true
+            is_anonymous: true,
         };
     }
 

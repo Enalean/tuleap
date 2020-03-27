@@ -53,7 +53,7 @@
 export default {
     name: "RecursionOptions",
     props: {
-        value: String
-    }
+        value: String,
+    },
 };
 </script>

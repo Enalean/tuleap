@@ -26,7 +26,7 @@ jest.mock("tlp");
 describe("API querier", () => {
     describe("getRepositoryList", () => {
         it("Given a project id and a callback, then it will recursively get all project repositories and call the callback for each batch", () => {
-            return new Promise(done => {
+            return new Promise((done) => {
                 const repositories = [{ id: 37 }, { id: 91 }];
                 const tlpRecursiveGet = jest
                     .spyOn(tlp, "recursiveGet")
@@ -49,8 +49,8 @@ describe("API querier", () => {
                             query: '{"scope":"project"}',
                             order_by: "push_date",
                             limit: 50,
-                            offset: 0
-                        }
+                            offset: 0,
+                        },
                     })
                 );
             });
@@ -59,7 +59,7 @@ describe("API querier", () => {
 
     describe("getForkedRepositoryList", () => {
         it("Given a project id, an owner id and a callback, then it will recursively get all forks and call the callback for each batch", () => {
-            return new Promise(done => {
+            return new Promise((done) => {
                 const repositories = [{ id: 88 }, { id: 57 }];
                 const tlpRecursiveGet = jest
                     .spyOn(tlp, "recursiveGet")
@@ -82,8 +82,8 @@ describe("API querier", () => {
                             query: '{"scope":"individual","owner_id":477}',
                             order_by: "push_date",
                             limit: 50,
-                            offset: 0
-                        }
+                            offset: 0,
+                        },
                     })
                 );
             });
@@ -102,12 +102,12 @@ describe("API querier", () => {
 
             const stringified_body = JSON.stringify({
                 project_id,
-                name: repository_name
+                name: repository_name,
             });
 
             expect(tlpPost).toHaveBeenCalledWith("/api/git/", {
                 headers: expect.objectContaining({ "content-type": "application/json" }),
-                body: stringified_body
+                body: stringified_body,
             });
         });
     });

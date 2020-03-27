@@ -26,7 +26,7 @@ const output = webpack_configurator.configureOutput(
 
 const entry_points = {
     "widget-project-labeled-items": "./scripts/project-labeled-items/src/index.js",
-    "configure-widget": "./scripts/configure-widget/index.js"
+    "configure-widget": "./scripts/configure-widget/index.js",
 };
 
 const colors = ["blue", "green", "grey", "orange", "purple", "red"];
@@ -43,7 +43,7 @@ module.exports = [
         context,
         output,
         externals: {
-            tlp: "tlp"
+            tlp: "tlp",
         },
         module: {
             rules: [
@@ -51,17 +51,17 @@ module.exports = [
                 webpack_configurator.rule_easygettext_loader,
                 webpack_configurator.rule_vue_loader,
                 webpack_configurator.rule_scss_loader,
-                webpack_configurator.rule_css_assets
-            ]
+                webpack_configurator.rule_css_assets,
+            ],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
             webpack_configurator.getVueLoaderPlugin(),
-            ...webpack_configurator.getCSSExtractionPlugins()
+            ...webpack_configurator.getCSSExtractionPlugins(),
         ],
         resolveLoader: {
-            alias: webpack_configurator.easygettext_loader_alias
-        }
-    }
+            alias: webpack_configurator.easygettext_loader_alias,
+        },
+    },
 ];

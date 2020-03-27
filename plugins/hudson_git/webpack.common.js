@@ -30,12 +30,12 @@ const output = webpack_configurator.configureOutput(
 const webpack_config_for_themes = {
     entry: {
         style: "./themes/default/css/style.scss",
-        "git-administration": "./scripts/src/git-administration.ts"
+        "git-administration": "./scripts/src/git-administration.ts",
     },
     context,
     output,
     externals: {
-        jquery: "jQuery"
+        jquery: "jQuery",
     },
     module: {
         rules: [
@@ -43,15 +43,15 @@ const webpack_config_for_themes = {
             ...webpack_configurator.configureTypescriptRules(
                 webpack_configurator.babel_options_ie11
             ),
-            webpack_configurator.rule_po_files
-        ]
+            webpack_configurator.rule_po_files,
+        ],
     },
     plugins: [
         webpack_configurator.getCleanWebpackPlugin(),
         manifest_plugin,
         ...webpack_configurator.getCSSExtractionPlugins(),
-        webpack_configurator.getTypescriptCheckerPlugin(false)
-    ]
+        webpack_configurator.getTypescriptCheckerPlugin(false),
+    ],
 };
 
 module.exports = [webpack_config_for_themes];

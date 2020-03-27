@@ -27,7 +27,7 @@ describe("FolderHeaderAction", () => {
     beforeEach(() => {
         state = {};
         store_options = {
-            state
+            state,
         };
         store = createStoreMock(store_options);
 
@@ -35,7 +35,7 @@ describe("FolderHeaderAction", () => {
             return shallowMount(FolderHeaderAction, {
                 localVue,
                 propsData: { ...props },
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
     });
@@ -46,7 +46,7 @@ describe("FolderHeaderAction", () => {
         const item = {
             id: 42,
             title: "current folder title",
-            user_can_write: false
+            user_can_write: false,
         };
 
         const wrapper = dropdown_factory({ item });
@@ -61,7 +61,7 @@ describe("FolderHeaderAction", () => {
         const item = {
             id: 42,
             title: "current folder title",
-            user_can_write: true
+            user_can_write: true,
         };
 
         const wrapper = dropdown_factory({ item });

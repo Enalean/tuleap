@@ -19,7 +19,7 @@
 
 import {
     mockFetchError,
-    mockFetchSuccess
+    mockFetchSuccess,
 } from "../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper.js";
 import { loadProjectList, loadTrackerList, move, moveDryRun } from "./actions.js";
 import * as rest_querier from "../api/rest-querier.js";
@@ -30,7 +30,7 @@ describe("Store actions", () => {
     beforeEach(() => {
         context = {
             commit: jest.fn(),
-            state: {}
+            state: {},
         };
         redirectTo = jest.spyOn(window_helper, "redirectTo").mockImplementation(() => {});
     });
@@ -45,8 +45,8 @@ describe("Store actions", () => {
             const projects = [
                 {
                     id: 102,
-                    label: "Project name"
-                }
+                    label: "Project name",
+                },
             ];
 
             getProjectList.mockReturnValue(Promise.resolve(projects));
@@ -61,8 +61,8 @@ describe("Store actions", () => {
             const error_json = {
                 error: {
                     code: "403",
-                    message: "error"
-                }
+                    message: "error",
+                },
             };
             mockFetchError(getProjectList, { error_json });
 
@@ -76,7 +76,7 @@ describe("Store actions", () => {
         beforeEach(() => {
             getTrackerList = jest.spyOn(rest_querier, "getTrackerList");
             context.state = {
-                selected_project_id: 101
+                selected_project_id: 101,
             };
         });
 
@@ -84,8 +84,8 @@ describe("Store actions", () => {
             const trackers = [
                 {
                     id: 10,
-                    label: "Tracker name"
-                }
+                    label: "Tracker name",
+                },
             ];
             const project_id = 106;
 
@@ -105,8 +105,8 @@ describe("Store actions", () => {
             const error_json = {
                 error: {
                     code: "403",
-                    message: "error"
-                }
+                    message: "error",
+                },
             };
             mockFetchError(getTrackerList, { error_json });
 
@@ -126,7 +126,7 @@ describe("Store actions", () => {
             const artifact_id = 101;
             const tracker_id = 5;
             context.state.selected_tracker = {
-                tracker_id
+                tracker_id,
             };
 
             await move(context, artifact_id);
@@ -138,15 +138,15 @@ describe("Store actions", () => {
             const error_json = {
                 error: {
                     code: "403",
-                    message: "error"
-                }
+                    message: "error",
+                },
             };
             mockFetchError(moveArtifact, { error_json });
 
             const artifact_id = 101;
             const tracker_id = 5;
             context.state.selected_tracker = {
-                tracker_id
+                tracker_id,
             };
 
             await move(context, artifact_id);
@@ -167,12 +167,12 @@ describe("Store actions", () => {
             const fields = {
                 fields_not_migrated: ["not_migrated"],
                 fields_partially_migrated: [],
-                fields_migrated: []
+                fields_migrated: [],
             };
             const return_json = {
                 dry_run: {
-                    fields
-                }
+                    fields,
+                },
             };
 
             mockFetchSuccess(moveDryRunArtifact, { return_json });
@@ -180,7 +180,7 @@ describe("Store actions", () => {
             const artifact_id = 101;
             const tracker_id = 5;
             context.state.selected_tracker = {
-                tracker_id
+                tracker_id,
             };
 
             await moveDryRun(context, artifact_id);
@@ -196,9 +196,9 @@ describe("Store actions", () => {
                     fields: {
                         fields_not_migrated: [],
                         fields_partially_migrated: [],
-                        fields_migrated: ["fully_migrated"]
-                    }
-                }
+                        fields_migrated: ["fully_migrated"],
+                    },
+                },
             };
 
             mockFetchSuccess(moveDryRunArtifact, { return_json });
@@ -207,7 +207,7 @@ describe("Store actions", () => {
             const artifact_id = 101;
             const tracker_id = 5;
             context.state.selected_tracker = {
-                tracker_id
+                tracker_id,
             };
 
             await moveDryRun(context, artifact_id);

@@ -17,30 +17,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-describe("Agile Dashboard", function() {
-    before(function() {
+describe("Agile Dashboard", function () {
+    before(function () {
         cy.clearCookie("__Host-TULEAP_session_hash");
         cy.ProjectAdministratorLogin();
         cy.visitProjectService("agile-dashboard", "Agile Dashboard");
     });
 
-    beforeEach(function() {
+    beforeEach(function () {
         Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
     });
 
-    it("should start scrum", function() {
+    it("should start scrum", function () {
         cy.get("[data-test=start-scrum]").click();
 
         cy.contains(
             "[data-test=feedback]",
             "We created an initial scrum configuration for you. Enjoy!",
             {
-                timeout: 20000
+                timeout: 20000,
             }
         );
     });
 
-    it("should start a Kanban with Scrum elements", function() {
+    it("should start a Kanban with Scrum elements", function () {
         //This the Administration menu in the breadcrumb.
         cy.get("[data-test=breadcrumb-dropdown-link]").click({ force: true });
         cy.get("[data-test=admin-kanban-pane]").click();

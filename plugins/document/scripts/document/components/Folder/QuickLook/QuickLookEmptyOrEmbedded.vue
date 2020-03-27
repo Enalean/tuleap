@@ -43,15 +43,15 @@ export default {
     components: {
         DetailsItemButton,
         DropDownQuickLook,
-        QuickLookDeleteButton
+        QuickLookDeleteButton,
     },
     props: {
-        item: Object
+        item: Object,
     },
     computed: {
         is_details_button_shown() {
             return !this.item.user_can_write;
-        }
-    }
+        },
+    },
 };
 </script>

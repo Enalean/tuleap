@@ -8,6 +8,6 @@ export default function BacklogItemSelectedBar() {
         controller: BacklogItemSelectedBarController,
         controllerAs: "selected_bar_controller",
         bindToController: true,
-        templateUrl: "backlog-item-selected-bar.tpl.html"
+        templateUrl: "backlog-item-selected-bar.tpl.html",
     };
 }

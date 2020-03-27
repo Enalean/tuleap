@@ -21,7 +21,7 @@ import {
     getProjectList,
     getTrackerList,
     moveDryRunArtifact,
-    moveArtifact
+    moveArtifact,
 } from "../api/rest-querier.js";
 import { redirectTo } from "../window-helper.js";
 

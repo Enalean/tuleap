@@ -27,7 +27,7 @@ export function loadAvatarReset(): void {
         );
     }
 
-    btn.addEventListener("click", function() {
+    btn.addEventListener("click", function () {
         const preview_container = getPreviewContainer();
 
         preview_container.classList.remove("account-information-avatar-modal-preview");

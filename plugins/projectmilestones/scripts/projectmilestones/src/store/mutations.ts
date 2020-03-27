@@ -42,5 +42,5 @@ export default {
 
     setLastRelease(state: State, milestone: MilestoneData): void {
         state.last_release = milestone;
-    }
+    },
 };

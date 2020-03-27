@@ -40,17 +40,17 @@ describe("ProjectInformation -", () => {
             routes: [
                 {
                     path: "/new",
-                    name: "template"
+                    name: "template",
                 },
                 {
                     path: "/information",
-                    name: "information"
+                    name: "information",
                 },
                 {
                     path: "/approval",
-                    name: "approval"
-                }
-            ]
+                    name: "approval",
+                },
+            ],
         });
     });
     describe("User can choose visibility and restricted users are allowed -", () => {
@@ -61,20 +61,20 @@ describe("ProjectInformation -", () => {
                     description: "string",
                     id: "scrum",
                     glyph: "string",
-                    is_built_in: true
+                    is_built_in: true,
                 },
                 are_restricted_users_allowed: true,
-                can_user_choose_project_visibility: true
+                can_user_choose_project_visibility: true,
             } as State;
 
             const getters = {
                 has_error: false,
-                is_template_selected: true
+                is_template_selected: true,
             };
 
             const store_options = {
                 state,
-                getters
+                getters,
             };
 
             store = createStoreMock(store_options);
@@ -82,7 +82,7 @@ describe("ProjectInformation -", () => {
             factory = shallowMount(ProjectInformation, {
                 localVue: await createProjectRegistrationLocalVue(),
                 mocks: { $store: store },
-                router
+                router,
             });
         });
 
@@ -114,14 +114,14 @@ describe("ProjectInformation -", () => {
         it("redirects user on /new when he does not have all needed information to start his project creation", async () => {
             const getters = {
                 has_error: false,
-                is_template_selected: false
+                is_template_selected: false,
             };
 
             store = createStoreMock({ getters });
             const wrapper = shallowMount(ProjectInformation, {
                 localVue: await createProjectRegistrationLocalVue(),
                 mocks: { $store: store },
-                router
+                router,
             });
 
             expect(wrapper.vm.$route.name).toBe("template");
@@ -134,19 +134,19 @@ describe("ProjectInformation -", () => {
 
                 EventBus.$emit("choose-trove-cat", { category_id: 1, value_id: 10 });
                 expect(wrapper.vm.$data.trove_cats).toStrictEqual([
-                    { category_id: 1, value_id: 10 }
+                    { category_id: 1, value_id: 10 },
                 ]);
 
                 EventBus.$emit("choose-trove-cat", { category_id: 2, value_id: 20 });
                 expect(wrapper.vm.$data.trove_cats).toStrictEqual([
                     { category_id: 1, value_id: 10 },
-                    { category_id: 2, value_id: 20 }
+                    { category_id: 2, value_id: 20 },
                 ]);
 
                 EventBus.$emit("choose-trove-cat", { category_id: 1, value_id: 100 });
                 expect(wrapper.vm.$data.trove_cats).toStrictEqual([
                     { category_id: 1, value_id: 100 },
-                    { category_id: 2, value_id: 20 }
+                    { category_id: 2, value_id: 20 },
                 ]);
             });
         });
@@ -164,7 +164,7 @@ describe("ProjectInformation -", () => {
                 categories: [],
                 xml_template_name: "scrum",
                 fields: [],
-                allow_restricted: false
+                allow_restricted: false,
             };
 
             factory.vm.$store.state.are_restricted_users_allowed = true;
@@ -172,7 +172,7 @@ describe("ProjectInformation -", () => {
 
             factory.vm.$data.name_properties = {
                 slugified_name: "this-is-a-test",
-                name: "this is a test"
+                name: "this is a test",
             };
 
             factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
@@ -197,7 +197,7 @@ describe("ProjectInformation -", () => {
 
             factory.vm.$data.name_properties = {
                 slugified_name: "this-is-a-test",
-                name: "this is a test"
+                name: "this is a test",
             };
 
             const expected_project_properties = {
@@ -208,7 +208,7 @@ describe("ProjectInformation -", () => {
                 allow_restricted: true,
                 categories: [],
                 xml_template_name: "scrum",
-                fields: []
+                fields: [],
             };
 
             factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
@@ -233,7 +233,7 @@ describe("ProjectInformation -", () => {
             factory.vm.$data.selected_visibility = "private-wo-restr";
             factory.vm.$data.name_properties = {
                 slugified_name: "this-is-a-test",
-                name: "this is a test"
+                name: "this is a test",
             };
 
             const expected_project_properties = {
@@ -244,7 +244,7 @@ describe("ProjectInformation -", () => {
                 allow_restricted: false,
                 categories: [],
                 xml_template_name: "scrum",
-                fields: []
+                fields: [],
             };
 
             factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
@@ -269,7 +269,7 @@ describe("ProjectInformation -", () => {
             factory.vm.$data.selected_visibility = "public";
             factory.vm.$data.name_properties = {
                 slugified_name: "this-is-a-test",
-                name: "this is a test"
+                name: "this is a test",
             };
 
             const expected_project_properties = {
@@ -280,7 +280,7 @@ describe("ProjectInformation -", () => {
                 description: "",
                 categories: [],
                 xml_template_name: "scrum",
-                fields: []
+                fields: [],
             };
 
             factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
@@ -305,7 +305,7 @@ describe("ProjectInformation -", () => {
             factory.vm.$data.selected_visibility = "unrestricted";
             factory.vm.$data.name_properties = {
                 slugified_name: "this-is-a-test",
-                name: "this is a test"
+                name: "this is a test",
             };
 
             const expected_project_properties = {
@@ -316,7 +316,7 @@ describe("ProjectInformation -", () => {
                 description: "",
                 categories: [],
                 xml_template_name: "scrum",
-                fields: []
+                fields: [],
             };
 
             factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
@@ -353,20 +353,20 @@ describe("ProjectInformation -", () => {
                     description: "string",
                     id: "scrum",
                     glyph: "string",
-                    is_built_in: true
+                    is_built_in: true,
                 },
                 are_restricted_users_allowed: false,
-                can_user_choose_project_visibility: true
+                can_user_choose_project_visibility: true,
             } as State;
 
             const getters = {
                 has_error: false,
-                is_template_selected: true
+                is_template_selected: true,
             };
 
             const store_options = {
                 state,
-                getters
+                getters,
             };
 
             store = createStoreMock(store_options);
@@ -374,7 +374,7 @@ describe("ProjectInformation -", () => {
             factory = shallowMount(ProjectInformation, {
                 localVue: await createProjectRegistrationLocalVue(),
                 mocks: { $store: store },
-                router
+                router,
             });
         });
 
@@ -387,7 +387,7 @@ describe("ProjectInformation -", () => {
             factory.vm.$data.selected_visibility = "private-wo-restr";
             factory.vm.$data.name_properties = {
                 slugified_name: "this-is-a-test",
-                name: "this is a test"
+                name: "this is a test",
             };
 
             const expected_project_properties = {
@@ -398,7 +398,7 @@ describe("ProjectInformation -", () => {
                 allow_restricted: false,
                 categories: [],
                 xml_template_name: "scrum",
-                fields: []
+                fields: [],
             };
 
             factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
@@ -423,7 +423,7 @@ describe("ProjectInformation -", () => {
             factory.vm.$data.selected_visibility = "public";
             factory.vm.$data.name_properties = {
                 slugified_name: "this-is-a-test",
-                name: "this is a test"
+                name: "this is a test",
             };
 
             const expected_project_properties = {
@@ -434,7 +434,7 @@ describe("ProjectInformation -", () => {
                 description: "",
                 categories: [],
                 xml_template_name: "scrum",
-                fields: []
+                fields: [],
             };
 
             factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
@@ -459,20 +459,20 @@ describe("ProjectInformation -", () => {
                     description: "string",
                     id: "scrum",
                     glyph: "string",
-                    is_built_in: true
+                    is_built_in: true,
                 },
                 are_restricted_users_allowed: false,
-                can_user_choose_project_visibility: false
+                can_user_choose_project_visibility: false,
             } as State;
 
             const getters = {
                 has_error: false,
-                is_template_selected: true
+                is_template_selected: true,
             };
 
             const store_options = {
                 state,
-                getters
+                getters,
             };
 
             store = createStoreMock(store_options);
@@ -480,7 +480,7 @@ describe("ProjectInformation -", () => {
             factory = shallowMount(ProjectInformation, {
                 localVue: await createProjectRegistrationLocalVue(),
                 mocks: { $store: store },
-                router
+                router,
             });
         });
 
@@ -498,19 +498,19 @@ describe("ProjectInformation -", () => {
 
             const getters = {
                 has_error: false,
-                is_template_selected: true
+                is_template_selected: true,
             };
 
             const store_options = {
                 state,
-                getters
+                getters,
             };
 
             store = createStoreMock(store_options);
 
             factory = shallowMount(ProjectInformation, {
                 localVue: await createProjectRegistrationLocalVue(),
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         });
         it("build the field list object", () => {
@@ -519,19 +519,19 @@ describe("ProjectInformation -", () => {
 
             EventBus.$emit("update-field-list", { field_id: 1, value: "test value" });
             expect(wrapper.vm.$data.field_list).toStrictEqual([
-                { field_id: 1, value: "test value" }
+                { field_id: 1, value: "test value" },
             ]);
 
             EventBus.$emit("update-field-list", { field_id: 2, value: "other value" });
             expect(wrapper.vm.$data.field_list).toStrictEqual([
                 { field_id: 1, value: "test value" },
-                { field_id: 2, value: "other value" }
+                { field_id: 2, value: "other value" },
             ]);
 
             EventBus.$emit("update-field-list", { field_id: 1, value: "updated value" });
             expect(wrapper.vm.$data.field_list).toStrictEqual([
                 { field_id: 1, value: "updated value" },
-                { field_id: 2, value: "other value" }
+                { field_id: 2, value: "other value" },
             ]);
         });
     });
@@ -546,20 +546,20 @@ describe("ProjectInformation -", () => {
                     description: "string",
                     id: "scrum",
                     glyph: "string",
-                    is_built_in: true
+                    is_built_in: true,
                 } as TemplateData,
                 default_project_template: null,
-                company_name: ""
+                company_name: "",
             } as State;
 
             const getters = {
                 has_error: false,
-                is_template_selected: true
+                is_template_selected: true,
             };
 
             const store_options = {
                 state,
-                getters
+                getters,
             };
 
             store = createStoreMock(store_options);
@@ -567,12 +567,12 @@ describe("ProjectInformation -", () => {
             factory = shallowMount(ProjectInformation, {
                 localVue: await createProjectRegistrationLocalVue(),
                 mocks: { $store: store },
-                router
+                router,
             });
             factory.vm.$data.selected_visibility = "unrestricted";
             factory.vm.$data.name_properties = {
                 slugified_name: "this-is-a-test",
-                name: "this is a test"
+                name: "this is a test",
             };
 
             const expected_project_properties = {
@@ -583,7 +583,7 @@ describe("ProjectInformation -", () => {
                 categories: [],
                 xml_template_name: "scrum",
                 fields: [],
-                allow_restricted: true
+                allow_restricted: true,
             } as ProjectProperties;
 
             factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
@@ -610,18 +610,18 @@ describe("ProjectInformation -", () => {
                     description: "desc",
                     id: "150",
                     glyph: "string",
-                    is_built_in: true
-                } as TemplateData
+                    is_built_in: true,
+                } as TemplateData,
             } as State;
 
             const getters = {
                 has_error: false,
-                is_template_selected: true
+                is_template_selected: true,
             };
 
             const store_options = {
                 state,
-                getters
+                getters,
             };
 
             store = createStoreMock(store_options);
@@ -629,12 +629,12 @@ describe("ProjectInformation -", () => {
             factory = shallowMount(ProjectInformation, {
                 localVue: await createProjectRegistrationLocalVue(),
                 mocks: { $store: store },
-                router
+                router,
             });
             factory.vm.$data.selected_visibility = "unrestricted";
             factory.vm.$data.name_properties = {
                 slugified_name: "this-is-a-test",
-                name: "this is a test"
+                name: "this is a test",
             };
 
             const expected_project_properties = {
@@ -645,7 +645,7 @@ describe("ProjectInformation -", () => {
                 categories: [],
                 template_id: 150,
                 fields: [],
-                allow_restricted: true
+                allow_restricted: true,
             } as ProjectProperties;
 
             factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
@@ -670,19 +670,19 @@ describe("ProjectInformation -", () => {
                     description: "The default Tuleap template",
                     id: "100",
                     glyph: "string",
-                    is_built_in: true
+                    is_built_in: true,
                 } as TemplateData,
-                default_project_template: null
+                default_project_template: null,
             } as State;
 
             const getters = {
                 has_error: false,
-                is_template_selected: true
+                is_template_selected: true,
             };
 
             const store_options = {
                 state,
-                getters
+                getters,
             };
 
             store = createStoreMock(store_options);
@@ -690,12 +690,12 @@ describe("ProjectInformation -", () => {
             factory = shallowMount(ProjectInformation, {
                 localVue: await createProjectRegistrationLocalVue(),
                 mocks: { $store: store },
-                router
+                router,
             });
             factory.vm.$data.selected_visibility = "unrestricted";
             factory.vm.$data.name_properties = {
                 slugified_name: "this-is-a-test",
-                name: "this is a test"
+                name: "this is a test",
             };
 
             const expected_project_properties = {
@@ -706,7 +706,7 @@ describe("ProjectInformation -", () => {
                 categories: [],
                 template_id: 100,
                 fields: [],
-                allow_restricted: true
+                allow_restricted: true,
             } as ProjectProperties;
 
             factory.find("[data-test=project-registration-form]").trigger("submit.prevent");

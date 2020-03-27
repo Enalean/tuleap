@@ -17,13 +17,13 @@
 
 /* global jQuery:readonly */
 
-(function($) {
-    $.fn.viewportChecker = function(useroptions) {
+(function ($) {
+    $.fn.viewportChecker = function (useroptions) {
         // Define options and extend with user
         var options = {
             classToAdd: "visible",
             offset: 100,
-            callbackFunction: function() {}
+            callbackFunction: function () {},
         };
         $.extend(options, useroptions);
 
@@ -31,14 +31,14 @@
         var $elem = this,
             windowHeight = $(window).height();
 
-        this.checkElements = function() {
+        this.checkElements = function () {
             // Set some vars to check with
             var scrollElem =
                     navigator.userAgent.toLowerCase().indexOf("webkit") != -1 ? "body" : "html",
                 viewportTop = $(scrollElem).scrollTop(),
                 viewportBottom = viewportTop + windowHeight;
 
-            $elem.each(function() {
+            $elem.each(function () {
                 var $obj = $(this);
                 // If class already exists; quit
                 if ($obj.hasClass(options.classToAdd)) {
@@ -64,7 +64,7 @@
         this.checkElements();
 
         // On resize change the height var
-        $(window).resize(function(e) {
+        $(window).resize(function (e) {
             windowHeight = e.currentTarget.innerHeight;
         });
     };

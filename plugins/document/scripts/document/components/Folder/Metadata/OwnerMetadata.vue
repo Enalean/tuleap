@@ -39,7 +39,7 @@ export default {
     name: "OwnerMetadata",
     components: { PeoplePicker },
     props: {
-        currentlyUpdatedItem: Object
+        currentlyUpdatedItem: Object,
     },
     computed: {
         owner_id: {
@@ -48,8 +48,8 @@ export default {
             },
             set(value) {
                 this.currentlyUpdatedItem.owner_id = value;
-            }
-        }
-    }
+            },
+        },
+    },
 };
 </script>

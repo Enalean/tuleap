@@ -26,8 +26,8 @@ async function getLabeledItems(project_id, labels_id, offset, limit) {
         params: {
             query: JSON.stringify({ labels_id }),
             limit,
-            offset
-        }
+            offset,
+        },
     });
 
     const total = Number.parseInt(response.headers.get("X-PAGINATION-SIZE"), 10);

@@ -27,14 +27,14 @@ describe(`list-value-to-column-mapper`, () => {
             const first_column = {
                 mappings: [
                     { tracker_id: 45, accepts: [{ id: 7546 }] },
-                    { tracker_id: 46, accepts: [{ id: 4366 }] }
-                ]
+                    { tracker_id: 46, accepts: [{ id: 4366 }] },
+                ],
             } as ColumnDefinition;
             const second_column = {
                 mappings: [
                     { tracker_id: 45, accepts: [{ id: 5398 }] },
-                    { tracker_id: 47, accepts: [{ id: 9857 }] }
-                ]
+                    { tracker_id: 47, accepts: [{ id: 9857 }] },
+                ],
             } as ColumnDefinition;
             const card = { tracker_id: 45, mapped_list_value: { id: 5398 } } as Card;
 
@@ -48,11 +48,11 @@ describe(`list-value-to-column-mapper`, () => {
             const first_column = {
                 mappings: [
                     { tracker_id: 45, accepts: [{ id: 7546 }] },
-                    { tracker_id: 46, accepts: [{ id: 4366 }] }
-                ]
+                    { tracker_id: 46, accepts: [{ id: 4366 }] },
+                ],
             } as ColumnDefinition;
             const second_column = {
-                mappings: [{ tracker_id: 45, accepts: [{ id: 7546 }] }]
+                mappings: [{ tracker_id: 45, accepts: [{ id: 7546 }] }],
             } as ColumnDefinition;
             const card = { tracker_id: 45, mapped_list_value: { id: 7546 } } as Card;
 
@@ -63,7 +63,7 @@ describe(`list-value-to-column-mapper`, () => {
 
         it(`when the column accepts multiple values, then it will return the column`, () => {
             const column = {
-                mappings: [{ tracker_id: 45, accepts: [{ id: 4366 }, { id: 7546 }] }]
+                mappings: [{ tracker_id: 45, accepts: [{ id: 4366 }, { id: 7546 }] }],
             } as ColumnDefinition;
             const card = { tracker_id: 45, mapped_list_value: { id: 7546 } } as Card;
 
@@ -74,7 +74,7 @@ describe(`list-value-to-column-mapper`, () => {
 
         it(`when there is no mapping for the card's tracker id, it will return undefined`, () => {
             const column = {
-                mappings: [{ tracker_id: 51, accepts: [{ id: 9857 }] }]
+                mappings: [{ tracker_id: 51, accepts: [{ id: 9857 }] }],
             } as ColumnDefinition;
             const card = { tracker_id: 45, mapped_list_value: { id: 9857 } } as Card;
 
@@ -90,7 +90,7 @@ describe(`list-value-to-column-mapper`, () => {
         it(`when the card has no mapped_list_value, it will return undefined`, () => {
             const card = { tracker_id: 45, mapped_list_value: null } as Card;
             const column = {
-                mappings: [{ tracker_id: 45, accepts: [{ id: 7546 }] }]
+                mappings: [{ tracker_id: 45, accepts: [{ id: 7546 }] }],
             } as ColumnDefinition;
             const columns = [column];
 

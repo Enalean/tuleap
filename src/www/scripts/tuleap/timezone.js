@@ -18,13 +18,11 @@
  */
 
 /* global jstz:readonly */
-!(function($) {
-    $(document).ready(function() {
+!(function ($) {
+    $(document).ready(function () {
         if (!$("#timezone option[selected]").val()) {
             var timezone = jstz.determine();
-            $("#timezone")
-                .val(timezone.name())
-                .prop("selected", true);
+            $("#timezone").val(timezone.name()).prop("selected", true);
         }
 
         $("#timezone").select2();

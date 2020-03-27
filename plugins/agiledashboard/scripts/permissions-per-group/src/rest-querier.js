@@ -26,8 +26,8 @@ async function getAgiledashboardPermissions(project_id, selected_ugroup_id) {
         params: {
             group_id: project_id,
             selected_ugroup_id: selected_ugroup_id,
-            action: "permission-per-group"
-        }
+            action: "permission-per-group",
+        },
     });
 
     return response.json();

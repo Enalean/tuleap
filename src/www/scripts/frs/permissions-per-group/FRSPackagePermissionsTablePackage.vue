@@ -56,16 +56,16 @@ export default {
     components: {
         EmptyState,
         UgroupBadge,
-        ReleasePermissions
+        ReleasePermissions,
     },
     props: {
         packagePermissions: Array,
-        selectedUgroupName: String
+        selectedUgroupName: String,
     },
     computed: {
         has_permissions() {
             return this.packagePermissions.length > 0;
-        }
-    }
+        },
+    },
 };
 </script>

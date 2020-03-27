@@ -22,7 +22,7 @@ import {
     MilestoneData,
     MilestoneResourcesData,
     TrackerProjectLabel,
-    TrackerProjectWithoutColor
+    TrackerProjectWithoutColor,
 } from "../type";
 
 describe("Tracker Label Helper", () => {
@@ -33,15 +33,15 @@ describe("Tracker Label Helper", () => {
                 resources: {
                     content: {
                         accept: {
-                            trackers: [] as TrackerProjectWithoutColor[]
-                        }
+                            trackers: [] as TrackerProjectWithoutColor[],
+                        },
                     },
                     milestones: {
                         accept: {
-                            trackers: [] as TrackerProjectLabel[]
-                        }
-                    }
-                } as MilestoneResourcesData
+                            trackers: [] as TrackerProjectLabel[],
+                        },
+                    },
+                } as MilestoneResourcesData,
             } as MilestoneData;
 
             const label = getTrackerSubmilestoneLabel(release);
@@ -56,19 +56,19 @@ describe("Tracker Label Helper", () => {
                 resources: {
                     content: {
                         accept: {
-                            trackers: [] as TrackerProjectWithoutColor[]
-                        }
+                            trackers: [] as TrackerProjectWithoutColor[],
+                        },
                     },
                     milestones: {
                         accept: {
                             trackers: [
                                 {
-                                    label: label_tracker
-                                }
-                            ] as TrackerProjectLabel[]
-                        }
-                    }
-                }
+                                    label: label_tracker,
+                                },
+                            ] as TrackerProjectLabel[],
+                        },
+                    },
+                },
             } as MilestoneData;
 
             const label = getTrackerSubmilestoneLabel(release);

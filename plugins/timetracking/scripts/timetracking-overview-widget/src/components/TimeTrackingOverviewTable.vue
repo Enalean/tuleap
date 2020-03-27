@@ -97,14 +97,14 @@ export default {
             "get_formatted_total_sum",
             "has_error",
             "can_results_be_displayed",
-            "is_sum_of_times_equals_zero"
+            "is_sum_of_times_equals_zero",
         ]),
         ...mapState([
             "trackers_times",
             "error_message",
             "is_loading",
             "are_void_trackers_hidden",
-            "users"
+            "users",
         ]),
         time_format_tooltip() {
             return this.$gettext("The time is displayed in hours:minutes");
@@ -125,12 +125,12 @@ export default {
             return this.are_void_trackers_hidden
                 ? this.$gettext("Show void trackers")
                 : this.$gettext("Hide void trackers");
-        }
+        },
     },
     methods: {
         setAreVoidTrackersHidden() {
             this.$store.dispatch("setPreference");
-        }
-    }
+        },
+    },
 };
 </script>

@@ -34,22 +34,22 @@ function getWrapper(
     return shallowMount(DropContainerCell, {
         propsData: {
             column,
-            swimlane
+            swimlane,
         },
         mocks: {
             $store: createStoreMock({
                 state: {
                     card_being_dragged: null,
                     column: {},
-                    swimlane: {}
+                    swimlane: {},
                 } as RootState,
                 getters: {
                     "column/accepted_trackers_ids": (): number[] => [],
-                    can_add_in_place: (): boolean => can_add_in_place
-                }
-            })
+                    can_add_in_place: (): boolean => can_add_in_place,
+                },
+            }),
         },
-        slots
+        slots,
     });
 }
 
@@ -57,7 +57,7 @@ describe("DropContainerCell", () => {
     it(`Given the column is expanded, it displays the content of the cell`, () => {
         const column: ColumnDefinition = { is_collapsed: false } as ColumnDefinition;
         const wrapper = getWrapper(column, false, {
-            default: '<div class="my-slot-content"></div>'
+            default: '<div class="my-slot-content"></div>',
         });
 
         expect(wrapper.classes("taskboard-cell-collapsed")).toBe(false);
@@ -67,7 +67,7 @@ describe("DropContainerCell", () => {
     it(`Given the column is collapsed, it does not display the content of the cell`, () => {
         const column: ColumnDefinition = { is_collapsed: true } as ColumnDefinition;
         const wrapper = getWrapper(column, false, {
-            default: '<div class="my-slot-content"></div>'
+            default: '<div class="my-slot-content"></div>',
         });
 
         expect(wrapper.classes("taskboard-cell-collapsed")).toBe(true);
@@ -113,7 +113,7 @@ describe("DropContainerCell", () => {
         const wrapper = getWrapper(column, false);
         wrapper.vm.$store.state.card_being_dragged = {
             tracker_id: 12,
-            card_id: 15
+            card_id: 15,
         };
 
         wrapper.trigger("pointerleave");

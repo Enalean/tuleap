@@ -29,7 +29,7 @@ const output = webpack_configurator.configureOutput(
 const entry_points = {
     "project-administration": "./scripts/src/project-administration.ts",
     "user-preferences": "./scripts/src/user-preferences.ts",
-    "user-preferences-style": "./themes/user-preferences.scss"
+    "user-preferences-style": "./themes/user-preferences.scss",
 };
 
 const colors = ["blue", "green", "grey", "orange", "purple", "red"];
@@ -46,7 +46,7 @@ module.exports = [
         context,
         output,
         externals: {
-            tlp: "tlp"
+            tlp: "tlp",
         },
         module: {
             rules: [
@@ -54,17 +54,17 @@ module.exports = [
                     webpack_configurator.babel_options_ie11
                 ),
                 webpack_configurator.rule_po_files,
-                webpack_configurator.rule_scss_loader
-            ]
+                webpack_configurator.rule_scss_loader,
+            ],
         },
         resolve: {
-            extensions: [".ts", ".js"]
+            extensions: [".ts", ".js"],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
             webpack_configurator.getTypescriptCheckerPlugin(false),
-            ...webpack_configurator.getCSSExtractionPlugins()
-        ]
-    }
+            ...webpack_configurator.getCSSExtractionPlugins(),
+        ],
+    },
 ];

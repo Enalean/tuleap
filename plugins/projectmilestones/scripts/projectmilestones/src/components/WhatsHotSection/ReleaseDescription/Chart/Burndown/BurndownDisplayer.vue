@@ -43,7 +43,7 @@ import Burndown from "./Burndown.vue";
 import { State } from "vuex-class";
 import { sprintf } from "sprintf-js";
 @Component({
-    components: { ChartError, Burndown }
+    components: { ChartError, Burndown },
 })
 export default class BurndownDisplayer extends Vue {
     @Prop()

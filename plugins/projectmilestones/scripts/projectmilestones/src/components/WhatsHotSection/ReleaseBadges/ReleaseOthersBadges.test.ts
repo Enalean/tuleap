@@ -48,15 +48,15 @@ describe("ReleaseOthersBadges", () => {
     beforeEach(() => {
         store_options = {
             state: {
-                project_id: project_id
-            }
+                project_id: project_id,
+            },
         };
 
         release_data = {
             id: 2,
             capacity: 10,
             total_sprint,
-            initial_effort
+            initial_effort,
         } as MilestoneData;
 
         component_options.propsData = { release_data };
@@ -75,7 +75,7 @@ describe("ReleaseOthersBadges", () => {
                 id: 2,
                 capacity: 10,
                 total_sprint,
-                initial_effort: null
+                initial_effort: null,
             } as MilestoneData;
 
             component_options.propsData = { release_data };
@@ -99,11 +99,11 @@ describe("ReleaseOthersBadges", () => {
                 id: 2,
                 capacity: null,
                 total_sprint,
-                initial_effort
+                initial_effort,
             } as MilestoneData;
 
             component_options.propsData = {
-                release_data
+                release_data,
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);

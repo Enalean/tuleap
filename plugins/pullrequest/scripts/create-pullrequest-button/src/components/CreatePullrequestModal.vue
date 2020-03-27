@@ -115,7 +115,7 @@ export default {
             "source_branches",
             "destination_branches",
             "create_error_message",
-            "is_creating_pullrequest"
+            "is_creating_pullrequest",
         ]),
         is_button_disabled() {
             return (
@@ -138,7 +138,7 @@ export default {
             },
             set(value) {
                 this.$store.commit("setSelectedSourceBranch", value);
-            }
+            },
         },
         destination_branch: {
             get() {
@@ -146,16 +146,16 @@ export default {
             },
             set(value) {
                 this.$store.commit("setSelectedDestinationBranch", value);
-            }
-        }
+            },
+        },
     },
     methods: {
         create() {
             this.$store.dispatch("create", {
                 source_branch: this.source_branch,
-                destination_branch: this.destination_branch
+                destination_branch: this.destination_branch,
             });
-        }
-    }
+        },
+    },
 };
 </script>

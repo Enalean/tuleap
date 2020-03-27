@@ -4,7 +4,7 @@ import "angular-mocks";
 import BaseController from "./app-kanban-controller.js";
 import { createAngularPromiseWrapper } from "../../../../../../tests/jest/angular-promise-wrapper.js";
 
-describe("KanbanCtrl -", function() {
+describe("KanbanCtrl -", function () {
     let $rootScope,
         $scope,
         $controller,
@@ -26,10 +26,10 @@ describe("KanbanCtrl -", function() {
         array.length = 0;
     }
 
-    beforeEach(function() {
+    beforeEach(function () {
         angular.mock.module(kanban_module);
 
-        angular.mock.inject(function(
+        angular.mock.inject(function (
             _$controller_,
             _$q_,
             _$rootScope_,
@@ -63,7 +63,7 @@ describe("KanbanCtrl -", function() {
             archive: {},
             backlog: {},
             columns: [{ id: 230 }, { id: 530 }],
-            tracker_id: 56
+            tracker_id: 56,
         };
 
         jest.spyOn(SharedPropertiesService, "getKanban").mockReturnValue(kanban);
@@ -97,15 +97,15 @@ describe("KanbanCtrl -", function() {
             KanbanColumnService: KanbanColumnService,
             SocketService: SocketService,
             ColumnCollectionService: ColumnCollectionService,
-            UserPreferencesService: UserPreferencesService
+            UserPreferencesService: UserPreferencesService,
         });
 
         wrapPromise = createAngularPromiseWrapper($rootScope);
     });
 
-    describe("init() -", function() {
-        describe("loadArchive() -", function() {
-            it("Given that the archive column was open, when I load it, then its content will be loaded and filtered", function() {
+    describe("init() -", function () {
+        describe("loadArchive() -", function () {
+            it("Given that the archive column was open, when I load it, then its content will be loaded and filtered", function () {
                 KanbanCtrl.archive.is_open = true;
                 var get_archive_request = $q.defer();
                 KanbanService.getArchive.mockReturnValue(get_archive_request.promise);
@@ -116,7 +116,7 @@ describe("KanbanCtrl -", function() {
                 expect(KanbanService.getArchive).toHaveBeenCalledWith(kanban.id, 50, 0);
 
                 get_archive_request.resolve({
-                    results: [{ id: 88 }, { id: 40 }]
+                    results: [{ id: 88 }, { id: 40 }],
                 });
                 $scope.$apply();
 
@@ -126,7 +126,7 @@ describe("KanbanCtrl -", function() {
                 expect(KanbanCtrl.archive.fully_loaded).toBeTruthy();
             });
 
-            it("Given that the archive column was closed, when I load it, then only its total number of items will be loaded", function() {
+            it("Given that the archive column was closed, when I load it, then only its total number of items will be loaded", function () {
                 var get_archive_size_request = $q.defer();
                 KanbanService.getArchiveSize.mockReturnValue(get_archive_size_request.promise);
 
@@ -143,8 +143,8 @@ describe("KanbanCtrl -", function() {
             });
         });
 
-        describe("loadBacklog() -", function() {
-            it("Given that the backlog column was open, when I load it, then its content will be loaded", function() {
+        describe("loadBacklog() -", function () {
+            it("Given that the backlog column was open, when I load it, then its content will be loaded", function () {
                 KanbanCtrl.backlog.is_open = true;
                 var get_backlog_request = $q.defer();
                 KanbanService.getBacklog.mockReturnValue(get_backlog_request.promise);
@@ -155,7 +155,7 @@ describe("KanbanCtrl -", function() {
                 expect(KanbanService.getBacklog).toHaveBeenCalledWith(kanban.id, 50, 0);
 
                 get_backlog_request.resolve({
-                    results: [{ id: 69 }, { id: 16 }]
+                    results: [{ id: 69 }, { id: 16 }],
                 });
                 $scope.$apply();
 
@@ -165,7 +165,7 @@ describe("KanbanCtrl -", function() {
                 expect(KanbanCtrl.backlog.fully_loaded).toBeTruthy();
             });
 
-            it("Given that the backlog column was closed, when I load it, then only its total number of items will be loaded", function() {
+            it("Given that the backlog column was closed, when I load it, then only its total number of items will be loaded", function () {
                 var get_backlog_size_request = $q.defer();
                 KanbanService.getBacklogSize.mockReturnValue(get_backlog_size_request.promise);
 
@@ -182,8 +182,8 @@ describe("KanbanCtrl -", function() {
             });
         });
 
-        describe("loadColumns() -", function() {
-            it("Given a kanban column that was open, when I load it, then its content will be loaded", function() {
+        describe("loadColumns() -", function () {
+            it("Given a kanban column that was open, when I load it, then its content will be loaded", function () {
                 var get_column_request = $q.defer();
                 jest.spyOn(KanbanService, "getItems").mockReturnValue(get_column_request.promise);
                 kanban.columns = [];
@@ -191,7 +191,7 @@ describe("KanbanCtrl -", function() {
                     id: 10,
                     label: "palate",
                     limit: 7,
-                    is_open: true
+                    is_open: true,
                 };
 
                 KanbanCtrl.$onInit();
@@ -211,7 +211,7 @@ describe("KanbanCtrl -", function() {
 
                 expect(KanbanService.getItems).toHaveBeenCalledWith(kanban.id, column.id, 50, 0);
                 get_column_request.resolve({
-                    results: [{ id: 981 }, { id: 331 }]
+                    results: [{ id: 981 }, { id: 331 }],
                 });
                 $scope.$apply();
 
@@ -221,7 +221,7 @@ describe("KanbanCtrl -", function() {
                 expect(column.fully_loaded).toBeTruthy();
             });
 
-            it("Given a kanban column that was closed, when I load it, then only its total number of items will be loaded", function() {
+            it("Given a kanban column that was closed, when I load it, then only its total number of items will be loaded", function () {
                 var get_column_size_request = $q.defer();
                 KanbanService.getColumnContentSize.mockReturnValue(get_column_size_request.promise);
                 kanban.columns = [];
@@ -229,7 +229,7 @@ describe("KanbanCtrl -", function() {
                     id: 75,
                     label: "undisfranchised",
                     limit: 21,
-                    is_open: false
+                    is_open: false,
                 };
 
                 KanbanCtrl.$onInit();
@@ -262,8 +262,8 @@ describe("KanbanCtrl -", function() {
         });
     });
 
-    describe("toggleArchive() -", function() {
-        it("Given that the archive column was open, when I toggle it, then it will be collapsed and its filtered content will be emptied", function() {
+    describe("toggleArchive() -", function () {
+        it("Given that the archive column was open, when I toggle it, then it will be collapsed and its filtered content will be emptied", function () {
             jest.spyOn(KanbanService, "collapseArchive").mockImplementation(() => {});
             KanbanCtrl.archive.is_open = true;
             KanbanCtrl.archive.filtered_content = [{ id: 82 }];
@@ -275,12 +275,12 @@ describe("KanbanCtrl -", function() {
             expect(KanbanCtrl.archive.is_open).toBeFalsy();
         });
 
-        describe("Given that the archive column was closed", function() {
-            beforeEach(function() {
+        describe("Given that the archive column was closed", function () {
+            beforeEach(function () {
                 KanbanCtrl.archive.is_open = false;
             });
 
-            it("and fully loaded, when I toggle it, then it will be expanded and filtered", function() {
+            it("and fully loaded, when I toggle it, then it will be expanded and filtered", function () {
                 jest.spyOn(KanbanService, "expandArchive").mockImplementation(() => {});
                 KanbanCtrl.archive.fully_loaded = true;
                 KanbanCtrl.archive.content = [{ id: 36 }];
@@ -292,7 +292,7 @@ describe("KanbanCtrl -", function() {
                 expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(KanbanCtrl.archive);
             });
 
-            it("and not yet loaded, when I toggle it, then it will be expanded and loaded", function() {
+            it("and not yet loaded, when I toggle it, then it will be expanded and loaded", function () {
                 KanbanCtrl.archive.fully_loaded = false;
 
                 KanbanCtrl.toggleArchive();
@@ -302,8 +302,8 @@ describe("KanbanCtrl -", function() {
         });
     });
 
-    describe("toggleBacklog() -", function() {
-        it("Given that the backlog column was open, when I toggle it, then it will be collapsed and its filtered content will be emptied", function() {
+    describe("toggleBacklog() -", function () {
+        it("Given that the backlog column was open, when I toggle it, then it will be collapsed and its filtered content will be emptied", function () {
             jest.spyOn(KanbanService, "collapseBacklog").mockImplementation(() => {});
             KanbanCtrl.backlog.is_open = true;
             KanbanCtrl.backlog.filtered_content = [{ id: 70 }];
@@ -315,12 +315,12 @@ describe("KanbanCtrl -", function() {
             expect(KanbanCtrl.backlog.is_open).toBeFalsy();
         });
 
-        describe("Given that the backlog column was closed", function() {
-            beforeEach(function() {
+        describe("Given that the backlog column was closed", function () {
+            beforeEach(function () {
                 KanbanCtrl.backlog.is_open = false;
             });
 
-            it("and fully loaded, when I toggle it, then it will be expanded and filtered", function() {
+            it("and fully loaded, when I toggle it, then it will be expanded and filtered", function () {
                 jest.spyOn(KanbanService, "expandBacklog").mockImplementation(() => {});
                 KanbanCtrl.backlog.fully_loaded = true;
                 KanbanCtrl.backlog.content = [{ id: 80 }];
@@ -332,7 +332,7 @@ describe("KanbanCtrl -", function() {
                 expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(KanbanCtrl.backlog);
             });
 
-            it("and not yet loaded, when I toggle it, then it will be expanded and loaded", function() {
+            it("and not yet loaded, when I toggle it, then it will be expanded and loaded", function () {
                 KanbanCtrl.backlog.fully_loaded = false;
 
                 KanbanCtrl.toggleBacklog();
@@ -342,13 +342,13 @@ describe("KanbanCtrl -", function() {
         });
     });
 
-    describe("toggleColumn() -", function() {
-        it("Given a kanban column that was open, when I toggle it, then it will be collapsed and its filtered content will be emptied", function() {
+    describe("toggleColumn() -", function () {
+        it("Given a kanban column that was open, when I toggle it, then it will be collapsed and its filtered content will be emptied", function () {
             jest.spyOn(KanbanService, "collapseColumn").mockImplementation(() => {});
             var column = {
                 id: 22,
                 is_open: true,
-                filtered_content: [{ id: 25 }]
+                filtered_content: [{ id: 25 }],
             };
 
             KanbanCtrl.toggleColumn(column);
@@ -358,16 +358,16 @@ describe("KanbanCtrl -", function() {
             expect(column.is_open).toBeFalsy();
         });
 
-        describe("Given a kanban column that was closed", function() {
+        describe("Given a kanban column that was closed", function () {
             var column;
-            beforeEach(function() {
+            beforeEach(function () {
                 column = {
                     id: 69,
-                    is_open: false
+                    is_open: false,
                 };
             });
 
-            it("and fully loaded, when I toggle it, then it will be expanded and filtered", function() {
+            it("and fully loaded, when I toggle it, then it will be expanded and filtered", function () {
                 jest.spyOn(KanbanService, "expandColumn").mockImplementation(() => {});
                 column.fully_loaded = true;
                 column.content = [{ id: 81 }];
@@ -381,8 +381,8 @@ describe("KanbanCtrl -", function() {
         });
     });
 
-    describe("createItemInPlace() -", function() {
-        it("Given a label and a kanban column, when I create a new kanban item, then it will be created using KanbanItemRestService and will be appended to the given column", function() {
+    describe("createItemInPlace() -", function () {
+        it("Given a label and a kanban column, when I create a new kanban item, then it will be created using KanbanItemRestService and will be appended to the given column", function () {
             var create_item_request = $q.defer();
             jest.spyOn(SharedPropertiesService, "doesUserPrefersCompactCards").mockReturnValue(
                 true
@@ -393,7 +393,7 @@ describe("KanbanCtrl -", function() {
             var column = {
                 id: 5,
                 content: [{ id: 97 }, { id: 69 }],
-                filtered_content: [{ id: 69 }]
+                filtered_content: [{ id: 69 }],
             };
 
             KanbanCtrl.createItemInPlace("photothermic", column);
@@ -403,22 +403,22 @@ describe("KanbanCtrl -", function() {
                 {
                     label: "photothermic",
                     updating: true,
-                    is_collapsed: true
-                }
+                    is_collapsed: true,
+                },
             ]);
             expect(column.filtered_content).toEqual([
                 { id: 69 },
                 {
                     label: "photothermic",
                     updating: true,
-                    is_collapsed: true
-                }
+                    is_collapsed: true,
+                },
             ]);
             expect(column.filtered_content).not.toBe(column.content);
 
             create_item_request.resolve({
                 id: 94,
-                label: "photothermic"
+                label: "photothermic",
             });
             $scope.$apply();
 
@@ -431,8 +431,8 @@ describe("KanbanCtrl -", function() {
         });
     });
 
-    describe("createItemInPlaceInBacklog() -", function() {
-        it("Given a label, when I create a new kanban item in the backlog, then it will be created using KanbanItemRestService and will be appended to the backlog", function() {
+    describe("createItemInPlaceInBacklog() -", function () {
+        it("Given a label, when I create a new kanban item in the backlog, then it will be created using KanbanItemRestService and will be appended to the backlog", function () {
             var create_item_request = $q.defer();
             jest.spyOn(SharedPropertiesService, "doesUserPrefersCompactCards").mockReturnValue(
                 true
@@ -450,22 +450,22 @@ describe("KanbanCtrl -", function() {
                 {
                     label: "unbeautifully",
                     updating: true,
-                    is_collapsed: true
-                }
+                    is_collapsed: true,
+                },
             ]);
             expect(KanbanCtrl.backlog.filtered_content).toEqual([
                 { id: 91 },
                 {
                     label: "unbeautifully",
                     updating: true,
-                    is_collapsed: true
-                }
+                    is_collapsed: true,
+                },
             ]);
             expect(KanbanCtrl.backlog.filtered_content).not.toBe(KanbanCtrl.backlog.content);
 
             create_item_request.resolve({
                 id: 11,
-                label: "unbeautifully"
+                label: "unbeautifully",
             });
             $scope.$apply();
 
@@ -477,9 +477,9 @@ describe("KanbanCtrl -", function() {
         });
     });
 
-    describe("filterCards() -", function() {
-        describe("Given that the backlog column", function() {
-            it("was open, when I filter the kanban, then the backlog will be filtered", function() {
+    describe("filterCards() -", function () {
+        describe("Given that the backlog column", function () {
+            it("was open, when I filter the kanban, then the backlog will be filtered", function () {
                 KanbanCtrl.backlog.is_open = true;
 
                 KanbanCtrl.filterCards();
@@ -487,7 +487,7 @@ describe("KanbanCtrl -", function() {
                 expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(KanbanCtrl.backlog);
             });
 
-            it("was closed, when I filter the kanban, then the backlog won't be filtered", function() {
+            it("was closed, when I filter the kanban, then the backlog won't be filtered", function () {
                 KanbanCtrl.backlog.is_open = false;
 
                 KanbanCtrl.filterCards();
@@ -496,8 +496,8 @@ describe("KanbanCtrl -", function() {
             });
         });
 
-        describe("Given that the archive column", function() {
-            it("was open, when I filter the kanban, then the archive will be filtered", function() {
+        describe("Given that the archive column", function () {
+            it("was open, when I filter the kanban, then the archive will be filtered", function () {
                 KanbanCtrl.archive.is_open = true;
 
                 KanbanCtrl.filterCards();
@@ -505,7 +505,7 @@ describe("KanbanCtrl -", function() {
                 expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(KanbanCtrl.archive);
             });
 
-            it("was closed, when I filter the kanban, then the archive won't be filtered", function() {
+            it("was closed, when I filter the kanban, then the archive won't be filtered", function () {
                 KanbanCtrl.archive.is_open = false;
 
                 KanbanCtrl.filterCards();
@@ -514,20 +514,20 @@ describe("KanbanCtrl -", function() {
             });
         });
 
-        describe("Given a kanban column", function() {
+        describe("Given a kanban column", function () {
             var column;
 
-            beforeEach(function() {
+            beforeEach(function () {
                 emptyArray(kanban.columns);
                 column = {
                     id: 8,
                     content: [{ id: 49 }, { id: 27 }],
-                    filtered_content: [{ id: 49 }, { id: 27 }]
+                    filtered_content: [{ id: 49 }, { id: 27 }],
                 };
                 kanban.columns[0] = column;
             });
 
-            it("that was open, when I filter the kanban, then the column will be filtered", function() {
+            it("that was open, when I filter the kanban, then the column will be filtered", function () {
                 column.is_open = true;
 
                 KanbanCtrl.filterCards();
@@ -535,7 +535,7 @@ describe("KanbanCtrl -", function() {
                 expect(KanbanColumnService.filterItems).toHaveBeenCalledWith(column);
             });
 
-            it("that was closed, when I filter the kanban, then the column won't be filtered", function() {
+            it("that was closed, when I filter the kanban, then the column won't be filtered", function () {
                 column.is_open = false;
 
                 KanbanCtrl.filterCards();
@@ -545,30 +545,30 @@ describe("KanbanCtrl -", function() {
         });
     });
 
-    describe("showEditModal() -", function() {
+    describe("showEditModal() -", function () {
         var fake_event;
-        beforeEach(function() {
+        beforeEach(function () {
             jest.spyOn(NewTuleapArtifactModalService, "showEdition").mockImplementation(() => {});
             SharedPropertiesService.getUserId.mockReturnValue(102);
             fake_event = {
                 which: 1,
-                preventDefault: jest.fn()
+                preventDefault: jest.fn(),
             };
         });
 
-        it("Given a left mouse click event, when I show the edition modal, then the default event will be prevented", function() {
+        it("Given a left mouse click event, when I show the edition modal, then the default event will be prevented", function () {
             KanbanCtrl.showEditModal(fake_event, {
                 id: 55,
-                color: "infaust"
+                color: "infaust",
             });
 
             expect(fake_event.preventDefault).toHaveBeenCalled();
         });
 
-        it("Given an item, when I show the edition modal, then the Tuleap Artifact Modal service will be called", function() {
+        it("Given an item, when I show the edition modal, then the Tuleap Artifact Modal service will be called", function () {
             KanbanCtrl.showEditModal(fake_event, {
                 id: 4288,
-                color: "Indianhood"
+                color: "Indianhood",
             });
 
             expect(NewTuleapArtifactModalService.showEdition).toHaveBeenCalledWith(
@@ -579,12 +579,12 @@ describe("KanbanCtrl -", function() {
             );
         });
 
-        describe("callback -", function() {
+        describe("callback -", function () {
             var fake_updated_item;
             var get_request;
 
-            beforeEach(function() {
-                NewTuleapArtifactModalService.showEdition.mockImplementation(function(
+            beforeEach(function () {
+                NewTuleapArtifactModalService.showEdition.mockImplementation(function (
                     c,
                     a,
                     b,
@@ -597,12 +597,12 @@ describe("KanbanCtrl -", function() {
                 jest.spyOn(KanbanCtrl, "moveItemAtTheEnd").mockImplementation(() => {});
 
                 var archive = {
-                    id: "archive"
+                    id: "archive",
                 };
                 var column = {
-                    id: 252
+                    id: 252,
                 };
-                ColumnCollectionService.getColumn.mockImplementation(function(column_id) {
+                ColumnCollectionService.getColumn.mockImplementation(function (column_id) {
                     if (column_id === "archive") {
                         return archive;
                     }
@@ -618,20 +618,20 @@ describe("KanbanCtrl -", function() {
                             field_id: 27,
                             type: "string",
                             label: "title",
-                            value: "omnigenous"
-                        }
+                            value: "omnigenous",
+                        },
                     ],
                     in_column: "archive",
-                    label: "omnigenous"
+                    label: "omnigenous",
                 };
             });
 
-            it("Given an item and given I changed its column during edition, when the new artifact modal calls its callback, then the kanban-item service will be called, the item will be refreshed with the new values and it will be moved at the end of its new column", function() {
+            it("Given an item and given I changed its column during edition, when the new artifact modal calls its callback, then the kanban-item service will be called, the item will be refreshed with the new values and it will be moved at the end of its new column", function () {
                 KanbanCtrl.showEditModal(fake_event, {
                     id: 108,
                     color: "nainsel",
                     in_column: 252,
-                    timeinfo: {}
+                    timeinfo: {},
                 });
                 get_request.resolve(fake_updated_item);
                 $scope.$apply();
@@ -647,12 +647,12 @@ describe("KanbanCtrl -", function() {
                 );
             });
 
-            it("Given an item and given that I did not change its column during edition, when the new artifact modal calls its callback, then the item will not be moved at the end of its new column", function() {
+            it("Given an item and given that I did not change its column during edition, when the new artifact modal calls its callback, then the item will not be moved at the end of its new column", function () {
                 KanbanCtrl.showEditModal(fake_event, {
                     id: 108,
                     color: "unpracticably",
                     in_column: "archive",
-                    timeinfo: {}
+                    timeinfo: {},
                 });
                 get_request.resolve(fake_updated_item);
                 $scope.$apply();
@@ -662,7 +662,7 @@ describe("KanbanCtrl -", function() {
         });
     });
 
-    describe("moveItemAtTheEnd() -", function() {
+    describe("moveItemAtTheEnd() -", function () {
         it(`Given a kanban item in a column and another kanban column,
             when I move the item to the column,
             then the item will be marked as updating,
@@ -675,15 +675,15 @@ describe("KanbanCtrl -", function() {
             var item = {
                 id: 19,
                 updating: false,
-                in_column: 3
+                in_column: 3,
             };
             var source_column = {
-                id: 3
+                id: 3,
             };
             var destination_column = {
-                id: 6
+                id: 6,
             };
-            ColumnCollectionService.getColumn.mockImplementation(function(column_id) {
+            ColumnCollectionService.getColumn.mockImplementation(function (column_id) {
                 if (column_id === 3) {
                     return source_column;
                 }
@@ -712,20 +712,20 @@ describe("KanbanCtrl -", function() {
         });
     });
 
-    describe("moveKanbanItemToTop() -", function() {
-        it("Given an item, when I move it to the top, then it will be moved to the top of its column", function() {
+    describe("moveKanbanItemToTop() -", function () {
+        it("Given an item, when I move it to the top, then it will be moved to the top of its column", function () {
             var item = {
                 id: 39,
-                in_column: 9
+                in_column: 9,
             };
 
             var column = {
-                id: 95
+                id: 95,
             };
             ColumnCollectionService.getColumn.mockReturnValue(column);
             var compared_to = {
                 direction: "before",
-                item_id: 44
+                item_id: 44,
             };
             DroppedService.getComparedToBeFirstItemOfColumn.mockReturnValue(compared_to);
 
@@ -746,20 +746,20 @@ describe("KanbanCtrl -", function() {
         });
     });
 
-    describe("moveKanbanItemToBottom() -", function() {
-        it("Given an item, when I move it to the bottom, then it will be moved to the bottom of its column", function() {
+    describe("moveKanbanItemToBottom() -", function () {
+        it("Given an item, when I move it to the bottom, then it will be moved to the bottom of its column", function () {
             var item = {
                 id: 74,
-                in_column: "archive"
+                in_column: "archive",
             };
 
             var archive = {
-                id: "archive"
+                id: "archive",
             };
             ColumnCollectionService.getColumn.mockReturnValue(archive);
             var compared_to = {
                 direction: "after",
-                item_id: 10
+                item_id: 10,
             };
             DroppedService.getComparedToBeLastItemOfColumn.mockReturnValue(compared_to);
 
@@ -809,7 +809,7 @@ describe("KanbanCtrl -", function() {
                 (all_items, column) => all_items.concat(column.content),
                 []
             );
-            all_kanban_items.forEach(item => {
+            all_kanban_items.forEach((item) => {
                 expect(item.is_collapsed).toBe(true);
             });
         });
@@ -830,7 +830,7 @@ describe("KanbanCtrl -", function() {
                 (all_items, column) => all_items.concat(column.content),
                 []
             );
-            all_kanban_items.forEach(item => {
+            all_kanban_items.forEach((item) => {
                 expect(item.is_collapsed).toBe(false);
             });
         });

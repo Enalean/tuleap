@@ -24,6 +24,6 @@ export default function OpenTlpDropdown() {
         restrict: "A",
         link(scope, element) {
             dropdown(element[0]);
-        }
+        },
     };
 }

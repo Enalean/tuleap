@@ -30,28 +30,28 @@ describe(`Tracker Workflow`, () => {
     const REMAINING_EFFORT_FIELD_LABEL = "Remaining Effort";
     const INITIAL_EFFORT_FIELD_LABEL = "Initial Effort";
 
-    before(function() {
+    before(function () {
         cy.clearCookie("__Host-TULEAP_session_hash");
         cy.ProjectAdministratorLogin();
         cy.getProjectId("tracker-project").as("project_id");
         getTrackerIdFromTrackerListPage()
             .as("workflow_tracker_id")
-            .then(workflow_tracker_id => {
+            .then((workflow_tracker_id) => {
                 cy.visit(`/plugins/tracker/workflow/${workflow_tracker_id}/transitions`);
             });
     });
 
-    beforeEach(function() {
+    beforeEach(function () {
         Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
         cy.server();
     });
 
-    it(`has an empty state`, function() {
+    it(`has an empty state`, function () {
         cy.get("[data-test=tracker-workflow-first-configuration]");
     });
 
     context("Simple mode", () => {
-        it(`can create and configure a workflow`, function() {
+        it(`can create and configure a workflow`, function () {
             cy.route("POST", "/api/tracker_workflow_transitions").as("post_workflow_transition");
             cy.route("DELETE", "/api/tracker_workflow_transitions/**").as(
                 "delete_workflow_transition"
@@ -69,7 +69,7 @@ describe(`Tracker Workflow`, () => {
                     .contains("On Going")
                     .parent("[data-test=matrix-row]")
                     .within(() => {
-                        cy.get("[data-test-action=create-transition]").each($button => {
+                        cy.get("[data-test-action=create-transition]").each(($button) => {
                             cy.wrap($button).click();
                             cy.wait("@post_workflow_transition");
                         });
@@ -79,14 +79,10 @@ describe(`Tracker Workflow`, () => {
                     .contains("(New artifact)")
                     .parent("[data-test=matrix-row]")
                     .within(() => {
-                        cy.get("[data-test-action=create-transition]")
-                            .first()
-                            .click();
+                        cy.get("[data-test-action=create-transition]").first().click();
                         cy.wait("@post_workflow_transition");
                     });
-                cy.get("[data-test=configure-state]")
-                    .first()
-                    .click();
+                cy.get("[data-test=configure-state]").first().click();
             });
             /* Configure a state */
             cy.get("[data-test=transition-modal]").within(() => {
@@ -114,9 +110,7 @@ describe(`Tracker Workflow`, () => {
                     .contains("(New artifact)")
                     .parent("[data-test=matrix-row]")
                     .within(() => {
-                        cy.get("[data-test-action=delete-transition]")
-                            .first()
-                            .click();
+                        cy.get("[data-test-action=delete-transition]").first().click();
                         cy.wait("@delete_workflow_transition");
                     });
             });

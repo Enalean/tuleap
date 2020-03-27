@@ -9,10 +9,10 @@ export default () => {
         restrict: "AE",
         scope: {
             card_field: "=field",
-            filter_terms: "@filterTerms"
+            filter_terms: "@filterTerms",
         },
         templateUrl: "card-text-field.tpl.html",
-        link
+        link,
     };
 
     function link(scope) {

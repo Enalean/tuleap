@@ -30,7 +30,7 @@ async function getPersonalWidgetInstance(
     const store = createStoreMock(store_options);
     const component_options = {
         mocks: { $store: store },
-        localVue: await createReleaseWidgetLocalVue()
+        localVue: await createReleaseWidgetLocalVue(),
     };
 
     return shallowMount(RoadmapSection, component_options);
@@ -43,11 +43,11 @@ describe("RoadmapSection", () => {
             state: {
                 is_loading: false,
                 current_milestones: [],
-                project_id: project_id
+                project_id: project_id,
             },
             getters: {
-                has_rest_error: false
-            }
+                has_rest_error: false,
+            },
         };
     });
 

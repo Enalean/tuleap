@@ -40,14 +40,14 @@ export default {
     name: "PullRequestBadge",
     props: {
         numberPullRequest: Number,
-        repositoryId: Number
+        repositoryId: Number,
     },
     computed: {
         pullrequest_url() {
             return `/plugins/git/?action=pull-requests&group_id=${getProjectId()}&repo_id=${
                 this.repositoryId
             }#/dashboard`;
-        }
-    }
+        },
+    },
 };
 </script>

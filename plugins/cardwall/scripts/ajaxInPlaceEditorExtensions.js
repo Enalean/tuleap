@@ -23,7 +23,7 @@
  * Adapted from https://groups.google.com/forum/?fromgroups=#!topic/prototype-scriptaculous/HcCxMmdAyjk
  */
 Ajax.InPlaceMultiCollectionEditor = Class.create(Ajax.InPlaceCollectionEditor, {
-    createEditField: function() {
+    createEditField: function () {
         var list = new Element("select");
         list.name = this.options.paramName;
         list.size = 1;
@@ -45,13 +45,13 @@ Ajax.InPlaceMultiCollectionEditor = Class.create(Ajax.InPlaceCollectionEditor, {
         }
     },
 
-    buildOptionList: function() {
+    buildOptionList: function () {
         this._form.removeClassName(this.options.loadingClassName);
         this._controls.editor.update("");
 
         this.getSelectedUsers();
         this._collection.each(
-            function(option) {
+            function (option) {
                 var option_element = new Element("option"),
                     option_key = option[0],
                     option_val = option[1];
@@ -68,7 +68,7 @@ Ajax.InPlaceMultiCollectionEditor = Class.create(Ajax.InPlaceCollectionEditor, {
         Field.scrollFreeActivate(this._controls.editor);
     },
 
-    getSelectedUsers: function() {
+    getSelectedUsers: function () {
         this.options.selected = {};
-    }
+    },
 });

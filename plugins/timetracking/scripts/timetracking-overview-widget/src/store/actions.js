@@ -28,7 +28,7 @@ import {
     getTrackersWithTimetracking,
     getTimes,
     saveNewReport,
-    setDisplayPreference
+    setDisplayPreference,
 } from "../api/rest-querier.js";
 import { ERROR_OCCURRED } from "../../../constants.js";
 

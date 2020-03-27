@@ -28,14 +28,14 @@ describe("TimeTrackingOverviewTrackerList tests", () => {
         beforeEach(() => {
             store_options = {
                 state: {
-                    selected_trackers: []
-                }
+                    selected_trackers: [],
+                },
             };
             store = createStoreMock(store_options);
 
             component_options = {
                 localVue,
-                mocks: { $store: store }
+                mocks: { $store: store },
             };
         });
 
@@ -51,28 +51,28 @@ describe("TimeTrackingOverviewTrackerList tests", () => {
                 {
                     artifacts: [
                         {
-                            minutes: 20
+                            minutes: 20,
                         },
                         {
-                            minutes: 40
-                        }
+                            minutes: 40,
+                        },
                     ],
                     id: "16",
                     label: "tracker",
                     project: {},
-                    uri: ""
+                    uri: "",
                 },
                 {
                     artifacts: [
                         {
-                            minutes: 20
-                        }
+                            minutes: 20,
+                        },
                     ],
                     id: "18",
                     label: "tracker 2",
                     project: {},
-                    uri: ""
-                }
+                    uri: "",
+                },
             ];
 
             const wrapper = shallowMount(TimeTrackingOverviewTrackerList, component_options);

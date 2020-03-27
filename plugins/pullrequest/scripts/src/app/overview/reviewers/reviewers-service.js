@@ -27,13 +27,13 @@ function ReviewersService(ReviewersRestService) {
     Object.assign(self, {
         getReviewers,
         updateReviewers,
-        buildUserRepresentationsForPut
+        buildUserRepresentationsForPut,
     });
 
     function getReviewers(pull_request) {
         let reviewers = [];
 
-        return ReviewersRestService.getReviewers(pull_request.id).then(response => {
+        return ReviewersRestService.getReviewers(pull_request.id).then((response) => {
             reviewers = response.data.users;
 
             return reviewers;
@@ -45,7 +45,7 @@ function ReviewersService(ReviewersRestService) {
     }
 
     function buildUserRepresentationsForPut(user_representations) {
-        return Array.from(user_representations, user => {
+        return Array.from(user_representations, (user) => {
             return { id: parseInt(user.id, 10) };
         });
     }

@@ -18,5 +18,5 @@
  */
 
 export default {
-    tracker_fields: []
+    tracker_fields: [],
 };

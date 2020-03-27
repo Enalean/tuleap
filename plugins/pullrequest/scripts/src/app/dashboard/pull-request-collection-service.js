@@ -5,7 +5,7 @@ export default PullRequestCollectionService;
 PullRequestCollectionService.$inject = [
     "SharedPropertiesService",
     "PullRequestService",
-    "PullRequestCollectionRestService"
+    "PullRequestCollectionRestService",
 ];
 
 function PullRequestCollectionService(
@@ -26,7 +26,7 @@ function PullRequestCollectionService(
         loadOpenPullRequests,
         search,
 
-        all_pull_requests: []
+        all_pull_requests: [],
     });
 
     let open_pull_requests_loaded = false;
@@ -38,11 +38,11 @@ function PullRequestCollectionService(
         const repository_id = SharedPropertiesService.getRepositoryId();
 
         return PullRequestCollectionRestService.getAllPullRequests(repository_id).then(
-            pull_requests => {
+            (pull_requests) => {
                 const closed_pull_requests = [];
                 const open_pull_requests = [];
 
-                pull_requests.forEach(pull_request => {
+                pull_requests.forEach((pull_request) => {
                     if (PullRequestService.isPullRequestClosed(pull_request)) {
                         closed_pull_requests.push(pull_request);
                         return;
@@ -73,7 +73,7 @@ function PullRequestCollectionService(
         return PullRequestCollectionRestService.getAllOpenPullRequests(
             repository_id,
             callback
-        ).then(function(open_pull_requests) {
+        ).then(function (open_pull_requests) {
             if (!self.areClosedPullRequestsFullyLoaded()) {
                 resetAllPullRequests(open_pull_requests);
             }
@@ -89,7 +89,7 @@ function PullRequestCollectionService(
         return PullRequestCollectionRestService.getAllClosedPullRequests(
             repository_id,
             progressivelyLoadCallback
-        ).then(function(closed_pull_requests) {
+        ).then(function (closed_pull_requests) {
             there_is_at_least_one_closed_pull_request = closed_pull_requests.length > 0;
             closed_pull_requests_loaded = true;
         });

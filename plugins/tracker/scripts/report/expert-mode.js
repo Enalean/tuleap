@@ -76,7 +76,7 @@ function initializeTrackerReportAllowedFields() {
         return;
     }
 
-    tracker_report_expert_allowed_fields.addEventListener("click", event =>
+    tracker_report_expert_allowed_fields.addEventListener("click", (event) =>
         insertAllowedFieldInCodeMirror(event, query_rich_editor)
     );
 }
@@ -117,7 +117,7 @@ function codeMirrorifyQueryArea() {
         query_rich_editor = codeMirrorify({
             textarea_element: tracker_query,
             autocomplete_keywords,
-            submitFormCallback
+            submitFormCallback,
         });
     }
 }

@@ -25,20 +25,20 @@ import CardAssignees from "./CardAssignees.vue";
 function getWrapper(card: Card, slots: Slots = {}): Wrapper<CardInfo> {
     return shallowMount(CardInfo, {
         propsData: { card, tracker: {} as Tracker, value: [] as number[] },
-        slots
+        slots,
     });
 }
 
 function getCard(
     definition: Card = {
-        is_in_edit_mode: false
+        is_in_edit_mode: false,
     } as Card
 ): Card {
     return {
         id: 43,
         color: "lake-placid-blue",
         assignees: [] as User[],
-        ...definition
+        ...definition,
     } as Card;
 }
 
@@ -51,7 +51,7 @@ describe("CardInfo", () => {
 
     it("Includes the initial effort slot", () => {
         const wrapper = getWrapper(getCard(), {
-            initial_effort: '<div class="my-initial-effort"></div>'
+            initial_effort: '<div class="my-initial-effort"></div>',
         });
 
         expect(wrapper.contains(".taskboard-card-info > .my-initial-effort")).toBe(true);
@@ -59,7 +59,7 @@ describe("CardInfo", () => {
 
     it("Does not include the initial effort slot if card is in edit mode", () => {
         const wrapper = getWrapper(getCard({ is_in_edit_mode: true } as Card), {
-            initial_effort: '<div class="my-initial-effort"></div>'
+            initial_effort: '<div class="my-initial-effort"></div>',
         });
 
         expect(wrapper.contains(".taskboard-card-info > .my-initial-effort")).toBe(false);

@@ -37,17 +37,17 @@
 export default {
     name: "GitInlineFilter",
     props: {
-        value: String
+        value: String,
     },
     computed: {
         placeholder() {
             return this.$gettext("Repository name");
-        }
+        },
     },
     methods: {
         search(event) {
             this.$emit("input", event.target.value);
-        }
-    }
+        },
+    },
 };
 </script>

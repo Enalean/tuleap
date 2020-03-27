@@ -51,6 +51,6 @@ import { edit_modal_mixin } from "./edit-modal-mixin.js";
 export default {
     name: "BaseProjectAdminEditModal",
     components: { ReadOnlySystemService, EditModal, InEditionCustomService, SidebarPreviewer },
-    mixins: [service_modal_mixin, edit_modal_mixin]
+    mixins: [service_modal_mixin, edit_modal_mixin],
 };
 </script>

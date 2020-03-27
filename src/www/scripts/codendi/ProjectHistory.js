@@ -21,7 +21,7 @@
  * Manage the form that filters project history
  */
 var ProjectHistory = Class.create({
-    initialize: function(sub_events_array, selected_sub_events) {
+    initialize: function (sub_events_array, selected_sub_events) {
         if (!sub_events_array) {
             throw new Error("sub_events_array is mandatory!");
         }
@@ -32,7 +32,7 @@ var ProjectHistory = Class.create({
         // Load sub events content when page loads
         this.SelectSubEvent(selected_sub_events);
     },
-    SelectSubEvent: function(selected_sub_events) {
+    SelectSubEvent: function (selected_sub_events) {
         this.removeAllOptions($("sub_events_box"));
         this.addOption("choose", "choose_event", false, true);
 
@@ -42,13 +42,13 @@ var ProjectHistory = Class.create({
             this.addOption(history_event, key, selected_sub_events[key]);
         }
     },
-    removeAllOptions: function(selectbox) {
+    removeAllOptions: function (selectbox) {
         var i;
         for (i = selectbox.options.length - 1; i >= 0; i--) {
             selectbox.remove(i);
         }
     },
-    addOption: function(history_event, value, selected, disabled) {
+    addOption: function (history_event, value, selected, disabled) {
         var optn = Builder.node(
             "option",
             { value: value },
@@ -65,6 +65,6 @@ var ProjectHistory = Class.create({
         } else {
             optn.disabled = false;
         }
-    }
+    },
 });
 window.ProjectHistory = ProjectHistory;

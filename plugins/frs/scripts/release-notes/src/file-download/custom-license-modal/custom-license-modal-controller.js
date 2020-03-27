@@ -22,7 +22,7 @@ export default CustomLicenseModalController;
 CustomLicenseModalController.$inject = [
     "modal_instance",
     "acceptCallback",
-    "SharedPropertiesService"
+    "SharedPropertiesService",
 ];
 
 function CustomLicenseModalController(modal_instance, acceptCallback, SharedPropertiesService) {
@@ -34,7 +34,7 @@ function CustomLicenseModalController(modal_instance, acceptCallback, SharedProp
         accept,
 
         title: license_agreement.title,
-        content: license_agreement.content
+        content: license_agreement.content,
     });
 
     function accept() {

@@ -23,7 +23,7 @@ Cypress.Commands.add("login", () => {
     cy.get("#form_pw").type("Correct Horse Battery Staple{enter}");
 });
 
-Cypress.Commands.add("getProjectId", project_shortname => {
+Cypress.Commands.add("getProjectId", (project_shortname) => {
     cy.visit(`/projects/${project_shortname}/`);
     return cy.get("[data-test=project-sidebar]").should("have.attr", "data-project-id");
 });

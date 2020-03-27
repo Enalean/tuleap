@@ -45,14 +45,14 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function initModals() {
-    document.addEventListener("click", event => {
+    document.addEventListener("click", (event) => {
         const button = event.target;
         if (
             button.id === "project-admin-members-modal-import-users-button" ||
             button.classList.contains("project-members-delete-button")
         ) {
             const modal = createModal(document.getElementById(button.dataset.targetModalId), {
-                destroy_on_hide: true
+                destroy_on_hide: true,
             });
 
             if (button.classList.contains("project-members-delete-button")) {
@@ -97,7 +97,7 @@ function initProjectMembersSelect2() {
 
     autocomplete_users_for_select2(select_element, {
         internal_users_only: false,
-        project_id: select_element.dataset.projectId
+        project_id: select_element.dataset.projectId,
     });
 }
 

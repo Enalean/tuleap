@@ -35,14 +35,14 @@ describe("computed-field-value-formatter", () => {
                 label: "heresiologist",
                 manual_value: 4,
                 permissions: ["read", "update", "create"],
-                value: 10
+                value: 10,
             };
 
             const result = formatComputedFieldValue(field_value);
 
             expect(result).toEqual({
                 field_id: 415,
-                is_autocomputed: true
+                is_autocomputed: true,
             });
         });
 
@@ -54,7 +54,7 @@ describe("computed-field-value-formatter", () => {
                     label: "Sangraal",
                     manual_value: null,
                     permissions: ["read", "update", "create"],
-                    value: 97
+                    value: 97,
                 };
 
                 const result = formatComputedFieldValue(field_value);
@@ -70,14 +70,14 @@ describe("computed-field-value-formatter", () => {
                     label: "psalmless",
                     manual_value: 33,
                     permissions: ["read", "update", "create"],
-                    value: 88
+                    value: 88,
                 };
 
                 const result = formatComputedFieldValue(field_value);
 
                 expect(result).toEqual({
                     field_id: 306,
-                    manual_value: 33
+                    manual_value: 33,
                 });
             });
         });

@@ -32,7 +32,7 @@ describe("WrongColorPopover", () => {
         const wrapper = shallowMount(WrongColorPopover, {
             localVue: await createTaskboardLocalVue(),
             mocks: { $store: createStoreMock({ state: { admin_url: "/path/to/admin" } }) },
-            propsData: { color: "#87DBEF" }
+            propsData: { color: "#87DBEF" },
         });
 
         expect(wrapper.element).toMatchSnapshot();

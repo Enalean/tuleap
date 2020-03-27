@@ -49,7 +49,7 @@ export default class ExpandButton extends Vue {
 
     get title(): string {
         return this.$gettextInterpolate(this.$gettext('Expand "%{ label }" column'), {
-            label: this.column.label
+            label: this.column.label,
         });
     }
 }

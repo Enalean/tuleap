@@ -29,8 +29,8 @@ describe("App", () => {
             localVue: await createProjectAdminBannerLocalVue(),
             propsData: {
                 message: "",
-                project_id: 108
-            }
+                project_id: 108,
+            },
         });
 
         expect(wrapper.element).toMatchSnapshot();
@@ -43,8 +43,8 @@ describe("App", () => {
             localVue: await createProjectAdminBannerLocalVue(),
             propsData: {
                 message: banner_message,
-                project_id: 108
-            }
+                project_id: 108,
+            },
         });
 
         expect(wrapper.element).toMatchSnapshot();
@@ -55,8 +55,8 @@ describe("App", () => {
             localVue: await createProjectAdminBannerLocalVue(),
             propsData: {
                 message: "some message",
-                project_id: 108
-            }
+                project_id: 108,
+            },
         });
 
         delete window.location;
@@ -82,8 +82,8 @@ describe("App", () => {
             localVue: await createProjectAdminBannerLocalVue(),
             propsData: {
                 message: "some message",
-                project_id: 108
-            }
+                project_id: 108,
+            },
         });
 
         jest.spyOn(rest_querier, "deleteBannerForProject").mockImplementation(() => {
@@ -105,8 +105,8 @@ describe("App", () => {
             localVue: await createProjectAdminBannerLocalVue(),
             propsData: {
                 message: "some message",
-                project_id: 108
-            }
+                project_id: 108,
+            },
         });
 
         delete window.location;
@@ -133,8 +133,8 @@ describe("App", () => {
             localVue: await createProjectAdminBannerLocalVue(),
             propsData: {
                 message: "some message",
-                project_id: 108
-            }
+                project_id: 108,
+            },
         });
 
         jest.spyOn(rest_querier, "saveBannerForProject").mockImplementation(() => {

@@ -21,7 +21,7 @@ import {
     buildLineGroups,
     UNMOVED_GROUP,
     DELETED_GROUP,
-    ADDED_GROUP
+    ADDED_GROUP,
 } from "./side-by-side-line-grouper.js";
 
 describe("Side-by-side line grouper", () => {
@@ -34,7 +34,7 @@ describe("Side-by-side line grouper", () => {
                 { unidiff_offset: 4, old_offset: 4, new_offset: null },
                 { unidiff_offset: 5, old_offset: 5, new_offset: 2 },
                 { unidiff_offset: 6, old_offset: 6, new_offset: null },
-                { unidiff_offset: 7, old_offset: 7, new_offset: null }
+                { unidiff_offset: 7, old_offset: 7, new_offset: null },
             ];
 
             it("Given diff lines, then it will return groups of deleted lines and a map from first line to group to be able to place line widgets", () => {
@@ -48,19 +48,19 @@ describe("Side-by-side line grouper", () => {
 
                 expect(first_unmoved_group).toEqual({
                     type: UNMOVED_GROUP,
-                    unidiff_offsets: [1]
+                    unidiff_offsets: [1],
                 });
                 expect(first_deleted_group).toEqual({
                     type: DELETED_GROUP,
-                    unidiff_offsets: [2, 3, 4]
+                    unidiff_offsets: [2, 3, 4],
                 });
                 expect(second_unmoved_group).toEqual({
                     type: UNMOVED_GROUP,
-                    unidiff_offsets: [5]
+                    unidiff_offsets: [5],
                 });
                 expect(second_deleted_group).toEqual({
                     type: DELETED_GROUP,
-                    unidiff_offsets: [6, 7]
+                    unidiff_offsets: [6, 7],
                 });
             });
 
@@ -92,7 +92,7 @@ describe("Side-by-side line grouper", () => {
                 { unidiff_offset: 5, old_offset: null, new_offset: 5 },
                 { unidiff_offset: 6, old_offset: 3, new_offset: 6 },
                 { unidiff_offset: 7, old_offset: null, new_offset: 7 },
-                { unidiff_offset: 8, old_offset: null, new_offset: 8 }
+                { unidiff_offset: 8, old_offset: null, new_offset: 8 },
             ];
 
             it("Given diff lines, then it will return groups of added lines to be able to add line widgets", () => {
@@ -106,19 +106,19 @@ describe("Side-by-side line grouper", () => {
 
                 expect(first_unmoved_group).toEqual({
                     type: UNMOVED_GROUP,
-                    unidiff_offsets: [1, 2]
+                    unidiff_offsets: [1, 2],
                 });
                 expect(first_added_group).toEqual({
                     type: ADDED_GROUP,
-                    unidiff_offsets: [3, 4, 5]
+                    unidiff_offsets: [3, 4, 5],
                 });
                 expect(second_unmoved_group).toEqual({
                     type: UNMOVED_GROUP,
-                    unidiff_offsets: [6]
+                    unidiff_offsets: [6],
                 });
                 expect(second_added_group).toEqual({
                     type: ADDED_GROUP,
-                    unidiff_offsets: [7, 8]
+                    unidiff_offsets: [7, 8],
                 });
             });
 

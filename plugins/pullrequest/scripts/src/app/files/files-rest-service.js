@@ -11,7 +11,7 @@ function FilesRestService($http, $q, ErrorModalService) {
         return $http
             .get("/api/v1/pull_requests/" + pull_request_id + "/files")
             .then(({ data }) => data)
-            .catch(response => {
+            .catch((response) => {
                 ErrorModalService.showError(response);
                 return $q.reject(response);
             });

@@ -18,26 +18,20 @@
  */
 
 /* global jQuery:readonly */
-(function($) {
-    $(document).ready(function() {
+(function ($) {
+    $(document).ready(function () {
         var templates = $(".one_step_project_choose_template > label.radio > input[type=radio]");
 
         function toggleTemplate(template) {
             if (template.prop("checked") === true) {
-                template
-                    .parents("label")
-                    .nextAll()
-                    .show();
+                template.parents("label").nextAll().show();
             } else {
-                template
-                    .parents("label")
-                    .nextAll()
-                    .hide();
+                template.parents("label").nextAll().hide();
             }
         }
 
         function toggleAllTemplates() {
-            templates.each(function() {
+            templates.each(function () {
                 var template = $(this);
                 toggleTemplate(template);
             });
@@ -45,7 +39,7 @@
 
         if (templates !== undefined) {
             toggleAllTemplates();
-            templates.click(function() {
+            templates.click(function () {
                 toggleAllTemplates();
             });
         }

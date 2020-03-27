@@ -73,7 +73,7 @@ export default {
         CreationModalPermissionsSection,
         ModalFeedback,
         ModalHeader,
-        ModalFooter
+        ModalFooter,
     },
     data() {
         return {
@@ -82,7 +82,7 @@ export default {
             is_displayed: false,
             modal: null,
             parent: {},
-            metadata: null
+            metadata: null,
         };
     },
     computed: {
@@ -96,7 +96,7 @@ export default {
         },
         aria_labelled_by() {
             return "document-new-item-modal";
-        }
+        },
     },
     mounted() {
         this.item = this.getDefaultItem();
@@ -119,8 +119,8 @@ export default {
                 permissions_for_groups: {
                     can_read: [],
                     can_write: [],
-                    can_manage: []
-                }
+                    can_manage: [],
+                },
             };
         },
         async show(event) {
@@ -152,7 +152,7 @@ export default {
             await this.$store.dispatch("createNewItem", [
                 this.item,
                 this.parent,
-                this.current_folder
+                this.current_folder,
             ]);
             this.is_loading = false;
             if (this.has_modal_error === false) {
@@ -172,10 +172,10 @@ export default {
                 return;
             }
             const item_metadata = this.item.metadata.find(
-                metadata => metadata.short_name === event.detail.id
+                (metadata) => metadata.short_name === event.detail.id
             );
             item_metadata.list_value = event.detail.value;
-        }
-    }
+        },
+    },
 };
 </script>

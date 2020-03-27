@@ -102,10 +102,10 @@ export default {
         show_empty_state() {
             return this.isCurrentRepositoryListEmpty && this.isInitialLoadingDoneWithoutError;
         },
-        ...mapGetters(["isCurrentRepositoryListEmpty", "isInitialLoadingDoneWithoutError"])
+        ...mapGetters(["isCurrentRepositoryListEmpty", "isInitialLoadingDoneWithoutError"]),
     },
     methods: {
-        ...mapActions(["showAddRepositoryModal"])
-    }
+        ...mapActions(["showAddRepositoryModal"]),
+    },
 };
 </script>

@@ -23,5 +23,5 @@ export function buildGraphScales({
     graph_width,
     graph_height,
     y_axis_maximum,
-    x_axis_tick_values
+    x_axis_tick_values,
 }: PropertiesBuilderGraph): XYScale;

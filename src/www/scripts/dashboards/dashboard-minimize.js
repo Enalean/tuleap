@@ -21,8 +21,8 @@ export default init;
 function init() {
     var minimize_buttons = document.querySelectorAll(".dashboard-widget-icons-minimize");
 
-    [].forEach.call(minimize_buttons, function(button) {
-        button.addEventListener("click", function() {
+    [].forEach.call(minimize_buttons, function (button) {
+        button.addEventListener("click", function () {
             button.parentNode.submit();
         });
     });

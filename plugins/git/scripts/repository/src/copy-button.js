@@ -35,7 +35,7 @@ export default function initCopyButton() {
 
     const original_title = copy_button.getAttribute("data-tlp-tooltip");
 
-    copy_button.addEventListener("click", function() {
+    copy_button.addEventListener("click", function () {
         input.select();
         document.execCommand("copy");
         copy_button.setAttribute(
@@ -48,7 +48,7 @@ export default function initCopyButton() {
 }
 
 function removeTooltipDisplay(copy_button, original_title) {
-    setTimeout(function() {
+    setTimeout(function () {
         copy_button.setAttribute("data-tlp-tooltip", original_title);
     }, 5000);
 }

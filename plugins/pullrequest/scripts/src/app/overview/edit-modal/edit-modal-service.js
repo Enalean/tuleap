@@ -9,7 +9,7 @@ function EditModalService(TlpModalService) {
     const self = this;
 
     Object.assign(self, {
-        showEditModal
+        showEditModal,
     });
 
     function showEditModal(pullrequest) {
@@ -19,9 +19,9 @@ function EditModalService(TlpModalService) {
             controllerAs: "edit_modal",
             tlpModalOptions: {
                 keyboard: true,
-                backdrop: "static"
+                backdrop: "static",
             },
-            resolve: { pullrequest }
+            resolve: { pullrequest },
         });
     }
 }

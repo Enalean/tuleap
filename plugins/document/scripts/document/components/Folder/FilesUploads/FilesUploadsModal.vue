@@ -34,7 +34,7 @@
                 v-for="file in files_uploads_list"
                 v-bind:key="file.id"
                 v-bind:class="{
-                    'document-dragndrop-file-upload-error': file.upload_error !== null
+                    'document-dragndrop-file-upload-error': file.upload_error !== null,
                 }"
             >
                 <div class="document-uploads-file">
@@ -77,20 +77,20 @@ import { FILE_UPLOAD_UNKNOWN_ERROR } from "../../../constants.js";
 
 export default {
     components: {
-        UploadProgressBar
+        UploadProgressBar,
     },
     computed: {
         ...mapState(["files_uploads_list"]),
         close() {
             return this.$gettext("Close");
-        }
+        },
     },
     methods: {
         getUploadErrorMessage(file) {
             return file.upload_error === FILE_UPLOAD_UNKNOWN_ERROR
                 ? this.$gettext("An error has occurred, please contact your administrator")
                 : file.upload_error;
-        }
-    }
+        },
+    },
 };
 </script>

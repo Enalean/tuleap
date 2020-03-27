@@ -43,7 +43,7 @@ function bindToggleDropdown() {
 }
 
 function bindCloseOnClickOutsideDropdown() {
-    document.addEventListener("click", event => {
+    document.addEventListener("click", (event) => {
         const target = event.target;
 
         if (
@@ -56,7 +56,7 @@ function bindCloseOnClickOutsideDropdown() {
 }
 
 function bindCloseOnEscape() {
-    document.addEventListener("keyup", event => {
+    document.addEventListener("keyup", (event) => {
         const target = event.target;
 
         const dropdown_content = target.closest("." + nav_dropdown_content_classname);

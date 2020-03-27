@@ -30,6 +30,6 @@ function ReviewersDirective() {
         templateUrl: "reviewers.tpl.html",
         controller: ReviewersController,
         controllerAs: "reviewers_controller",
-        bindToController: true
+        bindToController: true,
     };
 }

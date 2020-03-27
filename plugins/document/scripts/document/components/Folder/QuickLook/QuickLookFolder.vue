@@ -45,17 +45,17 @@ import EventBus from "../../../helpers/event-bus.js";
 export default {
     components: { QuickLookDeleteButton, DropDownQuickLook },
     props: {
-        item: Object
+        item: Object,
     },
     computed: {
         can_delete_folder() {
             return this.item.user_can_write;
-        }
+        },
     },
     methods: {
         showNewFolderModal() {
             EventBus.$emit("show-new-folder-modal", { detail: { parent: this.item } });
-        }
-    }
+        },
+    },
 };
 </script>

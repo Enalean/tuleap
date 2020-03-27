@@ -19,7 +19,7 @@
 
 /* global tuleap:readonly */
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     var input = document.querySelector("#listeners_to_add");
 
     if (!input) {

@@ -25,7 +25,7 @@ export {
     getForkedRepositoryList,
     postRepository,
     setRepositoriesSortedByPathUserPreference,
-    deleteRepositoriesSortedByPathUserPreference
+    deleteRepositoriesSortedByPathUserPreference,
 };
 
 const USER_PREFERENCE_KEY = "are_git_repositories_sorted_by_path";
@@ -33,12 +33,12 @@ const USER_PREFERENCE_KEY = "are_git_repositories_sorted_by_path";
 function setRepositoriesSortedByPathUserPreference(user_id) {
     return patch(`/api/users/${user_id}/preferences`, {
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
         },
         body: JSON.stringify({
             key: USER_PREFERENCE_KEY,
-            value: REPOSITORIES_SORTED_BY_PATH
-        })
+            value: REPOSITORIES_SORTED_BY_PATH,
+        }),
     });
 }
 
@@ -58,13 +58,13 @@ function getForkedRepositoryList(project_id, owner_id, order_by, displayCallback
         params: {
             query: JSON.stringify({
                 scope: "individual",
-                owner_id: Number.parseInt(owner_id, 10)
+                owner_id: Number.parseInt(owner_id, 10),
             }),
             order_by,
             limit: 50,
-            offset: 0
+            offset: 0,
         },
-        getCollectionCallback: buildCollectionCallback(displayCallback)
+        getCollectionCallback: buildCollectionCallback(displayCallback),
     });
 }
 
@@ -72,29 +72,29 @@ function getRepositoryList(project_id, order_by, displayCallback) {
     return recursiveGet("/api/projects/" + project_id + "/git", {
         params: {
             query: JSON.stringify({
-                scope: "project"
+                scope: "project",
             }),
             order_by,
             limit: 50,
-            offset: 0
+            offset: 0,
         },
-        getCollectionCallback: buildCollectionCallback(displayCallback)
+        getCollectionCallback: buildCollectionCallback(displayCallback),
     });
 }
 
 async function postRepository(project_id, repository_name) {
     const headers = {
-        "content-type": "application/json"
+        "content-type": "application/json",
     };
 
     const body = JSON.stringify({
         project_id,
-        name: repository_name
+        name: repository_name,
     });
 
     const response = await post("/api/git/", {
         headers,
-        body
+        body,
     });
 
     return response.json();

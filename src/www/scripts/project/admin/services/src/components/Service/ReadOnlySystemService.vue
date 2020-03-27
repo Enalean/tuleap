@@ -80,8 +80,8 @@ export default {
         ServiceIsUsed,
         ServiceRank,
         ReadOnlyServiceRank,
-        ReadOnlyServiceIcon
+        ReadOnlyServiceIcon,
     },
-    mixins: [service_mixin, system_service_mixin]
+    mixins: [service_mixin, system_service_mixin],
 };
 </script>

@@ -49,19 +49,19 @@ import TrackerPermissionsTable from "./TrackerPermissionsTable.vue";
 export default {
     name: "BaseTrackerPermissions",
     components: {
-        TrackerPermissionsTable
+        TrackerPermissionsTable,
     },
     props: {
         selectedUgroupId: String,
         selectedProjectId: String,
-        selectedUgroupName: String
+        selectedUgroupName: String,
     },
     data() {
         return {
             is_loaded: false,
             is_loading: false,
             error: null,
-            tracker_permissions: []
+            tracker_permissions: [],
         };
     },
     computed: {
@@ -70,7 +70,7 @@ export default {
         },
         isButtonLoadAllDisplayed() {
             return !this.is_loaded && !this.is_loading;
-        }
+        },
     },
     methods: {
         async loadAll() {
@@ -89,7 +89,7 @@ export default {
             } finally {
                 this.is_loading = false;
             }
-        }
-    }
+        },
+    },
 };
 </script>

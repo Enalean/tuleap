@@ -9,6 +9,6 @@ export default function TuleapArtifactModalQuotaDisplay() {
         controller: QuotaDisplayController,
         controllerAs: "quota_display",
         bindToController: true,
-        templateUrl: "quota-display.tpl.html"
+        templateUrl: "quota-display.tpl.html",
     };
 }

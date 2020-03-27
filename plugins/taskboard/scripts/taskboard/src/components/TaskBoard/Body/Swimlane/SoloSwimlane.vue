@@ -48,8 +48,8 @@ const column_store = namespace("column");
         SoloSwimlaneCell,
         CardWithRemainingEffort,
         DropContainerCell,
-        SwimlaneHeader
-    }
+        SwimlaneHeader,
+    },
 })
 export default class SoloSwimlane extends Vue {
     @Prop({ required: true })

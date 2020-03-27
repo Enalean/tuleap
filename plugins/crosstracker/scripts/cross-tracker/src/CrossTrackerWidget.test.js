@@ -41,7 +41,7 @@ describe("CrossTrackerWidget", () => {
 
         Vue.use(GetTextPlugin, {
             translations: {},
-            silent: true
+            silent: true,
         });
         Widget = Vue.extend(CrossTrackerWidget);
         backendCrossTrackerReport = new BackendCrossTrackerReport();
@@ -58,8 +58,8 @@ describe("CrossTrackerWidget", () => {
             propsData: {
                 backendCrossTrackerReport,
                 readingCrossTrackerReport,
-                writingCrossTrackerReport
-            }
+                writingCrossTrackerReport,
+            },
         });
         vm.$mount();
         jest.spyOn(vm.$store, "commit").mockImplementation(() => {});
@@ -79,7 +79,7 @@ describe("CrossTrackerWidget", () => {
 
             vm.$store.replaceState({
                 is_user_admin: true,
-                invalid_trackers: []
+                invalid_trackers: [],
             });
 
             vm.switchToWritingMode();
@@ -98,7 +98,7 @@ describe("CrossTrackerWidget", () => {
 
             vm.$store.replaceState({
                 is_user_admin: false,
-                invalid_trackers: []
+                invalid_trackers: [],
             });
 
             vm.switchToWritingMode();
@@ -145,7 +145,7 @@ describe("CrossTrackerWidget", () => {
             getReport.mockImplementation(() =>
                 Promise.resolve({
                     trackers,
-                    expert_query
+                    expert_query,
                 })
             );
             jest.spyOn(backendCrossTrackerReport, "init").mockImplementation(() => {});
@@ -170,8 +170,8 @@ describe("CrossTrackerWidget", () => {
             const message = "Report 41 not found";
             mockFetchError(getReport, {
                 error_json: {
-                    error: { message }
-                }
+                    error: { message },
+                },
             });
             const vm = instantiateComponent();
 

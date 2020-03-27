@@ -37,14 +37,14 @@ function createWrapper(
                 state: {
                     card_being_dragged: null,
                     column: {
-                        columns: [column_done]
+                        columns: [column_done],
                     },
-                    swimlane: {}
+                    swimlane: {},
                 } as RootState,
-                getters: { can_add_in_place: (): boolean => can_add_in_place }
-            })
+                getters: { can_add_in_place: (): boolean => can_add_in_place },
+            }),
         },
-        propsData: { swimlane, column: column_done }
+        propsData: { swimlane, column: column_done },
     });
 }
 
@@ -92,7 +92,7 @@ describe(`InvalidMappingCell`, () => {
         const wrapper = createWrapper({ card: { id: 43 } as Card } as Swimlane, false);
         wrapper.vm.$store.state.card_being_dragged = {
             tracker_id: 12,
-            card_id: 15
+            card_id: 15,
         };
 
         wrapper.trigger("pointerleave");

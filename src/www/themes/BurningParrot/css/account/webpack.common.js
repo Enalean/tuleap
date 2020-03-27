@@ -35,13 +35,13 @@ const config = {
         path.resolve(__dirname, "../../../../assets/account/css")
     ),
     module: {
-        rules: [webpack_configurator.rule_scss_loader]
+        rules: [webpack_configurator.rule_scss_loader],
     },
     plugins: [
         webpack_configurator.getCleanWebpackPlugin(),
         webpack_configurator.getManifestPlugin(),
-        ...webpack_configurator.getCSSExtractionPlugins()
-    ]
+        ...webpack_configurator.getCSSExtractionPlugins(),
+    ],
 };
 
 module.exports = [config];

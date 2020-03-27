@@ -21,5 +21,5 @@ const base_config = require("../../tests/jest/jest.base.config.js");
 
 module.exports = {
     ...base_config,
-    displayName: "oauth2_server"
+    displayName: "oauth2_server",
 };

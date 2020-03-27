@@ -45,7 +45,7 @@ describe("chartDataService", () => {
             { date: "2019-07-01T00:00:00+00:00", remaining_effort: null },
             { date: "2019-07-02T00:00:00+00:00", remaining_effort: 10 },
             { date: "2019-07-03T00:00:00+00:00", remaining_effort: null },
-            { date: "2019-07-04T00:00:00+00:00", remaining_effort: 15 }
+            { date: "2019-07-04T00:00:00+00:00", remaining_effort: 15 },
         ];
     }
 
@@ -54,7 +54,7 @@ describe("chartDataService", () => {
             { date: "2019-07-01T00:00:00+00:00", total: null, progression: null },
             { date: "2019-07-02T00:00:00+00:00", total: null, progression: 10 },
             { date: "2019-07-03T00:00:00+00:00", total: 15, progression: null },
-            { date: "2019-07-04T00:00:00+00:00", total: 40, progression: 30 }
+            { date: "2019-07-04T00:00:00+00:00", total: 40, progression: 30 },
         ];
     }
 });

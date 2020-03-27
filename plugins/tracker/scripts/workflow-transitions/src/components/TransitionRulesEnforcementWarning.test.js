@@ -31,13 +31,13 @@ describe("TransitionRulesEnforcementWarning", () => {
 
     beforeEach(() => {
         store = createStoreMock(store_options, {
-            current_tracker: create("tracker", { workflow: create("workflow") })
+            current_tracker: create("tracker", { workflow: create("workflow") }),
         });
         wrapper = shallowMount(TransitionRulesEnforcementWarning, {
             mocks: {
-                $store: store
+                $store: store,
             },
-            localVue
+            localVue,
         });
     });
 

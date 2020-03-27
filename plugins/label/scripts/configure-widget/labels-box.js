@@ -28,7 +28,7 @@ const convertLabelToSelect2Entry = ({ id, label, is_outline, color }) => ({
     id,
     text: label,
     is_outline,
-    color
+    color,
 });
 
 function initiateSelect2(container, selected_labels, labels_endpoint, placeholder) {
@@ -41,16 +41,16 @@ function initiateSelect2(container, selected_labels, labels_endpoint, placeholde
         dropdownCssClass: "item-labels-box-select2-results",
         templateResult: formatLabel,
         templateSelection: formatLabelSelected,
-        escapeMarkup: function(markup) {
+        escapeMarkup: function (markup) {
             return markup;
         },
         ajax: {
             url: labels_endpoint,
             dataType: "json",
             delay: 250,
-            data: data => ({ query: data.term }),
-            processResults: data => ({ results: data.labels.map(convertLabelToSelect2Entry) })
-        }
+            data: (data) => ({ query: data.term }),
+            processResults: (data) => ({ results: data.labels.map(convertLabelToSelect2Entry) }),
+        },
     };
 
     select2(container, options);
@@ -68,7 +68,7 @@ function formatLabel(label, li_element) {
     }
 
     return render('<span class="select-item-label-title">{{ label }}</span>', {
-        label: label.text
+        label: label.text,
     });
 }
 

@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const content = render(
         '<p class="current-project-nav-flag-popover-content-description">{{ content }}</p>',
         {
-            content: project_title_element.dataset.content
+            content: project_title_element.dataset.content,
         }
     );
 
@@ -47,6 +47,6 @@ document.addEventListener("DOMContentLoaded", () => {
         trigger: "hover",
         html: true,
         template,
-        content
+        content,
     });
 });

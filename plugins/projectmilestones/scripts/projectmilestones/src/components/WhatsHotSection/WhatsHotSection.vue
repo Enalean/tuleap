@@ -39,7 +39,7 @@ import { Component } from "vue-property-decorator";
 import { MilestoneData } from "../../type";
 
 @Component({
-    components: { ReleaseDisplayer }
+    components: { ReleaseDisplayer },
 })
 export default class WhatsHotSection extends Vue {
     @State

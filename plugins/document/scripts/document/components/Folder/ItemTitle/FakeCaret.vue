@@ -30,7 +30,7 @@ import { TYPE_FOLDER } from "../../../constants";
 
 export default {
     props: {
-        item: Object
+        item: Object,
     },
     computed: {
         ...mapState(["current_folder", "folder_content"]),
@@ -40,13 +40,13 @@ export default {
         is_item_sibling_of_a_folder() {
             return Boolean(
                 this.folder_content.find(
-                    item => item.parent_id === this.current_folder.id && item.type === TYPE_FOLDER
+                    (item) => item.parent_id === this.current_folder.id && item.type === TYPE_FOLDER
                 )
             );
         },
         can_be_displayed() {
             return !this.is_item_in_current_folder || this.is_item_sibling_of_a_folder;
-        }
-    }
+        },
+    },
 };
 </script>

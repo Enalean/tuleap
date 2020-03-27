@@ -7,8 +7,8 @@ TooltipService.$inject = ["$timeout"];
 function TooltipService($timeout) {
     const self = this;
 
-    self.setupTooltips = function() {
-        $timeout(function() {
+    self.setupTooltips = function () {
+        $timeout(function () {
             loadTooltips();
         }, 0);
     };

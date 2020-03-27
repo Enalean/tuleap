@@ -26,18 +26,18 @@ export function getColumnOfCard(
     if (card.mapped_list_value === null) {
         return undefined;
     }
-    return columns.find(column => isStatusAcceptedByColumn(card, column));
+    return columns.find((column) => isStatusAcceptedByColumn(card, column));
 }
 
 export function isStatusAcceptedByColumn(card: Card, column: ColumnDefinition): boolean {
-    return column.mappings.some(mapping => isStatusPartOfMapping(card, mapping));
+    return column.mappings.some((mapping) => isStatusPartOfMapping(card, mapping));
 }
 
 function isStatusPartOfMapping(card: Card, mapping: Mapping): boolean {
     return (
         mapping.tracker_id === card.tracker_id &&
         mapping.accepts.some(
-            list_value =>
+            (list_value) =>
                 card.mapped_list_value !== null && list_value.id === card.mapped_list_value.id
         )
     );

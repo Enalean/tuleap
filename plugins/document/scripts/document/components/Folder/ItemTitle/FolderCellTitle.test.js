@@ -32,20 +32,20 @@ describe("FolderCellTitle", () => {
             routes: [
                 {
                     path: "/folder/42",
-                    name: "folder"
-                }
-            ]
+                    name: "folder",
+                },
+            ],
         });
 
         item = {
             id: 42,
-            title: "my folder name"
+            title: "my folder name",
         };
 
         store_options = {
             state: {
-                files_uploads_list: []
-            }
+                files_uploads_list: [],
+            },
         };
         store = createStoreMock(store_options);
 
@@ -53,9 +53,9 @@ describe("FolderCellTitle", () => {
             localVue,
             router,
             propsData: {
-                item
+                item,
             },
-            mocks: { $store: store }
+            mocks: { $store: store },
         };
     });
     it(`Given folder is open
@@ -101,20 +101,20 @@ describe("FolderCellTitle", () => {
                 routes: [
                     {
                         path: "/folder/42",
-                        name: "folder"
-                    }
-                ]
+                        name: "folder",
+                    },
+                ],
             });
 
             item = {
                 id: 42,
-                title: "my folder name"
+                title: "my folder name",
             };
 
             store_options = {
                 state: {
-                    files_uploads_list: []
-                }
+                    files_uploads_list: [],
+                },
             };
 
             store = createStoreMock(store_options);
@@ -123,9 +123,9 @@ describe("FolderCellTitle", () => {
                 localVue,
                 router,
                 propsData: {
-                    item
+                    item,
                 },
-                mocks: { $store: store }
+                mocks: { $store: store },
             };
         });
 
@@ -148,11 +148,11 @@ describe("FolderCellTitle", () => {
             expect(store.commit).toHaveBeenCalledWith("unfoldFolderContent", item.id);
             expect(store.commit).toHaveBeenCalledWith("toggleCollapsedFolderHasUploadingContent", [
                 item,
-                false
+                false,
             ]);
             expect(store.dispatch).toHaveBeenCalledWith("setUserPreferenciesForFolder", [
                 item.id,
-                false
+                false,
             ]);
         });
 
@@ -170,11 +170,11 @@ describe("FolderCellTitle", () => {
             expect(store.commit).toHaveBeenCalledWith("foldFolderContent", item.id);
             expect(store.commit).toHaveBeenCalledWith("toggleCollapsedFolderHasUploadingContent", [
                 item,
-                undefined
+                undefined,
             ]);
             expect(store.dispatch).toHaveBeenCalledWith("setUserPreferenciesForFolder", [
                 item.id,
-                true
+                true,
             ]);
         });
 
@@ -203,21 +203,21 @@ describe("FolderCellTitle", () => {
                 routes: [
                     {
                         path: "/folder/42",
-                        name: "folder"
-                    }
-                ]
+                        name: "folder",
+                    },
+                ],
             });
 
             item = {
                 id: 42,
                 title: "my folder name",
-                is_expanded: true
+                is_expanded: true,
             };
 
             store_options = {
                 state: {
-                    files_uploads_list: [{ parent_id: 42, progress: 34 }]
-                }
+                    files_uploads_list: [{ parent_id: 42, progress: 34 }],
+                },
             };
 
             store = createStoreMock(store_options);
@@ -226,9 +226,9 @@ describe("FolderCellTitle", () => {
                 localVue,
                 router,
                 propsData: {
-                    item
+                    item,
                 },
-                mocks: { $store: store }
+                mocks: { $store: store },
             };
         });
 
@@ -245,11 +245,11 @@ describe("FolderCellTitle", () => {
             expect(store.commit).toHaveBeenCalledWith("foldFolderContent", item.id);
             expect(store.commit).toHaveBeenCalledWith("toggleCollapsedFolderHasUploadingContent", [
                 item,
-                { parent_id: 42, progress: 34 }
+                { parent_id: 42, progress: 34 },
             ]);
             expect(store.dispatch).toHaveBeenCalledWith("setUserPreferenciesForFolder", [
                 item.id,
-                true
+                true,
             ]);
         });
     });
@@ -261,19 +261,19 @@ describe("FolderCellTitle", () => {
                 routes: [
                     {
                         path: "/folder/42",
-                        name: "folder"
-                    }
-                ]
+                        name: "folder",
+                    },
+                ],
             });
 
             item = {
                 id: 42,
                 title: "my folder name",
-                is_expanded: true
+                is_expanded: true,
             };
 
             store_options = {
-                state: {}
+                state: {},
             };
 
             store = createStoreMock(store_options);
@@ -282,9 +282,9 @@ describe("FolderCellTitle", () => {
                 localVue,
                 router,
                 propsData: {
-                    item
+                    item,
                 },
-                mocks: { $store: store }
+                mocks: { $store: store },
             };
 
             abortCurrentUploads = jest.spyOn(abort_current_uploads, "abortCurrentUploads");

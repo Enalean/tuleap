@@ -37,14 +37,14 @@ describe("GoBackToRootButton", () => {
             routes: [
                 {
                     path: "/folder/3/42",
-                    name: "item"
-                }
-            ]
+                    name: "item",
+                },
+            ],
         });
 
         const component_options = {
             localVue,
-            router
+            router,
         };
 
         const wrapper = shallowMount(GoBackToRootButton, { store, ...component_options });
@@ -58,14 +58,14 @@ describe("GoBackToRootButton", () => {
             routes: [
                 {
                     path: "/",
-                    name: "root_folder"
-                }
-            ]
+                    name: "root_folder",
+                },
+            ],
         });
 
         const component_options = {
             localVue,
-            router
+            router,
         };
 
         const wrapper = shallowMount(GoBackToRootButton, { store, ...component_options });

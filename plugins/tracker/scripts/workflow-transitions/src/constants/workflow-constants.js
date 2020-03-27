@@ -22,16 +22,16 @@ const POST_ACTION_TYPE = {
     RUN_JOB: "run_job",
     SET_FIELD_VALUE: "set_field_value",
     FROZEN_FIELDS: "frozen_fields",
-    HIDDEN_FIELDSETS: "hidden_fieldsets"
+    HIDDEN_FIELDSETS: "hidden_fieldsets",
 };
 
 const EXTERNAL_POST_ACTION_TYPE = {
-    ADD_TO_BACKLOG: "add_to_top_backlog"
+    ADD_TO_BACKLOG: "add_to_top_backlog",
 };
 
 const DATE_FIELD_VALUE = {
     CLEAR: "",
-    CURRENT: "current"
+    CURRENT: "current",
 };
 
 export { POST_ACTION_TYPE, DATE_FIELD_VALUE, EXTERNAL_POST_ACTION_TYPE };

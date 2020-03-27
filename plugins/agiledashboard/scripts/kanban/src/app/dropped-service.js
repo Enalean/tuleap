@@ -74,7 +74,7 @@ function DroppedService(KanbanService) {
         var first_item = column.content[0];
         var compared_to = {
             direction: "before",
-            item_id: first_item.id
+            item_id: first_item.id,
         };
 
         return compared_to;
@@ -88,7 +88,7 @@ function DroppedService(KanbanService) {
         var last_item = column.content[column.content.length - 1];
         var compared_to = {
             direction: "after",
-            item_id: last_item.id
+            item_id: last_item.id,
         };
 
         return compared_to;

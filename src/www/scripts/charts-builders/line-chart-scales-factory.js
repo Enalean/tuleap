@@ -25,11 +25,11 @@ function buildGraphScales({
     graph_width,
     graph_height,
     y_axis_maximum,
-    x_axis_tick_values
+    x_axis_tick_values,
 }) {
     return {
         x_scale: initXScale(),
-        y_scale: initYScale()
+        y_scale: initYScale(),
     };
 
     function initXScale() {

@@ -40,7 +40,7 @@ export default {
         },
         artifact_badge_artifact_id() {
             return getArtifactId();
-        }
-    }
+        },
+    },
 };
 </script>

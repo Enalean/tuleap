@@ -79,10 +79,10 @@ export default {
         ModalFeedback,
         ModalHeader,
         ModalFooter,
-        EmbeddedProperties
+        EmbeddedProperties,
     },
     props: {
-        item: Object
+        item: Object,
     },
     data() {
         return {
@@ -90,15 +90,15 @@ export default {
             new_item_version: {
                 type: TYPE_FILE,
                 link_properties: {
-                    link_url: ""
+                    link_url: "",
                 },
                 file_properties: {
-                    file: ""
+                    file: "",
                 },
                 embedded_properties: {
-                    content: ""
-                }
-            }
+                    content: "",
+                },
+            },
         };
     },
     computed: {
@@ -109,7 +109,7 @@ export default {
         },
         modal_title() {
             return sprintf(this.$gettext('New version for "%s"'), this.item.title);
-        }
+        },
     },
     mounted() {
         this.modal = createModal(this.$el);
@@ -138,14 +138,14 @@ export default {
             await this.$store.dispatch("createNewVersionFromEmpty", [
                 this.new_item_version.type,
                 this.item,
-                this.new_item_version
+                this.new_item_version,
             ]);
 
             this.is_loading = false;
             if (this.has_modal_error === false) {
                 this.modal.hide();
             }
-        }
-    }
+        },
+    },
 };
 </script>

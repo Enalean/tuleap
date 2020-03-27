@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-describe("Frs", function() {
+describe("Frs", function () {
     before(() => {
         cy.clearCookie("__Host-TULEAP_session_hash");
         cy.ProjectAdministratorLogin();
@@ -28,32 +28,32 @@ describe("Frs", function() {
         cy.visitProjectService("frs-project", "Files");
     });
 
-    context("Frs packages", function() {
-        it("can create a new package", function() {
+    context("Frs packages", function () {
+        it("can create a new package", function () {
             cy.get("[data-test=create-new-package]").click();
             cy.get("[data-test=frs-create-package]").type("My first package");
             cy.get("[data-test=frs-create-package-button]").click({
-                timeout: 60000
+                timeout: 60000,
             });
 
             cy.visitProjectService("frs-project", "Files");
             cy.get('[data-test="package-name"]').contains("My first package");
         });
 
-        it("can update a package", function() {
+        it("can update a package", function () {
             cy.get("[data-test=update-package]").click();
             cy.get("[data-test=frs-create-package]").type(" edited");
             cy.get("[data-test=frs-create-package-button]").click({
-                timeout: 60000
+                timeout: 60000,
             });
 
             cy.visitProjectService("frs-project", "Files");
             cy.get('[data-test="package-name"]').contains("My first package edited");
         });
 
-        it("can delete a package", function() {
+        it("can delete a package", function () {
             cy.get("[data-test=remove-package]").click({
-                timeout: 60000
+                timeout: 60000,
             });
 
             cy.visitProjectService("frs-project", "Files");
@@ -61,13 +61,13 @@ describe("Frs", function() {
         });
     });
 
-    context("Frs releases", function() {
-        it("can create a new release", function() {
+    context("Frs releases", function () {
+        it("can create a new release", function () {
             cy.server();
             cy.get("[data-test=create-new-package]").click();
             cy.get("[data-test=frs-create-package]").type("Package to test release");
             cy.get("[data-test=frs-create-package-button]").click({
-                timeout: 60000
+                timeout: 60000,
             });
 
             cy.visitProjectService("frs-project", "Files");
@@ -76,7 +76,7 @@ describe("Frs", function() {
             cy.get("[data-test=create-release]").click({ force: true });
             cy.get("[data-test=release-name]").type("My release name");
             cy.get("[data-test=create-release-button]").click({
-                timeout: 60000
+                timeout: 60000,
             });
             cy.wait("@createRelease", { timeout: 60000 });
 
@@ -84,7 +84,7 @@ describe("Frs", function() {
             cy.get('[data-test="release-name"]').contains("My release name");
         });
 
-        it("can update a release", function() {
+        it("can update a release", function () {
             cy.server();
             cy.visitProjectService("frs-project", "Files");
 
@@ -92,7 +92,7 @@ describe("Frs", function() {
             cy.get("[data-test=edit-release]").click({ force: true });
             cy.get("[data-test=release-name]").type(" edited");
             cy.get("[data-test=create-release-button]").click({
-                timeout: 60000
+                timeout: 60000,
             });
 
             cy.wait("@createRelease", { timeout: 60000 });
@@ -102,7 +102,7 @@ describe("Frs", function() {
             cy.get('[data-test="release-name"]').should("have.value", "My release name edited");
         });
 
-        it("can delete a release", function() {
+        it("can delete a release", function () {
             cy.get("[data-test=release-delete-button]").click({ force: true, timeout: 60000 });
 
             cy.visitProjectService("frs-project", "Files");

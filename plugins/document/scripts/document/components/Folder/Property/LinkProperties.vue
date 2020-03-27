@@ -49,12 +49,12 @@ export default {
     name: "LinkProperties",
     props: {
         value: Object,
-        item: Object
+        item: Object,
     },
     computed: {
         is_displayed() {
             return this.item.type === TYPE_LINK;
-        }
-    }
+        },
+    },
 };
 </script>

@@ -25,7 +25,7 @@ export { getFileReaderStream };
 // from https://github.com/jimmywarting/Screw-FileReader
 function promisifyFileReader(file_reader) {
     return new Promise((resolve, reject) => {
-        file_reader.onload = file_reader.onerror = evt => {
+        file_reader.onload = file_reader.onerror = (evt) => {
             file_reader.onload = file_reader.onerror = null;
 
             evt.type === "load"
@@ -47,9 +47,9 @@ function getFileReaderStream(blob) {
 
     const stream = new Readable({
         highWaterMark: DEFAULT_CHUNK_SIZE,
-        objectMode: true
+        objectMode: true,
     });
-    stream._read = function(size) {
+    stream._read = function (size) {
         if (position >= blob.size) {
             stream.push(null);
             return;
@@ -57,13 +57,13 @@ function getFileReaderStream(blob) {
         const chunk = blob.slice(position, position + size);
 
         readBlobAsArrayBuffer(chunk).then(
-            array_buffer => {
+            (array_buffer) => {
                 const uint8array = new Uint8Array(array_buffer);
                 position += uint8array.byteLength;
 
                 stream.push(uint8array);
             },
-            error => {
+            (error) => {
                 stream.emit("error", error);
             }
         );

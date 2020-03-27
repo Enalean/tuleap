@@ -9,6 +9,6 @@ function FilterTrackerReportDirective() {
         controller: FilterTrackerReportCtrl,
         controllerAs: "filter_tracker_report",
         templateUrl: "filter-tracker-report.tpl.html",
-        scope: {}
+        scope: {},
     };
 }

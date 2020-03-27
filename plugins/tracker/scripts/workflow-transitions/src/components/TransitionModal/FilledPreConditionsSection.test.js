@@ -35,23 +35,23 @@ describe("FilledPreConditionsSection", () => {
         const store_options = {
             state: {
                 current_tracker: null,
-                transitionModal: state
+                transitionModal: state,
             },
             getters: {
-                "transitionModal/is_transition_from_new_artifact": false
+                "transitionModal/is_transition_from_new_artifact": false,
             },
             mutations,
-            actions
+            actions,
         };
 
         store = createStoreMock(store_options);
 
         wrapper = shallowMount(FilledPreConditionsSection, {
             mocks: {
-                $store: store
+                $store: store,
             },
             localVue,
-            sync: false // Without this, store.reset() causes errors
+            sync: false, // Without this, store.reset() causes errors
         });
     });
 
@@ -73,7 +73,7 @@ describe("FilledPreConditionsSection", () => {
 
             beforeEach(() => {
                 store.state.current_tracker = {
-                    fields: [invalid_field, valid_field]
+                    fields: [invalid_field, valid_field],
                 };
             });
             it("returns valid fields", () => {
@@ -88,14 +88,14 @@ describe("FilledPreConditionsSection", () => {
                     store.state.current_tracker.fields = [
                         create("field", { type: "valid", label: "second" }),
                         create("field", { type: "valid", label: "First" }),
-                        create("field", { type: "valid", label: "Third" })
+                        create("field", { type: "valid", label: "Third" }),
                     ];
                 });
                 it("returns fields sorted by natural order", () => {
-                    expect(wrapper.vm.writable_fields.map(field => field.label)).toEqual([
+                    expect(wrapper.vm.writable_fields.map((field) => field.label)).toEqual([
                         "First",
                         "second",
-                        "Third"
+                        "Third",
                     ]);
                 });
             });
@@ -116,7 +116,7 @@ describe("FilledPreConditionsSection", () => {
             const authorized_user_group_ids = ["1", "2"];
             beforeEach(() => {
                 store.state.transitionModal.current_transition = {
-                    authorized_user_group_ids
+                    authorized_user_group_ids,
                 };
             });
             it("returns transition authorized group ids", () => {
@@ -140,7 +140,7 @@ describe("FilledPreConditionsSection", () => {
             beforeEach(() => {
                 store.state.transitionModal.current_transition = {
                     not_empty_field_ids,
-                    authorized_user_group_ids: []
+                    authorized_user_group_ids: [],
                 };
             });
             it("returns transition empty field ids", () => {
@@ -163,7 +163,7 @@ describe("FilledPreConditionsSection", () => {
             beforeEach(() => {
                 store.state.transitionModal.current_transition = {
                     is_comment_required: true,
-                    authorized_user_group_ids: []
+                    authorized_user_group_ids: [],
                 };
             });
             it("returns true", () => {

@@ -27,17 +27,17 @@
 var tuleap = tuleap || {};
 tuleap.cardwall = tuleap.cardwall || {};
 
-(function($) {
+(function ($) {
     function getNewCardData(artifact_id, planning_id) {
         var params = {
             id: artifact_id,
             planning_id: planning_id,
-            action: "get-card"
+            action: "get-card",
         };
 
         $.ajax({
             url: "/plugins/cardwall/?" + $.param(params),
-            dataType: "json"
+            dataType: "json",
         });
     }
 
@@ -45,18 +45,18 @@ tuleap.cardwall = tuleap.cardwall || {};
         return $("div.hidden[data-planning-id]").attr("data-planning-id");
     }
 
-    tuleap.cardwall.isOnAgiledashboard = function() {
+    tuleap.cardwall.isOnAgiledashboard = function () {
         return $("div.hidden[data-planning-id]").length > 0;
     };
 
     tuleap.cardwall.cardsEditInPlace = {
-        init: function() {
+        init: function () {
             var self = this;
             if (!tuleap.cardwall.isOnAgiledashboard()) {
                 return;
             }
 
-            $("div.cardwall_board div.card li > a.edit-card").click(function(event) {
+            $("div.cardwall_board div.card li > a.edit-card").click(function (event) {
                 event.preventDefault();
 
                 var artifact_id = $(this).attr("data-artifact-id");
@@ -68,18 +68,18 @@ tuleap.cardwall = tuleap.cardwall || {};
             });
         },
 
-        validateEdition: function(artifact_id) {
+        validateEdition: function (artifact_id) {
             var planning_id = getConcernedPlanningId();
             getNewCardData(artifact_id, planning_id);
         },
 
-        moveCardCallback: function(artifact_id) {
+        moveCardCallback: function (artifact_id) {
             var planning_id = getConcernedPlanningId();
             getNewCardData(artifact_id, planning_id);
-        }
+        },
     };
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         tuleap.cardwall.cardsEditInPlace.init();
     });
 })(jQuery);

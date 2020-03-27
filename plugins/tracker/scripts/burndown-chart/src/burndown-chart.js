@@ -46,19 +46,19 @@ document.addEventListener("DOMContentLoaded", () => {
             top: 50,
             right: 80,
             bottom: 60,
-            left: 80
-        }
+            left: 80,
+        },
     };
 
     const chart_legends = [
         {
             label: gettext_provider.gettext("Ideal burndown"),
-            classname: "chart-plot-ideal-burndown"
+            classname: "chart-plot-ideal-burndown",
         },
         {
             label: gettext_provider.gettext("Remaining effort"),
-            classname: "chart-plot-remaining-effort"
-        }
+            classname: "chart-plot-remaining-effort",
+        },
     ];
 
     createBurndownChart({ chart_container, chart_props, chart_legends, burndown_data });

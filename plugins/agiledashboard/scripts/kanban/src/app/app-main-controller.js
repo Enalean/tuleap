@@ -8,7 +8,7 @@ MainCtrl.$inject = [
     "SharedPropertiesService",
     "amMoment",
     "UUIDGeneratorService",
-    "FilterTrackerReportService"
+    "FilterTrackerReportService",
 ];
 
 function MainCtrl(

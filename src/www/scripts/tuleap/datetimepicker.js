@@ -21,26 +21,26 @@
 
 var tuleap = tuleap || {};
 
-(function($) {
+(function ($) {
     /**
      * @see http://tarruda.github.io/bootstrap-datetimepicker/
      */
     tuleap.dateTimePicker = {
-        init: function() {
+        init: function () {
             $(".tuleap_field_date").datetimepicker({
                 language: codendi.locale,
-                pickTime: false
+                pickTime: false,
             });
 
             $(".tuleap_field_datetime").datetimepicker({
                 language: codendi.locale,
                 pickTime: true,
-                pickSeconds: false
+                pickSeconds: false,
             });
-        }
+        },
     };
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         tuleap.dateTimePicker.init();
     });
 })(window.jQuery);

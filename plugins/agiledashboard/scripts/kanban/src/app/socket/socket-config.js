@@ -8,6 +8,6 @@ function SocketConfig(lockerProvider) {
         namespace: "socket",
         separator: ".",
         eventsEnabled: false,
-        extend: {}
+        extend: {},
     });
 }

@@ -23,8 +23,8 @@
  * This script manage the fullscreen mode of the cardwall
  */
 
-(function($) {
-    $(document).ready(function() {
+(function ($) {
+    $(document).ready(function () {
         var isFullScreen = false;
         var body = $("body");
         var main = $(".main");
@@ -74,20 +74,12 @@
             if (isFullScreen) {
                 main.css("margin-left", 0);
                 $(".milestone-name").addClass("span3");
-                $(".milestone-days")
-                    .removeClass("span5")
-                    .addClass("span3");
-                $(".milestone-capacity")
-                    .removeClass("span5")
-                    .addClass("span4");
+                $(".milestone-days").removeClass("span5").addClass("span3");
+                $(".milestone-capacity").removeClass("span5").addClass("span4");
             } else {
                 $(".milestone-name").removeClass("span3");
-                $(".milestone-days")
-                    .removeClass("span3")
-                    .addClass("span5");
-                $(".milestone-capacity")
-                    .removeClass("span4")
-                    .addClass("span5");
+                $(".milestone-days").removeClass("span3").addClass("span5");
+                $(".milestone-capacity").removeClass("span4").addClass("span5");
             }
         }
 
@@ -132,7 +124,7 @@
             return eval("/*@cc_on !@*/false");
         }
 
-        $(document).on("webkitfullscreenchange mozfullscreenchange fullscreenchange", function() {
+        $(document).on("webkitfullscreenchange mozfullscreenchange fullscreenchange", function () {
             var fullscreenElement =
                 document.fullscreenElement ||
                 document.mozFullScreenElement ||
@@ -149,10 +141,10 @@
                 placement: "left",
                 html: true,
                 title: codendi.locales.cardwall.no_fullscreen_title,
-                content: codendi.locales.cardwall.no_fullscreen_content
+                content: codendi.locales.cardwall.no_fullscreen_content,
             });
         } else {
-            button.on("click", function() {
+            button.on("click", function () {
                 (function fullscreen() {
                     if (
                         RunPrefixMethod(document, "FullScreen") ||

@@ -24,13 +24,13 @@ export function initConfigurationModal() {
             "#button-modal-mirror-configuration, .mirror-show-repositories, .mirror-action-delete-button, .mirror-action-edit-button",
         matching_buttons = document.querySelectorAll(button_selectors);
 
-    [].forEach.call(matching_buttons, function(button) {
+    [].forEach.call(matching_buttons, function (button) {
         const modal_element = document.getElementById(button.dataset.modalId);
 
         if (modal_element) {
             const modal = tlp.modal(modal_element);
 
-            button.addEventListener("click", function() {
+            button.addEventListener("click", function () {
                 modal.toggle();
             });
         }

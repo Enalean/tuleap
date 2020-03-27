@@ -2,7 +2,7 @@ export default KanbanFilteredUpdatedAlertService;
 
 function KanbanFilteredUpdatedAlertService() {
     const property = {
-        updated: false
+        updated: false,
     };
 
     return {
@@ -11,6 +11,6 @@ function KanbanFilteredUpdatedAlertService() {
         },
         isCardUpdated() {
             return property.updated;
-        }
+        },
     };
 }

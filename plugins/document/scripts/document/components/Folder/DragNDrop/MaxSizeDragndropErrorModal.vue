@@ -38,12 +38,12 @@ export default {
                 this.$gettext("You are not allowed to upload files bigger than %s."),
                 prettyKibibytes(this.max_size_upload)
             );
-        }
+        },
     },
     methods: {
         bubbleErrorModalHidden() {
             this.$emit("error-modal-hidden");
-        }
-    }
+        },
+    },
 };
 </script>

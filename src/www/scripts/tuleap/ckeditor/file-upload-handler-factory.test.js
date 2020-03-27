@@ -20,13 +20,13 @@
 import * as TUS from "tus-js-client";
 import {
     mockFetchSuccess,
-    mockFetchError
+    mockFetchError,
 } from "../../../themes/common/tlp/mocks/tlp-fetch-mock-helper.js";
 import * as gettext_factory from "../gettext/gettext-factory.js";
 import {
     buildFileUploadHandler,
     MaxSizeUploadExceededError,
-    UploadError
+    UploadError,
 } from "./file-upload-handler-factory.js";
 import * as tlp_fetch from "tlp-fetch";
 
@@ -39,34 +39,34 @@ describe(`file-upload-handler-factory`, () => {
         options = {};
     beforeEach(() => {
         jest.spyOn(gettext_factory, "getGettextProvider").mockImplementation(() => ({
-            gettext: () => ""
+            gettext: () => "",
         }));
 
         options = {
             ckeditor_instance: {
-                fire: jest.fn()
+                fire: jest.fn(),
             },
             onStartCallback: jest.fn(),
             onErrorCallback: jest.fn(),
             onSuccessCallback: jest.fn(),
-            max_size_upload: 100
+            max_size_upload: 100,
         };
         loader = {
             changeStatus: jest.fn(),
             update: jest.fn(),
             file: {
                 name: "pentacyanic.jpg",
-                type: "image/jpg"
+                type: "image/jpg",
             },
             lang: {
-                filetools: []
-            }
+                filetools: [],
+            },
         };
         file_upload_event = {
             data: {
-                fileLoader: loader
+                fileLoader: loader,
             },
-            stop: jest.fn()
+            stop: jest.fn(),
         };
     });
 
@@ -80,8 +80,8 @@ describe(`file-upload-handler-factory`, () => {
                 mockFetchSuccess(jest.spyOn(tlp_fetch, "post"), {
                     return_json: {
                         id: 71,
-                        download_href: "https://example.com/extenuator"
-                    }
+                        download_href: "https://example.com/extenuator",
+                    },
                 });
 
                 const handler = handlerFactory();
@@ -125,7 +125,7 @@ describe(`file-upload-handler-factory`, () => {
             beforeEach(() => {
                 options.max_size_upload = 1024;
                 loader.file = {
-                    size: 1024
+                    size: 1024,
                 };
             });
 
@@ -137,8 +137,8 @@ describe(`file-upload-handler-factory`, () => {
                 mockFetchSuccess(tlpPost, {
                     return_json: {
                         id: 25,
-                        download_url: "https://example.com/download_url"
-                    }
+                        download_url: "https://example.com/download_url",
+                    },
                 });
 
                 const handler = handlerFactory();
@@ -149,8 +149,8 @@ describe(`file-upload-handler-factory`, () => {
                     body: JSON.stringify({
                         name: "pulpitism.png",
                         file_size: 1024,
-                        file_type: "image/png"
-                    })
+                        file_type: "image/png",
+                    }),
                 });
             });
 
@@ -178,9 +178,9 @@ describe(`file-upload-handler-factory`, () => {
                     mockFetchError(jest.spyOn(tlp_fetch, "post"), {
                         error_json: {
                             error: {
-                                i18n_error_message: "Problème durant le téléversement"
-                            }
-                        }
+                                i18n_error_message: "Problème durant le téléversement",
+                            },
+                        },
                     });
 
                     const handler = handlerFactory();
@@ -193,9 +193,9 @@ describe(`file-upload-handler-factory`, () => {
                     mockFetchError(jest.spyOn(tlp_fetch, "post"), {
                         error_json: {
                             error: {
-                                message: "Untranslated error message"
-                            }
-                        }
+                                message: "Untranslated error message",
+                            },
+                        },
                     });
 
                     const handler = handlerFactory();
@@ -210,8 +210,8 @@ describe(`file-upload-handler-factory`, () => {
                     mockFetchSuccess(jest.spyOn(tlp_fetch, "post"), {
                         return_json: {
                             id: 71,
-                            download_href: "https://example.com/download_url"
-                        }
+                            download_href: "https://example.com/download_url",
+                        },
                     });
                 });
 
@@ -233,7 +233,7 @@ describe(`file-upload-handler-factory`, () => {
 
                     expect(loader.responseData).toEqual({
                         width: " ",
-                        height: " "
+                        height: " ",
                     });
                 });
 
@@ -254,14 +254,14 @@ describe(`file-upload-handler-factory`, () => {
                         return_json: {
                             id: 23,
                             download_href: "https://example.com/download_url",
-                            upload_href: "https://example.com/postloitic"
-                        }
+                            upload_href: "https://example.com/postloitic",
+                        },
                     });
                 });
 
                 it(`will call the Start callback`, async () => {
                     TUS.Upload.mockImplementation((file, config) => ({
-                        start: () => config.onSuccess()
+                        start: () => config.onSuccess(),
                     }));
 
                     const handler = handlerFactory();
@@ -281,7 +281,7 @@ describe(`file-upload-handler-factory`, () => {
                                 expect(loader.update).toHaveBeenCalled();
 
                                 config.onSuccess();
-                            }
+                            },
                         }));
                         const handler = handlerFactory();
                         await handler(file_upload_event);
@@ -290,7 +290,7 @@ describe(`file-upload-handler-factory`, () => {
                     describe(`and when the uploader receives the onSuccess event`, () => {
                         beforeEach(() => {
                             TUS.Upload.mockImplementation((file, config) => ({
-                                start: () => config.onSuccess()
+                                start: () => config.onSuccess(),
                             }));
                         });
 
@@ -312,7 +312,7 @@ describe(`file-upload-handler-factory`, () => {
 
                             expect(loader.responseData).toEqual({
                                 width: " ",
-                                height: " "
+                                height: " ",
                             });
                         });
 
@@ -338,7 +338,7 @@ describe(`file-upload-handler-factory`, () => {
                         let error;
                         beforeEach(() => {
                             TUS.Upload.mockImplementation((file, config) => ({
-                                start: () => config.onError(error)
+                                start: () => config.onError(error),
                             }));
                         });
 
@@ -347,8 +347,8 @@ describe(`file-upload-handler-factory`, () => {
                             error = { originalRequest: { status: 403 } };
                             loader.lang = {
                                 filetools: {
-                                    httpError403: "Translated error message"
-                                }
+                                    httpError403: "Translated error message",
+                                },
                             };
 
                             const handler = handlerFactory();
@@ -364,8 +364,8 @@ describe(`file-upload-handler-factory`, () => {
                             error = { originalRequest: { status: 500 } };
                             loader.lang = {
                                 filetools: {
-                                    httpError: "Error %1"
-                                }
+                                    httpError: "Error %1",
+                                },
                             };
 
                             const handler = handlerFactory();
@@ -380,8 +380,8 @@ describe(`file-upload-handler-factory`, () => {
                             error = { originalRequest: { status: 500 } };
                             loader.lang = {
                                 filetools: {
-                                    httpError: ""
-                                }
+                                    httpError: "",
+                                },
                             };
                             const handler = handlerFactory();
                             await expect(handler(file_upload_event)).rejects.toBe(error);

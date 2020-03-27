@@ -39,7 +39,7 @@ function initLdapBindingPreview(options, callback) {
     gettext_provider.setTextDomain("ldap-bindings");
 
     const select2 = autocomplete_groups_for_select2(select, {
-        allowClear: true
+        allowClear: true,
     });
     select2.on("change", mapPreviewToChosenLdapGroup);
     preserve.addEventListener("click", mapPreviewToChosenLdapGroup);
@@ -92,7 +92,7 @@ function initLdapBindingPreview(options, callback) {
     }
 
     function removeAllChildren(element) {
-        [...element.children].forEach(child => child.remove());
+        [...element.children].forEach((child) => child.remove());
     }
 
     function getPresenter(
@@ -148,7 +148,7 @@ function initLdapBindingPreview(options, callback) {
             nothing_to_do_text,
             nb_not_impacted_text,
             ldap_group_not_found,
-            ldap_group_not_found_text
+            ldap_group_not_found_text,
         };
     }
 }

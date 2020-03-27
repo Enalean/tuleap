@@ -33,22 +33,22 @@ describe(`TransitionModal`, () => {
     function mockStore() {
         const store = createStoreMock({
             state: {
-                transitionModal: storeOptions
-            }
+                transitionModal: storeOptions,
+            },
         });
         // eslint-disable-next-line jest/prefer-spy-on
         store.watch = jest.fn();
         return store;
     }
 
-    const createWrapper = store =>
+    const createWrapper = (store) =>
         shallowMount(TransitionModal, { localVue, mocks: { $store: store } });
 
     beforeEach(() => {
         modal = {
             addEventListener: jest.fn(),
             show: jest.fn(),
-            hide: jest.fn()
+            hide: jest.fn(),
         };
         createModal = jest.spyOn(tlp, "modal").mockReturnValue(modal);
     });

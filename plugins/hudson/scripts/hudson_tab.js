@@ -20,8 +20,8 @@
 import jQuery from "jquery";
 import "./form.js";
 
-(function($) {
-    window.toggle_addurlform = function() {
+(function ($) {
+    window.toggle_addurlform = function () {
         $("#hudson_add_job").slideToggle(300);
     };
 })(jQuery);

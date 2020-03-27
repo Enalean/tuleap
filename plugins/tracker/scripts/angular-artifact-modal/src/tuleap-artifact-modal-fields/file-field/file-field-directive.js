@@ -12,11 +12,11 @@ function FileFieldDirective() {
         scope: {
             field: "=tuleapArtifactModalFileField",
             isDisabled: "&isDisabled",
-            value_model: "=valueModel"
+            value_model: "=valueModel",
         },
         controller: FileFieldController,
         controllerAs: "file_field",
         bindToController: true,
-        templateUrl: "file-field.tpl.html"
+        templateUrl: "file-field.tpl.html",
     };
 }

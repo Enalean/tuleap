@@ -80,7 +80,7 @@ export default {
     name: "ArtifactTable",
     components: { ArtifactTableRow, ExportButton },
     props: {
-        writingCrossTrackerReport: Object
+        writingCrossTrackerReport: Object,
     },
     data() {
         return {
@@ -89,7 +89,7 @@ export default {
             is_load_more_displayed: false,
             is_loading_more: false,
             current_offset: 0,
-            limit: 30
+            limit: 30,
         };
     },
     computed: {
@@ -103,14 +103,14 @@ export default {
         },
         should_show_export_button() {
             return this.reading_mode && this.is_report_saved && !this.is_table_empty;
-        }
+        },
     },
     watch: {
         report_state() {
             if (this.reading_mode === true) {
                 this.refreshArtifactList();
             }
-        }
+        },
     },
     mounted() {
         this.is_loading = true;
@@ -175,14 +175,14 @@ export default {
         },
 
         formatArtifacts(artifacts) {
-            return artifacts.map(artifact => {
+            return artifacts.map((artifact) => {
                 artifact.formatted_last_update_date = moment(artifact.last_update_date).format(
                     getUserPreferredDateFormat()
                 );
 
                 return artifact;
             });
-        }
-    }
+        },
+    },
 };
 </script>

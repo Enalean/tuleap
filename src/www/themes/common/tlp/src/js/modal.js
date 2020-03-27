@@ -39,13 +39,13 @@ class Modal {
         this.is_shown = false;
         this.options = {
             keyboard,
-            destroy_on_hide
+            destroy_on_hide,
         };
         this.shown_event = new CustomEvent(EVENT_TLP_MODAL_SHOWN, {
-            detail: { target: this.element }
+            detail: { target: this.element },
         });
         this.hidden_event = new CustomEvent(EVENT_TLP_MODAL_HIDDEN, {
-            detail: { target: this.element }
+            detail: { target: this.element },
         });
         this.event_listeners = [];
         this.eventHandler = new ModalEventHandler(this);
@@ -108,7 +108,7 @@ class Modal {
     }
 
     listenCloseEvents() {
-        this.close_elements.forEach(close_element => {
+        this.close_elements.forEach((close_element) => {
             close_element.addEventListener("click", this.eventHandler);
         });
 
@@ -118,7 +118,7 @@ class Modal {
     }
 
     destroy() {
-        this.close_elements.forEach(close_element => {
+        this.close_elements.forEach((close_element) => {
             close_element.removeEventListener("click", this.eventHandler);
         });
 
@@ -152,7 +152,7 @@ class Modal {
         let children = this.element.querySelectorAll('[data-dismiss="modal"]');
         let close_elements = [];
 
-        [].forEach.call(children, child => {
+        [].forEach.call(children, (child) => {
             close_elements.push(child);
         });
 

@@ -75,7 +75,7 @@
                     class="fa tlp-button-icon"
                     v-bind:class="{
                         'fa-spin fa-circle-o-notch': is_an_action_on_going,
-                        'fa-trash-o': !is_an_action_on_going
+                        'fa-trash-o': !is_an_action_on_going,
                     }"
                 ></i>
                 <span v-translate>Delete</span>
@@ -94,14 +94,14 @@ export default {
     components: {
         ModalFeedback,
         "delete-associated-wiki-page-checkbox": () =>
-            import("./AdditionalCheckboxes/DeleteAssociatedWikiPageCheckbox.vue")
+            import("./AdditionalCheckboxes/DeleteAssociatedWikiPageCheckbox.vue"),
     },
     props: {
         item: Object,
         shouldRedirectToParentAfterDeletion: {
             type: Boolean,
-            default: false
-        }
+            default: false,
+        },
     },
     data() {
         return {
@@ -109,7 +109,7 @@ export default {
             is_item_being_deleted: false,
             wiki_page_referencers_loading: false,
             additional_options: {},
-            wiki_page_referencers: null
+            wiki_page_referencers: null,
         };
     },
     computed: {
@@ -139,7 +139,7 @@ export default {
                 !this.wiki_page_referencers_loading &&
                 this.wiki_page_referencers !== null
             );
-        }
+        },
     },
     mounted() {
         this.modal = modal(this.$el);
@@ -161,7 +161,7 @@ export default {
             if (!this.has_modal_error) {
                 await this.$router.replace({
                     name: "folder",
-                    params: { item_id: deleted_item.parent_id }
+                    params: { item_id: deleted_item.parent_id },
                 });
                 this.$store.commit("showPostDeletionNotification");
 
@@ -184,7 +184,7 @@ export default {
         resetModal() {
             this.$store.commit("error/resetModalError");
             this.$emit("delete-modal-closed");
-        }
-    }
+        },
+    },
 };
 </script>

@@ -85,8 +85,8 @@ export default {
     props: {
         post_action: {
             type: Object,
-            mandatory: true
-        }
+            mandatory: true,
+        },
     },
     computed: {
         ...mapState("transitionModal", ["current_transition", "is_modal_save_running"]),
@@ -101,17 +101,17 @@ export default {
             return [
                 {
                     label: this.$gettext("Integers"),
-                    type: INT_FIELD
+                    type: INT_FIELD,
                 },
                 {
                     label: this.$gettext("Floats"),
-                    type: FLOAT_FIELD
+                    type: FLOAT_FIELD,
                 },
                 {
                     label: this.$gettext("Dates"),
-                    type: DATE_FIELD
-                }
-            ].map(group => ({ ...group, fields: this.getAvailableFieldsOfType(group.type) }));
+                    type: DATE_FIELD,
+                },
+            ].map((group) => ({ ...group, fields: this.getAvailableFieldsOfType(group.type) }));
         },
         field_id_input_id() {
             return `post-action-${this.post_action.unique_id}-field-id`;
@@ -135,7 +135,7 @@ export default {
                     return null;
                 }
                 const matching_fields = this.available_fields.filter(
-                    field => field.field_id === this.post_action.field_id
+                    (field) => field.field_id === this.post_action.field_id
                 );
                 if (matching_fields.length === 0) {
                     return null;
@@ -145,9 +145,9 @@ export default {
             set(new_field) {
                 this.$store.commit("transitionModal/updateSetValuePostActionField", {
                     post_action: this.post_action,
-                    new_field
+                    new_field,
                 });
-            }
+            },
         },
         value: {
             get() {
@@ -156,15 +156,15 @@ export default {
             set(value) {
                 this.$store.commit("transitionModal/updateSetValuePostActionValue", {
                     post_action: this.post_action,
-                    value
+                    value,
                 });
-            }
-        }
+            },
+        },
     },
     methods: {
         getAvailableFieldsOfType(type) {
-            return this.available_fields.filter(field => field.type === type);
-        }
-    }
+            return this.available_fields.filter((field) => field.type === type);
+        },
+    },
 };
 </script>

@@ -35,11 +35,11 @@ describe("getLabeledItems", () => {
     it("Returns the items", async () => {
         const headers = {
             /** 'X-PAGINATION-SIZE' */
-            get: () => 10
+            get: () => 10,
         };
         const return_json = {
             labeled_items: [{ title: "Le title" }],
-            are_there_items_user_cannot_see: false
+            are_there_items_user_cannot_see: false,
         };
         mockFetchSuccess(jest.spyOn(tlp, "get"), { headers, return_json });
 
@@ -51,11 +51,11 @@ describe("getLabeledItems", () => {
     it("Returns the are_there_items_user_cannot_see flag", async () => {
         const headers = {
             /** 'X-PAGINATION-SIZE' */
-            get: () => 10
+            get: () => 10,
         };
         const return_json = {
             labeled_items: [{ title: "Le title" }],
-            are_there_items_user_cannot_see: false
+            are_there_items_user_cannot_see: false,
         };
         mockFetchSuccess(jest.spyOn(tlp, "get"), { headers, return_json });
 
@@ -72,11 +72,11 @@ describe("getLabeledItems", () => {
     it("Sets has_more to true if there are still elements to fetch", async () => {
         const headers = {
             /** 'X-PAGINATION-SIZE' */
-            get: () => 10
+            get: () => 10,
         };
         const return_json = {
             labeled_items: [{ title: "Le title" }],
-            are_there_items_user_cannot_see: false
+            are_there_items_user_cannot_see: false,
         };
         mockFetchSuccess(jest.spyOn(tlp, "get"), { headers, return_json });
 
@@ -88,11 +88,11 @@ describe("getLabeledItems", () => {
     it("Sets has_more to false if there are no more elements to fetch", async () => {
         const headers = {
             /** 'X-PAGINATION-SIZE' */
-            get: () => 10
+            get: () => 10,
         };
         const return_json = {
             labeled_items: [{ title: "Le title" }],
-            are_there_items_user_cannot_see: false
+            are_there_items_user_cannot_see: false,
         };
         mockFetchSuccess(jest.spyOn(tlp, "get"), { headers, return_json });
 
@@ -104,11 +104,11 @@ describe("getLabeledItems", () => {
     it("Returns the offset so that the caller update its offset in case of recursive calls", async () => {
         const headers = {
             /** 'X-PAGINATION-SIZE' */
-            get: () => 10
+            get: () => 10,
         };
         const return_json = {
             labeled_items: [{ title: "Le title" }],
-            are_there_items_user_cannot_see: false
+            are_there_items_user_cannot_see: false,
         };
         mockFetchSuccess(jest.spyOn(tlp, "get"), { headers, return_json });
 
@@ -124,39 +124,39 @@ describe("getLabeledItems", () => {
                 Promise.resolve({
                     headers: {
                         /** 'X-PAGINATION-SIZE' */
-                        get: () => 10
+                        get: () => 10,
                     },
                     json: () =>
                         Promise.resolve({
                             labeled_items: [],
-                            are_there_items_user_cannot_see: true
-                        })
+                            are_there_items_user_cannot_see: true,
+                        }),
                 })
             )
             .mockReturnValueOnce(
                 Promise.resolve({
                     headers: {
                         /** 'X-PAGINATION-SIZE' */
-                        get: () => 10
+                        get: () => 10,
                     },
                     json: () =>
                         Promise.resolve({
                             labeled_items: [],
-                            are_there_items_user_cannot_see: true
-                        })
+                            are_there_items_user_cannot_see: true,
+                        }),
                 })
             )
             .mockReturnValueOnce(
                 Promise.resolve({
                     headers: {
                         /** 'X-PAGINATION-SIZE' */
-                        get: () => 10
+                        get: () => 10,
                     },
                     json: () =>
                         Promise.resolve({
                             labeled_items: [{ title: "Le title" }],
-                            are_there_items_user_cannot_see: false
-                        })
+                            are_there_items_user_cannot_see: false,
+                        }),
                 })
             );
 
@@ -169,9 +169,9 @@ describe("getLabeledItems", () => {
                 params: {
                     query: JSON.stringify({ labels_id }),
                     offset: 0,
-                    limit: 1
-                }
-            }
+                    limit: 1,
+                },
+            },
         ]);
         expect(tlpGet.mock.calls[1]).toEqual([
             "/api/projects/" + project_id + "/labeled_items",
@@ -179,9 +179,9 @@ describe("getLabeledItems", () => {
                 params: {
                     query: JSON.stringify({ labels_id }),
                     offset: 1,
-                    limit: 1
-                }
-            }
+                    limit: 1,
+                },
+            },
         ]);
         expect(tlpGet.mock.calls[2]).toEqual([
             "/api/projects/" + project_id + "/labeled_items",
@@ -189,9 +189,9 @@ describe("getLabeledItems", () => {
                 params: {
                     query: JSON.stringify({ labels_id }),
                     offset: 2,
-                    limit: 1
-                }
-            }
+                    limit: 1,
+                },
+            },
         ]);
         expect(offset).toEqual(2);
         expect(labeled_items).toEqual([{ title: "Le title" }]);

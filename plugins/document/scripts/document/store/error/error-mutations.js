@@ -25,7 +25,7 @@ export {
     setModalError,
     resetModalError,
     setItemLoadingError,
-    setLockError
+    setLockError,
 };
 
 function resetErrors(state) {

@@ -36,11 +36,11 @@ import TableContent from "./TrackerPermissionsTableContent.vue";
 export default {
     name: "TrackerPermissionsTable",
     components: {
-        TableContent
+        TableContent,
     },
     props: {
         trackerPermissions: Array,
-        selectedUgroupName: String
-    }
+        selectedUgroupName: String,
+    },
 };
 </script>

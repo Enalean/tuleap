@@ -27,7 +27,7 @@ describe(`FilesController`, () => {
     let $controller, SharedPropertiesService;
     beforeEach(() => {
         angular.mock.module(tuleap_frs_module);
-        angular.mock.inject(function(_$rootScope_, _$controller_, _SharedPropertiesService_) {
+        angular.mock.inject(function (_$rootScope_, _$controller_, _SharedPropertiesService_) {
             $controller = _$controller_;
             SharedPropertiesService = _SharedPropertiesService_;
         });
@@ -45,7 +45,7 @@ describe(`FilesController`, () => {
                 files: [{ id: 12 }],
                 links: [],
                 release_note: "",
-                changelog: ""
+                changelog: "",
             };
             jest.spyOn(SharedPropertiesService, "getRelease").mockReturnValue(release);
 
@@ -58,7 +58,7 @@ describe(`FilesController`, () => {
                 files: [],
                 links: [{ id: 23 }],
                 release_note: "",
-                changelog: ""
+                changelog: "",
             };
             jest.spyOn(SharedPropertiesService, "getRelease").mockReturnValue(release);
 
@@ -72,7 +72,7 @@ describe(`FilesController`, () => {
                 files: [],
                 links: [],
                 release_note: "Lorem ipsum dolor sit amet",
-                changelog: ""
+                changelog: "",
             };
             jest.spyOn(SharedPropertiesService, "getRelease").mockReturnValue(release);
 
@@ -86,7 +86,7 @@ describe(`FilesController`, () => {
                 files: [],
                 links: [],
                 release_note: "",
-                changelog: "Lorem ipsum dolor sit amet"
+                changelog: "Lorem ipsum dolor sit amet",
             };
             jest.spyOn(SharedPropertiesService, "getRelease").mockReturnValue(release);
 
@@ -100,7 +100,7 @@ describe(`FilesController`, () => {
                 files: [],
                 links: [],
                 release_note: "",
-                changelog: ""
+                changelog: "",
             };
             jest.spyOn(SharedPropertiesService, "getRelease").mockReturnValue(release);
 

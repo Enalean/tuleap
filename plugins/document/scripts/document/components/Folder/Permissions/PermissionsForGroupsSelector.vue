@@ -46,17 +46,17 @@ import PermissionsSelector from "./PermissionsSelector.vue";
 export default {
     name: "PermissionsForGroupsSelector",
     components: {
-        PermissionsSelector
+        PermissionsSelector,
     },
     props: {
         project_ugroups: {
             type: Array,
-            required: true
+            required: true,
         },
         value: {
             type: Object,
-            required: true
-        }
+            required: true,
+        },
     },
     computed: {
         permissions_for_groups: {
@@ -65,7 +65,7 @@ export default {
             },
             set(value) {
                 this.$emit("input", value);
-            }
+            },
         },
         label_reader() {
             return this.$gettext("Reader");
@@ -75,7 +75,7 @@ export default {
         },
         label_manager() {
             return this.$gettext("Manager");
-        }
-    }
+        },
+    },
 };
 </script>

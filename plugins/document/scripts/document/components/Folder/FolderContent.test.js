@@ -29,11 +29,11 @@ describe("FolderContent", () => {
 
     beforeEach(() => {
         state = {
-            project_id: 101
+            project_id: 101,
         };
 
         const store_options = {
-            state
+            state,
         };
 
         store = createStoreMock(store_options);
@@ -43,30 +43,30 @@ describe("FolderContent", () => {
             routes: [
                 {
                     path: "/preview/42",
-                    name: "preview"
+                    name: "preview",
                 },
                 {
                     path: "/folder/100",
-                    name: "folder"
+                    name: "folder",
                 },
                 {
                     path: "/",
-                    name: "root_folder"
-                }
-            ]
+                    name: "root_folder",
+                },
+            ],
         });
 
         factory = () => {
             return shallowMount(FolderContent, {
                 localVue,
                 mocks: { $store: store },
-                router
+                router,
             });
         };
 
         item = {
             id: 42,
-            title: "my item title"
+            title: "my item title",
         };
     });
 
@@ -75,7 +75,7 @@ describe("FolderContent", () => {
             project_id: 101,
             currently_previewed_item: {},
             current_folder: {},
-            folder_content: [item]
+            folder_content: [item],
         });
 
         expect(wrapper.contains("[data-test=document-quick-look]")).toBeFalsy();
@@ -89,7 +89,7 @@ describe("FolderContent", () => {
 
             const wrapper = factory();
             const event = {
-                details: { item }
+                details: { item },
             };
 
             expect(wrapper.vm.$route.path).toBe("/");
@@ -105,14 +105,14 @@ describe("FolderContent", () => {
         it(`Given user toggle quicklook from an item to an other, the it displays the quick look of new item`, async () => {
             store.state.currently_previewed_item = {
                 id: 105,
-                title: "my previewed item"
+                title: "my previewed item",
             };
 
             store.state.current_folder = item;
 
             const wrapper = factory();
             const event = {
-                details: { item }
+                details: { item },
             };
             await wrapper.vm.toggleQuickLook(event);
 
@@ -129,7 +129,7 @@ describe("FolderContent", () => {
 
             const wrapper = factory();
             const event = {
-                details: { item }
+                details: { item },
             };
             await wrapper.vm.toggleQuickLook(event);
 
@@ -146,7 +146,7 @@ describe("FolderContent", () => {
 
             const wrapper = factory();
             const event = {
-                details: { item }
+                details: { item },
             };
             await wrapper.vm.toggleQuickLook(event);
 
@@ -159,7 +159,7 @@ describe("FolderContent", () => {
         it(`Given closed quick look is called on root_folder, then it calls the "root_folder" route`, () => {
             store.state.current_folder = {
                 id: 25,
-                parent_id: 0
+                parent_id: 0,
             };
 
             store.state.currently_previewed_item = item;
@@ -173,7 +173,7 @@ describe("FolderContent", () => {
         it(`Given closed quick look is called on a subtree item, then it calls the parent folder route`, () => {
             store.state.current_folder = {
                 id: 25,
-                parent_id: 100
+                parent_id: 100,
             };
 
             store.state.currently_previewed_item = item;

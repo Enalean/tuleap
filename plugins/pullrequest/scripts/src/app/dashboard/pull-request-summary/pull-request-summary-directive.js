@@ -8,11 +8,11 @@ function PullRequestSummaryDirective() {
     return {
         restrict: "AE",
         scope: {
-            pull_request: "=pullRequestData"
+            pull_request: "=pullRequestData",
         },
         templateUrl: "pull-request-summary.tpl.html",
         controller: PullRequestSummaryController,
         controllerAs: "summary_controller",
-        bindToController: true
+        bindToController: true,
     };
 }

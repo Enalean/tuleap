@@ -20,7 +20,7 @@
 import Vue from "vue";
 import {
     mockFetchError,
-    mockFetchSuccess
+    mockFetchSuccess,
 } from "../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper.js";
 import { createStore } from "../store/index.js";
 import WritingCrossTrackerReport from "../writing-mode/writing-cross-tracker-report.js";
@@ -34,7 +34,7 @@ describe("ArtifactTable", () => {
     beforeEach(() => {
         Vue.use(GetTextPlugin, {
             translations: {},
-            silent: true
+            silent: true,
         });
         Widget = Vue.extend(ArtifactTable);
         writingCrossTrackerReport = new WritingCrossTrackerReport();
@@ -49,8 +49,8 @@ describe("ArtifactTable", () => {
         const vm = new Widget({
             store: createStore(),
             propsData: {
-                writingCrossTrackerReport
-            }
+                writingCrossTrackerReport,
+            },
         });
         vm.$mount();
 
@@ -61,7 +61,7 @@ describe("ArtifactTable", () => {
         it("Given report is saved, it loads artifacts of report", () => {
             const vm = instantiateComponent();
             vm.$store.replaceState({
-                is_report_saved: true
+                is_report_saved: true,
             });
 
             vm.loadArtifacts();
@@ -72,7 +72,7 @@ describe("ArtifactTable", () => {
         it("Given report is not saved, it loads artifacts of current selected trackers", () => {
             const vm = instantiateComponent();
             vm.$store.replaceState({
-                is_report_saved: false
+                is_report_saved: false,
             });
 
             vm.loadArtifacts();
@@ -97,8 +97,8 @@ describe("ArtifactTable", () => {
             const vm = instantiateComponent();
             const error_json = {
                 error: {
-                    i18n_error_message: "Error while parsing the query"
-                }
+                    i18n_error_message: "Error while parsing the query",
+                },
             };
             mockFetchError(getReportContent, { status: 400, error_json });
             jest.spyOn(vm.$store, "commit").mockImplementation(() => {});

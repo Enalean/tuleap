@@ -23,7 +23,7 @@ export default function TuleapArtifactModalFieldDependenciesService() {
     var self = this;
     Object.assign(self, {
         getTargetFieldPossibleValues,
-        setUpFieldDependenciesActions
+        setUpFieldDependenciesActions,
     });
 
     function setUpFieldDependenciesActions(tracker, callback) {
@@ -31,9 +31,9 @@ export default function TuleapArtifactModalFieldDependenciesService() {
 
         _(field_dependencies_rules)
             .unique(false, "target_field_id")
-            .forEach(function(rule) {
+            .forEach(function (rule) {
                 var target_field = tracker.fields.find(
-                    field => field.field_id === rule.target_field_id
+                    (field) => field.field_id === rule.target_field_id
                 );
 
                 if (_.isFunction(callback)) {
@@ -65,7 +65,7 @@ export default function TuleapArtifactModalFieldDependenciesService() {
             field_dependencies_rules
         );
 
-        return target_field.values.filter(value => possible_value_ids.includes(value.id));
+        return target_field.values.filter((value) => possible_value_ids.includes(value.id));
     }
 
     function getPossibleTargetValueIds(
@@ -74,7 +74,7 @@ export default function TuleapArtifactModalFieldDependenciesService() {
         field_dependencies_rules
     ) {
         return _(field_dependencies_rules)
-            .filter(function(rule) {
+            .filter(function (rule) {
                 return (
                     _(source_value_ids).contains(rule.source_value_id) &&
                     rule.target_field_id === target_field_id

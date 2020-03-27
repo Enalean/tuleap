@@ -26,7 +26,7 @@
 export default {
     name: "ListBindUser",
     props: {
-        user: Object
-    }
+        user: Object,
+    },
 };
 </script>

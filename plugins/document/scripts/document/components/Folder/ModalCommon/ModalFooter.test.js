@@ -26,14 +26,14 @@ import ModalFooter from "./ModalFooter.vue";
 describe("ModalFooter", () => {
     let footer_factory;
     beforeEach(() => {
-        footer_factory = isLoading => {
+        footer_factory = (isLoading) => {
             return shallowMount(ModalFooter, {
                 localVue,
                 context: {
                     props: {
-                        isLoading: isLoading
-                    }
-                }
+                        isLoading: isLoading,
+                    },
+                },
             });
         };
     });

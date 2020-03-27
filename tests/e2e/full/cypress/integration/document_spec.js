@@ -18,7 +18,7 @@
  */
 
 function disableSpecificErrorThrownByCkeditor() {
-    cy.on("uncaught:exception", err => {
+    cy.on("uncaught:exception", (err) => {
         // the message bellow is only thown by ckeditor, if any other js exception is thrown
         // the test will fail
         expect(err.message).to.include("Cannot read property 'compatMode' of undefined");
@@ -136,7 +136,7 @@ describe("Document new UI", () => {
             cy.get("[data-test=document-quick-look]").contains("My new link document");
 
             cy.get("[data-test=document-quicklook-action-button-new-version").click({
-                force: true
+                force: true,
             });
 
             cy.get("[data-test=document-new-version-modal]").within(() => {
@@ -177,7 +177,7 @@ describe("Document new UI", () => {
                 });
 
             cy.get("[data-test=document-quicklook-action-button-new-version").click({
-                force: true
+                force: true,
             });
 
             cy.get("[data-test=document-new-version-modal]").within(() => {
@@ -210,7 +210,7 @@ describe("Document new UI", () => {
 
                 cy.get("[data-test=document-new-item-title]").type("My new html content");
 
-                cy.window().then(win => {
+                cy.window().then((win) => {
                     win.CKEDITOR.instances["document-new-item-embedded"].setData(
                         `<strong>This is the story of my life </strong>`
                     );

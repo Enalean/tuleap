@@ -53,7 +53,7 @@ function initThemeColorSelector(): void {
                 </div>`,
                 result
             );
-        }
+        },
     });
 
     $(selector).on("change", changePreviewColor);

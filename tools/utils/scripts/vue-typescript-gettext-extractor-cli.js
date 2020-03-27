@@ -39,7 +39,7 @@ if (!quietMode && (!files || files.length === 0 || !outputFile)) {
     process.exit(1);
 }
 
-files.forEach(filename => {
+files.forEach((filename) => {
     try {
         extractFileSync(filename, gettext_extractor);
     } catch (e) {

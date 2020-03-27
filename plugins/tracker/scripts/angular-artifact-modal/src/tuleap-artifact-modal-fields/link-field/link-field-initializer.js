@@ -10,6 +10,6 @@ function formatExistingValue(field, artifact_value) {
         type,
         permissions,
         unformatted_links,
-        links: [{}]
+        links: [{}],
     };
 }

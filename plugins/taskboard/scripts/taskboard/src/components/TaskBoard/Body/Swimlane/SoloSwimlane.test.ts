@@ -33,11 +33,11 @@ async function createWrapper(
         mocks: {
             $store: createStoreMock({
                 state: {
-                    column: { columns }
-                } as RootState
-            })
+                    column: { columns },
+                } as RootState,
+            }),
         },
-        propsData: { swimlane }
+        propsData: { swimlane },
     });
 }
 
@@ -50,14 +50,14 @@ describe("SoloSwimlane", () => {
                 id: 2,
                 label: "To do",
                 is_collapsed: false,
-                mappings: [{ accepts: [{ id: 101 }] }]
+                mappings: [{ accepts: [{ id: 101 }] }],
             } as ColumnDefinition,
             {
                 id: 3,
                 label: "Done",
                 is_collapsed: true,
-                mappings: [{ accepts: [{ id: 103 }] }]
-            } as ColumnDefinition
+                mappings: [{ accepts: [{ id: 103 }] }],
+            } as ColumnDefinition,
         ];
         const swimlane = { card: { id: 43, mapped_list_value: { id: 103 } } } as Swimlane;
         const wrapper = await createWrapper(columns, swimlane);

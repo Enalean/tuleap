@@ -13,7 +13,7 @@ function DateFieldController($element) {
     Object.assign(self, {
         $onInit: init,
         getFieldSize,
-        isRequiredAndEmpty
+        isRequiredAndEmpty,
     });
 
     function init() {
@@ -26,9 +26,9 @@ function DateFieldController($element) {
         }
 
         const options = {
-            onChange: function(selected_dates, currently_selected_date) {
+            onChange: function (selected_dates, currently_selected_date) {
                 self.value_model.value = currently_selected_date;
-            }
+            },
         };
 
         datePicker(date_picker, options);

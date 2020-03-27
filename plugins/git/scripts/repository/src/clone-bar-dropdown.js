@@ -40,12 +40,12 @@ export default function initCloneBarDropdown() {
 
     const dropdown = createDropdown(button);
 
-    input.addEventListener("click", function() {
+    input.addEventListener("click", function () {
         this.select();
     });
 
     for (const transport_button of transport_buttons) {
-        transport_button.addEventListener("click", function() {
+        transport_button.addEventListener("click", function () {
             const { url, isReadOnly } = this.dataset;
             input.value = url;
             button_text.textContent = this.text;

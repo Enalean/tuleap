@@ -26,24 +26,24 @@ function transformToGenericBurnupData(burnup_data, mode) {
         duration,
         capacity,
         is_under_calculation,
-        opening_days
+        opening_days,
     };
 
     let points = [];
     if (mode === "count") {
-        points = burnup_data.points_with_date_count_elements.map(function(base_point) {
+        points = burnup_data.points_with_date_count_elements.map(function (base_point) {
             return {
                 date: base_point.date,
                 total: base_point.total_elements,
-                progression: base_point.closed_elements
+                progression: base_point.closed_elements,
             };
         });
     } else {
-        points = burnup_data.points_with_date.map(function(base_point) {
+        points = burnup_data.points_with_date.map(function (base_point) {
             return {
                 date: base_point.date,
                 total: base_point.total_effort,
-                progression: base_point.team_effort
+                progression: base_point.team_effort,
             };
         });
     }

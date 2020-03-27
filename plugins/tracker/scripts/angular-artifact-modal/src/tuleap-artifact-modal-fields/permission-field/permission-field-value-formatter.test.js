@@ -34,8 +34,8 @@ describe("permission-field-value-formatter -", () => {
                 permissions: ["read", "update", "create"],
                 value: {
                     is_used_by_default: true,
-                    granted_groups: ["1", "101"]
-                }
+                    granted_groups: ["1", "101"],
+                },
             };
 
             const result = formatPermissionFieldValue(field_value);
@@ -44,8 +44,8 @@ describe("permission-field-value-formatter -", () => {
                 field_id: 166,
                 value: {
                     is_used_by_default: true,
-                    granted_groups: ["1", "101"]
-                }
+                    granted_groups: ["1", "101"],
+                },
             });
         });
     });

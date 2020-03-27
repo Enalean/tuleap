@@ -33,7 +33,7 @@ describe("NewFolderSecondaryAction", () => {
             return shallowMount(NewFolderSecondaryAction, {
                 localVue,
                 propsData: { ...props },
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
     });
@@ -61,7 +61,7 @@ describe("NewFolderSecondaryAction", () => {
 
         wrapper.find("[data-test=document-new-folder-creation-button]").trigger("click");
         expect(event_bus_emit).toHaveBeenCalledWith("show-new-folder-modal", {
-            detail: { parent: item }
+            detail: { parent: item },
         });
     });
 });

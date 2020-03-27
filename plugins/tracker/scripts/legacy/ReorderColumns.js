@@ -29,7 +29,7 @@ var codendi = codendi || {};
 codendi.reorder_columns = {};
 
 codendi.ReorderColumns = Class.create({
-    initialize: function(table) {
+    initialize: function (table) {
         this.has_just_been_dragged = {};
         //Take the first row, and register the cells
         $(table)
@@ -38,17 +38,17 @@ codendi.ReorderColumns = Class.create({
             .select(".tracker_report_table_column")
             .map(this.register.bind(this));
     },
-    register: function(cell) {
+    register: function (cell) {
         if (cell.readAttribute("data-column-id")) {
             this.registerDraggables(cell);
             this.registerDroppables(cell);
         }
     },
-    registerDraggables: function(cell) {
+    registerDraggables: function (cell) {
         this.has_just_been_dragged[cell.identify()] = false;
         cell.observe(
             "click",
-            function(evt) {
+            function (evt) {
                 if (this.has_just_been_dragged[cell.identify()]) {
                     this.has_just_been_dragged[cell.identify()] = false;
                     Event.stop(evt);
@@ -59,19 +59,19 @@ codendi.ReorderColumns = Class.create({
         var d = new Draggable(cell.down("table"), {
             handle: cell.down(".tracker_report_table_column_grip"),
             revert: true,
-            onStart: function() {
+            onStart: function () {
                 Element.addClassName(cell, "reordercolumns_ondrag");
             },
-            onEnd: function() {
+            onEnd: function () {
                 this.has_just_been_dragged[cell.identify()] = true;
                 Element.removeClassName(cell, "reordercolumns_ondrag");
-            }.bind(this)
+            }.bind(this),
         });
     },
-    registerDroppables: function(cell) {
+    registerDroppables: function (cell) {
         Droppables.add(cell, {
             hoverclass: "drop-over",
-            onDrop: function(dragged, dropped) {
+            onDrop: function (dragged, dropped) {
                 dragged.undoPositioned();
                 var from = dragged.up("th").cellIndex;
                 var to = dropped.cellIndex;
@@ -87,7 +87,7 @@ codendi.ReorderColumns = Class.create({
 
                     var parameters = {
                             func: "renderer",
-                            renderer: renderer_id
+                            renderer: renderer_id,
                         },
                         param_name =
                             "renderer_table[reorder-column][" +
@@ -116,17 +116,17 @@ codendi.ReorderColumns = Class.create({
                             renderer_id,
                         {
                             parameters: parameters,
-                            onSuccess: function() {
+                            onSuccess: function () {
                                 this.reorder(dropped.up("table"), from, to);
                                 codendi.tracker.report.setHasChanged();
-                            }.bind(this)
+                            }.bind(this),
                         }
                     );
                 }
-            }.bind(this)
+            }.bind(this),
         });
     },
-    reorder: function(table, from, to) {
+    reorder: function (table, from, to) {
         var i = table.rows.length;
         while (i--) {
             var row = table.rows[i];
@@ -139,11 +139,11 @@ codendi.ReorderColumns = Class.create({
                 }
             }
         }
-    }
+    },
 });
 
-document.observe("dom:loaded", function() {
-    $$("table.reorderable").each(function(table) {
+document.observe("dom:loaded", function () {
+    $$("table.reorderable").each(function (table) {
         codendi.reorder_columns[table.identify()] = new codendi.ReorderColumns(table);
     });
 });

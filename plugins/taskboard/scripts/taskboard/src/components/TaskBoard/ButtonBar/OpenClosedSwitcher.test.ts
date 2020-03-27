@@ -29,10 +29,10 @@ describe("OpenClosedSwitcher", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
-                        are_closed_items_displayed: true
-                    }
-                })
-            }
+                        are_closed_items_displayed: true,
+                    },
+                }),
+            },
         });
 
         const radio_show: HTMLInputElement = wrapper.find("#button-bar-show-closed")
@@ -49,10 +49,10 @@ describe("OpenClosedSwitcher", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
-                        are_closed_items_displayed: false
-                    }
-                })
-            }
+                        are_closed_items_displayed: false,
+                    },
+                }),
+            },
         });
 
         const radio_show: HTMLInputElement = wrapper.find("#button-bar-show-closed")
@@ -69,10 +69,10 @@ describe("OpenClosedSwitcher", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
-                        are_closed_items_displayed: false
-                    }
-                })
-            }
+                        are_closed_items_displayed: false,
+                    },
+                }),
+            },
         });
         wrapper.find("#button-bar-show-closed").setChecked();
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith(
@@ -87,10 +87,10 @@ describe("OpenClosedSwitcher", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
-                        are_closed_items_displayed: false
-                    }
-                })
-            }
+                        are_closed_items_displayed: false,
+                    },
+                }),
+            },
         });
         wrapper.find("#button-bar-hide-closed").setChecked();
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith(

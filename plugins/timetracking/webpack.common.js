@@ -28,7 +28,7 @@ const output = webpack_configurator.configureOutput(
 let entry_points = {
     "style-fp": "./themes/FlamingParrot/css/style.scss",
     "widget-timetracking": "./scripts/personal-timetracking-widget/src/index.js",
-    "timetracking-overview": "./scripts/timetracking-overview-widget/src/index.js"
+    "timetracking-overview": "./scripts/timetracking-overview-widget/src/index.js",
 };
 
 const colors_burning_parrot = ["orange", "blue", "green", "red", "grey", "purple"];
@@ -45,7 +45,7 @@ module.exports = [
         context,
         output,
         externals: {
-            tlp: "tlp"
+            tlp: "tlp",
         },
         module: {
             rules: [
@@ -53,17 +53,17 @@ module.exports = [
                 webpack_configurator.rule_easygettext_loader,
                 webpack_configurator.rule_vue_loader,
                 webpack_configurator.rule_scss_loader,
-                webpack_configurator.rule_css_assets
-            ]
+                webpack_configurator.rule_css_assets,
+            ],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
             webpack_configurator.getVueLoaderPlugin(),
-            ...webpack_configurator.getCSSExtractionPlugins()
+            ...webpack_configurator.getCSSExtractionPlugins(),
         ],
         resolveLoader: {
-            alias: webpack_configurator.easygettext_loader_alias
-        }
-    }
+            alias: webpack_configurator.easygettext_loader_alias,
+        },
+    },
 ];

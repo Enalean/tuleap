@@ -7,7 +7,7 @@ function KanbanFilteredUpdatedAlertController($window, KanbanFilteredUpdatedAler
 
     Object.assign(self, {
         isDisplayed,
-        reload
+        reload,
     });
 
     function isDisplayed() {

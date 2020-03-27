@@ -26,5 +26,5 @@ class SuppressNullNamedEntryPlugin {
 }
 
 module.exports = {
-    SuppressNullNamedEntryPlugin
+    SuppressNullNamedEntryPlugin,
 };

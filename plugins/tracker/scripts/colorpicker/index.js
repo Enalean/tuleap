@@ -29,14 +29,14 @@ export { createColorPicker };
 function createColorPicker(mount_point) {
     Vue.use(GetTextPlugin, {
         translations: {
-            fr: french_translations.messages
+            fr: french_translations.messages,
         },
-        silent: true
+        silent: true,
     });
 
     Vue.config.language = document.body.dataset.userLocale;
 
     new ColorPickerComponent({
-        propsData: mount_point.dataset
+        propsData: mount_point.dataset,
     }).$mount(mount_point);
 }

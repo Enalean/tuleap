@@ -42,8 +42,8 @@ import TrackerFromAnotherProjectSelector from "./TrackerFromAnotherProjectSelect
         SvgTrackerFromAnotherProject,
         TrackerBaseCard,
         TrackerFromAnotherProjectDescription,
-        TrackerFromAnotherProjectSelector
-    }
+        TrackerFromAnotherProjectSelector,
+    },
 })
 export default class TrackerFromAnotherProjectCard extends Vue {
     private option_name: CreationOptions = CreationOptions.TRACKER_ANOTHER_PROJECT;

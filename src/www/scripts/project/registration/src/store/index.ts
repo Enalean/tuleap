@@ -31,6 +31,6 @@ export function createStore(root_state: State): Store<State> {
         state: root_state,
         mutations,
         actions,
-        getters
+        getters,
     });
 }

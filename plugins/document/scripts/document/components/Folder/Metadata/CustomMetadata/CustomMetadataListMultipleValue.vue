@@ -23,7 +23,7 @@
         class="tlp-form-element"
         v-if="
             currentlyUpdatedItemMetadata.type === 'list' &&
-                currentlyUpdatedItemMetadata.is_multiple_value_allowed
+            currentlyUpdatedItemMetadata.is_multiple_value_allowed
         "
         data-test="document-custom-metadata-list-multiple"
     >
@@ -63,16 +63,16 @@ import EventBus from "../../../../helpers/event-bus.js";
 export default {
     name: "CustomMetadataListMultipleValue",
     props: {
-        currentlyUpdatedItemMetadata: Object
+        currentlyUpdatedItemMetadata: Object,
     },
     data() {
         return {
             project_metadata_list_possible_values: [],
-            multiple_list_values: this.currentlyUpdatedItemMetadata.list_value
+            multiple_list_values: this.currentlyUpdatedItemMetadata.list_value,
         };
     },
     computed: {
-        ...mapState("metadata", ["project_metadata_list"])
+        ...mapState("metadata", ["project_metadata_list"]),
     },
     mounted() {
         if (
@@ -89,10 +89,10 @@ export default {
             EventBus.$emit("update-multiple-metadata-list-value", {
                 detail: {
                     value: this.multiple_list_values,
-                    id: this.currentlyUpdatedItemMetadata.short_name
-                }
+                    id: this.currentlyUpdatedItemMetadata.short_name,
+                },
             });
-        }
-    }
+        },
+    },
 };
 </script>

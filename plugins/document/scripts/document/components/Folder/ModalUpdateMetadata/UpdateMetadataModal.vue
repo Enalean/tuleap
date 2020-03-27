@@ -75,17 +75,17 @@ export default {
         OtherInformationMetadataForUpdate,
         DocumentGlobalMetadataForUpdate,
         ModalHeader,
-        ModalFooter
+        ModalFooter,
     },
     props: {
-        item: Object
+        item: Object,
     },
     data() {
         return {
             item_to_update: {},
             is_loading: false,
             modal: null,
-            formatted_item_metadata: []
+            formatted_item_metadata: [],
         };
     },
     computed: {
@@ -107,7 +107,7 @@ export default {
                 }
 
                 const obsolescence_date = this.item.metadata.find(
-                    metadata => metadata.short_name === "obsolescence_date"
+                    (metadata) => metadata.short_name === "obsolescence_date"
                 );
 
                 if (!obsolescence_date) {
@@ -121,8 +121,8 @@ export default {
             },
             set(value) {
                 this.item_to_update.obsolescence_date = value;
-            }
-        }
+            },
+        },
     },
     created() {
         EventBus.$on("update-multiple-metadata-list-value", this.updateMultipleMetadataListValue);
@@ -164,7 +164,7 @@ export default {
             await this.$store.dispatch("updateMetadata", [
                 this.item,
                 this.item_to_update,
-                this.current_folder
+                this.current_folder,
             ]);
             this.is_loading = false;
             if (this.has_modal_error === false) {
@@ -176,10 +176,10 @@ export default {
                 return;
             }
             const item_metadata = this.formatted_item_metadata.find(
-                metadata => metadata.short_name === event.detail.id
+                (metadata) => metadata.short_name === event.detail.id
             );
             item_metadata.list_value = event.detail.value;
-        }
-    }
+        },
+    },
 };
 </script>

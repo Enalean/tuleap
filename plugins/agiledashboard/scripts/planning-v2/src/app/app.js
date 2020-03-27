@@ -72,16 +72,16 @@ export default angular
         ngAnimate,
         ngSanitize,
         dragular,
-        card_fields
+        card_fields,
     ])
     .config(PlanningConfig)
     .run([
         "gettextCatalog",
-        function(gettextCatalog) {
+        function (gettextCatalog) {
             for (const [language, strings] of Object.entries(translations)) {
                 gettextCatalog.setStrings(language, strings);
             }
-        }
+        },
     ])
     .controller("MainController", MainController)
     .directive("planning", PlanningDirective)

@@ -42,14 +42,14 @@ function createBurnupChart({
     chart_props,
     chart_legends,
     generic_burnup_data,
-    mode
+    mode,
 }) {
     const tooltip_factory = new TooltipFactory({
         tooltip_margin_bottom: 25,
         tooltip_padding_width: 15,
         tooltip_padding_height: 5,
         tooltip_arrow_size: 150,
-        tooltip_font_size: 12
+        tooltip_font_size: 12,
     });
 
     const default_total_effort = 5,
@@ -61,7 +61,7 @@ function createBurnupChart({
     const properties = {
         ...chart_props,
         x_axis_tick_values,
-        y_axis_maximum: total_effort
+        y_axis_maximum: total_effort,
     };
 
     const { x_scale, y_scale } = buildGraphScales(properties);
@@ -70,12 +70,12 @@ function createBurnupChart({
         x_scale,
         y_scale,
         column_width: x_scale.step(),
-        column_height: y_scale(0) - properties.margins.top
+        column_height: y_scale(0) - properties.margins.top,
     });
 
     const svg_burnup = buildChartLayout(chart_container, chart_props, {
         x_scale,
-        y_scale
+        y_scale,
     });
 
     insertLegend();
@@ -83,7 +83,7 @@ function createBurnupChart({
     const label_formatter = new TimeScaleLabelsFormatter({
         layout: svg_burnup,
         first_date: x_axis_tick_values[0],
-        last_date: x_axis_tick_values[x_axis_tick_values.length - 1]
+        last_date: x_axis_tick_values[x_axis_tick_values.length - 1],
     });
 
     label_formatter.formatTicks();
@@ -112,7 +112,7 @@ function createBurnupChart({
             .append("g")
             .attr("class", "chart-datum-column");
 
-        columns.each(function(column_data) {
+        columns.each(function (column_data) {
             const column = select(this);
             const date = column_data.date;
 
@@ -139,7 +139,7 @@ function createBurnupChart({
             svg_burnup,
             {
                 x_scale,
-                y_scale
+                y_scale,
             },
             displayable_data,
             line_name
@@ -147,7 +147,7 @@ function createBurnupChart({
     }
 
     function setInteraction(mode) {
-        svg_burnup.selectAll(".chart-datum-column").each(function() {
+        svg_burnup.selectAll(".chart-datum-column").each(function () {
             const datum_column = select(this);
             datum_column.on("mouseenter", () => {
                 highlightColumn(datum_column, mode);
@@ -203,11 +203,11 @@ function createBurnupChart({
             svg_burnup,
             {
                 x_scale,
-                y_scale
+                y_scale,
             },
             {
                 line_start: 0,
-                line_end: total
+                line_end: total,
             }
         );
     }
@@ -261,13 +261,13 @@ function createBurnupChart({
         addTextCaption({
             layout: svg_burnup,
             content: date_legend_content,
-            legend_y_position
+            legend_y_position,
         });
 
         addBadgeCaption({
             layout: svg_burnup,
             badge_value,
-            legend_y_position
+            legend_y_position,
         });
 
         addContentCaption({
@@ -275,7 +275,7 @@ function createBurnupChart({
             layout: svg_burnup,
             chart_content_legend: chart_legends,
             chart_width: chart_props.graph_width,
-            chart_margin_right: chart_props.margins.right
+            chart_margin_right: chart_props.margins.right,
         });
     }
 }

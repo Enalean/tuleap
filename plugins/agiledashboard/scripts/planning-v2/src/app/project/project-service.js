@@ -8,7 +8,7 @@ function ProjectService(Restangular) {
         getProject: getProject,
         getProjectBacklog: getProjectBacklog,
         removeAddReorderToBacklog: removeAddReorderToBacklog,
-        removeAddToBacklog: removeAddToBacklog
+        removeAddToBacklog: removeAddToBacklog,
     };
 
     function reorderBacklog(project_id, dropped_item_ids, compared_to) {
@@ -19,8 +19,8 @@ function ProjectService(Restangular) {
                 order: {
                     ids: dropped_item_ids,
                     direction: compared_to.direction,
-                    compared_to: compared_to.item_id
-                }
+                    compared_to: compared_to.item_id,
+                },
             });
     }
 
@@ -32,12 +32,12 @@ function ProjectService(Restangular) {
                 order: {
                     ids: dropped_item_ids,
                     direction: compared_to.direction,
-                    compared_to: compared_to.item_id
+                    compared_to: compared_to.item_id,
                 },
-                add: dropped_item_ids.map(dropped_item_id => ({
+                add: dropped_item_ids.map((dropped_item_id) => ({
                     id: dropped_item_id,
-                    remove_from: milestone_id
-                }))
+                    remove_from: milestone_id,
+                })),
             });
     }
 
@@ -46,17 +46,15 @@ function ProjectService(Restangular) {
             .one("projects", project_id)
             .all("backlog")
             .patch({
-                add: dropped_item_ids.map(dropped_item_id => ({
+                add: dropped_item_ids.map((dropped_item_id) => ({
                     id: dropped_item_id,
-                    remove_from: milestone_id
-                }))
+                    remove_from: milestone_id,
+                })),
             });
     }
 
     function getProject(project_id) {
-        return getRest("v1")
-            .one("projects", project_id)
-            .get();
+        return getRest("v1").one("projects", project_id).get();
     }
 
     function getProjectBacklog(project_id) {
@@ -71,13 +69,13 @@ function ProjectService(Restangular) {
             .one("backlog")
             .get({
                 limit: limit,
-                offset: 0
+                offset: 0,
             })
-            .then(function(response) {
+            .then(function (response) {
                 var result = {
                     allowed_backlog_item_types: getAllowedBacklogItemTypes(response.data),
                     has_user_priority_change_permission:
-                        response.data.has_user_priority_change_permission
+                        response.data.has_user_priority_change_permission,
                 };
 
                 return result;
@@ -95,16 +93,16 @@ function ProjectService(Restangular) {
             parent_trackers,
             toString() {
                 return this.content
-                    .map(allowed_tracker => "trackerId" + allowed_tracker.id)
+                    .map((allowed_tracker) => "trackerId" + allowed_tracker.id)
                     .join("|");
-            }
+            },
         };
 
         return accepted_types;
     }
 
     function getRest(version) {
-        return Restangular.withConfig(function(RestangularConfigurer) {
+        return Restangular.withConfig(function (RestangularConfigurer) {
             RestangularConfigurer.setFullResponse(true);
             RestangularConfigurer.setBaseUrl("/api/" + version);
         });

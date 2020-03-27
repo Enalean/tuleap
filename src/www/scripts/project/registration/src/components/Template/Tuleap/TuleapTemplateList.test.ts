@@ -36,18 +36,18 @@ describe("TuleapTemplateList", () => {
         tuleap_templates: TemplateData[]
     ): Promise<Wrapper<TuleapTemplateList>> {
         const state: State = {
-            tuleap_templates: tuleap_templates
+            tuleap_templates: tuleap_templates,
         } as State;
 
         const store_options = {
-            state
+            state,
         };
         store = createStoreMock(store_options);
         local_vue = await createProjectRegistrationLocalVue();
 
         return shallowMount(TuleapTemplateList, {
             localVue: local_vue,
-            mocks: { $store: store }
+            mocks: { $store: store },
         });
     }
 
@@ -58,15 +58,15 @@ describe("TuleapTemplateList", () => {
                 description: "scrum desc",
                 id: "scrum",
                 glyph: "<svg></svg>",
-                is_built_in: true
+                is_built_in: true,
             } as TemplateData,
             {
                 title: "kanban",
                 description: "kanban desc",
                 id: "kanban",
                 glyph: "<svg>kanban</svg>",
-                is_built_in: true
-            } as TemplateData
+                is_built_in: true,
+            } as TemplateData,
         ];
 
         wrapper = await createWrapper(tuleap_templates);

@@ -20,7 +20,7 @@
 
 import {
     ChartPropsWhithoutTooltip,
-    XYScale
+    XYScale,
 } from "../../../../../../../src/www/scripts/charts-builders/type";
 import { GenericBurnupData } from "../../../../../../agiledashboard/scripts/burnup-chart/src/type";
 import { getDaysToDisplay } from "../../../../../../../src/www/scripts/charts-builders/chart-dates-service";
@@ -29,7 +29,7 @@ import { buildGraphScales } from "../../../../../../../src/www/scripts/charts-bu
 import { select } from "d3-selection";
 import {
     drawCurve,
-    drawIdealLine
+    drawIdealLine,
 } from "../../../../../../../src/www/scripts/charts-builders/chart-lines-service";
 import { getLastGenericBurnupData } from "../chart-data-service";
 import { addScaleLines } from "../chart-scale-drawer";
@@ -55,7 +55,7 @@ function createBurnupChart(
     const properties = {
         ...chart_props,
         x_axis_tick_values,
-        y_axis_maximum: total_effort
+        y_axis_maximum: total_effort,
     };
 
     const { x_scale, y_scale }: XYScale = buildGraphScales(properties);
@@ -86,17 +86,13 @@ function createBurnupChart(
             { x_scale, y_scale },
             { line_start: 0, line_end: getLastDataTotal() }
         );
-        select(chart_container)
-            .selectAll("circle")
-            .remove();
-        select(chart_container)
-            .selectAll(".chart-y-axis > .tick > line")
-            .remove();
+        select(chart_container).selectAll("circle").remove();
+        select(chart_container).selectAll(".chart-y-axis > .tick > line").remove();
 
         new TimeScaleLabelsFormatter({
             layout: svg_burnup,
             first_date: x_axis_tick_values[0],
-            last_date: x_axis_tick_values[x_axis_tick_values.length - 1]
+            last_date: x_axis_tick_values[x_axis_tick_values.length - 1],
         }).formatTicks();
 
         removeAllLabelsOverlapsOthersLabels(svg_burnup);

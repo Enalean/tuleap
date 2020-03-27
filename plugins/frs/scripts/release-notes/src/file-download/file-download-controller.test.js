@@ -29,7 +29,7 @@ describe("FileDownloadController", () => {
     beforeEach(() => {
         angular.mock.module(tuleap_frs_module);
 
-        angular.mock.inject(function(_$controller_, _TlpModalService_, _$rootScope_, _$window_) {
+        angular.mock.inject(function (_$controller_, _TlpModalService_, _$rootScope_, _$window_) {
             $controller = _$controller_;
             TlpModalService = _TlpModalService_;
             $rootScope = _$rootScope_;
@@ -37,19 +37,19 @@ describe("FileDownloadController", () => {
         });
     });
 
-    describe("init() -", function() {
-        it("Given a file with an encoded download_url property had been bound to the controller, when I init the controller then there will be a file_download_url on the scope with the decoded download url", function() {
+    describe("init() -", function () {
+        it("Given a file with an encoded download_url property had been bound to the controller, when I init the controller then there will be a file_download_url on the scope with the decoded download url", function () {
             var file = {
                 name: "alphabetist.tar.gz",
                 download_url:
-                    "%2Fsenso%2Finflationism%3Fa%3Dsextillionth%26b%3Dunfishable%23tricostate"
+                    "%2Fsenso%2Finflationism%3Fa%3Dsextillionth%26b%3Dunfishable%23tricostate",
             };
 
             FileDownloadController = $controller(
                 file_download_controller,
                 {},
                 {
-                    file: file
+                    file: file,
                 }
             );
             FileDownloadController.$onInit();
@@ -67,7 +67,7 @@ describe("FileDownloadController", () => {
 
             FileDownloadController = $controller(file_download_controller, {
                 TlpModalService,
-                $window: $window
+                $window: $window,
             });
         });
 
@@ -107,7 +107,7 @@ describe("FileDownloadController", () => {
                 controller: expect.any(Function),
                 controllerAs: "$ctrl",
                 tlpModalOptions: { destroy_on_hide: true },
-                resolve: { acceptCallback: expect.any(Function) }
+                resolve: { acceptCallback: expect.any(Function) },
             });
             $rootScope.$apply();
             expect($window.open).toHaveBeenCalledWith(file_download_url);
@@ -123,7 +123,7 @@ describe("FileDownloadController", () => {
             FileDownloadController.license_approval_mandatory = true;
             FileDownloadController.custom_license_agreement = {
                 title: "A fine license agreement",
-                content: "A fine text"
+                content: "A fine text",
             };
             const modalOpen = jest
                 .spyOn(TlpModalService, "open")
@@ -138,7 +138,7 @@ describe("FileDownloadController", () => {
                 controller: expect.any(Function),
                 controllerAs: "$ctrl",
                 tlpModalOptions: { destroy_on_hide: true },
-                resolve: { acceptCallback: expect.any(Function) }
+                resolve: { acceptCallback: expect.any(Function) },
             });
             $rootScope.$apply();
             expect($window.open).toHaveBeenCalledWith(file_download_url);

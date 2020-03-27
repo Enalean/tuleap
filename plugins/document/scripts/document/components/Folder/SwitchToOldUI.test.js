@@ -33,28 +33,28 @@ describe("SwitchToOldUI", () => {
     beforeEach(() => {
         state = {
             current_folder: null,
-            project_id: 100
+            project_id: 100,
         };
 
         const store_options = {
-            state
+            state,
         };
 
         router = new VueRouter({
             routes: [
                 {
                     path: "/preview/3",
-                    name: "preview"
+                    name: "preview",
                 },
                 {
                     path: "/folder/20",
-                    name: "folder"
+                    name: "folder",
                 },
                 {
                     path: "/",
-                    name: "root_folder"
-                }
-            ]
+                    name: "root_folder",
+                },
+            ],
         });
         store = createStoreMock(store_options);
 
@@ -62,9 +62,9 @@ describe("SwitchToOldUI", () => {
             return shallowMount(SwitchToOldUI, {
                 localVue,
                 mocks: {
-                    $store: store
+                    $store: store,
                 },
-                router
+                router,
             });
         };
         redirect_to_url = jest.spyOn(location_helper, "redirectToUrl").mockImplementation();
@@ -75,8 +75,8 @@ describe("SwitchToOldUI", () => {
         router.push({
             name: "folder",
             params: {
-                item_id: 20
-            }
+                item_id: 20,
+            },
         });
         const wrapper = factory();
 
@@ -97,8 +97,8 @@ describe("SwitchToOldUI", () => {
         router.push({
             name: "preview",
             params: {
-                preview_item_id: 3
-            }
+                preview_item_id: 3,
+            },
         });
         store.state.current_folder = { id: 25 };
 
@@ -118,7 +118,7 @@ describe("SwitchToOldUI", () => {
         The user wants to switch to old UI
         Then he is redirected on the old UI into the root folder`, async () => {
         router.push({
-            name: "root_folder"
+            name: "root_folder",
         });
 
         const wrapper = factory();

@@ -21,7 +21,7 @@ import { Writable } from "readable-stream";
 import pump from "pump";
 import {
     uploadTemporaryFile as uploadFile,
-    uploadAdditionalChunk
+    uploadAdditionalChunk,
 } from "../../rest/rest-service.js";
 
 import { getFileReaderStream } from "./streaming-file-reader.js";
@@ -31,7 +31,7 @@ import { file_upload_rules } from "./file-upload-rules-state.js";
 export { uploadAllTemporaryFiles, uploadTemporaryFile };
 
 function uploadAllTemporaryFiles(temporary_files) {
-    const promises = temporary_files.map(file => uploadTemporaryFile(file));
+    const promises = temporary_files.map((file) => uploadTemporaryFile(file));
 
     return Promise.all(promises);
 }
@@ -52,9 +52,9 @@ function uploadTemporaryFile(temporary_file) {
 
     const file_upload_stream = new Writable({
         highWaterMark: file_upload_rules.max_chunk_size,
-        decodeStrings: false
+        decodeStrings: false,
     });
-    file_upload_stream._write = function(chunk, encoding, callback) {
+    file_upload_stream._write = function (chunk, encoding, callback) {
         if (chunk_offset === 1) {
             return uploadFile(
                 temporary_file.file.name,
@@ -62,12 +62,12 @@ function uploadTemporaryFile(temporary_file) {
                 chunk,
                 temporary_file.description
             ).then(
-                id => {
+                (id) => {
                     chunk_offset++;
                     temporary_file_id = id;
                     callback();
                 },
-                error => callback(error)
+                (error) => callback(error)
             );
         }
 
@@ -76,7 +76,7 @@ function uploadTemporaryFile(temporary_file) {
                 chunk_offset++;
                 callback();
             },
-            error => callback(error)
+            (error) => callback(error)
         );
     };
 
@@ -85,7 +85,7 @@ function uploadTemporaryFile(temporary_file) {
             getFileReaderStream(temporary_file.file),
             getBase64Transform(),
             file_upload_stream,
-            error => {
+            (error) => {
                 if (error) {
                     error.file_name = temporary_file.file.name;
                     error.file_size = temporary_file.file.size;

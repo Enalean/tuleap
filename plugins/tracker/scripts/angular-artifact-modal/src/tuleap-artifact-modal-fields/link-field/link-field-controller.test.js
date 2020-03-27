@@ -17,7 +17,7 @@ describe("LinkFieldController -", () => {
 
     beforeEach(() => {
         angular.mock.module(link_module);
-        angular.mock.inject(function(_$controller_, _$q_, _$rootScope_) {
+        angular.mock.inject(function (_$controller_, _$q_, _$rootScope_) {
             $controller = _$controller_;
             $q = _$q_;
             $rootScope = _$rootScope_;
@@ -116,11 +116,11 @@ describe("LinkFieldController -", () => {
             tracker = {
                 id: 43,
                 parent: {
-                    id: 64
-                }
+                    id: 64,
+                },
             };
             parent_artifact = {
-                id: 154
+                id: 154,
             };
             possible_parent_artifacts = [{ id: 629 }];
         });
@@ -129,7 +129,7 @@ describe("LinkFieldController -", () => {
             Object.assign(LinkFieldController, {
                 tracker,
                 parent_artifact,
-                possible_parent_artifacts
+                possible_parent_artifacts,
             });
 
             const result = LinkFieldController.showParentArtifactChoice();
@@ -143,7 +143,7 @@ describe("LinkFieldController -", () => {
             Object.assign(LinkFieldController, {
                 tracker,
                 parent_artifact,
-                possible_parent_artifacts
+                possible_parent_artifacts,
             });
 
             const result = LinkFieldController.showParentArtifactChoice();
@@ -156,7 +156,7 @@ describe("LinkFieldController -", () => {
             Object.assign(LinkFieldController, {
                 tracker,
                 parent_artifact,
-                possible_parent_artifacts
+                possible_parent_artifacts,
             });
 
             const result = LinkFieldController.showParentArtifactChoice();
@@ -199,7 +199,7 @@ describe("LinkFieldController -", () => {
     describe("loadParentArtifactsTitle() -", () => {
         it("will load all the possible parent artifacts and assign them to the controller, formatted", async () => {
             LinkFieldController.tracker = {
-                id: 37
+                id: 37,
             };
             const collection = [
                 {
@@ -207,17 +207,17 @@ describe("LinkFieldController -", () => {
                     title: "forcipated",
                     tracker: {
                         id: 30,
-                        label: "flareboard"
-                    }
+                        label: "flareboard",
+                    },
                 },
                 {
                     id: 634,
                     title: "viability",
                     tracker: {
                         id: 30,
-                        label: "flareboard"
-                    }
-                }
+                        label: "flareboard",
+                    },
+                },
             ];
             jest.spyOn(rest_service, "getAllOpenParentArtifacts").mockImplementation(() =>
                 $q.when(collection)
@@ -233,12 +233,12 @@ describe("LinkFieldController -", () => {
             expect(LinkFieldController.possible_parent_artifacts).toEqual([
                 {
                     id: 747,
-                    formatted_ref: "flareboard #747 - forcipated"
+                    formatted_ref: "flareboard #747 - forcipated",
                 },
                 {
                     id: 634,
-                    formatted_ref: "flareboard #634 - viability"
-                }
+                    formatted_ref: "flareboard #634 - viability",
+                },
             ]);
         });
     });

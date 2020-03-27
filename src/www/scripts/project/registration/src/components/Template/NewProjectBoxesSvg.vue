@@ -55,7 +55,7 @@
             ></path>
             <g opacity="0.6">
                 <path
-                    style="mix-blend-mode:overlay"
+                    style="mix-blend-mode: overlay;"
                     stroke-width="5.5296"
                     stroke="white"
                     d="M172.84 10.9224L237.875 18.9697V79.564"
@@ -99,7 +99,7 @@
             ></path>
             <g opacity="0.6">
                 <path
-                    style="mix-blend-mode:overlay"
+                    style="mix-blend-mode: overlay;"
                     stroke-width="5.5296"
                     stroke="white"
                     d="M47.5503 36.6295C47.5503 36.6295 64.6299 39.7716 80.9399 39.7716C97.25 39.7716 112.561 36.6295 112.561 36.6295V46.9137"
@@ -121,7 +121,7 @@
             ></path>
             <g opacity="0.6">
                 <path
-                    style="mix-blend-mode:overlay"
+                    style="mix-blend-mode: overlay;"
                     stroke-width="5"
                     stroke="white"
                     d="M88.4399 63.9137H223.692V116.471"

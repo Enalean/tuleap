@@ -41,19 +41,19 @@ export function createStore(user_id, project_id) {
         modules: {
             error,
             clipboard,
-            metadata
+            metadata,
         },
         plugins: [
             createPersistedState({
                 key: `document_clipboard_${user_id}_${project_id}`,
                 storage: expiringLocalStorage(900),
-                paths: ["clipboard"]
+                paths: ["clipboard"],
             }),
             createMutationsSharer({
-                predicate: mutation => {
+                predicate: (mutation) => {
                     return mutation.type.startsWith("clipboard/");
-                }
-            })
-        ]
+                },
+            }),
+        ],
     });
 }

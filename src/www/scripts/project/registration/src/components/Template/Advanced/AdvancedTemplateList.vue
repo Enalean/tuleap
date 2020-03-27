@@ -101,8 +101,8 @@ import { State } from "vuex-class";
     components: {
         TemplateCard,
         SvgTemplate,
-        UserProjectList
-    }
+        UserProjectList,
+    },
 })
 export default class AdvancedTemplateList extends Vue {
     should_choose_a_project = false;

@@ -48,7 +48,7 @@
                     class="fa tlp-button-icon-right"
                     v-bind:class="{
                         'fa-long-arrow-right ': !is_parsing_a_xml_file,
-                        'fa-circle-o-notch fa-spin': is_parsing_a_xml_file
+                        'fa-circle-o-notch fa-spin': is_parsing_a_xml_file,
                     }"
                 ></i>
             </button>
@@ -58,7 +58,7 @@
                 type="submit"
                 data-test="button-create-my-tracker"
                 v-bind:class="{
-                    'tlp-button-disabled': !is_ready_to_submit || has_form_been_submitted
+                    'tlp-button-disabled': !is_ready_to_submit || has_form_been_submitted,
                 }"
                 v-bind:disabled="!is_ready_to_submit || has_form_been_submitted"
                 v-on:click="setCreationFormHasBeenSubmitted"
@@ -68,7 +68,7 @@
                     class="tlp-button-icon-right fa"
                     v-bind:class="{
                         'fa-circle-o-notch fa-spin': has_form_been_submitted,
-                        'fa-arrow-circle-o-right': !has_form_been_submitted
+                        'fa-arrow-circle-o-right': !has_form_been_submitted,
                     }"
                 ></i>
             </button>
@@ -81,7 +81,7 @@ import { Getter, State, Mutation } from "vuex-class";
 import { Component, Prop } from "vue-property-decorator";
 import BackToLegacy from "./BackToLegacy.vue";
 @Component({
-    components: { BackToLegacy }
+    components: { BackToLegacy },
 })
 export default class StepNavigationButtons extends Vue {
     @Prop({ required: false })

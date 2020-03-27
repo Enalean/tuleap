@@ -38,23 +38,23 @@ describe("getTrackedTimes() -", () => {
                 {
                     artifact: {},
                     project: {},
-                    minutes: 20
-                }
-            ]
+                    minutes: 20,
+                },
+            ],
         ];
 
         const tlpGet = jest.spyOn(tlp, "get");
         mockFetchSuccess(tlpGet, {
             headers: {
-                get: header_name => {
+                get: (header_name) => {
                     const headers = {
-                        "X-PAGINATION-SIZE": 1
+                        "X-PAGINATION-SIZE": 1,
                     };
 
                     return headers[header_name];
-                }
+                },
             },
-            return_json: times
+            return_json: times,
         });
 
         const result = await getTrackedTimes(user_id, "2018-03-08", "2018-03-15", limit, offset);
@@ -64,9 +64,9 @@ describe("getTrackedTimes() -", () => {
                 offset,
                 query: JSON.stringify({
                     start_date: "2018-03-08T00:00:00+01:00",
-                    end_date: "2018-03-15T00:00:00+01:00"
-                })
-            }
+                    end_date: "2018-03-15T00:00:00+01:00",
+                }),
+            },
         });
 
         expect(result.times).toEqual(times);
@@ -78,26 +78,26 @@ describe("getTrackedTimes() -", () => {
         const time = {
             artifact: {},
             project: {},
-            minutes: 20
+            minutes: 20,
         };
 
         const tlpPost = jest.spyOn(tlp, "post");
         mockFetchSuccess(tlpPost, {
-            return_json: time
+            return_json: time,
         });
         const result = await addTime("2018-03-08", 2, "11:11", "oui");
         const headers = {
-            "content-type": "application/json"
+            "content-type": "application/json",
         };
         const body = JSON.stringify({
             date_time: "2018-03-08",
             artifact_id: 2,
             time_value: "11:11",
-            step: "oui"
+            step: "oui",
         });
         expect(tlpPost).toHaveBeenCalledWith("/api/v1/timetracking", {
             headers,
-            body
+            body,
         });
         expect(result).toEqual(time);
     });
@@ -107,15 +107,15 @@ describe("getTrackedTimes() -", () => {
 
         const tlpDel = jest.spyOn(tlp, "del");
         mockFetchSuccess(tlpDel, {
-            return_json: []
+            return_json: [],
         });
         const time_id = 2;
         await deleteTime(time_id);
         const headers = {
-            "content-type": "application/json"
+            "content-type": "application/json",
         };
         expect(tlpDel).toHaveBeenCalledWith("/api/v1/timetracking/" + time_id, {
-            headers
+            headers,
         });
     });
 });

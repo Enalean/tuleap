@@ -24,7 +24,7 @@ export default {
 
     setTrackersTimes(state, times) {
         state.trackers_times = times;
-        state.trackers_times.forEach(function(time) {
+        state.trackers_times.forEach(function (time) {
             setUsers(state, time);
         });
     },
@@ -79,9 +79,11 @@ export default {
     },
 
     setTrackers(state, trackers) {
-        trackers.forEach(function(tracker) {
+        trackers.forEach(function (tracker) {
             tracker.disabled = Boolean(
-                state.selected_trackers.find(selected_tracker => selected_tracker.id === tracker.id)
+                state.selected_trackers.find(
+                    (selected_tracker) => selected_tracker.id === tracker.id
+                )
             );
         });
         state.trackers = trackers;
@@ -89,7 +91,7 @@ export default {
 
     setTrackersIds(state) {
         state.trackers_ids = [];
-        state.selected_trackers.forEach(function(tracker) {
+        state.selected_trackers.forEach(function (tracker) {
             state.trackers_ids.push(tracker.id);
         });
     },
@@ -100,11 +102,11 @@ export default {
 
     addSelectedTrackers(state, tracker_id) {
         state.is_added_tracker = false;
-        state.trackers.forEach(function(tracker) {
+        state.trackers.forEach(function (tracker) {
             if (
                 tracker.id === parseInt(tracker_id, 10) &&
                 !state.selected_trackers.find(
-                    selected_tracker => selected_tracker.id === tracker.id
+                    (selected_tracker) => selected_tracker.id === tracker.id
                 )
             ) {
                 state.selected_trackers.push(tracker);
@@ -124,16 +126,16 @@ export default {
 
     setReportId(state, report_id) {
         state.report_id = report_id;
-    }
+    },
 };
 
 function setUsers(state, time) {
     if (time.time_per_user.length > 0) {
-        time.time_per_user.reduce(function(users, user_time) {
-            if (!users.find(user => user.user_id === user_time.user_id)) {
+        time.time_per_user.reduce(function (users, user_time) {
+            if (!users.find((user) => user.user_id === user_time.user_id)) {
                 const user = {
                     user_name: user_time.user_name,
-                    user_id: user_time.user_id
+                    user_id: user_time.user_id,
                 };
                 users.push(user);
             }

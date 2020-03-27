@@ -33,7 +33,7 @@ import { mapState } from "vuex";
 export default {
     name: "ModalFeedback",
     computed: {
-        ...mapState("error", ["modal_error", "has_modal_error"])
-    }
+        ...mapState("error", ["modal_error", "has_modal_error"]),
+    },
 };
 </script>

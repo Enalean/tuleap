@@ -92,16 +92,16 @@ export default {
     components: {
         RecursionOptions,
         CustomMetadataComponentTypeRenderer,
-        StatusMetadataWithCustomBindingForFolderUpdate
+        StatusMetadataWithCustomBindingForFolderUpdate,
     },
     props: {
         currentlyUpdatedItem: Object,
-        itemMetadata: Array
+        itemMetadata: Array,
     },
     data() {
         return {
             metadata_list_to_update: [],
-            recursion: "none"
+            recursion: "none",
         };
     },
     computed: {
@@ -114,11 +114,11 @@ export default {
             set(value) {
                 this.currentlyUpdatedItem.status.recursion = value;
                 this.recursion = value;
-            }
+            },
         },
         has_recursion_metadata() {
             return this.is_item_status_metadata_used || this.itemMetadata.length > 0;
-        }
+        },
     },
     mounted() {
         if (!this.has_loaded_metadata) {
@@ -128,13 +128,13 @@ export default {
     methods: {
         updateMetadataListWithRecursion() {
             EventBus.$emit("metadata-recursion-metadata-list", {
-                detail: { metadata_list: this.metadata_list_to_update }
+                detail: { metadata_list: this.metadata_list_to_update },
             });
         },
         updateRecursionOption() {
             this.metadata_list_to_update = [];
             if (this.recursion !== "none") {
-                this.itemMetadata.forEach(metadata => {
+                this.itemMetadata.forEach((metadata) => {
                     this.metadata_list_to_update.push(metadata.short_name);
                 });
                 if (this.is_item_status_metadata_used) {
@@ -146,9 +146,9 @@ export default {
             }
             this.updateMetadataListWithRecursion();
             EventBus.$emit("metadata-recursion-option", {
-                detail: { recursion_option: this.recursion }
+                detail: { recursion_option: this.recursion },
             });
-        }
-    }
+        },
+    },
 };
 </script>

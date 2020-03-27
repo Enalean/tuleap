@@ -44,21 +44,21 @@ export default {
     props: {
         value: {
             type: String,
-            required: true
+            required: true,
         },
         id: {
             type: String,
-            required: true
+            required: true,
         },
         disabled: {
             type: Boolean,
-            default: false
-        }
+            default: false,
+        },
     },
     computed: {
         link_title() {
             return this.$gettext("Please, enter a http:// or https:// link");
-        }
-    }
+        },
+    },
 };
 </script>

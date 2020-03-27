@@ -56,10 +56,7 @@ describe("ChartBadgeServices -", () => {
     ): Selection<SVGTextElement, unknown, null, undefined> {
         const local_document = document.implementation.createHTMLDocument();
         const chart_div = local_document.createElement("svg");
-        const chart = select(chart_div)
-            .append("svg")
-            .append("text")
-            .text(badge_value);
+        const chart = select(chart_div).append("svg").append("text").text(badge_value);
 
         const node = chart.node();
 
@@ -72,7 +69,7 @@ describe("ChartBadgeServices -", () => {
                 x: 10,
                 y: 10,
                 width,
-                height: 12
+                height: 12,
             } as DOMRect;
         };
 

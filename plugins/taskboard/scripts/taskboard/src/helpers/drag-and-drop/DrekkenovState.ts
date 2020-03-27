@@ -22,7 +22,7 @@ import {
     AfterDropListener,
     DragHandler,
     DragStartContext,
-    DrekkenovInitOptions
+    DrekkenovInitOptions,
 } from "./types";
 import { OngoingDrag } from "./OngoingDrag";
 import { DropGhost } from "./DropGhost";
@@ -46,7 +46,7 @@ export class DrekkenovState implements AfterDropEventSource {
     }
 
     public dispatchAfterDropEvent(): void {
-        this.after_drop_listeners.forEach(listener => {
+        this.after_drop_listeners.forEach((listener) => {
             listener.afterDrop();
         });
         this.options.cleanupAfterDragCallback();

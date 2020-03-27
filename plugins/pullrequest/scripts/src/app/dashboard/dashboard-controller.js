@@ -3,7 +3,7 @@ export default DashboardController;
 DashboardController.$inject = [
     "PullRequestCollectionService",
     "PullRequestService",
-    "TooltipService"
+    "TooltipService",
 ];
 
 function DashboardController(PullRequestCollectionService, PullRequestService, TooltipService) {
@@ -25,7 +25,7 @@ function DashboardController(PullRequestCollectionService, PullRequestService, T
 
         areClosedPullRequestsHidden,
         loadClosedPullRequests,
-        $onInit: init
+        $onInit: init,
     });
 
     let closed_pull_requests_hidden;

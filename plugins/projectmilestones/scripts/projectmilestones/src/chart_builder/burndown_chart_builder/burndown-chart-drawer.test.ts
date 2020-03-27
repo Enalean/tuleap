@@ -26,7 +26,7 @@ import * as chart_badge_generator from "../chart-badge-generator";
 jest.mock("../../../../../../../src/www/scripts/charts-builders/time-scale-labels-formatter");
 jest.mock("../time-scale-label-formatter");
 jest.mock("../chart-badge-generator", () => ({
-    addBadgeCaption: jest.fn()
+    addBadgeCaption: jest.fn(),
 }));
 
 describe("BurndownChartDrawer -", () => {
@@ -36,7 +36,7 @@ describe("BurndownChartDrawer -", () => {
         it("Returns the highest remaining effort if it is greater than the capacity", () => {
             const max_remaining_effort = getMaxRemainingEffort({
                 points_with_date: getPointsWithDateWithMaxIs15(),
-                capacity: 10
+                capacity: 10,
             } as BurndownData);
 
             expect(max_remaining_effort).toEqual(15);
@@ -45,7 +45,7 @@ describe("BurndownChartDrawer -", () => {
         it("Returns capacity if it is greater than the biggest remaining effort", () => {
             const max_remaining_effort = getMaxRemainingEffort({
                 points_with_date: getPointsWithDateWithMaxIs15(),
-                capacity: 20
+                capacity: 20,
             } as BurndownData);
 
             expect(max_remaining_effort).toEqual(20);
@@ -54,7 +54,7 @@ describe("BurndownChartDrawer -", () => {
         it("When there are some remaining effort and no capacity, Then the biggest remaining effort is returned", () => {
             const max_remaining_effort = getMaxRemainingEffort({
                 points_with_date: getPointsWithDateWithMaxIs15(),
-                capacity: null
+                capacity: null,
             } as BurndownData);
 
             expect(max_remaining_effort).toEqual(15);
@@ -63,7 +63,7 @@ describe("BurndownChartDrawer -", () => {
         it("When there aren't capacity and remaining effort, Then 5 is returned", () => {
             const max_remaining_effort = getMaxRemainingEffort({
                 points_with_date: getPointsWithDateWithMaxIsNull(),
-                capacity: null
+                capacity: null,
             } as BurndownData);
 
             expect(max_remaining_effort).toEqual(5);
@@ -72,7 +72,7 @@ describe("BurndownChartDrawer -", () => {
         it("When there aren't remaining effort but there is capacity, Then capacity is returned", () => {
             const max_remaining_effort = getMaxRemainingEffort({
                 points_with_date: getPointsWithDateWithMaxIsNull(),
-                capacity: 100
+                capacity: 100,
             } as BurndownData);
 
             expect(max_remaining_effort).toEqual(100);
@@ -81,7 +81,7 @@ describe("BurndownChartDrawer -", () => {
         it("When capacity and remaining effort are 0, Then 5 is returned", () => {
             const max_remaining_effort = getMaxRemainingEffort({
                 points_with_date: getPointsWithDateWithMaxIsZero(),
-                capacity: 0
+                capacity: 0,
             } as BurndownData);
 
             expect(max_remaining_effort).toEqual(5);
@@ -139,8 +139,8 @@ describe("BurndownChartDrawer -", () => {
                 top: 20,
                 right: 20,
                 bottom: 20,
-                left: 20
-            }
+                left: 20,
+            },
         };
     }
 
@@ -152,7 +152,7 @@ describe("BurndownChartDrawer -", () => {
             capacity: null,
             is_under_calculation: false,
             points: [5, 10, 15],
-            points_with_date: getPointsWithDateWithMaxIs15()
+            points_with_date: getPointsWithDateWithMaxIs15(),
         } as BurndownData;
     }
 
@@ -164,7 +164,7 @@ describe("BurndownChartDrawer -", () => {
             capacity: null,
             is_under_calculation: false,
             points: [] as number[],
-            points_with_date: [] as PointsWithDateForBurndown[]
+            points_with_date: [] as PointsWithDateForBurndown[],
         } as BurndownData;
     }
 
@@ -176,7 +176,7 @@ describe("BurndownChartDrawer -", () => {
             capacity: null,
             is_under_calculation: false,
             points: [0],
-            points_with_date: getPointsWithDateWithMaxIsZero()
+            points_with_date: getPointsWithDateWithMaxIsZero(),
         } as BurndownData;
     }
 
@@ -184,11 +184,11 @@ describe("BurndownChartDrawer -", () => {
         const points: PointsWithDateForBurndown[] = [];
         points.push({
             date: "2019-07-01T00:00:00+00:00",
-            remaining_effort: null
+            remaining_effort: null,
         });
         points.push({
             date: "2019-07-01T00:00:00+00:00",
-            remaining_effort: 15
+            remaining_effort: 15,
         });
 
         return points;
@@ -198,7 +198,7 @@ describe("BurndownChartDrawer -", () => {
         const points: PointsWithDateForBurndown[] = [];
         points.push({
             date: "2019-07-01T00:00:00+00:00",
-            remaining_effort: null
+            remaining_effort: null,
         });
 
         return points;
@@ -208,7 +208,7 @@ describe("BurndownChartDrawer -", () => {
         const points: PointsWithDateForBurndown[] = [];
         points.push({
             date: "2019-07-01T00:00:00+00:00",
-            remaining_effort: 0
+            remaining_effort: 0,
         });
 
         return points;

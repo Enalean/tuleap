@@ -22,7 +22,7 @@ import { SwimlaneState } from "../type";
 import {
     UpdateCardPayload,
     NewRemainingEffortPayload,
-    TrackerAssignableUsersPayload
+    TrackerAssignableUsersPayload,
 } from "./type";
 import { findCard } from "../swimlane-helpers";
 

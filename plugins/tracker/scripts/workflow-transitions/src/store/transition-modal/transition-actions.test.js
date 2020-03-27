@@ -25,7 +25,7 @@ import {
     loadTransition,
     loadUserGroupsIfNotCached,
     loadPostActions,
-    saveTransitionRules
+    saveTransitionRules,
 } from "./transition-actions.js";
 import { create, createList } from "../../support/factories.js";
 
@@ -40,7 +40,7 @@ describe("Transition modal actions", () => {
         context = {
             state: {},
             commit: jest.fn(),
-            dispatch: jest.fn()
+            dispatch: jest.fn(),
         };
     });
 
@@ -64,9 +64,9 @@ describe("Transition modal actions", () => {
             mockFetchError(context.dispatch, {
                 error_json: {
                     error: {
-                        i18n_error_message: "You are not allowed to see that"
-                    }
-                }
+                        i18n_error_message: "You are not allowed to see that",
+                    },
+                },
             });
 
             await showTransitionConfigurationModal(context, transition);
@@ -101,11 +101,11 @@ describe("Transition modal actions", () => {
             context = {
                 ...context,
                 state: {
-                    user_groups: null
+                    user_groups: null,
                 },
                 rootGetters: {
-                    current_project_id: 205
-                }
+                    current_project_id: 205,
+                },
             };
             user_groups = createList("user_group", 2);
         });
@@ -158,11 +158,11 @@ describe("Transition modal actions", () => {
             context = {
                 ...context,
                 state: {
-                    current_transition: current_transition
+                    current_transition: current_transition,
                 },
                 getters: {
-                    post_actions
-                }
+                    post_actions,
+                },
             };
             await saveTransitionRules(context);
         });

@@ -25,7 +25,7 @@ import {
     updateTransitionRulesEnforcement,
     deleteTransition,
     deactivateLegacyTransitions,
-    changeWorkflowMode
+    changeWorkflowMode,
 } from "./actions.js";
 import * as rest_querier from "../api/rest-querier.js";
 import * as exception_handler from "./exception-handler.js";
@@ -39,7 +39,7 @@ describe("Store actions:", () => {
     beforeEach(() => {
         context = {
             commit: jest.fn(),
-            state: {}
+            state: {},
         };
         getErrorMessage = jest.spyOn(exception_handler, "getErrorMessage");
     });
@@ -75,7 +75,7 @@ describe("Store actions:", () => {
         beforeEach(() => {
             context = {
                 ...context,
-                getters: { current_tracker_id: 1 }
+                getters: { current_tracker_id: 1 },
             };
             restCreateWorkflowTransitions = jest.spyOn(rest_querier, "createWorkflowTransitions");
         });
@@ -104,7 +104,7 @@ describe("Store actions:", () => {
         beforeEach(() => {
             context = {
                 ...context,
-                getters: { current_tracker_id: 1 }
+                getters: { current_tracker_id: 1 },
             };
             restResetWorkflowTransitions = jest.spyOn(rest_querier, "resetWorkflowTransitions");
         });
@@ -133,7 +133,7 @@ describe("Store actions:", () => {
         beforeEach(() => {
             context = {
                 ...context,
-                getters: { current_tracker_id: 1 }
+                getters: { current_tracker_id: 1 },
             };
             restUpdateTransitionRulesEnforcement = jest.spyOn(
                 rest_querier,
@@ -183,7 +183,7 @@ describe("Store actions:", () => {
         beforeEach(() => {
             context = {
                 ...context,
-                getters: { current_tracker_id: 7 }
+                getters: { current_tracker_id: 7 },
             };
             restChangeWorkflowMode = jest.spyOn(rest_querier, "changeWorkflowMode");
         });
@@ -217,7 +217,7 @@ describe("Store actions:", () => {
         beforeEach(() => {
             context = {
                 ...context,
-                getters: { current_tracker_id: 1 }
+                getters: { current_tracker_id: 1 },
             };
             restCreateTransition = jest.spyOn(rest_querier, "createTransition");
         });
@@ -229,7 +229,7 @@ describe("Store actions:", () => {
                 restCreateTransition.mockReturnValue(Promise.resolve(created_transition));
                 await createTransition(context, {
                     from_id: 3,
-                    to_id: 9
+                    to_id: 9,
                 });
             });
 
@@ -241,7 +241,7 @@ describe("Store actions:", () => {
                 expect(context.commit).toHaveBeenCalledWith("addTransition", {
                     id: 1,
                     from_id: 3,
-                    to_id: 9
+                    to_id: 9,
                 }));
             it("ends operation", () => expect(context.commit).toHaveBeenCalledWith("endOperation"));
         });
@@ -308,7 +308,7 @@ describe("Store actions:", () => {
         beforeEach(() => {
             context = {
                 ...context,
-                getters: { current_tracker_id: 1 }
+                getters: { current_tracker_id: 1 },
             };
             restDeactivateLegacyTransitions = jest.spyOn(
                 rest_querier,

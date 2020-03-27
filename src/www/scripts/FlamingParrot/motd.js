@@ -23,15 +23,13 @@
  */
 import $ from "jquery";
 
-$(document).ready(function() {
+$(document).ready(function () {
     $(".navbar > .motd").each(updateTopMarginAccordinglyToMOTDHeight);
 });
 
 function updateTopMarginAccordinglyToMOTDHeight() {
     var motd_element = this,
-        main_content_element = $(motd_element)
-            .parents(".wrapper")
-            .find(".main"),
+        main_content_element = $(motd_element).parents(".wrapper").find(".main"),
         initial_margin_top = parseInt($(main_content_element).css("margin-top"), 10);
 
     function motdResized() {

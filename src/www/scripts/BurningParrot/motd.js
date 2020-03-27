@@ -36,7 +36,7 @@ function init() {
     function updateTopMarginAccordinglyToMOTDHeight() {
         const initial_margin_top = {
             main: parseInt(getComputedStyle(main).marginTop, 10),
-            sidebar: sidebar ? parseInt(getComputedStyle(sidebar).marginTop, 10) : false
+            sidebar: sidebar ? parseInt(getComputedStyle(sidebar).marginTop, 10) : false,
         };
 
         function motdResized() {

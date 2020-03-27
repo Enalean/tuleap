@@ -28,7 +28,7 @@ describe("Transition mutations", () => {
             state = {
                 is_modal_shown: false,
                 is_loading_modal: false,
-                current_transition: null
+                current_transition: null,
             };
 
             mutations.showModal(state);
@@ -45,7 +45,7 @@ describe("Transition mutations", () => {
         beforeEach(() => {
             state = {
                 is_modal_operation_failed: false,
-                modal_operation_failure_message: null
+                modal_operation_failure_message: null,
             };
 
             mutations.failModalOperation(state, message);
@@ -69,8 +69,8 @@ describe("Transition mutations", () => {
             beforeEach(() => {
                 state = {
                     current_transition: {
-                        is_comment_required: false
-                    }
+                        is_comment_required: false,
+                    },
                 };
                 mutations.updateIsCommentRequired(state, true);
             });
@@ -91,8 +91,8 @@ describe("Transition mutations", () => {
             beforeEach(() => {
                 state = {
                     current_transition: {
-                        not_empty_field_ids: []
-                    }
+                        not_empty_field_ids: [],
+                    },
                 };
                 mutations.updateNotEmptyFieldIds(state, [1, 2]);
             });
@@ -113,8 +113,8 @@ describe("Transition mutations", () => {
             beforeEach(() => {
                 state = {
                     current_transition: {
-                        authorized_user_group_ids: []
-                    }
+                        authorized_user_group_ids: [],
+                    },
                 };
                 mutations.updateAuthorizedUserGroupIds(state, [1, 2]);
             });
@@ -127,14 +127,14 @@ describe("Transition mutations", () => {
         const old_action = create("post_action", "presented");
         const new_action = create("post_action", {
             id: 2,
-            type: "run_job"
+            type: "run_job",
         });
 
         beforeEach(() => {
             state = {
                 post_actions_by_unique_id: {
-                    "old-post-action": old_action
-                }
+                    "old-post-action": old_action,
+                },
             };
             mutations.savePostActions(state, [new_action]);
         });
@@ -144,7 +144,7 @@ describe("Transition mutations", () => {
         it("adds given actions, presented with unique_id, and referenced by unique_id", () => {
             expect(state.post_actions_by_unique_id.run_job_2).toEqual({
                 ...new_action,
-                unique_id: "run_job_2"
+                unique_id: "run_job_2",
             });
         });
 
@@ -152,7 +152,7 @@ describe("Transition mutations", () => {
             const new_set_field_action = create("post_action", {
                 id: 2,
                 type: "set_field_value",
-                field_type: "date"
+                field_type: "date",
             });
 
             beforeEach(() => {
@@ -162,7 +162,7 @@ describe("Transition mutations", () => {
             it("adds given post actions, presented with unique_id, and referenced by unique_id", () => {
                 expect(state.post_actions_by_unique_id.set_field_value_date_2).toEqual({
                     ...new_set_field_action,
-                    unique_id: "set_field_value_date_2"
+                    unique_id: "set_field_value_date_2",
                 });
             });
         });
@@ -192,7 +192,7 @@ describe("Transition mutations", () => {
             state.post_actions_by_unique_id[unique_id] = post_action;
             mutations.updateRunJobPostActionJobUrl(state, {
                 post_action,
-                job_url: "http://new.test"
+                job_url: "http://new.test",
             });
         });
 
@@ -206,8 +206,8 @@ describe("Transition mutations", () => {
             state = {
                 new_post_action_unique_id_index: 3,
                 post_actions_by_unique_id: {
-                    run_job_1: create("post_action", "presented")
-                }
+                    run_job_1: create("post_action", "presented"),
+                },
             };
             mutations.addPostAction(state);
         });
@@ -220,22 +220,22 @@ describe("Transition mutations", () => {
             expect(post_action_unique_ids.length).toEqual(2);
             expect(state.post_actions_by_unique_id["new_4"]).toEqual({
                 unique_id: "new_4",
-                type: "run_job"
+                type: "run_job",
             });
         });
     });
 
     describe("deletePostAction", () => {
         const post_action_to_remove = create("post_action", "presented", {
-            unique_id: "unique_id_to_remove"
+            unique_id: "unique_id_to_remove",
         });
 
         beforeEach(() => {
             state = {
                 post_actions_by_unique_id: {
                     unique_id_to_remove: post_action_to_remove,
-                    unique_id_to_keep: create("post_action", "presented")
-                }
+                    unique_id_to_keep: create("post_action", "presented"),
+                },
             };
             mutations.deletePostAction(state, post_action_to_remove);
         });
@@ -251,13 +251,13 @@ describe("Transition mutations", () => {
     describe("updateSetValuePostActionField", () => {
         const post_action = create("post_action", "presented", {
             unique_id: "unique_id",
-            field_id: 3
+            field_id: 3,
         });
         const new_field = create("field", { field_id: 4 });
         const state = {
             post_actions_by_unique_id: {
-                unique_id: post_action
-            }
+                unique_id: post_action,
+            },
         };
 
         const mutatedPostAction = () => {

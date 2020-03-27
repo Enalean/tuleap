@@ -27,7 +27,7 @@ function init() {
         ".dashboard-widget-actions, #dashboard-tabs-dropdown-trigger"
     );
 
-    [].forEach.call(cogs, function(cog) {
+    [].forEach.call(cogs, function (cog) {
         createDropdown(cog);
     });
 
@@ -41,7 +41,7 @@ function init() {
 function initLayoutDropdowns() {
     var all_rows = document.querySelectorAll(".dashboard-widgets-row");
 
-    [].forEach.call(all_rows, function(row) {
+    [].forEach.call(all_rows, function (row) {
         addLayoutDropdown(row);
     });
 }
@@ -62,7 +62,7 @@ function initLayoutDropdown(dropdown_button, row) {
     var tlp_dropdown = createDropdown(dropdown_button);
     initLayoutChangeButtons(tlp_dropdown.dropdown_menu, row);
 
-    tlp_dropdown.addEventListener("tlp-dropdown-shown", function(event) {
+    tlp_dropdown.addEventListener("tlp-dropdown-shown", function (event) {
         var current_dropdown = event.detail.target;
         var parent_container = current_dropdown.parentElement;
         var nb_columns = row.querySelectorAll(".dashboard-widgets-column").length;
@@ -72,7 +72,7 @@ function initLayoutDropdown(dropdown_button, row) {
         row.classList.add("shake-widgets");
         hideUnapplicableLayoutsAndCheckCurrentLayout(current_dropdown, nb_columns, current_layout);
     });
-    tlp_dropdown.addEventListener("tlp-dropdown-hidden", function(event) {
+    tlp_dropdown.addEventListener("tlp-dropdown-hidden", function (event) {
         var current_dropdown = event.detail.target;
         var parent_container = current_dropdown.parentElement;
 
@@ -93,8 +93,8 @@ function cloneLayoutDropdown(row, template_dropdown) {
 function initLayoutChangeButtons(dropdown, row) {
     var radio_buttons = dropdown.querySelectorAll(".dashboard-dropdown-layout-field");
 
-    [].forEach.call(radio_buttons, function(radio_button) {
-        radio_button.addEventListener("click", function() {
+    [].forEach.call(radio_buttons, function (radio_button) {
+        radio_button.addEventListener("click", function () {
             var layout_name = this.value;
             var current_layout = row.dataset.currentLayout;
 
@@ -118,7 +118,7 @@ function initLayoutChangeButtons(dropdown, row) {
 function markPathAsSelected(dropdown, selected_path_element) {
     var dropdown_paths = dropdown.querySelectorAll(".dashboard-dropdown-layout-field-path");
 
-    [].forEach.call(dropdown_paths, function(path) {
+    [].forEach.call(dropdown_paths, function (path) {
         path.classList.remove("selected");
     });
     if (selected_path_element !== null) {
@@ -130,7 +130,7 @@ function hideUnapplicableLayoutsAndCheckCurrentLayout(dropdown, nb_columns, curr
     toggleVisibilityOfTooManyColumnsLayoutText(dropdown, nb_columns);
 
     var dropdown_items = dropdown.querySelectorAll(".dashboard-dropdown-layout");
-    [].forEach.call(dropdown_items, function(dropdown_item) {
+    [].forEach.call(dropdown_items, function (dropdown_item) {
         if (dropdown_item.dataset.layoutName === current_layout) {
             markRadioButtonAsChecked(dropdown_item, current_layout);
         }

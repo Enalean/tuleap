@@ -7,6 +7,6 @@ export default () => {
         controller: PlanningCtrl,
         controllerAs: "planning",
         templateUrl: "planning.tpl.html",
-        scope: {}
+        scope: {},
     };
 };

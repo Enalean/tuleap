@@ -35,7 +35,7 @@ export default {
     name: "DocumentTitleLockInfo",
     props: {
         item: Object,
-        isDisplayingInHeader: Boolean
+        isDisplayingInHeader: Boolean,
     },
     computed: {
         is_locked() {
@@ -58,7 +58,7 @@ export default {
         },
         get_additional_classes() {
             return this.isDisplayingInHeader ? "document-display-lock" : "";
-        }
-    }
+        },
+    },
 };
 </script>

@@ -23,7 +23,7 @@ import {
     doesDocumentAlreadyExistsAtUpdate,
     doesDocumentNameAlreadyExist,
     doesFolderNameAlreadyExist,
-    doesFolderAlreadyExistsAtUpdate
+    doesFolderAlreadyExistsAtUpdate,
 } from "./check-item-title.js";
 
 describe("doesFolderNameAlreadyExist", () => {
@@ -34,11 +34,11 @@ describe("doesFolderNameAlreadyExist", () => {
                 id: 25,
                 title: item_title,
                 parent_id: 3,
-                type: TYPE_FOLDER
-            }
+                type: TYPE_FOLDER,
+            },
         ];
         const parent_folder = {
-            id: 3
+            id: 3,
         };
         expect(doesFolderNameAlreadyExist(item_title, folder_content, parent_folder)).toEqual(true);
     });
@@ -50,11 +50,11 @@ describe("doesFolderNameAlreadyExist", () => {
                 id: 25,
                 title: "other folder name",
                 parent_id: 3,
-                type: TYPE_FOLDER
-            }
+                type: TYPE_FOLDER,
+            },
         ];
         const parent_folder = {
-            id: 3
+            id: 3,
         };
         expect(doesFolderNameAlreadyExist(item_title, folder_content, parent_folder)).toEqual(
             false
@@ -70,11 +70,11 @@ describe("doesDocumentNameAlreadyExist", () => {
                 id: 25,
                 title: item_title,
                 parent_id: 3,
-                type: TYPE_FILE
-            }
+                type: TYPE_FILE,
+            },
         ];
         const parent_folder = {
-            id: 3
+            id: 3,
         };
         expect(doesDocumentNameAlreadyExist(item_title, folder_content, parent_folder)).toEqual(
             true
@@ -88,11 +88,11 @@ describe("doesDocumentNameAlreadyExist", () => {
                 id: 25,
                 title: "other file name",
                 parent_id: 3,
-                type: TYPE_FILE
-            }
+                type: TYPE_FILE,
+            },
         ];
         const parent_folder = {
-            id: 3
+            id: 3,
         };
         expect(doesDocumentNameAlreadyExist(item_title, folder_content, parent_folder)).toEqual(
             false
@@ -108,14 +108,14 @@ describe("doesDocumentAlreadyExistsAtUpdate", () => {
                 id: 25,
                 title: item_title,
                 parent_id: 3,
-                type: TYPE_FILE
-            }
+                type: TYPE_FILE,
+            },
         ];
         const parent_folder = {
-            id: 3
+            id: 3,
         };
         const item_to_update = {
-            id: 300
+            id: 300,
         };
         expect(
             doesDocumentAlreadyExistsAtUpdate(
@@ -134,14 +134,14 @@ describe("doesDocumentAlreadyExistsAtUpdate", () => {
                 id: 25,
                 title: item_title,
                 parent_id: 3,
-                type: TYPE_FILE
-            }
+                type: TYPE_FILE,
+            },
         ];
         const parent_folder = {
-            id: 3
+            id: 3,
         };
         const item_to_update = {
-            id: 25
+            id: 25,
         };
         expect(
             doesDocumentAlreadyExistsAtUpdate(
@@ -160,14 +160,14 @@ describe("doesDocumentAlreadyExistsAtUpdate", () => {
                 id: 25,
                 title: "other file name",
                 parent_id: 3,
-                type: TYPE_FILE
-            }
+                type: TYPE_FILE,
+            },
         ];
         const parent_folder = {
-            id: 3
+            id: 3,
         };
         const item_to_update = {
-            id: 25
+            id: 25,
         };
         expect(
             doesDocumentAlreadyExistsAtUpdate(
@@ -186,14 +186,14 @@ describe("doesDocumentAlreadyExistsAtUpdate", () => {
                 id: 25,
                 title: "other folder name",
                 parent_id: 3,
-                type: TYPE_FOLDER
-            }
+                type: TYPE_FOLDER,
+            },
         ];
         const parent_folder = {
-            id: 3
+            id: 3,
         };
         const item_to_update = {
-            id: 25
+            id: 25,
         };
         expect(
             doesFolderAlreadyExistsAtUpdate(
@@ -211,14 +211,14 @@ describe("doesDocumentAlreadyExistsAtUpdate", () => {
                 id: 25,
                 title: item_title,
                 parent_id: 3,
-                type: TYPE_FOLDER
-            }
+                type: TYPE_FOLDER,
+            },
         ];
         const parent_folder = {
-            id: 3
+            id: 3,
         };
         const item_to_update = {
-            id: 300
+            id: 300,
         };
         expect(
             doesFolderAlreadyExistsAtUpdate(
@@ -237,14 +237,14 @@ describe("doesDocumentAlreadyExistsAtUpdate", () => {
                 id: 25,
                 title: item_title,
                 parent_id: 3,
-                type: TYPE_FOLDER
-            }
+                type: TYPE_FOLDER,
+            },
         ];
         const parent_folder = {
-            id: 3
+            id: 3,
         };
         const item_to_update = {
-            id: 25
+            id: 25,
         };
         expect(
             doesFolderAlreadyExistsAtUpdate(

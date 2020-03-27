@@ -28,19 +28,19 @@ describe("DropDownCurrentFolder", () => {
         state = {
             current_folder: {
                 id: 42,
-                title: "current folder title"
-            }
+                title: "current folder title",
+            },
         };
 
         store_options = {
-            state
+            state,
         };
         store = createStoreMock(store_options);
 
         dropdown_factory = () => {
             return shallowMount(DropDownCurrentFolder, {
                 localVue,
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
     });

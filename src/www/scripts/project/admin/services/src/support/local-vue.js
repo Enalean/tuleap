@@ -23,7 +23,7 @@ import GettextPlugin from "vue-gettext";
 const localVue = createLocalVue();
 localVue.use(GettextPlugin, {
     translations: {},
-    silent: true
+    silent: true,
 });
 
 export default localVue;

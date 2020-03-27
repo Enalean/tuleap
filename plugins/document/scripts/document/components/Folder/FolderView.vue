@@ -55,11 +55,11 @@ export default {
         FolderLoadingScreen,
         FolderContent,
         UnderTheFoldNotification,
-        ClipboardContentInformation
+        ClipboardContentInformation,
     },
     computed: {
         ...mapState(["is_loading_folder", "current_folder"]),
-        ...mapGetters(["is_folder_empty"])
-    }
+        ...mapGetters(["is_folder_empty"]),
+    },
 };
 </script>

@@ -74,10 +74,10 @@ export default {
         LockItem,
         DeleteItem,
         DropDownSeparator,
-        DropDownMenu
+        DropDownMenu,
     },
     props: {
-        isInFolderEmptyState: Boolean
+        isInFolderEmptyState: Boolean,
     },
     computed: {
         ...mapState(["currently_previewed_item"]),
@@ -86,7 +86,7 @@ export default {
                 this.currently_previewed_item.user_can_write &&
                 this.currently_previewed_item.parent_id
             );
-        }
-    }
+        },
+    },
 };
 </script>

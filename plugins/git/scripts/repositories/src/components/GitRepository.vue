@@ -22,7 +22,7 @@
         class="tlp-pane git-repository-card"
         v-bind:class="{
             'git-repository-card-two-columns': !isFolderDisplayMode,
-            'git-repository-in-folder': isFolderDisplayMode && is_in_folder
+            'git-repository-in-folder': isFolderDisplayMode && is_in_folder,
         }"
     >
         <div class="tlp-pane-container">
@@ -78,10 +78,10 @@ import { getRepositoryListUrl } from "../breadcrumb-presenter.js";
 export default {
     name: "GitRepository",
     components: {
-        PullRequestBadge
+        PullRequestBadge,
     },
     props: {
-        repository: Object
+        repository: Object,
     },
     computed: {
         hasRepositoryDescription() {
@@ -118,7 +118,7 @@ export default {
         folder_path() {
             return this.repository.path_without_project + "/";
         },
-        ...mapGetters(["isFolderDisplayMode"])
-    }
+        ...mapGetters(["isFolderDisplayMode"]),
+    },
 };
 </script>

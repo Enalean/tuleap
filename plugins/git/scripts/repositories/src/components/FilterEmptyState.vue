@@ -41,8 +41,8 @@ export default {
             "isThereAResultInCurrentFilteredList",
             "isCurrentRepositoryListEmpty",
             "isInitialLoadingDoneWithoutError",
-            "isFiltering"
-        ])
-    }
+            "isFiltering",
+        ]),
+    },
 };
 </script>

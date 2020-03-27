@@ -7,7 +7,7 @@ function PullRequestRefsController(SharedPropertiesService) {
 
     Object.assign(self, {
         isCurrentRepository,
-        isRepositoryAFork
+        isRepositoryAFork,
     });
 
     function isCurrentRepository(repository) {

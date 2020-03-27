@@ -34,12 +34,12 @@ describe(`link-field-value-formatter -`, () => {
                 field_id: 986,
                 type: "art_link",
                 permissions: ["read", "update", "create"],
-                links: [{ id: "" }, { id: 202 }, { id: undefined }, { id: 584 }, { id: null }]
+                links: [{ id: "" }, { id: 202 }, { id: undefined }, { id: 584 }, { id: null }],
             };
             const result = formatLinkFieldValue(field_value);
             expect(result).toEqual({
                 field_id: 986,
-                links: [{ id: 202 }, { id: 584 }]
+                links: [{ id: 202 }, { id: 584 }],
             });
         });
 
@@ -52,12 +52,12 @@ describe(`link-field-value-formatter -`, () => {
                 type: "art_link",
                 permissions: ["read", "update", "create"],
                 links: [{ id: 18 }],
-                unformatted_links: "text,650, 673"
+                unformatted_links: "text,650, 673",
             };
             const result = formatLinkFieldValue(field_value);
             expect(result).toEqual({
                 field_id: 162,
-                links: [{ id: 18 }, { id: 650 }, { id: 673 }]
+                links: [{ id: 18 }, { id: 650 }, { id: 673 }],
             });
         });
 
@@ -69,12 +69,12 @@ describe(`link-field-value-formatter -`, () => {
                 type: "art_link",
                 permissions: ["read", "update", "create"],
                 links: [{ id: "" }],
-                unformatted_links: " 551 , 404, text"
+                unformatted_links: " 551 , 404, text",
             };
             const result = formatLinkFieldValue(field_value);
             expect(result).toEqual({
                 field_id: 919,
-                links: [{ id: 551 }, { id: 404 }]
+                links: [{ id: 551 }, { id: 404 }],
             });
         });
     });

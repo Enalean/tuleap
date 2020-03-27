@@ -24,8 +24,8 @@ export default {
     controller,
     bindings: {
         submitCallback: "<",
-        codemirrorWidget: "<"
-    }
+        codemirrorWidget: "<",
+    },
 };
 
 export const NAME = "new-inline-comment";
@@ -36,7 +36,7 @@ function controller() {
         comment: "",
         is_loading: false,
         submit,
-        cancel
+        cancel,
     });
 
     function submit() {

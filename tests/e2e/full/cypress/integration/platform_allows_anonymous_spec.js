@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-describe("Plateform allows anonymous", function() {
-    it("project administrator can define permission access level of mediawiki", function() {
+describe("Plateform allows anonymous", function () {
+    it("project administrator can define permission access level of mediawiki", function () {
         cy.ProjectAdministratorLogin();
 
         cy.visit("/plugins/mediawiki/wiki/platform-allows-anonymous/");
@@ -29,11 +29,11 @@ describe("Plateform allows anonymous", function() {
         cy.get("[data-test=mediawiki-administration-permission-submit-button]").click();
     });
 
-    it("given project is public anonymous can browse it", function() {
+    it("given project is public anonymous can browse it", function () {
         cy.visit("/plugins/mediawiki/wiki/platform-allows-anonymous/");
     });
 
-    it("given project is switched from public to private, anonymous are redirected to login page", function() {
+    it("given project is switched from public to private, anonymous are redirected to login page", function () {
         cy.ProjectAdministratorLogin();
 
         cy.visitProjectService("platform-allows-anonymous", "Admin");

@@ -8,7 +8,7 @@ KanbanColumnService.$inject = [
     "$filter",
     "KanbanFilterValue",
     "KanbanItemRestService",
-    "SharedPropertiesService"
+    "SharedPropertiesService",
 ];
 
 function KanbanColumnService(
@@ -24,7 +24,7 @@ function KanbanColumnService(
         updateItemContent,
         filterItems,
         moveItem,
-        findItemAndReorderItems
+        findItemAndReorderItems,
     });
 
     function moveItem(item, source_column, destination_column, compared_to) {
@@ -44,7 +44,7 @@ function KanbanColumnService(
         }
 
         if (!promised_item) {
-            promised_item = KanbanItemRestService.getItem(id).then(function(item) {
+            promised_item = KanbanItemRestService.getItem(id).then(function (item) {
                 if (!item) {
                     return null;
                 }
@@ -64,7 +64,7 @@ function KanbanColumnService(
     ) {
         const promised_item = findItem(id, source_column);
 
-        $q.when(promised_item).then(function(item) {
+        $q.when(promised_item).then(function (item) {
             if (!item) {
                 return;
             }
@@ -124,7 +124,7 @@ function KanbanColumnService(
             color,
             item_name,
             label,
-            card_fields
+            card_fields,
         });
 
         updateItem(item, item_updated.in_column);
@@ -169,8 +169,8 @@ function KanbanColumnService(
 
     function reorderItemsByItemsIds(ordered_destination_column_items_ids, column) {
         const content = [];
-        ordered_destination_column_items_ids.forEach(item_id => {
-            const item = column.content.find(item => item.id === item_id);
+        ordered_destination_column_items_ids.forEach((item_id) => {
+            const item = column.content.find((item) => item.id === item_id);
             if (item) {
                 content.push(item);
             }
@@ -182,7 +182,7 @@ function KanbanColumnService(
         var filtered_items = $filter("InPropertiesFilter")(column.content, KanbanFilterValue.terms);
 
         emptyArray(column.filtered_content);
-        filtered_items.forEach(item => {
+        filtered_items.forEach((item) => {
             column.filtered_content.push(item);
         });
     }

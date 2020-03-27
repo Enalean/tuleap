@@ -77,7 +77,7 @@ export default {
         ...mapGetters(["get_formatted_aggregated_time"]),
         has_times_on_artifact() {
             return this.current_times[0].minutes !== null;
-        }
+        },
     },
     methods: {
         setAddMode() {
@@ -85,7 +85,7 @@ export default {
         },
         addNewTime(date, artifact_id, time, step) {
             this.$store.dispatch("addTime", [date, artifact_id, time, step]);
-        }
-    }
+        },
+    },
 };
 </script>

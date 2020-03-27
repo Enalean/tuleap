@@ -35,17 +35,17 @@ import ErrorModal from "./ErrorModal.vue";
 export default {
     components: { ErrorModal },
     props: {
-        reasons: Array
+        reasons: Array,
     },
     computed: {
         nb_dropped_files() {
             return this.reasons[0].nb_dropped_files;
-        }
+        },
     },
     methods: {
         bubbleErrorModalHidden() {
             this.$emit("error-modal-hidden");
-        }
-    }
+        },
+    },
 };
 </script>

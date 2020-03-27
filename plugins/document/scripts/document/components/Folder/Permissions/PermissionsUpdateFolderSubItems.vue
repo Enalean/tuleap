@@ -45,12 +45,12 @@ export default {
     name: "PermissionsUpdateFolderSubItems",
     props: {
         item: Object,
-        value: Boolean
+        value: Boolean,
     },
     computed: {
         is_item_a_folder() {
             return this.item.type === TYPE_FOLDER;
-        }
-    }
+        },
+    },
 };
 </script>

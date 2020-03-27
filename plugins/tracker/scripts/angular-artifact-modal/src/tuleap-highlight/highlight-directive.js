@@ -8,14 +8,14 @@ function TuleapHighlightDirective($timeout) {
     return {
         restrict: "A",
         scope: {
-            watched: "=*tuleapHighlightDirective"
+            watched: "=*tuleapHighlightDirective",
         },
-        link: function($scope, element) {
+        link: function ($scope, element) {
             $scope.$watch(
-                function() {
+                function () {
                     return $scope.watched;
                 },
-                function(new_value, old_value) {
+                function (new_value, old_value) {
                     if (new_value === old_value) {
                         return;
                     }
@@ -24,17 +24,17 @@ function TuleapHighlightDirective($timeout) {
                 }
             );
 
-            $scope.$on("$destroy", function() {
+            $scope.$on("$destroy", function () {
                 destroy();
             });
-        }
+        },
     };
 
     function applyHighlight(element) {
         removeTransition(element);
         highlight(element);
 
-        promise = $timeout(function() {
+        promise = $timeout(function () {
             addTransition(element);
             lowlight(element);
         });

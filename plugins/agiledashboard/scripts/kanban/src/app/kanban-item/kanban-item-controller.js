@@ -8,6 +8,6 @@ function KanbanItemController(KanbanFilterValue) {
     const self = this;
     Object.assign(self, {
         user_has_accessibility_mode: getAccessibilityMode(),
-        kanban_filter: KanbanFilterValue
+        kanban_filter: KanbanFilterValue,
     });
 }

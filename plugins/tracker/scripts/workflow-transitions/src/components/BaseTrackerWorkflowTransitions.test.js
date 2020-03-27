@@ -40,10 +40,10 @@ describe("BaseTrackerWorkflowTransitions", () => {
         store = createStoreMock(store_options, { is_operation_running: false });
         wrapper = shallowMount(BaseTrackerWorkflowTransitions, {
             mocks: {
-                $store: store
+                $store: store,
             },
             localVue,
-            propsData: { trackerId: 1 }
+            propsData: { trackerId: 1 },
         });
     });
 

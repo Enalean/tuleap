@@ -48,8 +48,8 @@ describe("ReleaseBadgesOpenSprint", () => {
     beforeEach(() => {
         store_options = {
             state: {
-                project_id: project_id
-            }
+                project_id: project_id,
+            },
         };
 
         sprint_data = {
@@ -61,12 +61,12 @@ describe("ReleaseBadgesOpenSprint", () => {
                     accept: {
                         trackers: [
                             {
-                                label: "Sprint1"
-                            }
-                        ]
-                    }
-                }
-            }
+                                label: "Sprint1",
+                            },
+                        ],
+                    },
+                },
+            },
         } as MilestoneData;
 
         component_options.propsData = { sprint_data };

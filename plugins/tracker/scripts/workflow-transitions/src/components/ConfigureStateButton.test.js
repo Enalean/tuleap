@@ -29,7 +29,7 @@ describe(`ConfigureStateButton`, () => {
         return shallowMount(ConfigureStateButton, {
             localVue,
             mocks: { $store: store },
-            propsData: { transition }
+            propsData: { transition },
         });
     }
 

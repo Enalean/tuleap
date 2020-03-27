@@ -34,7 +34,7 @@ describe("form-tree-builder", () => {
                     { field_id: 3, type: "fieldset" },
                     { field_id: 4, type: "int" },
                     { field_id: 5, type: "column" },
-                    { field_id: 6, type: "int" }
+                    { field_id: 6, type: "int" },
                 ],
                 structure: [
                     { id: 1, content: null },
@@ -45,11 +45,11 @@ describe("form-tree-builder", () => {
                             { id: 4, content: null },
                             {
                                 id: 5,
-                                content: [{ id: 6, content: null }]
-                            }
-                        ]
-                    }
-                ]
+                                content: [{ id: 6, content: null }],
+                            },
+                        ],
+                    },
+                ],
             };
 
             const output = buildFormTree(tracker);
@@ -58,12 +58,12 @@ describe("form-tree-builder", () => {
                 {
                     field_id: 1,
                     type: "int",
-                    template_url: "field-int.tpl.html"
+                    template_url: "field-int.tpl.html",
                 },
                 {
                     field_id: 2,
                     type: "int",
-                    template_url: "field-int.tpl.html"
+                    template_url: "field-int.tpl.html",
                 },
                 {
                     field_id: 3,
@@ -73,7 +73,7 @@ describe("form-tree-builder", () => {
                         {
                             field_id: 4,
                             type: "int",
-                            template_url: "field-int.tpl.html"
+                            template_url: "field-int.tpl.html",
                         },
                         {
                             field_id: 5,
@@ -83,12 +83,12 @@ describe("form-tree-builder", () => {
                                 {
                                     field_id: 6,
                                     type: "int",
-                                    template_url: "field-int.tpl.html"
-                                }
-                            ]
-                        }
-                    ]
-                }
+                                    template_url: "field-int.tpl.html",
+                                },
+                            ],
+                        },
+                    ],
+                },
             ]);
         });
 
@@ -100,16 +100,16 @@ describe("form-tree-builder", () => {
                 fields: [
                     { field_id: 1, type: "int" },
                     { field_id: 2, type: "int" },
-                    { field_id: 3, type: "fieldset" }
+                    { field_id: 3, type: "fieldset" },
                 ],
                 structure: [
                     { id: 1, content: null },
                     { id: 2, content: null },
                     {
                         id: 3,
-                        content: []
-                    }
-                ]
+                        content: [],
+                    },
+                ],
             };
 
             const output = buildFormTree(tracker);
@@ -118,13 +118,13 @@ describe("form-tree-builder", () => {
                 {
                     field_id: 1,
                     type: "int",
-                    template_url: "field-int.tpl.html"
+                    template_url: "field-int.tpl.html",
                 },
                 {
                     field_id: 2,
                     type: "int",
-                    template_url: "field-int.tpl.html"
-                }
+                    template_url: "field-int.tpl.html",
+                },
             ]);
         });
 
@@ -138,7 +138,7 @@ describe("form-tree-builder", () => {
                     { field_id: 2, type: "int" },
                     { field_id: 3, type: "fieldset" },
                     { field_id: 4, type: "fieldset" },
-                    { field_id: 5, type: "column" }
+                    { field_id: 5, type: "column" },
                 ],
                 structure: [
                     { id: 1, content: null },
@@ -148,11 +148,11 @@ describe("form-tree-builder", () => {
                         content: [
                             {
                                 id: 4,
-                                content: [{ id: 5, content: [] }]
-                            }
-                        ]
-                    }
-                ]
+                                content: [{ id: 5, content: [] }],
+                            },
+                        ],
+                    },
+                ],
             };
 
             const output = buildFormTree(tracker);
@@ -161,20 +161,20 @@ describe("form-tree-builder", () => {
                 {
                     field_id: 1,
                     type: "int",
-                    template_url: "field-int.tpl.html"
+                    template_url: "field-int.tpl.html",
                 },
                 {
                     field_id: 2,
                     type: "int",
-                    template_url: "field-int.tpl.html"
-                }
+                    template_url: "field-int.tpl.html",
+                },
             ]);
         });
 
         it(`Given a structural field, it will add a template_url according to the field type`, () => {
             tracker = {
                 fields: [{ field_id: 1, type: "fieldset" }],
-                structure: [{ id: 1, content: null }]
+                structure: [{ id: 1, content: null }],
             };
 
             const output = buildFormTree(tracker);
@@ -182,14 +182,14 @@ describe("form-tree-builder", () => {
             expect(output).toContainEqual({
                 field_id: 1,
                 type: "fieldset",
-                template_url: "field-fieldset.tpl.html"
+                template_url: "field-fieldset.tpl.html",
             });
         });
 
         it(`Given a non-structural field, it will add a template_url according to the field type`, () => {
             tracker = {
                 fields: [{ field_id: 1, type: "sb" }],
-                structure: [{ id: 1, content: null }]
+                structure: [{ id: 1, content: null }],
             };
 
             const output = buildFormTree(tracker);
@@ -197,14 +197,14 @@ describe("form-tree-builder", () => {
             expect(output).toContainEqual({
                 field_id: 1,
                 type: "sb",
-                template_url: "field-sb.tpl.html"
+                template_url: "field-sb.tpl.html",
             });
         });
 
         it(`Given an unknown field not in the whitelist, it won't be returned`, () => {
             tracker = {
                 fields: [{ field_id: 1, type: "unknown" }],
-                structure: [{ id: 1, content: null }]
+                structure: [{ id: 1, content: null }],
             };
 
             const output = buildFormTree(tracker);
@@ -218,17 +218,17 @@ describe("form-tree-builder", () => {
                 fields: [
                     { field_id: 1, type: "fieldset" },
                     { field_id: 2, type: "unknown" },
-                    { field_id: 3, type: "int" }
+                    { field_id: 3, type: "int" },
                 ],
                 structure: [
                     {
                         id: 1,
                         content: [
                             { id: 2, content: null },
-                            { id: 3, content: null }
-                        ]
-                    }
-                ]
+                            { id: 3, content: null },
+                        ],
+                    },
+                ],
             };
 
             const output = buildFormTree(tracker);

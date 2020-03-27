@@ -68,14 +68,11 @@ function deployKeyboardShortcuts() {
 }
 
 function setShortcutOnProjectDropDown(shortCut, element, dropdown) {
-    key.sequence(shortCut, function() {
+    key.sequence(shortCut, function () {
         if (element.length > 0) {
             element.click();
             if (dropdown !== undefined) {
-                dropdown
-                    .find("input")
-                    .first()
-                    .focus();
+                dropdown.find("input").first().focus();
                 return false;
             }
         }
@@ -83,7 +80,7 @@ function setShortcutOnProjectDropDown(shortCut, element, dropdown) {
 }
 
 function setShortcutOnUserDropDown(shortCut, element, dropdown) {
-    key.sequence(shortCut, function() {
+    key.sequence(shortCut, function () {
         if (element.length > 0) {
             element.click();
             if (dropdown !== undefined) {
@@ -95,7 +92,7 @@ function setShortcutOnUserDropDown(shortCut, element, dropdown) {
 }
 
 function setShortcutOnSidebar(shortCut, element) {
-    key(shortCut, function() {
+    key(shortCut, function () {
         if (element.length > 0) {
             element.click();
             return false;
@@ -104,7 +101,7 @@ function setShortcutOnSidebar(shortCut, element) {
 }
 
 function setShortcutOnSidebarLink(shortCut, element) {
-    key.sequence(shortCut, function() {
+    key.sequence(shortCut, function () {
         if (element.length > 0) {
             window.location.href = element.attr("href");
             return false;
@@ -113,7 +110,7 @@ function setShortcutOnSidebarLink(shortCut, element) {
 }
 
 function setShortcutOnLink(shortCut, element) {
-    key.sequence(shortCut, function() {
+    key.sequence(shortCut, function () {
         if (element.length > 0) {
             window.location.href = element.attr("href");
             return false;
@@ -126,7 +123,7 @@ function showOrHideHelpModal(help_modal) {
 }
 
 function setShortcutExitInput(shortCut) {
-    $(document).keyup(function(event) {
+    $(document).keyup(function (event) {
         if (event.which === shortCut) {
             var help_modal = $("#keyboard-navigation-help-modal");
             if (help_modal.hasClass("in")) {
@@ -143,7 +140,7 @@ function setShortcutExitInput(shortCut) {
 
 function setHelpModalShortcut(shortCut) {
     var help_modal = $("#keyboard-navigation-help-modal");
-    $(document).keypress(function(event) {
+    $(document).keypress(function (event) {
         if (event.which === shortCut && !$(document.activeElement).is("textarea, input")) {
             showOrHideHelpModal(help_modal);
         }

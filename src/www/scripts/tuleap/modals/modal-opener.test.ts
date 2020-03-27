@@ -21,7 +21,7 @@ import * as tlp from "tlp";
 import {
     openModalAndReplacePlaceholders,
     openModalOnClick,
-    openTargetModalIdOnClick
+    openTargetModalIdOnClick,
 } from "./modal-opener";
 
 jest.mock("tlp");
@@ -52,7 +52,7 @@ describe(`Modal Opener`, () => {
 
             simulateClick(button);
             const modal = {
-                show: jest.fn()
+                show: jest.fn(),
             };
             createModal.mockImplementation(() => modal);
 
@@ -124,12 +124,12 @@ describe(`Modal Opener`, () => {
                 modal_element_id: "modal_id",
                 paragraph_replacement: {
                     paragraph_id: "paragraph_id",
-                    paragraphReplaceCallback: (): string => "paragraph_text"
+                    paragraphReplaceCallback: (): string => "paragraph_text",
                 },
                 hidden_input_replacement: {
                     input_id: "hidden_input_id",
-                    hiddenInputReplaceCallback: (): string => "hidden_input_value"
-                }
+                    hiddenInputReplaceCallback: (): string => "hidden_input_value",
+                },
             });
 
         it(`does not crash when there are no buttons`, () => {

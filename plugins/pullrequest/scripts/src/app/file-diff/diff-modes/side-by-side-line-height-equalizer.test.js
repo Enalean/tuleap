@@ -43,12 +43,12 @@ describe("line-height-equalizer", () => {
                             height: 20,
                             node: {
                                 localName: "new-inline-comment",
-                                classList: { contains: () => false }
-                            }
-                        }
-                    ]
+                                classList: { contains: () => false },
+                            },
+                        },
+                    ],
                 },
-                right_handle: {}
+                right_handle: {},
             };
 
             const placeholder_to_create = equalizeSides(left_codemirror, right_codemirror, handles);
@@ -58,7 +58,7 @@ describe("line-height-equalizer", () => {
                 handle: handles.right_handle,
                 widget_height: 20,
                 display_above_line: false,
-                is_comment_placeholder: true
+                is_comment_placeholder: true,
             });
         });
 
@@ -70,21 +70,21 @@ describe("line-height-equalizer", () => {
                 node: {
                     localName: "placeholder",
                     style: { height: "20px" },
-                    className: "pull-request-file-diff-comment-placeholder-block"
+                    className: "pull-request-file-diff-comment-placeholder-block",
                 },
-                changed
+                changed,
             };
 
             const handles = {
                 left_handle: {
                     widgets: [
                         { height: 25, node: { localName: "inline-comment", className: "" } },
-                        { height: 20, node: { localName: "new-inline-comment", className: "" } }
-                    ]
+                        { height: 20, node: { localName: "new-inline-comment", className: "" } },
+                    ],
                 },
                 right_handle: {
-                    widgets: [placeholder]
-                }
+                    widgets: [placeholder],
+                },
             };
 
             getCommentPlaceholderWidget.mockReturnValueOnce(null).mockReturnValueOnce(placeholder);
@@ -102,25 +102,25 @@ describe("line-height-equalizer", () => {
                 node: {
                     localName: "placeholder",
                     style: { height: "45px" },
-                    className: "pull-request-file-diff-comment-placeholder-block"
+                    className: "pull-request-file-diff-comment-placeholder-block",
                 },
-                changed: () => {}
+                changed: () => {},
             };
 
             const handles = {
                 left_handle: {
                     widgets: [
                         { height: 25, node: { localName: "inline-comment", className: "" } },
-                        { height: 20, node: { localName: "inline-comment", className: "" } }
-                    ]
+                        { height: 20, node: { localName: "inline-comment", className: "" } },
+                    ],
                 },
                 right_handle: {
                     name: "right",
                     widgets: [
                         { height: 20, node: { localName: "new-inline-comment", className: "" } },
-                        placeholder
-                    ]
-                }
+                        placeholder,
+                    ],
+                },
             };
 
             const opposite_placeholder = null;
@@ -142,21 +142,21 @@ describe("line-height-equalizer", () => {
                 node: {
                     localName: "placeholder",
                     style: { height: "20px" },
-                    className: "pull-request-file-diff-comment-placeholder-block"
+                    className: "pull-request-file-diff-comment-placeholder-block",
                 },
-                changed: () => {}
+                changed: () => {},
             };
 
             const handles = {
                 left_handle: {
-                    widgets: [{ height: 20, node: { localName: "inline-comment", className: "" } }]
+                    widgets: [{ height: 20, node: { localName: "inline-comment", className: "" } }],
                 },
                 right_handle: {
                     widgets: [
                         placeholder,
-                        { height: 20, node: { localName: "new-inline-comment", className: "" } }
-                    ]
-                }
+                        { height: 20, node: { localName: "new-inline-comment", className: "" } },
+                    ],
+                },
             };
             const opposite_placeholder = null;
             const current_placeholder = placeholder;
@@ -182,18 +182,18 @@ describe("line-height-equalizer", () => {
             node: {
                 localName: "placeholder",
                 style: { height: "20px" },
-                className: "pull-request-file-diff-placeholder-block"
+                className: "pull-request-file-diff-placeholder-block",
             },
-            changed
+            changed,
         };
 
         const handles = {
             left_handle: {
-                widgets: [code_placeholder]
+                widgets: [code_placeholder],
             },
             right_handle: {
-                widgets: [{ height: 20, node: { localName: "new-inline-comment", className: "" } }]
-            }
+                widgets: [{ height: 20, node: { localName: "new-inline-comment", className: "" } }],
+            },
         };
 
         const opposite_placeholder = null;
@@ -210,7 +210,7 @@ describe("line-height-equalizer", () => {
             handle: handles.left_handle,
             widget_height: 20,
             display_above_line: false,
-            is_comment_placeholder: true
+            is_comment_placeholder: true,
         });
 
         expect(changed).not.toHaveBeenCalled();

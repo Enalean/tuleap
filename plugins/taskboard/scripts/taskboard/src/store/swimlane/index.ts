@@ -34,7 +34,7 @@ const swimlane_module_default: Module<SwimlaneState, RootState> = {
         swimlanes: [],
         is_loading_swimlanes: false,
         is_card_creation_blocked_due_to_ongoing_creation: false,
-        possible_assignees: new Map<number, UserForPeoplePicker[]>()
-    }
+        possible_assignees: new Map<number, UserForPeoplePicker[]>(),
+    },
 };
 export default swimlane_module_default;

@@ -10,7 +10,7 @@ function SharedPropertiesService() {
         user_id: null,
         nb_pull_request_badge: null,
         is_there_at_least_one_pull_request: null,
-        is_merge_commit_allowed: null
+        is_merge_commit_allowed: null,
     };
 
     return {
@@ -27,7 +27,7 @@ function SharedPropertiesService() {
         isThereAtLeastOnePullRequest,
         setIsThereAtLeastOnePullRequest,
         isMergeCommitAllowed,
-        setIsMergeCommitAllowed
+        setIsMergeCommitAllowed,
     };
 
     function whenReady() {

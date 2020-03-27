@@ -26,12 +26,12 @@ import { disableFormSubmit, enableFormSubmit } from "./form-adapter.js";
 import {
     buildFileUploadHandler,
     MaxSizeUploadExceededError,
-    UploadError
+    UploadError,
 } from "./file-upload-handler-factory.js";
 import { isThereAnImageWithDataURI } from "./image-urls-finder.js";
 
 export async function initiateUploadImage(ckeditor_instance, options, element) {
-    const gettext_provider = await initGettext(options.language, "rich-text-editor", locale =>
+    const gettext_provider = await initGettext(options.language, "rich-text-editor", (locale) =>
         import(/* webpackChunkName: "rich-text-editor-po-" */ `./po/${locale}.po`)
     );
     if (!isUploadEnabled(element)) {
@@ -46,7 +46,7 @@ export async function initiateUploadImage(ckeditor_instance, options, element) {
     informUsersThatTheyCanPasteImagesInEditor(element);
 
     const onStartCallback = () => disableFormSubmit(form);
-    const onErrorCallback = error => {
+    const onErrorCallback = (error) => {
         if (error instanceof MaxSizeUploadExceededError) {
             error.loader.message = sprintf(
                 gettext_provider.gettext("You are not allowed to upload files bigger than %s."),
@@ -74,7 +74,7 @@ export async function initiateUploadImage(ckeditor_instance, options, element) {
         max_size_upload,
         onStartCallback,
         onErrorCallback,
-        onSuccessCallback
+        onSuccessCallback,
     });
 
     ckeditor_instance.on("fileUploadRequest", fileUploadRequestHandler, null, null, 4);
@@ -82,7 +82,7 @@ export async function initiateUploadImage(ckeditor_instance, options, element) {
 }
 
 function disablePasteOfImages(ckeditor_instance, gettext_provider) {
-    ckeditor_instance.on("paste", event => {
+    ckeditor_instance.on("paste", (event) => {
         if (isThereAnImageWithDataURI(event.data.dataValue)) {
             event.data.dataValue = "";
             event.cancel();
@@ -101,6 +101,6 @@ export function getUploadImageOptions(element) {
 
     return {
         extraPlugins: "uploadimage",
-        uploadUrl: element.dataset.uploadUrl
+        uploadUrl: element.dataset.uploadUrl,
     };
 }

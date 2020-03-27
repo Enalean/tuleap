@@ -29,7 +29,7 @@ describe("TypeSelectorForEmptyModal", () => {
     beforeEach(() => {
         state = {};
         store_options = {
-            state
+            state,
         };
         store = createStoreMock(store_options);
 
@@ -37,7 +37,7 @@ describe("TypeSelectorForEmptyModal", () => {
             return shallowMount(TypeSelectorForEmptyModal, {
                 localVue,
                 propsData: { ...props },
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
     });

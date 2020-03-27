@@ -27,7 +27,7 @@ import { FieldData } from "../../../type";
 async function getWrapper(field: FieldData): Promise<Wrapper<FieldsList>> {
     return shallowMount(FieldsList, {
         localVue: await createProjectRegistrationLocalVue(),
-        propsData: { field }
+        propsData: { field },
     });
 }
 
@@ -38,7 +38,7 @@ describe("FieldsList -", () => {
             desc_name: "custom field",
             desc_type: "text",
             desc_description: "a helpful description",
-            desc_required: "1"
+            desc_required: "1",
         });
 
         expect(wrapper).toMatchSnapshot();
@@ -50,7 +50,7 @@ describe("FieldsList -", () => {
             desc_name: "custom field",
             desc_type: "line",
             desc_description: "a helpful description",
-            desc_required: "1"
+            desc_required: "1",
         });
 
         expect(wrapper).toMatchSnapshot();
@@ -60,7 +60,7 @@ describe("FieldsList -", () => {
         const wrapper = await getWrapper({
             group_desc_id: "1",
             desc_type: "line",
-            desc_description: ""
+            desc_description: "",
         } as FieldData);
 
         expect(wrapper.contains("[data-test=text-info]")).toBe(false);
@@ -70,7 +70,7 @@ describe("FieldsList -", () => {
         const wrapper = await getWrapper({
             group_desc_id: "1",
             desc_type: "line",
-            desc_required: "0"
+            desc_required: "0",
         } as FieldData);
 
         expect(wrapper.isEmpty()).toBe(true);
@@ -82,14 +82,14 @@ describe("FieldsList -", () => {
         const wrapper = await getWrapper({
             group_desc_id: "1",
             desc_type: "text",
-            desc_required: "1"
+            desc_required: "1",
         } as FieldData);
 
         wrapper.find("[data-test=project-field-text]").setValue("my new value");
 
         expect(event_bus_emit).toHaveBeenCalledWith("update-field-list", {
             field_id: "1",
-            value: "my new value"
+            value: "my new value",
         });
     });
 });

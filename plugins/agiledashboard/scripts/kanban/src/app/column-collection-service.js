@@ -15,7 +15,7 @@ function ColumnCollectionService(SharedPropertiesService) {
         addColumn: addColumn,
         removeColumn: removeColumn,
         reorderColumns: reorderColumns,
-        findItemById: findItemById
+        findItemById: findItemById,
     });
 
     function getColumn(id) {
@@ -60,7 +60,7 @@ function ColumnCollectionService(SharedPropertiesService) {
     }
 
     function cancelWipEditionOnAllColumns() {
-        SharedPropertiesService.getKanban().columns.forEach(column => {
+        SharedPropertiesService.getKanban().columns.forEach((column) => {
             column.wip_in_edit = false;
         });
     }

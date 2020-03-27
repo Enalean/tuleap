@@ -81,7 +81,7 @@ export default class FieldTrackerColor extends Vue {
             dropdownAutoWidth: true,
             escapeMarkup: sanitize,
             templateResult: this.formatOptionColor,
-            templateSelection: this.formatOptionColor
+            templateSelection: this.formatOptionColor,
         });
 
         this.selectColor();
@@ -89,9 +89,7 @@ export default class FieldTrackerColor extends Vue {
 
     destroyed(): void {
         if (this.select2_color !== null) {
-            $(this.color_selector)
-                .off()
-                .select2("destroy");
+            $(this.color_selector).off().select2("destroy");
         }
     }
 

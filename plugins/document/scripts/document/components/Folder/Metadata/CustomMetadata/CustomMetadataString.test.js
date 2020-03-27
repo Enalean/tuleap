@@ -27,7 +27,7 @@ describe("CustomMetadataString", () => {
         factory = (props = {}) => {
             return shallowMount(CustomMetadataString, {
                 localVue,
-                propsData: { ...props }
+                propsData: { ...props },
             });
         };
     });
@@ -37,7 +37,7 @@ describe("CustomMetadataString", () => {
             value: "string value",
             is_required: true,
             name: "field",
-            type: "string"
+            type: "string",
         };
         const wrapper = factory({ currentlyUpdatedItemMetadata });
         const date_input = wrapper.find("[data-test=document-string-input]");
@@ -52,7 +52,7 @@ describe("CustomMetadataString", () => {
             value: "",
             is_required: false,
             name: "field",
-            type: "string"
+            type: "string",
         };
         const wrapper = factory({ currentlyUpdatedItemMetadata });
         const date_input = wrapper.find("[data-test=document-string-input]");
@@ -67,7 +67,7 @@ describe("CustomMetadataString", () => {
             value: "",
             is_required: false,
             name: "field",
-            type: "text"
+            type: "text",
         };
 
         const wrapper = factory({ currentlyUpdatedItemMetadata });

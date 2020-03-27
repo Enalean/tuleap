@@ -31,9 +31,9 @@ import { build as buildRepositoryListPresenter } from "./repository-list-present
 document.addEventListener("DOMContentLoaded", () => {
     Vue.use(GetTextPlugin, {
         translations: {
-            fr: french_translations.messages
+            fr: french_translations.messages,
         },
-        silent: true
+        silent: true,
     });
 
     const locale = document.body.dataset.userLocale;
@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
             projectId,
             isAdmin,
             repositoriesOwners,
-            displayMode
+            displayMode,
         } = vue_mount_point.dataset;
 
         setUrls(repositoriesAdministrationUrl, repositoryListUrl, repositoriesForkUrl);
@@ -67,8 +67,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         new AppComponent({
             propsData: {
-                displayMode
-            }
+                displayMode,
+            },
         }).$mount(vue_mount_point);
     }
 });

@@ -14,7 +14,7 @@ function LabelsController($element, SharedPropertiesService) {
             return;
         }
 
-        SharedPropertiesService.whenReady().then(function() {
+        SharedPropertiesService.whenReady().then(function () {
             const pull_request = SharedPropertiesService.getPullRequest();
 
             createLabelsBox(

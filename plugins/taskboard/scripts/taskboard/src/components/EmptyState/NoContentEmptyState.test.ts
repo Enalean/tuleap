@@ -24,7 +24,7 @@ import NoContentEmptyState from "./NoContentEmptyState.vue";
 describe("NoContentEmptyState", () => {
     it("displays a cell that span on the whole table", async () => {
         const wrapper = shallowMount(NoContentEmptyState, {
-            localVue: await createTaskboardLocalVue()
+            localVue: await createTaskboardLocalVue(),
         });
         expect(wrapper.element).toMatchSnapshot();
     });

@@ -40,16 +40,16 @@ describe("Given a release widget", () => {
     beforeEach(() => {
         component_options.propsData = {
             project_id,
-            is_browser_IE11: false
+            is_browser_IE11: false,
         };
 
         store_options = {
             state: {
-                is_loading: false
+                is_loading: false,
             },
             getters: {
-                has_rest_error: false
-            }
+                has_rest_error: false,
+            },
         };
     });
 

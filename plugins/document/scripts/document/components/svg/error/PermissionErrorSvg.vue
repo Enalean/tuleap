@@ -125,6 +125,6 @@
 
 <script>
 export default {
-    name: "PermissionErrorSvg"
+    name: "PermissionErrorSvg",
 };
 </script>

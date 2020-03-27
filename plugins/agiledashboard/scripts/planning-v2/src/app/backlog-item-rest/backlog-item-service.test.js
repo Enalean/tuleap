@@ -9,12 +9,12 @@ describe("BacklogItemService", () => {
     beforeEach(() => {
         BacklogItemFactory = { augment: jest.fn() };
 
-        angular.mock.module(planning_module, function($provide) {
+        angular.mock.module(planning_module, function ($provide) {
             $provide.value("BacklogItemFactory", BacklogItemFactory);
         });
 
         let $rootScope;
-        angular.mock.inject(function(_$rootScope_, _BacklogItemService_, $httpBackend) {
+        angular.mock.inject(function (_$rootScope_, _BacklogItemService_, $httpBackend) {
             $rootScope = _$rootScope_;
             BacklogItemService = _BacklogItemService_;
             mockBackend = $httpBackend;
@@ -36,7 +36,7 @@ describe("BacklogItemService", () => {
             mockBackend
                 .expectGET("/api/v1/projects/32/backlog?limit=50&offset=0")
                 .respond([{ id: 271 }, { id: 242 }], {
-                    "X-PAGINATION-SIZE": 2
+                    "X-PAGINATION-SIZE": 2,
                 });
 
             const promise = BacklogItemService.getProjectBacklogItems(32, 50, 0);
@@ -58,7 +58,7 @@ describe("BacklogItemService", () => {
             mockBackend
                 .expectGET("/api/v1/milestones/65/backlog?limit=50&offset=0")
                 .respond([{ id: 398 }, { id: 848 }], {
-                    "X-PAGINATION-SIZE": 2
+                    "X-PAGINATION-SIZE": 2,
                 });
 
             const promise = BacklogItemService.getMilestoneBacklogItems(65, 50, 0);
@@ -80,7 +80,7 @@ describe("BacklogItemService", () => {
             mockBackend
                 .expectGET("/api/v1/backlog_items/57/children?limit=50&offset=0")
                 .respond([{ id: 722 }, { id: 481 }], {
-                    "X-PAGINATION-SIZE": 2
+                    "X-PAGINATION-SIZE": 2,
                 });
 
             const promise = BacklogItemService.getBacklogItemChildren(57, 50, 0);
@@ -101,12 +101,12 @@ describe("BacklogItemService", () => {
             const backlog_item = { id: 5 };
             mockBackend
                 .expectPATCH(`/api/v1/projects/${project_id}/backlog`, {
-                    remove: [{ id: backlog_item.id }]
+                    remove: [{ id: backlog_item.id }],
                 })
                 .respond(200);
 
             const promise = BacklogItemService.removeItemFromExplicitBacklog(project_id, [
-                backlog_item
+                backlog_item,
             ]);
             mockBackend.flush();
 

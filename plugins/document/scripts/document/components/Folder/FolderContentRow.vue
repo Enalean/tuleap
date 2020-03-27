@@ -29,7 +29,7 @@
             <div
                 v-bind:class="{
                     'document-folder-content-title': item_is_not_being_uploaded,
-                    'document-folder-content-quick-look-and-item-uploading': is_item_uploading_in_quicklook_mode
+                    'document-folder-content-quick-look-and-item-uploading': is_item_uploading_in_quicklook_mode,
                 }"
                 v-bind:id="`document-folder-content-row-div-${item.id}`"
             >
@@ -101,13 +101,13 @@ import { mapState } from "vuex";
 import { TYPE_FILE, TYPE_FOLDER, TYPE_LINK, TYPE_WIKI, TYPE_EMBEDDED } from "../../constants.js";
 import {
     formatDateUsingPreferredUserFormat,
-    getElapsedTimeFromNow
+    getElapsedTimeFromNow,
 } from "../../helpers/date-formatter.js";
 import {
     hasNoUploadingContent,
     isItemUploadingInQuickLookMode,
     isItemUploadingInTreeView,
-    isItemInTreeViewWithoutUpload
+    isItemInTreeViewWithoutUpload,
 } from "../../helpers/uploading-status-helper.js";
 import EventBus from "../../helpers/event-bus.js";
 import UserBadge from "../User/UserBadge.vue";
@@ -129,11 +129,11 @@ export default {
         QuickLookButton,
         UserBadge,
         UploadProgressBar,
-        DropDownButton
+        DropDownButton,
     },
     props: {
         item: Object,
-        isQuickLookDisplayed: Boolean
+        isQuickLookDisplayed: Boolean,
     },
     computed: {
         ...mapState(["date_time_format", "folded_items_ids"]),
@@ -157,7 +157,7 @@ export default {
             const indentation_size = this.item.level * 23;
 
             return {
-                "padding-left": `${indentation_size}px`
+                "padding-left": `${indentation_size}px`,
             };
         },
         row_classes() {
@@ -167,7 +167,7 @@ export default {
                 "document-tree-item-updated": this.item.updated,
                 "document-tree-item-uploading": this.item.is_uploading,
                 "document-tree-item-folder": this.item.type === TYPE_FOLDER,
-                "document-tree-item-file": this.item.type === TYPE_FILE
+                "document-tree-item-file": this.item.type === TYPE_FILE,
             };
         },
         cell_title_component_name() {
@@ -210,7 +210,7 @@ export default {
         },
         is_not_uploading_and_is_not_in_quicklook() {
             return isItemInTreeViewWithoutUpload(this.item, this.isQuickLookDisplayed);
-        }
+        },
     },
     mounted() {
         if (!(this.item.created || this.item.is_uploading)) {
@@ -226,7 +226,7 @@ export default {
 
         if (is_under_the_fold) {
             EventBus.$emit("item-has-been-created-under-the-fold", {
-                detail: { item: this.item }
+                detail: { item: this.item },
             });
         }
     },
@@ -241,7 +241,7 @@ export default {
             ) {
                 EventBus.$emit("toggle-quick-look", { details: { item: this.item } });
             }
-        }
-    }
+        },
+    },
 };
 </script>

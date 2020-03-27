@@ -75,18 +75,18 @@ export default {
         TransitionModal,
         FirstConfigurationSections,
         HeaderSection,
-        TransitionsMatrixSection
+        TransitionsMatrixSection,
     },
 
     props: {
         trackerId: {
             type: Number,
-            mandatory: true
+            mandatory: true,
         },
         used_services_names: {
             type: Array,
-            mandatory: true
-        }
+            mandatory: true,
+        },
     },
 
     computed: {
@@ -95,7 +95,7 @@ export default {
             "current_tracker",
             "is_current_tracker_load_failed",
             "is_operation_failed",
-            "operation_failure_message"
+            "operation_failure_message",
         ]),
         ...mapGetters(["has_selectbox_fields"]),
         is_tracker_available() {
@@ -110,12 +110,12 @@ export default {
         },
         translated_operation_failure_message() {
             return this.operation_failure_message || this.$gettext("An error occurred");
-        }
+        },
     },
 
     mounted() {
         this.$store.dispatch("loadTracker", this.trackerId);
         this.$store.dispatch("transitionModal/setUsedServiceName", this.used_services_names);
-    }
+    },
 };
 </script>

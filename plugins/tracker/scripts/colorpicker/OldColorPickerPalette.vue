@@ -38,13 +38,13 @@ export default {
     components: { OldColorPickerPaletteRow },
     data() {
         return {
-            palette: colors
+            palette: colors,
         };
     },
     methods: {
         colorChanged(color) {
             this.$emit("color-update", color);
-        }
-    }
+        },
+    },
 };
 </script>

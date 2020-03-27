@@ -10,7 +10,7 @@ describe("BacklogItemCollectionService", () => {
         angular.mock.module(planning_module);
 
         let $rootScope;
-        angular.mock.inject(function(
+        angular.mock.inject(function (
             _$q_,
             _$rootScope_,
             _BacklogItemCollectionService_,
@@ -40,18 +40,18 @@ describe("BacklogItemCollectionService", () => {
                     children: {
                         data: [],
                         collapsed: true,
-                        loaded: true
+                        loaded: true,
                     },
                     has_children: false,
                     initial_effort: 8,
                     remaining_effort: 7,
                     label: "hexapod",
                     status: "Review",
-                    updating: false
+                    updating: false,
                 };
 
                 BacklogItemCollectionService.items = {
-                    7088: initial_item
+                    7088: initial_item,
                 };
             });
 
@@ -68,8 +68,8 @@ describe("BacklogItemCollectionService", () => {
                                 field_id: 35,
                                 label: "Remaining Story Points",
                                 type: "float",
-                                value: 1.5
-                            }
+                                value: 1.5,
+                            },
                         ],
                         has_children: true,
                         initial_effort: 6,
@@ -78,9 +78,9 @@ describe("BacklogItemCollectionService", () => {
                         status: "Closed",
                         parent: {
                             id: 504,
-                            label: "pretangible"
-                        }
-                    }
+                            label: "pretangible",
+                        },
+                    },
                 };
 
                 BacklogItemService.getBacklogItem.mockReturnValue($q.when(updated_item));
@@ -99,13 +99,13 @@ describe("BacklogItemCollectionService", () => {
                             field_id: 35,
                             label: "Remaining Story Points",
                             type: "float",
-                            value: 1.5
-                        }
+                            value: 1.5,
+                        },
                     ],
                     children: {
                         data: [],
                         collapsed: true,
-                        loaded: true
+                        loaded: true,
                     },
                     has_children: true,
                     initial_effort: 6,
@@ -114,10 +114,10 @@ describe("BacklogItemCollectionService", () => {
                     status: "Closed",
                     parent: {
                         id: 504,
-                        label: "pretangible"
+                        label: "pretangible",
                     },
                     updating: false,
-                    updated: true
+                    updated: true,
                 });
             });
         });

@@ -84,7 +84,7 @@ export default {
             "folder_content",
             "currently_previewed_item",
             "toggle_quick_look",
-            "current_folder"
+            "current_folder",
         ]),
         item_id() {
             if (this.currently_previewed_item === null) {
@@ -102,12 +102,12 @@ export default {
                 "document-quick-look-folder-dropzone":
                     this.currently_previewed_item.type === TYPE_FOLDER,
                 "document-quick-look-file-dropzone":
-                    this.currently_previewed_item.type === TYPE_FILE
+                    this.currently_previewed_item.type === TYPE_FILE,
             };
         },
         should_display_preview() {
             return this.toggle_quick_look && this.currently_previewed_item;
-        }
+        },
     },
     created() {
         EventBus.$on("toggle-quick-look", this.toggleQuickLook);
@@ -136,7 +136,7 @@ export default {
         async displayQuickLook(item) {
             await this.$router.replace({
                 name: "preview",
-                params: { preview_item_id: item.id }
+                params: { preview_item_id: item.id },
             });
 
             this.$store.commit("updateCurrentlyPreviewedItem", item);
@@ -146,15 +146,15 @@ export default {
             if (this.current_folder.parent_id !== 0) {
                 await this.$router.replace({
                     name: "folder",
-                    params: { item_id: this.current_folder.id }
+                    params: { item_id: this.current_folder.id },
                 });
             } else {
                 await this.$router.replace({
-                    name: "root_folder"
+                    name: "root_folder",
                 });
             }
             this.$store.commit("toggleQuickLook", false);
-        }
-    }
+        },
+    },
 };
 </script>

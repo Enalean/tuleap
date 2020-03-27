@@ -6,11 +6,11 @@ export default function LabelsBox() {
         scope: {
             pullRequestId: "@",
             projectId: "@",
-            placeholder: "@"
+            placeholder: "@",
         },
         controller: LabelsController,
         controllerAs: "LabelCtrl",
         bindToController: true,
-        template: `<select class="tlp-select labels-box-select-hidden" multiple></select>`
+        template: `<select class="tlp-select labels-box-select-hidden" multiple></select>`,
     };
 }

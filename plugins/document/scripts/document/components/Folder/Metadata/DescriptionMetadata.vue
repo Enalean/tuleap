@@ -37,12 +37,12 @@
 <script>
 export default {
     props: {
-        value: String
+        value: String,
     },
     computed: {
         placeholder() {
             return this.$gettext("My useful document description");
-        }
-    }
+        },
+    },
 };
 </script>

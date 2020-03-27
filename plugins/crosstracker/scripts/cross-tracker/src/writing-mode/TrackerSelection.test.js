@@ -31,7 +31,7 @@ describe("TrackerSelection", () => {
     beforeEach(() => {
         Vue.use(GetTextPlugin, {
             translations: {},
-            silent: true
+            silent: true,
         });
         Selection = Vue.extend(TrackerSelection);
         selectedTrackers = [];
@@ -41,8 +41,8 @@ describe("TrackerSelection", () => {
         const vm = new Selection({
             store: createStore(),
             propsData: {
-                selectedTrackers
-            }
+                selectedTrackers,
+            },
         });
         vm.$mount();
         jest.spyOn(vm.$store, "commit").mockImplementation(() => {});
@@ -127,7 +127,7 @@ describe("TrackerSelection", () => {
             expect(vm.trackers).toEqual(trackers);
             expect(vm.tracker_options).toEqual([
                 { id: 8, label: "coquettish", disabled: false },
-                { id: 26, label: "unfruitfully", disabled: true }
+                { id: 26, label: "unfruitfully", disabled: true },
             ]);
         });
 
@@ -165,7 +165,7 @@ describe("TrackerSelection", () => {
 
             expect(vm.$emit).toHaveBeenCalledWith("trackerAdded", {
                 selected_project,
-                selected_tracker
+                selected_tracker,
             });
             expect(vm.selected_tracker).toBe(null);
         });

@@ -39,8 +39,8 @@ import StepLabel from "../layout/StepLabel.vue";
 
 @Component({
     components: {
-        StepLabel
-    }
+        StepLabel,
+    },
 })
 export default class StepOneInfo extends Vue {}
 </script>

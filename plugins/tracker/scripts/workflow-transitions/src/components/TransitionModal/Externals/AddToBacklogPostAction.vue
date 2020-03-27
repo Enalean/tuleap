@@ -41,8 +41,8 @@ export default {
     props: {
         post_action: {
             type: Object,
-            mandatory: true
-        }
-    }
+            mandatory: true,
+        },
+    },
 };
 </script>

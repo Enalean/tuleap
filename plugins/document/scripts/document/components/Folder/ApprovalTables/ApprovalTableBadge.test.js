@@ -33,7 +33,7 @@ describe("ApprovalTableBadge", () => {
             return shallowMount(ApprovalTableBadge, {
                 localVue,
                 propsData: { ...props },
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
     });
@@ -44,11 +44,11 @@ describe("ApprovalTableBadge", () => {
         const item = {
             id: 42,
             title: "my unlocked document",
-            type: TYPE_EMBEDDED
+            type: TYPE_EMBEDDED,
         };
 
         const wrapper = approval_badge_factory({
-            item
+            item,
         });
 
         expect(wrapper.contains(".document-approval-badge")).toBeFalsy();
@@ -62,12 +62,12 @@ describe("ApprovalTableBadge", () => {
             title: "my locked document",
             type: TYPE_EMBEDDED,
             approval_table: {
-                approval_state: "Approved"
-            }
+                approval_state: "Approved",
+            },
         };
 
         const wrapper = approval_badge_factory({
-            item
+            item,
         });
 
         expect(wrapper.contains(".document-approval-badge")).toBeTruthy();

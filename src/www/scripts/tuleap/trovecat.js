@@ -19,14 +19,14 @@
 
 import { modal as createModal } from "tlp";
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     const modal_add_element = document.getElementById("trove-cat-add"),
         button_modal_add_element = document.getElementById("add-project-category-button");
 
     if (modal_add_element) {
         const modal_add = createModal(modal_add_element);
 
-        button_modal_add_element.addEventListener("click", function() {
+        button_modal_add_element.addEventListener("click", function () {
             modal_add.toggle();
         });
     }
@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (modal_element) {
             const modal = createModal(modal_element);
 
-            button.addEventListener("click", function() {
+            button.addEventListener("click", function () {
                 modal.toggle();
             });
         }
@@ -75,7 +75,7 @@ function bindNbMaxValuesToProjectFlag() {
             }
         });
 
-        ["change", "keyup"].forEach(function(event_type) {
+        ["change", "keyup"].forEach(function (event_type) {
             nb_max_input.addEventListener(event_type, () => {
                 if (nb_max_input.value === "1") {
                     markFormElementAsEnabled(is_project_flag_input);

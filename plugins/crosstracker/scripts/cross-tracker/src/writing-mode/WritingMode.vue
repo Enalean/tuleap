@@ -61,14 +61,14 @@ export default {
     components: {
         QueryEditor,
         TrackerSelection,
-        TrackerListWritingMode
+        TrackerListWritingMode,
     },
     props: {
-        writingCrossTrackerReport: Object
+        writingCrossTrackerReport: Object,
     },
     data() {
         return {
-            selected_trackers: []
+            selected_trackers: [],
         };
     },
     mounted() {
@@ -110,10 +110,10 @@ export default {
                 return {
                     tracker_id: tracker.id,
                     tracker_label: tracker.label,
-                    project_label: project.label
+                    project_label: project.label,
                 };
             });
-        }
-    }
+        },
+    },
 };
 </script>

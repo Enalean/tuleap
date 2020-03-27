@@ -29,9 +29,9 @@ describe("CardWithRemainingEffort", () => {
             propsData: {
                 card: {
                     id: 43,
-                    remaining_effort: 2.5
-                }
-            }
+                    remaining_effort: 2.5,
+                },
+            },
         });
 
         expect(wrapper.contains(ParentCard)).toBe(true);

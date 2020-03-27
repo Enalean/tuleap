@@ -14,7 +14,7 @@ function AddInPlaceCtrl($scope, $element, $timeout) {
     self.$onInit = init;
 
     function init() {
-        $scope.$watch(isOpen, function(new_value) {
+        $scope.$watch(isOpen, function (new_value) {
             if (new_value) {
                 $timeout(autoFocusInput);
             }

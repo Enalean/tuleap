@@ -76,16 +76,16 @@ export default {
         DeleteItem,
         DropDownSeparator,
         NewFolderSecondaryAction,
-        DropDownMenu
+        DropDownMenu,
     },
     props: {
-        isInFolderEmptyState: Boolean
+        isInFolderEmptyState: Boolean,
     },
     computed: {
         ...mapState(["current_folder"]),
         can_user_delete_item() {
             return this.current_folder.user_can_write && this.current_folder.parent_id;
-        }
-    }
+        },
+    },
 };
 </script>

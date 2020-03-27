@@ -26,7 +26,7 @@ tuleap.textarea = tuleap.textarea || {};
 import "../codendi/RichTextEditor.js";
 
 tuleap.textarea.RTE = Class.create(window.codendi.RTE, {
-    initialize: function($super, element, options) {
+    initialize: function ($super, element, options) {
         options = Object.extend({ toolbar: "tuleap" }, options || {});
         this.options = Object.extend({ htmlFormat: false, id: 0 }, options || {});
         $super(element, options);
@@ -46,7 +46,7 @@ tuleap.textarea.RTE = Class.create(window.codendi.RTE, {
         var selectbox = Builder.node("select", {
             id: "rte_format_selectbox" + this.options.id,
             name: this.options.name,
-            class: "input-small"
+            class: "input-small",
         });
         select_container.appendChild(selectbox);
 
@@ -107,7 +107,7 @@ tuleap.textarea.RTE = Class.create(window.codendi.RTE, {
         }
     },
 
-    toggle: function($super, event, selectbox) {
+    toggle: function ($super, event, selectbox) {
         var option = selectbox.options[selectbox.selectedIndex].value,
             id = this.element.id;
 
@@ -129,7 +129,7 @@ tuleap.textarea.RTE = Class.create(window.codendi.RTE, {
         $super(event, option);
     },
 
-    init_rte: function($super) {
+    init_rte: function ($super) {
         var id = this.element.id;
 
         $super();
@@ -139,5 +139,5 @@ tuleap.textarea.RTE = Class.create(window.codendi.RTE, {
                 $(id).writeAttribute("data-required", true);
             }
         })();
-    }
+    },
 });

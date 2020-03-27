@@ -27,7 +27,7 @@ describe(`EmptyPostAction`, () => {
         const store = createStoreMock({});
         const wrapper = shallowMount(EmptyPostAction, {
             localVue,
-            mocks: { $store: store }
+            mocks: { $store: store },
         });
 
         const add_action_button = wrapper.find("[data-test=add-post-action]");

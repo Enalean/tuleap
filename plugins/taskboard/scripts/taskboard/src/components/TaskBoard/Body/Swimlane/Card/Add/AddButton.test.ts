@@ -26,8 +26,8 @@ describe("AddButon", () => {
         const wrapper = shallowMount(AddButton, {
             localVue: await createTaskboardLocalVue(),
             propsData: {
-                label: "Lorem"
-            }
+                label: "Lorem",
+            },
         });
 
         wrapper.trigger("click");
@@ -38,8 +38,8 @@ describe("AddButon", () => {
         const wrapper = shallowMount(AddButton, {
             localVue: await createTaskboardLocalVue(),
             propsData: {
-                label: ""
-            }
+                label: "",
+            },
         });
 
         expect(wrapper.text()).toBe("");
@@ -52,8 +52,8 @@ describe("AddButon", () => {
         const wrapper = shallowMount(AddButton, {
             localVue: await createTaskboardLocalVue(),
             propsData: {
-                label: "Lorem"
-            }
+                label: "Lorem",
+            },
         });
 
         expect(wrapper.text()).toBe("Lorem");

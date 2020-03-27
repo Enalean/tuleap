@@ -32,6 +32,6 @@ export function createColumnModule(
         state: initial_column_state,
         mutations,
         actions,
-        getters
+        getters,
     };
 }

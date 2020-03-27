@@ -23,7 +23,7 @@ import {
     DataFormat,
     LoadingData,
     IdTextPair,
-    GroupedDataFormat
+    GroupedDataFormat,
 } from "select2";
 
 export { Options, Select2Plugin, DataFormat, LoadingData, IdTextPair, GroupedDataFormat };

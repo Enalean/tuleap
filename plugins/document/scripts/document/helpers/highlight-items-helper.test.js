@@ -25,7 +25,7 @@ describe("highlight-items-helper", () => {
         it("When the hovered item is the peview of a file, then it should highlight it", () => {
             const item = {
                 user_can_write: true,
-                type: TYPE_FILE
+                type: TYPE_FILE,
             };
 
             const closest_row = document.createElement("div");
@@ -40,7 +40,7 @@ describe("highlight-items-helper", () => {
         it("When the hovered item is the preview of a folder, then it should highlight it", () => {
             const item = {
                 user_can_write: true,
-                type: TYPE_FOLDER
+                type: TYPE_FOLDER,
             };
 
             const closest_row = document.createElement("div");
@@ -57,7 +57,7 @@ describe("highlight-items-helper", () => {
         it("should highlight the file in the tree view", () => {
             const item = {
                 user_can_write: true,
-                type: TYPE_FILE
+                type: TYPE_FILE,
             };
 
             const closest_row = document.createElement("div");
@@ -72,7 +72,7 @@ describe("highlight-items-helper", () => {
         it("should highlight the folder in the tree view", () => {
             const item = {
                 user_can_write: true,
-                type: TYPE_FOLDER
+                type: TYPE_FOLDER,
             };
 
             const closest_row = document.createElement("div");
@@ -89,7 +89,7 @@ describe("highlight-items-helper", () => {
         it("should apply the 'forbiden' class on tree view items", () => {
             const item = {
                 user_can_write: false,
-                type: TYPE_FOLDER
+                type: TYPE_FOLDER,
             };
 
             const closest_row = document.createElement("div");
@@ -106,7 +106,7 @@ describe("highlight-items-helper", () => {
         it("should apply the 'forbidden' class on quick look pane", () => {
             const item = {
                 user_can_write: false,
-                type: TYPE_FOLDER
+                type: TYPE_FOLDER,
             };
 
             const closest_row = document.createElement("div");

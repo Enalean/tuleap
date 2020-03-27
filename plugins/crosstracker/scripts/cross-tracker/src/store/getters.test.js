@@ -50,7 +50,7 @@ describe("Store getters", () => {
             state.is_user_admin = true;
             const invalid_tracker = {
                 id: 1,
-                label: "My invalid tracker"
+                label: "My invalid tracker",
             };
             state.invalid_trackers = [invalid_tracker];
 

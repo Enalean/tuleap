@@ -18,7 +18,7 @@ describe("EditKanbanController -", () => {
 
         let $controller, $rootScope;
 
-        angular.mock.inject(function(
+        angular.mock.inject(function (
             _$controller_,
             _$rootScope_,
             _$q_,
@@ -39,7 +39,7 @@ describe("EditKanbanController -", () => {
         $scope = $rootScope.$new();
 
         modal_instance = {
-            tlp_modal: { hide: jest.fn() }
+            tlp_modal: { hide: jest.fn() },
         };
         const rebuild_scrollbars = angular.noop;
 
@@ -47,8 +47,8 @@ describe("EditKanbanController -", () => {
             label: "boxman",
             tracker: {
                 id: 48,
-                label: "pinkwort"
-            }
+                label: "pinkwort",
+            },
         });
 
         jest.spyOn(RestErrorService, "reload").mockImplementation(() => {});
@@ -58,7 +58,7 @@ describe("EditKanbanController -", () => {
             KanbanService,
             FilterTrackerReportService,
             modal_instance,
-            rebuild_scrollbars
+            rebuild_scrollbars,
         });
     });
 
@@ -69,7 +69,7 @@ describe("EditKanbanController -", () => {
             selectable_report_ids = [7, 63];
             Object.assign(EditKanbanController, {
                 kanban: { id: 48 },
-                selectable_report_ids
+                selectable_report_ids,
             });
             jest.spyOn(KanbanService, "updateSelectableReports").mockImplementation(() => {});
             jest.spyOn(

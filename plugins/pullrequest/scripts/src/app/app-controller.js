@@ -6,7 +6,7 @@ MainController.$inject = [
     "$state",
     "gettextCatalog",
     "amMoment",
-    "SharedPropertiesService"
+    "SharedPropertiesService",
 ];
 
 function MainController(

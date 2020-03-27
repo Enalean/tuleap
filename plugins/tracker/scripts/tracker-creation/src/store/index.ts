@@ -26,7 +26,7 @@ export function createStore(initial_state: State): Store<State> {
     const store_options: StoreOptions<State> = {
         state: initial_state,
         mutations,
-        getters
+        getters,
     };
 
     return new Store(store_options);

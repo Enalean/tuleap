@@ -27,7 +27,7 @@
 var codendi = codendi || {};
 
 codendi.feedback = {
-    log: function(level, msg) {
+    log: function (level, msg) {
         var feedback = $("feedback");
 
         if (!feedback) {
@@ -64,10 +64,10 @@ codendi.feedback = {
             );
         }
     },
-    clear: function() {
+    clear: function () {
         var feedback = $("feedback");
         if (feedback) {
             feedback.remove();
         }
-    }
+    },
 };

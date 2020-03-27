@@ -36,12 +36,12 @@
 export default {
     name: "TrackerPermissionTableEmptyState",
     props: {
-        selectedUgroupName: String
+        selectedUgroupName: String,
     },
     computed: {
         hasASelectedUserGroup() {
             return this.selectedUgroupName !== "";
-        }
-    }
+        },
+    },
 };
 </script>

@@ -28,7 +28,7 @@ describe("IntInput", () => {
     beforeEach(() => {
         wrapper = shallowMount(IntInput, {
             propsData: { value: 2 },
-            localVue
+            localVue,
         });
     });
 

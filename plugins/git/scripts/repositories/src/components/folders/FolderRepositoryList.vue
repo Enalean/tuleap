@@ -31,7 +31,7 @@ export default {
     name: "FolderRepositoryList",
     components: { CollapsibleFolder },
     computed: {
-        ...mapGetters(["filteredRepositoriesGroupedByPath"])
-    }
+        ...mapGetters(["filteredRepositoriesGroupedByPath"]),
+    },
 };
 </script>

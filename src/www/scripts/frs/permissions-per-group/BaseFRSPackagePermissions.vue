@@ -51,19 +51,19 @@ import PackagePermissionsTable from "./FRSPackagePermissionsTable.vue";
 export default {
     name: "BaseFRSPackagePermissions",
     components: {
-        PackagePermissionsTable
+        PackagePermissionsTable,
     },
     props: {
         selectedUgroupId: String,
         selectedProjectId: String,
-        selectedUgroupName: String
+        selectedUgroupName: String,
     },
     data() {
         return {
             is_loaded: false,
             is_loading: false,
             rest_error: null,
-            packages_list: []
+            packages_list: [],
         };
     },
     computed: {
@@ -72,7 +72,7 @@ export default {
         },
         packages_are_loading() {
             return this.$gettext("Packages are loading");
-        }
+        },
     },
     methods: {
         async loadAll() {
@@ -91,7 +91,7 @@ export default {
             } finally {
                 this.is_loading = false;
             }
-        }
-    }
+        },
+    },
 };
 </script>

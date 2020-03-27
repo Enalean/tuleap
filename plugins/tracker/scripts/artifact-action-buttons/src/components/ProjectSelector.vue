@@ -54,11 +54,11 @@ export default {
             },
             set(project_id) {
                 this.$store.dispatch("loadTrackerList", project_id);
-            }
-        }
+            },
+        },
     },
     mounted() {
         this.$store.dispatch("loadTrackerList", getProjectId());
-    }
+    },
 };
 </script>

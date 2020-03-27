@@ -34,11 +34,11 @@ describe("ProjectName", () => {
         component_options = {
             data(): DefaultData<ProjectName> {
                 return {
-                    error: ""
+                    error: "",
                 };
             },
             localVue: await createProjectRegistrationLocalVue(),
-            mocks: { $store: store }
+            mocks: { $store: store },
         };
 
         store = createStoreMock({});

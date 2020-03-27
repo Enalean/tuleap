@@ -33,7 +33,7 @@ describe("DropDownQuickLook", () => {
             return shallowMount(DropDownQuickLook, {
                 localVue,
                 propsData: { ...props },
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
     });
@@ -46,8 +46,8 @@ describe("DropDownQuickLook", () => {
                 id: 1,
                 title: "my item title",
                 type: "file",
-                user_can_write: true
-            }
+                user_can_write: true,
+            },
         });
 
         expect(wrapper.contains("[data-test=dropdown-menu-folder-creation]")).toBeFalsy();
@@ -63,8 +63,8 @@ describe("DropDownQuickLook", () => {
                 id: 1,
                 title: "my item title",
                 type: "file",
-                user_can_write: false
-            }
+                user_can_write: false,
+            },
         });
 
         expect(wrapper.contains("[data-test=document-dropdown-menu-lock-item]")).toBeFalsy();
@@ -78,7 +78,7 @@ describe("DropDownQuickLook", () => {
             id: 1,
             title: "my folder",
             type: "folder",
-            user_can_write: true
+            user_can_write: true,
         };
 
         beforeEach(() => {

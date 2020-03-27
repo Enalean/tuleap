@@ -65,21 +65,21 @@ import { mapState } from "vuex";
 export default {
     name: "TimeTrackingOverviewWritingDates",
     computed: {
-        ...mapState(["start_date", "end_date"])
+        ...mapState(["start_date", "end_date"]),
     },
     mounted() {
         const store = this.$store;
         datePicker(this.$refs.start_date, {
             onClose(long_date, short_date) {
                 store.commit("setStartDate", short_date);
-            }
+            },
         });
 
         datePicker(this.$refs.end_date, {
             onClose(long_date, short_date) {
                 store.commit("setEndDate", short_date);
-            }
+            },
         });
-    }
+    },
 };
 </script>

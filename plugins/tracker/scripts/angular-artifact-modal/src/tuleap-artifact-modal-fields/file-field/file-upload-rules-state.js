@@ -5,14 +5,14 @@ const file_upload_rules = {
     // All units are in bytes
     disk_quota: 0,
     disk_usage: 0,
-    max_chunk_size: 0
+    max_chunk_size: 0,
 };
 
 export { updateFileUploadRulesWhenNeeded, file_upload_rules };
 
 function updateFileUploadRulesWhenNeeded(field_values) {
     if (isThereAtLeastOneFileField(field_values)) {
-        return getFileUploadRules().then(data => {
+        return getFileUploadRules().then((data) => {
             Object.assign(file_upload_rules, data);
         });
     }

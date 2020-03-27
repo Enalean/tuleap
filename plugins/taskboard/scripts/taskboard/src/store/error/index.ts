@@ -29,9 +29,9 @@ const error_module_default: Module<ErrorState, RootState> = {
         global_error_message: "",
         has_global_error: false,
         modal_error_message: "",
-        has_modal_error: false
+        has_modal_error: false,
     },
     actions,
-    mutations
+    mutations,
 };
 export default error_module_default;

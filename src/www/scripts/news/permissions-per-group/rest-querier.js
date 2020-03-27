@@ -29,8 +29,8 @@ async function getNewsPermissions(project_id, selected_ugroup_id) {
     const response = await get("/news/permissions-per-group", {
         params: {
             group_id: project_id,
-            selected_ugroup_id: selected_ugroup_id
-        }
+            selected_ugroup_id: selected_ugroup_id,
+        },
     });
 
     return response.json();

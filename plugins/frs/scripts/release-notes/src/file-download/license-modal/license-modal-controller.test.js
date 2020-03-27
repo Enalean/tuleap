@@ -30,7 +30,7 @@ describe(`LicenseModalController`, () => {
         angular.mock.module(tuleap_frs_module);
 
         let $controller;
-        angular.mock.inject(function(_$controller_, _SharedPropertiesService_) {
+        angular.mock.inject(function (_$controller_, _SharedPropertiesService_) {
             $controller = _$controller_;
             SharedPropertiesService = _SharedPropertiesService_;
         });
@@ -41,13 +41,13 @@ describe(`LicenseModalController`, () => {
         jest.spyOn(SharedPropertiesService, "getPlatformLicenseInfo").mockReturnValue({
             exchange_policy_url: "https://phacochoerid.com/antiblastic/smutchy",
             organisation_name: "Phlegmasia",
-            contact_email: "scaldera@example.com"
+            contact_email: "scaldera@example.com",
         });
 
         LicenseModalController = $controller(BaseController, {
             modal_instance,
             acceptCallback,
-            SharedPropertiesService
+            SharedPropertiesService,
         });
     });
 

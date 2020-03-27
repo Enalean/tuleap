@@ -21,11 +21,11 @@ import { Transform } from "readable-stream";
 
 export function getBase64Transform() {
     const stream = new Transform({
-        readableObjectMode: true
+        readableObjectMode: true,
     });
     stream.setEncoding("ascii");
 
-    stream._transform = function(chunk, encoding, callback) {
+    stream._transform = function (chunk, encoding, callback) {
         //from https://github.com/dominictarr/arraybuffer-base64/blob/master/index.js
         let binary_string = "";
         for (let i = 0; i < chunk.byteLength; i++) {

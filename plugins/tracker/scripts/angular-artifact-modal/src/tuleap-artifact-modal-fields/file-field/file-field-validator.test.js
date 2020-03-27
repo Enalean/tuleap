@@ -42,7 +42,7 @@ describe(`file-field-validator`, () => {
                         html_url: "/plugins/tracker/attachments/429-favicon.ico",
                         html_preview_url: null,
                         uri: "artifact_files/429",
-                        display_as_image: true
+                        display_as_image: true,
                     },
                     {
                         id: 481,
@@ -56,18 +56,18 @@ describe(`file-field-validator`, () => {
                         html_preview_url:
                             "/plugins/tracker/attachments/preview/481-pullrequest-pr-diff-comment.png",
                         uri: "artifact_files/481",
-                        display_as_image: true
-                    }
+                        display_as_image: true,
+                    },
                 ],
                 images_added_by_text_fields: [],
                 permissions: ["read", "update", "create"],
                 temporary_files: [{ file: {}, description: "" }],
-                value: [429, 481]
+                value: [429, 481],
             };
             text_field_value_models = [];
             followup_value_model = {
                 body: "",
-                format: "text"
+                format: "text",
             };
         });
 
@@ -92,7 +92,7 @@ describe(`file-field-validator`, () => {
 
             expect(result).toEqual({
                 field_id: 6476,
-                value: []
+                value: [],
             });
         });
 
@@ -105,7 +105,7 @@ describe(`file-field-validator`, () => {
 
             expect(result).toEqual({
                 field_id: 6476,
-                value: [429, 481]
+                value: [429, 481],
             });
         });
 
@@ -127,7 +127,7 @@ describe(`file-field-validator`, () => {
             beforeEach(() => {
                 file_value_model.images_added_by_text_fields = [
                     { id: 127, download_href: "https://example.com/answerably.jpg" },
-                    { id: 142, download_href: "https://example.com/carboxylation.gif" }
+                    { id: 142, download_href: "https://example.com/carboxylation.gif" },
                 ];
                 file_value_model.value = [...file_value_model.value, 127, 142];
 
@@ -135,15 +135,15 @@ describe(`file-field-validator`, () => {
                     field_id: 6401,
                     value: {
                         content: `<p><img src="https://example.com/answerably.jpg"></p>`,
-                        format: TEXT_FORMAT_HTML
-                    }
+                        format: TEXT_FORMAT_HTML,
+                    },
                 };
                 other_text_field = {
                     field_id: 6959,
                     value: {
                         content: `<p><img src="https://example.com/carboxylation.gif"></p>`,
-                        format: TEXT_FORMAT_HTML
-                    }
+                        format: TEXT_FORMAT_HTML,
+                    },
                 };
                 text_field_value_models = [text_field_referencing_an_image, other_text_field];
             });
@@ -171,7 +171,7 @@ describe(`file-field-validator`, () => {
                             <img src="https://example.com/answerably.jpg">
                             <img src="https://example.com/carboxylation.gif">
                         </p>`,
-                        format: TEXT_FORMAT_HTML
+                        format: TEXT_FORMAT_HTML,
                     };
                 });
 

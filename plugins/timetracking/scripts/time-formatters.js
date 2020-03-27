@@ -33,7 +33,7 @@ function formatDatetimeToISO(string_date) {
     return DateTime.fromISO(string_date).toISO({
         suppressSeconds: false,
         suppressMilliseconds: true,
-        includeOffset: true
+        includeOffset: true,
     });
 }
 

@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (language === undefined) {
         throw new Error("Not able to find the user language.");
     }
-    const gettext_provider = await initGettext(language, "tuleap-oauth2_server", locale =>
+    const gettext_provider = await initGettext(language, "tuleap-oauth2_server", (locale) =>
         import(/* webpackChunkName: "oauth2-server-po-" */ `../po/${locale}.po`)
     );
 
@@ -41,11 +41,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         modal_element_id: REVOKE_MODAL_ID,
         hidden_input_replacement: {
             input_id: REVOKE_MODAL_HIDDEN_INPUT_ID,
-            hiddenInputReplaceCallback
+            hiddenInputReplaceCallback,
         },
         paragraph_replacement: {
             paragraph_id: REVOKE_MODAL_DESCRIPTION,
-            paragraphReplaceCallback: buildRevocationReplaceCallback(gettext_provider)
-        }
+            paragraphReplaceCallback: buildRevocationReplaceCallback(gettext_provider),
+        },
     });
 });

@@ -43,16 +43,16 @@ export default {
     components: {
         TimeTrackingOverviewTable,
         TimeTrackingOverviewReadingMode,
-        TimeTrackingOverviewWritingMode
+        TimeTrackingOverviewWritingMode,
     },
     props: {
         reportId: String,
         userId: Number,
-        areVoidTrackersHidden: Boolean
+        areVoidTrackersHidden: Boolean,
     },
     computed: {
         ...mapState(["reading_mode", "success_message"]),
-        ...mapGetters(["has_success_message"])
+        ...mapGetters(["has_success_message"]),
     },
     mounted() {
         this.$store.commit("setReportId", this.reportId);
@@ -68,7 +68,7 @@ export default {
     methods: {
         reloadTimes() {
             this.$store.dispatch("reloadTimetrackingOverviewTimes");
-        }
-    }
+        },
+    },
 };
 </script>

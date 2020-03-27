@@ -29,8 +29,8 @@ async function getPackagesPermissions(group_id, selected_ugroup_id) {
     const response = await get("/file/files_permissions_per_group.php", {
         params: {
             group_id,
-            selected_ugroup_id
-        }
+            selected_ugroup_id,
+        },
     });
 
     return response.json();

@@ -40,7 +40,7 @@ export default {
     methods: {
         showNewFolderModal() {
             EventBus.$emit("show-new-folder-modal", { detail: { parent: this.item } });
-        }
-    }
+        },
+    },
 };
 </script>

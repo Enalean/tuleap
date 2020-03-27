@@ -4,7 +4,7 @@ import {
     isThereACommentOnThisLine,
     getUnchangedSections,
     getPaddedCollapsibleSections,
-    getCollapsibleSectionsSideBySide
+    getCollapsibleSectionsSideBySide,
 } from "./code-collapse-service.js";
 
 describe("code-collapse-service", () => {
@@ -16,12 +16,12 @@ describe("code-collapse-service", () => {
             const inline_comments = [
                 {
                     unidiff_offset: 666,
-                    comment: "Hail to the lord of darkness!"
+                    comment: "Hail to the lord of darkness!",
                 },
                 {
                     unidiff_offset: 777,
-                    comment: "Wow, much luck!"
-                }
+                    comment: "Wow, much luck!",
+                },
             ];
 
             expect(isThereACommentOnThisLine(commented_line_number, inline_comments)).toBe(true);
@@ -39,12 +39,12 @@ describe("code-collapse-service", () => {
             expect(unchanged_sections).toEqual([
                 {
                     start: 0,
-                    end: 10
+                    end: 10,
                 },
                 {
                     start: 12,
-                    end: 23
-                }
+                    end: 23,
+                },
             ]);
         });
 
@@ -52,19 +52,19 @@ describe("code-collapse-service", () => {
             const unchanged_sections = getUnchangedSections(file_modifications, [
                 {
                     content: "A wild inline commment",
-                    unidiff_offset: 20
-                }
+                    unidiff_offset: 20,
+                },
             ]);
 
             expect(unchanged_sections).toEqual([
                 {
                     start: 0,
-                    end: 10
+                    end: 10,
                 },
                 {
                     start: 12,
-                    end: 19
-                }
+                    end: 19,
+                },
             ]);
         });
 
@@ -72,19 +72,19 @@ describe("code-collapse-service", () => {
             const unchanged_sections = getUnchangedSections(file_modifications, [
                 {
                     content: "A wild inline commment",
-                    unidiff_offset: 23
-                }
+                    unidiff_offset: 23,
+                },
             ]);
 
             expect(unchanged_sections).toEqual([
                 {
                     start: 0,
-                    end: 10
+                    end: 10,
                 },
                 {
                     start: 12,
-                    end: 22
-                }
+                    end: 22,
+                },
             ]);
         });
     });
@@ -95,12 +95,12 @@ describe("code-collapse-service", () => {
             const potentially_collapsible_sections = [
                 {
                     start: 0, // Can't be collapsed because end - start <= COLLAPSE THRESHOLD (10 LOCs)
-                    end: 10
+                    end: 10,
                 },
                 {
                     start: 12,
-                    end: 23
-                }
+                    end: 23,
+                },
             ];
 
             const sections_to_collapse = getPaddedCollapsibleSections(
@@ -111,8 +111,8 @@ describe("code-collapse-service", () => {
             expect(sections_to_collapse).toEqual([
                 {
                     start: 22,
-                    end: 23
-                }
+                    end: 23,
+                },
             ]);
         });
     });
@@ -128,13 +128,13 @@ describe("code-collapse-service", () => {
                 {
                     left: {
                         start: 22,
-                        end: 23
+                        end: 23,
                     },
                     right: {
                         start: 21,
-                        end: 22
-                    }
-                }
+                        end: 22,
+                    },
+                },
             ]);
         });
     });

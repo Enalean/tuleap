@@ -28,9 +28,9 @@ var codendi = codendi || {};
  *
  */
 codendi.PluginForumml = Class.create({
-    initialize: function(element) {
+    initialize: function (element) {
         // Toggle mail class name when click on the right button
-        element.observe("click", function(event) {
+        element.observe("click", function (event) {
             var link = Event.element(event);
             if (link) {
                 var msgId = link.id.replace("plugin_forumml_toogle_msg_", "");
@@ -45,11 +45,11 @@ codendi.PluginForumml = Class.create({
             }
             event.stop();
         });
-    }
+    },
 });
 
-document.observe("dom:loaded", function() {
-    $$(".plugin_forumml_toggle_font").each(function(elmt) {
+document.observe("dom:loaded", function () {
+    $$(".plugin_forumml_toggle_font").each(function (elmt) {
         new codendi.PluginForumml(elmt);
     });
 });

@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default function(parameters) {
+export default function (parameters) {
     return Object.keys(parameters)
-        .map(key => {
+        .map((key) => {
             return [key, parameters[key]].map(encodeURIComponent).join("=");
         })
         .join("&");

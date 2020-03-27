@@ -24,7 +24,7 @@ import {
     REST_FEEDBACK_ADD,
     REST_FEEDBACK_EDIT,
     REST_FEEDBACK_DELETE,
-    ERROR_OCCURRED
+    ERROR_OCCURRED,
 } from "../../../constants.js";
 
 describe("Store actions", () => {
@@ -37,15 +37,15 @@ describe("Store actions", () => {
                 end_date: "2017-04-24",
                 pagination_limit: 50,
                 pagination_offset: 0,
-                times_length: 1
-            }
+                times_length: 1,
+            },
         };
     });
     it("Given new dates, Then dates must equal to the new dates and queryHasChanged must be true", () => {
         actions.setDatesAndReload(context, ["2015-09-14", "2017-04-24"]);
         expect(context.commit).toHaveBeenCalledWith("setParametersForNewQuery", [
             "2015-09-14",
-            "2017-04-24"
+            "2017-04-24",
         ]);
     });
 
@@ -56,9 +56,9 @@ describe("Store actions", () => {
                     {
                         artifact: {},
                         project: {},
-                        minutes: 20
-                    }
-                ]
+                        minutes: 20,
+                    },
+                ],
             ];
             context.state.times = times;
 
@@ -79,9 +79,9 @@ describe("Store actions", () => {
                     error_json: {
                         error: {
                             code: 403,
-                            message: "Forbidden"
-                        }
-                    }
+                            message: "Forbidden",
+                        },
+                    },
                 });
 
                 await actions.getTimes(context);
@@ -104,15 +104,15 @@ describe("Store actions", () => {
                     error_json: {
                         error: {
                             code: 403,
-                            message: "Forbidden"
-                        }
-                    }
+                            message: "Forbidden",
+                        },
+                    },
                 });
 
                 await actions.addTime(context, ["2018-01-01", 1, "11:11", "oui"]);
                 expect(context.commit).toHaveBeenCalledWith("setRestFeedback", [
                     "403 Forbidden",
-                    "danger"
+                    "danger",
                 ]);
             });
 
@@ -122,7 +122,7 @@ describe("Store actions", () => {
                 await actions.addTime(context, ["2018-01-01", 1, "11:11", "oui"]);
                 expect(context.commit).toHaveBeenCalledWith("setRestFeedback", [
                     ERROR_OCCURRED,
-                    "danger"
+                    "danger",
                 ]);
             });
         });
@@ -134,14 +134,14 @@ describe("Store actions", () => {
                 let time = {
                     artifact: {},
                     project: {},
-                    minutes: 20
+                    minutes: 20,
                 };
                 restAddTime.mockReturnValue(Promise.resolve(time));
 
                 await actions.addTime(context, ["2018-01-01", 1, "00:20", "oui"]);
                 expect(context.commit).toHaveBeenCalledWith("pushCurrentTimes", [
                     [time],
-                    REST_FEEDBACK_ADD
+                    REST_FEEDBACK_ADD,
                 ]);
                 expect(restAddTime).toHaveBeenCalledTimes(1);
                 expect(context.commit).not.toHaveBeenCalledWith("setRestFeedback");
@@ -154,15 +154,15 @@ describe("Store actions", () => {
                     error_json: {
                         error: {
                             code: 403,
-                            message: "Forbidden"
-                        }
-                    }
+                            message: "Forbidden",
+                        },
+                    },
                 });
 
                 await actions.updateTime(context, ["2018-01-01", 1, "11:11", "oui"]);
                 expect(context.commit).toHaveBeenCalledWith("setRestFeedback", [
                     "403 Forbidden",
-                    "danger"
+                    "danger",
                 ]);
             });
 
@@ -172,7 +172,7 @@ describe("Store actions", () => {
                 await actions.updateTime(context, ["2018-01-01", 1, "11:11", "oui"]);
                 expect(context.commit).toHaveBeenCalledWith("setRestFeedback", [
                     ERROR_OCCURRED,
-                    "danger"
+                    "danger",
                 ]);
             });
         });
@@ -185,14 +185,14 @@ describe("Store actions", () => {
                     artifact: {},
                     project: {},
                     id: 1,
-                    minutes: 20
+                    minutes: 20,
                 };
                 jest.spyOn(rest_querier, "updateTime").mockReturnValue(Promise.resolve(time));
 
                 await actions.updateTime(context, ["2018-01-01", 1, "00:20", "oui"]);
                 expect(context.commit).toHaveBeenCalledWith("replaceInCurrentTimes", [
                     time,
-                    REST_FEEDBACK_EDIT
+                    REST_FEEDBACK_EDIT,
                 ]);
                 expect(getTrackedTimes).toHaveBeenCalled();
                 expect(context.commit).not.toHaveBeenCalledWith("setRestFeedback");
@@ -205,15 +205,15 @@ describe("Store actions", () => {
                     error_json: {
                         error: {
                             code: 403,
-                            message: "Forbidden"
-                        }
-                    }
+                            message: "Forbidden",
+                        },
+                    },
                 });
 
                 await actions.deleteTime(context, 1);
                 expect(context.commit).toHaveBeenCalledWith("setRestFeedback", [
                     "403 Forbidden",
-                    "danger"
+                    "danger",
                 ]);
             });
 
@@ -223,7 +223,7 @@ describe("Store actions", () => {
                 await actions.deleteTime(context, 1);
                 expect(context.commit).toHaveBeenCalledWith("setRestFeedback", [
                     ERROR_OCCURRED,
-                    "danger"
+                    "danger",
                 ]);
             });
         });
@@ -238,7 +238,7 @@ describe("Store actions", () => {
                 await actions.deleteTime(context, time_id);
                 expect(context.commit).toHaveBeenCalledWith("deleteInCurrentTimes", [
                     time_id,
-                    REST_FEEDBACK_DELETE
+                    REST_FEEDBACK_DELETE,
                 ]);
                 expect(getTrackedTimes).toHaveBeenCalled();
                 expect(context.commit).not.toHaveBeenCalledWith("setRestFeedback");
@@ -252,9 +252,9 @@ describe("Store actions", () => {
                         {
                             artifact: {},
                             project: {},
-                            minutes: 20
-                        }
-                    ]
+                            minutes: 20,
+                        },
+                    ],
                 ];
                 context.state.times = times;
 

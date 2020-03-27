@@ -59,8 +59,8 @@ import { sprintf } from "sprintf-js";
         TrackerTemplateCard,
         TrackerXmlFileCard,
         TrackerFromAnotherProjectCard,
-        StepOneInfo
-    }
+        StepOneInfo,
+    },
 })
 export default class StepOne extends Vue {
     @Mutation

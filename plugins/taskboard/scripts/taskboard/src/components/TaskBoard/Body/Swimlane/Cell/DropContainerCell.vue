@@ -55,7 +55,7 @@ import { isSoloCard } from "../../../../../store/swimlane/swimlane-helpers";
 const column_store = namespace("column");
 
 @Component({
-    components: { AddCard, CellDisallowsDropOverlay }
+    components: { AddCard, CellDisallowsDropOverlay },
 })
 export default class DropContainerCell extends Mixins(
     HoveringStateForCollapsedColumnMixin,

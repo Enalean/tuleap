@@ -42,18 +42,18 @@ describe("PastReleaseHeaderInitialPoints", () => {
 
     beforeEach(() => {
         store_options = {
-            state: {}
+            state: {},
         };
 
         release_data = {
             label: "mile",
-            initial_effort: 10
+            initial_effort: 10,
         } as MilestoneData;
 
         component_options = {
             propsData: {
-                release_data
-            }
+                release_data,
+            },
         };
     });
 
@@ -66,13 +66,13 @@ describe("PastReleaseHeaderInitialPoints", () => {
         it("When there isn't initial effort, Then 0 displayed", async () => {
             release_data = {
                 label: "mile",
-                initial_effort: null
+                initial_effort: null,
             } as MilestoneData;
 
             component_options = {
                 propsData: {
-                    release_data
-                }
+                    release_data,
+                },
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);

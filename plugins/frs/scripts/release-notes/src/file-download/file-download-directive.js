@@ -10,11 +10,11 @@ function fileDownloadDirective() {
         scope: {
             file: "=fileDownload",
             license_approval_mandatory: "=licenseApprovalMandatory",
-            custom_license_agreement: "=customLicenseAgreement"
+            custom_license_agreement: "=customLicenseAgreement",
         },
         templateUrl: "file-download.tpl.html",
         controller: FileDownloadController,
         controllerAs: "$ctrl",
-        bindToController: true
+        bindToController: true,
     };
 }

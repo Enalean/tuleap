@@ -56,7 +56,7 @@ function init() {
     initFilter();
     focusOnFilter();
 
-    document.addEventListener("keyup", event => {
+    document.addEventListener("keyup", (event) => {
         if (event.keyCode === tab_code_value) {
             underlineProject(event);
         }
@@ -66,7 +66,7 @@ function init() {
 function focusOnFilter() {
     const nav_dropdow_element = document.getElementById(nav_dropdow_projects_selector_name);
 
-    nav_dropdow_element.addEventListener("click", event => {
+    nav_dropdow_element.addEventListener("click", (event) => {
         const target = event.target;
         const dropdown_element = getDropdownElement(target);
 

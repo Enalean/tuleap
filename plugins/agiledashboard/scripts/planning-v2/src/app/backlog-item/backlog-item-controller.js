@@ -12,7 +12,7 @@ BacklogItemController.$inject = [
     "dragularService",
     "DroppedService",
     "BacklogItemCollectionService",
-    "BacklogItemSelectedService"
+    "BacklogItemSelectedService",
 ];
 
 function BacklogItemController(
@@ -42,7 +42,7 @@ function BacklogItemController(
         moveToBottomInParent: moveToBottomInParent,
         moveToTop: moveToTop,
         moveToTopInParent: moveToTopInParent,
-        reorderBacklogItemChildren: reorderBacklogItemChildren
+        reorderBacklogItemChildren: reorderBacklogItemChildren,
     });
 
     self.init();
@@ -56,7 +56,7 @@ function BacklogItemController(
         $scope.$on("dragulardrag", dragularDrag);
 
         if (!self.backlog_item.children.collapsed) {
-            $timeout(function() {
+            $timeout(function () {
                 self.initDragularForBacklogItemChildren();
             });
         }
@@ -79,15 +79,15 @@ function BacklogItemController(
 
         self.backlog_item.children.collapsed = !self.backlog_item.children.collapsed;
 
-        $timeout(function() {
+        $timeout(function () {
             self.initDragularForBacklogItemChildren();
         });
     }
 
     function fetchBacklogItemChildren(backlog_item, limit, offset) {
         return BacklogItemService.getBacklogItemChildren(backlog_item.id, limit, offset).then(
-            function(data) {
-                angular.forEach(data.results, function(child) {
+            function (data) {
+                angular.forEach(data.results, function (child) {
                     BacklogItemCollectionService.items[child.id] = child;
                     backlog_item.children.data.push(child);
                 });
@@ -157,7 +157,7 @@ function BacklogItemController(
 
         backlog_item.moving_to = true;
 
-        self.children_promise.then(function() {
+        self.children_promise.then(function () {
             compared_to = DroppedService.defineComparedToBeLastItem(
                 self.backlog_item.children.data,
                 moved_items
@@ -178,7 +178,7 @@ function BacklogItemController(
             self.dragularOptionsForBacklogItemChildren()
         );
 
-        $document.on("keyup", function(event) {
+        $document.on("keyup", function (event) {
             var esc_key_code = 27;
 
             if (event.keyCode === esc_key_code) {
@@ -199,7 +199,7 @@ function BacklogItemController(
             revertOnSpill: true,
             nameSpace: "dragular-list-children",
             accepts: isItemDroppable,
-            moves: isItemDraggable
+            moves: isItemDraggable,
         };
     }
 
@@ -299,10 +299,10 @@ function BacklogItemController(
             dropped_items,
             null
         )
-            .then(function() {
+            .then(function () {
                 BacklogItemSelectedService.deselectAllBacklogItems();
             })
-            .catch(function() {
+            .catch(function () {
                 BacklogItemSelectedService.reselectBacklogItems();
             });
     }
@@ -366,10 +366,10 @@ function BacklogItemController(
                         dropped_items,
                         compared_to
                     )
-                        .then(function() {
+                        .then(function () {
                             BacklogItemSelectedService.deselectAllBacklogItems();
                         })
-                        .catch(function() {
+                        .catch(function () {
                             BacklogItemSelectedService.reselectBacklogItems();
                         });
                     break;
@@ -389,19 +389,16 @@ function BacklogItemController(
             compared_to,
             backlog_item_id
         )
-            .then(function() {
+            .then(function () {
                 BacklogItemSelectedService.deselectAllBacklogItems();
             })
-            .catch(function() {
+            .catch(function () {
                 BacklogItemSelectedService.reselectBacklogItems();
             });
     }
 
     function getListElement(element) {
-        return angular
-            .element(element)
-            .find(".backlog-item-children-list")
-            .last();
+        return angular.element(element).find(".backlog-item-children-list").last();
     }
 
     function canDropIntoElement(source_element, target_element, dropped_item_element) {
@@ -456,7 +453,7 @@ function BacklogItemController(
             compared_to,
             source_backlog_item_id,
             target_backlog_item_id
-        ).then(function() {
+        ).then(function () {
             BacklogItemCollectionService.refreshBacklogItem(source_backlog_item_id);
             BacklogItemCollectionService.refreshBacklogItem(target_backlog_item_id);
         });

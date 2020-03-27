@@ -18,8 +18,8 @@ function RestErrorService(TlpModalService) {
             controllerAs: "error_modal",
             tlpModalOptions: { keyboard: false },
             resolve: {
-                message: message
-            }
+                message: message,
+            },
         });
     }
 }

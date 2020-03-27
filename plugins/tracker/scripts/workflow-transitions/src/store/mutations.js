@@ -55,8 +55,8 @@ export function saveCurrentTracker(state, tracker) {
         ...tracker,
         workflow: {
             ...tracker.workflow,
-            transitions: presented_transitions
-        }
+            transitions: presented_transitions,
+        },
     };
 }
 
@@ -72,14 +72,14 @@ export function addTransition(state, transition) {
 
     state.current_tracker.workflow.transitions = [
         ...state.current_tracker.workflow.transitions,
-        presented_transition
+        presented_transition,
     ];
 }
 
 function presentTransition(transition) {
     return {
         ...transition,
-        updated: false
+        updated: false,
     };
 }
 
@@ -92,7 +92,7 @@ export function deleteTransition(state, transition_to_delete) {
         return;
     }
     state.current_tracker.workflow.transitions = state.current_tracker.workflow.transitions.filter(
-        transition => transition !== transition_to_delete
+        (transition) => transition !== transition_to_delete
     );
 }
 
@@ -111,7 +111,7 @@ export function hideTransitionUpdated(state, { id }) {
 }
 
 function findTransitionById(state, id) {
-    return state.current_tracker.workflow.transitions.find(element => element.id === id);
+    return state.current_tracker.workflow.transitions.find((element) => element.id === id);
 }
 
 export function createWorkflow(state, tracker) {

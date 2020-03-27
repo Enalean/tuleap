@@ -41,7 +41,7 @@ import CardWithRemainingEffort from "../Card/CardWithRemainingEffort.vue";
 import { isStatusAcceptedByColumn } from "../../../../../helpers/list-value-to-column-mapper";
 
 @Component({
-    components: { DropContainerCell, CardWithRemainingEffort }
+    components: { DropContainerCell, CardWithRemainingEffort },
 })
 export default class SoloSwimlaneCell extends Vue {
     @Prop({ required: true })

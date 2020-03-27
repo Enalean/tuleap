@@ -8,6 +8,6 @@ function ErrorModalController(modal_instance, message) {
     Object.assign(self, {
         reloading: false,
         details: false,
-        message
+        message,
     });
 }

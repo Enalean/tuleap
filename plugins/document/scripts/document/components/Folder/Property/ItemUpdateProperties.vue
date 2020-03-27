@@ -45,12 +45,12 @@ export default {
     components: { LockProperty, ChangelogProperty, VersionTitleProperty, ApprovalUpdateProperties },
     props: {
         version: Object,
-        item: Object
+        item: Object,
     },
     methods: {
         emitApprovalUpdateAction(action) {
             this.$emit("approvalTableActionChange", action);
-        }
-    }
+        },
+    },
 };
 </script>

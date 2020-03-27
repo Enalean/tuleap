@@ -31,7 +31,7 @@ describe("ClipboardContentInformation", () => {
         content_information_factory = () => {
             return shallowMount(ClipboardContentInformation, {
                 localVue,
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
     });
@@ -50,7 +50,7 @@ describe("ClipboardContentInformation", () => {
         store.state.clipboard = {
             item_title: "My item",
             operation_type: CLIPBOARD_OPERATION_COPY,
-            pasting_in_progress: false
+            pasting_in_progress: false,
         };
 
         const wrapper = content_information_factory();

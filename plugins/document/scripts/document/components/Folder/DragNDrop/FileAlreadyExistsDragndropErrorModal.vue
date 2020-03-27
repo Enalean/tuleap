@@ -33,7 +33,7 @@ export default {
     methods: {
         bubbleErrorModalHidden() {
             this.$emit("error-modal-hidden");
-        }
-    }
+        },
+    },
 };
 </script>

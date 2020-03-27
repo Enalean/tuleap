@@ -2,7 +2,7 @@ let error_message = null;
 
 const getErrorMessage = () => error_message;
 const hasError = () => error_message !== null;
-const setError = error => {
+const setError = (error) => {
     error_message = error;
 };
 const resetError = () => {

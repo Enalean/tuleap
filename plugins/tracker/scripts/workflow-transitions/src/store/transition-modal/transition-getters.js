@@ -29,7 +29,7 @@ function post_actions(state) {
         return null;
     }
     return Object.keys(state.post_actions_by_unique_id).map(
-        unique_id => state.post_actions_by_unique_id[unique_id]
+        (unique_id) => state.post_actions_by_unique_id[unique_id]
     );
 }
 
@@ -38,10 +38,10 @@ function set_value_action_fields(state, getters, root_state) {
         return null;
     }
     const field_ids_used_in_post_actions = getters.post_actions.map(({ field_id }) => field_id);
-    const fields = [...root_state.current_tracker.fields].map(field => {
+    const fields = [...root_state.current_tracker.fields].map((field) => {
         return {
             ...field,
-            disabled: field_ids_used_in_post_actions.includes(field.field_id)
+            disabled: field_ids_used_in_post_actions.includes(field.field_id),
         };
     });
     return fields;

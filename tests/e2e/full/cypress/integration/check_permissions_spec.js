@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-describe("Permissions", function() {
+describe("Permissions", function () {
     before(() => {
         cy.clearCookie("__Host-TULEAP_session_hash");
         cy.projectMemberLogin();
@@ -28,13 +28,13 @@ describe("Permissions", function() {
         Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
     });
 
-    it("should raise an error when user try to access to project admin page", function() {
+    it("should raise an error when user try to access to project admin page", function () {
         cy.visit("/project/admin/?group_id=" + this.permission_project_id);
 
         cy.get("[data-test=feedback]").contains("You do not have permission to view this page");
     });
 
-    it("should raise an error when user try to access to docman admin page", function() {
+    it("should raise an error when user try to access to docman admin page", function () {
         cy.visit("/plugins/docman/?group_id=" + this.permission_project_id + "&action=admin");
 
         cy.get("[data-test=feedback]").contains(
@@ -42,7 +42,7 @@ describe("Permissions", function() {
         );
     });
 
-    it("should raise an error when user try to access to wiki admin page", function() {
+    it("should raise an error when user try to access to wiki admin page", function () {
         cy.visit(
             "/wiki/admin/index.php?group_id=" + this.permission_project_id + "&view=wikiPerms"
         );
@@ -52,13 +52,13 @@ describe("Permissions", function() {
         );
     });
 
-    it("should raise an error when user try to access to plugin SVN admin page", function() {
+    it("should raise an error when user try to access to plugin SVN admin page", function () {
         cy.visit("/plugins/svn/?group_id=" + this.permission_project_id + "&action=admin-groups");
 
         cy.get("[data-test=feedback]").contains("Permission Denied");
     });
 
-    it("should raise an error when user try to access to plugin files admin page", function() {
+    it("should raise an error when user try to access to plugin files admin page", function () {
         cy.visit(
             "/file/admin/?group_id=" + this.permission_project_id + "&action=edit-permissions"
         );
@@ -68,22 +68,22 @@ describe("Permissions", function() {
         );
     });
 
-    it("should raise an error when user try to access to plugin Tracker admin page", function() {
+    it("should raise an error when user try to access to plugin Tracker admin page", function () {
         cy.request({
             url: "/plugins/tracker/global-admin/" + this.permission_project_id,
-            failOnStatusCode: false
-        }).then(response => {
+            failOnStatusCode: false,
+        }).then((response) => {
             expect(response.status).to.eq(403);
         });
     });
 
-    it("should raise an error when user try to access to plugin Git admin page", function() {
+    it("should raise an error when user try to access to plugin Git admin page", function () {
         cy.visit("/plugins/git/?group_id=" + this.permission_project_id + "&action=admin");
 
         cy.get("[data-test=git-administration-page]").should("not.exist");
     });
 
-    it("should raise an error when user try to access to Forum admin page", function() {
+    it("should raise an error when user try to access to Forum admin page", function () {
         cy.visit("/forum/admin/?group_id=" + this.permission_project_id);
 
         cy.get("[data-test=feedback]").contains(
@@ -91,7 +91,7 @@ describe("Permissions", function() {
         );
     });
 
-    it("should raise an error when user try to access to List admin page", function() {
+    it("should raise an error when user try to access to List admin page", function () {
         cy.visit("/mail/admin/?group_id=" + this.permission_project_id);
 
         cy.get("[data-test=feedback]").contains(
@@ -99,7 +99,7 @@ describe("Permissions", function() {
         );
     });
 
-    it("should raise an error when user try to access to News admin page", function() {
+    it("should raise an error when user try to access to News admin page", function () {
         cy.visit("/news/admin/?group_id=" + this.permission_project_id);
 
         cy.get("[data-test=feedback]").contains(
@@ -107,7 +107,7 @@ describe("Permissions", function() {
         );
     });
 
-    it("should redirect user to Agiledashboard home page when user try to access to Agiledashboard admin page", function() {
+    it("should redirect user to Agiledashboard home page when user try to access to Agiledashboard admin page", function () {
         cy.visit(
             "/plugins/agiledashboard/?group_id=" + this.permission_project_id + "&action=admin"
         );

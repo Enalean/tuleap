@@ -26,6 +26,6 @@ export const system_service_mixin = {
         },
         can_update_is_used() {
             return this.service.short_name !== ADMIN_SERVICE_SHORTNAME || !this.service.is_used;
-        }
-    }
+        },
+    },
 };

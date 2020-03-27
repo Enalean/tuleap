@@ -25,5 +25,5 @@ export default [
     ["sherwood-green", "ocean-turquoise", "surf-green"],
     ["deep-blue", "lake-placid-blue", "daphne-blue"],
     ["plum-crazy", "ultra-violet", "lilac-purple"],
-    ["panther-pink", "peggy-pink", "flamingo-pink"]
+    ["panther-pink", "peggy-pink", "flamingo-pink"],
 ];

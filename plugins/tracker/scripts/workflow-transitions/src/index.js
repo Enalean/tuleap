@@ -45,9 +45,9 @@ document.addEventListener("DOMContentLoaded", () => {
     Vue.use(Vuex);
     Vue.use(GettextPlugin, {
         translations: {
-            fr: french_translations.messages
+            fr: french_translations.messages,
         },
-        silent: true
+        silent: true,
     });
     Vue.use(VueDOMPurifyHTML);
 
@@ -60,6 +60,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     new RootComponent({
         store,
-        propsData: { trackerId, used_services_names }
+        propsData: { trackerId, used_services_names },
     }).$mount(vue_mount_point);
 });

@@ -22,7 +22,7 @@ import {
     ProjectWithTrackers,
     State,
     Tracker,
-    TrackerToBeCreatedMandatoryData
+    TrackerToBeCreatedMandatoryData,
 } from "./type";
 import { extractNameAndShortnameFromXmlFile } from "../helpers/xml-data-extractor";
 import { getSlugifiedShortname } from "../helpers/shortname-slugifier";
@@ -41,7 +41,7 @@ export function setSelectedTrackerTemplate(state: State, tracker_id: string): vo
     }
 
     if (!tracker) {
-        tracker = state.default_templates.find(tracker => tracker.id === tracker_id);
+        tracker = state.default_templates.find((tracker) => tracker.id === tracker_id);
     }
 
     if (!tracker) {
@@ -79,7 +79,7 @@ function initTrackerToBeCreatedWithSelectedTracker(state: State, selected_tracke
     state.tracker_to_be_created = {
         name,
         shortname,
-        color
+        color,
     };
 }
 
@@ -87,7 +87,7 @@ export function reinitTrackerToBeCreatedData(state: State): void {
     state.tracker_to_be_created = {
         name: "",
         shortname: "",
-        color: state.default_tracker_color
+        color: state.default_tracker_color,
     };
 }
 

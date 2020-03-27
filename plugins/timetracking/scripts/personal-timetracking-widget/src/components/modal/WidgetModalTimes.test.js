@@ -27,7 +27,7 @@ function getWidgetModalTimesInstance(store_options) {
 
     const component_options = {
         localVue,
-        mocks: { $store: store }
+        mocks: { $store: store },
     };
     return shallowMount(WidgetModalTimes, component_options);
 }
@@ -37,8 +37,8 @@ describe("Given a personal timetracking widget modal", () => {
     beforeEach(() => {
         store_options = {
             getters: {
-                current_artifact: { artifact: "artifact" }
-            }
+                current_artifact: { artifact: "artifact" },
+            },
         };
 
         getWidgetModalTimesInstance(store_options);

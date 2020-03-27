@@ -18,7 +18,7 @@
  */
 
 /* global jQuery:readonly */
-(function($) {
+(function ($) {
     let currentRequest = null;
 
     function checkPassword() {
@@ -26,8 +26,8 @@
             currentRequest.abort();
         }
         currentRequest = $.post("/include/check_pw.php", {
-            form_pw: $(this).val()
-        }).done(function(data) {
+            form_pw: $(this).val(),
+        }).done(function (data) {
             if (toggleErrorMessages(data)) {
                 setRobustnessToBad();
             } else {
@@ -39,13 +39,11 @@
 
     function toggleErrorMessages(data) {
         var has_errors = false;
-        window.password_validators.forEach(function(key) {
-            $(".password_validator_msg_" + key).each(function() {
+        window.password_validators.forEach(function (key) {
+            $(".password_validator_msg_" + key).each(function () {
                 if (data.indexOf(key) >= 0) {
                     has_errors = true;
-                    $(this)
-                        .addClass("tlp-text-danger")
-                        .removeClass("tlp-text-success");
+                    $(this).addClass("tlp-text-danger").removeClass("tlp-text-success");
 
                     $(this)
                         .find("> i")
@@ -54,9 +52,7 @@
                         .removeClass("fa-check")
                         .removeClass("password-strategy-good");
                 } else {
-                    $(this)
-                        .addClass("tlp-text-success")
-                        .removeClass("tlp-text-danger");
+                    $(this).addClass("tlp-text-success").removeClass("tlp-text-danger");
 
                     $(this)
                         .find("> i")
@@ -96,29 +92,29 @@
      */
     function debounce(func, wait) {
         let timeout;
-        return function() {
+        return function () {
             const context = this,
                 args = arguments;
             clearTimeout(timeout);
-            timeout = setTimeout(function() {
+            timeout = setTimeout(function () {
                 timeout = null;
                 func.apply(context, args);
             }, wait);
         };
     }
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         setRobustnessToBad();
 
         const debouncedCheckPassword = debounce(checkPassword, 300);
 
         $("#form_pw").on("paste keyup", debouncedCheckPassword);
-        $("#form_pw").on("paste keyup", function() {
+        $("#form_pw").on("paste keyup", function () {
             $(".robustness .fa-times, .robustness .fa-check")
                 .removeClass("fa-times fa-check")
                 .addClass("fa-circle-o-notch fa-spin");
         });
-        $("#form_pw").on("focus", function() {
+        $("#form_pw").on("focus", function () {
             $(".account-security-password-robustness").removeClass(
                 "account-security-password-robustness-hidden"
             );

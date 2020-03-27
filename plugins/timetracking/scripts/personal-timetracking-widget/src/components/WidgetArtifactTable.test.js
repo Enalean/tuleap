@@ -27,7 +27,7 @@ function getWidgetArtifactTableInstance(store_options) {
 
     const component_options = {
         localVue,
-        mocks: { $store: store }
+        mocks: { $store: store },
     };
     return shallowMount(WidgetArtifactTable, component_options);
 }
@@ -39,14 +39,14 @@ describe("Given a personal timetracking widget", () => {
             state: {
                 error_message: "",
                 times: [[{ time: "time" }]],
-                is_loading: false
+                is_loading: false,
             },
             getters: {
                 get_formatted_total_sum: "00:00",
                 has_rest_error: false,
                 can_results_be_displayed: true,
-                can_load_more: false
-            }
+                can_load_more: false,
+            },
         };
 
         getWidgetArtifactTableInstance(store_options);

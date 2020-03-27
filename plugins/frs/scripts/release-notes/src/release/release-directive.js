@@ -11,6 +11,6 @@ function releaseDirective() {
         templateUrl: "release.tpl.html",
         controller: ReleaseController,
         controllerAs: "$ctrl",
-        bindToController: true
+        bindToController: true,
     };
 }

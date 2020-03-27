@@ -38,14 +38,14 @@ export default {
     data() {
         return {
             embedded_file: {},
-            is_loading: false
+            is_loading: false,
         };
     },
     computed: {
         ...mapGetters("error", ["does_document_have_any_error"]),
         has_loaded_without_error() {
             return !this.does_document_have_any_error && !this.is_loading;
-        }
+        },
     },
     async beforeMount() {
         this.is_loading = true;
@@ -68,7 +68,7 @@ export default {
         this.$store.commit("updateCurrentlyPreviewedItem", null);
     },
     methods: {
-        ...mapActions(["loadDocumentWithAscendentHierarchy"])
-    }
+        ...mapActions(["loadDocumentWithAscendentHierarchy"]),
+    },
 };
 </script>

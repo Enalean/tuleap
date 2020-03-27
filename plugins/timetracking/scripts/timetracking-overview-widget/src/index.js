@@ -31,9 +31,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     Vue.use(GetTextPlugin, {
         translations: {
-            fr: french_translations.messages
+            fr: french_translations.messages,
         },
-        silent: true
+        silent: true,
     });
     const Widget = Vue.extend(TimeTrackingOverview);
 
@@ -52,8 +52,8 @@ document.addEventListener("DOMContentLoaded", () => {
             propsData: {
                 reportId: report_id,
                 userId: user_id,
-                areVoidTrackersHidden: are_void_trackers_hidden
-            }
+                areVoidTrackersHidden: are_void_trackers_hidden,
+            },
         }).$mount(widget_element);
     }
 });

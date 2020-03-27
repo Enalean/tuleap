@@ -29,8 +29,8 @@ describe("LockProperty", () => {
             return shallowMount(LockProperty, {
                 localVue,
                 propsData: {
-                    item: { ...item }
-                }
+                    item: { ...item },
+                },
             });
         };
     });
@@ -50,8 +50,8 @@ describe("LockProperty", () => {
                 title: "Item",
                 lock_info: {
                     locked_date: "2019-04-25T16:32:59+02:00",
-                    lock_by: "peraltaj"
-                }
+                    lock_by: "peraltaj",
+                },
             };
             const wrapper = lock_property(item);
 

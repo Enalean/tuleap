@@ -30,11 +30,11 @@ async function getWrapper(column: ColumnDefinition): Promise<Wrapper<ExpandButto
         mocks: {
             $store: createStoreMock({
                 state: {
-                    column: {}
-                } as RootState
-            })
+                    column: {},
+                } as RootState,
+            }),
         },
-        propsData: { column }
+        propsData: { column },
     });
 }
 

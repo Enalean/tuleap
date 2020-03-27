@@ -27,7 +27,7 @@ export async function loadFolderContent(context, folder_id, loading_current_fold
 
         const [folder_content] = await Promise.all([
             getFolderContent(folder_id),
-            loading_current_folder_promise
+            loading_current_folder_promise,
         ]);
 
         context.commit("saveFolderContent", folder_content);

@@ -22,7 +22,7 @@ import { PointsWithDate } from "../../../../../../src/www/scripts/charts-builder
 import { PointsNotNullWithDate } from "../type";
 import {
     PointsNotNullWithDateForGenericBurnup,
-    PointsWithDateForGenericBurnup
+    PointsWithDateForGenericBurnup,
 } from "../../../../../agiledashboard/scripts/burnup-chart/src/type";
 
 export { getDisplayableData, getLastData, getLastGenericBurnupData, getDisplayableDataForBurnup };
@@ -31,7 +31,7 @@ function getDisplayableData(dataset: PointsWithDate[]): PointsNotNullWithDate[] 
     const formatted_data = getFormattedDates(dataset);
     const points_not_null: PointsNotNullWithDate[] = [];
 
-    formatted_data.forEach(point => {
+    formatted_data.forEach((point) => {
         const remaining_effort = point.remaining_effort;
         if (remaining_effort !== null) {
             points_not_null.push({ ...point, remaining_effort });
@@ -65,7 +65,7 @@ function getDisplayableDataForBurnup(
     const formatted_data = getFormattedDates(generic_burnup_data);
     const points_not_null: PointsNotNullWithDateForGenericBurnup[] = [];
 
-    formatted_data.forEach(point => {
+    formatted_data.forEach((point) => {
         const total = point.total;
         const progression = point.progression;
         if (total !== null && progression !== null) {

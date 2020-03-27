@@ -59,17 +59,17 @@ export default {
         GitRepositoryCreate,
         GitBreadcrumbs,
         RepositoryListSpinner,
-        FolderRepositoryList
+        FolderRepositoryList,
     },
     props: {
-        displayMode: String
+        displayMode: String,
     },
     computed: {
-        ...mapGetters(["isFolderDisplayMode"])
+        ...mapGetters(["isFolderDisplayMode"]),
     },
     mounted() {
         this.$store.commit("setDisplayMode", this.displayMode);
         this.$store.dispatch("changeRepositories", PROJECT_KEY);
-    }
+    },
 };
 </script>

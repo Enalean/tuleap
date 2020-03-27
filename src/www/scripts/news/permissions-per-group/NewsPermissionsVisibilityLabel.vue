@@ -32,7 +32,7 @@
 export default {
     name: "NewsPermissionsVisibilityLabel",
     props: {
-        isVisibilityPublic: Boolean
-    }
+        isVisibilityPublic: Boolean,
+    },
 };
 </script>

@@ -59,12 +59,12 @@ export default {
     name: "QuickLookDocumentAdditionalMetadataList",
     components: { QuicklookMetadataDate },
     props: {
-        metadata: Object
+        metadata: Object,
     },
     data() {
         return {
             METADATA_LIST_TYPE: "list",
-            METADATA_DATE_TYPE: "date"
+            METADATA_DATE_TYPE: "date",
         };
     },
     computed: {
@@ -86,12 +86,12 @@ export default {
             }
 
             return this.metadata.value;
-        }
+        },
     },
     methods: {
         isMetadataObsolescenceDate() {
             return this.metadata.short_name === METADATA_OBSOLESCENCE_DATE_SHORT_NAME;
-        }
-    }
+        },
+    },
 };
 </script>

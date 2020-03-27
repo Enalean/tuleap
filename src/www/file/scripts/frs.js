@@ -72,13 +72,13 @@ function build_select_file(number) {
 
     //remove all ftp files aldready selected in the avalaible ftp file list (result in the non_used_ftp_files)
     var non_used_ftp_files = available_ftp_files;
-    used_ftp_files.each(function(num) {
+    used_ftp_files.each(function (num) {
         non_used_ftp_files = non_used_ftp_files.without(num);
     });
 
     //for each non used ftp files, add a corresponding option ligne (used in the select files)
     var builder_node_files = [];
-    non_used_ftp_files.each(function(num) {
+    non_used_ftp_files.each(function (num) {
         if (num != "") {
             builder_node_files.push(Builder.node("option", { value: num }, num));
         }
@@ -86,11 +86,11 @@ function build_select_file(number) {
     var opts = [
         Builder.node("option", { value: "-1" }, choose),
         Builder.node("optgroup", { label: local_file }, [
-            Builder.node("option", { value: "-2" }, browse)
+            Builder.node("option", { value: "-2" }, browse),
         ]),
-        Builder.node("optgroup", { label: scp_ftp_files }, builder_node_files)
+        Builder.node("optgroup", { label: scp_ftp_files }, builder_node_files),
     ];
-    opts.each(function(opt) {
+    opts.each(function (opt) {
         selects[number].appendChild(opt);
     });
     selects[number].options[0].selected = "selected";
@@ -112,7 +112,7 @@ function add_new_file() {
     var image = Builder.node("img", {
         src: "./../images/delete.png",
         onclick: "delete_file('row_" + id + "'," + id + ")",
-        style: "cursor:pointer"
+        style: "cursor:pointer",
     });
 
     row.appendChild(cell_trash);
@@ -127,7 +127,7 @@ function add_new_file() {
     Event.observe(
         select,
         "change",
-        function(evt, current_select_number, id, cell_trash, image) {
+        function (evt, current_select_number, id, cell_trash, image) {
             onselectchange(this, current_select_number, id, cell_trash, image);
         }.bindAsEventListener(select, current_select_number, id, cell_trash, image),
         true
@@ -143,7 +143,7 @@ function add_new_file() {
     var ftp_file = Builder.node("input", {
         type: "hidden",
         id: "ftp_file_" + id,
-        name: "ftp_file[]"
+        name: "ftp_file[]",
     });
     Element.hide(ftp_file);
     cell.appendChild(ftp_file);
@@ -152,7 +152,7 @@ function add_new_file() {
 
     //for each processor, add a corresponding option ligne
     builder_node_processor.push(Builder.node("option", { value: "100" }, choose));
-    processor_id.each(function(id, item) {
+    processor_id.each(function (id, item) {
         builder_node_processor.push(Builder.node("option", { value: id }, processor_name[item]));
     });
 
@@ -165,7 +165,7 @@ function add_new_file() {
 
     //for each type, add a corresponding option ligne
     builder_node_type.push(Builder.node("option", { value: "100" }, choose));
-    type_id.each(function(id, item) {
+    type_id.each(function (id, item) {
         builder_node_type.push(Builder.node("option", { value: id }, type_name[item]));
     });
 
@@ -182,7 +182,7 @@ function add_new_file() {
         type: "text",
         id: "reference_md5_" + id,
         size: 36,
-        name: "reference_md5"
+        name: "reference_md5",
     });
     cell.appendChild(md5sum);
     row.appendChild(cell);
@@ -192,7 +192,7 @@ function add_new_file() {
         id: "comment_" + id,
         cols: 20,
         rows: 1,
-        name: "comment"
+        name: "comment",
     });
     cell.appendChild(comment_cell);
     row.appendChild(cell);
@@ -244,7 +244,7 @@ function add_new_link(event) {
 function onselectchange(select, number, id, cell_trash, image) {
     var h = {};
     if (select.options[select.selectedIndex].value == "-2") {
-        $H(selects).each(function(pair) {
+        $H(selects).each(function (pair) {
             if (pair.key != number) {
                 h[pair.key] = pair.value;
             }
@@ -261,7 +261,7 @@ function onselectchange(select, number, id, cell_trash, image) {
         $("comment_" + id).name = "comment[]";
         cell_trash.appendChild(image);
     } else if (select.options[select.selectedIndex].value != "-1") {
-        $H(selects).each(function(pair) {
+        $H(selects).each(function (pair) {
             if (pair.key != number) {
                 h[pair.key] = pair.value;
             }
@@ -287,7 +287,7 @@ function onselectchange(select, number, id, cell_trash, image) {
         //remove entry from other select boxes
         $H(selects)
             .keys()
-            .each(function(number) {
+            .each(function (number) {
                 build_select_file(number);
             });
     }
@@ -301,7 +301,7 @@ function delete_file(row_id, id) {
         used_ftp_files = used_ftp_files.without($("ftp_file_" + id).value);
         $H(selects)
             .keys()
-            .each(function(number) {
+            .each(function (number) {
                 build_select_file(number);
             });
     }
@@ -330,12 +330,12 @@ function cancel_update_change_log() {
     Element.remove("upload_change_log");
     Element.insert("change_log_title", {
         after:
-            '<TR id="upload_change_log"><TD><input type="file" id="uploaded_change_log" name="uploaded_change_log"  size="30"></TD></TR>'
+            '<TR id="upload_change_log"><TD><input type="file" id="uploaded_change_log" name="uploaded_change_log"  size="30"></TD></TR>',
     });
     Element.hide("upload_change_log");
     Element.insert("uploaded_change_log", {
         after:
-            '<input type="button" id="cancel_change_log" name="cancel_change_log"  size="30" value="cancel" onclick="cancel_update_change_log(); return false;">'
+            '<input type="button" id="cancel_change_log" name="cancel_change_log"  size="30" value="cancel" onclick="cancel_update_change_log(); return false;">',
     });
     Element.hide("cancel_change_log");
 }
@@ -349,11 +349,11 @@ function add_change_log() {
         after:
             '<a id="cl_upload_link" href="#upload_change_log" onclick="show_upload_change_log(); return false;">' +
             upload_text +
-            "</a>"
+            "</a>",
     });
     Element.insert("uploaded_change_log", {
         after:
-            '<input type="button" id="cancel_change_log" name="cancel_change_log"  size="30" value="cancel" onclick="cancel_update_change_log(); return false;">'
+            '<input type="button" id="cancel_change_log" name="cancel_change_log"  size="30" value="cancel" onclick="cancel_update_change_log(); return false;">',
     });
 }
 
@@ -363,7 +363,7 @@ function show_upload_notes() {
     Element.hide("rn_upload_link");
     Element.insert("uploaded_notes", {
         after:
-            '<input type="button" id="cancel_notes" name="cancel_notes"  size="30" value="cancel" onclick="cancel_update_notes(); return false;">'
+            '<input type="button" id="cancel_notes" name="cancel_notes"  size="30" value="cancel" onclick="cancel_update_notes(); return false;">',
     });
     Element.hide("release_notes_area");
 }
@@ -376,12 +376,12 @@ function cancel_update_notes() {
     Element.remove("upload_notes");
     Element.insert("notes_title", {
         after:
-            '<TR id="upload_notes"><TD><input id="uploaded_notes" type="file" name="uploaded_release_notes"  size="30"></TD></TR>'
+            '<TR id="upload_notes"><TD><input id="uploaded_notes" type="file" name="uploaded_release_notes"  size="30"></TD></TR>',
     });
     Element.hide("upload_notes");
     Element.insert("uploaded_notes", {
         after:
-            '<input type="button" id="cancel_notes" name="cancel_notes"  size="30" value="cancel" onclick="cancel_update_notes(); return false;">'
+            '<input type="button" id="cancel_notes" name="cancel_notes"  size="30" value="cancel" onclick="cancel_update_notes(); return false;">',
     });
     Element.hide("cancel_notes");
 }
@@ -398,20 +398,20 @@ function refresh_file_list() {
 
     new Ajax.Request(url, {
         method: "get",
-        onSuccess: function(transport) {
+        onSuccess: function (transport) {
             //eslint-disable-next-line no-eval
             var json = eval("(" + transport.responseText + ")");
             available_ftp_files = json.msg.split(",");
             $H(selects)
                 .keys()
-                .each(function(number) {
+                .each(function (number) {
                     build_select_file(number);
                 });
-        }
+        },
     });
 }
 
-Event.observe(window, "load", function() {
+Event.observe(window, "load", function () {
     //Add new file part
     //Element.hide('row_0');
     Element.remove("row_0");
@@ -423,11 +423,11 @@ Event.observe(window, "load", function() {
             after:
                 '<br/><a href="#refresh_file_list" onclick="refresh_file_list(); return false;">' +
                 refresh_files_list +
-                "<a>"
+                "<a>",
         });
         Element.insert("files", {
             after:
-                '<a id="file_help_link" href="#help" onclick="Element.hide(\'file_help_link\');Element.show( \'files_help\'); return false;"> [?]</a>'
+                '<a id="file_help_link" href="#help" onclick="Element.hide(\'file_help_link\');Element.show( \'files_help\'); return false;"> [?]</a>',
         });
         //Upload files help
         Element.hide("files_help");
@@ -437,7 +437,7 @@ Event.observe(window, "load", function() {
         after:
             '<a href="#add_new_file" onclick="add_new_file(); return false;">' +
             add_file_text +
-            "<a>"
+            "<a>",
     });
 
     //Release Notes
@@ -446,7 +446,7 @@ Event.observe(window, "load", function() {
         after:
             '<a id="rn_upload_link" href="#upload_release_notes" onclick="show_upload_notes();return false;">' +
             upload_text +
-            "</a>"
+            "</a>",
     });
 
     //Change Log
@@ -461,12 +461,12 @@ Event.observe(window, "load", function() {
             before:
                 '<TR id="add_change_log"><TD><a href="#add_change_log" onclick="add_change_log(); return false;">' +
                 add_change_log_text +
-                "</a></TD></TR>"
+                "</a></TD></TR>",
         });
     } else if (release_mode == "edition" && $("text_area_change_log").value != "") {
         Element.insert("uploaded_change_log", {
             after:
-                '<input type="button" id="cancel_change_log" name="cancel_change_log"  size="30" value="cancel" onclick="cancel_update_change_log(); return false;">'
+                '<input type="button" id="cancel_change_log" name="cancel_change_log"  size="30" value="cancel" onclick="cancel_update_change_log(); return false;">',
         });
         Element.hide("cancel_change_log");
         Element.hide("upload_change_log");
@@ -474,7 +474,7 @@ Event.observe(window, "load", function() {
             after:
                 '<a id="cl_upload_link" href="#upload_change_log" onclick="show_upload_change_log(); return false;">' +
                 upload_text +
-                "</a>"
+                "</a>",
         });
     }
     //News
@@ -484,7 +484,7 @@ Event.observe(window, "load", function() {
     Element.hide("tr_private");
 
     if ($("submit_news") != null) {
-        Event.observe($("submit_news"), "click", function() {
+        Event.observe($("submit_news"), "click", function () {
             if ($("submit_news").checked) {
                 Element.show("tr_subject");
                 Element.show("tr_details");
@@ -501,7 +501,7 @@ Event.observe(window, "load", function() {
 
     //Permissions
     if ($("package_id") != null) {
-        Event.observe($("package_id"), "change", function() {
+        Event.observe($("package_id"), "change", function () {
             if (release_mode == "creation") {
                 new Ajax.Updater(
                     "permissions_list",
@@ -525,11 +525,11 @@ Event.observe(window, "load", function() {
             default_permissions_text +
             '<a href="#change_permissions" onclick="view_change_permissions(); return false;">' +
             view_change_text +
-            "</a></TD></TR>"
+            "</a></TD></TR>",
     });
 });
 
-document.observe("dom:loaded", function() {
+document.observe("dom:loaded", function () {
     var create_release_btn = $("create_release");
 
     function updateFeedbackBox(html_msg) {
@@ -553,7 +553,7 @@ document.observe("dom:loaded", function() {
             return;
         }
 
-        total_bytes = input_files.inject(0, function(total_bytes, input_file) {
+        total_bytes = input_files.inject(0, function (total_bytes, input_file) {
             var files = input_file.files,
                 length = files.length;
 
@@ -610,13 +610,13 @@ document.observe("dom:loaded", function() {
         }
         new Ajax.Request(url, {
             method: "get",
-            onSuccess: function(transport, json) {
+            onSuccess: function (transport, json) {
                 if (json.valid) {
                     this.form.submit();
                 } else {
                     updateFeedbackBox(json.msg);
                 }
-            }.bind(create_release_btn)
+            }.bind(create_release_btn),
         });
     }
 

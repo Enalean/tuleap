@@ -9,6 +9,6 @@ function KanbanFilteredUpdatedAlert() {
         controller: KanbanFilteredUpdatedAlertCtrl,
         controllerAs: "kanban_filtered_updated_alert",
         templateUrl: "kanban-filtered-updated-alert.tpl.html",
-        scope: {}
+        scope: {},
     };
 }

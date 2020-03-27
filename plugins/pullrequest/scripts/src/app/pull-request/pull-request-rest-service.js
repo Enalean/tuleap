@@ -8,18 +8,18 @@ function PullRequestRestService($http, $q, ErrorModalService) {
     Object.assign(self, {
         getPullRequest,
         updateStatus,
-        updateTitleAndDescription
+        updateTitleAndDescription,
     });
 
     function getPullRequest(pull_request_id) {
         return $http
             .get("/api/v1/pull_requests/" + pull_request_id, {
-                timeout: 20000
+                timeout: 20000,
             })
-            .then(function(response) {
+            .then(function (response) {
                 return response.data;
             })
-            .catch(function(response) {
+            .catch(function (response) {
                 ErrorModalService.showError(response);
                 return $q.reject(response);
             });
@@ -28,7 +28,7 @@ function PullRequestRestService($http, $q, ErrorModalService) {
     function updateStatus(pull_request_id, status) {
         return $http
             .patch("/api/v1/pull_requests/" + pull_request_id, { status: status })
-            .catch(function(response) {
+            .catch(function (response) {
                 ErrorModalService.showError(response);
                 return $q.reject(response);
             });
@@ -38,9 +38,9 @@ function PullRequestRestService($http, $q, ErrorModalService) {
         return $http
             .patch("/api/v1/pull_requests/" + pull_request_id, {
                 title: new_title,
-                description: new_description
+                description: new_description,
             })
-            .catch(function(response) {
+            .catch(function (response) {
                 ErrorModalService.showError(response);
                 return $q.reject(response);
             });

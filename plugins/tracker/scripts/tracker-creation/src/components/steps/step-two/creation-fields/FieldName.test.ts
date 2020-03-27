@@ -36,11 +36,11 @@ describe("FieldName", () => {
                     state,
                     getters: {
                         can_display_slugify_mode,
-                        is_name_already_used
-                    }
-                })
+                        is_name_already_used,
+                    },
+                }),
             },
-            localVue: await createTrackerCreationLocalVue()
+            localVue: await createTrackerCreationLocalVue(),
         });
     }
 
@@ -48,8 +48,8 @@ describe("FieldName", () => {
         state = {
             tracker_to_be_created: {
                 name: "Kanban in the trees",
-                shortname: "kanban_in_the_trees"
-            }
+                shortname: "kanban_in_the_trees",
+            },
         } as State;
     });
 

@@ -21,24 +21,24 @@ import jQuery from "jquery";
 
 import { initGettext } from "../../../../src/www/scripts/tuleap/gettext/gettext-init";
 
-(async function($): Promise<void> {
+(async function ($): Promise<void> {
     const language = document.body.dataset.userLocale;
     if (language === undefined) {
         throw new Error("Not able to find the user language.");
     }
 
-    const gettext_provider = await initGettext(language, "tuleap-hudson_git", locale =>
+    const gettext_provider = await initGettext(language, "tuleap-hudson_git", (locale) =>
         import(/* webpackChunkName: "git-administration-po-" */ `../po/${locale}.po`)
     );
 
     function confirmDeletionPopover(): void {
-        $(".remove-jenkins-server").each(function() {
+        $(".remove-jenkins-server").each(function () {
             const id = $(this).data("popover-id");
 
             $(this).popover({
                 container: ".git-administration-jenkins-server",
                 title: gettext_provider.gettext("Wait a minute..."),
-                content: $("#" + id).html()
+                content: $("#" + id).html(),
             });
         });
     }
@@ -48,7 +48,7 @@ import { initGettext } from "../../../../src/www/scripts/tuleap/gettext/gettext-
     }
 
     function bindShowPopover(): void {
-        $(".remove-jenkins-server").click(function(event) {
+        $(".remove-jenkins-server").click(function (event) {
             event.preventDefault();
 
             dismissPopover();
@@ -68,8 +68,8 @@ import { initGettext } from "../../../../src/www/scripts/tuleap/gettext/gettext-
             beforeSend: () => {
                 button.classList.remove("fa-play");
                 button.classList.add("fa-circle-o-notch", "fa-spin");
-            }
-        }).done(function(data) {
+            },
+        }).done(function (data) {
             button.classList.add("fa-play");
             button.classList.remove("fa-circle-o-notch", "fa-spin");
 
@@ -97,12 +97,12 @@ import { initGettext } from "../../../../src/www/scripts/tuleap/gettext/gettext-
         }
     }
 
-    $(function(): void {
+    $(function (): void {
         confirmDeletionPopover();
 
         bindShowPopover();
 
-        $("body").on("click", function(event) {
+        $("body").on("click", function (event) {
             if ($(event.target).hasClass("dismiss-popover")) {
                 dismissPopover();
             }

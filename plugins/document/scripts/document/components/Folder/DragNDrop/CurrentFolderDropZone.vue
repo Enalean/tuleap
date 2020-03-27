@@ -50,7 +50,7 @@ import { sprintf } from "sprintf-js";
 export default {
     props: {
         user_can_dragndrop_in_current_folder: Boolean,
-        is_dropzone_highlighted: Boolean
+        is_dropzone_highlighted: Boolean,
     },
     computed: {
         ...mapGetters(["current_folder_title"]),
@@ -65,7 +65,7 @@ export default {
                 {
                     nb_files: this.max_files_dragndrop,
                     folder: this.current_folder_title,
-                    size: prettyKibibytes(this.max_size_upload)
+                    size: prettyKibibytes(this.max_size_upload),
                 }
             );
         },
@@ -80,7 +80,7 @@ export default {
         },
         classes() {
             return this.is_dropzone_highlighted ? this.upload_current_folder_class : "";
-        }
-    }
+        },
+    },
 };
 </script>

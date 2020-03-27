@@ -120,7 +120,7 @@ async function hideProjectBannerMessage(
     // Not dealing with potential errors here, worst case scenario the user will have to close the banner again on the next page
     await tlpPatch(`/api/users/${encodeURIComponent(user_id)}/preferences`, {
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ key: `project_banner_${project_id}`, value: "hidden" })
+        body: JSON.stringify({ key: `project_banner_${project_id}`, value: "hidden" }),
     });
 }
 

@@ -47,7 +47,7 @@ const column = namespace("column");
 const swimlane = namespace("swimlane");
 
 @Component({
-    components: { CollapsedHeaderCell, ExpandedHeaderCell }
+    components: { CollapsedHeaderCell, ExpandedHeaderCell },
 })
 export default class TaskBoardHeader extends Vue {
     @column.State

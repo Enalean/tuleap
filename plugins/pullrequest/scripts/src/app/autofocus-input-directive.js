@@ -9,6 +9,6 @@ function AutoFocusInput($timeout) {
             $timeout(() => {
                 element.focus();
             });
-        }
+        },
     };
 }

@@ -27,7 +27,7 @@ localVue.use(Vuex);
 
 localVue.use(GettextPlugin, {
     translations: {},
-    silent: true
+    silent: true,
 });
 
 export default localVue;

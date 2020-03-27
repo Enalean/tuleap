@@ -24,14 +24,14 @@ export default {
     trackers: [],
     error_message: "",
     selected_tracker: {
-        tracker_id: null
+        tracker_id: null,
     },
     selected_project_id: null,
     dry_run_fields: {
         fields_not_migrated: [],
         fields_partially_migrated: [],
-        fields_migrated: []
+        fields_migrated: [],
     },
     has_processed_dry_run: false,
-    is_processing_move: false
+    is_processing_move: false,
 };

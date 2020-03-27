@@ -23,11 +23,11 @@ import { modal as createModal } from "tlp";
 document.addEventListener("DOMContentLoaded", () => {
     const logs_buttons = document.querySelectorAll(".project-webhook-modal");
 
-    [].forEach.call(logs_buttons, function(button) {
+    [].forEach.call(logs_buttons, function (button) {
         const modal_element = document.getElementById(button.dataset.modalId),
             modal = createModal(modal_element);
 
-        button.addEventListener("click", function() {
+        button.addEventListener("click", function () {
             modal.toggle();
         });
     });

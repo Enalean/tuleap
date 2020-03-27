@@ -53,13 +53,13 @@ export default {
         currentlyUpdatedItemMetadata: {
             type: Object,
             required: true,
-            readonly: true
+            readonly: true,
         },
         value: {
             type: String,
             required: true,
-            readonly: true
-        }
+            readonly: true,
+        },
     },
     computed: {
         custom_metadata_date: {
@@ -68,8 +68,8 @@ export default {
             },
             set(value) {
                 this.$emit("input", value);
-            }
-        }
-    }
+            },
+        },
+    },
 };
 </script>

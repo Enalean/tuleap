@@ -24,9 +24,9 @@
 
 /* global jQuery:readonly */
 
-(function($) {
+(function ($) {
     function init() {
-        $(".tracker_field_permissionsonartifact").each(function(index, element) {
+        $(".tracker_field_permissionsonartifact").each(function (index, element) {
             disablePermissionsFieldIfNeeded(element);
             bindSwitch(element);
         });
@@ -34,31 +34,25 @@
 
     function disablePermissionsFieldIfNeeded(element) {
         if ($("input[type='checkbox']", element).is(":not(:checked)")) {
-            $(element)
-                .siblings("select")
-                .attr("disabled", "disabled");
+            $(element).siblings("select").attr("disabled", "disabled");
         }
     }
 
     function bindSwitch(element) {
-        $("input[type='checkbox']", element).bind("change", function() {
+        $("input[type='checkbox']", element).bind("change", function () {
             togglePermissionsField(element);
         });
     }
 
     function togglePermissionsField(element) {
         if ($("input[type='checkbox']", element).is(":not(:checked)")) {
-            $(element)
-                .siblings("select")
-                .attr("disabled", "disabled");
+            $(element).siblings("select").attr("disabled", "disabled");
         } else {
-            $(element)
-                .siblings("select")
-                .removeAttr("disabled");
+            $(element).siblings("select").removeAttr("disabled");
         }
     }
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         init();
     });
 })(jQuery);

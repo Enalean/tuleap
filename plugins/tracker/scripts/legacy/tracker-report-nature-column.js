@@ -19,9 +19,9 @@
 
 /* global jQuery:readonly codendi:readonly tuleap:readonly */
 
-(function($) {
+(function ($) {
     function initNatureColumnEditor(cog) {
-        $(cog).click(function(evt) {
+        $(cog).click(function (evt) {
             evt.preventDefault();
         });
 
@@ -29,7 +29,7 @@
             container: "body",
             html: true,
             title: codendi.getText("nature_column_editor", "title"),
-            content: getPopoverContent($(cog))
+            content: getPopoverContent($(cog)),
         });
     }
 
@@ -101,22 +101,22 @@
         var form = $(this);
 
         $.get(codendi.tracker.base_url, form.serialize())
-            .done(function() {
+            .done(function () {
                 location.reload();
             })
-            .fail(function() {
+            .fail(function () {
                 $(".popover.in .alert-danger").show(0);
             });
     }
 
-    $(function() {
+    $(function () {
         codendi.tracker.report.table.initNatureColumnEditor = initNatureColumnEditor;
 
-        $(".nature-column-editor").each(function() {
+        $(".nature-column-editor").each(function () {
             initNatureColumnEditor($(this));
         });
 
-        $("body").on("click", function(event) {
+        $("body").on("click", function (event) {
             if (
                 $(event.target).parents(".nature-column-editor").length === 0 &&
                 $(event.target).parents(".popover.in").length === 0
@@ -127,7 +127,7 @@
 
             if ($(event.target).parents(".nature-column-editor").length === 1) {
                 var clicked = $(event.target).parents(".nature-column-editor")[0];
-                $(".nature-column-editor").each(function(index, element) {
+                $(".nature-column-editor").each(function (index, element) {
                     if (element !== clicked) {
                         $(element).popover("hide");
                     }

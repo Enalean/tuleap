@@ -52,12 +52,12 @@ import { mapState } from "vuex";
 export default {
     name: "TimeTrackingOverviewTrackerList",
     computed: {
-        ...mapState(["selected_trackers"])
+        ...mapState(["selected_trackers"]),
     },
     methods: {
         removeTracker(tracker) {
             this.$store.commit("removeSelectedTracker", tracker);
-        }
-    }
+        },
+    },
 };
 </script>

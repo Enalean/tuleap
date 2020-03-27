@@ -22,7 +22,7 @@ BacklogController.$inject = [
     "BacklogItemSelectedService",
     "SharedPropertiesService",
     "NewTuleapArtifactModalService",
-    "ItemAnimatorService"
+    "ItemAnimatorService",
 ];
 
 function BacklogController(
@@ -69,7 +69,7 @@ function BacklogController(
         reorderBacklogItems,
         showAddBacklogItemModal,
         showAddBacklogItemParentModal,
-        soloButtonCanBeDisplayed
+        soloButtonCanBeDisplayed,
     });
 
     function init() {
@@ -90,7 +90,7 @@ function BacklogController(
         $scope.$on("dragularcancel", dragularCancel);
         $scope.$on("dragulardrag", dragularDrag);
 
-        $document.bind("keyup", function(event) {
+        $document.bind("keyup", function (event) {
             var esc_key_code = 27;
 
             if (event.keyCode === esc_key_code) {
@@ -116,7 +116,7 @@ function BacklogController(
 
             BacklogService.loadMilestoneBacklog(initial_milestone);
         } else {
-            MilestoneService.getMilestone(self.milestone_id, self.all_backlog_items).then(function(
+            MilestoneService.getMilestone(self.milestone_id, self.all_backlog_items).then(function (
                 data
             ) {
                 BacklogService.loadMilestoneBacklog(data.results);
@@ -146,7 +146,7 @@ function BacklogController(
                 self.backlog_items.pagination.limit,
                 self.backlog_items.pagination.offset
             )
-            .then(function(total) {
+            .then(function (total) {
                 self.backlog_items.pagination.offset += self.backlog_items.pagination.limit;
                 self.backlog_items.fully_loaded = self.backlog_items.pagination.offset >= total;
             });
@@ -162,7 +162,7 @@ function BacklogController(
             promise = BacklogItemService.getProjectBacklogItems(self.project_id, limit, offset);
         }
 
-        return promise.then(function(data) {
+        return promise.then(function (data) {
             var items = data.results;
             appendBacklogItems(items);
 
@@ -175,7 +175,7 @@ function BacklogController(
             return $q.reject();
         }
 
-        return self.fetchBacklogItems(limit, offset).then(function(total) {
+        return self.fetchBacklogItems(limit, offset).then(function (total) {
             if (offset + limit > total) {
                 self.backlog_items.fully_loaded = true;
             } else {
@@ -192,7 +192,7 @@ function BacklogController(
             .catch(() => {
                 // ignore rejection
             })
-            .finally(function() {
+            .finally(function () {
                 BacklogService.filterItems(self.filter.terms);
             });
     }
@@ -204,7 +204,7 @@ function BacklogController(
     }
 
     function prependItemToBacklog(backlog_item_id) {
-        return prependItemToFilteredBacklog(backlog_item_id).then(new_item => {
+        return prependItemToFilteredBacklog(backlog_item_id).then((new_item) => {
             self.backlog_items.filtered_content.unshift(new_item);
         });
     }
@@ -230,7 +230,7 @@ function BacklogController(
         if (!_.isEmpty(self.backlog_items.content)) {
             compared_to = {
                 direction: "before",
-                item_id: self.backlog_items.content[0].id
+                item_id: self.backlog_items.content[0].id,
             };
         }
 
@@ -305,7 +305,7 @@ function BacklogController(
             revertOnSpill: true,
             nameSpace: "dragular-list",
             accepts: isItemDroppable,
-            moves: isItemDraggable
+            moves: isItemDraggable,
         };
     }
 
@@ -356,7 +356,7 @@ function BacklogController(
         self.fetchAllBacklogItems(
             self.backlog_items.pagination.limit,
             self.backlog_items.pagination.offset
-        ).finally(function() {
+        ).finally(function () {
             compared_to = DroppedService.defineComparedToBeLastItem(
                 self.backlog_items.content,
                 moved_items
@@ -446,11 +446,11 @@ function BacklogController(
                         compared_to,
                         target_milestone_id
                     )
-                        .then(function() {
+                        .then(function () {
                             MilestoneCollectionService.refreshMilestone(target_milestone_id);
                             BacklogItemSelectedService.deselectAllBacklogItems();
                         })
-                        .catch(function() {
+                        .catch(function () {
                             BacklogItemSelectedService.reselectBacklogItems();
                         });
                     break;
@@ -466,10 +466,10 @@ function BacklogController(
             compared_to,
             BacklogService.backlog
         )
-            .then(function() {
+            .then(function () {
                 BacklogItemSelectedService.deselectAllBacklogItems();
             })
-            .catch(function() {
+            .catch(function () {
                 BacklogItemSelectedService.reselectBacklogItems();
             });
     }

@@ -30,7 +30,7 @@ import {
     getPostActions,
     putPostActions,
     deactivateLegacyTransitions,
-    changeWorkflowMode
+    changeWorkflowMode,
 } from "../api/rest-querier.js";
 import { create, createList } from "../support/factories.js";
 
@@ -38,7 +38,7 @@ jest.mock("tlp-fetch");
 
 describe("Rest queries:", () => {
     const json_headers = {
-        "content-type": "application/json"
+        "content-type": "application/json",
     };
 
     describe("for GET actions:", () => {
@@ -90,7 +90,7 @@ describe("Rest queries:", () => {
         beforeEach(() => {
             put = jest.spyOn(tlp_fetch, "put").mockReturnValue(
                 Promise.resolve({
-                    json: () => json_result
+                    json: () => json_result,
                 })
             );
         });
@@ -119,7 +119,7 @@ describe("Rest queries:", () => {
         beforeEach(() => {
             patch = jest.spyOn(tlp_fetch, "patch").mockReturnValue(
                 Promise.resolve({
-                    json: () => json_result
+                    json: () => json_result,
                 })
             );
         });
@@ -187,7 +187,7 @@ describe("Rest queries:", () => {
                 id: 1,
                 authorized_user_group_ids: ["1", "2"],
                 not_empty_field_ids: [3],
-                is_comment_required: true
+                is_comment_required: true,
             };
 
             beforeEach(async () => {
@@ -198,21 +198,21 @@ describe("Rest queries:", () => {
                 expect(patch).toHaveBeenCalledWith("/api/tracker_workflow_transitions/1", {
                     headers: json_headers,
                     body:
-                        '{"authorized_user_group_ids":["1","2"],"not_empty_field_ids":[3],"is_comment_required":true}'
+                        '{"authorized_user_group_ids":["1","2"],"not_empty_field_ids":[3],"is_comment_required":true}',
                 }));
 
             describe("when no authorized_user_group_ids provided", () => {
                 beforeEach(async () => {
                     await patchTransition({
                         ...transition_params,
-                        authorized_user_group_ids: null
+                        authorized_user_group_ids: null,
                     });
                 });
                 it("calls PATCH with empty authorized user groups", () =>
                     expect(patch).toHaveBeenCalledWith(
                         expect.anything(),
                         expect.objectContaining({
-                            body: expect.stringMatching(/"authorized_user_group_ids":\[\]/)
+                            body: expect.stringMatching(/"authorized_user_group_ids":\[\]/),
                         })
                     ));
             });
@@ -221,14 +221,14 @@ describe("Rest queries:", () => {
                 beforeEach(async () => {
                     await patchTransition({
                         ...transition_params,
-                        not_empty_field_ids: null
+                        not_empty_field_ids: null,
                     });
                 });
                 it("calls PATCH with empty field ids", () =>
                     expect(patch).toHaveBeenCalledWith(
                         expect.anything(),
                         expect.objectContaining({
-                            body: expect.stringMatching(/"not_empty_field_ids":\[\]/)
+                            body: expect.stringMatching(/"not_empty_field_ids":\[\]/),
                         })
                     ));
             });
@@ -242,7 +242,7 @@ describe("Rest queries:", () => {
         beforeEach(() => {
             post = jest.spyOn(tlp_fetch, "post").mockReturnValue(
                 Promise.resolve({
-                    json: () => new_transition
+                    json: () => new_transition,
                 })
             );
         });
@@ -256,7 +256,7 @@ describe("Rest queries:", () => {
             it("calls api tracker_workflow_transitions", () => {
                 expect(post).toHaveBeenCalledWith("/api/tracker_workflow_transitions", {
                     headers: json_headers,
-                    body: '{"tracker_id":1,"from_id":2,"to_id":3}'
+                    body: '{"tracker_id":1,"from_id":2,"to_id":3}',
                 });
             });
             it("returns created transition", () => expect(response).toEqual(new_transition));
@@ -269,7 +269,7 @@ describe("Rest queries:", () => {
                 it("send 0 as from_id", () => {
                     expect(post).toHaveBeenCalledWith("/api/tracker_workflow_transitions", {
                         headers: json_headers,
-                        body: '{"tracker_id":1,"from_id":0,"to_id":3}'
+                        body: '{"tracker_id":1,"from_id":0,"to_id":3}',
                     });
                 });
             });

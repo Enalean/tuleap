@@ -27,13 +27,13 @@ describe("Metadata actions", () => {
 
     beforeEach(() => {
         context = {
-            commit: jest.fn()
+            commit: jest.fn(),
         };
 
         global_context = {
             state: {
-                project_id: 102
-            }
+                project_id: 102,
+            },
         };
         getProjectMetadata = jest.spyOn(rest_querier, "getProjectMetadata");
         handleErrors = jest.spyOn(handle_errors, "handleErrors").mockReturnValue(Promise.resolve());
@@ -43,8 +43,8 @@ describe("Metadata actions", () => {
         const metadata = [
             {
                 short_name: "text",
-                type: "text"
-            }
+                type: "text",
+            },
         ];
 
         getProjectMetadata.mockReturnValue(metadata);
@@ -59,9 +59,9 @@ describe("Metadata actions", () => {
             status: 400,
             error_json: {
                 error: {
-                    message: "Something bad happens"
-                }
-            }
+                    message: "Something bad happens",
+                },
+            },
         });
 
         await loadProjectMetadata(context, [{ state: { project_id: 102 } }]);

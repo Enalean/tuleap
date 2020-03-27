@@ -35,7 +35,7 @@ describe("widget finder", () => {
 
             const comment_placeholder = { node: { classList: { contains } } };
             const handle = {
-                widgets: [comment_placeholder]
+                widgets: [comment_placeholder],
             };
 
             const comment_placeholder_widget = getCommentPlaceholderWidget(handle);
@@ -49,7 +49,7 @@ describe("widget finder", () => {
 
             const comment_placeholder = { node: { classList: { contains } } };
             const handle = {
-                widgets: [comment_placeholder]
+                widgets: [comment_placeholder],
             };
 
             const comment_placeholder_widget = getCommentPlaceholderWidget(handle);

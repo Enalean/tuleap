@@ -9,11 +9,11 @@ export default function BacklogItemDetails() {
             moveToTop: "&",
             moveToBottom: "&",
             current_milestone: "=currentMilestone",
-            children_context: "@childrenContext"
+            children_context: "@childrenContext",
         },
         controller: BacklogItemDetailsController,
         controllerAs: "details",
         bindToController: true,
-        templateUrl: "backlog-item-details.tpl.html"
+        templateUrl: "backlog-item-details.tpl.html",
     };
 }

@@ -38,24 +38,24 @@ describe("FrozenFieldsAction", () => {
 
     beforeEach(() => {
         const current_tracker = {
-            fields: [date_field, int_field, float_field, status_field]
+            fields: [date_field, int_field, float_field, status_field],
         };
 
         const store_options = {
             state: {
                 transitionModal: {
                     current_transition: create("transition"),
-                    is_modal_save_running: false
+                    is_modal_save_running: false,
                 },
-                current_tracker: current_tracker
+                current_tracker: current_tracker,
             },
             getters: {
                 "transitionModal/set_value_action_fields": [date_field, int_field, float_field],
                 "transitionModal/post_actions": [],
                 current_workflow_field: status_field,
                 is_workflow_advanced: false,
-                "transitionModal/is_agile_dashboard_used": false
-            }
+                "transitionModal/is_agile_dashboard_used": false,
+            },
         };
 
         store = createStoreMock(store_options);
@@ -64,7 +64,7 @@ describe("FrozenFieldsAction", () => {
             stubs: ["multi-select"],
             mocks: { $store: store },
             propsData: { post_action: create("post_action", "presented") },
-            localVue
+            localVue,
         });
     });
 
@@ -78,7 +78,7 @@ describe("FrozenFieldsAction", () => {
 
     it("disables the option when post-action is already used", () => {
         store.getters["transitionModal/post_actions"] = [
-            create("post_action", { type: "frozen_fields" })
+            create("post_action", { type: "frozen_fields" }),
         ];
 
         expect(wrapper.find("[data-test=freeze_fields]").attributes().disabled).toBeTruthy();

@@ -27,9 +27,11 @@ describe("scroll synchronizer", () => {
             left_code_mirror = buildCodeMirrorSpy();
             right_code_mirror = buildCodeMirrorSpy();
             clearInterval = jest.spyOn(window_helper, "clearInterval");
-            setInterval = jest.spyOn(window_helper, "setInterval").mockImplementation(callback => {
-                timerHandler = callback;
-            });
+            setInterval = jest
+                .spyOn(window_helper, "setInterval")
+                .mockImplementation((callback) => {
+                    timerHandler = callback;
+                });
         });
 
         it("Given two code mirrors, when the left one is scrolling, then the right one will be aligned and the synchronizer state will switch to 1 to let a delay pass", () => {
@@ -98,7 +100,7 @@ function buildCodeMirrorSpy() {
     const fake_code_mirror = {
         on: jest.fn(),
         scrollTo: jest.fn(),
-        getScrollInfo: jest.fn()
+        getScrollInfo: jest.fn(),
     };
     fake_code_mirror.on.mockImplementation((event_name, callback) => {
         fake_code_mirror.triggerScroll = callback;

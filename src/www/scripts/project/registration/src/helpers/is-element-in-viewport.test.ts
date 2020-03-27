@@ -31,7 +31,7 @@ describe("isElementInViewport", () => {
             width: 0,
             x: 0,
             y: 0,
-            toJSON: () => ({})
+            toJSON: () => ({}),
         });
 
         expect(isElementInViewport(document.createElement("div"))).toBe(false);
@@ -48,7 +48,7 @@ describe("isElementInViewport", () => {
             width: 0,
             x: 0,
             y: 0,
-            toJSON: () => ({})
+            toJSON: () => ({}),
         });
 
         expect(isElementInViewport(document.createElement("div"))).toBe(true);

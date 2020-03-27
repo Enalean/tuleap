@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function initializePieCharts() {
         const pie_chart_elements = document.getElementsByClassName("siteadmin-homepage-pie-chart");
 
-        [].forEach.call(pie_chart_elements, function(pie_chart_element) {
+        [].forEach.call(pie_chart_elements, function (pie_chart_element) {
             const pie_chart_element_sizes = getSizes(pie_chart_element);
 
             const pie_chart = new StatisticsPieChart({
@@ -40,12 +40,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 data: JSON.parse(pie_chart_element.dataset.statistics),
                 width: pie_chart_element_sizes.width,
                 height: pie_chart_element_sizes.height,
-                radius: pie_chart_element_sizes.radius
+                radius: pie_chart_element_sizes.radius,
             });
 
             pie_chart.init();
 
-            window.addEventListener("resize", function() {
+            window.addEventListener("resize", function () {
                 const sizes = getSizes(pie_chart_element);
                 pie_chart.redraw(sizes);
             });
@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ".siteadmin-homepage-pie-chart-legend > li"
         );
 
-        [].forEach.call(legend_li_elements, function(li_element) {
+        [].forEach.call(legend_li_elements, function (li_element) {
             const li_width = li_element.getBoundingClientRect().width;
 
             if (li_width > legend_max_width) {
@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        [].forEach.call(legend_li_elements, function(legend_li_element) {
+        [].forEach.call(legend_li_elements, function (legend_li_element) {
             legend_li_element.style.width = legend_max_width + PIE_CHART_LEGEND_MARGIN + "px";
         });
     }

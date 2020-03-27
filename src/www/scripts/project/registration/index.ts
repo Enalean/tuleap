@@ -100,15 +100,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         company_templates,
         default_project_template,
         company_name,
-        can_user_choose_project_visibility
+        can_user_choose_project_visibility,
     };
 
     Vue.use(VueDOMPurifyHTML, {
         namedConfigurations: {
             svg: {
-                USE_PROFILES: { svg: true }
-            }
-        }
+                USE_PROFILES: { svg: true },
+            },
+        },
     });
 
     const AppComponent = Vue.extend(App);
@@ -117,6 +117,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     new AppComponent({
         store,
-        router
+        router,
     }).$mount(vue_mount_point);
 });

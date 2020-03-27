@@ -34,7 +34,7 @@ describe("UploadProgressBar", () => {
             return shallowMount(UploadProgressBar, {
                 localVue,
                 propsData: { ...props },
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
     });
@@ -47,7 +47,7 @@ describe("UploadProgressBar", () => {
             title: "my item title",
             type: "file",
             user_can_write: true,
-            is_uploading_new_version: true
+            is_uploading_new_version: true,
         };
         const wrapper = upload_progress_bar({ item });
 
@@ -63,7 +63,7 @@ describe("UploadProgressBar", () => {
             id: 1,
             title: "my item title",
             type: "file",
-            user_can_write: true
+            user_can_write: true,
         };
 
         const wrapper = upload_progress_bar({ item });
@@ -80,7 +80,7 @@ describe("UploadProgressBar", () => {
             id: 1,
             title: "my item title",
             type: "folder",
-            user_can_write: true
+            user_can_write: true,
         };
         const wrapper = upload_progress_bar({ item });
 

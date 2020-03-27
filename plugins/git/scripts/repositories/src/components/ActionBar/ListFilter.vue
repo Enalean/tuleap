@@ -40,8 +40,8 @@ export default {
             },
             set(value) {
                 this.$store.commit("setFilter", value);
-            }
-        }
-    }
+            },
+        },
+    },
 };
 </script>

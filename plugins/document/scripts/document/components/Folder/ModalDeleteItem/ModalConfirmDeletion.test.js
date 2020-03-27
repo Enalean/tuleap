@@ -36,12 +36,12 @@ describe("ModalConfirmDeletion", () => {
             localVue,
             mocks: { $store: store },
             propsData: {
-                ...props
+                ...props,
             },
             stubs: {
-                "delete-associated-wiki-page-checkbox": `<div data-test="checkbox"></div>`
+                "delete-associated-wiki-page-checkbox": `<div data-test="checkbox"></div>`,
             },
-            router
+            router,
         });
     }
 
@@ -50,17 +50,17 @@ describe("ModalConfirmDeletion", () => {
             routes: [
                 {
                     path: "folder/42",
-                    name: "folder"
-                }
-            ]
+                    name: "folder",
+                },
+            ],
         });
         state = {
             error: {
-                has_modal_error: false
-            }
+                has_modal_error: false,
+            },
         };
         store_options = {
-            state
+            state,
         };
         store = createStoreMock(store_options);
         jest.spyOn(store, "dispatch").mockImplementation();
@@ -68,7 +68,7 @@ describe("ModalConfirmDeletion", () => {
         jest.spyOn(tlp, "modal").mockReturnValue({
             addEventListener: () => {},
             show: () => {},
-            hide: () => {}
+            hide: () => {},
         });
 
         store.getters.is_item_a_wiki = () => false;
@@ -84,9 +84,9 @@ describe("ModalConfirmDeletion", () => {
                 title: "my wiki",
                 wiki_properties: {
                     page_name: "my wiki",
-                    page_id: 123
+                    page_id: 123,
                 },
-                type: "wiki"
+                type: "wiki",
             };
 
             store.getters.is_item_a_wiki = () => true;
@@ -102,10 +102,10 @@ describe("ModalConfirmDeletion", () => {
                             title: "my other wiki",
                             wiki_properties: {
                                 page_name: "my wiki",
-                                page_id: 123
+                                page_id: 123,
                             },
-                            type: "wiki"
-                        }
+                            type: "wiki",
+                        },
                     ];
                 }
                 return [];
@@ -146,7 +146,7 @@ describe("ModalConfirmDeletion", () => {
         const item = {
             id: 42,
             title: "my folder",
-            type: "folder"
+            type: "folder",
         };
 
         store.getters.is_item_a_folder = () => true;
@@ -162,7 +162,7 @@ describe("ModalConfirmDeletion", () => {
         const item = {
             id: 42,
             title: "my folder",
-            type: "folder"
+            type: "folder",
         };
 
         const additional_options = {};
@@ -178,7 +178,7 @@ describe("ModalConfirmDeletion", () => {
         const item = {
             id: 42,
             title: "my folder",
-            type: "folder"
+            type: "folder",
         };
 
         const additional_options = {};

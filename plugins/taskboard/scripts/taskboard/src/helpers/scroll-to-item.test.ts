@@ -70,7 +70,7 @@ describe("scroll to item helper", () => {
 function setCardTopPosition(card: HTMLElement, top: number): void {
     jest.spyOn(card, "getBoundingClientRect").mockImplementation(() => {
         return {
-            top
+            top,
         } as DOMRect;
     });
 }

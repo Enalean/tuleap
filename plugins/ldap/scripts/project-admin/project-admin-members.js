@@ -60,7 +60,7 @@ function initLdapGroupsAutocompleter() {
             button,
             preview,
             display_name,
-            select
+            select,
         },
         getUsersToConfirm
     );
@@ -70,7 +70,7 @@ function initLdapGroupsAutocompleter() {
             ldap_group: chosen_ldap_group,
             group_id: project_id,
             preserve_members: preserve.checked ? 1 : 0,
-            synchronize: synchronize.checked ? 1 : 0
+            synchronize: synchronize.checked ? 1 : 0,
         };
 
         const response = await get(base_url, { params });

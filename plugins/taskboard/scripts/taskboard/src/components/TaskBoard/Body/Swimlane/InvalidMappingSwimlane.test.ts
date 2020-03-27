@@ -33,7 +33,7 @@ async function createWrapper(
     return shallowMount(InvalidMappingSwimlane, {
         localVue: await createTaskboardLocalVue(),
         mocks: { $store: createStoreMock({ state: { column: { columns } } as RootState }) },
-        propsData: { swimlane }
+        propsData: { swimlane },
     });
 }
 
@@ -41,7 +41,7 @@ describe(`InvalidMappingSwimlane`, () => {
     it("displays the parent card in its own cell when status does not map to a column", async () => {
         const columns = [
             { id: 2, label: "To do" } as ColumnDefinition,
-            { id: 3, label: "Done" } as ColumnDefinition
+            { id: 3, label: "Done" } as ColumnDefinition,
         ];
         const swimlane = { card: { id: 43, mapped_list_value: null } } as Swimlane;
 

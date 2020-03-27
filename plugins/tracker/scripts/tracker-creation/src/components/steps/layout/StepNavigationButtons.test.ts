@@ -39,25 +39,25 @@ describe("StepNavigationButtons", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
-                        has_form_been_submitted
+                        has_form_been_submitted,
                     },
                     getters: {
                         is_ready_for_step_2,
-                        is_ready_to_submit
-                    }
-                })
+                        is_ready_to_submit,
+                    },
+                }),
             },
             propsData: {
-                ...props
+                ...props,
             },
             localVue: await createTrackerCreationLocalVue(),
-            router
+            router,
         });
     }
 
     it("Does not display the [<- back] button when there is no previous step", async () => {
         const wrapper = await getWrapper({
-            nextStepName: "step-2"
+            nextStepName: "step-2",
         });
 
         expect(wrapper.find("[data-test=button-next]").exists()).toBe(true);
@@ -66,7 +66,7 @@ describe("StepNavigationButtons", () => {
 
     it("Does not display the [next ->] button when there is no next step, but displays the submit button instead", async () => {
         const wrapper = await getWrapper({
-            previousStepName: "step-1"
+            previousStepName: "step-1",
         });
 
         expect(wrapper.find("[data-test=button-next]").exists()).toBe(false);

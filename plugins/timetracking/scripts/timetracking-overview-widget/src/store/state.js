@@ -22,9 +22,7 @@ const state = {
     report_id: null,
     user_id: null,
     are_void_trackers_hidden: null,
-    start_date: DateTime.local()
-        .minus({ months: 1 })
-        .toISODate(),
+    start_date: DateTime.local().minus({ months: 1 }).toISODate(),
     end_date: DateTime.local().toISODate(),
     error_message: null,
     success_message: null,
@@ -39,7 +37,7 @@ const state = {
     projects: [],
     users: [],
     is_added_tracker: true,
-    selected_user: null
+    selected_user: null,
 };
 
 export default state;

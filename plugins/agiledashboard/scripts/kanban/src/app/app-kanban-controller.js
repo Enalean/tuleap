@@ -22,7 +22,7 @@ KanbanCtrl.$inject = [
     "KanbanFilterValue",
     "TlpModalService",
     "RestErrorService",
-    "FilterTrackerReportService"
+    "FilterTrackerReportService",
 ];
 
 function KanbanCtrl(
@@ -55,7 +55,7 @@ function KanbanCtrl(
         nb_items_at_kanban_init: 0,
         filtered_content: [],
         loading_items: true,
-        fully_loaded: false
+        fully_loaded: false,
     });
     self.archive = Object.assign(kanban.archive, {
         id: "archive",
@@ -63,13 +63,13 @@ function KanbanCtrl(
         nb_items_at_kanban_init: 0,
         filtered_content: [],
         loading_items: true,
-        fully_loaded: false
+        fully_loaded: false,
     });
 
     Object.assign(self, {
         kanban,
         board: {
-            columns: kanban.columns
+            columns: kanban.columns,
         },
         user_prefers_collapsed_cards: true,
         is_report_loading: false,
@@ -100,7 +100,7 @@ function KanbanCtrl(
         displayCardsAndWIPNotUpdated: FilterTrackerReportService.areNotCardsAndWIPUpdated,
         displayWIPNotUpdated: FilterTrackerReportService.isNotWIPUpdated,
         filter: KanbanFilterValue,
-        loading_modal: NewTuleapArtifactModalService.loading
+        loading_modal: NewTuleapArtifactModalService.loading,
     });
 
     function init() {
@@ -110,7 +110,7 @@ function KanbanCtrl(
         loadBacklog(limit, offset);
         loadArchive(limit, offset);
         SocketService.listenNodeJSServer()
-            .then(function() {
+            .then(function () {
                 if (FilterTrackerReportService.isFiltersTrackerReportSelected()) {
                     SocketService.listenKanbanFilteredUpdate();
                 } else {
@@ -135,7 +135,7 @@ function KanbanCtrl(
     }
 
     function initFilter() {
-        angular.element(".kanban-header-search").on("input", function(event) {
+        angular.element(".kanban-header-search").on("input", function (event) {
             self.filter.terms = event.target.value;
             filterCards();
         });
@@ -151,7 +151,7 @@ function KanbanCtrl(
 
         self.backlog.content.forEach(forceIsCollapsed);
         self.archive.content.forEach(forceIsCollapsed);
-        self.board.columns.forEach(function(column) {
+        self.board.columns.forEach(function (column) {
             column.content.forEach(forceIsCollapsed);
         });
 
@@ -174,9 +174,7 @@ function KanbanCtrl(
             filterArchiveCards();
         }
 
-        _(self.board.columns)
-            .filter("is_open")
-            .forEach(filterColumnCards);
+        _(self.board.columns).filter("is_open").forEach(filterColumnCards);
 
         reflowKustomScrollBars();
     }
@@ -313,7 +311,7 @@ function KanbanCtrl(
         self.is_edit_loading = true;
         resetError();
         $q.when(import(/* webpackChunkName: "edit-modal" */ "./edit-kanban/edit-kanban.js"))
-            .then(module => {
+            .then((module) => {
                 const { default: controller } = module;
 
                 TlpModalService.open({
@@ -321,8 +319,8 @@ function KanbanCtrl(
                     controller,
                     controllerAs: "edit_modal",
                     resolve: {
-                        rebuild_scrollbars: reflowKustomScrollBars
-                    }
+                        rebuild_scrollbars: reflowKustomScrollBars,
+                    },
                 });
             })
             .catch(() => {
@@ -341,13 +339,13 @@ function KanbanCtrl(
         self.is_report_loading = true;
         resetError();
         $q.when(import(/* webpackChunkName: "reports-modal" */ "./reports-modal/reports-modal.js"))
-            .then(module => {
+            .then((module) => {
                 const { default: controller } = module;
 
                 TlpModalService.open({
                     templateUrl: "reports-modal.tpl.html",
                     controller,
-                    controllerAs: "reports_modal"
+                    controllerAs: "reports_modal",
                 });
             })
             .catch(() => {
@@ -363,13 +361,13 @@ function KanbanCtrl(
     }
 
     function loadColumns() {
-        kanban.columns.forEach(function(column) {
+        kanban.columns.forEach(function (column) {
             ColumnCollectionService.augmentColumn(column);
 
             if (column.is_open) {
                 loadColumnContent(column, limit, offset);
             } else {
-                KanbanService.getColumnContentSize(kanban.id, column.id).then(function(size) {
+                KanbanService.getColumnContentSize(kanban.id, column.id).then(function (size) {
                     column.loading_items = false;
                     column.nb_items_at_kanban_init = size;
                 });
@@ -380,7 +378,7 @@ function KanbanCtrl(
     function loadColumnContent(column, limit, offset) {
         column.loading_items = true;
 
-        return KanbanService.getItems(kanban.id, column.id, limit, offset).then(function(data) {
+        return KanbanService.getItems(kanban.id, column.id, limit, offset).then(function (data) {
             column.content = column.content.concat(data.results);
 
             if (column.is_open) {
@@ -402,7 +400,7 @@ function KanbanCtrl(
         if (self.backlog.is_open) {
             loadBacklogContent(limit, offset);
         } else {
-            KanbanService.getBacklogSize(kanban.id).then(function(size) {
+            KanbanService.getBacklogSize(kanban.id).then(function (size) {
                 self.backlog.loading_items = false;
                 self.backlog.nb_items_at_kanban_init = size;
             });
@@ -412,7 +410,7 @@ function KanbanCtrl(
     function loadBacklogContent(limit, offset) {
         self.backlog.loading_items = true;
 
-        return KanbanService.getBacklog(kanban.id, limit, offset).then(function(data) {
+        return KanbanService.getBacklog(kanban.id, limit, offset).then(function (data) {
             self.backlog.content = self.backlog.content.concat(data.results);
 
             if (self.backlog.is_open) {
@@ -434,7 +432,7 @@ function KanbanCtrl(
         if (self.archive.is_open) {
             loadArchiveContent(limit, offset);
         } else {
-            KanbanService.getArchiveSize(kanban.id).then(function(size) {
+            KanbanService.getArchiveSize(kanban.id).then(function (size) {
                 self.archive.loading_items = false;
                 self.archive.nb_items_at_kanban_init = size;
             });
@@ -444,7 +442,7 @@ function KanbanCtrl(
     function loadArchiveContent(limit, offset) {
         self.archive.loading_items = true;
 
-        return KanbanService.getArchive(kanban.id, limit, offset).then(function(data) {
+        return KanbanService.getArchive(kanban.id, limit, offset).then(function (data) {
             self.archive.content = self.archive.content.concat(data.results);
 
             if (self.archive.is_open) {
@@ -479,13 +477,13 @@ function KanbanCtrl(
         var item = {
             label: label,
             updating: true,
-            is_collapsed: SharedPropertiesService.doesUserPrefersCompactCards()
+            is_collapsed: SharedPropertiesService.doesUserPrefersCompactCards(),
         };
 
         self.backlog.content.push(item);
         self.backlog.filtered_content.push(item);
 
-        KanbanItemRestService.createItemInBacklog(kanban.id, item.label).then(function(response) {
+        KanbanItemRestService.createItemInBacklog(kanban.id, item.label).then(function (response) {
             item.updating = false;
             _.extend(item, response.data);
 
@@ -497,18 +495,21 @@ function KanbanCtrl(
         var item = {
             label: label,
             updating: true,
-            is_collapsed: SharedPropertiesService.doesUserPrefersCompactCards()
+            is_collapsed: SharedPropertiesService.doesUserPrefersCompactCards(),
         };
 
         column.content.push(item);
         column.filtered_content.push(item);
 
-        KanbanItemRestService.createItem(kanban.id, column.id, item.label).then(function(response) {
+        KanbanItemRestService.createItem(kanban.id, column.id, item.label).then(function (
+            response
+        ) {
             item.updating = false;
             _.extend(item, response.data);
 
             reflowKustomScrollBars();
-        }, reload);
+        },
+        reload);
     }
 
     function showEditModal($event, item) {
@@ -517,10 +518,10 @@ function KanbanCtrl(
         if ($event.which === when_left_mouse_click) {
             $event.preventDefault();
 
-            var callback = function(artifact_id) {
+            var callback = function (artifact_id) {
                 item.updating = true;
 
-                return KanbanItemRestService.getItem(artifact_id).then(function(data) {
+                return KanbanItemRestService.getItem(artifact_id).then(function (data) {
                     updateItemMoveAtTheEnd(item, data);
                 });
             };
@@ -562,7 +563,7 @@ function KanbanCtrl(
             item.id,
             compared_to,
             item.in_column
-        ).then(function() {
+        ).then(function () {
             item.updating = false;
             KanbanColumnService.moveItem(item, source_column, destination_column, compared_to);
         });

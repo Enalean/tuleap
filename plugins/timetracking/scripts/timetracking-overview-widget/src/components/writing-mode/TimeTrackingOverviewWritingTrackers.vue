@@ -72,7 +72,7 @@ export default {
     components: { TimeTrackingOverviewProjectOption, TimeTrackingOverviewTrackersOptions },
     data() {
         return {
-            selected_tracker: null
+            selected_tracker: null,
         };
     },
     computed: {
@@ -88,7 +88,7 @@ export default {
         },
         is_tracker_available() {
             return this.trackers.length > 0 && !this.is_loading_tracker;
-        }
+        },
     },
     methods: {
         trackerSelected(value) {
@@ -96,7 +96,7 @@ export default {
         },
         addTracker() {
             this.$store.commit("addSelectedTrackers", this.selected_tracker);
-        }
-    }
+        },
+    },
 };
 </script>

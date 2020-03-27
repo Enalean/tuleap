@@ -23,15 +23,15 @@ var tuleap = tuleap || {};
 tuleap.tracker = tuleap.tracker || {};
 tuleap.textarea = tuleap.textarea || {};
 
-(function($) {
+(function ($) {
     tuleap.tracker.artifactModalInPlace = {
-        init: function() {
+        init: function () {
             var self = this;
 
-            $("a.backlog-item-link").each(function() {
+            $("a.backlog-item-link").each(function () {
                 $(this)
                     .off()
-                    .on("click", function(event) {
+                    .on("click", function (event) {
                         event.preventDefault();
 
                         var artifact_id = $(this).attr("data-artifact-id");
@@ -39,10 +39,10 @@ tuleap.textarea = tuleap.textarea || {};
                     });
             });
 
-            $("a.create-item-link").each(function() {
+            $("a.create-item-link").each(function () {
                 $(this)
                     .off()
-                    .on("click", function(event) {
+                    .on("click", function (event) {
                         event.preventDefault();
 
                         var tracker_id = $(this).attr("data-tracker-id");
@@ -52,11 +52,11 @@ tuleap.textarea = tuleap.textarea || {};
             });
         },
 
-        defaultCallback: function() {
+        defaultCallback: function () {
             window.location.reload();
         },
 
-        enableRichTextArea: function(element) {
+        enableRichTextArea: function (element) {
             var html_id = element.id,
                 id = html_id.match(/_(\d+)$/),
                 htmlFormat = false,
@@ -77,12 +77,12 @@ tuleap.textarea = tuleap.textarea || {};
                     name: name,
                     htmlFormat: htmlFormat,
                     no_resize: true,
-                    resize_enabled: false
+                    resize_enabled: false,
                 });
             }
         },
 
-        displayAutocomputed: function(element) {
+        displayAutocomputed: function (element) {
             element.find(".tracker_formelement_label").hide();
             element.find(".tracker_formelement_edit").show();
             element.find(".auto-computed").show();
@@ -90,7 +90,7 @@ tuleap.textarea = tuleap.textarea || {};
             element.removeClass("in-edition");
         },
 
-        displayInEdition: function(element) {
+        displayInEdition: function (element) {
             element.find(".tracker_formelement_edit").hide();
             element.find(".tracker_formelement_label").show();
             element.find(".auto-computed").hide();
@@ -98,7 +98,7 @@ tuleap.textarea = tuleap.textarea || {};
             element.addClass("in-edition");
         },
 
-        switchValueToManualMode: function(field_id) {
+        switchValueToManualMode: function (field_id) {
             var field_computed_is_autocomputed = document.getElementsByName(
                 "artifact[" + field_id + "][is_autocomputed]"
             );
@@ -110,7 +110,7 @@ tuleap.textarea = tuleap.textarea || {};
             }
         },
 
-        switchValueToAutoComputedMode: function(field_id) {
+        switchValueToAutoComputedMode: function (field_id) {
             var field_computed_manual_value = document.getElementsByName(
                 "artifact[" + field_id + "][manual_value]"
             );
@@ -126,7 +126,7 @@ tuleap.textarea = tuleap.textarea || {};
             }
         },
 
-        loadCreateArtifactModal: function(tracker_id, artifact_link_id, callback) {
+        loadCreateArtifactModal: function (tracker_id, artifact_link_id, callback) {
             var self = this;
 
             if (typeof callback === "undefined") {
@@ -141,23 +141,21 @@ tuleap.textarea = tuleap.textarea || {};
                     "&artifact-link-id=" +
                     artifact_link_id +
                     "&func=get-create-in-place",
-                beforeSend: tuleap.modal.showLoad
+                beforeSend: tuleap.modal.showLoad,
             })
-                .done(function(data) {
+                .done(function (data) {
                     tuleap.modal.hideLoad();
                     self.showArtifactCreationForm(data, tracker_id, artifact_link_id, callback);
                     tuleap.tracker.runTrackerFieldDependencies();
 
-                    $(".tuleap-modal-main-panel form textarea").each(function() {
+                    $(".tuleap-modal-main-panel form textarea").each(function () {
                         var element = $(this).get(0); //transform to prototype
                         self.enableRichTextArea(element);
                     });
 
-                    $(".tracker_artifact_field-computed").each(function() {
+                    $(".tracker_artifact_field-computed").each(function () {
                         var $element = $(this);
-                        var $field_id = $(this)
-                            .find(".add-field")
-                            .data("field-id");
+                        var $field_id = $(this).find(".add-field").data("field-id");
 
                         if ($element.hasClass("with-default-value")) {
                             self.displayInEdition($element);
@@ -165,25 +163,25 @@ tuleap.textarea = tuleap.textarea || {};
                             self.displayAutocomputed($element);
                         }
 
-                        $element.find(".tracker_formelement_edit").on("click", function() {
+                        $element.find(".tracker_formelement_edit").on("click", function () {
                             self.displayInEdition($element);
                             $element.off("click");
                             self.switchValueToManualMode($field_id);
                         });
 
-                        $element.find(".auto-compute").on("click", function() {
+                        $element.find(".auto-compute").on("click", function () {
                             self.displayAutocomputed($element);
                             self.switchValueToAutoComputedMode($field_id);
                         });
                     });
                 })
-                .fail(function() {
+                .fail(function () {
                     tuleap.modal.hideLoad();
                     codendi.feedback.log("error", codendi.locales.tracker_modal_errors.bad_request);
                 });
         },
 
-        loadEditArtifactModal: function(artifact_id, update_callback, load_callback, data) {
+        loadEditArtifactModal: function (artifact_id, update_callback, load_callback, data) {
             var self = this;
 
             if (typeof update_callback === "undefined") {
@@ -194,9 +192,9 @@ tuleap.textarea = tuleap.textarea || {};
                 url: codendi.tracker.base_url + "?aid=" + artifact_id + "&func=get-edit-in-place",
                 beforeSend: tuleap.modal.showLoad,
                 data: data,
-                method: "POST"
+                method: "POST",
             })
-                .done(function(data) {
+                .done(function (data) {
                     tuleap.modal.hideLoad();
                     self.showArtifactEditForm(data, artifact_id, update_callback);
                     tuleap.tracker.runTrackerFieldDependencies();
@@ -204,7 +202,7 @@ tuleap.textarea = tuleap.textarea || {};
                     var modalLoadedEvent = new Event("EditModalLoaded");
                     document.dispatchEvent(modalLoadedEvent);
 
-                    $(".tuleap-modal-main-panel form textarea").each(function() {
+                    $(".tuleap-modal-main-panel form textarea").each(function () {
                         var element = $(this).get(0); //transform to prototype
                         self.enableRichTextArea(element);
 
@@ -213,11 +211,9 @@ tuleap.textarea = tuleap.textarea || {};
                         }
                     });
 
-                    $(".tracker_artifact_field").each(function() {
+                    $(".tracker_artifact_field").each(function () {
                         var $element = $(this);
-                        var $field_id = $(this)
-                            .find(".add-field")
-                            .data("field-id");
+                        var $field_id = $(this).find(".add-field").data("field-id");
                         var field_computed_manual_value = document.getElementsByName(
                             "artifact[" + $field_id + "][manual_value]"
                         );
@@ -236,25 +232,25 @@ tuleap.textarea = tuleap.textarea || {};
                             }
                         }
 
-                        $element.find(".tracker_formelement_edit").on("click", function() {
+                        $element.find(".tracker_formelement_edit").on("click", function () {
                             self.displayInEdition($element);
                             $element.off("click");
                             self.switchValueToManualMode($field_id);
                         });
 
-                        $element.find(".auto-compute").on("click", function() {
+                        $element.find(".auto-compute").on("click", function () {
                             self.displayAutocomputed($element);
                             self.switchValueToAutoComputedMode($field_id);
                         });
                     });
                 })
-                .fail(function() {
+                .fail(function () {
                     tuleap.modal.hideLoad();
                     codendi.feedback.log("error", codendi.locales.tracker_modal_errors.bad_request);
                 });
         },
 
-        initModalInteraction: function(modal) {
+        initModalInteraction: function (modal) {
             const tuleap_modal = modal.getDOMElement();
             codendi.Tooltip.load(tuleap_modal, true);
             codendi.Toggler.init(tuleap_modal);
@@ -265,19 +261,19 @@ tuleap.textarea = tuleap.textarea || {};
             );
         },
 
-        beforeSubmit: function() {
+        beforeSubmit: function () {
             $("#tuleap-modal-submit")
                 .val($("#tuleap-modal-submit").attr("data-loading-text"))
                 .attr("disabled", true);
         },
 
-        afterSubmit: function() {
+        afterSubmit: function () {
             $("#tuleap-modal-submit")
                 .val($("#tuleap-modal-submit").attr("data-normal-text"))
                 .attr("disabled", false);
         },
 
-        submitDone: function(modal, callback) {
+        submitDone: function (modal, callback) {
             this.destroyRichTextAreaInstances();
             modal.closeModal();
             if (callback == this.defaultCallback) {
@@ -286,22 +282,22 @@ tuleap.textarea = tuleap.textarea || {};
             callback();
         },
 
-        showArtifactCreationForm: function(form_html, tracker_id, artifact_link_id, callback) {
+        showArtifactCreationForm: function (form_html, tracker_id, artifact_link_id, callback) {
             var self = this,
                 modal;
 
             $("body").append(form_html);
 
             modal = tuleap.modal.init({
-                beforeClose: function() {
+                beforeClose: function () {
                     self.destroyRichTextAreaInstances();
                     $(".artifact-event-popup").remove();
-                }
+                },
             });
 
             self.initModalInteraction(modal);
 
-            $("#tuleap-modal-submit").click(function() {
+            $("#tuleap-modal-submit").click(function () {
                 self.updateRichTextAreas();
                 $("#artifact-form-errors").hide();
 
@@ -314,18 +310,18 @@ tuleap.textarea = tuleap.textarea || {};
                         "&func=submit-artifact-in-place",
                     type: "post",
                     data: $(".tuleap-modal-main-panel form").serialize(),
-                    beforeSend: self.beforeSubmit
+                    beforeSend: self.beforeSubmit,
                 })
-                    .done(function() {
+                    .done(function () {
                         self.submitDone(modal, callback);
                     })
-                    .fail(function(response) {
+                    .fail(function (response) {
                         var data = JSON.parse(response.responseText);
 
                         self.afterSubmit();
 
                         $("#artifact-form-errors h5").html(data.message);
-                        $.each(data.errors, function() {
+                        $.each(data.errors, function () {
                             $("#artifact-form-errors ul")
                                 .html("")
                                 .append("<li>" + this + "</li>");
@@ -339,22 +335,22 @@ tuleap.textarea = tuleap.textarea || {};
             });
         },
 
-        showArtifactEditForm: function(form_html, artifact_id, callback) {
+        showArtifactEditForm: function (form_html, artifact_id, callback) {
             var self = this,
                 modal;
 
             $("body").append(form_html);
 
             modal = tuleap.modal.init({
-                beforeClose: function() {
+                beforeClose: function () {
                     self.destroyRichTextAreaInstances();
                     $(".artifact-event-popup").remove();
-                }
+                },
             });
 
             self.initModalInteraction(modal);
 
-            $("#tuleap-modal-submit").click(function(event) {
+            $("#tuleap-modal-submit").click(function (event) {
                 self.updateRichTextAreas();
 
                 if (!self.isArtifactSubmittable(event)) {
@@ -367,12 +363,12 @@ tuleap.textarea = tuleap.textarea || {};
                     url: "/plugins/tracker/?aid=" + artifact_id + "&func=update-in-place",
                     type: "post",
                     data: $(".tuleap-modal-main-panel form").serialize(),
-                    beforeSend: self.beforeSubmit
+                    beforeSend: self.beforeSubmit,
                 })
-                    .done(function() {
+                    .done(function () {
                         self.submitDone(modal, callback);
                     })
-                    .fail(function(response) {
+                    .fail(function (response) {
                         self.showSubmitFailFeedback(response.responseText);
                     });
 
@@ -380,23 +376,23 @@ tuleap.textarea = tuleap.textarea || {};
             });
         },
 
-        isArtifactSubmittable: function(event) {
+        isArtifactSubmittable: function (event) {
             return tuleap.trackers.submissionKeeper.isArtifactSubmittable(event);
         },
 
-        updateRichTextAreas: function() {
+        updateRichTextAreas: function () {
             for (let instance in CKEDITOR.instances) {
                 CKEDITOR.instances[instance].updateElement();
             }
         },
 
-        destroyRichTextAreaInstances: function() {
+        destroyRichTextAreaInstances: function () {
             for (let instance in CKEDITOR.instances) {
                 CKEDITOR.instances[instance].destroy();
             }
         },
 
-        showSubmitFailFeedback: function(responseText) {
+        showSubmitFailFeedback: function (responseText) {
             var data = JSON.parse(responseText);
 
             this.afterSubmit();
@@ -404,7 +400,7 @@ tuleap.textarea = tuleap.textarea || {};
             $("#artifact-form-errors h5").html(data.message);
 
             if (data.errors) {
-                $.each(data.errors, function() {
+                $.each(data.errors, function () {
                     $("#artifact-form-errors ul")
                         .html("")
                         .append("<li>" + this + "</li>");
@@ -413,10 +409,10 @@ tuleap.textarea = tuleap.textarea || {};
 
             $(".tuleap-modal-main-panel .tuleap-modal-content").scrollTop(0);
             $("#artifact-form-errors").show();
-        }
+        },
     };
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         tuleap.tracker.artifactModalInPlace.init();
     });
 })(jQuery);

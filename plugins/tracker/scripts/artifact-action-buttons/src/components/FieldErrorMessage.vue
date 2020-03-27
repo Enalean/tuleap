@@ -39,7 +39,7 @@ export default {
     name: "FieldErrorMessage",
     props: {
         fields: Array,
-        type: String
+        type: String,
     },
     data() {
         return { is_minimal_display: true };
@@ -56,7 +56,7 @@ export default {
                 "btn btn-link move-artifact-display-more-field move-artifact-display-more-field-" +
                 this.type
             );
-        }
-    }
+        },
+    },
 };
 </script>

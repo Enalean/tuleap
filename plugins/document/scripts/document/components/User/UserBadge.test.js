@@ -28,7 +28,7 @@ describe("UserBadge", () => {
         user_badge_factory = (props = {}) => {
             return shallowMount(UserBadge, {
                 localVue,
-                propsData: { ...props }
+                propsData: { ...props },
             });
         };
     });
@@ -41,8 +41,8 @@ describe("UserBadge", () => {
                 id: 1,
                 has_avatar: true,
                 user_url: "https://example.com/avatar",
-                is_anonymous: false
-            }
+                is_anonymous: false,
+            },
         });
 
         expect(wrapper.find("[data-test=document-user-avatar]").exists()).toBeTruthy();
@@ -56,8 +56,8 @@ describe("UserBadge", () => {
                 id: 1,
                 has_avatar: false,
                 user_url: "https://example.com/avatar",
-                is_anonymous: false
-            }
+                is_anonymous: false,
+            },
         });
 
         expect(wrapper.find("[data-test=document-user-avatar]").exists()).toBeFalsy();

@@ -13,7 +13,7 @@ function AddToDashboardController($element, SharedPropertiesService) {
         report_id: SharedPropertiesService.getSelectedTrackerReportId(),
 
         showProjectDashboards,
-        showDashboardButton
+        showDashboardButton,
     });
 
     function init() {

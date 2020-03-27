@@ -57,7 +57,7 @@ export async function extractNameAndShortnameFromXmlFile(
     return {
         name: name.textContent,
         shortname: shortname.textContent,
-        color: tlp_color.textContent
+        color: tlp_color.textContent,
     };
 }
 

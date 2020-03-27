@@ -41,10 +41,10 @@ class Dropdown {
         this.is_shown = false;
         this.keyboard = keyboard;
         this.shown_event = new CustomEvent(EVENT_TLP_DROPDOWN_SHOWN, {
-            detail: { target: this.dropdown_menu }
+            detail: { target: this.dropdown_menu },
         });
         this.hidden_event = new CustomEvent(EVENT_TLP_DROPDOWN_HIDDEN, {
-            detail: { target: this.dropdown_menu }
+            detail: { target: this.dropdown_menu },
         });
         this.event_listeners = [];
 
@@ -93,14 +93,14 @@ class Dropdown {
     }
 
     listenOpenEvents() {
-        this.trigger.addEventListener("click", event => {
+        this.trigger.addEventListener("click", (event) => {
             event.preventDefault();
             this.toggle();
         });
     }
 
     listenCloseEvents() {
-        document.addEventListener("click", event => {
+        document.addEventListener("click", (event) => {
             if (
                 this.is_shown &&
                 !findClosestElement(event.target, this.dropdown_menu) &&
@@ -111,7 +111,7 @@ class Dropdown {
         });
 
         if (this.keyboard) {
-            document.addEventListener("keyup", event => {
+            document.addEventListener("keyup", (event) => {
                 if (event.keyCode !== ESCAPE_CODE) {
                     return;
                 }

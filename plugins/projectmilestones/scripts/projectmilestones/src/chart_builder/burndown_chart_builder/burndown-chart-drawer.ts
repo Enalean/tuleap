@@ -27,12 +27,12 @@ import { BurndownData } from "../../type";
 import {
     ChartPropsWhithoutTooltip,
     PropertiesBuilderGraph,
-    XYScale
+    XYScale,
 } from "../../../../../../../src/www/scripts/charts-builders/type";
 import { addScaleLines } from "../chart-scale-drawer";
 import {
     drawCurve,
-    drawIdealLine
+    drawIdealLine,
 } from "../../../../../../../src/www/scripts/charts-builders/chart-lines-service";
 import { buildChartLayout } from "../../../../../../../src/www/scripts/charts-builders/chart-layout-builder";
 import { TimeScaleLabelsFormatter } from "../../../../../../../src/www/scripts/charts-builders/time-scale-labels-formatter";
@@ -58,7 +58,7 @@ function createBurndownChart(
     const properties: PropertiesBuilderGraph = {
         ...chart_props,
         x_axis_tick_values,
-        y_axis_maximum
+        y_axis_maximum,
     };
 
     const { x_scale, y_scale }: XYScale = buildGraphScales(properties);
@@ -90,19 +90,15 @@ function createBurndownChart(
             { x_scale, y_scale },
             { line_start: first_ideal_line_point, line_end: 0 }
         );
-        select(chart_container)
-            .selectAll("circle")
-            .remove();
-        select(chart_container)
-            .selectAll(".chart-y-axis > .tick > line")
-            .remove();
+        select(chart_container).selectAll("circle").remove();
+        select(chart_container).selectAll(".chart-y-axis > .tick > line").remove();
 
         addScaleLines(svg_burndown, coordinates_scale_lines);
 
         new TimeScaleLabelsFormatter({
             layout: svg_burndown,
             first_date: x_axis_tick_values[0],
-            last_date: x_axis_tick_values[x_axis_tick_values.length - 1]
+            last_date: x_axis_tick_values[x_axis_tick_values.length - 1],
         }).formatTicks();
 
         removeAllLabelsOverlapsOthersLabels(svg_burndown);

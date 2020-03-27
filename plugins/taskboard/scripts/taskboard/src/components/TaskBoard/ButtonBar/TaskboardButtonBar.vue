@@ -44,7 +44,7 @@ import OpenClosedSwitcher from "./OpenClosedSwitcher.vue";
 const fullscreen = namespace("fullscreen");
 
 @Component({
-    components: { SwitchToFullscreen, OpenClosedSwitcher }
+    components: { SwitchToFullscreen, OpenClosedSwitcher },
 })
 export default class TaskboardButtonBar extends Vue {
     @State

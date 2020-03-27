@@ -36,7 +36,7 @@ export async function loadSwimlanes(
     try {
         await recursiveGet(`/api/v1/taskboard/${context.rootState.milestone_id}/cards`, {
             params: {
-                limit: 100
+                limit: 100,
             },
             getCollectionCallback: (collection: Card[]): Swimlane[] => {
                 const swimlanes = collection.map(
@@ -45,19 +45,19 @@ export async function loadSwimlanes(
                         return {
                             card,
                             children_cards: [],
-                            is_loading_children_cards: false
+                            is_loading_children_cards: false,
                         };
                     }
                 );
                 context.commit("addSwimlanes", swimlanes);
                 swimlanes
-                    .filter(swimlane => swimlane.card.has_children)
-                    .map(swimlane_with_children =>
+                    .filter((swimlane) => swimlane.card.has_children)
+                    .map((swimlane_with_children) =>
                         context.dispatch("loadChildrenCards", swimlane_with_children)
                     );
 
                 return swimlanes;
-            }
+            },
         });
     } catch (error) {
         await context.dispatch("error/handleGlobalError", error, { root: true });
@@ -76,16 +76,16 @@ export async function loadChildrenCards(
         await recursiveGet(`/api/v1/taskboard_cards/${card_id}/children`, {
             params: {
                 milestone_id: context.rootState.milestone_id,
-                limit: 100
+                limit: 100,
             },
             getCollectionCallback: (collection: Card[]): Card[] => {
                 collection.forEach(injectDefaultPropertiesInCard);
                 context.commit("addChildrenToSwimlane", {
                     swimlane,
-                    children_cards: collection
+                    children_cards: collection,
                 });
                 return collection;
-            }
+            },
         });
     } catch (error) {
         await context.dispatch("error/handleModalError", error, { root: true });
@@ -100,7 +100,7 @@ export function expandSwimlane(
 ): Promise<void> {
     context.commit("expandSwimlane", swimlane);
     const payload: UserPreference = {
-        key: getPreferenceName(context, swimlane)
+        key: getPreferenceName(context, swimlane),
     };
 
     return context.dispatch("user/deletePreference", payload, { root: true });
@@ -113,7 +113,7 @@ export function collapseSwimlane(
     context.commit("collapseSwimlane", swimlane);
     const payload: UserPreferenceValue = {
         key: getPreferenceName(context, swimlane),
-        value: "1"
+        value: "1",
     };
 
     return context.dispatch("user/setPreference", payload, { root: true });
@@ -128,7 +128,7 @@ function getPreferenceName(
 
 async function getUpdatedCard(card_id: number, milestone_id: number): Promise<Card> {
     const response = await get(`/api/v1/taskboard_cards/${card_id}`, {
-        params: { milestone_id }
+        params: { milestone_id },
     });
     return response.json();
 }
@@ -142,7 +142,7 @@ export function refreshCardAndParent(
     if (isSoloCard(payload.swimlane)) {
         return getUpdatedCard(payload.card.id, context.rootState.milestone_id).then(
             refreshCard,
-            error => context.dispatch("error/handleModalError", error, { root: true })
+            (error) => context.dispatch("error/handleModalError", error, { root: true })
         );
     }
 
@@ -155,7 +155,7 @@ export function refreshCardAndParent(
         context.rootState.milestone_id
     ).then(refreshCard);
 
-    return Promise.all([refresh_parent_promise, refresh_child_promise]).catch(error =>
+    return Promise.all([refresh_parent_promise, refresh_child_promise]).catch((error) =>
         context.dispatch("error/handleModalError", error, { root: true })
     );
 }

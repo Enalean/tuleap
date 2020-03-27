@@ -9,12 +9,12 @@ describe("MilestoneService", () => {
     beforeEach(() => {
         BacklogItemFactory = { augment: jest.fn() };
 
-        angular.mock.module(planning_module, function($provide) {
+        angular.mock.module(planning_module, function ($provide) {
             $provide.value("BacklogItemFactory", BacklogItemFactory);
         });
 
         let $rootScope;
-        angular.mock.inject(function(_$rootScope_, _MilestoneService_, $httpBackend) {
+        angular.mock.inject(function (_$rootScope_, _MilestoneService_, $httpBackend) {
             $rootScope = _$rootScope_;
             MilestoneService = _MilestoneService_;
             mockBackend = $httpBackend;
@@ -23,7 +23,7 @@ describe("MilestoneService", () => {
         wrapPromise = createAngularPromiseWrapper($rootScope);
     });
 
-    afterEach(function() {
+    afterEach(function () {
         mockBackend.verifyNoOutstandingExpectation();
         mockBackend.verifyNoOutstandingRequest();
     });
@@ -44,34 +44,34 @@ describe("MilestoneService", () => {
                             resources: {
                                 backlog: {
                                     accept: {
-                                        trackers: [{ id: 68 }]
-                                    }
+                                        trackers: [{ id: 68 }],
+                                    },
                                 },
                                 content: {
                                     accept: {
-                                        trackers: [{ id: 60 }]
-                                    }
-                                }
-                            }
+                                        trackers: [{ id: 60 }],
+                                    },
+                                },
+                            },
                         },
                         {
                             id: 348,
                             resources: {
                                 backlog: {
                                     accept: {
-                                        trackers: [{ id: 26 }]
-                                    }
+                                        trackers: [{ id: 26 }],
+                                    },
                                 },
                                 content: {
                                     accept: {
-                                        trackers: [{ id: 37 }]
-                                    }
-                                }
-                            }
-                        }
+                                        trackers: [{ id: 37 }],
+                                    },
+                                },
+                            },
+                        },
                     ],
                     {
-                        "X-PAGINATION-SIZE": 2
+                        "X-PAGINATION-SIZE": 2,
                     }
                 );
 

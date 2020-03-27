@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-describe("Plateform allows restricted", function() {
-    it("project administrator can define permission access level of mediawiki", function() {
+describe("Plateform allows restricted", function () {
+    it("project administrator can define permission access level of mediawiki", function () {
         cy.updatePlatformVisibilityAndAllowRestricted();
 
         cy.ProjectAdministratorLogin();
@@ -31,7 +31,7 @@ describe("Plateform allows restricted", function() {
         cy.get("[data-test=mediawiki-administration-permission-submit-button]").click();
     });
 
-    it("given project is public only restricted project members can access it", function() {
+    it("given project is public only restricted project members can access it", function () {
         cy.RestrictedMemberLogin();
         cy.visit("/plugins/mediawiki/wiki/platform-allows-restricted/");
 
@@ -40,7 +40,7 @@ describe("Plateform allows restricted", function() {
         cy.RestrictedRegularUserLogin();
         //failOnStatusCode ignore the 401 thrown in HTTP Headers by server
         cy.visit("/plugins/mediawiki/wiki/platform-allows-restricted/", {
-            failOnStatusCode: false
+            failOnStatusCode: false,
         });
 
         cy.get("[data-test=error-user-is-restricted]").contains(
@@ -48,7 +48,7 @@ describe("Plateform allows restricted", function() {
         );
     });
 
-    it("given project is switched from public to private, permissions are respected", function() {
+    it("given project is switched from public to private, permissions are respected", function () {
         cy.ProjectAdministratorLogin();
 
         cy.visitProjectService("platform-allows-restricted", "Admin");

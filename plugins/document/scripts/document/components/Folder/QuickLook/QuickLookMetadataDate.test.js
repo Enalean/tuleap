@@ -40,7 +40,7 @@ describe("QuickLookMetadataDate", () => {
             return shallowMount(QuickLookMetadataDate, {
                 localVue,
                 propsData: { metadata: props },
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
     });
@@ -53,7 +53,7 @@ describe("QuickLookMetadataDate", () => {
             type: "date",
             list_value: null,
             value: "2019-07-02",
-            post_processed_value: "2019-07-02"
+            post_processed_value: "2019-07-02",
         };
         store.state.date_time_format = "d/m/Y H:i";
 
@@ -77,7 +77,7 @@ describe("QuickLookMetadataDate", () => {
             type: "date",
             list_value: null,
             value: null,
-            post_processed_value: null
+            post_processed_value: null,
         };
 
         store.state.date_time_format = "d/m/Y H:i";
@@ -97,7 +97,7 @@ describe("QuickLookMetadataDate", () => {
             type: "date",
             list_value: null,
             value: "2019-07-02",
-            post_processed_value: "2019-07-02"
+            post_processed_value: "2019-07-02",
         };
         store.state.date_time_format = "d/m/Y H:i";
 
@@ -117,7 +117,7 @@ describe("QuickLookMetadataDate", () => {
             type: "date",
             list_value: null,
             value: null,
-            post_processed_value: null
+            post_processed_value: null,
         };
 
         store.state.date_time_format = "d/m/Y H:i";
@@ -138,7 +138,7 @@ describe("QuickLookMetadataDate", () => {
             type: "date",
             list_value: null,
             value: "2019-07-02",
-            post_processed_value: "2019-07-02"
+            post_processed_value: "2019-07-02",
         };
 
         store.state.date_time_format = "d/m/Y H:i";

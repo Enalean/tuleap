@@ -33,19 +33,19 @@ function createWrapper(swimlane: Swimlane): Wrapper<ChildrenSwimlane> {
                             {
                                 id: 2,
                                 label: "To do",
-                                mappings: [{ tracker_id: 7, accepts: [{ id: 49 }] }]
+                                mappings: [{ tracker_id: 7, accepts: [{ id: 49 }] }],
                             } as ColumnDefinition,
                             {
                                 id: 3,
                                 label: "Done",
-                                mappings: [{ tracker_id: 7, accepts: [{ id: 50 }] }]
-                            } as ColumnDefinition
-                        ]
-                    }
-                } as RootState
-            })
+                                mappings: [{ tracker_id: 7, accepts: [{ id: 50 }] }],
+                            } as ColumnDefinition,
+                        ],
+                    },
+                } as RootState,
+            }),
         },
-        propsData: { swimlane }
+        propsData: { swimlane },
     });
 }
 
@@ -54,7 +54,7 @@ describe("ChildrenSwimlane", () => {
         const swimlane: Swimlane = {
             card: { id: 43 } as Card,
             children_cards: [],
-            is_loading_children_cards: true
+            is_loading_children_cards: true,
         };
         const wrapper = createWrapper(swimlane);
 

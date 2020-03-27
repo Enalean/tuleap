@@ -35,24 +35,24 @@ describe("App", () => {
                 has_content: has_content,
                 error: {
                     has_global_error,
-                    has_modal_error
+                    has_modal_error,
                 },
                 column: {
-                    columns
-                }
-            } as RootState
+                    columns,
+                },
+            } as RootState,
         });
     }
 
     it("displays misconfiguration error when there are no column", () => {
         const wrapper = shallowMount(App, {
-            mocks: { $store: getStore(true, [], false, false) }
+            mocks: { $store: getStore(true, [], false, false) },
         });
         expect(wrapper.element).toMatchSnapshot();
     });
     it("displays misconfiguration error even if there are no content", () => {
         const wrapper = shallowMount(App, {
-            mocks: { $store: getStore(false, [], false, false) }
+            mocks: { $store: getStore(false, [], false, false) },
         });
         expect(wrapper.element).toMatchSnapshot();
     });
@@ -63,12 +63,12 @@ describe("App", () => {
                     true,
                     [
                         { id: 2, label: "To do" },
-                        { id: 3, label: "Done" }
+                        { id: 3, label: "Done" },
                     ] as Array<ColumnDefinition>,
                     false,
                     false
-                )
-            }
+                ),
+            },
         });
         expect(wrapper.element).toMatchSnapshot();
     });
@@ -79,12 +79,12 @@ describe("App", () => {
                     false,
                     [
                         { id: 2, label: "To do" },
-                        { id: 3, label: "Done" }
+                        { id: 3, label: "Done" },
                     ] as Array<ColumnDefinition>,
                     false,
                     false
-                )
-            }
+                ),
+            },
         });
         expect(wrapper.element).toMatchSnapshot();
     });
@@ -92,8 +92,8 @@ describe("App", () => {
     it("displays global error state when there is an error", () => {
         const wrapper = shallowMount(App, {
             mocks: {
-                $store: getStore(true, [], true, false)
-            }
+                $store: getStore(true, [], true, false),
+            },
         });
         expect(wrapper.element).toMatchSnapshot();
     });
@@ -104,8 +104,8 @@ describe("App", () => {
 
             shallowMount(App, {
                 mocks: {
-                    $store: getStore(true, [], false, false)
-                }
+                    $store: getStore(true, [], false, false),
+                },
             });
 
             expect(document.addEventListener).toHaveBeenCalledWith("keyup", expect.any(Function));
@@ -118,8 +118,8 @@ describe("App", () => {
 
             const wrapper = shallowMount(App, {
                 mocks: {
-                    $store: getStore(true, [], false, false)
-                }
+                    $store: getStore(true, [], false, false),
+                },
             });
             wrapper.destroy();
 

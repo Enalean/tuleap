@@ -23,7 +23,7 @@ const webpack_configurator = require("../../tools/utils/scripts/webpack-configur
 const assets_dir_path = path.resolve(__dirname, "../../src/www/assets/admindelegation");
 
 let entry_points = {
-    "admin-delegation": "./scripts/admindelegation.js"
+    "admin-delegation": "./scripts/admindelegation.js",
 };
 
 const colors = ["blue", "green", "grey", "orange", "purple", "red"];
@@ -40,18 +40,18 @@ module.exports = [
         context: __dirname,
         output: webpack_configurator.configureOutput(assets_dir_path),
         externals: {
-            tlp: "tlp"
+            tlp: "tlp",
         },
         module: {
             rules: [
                 webpack_configurator.rule_scss_loader,
-                webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11)
-            ]
+                webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+            ],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
-            ...webpack_configurator.getCSSExtractionPlugins()
-        ]
-    }
+            ...webpack_configurator.getCSSExtractionPlugins(),
+        ],
+    },
 ];

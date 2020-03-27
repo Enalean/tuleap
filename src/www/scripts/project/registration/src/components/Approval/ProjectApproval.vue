@@ -46,7 +46,7 @@ import Vue from "vue";
 import ProjectApprovalSvg from "./ProjectApprovalSvg.vue";
 import { Getter } from "vuex-class";
 @Component({
-    components: { ProjectApprovalSvg }
+    components: { ProjectApprovalSvg },
 })
 export default class ProjectApproval extends Vue {
     @Getter

@@ -22,14 +22,14 @@ import tuleap_pullrequest_module from "./app.js";
 import { createAngularPromiseWrapper } from "../../../../../tests/jest/angular-promise-wrapper.js";
 import "angular-mocks";
 
-describe("UserRestService -", function() {
+describe("UserRestService -", function () {
     let $httpBackend, UserRestService, ErrorModalService, wrapPromise;
 
-    beforeEach(function() {
+    beforeEach(function () {
         let $rootScope;
         angular.mock.module(tuleap_pullrequest_module);
 
-        angular.mock.inject(function(
+        angular.mock.inject(function (
             _$rootScope_,
             _$httpBackend_,
             _UserRestService_,
@@ -46,13 +46,13 @@ describe("UserRestService -", function() {
         wrapPromise = createAngularPromiseWrapper($rootScope);
     });
 
-    afterEach(function() {
+    afterEach(function () {
         $httpBackend.verifyNoOutstandingExpectation();
         $httpBackend.verifyNoOutstandingRequest();
     });
 
-    describe("getUser()", function() {
-        it("Given an user id, when I get it, then a GET request will be sent to Tuleap and a promise will be resolved with a user object", async function() {
+    describe("getUser()", function () {
+        it("Given an user id, when I get it, then a GET request will be sent to Tuleap and a promise will be resolved with a user object", async function () {
             const user_id = 123;
 
             const user = {
@@ -60,7 +60,8 @@ describe("UserRestService -", function() {
                 display_name: "Susanne Tickle (stickle)",
                 avatar_url:
                     "https://mazalgia.com/semicurl/epitonic?a=pneumomalacia&b=superfinical#receptaculitid",
-                user_url: "http://mucinoid.com/freely/prestudy?a=hauranitic&b=summerproof#roadtrack"
+                user_url:
+                    "http://mucinoid.com/freely/prestudy?a=hauranitic&b=summerproof#roadtrack",
             };
 
             $httpBackend.expectGET("/api/v1/users/" + user_id).respond(angular.toJson(user));
@@ -71,7 +72,7 @@ describe("UserRestService -", function() {
             expect(await promise).toEqual(user);
         });
 
-        it("when the server responds with an error, then the error modal will be shown", async function() {
+        it("when the server responds with an error, then the error modal will be shown", async function () {
             const user_id = 12;
 
             $httpBackend.expectGET("/api/v1/users/" + user_id).respond(403, "Forbidden");
@@ -80,12 +81,12 @@ describe("UserRestService -", function() {
             $httpBackend.flush();
 
             await expect(promise).rejects.toMatchObject({
-                status: 403
+                status: 403,
             });
             expect(ErrorModalService.showError).toHaveBeenCalledWith(
                 expect.objectContaining({
                     status: 403,
-                    statusText: ""
+                    statusText: "",
                 })
             );
         });
@@ -97,7 +98,7 @@ describe("UserRestService -", function() {
 
             const preference = {
                 key: "preferred_color",
-                value: "red"
+                value: "red",
             };
 
             $httpBackend
@@ -121,12 +122,12 @@ describe("UserRestService -", function() {
             $httpBackend.flush();
 
             await expect(promise).rejects.toMatchObject({
-                status: 403
+                status: 403,
             });
             expect(ErrorModalService.showError).toHaveBeenCalledWith(
                 expect.objectContaining({
                     status: 403,
-                    statusText: ""
+                    statusText: "",
                 })
             );
         });
@@ -139,7 +140,7 @@ describe("UserRestService -", function() {
             $httpBackend
                 .expectPATCH("/api/v1/users/666/preferences", {
                     key: "religion",
-                    value: "Satan"
+                    value: "Satan",
                 })
                 .respond(200, "ok");
 

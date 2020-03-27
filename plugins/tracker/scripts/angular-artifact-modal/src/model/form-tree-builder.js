@@ -47,17 +47,17 @@ const white_listed_fields = [
     "file",
     "perm",
     "date",
-    "tbl"
+    "tbl",
 ];
 
 export function buildFormTree(tracker) {
     return tracker.structure
-        .map(field => recursiveGetCompleteField(field, tracker.fields))
-        .filter(field => field !== null);
+        .map((field) => recursiveGetCompleteField(field, tracker.fields))
+        .filter((field) => field !== null);
 }
 
 function recursiveGetCompleteField(structure_field, all_fields) {
-    const complete_field = all_fields.find(field => field.field_id === structure_field.id);
+    const complete_field = all_fields.find((field) => field.field_id === structure_field.id);
 
     if (complete_field === undefined) {
         return null;
@@ -71,8 +71,8 @@ function recursiveGetCompleteField(structure_field, all_fields) {
 
     if (structure_field.content !== null) {
         var content = structure_field.content
-            .map(sub_field => recursiveGetCompleteField(sub_field, all_fields))
-            .filter(field => field !== null);
+            .map((sub_field) => recursiveGetCompleteField(sub_field, all_fields))
+            .filter((field) => field !== null);
 
         if (complete_field.type === CONTAINER_FIELDSET || complete_field.type === "column") {
             if (content.length === 0) {

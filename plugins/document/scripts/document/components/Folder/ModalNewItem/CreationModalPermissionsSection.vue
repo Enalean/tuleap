@@ -43,17 +43,17 @@ import PermissionsForGroupsSelector from "../Permissions/PermissionsForGroupsSel
 export default {
     name: "CreationModalPermissionsSection",
     components: {
-        PermissionsForGroupsSelector
+        PermissionsForGroupsSelector,
     },
     props: {
         project_ugroups: {
-            validator: prop => Array.isArray(prop) || prop === null,
-            required: true
+            validator: (prop) => Array.isArray(prop) || prop === null,
+            required: true,
         },
         value: {
             type: Object,
-            required: true
-        }
+            required: true,
+        },
     },
     computed: {
         permissions_for_groups: {
@@ -62,8 +62,8 @@ export default {
             },
             set(value) {
                 this.$emit("input", value);
-            }
-        }
-    }
+            },
+        },
+    },
 };
 </script>

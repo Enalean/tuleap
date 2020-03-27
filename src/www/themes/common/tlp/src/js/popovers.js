@@ -42,7 +42,7 @@ export default function createPopover(popover_trigger, popover_content, options 
     };
 
     return {
-        destroy
+        destroy,
     };
 }
 
@@ -53,12 +53,12 @@ function getPopperOptions(anchor, options) {
         placement,
         modifiers: {
             arrow: {
-                element: ".tlp-popover-arrow"
+                element: ".tlp-popover-arrow",
             },
             computeStyle: {
-                gpuAcceleration: false
-            }
-        }
+                gpuAcceleration: false,
+            },
+        },
     };
 }
 
@@ -67,13 +67,13 @@ function buildListeners(popover_trigger, popover_content, dismiss_buttons, optio
     if (trigger === "hover") {
         return [
             buildMouseOverListener(popover_trigger, popover_content, popper),
-            buildMouseOutListener(popover_trigger, popover_content)
+            buildMouseOutListener(popover_trigger, popover_content),
         ];
     }
     if (trigger === "click") {
         const listeners = [
             buildTriggerClickListener(popover_trigger, popover_content, popper),
-            buildDocumentClickListener(popover_trigger, popover_content)
+            buildDocumentClickListener(popover_trigger, popover_content),
         ];
         for (const dismiss of dismiss_buttons) {
             listeners.push(buildDismissClickListener(dismiss));
@@ -103,7 +103,7 @@ function buildMouseOverListener(popover_trigger, popover_content, popper) {
         handler() {
             hideAllShownPopovers();
             showPopover(popover_content, popper);
-        }
+        },
     };
 }
 
@@ -114,7 +114,7 @@ function buildMouseOutListener(popover_trigger, popover_content) {
         handler() {
             hideAllShownPopovers();
             popover_content.classList.remove(CLASS_TLP_POPOVER_SHOWN);
-        }
+        },
     };
 }
 
@@ -129,7 +129,7 @@ function buildTriggerClickListener(popover_trigger, popover_content, popper) {
                 popper.popper.setAttribute("x-trigger", "click");
                 showPopover(popover_content, popper);
             }
-        }
+        },
     };
 }
 
@@ -145,7 +145,7 @@ function buildDocumentClickListener(popover_trigger, popover_content) {
             ) {
                 hideAllShownPopovers();
             }
-        }
+        },
     };
 }
 
@@ -153,7 +153,7 @@ function buildDismissClickListener(dismiss) {
     return {
         element: dismiss,
         type: "click",
-        handler: hideAllShownPopovers
+        handler: hideAllShownPopovers,
     };
 }
 

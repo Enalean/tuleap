@@ -33,7 +33,7 @@ EditKanbanCtrl.$inject = [
     "RestErrorService",
     "FilterTrackerReportService",
     "modal_instance",
-    "rebuild_scrollbars"
+    "rebuild_scrollbars",
 ];
 
 function EditKanbanCtrl(
@@ -64,7 +64,7 @@ function EditKanbanCtrl(
     const tracker_link = `<a class="edit-kanban-title-tracker-link" href="/plugins/tracker/?tracker=${self.kanban.tracker.id}">${sanitized_kanban_label}</a>`;
 
     self.title_tracker_link = gettextCatalog.getString("Based on the {{ trackerLink }} tracker.", {
-        trackerLink: tracker_link
+        trackerLink: tracker_link,
     });
 
     const info_tracker_link =
@@ -77,21 +77,21 @@ function EditKanbanCtrl(
     self.column_config_info = gettextCatalog.getString(
         "More information about columns are available in the field administration used by the semantic status in the {{ trackerLink }} tracker.",
         {
-            trackerLink: info_tracker_link
+            trackerLink: info_tracker_link,
         }
     );
 
     self.column_config_cannot_manage_info = gettextCatalog.getString(
         "You can't manage columns of the tracker configuration. More information about columns are available in the field administration used by the semantic status in the {{ trackerLink }} tracker.",
         {
-            trackerLink: info_tracker_link
+            trackerLink: info_tracker_link,
         }
     );
 
     self.old_kanban_label = self.kanban.label;
     self.select2_options = {
         placeholder: gettextCatalog.getString("Select tracker reports"),
-        allowClear: true
+        allowClear: true,
     };
     self.tracker_reports = [];
     self.selectable_reports = [];
@@ -115,7 +115,7 @@ function EditKanbanCtrl(
         editColumn,
         columnsCanBeManaged,
         updateWidgetTitle,
-        saveReports
+        saveReports,
     });
 
     function init() {
@@ -133,7 +133,7 @@ function EditKanbanCtrl(
     }
 
     function initModalValues() {
-        self.kanban.columns.forEach(function(column) {
+        self.kanban.columns.forEach(function (column) {
             column.editing = false;
             column.confirm_delete = false;
         });
@@ -144,7 +144,7 @@ function EditKanbanCtrl(
     }
 
     function initListenModal() {
-        modal_instance.tlp_modal.addEventListener("tlp-modal-hidden", function() {
+        modal_instance.tlp_modal.addEventListener("tlp-modal-hidden", function () {
             if (!self.saved) {
                 self.kanban.label = self.old_kanban_label;
                 updateWidgetTitle(self.old_kanban_label);
@@ -161,7 +161,7 @@ function EditKanbanCtrl(
                 self.saved = true;
                 FilterTrackerReportService.changeSelectableReports(self.selectable_report_ids);
             },
-            response => {
+            (response) => {
                 modal_instance.tlp_modal.hide();
                 RestErrorService.reload(response);
             }
@@ -174,7 +174,7 @@ function EditKanbanCtrl(
             scope: $scope,
             revertOnSpill: true,
             nameSpace: "dragular-columns",
-            moves: isItemDraggable
+            moves: isItemDraggable,
         };
     }
 
@@ -184,10 +184,8 @@ function EditKanbanCtrl(
 
     function ancestorCannotBeDragged(handle_element) {
         return (
-            element(handle_element)
-                .parentsUntil(".column")
-                .andSelf()
-                .filter('[data-nodrag="true"]').length > 0
+            element(handle_element).parentsUntil(".column").andSelf().filter('[data-nodrag="true"]')
+                .length > 0
         );
     }
 
@@ -196,7 +194,7 @@ function EditKanbanCtrl(
 
         var sorted_columns_ids = map(self.kanban.columns, "id");
 
-        KanbanService.reorderColumns(self.kanban.id, sorted_columns_ids).catch(function(response) {
+        KanbanService.reorderColumns(self.kanban.id, sorted_columns_ids).catch(function (response) {
             modal_instance.tlp_modal.hide();
             RestErrorService.reload(response);
         });
@@ -205,12 +203,12 @@ function EditKanbanCtrl(
     function saveModifications() {
         self.saving = true;
         KanbanService.updateKanbanLabel(self.kanban.id, self.kanban.label).then(
-            function() {
+            function () {
                 self.saving = false;
                 self.saved = true;
                 updateKanbanName(self.kanban.label);
             },
-            function(response) {
+            function (response) {
                 modal_instance.tlp_modal.hide();
                 RestErrorService.reload(response);
             }
@@ -222,10 +220,10 @@ function EditKanbanCtrl(
             self.deleting = true;
 
             KanbanService.deleteKanban(self.kanban.id)
-                .then(function() {
+                .then(function () {
                     KanbanService.removeKanban();
                 })
-                .catch(function(response) {
+                .catch(function (response) {
                     modal_instance.tlp_modal.hide();
                     RestErrorService.reload(response);
                 });
@@ -252,7 +250,7 @@ function EditKanbanCtrl(
             self.saving_new_column = true;
 
             KanbanService.addColumn(self.kanban.id, self.new_column_label).then(
-                function(column_representation) {
+                function (column_representation) {
                     ColumnCollectionService.addColumn(column_representation.data);
 
                     self.adding_column = false;
@@ -261,7 +259,7 @@ function EditKanbanCtrl(
 
                     rebuild_scrollbars();
                 },
-                function(response) {
+                function (response) {
                     modal_instance.tlp_modal.hide();
                     RestErrorService.reload(response);
                 }
@@ -276,12 +274,12 @@ function EditKanbanCtrl(
         self.saving_column = true;
 
         KanbanService.editColumn(self.kanban.id, column).then(
-            function() {
+            function () {
                 self.saving_column = false;
                 column.editing = false;
                 column.original_label = column.label;
             },
-            function(response) {
+            function (response) {
                 modal_instance.tlp_modal.hide();
                 RestErrorService.reload(response);
             }
@@ -302,13 +300,13 @@ function EditKanbanCtrl(
         if (column_to_remove.confirm_delete) {
             self.deleting_column = true;
             KanbanService.removeColumn(self.kanban.id, column_to_remove.id).then(
-                function() {
+                function () {
                     self.deleting_column = false;
                     ColumnCollectionService.removeColumn(column_to_remove.id);
 
                     rebuild_scrollbars();
                 },
-                function(response) {
+                function (response) {
                     modal_instance.tlp_modal.hide();
                     RestErrorService.reload(response);
                 }

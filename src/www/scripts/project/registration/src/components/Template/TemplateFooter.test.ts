@@ -32,12 +32,12 @@ describe("TemplateFooter", () => {
     beforeEach(async () => {
         state = {} as State;
         const getters = {
-            is_template_selected: false
+            is_template_selected: false,
         };
 
         const store_options = {
             state,
-            getters
+            getters,
         };
 
         store = createStoreMock(store_options);
@@ -46,19 +46,19 @@ describe("TemplateFooter", () => {
             routes: [
                 {
                     path: "/",
-                    name: "template"
+                    name: "template",
                 },
                 {
                     path: "/information",
-                    name: "information"
-                }
-            ]
+                    name: "information",
+                },
+            ],
         });
 
         factory = shallowMount(TemplateFooter, {
             localVue: await createProjectRegistrationLocalVue(),
             router,
-            mocks: { $store: store }
+            mocks: { $store: store },
         });
     });
 
@@ -95,7 +95,7 @@ describe("TemplateFooter", () => {
             const wrapper = shallowMount(TemplateFooter, {
                 localVue: await createProjectRegistrationLocalVue(),
                 router,
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
 
             wrapper.vm.$store.getters.is_template_selected = true;

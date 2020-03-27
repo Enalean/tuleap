@@ -28,7 +28,7 @@ if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     tooltipModule(jQuery, codendi);
 
     module.exports = {
-        loadTooltips: codendi.Tooltip.load
+        loadTooltips: codendi.Tooltip.load,
     };
 } else {
     codendi = window.codendi || {};
@@ -38,7 +38,7 @@ if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
 function tooltipModule($, codendi) {
     codendi.Tooltips = [];
 
-    codendi.Tooltip = function(element, url, options) {
+    codendi.Tooltip = function (element, url, options) {
         this.element = $(element);
         this.url = url;
         this.options = options || {};
@@ -55,16 +55,13 @@ function tooltipModule($, codendi) {
         this.element.on("mouseout", this.hideEvent);
     };
 
-    codendi.Tooltip.prototype.createTooltip = function(content) {
+    codendi.Tooltip.prototype.createTooltip = function (content) {
         this.fetched = true;
-        this.tooltip = $("<div>")
-            .hide()
-            .addClass("codendi-tooltip")
-            .html(content);
+        this.tooltip = $("<div>").hide().addClass("codendi-tooltip").html(content);
         $(document.body).append(this.tooltip);
     };
 
-    codendi.Tooltip.prototype.show = function(evt) {
+    codendi.Tooltip.prototype.show = function (evt) {
         this.show_tooltip = true;
         var mouse_event = evt;
 
@@ -77,13 +74,13 @@ function tooltipModule($, codendi) {
                 var posY = mouse_event.pageY;
                 this.tooltip.css({
                     top: posY + 10 + "px",
-                    left: posX + 10 + "px"
+                    left: posX + 10 + "px",
                 });
             } else {
                 var pos = this.element.offset();
                 this.tooltip.css({
                     top: pos.top + this.element.outerHeight() + "px",
-                    left: pos.left + "px"
+                    left: pos.left + "px",
                 });
             }
             this.tooltip.show();
@@ -95,11 +92,11 @@ function tooltipModule($, codendi) {
         }
     };
 
-    codendi.Tooltip.prototype.hide = function() {
+    codendi.Tooltip.prototype.hide = function () {
         this.show_tooltip = false;
         if (this.tooltip) {
             this.timeout = setTimeout(
-                $.proxy(function() {
+                $.proxy(function () {
                     this.tooltip.hide();
                 }, this),
                 200
@@ -107,7 +104,7 @@ function tooltipModule($, codendi) {
         }
     };
 
-    codendi.Tooltip.prototype.fetch = function(evt) {
+    codendi.Tooltip.prototype.fetch = function (evt) {
         if (this.fetching) {
             return;
         }
@@ -132,14 +129,14 @@ function tooltipModule($, codendi) {
 
     codendi.Tooltip.selectors = ["a.cross-reference", "a[class^=direct-link-to]"];
 
-    codendi.Tooltip.load = function(element, at_cursor_position) {
+    codendi.Tooltip.load = function (element, at_cursor_position) {
         var sparkline_hrefs = {};
 
         var options = {
-            atCursorPosition: at_cursor_position
+            atCursorPosition: at_cursor_position,
         };
 
-        $(codendi.Tooltip.selectors.join(",")).each(function(index, a) {
+        $(codendi.Tooltip.selectors.join(",")).each(function (index, a) {
             codendi.Tooltips.push(new codendi.Tooltip(a, a.href, options));
             if (sparkline_hrefs[a.href]) {
                 sparkline_hrefs[a.href].push(a);
@@ -155,14 +152,14 @@ function tooltipModule($, codendi) {
 
         if (hrefs.length) {
             $.post("/sparklines.php", {
-                "sparklines[]": hrefs
-            }).done(function(data, statusText, xhr) {
+                "sparklines[]": hrefs,
+            }).done(function (data, statusText, xhr) {
                 if (xhr.status !== 200) {
                     return;
                 }
 
                 for (var href in data) {
-                    sparkline_hrefs[href].each(function(a) {
+                    sparkline_hrefs[href].each(function (a) {
                         $(a).prepend(
                             $("<img>")
                                 .attr("src", data[href])

@@ -29,7 +29,7 @@ export function transformFolderMetadataForRecursionAtUpdate(item) {
             !metadata || !metadata.list_value[0]
                 ? "none"
                 : getStatusFromMapping(metadata.list_value[0].id),
-        recursion: "none"
+        recursion: "none",
     };
 
     return folder_to_update;
@@ -91,13 +91,13 @@ export function transformCustomMetadataForItemCreation(parent_metadata) {
     }
 
     let formatted_metadata_list = [];
-    parent_metadata.forEach(parent_metadata => {
+    parent_metadata.forEach((parent_metadata) => {
         let formatted_metadata = {
             short_name: parent_metadata.short_name,
             type: parent_metadata.type,
             name: parent_metadata.name,
             is_multiple_value_allowed: parent_metadata.is_multiple_value_allowed,
-            is_required: parent_metadata.is_required
+            is_required: parent_metadata.is_required,
         };
 
         switch (parent_metadata.type) {
@@ -128,7 +128,7 @@ export function transformCustomMetadataForItemCreation(parent_metadata) {
 }
 
 export function transformCustomMetadataForItemUpdate(parent_metadata) {
-    parent_metadata.forEach(parent_metadata => {
+    parent_metadata.forEach((parent_metadata) => {
         switch (parent_metadata.type) {
             case "date":
                 parent_metadata.value = formatDateValue(parent_metadata.value);
@@ -164,8 +164,8 @@ export function formatCustomMetadataForFolderUpdate(
     metadata_list_to_update,
     recursion_option
 ) {
-    item_to_update.metadata.forEach(metadata => {
-        if (metadata_list_to_update.find(short_name => short_name === metadata.short_name)) {
+    item_to_update.metadata.forEach((metadata) => {
+        if (metadata_list_to_update.find((short_name) => short_name === metadata.short_name)) {
             metadata.recursion = recursion_option;
         } else {
             metadata.recursion = "none";

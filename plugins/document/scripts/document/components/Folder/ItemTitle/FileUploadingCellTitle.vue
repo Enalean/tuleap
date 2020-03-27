@@ -38,7 +38,7 @@ import { getTitleWithElipsisIfNeeded } from "../../../helpers/cell-title-formatt
 export default {
     components: { FakeCaret, UploadProgressBar },
     props: {
-        item: Object
+        item: Object,
     },
     computed: {
         ...mapState(["current_folder"]),
@@ -47,7 +47,7 @@ export default {
         },
         title() {
             return getTitleWithElipsisIfNeeded(this.item);
-        }
-    }
+        },
+    },
 };
 </script>

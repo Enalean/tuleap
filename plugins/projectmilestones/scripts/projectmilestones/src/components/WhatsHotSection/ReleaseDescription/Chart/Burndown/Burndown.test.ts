@@ -43,15 +43,15 @@ describe("Burndown", () => {
 
     beforeEach(() => {
         store_options = {
-            state: {}
+            state: {},
         };
 
         release_data = {
-            id: 2
+            id: 2,
         } as MilestoneData;
 
         component_options.propsData = {
-            release_data
+            release_data,
         };
 
         getPersonalWidgetInstance(store_options);

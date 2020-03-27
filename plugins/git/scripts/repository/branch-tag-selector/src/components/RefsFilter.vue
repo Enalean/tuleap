@@ -32,10 +32,10 @@
 export default {
     props: {
         value: String,
-        placeholder: String
+        placeholder: String,
     },
     mounted() {
         this.$refs.filter.focus();
-    }
+    },
 };
 </script>

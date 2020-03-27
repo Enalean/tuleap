@@ -32,8 +32,8 @@
  * This script manage the update of the cardwall (drag'n drop of card, edit of
  * fields, etc).
  */
-document.observe("dom:loaded", function() {
-    $$(".cardwall_board").each(function(board) {
+document.observe("dom:loaded", function () {
+    $$(".cardwall_board").each(function (board) {
         (function checkForLatestCardWallVersion() {
             if ($("tracker_report_cardwall_to_be_refreshed")) {
                 //    Eg: board > drag n drop > go to a page > click back (the post it should be drag 'n dropped)
@@ -47,7 +47,7 @@ document.observe("dom:loaded", function() {
         })();
 
         (function defineDraggableCards() {
-            board.select(".cardwall_board_postit").each(function(postit) {
+            board.select(".cardwall_board_postit").each(function (postit) {
                 function start_effect(element) {
                     Draggable._dragging[element] = true;
                     element.addClassName("cardwall_board_postit_flying");
@@ -62,7 +62,7 @@ document.observe("dom:loaded", function() {
                     revert: "failure",
                     delay: 175,
                     starteffect: start_effect,
-                    endeffect: end_effect
+                    endeffect: end_effect,
                 });
             });
         })();
@@ -70,13 +70,10 @@ document.observe("dom:loaded", function() {
         (function dragAndDropColumns() {
             var cols = board.select("col");
 
-            cols.each(function(col, col_index) {
-                var table_body_rows = col
-                    .up("table")
-                    .down("tbody.cardwall")
-                    .childElements();
+            cols.each(function (col, col_index) {
+                var table_body_rows = col.up("table").down("tbody.cardwall").childElements();
 
-                table_body_rows.each(function(tr) {
+                table_body_rows.each(function (tr) {
                     var value_id = col.id.split("-")[1],
                         swimline_id = tr.id.split("-")[1],
                         current_td = tr.down("td.cardwall-cell", col_index),
@@ -91,7 +88,7 @@ document.observe("dom:loaded", function() {
                         hoverclass: "cardwall_board_column_hover",
                         accept: accept_class,
 
-                        onDrop: function(dragged) {
+                        onDrop: function (dragged) {
                             var value_id = col.id.split("-")[1],
                                 new_column = dragged
                                     .up("tr")
@@ -110,7 +107,7 @@ document.observe("dom:loaded", function() {
 
                             setStyle(dragged);
                             ajaxUpdate(dragged, value_id);
-                        }
+                        },
                     });
                 });
             });
@@ -118,7 +115,7 @@ document.observe("dom:loaded", function() {
             function setStyle(dragged) {
                 dragged.setStyle({
                     left: "auto",
-                    top: "auto"
+                    top: "auto",
                 });
             }
 
@@ -143,7 +140,7 @@ document.observe("dom:loaded", function() {
                     method: "POST",
                     parameters: parameters,
                     onComplete: afterAjaxUpdate,
-                    onFailure: function(response) {
+                    onFailure: function (response) {
                         function update_callback() {
                             if (tuleap.cardwall.isOnAgiledashboard()) {
                                 tuleap.cardwall.cardsEditInPlace.moveCardCallback(artifact_id);
@@ -167,7 +164,7 @@ document.observe("dom:loaded", function() {
                             load_modal_callback,
                             parameters
                         );
-                    }
+                    },
                 });
             }
 
@@ -177,7 +174,7 @@ document.observe("dom:loaded", function() {
         })();
 
         (function enableRemainingEffortInPlaceEditing() {
-            $$(".valueOf_remaining_effort").each(function(remaining_effort_container) {
+            $$(".valueOf_remaining_effort").each(function (remaining_effort_container) {
                 new tuleap.agiledashboard.cardwall.card.TextElementEditor(
                     remaining_effort_container
                 );
@@ -185,7 +182,7 @@ document.observe("dom:loaded", function() {
         })();
 
         (function enableAssignedToInPlaceEditing() {
-            $$(".valueOf_assigned_to").each(function(assigned_to_container) {
+            $$(".valueOf_assigned_to").each(function (assigned_to_container) {
                 var select_editor = new tuleap.agiledashboard.cardwall.card.SelectElementEditor(
                     assigned_to_container
                 );
@@ -196,13 +193,10 @@ document.observe("dom:loaded", function() {
 
         (function searchInCardwall() {
             var cardwall = board.down(".cardwall");
-            board
-                .up()
-                .select(".search-in-cardwall")
-                .each(registerTextFieldEvents);
+            board.up().select(".search-in-cardwall").each(registerTextFieldEvents);
 
             function registerTextFieldEvents(text_field) {
-                text_field.observe("keyup", function() {
+                text_field.observe("keyup", function () {
                     onUpdate(text_field);
                 });
             }
@@ -225,7 +219,7 @@ document.observe("dom:loaded", function() {
                     return [];
                 }
 
-                return all_cards.reject(function(card) {
+                return all_cards.reject(function (card) {
                     var searchable_content_list = card.select(
                         ".card-title",
                         ".dropdown-toggle",
@@ -241,7 +235,7 @@ document.observe("dom:loaded", function() {
             }
 
             function searchInTextContent(searchable_content_list, regexp) {
-                return searchable_content_list.find(function(searchable_content) {
+                return searchable_content_list.find(function (searchable_content) {
                     var text;
                     if (searchable_content.innerText !== undefined) {
                         // Yay IE Family!
@@ -255,14 +249,14 @@ document.observe("dom:loaded", function() {
             }
 
             function searchInAvatarTitle(card, regexp) {
-                return card.select(".valueOf_assigned_to .avatar").find(function(avatar) {
+                return card.select(".valueOf_assigned_to .avatar").find(function (avatar) {
                     return avatar.title.match(regexp);
                 });
             }
 
             function showSwimlineCard(swimline) {
                 var swimline_card = swimline.down("td:first > .nodrag .card"),
-                    visible_cards = swimline.select(".card").find(function(card) {
+                    visible_cards = swimline.select(".card").find(function (card) {
                         return card.visible();
                     });
 
@@ -275,7 +269,7 @@ document.observe("dom:loaded", function() {
         (function stackCards() {
             var stacked_classname = "cardwall-cell-stacked";
 
-            $$(".cardwall_board th").each(function(th) {
+            $$(".cardwall_board th").each(function (th) {
                 var toggle_input = th.down(".cardwall-auto-stack-toggle"),
                     cell_index = th.cellIndex,
                     cells_in_column = ".cardwall > tr > td:nth-child(" + (cell_index + 1) + ")";
@@ -284,7 +278,7 @@ document.observe("dom:loaded", function() {
                     return;
                 }
 
-                toggle_input.observe("click", function() {
+                toggle_input.observe("click", function () {
                     var toggle = toggle_input.checked ? "addClassName" : "removeClassName";
                     $$(cells_in_column).invoke(toggle, stacked_classname);
 
@@ -293,16 +287,16 @@ document.observe("dom:loaded", function() {
                         method: "POST",
                         parameters: {
                             action: "toggle_user_autostack_column",
-                            name: toggle_input.value
-                        }
+                            name: toggle_input.value,
+                        },
                     });
                 });
             });
 
-            $$(".cardwall-cell-controls-stack").each(function(icon_resize) {
+            $$(".cardwall-cell-controls-stack").each(function (icon_resize) {
                 var td = icon_resize.up("td");
 
-                icon_resize.observe("click", function() {
+                icon_resize.observe("click", function () {
                     td.toggleClassName(stacked_classname);
                 });
             });

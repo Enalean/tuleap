@@ -4,7 +4,7 @@ BacklogItemFactory.$inject = [];
 
 function BacklogItemFactory() {
     return {
-        augment: augment
+        augment: augment,
     };
 
     function augment(backlog_item) {
@@ -20,7 +20,7 @@ function BacklogItemFactory() {
         backlog_item.children.loaded = false;
         backlog_item.children.collapsed = true;
 
-        backlog_item.isOpen = function() {
+        backlog_item.isOpen = function () {
             return backlog_item.status === "Open";
         };
 
@@ -35,9 +35,9 @@ function BacklogItemFactory() {
             content: allowed_trackers,
             toString() {
                 return this.content
-                    .map(allowed_tracker => "trackerId" + allowed_tracker.id)
+                    .map((allowed_tracker) => "trackerId" + allowed_tracker.id)
                     .join("|");
-            }
+            },
         };
 
         backlog_item.trackerId = getTrackerType(tracker_id);

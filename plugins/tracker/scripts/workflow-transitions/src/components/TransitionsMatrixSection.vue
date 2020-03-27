@@ -76,9 +76,9 @@ export default {
             return [
                 {
                     label: this.$gettext("(New artifact)"),
-                    id: null
+                    id: null,
                 },
-                ...this.all_target_states
+                ...this.all_target_states,
             ];
         },
         has_field_values() {
@@ -89,7 +89,7 @@ export default {
             const workflow_field_id = this.current_tracker.workflow.field_id;
 
             return `/plugins/tracker/?tracker=${tracker_id}&func=admin-formElement-update&formElement=${workflow_field_id}`;
-        }
-    }
+        },
+    },
 };
 </script>

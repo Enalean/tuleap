@@ -4,14 +4,14 @@ import tuleap_pullrequest_module from "../app.js";
 import "angular-mocks";
 import { createAngularPromiseWrapper } from "../../../../../../tests/jest/angular-promise-wrapper";
 
-describe("PullRequestCollectionRestService -", function() {
+describe("PullRequestCollectionRestService -", function () {
     var $q, $httpBackend, PullRequestCollectionRestService, ErrorModalService, wrapPromise;
 
-    beforeEach(function() {
+    beforeEach(function () {
         let $rootScope;
         angular.mock.module(tuleap_pullrequest_module);
 
-        angular.mock.inject(function(
+        angular.mock.inject(function (
             _$rootScope_,
             _$httpBackend_,
             _$q_,
@@ -30,16 +30,16 @@ describe("PullRequestCollectionRestService -", function() {
         wrapPromise = createAngularPromiseWrapper($rootScope);
     });
 
-    afterEach(function() {
+    afterEach(function () {
         $httpBackend.verifyNoOutstandingExpectation();
         $httpBackend.verifyNoOutstandingRequest();
     });
 
-    describe("getPullRequests()", function() {
-        it("when I get the pull requests for the repository, then a GET request will be sent to Tuleap and an object containing the total number of pull requests and a collection of pull requests will be returned", async function() {
+    describe("getPullRequests()", function () {
+        it("when I get the pull requests for the repository, then a GET request will be sent to Tuleap and an object containing the total number of pull requests and a collection of pull requests will be returned", async function () {
             var total_pull_requests = 2;
             var headers = {
-                "X-Pagination-Size": total_pull_requests
+                "X-Pagination-Size": total_pull_requests,
             };
 
             var pull_requests = [
@@ -50,13 +50,13 @@ describe("PullRequestCollectionRestService -", function() {
                     branch_src: "feature-adicity",
                     branch_dest: "master",
                     repository: {
-                        id: 4
+                        id: 4,
                     },
                     repository_dest: {
-                        id: 26
+                        id: 26,
                     },
                     status: "abandon",
-                    creation_date: "2016-01-06T19:21:13+00:00"
+                    creation_date: "2016-01-06T19:21:13+00:00",
                 },
                 {
                     id: 8,
@@ -65,14 +65,14 @@ describe("PullRequestCollectionRestService -", function() {
                     branch_src: "feature-marblehead",
                     branch_dest: "master",
                     repository: {
-                        id: 16
+                        id: 16,
                     },
                     repository_dest: {
-                        id: 26
+                        id: 26,
                     },
                     status: "review",
-                    creation_date: "2010-08-17T11:02:09+00:00"
-                }
+                    creation_date: "2010-08-17T11:02:09+00:00",
+                },
             ];
 
             var repository_id = 26;
@@ -81,7 +81,7 @@ describe("PullRequestCollectionRestService -", function() {
                 .expectGET("/api/v1/git/" + repository_id + "/pull_requests?limit=50&offset=0")
                 .respond(
                     angular.toJson({
-                        collection: pull_requests
+                        collection: pull_requests,
                     }),
                     headers
                 );
@@ -93,14 +93,14 @@ describe("PullRequestCollectionRestService -", function() {
 
             expect(await promise).toEqual({
                 results: pull_requests,
-                total: total_pull_requests
+                total: total_pull_requests,
             });
         });
 
-        it("Given a git repository id, a limit, an offset and a status, when I get the pull requests for the repository, then a GET request will be sent to Tuleap with the status parameter and an object containing the total number of pull requests in that status and a collection of pull requests will be returned", async function() {
+        it("Given a git repository id, a limit, an offset and a status, when I get the pull requests for the repository, then a GET request will be sent to Tuleap with the status parameter and an object containing the total number of pull requests in that status and a collection of pull requests will be returned", async function () {
             var total_pull_requests = 1;
             var headers = {
-                "X-Pagination-Size": total_pull_requests
+                "X-Pagination-Size": total_pull_requests,
             };
 
             var pull_requests = [
@@ -111,14 +111,14 @@ describe("PullRequestCollectionRestService -", function() {
                     branch_src: "feature-unconstricted",
                     branch_dest: "master",
                     repository: {
-                        id: 12
+                        id: 12,
                     },
                     repository_dest: {
-                        id: 12
+                        id: 12,
                     },
                     status: "review",
-                    creation_date: "2011-02-03T16:19:19+00:00"
-                }
+                    creation_date: "2011-02-03T16:19:19+00:00",
+                },
             ];
 
             var repository_id = 12;
@@ -133,7 +133,7 @@ describe("PullRequestCollectionRestService -", function() {
                 )
                 .respond(
                     angular.toJson({
-                        collection: pull_requests
+                        collection: pull_requests,
                     }),
                     headers
                 );
@@ -145,11 +145,11 @@ describe("PullRequestCollectionRestService -", function() {
 
             expect(await promise).toEqual({
                 results: pull_requests,
-                total: total_pull_requests
+                total: total_pull_requests,
             });
         });
 
-        it("when the server responds with an error, then the error modal will be shown", async function() {
+        it("when the server responds with an error, then the error modal will be shown", async function () {
             var repository_id = 29;
 
             $httpBackend
@@ -162,49 +162,49 @@ describe("PullRequestCollectionRestService -", function() {
             $httpBackend.flush();
 
             await expect(promise).rejects.toMatchObject({
-                status: 403
+                status: 403,
             });
             expect(ErrorModalService.showError).toHaveBeenCalledWith(
                 expect.objectContaining({
                     status: 403,
-                    statusText: ""
+                    statusText: "",
                 })
             );
         });
     });
 
-    describe("Retrieve pull requests", function() {
+    describe("Retrieve pull requests", function () {
         var first_pull_requests, second_pull_requests, all_pull_requests, progress_callback;
 
-        beforeEach(function() {
+        beforeEach(function () {
             first_pull_requests = [
                 {
-                    id: 43
+                    id: 43,
                 },
                 {
-                    id: 35
-                }
+                    id: 35,
+                },
             ];
 
             second_pull_requests = [
                 {
-                    id: 18
+                    id: 18,
                 },
                 {
-                    id: 31
-                }
+                    id: 31,
+                },
             ];
             jest.spyOn(PullRequestCollectionRestService, "getPullRequests").mockImplementation(
-                function(repository_id, limit, offset) {
+                function (repository_id, limit, offset) {
                     if (offset === 0) {
                         return $q.when({
                             results: first_pull_requests,
-                            total: 4
+                            total: 4,
                         });
                     } else if (offset === 2) {
                         return $q.when({
                             results: second_pull_requests,
-                            total: 4
+                            total: 4,
                         });
                     }
                     throw new Error("Not expected offset: " + offset);
@@ -216,8 +216,8 @@ describe("PullRequestCollectionRestService -", function() {
             all_pull_requests = first_pull_requests.concat(second_pull_requests);
         });
 
-        describe("getAllPullRequests() -", function() {
-            it("Given a git repository id and a progress callback, given a pagination limit of 2 and given there were 4 linked pull requests, when I get all the pull requests for the repository, then two requests will be sent to Tuleap , for each resolved request the progress callback will be called with the results and a promise will be resolved with a single array containing all results", async function() {
+        describe("getAllPullRequests() -", function () {
+            it("Given a git repository id and a progress callback, given a pagination limit of 2 and given there were 4 linked pull requests, when I get all the pull requests for the repository, then two requests will be sent to Tuleap , for each resolved request the progress callback will be called with the results and a promise will be resolved with a single array containing all results", async function () {
                 var repository_id = 46;
                 var promise = wrapPromise(
                     PullRequestCollectionRestService.getAllPullRequests(
@@ -245,8 +245,8 @@ describe("PullRequestCollectionRestService -", function() {
             });
         });
 
-        describe("getAllOpenPullRequests() -", function() {
-            it("Given a git repository id and a progress callback, when I get all the open pull requests for the repository, then the requests will be made with the 'open' status", async function() {
+        describe("getAllOpenPullRequests() -", function () {
+            it("Given a git repository id and a progress callback, when I get all the open pull requests for the repository, then the requests will be made with the 'open' status", async function () {
                 var repository_id = 53;
 
                 var promise = wrapPromise(
@@ -273,8 +273,8 @@ describe("PullRequestCollectionRestService -", function() {
             });
         });
 
-        describe("getAllClosedPullRequests() -", function() {
-            it("Given a git repository id and a progress callback, when I get all the closed pull requests for the repository, then the requests will be made with the 'closed' status", async function() {
+        describe("getAllClosedPullRequests() -", function () {
+            it("Given a git repository id and a progress callback, when I get all the closed pull requests for the repository, then the requests will be made with the 'closed' status", async function () {
                 var repository_id = 56;
 
                 var promise = wrapPromise(

@@ -8,10 +8,10 @@ function PullRequestHeaderController(SharedPropertiesService) {
 
     function init() {
         SharedPropertiesService.whenReady()
-            .then(function() {
+            .then(function () {
                 self.pull_request = SharedPropertiesService.getPullRequest();
             })
-            .catch(function() {
+            .catch(function () {
                 //Do nothing
             });
     }

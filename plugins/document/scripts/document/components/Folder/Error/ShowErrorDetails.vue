@@ -55,7 +55,7 @@ export default {
     name: "ShowErrorDetails",
     data() {
         return {
-            is_more_shown: false
+            is_more_shown: false,
         };
     },
     computed: {
@@ -65,7 +65,7 @@ export default {
             "has_document_loading_error",
             "document_loading_error",
             "has_document_lock_error",
-            "document_lock_error"
+            "document_lock_error",
         ]),
         ...mapGetters("error", ["has_any_loading_error"]),
         error_message() {
@@ -81,7 +81,7 @@ export default {
         },
         has_lock_error() {
             return this.has_document_lock_error;
-        }
-    }
+        },
+    },
 };
 </script>

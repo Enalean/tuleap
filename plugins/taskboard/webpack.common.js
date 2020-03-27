@@ -21,7 +21,7 @@ const path = require("path");
 const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 
 const entry_points = {
-    taskboard: "./scripts/taskboard/index.ts"
+    taskboard: "./scripts/taskboard/index.ts",
 };
 
 const colors = ["blue", "green", "grey", "orange", "purple", "red"];
@@ -39,11 +39,11 @@ module.exports = [
             "/assets/taskboard/"
         ),
         resolve: {
-            extensions: [".js", ".ts", ".vue"]
+            extensions: [".js", ".ts", ".vue"],
         },
         externals: {
             tlp: "tlp",
-            jquery: "jQuery"
+            jquery: "jQuery",
         },
         module: {
             rules: [
@@ -54,10 +54,10 @@ module.exports = [
                         {
                             loader: "babel-loader",
                             options: {
-                                plugins: ["@babel/plugin-proposal-object-rest-spread"]
-                            }
-                        }
-                    ]
+                                plugins: ["@babel/plugin-proposal-object-rest-spread"],
+                            },
+                        },
+                    ],
                 },
                 ...webpack_configurator.configureTypescriptRules(
                     webpack_configurator.babel_options_chrome_firefox
@@ -65,18 +65,18 @@ module.exports = [
                 webpack_configurator.rule_easygettext_loader,
                 webpack_configurator.rule_vue_loader,
                 webpack_configurator.rule_file_loader_images,
-                webpack_configurator.rule_scss_loader
-            ]
+                webpack_configurator.rule_scss_loader,
+            ],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
             webpack_configurator.getVueLoaderPlugin(),
             webpack_configurator.getTypescriptCheckerPlugin(true),
-            ...webpack_configurator.getCSSExtractionPlugins()
+            ...webpack_configurator.getCSSExtractionPlugins(),
         ],
         resolveLoader: {
-            alias: webpack_configurator.easygettext_loader_alias
-        }
-    }
+            alias: webpack_configurator.easygettext_loader_alias,
+        },
+    },
 ];

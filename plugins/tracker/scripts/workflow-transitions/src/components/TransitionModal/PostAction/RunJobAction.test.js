@@ -36,9 +36,9 @@ describe("RunJobAction", () => {
                 current_tracker: create("tracker", { project: { id: 1 } }),
                 transitionModal: {
                     current_transition: create("transition"),
-                    is_modal_save_running: false
-                }
-            }
+                    is_modal_save_running: false,
+                },
+            },
         };
 
         store = createStoreMock(store_options);
@@ -46,7 +46,7 @@ describe("RunJobAction", () => {
         wrapper = shallowMount(RunJobAction, {
             mocks: { $store: store },
             propsData: { post_action },
-            localVue
+            localVue,
         });
     });
 
@@ -68,7 +68,7 @@ describe("RunJobAction", () => {
                 "transitionModal/updateRunJobPostActionJobUrl",
                 {
                     post_action: post_action,
-                    job_url: "http://new-url.test"
+                    job_url: "http://new-url.test",
                 }
             );
         });

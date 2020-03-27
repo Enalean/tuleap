@@ -86,6 +86,6 @@
 
 <script>
 export default {
-    name: "LoadingErrorSvg"
+    name: "LoadingErrorSvg",
 };
 </script>

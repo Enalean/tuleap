@@ -19,7 +19,7 @@
 
 export enum BurnupMode {
     COUNT = "count",
-    EFFORT = "effort"
+    EFFORT = "effort",
 }
 
 export interface MilestoneData {

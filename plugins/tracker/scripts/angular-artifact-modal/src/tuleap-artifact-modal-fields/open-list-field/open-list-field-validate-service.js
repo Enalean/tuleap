@@ -21,7 +21,7 @@ import { pick } from "lodash";
 import {
     LIST_BIND_STATIC,
     LIST_BIND_UGROUPS,
-    LIST_BIND_USERS
+    LIST_BIND_USERS,
 } from "../../../../constants/fields-constants.js";
 
 export function validateOpenListFieldValue(value_model) {
@@ -30,7 +30,7 @@ export function validateOpenListFieldValue(value_model) {
     }
 
     value_model.value.bind_value_objects = value_model.value.bind_value_objects.map(
-        bind_value_object => {
+        (bind_value_object) => {
             if (value_model.bindings.type === LIST_BIND_STATIC) {
                 return removeStaticValueUnusedAttributes(bind_value_object);
             } else if (value_model.bindings.type === LIST_BIND_UGROUPS) {

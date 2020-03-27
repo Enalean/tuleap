@@ -29,6 +29,6 @@ function formatDateYearMonthDay(date: string | null): string {
     return new Date(date).toLocaleDateString(getUserLocale(), {
         year: "numeric",
         month: "short",
-        day: "numeric"
+        day: "numeric",
     });
 }

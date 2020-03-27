@@ -20,7 +20,7 @@ function UgroupsOpenListFieldController($element) {
 
         select2(open_list_element, {
             placeholder: self.field.hint,
-            allowClear: true
+            allowClear: true,
         });
     }
 

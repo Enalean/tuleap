@@ -49,33 +49,33 @@ export default {
     props: {
         id: {
             type: String,
-            required: true
+            required: true,
         },
         value: {
             type: String,
-            required: true
+            required: true,
         },
         allowed_icons: {
             type: Object,
-            required: true
-        }
+            required: true,
+        },
     },
     data() {
         return {
-            selector: null
+            selector: null,
         };
     },
     watch: {
         value(value) {
             this.selector.val(value).trigger("change");
-        }
+        },
     },
     mounted() {
         this.selector = select2(this.$refs.select, {
             placeholder: this.$gettext("Choose an icon"),
             allowClear: true,
             templateSelection: this.formatItem,
-            templateResult: this.formatItem
+            templateResult: this.formatItem,
         })
             .val(this.value)
             .trigger("change")
@@ -99,7 +99,7 @@ export default {
             span.insertAdjacentElement("afterbegin", icon);
             span.insertAdjacentText("beforeend", item.text);
             return span;
-        }
-    }
+        },
+    },
 };
 </script>

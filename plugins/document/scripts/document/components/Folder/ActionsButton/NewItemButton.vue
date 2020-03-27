@@ -35,12 +35,12 @@ import EventBus from "../../../helpers/event-bus.js";
 
 export default {
     props: {
-        item: Object
+        item: Object,
     },
     methods: {
         showNewDocumentModal() {
             EventBus.$emit("show-new-document-modal", { detail: { parent: this.item } });
-        }
-    }
+        },
+    },
 };
 </script>

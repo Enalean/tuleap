@@ -63,23 +63,23 @@ document.addEventListener("DOMContentLoaded", () => {
             top: 50,
             right: 80,
             bottom: 60,
-            left: 80
-        }
+            left: 80,
+        },
     };
 
     const chart_legends = [
         {
             label: gettext_provider.gettext("Ideal burnup"),
-            classname: "chart-plot-ideal-burnup"
+            classname: "chart-plot-ideal-burnup",
         },
         {
             label: progression_label,
-            classname: "chart-plot-team-effort"
+            classname: "chart-plot-team-effort",
         },
         {
             label: total_label,
-            classname: "chart-plot-total-effort"
-        }
+            classname: "chart-plot-total-effort",
+        },
     ];
 
     const generic_burnup_data = transformToGenericBurnupData(burnup_data, mode);

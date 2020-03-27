@@ -36,42 +36,42 @@ describe("AdvancedTemplateList", () => {
 
     beforeEach(() => {
         state = {
-            default_project_template: null
+            default_project_template: null,
         } as State;
         const store_options = {
-            state
+            state,
         };
         store = createStoreMock(store_options);
     });
 
     it("does not display the TemplateCard Component if the defaut project template is null", async () => {
         state = {
-            default_project_template: null
+            default_project_template: null,
         } as State;
         const store_options = {
-            state
+            state,
         };
         store = createStoreMock(store_options);
 
         wrapper = shallowMount(AdvancedTemplateList, {
             localVue: await createProjectRegistrationLocalVue(),
-            mocks: { $store: store }
+            mocks: { $store: store },
         });
         expect(wrapper.contains(TemplateCard)).toBe(false);
     });
 
     it("displays the TemplateCard Component if the defaut project template is provided", async () => {
         state = {
-            default_project_template: {} as TemplateData
+            default_project_template: {} as TemplateData,
         } as State;
         const store_options = {
-            state
+            state,
         };
         store = createStoreMock(store_options);
 
         wrapper = shallowMount(AdvancedTemplateList, {
             localVue: await createProjectRegistrationLocalVue(),
-            mocks: { $store: store }
+            mocks: { $store: store },
         });
         expect(wrapper.contains(TemplateCard)).toBe(true);
     });
@@ -79,7 +79,7 @@ describe("AdvancedTemplateList", () => {
     it("Display the description by default", async () => {
         wrapper = shallowMount(AdvancedTemplateList, {
             localVue: await createProjectRegistrationLocalVue(),
-            mocks: { $store: store }
+            mocks: { $store: store },
         });
 
         expect(wrapper.find("[data-test=user-project-description]").exists()).toBeTruthy();
@@ -91,7 +91,7 @@ describe("AdvancedTemplateList", () => {
     it(`Display spinner when project list is loading`, async () => {
         wrapper = shallowMount(AdvancedTemplateList, {
             localVue: await createProjectRegistrationLocalVue(),
-            mocks: { $store: store }
+            mocks: { $store: store },
         });
 
         wrapper.vm.$data.is_loading_project_list = true;
@@ -105,7 +105,7 @@ describe("AdvancedTemplateList", () => {
     it(`Does not display spinner if an error happened`, async () => {
         wrapper = shallowMount(AdvancedTemplateList, {
             localVue: await createProjectRegistrationLocalVue(),
-            mocks: { $store: store }
+            mocks: { $store: store },
         });
 
         wrapper.vm.$data.is_loading_project_list = true;
@@ -120,7 +120,7 @@ describe("AdvancedTemplateList", () => {
     it(`Display error if something went wrong`, async () => {
         wrapper = shallowMount(AdvancedTemplateList, {
             localVue: await createProjectRegistrationLocalVue(),
-            mocks: { $store: store }
+            mocks: { $store: store },
         });
 
         wrapper.vm.$data.has_error = true;
@@ -137,7 +137,7 @@ describe("AdvancedTemplateList", () => {
 
         wrapper = shallowMount(AdvancedTemplateList, {
             localVue: await createProjectRegistrationLocalVue(),
-            mocks: { $store: store }
+            mocks: { $store: store },
         });
 
         wrapper.find("[data-test=project-registration-card-label").trigger("click");
@@ -155,7 +155,7 @@ describe("AdvancedTemplateList", () => {
     it(`Does not load twice the project list`, async () => {
         wrapper = shallowMount(AdvancedTemplateList, {
             localVue: await createProjectRegistrationLocalVue(),
-            mocks: { $store: store }
+            mocks: { $store: store },
         });
 
         const project: TemplateData = {
@@ -163,7 +163,7 @@ describe("AdvancedTemplateList", () => {
             description: "",
             id: "102",
             glyph: "",
-            is_built_in: false
+            is_built_in: false,
         };
 
         wrapper.vm.$data.project_list = [project];

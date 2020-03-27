@@ -25,22 +25,20 @@
  */
 function hide_references_to() {
     var references = $$(".not-condensed .reference_to");
-    references.each(function(li) {
+    references.each(function (li) {
         // hide all <li> with class "reference_to"
         li.hide();
         if (
             !li
                 .up()
                 .childElements()
-                .find(function(other_li) {
+                .find(function (other_li) {
                     return other_li.visible();
                 })
         ) {
             // if no other <li> are visible, hide also <ul> and nature of the reference (previous)
             li.up().hide();
-            li.up()
-                .previous()
-                .hide();
+            li.up().previous().hide();
         }
     });
     // display 'show link'
@@ -60,14 +58,12 @@ function hide_references_to() {
  */
 function show_references_to() {
     var references = $$(".not-condensed .reference_to");
-    references.each(function(li) {
+    references.each(function (li) {
         // show all <li> with class "reference_to"
         li.show();
         // shwo also <ul> and nature of the reference (previous)
         li.up().show();
-        li.up()
-            .previous()
-            .show();
+        li.up().previous().show();
     });
     // display 'hide link'
     if (references.size() > 0) {
@@ -87,35 +83,26 @@ function delete_ref(id, message) {
     if (confirm(message)) {
         var opt = {
             method: "get",
-            onComplete: function() {
+            onComplete: function () {
                 var is_the_deleted_reference_the_last_one = $(id).siblings().length === 1;
-                var is_the_full_cross_references_section_empty =
-                    $(id)
-                        .up()
-                        .siblings().length === 0;
+                var is_the_full_cross_references_section_empty = $(id).up().siblings().length === 0;
                 var is_the_full_cross_references_section_non_empty =
-                    $(id)
-                        .up()
-                        .siblings().length > 0;
+                    $(id).up().siblings().length > 0;
 
                 if (
                     is_the_deleted_reference_the_last_one &&
                     is_the_full_cross_references_section_empty
                 ) {
-                    $(id)
-                        .up()
-                        .hide();
+                    $(id).up().hide();
                 } else if (
                     is_the_deleted_reference_the_last_one &&
                     is_the_full_cross_references_section_non_empty
                 ) {
-                    $(id)
-                        .up(".nature")
-                        .hide();
+                    $(id).up(".nature").hide();
                 } else {
                     $(id).remove();
                 }
-            }
+            },
         };
         new Ajax.Updater("id", $(id).down(".delete_ref").href, opt);
     }
@@ -123,22 +110,22 @@ function delete_ref(id, message) {
 }
 window.delete_ref = delete_ref;
 
-document.observe("dom:loaded", function() {
+document.observe("dom:loaded", function () {
     //hide reference to item to clean the ui
     if ($("cross_references_legend")) {
         hide_references_to();
     }
 
     //hide the delete ref icon to clean the ui
-    $$(".link_to_ref").each(function(l) {
+    $$(".link_to_ref").each(function (l) {
         if (l.down(".delete_ref")) {
             var a = l.down(".delete_ref");
             var img = a.down("img");
             img.src = img.src.replace("cross.png", "cross-disabled.png");
-            img.observe("mouseover", function() {
+            img.observe("mouseover", function () {
                 img.src = img.src.replace("cross-disabled.png", "cross.png");
             });
-            img.observe("mouseout", function() {
+            img.observe("mouseout", function () {
                 img.src = img.src.replace("cross.png", "cross-disabled.png");
             });
         }

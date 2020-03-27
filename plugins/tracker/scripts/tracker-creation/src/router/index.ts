@@ -35,14 +35,14 @@ export function createRouter(project_unix_name: string): VueRouter {
             {
                 path: "/new",
                 name: STEP_1_NAME,
-                component: StepOne
+                component: StepOne,
             },
             {
                 path: "/new-information",
                 name: STEP_2_NAME,
-                component: StepTwo
-            }
-        ]
+                component: StepTwo,
+            },
+        ],
     });
 
     router.beforeEach((to, from, next) => {

@@ -47,7 +47,7 @@ import {
     REST_FEEDBACK_ADD,
     REST_FEEDBACK_EDIT,
     REST_FEEDBACK_DELETE,
-    ERROR_OCCURRED
+    ERROR_OCCURRED,
 } from "../../../../constants.js";
 import WidgetModalArtifactInfo from "./WidgetModalArtifactInfo.vue";
 import WidgetModalTable from "./WidgetModalTable.vue";
@@ -74,10 +74,10 @@ export default {
                 default:
                     return this.rest_feedback.message;
             }
-        }
+        },
     },
     methods: {
-        ...mapMutations(["setAddMode"])
-    }
+        ...mapMutations(["setAddMode"]),
+    },
 };
 </script>

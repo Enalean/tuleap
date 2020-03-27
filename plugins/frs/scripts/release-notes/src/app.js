@@ -53,7 +53,7 @@ export default angular
         "ng-showdown",
         angular_tlp_module,
         ng_sanitize,
-        ui_router
+        ui_router,
     ])
     .controller("AppController", AppController)
     .controller("LicenseModalController", LicenseModalController)
@@ -73,9 +73,9 @@ export default angular
     .config(LinkedArtifactsConfig)
     .run([
         "gettextCatalog",
-        function(gettextCatalog) {
+        function (gettextCatalog) {
             for (const [language, strings] of Object.entries(translations)) {
                 gettextCatalog.setStrings(language, strings);
             }
-        }
+        },
     ]).name;

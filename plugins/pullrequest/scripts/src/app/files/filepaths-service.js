@@ -9,7 +9,7 @@ function FilepathsService() {
     Object.assign(self, {
         setFilepaths,
         previous,
-        next
+        next,
     });
 
     function setFilepaths(files) {

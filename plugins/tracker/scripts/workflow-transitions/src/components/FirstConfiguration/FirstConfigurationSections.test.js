@@ -33,9 +33,9 @@ describe("FirstConfigurationSections", () => {
         store = createStoreMock(store_options);
         wrapper = shallowMount(FirstConfigurationSections, {
             mocks: {
-                $store: store
+                $store: store,
             },
-            localVue
+            localVue,
         });
     });
 

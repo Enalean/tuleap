@@ -35,7 +35,7 @@ export class VelocityChartDrawer {
         Object.assign(this, {
             mount_point,
             chart_props,
-            sprints_data
+            sprints_data,
         });
 
         this.init();
@@ -57,7 +57,7 @@ export class VelocityChartDrawer {
         const scales = buildBarChartScales({
             ...this.chart_props,
             x_axis_tick_values: this.getXLabels(),
-            y_axis_maximum: this.getMaximumVelocity()
+            y_axis_maximum: this.getMaximumVelocity(),
         });
 
         Object.assign(this, scales);
@@ -68,7 +68,7 @@ export class VelocityChartDrawer {
 
         this.svg_velocity = buildChartLayout(mount_point, chart_props, {
             x_scale,
-            y_scale
+            y_scale,
         });
     }
 
@@ -78,7 +78,7 @@ export class VelocityChartDrawer {
             tooltip_padding_width: 15,
             tooltip_padding_height: 5,
             tooltip_arrow_size: 150,
-            tooltip_font_size: 12
+            tooltip_font_size: 12,
         });
 
         Object.assign(this, { tooltip_factory });
@@ -94,7 +94,7 @@ export class VelocityChartDrawer {
             .append("g")
             .attr("class", "velocity-bar");
 
-        columns.each(function({ name, velocity }) {
+        columns.each(function ({ name, velocity }) {
             const column = select(this);
 
             column
@@ -137,7 +137,7 @@ export class VelocityChartDrawer {
 
                         return name;
                     })
-                    .addTextLine(sprint => this.getSprintDates(sprint))
+                    .addTextLine((sprint) => this.getSprintDates(sprint))
                     .addTextLine(({ velocity }) => {
                         return sprintf(gettext_provider.gettext("Velocity: %s"), velocity);
                     });
@@ -163,7 +163,7 @@ export class VelocityChartDrawer {
         const sprint_names = this.svg_velocity.selectAll(`.chart-x-axis > .tick`).nodes();
         const step_size = this.x_scale.step();
 
-        sprint_names.forEach(node => {
+        sprint_names.forEach((node) => {
             const label = select(node);
 
             let label_width = node.getBBox().width;

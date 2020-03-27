@@ -29,7 +29,7 @@ import {
     copyFolder,
     copyLink,
     copyWiki,
-    copyFile
+    copyFile,
 } from "../../api/rest-querier.js";
 import {
     TYPE_EMBEDDED,
@@ -39,7 +39,7 @@ import {
     TYPE_LINK,
     TYPE_WIKI,
     CLIPBOARD_OPERATION_CUT,
-    CLIPBOARD_OPERATION_COPY
+    CLIPBOARD_OPERATION_COPY,
 } from "../../constants.js";
 import { adjustItemToContentAfterItemCreationInAFolder } from "../actions-helpers/adjust-item-to-content-after-item-creation-in-folder.js";
 import { handleErrors } from "../actions-helpers/handle-errors.js";

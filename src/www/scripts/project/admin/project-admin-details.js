@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
     autocomplete(select_element, {
-        include_private_projects: true
+        include_private_projects: true,
     });
 });
 
@@ -96,7 +96,7 @@ function initWarningRestrictedUsersRemovalOnProjectVisibilityChange() {
         project_info_form.submit();
     });
 
-    project_info_form.addEventListener("submit", event => {
+    project_info_form.addEventListener("submit", (event) => {
         if (has_submission_been_confirmed) {
             return;
         }
@@ -114,7 +114,7 @@ function initWarningRestrictedUsersRemovalOnProjectVisibilityChange() {
         event.preventDefault();
 
         const modal = createModal(warning_restricted_users_removal_modal_element, {
-            destroy_on_hide: true
+            destroy_on_hide: true,
         });
         modal.show();
     });

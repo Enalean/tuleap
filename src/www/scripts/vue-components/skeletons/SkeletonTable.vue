@@ -45,7 +45,7 @@ export default {
         nb_rows: Number,
         nb_cols: Number,
         icons: Array,
-        cell_classes: Array
+        cell_classes: Array,
     },
     computed: {
         rows() {
@@ -65,7 +65,7 @@ export default {
             }
 
             return rows;
-        }
+        },
     },
     methods: {
         getRandomInt(max) {
@@ -87,7 +87,7 @@ export default {
             }
 
             return this.cell_classes[cell_index];
-        }
-    }
+        },
+    },
 };
 </script>

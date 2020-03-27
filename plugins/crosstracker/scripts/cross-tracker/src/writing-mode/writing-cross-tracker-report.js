@@ -35,7 +35,7 @@ export default class WritingCrossTrackerReport {
 
         this.trackers.set(tracker.id, {
             project,
-            tracker
+            tracker,
         });
     }
 

@@ -33,10 +33,10 @@ import { transformDocumentMetadataForUpdate } from "../../../../helpers/metadata
 export default {
     name: "StatusMetadataWithCustomBindingForDocumentUpdate",
     components: {
-        StatusMetadata
+        StatusMetadata,
     },
     props: {
-        currentlyUpdatedItem: Object
+        currentlyUpdatedItem: Object,
     },
     computed: {
         ...mapState(["is_item_status_metadata_used"]),
@@ -50,8 +50,8 @@ export default {
             },
             set(value) {
                 this.currentlyUpdatedItem.status = value;
-            }
-        }
-    }
+            },
+        },
+    },
 };
 </script>

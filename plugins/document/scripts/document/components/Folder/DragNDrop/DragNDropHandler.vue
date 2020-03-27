@@ -54,7 +54,7 @@ export default {
             DOCUMENT_NEEDS_APPROVAL: "document_needs_approval",
             DROPPED_ITEM_IS_NOT_A_FILE: "dropped_item_is_not_a_file",
             IE11_NOT_SUPPORTED: "ie11_is_not_supported",
-            highlighted_item_id: null
+            highlighted_item_id: null,
         };
     },
     computed: {
@@ -64,7 +64,7 @@ export default {
             "folder_content",
             "max_files_dragndrop",
             "max_size_upload",
-            "user_id"
+            "user_id",
         ]),
         user_can_dragndrop_in_current_folder() {
             return (
@@ -127,7 +127,7 @@ export default {
                 import(
                     /* webpackChunkName: "document-max-files-dragndrop-error-modal" */ "./MaxFilesDragndropErrorModal.vue"
                 );
-        }
+        },
     },
     created() {
         this.main = document.querySelector(".document-main");
@@ -216,7 +216,7 @@ export default {
 
                 if (
                     this.folder_content.find(
-                        item =>
+                        (item) =>
                             item.title === file.name &&
                             item.type !== TYPE_FOLDER &&
                             item.parent_id === dropzone_item.id
@@ -237,7 +237,7 @@ export default {
             if (is_uploading_in_subfolder && !dropzone_item.is_expanded) {
                 this.$store.commit("toggleCollapsedFolderHasUploadingContent", [
                     dropzone_item,
-                    true
+                    true,
                 ]);
             }
 
@@ -248,7 +248,7 @@ export default {
                         dropzone_item,
                         file.name,
                         "",
-                        should_display_fake_item
+                        should_display_fake_item,
                     ]);
                 } catch (error) {
                     this.error_modal_shown = this.CREATION_ERROR;
@@ -291,7 +291,7 @@ export default {
             const target_drop_zones = [
                 ".document-tree-item-folder",
                 ".document-quick-look-folder-dropzone",
-                ".document-quick-look-file-dropzone"
+                ".document-quick-look-file-dropzone",
             ];
 
             if (!event.dataTransfer.items) {
@@ -315,12 +315,12 @@ export default {
                 this.is_dropzone_highlighted = true;
             }
         },
-        getDropZoneItem: function() {
+        getDropZoneItem: function () {
             if (!this.highlighted_item_id) {
                 return this.current_folder;
             }
 
-            return this.folder_content.find(item => item.id === this.highlighted_item_id);
+            return this.folder_content.find((item) => item.id === this.highlighted_item_id);
         },
         async uploadNewFileVersion(event, dropzone_item) {
             const { lock_info, approval_table } = dropzone_item;
@@ -332,7 +332,7 @@ export default {
                 this.error_modal_shown = this.EDITION_LOCKED;
                 this.error_modal_reasons.push({
                     filename: dropzone_item.title,
-                    lock_owner: lock_info.locked_by
+                    lock_owner: lock_info.locked_by,
                 });
 
                 return;
@@ -347,7 +347,7 @@ export default {
                     filename: dropzone_item.title,
                     approval_table_owner: approval_table.table_owner,
                     approval_table_state: approval_table.approval_state,
-                    item_id: dropzone_item.id
+                    item_id: dropzone_item.id,
                 });
 
                 return;
@@ -377,7 +377,7 @@ export default {
             }
         },
         async isDroppedItemAFile(file) {
-            const read_file_operation = new Promise(resolve => {
+            const read_file_operation = new Promise((resolve) => {
                 const reader = new FileReader();
 
                 reader.onload = () => {
@@ -398,7 +398,7 @@ export default {
             const is_a_file = await read_file_operation;
 
             return is_a_file;
-        }
-    }
+        },
+    },
 };
 </script>

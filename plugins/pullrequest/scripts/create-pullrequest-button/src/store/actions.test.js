@@ -26,7 +26,7 @@ describe("Store actions", () => {
 
     beforeEach(() => {
         context = {
-            commit: jest.fn()
+            commit: jest.fn(),
         };
     });
 
@@ -45,8 +45,8 @@ describe("Store actions", () => {
                     display_name: "feature/branch",
                     repository_id: 42,
                     project_id: 101,
-                    name: "feature/branch"
-                }
+                    name: "feature/branch",
+                },
             ]);
         });
 
@@ -63,15 +63,15 @@ describe("Store actions", () => {
                     display_name: "feature/branch",
                     repository_id: 42,
                     project_id: 101,
-                    name: "feature/branch"
-                }
+                    name: "feature/branch",
+                },
             ]);
         });
 
         it("loads branches of parent repository and add them as destination branches", async () => {
             const branches = [{ name: "master" }, { name: "feature/branch" }];
             const parent_branches = [{ name: "master" }, { name: "dev" }];
-            jest.spyOn(rest_querier, "getBranches").mockImplementation(id => {
+            jest.spyOn(rest_querier, "getBranches").mockImplementation((id) => {
                 if (id === 42) {
                     return Promise.resolve(branches);
                 }
@@ -86,7 +86,7 @@ describe("Store actions", () => {
                 project_id: 101,
                 parent_repository_id: 66,
                 parent_project_id: 102,
-                parent_repository_name: "ledepot"
+                parent_repository_name: "ledepot",
             });
 
             expect(context.commit).toHaveBeenCalledWith("setDestinationBranches", [
@@ -95,15 +95,15 @@ describe("Store actions", () => {
                     display_name: "feature/branch",
                     repository_id: 42,
                     project_id: 101,
-                    name: "feature/branch"
+                    name: "feature/branch",
                 },
                 {
                     display_name: "ledepot : master",
                     repository_id: 66,
                     project_id: 102,
-                    name: "master"
+                    name: "master",
                 },
-                { display_name: "ledepot : dev", repository_id: 66, project_id: 102, name: "dev" }
+                { display_name: "ledepot : dev", repository_id: 66, project_id: 102, name: "dev" },
             ]);
         });
 
@@ -115,7 +115,7 @@ describe("Store actions", () => {
                 project_id: 101,
                 parent_repository_id: 66,
                 parent_project_id: 102,
-                parent_repository_name: "ledepot"
+                parent_repository_name: "ledepot",
             });
 
             expect(context.commit).toHaveBeenCalledWith("setHasErrorWhileLoadingBranchesToTrue");
@@ -126,12 +126,12 @@ describe("Store actions", () => {
         const source_branch = {
             repository_id: 102,
             project_id: 42,
-            name: "feature/branch"
+            name: "feature/branch",
         };
         const destination_branch = {
             repository_id: 101,
             project_id: 42,
-            name: "master"
+            name: "master",
         };
 
         it("calls the rest api to create the pull request", async () => {
@@ -168,11 +168,11 @@ describe("Store actions", () => {
                         json() {
                             return Promise.resolve({
                                 error: {
-                                    message: "You cannot create this pullrequest"
-                                }
+                                    message: "You cannot create this pullrequest",
+                                },
                             });
-                        }
-                    }
+                        },
+                    },
                 })
             );
 

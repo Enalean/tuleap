@@ -26,16 +26,16 @@ describe("PlanningController -", () => {
         resources: {
             backlog: {
                 accept: {
-                    trackers: [{ id: 99, label: "story" }]
-                }
+                    trackers: [{ id: 99, label: "story" }],
+                },
             },
             content: {
                 accept: {
-                    trackers: [{ id: 99, label: "story" }]
-                }
-            }
+                    trackers: [{ id: 99, label: "story" }],
+                },
+            },
         },
-        sub_milestone_type: { id: 66, label: "sprints" }
+        sub_milestone_type: { id: 66, label: "sprints" },
     };
     const initial_milestones = {
         milestones_representations: [
@@ -43,23 +43,23 @@ describe("PlanningController -", () => {
                 resources: {
                     backlog: {
                         accept: {
-                            trackers: [{ id: 98, label: "task" }]
-                        }
+                            trackers: [{ id: 98, label: "task" }],
+                        },
                     },
                     content: {
                         accept: {
-                            trackers: [{ id: 98, label: "task" }]
-                        }
-                    }
-                }
-            }
-        ]
+                            trackers: [{ id: 98, label: "task" }],
+                        },
+                    },
+                },
+            },
+        ],
     };
 
     beforeEach(() => {
         angular.mock.module(planning_module);
 
-        angular.mock.inject(function(
+        angular.mock.inject(function (
             _$controller_,
             $rootScope,
             _$q_,
@@ -87,7 +87,7 @@ describe("PlanningController -", () => {
             ).mockImplementation(() => {});
             jest.spyOn(SharedPropertiesService, "getViewMode").mockImplementation(() => {});
 
-            var returnPromise = function(method) {
+            var returnPromise = function (method) {
                 var self = this;
                 jest.spyOn(self, method).mockReturnValue($q.defer().promise);
             };
@@ -98,7 +98,7 @@ describe("PlanningController -", () => {
                 "getMilestoneBacklogItems",
                 "getProjectBacklogItems",
                 "getBacklogItem",
-                "removeAddBacklogItemChildren"
+                "removeAddBacklogItemChildren",
             ]).forEach(returnPromise, BacklogItemService);
 
             MilestoneService = _MilestoneService_;
@@ -115,7 +115,7 @@ describe("PlanningController -", () => {
                 "putSubMilestones",
                 "patchSubMilestones",
                 "removeAddReorderToBacklog",
-                "removeAddToBacklog"
+                "removeAddToBacklog",
             ]).forEach(returnPromise, MilestoneService);
 
             NewTuleapArtifactModalService = _NewTuleapArtifactModalService_;
@@ -133,8 +133,8 @@ describe("PlanningController -", () => {
                 "refreshBacklogItem"
             ).mockImplementation(() => {});
 
-            $filter = jest.fn(function() {
-                return function() {};
+            $filter = jest.fn(function () {
+                return function () {};
             });
 
             ItemAnimatorService = _ItemAnimatorService_;
@@ -154,7 +154,7 @@ describe("PlanningController -", () => {
             SharedPropertiesService,
             UserPreferencesService,
             BacklogItemCollectionService,
-            BacklogItemSelectedService
+            BacklogItemSelectedService,
         });
         PlanningController.$onInit();
     });
@@ -165,7 +165,7 @@ describe("PlanningController -", () => {
                 SharedPropertiesService.getMilestoneId.mockImplementation(() => {});
             });
 
-            it("and given that no milestone was injected, when I load the controller, then the milestones will be retrieved", function() {
+            it("and given that no milestone was injected, when I load the controller, then the milestones will be retrieved", function () {
                 SharedPropertiesService.getInitialMilestones.mockImplementation(() => {});
                 var milestone_request = $q.defer();
                 MilestoneService.getOpenMilestones.mockReturnValue(milestone_request.promise);
@@ -175,10 +175,10 @@ describe("PlanningController -", () => {
                     results: [
                         {
                             id: 184,
-                            label: "Release v1.0"
-                        }
+                            label: "Release v1.0",
+                        },
                     ],
-                    total: 1
+                    total: 1,
                 });
                 expect(PlanningController.milestones.loading).toBeTruthy();
                 $scope.$apply();
@@ -193,8 +193,8 @@ describe("PlanningController -", () => {
                 expect(PlanningController.milestones.content).toEqual([
                     {
                         id: 184,
-                        label: "Release v1.0"
-                    }
+                        label: "Release v1.0",
+                    },
                 ]);
             });
         });
@@ -213,16 +213,16 @@ describe("PlanningController -", () => {
 
                 PlanningController.$onInit();
                 milestone_request.resolve({
-                    results: milestone
+                    results: milestone,
                 });
                 submilestone_request.resolve({
                     results: [
                         {
                             id: 249,
-                            label: "Sprint 2015-38"
-                        }
+                            label: "Sprint 2015-38",
+                        },
                     ],
-                    total: 1
+                    total: 1,
                 });
                 expect(PlanningController.milestones.loading).toBeTruthy();
                 $scope.$apply();
@@ -237,8 +237,8 @@ describe("PlanningController -", () => {
                 expect(PlanningController.milestones.content).toEqual([
                     {
                         id: 249,
-                        label: "Sprint 2015-38"
-                    }
+                        label: "Sprint 2015-38",
+                    },
                 ]);
             });
         });
@@ -268,8 +268,8 @@ describe("PlanningController -", () => {
         });
     });
 
-    describe("switchViewMode() -", function() {
-        it("Given a view mode, when I switch to this view mode, then the current view class will be updated and this mode will be saved as my user preference", function() {
+    describe("switchViewMode() -", function () {
+        it("Given a view mode, when I switch to this view mode, then the current view class will be updated and this mode will be saved as my user preference", function () {
             PlanningController.switchViewMode("detailed-view");
 
             expect(PlanningController.current_view_class).toEqual("detailed-view");
@@ -281,23 +281,23 @@ describe("PlanningController -", () => {
         });
     });
 
-    describe("switchClosedMilestoneItemsViewMode() -", function() {
-        it("Given a view mode, when I switch closed milestones' view mode, then the current view class will be updated", function() {
+    describe("switchClosedMilestoneItemsViewMode() -", function () {
+        it("Given a view mode, when I switch closed milestones' view mode, then the current view class will be updated", function () {
             PlanningController.switchClosedMilestoneItemsViewMode("show-closed-view");
 
             expect(PlanningController.current_closed_view_class).toEqual("show-closed-view");
         });
     });
 
-    describe("displayClosedMilestones() -", function() {
+    describe("displayClosedMilestones() -", function () {
         var milestone_request;
-        beforeEach(function() {
+        beforeEach(function () {
             milestone_request = $q.defer();
             jest.spyOn(PlanningController, "isMilestoneContext").mockImplementation(() => {});
             PlanningController.milestones.content = [{ id: 747 }];
         });
 
-        it("Given that we were in a project's context, when I display closed milestones, then MilestoneService will be called and the milestones collection will be updated with the closed milestones in reverse order", function() {
+        it("Given that we were in a project's context, when I display closed milestones, then MilestoneService will be called and the milestones collection will be updated with the closed milestones in reverse order", function () {
             PlanningController.isMilestoneContext.mockReturnValue(false);
             MilestoneService.getClosedMilestones.mockReturnValue(milestone_request.promise);
 
@@ -305,7 +305,7 @@ describe("PlanningController -", () => {
             expect(PlanningController.milestones.loading).toBeTruthy();
             milestone_request.resolve({
                 results: [{ id: 108 }, { id: 982 }],
-                total: 2
+                total: 2,
             });
             $scope.$apply();
 
@@ -313,11 +313,11 @@ describe("PlanningController -", () => {
             expect(PlanningController.milestones.content).toEqual([
                 { id: 982 },
                 { id: 747 },
-                { id: 108 }
+                { id: 108 },
             ]);
         });
 
-        it("Given that we were in a milestone's context, when I display closed milestones, then MilestoneService will be called and the milestones collection will be updated with the closed milestones in reverse order", function() {
+        it("Given that we were in a milestone's context, when I display closed milestones, then MilestoneService will be called and the milestones collection will be updated with the closed milestones in reverse order", function () {
             PlanningController.isMilestoneContext.mockReturnValue(true);
             MilestoneService.getClosedSubMilestones.mockReturnValue(milestone_request.promise);
 
@@ -325,7 +325,7 @@ describe("PlanningController -", () => {
             expect(PlanningController.milestones.loading).toBeTruthy();
             milestone_request.resolve({
                 results: [{ id: 316 }, { id: 960 }],
-                total: 2
+                total: 2,
             });
             $scope.$apply();
 
@@ -333,19 +333,19 @@ describe("PlanningController -", () => {
             expect(PlanningController.milestones.content).toEqual([
                 { id: 960 },
                 { id: 747 },
-                { id: 316 }
+                { id: 316 },
             ]);
         });
     });
 
-    describe("thereAreOpenMilestonesLoaded() -", function() {
-        it("Given that open milestones have previously been loaded, when I check if open milestones have been loaded, then it will return true", function() {
-            $filter.mockReturnValue(function() {
+    describe("thereAreOpenMilestonesLoaded() -", function () {
+        it("Given that open milestones have previously been loaded, when I check if open milestones have been loaded, then it will return true", function () {
+            $filter.mockReturnValue(function () {
                 return [
                     {
                         id: 9,
-                        semantic_status: "open"
-                    }
+                        semantic_status: "open",
+                    },
                 ];
             });
 
@@ -354,8 +354,8 @@ describe("PlanningController -", () => {
             expect(result).toBeTruthy();
         });
 
-        it("Given that open milestones have never been loaded, when I check if open milestones have been loaded, then it will return false", function() {
-            $filter.mockReturnValue(function() {
+        it("Given that open milestones have never been loaded, when I check if open milestones have been loaded, then it will return false", function () {
+            $filter.mockReturnValue(function () {
                 return [];
             });
 
@@ -365,14 +365,14 @@ describe("PlanningController -", () => {
         });
     });
 
-    describe("thereAreClosedMilestonesLoaded() -", function() {
-        it("Given that closed milestones have previously been loaded, when I check if closed milestones have been loaded, then it will return true", function() {
-            $filter.mockReturnValue(function() {
+    describe("thereAreClosedMilestonesLoaded() -", function () {
+        it("Given that closed milestones have previously been loaded, when I check if closed milestones have been loaded, then it will return true", function () {
+            $filter.mockReturnValue(function () {
                 return [
                     {
                         id: 36,
-                        semantic_status: "closed"
-                    }
+                        semantic_status: "closed",
+                    },
                 ];
             });
 
@@ -381,8 +381,8 @@ describe("PlanningController -", () => {
             expect(result).toBeTruthy();
         });
 
-        it("Given that closed milestones have never been loaded, when I check if closed milestones have been loaded, then it will return false", function() {
-            $filter.mockReturnValue(function() {
+        it("Given that closed milestones have never been loaded, when I check if closed milestones have been loaded, then it will return false", function () {
+            $filter.mockReturnValue(function () {
                 return [];
             });
 
@@ -392,13 +392,13 @@ describe("PlanningController -", () => {
         });
     });
 
-    describe("generateMilestoneLinkUrl() -", function() {
-        it("Given a milestone and a pane, when I generate a Milestone link URL, then a correct URL will be generated", function() {
+    describe("generateMilestoneLinkUrl() -", function () {
+        it("Given a milestone and a pane, when I generate a Milestone link URL, then a correct URL will be generated", function () {
             var milestone = {
                 id: 71,
                 planning: {
-                    id: 207
-                }
+                    id: 207,
+                },
             };
             var pane = "burndown";
 
@@ -410,8 +410,8 @@ describe("PlanningController -", () => {
         });
     });
 
-    describe("displayUserCantPrioritizeForMilestones() -", function() {
-        it("Given that there were no milestones, when I check whether the user cannot prioritize items in milestones, then it will return false", function() {
+    describe("displayUserCantPrioritizeForMilestones() -", function () {
+        it("Given that there were no milestones, when I check whether the user cannot prioritize items in milestones, then it will return false", function () {
             PlanningController.milestones.content = [];
 
             var result = PlanningController.displayUserCantPrioritizeForMilestones();
@@ -419,11 +419,11 @@ describe("PlanningController -", () => {
             expect(result).toBeFalsy();
         });
 
-        it("Given that the user can prioritize items in milestones, when I check, then it will return true", function() {
+        it("Given that the user can prioritize items in milestones, when I check, then it will return true", function () {
             PlanningController.milestones.content = [
                 {
-                    has_user_priority_change_permission: true
-                }
+                    has_user_priority_change_permission: true,
+                },
             ];
 
             var result = PlanningController.displayUserCantPrioritizeForMilestones();
@@ -432,12 +432,12 @@ describe("PlanningController -", () => {
         });
     });
 
-    describe("canShowBacklogItem() -", function() {
-        it("Given an open backlog item, when I check whether we can show it, then it will return true", function() {
+    describe("canShowBacklogItem() -", function () {
+        it("Given an open backlog item, when I check whether we can show it, then it will return true", function () {
             var backlog_item = {
-                isOpen: function() {
+                isOpen: function () {
                     return true;
-                }
+                },
             };
 
             var result = PlanningController.canShowBacklogItem(backlog_item);
@@ -445,11 +445,11 @@ describe("PlanningController -", () => {
             expect(result).toBeTruthy();
         });
 
-        it("Given a closed backlog item, and we are displaying closed items, when I check whether we can show it, then it will return true", function() {
+        it("Given a closed backlog item, and we are displaying closed items, when I check whether we can show it, then it will return true", function () {
             var backlog_item = {
-                isOpen: function() {
+                isOpen: function () {
                     return false;
-                }
+                },
             };
             PlanningController.current_closed_view_class = "show-closed-view";
 
@@ -458,11 +458,11 @@ describe("PlanningController -", () => {
             expect(result).toBeTruthy();
         });
 
-        it("Given a closed backlog item, and we are not displaying closed items, when I check whether we can show it, then it will return false", function() {
+        it("Given a closed backlog item, and we are not displaying closed items, when I check whether we can show it, then it will return false", function () {
             var backlog_item = {
-                isOpen: function() {
+                isOpen: function () {
                     return false;
-                }
+                },
             };
             PlanningController.current_closed_view_class = "hide-closed-view";
 
@@ -471,7 +471,7 @@ describe("PlanningController -", () => {
             expect(result).toBeFalsy();
         });
 
-        it("Given an item that didn't have an isOpen() method, when I check whether we can show it, then it will return true", function() {
+        it("Given an item that didn't have an isOpen() method, when I check whether we can show it, then it will return true", function () {
             var backlog_item = { isOpen: undefined };
 
             var result = PlanningController.canShowBacklogItem(backlog_item);
@@ -480,9 +480,9 @@ describe("PlanningController -", () => {
         });
     });
 
-    describe("showEditModal() -", function() {
+    describe("showEditModal() -", function () {
         var event, item, get_request;
-        beforeEach(function() {
+        beforeEach(function () {
             get_request = $q.defer();
             event = { preventDefault: jest.fn() };
             event.which = 1;
@@ -490,11 +490,11 @@ describe("PlanningController -", () => {
                 artifact: {
                     id: 651,
                     tracker: {
-                        id: 30
-                    }
-                }
+                        id: 30,
+                    },
+                },
             };
-            NewTuleapArtifactModalService.showEdition.mockImplementation(function(
+            NewTuleapArtifactModalService.showEdition.mockImplementation(function (
                 c,
                 a,
                 b,
@@ -505,7 +505,7 @@ describe("PlanningController -", () => {
             BacklogItemCollectionService.refreshBacklogItem.mockReturnValue(get_request.promise);
         });
 
-        it("Given a left click event and an item to edit, when I show the edit modal, then the event's default action will be prevented and the NewTuleapArtifactModalService will be called with a callback, and the callback will be called", function() {
+        it("Given a left click event and an item to edit, when I show the edit modal, then the event's default action will be prevented and the NewTuleapArtifactModalService will be called with a callback, and the callback will be called", function () {
             PlanningController.showEditModal(event, item);
 
             expect(event.preventDefault).toHaveBeenCalled();
@@ -518,7 +518,7 @@ describe("PlanningController -", () => {
             expect(BacklogItemCollectionService.refreshBacklogItem).toHaveBeenCalledWith(8541);
         });
 
-        it("Given a middle click event and an item to edit, when I show the edit modal, then the event's default action will NOT be prevented and the NewTuleapArtifactModalService won't be called.", function() {
+        it("Given a middle click event and an item to edit, when I show the edit modal, then the event's default action will NOT be prevented and the NewTuleapArtifactModalService won't be called.", function () {
             event.which = 2;
 
             PlanningController.showEditModal(event, item);
@@ -527,14 +527,14 @@ describe("PlanningController -", () => {
             expect(NewTuleapArtifactModalService.showEdition).not.toHaveBeenCalled();
         });
 
-        describe("callback -", function() {
-            it("Given a milestone, when the artifact modal calls its callback, then the milestone's initial effort will be updated", function() {
+        describe("callback -", function () {
+            it("Given a milestone, when the artifact modal calls its callback, then the milestone's initial effort will be updated", function () {
                 const updateInitialEffort = jest
                     .spyOn(MilestoneService, "updateInitialEffort")
                     .mockImplementation(() => {});
                 var milestone = {
                     id: 38,
-                    label: "Release v1.0"
+                    label: "Release v1.0",
                 };
 
                 PlanningController.showEditModal(event, item, milestone);
@@ -546,11 +546,11 @@ describe("PlanningController -", () => {
         });
     });
 
-    describe("showEditSubmilestoneModal() -", function() {
+    describe("showEditSubmilestoneModal() -", function () {
         var event, item;
-        beforeEach(function() {
+        beforeEach(function () {
             event = { preventDefault: jest.fn(), stopPropagation: jest.fn() };
-            NewTuleapArtifactModalService.showEdition.mockImplementation(function(
+            NewTuleapArtifactModalService.showEdition.mockImplementation(function (
                 c,
                 a,
                 b,
@@ -560,15 +560,15 @@ describe("PlanningController -", () => {
             });
         });
 
-        it("Given a left click event and a submilestone to edit, when I show the edit modal, then the event's default action will be prevented and the NewTuleapArtifactModalService will be called with a callback, and the callback will be called", function() {
+        it("Given a left click event and a submilestone to edit, when I show the edit modal, then the event's default action will be prevented and the NewTuleapArtifactModalService will be called with a callback, and the callback will be called", function () {
             event.which = 1;
             item = {
                 artifact: {
                     id: 9040,
                     tracker: {
-                        id: 12
-                    }
-                }
+                        id: 12,
+                    },
+                },
             };
             jest.spyOn(PlanningController, "refreshSubmilestone").mockImplementation(() => {});
 
@@ -612,8 +612,8 @@ describe("PlanningController -", () => {
                         {
                             id: 3118,
                             label: "Sprint 2015-38",
-                            semantic_status: "open"
-                        }
+                            semantic_status: "open",
+                        },
                     ];
                     MilestoneService.patchSubMilestones.mockReturnValue($q.when());
                     MilestoneService.getMilestone.mockReturnValue(
@@ -621,8 +621,8 @@ describe("PlanningController -", () => {
                             results: {
                                 id: 1668,
                                 label: "Sprint 2015-20",
-                                semantic_status: "open"
-                            }
+                                semantic_status: "open",
+                            },
                         })
                     );
 
@@ -638,13 +638,13 @@ describe("PlanningController -", () => {
                         {
                             id: 1668,
                             label: "Sprint 2015-20",
-                            semantic_status: "open"
+                            semantic_status: "open",
                         },
                         {
                             id: 3118,
                             label: "Sprint 2015-38",
-                            semantic_status: "open"
-                        }
+                            semantic_status: "open",
+                        },
                     ]);
                 });
             });
@@ -654,15 +654,15 @@ describe("PlanningController -", () => {
                 PlanningController.milestones.content = [
                     {
                         id: 3118,
-                        label: "Sprint 2015-38"
-                    }
+                        label: "Sprint 2015-38",
+                    },
                 ];
                 MilestoneService.getMilestone.mockReturnValue(
                     $q.when({
                         results: {
                             id: 1668,
-                            label: "Sprint 2015-20"
-                        }
+                            label: "Sprint 2015-20",
+                        },
                     })
                 );
 
@@ -676,12 +676,12 @@ describe("PlanningController -", () => {
                 expect(PlanningController.milestones.content).toEqual([
                     {
                         id: 1668,
-                        label: "Sprint 2015-20"
+                        label: "Sprint 2015-20",
                     },
                     {
                         id: 3118,
-                        label: "Sprint 2015-38"
-                    }
+                        label: "Sprint 2015-38",
+                    },
                 ]);
             });
         });
@@ -696,8 +696,8 @@ describe("PlanningController -", () => {
             );
             artifact = {
                 backlog_item: {
-                    id: 7488
-                }
+                    id: 7488,
+                },
             };
         });
 
@@ -719,7 +719,7 @@ describe("PlanningController -", () => {
                 item_type = { id: 413 };
                 submilestone = {
                     id: 92,
-                    content: []
+                    content: [],
                 };
             });
 
@@ -733,7 +733,7 @@ describe("PlanningController -", () => {
 
                 expect(MilestoneService.addReorderToContent).toHaveBeenCalledWith(92, [7488], {
                     direction: "before",
-                    item_id: 9402
+                    item_id: 9402,
                 });
                 expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(7488);
                 expect(submilestone.content).toEqual([{ id: 7488 }, { id: 9402 }]);
@@ -753,30 +753,30 @@ describe("PlanningController -", () => {
         });
     });
 
-    describe("refreshSubmilestone() -", function() {
+    describe("refreshSubmilestone() -", function () {
         var get_milestone_request;
 
-        beforeEach(function() {
+        beforeEach(function () {
             get_milestone_request = $q.defer();
         });
 
-        it("Given an existing submilestone, when I refresh it, then the submilestone will be retrieved from the server and the milestones collection will be updated", function() {
+        it("Given an existing submilestone, when I refresh it, then the submilestone will be retrieved from the server and the milestones collection will be updated", function () {
             PlanningController.milestones.content = [{ id: 9040 }];
             MilestoneService.getMilestone.mockReturnValue(get_milestone_request.promise);
 
             PlanningController.refreshSubmilestone(9040);
 
             get_milestone_request.resolve({
-                results: { id: 9040 }
+                results: { id: 9040 },
             });
             expect(PlanningController.milestones.content).toEqual([
-                expect.objectContaining({ id: 9040, updating: true })
+                expect.objectContaining({ id: 9040, updating: true }),
             ]);
             $scope.$apply();
 
             expect(MilestoneService.getMilestone).toHaveBeenCalledWith(9040);
             expect(PlanningController.milestones.content).toEqual([
-                expect.objectContaining({ id: 9040, updating: false })
+                expect.objectContaining({ id: 9040, updating: false }),
             ]);
         });
     });

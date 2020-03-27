@@ -22,8 +22,8 @@ import "./inline-comment.tpl.html";
 export default {
     templateUrl: "inline-comment.tpl.html",
     bindings: {
-        comment: "<"
-    }
+        comment: "<",
+    },
 };
 
 export const NAME = "inline-comment";

@@ -3,11 +3,11 @@ import angular from "angular";
 import "angular-mocks";
 import { createAngularPromiseWrapper } from "../../../../../../../tests/jest/angular-promise-wrapper.js";
 
-describe("KanbanItemRestService -", function() {
+describe("KanbanItemRestService -", function () {
     let wrapPromise, KanbanItemRestService, RestErrorService, $q, mockRestangular;
-    beforeEach(function() {
-        angular.mock.module(kanban_module, function($provide) {
-            $provide.decorator("RestErrorService", function($delegate) {
+    beforeEach(function () {
+        angular.mock.module(kanban_module, function ($provide) {
+            $provide.decorator("RestErrorService", function ($delegate) {
                 jest.spyOn($delegate, "reload").mockImplementation(() => {});
 
                 return $delegate;
@@ -15,7 +15,7 @@ describe("KanbanItemRestService -", function() {
         });
 
         let $rootScope, Restangular;
-        angular.mock.inject(function(
+        angular.mock.inject(function (
             _$rootScope_,
             _$q_,
             _KanbanItemRestService_,
@@ -30,20 +30,20 @@ describe("KanbanItemRestService -", function() {
         });
 
         mockRestangular = {
-            get: jest.fn()
+            get: jest.fn(),
         };
         jest.spyOn(Restangular, "one").mockReturnValue(mockRestangular);
 
         wrapPromise = createAngularPromiseWrapper($rootScope);
     });
 
-    describe("getItem()", function() {
+    describe("getItem()", function () {
         it(`Given an item id, when I get the item,
             then a GET request will be made and a resolved promise will be returned`, async () => {
             const response = {
                 id: 410,
                 item_name: "paterfamiliarly",
-                label: "Disaccustomed"
+                label: "Disaccustomed",
             };
 
             mockRestangular.get.mockReturnValue($q.resolve({ data: response }));
@@ -55,7 +55,7 @@ describe("KanbanItemRestService -", function() {
                 expect.objectContaining({
                     id: 410,
                     item_name: "paterfamiliarly",
-                    label: "Disaccustomed"
+                    label: "Disaccustomed",
                 })
             );
         });
@@ -73,8 +73,8 @@ describe("KanbanItemRestService -", function() {
                 expect.objectContaining({
                     data: {
                         error: 404,
-                        message: "Error"
-                    }
+                        message: "Error",
+                    },
                 })
             );
         });

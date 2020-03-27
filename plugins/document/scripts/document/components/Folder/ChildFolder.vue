@@ -31,7 +31,7 @@ export default {
     name: "ChildFolder",
     components: { FolderContainer },
     computed: {
-        ...mapState(["current_folder", "currently_previewed_item"])
+        ...mapState(["current_folder", "currently_previewed_item"]),
     },
     watch: {
         $route(to) {
@@ -43,7 +43,7 @@ export default {
             } else {
                 this.$store.dispatch("toggleQuickLook", to.params.preview_item_id);
             }
-        }
+        },
     },
     async mounted() {
         if (this.$route.name === "preview") {
@@ -62,6 +62,6 @@ export default {
             this.$store.dispatch("loadFolder", parseInt(this.$route.params.item_id, 10));
             this.$store.dispatch("removeQuickLook");
         }
-    }
+    },
 };
 </script>

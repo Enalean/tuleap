@@ -31,12 +31,12 @@ async function get(input, init = {}) {
     const response = await fetch(url, {
         method,
         credentials,
-        ...init
+        ...init,
     });
     return checkResponse(response);
 }
 
-const encodeAllParamsToURI = params => {
+const encodeAllParamsToURI = (params) => {
     let url_params = "";
     const [first_param, ...other_params] = Object.entries(params);
 
@@ -54,7 +54,7 @@ const encodeParamToURI = ([key, value]) => {
 };
 
 async function recursiveGet(input, init = {}) {
-    const { params = {}, getCollectionCallback = json => [].concat(json) } = init;
+    const { params = {}, getCollectionCallback = (json) => [].concat(json) } = init;
 
     const { limit = 100, offset = 0 } = params;
 
@@ -63,8 +63,8 @@ async function recursiveGet(input, init = {}) {
         params: {
             ...params,
             limit,
-            offset
-        }
+            offset,
+        },
     });
     const json = await response.json();
     const results = getCollectionCallback(json);
@@ -74,19 +74,21 @@ async function recursiveGet(input, init = {}) {
     }
     const total = Number.parseInt(response.headers.get("X-PAGINATION-SIZE"), 10);
 
-    const parallel_calls = [...getAdditionalOffsets(offset, limit, total)].map(async new_offset => {
-        const new_init = {
-            ...init,
-            params: {
-                ...params,
-                offset: new_offset
-            }
-        };
+    const parallel_calls = [...getAdditionalOffsets(offset, limit, total)].map(
+        async (new_offset) => {
+            const new_init = {
+                ...init,
+                params: {
+                    ...params,
+                    offset: new_offset,
+                },
+            };
 
-        const response = await get(input, new_init);
-        const json = await response.json();
-        return getCollectionCallback(json);
-    });
+            const response = await get(input, new_init);
+            const json = await response.json();
+            return getCollectionCallback(json);
+        }
+    );
     const all_responses = await Promise.all(parallel_calls);
     return all_responses.reduce((accumulator, response) => accumulator.concat(response), results);
 }

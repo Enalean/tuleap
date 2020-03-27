@@ -31,7 +31,7 @@ export default {
     name: "RootFolder",
     components: { FolderContainer },
     computed: {
-        ...mapState(["current_folder"])
+        ...mapState(["current_folder"]),
     },
     mounted() {
         if (!this.current_folder || this.current_folder.parent_id !== 0) {
@@ -39,6 +39,6 @@ export default {
         }
         this.$store.commit("resetAscendantHierarchy");
         this.$store.dispatch("removeQuickLook");
-    }
+    },
 };
 </script>

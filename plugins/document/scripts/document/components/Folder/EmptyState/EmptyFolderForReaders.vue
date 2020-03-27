@@ -65,7 +65,7 @@ export default {
         },
         can_go_to_parent() {
             return this.index_of_parent >= -1;
-        }
-    }
+        },
+    },
 };
 </script>

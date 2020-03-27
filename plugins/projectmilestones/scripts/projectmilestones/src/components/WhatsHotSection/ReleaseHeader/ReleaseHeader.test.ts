@@ -46,20 +46,20 @@ describe("ReleaseHeader", () => {
 
     beforeEach(() => {
         store_options = {
-            state: {}
+            state: {},
         };
 
         release_data = {
             label: "mile",
             id: 2,
             start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
-            end_date: new Date("2019-10-05T13:42:08+02:00").toDateString()
+            end_date: new Date("2019-10-05T13:42:08+02:00").toDateString(),
         } as MilestoneData;
 
         component_options = {
             propsData: {
-                release_data
-            }
+                release_data,
+            },
         };
     });
 
@@ -75,11 +75,11 @@ describe("ReleaseHeader", () => {
         it("When there isn't a start date of a release, Then there isn't an arrow", async () => {
             release_data = {
                 id: 2,
-                start_date: null
+                start_date: null,
             } as MilestoneData;
 
             component_options.propsData = {
-                release_data
+                release_data,
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -89,12 +89,12 @@ describe("ReleaseHeader", () => {
 
     it("When the widget is loading, Then there is a skeleton instead of points", async () => {
         release_data = {
-            id: 2
+            id: 2,
         } as MilestoneData;
 
         component_options.propsData = {
             release_data,
-            isLoading: true
+            isLoading: true,
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -104,12 +104,12 @@ describe("ReleaseHeader", () => {
     it("When release's title contains '>', Then '>' is displayed", async () => {
         release_data = {
             label: "1 > 2",
-            id: 2
+            id: 2,
         } as MilestoneData;
 
         component_options.propsData = {
             release_data,
-            isLoading: true
+            isLoading: true,
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -120,7 +120,7 @@ describe("ReleaseHeader", () => {
         it("When the release is not past, Then ReleaseHeaderRemaining components are displayed", async () => {
             component_options.propsData = {
                 release_data,
-                isPastRelease: false
+                isPastRelease: false,
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -132,7 +132,7 @@ describe("ReleaseHeader", () => {
         it("When the release is past, Then PastReleaseHeaderInitialPoints component are displayed", async () => {
             component_options.propsData = {
                 release_data,
-                isPastRelease: true
+                isPastRelease: true,
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);

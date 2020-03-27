@@ -25,7 +25,7 @@ import { isInCreationMode, setCreationMode } from "./modal-creation-mode-state.j
 import {
     getArtifactWithCompleteTrackerStructure,
     getTracker,
-    getUserPreference
+    getUserPreference,
 } from "./rest/rest-service.js";
 import { updateFileUploadRulesWhenNeeded } from "./tuleap-artifact-modal-fields/file-field/file-upload-rules-state.js";
 import { getArtifactFieldValues } from "./artifact-edition-initializer.js";
@@ -42,7 +42,7 @@ ArtifactModalService.$inject = [
     "TuleapArtifactModalLoading",
     "TuleapArtifactModalTrackerTransformerService",
     "TuleapArtifactFieldValuesService",
-    "TuleapArtifactModalFieldDependenciesService"
+    "TuleapArtifactModalFieldDependenciesService",
 ];
 
 function ArtifactModalService(
@@ -59,7 +59,7 @@ function ArtifactModalService(
         initEditionModalModel,
         showCreation,
         showEdition,
-        loading: TuleapArtifactModalLoading
+        loading: TuleapArtifactModalLoading,
     });
 
     /**
@@ -86,8 +86,8 @@ function ArtifactModalService(
                     parent_artifact_id,
                     prefill_values
                 ),
-                displayItemCallback: displayItemCallback ? displayItemCallback : _.noop
-            }
+                displayItemCallback: displayItemCallback ? displayItemCallback : _.noop,
+            },
         });
     }
 
@@ -112,8 +112,8 @@ function ArtifactModalService(
             tlpModalOptions: { keyboard: false, destroy_on_hide: true },
             resolve: {
                 modal_model: self.initEditionModalModel(user_id, tracker_id, artifact_id),
-                displayItemCallback: displayItemCallback ? displayItemCallback : _.noop
-            }
+                displayItemCallback: displayItemCallback ? displayItemCallback : _.noop,
+            },
         });
     }
 
@@ -127,7 +127,7 @@ function ArtifactModalService(
 
         var promise = $q
             .when(getTracker(tracker_id))
-            .then(function(tracker) {
+            .then(function (tracker) {
                 var transformed_tracker = TuleapArtifactModalTrackerTransformerService.transform(
                     tracker,
                     creation_mode
@@ -153,7 +153,7 @@ function ArtifactModalService(
                 );
                 return file_upload_rules_promise;
             })
-            .then(function() {
+            .then(function () {
                 initializeVuexStore(modal_model);
                 return modal_model;
             });
@@ -175,9 +175,9 @@ function ArtifactModalService(
             .all([
                 getArtifactWithCompleteTrackerStructure(artifact_id),
                 getFollowupsCommentsOrderUserPreference(user_id, tracker_id, modal_model),
-                getTextFieldsFormatUserPreference(user_id, modal_model)
+                getTextFieldsFormatUserPreference(user_id, modal_model),
             ])
-            .then(function(promises) {
+            .then(function (promises) {
                 const tracker = promises[0].tracker;
                 transformed_tracker = TuleapArtifactModalTrackerTransformerService.transform(
                     tracker,
@@ -209,7 +209,7 @@ function ArtifactModalService(
                 );
                 return file_upload_rules_promise;
             })
-            .then(function() {
+            .then(function () {
                 initializeVuexStore(modal_model);
                 return modal_model;
             });
@@ -224,7 +224,7 @@ function ArtifactModalService(
     function getFollowupsCommentsOrderUserPreference(user_id, tracker_id, modal_model) {
         var preference_key = "tracker_comment_invertorder_" + tracker_id;
 
-        return $q.when(getUserPreference(user_id, preference_key)).then(function(data) {
+        return $q.when(getUserPreference(user_id, preference_key)).then(function (data) {
             modal_model.invert_followups_comments_order = Boolean(data.value);
         });
     }
@@ -232,7 +232,7 @@ function ArtifactModalService(
     function getTextFieldsFormatUserPreference(user_id, modal_model) {
         return $q
             .when(getUserPreference(user_id, "user_edition_default_format"))
-            .then(function(data) {
+            .then(function (data) {
                 modal_model.text_fields_format =
                     data.value !== false ? data.value : TEXT_FORMAT_TEXT;
             });
@@ -244,7 +244,7 @@ function ArtifactModalService(
         }
         var workflow = getWorkflow(tracker);
 
-        const workflow_field = tracker.fields.find(field => field.field_id === workflow.field_id);
+        const workflow_field = tracker.fields.find((field) => field.field_id === workflow.field_id);
         if (!workflow_field) {
             return;
         }
@@ -270,7 +270,7 @@ function ArtifactModalService(
     }
 
     function applyFieldDependencies(tracker, field_values) {
-        var filterTargetFieldValues = function(
+        var filterTargetFieldValues = function (
             source_field_id,
             target_field,
             field_dependencies_rules
@@ -293,11 +293,11 @@ function ArtifactModalService(
     function mapPrefillsToFieldValues(prefill_values, tracker_fields) {
         var field_values = {};
 
-        prefill_values.forEach(function(prefill) {
-            const field = tracker_fields.find(field => field.name === prefill.name);
+        prefill_values.forEach(function (prefill) {
+            const field = tracker_fields.find((field) => field.name === prefill.name);
             if (field) {
                 field_values[field.field_id] = Object.assign({}, prefill, {
-                    field_id: field.field_id
+                    field_id: field.field_id,
                 });
             }
         });

@@ -106,7 +106,7 @@ import prettyBytes from "pretty-bytes-es5";
 import { mapState } from "vuex";
 import {
     formatDateUsingPreferredUserFormat,
-    getElapsedTimeFromNow
+    getElapsedTimeFromNow,
 } from "../../../helpers/date-formatter.js";
 import UserBadge from "../../User/UserBadge.vue";
 import { TYPE_FILE, TYPE_FOLDER } from "../../../constants.js";
@@ -116,7 +116,7 @@ import ApprovalTableBadge from "../ApprovalTables/ApprovalTableBadge.vue";
 export default {
     components: { ApprovalTableBadge, QuickLookDocumentAdditionalMetadataList, UserBadge },
     props: {
-        item: Object
+        item: Object,
     },
     computed: {
         ...mapState(["date_time_format"]),
@@ -151,13 +151,13 @@ export default {
                 "description",
                 "owner",
                 "create_date",
-                "update_date"
+                "update_date",
             ];
 
             return this.item.metadata.filter(
                 ({ short_name }) => !hardcoded_metadata.includes(short_name)
             );
-        }
+        },
     },
     methods: {
         getFormattedDate(date) {
@@ -165,7 +165,7 @@ export default {
         },
         getFormattedDateForDisplay(date) {
             return getElapsedTimeFromNow(date);
-        }
-    }
+        },
+    },
 };
 </script>

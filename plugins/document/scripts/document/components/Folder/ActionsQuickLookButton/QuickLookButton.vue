@@ -35,12 +35,12 @@ import EventBus from "../../../helpers/event-bus.js";
 export default {
     name: "QuickLookButton",
     props: {
-        item: Object
+        item: Object,
     },
     methods: {
         toggleQuickLook() {
             EventBus.$emit("toggle-quick-look", { details: { item: this.item } });
-        }
-    }
+        },
+    },
 };
 </script>

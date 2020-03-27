@@ -33,15 +33,15 @@ describe("ModalConfirmationDeletion", () => {
             propsData: {
                 item: { ...item },
                 model: {},
-                wikiPageReferencers
-            }
+                wikiPageReferencers,
+            },
         });
     }
 
     beforeEach(() => {
         state = { project_id: 104 };
         store_options = {
-            state
+            state,
         };
         store = createStoreMock(store_options);
 
@@ -49,9 +49,9 @@ describe("ModalConfirmationDeletion", () => {
             id: 42,
             title: "my wiki",
             wiki_properties: {
-                page_name: "my wiki"
+                page_name: "my wiki",
             },
-            type: TYPE_WIKI
+            type: TYPE_WIKI,
         };
     });
 
@@ -59,8 +59,8 @@ describe("ModalConfirmationDeletion", () => {
         const wiki_checkbox = getWikiCheckbox(item, [
             {
                 id: 43,
-                path: "Project documentation/another wiki"
-            }
+                path: "Project documentation/another wiki",
+            },
         ]);
 
         const checkbox_input = wiki_checkbox.find(
@@ -103,12 +103,12 @@ describe("ModalConfirmationDeletion", () => {
         const wiki_checkbox = getWikiCheckbox(item, [
             {
                 id: 43,
-                path: "Project documentation/another wiki"
+                path: "Project documentation/another wiki",
             },
             {
                 id: 44,
-                path: "Project documentation/some folder/another wiki"
-            }
+                path: "Project documentation/some folder/another wiki",
+            },
         ]);
 
         const checkbox_input = wiki_checkbox.find(

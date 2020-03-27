@@ -47,7 +47,7 @@ export default {
         switchDefaultPaletteLabel: String,
         switchOldPaletteLabel: String,
         switchDisabledTitle: String,
-        isSwitchDisabled: Boolean
+        isSwitchDisabled: Boolean,
     },
     computed: {
         switch_title() {
@@ -56,7 +56,7 @@ export default {
                       "You can't switch to old colors because the field is currently being used by the card background color semantic"
                   )
                 : "";
-        }
+        },
     },
     methods: {
         switchPalette(event) {
@@ -67,7 +67,7 @@ export default {
             }
 
             this.$emit("switch-palette");
-        }
-    }
+        },
+    },
 };
 </script>

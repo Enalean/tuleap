@@ -24,7 +24,7 @@ const entry_points = {
     default: "./themes/default/css/style.scss",
     "fp-style": "./themes/FlamingParrot/css/style.scss",
     "open-id-connect-client": "./scripts/open-id-connect-client.js",
-    "user-account-style": "./themes/Account/style.scss"
+    "user-account-style": "./themes/Account/style.scss",
 };
 
 const colors = ["blue", "green", "grey", "orange", "purple", "red"];
@@ -44,15 +44,15 @@ module.exports = [
         ),
         externals: {
             tlp: "tlp",
-            jquery: "jQuery"
+            jquery: "jQuery",
         },
         module: {
-            rules: [webpack_configurator.rule_scss_loader]
+            rules: [webpack_configurator.rule_scss_loader],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
-            ...webpack_configurator.getCSSExtractionPlugins()
-        ]
-    }
+            ...webpack_configurator.getCSSExtractionPlugins(),
+        ],
+    },
 ];

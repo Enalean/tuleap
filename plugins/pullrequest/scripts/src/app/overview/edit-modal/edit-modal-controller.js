@@ -4,7 +4,7 @@ EditModalController.$inject = [
     "modal_instance",
     "PullRequestService",
     "TooltipService",
-    "pullrequest"
+    "pullrequest",
 ];
 
 function EditModalController(modal_instance, PullRequestService, TooltipService, pullrequest) {
@@ -14,7 +14,7 @@ function EditModalController(modal_instance, PullRequestService, TooltipService,
         save,
         raw_title: pullrequest.raw_title,
         raw_description: pullrequest.raw_description,
-        is_saving: false
+        is_saving: false,
     });
 
     function save() {

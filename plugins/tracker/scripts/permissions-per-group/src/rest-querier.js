@@ -30,8 +30,8 @@ async function getTrackerPermissions(project_id, selected_ugroup_id) {
         params: {
             group_id: project_id,
             selected_ugroup_id,
-            func: "permissions-per-group"
-        }
+            func: "permissions-per-group",
+        },
     });
 
     return response.json();

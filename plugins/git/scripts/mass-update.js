@@ -15,19 +15,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-!(function($) {
-    $(document).ready(function() {
-        $("#select-all").click(function() {
+!(function ($) {
+    $(document).ready(function () {
+        $("#select-all").click(function () {
             updateRepositoriesCheckboxesState(this.checked);
             updateMassChangeButtonState();
         });
 
-        $(".repository-ids").click(function() {
+        $(".repository-ids").click(function () {
             updateMassChangeButtonState();
             updateSelectAllCheckboxState();
         });
 
-        $("body").click(function(event) {
+        $("body").click(function (event) {
             if (
                 $(event.target).parents(".update-n-repositories").length === 0 &&
                 $(event.target).parents(".popover.in").length === 0
@@ -38,7 +38,7 @@
 
         $(".check-repository-mirror").on("change", changeCheckboxChangeState);
 
-        $(".check-all-mirror").on("click", function(evt) {
+        $(".check-all-mirror").on("click", function (evt) {
             var mirror_id = $(this).data("id");
 
             $("[data-mirror-id=" + mirror_id + "]")
@@ -48,7 +48,7 @@
             evt.preventDefault();
         });
 
-        $(".uncheck-all-mirror").on("click", function(evt) {
+        $(".uncheck-all-mirror").on("click", function (evt) {
             var mirror_id = $(this).data("id");
 
             $("[data-mirror-id=" + mirror_id + "]")
@@ -58,7 +58,7 @@
             evt.preventDefault();
         });
 
-        $(".check-all-repository").on("click", function(evt) {
+        $(".check-all-repository").on("click", function (evt) {
             var repository_id = $(this).data("id");
 
             $("[data-repository-id=" + repository_id + "]")
@@ -68,7 +68,7 @@
             evt.preventDefault();
         });
 
-        $(".uncheck-all-repository").on("click", function(evt) {
+        $(".uncheck-all-repository").on("click", function (evt) {
             var repository_id = $(this).data("id");
 
             $("[data-repository-id=" + repository_id + "]")
@@ -81,23 +81,13 @@
 
     function changeCheckboxChangeState() {
         var has_changed =
-            ($(this).is(":checked") &&
-                $(this)
-                    .parent("td")
-                    .hasClass("was-unused")) ||
-            (!$(this).is(":checked") &&
-                $(this)
-                    .parent("td")
-                    .hasClass("was-used"));
+            ($(this).is(":checked") && $(this).parent("td").hasClass("was-unused")) ||
+            (!$(this).is(":checked") && $(this).parent("td").hasClass("was-used"));
 
         if (has_changed) {
-            $(this)
-                .parent("td")
-                .addClass("has-changed");
+            $(this).parent("td").addClass("has-changed");
         } else {
-            $(this)
-                .parent("td")
-                .removeClass("has-changed");
+            $(this).parent("td").removeClass("has-changed");
         }
     }
 

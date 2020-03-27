@@ -35,9 +35,9 @@ describe("GlobalAppError", () => {
             localVue: local_vue,
             mocks: {
                 $store: createStoreMock({
-                    state: { error: { global_error_message: "Full error message with details" } }
-                })
-            }
+                    state: { error: { global_error_message: "Full error message with details" } },
+                }),
+            },
         });
         expect(wrapper.element).toMatchSnapshot();
     });
@@ -48,9 +48,9 @@ describe("GlobalAppError", () => {
             localVue: local_vue,
             mocks: {
                 $store: createStoreMock({
-                    state: { error: { global_error_message: error_message } }
-                })
-            }
+                    state: { error: { global_error_message: error_message } },
+                }),
+            },
         });
 
         wrapper.find("[data-test=show-details]").trigger("click");
@@ -63,9 +63,9 @@ describe("GlobalAppError", () => {
             localVue: local_vue,
             mocks: {
                 $store: createStoreMock({
-                    state: { error: { global_error_message: "" } }
-                })
-            }
+                    state: { error: { global_error_message: "" } },
+                }),
+            },
         });
         expect(wrapper.find("[data-test=show-details]").exists()).toBe(false);
         expect(wrapper.find("[data-test=details]").exists()).toBe(false);

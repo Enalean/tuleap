@@ -57,10 +57,10 @@ export default {
             );
         },
         ...mapGetters(["isCurrentRepositoryListEmpty", "isInitialLoadingDoneWithoutError"]),
-        ...mapState(["is_first_load_done"])
+        ...mapState(["is_first_load_done"]),
     },
     methods: {
-        ...mapActions(["showAddRepositoryModal"])
-    }
+        ...mapActions(["showAddRepositoryModal"]),
+    },
 };
 </script>

@@ -65,11 +65,11 @@ export default {
     data: () => {
         return {
             CLIPBOARD_OPERATION_CUT,
-            CLIPBOARD_OPERATION_COPY
+            CLIPBOARD_OPERATION_COPY,
         };
     },
     computed: {
-        ...mapState("clipboard", ["item_title", "operation_type", "pasting_in_progress"])
-    }
+        ...mapState("clipboard", ["item_title", "operation_type", "pasting_in_progress"]),
+    },
 };
 </script>

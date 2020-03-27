@@ -19,8 +19,8 @@
 
 /* global CKEDITOR:readonly tuleap:readonly */
 
-!(function($) {
-    $(function() {
+!(function ($) {
+    $(function () {
         var selector = $("#admin-headline-select-language");
 
         bindSwitchStatisticsOnHomePage();
@@ -29,14 +29,14 @@
         selector.change(switchHeadline);
 
         function initCKEditor() {
-            $('textarea[id^="admin-headline-"]').each(function() {
+            $('textarea[id^="admin-headline-"]').each(function () {
                 var textarea_id = $(this).attr("id");
 
                 CKEDITOR.replace(textarea_id, {
-                    toolbar: tuleap.ckeditor.toolbar
+                    toolbar: tuleap.ckeditor.toolbar,
                 });
 
-                CKEDITOR.on("instanceReady", function() {
+                CKEDITOR.on("instanceReady", function () {
                     switchHeadline();
                 });
             });
@@ -45,7 +45,7 @@
         function switchHeadline() {
             var language_id = selector.val();
 
-            $('div[id^="cke_admin-headline-"]').each(function() {
+            $('div[id^="cke_admin-headline-"]').each(function () {
                 var cke_instance = $(this);
 
                 if (cke_instance.attr("id") === "cke_admin-headline-" + language_id) {
@@ -57,12 +57,12 @@
         }
 
         function bindSwitchStatisticsOnHomePage() {
-            $("#use_statistics_homepage").on("change", function() {
+            $("#use_statistics_homepage").on("change", function () {
                 $("#admin-homepage").submit();
             });
         }
         function bindSwitchNewsOnHomePage() {
-            $("#use_news_homepage").on("change", function() {
+            $("#use_news_homepage").on("change", function () {
                 $("#admin-homepage").submit();
             });
         }

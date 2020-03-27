@@ -48,8 +48,8 @@ describe("ReleaseBadgesDisplayer", () => {
     beforeEach(() => {
         store_options = {
             state: {
-                project_id: project_id
-            }
+                project_id: project_id,
+            },
         };
 
         component_options.propsData = { release_data };
@@ -60,11 +60,11 @@ describe("ReleaseBadgesDisplayer", () => {
             release_data = {
                 id: 2,
                 total_sprint: 0,
-                open_sprints: [] as MilestoneData[]
+                open_sprints: [] as MilestoneData[],
             } as MilestoneData;
 
             component_options.propsData = {
-                release_data
+                release_data,
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -76,11 +76,11 @@ describe("ReleaseBadgesDisplayer", () => {
         it("When total_sprints is null, Then ReleaseBadgesDisplayerIfOpenSprints is not rendered", async () => {
             release_data = {
                 id: 2,
-                total_sprint: null
+                total_sprint: null,
             } as MilestoneData;
 
             component_options.propsData = {
-                release_data
+                release_data,
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -95,13 +95,13 @@ describe("ReleaseBadgesDisplayer", () => {
                 total_sprint: 10,
                 open_sprints: [
                     {
-                        id: 10
-                    } as MilestoneData
-                ]
+                        id: 10,
+                    } as MilestoneData,
+                ],
             } as MilestoneData;
 
             component_options.propsData = {
-                release_data
+                release_data,
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);

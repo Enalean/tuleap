@@ -11,7 +11,7 @@ BacklogItemDetailsController.$inject = [
     "BacklogItemService",
     "BacklogItemCollectionService",
     "NewTuleapArtifactModalService",
-    "ItemAnimatorService"
+    "ItemAnimatorService",
 ];
 
 function BacklogItemDetailsController(
@@ -33,7 +33,7 @@ function BacklogItemDetailsController(
         showAddChildModal,
         canBeAddedToChildren,
         getCardColorName,
-        canShowRemoveFromExplicitBacklog
+        canShowRemoveFromExplicitBacklog,
     });
 
     function showAddChildModal($event, item_type) {

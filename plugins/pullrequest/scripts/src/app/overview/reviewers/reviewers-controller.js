@@ -23,7 +23,7 @@ ReviewersController.$inject = [
     "SharedPropertiesService",
     "ReviewersService",
     "PullRequestService",
-    "UpdateReviewersModalService"
+    "UpdateReviewersModalService",
 ];
 
 function ReviewersController(
@@ -40,15 +40,15 @@ function ReviewersController(
         loading_reviewers: true,
         showUpdateReviewersModal: showUpdateReviewersModal,
         hasEditRight: hasEditRight,
-        $onInit: init
+        $onInit: init,
     });
 
     function init() {
-        SharedPropertiesService.whenReady().then(function() {
+        SharedPropertiesService.whenReady().then(function () {
             self.pull_request = SharedPropertiesService.getPullRequest();
 
             ReviewersService.getReviewers(self.pull_request)
-                .then(reviewers => {
+                .then((reviewers) => {
                     self.reviewers = reviewers;
                 })
                 .finally(() => {

@@ -28,21 +28,21 @@ describe("UpdateProperties", () => {
         document_action_button_factory = (props = {}) => {
             return shallowMount(UpdateProperties, {
                 localVue,
-                propsData: { ...props }
+                propsData: { ...props },
             });
         };
     });
 
     it(`Click on folder open the corresponding modal`, () => {
         const item = {
-            user_can_write: true
+            user_can_write: true,
         };
         const event_bus_emit = jest.spyOn(EventBus, "$emit");
         const wrapper = document_action_button_factory({ item });
         wrapper.find("[data-test=document-dropdown-update-properties]").trigger("click");
 
         expect(event_bus_emit).toHaveBeenCalledWith("show-update-item-metadata-modal", {
-            detail: { current_item: item }
+            detail: { current_item: item },
         });
     });
 });

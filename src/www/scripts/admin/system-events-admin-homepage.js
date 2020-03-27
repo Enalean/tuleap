@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ".siteadmin-homepage-system-events-queue"
     );
     for (const admin_homepage_queue of admin_homepage_queues) {
-        admin_homepage_queue.addEventListener("click", event => {
+        admin_homepage_queue.addEventListener("click", (event) => {
             if (
                 !event.target.classList.contains("system-event-type-count") &&
                 !event.target.parentNode.classList.contains("system-event-type-count")

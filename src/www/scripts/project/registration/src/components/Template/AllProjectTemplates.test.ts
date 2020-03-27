@@ -31,7 +31,7 @@ describe("ProjectList", () => {
     let factory: Wrapper<ProjectList>;
     beforeEach(async () => {
         factory = shallowMount(ProjectList, {
-            localVue: await createProjectRegistrationLocalVue()
+            localVue: await createProjectRegistrationLocalVue(),
         });
     });
     it("Spawns the ProjectTemplates component", () => {

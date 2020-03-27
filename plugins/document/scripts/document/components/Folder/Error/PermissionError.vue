@@ -40,6 +40,6 @@ import PermissionErrorSvg from "../../svg/error/PermissionErrorSvg.vue";
 
 export default {
     name: "PermissionError",
-    components: { PermissionErrorSvg }
+    components: { PermissionErrorSvg },
 };
 </script>

@@ -29,7 +29,7 @@ export function expandColumn(
 ): Promise<void> {
     context.commit("expandColumn", column);
     const payload: UserPreference = {
-        key: getCollapsePreferenceName(context, column)
+        key: getCollapsePreferenceName(context, column),
     };
 
     return context.dispatch("user/deletePreference", payload, { root: true });
@@ -42,7 +42,7 @@ export function collapseColumn(
     context.commit("collapseColumn", column);
     const payload: UserPreferenceValue = {
         key: getCollapsePreferenceName(context, column),
-        value: "1"
+        value: "1",
     };
 
     return context.dispatch("user/setPreference", payload, { root: true });

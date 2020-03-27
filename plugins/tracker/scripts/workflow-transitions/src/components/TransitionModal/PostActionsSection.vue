@@ -62,18 +62,18 @@ export default {
         RunJobAction,
         SetValueAction,
         FrozenFieldsAction,
-        HiddenFieldsetsAction
+        HiddenFieldsetsAction,
     },
     computed: {
         ...mapState("transitionModal", ["is_loading_modal", "is_modal_save_running"]),
         ...mapGetters("transitionModal", ["post_actions"]),
         has_post_actions() {
             return this.post_actions && this.post_actions.length > 0;
-        }
+        },
     },
     methods: {
         ...mapMutations({
-            addNewPostAction: "transitionModal/addPostAction"
+            addNewPostAction: "transitionModal/addPostAction",
         }),
         getComponent(post_action) {
             if (post_action.type === POST_ACTION_TYPE.RUN_JOB) {
@@ -89,7 +89,7 @@ export default {
             }
 
             return null;
-        }
-    }
+        },
+    },
 };
 </script>

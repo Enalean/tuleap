@@ -33,38 +33,38 @@ describe("CreateNewVersionEmptyModal", () => {
     beforeEach(() => {
         store = createStoreMock({}, { project_ugroups: null, error: {} });
 
-        factory = props => {
+        factory = (props) => {
             return shallowMount(CreateNewVersionEmptyModal, {
                 localVue,
                 propsData: { ...props },
-                mocks: { $store: store }
+                mocks: { $store: store },
             });
         };
 
         jest.spyOn(tlp, "modal").mockReturnValue({
             addEventListener: () => {},
             show: () => {},
-            hide: () => {}
+            hide: () => {},
         });
     });
 
     it("Default type for creation of new link version of an empty document is file", () => {
         const wrapper = factory({
-            item: { id: 10, type: TYPE_EMPTY }
+            item: { id: 10, type: TYPE_EMPTY },
         });
 
         expect(wrapper.vm.new_item_version.type).toBe(TYPE_FILE);
     });
     it("should create a new link version from an empty document", () => {
         const wrapper = factory({
-            item: { id: 10, type: TYPE_EMPTY }
+            item: { id: 10, type: TYPE_EMPTY },
         });
         wrapper.setData({
             new_item_version: {
-                type: TYPE_LINK
-            }
+                type: TYPE_LINK,
+            },
         });
-        store.dispatch.mockImplementation(actionMethodName => {
+        store.dispatch.mockImplementation((actionMethodName) => {
             if (actionMethodName === "createNewVersionFromEmpty") {
                 expect(wrapper.vm.is_loading).toBe(true);
                 expect(wrapper.vm.new_item_version.type).toBe(TYPE_LINK);

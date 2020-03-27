@@ -42,7 +42,7 @@ export function getCardFromSwimlane(swimlane: Swimlane, card_element?: HTMLEleme
     }
 
     const card = swimlane.children_cards.find(
-        card => card.id === Number(card_element.dataset.cardId)
+        (card) => card.id === Number(card_element.dataset.cardId)
     );
 
     return card || null;

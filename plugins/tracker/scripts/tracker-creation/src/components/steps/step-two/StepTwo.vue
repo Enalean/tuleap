@@ -71,8 +71,8 @@ import FieldTrackerColor from "./creation-fields/FieldTrackerColor.vue";
         FieldTrackerTemplateId,
         FieldCsrfToken,
         FieldChosenTemplate,
-        FieldTrackerColor
-    }
+        FieldTrackerColor,
+    },
 })
 export default class StepTwo extends Vue {
     @State

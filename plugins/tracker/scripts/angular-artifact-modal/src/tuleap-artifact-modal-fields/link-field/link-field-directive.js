@@ -12,11 +12,11 @@ export default function linkFieldDirective() {
             artifact_id: "=artifactId",
             tracker: "=tracker",
             parent_artifact_id: "=parentArtifactId",
-            parent_artifact: "=parentArtifact"
+            parent_artifact: "=parentArtifact",
         },
         controller: LinkFieldController,
         controllerAs: "link_field",
         bindToController: true,
-        templateUrl: "link-field.tpl.html"
+        templateUrl: "link-field.tpl.html",
     };
 }

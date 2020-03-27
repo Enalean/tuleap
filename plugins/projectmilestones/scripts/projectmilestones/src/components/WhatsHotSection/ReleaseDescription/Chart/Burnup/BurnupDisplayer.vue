@@ -43,7 +43,7 @@ import { State } from "vuex-class";
 import { sprintf } from "sprintf-js";
 import Burnup from "./Burnup.vue";
 @Component({
-    components: { Burnup, ChartError }
+    components: { Burnup, ChartError },
 })
 export default class BurnupDisplayer extends Vue {
     @Prop()

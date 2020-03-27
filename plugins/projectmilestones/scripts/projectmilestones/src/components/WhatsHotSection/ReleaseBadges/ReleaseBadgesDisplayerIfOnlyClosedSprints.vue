@@ -35,7 +35,7 @@ import ReleaseBadgesClosedSprints from "./ReleaseBadgesClosedSprints.vue";
 import { MilestoneData } from "../../../type";
 import { State } from "vuex-class";
 @Component({
-    components: { ReleaseBadgesClosedSprints, ReleaseOthersBadges }
+    components: { ReleaseBadgesClosedSprints, ReleaseOthersBadges },
 })
 export default class ReleaseBadgesDisplayerIfOnlyClosedSprints extends Vue {
     @Prop()

@@ -33,8 +33,8 @@ var number_of_columns_for_layout = {
         "three-columns",
         "three-columns-small-big-small",
         "three-columns-big-small-small",
-        "three-columns-small-small-big"
-    ]
+        "three-columns-small-small-big",
+    ],
 };
 
 function applyAutomaticLayout(row) {
@@ -70,7 +70,7 @@ function isLayoutFitForNbColumns(current_layout, nb_columns) {
 
     var fit_layouts = number_of_columns_for_layout[nb_columns];
     var found = false;
-    fit_layouts.forEach(function(fit_layout) {
+    fit_layouts.forEach(function (fit_layout) {
         if (current_layout === fit_layout) {
             found = true;
             return;
@@ -105,7 +105,7 @@ function saveLayoutChoiceInBackend(csrf_token, line_id, layout_name) {
         action: "edit-widget-line",
         challenge: csrf_token,
         "line-id": line_id,
-        layout: layout_name
+        layout: layout_name,
     };
 
     post(window.location.href, params);

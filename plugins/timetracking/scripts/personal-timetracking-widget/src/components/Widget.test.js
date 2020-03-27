@@ -29,9 +29,9 @@ function getPersonalWidgetInstance(store_options) {
     const store = createStoreMock(store_options);
     const component_options = {
         propsData: {
-            userId
+            userId,
         },
-        mocks: { $store: store }
+        mocks: { $store: store },
     };
     return shallowMount(Widget, component_options);
 }
@@ -41,8 +41,8 @@ describe("Given a personal timetracking widget", () => {
     beforeEach(() => {
         store_options = {
             state: {
-                reading_mode: true
-            }
+                reading_mode: true,
+            },
         };
 
         getPersonalWidgetInstance(store_options);

@@ -28,38 +28,38 @@ describe("ColumnsSkeleton", () => {
             {
                 column_index: 0,
                 column: { is_collapsed: false } as ColumnDefinition,
-                expected_number_of_skeletons: 4
+                expected_number_of_skeletons: 4,
             },
             {
                 column_index: 1,
                 column: { is_collapsed: false } as ColumnDefinition,
-                expected_number_of_skeletons: 1
+                expected_number_of_skeletons: 1,
             },
             {
                 column_index: 2,
                 column: { is_collapsed: false } as ColumnDefinition,
-                expected_number_of_skeletons: 2
+                expected_number_of_skeletons: 2,
             },
             {
                 column_index: 3,
                 column: { is_collapsed: false } as ColumnDefinition,
-                expected_number_of_skeletons: 3
+                expected_number_of_skeletons: 3,
             },
             {
                 column_index: 4,
                 column: { is_collapsed: false } as ColumnDefinition,
-                expected_number_of_skeletons: 1
+                expected_number_of_skeletons: 1,
             },
             {
                 column_index: 5,
                 column: { is_collapsed: false } as ColumnDefinition,
-                expected_number_of_skeletons: 4
+                expected_number_of_skeletons: 4,
             },
             {
                 column_index: 6,
                 column: { is_collapsed: false } as ColumnDefinition,
-                expected_number_of_skeletons: 1
-            }
+                expected_number_of_skeletons: 1,
+            },
         ].forEach(({ column_index, column, expected_number_of_skeletons }) => {
             const wrapper = shallowMount(ColumnsSkeleton, { propsData: { column_index, column } });
 
@@ -72,8 +72,8 @@ describe("ColumnsSkeleton", () => {
         const wrapper = shallowMount(ColumnsSkeleton, {
             propsData: {
                 column_index: 0,
-                column: { is_collapsed: true } as ColumnDefinition
-            }
+                column: { is_collapsed: true } as ColumnDefinition,
+            },
         });
 
         expect(wrapper.classes("taskboard-cell-collapsed")).toBe(true);

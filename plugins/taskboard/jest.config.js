@@ -24,6 +24,6 @@ module.exports = {
     displayName: "taskboard",
     moduleNameMapper: {
         ...base_config.moduleNameMapper,
-        "^jquery$": "<rootDir>/node_modules/jquery/dist/jquery.js"
-    }
+        "^jquery$": "<rootDir>/node_modules/jquery/dist/jquery.js",
+    },
 };

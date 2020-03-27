@@ -9,7 +9,7 @@ function TuleapArtifactModalQuotaDisplayController() {
     Object.assign(self, {
         file_upload_rules,
         getDiskUsagePercentage,
-        isDiskUsageEmpty
+        isDiskUsageEmpty,
     });
 
     function isDiskUsageEmpty() {

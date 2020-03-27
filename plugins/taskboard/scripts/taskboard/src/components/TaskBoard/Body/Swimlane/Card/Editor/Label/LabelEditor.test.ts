@@ -25,8 +25,8 @@ async function getWrapper(): Promise<Wrapper<LabelEditor>> {
     return shallowMount(LabelEditor, {
         localVue: await createTaskboardLocalVue(),
         propsData: {
-            value: "Lorem ipsum doloret"
-        }
+            value: "Lorem ipsum doloret",
+        },
     });
 }
 

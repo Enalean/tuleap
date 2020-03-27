@@ -48,12 +48,12 @@ describe("App", () => {
             is_item_status_metadata_used: false,
             is_obsolescence_date_metadata_used: false,
             csrf_token: "challenge_value",
-            csrf_token_name: "challenge_name"
+            csrf_token_name: "challenge_name",
         };
 
         factory = (state = {}, props = {}) => {
             store_options = {
-                state
+                state,
             };
             store = createStoreMock(store_options);
 
@@ -67,7 +67,7 @@ describe("App", () => {
                 localVue,
                 propsData: props,
                 mocks: { $store: store },
-                router
+                router,
             });
         };
     });
@@ -79,8 +79,8 @@ describe("App", () => {
                 has_folder_loading_error: false,
                 has_document_permission_error: false,
                 has_document_loading_error: false,
-                has_document_lock_error: false
-            }
+                has_document_lock_error: false,
+            },
         };
 
         const wrapper = factory(state, default_prop);
@@ -98,8 +98,8 @@ describe("App", () => {
                 has_folder_loading_error: true,
                 has_document_permission_error: false,
                 has_document_loading_error: false,
-                has_document_lock_error: false
-            }
+                has_document_lock_error: false,
+            },
         };
 
         const wrapper = factory(state, default_prop);
@@ -117,8 +117,8 @@ describe("App", () => {
                 has_folder_loading_error: false,
                 has_document_permission_error: true,
                 has_document_loading_error: false,
-                has_document_lock_error: false
-            }
+                has_document_lock_error: false,
+            },
         };
 
         const wrapper = factory(state, default_prop);
@@ -136,8 +136,8 @@ describe("App", () => {
                 has_folder_loading_error: false,
                 has_document_permission_error: false,
                 has_document_loading_error: true,
-                has_document_lock_error: false
-            }
+                has_document_lock_error: false,
+            },
         };
 
         const wrapper = factory(state, default_prop);
@@ -155,8 +155,8 @@ describe("App", () => {
                 has_folder_loading_error: false,
                 has_document_permission_error: false,
                 has_document_loading_error: false,
-                has_document_lock_error: true
-            }
+                has_document_lock_error: true,
+            },
         };
 
         const wrapper = factory(state, default_prop);
@@ -181,7 +181,7 @@ describe("App", () => {
             is_item_status_metadata_used: false,
             is_obsolescence_date_metadata_used: false,
             csrf_token: "challenge_value",
-            csrf_token_name: "challenge_name"
+            csrf_token_name: "challenge_name",
         };
 
         state = {
@@ -190,8 +190,8 @@ describe("App", () => {
                 has_folder_loading_error: false,
                 has_document_permission_error: false,
                 has_document_loading_error: false,
-                has_document_lock_error: false
-            }
+                has_document_lock_error: false,
+            },
         };
 
         const wrapper = factory(state, props);
@@ -206,8 +206,8 @@ describe("App", () => {
                 has_folder_loading_error: false,
                 has_document_permission_error: false,
                 has_document_loading_error: false,
-                has_document_lock_error: false
-            }
+                has_document_lock_error: false,
+            },
         };
 
         const wrapper = factory(state, default_prop);

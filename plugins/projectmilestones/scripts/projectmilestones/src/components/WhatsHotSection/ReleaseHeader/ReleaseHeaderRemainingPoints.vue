@@ -28,7 +28,7 @@
                 class="release-remaining-value"
                 v-bind:class="{
                     'release-remaining-value-disabled': disabled_points,
-                    'release-remaining-value-success': are_all_effort_defined
+                    'release-remaining-value-success': are_all_effort_defined,
                 }"
                 data-test="points-remaining-value"
             >
@@ -47,7 +47,7 @@
                 class="release-remaining-progress-value"
                 v-bind:class="{
                     'release-remaining-progress-value-success': are_all_effort_defined,
-                    'release-remaining-progress-value-disabled': disabled_points
+                    'release-remaining-progress-value-disabled': disabled_points,
                 }"
                 v-bind:style="{ width: get_tooltip_effort_points }"
                 data-test="points-progress-value"

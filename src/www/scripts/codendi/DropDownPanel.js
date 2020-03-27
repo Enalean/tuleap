@@ -28,7 +28,7 @@ var codendi = codendi || {};
 
 codendi.dropdown_panels = [];
 codendi.DropDownPanel = Class.create({
-    initialize: function(element, handle) {
+    initialize: function (element, handle) {
         this.element = $(element);
         this.handle = $(handle);
         if (this.element && this.handle) {
@@ -41,7 +41,7 @@ codendi.DropDownPanel = Class.create({
             //Disable submit button until there is one radio checked
             this.radios = this.element.select("input[type=radio]");
             if (this.radios.size()) {
-                this.radios.each(function(input) {
+                this.radios.each(function (input) {
                     input.checked = false;
                 });
                 this.element.down("input[type=submit]").disable();
@@ -55,13 +55,13 @@ codendi.DropDownPanel = Class.create({
             this.element.up().makePositioned();
             this.element.absolutize();
             this.element.setStyle({
-                top: this.handle.offsetHeight + "px"
+                top: this.handle.offsetHeight + "px",
             });
 
             //hide the thing if the user click elsewhere
             document.observe(
                 "click",
-                function(evt) {
+                function (evt) {
                     if (!Event.findElement(evt, "#" + this.element.identify())) {
                         if (this.element.visible() && !evt.isRightClick()) {
                             this.reset();
@@ -74,10 +74,10 @@ codendi.DropDownPanel = Class.create({
         }
         codendi.dropdown_panels.push(this);
     },
-    hide: function() {
+    hide: function () {
         this.element.hide();
     },
-    toggle: function(evt) {
+    toggle: function (evt) {
         if (this.element.visible()) {
             this.element.hide();
         } else {
@@ -87,7 +87,7 @@ codendi.DropDownPanel = Class.create({
             //Display me
             this.element.setStyle({
                 top: this.handle.offsetHeight + "px",
-                left: this.handle.offsetLeft + "px"
+                left: this.handle.offsetLeft + "px",
             });
             this.element.show();
             var over = this.element.offsetWidth + this.element.cumulativeOffset().left;
@@ -97,35 +97,33 @@ codendi.DropDownPanel = Class.create({
                         this.handle.offsetLeft +
                         this.handle.offsetWidth -
                         this.element.offsetWidth +
-                        "px"
+                        "px",
                 });
             }
         }
         Event.stop(evt);
     },
-    reset: function() {
+    reset: function () {
         this.element.hide();
         if (this.radios.size()) {
-            this.radios.each(function(input) {
+            this.radios.each(function (input) {
                 input.checked = false;
             });
             this.element.down("input[type=submit]").disable();
         }
     },
-    check: function(evt) {
+    check: function (evt) {
         this.element.down("input[type=submit]").enable();
-        var el = Event.element(evt)
-            .up()
-            .down("input[type=text]");
+        var el = Event.element(evt).up().down("input[type=text]");
         if (el) {
             el.activate();
         }
-    }
+    },
 });
 
 //Auto load
-document.observe("dom:loaded", function() {
-    $$(".dropdown_panel").each(function(element) {
+document.observe("dom:loaded", function () {
+    $$(".dropdown_panel").each(function (element) {
         if (element.id && $(element.id + "_handle")) {
             //eslint-disable-next-line @typescript-eslint/no-unused-vars
             var d = new codendi.DropDownPanel(element, $(element.id + "_handle"));

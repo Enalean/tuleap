@@ -22,7 +22,7 @@
         class="tlp-form-element"
         v-if="
             currentlyUpdatedItemMetadata.type === 'list' &&
-                !currentlyUpdatedItemMetadata.is_multiple_value_allowed
+            !currentlyUpdatedItemMetadata.is_multiple_value_allowed
         "
         data-test="document-custom-metadata-list"
     >
@@ -56,20 +56,20 @@ import { mapState } from "vuex";
 export default {
     name: "CustomMetadataListSingleValue",
     props: {
-        currentlyUpdatedItemMetadata: Object
+        currentlyUpdatedItemMetadata: Object,
     },
     data() {
         return {
-            project_metadata_list_possible_values: []
+            project_metadata_list_possible_values: [],
         };
     },
     computed: {
-        ...mapState("metadata", ["project_metadata_list"])
+        ...mapState("metadata", ["project_metadata_list"]),
     },
     mounted() {
         this.project_metadata_list_possible_values = this.project_metadata_list.find(
             ({ short_name }) => short_name === this.currentlyUpdatedItemMetadata.short_name
         );
-    }
+    },
 };
 </script>

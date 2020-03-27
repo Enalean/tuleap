@@ -15,8 +15,8 @@ function PullRequestCollectionRestService($http, $q, ErrorModalService) {
 
         pull_requests_pagination: {
             limit: 50,
-            offset: 0
-        }
+            offset: 0,
+        },
     });
 
     function getPullRequests(repository_id, limit, offset, status) {
@@ -25,15 +25,15 @@ function PullRequestCollectionRestService($http, $q, ErrorModalService) {
         if (typeof status === "string") {
             status_param = {
                 query: {
-                    status: status
-                }
+                    status: status,
+                },
             };
         }
 
         const params = Object.assign(
             {
                 limit: limit,
-                offset: offset
+                offset: offset,
             },
             status_param
         );
@@ -41,22 +41,22 @@ function PullRequestCollectionRestService($http, $q, ErrorModalService) {
         return $http
             .get("/api/v1/git/" + repository_id + "/pull_requests", {
                 params: params,
-                timeout: 20000
+                timeout: 20000,
             })
-            .then(function(response) {
+            .then(function (response) {
                 return {
                     results: response.data.collection,
-                    total: Number.parseInt(response.headers("X-PAGINATION-SIZE"), 10)
+                    total: Number.parseInt(response.headers("X-PAGINATION-SIZE"), 10),
                 };
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 ErrorModalService.showError(error);
                 return $q.reject(error);
             });
     }
 
     function recursiveGet(getFunction, limit, offset, callback) {
-        return getFunction(offset).then(function(response) {
+        return getFunction(offset).then(function (response) {
             const results = [].concat(response.results);
 
             const progress_callback = callback || noop;
@@ -67,7 +67,7 @@ function PullRequestCollectionRestService($http, $q, ErrorModalService) {
             }
 
             return recursiveGet(getFunction, limit, offset + limit, progress_callback).then(
-                function(second_response) {
+                function (second_response) {
                     return results.concat(second_response);
                 }
             );
@@ -78,7 +78,7 @@ function PullRequestCollectionRestService($http, $q, ErrorModalService) {
         const limit = self.pull_requests_pagination.limit;
         const offset = self.pull_requests_pagination.offset;
 
-        const getOnePagePullRequests = new_offset => {
+        const getOnePagePullRequests = (new_offset) => {
             return $q.when(self.getPullRequests(repository_id, limit, new_offset, status));
         };
 

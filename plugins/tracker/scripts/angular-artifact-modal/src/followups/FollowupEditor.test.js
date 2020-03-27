@@ -27,8 +27,8 @@ function getInstance() {
     return shallowMount(FollowupEditor, {
         localVue,
         propsData: {
-            value
-        }
+            value,
+        },
     });
 }
 
@@ -36,7 +36,7 @@ describe(`FollowupEditor`, () => {
     beforeEach(() => {
         value = {
             format: "text",
-            body: ""
+            body: "",
         };
     });
 
@@ -47,8 +47,8 @@ describe(`FollowupEditor`, () => {
         expect(wrapper.emitted("input")[0]).toEqual([
             {
                 format: "text",
-                body: "chrysopid"
-            }
+                body: "chrysopid",
+            },
         ]);
     });
 
@@ -59,8 +59,8 @@ describe(`FollowupEditor`, () => {
         expect(wrapper.emitted("input")[0]).toEqual([
             {
                 format: "html",
-                body: ""
-            }
+                body: "",
+            },
         ]);
     });
 });

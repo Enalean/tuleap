@@ -26,7 +26,7 @@ import {
     TYPE_LINK,
     TYPE_WIKI,
     CLIPBOARD_OPERATION_CUT,
-    CLIPBOARD_OPERATION_COPY
+    CLIPBOARD_OPERATION_COPY,
 } from "../../constants.js";
 import { mockFetchError } from "../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper.js";
 import * as rest_querier from "../../api/rest-querier.js";
@@ -38,8 +38,8 @@ describe("Clipboard actions", () => {
         const context = {
             commit: jest.fn(),
             state: {
-                pasting_in_progress: true
-            }
+                pasting_in_progress: true,
+            },
         };
 
         await pasteItem(context, [{}, {}, {}]);
@@ -51,11 +51,11 @@ describe("Clipboard actions", () => {
         const context = {
             commit: jest.fn(),
             state: {
-                operation_type: "unknown_operation"
-            }
+                operation_type: "unknown_operation",
+            },
         };
         const global_context = {
-            commit: jest.fn()
+            commit: jest.fn(),
         };
         const adjustItemToContentAfterItemCreationInAFolder = jest.spyOn(
             adjust_item_to_content_after_item_creation_in_folder,
@@ -76,11 +76,11 @@ describe("Clipboard actions", () => {
                 item_id: moved_item_id,
                 item_type: null,
                 pasting_in_progress: false,
-                operation_type: CLIPBOARD_OPERATION_CUT
+                operation_type: CLIPBOARD_OPERATION_CUT,
             };
             context = {
                 commit: jest.fn(),
-                state
+                state,
             };
 
             adjustItemToContentAfterItemCreationInAFolder = jest
@@ -91,7 +91,7 @@ describe("Clipboard actions", () => {
                 .mockReturnValue(Promise.resolve());
         });
 
-        const testPasteSuccess = async type => {
+        const testPasteSuccess = async (type) => {
             context.state.item_type = type;
 
             const current_folder = { id: 147 };
@@ -163,7 +163,7 @@ describe("Clipboard actions", () => {
             Then the paste is rejected and the clipboard state restored`, async () => {
             context.state.item_type = "unknown_type";
             const global_context = {
-                commit: jest.fn()
+                commit: jest.fn(),
             };
 
             await expect(pasteItem(context, [{}, {}, global_context])).rejects.toBeDefined();
@@ -175,11 +175,11 @@ describe("Clipboard actions", () => {
             Then the paste is rejected and the clipboard state is kept so the user can retry`, async () => {
             context.state.item_type = TYPE_EMPTY;
             const global_context = {
-                commit: jest.fn()
+                commit: jest.fn(),
             };
 
             mockFetchError(jest.spyOn(rest_querier, "moveEmpty"), {
-                status: 500
+                status: 500,
             });
 
             await pasteItem(context, [{}, {}, global_context]);
@@ -199,11 +199,11 @@ describe("Clipboard actions", () => {
                 item_id: copied_item_id,
                 item_type: null,
                 pasting_in_progress: false,
-                operation_type: CLIPBOARD_OPERATION_COPY
+                operation_type: CLIPBOARD_OPERATION_COPY,
             };
             context = {
                 commit: jest.fn(),
-                state
+                state,
             };
 
             adjustItemToContentAfterItemCreationInAFolder = jest
@@ -214,7 +214,7 @@ describe("Clipboard actions", () => {
                 .mockReturnValue(Promise.resolve());
         });
 
-        const testPasteSuccess = async type => {
+        const testPasteSuccess = async (type) => {
             context.state.item_type = type;
 
             const current_folder = { id: 147 };
@@ -286,7 +286,7 @@ describe("Clipboard actions", () => {
             Then the paste is rejected and the clipboard state restored`, async () => {
             context.state.item_type = "unknown_type";
             const global_context = {
-                commit: jest.fn()
+                commit: jest.fn(),
             };
 
             await expect(pasteItem(context, [{}, {}, global_context])).rejects.toBeDefined();
@@ -298,11 +298,11 @@ describe("Clipboard actions", () => {
             Then the paste is rejected and the clipboard state is kept so the user can retry`, async () => {
             context.state.item_type = TYPE_EMPTY;
             const global_context = {
-                commit: jest.fn()
+                commit: jest.fn(),
             };
 
             mockFetchError(jest.spyOn(rest_querier, "copyEmpty"), {
-                status: 500
+                status: 500,
             });
 
             await pasteItem(context, [{}, {}, global_context]);

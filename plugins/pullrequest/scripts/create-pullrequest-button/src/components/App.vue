@@ -38,19 +38,19 @@ export default {
     components: {
         CreatePullrequestButton,
         CreatePullrequestModal,
-        CreatePullrequestErrorModal
+        CreatePullrequestErrorModal,
     },
     props: {
         repository_id: Number,
         project_id: Number,
         parent_repository_id: Number,
         parent_repository_name: String,
-        parent_project_id: Number
+        parent_project_id: Number,
     },
     data() {
         return {
             modal: null,
-            error_modal: null
+            error_modal: null,
         };
     },
     mounted() {
@@ -59,7 +59,7 @@ export default {
             project_id: this.project_id,
             parent_repository_id: this.parent_repository_id,
             parent_repository_name: this.parent_repository_name,
-            parent_project_id: this.parent_project_id
+            parent_project_id: this.parent_project_id,
         });
 
         const modal = this.$refs.modal.$el;
@@ -79,7 +79,7 @@ export default {
         },
         resetModal() {
             this.$store.commit("resetSelection");
-        }
-    }
+        },
+    },
 };
 </script>

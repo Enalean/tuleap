@@ -24,7 +24,7 @@ import { formatExistingValue as formatForLinkField } from "../tuleap-artifact-mo
 import { formatExistingValue as formatForDateField } from "../tuleap-artifact-modal-fields/date-field/date-field-initializer.js";
 import {
     formatDefaultValue as defaultForOpenListField,
-    formatExistingValue as formatForOpenListField
+    formatExistingValue as formatForOpenListField,
 } from "../tuleap-artifact-modal-fields/open-list-field/open-list-field-initializer.js";
 
 export default TuleapArtifactFieldValuesService;
@@ -46,13 +46,13 @@ function TuleapArtifactFieldValuesService($sce) {
         var values = {};
         var artifact_value;
 
-        tracker.fields.forEach(field => {
+        tracker.fields.forEach((field) => {
             artifact_value = artifact_values[field.field_id];
 
             if (AwkwardCreationFields.includes(field.type)) {
                 values[field.field_id] = {
                     field_id: field.field_id,
-                    type: field.type
+                    type: field.type,
                 };
             } else if (artifact_value) {
                 values[field.field_id] = formatExistingValue(field, artifact_value);
@@ -86,14 +86,14 @@ function TuleapArtifactFieldValuesService($sce) {
             case "text":
                 value_obj.value = {
                     content: artifact_value.value,
-                    format: artifact_value.format
+                    format: artifact_value.format,
                 };
                 delete value_obj.format;
                 break;
             case "perm":
                 value_obj.value = {
                     is_used_by_default: field.values.is_used_by_default,
-                    granted_groups: artifact_value.granted_groups
+                    granted_groups: artifact_value.granted_groups,
                 };
                 delete value_obj.granted_groups;
                 break;
@@ -121,7 +121,7 @@ function TuleapArtifactFieldValuesService($sce) {
         var value_obj = {
             field_id: field.field_id,
             type: field.type,
-            permissions: field.permissions
+            permissions: field.permissions,
         };
         var default_value;
         switch (field.type) {
@@ -166,7 +166,7 @@ function TuleapArtifactFieldValuesService($sce) {
             case "text":
                 value_obj.value = {
                     content: null,
-                    format: "text"
+                    format: "text",
                 };
                 if (field.default_value) {
                     value_obj.value.format = field.default_value.format;
@@ -187,7 +187,7 @@ function TuleapArtifactFieldValuesService($sce) {
             case "perm":
                 value_obj.value = {
                     is_used_by_default: field.values.is_used_by_default,
-                    granted_groups: []
+                    granted_groups: [],
                 };
                 break;
             case "tbl":
@@ -218,20 +218,20 @@ function TuleapArtifactFieldValuesService($sce) {
         value_obj.temporary_files = [
             {
                 file: {},
-                description: ""
-            }
+                description: "",
+            },
         ];
         value_obj.images_added_by_text_fields = [];
         return value_obj;
     }
 
     function defaultValueExistsInValues(values, default_value_id) {
-        const found = values.find(value => default_value_id === value.id);
+        const found = values.find((value) => default_value_id === value.id);
         return found !== undefined;
     }
 
     function mapCheckboxValues(field, expected_values) {
-        return field.values.map(possible_value => {
+        return field.values.map((possible_value) => {
             return expected_values.includes(possible_value.id) ? possible_value.id : null;
         });
     }

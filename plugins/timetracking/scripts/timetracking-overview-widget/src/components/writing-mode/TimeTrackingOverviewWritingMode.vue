@@ -55,7 +55,7 @@ export default {
     components: {
         TimeTrackingOverviewWritingTrackers,
         TimeTrackingOverviewWritingDates,
-        TimeTrackingOverviewTrackerList
+        TimeTrackingOverviewTrackerList,
     },
     methods: {
         ...mapMutations(["toggleReadingMode"]),
@@ -65,7 +65,7 @@ export default {
         async switchToReadingMode() {
             await this.$store.dispatch("initWidgetWithReport");
             this.toggleReadingMode();
-        }
-    }
+        },
+    },
 };
 </script>

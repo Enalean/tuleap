@@ -20,7 +20,7 @@
 
 import jQuery from "jquery";
 
-(function($): void {
+(function ($): void {
     $("#tracker-creation-success-modal").modal();
 })(jQuery);
 

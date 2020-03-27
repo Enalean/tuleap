@@ -28,7 +28,7 @@ describe("FloatInput", () => {
     beforeEach(() => {
         wrapper = shallowMount(FloatInput, {
             propsData: { value: 1.23 },
-            localVue
+            localVue,
         });
     });
 

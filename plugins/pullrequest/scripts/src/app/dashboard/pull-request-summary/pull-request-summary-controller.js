@@ -11,11 +11,11 @@ function PullRequestSummaryController($state, PullRequestService, UserRestServic
         $onInit: init,
         goToOverview,
         isAbandoned,
-        isMerged
+        isMerged,
     });
 
     function init() {
-        UserRestService.getUser(self.pull_request.user_id).then(user => {
+        UserRestService.getUser(self.pull_request.user_id).then((user) => {
             self.author = user;
         });
     }

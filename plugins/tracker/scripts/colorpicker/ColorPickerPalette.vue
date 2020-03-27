@@ -45,17 +45,17 @@ export default {
     components: { ColorPickerPaletteRow, ColorPickerNoColorOption },
     props: {
         currentColor: String,
-        noColorLabel: String
+        noColorLabel: String,
     },
     data() {
         return {
-            tlp_colors
+            tlp_colors,
         };
     },
     methods: {
         updateColor(color) {
             this.$emit("color-update", color);
-        }
-    }
+        },
+    },
 };
 </script>

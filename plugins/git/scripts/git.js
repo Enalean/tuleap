@@ -13,7 +13,7 @@
 codendi.git = codendi.git || {};
 codendi.git.base_url = "/plugins/git/";
 
-document.observe("dom:loaded", function() {
+document.observe("dom:loaded", function () {
     var fork_repositories_prefix = $("fork_repositories_prefix");
 
     if (fork_repositories_prefix) {
@@ -32,7 +32,7 @@ document.observe("dom:loaded", function() {
                 );
             var preview = new Element("div", {
                 style:
-                    "color: #999; border-bottom: 1px solid #EEE; margin-bottom:0.5em; padding-bottom:0.5em;"
+                    "color: #999; border-bottom: 1px solid #EEE; margin-bottom:0.5em; padding-bottom:0.5em;",
             });
             table.down("tbody > tr > td", previewPos).insert({ top: preview });
 
@@ -43,7 +43,7 @@ document.observe("dom:loaded", function() {
                     return fork_destination.options[fork_destination.selectedIndex].title;
                 }
             }
-            return function(periodicalExecuter) {
+            return function (periodicalExecuter) {
                 // On form submission, stop periodical executer so button stay
                 // disabled.
                 if (submitted === true) {
@@ -53,7 +53,7 @@ document.observe("dom:loaded", function() {
                 var tplVars = {
                     path: "",
                     repo: "...",
-                    dest: tuleap.escaper.html(getForkDestination())
+                    dest: tuleap.escaper.html(getForkDestination()),
                 };
                 if (
                     (fork_destination === null || fork_destination.disabled) &&
@@ -92,7 +92,7 @@ document.observe("dom:loaded", function() {
         var periodicalExecuter = new PeriodicalExecuter(getPreviewUpdater(table, 3), 0.5);
 
         // On fork, disable submit button
-        submit.up("form").observe("submit", function() {
+        submit.up("form").observe("submit", function () {
             submit.disable();
             submitted = true;
         });
@@ -134,7 +134,7 @@ document.observe("dom:loaded", function() {
         var gerrit_option = $("git_admin_config_from_template");
 
         if (gerrit_option) {
-            gerrit_option.observe("click", function(event) {
+            gerrit_option.observe("click", function (event) {
                 cleanTemplateForm();
                 $("git_admin_config_delete").hide();
                 $("git_admin_config_list_area").hide();
@@ -155,7 +155,7 @@ document.observe("dom:loaded", function() {
         var gerrit_option = $("git_admin_config_from_gerrit");
 
         if (gerrit_option) {
-            gerrit_option.observe("click", function(event) {
+            gerrit_option.observe("click", function (event) {
                 cleanTemplateForm();
                 $("git_admin_config_delete").hide();
                 $("git_admin_template_list_area").hide();
@@ -175,7 +175,7 @@ document.observe("dom:loaded", function() {
         var gerrit_option = $("git_admin_config_from_scratch");
 
         if (gerrit_option) {
-            gerrit_option.observe("click", function(event) {
+            gerrit_option.observe("click", function (event) {
                 cleanTemplateForm();
                 $("git_admin_config_delete").hide();
                 $("git_admin_template_list_area").hide();
@@ -194,7 +194,7 @@ document.observe("dom:loaded", function() {
     (function loadGerritConfig() {
         var list = $("git_admin_config_list");
         if (list) {
-            list.observe("change", function() {
+            list.observe("change", function () {
                 var remote_repository = $F(list),
                     group_id = $F("project_id"),
                     query =
@@ -206,14 +206,14 @@ document.observe("dom:loaded", function() {
                     return;
                 }
                 new Ajax.Request(codendi.git.base_url + query, {
-                    onFailure: function() {
+                    onFailure: function () {
                         //eslint-disable-next-line no-alert
                         alert(codendi.locales["git"].cannot_get_gerrit_config);
                     },
-                    onSuccess: function(transport) {
+                    onSuccess: function (transport) {
                         $("git_admin_config_data").value = transport.responseText;
                         $("git_admin_config_edit_area").show();
-                    }
+                    },
                 });
             });
         }
@@ -222,7 +222,7 @@ document.observe("dom:loaded", function() {
     (function loadConfigTemplate() {
         var list = $("git_admin_template_list");
         if (list) {
-            list.observe("change", function() {
+            list.observe("change", function () {
                 var template = $F(list),
                     group_id = $F("project_id"),
                     query =
@@ -235,13 +235,13 @@ document.observe("dom:loaded", function() {
                     return;
                 }
                 new Ajax.Request(codendi.git.base_url + query, {
-                    onFailure: function() {
+                    onFailure: function () {
                         //eslint-disable-next-line no-alert
                         alert(codendi.locales["git"].cannot_get_template);
                     },
-                    onSuccess: function(transport) {
+                    onSuccess: function (transport) {
                         $("git_admin_config_data").value = transport.responseText;
-                    }
+                    },
                 });
             });
         }
@@ -250,7 +250,7 @@ document.observe("dom:loaded", function() {
     (function cancelTemplateConfig() {
         var cancel = $("git_admin_config_cancel");
         if (cancel) {
-            cancel.observe("click", function() {
+            cancel.observe("click", function () {
                 cleanTemplateForm();
                 $("git_admin_template_list_area").hide();
                 $("git_admin_config_list_area").hide();
@@ -263,8 +263,8 @@ document.observe("dom:loaded", function() {
     })();
 
     (function editTemplateConfig() {
-        $$(".git_admin_config_edit_template").each(function(edit_link) {
-            edit_link.observe("click", function(event) {
+        $$(".git_admin_config_edit_template").each(function (edit_link) {
+            edit_link.observe("click", function (event) {
                 var template_id = edit_link.readAttribute("data-template-id"),
                     group_id = $F("project_id"),
                     query =
@@ -277,11 +277,11 @@ document.observe("dom:loaded", function() {
                 cleanTemplateForm();
 
                 new Ajax.Request(codendi.git.base_url + query, {
-                    onFailure: function() {
+                    onFailure: function () {
                         //eslint-disable-next-line no-alert
                         alert(codendi.locales["git"].cannot_get_template);
                     },
-                    onSuccess: function(transport) {
+                    onSuccess: function (transport) {
                         $("git_admin_config_data").value = transport.responseText;
                         $("git_admin_config_templates_list").hide();
                         $("git_admin_config_btn_create").hide();
@@ -295,15 +295,15 @@ document.observe("dom:loaded", function() {
                         $("git_admin_template_id").value = edit_link.readAttribute(
                             "data-template-id"
                         );
-                    }
+                    },
                 });
             });
         });
     })();
 
     (function viewTemplateConfig() {
-        $$(".git_admin_config_view_template").each(function(view_link) {
-            view_link.observe("click", function(event) {
+        $$(".git_admin_config_view_template").each(function (view_link) {
+            view_link.observe("click", function (event) {
                 var template_id = view_link.readAttribute("data-template-id"),
                     group_id = $F("project_id"),
                     query =
@@ -316,11 +316,11 @@ document.observe("dom:loaded", function() {
                 cleanTemplateForm();
 
                 new Ajax.Request(codendi.git.base_url + query, {
-                    onFailure: function() {
+                    onFailure: function () {
                         //eslint-disable-next-line no-alert
                         alert(codendi.locales["git"].cannot_get_template);
                     },
-                    onSuccess: function(transport) {
+                    onSuccess: function (transport) {
                         $("git_admin_config_data").value = transport.responseText;
                         $("git_admin_config_templates_list").hide();
                         $("git_admin_config_btn_create").hide();
@@ -334,7 +334,7 @@ document.observe("dom:loaded", function() {
                         $("git_admin_config_template_name").textContent = view_link.readAttribute(
                             "data-template-name"
                         );
-                    }
+                    },
                 });
             });
         });
@@ -348,7 +348,7 @@ document.observe("dom:loaded", function() {
         $("git_admin_config_data_label").show();
         $("git_admin_save_button").show();
         $("git_admin_config_delete").show();
-        $$("#git_admin_config_form select").each(function(selectbox) {
+        $$("#git_admin_config_form select").each(function (selectbox) {
             selectbox.selectedIndex = 0;
         });
     }

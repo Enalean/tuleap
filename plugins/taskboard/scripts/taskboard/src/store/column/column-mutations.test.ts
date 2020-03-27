@@ -27,7 +27,7 @@ describe(`Column module mutations`, () => {
             const column: ColumnDefinition = { is_collapsed: false } as ColumnDefinition;
 
             const state: ColumnState = {
-                columns: [column]
+                columns: [column],
             };
 
             mutations.collapseColumn(state, column);
@@ -40,7 +40,7 @@ describe(`Column module mutations`, () => {
             const column: ColumnDefinition = { is_collapsed: true } as ColumnDefinition;
 
             const state: ColumnState = {
-                columns: [column]
+                columns: [column],
             };
 
             mutations.expandColumn(state, column);
@@ -52,7 +52,7 @@ describe(`Column module mutations`, () => {
             const column: ColumnDefinition = { has_hover: false } as ColumnDefinition;
 
             const state: ColumnState = {
-                columns: [column]
+                columns: [column],
             };
 
             mutations.pointerEntersColumn(state, column);
@@ -65,7 +65,7 @@ describe(`Column module mutations`, () => {
             const column: ColumnDefinition = { has_hover: true } as ColumnDefinition;
 
             const state: ColumnState = {
-                columns: [column]
+                columns: [column],
             };
 
             mutations.pointerLeavesColumn(state, column);

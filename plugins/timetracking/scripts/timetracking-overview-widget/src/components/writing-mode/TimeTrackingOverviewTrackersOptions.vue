@@ -50,20 +50,20 @@ export default {
         ...mapState(["trackers", "is_added_tracker"]),
         is_tracker_select_disabled() {
             return this.trackers.length === 0;
-        }
+        },
     },
     watch: {
         is_added_tracker: {
             handler() {
                 this.$refs.select.options.selectedIndex = 0;
             },
-            deep: true
-        }
+            deep: true,
+        },
     },
     methods: {
         setSelected($event) {
             this.$emit("input", $event.target.value);
-        }
-    }
+        },
+    },
 };
 </script>

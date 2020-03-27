@@ -21,7 +21,7 @@ import { createBurnupChart, getTotal } from "./burnup-chart-drawer";
 import { ChartPropsWhithoutTooltip } from "../../../../../../../src/www/scripts/charts-builders/type";
 import {
     GenericBurnupData,
-    PointsWithDateForGenericBurnup
+    PointsWithDateForGenericBurnup,
 } from "../../../../../../agiledashboard/scripts/burnup-chart/src/type";
 jest.mock("../../../../../../../src/www/scripts/charts-builders/time-scale-labels-formatter");
 jest.mock("../time-scale-label-formatter");
@@ -35,14 +35,14 @@ describe("BurnupChartDrawer", () => {
                     {
                         date: new Date().toDateString(),
                         progression: 10,
-                        total: 15
+                        total: 15,
                     },
                     {
                         date: new Date().toDateString(),
                         progression: 10,
-                        total: 20
-                    }
-                ]
+                        total: 20,
+                    },
+                ],
             } as GenericBurnupData;
 
             const total = getTotal(generic);
@@ -52,7 +52,7 @@ describe("BurnupChartDrawer", () => {
         it("When points are null, Then capacity returns", () => {
             const generic: GenericBurnupData = {
                 capacity: 30,
-                points_with_date: [] as PointsWithDateForGenericBurnup[]
+                points_with_date: [] as PointsWithDateForGenericBurnup[],
             } as GenericBurnupData;
 
             const total = getTotal(generic);
@@ -62,7 +62,7 @@ describe("BurnupChartDrawer", () => {
         it("When points and capacity are null, Then DEFAULT_TOTAL_EFFORT returns", () => {
             const generic: GenericBurnupData = {
                 capacity: null,
-                points_with_date: [] as PointsWithDateForGenericBurnup[]
+                points_with_date: [] as PointsWithDateForGenericBurnup[],
             } as GenericBurnupData;
 
             const total = getTotal(generic);
@@ -92,8 +92,8 @@ describe("BurnupChartDrawer", () => {
                     top: 20,
                     right: 20,
                     bottom: 20,
-                    left: 20
-                }
+                    left: 20,
+                },
             };
         }
 
@@ -104,7 +104,7 @@ describe("BurnupChartDrawer", () => {
                 start_date: "2019-07-01T00:00:00+00:00",
                 capacity: null,
                 is_under_calculation: false,
-                points_with_date: getGenericMaxIs15()
+                points_with_date: getGenericMaxIs15(),
             };
         }
 
@@ -113,12 +113,12 @@ describe("BurnupChartDrawer", () => {
             points.push({
                 date: "2019-07-01T00:00:00+00:00",
                 progression: 10,
-                total: 15
+                total: 15,
             });
             points.push({
                 date: "2019-07-01T00:00:00+00:00",
                 progression: 12,
-                total: 15
+                total: 15,
             });
 
             return points;

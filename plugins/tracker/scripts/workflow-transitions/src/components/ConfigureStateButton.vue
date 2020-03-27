@@ -35,8 +35,8 @@ export default {
     props: {
         transition: {
             type: Object,
-            required: true
-        }
+            required: true,
+        },
     },
     methods: {
         openModal() {
@@ -44,7 +44,7 @@ export default {
                 "transitionModal/showTransitionConfigurationModal",
                 this.transition
             );
-        }
-    }
+        },
+    },
 };
 </script>

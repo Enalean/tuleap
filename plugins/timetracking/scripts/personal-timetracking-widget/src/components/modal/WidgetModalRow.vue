@@ -67,17 +67,17 @@ export default {
     name: "WidgetModalRow",
     components: { WidgetModalEditTime, WidgetModalDeletePopover },
     props: {
-        timeData: Object
+        timeData: Object,
     },
     data() {
         return {
-            edit_mode: false
+            edit_mode: false,
         };
     },
     computed: {
         minutes() {
             return formatMinutes(this.timeData.minutes);
-        }
+        },
     },
     methods: {
         createPopover() {
@@ -89,7 +89,7 @@ export default {
         editTime(date, time_id, time, step) {
             this.$store.dispatch("updateTime", [date, time_id, time, step]);
             this.swapEditMode();
-        }
-    }
+        },
+    },
 };
 </script>

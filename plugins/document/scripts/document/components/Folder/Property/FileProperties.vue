@@ -49,18 +49,18 @@ export default {
     name: "FileProperties",
     props: {
         value: Object,
-        item: Object
+        item: Object,
     },
     data() {
         return {
-            error_message: ""
+            error_message: "",
         };
     },
     computed: {
         ...mapState(["max_size_upload"]),
         is_displayed() {
             return this.item.type === TYPE_FILE;
-        }
+        },
     },
     methods: {
         onFileChange(e) {
@@ -85,7 +85,7 @@ export default {
             this.$refs.input.setCustomValidity(this.error_message);
 
             this.$emit("input", { file });
-        }
-    }
+        },
+    },
 };
 </script>

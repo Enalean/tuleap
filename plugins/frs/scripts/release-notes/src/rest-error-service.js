@@ -7,12 +7,12 @@ function RestErrorService() {
 
     Object.assign(self, {
         getError,
-        setError
+        setError,
     });
 
     const error = {
         rest_error: "",
-        rest_error_occured: false
+        rest_error_occured: false,
     };
 
     function getError() {

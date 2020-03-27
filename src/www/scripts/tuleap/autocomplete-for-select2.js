@@ -27,7 +27,7 @@ if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
 
     module.exports = {
         autocomplete_projects_for_select2: autocomplete_projects_for_select2,
-        autocomplete_users_for_select2: autocomplete_users_for_select2
+        autocomplete_users_for_select2: autocomplete_users_for_select2,
     };
 } else {
     var tuleap = window.tuleap || {};
@@ -50,14 +50,14 @@ function autocomplete_projects_for_select2(element, options) {
         url: "/project/autocomplete.php",
         dataType: "json",
         delay: 250,
-        data: function(params) {
+        data: function (params) {
             return {
                 return_type: "json_for_select_2",
                 name: params.term,
                 page: params.page || 1,
-                private: options.include_private_projects ? 1 : 0
+                private: options.include_private_projects ? 1 : 0,
             };
-        }
+        },
     };
 
     select2(element, options);
@@ -65,7 +65,7 @@ function autocomplete_projects_for_select2(element, options) {
 
 const convertUsersToSelect2Entry = ({ tuleap_user_id, text }) => ({
     id: tuleap_user_id,
-    text: text
+    text: text,
 });
 
 function autocomplete_users_for_select2(element, options) {
@@ -81,24 +81,24 @@ function autocomplete_users_for_select2(element, options) {
         url: "/user/autocomplete.php",
         dataType: "json",
         delay: 250,
-        data: function(params) {
+        data: function (params) {
             return {
                 return_type: "json_for_select_2",
                 name: params.term,
                 page: params.page || 1,
                 codendi_user_only: options.internal_users_only,
                 project_id: options.project_id || "",
-                user: options.user
+                user: options.user,
             };
-        }
+        },
     };
 
     if (options.use_tuleap_id === true) {
-        options.ajax.processResults = data => ({
-            results: data.results.map(convertUsersToSelect2Entry)
+        options.ajax.processResults = (data) => ({
+            results: data.results.map(convertUsersToSelect2Entry),
         });
     }
-    options.escapeMarkup = function(markup) {
+    options.escapeMarkup = function (markup) {
         return markup;
     };
     options.templateResult = formatUser;

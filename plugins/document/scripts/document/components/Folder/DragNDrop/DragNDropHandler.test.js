@@ -29,17 +29,17 @@ describe("DragNDropHandler", () => {
 
     const file1 = new File([new Blob(["Some text in a file"])], "file.txt", {
         type: "plain/text",
-        endings: "native"
+        endings: "native",
     });
 
     const file2 = new File([new Blob(["Some text in a file"])], "file2.txt", {
         type: "plain/text",
-        endings: "native"
+        endings: "native",
     });
 
     const file3 = new File([new Blob(["Some text in a file"])], "file3.txt", {
         type: "plain/text",
-        endings: "native"
+        endings: "native",
     });
 
     beforeEach(() => {
@@ -52,30 +52,30 @@ describe("DragNDropHandler", () => {
                     id: 999,
                     title: "workdir",
                     type: TYPE_FOLDER,
-                    user_can_write: true
+                    user_can_write: true,
                 },
-                user_id: 666
+                user_id: 666,
             },
             getters: {
                 user_can_dragndrop: true,
-                current_folder_title: "workdir"
-            }
+                current_folder_title: "workdir",
+            },
         };
         store = createStoreMock(store_options);
 
         component_options = {
             mocks: {
-                $store: store
+                $store: store,
             },
-            localVue
+            localVue,
         };
 
         drop_event = {
             stopPropagation: () => {},
             preventDefault: () => {},
             dataTransfer: {
-                files: []
-            }
+                files: [],
+            },
         };
 
         main = document.createElement("div");
@@ -118,7 +118,7 @@ describe("DragNDropHandler", () => {
                     id: 123,
                     parent_id: store.state.current_folder.id,
                     title: file1.name,
-                    type: TYPE_FILE
+                    type: TYPE_FILE,
                 });
 
                 await wrapper.vm.ondrop(drop_event);
@@ -141,7 +141,7 @@ describe("DragNDropHandler", () => {
                     store.state.current_folder,
                     file1.name,
                     "",
-                    true
+                    true,
                 ]);
                 expect(wrapper.vm.error_modal_shown).toEqual(wrapper.vm.CREATION_ERROR);
             });
@@ -173,10 +173,10 @@ describe("DragNDropHandler", () => {
                     lock_info: {
                         locked_by: {
                             id: 753,
-                            name: "some dude"
-                        }
+                            name: "some dude",
+                        },
                     },
-                    approval_table: null
+                    approval_table: null,
                 };
 
                 store.state.folder_content.push(target_file);
@@ -198,8 +198,8 @@ describe("DragNDropHandler", () => {
                     user_can_write: true,
                     lock_info: null,
                     approval_table: {
-                        has_been_approved: false
-                    }
+                        has_been_approved: false,
+                    },
                 };
 
                 store.state.folder_content.push(target_file);
@@ -220,7 +220,7 @@ describe("DragNDropHandler", () => {
                     type: TYPE_FILE,
                     user_can_write: true,
                     lock_info: null,
-                    approval_table: null
+                    approval_table: null,
                 };
 
                 store.state.max_size_upload = 0;
@@ -243,7 +243,7 @@ describe("DragNDropHandler", () => {
                     type: TYPE_FILE,
                     user_can_write: true,
                     lock_info: null,
-                    approval_table: null
+                    approval_table: null,
                 };
 
                 store.state.folder_content.push(target_file);
@@ -272,14 +272,14 @@ describe("DragNDropHandler", () => {
                 store.state.current_folder,
                 file1.name,
                 "",
-                true
+                true,
             ]);
             expect(store.dispatch).toHaveBeenCalledWith("addNewUploadFile", [
                 file2,
                 store.state.current_folder,
                 file2.name,
                 "",
-                true
+                true,
             ]);
         });
 
@@ -291,7 +291,7 @@ describe("DragNDropHandler", () => {
                 title: "my subfolder",
                 type: TYPE_FOLDER,
                 user_can_write: true,
-                is_expanded: true
+                is_expanded: true,
             };
 
             store.state.folder_content.push(target_subfolder);
@@ -305,14 +305,14 @@ describe("DragNDropHandler", () => {
                 target_subfolder,
                 file1.name,
                 "",
-                true
+                true,
             ]);
             expect(store.dispatch).toHaveBeenCalledWith("addNewUploadFile", [
                 file2,
                 target_subfolder,
                 file2.name,
                 "",
-                true
+                true,
             ]);
         });
     });
@@ -328,7 +328,7 @@ describe("DragNDropHandler", () => {
                 store.state.current_folder,
                 file1.name,
                 "",
-                true
+                true,
             ]);
         });
 
@@ -343,12 +343,12 @@ describe("DragNDropHandler", () => {
                 lock_info: {
                     locked_by: {
                         id: store.state.user_id,
-                        name: "current_user"
-                    }
+                        name: "current_user",
+                    },
                 },
                 approval_table: {
-                    has_been_approved: true
-                }
+                    has_been_approved: true,
+                },
             };
 
             store.state.folder_content.push(target_file);
@@ -359,7 +359,7 @@ describe("DragNDropHandler", () => {
             expect(store.dispatch).not.toHaveBeenCalledWith("addNewUploadFile");
             expect(store.dispatch).toHaveBeenCalledWith("createNewFileVersion", [
                 target_file,
-                file1
+                file1,
             ]);
         });
     });
@@ -373,7 +373,7 @@ describe("DragNDropHandler", () => {
                 title: "my subfolder",
                 type: TYPE_FOLDER,
                 user_can_write: false,
-                is_expanded: true
+                is_expanded: true,
             };
 
             store.state.folder_content.push(target_subfolder);
@@ -394,7 +394,7 @@ describe("DragNDropHandler", () => {
                 type: TYPE_FILE,
                 user_can_write: false,
                 lock_info: null,
-                approval_table: null
+                approval_table: null,
             };
 
             store.state.folder_content.push(target_file);

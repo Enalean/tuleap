@@ -43,7 +43,7 @@ import { mapState } from "vuex";
 export default {
     name: "TimeTrackingOverviewReadingDates",
     computed: {
-        ...mapState(["start_date", "end_date"])
-    }
+        ...mapState(["start_date", "end_date"]),
+    },
 };
 </script>
