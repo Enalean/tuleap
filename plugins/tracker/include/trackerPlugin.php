@@ -153,7 +153,6 @@ use Tuleap\Tracker\Webhook\WebhookFactory;
 use Tuleap\Tracker\Widget\ProjectRendererWidgetXMLImporter;
 use Tuleap\Tracker\Workflow\WorkflowMenuTabPresenterBuilder;
 use Tuleap\Tracker\Workflow\WorkflowTransitionController;
-use Tuleap\Tracker\XMLTemplatesController;
 use Tuleap\Upload\FileBeingUploadedLocker;
 use Tuleap\Upload\FileBeingUploadedWriter;
 use Tuleap\Upload\FileUploadController;
@@ -1846,11 +1845,6 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         );
     }
 
-    public function routeGetTemplates() : DispatchableWithRequest
-    {
-        return new XMLTemplatesController();
-    }
-
     public function routeGetFieldsPermissionsByField() : DispatchableWithRequest
     {
         return new ByFieldController(TrackerFactory::instance(), TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/permission'));
@@ -1870,8 +1864,6 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         $event->getRouteCollector()->addGroup(TRACKER_BASE_URL, function (FastRoute\RouteCollector $r) {
             $r->addRoute(['GET', 'POST'], '[/[index.php]]', $this->getRouteHandler('routeLegacyController'));
-
-            $r->get('/resources/templates/[index.php]', $this->getRouteHandler('routeGetTemplates'));
 
             $r->post('/invert_comments_order.php', $this->getRouteHandler('routePostInvertCommentsOrder'));
             $r->post('/invert_display_changes.php', $this->getRouteHandler('routePostInvertDisplayChanges'));
