@@ -43,29 +43,29 @@ class GetItemsFromMilestone implements Dispatchable
      */
     private $items_ids;
 
-    public function __construct(PFUser $user, $milestone_id)
+    public function __construct(PFUser $user, int $milestone_id)
     {
         $this->user         = $user;
         $this->milestone_id = $milestone_id;
     }
 
-    public function getUser()
+    public function getUser(): PFUser
     {
         return $this->user;
     }
 
-    public function getMilestoneId()
+    public function getMilestoneId(): int
     {
         return $this->milestone_id;
     }
 
 
-    public function getItemsIds()
+    public function getItemsIds(): array
     {
         return $this->items_ids;
     }
 
-    public function setItemsIds(array $items_ids)
+    public function setItemsIds(array $items_ids): void
     {
         $this->items_ids = $items_ids;
     }

@@ -49,12 +49,12 @@ class ArtifactFactory
         $this->dao                      = $dao;
     }
 
-    public function getArtifactById($id)
+    public function getArtifactById(int $id): ?Tracker_Artifact
     {
         return $this->tracker_artifact_factory->getArtifactById($id);
     }
 
-    public function getArtifactByIdUserCanView(PFUser $user, $id): ?Tracker_Artifact
+    public function getArtifactByIdUserCanView(PFUser $user, int $id): ?Tracker_Artifact
     {
         return $this->tracker_artifact_factory->getArtifactByIdUserCanView($user, $id);
     }

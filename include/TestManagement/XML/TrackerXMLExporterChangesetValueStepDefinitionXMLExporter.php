@@ -43,7 +43,7 @@ class TrackerXMLExporterChangesetValueStepDefinitionXMLExporter extends Tracker_
         $this->simple_XMLCDATA_factory = $simple_XMLCDATA_factory;
     }
 
-    protected function getFieldChangeType()
+    protected function getFieldChangeType(): string
     {
         return StepDefinition::TYPE;
     }

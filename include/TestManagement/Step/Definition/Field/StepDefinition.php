@@ -39,6 +39,9 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     public const START_RANK = 1;
     public const TYPE       = 'ttmstepdef';
 
+    /**
+     * @return void
+     */
     public function accept(Tracker_FormElement_FieldVisitor $visitor)
     {
         $visitor->visitExternalField($this);
@@ -74,51 +77,75 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return '<textarea></textarea>';
     }
 
+    /**
+     * @return null
+     */
     public function getRESTAvailableValues()
     {
         return null;
     }
 
+    /**
+     * @return false
+     */
     public function canBeUsedAsReportCriterion()
     {
         return false;
     }
 
+    /**
+     * @return false
+     */
     public function canBeUsedAsReportColumn()
     {
         return false;
     }
 
-    public function fetchCriteriaValue($criteria)
+    /**
+     * @param mixed $criteria
+     */
+    public function fetchCriteriaValue($criteria): string
     {
         return '';
     }
 
-    public function fetchRawValue($value)
+    /**
+     * @param mixed $value
+     */
+    public function fetchRawValue($value): string
     {
         return '';
     }
 
-    public function getCriteriaFrom($criteria)
+    /**
+     * @param mixed $criteria
+     */
+    public function getCriteriaFrom($criteria): string
     {
         return '';
     }
 
-    public function getCriteriaWhere($criteria)
+    /**
+     * @param mixed $criteria
+     */
+    public function getCriteriaWhere($criteria): string
     {
         return '';
     }
 
-    public function getQueryFrom()
+    public function getQueryFrom(): string
     {
         return '';
     }
 
-    public function getQuerySelect()
+    public function getQuerySelect(): string
     {
         return '';
     }
 
+    /**
+     * @return null
+     */
     protected function getCriteriaDao()
     {
         return null;
@@ -127,8 +154,8 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     protected function fetchArtifactValue(
         Tracker_Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null,
-        $submitted_values = []
-    ) {
+        array $submitted_values = []
+    ): string {
         $steps = $this->getStepsPresentersFromSubmittedValues($submitted_values);
         if (empty($steps)) {
             $steps = $this->getStepsPresentersFromChangesetValue($value);
@@ -137,7 +164,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return $this->renderStepEditionToString($steps);
     }
 
-    private function getDefaultFormat(PFUser $user)
+    private function getDefaultFormat(PFUser $user): string
     {
         $user_preference = $user->getPreference(PFUser::EDITION_DEFAULT_FORMAT);
 
@@ -152,7 +179,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         Tracker_Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
         array $submitted_values
-    ) {
+    ): string {
         return $this->fetchArtifactValueReadOnly($artifact, $value) .
             $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
     }
@@ -160,7 +187,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     public function fetchArtifactValueReadOnly(
         Tracker_Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null
-    ) {
+    ): string {
         $renderer = TemplateRendererFactory::build()->getRenderer(TESTMANAGEMENT_BASE_DIR . '/templates');
 
         $purifier       = Codendi_HTMLPurifier::instance();
@@ -175,7 +202,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         );
     }
 
-    protected function fetchSubmitValue(array $submitted_values)
+    protected function fetchSubmitValue(array $submitted_values): string
     {
         $submitted_values = $submitted_values ?: [];
 
@@ -184,32 +211,35 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return $this->renderStepEditionToString($steps);
     }
 
-    protected function fetchSubmitValueMasschange()
+    protected function fetchSubmitValueMasschange(): string
     {
         return '';
     }
 
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
+    protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null): string
     {
         return '';
     }
 
-    public function fetchAddTooltip($used, $prefix = '')
+    public function fetchAddTooltip($used, $prefix = ''): string
     {
         return '';
     }
 
+    /**
+     * @return StepDefinitionChangesetValueDao
+     */
     protected function getValueDao()
     {
         return new StepDefinitionChangesetValueDao();
     }
 
-    public function fetchFollowUp($artifact, $from, $to)
+    public function fetchFollowUp($artifact, $from, $to): string
     {
         return '';
     }
 
-    public function fetchRawValueFromChangeset($changeset)
+    public function fetchRawValueFromChangeset($changeset): string
     {
         return '';
     }
@@ -251,7 +281,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return true;
     }
 
-    private function isSubmittedFormatValid($value, $format_key, $key)
+    private function isSubmittedFormatValid(array $value, string $format_key, string $key): bool
     {
         return isset($value[$format_key][$key])
             && in_array(
@@ -260,7 +290,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
             );
     }
 
-    private function doesUserWantToRemoveAllSteps(array $value)
+    private function doesUserWantToRemoveAllSteps(array $value): bool
     {
         return isset($value['no_steps']) && $value['no_steps'];
     }
@@ -323,7 +353,12 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
             $this->extractCrossRefs($artifact, $value);
     }
 
-    private function transformSubmittedValuesIntoArrayOfStructuredSteps(array $submitted_values)
+    /**
+     * @return Step[]
+     *
+     * @psalm-return list<Step>
+     */
+    private function transformSubmittedValuesIntoArrayOfStructuredSteps(array $submitted_values): array
     {
         if ($this->doesUserWantToRemoveAllSteps($submitted_values) || ! isset($submitted_values['description'])) {
             return [];
@@ -363,7 +398,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return $steps;
     }
 
-    private function extractCrossRefs(Tracker_Artifact $artifact, array $submitted_steps)
+    private function extractCrossRefs(Tracker_Artifact $artifact, array $submitted_steps): bool
     {
         if (! isset($submitted_steps['description']) && ! isset($submitted_steps['expected_results'])) {
             return true;
@@ -408,11 +443,17 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return new StepDefinitionChangesetValue($value_id, $changeset, $this, $has_changed, $steps);
     }
 
+    /**
+     * @param null $from_aid
+     */
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report_id = null, $from_aid = null)
     {
         return '';
     }
 
+    /**
+     * @return ViewAdmin
+     */
     public function getFormAdminVisitor(Tracker_FormElement_Field $element, array $used_element)
     {
         return new ViewAdmin($element, $used_element);
@@ -428,15 +469,15 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
             $steps = $value->getValue();
         }
 
-        return array_map(
+        return array_filter(array_map(
             function (Step $step) {
                 return $this->getStepPresenter($step);
             },
             $steps
-        );
+        ));
     }
 
-    private function getStepPresenter(Step $step)
+    private function getStepPresenter(Step $step): ?StepPresenter
     {
         $tracker = $this->getTracker();
         if (! $tracker) {
@@ -446,10 +487,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return new StepPresenter($step, $tracker->getProject());
     }
 
-    /**
-     * @return StepPresenter
-     */
-    private function getEmptyStepPresenter()
+    private function getEmptyStepPresenter(): ?StepPresenter
     {
         $default_format = $this->getDefaultFormat($this->getCurrentUser());
         $empty_step     = new Step(0, '', $default_format, '', $default_format, 0);
@@ -489,12 +527,12 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
 
         $submitted_steps = $this->getValueFromSubmitOrDefault($submitted_values);
         if ($submitted_steps) {
-            $steps = array_map(
+            $steps = array_filter(array_map(
                 function (Step $step) {
                     return $this->getStepPresenter($step);
                 },
                 $this->transformSubmittedValuesIntoArrayOfStructuredSteps($submitted_steps)
-            );
+            ));
         }
 
         return $steps;

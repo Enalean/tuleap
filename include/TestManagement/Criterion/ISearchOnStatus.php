@@ -22,8 +22,8 @@ namespace Tuleap\TestManagement\Criterion;
 
 interface ISearchOnStatus
 {
-    public function shouldRetrieveOpenCampaigns();
-    public function shouldRetrieveClosedCampaigns();
-    public function shouldRetrieveOnlyOpenCampaigns();
-    public function shouldRetrieveOnlyClosedCampaigns();
+    public function shouldRetrieveOpenCampaigns(): bool;
+    public function shouldRetrieveClosedCampaigns(): bool;
+    public function shouldRetrieveOnlyOpenCampaigns(): bool;
+    public function shouldRetrieveOnlyClosedCampaigns(): bool;
 }

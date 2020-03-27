@@ -92,6 +92,10 @@ class StepDefinitionChangesetValue extends Tracker_Artifact_ChangesetValue
         return false;
     }
 
+    /**
+     * @param mixed $format
+     * @return null|string
+     */
     public function nodiff($format = 'html')
     {
         if (count($this->steps)) {

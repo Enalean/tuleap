@@ -193,32 +193,36 @@ class ExecutionsResource
 
     /**
      * @url OPTIONS
+     *
      */
-    public function options()
+    public function options(): void
     {
         Header::allowOptions();
     }
 
     /**
      * @url OPTIONS {id}/presences
+     *
      */
-    public function optionsPresences($id)
+    public function optionsPresences(string $id): void
     {
         Header::allowOptionsPatch();
     }
 
     /**
      * @url OPTIONS {id}/issues
+     *
      */
-    public function optionsIssues($id)
+    public function optionsIssues(string $id): void
     {
         Header::allowOptionsPatch();
     }
 
     /**
      * @url OPTIONS {id}
+     *
      */
-    public function optionsId($id)
+    public function optionsId(int $id): void
     {
         Header::allowOptionsGet();
     }
@@ -273,7 +277,7 @@ class ExecutionsResource
         TrackerReference $tracker,
         $definition_id,
         $status,
-        $time = 0,
+        int $time = 0,
         $results = ''
     ) {
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
@@ -322,8 +326,9 @@ class ExecutionsResource
      * @throws RestException 403
      * @throws RestException 404
      * @throws RestException 500
+     *
      */
-    public function patchId($id, PATCHExecutionRepresentation $body)
+    public function patchId($id, PATCHExecutionRepresentation $body): void
     {
         $user               = $this->getCurrentUser();
         $execution_artifact = $this->getArtifactById($user, (int) $id);
@@ -405,8 +410,9 @@ class ExecutionsResource
      * @param string $remove_from  Id of the old artifact {@from body}
      *
      * @throws RestException 404
+     *
      */
-    protected function presences($id, $uuid, $remove_from = '')
+    protected function presences($id, $uuid, $remove_from = ''): void
     {
         $user = $this->getCurrentUser();
         $artifact = $this->getArtifactById($user, (int) $id);
@@ -435,8 +441,9 @@ class ExecutionsResource
      * @throws RestException 400
      * @throws RestException 404
      * @throws RestException 500
+     *
      */
-    protected function patchIssueLink($id, $issue_id, ?ChangesetCommentRepresentation $comment = null)
+    protected function patchIssueLink($id, $issue_id, ?ChangesetCommentRepresentation $comment = null): void
     {
         $user               = $this->getCurrentUser();
         $execution_artifact = $this->getArtifactById($user, (int) $id);
@@ -491,11 +498,13 @@ class ExecutionsResource
         $this->optionsIssues($id);
     }
 
-    /** @return array */
+    /**
+     * @return array
+     */
     private function getChanges(
-        $status,
-        $time,
-        $results,
+        string $status,
+        int $time,
+        string $results,
         Tracker_Artifact $artifact,
         PFUser $user
     ) {
@@ -537,17 +546,18 @@ class ExecutionsResource
     }
 
     private function getFormattedChangesetValueForFieldList(
-        $field_name,
-        $value,
+        string $field_name,
+        string $value,
         Tracker_Artifact $artifact,
         PFUser $user
-    ) {
+    ): ?ArtifactValuesRepresentation {
         $field = $this->getFieldByName($field_name, $artifact->getTrackerId(), $user);
         if (! $field) {
             return null;
         }
 
         $binds = [];
+        assert($field instanceof \Tracker_FormElement_Field_List);
         if ($field->getBind()) {
             $binds = $field->getBind()->getValuesByKeyword($value);
         }
@@ -564,11 +574,11 @@ class ExecutionsResource
     }
 
     private function getFormattedChangesetValueForFieldText(
-        $field_name,
-        $value,
-        $artifact,
-        $user
-    ) {
+        string $field_name,
+        string $value,
+        Tracker_Artifact $artifact,
+        PFUser $user
+    ): ?ArtifactValuesRepresentation {
         $field = $this->getFieldByName($field_name, $artifact->getTrackerId(), $user);
         if (! $field) {
             return null;
@@ -585,11 +595,11 @@ class ExecutionsResource
     }
 
     private function getFormattedChangesetValueForFieldInt(
-        $field_name,
-        $value,
-        $artifact,
-        $user
-    ) {
+        string $field_name,
+        int $value,
+        Tracker_Artifact $artifact,
+        PFUser $user
+    ): ?ArtifactValuesRepresentation {
         $field = $this->getFieldByName($field_name, $artifact->getTrackerId(), $user);
         if (! $field) {
             return null;
@@ -602,7 +612,7 @@ class ExecutionsResource
         return $value_representation;
     }
 
-    private function getFieldByName($field_name, $tracker_id, $user)
+    private function getFieldByName(string $field_name, int $tracker_id, PFUser $user): ?\Tracker_FormElement_Field
     {
         return  $this->formelement_factory->getUsedFieldByNameForUser(
             $tracker_id,
@@ -625,14 +635,16 @@ class ExecutionsResource
         throw new RestException(404);
     }
 
-    /** @return array */
+    /**
+     * @return array
+     */
     private function getValuesByFieldsName(
         PFUser $user,
-        $tracker_id,
-        $definition_id,
-        $status,
-        $time,
-        $results
+        int $tracker_id,
+        int $definition_id,
+        string $status,
+        int $time,
+        string $results
     ) {
         $status_field         = $this->getFieldByName(ExecutionRepresentation::FIELD_STATUS, $tracker_id, $user);
         $time_field           = $this->getFieldByName(ExecutionRepresentation::FIELD_TIME, $tracker_id, $user);
@@ -643,6 +655,7 @@ class ExecutionsResource
 
         if ($status_field) {
             $status_field_binds = [];
+            assert($status_field instanceof \Tracker_FormElement_Field_List);
             $bind               = $status_field->getBind();
             if ($bind) {
                 assert($bind instanceof Tracker_FormElement_Field_List_Bind);
@@ -690,7 +703,10 @@ class ExecutionsResource
         return $values;
     }
 
-    private function createArtifactValuesRepresentation($field_id, $value, $key)
+    /**
+     * @param mixed $value
+     */
+    private function createArtifactValuesRepresentation(int $field_id, $value, string $key): ArtifactValuesRepresentation
     {
         $artifact_values_representation           = new ArtifactValuesRepresentation();
         $artifact_values_representation->field_id = $field_id;
@@ -705,14 +721,14 @@ class ExecutionsResource
         return $artifact_values_representation;
     }
 
-    private function sendAllowHeadersForExecutionPut(Tracker_Artifact $artifact)
+    private function sendAllowHeadersForExecutionPut(Tracker_Artifact $artifact): void
     {
         $date = $artifact->getLastUpdateDate();
         Header::allowOptionsPut();
         Header::lastModified($date);
     }
 
-    private function sendAllowHeadersForExecutionPost(Tracker_Artifact $artifact)
+    private function sendAllowHeadersForExecutionPost(Tracker_Artifact $artifact): void
     {
         $date = $artifact->getLastUpdateDate();
         Header::allowOptionsPost();

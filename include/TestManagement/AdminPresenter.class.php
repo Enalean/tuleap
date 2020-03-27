@@ -76,13 +76,13 @@ class AdminPresenter
     public $execution_admin_url;
 
     public function __construct(
-        $campaign_tracker_id,
-        $test_definition_tracker_id,
-        $test_execution_tracker_id,
-        $issue_tracker_id,
+        int $campaign_tracker_id,
+        int $test_definition_tracker_id,
+        int $test_execution_tracker_id,
+        ?int $issue_tracker_id,
         CSRFSynchronizerToken $csrf_token,
-        $is_definition_disabled,
-        $is_execution_disabled
+        bool $is_definition_disabled,
+        bool $is_execution_disabled
     ) {
         $this->campaign_tracker_id        = $campaign_tracker_id;
         $this->test_definition_tracker_id = $test_definition_tracker_id;

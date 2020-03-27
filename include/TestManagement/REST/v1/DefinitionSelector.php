@@ -75,7 +75,7 @@ class DefinitionSelector
         $this->tracker_report_factory           = $tracker_report_factory;
     }
 
-    public function selectDefinitions(PFUser $user, Project $project, $selector, $milestone_id = 0, $report_id = 0)
+    public function selectDefinitions(PFUser $user, Project $project, string $selector, int $milestone_id = 0, int $report_id = 0): array
     {
         switch ($selector) {
             case self::ALL:
@@ -97,7 +97,12 @@ class DefinitionSelector
         return $definitions;
     }
 
-    public function selectNoDefinitions()
+    /**
+     * @return array
+     *
+     * @psalm-return array<empty, empty>
+     */
+    public function selectNoDefinitions(): array
     {
         return [];
     }
@@ -115,7 +120,7 @@ class DefinitionSelector
         );
     }
 
-    public function selectDefinitionsFromMilestone(PFUser $user, Project $project, $milestone_id)
+    public function selectDefinitionsFromMilestone(PFUser $user, Project $project, int $milestone_id): array
     {
         return $this->milestone_items_artifact_factory->getCoverTestDefinitionsUserCanViewForMilestone(
             $user,
@@ -124,7 +129,12 @@ class DefinitionSelector
         );
     }
 
-    public function selectDefinitionsFromReport(PFUser $user, $report_id)
+    /**
+     * @return array
+     *
+     * @psalm-return list<mixed>
+     */
+    public function selectDefinitionsFromReport(PFUser $user, int $report_id): array
     {
         $report       = $this->getReportById($user, $report_id);
         $matching_ids = $report->getMatchingIds();
@@ -135,7 +145,7 @@ class DefinitionSelector
 
         $artifacts = [];
         foreach (explode(',', $matching_ids['id']) as $artifact_id) {
-            $artifact = $this->artifact_factory->getArtifactById($artifact_id);
+            $artifact = $this->artifact_factory->getArtifactById((int) $artifact_id);
             if ($artifact) {
                 $artifacts[] = $artifact;
             }
@@ -144,7 +154,7 @@ class DefinitionSelector
         return $artifacts;
     }
 
-    private function getReportById(PFUser $user, $id)
+    private function getReportById(PFUser $user, int $id): \Tracker_Report
     {
         $store_in_session = false;
         $report = $this->tracker_report_factory->getReportById(

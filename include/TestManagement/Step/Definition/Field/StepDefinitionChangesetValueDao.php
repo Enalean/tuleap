@@ -32,6 +32,11 @@ class StepDefinitionChangesetValueDao extends Tracker_FormElement_Field_ValueDao
         $this->table_name = 'plugin_testmanagement_changeset_value_stepdef';
     }
 
+    /**
+     * @param int $changeset_value_id
+     * @return \DataAccessResult|false
+     * @psalm-ignore-falsable-return
+     */
     public function searchById($changeset_value_id)
     {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
@@ -47,8 +52,9 @@ class StepDefinitionChangesetValueDao extends Tracker_FormElement_Field_ValueDao
     /**
      * @param int    $changeset_value_id
      * @param Step[] $steps
+     *
      */
-    public function create($changeset_value_id, array $steps)
+    public function create(int $changeset_value_id, array $steps): bool
     {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
         $values             = [];
@@ -73,12 +79,12 @@ class StepDefinitionChangesetValueDao extends Tracker_FormElement_Field_ValueDao
         return true;
     }
 
-    public function createNoneValue($tracker_id, $field_id)
+    public function createNoneValue(int $tracker_id, int $field_id): void
     {
         $this->createNoneChangesetValue($tracker_id, $field_id);
     }
 
-    public function keep($from, $to)
+    public function keep(int $from, int $to): bool
     {
         $from = $this->da->escapeInt($from);
         $to   = $this->da->escapeInt($to);

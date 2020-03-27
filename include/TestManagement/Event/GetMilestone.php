@@ -44,29 +44,29 @@ class GetMilestone implements Dispatchable
      */
     private $milestone;
 
-    public function __construct(PFUser $user, $milestone_id)
+    public function __construct(PFUser $user, int $milestone_id)
     {
         $this->user         = $user;
         $this->milestone_id = $milestone_id;
     }
 
-    public function getUser()
+    public function getUser(): PFUser
     {
         return $this->user;
     }
 
-    public function getMilestoneId()
+    public function getMilestoneId(): int
     {
         return $this->milestone_id;
     }
 
 
-    public function getMilestone()
+    public function getMilestone(): ?Planning_Milestone
     {
         return $this->milestone;
     }
 
-    public function setMilestone(?Planning_Milestone $milestone = null)
+    public function setMilestone(?Planning_Milestone $milestone = null): void
     {
         $this->milestone = $milestone;
     }

@@ -39,10 +39,19 @@ class NodeReferenceRepresentation
      */
     public $uri;
 
+    /**
+     * @var string
+     */
     public $ref_name;
 
+    /**
+     * @var string
+     */
     public $ref_label;
 
+    /**
+     * @var string
+     */
     public $color;
 
     /**
@@ -50,25 +59,37 @@ class NodeReferenceRepresentation
      */
     public $title;
 
+    /**
+     * @var string
+     */
     public $url;
 
+    /**
+     * @var string | null
+     */
     public $status_semantic;
 
+    /**
+     * @var string | null
+     */
     public $status_label;
 
+    /**
+     * @var string
+     */
     public $nature;
 
     public function build(
-        $id,
-        $nature,
-        $url,
-        $ref_name,
-        $ref_label,
-        $color,
+        int $id,
+        string $nature,
+        string $url,
+        string $ref_name,
+        string $ref_label,
+        string $color,
         string $title,
-        $status_semantic,
-        $status_label
-    ) {
+        ?string $status_semantic,
+        ?string $status_label
+    ): void {
         $this->id              = JsonCast::toInt($id);
         $this->uri             = self::ROUTE . '/' . $this->id;
         $this->nature          = $nature;

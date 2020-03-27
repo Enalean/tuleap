@@ -26,13 +26,37 @@ use Tracker_Artifact_ChangesetValue_Text;
 
 class StepPresenter
 {
+    /**
+     * @var int
+     */
     public $id;
+    /**
+     * @var string
+     */
     public $raw_description;
+    /**
+     * @var string
+     */
     public $description_format;
+    /**
+     * @var string
+     */
     public $purified_description;
+    /**
+     * @var int
+     */
     public $rank;
+    /**
+     * @var string
+     */
     public $raw_expected_results;
+    /**
+     * @var string
+     */
     public $expected_results_format;
+    /**
+     * @var string
+     */
     public $purified_expected_results;
 
     public function __construct(Step $step, Project $project)
@@ -46,16 +70,16 @@ class StepPresenter
             $step->getDescriptionFormat(),
             $project
         );
-        $this->raw_expected_results      = $step->getExpectedResults();
+        $this->raw_expected_results      = $step->getExpectedResults() ?? '';
         $this->expected_results_format   = $step->getExpectedResultsFormat();
         $this->purified_expected_results = $this->getPurifiedText(
-            $step->getExpectedResults(),
+            $step->getExpectedResults() ?? '',
             $step->getExpectedResultsFormat(),
             $project
         );
     }
 
-    private function getPurifiedText($text, $format, Project $project)
+    private function getPurifiedText(string $text, string $format, Project $project): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
         if ($format === Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT) {

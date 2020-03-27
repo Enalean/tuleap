@@ -67,6 +67,9 @@ class AssignedToRepresentationBuilder
         return $user_representation;
     }
 
+    /**
+     * @return array|mixed
+     */
     private function getExecutionAssignedTo(PFUser $user, Tracker_Artifact $execution)
     {
         $assigned_to_field = $this->tracker_form_element_factory->getUsedFieldByNameForUser(

@@ -111,8 +111,9 @@ class ProjectResource
 
     /**
      * @url OPTIONS {id}/testmanagement_campaigns
+     *
      */
-    public function optionsCampaigns($id)
+    public function optionsCampaigns(int $id): void
     {
         Header::allowOptionsGet();
     }
@@ -183,8 +184,9 @@ class ProjectResource
 
     /**
      * @url OPTIONS {id}/testmanagement_definitions
+     *
      */
-    public function optionsDefinitions($id)
+    public function optionsDefinitions(int $id): void
     {
         Header::allowOptionsGet();
     }
@@ -241,7 +243,7 @@ class ProjectResource
     }
 
     /** @return \Tracker_Report */
-    private function getReportById(PFUser $user, $id)
+    private function getReportById(PFUser $user, int $id)
     {
         $store_in_session = false;
         $report = Tracker_ReportFactory::instance()->getReportById(
@@ -264,8 +266,10 @@ class ProjectResource
         return $report;
     }
 
-    /** @return array {Tracker_Artifact} */
-    private function getDefinitionsSliceFromReport($report_id, $limit, $offset)
+    /**
+     * @return array {Tracker_Artifact}
+     */
+    private function getDefinitionsSliceFromReport(int $report_id, int $limit, int $offset)
     {
         $report = $this->getReportById($this->user, $report_id);
         $matching_ids = $report->getMatchingIds();
@@ -286,8 +290,10 @@ class ProjectResource
         );
     }
 
-    /** @return array {Tracker_Artifact} */
-    private function getDefinitionsSliceFromTracker($tracker_id, $limit, $offset)
+    /**
+     * @return array {Tracker_Artifact}
+     */
+    private function getDefinitionsSliceFromTracker(int $tracker_id, int $limit, int $offset)
     {
         $paginated_artifacts =
             $this->testmanagement_artifact_factory
@@ -327,7 +333,7 @@ class ProjectResource
         return $definition_representations;
     }
 
-    private function getProject($id)
+    private function getProject(int $id): \Project
     {
         $project = $this->project_manager->getProject($id);
         if ($project->isError()) {
@@ -337,12 +343,12 @@ class ProjectResource
         return $project;
     }
 
-    private function sendPaginationHeaders($limit, $offset, $size)
+    private function sendPaginationHeaders(int $limit, int $offset, int $size): void
     {
         Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
     }
 
-    private function sendAllowHeaderForProjectCampaigns()
+    private function sendAllowHeaderForProjectCampaigns(): void
     {
         Header::allowOptionsGet();
     }

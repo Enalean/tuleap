@@ -66,7 +66,7 @@ class RealTimeMessageSender
         PFUser $user,
         Tracker_Artifact $campaign,
         Tracker_Artifact $artifact
-    ) {
+    ): void {
         if ($this->doesNotHaveHTTPClientUUID()) {
             return;
         }
@@ -84,7 +84,7 @@ class RealTimeMessageSender
         PFUser $user,
         Tracker_Artifact $campaign,
         Tracker_Artifact $artifact
-    ) {
+    ): void {
         if ($this->doesNotHaveHTTPClientUUID()) {
             return;
         }
@@ -102,10 +102,10 @@ class RealTimeMessageSender
         PFUser $user,
         Tracker_Artifact $campaign,
         Tracker_Artifact $artifact,
-        $status,
-        $previous_status,
-        $previous_user
-    ) {
+        ?string $status,
+        ?string $previous_status,
+        ?UserRepresentation $previous_user
+    ): void {
         $user_representation = new UserRepresentation();
         $user_representation->build($user);
         $data = array(
@@ -123,7 +123,7 @@ class RealTimeMessageSender
         Tracker_Artifact $campaign,
         Tracker_Artifact $execution_artifact,
         Tracker_Artifact $linked_artifact
-    ) {
+    ): void {
         if ($this->doesNotHaveHTTPClientUUID()) {
             return;
         }
@@ -145,7 +145,7 @@ class RealTimeMessageSender
     public function sendCampaignUpdated(
         PFUser $user,
         Tracker_Artifact $artifact
-    ) {
+    ): void {
         if ($this->doesNotHaveHTTPClientUUID()) {
             return;
         }
@@ -169,9 +169,9 @@ class RealTimeMessageSender
         Tracker_Artifact $campaign,
         Tracker_Artifact $artifact,
         PFUser $user,
-        $uuid,
-        $remove_from
-    ) {
+        string $uuid,
+        string $remove_from
+    ): void {
         if ($this->doesNotHaveHTTPClientUUID()) {
             return;
         }
@@ -199,7 +199,7 @@ class RealTimeMessageSender
         $this->node_js_client->sendMessage($message);
     }
 
-    private function buildArtifactLinkRepresentation(Tracker_Artifact $artifact_link)
+    private function buildArtifactLinkRepresentation(Tracker_Artifact $artifact_link): BugRepresentation
     {
         $tracker_representation = new MinimalTrackerRepresentation();
         $tracker_representation->build($artifact_link->getTracker());
@@ -214,9 +214,9 @@ class RealTimeMessageSender
         PFUser $user,
         Tracker_Artifact $campaign,
         Tracker_Artifact $artifact,
-        $event_name,
+        string $event_name,
         array $data
-    ) {
+    ): void {
         $this->artifact_message_sender->sendMessage(
             $user,
             $artifact,
@@ -226,7 +226,7 @@ class RealTimeMessageSender
         );
     }
 
-    private function doesNotHaveHTTPClientUUID()
+    private function doesNotHaveHTTPClientUUID(): bool
     {
         return ! isset($_SERVER[self::HTTP_CLIENT_UUID]) || ! $_SERVER[self::HTTP_CLIENT_UUID];
     }

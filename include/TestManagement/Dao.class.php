@@ -25,7 +25,11 @@ use DataAccessObject;
 class Dao extends DataAccessObject
 {
 
-    public function searchByProjectId($project_id)
+    /**
+     * @return \DataAccessResult|false
+     * @psalm-ignore-falsable-return
+     */
+    public function searchByProjectId(int $project_id)
     {
         $project_id = $this->da->escapeInt($project_id);
 
@@ -35,7 +39,7 @@ class Dao extends DataAccessObject
     }
 
 
-    public function countTestsExecutionsArtifacts()
+    public function countTestsExecutionsArtifacts(): int
     {
         $sql = "SELECT count(*) AS nb
                 FROM plugin_testmanagement
@@ -47,10 +51,10 @@ class Dao extends DataAccessObject
         }
         $row = $rows->getRow();
 
-        return $row['nb'];
+        return (int) $row['nb'];
     }
 
-    public function countTestExecutionsArtifactsRegisteredBefore($timestamp)
+    public function countTestExecutionsArtifactsRegisteredBefore(int $timestamp): int
     {
         $timestamp = $this->da->escapeInt($timestamp);
         $sql       = "SELECT count(*) AS nb
@@ -65,16 +69,16 @@ class Dao extends DataAccessObject
         }
         $row = $rows->getRow();
 
-        return $row['nb'];
+        return (int) $row['nb'];
     }
 
     public function saveProjectConfig(
-        $project_id,
-        $campaign_tracker_id,
-        $test_definition_tracker_id,
-        $test_execution_tracker_id,
-        $issue_tracker_id
-    ) {
+        int $project_id,
+        int $campaign_tracker_id,
+        int $test_definition_tracker_id,
+        int $test_execution_tracker_id,
+        ?int $issue_tracker_id
+    ): bool {
         $project_id                 = $this->da->escapeInt($project_id);
         $campaign_tracker_id        = $this->da->escapeInt($campaign_tracker_id);
         $test_definition_tracker_id = $this->da->escapeInt($test_definition_tracker_id);

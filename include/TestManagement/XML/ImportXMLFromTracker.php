@@ -55,7 +55,7 @@ class ImportXMLFromTracker
         );
     }
 
-    public function getInstanceFromXML(SimpleXMLElement $testmanagement, $project, $feedback_collector): StepDefinition
+    public function getInstanceFromXML(SimpleXMLElement $testmanagement, \Project $project, \Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector $feedback_collector): StepDefinition
     {
         $att = $testmanagement->attributes();
         assert($att !== null);

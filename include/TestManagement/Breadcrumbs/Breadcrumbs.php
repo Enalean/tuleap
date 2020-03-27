@@ -24,5 +24,5 @@ use Project;
 
 interface Breadcrumbs
 {
-    public function getCrumbs(Project $project);
+    public function getCrumbs(Project $project): array;
 }

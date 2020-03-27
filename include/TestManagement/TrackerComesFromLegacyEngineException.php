@@ -29,7 +29,7 @@ class TrackerComesFromLegacyEngineException extends \Exception
      */
     private $tracker_shortname;
 
-    public function __construct(string $tracker_shortname, $message = "", $code = 0, ?Throwable $previous = null)
+    public function __construct(string $tracker_shortname, string $message = "", int $code = 0, ?Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
 

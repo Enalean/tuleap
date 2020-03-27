@@ -28,7 +28,7 @@ class Step
     private $description;
     /** @var string */
     private $description_format;
-    /** @var string */
+    /** @var string|null */
     private $expected_results;
     /** @var string */
     private $expected_results_format;
@@ -36,12 +36,12 @@ class Step
     private $rank;
 
     public function __construct(
-        $id,
-        $description,
-        $description_format,
-        $expected_results,
-        $expected_results_format,
-        $rank
+        int $id,
+        string $description,
+        string $description_format,
+        ?string $expected_results,
+        string $expected_results_format,
+        int $rank
     ) {
         $this->id                      = $id;
         $this->description             = $description;
@@ -76,7 +76,7 @@ class Step
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getExpectedResults()
     {

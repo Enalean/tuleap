@@ -38,6 +38,9 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
     public const TYPE             = 'ttmstepexec';
     public const UPDATE_VALUE_KEY = 'steps_results';
 
+    /**
+     * @return void
+     */
     public function accept(Tracker_FormElement_FieldVisitor $visitor)
     {
         $visitor->visitExternalField($this);
@@ -73,21 +76,33 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
         return '<ol><li><span>First step definition</span> <span class="label">passed</span></li></ol>';
     }
 
+    /**
+     * @return null
+     */
     public function getRESTAvailableValues()
     {
         return null;
     }
 
+    /**
+     * @return false
+     */
     public function canBeUsedAsReportCriterion()
     {
         return false;
     }
 
+    /**
+     * @return false
+     */
     public function canBeUsedAsReportColumn()
     {
         return false;
     }
 
+    /**
+     * @param mixed $criteria
+     */
     public function fetchCriteriaValue($criteria)
     {
         return '';
@@ -150,10 +165,13 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
         );
     }
 
+    /**
+     * @return string
+     */
     public function fetchArtifactValueWithEditionFormIfEditable(
         Tracker_Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null,
-        $submitted_values = []
+        array $submitted_values = []
     ) {
         return $this->fetchArtifactValueReadOnly($artifact, $value) .
             $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
@@ -247,11 +265,17 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
         return new StepExecutionChangesetValue($value_id, $changeset, $this, $has_changed, $steps);
     }
 
+    /**
+     * @param null $from_aid
+     */
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report_id = null, $from_aid = null)
     {
         return '';
     }
 
+    /**
+     * @return ViewAdmin
+     */
     public function getFormAdminVisitor(Tracker_FormElement_Field $element, array $used_element)
     {
         return new ViewAdmin($element, $used_element);

@@ -26,6 +26,9 @@ class StepResultPresenter
 {
     /** @var StepPresenter */
     public $step;
+    /**
+     * @var string
+     */
     public $status;
 
     public function __construct(StepPresenter $step, StepResult $step_result)

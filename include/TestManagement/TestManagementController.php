@@ -25,6 +25,7 @@ use Codendi_Request;
 use Planning_Milestone;
 use EventManager;
 use Project;
+use Tuleap\TestManagement\Breadcrumbs\Breadcrumbs;
 use Tuleap\TestManagement\Breadcrumbs\NoCrumb;
 
 abstract class TestManagementController extends MVC2_PluginController
@@ -74,11 +75,14 @@ abstract class TestManagementController extends MVC2_PluginController
         }
     }
 
-    public function getBreadcrumbs()
+    public function getBreadcrumbs(): Breadcrumbs
     {
         return new NoCrumb();
     }
 
+    /**
+     * @return string
+     */
     protected function getTemplatesDir()
     {
         return TESTMANAGEMENT_BASE_DIR . '/templates';

@@ -105,7 +105,7 @@ class Router
         $this->int_validator               = $int_validator;
     }
 
-    public function route(Codendi_Request $request)
+    public function route(Codendi_Request $request): void
     {
         $csrf_token = new \CSRFSynchronizerToken(
             TESTMANAGEMENT_BASE_URL . '/?' . http_build_query(['group_id' => $request->get('group_id')])
@@ -158,7 +158,7 @@ class Router
         }
     }
 
-    private function renderStartTestManagement(Codendi_Request $request, CSRFSynchronizerToken $csrf_token)
+    private function renderStartTestManagement(Codendi_Request $request, CSRFSynchronizerToken $csrf_token): void
     {
         $controller = $this->getTestManagementController($csrf_token);
 
@@ -170,7 +170,7 @@ class Router
         );
     }
 
-    public function renderIndex(Codendi_Request $request)
+    public function renderIndex(Codendi_Request $request): void
     {
         $controller = new IndexController(
             $request,
@@ -189,13 +189,14 @@ class Router
      * @param string          $action_name The controller action name (e.g. index, show...).
      * @param Codendi_Request $request     The request
      * @param array           $args        Arguments to pass to the controller action method.
+     *
      */
     private function renderAction(
         $controller,
         $action_name,
         Codendi_Request $request,
         array $args = array()
-    ) {
+    ): void {
         $content = $this->executeAction($controller, $action_name, $args);
 
         $this->displayHeader($controller, $request, $this->getHeaderTitle($action_name));
@@ -210,6 +211,8 @@ class Router
      * @param mixed           $controller  The controller instance.
      * @param string          $action_name The controller action name (e.g. index, show...).
      * @param array           $args        Arguments to pass to the controller action method.
+     *
+     * @return mixed
      */
     private function executeAction(
         $controller,
@@ -264,12 +267,13 @@ class Router
      * @param mixed           $controller The controller instance
      * @param Codendi_Request $request    The request
      * @param string          $title      The page title
+     *
      */
     private function displayHeader(
         $controller,
         Codendi_Request $request,
         $title
-    ) {
+    ): void {
         $service = $this->getService($request);
         if (! $service) {
             exit_error(
@@ -298,7 +302,7 @@ class Router
         $service->displayHeader($title, $breadcrumbs->getCrumbs($project), $toolbar, array('body_class' => array('testmanagement')));
     }
 
-    private function userIsAdmin(Codendi_Request $request)
+    private function userIsAdmin(Codendi_Request $request): bool
     {
         return $request->getProject()->userIsAdmin();
     }
@@ -307,12 +311,12 @@ class Router
      * Renders the bottom footer for all Agile Dashboard pages.
      *
      */
-    private function displayFooter(Codendi_Request $request)
+    private function displayFooter(Codendi_Request $request): void
     {
         $this->getService($request)->displayFooter();
     }
 
-    protected function checkUserCanAdministrate(Project $project, PFUser $user)
+    protected function checkUserCanAdministrate(Project $project, PFUser $user): void
     {
         if (! $user->isAdmin($project->getId())) {
             throw new UserIsNotAdministratorException();

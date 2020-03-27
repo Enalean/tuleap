@@ -31,13 +31,14 @@ class TestStatusAccordingToStepsStatusChangesBuilder
      * @param array                          $changes
      * @param Step[]                         $steps_defined_in_test
      * @param array                          $steps_changes
+     *
      */
     public function enforceTestStatusAccordingToStepsStatus(
         Tracker_FormElement_Field_List $status_field,
         array &$changes,
         array $steps_defined_in_test,
         array $steps_changes
-    ) {
+    ): void {
         if (empty($steps_defined_in_test)) {
             return;
         }
@@ -56,7 +57,7 @@ class TestStatusAccordingToStepsStatusChangesBuilder
         $changes[] = $value_representation;
     }
 
-    private function getValuesIdsIndexedByLabel(Tracker_FormElement_Field_List $status_field)
+    private function getValuesIdsIndexedByLabel(Tracker_FormElement_Field_List $status_field): array
     {
         $bind = $status_field->getBind();
         if (! $bind) {
@@ -96,10 +97,15 @@ class TestStatusAccordingToStepsStatusChangesBuilder
         return 'passed';
     }
 
+    /**
+     * @return int[]
+     *
+     * @psalm-return array{passed: int, failed: int, blocked: int, notrun: int}
+     */
     private function countStatus(
         array $steps_defined_in_test,
         array $steps_changes
-    ) {
+    ): array {
         $nb = [
             'passed'  => 0,
             'failed'  => 0,

@@ -46,7 +46,7 @@ class BugRepresentation
      */
     public $tracker;
 
-    public function build(Tracker_Artifact $bug_artifact, MinimalTrackerRepresentation $tracker_representation)
+    public function build(Tracker_Artifact $bug_artifact, MinimalTrackerRepresentation $tracker_representation): void
     {
         $this->id      = JsonCast::toInt($bug_artifact->getId());
         $this->xref    = $bug_artifact->getXRef();

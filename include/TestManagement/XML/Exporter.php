@@ -87,8 +87,9 @@ class Exporter
 
     /**
      * @param $testmanagement_xml_content
+     *
      */
-    private function validateXMLContent(SimpleXMLElement $testmanagement_xml_content)
+    private function validateXMLContent(SimpleXMLElement $testmanagement_xml_content): void
     {
         $rng_path = realpath(TESTMANAGEMENT_RESOURCE_DIR . '/testmanagement.rng');
 

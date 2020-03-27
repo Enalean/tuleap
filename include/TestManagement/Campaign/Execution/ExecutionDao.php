@@ -28,17 +28,17 @@ class ExecutionDao extends DataAccessObject
     /**
      * @param int[] $executions_ids
      */
-    public function searchDefinitionsChangesetIdsForExecution(array $executions_ids)
+    public function searchDefinitionsChangesetIdsForExecution(array $executions_ids): array
     {
         $statement = EasyStatement::open()->in('execution_artifact_id IN (?*)', $executions_ids);
 
-        return $this->getDB()->safeQuery(
+        return $this->getDB()->run(
             "SELECT * FROM plugin_testmanagement_execution WHERE $statement",
-            $statement->values()
+            ...$statement->values()
         );
     }
 
-    public function updateExecutionToUseLatestVersionOfDefinition($execution_id, $definition_changeset_id)
+    public function updateExecutionToUseLatestVersionOfDefinition(string $execution_id, int $definition_changeset_id): void
     {
         $sql = 'REPLACE INTO plugin_testmanagement_execution (execution_artifact_id, definition_changeset_id)
                 VALUES (?, ?)';
@@ -46,7 +46,7 @@ class ExecutionDao extends DataAccessObject
         $this->getDB()->run($sql, $execution_id, $definition_changeset_id);
     }
 
-    public function removeExecution($execution_id)
+    public function removeExecution(int $execution_id): void
     {
         $this->getDB()->delete('plugin_testmanagement_execution', [
             'execution_artifact_id' => $execution_id

@@ -34,7 +34,7 @@ class StepResultRepresentation
      */
     public $status;
 
-    public function build(StepResult $stepstep_result)
+    public function build(StepResult $stepstep_result): void
     {
         $this->step_id = JsonCast::toInt($stepstep_result->getStep()->getId());
         $this->status  = $stepstep_result->getStatus();

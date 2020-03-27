@@ -102,6 +102,7 @@ class StepsResultsChangesBuilder
         }
 
         $submitted_steps_results = $this->getSubmittedStepsResultsIndexedById($submitted_steps_results);
+        assert($execution_field instanceof StepExecution);
         $existing_steps_results  = $this->getExistingStepsResultsIndexedById($execution_artifact, $execution_field);
 
         $steps_changes = [];
@@ -172,7 +173,7 @@ class StepsResultsChangesBuilder
         return $indexed_by_id;
     }
 
-    private function getDefinitionField(Tracker_Artifact $definition_artifact, PFUser $user)
+    private function getDefinitionField(Tracker_Artifact $definition_artifact, PFUser $user): ?\Tracker_FormElement_Field
     {
         return $this->form_element_factory->getUsedFieldByNameForUser(
             $definition_artifact->getTrackerId(),
@@ -181,7 +182,7 @@ class StepsResultsChangesBuilder
         );
     }
 
-    private function getExecutionField(Tracker_Artifact $execution_artifact, PFUser $user)
+    private function getExecutionField(Tracker_Artifact $execution_artifact, PFUser $user): ?\Tracker_FormElement_Field
     {
         return $this->form_element_factory->getUsedFieldByNameForUser(
             $execution_artifact->getTrackerId(),
@@ -190,7 +191,7 @@ class StepsResultsChangesBuilder
         );
     }
 
-    private function getStatusField(Tracker_Artifact $execution_artifact, PFUser $user)
+    private function getStatusField(Tracker_Artifact $execution_artifact, PFUser $user): ?\Tracker_FormElement_Field
     {
         return $this->form_element_factory->getUsedFieldByNameForUser(
             $execution_artifact->getTrackerId(),
@@ -199,7 +200,7 @@ class StepsResultsChangesBuilder
         );
     }
 
-    private function getDefinitionChangeset(Tracker_Artifact $execution_artifact, Tracker_Artifact $definition_artifact)
+    private function getDefinitionChangeset(Tracker_Artifact $execution_artifact, Tracker_Artifact $definition_artifact): ?\Tracker_Artifact_Changeset
     {
         $rows = $this->execution_dao->searchDefinitionsChangesetIdsForExecution([$execution_artifact->getId()]);
         if ($rows) {
@@ -217,11 +218,12 @@ class StepsResultsChangesBuilder
         array &$changes,
         array $steps_defined_in_test,
         array $steps_changes
-    ) {
+    ): void {
         $status_field = $this->getStatusField($execution_artifact, $user);
         if (! $status_field) {
             return;
         }
+        assert($status_field instanceof \Tracker_FormElement_Field_List);
 
         $this->test_status_changes_builder->enforceTestStatusAccordingToStepsStatus(
             $status_field,

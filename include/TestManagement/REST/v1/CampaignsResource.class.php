@@ -291,8 +291,9 @@ class CampaignsResource
 
     /**
      * @url OPTIONS {id}
+     *
      */
-    public function optionsId($id)
+    public function optionsId(int $id): void
     {
         Header::allowOptionsGet();
     }
@@ -327,8 +328,9 @@ class CampaignsResource
 
     /**
      * @url OPTIONS {id}/testmanagement_executions
+     *
      */
-    public function optionsExecutions($id)
+    public function optionsExecutions(int $id): void
     {
         Header::allowOptionsGet();
     }
@@ -465,8 +467,9 @@ class CampaignsResource
 
     /**
      * @url OPTIONS
+     *
      */
-    public function options()
+    public function options(): void
     {
         Header::allowOptionsPost();
     }
@@ -485,8 +488,9 @@ class CampaignsResource
      * @param int $report_id Id of the report to retrieve test definitions for campaign {@from query}
      *
      * @throws RestException 403
+     *
      */
-    protected function post($project_id, $label, $test_selector = 'all', $milestone_id = 0, $report_id = 0)
+    protected function post($project_id, $label, $test_selector = 'all', $milestone_id = 0, $report_id = 0): \Tuleap\Tracker\REST\Artifact\ArtifactReference
     {
         $this->options();
 
@@ -573,8 +577,9 @@ class CampaignsResource
      * @param int $id Id of the campaign
      *
      * @throws RestException 403
+     *
      */
-    protected function postAutomatedTests($id)
+    protected function postAutomatedTests($id): void
     {
         $this->options();
 
@@ -594,19 +599,19 @@ class CampaignsResource
         }
     }
 
-    private function sendPaginationHeaders($limit, $offset, $size)
+    private function sendPaginationHeaders(int $limit, int $offset, int $size): void
     {
         Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
     }
 
-    private function sendAllowHeadersForExecutionsList(Tracker_Artifact $artifact)
+    private function sendAllowHeadersForExecutionsList(Tracker_Artifact $artifact): void
     {
         $date = $artifact->getLastUpdateDate();
         Header::allowOptionsPatch();
         Header::lastModified($date);
     }
 
-    private function sendAllowHeadersForCampaign(Campaign $campaign)
+    private function sendAllowHeadersForCampaign(Campaign $campaign): void
     {
         $date = $campaign->getArtifact()->getLastUpdateDate();
         Header::allowOptionsPatch();
@@ -652,10 +657,10 @@ class CampaignsResource
     }
 
     /**
-     *
      * @throws RestException
+     *
      */
-    private function checkUserCanReadCampaign(PFUser $user, Campaign $campaign)
+    private function checkUserCanReadCampaign(PFUser $user, Campaign $campaign): void
     {
         $artifact = $campaign->getArtifact();
 
@@ -676,12 +681,13 @@ class CampaignsResource
 
     /**
      * @param string|null                         $label
+     *
      */
     private function overrideWithSubmittedData(
         Campaign $campaign,
         $label = null,
         ?JobConfigurationRepresentation $job_representation = null
-    ) {
+    ): void {
         if ($label) {
             $campaign->setLabel($label);
         }

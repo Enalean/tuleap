@@ -39,7 +39,7 @@ class CampaignSaver
         $this->key_factory = $key_factory;
     }
 
-    public function save(Campaign $campaign)
+    public function save(Campaign $campaign): void
     {
         $job_configuration = $campaign->getJobConfiguration();
 
@@ -50,7 +50,7 @@ class CampaignSaver
         );
     }
 
-    private function getEncryptedToken(ConcealedString $token)
+    private function getEncryptedToken(ConcealedString $token): string
     {
         return SymmetricCrypto::encrypt($token, $this->key_factory->getEncryptionKey());
     }

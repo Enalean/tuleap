@@ -33,7 +33,7 @@ class JobConfiguration
      */
     private $token;
 
-    public function __construct($url, ConcealedString $token)
+    public function __construct(string $url, ConcealedString $token)
     {
         $this->url   = $url;
         $this->token = $token;

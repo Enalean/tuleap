@@ -62,7 +62,7 @@ class NodeBuilderFactory
         );
     }
 
-    public function getNodeRepresentation(PFUser $user, Tracker_Artifact $artifact)
+    public function getNodeRepresentation(PFUser $user, Tracker_Artifact $artifact): NodeRepresentation
     {
         return $this->artifact_builder->getNodeRepresentation($user, $artifact);
     }

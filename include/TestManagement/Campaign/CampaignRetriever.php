@@ -55,9 +55,10 @@ class CampaignRetriever
      * @param int s$id
      *
      * @return Campaign
+     *
      * @throws ArtifactNotFoundException
      */
-    public function getById($id)
+    public function getById(int $id)
     {
         $artifact = $this->artifact_factory->getArtifactById($id);
         if (! $artifact) {
@@ -88,7 +89,7 @@ class CampaignRetriever
         return new Campaign($artifact, $artifact->getTitle(), $job);
     }
 
-    private function getDecryptedToken($encrypted_job_token)
+    private function getDecryptedToken(?string $encrypted_job_token): ConcealedString
     {
         if (! $encrypted_job_token) {
             return new ConcealedString('');

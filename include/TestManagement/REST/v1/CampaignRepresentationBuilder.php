@@ -56,7 +56,7 @@ class CampaignRepresentationBuilder
         $this->campaign_retriever              = $campaign_retriever;
     }
 
-    public function getCampaignRepresentation(PFUser $user, Campaign $campaign)
+    public function getCampaignRepresentation(PFUser $user, Campaign $campaign): CampaignRepresentation
     {
         $campaign_representation = new CampaignRepresentation();
         $campaign_representation->build(
@@ -72,18 +72,19 @@ class CampaignRepresentationBuilder
      * @param $campaign_tracker_id
      * @param $limit
      * @param $offset
+     *
      * @return PaginatedCampaignsRepresentations
      */
     public function getPaginatedCampaignsRepresentations(
         PFUser $user,
-        $campaign_tracker_id,
+        int $campaign_tracker_id,
         ISearchOnStatus $status_criterion,
         ISearchOnMilestone $milestone_criterion,
-        $limit,
-        $offset
+        int $limit,
+        int $offset
     ) {
         $campaign_representations = array();
-        $milestone_id = $milestone_criterion->getMilestoneId();
+        $milestone_id = (int) $milestone_criterion->getMilestoneId();
 
         if ($status_criterion->shouldRetrieveOnlyClosedCampaigns()) {
             $paginated_campaigns = $this->testmanagement_artifact_factory->getPaginatedClosedArtifactsByTrackerIdUserCanView($user, $campaign_tracker_id, $milestone_id, $limit, $offset);

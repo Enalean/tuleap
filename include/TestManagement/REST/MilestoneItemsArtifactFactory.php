@@ -57,7 +57,7 @@ class MilestoneItemsArtifactFactory
         $this->event_manager            = $event_manager;
     }
 
-    public function getCoverTestDefinitionsUserCanViewForMilestone(PFUser $user, Project $project, $milestone_id)
+    public function getCoverTestDefinitionsUserCanViewForMilestone(PFUser $user, Project $project, int $milestone_id): array
     {
         $test_definitions = array();
 
@@ -70,7 +70,7 @@ class MilestoneItemsArtifactFactory
         return $test_definitions;
     }
 
-    private function addCoveredBy(PFUser $user, array &$test_definitions, GetItemsFromMilestone $event, Project $project)
+    private function addCoveredBy(PFUser $user, array &$test_definitions, GetItemsFromMilestone $event, Project $project): void
     {
         $results = $this->dao->searchPaginatedLinkedArtifactsByLinkNatureAndTrackerId(
             $event->getItemsIds(),
@@ -83,7 +83,7 @@ class MilestoneItemsArtifactFactory
         $this->appendArtifactsUserCanView($user, $test_definitions, $results);
     }
 
-    private function addChildren(PFUser $user, array &$test_definitions, GetItemsFromMilestone $event, Project $project)
+    private function addChildren(PFUser $user, array &$test_definitions, GetItemsFromMilestone $event, Project $project): void
     {
         $results = $this->dao->searchPaginatedLinkedArtifactsByLinkNatureAndTrackerId(
             $event->getItemsIds(),
@@ -96,7 +96,7 @@ class MilestoneItemsArtifactFactory
         $this->appendArtifactsUserCanView($user, $test_definitions, $results);
     }
 
-    private function appendArtifactsUserCanView(PFUser $user, array &$test_definitions, LegacyDataAccessResultInterface $results)
+    private function appendArtifactsUserCanView(PFUser $user, array &$test_definitions, LegacyDataAccessResultInterface $results): void
     {
         foreach ($results as $row) {
             $test_def_artifact = $this->tracker_artifact_factory->getInstanceFromRow($row);

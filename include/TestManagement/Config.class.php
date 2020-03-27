@@ -46,11 +46,11 @@ class Config
 
     public function setProjectConfiguration(
         Project $project,
-        $campaign_tracker_id,
-        $test_definition_tracker_id,
-        $test_execution_tracker_id,
-        $issue_tracker_id
-    ) {
+        int $campaign_tracker_id,
+        int $test_definition_tracker_id,
+        int $test_execution_tracker_id,
+        ?int $issue_tracker_id
+    ): bool {
         unset($this->properties[$project->getID()]);
 
         return $this->dao->saveProjectConfig(
@@ -117,14 +117,17 @@ class Config
         return false;
     }
 
-    public function isConfigNeeded(Project $project)
+    public function isConfigNeeded(Project $project): bool
     {
         return (! $this->getCampaignTrackerId($project)) ||
             (! $this->getTestDefinitionTrackerId($project)) ||
             (! $this->getTestExecutionTrackerId($project));
     }
 
-    private function getProperty(Project $project, $key)
+    /**
+     * @return false|mixed
+     */
+    private function getProperty(Project $project, string $key)
     {
         $project_id = $project->getID();
 
@@ -139,6 +142,9 @@ class Config
         return $this->properties[$project_id][$key];
     }
 
+    /**
+     * @return array|false
+     */
     private function getPropertiesForProject(Project $project)
     {
         return $this->dao->searchByProjectId($project->getId())->getRow();

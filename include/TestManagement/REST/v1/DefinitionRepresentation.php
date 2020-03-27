@@ -58,6 +58,9 @@ class DefinitionRepresentation extends MinimalDefinitionRepresentation
         $this->purifier = $purifier;
     }
 
+    /**
+     * @return void
+     */
     public function build(
         Tracker_Artifact $artifact,
         Tracker_FormElementFactory $form_element_factory,

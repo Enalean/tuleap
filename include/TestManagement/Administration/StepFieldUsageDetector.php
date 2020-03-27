@@ -39,12 +39,12 @@ class StepFieldUsageDetector
         $this->form_element_factory = $form_element_factory;
     }
 
-    public function isStepDefinitionFieldUsed($tracker_id)
+    public function isStepDefinitionFieldUsed(int $tracker_id): bool
     {
         return $this->isFieldUsed($tracker_id, StepDefinition::TYPE);
     }
 
-    public function isStepExecutionFieldUsed($tracker_id)
+    public function isStepExecutionFieldUsed(int $tracker_id): bool
     {
         return $this->isFieldUsed($tracker_id, StepExecution::TYPE);
     }

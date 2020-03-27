@@ -55,6 +55,10 @@ class StepExecutionChangesetValue extends \Tracker_Artifact_ChangesetValue
         return '';
     }
 
+    /**
+     * @param mixed $format
+     * @return void
+     */
     public function nodiff($format = 'html')
     {
     }

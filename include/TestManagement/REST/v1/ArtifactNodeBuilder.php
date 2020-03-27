@@ -51,7 +51,7 @@ class ArtifactNodeBuilder
         $this->node_builder_factory           = $node_builder_factory;
     }
 
-    public function getNodeRepresentation(PFUser $user, Tracker_Artifact $artifact)
+    public function getNodeRepresentation(PFUser $user, Tracker_Artifact $artifact): NodeRepresentation
     {
         $nodes        = array();
         $artifact_ids = array($artifact->getId());
@@ -67,7 +67,12 @@ class ArtifactNodeBuilder
         return $node;
     }
 
-    private function getLinks(PFUser $user, $id, array &$nodes, array &$artifact_ids)
+    /**
+     * @return array
+     *
+     * @psalm-return list<mixed>
+     */
+    private function getLinks(PFUser $user, int $id, array &$nodes, array &$artifact_ids): array
     {
         $links = array();
         $this->appendNodeReferenceRepresentations(
@@ -89,7 +94,12 @@ class ArtifactNodeBuilder
         return array_values($links);
     }
 
-    private function getReverseLinks(PFUser $user, $id, array &$nodes, array &$artifact_ids)
+    /**
+     * @return array
+     *
+     * @psalm-return list<mixed>
+     */
+    private function getReverseLinks(PFUser $user, int $id, array &$nodes, array &$artifact_ids): array
     {
         $links = array();
         $this->appendNodeReferenceRepresentations(
@@ -111,7 +121,7 @@ class ArtifactNodeBuilder
         return array_values($links);
     }
 
-    private function appendNodeReferenceRepresentations(array &$links, LegacyDataAccessResultInterface $dar, PFUser $user, $id, array &$nodes, array &$artifact_ids)
+    private function appendNodeReferenceRepresentations(array &$links, LegacyDataAccessResultInterface $dar, PFUser $user, int $id, array &$nodes, array &$artifact_ids): void
     {
         foreach ($this->getArtifactIdsUserCanSee($user, $dar, $links) as $id) {
             $link = new NodeReferenceRepresentation();
@@ -121,7 +131,12 @@ class ArtifactNodeBuilder
         }
     }
 
-    private function getArtifactIdsUserCanSee(PFUser $user, LegacyDataAccessResultInterface $dar, array $already_linked_ids)
+    /**
+     * @return array
+     *
+     * @psalm-return list<mixed>
+     */
+    private function getArtifactIdsUserCanSee(PFUser $user, LegacyDataAccessResultInterface $dar, array $already_linked_ids): array
     {
         $artifact_ids = array();
         foreach ($dar as $row) {
@@ -137,12 +152,12 @@ class ArtifactNodeBuilder
         return $artifact_ids;
     }
 
-    private function notAlreadyLinked(array $already_linked_ids, $id)
+    private function notAlreadyLinked(array $already_linked_ids, int $id): bool
     {
         return ! isset($already_linked_ids[$id]);
     }
 
-    private function buildNode(NodeReferenceRepresentation $node, $id, array &$nodes)
+    private function buildNode(NodeReferenceRepresentation $node, int $id, array &$nodes): NodeReferenceRepresentation
     {
         $nodes[$id][] = $node;
         return $node;

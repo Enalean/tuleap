@@ -51,7 +51,7 @@ class IndexController extends TestManagementController
         $this->visit_recorder  = $visit_recorder;
     }
 
-    public function index()
+    public function index(): string
     {
         $current_user = $this->request->getCurrentUser();
 
@@ -72,7 +72,12 @@ class IndexController extends TestManagementController
         );
     }
 
-    private function getIssueTrackerConfig(PFUser $current_user)
+    /**
+     * @return (bool[]|string)[]
+     *
+     * @psalm-return array{permissions: array{create: bool, link: bool}, xref_color?: string}
+     */
+    private function getIssueTrackerConfig(PFUser $current_user): array
     {
         $issue_tracker_id = $this->config->getIssueTrackerId($this->project);
         $empty_config              = [

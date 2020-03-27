@@ -73,7 +73,7 @@ class ExecutionCreator
     /**
      * @return ArtifactReference
      */
-    public function createTestExecution($project_id, PFUser $user, Tracker_Artifact $definition)
+    public function createTestExecution(int $project_id, PFUser $user, Tracker_Artifact $definition)
     {
         $tracker = $this->getExecutionTrackerReferenceForProject($project_id);
         $values  = $this->getFieldValuesForExecutionArtifactCreation($tracker, $user, $definition->getId());
@@ -90,7 +90,7 @@ class ExecutionCreator
         return $execution;
     }
 
-    private function getExecutionTrackerReferenceForProject($project_id)
+    private function getExecutionTrackerReferenceForProject(int $project_id): TrackerReference
     {
         $project = $this->project_manager->getProject($project_id);
         if ($project->isError()) {
@@ -112,11 +112,16 @@ class ExecutionCreator
         return $tracker_reference;
     }
 
+    /**
+     * @return ArtifactValuesRepresentation[]
+     *
+     * @psalm-return array{0: ArtifactValuesRepresentation, 1: ArtifactValuesRepresentation}
+     */
     private function getFieldValuesForExecutionArtifactCreation(
         TrackerReference $tracker_reference,
         PFUser $user,
-        $definition_id
-    ) {
+        int $definition_id
+    ): array {
         $status_field      = $this->getStatusField($tracker_reference, $user);
         $link_field        = $this->getArtifactLinksField($tracker_reference, $user);
 
@@ -136,11 +141,13 @@ class ExecutionCreator
         TrackerReference $tracker_reference,
         PFUser $user
     ) {
-        return $this->getField(
+        $field = $this->getField(
             $tracker_reference,
             $user,
             ExecutionRepresentation::FIELD_STATUS
         );
+        assert($field instanceof \Tracker_FormElement_Field_List);
+        return $field;
     }
 
     /** @return \Tracker_FormElement_Field_ArtifactLink */
@@ -148,18 +155,20 @@ class ExecutionCreator
         TrackerReference $tracker_reference,
         PFUser $user
     ) {
-        return $this->getField(
+        $field = $this->getField(
             $tracker_reference,
             $user,
             ExecutionRepresentation::FIELD_ARTIFACT_LINKS
         );
+        assert($field instanceof \Tracker_FormElement_Field_ArtifactLink);
+        return $field;
     }
 
     private function getField(
         TrackerReference $tracker_reference,
         PFUser $user,
-        $field_name
-    ) {
+        string $field_name
+    ): \Tracker_FormElement_Field {
         $field = $this->formelement_factory->getUsedFieldByNameForUser(
             $tracker_reference->id,
             $field_name,

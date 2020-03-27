@@ -81,12 +81,16 @@ class CampaignUpdater
 
     /**
      * @throws LabelFieldNotFoundException
+     *
+     * @return ArtifactValuesRepresentation[]
+     *
+     * @psalm-return array{0: ArtifactValuesRepresentation}
      */
     private function getFieldValuesForCampaignArtifactUpdate(
         Tracker $tracker,
         PFUser $user,
-        $label
-    ) {
+        string $label
+    ): array {
         $label_field = $this->getLabelField($tracker, $user);
 
         $label_value           = new ArtifactValuesRepresentation();
@@ -98,8 +102,9 @@ class CampaignUpdater
 
     /**
      * @throws LabelFieldNotFoundException
+     *
      */
-    private function getLabelField(Tracker $tracker, PFUser $user)
+    private function getLabelField(Tracker $tracker, PFUser $user): \Tracker_FormElement_Field
     {
         $field = $this->formelement_factory->getUsedFieldByNameForUser(
             $tracker->getId(),

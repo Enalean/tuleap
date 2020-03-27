@@ -50,7 +50,7 @@ class MinimalDefinitionRepresentation
     public $summary;
 
     /**
-     * @var String
+     * @var string | null
      */
     public $category;
 
@@ -84,6 +84,9 @@ class MinimalDefinitionRepresentation
      */
     private $changeset;
 
+    /**
+     * @return void
+     */
     public function build(
         Tracker_Artifact $artifact,
         Tracker_FormElementFactory $form_element_factory,
@@ -140,7 +143,7 @@ class MinimalDefinitionRepresentation
         return $this->artifact->getValue($field, $this->changeset);
     }
 
-    private function getCategory()
+    private function getCategory(): ?string
     {
         $field_status = $this->form_element_factory->getSelectboxFieldByNameForUser(
             $this->tracker_id,

@@ -66,12 +66,13 @@ class FirstConfigCreator
      * @throws TrackerNotCreatedException
      * @throws TrackerHasAtLeastOneFrozenFieldsPostActionException
      * @throws TrackerNotInProjectException
+     *
      */
     public function createConfigForProjectFromTemplate(
         Project $project,
         Project $template,
         array $tracker_mapping
-    ) {
+    ): void {
         if (! $this->config->isConfigNeeded($project)) {
             return;
         }
@@ -103,8 +104,9 @@ class FirstConfigCreator
      * @throws TrackerNotCreatedException
      * @throws TrackerHasAtLeastOneFrozenFieldsPostActionException
      * @throws TrackerNotInProjectException
+     *
      */
-    public function createConfigForProjectFromXML(Project $project)
+    public function createConfigForProjectFromXML(Project $project): void
     {
         $tracker_ids       = array();
         $tracker_itemnames = array(
@@ -132,8 +134,9 @@ class FirstConfigCreator
     /**
      * @throws TrackerHasAtLeastOneFrozenFieldsPostActionException
      * @throws TrackerNotInProjectException
+     *
      */
-    private function saveConfiguration(Project $project, array $tracker_ids)
+    private function saveConfiguration(Project $project, array $tracker_ids): void
     {
         $campaign_tracker_id   = $tracker_ids[CAMPAIGN_TRACKER_SHORTNAME];
         $definition_tracker_id = $tracker_ids[DEFINITION_TRACKER_SHORTNAME];
@@ -156,10 +159,11 @@ class FirstConfigCreator
 
     /**
      * @return \Tracker|null
+     *
      * @throws TrackerComesFromLegacyEngineException
      * @throws TrackerNotCreatedException
      */
-    private function getTracker(Project $project, $tracker_itemname)
+    private function getTracker(Project $project, string $tracker_itemname)
     {
         $tracker = null;
         if ($this->isTrackerAlreadyCreated($project, $tracker_itemname)) {
@@ -183,11 +187,11 @@ class FirstConfigCreator
      * @return \Tracker|null
      * @throws TrackerNotCreatedException
      */
-    private function createTrackerFromXML(Project $project, $tracker_itemname)
+    private function createTrackerFromXML(Project $project, string $tracker_itemname)
     {
         $template_path = TESTMANAGEMENT_RESOURCE_DIR . '/Tracker_' . $tracker_itemname . '.xml';
         if ($tracker_itemname === ISSUE_TRACKER_SHORTNAME) {
-            $template_path = realpath(__DIR__ . '/../../../tracker/resources/templates/Tracker_Bugs.xml');
+            $template_path = (string) realpath(__DIR__ . '/../../../tracker/resources/templates/Tracker_Bugs.xml');
         }
 
         $tracker = $this->importTrackerStructure($project, $template_path);
@@ -201,7 +205,7 @@ class FirstConfigCreator
     /**
      * @return \Tracker|null
      */
-    private function importTrackerStructure(Project $project, $template_path)
+    private function importTrackerStructure(Project $project, string $template_path)
     {
         $created_tracker = null;
         try {
@@ -213,8 +217,10 @@ class FirstConfigCreator
         }
     }
 
-    /** @return bool */
-    private function isTrackerAlreadyCreated($project, $tracker_itemname)
+    /**
+     * @return bool
+     */
+    private function isTrackerAlreadyCreated(Project $project, string $tracker_itemname)
     {
         $is_tracker_already_created = $this->tracker_factory->isShortNameExists(
             $tracker_itemname,

@@ -60,12 +60,12 @@ class ExecutionRepresentation
     public $last_update_date;
 
     /**
-     * @var UserRepresentation
+     * @var UserRepresentation | null
      */
     public $assigned_to;
 
     /**
-     * @var PreviousResultRepresentation
+     * @var PreviousResultRepresentation | null
      */
     public $previous_result;
 
@@ -90,17 +90,17 @@ class ExecutionRepresentation
     public $steps_results;
 
     public function build(
-        $artifact_id,
-        $status,
-        $results,
-        $last_update_date,
-        $assigned_to,
-        $previous_result,
-        $definition,
+        int $artifact_id,
+        string $status,
+        string $results,
+        int $last_update_date,
+        ?UserRepresentation $assigned_to,
+        ?PreviousResultRepresentation $previous_result,
+        DefinitionRepresentation $definition,
         array $linked_bug,
-        $time,
+        int $time,
         array $steps_results
-    ) {
+    ): void {
         $this->id               = JsonCast::toInt($artifact_id);
         $this->uri              = self::ROUTE . '/' . $this->id;
         $this->results          = $results;

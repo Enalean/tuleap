@@ -32,7 +32,12 @@ class ArtifactDao extends DataAccessObject
         $this->table_name = 'tracker_artifact';
     }
 
-    public function searchPaginatedByTrackerId($tracker_id, $milestone_id, $limit, $offset, $reverse_order)
+    /**
+     *
+     * @return \DataAccessResult|false
+     * @psalm-ignore-falsable-return
+     */
+    public function searchPaginatedByTrackerId(int $tracker_id, ?int $milestone_id, int $limit, int $offset, bool $reverse_order)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $milestone_id = $this->da->escapeInt($milestone_id);
@@ -51,7 +56,11 @@ class ArtifactDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function searchPaginatedOpenByTrackerId($tracker_id, $milestone_id, $limit, $offset)
+    /**
+     * @return \DataAccessResult|false
+     * @psalm-ignore-falsable-return
+     */
+    public function searchPaginatedOpenByTrackerId(int $tracker_id, ?int $milestone_id, int $limit, int $offset)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $milestone_id = $this->da->escapeInt($milestone_id);
@@ -80,7 +89,11 @@ class ArtifactDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function searchPaginatedClosedByTrackerId($tracker_id, $milestone_id, $limit, $offset)
+    /**
+     * @return \DataAccessResult|false
+     * @psalm-ignore-falsable-return
+     */
+    public function searchPaginatedClosedByTrackerId(int $tracker_id, ?int $milestone_id, int $limit, int $offset)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $milestone_id = $this->da->escapeInt($milestone_id);
@@ -105,9 +118,9 @@ class ArtifactDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    private function milestoneSQLFilter($milestone_id)
+    private function milestoneSQLFilter(int $milestone_id): string
     {
-        if ($milestone_id === '0') {
+        if ($milestone_id === 0) {
             return '';
         }
 
@@ -122,12 +135,19 @@ class ArtifactDao extends DataAccessObject
                ) ON (milestone_artlink.changeset_value_id = milestone_cv.id AND milestone_artlink.artifact_id = $milestone_id)";
     }
 
+    /**
+     * @param false|int $target_tracker_id
+     *
+     * @return \DataAccessResult|false
+     *
+     * @psalm-ignore-falsable-return
+     */
     public function searchPaginatedLinkedArtifactsByLinkNatureAndTrackerId(
         array $artifacts_ids,
-        $nature,
+        string $nature,
         $target_tracker_id,
-        $limit,
-        $offset
+        int $limit,
+        int $offset
     ) {
         $artifact_id_list  = $this->da->escapeIntImplode($artifacts_ids);
         $target_tracker_id = $this->da->escapeInt($target_tracker_id);
@@ -150,7 +170,12 @@ class ArtifactDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function searchCampaignArtifactForExecution($execution_artifact_id, $campaign_tracker_id)
+    /**
+     * @param false|int $campaign_tracker_id
+     *
+     * @return array|false
+     */
+    public function searchCampaignArtifactForExecution(int $execution_artifact_id, $campaign_tracker_id)
     {
         $execution_artifact_id = $this->da->escapeInt($execution_artifact_id);
         $campaign_tracker_id   = $this->da->escapeInt($campaign_tracker_id);
@@ -167,11 +192,16 @@ class ArtifactDao extends DataAccessObject
         return $this->retrieveFirstRow($sql);
     }
 
+    /**
+     * @return \DataAccessResult|false
+     *
+     * @psalm-ignore-falsable-return
+     */
     public function searchPaginatedExecutionArtifactsForCampaign(
-        $campaign_artifact_id,
-        $execution_tracker_id,
-        $limit,
-        $offset
+        int $campaign_artifact_id,
+        int $execution_tracker_id,
+        int $limit,
+        int $offset
     ) {
         $campaign_artifact_id = $this->da->escapeInt($campaign_artifact_id);
         $execution_tracker_id = $this->da->escapeInt($execution_tracker_id);
@@ -192,7 +222,13 @@ class ArtifactDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function searchFirstRequirementId($test_definition_id, $test_exec_tracker_id)
+    /**
+     * @param false|int $test_exec_tracker_id
+     *
+     * @return array|false
+     * @psalm-ignore-falsable-return
+     */
+    public function searchFirstRequirementId(int $test_definition_id, $test_exec_tracker_id)
     {
         $test_definition_id   = $this->da->escapeInt($test_definition_id);
         $test_exec_tracker_id = $this->da->escapeInt($test_exec_tracker_id);

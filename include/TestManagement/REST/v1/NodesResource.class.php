@@ -34,16 +34,18 @@ class NodeResource
 
     /**
      * @url OPTIONS
+     *
      */
-    public function options()
+    public function options(): void
     {
         Header::allowOptions();
     }
 
     /**
      * @url OPTIONS {id}
+     *
      */
-    public function optionsId($id)
+    public function optionsId(string $id): void
     {
         Header::allowOptionsGet();
     }
@@ -87,7 +89,7 @@ class NodeResource
     }
 
 
-    private function sendAllowHeaders(Tracker_Artifact $artifact)
+    private function sendAllowHeaders(Tracker_Artifact $artifact): void
     {
         $date = $artifact->getLastUpdateDate();
         Header::allowOptionsGet();

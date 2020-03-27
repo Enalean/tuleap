@@ -29,7 +29,7 @@ class StepResult
     /** @var string */
     private $status;
 
-    public function __construct(Step $step, $status)
+    public function __construct(Step $step, string $status)
     {
         $this->step   = $step;
         $this->status = $status;

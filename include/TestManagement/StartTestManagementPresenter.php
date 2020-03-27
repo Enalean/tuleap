@@ -24,19 +24,29 @@ use CSRFSynchronizerToken;
 
 class StartTestManagementPresenter
 {
-    // @var String
+    /**
+     * @var string
+     */
     public $config_is_not_fully_set_up;
 
-    // @var String
+    /**
+     * @var string
+     */
     public $start_testmanagement;
 
-    // @var String
+    /**
+     * @var string
+     */
     public $help_message_config_not_fully_set_up;
 
-    // @var String
+    /**
+     * @var string
+     */
     public $come_back_later;
 
-    // @var bool
+    /**
+     * @var bool
+     */
     public $is_user_admin;
 
     /**
@@ -44,7 +54,7 @@ class StartTestManagementPresenter
      */
     public $csrf_token;
 
-    public function __construct($is_user_admin, CSRFSynchronizerToken $csrf_token)
+    public function __construct(bool $is_user_admin, CSRFSynchronizerToken $csrf_token)
     {
         $this->is_user_admin = $is_user_admin;
         $this->csrf_token    = $csrf_token;

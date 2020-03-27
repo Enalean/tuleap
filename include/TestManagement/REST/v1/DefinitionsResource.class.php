@@ -70,8 +70,9 @@ class DefinitionsResource
 
     /**
      * @url OPTIONS {id}
+     *
      */
-    protected function optionsId($id)
+    protected function optionsId(int $id): void
     {
         Header::allowOptionsGet();
     }
@@ -105,6 +106,10 @@ class DefinitionsResource
             $definition->getTracker()->getProject()
         );
 
-        return $this->definition_representation_builder->getDefinitionRepresentation($user, $definition);
+        $representation = $this->definition_representation_builder->getDefinitionRepresentation($user, $definition);
+        if ($representation === null) {
+            throw new RestException(400);
+        }
+        return $representation;
     }
 }

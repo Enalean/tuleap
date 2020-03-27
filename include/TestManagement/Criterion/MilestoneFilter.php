@@ -26,13 +26,12 @@ class MilestoneFilter implements ISearchOnMilestone
     /** @var int */
     private $milestone_id;
 
-    public function __construct($milestone_id)
+    public function __construct(int $milestone_id)
     {
         $this->milestone_id = $milestone_id;
     }
 
-    /** @return int */
-    public function getMilestoneId()
+    public function getMilestoneId(): ?int
     {
         return $this->milestone_id;
     }

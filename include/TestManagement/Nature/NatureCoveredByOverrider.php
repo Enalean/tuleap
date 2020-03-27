@@ -47,7 +47,7 @@ class NatureCoveredByOverrider
         Project $project,
         Tracker_Artifact $to_artifact,
         array $new_linked_artifact_ids
-    ) {
+    ): ?string {
         if ($this->dao->isTypeDisabledInProject($project->getID(), NatureCoveredByPresenter::NATURE_COVERED_BY)) {
             return null;
         }

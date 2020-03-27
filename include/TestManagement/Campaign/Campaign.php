@@ -73,13 +73,14 @@ class Campaign
 
     /**
      * @param string $label
+     *
      */
-    public function setLabel($label)
+    public function setLabel($label): void
     {
         $this->label = $label;
     }
 
-    public function setJobConfiguration(JobConfiguration $job_configuration)
+    public function setJobConfiguration(JobConfiguration $job_configuration): void
     {
         $this->job_configuration = $job_configuration;
     }

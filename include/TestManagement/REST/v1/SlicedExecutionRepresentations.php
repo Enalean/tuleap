@@ -44,7 +44,7 @@ class SlicedExecutionRepresentations
         $this->total_size      = $total_size;
     }
 
-    public function getTotalSize()
+    public function getTotalSize(): int
     {
         return $this->total_size;
     }

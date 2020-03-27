@@ -26,6 +26,10 @@ use Tracker_Artifact;
 class ArtifactNodeDao extends DataAccessObject
 {
 
+    /**
+     * @return \DataAccessResult|false
+     * @psalm-ignore-falsable-return
+     */
     public function getTitlesStatusAndTypes(array $artifact_ids)
     {
         $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
@@ -62,6 +66,9 @@ class ArtifactNodeDao extends DataAccessObject
      * Retrieve all artifacts that point to the given one
      *
      * @param int $artifact_id
+     *
+     * @return \DataAccessResult|false
+     * @psalm-ignore-falsable-return
      */
     public function getReverseLinkedArtifacts($artifact_id)
     {
@@ -77,7 +84,11 @@ class ArtifactNodeDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function getCrossReferencesFromArtifact($artifact_id)
+    /**
+     * @return \DataAccessResult|false
+     * @psalm-ignore-falsable-return
+     */
+    public function getCrossReferencesFromArtifact(int $artifact_id)
     {
         $artifact_id = $this->da->escapeInt($artifact_id);
 
@@ -90,7 +101,11 @@ class ArtifactNodeDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function getReverseCrossReferencesFromArtifact($artifact_id)
+    /**
+     * @return \DataAccessResult|false
+     * @psalm-ignore-falsable-return
+     */
+    public function getReverseCrossReferencesFromArtifact(int $artifact_id)
     {
         $artifact_id = $this->da->escapeInt($artifact_id);
 

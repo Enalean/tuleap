@@ -75,15 +75,21 @@ class IndexPresenter
      */
     public $issue_tracker_config;
 
+    /**
+     * @param int|false $campaign_tracker_id
+     * @param int|false $test_definition_tracker_id
+     * @param int|false $test_execution_tracker_id
+     * @param int|false|null $issue_tracker_id
+     */
     public function __construct(
-        $project_id,
+        int $project_id,
         $campaign_tracker_id,
         $test_definition_tracker_id,
         $test_execution_tracker_id,
         $issue_tracker_id,
-        $issue_tracker_config,
+        array $issue_tracker_config,
         PFUser $current_user,
-        $current_milestone
+        ?\Planning_Milestone $current_milestone
     ) {
         $this->lang       = $this->getLanguageAbbreviation($current_user);
         $this->project_id = $project_id;
@@ -116,7 +122,7 @@ class IndexPresenter
         $this->current_milestone          = json_encode($milestone_representation, JSON_THROW_ON_ERROR);
     }
 
-    private function getLanguageAbbreviation($current_user)
+    private function getLanguageAbbreviation(PFUser $current_user): string
     {
         [$lang, $country] = explode('_', $current_user->getLocale());
 

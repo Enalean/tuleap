@@ -83,7 +83,7 @@ class StartTestManagementController
         $this->config                      = $config;
     }
 
-    public function misconfiguration(HTTPRequest $request)
+    public function misconfiguration(HTTPRequest $request): string
     {
         $current_user   = $request->getCurrentUser();
         $project_id     = $request->getProject()->getID();
@@ -98,7 +98,7 @@ class StartTestManagementController
         );
     }
 
-    public function createConfig(\HTTPRequest $request)
+    public function createConfig(\HTTPRequest $request): void
     {
         $this->csrf_token->check();
         $project = $request->getProject();
@@ -143,12 +143,12 @@ class StartTestManagementController
         }
     }
 
-    private function redirectToTestManagementHomepage(Project $project)
+    private function redirectToTestManagementHomepage(Project $project): void
     {
         $GLOBALS['Response']->redirect(TESTMANAGEMENT_BASE_URL . '/?group_id=' . urlencode((string) $project->getID()));
     }
 
-    public function getBreadcrumbs()
+    public function getBreadcrumbs(): NoCrumb
     {
         return new NoCrumb();
     }
@@ -156,13 +156,13 @@ class StartTestManagementController
     private function allowProjectToUseNature(
         Project $template,
         Project $project
-    ) {
+    ): void {
         if (! $this->artifact_link_usage_updater->isProjectAllowedToUseArtifactLinkTypes($template)) {
             $this->artifact_link_usage_updater->forceUsageOfArtifactLinkTypes($project);
         }
     }
 
-    private function getRenderer()
+    private function getRenderer(): \TemplateRenderer
     {
         $templates_path = join(
             '/',

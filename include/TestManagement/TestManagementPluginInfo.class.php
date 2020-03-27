@@ -22,7 +22,7 @@ namespace Tuleap\TestManagement;
 
 class TestManagementPluginInfo extends \PluginInfo
 {
-    public function __construct($plugin)
+    public function __construct(\testmanagementPlugin $plugin)
     {
         parent::__construct($plugin);
         $this->setPluginDescriptor(new TestManagementPluginDescriptor());

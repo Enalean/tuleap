@@ -24,6 +24,9 @@ use Tracker_Artifact;
 
 class DefinitionNotFoundException extends \Exception
 {
+    /**
+     * @var Tracker_Artifact
+     */
     private $execution_artifact;
 
     public function __construct(Tracker_Artifact $execution_artifact)

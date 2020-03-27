@@ -80,7 +80,7 @@ class CampaignCreator
     /**
      * @return ArtifactReference
      */
-    public function createCampaign(PFUser $user, $project_id, $label, $test_selector, $milestone_id, $report_id)
+    public function createCampaign(PFUser $user, int $project_id, string $label, string $test_selector, int $milestone_id, int $report_id)
     {
         try {
             $execution_ids = $this->createTestExecutionsForDefinitions(
@@ -110,13 +110,18 @@ class CampaignCreator
         }
     }
 
+    /**
+     * @return int[][]
+     *
+     * @psalm-return list<array{id: int}>
+     */
     private function createTestExecutionsForDefinitions(
-        $project_id,
+        int $project_id,
         PFUser $user,
-        $test_selector,
-        $milestone_id,
-        $report_id
-    ) {
+        string $test_selector,
+        int $milestone_id,
+        int $report_id
+    ): array {
         $execution_ids = [];
         $project       = $this->project_manager->getProject($project_id);
         $definitions   = $this->definition_selector->selectDefinitions(
@@ -139,7 +144,7 @@ class CampaignCreator
         return $execution_ids;
     }
 
-    private function getCampaignTrackerReferenceForProject($project_id)
+    private function getCampaignTrackerReferenceForProject(int $project_id): TrackerReference
     {
         $project = $this->project_manager->getProject($project_id);
         if ($project->isError()) {
@@ -161,12 +166,17 @@ class CampaignCreator
         return $tracker_reference;
     }
 
+    /**
+     * @return ArtifactValuesRepresentation[]
+     *
+     * @psalm-return array{0: ArtifactValuesRepresentation, 1: ArtifactValuesRepresentation, 2: ArtifactValuesRepresentation}
+     */
     private function getFieldValuesForCampaignArtifactCreation(
         TrackerReference $tracker_reference,
         PFUser $user,
-        $label,
-        $execution_ids
-    ) {
+        string $label,
+        array $execution_ids
+    ): array {
         $label_field  = $this->getField($tracker_reference, $user, CampaignRepresentation::FIELD_NAME);
         $status_field = $this->getField($tracker_reference, $user, CampaignRepresentation::FIELD_STATUS);
         $link_field   = $this->getField($tracker_reference, $user, CampaignRepresentation::FIELD_ARTIFACT_LINKS);
@@ -189,8 +199,8 @@ class CampaignCreator
     private function getField(
         TrackerReference $tracker_reference,
         PFUser $user,
-        $field_name
-    ) {
+        string $field_name
+    ): \Tracker_FormElement_Field {
         $field = $this->formelement_factory->getUsedFieldByNameForUser(
             $tracker_reference->id,
             $field_name,

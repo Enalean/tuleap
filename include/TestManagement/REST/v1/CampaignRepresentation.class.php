@@ -92,7 +92,7 @@ class CampaignRepresentation
         Campaign $campaign,
         Tracker_FormElementFactory $form_element_factory,
         PFUser $user
-    ) {
+    ): void {
         $artifact = $campaign->getArtifact();
 
         $this->artifact             = $artifact;
@@ -103,7 +103,8 @@ class CampaignRepresentation
         $this->uri                  = self::ROUTE . '/' . $this->id;
 
         $label_field  = $this->getLabelField();
-        $this->label  = $this->getFieldValue($label_field)->getText();
+        $field_value  = $this->getFieldValue($label_field);
+        $this->label  = $field_value instanceof \Tracker_Artifact_ChangesetValue_Text ? $field_value->getText() : '';
         $this->status = $this->artifact->getStatus();
 
         $executions_status = $this->getExecutionsStatus();
@@ -129,12 +130,17 @@ class CampaignRepresentation
         ];
     }
 
-    private function getFieldValue($field)
+    private function getFieldValue(Tracker_FormElement_Field $field): ?\Tracker_Artifact_ChangesetValue
     {
         return $this->artifact->getValue($field);
     }
 
-    private function getExecutionsStatus()
+    /**
+     * @return int[]
+     *
+     * @psalm-return array{notrun: int, blocked: int, passed: int, failed: int}
+     */
+    private function getExecutionsStatus(): array
     {
         $executions = [
             self::STATUS_NOT_RUN => 0,

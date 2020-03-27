@@ -74,7 +74,7 @@ require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 
 class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public function __construct($id)
+    public function __construct(?int $id)
     {
         parent::__construct($id);
         $this->filesystem_path = TESTMANAGEMENT_BASE_DIR;
@@ -83,7 +83,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         bindtextdomain('tuleap-testmanagement', TESTMANAGEMENT_GETTEXT_DIR);
     }
 
-    public function getHooksAndCallbacks()
+    public function getHooksAndCallbacks(): Collection
     {
         $this->addHook(Event::REST_PROJECT_RESOURCES);
         $this->addHook(Event::REST_RESOURCES);
@@ -166,14 +166,17 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         return 'plugin_testmanagement';
     }
 
-    /** @see Tracker_FormElementFactory::GET_CLASSNAMES */
-    public function tracker_formelement_get_classnames($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    /**
+     * @see Tracker_FormElementFactory::GET_CLASSNAMES
+     *
+     */
+    public function tracker_formelement_get_classnames(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $params['fields'][StepDefinition::TYPE] = StepDefinition::class;
         $params['fields'][StepExecution::TYPE]  = StepExecution::class;
     }
 
-    public function isUsedByProject(Project $project)
+    public function isUsedByProject(Project $project): bool
     {
         return $project->usesService($this->getServiceShortname());
     }
@@ -183,7 +186,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         $params['classnames'][$this->getServiceShortname()] = \Tuleap\TestManagement\Service::class;
     }
 
-    public function register_project_creation($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    public function register_project_creation(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $project_manager = ProjectManager::instance();
         $template        = $project_manager->getProject($params['template_id']);
@@ -194,7 +197,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         }
     }
 
-    private function allowProjectToUseNature(Project $template, Project $project)
+    private function allowProjectToUseNature(Project $template, Project $project): void
     {
         if (! $this->getArtifactLinksUsageUpdater()->isProjectAllowedToUseArtifactLinkTypes($template)) {
             $this->getArtifactLinksUsageUpdater()->forceUsageOfArtifactLinkTypes($project);
@@ -209,19 +212,19 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         return new ArtifactLinksUsageUpdater(new ArtifactLinksUsageDao());
     }
 
-    public function event_get_artifactlink_natures($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    public function event_get_artifactlink_natures(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $params['natures'][] = new NatureCoveredByPresenter();
     }
 
-    public function event_get_nature_presenter($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    public function event_get_nature_presenter(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         if ($params['shortname'] === NatureCoveredByPresenter::NATURE_COVERED_BY) {
             $params['presenter'] = new NatureCoveredByPresenter();
         }
     }
 
-    public function tracker_event_artifact_link_nature_requested(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    public function tracker_event_artifact_link_nature_requested(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $project_manager = ProjectManager::instance();
         $project         = $project_manager->getProject($params['project_id']);
@@ -238,7 +241,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         }
     }
 
-    public function additionalArtifactActionButtonsFetcher(AdditionalArtifactActionButtonsFetcher $event)
+    public function additionalArtifactActionButtonsFetcher(AdditionalArtifactActionButtonsFetcher $event): void
     {
         $tracker = $event->getArtifact()->getTracker();
         $project = $tracker->getProject();
@@ -277,7 +280,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
      * @param array $params The project duplication parameters (source project id, tracker ids list)
      *
      */
-    public function tracker_event_project_creation_trackers_required(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    public function tracker_event_project_creation_trackers_required(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $config  = $this->getConfig();
         $project = ProjectManager::instance()->getProject($params['project_id']);
@@ -303,7 +306,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
      * @param mixed array $params The duplication params (tracker_mapping array, field_mapping array)
      *
      */
-    public function tracker_event_trackers_duplicated(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    public function tracker_event_trackers_duplicated(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $config       = $this->getConfig();
         $from_project = ProjectManager::instance()->getProject($params['source_project_id']);
@@ -333,8 +336,9 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
 
     /**
      * @see TRACKER_USAGE
+     *
      */
-    public function trackerUsage(array $params)
+    public function trackerUsage(array $params): void
     {
         $tracker    = $params['tracker'];
         $project = $tracker->getProject();
@@ -360,8 +364,9 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
 
     /**
      * Add tab in Agile Dashboard Planning view to redirect to TestManagement
+     *
      */
-    public function agiledashboardEventAdditionalPanesOnMilestone(PaneInfoCollector $collector)
+    public function agiledashboardEventAdditionalPanesOnMilestone(PaneInfoCollector $collector): void
     {
         $milestone = $collector->getMilestone();
         $project   = $milestone->getProject();
@@ -449,8 +454,9 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
 
     /**
      * @see REST_RESOURCES
+     *
      */
-    public function rest_resources(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    public function rest_resources(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $injector = new ResourcesInjector();
         $injector->populate($params['restler']);
@@ -458,25 +464,26 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
 
     /**
      * @see REST_PROJECT_RESOURCES
+     *
      */
-    public function rest_project_resources(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    public function rest_project_resources(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $injector = new ResourcesInjector();
         $injector->declareProjectResource($params['resources'], $params['project']);
     }
 
-    public function tracker_add_system_natures($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    public function tracker_add_system_natures(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $params['natures'][] = NatureCoveredByPresenter::NATURE_COVERED_BY;
     }
 
-    public function import_xml_project_tracker_done(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    public function import_xml_project_tracker_done(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $importer = new XMLImport($this->getConfig(), $this->getTrackerChecker());
         $importer->import($params['project'], $params['extraction_path'], $params['mapping']);
     }
 
-    public function tracker_get_editable_type_in_project(GetEditableTypesInProject $event) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    public function tracker_get_editable_type_in_project(GetEditableTypesInProject $event): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $project = $event->getProject();
 
@@ -485,7 +492,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         }
     }
 
-    public function tracker_artifact_link_can_be_unused(ArtifactLinkTypeCanBeUnused $event) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    public function tracker_artifact_link_can_be_unused(ArtifactLinkTypeCanBeUnused $event): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $type    = $event->getType();
         $project = $event->getProject();
@@ -499,7 +506,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         }
     }
 
-    public function importValidateExternalFields(ImportValidateExternalFields $validate_external_fields)
+    public function importValidateExternalFields(ImportValidateExternalFields $validate_external_fields): void
     {
         $xml = $validate_external_fields->getXml();
         $attributes = $xml->attributes();
@@ -543,7 +550,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         }
     }
 
-    public function project_service_before_activation(ProjectServiceBeforeActivation $event) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    public function project_service_before_activation(ProjectServiceBeforeActivation $event): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $service_short_name = $event->getServiceShortname();
         $project            = $event->getProject();
@@ -583,7 +590,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         $event->setWarningMessage($message);
     }
 
-    public function tracker_xml_import_artifact_link_can_be_disabled(XMLImportArtifactLinkTypeCanBeDisabled $event) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    public function tracker_xml_import_artifact_link_can_be_disabled(XMLImportArtifactLinkTypeCanBeDisabled $event): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         if ($event->getTypeName() !== NatureCoveredByPresenter::NATURE_COVERED_BY) {
             return;
@@ -599,7 +606,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         }
     }
 
-    public function filterFormElementsThatCanBeCreatedForTracker(FilterFormElementsThatCanBeCreatedForTracker $event)
+    public function filterFormElementsThatCanBeCreatedForTracker(FilterFormElementsThatCanBeCreatedForTracker $event): void
     {
         $project = $event->getTracker()->getProject();
         if (! $project->usesService($this->getServiceShortname())) {
@@ -608,7 +615,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         }
     }
 
-    public function displayAdminFormElementsWarningsEvent(DisplayAdminFormElementsWarningsEvent $event)
+    public function displayAdminFormElementsWarningsEvent(DisplayAdminFormElementsWarningsEvent $event): void
     {
         $step_field_usage = new StepFieldUsageDetector(
             TrackerFactory::instance(),
@@ -630,7 +637,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         StepFieldUsageDetector $step_field_usage,
         Tracker $tracker,
         Response $response
-    ) {
+    ): void {
         if (! $step_field_usage->isStepDefinitionFieldUsed($tracker->getId())) {
             return;
         }
@@ -663,7 +670,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         StepFieldUsageDetector $step_field_usage,
         Tracker $tracker,
         Response $response
-    ) {
+    ): void {
         if (! $step_field_usage->isStepExecutionFieldUsed($tracker->getId())) {
             return;
         }
@@ -692,7 +699,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         }
     }
 
-    public function tracker_event_export_full_xml($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    public function tracker_event_export_full_xml(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $project_id = $params['group_id'];
         $project    = ProjectManager::instance()->getProject($project_id);
@@ -709,7 +716,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         }
     }
 
-    private function getTmpDir()
+    private function getTmpDir(): string
     {
         return rtrim(ForgeConfig::get('codendi_cache_dir'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
     }
@@ -717,8 +724,9 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
     /**
      * @param $params
      * @param $xml_content
+     *
      */
-    private function addXMLFileIntoArchive(SimpleXMLElement $xml_content, Project $project, ArchiveInterface $archive)
+    private function addXMLFileIntoArchive(SimpleXMLElement $xml_content, Project $project, ArchiveInterface $archive): void
     {
         $temporaray_file = 'export_ttm_' . $project->getID() . time() . '.xml';
         $temporary_path  = $this->getTmpDir() . "/$temporaray_file";
@@ -727,12 +735,12 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         $archive->addFile('testmanagement.xml', $temporary_path);
     }
 
-    private function isTrackerURL()
+    private function isTrackerURL(): bool
     {
         return strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL) === 0;
     }
 
-    private function canIncludeStepDefinitionAssets()
+    private function canIncludeStepDefinitionAssets(): bool
     {
         if (! $this->isTrackerURL()) {
             return false;
@@ -758,7 +766,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         return false;
     }
 
-    private function isTrackerUsingStepDefinitionField(Tracker $tracker)
+    private function isTrackerUsingStepDefinitionField(Tracker $tracker): bool
     {
         $used_step_definition_fields = Tracker_FormElementFactory::instance()->getUsedFormElementsByType(
             $tracker,
@@ -768,7 +776,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         return ! empty($used_step_definition_fields);
     }
 
-    public function statisticsCollectionCollector(StatisticsCollectionCollector $collector)
+    public function statisticsCollectionCollector(StatisticsCollectionCollector $collector): void
     {
         $dao = new Dao();
         $collector->addStatistics(
@@ -778,7 +786,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         );
     }
 
-    public function checkPostActionsForTracker(CheckPostActionsForTracker $event)
+    public function checkPostActionsForTracker(CheckPostActionsForTracker $event): void
     {
         $frozen_fields_post_actions    = $event->getPostActions()->getFrozenFieldsPostActions();
         $hidden_fieldsets_post_actions = $event->getPostActions()->getHiddenFieldsetsPostActions();

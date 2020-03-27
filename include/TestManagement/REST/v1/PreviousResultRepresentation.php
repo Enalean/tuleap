@@ -52,12 +52,12 @@ class PreviousResultRepresentation
     public $has_been_run_at_least_once;
 
     public function build(
-        $submitted_on,
+        int $submitted_on,
         UserRepresentation $submitted_by,
-        $status,
-        $result,
-        $has_been_run_at_least_once
-    ) {
+        string $status,
+        string $result,
+        bool $has_been_run_at_least_once
+    ): void {
         $this->submitted_on               = JsonCast::toDate($submitted_on);
         $this->submitted_by               = $submitted_by;
         $this->status                     = $status;

@@ -59,7 +59,7 @@ class XMLImport
     /**
      * @throws Exception
      */
-    public function import(Project $project, $extraction_path, $tracker_mapping) : void
+    public function import(Project $project, string $extraction_path, array $tracker_mapping) : void
     {
         $xml_path = $extraction_path . '/testmanagement.xml';
         if (file_exists($xml_path)) {
@@ -93,7 +93,7 @@ class XMLImport
                         $campaign_tracker_id,
                         $definition_tracker_id,
                         $execution_tracker_id,
-                        $issue_tracker_id
+                        $issue_tracker_id === '' ? null : (int) $issue_tracker_id
                     );
                 }
             } catch (TrackerNotInProjectException |
@@ -105,7 +105,10 @@ class XMLImport
         }
     }
 
-    private function getXMLRef(SimpleXMLElement $xml, $tracker_mapping, $tracker_name)
+    /**
+     * @return mixed|string
+     */
+    private function getXMLRef(SimpleXMLElement $xml, array  $tracker_mapping, string $tracker_name)
     {
         $reference = (string) $xml->configuration->{$tracker_name};
 

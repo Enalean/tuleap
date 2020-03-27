@@ -34,11 +34,11 @@ class AutomatedTestsTriggerer
     }
 
     /**
-     *
      * @throws NoJobConfiguredForCampaignException
      * @throws \Jenkins_ClientUnableToLaunchBuildException
+     *
      */
-    public function triggerAutomatedTests(Campaign $campaign)
+    public function triggerAutomatedTests(Campaign $campaign): void
     {
         $job = $campaign->getJobConfiguration();
         $url = $job->getUrl();

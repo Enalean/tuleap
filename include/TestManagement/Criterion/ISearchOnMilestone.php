@@ -22,5 +22,5 @@ namespace Tuleap\TestManagement\Criterion;
 
 interface ISearchOnMilestone
 {
-    public function getMilestoneId();
+    public function getMilestoneId(): ?int;
 }

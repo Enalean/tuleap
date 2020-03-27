@@ -33,7 +33,7 @@ class JobConfigurationRepresentation
      */
     public $token;
 
-    public function build(JobConfiguration $job_configuration, $is_user_allowed_to_see_token)
+    public function build(JobConfiguration $job_configuration, bool $is_user_allowed_to_see_token): void
     {
         $this->url = $job_configuration->getUrl();
 

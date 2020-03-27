@@ -67,12 +67,13 @@ class ExecutionStatusUpdater
      * @param array            $changes
      *
      * @throws RestException
+     *
      */
     public function update(
         Tracker_Artifact $execution_artifact,
         array $changes,
         PFUser $user
-    ) {
+    ): void {
         try {
             $previous_status = $this->getCurrentStatus($execution_artifact);
             $previous_user   = $this->getCurrentSubmittedBy($execution_artifact);

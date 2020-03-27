@@ -27,7 +27,7 @@ class AdmininistrationBreadcrumbs implements Breadcrumbs
     /**
      * @return array
      */
-    public function getCrumbs(Project $project)
+    public function getCrumbs(Project $project): array
     {
         $home_url = TESTMANAGEMENT_BASE_URL . '/?' . http_build_query(array(
             'group_id' => $project->getID()

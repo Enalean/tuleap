@@ -23,8 +23,7 @@ namespace Tuleap\TestManagement\Criterion;
 class MilestoneAll implements ISearchOnMilestone
 {
 
-    /** @return null */
-    public function getMilestoneId()
+    public function getMilestoneId(): ?int
     {
         return null;
     }
