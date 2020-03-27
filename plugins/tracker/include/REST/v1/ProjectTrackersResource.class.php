@@ -82,6 +82,7 @@ class ProjectTrackersResource extends AuthenticatedResource
      *
      * @url    GET {id}/trackers
      * @access hybrid
+     * @oauth2-scope read:tracker
      *
      * @param int    $id             Id of the project
      * @param string $representation Whether you want to fetch full or reference only representations {@from path}{@choice full,minimal}

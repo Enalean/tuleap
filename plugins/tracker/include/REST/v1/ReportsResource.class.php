@@ -86,6 +86,7 @@ class ReportsResource extends AuthenticatedResource
      *
      * @url GET {id}
      * @access hybrid
+     * @oauth2-scope read:tracker
      *
      * @param int $id Id of the report
      *
@@ -144,6 +145,7 @@ class ReportsResource extends AuthenticatedResource
      *
      * @url GET {id}/artifacts
      * @access hybrid
+     * @oauth2-scope read:tracker
      *
      * @param int $id Id of the report
      * @param string $values Which fields to include in the response. Default is no field values {@from path}{@choice ,all}

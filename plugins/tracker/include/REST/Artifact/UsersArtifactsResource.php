@@ -40,6 +40,7 @@ class UsersArtifactsResource extends AuthenticatedResource
      * And you can combine both.
      *
      * @url GET {id}/artifacts
+     * @oauth2-scope read:tracker
      *
      * @param string $id Id of the desired user, as of today only `self` is allowed to get current user's artifacts
      * @param string $query What artifacts to retrieve {@required}

@@ -159,6 +159,7 @@ class TrackersResource extends AuthenticatedResource
      *
      * @url GET {id}
      * @access hybrid
+     * @oauth2-scope read:tracker
      *
      * @param int $id Id of the tracker
      *
@@ -252,6 +253,7 @@ class TrackersResource extends AuthenticatedResource
      *
      * @url GET {id}/tracker_reports
      * @access hybrid
+     * @oauth2-scope read:tracker
      *
      * @param int $id Id of the tracker
      * @param int $limit Number of elements displayed per page {@from path}{@min 1}
@@ -331,6 +333,7 @@ class TrackersResource extends AuthenticatedResource
      *
      * @url GET {id}/artifacts
      * @access hybrid
+     * @oauth2-scope read:tracker
      *
      * @param int    $id             ID of the tracker
      * @param string $values         Which fields to include in the response. Default is no field values {@from path}{@choice ,all}
@@ -521,6 +524,7 @@ class TrackersResource extends AuthenticatedResource
      *
      * @url GET {id}/parent_artifacts
      * @access hybrid
+     * @oauth2-scope read:tracker
      *
      * @param int $id
      * @param int $limit Number of elements displayed per page {@from path}{@min 1}

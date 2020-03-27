@@ -21,7 +21,7 @@ namespace Tuleap\REST;
 
 use Luracast\Restler\Data\ApiMethodInfo;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
+use Tuleap\Authentication\Scope\AggregateAuthenticationScopeBuilder;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
@@ -36,7 +36,8 @@ use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminUser
 use Tuleap\User\OAuth2\AccessToken\PrefixOAuth2AccessToken;
 use Tuleap\User\OAuth2\AccessToken\VerifyOAuth2AccessTokenEvent;
 use Tuleap\User\OAuth2\BearerTokenHeaderParser;
-use Tuleap\User\OAuth2\Scope\OAuth2ProjectReadScope;
+use Tuleap\User\OAuth2\Scope\CoreOAuth2ScopeBuilderFactory;
+use Tuleap\User\OAuth2\Scope\OAuth2ScopeBuilderCollector;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeExtractorRESTEndpoint;
 use Tuleap\User\PasswordVerifier;
 use User_ForgeUserGroupPermissionsDao;
@@ -127,8 +128,9 @@ class UserManager
         $user_manager     = \UserManager::instance();
         $password_handler = PasswordHandlerFactory::getPasswordHandler();
 
-        $oauth2_scope_builder = new AuthenticationScopeBuilderFromClassNames(
-            OAuth2ProjectReadScope::class
+        $oauth2_scope_builder = AggregateAuthenticationScopeBuilder::fromBuildersList(
+            CoreOAuth2ScopeBuilderFactory::buildCoreOAuth2ScopeBuilder(),
+            AggregateAuthenticationScopeBuilder::fromEventDispatcher(\EventManager::instance(), new OAuth2ScopeBuilderCollector())
         );
 
         return new self(

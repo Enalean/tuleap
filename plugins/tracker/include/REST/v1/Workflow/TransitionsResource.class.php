@@ -258,6 +258,7 @@ class TransitionsResource extends AuthenticatedResource
      *
      * @url GET {id}
      * @status 200
+     * @oauth2-scope read:tracker
      *
      * @access protected
      *
@@ -302,6 +303,7 @@ class TransitionsResource extends AuthenticatedResource
      *
      * @url GET {id}/actions
      * @status 200
+     * @oauth2-scope read:tracker
      *
      * @access protected
      *
