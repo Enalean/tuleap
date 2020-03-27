@@ -18,7 +18,6 @@
  */
 
 const BabelPresetEnv = require("@babel/preset-env").default;
-const BabelPluginSyntaxDynamicImport = require("@babel/plugin-syntax-dynamic-import").default;
 const BabelPluginDynamicImportNode = require("babel-plugin-dynamic-import-node");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
@@ -53,13 +52,11 @@ const babel_preset_env_chrome_config = [
 ];
 
 const babel_options_ie11 = {
-    presets: [babel_preset_env_ie_config],
-    plugins: [BabelPluginSyntaxDynamicImport]
+    presets: [babel_preset_env_ie_config]
 };
 
 const babel_options_chrome_firefox = {
-    presets: [babel_preset_env_chrome_config],
-    plugins: [BabelPluginSyntaxDynamicImport]
+    presets: [babel_preset_env_chrome_config]
 };
 
 const babel_options_jest = {
@@ -75,7 +72,7 @@ const babel_options_jest = {
             }
         ]
     ],
-    plugins: [BabelPluginSyntaxDynamicImport, BabelPluginDynamicImportNode]
+    plugins: [BabelPluginDynamicImportNode]
 };
 
 function configureBabelRule(babel_options) {
