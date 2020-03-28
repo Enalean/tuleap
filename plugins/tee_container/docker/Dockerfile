@@ -2,10 +2,6 @@ FROM centos:7
 
 ARG DOCKERFILE_PATH
 
-EXPOSE 22 80 443
-
-ENV TLP_SYSTEMCTL=docker-centos7
-
 COPY $DOCKERFILE_PATH/Tuleap.repo /etc/yum.repos.d/
 COPY packages/rhel7 /rpms
 
@@ -74,5 +70,13 @@ RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     awk '$5 >= 3071' /etc/ssh/moduli > /etc/ssh/moduli.tmp && mv /etc/ssh/moduli.tmp /etc/ssh/moduli
 
 COPY $DOCKERFILE_PATH/sshd_config /etc/ssh/sshd_config
+
+FROM scratch
+
+EXPOSE 22 80 443
+
+ENV TLP_SYSTEMCTL=docker-centos7
+
+COPY --from=0 / /
 
 CMD [ "/usr/share/tuleap/plugins/tee_container/bin/tee-container.php", "run" ]
