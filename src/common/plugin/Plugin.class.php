@@ -66,7 +66,7 @@ class Plugin implements PFO_Plugin
     protected $allowedForProject = array();
 
     /**
-     * @param int $id
+     * @param int|null $id
      */
     public function __construct($id = -1)
     {
