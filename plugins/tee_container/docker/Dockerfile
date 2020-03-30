@@ -71,6 +71,8 @@ RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     tuleap-theme-flamingparrot && \
     yum clean all && \
     /bin/rm -rf /rpms /etc/yum.repos.d/Tuleap.repo && \
-    sed -i 's/#PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config # Need to keep this one so image scanner are happy
+    awk '$5 >= 3071' /etc/ssh/moduli > /etc/ssh/moduli.tmp && mv /etc/ssh/moduli.tmp /etc/ssh/moduli
+
+COPY $DOCKERFILE_PATH/sshd_config /etc/ssh/sshd_config
 
 CMD [ "/usr/share/tuleap/plugins/tee_container/bin/tee-container.php", "run" ]
