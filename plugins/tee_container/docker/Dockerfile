@@ -34,12 +34,17 @@ RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     tuleap-documentation \
     tuleap-plugin-agiledashboard \
     tuleap-plugin-api-explorer \
+    tuleap-plugin-archivedeleteditems \
+    tuleap-plugin-baseline \
     tuleap-plugin-botmattermost \
     tuleap-plugin-botmattermost-agiledashboard \
     tuleap-plugin-botmattermost-git \
     tuleap-plugin-captcha \
+    tuleap-plugin-cardwall \
     tuleap-plugin-crosstracker \
+    tuleap-plugin-docman \
     tuleap-plugin-document \
+    tuleap-plugin-dynamic-credentials \
     tuleap-plugin-frs \
     tuleap-plugin-git \
     tuleap-plugin-gitlfs \
@@ -50,7 +55,7 @@ RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     tuleap-plugin-label \
     tuleap-plugin-ldap \
     tuleap-plugin-mediawiki \
-    tuleap-plugin-mytuleap-contact-support \
+    tuleap-plugin-oauth2-server \
     tuleap-plugin-openidconnectclient \
     tuleap-plugin-projectmilestones \
     tuleap-plugin-project-ownership \
@@ -58,6 +63,8 @@ RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     tuleap-plugin-pullrequest \
     tuleap-plugin-svn \
     tuleap-plugin-taskboard \
+    tuleap-plugin-testmanagement \
+    tuleap-plugin-textualreport \
     tuleap-plugin-timetracking \
     tuleap-plugin-velocity \
     tuleap-theme-burningparrot \
