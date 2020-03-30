@@ -1,0 +1,29 @@
+<h5>openModalAndReplacePlaceholders()</h5>
+<p>Useful in situations where you have many buttons and you want to open a single modal and replace placeholders in it.
+It handles two types of placeholders: hidden inputs and paragraphs.
+<br>Hidden input can be replaced with the ID of the thing you want to edit/delete with the modal.
+<br>Paragraph can be replaced with a translated string containing the label of the thing you want to edit/delete with the modal.</p>
+Arguments:
+<ul>
+    <li>{ Object } options. Contains:<ul>
+        <li>{ Document } document</li>
+        <li>{ String } buttons_selector. A CSS selector to select multiple buttons. Each of these buttons will open the modal on click.</li>
+        <li>{ String ] modal_element_id. The HTML id of the modal element.</li>
+        <li>{ Object } hidden_input_replacement. Contains: <ul>
+            <li>{ String } input_id. The HTML id of the hidden input in the modal that will be filled.</li>
+            <li>{ Function } hiddenInputReplaceCallback: (clicked_button: HTMLElement) => string
+                <br>A callback that will receive a single argument: { HTMLElement } clicked_button. The button that was clicked.
+                <br>It MUST return a string. For example, it can retrieve a <code class="code-inline">data-app-id</code> attribute from the button and return its value.
+                <br>The hidden input's <code class="code-inline">value</code> will be filled with the callback's return value.
+            </li>
+        </ul></li>
+        <li>{ Object } paragraph_replacement. Contains: <ul>
+            <li>{ String } paragraph_id. The HTML id of the paragraph in the modal that will be replaced.</li>
+            <li>{ Function } paragraphReplaceCallback: (clicked_button: HTMLElement) => string
+                <br>A callback that will receive a single argument: { HTMLElement } clicked_button. The button that was clicked.
+                <br>It MUST return a string. For example, it can retrieve a <code class="code-inline">data-app-name</code> attribute from the button and return it in a translated string.
+                <br>The paragraph's <code class="code-inline">textContent</code> will be filled with the callback's return value.
+            </li>
+        </ul></li>
+    </ul></li>
+</ul>

@@ -1,9 +1,11 @@
 {
-  "label": "Modals",
-  "shortcode": "tlp-modal",
-  "children": [
-    "structure",
-    "usage",
-    "types"
-  ]
+    "label": "Modals",
+    "shortcode": "tlp-modal",
+    "children": [
+        "structure",
+        "usage",
+        "open-target",
+        "replace-placeholders",
+        "types"
+    ]
 }

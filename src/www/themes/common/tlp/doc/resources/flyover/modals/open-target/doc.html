@@ -1,0 +1,17 @@
+<h4>Simplified usage with Typescript</h4>
+<p>In Typescript context, you can leverage our lib to simplify common patterns of modals: <code class="code-inline">src/www/scripts/tuleap/modals/modal-opener.ts</code>
+    Several use cases are supported.</p>
+
+<h5>openTargetModalIdOnClick()</h5>
+<p>Useful when you have only one modal and only one button.</p>
+Arguments:
+<ul>
+    <li>{ Document } document</li>
+    <li>{ String } button_id
+        <br>The button element MUST have an attribute named <code class="code-inline">data-target-modal-id</code> that references the modal element.
+        On click of this button, it will open that modal.
+    <li>(Optional) { Function } beforeModalOpenCallback: (clicked_button: HTMLElement) => void
+        <br>A callback that will receive a single argument: { HTMLElement } clicked_button. The button that was clicked.
+        <br>If provided, it will be called just before opening the modal.
+    </li>
+</ul>
