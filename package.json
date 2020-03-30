@@ -54,9 +54,9 @@
     "raw-loader": "^4.0.0",
     "read-pkg": "^5.2.0",
     "sass-loader": "^8.0.2",
-    "stylelint": "^10.1.0",
-    "stylelint-config-property-sort-order-smacss": "^5.0.0",
-    "stylelint-config-sass-guidelines": "^6.0.0",
+    "stylelint": "^13.2.1",
+    "stylelint-config-property-sort-order-smacss": "^6.0.0",
+    "stylelint-config-sass-guidelines": "^7.0.0",
     "ts-jest": "^25.2.1",
     "ts-loader": "^6.2.2",
     "typescript": "^3.8.3",
@@ -74,7 +74,7 @@
   "scripts": {
     "build": "lerna --concurrency=1 exec --stream npm install && lerna --concurrency=\"$(node ./tools/utils/scripts/max-usable-processors.js)\" run build",
     "eslint": "eslint --config .eslintrc.js --no-eslintrc --ext .js,.ts,.vue",
-    "stylelint": "stylelint --config .stylelintrc.js --syntax scss --ignore-path .stylelintignore",
+    "stylelint": "stylelint --config .stylelintrc.js --syntax scss --ignore-path .stylelintignore --report-needless-disables --report-invalid-scope-disables",
     "test": "BABEL_ENV=test jest --config tests/jest/jest.projects.config.js"
   }
 }
