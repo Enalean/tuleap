@@ -9,6 +9,21 @@
   <attribute name="rank">
     <data type="int"/>
   </attribute>
+  <optional>
+    <attribute name="id">
+      <data type="long"/>
+    </attribute>
+  </optional>
+  <optional>
+    <attribute name="tracker_id">
+      <data type="long"/>
+    </attribute>
+  </optional>
+  <optional>
+    <attribute name="parent_id">
+      <data type="long"/>
+    </attribute>
+  </optional>
   <element name="name">
     <data type="string"/>
   </element>

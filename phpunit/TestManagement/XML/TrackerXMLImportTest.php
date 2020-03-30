@@ -53,7 +53,7 @@ final class TrackerXMLImportTest extends TestCase
     {
         $xml_input = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
-             <externalField type="ttmstepdef" ID="F1602" rank="2">
+             <externalField type="ttmstepdef" ID="F1602" rank="2" id="1602" tracker_id="53" parent_id="0">
                   <name>steps</name>
                   <description><![CDATA[Definition of the test\'s steps]]></description>
                  <permissions>
