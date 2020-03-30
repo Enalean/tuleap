@@ -10,20 +10,20 @@
         "node-htmldiff": "^0.9.3",
         "phptomoment": "0.0.2",
         "sprintf-js": "^1.1.2",
-        "vue": "^2.5.17",
-        "vue-dompurify-html": "^2.1.0",
-        "vue-gettext": "^2.1.5",
-        "vue-router": "^3.0.2",
-        "vuex": "^3.1.0"
+        "vue": "^2.6.11",
+        "vue-dompurify-html": "^2.1.1",
+        "vue-gettext": "^2.1.8",
+        "vue-router": "^3.1.6",
+        "vuex": "^3.1.3"
     },
     "devDependencies": {
+        "@vue/test-utils": "^1.0.0-beta.27",
         "eslint": "^5.11.1",
         "prettier": "^1.14.3",
         "stylelint": "^9.9.0",
         "stylelint-config-property-sort-order-smacss": "^4.0.2",
         "stylelint-config-sass-guidelines": "^5.3.0",
-        "@vue/test-utils": "^1.0.0-beta.27",
-        "vuex-mock-store": "0.0.7"
+        "vuex-mock-store": "0.0.8"
     },
     "config": {
         "bin": "../../node_modules/.bin/"
