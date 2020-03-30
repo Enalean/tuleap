@@ -150,7 +150,7 @@ class PluginFactory // phpcs:ignore
     }
 
     /** @return Plugin */
-    public function instantiatePlugin($id, $name)
+    public function instantiatePlugin(?int $id, $name)
     {
         $plugin_class_info = $this->_getClassNameForPluginName($name);
         $plugin_class      = $plugin_class_info['class'];
