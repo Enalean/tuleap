@@ -22,37 +22,28 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact;
 
-use ForgeConfig;
 use PFUser;
 use TemplateRendererFactory;
 use Tracker;
 use Tracker_Artifact;
-use Tracker_FormElementFactory;
-use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 
 class RichTextareaProvider
 {
-    /**
-     * @var Tracker_FormElementFactory
-     */
-    private $form_element_factory;
     /**
      * @var TemplateRendererFactory
      */
     private $template_renderer_factory;
     /**
-     * @var FrozenFieldDetector
+     * @var UploadDataAttributesForRichTextEditorBuilder
      */
-    private $frozen_field_detector;
+    private $upload_data_attributes_for_rich_text_editor_builder;
 
     public function __construct(
-        Tracker_FormElementFactory $form_element_factory,
         TemplateRendererFactory $template_renderer_factory,
-        FrozenFieldDetector $frozen_field_detector
+        UploadDataAttributesForRichTextEditorBuilder $upload_data_attributes_for_rich_text_editor_builder
     ) {
-        $this->form_element_factory      = $form_element_factory;
         $this->template_renderer_factory = $template_renderer_factory;
-        $this->frozen_field_detector     = $frozen_field_detector;
+        $this->upload_data_attributes_for_rich_text_editor_builder = $upload_data_attributes_for_rich_text_editor_builder;
     }
 
     public function getTextarea(
@@ -69,37 +60,17 @@ class RichTextareaProvider
     ): string {
         $renderer = $this->template_renderer_factory->getRenderer(__DIR__ . '/../../../templates/artifact');
 
-        $is_dragndrop_allowed = false;
-        $help_id              = $id . '-help';
+        $help_id = $id . '-help';
 
-        $fields = $this->form_element_factory->getUsedFileFields($tracker);
-        foreach ($fields as $field) {
-            if (! $field->userCanUpdate($user)) {
-                continue;
-            }
+        $data_attributes_for_dragndrop = $this->upload_data_attributes_for_rich_text_editor_builder
+            ->getDataAttributes($tracker, $user, $artifact);
 
-            if ($artifact !== null && $this->frozen_field_detector->isFieldFrozen($artifact, $field)) {
-                continue;
-            }
-
-            $is_dragndrop_allowed = true;
+        $is_dragndrop_allowed = ! empty($data_attributes_for_dragndrop);
+        if ($is_dragndrop_allowed) {
             $data_attributes[]    = [
                 'name'  => 'help-id',
                 'value' => $help_id
             ];
-            $data_attributes[]    = [
-                'name'  => 'upload-url',
-                'value' => '/api/v1/tracker_fields/' . (int) $field->getId() . '/files'
-            ];
-            $data_attributes[]    = [
-                'name'  => 'upload-field-name',
-                'value' => 'artifact[' . (int) $field->getId() . '][][tus-uploaded-id]'
-            ];
-            $data_attributes[]    = [
-                'name'  => 'upload-max-size',
-                'value' => ForgeConfig::get('sys_max_size_upload')
-            ];
-            break;
         }
 
         return $renderer->renderToString(
@@ -111,7 +82,7 @@ class RichTextareaProvider
                 'cols'                 => $cols,
                 'value'                => $value,
                 'is_required'          => $is_required,
-                'data_attributes'      => $data_attributes,
+                'data_attributes'      => array_merge($data_attributes_for_dragndrop, $data_attributes),
                 'is_dragndrop_allowed' => $is_dragndrop_allowed,
                 'help_id'              => $help_id
             ]

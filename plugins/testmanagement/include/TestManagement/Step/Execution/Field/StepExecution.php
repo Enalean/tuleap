@@ -241,7 +241,7 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
         $changeset_value_id,
         $value,
         ?Tracker_Artifact_ChangesetValue $previous_changesetvalue,
-        CreatedFileURLMapping $id_mapping
+        CreatedFileURLMapping $url_mapping
     ) {
         return $this->getValueDao()->create($changeset_value_id, $value[self::UPDATE_VALUE_KEY]);
     }

@@ -56,6 +56,9 @@ export default {
         initial_steps: Array,
         artifact_field_id: Number,
         empty_step: Object,
+        upload_url: String,
+        upload_field_name: String,
+        upload_max_size: String,
     },
     computed: {
         ...mapState(["drake", "steps", "field_id", "is_dragging"]),
@@ -71,6 +74,9 @@ export default {
             this.initial_steps,
             this.artifact_field_id,
             this.empty_step,
+            this.upload_url,
+            this.upload_field_name,
+            this.upload_max_size,
         ]);
     },
     destroyed() {

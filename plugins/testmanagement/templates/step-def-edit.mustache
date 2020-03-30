@@ -1,5 +1,5 @@
 <div class="ttm-definition-step-mount-point"
-     data-steps="{{ json_encoded_steps }}"
-     data-field-id="{{ field_id }}"
-     data-empty-step="{{ json_encoded_empty_step }}"
+     {{# data_attributes }}
+         data-{{ name }}="{{ value }}"
+     {{/ data_attributes }}
 ></div>

@@ -85,9 +85,11 @@ class RichTextareaProviderTest extends TestCase
         $this->template_renderer_factory = new TemplateRendererFactory($template_cache);
 
         $this->provider = new RichTextareaProvider(
-            $this->form_element_factory,
             $this->template_renderer_factory,
-            $this->frozen_field_detector
+            new UploadDataAttributesForRichTextEditorBuilder(
+                $this->form_element_factory,
+                $this->frozen_field_detector
+            )
         );
 
         ForgeConfig::set('sys_max_size_upload', 1024);
@@ -170,11 +172,11 @@ EOL
         rows="8"
         cols="80"
         name="input-name"
-        \n            data-artifact-id="123"
-            data-help-id="input-id-help"
-            data-upload-url="/api/v1/tracker_fields/1002/files"
+        \n            data-upload-url="/api/v1/tracker_fields/1002/files"
             data-upload-field-name="artifact[1002][][tus-uploaded-id]"
             data-upload-max-size="1024"
+            data-artifact-id="123"
+            data-help-id="input-id-help"
 >input-value</textarea>
 <div class="muted tracker-richtexteditor-help" id="input-id-help"></div>
 
@@ -264,11 +266,11 @@ EOL
         rows="8"
         cols="80"
         name="input-name"
-        \n            data-artifact-id="123"
-            data-help-id="input-id-help"
-            data-upload-url="/api/v1/tracker_fields/1002/files"
+        \n            data-upload-url="/api/v1/tracker_fields/1002/files"
             data-upload-field-name="artifact[1002][][tus-uploaded-id]"
             data-upload-max-size="1024"
+            data-artifact-id="123"
+            data-help-id="input-id-help"
 >input-value</textarea>
 <div class="muted tracker-richtexteditor-help" id="input-id-help"></div>
 

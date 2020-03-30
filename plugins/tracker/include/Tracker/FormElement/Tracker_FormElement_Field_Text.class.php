@@ -295,9 +295,11 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
         $hp = Codendi_HTMLPurifier::instance();
 
         $rich_textarea_provider = new RichTextareaProvider(
-            Tracker_FormElementFactory::instance(),
             TemplateRendererFactory::build(),
-            $this->getFrozenFieldDetector()
+            new \Tuleap\Tracker\Artifact\UploadDataAttributesForRichTextEditorBuilder(
+                Tracker_FormElementFactory::instance(),
+                $this->getFrozenFieldDetector()
+            )
         );
 
         $html = '<input type="hidden"
