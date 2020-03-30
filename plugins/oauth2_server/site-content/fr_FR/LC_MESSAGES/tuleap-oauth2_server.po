@@ -28,6 +28,11 @@ msgstr ""
 "Autoriser l'application à accéder aux ressources en votre nom pendant une "
 "période prolongée même lorsque vous êtes déconnecté"
 
+msgid "Allow to connect to apps and services using your account"
+msgstr ""
+"Autoriser à se connecter à des applications et services à l'aide de votre "
+"compte"
+
 msgid "App"
 msgstr "App"
 
@@ -114,6 +119,9 @@ msgstr "Révoquer l'autorisation"
 
 msgid "Scopes"
 msgstr "Portées"
+
+msgid "Sign you in"
+msgstr "Se connecter"
 
 msgid "The App has been successfully deleted."
 msgstr "L'App a correctement été supprimée."
