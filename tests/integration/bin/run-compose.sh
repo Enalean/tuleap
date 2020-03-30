@@ -20,6 +20,20 @@ function cleanup {
 trap cleanup EXIT
 
 case "${1:-}" in
+    "73")
+    export PHP_VERSION="php73"
+    ;;
+    "74")
+    export PHP_VERSION="php74"
+    ;;
+    *)
+    echo "A PHP version must be provided as parameter. Allowed values are:"
+    echo "* 73"
+    echo "* 74"
+    exit 1
+esac
+
+case "${2:-}" in
     "mysql57")
     export DB_HOST="mysql57"
     ;;
