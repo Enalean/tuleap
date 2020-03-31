@@ -109,7 +109,7 @@ class UserSuspensionManager
     /**
      * Sends email alerts for all idle user accounts
      */
-    public function sendNotificationMailToIdleAccounts(DateTimeImmutable $date)
+    public function sendNotificationMailToIdleAccounts(DateTimeImmutable $date): void
     {
         $inactive_delay = (int) ForgeConfig::get(self::CONFIG_INACTIVE_DELAY);
         $notification_delay = (int) ForgeConfig::get(self::CONFIG_NOTIFICATION_DELAY);
@@ -146,7 +146,7 @@ class UserSuspensionManager
         }
     }
 
-    private function sendAndLogNotificationMailToUser(PFUser $user, DateTimeImmutable $last_access_date, DateTimeImmutable $suspension_date, BaseLanguage $language, array $idle_user)
+    private function sendAndLogNotificationMailToUser(PFUser $user, DateTimeImmutable $last_access_date, DateTimeImmutable $suspension_date, BaseLanguage $language, array $idle_user): void
     {
         if ($this->sendNotificationMail($user, $last_access_date, $suspension_date, $language)) {
             $this->logger->info(
