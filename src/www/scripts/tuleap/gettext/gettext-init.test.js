@@ -18,7 +18,7 @@
  */
 
 import Gettext from "node-gettext";
-import { initGettext } from "./gettext-init.js";
+import { initGettext, getPOFileFromLocale } from "./gettext-init.js";
 
 jest.mock("node-gettext");
 
@@ -49,5 +49,13 @@ describe("initGettext", () => {
         expect(gettext_provider.addTranslations).toHaveBeenCalledWith("fr_FR", "my-domain", {
             headers: { Language: "fr_FR" },
         });
+    });
+
+    it("does not reject string looking like actual locale ID string", () => {
+        expect(getPOFileFromLocale("fr_FR")).toEqual("fr_FR.po");
+    });
+
+    it("rejects string that does not look like locale ID string", () => {
+        expect(() => getPOFileFromLocale("not_a_locale")).toThrow();
     });
 });

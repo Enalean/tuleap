@@ -19,7 +19,10 @@
 
 import jQuery from "jquery";
 
-import { initGettext } from "../../../../src/www/scripts/tuleap/gettext/gettext-init";
+import {
+    getPOFileFromLocale,
+    initGettext,
+} from "../../../../src/www/scripts/tuleap/gettext/gettext-init";
 
 (async function ($): Promise<void> {
     const language = document.body.dataset.userLocale;
@@ -28,7 +31,9 @@ import { initGettext } from "../../../../src/www/scripts/tuleap/gettext/gettext-
     }
 
     const gettext_provider = await initGettext(language, "tuleap-hudson_git", (locale) =>
-        import(/* webpackChunkName: "git-administration-po-" */ `../po/${locale}.po`)
+        import(
+            /* webpackChunkName: "git-administration-po-" */ "../po/" + getPOFileFromLocale(locale)
+        )
     );
 
     function confirmDeletionPopover(): void {

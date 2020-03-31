@@ -23,7 +23,10 @@ import VueDOMPurifyHTML from "vue-dompurify-html";
 import App from "./src/components/App.vue";
 import { createStore } from "./src/store";
 import { setUserLocale } from "./src/helpers/user-locale-helper";
-import { initVueGettext } from "../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
+import {
+    initVueGettext,
+    getPOFileFromLocale,
+} from "../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
 import { BurnupMode, TrackerAgileDashboard } from "./src/type";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -35,7 +38,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         setUserLocale(locale.replace("_", "-"));
     }
     await initVueGettext(Vue, (locale: string) =>
-        import(/* webpackChunkName: "projectmilestones-po-" */ `./po/${locale}.po`)
+        import(
+            /* webpackChunkName: "projectmilestones-po-" */ "./po/" + getPOFileFromLocale(locale)
+        )
     );
 
     const widgets: NodeListOf<HTMLElement> = document.querySelectorAll(".projectmilestones");

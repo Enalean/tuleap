@@ -18,7 +18,7 @@
  */
 
 import Vue from "vue";
-import { initVueGettext } from "../../tuleap/gettext/vue-gettext-init";
+import { initVueGettext, getPOFileFromLocale } from "../../tuleap/gettext/vue-gettext-init";
 import App from "./src/components/App.vue";
 import { TemplateData, TroveCatData } from "./src/type";
 import { createStore } from "./src/store";
@@ -33,7 +33,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     await initVueGettext(Vue, (locale: string) =>
-        import(/* webpackChunkName: "project-registration-po-" */ `./po/${locale}.po`)
+        import(
+            /* webpackChunkName: "project-registration-po-" */ "./po/" + getPOFileFromLocale(locale)
+        )
     );
 
     const tuleap_templates_json = vue_mount_point.dataset.availableTuleapTemplates;

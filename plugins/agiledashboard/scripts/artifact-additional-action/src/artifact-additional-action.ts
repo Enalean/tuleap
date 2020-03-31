@@ -18,7 +18,10 @@
  */
 
 import { patch } from "../../../../../src/www/themes/common/tlp/src/js/fetch-wrapper";
-import { initGettext } from "../../../../../src/www/scripts/tuleap/gettext/gettext-init";
+import {
+    getPOFileFromLocale,
+    initGettext,
+} from "../../../../../src/www/scripts/tuleap/gettext/gettext-init";
 import { addFeedback, clearAllFeedbacks } from "../../../../../src/www/scripts/tuleap/feedback";
 
 export function initArtifactAdditionalAction(mount_point: Document): void {
@@ -58,7 +61,8 @@ export function initArtifactAdditionalAction(mount_point: Document): void {
                 "artifact-additional-action",
                 (locale) =>
                     import(
-                        /* webpackChunkName: "artifact-additional-action-po-" */ `../po/${locale}.po`
+                        /* webpackChunkName: "artifact-additional-action-po-" */ "../po/" +
+                            getPOFileFromLocale(locale)
                     )
             );
 

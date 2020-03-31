@@ -22,7 +22,10 @@ import Vue from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import { createStore } from "./src/store";
 import App from "./src/components/App.vue";
-import { initVueGettext } from "../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
+import {
+    initVueGettext,
+    getPOFileFromLocale,
+} from "../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
 import { ColumnDefinition, Tracker } from "./src/type";
 import Vuex from "vuex";
 import { UserState } from "./src/store/user/type";
@@ -58,7 +61,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             : [];
 
     await initVueGettext(Vue, (locale: string) =>
-        import(/* webpackChunkName: "taskboard-po-" */ `./po/${locale}.po`)
+        import(/* webpackChunkName: "taskboard-po-" */ "./po/" + getPOFileFromLocale(locale))
     );
     Vue.use(Vuex);
     Vue.use(VueDOMPurifyHTML);
