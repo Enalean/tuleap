@@ -1,9 +1,14 @@
 FROM centos:7
 
-ARG DOCKERFILE_PATH
+# DOCKERFILE_BASEDIR_PATH is the directory where the Dockerfiles is
+ARG DOCKERFILE_BASEDIR_PATH
+# YUM_REPO_PATH is the path toward the .repo yum definition
+ARG YUM_REPO_PATH
+# PACKAGES_PATH is the path toward the .rpm packages
+ARG PACKAGES_PATH
 
-COPY $DOCKERFILE_PATH/Tuleap.repo /etc/yum.repos.d/
-COPY packages/rhel7 /rpms
+COPY $YUM_REPO_PATH /etc/yum.repos.d/
+COPY $PACKAGES_PATH /rpms
 
 # initscripts is implicit dependency of openssh-server for ssh-keygen (/etc/rc.d/init.d/functions)
 
@@ -69,7 +74,7 @@ RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     /bin/rm -rf /rpms /etc/yum.repos.d/Tuleap.repo && \
     awk '$5 >= 3071' /etc/ssh/moduli > /etc/ssh/moduli.tmp && mv /etc/ssh/moduli.tmp /etc/ssh/moduli
 
-COPY $DOCKERFILE_PATH/sshd_config /etc/ssh/sshd_config
+COPY $DOCKERFILE_BASEDIR_PATH/sshd_config /etc/ssh/sshd_config
 
 FROM scratch
 
