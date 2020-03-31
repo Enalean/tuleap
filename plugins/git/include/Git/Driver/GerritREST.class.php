@@ -704,7 +704,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
             return $client->sendRequest($request);
         } catch (\Psr\Http\Client\ClientExceptionInterface $e) {
             $message = sprintf('Unable to send HTTP query %s %s', $request->getMethod(), (string) $request->getUri());
-            $this->logger->error($message);
+            $this->logger->error($message, ['exception' => $e]);
             throw new Git_Driver_Gerrit_Exception('Gerrit REST driver: ' . $message);
         }
     }
