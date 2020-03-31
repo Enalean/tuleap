@@ -33,7 +33,10 @@ class PluginDescriptor
      */
     public $icon_name;
 
-    public function __construct($name = '', $version = '', $description = '')
+    /**
+     * @param string|false $version
+     */
+    public function __construct(string $name = '', $version = '', string $description = '')
     {
         $this->name        = $name;
         $this->version     = $version;

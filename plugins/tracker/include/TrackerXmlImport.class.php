@@ -661,15 +661,12 @@ class TrackerXmlImport
     }
 
     /**
-     *
-     * @param type $filepath
-     *
-     * @return Tracker
+     * @return Tracker|null
      * @throws TrackerFromXmlException
      * @throws Tracker_Exception
      * @throws XML_ParseException
      */
-    public function createFromXMLFile(Project $project, $filepath)
+    public function createFromXMLFile(Project $project, string $filepath)
     {
         $tracker_xml = $this->loadXmlFile($filepath);
         if (! $tracker_xml) {

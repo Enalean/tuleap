@@ -131,7 +131,7 @@ class AgileDashboard_FirstKanbanCreator
         $GLOBALS['Response']->addFeedback(Feedback::WARN, $message);
     }
 
-    /** @return Tracker */
+    /** @return Tracker|null */
     private function importTrackerStructure()
     {
         try {

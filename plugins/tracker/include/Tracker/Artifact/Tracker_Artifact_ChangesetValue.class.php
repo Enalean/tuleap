@@ -49,6 +49,11 @@ abstract class Tracker_Artifact_ChangesetValue
      */
     protected $has_changed;
 
+    /**
+     * @param int $id
+     * @param Tracker_FormElement_Field $field
+     * @param bool $has_changed
+     */
     public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed)
     {
         $this->id          = $id;

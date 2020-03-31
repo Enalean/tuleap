@@ -29,7 +29,7 @@ class PluginInfo
     public $pluginDescriptor;
     public $propertyDescriptors;
 
-    public function __construct($plugin)
+    public function __construct(Plugin $plugin)
     {
         $this->plugin              = $plugin;
         $this->propertyDescriptors = new Map();
