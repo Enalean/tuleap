@@ -84,8 +84,8 @@ class AddInPlaceRetriever
         $mapped_field_id = $mapped_field->getId();
         $tracker_fields  = $this->form_element_factory->getUsedFields($tracker);
 
-        /** @var \Tracker_FormElement_Field $field */
         foreach ($tracker_fields as $field) {
+            \assert($field instanceof \Tracker_FormElement_Field);
             if ($field->getId() === $title_field_id) {
                 continue;
             }

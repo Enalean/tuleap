@@ -2165,10 +2165,8 @@ class Docman_Actions extends Actions
 
     private function addMonitorinUgroups($cascade, Docman_Item $item, array $ugroups_to_add)
     {
-        /**
-         * @var Docman_Controller $controller
-         */
         $controller = $this->_controler;
+        \assert($controller instanceof Docman_Controller);
         $ugroups      = array();
         $ugroups_name = array();
         foreach ($ugroups_to_add as $ugroup) {

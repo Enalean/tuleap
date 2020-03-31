@@ -1368,8 +1368,8 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     /** @see TemplatePresenter::EVENT_ADDITIONAL_ADMIN_BUTTONS */
     public function event_additional_admin_buttons(array $params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        /** @var Project $template */
         $template = $params['template'];
+        \assert($template instanceof Project);
 
         $is_service_used = $template->usesService($this->getServiceShortname());
 
@@ -1512,8 +1512,8 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
      */
     public function clearRecentlyVisitedArtifacts(array $params)
     {
-        /** @var PFUser $user */
         $user = $params['user'];
+        \assert($user instanceof PFUser);
 
         $visit_cleaner = new \Tuleap\Tracker\Artifact\RecentlyVisited\VisitCleaner(
             new RecentlyVisitedDao()

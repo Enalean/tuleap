@@ -52,10 +52,10 @@ class FileInfoXMLExporterTest extends TestCase
     {
         $artifact_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
 
-        /** @var Tracker_Artifact $artifact */
         $artifact         = Mockery::mock(Tracker_Artifact::class)->shouldReceive(['getId' => 123])->getMock();
-        /** @var Tracker_Artifact $another_artifact */
+        \assert($artifact instanceof Tracker_Artifact);
         $another_artifact = Mockery::mock(Tracker_Artifact::class)->shouldReceive(['getId' => 124])->getMock();
+        \assert($another_artifact instanceof Tracker_Artifact);
 
         $path_exporter = new Tracker_XML_Exporter_InArchiveFilePathXMLExporter();
         $exporter = new FileInfoXMLExporter($path_exporter);

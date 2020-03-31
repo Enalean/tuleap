@@ -78,8 +78,8 @@ class ArtifactLinkInformationPrepender
     {
         $purifier = Codendi_HTMLPurifier::instance();
         $folders = array();
-        /** @var Tracker_Artifact $folder */
         foreach ($folder_hierarchy as $folder) {
+            \assert($folder instanceof Tracker_Artifact);
             $uri = $folder->getUri() . '&view=artifactsfolders';
 
             $link = '<a href="' . $purifier->purify($uri) . '" class="direct-link-to-artifact">';

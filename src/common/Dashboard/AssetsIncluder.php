@@ -74,8 +74,8 @@ class AssetsIncluder
         $is_unique_dependency_included = [];
         foreach ($current_dashboard->widget_lines as $line) {
             foreach ($line->widget_columns as $column) {
-                /** @var DashboardWidgetPresenter $widget */
                 foreach ($column->widgets as $widget) {
+                    \assert($widget instanceof DashboardWidgetPresenter);
                     $deduplicated_css_assets = $deduplicated_css_assets->merge($widget->stylesheet_dependencies);
 
                     foreach ($widget->javascript_dependencies as $javascript) {

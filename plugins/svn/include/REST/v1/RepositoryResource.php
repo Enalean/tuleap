@@ -147,10 +147,8 @@ class RepositoryResource extends AuthenticatedResource
         $dao                        = new Dao();
         $logger                     = \SvnPlugin::getLogger();
         $system_command             = new \System_Command();
-        /**
-         * @var \BackendSVN $backend_svn
-         */
         $backend_svn                = \Backend::instance(\Backend::SVN);
+        \assert($backend_svn instanceof \BackendSVN);
         $project_history_dao        = new ProjectHistoryDao();
         $this->system_event_manager = \SystemEventManager::instance();
         $this->project_manager      = \ProjectManager::instance();

@@ -89,8 +89,8 @@ class SetDateValueValidator
     {
         $date_fields    = $this->form_element_factory->getUsedCustomDateFields($tracker);
         $date_field_ids = [];
-        /** @var \Tracker_FormElement_Field_Date $date_field */
         foreach ($date_fields as $date_field) {
+            \assert($date_field instanceof \Tracker_FormElement_Field_Date);
             $date_field_ids[] = (int) $date_field->getId();
         }
         return $date_field_ids;

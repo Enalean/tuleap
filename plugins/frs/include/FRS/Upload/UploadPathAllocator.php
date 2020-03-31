@@ -52,7 +52,7 @@ class UploadPathAllocator implements PathAllocator
 
         $directory_iterator = new \DirectoryIterator($base_path);
         foreach ($directory_iterator as $file_info) {
-            /** @var \SplFileInfo $file_info */
+            \assert($file_info instanceof \SplFileInfo);
             if (! $file_info->isDir()) {
                 continue;
             }

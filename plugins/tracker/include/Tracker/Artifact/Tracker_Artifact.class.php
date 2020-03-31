@@ -1684,8 +1684,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             return $linked_artifact_id;
         }
 
-        /** @var Tracker_Artifact_ChangesetValue_ArtifactLink $changeset_value */
         $changeset_value = $last_changeset->getValue($field);
+        \assert($changeset_value instanceof Tracker_Artifact_ChangesetValue_ArtifactLink);
         if (! $changeset_value) {
             return $linked_artifact_id;
         }

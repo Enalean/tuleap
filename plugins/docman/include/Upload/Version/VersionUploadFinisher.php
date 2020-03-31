@@ -163,10 +163,8 @@ final class VersionUploadFinisher implements TusFinisherDataStore
                     return;
                 }
 
-                /**
-                 * @var Docman_File|null $item
-                 */
                 $item = $this->docman_item_factory->getItemFromDb($upload_row['item_id']);
+                \assert($item instanceof Docman_File || $item === null);
                 if ($item === null) {
                     $this->logger->info('Item #' . $upload_row['item_id'] . ' could not found in the DB to add a new version');
                     return;

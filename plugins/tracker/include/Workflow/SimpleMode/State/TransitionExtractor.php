@@ -39,7 +39,7 @@ class TransitionExtractor
         }
 
         foreach ($transitions as $transition) {
-            /** @var Transition $transition*/
+            \assert($transition instanceof Transition);
             if ($transition->getIdFrom() !== '') {
                 return $transition;
             }

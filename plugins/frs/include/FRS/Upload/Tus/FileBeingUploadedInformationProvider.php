@@ -59,8 +59,8 @@ final class FileBeingUploadedInformationProvider implements TusFileInformationPr
         }
 
         $id = (int) $id;
-        /** @var PFUser $current_user */
         $current_user = $request->getAttribute(RESTCurrentUserMiddleware::class);
+        \assert($current_user instanceof PFUser);
 
         $row = $this->dao->searchFileOngoingUploadByIDUserIDAndExpirationDate(
             $id,

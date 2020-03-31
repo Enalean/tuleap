@@ -65,8 +65,8 @@ class FolderHierarchicalRepresentationCollectionBuilder
         FolderHierarchicalRepresentationCollection $all_folders
     ) {
         $top_level_folders = new FolderHierarchicalRepresentationCollection();
-        /** @var FolderHierarchicalRepresentation $folder_representation */
         foreach ($all_folders->toArray() as $folder_representation) {
+            \assert($folder_representation instanceof FolderHierarchicalRepresentation);
             $parent = $this->getParent($all_folders, $folder_representation->getParentId(), $current_user);
             if ($parent && $all_folders->contains($parent)) {
                 $all_folders->get($parent)->addChild($folder_representation);

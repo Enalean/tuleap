@@ -98,8 +98,8 @@ final class SystemEventUserActiveStatusChange extends SystemEvent
      */
     private function createUser(PFUser $user) : bool
     {
-        /** @var \BackendSystem $system_backend */
         $system_backend = Backend::instance('System');
+        \assert($system_backend instanceof \BackendSystem);
         $system_backend->flushNscdAndFsCache();
         return $system_backend->createUserHome($user);
     }

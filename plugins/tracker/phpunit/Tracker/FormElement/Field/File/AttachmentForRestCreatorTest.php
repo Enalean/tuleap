@@ -81,7 +81,6 @@ class AttachmentForRestCreatorTest extends TestCase
 
         $next_creator_in_chain = Mockery::mock(AttachmentCreator::class);
 
-        /** @var AttachmentForRestCreator|Mockery\MockInterface $creator */
         $creator = Mockery::mock(
             AttachmentForRestCreator::class . '[delete]',
             [
@@ -91,6 +90,7 @@ class AttachmentForRestCreatorTest extends TestCase
                 $rule_file
             ]
         );
+        \assert($creator instanceof AttachmentForRestCreator || $creator instanceof Mockery\MockInterface);
         $creator->shouldAllowMockingProtectedMethods();
 
         $creator->shouldReceive('delete')->never();
@@ -150,7 +150,6 @@ class AttachmentForRestCreatorTest extends TestCase
 
         $next_creator_in_chain = Mockery::mock(AttachmentCreator::class);
 
-        /** @var AttachmentForRestCreator|Mockery\MockInterface $creator */
         $creator = Mockery::mock(
             AttachmentForRestCreator::class . '[delete]',
             [
@@ -160,6 +159,7 @@ class AttachmentForRestCreatorTest extends TestCase
                 $rule_file
             ]
         );
+        \assert($creator instanceof AttachmentForRestCreator || $creator instanceof Mockery\MockInterface);
         $creator->shouldAllowMockingProtectedMethods();
 
         $creator->shouldReceive('delete')->never();
@@ -215,7 +215,6 @@ class AttachmentForRestCreatorTest extends TestCase
 
         $next_creator_in_chain = Mockery::mock(AttachmentCreator::class);
 
-        /** @var AttachmentForRestCreator|Mockery\MockInterface $creator */
         $creator = Mockery::mock(
             AttachmentForRestCreator::class . '[delete]',
             [
@@ -225,6 +224,7 @@ class AttachmentForRestCreatorTest extends TestCase
                 $rule_file
             ]
         );
+        \assert($creator instanceof AttachmentForRestCreator || $creator instanceof Mockery\MockInterface);
         $creator->shouldAllowMockingProtectedMethods();
 
         $creator->shouldReceive('delete')->once();
@@ -263,7 +263,6 @@ class AttachmentForRestCreatorTest extends TestCase
             ->shouldReceive('createAttachment')
             ->with($current_user, $field, $submitted_value_info, $url_mapping);
 
-        /** @var AttachmentForRestCreator|Mockery\MockInterface $creator */
         $creator = Mockery::mock(
             AttachmentForRestCreator::class . '[delete]',
             [
@@ -273,6 +272,7 @@ class AttachmentForRestCreatorTest extends TestCase
                 $rule_file
             ]
         );
+        \assert($creator instanceof AttachmentForRestCreator || $creator instanceof Mockery\MockInterface);
         $creator->shouldAllowMockingProtectedMethods();
 
         $creator->shouldReceive('delete')->never();
@@ -306,7 +306,6 @@ class AttachmentForRestCreatorTest extends TestCase
             ->shouldReceive('createAttachment')
             ->with($current_user, $field, $submitted_value_info, $url_mapping);
 
-        /** @var AttachmentForRestCreator|Mockery\MockInterface $creator */
         $creator = Mockery::mock(
             AttachmentForRestCreator::class . '[delete]',
             [
@@ -316,6 +315,7 @@ class AttachmentForRestCreatorTest extends TestCase
                 $rule_file
             ]
         );
+        \assert($creator instanceof AttachmentForRestCreator || $creator instanceof Mockery\MockInterface);
         $creator->shouldAllowMockingProtectedMethods();
 
         $creator->shouldReceive('delete')->never();
@@ -349,7 +349,6 @@ class AttachmentForRestCreatorTest extends TestCase
             ->shouldReceive('createAttachment')
             ->with($current_user, $field, $submitted_value_info, $url_mapping);
 
-        /** @var AttachmentForRestCreator|Mockery\MockInterface $creator */
         $creator = Mockery::mock(
             AttachmentForRestCreator::class . '[delete]',
             [
@@ -359,6 +358,7 @@ class AttachmentForRestCreatorTest extends TestCase
                 $rule_file
             ]
         );
+        \assert($creator instanceof AttachmentForRestCreator || $creator instanceof Mockery\MockInterface);
         $creator->shouldAllowMockingProtectedMethods();
 
         $creator->shouldReceive('delete')->never();

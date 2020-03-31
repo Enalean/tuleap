@@ -143,8 +143,8 @@ class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassD
     /** @see \Event::POST_REFERENCE_EXTRACTED */
     public function post_reference_extracted(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        /** @var CrossReference $cross_reference */
         $cross_reference = $params['cross_reference'];
+        \assert($cross_reference instanceof CrossReference);
 
         $bugzilla = $this->getBugzillaReferenceFromKeyword($cross_reference->targetKey);
         if (! $bugzilla) {
@@ -172,8 +172,8 @@ class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassD
     /** @see \Event::REMOVE_CROSS_REFERENCE */
     public function remove_cross_reference(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        /** @var CrossReference $cross_reference */
         $cross_reference = $params['cross_reference'];
+        \assert($cross_reference instanceof CrossReference);
 
         $bugzilla = $this->getBugzillaReferenceFromKeyword($cross_reference->targetKey);
         if (! $bugzilla) {
@@ -187,8 +187,8 @@ class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassD
     /** @see \Event::GET_REFERENCE_ADMIN_CAPABILITIES */
     public function get_reference_admin_capabilities(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        /** @var Reference $reference */
         $reference = $params['reference'];
+        \assert($reference instanceof Reference);
 
         if ($reference->getNature() === 'bugzilla') {
             $params['can_be_deleted'] = false;

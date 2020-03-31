@@ -59,8 +59,8 @@ class FileBeingUploadedInformationProvider implements TusFileInformationProvider
         }
 
         $id = (int) $id;
-        /** @var PFUser $current_user */
         $current_user = $request->getAttribute(RESTCurrentUserMiddleware::class);
+        \assert($current_user instanceof PFUser);
 
         return $this->getFileInformationByIdForUser($id, $current_user);
     }

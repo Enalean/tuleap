@@ -55,8 +55,8 @@ class AttachmentForTraditionalUploadCreatorTest extends TestCase
 
         $field = Mockery::mock(Tracker_FormElement_Field_File::class);
 
-        /** @var AttachmentForTraditionalUploadCreator|\Mockery\MockInterface $creator */
         $creator = \Mockery::mock(AttachmentForTraditionalUploadCreator::class . '[save]', [$mover, $rule_file]);
+        \assert($creator instanceof AttachmentForTraditionalUploadCreator || $creator instanceof \Mockery\MockInterface);
         $creator->shouldAllowMockingProtectedMethods();
 
         $creator->shouldReceive('save')->andReturn(true);
@@ -93,8 +93,8 @@ class AttachmentForTraditionalUploadCreatorTest extends TestCase
 
         $field = Mockery::mock(Tracker_FormElement_Field_File::class);
 
-        /** @var AttachmentForTraditionalUploadCreator|\Mockery\MockInterface $creator */
         $creator = \Mockery::mock(AttachmentForTraditionalUploadCreator::class . '[save]', [$mover, $rule_file]);
+        \assert($creator instanceof AttachmentForTraditionalUploadCreator || $creator instanceof \Mockery\MockInterface);
         $creator->shouldAllowMockingProtectedMethods();
 
         $creator->shouldReceive('save')->andReturn(true);
@@ -132,8 +132,8 @@ class AttachmentForTraditionalUploadCreatorTest extends TestCase
 
         $field = Mockery::mock(Tracker_FormElement_Field_File::class);
 
-        /** @var AttachmentForTraditionalUploadCreator|\Mockery\MockInterface $creator */
         $creator = \Mockery::mock(AttachmentForTraditionalUploadCreator::class . '[save]', [$mover, $rule_file]);
+        \assert($creator instanceof AttachmentForTraditionalUploadCreator || $creator instanceof \Mockery\MockInterface);
         $creator->shouldAllowMockingProtectedMethods();
 
         $creator->shouldReceive('save')->andReturn(true);
@@ -180,8 +180,8 @@ class AttachmentForTraditionalUploadCreatorTest extends TestCase
 
         $field = Mockery::mock(Tracker_FormElement_Field_File::class);
 
-        /** @var AttachmentForTraditionalUploadCreator|\Mockery\MockInterface $creator */
         $creator = \Mockery::mock(AttachmentForTraditionalUploadCreator::class . '[save]', [$mover, $rule_file]);
+        \assert($creator instanceof AttachmentForTraditionalUploadCreator || $creator instanceof \Mockery\MockInterface);
         $creator->shouldAllowMockingProtectedMethods();
 
         $creator->shouldReceive('save')->andReturn(true);
@@ -217,8 +217,8 @@ class AttachmentForTraditionalUploadCreatorTest extends TestCase
 
         $field = Mockery::mock(Tracker_FormElement_Field_File::class);
 
-        /** @var AttachmentForTraditionalUploadCreator|\Mockery\MockInterface $creator */
         $creator = \Mockery::mock(AttachmentForTraditionalUploadCreator::class . '[save]', [$mover, $rule_file]);
+        \assert($creator instanceof AttachmentForTraditionalUploadCreator || $creator instanceof \Mockery\MockInterface);
         $creator->shouldAllowMockingProtectedMethods();
 
         $creator->shouldReceive('save')->andReturn(false);
@@ -254,8 +254,8 @@ class AttachmentForTraditionalUploadCreatorTest extends TestCase
 
         $field = Mockery::mock(Tracker_FormElement_Field_File::class);
 
-        /** @var AttachmentForTraditionalUploadCreator|\Mockery\MockInterface $creator */
         $creator = \Mockery::mock(AttachmentForTraditionalUploadCreator::class . '[save]', [$mover, $rule_file]);
+        \assert($creator instanceof AttachmentForTraditionalUploadCreator || $creator instanceof \Mockery\MockInterface);
         $creator->shouldAllowMockingProtectedMethods();
 
         $creator->shouldReceive('save')->andReturn(true);
@@ -280,8 +280,8 @@ class AttachmentForTraditionalUploadCreatorTest extends TestCase
 
         $field = Mockery::mock(Tracker_FormElement_Field_File::class);
 
-        /** @var AttachmentForTraditionalUploadCreator|\Mockery\MockInterface $creator */
         $creator = \Mockery::mock(AttachmentForTraditionalUploadCreator::class . '[save]', [$mover, $rule_file]);
+        \assert($creator instanceof AttachmentForTraditionalUploadCreator || $creator instanceof \Mockery\MockInterface);
         $creator->shouldAllowMockingProtectedMethods();
 
         $url_mapping = Mockery::mock(CreatedFileURLMapping::class);

@@ -82,8 +82,8 @@ class ArtifactsPresentersBuilder
             return '';
         }
 
-        /** @var Tracker_Artifact_ChangesetValue_Text $changeset_value */
         $changeset_value = $last_changeset->getValue($description_field);
+        \assert($changeset_value instanceof Tracker_Artifact_ChangesetValue_Text);
         if (! $changeset_value) {
             return '';
         }

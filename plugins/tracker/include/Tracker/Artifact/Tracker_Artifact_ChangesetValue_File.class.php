@@ -312,8 +312,8 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
         &$added,
         &$previews
     ) {
-        /** @var Tracker_FileInfo $file */
         foreach ($files as $file) {
+            \assert($file instanceof Tracker_FileInfo);
             if ($format === 'html') {
                 $this->addFileForHTMLFormat($still_existing_files_ids, $added, $previews, $file);
             } else {

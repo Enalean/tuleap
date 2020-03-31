@@ -64,8 +64,8 @@ final class DocumentBeingUploadedInformationProvider implements TusFileInformati
         }
 
         $item_id = (int) $item_id;
-        /** @var PFUser $current_user */
         $current_user = $request->getAttribute(RESTCurrentUserMiddleware::class);
+        \assert($current_user instanceof PFUser);
 
         $document_row = $this->dao->searchDocumentOngoingUploadByItemIDUserIDAndExpirationDate(
             $item_id,

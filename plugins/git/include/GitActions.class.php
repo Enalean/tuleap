@@ -659,8 +659,8 @@ class GitActions extends PluginActions
 
         $user_helper = UserHelper::instance();
         $great_success = true;
-        /** @var PFUser $user */
         foreach ($users as $user) {
+            \assert($user instanceof PFUser);
             if ($this->users_to_notify_dao->insert($repository_id, $user->getId())) {
                 $controller->addInfo(
                     sprintf(
@@ -697,8 +697,8 @@ class GitActions extends PluginActions
         }
 
         $great_success = true;
-        /** @var ProjectUGroup $ugroup */
         foreach ($ugroups as $ugroup) {
+            \assert($ugroup instanceof ProjectUGroup);
             if ($this->ugroups_to_notify_dao->insert($repository_id, $ugroup->getId())) {
                 $controller->addInfo(
                     sprintf(

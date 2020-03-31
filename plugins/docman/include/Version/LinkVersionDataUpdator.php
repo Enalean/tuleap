@@ -51,8 +51,8 @@ class LinkVersionDataUpdator
             ]
         );
 
-        /** @var Docman_Link $link */
         $link = $this->item_factory->getItemFromDb($empty->getId());
+        \assert($link instanceof Docman_Link);
 
         $this->item_factory->createNewLinkVersion($link, $version_data);
 

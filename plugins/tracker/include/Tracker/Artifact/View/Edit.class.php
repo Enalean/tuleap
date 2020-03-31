@@ -185,7 +185,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
         $comments_content = array();
 
         foreach ($comments as $item) {
-            /** @var Tracker_Artifact_Followup_Item $item */
+            \assert($item instanceof Tracker_Artifact_Followup_Item);
             if ($previous_item) {
                 $diff_to_previous = $item->diffToPreviousArtifactView($this->user, $previous_item);
                 $classnames  = 'tracker_artifact_followup ';

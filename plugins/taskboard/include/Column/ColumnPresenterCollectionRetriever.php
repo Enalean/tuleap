@@ -59,8 +59,8 @@ class ColumnPresenterCollectionRetriever
         $collection = [];
         $planning   = $milestone->getPlanning();
         $columns    = $this->column_factory->getDashboardColumns($planning->getPlanningTracker());
-        /** @var Cardwall_Column $column */
         foreach ($columns as $column) {
+            \assert($column instanceof Cardwall_Column);
             $mappings = $this->tracker_mapping_builder->buildMappings($milestone, $column);
             $collection[] = new ColumnPresenter(
                 $column,
