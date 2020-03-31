@@ -1058,7 +1058,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     private function checkNaturesExistsOnPlateform(SimpleXMLElement $xml)
     {
-        if (! $xml->trackers['use-natures'][0]) {
+        if (! isset($xml->trackers['use-natures'][0]) || ! $xml->trackers['use-natures'][0]) {
             return true;
         }
 
