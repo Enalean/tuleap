@@ -340,7 +340,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $params['entries'][$this->getServiceShortname()] = 'Opened artifacts';
     }
 
-    public function getUriFromCrossReference(GetUriFromCrossReference $event)
+    public function getUriFromCrossReference(GetUriFromCrossReference $event): void
     {
         if ($event->getTargetType() === Tracker_Artifact::REFERENCE_NATURE) {
             $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($event->getSourceId());
