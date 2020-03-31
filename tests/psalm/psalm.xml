@@ -27,8 +27,6 @@
     </plugins>
 
     <issueHandlers>
-        <LessSpecificReturnType errorLevel="info" />
-
         <DeprecatedMethod errorLevel="info" />
         <DeprecatedProperty errorLevel="info" />
         <DeprecatedClass errorLevel="info" />
@@ -40,14 +38,8 @@
         <InternalProperty errorLevel="info" />
         <InternalClass errorLevel="info" />
 
-        <MissingClosureReturnType errorLevel="info" />
-        <MissingReturnType errorLevel="info" />
-        <MissingPropertyType errorLevel="info" />
-
         <PropertyNotSetInConstructor errorLevel="info" />
         <MissingConstructor errorLevel="info" />
-        <MissingClosureParamType errorLevel="info" />
-        <MissingParamType errorLevel="info" />
 
         <RedundantCondition errorLevel="info" />
 
