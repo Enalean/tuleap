@@ -101,7 +101,7 @@ describe("ReleaseDescription", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.find("[data-test=tooltip-description]").text()).toEqual(description);
+        expect(wrapper.get("[data-test=tooltip-description]").text()).toEqual(description);
     });
 
     it("When there is a burndown, Then the ChartDisplayer is rendered", async () => {
@@ -127,7 +127,7 @@ describe("ReleaseDescription", () => {
         store_options.state.user_can_view_sub_milestones_planning = true;
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.find("[data-test=planning-link]").attributes("href")).toEqual(
+        expect(wrapper.get("[data-test=planning-link]").attributes("href")).toEqual(
             "/plugins/agiledashboard/?group_id=" +
                 encodeURIComponent(project_id) +
                 "&planning_id=" +

@@ -41,7 +41,7 @@ describe("CustomMetadataText", () => {
             short_name: "short_name",
         };
         const wrapper = factory({ currentlyUpdatedItemMetadata });
-        const date_input = wrapper.find("[data-test=document-text-input]");
+        const date_input = wrapper.get("[data-test=document-text-input]");
 
         expect(date_input.element.value).toEqual("text value");
         expect(date_input.element.required).toBe(true);
@@ -57,7 +57,7 @@ describe("CustomMetadataText", () => {
             short_name: "short_name",
         };
         const wrapper = factory({ currentlyUpdatedItemMetadata });
-        const date_input = wrapper.find("[data-test=document-text-input]");
+        const date_input = wrapper.get("[data-test=document-text-input]");
 
         expect(date_input.element.value).toEqual("");
         expect(date_input.element.required).toBe(false);

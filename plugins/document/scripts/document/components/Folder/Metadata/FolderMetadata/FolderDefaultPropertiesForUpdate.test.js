@@ -64,7 +64,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
         });
 
         it(`Given custom component are loading
-            Then it displays spinner`, () => {
+            Then it displays spinner`, async () => {
             const wrapper = default_property({
                 currentlyUpdatedItem: {
                     metadata: [],
@@ -81,6 +81,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                     has_loaded_metadata: false,
                 },
             };
+            await wrapper.vm.$nextTick();
 
             expect(
                 wrapper.find("[data-test=document-folder-default-properties-container]").exists()
@@ -278,7 +279,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                 wrapper.find("[data-test=document-folder-default-properties-container]").exists()
             ).toBeTruthy();
 
-            const input = wrapper.find("[data-test=document-custom-metadata-checkbox]");
+            const input = wrapper.get("[data-test=document-custom-metadata-checkbox]");
             input.trigger("change");
 
             expect(event_bus_emit).toHaveBeenCalledWith("metadata-recursion-metadata-list", {
@@ -349,7 +350,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
 
             wrapper.vm.recursion_option = "all_items";
 
-            const input = wrapper.find("[data-test=document-custom-metadata-recursion-option]");
+            const input = wrapper.get("[data-test=document-custom-metadata-recursion-option]");
             input.element.value = "all_items";
 
             expect(wrapper.vm.metadata_list_to_update).toEqual([]);
@@ -426,7 +427,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
 
             wrapper.vm.recursion_option = "all_items";
 
-            const input = wrapper.find("[data-test=document-custom-metadata-recursion-option]");
+            const input = wrapper.get("[data-test=document-custom-metadata-recursion-option]");
             input.element.value = "all_items";
 
             expect(wrapper.vm.metadata_list_to_update).toEqual([]);
@@ -487,7 +488,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
 
             wrapper.vm.metadata_list_to_update = ["field_1", "field_3"];
 
-            const input = wrapper.find("[data-test=document-custom-metadata-recursion-option]");
+            const input = wrapper.get("[data-test=document-custom-metadata-recursion-option]");
             input.element.value = "none";
 
             expect(wrapper.vm.metadata_list_to_update).toEqual(["field_1", "field_3"]);

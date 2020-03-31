@@ -174,6 +174,8 @@ describe("DragNDropHandler", () => {
                         locked_by: {
                             id: 753,
                             name: "some dude",
+                            display_name: "Some Dude",
+                            user_url: "https://example.com",
                         },
                     },
                     approval_table: null,
@@ -183,6 +185,7 @@ describe("DragNDropHandler", () => {
                 wrapper.setData({ highlighted_item_id: target_file.id });
 
                 await wrapper.vm.ondrop(drop_event);
+                await wrapper.vm.$nextTick();
 
                 expect(store.dispatch).not.toHaveBeenCalledWith("createNewFileVersion");
                 expect(wrapper.vm.error_modal_shown).toEqual(wrapper.vm.EDITION_LOCKED);
@@ -199,6 +202,11 @@ describe("DragNDropHandler", () => {
                     lock_info: null,
                     approval_table: {
                         has_been_approved: false,
+                        approval_state: "Not yet",
+                        table_owner: {
+                            display_name: "Some Dude",
+                            user_url: "https://example.com",
+                        },
                     },
                 };
 
@@ -206,6 +214,7 @@ describe("DragNDropHandler", () => {
                 wrapper.setData({ highlighted_item_id: target_file.id });
 
                 await wrapper.vm.ondrop(drop_event);
+                await wrapper.vm.$nextTick();
 
                 expect(store.dispatch).not.toHaveBeenCalledWith("createNewFileVersion");
                 expect(wrapper.vm.error_modal_shown).toEqual(wrapper.vm.DOCUMENT_NEEDS_APPROVAL);

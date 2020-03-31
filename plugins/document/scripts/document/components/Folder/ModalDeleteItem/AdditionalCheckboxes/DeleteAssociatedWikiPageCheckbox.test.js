@@ -55,7 +55,7 @@ describe("ModalConfirmationDeletion", () => {
         };
     });
 
-    it("shows the warning only when option is checked", () => {
+    it("shows the warning only when option is checked", async () => {
         const wiki_checkbox = getWikiCheckbox(item, [
             {
                 id: 43,
@@ -63,30 +63,33 @@ describe("ModalConfirmationDeletion", () => {
             },
         ]);
 
-        const checkbox_input = wiki_checkbox.find(
+        const checkbox_input = wiki_checkbox.get(
             "[data-test=delete-associated-wiki-page-checkbox]"
         );
 
         checkbox_input.trigger("click");
+        await wiki_checkbox.vm.$nextTick();
 
         expect(
             wiki_checkbox.find("[data-test=delete-associated-wiki-page-warning-message]").exists()
         ).toBeTruthy();
 
         checkbox_input.trigger("click");
+        await wiki_checkbox.vm.$nextTick();
 
         expect(
             wiki_checkbox.find("[data-test=delete-associated-wiki-page-warning-message]").exists()
         ).toBeFalsy();
     });
 
-    it("does not show the warning when wikiPageReferencers is empty no matter if the option is checked or not", () => {
+    it("does not show the warning when wikiPageReferencers is empty no matter if the option is checked or not", async () => {
         const wiki_checkbox = getWikiCheckbox(item, []);
-        const checkbox_input = wiki_checkbox.find(
+        const checkbox_input = wiki_checkbox.get(
             "[data-test=delete-associated-wiki-page-checkbox]"
         );
 
         checkbox_input.trigger("click");
+        await wiki_checkbox.vm.$nextTick();
 
         expect(
             wiki_checkbox.find("[data-test=delete-associated-wiki-page-warning-message]").exists()
@@ -99,7 +102,7 @@ describe("ModalConfirmationDeletion", () => {
         ).toBeFalsy();
     });
 
-    it("renders a list of links", () => {
+    it("renders a list of links", async () => {
         const wiki_checkbox = getWikiCheckbox(item, [
             {
                 id: 43,
@@ -111,11 +114,12 @@ describe("ModalConfirmationDeletion", () => {
             },
         ]);
 
-        const checkbox_input = wiki_checkbox.find(
+        const checkbox_input = wiki_checkbox.get(
             "[data-test=delete-associated-wiki-page-checkbox]"
         );
 
         checkbox_input.trigger("click");
+        await wiki_checkbox.vm.$nextTick();
 
         const links = wiki_checkbox.findAll("[data-test=wiki-page-referencer-link]");
 

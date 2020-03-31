@@ -47,7 +47,7 @@ describe("QuickLookGlobal", () => {
             mocks: { $store: store },
         });
 
-        const displayed_description = wrapper.find("[id=item-description]");
+        const displayed_description = wrapper.get("[id=item-description]");
 
         expect(displayed_description.text()).toEqual(item.description);
         expect(displayed_description.html()).toContain(item.post_processed_description);

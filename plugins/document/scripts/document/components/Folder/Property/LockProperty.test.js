@@ -39,7 +39,7 @@ describe("LockProperty", () => {
             const item = { id: 1, title: "Item", lock_info: null };
             const wrapper = lock_property(item);
 
-            const label_element = wrapper.find("[data-test='lock-property-label']");
+            const label_element = wrapper.get("[data-test='lock-property-label']");
 
             expect(label_element.element.textContent).toMatch("Lock new version");
         });
@@ -55,7 +55,7 @@ describe("LockProperty", () => {
             };
             const wrapper = lock_property(item);
 
-            const label_element = wrapper.find("[data-test='lock-property-label']");
+            const label_element = wrapper.get("[data-test='lock-property-label']");
 
             expect(label_element.element.textContent).toMatch("Keep lock?");
         });

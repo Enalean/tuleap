@@ -43,7 +43,7 @@ describe("StatusMetadataWithCustomBindingForFolderUpdate", () => {
         };
     });
 
-    it(`display status selectbox only when status property is enabled for project`, () => {
+    it(`display status selectbox only when status property is enabled for project`, async () => {
         const wrapper = status_metadata({
             currentlyUpdatedItem: {
                 metadata: [
@@ -63,6 +63,7 @@ describe("StatusMetadataWithCustomBindingForFolderUpdate", () => {
         });
 
         store.state.is_item_status_metadata_used = true;
+        await wrapper.vm.$nextTick();
 
         expect(
             wrapper.contains("[data-test=document-status-metadata-for-folder-update]")
@@ -95,7 +96,7 @@ describe("StatusMetadataWithCustomBindingForFolderUpdate", () => {
         ).toBeFalsy();
     });
 
-    it(`updates the status`, () => {
+    it(`updates the status`, async () => {
         const wrapper = status_metadata({
             currentlyUpdatedItem: {
                 metadata: [
@@ -120,6 +121,7 @@ describe("StatusMetadataWithCustomBindingForFolderUpdate", () => {
         store.state.is_item_status_metadata_used = true;
 
         wrapper.vm.status_value = "approved";
+        await wrapper.vm.$nextTick();
 
         expect(
             wrapper.contains("[data-test=document-status-metadata-for-folder-update]")

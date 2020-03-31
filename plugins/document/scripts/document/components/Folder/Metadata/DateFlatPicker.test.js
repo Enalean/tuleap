@@ -54,7 +54,7 @@ describe("DateFlatPicker", () => {
     it(`User can set a date value manually`, () => {
         const wrapper = factory({ id: "input-date", value: "" });
 
-        const input = wrapper.find("input");
+        const input = wrapper.get("input");
         input.element.value = "2019-06-30";
         input.trigger("input");
 

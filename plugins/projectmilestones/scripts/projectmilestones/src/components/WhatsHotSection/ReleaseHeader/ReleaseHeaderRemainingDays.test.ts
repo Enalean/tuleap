@@ -67,8 +67,8 @@ describe("ReleaseHeaderRemainingDays", () => {
 
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            const remaining_day_text = wrapper.find("[data-test=display-remaining-day-text]");
-            const remaining_day_value = wrapper.find("[data-test=display-remaining-day-value]");
+            const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
+            const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");
 
             expect(wrapper.attributes("data-tlp-tooltip")).toEqual("0.00%");
             expect(remaining_day_text.classes()).toContain("release-remaining-value-success");
@@ -90,8 +90,8 @@ describe("ReleaseHeaderRemainingDays", () => {
 
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            const remaining_day_text = wrapper.find("[data-test=display-remaining-day-text]");
-            const remaining_day_value = wrapper.find("[data-test=display-remaining-day-value]");
+            const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
+            const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");
 
             expect(wrapper.attributes("data-tlp-tooltip")).toEqual("No start date defined.");
             expect(remaining_day_text.classes()).toContain("release-remaining-value-disabled");
@@ -114,8 +114,8 @@ describe("ReleaseHeaderRemainingDays", () => {
 
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            const remaining_day_text = wrapper.find("[data-test=display-remaining-day-text]");
-            const remaining_day_value = wrapper.find("[data-test=display-remaining-day-value]");
+            const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
+            const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");
 
             expect(wrapper.attributes("data-tlp-tooltip")).toEqual("0.00%");
             expect(wrapper.classes()).not.toContain("release-remaining-value-disabled");
@@ -139,8 +139,8 @@ describe("ReleaseHeaderRemainingDays", () => {
 
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            const remaining_day_text = wrapper.find("[data-test=display-remaining-day-text]");
-            const remaining_day_value = wrapper.find("[data-test=display-remaining-day-value]");
+            const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
+            const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");
 
             expect(wrapper.attributes("data-tlp-tooltip")).toEqual("100.00%");
             expect(wrapper.classes()).not.toContain("release-remaining-value-disabled");
@@ -164,8 +164,8 @@ describe("ReleaseHeaderRemainingDays", () => {
 
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            const remaining_day_text = wrapper.find("[data-test=display-remaining-day-text]");
-            const remaining_day_value = wrapper.find("[data-test=display-remaining-day-value]");
+            const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
+            const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");
 
             expect(wrapper.attributes("data-tlp-tooltip")).toEqual("100.00%");
             expect(wrapper.classes()).not.toContain("release-remaining-value-danger");
@@ -192,8 +192,8 @@ describe("ReleaseHeaderRemainingDays", () => {
 
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            const remaining_day_text = wrapper.find("[data-test=display-remaining-day-text]");
-            const remaining_day_value = wrapper.find("[data-test=display-remaining-day-value]");
+            const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
+            const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");
 
             expect(wrapper.attributes("data-tlp-tooltip")).toEqual("No end date defined.");
             expect(remaining_day_text.classes()).toContain("release-remaining-value-disabled");
@@ -216,8 +216,8 @@ describe("ReleaseHeaderRemainingDays", () => {
 
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            const remaining_day_text = wrapper.find("[data-test=display-remaining-day-text]");
-            const remaining_day_value = wrapper.find("[data-test=display-remaining-day-value]");
+            const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
+            const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");
 
             expect(wrapper.attributes("data-tlp-tooltip")).toEqual("50.00%");
             expect(remaining_day_text.classes()).toContain("release-remaining-value-success");
@@ -240,8 +240,8 @@ describe("ReleaseHeaderRemainingDays", () => {
 
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            const remaining_day_text = wrapper.find("[data-test=display-remaining-day-text]");
-            const remaining_day_value = wrapper.find("[data-test=display-remaining-day-value]");
+            const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
+            const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");
 
             expect(wrapper.attributes("data-tlp-tooltip")).toEqual("80.00%");
             expect(remaining_day_text.classes()).toContain("release-remaining-value-danger");
@@ -264,8 +264,8 @@ describe("ReleaseHeaderRemainingDays", () => {
 
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            const remaining_day_text = wrapper.find("[data-test=display-remaining-day-text]");
-            const remaining_day_value = wrapper.find("[data-test=display-remaining-day-value]");
+            const remaining_day_text = wrapper.get("[data-test=display-remaining-day-text]");
+            const remaining_day_value = wrapper.get("[data-test=display-remaining-day-value]");
 
             expect(wrapper.attributes("data-tlp-tooltip")).toEqual("90.91%");
             expect(remaining_day_text.classes()).toContain("release-remaining-value-danger");

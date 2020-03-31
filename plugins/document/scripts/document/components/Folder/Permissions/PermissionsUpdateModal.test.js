@@ -125,7 +125,7 @@ describe("PermissionsUpdateModal", () => {
         expect(handleErrors).toHaveBeenCalledTimes(1);
     });
 
-    it("Change permissions to update when the bound item is updated", () => {
+    it("Change permissions to update when the bound item is updated", async () => {
         const wrapper = factory({ item: {} });
 
         const item_to_update = {
@@ -139,6 +139,7 @@ describe("PermissionsUpdateModal", () => {
         };
 
         wrapper.setProps({ item: item_to_update });
+        await wrapper.vm.$nextTick();
 
         const updated_permissions_per_groups = {
             can_read: wrapper.vm.updated_permissions.can_read,
@@ -170,7 +171,7 @@ describe("PermissionsUpdateModal", () => {
             expect(wrapper.vm.can_be_submitted).toBe(false);
         });
 
-        wrapper.find("form").trigger("submit.prevent");
+        wrapper.get("form").trigger("submit.prevent");
 
         const permissions_to_update = {
             apply_permissions_on_children: false,

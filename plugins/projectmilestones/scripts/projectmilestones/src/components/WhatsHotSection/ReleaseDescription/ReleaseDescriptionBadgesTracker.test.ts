@@ -71,13 +71,13 @@ describe("ReleaseDescriptionBadgesTracker", () => {
 
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.find("[data-test=color-name-tracker").classes()).toEqual([
+        expect(wrapper.get("[data-test=color-name-tracker").classes()).toEqual([
             "release-number-artifacts-tracker",
             "release-number-artifacts-tracker-red-fiesta",
         ]);
 
-        expect(wrapper.find("[data-test=total-artifact-tracker").text()).toEqual("2");
+        expect(wrapper.get("[data-test=total-artifact-tracker").text()).toEqual("2");
 
-        expect(wrapper.find("[data-test=artifact-tracker-name").text()).toEqual("Bug");
+        expect(wrapper.get("[data-test=artifact-tracker-name").text()).toEqual("Bug");
     });
 });

@@ -103,8 +103,11 @@ describe("PeoplePicker", () => {
             mocked_jquery.val.mockImplementation(() => ["123", "234"]);
             onchange_callback();
 
-            expect(wrapper.emitted().input).toBeTruthy();
-            expect(wrapper.emitted().input[0]).toStrictEqual([[123, 234]]);
+            const input = wrapper.emitted().input;
+            if (!input) {
+                throw new Error("Should have received input");
+            }
+            expect(input[0]).toStrictEqual([[123, 234]]);
         });
 
         it("Emits input event on change with empty array if val() returns null", async () => {
@@ -113,8 +116,11 @@ describe("PeoplePicker", () => {
             mocked_jquery.val.mockImplementation(() => null);
             onchange_callback();
 
-            expect(wrapper.emitted().input).toBeTruthy();
-            expect(wrapper.emitted().input[0]).toStrictEqual([[]]);
+            const input = wrapper.emitted().input;
+            if (!input) {
+                throw new Error("Should have received input");
+            }
+            expect(input[0]).toStrictEqual([[]]);
         });
 
         it("Emits input event on change with empty array if val() returns undefined", async () => {
@@ -123,8 +129,11 @@ describe("PeoplePicker", () => {
             mocked_jquery.val.mockImplementation(() => undefined);
             onchange_callback();
 
-            expect(wrapper.emitted().input).toBeTruthy();
-            expect(wrapper.emitted().input[0]).toStrictEqual([[]]);
+            const input = wrapper.emitted().input;
+            if (!input) {
+                throw new Error("Should have received input");
+            }
+            expect(input[0]).toStrictEqual([[]]);
         });
 
         it("Emits input event on change with array of one element if val() returns a string", async () => {
@@ -133,8 +142,11 @@ describe("PeoplePicker", () => {
             mocked_jquery.val.mockImplementation(() => "123");
             onchange_callback();
 
-            expect(wrapper.emitted().input).toBeTruthy();
-            expect(wrapper.emitted().input[0]).toStrictEqual([[123]]);
+            const input = wrapper.emitted().input;
+            if (!input) {
+                throw new Error("Should have received input");
+            }
+            expect(input[0]).toStrictEqual([[123]]);
         });
 
         it("Emits input event on change with array of one element if val() returns a number", async () => {
@@ -143,8 +155,11 @@ describe("PeoplePicker", () => {
             mocked_jquery.val.mockImplementation(() => 123);
             onchange_callback();
 
-            expect(wrapper.emitted().input).toBeTruthy();
-            expect(wrapper.emitted().input[0]).toStrictEqual([[123]]);
+            const input = wrapper.emitted().input;
+            if (!input) {
+                throw new Error("Should have received input");
+            }
+            expect(input[0]).toStrictEqual([[123]]);
         });
     });
 });

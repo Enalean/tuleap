@@ -91,8 +91,8 @@ describe(`TextField`, () => {
         field.field_id = 197;
         const wrapper = getInstance();
 
-        const label = wrapper.find(FormatSelector);
-        const editor = wrapper.find(RichTextEditor);
+        const label = wrapper.get(FormatSelector);
+        const editor = wrapper.get(RichTextEditor);
 
         expect(label.props("id")).toEqual("tracker_field_197");
         expect(editor.props("id")).toEqual("tracker_field_197");

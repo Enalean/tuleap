@@ -34,7 +34,7 @@ describe("DateInput", () => {
     });
 
     const findSelectedOption = () => {
-        const select = wrapper.find("select").element;
+        const select = wrapper.get("select").element;
         return select.options[select.selectedIndex];
     };
 
@@ -56,8 +56,8 @@ describe("DateInput", () => {
 
     describe("when selecting another option", () => {
         beforeEach(() => {
-            wrapper.find('[data-test-type="current"]').element.selected = true;
-            wrapper.find("select").trigger("change");
+            wrapper.get('[data-test-type="current"]').element.selected = true;
+            wrapper.get("select").trigger("change");
         });
 
         it("emits input event with corresponding value", () => {

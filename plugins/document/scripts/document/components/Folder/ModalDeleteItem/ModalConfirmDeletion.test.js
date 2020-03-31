@@ -112,6 +112,7 @@ describe("ModalConfirmDeletion", () => {
             });
 
             const deletion_modal = await getDeletionModal({ item });
+            await deletion_modal.vm.$nextTick();
 
             expect(store.dispatch).toHaveBeenCalledWith("getWikisReferencingSameWikiPage", item);
             expect(deletion_modal.contains("[data-test=checkbox]")).toBeTruthy();
@@ -169,7 +170,7 @@ describe("ModalConfirmDeletion", () => {
 
         const deletion_modal = getDeletionModal({ item, additional_options });
         const deleteItem = jest.spyOn(deletion_modal.vm, "deleteItem");
-        deletion_modal.find("[data-test=document-confirm-deletion-button]").trigger("click");
+        deletion_modal.get("[data-test=document-confirm-deletion-button]").trigger("click");
 
         expect(deleteItem).toHaveBeenCalled();
     });

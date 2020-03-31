@@ -65,8 +65,8 @@ describe("ReleaseHeaderRemainingEffort", () => {
 
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            const remaining_point_text = wrapper.find("[data-test=points-remaining-value]");
-            const remaining_point_value = wrapper.find("[data-test=points-progress-value]");
+            const remaining_point_text = wrapper.get("[data-test=points-remaining-value]");
+            const remaining_point_value = wrapper.get("[data-test=points-progress-value]");
 
             expect(wrapper.attributes("data-tlp-tooltip")).toEqual("110.00%");
             expect(wrapper.classes()).not.toContain("release-remaining-value-success");
@@ -93,8 +93,8 @@ describe("ReleaseHeaderRemainingEffort", () => {
 
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            const remaining_point_text = wrapper.find("[data-test=points-remaining-value]");
-            const remaining_point_value = wrapper.find("[data-test=points-progress-value]");
+            const remaining_point_text = wrapper.get("[data-test=points-remaining-value]");
+            const remaining_point_value = wrapper.get("[data-test=points-progress-value]");
 
             expect(wrapper.attributes("data-tlp-tooltip")).toEqual("No remaining effort defined.");
             expect(remaining_point_text.classes()).toContain("release-remaining-value-disabled");
@@ -117,8 +117,8 @@ describe("ReleaseHeaderRemainingEffort", () => {
 
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            const remaining_point_text = wrapper.find("[data-test=points-remaining-value]");
-            const remaining_point_value = wrapper.find("[data-test=points-progress-value]");
+            const remaining_point_text = wrapper.get("[data-test=points-remaining-value]");
+            const remaining_point_value = wrapper.get("[data-test=points-progress-value]");
 
             expect(wrapper.attributes("data-tlp-tooltip")).toEqual("50.00%");
             expect(remaining_point_text.classes()).toContain("release-remaining-value-success");
@@ -141,8 +141,8 @@ describe("ReleaseHeaderRemainingEffort", () => {
 
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            const remaining_point_text = wrapper.find("[data-test=points-remaining-value]");
-            const remaining_point_value = wrapper.find("[data-test=points-progress-value]");
+            const remaining_point_text = wrapper.get("[data-test=points-remaining-value]");
+            const remaining_point_value = wrapper.get("[data-test=points-progress-value]");
 
             expect(wrapper.attributes("data-tlp-tooltip")).toEqual("100.00%");
             expect(remaining_point_text.classes()).not.toContain("release-remaining-value-success");
@@ -168,8 +168,8 @@ describe("ReleaseHeaderRemainingEffort", () => {
 
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            const remaining_point_text = wrapper.find("[data-test=points-remaining-value]");
-            const remaining_point_value = wrapper.find("[data-test=points-progress-value]");
+            const remaining_point_text = wrapper.get("[data-test=points-remaining-value]");
+            const remaining_point_value = wrapper.get("[data-test=points-progress-value]");
 
             expect(wrapper.attributes("data-tlp-tooltip")).toEqual("No initial effort defined.");
             expect(remaining_point_text.classes()).toContain("release-remaining-value-disabled");
@@ -192,8 +192,8 @@ describe("ReleaseHeaderRemainingEffort", () => {
 
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            const remaining_point_text = wrapper.find("[data-test=points-remaining-value]");
-            const remaining_point_value = wrapper.find("[data-test=points-progress-value]");
+            const remaining_point_text = wrapper.get("[data-test=points-remaining-value]");
+            const remaining_point_value = wrapper.get("[data-test=points-progress-value]");
 
             expect(wrapper.attributes("data-tlp-tooltip")).toEqual("Initial effort equal at 0.");
             expect(remaining_point_text.classes()).toContain("release-remaining-value-disabled");
@@ -216,8 +216,8 @@ describe("ReleaseHeaderRemainingEffort", () => {
 
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            const remaining_point_text = wrapper.find("[data-test=points-remaining-value]");
-            const remaining_point_value = wrapper.find("[data-test=points-progress-value]");
+            const remaining_point_text = wrapper.get("[data-test=points-remaining-value]");
+            const remaining_point_value = wrapper.get("[data-test=points-progress-value]");
 
             expect(wrapper.attributes("data-tlp-tooltip")).toEqual(
                 "Initial effort (10) should be bigger or equal to remaining effort (100)."
@@ -241,8 +241,8 @@ describe("ReleaseHeaderRemainingEffort", () => {
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
-            const points_remaining_value = wrapper.find("[data-test=points-remaining-value]");
-            const points_remaining_progress = wrapper.find("[data-test=points-progress-value]");
+            const points_remaining_value = wrapper.get("[data-test=points-remaining-value]");
+            const points_remaining_progress = wrapper.get("[data-test=points-progress-value]");
 
             expect(points_remaining_value.classes("release-remaining-value-success")).toBe(true);
             expect(points_remaining_value.classes("release-remaining-value-disabled")).toBe(false);

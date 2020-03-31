@@ -42,7 +42,7 @@ describe("ProjectInformationInputPrivacyList", () => {
 
             await wrapper.vm.$nextTick();
 
-            expect((wrapper.find("[data-test=public]").element as HTMLOptionElement).selected).toBe(
+            expect((wrapper.get("[data-test=public]").element as HTMLOptionElement).selected).toBe(
                 true
             );
         });
@@ -62,9 +62,10 @@ describe("ProjectInformationInputPrivacyList", () => {
                 localVue: await createProjectRegistrationLocalVue(),
                 mocks: { $store: store },
             });
+            await wrapper.vm.$nextTick();
 
             expect(
-                (wrapper.find("[data-test=unrestricted]").element as HTMLOptionElement).selected
+                (wrapper.get("[data-test=unrestricted]").element as HTMLOptionElement).selected
             ).toBe(true);
         });
 
@@ -84,7 +85,7 @@ describe("ProjectInformationInputPrivacyList", () => {
             });
 
             expect(
-                (wrapper.find("[data-test=private-wo-restr]").element as HTMLOptionElement).selected
+                (wrapper.get("[data-test=private-wo-restr]").element as HTMLOptionElement).selected
             ).toBe(true);
         });
 
@@ -103,10 +104,11 @@ describe("ProjectInformationInputPrivacyList", () => {
                 localVue: await createProjectRegistrationLocalVue(),
                 mocks: { $store: store },
             });
+            await wrapper.vm.$nextTick();
 
-            expect(
-                (wrapper.find("[data-test=private]").element as HTMLOptionElement).selected
-            ).toBe(true);
+            expect((wrapper.get("[data-test=private]").element as HTMLOptionElement).selected).toBe(
+                true
+            );
         });
     });
 

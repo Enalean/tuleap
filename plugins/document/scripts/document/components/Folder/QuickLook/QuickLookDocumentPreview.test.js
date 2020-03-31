@@ -96,7 +96,7 @@ describe("QuickLookDocumentPreview", () => {
         expect(wrapper.contains(".document-quick-look-embedded")).toBeFalsy();
     });
 
-    it("Display spinner when embedded file is loaded", () => {
+    it("Display spinner when embedded file is loaded", async () => {
         store.state.currently_previewed_item = {
             id: 42,
             parent_id: 66,
@@ -117,7 +117,9 @@ describe("QuickLookDocumentPreview", () => {
                 content: "custom content",
             },
         };
+        await wrapper.vm.$nextTick();
         store.state.is_loading_currently_previewed_item = false;
+        await wrapper.vm.$nextTick();
         expect(wrapper.contains("[data-test=document-preview-spinner]")).toBeFalsy();
         expect(wrapper.contains("[data-test=document-quick-look-embedded]")).toBeTruthy();
     });

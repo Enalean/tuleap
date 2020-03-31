@@ -45,15 +45,16 @@ describe("ProjectInformationFooter", () => {
     });
 
     it(`reset the selected template when the 'Back' button is clicked`, () => {
-        factory.find("[data-test=project-registration-back-button]").trigger("click");
+        factory.get("[data-test=project-registration-back-button]").trigger("click");
         expect(store.commit).toHaveBeenCalledWith("resetSelectedTemplate");
     });
 
-    it(`Displays spinner when project is creating`, () => {
+    it(`Displays spinner when project is creating`, async () => {
         factory.vm.$store.getters.has_error = false;
         factory.vm.$store.state.is_creating_project = true;
+        await factory.vm.$nextTick();
 
-        expect(factory.find("[data-test=project-submission-icon]").classes()).toEqual([
+        expect(factory.get("[data-test=project-submission-icon]").classes()).toEqual([
             "fa",
             "tlp-button-icon-right",
             "fa-spin",
@@ -65,7 +66,7 @@ describe("ProjectInformationFooter", () => {
         factory.vm.$store.getters.has_error = false;
         factory.vm.$store.state.is_creating_project = false;
 
-        expect(factory.find("[data-test=project-submission-icon]").classes()).toEqual([
+        expect(factory.get("[data-test=project-submission-icon]").classes()).toEqual([
             "fa",
             "tlp-button-icon-right",
             "fa-arrow-circle-o-right",

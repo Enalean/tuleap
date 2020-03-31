@@ -58,7 +58,7 @@ describe("PastSection", () => {
     it("Given user display widget, Then a good link to done releases of the project is rendered", async () => {
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.find("[data-test=past-releases-link]").attributes("href")).toContain(
+        expect(wrapper.get("[data-test=past-releases-link]").attributes("href")).toContain(
             "/plugins/agiledashboard/?group_id=" + encodeURIComponent(project_id) + "&period=past"
         );
     });

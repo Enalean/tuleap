@@ -174,9 +174,10 @@ describe(`RichTextEditor`, () => {
         });
 
         describe(`and I switched the format to "text"`, () => {
-            it(`will destroy the editor`, () => {
+            it(`will destroy the editor`, async () => {
                 const wrapper = getInstance();
                 wrapper.setProps({ format: "text" });
+                await wrapper.vm.$nextTick();
 
                 expect(editor.destroy).toHaveBeenCalled();
             });
@@ -240,7 +241,7 @@ describe(`RichTextEditor`, () => {
 
             it(`informs users that they can paste images`, () => {
                 const wrapper = getInstance();
-                const help = wrapper.find("[data-test=help]");
+                const help = wrapper.get("[data-test=help]");
 
                 expect(help.isVisible()).toBe(true);
             });
@@ -352,9 +353,10 @@ describe(`RichTextEditor`, () => {
         });
 
         describe(`and I switched the format to "html"`, () => {
-            it(`will instantiate CKEditor`, () => {
+            it(`will instantiate CKEditor`, async () => {
                 const wrapper = getInstance();
                 wrapper.setProps({ format: "html" });
+                await wrapper.vm.$nextTick();
 
                 expect(ckeditorReplaceSpy).toHaveBeenCalled();
             });
@@ -387,7 +389,7 @@ describe(`RichTextEditor`, () => {
         });
 
         it(`will set the textarea to disabled`, () => {
-            const textarea = wrapper.find("[data-test=textarea]");
+            const textarea = wrapper.get("[data-test=textarea]");
             expect(textarea.attributes("disabled")).toBe("disabled");
         });
     });
@@ -400,7 +402,7 @@ describe(`RichTextEditor`, () => {
         });
 
         it(`will set the textarea to required`, () => {
-            const textarea = wrapper.find("[data-test=textarea]");
+            const textarea = wrapper.get("[data-test=textarea]");
             expect(textarea.attributes("required")).toBe("required");
         });
     });

@@ -61,11 +61,12 @@ describe("TrackerFromAnotherProject", () => {
             ],
         } as State);
 
-        const project_select = wrapper.find("[data-test=project-select]");
+        const project_select = wrapper.get("[data-test=project-select]");
 
         project_select.findAll("option").at(1).setSelected();
+        await wrapper.vm.$nextTick();
 
-        const tracker_select = wrapper.find("[data-test=project-tracker-select]");
+        const tracker_select = wrapper.get("[data-test=project-tracker-select]");
         const tracker_option_names = tracker_select
             .findAll("option")
             .wrappers.map((wrapper) => wrapper.text());
@@ -109,7 +110,7 @@ describe("TrackerFromAnotherProject", () => {
             ],
         } as State);
 
-        const tracker_select = wrapper.find("[data-test=project-tracker-select]");
+        const tracker_select = wrapper.get("[data-test=project-tracker-select]");
 
         tracker_select.findAll("option").at(1).setSelected();
 

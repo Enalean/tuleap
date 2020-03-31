@@ -49,7 +49,7 @@ describe("FirstConfigurationSections", () => {
         });
 
         it("the submit button will be disabled", () => {
-            const create_workflow_button = wrapper.find(create_workflow_selector);
+            const create_workflow_button = wrapper.get(create_workflow_selector);
             expect(create_workflow_button.attributes("disabled")).toBe("disabled");
         });
     });

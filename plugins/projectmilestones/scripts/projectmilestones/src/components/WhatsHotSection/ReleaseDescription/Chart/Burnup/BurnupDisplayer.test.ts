@@ -85,7 +85,7 @@ describe("BurnupDisplayer", () => {
             release_data,
         };
         const wrapper = await getPersonalWidgetInstance(store_options);
-        const chart_error = wrapper.find(ChartError);
+        const chart_error = wrapper.get(ChartError);
 
         expect(chart_error.attributes("is_under_calculation")).toBeTruthy();
         expect(chart_error.attributes("has_error_start_date")).toBeFalsy();
@@ -114,7 +114,7 @@ describe("BurnupDisplayer", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        const chart_error = wrapper.find(ChartError);
+        const chart_error = wrapper.get(ChartError);
 
         expect(chart_error.attributes("is_under_calculation")).toBeFalsy();
         expect(chart_error.attributes("has_error_start_date")).toBeTruthy();
@@ -143,7 +143,7 @@ describe("BurnupDisplayer", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        const chart_error = wrapper.find(ChartError);
+        const chart_error = wrapper.get(ChartError);
 
         expect(chart_error.attributes("is_under_calculation")).toBeFalsy();
         expect(chart_error.attributes("has_error_start_date")).toBeFalsy();
@@ -172,7 +172,7 @@ describe("BurnupDisplayer", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        const chart_error = wrapper.find(ChartError);
+        const chart_error = wrapper.get(ChartError);
 
         expect(chart_error.attributes("is_under_calculation")).toBeFalsy();
         expect(chart_error.attributes("has_error_start_date")).toBeFalsy();
@@ -201,7 +201,7 @@ describe("BurnupDisplayer", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        const chart_error = wrapper.find(ChartError);
+        const chart_error = wrapper.get(ChartError);
 
         expect(chart_error.attributes("is_under_calculation")).toBeFalsy();
         expect(chart_error.attributes("has_error_start_date")).toBeTruthy();
@@ -230,7 +230,7 @@ describe("BurnupDisplayer", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        const chart_error = wrapper.find(ChartError);
+        const chart_error = wrapper.get(ChartError);
 
         expect(chart_error.attributes("is_under_calculation")).toBeTruthy();
         expect(chart_error.attributes("has_error_start_date")).toBeFalsy();
@@ -287,7 +287,7 @@ describe("BurnupDisplayer", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        const chart_error = wrapper.find(ChartError);
+        const chart_error = wrapper.get(ChartError);
 
         expect(chart_error.attributes("has_error_duration")).toBeTruthy();
     });

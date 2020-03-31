@@ -70,27 +70,30 @@ describe("FrozenFieldsAction", () => {
 
     afterEach(() => store.reset());
 
-    it("disables the option when no fields are available", () => {
+    it("disables the option when no fields are available", async () => {
         store.state.current_tracker = null;
+        await wrapper.vm.$nextTick();
 
-        expect(wrapper.find("[data-test=freeze_fields]").attributes().disabled).toBeTruthy();
+        expect(wrapper.get("[data-test=freeze_fields]").attributes().disabled).toBeTruthy();
     });
 
-    it("disables the option when post-action is already used", () => {
+    it("disables the option when post-action is already used", async () => {
         store.getters["transitionModal/post_actions"] = [
             create("post_action", { type: "frozen_fields" }),
         ];
+        await wrapper.vm.$nextTick();
 
-        expect(wrapper.find("[data-test=freeze_fields]").attributes().disabled).toBeTruthy();
+        expect(wrapper.get("[data-test=freeze_fields]").attributes().disabled).toBeTruthy();
     });
 
     it("should not show the status field as available", () => {
         expect(wrapper.find(`[data-test=field_${status_field_id}]`).exists()).toBeFalsy();
     });
 
-    it(`when the modal is saving, it will disable the fields select`, () => {
+    it(`when the modal is saving, it will disable the fields select`, async () => {
         store.state.transitionModal.is_modal_save_running = true;
-        const fields_select = wrapper.find("[data-test=frozen-fields-selector]");
+        await wrapper.vm.$nextTick();
+        const fields_select = wrapper.get("[data-test=frozen-fields-selector]");
         expect(fields_select.attributes("disabled")).toBeTruthy();
     });
 });

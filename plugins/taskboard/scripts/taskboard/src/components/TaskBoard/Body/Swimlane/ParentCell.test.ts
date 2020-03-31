@@ -106,7 +106,7 @@ describe("ParentCell", () => {
             },
         });
 
-        expect(wrapper.find(CardWithRemainingEffort).classes()).toContain(
+        expect(wrapper.get(CardWithRemainingEffort).classes()).toContain(
             "taskboard-cell-parent-card-edit-mode"
         );
     });

@@ -39,7 +39,7 @@ describe("UpdateProperties", () => {
         };
         const event_bus_emit = jest.spyOn(EventBus, "$emit");
         const wrapper = document_action_button_factory({ item });
-        wrapper.find("[data-test=document-dropdown-update-properties]").trigger("click");
+        wrapper.get("[data-test=document-dropdown-update-properties]").trigger("click");
 
         expect(event_bus_emit).toHaveBeenCalledWith("show-update-item-metadata-modal", {
             detail: { current_item: item },

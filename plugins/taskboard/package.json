@@ -20,7 +20,7 @@
     "@types/jquery": "^3.3.31",
     "@types/mustache": "^3.2.0",
     "@types/sprintf-js": "^1.1.2",
-    "@vue/test-utils": "^1.0.0-beta.27",
+    "@vue/test-utils": "^1.0.0-beta.32",
     "jquery": "^3.4.1",
     "vue-property-decorator": "^8.4.1",
     "vuex-class": "^0.3.2"

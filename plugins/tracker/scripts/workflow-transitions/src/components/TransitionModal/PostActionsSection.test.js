@@ -100,20 +100,21 @@ describe("PostActionsSection", () => {
         });
     });
 
-    it(`when the modal is saving, it will disable the "Add another action" button`, () => {
+    it(`when the modal is saving, it will disable the "Add another action" button`, async () => {
         store.state.transitionModal.is_modal_save_running = true;
-        const add_action_button = wrapper.find("[data-test=add-post-action]");
+        await wrapper.vm.$nextTick();
+        const add_action_button = wrapper.get("[data-test=add-post-action]");
         expect(add_action_button.attributes("disabled")).toBeTruthy();
     });
 
     it(`when I click on the "Add another action" button, it will commit a mutation to create a new post action`, () => {
-        const add_action_button = wrapper.find("[data-test=add-post-action]");
+        const add_action_button = wrapper.get("[data-test=add-post-action]");
         add_action_button.trigger("click");
         expect(store.commit).toHaveBeenCalledWith("transitionModal/addPostAction");
     });
 
     describe("getComponent", () => {
-        it("displays the components which are alreay set", () => {
+        it("displays the components which are alreay set", async () => {
             store.getters["transitionModal/post_actions"] = [
                 {
                     type: "run_job",
@@ -128,13 +129,14 @@ describe("PostActionsSection", () => {
                     unique_id: "new_4",
                 },
             ];
+            await wrapper.vm.$nextTick();
             expect(wrapper.contains(RunJobAction)).toBe(true);
             expect(wrapper.contains(SetValueAction)).toBe(true);
             expect(wrapper.contains(FrozenFieldsAction)).toBe(false);
             expect(wrapper.contains(HiddenFieldsetsAction)).toBe(true);
             expect(wrapper.contains(AddToBacklogPostAction)).toBe(false);
         });
-        it("displays all the component which are in the post_actions", () => {
+        it("displays all the component which are in the post_actions", async () => {
             store.getters["transitionModal/post_actions"] = [
                 {
                     type: "run_job",
@@ -157,6 +159,7 @@ describe("PostActionsSection", () => {
                     unique_id: "new_10",
                 },
             ];
+            await wrapper.vm.$nextTick();
             expect(wrapper.contains(RunJobAction)).toBe(true);
             expect(wrapper.contains(SetValueAction)).toBe(true);
             expect(wrapper.contains(FrozenFieldsAction)).toBe(true);
@@ -164,8 +167,9 @@ describe("PostActionsSection", () => {
             expect(wrapper.contains(AddToBacklogPostAction)).toBe(true);
         });
 
-        it("displays nothing if there is no post action", () => {
+        it("displays nothing if there is no post action", async () => {
             store.getters["transitionModal/post_actions"] = [];
+            await wrapper.vm.$nextTick();
             expect(wrapper.contains(RunJobAction)).toBe(false);
             expect(wrapper.contains(SetValueAction)).toBe(false);
             expect(wrapper.contains(FrozenFieldsAction)).toBe(false);

@@ -54,7 +54,7 @@ describe("CardXrefLabel", () => {
                 label: "Story 2",
             },
         });
-        expect(wrapper.find("[data-test=xref]").classes("tlp-swatch-fiesta-red")).toBe(true);
+        expect(wrapper.get("[data-test=xref]").classes("tlp-swatch-fiesta-red")).toBe(true);
     });
 
     it("hides the label when card is in edit mode", () => {

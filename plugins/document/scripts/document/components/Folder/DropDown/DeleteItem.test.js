@@ -62,7 +62,7 @@ describe("DeleteItem", () => {
         const event_bus_emit = jest.spyOn(EventBus, "$emit");
 
         const wrapper = delete_button_factory(true, TYPE_FILE);
-        wrapper.find("[data-test=document-delete-item]").trigger("click");
+        wrapper.get("[data-test=document-delete-item]").trigger("click");
 
         expect(event_bus_emit).toHaveBeenCalledWith("show-confirm-item-deletion-modal", {
             detail: { current_item: { id: 1, user_can_write: true, type: TYPE_FILE } },

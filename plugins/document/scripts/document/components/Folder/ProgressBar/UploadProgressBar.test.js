@@ -51,7 +51,7 @@ describe("UploadProgressBar", () => {
         };
         const wrapper = upload_progress_bar({ item });
 
-        wrapper.find("[data-test=cancel-upload]").trigger("click");
+        wrapper.get("[data-test=cancel-upload]").trigger("click");
 
         expect(store.dispatch).toHaveBeenCalledWith("cancelVersionUpload", item);
     });
@@ -68,7 +68,7 @@ describe("UploadProgressBar", () => {
 
         const wrapper = upload_progress_bar({ item });
 
-        wrapper.find("[data-test=cancel-upload]").trigger("click");
+        wrapper.get("[data-test=cancel-upload]").trigger("click");
 
         expect(store.dispatch).toHaveBeenCalledWith("cancelFileUpload", item);
     });
@@ -84,7 +84,7 @@ describe("UploadProgressBar", () => {
         };
         const wrapper = upload_progress_bar({ item });
 
-        wrapper.find("[data-test=cancel-upload]").trigger("click");
+        wrapper.get("[data-test=cancel-upload]").trigger("click");
 
         expect(store.dispatch).toHaveBeenCalledWith("cancelFolderUpload", item);
     });

@@ -61,7 +61,7 @@ describe("Given a personal timetracking widget modal", () => {
     it("When add mode button is triggered, then setAddMode should be called", () => {
         const wrapper = getWidgetModalContentInstance(store);
 
-        wrapper.find("[data-test=button-set-add-mode]").trigger("click");
+        wrapper.get("[data-test=button-set-add-mode]").trigger("click");
         expect(store.commit).toHaveBeenCalledWith("setAddMode", true);
     });
 });

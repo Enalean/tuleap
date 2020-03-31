@@ -49,16 +49,17 @@ describe("ProjectName", () => {
     it(`Should not yields again user, if he just started to type its new project short name, even if the minimal length is not reached`, () => {
         wrapper = shallowMount(ProjectName, component_options);
         wrapper.vm.$data.written_chars = 0;
-        wrapper.find("[data-test=new-project-name]").setValue("t");
+        wrapper.get("[data-test=new-project-name]").setValue("t");
         expect(wrapper.vm.$data.has_error).toBe(false);
 
         expect(wrapper.contains("[data-test=project-name-is-invalid]")).toBe(false);
     });
 
-    it(`Should yields error when user has write more than 3 character ans when minimal project length is not reached`, () => {
+    it(`Should yields error when user has write more than 3 character ans when minimal project length is not reached`, async () => {
         wrapper = shallowMount(ProjectName, component_options);
         wrapper.vm.$data.written_chars = 4;
-        wrapper.find("[data-test=new-project-name]").setValue("t");
+        wrapper.get("[data-test=new-project-name]").setValue("t");
+        await wrapper.vm.$nextTick();
         expect(wrapper.vm.$data.has_error).toBe(true);
 
         expect(wrapper.contains("[data-test=project-name-is-invalid]")).toBe(true);
@@ -68,7 +69,7 @@ describe("ProjectName", () => {
         const event_bus_emit = jest.spyOn(EventBus, "$emit");
 
         wrapper = shallowMount(ProjectName, component_options);
-        wrapper.find("[data-test=new-project-name]").setValue("test");
+        wrapper.get("[data-test=new-project-name]").setValue("test");
 
         expect(wrapper.contains("[data-test=project-project-name-is-invalid]")).toBe(false);
 

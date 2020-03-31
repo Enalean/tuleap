@@ -58,7 +58,7 @@ describe("CreateNewItemVersionButton", () => {
             },
         });
 
-        wrapper.find("[data-test=docman-go-to-details]").trigger("click");
+        wrapper.get("[data-test=docman-go-to-details]").trigger("click");
 
         expect(redirect_to_url).toHaveBeenCalledWith(
             "/plugins/docman/?group_id=101&id=1&action=details&section=details"

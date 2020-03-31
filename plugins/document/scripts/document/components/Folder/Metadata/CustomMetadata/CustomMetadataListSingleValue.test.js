@@ -68,7 +68,7 @@ describe("CustomMetadataList", () => {
         await wrapper.vm.$nextTick().then(() => {});
 
         const all_options = wrapper
-            .find("[data-test=document-custom-list-select]")
+            .get("[data-test=document-custom-list-select]")
             .findAll("option");
         expect(all_options.length).toBe(3);
 
@@ -100,7 +100,7 @@ describe("CustomMetadataList", () => {
 
         expect(wrapper.contains("[data-test=document-custom-list-select]")).toBeTruthy();
 
-        const input = wrapper.find("[data-test=document-custom-list-select]");
+        const input = wrapper.get("[data-test=document-custom-list-select]");
         expect(input.element.required).toBe(true);
     });
 

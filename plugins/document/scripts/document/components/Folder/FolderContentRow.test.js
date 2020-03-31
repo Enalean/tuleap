@@ -41,6 +41,7 @@ describe("FolderContentRow", () => {
             is_uploading_new_version: false,
             is_uploading_in_collapsed_folder: false,
             type: TYPE_FILE,
+            file_type: "text",
         };
 
         store_options = {

@@ -114,7 +114,7 @@ describe("BaseCard", () => {
             const card = getCard({ is_in_edit_mode: false } as Card);
             const wrapper = getWrapper(card);
 
-            wrapper.find("[data-test=card-edit-button]").trigger("click");
+            wrapper.get("[data-test=card-edit-button]").trigger("click");
 
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
                 "swimlane/addCardToEditMode",
@@ -126,7 +126,7 @@ describe("BaseCard", () => {
             const card = getCard({ is_in_edit_mode: true } as Card);
             const wrapper = getWrapper(card);
 
-            wrapper.find("[data-test=card-edit-button]").trigger("click");
+            wrapper.get("[data-test=card-edit-button]").trigger("click");
             expect(wrapper.vm.$store.commit).not.toHaveBeenCalledWith(
                 "swimlane/addCardToEditMode",
                 expect.any(Object)
@@ -187,7 +187,7 @@ describe("BaseCard", () => {
 
             const label = "Lorem ipsum";
             wrapper.setData({ label });
-            const edit_label = wrapper.find(LabelEditor);
+            const edit_label = wrapper.get(LabelEditor);
             edit_label.vm.$emit("save");
 
             expect(wrapper.vm.$store.commit).not.toHaveBeenCalledWith(
@@ -228,7 +228,7 @@ describe("BaseCard", () => {
             const wrapper = getWrapper(card);
 
             wrapper.setData({ label: "toto" });
-            const edit_label = wrapper.find(LabelEditor);
+            const edit_label = wrapper.get(LabelEditor);
             edit_label.vm.$emit("save");
 
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
@@ -244,7 +244,7 @@ describe("BaseCard", () => {
 
             wrapper.setData({ label: "toto" });
             wrapper.setData({ assignees: [{ id: 123 }, { id: 234 }] });
-            const edit_label = wrapper.find(LabelEditor);
+            const edit_label = wrapper.get(LabelEditor);
             edit_label.vm.$emit("save");
 
             expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("swimlane/saveCard", {
@@ -307,7 +307,7 @@ describe("BaseCard", () => {
 
             jest.spyOn(scroll_helper, "scrollToItemIfNeeded").mockImplementation();
 
-            wrapper.find("[data-test=card-edit-button]").trigger("click");
+            wrapper.get("[data-test=card-edit-button]").trigger("click");
 
             jest.runAllTimers();
             expect(scroll_helper.scrollToItemIfNeeded).toHaveBeenCalled();

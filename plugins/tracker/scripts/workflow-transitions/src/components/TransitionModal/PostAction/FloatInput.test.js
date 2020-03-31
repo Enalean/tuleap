@@ -42,7 +42,7 @@ describe("FloatInput", () => {
 
     describe("when changing value", () => {
         beforeEach(() => {
-            const input = wrapper.find("input");
+            const input = wrapper.get("input");
             input.element.value = "4.56";
             input.trigger("input");
         });
@@ -55,7 +55,7 @@ describe("FloatInput", () => {
 
     describe("when trying to input not float value", () => {
         beforeEach(() => {
-            const input = wrapper.find("input");
+            const input = wrapper.get("input");
             input.element.value = "invalid format";
             input.trigger("input");
         });

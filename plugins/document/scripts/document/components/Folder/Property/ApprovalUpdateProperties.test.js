@@ -35,7 +35,7 @@ describe("ApprovalUpdateProperties", () => {
         Then it raise the 'action' event with the value 'copy'`, () => {
         const wrapper = approval_update_factory();
 
-        const radio_input = wrapper.find(
+        const radio_input = wrapper.get(
             'input[id="document-new-file-upload-approval-table-action-copy"]'
         );
         radio_input.setChecked();
@@ -47,7 +47,7 @@ describe("ApprovalUpdateProperties", () => {
         Then it raise the 'action' event with the value 'reset'`, () => {
         const wrapper = approval_update_factory();
 
-        const radio_input = wrapper.find(
+        const radio_input = wrapper.get(
             'input[id="document-new-file-upload-approval-table-action-reset"]'
         );
         radio_input.setChecked();
@@ -59,7 +59,7 @@ describe("ApprovalUpdateProperties", () => {
         Then it raise the 'action' event with the value 'empty'`, () => {
         const wrapper = approval_update_factory();
 
-        const radio_input = wrapper.find(
+        const radio_input = wrapper.get(
             'input[id="document-new-file-upload-approval-table-action-empty"]'
         );
         radio_input.setChecked();

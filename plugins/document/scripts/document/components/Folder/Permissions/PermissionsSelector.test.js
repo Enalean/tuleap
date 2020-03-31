@@ -49,7 +49,7 @@ describe("PermissionsSelector", () => {
         });
 
         expect(wrapper.text()).toContain(permission_label);
-        const all_options = wrapper.find("select").findAll("option");
+        const all_options = wrapper.get("select").findAll("option");
         expect(all_options.length).toBe(4);
         const selected_option_wrappers = all_options.wrappers.filter(
             (option_wrapper) => option_wrapper.element.selected
@@ -67,13 +67,13 @@ describe("PermissionsSelector", () => {
             selected_ugroups: [],
         });
 
-        wrapper.find("select").setValue(ugroup_1.id);
+        wrapper.get("select").setValue(ugroup_1.id);
         const emitted_input = wrapper.emitted("input");
         expect(emitted_input.length).toBe(1);
         expect(emitted_input[0]).toEqual([[{ id: ugroup_1.id }]]);
     });
 
-    it("Refresh selected user groups on fresh information", () => {
+    it("Refresh selected user groups on fresh information", async () => {
         const ugroup_1 = { id: "177", label: "My group 177" };
         const ugroup_2 = { id: "178", label: "My group 178" };
 
@@ -88,11 +88,13 @@ describe("PermissionsSelector", () => {
             project_ugroups: [ugroup_1, ugroup_2],
             selected_ugroups: [ugroup_2],
         });
+        await wrapper.vm.$nextTick();
 
-        const all_options = wrapper.find("select").findAll("option");
+        const all_options = wrapper.get("select").findAll("option");
         const selected_option_wrappers = all_options.wrappers.filter(
             (option_wrapper) => option_wrapper.element.selected
         );
+
         expect(selected_option_wrappers.length).toBe(1);
     });
 });

@@ -70,7 +70,7 @@ describe("CustomMetadataListMultipleValue", () => {
         await wrapper.vm.$nextTick().then(() => {});
 
         const all_options = wrapper
-            .find("[data-test=document-custom-list-multiple-select]")
+            .get("[data-test=document-custom-list-multiple-select]")
             .findAll("option");
 
         expect(all_options.length).toBe(3);

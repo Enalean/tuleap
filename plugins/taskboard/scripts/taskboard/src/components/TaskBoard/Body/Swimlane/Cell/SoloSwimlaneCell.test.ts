@@ -70,7 +70,7 @@ describe(`SoloSwimlaneCell`, () => {
 
             const wrapper = createWrapper(done_column, swimlane);
 
-            const solo_card = wrapper.find(CardWithRemainingEffort);
+            const solo_card = wrapper.get(CardWithRemainingEffort);
 
             expect(solo_card.classes()).toContain("taskboard-draggable-item");
             expect(solo_card.attributes("draggable")).toBe("true");
@@ -81,7 +81,7 @@ describe(`SoloSwimlaneCell`, () => {
 
             const wrapper = createWrapper(done_column, swimlane);
 
-            const solo_card = wrapper.find(CardWithRemainingEffort);
+            const solo_card = wrapper.get(CardWithRemainingEffort);
 
             expect(solo_card.classes()).not.toContain("taskboard-draggable-item");
             expect(solo_card.attributes("draggable")).toBeFalsy();

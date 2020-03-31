@@ -39,7 +39,7 @@ describe("ExpandedHeaderCell", () => {
             },
         });
 
-        const label = wrapper.find("[data-test=label]");
+        const label = wrapper.get("[data-test=label]");
         expect(label.classes("taskboard-header-label")).toBe(true);
         expect(label.text()).toBe("To do");
     });

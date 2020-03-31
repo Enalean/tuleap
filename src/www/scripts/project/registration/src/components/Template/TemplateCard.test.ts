@@ -64,9 +64,9 @@ describe("CardWithChildren", () => {
         };
         const wrapper = createWrapper(tuleap_template);
 
-        wrapper.find("[data-test=project-registration-card-label]").trigger("click");
+        wrapper.get("[data-test=project-registration-card-label]").trigger("click");
 
-        const radio: HTMLInputElement = wrapper.find("[data-test=project-registration-radio]")
+        const radio: HTMLInputElement = wrapper.get("[data-test=project-registration-radio]")
             .element as HTMLInputElement;
         expect(radio.checked).toBe(true);
     });
@@ -82,7 +82,7 @@ describe("CardWithChildren", () => {
 
         const wrapper = createWrapper(tuleap_template);
 
-        wrapper.find("[data-test=project-registration-radio]").trigger("change");
+        wrapper.get("[data-test=project-registration-radio]").trigger("change");
 
         expect(store.dispatch).toHaveBeenCalledWith("setSelectedTemplate", tuleap_template);
     });

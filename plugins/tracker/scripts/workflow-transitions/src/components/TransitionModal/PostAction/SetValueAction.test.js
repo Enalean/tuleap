@@ -75,7 +75,7 @@ describe("SetValueAction", () => {
 
     it("Shows date field in date fields group", () => {
         const date_group_selector = `optgroup[data-test-type="${DATE_FIELD}-group"]`;
-        const date_select_group = wrapper.find(date_group_selector);
+        const date_select_group = wrapper.get(date_group_selector);
         expect(date_select_group.contains('[data-test-type="field_43"]')).toBeTruthy();
     });
 
@@ -93,16 +93,17 @@ describe("SetValueAction", () => {
         });
 
         it("shows a disabled option", () => {
-            const date_field_option = wrapper.find('[data-test-type="field_43"]');
+            const date_field_option = wrapper.get('[data-test-type="field_43"]');
             expect(date_field_option.attributes().disabled).toBeTruthy();
         });
     });
 
     describe("when there are no valid fields", () => {
-        it("disables the option", () => {
+        it("disables the option", async () => {
             store.getters["transitionModal/set_value_action_fields"] = [];
+            await wrapper.vm.$nextTick();
 
-            expect(wrapper.find("[data-test=set_field]").attributes("disabled")).toBeTruthy();
+            expect(wrapper.get("[data-test=set_field]").attributes("disabled")).toBeTruthy();
         });
     });
 
@@ -120,7 +121,7 @@ describe("SetValueAction", () => {
         });
 
         it("shows post action value", () => {
-            expect(wrapper.find(DateInput).props().value).toBe("current");
+            expect(wrapper.get(DateInput).props().value).toBe("current");
         });
     });
 
@@ -135,7 +136,7 @@ describe("SetValueAction", () => {
 
         it("shows value of action", () => {
             expect(wrapper.vm.post_action_field).toEqual(int_field);
-            expect(wrapper.find(IntInput).props().value).toBe(200);
+            expect(wrapper.get(IntInput).props().value).toBe(200);
         });
     });
 
@@ -150,7 +151,7 @@ describe("SetValueAction", () => {
 
         it("shows value of action", () => {
             expect(wrapper.vm.post_action_field).toEqual(float_field);
-            expect(wrapper.find(FloatInput).props().value).toBe(12.34);
+            expect(wrapper.get(FloatInput).props().value).toBe(12.34);
         });
     });
 });

@@ -121,17 +121,17 @@ describe(`TransitionModal`, () => {
         });
 
         it(`will disable the Cancel button`, () => {
-            const cancel_button = wrapper.find("[data-test=cancel-button]");
+            const cancel_button = wrapper.get("[data-test=cancel-button]");
             expect(cancel_button.attributes("disabled")).toBe("disabled");
         });
 
         it(`will disable the "Save configuration" button`, () => {
-            const save_button = wrapper.find("[data-test=save-button]");
+            const save_button = wrapper.get("[data-test=save-button]");
             expect(save_button.attributes("disabled")).toBe("disabled");
         });
 
         it(`will show a spinner icon on the "Save configuration" button`, () => {
-            const save_spinner_icon = wrapper.find("[data-test=save-button-spinner]");
+            const save_spinner_icon = wrapper.get("[data-test=save-button-spinner]");
             expect(save_spinner_icon.exists()).toBe(true);
         });
     });

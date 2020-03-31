@@ -65,7 +65,7 @@ describe("TroveCategoryList -", () => {
         const wrapper = factory;
         (wrapper.findAll("option").at(2).element as HTMLOptionElement).selected = true;
 
-        wrapper.find("[data-test=trove-category-list]").trigger("change");
+        wrapper.get("[data-test=trove-category-list]").trigger("change");
 
         expect(event_bus_emit).toHaveBeenCalledWith("choose-trove-cat", {
             category_id: "1",

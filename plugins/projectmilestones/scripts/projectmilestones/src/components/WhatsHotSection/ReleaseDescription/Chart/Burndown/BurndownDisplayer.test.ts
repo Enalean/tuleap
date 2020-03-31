@@ -83,7 +83,7 @@ describe("BurndownDisplayer", () => {
             release_data,
         };
         const wrapper = await getPersonalWidgetInstance(store_options);
-        const burndown_error = wrapper.find(ChartError);
+        const burndown_error = wrapper.get(ChartError);
 
         expect(burndown_error.attributes("is_under_calculation")).toBeTruthy();
         expect(burndown_error.attributes("has_error_start_date")).toBeFalsy();
@@ -110,7 +110,7 @@ describe("BurndownDisplayer", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        const burndown_error = wrapper.find(ChartError);
+        const burndown_error = wrapper.get(ChartError);
 
         expect(burndown_error.attributes("is_under_calculation")).toBeFalsy();
         expect(burndown_error.attributes("has_error_start_date")).toBeTruthy();
@@ -137,7 +137,7 @@ describe("BurndownDisplayer", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        const burndown_error = wrapper.find(ChartError);
+        const burndown_error = wrapper.get(ChartError);
 
         expect(burndown_error.attributes("is_under_calculation")).toBeFalsy();
         expect(burndown_error.attributes("has_error_start_date")).toBeFalsy();
@@ -164,7 +164,7 @@ describe("BurndownDisplayer", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        const burndown_error = wrapper.find(ChartError);
+        const burndown_error = wrapper.get(ChartError);
 
         expect(burndown_error.attributes("is_under_calculation")).toBeFalsy();
         expect(burndown_error.attributes("has_error_start_date")).toBeFalsy();
@@ -191,7 +191,7 @@ describe("BurndownDisplayer", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        const burndown_error = wrapper.find(ChartError);
+        const burndown_error = wrapper.get(ChartError);
 
         expect(burndown_error.attributes("is_under_calculation")).toBeFalsy();
         expect(burndown_error.attributes("has_error_start_date")).toBeTruthy();
@@ -218,7 +218,7 @@ describe("BurndownDisplayer", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        const burndown_error = wrapper.find(ChartError);
+        const burndown_error = wrapper.get(ChartError);
 
         expect(burndown_error.attributes("is_under_calculation")).toBeTruthy();
         expect(burndown_error.attributes("has_error_start_date")).toBeFalsy();
@@ -271,7 +271,7 @@ describe("BurndownDisplayer", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        const burndown_error = wrapper.find(ChartError);
+        const burndown_error = wrapper.get(ChartError);
 
         expect(burndown_error.attributes("has_error_duration")).toBeTruthy();
     });

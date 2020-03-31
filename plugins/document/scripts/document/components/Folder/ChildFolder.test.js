@@ -106,7 +106,7 @@ describe("ChildFolder", () => {
     });
 
     it(`Given route is updated to "folder" and given folder has changed (=> redirection into a folder)
-        Then the folder is loaded`, () => {
+        Then the folder is loaded`, async () => {
         store.state.current_folder = { id: 10, title: "current folder" };
 
         router.push({
@@ -115,7 +115,7 @@ describe("ChildFolder", () => {
                 preview_item_id: 10,
             },
         });
-        factory();
+        const wrapper = factory();
 
         router.push({
             name: "folder",
@@ -123,13 +123,14 @@ describe("ChildFolder", () => {
                 item_id: 20,
             },
         });
+        await wrapper.vm.$nextTick();
 
         expect(store.dispatch).toHaveBeenCalledWith("removeQuickLook");
         expect(store.dispatch).toHaveBeenCalledWith("loadFolder", 20);
     });
 
     it(`Given route is updated to "folder" and given folder is the same (=> close preview)
-        Then we only close quick look`, () => {
+        Then we only close quick look`, async () => {
         store.state.current_folder = { id: 10, title: "current folder" };
 
         router.push({
@@ -138,7 +139,7 @@ describe("ChildFolder", () => {
                 preview_item_id: 20,
             },
         });
-        factory();
+        const wrapper = factory();
 
         router.push({
             name: "folder",
@@ -146,6 +147,7 @@ describe("ChildFolder", () => {
                 preview_item_id: 20,
             },
         });
+        await wrapper.vm.$nextTick();
 
         expect(store.dispatch).toHaveBeenCalledWith("removeQuickLook");
         expect(store.dispatch).not.toHaveBeenCalledWith("loadFolder");

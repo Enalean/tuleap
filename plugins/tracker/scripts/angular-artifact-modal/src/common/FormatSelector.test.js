@@ -71,7 +71,7 @@ describe(`FormatSelector`, () => {
             disabled = true;
 
             const wrapper = getInstance();
-            const format_selectbox = wrapper.find("[data-test=format]");
+            const format_selectbox = wrapper.get("[data-test=format]");
 
             expect(format_selectbox.attributes("disabled")).toBe("disabled");
         });

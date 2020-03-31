@@ -68,13 +68,14 @@ describe("ErrorModal", () => {
         expect(modal_show).toHaveBeenCalledTimes(1);
     });
 
-    it("display more details when user click on show error", () => {
+    it("display more details when user click on show error", async () => {
         const error_message = "Full error message with details";
         const wrapper = createWrapper(error_message);
 
-        wrapper.find("[data-test=show-details]").trigger("click");
+        wrapper.get("[data-test=show-details]").trigger("click");
+        await wrapper.vm.$nextTick();
 
-        const details = wrapper.find("[data-test=details]");
+        const details = wrapper.get("[data-test=details]");
         expect(details.text()).toEqual(error_message);
     });
 

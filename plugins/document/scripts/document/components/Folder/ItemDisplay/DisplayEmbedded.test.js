@@ -108,14 +108,14 @@ describe("DisplayEmbedded", () => {
 
         const wrapper = shallowMount(DisplayEmbedded, { store, ...component_options });
 
-        await wrapper.vm.$nextTick().then(() => {});
-
+        await wrapper.vm.$nextTick();
         jest.spyOn(wrapper.vm, "loadDocumentWithAscendentHierarchy").mockReturnValue({
             id: 10,
             embedded_properties: {
                 content: "<p>my custom content </p>",
             },
         });
+        await wrapper.vm.$nextTick();
 
         expect(wrapper.find(DisplayEmbeddedContent).exists()).toBeTruthy();
         expect(wrapper.find(DisplayEmbeddedSpinner).exists()).toBeFalsy();

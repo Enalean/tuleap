@@ -178,19 +178,19 @@ describe("FilledPreConditionsSection", () => {
         });
 
         it(`will disable the "Authorized ugroups" selectbox`, () => {
-            const authorized_ugroups_selectbox = wrapper.find(
+            const authorized_ugroups_selectbox = wrapper.get(
                 "[data-test=authorized-ugroups-select]"
             );
             expect(authorized_ugroups_selectbox.attributes("disabled")).toBeTruthy();
         });
 
         it(`will disable the "Not empty fields" select`, () => {
-            const not_empty_field_select = wrapper.find("[data-test=not-empty-field-select]");
+            const not_empty_field_select = wrapper.get("[data-test=not-empty-field-select]");
             expect(not_empty_field_select.attributes("disabled")).toBeTruthy();
         });
 
         it(`will disable the "Not empty comment" checkbox`, () => {
-            const not_empty_comment_checkbox = wrapper.find(
+            const not_empty_comment_checkbox = wrapper.get(
                 "[data-test=not-empty-comment-checkbox]"
             );
             expect(not_empty_comment_checkbox.attributes("disabled")).toBeTruthy();

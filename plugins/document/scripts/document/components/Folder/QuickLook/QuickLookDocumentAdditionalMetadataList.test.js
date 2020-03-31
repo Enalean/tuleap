@@ -58,7 +58,7 @@ describe("QuickLookDocumentAdditionalMetadataList", () => {
 
             const wrapper = metadata_factory(metadata_date);
 
-            const label_element = wrapper.find("[data-test=metadata-list-label]");
+            const label_element = wrapper.get("[data-test=metadata-list-label]");
             expect(label_element).toBeTruthy();
             expect(label_element.text()).toBe("Validity");
         });
@@ -101,7 +101,7 @@ describe("QuickLookDocumentAdditionalMetadataList", () => {
             const wrapper = metadata_factory(metadata_list);
 
             expect(wrapper.contains("ul")).toBeFalsy();
-            expect(wrapper.find("p").text()).toBe("value 1");
+            expect(wrapper.get("p").text()).toBe("value 1");
         });
     });
 
@@ -121,7 +121,7 @@ describe("QuickLookDocumentAdditionalMetadataList", () => {
 
             const wrapper = metadata_factory(metadata_string);
 
-            const displayed_metadata = wrapper.find("[id=document-bad-lyrics]");
+            const displayed_metadata = wrapper.get("[id=document-bad-lyrics]");
 
             expect(wrapper.contains("ul")).toBeFalsy();
             expect(wrapper.contains("[data-test=metadata-list-date]")).toBeFalsy();
@@ -144,7 +144,7 @@ describe("QuickLookDocumentAdditionalMetadataList", () => {
 
         const wrapper = metadata_factory(metadata_empty);
 
-        const displayed_metadata = wrapper.find("[id=document-silence]");
+        const displayed_metadata = wrapper.get("[id=document-silence]");
 
         expect(wrapper.contains("ul")).toBeFalsy();
         expect(wrapper.contains("[data-test=metadata-list-date]")).toBeFalsy();

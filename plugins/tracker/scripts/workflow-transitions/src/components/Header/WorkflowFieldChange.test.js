@@ -55,17 +55,18 @@ describe(`WorkflowFieldChange`, () => {
         jest.spyOn(tlp, "modal").mockReturnValue(modal);
         createWrapper();
 
-        const change_remove_button = wrapper.find("[data-test=change-or-remove-button]");
+        const change_remove_button = wrapper.get("[data-test=change-or-remove-button]");
         change_remove_button.trigger("click");
 
         expect(modal.show).toHaveBeenCalled();
     });
 
     describe(`when an operation is running`, () => {
-        it(`will disable the "Change or remove" button`, () => {
+        it(`will disable the "Change or remove" button`, async () => {
             createWrapper();
             store.state.is_operation_running = true;
-            const change_remove_button = wrapper.find("[data-test=change-or-remove-button]");
+            await wrapper.vm.$nextTick();
+            const change_remove_button = wrapper.get("[data-test=change-or-remove-button]");
             expect(change_remove_button.attributes("disabled")).toBeTruthy();
         });
     });

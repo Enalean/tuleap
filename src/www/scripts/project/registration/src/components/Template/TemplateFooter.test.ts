@@ -63,26 +63,28 @@ describe("TemplateFooter", () => {
     });
 
     describe("Next button", () => {
-        it(`Enables the 'Next' button when template is selected`, () => {
+        it(`Enables the 'Next' button when template is selected`, async () => {
             const wrapper = factory;
 
-            const next_button: HTMLButtonElement = wrapper.find(
+            const next_button: HTMLButtonElement = wrapper.get(
                 "[data-test=project-registration-next-button]"
             ).element as HTMLButtonElement;
 
             expect(next_button.getAttribute("disabled")).toBe("disabled");
 
             wrapper.vm.$store.getters.is_template_selected = true;
+            await wrapper.vm.$nextTick();
 
             expect(next_button.getAttribute("disabled")).toBeNull();
         });
 
-        it(`Go to 'Project information' step when the 'Next' button is clicked`, () => {
+        it(`Go to 'Project information' step when the 'Next' button is clicked`, async () => {
             const wrapper = factory;
 
             wrapper.vm.$store.getters.is_template_selected = true;
+            await wrapper.vm.$nextTick();
 
-            wrapper.find("[data-test=project-registration-next-button]").trigger("click");
+            wrapper.get("[data-test=project-registration-next-button]").trigger("click");
 
             expect(wrapper.vm.$route.name).toBe("information");
         });
@@ -99,10 +101,10 @@ describe("TemplateFooter", () => {
             });
 
             wrapper.vm.$store.getters.is_template_selected = true;
+            await wrapper.vm.$nextTick();
 
-            const template_footer: HTMLElement = (wrapper.find(
-                "[data-test=project-template-footer]"
-            ).element as unknown) as HTMLElement;
+            const template_footer: HTMLElement = (wrapper.get("[data-test=project-template-footer]")
+                .element as unknown) as HTMLElement;
 
             expect(template_footer.classList).toContain("pinned");
         });
@@ -112,9 +114,8 @@ describe("TemplateFooter", () => {
 
             wrapper.vm.$store.getters.is_template_selected = true;
 
-            const template_footer: HTMLElement = (wrapper.find(
-                "[data-test=project-template-footer]"
-            ).element as unknown) as HTMLElement;
+            const template_footer: HTMLElement = (wrapper.get("[data-test=project-template-footer]")
+                .element as unknown) as HTMLElement;
 
             expect(template_footer.classList).not.toContain("pinned");
         });
@@ -123,9 +124,8 @@ describe("TemplateFooter", () => {
             const wrapper = factory;
 
             wrapper.vm.$store.getters.is_template_selected = false;
-            const template_footer: HTMLElement = (wrapper.find(
-                "[data-test=project-template-footer]"
-            ).element as unknown) as HTMLElement;
+            const template_footer: HTMLElement = (wrapper.get("[data-test=project-template-footer]")
+                .element as unknown) as HTMLElement;
 
             expect(template_footer.classList).not.toContain("pinned");
         });

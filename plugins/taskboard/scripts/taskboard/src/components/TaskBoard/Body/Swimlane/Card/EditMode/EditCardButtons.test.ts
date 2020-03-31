@@ -76,7 +76,7 @@ describe("EditCardButtons", () => {
             const wrapper = createWrapper(card);
             const event_bus_emit = jest.spyOn(EventBus, "$emit");
 
-            wrapper.find(CancelSaveButtons).vm.$emit("cancel");
+            wrapper.get(CancelSaveButtons).vm.$emit("cancel");
 
             expect(event_bus_emit).toHaveBeenCalledWith(TaskboardEvent.CANCEL_CARD_EDITION, card);
         });
@@ -89,7 +89,7 @@ describe("EditCardButtons", () => {
             const wrapper = createWrapper(card);
             const event_bus_emit = jest.spyOn(EventBus, "$emit");
 
-            wrapper.find(CancelSaveButtons).vm.$emit("save");
+            wrapper.get(CancelSaveButtons).vm.$emit("save");
 
             expect(event_bus_emit).toHaveBeenCalledWith(TaskboardEvent.SAVE_CARD_EDITION, card);
         });
@@ -101,7 +101,7 @@ describe("EditCardButtons", () => {
             is_in_edit_mode: true,
             is_being_saved: true,
         } as Card);
-        const buttons = wrapper.find(CancelSaveButtons);
+        const buttons = wrapper.get(CancelSaveButtons);
         expect(buttons.props("is_action_ongoing")).toBe(true);
     });
 
@@ -112,7 +112,7 @@ describe("EditCardButtons", () => {
             remaining_effort: null,
             is_being_saved: false,
         } as Card);
-        const buttons = wrapper.find(CancelSaveButtons);
+        const buttons = wrapper.get(CancelSaveButtons);
         expect(buttons.props("is_action_ongoing")).toBe(false);
     });
 
@@ -123,7 +123,7 @@ describe("EditCardButtons", () => {
             remaining_effort: { is_in_edit_mode: true, is_being_saved: true },
             is_being_saved: false,
         } as Card);
-        const buttons = wrapper.find(CancelSaveButtons);
+        const buttons = wrapper.get(CancelSaveButtons);
         expect(buttons.props("is_action_ongoing")).toBe(true);
     });
 });

@@ -55,12 +55,12 @@ describe("RunJobAction", () => {
     const jobUrlInputSelector = '[data-test-type="job-url"]';
 
     it("shows job url of action", () => {
-        expect(wrapper.find(jobUrlInputSelector).element.value).toBe("http://my-url.test");
+        expect(wrapper.get(jobUrlInputSelector).element.value).toBe("http://my-url.test");
     });
 
     describe("when modifying job url", () => {
         beforeEach(() => {
-            wrapper.find(jobUrlInputSelector).setValue("http://new-url.test");
+            wrapper.get(jobUrlInputSelector).setValue("http://new-url.test");
         });
 
         it("updates store", () => {

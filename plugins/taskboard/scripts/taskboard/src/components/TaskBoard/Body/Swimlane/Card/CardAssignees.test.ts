@@ -109,7 +109,7 @@ describe("CardAssignees", () => {
             { assigned_to_field: { id: 123 } } as Tracker
         );
 
-        const icon = wrapper.find("[data-test=icon]");
+        const icon = wrapper.get("[data-test=icon]");
         expect(icon.classes()).toContain("fa");
         expect(icon.classes()).toContain("fa-user-plus");
         expect(icon.classes()).toContain("taskboard-card-assignees-add-icon");
@@ -129,7 +129,7 @@ describe("CardAssignees", () => {
             { assigned_to_field: { id: 123 } } as Tracker
         );
 
-        const icon = wrapper.find("[data-test=icon]");
+        const icon = wrapper.get("[data-test=icon]");
         expect(icon.classes()).toContain("fa");
         expect(icon.classes()).toContain("fa-tlp-user-pencil");
         expect(icon.classes()).toContain("taskboard-card-assignees-edit-icon");
@@ -148,6 +148,7 @@ describe("CardAssignees", () => {
             [{ id: 1, display_name: "Steeve" }] as UserForPeoplePicker[];
 
         wrapper.trigger("click");
+        await wrapper.vm.$nextTick();
 
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith(
             "swimlane/loadPossibleAssignees",
@@ -158,7 +159,7 @@ describe("CardAssignees", () => {
         expect(wrapper.classes()).not.toContain("taskboard-card-assignees-edit-mode");
         expect(wrapper.contains(PeoplePicker)).toBe(false);
 
-        const icon = wrapper.find("[data-test=icon]");
+        const icon = wrapper.get("[data-test=icon]");
         expect(icon.classes()).toContain("fa");
         expect(icon.classes()).toContain("fa-circle-o-notch");
         expect(icon.classes()).toContain("fa-spin");

@@ -84,14 +84,15 @@ describe("TransitionMatrixContent", () => {
             });
 
             describe("during another operation running", () => {
-                it("transition creation is disabled", () => {
+                it("transition creation is disabled", async () => {
                     store.state.is_operation_running = true;
+                    await wrapper.vm.$nextTick();
 
-                    expect(wrapper.find(create_transition_selector).classes()).toContain(
+                    expect(wrapper.get(create_transition_selector).classes()).toContain(
                         "tracker-workflow-transition-action-disabled"
                     );
 
-                    wrapper.find(create_transition_selector).trigger("click");
+                    wrapper.get(create_transition_selector).trigger("click");
 
                     expect(store.commit).not.toHaveBeenCalledWith("createTransition");
                 });
@@ -106,7 +107,7 @@ describe("TransitionMatrixContent", () => {
                             resolveCreateTransition = resolve;
                         })
                     );
-                    wrapper.find(create_transition_selector).trigger("click");
+                    wrapper.get(create_transition_selector).trigger("click");
                 });
 
                 it("shows a spinner", () => {
@@ -164,7 +165,7 @@ describe("TransitionMatrixContent", () => {
                 });
 
                 it("shows an 'updated' animation", () => {
-                    const configure_transition_button = wrapper.find(
+                    const configure_transition_button = wrapper.get(
                         transition_configuration_selector
                     );
 

@@ -110,8 +110,9 @@ describe("BaseTrackerWorkflowTransitions", () => {
                 expect(wrapper.contains(TransitionRulesEnforcementWarning)).toBeFalsy();
             });
 
-            it("when base field is not configured and there is no selectbox field, then it shows that first configuration is impossible", () => {
+            it("when base field is not configured and there is no selectbox field, then it shows that first configuration is impossible", async () => {
                 store.getters.has_selectbox_fields = false;
+                await wrapper.vm.$nextTick();
 
                 expect(wrapper.contains(FirstConfigurationImpossibleWarning)).toBeTruthy();
             });

@@ -76,7 +76,7 @@ describe("ReleaseBadgesOpenSprint", () => {
         it("When the component is rendered, Then the label of sprint is displayed", async () => {
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            expect(wrapper.find("[data-test=sprint-label]").text()).toEqual("mile");
+            expect(wrapper.get("[data-test=sprint-label]").text()).toEqual("mile");
         });
 
         it("When the component is rendered, Then ReleaseBadgesButtonOpenSprint is rendered", async () => {
