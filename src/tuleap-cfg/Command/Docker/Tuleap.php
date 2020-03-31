@@ -57,7 +57,7 @@ final class Tuleap
                 '--web-server-ip=' . $web_server_ip,
             ]
         )->mustRun();
-        $this->process_factory->getProcess(['/usr/bin/tuleap', 'config-set', ServiceControl::FORGECONFIG_INIT_MODE, ServiceControl::SUPERVISORD])->mustRun();
+        $this->process_factory->getProcess(['/usr/bin/tuleap', 'config-set', ServiceControl::FORGECONFIG_INIT_MODE, ServiceControl::SUPERVISORD])->setTimeout(null)->mustRun();
     }
 
     public function update(OutputInterface $output): void
@@ -80,7 +80,7 @@ final class Tuleap
     private function runForgeUpgrade(OutputInterface $output): void
     {
         $output->writeln('<info>Run forgeupgrade</info>');
-        $this->process_factory->getProcess(['/usr/lib/forgeupgrade/bin/forgeupgrade', '--config=/etc/tuleap/forgeupgrade/config.ini', 'update'])->setTimeout(0)->mustRun();
+        $this->process_factory->getProcess(['/usr/lib/forgeupgrade/bin/forgeupgrade', '--config=/etc/tuleap/forgeupgrade/config.ini', 'update'])->setTimeout(null)->mustRun();
     }
 
     private function queueSystemCheck(OutputInterface $output): void
