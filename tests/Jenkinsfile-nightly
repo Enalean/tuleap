@@ -73,6 +73,20 @@ pipeline {
                     }
                     post { always { junit 'results/api-rest/*/rest_tests.xml' } }
                 }
+                stage('SOAP') {
+                    stages {
+                        stage('SOAP PHP 7.3 MariaDB 10.3') {
+                            steps { script { actions.runSOAPTests('mariadb103', '73') } }
+                        }
+                        stage('SOAP PHP 7.4 MariaDB 10.3') {
+                            steps { script { actions.runSOAPTests('mariadb103', '74') } }
+                        }
+                        stage('SOAP PHP 7.4 MySQL 5.7') {
+                            steps { script { actions.runSOAPTests('mysql57', '74') } }
+                        }
+                    }
+                    post { always { junit 'results/soap/*/rest_tests.xml' } }
+                }
                 stage('DB Integration') {
                     stages {
                         stage('DB PHP 7.3 MariaDB 10.3') {
