@@ -29,10 +29,11 @@ import {
     UploadError,
 } from "./file-upload-handler-factory.js";
 import { isThereAnImageWithDataURI } from "./image-urls-finder.js";
+import { getPOFileFromLocale } from "../gettext/gettext-init";
 
 export async function initiateUploadImage(ckeditor_instance, options, element) {
     const gettext_provider = await initGettext(options.language, "rich-text-editor", (locale) =>
-        import(/* webpackChunkName: "rich-text-editor-po-" */ `./po/${locale}.po`)
+        import(/* webpackChunkName: "rich-text-editor-po-" */ "./po/" + getPOFileFromLocale(locale))
     );
     if (!isUploadEnabled(element)) {
         disablePasteOfImages(ckeditor_instance, gettext_provider);

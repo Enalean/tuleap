@@ -19,6 +19,13 @@
 
 import Gettext from "node-gettext";
 
+export function getPOFileFromLocale(locale) {
+    if (!locale.match(/[a-z]{2,3}_[A-Z]{2,3}/)) {
+        throw new Error(`${locale} does not not seem to be a locale string`);
+    }
+    return locale + ".po";
+}
+
 export async function initGettext(locale, domain, load_translations_callback) {
     const gettext_provider = new Gettext();
     if (locale !== "en_US") {

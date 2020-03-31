@@ -171,30 +171,44 @@ export default {
             };
         },
         cell_title_component_name() {
-            let name = "Document";
             switch (this.item.type) {
                 case TYPE_FILE:
                     if (this.item.is_uploading) {
-                        name = "FileUploading";
-                    } else {
-                        name = "File";
+                        return () =>
+                            import(
+                                /* webpackChunkName: "document-cell-title-file-uploading" */ `./ItemTitle/FileUploadingCellTitle.vue`
+                            );
                     }
-
-                    break;
+                    return () =>
+                        import(
+                            /* webpackChunkName: "document-cell-title-file" */ `./ItemTitle/FileCellTitle.vue`
+                        );
                 case TYPE_EMBEDDED:
+                    return () =>
+                        import(
+                            /* webpackChunkName: "document-cell-title-embedded" */ `./ItemTitle/EmbeddedCellTitle.vue`
+                        );
                 case TYPE_FOLDER:
+                    return () =>
+                        import(
+                            /* webpackChunkName: "document-cell-title-folder" */ `./ItemTitle/FolderCellTitle.vue`
+                        );
                 case TYPE_LINK:
+                    return () =>
+                        import(
+                            /* webpackChunkName: "document-cell-title-link" */ `./ItemTitle/LinkCellTitle.vue`
+                        );
                 case TYPE_WIKI:
-                    name = this.item.type;
-                    name = name.charAt(0).toUpperCase() + name.slice(1);
-                    break;
+                    return () =>
+                        import(
+                            /* webpackChunkName: "document-cell-title-wiki" */ `./ItemTitle/WikiCellTitle.vue`
+                        );
                 default:
-                    break;
+                    return () =>
+                        import(
+                            /* webpackChunkName: "document-cell-title-document" */ `./ItemTitle/DocumentCellTitle.vue`
+                        );
             }
-            return () =>
-                import(
-                    /* webpackChunkName: "document-cell-title-" */ `./ItemTitle/${name}CellTitle.vue`
-                );
         },
         colspan() {
             return this.item.is_uploading ? 4 : 1;

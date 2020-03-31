@@ -18,7 +18,7 @@
  */
 
 import Vue from "vue";
-import { initVueGettext } from "../../../tuleap/gettext/vue-gettext-init";
+import { initVueGettext, getPOFileFromLocale } from "../../../tuleap/gettext/vue-gettext-init";
 import App from "./src/components/App.vue";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -32,7 +32,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     await initVueGettext(Vue, (locale: string) =>
-        import(/* webpackChunkName: "project-admin-banner-po-" */ `./po/${locale}.po`)
+        import(
+            /* webpackChunkName: "project-admin-banner-po-" */ "./po/" + getPOFileFromLocale(locale)
+        )
     );
 
     const AppComponent = Vue.extend(App);

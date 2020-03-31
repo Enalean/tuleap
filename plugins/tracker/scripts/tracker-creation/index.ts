@@ -20,7 +20,10 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import App from "./src/components/App.vue";
-import { initVueGettext } from "../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
+import {
+    initVueGettext,
+    getPOFileFromLocale,
+} from "../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
 import { createStore } from "./src/store/index";
 import {
     CreationOptions,
@@ -41,7 +44,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     await initVueGettext(Vue, (locale: string) =>
-        import(/* webpackChunkName: "tracker-creation-po" */ `./po/${locale}.po`)
+        import(/* webpackChunkName: "tracker-creation-po" */ "./po/" + getPOFileFromLocale(locale))
     );
 
     const AppComponent = Vue.extend(App);

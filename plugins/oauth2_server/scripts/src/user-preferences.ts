@@ -17,7 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { initGettext } from "../../../../src/www/scripts/tuleap/gettext/gettext-init";
+import {
+    getPOFileFromLocale,
+    initGettext,
+} from "../../../../src/www/scripts/tuleap/gettext/gettext-init";
 import { openModalAndReplacePlaceholders } from "../../../../src/www/scripts/tuleap/modals/modal-opener";
 import { buildRevocationReplaceCallback, hiddenInputReplaceCallback } from "./replacers";
 
@@ -32,7 +35,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         throw new Error("Not able to find the user language.");
     }
     const gettext_provider = await initGettext(language, "tuleap-oauth2_server", (locale) =>
-        import(/* webpackChunkName: "oauth2-server-po-" */ `../po/${locale}.po`)
+        import(/* webpackChunkName: "oauth2-server-po-" */ "../po/" + getPOFileFromLocale(locale))
     );
 
     openModalAndReplacePlaceholders({

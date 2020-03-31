@@ -119,7 +119,7 @@ module.exports = {
             "error",
             {
                 escape: {
-                    methods: ["sanitize", "render"]
+                    methods: ["sanitize", "render", "getPOFileFromLocale"]
                 }
             }
         ]
