@@ -64,6 +64,7 @@ RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     tuleap-plugin-pullrequest \
     tuleap-plugin-svn \
     tuleap-plugin-taskboard \
+    tuleap-plugin-tee-container \
     tuleap-plugin-testmanagement \
     tuleap-plugin-textualreport \
     tuleap-plugin-timetracking \
