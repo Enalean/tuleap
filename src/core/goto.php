@@ -22,6 +22,7 @@
 
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Project\Event\GetUriFromCrossReference;
 use Tuleap\Reference\ReferenceOpenGraph;
 use Tuleap\Reference\ReferenceOpenGraphDispatcher;
 
@@ -103,6 +104,18 @@ if ($ref) {
     }
     $ref->replaceLink($args, $project_name);
 } else {
+    $cross_reference = $reference_manager->getCrossReferenceByKeyword($keyword);
+
+    if (isset($cross_reference['source_id'])) {
+        $source_id   = (int) $cross_reference['source_id'];
+        $target_type = $cross_reference['target_type'];
+        $get_uri_from_crossreference = new GetUriFromCrossReference($source_id, $target_type);
+
+        $event_manager->processEvent($get_uri_from_crossreference);
+        if ($get_uri_from_crossreference->getUri() !== null) {
+            $GLOBALS['Response']->redirect($get_uri_from_crossreference->getUri());
+        }
+    }
     $GLOBALS['Response']->sendStatusCode(404);
     exit_error(
         $GLOBALS['Language']->getText('global', 'error'),

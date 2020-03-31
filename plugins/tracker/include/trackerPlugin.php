@@ -38,6 +38,7 @@ use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\TemplatePresenter;
 use Tuleap\Project\Event\GetProjectWithTrackerAdministrationPermission;
+use Tuleap\Project\Event\GetUriFromCrossReference;
 use Tuleap\Project\Event\ProjectRegistrationActivateService;
 use Tuleap\Project\Event\ProjectXMLImportPreChecksEvent;
 use Tuleap\Project\HeartbeatsEntryCollection;
@@ -227,6 +228,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $this->addHook('plugin_statistics_service_usage');
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::REST_PROJECT_RESOURCES);
+        $this->addHook(GetUriFromCrossReference::NAME);
 
         $this->addHook(Event::BACKEND_ALIAS_GET_ALIASES);
         $this->addHook(Event::GET_PROJECTID_FROM_URL);
@@ -336,6 +338,16 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     public function plugin_statistics_frequence_stat_entries($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['entries'][$this->getServiceShortname()] = 'Opened artifacts';
+    }
+
+    public function getUriFromCrossReference(GetUriFromCrossReference $event)
+    {
+        if ($event->getTargetType() === Tracker_Artifact::REFERENCE_NATURE) {
+            $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($event->getSourceId());
+            if ($artifact) {
+                $event->setUri($artifact->getUri());
+            }
+        }
     }
 
     /**
