@@ -74,7 +74,7 @@ try {
 
     if (! $debug) {
         $validator = new XML_RNGValidator();
-        $validator->validate(simplexml_import_dom($xml), realpath(dirname(TRACKER_BASE_DIR) . '/www/resources/artifacts.rng'));
+        $validator->validate(simplexml_import_dom($xml), realpath(__DIR__ . '/../../plugins/tracker/resources/artifacts.rng'));
     }
 
     $xml_security = new XML_Security();

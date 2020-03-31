@@ -99,7 +99,7 @@ class CardwallConfigXmlImport
             return;
         }
 
-        $rng_path = realpath(CARDWALL_BASE_DIR . '/../www/resources/xml_project_cardwall.rng');
+        $rng_path = realpath(__DIR__ . '/../resources/xml_project_cardwall.rng');
         $this->xml_validator->validate($xml_input->{CardwallConfigXml::NODE_CARDWALL}, $rng_path);
 
         $this->cardwall_ontop_dao->startTransaction();

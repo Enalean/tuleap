@@ -118,7 +118,7 @@ class AgileDashboard_XMLExporter
      */
     private function validateXML(SimpleXMLElement $agiledashboard_node): void
     {
-        $rng_path = realpath(AGILEDASHBOARD_BASE_DIR . '/../www/resources/xml_project_agiledashboard.rng');
+        $rng_path = realpath(__DIR__ . '/../../resources/xml_project_agiledashboard.rng');
         $this->xml_validator->validate($agiledashboard_node, $rng_path);
     }
 }

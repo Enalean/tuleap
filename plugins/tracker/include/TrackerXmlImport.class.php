@@ -292,7 +292,7 @@ class TrackerXmlImport
 
         $this->rng_validator->validate(
             $partial_element->trackers,
-            dirname(TRACKER_BASE_DIR) . '/www/resources/trackers.rng'
+            __DIR__ . '/../resources/trackers.rng'
         );
 
         $this->activateArtlinkV2($project, $xml_input->trackers);
@@ -432,7 +432,7 @@ class TrackerXmlImport
         $partial_element = new SimpleXMLElement((string) $xml_input->asXML());
         $this->external_fields_extractor->extractExternalFieldFromProjectElement($partial_element);
 
-        $this->rng_validator->validate($partial_element->trackers, dirname(TRACKER_BASE_DIR) . '/www/resources/trackers.rng');
+        $this->rng_validator->validate($partial_element->trackers, __DIR__ . '/../resources/trackers.rng');
 
         $xml_trackers = $this->getAllXmlTrackers($xml_input);
         $trackers = array();
@@ -746,7 +746,7 @@ class TrackerXmlImport
 
         $this->rng_validator->validate(
             $partial_element,
-            realpath(dirname(TRACKER_BASE_DIR) . '/www/resources/tracker.rng')
+            realpath(__DIR__ . '/../resources/tracker.rng')
         );
 
         $tracker = $this->getInstanceFromXML(

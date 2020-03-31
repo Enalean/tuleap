@@ -106,7 +106,7 @@ class AgileDashboard_XMLController extends MVC2_PluginController
         $this->checkUserIsAdmin();
 
         $xml           = $this->request->get('xml_content')->agiledashboard;
-        $rng_path      = realpath(AGILEDASHBOARD_BASE_DIR . '/../www/resources/xml_project_agiledashboard.rng');
+        $rng_path      = realpath(__DIR__ . '/../../resources/xml_project_agiledashboard.rng');
 
         $this->xml_rng_validator->validate($xml, $rng_path);
 
