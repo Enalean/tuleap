@@ -35,14 +35,13 @@ class TrackerArtifactXMLImportXMLImportFieldStrategySteps implements Tracker_Art
         SimpleXMLElement $field_change,
         PFUser $submitted_by,
         Tracker_Artifact $artifact
-    ) : array
-    {
+    ) : array {
         $data = [];
         foreach ($field_change->step as $step) {
-            $data['description_format'][]      = (string)$step->description->attributes()['format'];
-            $data['description'][]             = (string)$step->description;
-            $data['expected_results_format'][] = (string)$step->expected_results->attributes()['format'];
-            $data['expected_results'][]        = (string)$step->expected_results;
+            $data['description_format'][]      = (string) $step->description->attributes()['format'];
+            $data['description'][]             = (string) $step->description;
+            $data['expected_results_format'][] = (string) $step->expected_results->attributes()['format'];
+            $data['expected_results'][]        = (string) $step->expected_results;
         }
 
         return $data;

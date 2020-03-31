@@ -82,8 +82,8 @@ class DefinitionRepresentation extends MinimalDefinitionRepresentation
         $this->requirement = $artifact_representation;
 
         $this->steps = [];
-        /** @var StepDefinitionChangesetValue|null $value */
         $value = $this->getFieldValue(self::FIELD_STEPS);
+        \assert($value instanceof StepDefinitionChangesetValue || $value === null);
         if (! $value) {
             return;
         }

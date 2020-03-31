@@ -21,32 +21,25 @@
 namespace Tuleap\TestManagement\XML;
 
 use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
 use SimpleXMLElement;
-use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 use XML_RNGValidator;
 
 final class TrackerXMLImportTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /**
      * @var ImportXMLFromTracker
      */
     private $xml_validator;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UGroupRetrieverWithLegacy
-     */
-    private $ugroup_retriever;
 
     public function setUp(): void
     {
-        $this->ugroup_retriever = Mockery::mock(UGroupRetrieverWithLegacy::class);
-        $this->xml_validator = new ImportXMLFromTracker(new XML_RNGValidator(), $this->ugroup_retriever);
+        $this->xml_validator = new ImportXMLFromTracker(new XML_RNGValidator());
     }
 
     public function testValidateXMLImportThrowExceptionIfNotValidXML(): void

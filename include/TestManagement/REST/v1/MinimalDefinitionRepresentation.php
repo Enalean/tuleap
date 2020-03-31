@@ -111,9 +111,8 @@ class MinimalDefinitionRepresentation
      */
     protected function getTextFieldValue($field_shortname)
     {
-        // We assume that the given field will always be type = text|string
-        /** @var \Tracker_Artifact_ChangesetValue_Text $field_value */
         $field_value = $this->getFieldValue($field_shortname);
+        \assert($field_value instanceof \Tracker_Artifact_ChangesetValue_Text);
         if (! $field_value) {
             return '';
         }
@@ -143,12 +142,12 @@ class MinimalDefinitionRepresentation
 
     private function getCategory()
     {
-        /** @var \Tracker_FormElement_Field_List $field_status */
         $field_status = $this->form_element_factory->getSelectboxFieldByNameForUser(
             $this->tracker_id,
             self::FIELD_CATEGORY,
             $this->user
         );
+        \assert($field_status instanceof \Tracker_FormElement_Field_List);
 
         if (! $field_status || ! $this->changeset) {
             return null;
