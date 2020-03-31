@@ -591,6 +591,25 @@ final class GerritRESTTest extends TestCase
         $this->assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
     }
 
+    public function testTriesToDeleteAnAlreadyDeletedProjectWithoutThrowingAnException(): void
+    {
+        $this->logger->shouldReceive('info')->twice();
+
+        $this->http_client->addResponse(
+            $this->response_factory->createResponse(404)
+        );
+
+        $project_name = 'gerrit/already_deleted_project_name';
+        $this->driver->deleteProject($this->gerrit_server, $project_name);
+
+        $request = $this->http_client->getLastRequest();
+        assert($request instanceof RequestInterface);
+        $this->assertEquals('POST', $request->getMethod());
+        $request_uri = $request->getUri();
+        $this->assertEquals('/a/projects/' . urlencode($project_name) . '/delete-project~delete', $request_uri->getPath());
+        $this->assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+    }
+
     private function buildGitRepository(string $project_name, string $repo_name): \GitRepository
     {
         $repo = \Mockery::mock(\GitRepository::class);
