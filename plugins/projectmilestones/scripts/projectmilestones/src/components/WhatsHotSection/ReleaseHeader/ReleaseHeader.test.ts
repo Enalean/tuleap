@@ -20,12 +20,13 @@
 import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import ReleaseHeader from "./ReleaseHeader.vue";
 import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
-import { MilestoneData, StoreOptions } from "../../../type";
+import { MilestoneData, Pane, StoreOptions } from "../../../type";
 import { setUserLocale } from "../../../helpers/user-locale-helper";
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
 import ReleaseHeaderRemainingDays from "./ReleaseHeaderRemainingDays.vue";
 import ReleaseHeaderRemainingPoints from "./ReleaseHeaderRemainingPoints.vue";
 import PastReleaseHeaderInitialPoints from "./PastReleaseHeaderInitialPoints.vue";
+import PastReleaseHeaderTestsDisplayer from "./PastReleaseHeaderTestsDisplayer.vue";
 
 let release_data: MilestoneData;
 let component_options: ShallowMountOptions<ReleaseHeader>;
@@ -54,6 +55,9 @@ describe("ReleaseHeader", () => {
             id: 2,
             start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
             end_date: new Date("2019-10-05T13:42:08+02:00").toDateString(),
+            resources: {
+                additional_panes: [] as Pane[],
+            },
         } as MilestoneData;
 
         component_options = {
@@ -139,6 +143,28 @@ describe("ReleaseHeader", () => {
             expect(wrapper.contains(ReleaseHeaderRemainingDays)).toBe(false);
             expect(wrapper.contains(ReleaseHeaderRemainingPoints)).toBe(false);
             expect(wrapper.contains(PastReleaseHeaderInitialPoints)).toBe(true);
+        });
+
+        it("When the release is past and TTM is enabled, Then PastReleaseHeaderTestsDisplayer component are displayed", async () => {
+            release_data.resources.additional_panes = [
+                {
+                    icon_name: "fa-external",
+                    identifier: "testmgmt",
+                    title: "Test Management",
+                    uri: "plugin/testmanagement",
+                },
+            ];
+
+            component_options.propsData = {
+                release_data,
+                isPastRelease: true,
+            };
+
+            const wrapper = await getPersonalWidgetInstance(store_options);
+            expect(wrapper.contains(ReleaseHeaderRemainingDays)).toBe(false);
+            expect(wrapper.contains(ReleaseHeaderRemainingPoints)).toBe(false);
+            expect(wrapper.contains(PastReleaseHeaderInitialPoints)).toBe(true);
+            expect(wrapper.contains(PastReleaseHeaderTestsDisplayer)).toBe(true);
         });
     });
 });

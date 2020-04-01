@@ -96,6 +96,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     flex: 1 0 auto;
 }
 
+.closed-release-header-badges,
 .release-remaining-effort-badges {
     display: flex;
 }
@@ -187,4 +188,11 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 
 .release-remaining-disabled {
     width: 220px + $tlp-spacing;
+}
+
+.closed-release-header-badge {
+    display: flex;
+    align-items: baseline;
+    width: 110px;
+    margin: 0 0 5px $tlp-half-spacing;
 }

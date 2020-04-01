@@ -18,17 +18,17 @@
   -->
 
 <template>
-    <div class="past-release closed-release-header-badge">
-        <i class="release-remaining-icon fa fa-flag-checkered"></i>
-        <span class="release-remaining-value" data-test="points-initial-value">
-            {{ formatPoints(release_data.initial_effort) }}
+    <div v-if="is_testmanagement_activated" class="past-release closed-release-header-badge">
+        <i class="release-remaining-icon fa fa-check"></i>
+        <span class="release-remaining-value" data-test="number-tests">
+            {{ number_tests }}
         </span>
         <translate
             class="release-remaining-text"
-            v-bind:translate-n="release_data.initial_effort"
-            translate-plural="pts done"
+            v-bind:translate-n="number_tests"
+            translate-plural="tests"
         >
-            pt done
+            test
         </translate>
     </div>
 </template>
@@ -37,12 +37,28 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { MilestoneData } from "../../../type";
+import { is_testmanagement_activated } from "../../../helpers/test-management-helper";
 
 @Component
-export default class PastReleaseHeaderInitialPoints extends Vue {
+export default class PastReleaseHeaderTestsDisplayer extends Vue {
     @Prop()
     readonly release_data!: MilestoneData;
 
-    formatPoints = (pts: number): number => (pts ? pts : 0);
+    get number_tests(): number {
+        if (!this.release_data.campaign) {
+            return 0;
+        }
+
+        return (
+            this.release_data.campaign.nb_of_failed +
+            this.release_data.campaign.nb_of_blocked +
+            this.release_data.campaign.nb_of_notrun +
+            this.release_data.campaign.nb_of_passed
+        );
+    }
+
+    get is_testmanagement_activated(): boolean {
+        return is_testmanagement_activated(this.release_data);
+    }
 }
 </script>
