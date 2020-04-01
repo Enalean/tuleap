@@ -65,8 +65,8 @@ class BaselineArtifactRepositoryStub implements BaselineArtifactRepository
 
     public function findByIdAt(PFUser $current_user, int $id, DateTimeInterface $date): ?BaselineArtifact
     {
-        /** @var ArtifactHistory $history */
         $history = $this->artifact_histories_by_id[$id];
+        \assert($history instanceof ArtifactHistory);
         if ($history === null) {
             return null;
         }

@@ -55,8 +55,8 @@ class ArtifactHistory
 
     public function findAt(DateTimeInterface $date): ?BaselineArtifact
     {
-        /** @var BaselineChangeSet $previous_change_set */
         $previous_change_set = null;
+        \assert($previous_change_set instanceof BaselineChangeSet);
         foreach ($this->change_sets as $change_set) {
             if ($change_set->isLaterThan($date)) {
                 if ($previous_change_set === null) {
