@@ -96,7 +96,7 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
         $from_empty_tracker = $request->get('from-tracker-empty');
 
         $default_templates_collection = $this->default_templates_collection_builder->build();
-        $is_from_default_tracker = $default_templates_collection->has($tracker_template_id);
+        $is_from_default_tracker = $tracker_template_id && $default_templates_collection->has($tracker_template_id);
 
         try {
             if ($is_from_default_tracker) {

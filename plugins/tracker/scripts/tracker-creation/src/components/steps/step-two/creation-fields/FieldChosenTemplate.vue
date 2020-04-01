@@ -81,7 +81,10 @@ export default class FieldChosenTemplate extends Vue {
     private selected_template_project_name = "";
 
     mounted(): void {
-        if (this.selected_tracker_template.id.indexOf("default-") === 0) {
+        if (
+            this.selected_tracker_template &&
+            this.selected_tracker_template.id.indexOf("default-") === 0
+        ) {
             this.selected_template_name = this.selected_tracker_template.name;
         } else if (this.is_a_duplication) {
             this.selected_template_name = this.selected_tracker_template.name;
