@@ -371,6 +371,10 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
 
     public function register_project_creation($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
+        if (! $params['project_creation_data']->projectShouldInheritFromTemplate()) {
+            return;
+        }
+
         if ($this->serviceIsUsedInTemplate($params['template_id'])) {
             $mediawiki_instantiater = $this->getInstantiater($params['group_id']);
             if ($mediawiki_instantiater) {
