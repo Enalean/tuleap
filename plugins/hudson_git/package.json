@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@types/bootstrap": "^3.4.0",
-    "@types/jquery": "^3.3.32",
+    "@types/jquery": "^3.3.34",
     "jquery": "^3.4.1"
   }
 }
