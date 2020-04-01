@@ -6,6 +6,8 @@ ARG DOCKERFILE_BASEDIR_PATH
 ARG YUM_REPO_PATH
 # PACKAGES_PATH is the path toward the .rpm packages
 ARG PACKAGES_PATH
+# RELEASE_CYCLE is the Tuleap release cycle (eg. 11.12)
+ARG RELEASE_CYCLE=dev
 
 COPY $YUM_REPO_PATH /etc/yum.repos.d/
 COPY $PACKAGES_PATH /rpms
@@ -22,6 +24,7 @@ RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     /usr/sbin/useradd -u 903 -c 'Dummy Tuleap User' -M -d '/var/lib/tuleap/dumps' -r -g dummy dummy && \
     /usr/sbin/useradd -u 904 -c 'FTP Administrator' -M -d '/var/lib/tuleap/ftp' -r -g ftpadmin ftpadmin && \
     /usr/sbin/usermod -u 14 -c 'FTP User' -d '/var/lib/tuleap/ftp' -g ftp ftp && \
+    echo "$RELEASE_CYCLE" > /etc/yum/vars/tuleap_release_cycle && \
     yum install -y epel-release centos-release-scl sudo https://rpms.remirepo.net/enterprise/remi-release-7.rpm && \
     yum update -y && \
     yum install -y \
