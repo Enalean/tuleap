@@ -19,7 +19,7 @@
 
 import angular from "angular";
 import ngSanitize from "angular-sanitize";
-import "angular-moment";
+import angular_moment from "angular-moment";
 import "angular-gettext";
 import translations from "../po/fr.po";
 
@@ -45,7 +45,7 @@ import NgVueConfig from "./ng-vue-config.js";
 
 export default angular
     .module("tuleap.artifact-modal", [
-        "angularMoment",
+        angular_moment,
         "gettext",
         "ngVue",
         "ngVue.plugins",
