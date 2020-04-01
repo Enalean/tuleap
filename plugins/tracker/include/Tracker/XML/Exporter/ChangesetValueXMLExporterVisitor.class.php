@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,9 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Artifact\ChangesetValueComputed;
 use Tuleap\Tracker\XML\Exporter\ChangesetValue\ChangesetValueComputedXMLExporter;
-use Tuleap\Tracker\XML\Exporter\ChangesetValue\ExternalExporterCollector;
+use Tuleap\Tracker\Artifact\ChangesetValueComputed;
 
 class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor implements Tracker_Artifact_ChangesetValueVisitor
 {
@@ -84,10 +83,6 @@ class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor implements Tracker_A
      * @var ChangesetValueComputedXMLExporter
      */
     private $computed_exporter;
-    /**
-     * @var ExternalExporterCollector
-     */
-    private $collector;
 
     public function __construct(
         Tracker_XML_Exporter_ChangesetValue_ChangesetValueDateXMLExporter $date_exporter,
@@ -101,8 +96,7 @@ class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor implements Tracker_A
         Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter $open_list_exporter,
         Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter $artlink_exporter,
         ChangesetValueComputedXMLExporter $computed_exporter,
-        Tracker_XML_Exporter_ChangesetValue_ChangesetValueUnknownXMLExporter $unknown_exporter,
-        ExternalExporterCollector $collector
+        Tracker_XML_Exporter_ChangesetValue_ChangesetValueUnknownXMLExporter $unknown_exporter
     ) {
         $this->file_exporter      = $file_exporter;
         $this->date_exporter      = $date_exporter;
@@ -116,7 +110,6 @@ class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor implements Tracker_A
         $this->unknown_exporter   = $unknown_exporter;
         $this->artlink_exporter   = $artlink_exporter;
         $this->computed_exporter  = $computed_exporter;
-        $this->collector          = $collector;
     }
 
     public function export(
@@ -187,12 +180,6 @@ class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor implements Tracker_A
 
     public function visitExternalField(Tracker_Artifact_ChangesetValue $changeset_value)
     {
-        $external_exporter = $this->collector->collectExporter($changeset_value);
-
-        if ($external_exporter) {
-            return $external_exporter;
-        }
-
         return $this->unknown_exporter;
     }
 }

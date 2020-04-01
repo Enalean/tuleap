@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
-
 require_once __DIR__ . '/../bootstrap.php';
 
 class Tracker_Artifact_XMLExportTest extends TuleapTestCase
@@ -235,20 +233,16 @@ class Tracker_Artifact_XMLExportTest extends TuleapTestCase
         $can_bypass_threshold = true;
 
         $user_xml_exporter = new UserXMLExporter($this->user_manager, mock('UserXMLExportedCollection'));
-        $external_field_extractor = Mockery::mock(ExternalFieldsExtractor::class);
 
         $exporter = new Tracker_Artifact_XMLExport(
             $rng_validator,
             $artifact_factory,
             $can_bypass_threshold,
-            $user_xml_exporter,
-            $external_field_extractor
+            $user_xml_exporter
         );
 
         $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
                                              <project />');
-
-        $external_field_extractor->shouldReceive('extractExternalFieldsFromArtifact');
 
         $admin_user = stub('PFUser')->isSuperUser()->returns(true);
 
@@ -280,17 +274,13 @@ class Tracker_Artifact_XMLExport_forceTest extends TuleapTestCase
         $can_bypass_threshold = false;
 
         $user_xml_exporter = mock('UserXMLExporter');
-        $external_field_extractor = Mockery::mock(ExternalFieldsExtractor::class);
 
         $exporter = new Tracker_Artifact_XMLExport(
             $rng_validator,
             $artifact_factory,
             $can_bypass_threshold,
-            $user_xml_exporter,
-            $external_field_extractor
+            $user_xml_exporter
         );
-
-        $external_field_extractor->shouldReceive('extractExternalFieldsFromArtifact');
 
         $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
                                              <project />');
