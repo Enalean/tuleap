@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -64,13 +64,20 @@ class Planning_ArtifactParentsSelector_SubChildrenBelongingToTrackerCommand exte
 
     private function getParentTrackersAndStopAtGivenTracker(Tracker $tracker, Tracker $stop)
     {
-        $hierarchy = array();
-        while (($parent = $this->hierarchy_factory->getParent($tracker)) && (int) $parent->getId() !== (int) $stop->getId()) {
+        $hierarchy = [];
+        while (($parent = $this->hierarchy_factory->getParent($tracker)) &&
+            (int) $parent->getId() !== (int) $stop->getId()) {
             $hierarchy[$parent->getId()] = $tracker;
-            $tracker = $parent;
+            $tracker                     = $parent;
         }
+
+        if (! $parent) {
+            return null;
+        }
+
         if ((int) $parent->getId() === (int) $stop->getId()) {
             $hierarchy[$stop->getId()] = $tracker;
+
             return $hierarchy;
         }
     }
