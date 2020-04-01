@@ -43,7 +43,7 @@ final class Tuleap
     public function setup(OutputInterface $output, string $tuleap_fqdn, string $db_host, string $db_admin_user, string $db_admin_password, string $web_server_ip): void
     {
         $output->writeln('Install Tuleap');
-        $this->process_factory->getProcess(
+        $this->process_factory->getProcessWithoutTimeout(
             [
                 '/bin/bash',
                 '/usr/share/tuleap/tools/setup.el7.sh',
@@ -57,7 +57,7 @@ final class Tuleap
                 '--web-server-ip=' . $web_server_ip,
             ]
         )->mustRun();
-        $this->process_factory->getProcess(['/usr/bin/tuleap', 'config-set', ServiceControl::FORGECONFIG_INIT_MODE, ServiceControl::SUPERVISORD])->setTimeout(null)->mustRun();
+        $this->process_factory->getProcess(['/usr/bin/tuleap', 'config-set', ServiceControl::FORGECONFIG_INIT_MODE, ServiceControl::SUPERVISORD])->mustRun();
     }
 
     public function update(OutputInterface $output): void
@@ -80,7 +80,7 @@ final class Tuleap
     private function runForgeUpgrade(OutputInterface $output): void
     {
         $output->writeln('<info>Run forgeupgrade</info>');
-        $this->process_factory->getProcess(['/usr/lib/forgeupgrade/bin/forgeupgrade', '--config=/etc/tuleap/forgeupgrade/config.ini', 'update'])->setTimeout(null)->mustRun();
+        $this->process_factory->getProcessWithoutTimeout(['/usr/lib/forgeupgrade/bin/forgeupgrade', '--config=/etc/tuleap/forgeupgrade/config.ini', 'update'])->mustRun();
     }
 
     private function queueSystemCheck(OutputInterface $output): void
