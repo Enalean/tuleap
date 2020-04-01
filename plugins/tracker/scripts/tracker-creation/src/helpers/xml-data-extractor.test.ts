@@ -38,7 +38,7 @@ describe("xml-data-extractor", () => {
         );
 
         await expect(extractNameAndShortnameFromXmlFile(file)).rejects.toEqual(
-            "The provided XML file does not provide any name and/or shortname and/or color"
+            "The provided XML file does not provide any name and/or shortname"
         );
     });
 
@@ -56,7 +56,7 @@ describe("xml-data-extractor", () => {
         );
 
         await expect(extractNameAndShortnameFromXmlFile(file)).rejects.toEqual(
-            "The provided XML file does not provide any name and/or shortname and/or color"
+            "The provided XML file does not provide any name and/or shortname"
         );
     });
 
@@ -75,7 +75,7 @@ describe("xml-data-extractor", () => {
         );
 
         await expect(extractNameAndShortnameFromXmlFile(file)).rejects.toEqual(
-            "The provided XML file does not provide any name and/or shortname and/or color"
+            "The provided XML file does not provide any name and/or shortname"
         );
     });
 
@@ -94,26 +94,7 @@ describe("xml-data-extractor", () => {
         );
 
         await expect(extractNameAndShortnameFromXmlFile(file)).rejects.toEqual(
-            "The provided XML file does not provide any name and/or shortname and/or color"
-        );
-    });
-
-    it("throws an error when the file does not contain a color", async () => {
-        expect.assertions(1);
-
-        const file = new File(
-            [
-                `<tracker instantiate_for_new_projects="1">
-                    <name>Bugs</name>
-                    <item_name>bugs_tracker</item_name>
-                </tracker>`,
-            ],
-            "tracker.xml",
-            { type: "text/xml" }
-        );
-
-        await expect(extractNameAndShortnameFromXmlFile(file)).rejects.toEqual(
-            "The provided XML file does not provide any name and/or shortname and/or color"
+            "The provided XML file does not provide any name and/or shortname"
         );
     });
 
@@ -133,7 +114,7 @@ describe("xml-data-extractor", () => {
         );
 
         await expect(extractNameAndShortnameFromXmlFile(file)).rejects.toEqual(
-            "The provided XML file does not provide any name and/or shortname and/or color"
+            "The tracker color cannot be an empty string"
         );
     });
 
@@ -156,6 +137,29 @@ describe("xml-data-extractor", () => {
             name: "Bugs",
             shortname: "bugs_tracker",
             color: "peggy-pink",
+        });
+    });
+
+    it("chooses a default color when the file does not contain a color", async () => {
+        expect.assertions(1);
+
+        const file = new File(
+            [
+                `<tracker instantiate_for_new_projects="1">
+                    <name>Bugs</name>
+                    <item_name>bugs_tracker</item_name>
+                </tracker>`,
+            ],
+            "tracker.xml",
+            { type: "text/xml" }
+        );
+
+        const result = await extractNameAndShortnameFromXmlFile(file);
+
+        expect(result).toEqual({
+            name: "Bugs",
+            shortname: "bugs_tracker",
+            color: "inca-silver",
         });
     });
 });
