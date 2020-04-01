@@ -96,7 +96,7 @@ describe("Artifact", () => {
 
         it("does not show description", () => {
             expect(
-                wrapper.find(artifact_fields_selector).contains(artifact_description_selector)
+                wrapper.get(artifact_fields_selector).contains(artifact_description_selector)
             ).toBeFalsy();
         });
     });
@@ -123,7 +123,7 @@ describe("Artifact", () => {
 
         it("does not show status", () => {
             expect(
-                wrapper.find(artifact_fields_selector).contains(artifact_status_selector)
+                wrapper.get(artifact_fields_selector).contains(artifact_status_selector)
             ).toBeFalsy();
         });
     });
@@ -154,7 +154,7 @@ describe("Artifact", () => {
 
             it("shows only visible linked artifacts", () => {
                 expect(wrapper.contains(ArtifactsList)).toBeTruthy();
-                expect(wrapper.find(ArtifactsList).props().artifacts).toEqual(
+                expect(wrapper.get(ArtifactsList).props().artifacts).toEqual(
                     filtered_linked_artifacts
                 );
             });

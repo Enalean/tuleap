@@ -45,7 +45,7 @@ describe("IndexPage", () => {
     });
 
     describe("when clicking on new baseline button", () => {
-        beforeEach(() => wrapper.find('[data-test-action="new-baseline"]').trigger("click"));
+        beforeEach(() => wrapper.get('[data-test-action="new-baseline"]').trigger("click"));
 
         it("shows new modal", () => {
             expect($store.commit).toHaveBeenCalledWith(
@@ -62,7 +62,7 @@ describe("IndexPage", () => {
         });
 
         describe("when clicking on show comparison button", () => {
-            beforeEach(() => wrapper.find('[data-test-action="show-comparison"]').trigger("click"));
+            beforeEach(() => wrapper.get('[data-test-action="show-comparison"]').trigger("click"));
 
             it("shows new modal", () => {
                 expect($store.commit).toHaveBeenCalledWith(

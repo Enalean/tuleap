@@ -51,12 +51,12 @@ describe("DeleteConfirmationModal", () => {
         expect(wrapper.contains(spinner_selector)).toBeFalsy();
     });
     it("enables confirm button", () => {
-        expect(wrapper.find(confirm_selector).attributes().disabled).toBeUndefined();
+        expect(wrapper.get(confirm_selector).attributes().disabled).toBeUndefined();
     });
 
     describe("when confirming", () => {
         beforeEach(async () => {
-            wrapper.find(confirm_selector).trigger("click");
+            wrapper.get(confirm_selector).trigger("click");
             await wrapper.vm.$nextTick();
         });
 
@@ -64,7 +64,7 @@ describe("DeleteConfirmationModal", () => {
             expect(wrapper.contains(spinner_selector)).toBeTruthy();
         });
         it("disables confirm button", () => {
-            expect(wrapper.find(confirm_selector).attributes().disabled).toEqual("disabled");
+            expect(wrapper.get(confirm_selector).attributes().disabled).toEqual("disabled");
         });
         it("calls confirm method", () => {
             expect(confirm).toHaveBeenCalled();
@@ -73,7 +73,7 @@ describe("DeleteConfirmationModal", () => {
 
     describe("when deletion is completed", () => {
         beforeEach(async () => {
-            wrapper.find(confirm_selector).trigger("click");
+            wrapper.get(confirm_selector).trigger("click");
             confirmResolve("resolved");
             await wrapper.vm.$nextTick();
         });
@@ -82,7 +82,7 @@ describe("DeleteConfirmationModal", () => {
             expect(wrapper.contains(spinner_selector)).toBeFalsy();
         });
         it("enables confirm button", () => {
-            expect(wrapper.find(confirm_selector).attributes().disabled).toBeUndefined();
+            expect(wrapper.get(confirm_selector).attributes().disabled).toBeUndefined();
         });
     });
 });

@@ -43,7 +43,7 @@ describe("ActionButton", () => {
         expect(wrapper.contains(".fa-delete")).toBeTruthy();
     });
     it("enables button", () => {
-        expect(wrapper.find(button_selector).attributes().disabled).toBeFalsy();
+        expect(wrapper.get(button_selector).attributes().disabled).toBeFalsy();
     });
 
     describe("when clicking", () => {
@@ -66,7 +66,7 @@ describe("ActionButton", () => {
         beforeEach(() => wrapper.setProps({ disabled: true }));
 
         it("disables button", () => {
-            expect(wrapper.find(button_selector).attributes().disabled).toBeTruthy();
+            expect(wrapper.get(button_selector).attributes().disabled).toBeTruthy();
         });
     });
 });

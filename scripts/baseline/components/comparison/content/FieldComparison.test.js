@@ -39,12 +39,12 @@ describe("FieldComparison", () => {
 
     it("renders deletion", () => {
         expect(wrapper.findAll("del").length).toEqual(1);
-        expect(wrapper.find("del").text()).toEqual("My");
+        expect(wrapper.get("del").text()).toEqual("My");
     });
 
     it("renders addition", () => {
         expect(wrapper.findAll("ins").length).toEqual(1);
-        expect(wrapper.find("ins").text()).toEqual("New");
+        expect(wrapper.get("ins").text()).toEqual("New");
     });
 
     describe("when compared values contain html", () => {

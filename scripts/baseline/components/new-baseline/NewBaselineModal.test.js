@@ -112,7 +112,7 @@ describe("NewBaselineModal", () => {
         });
 
         it("passes milestones returned by getOpenMilestones() to MilestoneList", () => {
-            expect(wrapper.find(MilestonesSelect).props().milestones).toEqual([a_milestone]);
+            expect(wrapper.get(MilestonesSelect).props().milestones).toEqual([a_milestone]);
         });
     });
 
@@ -135,8 +135,8 @@ describe("NewBaselineModal", () => {
         });
 
         it("disables buttons", () => {
-            expect(wrapper.find(cancel_selector).attributes("disabled")).toEqual("disabled");
-            expect(wrapper.find(submit_selector).attributes("disabled")).toEqual("disabled");
+            expect(wrapper.get(cancel_selector).attributes("disabled")).toEqual("disabled");
+            expect(wrapper.get(submit_selector).attributes("disabled")).toEqual("disabled");
         });
 
         describe("when createBaseline() fail", () => {
@@ -146,12 +146,10 @@ describe("NewBaselineModal", () => {
             });
 
             it("shows an error message", () => {
-                expect(wrapper.find(error_message_selector).text).not.toBe(null);
+                expect(wrapper.get(error_message_selector).text).not.toBe(null);
             });
             it("enables cancel buttons", () => {
-                expect(wrapper.find(cancel_selector).attributes("disabled")).not.toEqual(
-                    "disabled"
-                );
+                expect(wrapper.get(cancel_selector).attributes("disabled")).not.toEqual("disabled");
             });
         });
 

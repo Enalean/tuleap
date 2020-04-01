@@ -87,7 +87,7 @@ describe("ContentBody", () => {
 
             it("shows all visible artifacts", () => {
                 expect(wrapper.contains(ArtifactsList)).toBeTruthy();
-                expect(wrapper.find(ArtifactsList).props().artifacts).toEqual(filtered_artifacts);
+                expect(wrapper.get(ArtifactsList).props().artifacts).toEqual(filtered_artifacts);
             });
         });
     });

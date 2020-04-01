@@ -44,7 +44,7 @@ describe("TransientComparisonLabel", () => {
     });
 
     describe("when saving comparison", () => {
-        beforeEach(() => wrapper.find(save_comparison_selector).trigger("click"));
+        beforeEach(() => wrapper.get(save_comparison_selector).trigger("click"));
 
         it("shows save comparison modal", () => {
             expect($store.commit).toHaveBeenCalledWith("dialog_interface/showModal", {

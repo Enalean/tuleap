@@ -40,35 +40,35 @@ describe("CollapsableContent", () => {
     });
 
     it("shows header slot", () => {
-        expect(wrapper.find(header_slot_selector).isVisible()).toBeTruthy();
+        expect(wrapper.get(header_slot_selector).isVisible()).toBeTruthy();
     });
 
     it("shows default slot", () => {
-        expect(wrapper.find(default_slot_selector).isVisible()).toBeTruthy();
+        expect(wrapper.get(default_slot_selector).isVisible()).toBeTruthy();
     });
 
     describe("when toggle expand/collapse", () => {
         beforeEach(async () => {
-            wrapper.find(toggle_selector).trigger("click");
+            wrapper.get(toggle_selector).trigger("click");
             await wrapper.vm.$nextTick();
         });
 
         it("still shows header slot", () => {
-            expect(wrapper.find(header_slot_selector).isVisible()).toBeTruthy();
+            expect(wrapper.get(header_slot_selector).isVisible()).toBeTruthy();
         });
 
         it("hides default slot", () => {
-            expect(wrapper.find(default_slot_selector).isVisible()).toBeFalsy();
+            expect(wrapper.get(default_slot_selector).isVisible()).toBeFalsy();
         });
 
         describe("when toggle expand/collapse again", () => {
             beforeEach(async () => {
-                wrapper.find(toggle_selector).trigger("click");
+                wrapper.get(toggle_selector).trigger("click");
                 await wrapper.vm.$nextTick();
             });
 
             it("shows default slot", () => {
-                expect(wrapper.find(default_slot_selector).isVisible()).toBeTruthy();
+                expect(wrapper.get(default_slot_selector).isVisible()).toBeTruthy();
             });
         });
     });
