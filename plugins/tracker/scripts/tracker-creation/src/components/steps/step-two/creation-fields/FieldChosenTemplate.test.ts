@@ -102,7 +102,16 @@ describe("FieldChosenTemplate", () => {
         });
 
         it("is a xml export", async () => {
-            const wrapper = await getWrapper(state, false, true);
+            const wrapper = await getWrapper(
+                {
+                    tracker_to_be_created: {
+                        name: "Tracker XML structure",
+                        shortname: "tracker_to_be_created",
+                    },
+                } as State,
+                false,
+                true
+            );
 
             expect(wrapper.find("[data-test=project-of-chosen-template]").exists()).toBe(false);
             expect(wrapper.find("[data-test=chosen-template]").text()).toEqual(
