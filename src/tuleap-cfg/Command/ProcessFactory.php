@@ -31,4 +31,9 @@ class ProcessFactory
     {
         return new Process($args);
     }
+
+    public function getProcessWithoutTimeout(array $args) : Process
+    {
+        return $this->getProcess($args)->setTimeout(null);
+    }
 }
