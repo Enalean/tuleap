@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation;
 
+use XML_Security;
+
 class DefaultTemplatesCollectionBuilder
 {
     /**
@@ -36,15 +38,33 @@ class DefaultTemplatesCollectionBuilder
 
     public function build(): DefaultTemplatesCollection
     {
-        $default_templates = [
-            'default-bug' => new DefaultTemplate(
-                new TrackerTemplatesRepresentation('default-bug', 'Bugs', 'fiesta-red'),
-                __DIR__ . '/../../../resources/templates/Tracker_Bugs.xml'
-            )
-        ];
+        $xml_files_collection = new DefaultTemplatesXMLFileCollection();
+        $xml_files_collection->add(__DIR__ . '/../../../resources/templates/Tracker_Bugs.xml');
+        $this->event_manager->processEvent($xml_files_collection);
 
-        $collection = new DefaultTemplatesCollection($default_templates);
-        $this->event_manager->processEvent($collection);
+        $collection = new DefaultTemplatesCollection();
+        $xml_security = new XML_Security();
+        foreach ($xml_files_collection->getXMLFiles() as $filepath) {
+            $xml = $xml_security->loadFile($filepath);
+            if (! (string) $xml->name) {
+                continue;
+            }
+            if (! (string) $xml->item_name) {
+                continue;
+            }
+            if (! (string) $xml->color) {
+                continue;
+            }
+
+            $id = 'default-' . (string) $xml->item_name;
+            $collection->add(
+                $id,
+                new DefaultTemplate(
+                    new TrackerTemplatesRepresentation($id, (string) $xml->name, (string) $xml->color),
+                    $filepath
+                )
+            );
+        }
 
         return $collection;
     }

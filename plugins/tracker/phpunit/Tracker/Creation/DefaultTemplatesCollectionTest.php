@@ -32,7 +32,7 @@ class DefaultTemplatesCollectionTest extends TestCase
 
     public function testEmptyCollection(): void
     {
-        $collection = new DefaultTemplatesCollection([]);
+        $collection = new DefaultTemplatesCollection();
 
         $this->assertFalse($collection->has('whatever'));
         $this->assertEmpty($collection->getSortedDefaultTemplatesRepresentations());
@@ -40,11 +40,8 @@ class DefaultTemplatesCollectionTest extends TestCase
 
     public function testItHasATemplate(): void
     {
-        $collection = new DefaultTemplatesCollection(
-            [
-                'my-template' => Mockery::mock(DefaultTemplate::class)
-            ]
-        );
+        $collection = new DefaultTemplatesCollection();
+        $collection->add('my-template', Mockery::mock(DefaultTemplate::class));
 
         $this->assertTrue($collection->has('my-template'));
         $this->assertFalse($collection->has('another-template'));
@@ -52,7 +49,7 @@ class DefaultTemplatesCollectionTest extends TestCase
 
     public function testItAddsTemplate(): void
     {
-        $collection = new DefaultTemplatesCollection([]);
+        $collection = new DefaultTemplatesCollection();
 
         $this->assertFalse($collection->has('my-template'));
         $collection->add('my-template', Mockery::mock(DefaultTemplate::class));
@@ -61,12 +58,12 @@ class DefaultTemplatesCollectionTest extends TestCase
 
     public function testItReturnsTheXMLFileOfATemplate(): void
     {
-        $collection = new DefaultTemplatesCollection(
-            [
-                'my-template' => Mockery::mock(DefaultTemplate::class)
-                    ->shouldReceive(['getXmlFile' => '/path'])
-                    ->getMock()
-            ]
+        $collection = new DefaultTemplatesCollection();
+        $collection->add(
+            'my-template',
+            Mockery::mock(DefaultTemplate::class)
+                ->shouldReceive(['getXmlFile' => '/path'])
+                ->getMock()
         );
 
         $this->assertEquals('/path', $collection->getXmlFile('my-template'));
@@ -74,11 +71,8 @@ class DefaultTemplatesCollectionTest extends TestCase
 
     public function testItThrowsExceptionIfTemplateIsNotFound(): void
     {
-        $collection = new DefaultTemplatesCollection(
-            [
-                'my-template' => Mockery::mock(DefaultTemplate::class)
-            ]
-        );
+        $collection = new DefaultTemplatesCollection();
+        $collection->add('my-template', Mockery::mock(DefaultTemplate::class));
 
         $this->expectException(\OutOfBoundsException::class);
         $collection->getXmlFile('another-template');
@@ -86,17 +80,20 @@ class DefaultTemplatesCollectionTest extends TestCase
 
     public function testGetSortedDefaultTemplatesRepresentations(): void
     {
-        $collection = new DefaultTemplatesCollection(
-            [
-                'default-bug' => new DefaultTemplate(
-                    new TrackerTemplatesRepresentation('default-bug', 'Bugs', 'clockwork-orange'),
-                    '/path/to/xml'
-                ),
-                'default-activity' => new DefaultTemplate(
-                    new TrackerTemplatesRepresentation('default-activity', 'Activities', 'fiesta-red'),
-                    '/path/to/xml'
-                )
-            ]
+        $collection = new DefaultTemplatesCollection();
+        $collection->add(
+            'default-bug',
+            new DefaultTemplate(
+                new TrackerTemplatesRepresentation('default-bug', 'Bugs', 'clockwork-orange'),
+                '/path/to/xml'
+            )
+        );
+        $collection->add(
+            'default-activity',
+            new DefaultTemplate(
+                new TrackerTemplatesRepresentation('default-activity', 'Activities', 'fiesta-red'),
+                '/path/to/xml'
+            )
         );
 
         $this->assertEquals(

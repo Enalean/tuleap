@@ -22,21 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation;
 
-use Tuleap\Event\Dispatchable;
-
-class DefaultTemplatesCollection implements Dispatchable
+class DefaultTemplatesCollection
 {
     public const NAME = 'defaultTemplatesCollection';
 
     /**
      * @var array<string, DefaultTemplate>
      */
-    private $default_templates;
-
-    public function __construct(array $default_templates)
-    {
-        $this->default_templates = $default_templates;
-    }
+    private $default_templates = [];
 
     /**
      * @return TrackerTemplatesRepresentation[]

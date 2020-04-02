@@ -112,9 +112,7 @@ use Tuleap\Tracker\Artifact\RecentlyVisited\HistoryQuickLinkCollection;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\CreateTrackerFromXMLEvent;
-use Tuleap\Tracker\Creation\DefaultTemplate;
-use Tuleap\Tracker\Creation\DefaultTemplatesCollection;
-use Tuleap\Tracker\Creation\TrackerTemplatesRepresentation;
+use Tuleap\Tracker\Creation\DefaultTemplatesXMLFileCollection;
 use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticCheckers;
 use Tuleap\Tracker\Events\MoveArtifactParseFieldChangeNodes;
 use Tuleap\Tracker\FormElement\Event\MessageFetcherAdditionalWarnings;
@@ -265,7 +263,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->addHook(GetExternalPostActionPluginsEvent::NAME);
             $this->addHook(CheckPostActionsForTracker::NAME);
             $this->addHook(GetWorkflowExternalPostActionsValuesForUpdate::NAME);
-            $this->addHook(DefaultTemplatesCollection::NAME);
+            $this->addHook(DefaultTemplatesXMLFileCollection::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -2158,52 +2156,22 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         }
     }
 
-    public function defaultTemplatesCollection(DefaultTemplatesCollection $collection): void
+    public function defaultTemplatesXMLFileCollection(DefaultTemplatesXMLFileCollection $collection): void
     {
         $this->addKanbanTemplates($collection);
         $this->addScrumTemplates($collection);
     }
 
-    private function addKanbanTemplates(DefaultTemplatesCollection $collection): void
+    private function addKanbanTemplates(DefaultTemplatesXMLFileCollection $collection): void
     {
-        $collection->add(
-            'default-activity',
-            new DefaultTemplate(
-                new TrackerTemplatesRepresentation('default-activity', 'Activities', 'clockwork-orange'),
-                __DIR__ . '/../resources/templates/Tracker_activity.xml'
-            )
-        );
+        $collection->add(__DIR__ . '/../resources/templates/Tracker_activity.xml');
     }
 
-    private function addScrumTemplates(DefaultTemplatesCollection $collection): void
+    private function addScrumTemplates(DefaultTemplatesXMLFileCollection $collection): void
     {
-        $collection->add(
-            'default-release',
-            new DefaultTemplate(
-                new TrackerTemplatesRepresentation('default-release', 'Releases', 'clockwork-orange'),
-                __DIR__ . '/../resources/templates/Tracker_release.xml'
-            )
-        );
-        $collection->add(
-            'default-sprint',
-            new DefaultTemplate(
-                new TrackerTemplatesRepresentation('default-sprint', 'Sprints', 'acid-green'),
-                __DIR__ . '/../resources/templates/Tracker_sprint.xml'
-            )
-        );
-        $collection->add(
-            'default-story',
-            new DefaultTemplate(
-                new TrackerTemplatesRepresentation('default-story', 'User Stories', 'lake-placid-blue'),
-                __DIR__ . '/../resources/templates/Tracker_UserStories.xml'
-            )
-        );
-        $collection->add(
-            'default-task',
-            new DefaultTemplate(
-                new TrackerTemplatesRepresentation('default-task', 'Tasks', 'daphne-blue'),
-                __DIR__ . '/../resources/templates/Tracker_Tasks.xml'
-            )
-        );
+        $collection->add(__DIR__ . '/../resources/templates/Tracker_release.xml');
+        $collection->add(__DIR__ . '/../resources/templates/Tracker_sprint.xml');
+        $collection->add(__DIR__ . '/../resources/templates/Tracker_UserStories.xml');
+        $collection->add(__DIR__ . '/../resources/templates/Tracker_Tasks.xml');
     }
 }

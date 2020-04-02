@@ -192,20 +192,26 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
         $this->tracker_dao->shouldReceive('searchByGroupId')->andReturn([]);
         $this->current_user->shouldReceive('getProjects')->andReturn([]);
 
+        $collection = new DefaultTemplatesCollection();
+        $collection->add(
+            'default-activity',
+            new DefaultTemplate(
+                new TrackerTemplatesRepresentation('default-activity', 'Activities', 'fiesta-red'),
+                '/path/to/xml'
+            )
+        );
+        $collection->add(
+            'default-bug',
+            new DefaultTemplate(
+                new TrackerTemplatesRepresentation('default-bug', 'Bugs', 'clockwork-orange'),
+                '/path/to/xml'
+            )
+        );
         $this->default_templates_collection_builder
             ->shouldReceive('build')
             ->once()
             ->andReturn(
-                new DefaultTemplatesCollection([
-                    'default-activity' => new DefaultTemplate(
-                        new TrackerTemplatesRepresentation('default-activity', 'Activities', 'fiesta-red'),
-                        '/path/to/xml'
-                    ),
-                    'default-bug' => new DefaultTemplate(
-                        new TrackerTemplatesRepresentation('default-bug', 'Bugs', 'clockwork-orange'),
-                        '/path/to/xml'
-                    )
-                ])
+                $collection
             );
 
         $presenter = $this->builder->build($this->current_project, $this->csrf_token, $this->current_user);
