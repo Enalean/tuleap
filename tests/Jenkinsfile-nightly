@@ -85,7 +85,7 @@ pipeline {
                             steps { script { actions.runSOAPTests('mysql57', '74') } }
                         }
                     }
-                    post { always { junit 'results/soap/*/rest_tests.xml' } }
+                    post { always { junit 'results/soap/*/soap_tests.xml' } }
                 }
                 stage('DB Integration') {
                     stages {
