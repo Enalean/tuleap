@@ -290,8 +290,13 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
             if (isset($new_value['expected_results_format'][$key])) {
                 $submitted_expected_results_format = $new_value['expected_results_format'][$key];
             }
+            $submitted_step_id = 0;
+            if (isset($new_value['id'][$key])) {
+                $submitted_step_id = $new_value['id'][$key];
+            }
+
             $submitted_steps[] = new Step(
-                $new_value['id'][$key],
+                $submitted_step_id,
                 $submitted_step_description,
                 $submitted_description_format,
                 $submitted_expected_results,
@@ -320,7 +325,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
 
     private function transformSubmittedValuesIntoArrayOfStructuredSteps(array $submitted_values)
     {
-        if ($this->doesUserWantToRemoveAllSteps($submitted_values)) {
+        if ($this->doesUserWantToRemoveAllSteps($submitted_values) || ! isset($submitted_values['description'])) {
             return [];
         }
 

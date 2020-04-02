@@ -1,9 +1,9 @@
 namespace xsd = "http://www.w3.org/2001/XMLSchema"
 grammar {
      start = element external_field_change {
-            attribute field_name {'steps'},
+            attribute field_name { xsd:string },
             attribute type {"ttmstepdef"},
-            element step { step_value}*
+            element step { step_value}+
      }
 
      step_value =
