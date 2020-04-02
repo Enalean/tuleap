@@ -20,6 +20,7 @@
 import { modal as createModal } from "tlp";
 import jQuery from "jquery";
 import { contactSupportModalShown } from "./modal.js";
+import { sanitize } from "dompurify";
 
 (function ($) {
     var help_modal_trigger = document.querySelector(
@@ -35,7 +36,7 @@ import { contactSupportModalShown } from "./modal.js";
                 "/plugins/mytuleap_contact_support/get-modal-content?is-burning-parrot-compatible=1"
             ).then(function (data) {
                 var modal_container = document.createElement("div");
-                modal_container.innerHTML = data;
+                modal_container.innerHTML = sanitize(data);
                 document.body.appendChild(modal_container.querySelector(".tlp-modal"));
                 contact_support_modal = createModal(
                     document.body.querySelector(".contact-support-modal")

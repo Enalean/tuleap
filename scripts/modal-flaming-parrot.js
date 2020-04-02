@@ -19,6 +19,7 @@
 
 import jQuery from "jquery";
 import { contactSupportModalShown } from "./modal.js";
+import { sanitize } from "dompurify";
 
 (function ($) {
     $(function () {
@@ -35,7 +36,7 @@ import { contactSupportModalShown } from "./modal.js";
                     "/plugins/mytuleap_contact_support/get-modal-content?is-burning-parrot-compatible=0"
                 ).then(function (data) {
                     var modal_container = document.createElement("div");
-                    modal_container.innerHTML = data;
+                    modal_container.innerHTML = sanitize(data);
 
                     contact_support_modal = modal_container.querySelector(".contact-support-modal");
                     document.body.appendChild(contact_support_modal);

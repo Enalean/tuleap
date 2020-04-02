@@ -1,7 +1,9 @@
 {
   "name": "@tuleap/plugin-mytuleap_contact_support",
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "dompurify": "^2.0.8"
+  },
   "devDependencies": {},
   "config": {
     "bin": "../../node_modules/.bin"
