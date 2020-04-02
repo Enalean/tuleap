@@ -73,7 +73,7 @@ describe("SwimlaneHeader", () => {
     it("collapse the swimlane when user click on the toggle icon", async () => {
         const wrapper = await createWrapper(false);
 
-        wrapper.find(".taskboard-swimlane-toggle").trigger("click");
+        wrapper.get(".taskboard-swimlane-toggle").trigger("click");
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith(
             "swimlane/collapseSwimlane",
             swimlane

@@ -128,9 +128,10 @@ describe("PostAction", () => {
         });
     });
 
-    it(`when the modal is saving, it will disable the post-action type selectbox`, () => {
+    it(`when the modal is saving, it will disable the post-action type selectbox`, async () => {
         store.state.transitionModal.is_modal_save_running = true;
-        const post_action_type_select = wrapper.find("[data-test=post-action-type-select]");
+        await wrapper.vm.$nextTick();
+        const post_action_type_select = wrapper.get("[data-test=post-action-type-select]");
         expect(post_action_type_select.attributes("disabled")).toBeTruthy();
     });
 

@@ -71,17 +71,19 @@ describe(`BaseSiteAdminEditModal`, () => {
     });
 
     describe(`when the show() method is called`, () => {
-        it(`and it's a custom service, it will instanciate the custom service component`, () => {
+        it(`and it's a custom service, it will instanciate the custom service component`, async () => {
             const fake_button = createFakeButton({ is_project_scope: true });
             wrapper.vm.show(fake_button);
+            await wrapper.vm.$nextTick();
 
             const project_service = wrapper.find(InEditionCustomService);
             expect(project_service.exists()).toBe(true);
         });
 
-        it(`and it's a system service, it will instanciate the editable system service component`, () => {
+        it(`and it's a system service, it will instanciate the editable system service component`, async () => {
             const fake_button = createFakeButton({ is_project_scope: false });
             wrapper.vm.show(fake_button);
+            await wrapper.vm.$nextTick();
 
             const system_service = wrapper.find(EditableSystemService);
             expect(system_service.exists()).toBe(true);

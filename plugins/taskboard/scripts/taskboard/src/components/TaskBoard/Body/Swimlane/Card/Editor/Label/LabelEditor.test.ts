@@ -40,14 +40,14 @@ describe("LabelEditor", () => {
     it("Saves the card if user hits enter", async () => {
         const wrapper = await getWrapper();
 
-        wrapper.find({ ref: "textarea" }).trigger("keydown.enter");
+        wrapper.get({ ref: "textarea" }).trigger("keydown.enter");
         expect(wrapper.emitted("save")).toBeTruthy();
     });
 
     it("Does not save the card if user hits shift + enter", async () => {
         const wrapper = await getWrapper();
 
-        wrapper.find({ ref: "textarea" }).trigger("keydown.enter", { shiftKey: true });
+        wrapper.get({ ref: "textarea" }).trigger("keydown.enter", { shiftKey: true });
         expect(wrapper.emitted("save")).toBeFalsy();
     });
 });

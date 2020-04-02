@@ -48,7 +48,7 @@ describe("SwimlaneSkeleton", () => {
 
         expect(
             wrapper
-                .find(".taskboard-cell")
+                .get(".taskboard-cell")
                 .contains(".taskboard-card-parent.taskboard-card-skeleton")
         ).toBe(true);
         const skeletons = wrapper.findAll(ColumnsSkeleton);

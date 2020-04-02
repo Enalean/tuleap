@@ -220,6 +220,7 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
 
         expect(wrapper.contains(ReleaseBadgesClosedSprints)).toBe(false);
         wrapper.setData({ open_sprints_details: true });
+        await wrapper.vm.$nextTick();
         expect(wrapper.contains(ReleaseBadgesClosedSprints)).toBe(true);
     });
 
@@ -229,7 +230,8 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
         wrapper.setData({ open_sprints_details: true });
         expect(wrapper.contains("[data-test=button-to-close]")).toBe(true);
 
-        wrapper.find("[data-test=button-to-close]").trigger("click");
+        wrapper.get("[data-test=button-to-close]").trigger("click");
+        await wrapper.vm.$nextTick();
 
         expect(wrapper.contains("[data-test=button-to-close]")).toBe(false);
     });
@@ -337,6 +339,7 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
         expect(wrapper.contains(ReleaseBadgesAllSprints)).toBe(true);
 
         wrapper.setData({ open_sprints_details: true });
+        await wrapper.vm.$nextTick();
         expect(wrapper.contains(ReleaseBadgesOpenSprint)).toBe(true);
         expect(wrapper.contains(ReleaseBadgesAllSprints)).toBe(false);
     });

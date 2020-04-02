@@ -42,7 +42,7 @@ describe("IntInput", () => {
 
     describe("when changing value", () => {
         beforeEach(() => {
-            const input = wrapper.find("input");
+            const input = wrapper.get("input");
             input.element.value = "6";
             input.trigger("input");
         });
@@ -55,7 +55,7 @@ describe("IntInput", () => {
 
     describe("when trying to input not int value", () => {
         beforeEach(() => {
-            const input = wrapper.find("input");
+            const input = wrapper.get("input");
             input.element.value = "invalid format";
             input.trigger("input");
         });

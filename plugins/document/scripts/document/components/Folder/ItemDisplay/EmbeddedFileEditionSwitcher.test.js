@@ -44,16 +44,16 @@ describe("EmbeddedFileEditionSwitcher", () => {
         store.state.is_embedded_in_large_view = false;
         const wrapper = factory();
 
-        expect(wrapper.find("[data-test=view-switcher-narrow]").element.checked).toBe(true);
-        expect(wrapper.find("[data-test=view-switcher-large]").element.checked).toBe(false);
+        expect(wrapper.get("[data-test=view-switcher-narrow]").element.checked).toBe(true);
+        expect(wrapper.get("[data-test=view-switcher-large]").element.checked).toBe(false);
     });
 
     it(`Embedded document is well rendered in narrow mode`, () => {
         store.state.is_embedded_in_large_view = true;
         const wrapper = factory();
 
-        expect(wrapper.find("[data-test=view-switcher-narrow]").element.checked).toBe(false);
-        expect(wrapper.find("[data-test=view-switcher-large]").element.checked).toBe(true);
+        expect(wrapper.get("[data-test=view-switcher-narrow]").element.checked).toBe(false);
+        expect(wrapper.get("[data-test=view-switcher-large]").element.checked).toBe(true);
     });
 
     it(`Should switch view to narrow when user click on narrow view`, () => {
@@ -61,7 +61,7 @@ describe("EmbeddedFileEditionSwitcher", () => {
         store.state.is_embedded_in_large_view = false;
         const wrapper = factory();
 
-        wrapper.find("[data-test=view-switcher-narrow]").trigger("click");
+        wrapper.get("[data-test=view-switcher-narrow]").trigger("click");
         expect(store.dispatch).toHaveBeenCalledWith(
             "displayEmbeddedInNarrowMode",
             store.state.currently_previewed_item
@@ -73,7 +73,7 @@ describe("EmbeddedFileEditionSwitcher", () => {
         store.state.is_embedded_in_large_view = true;
         const wrapper = factory();
 
-        wrapper.find("[data-test=view-switcher-large]").trigger("click");
+        wrapper.get("[data-test=view-switcher-large]").trigger("click");
         expect(store.dispatch).toHaveBeenCalledWith(
             "displayEmbeddedInLargeMode",
             store.state.currently_previewed_item

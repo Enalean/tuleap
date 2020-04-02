@@ -76,14 +76,14 @@ describe("StepNavigationButtons", () => {
 
     it("Disables the [Create my tracker] submit button when the creation is not ready to be submitted", async () => {
         const wrapper = await getWrapper({ previousStepName: "step-1" }, false, false);
-        const submit_button = wrapper.find("[data-test=button-create-my-tracker]");
+        const submit_button = wrapper.get("[data-test=button-create-my-tracker]");
 
         expect(submit_button.attributes("disabled")).toBe("disabled");
     });
 
     it("Disables the [Create my tracker] submit button when the form has been submitted", async () => {
         const wrapper = await getWrapper({ previousStepName: "step-1" }, false, false, true);
-        const submit_button = wrapper.find("[data-test=button-create-my-tracker]");
+        const submit_button = wrapper.get("[data-test=button-create-my-tracker]");
 
         expect(submit_button.attributes("disabled")).toBe("disabled");
         expect(submit_button.find("i.fa-spin").exists()).toBe(true);
@@ -91,7 +91,7 @@ describe("StepNavigationButtons", () => {
 
     it("Clicking on [Create my tracker] sets the form as submitted", async () => {
         const wrapper = await getWrapper({ previousStepName: "step-1" }, false, true, false);
-        const submit_button = wrapper.find("[data-test=button-create-my-tracker]");
+        const submit_button = wrapper.get("[data-test=button-create-my-tracker]");
 
         submit_button.trigger("click");
 
@@ -103,7 +103,7 @@ describe("StepNavigationButtons", () => {
 
     it("Disables the [next ->] button when the creation is not ready for the step 2 and to click on it does nothing", async () => {
         const wrapper = await getWrapper({ nextStepName: "step-2" }, false);
-        const next_step_button = wrapper.find("[data-test=button-next]");
+        const next_step_button = wrapper.get("[data-test=button-next]");
 
         expect(next_step_button.attributes("disabled")).toBe("disabled");
 
@@ -115,7 +115,7 @@ describe("StepNavigationButtons", () => {
     it("Clicking on the [next ->] button makes the app navigate to the next step", async () => {
         const wrapper = await getWrapper({ nextStepName: "step-2" }, true);
 
-        wrapper.find("[data-test=button-next]").trigger("click");
+        wrapper.get("[data-test=button-next]").trigger("click");
 
         expect(wrapper.vm.$router.push).toHaveBeenCalledWith({ name: "step-2" });
     });

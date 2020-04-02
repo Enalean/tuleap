@@ -40,24 +40,24 @@ describe("CancelSaveButtons", () => {
         });
 
         it(`when the user clicks on the cancel button, it will emit a "cancel" event`, () => {
-            const cancel_button = wrapper.find("[data-test=cancel]");
+            const cancel_button = wrapper.get("[data-test=cancel]");
 
             cancel_button.trigger("click");
 
-            expect(wrapper.emitted("cancel").length).toBe(1);
+            expect(wrapper.emitted("cancel")).toBeTruthy();
         });
 
         it(`when the user presses the ESC key, it will emit a "cancel" event`, () => {
             EventBus.$emit(TaskboardEvent.ESC_KEY_PRESSED);
 
-            expect(wrapper.emitted("cancel").length).toBe(1);
+            expect(wrapper.emitted("cancel")).toBeTruthy();
         });
 
         it(`when the user clicks on the save button, it will emit a "save" event`, () => {
-            const save_button = wrapper.find("[data-test=save]");
+            const save_button = wrapper.get("[data-test=save]");
             save_button.trigger("click");
 
-            expect(wrapper.emitted("save").length).toBe(1);
+            expect(wrapper.emitted("save")).toBeTruthy();
         });
     });
 
@@ -68,15 +68,15 @@ describe("CancelSaveButtons", () => {
         });
 
         it(`the save button will be disabled and will show a spinner icon`, () => {
-            const save_button = wrapper.find("[data-test=save]");
+            const save_button = wrapper.get("[data-test=save]");
             expect(save_button.attributes("disabled")).toEqual("disabled");
-            const save_icon = wrapper.find("[data-test=save-icon]");
+            const save_icon = wrapper.get("[data-test=save-icon]");
             expect(save_icon.classes()).toContain("fa-circle-o-notch");
             expect(save_icon.classes()).toContain("fa-spin");
         });
 
         it(`the cancel button will be disabled`, () => {
-            const cancel_button = wrapper.find("[data-test=cancel]");
+            const cancel_button = wrapper.get("[data-test=cancel]");
             expect(cancel_button.attributes("disabled")).toEqual("disabled");
         });
 
@@ -87,14 +87,14 @@ describe("CancelSaveButtons", () => {
         });
 
         it(`when the user clicks on the save button, it won't emit an event`, () => {
-            const save_button = wrapper.find("[data-test=save]");
+            const save_button = wrapper.get("[data-test=save]");
             save_button.trigger("click");
 
             expect(wrapper.emitted("cancel")).toBeUndefined();
         });
 
         it(`when the user clicks on the cancel button, it won't emit an event`, () => {
-            const cancel_button = wrapper.find("[data-test=cancel]");
+            const cancel_button = wrapper.get("[data-test=cancel]");
             cancel_button.trigger("click");
 
             expect(wrapper.emitted("cancel")).toBeUndefined();

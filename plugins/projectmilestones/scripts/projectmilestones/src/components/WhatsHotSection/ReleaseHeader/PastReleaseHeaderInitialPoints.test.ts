@@ -60,7 +60,7 @@ describe("PastReleaseHeaderInitialPoints", () => {
     describe("Display initial effort", () => {
         it("When there is initial effort, Then it's displayed", async () => {
             const wrapper = await getPersonalWidgetInstance(store_options);
-            expect(wrapper.find("[data-test=points-initial-value]").text()).toBe("10");
+            expect(wrapper.get("[data-test=points-initial-value]").text()).toBe("10");
         });
 
         it("When there isn't initial effort, Then 0 displayed", async () => {
@@ -76,7 +76,7 @@ describe("PastReleaseHeaderInitialPoints", () => {
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
-            expect(wrapper.find("[data-test=points-initial-value]").text()).toBe("0");
+            expect(wrapper.get("[data-test=points-initial-value]").text()).toBe("0");
         });
     });
 });

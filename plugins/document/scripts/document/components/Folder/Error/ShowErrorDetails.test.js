@@ -59,12 +59,13 @@ describe("ShowErrorDetails", () => {
         });
         it(`Given route fails with an error with content and is_more_shown is true
             When we display the error
-            Then the original error message is displayed in a info`, () => {
+            Then the original error message is displayed in a info`, async () => {
             const wrapper = show_error_details_factory();
             expect(
                 wrapper.find("[data-test=error-details-show-more-button]").exists()
             ).toBeTruthy();
-            wrapper.find("[data-test=error-details-show-more-button]").trigger("click");
+            wrapper.get("[data-test=error-details-show-more-button]").trigger("click");
+            await wrapper.vm.$nextTick();
             expect(wrapper.find("[data-test=show-more-error-message]").exists()).toBeTruthy();
         });
 
@@ -80,10 +81,11 @@ describe("ShowErrorDetails", () => {
 
         it(`Given error concerns a folder and is_more_shown is true
             When we display the error
-            Then the message displayed is the folder one`, () => {
+            Then the message displayed is the folder one`, async () => {
             const wrapper = show_error_details_factory();
-            wrapper.find("[data-test=error-details-show-more-button]").trigger("click");
-            expect(wrapper.find("[data-test=show-more-error-message]").element.innerHTML).toBe(
+            wrapper.get("[data-test=error-details-show-more-button]").trigger("click");
+            await wrapper.vm.$nextTick();
+            expect(wrapper.get("[data-test=show-more-error-message]").element.innerHTML).toBe(
                 folder_loading_error
             );
         });
@@ -119,11 +121,12 @@ describe("ShowErrorDetails", () => {
 
         it(`Given error concerns an item and is_more_shown is true
         When we display the error
-        Then the message displayed is the item one`, () => {
+        Then the message displayed is the item one`, async () => {
             store.getters.has_any_loading_error = true;
             const wrapper = show_error_details_factory();
-            wrapper.find("[data-test=error-details-show-more-button]").trigger("click");
-            expect(wrapper.find("[data-test=show-more-error-message]").element.innerHTML).toBe(
+            wrapper.get("[data-test=error-details-show-more-button]").trigger("click");
+            await wrapper.vm.$nextTick();
+            expect(wrapper.get("[data-test=show-more-error-message]").element.innerHTML).toBe(
                 document_loading_error
             );
         });
@@ -158,12 +161,13 @@ describe("ShowErrorDetails", () => {
         });
         it(`Given route fails with an error with content and is_more_shown is true
             When we display the error
-            Then the original error message is displayed in a info`, () => {
+            Then the original error message is displayed in a info`, async () => {
             const wrapper = show_error_details_factory();
             expect(
                 wrapper.find("[data-test=error-details-show-more-button]").exists()
             ).toBeTruthy();
-            wrapper.find("[data-test=error-details-show-more-button]").trigger("click");
+            wrapper.get("[data-test=error-details-show-more-button]").trigger("click");
+            await wrapper.vm.$nextTick();
             expect(wrapper.find("[data-test=show-more-error-message]").exists()).toBeTruthy();
         });
 
@@ -179,10 +183,11 @@ describe("ShowErrorDetails", () => {
 
         it(`Given error concerns a lock and is_more_shown is true
             When we display the error
-            Then the message displayed is the folder one`, () => {
+            Then the message displayed is the folder one`, async () => {
             const wrapper = show_error_details_factory();
-            wrapper.find("[data-test=error-details-show-more-button]").trigger("click");
-            expect(wrapper.find("[data-test=show-more-error-message]").element.innerHTML).toBe(
+            wrapper.get("[data-test=error-details-show-more-button]").trigger("click");
+            await wrapper.vm.$nextTick();
+            expect(wrapper.get("[data-test=show-more-error-message]").element.innerHTML).toBe(
                 document_lock_error
             );
         });

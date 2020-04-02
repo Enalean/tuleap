@@ -44,6 +44,7 @@ describe("FolderHeader", () => {
         const dynamic_import_stubs = {
             permissionsUpdateModal: "<div></div>",
             confirmDeletionModal: "<div></div>",
+            CreateNewVersionEmptyModal: "<div></div>",
         };
 
         factory = (props = {}) => {
@@ -60,7 +61,7 @@ describe("FolderHeader", () => {
             store.state.is_loading_ascendant_hierarchy = true;
 
             const wrapper = factory();
-            expect(wrapper.find("[data-test=document-folder-header-title]").classes()).toContain(
+            expect(wrapper.get("[data-test=document-folder-header-title]").classes()).toContain(
                 "document-folder-title-loading"
             );
         });
@@ -69,7 +70,7 @@ describe("FolderHeader", () => {
             store.state.is_loading_ascendant_hierarchy = false;
 
             const wrapper = factory();
-            expect(wrapper.find("[data-test=document-folder-header-title]").classes()).toEqual([]);
+            expect(wrapper.get("[data-test=document-folder-header-title]").classes()).toEqual([]);
         });
     });
     describe("Search box -", () => {
@@ -92,26 +93,29 @@ describe("FolderHeader", () => {
     });
 
     describe("Modal loading -", () => {
-        it(`Load new item version modal`, () => {
+        it(`Load new item version modal`, async () => {
             store.state.is_loading_ascendant_hierarchy = false;
             store.state.current_folder = { id: 20 };
 
             const wrapper = factory();
             const event = { detail: { current_item: { type: TYPE_EMPTY } } };
             wrapper.vm.showCreateNewItemVersionModal(event);
+            await wrapper.vm.$nextTick();
+            await wrapper.vm.shown_new_version_modal();
 
             expect(wrapper.contains("[data-test=document-new-version-modal]")).toBeTruthy();
             expect(wrapper.contains("[data-test=document-update-metadata-modal]")).toBeFalsy();
             expect(wrapper.contains("[data-test=document-delete-item-modal]")).toBeFalsy();
             expect(wrapper.contains("[data-test=document-permissions-item-modal]")).toBeFalsy();
         });
-        it(`Load delete modal`, () => {
+        it(`Load delete modal`, async () => {
             store.state.is_loading_ascendant_hierarchy = false;
             store.state.current_folder = { id: 20 };
 
             const wrapper = factory();
             const event = { detail: { current_item: { type: TYPE_EMPTY } } };
             wrapper.vm.showDeleteItemModal(event);
+            await wrapper.vm.$nextTick();
 
             expect(wrapper.contains("[data-test=document-new-version-modal]")).toBeFalsy();
             expect(wrapper.contains("[data-test=document-update-metadata-modal]")).toBeFalsy();
@@ -119,13 +123,15 @@ describe("FolderHeader", () => {
             expect(wrapper.contains("[data-test=document-permissions-item-modal]")).toBeFalsy();
         });
 
-        it(`Load update metadata modal`, () => {
+        it(`Load update metadata modal`, async () => {
             store.state.is_loading_ascendant_hierarchy = false;
             store.state.current_folder = { id: 20 };
 
             const wrapper = factory();
             const event = { detail: { current_item: { type: TYPE_EMPTY } } };
             wrapper.vm.showUpdateItemMetadataModal(event);
+            await wrapper.vm.$nextTick();
+            await wrapper.vm.shown_update_metadata_modal();
 
             expect(wrapper.contains("[data-test=document-new-version-modal]")).toBeFalsy();
             expect(wrapper.contains("[data-test=document-update-metadata-modal]")).toBeTruthy();
@@ -133,13 +139,14 @@ describe("FolderHeader", () => {
             expect(wrapper.contains("[data-test=document-permissions-item-modal]")).toBeFalsy();
         });
 
-        it(`Load permission modal`, () => {
+        it(`Load permission modal`, async () => {
             store.state.is_loading_ascendant_hierarchy = false;
             store.state.current_folder = { id: 20 };
 
             const wrapper = factory();
             const event = { detail: { current_item: { type: TYPE_EMPTY } } };
             wrapper.vm.showUpdateItemPermissionsModal(event);
+            await wrapper.vm.$nextTick();
 
             expect(wrapper.contains("[data-test=document-new-version-modal]")).toBeFalsy();
             expect(wrapper.contains("[data-test=document-update-metadata-modal]")).toBeFalsy();

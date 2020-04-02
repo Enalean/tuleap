@@ -55,7 +55,7 @@ describe("FieldName", () => {
 
     it("its value is initialized with the tracker name from the store", async () => {
         const wrapper = await getWrapper(true);
-        const input_element: HTMLInputElement = wrapper.find("[data-test=tracker-name-input]")
+        const input_element: HTMLInputElement = wrapper.get("[data-test=tracker-name-input]")
             .element as HTMLInputElement;
 
         expect(input_element.value).toEqual(state.tracker_to_be_created.name);
@@ -69,7 +69,7 @@ describe("FieldName", () => {
 
     it("sets the tracker name with the entered value on the keyup event", async () => {
         const wrapper = await getWrapper(true);
-        const name_input = wrapper.find("[data-test=tracker-name-input]");
+        const name_input = wrapper.get("[data-test=tracker-name-input]");
 
         name_input.trigger("keyup");
 

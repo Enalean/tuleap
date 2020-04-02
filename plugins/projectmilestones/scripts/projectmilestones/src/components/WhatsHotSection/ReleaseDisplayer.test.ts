@@ -94,6 +94,7 @@ describe("ReleaseDisplayer", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
+        await wrapper.vm.$nextTick();
         expect(wrapper.contains("[data-test=toggle-open]")).toBe(true);
     });
 
@@ -129,7 +130,8 @@ describe("ReleaseDisplayer", () => {
         const wrapper = await getPersonalWidgetInstance(store_options);
         expect(wrapper.contains("[data-test=toggle-open]")).toBe(true);
 
-        wrapper.find(ReleaseHeader).vm.$emit("toggleReleaseDetails");
+        wrapper.get(ReleaseHeader).vm.$emit("toggleReleaseDetails");
+        await wrapper.vm.$nextTick();
         expect(wrapper.contains("[data-test=toggle-open]")).toBe(false);
     });
 

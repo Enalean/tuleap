@@ -50,7 +50,7 @@ describe("CreateNewItemVersionButton", () => {
             },
         });
 
-        wrapper.find("[data-test=document-new-item-version-button]").trigger("click");
+        wrapper.get("[data-test=document-new-item-version-button]").trigger("click");
 
         expect(event_bus_emit).toHaveBeenCalledWith(
             "show-create-new-item-version-modal",
@@ -71,7 +71,7 @@ describe("CreateNewItemVersionButton", () => {
             },
         });
 
-        wrapper.find("[data-test=document-new-item-version-button]").trigger("click");
+        wrapper.get("[data-test=document-new-item-version-button]").trigger("click");
 
         expect(event_bus_emit).toHaveBeenCalledWith(
             "show-create-new-item-version-modal",
@@ -93,7 +93,7 @@ describe("CreateNewItemVersionButton", () => {
             },
         });
 
-        wrapper.find("[data-test=document-new-item-version-button]").trigger("click");
+        wrapper.get("[data-test=document-new-item-version-button]").trigger("click");
 
         expect(event_bus_emit).toHaveBeenCalledWith(
             "show-create-new-item-version-modal",
@@ -117,7 +117,7 @@ describe("CreateNewItemVersionButton", () => {
             },
         });
 
-        wrapper.find("[data-test=document-new-item-version-button]").trigger("click");
+        wrapper.get("[data-test=document-new-item-version-button]").trigger("click");
 
         expect(event_bus_emit).not.toHaveBeenCalled();
     });
@@ -136,7 +136,7 @@ describe("CreateNewItemVersionButton", () => {
             },
         });
 
-        wrapper.find("[data-test=document-new-item-version-button]").trigger("click");
+        wrapper.get("[data-test=document-new-item-version-button]").trigger("click");
 
         expect(event_bus_emit).toHaveBeenCalledWith(
             "show-create-new-item-version-modal",
@@ -156,7 +156,7 @@ describe("CreateNewItemVersionButton", () => {
 
         const wrapper = create_new_item_version_button_factory({ item });
 
-        wrapper.find("[data-test=document-new-item-version-button]").trigger("click");
+        wrapper.get("[data-test=document-new-item-version-button]").trigger("click");
 
         expect(store.dispatch).toHaveBeenCalledWith("loadDocument", 1);
     });

@@ -40,7 +40,7 @@ describe("CustomMetadataString", () => {
             type: "string",
         };
         const wrapper = factory({ currentlyUpdatedItemMetadata });
-        const date_input = wrapper.find("[data-test=document-string-input]");
+        const date_input = wrapper.get("[data-test=document-string-input]");
 
         expect(date_input.element.value).toEqual("string value");
         expect(date_input.element.required).toBe(true);
@@ -55,7 +55,7 @@ describe("CustomMetadataString", () => {
             type: "string",
         };
         const wrapper = factory({ currentlyUpdatedItemMetadata });
-        const date_input = wrapper.find("[data-test=document-string-input]");
+        const date_input = wrapper.get("[data-test=document-string-input]");
 
         expect(date_input.element.value).toEqual("");
         expect(date_input.element.required).toBe(false);

@@ -77,7 +77,7 @@ describe("StepTwo", () => {
         });
 
         it("Sets the right encoding type for the form", () => {
-            expect(wrapper.find("#tracker-creation-form").attributes("enctype")).toEqual(
+            expect(wrapper.get("#tracker-creation-form").attributes("enctype")).toEqual(
                 "application/x-www-form-urlencoded"
             );
         });
@@ -101,7 +101,7 @@ describe("StepTwo", () => {
         });
 
         it("Sets the right encoding type for the form", () => {
-            expect(wrapper.find("#tracker-creation-form").attributes("enctype")).toEqual(
+            expect(wrapper.get("#tracker-creation-form").attributes("enctype")).toEqual(
                 "application/x-www-form-urlencoded"
             );
         });
@@ -131,7 +131,7 @@ describe("StepTwo", () => {
         });
 
         it("Sets the right encoding type for the form", () => {
-            expect(wrapper.find("#tracker-creation-form").attributes("enctype")).toEqual(
+            expect(wrapper.get("#tracker-creation-form").attributes("enctype")).toEqual(
                 "multipart/form-data"
             );
         });
@@ -165,7 +165,7 @@ describe("StepTwo", () => {
         });
 
         it("Sets the right encoding type for the form", () => {
-            expect(wrapper.find("#tracker-creation-form").attributes("enctype")).toEqual(
+            expect(wrapper.get("#tracker-creation-form").attributes("enctype")).toEqual(
                 "application/x-www-form-urlencoded"
             );
         });

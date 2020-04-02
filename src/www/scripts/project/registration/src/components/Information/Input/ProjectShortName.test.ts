@@ -56,7 +56,7 @@ describe("ProjectShortName", () => {
             };
             const wrapper = await createWrapper(data);
             expect(wrapper.contains("[data-test=project-shortname-slugified-section]")).toBe(false);
-            expect(wrapper.find("[data-test=project-shortname-edit-section]").classes()).toEqual([
+            expect(wrapper.get("[data-test=project-shortname-edit-section]").classes()).toEqual([
                 "tlp-form-element",
                 "project-short-name-hidden-section",
             ]);
@@ -71,7 +71,7 @@ describe("ProjectShortName", () => {
             const wrapper = await createWrapper(data);
 
             expect(wrapper.contains("[data-test=project-shortname-slugified-section]")).toBe(false);
-            expect(wrapper.find("[data-test=project-shortname-edit-section]").classes()).toEqual([
+            expect(wrapper.get("[data-test=project-shortname-edit-section]").classes()).toEqual([
                 "tlp-form-element",
                 "project-short-name-edit-section",
             ]);
@@ -86,7 +86,7 @@ describe("ProjectShortName", () => {
             const wrapper = await createWrapper(data);
 
             expect(wrapper.contains("[data-test=project-shortname-slugified-section]")).toBe(true);
-            expect(wrapper.find("[data-test=project-shortname-edit-section]").classes()).toEqual([
+            expect(wrapper.get("[data-test=project-shortname-edit-section]").classes()).toEqual([
                 "tlp-form-element",
                 "project-short-name-hidden-section",
             ]);
@@ -294,11 +294,11 @@ describe("ProjectShortName", () => {
             };
             const wrapper = await createWrapper(data);
 
-            wrapper.find("[data-test=new-project-shortname]").setValue("Original");
+            wrapper.get("[data-test=new-project-shortname]").setValue("Original");
 
-            wrapper.find("[data-test=project-shortname-slugified-section]").trigger("click");
+            wrapper.get("[data-test=project-shortname-slugified-section]").trigger("click");
 
-            wrapper.find("[data-test=new-project-shortname]").setValue("Accentué ç è é ù ë");
+            wrapper.get("[data-test=new-project-shortname]").setValue("Accentué ç è é ù ë");
             expect(wrapper.vm.$data.slugified_project_name).toBe("Accentué ç è é ù ë");
             expect(wrapper.vm.$data.has_slug_error).toBe(true);
 

@@ -95,6 +95,7 @@ describe("AdvancedTemplateList", () => {
         });
 
         wrapper.vm.$data.is_loading_project_list = true;
+        await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=user-project-description]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=user-project-spinner]").exists()).toBeTruthy();
@@ -110,6 +111,7 @@ describe("AdvancedTemplateList", () => {
 
         wrapper.vm.$data.is_loading_project_list = true;
         wrapper.vm.$data.has_error = true;
+        await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=user-project-description]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=user-project-spinner]").exists()).toBeFalsy();
@@ -124,6 +126,7 @@ describe("AdvancedTemplateList", () => {
         });
 
         wrapper.vm.$data.has_error = true;
+        await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=user-project-description]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=user-project-spinner]").exists()).toBeFalsy();
@@ -140,11 +143,11 @@ describe("AdvancedTemplateList", () => {
             mocks: { $store: store },
         });
 
-        wrapper.find("[data-test=project-registration-card-label").trigger("click");
+        wrapper.get("[data-test=project-registration-card-label").trigger("click");
+        await wrapper.vm.$nextTick();
+        await wrapper.vm.$nextTick();
 
         expect(is_user_admin_of).toHaveBeenCalled();
-
-        await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=user-project-description]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=user-project-spinner]").exists()).toBeFalsy();

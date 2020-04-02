@@ -83,7 +83,7 @@ describe("FieldChosenTemplate", () => {
 
             const wrapper = await getWrapper(state);
             expect(wrapper.find("[data-test=project-of-chosen-template]").exists()).toBe(false);
-            expect(wrapper.find("[data-test=chosen-template]").text()).toEqual("Bugs");
+            expect(wrapper.get("[data-test=chosen-template]").text()).toEqual("Bugs");
         });
 
         it("is a tracker duplication", async () => {
@@ -92,11 +92,11 @@ describe("FieldChosenTemplate", () => {
                 tracker_list: [],
             });
 
-            expect(wrapper.find("[data-test=project-of-chosen-template]").text()).toEqual(
+            expect(wrapper.get("[data-test=project-of-chosen-template]").text()).toEqual(
                 "Default Site Template"
             );
 
-            expect(wrapper.find("[data-test=chosen-template]").text()).toEqual(
+            expect(wrapper.get("[data-test=chosen-template]").text()).toEqual(
                 "Tracker from a template project"
             );
         });
@@ -114,7 +114,7 @@ describe("FieldChosenTemplate", () => {
             );
 
             expect(wrapper.find("[data-test=project-of-chosen-template]").exists()).toBe(false);
-            expect(wrapper.find("[data-test=chosen-template]").text()).toEqual(
+            expect(wrapper.get("[data-test=chosen-template]").text()).toEqual(
                 "Tracker XML structure"
             );
         });
@@ -123,16 +123,16 @@ describe("FieldChosenTemplate", () => {
             const wrapper = await getWrapper(state, false, false, true);
 
             expect(wrapper.find("[data-test=project-of-chosen-template]").exists()).toBe(false);
-            expect(wrapper.find("[data-test=chosen-template]").text()).toEqual("Empty");
+            expect(wrapper.get("[data-test=chosen-template]").text()).toEqual("Empty");
         });
 
         it("is a duplication of a tracker from another project", async () => {
             const wrapper = await getWrapper(state, false, false, false, true);
 
-            expect(wrapper.find("[data-test=project-of-chosen-template]").text()).toEqual(
+            expect(wrapper.get("[data-test=project-of-chosen-template]").text()).toEqual(
                 "Another project"
             );
-            expect(wrapper.find("[data-test=chosen-template]").text()).toEqual(
+            expect(wrapper.get("[data-test=chosen-template]").text()).toEqual(
                 "Tracker from another project"
             );
         });

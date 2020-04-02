@@ -77,8 +77,10 @@ describe("UserProjectList", () => {
         });
 
         wrapper.vm.$data.selected_project = project_a;
+        await wrapper.vm.$nextTick();
 
-        wrapper.find("[data-test=from-another-project]").trigger("change");
+        wrapper.get("[data-test=from-another-project]").trigger("change");
+        await wrapper.vm.$nextTick();
 
         expect(store.dispatch).toHaveBeenCalledWith("setSelectedTemplate", project_a);
     });

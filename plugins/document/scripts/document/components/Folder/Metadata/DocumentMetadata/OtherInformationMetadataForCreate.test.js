@@ -97,7 +97,7 @@ describe("OtherInformationMetadataForCreate", () => {
     });
 
     it(`Given custom component are loading
-        Then it displays spinner`, () => {
+        Then it displays spinner`, async () => {
         const wrapper = factory({
             currentlyUpdatedItem: {
                 metadata: [],
@@ -114,6 +114,7 @@ describe("OtherInformationMetadataForCreate", () => {
                 has_loaded_metadata: false,
             },
         };
+        await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=document-other-information]").exists()).toBeTruthy();
         expect(

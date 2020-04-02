@@ -87,10 +87,11 @@ describe("TransitionDeleter", () => {
         });
 
         describe("and another action is running", () => {
-            it("will disable deleting the transition", () => {
+            it("will disable deleting the transition", async () => {
                 store.state.is_operation_running = true;
+                await wrapper.vm.$nextTick();
 
-                const confirm_button = wrapper.find(confirm_delete_transition_selector);
+                const confirm_button = wrapper.get(confirm_delete_transition_selector);
                 expect(confirm_button.classes()).toContain(
                     "tracker-workflow-transition-action-disabled"
                 );
@@ -98,10 +99,11 @@ describe("TransitionDeleter", () => {
         });
 
         describe("and the transition has just been updated", () => {
-            it("shows an animation", () => {
+            it("shows an animation", async () => {
                 wrapper.setProps({ is_transition_updated: true });
+                await wrapper.vm.$nextTick();
 
-                const confirm_button = wrapper.find(confirm_delete_transition_selector);
+                const confirm_button = wrapper.get(confirm_delete_transition_selector);
                 expect(confirm_button.classes()).toContain(
                     "tracker-workflow-transition-action-updated"
                 );
@@ -156,7 +158,7 @@ describe("TransitionDeleter", () => {
 
             describe("and when user clicks the delete button", () => {
                 it("deletes the transition", () => {
-                    const delete_button = wrapper.find(delete_transition_selector);
+                    const delete_button = wrapper.get(delete_transition_selector);
                     delete_button.trigger("click");
 
                     expect(deleteTransition).toHaveBeenCalled();
@@ -169,7 +171,7 @@ describe("TransitionDeleter", () => {
                 });
 
                 it("will disable deleting the transition", () => {
-                    const delete_button = wrapper.find(delete_transition_selector);
+                    const delete_button = wrapper.get(delete_transition_selector);
                     expect(delete_button.classes()).toContain(
                         "tracker-workflow-transition-action-disabled"
                     );
@@ -177,7 +179,7 @@ describe("TransitionDeleter", () => {
 
                 describe("and when user clicks the delete button", () => {
                     it("does nothing", () => {
-                        const delete_button = wrapper.find(delete_transition_selector);
+                        const delete_button = wrapper.get(delete_transition_selector);
                         delete_button.trigger("click");
 
                         expect(deleteTransition).not.toHaveBeenCalled();

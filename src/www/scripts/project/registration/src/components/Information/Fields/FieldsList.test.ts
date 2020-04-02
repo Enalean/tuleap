@@ -85,7 +85,7 @@ describe("FieldsList -", () => {
             desc_required: "1",
         } as FieldData);
 
-        wrapper.find("[data-test=project-field-text]").setValue("my new value");
+        wrapper.get("[data-test=project-field-text]").setValue("my new value");
 
         expect(event_bus_emit).toHaveBeenCalledWith("update-field-list", {
             field_id: "1",

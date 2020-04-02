@@ -57,7 +57,7 @@ describe("NewItemButton", () => {
             },
         });
 
-        wrapper.find("[data-test=docman-new-item-button]").trigger("click");
+        wrapper.get("[data-test=docman-new-item-button]").trigger("click");
 
         expect(event_bus_emit).toHaveBeenCalledWith("show-new-document-modal", expect.any(Object));
     });

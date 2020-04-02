@@ -66,7 +66,7 @@ describe("NewDocument", () => {
         const event_bus_emit = jest.spyOn(EventBus, "$emit");
 
         const wrapper = new_item({ item });
-        wrapper.find("[data-test=document-new-item]").trigger("click");
+        wrapper.get("[data-test=document-new-item]").trigger("click");
         expect(event_bus_emit).toHaveBeenCalledWith("show-new-document-modal", {
             detail: { parent: item },
         });

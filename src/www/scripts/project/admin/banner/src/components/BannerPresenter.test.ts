@@ -59,8 +59,8 @@ describe("BannerPresenter", () => {
 
         const emitSpy = jest.spyOn(wrapper.vm, "$emit");
 
-        wrapper.find("input").trigger("click");
-        wrapper.find("button").trigger("click");
+        wrapper.get("input").trigger("click");
+        wrapper.get("button").trigger("click");
         expect(emitSpy).toHaveBeenCalledWith("save-banner", {
             message: "some message",
             activated: false,
@@ -93,7 +93,7 @@ describe("BannerPresenter", () => {
 
         wrapper.setData({ current_message: updated_message });
 
-        wrapper.find("button").trigger("click");
+        wrapper.get("button").trigger("click");
         expect(emitSpy).toHaveBeenCalledWith("save-banner", {
             message: updated_message,
             activated: true,
@@ -113,7 +113,7 @@ describe("BannerPresenter", () => {
 
         wrapper.setData({ current_message: "" });
 
-        wrapper.find("button").trigger("click");
+        wrapper.get("button").trigger("click");
         expect(emitSpy).not.toHaveBeenCalled();
     });
 });

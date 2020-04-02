@@ -71,6 +71,6 @@ describe("CreateNewVersionEmptyModal", () => {
                 store.state.error.has_modal_error = false;
             }
         });
-        wrapper.find("form").trigger("submit.prevent");
+        wrapper.get("form").trigger("submit.prevent");
     });
 });

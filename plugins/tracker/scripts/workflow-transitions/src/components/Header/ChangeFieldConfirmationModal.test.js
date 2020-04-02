@@ -38,7 +38,7 @@ describe(`ChangeFieldConfirmationModal`, () => {
         });
 
         it(`will disable the "Confirm" button`, () => {
-            const confirm_button = wrapper.find("[data-test=confirm-button]");
+            const confirm_button = wrapper.get("[data-test=confirm-button]");
             expect(confirm_button.attributes("disabled")).toBeTruthy();
         });
 

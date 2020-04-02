@@ -102,20 +102,22 @@ describe("CompanyTemplateList", () => {
             expect(wrapper.findAll(TemplateCardContent)).toHaveLength(2);
         });
 
-        it(`displays the company name if the platform name is not Tuleap`, () => {
+        it(`displays the company name if the platform name is not Tuleap`, async () => {
             wrapper.vm.$store.state.company_name = "Nichya company";
+            await wrapper.vm.$nextTick();
             expect(
                 wrapper
-                    .find("[data-test=project-registration-company-template-title]")
+                    .get("[data-test=project-registration-company-template-title]")
                     .element.innerHTML.trim()
             ).toEqual("Nichya company templates");
         });
 
-        it(`displays 'Custom templates' if the platform name is Tuleap`, () => {
+        it(`displays 'Custom templates' if the platform name is Tuleap`, async () => {
             wrapper.vm.$store.state.company_name = "Tuleap";
+            await wrapper.vm.$nextTick();
             expect(
                 wrapper
-                    .find("[data-test=project-registration-company-template-title]")
+                    .get("[data-test=project-registration-company-template-title]")
                     .element.innerHTML.trim()
             ).toEqual("Custom templates");
         });

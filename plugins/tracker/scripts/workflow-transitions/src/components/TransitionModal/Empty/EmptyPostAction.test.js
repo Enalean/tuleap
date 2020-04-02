@@ -30,7 +30,7 @@ describe(`EmptyPostAction`, () => {
             mocks: { $store: store },
         });
 
-        const add_action_button = wrapper.find("[data-test=add-post-action]");
+        const add_action_button = wrapper.get("[data-test=add-post-action]");
         add_action_button.trigger("click");
 
         expect(store.commit).toHaveBeenCalledWith("transitionModal/addPostAction");

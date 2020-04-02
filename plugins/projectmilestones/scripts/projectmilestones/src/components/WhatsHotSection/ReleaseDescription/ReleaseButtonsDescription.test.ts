@@ -95,10 +95,10 @@ describe("ReleaseButtonsDescription", () => {
         store_options.state.project_id = project_id;
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        const ttm_element = wrapper.find("[data-test=pane-link-testmgmt]");
+        const ttm_element = wrapper.get("[data-test=pane-link-testmgmt]");
         expect(ttm_element.attributes("href")).toEqual("/plugin/testmanagement/project/6");
         expect(ttm_element.text()).toEqual("Test Campaigns");
-        expect(wrapper.find("[data-test=pane-icon-testmgmt]").classes()).toContain(
+        expect(wrapper.get("[data-test=pane-icon-testmgmt]").classes()).toContain(
             "fa-external-link"
         );
     });
@@ -107,10 +107,10 @@ describe("ReleaseButtonsDescription", () => {
         store_options.state.project_id = project_id;
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        const taskboard_element = wrapper.find("[data-test=pane-link-taskboard]");
+        const taskboard_element = wrapper.get("[data-test=pane-link-taskboard]");
         expect(taskboard_element.attributes("href")).toEqual("/taskboard/project/6");
         expect(taskboard_element.text()).toEqual("Taskboard");
-        expect(wrapper.find("[data-test=pane-icon-taskboard]").classes()).toContain(
+        expect(wrapper.get("[data-test=pane-icon-taskboard]").classes()).toContain(
             "fa-tlp-taskboard"
         );
     });
@@ -119,7 +119,7 @@ describe("ReleaseButtonsDescription", () => {
         store_options.state.project_id = project_id;
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.find("[data-test=overview-link]").attributes("href")).toEqual(
+        expect(wrapper.get("[data-test=overview-link]").attributes("href")).toEqual(
             "/plugins/agiledashboard/?group_id=" +
                 encodeURIComponent(project_id) +
                 "&planning_id=" +
@@ -134,7 +134,7 @@ describe("ReleaseButtonsDescription", () => {
         store_options.state.project_id = project_id;
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.find("[data-test=cardwall-link]").attributes("href")).toEqual(
+        expect(wrapper.get("[data-test=cardwall-link]").attributes("href")).toEqual(
             "/plugins/agiledashboard/?group_id=" +
                 encodeURIComponent(project_id) +
                 "&planning_id=" +

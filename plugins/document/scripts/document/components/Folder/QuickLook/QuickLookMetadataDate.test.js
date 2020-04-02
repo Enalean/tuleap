@@ -65,7 +65,7 @@ describe("QuickLookMetadataDate", () => {
 
         expect(
             wrapper
-                .find("[data-test=metadata-date-formatted-display]")
+                .get("[data-test=metadata-date-formatted-display]")
                 .element.getAttribute("data-tlp-tooltip")
         ).toContain("02/07/2019 00:00");
     });

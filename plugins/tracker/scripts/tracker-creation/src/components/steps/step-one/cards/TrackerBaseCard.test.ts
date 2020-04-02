@@ -43,7 +43,7 @@ describe("TrackerBaseCard", () => {
 
         const wrapper: Wrapper<TrackerBaseCard> = getWrapper(state);
 
-        wrapper.find("[data-test=selected-option]").trigger("click");
+        wrapper.get("[data-test=selected-option]").trigger("click");
 
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
             "setActiveOption",

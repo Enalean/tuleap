@@ -98,10 +98,11 @@ describe("ProjectInformation -", () => {
             expect(wrapper.contains("[data-test=project-creation-failed]")).toBe(false);
         });
 
-        it("Displays error message", () => {
+        it("Displays error message", async () => {
             const wrapper = factory;
 
             wrapper.vm.$store.getters.has_error = true;
+            await wrapper.vm.$nextTick();
 
             expect(wrapper.contains(ProjectInformationSvg)).toBe(true);
             expect(wrapper.contains(ProjectInformationFooter)).toBe(true);
@@ -175,7 +176,7 @@ describe("ProjectInformation -", () => {
                 name: "this is a test",
             };
 
-            factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
+            factory.get("[data-test=project-registration-form]").trigger("submit.prevent");
             expect(store.dispatch).toHaveBeenCalledWith(
                 "createProject",
                 expected_project_properties
@@ -211,7 +212,7 @@ describe("ProjectInformation -", () => {
                 fields: [],
             };
 
-            factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
+            factory.get("[data-test=project-registration-form]").trigger("submit.prevent");
             expect(store.dispatch).toHaveBeenCalledWith(
                 "createProject",
                 expected_project_properties
@@ -247,7 +248,7 @@ describe("ProjectInformation -", () => {
                 fields: [],
             };
 
-            factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
+            factory.get("[data-test=project-registration-form]").trigger("submit.prevent");
             expect(store.dispatch).toHaveBeenCalledWith(
                 "createProject",
                 expected_project_properties
@@ -283,7 +284,7 @@ describe("ProjectInformation -", () => {
                 fields: [],
             };
 
-            factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
+            factory.get("[data-test=project-registration-form]").trigger("submit.prevent");
             expect(store.dispatch).toHaveBeenCalledWith(
                 "createProject",
                 expected_project_properties
@@ -319,7 +320,7 @@ describe("ProjectInformation -", () => {
                 fields: [],
             };
 
-            factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
+            factory.get("[data-test=project-registration-form]").trigger("submit.prevent");
             expect(store.dispatch).toHaveBeenCalledWith(
                 "createProject",
                 expected_project_properties
@@ -337,7 +338,7 @@ describe("ProjectInformation -", () => {
             factory.vm.$store.state.are_restricted_users_allowed = true;
             factory.vm.$data.selected_visibility = "private";
 
-            factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
+            factory.get("[data-test=project-registration-form]").trigger("submit.prevent");
 
             await factory.vm.$nextTick();
 
@@ -401,7 +402,7 @@ describe("ProjectInformation -", () => {
                 fields: [],
             };
 
-            factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
+            factory.get("[data-test=project-registration-form]").trigger("submit.prevent");
             expect(store.dispatch).toHaveBeenCalledWith(
                 "createProject",
                 expected_project_properties
@@ -437,7 +438,7 @@ describe("ProjectInformation -", () => {
                 fields: [],
             };
 
-            factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
+            factory.get("[data-test=project-registration-form]").trigger("submit.prevent");
             expect(store.dispatch).toHaveBeenCalledWith(
                 "createProject",
                 expected_project_properties
@@ -586,7 +587,7 @@ describe("ProjectInformation -", () => {
                 allow_restricted: true,
             } as ProjectProperties;
 
-            factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
+            factory.get("[data-test=project-registration-form]").trigger("submit.prevent");
             expect(store.dispatch).toHaveBeenCalledWith(
                 "createProject",
                 expected_project_properties
@@ -648,7 +649,7 @@ describe("ProjectInformation -", () => {
                 allow_restricted: true,
             } as ProjectProperties;
 
-            factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
+            factory.get("[data-test=project-registration-form]").trigger("submit.prevent");
             expect(store.dispatch).toHaveBeenCalledWith(
                 "createProject",
                 expected_project_properties
@@ -709,7 +710,7 @@ describe("ProjectInformation -", () => {
                 allow_restricted: true,
             } as ProjectProperties;
 
-            factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
+            factory.get("[data-test=project-registration-form]").trigger("submit.prevent");
             expect(store.dispatch).toHaveBeenCalledWith(
                 "createProject",
                 expected_project_properties

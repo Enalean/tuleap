@@ -52,7 +52,7 @@ describe("DisplayEmbeddedContent", () => {
             isInLargeView: false,
         });
 
-        const element = wrapper.find("[data-test=display-embedded-content]");
+        const element = wrapper.get("[data-test=display-embedded-content]");
         expect(element.classes()).toEqual(["tlp-pane", "embedded-document", "narrow"]);
     });
 
@@ -69,7 +69,7 @@ describe("DisplayEmbeddedContent", () => {
             isInLargeView: true,
         });
 
-        const element = wrapper.find("[data-test=display-embedded-content]");
+        const element = wrapper.get("[data-test=display-embedded-content]");
         expect(element.classes()).toEqual(["tlp-pane", "embedded-document"]);
     });
 
@@ -83,7 +83,7 @@ describe("DisplayEmbeddedContent", () => {
             isInLargeView: true,
         });
 
-        const element = wrapper.find("[data-test=display-embedded-content]");
+        const element = wrapper.get("[data-test=display-embedded-content]");
         expect(element.classes()).toEqual(["tlp-pane", "embedded-document"]);
     });
 });

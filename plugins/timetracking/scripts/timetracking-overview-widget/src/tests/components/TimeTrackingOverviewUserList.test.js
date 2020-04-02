@@ -45,7 +45,7 @@ describe("Given a timetracking overview widget", () => {
     });
 
     it("When tracker total sum not equal zero, then table row is displayed", () => {
-        input = wrapper.find("[data-test=timetracking-overview-users-selector]");
+        input = wrapper.get("[data-test=timetracking-overview-users-selector]");
         input.setValue(100);
         input.trigger("input");
 

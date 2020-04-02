@@ -35,9 +35,9 @@ describe("OpenClosedSwitcher", () => {
             },
         });
 
-        const radio_show: HTMLInputElement = wrapper.find("#button-bar-show-closed")
+        const radio_show: HTMLInputElement = wrapper.get("#button-bar-show-closed")
             .element as HTMLInputElement;
-        const radio_hide: HTMLInputElement = wrapper.find("#button-bar-hide-closed")
+        const radio_hide: HTMLInputElement = wrapper.get("#button-bar-hide-closed")
             .element as HTMLInputElement;
         expect(radio_show.checked).toBe(true);
         expect(radio_hide.checked).toBe(false);
@@ -55,9 +55,9 @@ describe("OpenClosedSwitcher", () => {
             },
         });
 
-        const radio_show: HTMLInputElement = wrapper.find("#button-bar-show-closed")
+        const radio_show: HTMLInputElement = wrapper.get("#button-bar-show-closed")
             .element as HTMLInputElement;
-        const radio_hide: HTMLInputElement = wrapper.find("#button-bar-hide-closed")
+        const radio_hide: HTMLInputElement = wrapper.get("#button-bar-hide-closed")
             .element as HTMLInputElement;
         expect(radio_show.checked).toBe(false);
         expect(radio_hide.checked).toBe(true);
@@ -74,7 +74,7 @@ describe("OpenClosedSwitcher", () => {
                 }),
             },
         });
-        wrapper.find("#button-bar-show-closed").setChecked();
+        wrapper.get("#button-bar-show-closed").setChecked();
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith(
             "displayClosedItems",
             expect.anything()
@@ -92,7 +92,9 @@ describe("OpenClosedSwitcher", () => {
                 }),
             },
         });
-        wrapper.find("#button-bar-hide-closed").setChecked();
+        const hide_button = wrapper.get("#button-bar-hide-closed");
+        hide_button.setChecked();
+        hide_button.trigger("change");
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith(
             "hideClosedItems",
             expect.anything()

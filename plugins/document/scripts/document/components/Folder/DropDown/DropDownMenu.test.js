@@ -41,7 +41,7 @@ describe("DropDownMenu", () => {
     describe("Approval table menu option -", () => {
         it(`Given item type is empty
             When we display the menu
-            Then the approval table link should not be available`, () => {
+            Then the approval table link should not be available`, async () => {
             const wrapper = dropdown_menu_factory({
                 item: {
                     id: 4,
@@ -51,6 +51,7 @@ describe("DropDownMenu", () => {
                 },
             });
             store.getters.is_item_an_empty_document = () => true;
+            await wrapper.vm.$nextTick();
             expect(wrapper.contains("[data-test=document-dropdown-approval-tables]")).toBeFalsy();
         });
         it(`Given item type is a file

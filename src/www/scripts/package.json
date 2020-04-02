@@ -47,7 +47,7 @@
     "@types/mustache": "^3.2.0",
     "@types/node-gettext": "^2.0.1",
     "@types/sprintf-js": "^1.1.2",
-    "@vue/test-utils": "^1.0.0-beta.29",
+    "@vue/test-utils": "^1.0.0-beta.32",
     "imports-loader": "^0.7.1",
     "jquery": "^3.4.1",
     "load-json-file": "^5.1.0",

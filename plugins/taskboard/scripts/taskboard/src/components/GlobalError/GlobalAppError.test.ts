@@ -42,7 +42,7 @@ describe("GlobalAppError", () => {
         expect(wrapper.element).toMatchSnapshot();
     });
 
-    it("display more details when user click on show error", () => {
+    it("display more details when user click on show error", async () => {
         const error_message = "Full error message with details";
         const wrapper = shallowMount(GlobalAppError, {
             localVue: local_vue,
@@ -53,7 +53,8 @@ describe("GlobalAppError", () => {
             },
         });
 
-        wrapper.find("[data-test=show-details]").trigger("click");
+        wrapper.get("[data-test=show-details]").trigger("click");
+        await wrapper.vm.$nextTick();
 
         expect(wrapper.text()).toMatch(error_message);
     });

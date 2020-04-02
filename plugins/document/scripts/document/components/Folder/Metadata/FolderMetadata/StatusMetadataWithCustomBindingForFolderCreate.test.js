@@ -46,7 +46,7 @@ describe("StatusMetadataWithCustomBindingForFolderCreate", () => {
         };
     });
 
-    it(`display status selectbox only when status property is enabled for project`, () => {
+    it(`display status selectbox only when status property is enabled for project`, async () => {
         const wrapper = status_metadata({
             currentlyUpdatedItem: {
                 status: 100,
@@ -69,6 +69,7 @@ describe("StatusMetadataWithCustomBindingForFolderCreate", () => {
         });
 
         store.state.is_item_status_metadata_used = true;
+        await wrapper.vm.$nextTick();
 
         expect(
             wrapper.contains("[data-test=document-status-metadata-for-item-create]")

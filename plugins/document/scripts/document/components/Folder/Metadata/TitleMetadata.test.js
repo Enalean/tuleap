@@ -89,12 +89,12 @@ describe("TitleMetadata", () => {
         wrapper.setProps({ value: value });
 
         await wrapper.vm.$nextTick().then(() => {});
-        const input = wrapper.find("[data-test=document-new-item-title]");
+        const input = wrapper.get("[data-test=document-new-item-title]");
 
         expect(input.element.disabled).toBe(true);
-        expect(
-            wrapper.find("[data-test=document-new-item-title-form-element]").classes()
-        ).toContain("tlp-form-element-disabled");
+        expect(wrapper.get("[data-test=document-new-item-title-form-element]").classes()).toContain(
+            "tlp-form-element-disabled"
+        );
     });
 
     it(`Title can be updated for other items`, async () => {
@@ -115,7 +115,7 @@ describe("TitleMetadata", () => {
         wrapper.setProps({ value: value });
 
         await wrapper.vm.$nextTick().then(() => {});
-        const input = wrapper.find("[data-test=document-new-item-title]");
+        const input = wrapper.get("[data-test=document-new-item-title]");
 
         expect(input.element.disabled).toBe(false);
     });

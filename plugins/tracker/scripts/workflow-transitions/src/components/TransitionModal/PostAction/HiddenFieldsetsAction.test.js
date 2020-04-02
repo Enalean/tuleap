@@ -70,17 +70,19 @@ describe("HiddenFieldsetsAction", () => {
 
     afterEach(() => store.reset());
 
-    it("disables the option when no fieldsets are available", () => {
+    it("disables the option when no fieldsets are available", async () => {
         store.state.current_tracker = null;
+        await wrapper.vm.$nextTick();
 
-        expect(wrapper.find("[data-test=hide_fieldsets]").attributes().disabled).toBeTruthy();
+        expect(wrapper.get("[data-test=hide_fieldsets]").attributes().disabled).toBeTruthy();
     });
 
-    it("disables the option when post-action is already used", () => {
+    it("disables the option when post-action is already used", async () => {
         store.getters["transitionModal/post_actions"] = [
             create("post_action", { type: "hidden_fieldsets" }),
         ];
+        await wrapper.vm.$nextTick();
 
-        expect(wrapper.find("[data-test=hide_fieldsets").attributes().disabled).toBeTruthy();
+        expect(wrapper.get("[data-test=hide_fieldsets").attributes().disabled).toBeTruthy();
     });
 });

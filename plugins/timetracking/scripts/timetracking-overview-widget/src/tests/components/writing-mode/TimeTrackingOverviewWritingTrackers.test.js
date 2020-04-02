@@ -54,8 +54,8 @@ describe("Given a timetracking overview widget on writing mode", () => {
     it("When trackers and projects are available, then click on add button", () => {
         const wrapper = shallowMount(TimeTrackingOverviewWritingTrackers, component_options);
 
-        wrapper.find(TimeTrackingOverviewTrackersOptions).vm.$emit("input", "letracker");
-        wrapper.find("[data-test=add-tracker-button]").trigger("click");
+        wrapper.get(TimeTrackingOverviewTrackersOptions).vm.$emit("input", "letracker");
+        wrapper.get("[data-test=add-tracker-button]").trigger("click");
         expect(store.commit).toHaveBeenCalledWith("addSelectedTrackers", "letracker");
     });
 

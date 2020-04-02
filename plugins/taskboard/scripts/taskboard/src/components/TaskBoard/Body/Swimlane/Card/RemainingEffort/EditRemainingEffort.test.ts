@@ -81,7 +81,9 @@ describe("EditRemainingEffort", () => {
 
         const value = 42;
         wrapper.setData({ value });
+        await wrapper.vm.$nextTick();
         wrapper.trigger("keyup.enter");
+        await wrapper.vm.$nextTick();
 
         const card = wrapper.props("card");
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("swimlane/saveRemainingEffort", {
@@ -96,6 +98,7 @@ describe("EditRemainingEffort", () => {
 
         const value = 42;
         wrapper.setData({ value });
+        await wrapper.vm.$nextTick();
 
         const card = wrapper.props("card");
         EventBus.$emit(TaskboardEvent.SAVE_CARD_EDITION, card);
@@ -111,6 +114,7 @@ describe("EditRemainingEffort", () => {
 
         const value = 42;
         wrapper.setData({ value });
+        await wrapper.vm.$nextTick();
 
         const card = wrapper.props("card");
         EventBus.$emit(TaskboardEvent.CANCEL_CARD_EDITION, card);
@@ -127,6 +131,7 @@ describe("EditRemainingEffort", () => {
 
         const value = 42;
         wrapper.setData({ value });
+        await wrapper.vm.$nextTick();
 
         const card = wrapper.props("card");
         EventBus.$emit(TaskboardEvent.SAVE_CARD_EDITION, {} as Card);
@@ -140,6 +145,7 @@ describe("EditRemainingEffort", () => {
 
         const value = 42;
         wrapper.setData({ value });
+        await wrapper.vm.$nextTick();
 
         const card = wrapper.props("card");
         EventBus.$emit(TaskboardEvent.CANCEL_CARD_EDITION, {} as Card);
@@ -151,12 +157,15 @@ describe("EditRemainingEffort", () => {
         const wrapper = await getWrapper();
 
         wrapper.setData({ value: "3" });
+        await wrapper.vm.$nextTick();
         expect(wrapper.classes()).toEqual(["taskboard-card-remaining-effort-input"]);
 
         wrapper.setData({ value: "3.14" });
+        await wrapper.vm.$nextTick();
         expect(wrapper.classes()).toContain("taskboard-card-remaining-effort-input-width-40");
 
         wrapper.setData({ value: "3.14159265358979323846264338327950288" });
+        await wrapper.vm.$nextTick();
         expect(wrapper.classes()).toContain("taskboard-card-remaining-effort-input-width-60");
     });
 });

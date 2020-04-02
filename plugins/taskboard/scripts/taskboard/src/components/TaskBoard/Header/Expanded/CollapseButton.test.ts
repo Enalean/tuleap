@@ -50,7 +50,7 @@ describe("CollapseButton", () => {
         const column: ColumnDefinition = { label: "Done" } as ColumnDefinition;
         const wrapper = await getWrapper(column);
 
-        const button = wrapper.find("[data-test=button]");
+        const button = wrapper.get("[data-test=button]");
         expect(button.classes("fa-minus-square")).toBe(true);
         expect(button.attributes("role")).toBe("button");
         expect(button.attributes("tabindex")).toBe("0");
@@ -61,7 +61,7 @@ describe("CollapseButton", () => {
         const column: ColumnDefinition = { label: "Done" } as ColumnDefinition;
         const wrapper = await getWrapper(column);
 
-        const button = wrapper.find("[data-test=button]");
+        const button = wrapper.get("[data-test=button]");
         button.trigger("click");
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("column/collapseColumn", column);
     });

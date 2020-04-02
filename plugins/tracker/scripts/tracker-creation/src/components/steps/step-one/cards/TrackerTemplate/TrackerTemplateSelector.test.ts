@@ -51,10 +51,10 @@ describe("TrackerTemplateSelector", () => {
             ],
         } as State);
 
-        wrapper.find("[data-test=template-selector]").setValue("10");
+        wrapper.get("[data-test=template-selector]").setValue("10");
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("setSelectedTrackerTemplate", "10");
 
-        wrapper.find("[data-test=template-selector]").setValue("11");
+        wrapper.get("[data-test=template-selector]").setValue("11");
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("setSelectedTrackerTemplate", "11");
     });
 
@@ -75,7 +75,7 @@ describe("TrackerTemplateSelector", () => {
             selected_tracker_template: story_tracker,
         } as State);
 
-        const selectbox: HTMLInputElement = wrapper.find("[data-test=template-selector]")
+        const selectbox: HTMLInputElement = wrapper.get("[data-test=template-selector]")
             .element as HTMLInputElement;
 
         expect(selectbox.value).toEqual(story_tracker.id);
@@ -99,7 +99,7 @@ describe("TrackerTemplateSelector", () => {
             selected_tracker_template: story_tracker,
         } as State);
 
-        const selectbox: HTMLInputElement = wrapper.find("[data-test=template-selector]")
+        const selectbox: HTMLInputElement = wrapper.get("[data-test=template-selector]")
             .element as HTMLInputElement;
 
         expect(selectbox.value).toEqual(story_tracker.id);

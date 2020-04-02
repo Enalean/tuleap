@@ -57,14 +57,14 @@ describe("FieldShortname", () => {
 
     it("The input is rendered", async () => {
         const wrapper = await getWrapper(false);
-        const shortname_input = wrapper.find("[data-test=tracker-shortname-input]");
+        const shortname_input = wrapper.get("[data-test=tracker-shortname-input]");
 
         expect(shortname_input.exists()).toBe(true);
     });
 
     it("is initialized with the tracker shortname from the store", async () => {
         const wrapper = await getWrapper(false);
-        const shortname_input = wrapper.find("[data-test=tracker-shortname-input]");
+        const shortname_input = wrapper.get("[data-test=tracker-shortname-input]");
         const input_element: HTMLInputElement = shortname_input.element as HTMLInputElement;
 
         expect(input_element.value).toEqual(state.tracker_to_be_created.shortname);
@@ -72,7 +72,7 @@ describe("FieldShortname", () => {
 
     it("sets the tracker shortname with the entered value on the keyup event", async () => {
         const wrapper = await getWrapper(false);
-        const shortname_input = wrapper.find("[data-test=tracker-shortname-input]");
+        const shortname_input = wrapper.get("[data-test=tracker-shortname-input]");
 
         shortname_input.trigger("keyup");
 

@@ -66,7 +66,7 @@ describe("ChildCard", () => {
             const wrapper = getWrapper(card, true);
 
             expect(wrapper.isEmpty()).toBe(false);
-            expect(wrapper.find(BaseCard).props("card")).toBe(card);
+            expect(wrapper.get(BaseCard).props("card")).toBe(card);
         });
 
         it(`adds draggable attributes`, () => {

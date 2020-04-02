@@ -82,7 +82,7 @@ describe("SwitchToOldUI", () => {
 
         expect(wrapper.vm.$route.name).toBe("folder");
 
-        wrapper.find("a").trigger("click");
+        wrapper.get("a").trigger("click");
 
         await wrapper.vm.$nextTick().then(() => {});
 
@@ -106,7 +106,7 @@ describe("SwitchToOldUI", () => {
 
         expect(wrapper.vm.$route.name).toBe("preview");
 
-        wrapper.find("a").trigger("click");
+        wrapper.get("a").trigger("click");
 
         await wrapper.vm.$nextTick().then(() => {});
 
@@ -125,7 +125,7 @@ describe("SwitchToOldUI", () => {
 
         expect(wrapper.vm.$route.name).toBe("root_folder");
 
-        wrapper.find("a").trigger("click");
+        wrapper.get("a").trigger("click");
 
         await wrapper.vm.$nextTick().then(() => {});
 

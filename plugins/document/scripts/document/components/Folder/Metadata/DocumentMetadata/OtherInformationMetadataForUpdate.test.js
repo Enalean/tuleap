@@ -42,7 +42,7 @@ describe("OtherInformationMetadataForUpdate", () => {
     });
     describe("Custom metadata", () => {
         it(`Given custom component are loading
-        Then it displays spinner`, () => {
+        Then it displays spinner`, async () => {
             const wrapper = other_metadata({
                 currentlyUpdatedItem: {
                     metadata: [],
@@ -60,6 +60,7 @@ describe("OtherInformationMetadataForUpdate", () => {
                     has_loaded_metadata: false,
                 },
             };
+            await wrapper.vm.$nextTick();
 
             expect(wrapper.find("[data-test=document-other-information]").exists()).toBeTruthy();
             expect(
@@ -94,7 +95,7 @@ describe("OtherInformationMetadataForUpdate", () => {
 
     describe("Other information display", () => {
         it(`Given obsolescence date is enabled for project
-            Then we should display the obsolescence date component`, () => {
+            Then we should display the obsolescence date component`, async () => {
             const wrapper = other_metadata({
                 currentlyUpdatedItem: {
                     metadata: [
@@ -117,6 +118,7 @@ describe("OtherInformationMetadataForUpdate", () => {
                     has_loaded_metadata: true,
                 },
             };
+            await wrapper.vm.$nextTick();
 
             expect(wrapper.find("[data-test=document-other-information]").exists()).toBeTruthy();
         });

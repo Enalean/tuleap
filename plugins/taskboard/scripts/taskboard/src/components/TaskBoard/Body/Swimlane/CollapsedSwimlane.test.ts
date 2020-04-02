@@ -68,7 +68,7 @@ describe("CollapsedSwimlane", () => {
             mocks: { $store },
             propsData: { swimlane },
         });
-        wrapper.find(".taskboard-swimlane-toggle").trigger("click");
+        wrapper.get(".taskboard-swimlane-toggle").trigger("click");
         expect($store.dispatch).toHaveBeenCalledWith("swimlane/expandSwimlane", swimlane);
     });
 });

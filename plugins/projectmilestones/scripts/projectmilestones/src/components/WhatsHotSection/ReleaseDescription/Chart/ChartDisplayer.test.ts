@@ -147,6 +147,7 @@ describe("ChartDisplayer", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
+        await wrapper.vm.$nextTick();
 
         expect(wrapper.contains(BurndownDisplayer)).toBe(true);
         expect(wrapper.contains("[data-test=burnup-exists]")).toBe(true);
@@ -191,6 +192,7 @@ describe("ChartDisplayer", () => {
 
         const wrapper = await getPersonalWidgetInstance(store_options);
         wrapper.setData({ is_loading: true });
+        await wrapper.vm.$nextTick();
 
         expect(wrapper.contains("[data-test=loading-data]")).toBe(true);
     });
@@ -211,6 +213,6 @@ describe("ChartDisplayer", () => {
 
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.find("[data-test=error-rest]").text()).toBe("404 Error");
+        expect(wrapper.get("[data-test=error-rest]").text()).toBe("404 Error");
     });
 });

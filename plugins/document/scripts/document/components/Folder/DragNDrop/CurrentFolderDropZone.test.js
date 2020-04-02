@@ -88,7 +88,7 @@ describe("CurrentFolderDropZone", () => {
                 user_can_dragndrop_in_current_folder: true,
             });
 
-            const current_folder_drop_zone = wrapper.find(
+            const current_folder_drop_zone = wrapper.get(
                 "[data-test=document-current-folder-dropzone]"
             );
             expect(current_folder_drop_zone.classes()).toContain("shown-success");
@@ -102,7 +102,7 @@ describe("CurrentFolderDropZone", () => {
                 user_can_dragndrop_in_current_folder: false,
             });
 
-            const current_folder_drop_zone = wrapper.find(
+            const current_folder_drop_zone = wrapper.get(
                 "[data-test=document-current-folder-dropzone]"
             );
             expect(current_folder_drop_zone.classes()).toContain("shown-error");
@@ -116,7 +116,7 @@ describe("CurrentFolderDropZone", () => {
                 user_can_dragndrop_in_current_folder: true,
             });
 
-            const current_folder_drop_zone = wrapper.find(
+            const current_folder_drop_zone = wrapper.get(
                 "[data-test=document-current-folder-dropzone]"
             );
             expect(current_folder_drop_zone.classes()).toEqual([
@@ -132,7 +132,7 @@ describe("CurrentFolderDropZone", () => {
                 user_can_dragndrop_in_current_folder: false,
             });
 
-            const current_folder_drop_zone = wrapper.find(
+            const current_folder_drop_zone = wrapper.get(
                 "[data-test=document-current-folder-dropzone]"
             );
             expect(current_folder_drop_zone.classes()).toEqual([

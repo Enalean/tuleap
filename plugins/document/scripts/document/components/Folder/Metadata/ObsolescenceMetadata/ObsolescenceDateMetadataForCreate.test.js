@@ -44,40 +44,44 @@ describe("ObsolescenceDateMetadataForCreate", () => {
         };
     });
     describe("Component display", () => {
-        it(`Displays the component if the obsolescence date metadata is used`, () => {
+        it(`Displays the component if the obsolescence date metadata is used`, async () => {
             const wrapper = metadata_factory({ value: "" });
 
             store.state.is_obsolescence_date_metadata_used = true;
+            await wrapper.vm.$nextTick();
 
             expect(wrapper.find("[data-test=obsolescence-date-metadata]").exists()).toBeTruthy();
         });
-        it(`Does not display the component if the obsolescence date metadata is not used`, () => {
+        it(`Does not display the component if the obsolescence date metadata is not used`, async () => {
             const wrapper = metadata_factory({ value: "" });
 
             store.state.is_obsolescence_date_metadata_used = false;
+            await wrapper.vm.$nextTick();
 
             expect(wrapper.find("[data-test=obsolescence-date-metadata]").exists()).toBeFalsy();
         });
     });
 
     describe(`Should link flat picker and select helper`, () => {
-        it(`Obsolescence date should be null if the option "permanent" is chosen by the user`, () => {
+        it(`Obsolescence date should be null if the option "permanent" is chosen by the user`, async () => {
             const wrapper = metadata_factory({ value: "" });
             store.state.is_obsolescence_date_metadata_used = true;
+            await wrapper.vm.$nextTick();
 
-            const select = wrapper.find("[data-test=document-obsolescence-date-select]");
+            const select = wrapper.get("[data-test=document-obsolescence-date-select]");
             select.trigger("change");
 
             expect(wrapper.vm.selected_value).toEqual("permanent");
             expect(wrapper.vm.obsolescence_date).toEqual(null);
         });
-        it(`Obsolescence date should be the current day + 3 months if the option "3months" is chosen by the user`, () => {
+        it(`Obsolescence date should be the current day + 3 months if the option "3months" is chosen by the user`, async () => {
             const wrapper = metadata_factory({ value: "" });
             store.state.is_obsolescence_date_metadata_used = true;
+            await wrapper.vm.$nextTick();
 
             wrapper.findAll("option").at(1).element.selected = true;
 
-            wrapper.find("[data-test=document-obsolescence-date-select]").trigger("change");
+            wrapper.get("[data-test=document-obsolescence-date-select]").trigger("change");
 
             const current_date = moment().format("YYYY-MM-DD");
 
@@ -101,16 +105,17 @@ describe("ObsolescenceDateMetadataForCreate", () => {
         });
     });
     describe(`Obsolescence date validity`, () => {
-        it(`date is invalid when it's is anterior the current date`, () => {
+        it(`date is invalid when it's is anterior the current date`, async () => {
             const wrapper = metadata_factory({ value: "" });
             store.state.is_obsolescence_date_metadata_used = true;
 
             expect(wrapper.vm.selected_value).toEqual("permanent");
             wrapper.vm.obsolescence_date = "2018-09-07";
+            await wrapper.vm.$nextTick();
 
             expect(wrapper.contains("[data-test=obsolescence-date-error-message]")).toBeTruthy();
         });
-        it(`date is valid for today`, () => {
+        it(`date is valid for today`, async () => {
             const props = {
                 isInUpdateContext: false,
                 value: "",
@@ -121,6 +126,7 @@ describe("ObsolescenceDateMetadataForCreate", () => {
             expect(wrapper.vm.selected_value).toEqual("permanent");
 
             wrapper.vm.obsolescence_date = moment().format("YYYY-MM-DD");
+            await wrapper.vm.$nextTick();
 
             expect(wrapper.contains("[data-test=obsolescence-date-error-message]")).toBeTruthy();
         });

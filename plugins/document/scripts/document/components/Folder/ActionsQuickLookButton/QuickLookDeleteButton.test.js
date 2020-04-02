@@ -73,7 +73,7 @@ describe("QuickLookDeleteButton", () => {
         store.state.is_deletion_allowed = true;
         const event_bus_emit = jest.spyOn(EventBus, "$emit");
         const wrapper = delete_button_factory(true, TYPE_FILE);
-        wrapper.find("[data-test=document-quick-look-delete-button]").trigger("click");
+        wrapper.get("[data-test=document-quick-look-delete-button]").trigger("click");
 
         expect(event_bus_emit).toHaveBeenCalledWith(
             "show-confirm-item-deletion-modal",

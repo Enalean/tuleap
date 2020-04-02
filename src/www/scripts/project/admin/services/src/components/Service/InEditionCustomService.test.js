@@ -58,39 +58,43 @@ describe(`InEditionCustomService`, () => {
             props.service.is_in_iframe = true;
             wrapper = createWrapper(props);
 
-            iframe_switch = wrapper.find("[data-test=iframe-switch]");
+            iframe_switch = wrapper.get("[data-test=iframe-switch]");
         });
 
         it(`will show the switch input`, () => {
             expect(iframe_switch.exists()).toBe(true);
         });
 
-        it(`when I switch off "Open in iframe", it will show a deprecation warning`, () => {
+        it(`when I switch off "Open in iframe", it will show a deprecation warning`, async () => {
             iframe_switch.setChecked(false);
             const updated_service = { ...props.service, is_in_iframe: false };
             const new_props = { minimal_rank: 10, service: updated_service, allowed_icons: {} };
             wrapper.setProps(new_props);
+            await wrapper.vm.$nextTick();
 
-            const deprecation_message = wrapper.find("[data-test=iframe-deprecation-warning");
+            const deprecation_message = wrapper.get("[data-test=iframe-deprecation-warning");
             expect(deprecation_message.exists()).toBe(true);
         });
 
         it(`when I also check "Is in new tab",
-            it will disable "is in iframe" and show a warning`, () => {
+            it will disable "is in iframe" and show a warning`, async () => {
             wrapper.vm.onNewTabChange({ target: { checked: true } });
+            await wrapper.vm.$nextTick();
 
-            const new_tab_warning = wrapper.find("[data-test=new-tab-warning");
+            const new_tab_warning = wrapper.get("[data-test=new-tab-warning");
             expect(new_tab_warning.exists()).toBe(true);
         });
 
         it(`When the warning is shown and I uncheck "Is in new tab",
-            it will hide the warning`, () => {
+            it will hide the warning`, async () => {
             wrapper.vm.onNewTabChange({ target: { checked: true } });
+            await wrapper.vm.$nextTick();
 
-            const new_tab_warning = wrapper.find("[data-test=new-tab-warning");
+            const new_tab_warning = wrapper.get("[data-test=new-tab-warning");
             expect(new_tab_warning.exists()).toBe(true);
 
             wrapper.vm.onNewTabChange({ target: { checked: false } });
+            await wrapper.vm.$nextTick();
 
             expect(new_tab_warning.exists()).toBe(false);
         });
