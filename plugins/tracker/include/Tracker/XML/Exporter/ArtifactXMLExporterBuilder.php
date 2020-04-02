@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,20 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types = 1);
+
 use Tuleap\Tracker\XML\Exporter\ChangesetValue\ChangesetValueComputedXMLExporter;
+use Tuleap\Tracker\XML\Exporter\ChangesetValue\ExternalExporterCollector;
 use Tuleap\Tracker\XML\Exporter\FileInfoXMLExporter;
 
 class Tracker_XML_Exporter_ArtifactXMLExporterBuilder
 {
-
-    /** @var Tracker_XML_Exporter_ArtifactXMLExporter */
     public function build(
         Tracker_XML_ChildrenCollector $children_collector,
         Tracker_XML_Exporter_FilePathXMLExporter $file_path_xml_exporter,
         PFUser $current_user,
         UserXMLExporter $user_xml_exporter,
         $is_in_archive_context
-    ) {
+    ): Tracker_XML_Exporter_ArtifactXMLExporter {
         $file_info_xml_exporter = new FileInfoXMLExporter($file_path_xml_exporter);
 
         $visitor = new Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor(
@@ -49,7 +50,8 @@ class Tracker_XML_Exporter_ArtifactXMLExporterBuilder
                 $current_user
             ),
             new ChangesetValueComputedXMLExporter($current_user, $is_in_archive_context),
-            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueUnknownXMLExporter()
+            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueUnknownXMLExporter(),
+            new ExternalExporterCollector(EventManager::instance())
         );
         $values_exporter    = new Tracker_XML_Exporter_ChangesetValuesXMLExporter($visitor, $is_in_archive_context);
         $changeset_exporter = new Tracker_XML_Exporter_ChangesetXMLExporter(
