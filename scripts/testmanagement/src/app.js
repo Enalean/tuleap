@@ -22,11 +22,11 @@ import ngSanitize from "angular-sanitize";
 import ui_router from "angular-ui-router";
 import angular_artifact_modal from "../../../../tracker/scripts/angular-artifact-modal/index.js";
 import angular_tlp from "angular-tlp";
+import angular_moment from "angular-moment";
 
 import "angular-breadcrumb";
 import "angular-gettext";
 import translations from "../po/fr.po";
-import "angular-moment";
 import "d3-selection-multi";
 
 import shared_properties from "./shared-properties/shared-properties.js";
@@ -55,7 +55,7 @@ export default angular
         angular_tlp,
         "ncy-angular-breadcrumb",
         "gettext",
-        "angularMoment",
+        angular_moment,
         shared_properties,
         uuid_generator,
         socket,
