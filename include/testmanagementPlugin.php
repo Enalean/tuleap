@@ -428,8 +428,8 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
             $router,
             $this->getAssets(),
             new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets',
-                '/assets'
+                __DIR__ . '/../../../src/www/assets/core',
+                '/assets/core'
             )
         );
     }
