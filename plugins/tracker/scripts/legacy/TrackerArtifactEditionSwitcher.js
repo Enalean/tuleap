@@ -64,7 +64,7 @@ tuleap.tracker.artifact = tuleap.tracker.artifact || {};
 
         var observeRequiredElements = function () {
             [].forEach.call(document.querySelectorAll(".tracker_artifact_field"), function (field) {
-                if (!JSON.parse(field.dataset.isRequired)) {
+                if (!field.dataset.isRequired || !JSON.parse(field.dataset.isRequired)) {
                     return;
                 }
 
