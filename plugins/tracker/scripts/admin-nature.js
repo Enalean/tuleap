@@ -21,6 +21,10 @@ import { modal as createModal } from "tlp";
 
 document.addEventListener("DOMContentLoaded", () => {
     var dom_natures_modal_create = document.getElementById("siteadmin-config-natures-modal-create");
+    if (!dom_natures_modal_create) {
+        throw new Error("siteadmin-config-natures-modal-create DOM element not found");
+    }
+
     var tlp_natures_modal_create = createModal(dom_natures_modal_create);
     document
         .getElementById("siteadmin-config-natures-modal-create-button")

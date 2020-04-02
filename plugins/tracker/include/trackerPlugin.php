@@ -412,9 +412,6 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function javascript_file($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/config.php') === 0) {
-            echo $this->getAssets()->getHTMLSnippet('admin-nature.js');
-        }
         if ($this->currentRequestIsForPlugin()) {
             echo $this->getAssets()->getHTMLSnippet('tracker.js');
         }
@@ -423,7 +420,6 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     public function burning_parrot_get_javascript_files(array $params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/config.php') === 0) {
-            $params['javascript_files'][] = $this->getAssets()->getFileURL('admin-nature.js');
             $params['javascript_files'][] = '/scripts/tuleap/manage-allowed-projects-on-resource.js';
         }
     }
