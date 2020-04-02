@@ -84,23 +84,18 @@ clean-rng:
 generate-templates-docker: ## Generate XML templates
 	@$(DOCKER) run --rm -u "`id -u`":"`id -g`" -v "$(CURDIR):/wrk" enalean/xsltproc make generate-templates
 
-generate-templates:
-	xsltproc tools/utils/setup_templates/generate-templates/generate-scrum_dashboard.xml \
-		-o plugins/agiledashboard/resources/templates/scrum_dashboard_template.xml
+generate-templates: generate-templates-plugins
 	xsltproc tools/utils/setup_templates/generate-templates/generate-agile_alm.xml \
 		-o tools/utils/setup_templates/agile_alm/agile_alm_template.xml
-	cp -f tools/utils/setup_templates/generate-templates/trackers/bug.xml \
-		plugins/tracker/resources/templates/Tracker_Bugs.xml
-	cp -f tools/utils/setup_templates/generate-templates/trackers/task.xml \
-		plugins/agiledashboard/resources/templates/Tracker_Tasks.xml
-	cp -f tools/utils/setup_templates/generate-templates/trackers/story.xml \
-		plugins/agiledashboard/resources/templates/Tracker_UserStories.xml
-	cp -f tools/utils/setup_templates/generate-templates/trackers/activity.xml \
-		plugins/agiledashboard/resources/templates/Tracker_activity.xml
-	cp -f tools/utils/setup_templates/generate-templates/trackers/rel.xml \
-		plugins/agiledashboard/resources/templates/Tracker_release.xml
-	cp -f tools/utils/setup_templates/generate-templates/trackers/sprint.xml \
-		plugins/agiledashboard/resources/templates/Tracker_sprint.xml
+
+generate-templates-plugins:
+	@find . plugins/ -mindepth 2 -maxdepth 2 -type f -name 'Makefile' | while read file; do \
+	    basedir=`dirname $$file`; \
+	    make -C $$basedir -sq generate-templates 2>/dev/null; \
+		if [ $$? -eq 1 ]; then \
+			$(MAKE) -C $$basedir generate-templates; \
+		fi \
+	done
 
 #
 # Tests and all
