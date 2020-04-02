@@ -59,7 +59,7 @@ final class SSHDaemon
         }
     }
 
-    private function generateSSHServerKeys()
+    private function generateSSHServerKeys(): void
     {
         if (! is_file('/etc/ssh/ssh_host_ecdsa_key')) {
             $process = $this->process_factory->getProcess(['/usr/sbin/sshd-keygen']);

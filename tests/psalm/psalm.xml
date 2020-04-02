@@ -11,6 +11,7 @@
         <directory name="src/common/" />
         <directory name="src/www/" />
         <directory name="src/utils/" />
+        <directory name="src/tuleap-cfg/" />
         <directory name="plugins/*/include/" />
         <directory name="tests/phpcs/TuleapCodingStandard/" />
         <ignoreFiles>

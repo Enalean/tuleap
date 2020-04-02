@@ -27,7 +27,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class Postfix
 {
-    public function setup(OutputInterface $output)
+    public function setup(OutputInterface $output): void
     {
         $output->writeln('Setup Postfix');
         $file_path = '/etc/postfix/main.cf';
