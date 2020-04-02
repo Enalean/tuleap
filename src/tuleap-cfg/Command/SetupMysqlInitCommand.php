@@ -44,7 +44,7 @@ final class SetupMysqlInitCommand extends Command
     private const OPT_MEDIAWIKI_VALUE_PER_PROJECT = 'per-project';
     private const OPT_MEDIAWIKI_VALUE_CENTRAL     = 'central';
 
-    public function getHelp()
+    public function getHelp(): string
     {
         return <<<EOT
         Initialize the database (MySQL > 5.7 or MariaDB 10.3) for use with Tuleap
@@ -62,7 +62,7 @@ final class SetupMysqlInitCommand extends Command
         EOT;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName('setup:mysql-init')
             ->setDescription('Initialize database (users, database, permissions)')
@@ -77,17 +77,20 @@ final class SetupMysqlInitCommand extends Command
             ->addOption(self::OPT_MEDIAWIKI, '', InputOption::VALUE_REQUIRED, 'Grant permissions for mediawiki. Possible values: `per-project` or `central`');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
-        $host = (string) $input->getOption('host');
-        $user = (string) $input->getOption(self::OPT_ADMIN_USER);
+        $host = $input->getOption('host');
+        assert(is_string($host));
+        $user = $input->getOption(self::OPT_ADMIN_USER);
+        assert(is_string($user));
         $password = $input->getOption(self::OPT_ADMIN_PASSWORD);
         if (! $password) {
             $io->getErrorStyle()->writeln(sprintf('<error>Missing mysql password for admin user `%s`</error>', $user));
             return 1;
         }
+        assert(is_string($password));
 
         $connexion_manager = new ConnectionManager();
         $db = $connexion_manager->getDBWithoutDBName($io, $host, $user, $password);
@@ -99,31 +102,42 @@ final class SetupMysqlInitCommand extends Command
 
         $connexion_manager->checkSQLModes($db);
 
+        $app_dbname   = $input->getOption(self::OPT_APP_DBNAME);
+        assert(is_string($app_dbname));
         $app_password = $input->getOption(self::OPT_APP_PASSWORD);
         if ($app_password) {
+            assert(is_string($app_password));
+            $app_user = $input->getOption(self::OPT_APP_USER);
+            assert(is_string($app_user));
             $this->setUpApplication(
                 $io,
                 $db,
-                $input->getOption(self::OPT_APP_DBNAME),
-                $input->getOption(self::OPT_APP_USER),
+                $app_dbname,
+                $app_user,
                 $app_password,
             );
         }
 
         $nss_password = $input->getOption(self::OPT_NSS_PASSWORD);
         if ($nss_password) {
+            assert(is_string($nss_password));
+            $nss_user = $input->getOption(self::OPT_NSS_USER);
+            assert(is_string($nss_user));
             $this->setUpNss(
                 $io,
                 $db,
-                $input->getOption(self::OPT_APP_DBNAME),
-                $input->getOption(self::OPT_NSS_USER),
+                $app_dbname,
+                $nss_user,
                 $nss_password,
             );
         }
 
         $mediawiki = $input->getOption(self::OPT_MEDIAWIKI);
         if ($mediawiki) {
-            $this->setUpMediawiki($io, $db, $mediawiki, $input->getOption(self::OPT_APP_USER));
+            assert(is_string($mediawiki));
+            $app_user = $input->getOption(self::OPT_APP_USER);
+            assert(is_string($app_user));
+            $this->setUpMediawiki($io, $db, $mediawiki, $app_user);
         }
 
         $db->run('FLUSH PRIVILEGES');
@@ -153,7 +167,7 @@ final class SetupMysqlInitCommand extends Command
     /**
      * @see https://bugs.mysql.com/bug.php?id=80379
      */
-    private function setUpNss(SymfonyStyle $io, EasyDB $db, string $target_dbname, string $nss_user, string $nss_password)
+    private function setUpNss(SymfonyStyle $io, EasyDB $db, string $target_dbname, string $nss_user, string $nss_password): void
     {
         $io->writeln(sprintf('<info>Grant privileges to %s</info>', $nss_user));
 
@@ -195,7 +209,7 @@ final class SetupMysqlInitCommand extends Command
         ));
     }
 
-    private function createUser(EasyDB $db, string $user, string $password)
+    private function createUser(EasyDB $db, string $user, string $password): void
     {
         $db->run(sprintf(
             'CREATE USER IF NOT EXISTS %s IDENTIFIED BY \'%s\'',

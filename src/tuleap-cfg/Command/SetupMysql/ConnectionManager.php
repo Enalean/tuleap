@@ -70,7 +70,12 @@ class ConnectionManager
                 $db->single('SELECT 1');
                 return $db;
             } catch (ConstructorFailed $exception) {
-                $io->getErrorStyle()->writeln($exception->getRealException()->getMessage());
+                $real_exception = $exception->getRealException();
+                if ($real_exception !== null) {
+                    $io->getErrorStyle()->writeln($real_exception->getMessage());
+                } else {
+                    $io->getErrorStyle()->writeln('Could not contact the DB');
+                }
                 $result = 0;
                 $i++;
                 sleep(1);
@@ -79,7 +84,7 @@ class ConnectionManager
         return null;
     }
 
-    public function checkSQLModes(EasyDB $db)
+    public function checkSQLModes(EasyDB $db): void
     {
         $row = $db->row('SHOW VARIABLES LIKE \'sql_mode\'');
         $errors = [];

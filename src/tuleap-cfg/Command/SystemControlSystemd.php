@@ -30,14 +30,6 @@ class SystemControlSystemd implements SystemControlInterface
     private const SYSTEMCTL = '/usr/bin/systemctl';
 
     /**
-     * @var ProcessFactory
-     */
-    private $process_factory;
-    /**
-     * @var string[]
-     */
-    private $command;
-    /**
      * @var Process
      */
     private $process;
@@ -52,19 +44,18 @@ class SystemControlSystemd implements SystemControlInterface
 
     public function __construct(ProcessFactory $process_factory, bool $quiet, string $action, string ...$targets)
     {
-        $this->process_factory = $process_factory;
         if ($quiet) {
-            $this->command = array_merge([self::SYSTEMCTL, '--quiet', $action], $targets);
+            $command = array_merge([self::SYSTEMCTL, '--quiet', $action], $targets);
         } else {
-            $this->command = array_merge([self::SYSTEMCTL, $action], $targets);
+            $command = array_merge([self::SYSTEMCTL, $action], $targets);
         }
+        $this->process = $process_factory->getProcess($command);
         $this->targets = $targets;
         $this->action  = $action;
     }
 
     public function run() : void
     {
-        $this->process = $this->process_factory->getProcess($this->command);
         $this->process->run();
     }
 

@@ -70,14 +70,14 @@ class DockerAioRunCommand extends Command
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('docker:tuleap-aio-run')
             ->setDescription('Run Tuleap in the context of `tuleap-aio` image');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
             $tuleap = new Tuleap($this->process_factory);
@@ -109,6 +109,7 @@ class DockerAioRunCommand extends Command
                 throw new \RuntimeException('Exec of /usr/bin/supervisord failed');
             }
         }
+        return 0;
     }
 
     private function installTuleap(OutputInterface $output, Tuleap $tuleap): void
@@ -117,7 +118,7 @@ class DockerAioRunCommand extends Command
 
         $mysql_daemon = $this->initializeMysqlDataStore($output);
         $ssh_daemon->startDaemon($output);
-        $tuleap->setup($output, 'tuleap.local', 'localhost', 'root', getenv('MYSQL_ROOT_PASSWORD'), 'localhost');
+        $tuleap->setup($output, 'tuleap.local', 'localhost', 'root', (string) getenv('MYSQL_ROOT_PASSWORD'), 'localhost');
         $this->shutdownMysql($output, $mysql_daemon);
         $ssh_daemon->shutdownDaemon($output);
     }
@@ -134,7 +135,7 @@ class DockerAioRunCommand extends Command
 
         $mysqld = $this->startMysqlDaemon();
 
-        $this->process_factory->getProcess(['scl', 'enable', 'rh-mysql57', '--', 'mysqladmin', '-uroot', 'password', getenv('MYSQL_ROOT_PASSWORD')])->mustRun();
+        $this->process_factory->getProcess(['scl', 'enable', 'rh-mysql57', '--', 'mysqladmin', '-uroot', 'password', (string) getenv('MYSQL_ROOT_PASSWORD')])->mustRun();
         return $mysqld;
     }
 
@@ -146,7 +147,7 @@ class DockerAioRunCommand extends Command
         return $mysqld;
     }
 
-    private function deployMysqldConfig()
+    private function deployMysqldConfig(): void
     {
         unlink('/etc/opt/rh/rh-mysql57/my.cnf.d/rh-mysql57-mysql-server.cnf');
         copy(__DIR__ . '/../../../tools/docker/tuleap-aio-c7/rh-mysql57-mysql-server.cnf', '/etc/opt/rh/rh-mysql57/my.cnf.d/rh-mysql57-mysql-server.cnf');
@@ -155,7 +156,7 @@ class DockerAioRunCommand extends Command
     private function shutdownMysql(OutputInterface $output, Process $mysql_daemon): void
     {
         $output->writeln('Shutdown Mysql');
-        $this->process_factory->getProcess(['scl', 'enable', 'rh-mysql57', '--', 'mysqladmin', '-uroot', '-p' . getenv('MYSQL_ROOT_PASSWORD'), 'shutdown'])->mustRun();
+        $this->process_factory->getProcess(['scl', 'enable', 'rh-mysql57', '--', 'mysqladmin', '-uroot', '-p' . (string) getenv('MYSQL_ROOT_PASSWORD'), 'shutdown'])->mustRun();
         while ($mysql_daemon->isRunning()) {
             $output->writeln('Wait for mysql to shutdown');
             sleep(1);

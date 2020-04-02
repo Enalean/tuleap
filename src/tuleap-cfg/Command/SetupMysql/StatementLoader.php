@@ -37,7 +37,7 @@ class StatementLoader
         $this->db = $db;
     }
 
-    public function loadFromFile(string $filepath)
+    public function loadFromFile(string $filepath): void
     {
         if (! is_file($filepath)) {
             throw new \RuntimeException(sprintf('%s does not exist', $filepath));
