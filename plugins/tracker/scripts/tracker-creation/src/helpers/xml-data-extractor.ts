@@ -20,6 +20,7 @@
 import { TrackerToBeCreatedMandatoryData } from "../store/type";
 
 const XML_MIME_TYPE = "text/xml";
+const TRACKER_DEFAULT_COLOR = "inca-silver";
 
 export async function extractNameAndShortnameFromXmlFile(
     file: File
@@ -41,23 +42,22 @@ export async function extractNameAndShortnameFromXmlFile(
     const shortname: Element | null = xml_file.querySelector("tracker > item_name");
     const tlp_color: Element | null = xml_file.querySelector("tracker > color");
 
-    if (
-        name === null ||
-        shortname === null ||
-        tlp_color === null ||
-        !name.textContent ||
-        !shortname.textContent ||
-        !tlp_color.textContent
-    ) {
-        return Promise.reject(
-            "The provided XML file does not provide any name and/or shortname and/or color"
-        );
+    if (name === null || shortname === null || !name.textContent || !shortname.textContent) {
+        return Promise.reject("The provided XML file does not provide any name and/or shortname");
+    }
+
+    let tracker_color = TRACKER_DEFAULT_COLOR;
+    if (tlp_color !== null && tlp_color.textContent !== null) {
+        tracker_color = tlp_color.textContent;
+    }
+    if (tracker_color === "") {
+        return Promise.reject("The tracker color cannot be an empty string");
     }
 
     return {
         name: name.textContent,
         shortname: shortname.textContent,
-        color: tlp_color.textContent,
+        color: tracker_color,
     };
 }
 
