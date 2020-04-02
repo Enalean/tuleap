@@ -821,7 +821,7 @@ describe("TuleapArtifactFieldValuesService", () => {
             var artifact_values = {
                 904: {
                     field_id: 904,
-                    granted_groups: ["2", "101_3", "103"],
+                    granted_groups_ids: ["2", "101_3", "103"],
                 },
             };
             var tracker = {

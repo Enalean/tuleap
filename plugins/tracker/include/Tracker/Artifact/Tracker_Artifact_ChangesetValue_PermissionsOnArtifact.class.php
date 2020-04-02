@@ -119,6 +119,10 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
             array_map(
                 array($this, 'getUgroupLabel'),
                 $this->getPerms()
+            ),
+            array_map(
+                array($this, 'getUserGroupRESTId'),
+                $this->getPerms()
             )
         );
         return $representation;
