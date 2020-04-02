@@ -22,6 +22,7 @@
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Hudson\HudsonJobBuilder;
+use Tuleap\Sanitizer\URISanitizer;
 
 require_once __DIR__ . '/../../../src/www/include/help.php';
 
@@ -309,6 +310,7 @@ class hudsonViews extends Views
                     $minimal_hudson_jobs[$job_id]                   = $minimal_job_factory->getMinimalHudsonJob($row['job_url'], $row['name']);
                     $hudson_jobs_complementary_information[$job_id] = [
                         'name'            => $row['name'],
+                        'url'             => $row['job_url'],
                         'use_svn_trigger' => $row['use_svn_trigger'],
                         'use_cvs_trigger' => $row['use_cvs_trigger']
                     ];
@@ -318,6 +320,7 @@ class hudsonViews extends Views
             }
 
             $hudson_jobs_with_exception = $job_builder->getHudsonJobsWithException($minimal_hudson_jobs);
+            $uri_sanitizer = new URISanitizer(new Valid_HTTPURI());
 
             foreach ($hudson_jobs_with_exception as $job_id => $hudson_job_with_exception) {
                 echo ' <tr>';
@@ -327,19 +330,19 @@ class hudsonViews extends Views
 
                     echo '<td>';
                     echo '<img src="' . $purifier->purify($job->getStatusIcon()) . '" alt="' . $purifier->purify($job->getStatus()) . '" title="' . $purifier->purify($job->getStatus()) . '" /> ';
-                    echo '<a href="' . $purifier->purify($job->getUrl()) . '" title="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'show_job', array($job->getName()))) . '">' . $purifier->purify($job->getName()) . '</a>';
+                    echo '<a href="' . $purifier->purify($uri_sanitizer->sanitizeForHTMLAttribute($job->getUrl())) . '" title="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'show_job', array($job->getName()))) . '">' . $purifier->purify($job->getName()) . '</a>';
                     echo '</td>';
                     if ($job->getLastSuccessfulBuildNumber() !== 0) {
-                        echo '  <td><a href="' . $purifier->purify($job->getLastSuccessfulBuildUrl()) . '" title="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'show_build', array($job->getLastSuccessfulBuildNumber(), $job->getName()))) . '">' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'build') . ' #' . $job->getLastSuccessfulBuildNumber()) . '</a></td>';
+                        echo '  <td><a href="' . $purifier->purify($uri_sanitizer->sanitizeForHTMLAttribute($job->getLastSuccessfulBuildUrl())) . '" title="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'show_build', array($job->getLastSuccessfulBuildNumber(), $job->getName()))) . '">' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'build') . ' #' . $job->getLastSuccessfulBuildNumber()) . '</a></td>';
                     } else {
                         echo '  <td>&nbsp;</td>';
                     }
                     if ($job->getLastFailedBuildNumber() !== 0) {
-                        echo '  <td><a href="' . $purifier->purify($job->getLastFailedBuildUrl()) . '" title="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'show_build', array($job->getLastFailedBuildNumber(), $job->getName()))) . '">' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'build') . ' #' . $job->getLastFailedBuildNumber()) . '</a></td>';
+                        echo '  <td><a href="' . $purifier->purify($uri_sanitizer->sanitizeForHTMLAttribute($job->getLastFailedBuildUrl())) . '" title="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'show_build', array($job->getLastFailedBuildNumber(), $job->getName()))) . '">' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'build') . ' #' . $job->getLastFailedBuildNumber()) . '</a></td>';
                     } else {
                         echo '  <td>&nbsp;</td>';
                     }
-                    echo '  <td align="center"><a href="' . $purifier->purify($job->getUrl()) . '/rssAll"><img src="' . hudsonPlugin::ICONS_PATH . 'rss_feed.png" alt="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'rss_feed', array($job->getName()))) . '" title="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'rss_feed', array($job->getName()))) . '"></a></td>';
+                    echo '  <td align="center"><a href="' . $purifier->purify($uri_sanitizer->sanitizeForHTMLAttribute($job->getUrl())) . '/rssAll"><img src="' . hudsonPlugin::ICONS_PATH . 'rss_feed.png" alt="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'rss_feed', array($job->getName()))) . '" title="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'rss_feed', array($job->getName()))) . '"></a></td>';
 
                     if ($project->usesSVN()) {
                         if ($hudson_jobs_complementary_information[$job_id]['use_svn_trigger'] == 1) {
@@ -365,8 +368,13 @@ class hudsonViews extends Views
                         }
                     }
                 } catch (Exception $e) {
-                    echo '  <td><img src="' . $purifier->purify(hudsonPlugin::ICONS_PATH) . 'link_error.png" alt="' . $purifier->purify($e->getMessage()) . '" title="' . $purifier->purify($e->getMessage()) . '" /></td>';
-                    $nb_columns = 2;
+                    echo '  <td>';
+                    echo '<img src="' . $purifier->purify(hudsonPlugin::ICONS_PATH) . 'link_error.png" alt="' . $purifier->purify($e->getMessage()) . '" title="' . $purifier->purify($e->getMessage()) . '" /> ';
+                    echo '<a href="' . $purifier->purify($uri_sanitizer->sanitizeForHTMLAttribute($hudson_jobs_complementary_information[$job_id]['url'])) . '" title="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'show_job', $hudson_jobs_complementary_information[$job_id]['name'])) . '">';
+                    echo $purifier->purify($hudson_jobs_complementary_information[$job_id]['name']);
+                    echo '</a>';
+                    echo '</td>';
+                    $nb_columns = 3;
                     if ($project->usesSVN()) {
                         $nb_columns++;
                     }
