@@ -30,7 +30,13 @@
                 <i class="fa fa-plus tlp-modal-title-icon"></i>
                 <translate>Add a new service</translate>
             </h1>
-            <div class="tlp-modal-close" data-dismiss="modal" v-bind:aria-label="close_label">
+            <div
+                class="tlp-modal-close"
+                tabindex="0"
+                role="button"
+                data-dismiss="modal"
+                v-bind:aria-label="close_label"
+            >
                 ×
             </div>
         </div>

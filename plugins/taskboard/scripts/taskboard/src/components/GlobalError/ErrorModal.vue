@@ -28,7 +28,13 @@
                 <i class="fa fa-warning tlp-modal-title-icon"></i>
                 <translate>Oops, there's an issue</translate>
             </h1>
-            <div class="tlp-modal-close" data-dismiss="modal" v-bind:aria-label="$gettext('Close')">
+            <div
+                class="tlp-modal-close"
+                tabindex="0"
+                role="button"
+                data-dismiss="modal"
+                v-bind:aria-label="$gettext('Close')"
+            >
                 ×
             </div>
         </div>

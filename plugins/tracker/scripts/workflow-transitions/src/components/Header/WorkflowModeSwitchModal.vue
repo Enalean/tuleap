@@ -28,7 +28,15 @@
             <h1 class="tlp-modal-title" id="modal-confirm-workflow-mode-change-label" v-translate>
                 Wait a minute...
             </h1>
-            <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">&times;</div>
+            <div
+                class="tlp-modal-close"
+                tabindex="0"
+                role="button"
+                data-dismiss="modal"
+                aria-label="Close"
+            >
+                &times;
+            </div>
         </div>
         <div class="tlp-modal-body">
             <slot name="modal-body"></slot>

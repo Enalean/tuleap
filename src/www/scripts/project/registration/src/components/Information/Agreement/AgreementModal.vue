@@ -24,7 +24,13 @@
             <h1 class="tlp-modal-title" id="term-of-services" v-translate>
                 Policy agreement
             </h1>
-            <div class="tlp-modal-close" data-dismiss="modal" v-bind:aria-label="$gettext('Close')">
+            <div
+                class="tlp-modal-close"
+                tabindex="0"
+                role="button"
+                data-dismiss="modal"
+                v-bind:aria-label="$gettext('Close')"
+            >
                 &times;
             </div>
         </div>

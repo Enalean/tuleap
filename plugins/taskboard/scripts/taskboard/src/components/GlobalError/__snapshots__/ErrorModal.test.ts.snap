@@ -28,6 +28,8 @@ exports[`ErrorModal warns user that something is wrong with a button to show det
       aria-label="Close"
       class="tlp-modal-close"
       data-dismiss="modal"
+      role="button"
+      tabindex="0"
     >
       
             ×

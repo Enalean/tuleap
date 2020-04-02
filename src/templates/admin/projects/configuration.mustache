@@ -53,7 +53,7 @@
                                             <div id="logs-modal-{{ id }}" class="tlp-modal" role="dialog" aria-labelledby="logs-modal-{{ id }}-label">
                                                 <div class="tlp-modal-header">
                                                     <h1 id="logs-modal-{{ id }}-label" class="tlp-modal-title"><i class="fa fa-list tlp-modal-title-icon"></i> {{ show_logs_title }}</h1>
-                                                    <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ close_modal }}">&times;</div>
+                                                    <div class="tlp-modal-close" tabindex="0" role="button" data-dismiss="modal" aria-label="{{ close_modal }}">&times;</div>
                                                 </div>
                                                 <div class="tlp-modal-body">
                                                     <table class="tlp-table">
@@ -86,7 +86,7 @@
                                         <form id="edit-modal-{{ id }}" class="tlp-modal" role="dialog" aria-labelledby="edit-modal-label-{{ id }}" method="post">
                                             <div class="tlp-modal-header">
                                                 <h1 class="tlp-modal-title" id="edit-modal-label-{{ id }}"><i class="fa fa-pencil tlp-modal-title-icon"></i> {{ update_title }}</h1>
-                                                <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ cancel_modal }}">&times;</div>
+                                                <div class="tlp-modal-close" tabindex="0" role="button" data-dismiss="modal" aria-label="{{ cancel_modal }}">&times;</div>
                                             </div>
                                             <div class="tlp-modal-body">
                                                 <div class="tlp-form-element">
@@ -116,7 +116,7 @@
                                         <form id="delete-modal-{{ id }}" class="tlp-modal tlp-modal-danger" role="dialog" aria-labelledby="delete-modal-label-{{ id }}" method="post">
                                             <div class="tlp-modal-header">
                                                 <h1 class="tlp-modal-title" id="delete-modal-label-{{ id }}"><i class="fa fa-trash-o tlp-modal-title-icon"></i> {{ delete_title }}</h1>
-                                                <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ cancel_modal }}">&times;</div>
+                                                <div class="tlp-modal-close" tabindex="0" role="button" data-dismiss="modal" aria-label="{{ cancel_modal }}">&times;</div>
                                             </div>
                                             <div class="tlp-modal-body">
                                                 <p>{{ delete_warning }}</p>
@@ -151,7 +151,7 @@
     <form id="add-project-webhook" class="tlp-modal" role="dialog" aria-labelledby="add-modal-label" method="post">
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="add-modal-label"><i class="fa fa-plus tlp-modal-title-icon"></i> {{ add_webhook }}</h1>
-            <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ cancel_modal }}">&times;</div>
+            <div class="tlp-modal-close" tabindex="0" role="button" data-dismiss="modal" aria-label="{{ cancel_modal }}">&times;</div>
         </div>
         <div class="tlp-modal-body">
             <p>{{ add_webhook_description_modal }}</p>
