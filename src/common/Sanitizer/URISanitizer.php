@@ -20,29 +20,33 @@
 
 namespace Tuleap\Sanitizer;
 
+use Valid_String;
+
 class URISanitizer
 {
     /**
-     * @var \Valid_LocalURI
+     * @var Valid_String[]
      */
-    private $validator_local_uri;
-    /**
-     * @var \Valid_FTPURI
-     */
-    private $validator_ftp_uri;
+    private $validators;
 
-    public function __construct(\Valid_LocalURI $validator_local_uri, \Valid_FTPURI $validator_ftp_uri)
+    /**
+     * @psalm-param \Valid_HTTPURI|\Valid_HTTPSURI|\Valid_LocalURI|\Valid_FTPURI ...$validators
+     */
+    public function __construct(Valid_String ...$validators)
     {
-        $this->validator_local_uri = $validator_local_uri;
-        $this->validator_ftp_uri   = $validator_ftp_uri;
+        $this->validators = $validators;
     }
 
-    public function sanitizeForHTMLAttribute($uri)
+    public function sanitizeForHTMLAttribute(string $uri): string
     {
-        if (! $this->validator_local_uri->validate($uri) && ! $this->validator_ftp_uri->validate($uri)) {
-            return '';
-        }
+        $is_valid = array_reduce(
+            $this->validators,
+            static function (bool $is_valid, Valid_String $validator) use ($uri) {
+                return $is_valid || $validator->validate($uri);
+            },
+            false
+        );
 
-        return $uri;
+        return $is_valid ? $uri : '';
     }
 }

@@ -22,6 +22,7 @@ namespace Tuleap\Sanitizer;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Valid_HTTPURI;
 
 class URISanitizerTest extends TestCase
 {
@@ -70,5 +71,26 @@ class URISanitizerTest extends TestCase
         $uri = 'invalid_uri';
 
         $this->assertEquals('', $uri_sanitizer->sanitizeForHTMLAttribute($uri));
+    }
+
+    public function testItAcceptsOnlyOneValidator(): void
+    {
+        $validator_http_uri = new Valid_HTTPURI();
+        $validator_http_uri->disableFeedback();
+
+        $uri_sanitizer = new URISanitizer($validator_http_uri);
+
+        $this->assertEquals(
+            '',
+            $uri_sanitizer->sanitizeForHTMLAttribute('javascript:alert(1);')
+        );
+        $this->assertEquals(
+            'http://example.test',
+            $uri_sanitizer->sanitizeForHTMLAttribute('http://example.test')
+        );
+        $this->assertEquals(
+            'https://example.test',
+            $uri_sanitizer->sanitizeForHTMLAttribute('https://example.test')
+        );
     }
 }
