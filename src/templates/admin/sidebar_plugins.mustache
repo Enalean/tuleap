@@ -6,7 +6,12 @@
     <nav class="admin-sidebar-section-nav">
         <a href="/plugins/pluginsadministration/" class="admin-sidebar-section-nav-item">{{ plugins_manage_all }}</a>
         {{# plugins }}
-            <a href="{{ href }}" class="admin-sidebar-section-nav-item">{{ label }}</a>
+            <a href="{{ href }}"
+               class="admin-sidebar-section-nav-item"
+               {{# has_shortname }} data-test="{{ shortname }}" {{/ has_shortname }}
+            >
+                {{ label }}
+            </a>
         {{/ plugins }}
     </nav>
 </section>

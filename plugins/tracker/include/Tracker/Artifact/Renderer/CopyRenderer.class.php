@@ -89,7 +89,7 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer
         $copy_children_label = $GLOBALS['Language']->getText('plugin_tracker_artifact', 'copy_submit_button_children');
         $copy_children_title = $GLOBALS['Language']->getText('plugin_tracker_artifact', 'copy_submit_button_children_title');
 
-        $button = '<button class="btn btn-large btn-primary" type="submit">' . $copy_label . '</button>';
+        $button = '<button class="btn btn-large btn-primary" type="submit" data-test="artifact-copy">' . $copy_label . '</button>';
 
         if (count($this->artifact->getChildrenForUser($current_user)) > 0) {
             $button = '<div class="btn-group dropup">

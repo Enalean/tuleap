@@ -11,13 +11,18 @@
         </a>
     </li>
     <li class="dropdown {{# is_permissions_tab_active }}active{{/ is_permissions_tab_active }}">
-        <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-perms-tracker" class="dropdown-toggle" data-toggle="dropdown" data-target="#">
+        <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-perms-tracker"
+            class="dropdown-toggle"
+            data-toggle="dropdown"
+            data-target="#"
+            data-test="admin-permissions"
+        >
             {{# dgettext }}tuleap-tracker | Permissions{{/ dgettext }}
             <b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
             <li>
-                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-perms-tracker">
+                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-perms-tracker" data-test="tracker-permissions">
                     {{# dgettext }}tuleap-tracker | Tracker permissions{{/ dgettext }}
                 </a>
             </li>

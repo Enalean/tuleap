@@ -104,11 +104,17 @@ abstract class Tracker_Artifact_ArtifactRenderer
                     <input type="hidden" id="submit-type" />
                     <div class="btn-group dropup">
                         <button class="btn btn-large btn-primary" type="submit">' . $GLOBALS['Language']->getText('global', 'btn_submit') . '</button>
-                        <button class="btn btn-large btn-primary dropdown-toggle" data-toggle="dropdown">
+                        <button class="btn btn-large btn-primary dropdown-toggle" data-toggle="dropdown" data-test="artifact-submit-options">
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
-                            <li><input type="submit" name="submit_and_stay" class="btn btn-link" value="' . $GLOBALS['Language']->getText('global', 'btn_submit_and_stay') . '" /></li>
+                            <li>
+                                <input type="submit"
+                                        name="submit_and_stay"
+                                        data-test="artifact-submit-and-stay"
+                                        class="btn btn-link"
+                                        value="' . $GLOBALS['Language']->getText('global', 'btn_submit_and_stay') . '" />
+                            </li>
                         </ul>
                     </div>' . $this->getConcurrentEditMessage() . '
                 </div>';

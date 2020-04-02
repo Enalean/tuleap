@@ -18,7 +18,11 @@
   -->
 
 <template>
-    <div v-if="partially_migrated_fields_count > 0" class="alert block">
+    <div
+        v-if="partially_migrated_fields_count > 0"
+        class="alert block"
+        data-test="dry-run-message-warning"
+    >
         <i class="fa fa-exclamation-circle move-artifact-icon"></i>
         <translate
             v-bind:translate-n="partially_migrated_fields_count"

@@ -24,6 +24,7 @@
         <select
             id="move-artifact-tracker-selector"
             name="move-artifact-tracker-selector"
+            data-test="move-artifact-tracker-selector"
             v-bind:disabled="is_tracker_list_empty"
             v-model="selected_tracker"
         >
