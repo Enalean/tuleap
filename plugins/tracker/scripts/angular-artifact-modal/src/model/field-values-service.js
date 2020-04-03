@@ -93,9 +93,9 @@ function TuleapArtifactFieldValuesService($sce) {
             case "perm":
                 value_obj.value = {
                     is_used_by_default: field.values.is_used_by_default,
-                    granted_groups: artifact_value.granted_groups,
+                    granted_groups: artifact_value.granted_groups_ids,
                 };
-                delete value_obj.granted_groups;
+                delete value_obj.granted_groups_ids;
                 break;
             case "tbl":
                 value_obj = formatForOpenListField(field, artifact_value);
