@@ -13,6 +13,7 @@
         <directory name="src/utils/" />
         <directory name="src/tuleap-cfg/" />
         <directory name="plugins/*/include/" />
+        <directory name="plugins/*/bin/" />
         <directory name="tests/phpcs/TuleapCodingStandard/" />
         <ignoreFiles>
             <directory name="src/common/wiki/phpwiki/"/>

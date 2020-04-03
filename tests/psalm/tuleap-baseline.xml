@@ -4301,6 +4301,15 @@
       <code>getWellFormattedArchivePath</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/artifactsfolders/bin/convert_from_folders_to_scrum.php">
+    <MissingReturnType occurrences="1">
+      <code>usage</code>
+    </MissingReturnType>
+    <PossiblyUndefinedVariable occurrences="2">
+      <code>$username</code>
+      <code>$project_id</code>
+    </PossiblyUndefinedVariable>
+  </file>
   <file src="plugins/artifactsfolders/include/Converter/AncestorFolderChecker.php">
     <MissingReturnType occurrences="1">
       <code>isAncestorInSameFolder</code>
@@ -7116,6 +7125,534 @@
       <code>restResources</code>
       <code>trackerEventProjectCreationTrackersRequired</code>
       <code>collectRoutesEvent</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/docman/bin/DocmanExport/Docman_ExportException.class.php">
+    <MissingParamType occurrences="1">
+      <code>$msg</code>
+    </MissingParamType>
+  </file>
+  <file src="plugins/docman/bin/DocmanExport/Docman_XMLExport.class.php">
+    <MissingParamType occurrences="3">
+      <code>$groupId</code>
+      <code>$path</code>
+      <code>$doc</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="2">
+      <code>$groupId</code>
+      <code>$dataPath</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="4">
+      <code>setGroupId</code>
+      <code>setDataPath</code>
+      <code>getXML</code>
+      <code>getTree</code>
+    </MissingReturnType>
+    <PossiblyNullArgument occurrences="1">
+      <code>$rootItem</code>
+    </PossiblyNullArgument>
+    <PossiblyUndefinedVariable occurrences="1">
+      <code>$type</code>
+    </PossiblyUndefinedVariable>
+  </file>
+  <file src="plugins/docman/bin/DocmanExport/Docman_XMLExportVisitor.class.php">
+    <ForbiddenCode occurrences="1">
+      <code>var_dump($this-&gt;statistics)</code>
+    </ForbiddenCode>
+    <MissingParamType occurrences="10">
+      <code>$path</code>
+      <code>$mdValues</code>
+      <code>$mdNode</code>
+      <code>$version</code>
+      <code>$userId</code>
+      <code>$statusId</code>
+      <code>$label</code>
+      <code>$value</code>
+      <code>$label</code>
+      <code>$value</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="5">
+      <code>$doc</code>
+      <code>$statistics</code>
+      <code>$userCache</code>
+      <code>$dataPath</code>
+      <code>$logger</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="12">
+      <code>setDataPath</code>
+      <code>appendItemMetadataNode</code>
+      <code>getNodeForMetadata</code>
+      <code>getNodeForMetadataValues</code>
+      <code>visitDocument</code>
+      <code>createVersion</code>
+      <code>getNormalizedLogin</code>
+      <code>getNormalizedStatus</code>
+      <code>setAttribute</code>
+      <code>appendChild</code>
+      <code>getXML</code>
+      <code>displayStatistics</code>
+    </MissingReturnType>
+    <UndefinedThisPropertyAssignment occurrences="1">
+      <code>$this-&gt;fileCounter</code>
+    </UndefinedThisPropertyAssignment>
+    <UndefinedThisPropertyFetch occurrences="1">
+      <code>$this-&gt;fileCounter</code>
+    </UndefinedThisPropertyFetch>
+  </file>
+  <file src="plugins/docman/bin/DocmanExport/XMLExport.class.php">
+    <MissingParamType occurrences="5">
+      <code>$groupId</code>
+      <code>$name</code>
+      <code>$path</code>
+      <code>$doc</code>
+      <code>$directoryPath</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="5">
+      <code>$archiveName</code>
+      <code>$groupId</code>
+      <code>$dataPath</code>
+      <code>$packagePath</code>
+      <code>$logger</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="9">
+      <code>setGroupId</code>
+      <code>setArchiveName</code>
+      <code>setPackagePath</code>
+      <code>createDomDocument</code>
+      <code>dumpPackage</code>
+      <code>dump</code>
+      <code>appendDocman</code>
+      <code>createDirectories</code>
+      <code>createDirectory</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/docman/bin/DocmanExport/export.php">
+    <MissingReturnType occurrences="1">
+      <code>usage</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/docman/bin/DocmanImport/DateParser.class.php">
+    <InvalidScalarArgument occurrences="5">
+      <code>$hour</code>
+      <code>$minute</code>
+      <code>$month</code>
+      <code>$day</code>
+      <code>$year</code>
+    </InvalidScalarArgument>
+    <MissingParamType occurrences="1">
+      <code>$isodate</code>
+    </MissingParamType>
+    <PossiblyUndefinedVariable occurrences="2">
+      <code>$hour</code>
+      <code>$localOffset</code>
+    </PossiblyUndefinedVariable>
+    <UndefinedDocblockClass occurrences="1">
+      <code>The</code>
+    </UndefinedDocblockClass>
+  </file>
+  <file src="plugins/docman/bin/DocmanImport/FSDocmanUploader.class.php">
+    <ForbiddenCode occurrences="3">
+      <code>shell_exec('stty -echo')</code>
+      <code>shell_exec('stty echo')</code>
+      <code>shell_exec('file -bi "' . escapeshellcmd($r-&gt;getPathname()) . '"')</code>
+    </ForbiddenCode>
+    <MissingParamType occurrences="4">
+      <code>$filePath</code>
+      <code>$offset</code>
+      <code>$size</code>
+      <code>$name</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="2">
+      <code>getChunk</code>
+      <code>uploadAllowed</code>
+    </MissingReturnType>
+    <NullArgument occurrences="1">
+      <code>null</code>
+    </NullArgument>
+    <PossiblyUndefinedGlobalVariable occurrences="1">
+      <code>$folderhash</code>
+    </PossiblyUndefinedGlobalVariable>
+  </file>
+  <file src="plugins/docman/bin/DocmanImport/ImportFromDocmanV1.class.php">
+    <InvalidArgument occurrences="1">
+      <code>$logger</code>
+    </InvalidArgument>
+    <MissingParamType occurrences="4">
+      <code>$wsdl_url</code>
+      <code>$login</code>
+      <code>$password</code>
+      <code>$folder_id</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="4">
+      <code>$temporary_directory</code>
+      <code>$wsdl_url</code>
+      <code>$user_login</code>
+      <code>$user_password</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="6">
+      <code>migrate</code>
+      <code>dumpDocmanV1</code>
+      <code>createTarget</code>
+      <code>importDump</code>
+      <code>createTemporaryDirectory</code>
+      <code>removeTemporaryDirectory</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/docman/bin/DocmanImport/Trees.class.php">
+    <MissingParamType occurrences="8">
+      <code>$listOfNodes</code>
+      <code>$nodeId</code>
+      <code>$listOfNodes</code>
+      <code>$listOfNodes</code>
+      <code>$array1</code>
+      <code>$array2</code>
+      <code>$tree</code>
+      <code>$tag</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="6">
+      <code>nodeListToTreeRec</code>
+      <code>findRoot</code>
+      <code>nodeListToTree</code>
+      <code>mergeTagRec</code>
+      <code>tagTree</code>
+      <code>mergeTag</code>
+    </MissingReturnType>
+    <PossiblyNullArrayAssignment occurrences="3">
+      <code>$res['children']</code>
+      <code>$res['children']</code>
+      <code>$res['children']</code>
+    </PossiblyNullArrayAssignment>
+    <PossiblyUndefinedVariable occurrences="1">
+      <code>$res</code>
+    </PossiblyUndefinedVariable>
+  </file>
+  <file src="plugins/docman/bin/DocmanImport/XMLDocmanImport.class.php">
+    <ArgumentTypeCoercion occurrences="2">
+      <code>$e</code>
+      <code>$e</code>
+    </ArgumentTypeCoercion>
+    <InvalidDocblockParamName occurrences="1">
+      <code>$groupId</code>
+    </InvalidDocblockParamName>
+    <InvalidNullableReturnType occurrences="1">
+      <code>string</code>
+    </InvalidNullableReturnType>
+    <InvalidOperand occurrences="1">
+      <code>$chunk_offset</code>
+    </InvalidOperand>
+    <InvalidReturnStatement occurrences="2">
+      <code>$s</code>
+      <code>$local_checksum == $distant_checksum</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="2">
+      <code>The</code>
+      <code>true</code>
+    </InvalidReturnType>
+    <InvalidScalarArgument occurrences="1">
+      <code>600</code>
+    </InvalidScalarArgument>
+    <MissingClosureParamType occurrences="2">
+      <code>$node1</code>
+      <code>$node2</code>
+    </MissingClosureParamType>
+    <MissingClosureReturnType occurrences="1">
+      <code>static function ($node1, $node2) {</code>
+    </MissingClosureReturnType>
+    <MissingParamType occurrences="96">
+      <code>$rootPath</code>
+      <code>$node1</code>
+      <code>$node2</code>
+      <code>$xmlDoc</code>
+      <code>$parentId</code>
+      <code>$path</code>
+      <code>$item</code>
+      <code>$message</code>
+      <code>$text</code>
+      <code>$type</code>
+      <code>$type</code>
+      <code>$path</code>
+      <code>$userNode</code>
+      <code>$userNode</code>
+      <code>$s</code>
+      <code>$e</code>
+      <code>$e</code>
+      <code>$parentId</code>
+      <code>$title</code>
+      <code>$description</code>
+      <code>$ordering</code>
+      <code>$status</code>
+      <code>$owner</code>
+      <code>$createDate</code>
+      <code>$updateDate</code>
+      <code>$parentId</code>
+      <code>$title</code>
+      <code>$description</code>
+      <code>$ordering</code>
+      <code>$status</code>
+      <code>$obsolescenceDate</code>
+      <code>$owner</code>
+      <code>$createDate</code>
+      <code>$updateDate</code>
+      <code>$parentId</code>
+      <code>$title</code>
+      <code>$description</code>
+      <code>$ordering</code>
+      <code>$status</code>
+      <code>$obsolescenceDate</code>
+      <code>$pagename</code>
+      <code>$owner</code>
+      <code>$createDate</code>
+      <code>$updateDate</code>
+      <code>$parentId</code>
+      <code>$title</code>
+      <code>$description</code>
+      <code>$ordering</code>
+      <code>$status</code>
+      <code>$obsolescenceDate</code>
+      <code>$url</code>
+      <code>$owner</code>
+      <code>$createDate</code>
+      <code>$updateDate</code>
+      <code>$parentId</code>
+      <code>$title</code>
+      <code>$description</code>
+      <code>$ordering</code>
+      <code>$status</code>
+      <code>$obsolescenceDate</code>
+      <code>$file</code>
+      <code>$author</code>
+      <code>$date</code>
+      <code>$owner</code>
+      <code>$createDate</code>
+      <code>$updateDate</code>
+      <code>$parentId</code>
+      <code>$title</code>
+      <code>$description</code>
+      <code>$ordering</code>
+      <code>$status</code>
+      <code>$obsolescenceDate</code>
+      <code>$file</code>
+      <code>$fileName</code>
+      <code>$fileType</code>
+      <code>$author</code>
+      <code>$date</code>
+      <code>$owner</code>
+      <code>$createDate</code>
+      <code>$updateDate</code>
+      <code>$item_id</code>
+      <code>$filename</code>
+      <code>$itemId</code>
+      <code>$label</code>
+      <code>$changeLog</code>
+      <code>$file</code>
+      <code>$fileName</code>
+      <code>$fileType</code>
+      <code>$author</code>
+      <code>$date</code>
+      <code>$itemId</code>
+      <code>$label</code>
+      <code>$changeLog</code>
+      <code>$file</code>
+      <code>$author</code>
+      <code>$date</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="16">
+      <code>$dataBaseDir</code>
+      <code>$metadataMap</code>
+      <code>$hardCodedMetadata</code>
+      <code>$ugroupMap</code>
+      <code>$userMap</code>
+      <code>$groupId</code>
+      <code>$doc</code>
+      <code>$soap</code>
+      <code>$hash</code>
+      <code>$force</code>
+      <code>$reorder</code>
+      <code>$importMessageMetadata</code>
+      <code>$autoRetry</code>
+      <code>$retryCounter</code>
+      <code>$logger</code>
+      <code>$chunk_size</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="36">
+      <code>loadXML</code>
+      <code>compareItemNodes</code>
+      <code>reorderItemNodes</code>
+      <code>importPath</code>
+      <code>buildUgroupMap</code>
+      <code>buildMetadataMap</code>
+      <code>buildUserMap</code>
+      <code>addImportMessageOnItem</code>
+      <code>appendTextToNode</code>
+      <code>printSoapResponseAndThrow</code>
+      <code>checkHardCodedMetadataUsage</code>
+      <code>checkMetadataUsage</code>
+      <code>checkUgroupsUsage</code>
+      <code>checkUgroupDefinition</code>
+      <code>checkMetadataDefinition</code>
+      <code>typeCodeToString</code>
+      <code>typeStringToCode</code>
+      <code>findPath</code>
+      <code>getItemInformation</code>
+      <code>getVersionInformation</code>
+      <code>recurseOnNode</code>
+      <code>extractOneMetadata</code>
+      <code>extractOnePermission</code>
+      <code>askWhatToDo</code>
+      <code>initRetryCounter</code>
+      <code>printException</code>
+      <code>createFolder</code>
+      <code>createEmpty</code>
+      <code>createWiki</code>
+      <code>createLink</code>
+      <code>createEmbeddedFile</code>
+      <code>createFile</code>
+      <code>adjustChunkSize</code>
+      <code>requestEntityTooLarge</code>
+      <code>createFileVersion</code>
+      <code>createEmbeddedFileVersion</code>
+    </MissingReturnType>
+    <NullArgument occurrences="2">
+      <code>null</code>
+      <code>null</code>
+    </NullArgument>
+    <NullableReturnStatement occurrences="2">
+      <code>null</code>
+      <code>null</code>
+    </NullableReturnStatement>
+    <PossiblyUndefinedVariable occurrences="3">
+      <code>$missingProp</code>
+      <code>$members</code>
+      <code>$members</code>
+    </PossiblyUndefinedVariable>
+    <TypeDoesNotContainType occurrences="1">
+      <code>$errorMsg != ''</code>
+    </TypeDoesNotContainType>
+    <UndefinedClass occurrences="1">
+      <code>Logger</code>
+    </UndefinedClass>
+    <UndefinedDocblockClass occurrences="1">
+      <code>The</code>
+    </UndefinedDocblockClass>
+  </file>
+  <file src="plugins/docman/bin/DocmanImport/XMLDocmanUpdate.class.php">
+    <FalsableReturnStatement occurrences="2">
+      <code>false</code>
+      <code>false</code>
+    </FalsableReturnStatement>
+    <InvalidPassByReference occurrences="2">
+      <code>$this-&gt;buildDistantTreeFromSoapArray()</code>
+      <code>Trees::mergeTag($remoteTree, $localTree)</code>
+    </InvalidPassByReference>
+    <InvalidReturnType occurrences="1">
+      <code>true</code>
+    </InvalidReturnType>
+    <MissingParamType occurrences="36">
+      <code>$xmlDoc</code>
+      <code>$parentId</code>
+      <code>$path</code>
+      <code>$array</code>
+      <code>$xmlDoc</code>
+      <code>$parentId</code>
+      <code>$path</code>
+      <code>$tree</code>
+      <code>$title</code>
+      <code>$tree</code>
+      <code>$parentId</code>
+      <code>$tree</code>
+      <code>$id</code>
+      <code>$itemElement</code>
+      <code>$itemElement</code>
+      <code>$itemId</code>
+      <code>$title</code>
+      <code>$node</code>
+      <code>$itemId</code>
+      <code>$node</code>
+      <code>$itemId</code>
+      <code>$node</code>
+      <code>$itemId</code>
+      <code>$itemInfo</code>
+      <code>$itemId</code>
+      <code>$itemInfo</code>
+      <code>$itemId</code>
+      <code>$itemInfo</code>
+      <code>$itemId</code>
+      <code>$itemInfo</code>
+      <code>$pageName</code>
+      <code>$itemId</code>
+      <code>$itemInfo</code>
+      <code>$url</code>
+      <code>$itemId</code>
+      <code>$itemInfo</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="2">
+      <code>$remoteItems</code>
+      <code>$continue</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="19">
+      <code>updatePath</code>
+      <code>sortChildrenArray</code>
+      <code>continuePath</code>
+      <code>tagCount</code>
+      <code>recurseUpdateTree</code>
+      <code>buildDistantTreeFromSoapArray</code>
+      <code>getTitleTreeFromIdTree</code>
+      <code>getItemTitle</code>
+      <code>getTreeFromItemElement_rec</code>
+      <code>getTreeFromItemElement</code>
+      <code>deleteItem</code>
+      <code>getAllVersionsMD5sum</code>
+      <code>updateItem</code>
+      <code>updateFile</code>
+      <code>updateEmbeddedFile</code>
+      <code>updateEmpty</code>
+      <code>updateWiki</code>
+      <code>updateLink</code>
+      <code>updateFolder</code>
+    </MissingReturnType>
+    <PossiblyUndefinedVariable occurrences="4">
+      <code>$tree2</code>
+      <code>$tree2</code>
+      <code>$tree2</code>
+      <code>$tree</code>
+    </PossiblyUndefinedVariable>
+  </file>
+  <file src="plugins/docman/bin/DocmanImport/import.php">
+    <ForbiddenCode occurrences="2">
+      <code>shell_exec('stty -echo')</code>
+      <code>shell_exec('stty echo')</code>
+    </ForbiddenCode>
+    <MissingParamType occurrences="1">
+      <code>$console</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="1">
+      <code>help</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/docman/bin/DocmanImport/parameters.php">
+    <MissingParamType occurrences="3">
+      <code>$parameter_array</code>
+      <code>$parameter</code>
+      <code>$require_value</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="1">
+      <code>getParameter</code>
+    </MissingReturnType>
+    <PossiblyUndefinedVariable occurrences="2">
+      <code>$passed_value</code>
+      <code>$passed_value</code>
+    </PossiblyUndefinedVariable>
+  </file>
+  <file src="plugins/docman/bin/import_from_docman_v1.php">
+    <ForbiddenCode occurrences="2">
+      <code>shell_exec('stty -echo')</code>
+      <code>shell_exec('stty echo')</code>
+    </ForbiddenCode>
+    <MissingParamType occurrences="1">
+      <code>$login</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="1">
+      <code>getPasswordFromStdin</code>
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/ApprovalTable/ApprovalTable.class.php">
@@ -14877,6 +15414,11 @@
       <code>artifactPartialUpdate</code>
       <code>moveArtifactActionAllowedByPluginRetriever</code>
     </MissingReturnType>
+  </file>
+  <file src="plugins/git/bin/restore-tar-repository.php">
+    <NullArgument occurrences="1">
+      <code>$exit_code</code>
+    </NullArgument>
   </file>
   <file src="plugins/git/include/AccessRightsPresenterOptionsBuilder.php">
     <MissingParamType occurrences="3">
@@ -23905,6 +24447,46 @@
       <code>isInProjectDashboard</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/ldap/bin/convertSvnToLdap.php">
+    <InvalidScalarArgument occurrences="2">
+      <code>0</code>
+      <code>-1</code>
+    </InvalidScalarArgument>
+    <MissingParamType occurrences="3">
+      <code>$username</code>
+      <code>$srcFileName</code>
+      <code>$dstFileName</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="2">
+      <code>getLdapFromUserName</code>
+      <code>svn_utils_convert_access_file_to_ldap</code>
+    </MissingReturnType>
+    <PossiblyFalseOperand occurrences="2">
+      <code>$eqpos</code>
+      <code>$eqpos</code>
+    </PossiblyFalseOperand>
+    <TooManyArguments occurrences="1">
+      <code>db_error($res)</code>
+    </TooManyArguments>
+    <UndefinedVariable occurrences="1">
+      <code>$argname</code>
+    </UndefinedVariable>
+  </file>
+  <file src="plugins/ldap/bin/ldap_sync.php">
+    <InvalidScalarArgument occurrences="2">
+      <code>0</code>
+      <code>-1</code>
+    </InvalidScalarArgument>
+  </file>
+  <file src="plugins/ldap/bin/registerUser.php">
+    <PossiblyFalseOperand occurrences="2">
+      <code>$eqpos</code>
+      <code>$eqpos</code>
+    </PossiblyFalseOperand>
+    <UndefinedVariable occurrences="1">
+      <code>$argname</code>
+    </UndefinedVariable>
+  </file>
   <file src="plugins/ldap/include/GroupSyncAdminEmailNotificationsManager.class.php">
     <MissingParamType occurrences="1">
       <code>$id</code>
@@ -24606,6 +25188,25 @@
     <MissingReturnType occurrences="2">
       <code>injectDependencies</code>
       <code>process</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/mediawiki/bin/migrate_to_123.php">
+    <MissingFile occurrences="1">
+      <code>include('/usr/share/mediawiki-tuleap-123/maintenance/update.php')</code>
+    </MissingFile>
+  </file>
+  <file src="plugins/mediawiki/bin/mw-maintenance-wrapper.php">
+    <MissingReturnType occurrences="1">
+      <code>usage</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/mediawiki/bin/mw-plugin-init.php">
+    <MissingParamType occurrences="2">
+      <code>$from</code>
+      <code>$to</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="1">
+      <code>mysymlink</code>
     </MissingReturnType>
   </file>
   <file src="plugins/mediawiki/fusionforge/compat/forge_get_config.php">
@@ -25496,6 +26097,11 @@
       <code>$this-&gt;text</code>
       <code>$this-&gt;text</code>
     </UndefinedThisPropertyFetch>
+  </file>
+  <file src="plugins/mediawiki/www/setpath.php">
+    <MissingClosureParamType occurrences="1">
+      <code>$class_with_namespace</code>
+    </MissingClosureParamType>
   </file>
   <file src="plugins/mfa/include/Enrollment/EnrollmentDisplayController.php">
     <NullReference occurrences="1">
@@ -30172,6 +30778,16 @@
       <code>getProjectQuota</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/svn/bin/migrate_to_plugin.php">
+    <MissingReturnType occurrences="1">
+      <code>usage</code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/svn/bin/svn_post_commit.php">
+    <InvalidOperand occurrences="1">
+      <code>$revision</code>
+    </InvalidOperand>
+  </file>
   <file src="plugins/svn/include/Events/SystemEvent_SVN_CREATE_REPOSITORY.class.php">
     <MissingReturnType occurrences="3">
       <code>injectDependencies</code>
@@ -32719,6 +33335,28 @@
       <code>fill_project_history_sub_events</code>
       <code>restResources</code>
     </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/bin/create_tracker_structure_from_tv3.php">
+    <PossiblyFalseOperand occurrences="1">
+      <code>$sys_user</code>
+    </PossiblyFalseOperand>
+    <TypeDoesNotContainType occurrences="1">
+      <code>is_object($tv3)</code>
+    </TypeDoesNotContainType>
+  </file>
+  <file src="plugins/tracker/bin/remove_multiple_artifacts.php">
+    <ForbiddenCode occurrences="2">
+      <code>shell_exec('stty -echo')</code>
+      <code>shell_exec('stty echo')</code>
+    </ForbiddenCode>
+    <PossiblyFalseOperand occurrences="1">
+      <code>$sys_user</code>
+    </PossiblyFalseOperand>
+    <StringIncrement occurrences="3">
+      <code>$current_artifact_id</code>
+      <code>$current_artifact_id</code>
+      <code>$current_artifact_id</code>
+    </StringIncrement>
   </file>
   <file src="plugins/tracker/include/PermissionsPerGroup/ProjectAdminPermissionPerGroupPresenterBuilder.php">
     <MissingParamType occurrences="1">
@@ -48106,9 +48744,6 @@
     <MissingParamType occurrences="1">
       <code>$is_in_archive_context</code>
     </MissingParamType>
-    <MissingReturnType occurrences="1">
-      <code>build</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/XML/Exporter/ChangesetValue/ChangesetValueArtifactLinkXMLExporter.class.php">
     <MissingClosureParamType occurrences="2">
@@ -50779,6 +51414,20 @@
       <code>collectRoutesEvent</code>
       <code>site_admin_option_hook</code>
     </MissingReturnType>
+  </file>
+  <file src="plugins/userlog/bin/clean_userlog_request.php">
+    <MissingParamType occurrences="3">
+      <code>$table_name</code>
+      <code>$column_name</code>
+      <code>$number_of_months_to_keep</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="2">
+      <code>removePotentiallyUnusedColumns</code>
+      <code>purgeUserlogRequestTable</code>
+    </MissingReturnType>
+    <NoInterfaceProperties occurrences="1">
+      <code>$data_access-&gt;db_name</code>
+    </NoInterfaceProperties>
   </file>
   <file src="plugins/userlog/include/UserLogBuilder.php">
     <InvalidOperand occurrences="1">
@@ -55810,13 +56459,13 @@
   </file>
   <file src="src/common/Project/Group.class.php">
     <MissingParamType occurrences="7">
-      <code>$string</code>
-      <code>$param</code>
       <code>$groupname</code>
+      <code>$param</code>
       <code>$tolower</code>
       <code>$field</code>
       <code>$value</code>
       <code>$type</code>
+      <code>$string</code>
     </MissingParamType>
     <MissingPropertyType occurrences="7">
       <code>$data_array</code>
@@ -57890,14 +58539,6 @@
       <code>getRssLatestNews</code>
       <code>getLegacyController</code>
       <code>collect</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/Sanitizer/URISanitizer.php">
-    <MissingParamType occurrences="1">
-      <code>$uri</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="1">
-      <code>sanitizeForHTMLAttribute</code>
     </MissingReturnType>
   </file>
   <file src="src/common/Service/ServiceCreator.php">
@@ -65102,11 +65743,11 @@
       <code>$index</code>
     </MissingParamType>
     <MissingPropertyType occurrences="5">
-      <code>$this-&gt;bgpri</code>
       <code>$widget-&gt;id</code>
       <code>$javascript</code>
       <code>$version</code>
       <code>$icons</code>
+      <code>$this-&gt;bgpri</code>
     </MissingPropertyType>
     <MissingReturnType occurrences="39">
       <code>iframe</code>
@@ -66227,13 +66868,12 @@
     <LessSpecificReturnStatement occurrences="1">
       <code>$plugin</code>
     </LessSpecificReturnStatement>
-    <MissingParamType occurrences="36">
+    <MissingParamType occurrences="35">
       <code>$id</code>
       <code>$name</code>
       <code>$name</code>
       <code>$id</code>
       <code>$row</code>
-      <code>$id</code>
       <code>$name</code>
       <code>$name</code>
       <code>$file_name</code>
@@ -69347,15 +69987,15 @@
   </file>
   <file src="src/common/tracker/ArtifactCanned.class.php">
     <MissingParamType occurrences="9">
+      <code>$string</code>
+      <code>$id</code>
       <code>$ArtifactType</code>
       <code>$data</code>
       <code>$title</code>
       <code>$body</code>
-      <code>$id</code>
       <code>$artifact_canned_id</code>
       <code>$title</code>
       <code>$body</code>
-      <code>$string</code>
     </MissingParamType>
     <MissingPropertyType occurrences="1">
       <code>$atid</code>
@@ -70565,14 +71205,13 @@
       <code>count($chunk) / 2</code>
     </InvalidScalarArgument>
     <MissingParamType occurrences="86">
-      <code>$string</code>
-      <code>$artifact_type_id</code>
-      <code>$artifact_type_id</code>
-      <code>$artifact_type_id</code>
       <code>$Group</code>
       <code>$artifact_type_id</code>
       <code>$arr</code>
       <code>$atid</code>
+      <code>$artifact_type_id</code>
+      <code>$artifact_type_id</code>
+      <code>$artifact_type_id</code>
       <code>$stop_notification</code>
       <code>$id</code>
       <code>$value</code>
@@ -70651,6 +71290,7 @@
       <code>$from_atid</code>
       <code>$from_atid</code>
       <code>$from_aid</code>
+      <code>$string</code>
     </MissingParamType>
     <MissingReturnType occurrences="57">
       <code>createUserPerms</code>
