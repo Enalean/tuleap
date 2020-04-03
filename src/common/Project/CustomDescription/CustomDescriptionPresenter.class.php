@@ -18,9 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Presenter of a Custom Project Description Field
- */
+use Tuleap\Project\Admin\DescriptionFields\DescriptionFieldLabelBuilder;
+
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Project_CustomDescription_CustomDescriptionPresenter
 {
 
@@ -42,13 +42,13 @@ class Project_CustomDescription_CustomDescriptionPresenter
 
     public function getName()
     {
-        return $this->getTranslation($this->custom_description->getName());
+        return DescriptionFieldLabelBuilder::getFieldTranslatedName($this->custom_description->getName());
     }
 
     public function getDescription()
     {
         $hp = Codendi_HTMLPurifier::instance();
-        return $hp->purify($this->getTranslation($this->custom_description->getDescription()), CODENDI_PURIFIER_LIGHT);
+        return $hp->purify(DescriptionFieldLabelBuilder::getFieldTranslatedDescription($this->custom_description->getDescription()), CODENDI_PURIFIER_LIGHT);
     }
 
     public function isRequired()
@@ -74,15 +74,5 @@ class Project_CustomDescription_CustomDescriptionPresenter
     public function setValue($value)
     {
         $this->value = $value;
-    }
-
-    private function getTranslation($text)
-    {
-        if (preg_match('/(.*):(.*)/', $text, $matches)) {
-            if ($GLOBALS['Language']->hasText($matches[1], $matches[2])) {
-                return $GLOBALS['Language']->getText($matches[1], $matches[2]);
-            }
-        }
-        return $text;
     }
 }

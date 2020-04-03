@@ -50,8 +50,8 @@ class DescriptionFieldAdminPresenterBuilder
         foreach ($description_fields_infos as $field) {
             $field_presenters[] = new FieldPresenter(
                 $field['group_desc_id'],
-                DescriptionFieldLabelBuilder::getFieldTranslatedTextLabel($field['desc_name']),
-                DescriptionFieldLabelBuilder::getFieldTranslatedTextLabel($field['desc_description']),
+                DescriptionFieldLabelBuilder::getFieldTranslatedName($field['desc_name']),
+                DescriptionFieldLabelBuilder::getFieldTranslatedDescription($field['desc_description']),
                 $field['desc_required'],
                 $this->getTranslatedRequiredLabel($field['desc_required']),
                 $field['desc_type'],

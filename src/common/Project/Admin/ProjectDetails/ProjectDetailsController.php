@@ -37,6 +37,7 @@ use ProjectHistoryDao;
 use ProjectManager;
 use Rule_ProjectFullName;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Project\Admin\DescriptionFields\DescriptionFieldLabelBuilder;
 use Tuleap\Project\HierarchyDisplayer;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectVisibilityPresenterBuilder;
@@ -362,13 +363,13 @@ class ProjectDetailsController
                 $field_value = $description_fields_values[$description_field_id]['value'];
             }
 
-            $translated_field_description = $this->translateFieldProperty($description_field["desc_description"]);
+            $translated_field_description = DescriptionFieldLabelBuilder::getFieldTranslatedDescription($description_field["desc_description"]);
             $purified_field_description   = Codendi_HTMLPurifier::instance()->purify($translated_field_description, CODENDI_PURIFIER_LIGHT);
 
             $description_fields_representations[] = array(
                 'field_name'                 => "form_" . $description_field["group_desc_id"],
                 'field_value'                => $field_value,
-                'field_label'                => $this->translateFieldProperty($description_field["desc_name"]),
+                'field_label'                => DescriptionFieldLabelBuilder::getFieldTranslatedName($description_field["desc_name"]),
                 'field_description_required' => $description_field["desc_required"],
                 'is_field_line_typed'        => $description_field["desc_type"] === 'line',
                 'is_field_text_typed'        => $description_field["desc_type"] === 'text',
@@ -377,16 +378,6 @@ class ProjectDetailsController
         }
 
         return $description_fields_representations;
-    }
-
-    private function translateFieldProperty($field_property)
-    {
-        if (preg_match('/(.*):(.*)/', $field_property, $matches)
-            && $GLOBALS['Language']->hasText($matches[1], $matches[2])) {
-            return $GLOBALS['Language']->getText($matches[1], $matches[2]);
-        }
-
-        return $field_property;
     }
 
     private function updateGroup(HTTPRequest $request)

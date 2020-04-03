@@ -29,6 +29,7 @@ use Statistics_Services_UsageFormatter;
 use Statistics_ServicesUsageDao;
 use TroveCatDao;
 use TroveCatFactory;
+use Tuleap\Project\Admin\DescriptionFields\DescriptionFieldLabelBuilder;
 
 class CSVBuilder
 {
@@ -119,7 +120,7 @@ class CSVBuilder
         foreach ($this->custom_description_factory->getCustomDescriptions() as $custom_description) {
             $this->services_usage_formatter->buildDatas(
                 $this->custom_description_value_dao->getAllDescriptionValues($custom_description->getId()),
-                $custom_description->getLabel()
+                DescriptionFieldLabelBuilder::getFieldTranslatedName($custom_description->getName())
             );
         }
 

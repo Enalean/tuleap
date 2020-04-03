@@ -81,9 +81,9 @@ class ProjectRegistrationPresenterBuilder
         foreach ($fields as $field) {
             $formatted_field[] = [
                 'group_desc_id'    => $field['group_desc_id'],
-                'desc_name'        => DescriptionFieldLabelBuilder::getFieldTranslatedTextLabel($field['desc_name']),
+                'desc_name'        => DescriptionFieldLabelBuilder::getFieldTranslatedName($field['desc_name']),
                 'desc_type'        => $field['desc_type'],
-                'desc_description' => DescriptionFieldLabelBuilder::getFieldTranslatedTextLabel($field['desc_description']),
+                'desc_description' => DescriptionFieldLabelBuilder::getFieldTranslatedDescription($field['desc_description']),
                 'desc_required'    => $field['desc_required']
             ];
         }
