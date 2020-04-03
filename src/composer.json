@@ -59,6 +59,7 @@
     "php-http/client-common": "^2.0",
     "php-http/guzzle6-adapter": "^2.0",
     "php-http/message": "^1.7",
+    "phpdocumentor/reflection-docblock": "^5.1",
     "psr/event-dispatcher": "^1.0",
     "psr/http-client": "^1.0",
     "psr/http-factory": "^1.0",
