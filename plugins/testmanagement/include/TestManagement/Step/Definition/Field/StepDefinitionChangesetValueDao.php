@@ -50,7 +50,6 @@ class StepDefinitionChangesetValueDao extends Tracker_FormElement_Field_ValueDao
     }
 
     /**
-     * @param int    $changeset_value_id
      * @param Step[] $steps
      *
      */
