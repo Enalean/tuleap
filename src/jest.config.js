@@ -24,6 +24,7 @@ module.exports = {
     displayName: "tuleap-core",
     collectCoverageFrom: [
         ...base_config.collectCoverageFrom,
+        "!common/**",
         "!www/**/jquery/**",
         "!www/**/jscrollpane/**",
         "!www/**/jstimezonedetect/**",
