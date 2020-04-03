@@ -27,6 +27,7 @@ class LabelFieldNotFoundException extends Exception
 {
     public function __construct(Tracker $tracker)
     {
-        parent::__construct("No label field found. $tracker->name tracker misconfigured");
+        $tracker_name = $tracker->getName();
+        parent::__construct("No label field found. $tracker_name tracker misconfigured");
     }
 }
