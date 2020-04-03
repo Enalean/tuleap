@@ -465,6 +465,13 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-agiledashboar
 %description plugin-taskboard
 %{summary}.
 
+%package plugin-testmanagement
+Summary: Test Management plugin for Tuleap
+Group: Development/Tools
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker, tuleap-plugin-agiledashboard
+%description plugin-testmanagement
+%{summary}.
+
 %package plugin-textualreport
 Summary: Textual Report
 Group: Development/Tools
@@ -1446,6 +1453,11 @@ fi
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/taskboard
 %{APP_DIR}/src/www/assets/taskboard
+
+%files plugin-testmanagement
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/testmanagement
+%{APP_DIR}/src/www/assets/testmanagement
 
 %files plugin-textualreport
 %defattr(-,root,root,-)
