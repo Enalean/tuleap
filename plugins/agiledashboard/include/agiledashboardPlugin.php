@@ -2159,19 +2159,10 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     public function defaultTemplatesXMLFileCollection(DefaultTemplatesXMLFileCollection $collection): void
     {
         $this->addKanbanTemplates($collection);
-        $this->addScrumTemplates($collection);
     }
 
     private function addKanbanTemplates(DefaultTemplatesXMLFileCollection $collection): void
     {
         $collection->add(__DIR__ . '/../resources/templates/Tracker_activity.xml');
-    }
-
-    private function addScrumTemplates(DefaultTemplatesXMLFileCollection $collection): void
-    {
-        $collection->add(__DIR__ . '/../resources/templates/Tracker_release.xml');
-        $collection->add(__DIR__ . '/../resources/templates/Tracker_sprint.xml');
-        $collection->add(__DIR__ . '/../resources/templates/Tracker_UserStories.xml');
-        $collection->add(__DIR__ . '/../resources/templates/Tracker_Tasks.xml');
     }
 }

@@ -135,6 +135,19 @@ describe("getters", () => {
 
             expect(getters.is_ready_for_step_2(state)).toBe(true);
         });
+
+        it("Is ready if default tracker template is selected", () => {
+            const state: State = {
+                active_option: "default-bug",
+                selected_tracker_template: null,
+                is_a_xml_file_selected: false,
+                has_xml_file_error: false,
+                is_parsing_a_xml_file: false,
+                selected_project_tracker_template: null,
+            } as State;
+
+            expect(getters.is_ready_for_step_2(state)).toBe(true);
+        });
     });
 
     describe("is_ready_to_submit", () => {

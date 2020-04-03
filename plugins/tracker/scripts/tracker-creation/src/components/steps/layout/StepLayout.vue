@@ -29,6 +29,7 @@
             </div>
             <div class="tracker-creation-step-interactive-content">
                 <slot name="interactive_content"></slot>
+                <slot name="interactive_content_default"></slot>
                 <slot name="interactive_content_advanced"></slot>
             </div>
             <step-navigation-buttons

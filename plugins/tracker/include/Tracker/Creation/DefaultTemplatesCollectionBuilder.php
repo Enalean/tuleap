@@ -55,12 +55,15 @@ class DefaultTemplatesCollectionBuilder
             if (! (string) $xml->color) {
                 continue;
             }
+            if (! (string) $xml->description) {
+                continue;
+            }
 
             $id = 'default-' . (string) $xml->item_name;
             $collection->add(
                 $id,
                 new DefaultTemplate(
-                    new TrackerTemplatesRepresentation($id, (string) $xml->name, (string) $xml->color),
+                    new TrackerTemplatesRepresentation($id, (string) $xml->name, (string) $xml->description, (string) $xml->color),
                     $filepath
                 )
             );

@@ -35,10 +35,13 @@ export default class FieldTrackerTemplateId extends Vue {
     readonly selected_project_tracker_template!: Tracker;
 
     @Getter
+    readonly is_created_from_default_template!: boolean;
+
+    @Getter
     readonly is_a_duplication!: boolean;
 
     get tracker_id(): string {
-        if (this.is_a_duplication) {
+        if (this.is_a_duplication || this.is_created_from_default_template) {
             return this.selected_tracker_template.id;
         }
 

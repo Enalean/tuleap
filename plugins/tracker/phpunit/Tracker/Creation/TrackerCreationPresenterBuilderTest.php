@@ -196,14 +196,14 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
         $collection->add(
             'default-activity',
             new DefaultTemplate(
-                new TrackerTemplatesRepresentation('default-activity', 'Activities', 'fiesta-red'),
+                new TrackerTemplatesRepresentation('default-activity', 'Activities', 'Description', 'fiesta-red'),
                 '/path/to/xml'
             )
         );
         $collection->add(
             'default-bug',
             new DefaultTemplate(
-                new TrackerTemplatesRepresentation('default-bug', 'Bugs', 'clockwork-orange'),
+                new TrackerTemplatesRepresentation('default-bug', 'Bugs', 'Description', 'clockwork-orange'),
                 '/path/to/xml'
             )
         );
@@ -219,8 +219,8 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
         $expected_list_of_existing_trackers = ['names' => [], 'shortnames' => []];
         $expected_template = new TrackerCreationPresenter(
             [
-                new TrackerTemplatesRepresentation('default-activity', 'Activities', 'fiesta-red'),
-                new TrackerTemplatesRepresentation('default-bug', 'Bugs', 'clockwork-orange')
+                new TrackerTemplatesRepresentation('default-activity', 'Activities', 'Description', 'fiesta-red'),
+                new TrackerTemplatesRepresentation('default-bug', 'Bugs', 'Description', 'clockwork-orange')
             ],
             [],
             $expected_list_of_existing_trackers,
@@ -242,14 +242,16 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
         $this->tracker_dao->shouldReceive('searchByGroupId')->with(101)->andReturn(
             [
                 [
-                    'id'        => '1',
-                    'name'      => 'request',
-                    'color'     => 'peggy-pink'
+                    'id'          => '1',
+                    'name'        => 'request',
+                    'description' => 'Description',
+                    'color'       => 'peggy-pink'
                 ],
                 [
-                    'id'        => '2',
-                    'name'      => 'stories',
-                    'color'     => 'sherwood-green'
+                    'id'          => '2',
+                    'name'        => 'stories',
+                    'description' => 'Description',
+                    'color'       => 'sherwood-green'
                 ]
             ]
         );
@@ -268,6 +270,7 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
         $tracker_user_admin->shouldReceive('userIsAdmin')->andReturn(true);
         $tracker_user_admin->shouldReceive('getId')->andReturn('4');
         $tracker_user_admin->shouldReceive('getName')->andReturn('MyAwesomeTracker');
+        $tracker_user_admin->shouldReceive('getDescription')->andReturn('Description');
         $tracker_user_admin->shouldReceive('getColor')->andReturn(TrackerColor::fromName('red-wine'));
 
         $this->project_manager->shouldReceive('getProject')->with('101')->andReturn($project);
@@ -280,8 +283,8 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
                 $tracker_user_admin
             ]);
 
-        $tracker_bugs = new TrackerTemplatesRepresentation('1', 'request', 'peggy-pink');
-        $tracker_epics = new TrackerTemplatesRepresentation('2', 'stories', 'sherwood-green');
+        $tracker_bugs = new TrackerTemplatesRepresentation('1', 'request', 'Description', 'peggy-pink');
+        $tracker_epics = new TrackerTemplatesRepresentation('2', 'stories', 'Description', 'sherwood-green');
 
         $project_template[] = new ProjectTemplatesRepresentation(
             $project,
@@ -291,14 +294,16 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
         $this->tracker_dao->shouldReceive('searchByGroupId')->with(104)->andReturn(
             [
                 [
-                    'id'        => '1',
-                    'name'      => 'Bugs',
-                    'item_name' => 'bugz'
+                    'id'          => '1',
+                    'name'        => 'Bugs',
+                    'description' => 'Description',
+                    'item_name'   => 'bugz'
                 ],
                 [
-                    'id'        => '2',
-                    'name'      => 'Epics',
-                    'item_name' => 'epico'
+                    'id'          => '2',
+                    'name'        => 'Epics',
+                    'description' => 'Description',
+                    'item_name'   => 'epico'
                 ]
             ]
         );
@@ -316,6 +321,7 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
                     [
                         'id' => 4,
                         'name' => 'MyAwesomeTracker',
+                        'description' => 'Description',
                         'tlp_color' => 'red-wine'
                     ]
                 ]

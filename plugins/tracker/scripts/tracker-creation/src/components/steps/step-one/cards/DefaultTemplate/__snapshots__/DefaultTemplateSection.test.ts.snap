@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DefaultTemplateSection Displays cards for default templates trackers 1`] = `
+<div
+  class="tracker-creation-starting-point-options"
+>
+  <default-template-card-stub
+    tracker="[object Object]"
+  />
+  <default-template-card-stub
+    tracker="[object Object]"
+  />
+</div>
+`;

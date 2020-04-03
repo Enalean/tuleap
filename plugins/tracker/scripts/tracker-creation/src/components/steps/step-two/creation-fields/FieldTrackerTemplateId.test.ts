@@ -23,7 +23,10 @@ import { State } from "../../../../store/type";
 import { createStoreMock } from "../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 
 describe("FieldTrackerTemplateId", () => {
-    function getWrapper(is_a_duplication: boolean): Wrapper<FieldTrackerTemplateId> {
+    function getWrapper(
+        is_a_duplication: boolean,
+        is_created_from_default_template: boolean
+    ): Wrapper<FieldTrackerTemplateId> {
         return shallowMount(FieldTrackerTemplateId, {
             mocks: {
                 $store: createStoreMock({
@@ -39,6 +42,7 @@ describe("FieldTrackerTemplateId", () => {
                     } as State,
                     getters: {
                         is_a_duplication,
+                        is_created_from_default_template,
                     },
                 }),
             },
@@ -46,16 +50,23 @@ describe("FieldTrackerTemplateId", () => {
     }
 
     it("If it is a duplication, then it sets the input value with the selected tracker id", () => {
-        const wrapper = getWrapper(true);
+        const wrapper = getWrapper(true, false);
         const input: HTMLInputElement = wrapper.element as HTMLInputElement;
 
         expect(input.value).toEqual("100");
     });
 
     it("sets the input value with the selected project tracker id", () => {
-        const wrapper = getWrapper(false);
+        const wrapper = getWrapper(false, false);
         const input: HTMLInputElement = wrapper.element as HTMLInputElement;
 
         expect(input.value).toEqual("101");
+    });
+
+    it("If it is from default template, then it sets the input value with the selected tracker id", () => {
+        const wrapper = getWrapper(false, true);
+        const input: HTMLInputElement = wrapper.element as HTMLInputElement;
+
+        expect(input.value).toEqual("100");
     });
 });

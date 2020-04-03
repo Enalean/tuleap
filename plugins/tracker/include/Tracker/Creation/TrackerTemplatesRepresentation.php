@@ -19,7 +19,7 @@
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation;
 
@@ -38,12 +38,17 @@ class TrackerTemplatesRepresentation implements \JsonSerializable
      * @var string
      */
     public $tlp_color;
+    /**
+     * @var string
+     */
+    private $description;
 
-    public function __construct(string $id, string $name, string $tlp_color)
+    public function __construct(string $id, string $name, string $description, string $tlp_color)
     {
-        $this->id        = $id;
-        $this->name      = $name;
-        $this->tlp_color = $tlp_color;
+        $this->id          = $id;
+        $this->name        = $name;
+        $this->description = $description;
+        $this->tlp_color   = $tlp_color;
     }
 
     /**
@@ -52,9 +57,10 @@ class TrackerTemplatesRepresentation implements \JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'id'        => $this->id,
-            'name'      => $this->name,
-            'tlp_color' => $this->tlp_color
+            'id'          => $this->id,
+            'name'        => $this->name,
+            'description' => $this->description,
+            'tlp_color'   => $this->tlp_color
         ];
     }
 }

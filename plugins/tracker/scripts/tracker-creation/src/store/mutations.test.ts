@@ -18,9 +18,51 @@
  */
 
 import * as mutations from "./mutations";
-import { State } from "./type";
+import { setActiveOption } from "./mutations";
+import { CreationOptions, ProjectTemplate, State, Tracker } from "./type";
 
 describe("mutations", () => {
+    describe("setActiveOption", () => {
+        it("stores the active option for empty", () => {
+            const state: State = { active_option: CreationOptions.NONE_YET } as State;
+            setActiveOption(state, CreationOptions.TRACKER_EMPTY);
+            expect(state.active_option).toBe(CreationOptions.TRACKER_EMPTY);
+        });
+
+        it("stores the active option for default template", () => {
+            const tracker: Tracker = {
+                id: "default-bug",
+                name: "Bug",
+                description: "Bug",
+                tlp_color: "fiesta-red",
+            };
+            const state: State = {
+                active_option: CreationOptions.NONE_YET,
+                project_templates: [] as ProjectTemplate[],
+                default_templates: [tracker],
+            } as State;
+            setActiveOption(state, "default-bug");
+            expect(state.active_option).toBe("default-bug");
+            expect(state.selected_tracker_template).toBe(tracker);
+        });
+
+        it("resets the selected tracker when we switch active option", () => {
+            const state: State = {
+                active_option: "default-bug",
+                project_templates: [] as ProjectTemplate[],
+                selected_tracker_template: {
+                    id: "default-bug",
+                    name: "Bug",
+                    description: "Bug",
+                    tlp_color: "fiesta-red",
+                },
+            } as State;
+            setActiveOption(state, CreationOptions.TRACKER_TEMPLATE);
+            expect(state.active_option).toBe(CreationOptions.TRACKER_TEMPLATE);
+            expect(state.selected_tracker_template).toBe(null);
+        });
+    });
+
     describe("setSelectedTrackerTemplate", () => {
         let state: State;
 
