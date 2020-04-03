@@ -26,6 +26,9 @@ use Codendi_Request;
 use Response;
 use Feedback;
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 
 class NatureConfigController
 {
@@ -66,9 +69,15 @@ class NatureConfigController
         $this->nature_usage_presenter_factory = $nature_usage_presenter_factory;
     }
 
-    public function index(CSRFSynchronizerToken $csrf, Response $response)
+    public function index(CSRFSynchronizerToken $csrf, BaseLayout $base_layout)
     {
         $title  = $GLOBALS['Language']->getText('plugin_tracker_config', 'title');
+
+        $assets = new IncludeAssets(
+            __DIR__ . '/../../../../../../../../src/www/assets/trackers',
+            '/assets/trackers'
+        );
+        $base_layout->addJavascriptAsset(new JavascriptAsset($assets, 'admin-nature.js'));
 
         $this->admin_page_rendered->renderANoFramedPresenter(
             $title,
