@@ -36,15 +36,6 @@ final class TrackerXMLExporterChangesetValueStepDefinitionXMLExporterTest extend
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var Step|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $step1;
-    /**
-     * @var Step|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $step2;
-
     public function testItExportsTheExternalChangeset(): void
     {
         $exporter     = new TrackerXMLExporterChangesetValueStepDefinitionXMLExporter(new XML_SimpleXMLCDATAFactory());

@@ -74,7 +74,7 @@ class TrackerXMLExporterChangesetValueStepDefinitionXMLExporter extends Tracker_
         $this->simple_XMLCDATA_factory->insertWithAttributes(
             $step,
             'description',
-            (string)$value->getDescription(),
+            (string) $value->getDescription(),
             ['format' => $value->getDescriptionFormat()]
         );
 

@@ -108,7 +108,7 @@ class XMLImport
     /**
      * @return mixed|string
      */
-    private function getXMLRef(SimpleXMLElement $xml, array  $tracker_mapping, string $tracker_name)
+    private function getXMLRef(SimpleXMLElement $xml, array $tracker_mapping, string $tracker_name)
     {
         $reference = (string) $xml->configuration->{$tracker_name};
 
