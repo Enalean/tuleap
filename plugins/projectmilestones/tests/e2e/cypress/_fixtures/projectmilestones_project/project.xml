@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+  ~
+  ~ This file is a part of Tuleap.
+  ~
+  ~ Tuleap is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Tuleap is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Tuleap. If not, see http://www.gnu.org/licenses/.
+  ~
+  -->
+
+<project access="public" description="" full-name="ProjectMilestones Widget" unix-name="projectmilestones-dashboard">
+    <long-description/>
+
+    <services>
+      <service shortname="summary" enabled="1"/>
+      <service shortname="plugin_tracker" enabled="1"/>
+      <service shortname="plugin_agiledashboard" enabled="1"/>
+    </services>
+
+    <ugroups>
+        <ugroup name="project_members" description="">
+            <members>
+                <member format="username">ProjectAdministrator</member>
+                <member format="username">ProjectMember</member>
+            </members>
+        </ugroup>
+        <ugroup name="project_admins" description="">
+            <members>
+                <member format="username">ProjectAdministrator</member>
+            </members>
+        </ugroup>
+    </ugroups>
+
+  <trackers>
+    <tracker id="T117" parent_id="0">
+      <name><![CDATA[Releases]]></name>
+      <item_name><![CDATA[releases]]></item_name>
+      <description><![CDATA[]]></description>
+      <color><![CDATA[inca-silver]]></color>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="string" ID="F2590" rank="3" id="2590" tracker_id="117" parent_id="0">
+          <name><![CDATA[label]]></name>
+          <label><![CDATA[Label]]></label>
+          <properties size="30"/>
+        </formElement>
+        <formElement type="date" ID="F2593" rank="4" id="2593" tracker_id="117" parent_id="0" required="1">
+          <name><![CDATA[beginning_1]]></name>
+          <label><![CDATA[Beginning]]></label>
+          <properties default_value="today" display_time="0"/>
+        </formElement>
+        <formElement type="date" ID="F2594" rank="5" id="2594" tracker_id="117" parent_id="0" required="1">
+          <name><![CDATA[end]]></name>
+          <label><![CDATA[End]]></label>
+          <properties display_time="0"/>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="title">
+          <shortname><![CDATA[title]]></shortname>
+          <label><![CDATA[Title]]></label>
+          <description><![CDATA[Define the title of an artifact]]></description>
+          <field REF="F2590"/>
+        </semantic>
+        <semantic type="timeframe">
+          <start_date_field REF="F2593"/>
+          <end_date_field REF="F2594"/>
+        </semantic>
+        <semantic type="tooltip"/>
+        <semantic type="plugin_cardwall_card_fields"/>
+      </semantics>
+      <rules>
+        <date_rules/>
+        <list_rules/>
+      </rules>
+      <reports>
+        <report is_default="0">
+          <name><![CDATA[Default]]></name>
+          <description><![CDATA[The system default artifact report]]></description>
+          <criterias/>
+          <renderers>
+            <renderer ID="R494" type="table" rank="0" chunksz="15">
+              <name><![CDATA[Results]]></name>
+              <columns/>
+            </renderer>
+          </renderers>
+        </report>
+      </reports>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F2590" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F2590" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F2590" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F2593" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F2593" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F2593" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F2594" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F2594" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F2594" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+      </permissions>
+      <artifacts/>
+    </tracker>
+    <tracker id="T118" parent_id="0">
+      <name><![CDATA[User Stories]]></name>
+      <item_name><![CDATA[user_stories]]></item_name>
+      <description><![CDATA[]]></description>
+      <color><![CDATA[red-wine]]></color>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="string" ID="F2592" rank="0" id="2592" tracker_id="118" parent_id="0">
+          <name><![CDATA[label]]></name>
+          <label><![CDATA[Label]]></label>
+          <properties size="30"/>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="tooltip"/>
+        <semantic type="plugin_cardwall_card_fields"/>
+      </semantics>
+      <rules>
+        <date_rules/>
+        <list_rules/>
+      </rules>
+      <reports>
+        <report is_default="0">
+          <name><![CDATA[Default]]></name>
+          <description><![CDATA[The system default artifact report]]></description>
+          <criterias/>
+          <renderers>
+            <renderer ID="R495" type="table" rank="0" chunksz="15">
+              <name><![CDATA[Results]]></name>
+              <columns/>
+            </renderer>
+          </renderers>
+        </report>
+      </reports>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F2592" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F2592" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F2592" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+      </permissions>
+      <artifacts/>
+    </tracker>
+    <triggers/>
+  </trackers>
+  <natures>
+    <nature><![CDATA[_is_child]]></nature>
+    <nature><![CDATA[_covered_by]]></nature>
+  </natures>
+  <agiledashboard>
+    <plannings>
+      <planning name="Sprint Planning" plan_title="Sprint Plan" planning_tracker_id="T117" backlog_title="Release Backlog">
+        <backlogs>
+          <backlog>T118</backlog>
+        </backlogs>
+      </planning>
+    </plannings>
+  </agiledashboard>
+  <cardwall>
+    <trackers/>
+  </cardwall>
+
+    <dashboards>
+      <dashboard name="Project Dashboard">
+        <line>
+          <column>
+            <widget name="projectheartbeat" />
+          </column>
+        </line>
+      </dashboard>
+    </dashboards>
+</project>

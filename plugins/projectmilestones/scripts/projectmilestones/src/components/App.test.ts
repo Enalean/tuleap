@@ -56,7 +56,7 @@ describe("Given a release widget", () => {
     it("When there are no errors, then the widget content will be displayed", async () => {
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.contains("[data-test=widget-content]")).toBe(true);
+        expect(wrapper.contains("[data-test=widget-content-project-milestones]")).toBe(true);
         expect(wrapper.contains("[data-test=show-error-message]")).toBe(false);
         expect(wrapper.contains("[data-test=is-loading]")).toBe(false);
     });
@@ -67,7 +67,7 @@ describe("Given a release widget", () => {
         const wrapper = await getPersonalWidgetInstance(store_options);
 
         expect(wrapper.contains("[data-test=show-error-message]")).toBe(true);
-        expect(wrapper.contains("[data-test=widget-content]")).toBe(false);
+        expect(wrapper.contains("[data-test=widget-content-project-milestones]")).toBe(false);
         expect(wrapper.contains("[data-test=is-loading]")).toBe(false);
     });
 
@@ -76,7 +76,7 @@ describe("Given a release widget", () => {
         const wrapper = await getPersonalWidgetInstance(store_options);
 
         expect(wrapper.contains("[data-test=is-loading]")).toBe(true);
-        expect(wrapper.contains("[data-test=widget-content]")).toBe(false);
+        expect(wrapper.contains("[data-test=widget-content-project-milestones]")).toBe(false);
         expect(wrapper.contains("[data-test=show-error-message]")).toBe(false);
     });
 
