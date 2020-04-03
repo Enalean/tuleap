@@ -20,7 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import CardsInColumnCount from "./CardsInColumnCount.vue";
 import { ColumnDefinition } from "../../../../type";
-import { createStoreMock } from "../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 
 describe("CardsInColumnCount", () => {
     it("Displays the number of cards in the given column", () => {

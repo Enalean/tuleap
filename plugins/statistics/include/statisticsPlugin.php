@@ -80,7 +80,7 @@ class StatisticsPlugin extends Plugin
     }
 
     /** @see Event::GET_SYSTEM_EVENT_CLASS */
-    public function get_system_event_class($params)
+    public function get_system_event_class($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         switch ($params['type']) {
             case SystemEvent_STATISTICS_DAILY::NAME:
@@ -99,13 +99,13 @@ class StatisticsPlugin extends Plugin
     }
 
     /** @see Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES */
-    public function system_event_get_custom_queues(array $params)
+    public function system_event_get_custom_queues(array $params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['queues'][SystemEventQueueStatistics::NAME] = new SystemEventQueueStatistics();
     }
 
     /** @see Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE */
-    public function system_event_get_types_for_custom_queue($params)
+    public function system_event_get_types_for_custom_queue($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($params['queue'] === SystemEventQueueStatistics::NAME) {
             $params['types'][] = SystemEvent_STATISTICS_DAILY::NAME;
@@ -113,7 +113,7 @@ class StatisticsPlugin extends Plugin
     }
 
     /** @see Event::AFTER_MASSMAIL_TO_PROJECT_ADMINS */
-    public function after_massmail_to_project_admins($params)
+    public function after_massmail_to_project_admins($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $request = HTTPRequest::instance();
         if ($request->get('project_over_quota')) {
@@ -130,7 +130,7 @@ class StatisticsPlugin extends Plugin
         return $this->pluginInfo;
     }
 
-    public function site_admin_option_hook($params)
+    public function site_admin_option_hook($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['plugins'][] = array(
             'label' => 'Statistics',
@@ -192,7 +192,7 @@ class StatisticsPlugin extends Plugin
      *
      * @return void
      */
-    public function usergroup_data($params)
+    public function usergroup_data($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $user_url_params = array(
             'menu' => 'one_user_details',
@@ -206,7 +206,7 @@ class StatisticsPlugin extends Plugin
     }
 
     /** @see ProjectDetailsPresenter::GET_MORE_INFO_LINKS */
-    public function get_more_info_links($params)
+    public function get_more_info_links($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (! UserManager::instance()->getCurrentUser()->isSuperUser()) {
             return;
@@ -333,20 +333,20 @@ class StatisticsPlugin extends Plugin
         $wsdl_renderer->render($uri . '/?wsdl');
     }
 
-    public function wsdl_doc2soap_types($params)
+    public function wsdl_doc2soap_types($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['doc2soap_types'] = array_merge($params['doc2soap_types'], array(
             'arrayofstatistics' => 'tns:ArrayOfStatistics',
         ));
     }
 
-    public function aggregate_statistics($params)
+    public function aggregate_statistics($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $statistics_aggregator = new StatisticsAggregatorDao();
         $statistics_aggregator->addStatistic($params['project_id'], $params['statistic_name']);
     }
 
-    public function get_statistics_aggregation($params)
+    public function get_statistics_aggregation($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $statistics_aggregator = new StatisticsAggregatorDao();
         $params['result'] = $statistics_aggregator->getStatistics(
@@ -356,7 +356,7 @@ class StatisticsPlugin extends Plugin
         );
     }
 
-    public function burning_parrot_get_stylesheets(array $params)
+    public function burning_parrot_get_stylesheets(array $params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             $variant    = $params['variant'];
@@ -364,10 +364,10 @@ class StatisticsPlugin extends Plugin
         }
     }
 
-    public function burning_parrot_get_javascript_files(array $params)
+    public function burning_parrot_get_javascript_files(array $params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $ckeditor_assets = new IncludeAssets(__DIR__ . '/../../../src/www/assets', '/assets');
+            $ckeditor_assets = new IncludeAssets(__DIR__ . '/../../../src/www/assets/core', '/assets/core');
             $params['javascript_files'][] = $ckeditor_assets->getFileURL('ckeditor.js');
             $params['javascript_files'][] = $this->getAssets()->getFileURL('admin.js');
         }

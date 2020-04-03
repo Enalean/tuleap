@@ -19,7 +19,7 @@
 
 import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import ReleaseDescription from "./ReleaseDescription.vue";
-import { createStoreMock } from "../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import { MilestoneData, Pane, StoreOptions, TrackerProjectLabel } from "../../../type";
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
 import ChartDisplayer from "./Chart/ChartDisplayer.vue";

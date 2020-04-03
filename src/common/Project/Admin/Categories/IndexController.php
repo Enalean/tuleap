@@ -73,7 +73,7 @@ class IndexController implements DispatchableWithRequest, DispatchableWithBurnin
             AdministrationLayoutHelper::buildSelf(),
             new TroveCatDao(),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../../templates/project/admin'),
-            new IncludeAssets(__DIR__ . '/../../../../www/assets', '/assets')
+            new IncludeAssets(__DIR__ . '/../../../../www/assets/core', '/assets/core')
         );
     }
 

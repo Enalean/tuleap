@@ -20,7 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import TimeTrackingOverviewWritingTrackers from "../../../components/writing-mode/TimeTrackingOverviewWritingTrackers.vue";
 import TimeTrackingOverviewTrackersOptions from "../../../components/writing-mode/TimeTrackingOverviewTrackersOptions.vue";
-import { createStoreMock } from "../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest.js";
+import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import localVue from "../../helpers/local-vue.js";
 
 describe("Given a timetracking overview widget on writing mode", () => {

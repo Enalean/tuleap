@@ -6,10 +6,10 @@
 **/node_modules/*
 **/vendor/*
 src/common/wiki/phpwiki/
+src/scripts/FlamingParrot/keymaster-sequence/
 src/www/scripts/bootstrap/
 src/www/scripts/d3/
 src/www/scripts/datepicker/
-src/www/scripts/FlamingParrot/keymaster-sequence/
 src/www/scripts/jquery/
 src/www/scripts/jscrollpane/
 src/www/scripts/jstimezonedetect/
@@ -27,6 +27,7 @@ src/www/scripts/fieldDependencies.js
 src/www/scripts/filterlist.js
 src/www/scripts/user.js
 src/www/themes/common/tlp/doc/codemirror/
+src/www/themes/common/tlp/src/types/
 src/www/themes/common/tlp/src/vendor-i18n/
 tests/simpletest/common/include/_fixtures
 plugins/mediawiki/www/

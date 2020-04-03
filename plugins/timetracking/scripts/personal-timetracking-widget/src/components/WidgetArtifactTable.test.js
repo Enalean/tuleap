@@ -20,7 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import WidgetArtifactTable from "./WidgetArtifactTable.vue";
 import localVue from "../helpers/local-vue.js";
-import { createStoreMock } from "../../../../../../src/www/scripts/vue-components/store-wrapper-jest.js";
+import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 
 function getWidgetArtifactTableInstance(store_options) {
     const store = createStoreMock(store_options);

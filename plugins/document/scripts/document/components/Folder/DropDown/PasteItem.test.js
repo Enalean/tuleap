@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue.js";
-import { createStoreMock } from "../../../../../../../src/www/scripts/vue-components/store-wrapper-jest.js";
+import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import PasteItem from "./PasteItem.vue";
 import EventBus from "../../../helpers/event-bus.js";
 import * as check_item_title from "../../../helpers/metadata-helpers/check-item-title.js";

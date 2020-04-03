@@ -39,10 +39,7 @@ module.exports = [
         ),
         resolve: {
             alias: {
-                "charts-builders": path.resolve(
-                    __dirname,
-                    "../../src/www/scripts/charts-builders/"
-                ),
+                "charts-builders": path.resolve(__dirname, "../../src/scripts/charts-builders/"),
             },
         },
         module: {

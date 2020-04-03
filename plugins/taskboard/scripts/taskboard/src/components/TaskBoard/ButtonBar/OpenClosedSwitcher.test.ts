@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import OpenClosedSwitcher from "./OpenClosedSwitcher.vue";
-import { createStoreMock } from "../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import { createTaskboardLocalVue } from "../../../helpers/local-vue-for-test";
 
 describe("OpenClosedSwitcher", () => {

@@ -78,7 +78,7 @@ $router                     = new UserDashboardRouter(
         new WidgetMinimizor($dashboard_widget_dao),
         new AssetsIncluder(
             $GLOBALS['Response'],
-            new IncludeAssets(__DIR__ . '/../assets', '/assets'),
+            new IncludeAssets(__DIR__ . '/../assets/core', '/assets/core'),
             new CssAssetCollection(
                 [new CssAsset(
                     new IncludeAssets(

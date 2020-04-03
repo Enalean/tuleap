@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { autocomplete_projects_for_select2 } from "../../../../src/www/scripts/tuleap/autocomplete-for-select2";
+import { autocomplete_projects_for_select2 } from "../../../../src/scripts/tuleap/autocomplete-for-select2";
 
 document.addEventListener("dashboard-edit-widget-modal-content-loaded", (event) => {
     if (!(event instanceof CustomEvent)) {

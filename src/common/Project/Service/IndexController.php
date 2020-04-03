@@ -72,7 +72,7 @@ class IndexController implements DispatchableWithRequest, DispatchableWithBurnin
             AdministrationLayoutHelper::buildSelf(),
             new ServicesPresenterBuilder(ServiceManager::instance(), EventManager::instance()),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates/project/admin/services/'),
-            new IncludeAssets(__DIR__ . '/../../../www/assets', '/assets')
+            new IncludeAssets(__DIR__ . '/../../../www/assets/core', '/assets/core')
         );
     }
 

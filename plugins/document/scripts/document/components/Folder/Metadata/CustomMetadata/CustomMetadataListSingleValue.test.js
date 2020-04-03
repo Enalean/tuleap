@@ -20,7 +20,7 @@
 import localVue from "../../../../helpers/local-vue.js";
 import { shallowMount } from "@vue/test-utils";
 import CustomMetadataList from "./CustomMetadataListSingleValue.vue";
-import { createStoreMock } from "../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest.js";
+import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 
 describe("CustomMetadataList", () => {
     let store, factory;

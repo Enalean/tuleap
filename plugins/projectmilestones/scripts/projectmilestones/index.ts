@@ -26,7 +26,7 @@ import { setUserLocale } from "./src/helpers/user-locale-helper";
 import {
     initVueGettext,
     getPOFileFromLocale,
-} from "../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
+} from "../../../../src/scripts/tuleap/gettext/vue-gettext-init";
 import { BurnupMode, TrackerAgileDashboard } from "./src/type";
 
 document.addEventListener("DOMContentLoaded", async () => {

@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import BoardWithoutAnyColumnsError from "./BoardWithoutAnyColumnsError.vue";
-import { createStoreMock } from "../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 
 describe("BoardWithoutAnyColumnsError", () => {
     it("is displays misconfiguration error for regular user", () => {

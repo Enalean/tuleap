@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { loadTooltips } from "../../../../../src/www/scripts/codendi/Tooltip.js";
+import { loadTooltips } from "../../../../../src/scripts/codendi/Tooltip.js";
 import { isInCreationMode } from "./modal-creation-mode-state.js";
 import { setError, hasError, getErrorMessage } from "./rest/rest-error-state.js";
 import { isDisabled } from "./tuleap-artifact-modal-fields/disabled-field-detector.js";

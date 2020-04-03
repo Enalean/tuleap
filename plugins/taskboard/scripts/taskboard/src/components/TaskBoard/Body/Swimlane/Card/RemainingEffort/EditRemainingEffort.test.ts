@@ -18,7 +18,7 @@
  */
 
 import { shallowMount, Wrapper } from "@vue/test-utils";
-import { createStoreMock } from "../../../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "../../../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import { createTaskboardLocalVue } from "../../../../../../helpers/local-vue-for-test";
 import EditRemainingEffort from "./EditRemainingEffort.vue";
 import { RootState } from "../../../../../../store/type";

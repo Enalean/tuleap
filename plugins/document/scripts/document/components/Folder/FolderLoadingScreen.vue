@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import SkeletonTable from "../../../../../../src/www/scripts/vue-components/skeletons/SkeletonTable.vue";
+import SkeletonTable from "../../../../../../src/scripts/vue-components/skeletons/SkeletonTable.vue";
 
 export default {
     name: "FolderLoadingScreen",

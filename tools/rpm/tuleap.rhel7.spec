@@ -515,8 +515,10 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/oauth2_server
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/oauth2_server
 %endif
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/composer.json
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/*.js
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/*.json
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/composer.lock
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/scripts/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/gerrit_setup
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/githooks
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/version_numbers
@@ -902,11 +904,9 @@ fi
 %{APP_DIR}/src/www/api/index.php
 %{APP_DIR}/src/www/api/reference
 %dir %{APP_DIR}/src/www/assets
-%{APP_DIR}/src/www/assets/*.js
-%{APP_DIR}/src/www/assets/manifest.json
+%{APP_DIR}/src/www/assets/core
 %{APP_DIR}/src/www/assets/account
 %{APP_DIR}/src/www/assets/admindelegation
-%{APP_DIR}/src/www/assets/ckeditor-*
 %{APP_DIR}/src/www/assets/dashboards
 %{APP_DIR}/src/www/assets/pluginsadministration
 %{APP_DIR}/src/www/assets/project-registration

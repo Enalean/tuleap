@@ -614,7 +614,7 @@ class RouteCollector
     {
         return new ProjectRegistrationController(
             TemplateRendererFactory::build(),
-            new IncludeAssets(__DIR__ . '/../../www/assets/project-registration/scripts', '/assets/project-registration/scripts'),
+            new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core'),
             new IncludeAssets(__DIR__ . '/../../www/assets/project-registration/themes', '/assets/project-registration/themes'),
             new ProjectRegistrationUserPermissionChecker(
                 new \ProjectDao()

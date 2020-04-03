@@ -75,7 +75,7 @@ $project = $pm->getProject($group_id);
 
 $title = $Language->getText('project_admin_ugroup', 'manage_ug');
 
-$include_assets = new IncludeAssets(ForgeConfig::get('tuleap_dir') . '/src/www/assets', '/assets');
+$include_assets = new IncludeAssets(__DIR__ . '/../../../www/assets/core', '/assets/core');
 $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('project-admin-ugroups.js'));
 
 $navigation_displayer = new HeaderNavigationDisplayer();

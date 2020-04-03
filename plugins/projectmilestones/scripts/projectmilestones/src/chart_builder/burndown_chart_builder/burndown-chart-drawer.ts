@@ -20,22 +20,22 @@
 
 import { max } from "d3-array";
 import { select } from "d3-selection";
-import { buildGraphScales } from "../../../../../../../src/www/scripts/charts-builders/line-chart-scales-factory";
-import { getDaysToDisplay } from "../../../../../../../src/www/scripts/charts-builders/chart-dates-service";
+import { buildGraphScales } from "../../../../../../../src/scripts/charts-builders/line-chart-scales-factory";
+import { getDaysToDisplay } from "../../../../../../../src/scripts/charts-builders/chart-dates-service";
 import { BurndownData } from "../../type";
 
 import {
     ChartPropsWhithoutTooltip,
     PropertiesBuilderGraph,
     XYScale,
-} from "../../../../../../../src/www/scripts/charts-builders/type";
+} from "../../../../../../../src/scripts/charts-builders/type";
 import { addScaleLines } from "../chart-scale-drawer";
 import {
     drawCurve,
     drawIdealLine,
-} from "../../../../../../../src/www/scripts/charts-builders/chart-lines-service";
-import { buildChartLayout } from "../../../../../../../src/www/scripts/charts-builders/chart-layout-builder";
-import { TimeScaleLabelsFormatter } from "../../../../../../../src/www/scripts/charts-builders/time-scale-labels-formatter";
+} from "../../../../../../../src/scripts/charts-builders/chart-lines-service";
+import { buildChartLayout } from "../../../../../../../src/scripts/charts-builders/chart-layout-builder";
+import { TimeScaleLabelsFormatter } from "../../../../../../../src/scripts/charts-builders/time-scale-labels-formatter";
 import { removeAllLabelsOverlapsOthersLabels } from "../time-scale-label-formatter";
 import { getDisplayableData, getLastData } from "../chart-data-service";
 import { addBadgeCaption } from "../chart-badge-generator";

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,8 +28,8 @@ class ErrorDependenciesInjector
     public function includeJavascriptDependencies(BaseLayout $layout)
     {
         $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets',
-            '/assets'
+            __DIR__ . '/../../../src/www/assets/core',
+            '/assets/core'
         );
 
         $layout->includeFooterJavascriptFile($include_assets->getFileURL('access-denied-error.js'));

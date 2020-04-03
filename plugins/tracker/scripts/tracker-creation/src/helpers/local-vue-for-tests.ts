@@ -19,7 +19,7 @@
 
 import Vuex from "vuex";
 import { createLocalVue } from "@vue/test-utils";
-import { initVueGettext } from "../../../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
+import { initVueGettext } from "../../../../../../src/scripts/tuleap/gettext/vue-gettext-init";
 import { Vue } from "vue/types/vue";
 import VueRouter from "vue-router";
 

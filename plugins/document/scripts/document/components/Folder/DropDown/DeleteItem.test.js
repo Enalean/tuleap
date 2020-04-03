@@ -23,7 +23,7 @@ import localVue from "../../../helpers/local-vue.js";
 
 import DeleteItem from "./DeleteItem.vue";
 
-import { createStoreMock } from "../../../../../../../src/www/scripts/vue-components/store-wrapper-jest.js";
+import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 
 import { TYPE_FILE } from "../../../constants.js";
 import EventBus from "../../../helpers/event-bus.js";

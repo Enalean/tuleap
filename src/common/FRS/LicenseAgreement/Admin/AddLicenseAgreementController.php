@@ -84,7 +84,7 @@ class AddLicenseAgreementController implements DispatchableWithRequest
             ),
             \TemplateRendererFactory::build()->getRenderer(__DIR__ . '/templates'),
             SaveLicenseAgreementController::getCSRFTokenSynchronizer(),
-            new IncludeAssets(__DIR__ . '/../../../../www/assets', '/assets'),
+            new IncludeAssets(__DIR__ . '/../../../../www/assets/core', '/assets/core'),
         );
     }
 

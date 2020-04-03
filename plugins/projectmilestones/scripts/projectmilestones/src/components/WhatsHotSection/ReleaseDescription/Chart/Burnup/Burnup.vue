@@ -29,7 +29,7 @@ import { Component, Prop } from "vue-property-decorator";
 import { BurnupMode, MilestoneData } from "../../../../../type";
 import Vue from "vue";
 import { createBurnupChart } from "../../../../../chart_builder/burnup_chart_builder/burnup-chart-drawer";
-import { ChartPropsWhithoutTooltip } from "../../../../../../../../../../src/www/scripts/charts-builders/type";
+import { ChartPropsWhithoutTooltip } from "../../../../../../../../../../src/scripts/charts-builders/type";
 import { transformToGenericBurnupData } from "../../../../../../../../../agiledashboard/scripts/burnup-chart/src/burnup-data-transformer";
 import { State } from "vuex-class";
 

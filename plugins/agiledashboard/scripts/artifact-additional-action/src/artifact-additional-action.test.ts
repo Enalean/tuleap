@@ -19,8 +19,8 @@
 
 import { initArtifactAdditionalAction } from "./artifact-additional-action";
 import * as fetch_wrapper from "../../../../../src/www/themes/common/tlp/src/js/fetch-wrapper";
-import * as get_text from "../../../../../src/www/scripts/tuleap/gettext/gettext-init";
-import * as feedbacks from "../../../../../src/www/scripts/tuleap/feedback";
+import * as get_text from "../../../../../src/scripts/tuleap/gettext/gettext-init";
+import * as feedbacks from "../../../../../src/scripts/tuleap/feedback";
 import GetText from "node-gettext";
 import {
     mockFetchError,

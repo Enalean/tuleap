@@ -18,7 +18,6 @@
         <ignoreFiles>
             <directory name="src/common/wiki/phpwiki/"/>
             <directory name="src/www/assets/"/>
-            <directory name="src/www/scripts/node_modules/"/>
             <directory name="src/www/themes/FlamingParrot/vendor/"/>
             <directory name="src/www/themes/BurningParrot/vendor/"/>
         </ignoreFiles>

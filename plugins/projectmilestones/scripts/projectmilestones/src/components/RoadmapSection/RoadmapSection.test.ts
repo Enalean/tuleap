@@ -19,7 +19,7 @@
 
 import { shallowMount, Wrapper } from "@vue/test-utils";
 import RoadmapSection from "./RoadmapSection.vue";
-import { createStoreMock } from "../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import { StoreOptions } from "../../type";
 import { createReleaseWidgetLocalVue } from "../../helpers/local-vue-for-test";
 

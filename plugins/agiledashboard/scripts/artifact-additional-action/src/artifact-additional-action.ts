@@ -21,8 +21,8 @@ import { patch } from "../../../../../src/www/themes/common/tlp/src/js/fetch-wra
 import {
     getPOFileFromLocale,
     initGettext,
-} from "../../../../../src/www/scripts/tuleap/gettext/gettext-init";
-import { addFeedback, clearAllFeedbacks } from "../../../../../src/www/scripts/tuleap/feedback";
+} from "../../../../../src/scripts/tuleap/gettext/gettext-init";
+import { addFeedback, clearAllFeedbacks } from "../../../../../src/scripts/tuleap/feedback";
 
 export function initArtifactAdditionalAction(mount_point: Document): void {
     const action_button = mount_point.getElementById("artifact-explicit-backlog-action");

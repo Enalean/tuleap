@@ -21,7 +21,7 @@ import { shallowMount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.js";
 import PostActionsSection from "./PostActionsSection.vue";
 import { createList } from "../../support/factories.js";
-import { createStoreMock } from "../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import RunJobAction from "./PostAction/RunJobAction.vue";
 import SetValueAction from "./PostAction/SetValueAction.vue";
 import FrozenFieldsAction from "./PostAction/FrozenFieldsAction.vue";

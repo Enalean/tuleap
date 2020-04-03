@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Admin;
 
 use CSRFSynchronizerToken;
-use ForgeConfig;
 use HTTPRequest;
 use Tuleap\Dashboard\Project\DisabledProjectWidgetsChecker;
 use Tuleap\Dashboard\Project\DisabledProjectWidgetsDao;
@@ -64,8 +63,7 @@ class ProjectWidgetsConfigurationDisplayController implements DispatchableWithRe
             $this->buildWidgetPresenters($project_widgets)
         );
 
-        $assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
-        $include_assets = new IncludeAssets($assets_path, '/assets');
+        $include_assets = new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core');
         $layout->includeFooterJavascriptFile(
             $include_assets->getFileURL('site-admin-project-widgets.js')
         );

@@ -21,7 +21,7 @@ import { shallowMount, Wrapper } from "@vue/test-utils";
 import SwimlaneHeader from "./SwimlaneHeader.vue";
 import { Swimlane } from "../../../../../type";
 import { createTaskboardLocalVue } from "../../../../../helpers/local-vue-for-test";
-import { createStoreMock } from "../../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "../../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import { FullscreenState } from "../../../../../store/fullscreen/type";
 import { SwimlaneState } from "../../../../../store/swimlane/type";
 

@@ -46,7 +46,7 @@
     </tr>
 </template>
 <script>
-import GitPermissionsBadge from "../../../../../src/www/scripts/project/admin/permissions-per-group/PermissionsPerGroupBadge.vue";
+import GitPermissionsBadge from "../../../../../src/scripts/project/admin/permissions-per-group/PermissionsPerGroupBadge.vue";
 
 export default {
     name: "GitRepositoryTableFineGrainedPermission",

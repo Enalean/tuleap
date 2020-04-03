@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { PROJECT_ADMINISTRATORS_ID } from "../../../../../src/www/scripts/user-group-constants.js";
+import { PROJECT_ADMINISTRATORS_ID } from "../../../../../src/scripts/user/user-group-constants.js";
 import { POST_ACTION_TYPE } from "../../../../../plugins/tracker/scripts/workflow-transitions/src/constants/workflow-constants.js";
 
 function getTrackerIdFromTrackerListPage() {

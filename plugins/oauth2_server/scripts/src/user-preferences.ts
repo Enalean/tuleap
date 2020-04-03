@@ -20,8 +20,8 @@
 import {
     getPOFileFromLocale,
     initGettext,
-} from "../../../../src/www/scripts/tuleap/gettext/gettext-init";
-import { openModalAndReplacePlaceholders } from "../../../../src/www/scripts/tuleap/modals/modal-opener";
+} from "../../../../src/scripts/tuleap/gettext/gettext-init";
+import { openModalAndReplacePlaceholders } from "../../../../src/scripts/tuleap/modals/modal-opener";
 import { buildRevocationReplaceCallback, hiddenInputReplaceCallback } from "./replacers";
 
 const REVOKE_BUTTONS_SELECTOR = ".oauth2-server-revoke-authorization-button";

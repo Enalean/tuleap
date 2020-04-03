@@ -110,8 +110,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
 
     private function includeJavascriptFiles(BaseLayout $layout) : void
     {
-        $assets_path     = __DIR__ . '/../../../../src/www/assets';
-        $ckeditor_assets = new IncludeAssets($assets_path, '/assets');
+        $ckeditor_assets = new IncludeAssets(__DIR__ . '/../../../../src/www/assets/core', '/assets/core');
         $layout->includeFooterJavascriptFile($ckeditor_assets->getFileURL('ckeditor.js'));
         $layout->includeFooterJavascriptFile($this->getAssets()->getFileURL('document.js'));
     }

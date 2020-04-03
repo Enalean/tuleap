@@ -21,21 +21,21 @@
 import {
     ChartPropsWhithoutTooltip,
     XYScale,
-} from "../../../../../../../src/www/scripts/charts-builders/type";
+} from "../../../../../../../src/scripts/charts-builders/type";
 import { GenericBurnupData } from "../../../../../../agiledashboard/scripts/burnup-chart/src/type";
-import { getDaysToDisplay } from "../../../../../../../src/www/scripts/charts-builders/chart-dates-service";
+import { getDaysToDisplay } from "../../../../../../../src/scripts/charts-builders/chart-dates-service";
 import { max } from "d3-array";
-import { buildGraphScales } from "../../../../../../../src/www/scripts/charts-builders/line-chart-scales-factory";
+import { buildGraphScales } from "../../../../../../../src/scripts/charts-builders/line-chart-scales-factory";
 import { select } from "d3-selection";
 import {
     drawCurve,
     drawIdealLine,
-} from "../../../../../../../src/www/scripts/charts-builders/chart-lines-service";
+} from "../../../../../../../src/scripts/charts-builders/chart-lines-service";
 import { getLastGenericBurnupData } from "../chart-data-service";
 import { addScaleLines } from "../chart-scale-drawer";
 import { getCoordinatesScaleLines } from "../chart-scale-helper";
-import { buildChartLayout } from "../../../../../../../src/www/scripts/charts-builders/chart-layout-builder";
-import { TimeScaleLabelsFormatter } from "../../../../../../../src/www/scripts/charts-builders/time-scale-labels-formatter";
+import { buildChartLayout } from "../../../../../../../src/scripts/charts-builders/chart-layout-builder";
+import { TimeScaleLabelsFormatter } from "../../../../../../../src/scripts/charts-builders/time-scale-labels-formatter";
 import { removeAllLabelsOverlapsOthersLabels } from "../time-scale-label-formatter";
 import { getDisplayableDataForBurnup } from "../chart-data-service";
 

@@ -244,8 +244,7 @@ class Admin_PermissionDelegationController
             $add_perm_presenter = new Admin_PermissionDelegationPermissionsModalPresenter($current_group, $unused_permissions);
         }
 
-        $assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
-        $include_assets = new IncludeAssets($assets_path, '/assets');
+        $include_assets = new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core');
 
         $presenter = new Admin_PermissionDelegationIndexPresenter(
             $this->csrf_token,

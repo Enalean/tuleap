@@ -22,7 +22,7 @@ import { Vue } from "vue/types/vue";
 import Vuex from "vuex";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import { createLocalVue } from "@vue/test-utils";
-import { initVueGettext } from "../../../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
+import { initVueGettext } from "../../../../../../src/scripts/tuleap/gettext/vue-gettext-init";
 
 export async function createTaskboardLocalVue(): Promise<typeof Vue> {
     const local_vue = createLocalVue();

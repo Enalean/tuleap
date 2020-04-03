@@ -19,7 +19,7 @@
 
 import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import ReleaseDisplayer from "./ReleaseDisplayer.vue";
-import { createStoreMock } from "../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
+import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import ReleaseHeader from "./ReleaseHeader/ReleaseHeader.vue";
 import { MilestoneData, StoreOptions } from "../../type";
 import { DefaultData } from "vue/types/options";

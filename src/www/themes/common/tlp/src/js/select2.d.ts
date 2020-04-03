@@ -24,7 +24,7 @@ import {
     LoadingData,
     IdTextPair,
     GroupedDataFormat,
-} from "select2";
+} from "../types/select2";
 
 export { Options, Select2Plugin, DataFormat, LoadingData, IdTextPair, GroupedDataFormat };
 

@@ -1,4 +1,4 @@
-import { loadTooltips } from "../../../../../src/www/scripts/codendi/Tooltip.js";
+import { loadTooltips } from "../../../../../src/scripts/codendi/Tooltip.js";
 
 export default TooltipService;
 

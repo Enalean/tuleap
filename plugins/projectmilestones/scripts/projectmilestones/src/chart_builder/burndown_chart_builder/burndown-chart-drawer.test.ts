@@ -20,10 +20,10 @@
 import { createBurndownChart, getMaxRemainingEffort } from "./burndown-chart-drawer";
 
 import { BurndownData, PointsWithDateForBurndown } from "../../type";
-import { ChartPropsWhithoutTooltip } from "../../../../../../../src/www/scripts/charts-builders/type";
+import { ChartPropsWhithoutTooltip } from "../../../../../../../src/scripts/charts-builders/type";
 import * as chart_badge_generator from "../chart-badge-generator";
 
-jest.mock("../../../../../../../src/www/scripts/charts-builders/time-scale-labels-formatter");
+jest.mock("../../../../../../../src/scripts/charts-builders/time-scale-labels-formatter");
 jest.mock("../time-scale-label-formatter");
 jest.mock("../chart-badge-generator", () => ({
     addBadgeCaption: jest.fn(),

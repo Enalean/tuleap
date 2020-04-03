@@ -21,7 +21,7 @@ import { shallowMount } from "@vue/test-utils";
 import UploadProgressBar from "./UploadProgressBar.vue";
 
 import localVue from "../../../helpers/local-vue.js";
-import { createStoreMock } from "../../../../../../../src/www/scripts/vue-components/store-wrapper-jest.js";
+import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 
 describe("UploadProgressBar", () => {
     let upload_progress_bar, store;

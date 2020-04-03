@@ -28,7 +28,7 @@ require_once('Widget.class.php');
 * Allows users to send message to all administrators of a project
 *
 */
-class Widget_Contacts extends Widget
+class Widget_Contacts extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
 
     public function __construct()
@@ -57,8 +57,7 @@ class Widget_Contacts extends Widget
         $template_factory = TemplateRendererFactory::build();
         $renderer         = $template_factory->getRenderer($presenter->getTemplateDir());
 
-        $assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
-        $include_assets = new IncludeAssets($assets_path, '/assets');
+        $include_assets = new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core');
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('ckeditor.js'));
         $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/tuleap-ckeditor-toolbar.js');
         $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/widgets/contact-modal.js');

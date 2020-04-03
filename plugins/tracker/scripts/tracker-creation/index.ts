@@ -23,7 +23,7 @@ import App from "./src/components/App.vue";
 import {
     initVueGettext,
     getPOFileFromLocale,
-} from "../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
+} from "../../../../src/scripts/tuleap/gettext/vue-gettext-init";
 import { createStore } from "./src/store/index";
 import {
     CreationOptions,

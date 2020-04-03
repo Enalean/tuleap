@@ -74,8 +74,7 @@ class Admin_Homepage_Controller
 
     public function index()
     {
-        $assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
-        $include_assets = new IncludeAssets($assets_path, '/assets');
+        $include_assets = new IncludeAssets(__DIR__ . '/../../../www/assets/core', '/assets/core');
         $this->response->includeFooterJavascriptFile($include_assets->getFileURL('ckeditor.js'));
         $this->response->includeFooterJavascriptFile('/scripts/tuleap/tuleap-ckeditor-toolbar.js');
         $this->response->includeFooterJavascriptFile('/scripts/tuleap/admin-homepage.js');

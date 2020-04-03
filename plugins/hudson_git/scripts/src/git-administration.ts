@@ -22,7 +22,7 @@ import jQuery from "jquery";
 import {
     getPOFileFromLocale,
     initGettext,
-} from "../../../../src/www/scripts/tuleap/gettext/gettext-init";
+} from "../../../../src/scripts/tuleap/gettext/gettext-init";
 
 (async function ($): Promise<void> {
     const language = document.body.dataset.userLocale;

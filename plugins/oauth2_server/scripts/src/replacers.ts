@@ -18,7 +18,7 @@
  */
 
 import { sprintf } from "sprintf-js";
-import { GetText } from "../../../../src/www/scripts/tuleap/gettext/gettext-init";
+import { GetText } from "../../../../src/scripts/tuleap/gettext/gettext-init";
 
 export const hiddenInputReplaceCallback = (clicked_button: HTMLElement): string => {
     if (!clicked_button.dataset.appId) {
