@@ -60,13 +60,14 @@
                 class="tlp-button-primary"
                 type="submit"
                 data-test="timetracking-submit-time"
+                v-bind:disabled="is_loading"
                 v-bind:class="{
                     'tlp-tooltip tlp-tooltip-bottom timetracking-tooltip': error_message,
                 }"
                 v-bind:data-tlp-tooltip="error_message"
                 v-on:click="validateNewTime()"
             >
-                <i class="fa fa-check"></i>
+                <i v-bind:class="getButtonIconClass"></i>
             </button>
             <button
                 class="tlp-button-primary tlp-button-outline"
@@ -88,7 +89,12 @@ import { mapGetters } from "vuex";
 export default {
     name: "WidgetModalEditTime",
     props: {
-        timeData: Object,
+        timeData: {
+            type: Object,
+            default: () => {
+                return {};
+            },
+        },
     },
     data() {
         const data = this.timeData || {};
@@ -96,12 +102,21 @@ export default {
         return {
             date,
             step,
-            time: this.timeData ? formatMinutes(this.timeData.minutes) : "",
+            time:
+                this.timeData && this.timeData.minutes ? formatMinutes(this.timeData.minutes) : "",
             error_message: null,
+            is_loading: false,
         };
     },
     computed: {
         ...mapGetters(["current_artifact"]),
+        getButtonIconClass() {
+            if (this.is_loading) {
+                return "fa fa-spinner";
+            }
+
+            return "fa fa-check";
+        },
     },
     mounted() {
         datePicker(this.$refs.date_field, {
@@ -117,7 +132,13 @@ export default {
         },
         validateNewTime() {
             if (TIME_REGEX.test(this.time)) {
-                const id = this.timeData ? this.timeData.id : this.current_artifact.id;
+                if (this.is_loading) {
+                    return;
+                }
+                this.is_loading = true;
+
+                const id =
+                    this.timeData && this.timeData.id ? this.timeData.id : this.current_artifact.id;
                 this.$emit("validateTime", this.date, id, this.time, this.step);
             } else {
                 this.error_message = this.$gettext("Please check time's format (hh:mm)");
