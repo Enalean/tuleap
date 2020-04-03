@@ -1,12 +1,21 @@
 module.exports = {
     extends: ["stylelint-config-sass-guidelines", "stylelint-config-property-sort-order-smacss"],
+    syntax: "scss",
+    reportNeedlessDisables: true,
+    reportInvalidScopeDisables: true,
     rules: {
         indentation: [4],
+        "comment-word-blacklist": [
+            [/^!/],
+            {
+                message: `Never use the "/*!" style of comments. Those comments are output in compressed CSS. (comment-word-blacklist)`
+            }
+        ],
         "color-hex-length": ["long"],
         "color-named": [
             "never",
             {
-                message: "Colors should be written in hexadecimal format"
+                message: "Colors should be written in hexadecimal format (color-named)"
             }
         ],
         "declaration-block-no-duplicate-properties": true,
