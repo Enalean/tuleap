@@ -320,9 +320,11 @@ class UserGroupResource extends AuthenticatedResource
 
     private function checkUgroupValidity(ProjectUGroup $user_group)
     {
-        if (! $user_group->isStatic() &&
+        if (
+            ! $user_group->isStatic() &&
             (int) $user_group->getId() !== ProjectUGroup::PROJECT_MEMBERS &&
-            (int) $user_group->getId() !== ProjectUGroup::PROJECT_ADMIN) {
+            (int) $user_group->getId() !== ProjectUGroup::PROJECT_ADMIN
+        ) {
             throw new RestException(
                 400,
                 'Only project members or administrators can be taken into account for the dynamic user groups'

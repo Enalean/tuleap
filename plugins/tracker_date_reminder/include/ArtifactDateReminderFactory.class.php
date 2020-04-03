@@ -378,7 +378,7 @@ class ArtifactDateReminderFactory
                     foreach ($assignee_array as $assignee) {
                         if (! in_array(user_getemail($assignee), $notified_people) && $assignee != 100 && $this->isUserAllowedToBeNotified($assignee)) {
                             $notified_people[$index] = user_getemail($assignee);
-                            $index ++;
+                            $index++;
                         }
                     }
                 }
@@ -406,7 +406,7 @@ class ArtifactDateReminderFactory
                         if (! in_array(user_getemail($commenter), $notified_people) && $commenter != 100 && $this->isUserAllowedToBeNotified($commenter)) {
                             //add Commenters in the 'notified_people' array
                             $notified_people[$index] = user_getemail($commenter);
-                            $index ++;
+                            $index++;
                         }
                     }
                 }
@@ -424,7 +424,7 @@ class ArtifactDateReminderFactory
                             if (! in_array(user_getemail($usr), $notified_people) && $usr != 100 && $this->isUserAllowedToBeNotified($usr)) {
                                 //add ugroup members in the 'notified_people' array
                                 $notified_people[$idx] = user_getemail($usr);
-                                $idx ++;
+                                $idx++;
                             }
                         }
                     }
@@ -442,7 +442,7 @@ class ArtifactDateReminderFactory
                             if (! in_array(user_getemail($usr), $notified_people) && $usr != 100 && $this->isUserAllowedToBeNotified($usr)) {
                                 //add ugroup members in the 'notified_people' array
                                 $notified_people[$idx] = user_getemail($usr);
-                                $idx ++;
+                                $idx++;
                             }
                         }
                     }

@@ -92,11 +92,13 @@ class WordLevelDiff extends MappedDiff
     public function _split($lines)
     {
         // FIXME: fix POSIX char class.
-        if (!preg_match_all(
-            '/ ( [^\S\n]+ | [[:alnum:]]+ | . ) (?: (?!< \n) [^\S\n])? /xs',
-            implode("\n", $lines),
-            $m
-        )) {
+        if (
+            !preg_match_all(
+                '/ ( [^\S\n]+ | [[:alnum:]]+ | . ) (?: (?!< \n) [^\S\n])? /xs',
+                implode("\n", $lines),
+                $m
+            )
+        ) {
             return array(array(''), array(''));
         }
         return array($m[0], $m[1]);
@@ -104,7 +106,7 @@ class WordLevelDiff extends MappedDiff
 
     public function orig()
     {
-        $orig = new _HWLDF_WordAccumulator;
+        $orig = new _HWLDF_WordAccumulator();
 
         foreach ($this->edits as $edit) {
             if ($edit->type == 'copy') {
@@ -118,7 +120,7 @@ class WordLevelDiff extends MappedDiff
 
     public function _final()
     {
-        $final = new _HWLDF_WordAccumulator;
+        $final = new _HWLDF_WordAccumulator();
 
         foreach ($this->edits as $edit) {
             if ($edit->type == 'copy') {
@@ -472,7 +474,7 @@ function showDiff(&$request)
             );
         } else {
             // New CSS formatted unified diffs (ugly in NS4).
-            $fmt = new HtmlUnifiedDiffFormatter;
+            $fmt = new HtmlUnifiedDiffFormatter();
 
             // Use this for old table-formatted diffs.
             //$fmt = new TableUnifiedDiffFormatter;

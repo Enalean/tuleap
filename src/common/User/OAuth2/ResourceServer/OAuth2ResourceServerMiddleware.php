@@ -86,7 +86,7 @@ final class OAuth2ResourceServerMiddleware implements MiddlewareInterface
         $this->login_manager                        = $login_manager;
     }
 
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $authorization_header = $request->getHeaderLine('Authorization');
 

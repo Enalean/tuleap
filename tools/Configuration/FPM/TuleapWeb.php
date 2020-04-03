@@ -57,7 +57,7 @@ class TuleapWeb
         LoggerInterface $logger,
         string $application_user,
         bool $development
-    ) : self {
+    ): self {
         return new self(
             $logger,
             $application_user,
@@ -72,7 +72,7 @@ class TuleapWeb
         LoggerInterface $logger,
         string $application_user,
         bool $development
-    ) : self {
+    ): self {
         return new self(
             $logger,
             $application_user,
@@ -83,11 +83,13 @@ class TuleapWeb
         );
     }
 
-    public function configure() : void
+    public function configure(): void
     {
         $this->logger->info("Start configuration in $this->php_configuration_folder/php-fpm.d/");
-        if (file_exists("$this->php_configuration_folder/php-fpm.d/www.conf") &&
-                filesize("$this->php_configuration_folder/php-fpm.d/www.conf") !== 0) {
+        if (
+            file_exists("$this->php_configuration_folder/php-fpm.d/www.conf") &&
+                filesize("$this->php_configuration_folder/php-fpm.d/www.conf") !== 0
+        ) {
             $this->logger->info("Backup $this->php_configuration_folder/php-fpm.d/www.conf");
             rename("$this->php_configuration_folder/php-fpm.d/www.conf", "$this->php_configuration_folder/php-fpm.d/www.conf.orig");
             touch("$this->php_configuration_folder/php-fpm.d/www.conf");
@@ -113,7 +115,7 @@ class TuleapWeb
         $this->logger->info("Configuration done!");
     }
 
-    private function createDirectoryForAppUser($path) : void
+    private function createDirectoryForAppUser($path): void
     {
         if (! is_dir($path)) {
             mkdir($path, 0700);
@@ -122,7 +124,7 @@ class TuleapWeb
         chgrp($path, $this->application_user);
     }
 
-    private function moveExistingConfigurationFromOldConfigurationFolders(string $configuration_name) : void
+    private function moveExistingConfigurationFromOldConfigurationFolders(string $configuration_name): void
     {
         foreach ($this->previous_php_configuration_folders as $previous_php_configuration_folder) {
             if (file_exists("$previous_php_configuration_folder/php-fpm.d/$configuration_name")) {
@@ -132,7 +134,7 @@ class TuleapWeb
         }
     }
 
-    private function deployFreshTuleapConf(string $configuration_name) : void
+    private function deployFreshTuleapConf(string $configuration_name): void
     {
         $this->logger->info("Deploy $this->php_configuration_folder/php-fpm.d/$configuration_name");
 
@@ -159,7 +161,7 @@ class TuleapWeb
         );
     }
 
-    private function replacePlaceHolderInto($template_path, $target_path, array $variables, array $values) : void
+    private function replacePlaceHolderInto($template_path, $target_path, array $variables, array $values): void
     {
         file_put_contents(
             $target_path,

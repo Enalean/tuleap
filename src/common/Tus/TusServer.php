@@ -47,7 +47,7 @@ final class TusServer implements RequestHandlerInterface
         $this->data_store       = $data_store;
     }
 
-    public function handle(\Psr\Http\Message\ServerRequestInterface $request) : ResponseInterface
+    public function handle(\Psr\Http\Message\ServerRequestInterface $request): ResponseInterface
     {
         $response = null;
         try {
@@ -107,12 +107,12 @@ final class TusServer implements RequestHandlerInterface
         return $response->withHeader('Tus-Resumable', self::TUS_VERSION);
     }
 
-    private function getNonSupportedResponse() : ResponseInterface
+    private function getNonSupportedResponse(): ResponseInterface
     {
         return $this->response_factory->createResponse(405);
     }
 
-    private function processOptions() : ResponseInterface
+    private function processOptions(): ResponseInterface
     {
         $response = $this->response_factory->createResponse(204)
             ->withHeader('Tus-Version', self::TUS_VERSION);
@@ -129,7 +129,7 @@ final class TusServer implements RequestHandlerInterface
         return $response;
     }
 
-    private function processHead(TusFileInformation $file_information) : ResponseInterface
+    private function processHead(TusFileInformation $file_information): ResponseInterface
     {
         return $this->response_factory->createResponse(204)
             ->withHeader('Upload-Length', (string) $file_information->getLength())
@@ -137,7 +137,7 @@ final class TusServer implements RequestHandlerInterface
             ->withHeader('Cache-Control', 'no-cache');
     }
 
-    private function processPatch(\Psr\Http\Message\ServerRequestInterface $request, TusFileInformation $file_information) : ResponseInterface
+    private function processPatch(\Psr\Http\Message\ServerRequestInterface $request, TusFileInformation $file_information): ResponseInterface
     {
         $content_type_header         = $request->getHeaderLine('Content-Type');
         $found_expected_content_type = false;
@@ -195,7 +195,7 @@ final class TusServer implements RequestHandlerInterface
     /**
      * @throws TusServerIncompatibleVersionException
      */
-    private function checkProtocolVersionIsSupported(\Psr\Http\Message\RequestInterface $request) : void
+    private function checkProtocolVersionIsSupported(\Psr\Http\Message\RequestInterface $request): void
     {
         if ($request->getHeaderLine('Tus-Resumable') !== self::TUS_VERSION) {
             throw new TusServerIncompatibleVersionException(self::TUS_VERSION);

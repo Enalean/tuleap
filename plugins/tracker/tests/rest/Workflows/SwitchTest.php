@@ -28,7 +28,7 @@ require_once __DIR__ . '/../bootstrap.php';
 
 class SwitchTest extends TrackerBase
 {
-    public function testPATCHTrackerToSwitchWorkflowInAdvancedMode() : array
+    public function testPATCHTrackerToSwitchWorkflowInAdvancedMode(): array
     {
         $tracker = $this->tracker_representations[$this->simple_mode_workflow_to_switch_tracker_id];
         $workflow = $tracker['workflow'];
@@ -54,7 +54,7 @@ class SwitchTest extends TrackerBase
     /**
      * @depends testPATCHTrackerToSwitchWorkflowInAdvancedMode
      */
-    public function testPATCHTrackerToSwitchWorkflowInSimpleMode(array $tracker) : void
+    public function testPATCHTrackerToSwitchWorkflowInSimpleMode(array $tracker): void
     {
         $workflow = $tracker['workflow'];
 

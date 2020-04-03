@@ -96,15 +96,17 @@ class hudsonActions extends Actions
         $svn_paths           = $this->svn_paths_updater->transformContent($request->get('hudson_svn_paths'));
         $job_dao             = new PluginHudsonJobDao(CodendiDataAccess::instance());
 
-        if (! $job_dao->updateHudsonJob(
-            $job_id,
-            $new_job_url,
-            $new_job_name,
-            $new_use_svn_trigger,
-            $new_use_cvs_trigger,
-            $new_token,
-            $svn_paths
-        )) {
+        if (
+            ! $job_dao->updateHudsonJob(
+                $job_id,
+                $new_job_url,
+                $new_job_name,
+                $new_use_svn_trigger,
+                $new_use_cvs_trigger,
+                $new_token,
+                $svn_paths
+            )
+        ) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson', 'edit_job_error'));
         } else {
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_hudson', 'job_updated'));

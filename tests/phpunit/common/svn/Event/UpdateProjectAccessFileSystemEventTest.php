@@ -29,7 +29,8 @@ use Tuleap\GlobalSVNPollution;
 
 final class UpdateProjectAccessFileSystemEventTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalSVNPollution;
+    use MockeryPHPUnitIntegration;
+    use GlobalSVNPollution;
 
     private const PROJECT_ID = 102;
 

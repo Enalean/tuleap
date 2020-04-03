@@ -773,10 +773,12 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     {
         $this->has_errors = false;
 
-        if (is_array($value) &&
+        if (
+            is_array($value) &&
             $this->isRequired() &&
             ! $this->checkThatAtLeastOneFileIsUploaded($value) &&
-            $this->isPreviousChangesetEmpty($artifact, $value)) {
+            $this->isPreviousChangesetEmpty($artifact, $value)
+        ) {
             $this->addRequiredError();
         }
 
@@ -1068,7 +1070,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     {
         $last_changeset = $artifact->getLastChangeset();
 
-        if ($last_changeset &&
+        if (
+            $last_changeset &&
             ! is_a($last_changeset, Tracker_Artifact_Changeset_Null::class) &&
             count($last_changeset->getValue($this)->getFiles()) > 0
         ) {

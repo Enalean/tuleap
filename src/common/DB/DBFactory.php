@@ -31,12 +31,12 @@ final class DBFactory
     {
     }
 
-    public static function getMainTuleapDBConnection() : DBConnection
+    public static function getMainTuleapDBConnection(): DBConnection
     {
         return self::getDBConnection(\ForgeConfig::get('sys_dbname'));
     }
 
-    public static function getDBConnection(string $database_name) : DBConnection
+    public static function getDBConnection(string $database_name): DBConnection
     {
         if (! isset(self::$connections[$database_name])) {
             self::$connections[$database_name] = new DBConnection(new DBCreator($database_name));

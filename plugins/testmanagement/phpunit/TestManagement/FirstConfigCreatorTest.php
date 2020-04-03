@@ -72,7 +72,7 @@ class FirstConfigCreatorTest extends TestCase
     private $execution_tracker_xml_path;
     private $issue_tracker_xml_path;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 

@@ -34,7 +34,8 @@ use Tuleap\GlobalLanguageMock;
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_Semantic_TitleTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /**
      * @var SimpleXMLElement

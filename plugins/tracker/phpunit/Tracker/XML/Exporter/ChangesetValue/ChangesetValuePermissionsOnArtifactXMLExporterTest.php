@@ -46,7 +46,7 @@ class ChangesetValuePermissionsOnArtifactXMLExporterTest extends TestCase
     /** @var Tracker_FormElement_Field */
     private $field;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

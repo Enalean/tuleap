@@ -51,13 +51,15 @@ class PriorityDaoPerformancesTest extends TestCase
         $csv = array(
             'labels' => array('')
         );
-        foreach (array(
+        foreach (
+            array(
             100,
             10000,
             100000,
             500000,
             1000000
-        ) as $n) {
+            ) as $n
+        ) {
             $csv['labels'][] = $n;
             $this->addToCSV($csv, $this->benchmarkPutAtTheEnd($n));
             $this->addToCSV($csv, $this->benchmarkMoveBefore1rank($n));

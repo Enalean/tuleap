@@ -113,7 +113,8 @@ class BurndownCacheGenerationChecker
         $server_burndown_data = new Tracker_Chart_Data_Burndown($time_period_with_start_date_from_midnight, $capacity);
 
         $this->remaining_effort_adder->addRemainingEffortDataForREST($server_burndown_data, $artifact, $user);
-        if ($this->isCacheCompleteForBurndown($time_period_with_start_date_from_midnight, $artifact, $user) === false
+        if (
+            $this->isCacheCompleteForBurndown($time_period_with_start_date_from_midnight, $artifact, $user) === false
             && $this->isCacheBurndownAlreadyAsked($artifact) === false
         ) {
             $this->cache_generator->forceBurndownCacheGeneration($artifact->getId());
@@ -130,8 +131,10 @@ class BurndownCacheGenerationChecker
         Tracker_Artifact $artifact,
         PFUser $user
     ) {
-        if ($this->value_checker->doesUserCanReadRemainingEffort($artifact, $user) === true
-            && $this->value_checker->hasStartDate($artifact, $user) === true) {
+        if (
+            $this->value_checker->doesUserCanReadRemainingEffort($artifact, $user) === true
+            && $this->value_checker->hasStartDate($artifact, $user) === true
+        ) {
             $cached_days = $this->computed_dao->getCachedDays(
                 $artifact->getId(),
                 $this->field_retriever->getBurndownRemainingEffortField($artifact, $user)->getId()

@@ -81,7 +81,7 @@ class Flow
      * @throws \Http\Client\Exception
      * @throws \Tuleap\OpenIDConnectClient\Provider\ProviderNotFoundException
      */
-    public function process(\HTTPRequest $request) : FlowResponse
+    public function process(\HTTPRequest $request): FlowResponse
     {
         $authorization_response = AuthorizationResponse::buildFromHTTPRequest($request);
         $signed_state           = $authorization_response->getState();

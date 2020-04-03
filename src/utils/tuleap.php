@@ -82,7 +82,7 @@ $CLI_command_collector->addCommand(
 );
 $CLI_command_collector->addCommand(
     ConfigSetCommand::NAME,
-    static function () use ($event_manager) : ConfigSetCommand {
+    static function () use ($event_manager): ConfigSetCommand {
         return new ConfigSetCommand(
             new ConfigDao(),
             $event_manager
@@ -100,13 +100,13 @@ $CLI_command_collector->addCommand(
 );
 $CLI_command_collector->addCommand(
     ImportProjectXMLCommand::NAME,
-    static function () : ImportProjectXMLCommand {
+    static function (): ImportProjectXMLCommand {
         return new ImportProjectXMLCommand();
     }
 );
 $CLI_command_collector->addCommand(
     ProcessSystemEventsCommand::NAME,
-    static function () use ($backend_logger, $event_manager) : ProcessSystemEventsCommand {
+    static function () use ($backend_logger, $event_manager): ProcessSystemEventsCommand {
         $store   = new SemaphoreStore();
         $factory = new LockFactory($store);
 
@@ -119,7 +119,7 @@ $CLI_command_collector->addCommand(
 );
 $CLI_command_collector->addCommand(
     QueueSystemCheckCommand::NAME,
-    static function () use ($event_manager) : QueueSystemCheckCommand {
+    static function () use ($event_manager): QueueSystemCheckCommand {
         return new QueueSystemCheckCommand(
             $event_manager,
             DBFactory::getMainTuleapDBConnection(),
@@ -134,7 +134,7 @@ $CLI_command_collector->addCommand(
 
 $CLI_command_collector->addCommand(
     LaunchEveryMinuteJobCommand::NAME,
-    static function () use ($event_manager, $backend_logger) : LaunchEveryMinuteJobCommand {
+    static function () use ($event_manager, $backend_logger): LaunchEveryMinuteJobCommand {
         return new LaunchEveryMinuteJobCommand(
             $event_manager,
             $backend_logger,
@@ -145,21 +145,21 @@ $CLI_command_collector->addCommand(
 
 $CLI_command_collector->addCommand(
     WorkerSVNRootUpdateCommand::NAME,
-    static function () : WorkerSVNRootUpdateCommand {
+    static function (): WorkerSVNRootUpdateCommand {
         return new WorkerSVNRootUpdateCommand();
     }
 );
 
 $CLI_command_collector->addCommand(
     \Tuleap\CLI\Command\RedisWaiterCommand::NAME,
-    static function () : \Tuleap\CLI\Command\RedisWaiterCommand {
+    static function (): \Tuleap\CLI\Command\RedisWaiterCommand {
         return new \Tuleap\CLI\Command\RedisWaiterCommand();
     }
 );
 
 $CLI_command_collector->addCommand(
     DailyJobCommand::NAME,
-    static function () use ($event_manager, $user_manager) : DailyJobCommand {
+    static function () use ($event_manager, $user_manager): DailyJobCommand {
         return new DailyJobCommand(
             $event_manager,
             new AccessKeyRevoker(
@@ -174,7 +174,7 @@ $CLI_command_collector->addCommand(
             new UserSuspensionManager(
                 new MailPresenterFactory(),
                 TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/mail/'),
-                new Codendi_Mail,
+                new Codendi_Mail(),
                 new UserSuspensionDao(),
                 $user_manager,
                 new BaseLanguageFactory(),
@@ -187,7 +187,7 @@ $CLI_command_collector->addCommand(
 
 $CLI_command_collector->addCommand(
     TaskWorkerProcessCommand::NAME,
-    static function () use ($event_manager) : TaskWorkerProcessCommand {
+    static function () use ($event_manager): TaskWorkerProcessCommand {
         return new TaskWorkerProcessCommand(
             $event_manager,
             new TruncateLevelLogger(
@@ -200,7 +200,7 @@ $CLI_command_collector->addCommand(
 
 $CLI_command_collector->addCommand(
     WorkerSupervisorCommand::NAME,
-    static function () : WorkerSupervisorCommand {
+    static function (): WorkerSupervisorCommand {
         return new WorkerSupervisorCommand(
             new ProcessFactory(),
             new LockFactory(new SemaphoreStore()),
@@ -210,7 +210,7 @@ $CLI_command_collector->addCommand(
 
 $CLI_command_collector->addCommand(
     WorkerSystemCtlCommand::NAME,
-    static function () : WorkerSystemCtlCommand {
+    static function (): WorkerSystemCtlCommand {
         return new WorkerSystemCtlCommand(
             new ProcessFactory(),
         );

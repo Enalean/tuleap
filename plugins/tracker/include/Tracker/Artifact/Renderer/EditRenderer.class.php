@@ -229,7 +229,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         return $html;
     }
 
-    private function fetchShowHideFieldSetsButton() : string
+    private function fetchShowHideFieldSetsButton(): string
     {
         if (! $this->hidden_fieldsets_detector->doesArtifactContainHiddenFieldsets($this->artifact)) {
             return '';

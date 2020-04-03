@@ -73,7 +73,7 @@ class VelocityComputationCheckerTest extends \PHPUnit\Framework\TestCase
      */
     private $artifact;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

@@ -263,7 +263,7 @@ class TrackerXmlImport
         if (! $tracker_attributes[$attribute_name]) {
             return false;
         }
-        return (String) $tracker_attributes[$attribute_name];
+        return (string) $tracker_attributes[$attribute_name];
     }
 
     /**
@@ -341,10 +341,12 @@ class TrackerXmlImport
         // Deal with artifact link types after changesets import to keep the history of types
         $this->disableArtifactLinkTypes($xml_input, $project);
 
-        if ($this->artifact_links_usage_dao->isTypeDisabledInProject(
-            $project->getID(),
-            Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
-        )) {
+        if (
+            $this->artifact_links_usage_dao->isTypeDisabledInProject(
+                $project->getID(),
+                Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
+            )
+        ) {
             $this->logger->warning('Artifact link type _is_child is disabled, skipping the hierarchy');
         } else {
             $this->importHierarchy($xml_input, $created_trackers_mapping);
@@ -590,15 +592,15 @@ class TrackerXmlImport
             return $this->createFromXML(
                 $xml_tracker,
                 $project,
-                (String) $xml_tracker->name,
-                (String) $xml_tracker->description,
-                (String) $xml_tracker->item_name,
-                (String) $xml_tracker->color
+                (string) $xml_tracker->name,
+                (string) $xml_tracker->description,
+                (string) $xml_tracker->item_name,
+                (string) $xml_tracker->color
             );
         } catch (\Tuleap\Tracker\TrackerIsInvalidException $exception) {
             $this->feedback_collector->addErrors($exception->getTranslatedMessage());
             $this->feedback_collector->displayErrors($this->logger);
-            throw new TrackerFromXmlImportCannotBeCreatedException((String) $xml_tracker->name);
+            throw new TrackerFromXmlImportCannotBeCreatedException((string) $xml_tracker->name);
         }
     }
 
@@ -615,7 +617,7 @@ class TrackerXmlImport
                 continue;
             }
 
-            $tracker_shortname = (String) $xml_tracker->item_name;
+            $tracker_shortname = (string) $xml_tracker->item_name;
 
             if (in_array($tracker_shortname, $extra_configuration->getValue())) {
                 $tracker_existing = $this->tracker_factory->getTrackerByShortnameAndProjectId(
@@ -640,10 +642,10 @@ class TrackerXmlImport
      */
     public function updateFromXML(Project $project, SimpleXMLElement $xml_tracker)
     {
-        $tracker_existing = $this->tracker_factory->getTrackerByShortnameAndProjectId((String) $xml_tracker->item_name, $project->getID());
+        $tracker_existing = $this->tracker_factory->getTrackerByShortnameAndProjectId((string) $xml_tracker->item_name, $project->getID());
 
         if (! $tracker_existing) {
-            throw new TrackerFromXmlImportCannotBeUpdatedException((String) $xml_tracker->name);
+            throw new TrackerFromXmlImportCannotBeUpdatedException((string) $xml_tracker->name);
         }
 
         $this->fillFieldMappingFromExistingTracker($tracker_existing, $xml_tracker);

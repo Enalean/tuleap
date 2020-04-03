@@ -170,7 +170,7 @@ class PhpWikiResource extends AuthenticatedResource
      * @throws RestException 403
      * @throws RestException 404
      */
-    public function getItemsReferencingWikiPage(int $id) : array
+    public function getItemsReferencingWikiPage(int $id): array
     {
         $this->checkAccess();
         $this->checkPhpWikiPageExists($id);

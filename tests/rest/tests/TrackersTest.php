@@ -275,7 +275,7 @@ final class TrackersTest extends TrackerBase
         $this->assertEquals(null, $status_field['permissions_for_groups']);
     }
 
-    private function getStatusField(array $tracker) : array
+    private function getStatusField(array $tracker): array
     {
         foreach ($tracker['fields'] as $field) {
             if ($field['label'] === 'Status') {
@@ -487,7 +487,7 @@ final class TrackersTest extends TrackerBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    public function testGetDeletedTrackerReturnsError() : void
+    public function testGetDeletedTrackerReturnsError(): void
     {
         $response = $this->getResponse($this->client->get("trackers/$this->deleted_tracker_id"));
 

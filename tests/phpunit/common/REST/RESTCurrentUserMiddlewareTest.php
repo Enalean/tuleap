@@ -40,7 +40,7 @@ final class RESTCurrentUserMiddlewareTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testRequestIsProcessedWhenCurrentUserIsNotRejected() : void
+    public function testRequestIsProcessedWhenCurrentUserIsNotRejected(): void
     {
         $basic_rest_auth   = Mockery::mock(BasicAuthentication::class);
         $rest_user_manager = Mockery::mock(UserManager::class);
@@ -54,7 +54,7 @@ final class RESTCurrentUserMiddlewareTest extends TestCase
         $request_handler   = Mockery::mock(RequestHandlerInterface::class);
         $expected_response = HTTPFactoryBuilder::responseFactory()->createResponse();
         $request_handler->shouldReceive('handle')->with(Mockery::on(
-            static function (ServerRequestInterface $request) use ($expected_user) : bool {
+            static function (ServerRequestInterface $request) use ($expected_user): bool {
                 return $request->getAttribute(RESTCurrentUserMiddleware::class) === $expected_user;
             }
         ))->andReturn($expected_response);
@@ -70,7 +70,7 @@ final class RESTCurrentUserMiddlewareTest extends TestCase
     /**
      * @dataProvider restAuthenticationExceptionProvider
      */
-    public function testRequestIsRejectedWhenTheCurrentUserCanNotBeAuthenticated(Exception $exception) : void
+    public function testRequestIsRejectedWhenTheCurrentUserCanNotBeAuthenticated(Exception $exception): void
     {
         $basic_rest_auth   = Mockery::mock(BasicAuthentication::class);
         $rest_user_manager = Mockery::mock(UserManager::class);
@@ -87,7 +87,7 @@ final class RESTCurrentUserMiddlewareTest extends TestCase
         );
     }
 
-    public function restAuthenticationExceptionProvider() : array
+    public function restAuthenticationExceptionProvider(): array
     {
         return [
             [new User_StatusInvalidException()],

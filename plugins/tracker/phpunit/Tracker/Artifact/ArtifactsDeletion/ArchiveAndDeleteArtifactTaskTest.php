@@ -30,9 +30,10 @@ use Tuleap\Tracker\Artifact\ArtifactWithTrackerStructureExporter;
 
 final class ArchiveAndDeleteArtifactTaskTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
-    public function testDBReconnection() : void
+    public function testDBReconnection(): void
     {
         $artifact_exporter = \Mockery::mock(ArtifactWithTrackerStructureExporter::class);
         $artifact_deletor  = \Mockery::mock(ArtifactDependenciesDeletor::class);

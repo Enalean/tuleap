@@ -209,8 +209,10 @@ function _determineBogoUserOrPassUser($UserName)
     }
     if (_isUserPasswordsAllowed()) {
         // PassUsers override BogoUsers if a password is stored
-        if (isset($_BogoUser) and isset($_BogoUser->_prefs)
-            and $_BogoUser->_prefs->get('passwd')) {
+        if (
+            isset($_BogoUser) and isset($_BogoUser->_prefs)
+            and $_BogoUser->_prefs->get('passwd')
+        ) {
             return new _PassUser($UserName, $_BogoUser->_prefs);
         } else {
             $_PassUser = new _PassUser(
@@ -300,12 +302,16 @@ function UpgradeUser($olduser, $user)
     if (isa($user, '_WikiUser') and isa($olduser, '_WikiUser')) {
         // populate the upgraded class $olduser with the values from the new user object
         //only _auth_level, _current_method, _current_index,
-        if (!empty($user->_level) and
-            $user->_level > $olduser->_level) {
+        if (
+            !empty($user->_level) and
+            $user->_level > $olduser->_level
+        ) {
             $olduser->_level = $user->_level;
         }
-        if (!empty($user->_current_index) and
-            $user->_current_index > $olduser->_current_index) {
+        if (
+            !empty($user->_current_index) and
+            $user->_current_index > $olduser->_current_index
+        ) {
             $olduser->_current_index = $user->_current_index;
             $olduser->_current_method = $user->_current_method;
         }
@@ -655,8 +661,10 @@ class _WikiUser
 
         // Successful login.
         //$user = $GLOBALS['request']->_user;
-        if (!empty($this->_current_method) and
-            strtolower(static::class) == '_passuser') {
+        if (
+            !empty($this->_current_method) and
+            strtolower(static::class) == '_passuser'
+        ) {
             // upgrade class
             $class = "_" . $this->_current_method . "PassUser";
             include_once("lib/WikiUser/" . $this->_current_method . ".php");
@@ -683,7 +691,7 @@ class _AnonUser extends _WikiUser
     public function getPreferences()
     {
         if (empty($this->_prefs)) {
-            $this->_prefs = new UserPreferences;
+            $this->_prefs = new UserPreferences();
         }
 
         return $this->_prefs;
@@ -894,21 +902,29 @@ class _PassUser extends _AnonUser
                     if (!empty($GLOBALS['PHP_AUTH_USER']) or !empty($_SERVER['REMOTE_USER'])) {
                         include_once("lib/WikiUser/HttpAuth.php");
                         return new _HttpAuthPassUser($UserName, $this->_prefs);
-                    } elseif (in_array('Db', $dbh->getAuthParam('USER_AUTH_ORDER')) and
+                    } elseif (
+                        in_array('Db', $dbh->getAuthParam('USER_AUTH_ORDER')) and
                               $dbh->getAuthParam('auth_check') and
-                              ($dbh->getAuthParam('auth_dsn') or $dbh->getParam('dsn'))) {
+                              ($dbh->getAuthParam('auth_dsn') or $dbh->getParam('dsn'))
+                    ) {
                         return new _DbPassUser($UserName, $this->_prefs);
-                    } elseif (in_array('LDAP', $dbh->getAuthParam('USER_AUTH_ORDER')) and
+                    } elseif (
+                        in_array('LDAP', $dbh->getAuthParam('USER_AUTH_ORDER')) and
                               defined('LDAP_AUTH_HOST') and defined('LDAP_BASE_DN') and
-                              function_exists('ldap_connect')) {
+                              function_exists('ldap_connect')
+                    ) {
                         include_once("lib/WikiUser/LDAP.php");
                         return new _LDAPPassUser($UserName, $this->_prefs);
-                    } elseif (in_array('IMAP', $dbh->getAuthParam('USER_AUTH_ORDER')) and
-                              defined('IMAP_AUTH_HOST') and function_exists('imap_open')) {
+                    } elseif (
+                        in_array('IMAP', $dbh->getAuthParam('USER_AUTH_ORDER')) and
+                              defined('IMAP_AUTH_HOST') and function_exists('imap_open')
+                    ) {
                         include_once("lib/WikiUser/IMAP.php");
                         return new _IMAPPassUser($UserName, $this->_prefs);
-                    } elseif (in_array('File', $dbh->getAuthParam('USER_AUTH_ORDER')) and
-                              defined('AUTH_USER_FILE') and file_exists(AUTH_USER_FILE)) {
+                    } elseif (
+                        in_array('File', $dbh->getAuthParam('USER_AUTH_ORDER')) and
+                              defined('AUTH_USER_FILE') and file_exists(AUTH_USER_FILE)
+                    ) {
                         include_once("lib/WikiUser/File.php");
                         return new _FilePassUser($UserName, $this->_prefs);
                     } else {
@@ -938,9 +954,11 @@ class _PassUser extends _AnonUser
             }
         }
         if (empty($this->_auth_dbi)) {
-            if ($dbh->getParam('dbtype') != 'SQL'
+            if (
+                $dbh->getParam('dbtype') != 'SQL'
                 and $dbh->getParam('dbtype') != 'ADODB'
-                and $dbh->getParam('dbtype') != 'PDO') {
+                and $dbh->getParam('dbtype') != 'PDO'
+            ) {
                 return false;
             }
             if (empty($GLOBALS['DBAuthParams'])) {
@@ -1018,8 +1036,10 @@ class _PassUser extends _AnonUser
         }
         $prefix = $dbi->getParam('prefix');
         // probably prefix table names if in same database
-        if ($prefix and isset($this->_auth_dbi) and isset($dbi->_backend->_dbh) and
-            ($dbi->getAuthParam('auth_dsn') and $dbi->getParam('dsn') == $dbi->getAuthParam('auth_dsn'))) {
+        if (
+            $prefix and isset($this->_auth_dbi) and isset($dbi->_backend->_dbh) and
+            ($dbi->getAuthParam('auth_dsn') and $dbi->getParam('dsn') == $dbi->getAuthParam('auth_dsn'))
+        ) {
             if (!stristr($stmt, $prefix)) {
                 $oldstmt = $stmt;
                 $stmt = str_replace(
@@ -1629,15 +1649,17 @@ class _UserPreference_email extends _UserPreference
         }
         if (!empty($value) and !$verified) {
             list($ok,$msg) = ValidateMail($value);
-            if ($ok and mail(
-                $value,
-                "[" . WIKI_NAME . "] " . _("Email Verification"),
-                sprintf(
-                    _("Welcome to %s!\nYour email account is verified and\nwill be used to send page change notifications.\nSee %s"),
-                    WIKI_NAME,
-                    WikiURL($GLOBALS['request']->getArg('pagename'), '', true)
+            if (
+                $ok and mail(
+                    $value,
+                    "[" . WIKI_NAME . "] " . _("Email Verification"),
+                    sprintf(
+                        _("Welcome to %s!\nYour email account is verified and\nwill be used to send page change notifications.\nSee %s"),
+                        WIKI_NAME,
+                        WikiURL($GLOBALS['request']->getArg('pagename'), '', true)
+                    )
                 )
-            )) {
+            ) {
                 $this->set('emailVerified', 1);
             }
         }
@@ -1739,7 +1761,7 @@ function ValidateMail($email, $noconnect = false)
     $result[0] = true;
     $result[1] = "E-Mail address '$email' appears to be valid.";
     return $result;
-} // end of function
+}
 
 
 /**
@@ -1854,9 +1876,11 @@ class UserPreferences
         }
 
         /* do it here or outside? */
-        if ($name == 'passwd' and
+        if (
+            $name == 'passwd' and
             defined('PASSWORD_LENGTH_MINIMUM') and
-            strlen($value) <= PASSWORD_LENGTH_MINIMUM) {
+            strlen($value) <= PASSWORD_LENGTH_MINIMUM
+        ) {
             //TODO: How to notify the user?
             return false;
         }
@@ -1865,9 +1889,11 @@ class UserPreferences
            return true;
         */
         // Fix Fatal error for undefined value. Thanks to Jim Ford and Joel Schaubert
-        if ((!$value and $pref->default_value)
+        if (
+            (!$value and $pref->default_value)
             or ($value and !isset($pref->$value))
-            or ($value and ($pref->$value != $pref->default_value))) {
+            or ($value and ($pref->$value != $pref->default_value))
+        ) {
             if ($name == 'emailVerified') {
                 $newvalue = $value;
             } else {
@@ -1901,12 +1927,16 @@ class UserPreferences
                 $obj->_init = $init;
                 if ($prefs->get($type) !== $obj->get($type)) {
                     // special systemdefault prefs: (probably not needed)
-                    if ($type == 'theme' and $prefs->get($type) == '' and
-                        $obj->get($type) == THEME) {
+                    if (
+                        $type == 'theme' and $prefs->get($type) == '' and
+                        $obj->get($type) == THEME
+                    ) {
                         continue;
                     }
-                    if ($type == 'lang' and $prefs->get($type) == '' and
-                        $obj->get($type) == DEFAULT_LANGUAGE) {
+                    if (
+                        $type == 'lang' and $prefs->get($type) == '' and
+                        $obj->get($type) == DEFAULT_LANGUAGE
+                    ) {
                         continue;
                     }
                     if ($this->_prefs[$type]->set($type, $prefs->get($type))) {
@@ -1942,12 +1972,16 @@ class UserPreferences
                 }
                 if (isset($prefs[$type]) and $obj->get($type) != $prefs[$type]) {
                     // special systemdefault prefs:
-                    if ($type == 'theme' and $prefs[$type] == '' and
-                        $obj->get($type) == THEME) {
+                    if (
+                        $type == 'theme' and $prefs[$type] == '' and
+                        $obj->get($type) == THEME
+                    ) {
                         continue;
                     }
-                    if ($type == 'lang' and $prefs[$type] == '' and
-                        $obj->get($type) == DEFAULT_LANGUAGE) {
+                    if (
+                        $type == 'lang' and $prefs[$type] == '' and
+                        $obj->get($type) == DEFAULT_LANGUAGE
+                    ) {
                         continue;
                     }
                     if ($obj->set($type, $prefs[$type])) {

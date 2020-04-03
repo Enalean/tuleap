@@ -273,7 +273,7 @@ class DocmanItemsResource extends AuthenticatedResource
         );
     }
 
-    private function getItemRepresentationBuilder(Docman_Item $item, Project $project) : ItemRepresentationBuilder
+    private function getItemRepresentationBuilder(Docman_Item $item, Project $project): ItemRepresentationBuilder
     {
         $html_purifier = Codendi_HTMLPurifier::instance();
 

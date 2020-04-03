@@ -42,7 +42,7 @@ class LFSJSONHTTPDispatchable implements DispatchableWithRequestNoAuthz
         $this->dispatchable_with_request = $dispatchable_with_request;
     }
 
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables) : void
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         if (! $this->doesRequestAcceptGitLFSResponse($request)) {
             throw new \RuntimeException(self::GIT_LFS_MIME_TYPE . ' data must be an acceptable response', 406);
@@ -60,7 +60,7 @@ class LFSJSONHTTPDispatchable implements DispatchableWithRequestNoAuthz
         }
     }
 
-    private function doesRequestAcceptGitLFSResponse(HTTPRequest $request) : bool
+    private function doesRequestAcceptGitLFSResponse(HTTPRequest $request): bool
     {
         return stripos(trim($request->getFromServer('HTTP_ACCEPT')), self::GIT_LFS_MIME_TYPE) === 0;
     }

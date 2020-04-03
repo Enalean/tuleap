@@ -19,7 +19,7 @@
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Planning;
 
@@ -37,6 +37,7 @@ use Tracker_Artifact;
 final class MilestoneFactoryGetMilestoneWithAncestorsTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Planning_ArtifactMilestone
      */

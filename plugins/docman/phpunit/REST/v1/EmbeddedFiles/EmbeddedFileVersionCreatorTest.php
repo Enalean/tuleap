@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1\Files;
 
@@ -40,6 +40,7 @@ use Tuleap\Docman\REST\v1\PostUpdateEventAdder;
 class EmbeddedFileVersionCreatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var EmbeddedFileVersionCreator
      */

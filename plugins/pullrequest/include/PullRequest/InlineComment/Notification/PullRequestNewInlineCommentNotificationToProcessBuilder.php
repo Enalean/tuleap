@@ -91,7 +91,7 @@ final class PullRequestNewInlineCommentNotificationToProcessBuilder implements N
         $this->html_url_builder            = $html_url_builder;
     }
 
-    public function getNotificationsToProcess(EventSubjectToNotification $event) : array
+    public function getNotificationsToProcess(EventSubjectToNotification $event): array
     {
         $comment = $this->inline_comment_retriever->getInlineCommentByID($event->getInlineCommentID());
 

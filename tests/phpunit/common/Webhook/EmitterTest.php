@@ -34,7 +34,7 @@ class EmitterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testWebhooksAreEmitted() : void
+    public function testWebhooksAreEmitted(): void
     {
         $request_factory = \Mockery::mock(RequestFactoryInterface::class);
         $stream_factory  = \Mockery::mock(StreamFactoryInterface::class);

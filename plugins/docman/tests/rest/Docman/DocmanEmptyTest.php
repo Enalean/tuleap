@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Docman\Test\rest\Docman;
 
@@ -323,7 +323,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
     /**
      * @depends testGetRootId
      */
-    public function testUpdatePermissionsEmptyDocument(int $root_id) : void
+    public function testUpdatePermissionsEmptyDocument(int $root_id): void
     {
         $response_empty_creation = $this->getResponseByName(
             DocmanDataBuilder::ADMIN_USER_NAME,

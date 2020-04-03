@@ -131,11 +131,13 @@ class WikiUser
      */
     public function _ok()
     {
-        if ((in_array($this->_level, array(WIKIAUTH_BOGO,
+        if (
+            (in_array($this->_level, array(WIKIAUTH_BOGO,
                                            WIKIAUTH_USER,
                                            WIKIAUTH_ADMIN))
             &&
-            (is_string($this->_userid)))) {
+            (is_string($this->_userid)))
+        ) {
             return true;
         }
         return false;
@@ -467,8 +469,10 @@ class WikiUser
         if ($stored_passwd == '*') {
             return true;
         }
-        if (!empty($passwd)
-             && crypt($passwd, $stored_passwd) == $stored_passwd) {
+        if (
+            !empty($passwd)
+             && crypt($passwd, $stored_passwd) == $stored_passwd
+        ) {
             return true;
         } else {
             return false;

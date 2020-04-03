@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Request;
 
-use function array_merge;
 use GuzzleHttp\Psr7\ServerRequest;
 use HTTPRequest;
 use Psr\Http\Server\MiddlewareInterface;
@@ -31,6 +30,7 @@ use Tuleap\Http\Server\MiddlewareDispatcher;
 use Tuleap\Http\Server\RequestHandlerAsMiddleware;
 use Tuleap\Layout\BaseLayout;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
+use function array_merge;
 
 abstract class DispatchablePSR15Compatible implements DispatchableWithRequest, RequestHandlerInterface
 {
@@ -51,7 +51,7 @@ abstract class DispatchablePSR15Compatible implements DispatchableWithRequest, R
         );
     }
 
-    final public function process(HTTPRequest $request, BaseLayout $layout, array $variables) : void
+    final public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $server_request = ServerRequest::fromGlobals();
         foreach ($variables as $variable_name => $variable_value) {

@@ -36,7 +36,8 @@ use Tuleap\User\AccessKey\Scope\AccessKeyScopeRetriever;
 
 final class AccessKeyVerifierTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     private const LAST_ACCESS_RESOLUTION             = 3600;
     private const IP_ADDRESS_REQUESTING_VERIFICATION = '2001:db8::1777';
@@ -67,7 +68,7 @@ final class AccessKeyVerifierTest extends TestCase
      */
     private $verifier;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->dao                        = \Mockery::mock(AccessKeyDAO::class);
         $this->hasher                     = \Mockery::mock(SplitTokenVerificationStringHasher::class);

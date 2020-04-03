@@ -45,7 +45,9 @@ use Tuleap\Taskboard\Tracker\TaskboardTracker;
 
 final class CardMappedFieldUpdaterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalResponseMock , GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalResponseMock;
+    use GlobalLanguageMock;
 
     /** @var CardMappedFieldUpdater */
     private $updater;

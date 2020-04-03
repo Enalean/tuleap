@@ -131,7 +131,8 @@ abstract class Kanban extends Widget
         $kanban_name     = $this->kanban_title ? : 'Kanban';
         $selected_report = $this->getSelectedReport();
 
-        if ($this->tracker_report_id
+        if (
+            $this->tracker_report_id
             && $selected_report
             && $this->isCurrentReportSelectable($selected_report)
         ) {
@@ -364,7 +365,7 @@ abstract class Kanban extends Widget
         );
     }
 
-    private function getKanbanTrackerShortname(AgileDashboard_Kanban $kanban) : string
+    private function getKanbanTrackerShortname(AgileDashboard_Kanban $kanban): string
     {
         return $this->tracker_factory->getTrackerById(
             $kanban->getTrackerId()

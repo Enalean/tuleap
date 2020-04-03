@@ -44,7 +44,7 @@ class TestStatusAccordingToStepsStatusChangesBuilderTest extends \PHPUnit\Framew
     private $failed_id = 103;
     private $blocked_id = 104;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         $this->builder      = new TestStatusAccordingToStepsStatusChangesBuilder();
         $this->status_field = $this->createMock(Tracker_FormElement_Field_List::class);

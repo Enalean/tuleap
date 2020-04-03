@@ -115,4 +115,4 @@ abstract class Theme
 
         return $color;
     }
-} // Class
+}

@@ -25,7 +25,7 @@
 class UserTest extends SOAPBase // phpcs:ignore
 {
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -34,7 +34,7 @@ class UserTest extends SOAPBase // phpcs:ignore
         $_SERVER['SCRIPT_NAME'] = $this->base_wsdl;
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         unset($_SERVER['SERVER_NAME']);
         unset($_SERVER['SERVER_PORT']);

@@ -146,56 +146,74 @@ class RestrictedUserCanAccessUrlOrProjectVerifier implements RestrictedUserCanAc
         }
 
         // Forum and news. Each published news is a special forum of project 'news'
-        if (strpos($req_uri, '/news/') === 0 &&
-            isset($allow_access_to_project_news[$group_id])) {
+        if (
+            strpos($req_uri, '/news/') === 0 &&
+            isset($allow_access_to_project_news[$group_id])
+        ) {
             $user_is_allowed = true;
         }
 
-        if (strpos($req_uri, '/news/') === 0 &&
-            $allow_news_browsing) {
+        if (
+            strpos($req_uri, '/news/') === 0 &&
+            $allow_news_browsing
+        ) {
             $user_is_allowed = true;
         }
 
-        if (strpos($req_uri, '/forum/') === 0 &&
-            isset($allow_access_to_project_forums[$group_id])) {
+        if (
+            strpos($req_uri, '/forum/') === 0 &&
+            isset($allow_access_to_project_forums[$group_id])
+        ) {
             $user_is_allowed = true;
         }
 
         // Codendi trackers
-        if (strpos($req_uri, '/tracker/') === 0 &&
-            isset($allow_access_to_project_trackers[$group_id])) {
+        if (
+            strpos($req_uri, '/tracker/') === 0 &&
+            isset($allow_access_to_project_trackers[$group_id])
+        ) {
             $user_is_allowed = true;
         }
 
         // Trackers v5
-        if (strpos($req_uri, '/plugins/tracker/') === 0 &&
-            isset($allow_access_to_project_trackers_v5[$group_id])) {
+        if (
+            strpos($req_uri, '/plugins/tracker/') === 0 &&
+            isset($allow_access_to_project_trackers_v5[$group_id])
+        ) {
             $user_is_allowed = true;
         }
 
         // Codendi documents and wiki
-        if (((strpos($req_uri, '/docman/') === 0) ||
+        if (
+            ((strpos($req_uri, '/docman/') === 0) ||
                 (strpos($req_uri, '/plugins/docman/') === 0) ||
                 (strpos($req_uri, '/wiki/') === 0)) &&
-            isset($allow_access_to_project_docs[$group_id])) {
+            isset($allow_access_to_project_docs[$group_id])
+        ) {
             $user_is_allowed = true;
         }
 
         // Codendi mailing lists page
-        if (strpos($req_uri, '/mail/') === 0 &&
-            isset($allow_access_to_project_mail[$group_id])) {
+        if (
+            strpos($req_uri, '/mail/') === 0 &&
+            isset($allow_access_to_project_mail[$group_id])
+        ) {
             $user_is_allowed = true;
         }
 
         // Codendi file releases
-        if (strpos($req_uri, '/file/') === 0 &&
-            isset($allow_access_to_project_frs[$group_id])) {
+        if (
+            strpos($req_uri, '/file/') === 0 &&
+            isset($allow_access_to_project_frs[$group_id])
+        ) {
             $user_is_allowed = true;
         }
 
         // References
-        if (strpos($req_uri, '/goto') === 0 &&
-            isset($allow_access_to_project_refs[$group_id])) {
+        if (
+            strpos($req_uri, '/goto') === 0 &&
+            isset($allow_access_to_project_refs[$group_id])
+        ) {
             $user_is_allowed = true;
         }
 

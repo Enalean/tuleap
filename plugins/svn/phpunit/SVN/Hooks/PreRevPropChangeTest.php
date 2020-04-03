@@ -36,6 +36,7 @@ use Tuleap\SVN\Repository\RepositoryManager;
 class PreRevPropChangeTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var HookConfigRetriever
      */

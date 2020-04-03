@@ -34,7 +34,7 @@ class DocumentBeingUploadedInformationProviderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testFileInformationCanBeProvided() : void
+    public function testFileInformationCanBeProvided(): void
     {
         $path_allocator = new UploadPathAllocator('/var/tmp');
         $dao            = \Mockery::mock(DocumentOngoingUploadDAO::class);
@@ -63,7 +63,7 @@ class DocumentBeingUploadedInformationProviderTest extends TestCase
         $this->assertSame(0, $file_information->getOffset());
     }
 
-    public function testFileInformationCanBeProvidedWhenTheFileHasAlreadyBeenUploaded() : void
+    public function testFileInformationCanBeProvidedWhenTheFileHasAlreadyBeenUploaded(): void
     {
         $path_allocator = new UploadPathAllocator('/var/tmp');
         $dao            = \Mockery::mock(DocumentOngoingUploadDAO::class);
@@ -89,7 +89,7 @@ class DocumentBeingUploadedInformationProviderTest extends TestCase
         $this->assertSame(123456, $file_information->getOffset());
     }
 
-    public function testFileInformationCannotBeFoundIfRequestAttributesAreMissing() : void
+    public function testFileInformationCannotBeFoundIfRequestAttributesAreMissing(): void
     {
         $data_store = new DocumentBeingUploadedInformationProvider(
             new UploadPathAllocator('/var/tmp'),
@@ -103,7 +103,7 @@ class DocumentBeingUploadedInformationProviderTest extends TestCase
         $this->assertNull($data_store->getFileInformation($request));
     }
 
-    public function testFileInformationCannotBeFoundIfThereIsNotAValidEntryInTheDatabase() : void
+    public function testFileInformationCannotBeFoundIfThereIsNotAValidEntryInTheDatabase(): void
     {
         $dao           = \Mockery::mock(DocumentOngoingUploadDAO::class);
         $item_factory  = \Mockery::mock(\Docman_ItemFactory::class);

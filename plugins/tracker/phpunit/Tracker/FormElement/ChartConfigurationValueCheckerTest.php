@@ -105,7 +105,7 @@ final class ChartConfigurationValueCheckerTest extends TestCase
      */
     private $end_date_changeset;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->configuration_field_retriever     = \Mockery::mock(\Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever::class);
         $this->configuration_value_retriever     = Mockery::mock(ChartConfigurationValueRetriever::class);

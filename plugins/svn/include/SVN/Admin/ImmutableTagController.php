@@ -88,7 +88,8 @@ class ImmutableTagController
             $vimmutable_tag_whitelist = new Valid_Text('immutable-tags-whitelist');
 
             try {
-                if ($request->valid($vimmutable_tag_path)
+                if (
+                    $request->valid($vimmutable_tag_path)
                     && $request->valid($vimmutable_tag_whitelist)
                 ) {
                     $immutable_tags_path = trim($request->get('immutable-tags-path'));

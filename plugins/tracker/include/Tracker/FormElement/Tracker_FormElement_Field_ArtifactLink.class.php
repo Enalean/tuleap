@@ -1519,9 +1519,13 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
 
         $hasLastChangesetValues   = !$hasNoLastChangesetValues;
 
-        if (($hasNoLastChangesetValues && $hasNoNewValues) ||
-             ($hasLastChangesetValues && $hasNoNewValues
-                && $this->allLastChangesetValuesRemoved($last_changeset_values, $submitted_value))) {
+        if (
+            ($hasNoLastChangesetValues &&
+            $hasNoNewValues) ||
+             ($hasLastChangesetValues &&
+             $hasNoNewValues &&
+                $this->allLastChangesetValuesRemoved($last_changeset_values, $submitted_value))
+        ) {
             return true;
         }
         return false;

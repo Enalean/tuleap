@@ -967,7 +967,8 @@ class WikiDB_Page
                         continue;
                     }
 
-                    if ($user_can_access_project &&
+                    if (
+                        $user_can_access_project &&
                         $wiki->isAutorized($dbUser->getId()) &&
                         $wp->isAutorized($dbUser->getId())
                     ) {
@@ -1349,7 +1350,8 @@ class WikiDB_Page
             return false;
         }
         // several new SQL backends optimize this.
-        if (!WIKIDB_NOCACHE_MARKUP
+        if (
+            !WIKIDB_NOCACHE_MARKUP
             and $key == '_cached_html'
             and method_exists($backend, 'get_cached_html')
         ) {
@@ -1395,7 +1397,8 @@ class WikiDB_Page
         assert($key && $key[0] != '%');
 
         // several new SQL backends optimize this.
-        if (!WIKIDB_NOCACHE_MARKUP
+        if (
+            !WIKIDB_NOCACHE_MARKUP
             and $key == '_cached_html'
             and method_exists($backend, 'set_cached_html')
         ) {
@@ -1727,7 +1730,8 @@ class WikiDB_PageRevision
 
             // A feature similar to taglines at http://www.wlug.org.nz/
             // Lib from http://www.aasted.org/quote/
-            if (defined('FORTUNE_DIR')
+            if (
+                defined('FORTUNE_DIR')
                 and is_dir(FORTUNE_DIR)
                 and in_array($GLOBALS['request']->getArg('action'), array('create','edit'))
             ) {
@@ -1918,8 +1922,10 @@ class WikiDB_PageIterator
             $this->_wikidb->_cache->cache_data($next);
         // cache existing page id's since we iterate over all links in GleanDescription
         // and need them later for LinkExistingWord
-        } elseif ($this->_options and array_key_exists('include_empty', $this->_options)
-                  and !$this->_options['include_empty'] and isset($next['id'])) {
+        } elseif (
+            $this->_options and array_key_exists('include_empty', $this->_options)
+                  and !$this->_options['include_empty'] and isset($next['id'])
+        ) {
             $this->_wikidb->_cache->_id_cache[$next['pagename']] = $next['id'];
         }
         return new WikiDB_Page($this->_wikidb, $pagename);
@@ -2281,7 +2287,8 @@ class WikiDB_cache
             //$need_content = true;
             $nc = $need_content ? '1' : '0';
             $cache = &$this->_versiondata_cache;
-            if (! isset($cache[$pagename][$version][$nc])
+            if (
+                ! isset($cache[$pagename][$version][$nc])
                 || !(is_array($cache[$pagename]))
                 || !(is_array($cache[$pagename][$version]))
             ) {

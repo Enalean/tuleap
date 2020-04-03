@@ -36,15 +36,18 @@ class ViewVCProxy
             return true;
         }
 
-        if (strpos($request_uri, "view=patch") !== false ||
+        if (
+            strpos($request_uri, "view=patch") !== false ||
             $this->isAGraphImageRequest($request_uri) ||
             strpos($request_uri, "view=redirect_path") !== false ||
             // ViewVC will redirect URLs with "&rev=" to "&revision=". This is needed by Hudson.
-            strpos($request_uri, "&rev=") !== false) {
+            strpos($request_uri, "&rev=") !== false
+        ) {
             return false;
         }
 
-        if (strpos($request_uri, "/?") === false &&
+        if (
+            strpos($request_uri, "/?") === false &&
             strpos($request_uri, "&r1=") === false &&
             strpos($request_uri, "&r2=") === false &&
             (strpos($request_uri, "view=") === false ||

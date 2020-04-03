@@ -100,7 +100,7 @@ class AccessKeyResource extends AuthenticatedResource
         $storage_access_key_identifier_store = [];
         $last_access_key_identifier_store    = new LastAccessKeyIdentifierStore(
             new PrefixedSplitTokenSerializer(new PrefixAccessKey()),
-            (new KeyFactory)->getEncryptionKey(),
+            (new KeyFactory())->getEncryptionKey(),
             $storage_access_key_identifier_store
         );
         $access_key_creator               = new AccessKeyCreator(

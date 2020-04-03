@@ -37,7 +37,8 @@ use Tuleap\User\Account\Appearance\AppearancePresenter;
 
 class DisplayAppearanceControllerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, TemporaryTestDirectory;
+    use MockeryPHPUnitIntegration;
+    use TemporaryTestDirectory;
 
     /**
      * @var DisplayExperimentalController

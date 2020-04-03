@@ -216,38 +216,52 @@ class ArtifactField
     {
         global $Language;
 
-        if (($this->data_type == $this->DATATYPE_INT || $this->data_type == $this->DATATYPE_USER)
-        && ($this->display_type == "SB")) {
+        if (
+            ($this->data_type == $this->DATATYPE_INT || $this->data_type == $this->DATATYPE_USER)
+            && ($this->display_type == "SB")
+        ) {
             return $Language->getText('tracker_include_type', 'sb');
         }
 
-        if (($this->data_type == $this->DATATYPE_INT || $this->data_type == $this->DATATYPE_USER)
-        && ($this->display_type == "MB")) {
+        if (
+            ($this->data_type == $this->DATATYPE_INT || $this->data_type == $this->DATATYPE_USER)
+            && ($this->display_type == "MB")
+        ) {
             return $Language->getText('tracker_include_type', 'mb');
         }
 
-        if (($this->data_type == $this->DATATYPE_TEXT)
-        && ($this->display_type == "TF")) {
+        if (
+            ($this->data_type == $this->DATATYPE_TEXT)
+            && ($this->display_type == "TF")
+        ) {
             return $Language->getText('tracker_include_type', 'tf');
         }
 
-        if (($this->data_type == $this->DATATYPE_TEXT)
-        && ($this->display_type == "TA")) {
+        if (
+            ($this->data_type == $this->DATATYPE_TEXT)
+            && ($this->display_type == "TA")
+        ) {
             return $Language->getText('tracker_include_type', 'ta');
         }
 
-        if (($this->data_type == $this->DATATYPE_DATE)
-        && ($this->display_type == "DF")) {
+        if (
+            ($this->data_type == $this->DATATYPE_DATE)
+            && ($this->display_type == "DF")
+        ) {
             return $Language->getText('tracker_include_type', 'df');
         }
 
-        if (($this->data_type == $this->DATATYPE_FLOAT)
-        && ($this->display_type == "TF")) {
+        if (
+            ($this->data_type == $this->DATATYPE_FLOAT)
+            && ($this->display_type == "TF")
+        ) {
             return $Language->getText('tracker_include_type', 'ff');
         }
 
-        if (($this->data_type == $this->DATATYPE_INT)
-        && ($this->display_type == "TF")) {
+        if (
+            ($this->data_type == $this->DATATYPE_INT)
+            && ($this->display_type == "TF")
+        ) {
             return $Language->getText('tracker_include_type', 'if');
         }
 
@@ -383,8 +397,10 @@ class ArtifactField
         }
 
         $def_val = $this->default_value;
-        if (($this->data_type == $this->DATATYPE_INT || $this->data_type == $this->DATATYPE_USER)
-        && ($this->display_type == "MB")) {
+        if (
+            ($this->data_type == $this->DATATYPE_INT || $this->data_type == $this->DATATYPE_USER)
+            && ($this->display_type == "MB")
+        ) {
             $res = explode(",", $def_val);
             return $res;
         }
@@ -1429,8 +1445,10 @@ class ArtifactField
                 // value 0 match with empty date
                 list($value,$ok) = util_date_to_unixtime($default_value);
             }
-        } elseif (($this->data_type == $this->DATATYPE_INT || $this->data_type == $this->DATATYPE_USER) &&
-        is_array($default_value)) {
+        } elseif (
+            ($this->data_type == $this->DATATYPE_INT || $this->data_type == $this->DATATYPE_USER) &&
+            is_array($default_value)
+        ) {
             $value = implode(",", $default_value);
         } else {
             $value = $default_value;

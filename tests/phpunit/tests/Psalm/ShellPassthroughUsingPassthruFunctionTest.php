@@ -30,7 +30,7 @@ final class ShellPassthroughUsingPassthruFunctionTest extends TestCase
      * @testWith [0]
      *           [1]
      */
-    public function testCommandPassthrough(int $expected_exit_code) : void
+    public function testCommandPassthrough(int $expected_exit_code): void
     {
         $shell_pathrough = new ShellPassthroughUsingPassthruFunction();
         $exit_code       = $shell_pathrough('echo -n "Test" && exit ' . $expected_exit_code);

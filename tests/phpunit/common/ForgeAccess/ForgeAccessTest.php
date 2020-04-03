@@ -29,22 +29,24 @@ use Tuleap\GlobalLanguageMock;
 
 class ForgeAccessTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
+    use GlobalLanguageMock;
 
     private $permissions_overrider_manager;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->permissions_overrider_manager = \Mockery::mock(\PermissionsOverrider_PermissionsOverriderManager::class);
         \PermissionsOverrider_PermissionsOverriderManager::setInstance($this->permissions_overrider_manager);
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         \PermissionsOverrider_PermissionsOverriderManager::clearInstance();
     }
 
-    public function testLoginIsNotRequiredWhenAnonymousAreAllowedAndThereIsNoPermissionOverride() : void
+    public function testLoginIsNotRequiredWhenAnonymousAreAllowedAndThereIsNoPermissionOverride(): void
     {
         $forge_access = new \ForgeAccess($this->permissions_overrider_manager);
 
@@ -54,7 +56,7 @@ class ForgeAccessTest extends TestCase
         $this->assertFalse($forge_access->doesPlatformRequireLogin());
     }
 
-    public function testLoginIsRequiredWhenAnonymousAreNotAllowedAndThereIsNoPermissionOverride() : void
+    public function testLoginIsRequiredWhenAnonymousAreNotAllowedAndThereIsNoPermissionOverride(): void
     {
         $forge_access = new \ForgeAccess($this->permissions_overrider_manager);
 
@@ -65,7 +67,7 @@ class ForgeAccessTest extends TestCase
         $this->assertTrue($forge_access->doesPlatformRequireLogin());
     }
 
-    public function testLoginRequirementCanBeOverriddenByThePermissionOverrider() : void
+    public function testLoginRequirementCanBeOverriddenByThePermissionOverrider(): void
     {
         $forge_access = new \ForgeAccess($this->permissions_overrider_manager);
 

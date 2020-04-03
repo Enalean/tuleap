@@ -38,7 +38,8 @@ use UGroupDao;
 
 class BackendSVNTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalSVNPollution;
+    use MockeryPHPUnitIntegration;
+    use GlobalSVNPollution;
 
     /**
      * @var MockInterface|BackendSVN
@@ -48,7 +49,7 @@ class BackendSVNTest extends TestCase
     /**
      * @before
      */
-    public function createInstance() : void
+    public function createInstance(): void
     {
         $this->backend                         = Mockery::mock(BackendSVN::class)->makePartial()->shouldAllowMockingProtectedMethods();
     }

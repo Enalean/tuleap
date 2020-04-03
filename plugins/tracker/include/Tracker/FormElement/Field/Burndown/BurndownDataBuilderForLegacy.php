@@ -156,7 +156,7 @@ class BurndownDataBuilderForLegacy
         return $user_burndown_data;
     }
 
-    private function getTimePeriod(TimePeriodWithoutWeekEnd $time_period) : TimePeriodWithoutWeekEnd
+    private function getTimePeriod(TimePeriodWithoutWeekEnd $time_period): TimePeriodWithoutWeekEnd
     {
         if ($time_period->getStartDate() === null) {
             return TimePeriodWithoutWeekEnd::buildFromDuration($_SERVER['REQUEST_TIME'], $time_period->getDuration());

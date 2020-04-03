@@ -35,14 +35,14 @@ final class User_ForgeUserGroupFactoryTest extends \PHPUnit\Framework\TestCase
      */
     protected $factory;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->dao     = \Mockery::spy(\UserGroupDao::class);
         $this->factory = new User_ForgeUserGroupFactory($this->dao);
     }
 
-    public function testItReturnsEmptyArrayIfNoResultsInDb() : void
+    public function testItReturnsEmptyArrayIfNoResultsInDb(): void
     {
         $this->dao->shouldReceive('getAllForgeUGroups')->andReturns(false);
         $all = $this->factory->getAllForgeUserGroups();
@@ -50,7 +50,7 @@ final class User_ForgeUserGroupFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertCount(0, $all);
     }
 
-    public function testItReturnsArrayOfUserGroups() : void
+    public function testItReturnsArrayOfUserGroups(): void
     {
         $data = array(
             array(
@@ -96,7 +96,7 @@ final class User_ForgeUserGroupFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('whatever gbgf', $third->getDescription());
     }
 
-    public function testItGetsForgeUGroup() : void
+    public function testItGetsForgeUGroup(): void
     {
         $user_group_id = 105;
         $row = array(
@@ -114,7 +114,7 @@ final class User_ForgeUserGroupFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('user group', $ugroup->getDescription());
     }
 
-    public function testItThrowsExceptionIfUGroupNotFound() : void
+    public function testItThrowsExceptionIfUGroupNotFound(): void
     {
         $this->expectException(\User_UserGroupNotFoundException::class);
 
@@ -125,7 +125,7 @@ final class User_ForgeUserGroupFactoryTest extends \PHPUnit\Framework\TestCase
         $this->factory->getForgeUserGroupById($user_group_id);
     }
 
-    public function testItCreatesForgeUGroup() : void
+    public function testItCreatesForgeUGroup(): void
     {
         $name        = 'my group';
         $description = 'my desc';
@@ -140,7 +140,7 @@ final class User_ForgeUserGroupFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('my desc', $ugroup->getDescription());
     }
 
-    public function testItThrowsExceptionIfUGroupNameExists() : void
+    public function testItThrowsExceptionIfUGroupNameExists(): void
     {
         $name        = 'my group';
         $description = 'my desc';

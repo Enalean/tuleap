@@ -27,7 +27,7 @@ final class EmailDoesNotMatchUserTest extends \PHPUnit\Framework\TestCase
     /** @var EmailDoesNotMatchUser */
     private $user;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->user = new EmailDoesNotMatchUser(
             new \PFUser(['user_name' => 'cstevens', 'language_id' => 'en']),
@@ -37,17 +37,17 @@ final class EmailDoesNotMatchUserTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItReturnsFalseWhenActionIsCreate() : void
+    public function testItReturnsFalseWhenActionIsCreate(): void
     {
         $this->assertFalse($this->user->isActionAllowed('create'));
     }
 
-    public function testItReturnsFalseWhenActionIsActivate() : void
+    public function testItReturnsFalseWhenActionIsActivate(): void
     {
         $this->assertFalse($this->user->isActionAllowed('activate'));
     }
 
-    public function testItReturnsFalseWhenActionIsMap() : void
+    public function testItReturnsFalseWhenActionIsMap(): void
     {
         $this->assertTrue($this->user->isActionAllowed('map'));
     }

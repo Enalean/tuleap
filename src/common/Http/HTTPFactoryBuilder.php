@@ -33,17 +33,17 @@ use Psr\Http\Message\UriFactoryInterface;
 
 final class HTTPFactoryBuilder
 {
-    public static function requestFactory() : RequestFactoryInterface
+    public static function requestFactory(): RequestFactoryInterface
     {
         return new RequestFactory();
     }
 
-    public static function responseFactory() : ResponseFactoryInterface
+    public static function responseFactory(): ResponseFactoryInterface
     {
         return new ResponseFactory();
     }
 
-    public static function streamFactory() : StreamFactoryInterface
+    public static function streamFactory(): StreamFactoryInterface
     {
         return new StreamFactory();
     }

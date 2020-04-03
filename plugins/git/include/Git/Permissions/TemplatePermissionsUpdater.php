@@ -140,7 +140,8 @@ class TemplatePermissionsUpdater
             $rewind_ugroup_ids = $this->getUgroupIdsForPermission($ugroup_ids, Git::DEFAULT_PERM_WPLUS);
         }
 
-        if ($this->isDisablingFineGrainedPermissions($project, $enable_fine_grained_permissions)
+        if (
+            $this->isDisablingFineGrainedPermissions($project, $enable_fine_grained_permissions)
             && empty($write_ugroup_ids)
         ) {
             $GLOBALS['Response']->addFeedback(
@@ -191,13 +192,15 @@ class TemplatePermissionsUpdater
         $added_tags_permissions     = array();
         $added_branches_permissions = array();
 
-        if ($this->isEnablingFineGrainedPermissions($project, $enable_fine_grained_permissions) &&
+        if (
+            $this->isEnablingFineGrainedPermissions($project, $enable_fine_grained_permissions) &&
             count($current_permissions) === 0
         ) {
             $added_tags_permissions     = $this->default_fine_grained_factory->getDefaultTagsFineGrainedPermissionsForProject($project);
             $added_branches_permissions = $this->default_fine_grained_factory->getDefaultBranchesFineGrainedPermissionsForProject($project);
         } else {
-            if ($enable_fine_grained_permissions &&
+            if (
+                $enable_fine_grained_permissions &&
                 ! $this->isEnablingFineGrainedPermissions($project, $enable_fine_grained_permissions)
             ) {
                 $updated_permissions = $this->default_fine_grained_factory->getUpdatedPermissionsFromRequest(

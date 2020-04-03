@@ -35,7 +35,7 @@ class Tracker_SharedFormElementFactoryTest extends \PHPUnit\Framework\TestCase /
      */
     private $tracker;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->project = Mockery::mock(Project::class);
         $this->tracker = Mockery::mock(Tracker::class);
@@ -47,7 +47,7 @@ class Tracker_SharedFormElementFactoryTest extends \PHPUnit\Framework\TestCase /
         $GLOBALS['Language']->shouldReceive('getText');
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         unset($GLOBALS['Language']);
         parent::tearDown();

@@ -32,7 +32,7 @@ final class ProjectImportCleanupUserCreatorFromAdministratorsTest extends TestCa
 {
     use MockeryPHPUnitIntegration;
 
-    public function testValuesHoldByTheEventCanBeAccessed() : void
+    public function testValuesHoldByTheEventCanBeAccessed(): void
     {
         $creator = Mockery::mock(PFUser::class);
         $ugroup  = Mockery::mock(ProjectUGroup::class);
@@ -43,7 +43,7 @@ final class ProjectImportCleanupUserCreatorFromAdministratorsTest extends TestCa
         $this->assertSame($ugroup, $event->getUGroupAdministrator());
     }
 
-    public function testOnlyProjectAdminUGroupAreAccepted() : void
+    public function testOnlyProjectAdminUGroupAreAccepted(): void
     {
         $ugroup  = Mockery::mock(ProjectUGroup::class);
         $ugroup->shouldReceive('getId')->andReturn(ProjectUGroup::PROJECT_MEMBERS);

@@ -25,7 +25,7 @@ final class Cardwall_OnTop_Config_Command_DeleteMappingFieldsTest extends \PHPUn
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -57,7 +57,7 @@ final class Cardwall_OnTop_Config_Command_DeleteMappingFieldsTest extends \PHPUn
         $this->command   = new Cardwall_OnTop_Config_Command_DeleteMappingFields($tracker, $this->dao, $this->value_dao, $tracker_factory, $existing_mappings);
     }
 
-    public function testItDeletesOnlyCustomMappings() : void
+    public function testItDeletesOnlyCustomMappings(): void
     {
         $request = new HTTPRequest();
         $request->set('custom_mapping', array('13' => '1', '42' => 0, '69' => 0));

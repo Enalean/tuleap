@@ -224,8 +224,10 @@ function _requiredAuthorityForPagename($access, $pagename)
 {
     static $permcache = array();
 
-    if (array_key_exists($pagename, $permcache)
-        and array_key_exists($access, $permcache[$pagename])) {
+    if (
+        array_key_exists($pagename, $permcache)
+        and array_key_exists($access, $permcache[$pagename])
+    ) {
         return $permcache[$pagename][$access];
     }
 
@@ -516,7 +518,7 @@ class PagePermission
     {
         foreach ($this->perm as $access => $groups) {
             foreach ($groups as $group => $bool) {
-                $this->perm[$access][$group] = (boolean) $bool;
+                $this->perm[$access][$group] = (bool) $bool;
             }
         }
     }
@@ -791,42 +793,60 @@ class PagePermission
         $perm = $this->perm;
         // get effective user and group
         $s = '---------+';
-        if (isset($perm['view'][$owner]) or
-            (isset($perm['view'][ACL_AUTHENTICATED]) and $request->_user->isAuthenticated())) {
+        if (
+            isset($perm['view'][$owner]) or
+            (isset($perm['view'][ACL_AUTHENTICATED]) and $request->_user->isAuthenticated())
+        ) {
             $s[0] = 'r';
         }
-        if (isset($perm['edit'][$owner]) or
-            (isset($perm['edit'][ACL_AUTHENTICATED]) and $request->_user->isAuthenticated())) {
+        if (
+            isset($perm['edit'][$owner]) or
+            (isset($perm['edit'][ACL_AUTHENTICATED]) and $request->_user->isAuthenticated())
+        ) {
             $s[1] = 'w';
         }
-        if (isset($perm['change'][$owner]) or
-            (isset($perm['change'][ACL_AUTHENTICATED]) and $request->_user->isAuthenticated())) {
+        if (
+            isset($perm['change'][$owner]) or
+            (isset($perm['change'][ACL_AUTHENTICATED]) and $request->_user->isAuthenticated())
+        ) {
             $s[2] = 'x';
         }
         if (!empty($group)) {
-            if (isset($perm['view'][$group]) or
-                (isset($perm['view'][ACL_AUTHENTICATED]) and $request->_user->isAuthenticated())) {
+            if (
+                isset($perm['view'][$group]) or
+                (isset($perm['view'][ACL_AUTHENTICATED]) and $request->_user->isAuthenticated())
+            ) {
                 $s[3] = 'r';
             }
-            if (isset($perm['edit'][$group]) or
-                (isset($perm['edit'][ACL_AUTHENTICATED]) and $request->_user->isAuthenticated())) {
+            if (
+                isset($perm['edit'][$group]) or
+                (isset($perm['edit'][ACL_AUTHENTICATED]) and $request->_user->isAuthenticated())
+            ) {
                 $s[4] = 'w';
             }
-            if (isset($perm['change'][$group]) or
-                (isset($perm['change'][ACL_AUTHENTICATED]) and $request->_user->isAuthenticated())) {
+            if (
+                isset($perm['change'][$group]) or
+                (isset($perm['change'][ACL_AUTHENTICATED]) and $request->_user->isAuthenticated())
+            ) {
                 $s[5] = 'x';
             }
         }
-        if (isset($perm['view'][ACL_EVERY]) or
-            (isset($perm['view'][ACL_AUTHENTICATED]) and $request->_user->isAuthenticated())) {
+        if (
+            isset($perm['view'][ACL_EVERY]) or
+            (isset($perm['view'][ACL_AUTHENTICATED]) and $request->_user->isAuthenticated())
+        ) {
             $s[6] = 'r';
         }
-        if (isset($perm['edit'][ACL_EVERY]) or
-            (isset($perm['edit'][ACL_AUTHENTICATED]) and $request->_user->isAuthenticated())) {
+        if (
+            isset($perm['edit'][ACL_EVERY]) or
+            (isset($perm['edit'][ACL_AUTHENTICATED]) and $request->_user->isAuthenticated())
+        ) {
             $s[7] = 'w';
         }
-        if (isset($perm['change'][ACL_EVERY]) or
-            (isset($perm['change'][ACL_AUTHENTICATED]) and $request->_user->isAuthenticated())) {
+        if (
+            isset($perm['change'][ACL_EVERY]) or
+            (isset($perm['change'][ACL_AUTHENTICATED]) and $request->_user->isAuthenticated())
+        ) {
             $s[8] = 'x';
         }
         return $s;

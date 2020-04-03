@@ -19,7 +19,7 @@
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Project\Admin\DescriptionFields;
 
@@ -30,9 +30,10 @@ use Tuleap\GlobalLanguageMock;
 
 final class DescriptionFieldAdminPresenterBuilderTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
-    public function testItBuildsAListOfFields() : void
+    public function testItBuildsAListOfFields(): void
     {
         $row = [
             'group_desc_id' => 1,

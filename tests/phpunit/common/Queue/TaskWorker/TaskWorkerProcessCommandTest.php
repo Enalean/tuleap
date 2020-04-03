@@ -34,17 +34,18 @@ use Tuleap\Queue\WorkerEvent;
 final class TaskWorkerProcessCommandTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var \org\bovigo\vfs\vfsStreamDirectory
      */
     private $filesystem_root;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->filesystem_root = vfsStream::setup();
     }
 
-    public function testEventIsDispatchedForProcessing() : void
+    public function testEventIsDispatchedForProcessing(): void
     {
         $event_dispatcher = Mockery::mock(EventDispatcherInterface::class);
         $logger           = Mockery::mock(\Psr\Log\LoggerInterface::class);
@@ -54,7 +55,7 @@ final class TaskWorkerProcessCommandTest extends TestCase
         $event_serialized_string = '{"event_name":"event.name","payload":{"id":2545}}';
         file_put_contents($path_to_file, $event_serialized_string);
 
-        $logger->shouldReceive('debug')->with(Mockery::on(static function (string $message) use ($event_serialized_string) : bool {
+        $logger->shouldReceive('debug')->with(Mockery::on(static function (string $message) use ($event_serialized_string): bool {
             return strpos($message, $event_serialized_string) !== false;
         }));
         $event_dispatcher->shouldReceive('dispatch')->with(Mockery::type(WorkerEvent::class));
@@ -63,7 +64,7 @@ final class TaskWorkerProcessCommandTest extends TestCase
         $command_tester->execute(['input_file' => $path_to_file]);
     }
 
-    public function testEventNotProperlyJSONSerializedIsRejected() : void
+    public function testEventNotProperlyJSONSerializedIsRejected(): void
     {
         $logger           = Mockery::mock(\Psr\Log\LoggerInterface::class);
         $command          = new TaskWorkerProcessCommand(Mockery::mock(EventDispatcherInterface::class), $logger);

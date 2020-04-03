@@ -28,7 +28,7 @@ class ArtifactTimeframeHelperTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testItShouldReturnFalseIfSemanticIsNotDefined() : void
+    public function testItShouldReturnFalseIfSemanticIsNotDefined(): void
     {
         $semantic_timeframe_builder = Mockery::mock(SemanticTimeframeBuilder::class);
         $timeframe_builder          = Mockery::mock(TimeframeBuilder::class);
@@ -46,7 +46,7 @@ class ArtifactTimeframeHelperTest extends TestCase
         $this->assertFalse($artifact_timeframe_helper->artifactHelpShouldBeShownToUser($user, $duration_field));
     }
 
-    public function testItShouldReturnFalseIfNotUsedInSemantics() : void
+    public function testItShouldReturnFalseIfNotUsedInSemantics(): void
     {
         $semantic_timeframe_builder = Mockery::mock(SemanticTimeframeBuilder::class);
         $timeframe_builder          = Mockery::mock(TimeframeBuilder::class);
@@ -69,7 +69,7 @@ class ArtifactTimeframeHelperTest extends TestCase
         $this->assertFalse($artifact_timeframe_helper->artifactHelpShouldBeShownToUser($user, $duration_field));
     }
 
-    public function testItShouldReturnFalseIfUserCannotViewStartDate() : void
+    public function testItShouldReturnFalseIfUserCannotViewStartDate(): void
     {
         $semantic_timeframe_builder = Mockery::mock(SemanticTimeframeBuilder::class);
         $timeframe_builder          = Mockery::mock(TimeframeBuilder::class);
@@ -92,7 +92,7 @@ class ArtifactTimeframeHelperTest extends TestCase
         $this->assertFalse($artifact_timeframe_helper->artifactHelpShouldBeShownToUser($user, $duration_field));
     }
 
-    public function testItShouldReturnTrueIfUserShouldBeShownArtifactHelperForDuration() : void
+    public function testItShouldReturnTrueIfUserShouldBeShownArtifactHelperForDuration(): void
     {
         $semantic_timeframe_builder = Mockery::mock(SemanticTimeframeBuilder::class);
         $timeframe_builder          = Mockery::mock(TimeframeBuilder::class);
@@ -115,7 +115,7 @@ class ArtifactTimeframeHelperTest extends TestCase
         $this->assertTrue($artifact_timeframe_helper->artifactHelpShouldBeShownToUser($user, $duration_field));
     }
 
-    public function testItShouldReturnTrueIfUserShouldBeShownArtifactHelperForEndDate() : void
+    public function testItShouldReturnTrueIfUserShouldBeShownArtifactHelperForEndDate(): void
     {
         $semantic_timeframe_builder = Mockery::mock(SemanticTimeframeBuilder::class);
         $timeframe_builder          = Mockery::mock(TimeframeBuilder::class);

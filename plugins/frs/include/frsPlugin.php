@@ -115,11 +115,13 @@ class frsPlugin extends \Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         $file = $event->getFile();
         $current_time = new DateTimeImmutable();
         $dao = new FileOngoingUploadDao();
-        if (! empty($dao->searchFileOngoingUploadByReleaseIDNameAndExpirationDate(
-            $file->getRelease()->getReleaseID(),
-            $file->getFileName(),
-            $current_time->getTimestamp()
-        ))) {
+        if (
+            ! empty($dao->searchFileOngoingUploadByReleaseIDNameAndExpirationDate(
+                $file->getRelease()->getReleaseID(),
+                $file->getFileName(),
+                $current_time->getTimestamp()
+            ))
+        ) {
             $event->setIsFileBeingUploadedToTrue();
         }
     }

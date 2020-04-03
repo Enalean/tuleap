@@ -40,7 +40,7 @@ class CommitMetadataRetrieverTest extends TestCase
      */
     private $user_manager;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->status_retriever = \Mockery::mock(CommitStatusRetriever::class);
         $this->user_manager     = \Mockery::mock(\UserManager::class);

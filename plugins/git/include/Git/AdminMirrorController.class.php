@@ -184,7 +184,8 @@ class Git_AdminMirrorController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
                 $GLOBALS['Response']->redirect(GIT_SITE_ADMIN_BASE_URL . '?view=mirrors_restriction&action=manage-allowed-projects&mirror_id=' . $mirror->id);
             }
         } else {
-            if ($this->git_mirror_resource_restrictor->setMirrorRestricted($mirror) &&
+            if (
+                $this->git_mirror_resource_restrictor->setMirrorRestricted($mirror) &&
                 $this->git_mirror_mapper->deleteFromDefaultMirrors($mirror->id)
             ) {
                 $GLOBALS['Response']->addFeedback(Feedback::INFO, dgettext('tuleap-git', 'Now, only the allowed projects are able to use this mirror. Projects with at least one repository using this mirror have been automatically added to the list of allowed projects.'));
@@ -240,7 +241,8 @@ class Git_AdminMirrorController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
 
     private function revokeProjectsFromMirror(Git_Mirror_Mirror $mirror, $project_ids)
     {
-        if (count($project_ids) > 0 &&
+        if (
+            count($project_ids) > 0 &&
             $this->git_mirror_resource_restrictor->revokeProjectsFromMirror($mirror, $project_ids) &&
             $this->git_mirror_mapper->deleteFromDefaultMirrorsInProjects($mirror, $project_ids)
         ) {

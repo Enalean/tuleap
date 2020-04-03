@@ -92,7 +92,7 @@ class HiddenFieldsetsDetector
         return false;
     }
 
-    private function artifactIsEligibleToHiddenFieldsets(Tracker_Artifact $artifact) : bool
+    private function artifactIsEligibleToHiddenFieldsets(Tracker_Artifact $artifact): bool
     {
         $workflow = $artifact->getWorkflow();
 

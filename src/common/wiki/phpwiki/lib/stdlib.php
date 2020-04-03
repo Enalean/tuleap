@@ -469,9 +469,11 @@ function LinkImage($url, $alt = false)
         if (($width  = $link->getAttr('width')) and ($height = $link->getAttr('height'))) {
             //$width  = (int) $width; // px or % or other suffix
             //$height = (int) $height;
-            if (($width < 3 and $height < 10) or
+            if (
+                ($width < 3 and $height < 10) or
                 ($height < 3 and $width < 20) or
-                ($height < 7 and $width < 7)) {
+                ($height < 7 and $width < 7)
+            ) {
                 trigger_error(_("Invalid image size"), E_USER_WARNING);
                 return '';
             }
@@ -479,9 +481,11 @@ function LinkImage($url, $alt = false)
             if (!DISABLE_GETIMAGESIZE and ($size = @getimagesize($url))) {
                 $width  = $size[0];
                 $height = $size[1];
-                if (($width < 3 and $height < 10)
+                if (
+                    ($width < 3 and $height < 10)
                     or ($height < 3 and $width < 20)
-                    or ($height < 7 and $width < 7)) {
+                    or ($height < 7 and $width < 7)
+                ) {
                     trigger_error(_("Invalid image size"), E_USER_WARNING);
                     return '';
                 }
@@ -617,8 +621,10 @@ function LinkPhpwikiURL($url, $text = '', $basepage = false)
     }
     $qargs = $m[2];
 
-    if (empty($pagename) &&
-        preg_match('/^(diff|edit|links|info)=([^&]+)$/', $qargs, $m)) {
+    if (
+        empty($pagename) &&
+        preg_match('/^(diff|edit|links|info)=([^&]+)$/', $qargs, $m)
+    ) {
         // Convert old style links (to not break diff links in
         // RecentChanges).
         $pagename = urldecode($m[2]);
@@ -885,8 +891,10 @@ class WikiPageName
         }
 
         // disallow some chars only on file and cvs
-        if ((DATABASE_TYPE == 'cvs' or DATABASE_TYPE == 'file')
-            and preg_match('/(:|\.\.)/', $pagename, $m)) {
+        if (
+            (DATABASE_TYPE == 'cvs' or DATABASE_TYPE == 'file')
+            and preg_match('/(:|\.\.)/', $pagename, $m)
+        ) {
             $this->_warnings[] = sprintf(_("Illegal chars %s removed"), $m[1]);
             $pagename = str_replace('..', '', $pagename);
             $pagename = str_replace(':', '', $pagename);
@@ -930,8 +938,10 @@ function ConvertOldMarkup($text, $markup_type = "block")
     // also known to crash, even with Apache1.
     $debug_skip = false;
     // I suspect this only to crash with Apache2 and IIS.
-    if (in_array(php_sapi_name(), array('apache2handler','apache2filter','isapi'))
-        and preg_match("/plugin CreateToc/", $text)) {
+    if (
+        in_array(php_sapi_name(), array('apache2handler','apache2filter','isapi'))
+        and preg_match("/plugin CreateToc/", $text)
+    ) {
         trigger_error(_("The CreateTocPlugin is not yet old markup compatible! ")
                      . _("Please remove the CreateToc line to be able to reformat this page to old markup. ")
                      . _("Skipped."), E_USER_WARNING);
@@ -1298,31 +1308,37 @@ function Rfc1123DateTime($time = false)
 function ParseRfc1123DateTime($timestr)
 {
     $timestr = trim($timestr);
-    if (preg_match(
-        '/^ \w{3},\s* (\d{1,2}) \s* (\w{3}) \s* (\d{4}) \s*'
+    if (
+        preg_match(
+            '/^ \w{3},\s* (\d{1,2}) \s* (\w{3}) \s* (\d{4}) \s*'
                    . '(\d\d):(\d\d):(\d\d) \s* GMT $/ix',
-        $timestr,
-        $m
-    )) {
+            $timestr,
+            $m
+        )
+    ) {
         list(, $mday, $mon, $year, $hh, $mm, $ss) = $m;
-    } elseif (preg_match(
-        '/^ \w+,\s* (\d{1,2})-(\w{3})-(\d{2}|\d{4}) \s*'
+    } elseif (
+        preg_match(
+            '/^ \w+,\s* (\d{1,2})-(\w{3})-(\d{2}|\d{4}) \s*'
                        . '(\d\d):(\d\d):(\d\d) \s* GMT $/ix',
-        $timestr,
-        $m
-    )) {
+            $timestr,
+            $m
+        )
+    ) {
         list(, $mday, $mon, $year, $hh, $mm, $ss) = $m;
         if ($year < 70) {
             $year += 2000;
         } elseif ($year < 100) {
             $year += 1900;
         }
-    } elseif (preg_match(
-        '/^\w+\s* (\w{3}) \s* (\d{1,2}) \s*'
+    } elseif (
+        preg_match(
+            '/^\w+\s* (\w{3}) \s* (\d{1,2}) \s*'
                        . '(\d\d):(\d\d):(\d\d) \s* (\d{4})$/ix',
-        $timestr,
-        $m
-    )) {
+            $timestr,
+            $m
+        )
+    ) {
         list(, $mon, $mday, $hh, $mm, $ss, $year) = $m;
     } else {
         // Parse failed.
@@ -1622,10 +1638,12 @@ class ListRegexExpand
     public function listMatchCallback($item, $key)
     {
         $quoted = str_replace('/', '\/', $item);
-        if (preg_match(
-            '/' . $this->match . ($this->case_sensitive ? '/' : '/i'),
-            $quoted
-        )) {
+        if (
+            preg_match(
+                '/' . $this->match . ($this->case_sensitive ? '/' : '/i'),
+                $quoted
+            )
+        ) {
             unset($this->list[$this->index]);
             $this->list[] = $item;
         }
@@ -2154,14 +2172,16 @@ function extractSection($section, $content, $page, $quiet = false, $sectionhead 
 {
     $qsection = preg_replace('/\s+/', '\s+', preg_quote($section, '/'));
 
-    if (preg_match(
-        "/ ^(!{1,})\\s*$qsection" // section header
+    if (
+        preg_match(
+            "/ ^(!{1,})\\s*$qsection" // section header
                    . "  \\s*$\\n?"           // possible blank lines
                    . "  ( (?: ^.*\\n? )*? )" // some lines
                    . "  (?= ^\\1 | \\Z)/xm", // sec header (same or higher level) (or EOF)
-        implode("\n", $content),
-        $match
-    )) {
+            implode("\n", $content),
+            $match
+        )
+    ) {
         // Strip trailing blanks lines and ---- <hr>s
         $text = preg_replace("/\\s*^-{4,}\\s*$/m", "", $match[2]);
         if ($sectionhead) {
@@ -2220,7 +2240,7 @@ function longer_timeout($secs = 30)
     $timeout = @ini_get("max_execution_time") ? ini_get("max_execution_time") : 30;
     $timeleft = $timeout - $GLOBALS['RUNTIMER']->getTime();
     if ($timeleft < $secs) {
-        @set_time_limit(max($timeout, (integer) ($secs + $timeleft)));
+        @set_time_limit(max($timeout, (int) ($secs + $timeleft)));
     }
 }
 

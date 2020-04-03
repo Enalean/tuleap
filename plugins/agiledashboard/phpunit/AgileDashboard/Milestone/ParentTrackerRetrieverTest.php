@@ -32,6 +32,7 @@ use Tracker;
 final class ParentTrackerRetrieverTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var ParentTrackerRetriever
      */

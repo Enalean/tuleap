@@ -85,7 +85,8 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
     protected function validate(Tracker_Artifact $artifact, $value)
     {
         $last_changeset_value = $this->getLastChangesetValue($artifact);
-        if ($last_changeset_value !== null
+        if (
+            $last_changeset_value !== null
             && $last_changeset_value->getValue() === $value
         ) {
             return true;
@@ -219,7 +220,8 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
         $submitted_values = array()
     ) {
         $html = '';
-        if (is_array($submitted_values)
+        if (
+            is_array($submitted_values)
             && isset($submitted_values[$this->getId()])
             && $submitted_values[$this->getId()] !== false
         ) {

@@ -25,7 +25,8 @@ use Mockery;
 class WholeInstanceKeysAggregatorTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    public function testItUsesAllKeyProviders() : void
+
+    public function testItUsesAllKeyProviders(): void
     {
         $gitolite_admin_key = Mockery::spy('Tuleap\Git\Gitolite\SSHKey\Provider\GitoliteAdmin');
         $gerrit_server_keys = Mockery::spy('Tuleap\Git\Gitolite\SSHKey\Provider\GerritServer');

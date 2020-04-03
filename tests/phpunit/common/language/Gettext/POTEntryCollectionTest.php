@@ -24,14 +24,14 @@ namespace Tuleap\Language\Gettext;
 
 final class POTEntryCollectionTest extends \PHPUnit\Framework\TestCase
 {
-    public function testItHasNoEntriesByDefault() : void
+    public function testItHasNoEntriesByDefault(): void
     {
         $collection = new POTEntryCollection('mydomain');
 
         $this->assertEquals([], $collection->getEntries());
     }
 
-    public function testItAddsEntries() : void
+    public function testItAddsEntries(): void
     {
         $collection = new POTEntryCollection('mydomain');
 
@@ -43,7 +43,7 @@ final class POTEntryCollectionTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(array($entry1, $entry2), $collection->getEntries());
     }
 
-    public function testItDoesNotAddEntryIfNotSameDomain() : void
+    public function testItDoesNotAddEntryIfNotSameDomain(): void
     {
         $collection = new POTEntryCollection('mydomain');
 
@@ -53,7 +53,7 @@ final class POTEntryCollectionTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals([], $collection->getEntries());
     }
 
-    public function testItDoesNotAddTwiceTheSameEntryInSameDomain() : void
+    public function testItDoesNotAddTwiceTheSameEntryInSameDomain(): void
     {
         $collection = new POTEntryCollection('mydomain');
 

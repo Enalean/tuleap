@@ -89,7 +89,8 @@ class HistoryValueFormatter
     {
         $value = $this->getReadersForRepository($repository);
 
-        if (! $repository->isMigratedToGerrit() &&
+        if (
+            ! $repository->isMigratedToGerrit() &&
             ! $this->fine_grained_retriever->doesRepositoryUseFineGrainedPermissions($repository)
         ) {
             $value .= $this->getWritersForRepository($repository);

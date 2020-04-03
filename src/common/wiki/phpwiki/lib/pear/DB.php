@@ -569,8 +569,10 @@ class DB_result
                     }
                 }
             }
-            if ($this->row_counter >= (
-                    $this->limit_from + $this->limit_count)) {
+            if (
+                $this->row_counter >= (
+                    $this->limit_from + $this->limit_count)
+            ) {
                 if ($this->autofree) {
                     $this->free();
                 }
@@ -652,8 +654,10 @@ class DB_result
                     }
                 }
             }
-            if ($this->row_counter >= (
-                    $this->limit_from + $this->limit_count)) {
+            if (
+                $this->row_counter >= (
+                    $this->limit_from + $this->limit_count)
+            ) {
                 if ($this->autofree) {
                     $this->free();
                 }

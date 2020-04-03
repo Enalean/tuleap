@@ -22,17 +22,17 @@ declare(strict_types=1);
 
 class b201904010950_remove_json_plugin_hooks_cache extends ForgeUpgrade_Bucket // phpcs:ignore
 {
-    public function description() : string
+    public function description(): string
     {
         return 'Remove forgeconfig setting about plugin hooks cache';
     }
 
-    public function preUp() : void
+    public function preUp(): void
     {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() : void
+    public function up(): void
     {
         $sql = "DELETE FROM forgeconfig WHERE name = 'plugin_hooks_cache_type'";
 

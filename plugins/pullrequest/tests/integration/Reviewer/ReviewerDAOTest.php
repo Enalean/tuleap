@@ -52,7 +52,7 @@ final class ReviewerDAOTest extends TestCase
         );
     }
 
-    public static function tearDownAfterClass() : void
+    public static function tearDownAfterClass(): void
     {
         $db                       = DBFactory::getMainTuleapDBConnection()->getDB();
 

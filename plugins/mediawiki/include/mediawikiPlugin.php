@@ -281,8 +281,10 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
     public function cssFile($params): void
     {
         // Only show the stylesheet if we're actually in the Mediawiki pages.
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
-            strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0) {
+        if (
+            strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
+            strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0
+        ) {
             echo '<link rel="stylesheet" type="text/css" href="' . $this->getAssets()->getFileURL('style.css') . '" />';
         }
     }
@@ -307,7 +309,8 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
             exit;
         }
 
-        if ((! $project->isPublic() || $user->isRestricted())
+        if (
+            (! $project->isPublic() || $user->isRestricted())
             && ! $project->userIsMember()
             && ! $user->isSuperUser()
             && ! $this->doesUserHavePermission($user)
@@ -371,8 +374,10 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
 
     public function register_project_creation($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        if (! $params['project_creation_data']->projectShouldInheritFromTemplate()
-            && ! $this->serviceIsUsedInTemplate($params['group_id'])) {
+        if (
+            ! $params['project_creation_data']->projectShouldInheritFromTemplate()
+            && ! $this->serviceIsUsedInTemplate($params['group_id'])
+        ) {
             return;
         }
 
@@ -389,10 +394,12 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
         }
     }
 
-    public function has_user_been_delegated_access(DelegatedUserAccessForProject $event) : void//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function has_user_been_delegated_access(DelegatedUserAccessForProject $event): void//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        if (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 &&
-                $this->doesUserHavePermission($event->getUser())) {
+        if (
+            isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 &&
+                $this->doesUserHavePermission($event->getUser())
+        ) {
             $event->enableAccessToProjectToTheUser();
         }
     }

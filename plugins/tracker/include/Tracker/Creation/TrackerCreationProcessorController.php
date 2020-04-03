@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation;
 
@@ -161,7 +161,7 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
     /**
      * @inheritDoc
      */
-    public function getProject(array $variables) : Project
+    public function getProject(array $variables): Project
     {
         return $this->project_manager->getValidProjectByShortNameOrId($variables['project_name']);
     }
@@ -180,7 +180,7 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
         );
     }
 
-    public static function getRouteToSubmissionController(Project $project) : string
+    public static function getRouteToSubmissionController(Project $project): string
     {
         return '/plugins/tracker/' . urlencode($project->getUnixNameLowerCase()) . '/new-information';
     }

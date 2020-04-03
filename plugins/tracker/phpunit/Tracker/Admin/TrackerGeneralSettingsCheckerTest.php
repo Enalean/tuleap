@@ -19,7 +19,7 @@
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Tracker\Admin;
 
@@ -30,6 +30,7 @@ use Tuleap\Tracker\TrackerIsInvalidException;
 class TrackerGeneralSettingsCheckerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var TrackerGeneralSettingsChecker
      */

@@ -50,7 +50,7 @@ class AccentColorBuilderTest extends TestCase
     /** @var PHPUnit_Framework_MockObject_MockObject */
     private $decorator;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

@@ -438,4 +438,4 @@ class Gradient
             $prevcolnum = $colnum;
         }
     }
-} // Class
+}

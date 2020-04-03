@@ -151,7 +151,7 @@ final class QueryBuilderVisitorTest extends TestCase
             new QueryBuilder\LesserThanOrEqualFieldComparisonVisitor(),
             new QueryBuilder\GreaterThanOrEqualFieldComparisonVisitor(),
             new QueryBuilder\BetweenFieldComparisonVisitor(),
-            new QueryBuilder\InFieldComparisonVisitor,
+            new QueryBuilder\InFieldComparisonVisitor(),
             new QueryBuilder\NotInFieldComparisonVisitor(),
             new QueryBuilder\SearchableVisitor($formelement_factory),
             new QueryBuilder\MetadataEqualComparisonFromWhereBuilder(new CommentFromWhereBuilder()),

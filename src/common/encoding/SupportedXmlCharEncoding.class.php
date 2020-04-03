@@ -55,7 +55,8 @@ class Encoding_SupportedXmlCharEncoding
         $length = strlen($string);
         for ($i = 0; $i < $length; $i++) {
             $current = ord($string[$i]);
-            if ((($current >= 0x20) && ($current <= 0xD7FF)) ||
+            if (
+                (($current >= 0x20) && ($current <= 0xD7FF)) ||
                 (($current >= 0xE000) && ($current <= 0xFFFD)) ||
                 (($current >= 0x10000) && ($current <= 0x10FFFF)) ||
                 $current == 0x9 ||

@@ -43,6 +43,7 @@ use TrackerManager;
 class Tracker_FormElement_Field_BurndownTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerManager
      */

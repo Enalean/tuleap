@@ -93,7 +93,7 @@ class AccessKeyPresenterBuilder
                 )
             ),
             new PrefixedSplitTokenSerializer(new PrefixAccessKey()),
-            (new KeyFactory)->getEncryptionKey(),
+            (new KeyFactory())->getEncryptionKey(),
         );
     }
 

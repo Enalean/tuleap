@@ -45,7 +45,7 @@ class TimeframeChecker
         $this->form_element_factory = $form_element_factory;
     }
 
-    public function isATimePeriodBuildableInTracker(Tracker $tracker) : bool
+    public function isATimePeriodBuildableInTracker(Tracker $tracker): bool
     {
         $start_date_field = $this->getStartDateField($tracker);
         $duration_field   = $this->getDurationField($tracker);
@@ -56,7 +56,7 @@ class TimeframeChecker
             && $duration_field->isUsed();
     }
 
-    private function getStartDateField(Tracker $tracker) : ?Tracker_FormElement_Field
+    private function getStartDateField(Tracker $tracker): ?Tracker_FormElement_Field
     {
         return $this->form_element_factory->getFormElementByName(
             $tracker->getId(),
@@ -64,7 +64,7 @@ class TimeframeChecker
         );
     }
 
-    private function getDurationField(Tracker $tracker) : ?Tracker_FormElement_Field
+    private function getDurationField(Tracker $tracker): ?Tracker_FormElement_Field
     {
         return $this->form_element_factory->getFormElementByName(
             $tracker->getId(),

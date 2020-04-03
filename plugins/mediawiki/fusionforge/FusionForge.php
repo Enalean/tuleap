@@ -192,8 +192,10 @@ foreach ($this->data['xhtmlnamespaces'] as $tag => $ns) {
                     // give the edit tab an accesskey, because that's fairly su-
                     // perfluous and conflicts with an accesskey (Ctrl-E) often
                     // used for editing in Safari.
-            if (in_array($action, array( 'edit', 'submit'))
-                && in_array($key, array('edit', 'watch', 'unwatch'))) {
+            if (
+                in_array($action, array( 'edit', 'submit'))
+                && in_array($key, array('edit', 'watch', 'unwatch'))
+            ) {
                 echo $skin->tooltip("ca-$key");
             } else {
                 echo $skin->tooltipAndAccesskey("ca-$key");
@@ -304,7 +306,7 @@ echo htmlspecialchars($item['class']) ?>"
         <?php	} ?>
         <?php
         wfRestoreWarnings();
-    } // end of execute() method
+    }
 
     public function searchBox()
     {

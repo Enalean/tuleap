@@ -166,10 +166,12 @@ class WikiPlugin_CreateToc extends WikiPlugin
         $qheading = $this->_quote($heading);
         for ($j = $start_index; $j < count($content); $j++) {
             if (is_string($content[$j])) {
-                if (preg_match(
-                    "/<$h>$qheading<\/$h>/",
-                    $content[$j]
-                )) {
+                if (
+                    preg_match(
+                        "/<$h>$qheading<\/$h>/",
+                        $content[$j]
+                    )
+                ) {
                     return $j;
                 }
             } elseif (isa($content[$j], 'cached_link')) {
@@ -180,9 +182,11 @@ class WikiPlugin_CreateToc extends WikiPlugin
                     $content[$j] = $content[$j]->asString();
                 }
         // shortcut for single wikiword or link headers
-                if ($content[$j] == $heading
-                and substr($content[$j - 1], -4, 4) == "<$h>"
-                and substr($content[$j + 1], 0, 5) == "</$h>") {
+                if (
+                    $content[$j] == $heading
+                    and substr($content[$j - 1], -4, 4) == "<$h>"
+                    and substr($content[$j + 1], 0, 5) == "</$h>"
+                ) {
                     $hstart = $j - 1;
                     $hend = $j + 1;
                     return $j; // single wikiword
@@ -253,11 +257,13 @@ class WikiPlugin_CreateToc extends WikiPlugin
                 if ($level < 1 or $level > 3) {
                     continue;
                 }
-                if (preg_match(
-                    '/^\s*(!{' . $level . ',' . $level . '})([^!].*)$/',
-                    $content[$i],
-                    $match
-                )) {
+                if (
+                    preg_match(
+                        '/^\s*(!{' . $level . ',' . $level . '})([^!].*)$/',
+                        $content[$i],
+                        $match
+                    )
+                ) {
                     $this->_tocCounter($tocCounter, $level);
                     if (!strstr($content[$i], '#[')) {
                         $s = trim($match[2]);
@@ -308,12 +314,14 @@ class WikiPlugin_CreateToc extends WikiPlugin
                                         $anchorString .= "$counterString - ";
                                     }
                                 }
-                                if ($x = preg_replace(
-                                    '/(<h\d>)(' . $qheading . ')(<\/h\d>)/',
-                                    "\$1$anchorString\$2\$3",
-                                    $x,
-                                    1
-                                )) {
+                                if (
+                                    $x = preg_replace(
+                                        '/(<h\d>)(' . $qheading . ')(<\/h\d>)/',
+                                        "\$1$anchorString\$2\$3",
+                                        $x,
+                                        1
+                                    )
+                                ) {
                                     if ($backlink) {
                                         $x = preg_replace(
                                             '/(<h\d>)(' . $qheading . ')(<\/h\d>)/',
@@ -422,14 +430,16 @@ class WikiPlugin_CreateToc extends WikiPlugin
         if (TOC_FULL_SYNTAX) {
             require_once("lib/InlineParser.php");
         }
-        if ($headers = $this->extractHeaders(
-            $content,
-            $dbi->_markup,
-            $with_toclink,
-            $with_counter,
-            $levels,
-            $basepage
-        )) {
+        if (
+            $headers = $this->extractHeaders(
+                $content,
+                $dbi->_markup,
+                $with_toclink,
+                $with_counter,
+                $levels,
+                $basepage
+            )
+        ) {
             $container     = $list;
             $levelRefs     = array();
             $previousLevel = 3;

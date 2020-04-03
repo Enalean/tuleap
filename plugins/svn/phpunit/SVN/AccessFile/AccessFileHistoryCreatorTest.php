@@ -33,7 +33,9 @@ use Tuleap\SVN\Repository\Repository;
 
 class AccessFileHistoryCreatorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
+
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|SVN_AccessFile_Writer
      */
@@ -150,7 +152,7 @@ class AccessFileHistoryCreatorTest extends TestCase
         $this->creator->create($this->repository, $new_access_file, time(), $this->access_file_writer);
     }
 
-    public function testItThrowsAnExceptionWhenAccessFileSaveFailed() : void
+    public function testItThrowsAnExceptionWhenAccessFileSaveFailed(): void
     {
         $new_access_file     = "[/tags]\n@members = r\n";
         $current_access_file = new AccessFileHistory(

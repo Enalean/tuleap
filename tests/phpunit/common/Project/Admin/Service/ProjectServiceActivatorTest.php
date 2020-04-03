@@ -19,7 +19,7 @@
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\common\Project\Admin\Service;
 
@@ -34,6 +34,7 @@ use Tuleap\Service\ServiceCreator;
 final class ProjectServiceActivatorTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ServiceLinkDataBuilder
      */

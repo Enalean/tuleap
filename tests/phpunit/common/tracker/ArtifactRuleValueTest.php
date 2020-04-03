@@ -24,7 +24,7 @@ declare(strict_types=1);
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 final class ArtifactRuleValueTest extends \PHPUnit\Framework\TestCase
 {
-    public function testApplyTo() : void
+    public function testApplyTo(): void
     {
         $arv = new ArtifactRuleValue('id', 'group_artifact_id', 'source_field', 'source_value', 'target_field', 'target_value');
 
@@ -40,7 +40,7 @@ final class ArtifactRuleValueTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($arv->applyTo('group_artifact_id', 'source_field', 'source_value', 'false_target_field', 'false_target_value'));
     }
 
-    public function testCanApplyTo() : void
+    public function testCanApplyTo(): void
     {
         $arv = new ArtifactRuleValue('id', 'group_artifact_id', 'source_field', 'source_value', 'target_field', 'target_value');
 

@@ -28,13 +28,13 @@ use Tuleap\Http\Server\Authentication\LoginCredentialSet;
 
 final class MetricsAuthCredentialTest extends TestCase
 {
-    public function testCredentialDoesNotMatchWhenNoneWereSet() : void
+    public function testCredentialDoesNotMatchWhenNoneWereSet(): void
     {
         $basic_auth_credential = MetricsAuthCredential::noCredentialSet();
         $this->assertFalse($basic_auth_credential->doesCredentialMatch('username', new ConcealedString('')));
     }
 
-    public function testCredentialMatchesWhenUsernameAndPasswordAreCorrects() : void
+    public function testCredentialMatchesWhenUsernameAndPasswordAreCorrects(): void
     {
         $basic_auth_credential = MetricsAuthCredential::fromLoginCredentialSet(
             new LoginCredentialSet('username', new ConcealedString('password'))
@@ -42,7 +42,7 @@ final class MetricsAuthCredentialTest extends TestCase
         $this->assertTrue($basic_auth_credential->doesCredentialMatch('username', new ConcealedString('password')));
     }
 
-    public function testCredentialDoesNotMatchWhenUsernameIsIncorrect() : void
+    public function testCredentialDoesNotMatchWhenUsernameIsIncorrect(): void
     {
         $basic_auth_credential = MetricsAuthCredential::fromLoginCredentialSet(
             new LoginCredentialSet('wrong', new ConcealedString('password'))
@@ -50,7 +50,7 @@ final class MetricsAuthCredentialTest extends TestCase
         $this->assertFalse($basic_auth_credential->doesCredentialMatch('username', new ConcealedString('password')));
     }
 
-    public function testCredentialDoesNotMatchWhenPasswordIsIncorrect() : void
+    public function testCredentialDoesNotMatchWhenPasswordIsIncorrect(): void
     {
         $basic_auth_credential = MetricsAuthCredential::fromLoginCredentialSet(
             new LoginCredentialSet('username', new ConcealedString('wrong'))

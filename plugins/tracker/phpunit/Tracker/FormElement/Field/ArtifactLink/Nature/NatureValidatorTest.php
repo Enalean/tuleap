@@ -26,7 +26,8 @@ use Tuleap\GlobalLanguageMock;
 
 final class NatureValidatorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /**
      * @var NatureValidator

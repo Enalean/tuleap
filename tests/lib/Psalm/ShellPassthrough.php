@@ -24,5 +24,5 @@ namespace Tuleap\Test\Psalm;
 
 interface ShellPassthrough
 {
-    public function __invoke(string $command) : int;
+    public function __invoke(string $command): int;
 }

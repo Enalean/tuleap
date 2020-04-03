@@ -519,8 +519,10 @@ class ArtifactReport
                 // }}}
 
                 // {{{ tracker_admins
-                if (in_array($GLOBALS['UGROUP_TRACKER_ADMIN'], $dynamic_ugroups) &&
-                in_array($GLOBALS['UGROUP_TRACKER_ADMIN'], $permissions['TRACKER_ACCESS_SUBMITTER'])) {
+                if (
+                    in_array($GLOBALS['UGROUP_TRACKER_ADMIN'], $dynamic_ugroups) &&
+                    in_array($GLOBALS['UGROUP_TRACKER_ADMIN'], $permissions['TRACKER_ACCESS_SUBMITTER'])
+                ) {
                     $sql = "SELECT a.artifact_id " .
                            $from . " , artifact_perm p " .
                            $where .
@@ -532,8 +534,10 @@ class ArtifactReport
                 }
                 //}}}
                 // {{{ project_members
-                if (in_array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $dynamic_ugroups) &&
-                in_array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $permissions['TRACKER_ACCESS_SUBMITTER'])) {
+                if (
+                    in_array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $dynamic_ugroups) &&
+                    in_array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $permissions['TRACKER_ACCESS_SUBMITTER'])
+                ) {
                     $sql = "SELECT a.artifact_id " .
                            $from . " , user_group ug " .
                            $where .
@@ -544,8 +548,10 @@ class ArtifactReport
                 }
                 //}}}
                 // {{{ project_admins
-                if (in_array($GLOBALS['UGROUP_PROJECT_ADMIN'], $dynamic_ugroups) &&
-                in_array($GLOBALS['UGROUP_PROJECT_ADMIN'], $permissions['TRACKER_ACCESS_SUBMITTER'])) {
+                if (
+                    in_array($GLOBALS['UGROUP_PROJECT_ADMIN'], $dynamic_ugroups) &&
+                    in_array($GLOBALS['UGROUP_PROJECT_ADMIN'], $permissions['TRACKER_ACCESS_SUBMITTER'])
+                ) {
                     $sql = "SELECT a.artifact_id " .
                            $from . " , user_group ug " .
                            $where .
@@ -583,8 +589,10 @@ class ArtifactReport
                     // }}}
 
                     // {{{ tracker_admins
-                    if (in_array($GLOBALS['UGROUP_TRACKER_ADMIN'], $dynamic_ugroups) &&
-                    in_array($GLOBALS['UGROUP_TRACKER_ADMIN'], $permissions['TRACKER_ACCESS_ASSIGNEE'])) {
+                    if (
+                        in_array($GLOBALS['UGROUP_TRACKER_ADMIN'], $dynamic_ugroups) &&
+                        in_array($GLOBALS['UGROUP_TRACKER_ADMIN'], $permissions['TRACKER_ACCESS_ASSIGNEE'])
+                    ) {
                         $sql = "SELECT a.artifact_id " .
                                $from . " , artifact_field_value afv, artifact_perm p " .
                                $where .
@@ -598,8 +606,10 @@ class ArtifactReport
                     }
                     //}}}
                     // {{{ project_members
-                    if (in_array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $dynamic_ugroups) &&
-                    in_array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $permissions['TRACKER_ACCESS_ASSIGNEE'])) {
+                    if (
+                        in_array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $dynamic_ugroups) &&
+                        in_array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $permissions['TRACKER_ACCESS_ASSIGNEE'])
+                    ) {
                         $sql = "SELECT a.artifact_id " .
                                $from . " , artifact_field_value afv, user_group ug " .
                                $where .
@@ -612,8 +622,10 @@ class ArtifactReport
                     }
                     //}}}
                     // {{{ project_admins
-                    if (in_array($GLOBALS['UGROUP_PROJECT_ADMIN'], $dynamic_ugroups) &&
-                    in_array($GLOBALS['UGROUP_PROJECT_ADMIN'], $permissions['TRACKER_ACCESS_ASSIGNEE'])) {
+                    if (
+                        in_array($GLOBALS['UGROUP_PROJECT_ADMIN'], $dynamic_ugroups) &&
+                        in_array($GLOBALS['UGROUP_PROJECT_ADMIN'], $permissions['TRACKER_ACCESS_ASSIGNEE'])
+                    ) {
                         $sql = "SELECT a.artifact_id " .
                                $from . " , artifact_field_value afv, user_group ug " .
                                $where .
@@ -714,9 +726,11 @@ class ArtifactReport
         if (($field->isSelectBox() || $field->isMultiSelectBox()) && (isset($prefs[$field->getName()]) && !$this->isvarany($prefs[$field->getName()]))) {
             // Only select box criteria to where clause if argument is not ANY
             return " AND " . $field_name . " IN (" . db_es(implode(",", $prefs[$field->getName()])) . ") ";
-        } elseif ($field->isDateField() && (
+        } elseif (
+            $field->isDateField() && (
             ((isset($prefs[$field->getName()]) && $prefs[$field->getName()][0]) ||
-            (isset($prefs[$field->getName() . '_end']) && $prefs[$field->getName() . '_end'][0])))) {
+            (isset($prefs[$field->getName() . '_end']) && $prefs[$field->getName() . '_end'][0])))
+        ) {
       // transform a date field into a unix time and use <, > or =
             list($time,$ok) = util_date_to_unixtime($prefs[$field->getName()][0]);
 
@@ -760,8 +774,10 @@ class ArtifactReport
             $where .= " AND " . $field_name . " <> 0 ";
 
             return $where;
-        } elseif (($field->isTextField() || $field->isTextArea())
-                        && isset($prefs[$field->getName()][0]) && $prefs[$field->getName()][0]) {
+        } elseif (
+            ($field->isTextField() || $field->isTextArea())
+                        && isset($prefs[$field->getName()][0]) && $prefs[$field->getName()][0]
+        ) {
       // It's a text field accept. Process INT or TEXT,VARCHAR fields differently
             return " AND " . $field->buildMatchExpression($field_name, $prefs[$field->getName()][0]);
         }
@@ -1000,7 +1016,7 @@ class ArtifactReport
                 if (($field->isShowOnResult()) || ($field->getName() == "severity")) {
                     if ($select_count != 0) {
                         $select .= ",";
-                        $select_count ++;
+                        $select_count++;
                     } else {
                         $select_count = 1;
                     }
@@ -1031,8 +1047,10 @@ class ArtifactReport
                     $where .= $this->getValuesWhereClause($field, $prefs, "v" . $count . "." . $field->getValueFieldName(), $advsrch, $notany);
                 }
 
-                if ($field->isShowOnResult() ||
-                ($field->isShowOnQuery() && !$aids && $notany)) {
+                if (
+                    $field->isShowOnResult() ||
+                    ($field->isShowOnQuery() && !$aids && $notany)
+                ) {
                     $from .= " JOIN artifact_field_value v" . $count . " ON (v" . $count . ".artifact_id=a.artifact_id" .
                     " and v" . $count . ".field_id=" . db_ei($field->getID()) . ")";
                 }
@@ -1040,7 +1058,7 @@ class ArtifactReport
                 if ($field->isShowOnResult()) {
                     if ($select_count != 0) {
                           $select .= ",";
-                          $select_count ++;
+                          $select_count++;
                     } else {
                           $select_count = 1;
                     }
@@ -1095,7 +1113,7 @@ class ArtifactReport
                 } else {
                     $order_by .= $fields_order_result[$key] . " " . $fields_order[$key];
                 }
-                  $i ++;
+                  $i++;
             }
         } else {
             $order_by = "";

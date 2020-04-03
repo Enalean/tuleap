@@ -107,7 +107,7 @@ final class GitJenkinsServersResource extends AuthenticatedResource
         int $id,
         int $limit = self::DEFAULT_LIMIT,
         int $offset = self::DEFAULT_OFFSET
-    ) : void {
+    ): void {
         Header::allowOptionsGet();
     }
 
@@ -128,7 +128,7 @@ final class GitJenkinsServersResource extends AuthenticatedResource
         int $id,
         int $limit = self::DEFAULT_LIMIT,
         int $offset = self::DEFAULT_OFFSET
-    ) : JenkinsServerRepresentationCollection {
+    ): JenkinsServerRepresentationCollection {
         $user = $this->user_manager->getCurrentUser();
         $project = $this->project_manager->getProject($id);
 
@@ -167,7 +167,7 @@ final class GitJenkinsServersResource extends AuthenticatedResource
     /**
      * @throws RestException 404
      */
-    private function checkUserCanAccessProject(Project $project, PFUser $user) : void
+    private function checkUserCanAccessProject(Project $project, PFUser $user): void
     {
         ProjectAuthorization::userCanAccessProject(
             $user,
@@ -179,7 +179,7 @@ final class GitJenkinsServersResource extends AuthenticatedResource
     /**
      * @throws RestException 401
      */
-    private function checkUserIsGitAdministrator(Project $project, PFUser $user) : void
+    private function checkUserIsGitAdministrator(Project $project, PFUser $user): void
     {
         if (!$this->git_permission_manager->userIsGitAdmin($user, $project)) {
             throw new RestException(401);

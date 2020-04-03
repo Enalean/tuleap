@@ -21,7 +21,10 @@
 
 final class Tracker_Artifact_Changeset_InitialChangesetFieldsValidatorTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\GlobalLanguageMock, \Tuleap\GlobalResponseMock;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\GlobalLanguageMock;
+    use \Tuleap\GlobalResponseMock;
+
     /** @var Tracker_Artifact_Changeset_InitialChangesetFieldsValidator */
     private $initial_changeset_fields_validator;
 

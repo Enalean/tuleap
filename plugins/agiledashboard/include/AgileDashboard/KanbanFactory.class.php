@@ -118,7 +118,7 @@ class AgileDashboard_KanbanFactory
         return $this->instantiateFromRow($row);
     }
 
-    private function instantiateFromRow(array $kanban_data) : AgileDashboard_Kanban
+    private function instantiateFromRow(array $kanban_data): AgileDashboard_Kanban
     {
         return new AgileDashboard_Kanban(
             $kanban_data['id'],

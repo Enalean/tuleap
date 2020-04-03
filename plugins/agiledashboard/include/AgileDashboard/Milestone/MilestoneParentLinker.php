@@ -55,11 +55,12 @@ class MilestoneParentLinker
             return;
         }
 
-        if (! $this->isParentLinkedToParentMilestone(
-            $artifact_added,
-            $parent_milestone_artifact,
-            $user
-        )
+        if (
+            ! $this->isParentLinkedToParentMilestone(
+                $artifact_added,
+                $parent_milestone_artifact,
+                $user
+            )
         ) {
             $parent_milestone_artifact->linkArtifact($artifact_added->getId(), $user);
             $this->linkToMilestoneParent($parent_milestone, $user, $artifact_added);

@@ -135,7 +135,7 @@ class Tracker_FormElementFactory
     {
         if (!isset(self::$_instance)) {
             $FormElementFactory_class = self::class;
-            self::setInstance(new $FormElementFactory_class);
+            self::setInstance(new $FormElementFactory_class());
         }
         return self::$_instance;
     }
@@ -416,7 +416,8 @@ class Tracker_FormElementFactory
     public function getComputableFieldByNameForUser($tracker_id, $field_name, PFUser $user)
     {
         $field = $this->getUsedFieldByNameForUser($tracker_id, $field_name, $user);
-        if ($field
+        if (
+            $field
             && $field instanceof Tracker_FormElement_IComputeValues
         ) {
             return $field;
@@ -541,7 +542,7 @@ class Tracker_FormElementFactory
      *
      * @return Array $fields_data
      */
-    public function getUsedFieldsWithDefaultValue(Tracker $tracker, Array $fields_data, PFUser $user)
+    public function getUsedFieldsWithDefaultValue(Tracker $tracker, array $fields_data, PFUser $user)
     {
         $fields = $this->getUsedFields($tracker);
         foreach ($fields as $field) {
@@ -1657,22 +1658,24 @@ class Tracker_FormElementFactory
                     $original_field_id = isset($form_element_data['original_field_id']) ? $form_element_data['original_field_id'] : null;
 
                     //Create the element
-                    if ($id = $this->getDao()->create(
-                        $type,
-                        $tracker->id,
-                        $parent_id,
-                        $name,
-                        $prefix,
-                        $label,
-                        $description,
-                        $form_element_data['use_it'],
-                        'P',
-                        $is_required,
-                        $notify,
-                        $rank,
-                        $original_field_id,
-                        $force_absolute_ranking
-                    )) {
+                    if (
+                        $id = $this->getDao()->create(
+                            $type,
+                            $tracker->id,
+                            $parent_id,
+                            $name,
+                            $prefix,
+                            $label,
+                            $description,
+                            $form_element_data['use_it'],
+                            'P',
+                            $is_required,
+                            $notify,
+                            $rank,
+                            $original_field_id,
+                            $force_absolute_ranking
+                        )
+                    ) {
                         //Set permissions
                         if (!array_key_exists($type, array_merge($this->group_classnames, $this->staticfield_classnames))) {
                             $ugroups_permissions = $this->getPermissionsFromFormElementData($id, (array) $form_element_data);

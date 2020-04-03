@@ -42,12 +42,12 @@ final class FileBeingUploadedLocker implements TusLocker
         $this->path_allocator = $path_allocator;
     }
 
-    public function lock(TusFileInformation $file_information) : bool
+    public function lock(TusFileInformation $file_information): bool
     {
         return sem_acquire($this->createSemaphore($file_information), true);
     }
 
-    public function unlock(TusFileInformation $file_information) : void
+    public function unlock(TusFileInformation $file_information): void
     {
         $key = $this->getSemaphoreKey($file_information);
         if (isset(self::$holded_semaphores[$key])) {
@@ -77,7 +77,7 @@ final class FileBeingUploadedLocker implements TusLocker
         return $semaphore;
     }
 
-    private function getSemaphoreKey(TusFileInformation $file_information) : int
+    private function getSemaphoreKey(TusFileInformation $file_information): int
     {
         $file_path = $this->getPathForFile($file_information);
 
@@ -90,7 +90,7 @@ final class FileBeingUploadedLocker implements TusLocker
         return hexdec(substr(hash('sha256', $file_path), 0, 8));
     }
 
-    private function getPathForFile(TusFileInformation $file_information) : string
+    private function getPathForFile(TusFileInformation $file_information): string
     {
         return $this->path_allocator->getPathForItemBeingUploaded($file_information);
     }

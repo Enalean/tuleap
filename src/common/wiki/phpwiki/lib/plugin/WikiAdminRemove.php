@@ -166,8 +166,10 @@ class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
 
         $next_action = 'select';
         $pages = array();
-        if ($p && $request->isPost() &&
-            !empty($post_args['remove']) && empty($post_args['cancel'])) {
+        if (
+            $p && $request->isPost() &&
+            !empty($post_args['remove']) && empty($post_args['cancel'])
+        ) {
             // check individual PagePermissions
             if (!ENABLE_PAGEPERM and !$request->_user->isAdmin()) {
                 $request->_notAuthorized(WIKIAUTH_ADMIN);

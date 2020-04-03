@@ -163,7 +163,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             new QueryBuilder\LesserThanOrEqualFieldComparisonVisitor(),
             new QueryBuilder\GreaterThanOrEqualFieldComparisonVisitor(),
             new QueryBuilder\BetweenFieldComparisonVisitor(),
-            new QueryBuilder\InFieldComparisonVisitor,
+            new QueryBuilder\InFieldComparisonVisitor(),
             new QueryBuilder\NotInFieldComparisonVisitor(),
             new QueryBuilder\SearchableVisitor($this->getFormElementFactory()),
             new QueryBuilder\MetadataEqualComparisonFromWhereBuilder($this->comment_from_where_builder),
@@ -728,7 +728,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             $column_id    = $id . '_' . $type->shortname;
             $type_is_used = isset($used[$column_id]);
 
-            if ($this->getArtifactLinksUsageDao()->isTypeDisabledInProject($project->getID(), $type->shortname) &&
+            if (
+                $this->getArtifactLinksUsageDao()->isTypeDisabledInProject($project->getID(), $type->shortname) &&
                 ! $type_is_used
             ) {
                 continue;
@@ -822,9 +823,11 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         }
         if (!$current_renderer) {
             foreach ($renderers as $r) {
-                if (!$current_renderer || ($request->get('renderer') == $r->id)
+                if (
+                    !$current_renderer || ($request->get('renderer') == $r->id)
                                        || (!$request->get('renderer') && $r->id == $this->current_renderer_id)
-                                       || (!$request->get('renderer') && $r->id == $current_user->getPreference($renderer_preference_key))) {
+                                       || (!$request->get('renderer') && $r->id == $current_user->getPreference($renderer_preference_key))
+                ) {
                     $current_renderer = $r;
                 }
             }

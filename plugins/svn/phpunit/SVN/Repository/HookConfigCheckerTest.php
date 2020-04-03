@@ -26,6 +26,7 @@ use PHPUnit\Framework\TestCase;
 class HookConfigCheckerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|HookConfigRetriever
      */

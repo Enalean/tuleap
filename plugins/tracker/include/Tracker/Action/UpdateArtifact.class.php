@@ -189,7 +189,8 @@ class Tracker_Action_UpdateArtifact
         Tracker_FormElement_Field $remaining_effort_field,
         $remaining_effort
     ) {
-        if ($artifact->getTracker()->hasFormElementWithNameAndType($remaining_effort_field->getName(), array('computed'))
+        if (
+            $artifact->getTracker()->hasFormElementWithNameAndType($remaining_effort_field->getName(), array('computed'))
             && $remaining_effort_field->isArtifactValueAutocomputed($artifact)
         ) {
             $remaining_effort .= " (" . $GLOBALS['Language']->getText('plugin_tracker', 'autocomputed_field') . ")";

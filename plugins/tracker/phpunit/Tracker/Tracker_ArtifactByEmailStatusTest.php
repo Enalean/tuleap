@@ -21,6 +21,7 @@
 class Tracker_ArtifactByEmailStatusTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     private $tracker;
     private $tracker_plugin_conf;
 

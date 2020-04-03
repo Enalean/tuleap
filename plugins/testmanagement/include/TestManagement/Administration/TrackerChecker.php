@@ -64,7 +64,7 @@ class TrackerChecker
      * @throws TrackerDoesntExistException
      * @throws TrackerIsDeletedException
      */
-    public function checkTrackerIsInProject(Project $project, int $submitted_id) : void
+    public function checkTrackerIsInProject(Project $project, int $submitted_id): void
     {
         $this->initTrackerIds($project);
 
@@ -85,7 +85,7 @@ class TrackerChecker
      * @throws TrackerHasAtLeastOneFrozenFieldsPostActionException
      * @throws TrackerHasAtLeastOneHiddenFieldsetsPostActionException
      */
-    public function checkSubmittedTrackerCanBeUsed(Project $project, int $submitted_id) : void
+    public function checkSubmittedTrackerCanBeUsed(Project $project, int $submitted_id): void
     {
         $this->checkTrackerIsInProject($project, $submitted_id);
 
@@ -98,7 +98,7 @@ class TrackerChecker
         }
     }
 
-    private function initTrackerIds(Project $project) : void
+    private function initTrackerIds(Project $project): void
     {
         $project_id = $project->getID();
 

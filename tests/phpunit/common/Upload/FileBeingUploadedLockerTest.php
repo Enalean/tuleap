@@ -31,21 +31,22 @@ use Tuleap\Tus\TusFileInformation;
 
 class FileBeingUploadedLockerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     /**
      * @var string
      */
     private $tmp_dir;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $path = sys_get_temp_dir() . '/' . bin2hex(random_bytes(8));
         mkdir($path);
         $this->tmp_dir = $path;
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         $folders = new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator($this->tmp_dir, RecursiveDirectoryIterator::SKIP_DOTS),
@@ -61,7 +62,7 @@ class FileBeingUploadedLockerTest extends TestCase
         rmdir($this->tmp_dir);
     }
 
-    public function testALockCanOnlyBeAcquiredOnce() : void
+    public function testALockCanOnlyBeAcquiredOnce(): void
     {
         \ForgeConfig::set('tmp_dir', $this->tmp_dir);
         $path_allocator = \Mockery::mock(PathAllocator::class);
@@ -77,7 +78,7 @@ class FileBeingUploadedLockerTest extends TestCase
         $this->assertFalse($locker->lock($file_information));
     }
 
-    public function testALockCanBeAcquiredAgainAfterHavingBeenReleased() : void
+    public function testALockCanBeAcquiredAgainAfterHavingBeenReleased(): void
     {
         \ForgeConfig::set('tmp_dir', $this->tmp_dir);
         $path_allocator = \Mockery::mock(PathAllocator::class);

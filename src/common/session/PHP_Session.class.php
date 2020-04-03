@@ -23,7 +23,7 @@ use Tuleap\CookieManager;
 
 class PHP_Session
 {
-    public static function start() : void
+    public static function start(): void
     {
         session_cache_limiter('');
         session_name(CookieManager::getCookieName(session_name()));

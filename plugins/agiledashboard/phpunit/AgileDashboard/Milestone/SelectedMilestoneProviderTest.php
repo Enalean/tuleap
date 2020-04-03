@@ -21,6 +21,7 @@
 class AgileDashboard_Milestone_SelectedMilestoneProviderTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     public const FIELD_NAME = AgileDashboard_Milestone_MilestoneReportCriterionProvider::FIELD_NAME;
     public const ANY        = AgileDashboard_Milestone_MilestoneReportCriterionProvider::ANY;
     /**

@@ -70,9 +70,11 @@ class BackendMailingList extends Backend
             }
             fclose($fp);
 
-            if (system(
-                $GLOBALS['mailman_bin_dir'] . '/config_list -i ' . escapeshellarg($config_file) . ' ' . escapeshellarg($list->getListName())
-            ) !== false) {
+            if (
+                system(
+                    $GLOBALS['mailman_bin_dir'] . '/config_list -i ' . escapeshellarg($config_file) . ' ' . escapeshellarg($list->getListName())
+                ) !== false
+            ) {
                 if (unlink($config_file)) {
                     return true;
                 }

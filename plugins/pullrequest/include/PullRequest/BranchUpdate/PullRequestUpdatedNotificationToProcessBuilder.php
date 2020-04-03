@@ -100,7 +100,7 @@ final class PullRequestUpdatedNotificationToProcessBuilder implements Notificati
         $this->commit_diff                 = $commit_diff;
     }
 
-    public function getNotificationsToProcess(EventSubjectToNotification $event) : array
+    public function getNotificationsToProcess(EventSubjectToNotification $event): array
     {
         try {
             $pull_request = $this->pull_request_factory->getPullRequestById($event->getPullRequestID());

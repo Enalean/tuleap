@@ -26,7 +26,7 @@ use Tuleap\Authentication\Scope\AuthenticationScopeTestCase;
 
 final class OAuth2OfflineAccessScopeTest extends AuthenticationScopeTestCase
 {
-    public function getAuthenticationScopeClassname() : string
+    public function getAuthenticationScopeClassname(): string
     {
         return OAuth2OfflineAccessScope::class;
     }

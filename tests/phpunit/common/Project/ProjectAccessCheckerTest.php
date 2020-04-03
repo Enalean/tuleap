@@ -39,7 +39,9 @@ use Tuleap\GlobalLanguageMock;
 
 class ProjectAccessCheckerTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, ForgeConfigSandbox, GlobalLanguageMock;
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
+    use GlobalLanguageMock;
 
     /**
      * @var Mockery\MockInterface|PermissionsOverrider_PermissionsOverriderManager
@@ -61,7 +63,7 @@ class ProjectAccessCheckerTest extends TestCase
     /**
      * @before
      */
-    public function createInstance() : void
+    public function createInstance(): void
     {
         $this->overrider     = Mockery::mock(PermissionsOverrider_PermissionsOverriderManager::class);
         $this->verifier      = Mockery::mock(RestrictedUserCanAccessUrlOrProjectVerifier::class);
@@ -70,7 +72,7 @@ class ProjectAccessCheckerTest extends TestCase
         $this->checker = new ProjectAccessChecker($this->overrider, $this->verifier, $this->event_manager);
     }
 
-    public function testRestrictedUserCanNotAccessProjectWhichDoesntAllowRestricted() : void
+    public function testRestrictedUserCanNotAccessProjectWhichDoesntAllowRestricted(): void
     {
         $user = Mockery::mock(PFUser::class);
         $user->shouldReceive(
@@ -99,7 +101,7 @@ class ProjectAccessCheckerTest extends TestCase
         $this->checker->checkUserCanAccessProject($user, $project);
     }
 
-    public function testRestrictedUserCanAccessProjectWhichAllowsRestricted() : void
+    public function testRestrictedUserCanAccessProjectWhichAllowsRestricted(): void
     {
         $user = Mockery::mock(PFUser::class);
         $user->shouldReceive(
@@ -127,7 +129,7 @@ class ProjectAccessCheckerTest extends TestCase
         $this->checker->checkUserCanAccessProject($user, $project);
     }
 
-    public function testRestrictedUserCannotAccessProjectWhichAllowsRestrictedButVerifierDoesNot() : void
+    public function testRestrictedUserCannotAccessProjectWhichAllowsRestrictedButVerifierDoesNot(): void
     {
         $user = Mockery::mock(PFUser::class);
         $user->shouldReceive(
@@ -157,7 +159,7 @@ class ProjectAccessCheckerTest extends TestCase
         $this->checker->checkUserCanAccessProject($user, $project);
     }
 
-    public function testRestrictedUserCanNotAccessAProjectMarkedAsPrivateWithoutRestrictedEvenSheIsMemberOf() : void
+    public function testRestrictedUserCanNotAccessAProjectMarkedAsPrivateWithoutRestrictedEvenSheIsMemberOf(): void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
 
@@ -186,7 +188,7 @@ class ProjectAccessCheckerTest extends TestCase
         $this->checker->checkUserCanAccessProject($user, $project);
     }
 
-    public function testRestrictedUserCanAccessAProjectMarkedAsPrivateEvenSheIsMemberOf() : void
+    public function testRestrictedUserCanAccessAProjectMarkedAsPrivateEvenSheIsMemberOf(): void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
 
@@ -213,7 +215,7 @@ class ProjectAccessCheckerTest extends TestCase
         $this->checker->checkUserCanAccessProject($user, $project);
     }
 
-    public function testItGrantsAccessToProjectMembers() : void
+    public function testItGrantsAccessToProjectMembers(): void
     {
         $project = Mockery::mock(Project::class);
         $project->shouldReceive(
@@ -237,7 +239,7 @@ class ProjectAccessCheckerTest extends TestCase
         $this->checker->checkUserCanAccessProject($user, $project);
     }
 
-    public function testItGrantsAccessToNonProjectMembersForPublicProjects() : void
+    public function testItGrantsAccessToNonProjectMembersForPublicProjects(): void
     {
         $user = Mockery::mock(PFUser::class);
         $user->shouldReceive(
@@ -264,7 +266,7 @@ class ProjectAccessCheckerTest extends TestCase
         $this->checker->checkUserCanAccessProject($user, $project);
     }
 
-    public function testItForbidsAccessToRestrictedUsersNotProjectMembers() : void
+    public function testItForbidsAccessToRestrictedUsersNotProjectMembers(): void
     {
         $user = Mockery::mock(PFUser::class);
         $user->shouldReceive(
@@ -293,7 +295,7 @@ class ProjectAccessCheckerTest extends TestCase
         $this->checker->checkUserCanAccessProject($user, $project);
     }
 
-    public function testItGrantsAccessToRestrictedUsersThatAreProjectMembers() : void
+    public function testItGrantsAccessToRestrictedUsersThatAreProjectMembers(): void
     {
         $user = Mockery::mock(PFUser::class);
         $user->shouldReceive(
@@ -318,7 +320,7 @@ class ProjectAccessCheckerTest extends TestCase
         $this->checker->checkUserCanAccessProject($user, $project);
     }
 
-    public function testItForbidsAccessToActiveUsersThatAreNotPrivateProjectMembers() : void
+    public function testItForbidsAccessToActiveUsersThatAreNotPrivateProjectMembers(): void
     {
         $user = Mockery::mock(PFUser::class);
         $user->shouldReceive(
@@ -348,7 +350,7 @@ class ProjectAccessCheckerTest extends TestCase
         $this->checker->checkUserCanAccessProject($user, $project);
     }
 
-    public function testItForbidsRestrictedUsersToAccessProjectsTheyAreNotMemberOf() : void
+    public function testItForbidsRestrictedUsersToAccessProjectsTheyAreNotMemberOf(): void
     {
         $user = Mockery::mock(PFUser::class);
         $user->shouldReceive(
@@ -378,7 +380,7 @@ class ProjectAccessCheckerTest extends TestCase
         $this->checker->checkUserCanAccessProject($user, $project);
     }
 
-    public function testItAllowsRestrictedUsersToAccessProjectsTheyAreNotMemberOfButOverriderAllowsTo() : void
+    public function testItAllowsRestrictedUsersToAccessProjectsTheyAreNotMemberOfButOverriderAllowsTo(): void
     {
         $user = Mockery::mock(PFUser::class);
         $user->shouldReceive(
@@ -406,7 +408,7 @@ class ProjectAccessCheckerTest extends TestCase
         $this->checker->checkUserCanAccessProject($user, $project);
     }
 
-    public function testItForbidsAccessToDeletedProjects() : void
+    public function testItForbidsAccessToDeletedProjects(): void
     {
         $user = Mockery::mock(PFUser::class);
         $user->shouldReceive(
@@ -433,7 +435,7 @@ class ProjectAccessCheckerTest extends TestCase
         $this->checker->checkUserCanAccessProject($user, $project);
     }
 
-    public function testItForbidsAccessToSuspendedProjects() : void
+    public function testItForbidsAccessToSuspendedProjects(): void
     {
         $user = Mockery::mock(PFUser::class);
         $user->shouldReceive(
@@ -460,7 +462,7 @@ class ProjectAccessCheckerTest extends TestCase
         $this->checker->checkUserCanAccessProject($user, $project);
     }
 
-    public function testItForbidsAccessToNonExistentProject() : void
+    public function testItForbidsAccessToNonExistentProject(): void
     {
         $user = Mockery::mock(PFUser::class);
 
@@ -478,7 +480,7 @@ class ProjectAccessCheckerTest extends TestCase
         $this->checker->checkUserCanAccessProject($user, $project);
     }
 
-    public function testItBlindlyGrantAccessForSiteAdmin() : void
+    public function testItBlindlyGrantAccessForSiteAdmin(): void
     {
         $user = Mockery::mock(PFUser::class);
         $user->shouldReceive(
@@ -502,7 +504,7 @@ class ProjectAccessCheckerTest extends TestCase
         $this->checker->checkUserCanAccessProject($user, $project);
     }
 
-    public function testItGrantsAccessForUserWithDelegatedAccessByAPlugin() : void
+    public function testItGrantsAccessForUserWithDelegatedAccessByAPlugin(): void
     {
         $user = Mockery::mock(PFUser::class);
         $user->shouldReceive(
@@ -526,7 +528,7 @@ class ProjectAccessCheckerTest extends TestCase
 
         $this->overrider->shouldReceive('doesOverriderAllowUserToAccessProject')->andReturn(false);
         $this->event_manager->shouldReceive('processEvent')->withArgs(
-            static function (DelegatedUserAccessForProject $event) : bool {
+            static function (DelegatedUserAccessForProject $event): bool {
                 $event->enableAccessToProjectToTheUser();
                 return true;
             }
@@ -535,7 +537,7 @@ class ProjectAccessCheckerTest extends TestCase
         $this->checker->checkUserCanAccessProject($user, $project);
     }
 
-    public function testItForbidsAccessToAnonymousUsersWhenTheInstanceDoesNotAllowAnonymousUsers() : void
+    public function testItForbidsAccessToAnonymousUsersWhenTheInstanceDoesNotAllowAnonymousUsers(): void
     {
         $user = Mockery::mock(PFUser::class);
         $user->shouldReceive('isAnonymous')->andReturn(true);
@@ -549,7 +551,7 @@ class ProjectAccessCheckerTest extends TestCase
         $this->checker->checkUserCanAccessProject($user, $project);
     }
 
-    public function testItForbidsAccessForAnonymousUsersInAPublicProjectWhenTheInstanceAllowsAnonymousUsers() : void
+    public function testItForbidsAccessForAnonymousUsersInAPublicProjectWhenTheInstanceAllowsAnonymousUsers(): void
     {
         $user = Mockery::mock(PFUser::class);
         $user->shouldReceive(

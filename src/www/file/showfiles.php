@@ -93,8 +93,10 @@ function buildReleaseNotesLink(FRSRelease $release): string
 // Retain only packages the user is authorized to access, or packages containing releases the user is authorized to access...
 $res = $frspf->getFRSPackagesFromDb($group_id);
 foreach ($res as $package) {
-    if ($frspf->userCanRead($group_id, $package->getPackageID(), $user->getId())
-        && $permission_manager->userCanRead($project, $user)) {
+    if (
+        $frspf->userCanRead($group_id, $package->getPackageID(), $user->getId())
+        && $permission_manager->userCanRead($project, $user)
+    ) {
         if ($request->existAndNonEmpty('release_id')) {
             if ($request->valid(new Valid_UInt('release_id'))) {
                 $release_id = $request->get('release_id');

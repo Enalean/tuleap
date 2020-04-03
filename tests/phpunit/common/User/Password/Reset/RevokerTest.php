@@ -23,7 +23,8 @@ namespace Tuleap\User\Password\Reset;
 class RevokerTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    public function testItThrowsAnExceptionIfTokensHaveNotBeenRemoved() : void
+
+    public function testItThrowsAnExceptionIfTokensHaveNotBeenRemoved(): void
     {
         $user = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('getId')->andReturns(101);

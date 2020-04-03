@@ -19,10 +19,10 @@
 
 class GenericUserFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\GlobalLanguageMock;
 
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\GlobalLanguageMock;
-
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->user_manager = \Mockery::spy(\UserManager::class);
@@ -37,13 +37,13 @@ class GenericUserFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $this->factory = new GenericUserFactory($this->user_manager, $this->project_manager, $dao);
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         ForgeConfig::restore();
         parent::tearDown();
     }
 
-    public function testCreateReturnsGenericUserWithCorrectId() : void
+    public function testCreateReturnsGenericUserWithCorrectId(): void
     {
         $group_id = '120';
         $password = 'my_password';
@@ -55,7 +55,7 @@ class GenericUserFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $this->assertEquals($generic_user->getProject(), $this->project);
     }
 
-    public function testItCreatesUserWithNoSuffixByDefault() : void
+    public function testItCreatesUserWithNoSuffixByDefault(): void
     {
         $project_name = 'vla';
         $this->project->shouldReceive('getUnixName')->andReturns($project_name);
@@ -64,7 +64,7 @@ class GenericUserFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $this->assertEquals(substr($generic_user->getUnixName(), -strlen($project_name)), $project_name);
     }
 
-    public function testItCreatesUserWithPrefixSetFromConfig() : void
+    public function testItCreatesUserWithPrefixSetFromConfig(): void
     {
         $suffix = '-team';
         ForgeConfig::set(GenericUserFactory::CONFIG_KEY_SUFFIX, $suffix);

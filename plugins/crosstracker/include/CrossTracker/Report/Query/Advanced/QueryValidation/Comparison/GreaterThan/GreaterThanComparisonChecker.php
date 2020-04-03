@@ -26,7 +26,7 @@ class GreaterThanComparisonChecker extends GreaterOrLesserThanComparisonChecker
 {
     private const OPERATOR = '>';
 
-    public function getOperator() : string
+    public function getOperator(): string
     {
         return self::OPERATOR;
     }

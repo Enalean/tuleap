@@ -155,7 +155,7 @@ class Codendi_HTMLPurifier
         return $config;
     }
 
-    private function getMinimalFormattingNoNewlineConfig() : HTMLPurifier_Config
+    private function getMinimalFormattingNoNewlineConfig(): HTMLPurifier_Config
     {
         $config = $this->getCodendiConfig();
         $this->setConfigAttribute($config, 'HTML', 'Allowed', 'a[href],strong,em,b,i');

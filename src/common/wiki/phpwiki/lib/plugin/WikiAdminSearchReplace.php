@@ -151,8 +151,10 @@ class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
         if ($p && !$request->isPost()) {
             $pages = $p;
         }
-        if ($p && $request->isPost() &&
-            empty($post_args['cancel'])) {
+        if (
+            $p && $request->isPost() &&
+            empty($post_args['cancel'])
+        ) {
             // without individual PagePermissions:
             if (!ENABLE_PAGEPERM and !$request->_user->isAdmin()) {
                 $request->_notAuthorized(WIKIAUTH_ADMIN);

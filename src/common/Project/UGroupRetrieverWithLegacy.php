@@ -48,7 +48,7 @@ class UGroupRetrieverWithLegacy
         $this->ugroup_manager = $ugroup_manager;
     }
 
-    public function getUGroupId(Project $project, string $ugroup_name) : ?int
+    public function getUGroupId(Project $project, string $ugroup_name): ?int
     {
         if (isset(self::LEGACY_SYSTEM_USER_GROUPS[$ugroup_name])) {
             $ugroup_id = self::LEGACY_SYSTEM_USER_GROUPS[$ugroup_name];

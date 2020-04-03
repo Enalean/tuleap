@@ -59,7 +59,7 @@ class ProjectXMLExporterWithSynchronizedUGroupsTest extends TestCase
      */
     private $synch_detector;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->event_manager  = M::spy(EventManager::class);
         $this->ugroup_manager = M::spy(UGroupManager::class);
@@ -86,7 +86,7 @@ class ProjectXMLExporterWithSynchronizedUGroupsTest extends TestCase
         $this->user    = M::spy(PFUser::class);
     }
 
-    public function testItExportsThatUserGroupsAreSynchronizedWithProjectMembers() : void
+    public function testItExportsThatUserGroupsAreSynchronizedWithProjectMembers(): void
     {
         $this->synch_detector->shouldReceive('isSynchronizedWithProjectMembers')->with($this->project)->andReturnTrue();
 

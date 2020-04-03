@@ -183,7 +183,7 @@ class Docman_VersionFactory
      * @param Docman_Version $version Deleted docman item version
      *
      */
-    public function archiveBeforePurge(Docman_Version $version) : bool
+    public function archiveBeforePurge(Docman_Version $version): bool
     {
         $item    = $this->_getItemFactory()->getItemFromDb($version->getItemId(), array('ignore_deleted' => true));
         $prefix  = $item->getGroupId() . '_i' . $version->getItemId() . '_v' . $version->getNumber();

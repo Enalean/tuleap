@@ -36,7 +36,7 @@ class Key
         $this->key_material = $key_data->getString();
     }
 
-    public function getRawKeyMaterial() : string
+    public function getRawKeyMaterial(): string
     {
         return $this->key_material;
     }
@@ -46,17 +46,17 @@ class Key
         return '';
     }
 
-    public function __debugInfo() : array
+    public function __debugInfo(): array
     {
         return ['key_material' => '** protected value**'];
     }
 
-    public function __sleep() : array
+    public function __sleep(): array
     {
         throw new CannotSerializeKeyException();
     }
 
-    public function __wakeup() : void
+    public function __wakeup(): void
     {
         throw new CannotSerializeKeyException();
     }

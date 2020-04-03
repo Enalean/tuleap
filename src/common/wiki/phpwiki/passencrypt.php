@@ -148,8 +148,10 @@ if (!empty($posted['create'])) {
     $posted['password2'] = $new_password;
 }
 
-if (($posted['password'] != "")
-    && ($posted['password'] == $posted['password2'])) {
+if (
+    ($posted['password'] != "")
+    && ($posted['password'] == $posted['password2'])
+) {
     $password = $posted['password'];
     /**
      * http://www.php.net/manual/en/function.crypt.php

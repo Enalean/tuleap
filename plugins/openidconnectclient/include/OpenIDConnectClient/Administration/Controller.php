@@ -246,7 +246,8 @@ class Controller
             );
         }
 
-        if ($is_unique_authentication_endpoint &&
+        if (
+            $is_unique_authentication_endpoint &&
             ! $this->enable_unique_authentication_endpoint_verifier->canBeEnabledBy(
                 $provider,
                 $request->getCurrentUser()
@@ -308,7 +309,8 @@ class Controller
             );
         }
 
-        if ($is_unique_authentication_endpoint &&
+        if (
+            $is_unique_authentication_endpoint &&
             ! $this->enable_unique_authentication_endpoint_verifier->canBeEnabledBy(
                 $provider,
                 $request->getCurrentUser()

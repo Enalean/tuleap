@@ -223,7 +223,7 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
         $u_group        = $ugroup_manager->getById($u_group_id);
 
         $classname_with_namespace = 'Tuleap\Project\REST\UserGroupRepresentation';
-        $representation           = new $classname_with_namespace;
+        $representation           = new $classname_with_namespace();
 
         $representation->build($this->getField()->getTracker()->getProject()->getID(), $u_group);
 

@@ -58,7 +58,7 @@ class AddProjectMember
         $this->ugroup_binding = $ugroup_binding;
     }
 
-    public static function build() : self
+    public static function build(): self
     {
         return new self(
             new UserPermissionsDao(),
@@ -72,7 +72,7 @@ class AddProjectMember
         );
     }
 
-    public function addProjectMember(\PFUser $user, \Project $project) : void
+    public function addProjectMember(\PFUser $user, \Project $project): void
     {
         if (\ForgeConfig::areRestrictedUsersAllowed() && $user->isRestricted() && $project->getAccess() === \Project::ACCESS_PRIVATE_WO_RESTRICTED) {
             throw new CannotAddRestrictedUserToProjectNotAllowingRestricted($user, $project);

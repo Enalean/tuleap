@@ -52,7 +52,7 @@ final class PermissionItemUpdaterFromRESTContextTest extends TestCase
      */
     private $permissions_item_updater_rest;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->permissions_item_updater           = Mockery::mock(PermissionItemUpdater::class);
         $this->permissions_manager                = Mockery::mock(Docman_PermissionsManager::class);
@@ -65,7 +65,7 @@ final class PermissionItemUpdaterFromRESTContextTest extends TestCase
         );
     }
 
-    public function testPermissionsCanBeUpdated() : void
+    public function testPermissionsCanBeUpdated(): void
     {
         $item           = Mockery::mock(Docman_Item::class);
         $representation = new DocmanItemPermissionsForGroupsSetRepresentation();
@@ -84,7 +84,7 @@ final class PermissionItemUpdaterFromRESTContextTest extends TestCase
         );
     }
 
-    public function testPermissionsUpdateOfAFolderIsNotAppliedOnChildrenWhenNotRequested() : void
+    public function testPermissionsUpdateOfAFolderIsNotAppliedOnChildrenWhenNotRequested(): void
     {
         $folder = Mockery::mock(Docman_Folder::class);
         $folder->shouldReceive('getId')->andReturn(18);
@@ -105,7 +105,7 @@ final class PermissionItemUpdaterFromRESTContextTest extends TestCase
         );
     }
 
-    public function testPermissionsUpdateOfAFolderIsAppliedOnChildrenWhenRequested() : void
+    public function testPermissionsUpdateOfAFolderIsAppliedOnChildrenWhenRequested(): void
     {
         $folder = Mockery::mock(Docman_Folder::class);
         $folder->shouldReceive('getId')->andReturn(18);
@@ -125,7 +125,7 @@ final class PermissionItemUpdaterFromRESTContextTest extends TestCase
         );
     }
 
-    public function testUpdateIsRejectedIfTheUserCanNotManageTheItem() : void
+    public function testUpdateIsRejectedIfTheUserCanNotManageTheItem(): void
     {
         $item = Mockery::mock(Docman_Item::class);
         $item->shouldReceive('getId')->andReturn(78);
@@ -142,7 +142,7 @@ final class PermissionItemUpdaterFromRESTContextTest extends TestCase
         );
     }
 
-    public function testUpdateItemPermissionsIsRejectedWhenTheUserCanNotManageIt() : void
+    public function testUpdateItemPermissionsIsRejectedWhenTheUserCanNotManageIt(): void
     {
         $item = Mockery::mock(Docman_Item::class);
         $item->shouldReceive('getId')->andReturn(77);
@@ -158,7 +158,7 @@ final class PermissionItemUpdaterFromRESTContextTest extends TestCase
         );
     }
 
-    public function testUpdateFolderPermissionsIsRejectedWhenTheUserCanNotManageIt() : void
+    public function testUpdateFolderPermissionsIsRejectedWhenTheUserCanNotManageIt(): void
     {
         $folder = Mockery::mock(Docman_Folder::class);
         $folder->shouldReceive('getId')->andReturn(77);

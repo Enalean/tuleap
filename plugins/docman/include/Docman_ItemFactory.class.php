@@ -501,8 +501,10 @@ class Docman_ItemFactory
                     $row = $dar->current();
                     $itemRows[$row['item_id']] = $row;
                     $itemIds[] = $row['item_id'];
-                    if ($row['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
-                        && ($expandAll || isset($expandedFolders[$row['item_id']]))) {
+                    if (
+                        $row['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
+                        && ($expandAll || isset($expandedFolders[$row['item_id']]))
+                    ) {
                         $parentIds[$row['item_id']] = $row['item_id'];
                     }
                     $dar->next();

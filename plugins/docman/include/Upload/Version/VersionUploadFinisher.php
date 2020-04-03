@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Docman\Upload\Version;
 
@@ -190,7 +190,7 @@ final class VersionUploadFinisher implements TusFinisherDataStore
                     throw new \RuntimeException('Could not copy uploaded file for item #' . $item->getId() . ' of upload #' . $upload_id);
                 }
 
-                $current_time             = (new \DateTimeImmutable)->getTimestamp();
+                $current_time             = (new \DateTimeImmutable())->getTimestamp();
                 $has_version_been_created = $this->version_factory->create(
                     [
                         'item_id'   => $item_id,
@@ -239,7 +239,8 @@ final class VersionUploadFinisher implements TusFinisherDataStore
                 }
 
                 $approval_table_action = $upload_row['approval_table_action'];
-                if ($this->approval_table_retriever->hasApprovalTable($item)
+                if (
+                    $this->approval_table_retriever->hasApprovalTable($item)
                     && $this->approval_table_action_checker->checkAvailableUpdateAction($approval_table_action)
                 ) {
                     $item_current_version = $this->version_factory->getCurrentVersionForItem($item);
@@ -253,7 +254,7 @@ final class VersionUploadFinisher implements TusFinisherDataStore
         $this->logger->debug('New version from upload #' . $upload_id . ' has been created');
     }
 
-    private function getFiletype(string $filename, string $path) : string
+    private function getFiletype(string $filename, string $path): string
     {
         $mime_type = $this->docman_mime_type_detector->getRightOfficeType($filename);
         if ($mime_type !== null) {

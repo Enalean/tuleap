@@ -43,7 +43,7 @@ class SystemEvent_PROFTPD_UPDATE_ACLTest extends \PHPUnit\Framework\TestCase
     private $project_manager;
     private $acl_updater;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -100,7 +100,7 @@ class SystemEvent_PROFTPD_UPDATE_ACLTest extends \PHPUnit\Framework\TestCase
         $GLOBALS['sys_http_user'] = 'httpuser';
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         parent::tearDown();
         unset($GLOBALS['sys_http_user']);

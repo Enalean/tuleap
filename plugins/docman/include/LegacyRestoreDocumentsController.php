@@ -44,7 +44,7 @@ final class LegacyRestoreDocumentsController implements DispatchableWithRequest
         $this->plugin = $plugin;
     }
 
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables) : void
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         \Tuleap\Project\ServiceInstrumentation::increment('docman');
         // Need to setup the controller so the notification & logging works (setup in controller constructor)

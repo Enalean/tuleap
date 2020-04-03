@@ -164,13 +164,15 @@ if ($func == 'gotoid') {
                         } elseif ($afh->isError()) {
                                 $GLOBALS['Response']->addFeedback('error', $afh->getErrorMessage());
                         } else {
-                            if (!$afh->upload(
-                                $_FILES['input_file']['tmp_name'],
-                                $_FILES['input_file']['name'],
-                                $_FILES['input_file']['type'],
-                                $sanitizer->sanitize($request->get('file_description')),
-                                $changes
-                            )) {
+                            if (
+                                !$afh->upload(
+                                    $_FILES['input_file']['tmp_name'],
+                                    $_FILES['input_file']['name'],
+                                    $_FILES['input_file']['type'],
+                                    $sanitizer->sanitize($request->get('file_description')),
+                                    $changes
+                                )
+                            ) {
                                     $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index', 'not_attach_file', $afh->getErrorMessage()));
                             }
                         }
@@ -243,13 +245,15 @@ if ($func == 'gotoid') {
                         } elseif ($afh->isError()) {
                                $GLOBALS['Response']->addFeedback('error', $afh->getErrorMessage());
                         } else {
-                            if (!$afh->upload(
-                                $_FILES['input_file']['tmp_name'],
-                                $_FILES['input_file']['name'],
-                                $_FILES['input_file']['type'],
-                                $sanitizer->sanitize($request->get('file_description')),
-                                $changes
-                            )) {
+                            if (
+                                !$afh->upload(
+                                    $_FILES['input_file']['tmp_name'],
+                                    $_FILES['input_file']['name'],
+                                    $_FILES['input_file']['type'],
+                                    $sanitizer->sanitize($request->get('file_description')),
+                                    $changes
+                                )
+                            ) {
                                     $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index', 'not_attach_file', $afh->getErrorMessage()));
                             }
                         }
@@ -310,10 +314,12 @@ if ($func == 'gotoid') {
                     // (b) then CC name is the current user
                     // (c) the CC email address matches the one of the current user
                     // (d) the current user is the person who added a gieven name in CC list
-                if (user_ismember($group_id) ||
+                if (
+                    user_ismember($group_id) ||
                     (user_getname($user_id) == $cc_array['email']) ||
                     (user_getemail($user_id) == $cc_array['email']) ||
-                    (user_getname($user_id) == $cc_array['user_name'] )) {
+                    (user_getname($user_id) == $cc_array['user_name'] )
+                ) {
                         $changed = $ah->deleteCC($artifact_cc_id, $changes);
                     if ($changed) {
                         $agnf = new ArtifactGlobalNotificationFactory();
@@ -394,8 +400,10 @@ if ($func == 'gotoid') {
                 // Check permissions
                 $id = $request->get('id');
                 $file_array = $ah->getAttachedFile($id);
-            if (user_ismember($group_id) ||
-                (user_getname(UserManager::instance()->getCurrentUser()->getId()) == $file_array['user_name'] )) {
+            if (
+                user_ismember($group_id) ||
+                (user_getname(UserManager::instance()->getCurrentUser()->getId()) == $file_array['user_name'] )
+            ) {
                         $afh = new ArtifactFileHtml($ah, $id);
                 if (!$afh || !is_object($afh)) {
                         $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index', 'not_create_file_obj', $afh->getName()));
@@ -432,8 +440,10 @@ if ($func == 'gotoid') {
 
                     // Check timestamp
                     $artifact_timestamp = $request->get('artifact_timestamp');
-                if (isset($artifact_timestamp) &&
-                         ($ah->getLastUpdateDate() > $artifact_timestamp)) {
+                if (
+                    isset($artifact_timestamp) &&
+                         ($ah->getLastUpdateDate() > $artifact_timestamp)
+                ) {
                     // Artifact was updated between the time it was sent to the user, and the time it was submitted
                     exit_error($Language->getText('tracker_index', 'artifact_has_changed_title'), $Language->getText('tracker_index', 'artifact_has_changed', "/tracker/?func=detail&aid=$aid&atid=$atid&group_id=$group_id"));
                 }
@@ -473,13 +483,15 @@ if ($func == 'gotoid') {
                     } elseif ($afh->isError()) {
                         $GLOBALS['Response']->addFeedback('error', $afh->getErrorMessage());
                     } else {
-                        if (!$afh->upload(
-                            $_FILES['input_file']['tmp_name'],
-                            $_FILES['input_file']['name'],
-                            $_FILES['input_file']['type'],
-                            $sanitizer->sanitize($request->get('file_description')),
-                            $changes
-                        )) {
+                        if (
+                            !$afh->upload(
+                                $_FILES['input_file']['tmp_name'],
+                                $_FILES['input_file']['name'],
+                                $_FILES['input_file']['type'],
+                                $sanitizer->sanitize($request->get('file_description')),
+                                $changes
+                            )
+                        ) {
                             $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index', 'file_upload_err', $afh->getErrorMessage()));
                                 $was_error = true;
                         } else {
@@ -610,13 +622,15 @@ if ($func == 'gotoid') {
                         } elseif ($afh->isError()) {
                             $GLOBALS['Response']->addFeedback('error', $afh->getErrorMessage());
                         } else {
-                            if (!$afh->upload(
-                                $_FILES['input_file']['tmp_name'],
-                                $_FILES['input_file']['name'],
-                                $_FILES['input_file']['type'],
-                                $sanitizer->sanitize($request->get('file_description')),
-                                $changes
-                            )) {
+                            if (
+                                !$afh->upload(
+                                    $_FILES['input_file']['tmp_name'],
+                                    $_FILES['input_file']['name'],
+                                    $_FILES['input_file']['type'],
+                                    $sanitizer->sanitize($request->get('file_description')),
+                                    $changes
+                                )
+                            ) {
                                   $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index', 'file_upload_err', $afh->getErrorMessage()));
                                   $was_error = true;
                             }
@@ -706,13 +720,15 @@ if ($func == 'gotoid') {
                 } elseif ($afh->isError()) {
                     $GLOBALS['Response']->addFeedback('error', $afh->getErrorMessage());
                 } else {
-                    if (!$afh->upload(
-                        $_FILES['input_file']['tmp_name'],
-                        $_FILES['input_file']['name'],
-                        $_FILES['input_file']['type'],
-                        $sanitizer->sanitize($request->get('file_description')),
-                        $changes
-                    )) {
+                    if (
+                        !$afh->upload(
+                            $_FILES['input_file']['tmp_name'],
+                            $_FILES['input_file']['name'],
+                            $_FILES['input_file']['type'],
+                            $sanitizer->sanitize($request->get('file_description')),
+                            $changes
+                        )
+                    ) {
                         $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index', 'not_attach_file', $afh->getErrorMessage()));
                     }
                 }

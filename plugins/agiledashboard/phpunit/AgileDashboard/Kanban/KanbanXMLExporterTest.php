@@ -19,7 +19,7 @@
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Kanban;
 
@@ -32,6 +32,7 @@ use PHPUnit\Framework\TestCase;
 final class KanbanXMLExporterTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var KanbanXMLExporter
      */

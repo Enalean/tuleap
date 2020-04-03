@@ -22,6 +22,7 @@
 final class Tracker_Report_ResultJoinerTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     public function testItRemovesEntriesWhoseKeysAreNotPresentInOtherResult(): void
     {
         $matching_ids = array(123 => 'whatever', 456 => 'whatever', 789 => 'whatever');

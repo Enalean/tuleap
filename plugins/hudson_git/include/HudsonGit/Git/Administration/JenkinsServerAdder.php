@@ -56,10 +56,12 @@ class JenkinsServerAdder
         }
 
         $project_id = (int) $project->getID();
-        if ($this->jenkins_server_dao->isJenkinsServerAlreadyDefinedInProject(
-            $project_id,
-            $jenkins_server_url
-        )) {
+        if (
+            $this->jenkins_server_dao->isJenkinsServerAlreadyDefinedInProject(
+                $project_id,
+                $jenkins_server_url
+            )
+        ) {
             throw new JenkinsServerAlreadyDefinedException();
         }
 

@@ -145,8 +145,10 @@ class ProjectOwnershipResource extends AuthenticatedResource
             new User_ForgeUserGroupPermissionsDao()
         );
         $forge_ugroup_permissions_manager->doesUserHavePermission($user, new RestProjectManagementPermission());
-        if (! $user->isSuperUser() &&
-            ! $forge_ugroup_permissions_manager->doesUserHavePermission($user, new RestProjectManagementPermission())) {
+        if (
+            ! $user->isSuperUser() &&
+            ! $forge_ugroup_permissions_manager->doesUserHavePermission($user, new RestProjectManagementPermission())
+        ) {
             throw new RestException(
                 403,
                 'You need to be a site administrator or have REST project management permission delegation'

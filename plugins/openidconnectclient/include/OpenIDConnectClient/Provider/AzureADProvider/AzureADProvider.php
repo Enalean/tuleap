@@ -105,17 +105,17 @@ final class AzureADProvider implements Provider
         return $this->name;
     }
 
-    public function getAuthorizationEndpoint() : string
+    public function getAuthorizationEndpoint(): string
     {
         return self::BASE_AZURE_URL . urlencode($this->acceptable_tenant_for_authentication_configuration->getValueForAuthenticationFlow()) . "/oauth2/v2.0/authorize";
     }
 
-    public function getTokenEndpoint() : string
+    public function getTokenEndpoint(): string
     {
         return self::BASE_AZURE_URL . urlencode($this->acceptable_tenant_for_authentication_configuration->getValueForAuthenticationFlow()) . "/oauth2/v2.0/token";
     }
 
-    public function getUserInfoEndpoint() : string
+    public function getUserInfoEndpoint(): string
     {
         return "https://graph.microsoft.com/oidc/userinfo";
     }
@@ -145,7 +145,7 @@ final class AzureADProvider implements Provider
         return $this->color;
     }
 
-    public function getTenantId() : string
+    public function getTenantId(): string
     {
         return $this->tenant_id;
     }
@@ -163,7 +163,7 @@ final class AzureADProvider implements Provider
         return $this->acceptable_tenant_for_authentication_configuration->getTenantSetup();
     }
 
-    public function getRedirectUri() : string
+    public function getRedirectUri(): string
     {
         return 'https://' . ForgeConfig::get('sys_https_host') . '/plugins/openidconnectclient/azure/';
     }

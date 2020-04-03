@@ -29,7 +29,8 @@ use Tuleap\Svn\SVNRepositoryLayoutInitializationException;
 
 class SystemEvent_SVN_CREATE_REPOSITORYTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, GlobalSVNPollution;
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use GlobalSVNPollution;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tuleap\SVN\Repository\RepositoryManager

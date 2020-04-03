@@ -19,7 +19,7 @@
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\TestManagement;
 
@@ -30,6 +30,7 @@ use TrackerFactory;
 final class ConfigTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var Config
      */

@@ -61,7 +61,7 @@ class VelocityRepresentationBuilder
         $this->semantic_timeframe_builder = $semantic_timeframe_builder;
     }
 
-    public function buildCollectionOfRepresentations(Planning_Milestone $milestone, PFUser $user) : VelocityCollection
+    public function buildCollectionOfRepresentations(Planning_Milestone $milestone, PFUser $user): VelocityCollection
     {
         $representations = new VelocityCollection();
 

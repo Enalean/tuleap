@@ -51,7 +51,7 @@ class HiddenFieldsetChecker
     public function mustFieldsetBeHidden(
         Tracker_FormElement_Container_Fieldset $fieldset,
         Tracker_Artifact $artifact
-    ) : bool {
+    ): bool {
         if ($this->hidden_fieldsets_detector->isFieldsetHidden($artifact, $fieldset)) {
             $fields = $this->fields_extractor->extractFieldsInsideContainer($fieldset);
             foreach ($fields as $field) {

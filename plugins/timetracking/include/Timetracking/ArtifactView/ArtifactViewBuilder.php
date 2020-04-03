@@ -97,7 +97,8 @@ class ArtifactViewBuilder
 
         $user_can_add_time = $this->permissions_retriever->userCanAddTimeInTracker($user, $tracker);
 
-        if (! $user_can_add_time &&
+        if (
+            ! $user_can_add_time &&
             ! $this->permissions_retriever->userCanSeeAggregatedTimesInTracker($user, $tracker)
         ) {
             return null;

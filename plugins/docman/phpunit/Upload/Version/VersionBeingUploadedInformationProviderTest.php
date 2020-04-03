@@ -33,7 +33,7 @@ class VersionBeingUploadedInformationProviderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testFileInformationCanBeProvided() : void
+    public function testFileInformationCanBeProvided(): void
     {
         $path_allocator = new UploadPathAllocator('/var/tmp');
         $dao            = \Mockery::mock(DocumentOnGoingVersionToUploadDAO::class);
@@ -82,7 +82,7 @@ class VersionBeingUploadedInformationProviderTest extends TestCase
         $this->assertNull($data_store->getFileInformation($request));
     }
 
-    public function testFileInformationCannotBeFoundIfRequestAttributesAreMissing() : void
+    public function testFileInformationCannotBeFoundIfRequestAttributesAreMissing(): void
     {
         $path_allocator = new UploadPathAllocator('/var/tmp');
         $dao            = \Mockery::mock(DocumentOnGoingVersionToUploadDAO::class);
@@ -95,7 +95,7 @@ class VersionBeingUploadedInformationProviderTest extends TestCase
         $this->assertNull($data_store->getFileInformation($request));
     }
 
-    public function testFileInformationCannotBeFoundIfThereIsNotAValidEntryInTheDatabase() : void
+    public function testFileInformationCannotBeFoundIfThereIsNotAValidEntryInTheDatabase(): void
     {
         $path_allocator = new UploadPathAllocator('/var/tmp');
         $dao            = \Mockery::mock(DocumentOnGoingVersionToUploadDAO::class);

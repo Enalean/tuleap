@@ -77,7 +77,7 @@ class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassD
         );
     }
 
-    public function routeAdmin() : DispatchableWithRequest
+    public function routeAdmin(): DispatchableWithRequest
     {
         $encryption_key = $this->getEncryptionKey();
 
@@ -159,7 +159,7 @@ class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassD
         return new CrossReferenceCreator(new CrossReferenceDao(), $this->getRESTReferenceCreator());
     }
 
-    private function getRESTReferenceCreator() : RESTReferenceCreator
+    private function getRESTReferenceCreator(): RESTReferenceCreator
     {
         return new RESTReferenceCreator(
             HttpClientFactory::createClient(),

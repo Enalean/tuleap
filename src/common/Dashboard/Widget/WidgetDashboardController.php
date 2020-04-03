@@ -101,7 +101,8 @@ class WidgetDashboardController
         $widget_to_update = $this->widget_retriever->getWidgetById($widget_id);
         $old_column_id    = $widget_to_update->getColumnId();
 
-        if ($new_column_id === $old_column_id
+        if (
+            $new_column_id === $old_column_id
             && $widget_to_update->getRank() === $new_widget_rank
         ) {
             return;

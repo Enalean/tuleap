@@ -124,7 +124,7 @@ class LFSBasicTransferObjectSaver
         }
     }
 
-    private function handlePotentialDBReconnection() : void
+    private function handlePotentialDBReconnection(): void
     {
         // The copy of the file to the disk can be quite long so the DB
         // server can decide to close the connection, we want to make sure

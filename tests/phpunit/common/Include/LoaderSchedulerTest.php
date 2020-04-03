@@ -25,7 +25,8 @@ use Tuleap\Plugin\PluginLoader;
 
 final class LoaderSchedulerTest extends TestCase // phpcs:ignore
 {
-    use MockeryPHPUnitIntegration, \Tuleap\TemporaryTestDirectory;
+    use MockeryPHPUnitIntegration;
+    use \Tuleap\TemporaryTestDirectory;
 
     /**
      * @var Mockery\MockInterface
@@ -40,7 +41,7 @@ final class LoaderSchedulerTest extends TestCase // phpcs:ignore
      */
     private $loader_scheduler;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->cookie_manager = Mockery::mock(CookieManager::class);
         $this->plugin_loader = Mockery::mock(PluginLoader::class);
@@ -51,7 +52,7 @@ final class LoaderSchedulerTest extends TestCase // phpcs:ignore
     /**
      * @runInSeparateProcess
      */
-    public function testSessionHashLoading() : void
+    public function testSessionHashLoading(): void
     {
         session_save_path($this->getTmpDir());
 
@@ -64,7 +65,7 @@ final class LoaderSchedulerTest extends TestCase // phpcs:ignore
         $this->assertSame('test_value', $GLOBALS['session_hash']);
     }
 
-    public function testSessionIsNotLoadedWhenItsAScript() : void
+    public function testSessionIsNotLoadedWhenItsAScript(): void
     {
         $this->cookie_manager->shouldNotReceive('isCookie');
         $this->plugin_loader->shouldReceive('loadPlugins')->once();

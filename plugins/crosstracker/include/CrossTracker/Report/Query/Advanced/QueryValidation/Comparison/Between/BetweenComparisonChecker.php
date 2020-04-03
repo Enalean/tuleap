@@ -55,7 +55,7 @@ class BetweenComparisonChecker extends ComparisonChecker
         // AllowedMetadata::SUBMITTED_ON can be used with BETWEEN operator
     }
 
-    public function getOperator() : string
+    public function getOperator(): string
     {
         return self::OPERATOR;
     }

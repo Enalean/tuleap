@@ -38,7 +38,7 @@ class LockDestructorTest extends TestCase
      */
     private $lock_dao;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         $this->lock_dao        = \Mockery::mock(LockDao::class);
         $this->lock_destructor = new LockDestructor($this->lock_dao);

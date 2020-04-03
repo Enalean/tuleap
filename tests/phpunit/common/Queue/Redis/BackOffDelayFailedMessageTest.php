@@ -66,7 +66,7 @@ final class BackOffDelayFailedMessageTest extends TestCase
 
     private function buildMessage(int $nb_time_message_has_been_queued): EventMessageForPersistentQueue
     {
-        return new class($nb_time_message_has_been_queued) implements EventMessageForPersistentQueue
+        return new class ($nb_time_message_has_been_queued) implements EventMessageForPersistentQueue
         {
             /**
              * @var int
@@ -78,7 +78,7 @@ final class BackOffDelayFailedMessageTest extends TestCase
                 $this->nb_time_message_has_been_queued = $nb_time_message_has_been_queued;
             }
 
-            public function getTopic() : string
+            public function getTopic(): string
             {
                 return '';
             }

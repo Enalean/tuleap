@@ -45,7 +45,8 @@ class ReleasePermissionManager
 
     public function canUserSeeRelease(PFUser $user, FRSRelease $release, Project $project)
     {
-        if ($release->isActive()
+        if (
+            $release->isActive()
             && $this->frs_service_permission_manager->userCanRead($project, $user)
             && $this->release_factory->userCanRead($project->getID(), $release->getPackageID(), $release->getReleaseID())
         ) {

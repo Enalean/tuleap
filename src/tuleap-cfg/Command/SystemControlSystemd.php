@@ -54,7 +54,7 @@ class SystemControlSystemd implements SystemControlInterface
         $this->action  = $action;
     }
 
-    public function run() : void
+    public function run(): void
     {
         $this->process->run();
     }

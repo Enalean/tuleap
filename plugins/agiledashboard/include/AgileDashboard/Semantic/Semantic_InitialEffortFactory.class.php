@@ -42,7 +42,7 @@ class AgileDashboard_Semantic_InitialEffortFactory implements IBuildSemanticFrom
     {
         if (!isset(self::$instance)) {
             $class_name = self::class;
-            self::$instance = new $class_name;
+            self::$instance = new $class_name();
         }
         return self::$instance;
     }

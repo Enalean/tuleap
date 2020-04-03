@@ -19,7 +19,7 @@
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Admin\ProjectCreation;
 
@@ -33,7 +33,8 @@ use Tuleap\Project\Admin\DescriptionFields\DescriptionFieldAdminPresenterBuilder
 
 class ProjectsFieldDescriptionUpdaterTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /**
      * @var ProjectsFieldDescriptionUpdater

@@ -153,7 +153,8 @@ class AddWidgetController
             $widgets_presenter = array();
             foreach ($widgets as $widget) {
                 $widget = $this->factory->getInstanceByWidgetName($widget->id);
-                if ($widget
+                if (
+                    $widget
                     && $widget->isAvailable()
                     && $this->disabled_project_widgets_checker->isWidgetDisabled($widget, $dashboard_type) === false
                 ) {

@@ -46,8 +46,10 @@ class BackendSVN
             return;
         }
 
-        if (file_exists('/etc/opt/remi/php73/php-fpm.d/www.conf') &&
-                filesize('/etc/opt/remi/php73/php-fpm.d/www.conf') !== 0) {
+        if (
+            file_exists('/etc/opt/remi/php73/php-fpm.d/www.conf') &&
+                filesize('/etc/opt/remi/php73/php-fpm.d/www.conf') !== 0
+        ) {
             $this->logger->info('Backup original FPM file');
             rename('/etc/opt/remi/php73/php-fpm.d/www.conf', '/etc/opt/remi/php73/php-fpm.d/www.conf.orig');
             touch('/etc/opt/remi/php73/php-fpm.d/www.conf');

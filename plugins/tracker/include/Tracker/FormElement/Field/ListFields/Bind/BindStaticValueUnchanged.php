@@ -38,7 +38,7 @@ class BindStaticValueUnchanged extends Tracker_FormElement_Field_List_Bind_Stati
         parent::__construct($id, $label, $description, $rank, $is_hidden);
     }
 
-    public function getXMLId() : string
+    public function getXMLId(): string
     {
         return self::XML_VALUE_ID;
     }

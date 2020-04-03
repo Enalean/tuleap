@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Docman\Upload\Version;
 
@@ -35,14 +35,14 @@ class VersionToUploadCreatorTest extends TestCase
 
     private $dao;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         \ForgeConfig::store();
 
         $this->dao = \Mockery::mock(DocumentOnGoingVersionToUploadDAO::class);
     }
 
-    public function tearDown()  : void
+    public function tearDown(): void
     {
         \ForgeConfig::restore();
     }

@@ -24,7 +24,8 @@ use Tuleap\GlobalLanguageMock;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class UGroupGetUsersTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     protected $garfield;
     protected $goofy;

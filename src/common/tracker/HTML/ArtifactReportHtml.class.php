@@ -278,8 +278,10 @@ class ArtifactReportHtml extends ArtifactReport
                     $val    = isset($prefs[$field->getName()][0])       ? $prefs[$field->getName()][0]       : '';
                     $boxes .= $field_html->fieldDateOperator($val_op, $pv) . $field_html->fieldDate($val, $pv);
                 }
-            } elseif ($field->isTextField() ||
-                       $field->isTextArea()) {
+            } elseif (
+                $field->isTextField() ||
+                       $field->isTextArea()
+            ) {
                 $val = isset($prefs[$field->getName()][0]) ? $prefs[$field->getName()][0] : "";
                 $boxes .=
                     ($pv != 0 ? $val : $field_html->fieldText(stripslashes($val), 15, 80));
@@ -444,10 +446,12 @@ class ArtifactReportHtml extends ArtifactReport
             $html_result .= '<table width="100%" cellpadding="2" cellspacing="1" border="0">';
             $html_result .= '<thead>';
             $html_result .= '<tr class="boxtable">';
-            while (($title = current($title_arr)) &&
+            while (
+                ($title = current($title_arr)) &&
                   ($link = current($links_arr)) &&
                   ($id = current($id_arr)) &&
-                  ($width = current($width_arr))) {
+                  ($width = current($width_arr))
+            ) {
                 if ($width) {
                     $width = 'style="width:' . $width . '%"';
                 } else {
@@ -997,8 +1001,10 @@ class ArtifactReportHtml extends ArtifactReport
 
              // Do not show some special fields any way
                 if ($field->isSpecial()) {
-                    if (($field->getName() == 'group_id') ||
-                             ($field->getName() == 'comment_type_id')) {
+                    if (
+                        ($field->getName() == 'group_id') ||
+                             ($field->getName() == 'comment_type_id')
+                    ) {
                         continue;
                     }
                 }
@@ -1113,8 +1119,10 @@ class ArtifactReportHtml extends ArtifactReport
 
              // Do not show some special fields any way
                 if ($field->isSpecial()) {
-                    if (($field->getName() == 'group_id') ||
-                             ($field->getName() == 'comment_type_id')) {
+                    if (
+                        ($field->getName() == 'group_id') ||
+                             ($field->getName() == 'comment_type_id')
+                    ) {
                         continue;
                     }
                 }

@@ -23,17 +23,17 @@ declare(strict_types=1);
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class b201904191400_rename_type_systemevent_user_create extends ForgeUpgrade_Bucket
 {
-    public function description() : string
+    public function description(): string
     {
         return 'Rename the type of the system event processing the status change of an active user';
     }
 
-    public function preUp() : void
+    public function preUp(): void
     {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() : void
+    public function up(): void
     {
         $sql = "UPDATE system_event SET type = 'ACTIVE_USER_STATUS_CHANGE' WHERE type = 'USER_CREATE'";
 

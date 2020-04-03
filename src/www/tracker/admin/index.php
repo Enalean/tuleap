@@ -177,8 +177,10 @@ if ($group_id && !$atid) {
                 }
                 $arh->fetchData($report_id);
             } elseif ($request->getValidated('delete_report')) {
-                if (($arh->scope == 'P') &&
-                 !$ath->userIsAdmin()) {
+                if (
+                    ($arh->scope == 'P') &&
+                    !$ath->userIsAdmin()
+                ) {
                     exit_permission_denied();
                 }
                 $arh->delete();
@@ -194,12 +196,16 @@ if ($group_id && !$atid) {
             if ($request->getValidated('new_report')) {
                 $arh->createReportForm();
             } elseif ($request->getValidated('show_report')) {
-                if (($arh->scope == 'P') &&
-                !$ath->userIsAdmin()) {
+                if (
+                    ($arh->scope == 'P') &&
+                    !$ath->userIsAdmin()
+                ) {
                        exit_permission_denied();
                 }
-                if (($arh->scope == 'S') &&
-                !user_is_super_user()) {
+                if (
+                    ($arh->scope == 'S') &&
+                    !user_is_super_user()
+                ) {
                        exit_permission_denied();
                 }
                 $arh->showReportForm();
@@ -338,11 +344,13 @@ if ($group_id && !$atid) {
                         $agnf = new ArtifactGlobalNotificationFactory();
                         $notifs = $agnf->getGlobalNotificationsForTracker($atid);
                         foreach ($notifs as $id => $nop) {
-                            if (isset($submitted_notifications[$id]) && (
+                            if (
+                                isset($submitted_notifications[$id]) && (
                                  $submitted_notifications[$id]['addresses'] != $notifs[$id]->getAddresses() ||
                                  $submitted_notifications[$id]['all_updates'] != $notifs[$id]->isAllUpdates() ||
                                  $submitted_notifications[$id]['check_permissions'] != $notifs[$id]->isCheckPermissions()
-                              )) {
+                                )
+                            ) {
                                      $ok = $agnf->updateGlobalNotification($id, $submitted_notifications[$id]) && $ok;
                             }
                         }
@@ -350,9 +358,11 @@ if ($group_id && !$atid) {
 
                     if (is_array($request->get('add_global_notification'))) {
                         foreach ($request->get('add_global_notification') as $new_global_notif) {
-                            if ((isset($new_global_notif['addresses']) && trim($new_global_notif['addresses'])) &&
+                            if (
+                                (isset($new_global_notif['addresses']) && trim($new_global_notif['addresses'])) &&
                                    isset($new_global_notif['all_updates']) &&
-                                   isset($new_global_notif['check_permissions'])) {
+                                   isset($new_global_notif['check_permissions'])
+                            ) {
                                 if ($id = $agnf->addGlobalNotificationForTracker($atid)) {
                                              $ok = $agnf->updateGlobalNotification($id, $new_global_notif) && $ok;
                                 }
@@ -416,15 +426,17 @@ if ($group_id && !$atid) {
                 $browse_instructions = $request->getValidated('browse_instructions', 'text', '');
                 $instantiate_for_new_projects = $ath->Group->isTemplate() && $request->getValidated('instantiate_for_new_projects') ? 1 : 0;
 
-                if (!$ath->update(
-                    $name,
-                    $description,
-                    $itemname,
-                    $allow_copy,
-                    $submit_instructions,
-                    $browse_instructions,
-                    $instantiate_for_new_projects
-                )) {
+                if (
+                    !$ath->update(
+                        $name,
+                        $description,
+                        $itemname,
+                        $allow_copy,
+                        $submit_instructions,
+                        $browse_instructions,
+                        $instantiate_for_new_projects
+                    )
+                ) {
                         exit_error($Language->getText('global', 'error'), $ath->getErrorMessage());
                 } else {
                     $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_admin_index', 'update_success_title'));
@@ -488,10 +500,12 @@ if ($group_id && !$atid) {
                     $computed_value = false;
                 }
 
-                if ((!$field->isDateField() && $request->valid(new Valid_String('default_value')))
-                || ($field->isMultiSelectBox())
-                || ($request->valid(new Valid_String('default_value')))
-                || ($field->isTextArea() && $request->valid(new Valid_Text('default_value')))) {
+                if (
+                    (!$field->isDateField() && $request->valid(new Valid_String('default_value')))
+                    || ($field->isMultiSelectBox())
+                    || ($request->valid(new Valid_String('default_value')))
+                    || ($field->isTextArea() && $request->valid(new Valid_Text('default_value')))
+                ) {
                     if (!$field->updateDefaultValue($atid, $request->get('default_value'), $computed_value)) {
                         exit_error($Language->getText('global', 'error'), $art_field_fact->getErrorMessage());
                     } else {
@@ -647,9 +661,10 @@ if ($group_id && !$atid) {
             }
 
 
-            if ($request->valid(new Valid_WhiteList('data_type', array(1,2,3,4,5))) //See data_type in ArtifactField.class.php
+            if (
+                $request->valid(new Valid_WhiteList('data_type', array(1,2,3,4,5))) //See data_type in ArtifactField.class.php
                     && $request->valid(new Valid_WhiteList('display_type', array('SB','MB','TF','TA','DF')))
-                       ) {
+            ) {
                        $label          = $sanitizer->sanitize($request->getValidated('label', 'string'));
                        $description    = $sanitizer->sanitize($request->getValidated('description', 'text'));
                        $data_type      = $request->get('data_type');
@@ -662,19 +677,21 @@ if ($group_id && !$atid) {
                        $use_it         = $request->getValidated('use_it', new Valid_WhiteList('', array(1)), 0);
                        $field_set_id = $request->getValidated('field_set_id', 'uint');
 
-                if (!$art_field_fact->createField(
-                    $description,
-                    $label,
-                    $data_type,
-                    $display_type,
-                    $display_size,
-                    $rank_on_screen,
-                    (isset($empty_ok) ? $empty_ok : 0),
-                    (isset($keep_history) ? $keep_history : 0),
-                    $special,
-                    $use_it,
-                    $field_set_id
-                )) {
+                if (
+                    !$art_field_fact->createField(
+                        $description,
+                        $label,
+                        $data_type,
+                        $display_type,
+                        $display_size,
+                        $rank_on_screen,
+                        (isset($empty_ok) ? $empty_ok : 0),
+                        (isset($keep_history) ? $keep_history : 0),
+                        $special,
+                        $use_it,
+                        $field_set_id
+                    )
+                ) {
                             exit_error($Language->getText('global', 'error'), $art_field_fact->getErrorMessage());
                 } else {
                   // Reload the field factory
@@ -701,9 +718,10 @@ if ($group_id && !$atid) {
             $field_id = $request->getValidated('field_id', 'uint', 0);
             $field = $art_field_fact->getFieldFromId($field_id);
             if ($field) {
-                if ($request->valid(new Valid_WhiteList('data_type', array(1,2,3,4,5))) //See data_type in ArtifactField.class.php
-                  && $request->valid(new Valid_WhiteList('display_type', array('SB','MB','TF','TA','DF')))
-                  && $request->valid(new Valid_String('field_name'))
+                if (
+                    $request->valid(new Valid_WhiteList('data_type', array(1,2,3,4,5))) //See data_type in ArtifactField.class.php
+                    && $request->valid(new Valid_WhiteList('display_type', array('SB','MB','TF','TA','DF')))
+                    && $request->valid(new Valid_String('field_name'))
                 ) {
                      $field_name     = $request->get('field_name');
                      $label          = $sanitizer->sanitize($request->getValidated('label', 'string'));
@@ -717,21 +735,23 @@ if ($group_id && !$atid) {
                      $special        = $request->getValidated('special', new Valid_WhiteList('', array(1)), 0);
                      $use_it         = $request->getValidated('use_it', new Valid_WhiteList('', array(1)), 0);
                      $field_set_id = $request->getValidated('field_set_id', 'uint');
-                    if (!$field->update(
-                        $atid,
-                        $field_name,
-                        $description,
-                        $label,
-                        $data_type,
-                        $display_type,
-                        ($display_size == "N/A" ? "" : $display_size),
-                        $rank_on_screen,
-                        $empty_ok,
-                        $keep_history,
-                        $special,
-                        $use_it,
-                        $field_set_id
-                    )) {
+                    if (
+                        !$field->update(
+                            $atid,
+                            $field_name,
+                            $description,
+                            $label,
+                            $data_type,
+                            $display_type,
+                            ($display_size == "N/A" ? "" : $display_size),
+                            $rank_on_screen,
+                            $empty_ok,
+                            $keep_history,
+                            $special,
+                            $use_it,
+                            $field_set_id
+                        )
+                    ) {
                                exit_error($Language->getText('global', 'error'), $field->getErrorMessage());
                     } else {
                         if (!(isset($use_it) && $use_it)) {

@@ -33,7 +33,9 @@ use URLVerification;
 
 class URLVerificationTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
+    use ForgeConfigSandbox;
 
     public function testIsScriptAllowedForAnonymous(): void
     {

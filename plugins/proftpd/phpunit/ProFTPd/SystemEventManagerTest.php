@@ -32,7 +32,7 @@ class ProFTPd_SystemEventManagerTest extends \PHPUnit\Framework\TestCase
     /** @var Proftpd_SystemEventManager */
     public $proftpd_system_event_manager;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
         $this->system_event_manager = $this->getMockBuilder('SystemEventManager')->disableOriginalConstructor()->getMock();

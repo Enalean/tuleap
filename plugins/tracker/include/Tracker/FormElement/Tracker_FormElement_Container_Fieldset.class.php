@@ -83,7 +83,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         return $html;
     }
 
-    private function getHiddenFieldsetChecker() : HiddenFieldsetChecker
+    private function getHiddenFieldsetChecker(): HiddenFieldsetChecker
     {
         return new HiddenFieldsetChecker(
             new HiddenFieldsetsDetector(
@@ -208,7 +208,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         return $html;
     }
 
-    public function canBeRemovedFromUsage() : bool
+    public function canBeRemovedFromUsage(): bool
     {
         return parent::canBeRemovedFromUsage() && ! $this->isFieldsetUsedInPostAction();
     }
@@ -308,12 +308,12 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         return parent::getCannotRemoveMessage();
     }
 
-    protected function getHiddenFieldsetsDao() : HiddenFieldsetsDao
+    protected function getHiddenFieldsetsDao(): HiddenFieldsetsDao
     {
         return new HiddenFieldsetsDao();
     }
 
-    private function isFieldsetUsedInPostAction() : bool
+    private function isFieldsetUsedInPostAction(): bool
     {
         return $this->getHiddenFieldsetsDao()->isFieldsetUsedInPostAction((int) $this->getID());
     }

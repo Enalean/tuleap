@@ -27,7 +27,7 @@ use Tuleap\Cryptography\Exception\CannotSerializeKeyException;
 
 final class KeyTest extends TestCase
 {
-    public function testRawKeyMaterialCanBeRetrieved() : void
+    public function testRawKeyMaterialCanBeRetrieved(): void
     {
         $key_material = 'key_material';
         $key          = new Key(new ConcealedString($key_material));
@@ -35,7 +35,7 @@ final class KeyTest extends TestCase
         $this->assertEquals($key_material, $key->getRawKeyMaterial());
     }
 
-    public function testSerializationIsDisabled() : void
+    public function testSerializationIsDisabled(): void
     {
         $key = new Key(new ConcealedString('key_material'));
 
@@ -43,20 +43,20 @@ final class KeyTest extends TestCase
         serialize($key);
     }
 
-    public function testUnserializationIsDisabled() : void
+    public function testUnserializationIsDisabled(): void
     {
         $this->expectException(CannotSerializeKeyException::class);
         unserialize('O:23:"Tuleap\Cryptography\Key":0:{}');
     }
 
-    public function testKeyCanNotBeTransformedToAString() : void
+    public function testKeyCanNotBeTransformedToAString(): void
     {
         $key = new Key(new ConcealedString('key_material'));
 
         $this->assertEquals('', (string) $key);
     }
 
-    public function testKeyMaterialIsNotPresentInTheDebugInformation() : void
+    public function testKeyMaterialIsNotPresentInTheDebugInformation(): void
     {
         $key_material = 'key_material_value';
         $key          = new Key(new ConcealedString($key_material));

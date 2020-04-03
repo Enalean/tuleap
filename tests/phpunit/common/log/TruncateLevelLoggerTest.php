@@ -25,6 +25,7 @@ use Psr\Log\LogLevel;
 class TruncateLevelLoggerTest extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Psr\Log\LoggerInterface
      */

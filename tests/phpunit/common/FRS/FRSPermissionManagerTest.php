@@ -55,7 +55,7 @@ class FRSPermissionManagerTest extends TestCase
      */
     private $access_checker;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         $this->permission_dao     = \Mockery::mock(\Tuleap\FRS\FRSPermissionDao::class);
         $this->permission_factory = \Mockery::mock(\Tuleap\FRS\FRSPermissionFactory::class);

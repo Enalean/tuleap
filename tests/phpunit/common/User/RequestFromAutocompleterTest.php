@@ -29,7 +29,8 @@ use Tuleap\GlobalResponseMock;
 
 final class RequestFromAutocompleterTest extends \PHPUnit\Framework\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, GlobalResponseMock;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use GlobalResponseMock;
 
     private $rule_email;
     private $user_manager;
@@ -44,7 +45,7 @@ final class RequestFromAutocompleterTest extends \PHPUnit\Framework\TestCase
     /** @var InvalidEntryInAutocompleterCollection */
     private $invalid_entries;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -90,14 +91,14 @@ final class RequestFromAutocompleterTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItExtractEmails() : void
+    public function testItExtractEmails(): void
     {
         $request = $this->getRequest('jdoe@example.com,smith@example.com');
 
         $this->assertEquals(array('jdoe@example.com', 'smith@example.com'), $request->getEmails());
     }
 
-    public function testItIgnoresIfItIsUnknown() : void
+    public function testItIgnoresIfItIsUnknown(): void
     {
         $request = $this->getRequest(',bla,');
 
@@ -106,35 +107,35 @@ final class RequestFromAutocompleterTest extends \PHPUnit\Framework\TestCase
         $this->assertEmpty($request->getUgroups());
     }
 
-    public function testItExtractsUgroups() : void
+    public function testItExtractsUgroups(): void
     {
         $request = $this->getRequest('_ugroup:project_members,_ugroup:Developers');
 
         $this->assertEquals(array($this->project_members, $this->developers), $request->getUgroups());
     }
 
-    public function testItDoesNotLeakSecretUgroups() : void
+    public function testItDoesNotLeakSecretUgroups(): void
     {
         $request = $this->getRequest('_ugroup:Secret');
 
         $this->assertEquals([], $request->getUgroups());
     }
 
-    public function testItExtractsUsers() : void
+    public function testItExtractsUsers(): void
     {
         $request = $this->getRequest('Smith (asmith),Thomas A. Anderson (neo)');
 
         $this->assertEquals(array($this->smith, $this->thomas), $request->getUsers());
     }
 
-    public function testItIgnoresUnknownPeople() : void
+    public function testItIgnoresUnknownPeople(): void
     {
         $request = $this->getRequest('Unknown (seraph)');
 
         $this->assertEquals([], $request->getUsers());
     }
 
-    public function testItExtractsEmailsAndUgroupsAndUsers() : void
+    public function testItExtractsEmailsAndUgroupsAndUsers(): void
     {
         $request = $this->getRequest('jdoe@example.com,Thomas A. Anderson (neo),_ugroup:Developers');
 
@@ -143,7 +144,7 @@ final class RequestFromAutocompleterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(array($this->thomas), $request->getUsers());
     }
 
-    public function testItCollectsUnknownEntries() : void
+    public function testItCollectsUnknownEntries(): void
     {
         $this->getRequest('bla,jdoe@example.com,_ugroup:Secret,Unknown (seraph)');
 
@@ -155,7 +156,7 @@ final class RequestFromAutocompleterTest extends \PHPUnit\Framework\TestCase
         $this->invalid_entries->generateWarningMessageForInvalidEntries();
     }
 
-    public function testItIgnoresEmptyStrings() : void
+    public function testItIgnoresEmptyStrings(): void
     {
         $this->getRequest('');
 

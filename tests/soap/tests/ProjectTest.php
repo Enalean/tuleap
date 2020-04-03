@@ -31,7 +31,7 @@ use SOAPBase;
 class ProjectTest extends SOAPBase
 {
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -40,7 +40,7 @@ class ProjectTest extends SOAPBase
         $_SERVER['SCRIPT_NAME'] = $this->base_wsdl;
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         unset($_SERVER['SERVER_NAME']);
         unset($_SERVER['SERVER_PORT']);
@@ -96,7 +96,7 @@ class ProjectTest extends SOAPBase
         $this->assertTrue($response);
     }
 
-    public function testGetProjectGroupsAndUsers() : void
+    public function testGetProjectGroupsAndUsers(): void
     {
         $ugroups = $this->soap_base->getProjectGroupsAndUsers(
             $this->getSessionHash(),

@@ -245,7 +245,8 @@ function frs_file_restore_view($group_id, CSRFSynchronizerToken $csrf_token, &$i
             $html .= '<td><a href="' . $url . '">' . $purifier->purify($file['release_name']) . '</a></td>';
             $url = '/file/showfiles.php?group_id=' . urlencode($group_id) . '#p_' . urlencode($file['package_id']);
             $html .= '<td><a href="' . $url . '">' . $purifier->purify($file['package_name']) . '</a></td>';
-            if ($file['release_status'] != FRSRelease::STATUS_DELETED
+            if (
+                $file['release_status'] != FRSRelease::STATUS_DELETED
                 && $file['package_status'] != FRSPackage::STATUS_DELETED
             ) {
                 $html .= '<td>' . $GLOBALS['Language']->getText(

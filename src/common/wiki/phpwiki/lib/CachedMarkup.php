@@ -53,9 +53,11 @@ class CacheableMarkup extends XmlContent
 
         // ZLIB format has a five bit checksum in it's header.
         // Lets check for sanity.
-        if (((ord($packed[0]) * 256 + ord($packed[1])) % 31 == 0)
+        if (
+            ((ord($packed[0]) * 256 + ord($packed[1])) % 31 == 0)
              and (substr($packed, 0, 2) == "\037\213")
-                  or (substr($packed, 0, 2) == "x\332")) {   // 120, 218
+                  or (substr($packed, 0, 2) == "x\332")
+        ) {   // 120, 218
             if (function_exists('gzuncompress')) {
                 // Looks like ZLIB.
                 $data = gzuncompress($packed);
@@ -577,7 +579,7 @@ class Cached_PluginInvocation extends Cached_DynamicContent
 
         if (!$loader) {
             include_once('lib/WikiPlugin.php');
-            $loader = new WikiPluginLoader;
+            $loader = new WikiPluginLoader();
         }
         return $loader;
     }

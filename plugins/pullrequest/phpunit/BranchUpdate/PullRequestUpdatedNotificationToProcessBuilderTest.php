@@ -41,7 +41,8 @@ use UserManager;
 
 final class PullRequestUpdatedNotificationToProcessBuilderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, TemporaryTestDirectory;
+    use MockeryPHPUnitIntegration;
+    use TemporaryTestDirectory;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|UserManager

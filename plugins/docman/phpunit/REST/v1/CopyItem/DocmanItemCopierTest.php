@@ -67,7 +67,7 @@ final class DocmanItemCopierTest extends TestCase
      */
     private $item_copier;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->item_factory             = Mockery::mock(Docman_ItemFactory::class);
         $this->permission_manager       = Mockery::mock(Docman_PermissionsManager::class);
@@ -94,7 +94,7 @@ final class DocmanItemCopierTest extends TestCase
         );
     }
 
-    public function testAnItemCanBeCopied() : void
+    public function testAnItemCanBeCopied(): void
     {
         $destination_folder                = Mockery::mock(Docman_Folder::class);
         $copy_item_representation          = new DocmanCopyItemRepresentation();
@@ -129,7 +129,7 @@ final class DocmanItemCopierTest extends TestCase
         $this->assertEquals($representation_copy->id, 999);
     }
 
-    public function testCanNotCopyAnItemThatDoesNotExist() : void
+    public function testCanNotCopyAnItemThatDoesNotExist(): void
     {
         $copy_item_representation          = new DocmanCopyItemRepresentation();
         $copy_item_representation->item_id = 741;
@@ -146,7 +146,7 @@ final class DocmanItemCopierTest extends TestCase
         );
     }
 
-    public function testCanNotCopyAnItemTheUserCanNotAccess() : void
+    public function testCanNotCopyAnItemTheUserCanNotAccess(): void
     {
         $copy_item_representation          = new DocmanCopyItemRepresentation();
         $copy_item_representation->item_id = 741;
@@ -167,7 +167,7 @@ final class DocmanItemCopierTest extends TestCase
         );
     }
 
-    public function testCanNotCopyAnItemInADifferentProjectThanTheDestination() : void
+    public function testCanNotCopyAnItemInADifferentProjectThanTheDestination(): void
     {
         $copy_item_representation          = new DocmanCopyItemRepresentation();
         $copy_item_representation->item_id = 741;
@@ -194,7 +194,7 @@ final class DocmanItemCopierTest extends TestCase
         );
     }
 
-    public function testItemTitleIsUpdatedIfADuplicateExistsInTheDestinationFolder() : void
+    public function testItemTitleIsUpdatedIfADuplicateExistsInTheDestinationFolder(): void
     {
         $destination_folder                = Mockery::mock(Docman_Folder::class);
         $copy_item_representation          = new DocmanCopyItemRepresentation();
@@ -217,7 +217,7 @@ final class DocmanItemCopierTest extends TestCase
         $item_to_copy->shouldReceive('accept')
             ->with(Mockery::type(BeforeCopyVisitor::class), Mockery::any())
             ->andReturn($item_copy_expectation);
-        $this->item_factory->shouldReceive('update')->withArgs(function (array $row) use ($item_copy_expectation) : bool {
+        $this->item_factory->shouldReceive('update')->withArgs(function (array $row) use ($item_copy_expectation): bool {
             $this->assertEquals($row['title'], $item_copy_expectation->getExpectedTitle());
             return true;
         });
@@ -234,7 +234,7 @@ final class DocmanItemCopierTest extends TestCase
         $this->assertEquals($representation_copy->id, 999);
     }
 
-    public function testCloneIsInterruptedWhenItemDoesNotAppearToHaveBeenCloned() : void
+    public function testCloneIsInterruptedWhenItemDoesNotAppearToHaveBeenCloned(): void
     {
         $destination_folder                = Mockery::mock(Docman_Folder::class);
         $copy_item_representation          = new DocmanCopyItemRepresentation();

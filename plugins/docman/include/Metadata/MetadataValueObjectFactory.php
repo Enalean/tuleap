@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Docman\Metadata;
 
@@ -41,7 +41,7 @@ class MetadataValueObjectFactory
      * Create and set-up a MetadataValue object.
      * @var $value string | int | array
      */
-    public function createMetadataValueObjectWithCorrectValue(int $item_id, int $field_id, int $type, $value) : Docman_MetadataValue
+    public function createMetadataValueObjectWithCorrectValue(int $item_id, int $field_id, int $type, $value): Docman_MetadataValue
     {
         $docman_metadata_value = $this->metadata_type_value_factory->createFromType($type);
 

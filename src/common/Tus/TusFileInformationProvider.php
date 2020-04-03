@@ -24,5 +24,5 @@ namespace Tuleap\Tus;
 
 interface TusFileInformationProvider
 {
-    public function getFileInformation(\Psr\Http\Message\ServerRequestInterface $request) : ?TusFileInformation;
+    public function getFileInformation(\Psr\Http\Message\ServerRequestInterface $request): ?TusFileInformation;
 }

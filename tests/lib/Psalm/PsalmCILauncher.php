@@ -42,7 +42,7 @@ final class PsalmCILauncher extends Command
         $this->shell_passthrough = $shell_passthrough;
     }
 
-    protected function configure() : void
+    protected function configure(): void
     {
         $this->setDescription('Launch Psalm on a contribution')
             ->addOption('config', null, InputOption::VALUE_REQUIRED, 'Path to the Psalm configuration file', 'tests/psalm/psalm.xml')
@@ -51,7 +51,7 @@ final class PsalmCILauncher extends Command
             ->addArgument('modified-files', InputArgument::IS_ARRAY | InputArgument::REQUIRED, 'List of files to inspect');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output) : int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $config_path = (string) $input->getOption('config');
         $base_dir    = realpath((string) $input->getOption('base-dir')) . DIRECTORY_SEPARATOR;

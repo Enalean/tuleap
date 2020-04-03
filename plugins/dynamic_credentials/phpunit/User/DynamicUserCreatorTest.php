@@ -31,14 +31,14 @@ class DynamicUserCreatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $language = \Mockery::mock(\BaseLanguage::class);
         $GLOBALS['Language'] = $language;
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         unset($GLOBALS['Language']);
         parent::tearDown();

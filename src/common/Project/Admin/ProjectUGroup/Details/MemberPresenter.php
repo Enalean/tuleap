@@ -57,8 +57,10 @@ class MemberPresenter
         );
 
         $is_news_admin = false;
-        if ((int) $ugroup->getId() === ProjectUGroup::NEWS_WRITER
-            && $member->isMember($ugroup->getProjectId(), "N2")) {
+        if (
+            (int) $ugroup->getId() === ProjectUGroup::NEWS_WRITER
+            && $member->isMember($ugroup->getProjectId(), "N2")
+        ) {
             $is_news_admin = true;
         }
 

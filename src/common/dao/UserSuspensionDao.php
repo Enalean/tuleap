@@ -80,7 +80,7 @@ class UserSuspensionDao extends DataAccessObject
     /**
      * Return list of user_id that are not member of any project
      */
-    public function returnNotProjectMembers() : array
+    public function returnNotProjectMembers(): array
     {
         $sql = 'SELECT user_id FROM user LEFT JOIN user_group USING(user_id) WHERE group_id IS NULL and status in ("A","R")';
         return $this->getDB()->run($sql);
@@ -89,7 +89,7 @@ class UserSuspensionDao extends DataAccessObject
     /**
      * Return the last date of being removed from the last project
      */
-    public function delayForBeingNotProjectMembers(int $user_id) : array
+    public function delayForBeingNotProjectMembers(int $user_id): array
     {
         $req = 'SELECT date from group_history where field_name = "removed_user" and old_value REGEXP ? order by date desc LIMIT 1';
         $param = '[(]' . $this->getDB()->escapeLikeValue((string) $user_id) . '[)]$';
@@ -100,7 +100,7 @@ class UserSuspensionDao extends DataAccessObject
      * Return 1 row if delay allowed to  be subscribed without belonging to any project has expired
      * else 0 row
      */
-    public function delayForBeingSubscribed(int $user_id, DateTimeImmutable $date) : array
+    public function delayForBeingSubscribed(int $user_id, DateTimeImmutable $date): array
     {
         //Return delay for being subscribed and not being added to any project
         $timestamp = $date->getTimestamp();
@@ -108,7 +108,7 @@ class UserSuspensionDao extends DataAccessObject
         return $this->getDB()->run($select, $user_id, $timestamp);
     }
 
-    public function verifySuspension(int $user_id) : bool
+    public function verifySuspension(int $user_id): bool
     {
         $sql = "SELECT user.status FROM user WHERE user.user_id = ? ";
         $res = $this->getDB()->run($sql, $user_id);
@@ -120,7 +120,7 @@ class UserSuspensionDao extends DataAccessObject
     }
 
 
-    public function getUsersWithoutConnectionOrAccessBetweenDates(DateTimeImmutable $start_date, DateTimeImmutable $end_date) : array
+    public function getUsersWithoutConnectionOrAccessBetweenDates(DateTimeImmutable $start_date, DateTimeImmutable $end_date): array
     {
         $start_date_timestamp = $start_date->getTimestamp();
         $end_date_timestamp = $end_date->getTimestamp();

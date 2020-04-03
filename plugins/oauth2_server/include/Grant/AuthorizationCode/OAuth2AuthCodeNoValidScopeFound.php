@@ -21,7 +21,6 @@
 declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
-
 namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
 
 use Tuleap\Authentication\SplitToken\SplitToken;

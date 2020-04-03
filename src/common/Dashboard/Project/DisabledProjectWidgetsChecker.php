@@ -48,7 +48,8 @@ class DisabledProjectWidgetsChecker
 
     public function isWidgetDisabled(Widget $widget, string $dashboard_type): bool
     {
-        if ($dashboard_type !== ProjectDashboardController::DASHBOARD_TYPE &&
+        if (
+            $dashboard_type !== ProjectDashboardController::DASHBOARD_TYPE &&
             $dashboard_type !== ProjectDashboardController::LEGACY_DASHBOARD_TYPE
         ) {
             return false;

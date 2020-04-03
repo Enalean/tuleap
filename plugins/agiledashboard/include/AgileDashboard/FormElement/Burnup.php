@@ -389,7 +389,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
      */
     private function getBurnupDataBuilder()
     {
-        $burnup_cache_dao = new BurnupCacheDao;
+        $burnup_cache_dao = new BurnupCacheDao();
 
         return new BurnupDataBuilder(
             $this->getLogger(),

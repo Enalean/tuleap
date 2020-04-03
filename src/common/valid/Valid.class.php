@@ -162,8 +162,10 @@ class Valid
             if ($this->isRequired) {
                 $level = 'error';
             }
-            if ($this->globalErrorMessage !== null &&
-               !$this->isValid) {
+            if (
+                $this->globalErrorMessage !== null &&
+                !$this->isValid
+            ) {
                 $this->addFeedback($level, $this->globalErrorMessage);
             } else {
                 foreach ($this->errors as $error) {
@@ -225,8 +227,10 @@ class Valid
      */
     public function validate($value)
     {
-        if ($this->isRequired
-           || (!$this->isRequired && !$this->isValueEmpty($value))) {
+        if (
+            $this->isRequired
+            || (!$this->isRequired && !$this->isValueEmpty($value))
+        ) {
             $this->checkEachRules($value);
             return $this->isValid;
         }

@@ -30,7 +30,7 @@ final class DelegatedUserAccessForProjectTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testThatByDefaultUserCanNotAccessProject() : void
+    public function testThatByDefaultUserCanNotAccessProject(): void
     {
         $user = Mockery::mock(PFUser::class);
 
@@ -40,7 +40,7 @@ final class DelegatedUserAccessForProjectTest extends TestCase
         $this->assertFalse($event->canUserAccessProject());
     }
 
-    public function testAccessToProjectCanBeGrantedToUser() : void
+    public function testAccessToProjectCanBeGrantedToUser(): void
     {
         $event = new DelegatedUserAccessForProject(Mockery::mock(PFUser::class));
 

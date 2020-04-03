@@ -45,7 +45,7 @@ final class BannerRetrieverTest extends TestCase
      */
     private $project;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->banner_dao        = Mockery::mock(BannerDao::class);
         $this->banner_retriever = new BannerRetriever($this->banner_dao);
@@ -54,7 +54,7 @@ final class BannerRetrieverTest extends TestCase
         $this->project->shouldReceive('getID')->andReturn('102');
     }
 
-    public function testBannerCanBeRetrievedWhenItExists() : void
+    public function testBannerCanBeRetrievedWhenItExists(): void
     {
         $expected_banner_message = 'banner message';
         $this->banner_dao->shouldReceive('searchBannerByProjectId')->andReturn($expected_banner_message);
@@ -64,7 +64,7 @@ final class BannerRetrieverTest extends TestCase
         $this->assertEquals($expected_banner_message, $banner->getMessage());
     }
 
-    public function testCanCheckBannerDoesNotExistForAProject() : void
+    public function testCanCheckBannerDoesNotExistForAProject(): void
     {
         $this->banner_dao->shouldReceive('searchBannerByProjectId')->andReturn(null);
 
@@ -73,7 +73,7 @@ final class BannerRetrieverTest extends TestCase
         $this->assertNull($banner);
     }
 
-    public function testBannerVisibilityForAUserThatHasNotOptOutFromTheProjectBanner() : void
+    public function testBannerVisibilityForAUserThatHasNotOptOutFromTheProjectBanner(): void
     {
         $expected_banner_message = 'banner message';
         $this->banner_dao->shouldReceive('searchBannerWithVisibilityByProjectID')->andReturn(
@@ -89,7 +89,7 @@ final class BannerRetrieverTest extends TestCase
         $this->assertTrue($banner->isVisible());
     }
 
-    public function testBannerVisibilityForAUserThatHasOptOutFromTheProjectBanner() : void
+    public function testBannerVisibilityForAUserThatHasOptOutFromTheProjectBanner(): void
     {
         $expected_banner_message = 'banner message';
         $this->banner_dao->shouldReceive('searchBannerWithVisibilityByProjectID')->andReturn(

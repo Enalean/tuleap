@@ -75,8 +75,10 @@ class Tracker_SharedFormElementFactory
 
     private function assertFieldIsReadable(Tracker_FormElement $field, PFUser $user)
     {
-        if (! ($field->userCanRead($user)
-              && $field->getTracker()->userCanView($user))) {
+        if (
+            ! ($field->userCanRead($user)
+              && $field->getTracker()->userCanView($user))
+        ) {
             $exception_message = $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'permission_denied');
             throw new Exception($exception_message);
         }
@@ -84,8 +86,10 @@ class Tracker_SharedFormElementFactory
 
     private function assertFieldIsStaticSelectbox(Tracker_FormElement $field)
     {
-        if (! ($field instanceof Tracker_FormElement_Field_Selectbox
-                && $field->getBind() instanceof Tracker_FormElement_Field_List_Bind_Static)) {
+        if (
+            ! ($field instanceof Tracker_FormElement_Field_Selectbox
+                && $field->getBind() instanceof Tracker_FormElement_Field_List_Bind_Static)
+        ) {
             $exception_message = $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'field_must_be_static');
             throw new Exception($exception_message);
         }

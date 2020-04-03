@@ -88,8 +88,10 @@ $projectname = $project->getUnixName(false);
 // Automatically discard invalid field names.
 if ($order !== false) {
     if ($order == 'id' || $order == 'description' || $order == 'date' || $order == 'submitted_by') {
-        if (user_isloggedin() &&
-        ($order != user_get_preference('commits_browse_order'))) {
+        if (
+            user_isloggedin() &&
+            ($order != user_get_preference('commits_browse_order'))
+        ) {
             user_set_preference('commits_browse_order', $order);
         }
     } else {

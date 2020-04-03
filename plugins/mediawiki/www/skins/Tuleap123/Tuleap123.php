@@ -38,8 +38,10 @@ class SkinTuleap123 extends SkinTemplate
     {
             $tc = new $classname();
             $tc->params = array();
-        if (($tc->project = $project =
-                group_get_object_by_name($GLOBALS['fusionforgeproject']))) {
+        if (
+            ($tc->project = $project =
+                group_get_object_by_name($GLOBALS['fusionforgeproject']))
+        ) {
                 $tc->params['group'] = $GLOBALS['group_id'] =
                     $project->getID();
                 $tc->params['toptab'] = 'plugin_mediawiki';
@@ -238,7 +240,7 @@ class Tuleap123Template extends BaseTemplate
         echo Html::closeElement('body');
         echo Html::closeElement('html');
         wfRestoreWarnings();
-    } // end of execute() method
+    }
 
     private function IsUserAdmin()
     {
@@ -465,4 +467,4 @@ class Tuleap123Template extends BaseTemplate
     </div>
         <?php
     }
-} // end of class
+}

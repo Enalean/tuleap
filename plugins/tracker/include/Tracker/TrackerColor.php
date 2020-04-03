@@ -85,7 +85,7 @@ final class TrackerColor
         $this->color_name = $color_name;
     }
 
-    public static function fromName(string $color_name) : self
+    public static function fromName(string $color_name): self
     {
         if (! in_array($color_name, self::COLOR_NAMES, true)) {
             throw self::createException(self::COLOR_NAMES, $color_name);
@@ -94,7 +94,7 @@ final class TrackerColor
         return new self($color_name);
     }
 
-    public static function fromNotStandardizedName(string $color_name) : self
+    public static function fromNotStandardizedName(string $color_name): self
     {
         $valid_not_standardized_color_names = array_merge(self::COLOR_NAMES, self::NOT_STANDARDIZED_NAMES);
 
@@ -105,7 +105,7 @@ final class TrackerColor
         return self::fromName(str_replace('_', '-', $color_name));
     }
 
-    public static function default() : self
+    public static function default(): self
     {
         return new self(self::DEFAULT_COLOR_NAME);
     }
@@ -113,7 +113,7 @@ final class TrackerColor
     /**
      * @param string[] $valid_colors
      */
-    private static function createException(array $valid_colors, string $given_color_name) : InvalidArgumentException
+    private static function createException(array $valid_colors, string $given_color_name): InvalidArgumentException
     {
         return new InvalidArgumentException(
             sprintf(
@@ -124,7 +124,7 @@ final class TrackerColor
         );
     }
 
-    public function getName() : string
+    public function getName(): string
     {
         return $this->color_name;
     }

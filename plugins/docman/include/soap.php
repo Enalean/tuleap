@@ -515,9 +515,11 @@ function operatorToValue($operator)
 
 function isValidOperator($operator)
 {
-    if ($operator == '<' ||
-       $operator == '>' ||
-       $operator == '=') {
+    if (
+        $operator == '<' ||
+        $operator == '>' ||
+        $operator == '='
+    ) {
         return true;
     }
     return false;

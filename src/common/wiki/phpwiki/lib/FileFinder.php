@@ -531,7 +531,7 @@ function FindFile($file, $missing_okay = false, $slashify = false)
 {
     static $finder;
     if (!isset($finder)) {
-        $finder = new FileFinder;
+        $finder = new FileFinder();
         // remove "/lib" from dirname(__FILE__)
         $wikidir = preg_replace('/.lib$/', '', dirname(__FILE__));
         // let the system favor its local pear?
@@ -555,7 +555,7 @@ function FindLocalizedFile($file, $missing_okay = false, $re_init = false)
 {
     static $finder;
     if ($re_init or !isset($finder)) {
-        $finder = new LocalizedFileFinder;
+        $finder = new LocalizedFileFinder();
     }
     return $finder->findFile($file, $missing_okay);
 }
@@ -564,7 +564,7 @@ function FindLocalizedButtonFile($file, $missing_okay = false, $re_init = false)
 {
     static $buttonfinder;
     if ($re_init or !isset($buttonfinder)) {
-        $buttonfinder = new LocalizedButtonFinder;
+        $buttonfinder = new LocalizedButtonFinder();
     }
     return $buttonfinder->findFile($file, $missing_okay);
 }
@@ -582,7 +582,7 @@ function NormalizeLocalFileName($file)
 {
     static $finder;
     if (!isset($finder)) {
-        $finder = new FileFinder;
+        $finder = new FileFinder();
     }
     // remove "/lib" from dirname(__FILE__)
     if ($finder->_is_abs($file)) {
@@ -607,7 +607,7 @@ function NormalizeWebFileName($file)
 {
     static $finder;
     if (!isset($finder)) {
-        $finder = new FileFinder;
+        $finder = new FileFinder();
     }
     if (defined("DATA_PATH")) {
         $wikipath = DATA_PATH;

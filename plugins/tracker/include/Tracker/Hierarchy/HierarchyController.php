@@ -87,7 +87,7 @@ class HierarchyController
         $this->renderer                           = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates');
     }
 
-    public function edit() : void
+    public function edit(): void
     {
         $this->render('admin-hierarchy', $this->buildPresenter());
     }
@@ -107,7 +107,7 @@ class HierarchyController
      * @return Tracker[]
      * @psalm-return array<int, Tracker> Array of tracker by tracker ID
      */
-    private function getChildrenUsedInTriggerRules() : array
+    private function getChildrenUsedInTriggerRules(): array
     {
         $rows = $this->tracker_workflow_trigger_rules_dao->searchTriggeringTrackersByTargetTrackerID($this->tracker->getId());
         if ($rows === false) {
@@ -128,7 +128,7 @@ class HierarchyController
         return $children_used_in_triggers_rules;
     }
 
-    private function isIsChildTypeDisabledForProject(Project $project) : bool
+    private function isIsChildTypeDisabledForProject(Project $project): bool
     {
         return $this->artifact_links_usage_dao->isProjectUsingArtifactLinkTypes($project->getID()) &&
             $this->artifact_links_usage_dao->isTypeDisabledInProject(
@@ -137,7 +137,7 @@ class HierarchyController
             );
     }
 
-    public function update() : void
+    public function update(): void
     {
         $vChildren = new Valid_UInt('children');
         $vChildren->required();
@@ -173,7 +173,7 @@ class HierarchyController
         $this->redirectToAdminHierarchy();
     }
 
-    private function redirectToAdminHierarchy() : void
+    private function redirectToAdminHierarchy(): void
     {
         $redirect = http_build_query(
             [

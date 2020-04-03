@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Docman;
 
@@ -49,7 +49,7 @@ class DocmanWikisReferencingSameWikiPageRetriever
     public function retrieveWikiDocuments(
         WikiPage $wiki_page,
         PFUser $user
-    ) : array {
+    ): array {
         $wikis_referencing_wiki_page = [];
 
         $wikis = $this->item_factory->getWikiPageReferencers($wiki_page->getPagename(), (string) $wiki_page->getGid());

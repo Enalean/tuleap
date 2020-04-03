@@ -39,17 +39,17 @@ final class LargestObjectSizeGitRepository
         $this->largest_size = $largest_size;
     }
 
-    public function getRepository() : \GitRepository
+    public function getRepository(): \GitRepository
     {
         return $this->repository;
     }
 
-    public function getLargestObjectSize() : int
+    public function getLargestObjectSize(): int
     {
         return $this->largest_size;
     }
 
-    public function isOverTheObjectSizeLimit() : bool
+    public function isOverTheObjectSizeLimit(): bool
     {
         return $this->largest_size > \Git_Gitolite_ProjectSerializer::OBJECT_SIZE_LIMIT;
     }

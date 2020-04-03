@@ -117,7 +117,8 @@ class ListMailsController implements DispatchableWithRequest
         } else {
             $list_id = $request->get('list');
             $project = ProjectManager::instance()->getProject($group_id);
-            if (! $user->isMember($group_id) &&
+            if (
+                ! $user->isMember($group_id) &&
                 ($user->isRestricted() || ! mail_is_list_public($list_id) || ! $project->isPublic())
             ) {
                 exit_error(

@@ -64,7 +64,7 @@ class SOAPRequestValidatorImplementation implements SOAPRequestValidator
         $this->project_access_checker = $project_access_checker;
     }
 
-    public function continueSession(string $session_key) : PFUser
+    public function continueSession(string $session_key): PFUser
     {
         $user = $this->user_manager->getCurrentUser($session_key);
         if ($user->isLoggedIn()) {
@@ -73,7 +73,7 @@ class SOAPRequestValidatorImplementation implements SOAPRequestValidator
         throw new Exception('Invalid session', 3001);
     }
 
-    public function assertUserCanAccessProject(PFUser $user, Project $project) : void
+    public function assertUserCanAccessProject(PFUser $user, Project $project): void
     {
         try {
             $this->project_access_checker->checkUserCanAccessProject($user, $project);

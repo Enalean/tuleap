@@ -44,7 +44,7 @@ class Link
         $this->button_label = dgettext('tuleap-docman', 'Switch to the new user interface');
     }
 
-    private function buildUrl(\Project $project, int $folder_id) : string
+    private function buildUrl(\Project $project, int $folder_id): string
     {
         $url = "/plugins/document/" . urlencode($project->getUnixName()) . "/";
         if ($folder_id === 0) {

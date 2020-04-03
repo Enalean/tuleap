@@ -37,13 +37,13 @@ final class DispatchablePSR15CompatibleTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testRequestIsProcessed() : void
+    public function testRequestIsProcessed(): void
     {
         $middleware = new class implements MiddlewareInterface {
             public function process(
                 ServerRequestInterface $request,
                 RequestHandlerInterface $handler
-            ) : ResponseInterface {
+            ): ResponseInterface {
                 $response = $handler->handle($request);
                 return $response->withHeader('middleware', 'OK');
             }
@@ -52,7 +52,7 @@ final class DispatchablePSR15CompatibleTest extends TestCase
 
         $base_layout = Mockery::mock(BaseLayout::class);
 
-        $dispatchable = new class($emitter, $base_layout, $middleware) extends DispatchablePSR15Compatible {
+        $dispatchable = new class ($emitter, $base_layout, $middleware) extends DispatchablePSR15Compatible {
             /**
              * @var BaseLayout
              */
@@ -67,7 +67,7 @@ final class DispatchablePSR15CompatibleTest extends TestCase
                 $this->expected_base_layout = $expected_base_layout;
             }
 
-            public function handle(ServerRequestInterface $request) : ResponseInterface
+            public function handle(ServerRequestInterface $request): ResponseInterface
             {
                 TestCase::assertSame($this->expected_base_layout, $request->getAttribute(BaseLayout::class));
                 return HTTPFactoryBuilder::responseFactory()->createResponse()->withHeader(
@@ -78,7 +78,7 @@ final class DispatchablePSR15CompatibleTest extends TestCase
         };
 
         $emitter->shouldReceive('emit')->with(Mockery::on(
-            static function (ResponseInterface $response) : bool {
+            static function (ResponseInterface $response): bool {
                 return $response->getHeaderLine('middleware') === 'OK' &&
                     $response->getHeaderLine('dispatchable_got_front_controller_param') === 'front_controller_param';
             }
@@ -91,13 +91,13 @@ final class DispatchablePSR15CompatibleTest extends TestCase
         );
     }
 
-    public function testResponseEmissionFailureThrowsAnException() : void
+    public function testResponseEmissionFailureThrowsAnException(): void
     {
         $emitter = Mockery::mock(EmitterInterface::class);
         $emitter->shouldReceive('emit')->andReturn(false);
 
-        $dispatchable = new class($emitter) extends DispatchablePSR15Compatible {
-            public function handle(ServerRequestInterface $request) : ResponseInterface
+        $dispatchable = new class ($emitter) extends DispatchablePSR15Compatible {
+            public function handle(ServerRequestInterface $request): ResponseInterface
             {
                 return HTTPFactoryBuilder::responseFactory()->createResponse();
             }

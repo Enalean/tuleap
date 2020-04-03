@@ -36,7 +36,9 @@ use Tuleap\Request\ProjectRetriever;
 
 final class MemberRemovalControllerTest extends TestCase
 {
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration, GlobalLanguageMock, GlobalResponseMock;
+    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
+    use GlobalResponseMock;
 
     /**
      * @var M\LegacyMockInterface|M\MockInterface|ProjectRetriever

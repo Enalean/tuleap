@@ -26,7 +26,8 @@ require_once __DIR__ . '/../../bootstrap.php';
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class WikiAttachmentTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\TemporaryTestDirectory;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\TemporaryTestDirectory;
 
     protected function tearDown(): void
     {

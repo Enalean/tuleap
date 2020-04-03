@@ -25,7 +25,7 @@ final class UserDaoTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testReplaceStringInList() : void
+    public function testReplaceStringInList(): void
     {
         $da  = \Mockery::spy(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
         $dao = new UserDao($da);

@@ -62,7 +62,7 @@ final class DocmanFileDownloadResponseGeneratorTest extends TestCase
      */
     private $permissions_manager;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->binary_file_response_factory = new BinaryFileResponseBuilder(
             HTTPFactoryBuilder::responseFactory(),
@@ -76,12 +76,12 @@ final class DocmanFileDownloadResponseGeneratorTest extends TestCase
         Docman_PermissionsManager::setInstance(self::TEST_PROJECT_ID, $this->permissions_manager);
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         Docman_PermissionsManager::clearInstances();
     }
 
-    public function testUserCanNotDownloadTheFileWithoutTheNeededPermissions() : void
+    public function testUserCanNotDownloadTheFileWithoutTheNeededPermissions(): void
     {
         $response_generator = new DocmanFileDownloadResponseGenerator($this->version_factory, $this->binary_file_response_factory);
 
@@ -102,7 +102,7 @@ final class DocmanFileDownloadResponseGeneratorTest extends TestCase
      * @testWith [null]
      *           [1]
      */
-    public function testFileCanNotBeDownloadedIfTheVersionCannotBeFound(?int $version_id) : void
+    public function testFileCanNotBeDownloadedIfTheVersionCannotBeFound(?int $version_id): void
     {
         $response_generator = new DocmanFileDownloadResponseGenerator($this->version_factory, $this->binary_file_response_factory);
 
@@ -122,7 +122,7 @@ final class DocmanFileDownloadResponseGeneratorTest extends TestCase
         );
     }
 
-    public function testFileCanNotBeDownloadedIfItIsNotPresentOnTheFilesystem() : void
+    public function testFileCanNotBeDownloadedIfItIsNotPresentOnTheFilesystem(): void
     {
         $response_generator = new DocmanFileDownloadResponseGenerator($this->version_factory, $this->binary_file_response_factory);
 
@@ -147,7 +147,7 @@ final class DocmanFileDownloadResponseGeneratorTest extends TestCase
         );
     }
 
-    public function testFileResponseCanBeGenerated() : void
+    public function testFileResponseCanBeGenerated(): void
     {
         $response_generator = new DocmanFileDownloadResponseGenerator($this->version_factory, $this->binary_file_response_factory);
 

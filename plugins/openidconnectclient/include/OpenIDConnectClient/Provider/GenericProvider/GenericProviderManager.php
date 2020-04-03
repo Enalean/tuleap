@@ -50,7 +50,7 @@ class GenericProviderManager
         string $client_secret,
         string $icon,
         string $color
-    ) : GenericProvider {
+    ): GenericProvider {
         $is_unique_authentication_endpoint = false;
         $is_data_valid                     = $this->isGenericProviderDataValid(
             $name,

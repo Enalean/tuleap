@@ -87,7 +87,8 @@ class ProjectAccessChecker
         }
 
         if ($user->isMember($project->getID())) {
-            if ($project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED &&
+            if (
+                $project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED &&
                 ForgeConfig::areRestrictedUsersAllowed() &&
                 $user->isRestricted()
             ) {
@@ -101,8 +102,10 @@ class ProjectAccessChecker
         }
 
         if ($user->isRestricted()) {
-            if (! $project->allowsRestricted() ||
-                ! $this->verifier->isRestrictedUserAllowedToAccess($user, $project)) {
+            if (
+                ! $project->allowsRestricted() ||
+                ! $this->verifier->isRestrictedUserAllowedToAccess($user, $project)
+            ) {
                 throw new Project_AccessRestrictedException();
             }
             return;
@@ -119,7 +122,7 @@ class ProjectAccessChecker
         throw new Project_AccessPrivateException();
     }
 
-    private function userHasBeenDelegatedAccess(PFUser $user) : bool
+    private function userHasBeenDelegatedAccess(PFUser $user): bool
     {
         $event = new DelegatedUserAccessForProject($user);
 

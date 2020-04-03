@@ -36,13 +36,13 @@ final class Tracker_Artifact_ChangesetValue_FloatTest extends TestCase // phpcs:
     private $changeset;
     private $field;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->field     = \Mockery::mock(Tracker_FormElement_Field_Float::class);
         $this->changeset = \Mockery::mock(Tracker_Artifact_Changeset::class);
     }
 
-    public function testFloats() : void
+    public function testFloats(): void
     {
         $float = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 1.1234);
         $this->assertEquals(1.1234, $float->getFloat());
@@ -77,7 +77,7 @@ final class Tracker_Artifact_ChangesetValue_FloatTest extends TestCase // phpcs:
         $this->assertNull($null_float->getValue());
     }
 
-    public function testNoDiff() : void
+    public function testNoDiff(): void
     {
         $float_1 = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 456.789);
         $float_2 = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 456.789);
@@ -85,7 +85,7 @@ final class Tracker_Artifact_ChangesetValue_FloatTest extends TestCase // phpcs:
         $this->assertFalse($float_2->diff($float_1));
     }
 
-    public function testDiff() : void
+    public function testDiff(): void
     {
         $float_1 = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 987.321);
         $float_2 = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 987);
@@ -109,7 +109,7 @@ final class Tracker_Artifact_ChangesetValue_FloatTest extends TestCase // phpcs:
         $this->assertEquals('cleared', $float_8->diff($float_7));
     }
 
-    public function testTheRESTValueIsReturned() : void
+    public function testTheRESTValueIsReturned(): void
     {
         $this->field->shouldReceive('getId')->andReturns('45');
         $this->field->shouldReceive('getLabel')->andReturns('field_float');

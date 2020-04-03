@@ -19,7 +19,7 @@
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement;
 
@@ -29,6 +29,7 @@ use PHPUnit\Framework\TestCase;
 final class FieldCalculatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var FieldCalculator
      */

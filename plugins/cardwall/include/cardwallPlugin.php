@@ -543,8 +543,8 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
             $params['mapping'],
             $params['field_mapping'],
             $params['artifact_id_mapping'],
-            new Cardwall_OnTop_Dao,
-            new Cardwall_OnTop_ColumnDao,
+            new Cardwall_OnTop_Dao(),
+            new Cardwall_OnTop_ColumnDao(),
             new Cardwall_OnTop_ColumnMappingFieldDao(),
             new Cardwall_OnTop_ColumnMappingFieldValueDao(),
             EventManager::instance(),
@@ -685,14 +685,14 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         $event_retriever->setAllowedTypes($allowed_types);
     }
 
-    public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event) : void
+    public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addGroup('/plugins/cardwall', function (FastRoute\RouteCollector $r) {
             $r->addRoute(['GET', 'POST'], '[/[index.php]]', $this->getRouteHandler('routeLegacyController'));
         });
     }
 
-    public function routeLegacyController() : \Tuleap\Cardwall\CardwallLegacyController
+    public function routeLegacyController(): \Tuleap\Cardwall\CardwallLegacyController
     {
         return new \Tuleap\Cardwall\CardwallLegacyController($this->getConfigFactory());
     }

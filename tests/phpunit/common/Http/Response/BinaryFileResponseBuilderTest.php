@@ -34,7 +34,7 @@ final class BinaryFileResponseBuilderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testFileResponseCanBeBuiltFromFilepath() : void
+    public function testFileResponseCanBeBuiltFromFilepath(): void
     {
         $builder = new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory());
 
@@ -54,7 +54,7 @@ final class BinaryFileResponseBuilderTest extends TestCase
         $this->assertTrue($response->hasHeader('Content-Type'));
     }
 
-    public function testCannotBuildResponseFromFilepathWhenTheFileDoesNotExist() : void
+    public function testCannotBuildResponseFromFilepathWhenTheFileDoesNotExist(): void
     {
         $builder = new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory());
 
@@ -77,7 +77,7 @@ final class BinaryFileResponseBuilderTest extends TestCase
         string $range_header,
         string $expected_content_range_header,
         string $expected_content_length_header
-    ) : void {
+    ): void {
         $builder = new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory());
 
         $directory = vfsStream::setup()->url();
@@ -99,7 +99,7 @@ final class BinaryFileResponseBuilderTest extends TestCase
      *           ["bytes=0-999999999999"]
      *           ["bytes=-0"]
      */
-    public function testPartialFileResponseWithUnsupportedRangeHeader(string $range_header) : void
+    public function testPartialFileResponseWithUnsupportedRangeHeader(string $range_header): void
     {
         $builder = new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory());
 

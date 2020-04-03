@@ -91,7 +91,7 @@ final class PullRequestUpdatedEvent implements EventSubjectToNotification
         );
     }
 
-    public static function fromWorkerEventPayload(array $payload) : EventSubjectToNotification
+    public static function fromWorkerEventPayload(array $payload): EventSubjectToNotification
     {
         if (! isset($payload['user_id'], $payload['pr_id'], $payload['old_src'], $payload['new_src'], $payload['old_dst'], $payload['new_dst'])) {
             throw new InvalidWorkerEventPayloadException(

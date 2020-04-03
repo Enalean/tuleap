@@ -61,7 +61,7 @@ class HiddenFieldsetsValueValidator
     /**
      * @throws InvalidPostActionException
      */
-    private function validateSelectedFieldset(Tracker $tracker, HiddenFieldsetsValue $hidden_fieldsets_value) : void
+    private function validateSelectedFieldset(Tracker $tracker, HiddenFieldsetsValue $hidden_fieldsets_value): void
     {
         $used_fieldset_ids = $this->extractUsedFieldsetIds($tracker);
         $workflow          = $tracker->getWorkflow();
@@ -75,7 +75,7 @@ class HiddenFieldsetsValueValidator
         }
     }
 
-    private function extractUsedFieldsetIds(Tracker $tracker) : array
+    private function extractUsedFieldsetIds(Tracker $tracker): array
     {
         $used_fieldsets    = $this->form_element_factory->getUsedFieldsets($tracker);
         $used_fieldset_ids = [];

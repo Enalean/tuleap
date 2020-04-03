@@ -130,8 +130,10 @@ class WikiPlugin
         }
 
         foreach (array_merge($argstr_args, $argstr_defaults) as $arg => $val) {
-            if ($request and $request->getArg('pagename') == _("PhpWikiAdministration")
-                and $arg == 'overwrite') { // silence this warning
+            if (
+                $request and $request->getArg('pagename') == _("PhpWikiAdministration")
+                and $arg == 'overwrite'
+            ) { // silence this warning
             } else {
                 trigger_error(sprintf(
                     _("Argument '%s' not declared by plugin."),
@@ -605,7 +607,7 @@ class WikiPluginLoader
             }
         }
         $ErrorManager->popErrorHandler();
-        $plugin = new $plugin_class;
+        $plugin = new $plugin_class();
         if (!is_subclass_of($plugin, "WikiPlugin")) {
             return $this->_error(sprintf(
                 _("%s: not a subclass of WikiPlugin."),

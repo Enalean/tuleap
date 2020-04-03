@@ -42,18 +42,18 @@ class RequestInstrumentation
         $this->prometheus = $prometheus;
     }
 
-    public function increment(int $code) : void
+    public function increment(int $code): void
     {
         $this->incrementCodeRouter((string) $code, 'fastroute');
         $this->updateRequestDurationHistogram('fastroute');
     }
 
-    public function incrementLegacy() : void
+    public function incrementLegacy(): void
     {
         $this->incrementCodeRouter('200', 'legacy');
     }
 
-    public function incrementRest(?int $code) : void
+    public function incrementRest(?int $code): void
     {
         if ($code === null) {
             $code = -1;
@@ -66,17 +66,17 @@ class RequestInstrumentation
      * Soap will also increment legacy router due to pre.php
      * It's not worth fixing it.
      */
-    public function incrementSoap() : void
+    public function incrementSoap(): void
     {
         $this->incrementCodeRouter('200', 'soap');
     }
 
-    private function incrementCodeRouter(string $code, string $router) : void
+    private function incrementCodeRouter(string $code, string $router): void
     {
         $this->prometheus->increment(self::COUNT_NAME, self::COUNT_HELP, ['code' => $code, 'router' => $router]);
     }
 
-    private function updateRequestDurationHistogram(string $router) : void
+    private function updateRequestDurationHistogram(string $router): void
     {
         $this->prometheus->histogram(
             self::DURATION_NAME,

@@ -76,10 +76,12 @@ class DynamicUGroupMembersUpdater
     /**
      * @throws CannotAddRestrictedUserToProjectNotAllowingRestricted
      */
-    public function addUser(Project $project, ProjectUGroup $ugroup, PFUser $user) : void
+    public function addUser(Project $project, ProjectUGroup $ugroup, PFUser $user): void
     {
-        if ($project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED && ForgeConfig::areRestrictedUsersAllowed() &&
-            $user->isRestricted()) {
+        if (
+            $project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED && ForgeConfig::areRestrictedUsersAllowed() &&
+            $user->isRestricted()
+        ) {
             throw new CannotAddRestrictedUserToProjectNotAllowingRestricted($user, $project);
         }
 

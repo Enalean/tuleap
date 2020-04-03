@@ -22,6 +22,7 @@ use PHPUnit\Framework\TestCase;
 final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var Tracker_FormElement_Field_List_Bind_UgroupsValue
      */

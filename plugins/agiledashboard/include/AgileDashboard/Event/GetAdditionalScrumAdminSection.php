@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Event;
 
@@ -56,7 +56,7 @@ class GetAdditionalScrumAdminSection
         return $this->controllers;
     }
 
-    public function notifyAdditionalSectionsControllers(\HTTPRequest $request) : void
+    public function notifyAdditionalSectionsControllers(\HTTPRequest $request): void
     {
         foreach ($this->controllers as $controller) {
             $controller->onSubmitCallback($request);

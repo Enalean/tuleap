@@ -41,7 +41,7 @@ class PermissionsTest extends TestCase
     private $transition;
     private $tracker;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -67,7 +67,7 @@ class PermissionsTest extends TestCase
         $this->condition  = new Workflow_Transition_Condition_Permissions($this->transition);
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         PermissionsManager::clearInstance();
 

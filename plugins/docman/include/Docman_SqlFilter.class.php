@@ -78,8 +78,10 @@ class Docman_SqlFilter extends Docman_MetadataSqlQueryChunk
         $tables = array();
 
         if ($this->isRealMetadata) {
-            if ($this->filter->getValue() !== null &&
-               $this->filter->getValue() != '') {
+            if (
+                $this->filter->getValue() !== null &&
+                $this->filter->getValue() != ''
+            ) {
                 $tables[] = $this->_getMdvJoin();
             }
         }
@@ -91,8 +93,10 @@ class Docman_SqlFilter extends Docman_MetadataSqlQueryChunk
     {
         $stmt = array();
 
-        if ($this->filter->getValue() !== null &&
-           $this->filter->getValue() != '') {
+        if (
+            $this->filter->getValue() !== null &&
+            $this->filter->getValue() != ''
+        ) {
             $data_access = CodendiDataAccess::instance();
             $stmt[] = $this->field . ' = ' . $data_access->quoteSmart($this->filter->getValue());
         }
@@ -279,8 +283,10 @@ class Docman_SqlFilterOwner extends Docman_SqlFilter
     public function getFrom()
     {
         $tables = array();
-        if ($this->filter->getValue() !== null
-           && $this->filter->getValue() != '') {
+        if (
+            $this->filter->getValue() !== null
+            && $this->filter->getValue() != ''
+        ) {
             $tables[] = 'user ON (i.user_id = user.user_id)';
         }
         return $tables;
@@ -298,8 +304,10 @@ class Docman_SqlFilterText extends Docman_SqlFilter
     public function _getSpecificSearchChunk()
     {
         $stmt = array();
-        if ($this->filter->getValue() !== null &&
-           $this->filter->getValue() != '') {
+        if (
+            $this->filter->getValue() !== null &&
+            $this->filter->getValue() != ''
+        ) {
             $qv = $this->filter->getValue();
             $searchType = $this->getSearchType($qv);
             if ($searchType['like']) {
@@ -323,8 +331,10 @@ class Docman_SqlFilterGlobalText extends Docman_SqlFilterText
     public function getFrom()
     {
         $tables = array();
-        if ($this->filter->getValue() !== null &&
-           $this->filter->getValue() != '') {
+        if (
+            $this->filter->getValue() !== null &&
+            $this->filter->getValue() != ''
+        ) {
             foreach ($this->filter->dynTextFields as $f) {
                 $tables[] = $this->_getMdvJoin($f);
             }
@@ -335,8 +345,10 @@ class Docman_SqlFilterGlobalText extends Docman_SqlFilterText
     public function _getSpecificSearchChunk()
     {
         $stmt = array();
-        if ($this->filter->getValue() !== null &&
-           $this->filter->getValue() != '') {
+        if (
+            $this->filter->getValue() !== null &&
+            $this->filter->getValue() != ''
+        ) {
             $qv = $this->filter->getValue();
             $searchType = $this->getSearchType($qv);
             if ($searchType['like']) {
@@ -376,11 +388,12 @@ class Docman_SqlFilterListAdvanced extends Docman_SqlFilter
         $stmt = array();
 
         $v = $this->filter->getValue();
-        if ($v !== null
-           && (count($v) > 0
+        if (
+            $v !== null
+            && (count($v) > 0
                || (count($v) == 1 && $v[0] != '')
                )
-           ) {
+        ) {
             $stmt[] = $this->field . ' IN (' . implode(',', $this->filter->getValue()) . ')';
         }
 

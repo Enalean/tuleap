@@ -23,7 +23,9 @@ declare(strict_types=1);
 
 class User_SSHKeyValidator_InputManagementTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\GlobalResponseMock, \Tuleap\GlobalLanguageMock;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\GlobalResponseMock;
+    use \Tuleap\GlobalLanguageMock;
 
     /** @var PFUser*/
     protected $user;
@@ -40,7 +42,7 @@ class User_SSHKeyValidator_InputManagementTest extends \PHPUnit\Framework\TestCa
      */
     protected $validator;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->key1 = 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAxo4yIDI6bkSUVgXMZYmBZNDl3ttYUIxaThIX1hjp+Oxjo1yeI+vytb1UvESnu1fAhNB40KpPwL7md+UwfHyo2Jah9PMq6bfrSupAE6NOJQ4xG5W7hP70ih5UZtA9YuZfzDc7JsCpwlF7Fvhc+1u4uRYxuKQ+4SpzxCNkmMAMD9BzjXq0Jt/6MsEz+Txt6xoo+HAZXUnUq/XgqMh1A71zAjz6E1ADsd1vLYekQruy9uzhnq9Q7bi+evS1bvi7/O+csAqpIvN/stBqIzALpoAGY1Ek/YMKxjzNurnRTtwEuvqciaPk4aZGg5UvWL1B+yo7HuG/Je0KSz/+u+1efqLUxw== user@shunt';
         $this->key2 = 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAo2Z2ru57hk2p9wMkM66IxYV1HFKEJvWjWi7Otug/G14LWwO1VU5wNBJgJEfaAoL7ccRpWYpRKLAZdAPYq8nOVFsTU0X4z4mtIo8L1mlw+qXZ3KW77/QJ7sNbCZe6vpNcKg0+DX0e4n0h6R+lXIwi/ISM6wXPQU3uUKVRbcykC9YwEnQokFXXHRqeBzPjyRFval4SRMHAdcs2pjZtu5Et0pObR+Lrs532NE1tvDUrPbU1Oy+9w7bbcvbfjKeYX7FgdXmlYDYLcAfZG4wCHBBYbp5HNXTxhwv4wHq7Z20tEN4qqBnehCGPOpBIgbfBTdN9NftloRYrVPNAxKXhPd/VRQ== user@crampons';
@@ -51,7 +53,7 @@ class User_SSHKeyValidator_InputManagementTest extends \PHPUnit\Framework\TestCa
         $this->validator = new User_SSHKeyValidator();
     }
 
-    public function testItUpdatesWithOneKey() : void
+    public function testItUpdatesWithOneKey(): void
     {
         $keys = $this->validator->validateAllKeys(array($this->key1));
 
@@ -59,7 +61,7 @@ class User_SSHKeyValidator_InputManagementTest extends \PHPUnit\Framework\TestCa
         $this->assertEquals($this->key1, $keys[0]);
     }
 
-    public function testItUpdatesWithTwoKeys() : void
+    public function testItUpdatesWithTwoKeys(): void
     {
         $keys = $this->validator->validateAllKeys(array(
             $this->key1,
@@ -71,7 +73,7 @@ class User_SSHKeyValidator_InputManagementTest extends \PHPUnit\Framework\TestCa
         $this->assertEquals($this->key2, $keys[1]);
     }
 
-    public function testItUpdatesWithAnExtraSpaceAfterFirstKey() : void
+    public function testItUpdatesWithAnExtraSpaceAfterFirstKey(): void
     {
         $keys = $this->validator->validateAllKeys(array(
             $this->key1 . " ",
@@ -83,7 +85,7 @@ class User_SSHKeyValidator_InputManagementTest extends \PHPUnit\Framework\TestCa
         $this->assertEquals($this->key2, $keys[1]);
     }
 
-    public function testItUpdatesWithAnEmptyKey() : void
+    public function testItUpdatesWithAnEmptyKey(): void
     {
         $keys = $this->validator->validateAllKeys(array(
             $this->key1,

@@ -68,8 +68,10 @@ class ErrorPlot extends Plot
                 $x = $i;
             }
 
-            if (!is_numeric($x) ||
-            !is_numeric($this->coords[0][$i * 2]) || !is_numeric($this->coords[0][$i * 2 + 1])) {
+            if (
+                !is_numeric($x) ||
+                !is_numeric($this->coords[0][$i * 2]) || !is_numeric($this->coords[0][$i * 2 + 1])
+            ) {
                 continue;
             }
 
@@ -82,7 +84,7 @@ class ErrorPlot extends Plot
         }
         return true;
     }
-} // Class
+}
 
 
 //===================================================
@@ -122,7 +124,7 @@ class ErrorLinePlot extends ErrorPlot
         parent::Stroke($img, $xscale, $yscale);
         $this->line->Stroke($img, $xscale, $yscale);
     }
-} // Class
+}
 
 
 //===================================================
@@ -168,7 +170,7 @@ class LineErrorPlot extends ErrorPlot
         parent::Stroke($img, $xscale, $yscale);
         $this->line->Stroke($img, $xscale, $yscale);
     }
-} // Class
+}
 
 
 /* EOF */

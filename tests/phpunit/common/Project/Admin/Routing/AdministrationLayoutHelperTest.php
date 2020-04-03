@@ -83,7 +83,7 @@ final class AdministrationLayoutHelperTest extends TestCase
             ->with($page_title, $project, $current_pane_shortname);
         $this->footer_displayer->shouldReceive('display');
 
-        $callback = function (\Project $param_project, \PFUser $param_current_user) use ($project, $current_user) : void {
+        $callback = function (\Project $param_project, \PFUser $param_current_user) use ($project, $current_user): void {
             $this->assertSame($project, $param_project);
             $this->assertSame($current_user, $param_current_user);
         };

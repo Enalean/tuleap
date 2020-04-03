@@ -43,7 +43,7 @@ class MediawikiMathExtensionEnablerTest extends TestCase
      */
     private $migrator;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->mediawiki_installation_path = vfsStream::setup();
         $this->dao                         = \Mockery::mock(MediawikiExtensionDAO::class);

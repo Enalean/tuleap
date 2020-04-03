@@ -31,7 +31,8 @@ require_once __DIR__ . '/../../bootstrap.php';
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class ManifestFileGeneratorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, TemporaryTestDirectory;
+    use MockeryPHPUnitIntegration;
+    use TemporaryTestDirectory;
 
     protected $current_time;
     protected $manifest_directory;

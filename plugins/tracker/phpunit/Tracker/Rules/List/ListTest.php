@@ -29,12 +29,13 @@ use Tracker_Rule_List;
 class Tracker_Rule_List_ListTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var Tracker_Rule_List
      */
     private $list_rule;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         $this->list_rule = new Tracker_Rule_List();
     }
@@ -42,13 +43,13 @@ class Tracker_Rule_List_ListTest extends TestCase
     /*
      * Source Field tests
      */
-    public function testSetSourceFieldIdReturnsModelObject() : void
+    public function testSetSourceFieldIdReturnsModelObject(): void
     {
         $set = $this->list_rule->setSourceFieldId(123);
         $this->assertEquals($this->list_rule, $set);
     }
 
-    public function testGetSourceFieldIdReturnsFieldIdSet() : void
+    public function testGetSourceFieldIdReturnsFieldIdSet(): void
     {
         $this->list_rule->setSourceFieldId(45);
         $this->assertEquals(45, $this->list_rule->getSourceFieldId());
@@ -57,13 +58,13 @@ class Tracker_Rule_List_ListTest extends TestCase
     /*
      * Target Field tests
      */
-    public function testSetTargetFieldIdReturnsModelObject() : void
+    public function testSetTargetFieldIdReturnsModelObject(): void
     {
         $set = $this->list_rule->setSourceFieldId(123);
         $this->assertEquals($this->list_rule, $set);
     }
 
-    public function testGetTargetFieldIdReturnsTargetIdSet() : void
+    public function testGetTargetFieldIdReturnsTargetIdSet(): void
     {
         $this->list_rule->setTargetFieldId(45);
         $this->assertEquals(45, $this->list_rule->getTargetFieldId());
@@ -72,13 +73,13 @@ class Tracker_Rule_List_ListTest extends TestCase
     /*
      * Tracker Field tests
      */
-    public function testSetTrackerFieldIdReturnsModelObject() : void
+    public function testSetTrackerFieldIdReturnsModelObject(): void
     {
         $set = $this->list_rule->setTrackerId(123);
         $this->assertEquals($this->list_rule, $set);
     }
 
-    public function testGetTrackerFieldIdReturnsTrackerIdSet() : void
+    public function testGetTrackerFieldIdReturnsTrackerIdSet(): void
     {
         $this->list_rule->setTrackerId(45);
         $this->assertEquals(45, $this->list_rule->getTrackerId());
@@ -87,13 +88,13 @@ class Tracker_Rule_List_ListTest extends TestCase
     /*
      * Source Field value tests
      */
-    public function testSetSourceValueReturnsModelObject() : void
+    public function testSetSourceValueReturnsModelObject(): void
     {
         $set = $this->list_rule->setSourceValue(123);
         $this->assertEquals($this->list_rule, $set);
     }
 
-    public function testGetSourceValueReturnsFieldIdSet() : void
+    public function testGetSourceValueReturnsFieldIdSet(): void
     {
         $this->list_rule->setSourceValue(45);
         $this->assertEquals(45, $this->list_rule->getSourceValue());
@@ -102,13 +103,13 @@ class Tracker_Rule_List_ListTest extends TestCase
     /*
      * Target Field value tests
      */
-    public function testSetTargetValueReturnsModelObject() : void
+    public function testSetTargetValueReturnsModelObject(): void
     {
         $set = $this->list_rule->setSourceValue(123);
         $this->assertEquals($this->list_rule, $set);
     }
 
-    public function testGetTargetValueReturnsTargetIdSet() : void
+    public function testGetTargetValueReturnsTargetIdSet(): void
     {
         $this->list_rule->setTargetValue(45);
         $this->assertEquals(45, $this->list_rule->getTargetValue());

@@ -95,7 +95,7 @@ class ResourcesInjector
         );
     }
 
-    public static function declareProjectResources(array &$resources, Project $project) : void
+    public static function declareProjectResources(array &$resources, Project $project): void
     {
         if (! $project->usesService(\DocmanPlugin::SERVICE_SHORTNAME)) {
             return;

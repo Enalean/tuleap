@@ -88,8 +88,10 @@ class Docman_ApprovalTableNotificationCycle
             $this->sendNotifReviewApproved($reviewer, $withComments);
         }
 
-        if (!$isLastReviewer &&
-           $this->table->getNotification() == PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL) {
+        if (
+            !$isLastReviewer &&
+            $this->table->getNotification() == PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL
+        ) {
             $this->notifyNextReviewer();
         }
     }
@@ -109,8 +111,10 @@ class Docman_ApprovalTableNotificationCycle
     public function reviewerDecline($reviewer, $isLastReviewer)
     {
         $this->sendNotifReviewDeclined($reviewer);
-        if (!$isLastReviewer &&
-           $this->table->getNotification() == PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL) {
+        if (
+            !$isLastReviewer &&
+            $this->table->getNotification() == PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL
+        ) {
             $this->notifyNextReviewer();
         }
     }

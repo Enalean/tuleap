@@ -47,7 +47,7 @@ final class DocmanServicePermissionsForGroupsBuilderTest extends TestCase
      */
     private $builder;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->permissions_manager = Mockery::mock(IPermissionsManagerNG::class);
         $this->ugroup_manager      = Mockery::mock(UGroupManager::class);
@@ -55,7 +55,7 @@ final class DocmanServicePermissionsForGroupsBuilderTest extends TestCase
         $this->builder = new DocmanServicePermissionsForGroupsBuilder($this->permissions_manager, $this->ugroup_manager);
     }
 
-    public function testRepresentationIsBuiltWhenSomeUGroupsAreAssignedToTheDocumentManagerManagement() : void
+    public function testRepresentationIsBuiltWhenSomeUGroupsAreAssignedToTheDocumentManagerManagement(): void
     {
         $project    = Mockery::mock(\Project::class);
         $project_id = '102';
@@ -90,7 +90,7 @@ final class DocmanServicePermissionsForGroupsBuilderTest extends TestCase
         $this->assertEquals($ugroup_static->getNormalizedName(), $representation->can_admin[1]->label);
     }
 
-    public function testRepresentationIsBuiltWhenNobodyHasSpecialRightToAdministrateTheDocumentManager() : void
+    public function testRepresentationIsBuiltWhenNobodyHasSpecialRightToAdministrateTheDocumentManager(): void
     {
         $project    = Mockery::mock(\Project::class);
         $project_id = '102';

@@ -82,7 +82,7 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
     }
     public function getHtml($dbi, $argarray, $request, $basepage)
     {
-        $loader = new WikiPluginLoader;
+        $loader = new WikiPluginLoader();
         return $loader->expandPI('<?plugin SystemInfo '
                                  . WikiPluginCached::glueArgs($argarray) // all
                                  . ' ?>', $request, $this, $basepage);
@@ -237,8 +237,10 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
         $hits = array();
         $page_iter = $dbi->getAllPages(true);
         while ($page = $page_iter->next()) {
-            if (($current = $page->getCurrentRevision())
-                && (! $current->hasDefaultContents())) {
+            if (
+                ($current = $page->getCurrentRevision())
+                && (! $current->hasDefaultContents())
+            ) {
                 $hits[] = $page->get('hits');
             }
         }
@@ -324,8 +326,10 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
             return $availableargs[$arg]();
         } elseif (method_exists($this, $arg)) { // any defined SystemInfo->method()
             return call_user_func_array(array(&$this, $arg), '');
-        } elseif (defined($arg) && // any defined constant
-                !in_array($arg, array('ADMIN_PASSWD','DBAUTH_AUTH_DSN'))) {
+        } elseif (
+            defined($arg) && // any defined constant
+                !in_array($arg, array('ADMIN_PASSWD','DBAUTH_AUTH_DSN'))
+        ) {
             return constant($arg);
         } else {
             return $this->error(sprintf(_("unknown argument '%s' to SystemInfo"), $arg));

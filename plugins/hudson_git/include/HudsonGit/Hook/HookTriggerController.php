@@ -71,7 +71,7 @@ class HookTriggerController
         $this->jenkins_server_factory = $jenkins_server_factory;
     }
 
-    public function trigger(GitRepository $repository, string $commit_reference, DateTimeImmutable $date_time) : void
+    public function trigger(GitRepository $repository, string $commit_reference, DateTimeImmutable $date_time): void
     {
         $this->triggerRepositoryJenkinsServer($repository, $commit_reference, $date_time);
         $this->triggerProjectJenkinsServers($repository, $commit_reference, $date_time);

@@ -202,7 +202,7 @@ class Docman_Widget_MyDocman extends Widget
         return $ajax_url;
     }
 
-    public function getStylesheetDependencies() : CssAssetCollection
+    public function getStylesheetDependencies(): CssAssetCollection
     {
         $theme_include_assets = new IncludeAssets(
             __DIR__ . '/../../../src/www/assets/docman/',

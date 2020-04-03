@@ -19,7 +19,7 @@
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\REST\v1\Milestone;
 
@@ -39,6 +39,7 @@ use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
 class MilestoneElementMoverTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var DBTransactionExecutorPassthrough
      */

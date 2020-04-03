@@ -26,7 +26,8 @@ use Tuleap\GlobalSVNPollution;
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class SystemEvent_UGROUP_MODIFYRenameTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalSVNPollution;
+    use MockeryPHPUnitIntegration;
+    use GlobalSVNPollution;
 
     private $system_event;
     private $project;

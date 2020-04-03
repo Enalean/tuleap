@@ -1003,7 +1003,7 @@ class ProjectResource extends AuthenticatedResource
      * @param int $id id of the project
      * @throws RestException 403
      */
-    protected function deleteBanner(int $id) : void
+    protected function deleteBanner(int $id): void
     {
         $project           = $this->getProjectForUser($id);
         $delete_permission = $this->banner_permissions_checker->getEditBannerPermission(

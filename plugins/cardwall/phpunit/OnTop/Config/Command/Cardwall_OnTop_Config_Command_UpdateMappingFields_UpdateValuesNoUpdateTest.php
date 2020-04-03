@@ -23,7 +23,7 @@ declare(strict_types=1);
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesNoUpdateTest extends Cardwall_OnTop_Config_Command_UpdateMappingFieldsTestBase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -59,7 +59,7 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesNoUpda
         );
     }
 
-    public function testItDoesntUpdatesMappingFieldValuesWhenMappingDoesntChange() : void
+    public function testItDoesntUpdatesMappingFieldValuesWhenMappingDoesntChange(): void
     {
         $request = new HTTPRequest();
         $request->set(
@@ -81,7 +81,7 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesNoUpda
         $this->command->execute($request);
     }
 
-    public function testItUpdatesMappingFieldValuesWhenThereIsANewValue() : void
+    public function testItUpdatesMappingFieldValuesWhenThereIsANewValue(): void
     {
         $request = new HTTPRequest();
         $request->set(
@@ -104,7 +104,7 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesNoUpda
         $this->command->execute($request);
     }
 
-    public function testItUpdatesMappingFieldValuesWhenAValueIsRemoved() : void
+    public function testItUpdatesMappingFieldValuesWhenAValueIsRemoved(): void
     {
         $request = new HTTPRequest();
         $request->set(

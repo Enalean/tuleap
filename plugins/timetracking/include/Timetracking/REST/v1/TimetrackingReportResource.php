@@ -289,7 +289,7 @@ class TimetrackingReportResource extends AuthenticatedResource
      *
      * @return array
      */
-    private function getTrackersFromRoute($query, TimetrackingReport $report) : array
+    private function getTrackersFromRoute($query, TimetrackingReport $report): array
     {
         $query_parser = new QueryParameterParser($this->json_decoder);
         $json_query   = $this->json_decoder->decodeAsAnArray('query', $query);

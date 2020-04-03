@@ -177,7 +177,7 @@ class RegexpSet
                 return false;
             }
         }
-        $match = new RegexpSet_match;
+        $match = new RegexpSet_match();
 
         // Optimization: if the matches are only "$" and another, then omit "$"
         if (! _INLINE_OPTIMIZATION or count($matched) > 2) {
@@ -353,7 +353,7 @@ function LinkBracketLink($bracketlink)
     );
     if (count($matches) < 4) {
         trigger_error(_("Invalid [] syntax ignored") . ": " . $bracketlink, E_USER_WARNING);
-        return new Cached_Link;
+        return new Cached_Link();
     }
     list (, $hash, $label, $bar, $rawlink) = $matches;
 
@@ -416,9 +416,11 @@ function LinkBracketLink($bracketlink)
         }
     } elseif (preg_match("/^phpwiki:/", $link)) {
         return new Cached_PhpwikiURL($link, $label);
-    } elseif (strstr($link, ':')
+    } elseif (
+        strstr($link, ':')
             and ($intermap = getInterwikiMap())
-            and preg_match("/^" . $intermap->getRegexp() . ":/", $link)) {
+            and preg_match("/^" . $intermap->getRegexp() . ":/", $link)
+    ) {
         /*
          * Inline images in Interwiki urls's:
          * [File:my_image.gif] inlines the image,
@@ -690,12 +692,16 @@ class Markup_color extends BalancedMarkup
     public function markup($match, $body)
     {
         $color = substr($match, 7, -1);
-        if (strlen($color) != 7
-            and in_array($color, array('red', 'blue', 'grey', 'black'))) {
+        if (
+            strlen($color) != 7
+            and in_array($color, array('red', 'blue', 'grey', 'black'))
+        ) {
             // must be a name
             return new HtmlElement('font', array('color' => $color), $body);
-        } elseif ((substr($color, 0, 1) == '#')
-                  and (strspn(substr($color, 1), '0123456789ABCDEFabcdef') == strlen($color) - 1)) {
+        } elseif (
+            (substr($color, 0, 1) == '#')
+                  and (strspn(substr($color, 1), '0123456789ABCDEFabcdef') == strlen($color) - 1)
+        ) {
             return new HtmlElement('font', array('color' => $color), $body);
         } else {
             trigger_error(sprintf(_("unknown color %s ignored"), $color), E_USER_WARNING);
@@ -809,13 +815,13 @@ class InlineTransformer
         }
         foreach ($markup_types as $mtype) {
             $class = "Markup_$mtype";
-            $this->_addMarkup(new $class);
+            $this->_addMarkup(new $class());
         }
         if (ENABLE_MARKUP_COLOR and !$non_default) {
-            $this->_addMarkup(new Markup_color);
+            $this->_addMarkup(new Markup_color());
         }
         if (ENABLE_MARKUP_TEMPLATE and !$non_default) {
-            $this->_addMarkup(new Markup_template_plugin);
+            $this->_addMarkup(new Markup_template_plugin());
         }
     }
 
@@ -842,7 +848,7 @@ class InlineTransformer
         $regexps = new RegexpSet($regexps);
 
         $input = $text;
-        $output = new XmlContent;
+        $output = new XmlContent();
 
         $match = $regexps->match($input);
 
@@ -926,7 +932,7 @@ function TransformInline($text, $markup = 2.0, $basepage = false)
     static $trfm;
 
     if (empty($trfm)) {
-        $trfm = new InlineTransformer;
+        $trfm = new InlineTransformer();
     }
 
     if ($markup < 2.0) {
@@ -944,7 +950,7 @@ function TransformLinks($text, $markup = 2.0, $basepage = false)
     static $trfm;
 
     if (empty($trfm)) {
-        $trfm = new LinkTransformer;
+        $trfm = new LinkTransformer();
     }
 
     if ($markup < 2.0) {

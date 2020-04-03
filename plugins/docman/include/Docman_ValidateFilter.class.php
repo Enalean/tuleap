@@ -74,10 +74,12 @@ class Docman_ValidateFilterDate extends Docman_ValidateFilter
             $this->isValid = false;
             if ($this->filter->getValue() == '') {
                 $this->isValid = true;
-            } elseif (preg_match(
-                '/[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/',
-                $this->filter->getValue()
-            )) {
+            } elseif (
+                preg_match(
+                    '/[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/',
+                    $this->filter->getValue()
+                )
+            ) {
                 $this->isValid = true;
             } else {
                 $today = date("Y-n-j");

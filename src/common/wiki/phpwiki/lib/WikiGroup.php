@@ -19,8 +19,10 @@
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-if (!defined('GROUP_METHOD') or
-    GROUP_METHOD !== 'NONE') {
+if (
+    !defined('GROUP_METHOD') or
+    GROUP_METHOD !== 'NONE'
+) {
     trigger_error(_("No or unsupported GROUP_METHOD defined"), E_USER_WARNING);
 }
 

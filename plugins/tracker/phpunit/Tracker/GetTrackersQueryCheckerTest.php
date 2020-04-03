@@ -46,7 +46,7 @@ class GetTrackersQueryCheckerTest extends TestCase
      */
     private $event_manager;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         $this->event_manager = \Mockery::mock(EventManager::class);
         $this->checker       = new GetTrackersQueryChecker($this->event_manager);

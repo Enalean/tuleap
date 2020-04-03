@@ -62,7 +62,7 @@ final class HiddenFieldsetsDetectorTest extends TestCase
         );
     }
 
-    public function testIsFieldsetHiddenReturnsFalseWhenNoTransitionIsDefinedForCurrentState() : void
+    public function testIsFieldsetHiddenReturnsFalseWhenNoTransitionIsDefinedForCurrentState(): void
     {
         $this->transition_retriever->shouldReceive('getReferenceTransitionForCurrentState')
             ->andThrow(NoTransitionForStateException::class);
@@ -75,7 +75,7 @@ final class HiddenFieldsetsDetectorTest extends TestCase
         );
     }
 
-    public function testIsFieldsetHiddenReturnsFalseWhenNoHiddenFieldsetsPostAction() : void
+    public function testIsFieldsetHiddenReturnsFalseWhenNoHiddenFieldsetsPostAction(): void
     {
         $artifact = Mockery::mock(Tracker_Artifact::class);
         $fieldset = Mockery::mock(Tracker_FormElement_Container_Fieldset::class);
@@ -94,7 +94,7 @@ final class HiddenFieldsetsDetectorTest extends TestCase
         );
     }
 
-    public function testIsFieldsetHiddenReturnsFalseWhenGivenFieldsetIsNotAmongHiddenFieldsets() : void
+    public function testIsFieldsetHiddenReturnsFalseWhenGivenFieldsetIsNotAmongHiddenFieldsets(): void
     {
         $fieldset                     = Mockery::mock(Tracker_FormElement_Container_Fieldset::class);
         $artifact                     = Mockery::mock(Tracker_Artifact::class);
@@ -122,7 +122,7 @@ final class HiddenFieldsetsDetectorTest extends TestCase
         );
     }
 
-    public function testIsFieldFrozenReturnsTrueWhenGivenFieldIsReadOnly() : void
+    public function testIsFieldFrozenReturnsTrueWhenGivenFieldIsReadOnly(): void
     {
         $fieldset                     = Mockery::mock(Tracker_FormElement_Container_Fieldset::class);
         $artifact                     = Mockery::mock(Tracker_Artifact::class);
@@ -150,7 +150,7 @@ final class HiddenFieldsetsDetectorTest extends TestCase
         );
     }
 
-    public function testDoesArtifactContainsHiddenFieldsetsShouldReturnTrueIfThereAny() : void
+    public function testDoesArtifactContainsHiddenFieldsetsShouldReturnTrueIfThereAny(): void
     {
         $fieldset                     = Mockery::mock(Tracker_FormElement_Container_Fieldset::class);
         $artifact                     = Mockery::mock(Tracker_Artifact::class);
@@ -186,7 +186,7 @@ final class HiddenFieldsetsDetectorTest extends TestCase
         );
     }
 
-    public function testDoesArtifactContainsHiddenFieldsetsShouldReturnFalseIfThereAreNoFieldsets() : void
+    public function testDoesArtifactContainsHiddenFieldsetsShouldReturnFalseIfThereAreNoFieldsets(): void
     {
         $artifact = Mockery::mock(Tracker_Artifact::class);
         $tracker  = Mockery::mock(Tracker::class);
@@ -203,7 +203,7 @@ final class HiddenFieldsetsDetectorTest extends TestCase
         );
     }
 
-    public function testDoesArtifactContainsHiddenFieldsetsShouldReturnFalseIfThereAreNoHiddenFieldsets() : void
+    public function testDoesArtifactContainsHiddenFieldsetsShouldReturnFalseIfThereAreNoHiddenFieldsets(): void
     {
         $fieldset                     = Mockery::mock(Tracker_FormElement_Container_Fieldset::class);
         $artifact                     = Mockery::mock(Tracker_Artifact::class);

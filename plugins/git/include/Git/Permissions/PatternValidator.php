@@ -52,8 +52,10 @@ class PatternValidator
 
     public function isValidForRepository(GitRepository $repository, $pattern, $are_we_activating_regexp)
     {
-        if (($this->regexp_retriever->areRegexpActivatedForRepository($repository) || $are_we_activating_regexp)
-            && ! $this->regexp_retriever->areRegexpRepositoryConflitingWithPlateform($repository)) {
+        if (
+            ($this->regexp_retriever->areRegexpActivatedForRepository($repository) || $are_we_activating_regexp)
+            && ! $this->regexp_retriever->areRegexpRepositoryConflitingWithPlateform($repository)
+        ) {
             return $this->regexp_validator->isPatternValid($pattern);
         }
 
@@ -62,7 +64,8 @@ class PatternValidator
 
     public function isValidForDefault(Project $project, $pattern, $are_we_activating_regexp)
     {
-        if (($this->regexp_retriever->areRegexpActivatedForDefault($project) || $are_we_activating_regexp)
+        if (
+            ($this->regexp_retriever->areRegexpActivatedForDefault($project) || $are_we_activating_regexp)
             && ! $this->regexp_retriever->areDefaultRegexpConflitingWithPlateform($project)
         ) {
             return $this->regexp_validator->isPatternValid($pattern);

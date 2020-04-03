@@ -27,7 +27,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 
 final class ClientTest extends TestCase
 {
-    public function testValidRequestIsAccepted() : void
+    public function testValidRequestIsAccepted(): void
     {
         $http_client    = new \Http\Mock\Client();
         $stream_factory = HTTPFactoryBuilder::streamFactory();
@@ -40,7 +40,7 @@ final class ClientTest extends TestCase
         $this->assertTrue($client->verify('valid_challenge', '192.0.2.1'));
     }
 
-    public function testInvalidRequestIsRefused() : void
+    public function testInvalidRequestIsRefused(): void
     {
         $http_client    = new \Http\Mock\Client();
         $stream_factory = HTTPFactoryBuilder::streamFactory();
@@ -53,7 +53,7 @@ final class ClientTest extends TestCase
         $this->assertFalse($client->verify('invalid_challenge', '192.0.2.1'));
     }
 
-    public function testValidationIsRefusedIfThereIsANetworkFailure() : void
+    public function testValidationIsRefusedIfThereIsANetworkFailure(): void
     {
         $http_client = new \Http\Mock\Client();
         $http_client->addException(
@@ -66,7 +66,7 @@ final class ClientTest extends TestCase
         $this->assertFalse($client->verify('valid_challenge', '192.0.2.1'));
     }
 
-    public function testValidationIsRefusedIfHTTPRequestFails() : void
+    public function testValidationIsRefusedIfHTTPRequestFails(): void
     {
         $http_client = new \Http\Mock\Client();
         $http_client->addResponse(HTTPFactoryBuilder::responseFactory()->createResponse(500));
@@ -76,7 +76,7 @@ final class ClientTest extends TestCase
         $this->assertFalse($client->verify('valid_challenge', '192.0.2.1'));
     }
 
-    public function testValidationIsRefusedIfReceivedCanNotBeDecoded() : void
+    public function testValidationIsRefusedIfReceivedCanNotBeDecoded(): void
     {
         $http_client    = new \Http\Mock\Client();
         $stream_factory = HTTPFactoryBuilder::streamFactory();
@@ -89,7 +89,7 @@ final class ClientTest extends TestCase
         $this->assertFalse($client->verify('valid_challenge', '192.0.2.1'));
     }
 
-    public function testValidationIsRefusedIfJSONObjectDoesNotContainSuccessKey() : void
+    public function testValidationIsRefusedIfJSONObjectDoesNotContainSuccessKey(): void
     {
         $http_client    = new \Http\Mock\Client();
         $stream_factory = HTTPFactoryBuilder::streamFactory();

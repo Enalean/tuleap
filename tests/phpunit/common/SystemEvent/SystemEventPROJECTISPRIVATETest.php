@@ -39,15 +39,16 @@ use Tuleap\Project\UserRemover;
 
 final class SystemEventPROJECTISPRIVATETest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         ProjectManager::clearInstance();
         EventManager::clearInstance();
     }
 
-    public function testRestrictedUsersAreRemovedFromAllUserGroupsWhenProjectBecomesPrivateWithoutRestricted() : void
+    public function testRestrictedUsersAreRemovedFromAllUserGroupsWhenProjectBecomesPrivateWithoutRestricted(): void
     {
         $project_id = 102;
         $system_event = new SystemEvent_PROJECT_IS_PRIVATE(

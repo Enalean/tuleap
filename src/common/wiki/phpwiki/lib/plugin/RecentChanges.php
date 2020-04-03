@@ -654,7 +654,7 @@ class _RecentChanges_RssFormatter extends _RecentChanges_Formatter
     public function format($changes)
     {
         include_once('lib/RssWriter.php');
-        $rss = new RssWriter;
+        $rss = new RssWriter();
 
         $rss->channel($this->channel_properties());
 
@@ -772,7 +772,7 @@ class _RecentChanges_Rss2Formatter extends _RecentChanges_RssFormatter
     public function format($changes)
     {
         include_once('lib/RssWriter2.php');
-        $rss = new RssWriter2;
+        $rss = new RssWriter2();
 
         $rss->channel($this->channel_properties());
         if (($props = $this->cloud_properties())) {
@@ -829,7 +829,7 @@ class _RecentChanges_Rss2Formatter extends _RecentChanges_RssFormatter
     public function cloud_properties()
     {
         return false;
-    } // xml-rpc registerProcedure not yet implemented
+    }
 }
 
 class NonDeletedRevisionIterator extends WikiDB_PageRevisionIterator

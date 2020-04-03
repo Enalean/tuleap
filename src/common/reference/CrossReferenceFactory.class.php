@@ -71,16 +71,18 @@ class CrossReferenceFactory
                 $user_id = $field_array['user_id'];
                 $created_at = $field_array['created_at'];
 
-                if (($target_id == $this->entity_id) &&
+                if (
+                    ($target_id == $this->entity_id) &&
                      ($target_gid == $this->entity_gid) &&
                      ($target_type == $this->entity_type)
-                    ) {
+                ) {
                     $this->source_refs_datas[] = new CrossReference($source_id, $source_gid, $source_type, $source_key, $target_id, $target_gid, $target_type, $target_key, $user_id);
                 }
-                if (($source_id == $this->entity_id) &&
+                if (
+                    ($source_id == $this->entity_id) &&
                      ($source_gid == $this->entity_gid) &&
                      ($source_type == $this->entity_type)
-                    ) {
+                ) {
                     $this->target_refs_datas[] = new CrossReference($source_id, $source_gid, $source_type, $source_key, $target_id, $target_gid, $target_type, $target_key, $user_id);
                 }
             }
@@ -391,10 +393,11 @@ class CrossReferenceFactory
                 $j++;
             }
             if ($is_cross) {
-                if ($this->entity_id == $this->target_refs_datas[$i]->getRefSourceId() &&
+                if (
+                    $this->entity_id == $this->target_refs_datas[$i]->getRefSourceId() &&
                     $this->entity_gid == $this->target_refs_datas[$i]->getRefSourceGid() &&
                     $this->entity_type == $this->target_refs_datas[$i]->getRefSourceType()
-                    ) {
+                ) {
                     // Add the cross reference into the "both" (target and source) array
                     $crossRefArray[$this->source_refs_datas[$source_position]->getInsertSourceType()]['both'][] = $this->target_refs_datas[$i];
                 } else {

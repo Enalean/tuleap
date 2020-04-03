@@ -30,7 +30,8 @@ require_once __DIR__ . '/../../bootstrap.php';
 
 class ChartConfigurationValueRetrieverTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /**
      * @var ChartConfigurationValueRetriever
@@ -70,7 +71,7 @@ class ChartConfigurationValueRetrieverTest extends TestCase
     private $capacity;
 
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 

@@ -75,7 +75,7 @@ class WikiPlugin_AllPages extends WikiPlugin
         $pages = false;
         // Todo: extend given _GET args
         if ($args['debug']) {
-            $timer = new DebugTimer;
+            $timer = new DebugTimer();
         }
         $caption = _("All pages in this wiki (%d total):");
 

@@ -36,7 +36,7 @@ class SettingsRepresentationValidatorTest extends TestCase
         $this->validator = new SettingsRepresentationValidator();
     }
 
-    public function testItThrowAnExceptionWHenPathAreNotUnique() : void
+    public function testItThrowAnExceptionWHenPathAreNotUnique(): void
     {
         $notification_representation_01         = new NotificationRepresentation();
         $notification_representation_01->path   = "/tags";
@@ -55,7 +55,7 @@ class SettingsRepresentationValidatorTest extends TestCase
         $this->validator->validateForPOSTRepresentation($settings);
     }
 
-    public function testItDontThrowExceptionWhenPathAreUnique() : void
+    public function testItDontThrowExceptionWhenPathAreUnique(): void
     {
         $notification_representation_01         = new NotificationRepresentation();
         $notification_representation_01->path   = "/tags";
@@ -75,7 +75,7 @@ class SettingsRepresentationValidatorTest extends TestCase
         $this->validator->validateForPOSTRepresentation($settings);
     }
 
-    public function testItDontThrowAnExceptionAccessFileIsSentEmpty() : void
+    public function testItDontThrowAnExceptionAccessFileIsSentEmpty(): void
     {
         $settings = new SettingsPUTRepresentation();
         $settings->access_file = "";
@@ -85,7 +85,7 @@ class SettingsRepresentationValidatorTest extends TestCase
         $this->validator->validateForPUTRepresentation($settings);
     }
 
-    public function testItThrowAnExceptionAccessFileKeyIsNotPresent() : void
+    public function testItThrowAnExceptionAccessFileKeyIsNotPresent(): void
     {
         $settings = new SettingsPUTRepresentation();
 
@@ -93,14 +93,14 @@ class SettingsRepresentationValidatorTest extends TestCase
         $this->validator->validateForPUTRepresentation($settings);
     }
 
-    public function testItDontRaiseErrorWhenSettingsAreNotProvided() : void
+    public function testItDontRaiseErrorWhenSettingsAreNotProvided(): void
     {
         $this->addToAssertionCount(1);
 
         $this->validator->validateForPUTRepresentation(null);
     }
 
-    public function testItThrowsAnExceptionWhenUsersAndEmailAreBothEmpty() : void
+    public function testItThrowsAnExceptionWhenUsersAndEmailAreBothEmpty(): void
     {
         $notification_representation_01         = new NotificationRepresentation();
         $notification_representation_01->path   = "/tags";
@@ -114,7 +114,7 @@ class SettingsRepresentationValidatorTest extends TestCase
         $this->validator->validateForPOSTRepresentation($settings);
     }
 
-    public function testItThrowsAnExceptionWhenSameMailIsAddedTwiceOnTheSamePathOnPOST() : void
+    public function testItThrowsAnExceptionWhenSameMailIsAddedTwiceOnTheSamePathOnPOST(): void
     {
         $notification_representation_01 = new NotificationRepresentation();
         $notification_representation_01->path = "/tags";
@@ -127,7 +127,7 @@ class SettingsRepresentationValidatorTest extends TestCase
         $this->validator->validateForPOSTRepresentation($settings);
     }
 
-    public function testItDontThrowExceptionWhenSameMailIsUsedForTwoDifferentPathOnPOST() : void
+    public function testItDontThrowExceptionWhenSameMailIsUsedForTwoDifferentPathOnPOST(): void
     {
         $notification_representation_01 = new NotificationRepresentation();
         $notification_representation_01->path = "/tags";
@@ -145,7 +145,7 @@ class SettingsRepresentationValidatorTest extends TestCase
         $this->validator->validateForPOSTRepresentation($settings);
     }
 
-    public function testItThrowsAnExceptionWhenSameMailIsAddedTwiceOnTheSamePathOnPUT() : void
+    public function testItThrowsAnExceptionWhenSameMailIsAddedTwiceOnTheSamePathOnPUT(): void
     {
         $notification_representation_01         = new NotificationRepresentation();
         $notification_representation_01->path   = "/tags";
@@ -161,7 +161,7 @@ class SettingsRepresentationValidatorTest extends TestCase
         $this->validator->validateForPUTRepresentation($settings);
     }
 
-    public function testItDontThrowExceptionWhenSameMailIsUsedForTwoDifferentPathOnPUT() : void
+    public function testItDontThrowExceptionWhenSameMailIsUsedForTwoDifferentPathOnPUT(): void
     {
         $notification_representation_01         = new NotificationRepresentation();
         $notification_representation_01->path   = "/tags";

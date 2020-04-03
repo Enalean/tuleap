@@ -29,7 +29,7 @@ final class PrometheusFlushableStorageProviderTest extends TestCase
 {
     use ForgeConfigSandbox;
 
-    public function testGetANullStoreWhenARedisClientCanNotBeInstantiated() : void
+    public function testGetANullStoreWhenARedisClientCanNotBeInstantiated(): void
     {
         $provider = new PrometheusFlushableStorageProvider();
 

@@ -28,7 +28,7 @@ final class CommitStatusUnknown implements CommitStatus
 
     public function __construct()
     {
-        $this->date = new \DateTimeImmutable;
+        $this->date = new \DateTimeImmutable();
     }
 
     /**

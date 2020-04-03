@@ -39,7 +39,7 @@ class ConfigPermissionsSerializerGerritTest extends TestCase
     private $repository;
     private $gerrit_status;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -79,7 +79,7 @@ class ConfigPermissionsSerializerGerritTest extends TestCase
         );
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         PermissionsManager::clearInstance();
         parent::tearDown();

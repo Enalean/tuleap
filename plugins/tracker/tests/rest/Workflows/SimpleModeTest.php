@@ -60,7 +60,8 @@ class SimpleModeTest extends TrackerBase
             }
         }
 
-        if ($done_id === 0
+        if (
+            $done_id === 0
             || $closed_id === 0
             || $date_field_id === 0
             || $open_id === 0

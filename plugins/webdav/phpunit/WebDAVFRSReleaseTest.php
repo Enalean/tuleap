@@ -40,7 +40,8 @@ require_once __DIR__ . '/bootstrap.php';
  */
 class WebDAVFRSReleaseTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     protected function setUp(): void
     {

@@ -36,7 +36,7 @@ final class POTFileDumperTest extends \PHPUnit\Framework\TestCase
         $this->tmp_dir = vfsStream::setup()->url();
     }
 
-    public function testItDumpsAnEmptyPot() : void
+    public function testItDumpsAnEmptyPot(): void
     {
         $path       = $this->tmp_dir . '/template.pot';
         $dumper     = new POTFileDumper();
@@ -47,7 +47,7 @@ final class POTFileDumperTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(strlen(file_get_contents($path)), 0);
     }
 
-    public function testItDumpsOneSingularEntry() : void
+    public function testItDumpsOneSingularEntry(): void
     {
         $path       = $this->tmp_dir . '/template.pot';
         $dumper     = new POTFileDumper();
@@ -71,7 +71,7 @@ final class POTFileDumperTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItDumpsTwoSingularEntries() : void
+    public function testItDumpsTwoSingularEntries(): void
     {
         $path       = $this->tmp_dir . '/template.pot';
         $dumper     = new POTFileDumper();
@@ -99,7 +99,7 @@ final class POTFileDumperTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItDumpsPluralStrings() : void
+    public function testItDumpsPluralStrings(): void
     {
         $path       = $this->tmp_dir . '/template.pot';
         $dumper     = new POTFileDumper();
@@ -125,7 +125,7 @@ final class POTFileDumperTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItShouldEscapeDoubleQuote() : void
+    public function testItShouldEscapeDoubleQuote(): void
     {
         $path       = $this->tmp_dir . '/template.pot';
         $dumper     = new POTFileDumper();
@@ -149,7 +149,7 @@ final class POTFileDumperTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItShouldEscapeAntislash() : void
+    public function testItShouldEscapeAntislash(): void
     {
         $path       = $this->tmp_dir . '/template.pot';
         $dumper     = new POTFileDumper();
@@ -173,7 +173,7 @@ final class POTFileDumperTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItShouldEscapeNewline() : void
+    public function testItShouldEscapeNewline(): void
     {
         $path       = $this->tmp_dir . '/template.pot';
         $dumper     = new POTFileDumper();

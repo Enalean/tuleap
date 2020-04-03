@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 class b201903111212_add_lock_information_for_new_file_version extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
 {

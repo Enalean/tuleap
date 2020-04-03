@@ -32,14 +32,15 @@ use Tuleap\ForgeConfigSandbox;
 
 final class DocmanValidateUploadTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         $_FILES = [];
     }
 
-    public function testValidFileIsAccepted() : void
+    public function testValidFileIsAccepted(): void
     {
         $request   = Mockery::mock(Codendi_Request::class);
         $request->shouldReceive('exist')->with('upload_content')->andReturn(false);
@@ -53,7 +54,7 @@ final class DocmanValidateUploadTest extends TestCase
         $this->assertTrue($validator->isValid());
     }
 
-    public function testTooLargeFileIsRejected() : void
+    public function testTooLargeFileIsRejected(): void
     {
         $request   = Mockery::mock(Codendi_Request::class);
         $request->shouldReceive('exist')->with('upload_content')->andReturn(false);

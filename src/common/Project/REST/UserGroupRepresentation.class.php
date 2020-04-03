@@ -71,9 +71,10 @@ class UserGroupRepresentation
         return $this;
     }
 
-    public static function getRESTIdForProject(int $project_id, int $user_group_id) : string
+    public static function getRESTIdForProject(int $project_id, int $user_group_id): string
     {
-        if ($user_group_id > ProjectUGroup::DYNAMIC_UPPER_BOUNDARY
+        if (
+            $user_group_id > ProjectUGroup::DYNAMIC_UPPER_BOUNDARY
             || in_array($user_group_id, ProjectUGroup::SYSTEM_USER_GROUPS, true)
         ) {
             return (string) $user_group_id;
@@ -103,7 +104,8 @@ class UserGroupRepresentation
     {
         if (preg_match(self::SIMPLE_REST_ID_PATTERN, $identifier, $simple_id)) {
             $id = (int) $simple_id[0];
-            if ($id > ProjectUGroup::DYNAMIC_UPPER_BOUNDARY
+            if (
+                $id > ProjectUGroup::DYNAMIC_UPPER_BOUNDARY
                 || in_array($id, ProjectUGroup::SYSTEM_USER_GROUPS, true)
             ) {
                 return;

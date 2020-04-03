@@ -41,7 +41,7 @@ class Tracker_Report_CriteriaFactory
     {
         if (!isset(self::$_instance)) {
             $c = self::class;
-            self::$_instance = new $c;
+            self::$_instance = new $c();
         }
         return self::$_instance;
     }

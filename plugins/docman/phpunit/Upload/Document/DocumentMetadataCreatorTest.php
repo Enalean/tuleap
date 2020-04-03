@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Docman\Upload\Document;
 
@@ -33,6 +33,7 @@ use Tuleap\Docman\Metadata\MetadataValueCreator;
 class DocumentMetadataCreatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var Mockery\MockInterface|MetadataValueCreator
      */

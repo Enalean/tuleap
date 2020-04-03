@@ -602,9 +602,11 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
 
         $widget = \Mockery::mock(\Widget::class, ['getId' => 'projectrss'])->shouldIgnoreMissing();
         $widget->shouldReceive('create')->with(\Mockery::on(function (\Codendi_Request $request) {
-            if ($request->get('rss') &&
+            if (
+                $request->get('rss') &&
                 $request->getInArray('rss', 'title') === 'Da feed' &&
-                $request->getInArray('rss', 'url') === 'https://stuff') {
+                $request->getInArray('rss', 'url') === 'https://stuff'
+            ) {
                 return true;
             }
             return false;

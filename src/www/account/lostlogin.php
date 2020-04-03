@@ -51,10 +51,12 @@ try {
     );
 }
 
-if ($request->isPost()
+if (
+    $request->isPost()
     && $request->exist('Update')
     && $request->existAndNonEmpty('form_pw')
-    && !strcmp($request->get('form_pw'), $request->get('form_pw2'))) {
+    && !strcmp($request->get('form_pw'), $request->get('form_pw2'))
+) {
     $user->setPassword($request->get('form_pw'));
 
     $reset_token_revoker = new \Tuleap\User\Password\Reset\Revoker($reset_token_dao);

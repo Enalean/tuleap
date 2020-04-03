@@ -32,9 +32,10 @@ use Tuleap\Upload\FileBeingUploadedInformation;
 
 class FileUploadCancelerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
-    public function testDocumentBeingUploadedIsCleanedWhenTheUploadIsCancelled() : void
+    public function testDocumentBeingUploadedIsCleanedWhenTheUploadIsCancelled(): void
     {
         \ForgeConfig::set('tmp_dir', vfsStream::setup()->url());
         $path_allocator = new UploadPathAllocator();
@@ -54,7 +55,7 @@ class FileUploadCancelerTest extends TestCase
         $this->assertFileNotExists($item_path);
     }
 
-    public function testCancellingAnUploadThatHasNotYetStartedDoesNotGiveAWarning() : void
+    public function testCancellingAnUploadThatHasNotYetStartedDoesNotGiveAWarning(): void
     {
         \ForgeConfig::set('tmp_dir', vfsStream::setup()->url());
         $path_allocator = new UploadPathAllocator();

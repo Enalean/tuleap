@@ -191,8 +191,10 @@ class Docman_HtmlFilterList extends Docman_HtmlFilter
         while ($vIter->valid()) {
             $e = $vIter->current();
 
-            if ($e->getStatus() == 'A'
-               || $e->getStatus() == 'P') {
+            if (
+                $e->getStatus() == 'A'
+                || $e->getStatus() == 'P'
+            ) {
                 $vals[]  = $e->getId();
                 $txts[] = Docman_MetadataHtmlList::_getElementName($e);
             }

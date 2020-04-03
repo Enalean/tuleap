@@ -29,6 +29,7 @@ use Tuleap\Cardwall\Semantic\FieldUsedInSemanticObjectChecker;
 class AllowedFieldRetrieverTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var \Tracker_FormElement_Field
      */
@@ -47,7 +48,7 @@ class AllowedFieldRetrieverTest extends TestCase
      */
     private $form_element_factory;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

@@ -80,7 +80,7 @@ final class AggregateAuthenticationScopeBuilderTest extends TestCase
                 $this->builder = $builder;
             }
 
-            public function getAuthenticationKeyScopeBuilders() : array
+            public function getAuthenticationKeyScopeBuilders(): array
             {
                 return [$this->builder];
             }

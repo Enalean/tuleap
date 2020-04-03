@@ -108,7 +108,8 @@ class ArtifactMoveButtonPresenterBuilder
         Tracker $tracker,
         MoveArtifactActionAllowedByPluginRetriever $event
     ) {
-        if ($tracker->hasSemanticsTitle() ||
+        if (
+            $tracker->hasSemanticsTitle() ||
             $tracker->hasSemanticsDescription() ||
             $tracker->hasSemanticsStatus() ||
             $tracker->getContributorField() !== null ||

@@ -42,7 +42,7 @@ class WorkflowUpdateChecker
         $submitted_value,
         bool $is_submission,
         \PFUser $user
-    ) : bool {
+    ): bool {
         if ($is_submission || $user instanceof \Tracker_Workflow_WorkflowUser) {
             return true;
         }
@@ -59,7 +59,7 @@ class WorkflowUpdateChecker
         Tracker_FormElement_Field $field,
         ?Tracker_Artifact_ChangesetValue $last_changeset_value,
         $submitted_value
-    ) : bool {
+    ): bool {
         if ($submitted_value === null) {
             return false;
         }

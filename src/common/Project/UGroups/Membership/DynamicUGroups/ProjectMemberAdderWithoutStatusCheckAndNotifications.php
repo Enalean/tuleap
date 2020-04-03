@@ -37,7 +37,7 @@ class ProjectMemberAdderWithoutStatusCheckAndNotifications implements ProjectMem
         $this->add_project_member = $add_project_member;
     }
 
-    public static function build() : self
+    public static function build(): self
     {
         return new self(AddProjectMember::build());
     }

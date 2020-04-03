@@ -20,7 +20,8 @@
 
 final class Tracker_FormElement_View_AdminTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Tuleap\GlobalLanguageMock, \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\GlobalLanguageMock;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     public function testForSharedFieldsItDisplaysOriginalTrackerAndProjectName(): void
     {

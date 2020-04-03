@@ -31,7 +31,8 @@ use Tuleap\Project\UGroups\Membership\StaticUGroups\StaticMemberRemover;
 
 class MemberRemoverTest extends TestCase
 {
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /**
      * @var M\MockInterface|DynamicUGroupMembersUpdater

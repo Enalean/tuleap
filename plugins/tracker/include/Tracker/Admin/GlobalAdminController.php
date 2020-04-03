@@ -98,7 +98,8 @@ class GlobalAdminController implements DispatchableWithRequest, DispatchableWith
     public function process(\HTTPRequest $request, BaseLayout $response, array $variables)
     {
         $project = $this->getProject($variables);
-        if (! $this->tracker_manager->userCanCreateTracker($project->getID())
+        if (
+            ! $this->tracker_manager->userCanCreateTracker($project->getID())
             && ! $this->tracker_manager->userCanAdminAllProjectTrackers()
         ) {
             throw new ForbiddenException();

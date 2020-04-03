@@ -38,6 +38,7 @@ use Tuleap\REST\I18NRestException;
 final class MetadataUpdatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var \Mockery\MockInterface|MetadataValueUpdator
      */

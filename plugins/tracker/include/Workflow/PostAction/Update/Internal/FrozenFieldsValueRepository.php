@@ -36,12 +36,12 @@ class FrozenFieldsValueRepository
         $this->frozen_fields_dao = $frozen_fields_dao;
     }
 
-    public function create(Transition $transition, FrozenFieldsValue $frozen_fields) :  void
+    public function create(Transition $transition, FrozenFieldsValue $frozen_fields): void
     {
         $this->frozen_fields_dao->createPostActionForTransitionId($transition->getId(), $frozen_fields->getFieldIds());
     }
 
-    public function deleteAllByTransition(Transition $transition) : void
+    public function deleteAllByTransition(Transition $transition): void
     {
         $this->frozen_fields_dao->deletePostActionsByTransitionId($transition->getId());
     }

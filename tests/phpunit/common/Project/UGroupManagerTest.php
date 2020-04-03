@@ -38,7 +38,9 @@ use UGroupUserDao;
 
 class UGroupManagerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
+    use GlobalLanguageMock;
 
     /**
      * @var UGroupManager
@@ -198,7 +200,7 @@ class UGroupManagerTest extends TestCase
     /**
      * @param ProjectUGroup[] $user_groups
      */
-    private function assertUgroupsContainsId(array $user_groups, int $expected_id) : void
+    private function assertUgroupsContainsId(array $user_groups, int $expected_id): void
     {
         $this->assertContains(
             $expected_id,
@@ -209,7 +211,7 @@ class UGroupManagerTest extends TestCase
     /**
      * @param ProjectUGroup[] $user_groups
      */
-    private function assertUgroupsNotContainsId(array $user_groups, int $not_expected_id) : void
+    private function assertUgroupsNotContainsId(array $user_groups, int $not_expected_id): void
     {
         $this->assertNotContains(
             $not_expected_id,
@@ -217,10 +219,10 @@ class UGroupManagerTest extends TestCase
         );
     }
 
-    private function flattenUserGroupsToUserGroupIDs(ProjectUGroup ...$user_groups) : array
+    private function flattenUserGroupsToUserGroupIDs(ProjectUGroup ...$user_groups): array
     {
         return array_map(
-            function (ProjectUGroup $user_group) : int {
+            function (ProjectUGroup $user_group): int {
                 return $user_group->getId();
             },
             $user_groups

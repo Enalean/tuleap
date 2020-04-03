@@ -26,9 +26,10 @@ require_once __DIR__ . '/../../../bootstrap.php';
 
 class KeyTest extends \PHPUnit\Framework\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
-    public function testItChecksUsernameValidity() : void
+    public function testItChecksUsernameValidity(): void
     {
         $this->expectException('\InvalidArgumentException');
         new Key(
@@ -37,7 +38,7 @@ class KeyTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItCleansKey() : void
+    public function testItCleansKey(): void
     {
         $key = new Key(
             'user',
@@ -52,7 +53,7 @@ class KeyTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItAcceptsOnlyOneKey() : void
+    public function testItAcceptsOnlyOneKey(): void
     {
         $this->expectException('\InvalidArgumentException');
         new Key(

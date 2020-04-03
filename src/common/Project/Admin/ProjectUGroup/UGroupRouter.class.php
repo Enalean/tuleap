@@ -155,7 +155,7 @@ class UGroupRouter
         );
     }
 
-    public static function getCSRFTokenSynchronizer() : CSRFSynchronizerToken
+    public static function getCSRFTokenSynchronizer(): CSRFSynchronizerToken
     {
         return new CSRFSynchronizerToken(self::CSRF_TOKEN);
     }

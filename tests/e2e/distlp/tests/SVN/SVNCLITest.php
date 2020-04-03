@@ -30,14 +30,14 @@ class SVNCLITest extends TestCase
 {
     private $init_pwd;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->init_pwd = getcwd();
         system('/bin/rm -rf /tmp/sample');
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         parent::tearDown();
         chdir($this->init_pwd);
@@ -54,7 +54,7 @@ class SVNCLITest extends TestCase
         $this->assertEqualsCanonicalizing(['tags', 'trunk', 'branches'], $content);
     }
 
-    private function getSvnCommand(string $username, string $command) : string
+    private function getSvnCommand(string $username, string $command): string
     {
         return 'svn --username ' . $username . ' --password "Correct Horse Battery Staple" --non-interactive --trust-server-cert ' . $command;
     }
@@ -107,19 +107,19 @@ class SVNCLITest extends TestCase
         $this->assertFalse($got_exception);
     }
 
-    private function getWCRevision() : int
+    private function getWCRevision(): int
     {
         $xml = $this->getXML('svn --xml info');
         return (int) $xml->entry['revision'];
     }
 
-    private function getXML(string $command) : SimpleXMLElement
+    private function getXML(string $command): SimpleXMLElement
     {
         $xml = simplexml_load_string($this->command($command));
         return $xml;
     }
 
-    private function command(string $command) : string
+    private function command(string $command): string
     {
         $total_stdout = '';
         $total_stderr = '';

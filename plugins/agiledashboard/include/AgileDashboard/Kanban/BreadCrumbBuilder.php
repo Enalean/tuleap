@@ -50,7 +50,7 @@ class BreadCrumbBuilder
      * @throws \AgileDashboard_KanbanCannotAccessException
      * @throws \AgileDashboard_KanbanNotFoundException
      */
-    public function build(\PFUser $current_user, int $kanban_id) : BreadCrumb
+    public function build(\PFUser $current_user, int $kanban_id): BreadCrumb
     {
         $kanban  = $this->kanban_factory->getKanban($current_user, $kanban_id);
         $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());

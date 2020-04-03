@@ -47,7 +47,7 @@ class GenericProviderDao extends DataAccessObject
                 $client_secret,
                 $icon,
                 $color
-            ) : int {
+            ): int {
                 $sql = "INSERT INTO plugin_openidconnectclient_provider(name, client_id, client_secret, icon, color)
                     VALUES (?, ?, ?, ?, ?)";
 
@@ -95,7 +95,7 @@ class GenericProviderDao extends DataAccessObject
                 $client_secret,
                 $icon,
                 $color
-            ) : void {
+            ): void {
                 if ($is_unique_authentication_endpoint) {
                     $this->disableUniqueAuthenticationProvider();
                 }

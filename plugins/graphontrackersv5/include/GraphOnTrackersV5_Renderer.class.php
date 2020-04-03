@@ -269,8 +269,10 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
                 if ($request->exist('store_in_session')) {
                     $store_in_session = (bool) $request->get('store_in_session');
                 }
-                if ($chart = $this->getChartFactory()
-                                  ->getChart($this, $renderer_parameters['stroke'], $store_in_session)) {
+                if (
+                    $chart = $this->getChartFactory()
+                                  ->getChart($this, $renderer_parameters['stroke'], $store_in_session)
+                ) {
                     $chart->stroke();
                     exit;
                 }

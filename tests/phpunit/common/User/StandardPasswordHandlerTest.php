@@ -37,7 +37,7 @@ final class StandardPasswordHandlerTest extends TestCase
      */
     private $password_handler;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         $this->password_handler = new StandardPasswordHandler();
     }
@@ -45,7 +45,7 @@ final class StandardPasswordHandlerTest extends TestCase
     /**
      * @test
      */
-    public function itVerifyPassword() : void
+    public function itVerifyPassword(): void
     {
         $check_password = $this->password_handler->verifyHashPassword(self::HASHED_WORD, self::BCRYPT_HASH);
         $this->assertTrue($check_password);
@@ -54,7 +54,7 @@ final class StandardPasswordHandlerTest extends TestCase
     /**
      * @test
      */
-    public function itVerifyPasswordSaltedMD5() : void
+    public function itVerifyPasswordSaltedMD5(): void
     {
         $check_password = $this->password_handler->verifyHashPassword(self::HASHED_WORD, self::MD5_HASH);
         $this->assertTrue($check_password);
@@ -63,7 +63,7 @@ final class StandardPasswordHandlerTest extends TestCase
     /**
      * @test
      */
-    public function itVerifyPasswordSaltedSHA512() : void
+    public function itVerifyPasswordSaltedSHA512(): void
     {
         $check_password = $this->password_handler->verifyHashPassword(self::HASHED_WORD, self::SHA512_HASH);
         $this->assertTrue($check_password);
@@ -72,7 +72,7 @@ final class StandardPasswordHandlerTest extends TestCase
     /**
      * @test
      */
-    public function itChecksIfRehashingIsNeeded() : void
+    public function itChecksIfRehashingIsNeeded(): void
     {
         $rehash_needed = $this->password_handler->isPasswordNeedRehash(self::MD5_HASH);
         $this->assertTrue($rehash_needed);

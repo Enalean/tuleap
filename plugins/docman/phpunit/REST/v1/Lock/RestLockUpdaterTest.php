@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1\Lock;
 
@@ -34,6 +34,7 @@ use Tuleap\REST\I18NRestException;
 class RestLockUpdaterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var \Mockery\MockInterface|PFUser
      */

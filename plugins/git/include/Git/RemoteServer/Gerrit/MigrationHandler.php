@@ -201,7 +201,8 @@ class MigrationHandler
         Git_RemoteServer_GerritServer $server,
         $disconnect_option
     ) {
-        if (! $driver->isDeletePluginEnabled($server) &&
+        if (
+            ! $driver->isDeletePluginEnabled($server) &&
             $disconnect_option === Pane\Gerrit::OPTION_DELETE_GERRIT_PROJECT
         ) {
             throw new DeletePluginNotInstalledException();

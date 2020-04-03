@@ -176,8 +176,10 @@ class AdminController
         $notification_to_add    = $request->get('notification_add');
         $notification_to_update = $request->get('notification_update');
 
-        if ($notification_to_update
-            && !empty($notification_to_update)) {
+        if (
+            $notification_to_update
+            && !empty($notification_to_update)
+        ) {
             $this->updateMailingList($request, $repository, $notification_to_update);
         } else {
             $this->createMailingList($request, $repository, $notification_to_add);
@@ -287,8 +289,10 @@ class AdminController
             return;
         }
 
-        if ($notification->getPath() !== $new_path
-            && $this->mail_notification_manager->isAnExistingPath($repository, $notification_id, $new_path)) {
+        if (
+            $notification->getPath() !== $new_path
+            && $this->mail_notification_manager->isAnExistingPath($repository, $notification_id, $new_path)
+        ) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::WARN,
                 sprintf(

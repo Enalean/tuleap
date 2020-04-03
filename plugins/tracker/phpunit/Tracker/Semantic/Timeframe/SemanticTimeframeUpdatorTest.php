@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
@@ -29,7 +29,8 @@ use Tuleap\GlobalResponseMock;
 
 class SemanticTimeframeUpdatorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalResponseMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalResponseMock;
 
     /**
      * @var SemanticTimeframeDao
@@ -56,7 +57,7 @@ class SemanticTimeframeUpdatorTest extends TestCase
      */
     private $tracker_id;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->semantic_timeframe_dao = Mockery::mock(SemanticTimeframeDao::class);
         $this->tracker                = Mockery::mock(\Tracker::class);
@@ -70,7 +71,7 @@ class SemanticTimeframeUpdatorTest extends TestCase
         $this->tracker->shouldReceive('getId')->andReturn($this->tracker_id);
     }
 
-    public function testItDoesNotUpdateIfAFieldIdIsNotNumeric() : void
+    public function testItDoesNotUpdateIfAFieldIdIsNotNumeric(): void
     {
         $request = new \Codendi_Request([
             'start-date-field-id' => 'start',
@@ -87,7 +88,7 @@ class SemanticTimeframeUpdatorTest extends TestCase
         $this->updator->update($this->tracker, $request);
     }
 
-    public function testItDoesNotUpdateIfStartDateFieldIdIsMissing() : void
+    public function testItDoesNotUpdateIfStartDateFieldIdIsMissing(): void
     {
         $request = new \Codendi_Request([
             'start-date-field-id' => '',
@@ -104,7 +105,7 @@ class SemanticTimeframeUpdatorTest extends TestCase
         $this->updator->update($this->tracker, $request);
     }
 
-    public function testItDoesNotUpdateIfDurationFieldIdIsMissing() : void
+    public function testItDoesNotUpdateIfDurationFieldIdIsMissing(): void
     {
         $request = new \Codendi_Request([
             'start-date-field-id' => '1234',
@@ -121,7 +122,7 @@ class SemanticTimeframeUpdatorTest extends TestCase
         $this->updator->update($this->tracker, $request);
     }
 
-    public function testItDoesNotUpdateIfAFieldCannotBeFoundInTheTracker() : void
+    public function testItDoesNotUpdateIfAFieldCannotBeFoundInTheTracker(): void
     {
         $request = new \Codendi_Request([
             'start-date-field-id' => '1234',
@@ -139,7 +140,7 @@ class SemanticTimeframeUpdatorTest extends TestCase
         $this->updator->update($this->tracker, $request);
     }
 
-    public function testItUpdatesTheSemanticWithDuration() : void
+    public function testItUpdatesTheSemanticWithDuration(): void
     {
         $start_date_field_id = 1234;
         $duration_field_id   = 5678;
@@ -176,7 +177,7 @@ class SemanticTimeframeUpdatorTest extends TestCase
         $this->updator->update($this->tracker, $request);
     }
 
-    public function testItUpdatesTheSemanticWithEndDate() : void
+    public function testItUpdatesTheSemanticWithEndDate(): void
     {
         $start_date_field_id = 1234;
         $end_date_field_id   = 5678;
@@ -209,7 +210,7 @@ class SemanticTimeframeUpdatorTest extends TestCase
         $this->updator->update($this->tracker, $request);
     }
 
-    public function testItRejectsIfBothDurationAndEndDateAreSent() : void
+    public function testItRejectsIfBothDurationAndEndDateAreSent(): void
     {
         $start_date_field_id = 1234;
         $end_date_field_id   = 5678;

@@ -39,9 +39,9 @@ interface SOAPRequestValidator
     /**
      * @see session_continue
      */
-    public function continueSession(string $session_key) : PFUser;
+    public function continueSession(string $session_key): PFUser;
 
-    public function assertUserCanAccessProject(PFUser $user, Project $project) : void;
+    public function assertUserCanAccessProject(PFUser $user, Project $project): void;
 
     public function getProjectById($project_id, $method_name);
 

@@ -99,7 +99,7 @@ class GerritSetupCommand extends Command
         $output->writeln("First Login successful");
     }
 
-    private function generateSSHKey(InputInterface $input, OutputInterface $output) : void
+    private function generateSSHKey(InputInterface $input, OutputInterface $output): void
     {
         $ssh_key_path = $input->getOption('ssh-private-key-path');
         if (! file_exists($ssh_key_path)) {
@@ -225,7 +225,7 @@ class GerritSetupCommand extends Command
         $output->writeln("Permissions on All-Projects updated");
     }
 
-    private function getAdministratorGroupUUID(MessageFactory $message_factory, string $gerrit_server, ClientInterface $plugin_client) : string
+    private function getAdministratorGroupUUID(MessageFactory $message_factory, string $gerrit_server, ClientInterface $plugin_client): string
     {
         $request  = $message_factory->createRequest('GET', $gerrit_server . '/a/groups/Administrators');
         $response = $plugin_client->sendRequest($request);
@@ -239,7 +239,7 @@ class GerritSetupCommand extends Command
         return $group['id'];
     }
 
-    private function getJsonFromResponse(string $body) : array
+    private function getJsonFromResponse(string $body): array
     {
         return json_decode(substr($body, 5), true);
     }

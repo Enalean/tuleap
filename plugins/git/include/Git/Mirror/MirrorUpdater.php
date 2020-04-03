@@ -39,9 +39,11 @@ class GitRepositoryMirrorUpdater
 
     public function updateRepositoryMirrors(GitRepository $repository, array $mirror_ids)
     {
-        if ($this->mirror_data_mapper->doesAllSelectedMirrorIdsExist($mirror_ids)
+        if (
+            $this->mirror_data_mapper->doesAllSelectedMirrorIdsExist($mirror_ids)
             && $this->mirror_data_mapper->unmirrorRepository($repository->getId())
-            && $this->mirror_data_mapper->mirrorRepositoryTo($repository->getId(), $mirror_ids)) {
+            && $this->mirror_data_mapper->mirrorRepositoryTo($repository->getId(), $mirror_ids)
+        ) {
             $this->history_dao->groupAddHistory(
                 "git_repo_mirroring_update",
                 $repository->getName(),

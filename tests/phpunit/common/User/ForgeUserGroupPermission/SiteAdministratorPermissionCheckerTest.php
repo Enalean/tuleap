@@ -23,6 +23,7 @@ namespace Tuleap\User\ForgeUserGroupPermission;
 class SiteAdministratorPermissionCheckerTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var SiteAdministratorPermissionChecker
      */
@@ -33,7 +34,7 @@ class SiteAdministratorPermissionCheckerTest extends \PHPUnit\Framework\TestCase
      */
     private $permission_dao;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -42,21 +43,21 @@ class SiteAdministratorPermissionCheckerTest extends \PHPUnit\Framework\TestCase
         $this->permission_checker = new SiteAdministratorPermissionChecker($this->permission_dao);
     }
 
-    public function testItReturnsFalseWhenPlatformHasOnlyOneSiteAdministrationPermission() : void
+    public function testItReturnsFalseWhenPlatformHasOnlyOneSiteAdministrationPermission(): void
     {
         $this->permission_dao->shouldReceive('isMoreThanOneUgroupUsingForgePermission')->andReturns(false);
 
         $this->assertFalse($this->permission_checker->checkPlatformHasMoreThanOneSiteAdministrationPermission());
     }
 
-    public function testItReturnsTrueWhenPlatformHasSeveralSiteAdministrationPermission() : void
+    public function testItReturnsTrueWhenPlatformHasSeveralSiteAdministrationPermission(): void
     {
         $this->permission_dao->shouldReceive('isMoreThanOneUgroupUsingForgePermission')->andReturns(true);
 
         $this->assertTrue($this->permission_checker->checkPlatformHasMoreThanOneSiteAdministrationPermission());
     }
 
-    public function testItReturnsTrueWhenPlatformHasOnlyAUGroupContainingSiteAdminsitrationPermission() : void
+    public function testItReturnsTrueWhenPlatformHasOnlyAUGroupContainingSiteAdminsitrationPermission(): void
     {
         $ugroup = \Mockery::spy(\User_ForgeUGroup::class);
         $ugroup->shouldReceive('getId')->andReturns(101);
@@ -65,7 +66,7 @@ class SiteAdministratorPermissionCheckerTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($this->permission_checker->checkUGroupIsNotTheOnlyOneWithPlatformAdministrationPermission($ugroup));
     }
 
-    public function testItReturnsFalseWhenPlatformHasSeveralAUGroupContainingSiteAdminsitrationPermission() : void
+    public function testItReturnsFalseWhenPlatformHasSeveralAUGroupContainingSiteAdminsitrationPermission(): void
     {
         $ugroup = \Mockery::spy(\User_ForgeUGroup::class);
         $ugroup->shouldReceive('getId')->andReturns(101);

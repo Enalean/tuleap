@@ -91,8 +91,10 @@ class Docman_ReportFactory
             $report->setUserId($user->getId());
 
             // New report
-            if ($request->get('save_report') == 'newp'
-               || $request->get('save_report') == 'newi') {
+            if (
+                $request->get('save_report') == 'newp'
+                || $request->get('save_report') == 'newi'
+            ) {
                 if ($request->exist('report_name')) {
                     $reportName = $request->get('report_name');
                     // todo Validate report name
@@ -118,8 +120,10 @@ class Docman_ReportFactory
                         if ($dpm->userCanAdmin($user)) {
                             $updReportOk = true;
                         } else {
-                            if ($refReport->getScope() == 'I'
-                               && $refReport->getUserId() == $user->getId()) {
+                            if (
+                                $refReport->getScope() == 'I'
+                                && $refReport->getUserId() == $user->getId()
+                            ) {
                                 $updReportOk = true;
                             }
                         }
@@ -143,8 +147,10 @@ class Docman_ReportFactory
 
     public function initReport(&$report, $request, $item)
     {
-        if ($request->exist('advsearch')
-           && $request->get('advsearch') == 1) {
+        if (
+            $request->exist('advsearch')
+            && $request->get('advsearch') == 1
+        ) {
             $report->setAdvancedSearch(true);
         }
         $report->setItemId($item->getId());
@@ -384,9 +390,11 @@ class Docman_ReportFactory
 
         // Be carful with reports associated to an item.
         if ($srcReport->getGroupId() != $dstGroupId) {
-            if ($srcReport->getItemId() !== null
-               && $srcReport->getItemId() != 0
-               && isset($itemMapping[$srcReport->getItemId()])) {
+            if (
+                $srcReport->getItemId() !== null
+                && $srcReport->getItemId() != 0
+                && isset($itemMapping[$srcReport->getItemId()])
+            ) {
                 $dstReport->setItemId($itemMapping[$srcReport->getItemId()]);
             } else {
                 $dstReport->setItemId(0);

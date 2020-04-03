@@ -58,7 +58,10 @@ use XMLImportHelper;
 
 final class GitXmlImporterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, TemporaryTestDirectory, \Tuleap\GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use TemporaryTestDirectory;
+    use \Tuleap\GlobalLanguageMock;
+
     /**
      * @var XMLImportHelper
      */
@@ -125,7 +128,7 @@ final class GitXmlImporterTest extends TestCase
     private $backup_tmp_dir;
     private $backup_access_config;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->backup_tmp_dir       = ForgeConfig::get('tmp_dir');
         $this->backup_access_config = ForgeConfig::get(ForgeAccess::CONFIG);
@@ -144,7 +147,7 @@ final class GitXmlImporterTest extends TestCase
 
         $this->git_dao = \Mockery::spy(GitDao::class);
         $this->git_dao->shouldReceive('save')->with(\Mockery::on(
-            function (GitRepository $repository) : bool {
+            function (GitRepository $repository): bool {
                 $this->last_saved_repository = $repository;
                 return true;
             }
@@ -254,7 +257,7 @@ final class GitXmlImporterTest extends TestCase
         );
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         $this->backup_tmp_dir       = ForgeConfig::set('tmp_dir', $this->backup_tmp_dir);
         $this->backup_access_config = ForgeConfig::set(ForgeAccess::CONFIG, $this->backup_access_config);
@@ -269,7 +272,7 @@ final class GitXmlImporterTest extends TestCase
         chdir($this->old_cwd);
     }
 
-    public function testItShouldCreateOneEmptyRepository() : void
+    public function testItShouldCreateOneEmptyRepository(): void
     {
         $xml = <<<XML
             <project>
@@ -299,7 +302,7 @@ XML;
         $this->assertFalse($empty_is_here);
     }
 
-    public function testItShouldImportOneRepositoryWithOneCommit() : void
+    public function testItShouldImportOneRepositoryWithOneCommit(): void
     {
         $xml = <<<XML
             <project>
@@ -322,7 +325,7 @@ XML;
         $this->assertEquals(1, intval($nb_commit));
     }
 
-    public function testItShouldImportTwoRepositoriesWithOneCommit() : void
+    public function testItShouldImportTwoRepositoriesWithOneCommit(): void
     {
         $xml = <<<XML
             <project>
@@ -341,7 +344,7 @@ XML;
         $this->assertEquals(1, (int) $nb_commit_stable2);
     }
 
-    public function testItShouldImportStaticUgroups() : void
+    public function testItShouldImportStaticUgroups(): void
     {
         //allow anonymous to avoid overriding of the ugroups by PermissionsUGroupMapper when adding/updating permissions
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
@@ -374,7 +377,7 @@ XML;
         $this->import(new SimpleXMLElement($xml));
     }
 
-    public function testItShouldImportLegacyPermissions() : void
+    public function testItShouldImportLegacyPermissions(): void
     {
         //allow anonymous to avoid overriding of the ugroups by PermissionsUGroupMapper when adding/updating permissions
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
@@ -405,7 +408,7 @@ XML;
         $this->import(new SimpleXMLElement($xml));
     }
 
-    public function testItShouldUpdateConfViaSystemEvents() : void
+    public function testItShouldUpdateConfViaSystemEvents(): void
     {
         $xml = <<<XML
             <project>
@@ -418,7 +421,7 @@ XML;
         $this->import(new SimpleXMLElement($xml));
     }
 
-    public function testItShouldImportDescription() : void
+    public function testItShouldImportDescription(): void
     {
         $xml = <<<XML
             <project>
@@ -431,7 +434,7 @@ XML;
         $this->assertEquals('description stable', $this->last_saved_repository->getDescription());
     }
 
-    public function testItShouldImportDefaultDescription() : void
+    public function testItShouldImportDefaultDescription(): void
     {
         $xml = <<<XML
             <project>
@@ -444,7 +447,7 @@ XML;
         $this->assertEquals(GitRepository::DEFAULT_DESCRIPTION, $this->last_saved_repository->getDescription());
     }
 
-    public function testItShouldAtLeastSetProjectsAdminAsGitAdmins() : void
+    public function testItShouldAtLeastSetProjectsAdminAsGitAdmins(): void
     {
         $xml = <<<XML
             <project>
@@ -457,7 +460,7 @@ XML;
         $this->import(new SimpleXMLElement($xml));
     }
 
-    public function testItShouldImportGitAdmins() : void
+    public function testItShouldImportGitAdmins(): void
     {
         $xml = <<<XML
             <project>
@@ -478,7 +481,7 @@ XML;
         $this->import(new SimpleXMLElement($xml));
     }
 
-    public function testItShouldImportReferences() : void
+    public function testItShouldImportReferences(): void
     {
         $xml = <<<XML
             <project>
@@ -498,7 +501,7 @@ XML;
         $this->import(new SimpleXMLElement($xml));
     }
 
-    public function testItShouldNotImportFineGrainedPermissionsWhenNoNode() : void
+    public function testItShouldNotImportFineGrainedPermissionsWhenNoNode(): void
     {
         $xml = <<<XML
             <project>
@@ -516,7 +519,7 @@ XML;
         $this->import(new SimpleXMLElement($xml));
     }
 
-    public function testItShouldImportFineGrainedPermissions() : void
+    public function testItShouldImportFineGrainedPermissions(): void
     {
         $xml = <<<XML
             <project>
@@ -538,7 +541,7 @@ XML;
         $this->import(new SimpleXMLElement($xml));
     }
 
-    public function testItShouldImportRegexpFineGrainedPermissions() : void
+    public function testItShouldImportRegexpFineGrainedPermissions(): void
     {
         $xml = <<<XML
             <project>
@@ -560,7 +563,7 @@ XML;
         $this->import(new SimpleXMLElement($xml));
     }
 
-    public function testItShouldNotImportRegexpFineGrainedPermissionsIfNotAvailableAtSiteLevel() : void
+    public function testItShouldNotImportRegexpFineGrainedPermissionsIfNotAvailableAtSiteLevel(): void
     {
         $xml = <<<XML
             <project>
@@ -583,7 +586,7 @@ XML;
         $this->import(new SimpleXMLElement($xml));
     }
 
-    public function testItShouldImportRegexpFineGrainedPermissionsEvenWhenFineGrainedAreNotUsed() : void
+    public function testItShouldImportRegexpFineGrainedPermissionsEvenWhenFineGrainedAreNotUsed(): void
     {
         $xml = <<<XML
             <project>
@@ -605,7 +608,7 @@ XML;
         $this->import(new SimpleXMLElement($xml));
     }
 
-    public function testItImportPatternsWithoutRegexp() : void
+    public function testItImportPatternsWithoutRegexp(): void
     {
         $xml = <<<XML
             <project>
@@ -640,7 +643,7 @@ XML;
         $this->import(new SimpleXMLElement($xml));
     }
 
-    public function testItDoesNotImportRegexpWhenNotActivated() : void
+    public function testItDoesNotImportRegexpWhenNotActivated(): void
     {
         $xml = <<<XML
             <project>
@@ -677,7 +680,7 @@ XML;
         $this->import(new SimpleXMLElement($xml));
     }
 
-    public function testItImportsRegexpPatterns() : void
+    public function testItImportsRegexpPatterns(): void
     {
         $xml = <<<XML
             <project>
@@ -728,7 +731,7 @@ XML;
         return $this->importer->import(new \Tuleap\Project\XML\Import\ImportConfig(), $this->project, \Mockery::spy(\PFUser::class), $xml, $this->getTmpDir());
     }
 
-    public function testItShouldImportGitLastPushData() : void
+    public function testItShouldImportGitLastPushData(): void
     {
         $xml = <<<XML
             <project>

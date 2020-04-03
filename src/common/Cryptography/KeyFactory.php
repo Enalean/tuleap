@@ -30,7 +30,7 @@ class KeyFactory
     /**
      * @throws CannotPerformIOOperationException
      */
-    public function getEncryptionKey() : EncryptionKey
+    public function getEncryptionKey(): EncryptionKey
     {
         $encryption_key_file_path = \ForgeConfig::get('sys_custom_dir') . '/conf/encryption_secret.key';
         if (! \file_exists($encryption_key_file_path)) {
@@ -56,7 +56,7 @@ class KeyFactory
         return $encryption_key;
     }
 
-    private function generateEncryptionKey() : EncryptionKey
+    private function generateEncryptionKey(): EncryptionKey
     {
         $raw_encryption_key = \random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES);
         $key_data           = new ConcealedString($raw_encryption_key);

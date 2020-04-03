@@ -37,7 +37,8 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class DisplayAccountInformationControllerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, TemporaryTestDirectory;
+    use MockeryPHPUnitIntegration;
+    use TemporaryTestDirectory;
 
     /**
      * @var DisplayAccountInformationController

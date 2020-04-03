@@ -27,5 +27,5 @@ interface PsalmIgnoreDirectory
     /**
      * @return string[]
      */
-    public function getIgnoredDirectories() : array;
+    public function getIgnoredDirectories(): array;
 }

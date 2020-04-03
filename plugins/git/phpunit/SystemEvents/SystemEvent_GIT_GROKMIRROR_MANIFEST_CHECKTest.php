@@ -22,12 +22,12 @@ require_once __DIR__ . '/../bootstrap.php';
 
 class SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECKTest extends \PHPUnit\Framework\TestCase
 {
-
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /** @var SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECK */
     private $event;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -39,7 +39,7 @@ class SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECKTest extends \PHPUnit\Framework\T
         );
     }
 
-    public function testItChecksTheManifest() : void
+    public function testItChecksTheManifest(): void
     {
         $this->manifest_manager->shouldReceive('checkManifestFiles')->once();
 

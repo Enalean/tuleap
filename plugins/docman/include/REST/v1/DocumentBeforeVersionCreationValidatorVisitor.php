@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1;
 
@@ -75,8 +75,10 @@ class DocumentBeforeVersionCreationValidatorVisitor implements ItemVisitor
     {
         $this->checkExpectedType($item, $params['document_type']);
 
-        if ($item->getTitle() !== $params['title']
-            && $this->item_factory->doesTitleCorrespondToExistingFolder($params['title'], (int) $item->getParentId())) {
+        if (
+            $item->getTitle() !== $params['title']
+            && $this->item_factory->doesTitleCorrespondToExistingFolder($params['title'], (int) $item->getParentId())
+        ) {
             throw new RestException(400, "A folder with same title already exists in the given folder.");
         }
     }
@@ -139,7 +141,7 @@ class DocumentBeforeVersionCreationValidatorVisitor implements ItemVisitor
      * @psalm-param class-string<Docman_Item> $expected_type
      * @throws I18NRestException
      */
-    private function checkExpectedType(Docman_Item $item, string $expected_type) : void
+    private function checkExpectedType(Docman_Item $item, string $expected_type): void
     {
         if (! $item->accept(new DoesItemHasExpectedTypeVisitor($expected_type))) {
             $this->throwItemHasNotTheRightType($expected_type);

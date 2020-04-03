@@ -33,7 +33,7 @@ class CIBuildValidatorTest extends TestCase
     /** @var CIBuildValueValidator */
     private $ci_build_validator;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->ci_build_validator = new CIBuildValueValidator();
     }

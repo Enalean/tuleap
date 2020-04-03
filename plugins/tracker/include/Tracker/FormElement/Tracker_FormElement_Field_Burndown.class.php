@@ -200,7 +200,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $user = $this->getCurrentUser();
 
         $html = "";
-        if ($user->isAdmin($artifact->getTracker()->getGroupId())
+        if (
+            $user->isAdmin($artifact->getTracker()->getGroupId())
             && $this->getBurndownCacheChecker()->isCacheBurndownAlreadyAsked($artifact) === false
             && $this->getBurndownConfigurationValueChecker()->areBurndownFieldsCorrectlySet($artifact, $user)
             && ! strpos($_SERVER['REQUEST_URI'], 'from_agiledashboard')
@@ -635,7 +636,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         ?Tracker_Artifact_Changeset $previous_changeset = null
     ) {
         try {
-            if ($previous_changeset !== null &&
+            if (
+                $previous_changeset !== null &&
                 $this->getBurndownCacheChecker()->isCacheBurndownAlreadyAsked($artifact) === false &&
                 $this->getBurdownConfigurationFieldRetriever()->getBurndownRemainingEffortField($artifact, $submitter)
             ) {
@@ -813,7 +815,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         );
     }
 
-    private function getTimeframeBuilder() : TimeframeBuilder
+    private function getTimeframeBuilder(): TimeframeBuilder
     {
         return new TimeframeBuilder(
             $this->getSemanticTimeframeBuilder(),
@@ -821,7 +823,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         );
     }
 
-    private function getSemanticTimeframeBuilder() : SemanticTimeframeBuilder
+    private function getSemanticTimeframeBuilder(): SemanticTimeframeBuilder
     {
         return new SemanticTimeframeBuilder(
             new SemanticTimeframeDao(),

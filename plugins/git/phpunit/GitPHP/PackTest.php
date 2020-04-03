@@ -79,7 +79,7 @@ class PackTest extends TestCase
      * In the V2 pack index with 64-bit index entries, all Git objects located after the offset 1200
      * use 64-bit index entries
      */
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $git_repository = vfsStream::setup(
             'git_repo',

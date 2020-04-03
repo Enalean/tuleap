@@ -27,7 +27,7 @@ final class ToBeMappedUserTest extends \PHPUnit\Framework\TestCase
     /** @var ToBeMappedUser */
     private $user;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -42,17 +42,17 @@ final class ToBeMappedUserTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItReturnsFalseWhenActionIsCreate() : void
+    public function testItReturnsFalseWhenActionIsCreate(): void
     {
         $this->assertFalse($this->user->isActionAllowed('create'));
     }
 
-    public function testItReturnsFalseWhenActionIsActivate() : void
+    public function testItReturnsFalseWhenActionIsActivate(): void
     {
         $this->assertFalse($this->user->isActionAllowed('activate'));
     }
 
-    public function testItReturnsFalseWhenActionIsMap() : void
+    public function testItReturnsFalseWhenActionIsMap(): void
     {
         $this->assertTrue($this->user->isActionAllowed('map'));
     }

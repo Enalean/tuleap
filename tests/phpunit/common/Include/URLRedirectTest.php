@@ -21,7 +21,8 @@
 
 class URLRedirectTest extends \PHPUnit\Framework\TestCase //phpcs:ignore
 {
-    use \Tuleap\ForgeConfigSandbox, \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\ForgeConfigSandbox;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     private $url_redirect;
 

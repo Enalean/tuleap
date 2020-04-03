@@ -121,7 +121,8 @@ class PermissionPerGroupDocmanServicePaneBuilder
             Docman_PermissionsManager::PLUGIN_DOCMAN_ADMIN
         );
 
-        if (in_array($event->getSelectedUGroupId(), $all_ugroups) ||
+        if (
+            in_array($event->getSelectedUGroupId(), $all_ugroups) ||
             ((int) $event->getSelectedUGroupId() === ProjectUGroup::PROJECT_ADMIN)
         ) {
             return $all_ugroups;

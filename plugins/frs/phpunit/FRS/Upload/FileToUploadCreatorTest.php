@@ -35,7 +35,8 @@ use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 class FileToUploadCreatorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     private const RELEASE_ID = 11;
     private const PROJECT_ID = 104;

@@ -22,7 +22,7 @@
 class Codendi_DiffTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 {
 
-    public function setUp() : void
+    public function setUp(): void
     {
         $this->a = array('Line 1', 'Line 2');
         $this->b = array('Line 1', 'Line 2');

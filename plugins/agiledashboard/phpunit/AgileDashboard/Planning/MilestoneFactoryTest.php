@@ -45,6 +45,7 @@ use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 class MilestoneFactoryTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var Mockery\MockInterface|Project
      */

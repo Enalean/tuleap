@@ -35,7 +35,7 @@ class MoveTitleSemanticCheckerTest extends TestCase
      */
     private $checker;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 

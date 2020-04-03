@@ -200,11 +200,13 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
             //Update the field_id parameter
             if (isset($renderer_parameters['columns'])) {
                 $new_columns_field = (int) $renderer_parameters['columns'];
-                if ($new_columns_field && (
+                if (
+                    $new_columns_field && (
                         ($this->field !== null && ($this->field->getId() !== $new_columns_field))
                     ||
                         ($this->field === null)
-                    )) {
+                    )
+                ) {
                     $this->report_session->set("{$this->id}.field_id", $new_columns_field);
                     $this->report_session->setHasChanged();
                     $this->field = $this->getFormElementFactory()->getFieldById($new_columns_field);

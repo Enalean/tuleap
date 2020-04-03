@@ -76,8 +76,10 @@ class LFSBatchController implements DispatchableWithRequestNoAuthz
             $variables['project_name'],
             $variables['path']
         );
-        if ($repository === null || ! $repository->isCreated() ||
-            ! $repository->getProject()->isActive() || ! $this->plugin->isAllowed($repository->getProject()->getID())) {
+        if (
+            $repository === null || ! $repository->isCreated() ||
+            ! $repository->getProject()->isActive() || ! $this->plugin->isAllowed($repository->getProject()->getID())
+        ) {
             throw new NotFoundException(dgettext('tuleap-git', 'Repository does not exist'));
         }
 

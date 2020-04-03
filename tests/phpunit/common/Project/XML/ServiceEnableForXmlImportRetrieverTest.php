@@ -19,7 +19,7 @@
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Project\XML;
 
@@ -30,6 +30,7 @@ use PluginFactory;
 final class ServiceEnableForXmlImportRetrieverTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var ServiceEnableForXmlImportRetriever
      */

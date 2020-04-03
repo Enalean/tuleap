@@ -29,8 +29,8 @@ use Tuleap\Docman\ExternalLinks\ILinkUrlProvider;
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class NotificationsManager_DeleteTest extends TestCase
 {
-
     use MockeryPHPUnitIntegration;
+
     /*
      * Test the case when deleting a docman item the notification mail
      * is sent to all monitoring users not only one of them

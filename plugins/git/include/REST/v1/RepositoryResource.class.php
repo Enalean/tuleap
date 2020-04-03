@@ -327,7 +327,7 @@ class RepositoryResource extends AuthenticatedResource
             $event_manager
         );
 
-        $status_retriever   = new CommitStatusRetriever(new CommitStatusDAO);
+        $status_retriever   = new CommitStatusRetriever(new CommitStatusDAO());
         $metadata_retriever = new CommitMetadataRetriever($status_retriever, $this->user_manager);
         $url_manager        = new Git_GitRepositoryUrlManager(
             PluginFactory::instance()->getPluginByName('git'),
@@ -544,7 +544,7 @@ class RepositoryResource extends AuthenticatedResource
             throw new RestException(403, 'Invalid token');
         }
 
-        $commit_status_creator = new CommitStatusCreator(new CommitStatusDAO);
+        $commit_status_creator = new CommitStatusCreator(new CommitStatusDAO());
 
         try {
             $commit_status_creator->createCommitStatus(

@@ -32,7 +32,7 @@ final class ReferenceValidatorTest extends TestCase
      */
     private $reference_validator;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->reference_validator = new ReferenceValidator(
             \Mockery::spy(\ReferenceDao::class),
@@ -40,7 +40,7 @@ final class ReferenceValidatorTest extends TestCase
         );
     }
 
-    public function testItTestKeywordCharacterValidation() : void
+    public function testItTestKeywordCharacterValidation(): void
     {
         $this->assertFalse($this->reference_validator->isValidKeyword("UPPER"));
         $this->assertFalse($this->reference_validator->isValidKeyword("with space"));
@@ -57,7 +57,7 @@ final class ReferenceValidatorTest extends TestCase
         $this->assertTrue($this->reference_validator->isValidKeyword("with_underscore"));
     }
 
-    public function testItTestIfKeywordIsReserved() : void
+    public function testItTestIfKeywordIsReserved(): void
     {
         $this->assertTrue($this->reference_validator->isReservedKeyword("art"));
         $this->assertTrue($this->reference_validator->isReservedKeyword("cvs"));

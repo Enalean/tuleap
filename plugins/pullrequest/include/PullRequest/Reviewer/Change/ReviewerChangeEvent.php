@@ -54,7 +54,7 @@ final class ReviewerChangeEvent implements EventSubjectToNotification
         return new self($payload['change_id']);
     }
 
-    public function getChangeID() : int
+    public function getChangeID(): int
     {
         return $this->change_id;
     }

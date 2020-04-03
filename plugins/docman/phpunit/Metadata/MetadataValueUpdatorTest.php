@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Docman\Metadata;
 
@@ -31,6 +31,7 @@ use PHPUnit\Framework\TestCase;
 class MetadataValueUpdatorTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var Docman_MetadataValueDao|Mockery\MockInterface
      */

@@ -24,8 +24,8 @@ namespace Tuleap\Tus;
 
 interface TusFileInformation
 {
-    public function getID() : int;
-    public function getLength() : int;
-    public function getOffset() : int;
-    public function getName() : string;
+    public function getID(): int;
+    public function getLength(): int;
+    public function getOffset(): int;
+    public function getName(): string;
 }

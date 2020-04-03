@@ -34,6 +34,7 @@ use PHPUnit\Framework\TestCase;
 class Docman_VersionFactoryTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var string
      */

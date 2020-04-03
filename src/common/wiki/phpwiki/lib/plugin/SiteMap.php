@@ -108,8 +108,10 @@ class WikiPlugin_SiteMap extends WikiPlugin
         $pagelinks = $startpage->getLinks();
         while ($link = $pagelinks->next()) {
             $linkpagename = $link->getName();
-            if (($linkpagename != $startpagename)
-                and (!$this->ExcludedPages or !preg_match("/" . $this->ExcludedPages . "/", $linkpagename))) {
+            if (
+                ($linkpagename != $startpagename)
+                and (!$this->ExcludedPages or !preg_match("/" . $this->ExcludedPages . "/", $linkpagename))
+            ) {
                 $pagearr[$level . " [$linkpagename]"] = $link;
                 $pagearr = $this->recursivelyGetBackLinks(
                     $link,
@@ -145,8 +147,10 @@ class WikiPlugin_SiteMap extends WikiPlugin
         $pagelinks = $startpage->getLinks($reversed);
         while ($link = $pagelinks->next()) {
             $linkpagename = $link->getName();
-            if (($linkpagename != $startpagename) and
-                (!$this->ExcludedPages or !preg_match("/$this->ExcludedPages/", $linkpagename))) {
+            if (
+                ($linkpagename != $startpagename) and
+                (!$this->ExcludedPages or !preg_match("/$this->ExcludedPages/", $linkpagename))
+            ) {
                 if (!$this->excludeunknown or $this->dbi->isWikiPage($linkpagename)) {
                     $pagearr[$level . " [$linkpagename]"] = $link;
                     $pagearr = $this->recursivelyGetLinks(

@@ -26,7 +26,7 @@ final class User_SOAPServerTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testLoginAsReturnsSoapFaultsWhenUserManagerThrowsAnException() : void
+    public function testLoginAsReturnsSoapFaultsWhenUserManagerThrowsAnException(): void
     {
         $this->GivenAUserManagerThatIsProgrammedToThrow(new UserNotAuthorizedException())
                 ->thenLoginAsReturns(new SoapFault('3300', 'Permission denied. You must be site admin to loginAs someonelse'));
@@ -36,7 +36,7 @@ final class User_SOAPServerTest extends \PHPUnit\Framework\TestCase
                 ->thenLoginAsReturns(new SoapFault('3303', 'Temporary error creating a session, please try again in a couple of seconds'));
     }
 
-    public function testLoginAsReturnsASessionHash() : void
+    public function testLoginAsReturnsASessionHash(): void
     {
         $admin_session_hash = 'admin_session_hash';
         $um = $this->GivenAUserManagerWithValidAdmin($admin_session_hash);
@@ -61,7 +61,7 @@ final class User_SOAPServerTest extends \PHPUnit\Framework\TestCase
         return $um;
     }
 
-    public function testLoginAsReturnsASoapFaultIfUserNotLoggedIn() : void
+    public function testLoginAsReturnsASoapFaultIfUserNotLoggedIn(): void
     {
         $admin_session_hash = 'admin_session_hash';
 

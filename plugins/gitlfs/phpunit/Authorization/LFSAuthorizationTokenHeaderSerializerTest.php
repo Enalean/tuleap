@@ -48,7 +48,7 @@ class LFSAuthorizationTokenHeaderSerializerTest extends TestCase
     /**
      * @dataProvider incorrectlyFormattedIdentifierProvider
      */
-    public function testBuildingFromAnIncorrectlyFormattedIdentifierIsRejected(string $incorrectly_formatted_identifier) : void
+    public function testBuildingFromAnIncorrectlyFormattedIdentifierIsRejected(string $incorrectly_formatted_identifier): void
     {
         $serializer = new LFSAuthorizationTokenHeaderSerializer();
 
@@ -57,7 +57,7 @@ class LFSAuthorizationTokenHeaderSerializerTest extends TestCase
         $serializer->getSplitToken(new ConcealedString($incorrectly_formatted_identifier));
     }
 
-    public function incorrectlyFormattedIdentifierProvider() : array
+    public function incorrectlyFormattedIdentifierProvider(): array
     {
         return [
             ['incorrect_identifier'],

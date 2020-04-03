@@ -26,12 +26,12 @@ use PHPUnit\Framework\TestCase;
 
 final class HTTPResponseFunctionsOverloadTest extends TestCase
 {
-    public function tearDown() : void
+    public function tearDown(): void
     {
         HTTPHeaderStack::clear();
     }
 
-    public function testOverloadedHTTPHeadersFunctions() : void
+    public function testOverloadedHTTPHeadersFunctions(): void
     {
         $this->assertFalse(\Tuleap\headers_sent());
         \Tuleap\header('Header: my_header');

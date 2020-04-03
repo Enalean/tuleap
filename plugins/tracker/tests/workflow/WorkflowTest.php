@@ -60,7 +60,7 @@ class WorkflowTest extends TuleapTestCase
                 parent::$_instance = $transition_factory_instance;
             }
 
-            public function clearInstance() : void
+            public function clearInstance(): void
             {
                 parent::$_instance = null;
             }

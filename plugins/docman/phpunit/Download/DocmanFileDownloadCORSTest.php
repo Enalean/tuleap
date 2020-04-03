@@ -32,7 +32,7 @@ final class DocmanFileDownloadCORSTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testResponseIsGeneratedOnOptionsRequest() : void
+    public function testResponseIsGeneratedOnOptionsRequest(): void
     {
         $file_download_cors_middleware = new DocmanFileDownloadCORS(HTTPFactoryBuilder::responseFactory());
 
@@ -46,7 +46,7 @@ final class DocmanFileDownloadCORSTest extends TestCase
         $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Access-Control-Allow-Methods'));
     }
 
-    public function testRequestIsGivenToTheNextRequestHandlerWhenItsNotAnOPTIONS() : void
+    public function testRequestIsGivenToTheNextRequestHandlerWhenItsNotAnOPTIONS(): void
     {
         $response_factory              = HTTPFactoryBuilder::responseFactory();
         $file_download_cors_middleware = new DocmanFileDownloadCORS($response_factory);

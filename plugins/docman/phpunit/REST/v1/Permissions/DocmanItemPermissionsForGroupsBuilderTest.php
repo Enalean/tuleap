@@ -58,7 +58,7 @@ final class DocmanItemPermissionsForGroupsBuilderTest extends TestCase
      */
     private $builder;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->docman_permissions_manager = Mockery::mock(Docman_PermissionsManager::class);
         $this->project_manager            = Mockery::mock(ProjectManager::class);
@@ -73,7 +73,7 @@ final class DocmanItemPermissionsForGroupsBuilderTest extends TestCase
         );
     }
 
-    public function testDoNotBuildPermissionsRepresentationIfTheUserCanNotManageTheItem() : void
+    public function testDoNotBuildPermissionsRepresentationIfTheUserCanNotManageTheItem(): void
     {
         $this->docman_permissions_manager->shouldReceive('userCanManage')->andReturn(false);
 
@@ -86,7 +86,7 @@ final class DocmanItemPermissionsForGroupsBuilderTest extends TestCase
         ));
     }
 
-    public function testRepresentationHaveTheUGroupsForDifferentTypesOfPermissions() : void
+    public function testRepresentationHaveTheUGroupsForDifferentTypesOfPermissions(): void
     {
         $this->docman_permissions_manager->shouldReceive('userCanManage')->andReturn(true);
 

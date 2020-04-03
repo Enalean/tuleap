@@ -25,12 +25,12 @@ namespace Tuleap\Project\UGroups\Membership\StaticUGroups;
 
 class StaticMemberRemover
 {
-    public function removeUser(\ProjectUGroup $ugroup, \PFUser $user) : void
+    public function removeUser(\ProjectUGroup $ugroup, \PFUser $user): void
     {
         $this->removeUserFromStaticGroup((int) $ugroup->getProjectId(), (int) $ugroup->getId(), (int) $user->getId());
     }
 
-    public function removeUserFromStaticGroup(int $group_id, int $ugroup_id, int $user_id) : void
+    public function removeUserFromStaticGroup(int $group_id, int $ugroup_id, int $user_id): void
     {
         include_once __DIR__ . '/../../../../../www/project/admin/ugroup_utils.php';
         ugroup_remove_user_from_ugroup($group_id, $ugroup_id, $user_id);

@@ -37,7 +37,7 @@ final class ExecutionDelayedLauncher
     /**
      * @psalm-param callable: void $execution
      */
-    public function execute(callable $execution) : void
+    public function execute(callable $execution): void
     {
         $this->execution_delayer->delay();
         $execution();

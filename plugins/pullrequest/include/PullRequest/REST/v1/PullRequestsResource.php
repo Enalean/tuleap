@@ -251,8 +251,8 @@ class PullRequestsResource extends AuthenticatedResource
             $this->pull_request_merger,
             $this->event_manager,
             new GitPullRequestReferenceCreator(
-                new GitPullRequestReferenceDAO,
-                new GitPullRequestReferenceNamespaceAvailabilityChecker
+                new GitPullRequestReferenceDAO(),
+                new GitPullRequestReferenceNamespaceAvailabilityChecker()
             )
         );
         $this->pull_request_closer  = new PullRequestCloser(
@@ -286,7 +286,7 @@ class PullRequestsResource extends AuthenticatedResource
             $this->access_control_verifier
         );
 
-        $git_pull_request_reference_dao             = new GitPullRequestReferenceDAO;
+        $git_pull_request_reference_dao             = new GitPullRequestReferenceDAO();
         $this->git_pull_request_reference_retriever = new GitPullRequestReferenceRetriever($git_pull_request_reference_dao);
         $this->git_pull_request_reference_updater   = new GitPullRequestReferenceUpdater(
             $git_pull_request_reference_dao,
@@ -296,7 +296,7 @@ class PullRequestsResource extends AuthenticatedResource
         $this->git_plugin  = PluginFactory::instance()->getPluginByName('git');
         $url_manager = new Git_GitRepositoryUrlManager($this->git_plugin, new \Tuleap\InstanceBaseURLBuilder());
 
-        $this->status_retriever = new CommitStatusRetriever(new CommitStatusDAO);
+        $this->status_retriever = new CommitStatusRetriever(new CommitStatusDAO());
         $metadata_retriever     = new CommitMetadataRetriever($this->status_retriever, $this->user_manager);
         $this->commit_representation_builder = new GitCommitRepresentationBuilder(
             $metadata_retriever,
@@ -959,7 +959,7 @@ class PullRequestsResource extends AuthenticatedResource
 
         $pr_representation_factory = new PullRequestRepresentationFactory(
             $this->access_control_verifier,
-            new CommitStatusRetriever(new CommitStatusDAO),
+            new CommitStatusRetriever(new CommitStatusDAO()),
             $this->getGitoliteAccessURLGenerator()
         );
 

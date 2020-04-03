@@ -39,7 +39,7 @@ class FieldUsedInSupportedSemanticsVisitorTest extends TestCase
     /** @var \Tracker_Semantic_Status | Mockery\MockInterface */
     private $status_semantic;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->title_semantic       = Mockery::mock(\Tracker_Semantic_Title::class);

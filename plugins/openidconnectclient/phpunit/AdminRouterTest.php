@@ -31,7 +31,8 @@ require_once __DIR__ . '/bootstrap.php';
 
 class AdminRouterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     public function testItIsOnlyAccessibleBySuperUser(): void
     {

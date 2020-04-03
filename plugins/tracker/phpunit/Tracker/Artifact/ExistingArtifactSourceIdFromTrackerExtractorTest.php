@@ -55,7 +55,7 @@ class ExistingArtifactSourceIdFromTrackerExtractorTest extends TestCase
      */
     private $artifact_source_id_dao;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         $this->tracker_artifact_factory = \Mockery::mock(Tracker_ArtifactFactory::class);
         $this->artifact_source_id_dao = \Mockery::mock(TrackerArtifactSourceIdDao::class);

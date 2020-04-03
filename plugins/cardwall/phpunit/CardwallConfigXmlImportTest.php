@@ -23,7 +23,9 @@ declare(strict_types=1);
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 final class CardwallConfigXmlImportTest extends \PHPUnit\Framework\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\GlobalResponseMock, \Tuleap\GlobalLanguageMock;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\GlobalResponseMock;
+    use \Tuleap\GlobalLanguageMock;
 
     private $default_xml_input;
     private $enhanced_xml_input;
@@ -40,7 +42,7 @@ final class CardwallConfigXmlImportTest extends \PHPUnit\Framework\TestCase
      */
     private $cardwall_config_xml_import;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->default_xml_input = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
@@ -186,7 +188,7 @@ final class CardwallConfigXmlImportTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItStoresAllTheCardwallOnTop() : void
+    public function testItStoresAllTheCardwallOnTop(): void
     {
         $this->event_manager->shouldReceive('processEvent');
 
@@ -196,7 +198,7 @@ final class CardwallConfigXmlImportTest extends \PHPUnit\Framework\TestCase
         $this->cardwall_config_xml_import->import($this->default_xml_input);
     }
 
-    public function testItCreatesTheFreestyleColumns() : void
+    public function testItCreatesTheFreestyleColumns(): void
     {
         $this->event_manager->shouldReceive('processEvent');
 
@@ -211,7 +213,7 @@ final class CardwallConfigXmlImportTest extends \PHPUnit\Framework\TestCase
         $this->cardwall_config_xml_import->import($this->default_xml_input);
     }
 
-    public function testItCreatesTheFreestyleColumnsWithColor() : void
+    public function testItCreatesTheFreestyleColumnsWithColor(): void
     {
         $this->event_manager->shouldReceive('processEvent');
 
@@ -231,7 +233,7 @@ final class CardwallConfigXmlImportTest extends \PHPUnit\Framework\TestCase
         $this->cardwall_config_xml_import->import($this->enhanced_xml_input);
     }
 
-    public function testItDoesNotCreateMappingAndMappingValueinDefaultXML() : void
+    public function testItDoesNotCreateMappingAndMappingValueinDefaultXML(): void
     {
         $this->event_manager->shouldReceive('processEvent');
 
@@ -243,7 +245,7 @@ final class CardwallConfigXmlImportTest extends \PHPUnit\Framework\TestCase
         $this->cardwall_config_xml_import->import($this->default_xml_input);
     }
 
-    public function testItCreatesMappingAndMappingValue() : void
+    public function testItCreatesMappingAndMappingValue(): void
     {
         $this->event_manager->shouldReceive('processEvent');
 
@@ -265,7 +267,7 @@ final class CardwallConfigXmlImportTest extends \PHPUnit\Framework\TestCase
         $this->cardwall_config_xml_import->import($this->enhanced_xml_input);
     }
 
-    public function testItProcessesANewEventIfAllCardwallAreEnabled() : void
+    public function testItProcessesANewEventIfAllCardwallAreEnabled(): void
     {
         $this->event_manager->shouldReceive('processEvent')->with(
             Event::IMPORT_XML_PROJECT_CARDWALL_DONE,
@@ -283,7 +285,7 @@ final class CardwallConfigXmlImportTest extends \PHPUnit\Framework\TestCase
         $this->cardwall_config_xml_import->import($this->default_xml_input);
     }
 
-    public function testItDoesNotProcessAnEventIfAtLeastOneCardwallCannotBeEnabledAndThrowsAnException() : void
+    public function testItDoesNotProcessAnEventIfAtLeastOneCardwallCannotBeEnabledAndThrowsAnException(): void
     {
         $cardwall_ontop_dao         = \Mockery::spy(\Cardwall_OnTop_Dao::class);
         $cardwall_ontop_dao->shouldReceive('enable')->andReturns(false)->once();
@@ -307,7 +309,7 @@ final class CardwallConfigXmlImportTest extends \PHPUnit\Framework\TestCase
         $cardwall_config_xml_import->import($this->default_xml_input);
     }
 
-    public function testItThrowsAnExceptionIfXmlDoesNotMatchRNG() : void
+    public function testItThrowsAnExceptionIfXmlDoesNotMatchRNG(): void
     {
         $xml_validator  = \Mockery::spy(\XML_RNGValidator::class);
         $xml_validator->shouldReceive('validate')->andThrows(new XML_ParseException('', array(), array()));

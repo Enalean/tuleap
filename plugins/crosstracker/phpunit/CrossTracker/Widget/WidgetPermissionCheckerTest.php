@@ -49,7 +49,7 @@ class WidgetPermissionCheckerTest extends TestCase
      */
     private $cross_tracker_dao;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 

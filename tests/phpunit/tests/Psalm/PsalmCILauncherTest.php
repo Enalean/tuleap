@@ -39,25 +39,25 @@ final class PsalmCILauncherTest extends TestCase
      */
     private $previous_status_xml_entity_loading;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         // Psalm XML configuration will be verified against a XSD file external entities are needed
         $this->previous_status_xml_entity_loading = libxml_disable_entity_loader(false);
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         libxml_disable_entity_loader($this->previous_status_xml_entity_loading);
     }
 
-    public function testPsalmIsLaunchedOnlyWithFilesInScopeOfTheConfig() : void
+    public function testPsalmIsLaunchedOnlyWithFilesInScopeOfTheConfig(): void
     {
         $shell_passthrough = Mockery::mock(ShellPassthrough::class);
         $command           = new PsalmCILauncher($shell_passthrough);
         $command_tester    = new CommandTester($command);
 
         $shell_passthrough->shouldReceive('__invoke')->withArgs(
-            function (string $command) : bool {
+            function (string $command): bool {
                 $this->assertStringContainsString(self::FILE_IN_SCOPE, $command);
                 $this->assertStringNotContainsString(self::FILE_OUT_OF_SCOPE, $command);
                 $this->assertStringNotContainsString(self::FILE_NOT_EXISTING, $command);
@@ -73,7 +73,7 @@ final class PsalmCILauncherTest extends TestCase
         $this->assertSame(0, $command_tester->getStatusCode());
     }
 
-    public function testPsalmIsNotLaunchedIfNoFileNeedsToBeAnalyzed() : void
+    public function testPsalmIsNotLaunchedIfNoFileNeedsToBeAnalyzed(): void
     {
         $shell_passthrough = Mockery::mock(ShellPassthrough::class);
         $command           = new PsalmCILauncher($shell_passthrough);

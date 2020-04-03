@@ -34,7 +34,7 @@ final class LinkedArtifactsTest extends TrackerBase
     private const TRACKER_SHORTNAME = 'linked_artifacts';
     private const FIELD_SHORTNAME   = 'link';
 
-    public function testLinkedArtifacts() : void
+    public function testLinkedArtifacts(): void
     {
         $project_id = $this->getProjectId(self::PROJECT_SHORTNAME);
         $tracker_id = $this->tracker_ids[$project_id][self::TRACKER_SHORTNAME];
@@ -56,14 +56,14 @@ final class LinkedArtifactsTest extends TrackerBase
         $this->assertArtifactLinks($response_with_read_only_user, $artifact_id_1, $artifact_id_2);
     }
 
-    private function createArtifact(int $tracker_id, int $art_link_field_id, int ...$linked_artifacts) : int
+    private function createArtifact(int $tracker_id, int $art_link_field_id, int ...$linked_artifacts): int
     {
         $payload = [
             'tracker' => ['id' => $tracker_id],
             'values'  => [
                 [
                     'field_id' => $art_link_field_id,
-                    'links' => (static function (int ...$linked_artifacts) : array {
+                    'links' => (static function (int ...$linked_artifacts): array {
                         $representations = [];
 
                         foreach ($linked_artifacts as $linked_artifact) {

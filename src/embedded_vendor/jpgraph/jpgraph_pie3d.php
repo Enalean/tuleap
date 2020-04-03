@@ -494,11 +494,15 @@ class PiePlot3D extends PiePlot
                 // If the slice size is <= 90 it can at maximum cut across
                 // one boundary (either 90 or 270) where it needs to be split
                 $split = -1; // no split
-                if (($da <= 90 && ($a <= 90 && $ne > 90)) ||
-                (($da <= 180 && $da > 90)  && (($a < 90 || $a >= 270) && $ne > 90))) {
+                if (
+                    ($da <= 90 && ($a <= 90 && $ne > 90)) ||
+                    (($da <= 180 && $da > 90)  && (($a < 90 || $a >= 270) && $ne > 90))
+                ) {
                     $split = 90;
-                } elseif (($da <= 90 && ($a <= 270 && $ne > 270)) ||
-                (($da <= 180 && $da > 90) && ($a >= 90 && $a < 270 && ($a + $da) > 270 ))) {
+                } elseif (
+                    ($da <= 90 && ($a <= 270 && $ne > 270)) ||
+                    (($da <= 180 && $da > 90) && ($a >= 90 && $a < 270 && ($a + $da) > 270 ))
+                ) {
                     $split = 270;
                 }
                 if ($split > 0) { // split in two
@@ -1016,6 +1020,6 @@ class PiePlot3D extends PiePlot
         $this->value->Stroke($img, $label, $x, $y);
         $this->value->margin = $oldmargin;
     }
-} // Class
+}
 
 /* EOF */

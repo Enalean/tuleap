@@ -108,7 +108,7 @@ class OAuth2RefreshTokenCreator
         $expiration_date     = $current_time->add($this->refresh_token_expiration_delay);
 
         $refresh_token_id = $this->transaction_executor->execute(
-            function () use ($verification_string, $expiration_date, $authorization_code_id, $scopes) : int {
+            function () use ($verification_string, $expiration_date, $authorization_code_id, $scopes): int {
                 $refresh_token_id = $this->dao->create(
                     $authorization_code_id,
                     $this->hasher->computeHash($verification_string),

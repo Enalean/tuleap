@@ -65,13 +65,13 @@ class ArchiveAndDeleteArtifactTask
         $this->logger                                   = $logger;
     }
 
-    public function archive(\Tracker_Artifact $artifact, \PFUser $user) : void
+    public function archive(\Tracker_Artifact $artifact, \PFUser $user): void
     {
         $this->tryToArchiveArtifact($artifact, $user);
         $this->dependencies_deletor->cleanDependencies($artifact);
     }
 
-    private function tryToArchiveArtifact(Tracker_Artifact $artifact, PFUser $user) : void
+    private function tryToArchiveArtifact(Tracker_Artifact $artifact, PFUser $user): void
     {
         $archive_file_provider = new ArchiveDeletedArtifactProvider(
             $this->artifact_with_tracker_structure_exporter,

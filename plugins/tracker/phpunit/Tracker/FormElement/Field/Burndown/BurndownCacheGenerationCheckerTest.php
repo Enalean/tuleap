@@ -32,6 +32,7 @@ use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
 class BurndownCacheGenerationCheckerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var ChartConfigurationFieldRetriever
      */
@@ -74,7 +75,7 @@ class BurndownCacheGenerationCheckerTest extends TestCase
      */
     private $cache_checker;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 

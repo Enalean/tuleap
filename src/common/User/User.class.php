@@ -966,7 +966,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     {
         $projects = array();
         foreach ($this->getUserGroupDao()->searchActiveGroupsByUserId($this->user_id) as $data) {
-            if ($data['access'] === Project::ACCESS_PRIVATE_WO_RESTRICTED &&
+            if (
+                $data['access'] === Project::ACCESS_PRIVATE_WO_RESTRICTED &&
                 ForgeConfig::areRestrictedUsersAllowed() &&
                 $this->isRestricted()
             ) {

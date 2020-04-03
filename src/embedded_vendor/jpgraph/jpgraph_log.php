@@ -120,7 +120,7 @@ class LogScale extends LinearScale
     }
     //---------------
     // PRIVATE METHODS
-} // Class
+}
 
 //===================================================
 // CLASS LogTicks
@@ -294,5 +294,4 @@ class LogTicks extends Ticks
         }
         return true;
     }
-} // Class
-/* EOF */
+}

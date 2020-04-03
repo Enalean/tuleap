@@ -26,12 +26,12 @@ use PHPUnit\Framework\TestCase;
 
 final class ExecutionDelayedLauncherTest extends TestCase
 {
-    public function testDelayIsAppliedBeforeRunningTheRestOfTheCode() : void
+    public function testDelayIsAppliedBeforeRunningTheRestOfTheCode(): void
     {
         $execution_delayer = new class implements ExecutionDelayer {
             public $nb_delay = 0;
 
-            public function delay() : void
+            public function delay(): void
             {
                 $this->nb_delay++;
             }

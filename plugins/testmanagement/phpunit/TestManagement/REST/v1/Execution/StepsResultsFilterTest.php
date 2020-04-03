@@ -41,7 +41,7 @@ class StepsResultsFilterTest extends TestCase
     /** @var PHPUnit_Framework_MockObject_MockObject */
     private $execution_value;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

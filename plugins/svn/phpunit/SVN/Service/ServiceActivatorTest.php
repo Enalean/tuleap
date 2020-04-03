@@ -63,7 +63,7 @@ class ServiceActivatorTest extends TestCase
      */
     private $data;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 

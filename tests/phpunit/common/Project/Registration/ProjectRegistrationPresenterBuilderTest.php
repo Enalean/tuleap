@@ -19,7 +19,7 @@
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Project\Registration;
 
@@ -39,7 +39,8 @@ use Tuleap\XML\ProjectXMLMerger;
 
 final class ProjectRegistrationPresenterBuilderTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     /**
      * @var ProjectRegistrationPresenterBuilder

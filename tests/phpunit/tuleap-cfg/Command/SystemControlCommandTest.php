@@ -54,7 +54,7 @@ class SystemControlCommandTest extends TestCase
      */
     private $root;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->root            = vfsStream::setup('slash');
         $this->process         = \Mockery::mock(Process::class, ['isSuccessful' => true, 'getExitCode' => 0]);

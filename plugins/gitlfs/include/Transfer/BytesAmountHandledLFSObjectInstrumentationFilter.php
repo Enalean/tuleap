@@ -60,7 +60,7 @@ final class BytesAmountHandledLFSObjectInstrumentationFilter implements FilterIn
         $this->transfer_type            = $transfer_type;
     }
 
-    public static function buildTransmittedBytesFilter(Prometheus $prometheus, string $transfer_type) : self
+    public static function buildTransmittedBytesFilter(Prometheus $prometheus, string $transfer_type): self
     {
         return new self(
             $prometheus,
@@ -70,7 +70,7 @@ final class BytesAmountHandledLFSObjectInstrumentationFilter implements FilterIn
         );
     }
 
-    public static function buildReceivedBytesFilter(Prometheus $prometheus) : self
+    public static function buildReceivedBytesFilter(Prometheus $prometheus): self
     {
         return new self(
             $prometheus,
@@ -80,18 +80,18 @@ final class BytesAmountHandledLFSObjectInstrumentationFilter implements FilterIn
         );
     }
 
-    public function process($data_chunk) : string
+    public function process($data_chunk): string
     {
         $this->transferred_bytes += \strlen($data_chunk);
         return $data_chunk;
     }
 
-    public function getFilteredChainIdentifier() : int
+    public function getFilteredChainIdentifier(): int
     {
         return STREAM_FILTER_READ;
     }
 
-    public function filterDetachedEvent() : void
+    public function filterDetachedEvent(): void
     {
         $this->prometheus->incrementBy(
             $this->instrumentation_key_name,

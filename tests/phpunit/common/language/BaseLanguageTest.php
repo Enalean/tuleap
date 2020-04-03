@@ -21,11 +21,12 @@
 
 class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\TemporaryTestDirectory;
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\TemporaryTestDirectory;
 
     protected $cache_dir;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         ForgeConfig::store();
@@ -45,7 +46,7 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         }
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         unset($GLOBALS['sys_incdir']);
         unset($GLOBALS['sys_pluginsroot']);

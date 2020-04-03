@@ -29,7 +29,7 @@ final class LargestObjectSizeGitRepositoryTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testExpectedValuesAreRetrieved() : void
+    public function testExpectedValuesAreRetrieved(): void
     {
         $repository = \Mockery::mock(\GitRepository::class);
         $size       = 12;
@@ -43,7 +43,7 @@ final class LargestObjectSizeGitRepositoryTest extends TestCase
     /**
      * @dataProvider providerObjectSize
      */
-    public function testVerifyIfARepositoryIsOverTheLimit(int $size, bool $is_over_the_limit) : void
+    public function testVerifyIfARepositoryIsOverTheLimit(int $size, bool $is_over_the_limit): void
     {
         $repository_with_largest_object_size = new LargestObjectSizeGitRepository(
             \Mockery::mock(\GitRepository::class),
@@ -53,7 +53,7 @@ final class LargestObjectSizeGitRepositoryTest extends TestCase
         $this->assertSame($is_over_the_limit, $repository_with_largest_object_size->isOverTheObjectSizeLimit());
     }
 
-    public function providerObjectSize() : array
+    public function providerObjectSize(): array
     {
         return [
             [0, false],

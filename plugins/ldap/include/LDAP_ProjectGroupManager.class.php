@@ -157,7 +157,7 @@ class LDAP_ProjectGroupManager extends LDAP_GroupManager
         }
     }
 
-    protected function diffDbAndDirectory($option) : void
+    protected function diffDbAndDirectory($option): void
     {
         parent::diffDbAndDirectory($option);
 

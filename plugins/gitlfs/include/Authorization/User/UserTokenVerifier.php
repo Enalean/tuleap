@@ -67,8 +67,10 @@ class UserTokenVerifier
         }
 
         $is_valid_access_key = $this->hasher->verifyHash($authorization_token->getVerificationString(), $row['verifier']);
-        if (! $is_valid_access_key ||
-            ! \hash_equals($user_operation->getName(), $row['operation_name'])) {
+        if (
+            ! $is_valid_access_key ||
+            ! \hash_equals($user_operation->getName(), $row['operation_name'])
+        ) {
             throw new InvalidUserUserAuthorizationException();
         }
 

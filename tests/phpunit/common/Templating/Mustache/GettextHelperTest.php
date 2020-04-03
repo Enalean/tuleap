@@ -24,7 +24,7 @@ final class GettextHelperTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testItTranslateASimpleString() : void
+    public function testItTranslateASimpleString(): void
     {
         $helper = new GettextHelper(new GettextSectionContentTransformer());
 
@@ -32,7 +32,7 @@ final class GettextHelperTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('A text', $helper->dgettext('domain | A text'));
     }
 
-    public function testItReplacesArgumentsIfTheyAreGiven() : void
+    public function testItReplacesArgumentsIfTheyAreGiven(): void
     {
         $helper = new GettextHelper(new GettextSectionContentTransformer());
 
@@ -40,7 +40,7 @@ final class GettextHelperTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('A useful text', $helper->dgettext('domain | A %s text|useful'));
     }
 
-    public function testItTrimsTextAndArguments() : void
+    public function testItTrimsTextAndArguments(): void
     {
         $helper = new GettextHelper(new GettextSectionContentTransformer());
 
@@ -48,7 +48,7 @@ final class GettextHelperTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('A useful text', $helper->dgettext(' domain | A %s text | useful '));
     }
 
-    public function testItReturnsSingular() : void
+    public function testItReturnsSingular(): void
     {
         $helper = new GettextHelper(new GettextSectionContentTransformer());
         $lambda = \Mockery::mock(\Mustache_LambdaHelper::class)->shouldReceive('render')->with('{{ nb }}')->andReturns('1')->getMock();
@@ -63,7 +63,7 @@ final class GettextHelperTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItReturnsPlural() : void
+    public function testItReturnsPlural(): void
     {
         $helper = new GettextHelper(new GettextSectionContentTransformer());
         $lambda = \Mockery::mock(\Mustache_LambdaHelper::class)->shouldReceive('render')->with('{{ nb }}')->andReturns('2')->getMock();
@@ -78,7 +78,7 @@ final class GettextHelperTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItUsesNbAsArgumentByDefault() : void
+    public function testItUsesNbAsArgumentByDefault(): void
     {
         $helper = new GettextHelper(new GettextSectionContentTransformer());
         $lambda = \Mockery::mock(\Mustache_LambdaHelper::class)->shouldReceive('render')->with('{{ nb }}')->andReturns('2')->getMock();
@@ -93,7 +93,7 @@ final class GettextHelperTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItDoesNotUseNbAsArgumentIfDevelopersGaveExtraArguments() : void
+    public function testItDoesNotUseNbAsArgumentIfDevelopersGaveExtraArguments(): void
     {
         $helper = new GettextHelper(new GettextSectionContentTransformer());
         $lambda = \Mockery::mock(\Mustache_LambdaHelper::class)->shouldReceive('render')->with('{{ nb }}')->andReturns('2')->getMock();
@@ -108,7 +108,7 @@ final class GettextHelperTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItFailsIfStringIsEmpty() : void
+    public function testItFailsIfStringIsEmpty(): void
     {
         $this->expectException(\Tuleap\Templating\Mustache\InvalidGettextStringException::class);
 
@@ -116,7 +116,7 @@ final class GettextHelperTest extends \PHPUnit\Framework\TestCase
         $helper->gettext('');
     }
 
-    public function testItFailsIfThereIsOnlyTheDomain() : void
+    public function testItFailsIfThereIsOnlyTheDomain(): void
     {
         $this->expectException(\Tuleap\Templating\Mustache\InvalidGettextStringException::class);
 
@@ -125,7 +125,7 @@ final class GettextHelperTest extends \PHPUnit\Framework\TestCase
         $helper->dgettext('domain|');
     }
 
-    public function testItFailsIfNbIsNotGiven() : void
+    public function testItFailsIfNbIsNotGiven(): void
     {
         $this->expectException(\Tuleap\Templating\Mustache\InvalidGettextStringException::class);
 

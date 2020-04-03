@@ -46,7 +46,7 @@ class SimilarFieldsMatcherTest extends TestCase
     /** @var BindNameVisitor | Mockery\MockInterface */
     private $bind_name_visitor;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->similar_fields_dao      = Mockery::mock(SupportedFieldsDao::class);

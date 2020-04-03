@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Tracker\XML;
 
@@ -35,17 +35,17 @@ class TrackerXmlImportFeedbackCollector
      */
     private $errors = [];
 
-    public function getWarnings() : array
+    public function getWarnings(): array
     {
         return $this->warns;
     }
 
-    public function addWarnings(String $warn) : void
+    public function addWarnings(string $warn): void
     {
         $this->warns[] = $warn;
     }
 
-    public function displayWarnings(LoggerInterface $logger) : void
+    public function displayWarnings(LoggerInterface $logger): void
     {
         foreach ($this->warns as $warn) {
             $GLOBALS['Response']->addFeedback(\Feedback::WARN, $warn);
@@ -53,12 +53,12 @@ class TrackerXmlImportFeedbackCollector
         }
     }
 
-    public function addErrors(string $error) : void
+    public function addErrors(string $error): void
     {
         $this->errors[] = $error;
     }
 
-    public function displayErrors(LoggerInterface $logger) : void
+    public function displayErrors(LoggerInterface $logger): void
     {
         foreach ($this->errors as $error) {
             $GLOBALS['Response']->addFeedback(\Feedback::ERROR, $error);

@@ -31,14 +31,14 @@ final class UsersTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testItExtractsUserNames() : void
+    public function testItExtractsUserNames(): void
     {
         $users = new Users($this->getUserWithUsername('user1'), $this->getUserWithUsername('user2'));
 
         $this->assertEquals(['user1', 'user2'], $users->getNames());
     }
 
-    private function getUserWithUsername(string $username) : PFUser
+    private function getUserWithUsername(string $username): PFUser
     {
         $user = Mockery::mock(PFUser::class);
         $user->shouldReceive('getUserName')->andReturn($username);

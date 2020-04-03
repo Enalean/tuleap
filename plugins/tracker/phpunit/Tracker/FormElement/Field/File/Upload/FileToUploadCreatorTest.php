@@ -33,7 +33,8 @@ use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 class FileToUploadCreatorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     /**
      * @var MockInterface|FileOngoingUploadDao

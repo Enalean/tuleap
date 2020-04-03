@@ -160,15 +160,16 @@ class Tracker_Artifact_IncomingMessageInsecureBuilder
     {
         $mail_address = '';
         foreach ($address_array as $id => $value) {
-            if ((strpos(
-                $value,
-                trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_UPDATE
-            ) === 0) ||
+            if (
+                (strpos(
+                    $value,
+                    trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_UPDATE
+                ) === 0) ||
                 (strpos(
                     $value,
                     trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_CREATION
                 ) === 0)
-                ) {
+            ) {
                 $mail_address = $value;
                 break;
             }

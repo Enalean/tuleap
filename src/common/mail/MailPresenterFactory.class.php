@@ -282,7 +282,7 @@ class MailPresenterFactory
      * Creates a presenter for the account suspension notification email
      *
      */
-    public function createMailAccountSuspensionAlertPresenter(DateTimeImmutable $last_access_date, DateTimeImmutable $suspension_date, BaseLanguage $language) : MailAccountSuspensionAlertPresenter
+    public function createMailAccountSuspensionAlertPresenter(DateTimeImmutable $last_access_date, DateTimeImmutable $suspension_date, BaseLanguage $language): MailAccountSuspensionAlertPresenter
     {
         $color_logo = "#000";
         $this->setColorTheme($color_logo);
@@ -295,7 +295,7 @@ class MailPresenterFactory
      * Creates a presenter for the account suspension email
      *
      */
-    public function createMailAccountSuspensionPresenter(DateTimeImmutable $last_access_date, BaseLanguage $language) : MailAccountSuspensionPresenter
+    public function createMailAccountSuspensionPresenter(DateTimeImmutable $last_access_date, BaseLanguage $language): MailAccountSuspensionPresenter
     {
         $color_logo = "#000";
         $this->setColorTheme($color_logo);

@@ -62,7 +62,7 @@ class ArtifactMoveButtonPresenterBuilderTest extends TestCase
      */
     private $event_manager;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         $this->deletion_limit_retriever = Mockery::mock(ArtifactDeletionLimitRetriever::class);
         $this->event_manager            = Mockery::mock(EventManager::class);

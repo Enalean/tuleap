@@ -26,7 +26,7 @@ class Codendi_RequestTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
     private $project_manager;
     private $project;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         $this->project         = \Mockery::spy(\Project::class);
         $this->project_manager = \Mockery::spy(\ProjectManager::class)->shouldReceive('getProject')->with(123)->andReturns($this->project)->getMock();

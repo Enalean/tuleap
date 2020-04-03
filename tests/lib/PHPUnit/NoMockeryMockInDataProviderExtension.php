@@ -27,7 +27,7 @@ use PHPUnit\Runner\TestHook;
 
 final class NoMockeryMockInDataProviderExtension implements TestHook, BeforeFirstTestHook
 {
-    public function executeBeforeFirstTest() : void
+    public function executeBeforeFirstTest(): void
     {
         try {
             \Mockery::self();

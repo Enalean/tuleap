@@ -35,7 +35,7 @@ class ConfigNotificationEmailCustomSenderFormatterTest extends TestCase
      * */
     private $formatter;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
         $dummydata = array();

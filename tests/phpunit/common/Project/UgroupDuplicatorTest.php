@@ -37,7 +37,8 @@ use UGroupManager;
 
 class UgroupDuplicatorTest extends TestCase
 {
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /**
      * @var M\MockInterface|UGroupDao

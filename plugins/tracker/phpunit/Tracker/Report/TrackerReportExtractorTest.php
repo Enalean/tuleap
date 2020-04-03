@@ -48,7 +48,7 @@ class TrackerReportExtractorTest extends TestCase
      */
     private $tracker_factory;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

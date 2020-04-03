@@ -24,7 +24,7 @@ final class PluginInfoTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testPluginDescriptor() : void
+    public function testPluginDescriptor(): void
     {
         $p  = \Mockery::spy(\Plugin::class);
         $pi = new PluginInfo($p);
@@ -41,12 +41,12 @@ final class PluginInfoTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('A simple plugin, just for unit testing', $pd->getDescription());
     }
 
-    public function testPropertyDescriptor() : void
+    public function testPropertyDescriptor(): void
     {
         $name_d1 = 'd1';
         $name_d2 = 'd2';
         $p  = \Mockery::spy(\Plugin::class);
-        $pi = new class($p) extends PluginInfo
+        $pi = new class ($p) extends PluginInfo
         {
             public function addPropertyDescriptor($desc): void
             {

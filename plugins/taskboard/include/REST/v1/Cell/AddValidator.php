@@ -36,7 +36,8 @@ class AddValidator
         Tracker_Artifact $artifact_to_add,
         PFUser $current_user
     ): void {
-        if (! $this->isSoloItem($swimlane_artifact, $artifact_to_add) &&
+        if (
+            ! $this->isSoloItem($swimlane_artifact, $artifact_to_add) &&
             ! $this->isSwimlaneParentOfArtifactToAdd($swimlane_artifact, $artifact_to_add, $current_user)
         ) {
             throw new I18NRestException(

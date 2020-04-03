@@ -34,9 +34,10 @@ use UserManager;
 
 final class ProjectGroupManagerRestrictedUserFilterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
-    public function testNoFilteringIsDoneWhenRestrictedUsersAreNotAllowedAtSiteLevel() : void
+    public function testNoFilteringIsDoneWhenRestrictedUsersAreNotAllowedAtSiteLevel(): void
     {
         $filter = new ProjectGroupManagerRestrictedUserFilter(Mockery::mock(UserManager::class));
 
@@ -47,7 +48,7 @@ final class ProjectGroupManagerRestrictedUserFilterTest extends TestCase
         $this->assertSame($set_for_diff, $filter->filter(Mockery::mock(Project::class), $set_for_diff));
     }
 
-    public function testNoFilteringIsDoneWhenProjectAllowsRestrictedUsers() : void
+    public function testNoFilteringIsDoneWhenProjectAllowsRestrictedUsers(): void
     {
         $filter = new ProjectGroupManagerRestrictedUserFilter(Mockery::mock(UserManager::class));
 
@@ -59,7 +60,7 @@ final class ProjectGroupManagerRestrictedUserFilterTest extends TestCase
         $this->assertSame($set_for_diff, $filter->filter($project, $set_for_diff));
     }
 
-    public function testRestrictedUsersAreFilteredOutTheProjectWhenRestrictedUsersAreNotAllowed() : void
+    public function testRestrictedUsersAreFilteredOutTheProjectWhenRestrictedUsersAreNotAllowed(): void
     {
         $user_manager = Mockery::mock(UserManager::class);
         $filter       = new ProjectGroupManagerRestrictedUserFilter($user_manager);
@@ -96,7 +97,7 @@ final class ProjectGroupManagerRestrictedUserFilterTest extends TestCase
         $this->assertEqualsCanonicalizing([106], $filtered_set->getUserIDsNotImpacted());
     }
 
-    private function getProjectMember(int $id, bool $is_restricted) : PFUser
+    private function getProjectMember(int $id, bool $is_restricted): PFUser
     {
         $member = Mockery::mock(PFUser::class);
         $member->shouldReceive('getId')->andReturn($id);

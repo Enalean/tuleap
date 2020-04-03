@@ -19,7 +19,7 @@
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Project\REST\v1;
 
@@ -58,7 +58,9 @@ use Tuleap\XML\ProjectXMLMerger;
 
 class RestProjectCreatorTest extends TestCase
 {
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
+
     /**
      * @var M\LegacyMockInterface|M\MockInterface|ServiceEnableForXmlImportRetriever
      */

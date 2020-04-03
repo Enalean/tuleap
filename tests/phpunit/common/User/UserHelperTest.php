@@ -24,9 +24,10 @@ declare(strict_types=1);
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 final class UserHelperTest extends \PHPUnit\Framework\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\GlobalLanguageMock;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\GlobalLanguageMock;
 
-    public function testGetDisplayName() : void
+    public function testGetDisplayName(): void
     {
         $uh = \Mockery::mock(\UserHelper::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $uh->shouldReceive('_getCurrentUserUsernameDisplayPreference')->once()->andReturns(1);
@@ -51,7 +52,7 @@ final class UserHelperTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals("realname (user_name)", $uh->getDisplayName("user_name", "realname"));
     }
 
-    public function testGetDisplayNameFromUser() : void
+    public function testGetDisplayNameFromUser(): void
     {
         $user = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('getUserName')->andReturns('user_name');
@@ -64,7 +65,7 @@ final class UserHelperTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($uh->getDisplayNameFromUser(null));
     }
 
-    public function testGetDisplayNameFromUserId() : void
+    public function testGetDisplayNameFromUserId(): void
     {
         $user = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('getUserName')->andReturns('user_name');
@@ -81,7 +82,7 @@ final class UserHelperTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals("user_name (realname)", $uh->getDisplayNameFromUserId(123));
     }
 
-    public function testGetDisplayNameFromUserName() : void
+    public function testGetDisplayNameFromUserName(): void
     {
         $user = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('getUserName')->andReturns('user_name');
@@ -99,7 +100,7 @@ final class UserHelperTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals("user_name (realname)", $uh->getDisplayNameFromUserName('user_name'));
     }
 
-    public function testGetDisplayNameForNone() : void
+    public function testGetDisplayNameForNone(): void
     {
         $user = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('isNone')->andReturns(true);
@@ -132,7 +133,7 @@ final class UserHelperTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals("Aucun", $uh->getDisplayNameFromUserName("Aucun"));
     }
 
-    public function testInternalCachingById() : void
+    public function testInternalCachingById(): void
     {
         $dao = \Mockery::spy(\UserDao::class);
         $dar = TestHelper::arrayToDar(array('user_name' => 'user_name', 'realname' => 'realname', 'user_id' => 123));
@@ -157,7 +158,7 @@ final class UserHelperTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals("user_name (realname)", $uh->getDisplayNameFromUserName('user_name'));
     }
 
-    public function testInternalCachingByUserName() : void
+    public function testInternalCachingByUserName(): void
     {
         $dao = \Mockery::spy(\UserDao::class);
         $dar = TestHelper::arrayToDar(array('user_name' => 'user_name', 'realname' => 'realname', 'user_id' => 123));
@@ -182,7 +183,7 @@ final class UserHelperTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals("user_name (realname)", $uh->getDisplayNameFromUserId(123));
     }
 
-    public function testItCachesUnknownNames() : void
+    public function testItCachesUnknownNames(): void
     {
         $name = "L'équipe de développement de PhpWiki";
 

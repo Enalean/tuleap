@@ -34,7 +34,7 @@ final class ReferenceDescriptionTranslation
         $this->reference = $reference;
     }
 
-    public function getTranslatedDescription() : string
+    public function getTranslatedDescription(): string
     {
         $description = $this->reference->getDescription();
 
@@ -43,8 +43,10 @@ final class ReferenceDescriptionTranslation
         }
 
         $reference_matches = [];
-        if (preg_match('/(.*):(.*)/', $description, $reference_matches) === 1 &&
-            $GLOBALS['Language']->hasText($reference_matches[1], $reference_matches[2])) {
+        if (
+            preg_match('/(.*):(.*)/', $description, $reference_matches) === 1 &&
+            $GLOBALS['Language']->hasText($reference_matches[1], $reference_matches[2])
+        ) {
             return $GLOBALS['Language']->getText($reference_matches[1], $reference_matches[2]);
         }
 

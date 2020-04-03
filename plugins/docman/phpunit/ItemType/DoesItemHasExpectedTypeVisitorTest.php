@@ -45,7 +45,7 @@ final class DoesItemHasExpectedTypeVisitorTest extends TestCase
         Docman_Item::class
     ];
 
-    public function testExpectedTypeIsCorrectlyIdentified() : void
+    public function testExpectedTypeIsCorrectlyIdentified(): void
     {
         foreach (self::VISITOR_PROCESSABLE_CLASSES as $processed_class) {
             $processed_item = new $processed_class();

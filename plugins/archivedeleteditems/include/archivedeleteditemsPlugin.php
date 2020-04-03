@@ -76,7 +76,7 @@ class ArchivedeleteditemsPlugin extends Plugin //phpcs:ignore PSR1.Classes.Class
     /**
      * Copy files to the archiving directory
      */
-    public function archiveDeletedItem(ArchiveDeletedItemEvent $event) : void
+    public function archiveDeletedItem(ArchiveDeletedItemEvent $event): void
     {
         $logger           = $this->getLogger();
 

@@ -32,6 +32,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFormatValidator;
 final class DateFieldCheckerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /** @var DateFieldChecker */
     private $date_field_checker;
     /** @var Tracker_FormElement_Field_Date */

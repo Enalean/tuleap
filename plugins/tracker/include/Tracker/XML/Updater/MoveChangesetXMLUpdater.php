@@ -210,23 +210,27 @@ class MoveChangesetXMLUpdater
         $last_index = $changeset_xml->field_change === null ? -1 : count($changeset_xml->field_change) - 1;
         for ($index = $last_index; $index >= 0; $index--) {
             $modified = false;
-            if ($title_semantic_can_be_moved &&
+            if (
+                $title_semantic_can_be_moved &&
                 $this->isFieldChangeCorrespondingToTitleSemanticField($changeset_xml, $source_tracker, $index)
             ) {
                 $this->useTargetTrackerFieldName($changeset_xml, $target_title_field, $index);
                 continue;
-            } elseif ($description_semantic_can_be_moved &&
+            } elseif (
+                $description_semantic_can_be_moved &&
                 $this->isFieldChangeCorrespondingToDescriptionSemanticField($changeset_xml, $source_tracker, $index)
             ) {
                 $this->useTargetTrackerFieldName($changeset_xml, $target_description_field, $index);
                 continue;
-            } elseif ($status_semantic_can_be_moved &&
+            } elseif (
+                $status_semantic_can_be_moved &&
                 $this->isFieldChangeCorrespondingToStatusSemanticField($changeset_xml, $source_status_field, $index)
             ) {
                 $this->useTargetTrackerFieldName($changeset_xml, $target_status_field, $index);
                 $this->updateValue($changeset_xml, $source_status_field, $target_status_field, $index, $feedback_field_collector);
                 continue;
-            } elseif ($contributor_semantic_can_be_moved &&
+            } elseif (
+                $contributor_semantic_can_be_moved &&
                 $this->isFieldChangeCorrespondingToContributorSemanticField($changeset_xml, $source_contributor_field, $index)
             ) {
                 $this->useTargetTrackerFieldName($changeset_xml, $target_contributor_field, $index);
@@ -302,7 +306,8 @@ class MoveChangesetXMLUpdater
         $index
     ) {
         $source_description_field = $source_tracker->getDescriptionField();
-        if ($source_description_field &&
+        if (
+            $source_description_field &&
             $this->isFieldChangeCorrespondingToField($changeset_xml, $source_description_field, $index)
         ) {
             return true;
@@ -381,10 +386,12 @@ class MoveChangesetXMLUpdater
     ) {
         $last_index = count($changeset_xml->field_change[$field_change_index]->value) - 1;
         for ($value_index = $last_index; $value_index >= 0; $value_index--) {
-            if (! $this->field_value_matcher->isSourceUserValueMathingATargetUserValue(
-                $target_contributor_field,
-                $changeset_xml->field_change[$field_change_index]->value[$value_index]
-            )) {
+            if (
+                ! $this->field_value_matcher->isSourceUserValueMathingATargetUserValue(
+                    $target_contributor_field,
+                    $changeset_xml->field_change[$field_change_index]->value[$value_index]
+                )
+            ) {
                 unset($changeset_xml->field_change[$field_change_index]->value[$value_index]);
 
                 $feedback_field_collector->addFieldInPartiallyMigrated($source_contributor_field);

@@ -30,6 +30,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 final class SizeValidatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var SizeValidatorVisitor
      */

@@ -109,7 +109,7 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
     /**
      * @throws ForbiddenException
      */
-    public function handle(ServerRequestInterface $request) : ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $user = $this->user_manager->getCurrentUser();
         if ($user->isAnonymous()) {

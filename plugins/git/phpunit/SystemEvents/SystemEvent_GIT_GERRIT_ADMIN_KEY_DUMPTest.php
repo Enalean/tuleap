@@ -30,6 +30,7 @@ require_once __DIR__ . '/../bootstrap.php';
 class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /** @var SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP */
     private $event;
     /** @var Git_RemoteServer_GerritServerFactory */
@@ -37,7 +38,7 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends \PHPUnit\Framework\TestC
     /** @var Git_Gitolite_SSHKeyDumper */
     private $ssh_key_dumper;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->ssh_key_dumper = \Mockery::spy(\Git_Gitolite_SSHKeyDumper::class);
@@ -46,7 +47,7 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends \PHPUnit\Framework\TestC
         $this->event->injectDependencies($this->gerrit_server_factory, $this->ssh_key_dumper);
     }
 
-    public function testItAddsKeyForAServer() : void
+    public function testItAddsKeyForAServer(): void
     {
         $gerrit_server_id = 7;
         $this->event->setParameters("$gerrit_server_id");
@@ -59,7 +60,7 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends \PHPUnit\Framework\TestC
         $this->event->process();
     }
 
-    public function testItDumpsTheNewKeyForServer() : void
+    public function testItDumpsTheNewKeyForServer(): void
     {
         $gerrit_server_id = 7;
         $this->event->setParameters("$gerrit_server_id");
@@ -95,7 +96,7 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends \PHPUnit\Framework\TestC
         $this->event->process();
     }
 
-    public function testItDeleteCorrespondingKeyWhenNoServer() : void
+    public function testItDeleteCorrespondingKeyWhenNoServer(): void
     {
         $gerrit_server_id = 7;
         $this->event->setParameters("$gerrit_server_id");
@@ -113,7 +114,7 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends \PHPUnit\Framework\TestC
         $this->event->process();
     }
 
-    public function testItMarkAsDoneWhenDumpWorks() : void
+    public function testItMarkAsDoneWhenDumpWorks(): void
     {
         $this->event->setParameters("7");
 
@@ -125,7 +126,7 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends \PHPUnit\Framework\TestC
         $this->event->process();
     }
 
-    public function testItMarkAsErrorWhenDumpDoesntWork() : void
+    public function testItMarkAsErrorWhenDumpDoesntWork(): void
     {
         $this->event->setParameters("7");
 

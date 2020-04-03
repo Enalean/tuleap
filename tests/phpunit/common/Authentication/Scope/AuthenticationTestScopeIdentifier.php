@@ -39,7 +39,7 @@ final class AuthenticationTestScopeIdentifier implements AuthenticationScopeIden
         return new self($identifier_key);
     }
 
-    public function toString() : string
+    public function toString(): string
     {
         return $this->identifier;
     }

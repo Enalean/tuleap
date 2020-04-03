@@ -28,7 +28,7 @@ class CredentialIdentifierExtractorTest extends TestCase
 {
     public function testExtractionOfTheIdentifierFromProperlyFormattedUsername()
     {
-        $extractor = new CredentialIdentifierExtractor;
+        $extractor = new CredentialIdentifierExtractor();
         $username  = 'forge__dynamic_credential-identifier';
 
         $this->assertEquals('identifier', $extractor->extract($username));
@@ -39,7 +39,7 @@ class CredentialIdentifierExtractorTest extends TestCase
      */
     public function testRejectionWhenUsernameIsIncorrectlyFormatted($username)
     {
-        $extractor = new CredentialIdentifierExtractor;
+        $extractor = new CredentialIdentifierExtractor();
 
         $this->expectException(CredentialInvalidUsernameException::class);
 

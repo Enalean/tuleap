@@ -39,7 +39,8 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class AppRevocationControllerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /**
      * @var AppRevocationController

@@ -34,7 +34,10 @@ use Tuleap\Project\Admin\ProjectUGroup\CannotAddRestrictedUserToProjectNotAllowi
 
 class ProjectMemberAdderWithStatusCheckAndNotificationsTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock, ForgeConfigSandbox, GlobalResponseMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
+    use ForgeConfigSandbox;
+    use GlobalResponseMock;
 
     /**
      * @var M\MockInterface|AddProjectMember

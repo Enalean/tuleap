@@ -55,7 +55,7 @@ final class DocumentBeingUploadedInformationProvider implements TusFileInformati
         $this->item_factory   = $item_factory;
     }
 
-    public function getFileInformation(\Psr\Http\Message\ServerRequestInterface $request) : ?TusFileInformation
+    public function getFileInformation(\Psr\Http\Message\ServerRequestInterface $request): ?TusFileInformation
     {
         $item_id = $request->getAttribute('id');
 

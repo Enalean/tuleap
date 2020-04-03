@@ -161,7 +161,7 @@ class Docman_CloneItemsVisitor implements ItemVisitor
     /**
      * @param Docman_File|Docman_Link $original_item
      */
-    private function getChangelogForCopiedItem($original_item) : string
+    private function getChangelogForCopiedItem($original_item): string
     {
         $project_id = $original_item->getGroupId();
         $project    = $this->project_manager->getProject($project_id);

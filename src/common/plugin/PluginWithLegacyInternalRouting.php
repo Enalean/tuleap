@@ -28,21 +28,21 @@ use Tuleap\Request\CollectRoutesEvent;
 
 abstract class PluginWithLegacyInternalRouting extends Plugin
 {
-    abstract public function process() : void;
+    abstract public function process(): void;
 
-    final protected function listenToCollectRouteEventWithDefaultController() : void
+    final protected function listenToCollectRouteEventWithDefaultController(): void
     {
         $this->addHook(CollectRoutesEvent::NAME, 'defaultCollectRoutesEvent');
     }
 
-    final public function defaultCollectRoutesEvent(CollectRoutesEvent $event) : void
+    final public function defaultCollectRoutesEvent(CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
             $r->addRoute(['GET', 'POST'], '[/[index.php]]', $this->getRouteHandler('routePluginLegacyController'));
         });
     }
 
-    final public function routePluginLegacyController() : PluginLegacyController
+    final public function routePluginLegacyController(): PluginLegacyController
     {
         return new PluginLegacyController($this);
     }

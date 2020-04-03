@@ -78,7 +78,7 @@ class JenkinsClient
     /**
      * @throws UnableToLaunchBuildException
      */
-    public function pushGitNotifications($server_url, $repository_url, string $commit_reference) : PollingResponse
+    public function pushGitNotifications($server_url, $repository_url, string $commit_reference): PollingResponse
     {
         $csrf_crumb_header = $this->csrf_crumb_retriever->getCSRFCrumbHeader($server_url);
 

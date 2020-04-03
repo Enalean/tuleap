@@ -44,7 +44,7 @@ final class UsernameToSearchTooSmallException extends \RuntimeException
         $this->minimal_accepted_length = $minimal_accepted_length;
     }
 
-    public function getMinimalAcceptedLength() : int
+    public function getMinimalAcceptedLength(): int
     {
         return $this->minimal_accepted_length;
     }

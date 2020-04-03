@@ -33,7 +33,9 @@ use UserHelper;
 
 final class ReviewerAddedNotificationTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox, TemporaryTestDirectory;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
+    use TemporaryTestDirectory;
 
     public function testReviewerAddedNotificationCanBeBuiltFromReviewerChangeInformation(): void
     {

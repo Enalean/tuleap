@@ -130,19 +130,23 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
                 $j = count($this->inputbox) - 1;
                 $curargs = trim($m[2]);
                 // must match name=NAME and also value=<!plugin-list name !>
-                while (preg_match(
-                    "/^(\w+)=((?:\".*\")|(?:\w+)|(?:\"?<!plugin-list.+!>\"?))\s*/",
-                    $curargs,
-                    $m
-                )) {
+                while (
+                    preg_match(
+                        "/^(\w+)=((?:\".*\")|(?:\w+)|(?:\"?<!plugin-list.+!>\"?))\s*/",
+                        $curargs,
+                        $m
+                    )
+                ) {
                        $attr = $m[1];
                     $value = $m[2];
                        $curargs = substr($curargs, strlen($m[0]));
                     if (preg_match("/^\"(.*)\"$/", $value, $m)) {
                         $value = $m[1];
                     }
-                    if (in_array($name, array("pulldown","checkbox","radio","radiobutton","combobox"))
-                            and preg_match('/^<!plugin-list.+!>$/', $value, $m)) {
+                    if (
+                        in_array($name, array("pulldown","checkbox","radio","radiobutton","combobox"))
+                            and preg_match('/^<!plugin-list.+!>$/', $value, $m)
+                    ) {
                     // like pulldown[] name=test value=<!plugin-list BackLinks page=HomePage!>
                         $loader = new WikiPluginLoader();
                         $markup = null;

@@ -49,7 +49,7 @@ class TransitionRetriever
     /**
      * @throws NoTransitionForStateException
      */
-    public function getReferenceTransitionForCurrentState(Tracker_Artifact $artifact) : Transition
+    public function getReferenceTransitionForCurrentState(Tracker_Artifact $artifact): Transition
     {
         $workflow = $artifact->getWorkflow();
 

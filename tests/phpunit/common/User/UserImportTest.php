@@ -54,7 +54,7 @@ final class UserImportTest extends \PHPUnit\Framework\TestCase
      */
     private $project;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -66,14 +66,14 @@ final class UserImportTest extends \PHPUnit\Framework\TestCase
         $this->user_import         = new UserImport($this->user_manager, $this->user_helper, \Mockery::mock(ProjectMemberAdder::class));
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         parent::tearDown();
 
         UserManager::clearInstance();
     }
 
-    public function testItImportsUserByUserName() : void
+    public function testItImportsUserByUserName(): void
     {
         $user = $this->getUser(102);
 
@@ -95,7 +95,7 @@ final class UserImportTest extends \PHPUnit\Framework\TestCase
         $this->assertEmpty($user_collection->getWarningsInvalidUsers());
     }
 
-    public function testItImportsUserByEmail() : void
+    public function testItImportsUserByEmail(): void
     {
         $user = $this->getUser(102);
 
@@ -117,7 +117,7 @@ final class UserImportTest extends \PHPUnit\Framework\TestCase
         $this->assertEmpty($user_collection->getWarningsInvalidUsers());
     }
 
-    public function testItDoesNotImportUserByEmailIfEmailLinkedToMultipleUsers() : void
+    public function testItDoesNotImportUserByEmailIfEmailLinkedToMultipleUsers(): void
     {
         $user  = $this->getUser(102);
         $user2 = $this->getUser(103);
@@ -136,7 +136,7 @@ final class UserImportTest extends \PHPUnit\Framework\TestCase
         $this->assertEmpty($user_collection->getWarningsInvalidUsers());
     }
 
-    public function testItDoesNotImportUserIfUserNameDoesNotExist() : void
+    public function testItDoesNotImportUserIfUserNameDoesNotExist(): void
     {
         $this->user_manager->shouldReceive('findUser')->with('zurg')->andReturns(null);
         $this->user_manager->shouldReceive('getAllUsersByEmail')->andReturns([]);

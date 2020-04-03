@@ -20,7 +20,7 @@
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Docman\Test\rest\Docman;
 
@@ -177,7 +177,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
     /**
      * @depends testGetRootId
      */
-    public function testGetId($root_id) : void
+    public function testGetId($root_id): void
     {
         $response = $this->getResponse(
             $this->client->get('docman_items/' . $root_id),
@@ -194,7 +194,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
     /**
      * @depends testGetRootId
      */
-    public function testGetIdWithUserRESTReadOnlyAdmin($root_id) : void
+    public function testGetIdWithUserRESTReadOnlyAdmin($root_id): void
     {
         $response = $this->getResponse(
             $this->client->get('docman_items/' . $root_id),

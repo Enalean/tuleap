@@ -156,15 +156,17 @@ class BackendSVN extends Backend
 
         $project = $this->getProjectManager()->getProject($project_id);
 
-        if (! $this->updateHooks(
-            $project,
-            $svn_dir,
-            true,
-            $hook_commit_path,
-            'svn_post_commit.php',
-            ForgeConfig::get('tuleap_dir') . '/src/utils/php-launcher.sh',
-            'svn_pre_commit.php'
-        )) {
+        if (
+            ! $this->updateHooks(
+                $project,
+                $svn_dir,
+                true,
+                $hook_commit_path,
+                'svn_post_commit.php',
+                ForgeConfig::get('tuleap_dir') . '/src/utils/php-launcher.sh',
+                'svn_pre_commit.php'
+            )
+        ) {
             throw new SVNRepositoryCreationException(_('Could not update hooks of the SVN repository'));
         }
 
@@ -846,8 +848,10 @@ class BackendSVN extends Backend
             // Get file stat
             if (file_exists("$svnroot/$file")) {
                 $stat = stat("$svnroot/$file");
-                if (($stat['uid'] != $this->getHTTPUserUID())
-                     || ($stat['gid'] != $this->getSvnFilesUnixGroupId($project))) {
+                if (
+                    ($stat['uid'] != $this->getHTTPUserUID())
+                     || ($stat['gid'] != $this->getSvnFilesUnixGroupId($project))
+                ) {
                     $need_owner_update = true;
                 }
             }

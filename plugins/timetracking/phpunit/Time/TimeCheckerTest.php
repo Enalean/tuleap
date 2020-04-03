@@ -37,7 +37,7 @@ class TimeCheckerTest extends TestCase
     */
     private $time_checker;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

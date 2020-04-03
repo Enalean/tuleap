@@ -9,10 +9,12 @@ function viewvc_utils_track_browsing($group_id, $type)
     $query_string = getStringFromServer('QUERY_STRING');
     $request_uri = getStringFromServer('REQUEST_URI');
 
-    if (strpos($query_string, "view=markup") !== false ||
-      strpos($query_string, "view=auto") !== false ||
-      strpos($request_uri, "*checkout*") !== false ||
-      strpos($query_string, "annotate=") !== false) {
+    if (
+        strpos($query_string, "view=markup") !== false ||
+        strpos($query_string, "view=auto") !== false ||
+        strpos($request_uri, "*checkout*") !== false ||
+        strpos($query_string, "annotate=") !== false
+    ) {
         if ($type == 'svn') {
             $browse_column = 'svn_browse';
             $table = 'group_svn_full_history';

@@ -42,7 +42,7 @@ class FileCopierTest extends TestCase
     private $source_file;
     private $destination_file;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->logger           = \Mockery::spy(LoggerInterface::class);
         $this->file_system      = vfsStream::setup();
@@ -81,7 +81,7 @@ class FileCopierTest extends TestCase
         $this->assertTrue($is_copy_successful);
     }
 
-    public function testItCopiesAFile() : void
+    public function testItCopiesAFile(): void
     {
         $content = random_bytes(64);
         file_put_contents($this->source_file, $content);

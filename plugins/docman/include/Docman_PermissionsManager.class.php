@@ -730,12 +730,12 @@ class Docman_PermissionsManager
         return $userArray;
     }
 
-    protected function getProject() : Project
+    protected function getProject(): Project
     {
         return $this->project;
     }
 
-    protected function getProjectAccessChecker() : ProjectAccessChecker
+    protected function getProjectAccessChecker(): ProjectAccessChecker
     {
         return $this->project_access_checker;
     }

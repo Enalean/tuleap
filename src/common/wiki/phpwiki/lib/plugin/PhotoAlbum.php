@@ -554,7 +554,7 @@ display_slides();"));
                         HTML::span(array('class' => 'gensmall'), $desc)
                     ))
                 );
-                $count ++;
+                $count++;
             } elseif ($mode == 'row') {
                 $desc = ($showdesc != 'none') ? HTML::p($value["desc"]) : '';
                 $row->pushContent(
@@ -574,9 +574,11 @@ display_slides();"));
             }
 
             // no more images in one row as defined by $numcols
-            if (($key + 1) % $numcols == 0 ||
+            if (
+                ($key + 1) % $numcols == 0 ||
                  ($key + 1) == count($photos) ||
-                 $p) {
+                 $p
+            ) {
                 if ($mode == 'row') {
                     $html->pushcontent(HTML::span($row));
                 } else {
@@ -726,9 +728,11 @@ display_slides();"));
                 return $this->error(fmt("Unable to read src='%s'", $src));
             }
             while ($data = fgetcsv($fp, 1024, ';')) {
-                if (count($data) == 0 || empty($data[0])
+                if (
+                    count($data) == 0 || empty($data[0])
                                       || preg_match('/^#/', $data[0])
-                                      || preg_match('/^[[:space:]]*$/', $data[0])) {
+                                      || preg_match('/^[[:space:]]*$/', $data[0])
+                ) {
                     continue;
                 }
                 if (empty($data[1])) {
@@ -745,9 +749,11 @@ display_slides();"));
             $contents = preg_split('/\n/', $contents);
             foreach ($contents as $value) {
                 $data = preg_split('/\;/', $value);
-                if (count($data) == 0 || empty($data[0])
+                if (
+                    count($data) == 0 || empty($data[0])
                                       || preg_match('/^#/', $data[0])
-                                      || preg_match('/^[[:space:]]*$/', $data[0])) {
+                                      || preg_match('/^[[:space:]]*$/', $data[0])
+                ) {
                     continue;
                 }
                 if (empty($data[1])) {

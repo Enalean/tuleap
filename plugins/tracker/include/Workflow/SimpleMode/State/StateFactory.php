@@ -46,7 +46,7 @@ class StateFactory
         $this->simple_workflow_dao = $simple_workflow_dao;
     }
 
-    public function getStateFromValueId(Workflow $workflow, int $value_id) : State
+    public function getStateFromValueId(Workflow $workflow, int $value_id): State
     {
         $transitions = $this->transition_factory->getTransitionsForAGivenDestination(
             $workflow,
@@ -59,7 +59,7 @@ class StateFactory
     /**
      * @return State[]
      */
-    public function getAllStatesForWorkflow(Workflow $workflow) : array
+    public function getAllStatesForWorkflow(Workflow $workflow): array
     {
         $states = [];
         foreach ($this->simple_workflow_dao->searchStatesForWorkflow((int) $workflow->getId()) as $state_sql) {
@@ -69,7 +69,7 @@ class StateFactory
         return $states;
     }
 
-    public function getInstanceFromXML(SimpleXMLElement $state_xml, array &$xml_mapping, Project $project) : State
+    public function getInstanceFromXML(SimpleXMLElement $state_xml, array &$xml_mapping, Project $project): State
     {
         $to_value = $xml_mapping[(string) $state_xml->to_id['REF']];
 

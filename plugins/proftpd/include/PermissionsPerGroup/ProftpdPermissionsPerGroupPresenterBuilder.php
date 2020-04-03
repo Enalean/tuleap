@@ -87,7 +87,8 @@ class ProftpdPermissionsPerGroupPresenterBuilder
             $this->permission_manager->getSelectUGroupFor($project, PermissionsManager::PERM_WRITE)
         ]);
 
-        if ($selected_ugroup_id
+        if (
+            $selected_ugroup_id
             && ! in_array($selected_ugroup_id, $readers_ugroups_ids)
         ) {
             return [];
@@ -109,7 +110,8 @@ class ProftpdPermissionsPerGroupPresenterBuilder
             $this->permission_manager->getSelectUGroupFor($project, PermissionsManager::PERM_WRITE)
         ]);
 
-        if ($selected_ugroup_id
+        if (
+            $selected_ugroup_id
             && ! in_array($selected_ugroup_id, $writers_ugroup_id)
         ) {
             return [];

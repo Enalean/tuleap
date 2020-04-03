@@ -49,7 +49,7 @@ class Docman_Actions extends Actions
         return $em;
     }
 
-    private function getPermissionItemUpdater(Docman_Item $item) : PermissionItemUpdater
+    private function getPermissionItemUpdater(Docman_Item $item): PermissionItemUpdater
     {
         return new PermissionItemUpdater(
             $this->_controler->feedback,
@@ -335,14 +335,15 @@ class Docman_Actions extends Actions
                 $item['title'] = trim($item['title']);
             }
 
-            if ($item['item_type'] != PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+            if (
+                $item['item_type'] != PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
                     ||
                     (
                         $this->_controler->getProperty('embedded_are_allowed')
                         &&
                         $request->exist('content')
                     )
-                ) {
+            ) {
                 // Special handling of obsolescence date
                 if (isset($item['obsolescence_date']) && $item['obsolescence_date'] != 0) {
                     if (preg_match('/^([0-9]+)-([0-9]+)-([0-9]+)$/', $item['obsolescence_date'], $d)) {
@@ -424,8 +425,10 @@ class Docman_Actions extends Actions
                     );
 
                     $new_version = null;
-                    if ($item['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_FILE ||
-                       $item['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
+                    if (
+                        $item['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_FILE ||
+                        $item['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+                    ) {
                         $new_version = $this->_storeFile($new_item);
                     }
 
@@ -609,10 +612,14 @@ class Docman_Actions extends Actions
             $createFile = false;
             $itemType = $item_factory->getItemTypeForItem($item);
 
-            if ($itemType == PLUGIN_DOCMAN_ITEM_TYPE_EMPTY && isset($data['item_type']) && $itemType != $data['item_type'] &&
-                ($data['item_type'] != PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE || $this->_controler->getProperty('embedded_are_allowed'))) {
-                if ($data['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
-                   || $data['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_FILE) {
+            if (
+                $itemType == PLUGIN_DOCMAN_ITEM_TYPE_EMPTY && isset($data['item_type']) && $itemType != $data['item_type'] &&
+                ($data['item_type'] != PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE || $this->_controler->getProperty('embedded_are_allowed'))
+            ) {
+                if (
+                    $data['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+                    || $data['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_FILE
+                ) {
                     $createFile = true;
                 }
             } else {
@@ -1373,9 +1380,11 @@ class Docman_Actions extends Actions
         $mdFactory = new Docman_MetadataFactory($_gid);
         $md = $mdFactory->getFromLabel($_mdLabel);
 
-        if ($md !== null
-           && $md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST
-           && $md->getLabel() != 'status') {
+        if (
+            $md !== null
+            && $md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST
+            && $md->getLabel() != 'status'
+        ) {
             $loveFactory = new Docman_MetadataListOfValuesElementFactory($md->getId());
 
             $love = new Docman_MetadataListOfValuesElement();
@@ -1397,9 +1406,11 @@ class Docman_Actions extends Actions
         $mdFactory = new Docman_MetadataFactory($_gid);
         $md        = $mdFactory->getFromLabel($_mdLabel);
 
-        if ($md !== null
-           && $md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST
-           && $md->getLabel() != 'status') {
+        if (
+            $md !== null
+            && $md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST
+            && $md->getLabel() != 'status'
+        ) {
             $love = new Docman_MetadataListOfValuesElement($md->getId());
             $love->setId($_loveId);
 
@@ -1451,9 +1462,12 @@ class Docman_Actions extends Actions
 
         $pm = ProjectManager::instance();
         $srcGo = $pm->getProject($srcGroupId);
-        if ($srcGo != false &&
-           ($srcGo->isPublic()
-            || (!$srcGo->isPublic() && $srcGo->userIsMember()))) {
+        if (
+            $srcGo != false &&
+            ($srcGo->isPublic() ||
+            (!$srcGo->isPublic() &&
+            $srcGo->userIsMember()))
+        ) {
             $mdFactory = new Docman_MetadataFactory($srcGo->getGroupId());
             $mdFactory->exportMetadata($groupId);
 
@@ -1537,24 +1551,32 @@ class Docman_Actions extends Actions
             $cascade = true;
         }
 
-        if (isset($params['listeners_users_to_add'])
+        if (
+            isset($params['listeners_users_to_add'])
             && is_array($params['listeners_users_to_add'])
-            && ! empty($params['listeners_users_to_add'])) {
+            && ! empty($params['listeners_users_to_add'])
+        ) {
             $this->addMonitoringUsers($cascade, $item, $params['listeners_users_to_add']);
         }
-        if (isset($params['listeners_ugroups_to_add'])
+        if (
+            isset($params['listeners_ugroups_to_add'])
             && is_array($params['listeners_ugroups_to_add'])
-            && ! empty($params['listeners_ugroups_to_add'])) {
+            && ! empty($params['listeners_ugroups_to_add'])
+        ) {
             $this->addMonitorinUgroups($cascade, $item, $params['listeners_ugroups_to_add']);
         }
-        if (isset($params['listeners_users_to_delete'])
+        if (
+            isset($params['listeners_users_to_delete'])
             && is_array($params['listeners_users_to_delete'])
-            && ! empty($params['listeners_users_to_delete'])) {
+            && ! empty($params['listeners_users_to_delete'])
+        ) {
             $this->removeNotificationUsersByItem($item, $params['listeners_users_to_delete']);
         }
-        if (isset($params['listeners_ugroups_to_delete'])
+        if (
+            isset($params['listeners_ugroups_to_delete'])
             && is_array($params['listeners_ugroups_to_delete'])
-            && ! empty($params['listeners_ugroups_to_delete'])) {
+            && ! empty($params['listeners_ugroups_to_delete'])
+        ) {
             $this->removeNotificationUgroupsByItem($item, $params['listeners_ugroups_to_delete']);
         }
     }
@@ -1569,8 +1591,10 @@ class Docman_Actions extends Actions
         if (!$table->isCustomizable()) {
             // Cannot set status of an old table to something else than 'close'
             // or 'deleted'
-            if ($sStatus != PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED &&
-                $sStatus != PLUGIN_DOCMAN_APPROVAL_TABLE_DELETED) {
+            if (
+                $sStatus != PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED &&
+                $sStatus != PLUGIN_DOCMAN_APPROVAL_TABLE_DELETED
+            ) {
                 $sStatus = PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED;
             }
             // Ensure that, once the table belong to an old version, user
@@ -1789,10 +1813,12 @@ class Docman_Actions extends Actions
                     }
                 }
                 // If needed, notify next reviewer
-                if (($oldTable !== null
+                if (
+                    ($oldTable !== null
                     && $oldTable->getStatus() != PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED
                     && $table->getStatus() == PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED)
-                   || $resendNotif) {
+                    || $resendNotif
+                ) {
                     $this->_approval_update_notif_resend($atrf);
                 }
             }
@@ -1933,9 +1959,12 @@ class Docman_Actions extends Actions
         // Private projects he is member of.
         $pm = ProjectManager::instance();
         $go = $pm->getProject($importGroupId);
-        if ($go != false &&
-           ($go->isPublic()
-            || (!$go->isPublic() && $go->userIsMember()))) {
+        if (
+            $go != false &&
+            ($go->isPublic() ||
+            (!$go->isPublic() &&
+            $go->userIsMember()))
+        ) {
             $srcReportFactory = new Docman_ReportFactory($importGroupId);
 
             // Get the mapping between src and current project metadata definition.
@@ -1971,8 +2000,10 @@ class Docman_Actions extends Actions
 
                 if ($report !== null) {
                     // User can import Project wide reports or his own Individual reports.
-                    if ($report->getScope() == 'P' ||
-                       ($report->getScope() == 'I' && $report->getUserId() == $user->getId())) {
+                    if (
+                        $report->getScope() == 'P' ||
+                        ($report->getScope() == 'I' && $report->getUserId() == $user->getId())
+                    ) {
                         $srcReportFactory->cloneReport($report, $groupId, $mdMap, $user, $forceScope, $itemMapping);
 
                         $this->_controler->feedback->log('info', dgettext('tuleap-docman', 'Report successfully cloned.'));
@@ -2042,8 +2073,10 @@ class Docman_Actions extends Actions
         $users = array();
         foreach ($users_to_delete as $user) {
             if ($this->_controler->notificationsManager->userExists($user->getId(), $item->getId())) {
-                if ($this->_controler->notificationsManager->removeUser($user->getId(), $item->getId())
-                    && $this->_controler->notificationsManager->removeUser($user->getId(), $item->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)) {
+                if (
+                    $this->_controler->notificationsManager->removeUser($user->getId(), $item->getId())
+                    && $this->_controler->notificationsManager->removeUser($user->getId(), $item->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)
+                ) {
                     $users[] = $user;
                 } else {
                     $this->_controler->feedback->log(
@@ -2086,8 +2119,10 @@ class Docman_Actions extends Actions
         $ugroups = array();
         foreach ($ugroups_to_delete as $ugroup) {
             if ($this->_controler->notificationsManager->ugroupExists($ugroup->getId(), $item->getId())) {
-                if ($this->_controler->notificationsManager->removeUgroup($ugroup->getId(), $item->getId())
-                    && $this->_controler->notificationsManager->removeUgroup($ugroup->getId(), $item->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)) {
+                if (
+                    $this->_controler->notificationsManager->removeUgroup($ugroup->getId(), $item->getId())
+                    && $this->_controler->notificationsManager->removeUgroup($ugroup->getId(), $item->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)
+                ) {
                     $ugroups[] = $ugroup;
                 } else {
                     $this->_controler->feedback->log('error', sprintf(dgettext('tuleap-docman', 'Unable to remove monitoring for group \'%1$s\''), $ugroup->getTranslatedName()));
@@ -2136,11 +2171,12 @@ class Docman_Actions extends Actions
                 );
                 continue;
             }
-            if ($cascade && ! $this->_controler->notificationsManager->addUser(
-                $user->getId(),
-                $item->getId(),
-                PLUGIN_DOCMAN_NOTIFICATION_CASCADE
-            )
+            if (
+                $cascade && ! $this->_controler->notificationsManager->addUser(
+                    $user->getId(),
+                    $item->getId(),
+                    PLUGIN_DOCMAN_NOTIFICATION_CASCADE
+                )
             ) {
                 $this->_controler->feedback->log(
                     'error',
@@ -2184,11 +2220,12 @@ class Docman_Actions extends Actions
                 );
                 continue;
             }
-            if ($cascade && ! $controller->notificationsManager->addUgroup(
-                $ugroup->getId(),
-                $item->getId(),
-                PLUGIN_DOCMAN_NOTIFICATION_CASCADE
-            )
+            if (
+                $cascade && ! $controller->notificationsManager->addUgroup(
+                    $ugroup->getId(),
+                    $item->getId(),
+                    PLUGIN_DOCMAN_NOTIFICATION_CASCADE
+                )
             ) {
                 $controller->feedback->log(
                     Feedback::ERROR,

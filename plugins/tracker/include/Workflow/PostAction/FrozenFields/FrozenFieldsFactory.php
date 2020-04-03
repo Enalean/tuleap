@@ -50,7 +50,7 @@ class FrozenFieldsFactory implements \Transition_PostActionSubFactory
      *
      * @return FrozenFields[]
      */
-    public function loadPostActions(Transition $transition) : array
+    public function loadPostActions(Transition $transition): array
     {
         $rows = $this->frozen_dao->searchByTransitionId((int) $transition->getId());
 

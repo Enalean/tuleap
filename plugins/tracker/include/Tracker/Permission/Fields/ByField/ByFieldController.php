@@ -105,7 +105,7 @@ class ByFieldController implements DispatchableWithRequest
     }
 
 
-    private function getUGroupPermissionsPerField(\Tracker $tracker, int $selected_id) : ByFieldGroupPermissions
+    private function getUGroupPermissionsPerField(\Tracker $tracker, int $selected_id): ByFieldGroupPermissions
     {
         $ugroups_permissions = plugin_tracker_permission_get_field_tracker_ugroups_permissions(
             $tracker->getGroupId(),
@@ -137,7 +137,7 @@ class ByFieldController implements DispatchableWithRequest
         return $ugroups_for_selected_field;
     }
 
-    private function getFieldsPermissionForGroupWithFirstMatchingGroup(array $ugroups_permissions, int $selected_id) : ByFieldGroupPermissions
+    private function getFieldsPermissionForGroupWithFirstMatchingGroup(array $ugroups_permissions, int $selected_id): ByFieldGroupPermissions
     {
         foreach ($ugroups_permissions as $field_id => $value_field) {
             $field_id = (int) $field_id;
@@ -153,7 +153,7 @@ class ByFieldController implements DispatchableWithRequest
         return count($ugroup_list) === 0;
     }
 
-    public static function getUrl(\Tracker $tracker) : string
+    public static function getUrl(\Tracker $tracker): string
     {
         return TRACKER_BASE_URL . self::URL . '/' . $tracker->getId();
     }

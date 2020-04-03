@@ -29,7 +29,8 @@ use Tuleap\ForgeConfigSandbox;
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class PreCommitMessageTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     /** @var SVN_Svnlook */
     protected $svn_look;

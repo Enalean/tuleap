@@ -38,7 +38,7 @@ final class RestrictedUsersProjectCounter
         $this->user_dao = $user_dao;
     }
 
-    public function getNumberOfRestrictedUsersInProject(Project $project) : int
+    public function getNumberOfRestrictedUsersInProject(Project $project): int
     {
         if (! ForgeConfig::areRestrictedUsersAllowed()) {
             return 0;

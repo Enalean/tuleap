@@ -28,13 +28,13 @@ class GitoliteAccessURLGeneratorTest extends TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         \ForgeConfig::store();
         \ForgeConfig::set('sys_default_domain', 'example.com');
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         \ForgeConfig::restore();
     }

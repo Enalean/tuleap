@@ -529,7 +529,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest
         $workflow->shouldReceive('validate')->andReturns(true);
         $workflow->shouldReceive('before')->with(
             Mockery::on(
-                static function (&$fields_data) : bool {
+                static function (&$fields_data): bool {
                     if ($fields_data !== [101 => '123']) {
                         return false;
                     }

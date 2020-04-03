@@ -45,7 +45,8 @@ class InitialEffortSemanticUpdater
 
             $rest_value = $initial_effort_field->getFullRESTValue($current_user, $last_changeset);
             if ($rest_value) {
-                if ($initial_effort_field instanceof Tracker_FormElement_Field_Selectbox ||
+                if (
+                    $initial_effort_field instanceof Tracker_FormElement_Field_Selectbox ||
                     $initial_effort_field instanceof Tracker_FormElement_Field_Computed
                 ) {
                     $value = $initial_effort_field->getComputedValue($current_user, $artifact);

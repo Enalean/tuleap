@@ -33,7 +33,7 @@ final class SystemEventDaoTest extends \PHPUnit\Framework\TestCase
     private $event_type  = array('MY_IMAGINARY_EVENT');
     private $status      = array('ONGOING');
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->da = \Mockery::mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
 
@@ -41,7 +41,7 @@ final class SystemEventDaoTest extends \PHPUnit\Framework\TestCase
         $this->da->shouldReceive('quoteSmartImplode')->with(', ', $this->status)->andReturns('ONGOING');
     }
 
-    public function testItCreatesCorrectQueryWithSearchTermInFirstPosition() : void
+    public function testItCreatesCorrectQueryWithSearchTermInFirstPosition(): void
     {
         $dao = new SystemEventDao($this->da);
 
@@ -57,7 +57,7 @@ final class SystemEventDaoTest extends \PHPUnit\Framework\TestCase
         $dao->searchWithParam('head', $this->search_term, $this->event_type, $this->status);
     }
 
-    public function testItCreatesCorrectQueryWithSearchTermInLastPosition() : void
+    public function testItCreatesCorrectQueryWithSearchTermInLastPosition(): void
     {
         $dao = new SystemEventDao($this->da);
 
@@ -73,7 +73,7 @@ final class SystemEventDaoTest extends \PHPUnit\Framework\TestCase
         $dao->searchWithParam('tail', $this->search_term, $this->event_type, $this->status);
     }
 
-    public function testItCreatesCorrectQueryWithExactSearchTerm() : void
+    public function testItCreatesCorrectQueryWithExactSearchTerm(): void
     {
         $dao = new SystemEventDao($this->da);
 

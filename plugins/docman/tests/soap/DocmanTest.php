@@ -28,7 +28,7 @@ class DocmanTest extends SOAPBase
     private $content    = 'Content of the file';
     private $content_v2 = 'Updated content of the file';
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -37,7 +37,7 @@ class DocmanTest extends SOAPBase
         $_SERVER['SCRIPT_NAME'] = $this->base_wsdl;
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         unset($_SERVER['SERVER_NAME']);
         unset($_SERVER['SERVER_PORT']);
@@ -153,7 +153,7 @@ class DocmanTest extends SOAPBase
      * @depends testGetDocumentRootFolder
      * @param $root_folder_id
      */
-    public function testCreateFileWithTheWrongSizeFail($root_folder_id) : void
+    public function testCreateFileWithTheWrongSizeFail($root_folder_id): void
     {
         $session_hash = $this->getSessionHash();
 

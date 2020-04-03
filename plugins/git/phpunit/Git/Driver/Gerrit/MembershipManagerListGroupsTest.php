@@ -28,7 +28,8 @@ require_once __DIR__ . '/../../../bootstrap.php';
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class MembershipManagerListGroupsTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     protected $user_ldap_id;
     protected $membership_manager;

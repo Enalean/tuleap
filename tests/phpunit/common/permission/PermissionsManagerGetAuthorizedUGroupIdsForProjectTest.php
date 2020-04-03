@@ -26,7 +26,8 @@ use Tuleap\ForgeConfigSandbox;
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class PermissionsManagerGetAuthorizedUGroupIdsForProjectTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     private $permissions_manager;
     private $project;

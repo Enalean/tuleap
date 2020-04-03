@@ -38,7 +38,7 @@ final class HudsonBuildTest extends TestCase
     /** @var XML_Security */
     private $xml_security;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -48,7 +48,7 @@ final class HudsonBuildTest extends TestCase
         $GLOBALS['Language'] = Mockery::spy(BaseLanguage::class);
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         unset($GLOBALS['Language']);
         $this->xml_security->disableExternalLoadOfEntities();
@@ -56,28 +56,28 @@ final class HudsonBuildTest extends TestCase
         parent::tearDown();
     }
 
-    public function testMalformedURL() : void
+    public function testMalformedURL(): void
     {
         $this->expectException(HudsonJobURLMalformedException::class);
 
         new HudsonBuild("toto", new Client(), HTTPFactoryBuilder::requestFactory());
     }
 
-    public function testMissingSchemeURL() : void
+    public function testMissingSchemeURL(): void
     {
         $this->expectException(HudsonJobURLMalformedException::class);
 
         new HudsonBuild("code4:8080/hudson/jobs/tuleap", new Client(), HTTPFactoryBuilder::requestFactory());
     }
 
-    public function testMissingHostURL() : void
+    public function testMissingHostURL(): void
     {
         $this->expectException(HudsonJobURLMalformedException::class);
 
         new HudsonBuild("http://", new Client(), HTTPFactoryBuilder::requestFactory());
     }
 
-    public function testSimpleJobBuild() : void
+    public function testSimpleJobBuild(): void
     {
         $build_file = __DIR__ . '/resources/jobbuild.xml';
         $xmldom     = simplexml_load_file($build_file);

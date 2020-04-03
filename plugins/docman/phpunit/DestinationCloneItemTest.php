@@ -36,7 +36,7 @@ final class DestinationCloneItemTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testDestinationForACloneCanBeBuiltFromAFolder() : void
+    public function testDestinationForACloneCanBeBuiltFromAFolder(): void
     {
         $folder = Mockery::mock(Docman_Folder::class);
         $folder->shouldReceive('getGroupId')->andReturn('102');
@@ -55,7 +55,7 @@ final class DestinationCloneItemTest extends TestCase
         );
     }
 
-    public function testDestinationForACloneCanBeUsedToCreateRootFolder() : void
+    public function testDestinationForACloneCanBeUsedToCreateRootFolder(): void
     {
         $project = Mockery::mock(Project::class);
         $project->shouldReceive('getID')->andReturn('102');
@@ -77,7 +77,7 @@ final class DestinationCloneItemTest extends TestCase
         );
     }
 
-    public function testDestinationForACloneToBuildTheRootFolderCanConstructedWhenARootFolderAlreadyExist() : void
+    public function testDestinationForACloneToBuildTheRootFolderCanConstructedWhenARootFolderAlreadyExist(): void
     {
         $project = Mockery::mock(Project::class);
         $project->shouldReceive('getID')->andReturn('102');

@@ -33,7 +33,6 @@ use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActionContent;
 
 class SSHAuthenticateTest extends TestCase
 {
-
     use MockeryPHPUnitIntegration;
 
     private $auth;
@@ -44,7 +43,7 @@ class SSHAuthenticateTest extends TestCase
     private $ssh_response;
     private $user_operation_factory;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->project_manager        = Mockery::mock(\ProjectManager::class);
         $this->user_manager           = Mockery::mock(\UserManager::class);

@@ -46,7 +46,7 @@ class SemanticDoneIntroPresenter
 
     public function __construct(array $selected_values, ?Tracker_FormElement_Field $semantic_status_field = null)
     {
-        $this->semantic_status_is_defined  = (boolean) ($semantic_status_field !== null);
+        $this->semantic_status_is_defined  = (bool) ($semantic_status_field !== null);
         $this->selected_values             = $selected_values;
         $this->has_selected_values         = count($selected_values) > 0;
 

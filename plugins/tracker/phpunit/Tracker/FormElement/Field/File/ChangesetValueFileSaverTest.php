@@ -33,7 +33,8 @@ use Tuleap\ForgeConfigSandbox;
 
 class ChangesetValueFileSaverTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     public function testReturnsTrueWhenThereIsNothingToSaveForANewArtifact(): void
     {

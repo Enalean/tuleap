@@ -64,7 +64,7 @@ final class OAuth2ProjectReadScope implements AuthenticationScope
     /**
      * @psalm-pure
      */
-    public static function fromItself() : AuthenticationScope
+    public static function fromItself(): AuthenticationScope
     {
         return new self(OAuth2ScopeIdentifier::fromIdentifierKey(self::IDENTIFIER_KEY));
     }

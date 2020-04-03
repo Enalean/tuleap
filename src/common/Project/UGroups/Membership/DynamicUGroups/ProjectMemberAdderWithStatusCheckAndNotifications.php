@@ -50,7 +50,7 @@ class ProjectMemberAdderWithStatusCheckAndNotifications implements ProjectMember
         $this->mail_factory = $mail_factory;
     }
 
-    public static function build() : self
+    public static function build(): self
     {
         return new self(
             AddProjectMember::build(),
@@ -78,7 +78,7 @@ class ProjectMemberAdderWithStatusCheckAndNotifications implements ProjectMember
         }
     }
 
-    private function sendNotification(\PFUser $user, \Project $project) : void
+    private function sendNotification(\PFUser $user, \Project $project): void
     {
         if (! $user->getEmail()) {
             throw new NoEmailForUserException();
@@ -98,7 +98,7 @@ class ProjectMemberAdderWithStatusCheckAndNotifications implements ProjectMember
      * Both variables $base_url and $unix_group_name are used
      * by default in add_user_to_group_email.txt
      */
-    private function getMessageBody(\Project $project) : string
+    private function getMessageBody(\Project $project): string
     {
         $group_name      = $project->getPublicName();
         $base_url        = HTTPRequest::instance()->getServerUrl();

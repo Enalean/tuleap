@@ -23,7 +23,9 @@ final class Planning_MilestoneSelectorControllerTest extends \PHPUnit\Framework\
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    use \Tuleap\ForgeConfigSandbox, \Tuleap\GlobalResponseMock;
+    use \Tuleap\ForgeConfigSandbox;
+    use \Tuleap\GlobalResponseMock;
+
     /**
      * @var int
      */

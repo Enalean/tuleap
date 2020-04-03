@@ -28,6 +28,7 @@ use PHPUnit\Framework\TestCase;
 class LayoutTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     protected function setUp(): void
     {
         parent::setUp();

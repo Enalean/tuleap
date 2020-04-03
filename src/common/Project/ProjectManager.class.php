@@ -876,7 +876,8 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
     {
         $projects = [];
         foreach ($projects_results as $row) {
-            if ($row['access'] === Project::ACCESS_PRIVATE_WO_RESTRICTED &&
+            if (
+                $row['access'] === Project::ACCESS_PRIVATE_WO_RESTRICTED &&
                 ForgeConfig::areRestrictedUsersAllowed() &&
                 $user->isRestricted()
             ) {

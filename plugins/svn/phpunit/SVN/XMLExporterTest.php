@@ -33,7 +33,10 @@ use XML_SimpleXMLCDATAFactory;
 
 final class XMLExporterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox, GlobalSVNPollution;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
+    use GlobalSVNPollution;
+
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AccessFileReader
      */

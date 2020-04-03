@@ -446,7 +446,8 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
     {
         $detector = new Detector();
 
-        if (($event->getObjectSrc() !== null && $detector->isFileALFSFile($event->getObjectSrc())) ||
+        if (
+            ($event->getObjectSrc() !== null && $detector->isFileALFSFile($event->getObjectSrc())) ||
             $detector->isFileALFSFile($event->getObjectDest())
         ) {
             $event->setSpecialFormat('git-lfs');
@@ -478,7 +479,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
         );
     }
 
-    private function getUserRetriever(\Psr\Log\LoggerInterface $logger) : \Tuleap\GitLFS\HTTP\UserRetriever
+    private function getUserRetriever(\Psr\Log\LoggerInterface $logger): \Tuleap\GitLFS\HTTP\UserRetriever
     {
         return new \Tuleap\GitLFS\HTTP\UserRetriever(
             $this->getLFSAPIHTTPAuthorization(),

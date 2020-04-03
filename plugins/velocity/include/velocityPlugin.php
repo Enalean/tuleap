@@ -282,7 +282,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         $event->addEscapedChart($string_representation);
     }
 
-    private function getSemanticTimeframeBuilder(Tracker_FormElementFactory $form_element_factory) : SemanticTimeframeBuilder
+    private function getSemanticTimeframeBuilder(Tracker_FormElementFactory $form_element_factory): SemanticTimeframeBuilder
     {
         return new SemanticTimeframeBuilder(
             new SemanticTimeframeDao(),
@@ -290,7 +290,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         );
     }
 
-    public function doesAPluginRenderAChartBasedOnSemanticTimeframeForTracker(DoesAPluginRenderAChartBasedOnSemanticTimeframeForTrackerEvent $event) : void
+    public function doesAPluginRenderAChartBasedOnSemanticTimeframeForTracker(DoesAPluginRenderAChartBasedOnSemanticTimeframeForTrackerEvent $event): void
     {
         $semantic_velocity = SemanticVelocity::load($event->getTracker());
 

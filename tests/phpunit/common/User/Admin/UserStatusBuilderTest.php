@@ -27,7 +27,8 @@ use Tuleap\GlobalLanguageMock;
 
 class UserStatusBuilderTest extends \PHPUnit\Framework\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /**
      * @var UserStatusChecker
@@ -54,7 +55,7 @@ class UserStatusBuilderTest extends \PHPUnit\Framework\TestCase
      */
     private $user_status_builder;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         ForgeConfig::store();
@@ -105,7 +106,7 @@ class UserStatusBuilderTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItRetrievesRestrictedStatusWhenPlatformAllowsRestricted() : void
+    public function testItRetrievesRestrictedStatusWhenPlatformAllowsRestricted(): void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
         $this->user->shouldReceive('isRestricted')->andReturns(false);
@@ -113,7 +114,7 @@ class UserStatusBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($this->user_status_builder->getStatus($this->user), $this->status_with_restricted);
     }
 
-    public function testItRetrievesRestrictedStatusWhenAUserHasRestrictedStatus() : void
+    public function testItRetrievesRestrictedStatusWhenAUserHasRestrictedStatus(): void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
         $this->user->shouldReceive('isRestricted')->andReturns(true);
@@ -121,7 +122,7 @@ class UserStatusBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($this->user_status_builder->getStatus($this->user), $this->status_with_restricted);
     }
 
-    public function testItShouldNeverReturnsRestrictedWhenNoUserIsRestrictedAndPlatformDoesNotAllowRestricted() : void
+    public function testItShouldNeverReturnsRestrictedWhenNoUserIsRestrictedAndPlatformDoesNotAllowRestricted(): void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
         $this->user->shouldReceive('isRestricted')->andReturns(false);

@@ -112,7 +112,7 @@ final class MetricsController extends DispatchablePSR15Compatible implements Dis
             );
     }
 
-    private function getTuleapMetrics() : string
+    private function getTuleapMetrics(): string
     {
         $instance = Prometheus::instance();
 
@@ -126,7 +126,7 @@ final class MetricsController extends DispatchablePSR15Compatible implements Dis
         }
     }
 
-    private function getTuleapComputedMetrics() : string
+    private function getTuleapComputedMetrics(): string
     {
         $prometheus = Prometheus::getInMemory();
         $collector  = new MetricsCollector(
@@ -143,7 +143,7 @@ final class MetricsController extends DispatchablePSR15Compatible implements Dis
         return $prometheus->renderText();
     }
 
-    private function getNodeExporterMetrics() : string
+    private function getNodeExporterMetrics(): string
     {
         try {
             $node_exporter_url = ForgeConfig::get(Prometheus::CONFIG_PROMETHEUS_NODE_EXPORTER, '');

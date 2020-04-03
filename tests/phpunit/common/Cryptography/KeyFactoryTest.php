@@ -30,7 +30,7 @@ final class KeyFactoryTest extends TestCase
 {
     use ForgeConfigSandbox;
 
-    public function testEncryptionKeyCanBeGenerated() : void
+    public function testEncryptionKeyCanBeGenerated(): void
     {
         $temporary_dir       = vfsStream::setup()->url();
         $encryption_key_file = $temporary_dir . '/conf/encryption_secret.key';
@@ -49,7 +49,7 @@ final class KeyFactoryTest extends TestCase
         $this->assertEquals($key_generated->getRawKeyMaterial(), $key_from_file->getRawKeyMaterial());
     }
 
-    public function testEncryptionKeyCanBeRetrievedFromFile() : void
+    public function testEncryptionKeyCanBeRetrievedFromFile(): void
     {
         $temporary_dir       = vfsStream::setup()->url();
         $encryption_key_file = $temporary_dir . '/conf/encryption_secret.key';
@@ -66,7 +66,7 @@ final class KeyFactoryTest extends TestCase
         $this->assertEquals($raw_key_material, $key->getRawKeyMaterial());
     }
 
-    public function testADifferentEncryptionKeyIsGeneratedEachTimeAGenerationIsNeeded() : void
+    public function testADifferentEncryptionKeyIsGeneratedEachTimeAGenerationIsNeeded(): void
     {
         $temporary_dir       = vfsStream::setup()->url();
         $encryption_key_file = $temporary_dir . '/conf/encryption_secret.key';

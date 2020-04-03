@@ -55,8 +55,10 @@ class Docman_Filter
 
     public function _urlMatchDelete($request)
     {
-        if ($request->exist('del_filter')
-           && $this->md->getLabel() == $request->get('del_filter')) {
+        if (
+            $request->exist('del_filter')
+            && $this->md->getLabel() == $request->get('del_filter')
+        ) {
             return true;
         }
         return false;
@@ -82,8 +84,10 @@ class Docman_Filter
     // Add new fields
     public function _urlMatchAdd($request)
     {
-        if ($request->exist('add_filter')
-           && $this->md->getLabel() == $request->get('add_filter')) {
+        if (
+            $request->exist('add_filter')
+            && $this->md->getLabel() == $request->get('add_filter')
+        ) {
             return true;
         }
         return false;
@@ -159,9 +163,11 @@ class Docman_FilterDate extends Docman_Filter
 
     public function isValidOperator($op)
     {
-        if ($op == 0 ||
-           $op == -1 ||
-           $op == 1) {
+        if (
+            $op == 0 ||
+            $op == -1 ||
+            $op == 1
+        ) {
             return true;
         }
         return false;
@@ -196,12 +202,16 @@ class Docman_FilterDate extends Docman_Filter
 
         // If no values found, try to get fields from advanced search
         $advSearch = new Docman_FilterDateAdvanced($this->md);
-        if ($request->exist($advSearch->getFieldStartValueName()) &&
-           $this->isValidDateFormat($request->get($advSearch->getFieldStartValueName()))) {
+        if (
+            $request->exist($advSearch->getFieldStartValueName()) &&
+            $this->isValidDateFormat($request->get($advSearch->getFieldStartValueName()))
+        ) {
             $startValue = $request->get($advSearch->getFieldStartValueName());
             $endValue = '';
-            if ($request->exist($advSearch->getFieldEndValueName()) &&
-               $this->isValidDateFormat($request->get($advSearch->getFieldEndValueName()))) {
+            if (
+                $request->exist($advSearch->getFieldEndValueName()) &&
+                $this->isValidDateFormat($request->get($advSearch->getFieldEndValueName()))
+            ) {
                 $endValue = $request->get($advSearch->getFieldEndValueName());
             }
             if ($startValue != '') {
@@ -307,8 +317,10 @@ class Docman_FilterDateAdvanced extends Docman_FilterDate
 
         // If no values found, try to get values from simple search
         if (!$startValue && !$endValue) {
-            if ($request->exist($this->getFieldOperatorName())
-               && $request->exist($this->getFieldValueName())) {
+            if (
+                $request->exist($this->getFieldOperatorName())
+                && $request->exist($this->getFieldValueName())
+            ) {
                 switch ($request->get($this->getFieldOperatorName())) {
                     case '-1': // '<'
                         $this->setValueEnd($request->get($this->getFieldValueName()));

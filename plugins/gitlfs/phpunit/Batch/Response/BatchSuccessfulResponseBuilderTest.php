@@ -75,7 +75,7 @@ class BatchSuccessfulResponseBuilderTest extends TestCase
      */
     private $repository;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->token_creator         = \Mockery::mock(ActionAuthorizationTokenCreator::class);
         $this->token_formatter       = \Mockery::mock(SplitTokenFormatter::class);

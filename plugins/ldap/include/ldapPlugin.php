@@ -731,9 +731,10 @@ class LdapPlugin extends Plugin
     {
         $ldap_project_manager = new LDAP_ProjectManager();
 
-        if ($this->isLdapAuthType() &&
-           isset($params['group_id']) &&
-           $ldap_project_manager->hasSVNLDAPAuth($params['group_id'])
+        if (
+            $this->isLdapAuthType() &&
+            isset($params['group_id']) &&
+            $ldap_project_manager->hasSVNLDAPAuth($params['group_id'])
         ) {
             $params['svn_intro_in_plugin'] = true;
             $params['svn_intro_info']      = $this->getLdapUserManager()->getLdapFromUserId(
@@ -753,9 +754,11 @@ class LdapPlugin extends Plugin
     public function svn_check_access_username($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $svnProjectManager = new LDAP_ProjectManager();
-        if ($this->isLdapAuthType()
-           && isset($params['project_svnroot'])
-           && $svnProjectManager->hasSVNLDAPAuthByName(basename($params['project_svnroot']))) {
+        if (
+            $this->isLdapAuthType()
+            && isset($params['project_svnroot'])
+            && $svnProjectManager->hasSVNLDAPAuthByName(basename($params['project_svnroot']))
+        ) {
                $ldapUm = $this->getLdapUserManager();
                $lr     = $ldapUm->getLdapFromUserName($params['username']);
             if ($lr !== false) {
@@ -1403,27 +1406,27 @@ class LdapPlugin extends Plugin
         }
     }
 
-    public function routeGetWelcome() : DispatchableWithRequest
+    public function routeGetWelcome(): DispatchableWithRequest
     {
         return new \Tuleap\LDAP\WelcomeDisplayController($this->getLdapUserManager(), Codendi_HTMLPurifier::instance(), $this->getPluginPath());
     }
 
-    public function routePostWelcome() : DispatchableWithRequest
+    public function routePostWelcome(): DispatchableWithRequest
     {
         return new \Tuleap\LDAP\WelcomeUpdateController(UserManager::instance(), new LDAP_UserDao(), new Account_TimezonesCollection());
     }
 
-    public function routeGetAutocomplete() : DispatchableWithRequest
+    public function routeGetAutocomplete(): DispatchableWithRequest
     {
         return new \Tuleap\LDAP\GroupAutocompleteController($this->getLdap());
     }
 
-    public function routeGetBindUgroupConfirm() : DispatchableWithRequest
+    public function routeGetBindUgroupConfirm(): DispatchableWithRequest
     {
         return new \Tuleap\LDAP\BindUgroupConfirmController(new UGroupManager(), $this->getLdapUserGroupManager(), UserManager::instance(), UserHelper::instance());
     }
 
-    public function routeGetBindMembersConfirm() : DispatchableWithRequest
+    public function routeGetBindMembersConfirm(): DispatchableWithRequest
     {
         return new \Tuleap\LDAP\BindMembersConfirmController($this->getLdapProjectGroupManager(), UserManager::instance(), UserHelper::instance(), new \Tuleap\Project\Admin\MembershipDelegationDao());
     }

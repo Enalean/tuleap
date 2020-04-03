@@ -47,7 +47,7 @@ class FrozenFieldsDao extends DataAccessObject
         return $this->getDB()->q($sql, $transition_id);
     }
 
-    public function isAFrozenFieldPostActionUsedInTracker(int $tracker_id) : bool
+    public function isAFrozenFieldPostActionUsedInTracker(int $tracker_id): bool
     {
         $sql = 'SELECT NULL
             FROM tracker_workflow
@@ -61,7 +61,7 @@ class FrozenFieldsDao extends DataAccessObject
         return $result !== false;
     }
 
-    public function createPostActionForTransitionId(int $transition_id, array $field_ids) : void
+    public function createPostActionForTransitionId(int $transition_id, array $field_ids): void
     {
         $frozen_fields_action_id = (int) $this->getDB()->insertReturnId(
             "plugin_tracker_workflow_postactions_frozen_fields",
@@ -79,7 +79,7 @@ class FrozenFieldsDao extends DataAccessObject
         }
     }
 
-    public function deletePostActionsByTransitionId(int $transition_id) : void
+    public function deletePostActionsByTransitionId(int $transition_id): void
     {
         $sql = "
             DELETE plugin_tracker_workflow_postactions_frozen_fields, plugin_tracker_workflow_postactions_frozen_fields_value
@@ -94,7 +94,7 @@ class FrozenFieldsDao extends DataAccessObject
         );
     }
 
-    public function deleteAllPostActionsForWorkflow(int $workflow_id) : void
+    public function deleteAllPostActionsForWorkflow(int $workflow_id): void
     {
         $sql = "
             DELETE plugin_tracker_workflow_postactions_frozen_fields, plugin_tracker_workflow_postactions_frozen_fields_value

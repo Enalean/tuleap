@@ -19,7 +19,7 @@
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Scrum;
 
@@ -40,7 +40,9 @@ use Tuleap\GlobalLanguageMock;
 
 class ScrumPresenterBuilderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
+
     /**
      * @var ScrumPresenterBuilder
      */

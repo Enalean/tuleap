@@ -70,7 +70,7 @@ final class PluginDependencySolverTest extends TestCase
         );
     }
 
-    public function testItReturnsTheUnmetDependencies() : void
+    public function testItReturnsTheUnmetDependencies(): void
     {
         $installed_plugin = array($this->tracker_plugin);
         $this->plugin_manager->shouldReceive('getPluginByName')->with('tracker')->andReturns($this->tracker_plugin);
@@ -83,7 +83,7 @@ final class PluginDependencySolverTest extends TestCase
         );
     }
 
-    public function testItReturnsEmptyArrayWhenDependenciesAreMet() : void
+    public function testItReturnsEmptyArrayWhenDependenciesAreMet(): void
     {
         $installed_plugin = array($this->tracker_plugin, $this->fusionforge_compat_plugin);
         $this->plugin_manager->shouldReceive('getPluginByName')->with('tracker')->andReturns($this->tracker_plugin);

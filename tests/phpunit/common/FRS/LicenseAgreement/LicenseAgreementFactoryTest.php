@@ -31,7 +31,8 @@ use Tuleap\ForgeConfigSandbox;
 
 class LicenseAgreementFactoryTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|LicenseAgreementDao

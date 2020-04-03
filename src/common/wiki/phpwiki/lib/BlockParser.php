@@ -102,7 +102,7 @@ class AnchoredRegexpSet
             return false;
         }
 
-        $match = new AnchoredRegexpSet_match;
+        $match = new AnchoredRegexpSet_match();
         $match->postmatch = substr($text, strlen($m[0]));
         $match->match = $m[1];
         $match->regexp_ind = count($m) - 3;
@@ -142,7 +142,7 @@ class AnchoredRegexpSet
             return false;
         }
 
-        $match = new AnchoredRegexpSet_match;
+        $match = new AnchoredRegexpSet_match();
         $match->postmatch = substr($text, strlen($m[0]));
         $match->match = $m[1];
         $match->regexp_ind = count($m) - 3 + $prevMatch->regexp_ind + 1;
@@ -398,11 +398,13 @@ class ParsedBlock extends Block_HtmlElement
         static $_regexpset, $_block_types;
 
         if (!is_object($_regexpset)) {
-            foreach (array('oldlists', 'list', 'dl', 'table_dl',
+            foreach (
+                array('oldlists', 'list', 'dl', 'table_dl',
                            'blockquote', 'heading', 'hr', 'pre', 'email_blockquote',
-                           'plugin', 'p') as $type) {
+                           'plugin', 'p') as $type
+            ) {
                    $class = "Block_$type";
-                   $proto = new $class;
+                   $proto = new $class();
                    $this->_block_types[] = $proto;
                    $this->_regexps[] = $proto->_re;
             }

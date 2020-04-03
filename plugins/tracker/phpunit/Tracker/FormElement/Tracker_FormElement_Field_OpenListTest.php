@@ -25,6 +25,7 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 final class Tracker_FormElement_Field_OpenListTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_List_OpenValueDao
      */
@@ -264,7 +265,7 @@ final class Tracker_FormElement_Field_OpenListTest extends \PHPUnit\Framework\Te
         $this->assertEquals('!new value,o30,b115', $this->field->getFieldData('new value,existing open value,existing value'));
     }
 
-    public function testItThrowsAnExceptionWhenReturningValueIndexedByFieldName() : void
+    public function testItThrowsAnExceptionWhenReturningValueIndexedByFieldName(): void
     {
         $field = new Tracker_FormElement_Field_OpenList(
             1,

@@ -34,7 +34,8 @@ require_once __DIR__ . '/../../../../bootstrap.php';
 
 class HiddenFieldsetCheckerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     /**
      * @var HiddenFieldsetChecker

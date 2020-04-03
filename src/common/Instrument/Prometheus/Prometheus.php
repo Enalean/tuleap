@@ -54,7 +54,7 @@ class Prometheus
         $this->registry = $registry;
     }
 
-    public static function instance() : self
+    public static function instance(): self
     {
         if (self::$instance === null) {
             self::$instance = new self(self::getCollectorRegistry());
@@ -65,7 +65,7 @@ class Prometheus
     /**
      * @param string[] $labels
      */
-    public function increment(string $name, string $help, array $labels = []) : void
+    public function increment(string $name, string $help, array $labels = []): void
     {
         $this->incrementBy($name, $help, 1, $labels);
     }
@@ -73,7 +73,7 @@ class Prometheus
     /**
      * @param array $labels
      */
-    public function incrementBy(string $name, string $help, float $count, array $labels = []) : void
+    public function incrementBy(string $name, string $help, float $count, array $labels = []): void
     {
         [$label_names, $label_values] = $this->getLabelsNamesAndValues($labels);
         $this->registry->getOrRegisterCounter(
@@ -86,7 +86,7 @@ class Prometheus
     /**
      * @param array $labels
      */
-    public function gaugeSet(string $name, string $help, float $value, array $labels = []) : void
+    public function gaugeSet(string $name, string $help, float $value, array $labels = []): void
     {
         [$label_names, $label_values] = $this->getLabelsNamesAndValues($labels);
         $this->registry->getOrRegisterGauge(
@@ -124,7 +124,7 @@ class Prometheus
      * @param array $labels
      * @param float[] $buckets
      */
-    public function histogram(string $name, string $help, float $time, array $labels = [], array $buckets = []) : void
+    public function histogram(string $name, string $help, float $time, array $labels = [], array $buckets = []): void
     {
         [$label_names, $label_values] = $this->getLabelsNamesAndValues($labels);
         $this->registry->getOrRegisterHistogram(
@@ -135,7 +135,7 @@ class Prometheus
         )->observe($time, ...$label_values);
     }
 
-    private function getLabelsNamesAndValues(array $labels) : array
+    private function getLabelsNamesAndValues(array $labels): array
     {
         $label_names  = [];
         $label_values = [];
@@ -151,16 +151,18 @@ class Prometheus
         return [$label_names, $label_values];
     }
 
-    public function renderText() : string
+    public function renderText(): string
     {
         $renderer = new RenderTextFormat();
         return $renderer->render($this->registry->getMetricFamilySamples());
     }
 
-    private static function getCollectorRegistry() : CollectorRegistry
+    private static function getCollectorRegistry(): CollectorRegistry
     {
-        if (ClientFactory::canClientBeBuiltFromForgeConfig() &&
-            ForgeConfig::exists(self::CONFIG_PROMETHEUS_PLATFORM)) {
+        if (
+            ClientFactory::canClientBeBuiltFromForgeConfig() &&
+            ForgeConfig::exists(self::CONFIG_PROMETHEUS_PLATFORM)
+        ) {
             $store = new RedisStore(ClientFactory::fromForgeConfig());
         } else {
             $store = new NullStore();
@@ -168,7 +170,7 @@ class Prometheus
         return new CollectorRegistry($store);
     }
 
-    public static function getInMemory() : self
+    public static function getInMemory(): self
     {
         return new self(
             new CollectorRegistry(

@@ -26,7 +26,7 @@ use PHPUnit\Framework\TestCase;
 
 final class ConcealedStringTest extends TestCase
 {
-    public function testValueIsNotAltered() : void
+    public function testValueIsNotAltered(): void
     {
         $value_to_hide    = 'my_cleartext_credential';
         $concealed_string = new ConcealedString($value_to_hide);
@@ -35,7 +35,7 @@ final class ConcealedStringTest extends TestCase
         $this->assertEquals($value_to_hide, $concealed_string->getString());
     }
 
-    public function testValueIsNotPresentInTheDebugInformation() : void
+    public function testValueIsNotPresentInTheDebugInformation(): void
     {
         $value_to_hide    = 'private';
         $concealed_string = new ConcealedString($value_to_hide);
@@ -43,14 +43,14 @@ final class ConcealedStringTest extends TestCase
         $this->assertStringNotContainsString($value_to_hide, print_r($concealed_string, true));
     }
 
-    public function testCompareWithIdenticatlStringsSucceeds() : void
+    public function testCompareWithIdenticatlStringsSucceeds(): void
     {
         $string_a = new ConcealedString('some content');
         $string_b = new ConcealedString('some content');
         $this->assertTrue($string_a->isIdenticalTo($string_b));
     }
 
-    public function testCompareWithDifferentStringsFails() : void
+    public function testCompareWithDifferentStringsFails(): void
     {
         $string_a = new ConcealedString('some content');
         $string_b = new ConcealedString('another content');

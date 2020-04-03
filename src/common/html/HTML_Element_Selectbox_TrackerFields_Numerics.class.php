@@ -35,7 +35,8 @@ class HTML_Element_Selectbox_TrackerFields_Numerics extends HTML_Element_Selectb
         $aff = new ArtifactFieldFactory($at);
         foreach ($aff->getAllUsedFields() as $field) {
             if ($field->userCanRead($GLOBALS['group_id'], $GLOBALS['ath']->getID(), UserManager::instance()->getCurrentUser()->getId())) {
-                if (($field->isSelectBox() || $field->isInt() || $field->isFloat())
+                if (
+                    ($field->isSelectBox() || $field->isInt() || $field->isFloat())
                     && !$field->isUsername()
                     && !$field->isStandardField()
                 ) {

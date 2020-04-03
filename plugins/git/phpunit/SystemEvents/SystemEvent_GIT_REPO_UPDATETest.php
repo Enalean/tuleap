@@ -26,10 +26,11 @@ require_once __DIR__ . '/../bootstrap.php';
 class SystemEvent_GIT_REPO_UPDATETest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     private $repository_id = 115;
     private $system_event_manager;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -49,7 +50,7 @@ class SystemEvent_GIT_REPO_UPDATETest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItGetsTheRepositoryFromTheFactory() : void
+    public function testItGetsTheRepositoryFromTheFactory(): void
     {
         $this->repository_factory->shouldReceive('getRepositoryById')
             ->with($this->repository_id)
@@ -59,14 +60,14 @@ class SystemEvent_GIT_REPO_UPDATETest extends \PHPUnit\Framework\TestCase
         $this->event->process();
     }
 
-    public function testItDelegatesToBackendRepositoryCreation() : void
+    public function testItDelegatesToBackendRepositoryCreation(): void
     {
         $this->repository_factory->shouldReceive('getRepositoryById')->andReturns($this->repository);
         $this->backend->shouldReceive('updateRepoConf')->once();
         $this->event->process();
     }
 
-    public function testItMarksTheEventAsDone() : void
+    public function testItMarksTheEventAsDone(): void
     {
         $this->repository_factory->shouldReceive('getRepositoryById')->andReturns($this->repository);
         $this->backend->shouldReceive('updateRepoConf')->once()->andReturns(true);
@@ -74,14 +75,14 @@ class SystemEvent_GIT_REPO_UPDATETest extends \PHPUnit\Framework\TestCase
         $this->event->process();
     }
 
-    public function testItMarksTheEventAsWarningWhenTheRepoDoesNotExist() : void
+    public function testItMarksTheEventAsWarningWhenTheRepoDoesNotExist(): void
     {
         $this->repository_factory->shouldReceive('getRepositoryById')->andReturns(null);
         $this->event->shouldReceive('warning')->with('Unable to find repository, perhaps it was deleted in the mean time?')->once();
         $this->event->process();
     }
 
-    public function testItMarksTheEventAsDoneWhenTheRepoIsFlaggedAsDeleted() : void
+    public function testItMarksTheEventAsDoneWhenTheRepoIsFlaggedAsDeleted(): void
     {
         $this->repository_factory->shouldReceive('getRepositoryById')->andReturns(null);
         $this->repository_factory->shouldReceive('getDeletedRepository')->andReturns($this->repository);
@@ -91,7 +92,7 @@ class SystemEvent_GIT_REPO_UPDATETest extends \PHPUnit\Framework\TestCase
         $this->event->process();
     }
 
-    public function testItAskToUpdateGrokmirrorManifestFiles() : void
+    public function testItAskToUpdateGrokmirrorManifestFiles(): void
     {
         $this->repository_factory->shouldReceive('getRepositoryById')->andReturns($this->repository);
 

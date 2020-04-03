@@ -31,7 +31,7 @@ final class MetadataFactoryBuilderTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testMetadataFactoryIsInitializedCorrectly() : void
+    public function testMetadataFactoryIsInitializedCorrectly(): void
     {
         $item       = Mockery::mock(Docman_Item::class);
         $project_id = '102';

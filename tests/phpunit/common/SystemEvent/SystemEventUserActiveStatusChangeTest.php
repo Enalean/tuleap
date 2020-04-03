@@ -37,14 +37,15 @@ use UserManager;
 
 final class SystemEventUserActiveStatusChangeTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         Backend::clearInstances();
     }
 
-    public function testUserBecomingRestrictedIsRemovedFromProjectNotIncludingRestricted() : void
+    public function testUserBecomingRestrictedIsRemovedFromProjectNotIncludingRestricted(): void
     {
         $user_id = 102;
 

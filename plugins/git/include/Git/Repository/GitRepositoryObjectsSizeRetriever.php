@@ -24,7 +24,7 @@ namespace Tuleap\Git\Repository;
 
 class GitRepositoryObjectsSizeRetriever
 {
-    public function getLargestObjectSize(\GitRepository $repository) : LargestObjectSizeGitRepository
+    public function getLargestObjectSize(\GitRepository $repository): LargestObjectSizeGitRepository
     {
         $git_exec = \Git_Exec::buildFromRepository($repository);
         return new LargestObjectSizeGitRepository($repository, $git_exec->getLargestObjectSize());

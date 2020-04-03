@@ -98,7 +98,8 @@ class MemberAdder
             throw new UGroup_Invalid_Exception();
         }
 
-        if ($project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED
+        if (
+            $project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED
             && ForgeConfig::areRestrictedUsersAllowed()
             && $user->isRestricted()
         ) {
@@ -125,7 +126,8 @@ class MemberAdder
         }
         $this->static_member_adder->addUserToStaticGroup($project_id, $ugroup_id, $user->getId());
 
-        if ($this->synchronized_project_membership_detector->isSynchronizedWithProjectMembers($project)
+        if (
+            $this->synchronized_project_membership_detector->isSynchronizedWithProjectMembers($project)
             && ! $user->isMember($project_id)
         ) {
             $this->project_member_adder->addProjectMember($user, $project);

@@ -38,7 +38,7 @@ class PermissionsForGroupsRepresentation
      */
     public $can_update = [];
 
-    public function build(array $can_read, array $can_submit, array $can_update) : void
+    public function build(array $can_read, array $can_submit, array $can_update): void
     {
         $this->can_read   = $can_read;
         $this->can_submit = $can_submit;

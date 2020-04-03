@@ -45,7 +45,7 @@ final class BlockToMaxSizeOnReadFilter implements FilterInterface
         $this->max_size = $max_size;
     }
 
-    public function process($data_chunk) : string
+    public function process($data_chunk): string
     {
         if ($this->maximum_size_exceeded) {
             throw new ReadTooMuchDataException($this->max_size);
@@ -60,21 +60,21 @@ final class BlockToMaxSizeOnReadFilter implements FilterInterface
         return $cut_data_chunk;
     }
 
-    public function getFilteredChainIdentifier() : int
+    public function getFilteredChainIdentifier(): int
     {
         return STREAM_FILTER_READ;
     }
 
-    public function filterDetachedEvent() : void
+    public function filterDetachedEvent(): void
     {
     }
 
-    public function hasMaximumSizeBeenExceeded() : bool
+    public function hasMaximumSizeBeenExceeded(): bool
     {
         return $this->maximum_size_exceeded;
     }
 
-    public function getReadDataSize() : int
+    public function getReadDataSize(): int
     {
         return $this->read_data_size;
     }

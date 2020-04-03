@@ -35,7 +35,7 @@ final class DefaultProjectVisibilityRetrieverTest extends TestCase
     /**
      * @dataProvider providerLegacySetting
      */
-    public function testLegacyIsProjectPublicSettingIsSupported(int $setting_value, string $expected_access) : void
+    public function testLegacyIsProjectPublicSettingIsSupported(int $setting_value, string $expected_access): void
     {
         ForgeConfig::set('sys_is_project_public', $setting_value);
 
@@ -44,7 +44,7 @@ final class DefaultProjectVisibilityRetrieverTest extends TestCase
         $this->assertEquals($expected_access, $default_visibility_retriever->getDefaultProjectVisibility());
     }
 
-    public function providerLegacySetting() : array
+    public function providerLegacySetting(): array
     {
         return [
             [0, Project::ACCESS_PRIVATE],
@@ -59,7 +59,7 @@ final class DefaultProjectVisibilityRetrieverTest extends TestCase
         string $setting_value,
         bool $are_restricted_allowed,
         string $expected_access
-    ) : void {
+    ): void {
         if ($are_restricted_allowed) {
             ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
         }
@@ -70,7 +70,7 @@ final class DefaultProjectVisibilityRetrieverTest extends TestCase
         $this->assertEquals($expected_access, $default_visibility_retriever->getDefaultProjectVisibility());
     }
 
-    public function providerSettingDefaultVisibility() : array
+    public function providerSettingDefaultVisibility(): array
     {
         return [
             [Project::ACCESS_PUBLIC, true, Project::ACCESS_PUBLIC],
@@ -84,14 +84,14 @@ final class DefaultProjectVisibilityRetrieverTest extends TestCase
         ];
     }
 
-    public function testFallbackToDefaultValueWhenNoSettingIsFound() : void
+    public function testFallbackToDefaultValueWhenNoSettingIsFound(): void
     {
         $default_visibility_retriever = new DefaultProjectVisibilityRetriever();
 
         $this->assertEquals(Project::ACCESS_PUBLIC, $default_visibility_retriever->getDefaultProjectVisibility());
     }
 
-    public function testNewSettingHasPrecedenceOverTheLegacySetting() : void
+    public function testNewSettingHasPrecedenceOverTheLegacySetting(): void
     {
         ForgeConfig::set(DefaultProjectVisibilityRetriever::CONFIG_SETTING_NAME, Project::ACCESS_PRIVATE);
         ForgeConfig::set('sys_is_project_public', 1);

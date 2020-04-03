@@ -51,7 +51,9 @@ use WorkflowManager;
 
 class TrackerPermissionsTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
+
     private $all_trackers_admin_user;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project

@@ -27,12 +27,12 @@ class HudsonJobFactoryTest extends TestCase // @codingStandardsIgnoreLine
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $GLOBALS['Language'] = Mockery::spy(BaseLanguage::class);
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         unset($GLOBALS['Language']);
     }

@@ -78,7 +78,7 @@ final class Supervisord
         }
     }
 
-    private function setupSupervisord(OutputInterface $output) : void
+    private function setupSupervisord(OutputInterface $output): void
     {
         $output->writeln('Setup Supervisord');
         foreach ($this->units as $unit) {
@@ -91,7 +91,7 @@ final class Supervisord
         );
     }
 
-    private function generateCredentialsConfigurationForSupervisordSocket() : string
+    private function generateCredentialsConfigurationForSupervisordSocket(): string
     {
         $password = \sodium_bin2hex(\random_bytes(32));
         return <<<EOT

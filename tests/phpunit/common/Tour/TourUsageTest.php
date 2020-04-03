@@ -30,7 +30,8 @@ use Tuleap_TourUsageStatsDao;
 
 final class TourUsageTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /** @var PFUser */
     private $user;
@@ -47,7 +48,7 @@ final class TourUsageTest extends TestCase
     /** @var Tuleap_Tour */
     private $tour;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->stats_dao  = \Mockery::spy(Tuleap_TourUsageStatsDao::class);
         $this->user       = \Mockery::spy(PFUser::class)->shouldReceive('getId')->andReturns(123)->getMock();
@@ -61,21 +62,21 @@ final class TourUsageTest extends TestCase
         );
     }
 
-    public function testItSavesInUserPreferencesThatTheTourIsExecuted() : void
+    public function testItSavesInUserPreferencesThatTheTourIsExecuted(): void
     {
         $this->user->shouldReceive('setPreference')->with($this->tour->name, true)->once();
 
         $this->tour_usage->endTour($this->user, $this->tour, $this->current_step);
     }
 
-    public function testItStoresUsageStatistics() : void
+    public function testItStoresUsageStatistics(): void
     {
         $this->stats_dao->shouldReceive('save')->with($this->user->getId(), $this->tour->name, count($this->tour->steps), $this->current_step, true)->once();
 
         $this->tour_usage->endTour($this->user, $this->tour, $this->current_step);
     }
 
-    public function testItStoresUsageStatisticsWhenAStepIsShown() : void
+    public function testItStoresUsageStatisticsWhenAStepIsShown(): void
     {
         $this->stats_dao->shouldReceive('save')->with($this->user->getId(), $this->tour->name, count($this->tour->steps), $this->current_step, false)->once();
 

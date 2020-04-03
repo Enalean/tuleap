@@ -27,7 +27,9 @@ use Tuleap\ForgeConfigSandbox;
 
 final class UgroupLabelConverterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
+
     /** @var  UgroupLabelConverter */
     private $ugroup_label_converter;
     /** @var  \BaseLanguageFactory */

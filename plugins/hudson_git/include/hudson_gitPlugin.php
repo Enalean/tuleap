@@ -98,7 +98,8 @@ class hudson_gitPlugin extends Plugin
             throw new RuntimeException('Cannot instantiate Git plugin');
         }
 
-        if (strpos($_SERVER['REQUEST_URI'], '/administration/jenkins') !== false
+        if (
+            strpos($_SERVER['REQUEST_URI'], '/administration/jenkins') !== false
             && strpos($_SERVER['REQUEST_URI'], $git_plugin->getPluginPath()) === 0
         ) {
             echo '<link rel="stylesheet" type="text/css" href="' . $this->getIncludeAssets()->getFileURL('style.css') . '" />';

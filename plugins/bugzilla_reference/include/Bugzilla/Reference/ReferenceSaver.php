@@ -93,7 +93,8 @@ class ReferenceSaver
             throw new KeywordIsInvalidException();
         }
 
-        if ($this->reference_validator->isSystemKeyword($keyword)
+        if (
+            $this->reference_validator->isSystemKeyword($keyword)
             || $this->reference_validator->isReservedKeyword($keyword)
             || $this->reference_retriever->getReferenceByKeyword($keyword) !== null
         ) {

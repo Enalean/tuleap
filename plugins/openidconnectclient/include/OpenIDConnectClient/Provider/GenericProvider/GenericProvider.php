@@ -106,52 +106,52 @@ final class GenericProvider implements Provider
         return $this->id;
     }
 
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function getAuthorizationEndpoint() : string
+    public function getAuthorizationEndpoint(): string
     {
         return $this->authorization_endpoint;
     }
 
-    public function getTokenEndpoint() : string
+    public function getTokenEndpoint(): string
     {
         return $this->token_endpoint;
     }
 
-    public function getUserInfoEndpoint() : string
+    public function getUserInfoEndpoint(): string
     {
         return $this->user_info_endpoint;
     }
 
-    public function getClientId() : string
+    public function getClientId(): string
     {
         return $this->client_id;
     }
 
-    public function getClientSecret() : string
+    public function getClientSecret(): string
     {
         return $this->client_secret;
     }
 
-    public function isUniqueAuthenticationEndpoint() : bool
+    public function isUniqueAuthenticationEndpoint(): bool
     {
         return $this->is_unique_authentication_endpoint;
     }
 
-    public function getIcon() : string
+    public function getIcon(): string
     {
         return $this->icon;
     }
 
-    public function getColor() : string
+    public function getColor(): string
     {
         return $this->color;
     }
 
-    public function getRedirectUri() : string
+    public function getRedirectUri(): string
     {
         return 'https://' . ForgeConfig::get('sys_https_host') . '/plugins/openidconnectclient/';
     }

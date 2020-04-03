@@ -613,7 +613,7 @@ abstract class BaseLayout extends Response
         }
     }
 
-    final protected function getProjectBanner(Project $project, PFUser $current_user, string $script_name) : ?BannerDisplay
+    final protected function getProjectBanner(Project $project, PFUser $current_user, string $script_name): ?BannerDisplay
     {
         $project_banner = (new BannerRetriever(new BannerDao()))->getBannerForDisplayPurpose($project, $current_user);
         if ($project_banner === null) {

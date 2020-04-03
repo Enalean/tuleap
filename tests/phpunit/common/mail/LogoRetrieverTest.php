@@ -25,14 +25,14 @@ final class LogoRetrieverTest extends \PHPUnit\Framework\TestCase
 {
     use \Tuleap\ForgeConfigSandbox;
 
-    public function testItFindsExistingLogo() : void
+    public function testItFindsExistingLogo(): void
     {
         ForgeConfig::set('sys_urlroot', __DIR__ . '/../../../../src/www');
         $logo_retriever = new LogoRetriever();
         $this->assertNotNull($logo_retriever->getPath());
     }
 
-    public function testItDoesNotFoundUnavailableLogo() : void
+    public function testItDoesNotFoundUnavailableLogo(): void
     {
         ForgeConfig::set('sys_urlroot', '/wrongpath/');
         $logo_retriever = new LogoRetriever();

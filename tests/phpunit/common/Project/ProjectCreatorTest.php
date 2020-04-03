@@ -49,7 +49,9 @@ use UserManager;
  */
 final class ProjectCreatorTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, GlobalSVNPollution, ForgeConfigSandbox;
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use GlobalSVNPollution;
+    use ForgeConfigSandbox;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectManager

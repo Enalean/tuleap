@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1\Wiki;
 
@@ -68,7 +68,7 @@ class DocmanWikiPOSTRepresentation implements CanContainACopyRepresentation
      */
     public $copy;
 
-    public static function getNonCopyRequiredObjectProperties() : array
+    public static function getNonCopyRequiredObjectProperties(): array
     {
         return self::REQUIRED_NON_COPY_PROPERTIES;
     }

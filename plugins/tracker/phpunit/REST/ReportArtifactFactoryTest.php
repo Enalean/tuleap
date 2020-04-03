@@ -43,7 +43,7 @@ class ReportArtifactFactoryTest extends TestCase
         );
     }
 
-    public function testItReturnsAnEmptyCollectionWhenTheReportDoesNotMatchArtifacts() : void
+    public function testItReturnsAnEmptyCollectionWhenTheReportDoesNotMatchArtifacts(): void
     {
         $empty_report = \Mockery::spy(\Tracker_Report::class);
         $from_where   = new FromWhere('', '');
@@ -59,7 +59,7 @@ class ReportArtifactFactoryTest extends TestCase
         $this->assertEquals(0, $collection->getTotalSize());
     }
 
-    public function testItReturnsACollectionOfMatchingArtifactsCorrespondingToLimitAndOffset() : void
+    public function testItReturnsACollectionOfMatchingArtifactsCorrespondingToLimitAndOffset(): void
     {
         $report     = \Mockery::spy(\Tracker_Report::class);
         $from_where = new FromWhere('', '');

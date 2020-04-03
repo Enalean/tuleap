@@ -27,7 +27,9 @@ use Tuleap\GlobalResponseMock;
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class PermissionsManagerSavePermissionsPlatformForRestrictedProjectUnrestrictedTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox, GlobalResponseMock;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
+    use GlobalResponseMock;
 
     protected $permissions_manager;
     protected $project;

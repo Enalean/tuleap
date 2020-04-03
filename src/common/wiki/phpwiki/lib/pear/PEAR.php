@@ -224,8 +224,10 @@ class PEAR
      */
     public function isError($data, $code = null)
     {
-        if (is_object($data) && (strtolower(get_class($data)) == 'pear_error' ||
-                                 is_subclass_of($data, 'pear_error'))) {
+        if (
+            is_object($data) && (strtolower(get_class($data)) == 'pear_error' ||
+                                 is_subclass_of($data, 'pear_error'))
+        ) {
             if (is_null($code)) {
                 return true;
             } elseif (is_string($code)) {
@@ -300,8 +302,10 @@ class PEAR
 
             case PEAR_ERROR_CALLBACK:
                 $setmode = $mode;
-                if ((is_string($options) && function_exists($options)) ||
-                    (is_array($options) && method_exists(@$options[0], @$options[1]))) {
+                if (
+                    (is_string($options) && function_exists($options)) ||
+                    (is_array($options) && method_exists(@$options[0], @$options[1]))
+                ) {
                     $setoptions = $options;
                 } else {
                     trigger_error("invalid error callback", E_USER_WARNING);
@@ -481,9 +485,11 @@ class PEAR
         }
 
         if (isset($this) && isset($this->_expected_errors) && sizeof($this->_expected_errors) > 0 && sizeof($exp = end($this->_expected_errors))) {
-            if ($exp[0] == "*" ||
+            if (
+                $exp[0] == "*" ||
                 (is_int(reset($exp)) && in_array($code, $exp)) ||
-                (is_string(reset($exp)) && in_array($message, $exp))) {
+                (is_string(reset($exp)) && in_array($message, $exp))
+            ) {
                 $mode = PEAR_ERROR_RETURN;
             }
         }
@@ -619,8 +625,10 @@ class PEAR
 function _PEAR_call_destructors()
 {
     global $_PEAR_destructor_object_list;
-    if (is_array($_PEAR_destructor_object_list) &&
-        sizeof($_PEAR_destructor_object_list)) {
+    if (
+        is_array($_PEAR_destructor_object_list) &&
+        sizeof($_PEAR_destructor_object_list)
+    ) {
         foreach ($_PEAR_destructor_object_list as $objref) {
             $classname = get_class($objref);
             while ($classname) {
@@ -736,11 +744,13 @@ class PEAR_Error
         if ($this->mode & PEAR_ERROR_CALLBACK) {
             if (is_string($this->callback) && strlen($this->callback)) {
                 call_user_func($this->callback, $this);
-            } elseif (is_array($this->callback) &&
+            } elseif (
+                is_array($this->callback) &&
                       sizeof($this->callback) == 2 &&
                       is_object($this->callback[0]) &&
                       is_string($this->callback[1]) &&
-                      strlen($this->callback[1])) {
+                      strlen($this->callback[1])
+            ) {
                       @call_user_func($this->callback, $this);
             }
         }

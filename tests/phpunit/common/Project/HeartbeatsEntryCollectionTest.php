@@ -27,7 +27,8 @@ use PHPUnit\Framework\TestCase;
 final class HeartbeatsEntryCollectionTest extends TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    public function testItReturnsEntriesOrderedByDate() : void
+
+    public function testItReturnsEntriesOrderedByDate(): void
     {
         $collection = new HeartbeatsEntryCollection(\Mockery::spy(\Project::class), \Mockery::spy(\PFUser::class));
 

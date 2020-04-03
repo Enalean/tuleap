@@ -24,9 +24,10 @@ declare(strict_types=1);
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 final class ArtifactImportTest extends \PHPUnit\Framework\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\GlobalLanguageMock;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\GlobalLanguageMock;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->da  = \Mockery::spy(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
@@ -35,14 +36,14 @@ final class ArtifactImportTest extends \PHPUnit\Framework\TestCase
         CodendiDataAccess::setInstance($this->da);
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         parent::tearDown();
         CodendiDataAccess::clearInstance();
         unset($GLOBALS['sys_lf'], $GLOBALS['user_id'], $GLOBALS['db_qhandle']);
     }
 
-    public function testALL() : void
+    public function testALL(): void
     {
         $GLOBALS['Language'] = \Mockery::spy(\BaseLanguage::class);
         $GLOBALS['Language']->shouldReceive('getText')->with('global', 'on')->andReturns('on');
@@ -394,7 +395,7 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
       */
     }
 
-    public function testSplitFollowUpComments() : void
+    public function testSplitFollowUpComments(): void
     {
         $aitv = \Mockery::mock(\ArtifactImport::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $followup_comments = file_get_contents(__DIR__ . '/_fixtures/followup_comments1.txt');
@@ -402,7 +403,7 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
         $this->assertCount(4 + 1, $comments); // + 1 because the follow-up comments header is returned
     }
 
-    public function testCanApplyHtmlSpecialCharsWithBaseTranslation() : void
+    public function testCanApplyHtmlSpecialCharsWithBaseTranslation(): void
     {
         $ai = \Mockery::mock(\ArtifactImport::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->assertTrue($ai->canApplyHtmlSpecialChars('"'));
@@ -412,7 +413,7 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
         $this->assertFalse($ai->canApplyHtmlSpecialChars("'"));
     }
 
-    public function testCanApplyHtmlSpecialCharsWithTranslatedChars() : void
+    public function testCanApplyHtmlSpecialCharsWithTranslatedChars(): void
     {
         $ai = \Mockery::mock(\ArtifactImport::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->assertFalse($ai->canApplyHtmlSpecialChars('&quot;'));
@@ -422,7 +423,7 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
         $this->assertTrue($ai->canApplyHtmlSpecialChars('&#039;'));
     }
 
-    public function testCanApplyHtmlSpecialCharsWithAdvancedHTMLTricks() : void
+    public function testCanApplyHtmlSpecialCharsWithAdvancedHTMLTricks(): void
     {
         $ai = \Mockery::mock(\ArtifactImport::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->assertFalse($ai->canApplyHtmlSpecialChars("&lt;p&gt;this is 'my test'&lt;/p&gt;"));
@@ -445,7 +446,7 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
      * (for instance &lt;), then exported it in CSV and finaly imported it with
      * CSV as well.
      */
-    public function testUnCatchableStrings() : void
+    public function testUnCatchableStrings(): void
     {
         $ai = \Mockery::mock(\ArtifactImport::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -455,7 +456,7 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
         $this->assertFalse($ai->canApplyHtmlSpecialChars("Test&lt;"));
     }
 
-    public function testCanApplyHtmlSpecialCharsWithRealTextTricks() : void
+    public function testCanApplyHtmlSpecialCharsWithRealTextTricks(): void
     {
         $ai = \Mockery::mock(\ArtifactImport::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->assertTrue($ai->canApplyHtmlSpecialChars('"Description"'));
@@ -466,7 +467,7 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
         $this->assertTrue($ai->canApplyHtmlSpecialChars('&&quot;'));
     }
 
-    public function testCheckCommentExistInLegacyFormat() : void
+    public function testCheckCommentExistInLegacyFormat(): void
     {
         $this->da->shouldReceive('numRows')->andReturns(1);
         $this->da->shouldReceive('fetchArray')->andReturns(array ('new_value' => '<pre> testing issue </pre>'));

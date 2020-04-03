@@ -37,7 +37,8 @@ require_once __DIR__ . '/bootstrap.php';
  */
 class WebDAVFRSPackageTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /**
      * Testing when The package have no releases

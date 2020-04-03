@@ -33,9 +33,10 @@ use Tuleap\ForgeConfigSandbox;
 
 final class ProjectVisibilityConfigManagerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
-    public function testDefaultProjectVisibilityUpdate() : void
+    public function testDefaultProjectVisibilityUpdate(): void
     {
         $config_dao     = Mockery::mock(ConfigDao::class);
         $config_manager = new ProjectVisibilityConfigManager($config_dao);
@@ -47,7 +48,7 @@ final class ProjectVisibilityConfigManagerTest extends TestCase
         $this->assertTrue($config_manager->updateDefaultProjectVisibility(Project::ACCESS_PRIVATE_WO_RESTRICTED));
     }
 
-    public function testDefaultProjectVisibilityUpdateWithIncorrectProjectVisibility() : void
+    public function testDefaultProjectVisibilityUpdateWithIncorrectProjectVisibility(): void
     {
         $config_dao     = Mockery::mock(ConfigDao::class);
         $config_manager = new ProjectVisibilityConfigManager($config_dao);

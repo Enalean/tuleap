@@ -40,7 +40,7 @@ final class MappingTest extends \PHPUnit\Framework\TestCase
     /** @var PFUser */
     private $user_manager;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -55,7 +55,7 @@ final class MappingTest extends \PHPUnit\Framework\TestCase
         $this->mapping = new Mapping($this->user_manager, $this->collection, \Mockery::spy(\Psr\Log\LoggerInterface::class));
     }
 
-    public function testItReturnsAUserReferencedById() : void
+    public function testItReturnsAUserReferencedById(): void
     {
         $this->collection->shouldReceive('getUserById')->with(107)->andReturns(new WillBeMappedUser('jdoe', $this->my_user));
 
@@ -69,7 +69,7 @@ final class MappingTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItReturnsAUserReferencedByLdapId() : void
+    public function testItReturnsAUserReferencedByLdapId(): void
     {
         $this->collection->shouldReceive('getUserByLdapId')->with('107')->andReturns(new WillBeMappedUser('jdoe', $this->my_user));
 
@@ -83,7 +83,7 @@ final class MappingTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItReturnsAUserReferencedByUsername() : void
+    public function testItReturnsAUserReferencedByUsername(): void
     {
         $this->collection->shouldReceive('getUserByUserName')->with('jdoe')->andReturns(new WillBeMappedUser('jdoe', $this->my_user));
 
@@ -97,7 +97,7 @@ final class MappingTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItReturnsAnAnonymousUserReferencedByEmail() : void
+    public function testItReturnsAnAnonymousUserReferencedByEmail(): void
     {
         $xml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?>
             <submitted_by format="email">jdoe@example.com</submitted_by>
@@ -108,7 +108,7 @@ final class MappingTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($user->isAnonymous());
     }
 
-    public function testItReturnsAMatchingUserReferencedByEmail() : void
+    public function testItReturnsAMatchingUserReferencedByEmail(): void
     {
         $this->user_manager->shouldReceive('getUserByEmail')->with('existing@example.com')->andReturns($this->my_user);
 
@@ -122,7 +122,7 @@ final class MappingTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItReturnsACreatedUser() : void
+    public function testItReturnsACreatedUser(): void
     {
         $this->collection->shouldReceive('getUserById')->with(107)->andReturns(new WillBeCreatedUser('jdoe', 'John Doe', 'jdoe@example.com', 'S', 'ed107'));
         $this->user_manager->shouldReceive('getUserByUserName')->with('jdoe')->andReturns($this->my_user);
@@ -137,7 +137,7 @@ final class MappingTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItReturnsAnAlreadyExistingUser() : void
+    public function testItReturnsAnAlreadyExistingUser(): void
     {
         $this->collection->shouldReceive('getUserById')->with(107)->andReturns(new AlreadyExistingUser($this->my_user, 107, 'ldap1234'));
 
@@ -151,7 +151,7 @@ final class MappingTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItReturnsAnActivatedUser() : void
+    public function testItReturnsAnActivatedUser(): void
     {
         $this->collection->shouldReceive('getUserById')->with(107)->andReturns(new WillBeActivatedUser($this->my_user));
 
@@ -165,7 +165,7 @@ final class MappingTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItReturnsNoneUser() : void
+    public function testItReturnsNoneUser(): void
     {
         $this->collection->shouldReceive('getUserByUserName')->with('None')->andThrows(new UserNotFoundException());
 

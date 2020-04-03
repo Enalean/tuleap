@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Docman;
 
@@ -60,7 +60,7 @@ class DocmanWikiDeletorTest extends TestCase
      */
     private $wiki_page_retriever;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->permissions_manager = \Mockery::mock(\Docman_PermissionsManager::class);
         $this->item_factory        = \Mockery::mock(\Docman_ItemFactory::class);
@@ -77,12 +77,12 @@ class DocmanWikiDeletorTest extends TestCase
         );
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         \Mockery::close();
     }
 
-    public function testItThrowsAnExceptionIfUserCannotDeleteTheWiki() : void
+    public function testItThrowsAnExceptionIfUserCannotDeleteTheWiki(): void
     {
         $propagate_deletion_to_wiki_service = false;
         $wiki_to_delete                     = \Mockery::mock(\Docman_Wiki::class);
@@ -111,7 +111,7 @@ class DocmanWikiDeletorTest extends TestCase
         );
     }
 
-    public function testItOnlyDeletesAWikiAndSendsWikiPageUpdatedEvent() : void
+    public function testItOnlyDeletesAWikiAndSendsWikiPageUpdatedEvent(): void
     {
         $propagate_deletion_to_wiki_service = false;
         $wiki_to_delete                     = \Mockery::mock(\Docman_Wiki::class);
@@ -148,7 +148,7 @@ class DocmanWikiDeletorTest extends TestCase
         );
     }
 
-    public function testItDeletesAWikiAndItsReferencedWikiPage() : void
+    public function testItDeletesAWikiAndItsReferencedWikiPage(): void
     {
         $propagate_deletion_to_wiki_service = true;
         $wiki_to_delete                     = \Mockery::mock(\Docman_Wiki::class);
@@ -178,7 +178,7 @@ class DocmanWikiDeletorTest extends TestCase
         );
     }
 
-    public function testItThrowsExceptionWhenReferencedWikiPageHasNotBeenDeleted() : void
+    public function testItThrowsExceptionWhenReferencedWikiPageHasNotBeenDeleted(): void
     {
         $propagate_deletion_to_wiki_service = true;
         $wiki_to_delete                     = \Mockery::mock(\Docman_Wiki::class);
@@ -210,7 +210,7 @@ class DocmanWikiDeletorTest extends TestCase
         );
     }
 
-    public function testItDoesNotThrowsExceptionWhenTheReferencedWikiPageDoesNotExist() : void
+    public function testItDoesNotThrowsExceptionWhenTheReferencedWikiPageDoesNotExist(): void
     {
         $propagate_deletion_to_wiki_service = true;
         $wiki_to_delete                     = \Mockery::mock(\Docman_Wiki::class);

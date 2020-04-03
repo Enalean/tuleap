@@ -108,9 +108,11 @@ class SimilarFieldCollection implements \IteratorAggregate
     {
         $this->sortSimilarFieldsByIdentifierAndTrackerIDIfNeeded();
         $identifier_string = $identifier->getIdentifierWithBindType();
-        if (! isset(
-            $this->candidates_sorted_by_identifier_and_tracker_id[$identifier_string][$artifact->getTrackerId()]
-        )) {
+        if (
+            ! isset(
+                $this->candidates_sorted_by_identifier_and_tracker_id[$identifier_string][$artifact->getTrackerId()]
+            )
+        ) {
             return null;
         }
         return $this->candidates_sorted_by_identifier_and_tracker_id[$identifier_string][$artifact->getTrackerId()];

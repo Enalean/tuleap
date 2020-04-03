@@ -50,7 +50,7 @@ class SystemControlTuleapCron implements SystemControlInterface
         $this->action         = $action;
     }
 
-    public function run() : void
+    public function run(): void
     {
         switch ($this->action) {
             case 'reload':

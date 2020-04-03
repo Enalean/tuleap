@@ -95,7 +95,7 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
      *
      * @throws NotFoundException
      */
-    public function getProject(array $variables) : Project
+    public function getProject(array $variables): Project
     {
         $project = $this->project_manager->getProjectByCaseInsensitiveUnixName($variables['project_name']);
         if (! $project || $project->isError()) {

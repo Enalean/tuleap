@@ -24,7 +24,7 @@ namespace Tuleap\Project\Webhook;
 
 final class WebhookTest extends \PHPUnit\Framework\TestCase
 {
-    public function testItUsesGivenInformation() : void
+    public function testItUsesGivenInformation(): void
     {
         $webhook = new Webhook(1, 'Name', 'https://example.com');
 

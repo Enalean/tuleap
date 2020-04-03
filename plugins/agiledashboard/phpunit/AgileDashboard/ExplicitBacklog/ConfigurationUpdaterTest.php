@@ -39,7 +39,8 @@ use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 class ConfigurationUpdaterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalResponseMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalResponseMock;
 
     /**
      * @var ConfigurationUpdater

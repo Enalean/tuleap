@@ -733,7 +733,7 @@ class BarPlot extends Plot
         }
         return true;
     }
-} // Class
+}
 
 //===================================================
 // CLASS GroupBarPlot
@@ -832,7 +832,7 @@ class GroupBarPlot extends BarPlot
         }
         $xscale->off = $tmp;
     }
-} // Class
+}
 
 //===================================================
 // CLASS AccBarPlot
@@ -1080,8 +1080,10 @@ class AccBarPlot extends BarPlot
                         // triple.
                         $ng = count($this->plots[$j]->grad_fromcolor);
                         if ($ng === 3) {
-                            if (is_numeric($this->plots[$j]->grad_fromcolor[0]) && $this->plots[$j]->grad_fromcolor[0] > 0 &&
-                                 $this->plots[$j]->grad_fromcolor[0] < 256) {
+                            if (
+                                is_numeric($this->plots[$j]->grad_fromcolor[0]) && $this->plots[$j]->grad_fromcolor[0] > 0 &&
+                                 $this->plots[$j]->grad_fromcolor[0] < 256
+                            ) {
                                 // RGB Triple
                                 $fromcolor = $this->plots[$j]->grad_fromcolor;
                                 $tocolor = $this->plots[$j]->grad_tocolor;
@@ -1271,6 +1273,6 @@ class AccBarPlot extends BarPlot
         }
         return true;
     }
-} // Class
+}
 
 /* EOF */

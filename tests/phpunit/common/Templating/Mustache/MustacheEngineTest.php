@@ -24,7 +24,7 @@ final class MustacheEngineTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testItContainsGettextHelpersToDoI18nDirectlyInTemplates() : void
+    public function testItContainsGettextHelpersToDoI18nDirectlyInTemplates(): void
     {
         $engine = new MustacheEngine(
             \Mockery::mock(\Mustache_Loader::class),

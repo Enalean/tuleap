@@ -31,14 +31,15 @@ use Tuleap\TemporaryTestDirectory;
 
 final class GitDriverTest extends \PHPUnit\Framework\TestCase
 {
-    use MockeryPHPUnitIntegration, TemporaryTestDirectory;
+    use MockeryPHPUnitIntegration;
+    use TemporaryTestDirectory;
 
     private $curDir;
     private $fixtures_path;
     private $destination_path;
     private $sourcePath;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->curDir = getcwd();
@@ -51,20 +52,20 @@ final class GitDriverTest extends \PHPUnit\Framework\TestCase
         @exec('GIT_DIR=' . $this->sourcePath . ' git --bare init --shared=group');
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         chdir($this->curDir);
         parent::tearDown();
     }
 
-    public function testItExtractsTheGitVersion() : void
+    public function testItExtractsTheGitVersion(): void
     {
         $git_driver = \Mockery::mock(\GitDriver::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $git_driver->shouldReceive('execGitAction')->with('git --version', 'version')->andReturns('git version 1.8.1.2');
         $this->assertEquals('1.8.1.2', $git_driver->getGitVersion());
     }
 
-    public function testInitBareRepo() : void
+    public function testInitBareRepo(): void
     {
         $path = $this->getTmpDir();
         chdir($path);
@@ -75,7 +76,7 @@ final class GitDriverTest extends \PHPUnit\Framework\TestCase
         $this->assertStringEqualsFile($path . '/description', 'Default description for this project' . PHP_EOL);
     }
 
-    public function testInitStdRepo() : void
+    public function testInitStdRepo(): void
     {
         $path = $this->getTmpDir();
         chdir($path);
@@ -85,7 +86,7 @@ final class GitDriverTest extends \PHPUnit\Framework\TestCase
         $this->assertFileExists($path . '/.git/HEAD');
     }
 
-    public function testForkRepo() : void
+    public function testForkRepo(): void
     {
         $srcPath = $this->getTmpDir() . '/tmp/repo.git';
         $dstPath = $this->getTmpDir() . '/tmp/fork.git';
@@ -100,7 +101,7 @@ final class GitDriverTest extends \PHPUnit\Framework\TestCase
         $this->assertStringEqualsFile($dstPath . '/description', 'Default description for this project' . PHP_EOL);
     }
 
-    public function testCloneAtSpecifiqBranch() : void
+    public function testCloneAtSpecifiqBranch(): void
     {
         $driver = new GitDriver();
         $driver->cloneAtSpecifiqBranch($this->sourcePath, $this->destination_path, "master");
@@ -108,7 +109,7 @@ final class GitDriverTest extends \PHPUnit\Framework\TestCase
         $this->assertFileExists($this->destination_path);
     }
 
-    public function testAdd() : void
+    public function testAdd(): void
     {
         $driver = new GitDriver();
         $driver->cloneAtSpecifiqBranch($this->sourcePath, $this->destination_path, "master");
@@ -119,7 +120,7 @@ final class GitDriverTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(implode($out), 'A  toto');
     }
 
-    public function testGetInformationsFile() : void
+    public function testGetInformationsFile(): void
     {
         $driver = new GitDriver();
         $driver->cloneAtSpecifiqBranch($this->sourcePath, $this->destination_path, "master");
@@ -146,7 +147,7 @@ final class GitDriverTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(implode($out), '');
     }
 
-    public function testRmREpo() : void
+    public function testRmREpo(): void
     {
         $driver = new GitDriver();
         $driver->cloneAtSpecifiqBranch($this->sourcePath, $this->destination_path, "master");
@@ -184,7 +185,7 @@ final class GitDriverTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue(file_exists($destinationPath3 . '/toto.txt') && file_exists($destinationPath3 . '/titi.txt'));
     }
 
-    public function testSetRepositoryAccessPublic() : void
+    public function testSetRepositoryAccessPublic(): void
     {
         $srcPath = $this->getTmpDir() . '/tmp/repo.git';
 
@@ -200,7 +201,7 @@ final class GitDriverTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(base_convert($stat['mode'], 10, 8), 42775);
     }
 
-    public function testSetRepositoryAccessPrivate() : void
+    public function testSetRepositoryAccessPrivate(): void
     {
         $srcPath = $this->getTmpDir() . '/tmp/repo.git';
 
@@ -216,7 +217,7 @@ final class GitDriverTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(base_convert($stat['mode'], 10, 8), 42770);
     }
 
-    public function testForkRepoUnixPermissions() : void
+    public function testForkRepoUnixPermissions(): void
     {
         $srcPath = $this->getTmpDir() . '/tmp/repo.git';
         $dstPath = $this->getTmpDir() . '/tmp/fork.git';
@@ -240,7 +241,7 @@ final class GitDriverTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(base_convert($stat['mode'], 10, 8), 42775, '/refs/heads must have setgid bit');
     }
 
-    public function testActivateHook() : void
+    public function testActivateHook(): void
     {
         mkdir($this->getTmpDir() . '/hooks', 0770, true);
         copy($this->fixtures_path . '/hooks/post-receive', $this->getTmpDir() . '/hooks/blah');
@@ -251,7 +252,7 @@ final class GitDriverTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(substr(sprintf('%o', fileperms($this->getTmpDir() . '/hooks/blah')), -4), '0755');
     }
 
-    public function testSetConfigSimple() : void
+    public function testSetConfigSimple(): void
     {
         copy($this->fixtures_path . '/config', $this->getTmpDir() . '/config');
 
@@ -262,7 +263,7 @@ final class GitDriverTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($config['hooks']['showrev'], 'abcd');
     }
 
-    public function testSetConfigComplex() : void
+    public function testSetConfigComplex(): void
     {
         copy($this->fixtures_path . '/config', $this->getTmpDir() . '/config');
 
@@ -275,7 +276,7 @@ final class GitDriverTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($config['hooks']['showrev'], 't=%s; git log --name-status --pretty=\'format:URL:    https://codendi.org/plugins/git/index.php/1750/view/290/?p=git.git&a=commitdiff&h=%%H%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b\' $t~1..$t');
     }
 
-    public function testSetConfigWithSpace() : void
+    public function testSetConfigWithSpace(): void
     {
         copy($this->fixtures_path . '/config', $this->getTmpDir() . '/config');
 
@@ -286,7 +287,7 @@ final class GitDriverTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($config['hooks']['showrev'], '[MyVal] ');
     }
 
-    public function testSetEmptyConfig() : void
+    public function testSetEmptyConfig(): void
     {
         copy($this->fixtures_path . '/config', $this->getTmpDir() . '/config');
 

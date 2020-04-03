@@ -105,7 +105,7 @@ class ItemRepresentationBuilder
     /**
      * @throws UnknownMetadataException
      */
-    public function buildRootId(Project $project, \PFUser $current_user) : ?ItemRepresentation
+    public function buildRootId(Project $project, \PFUser $current_user): ?ItemRepresentation
     {
         $result = $this->dao->searchRootItemForGroupId($project->getID());
 
@@ -182,7 +182,7 @@ class ItemRepresentationBuilder
         return $item_representation;
     }
 
-    private function getLockInformation(\Docman_Item $item) : ?ItemLockInfoRepresentation
+    private function getLockInformation(\Docman_Item $item): ?ItemLockInfoRepresentation
     {
         $lock_infos = $this->lock_factory->getLockInfoForItem($item);
 
@@ -198,7 +198,7 @@ class ItemRepresentationBuilder
         );
     }
 
-    private function getApprovalTable(\Docman_Item $item) : ?ItemApprovalTableRepresentation
+    private function getApprovalTable(\Docman_Item $item): ?ItemApprovalTableRepresentation
     {
         $approval_table = $this->approval_table_retriever->retrieveByItem($item);
         if (! $approval_table) {
@@ -214,7 +214,7 @@ class ItemRepresentationBuilder
         );
     }
 
-    private function getMinimalUserRepresentation(int $user_id) : MinimalUserRepresentation
+    private function getMinimalUserRepresentation(int $user_id): MinimalUserRepresentation
     {
         return (new MinimalUserRepresentation())->build(
             $this->user_manager->getUserById($user_id)

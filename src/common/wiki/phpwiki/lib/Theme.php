@@ -107,9 +107,11 @@ function WikiLink($page_or_rev, $type = 'known', $label = false)
     // WikiLink makes A link, not a string of fancy ones.
     // (I think that the fancy split links are just confusing.)
     // Todo: test external ImageLinks http://some/images/next.gif
-    if (isa($wikipage, 'WikiPageName') and
+    if (
+        isa($wikipage, 'WikiPageName') and
         ! $label and
-        strchr(substr($wikipage->shortName, 1), SUBPAGE_SEPARATOR)) {
+        strchr(substr($wikipage->shortName, 1), SUBPAGE_SEPARATOR)
+    ) {
         $parts = explode(SUBPAGE_SEPARATOR, $wikipage->shortName);
         $last_part = array_pop($parts);
         $sep = '';
@@ -208,13 +210,15 @@ class Theme
         $this->_theme = "themes/$theme_name";
 
         if ($theme_name != 'default') {
-            $this->_default_theme = new Theme;
+            $this->_default_theme = new Theme();
         }
 
         // by pixels
-        if ((is_object($GLOBALS['request']) // guard against unittests
+        if (
+            (is_object($GLOBALS['request']) // guard against unittests
              and $GLOBALS['request']->getPref('doubleClickEdit'))
-            or ENABLE_DOUBLECLICKEDIT) {
+            or ENABLE_DOUBLECLICKEDIT
+        ) {
             $this->initDoubleClickEdit();
         }
 
@@ -471,8 +475,10 @@ class Theme
         // Note that due to daylight savings chages (and leap seconds), $now minus
         // 24 hours is not guaranteed to be yesterday.
         $yesterday = localtime($now - (12 + $today['tm_hour']) * 3600, true);
-        if ($time['tm_yday'] == $yesterday['tm_yday']
-            and $time['tm_year'] == $yesterday['tm_year']) {
+        if (
+            $time['tm_yday'] == $yesterday['tm_yday']
+            and $time['tm_year'] == $yesterday['tm_year']
+        ) {
             return _("yesterday");
         }
 
@@ -636,9 +642,11 @@ class Theme
             return $link;
         } else {
             // if AnonEditUnknownLinks show "?" only users which are allowed to edit this page
-            if (! $this->_anonEditUnknownLinks and
+            if (
+                ! $this->_anonEditUnknownLinks and
                 ( ! $request->_user->isSignedIn()
-                  or ! mayAccessPage('edit', $request->getArg('pagename')))) {
+                  or ! mayAccessPage('edit', $request->getArg('pagename')))
+            ) {
                 $text = HTML::span(empty($linktext) ? $wikiword : $linktext);
                 $text->setAttr('class', empty($linktext) ? 'wikiunknown' : 'named-wikiunknown');
                 return $text;
@@ -1400,8 +1408,10 @@ class Button extends HtmlElement
             $this->setAttr('target', '_top');
         }
         // Google honors this
-        if (in_array(strtolower($text), array('edit','create','diff'))
-            and !$request->_user->isAuthenticated()) {
+        if (
+            in_array(strtolower($text), array('edit','create','diff'))
+            and !$request->_user->isAuthenticated()
+        ) {
             $this->setAttr('rel', 'nofollow');
         }
         $this->pushContent($GLOBALS['WikiTheme']->maybeSplitWikiWord($text));
@@ -1429,8 +1439,10 @@ class ImageButton extends Button
             $this->setAttr('class', $class);
         }
         // Google honors this
-        if (in_array(strtolower($text), array('edit','create','diff'))
-            and !$GLOBALS['request']->_user->isAuthenticated()) {
+        if (
+            in_array(strtolower($text), array('edit','create','diff'))
+            and !$GLOBALS['request']->_user->isAuthenticated()
+        ) {
             $this->setAttr('rel', 'nofollow');
         }
 
@@ -1627,9 +1639,11 @@ function listAvailableThemes()
     $dir = dir($dir_root);
     if ($dir) {
         while ($entry = $dir->read()) {
-            if (is_dir($dir_root . '/' . $entry)
+            if (
+                is_dir($dir_root . '/' . $entry)
                 && (substr($entry, 0, 1) != '.')
-                && $entry != 'CVS') {
+                && $entry != 'CVS'
+            ) {
                 array_push($available_themes, $entry);
             }
         }
@@ -1647,10 +1661,12 @@ function listAvailableLanguages()
     }
     if ($dir = dir($dir_root)) {
         while ($entry = $dir->read()) {
-            if (is_dir($dir_root . "/" . $entry)
+            if (
+                is_dir($dir_root . "/" . $entry)
                 && (substr($entry, 0, 1) != '.')
                 && $entry != 'po'
-                && $entry != 'CVS') {
+                && $entry != 'CVS'
+            ) {
                 array_push($available_languages, $entry);
             }
         }

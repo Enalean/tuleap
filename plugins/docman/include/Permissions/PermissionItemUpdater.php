@@ -95,7 +95,7 @@ class PermissionItemUpdater
     /**
      * @psalm-param PermissionsPerUGroupIDAndType $permissions
      */
-    public function initPermissionsOnNewlyCreatedItem(Docman_Item $item, array $permissions) : void
+    public function initPermissionsOnNewlyCreatedItem(Docman_Item $item, array $permissions): void
     {
         $this->setPermissions($item, true, $permissions);
     }
@@ -103,7 +103,7 @@ class PermissionItemUpdater
     /**
      * @psalm-param PermissionsPerUGroupIDAndType $permissions
      */
-    public function updateItemPermissions(Docman_Item $item, PFUser $user, array $permissions) : void
+    public function updateItemPermissions(Docman_Item $item, PFUser $user, array $permissions): void
     {
         $this->setPermissions($item, false, $permissions);
 
@@ -120,7 +120,7 @@ class PermissionItemUpdater
     /**
      * @psalm-param PermissionsPerUGroupIDAndType $permissions
      */
-    public function updateFolderAndChildrenPermissions(Docman_Folder $folder, PFUser $user, array $permissions) : void
+    public function updateFolderAndChildrenPermissions(Docman_Folder $folder, PFUser $user, array $permissions): void
     {
         $this->updateItemPermissions($folder, $user, $permissions);
 
@@ -132,7 +132,7 @@ class PermissionItemUpdater
             /**
              * @psalm-param array{item_id:int,title:string} $data
              */
-            function (array $data) use ($user, $folder) : void {
+            function (array $data) use ($user, $folder): void {
                 $inspected_item_id = $data['item_id'];
                 if ($this->docman_permissions_manager->userCanManage($user, $inspected_item_id)) {
                     $this->global_permissions_manager->clonePermissions(
@@ -156,7 +156,7 @@ class PermissionItemUpdater
      * @param bool $force true if you want to bypass permissions checking (@see permission_add_ugroup)
      * @psalm-param PermissionsPerUGroupIDAndType $permissions
      */
-    private function setPermissions(Docman_Item $item, bool $force, array $permissions) : void
+    private function setPermissions(Docman_Item $item, bool $force, array $permissions): void
     {
         $old_permissions = permission_get_ugroups_permissions(
             $item->getGroupId(),

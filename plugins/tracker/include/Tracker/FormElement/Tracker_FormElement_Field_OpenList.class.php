@@ -946,7 +946,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
 
             $values = array();
             foreach ($user_groups as $ugroup) {
-                $ugroup_representation = new $class_user_representation;
+                $ugroup_representation = new $class_user_representation();
                 $ugroup_representation->build($project->getID(), $ugroup);
                 $values[] = $ugroup_representation;
             }

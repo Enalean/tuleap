@@ -74,14 +74,16 @@ class WikiPlugin_PageGroup extends WikiPlugin
     public function extractGroupSection($section, $content, $page)
     {
         $qsection = preg_replace('/\s+/', '\s+', preg_quote($section, '/'));
-        if (preg_match(
-            "/ ^(!{1,})\\s*$qsection" // section header
+        if (
+            preg_match(
+                "/ ^(!{1,})\\s*$qsection" // section header
                        . "  \\s*$\\n?"           // possible blank lines
                        . "  ( (?: ^.*\\n? )*? )" // some lines
                        . "  (?= ^\\1 | \\Z)/xm", // sec header (same or higher level) (or EOF)
-            implode("\n", $content),
-            $match
-        )) {
+                implode("\n", $content),
+                $match
+            )
+        ) {
             $result = array();
             //FIXME: return list of Wiki_Pagename objects
             foreach (explode("\n", $match[2]) as $line) {

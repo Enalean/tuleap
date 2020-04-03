@@ -30,7 +30,8 @@ require_once __DIR__ . '/bootstrap.php';
 
 class FileUniDiffBuilderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, TemporaryTestDirectory;
+    use MockeryPHPUnitIntegration;
+    use TemporaryTestDirectory;
 
     /**
      * @var FileUniDiffBuilder

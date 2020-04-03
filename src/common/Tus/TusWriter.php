@@ -28,5 +28,5 @@ interface TusWriter
      * @param resource $input_source
      * @throws CannotWriteFileException
      */
-    public function writeChunk(TusFileInformation $file_information, int $offset, $input_source) : int;
+    public function writeChunk(TusFileInformation $file_information, int $offset, $input_source): int;
 }

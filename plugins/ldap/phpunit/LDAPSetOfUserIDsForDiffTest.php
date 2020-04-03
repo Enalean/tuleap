@@ -26,7 +26,7 @@ use PHPUnit\Framework\TestCase;
 
 final class LDAPSetOfUserIDsForDiffTest extends TestCase
 {
-    public function testValuesArePreserved() : void
+    public function testValuesArePreserved(): void
     {
         $users_to_add       = [102];
         $users_to_remove    = [103];

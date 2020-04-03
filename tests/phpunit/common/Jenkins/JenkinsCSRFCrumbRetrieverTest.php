@@ -37,7 +37,7 @@ class JenkinsCSRFCrumbRetrieverTest extends TestCase
      * @testWith ["https://example.com"]
      *           ["https://example.com/"]
      */
-    public function testRetrievalCSRFHeader(string $test_url) : void
+    public function testRetrievalCSRFHeader(string $test_url): void
     {
         $csrf_crumb_header = 'Jenkins-Crumb:eb62a7b696ef05275be811c0608cbbcb';
         $http_client       = new Client();
@@ -59,7 +59,7 @@ class JenkinsCSRFCrumbRetrieverTest extends TestCase
         $this->assertEquals($expected_request_url, (string) $requests[0]->getUri());
     }
 
-    public function testItDoesNotFailOnHTTPError() : void
+    public function testItDoesNotFailOnHTTPError(): void
     {
         $http_client = new Client();
         $http_client->addResponse(
@@ -74,7 +74,7 @@ class JenkinsCSRFCrumbRetrieverTest extends TestCase
         );
     }
 
-    public function testItDoesNotFailOnNetworkError() : void
+    public function testItDoesNotFailOnNetworkError(): void
     {
         $http_client = Mockery::mock(ClientInterface::class);
         $http_client->shouldReceive('sendRequest')->andThrow(

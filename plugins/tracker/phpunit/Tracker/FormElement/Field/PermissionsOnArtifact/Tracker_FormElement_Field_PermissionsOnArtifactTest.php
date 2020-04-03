@@ -31,7 +31,9 @@ use Tuleap\GlobalResponseMock;
 
 class Tracker_FormElement_Field_PermissionsOnArtifactTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalResponseMock, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalResponseMock;
+    use GlobalLanguageMock;
 
     /**
      * @var Tracker_FormElement_Field_PermissionsOnArtifact
@@ -43,7 +45,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifactTest extends TestCase
      */
     private $artifact;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         $this->artifact = Mockery::mock(Tracker_Artifact::class);
         $this->artifact->shouldReceive('getId')->andReturn(101);

@@ -69,9 +69,11 @@ class ActionAuthorizationVerifier
         }
 
         $is_valid_access_key = $this->hasher->verifyHash($authorization_token->getVerificationString(), $row['verifier']);
-        if (! $is_valid_access_key ||
+        if (
+            ! $is_valid_access_key ||
             ! \hash_equals($oid, $row['object_oid']) ||
-            ! \hash_equals($action_type->getName(), $row['action_type'])) {
+            ! \hash_equals($action_type->getName(), $row['action_type'])
+        ) {
             throw new InvalidActionAuthorizationException();
         }
 

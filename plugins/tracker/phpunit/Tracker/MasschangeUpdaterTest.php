@@ -46,21 +46,22 @@ use Tuleap\Layout\BaseLayout;
 
 final class MasschangeUpdaterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $GLOBALS['Response'] = Mockery::spy(BaseLayout::class);
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         unset($GLOBALS['Response']);
         parent::tearDown();
     }
 
-    public function testUpdateArtifactsWithoutBeenUnsubscribedFromNotifications() : void
+    public function testUpdateArtifactsWithoutBeenUnsubscribedFromNotifications(): void
     {
         $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(123);
@@ -106,7 +107,7 @@ final class MasschangeUpdaterTest extends TestCase
         $masschange_updater->updateArtifacts(Mockery::mock(PFUser::class), $request);
     }
 
-    public function testUpdateArtifactsAndUserHasBeenUnsubscribedFromNotifications() : void
+    public function testUpdateArtifactsAndUserHasBeenUnsubscribedFromNotifications(): void
     {
         $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(123);
@@ -165,13 +166,13 @@ final class MasschangeUpdaterTest extends TestCase
         $masschange_updater->updateArtifacts($user, $request);
     }
 
-    public function testDataRetrievedFromTheRequestIsConsolidated() : void
+    public function testDataRetrievedFromTheRequestIsConsolidated(): void
     {
         $tracker = Mockery::mock(Tracker::class);
         $tracker->shouldReceive('getId')->andReturn(123);
         $tracker->shouldReceive('userIsAdmin')->andReturn(true);
         $tracker->shouldReceive('augmentDataFromRequest')->with(
-            Mockery::on(static function (array $data) : bool {
+            Mockery::on(static function (array $data): bool {
                 return isset($data['request_method_called']) && $data['request_method_called'] === 'artifact-masschange';
             })
         );

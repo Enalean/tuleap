@@ -205,10 +205,11 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine
             $f = $this->data[$i]['finish'];
 
             //Milestone
-            if (($s == 0 && $d == 0 && $f != 0)
+            if (
+                ($s == 0 && $d == 0 && $f != 0)
                 || ($s == 0 && $d != 0 && $f == 0)
                 || ($s == 0 && $d != 0 && $f == $d)
-                ) {
+            ) {
                 $this->addMilestone($i, $this->data[$i], array('date' => max($this->data[$i]['due'], $this->data[$i]['finish'])));
             } elseif ($s == 0 && $d != 0 && $f != 0 && $d < $f) { //Late milestone
                 $this->addLateBar($i, $this->data[$i], false, array(

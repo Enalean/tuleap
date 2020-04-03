@@ -26,7 +26,7 @@ final class StatusRetrieverTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testItRetrievesStatus() : void
+    public function testItRetrievesStatus(): void
     {
         $row_1              = array('webhook_id' => 1, 'created_on' => 1489595500, 'status' => 'Operation timed out after 5000 milliseconds with 0 bytes received');
         $row_2              = array('webhook_id' => 1, 'created_on' => 1489595525, 'status' => '200 OK');
@@ -42,7 +42,7 @@ final class StatusRetrieverTest extends \PHPUnit\Framework\TestCase
         $this->assertCount(2, $status);
     }
 
-    public function testItFailsWhenStatusCanNotBeRetrieved() : void
+    public function testItFailsWhenStatusCanNotBeRetrieved(): void
     {
         $dao = \Mockery::mock(\Tuleap\Project\Webhook\Log\WebhookLoggerDao::class);
         $dao->shouldReceive('searchLogsByWebhookId')->andReturns(false);

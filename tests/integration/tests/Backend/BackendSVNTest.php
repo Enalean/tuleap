@@ -33,7 +33,10 @@ use SVNAccessFile;
 
 final class BackendSVNTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, \Tuleap\TemporaryTestDirectory, \Tuleap\GlobalSVNPollution, \Tuleap\GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use \Tuleap\TemporaryTestDirectory;
+    use \Tuleap\GlobalSVNPollution;
+    use \Tuleap\GlobalLanguageMock;
 
     private $tmp_dir;
     private $bin_dir;
@@ -49,7 +52,7 @@ final class BackendSVNTest extends TestCase
     private $project_manager;
     private $backend;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->tmp_dir      = $this->getTmpDir();
@@ -81,7 +84,7 @@ final class BackendSVNTest extends TestCase
     }
 
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         //clear the cache between each tests
         Backend::clearInstances();
@@ -92,13 +95,13 @@ final class BackendSVNTest extends TestCase
         ForgeConfig::set('codendi_bin_prefix', $this->initial_codendi_bin_prefix);
     }
 
-    public function testConstructor() : void
+    public function testConstructor(): void
     {
         $this->assertNotNull(BackendSVN::instance());
     }
 
 
-    public function testArchiveProjectSVN() : void
+    public function testArchiveProjectSVN(): void
     {
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getUnixNameMixedCase')->andReturns('TestProj');
@@ -124,7 +127,7 @@ final class BackendSVNTest extends TestCase
     }
 
 
-    public function testCreateProjectSVN() : void
+    public function testCreateProjectSVN(): void
     {
         $user1   = \Mockery::spy(\PFUser::class);
         $user1->shouldReceive('getUserName')->andReturns('user1');
@@ -193,7 +196,7 @@ final class BackendSVNTest extends TestCase
         $this->assertTrue(is_file($GLOBALS['svn_prefix'] . "/TestProj/hooks/post-commit"), "post-commit file should be created");
     }
 
-    public function testUpdateSVNAccess() : void
+    public function testUpdateSVNAccess(): void
     {
         $user1   = \Mockery::spy(\PFUser::class);
         $user1->shouldReceive('getUserName')->andReturns('user1');
@@ -290,7 +293,7 @@ final class BackendSVNTest extends TestCase
         $this->assertFalse(is_file($GLOBALS['svn_prefix'] . "/TestProj/.SVNAccessFile.old"), "SVN access file (.old) should not be created");
     }
 
-    public function testGenerateSVNApacheConf() : void
+    public function testGenerateSVNApacheConf(): void
     {
         $svn_dao = \Mockery::spy(\SVN_DAO::class)->shouldReceive('searchSvnRepositories')->andReturns(\TestHelper::arrayToDar(array (
             "group_id"        => "101",
@@ -323,7 +326,7 @@ final class BackendSVNTest extends TestCase
         $this->assertStringContainsString("AuthName \"Subversion Authorization (Guinea Pig is 'back')\"", $svnroots, "Group name double quotes in realm");
     }
 
-    public function testSetSVNPrivacyPrivate() : void
+    public function testSetSVNPrivacyPrivate(): void
     {
         $this->backend->shouldReceive('chmod')->with($GLOBALS['svn_prefix'] . '/' . 'toto', 0770)->once()->andReturns(true);
         $this->backend->shouldReceive('getProjectManager')->andReturns($this->project_manager);
@@ -333,7 +336,7 @@ final class BackendSVNTest extends TestCase
         $this->assertTrue($this->backend->setSVNPrivacy($project, true));
     }
 
-    public function testsetSVNPrivacyPublic() : void
+    public function testsetSVNPrivacyPublic(): void
     {
         $this->backend->shouldReceive('chmod')->with($GLOBALS['svn_prefix'] . '/' . 'toto', 0775)->once()->andReturns(true);
         $project = \Mockery::spy(\Project::class);
@@ -342,7 +345,7 @@ final class BackendSVNTest extends TestCase
         $this->assertTrue($this->backend->setSVNPrivacy($project, false));
     }
 
-    public function testSetSVNPrivacyNoRepository() : void
+    public function testSetSVNPrivacyNoRepository(): void
     {
         $path_that_doesnt_exist = $this->getTmpDir() . '/' . bin2hex(random_bytes(32));
 
@@ -356,7 +359,7 @@ final class BackendSVNTest extends TestCase
         $this->assertFalse($this->backend->setSVNPrivacy($project, false));
     }
 
-    public function testRenameSVNRepository() : void
+    public function testRenameSVNRepository(): void
     {
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getUnixNameMixedCase')->andReturns('TestProj');
@@ -383,7 +386,7 @@ final class BackendSVNTest extends TestCase
         $this->assertTrue(is_dir($GLOBALS['svn_prefix'] . "/foobar"), "SVN dir should be renamed");
     }
 
-    public function testUpdateSVNAccessForGivenMember() : void
+    public function testUpdateSVNAccessForGivenMember(): void
     {
         $backend = \Mockery::mock(\BackendSVN::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -415,7 +418,7 @@ final class BackendSVNTest extends TestCase
         $backend->shouldReceive('updateSVNAccess')->with(101)->andReturn(true);
     }
 
-    public function testItThrowsAnExceptionIfFileForSymlinkAlreadyExists() : void
+    public function testItThrowsAnExceptionIfFileForSymlinkAlreadyExists(): void
     {
         $backend = \Mockery::mock(\BackendSVN::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $path    = $GLOBALS['svn_prefix'] . '/toto/hooks';
@@ -438,7 +441,7 @@ final class BackendSVNTest extends TestCase
         );
     }
 
-    public function testDoesntThrowAnExceptionIfTheHookIsALinkToOurImplementation() : void
+    public function testDoesntThrowAnExceptionIfTheHookIsALinkToOurImplementation(): void
     {
         $backend = \Mockery::mock(\BackendSVN::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $path    = $GLOBALS['svn_prefix'] . '/toto/hooks';

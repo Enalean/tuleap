@@ -30,7 +30,7 @@ final class DocmanServicePermissionsForGroupsRepresentation
      */
     public $can_admin = [];
 
-    public static function build(array $can_admin) : self
+    public static function build(array $can_admin): self
     {
         $representation            = new self();
         $representation->can_admin = $can_admin;

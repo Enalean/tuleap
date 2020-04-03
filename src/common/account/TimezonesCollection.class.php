@@ -494,7 +494,7 @@ class Account_TimezonesCollection
     {
         $list_of_presenters = array();
         foreach ($this->timezones as $timezone) {
-            $presenter = new stdClass;
+            $presenter = new stdClass();
             $presenter->value = $timezone;
             $presenter->label = $timezone;
             $presenter->is_selected = $current_timezone === $timezone;

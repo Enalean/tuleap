@@ -117,7 +117,7 @@ class RestBase extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         $this->initialized = true;
     }
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
         $this->initialize();

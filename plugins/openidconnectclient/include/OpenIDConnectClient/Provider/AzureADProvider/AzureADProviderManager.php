@@ -120,7 +120,7 @@ class AzureADProviderManager
         string $icon,
         string $color,
         string $tenant_id
-    ) : bool {
+    ): bool {
         $string_validator   = new Valid_String();
 
         return $string_validator->validate($name)
@@ -134,7 +134,7 @@ class AzureADProviderManager
     /**
      * @throws ProviderMalformedDataException
      */
-    public function updateAzureADProvider(AzureADProvider $provider) : void
+    public function updateAzureADProvider(AzureADProvider $provider): void
     {
         $is_data_valid = $this->isAzureProviderDataValid(
             $provider->getName(),

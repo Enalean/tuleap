@@ -44,7 +44,7 @@ abstract class BaseTest extends RestBase
         return parent::getResponse($request, $user_name);
     }
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

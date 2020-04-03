@@ -23,6 +23,7 @@ use PHPUnit\Framework\TestCase;
 final class MilestoneParentLinkerTest extends TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var MilestoneParentLinker
      */

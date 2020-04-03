@@ -66,7 +66,7 @@ final class DocmanItemPermissionsForGroupsSetFactoryTest extends TestCase
         );
     }
 
-    public function testTransformationFromRepresentationWithValidData() : void
+    public function testTransformationFromRepresentationWithValidData(): void
     {
         $item                                       = Mockery::mock(Docman_Item::class);
         $representation                             = new DocmanItemPermissionsForGroupsSetRepresentation();
@@ -116,7 +116,7 @@ final class DocmanItemPermissionsForGroupsSetFactoryTest extends TestCase
         );
     }
 
-    public function testTransformationFromRepresentationFailsWhenAnUserGroupDoesNotExist() : void
+    public function testTransformationFromRepresentationFailsWhenAnUserGroupDoesNotExist(): void
     {
         $item                          = Mockery::mock(Docman_Item::class);
         $representation                = new DocmanItemPermissionsForGroupsSetRepresentation();
@@ -140,7 +140,7 @@ final class DocmanItemPermissionsForGroupsSetFactoryTest extends TestCase
         $this->permissions_for_groups_set_factory->fromRepresentation($item, $representation);
     }
 
-    public function testTransformationFromRepresentationFailsWhenAnUserGroupIsFromADifferentProject() : void
+    public function testTransformationFromRepresentationFailsWhenAnUserGroupIsFromADifferentProject(): void
     {
         $item                          = Mockery::mock(Docman_Item::class);
         $representation                = new DocmanItemPermissionsForGroupsSetRepresentation();
@@ -161,7 +161,7 @@ final class DocmanItemPermissionsForGroupsSetFactoryTest extends TestCase
         $this->permissions_for_groups_set_factory->fromRepresentation($item, $representation);
     }
 
-    public function testTransformationFromRepresentationFailsWhenAnIncorrectUGroupIdentifierIsGiven() : void
+    public function testTransformationFromRepresentationFailsWhenAnIncorrectUGroupIdentifierIsGiven(): void
     {
         $item                          = Mockery::mock(Docman_Item::class);
         $representation                = new DocmanItemPermissionsForGroupsSetRepresentation();
@@ -183,7 +183,7 @@ final class DocmanItemPermissionsForGroupsSetFactoryTest extends TestCase
         $this->permissions_for_groups_set_factory->fromRepresentation($item, $representation);
     }
 
-    private function getUGroupMock(string $identifier, int $id, ?int $project_id, bool $is_static) : ProjectUGroup
+    private function getUGroupMock(string $identifier, int $id, ?int $project_id, bool $is_static): ProjectUGroup
     {
         $ugroup_mock = Mockery::mock(ProjectUGroup::class);
         $ugroup_mock->shouldReceive('getId')->andReturn($id);

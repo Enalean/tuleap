@@ -33,11 +33,12 @@ require_once __DIR__ . '/../../../../bootstrap.php';
 
 class CommentNotEmpty_validateTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     private $empty_data = '';
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->dao        = Mockery::mock(Workflow_Transition_Condition_CommentNotEmpty_Dao::class);

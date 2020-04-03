@@ -26,7 +26,7 @@ use PHPUnit\Framework\TestCase;
 
 final class ItemBeingCopiedExpectationTest extends TestCase
 {
-    public function testExpectedTitleIsNotModified() : void
+    public function testExpectedTitleIsNotModified(): void
     {
         $expected_title = 'Expected title';
         $expectation    = new ItemBeingCopiedExpectation($expected_title);

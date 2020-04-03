@@ -248,7 +248,8 @@ class RecipientsManager
                 $tracker
             );
 
-            if (! $user_notification_settings->isInNotifyOnEveryChangeMode() &&
+            if (
+                ! $user_notification_settings->isInNotifyOnEveryChangeMode() &&
                 ! $user_notification_settings->isInNoGlobalNotificationMode()
             ) {
                 unset($recipients[$recipient]);

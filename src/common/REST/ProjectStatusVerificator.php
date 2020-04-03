@@ -65,7 +65,7 @@ class ProjectStatusVerificator
      * @deprecated You should be checking permissions at the resource level directly (Artifact, File, Document, etc).
      * @throws RestException
      */
-    public function checkProjectStatusAllowsOnlySiteAdminToAccessIt(\PFUser $user, Project $project) : void
+    public function checkProjectStatusAllowsOnlySiteAdminToAccessIt(\PFUser $user, Project $project): void
     {
         try {
             $this->access_checker->checkUserCanAccessProject($user, $project);

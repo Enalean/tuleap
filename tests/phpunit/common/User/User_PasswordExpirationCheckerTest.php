@@ -22,17 +22,18 @@ declare(strict_types=1);
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class User_PasswordExpirationCheckerTest extends \PHPUnit\Framework\TestCase
 {
-    use \Tuleap\ForgeConfigSandbox, \Tuleap\GlobalLanguageMock;
+    use \Tuleap\ForgeConfigSandbox;
+    use \Tuleap\GlobalLanguageMock;
 
     private $password_expiration_checker;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->password_expiration_checker = new User_PasswordExpirationChecker();
     }
 
-    public function testItRaisesAnExceptionWhenPasswordExpired() : void
+    public function testItRaisesAnExceptionWhenPasswordExpired(): void
     {
         ForgeConfig::set('sys_password_lifetime', 10);
         $this->expectException(\User_PasswordExpiredException::class);

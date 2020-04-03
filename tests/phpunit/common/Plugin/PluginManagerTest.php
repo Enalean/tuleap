@@ -31,13 +31,13 @@ final class PluginManagerTest extends \PHPUnit\Framework\TestCase
      */
     private $service_manager;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->service_manager = \Mockery::spy(\ServiceManager::class);
         ServiceManager::setInstance($this->service_manager);
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         ServiceManager::clearInstance();
         unset($GLOBALS['sys_pluginsroot'], $GLOBALS['sys_custompluginsroot']);
@@ -85,7 +85,7 @@ final class PluginManagerTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($pm->isPluginAvailable($plugin));
     }
 
-    public function testEnablePlugin() : void
+    public function testEnablePlugin(): void
     {
         //The plugins
         $plugin = \Mockery::spy(\Plugin::class);
@@ -109,7 +109,7 @@ final class PluginManagerTest extends \PHPUnit\Framework\TestCase
         $pm->availablePlugin($plugin);
     }
 
-    public function testDisablePlugin() : void
+    public function testDisablePlugin(): void
     {
         //The plugins
         $plugin = \Mockery::spy(\Plugin::class);
@@ -132,7 +132,7 @@ final class PluginManagerTest extends \PHPUnit\Framework\TestCase
         $pm->unavailablePlugin($plugin);
     }
 
-    public function testInstallPlugin() : void
+    public function testInstallPlugin(): void
     {
         $root = \org\bovigo\vfs\vfsStream::setup()->url();
         $GLOBALS['sys_pluginsroot']       = $root . '/test/custom/';
@@ -173,7 +173,7 @@ final class PluginManagerTest extends \PHPUnit\Framework\TestCase
         $this->assertDirectoryExists($root . '/test/custom/New_Plugin');
     }
 
-    public function testIsNameValid() : void
+    public function testIsNameValid(): void
     {
         $pm = new PluginManager(
             \Mockery::spy(\PluginFactory::class),
@@ -191,7 +191,7 @@ final class PluginManagerTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($pm->isNameValid('.'));
     }
 
-    public function testGetPluginByName() : void
+    public function testGetPluginByName(): void
     {
         //The plugin factory
         $plugin_factory = \Mockery::spy(\PluginFactory::class);

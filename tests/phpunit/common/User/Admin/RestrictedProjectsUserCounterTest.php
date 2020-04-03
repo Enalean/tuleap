@@ -33,9 +33,10 @@ use UserGroupDao;
 
 final class RestrictedProjectsUserCounterTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
-    public function testThereIsNoProjectNotAllowingRestrictedWhenRestrictedUsersAreDisabledAtTheInstanceLevel() : void
+    public function testThereIsNoProjectNotAllowingRestrictedWhenRestrictedUsersAreDisabledAtTheInstanceLevel(): void
     {
         $user_group_dao = Mockery::mock(UserGroupDao::class);
         $counter         = new RestrictedProjectsUserCounter($user_group_dao);
@@ -47,7 +48,7 @@ final class RestrictedProjectsUserCounterTest extends TestCase
         $this->assertEquals(0, $counter->getNumberOfProjectsNotAllowingRestrictedTheUserIsMemberOf($user));
     }
 
-    public function testTotalNumberOfProjectsNotAllowingRestrictedTheUserIsMemberOf() : void
+    public function testTotalNumberOfProjectsNotAllowingRestrictedTheUserIsMemberOf(): void
     {
         $user_group_dao = Mockery::mock(UserGroupDao::class);
         $counter        = new RestrictedProjectsUserCounter($user_group_dao);

@@ -35,7 +35,7 @@ final class FileDownloaderControllerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testNotFoundExceptionIsThrownWhenTheGitRepositoryCanNotBeFound() : void
+    public function testNotFoundExceptionIsThrownWhenTheGitRepositoryCanNotBeFound(): void
     {
         $repository_factory        = \Mockery::mock(\GitRepositoryFactory::class);
         $file_downloader_controler = new FileDownloaderController(

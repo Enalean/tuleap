@@ -183,7 +183,8 @@ class Planning_MilestoneController extends BaseController
     private function getTemplateName(PanePresenterData $presenter_data)
     {
         $current_pane_identifier = $presenter_data->getActivePane()->getIdentifier();
-        if ($current_pane_identifier === DetailsPaneInfo::IDENTIFIER ||
+        if (
+            $current_pane_identifier === DetailsPaneInfo::IDENTIFIER ||
             $current_pane_identifier === PlanningV2PaneInfo::IDENTIFIER
         ) {
             return 'show';

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1;
 
@@ -67,42 +67,42 @@ class DocumentBeforeModificationValidatorVisitor implements ItemVisitor
         $this->does_item_has_expected_type_visitor = $does_item_has_expected_type_visitor;
     }
 
-    public function visitFolder(Docman_Folder $item, array $params = []) : void
+    public function visitFolder(Docman_Folder $item, array $params = []): void
     {
         $this->checkExpectedType($item);
     }
 
-    public function visitWiki(Docman_Wiki $item, array $params = []) : void
-    {
-        $this->checkExpectedType($item);
-        $this->checkUserCanWrite($this->current_user, $this->item);
-    }
-
-    public function visitLink(Docman_Link $item, array $params = []) : void
+    public function visitWiki(Docman_Wiki $item, array $params = []): void
     {
         $this->checkExpectedType($item);
         $this->checkUserCanWrite($this->current_user, $this->item);
     }
 
-    public function visitFile(Docman_File $item, array $params = []) : void
+    public function visitLink(Docman_Link $item, array $params = []): void
     {
         $this->checkExpectedType($item);
         $this->checkUserCanWrite($this->current_user, $this->item);
     }
 
-    public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []) : void
+    public function visitFile(Docman_File $item, array $params = []): void
     {
         $this->checkExpectedType($item);
         $this->checkUserCanWrite($this->current_user, $this->item);
     }
 
-    public function visitEmpty(Docman_Empty $item, array $params = []) : void
+    public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []): void
     {
         $this->checkExpectedType($item);
         $this->checkUserCanWrite($this->current_user, $this->item);
     }
 
-    public function visitItem(Docman_Item $item, array $params = []) : void
+    public function visitEmpty(Docman_Empty $item, array $params = []): void
+    {
+        $this->checkExpectedType($item);
+        $this->checkUserCanWrite($this->current_user, $this->item);
+    }
+
+    public function visitItem(Docman_Item $item, array $params = []): void
     {
         $this->throwItemHasNotTheRightType();
     }
@@ -110,7 +110,7 @@ class DocumentBeforeModificationValidatorVisitor implements ItemVisitor
     /**
      * @throws I18NRestException
      */
-    private function checkExpectedType(Docman_Item $item) : void
+    private function checkExpectedType(Docman_Item $item): void
     {
         if (! $item->accept($this->does_item_has_expected_type_visitor)) {
             $this->throwItemHasNotTheRightType();
@@ -120,7 +120,7 @@ class DocumentBeforeModificationValidatorVisitor implements ItemVisitor
     /**
      * @throws I18NRestException
      */
-    private function throwItemHasNotTheRightType() : void
+    private function throwItemHasNotTheRightType(): void
     {
         throw new I18NRestException(
             400,

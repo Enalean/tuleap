@@ -59,8 +59,10 @@ class Collector
         $yesterday_timestamp = $yesterday->getTimestamp();
         $project_id          = $project->getID();
 
-        if ($this->git_log_dao->hasRepositoriesUpdatedAfterGivenDate($project_id, $yesterday_timestamp) ||
-            ! $this->git_log_dao->hasRepositories($project->getID())) {
+        if (
+            $this->git_log_dao->hasRepositoriesUpdatedAfterGivenDate($project_id, $yesterday_timestamp) ||
+            ! $this->git_log_dao->hasRepositories($project->getID())
+        ) {
             return $this->extractInFileSystem($project);
         }
 

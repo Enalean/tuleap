@@ -94,7 +94,8 @@ class SVN_Hook_PreCommit extends SVN_Hook
     {
         $project = $this->getProjectFromRepositoryPath($repository);
 
-        if ($this->handler->doesProjectUsesImmutableTags($project) &&
+        if (
+            $this->handler->doesProjectUsesImmutableTags($project) &&
             ! $this->isCommitAllowed($project, $transaction)
         ) {
             throw new SVN_CommitToTagDeniedException("Commit to tag is not allowed");

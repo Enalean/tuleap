@@ -33,7 +33,7 @@ class TrackerFormElementUserPermissionsTest extends TestCase
     private $form_element;
     private $workflow_user;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->form_element = Mockery::mock(Tracker_FormElement_Field_String::class)->makePartial();
         $this->form_element->shouldReceive('getId')->andReturn(300);

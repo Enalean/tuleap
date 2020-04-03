@@ -44,7 +44,7 @@ class MoveChangesetXMLUpdaterTest extends TestCase
      */
     private $updater;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

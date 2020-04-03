@@ -29,7 +29,8 @@ require_once 'bootstrap.php';
 
 class GitActionsTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     protected function setUp(): void
     {

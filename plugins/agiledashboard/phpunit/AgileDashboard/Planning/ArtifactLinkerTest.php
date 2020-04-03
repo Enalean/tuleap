@@ -25,6 +25,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 final class Planning_ArtifactLinkerTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var Planning_ArtifactLinker
      */

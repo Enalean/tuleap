@@ -39,7 +39,7 @@ class WidgetKanbanXMLImporterTest extends TestCase
      */
     private $widget;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         $kanban = new \AgileDashboard_Kanban(
             20001,
@@ -53,7 +53,7 @@ class WidgetKanbanXMLImporterTest extends TestCase
         $this->widget = Mockery::mock(\Widget::class);
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         if ($container = Mockery::getContainer()) {
             $this->addToAssertionCount($container->mockery_getExpectationCount());
@@ -75,9 +75,11 @@ class WidgetKanbanXMLImporterTest extends TestCase
         );
 
         $this->widget->shouldReceive('create')->with(\Mockery::on(function (\Codendi_Request $request) {
-            if ($request->get('kanban') &&
+            if (
+                $request->get('kanban') &&
                 $request->getInArray('kanban', 'id') === 20001 &&
-                $request->getInArray('kanban', 'title') === '') {
+                $request->getInArray('kanban', 'title') === ''
+            ) {
                 return true;
             }
             return false;

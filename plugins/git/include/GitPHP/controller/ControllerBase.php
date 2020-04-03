@@ -69,7 +69,7 @@ abstract class ControllerBase
      */
     public function __construct()
     {
-        $this->tpl = new \Smarty;
+        $this->tpl = new \Smarty();
         $this->tpl->plugins_dir[] = __DIR__ . '/../smartyplugins';
         $this->tpl->plugins_dir[] = __DIR__ . '/../../../vendor/smarty-gettext/smarty-gettext';
         $this->tpl->template_dir  = __DIR__ . '/../../../templates/gitphp/';

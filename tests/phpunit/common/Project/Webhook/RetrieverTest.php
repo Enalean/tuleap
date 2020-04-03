@@ -26,7 +26,7 @@ final class RetrieverTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testItRetrievesWebhooks() : void
+    public function testItRetrievesWebhooks(): void
     {
         $row_1              = array('id' => 1, 'name' => 'W1', 'url' => 'https://example.com');
         $row_2              = array('id' => 2, 'name' => 'W2', 'url' => 'https://webhook2.example.com');
@@ -41,7 +41,7 @@ final class RetrieverTest extends \PHPUnit\Framework\TestCase
         $this->assertCount(2, $webhooks);
     }
 
-    public function testItFailsWhenWebhooksCanNotBeRetrieved() : void
+    public function testItFailsWhenWebhooksCanNotBeRetrieved(): void
     {
         $dao = \Mockery::mock(\Tuleap\Project\Webhook\WebhookDao::class);
         $dao->shouldReceive('searchWebhooks')->andReturns(false);

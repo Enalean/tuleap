@@ -25,6 +25,7 @@ require_once __DIR__ . '/../../bootstrap.php';
 class TransitionListValidatorTest extends \PHPUnit\Framework\TestCase  // phpcs:ignore
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var TransitionListValidator
      */
@@ -35,7 +36,7 @@ class TransitionListValidatorTest extends \PHPUnit\Framework\TestCase  // phpcs:
      */
     private $transition_factory;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

@@ -39,7 +39,7 @@ final class LogoutController implements DispatchableWithRequestNoAuthz
         $this->user_manager = $user_manager;
     }
 
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables) : void
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $logout_csrf = new CSRFSynchronizerToken('logout_action');
         $logout_csrf->check('/my/');

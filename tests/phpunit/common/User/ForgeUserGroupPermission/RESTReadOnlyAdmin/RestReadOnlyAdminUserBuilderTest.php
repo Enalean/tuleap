@@ -29,7 +29,8 @@ use User_ForgeUserGroupPermissionsManager;
 
 class RestReadOnlyAdminUserBuilderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     protected function tearDown(): void
     {

@@ -58,7 +58,7 @@ class StepsResultsChangesBuilderTest extends TestCase
     private $test_status_builder;
     private $execution_status_field;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         $this->user                       = $this->createMock(PFUser::class);
         $this->execution_artifact         = $this->createMock(Tracker_Artifact::class);

@@ -40,7 +40,7 @@ class GitPullRequestReferenceRemoverTest extends TestCase
             $executor->shouldReceive('removeReference')->with($reference);
         }
 
-        $reference_remover = new GitPullRequestReferenceRemover;
+        $reference_remover = new GitPullRequestReferenceRemover();
         $reference_remover->removeAll($executor);
     }
 

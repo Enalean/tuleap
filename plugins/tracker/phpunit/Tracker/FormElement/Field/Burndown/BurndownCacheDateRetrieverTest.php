@@ -31,7 +31,7 @@ class BurndownCacheDateRetrieverTest extends TestCase
      */
     private $burndown_cache_retriever;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->burndown_cache_retriever = new BurndownCacheDateRetriever();
     }

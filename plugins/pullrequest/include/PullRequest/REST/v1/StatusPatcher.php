@@ -157,7 +157,8 @@ class StatusPatcher
         ProjectAuthorization::userCanAccessProject($user, $repository_source->getProject(), $this->url_verification);
         ProjectAuthorization::userCanAccessProject($user, $repository_dest->getProject(), $this->url_verification);
 
-        if (! $this->access_control_verifier->canWrite($user, $repository_source, $source_reference) &&
+        if (
+            ! $this->access_control_verifier->canWrite($user, $repository_source, $source_reference) &&
             ! $this->access_control_verifier->canWrite($user, $repository_dest, $destination_reference)
         ) {
             throw new RestException(403, 'User is not able to WRITE in both source and destination git repositories');

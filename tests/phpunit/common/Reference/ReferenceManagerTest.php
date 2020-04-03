@@ -31,7 +31,8 @@ use UserManager;
 
 final class ReferenceManagerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ReferenceManager
@@ -42,7 +43,7 @@ final class ReferenceManagerTest extends TestCase
      */
     private $user_manager;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         EventManager::setInstance(\Mockery::spy(\EventManager::class));
         ProjectManager::setInstance(\Mockery::spy(ProjectManager::class));
@@ -61,20 +62,20 @@ final class ReferenceManagerTest extends TestCase
         )->shouldAllowMockingProtectedMethods();
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         EventManager::clearInstance();
         ProjectManager::clearInstance();
         UserManager::clearInstance();
     }
 
-    public function testSingleton() : void
+    public function testSingleton(): void
     {
         $this->assertInstanceOf(\ReferenceManager::class, ReferenceManager::instance());
         $this->assertSame(ReferenceManager::instance(), ReferenceManager::instance());
     }
 
-    public function testExtractReference() : void
+    public function testExtractReference(): void
     {
         $dao = \Mockery::spy(\ReferenceDao::class);
         $dao->shouldReceive('searchActiveByGroupID')->with('100')
@@ -118,7 +119,7 @@ final class ReferenceManagerTest extends TestCase
         $this->assertCount(1, $this->rm->extractReferences('art #100:123', 0), 'Art is a reference for project named codendi');
     }
 
-    public function testExtractRegexp() : void
+    public function testExtractRegexp(): void
     {
         $this->rm->shouldReceive('_getReferenceDao', \Mockery::spy(\ReferenceDao::class));
 
@@ -182,7 +183,7 @@ final class ReferenceManagerTest extends TestCase
         $this->assertEquals('12784', $matches[0]['value']);
     }
 
-    public function testUpdateProjectReferenceShortName() : void
+    public function testUpdateProjectReferenceShortName(): void
     {
         $ref_dao   = \Mockery::spy(\ReferenceDao::class);
         $cross_dao = \Mockery::spy(\CrossReferenceDao::class);
@@ -200,7 +201,7 @@ final class ReferenceManagerTest extends TestCase
         $this->rm->updateProjectReferenceShortName($group_id, $from, $to);
     }
 
-    public function testInsertReferencesConvertsToUTF8() : void
+    public function testInsertReferencesConvertsToUTF8(): void
     {
         $html = 'g&=+}éàùœ';
         $encoded = htmlentities($html, ENT_IGNORE, 'UTF-8');
@@ -215,7 +216,7 @@ final class ReferenceManagerTest extends TestCase
         $this->assertEquals('UTF-8', $post_encoding);
     }
 
-    public function testItInsertsLinkForReferences() : void
+    public function testItInsertsLinkForReferences(): void
     {
         $reference_dao                = \Mockery::mock(\ReferenceDao::class);
         $data_access_result_reference = \Mockery::mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface::class);
@@ -252,7 +253,7 @@ final class ReferenceManagerTest extends TestCase
         );
     }
 
-    public function testItInsertsLinkForMentionAtTheBeginningOfTheString() : void
+    public function testItInsertsLinkForMentionAtTheBeginningOfTheString(): void
     {
         $this->user_manager->shouldReceive('getUserByUserName')->with('username')->andReturn(\Mockery::spy(\PFUser::class));
 
@@ -261,7 +262,7 @@ final class ReferenceManagerTest extends TestCase
         $this->assertEquals('<a href="/users/username">@username</a>', $html);
     }
 
-    public function testItDoesNotInsertsLinkForUserThatDoNotExist() : void
+    public function testItDoesNotInsertsLinkForUserThatDoNotExist(): void
     {
         $this->user_manager->shouldReceive('getUserByUserName')->with('username')->andReturn(null);
 
@@ -270,7 +271,7 @@ final class ReferenceManagerTest extends TestCase
         $this->assertEquals('@username', $html);
     }
 
-    public function testItInsertsLinkForMentionAtTheMiddleOfTheString() : void
+    public function testItInsertsLinkForMentionAtTheMiddleOfTheString(): void
     {
         $this->user_manager->shouldReceive('getUserByUserName')->with('username')->andReturn(\Mockery::spy(\PFUser::class));
 
@@ -279,7 +280,7 @@ final class ReferenceManagerTest extends TestCase
         $this->assertEquals('/cc <a href="/users/username">@username</a>', $html);
     }
 
-    public function testItInsertsLinkForMentionWhenPointAtTheMiddle() : void
+    public function testItInsertsLinkForMentionWhenPointAtTheMiddle(): void
     {
         $this->user_manager->shouldReceive('getUserByUserName')->with('user.name')->andReturn(\Mockery::spy(\PFUser::class));
 
@@ -288,7 +289,7 @@ final class ReferenceManagerTest extends TestCase
         $this->assertEquals('/cc <a href="/users/user.name">@user.name</a>', $html);
     }
 
-    public function testItInsertsLinkForMentionWhenHyphenAtTheMiddle() : void
+    public function testItInsertsLinkForMentionWhenHyphenAtTheMiddle(): void
     {
         $this->user_manager->shouldReceive('getUserByUserName')->with('user-name')->andReturn(\Mockery::spy(\PFUser::class));
 
@@ -297,7 +298,7 @@ final class ReferenceManagerTest extends TestCase
         $this->assertEquals('/cc <a href="/users/user-name">@user-name</a>', $html);
     }
 
-    public function testItInsertsLinkForMentionWhenUnderscoreAtTheMiddle() : void
+    public function testItInsertsLinkForMentionWhenUnderscoreAtTheMiddle(): void
     {
         $this->user_manager->shouldReceive('getUserByUserName')->with('user_name')->andReturn(\Mockery::spy(\PFUser::class));
 
@@ -306,7 +307,7 @@ final class ReferenceManagerTest extends TestCase
         $this->assertEquals('/cc <a href="/users/user_name">@user_name</a>', $html);
     }
 
-    public function testItDoesNotInsertsLinkIfInvalidCharacterAtBeginning() : void
+    public function testItDoesNotInsertsLinkIfInvalidCharacterAtBeginning(): void
     {
         $this->user_manager->shouldReceive('getUserByUserName')->with('1username')->andReturn(\Mockery::spy(\PFUser::class));
 
@@ -315,7 +316,7 @@ final class ReferenceManagerTest extends TestCase
         $this->assertEquals('@1username', $html);
     }
 
-    public function testItDoesNotBreakEmailAddress() : void
+    public function testItDoesNotBreakEmailAddress(): void
     {
         $html = 'toto@userna.me';
         $this->rm->insertReferences($html, 0);

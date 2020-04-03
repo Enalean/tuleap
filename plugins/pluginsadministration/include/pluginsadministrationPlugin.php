@@ -72,7 +72,7 @@ class PluginsAdministrationPlugin extends PluginWithLegacyInternalRouting
         }
     }
 
-    public function process() : void
+    public function process(): void
     {
         require_once('PluginsAdministration.class.php');
         $controler = new PluginsAdministration();

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Admin;
 
@@ -69,7 +69,8 @@ class ScrumBoardTypeSelectorController implements IScrumAdminSectionControllers
 
         $project_id = (int) $this->project->getID();
 
-        if ($board_type !== TaskboardUsage::OPTION_CARDWALL_AND_TASKBOARD &&
+        if (
+            $board_type !== TaskboardUsage::OPTION_CARDWALL_AND_TASKBOARD &&
             $current_board_type === TaskboardUsage::OPTION_CARDWALL_AND_TASKBOARD
         ) {
             $this->dao->create($project_id, $board_type);
@@ -78,7 +79,7 @@ class ScrumBoardTypeSelectorController implements IScrumAdminSectionControllers
         }
     }
 
-    private function updateBoardType(int $project_id, $board_type) : void
+    private function updateBoardType(int $project_id, $board_type): void
     {
         if ($board_type === TaskboardUsage::OPTION_CARDWALL_AND_TASKBOARD) {
             $this->dao->deleteBoardTypeByProjectId($project_id);

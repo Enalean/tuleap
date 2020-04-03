@@ -24,7 +24,7 @@ final class GettextExtractorTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testItExtractNothingIfThereIsNoGettextSection() : void
+    public function testItExtractNothingIfThereIsNoGettextSection(): void
     {
         $gettext_collector = \Mockery::mock(\Tuleap\Templating\Mustache\GettextCollector::class);
         $entries           = \Mockery::mock(\Tuleap\Language\Gettext\POTEntryCollection::class);
@@ -35,7 +35,7 @@ final class GettextExtractorTest extends \PHPUnit\Framework\TestCase
         $extractor->extract('{{# foo }}{{ bar }}{{/ foo }}', $entries);
     }
 
-    public function testItExtractGettextSection() : void
+    public function testItExtractGettextSection(): void
     {
         $gettext_collector = \Mockery::mock(\Tuleap\Templating\Mustache\GettextCollector::class);
         $entries           = \Mockery::mock(\Tuleap\Language\Gettext\POTEntryCollection::class);
@@ -46,7 +46,7 @@ final class GettextExtractorTest extends \PHPUnit\Framework\TestCase
         $extractor->extract('{{# gettext }}whatever | toto{{/ gettext }}', $entries);
     }
 
-    public function testItExtractGettextSectionInASection() : void
+    public function testItExtractGettextSectionInASection(): void
     {
         $gettext_collector = \Mockery::mock(\Tuleap\Templating\Mustache\GettextCollector::class);
         $entries           = \Mockery::mock(\Tuleap\Language\Gettext\POTEntryCollection::class);
@@ -57,7 +57,7 @@ final class GettextExtractorTest extends \PHPUnit\Framework\TestCase
         $extractor->extract('{{# foo }}{{# gettext }}whatever | toto{{/ gettext }}{{/ foo }}', $entries);
     }
 
-    public function testItExtractGettextSectionInAnInvertedSection() : void
+    public function testItExtractGettextSectionInAnInvertedSection(): void
     {
         $gettext_collector = \Mockery::mock(\Tuleap\Templating\Mustache\GettextCollector::class);
         $entries           = \Mockery::mock(\Tuleap\Language\Gettext\POTEntryCollection::class);
@@ -68,7 +68,7 @@ final class GettextExtractorTest extends \PHPUnit\Framework\TestCase
         $extractor->extract('{{^ foo }}{{# gettext }}whatever | toto{{/ gettext }}{{/ foo }}', $entries);
     }
 
-    public function testItDoesNotExtractGettextSectionInAGettextSection() : void
+    public function testItDoesNotExtractGettextSectionInAGettextSection(): void
     {
         $gettext_collector = \Mockery::mock(\Tuleap\Templating\Mustache\GettextCollector::class);
         $entries           = \Mockery::mock(\Tuleap\Language\Gettext\POTEntryCollection::class);

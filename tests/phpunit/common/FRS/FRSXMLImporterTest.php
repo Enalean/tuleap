@@ -48,7 +48,9 @@ class FRSXMLImporterTest_FRSFileFactory extends FRSFileFactory
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,PSR1.Classes.ClassDeclaration.MultipleClasses
 class FRSXMLImporterTest extends \PHPUnit\Framework\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\TemporaryTestDirectory, \Tuleap\GlobalLanguageMock;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\TemporaryTestDirectory;
+    use \Tuleap\GlobalLanguageMock;
 
     /**
      * @var \Tuleap\FRS\UploadedLinksDao

@@ -38,7 +38,7 @@ class MergeSettingRetrieverTest extends TestCase
      */
     private $git_repository;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->dao            = \Mockery::mock(MergeSettingDAO::class);
         $this->git_repository = \Mockery::mock(\GitRepository::class);

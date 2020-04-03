@@ -44,7 +44,7 @@ class PermissionsRepresentationBuilder
         $this->permissions_functions_wrapper = $permissions_functions_wrapper;
     }
 
-    public function getPermissionsRepresentation(Tracker $tracker, \PFUser $user) : ?PermissionsRepresentation
+    public function getPermissionsRepresentation(Tracker $tracker, \PFUser $user): ?PermissionsRepresentation
     {
         if ($tracker->userIsAdmin($user)) {
             $ugroups = $this->permissions_functions_wrapper->getTrackerUGroupsPermissions($tracker);
@@ -78,7 +78,7 @@ class PermissionsRepresentationBuilder
         return null;
     }
 
-    private function addUserGroupRepresentation(array &$ugroup_representations, Tracker $tracker, array $result_array) : void
+    private function addUserGroupRepresentation(array &$ugroup_representations, Tracker $tracker, array $result_array): void
     {
         $ugroup = $this->ugroup_manager->getUGroup($tracker->getProject(), $result_array['ugroup']['id']);
         if ($ugroup) {

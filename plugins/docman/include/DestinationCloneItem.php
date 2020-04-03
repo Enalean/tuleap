@@ -67,7 +67,7 @@ final class DestinationCloneItem
         Docman_Folder $folder,
         ProjectManager $project_manager,
         Docman_LinkVersionFactory $link_version_factory
-    ) : self {
+    ): self {
         return new self((int) $folder->getId(), (int) $folder->getGroupId(), $project_manager, $link_version_factory);
     }
 
@@ -76,7 +76,7 @@ final class DestinationCloneItem
         Project $destination_project,
         ProjectManager $project_manager,
         Docman_LinkVersionFactory $link_version_factory
-    ) : self {
+    ): self {
         $project_id = $destination_project->getID();
         if ($item_factory->getRoot($project_id) !== null) {
             throw new LogicException(
@@ -89,12 +89,12 @@ final class DestinationCloneItem
         return new self(self::CLONE_ROOT_PARENT_ID, (int) $project_id, $project_manager, $link_version_factory);
     }
 
-    public function getNewParentID() : int
+    public function getNewParentID(): int
     {
         return $this->parent_folder_id;
     }
 
-    public function getCloneItemsVisitor() : Docman_CloneItemsVisitor
+    public function getCloneItemsVisitor(): Docman_CloneItemsVisitor
     {
         return new Docman_CloneItemsVisitor(
             $this->destination_project_id,

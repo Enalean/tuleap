@@ -52,7 +52,7 @@ class BackgroundColorBuilderTest extends TestCase
     /** @var PHPUnit_Framework_MockObject_MockObject */
     private $field;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

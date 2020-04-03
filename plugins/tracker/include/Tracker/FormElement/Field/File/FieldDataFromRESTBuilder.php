@@ -90,7 +90,8 @@ class FieldDataFromRESTBuilder
                 continue;
             }
 
-            if (! $this->appendFileInfoDataForTemporaryFile($file_id, $field_data)
+            if (
+                ! $this->appendFileInfoDataForTemporaryFile($file_id, $field_data)
                 && ! $this->appendFileInfoDataForTusUploadedFile($file_id, $field, $field_data)
             ) {
                 throw new Tracker_Artifact_Attachment_FileNotFoundException(

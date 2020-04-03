@@ -27,12 +27,12 @@ use Symfony\Component\Process\Process;
 
 class ProcessFactory
 {
-    public function getProcess(array $args) : Process
+    public function getProcess(array $args): Process
     {
         return new Process($args);
     }
 
-    public function getProcessWithoutTimeout(array $args) : Process
+    public function getProcessWithoutTimeout(array $args): Process
     {
         return $this->getProcess($args)->setTimeout(null);
     }

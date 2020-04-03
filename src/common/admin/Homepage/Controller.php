@@ -145,7 +145,7 @@ class Admin_Homepage_Controller
     /**
      * @return Admin_Homepage_HeadlinePresenter[]
      */
-    private function getHeadlines() : array
+    private function getHeadlines(): array
     {
         $supported_languages = array_map('trim', explode(',', ForgeConfig::get('sys_supported_languages')));
         $headlines           = [];

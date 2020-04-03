@@ -40,7 +40,8 @@ require_once __DIR__ . '/bootstrap.php';
  */
 class LDAPRetrieveAllArgumentsTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     private $ldap_params = array(
         'dn'          => 'dc=tuleap,dc=local',

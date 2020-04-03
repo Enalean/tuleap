@@ -31,7 +31,8 @@ use Tuleap\Tus\TusFileInformation;
 
 class EmptyFileToUploadFinisherTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     public function testCreateEmptyFile(): void
     {

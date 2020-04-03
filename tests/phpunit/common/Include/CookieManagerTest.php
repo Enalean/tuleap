@@ -26,26 +26,26 @@ class CookieManagerTest extends \PHPUnit\Framework\TestCase
 {
     use ForgeConfigSandbox;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         ForgeConfig::set('sys_cookie_prefix', 'test');
     }
 
-    public function testCookiePrefixIsUsedIfPossible() : void
+    public function testCookiePrefixIsUsedIfPossible(): void
     {
         ForgeConfig::set('sys_https_host', 'example.com');
 
         $this->assertEquals('__Host-test_name', CookieManager::getCookieName('name'));
     }
 
-    public function testItDoesNotUseCookiePrefixIfHTTPSIsNotAvailable() : void
+    public function testItDoesNotUseCookiePrefixIfHTTPSIsNotAvailable(): void
     {
         ForgeConfig::set('sys_https_host', '');
 
         $this->assertEquals('test_name', CookieManager::getCookieName('name'));
     }
 
-    public function testItDeterminesIfACookieCanUseSecureFlag() : void
+    public function testItDeterminesIfACookieCanUseSecureFlag(): void
     {
         ForgeConfig::set('sys_https_host', '');
         $this->assertFalse(CookieManager::canCookieUseSecureFlag());

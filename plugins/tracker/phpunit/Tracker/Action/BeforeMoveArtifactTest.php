@@ -42,7 +42,7 @@ class BeforeMoveArtifactTest extends TestCase
      */
     private $before_move_artifact;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 

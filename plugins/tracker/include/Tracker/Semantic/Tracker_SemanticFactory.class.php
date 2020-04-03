@@ -42,7 +42,7 @@ class Tracker_SemanticFactory
     {
         if (!isset(self::$instance)) {
             $c = self::class;
-            self::$instance = new $c;
+            self::$instance = new $c();
         }
         return self::$instance;
     }

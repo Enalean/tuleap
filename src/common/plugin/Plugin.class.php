@@ -419,7 +419,7 @@ class Plugin implements PFO_Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $dao->removeOrphanWidgetsByNames($names);
     }
 
-    protected function getRouteHandler(string $handler) : array
+    protected function getRouteHandler(string $handler): array
     {
         return [
             'plugin'  => $this->getName(),

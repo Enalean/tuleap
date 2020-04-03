@@ -45,7 +45,7 @@ class ResetTokenSerializerTest extends TestCase
     /**
      * @dataProvider incorrectlyFormattedIdentifierProvider
      */
-    public function testIncorrectlyFormattedIdentifierIsRejected(string $incorrectly_formatted_identifier) : void
+    public function testIncorrectlyFormattedIdentifierIsRejected(string $incorrectly_formatted_identifier): void
     {
         $serializer = new ResetTokenSerializer();
 
@@ -54,7 +54,7 @@ class ResetTokenSerializerTest extends TestCase
         $serializer->getSplitToken(new ConcealedString($incorrectly_formatted_identifier));
     }
 
-    public function incorrectlyFormattedIdentifierProvider() : array
+    public function incorrectlyFormattedIdentifierProvider(): array
     {
         return [
             ['100' . ResetTokenSerializer::PARTS_SEPARATOR . 'random_string' . ResetTokenSerializer::PARTS_SEPARATOR . 'separated'],

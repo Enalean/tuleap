@@ -168,7 +168,8 @@ class ProjectDashboardController
                 $trove_cats[] = $row_trovecat['fullname'];
             }
 
-            if (ForgeConfig::get('sys_trove_cat_mandatory')
+            if (
+                ForgeConfig::get('sys_trove_cat_mandatory')
                 && $request->getCurrentUser()->isAdmin($project->getID())
                 && empty($trove_cats)
             ) {

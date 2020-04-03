@@ -61,7 +61,7 @@ class DocmanItemPermissionsForGroupsSetFactory
     public function fromRepresentation(
         Docman_Item $item,
         DocmanItemPermissionsForGroupsSetRepresentation $representation
-    ) : DocmanItemPermissionsForGroupsSet {
+    ): DocmanItemPermissionsForGroupsSet {
         $permissions = array_replace(
             $this->getNonePermissionsForAllUGroupID($item),
             $this->getPermissionsPerUGroupID($item, $representation->can_read, PermissionItemUpdater::PERMISSION_DEFINITION_READ),
@@ -72,7 +72,7 @@ class DocmanItemPermissionsForGroupsSetFactory
         return new DocmanItemPermissionsForGroupsSet($permissions);
     }
 
-    private function getNonePermissionsForAllUGroupID(Docman_Item $item) : array
+    private function getNonePermissionsForAllUGroupID(Docman_Item $item): array
     {
         $project = $this->project_manager->getProject($item->getGroupId());
         $ugroups = $this->ugroup_manager->getUGroups($project);
@@ -92,7 +92,7 @@ class DocmanItemPermissionsForGroupsSetFactory
         Docman_Item $item,
         array $user_group_representations,
         int $permission_type
-    ) : array {
+    ): array {
         $permissions_per_ugroup_id = [];
         $user_groups               = $this->getUserGroups($item, $user_group_representations);
         foreach ($user_groups as $user_group) {
@@ -106,7 +106,7 @@ class DocmanItemPermissionsForGroupsSetFactory
      * @return ProjectUGroup[]
      * @throws RestException
      */
-    private function getUserGroups(Docman_Item $item, array $user_group_representations) : array
+    private function getUserGroups(Docman_Item $item, array $user_group_representations): array
     {
         $user_groups = [];
         foreach ($user_group_representations as $user_group_representation) {
@@ -121,7 +121,7 @@ class DocmanItemPermissionsForGroupsSetFactory
     private function getUserGroup(
         Docman_Item $item,
         MinimalUserGroupRepresentationForUpdate $user_group_representation
-    ) : ProjectUGroup {
+    ): ProjectUGroup {
         $identifier      = $user_group_representation->id;
         $item_project_id = $item->getGroupId();
 
@@ -143,7 +143,7 @@ class DocmanItemPermissionsForGroupsSetFactory
         return $ugroup;
     }
 
-    private function getExceptionUserGroupNoFoundInProject(string $ugroup_identifier, int $project_id) : RestException
+    private function getExceptionUserGroupNoFoundInProject(string $ugroup_identifier, int $project_id): RestException
     {
         return new RestException(
             400,

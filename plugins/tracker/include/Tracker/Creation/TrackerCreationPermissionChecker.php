@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation;
 
@@ -44,7 +44,7 @@ class TrackerCreationPermissionChecker
      * @throws NotFoundException
      * @throws ForbiddenException
      */
-    public function checkANewTrackerCanBeCreated(Project $project, PFUser $user) : void
+    public function checkANewTrackerCanBeCreated(Project $project, PFUser $user): void
     {
         if (! $project->usesService(trackerPlugin::SERVICE_SHORTNAME)) {
             throw new NotFoundException(dgettext('tuleap-tracker', 'Tracker service is disabled.'));

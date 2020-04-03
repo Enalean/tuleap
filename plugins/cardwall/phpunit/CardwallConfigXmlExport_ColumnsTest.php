@@ -54,7 +54,7 @@ final class CardwallConfigXmlExport_ColumnsTest extends \PHPUnit\Framework\TestC
     /** @var Cardwall_OnTop_ConfigFactory **/
     private $config_factory;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -78,7 +78,7 @@ final class CardwallConfigXmlExport_ColumnsTest extends \PHPUnit\Framework\TestC
         $this->xml_exporter = new CardwallConfigXmlExport($this->project, $this->tracker_factory, $this->config_factory, $this->xml_validator);
     }
 
-    public function testItDumpsNoColumnsWhenNoColumnsDefined() : void
+    public function testItDumpsNoColumnsWhenNoColumnsDefined(): void
     {
         $this->cardwall_config->shouldReceive('getDashboardColumns')->andReturns(new Cardwall_OnTop_Config_ColumnCollection(array()));
         $this->cardwall_config->shouldReceive('getMappings')->andReturns(array());
@@ -87,7 +87,7 @@ final class CardwallConfigXmlExport_ColumnsTest extends \PHPUnit\Framework\TestC
         $this->assertCount(0, $this->root->cardwall->trackers->tracker->children());
     }
 
-    public function testItDumpsColumnsAsDefined() : void
+    public function testItDumpsColumnsAsDefined(): void
     {
         $this->cardwall_config->shouldReceive('getDashboardColumns')->andReturns(new Cardwall_OnTop_Config_ColumnCollection(array(
             new Cardwall_Column(112, "Todo", "red"),
@@ -103,7 +103,7 @@ final class CardwallConfigXmlExport_ColumnsTest extends \PHPUnit\Framework\TestC
         $this->assertCount(3, $column_xml);
     }
 
-    public function testItDumpsColumnsAsDefinedWithMappings() : void
+    public function testItDumpsColumnsAsDefinedWithMappings(): void
     {
         $this->cardwall_config->shouldReceive('getDashboardColumns')->andReturns(new Cardwall_OnTop_Config_ColumnCollection(array(
             new Cardwall_Column(112, "Todo", "red"),

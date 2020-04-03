@@ -30,5 +30,5 @@ interface IssuerClaimValidator
     /**
      * @psalm-param P $provider
      */
-    public function isIssuerClaimValid(Provider $provider, string $iss_from_id_token) : bool;
+    public function isIssuerClaimValid(Provider $provider, string $iss_from_id_token): bool;
 }

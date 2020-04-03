@@ -131,7 +131,7 @@ final class PullRequestNotificationSendMailTest extends TestCase
         $this->mail_builder->shouldReceive('buildAndSendEmail')->with(
             \Mockery::any(),
             \Mockery::on(
-                static function (\Notification $notification) use ($recipient_with_access) : bool {
+                static function (\Notification $notification) use ($recipient_with_access): bool {
                     $emails = $notification->getEmails();
                     return count($emails) === 1 && $emails[0] === $recipient_with_access->getEmail();
                 }
@@ -158,7 +158,7 @@ final class PullRequestNotificationSendMailTest extends TestCase
 
     private function buildNotificationToProcess(PullRequest $pull_request, \PFUser ...$recipients): NotificationToProcess
     {
-        return new class($pull_request, ...$recipients) implements NotificationToProcess
+        return new class ($pull_request, ...$recipients) implements NotificationToProcess
         {
             /**
              * @var PullRequest
@@ -193,7 +193,7 @@ final class PullRequestNotificationSendMailTest extends TestCase
             public function asEnhancedContent(): NotificationEnhancedContent
             {
                 return new class implements NotificationEnhancedContent {
-                    public function toString() : string
+                    public function toString(): string
                     {
                         return 'Markup content mail body';
                     }

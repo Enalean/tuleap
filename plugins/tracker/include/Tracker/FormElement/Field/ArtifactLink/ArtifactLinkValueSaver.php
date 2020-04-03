@@ -161,10 +161,12 @@ class ArtifactLinkValueSaver
         $is_child = $this->isTrackerChildrenOfTheOtherTracker($to_tracker, $from_tracker);
 
         if ($is_child) {
-            if ($this->artifact_links_usage_dao->isTypeDisabledInProject(
-                $from_tracker->getProject()->getID(),
-                Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
-            )) {
+            if (
+                $this->artifact_links_usage_dao->isTypeDisabledInProject(
+                    $from_tracker->getProject()->getID(),
+                    Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
+                )
+            ) {
                 return Tracker_FormElement_Field_ArtifactLink::NO_NATURE;
             }
 
@@ -173,7 +175,8 @@ class ArtifactLinkValueSaver
             return Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD;
         }
 
-        if ($from_tracker->getChildren()
+        if (
+            $from_tracker->getChildren()
             && ! $is_child
             && $existing_nature === Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
         ) {
@@ -215,7 +218,8 @@ class ArtifactLinkValueSaver
         Tracker $from_tracker,
         $existing_nature
     ) {
-        if ($existing_nature !== Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
+        if (
+            $existing_nature !== Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
             && $from_tracker->isProjectAllowedToUseNature()
         ) {
             $GLOBALS['Response']->addFeedback(

@@ -69,7 +69,7 @@ class SemanticDoneLoaderTest extends TestCase
         $this->loader = new SemanticDoneLoader($this->dao, $this->value_checker);
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         unset($GLOBALS['_SESSION']);
     }

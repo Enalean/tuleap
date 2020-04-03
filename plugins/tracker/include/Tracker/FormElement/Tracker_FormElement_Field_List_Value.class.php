@@ -61,7 +61,7 @@ abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJ
         return array(
             'id'        => $this->getId(),
             'label'     => $this->getLabel(),
-            'is_hidden' => (boolean) $this->isHidden(),
+            'is_hidden' => (bool) $this->isHidden(),
         );
     }
 

@@ -24,7 +24,7 @@ namespace Tuleap;
 
 final class JSONHeader
 {
-    public static function getHeaderForPrototypeJS($params) : string
+    public static function getHeaderForPrototypeJS($params): string
     {
         return 'X-JSON: ' . json_encode($params);
     }

@@ -78,7 +78,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
         return 'hudson';
     }
 
-    public function service_classnames(array &$params) : void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    public function service_classnames(array &$params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $params['classnames'][$this->getServiceShortname()] = \Tuleap\Hudson\HudsonService::class;
     }
@@ -87,7 +87,8 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
     {
         // Only show the stylesheet if we're actually in the hudson pages.
         // This stops styles inadvertently clashing with the main site.
-        if ($this->canIncludeStylesheets() ||
+        if (
+            $this->canIncludeStylesheets() ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0
         ) {
             echo '<link rel="stylesheet" type="text/css" href="' . $this->getAssets()->getFileURL('default-style.css') . '" />';
@@ -388,7 +389,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
         }
     }
 
-    public function process() : void
+    public function process(): void
     {
         require_once('hudson.class.php');
         $controler = new hudson();

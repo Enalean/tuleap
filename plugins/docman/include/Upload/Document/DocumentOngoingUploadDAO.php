@@ -100,7 +100,7 @@ class DocumentOngoingUploadDAO extends DataAccessObject
         return $item_id;
     }
 
-    public function deleteUnusableDocuments($current_time) : void
+    public function deleteUnusableDocuments($current_time): void
     {
         $this->getDB()->run(
             'DELETE plugin_docman_new_document_upload, plugin_docman_item_id, plugin_docman_metadata_value, permissions

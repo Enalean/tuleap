@@ -211,7 +211,7 @@ class SemanticTimeframe extends Tracker_Semantic
         }
     }
 
-    public function buildXMLExport(SimpleXMLElement $root, string $start_date_ref) : SimpleXMLElement
+    public function buildXMLExport(SimpleXMLElement $root, string $start_date_ref): SimpleXMLElement
     {
         $semantic_child = $root->addChild('semantic');
         $semantic_child->addAttribute('type', $this->getShortName());
@@ -310,7 +310,7 @@ class SemanticTimeframe extends Tracker_Semantic
         );
     }
 
-    private function resetSemantic() : void
+    private function resetSemantic(): void
     {
         (new SemanticTimeframeDao())->deleteTimeframeSemantic(
             (int) $this->tracker->getId()

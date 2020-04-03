@@ -62,7 +62,7 @@ final class CardwallConfigXmlExportTest extends \PHPUnit\Framework\TestCase
     /** @var Cardwall_OnTop_ConfigFactory **/
     private $config_factory;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -93,7 +93,7 @@ final class CardwallConfigXmlExportTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItReturnsTheGoodRootXmlWithTrackers() : void
+    public function testItReturnsTheGoodRootXmlWithTrackers(): void
     {
         $this->config_factory->shouldReceive('getOnTopConfig')->with($this->tracker1)->once()->andReturn($this->cardwall_config);
         $this->config_factory->shouldReceive('getOnTopConfig')->with($this->tracker2)->once()->andReturn($this->cardwall_config2);
@@ -106,7 +106,7 @@ final class CardwallConfigXmlExportTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('T614', (string) $attributes['id']);
     }
 
-    public function testItReturnsTheGoodRootXmlWithoutTrackers() : void
+    public function testItReturnsTheGoodRootXmlWithoutTrackers(): void
     {
         $cardwall_config = Mockery::spy(\Cardwall_OnTop_Config::class);
         $cardwall_config->shouldReceive('isEnabled')->andReturn(false);
@@ -123,7 +123,7 @@ final class CardwallConfigXmlExportTest extends \PHPUnit\Framework\TestCase
         $this->assertCount(0, $this->root->cardwall->trackers->children());
     }
 
-    public function testItThrowsAnExceptionIfXmlGeneratedIsNotValid() : void
+    public function testItThrowsAnExceptionIfXmlGeneratedIsNotValid(): void
     {
         $this->config_factory->shouldReceive('getOnTopConfig')->with($this->tracker1)->once()->andReturn($this->cardwall_config);
         $this->config_factory->shouldReceive('getOnTopConfig')->with($this->tracker2)->once()->andReturn($this->cardwall_config2);

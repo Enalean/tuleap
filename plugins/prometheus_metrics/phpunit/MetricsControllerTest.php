@@ -41,7 +41,7 @@ final class MetricsControllerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testMetricsAreRendered() : void
+    public function testMetricsAreRendered(): void
     {
         $dao               = Mockery::mock(MetricsCollectorDao::class);
         $nb_user_builder   = Mockery::mock(NbUsersByStatusBuilder::class);

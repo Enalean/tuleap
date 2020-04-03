@@ -29,12 +29,12 @@ namespace Tuleap;
 use Tuleap\Test\Network\HTTPHeader;
 use Tuleap\Test\Network\HTTPHeaderStack;
 
-function headers_sent() : bool
+function headers_sent(): bool
 {
     return false;
 }
 
-function header($header, $replace = true, $http_response_code = null) : void
+function header($header, $replace = true, $http_response_code = null): void
 {
     HTTPHeaderStack::push(new HTTPHeader($header, $replace, $http_response_code));
 }

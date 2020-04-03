@@ -46,7 +46,7 @@ class MIME
     {
         if (!isset(self::$_instance)) {
             $c = self::class;
-            self::$_instance = new $c;
+            self::$_instance = new $c();
         }
         return self::$_instance;
     }
@@ -152,7 +152,7 @@ class MIME
                         default:
                             $indent = ($buffer[0] == '>' ? 0 : intval($buffer));
                             $buffer = substr($buffer, strpos($buffer, '>') + 1);
-                            $parents[$indent][] = new MIME_MagicRule;
+                            $parents[$indent][] = new MIME_MagicRule();
                             $rulenum = sizeof($parents[$indent]) - 1;
                             $parents[$indent][$rulenum]->start_offset = intval($buffer);
                             $buffer = substr($buffer, strpos($buffer, '=') + 1);

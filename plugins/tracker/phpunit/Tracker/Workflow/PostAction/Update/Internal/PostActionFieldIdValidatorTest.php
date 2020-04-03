@@ -33,7 +33,7 @@ class PostActionFieldIdValidatorTest extends TestCase
     /** @var PostActionFieldIdValidator */
     private $field_ids_validator;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->field_ids_validator = new PostActionFieldIdValidator();
     }

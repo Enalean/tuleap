@@ -24,9 +24,11 @@ declare(strict_types=1);
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 final class ArtifactTest extends \PHPUnit\Framework\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\GlobalResponseMock, \Tuleap\GlobalLanguageMock;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\GlobalResponseMock;
+    use \Tuleap\GlobalLanguageMock;
 
-    public function testAddDependenciesSimple() : void
+    public function testAddDependenciesSimple(): void
     {
         $a = \Mockery::mock(\Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $a->data_array = ['artifact_id' => 147];
@@ -37,7 +39,7 @@ final class ArtifactTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($a->addDependencies("171", $changes, false), "It should be possible to add a dependency like 171");
     }
 
-    public function testAddWrongDependency() : void
+    public function testAddWrongDependency(): void
     {
         $a = \Mockery::mock(\Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $a->data_array = ['artifact_id' => 147];
@@ -49,7 +51,7 @@ final class ArtifactTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($a->addDependencies("99999", $changes, false), "It should be possible to add a dependency like 99999 because it is not a valid artifact");
     }
 
-    public function testAddDependenciesDouble() : void
+    public function testAddDependenciesDouble(): void
     {
         $a = \Mockery::mock(\Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $a->data_array = ['artifact_id' => 147];
@@ -60,7 +62,7 @@ final class ArtifactTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($a->addDependencies("171, 171", $changes, false), "It should be possible to add two identical dependencies in the same time, without getting an exception");
     }
 
-    public function testFormatFollowUp() : void
+    public function testFormatFollowUp(): void
     {
         $art = \Mockery::mock(\Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
 

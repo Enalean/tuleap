@@ -44,7 +44,8 @@ use Tuleap\Svn\ApacheConfGenerator;
 
 class SystemEventProcessorRootTest extends TestCase
 {
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration, GlobalSVNPollution;
+    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use GlobalSVNPollution;
 
     private $system_event_manager;
     /**

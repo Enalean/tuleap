@@ -28,7 +28,9 @@ use Tuleap\Tracker\Admin\GlobalAdminController;
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class TrackerManagerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock, GlobalResponseMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
+    use GlobalResponseMock;
 
     private $tracker;
 

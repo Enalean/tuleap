@@ -42,7 +42,7 @@ class QueueFactory
     /**
      * @throws NoQueueSystemAvailableException
      */
-    public function getPersistentQueue(string $queue_name, string $favor = '') : PersistentQueue
+    public function getPersistentQueue(string $queue_name, string $favor = ''): PersistentQueue
     {
         if (RedisClientFactory::canClientBeBuiltFromForgeConfig()) {
             return new Redis\RedisPersistentQueue(

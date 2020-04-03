@@ -40,7 +40,7 @@ class TrackerRulesDateValidator
         $this->form_element_factory = $form_element_factory;
     }
 
-    public function validateDateRules(array $value_field_list, array $rules) : bool
+    public function validateDateRules(array $value_field_list, array $rules): bool
     {
         foreach ($rules as $rule) {
             if (! $this->dateRuleApplyToSubmittedFields($rule, $value_field_list)) {
@@ -71,7 +71,7 @@ class TrackerRulesDateValidator
         return true;
     }
 
-    private function dateRuleApplyToSubmittedFields(Tracker_Rule_Date $rule, array $value_field_list) : bool
+    private function dateRuleApplyToSubmittedFields(Tracker_Rule_Date $rule, array $value_field_list): bool
     {
         $is_valid = true;
         if (! array_key_exists($rule->getSourceFieldId(), $value_field_list)) {
@@ -94,7 +94,7 @@ class TrackerRulesDateValidator
         return $is_valid;
     }
 
-    private function validateDateRuleOnSubmittedFields(Tracker_Rule_Date $rule, array $value_field_list) : bool
+    private function validateDateRuleOnSubmittedFields(Tracker_Rule_Date $rule, array $value_field_list): bool
     {
         $source_value = $value_field_list[$rule->getSourceFieldId()];
         $target_value = $value_field_list[$rule->getTargetFieldId()];
@@ -102,7 +102,7 @@ class TrackerRulesDateValidator
         return $rule->validate($source_value, $target_value);
     }
 
-    private function getFieldById($field_id) : Tracker_FormElement_Field
+    private function getFieldById($field_id): Tracker_FormElement_Field
     {
         return $this->form_element_factory->getFormElementById($field_id);
     }

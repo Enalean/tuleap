@@ -40,7 +40,7 @@ class BindToValueVisitorTest extends TestCase
     /** @var Mockery\MockInterface | \Tracker_Artifact_ChangesetValue_List */
     private $changeset_value;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 

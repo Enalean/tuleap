@@ -23,9 +23,11 @@ declare(strict_types=1);
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends \PHPUnit\Framework\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\GlobalResponseMock, \Tuleap\GlobalLanguageMock;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\GlobalResponseMock;
+    use \Tuleap\GlobalLanguageMock;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -39,7 +41,7 @@ final class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends \PHPUnit\Fra
         $this->command = new Cardwall_OnTop_Config_Command_DeleteColumns($tracker, $this->dao, $this->field_dao, $this->value_dao);
     }
 
-    public function testItDeletesOneColumn() : void
+    public function testItDeletesOneColumn(): void
     {
         $request = new HTTPRequest();
         $request->set(
@@ -55,7 +57,7 @@ final class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends \PHPUnit\Fra
         $this->command->execute($request);
     }
 
-    public function testItDeletes2Columns() : void
+    public function testItDeletes2Columns(): void
     {
         $request = new HTTPRequest();
         $request->set(
@@ -74,7 +76,7 @@ final class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends \PHPUnit\Fra
         $this->command->execute($request);
     }
 
-    public function testItDeleteFieldMappingWhenRemoveTheLastColumn() : void
+    public function testItDeleteFieldMappingWhenRemoveTheLastColumn(): void
     {
         $request = new HTTPRequest();
         $request->set('column', array(14 => array('label' => '')));
@@ -84,7 +86,7 @@ final class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends \PHPUnit\Fra
         $this->command->execute($request);
     }
 
-    public function testItDeletesAllColumns() : void
+    public function testItDeletesAllColumns(): void
     {
         $request = new HTTPRequest();
         $request->set(

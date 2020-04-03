@@ -28,6 +28,7 @@ use Tracker_FormElement_Field_List_Bind_StaticValue;
 class SemanticDoneTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|SemanticDoneValueChecker
      */

@@ -30,7 +30,9 @@ require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 
 final class AgileDashboardRouterTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\ForgeConfigSandbox;
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\ForgeConfigSandbox;
+
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Planning_MilestoneControllerFactory
      */

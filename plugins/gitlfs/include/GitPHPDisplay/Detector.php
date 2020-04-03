@@ -27,6 +27,6 @@ class Detector
 
     public function isFileALFSFile($file_content)
     {
-        return (boolean) preg_match(self::LFS_CONTENT_REGEXP, $file_content);
+        return (bool) preg_match(self::LFS_CONTENT_REGEXP, $file_content);
     }
 }

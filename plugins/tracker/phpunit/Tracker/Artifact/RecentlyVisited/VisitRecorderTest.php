@@ -39,13 +39,13 @@ final class VisitRecorderTest extends TestCase
      */
     private $visit_recorder;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         $this->dao            = \Mockery::mock(RecentlyVisitedDao::class);
         $this->visit_recorder = new VisitRecorder($this->dao, new DBTransactionExecutorPassthrough());
     }
 
-    public function testVisitOfAnAuthenticatedUserIsSaved() : void
+    public function testVisitOfAnAuthenticatedUserIsSaved(): void
     {
         $this->dao->shouldReceive('save')->once();
 
@@ -58,7 +58,7 @@ final class VisitRecorderTest extends TestCase
         $this->visit_recorder->record($user, $artifact);
     }
 
-    public function testVisitOfAnAnonymousUserIsNotSaved() : void
+    public function testVisitOfAnAnonymousUserIsNotSaved(): void
     {
         $this->dao->shouldNotReceive('save');
 

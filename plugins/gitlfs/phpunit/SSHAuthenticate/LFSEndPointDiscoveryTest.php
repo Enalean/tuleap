@@ -36,7 +36,7 @@ class LFSEndPointDiscoveryTest extends TestCase
     private $endpoint_discovery;
     private $git_repository;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 

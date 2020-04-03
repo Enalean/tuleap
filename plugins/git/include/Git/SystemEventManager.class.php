@@ -56,7 +56,8 @@ class Git_SystemEventManager
 
     public function queueRepositoryUpdate(GitRepository $repository)
     {
-        if ($repository->getBackend() instanceof Git_Backend_Gitolite &&
+        if (
+            $repository->getBackend() instanceof Git_Backend_Gitolite &&
             ! $this->isRepositoryUpdateAlreadyQueued($repository)
         ) {
             $this->system_event_manager->createEvent(

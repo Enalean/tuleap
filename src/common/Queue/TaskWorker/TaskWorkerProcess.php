@@ -31,7 +31,7 @@ final class TaskWorkerProcess implements TaskWorker
     private const PROCESS_TIMEOUT_SECONDS = 15 * 60;
     private const TULEAP_SOURCE_ROOT      = __DIR__ . '/../../../../';
 
-    public function run(string $event) : void
+    public function run(string $event): void
     {
         $process = new Process(
             ['tuleap', TaskWorkerProcessCommand::NAME],

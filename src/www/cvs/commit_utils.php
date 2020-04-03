@@ -496,9 +496,11 @@ function show_commit_details($group_id, $commit_id, $result)
             $type_text = $GLOBALS['Language']->getText('cvs_commit_utils', 'change');
         }
 
-        if (($type == "Change") &&
-        ($added == 999) &&
-        ($removed == 999)) { // the default values
+        if (
+            ($type == "Change") &&
+            ($added == 999) &&
+            ($removed == 999)
+        ) { // the default values
           // back to rcs to complete
             $repo = db_result($result, $i, 'repository');
             $command = "rlog -r" . escapeshellarg($revision) . " " . escapeshellarg($repo . "/" . $filename);

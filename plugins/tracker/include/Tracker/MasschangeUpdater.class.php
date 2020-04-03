@@ -135,7 +135,7 @@ class Tracker_MasschangeUpdater
         string $comment,
         bool $send_notifications,
         string $comment_format
-    ) : void {
+    ): void {
         $fields_data = $this->consolidateFieldsData($fields_data);
 
         $list_fields_used_in_tracker_rules = $this->getFieldListUsedInTrackerRules();
@@ -182,7 +182,7 @@ class Tracker_MasschangeUpdater
         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'updated_aid', implode(', ', $masschange_aids)));
     }
 
-    private function consolidateFieldsData(array $fields_data) : array
+    private function consolidateFieldsData(array $fields_data): array
     {
         $fields_data['request_method_called'] = 'artifact-masschange';
         $this->tracker->augmentDataFromRequest($fields_data);
@@ -194,7 +194,7 @@ class Tracker_MasschangeUpdater
     /**
      * @return Tracker_FormElement_Field_List[]
      */
-    private function getFieldListUsedInTrackerRules() : array
+    private function getFieldListUsedInTrackerRules(): array
     {
         $list_fields_used_in_tracker_rules = [];
         $tracker_rules_for_list_field      = $this->rule_factory->getAllListRulesByTrackerWithOrder($this->tracker->getId());
@@ -223,7 +223,7 @@ class Tracker_MasschangeUpdater
         Tracker_Artifact_Changeset $changeset,
         array $list_fields,
         array $fields_data
-    ) : array {
+    ): array {
         foreach ($list_fields as $list_field) {
             $changeset_value = $changeset->getValue($list_field);
             if ($changeset_value !== null) {
@@ -259,7 +259,7 @@ class Tracker_MasschangeUpdater
         );
     }
 
-    private function getArtifactNotificationSubscriber($artifact_id) : Tracker_ArtifactNotificationSubscriber
+    private function getArtifactNotificationSubscriber($artifact_id): Tracker_ArtifactNotificationSubscriber
     {
         $artifact = $this->artifact_factory->getArtifactById($artifact_id);
         if ($artifact === null) {

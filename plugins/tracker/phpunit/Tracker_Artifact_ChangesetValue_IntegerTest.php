@@ -31,7 +31,7 @@ final class Tracker_Artifact_ChangesetValue_IntegerTest extends \PHPUnit\Framewo
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testIntegers() : void
+    public function testIntegers(): void
     {
         $field = Mockery::mock(Tracker_FormElement_Field_Integer::class);
         $changest = Mockery::mock(Tracker_Artifact_Changeset::class);
@@ -46,7 +46,7 @@ final class Tracker_Artifact_ChangesetValue_IntegerTest extends \PHPUnit\Framewo
         $this->assertNull($null_int->getValue());
     }
 
-    public function testNoDiff() : void
+    public function testNoDiff(): void
     {
         $field = Mockery::mock(Tracker_FormElement_Field_Integer::class);
         $changest = Mockery::mock(Tracker_Artifact_Changeset::class);

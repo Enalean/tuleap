@@ -32,11 +32,12 @@ use XML_SimpleXMLCDATAFactory;
 
 final class UserXMLExportedCollectionTest extends \PHPUnit\Framework\TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     private $collection;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         ForgeConfig::set('tuleap_dir', __DIR__ . '/../../../../../');
@@ -70,7 +71,7 @@ final class UserXMLExportedCollectionTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItExportsAUser() : void
+    public function testItExportsAUser(): void
     {
         $this->collection->add($this->a_user);
 
@@ -85,7 +86,7 @@ final class UserXMLExportedCollectionTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('cb9867', (string) $xml_object->user[0]->ldapid);
     }
 
-    public function testItExportsMoreThanOneUser() : void
+    public function testItExportsMoreThanOneUser(): void
     {
         $this->collection->add($this->a_user);
         $this->collection->add($this->another_user);
@@ -96,7 +97,7 @@ final class UserXMLExportedCollectionTest extends \PHPUnit\Framework\TestCase
         $this->assertCount(2, $xml_object->user);
     }
 
-    public function testItDoesNotExportLdapIdIfNoLdap() : void
+    public function testItDoesNotExportLdapIdIfNoLdap(): void
     {
         $this->collection->add($this->another_user);
 
@@ -106,7 +107,7 @@ final class UserXMLExportedCollectionTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('', (string) $xml_object->user[0]->ldapid);
     }
 
-    public function testItDoesNotExportNone() : void
+    public function testItDoesNotExportNone(): void
     {
         $this->collection->add($this->none);
 

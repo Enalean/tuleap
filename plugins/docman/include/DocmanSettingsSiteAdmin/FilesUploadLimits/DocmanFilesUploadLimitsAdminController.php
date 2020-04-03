@@ -48,7 +48,7 @@ class DocmanFilesUploadLimitsAdminController implements DispatchableWithRequest,
      *
      * @param array $variables
      */
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables) : void
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         if (! $request->getCurrentUser()->isSuperUser()) {
             $layout->addFeedback(

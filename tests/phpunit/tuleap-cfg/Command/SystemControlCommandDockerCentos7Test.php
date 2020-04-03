@@ -33,6 +33,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 class SystemControlCommandDockerCentos7Test extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var MockInterface|ProcessFactory
      */
@@ -48,7 +49,7 @@ class SystemControlCommandDockerCentos7Test extends TestCase
      */
     private $root;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->root            = vfsStream::setup('slash');
         $this->process_factory = \Mockery::mock(ProcessFactory::class);

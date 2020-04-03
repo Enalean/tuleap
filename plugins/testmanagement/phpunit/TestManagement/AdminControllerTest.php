@@ -35,7 +35,8 @@ use Valid_UInt;
 
 class AdminControllerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalResponseMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalResponseMock;
 
     private $globals;
     /** @var Project */
@@ -61,7 +62,7 @@ class AdminControllerTest extends TestCase
     public const EXECUTION_TRACKER_ID = 533;
     public const ISSUE_TRACKER_ID = 534;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
         $this->globals = $GLOBALS;
@@ -92,7 +93,7 @@ class AdminControllerTest extends TestCase
         );
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         $GLOBALS = $this->globals;
         parent::tearDown();

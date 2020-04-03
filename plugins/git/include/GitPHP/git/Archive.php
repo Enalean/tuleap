@@ -152,8 +152,10 @@ class Archive
      */
     public function SetFormat($format) // @codingStandardsIgnoreLine
     {
-        if ((($format == self::COMPRESS_BZ2) && (!function_exists('bzcompress'))) ||
-            (($format == self::COMPRESS_GZ) && (!function_exists('gzencode')))) {
+        if (
+            (($format == self::COMPRESS_BZ2) && (!function_exists('bzcompress'))) ||
+            (($format == self::COMPRESS_GZ) && (!function_exists('gzencode')))
+        ) {
             /*
              * Trying to set a format but doesn't have the appropriate
              * compression function, fall back to tar

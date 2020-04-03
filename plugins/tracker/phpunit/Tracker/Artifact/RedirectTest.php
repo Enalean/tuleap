@@ -32,7 +32,7 @@ final class RedirectTest extends TestCase
      *           ["/base/url/"]
      *           ["/base/url//"]
      */
-    public function testRedirectURLCanBeBuilt(string $base_url) : void
+    public function testRedirectURLCanBeBuilt(string $base_url): void
     {
         $redirect                   = new Tracker_Artifact_Redirect();
         $redirect->base_url         = $base_url;
@@ -41,7 +41,7 @@ final class RedirectTest extends TestCase
         $this->assertEquals('/base/url/?paramA=1&paramB=2', $redirect->toUrl());
     }
 
-    public function testDetectWhenRedirectionStaysInTracker() : void
+    public function testDetectWhenRedirectionStaysInTracker(): void
     {
         $redirection = new Tracker_Artifact_Redirect();
         $redirection->mode = Tracker_Artifact_Redirect::STATE_STAY_OR_CONTINUE;

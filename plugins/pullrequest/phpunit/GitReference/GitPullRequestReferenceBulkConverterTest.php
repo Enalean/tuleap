@@ -53,7 +53,7 @@ class GitPullRequestReferenceBulkConverterTest extends TestCase
      */
     private $logger;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->dao                      = \Mockery::mock(GitPullRequestReferenceDAO::class);
         $this->pull_request_ref_updater = \Mockery::mock(GitPullRequestReferenceUpdater::class);
@@ -66,7 +66,7 @@ class GitPullRequestReferenceBulkConverterTest extends TestCase
         \ForgeConfig::set('tmp_dir', $tmp_dir->url());
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         \ForgeConfig::restore();
     }

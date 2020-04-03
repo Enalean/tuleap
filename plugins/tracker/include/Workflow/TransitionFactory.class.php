@@ -481,11 +481,13 @@ class TransitionFactory
                 $event = new TransitionDeletionEvent($transition);
                 $this->event_manager->processEvent($event);
 
-                if (! $this->getDao()->deleteTransition(
-                    $transition->getWorkflow()->getId(),
-                    $transition->getIdFrom(),
-                    $transition->getIdTo()
-                )) {
+                if (
+                    ! $this->getDao()->deleteTransition(
+                        $transition->getWorkflow()->getId(),
+                        $transition->getIdFrom(),
+                        $transition->getIdTo()
+                    )
+                ) {
                     throw new TransitionDeletionException();
                 }
             } catch (DataAccessQueryException $exception) {

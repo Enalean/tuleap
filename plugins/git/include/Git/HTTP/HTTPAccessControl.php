@@ -101,7 +101,7 @@ class HTTPAccessControl
         return $user;
     }
 
-    private function needAuthentication(\GitRepository $repository, GitHTTPOperation $git_operation) : bool
+    private function needAuthentication(\GitRepository $repository, GitHTTPOperation $git_operation): bool
     {
         return $this->forge_access->doesPlatformRequireLogin() ||
             $git_operation->isWrite() ||
@@ -138,7 +138,8 @@ class HTTPAccessControl
      */
     private function authenticate(\GitRepository $repository)
     {
-        if (! isset($_SERVER['PHP_AUTH_USER']) ||
+        if (
+            ! isset($_SERVER['PHP_AUTH_USER']) ||
             $_SERVER['PHP_AUTH_USER'] == '' ||
             ! isset($_SERVER['PHP_AUTH_PW']) ||
             $_SERVER['PHP_AUTH_PW'] == ''

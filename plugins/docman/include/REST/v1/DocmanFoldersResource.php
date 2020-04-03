@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1;
 
@@ -103,7 +103,7 @@ class DocmanFoldersResource extends AuthenticatedResource
     /**
      * @url OPTIONS {id}
      */
-    public function options(int $id) : void
+    public function options(int $id): void
     {
         $this->setHeaders();
     }
@@ -116,7 +116,7 @@ class DocmanFoldersResource extends AuthenticatedResource
      * @url OPTIONS {id}/embedded_files
      * @url OPTIONS {id}/links
      */
-    public function optionsCreation(int $id) : void
+    public function optionsCreation(int $id): void
     {
         $this->setCreationHeaders();
     }
@@ -615,7 +615,7 @@ class DocmanFoldersResource extends AuthenticatedResource
      * @throws RestException 404
      */
 
-    public function patch(int $id, DocmanPATCHItemRepresentation $representation) : void
+    public function patch(int $id, DocmanPATCHItemRepresentation $representation): void
     {
         $this->checkAccess();
         $this->setHeaders();
@@ -658,7 +658,7 @@ class DocmanFoldersResource extends AuthenticatedResource
      * @throws I18NRestException 403
      * @throws I18NRestException 404
      */
-    public function delete(int $id) : void
+    public function delete(int $id): void
     {
         $this->checkAccess();
         $this->setHeaders();
@@ -689,12 +689,12 @@ class DocmanFoldersResource extends AuthenticatedResource
         $this->event_manager->processEvent('send_notifications', []);
     }
 
-    private function setHeaders() : void
+    private function setHeaders(): void
     {
         Header::allowOptionsPatchDelete();
     }
 
-    private function setCreationHeaders() : void
+    private function setCreationHeaders(): void
     {
         Header::allowOptionsPost();
     }
@@ -770,7 +770,7 @@ class DocmanFoldersResource extends AuthenticatedResource
     /**
      * @url OPTIONS {id}/permissions
      */
-    public function optionsPermissions(int $id) : void
+    public function optionsPermissions(int $id): void
     {
         Header::allowOptionsPost();
     }
@@ -788,7 +788,7 @@ class DocmanFoldersResource extends AuthenticatedResource
      *
      * @throws RestException 400
      */
-    public function putPermissions(int $id, DocmanFolderPermissionsForGroupsPUTRepresentation $representation) : void
+    public function putPermissions(int $id, DocmanFolderPermissionsForGroupsPUTRepresentation $representation): void
     {
         $this->checkAccess();
         $this->optionsPermissions($id);
@@ -862,7 +862,7 @@ class DocmanFoldersResource extends AuthenticatedResource
     /**
      * @psalm-param class-string<Docman_Item> $expected_item_class_to_copy
      */
-    private function getItemCopier(Project $project, string $expected_item_class_to_copy) : DocmanItemCopier
+    private function getItemCopier(Project $project, string $expected_item_class_to_copy): DocmanItemCopier
     {
         $docman_plugin = PluginManager::instance()->getPluginByName('docman');
         assert($docman_plugin instanceof DocmanPlugin);

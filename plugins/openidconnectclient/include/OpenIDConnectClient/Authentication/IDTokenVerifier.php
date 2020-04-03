@@ -42,7 +42,8 @@ class IDTokenVerifier
     {
         $id_token = $this->getJWTPayload($encoded_id_token);
 
-        if (! $this->isSubjectIdentifierClaimPresent($id_token) ||
+        if (
+            ! $this->isSubjectIdentifierClaimPresent($id_token) ||
             ! isset($id_token['iss']) ||
             ! $this->issuer_claim_validator->isIssuerClaimValid($provider, $id_token['iss']) ||
             ! $this->isAudienceClaimValid($provider->getClientId(), $id_token) ||

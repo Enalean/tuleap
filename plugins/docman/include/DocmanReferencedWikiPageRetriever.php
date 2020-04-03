@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Docman;
 
@@ -26,7 +26,7 @@ use Tuleap\PHPWiki\WikiPage;
 
 class DocmanReferencedWikiPageRetriever
 {
-    public function retrieveAssociatedWikiPage(\Docman_Wiki $wiki) : ?WikiPage
+    public function retrieveAssociatedWikiPage(\Docman_Wiki $wiki): ?WikiPage
     {
         $wiki_page = new WikiPage($wiki->getGroupId(), $wiki->getPagename());
 

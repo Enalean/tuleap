@@ -29,6 +29,7 @@ use UGroupManager;
 class NotifiedPeopleRetrieverTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /** @var  UsersRetriever */
     private $retriever;
     /** @var  UsersToNotifyDao */

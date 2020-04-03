@@ -51,13 +51,13 @@ final class FRSFileDownloadControllerTest extends TestCase
      */
     private $file_factory;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->url_verification = Mockery::mock(URLVerification::class);
         $this->file_factory     = Mockery::mock(FRSFileFactory::class);
     }
 
-    public function testFileCanBeDownloaded() : void
+    public function testFileCanBeDownloaded(): void
     {
         $controller = new FRSFileDownloadController(
             $this->url_verification,
@@ -96,7 +96,7 @@ final class FRSFileDownloadControllerTest extends TestCase
         $this->assertEquals($file_data, $response->getBody()->getContents());
     }
 
-    public function testNonExistingFileRequestIsRejected() : void
+    public function testNonExistingFileRequestIsRejected(): void
     {
         $controller = new FRSFileDownloadController(
             $this->url_verification,
@@ -114,7 +114,7 @@ final class FRSFileDownloadControllerTest extends TestCase
         $controller->handle($server_request);
     }
 
-    public function testRequestIsRejectedWhenTheUserCanNotAccessTheProject() : void
+    public function testRequestIsRejectedWhenTheUserCanNotAccessTheProject(): void
     {
         $controller = new FRSFileDownloadController(
             $this->url_verification,
@@ -141,7 +141,7 @@ final class FRSFileDownloadControllerTest extends TestCase
         $controller->handle($server_request);
     }
 
-    public function testRequestIsRejectedWhenTheFileIsNotActive() : void
+    public function testRequestIsRejectedWhenTheFileIsNotActive(): void
     {
         $controller = new FRSFileDownloadController(
             $this->url_verification,
@@ -169,7 +169,7 @@ final class FRSFileDownloadControllerTest extends TestCase
         $controller->handle($server_request);
     }
 
-    public function testRequestIsRejectedWhenTheFileIsNotReadableByTheUser() : void
+    public function testRequestIsRejectedWhenTheFileIsNotReadableByTheUser(): void
     {
         $controller = new FRSFileDownloadController(
             $this->url_verification,

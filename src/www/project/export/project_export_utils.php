@@ -31,9 +31,11 @@ function tocsv($string, $csv_separator)
 
     //Surround with double quotes if there is a comma;
     // a space or the user separator in the string
-    if (strpos($string, ' ') !== false || strpos($string, ',') !== false || strpos($string, $csv_separator) !== false ||
+    if (
+        strpos($string, ' ') !== false || strpos($string, ',') !== false || strpos($string, $csv_separator) !== false ||
         strpos($string, '"') !== false || strpos($string, "\n") !== false || strpos($string, "\t") !== false ||
-        strpos($string, "\r") !== false || strpos($string, "\0") !== false || strpos($string, "\x0B") !== false) {
+        strpos($string, "\r") !== false || strpos($string, "\0") !== false || strpos($string, "\x0B") !== false
+    ) {
         return "\"$string\"";
     } else {
         return $string;

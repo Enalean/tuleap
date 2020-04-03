@@ -37,7 +37,7 @@ final class DocmanItemPermissionsForGroupsSet
         $this->permissions_per_ugroup_id_and_type = $permissions_per_ugroup_id_and_type;
     }
 
-    public function toPermissionsPerUGroupIDAndTypeArray() : array
+    public function toPermissionsPerUGroupIDAndTypeArray(): array
     {
         return $this->permissions_per_ugroup_id_and_type;
     }

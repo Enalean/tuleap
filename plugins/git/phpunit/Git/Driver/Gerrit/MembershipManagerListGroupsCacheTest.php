@@ -25,7 +25,8 @@ use Tuleap\ForgeConfigSandbox;
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class MembershipManagerListGroupsCacheTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     protected $membership_manager;
     protected $driver;

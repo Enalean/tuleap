@@ -48,7 +48,7 @@ final class MetricsAuthCredential
     /**
      * @psalm-pure
      */
-    public static function noCredentialSet() : self
+    public static function noCredentialSet(): self
     {
         return new self(null, null);
     }
@@ -61,7 +61,7 @@ final class MetricsAuthCredential
         return new self($credential_set->getUsername(), $credential_set->getPassword());
     }
 
-    public function doesCredentialMatch(string $known_username, ConcealedString $known_password) : bool
+    public function doesCredentialMatch(string $known_username, ConcealedString $known_password): bool
     {
         if ($this->username === null || $this->password === null) {
             return false;

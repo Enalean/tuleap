@@ -44,7 +44,7 @@ final class BeforeMoveVisitorTest extends TestCase
     /**
      * @dataProvider dataProviderProcessableDocumentClasses
      */
-    public function testAllExpectedDocumentTypesCanBeProcessed(string $processed_document_class) : void
+    public function testAllExpectedDocumentTypesCanBeProcessed(string $processed_document_class): void
     {
         $item_factory = Mockery::mock(Docman_ItemFactory::class);
         $item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
@@ -72,7 +72,7 @@ final class BeforeMoveVisitorTest extends TestCase
     /**
      * @dataProvider dataProviderProcessableItemClasses
      */
-    public function testProcessingOfANonExpectedItemTypeIsRejected(string $processed_item_class) : void
+    public function testProcessingOfANonExpectedItemTypeIsRejected(string $processed_item_class): void
     {
         $before_move_visitor = new BeforeMoveVisitor(
             new DoesItemHasExpectedTypeVisitor(Docman_Item::class),
@@ -93,7 +93,7 @@ final class BeforeMoveVisitorTest extends TestCase
     /**
      * @dataProvider dataProviderProcessableItemClasses
      */
-    public function testProcessingOfAnItemIsRejectedIfItIsNotMovable(string $processed_item_class) : void
+    public function testProcessingOfAnItemIsRejectedIfItIsNotMovable(string $processed_item_class): void
     {
         $item_factory = Mockery::mock(Docman_ItemFactory::class);
         $item_factory->shouldReceive('isMoveable')->andReturn(false);
@@ -117,7 +117,7 @@ final class BeforeMoveVisitorTest extends TestCase
     /**
      * @dataProvider dataProviderProcessableDocumentClasses
      */
-    public function testProcessingOfADocumentIsRejectedWhenTheNameIsAlreadyUsedInTheDestinationFolder(string $processed_document_class) : void
+    public function testProcessingOfADocumentIsRejectedWhenTheNameIsAlreadyUsedInTheDestinationFolder(string $processed_document_class): void
     {
         $item_factory = Mockery::mock(Docman_ItemFactory::class);
         $item_factory->shouldReceive('isMoveable')->andReturn(true);
@@ -146,7 +146,7 @@ final class BeforeMoveVisitorTest extends TestCase
     /**
      * @dataProvider dataProviderProcessableDocumentClasses
      */
-    public function testProcessingOfADocumentIsRejectedWhenTheNameIsUsedByAnOngoingUploadInTheDestinationFolder(string $processed_document_class) : void
+    public function testProcessingOfADocumentIsRejectedWhenTheNameIsUsedByAnOngoingUploadInTheDestinationFolder(string $processed_document_class): void
     {
         $item_factory = Mockery::mock(Docman_ItemFactory::class);
         $item_factory->shouldReceive('isMoveable')->andReturn(true);
@@ -174,7 +174,7 @@ final class BeforeMoveVisitorTest extends TestCase
         );
     }
 
-    public function testProcessingOfAFolderIsRejectedWhenTheNameIsAlreadyUsedByAnotherFolderInTheDestinationFolder() : void
+    public function testProcessingOfAFolderIsRejectedWhenTheNameIsAlreadyUsedByAnotherFolderInTheDestinationFolder(): void
     {
         $item_factory = Mockery::mock(Docman_ItemFactory::class);
         $item_factory->shouldReceive('isMoveable')->andReturn(true);
@@ -200,7 +200,7 @@ final class BeforeMoveVisitorTest extends TestCase
         );
     }
 
-    public function testProcessingOfAFolderIsRejectedWhenTheDestinationFolderIsItself() : void
+    public function testProcessingOfAFolderIsRejectedWhenTheDestinationFolderIsItself(): void
     {
         $item_factory = Mockery::mock(Docman_ItemFactory::class);
         $item_factory->shouldReceive('isMoveable')->andReturn(true);
@@ -227,7 +227,7 @@ final class BeforeMoveVisitorTest extends TestCase
         );
     }
 
-    public function testProcessingOfAFolderIsRejectedWhenTheDestinationFolderIsOneOfTheChild() : void
+    public function testProcessingOfAFolderIsRejectedWhenTheDestinationFolderIsOneOfTheChild(): void
     {
         $item_factory = Mockery::mock(Docman_ItemFactory::class);
         $item_factory->shouldReceive('isMoveable')->andReturn(true);
@@ -254,7 +254,7 @@ final class BeforeMoveVisitorTest extends TestCase
         );
     }
 
-    public function dataProviderProcessableDocumentClasses() : array
+    public function dataProviderProcessableDocumentClasses(): array
     {
         return [
             [Docman_Wiki::class],
@@ -265,7 +265,7 @@ final class BeforeMoveVisitorTest extends TestCase
         ];
     }
 
-    public function dataProviderProcessableItemClasses() : ?\Generator
+    public function dataProviderProcessableItemClasses(): ?\Generator
     {
         yield [Docman_Folder::class];
         foreach ($this->dataProviderProcessableDocumentClasses() as $document_class) {

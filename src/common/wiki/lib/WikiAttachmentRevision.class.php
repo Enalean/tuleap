@@ -303,7 +303,7 @@ class WikiAttachmentRevision
         return $this->filename;
     }
 
-    private function getDisplayFilename() : string
+    private function getDisplayFilename(): string
     {
         $this->getFilename();
         return $this->displayFilename;

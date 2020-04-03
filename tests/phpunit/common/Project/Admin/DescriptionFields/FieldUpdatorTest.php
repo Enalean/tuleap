@@ -19,7 +19,7 @@
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\common\Project\Admin\DescriptionFields;
 
@@ -38,6 +38,7 @@ use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 final class FieldUpdatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|LoggerInterface
      */

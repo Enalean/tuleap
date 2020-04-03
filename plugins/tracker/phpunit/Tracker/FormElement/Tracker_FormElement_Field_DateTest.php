@@ -20,7 +20,7 @@
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement;
 
@@ -46,7 +46,9 @@ use XMLImportHelper;
 
 final class Tracker_FormElement_Field_DateTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use MockeryPHPUnitIntegration, GlobalResponseMock, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalResponseMock;
+    use GlobalLanguageMock;
 
     /** @var XML_Security */
     protected $xml_security;

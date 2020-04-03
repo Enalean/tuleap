@@ -65,8 +65,10 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
             $url   = '';
 
             $itemType = Docman_ItemFactory::getItemTypeForItem($this->item);
-            if ($itemType == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
-               || $itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE) {
+            if (
+                $itemType == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+                || $itemType == PLUGIN_DOCMAN_ITEM_TYPE_FILE
+            ) {
                 $vFactory = new Docman_VersionFactory();
                 $v = $vFactory->getSpecificVersion($this->item, $version);
                 if ($v) {
@@ -548,9 +550,11 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
         } else {
             // '&user_id=XX' was used in CX_3_4 to identify users. Now it's '&review=1'
             // We should keep this part of the test until CX_3_8.
-            if (($request->exist('review') || $request->exist('user_id'))
+            if (
+                ($request->exist('review') || $request->exist('user_id'))
                 && $this->table->isReviewer($user->getId())
-                && $this->table->isEnabled()) {
+                && $this->table->isEnabled()
+            ) {
                 $html .= $this->getReviewForm($user);
             } else {
                 $forceReadOnly = false;

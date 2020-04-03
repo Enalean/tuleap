@@ -935,7 +935,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         return $this->is_project_allowed_to_use_nature;
     }
 
-    private function getHierarchyController(Codendi_Request $request) : HierarchyController
+    private function getHierarchyController(Codendi_Request $request): HierarchyController
     {
         $dao                  = new HierarchyDAO();
         $tracker_factory      = $this->getTrackerFactory();
@@ -1827,7 +1827,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     {
         $user_to_notify_dao             = new UsersToNotifyDao();
         $ugroup_to_notify_dao           = new UgroupsToNotifyDao();
-        $unsubscribers_notification_dao = new UnsubscribersNotificationDAO;
+        $unsubscribers_notification_dao = new UnsubscribersNotificationDAO();
         $user_manager                   = UserManager::instance();
         $notification_list_builder      = new NotificationListBuilder(
             new UGroupDao(),
@@ -1843,7 +1843,7 @@ class Tracker implements Tracker_Dispatchable_Interface
             $notification_list_builder,
             $user_to_notify_dao,
             $ugroup_to_notify_dao,
-            new UserNotificationSettingsDAO,
+            new UserNotificationSettingsDAO(),
             new GlobalNotificationsAddressesBuilder(),
             $user_manager,
             new UGroupManager(),
@@ -2648,7 +2648,8 @@ class Tracker implements Tracker_Dispatchable_Interface
     {
         $artifactbyemail_status = $this->getArtifactByMailStatus();
 
-        if (! $artifactbyemail_status->isRequiredFieldsConfigured($this)
+        if (
+            ! $artifactbyemail_status->isRequiredFieldsConfigured($this)
             || ! $artifactbyemail_status->isSemanticConfigured($this)
         ) {
             $GLOBALS['Response']->addFeedback(

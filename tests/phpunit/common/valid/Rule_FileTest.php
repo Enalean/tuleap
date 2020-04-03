@@ -28,7 +28,10 @@ use Tuleap\TemporaryTestDirectory;
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Rule_FileTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, TemporaryTestDirectory, GlobalLanguageMock, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use TemporaryTestDirectory;
+    use GlobalLanguageMock;
+    use ForgeConfigSandbox;
 
     protected function setUp(): void
     {

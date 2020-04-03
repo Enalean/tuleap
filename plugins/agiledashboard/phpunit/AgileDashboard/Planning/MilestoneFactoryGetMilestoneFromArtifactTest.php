@@ -19,7 +19,7 @@
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Planning;
 
@@ -43,6 +43,7 @@ use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 class MilestoneFactoryGetMilestoneFromArtifactTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningFactory
      */

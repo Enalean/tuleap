@@ -40,7 +40,7 @@ class ColumnFactoryTest extends TestCase
     /** @var \Cardwall_OnTop_Config_ColumnFactory */
     private $column_factory;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

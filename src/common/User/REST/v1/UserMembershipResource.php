@@ -109,17 +109,21 @@ class UserMembershipResource extends AuthenticatedResource
             return;
         }
 
-        if ($this->forge_ugroup_permissions_manager->doesUserHavePermission(
-            $user,
-            new User_ForgeUserGroupPermission_RetrieveUserMembershipInformation()
-        )) {
+        if (
+            $this->forge_ugroup_permissions_manager->doesUserHavePermission(
+                $user,
+                new User_ForgeUserGroupPermission_RetrieveUserMembershipInformation()
+            )
+        ) {
             return;
         }
 
-        if ($this->forge_ugroup_permissions_manager->doesUserHavePermission(
-            $user,
-            new User_ForgeUserGroupPermission_UserManagement()
-        )) {
+        if (
+            $this->forge_ugroup_permissions_manager->doesUserHavePermission(
+                $user,
+                new User_ForgeUserGroupPermission_UserManagement()
+            )
+        ) {
             return;
         }
 

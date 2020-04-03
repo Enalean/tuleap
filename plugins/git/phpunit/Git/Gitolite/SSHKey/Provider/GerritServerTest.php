@@ -29,7 +29,8 @@ require_once __DIR__ . '/../../../../bootstrap.php';
 class GerritServerTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    public function testItExtractsGerritServerSSHKey() : void
+
+    public function testItExtractsGerritServerSSHKey(): void
     {
         $replication_key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
         $replication_key->setGerritHostId(1);
@@ -62,10 +63,10 @@ class GerritServerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected_result, array_values(iterator_to_array($gerrit_server_provider)));
     }
 
-    public function testItThrowsAnExceptionIfGerritServerDataCanNotBeAccessed() : void
+    public function testItThrowsAnExceptionIfGerritServerDataCanNotBeAccessed(): void
     {
         $gerrit_server_dao = \Mockery::mock(Git_RemoteServer_Dao::class);
-        $gerrit_server_dao->shouldReceive('searchAllServersWithSSHKey')->andThrows(new \PDOException);
+        $gerrit_server_dao->shouldReceive('searchAllServersWithSSHKey')->andThrows(new \PDOException());
 
         $this->expectException('Tuleap\Git\Gitolite\SSHKey\Provider\AccessException');
         new GerritServer($gerrit_server_dao);

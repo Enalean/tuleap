@@ -45,7 +45,8 @@ class NewsPermissionsRepresentationBuilder
         foreach ($project_news as $new) {
             $is_public = $this->news_permissions_manager->isProjectNewsPublic($new);
 
-            if ($selected_ugroup_id
+            if (
+                $selected_ugroup_id
                 && !$is_public
                 && !$this->isUGroupAuthorizedToSeePrivateNews($selected_ugroup_id)
             ) {

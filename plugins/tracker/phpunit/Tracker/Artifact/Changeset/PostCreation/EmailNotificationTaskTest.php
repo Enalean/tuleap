@@ -44,7 +44,7 @@ class EmailNotificationTaskTest extends TestCase
     private $artifact;
     private $changeset;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->logger                          = \Mockery::spy(LoggerInterface::class);
         $this->mail_gateway_config             = \Mockery::spy(MailGatewayConfig::class);

@@ -71,7 +71,8 @@ class TrackerReportConfigController
         $valid_query_limit = new Valid_UInt('query_limit');
         if ($request->valid($valid_query_limit)) {
             $query_limit = $request->get('query_limit');
-            if ($query_limit
+            if (
+                $query_limit
                 && $query_limit <= self::EXPERT_QUERY_LIMIT_MAX
                 && $this->config->setExpertQueryLimit($query_limit)
             ) {

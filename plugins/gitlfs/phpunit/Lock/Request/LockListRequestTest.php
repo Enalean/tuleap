@@ -27,7 +27,7 @@ final class LockListRequestTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testBuildFromRequest() : void
+    public function testBuildFromRequest(): void
     {
         $request = \Mockery::mock('HTTPRequest');
 
@@ -42,7 +42,7 @@ final class LockListRequestTest extends TestCase
         $this->assertSame('refs/heads/master', $list_request->getReference()->getName());
     }
 
-    public function testRequestCanBeParsedWhenNoRefIsGiven() : void
+    public function testRequestCanBeParsedWhenNoRefIsGiven(): void
     {
         $request_without_ref = \Mockery::mock('HTTPRequest');
 
@@ -65,7 +65,7 @@ final class LockListRequestTest extends TestCase
      * with Git LFS before v2.8.0.
      * https://github.com/git-lfs/git-lfs/pull/3715
      */
-    public function testListRequestShouldBeConsideredAsBothReadAndWriteRequest() : void
+    public function testListRequestShouldBeConsideredAsBothReadAndWriteRequest(): void
     {
         $request = \Mockery::mock('HTTPRequest');
         $request->shouldReceive('get')->with('id')->andReturn('2');

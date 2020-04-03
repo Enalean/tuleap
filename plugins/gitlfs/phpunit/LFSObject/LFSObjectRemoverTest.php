@@ -34,7 +34,7 @@ class LFSObjectRemoverTest extends TestCase
     private $path_allocator;
     private $dao;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->filesystem     = \Mockery::mock(FilesystemInterface::class);
         $this->path_allocator = \Mockery::mock(LFSObjectPathAllocator::class);

@@ -53,7 +53,7 @@ class User_SSHKeyValidator // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
         return $valid_keys;
     }
 
-    private function isValid(string $key) : bool
+    private function isValid(string $key): bool
     {
         if ($key === '') {
             return false;

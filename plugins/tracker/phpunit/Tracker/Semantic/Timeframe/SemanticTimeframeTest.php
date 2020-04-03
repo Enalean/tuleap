@@ -36,7 +36,7 @@ class SemanticTimeframeTest extends TestCase
 
     private $tracker;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->tracker = Mockery::mock(Tracker::class);
         parent::setUp();
@@ -341,7 +341,7 @@ class SemanticTimeframeTest extends TestCase
         $this->assertEquals('F102', (string) $root->semantic->end_date_field['REF']);
     }
 
-    public function testItBuildsARESTRepresentationWithDurationIfDurationIsSet() : void
+    public function testItBuildsARESTRepresentationWithDurationIfDurationIsSet(): void
     {
         $start_date = Mockery::mock(\Tracker_FormElement_Field_Date::class);
         $duration   = Mockery::mock(\Tracker_FormElement_Field_Integer::class);
@@ -357,7 +357,7 @@ class SemanticTimeframeTest extends TestCase
         $this->assertEquals(24, $representation->duration_field_id);
     }
 
-    public function testItBuildsARESTRepresentationWithEndDateIfEndDateIsSet() : void
+    public function testItBuildsARESTRepresentationWithEndDateIfEndDateIsSet(): void
     {
         $start_date = Mockery::mock(\Tracker_FormElement_Field_Date::class);
         $end_date = Mockery::mock(\Tracker_FormElement_Field_Date::class);

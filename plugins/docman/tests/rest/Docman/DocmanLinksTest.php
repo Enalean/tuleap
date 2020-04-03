@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Docman\Test\rest\Docman;
 
@@ -179,7 +179,7 @@ class DocmanLinksTest extends DocmanTestExecutionHelper
     /**
      * @depends testGetRootId
      */
-    public function testUpdatePermissionsLinkDocument(int $root_id) : void
+    public function testUpdatePermissionsLinkDocument(int $root_id): void
     {
         $link_doc_id = $this->createLinkAndReturnItsId(
             $root_id,

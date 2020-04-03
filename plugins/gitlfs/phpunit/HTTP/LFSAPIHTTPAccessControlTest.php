@@ -36,7 +36,7 @@ class LFSAPIHTTPAccessControlTest extends TestCase
     private $user_manager;
     private $access_control_verifier;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->lfs_http_api_access_control = \Mockery::mock(LSFAPIHTTPAuthorization::class);
         $this->http_access_control         = \Mockery::mock(HTTPAccessControl::class);

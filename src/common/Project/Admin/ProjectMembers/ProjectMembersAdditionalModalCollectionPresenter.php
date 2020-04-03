@@ -96,32 +96,32 @@ class ProjectMembersAdditionalModalCollectionPresenter implements Dispatchable
         return $this->user_locale;
     }
 
-    public function setJavascriptFile(string $path) : void
+    public function setJavascriptFile(string $path): void
     {
         $this->javascript_file = $path;
     }
 
-    public function getJavascriptFile() : string
+    public function getJavascriptFile(): string
     {
         return $this->javascript_file;
     }
 
-    public function setCssAsset(CssAsset $css_asset) : void
+    public function setCssAsset(CssAsset $css_asset): void
     {
         $this->css_asset = $css_asset;
     }
 
-    public function getCssAsset() : CssAsset
+    public function getCssAsset(): CssAsset
     {
         return $this->css_asset;
     }
 
-    public function hasJavascriptFile() : bool
+    public function hasJavascriptFile(): bool
     {
         return $this->javascript_file !== null;
     }
 
-    public function hasCssAsset() : bool
+    public function hasCssAsset(): bool
     {
         return $this->css_asset !== null;
     }

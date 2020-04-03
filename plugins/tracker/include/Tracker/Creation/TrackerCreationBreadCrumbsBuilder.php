@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation;
 
@@ -62,7 +62,7 @@ class TrackerCreationBreadCrumbsBuilder
         return $bread_crumb_collection;
     }
 
-    private function addADropdownWithLinkToGlobalAdministration(Project $project, BreadCrumb $breadcrumb) : void
+    private function addADropdownWithLinkToGlobalAdministration(Project $project, BreadCrumb $breadcrumb): void
     {
         $global_admin_link = new BreadCrumbLink(
             dgettext('tuleap-tracker', 'Administration'),

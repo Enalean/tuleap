@@ -27,7 +27,7 @@ use Docman_MetadataFactory;
 
 class MetadataFactoryBuilder
 {
-    public function getMetadataFactoryForItem(Docman_Item $item) : Docman_MetadataFactory
+    public function getMetadataFactoryForItem(Docman_Item $item): Docman_MetadataFactory
     {
         return new Docman_MetadataFactory($item->getGroupId());
     }

@@ -86,7 +86,7 @@ class TrackerRulesListValidator
         return $dependencies;
     }
 
-    private function checkFieldsValidityForAllDependencies(Tracker $tracker, array $dependencies, array $values, int $source, array $value_field_list) : bool
+    private function checkFieldsValidityForAllDependencies(Tracker $tracker, array $dependencies, array $values, int $source, array $value_field_list): bool
     {
         $error_occured = false;
         foreach ($dependencies[$source] as $target => $not_used_target) {
@@ -157,7 +157,7 @@ class TrackerRulesListValidator
         return $valid;
     }
 
-    private function dealDependencesProblems(int $source, int $target, array $values, $target_value, array $value_field_list) : void
+    private function dealDependencesProblems(int $source, int $target, array $values, $target_value, array $value_field_list): void
     {
         $source_field = $this->form_element_factory->getFormElementListById($source);
         if ($source_field !== null) {
@@ -195,7 +195,7 @@ class TrackerRulesListValidator
         }
     }
 
-    private function sendFeedbackError(String $target_label, String $source_label, array $pb_source_values, array $pb_target_values) : void
+    private function sendFeedbackError(string $target_label, string $source_label, array $pb_source_values, array $pb_target_values): void
     {
         $GLOBALS['Response']->addFeedback(
             Feedback::ERROR,

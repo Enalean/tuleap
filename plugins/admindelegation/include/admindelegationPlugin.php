@@ -141,7 +141,7 @@ class AdminDelegationPlugin extends Plugin
         $this->removeOrphanWidgets(array('admindelegation', 'admindelegation_projects'));
     }
 
-    public function routeAdmin() : \Tuleap\Request\DispatchableWithRequest
+    public function routeAdmin(): \Tuleap\Request\DispatchableWithRequest
     {
         return new \Tuleap\AdminDelegation\SiteAdminController(
             new AdminDelegation_UserServiceManager(

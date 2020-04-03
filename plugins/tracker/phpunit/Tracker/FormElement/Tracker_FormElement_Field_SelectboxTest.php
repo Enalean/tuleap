@@ -35,7 +35,8 @@ use Tuleap\GlobalLanguageMock;
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 final class Tracker_FormElement_Field_SelectboxTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /**
      * @var Tracker_FormElement_Field_Selectbox
@@ -59,13 +60,13 @@ final class Tracker_FormElement_Field_SelectboxTest extends TestCase
         );
     }
 
-    public function testEmptyCSVStringIsRecognizedAsTheNoneValue() : void
+    public function testEmptyCSVStringIsRecognizedAsTheNoneValue(): void
     {
         $value = $this->field->getFieldDataFromCSVValue('');
         $this->assertEquals(Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID, $value);
     }
 
-    public function testCSVString100CanBeUsedAsACSVValue() : void
+    public function testCSVString100CanBeUsedAsACSVValue(): void
     {
         $bind = Mockery::mock(Tracker_FormElement_Field_List_Bind::class);
         $bind->shouldReceive('getFieldData')->andReturn('bind_value');

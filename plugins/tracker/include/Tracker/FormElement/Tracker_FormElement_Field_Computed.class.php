@@ -304,8 +304,10 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             return false;
         }
 
-        if (isset($value[self::FIELD_VALUE_MANUAL]) && isset($value[self::FIELD_VALUE_IS_AUTOCOMPUTED]) &&
-                $value[self::FIELD_VALUE_IS_AUTOCOMPUTED]) {
+        if (
+            isset($value[self::FIELD_VALUE_MANUAL]) && isset($value[self::FIELD_VALUE_IS_AUTOCOMPUTED]) &&
+                $value[self::FIELD_VALUE_IS_AUTOCOMPUTED]
+        ) {
             return $value[self::FIELD_VALUE_MANUAL] === '';
         }
 
@@ -993,7 +995,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
      */
     public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $previous_changeset_value, $value)
     {
-        if (! $previous_changeset_value->isManualValue() &&
+        if (
+            ! $previous_changeset_value->isManualValue() &&
             isset($value[self::FIELD_VALUE_IS_AUTOCOMPUTED]) &&
             $value[self::FIELD_VALUE_IS_AUTOCOMPUTED]
         ) {
@@ -1076,12 +1079,14 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'err_required', $this->getLabel() . ' (' . $this->getName() . ')'));
             return false;
         } elseif ($hasPermission) {
-            if (! isset($submitted_value[self::FIELD_VALUE_IS_AUTOCOMPUTED])
+            if (
+                ! isset($submitted_value[self::FIELD_VALUE_IS_AUTOCOMPUTED])
                 && ! isset($submitted_value[self::FIELD_VALUE_MANUAL])
             ) {
                 return true;
             }
-            if (! isset($submitted_value[self::FIELD_VALUE_IS_AUTOCOMPUTED])
+            if (
+                ! isset($submitted_value[self::FIELD_VALUE_IS_AUTOCOMPUTED])
                 || ! (
                     isset($submitted_value[self::FIELD_VALUE_IS_AUTOCOMPUTED])
                     && $submitted_value[self::FIELD_VALUE_IS_AUTOCOMPUTED]

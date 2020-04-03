@@ -54,7 +54,7 @@ final class AccessKeyScopeBuilderCollectorTest extends TestCase
     {
         return new class implements AuthenticationScopeBuilder
         {
-            public function buildAuthenticationScopeFromScopeIdentifier(AuthenticationScopeIdentifier $scope_identifier) : ?AuthenticationScope
+            public function buildAuthenticationScopeFromScopeIdentifier(AuthenticationScopeIdentifier $scope_identifier): ?AuthenticationScope
             {
                 return null;
             }

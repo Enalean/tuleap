@@ -27,7 +27,8 @@ use Tuleap\GlobalLanguageMock;
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class MilestoneReportCriterionProviderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /**
      * @var AgileDashboard_Milestone_MilestoneReportCriterionProvider

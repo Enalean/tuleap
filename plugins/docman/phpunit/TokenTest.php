@@ -133,12 +133,14 @@ class TokenTest extends TestCase
 
             $this->assertNull($t->getToken(), 'Without valid referer, we should have a null token');
         }
-        foreach (array(
+        foreach (
+            array(
                      '?action=show',
                      '?id=1&action=show',
                      '?action=details',
                      '?action=details&section=history'
-                 ) as $referer) {
+                 ) as $referer
+        ) {
             $t = \Mockery::mock(Docman_Token::class)->makePartial()->shouldAllowMockingProtectedMethods();
             $t->allows(['_getDao' => $dao]);
             $t->allows(['_getReferer' => 'http://codendi.com/' . $referer]);

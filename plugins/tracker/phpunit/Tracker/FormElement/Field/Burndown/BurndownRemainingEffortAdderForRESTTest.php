@@ -33,6 +33,7 @@ use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 class BurndownRemainingEffortAdderForRESTTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var PFUser
      */
@@ -55,7 +56,7 @@ class BurndownRemainingEffortAdderForRESTTest extends TestCase
      */
     private $computed_cache;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -74,7 +75,7 @@ class BurndownRemainingEffortAdderForRESTTest extends TestCase
         $GLOBALS['Language']->shouldReceive('getText');
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         unset($GLOBALS['Language']);
         parent::tearDown();

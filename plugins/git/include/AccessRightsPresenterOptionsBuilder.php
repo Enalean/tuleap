@@ -133,7 +133,8 @@ class AccessRightsPresenterOptionsBuilder
         $options     = array();
 
         foreach ($user_groups as $ugroup) {
-            if ($ugroup->getId() == ProjectUGroup::ANONYMOUS &&
+            if (
+                $ugroup->getId() == ProjectUGroup::ANONYMOUS &&
                 ($permission !== Git::PERM_READ && $permission !== Git::DEFAULT_PERM_READ)
             ) {
                 continue;

@@ -279,8 +279,10 @@ class _PageList_Column_size extends _PageList_Column
 
     public function _getValue($page_handle, &$revision_handle, &$pagelist = [])
     {
-        if (!$revision_handle or (!$revision_handle->_data['%content']
-                                  or $revision_handle->_data['%content'] === true)) {
+        if (
+            !$revision_handle or (!$revision_handle->_data['%content']
+                                  or $revision_handle->_data['%content'] === true)
+        ) {
             $revision_handle = $page_handle->getCurrentRevision(true);
             unset($revision_handle->_data['%pagedata']['_cached_html']);
         }
@@ -430,8 +432,10 @@ class _PageList_Column_content extends _PageList_Column
 
     public function _getValue($page_handle, &$revision_handle)
     {
-        if (!$revision_handle or (!$revision_handle->_data['%content']
-                                  or $revision_handle->_data['%content'] === true)) {
+        if (
+            !$revision_handle or (!$revision_handle->_data['%content']
+                                  or $revision_handle->_data['%content'] === true)
+        ) {
             $revision_handle = $page_handle->getCurrentRevision(true);
         }
         // Not sure why implode is needed here, I thought
@@ -715,7 +719,7 @@ class PageList
     public function getTotal()
     {
         return !empty($this->_options['count'])
-               ? (integer) $this->_options['count'] : count($this->_pages);
+               ? (int) $this->_options['count'] : count($this->_pages);
     }
 
     public function isEmpty()
@@ -726,10 +730,12 @@ class PageList
     public function addPage($page_handle)
     {
         if (!empty($this->_excluded_pages)) {
-            if (!in_array(
-                (is_string($page_handle) ? $page_handle : $page_handle->getName()),
-                $this->_excluded_pages
-            )) {
+            if (
+                !in_array(
+                    (is_string($page_handle) ? $page_handle : $page_handle->getName()),
+                    $this->_excluded_pages
+                )
+            ) {
                 $this->_pages[] = $page_handle;
             }
         } else {
@@ -770,10 +776,12 @@ class PageList
             trigger_error("PageList: Invalid page_handle $page_handle", E_USER_WARNING);
             return;
         }
-        if (!isset($page_handle)
+        if (
+            !isset($page_handle)
             or empty($page_handle)
             or (!empty($this->_excluded_pages)
-                and in_array($page_handle->getName(), $this->_excluded_pages))) {
+                and in_array($page_handle->getName(), $this->_excluded_pages))
+        ) {
             return; // exclude page.
         }
 
@@ -936,9 +944,11 @@ class PageList
                         and strstr($request->getArg('sortby'), $column)));
         } elseif ($action == 'db') {
             // Performance enhancement: use native DB sort if possible.
-            if (($valid_fields and in_array($column, $valid_fields))
+            if (
+                ($valid_fields and in_array($column, $valid_fields))
                 or (method_exists($request->_dbi->_backend, 'sortable_columns')
-                    and (in_array($column, $request->_dbi->_backend->sortable_columns())))) {
+                    and (in_array($column, $request->_dbi->_backend->sortable_columns())))
+            ) {
                 // omit this sort method from the _sortPages call at rendering
                 // asc or desc: +pagename, -pagename
                 return $column . ($order == '+' ? ' ASC' : ' DESC');
@@ -1117,7 +1127,7 @@ class PageList
                   'checkbox'
                   => new _PageList_Column_checkbox('p', _("Select")),
                   'pagename'
-                  => new _PageList_Column_pagename,
+                  => new _PageList_Column_pagename(),
                   'mtime'
                   => new _PageList_Column_time('rev:mtime', _("Last Modified")),
                   'hits'
@@ -1349,9 +1359,11 @@ class PageList
         }
 
         list($offset, $pagesize) = $this->limit($limit);
-        if (!$pagesize or
+        if (
+            !$pagesize or
             (!$offset and $numrows <= $pagesize) or
-            ($offset + $pagesize < 0)) {
+            ($offset + $pagesize < 0)
+        ) {
             return false;
         }
 
@@ -1434,10 +1446,12 @@ class PageList
         $i = 1; // start with 1!
         foreach ($this->_columns as $col) {
             $heading = $col->button_heading($this, $i);
-            if ($do_paging
+            if (
+                $do_paging
                  and isset($col->_field)
                  and $col->_field == 'pagename'
-                 and ($maxlen = $this->maxLen())) {
+                 and ($maxlen = $this->maxLen())
+            ) {
                 $heading->setAttr('width', $maxlen * 7);
             }
             $row->pushContent($heading);
@@ -1562,9 +1576,10 @@ function flipAll(formObj) {
         }
 
         // Ignore azhead if not sorted by pagename
-        if (!empty($this->_options['azhead'])
+        if (
+            !empty($this->_options['azhead'])
             and strstr($this->sortby($this->_options['sortby'], 'init'), "pagename")
-            ) {
+        ) {
             $cur_h = substr($this->_pages[0]->getName(), 0, 1);
             $out->pushContent(HTML::h3($cur_h));
             // group those pages together with same $h

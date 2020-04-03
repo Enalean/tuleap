@@ -51,7 +51,7 @@ class SimilarFieldsFormatterTest extends TestCase
     /** @var Mockery\MockInterface | \Tracker_Artifact_Changeset */
     private $last_changeset;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 

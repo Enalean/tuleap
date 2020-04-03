@@ -52,7 +52,7 @@ class ByFieldGroupPermissions
         $this->field = $field;
     }
 
-    public function addUGroup(int $id, string $name, array $permissions, array $tracker_permissions) : void
+    public function addUGroup(int $id, string $name, array $permissions, array $tracker_permissions): void
     {
         $this->ugroups[$id]             = new ByFieldUGroup($id, $name, count($tracker_permissions) === 0);
         $this->ugroups_permissions[$id] = $permissions;
@@ -61,7 +61,7 @@ class ByFieldGroupPermissions
         }
     }
 
-    public function setFieldList(array $field_list) : void
+    public function setFieldList(array $field_list): void
     {
         $this->field_list = $field_list;
     }
@@ -74,27 +74,27 @@ class ByFieldGroupPermissions
         return array_values($this->field_list);
     }
 
-    public function hasNoAccess(ByFieldUGroup $ugroup) : bool
+    public function hasNoAccess(ByFieldUGroup $ugroup): bool
     {
         return !isset($this->ugroups_permissions[$ugroup->getId()]['PLUGIN_TRACKER_FIELD_READ']) && !isset($this->ugroups_permissions[$ugroup->getId()]['PLUGIN_TRACKER_FIELD_UPDATE']);
     }
 
-    public function hasSubmitPermission(ByFieldUGroup $ugroup) : bool
+    public function hasSubmitPermission(ByFieldUGroup $ugroup): bool
     {
         return isset($this->ugroups_permissions[$ugroup->getId()]['PLUGIN_TRACKER_FIELD_SUBMIT']);
     }
 
-    public function hasReadOnlyPermission(ByFieldUGroup $ugroup) : bool
+    public function hasReadOnlyPermission(ByFieldUGroup $ugroup): bool
     {
         return isset($this->ugroups_permissions[$ugroup->getId()]['PLUGIN_TRACKER_FIELD_READ']) && !isset($this->ugroups_permissions[$ugroup->getId()]['PLUGIN_TRACKER_FIELD_UPDATE']);
     }
 
-    public function hasUpdatePermission(ByFieldUGroup $ugroup) : bool
+    public function hasUpdatePermission(ByFieldUGroup $ugroup): bool
     {
         return isset($this->ugroups_permissions[$ugroup->getId()]['PLUGIN_TRACKER_FIELD_UPDATE']);
     }
 
-    public function getUGroupCount() : int
+    public function getUGroupCount(): int
     {
         return count($this->ugroups);
     }
@@ -102,7 +102,7 @@ class ByFieldGroupPermissions
     /**
      * @return ByFieldUGroup[]
      */
-    public function getUgroupsOrderedWithPrecedence() : array
+    public function getUgroupsOrderedWithPrecedence(): array
     {
         $ugroups = $this->ugroups;
         ksort($ugroups);

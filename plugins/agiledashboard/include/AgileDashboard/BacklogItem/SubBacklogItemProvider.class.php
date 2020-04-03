@@ -137,7 +137,8 @@ class AgileDashboard_BacklogItem_SubBacklogItemProvider
         foreach ($this->dao->getLinkedArtifactsByIds($artifacts, $this->inspected_ids) as $artifact_row) {
             $artifact_row_tracker_id = $artifact_row['tracker_id'];
 
-            if (! $this->planning_factory->isTrackerIdUsedInAPlanning($artifact_row['tracker_id']) ||
+            if (
+                ! $this->planning_factory->isTrackerIdUsedInAPlanning($artifact_row['tracker_id']) ||
                 in_array($artifact_row_tracker_id, $filtrable_planning_tracker_ids)
             ) {
                 $artifacts_to_inspect[] = $artifact_row['id'];

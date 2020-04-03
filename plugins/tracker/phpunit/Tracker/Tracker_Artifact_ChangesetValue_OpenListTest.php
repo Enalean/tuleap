@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Tracker;
 
@@ -34,7 +34,9 @@ use Tuleap\GlobalLanguageMock;
 
 class Tracker_Artifact_ChangesetValue_OpenListTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use GlobalLanguageMock, Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_OpenList
      */
@@ -128,7 +130,7 @@ class Tracker_Artifact_ChangesetValue_OpenListTest extends TestCase // phpcs:ign
         $this->assertEquals('Manon removed', $list_1->diff($list_2));
     }
 
-    public function testDiffCleared() : void
+    public function testDiffCleared(): void
     {
         $bind_value_1 = $this->getBindValueForLabel('Sandra');
 

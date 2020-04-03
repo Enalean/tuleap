@@ -78,7 +78,8 @@ class AgileDashboard_KanbanColumnManager
 
         $this->column_dao->startTransaction();
 
-        if (! $semantic->removeOpenValue($column->getId())
+        if (
+            ! $semantic->removeOpenValue($column->getId())
             || ! $this->hideColumnFromTrackerFieldStaticValues($column, $semantic)
             || ! $this->column_dao->deleteColumn($column->getKanbanId(), $column->getId())
         ) {

@@ -99,7 +99,7 @@ class MilestoneControllerTest extends TestCase
      */
     private $crumb_builder;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
         ForgeConfig::store();
@@ -156,7 +156,7 @@ class MilestoneControllerTest extends TestCase
         );
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         ForgeConfig::restore();
         parent::tearDown();

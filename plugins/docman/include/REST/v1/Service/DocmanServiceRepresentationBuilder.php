@@ -52,7 +52,7 @@ final class DocmanServiceRepresentationBuilder
         $this->service_permissions_for_groups_builder = $service_permissions_for_groups_builder;
     }
 
-    public function getServiceRepresentation(Project $project, PFUser $user) : ?DocmanServiceRepresentation
+    public function getServiceRepresentation(Project $project, PFUser $user): ?DocmanServiceRepresentation
     {
         if (! $project->usesService(\DocmanPlugin::SERVICE_SHORTNAME)) {
             return null;

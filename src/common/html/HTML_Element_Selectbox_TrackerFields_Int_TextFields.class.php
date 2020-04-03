@@ -35,7 +35,8 @@ class HTML_Element_Selectbox_TrackerFields_Int_TextFields extends HTML_Element_S
         $aff = new ArtifactFieldFactory($at);
         foreach ($aff->getAllUsedFields() as $field) {
             if ($field->userCanRead($GLOBALS['group_id'], $GLOBALS['ath']->getID(), UserManager::instance()->getCurrentUser()->getId())) {
-                if ($field->isInt()
+                if (
+                    $field->isInt()
                     && !$field->isUsername()
                     && !$field->isStandardField()
                     && $field->isTextField()

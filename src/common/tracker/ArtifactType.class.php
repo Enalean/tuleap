@@ -1424,8 +1424,10 @@ class ArtifactType
 
         //----------------------------------------------------------
         //Check: PSS_CHANGE  (Priority,Status,Severity changes)
-        if ($arr_notif[$role]['PSS_CHANGE'] &&
-        (isset($changes['priority']) || isset($changes['status_id']) || isset($changes['severity']))) {
+        if (
+            $arr_notif[$role]['PSS_CHANGE'] &&
+            (isset($changes['priority']) || isset($changes['status_id']) || isset($changes['severity']))
+        ) {
       // echo "DBG PSS_CHANGE notified<br>";
             return true;
         }
@@ -1436,16 +1438,20 @@ class ArtifactType
         // one day the submitter will be changeable by the project admin so test it.
         // Rk #2: check this one at the end because it is the most CPU intensive and this
         // event seldomly happens
-        if ($arr_notif['SUBMITTER']['ROLE_CHANGE'] &&
-        isset($changes['submitted_by']) && (($changes['submitted_by']['add'] == $user_name) || ($changes['submitted_by']['del'] == $user_name)) &&
-        ($role == 'SUBMITTER')) {
+        if (
+            $arr_notif['SUBMITTER']['ROLE_CHANGE'] &&
+            isset($changes['submitted_by']) && (($changes['submitted_by']['add'] == $user_name) || ($changes['submitted_by']['del'] == $user_name)) &&
+            ($role == 'SUBMITTER')
+        ) {
       // echo "DBG ROLE_CHANGE for submitter notified<br>";
             return true;
         }
 
-        if ($arr_notif['ASSIGNEE']['ROLE_CHANGE'] &&
-        isset($changes['assigned_to']) && (($changes['assigned_to']['add'] == $user_name) || ($changes['assigned_to']['del'] == $user_name)) &&
-        ($role == 'ASSIGNEE')) {
+        if (
+            $arr_notif['ASSIGNEE']['ROLE_CHANGE'] &&
+            isset($changes['assigned_to']) && (($changes['assigned_to']['add'] == $user_name) || ($changes['assigned_to']['del'] == $user_name)) &&
+            ($role == 'ASSIGNEE')
+        ) {
       // echo "DBG ROLE_CHANGE for role assignee notified<br>";
             return true;
         }
@@ -1638,7 +1644,7 @@ class ArtifactType
             if ($field->isStandardField()) {
                 if ($select_count != 0) {
                     $select .= ",";
-                    $select_count ++;
+                    $select_count++;
                 } else {
                     $select_count = 1;
                 }
@@ -1658,7 +1664,7 @@ class ArtifactType
            // So we need to add a new join
                     if ($select_count != 0) {
                            $select .= ",";
-                           $select_count ++;
+                           $select_count++;
                     } else {
                            $select_count = 1;
                     }
@@ -1675,7 +1681,7 @@ class ArtifactType
                            $select .= " v" . $count . "." . $field->getValueFieldName() . " as " . $field->getName();
                     }
 
-                    $count ++;
+                    $count++;
                 }
             }
         }

@@ -27,7 +27,8 @@ use Tuleap\ForgeConfigSandbox;
 
 final class XMLUserCheckerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     public function testItReturnsTrueIfCurrentUserIsHTTPUser(): void
     {

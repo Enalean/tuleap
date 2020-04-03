@@ -168,7 +168,8 @@ class MilestoneResourceValidator
                 throw new ArtifactIsNotInBacklogTrackerException($potential_backlog_item_id);
             }
 
-            if ($todo !== null
+            if (
+                $todo !== null
                 && ! $this->isArtifactInUnplannedParentMilestoneBacklogItems($artifact, $open_unplanned)
                 && ! $this->isArtifactInPlannedMilestoneBacklogItems($artifact, $done, $todo)
             ) {

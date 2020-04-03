@@ -79,7 +79,7 @@ class Tracker_Workflow_Trigger_RulesProcessor // phpcs:ignore PSR1.Classes.Class
         $this->logger->end(__METHOD__, $artifact->getId(), $rule->getId());
     }
 
-    private function updateParent(Tracker_Artifact $parent, Tracker_Artifact $child, Tracker_Workflow_Trigger_TriggerRule $rule) : void
+    private function updateParent(Tracker_Artifact $parent, Tracker_Artifact $child, Tracker_Workflow_Trigger_TriggerRule $rule): void
     {
         $rule_parent_target_tracker_id = $rule->getTargetTracker()->getId();
         if ($parent->getTrackerId() !== $rule_parent_target_tracker_id) {

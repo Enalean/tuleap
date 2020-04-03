@@ -27,7 +27,8 @@ use PHPUnit\Framework\TestCase;
 class TimezoneRetrieverTest extends TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    public function testItGetsUserTimezone() : void
+
+    public function testItGetsUserTimezone(): void
     {
         $user = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('isLoggedIn')->andReturns(true);
@@ -37,7 +38,7 @@ class TimezoneRetrieverTest extends TestCase
         $this->assertEquals('America/Montreal', $timezone);
     }
 
-    public function testItGetsServerTimezoneWhenUserTimezoneIsNotValid() : void
+    public function testItGetsServerTimezoneWhenUserTimezoneIsNotValid(): void
     {
         $user = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('isLoggedIn')->andReturns(true);

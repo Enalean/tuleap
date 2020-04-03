@@ -23,6 +23,7 @@ use Psr\Log\LogLevel;
 final class MigrationLoggerTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var \Psr\Log\LoggerInterface
      */

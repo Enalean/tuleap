@@ -785,7 +785,7 @@ class FileDiff
             while ($idx + 1 < $d['line']) {
                 $h = $blob[$idx];
                 $output[] = array('', $h, $h);
-                $idx ++;
+                $idx++;
             }
 
             if (count($d['left']) == 0) {
@@ -808,7 +808,7 @@ class FileDiff
         while ($idx < count($blob)) {
             $h = $blob[$idx];
             $output[] = array('', $h, $h);
-            $idx ++;
+            $idx++;
         }
 
         $this->diffDataSplit = $output;

@@ -44,7 +44,7 @@ final class TusRequestMethodOverride implements MiddlewareInterface
     }
 
 
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $override_method = $request->getHeaderLine(self::HEADER_NAME);
         if ($override_method === '') {

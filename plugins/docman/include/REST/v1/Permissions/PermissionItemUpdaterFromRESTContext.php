@@ -58,7 +58,7 @@ final class PermissionItemUpdaterFromRESTContext
         Docman_Item $item,
         PFUser $user,
         DocmanItemPermissionsForGroupsSetRepresentation $representation
-    ) : void {
+    ): void {
         if (! $this->permissions_manager->userCanManage($user, $item->getId())) {
             throw new RestException(403);
         }
@@ -77,7 +77,7 @@ final class PermissionItemUpdaterFromRESTContext
         \Docman_Folder $folder,
         PFUser $user,
         DocmanFolderPermissionsForGroupsPUTRepresentation $representation
-    ) : void {
+    ): void {
         if (! $this->permissions_manager->userCanManage($user, $folder->getId())) {
             throw new RestException(403);
         }

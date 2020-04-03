@@ -53,7 +53,7 @@ class JenkinsServerDao extends DataAccessObject
         int $project_id,
         int $limit,
         int $offset
-    ) : array {
+    ): array {
         $sql = "SELECT SQL_CALC_FOUND_ROWS *
                 FROM plugin_hudson_git_project_server
                 WHERE project_id = ?

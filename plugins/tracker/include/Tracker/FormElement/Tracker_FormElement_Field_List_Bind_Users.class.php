@@ -640,12 +640,13 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         for ($i = 0; $i < $rows; $i++) {
             $ug = db_result($ugroup_res, $i, 'ugroup_id');
             $selected = "";
-            if (($ug == $GLOBALS['UGROUP_NONE']) ||
+            if (
+                ($ug == $GLOBALS['UGROUP_NONE']) ||
                 ($ug == $GLOBALS['UGROUP_ANONYMOUS']) ||
                 ($ug == $GLOBALS['UGROUP_PROJECT_MEMBERS']) ||
                 ($ug == $GLOBALS['UGROUP_PROJECT_ADMIN']) ||
                 ($ug == $GLOBALS['UGROUP_TRACKER_ADMIN'])
-               ) {
+            ) {
                    continue;
             }
 
@@ -952,7 +953,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     {
         $user_manager = UserManager::instance();
         $class_user_representation = '\\Tuleap\\User\\REST\\UserRepresentation';
-        $user_representation       = new $class_user_representation;
+        $user_representation       = new $class_user_representation();
         $user = $user_manager->getUserByUserName($value->getLabel());
         if (! $user) {
             $user = new PFUser();

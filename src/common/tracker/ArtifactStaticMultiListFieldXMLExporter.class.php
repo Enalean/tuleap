@@ -151,7 +151,7 @@ class ArtifactStaticMultiListFieldXMLExporter extends ArtifactFieldXMLExporter
             return false;
         }
 
-        return ((boolean) array_search($value, $all_labels)) === false;
+        return ((bool) array_search($value, $all_labels)) === false;
     }
 
     private function getListValueLabels(array $field_value_row, $tracker_id)

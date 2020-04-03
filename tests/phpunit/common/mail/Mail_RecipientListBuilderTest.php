@@ -49,7 +49,7 @@ final class Mail_RecipientListBuilderTest extends \PHPUnit\Framework\TestCase
     /** @var Mail_RecipientListBuilder */
     private $builder;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -69,7 +69,7 @@ final class Mail_RecipientListBuilderTest extends \PHPUnit\Framework\TestCase
         $this->builder = new Mail_RecipientListBuilder($user_manager);
     }
 
-    public function testItReturnsAnExternalAddress() : void
+    public function testItReturnsAnExternalAddress(): void
     {
         $list = $this->builder->getValidRecipientsFromAddresses(array($this->external_address));
 
@@ -80,7 +80,7 @@ final class Mail_RecipientListBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $list);
     }
 
-    public function testItReturnsAListOfExternalAddresses() : void
+    public function testItReturnsAListOfExternalAddresses(): void
     {
         $list = $this->builder->getValidRecipientsFromAddresses(
             array($this->external_address, $this->external_address2)
@@ -94,7 +94,7 @@ final class Mail_RecipientListBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $list);
     }
 
-    public function testItLooksForAUser() : void
+    public function testItLooksForAUser(): void
     {
         $list = $this->builder->getValidRecipientsFromAddresses(
             array($this->active_user_address)
@@ -107,7 +107,7 @@ final class Mail_RecipientListBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $list);
     }
 
-    public function testItDoesNotOutputSuspendedNorDeletedUsers() : void
+    public function testItDoesNotOutputSuspendedNorDeletedUsers(): void
     {
         $list = $this->builder->getValidRecipientsFromAddresses(
             array($this->suspended_user_address, $this->deleted_user_address)
@@ -119,7 +119,7 @@ final class Mail_RecipientListBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $list);
     }
 
-    public function testItTakesTheFirstUserAccountWithAllowedStatus() : void
+    public function testItTakesTheFirstUserAccountWithAllowedStatus(): void
     {
         $list = $this->builder->getValidRecipientsFromAddresses(
             array($this->bob_active_user_address)
@@ -132,7 +132,7 @@ final class Mail_RecipientListBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $list);
     }
 
-    public function testItFallbacksOnFindUserIfEmailNotFound() : void
+    public function testItFallbacksOnFindUserIfEmailNotFound(): void
     {
         $list = $this->builder->getValidRecipientsFromAddresses(
             array($this->bob_identifier)
@@ -145,7 +145,7 @@ final class Mail_RecipientListBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $list);
     }
 
-    public function testItValidatesAListOfUsers() : void
+    public function testItValidatesAListOfUsers(): void
     {
         $list = $this->builder->getValidRecipientsFromUsers(
             array(

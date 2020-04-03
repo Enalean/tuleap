@@ -56,6 +56,7 @@ use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;
 class DocmanItemCreatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var Docman_MetadataValueDao|\Mockery\MockInterface
      */
@@ -106,7 +107,7 @@ class DocmanItemCreatorTest extends TestCase
      */
     private $permissions_for_groups_set_factory;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->creator_visitor = \Mockery::mock(AfterItemCreationVisitor::class);
 
@@ -190,7 +191,7 @@ class DocmanItemCreatorTest extends TestCase
         }
 
         $this->creator_visitor->shouldReceive('visitEmpty')
-            ->withArgs(function (Docman_Empty $item, array $params) use ($permissions_for_groups_set) : bool {
+            ->withArgs(function (Docman_Empty $item, array $params) use ($permissions_for_groups_set): bool {
                 if ($permissions_for_groups_set === null) {
                     $this->assertNull($params['permissions_for_groups']);
                 } else {
@@ -256,7 +257,7 @@ class DocmanItemCreatorTest extends TestCase
         }
 
         $this->creator_visitor->shouldReceive('visitWiki')
-            ->withArgs(function (Docman_Wiki $item, array $params) use ($permissions_for_groups_set) : bool {
+            ->withArgs(function (Docman_Wiki $item, array $params) use ($permissions_for_groups_set): bool {
                 if ($permissions_for_groups_set === null) {
                     $this->assertNull($params['permissions_for_groups']);
                 } else {
@@ -455,7 +456,7 @@ class DocmanItemCreatorTest extends TestCase
     /**
      * @dataProvider permissionsForGroupsSetRepresentationDataProvider
      */
-    public function testLinkDocumentCanBeCreated(?DocmanItemPermissionsForGroupsSetRepresentation $permissions_for_groups_set) : void
+    public function testLinkDocumentCanBeCreated(?DocmanItemPermissionsForGroupsSetRepresentation $permissions_for_groups_set): void
     {
         $parent_item  = \Mockery::mock(\Docman_Item::class);
         $user         = \Mockery::mock(\PFUser::class);
@@ -487,7 +488,7 @@ class DocmanItemCreatorTest extends TestCase
         }
 
         $this->creator_visitor->shouldReceive('visitLink')
-            ->withArgs(function (Docman_Link $item, array $params) use ($permissions_for_groups_set) : bool {
+            ->withArgs(function (Docman_Link $item, array $params) use ($permissions_for_groups_set): bool {
                 if ($permissions_for_groups_set === null) {
                     $this->assertNull($params['permissions_for_groups']);
                 } else {
@@ -572,7 +573,7 @@ class DocmanItemCreatorTest extends TestCase
         }
 
         $this->creator_visitor->shouldReceive('visitFolder')
-            ->withArgs(function (Docman_Folder $item, array $params) use ($permissions_for_groups_set) : bool {
+            ->withArgs(function (Docman_Folder $item, array $params) use ($permissions_for_groups_set): bool {
                 if ($permissions_for_groups_set === null) {
                     $this->assertNull($params['permissions_for_groups']);
                 } else {
@@ -645,7 +646,7 @@ class DocmanItemCreatorTest extends TestCase
         }
 
         $this->creator_visitor->shouldReceive('visitEmbeddedFile')
-            ->withArgs(function (Docman_EmbeddedFile $item, array $params) use ($permissions_for_groups_set) : bool {
+            ->withArgs(function (Docman_EmbeddedFile $item, array $params) use ($permissions_for_groups_set): bool {
                 if ($permissions_for_groups_set === null) {
                     $this->assertNull($params['permissions_for_groups']);
                 } else {
@@ -1170,7 +1171,7 @@ class DocmanItemCreatorTest extends TestCase
         $this->assertNotNull($created_item_representation->file_properties);
     }
 
-    public function permissionsForGroupsSetRepresentationDataProvider() : array
+    public function permissionsForGroupsSetRepresentationDataProvider(): array
     {
         return [
             [null],

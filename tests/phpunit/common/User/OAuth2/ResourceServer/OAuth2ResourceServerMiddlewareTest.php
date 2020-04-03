@@ -245,12 +245,12 @@ final class OAuth2ResourceServerMiddlewareTest extends TestCase
         $scope_identifier = OAuth2ScopeIdentifier::fromIdentifierKey('foo');
         $scope_definition = new /** @psalm-immutable */class implements AuthenticationScopeDefinition
         {
-            public function getName() : string
+            public function getName(): string
             {
                 return 'Foo';
             }
 
-            public function getDescription() : string
+            public function getDescription(): string
             {
                 return 'Foo Description';
             }

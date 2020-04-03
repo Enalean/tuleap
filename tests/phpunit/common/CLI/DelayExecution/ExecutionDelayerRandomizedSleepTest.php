@@ -27,13 +27,13 @@ use PHPUnit\Framework\TestCase;
 
 final class ExecutionDelayerRandomizedSleepTest extends TestCase
 {
-    public function testNegativeDelayIsRejected() : void
+    public function testNegativeDelayIsRejected(): void
     {
         $this->expectException(InvalidArgumentException::class);
         new ExecutionDelayerRandomizedSleep(-10);
     }
 
-    public function testCanBeExecuted() : void
+    public function testCanBeExecuted(): void
     {
         $this->expectNotToPerformAssertions();
         (new ExecutionDelayerRandomizedSleep(0))->delay();

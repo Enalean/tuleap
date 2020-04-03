@@ -44,7 +44,7 @@ class AccessControlVerifierTest extends TestCase
      */
     private $repository;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
         $this->fine_grained_permissions = \Mockery::mock(FineGrainedRetriever::class);

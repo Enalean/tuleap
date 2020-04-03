@@ -38,7 +38,7 @@ class FRSReleaseDeleteUsingCLITest extends SOAPBase
 
     private $session_hash;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -49,7 +49,7 @@ class FRSReleaseDeleteUsingCLITest extends SOAPBase
         $this->session_hash = $this->getSessionHash();
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         unset($_SERVER['SERVER_NAME']);
         unset($_SERVER['SERVER_PORT']);

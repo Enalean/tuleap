@@ -65,8 +65,10 @@ class Planning_ArtifactParentsSelector_SubChildrenBelongingToTrackerCommand exte
     private function getParentTrackersAndStopAtGivenTracker(Tracker $tracker, Tracker $stop)
     {
         $hierarchy = [];
-        while (($parent = $this->hierarchy_factory->getParent($tracker)) &&
-            (int) $parent->getId() !== (int) $stop->getId()) {
+        while (
+            ($parent = $this->hierarchy_factory->getParent($tracker)) &&
+            (int) $parent->getId() !== (int) $stop->getId()
+        ) {
             $hierarchy[$parent->getId()] = $tracker;
             $tracker                     = $parent;
         }

@@ -41,7 +41,7 @@ final class WorkflowRulesManagerLoopSafeGuard
         $this->logger = $logger;
     }
 
-    public function process(Tracker_Artifact $artifact, callable $process_to_protect) : void
+    public function process(Tracker_Artifact $artifact, callable $process_to_protect): void
     {
         $artifact_id = $artifact->getId();
         if (isset($this->already_processed_artifacts[$artifact_id])) {

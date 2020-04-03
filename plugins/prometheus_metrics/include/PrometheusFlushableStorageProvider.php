@@ -29,10 +29,12 @@ use Tuleap\Redis\ClientFactory;
 
 final class PrometheusFlushableStorageProvider
 {
-    public function getFlushableStorage() : FlushableStorage
+    public function getFlushableStorage(): FlushableStorage
     {
-        if (ClientFactory::canClientBeBuiltFromForgeConfig() &&
-            ForgeConfig::exists(Prometheus::CONFIG_PROMETHEUS_PLATFORM)) {
+        if (
+            ClientFactory::canClientBeBuiltFromForgeConfig() &&
+            ForgeConfig::exists(Prometheus::CONFIG_PROMETHEUS_PLATFORM)
+        ) {
             return new RedisStore(ClientFactory::fromForgeConfig());
         }
         return new NullStore();

@@ -78,10 +78,12 @@ class MilestoneIsAllowedChecker
      */
     public function checkMilestoneIsAllowed(\Planning_Milestone $milestone): void
     {
-        if (! $this->plugin_manager->isPluginAllowedForProject(
-            $this->taskboard_plugin,
-            $milestone->getProject()->getID()
-        )) {
+        if (
+            ! $this->plugin_manager->isPluginAllowedForProject(
+                $this->taskboard_plugin,
+                $milestone->getProject()->getID()
+            )
+        ) {
             throw new MilestoneIsNotAllowedException(
                 sprintf(
                     dgettext('tuleap-taskboard', "Taskboard is not activated in project %s."),

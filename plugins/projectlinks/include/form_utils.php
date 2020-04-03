@@ -413,7 +413,7 @@ function form_Validation($ParamName, $Tests, $OptionalParam = null)
         $Tests = array($Tests => $OptionalParam);
     }
     foreach ($Tests as $Test => $OptionalParam) {
-        $valItem = new tValidation;
+        $valItem = new tValidation();
         $valItem->ParamName = $ParamName;
         switch ($Test) {
             case FORM_VAL_IS_NOT_ZERO_LENGTH:

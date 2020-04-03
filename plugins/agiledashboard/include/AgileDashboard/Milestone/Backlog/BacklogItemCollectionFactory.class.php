@@ -728,7 +728,8 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         foreach ($artifacts as $artifact) {
             $artifact_id = $artifact->getId();
 
-            if (!isset($semantics[$artifact_id])
+            if (
+                !isset($semantics[$artifact_id])
                 || !isset($semantics[$artifact_id][Tracker_Semantic_Status::NAME])
                 || $semantics[$artifact_id][Tracker_Semantic_Status::NAME] != AgileDashboard_BacklogItemDao::STATUS_OPEN
             ) {

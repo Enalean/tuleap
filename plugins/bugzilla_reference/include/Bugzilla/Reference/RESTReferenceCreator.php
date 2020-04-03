@@ -59,7 +59,7 @@ class RESTReferenceCreator
         $this->logger          = $logger;
     }
 
-    public function create(CrossReference $cross_reference, Reference $bugzilla) : void
+    public function create(CrossReference $cross_reference, Reference $bugzilla): void
     {
         $source_keyword = $cross_reference->getRefSourceKey();
         $source_id      = $cross_reference->getRefSourceId();

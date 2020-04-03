@@ -484,7 +484,7 @@ class LinePlot extends Plot
             }
         }
     }
-} // Class
+}
 
 
 //===================================================
@@ -588,8 +588,10 @@ class AccLinePlot extends Plot
         // (We check for empty in case the scale is  a log scale
         // and hence doesn't contain any xlabel_offset)
 
-        if (empty($graph->xaxis->scale->ticks->xlabel_offset) ||
-        $graph->xaxis->scale->ticks->xlabel_offset == 0) {
+        if (
+            empty($graph->xaxis->scale->ticks->xlabel_offset) ||
+            $graph->xaxis->scale->ticks->xlabel_offset == 0
+        ) {
             if ($this->center) {
                 ++$this->numpoints;
                 $a = 0.5;
@@ -707,7 +709,7 @@ class AccLinePlot extends Plot
             $p->coords[0][] = $tmp;
         }
     }
-} // Class
+}
 
 
 /* EOF */

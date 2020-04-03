@@ -33,12 +33,13 @@ use Tuleap\TemporaryTestDirectory;
 
 final class BackendCVSTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, TemporaryTestDirectory;
+    use MockeryPHPUnitIntegration;
+    use TemporaryTestDirectory;
 
     private $initial_sys_project_backup_path;
     private $initial_codendi_log;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         mkdir($this->getTmpDir() . '/var/lock/cvs', 0770, true);
         mkdir($this->getTmpDir() . '/cvsroot');
@@ -58,7 +59,7 @@ final class BackendCVSTest extends TestCase
     }
 
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         Backend::clearInstances();
         ForgeConfig::set('sys_project_backup_path', $this->initial_sys_project_backup_path);
@@ -73,13 +74,13 @@ final class BackendCVSTest extends TestCase
         );
     }
 
-    public function testConstructor() : void
+    public function testConstructor(): void
     {
         $this->assertNotNull(BackendCVS::instance());
     }
 
 
-    public function testArchiveProjectCVS() : void
+    public function testArchiveProjectCVS(): void
     {
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getUnixName')->with(false)->andReturns('TestProj');
@@ -105,7 +106,7 @@ final class BackendCVSTest extends TestCase
         $this->assertFalse($backend->archiveProjectCVS(99999));
     }
 
-    public function testCreateProjectCVS() : void
+    public function testCreateProjectCVS(): void
     {
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getUnixName')->with(false)->andReturns('TestProj');
@@ -154,7 +155,7 @@ final class BackendCVSTest extends TestCase
         $this->assertContains("user3\n", $writers_file, 'writers file should contain user3');
     }
 
-    public function testCVSRootListUpdate() : void
+    public function testCVSRootListUpdate(): void
     {
         $backend = \Mockery::mock(\BackendCVS::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $service_dao = \Mockery::spy(\ServiceDao::class);
@@ -201,7 +202,7 @@ final class BackendCVSTest extends TestCase
         $this->assertTrue(is_file($GLOBALS['cvs_root_allow_file'] . ".old"), "cvs_root_allow.old file should be there");
     }
 
-    public function testSetCVSPrivacyPrivate() : void
+    public function testSetCVSPrivacyPrivate(): void
     {
         $backend = \Mockery::mock(\BackendCVS::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $backend->shouldReceive('chmod')->with($GLOBALS['cvs_prefix'] . '/' . 'toto', 02770)->once()->andReturns(true);
@@ -212,7 +213,7 @@ final class BackendCVSTest extends TestCase
         $this->assertTrue($backend->setCVSPrivacy($project, true));
     }
 
-    public function testsetCVSPrivacyPublic() : void
+    public function testsetCVSPrivacyPublic(): void
     {
         $backend = \Mockery::mock(\BackendCVS::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $backend->shouldReceive('chmod')->with($GLOBALS['cvs_prefix'] . '/' . 'toto', 02775)->once()->andReturns(true);
@@ -223,7 +224,7 @@ final class BackendCVSTest extends TestCase
         $this->assertTrue($backend->setCVSPrivacy($project, false));
     }
 
-    public function testSetCVSPrivacyNoRepository() : void
+    public function testSetCVSPrivacyNoRepository(): void
     {
         $path_that_doesnt_exist = '/' . bin2hex(random_bytes(32));
 
@@ -237,7 +238,7 @@ final class BackendCVSTest extends TestCase
         $this->assertFalse($backend->setCVSPrivacy($project, false));
     }
 
-    public function testRenameCVSRepository() : void
+    public function testRenameCVSRepository(): void
     {
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getUnixName')->with(false)->andReturns('TestProj');
@@ -272,7 +273,7 @@ final class BackendCVSTest extends TestCase
         $this->assertStringNotContainsString('TestProj', $file, 'There should no longer be any occurrence of old project name in CVSROOT/commitinfo');
     }
 
-    public function testRenameCVSRepositoryTracked() : void
+    public function testRenameCVSRepositoryTracked(): void
     {
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getUnixName')->with(false)->andReturns('TestProj');
@@ -315,7 +316,7 @@ final class BackendCVSTest extends TestCase
         $this->assertStringNotContainsString('TestProj', $file, 'There should no longer be any occurrence of old project name in CVSROOT/commitinfo');
     }
 
-    public function testRenameCVSRepositoryWithCVSNT() : void
+    public function testRenameCVSRepositoryWithCVSNT(): void
     {
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getUnixName')->with(false)->andReturns('TestProj');
@@ -349,7 +350,7 @@ final class BackendCVSTest extends TestCase
         $this->assertStringNotContainsString('TestProj', $file, 'There should no longer be any occurrence of old project name in CVSROOT/loginfo');
     }
 
-    public function testIsNameAvailable() : void
+    public function testIsNameAvailable(): void
     {
         $cvsdir = $GLOBALS['cvs_prefix'] . '/foobar';
         mkdir($cvsdir);
@@ -358,7 +359,7 @@ final class BackendCVSTest extends TestCase
         $this->assertFalse($backend->isNameAvailable("foobar"));
     }
 
-    public function testUpdateCVSWritersForGivenMember() : void
+    public function testUpdateCVSWritersForGivenMember(): void
     {
         $backend = \Mockery::mock(\BackendCVS::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -392,7 +393,7 @@ final class BackendCVSTest extends TestCase
         $this->assertTrue($backend->updateCVSWritersForGivenMember($user));
     }
 
-    public function testUpdateCVSWatchModeNotifyMissing() : void
+    public function testUpdateCVSWatchModeNotifyMissing(): void
     {
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getUnixName')->with(false)->andReturns('TestProj');
@@ -407,7 +408,7 @@ final class BackendCVSTest extends TestCase
         $this->assertFalse($backend->updateCVSWatchMode(1));
     }
 
-    public function testUpdateCVSWatchModeNotifyExist() : void
+    public function testUpdateCVSWatchModeNotifyExist(): void
     {
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getUnixName')->with(false)->andReturns('TestProj');
@@ -425,7 +426,7 @@ final class BackendCVSTest extends TestCase
         $this->assertTrue($backend->updateCVSWatchMode(1));
     }
 
-    public function testCheckCVSModeFilesMissing() : void
+    public function testCheckCVSModeFilesMissing(): void
     {
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getUnixName')->with(false)->andReturns('TestProj');
@@ -459,7 +460,7 @@ final class BackendCVSTest extends TestCase
         $this->assertTrue($backend->checkCVSMode($project));
     }
 
-    public function testCheckCVSModeNeedOwnerUpdate() : void
+    public function testCheckCVSModeNeedOwnerUpdate(): void
     {
         $cvsdir = $GLOBALS['cvs_prefix'] . '/TestProj';
         mkdir($cvsdir . '/CVSROOT', 0700, true);

@@ -27,7 +27,7 @@ class CookieManager
 {
     private const PREFIX_HOST = '__Host-';
 
-    public function setCookie(string $name, string $value, int $expire = 0) : void
+    public function setCookie(string $name, string $value, int $expire = 0): void
     {
         setcookie(
             self::getCookieName($name),
@@ -42,27 +42,27 @@ class CookieManager
         );
     }
 
-    public static function canCookieUseSecureFlag() : bool
+    public static function canCookieUseSecureFlag(): bool
     {
         return (bool) ForgeConfig::get('sys_https_host');
     }
 
-    public function getCookie(string $name) : ?string
+    public function getCookie(string $name): ?string
     {
         return $_COOKIE[self::getCookieName($name)] ?? null;
     }
 
-    public function isCookie(string $name) : bool
+    public function isCookie(string $name): bool
     {
         return isset($_COOKIE[self::getCookieName($name)]);
     }
 
-    public function removeCookie(string $name) : void
+    public function removeCookie(string $name): void
     {
         $this->setCookie($name, '');
     }
 
-    public static function getCookieName(string $name) : string
+    public static function getCookieName(string $name): string
     {
         $cookie_prefix = ForgeConfig::get('sys_cookie_prefix');
         $cookie_name   = "${cookie_prefix}_${name}";

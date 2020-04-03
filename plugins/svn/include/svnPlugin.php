@@ -558,7 +558,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         );
     }
 
-    public function routeSvnPlugin() : DispatchableWithRequest
+    public function routeSvnPlugin(): DispatchableWithRequest
     {
         $repository_manager  = $this->getRepositoryManager();
         $permissions_manager = $this->getPermissionsManager();
@@ -645,7 +645,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         );
     }
 
-    public function redirectOldViewVcRoutes() : DispatchableWithRequest
+    public function redirectOldViewVcRoutes(): DispatchableWithRequest
     {
         return new RedirectOldViewVCUrls($this->getPluginPath());
     }

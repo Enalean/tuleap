@@ -38,7 +38,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
         return $this->getResponse($request, REST_TestDataBuilder::TEST_USER_2_NAME);
     }
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

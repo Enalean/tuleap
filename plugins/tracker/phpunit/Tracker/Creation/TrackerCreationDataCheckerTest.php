@@ -19,7 +19,7 @@
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation;
 
@@ -32,6 +32,7 @@ use Tuleap\Tracker\TrackerIsInvalidException;
 final class TrackerCreationDataCheckerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\TrackerFactory
      */

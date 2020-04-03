@@ -95,7 +95,8 @@ class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder
         int $limit,
         int $offset
     ) {
-        if ($milestone instanceof Planning_VirtualTopMilestone &&
+        if (
+            $milestone instanceof Planning_VirtualTopMilestone &&
             $this->explicit_backlog_dao->isProjectUsingExplicitBacklog((int) $milestone->getGroupId())
         ) {
             return $this->backlog_item_collection_factory->getExplicitTopBacklogItems(

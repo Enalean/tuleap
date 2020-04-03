@@ -39,12 +39,12 @@ final class ClearPrometheusMetricsCommand extends Command
         $this->flushable_storage = $flushable_storage;
     }
 
-    protected function configure() : void
+    protected function configure(): void
     {
         $this->setDescription('Clear Prometheus metrics');
     }
 
-    public function execute(InputInterface $input, OutputInterface $output) : int
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->flushable_storage->flush();
         $output->writeln('<info>Prometheus metrics have been cleared</info>');

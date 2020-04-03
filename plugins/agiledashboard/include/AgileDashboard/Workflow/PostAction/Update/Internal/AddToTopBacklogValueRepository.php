@@ -37,14 +37,14 @@ class AddToTopBacklogValueRepository
         $this->add_to_top_backlog_post_action_dao = $add_to_top_backlog_post_action_dao;
     }
 
-    public function create(Transition $transition) :  void
+    public function create(Transition $transition): void
     {
         $this->add_to_top_backlog_post_action_dao->createPostActionForTransitionId(
             (int) $transition->getId()
         );
     }
 
-    public function deleteAllByTransition(Transition $transition) : void
+    public function deleteAllByTransition(Transition $transition): void
     {
         $this->add_to_top_backlog_post_action_dao->deleteTransitionPostActions(
             (int) $transition->getId()

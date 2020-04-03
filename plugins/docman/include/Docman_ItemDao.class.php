@@ -27,7 +27,7 @@ class Docman_ItemDao extends DataAccessObject
     /**
      * Return the timestamp of the current day at 00:00
      */
-    private static function getObsoleteToday() : int
+    private static function getObsoleteToday(): int
     {
         $today = getdate();
         return mktime(0, 0, 1, $today['mon'], $today['mday'], $today['year']);
@@ -37,7 +37,7 @@ class Docman_ItemDao extends DataAccessObject
      * Return the SQL statement that exclude the items that are obsolete as of today.
      * static
      */
-    private static function getExcludeObsoleteItemsStmt(string $table) : string
+    private static function getExcludeObsoleteItemsStmt(string $table): string
     {
         $sql = '';
         $sql .= '(' . $table . '.obsolescence_date = 0 OR ';
@@ -48,7 +48,7 @@ class Docman_ItemDao extends DataAccessObject
     /**
      * Return the SQL statement that exclude the items that are deleted.
      */
-    private static function getExcludeDeletedItemsStmt(string $table) : string
+    private static function getExcludeDeletedItemsStmt(string $table): string
     {
         return $table . '.delete_date IS NULL';
     }

@@ -121,7 +121,7 @@ class Tracker_Hierarchy_Presenter
         $this->tracker_used_in_trigger_rules_names = implode(
             ', ',
             array_map(
-                static function (Tracker $tracker) : string {
+                static function (Tracker $tracker): string {
                     return $tracker->getName();
                 },
                 $trackers_used_in_trigger_rules

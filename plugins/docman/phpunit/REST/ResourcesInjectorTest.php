@@ -29,7 +29,7 @@ final class ResourcesInjectorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testProjectResourcesAreInjectedWhenTheProjectUsesTheDocumentManagerService() : void
+    public function testProjectResourcesAreInjectedWhenTheProjectUsesTheDocumentManagerService(): void
     {
         $resources = [];
 
@@ -41,7 +41,7 @@ final class ResourcesInjectorTest extends TestCase
         $this->assertNotEmpty($resources);
     }
 
-    public function testProjectResourcesAreNotInjectedWhenTheProjectDoesNotUseTheDocumentManagerService() : void
+    public function testProjectResourcesAreNotInjectedWhenTheProjectDoesNotUseTheDocumentManagerService(): void
     {
         $resources = [];
 

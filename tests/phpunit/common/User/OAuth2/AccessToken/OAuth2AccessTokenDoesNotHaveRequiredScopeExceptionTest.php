@@ -35,12 +35,12 @@ final class OAuth2AccessTokenDoesNotHaveRequiredScopeExceptionTest extends TestC
     {
         $scope = new class /** @psalm-immutable */ implements AuthenticationScope
         {
-            public static function fromItself() : AuthenticationScope
+            public static function fromItself(): AuthenticationScope
             {
                 throw new LogicException('Not Supposed to be called in the test');
             }
 
-            public static function fromIdentifier(AuthenticationScopeIdentifier $identifier) : ?AuthenticationScope
+            public static function fromIdentifier(AuthenticationScopeIdentifier $identifier): ?AuthenticationScope
             {
                 throw new LogicException('Not Supposed to be called in the test');
             }
@@ -54,19 +54,19 @@ final class OAuth2AccessTokenDoesNotHaveRequiredScopeExceptionTest extends TestC
             {
                 return new class /** @psalm-immutable */ implements AuthenticationScopeDefinition
                 {
-                    public function getName() : string
+                    public function getName(): string
                     {
                         return 'Test';
                     }
 
-                    public function getDescription() : string
+                    public function getDescription(): string
                     {
                         return 'For test';
                     }
                 };
             }
 
-            public function covers(AuthenticationScope $scope) : bool
+            public function covers(AuthenticationScope $scope): bool
             {
                 throw new LogicException('Not Supposed to be called in the test');
             }

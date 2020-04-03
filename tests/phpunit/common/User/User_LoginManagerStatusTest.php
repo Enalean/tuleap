@@ -22,17 +22,19 @@ declare(strict_types=1);
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class User_LoginManagerStatusTest extends \PHPUnit\Framework\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\ForgeConfigSandbox, \Tuleap\GlobalLanguageMock;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\ForgeConfigSandbox;
+    use \Tuleap\GlobalLanguageMock;
 
     private $user_status_manager;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->user_status_manager = new User_UserStatusManager();
     }
 
-    public function testItSucceedsIfUserIsActive() : void
+    public function testItSucceedsIfUserIsActive(): void
     {
         $this->expectNotToPerformAssertions();
         $this->user_status_manager->checkStatus(
@@ -40,7 +42,7 @@ final class User_LoginManagerStatusTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItSucceedsIfUserIsRestricted() : void
+    public function testItSucceedsIfUserIsRestricted(): void
     {
         $this->expectNotToPerformAssertions();
         $this->user_status_manager->checkStatus(
@@ -48,7 +50,7 @@ final class User_LoginManagerStatusTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItSucceedsIfAllowPendingAndStatusIsValidated() : void
+    public function testItSucceedsIfAllowPendingAndStatusIsValidated(): void
     {
         $this->expectNotToPerformAssertions();
         $this->user_status_manager->checkStatusOnVerifyPage(
@@ -56,7 +58,7 @@ final class User_LoginManagerStatusTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItSucceedsIfAllowPendingAndStatusIsValidatedRestricted() : void
+    public function testItSucceedsIfAllowPendingAndStatusIsValidatedRestricted(): void
     {
         $this->expectNotToPerformAssertions();
         $this->user_status_manager->checkStatusOnVerifyPage(
@@ -64,7 +66,7 @@ final class User_LoginManagerStatusTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItSucceedsIfAllowPendingAndStatusIsPendingAndNoUserApproval() : void
+    public function testItSucceedsIfAllowPendingAndStatusIsPendingAndNoUserApproval(): void
     {
         $this->expectNotToPerformAssertions();
         ForgeConfig::set('sys_user_approval', 0);
@@ -73,7 +75,7 @@ final class User_LoginManagerStatusTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItRaisesAnExceptionWhenUserIsDeleted() : void
+    public function testItRaisesAnExceptionWhenUserIsDeleted(): void
     {
         $this->expectException(\User_StatusDeletedException::class);
         $this->user_status_manager->checkStatus(
@@ -81,7 +83,7 @@ final class User_LoginManagerStatusTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItRaisesAnExceptionWhenUserIsSuspended() : void
+    public function testItRaisesAnExceptionWhenUserIsSuspended(): void
     {
         $this->expectException(\User_StatusSuspendedException::class);
         $this->user_status_manager->checkStatus(
@@ -89,7 +91,7 @@ final class User_LoginManagerStatusTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItRaisesAnExceptionWhenStatusIsUnknown() : void
+    public function testItRaisesAnExceptionWhenStatusIsUnknown(): void
     {
         $this->expectException(\User_StatusInvalidException::class);
         $this->user_status_manager->checkStatus(
@@ -97,7 +99,7 @@ final class User_LoginManagerStatusTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItRaisesAnExceptionIfAllowPendingAndStatusIsUnknown() : void
+    public function testItRaisesAnExceptionIfAllowPendingAndStatusIsUnknown(): void
     {
         $this->expectException(\User_StatusInvalidException::class);
         $this->user_status_manager->checkStatusOnVerifyPage(
@@ -105,7 +107,7 @@ final class User_LoginManagerStatusTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItRaisesAnExceptionWhenSiteMandateUserApprovalAndStatusIsPending() : void
+    public function testItRaisesAnExceptionWhenSiteMandateUserApprovalAndStatusIsPending(): void
     {
         $this->expectException(\User_StatusPendingException::class);
         ForgeConfig::set('sys_user_approval', 1);
@@ -114,7 +116,7 @@ final class User_LoginManagerStatusTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItRaisesAnExceptionWhenSiteMandateUserApprovalAndStatusIsValidated() : void
+    public function testItRaisesAnExceptionWhenSiteMandateUserApprovalAndStatusIsValidated(): void
     {
         $this->expectException(\User_StatusPendingException::class);
         ForgeConfig::set('sys_user_approval', 1);
@@ -123,7 +125,7 @@ final class User_LoginManagerStatusTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItRaisesAnExceptionWhenSiteDoesntMandateUserApprovalAndStatusIsValidated() : void
+    public function testItRaisesAnExceptionWhenSiteDoesntMandateUserApprovalAndStatusIsValidated(): void
     {
         $this->expectException(\User_StatusPendingException::class);
         ForgeConfig::set('sys_user_approval', 0);
@@ -132,7 +134,7 @@ final class User_LoginManagerStatusTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItRaisesAnExceptionWhenSiteMandateUserApprovalAndStatusIsValidatedRestricted() : void
+    public function testItRaisesAnExceptionWhenSiteMandateUserApprovalAndStatusIsValidatedRestricted(): void
     {
         $this->expectException(\User_StatusPendingException::class);
         ForgeConfig::set('sys_user_approval', 1);
@@ -141,7 +143,7 @@ final class User_LoginManagerStatusTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItRaisesAnExceptionWhenSiteDoesntMandateUserApprovalAndStatusIsValidatedRestricted() : void
+    public function testItRaisesAnExceptionWhenSiteDoesntMandateUserApprovalAndStatusIsValidatedRestricted(): void
     {
         $this->expectException(\User_StatusPendingException::class);
         ForgeConfig::set('sys_user_approval', 0);
@@ -150,7 +152,7 @@ final class User_LoginManagerStatusTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItRaisesAnExceptionWhenSiteDoesntMandateUserApprovalAndStatusIsPending() : void
+    public function testItRaisesAnExceptionWhenSiteDoesntMandateUserApprovalAndStatusIsPending(): void
     {
         $this->expectException(\User_StatusPendingException::class);
         ForgeConfig::set('sys_user_approval', 0);

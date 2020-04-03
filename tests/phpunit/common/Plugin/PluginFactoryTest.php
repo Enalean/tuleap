@@ -34,7 +34,8 @@ use Tuleap\ForgeConfigSandbox;
 
 final class PluginFactoryTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PluginDao

@@ -125,7 +125,8 @@ class proftpdPlugin extends Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration
 
     public function cssfile($params)
     {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
+        if (
+            strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0
         ) {
             $assets = new IncludeAssets(

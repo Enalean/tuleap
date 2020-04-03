@@ -33,7 +33,9 @@ use UserManager;
 
 final class URLVerificationExpiredPasswordTest extends TestCase
 {
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration, GlobalLanguageMock, ForgeConfigSandbox;
+    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
+    use ForgeConfigSandbox;
 
     /**
      * @var

@@ -39,7 +39,7 @@ class LFSTransferVerifierTest extends TestCase
     private $path_allocator;
     private $dao;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->filesystem           = \Mockery::mock(FilesystemInterface::class);
         $this->lfs_object_retriever = \Mockery::mock(LFSObjectRetriever::class);

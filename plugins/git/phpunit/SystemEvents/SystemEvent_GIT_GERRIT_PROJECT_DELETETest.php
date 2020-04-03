@@ -48,7 +48,7 @@ class SystemEvent_GIT_GERRIT_PROJECT_DELETE_BaseTest extends TestCase  // phpcs:
      */
     private $event;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

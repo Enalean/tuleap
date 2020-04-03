@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Docman\ApprovalTable;
 
@@ -29,7 +29,7 @@ class ApprovalTableStateMapper
      * @return string The label corresponding to $state_id
      * @throws \Exception
      */
-    public function getStatusStringFromStatusId(int $state_id) : string
+    public function getStatusStringFromStatusId(int $state_id): string
     {
         $statuses_map = [
             PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET    => dgettext('tuleap-docman', 'Not yet'),

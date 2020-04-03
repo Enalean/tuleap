@@ -56,7 +56,7 @@ final class ReviewerChangeNotificationToProcessBuilder implements NotificationTo
         $this->html_url_builder          = $html_url_builder;
     }
 
-    public function getNotificationsToProcess(EventSubjectToNotification $event) : array
+    public function getNotificationsToProcess(EventSubjectToNotification $event): array
     {
         $reviewer_change_pull_request_association = $this->reviewer_change_retriever->getChangeWithTheAssociatedPullRequestByID(
             $event->getChangeID()

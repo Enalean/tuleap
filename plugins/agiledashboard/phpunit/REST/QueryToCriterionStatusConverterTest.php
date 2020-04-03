@@ -29,6 +29,7 @@ use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusOpen;
 class QueryToCriterionStatusConverterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var QueryToCriterionStatusConverter
      */

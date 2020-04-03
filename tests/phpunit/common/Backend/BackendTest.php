@@ -37,7 +37,8 @@ use EventManager;
 
 final class BackendTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalSVNPollution;
+    use MockeryPHPUnitIntegration;
+    use GlobalSVNPollution;
 
     protected function tearDown(): void
     {
@@ -45,7 +46,7 @@ final class BackendTest extends TestCase
         EventManager::clearInstance();
     }
 
-    public function testFactoryCore() : void
+    public function testFactoryCore(): void
     {
         // Core backends
         $this->assertInstanceOf(\BackendSVN::class, Backend::instance(Backend::SVN));
@@ -73,7 +74,7 @@ final class BackendTest extends TestCase
         Backend::instance('plugin_fake');
     }
 
-    public function testFactoryOverride() : void
+    public function testFactoryOverride(): void
     {
         //Create a fake backend class which simulate an override of BackendSVN by a plugin
         $backend_overridden_by_plugin = new class extends BackendSVN
@@ -93,7 +94,7 @@ final class BackendTest extends TestCase
         $this->assertInstanceOf(get_class($backend_overridden_by_plugin), Backend::instance(Backend::SVN));
     }
 
-    public function testFactoryOverrideWithoutParameters() : void
+    public function testFactoryOverrideWithoutParameters(): void
     {
         $backend_overridden_by_plugin_and_has_setup = new class extends BackendSVN
         {
@@ -103,7 +104,7 @@ final class BackendTest extends TestCase
             {
             }
 
-            protected function setUp($a, $b, $c) : void
+            protected function setUp($a, $b, $c): void
             {
                 $this->a_variable_for_tests = ($a + $b) * $c;
             }
@@ -120,7 +121,7 @@ final class BackendTest extends TestCase
         $this->assertEquals($b->a_variable_for_tests, -25);
     }
 
-    public function testFactoryOverrideWithParameters() : void
+    public function testFactoryOverrideWithParameters(): void
     {
         $backend_overridden_by_plugin_and_has_setup = new class extends BackendSVN
         {
@@ -130,7 +131,7 @@ final class BackendTest extends TestCase
             {
             }
 
-            protected function setUp($a, $b, $c) : void
+            protected function setUp($a, $b, $c): void
             {
                 $this->a_variable_for_tests = ($a + $b) * $c;
             }
@@ -157,7 +158,7 @@ final class BackendTest extends TestCase
             {
             }
 
-            protected function setUp($a, $b, $c) : void
+            protected function setUp($a, $b, $c): void
             {
                 $this->a_variable_for_tests = ($a + $b) * $c;
             }
@@ -192,7 +193,7 @@ final class BackendTest extends TestCase
         $this->assertEquals($b->a_variable_for_tests, 9);
     }
 
-    public function testFactoryOverrideWithParametersButNoSetUp() : void
+    public function testFactoryOverrideWithParametersButNoSetUp(): void
     {
         $test_backend = new class extends BackendSVN
         {
@@ -243,7 +244,7 @@ final class BackendTest extends TestCase
 
     private function buildPluginTestBackend(BackendSVN $backend): object
     {
-        return new class($backend) {
+        return new class ($backend) {
             /**
              * @var BackendSVN
              */

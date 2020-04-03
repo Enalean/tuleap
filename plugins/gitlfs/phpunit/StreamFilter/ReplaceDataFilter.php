@@ -36,7 +36,7 @@ final class ReplaceDataFilter implements FilterInterface
         $this->replacement_data = $replacement_data;
     }
 
-    public function process($data_chunk) : string
+    public function process($data_chunk): string
     {
         if ($this->has_already_written_expected_data) {
             return '';
@@ -44,12 +44,12 @@ final class ReplaceDataFilter implements FilterInterface
         return $this->replacement_data;
     }
 
-    public function getFilteredChainIdentifier() : int
+    public function getFilteredChainIdentifier(): int
     {
         return STREAM_FILTER_READ;
     }
 
-    public function filterDetachedEvent() : void
+    public function filterDetachedEvent(): void
     {
     }
 }

@@ -475,7 +475,7 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         }
     }
 
-    private function cleanProjectAdminsFromUserCreator(ProjectUGroup $ugroup, array $users, PFUser $user_creator) : void
+    private function cleanProjectAdminsFromUserCreator(ProjectUGroup $ugroup, array $users, PFUser $user_creator): void
     {
         if (! empty($users) && ! in_array($user_creator, $users)) {
             $this->event_manager->processEvent(

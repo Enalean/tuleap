@@ -25,32 +25,32 @@ final class SOAP_WSDLMethodGeneratorTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         EventManager::clearInstance();
         parent::tearDown();
     }
 
-    public function testExtractCommentShouldContainsComment() : void
+    public function testExtractCommentShouldContainsComment(): void
     {
         $comment = $this->givenTheCommentOfAddProject();
         $this->assertStringContainsString('Create a new project', $comment);
     }
 
-    public function testExtractCommentShouldContainsParams() : void
+    public function testExtractCommentShouldContainsParams(): void
     {
         $comment = $this->givenTheCommentOfAddProject();
         $this->assertStringContainsString('@param', $comment);
     }
 
-    public function testExtractCommentShouldNotContainsCommentsDelimiters() : void
+    public function testExtractCommentShouldNotContainsCommentsDelimiters(): void
     {
         $comment = $this->givenTheCommentOfAddProject();
         $this->assertStringNotContainsString('/**', $comment);
         $this->assertStringNotContainsString('*/', $comment);
     }
 
-    public function testExtractCommentShouldNotContainsDocblocks() : void
+    public function testExtractCommentShouldNotContainsDocblocks(): void
     {
         $comment = $this->givenTheCommentOfAddProject();
         $this->assertStringNotContainsString('@return', $comment);
@@ -58,19 +58,19 @@ final class SOAP_WSDLMethodGeneratorTest extends \PHPUnit\Framework\TestCase
         $this->assertStringNotContainsString('@todo', $comment);
     }
 
-    public function testExtractCommentShouldNotFinishByTonsOfSpaces() : void
+    public function testExtractCommentShouldNotFinishByTonsOfSpaces(): void
     {
         $comment = $this->givenTheCommentOfAddProject();
         $this->assertNotRegExp('%[ ]+$%', $comment);
     }
 
-    public function testExtractParamsShouldListAllParameters() : void
+    public function testExtractParamsShouldListAllParameters(): void
     {
         $params = $this->givenTheParametersOfAddProject();
         $this->assertCount(5, $params);
     }
 
-    public function testExtractParamsShouldListParamsInOrder() : void
+    public function testExtractParamsShouldListParamsInOrder(): void
     {
         $params = $this->givenTheParametersOfAddProject();
 
@@ -86,31 +86,31 @@ final class SOAP_WSDLMethodGeneratorTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testExtractReturnType() : void
+    public function testExtractReturnType(): void
     {
         $return = $this->givenTheReturnTypeOfAddProject();
         $this->assertEquals(array('addProject' => 'xsd:int'), $return);
     }
 
-    public function testExtractReturnTypeBoolean() : void
+    public function testExtractReturnTypeBoolean(): void
     {
         $gen = $this->givenGenerator('returnBoolean');
         $this->assertEquals(array('returnBoolean' => 'xsd:boolean'), $gen->getReturnType());
     }
 
-    public function testItExtractReturnTypeArrayOfString() : void
+    public function testItExtractReturnTypeArrayOfString(): void
     {
         $gen = $this->givenGenerator('returnArrayOfString');
         $this->assertEquals(array('returnArrayOfString' => 'tns:ArrayOfstring'), $gen->getReturnType());
     }
 
-    public function testItThrowAnExceptionOnUnknownTypes() : void
+    public function testItThrowAnExceptionOnUnknownTypes(): void
     {
         $this->expectException(\Exception::class);
         $this->givenGenerator('returnUnknownType');
     }
 
-    public function testItAsksToPluginsForUnknownTypes() : void
+    public function testItAsksToPluginsForUnknownTypes(): void
     {
         $plugin = new class
         {

@@ -26,7 +26,8 @@ use Tuleap\TemporaryTestDirectory;
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepoTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, TemporaryTestDirectory;
+    use MockeryPHPUnitIntegration;
+    use TemporaryTestDirectory;
 
     private $fixtures;
     /**

@@ -407,7 +407,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         );
     }
 
-    public function routeAzureIndex() : DispatchableWithRequest
+    public function routeAzureIndex(): DispatchableWithRequest
     {
         $user_manager             = UserManager::instance();
         $user_mapping_manager     = new UserMappingManager(new UserMappingDao());
@@ -438,7 +438,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         );
     }
 
-    public function routeIndex() : DispatchableWithRequest
+    public function routeIndex(): DispatchableWithRequest
     {
         if (! $this->canPluginAuthenticateUser()) {
             return new DispatchTemporaryRedirect('/');
@@ -479,7 +479,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         );
     }
 
-    public function routeAdminIndex() : DispatchableWithRequest
+    public function routeAdminIndex(): DispatchableWithRequest
     {
         $provider_manager                               = $this->getProviderManager();
         $generic_provider_manager                       = new GenericProviderManager(new GenericProviderDao());
@@ -508,7 +508,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         return new AdminRouter($controller, $csrf_token);
     }
 
-    public function routeLogin() : DispatchableWithRequest
+    public function routeLogin(): DispatchableWithRequest
     {
         if (! $this->canPluginAuthenticateUser()) {
             return new DispatchTemporaryRedirect('/');
@@ -522,7 +522,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         );
     }
 
-    public function collectRoutesEvent(CollectRoutesEvent $event) : void
+    public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
             $r->addRoute(['GET', 'POST'], '[/[index.php]]', $this->getRouteHandler('routeIndex'));

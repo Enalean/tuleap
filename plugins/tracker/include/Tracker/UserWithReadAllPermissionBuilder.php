@@ -25,7 +25,7 @@ use Tracker_UserWithReadAllPermission;
 
 class UserWithReadAllPermissionBuilder
 {
-    public function buildUserWithReadAllPermission(PFUser $user) : Tracker_UserWithReadAllPermission
+    public function buildUserWithReadAllPermission(PFUser $user): Tracker_UserWithReadAllPermission
     {
         return new Tracker_UserWithReadAllPermission($user);
     }

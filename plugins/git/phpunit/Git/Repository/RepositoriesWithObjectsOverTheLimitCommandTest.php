@@ -33,13 +33,13 @@ final class RepositoriesWithObjectsOverTheLimitCommandTest extends TestCase
     private $repository_factory;
     private $repository_objects_size_retriever;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->repository_factory                = \Mockery::mock(\GitRepositoryFactory::class);
         $this->repository_objects_size_retriever = \Mockery::mock(GitRepositoryObjectsSizeRetriever::class);
     }
 
-    public function testRepositoryOverTheLimitIsListed() : void
+    public function testRepositoryOverTheLimitIsListed(): void
     {
         $command        = new RepositoriesWithObjectsOverTheLimitCommand(
             $this->repository_factory,
@@ -86,7 +86,7 @@ final class RepositoriesWithObjectsOverTheLimitCommandTest extends TestCase
         );
     }
 
-    public function testUnknownFormatIsRejected() : void
+    public function testUnknownFormatIsRejected(): void
     {
         $command        = new RepositoriesWithObjectsOverTheLimitCommand(
             $this->repository_factory,

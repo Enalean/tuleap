@@ -188,8 +188,10 @@ class _DiffEngine
 
             // Skip matching "snake".
             $copy = array();
-            while ($xi < $n_from && $yi < $n_to
-                    && !$this->xchanged[$xi] && !$this->ychanged[$yi]) {
+            while (
+                $xi < $n_from && $yi < $n_to
+                    && !$this->xchanged[$xi] && !$this->ychanged[$yi]
+            ) {
                 $copy[] = $from_lines[$xi++];
                 ++$yi;
             }
@@ -357,15 +359,19 @@ class _DiffEngine
     public function _compareseq($xoff, $xlim, $yoff, $ylim)
     {
     // Slide down the bottom initial diagonal.
-        while ($xoff < $xlim && $yoff < $ylim
-               && $this->xv[$xoff] == $this->yv[$yoff]) {
+        while (
+            $xoff < $xlim && $yoff < $ylim
+               && $this->xv[$xoff] == $this->yv[$yoff]
+        ) {
             ++$xoff;
             ++$yoff;
         }
 
     // Slide up the top initial diagonal.
-        while ($xlim > $xoff && $ylim > $yoff
-               && $this->xv[$xlim - 1] == $this->yv[$ylim - 1]) {
+        while (
+            $xlim > $xoff && $ylim > $yoff
+               && $this->xv[$xlim - 1] == $this->yv[$ylim - 1]
+        ) {
             --$xlim;
             --$ylim;
         }
@@ -549,7 +555,7 @@ class Diff
      */
     public function __construct($from_lines, $to_lines)
     {
-        $eng = new _DiffEngine;
+        $eng = new _DiffEngine();
         $this->edits = $eng->diff($from_lines, $to_lines);
         //$this->_check($from_lines, $to_lines);
     }

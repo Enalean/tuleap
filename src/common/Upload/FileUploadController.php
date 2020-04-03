@@ -84,7 +84,7 @@ final class FileUploadController extends DispatchablePSR15Compatible implements 
         );
     }
 
-    public function handle(ServerRequestInterface $request) : ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         if ($this->user_manager->getCurrentUser()->isAnonymous()) {
             throw new ForbiddenException();

@@ -136,8 +136,10 @@ class WikiService extends Controler
             $this->view = 'empty';
         }
 
-        if (isset($_REQUEST['format']) &&
-         ($_REQUEST['format'] == 'rss')) {
+        if (
+            isset($_REQUEST['format']) &&
+            ($_REQUEST['format'] == 'rss')
+        ) {
             $this->view = 'empty';
         }
 
@@ -163,8 +165,10 @@ class WikiService extends Controler
             }
         }
 
-        if (isset($_REQUEST['view']) &&
-         ($_REQUEST['view'] == 'browsePages')) {
+        if (
+            isset($_REQUEST['view']) &&
+            ($_REQUEST['view'] == 'browsePages')
+        ) {
             $this->view = 'browsePages';
         }
 

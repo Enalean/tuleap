@@ -28,14 +28,14 @@ use Tuleap\Cryptography\Exception\InvalidKeyException;
 
 final class EncryptionKeyTest extends TestCase
 {
-    public function testEncryptionKeyConstruction() : void
+    public function testEncryptionKeyConstruction(): void
     {
         $key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
 
         $this->assertEquals(SODIUM_CRYPTO_SECRETBOX_KEYBYTES, mb_strlen($key->getRawKeyMaterial()));
     }
 
-    public function testEncryptionKeyIsNotConstructedWhenTheKeyMaterialIsWronglySized() : void
+    public function testEncryptionKeyIsNotConstructedWhenTheKeyMaterialIsWronglySized(): void
     {
         $this->expectException(InvalidKeyException::class);
         new EncryptionKey(new ConcealedString('wrongly_sized_key_material'));

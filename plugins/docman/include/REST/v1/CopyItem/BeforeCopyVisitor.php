@@ -66,37 +66,37 @@ final class BeforeCopyVisitor implements ItemVisitor
         $this->document_ongoing_upload_retriever = $document_ongoing_upload_retriever;
     }
 
-    public function visitFolder(Docman_Folder $item, array $params = []) : ItemBeingCopiedExpectation
+    public function visitFolder(Docman_Folder $item, array $params = []): ItemBeingCopiedExpectation
     {
         return $this->handleItem($item, $params['destination'], $this->isFolderTitleConflictingVerifier());
     }
 
-    public function visitWiki(Docman_Wiki $item, array $params = []) : ItemBeingCopiedExpectation
+    public function visitWiki(Docman_Wiki $item, array $params = []): ItemBeingCopiedExpectation
     {
         return $this->handleDocument($params['current_time'], $item, $params['destination']);
     }
 
-    public function visitLink(Docman_Link $item, array $params = []) : ItemBeingCopiedExpectation
+    public function visitLink(Docman_Link $item, array $params = []): ItemBeingCopiedExpectation
     {
         return $this->handleDocument($params['current_time'], $item, $params['destination']);
     }
 
-    public function visitFile(Docman_File $item, array $params = []) : ItemBeingCopiedExpectation
+    public function visitFile(Docman_File $item, array $params = []): ItemBeingCopiedExpectation
     {
         return $this->handleDocument($params['current_time'], $item, $params['destination']);
     }
 
-    public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []) : ItemBeingCopiedExpectation
+    public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []): ItemBeingCopiedExpectation
     {
         return $this->handleDocument($params['current_time'], $item, $params['destination']);
     }
 
-    public function visitEmpty(Docman_Empty $item, array $params = []) : ItemBeingCopiedExpectation
+    public function visitEmpty(Docman_Empty $item, array $params = []): ItemBeingCopiedExpectation
     {
         return $this->handleDocument($params['current_time'], $item, $params['destination']);
     }
 
-    public function visitItem(Docman_Item $item, array $params = []) : ItemBeingCopiedExpectation
+    public function visitItem(Docman_Item $item, array $params = []): ItemBeingCopiedExpectation
     {
         throw new LogicException('Cannot copy a non specialized item');
     }
@@ -109,7 +109,7 @@ final class BeforeCopyVisitor implements ItemVisitor
         DateTimeImmutable $current_time,
         Docman_Item $item,
         Docman_Folder $destination
-    ) : ItemBeingCopiedExpectation {
+    ): ItemBeingCopiedExpectation {
         $is_document_being_uploaded = $this->document_ongoing_upload_retriever->isThereAlreadyAnUploadOngoing(
             $destination,
             $item->getTitle(),
@@ -132,7 +132,7 @@ final class BeforeCopyVisitor implements ItemVisitor
      * @psalm-param callable(string, Docman_Folder): bool $does_title_conflict
      * @throws RestException
      */
-    private function handleItem(Docman_Item $item, Docman_Folder $destination, callable $does_title_conflict) : ItemBeingCopiedExpectation
+    private function handleItem(Docman_Item $item, Docman_Folder $destination, callable $does_title_conflict): ItemBeingCopiedExpectation
     {
         if (! $item->accept($this->does_item_has_expected_type)) {
             throw new RestException(400, 'The item to copy does not match the one expected by the route');
@@ -150,7 +150,7 @@ final class BeforeCopyVisitor implements ItemVisitor
     /**
      * @psalm-return callable(string, Docman_Folder): bool
      */
-    private function isDocumentTitleConflictingVerifier() : callable
+    private function isDocumentTitleConflictingVerifier(): callable
     {
         return function (string $title, Docman_Folder $destination): bool {
             return $this->item_factory->doesTitleCorrespondToExistingDocument($title, $destination->getId());
@@ -160,7 +160,7 @@ final class BeforeCopyVisitor implements ItemVisitor
     /**
      * @psalm-return callable(string, Docman_Folder): bool
      */
-    private function isFolderTitleConflictingVerifier() : callable
+    private function isFolderTitleConflictingVerifier(): callable
     {
         return function (string $title, Docman_Folder $destination): bool {
             return $this->item_factory->doesTitleCorrespondToExistingFolder($title, $destination->getId());

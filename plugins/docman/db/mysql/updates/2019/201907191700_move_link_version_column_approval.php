@@ -23,17 +23,17 @@ declare(strict_types=1);
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 final class b201907191700_move_link_version_column_approval extends ForgeUpgrade_Bucket
 {
-    public function description() : string
+    public function description(): string
     {
         return 'Update approval table to avoid conflicts between links and files';
     }
 
-    public function preUp() : void
+    public function preUp(): void
     {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() : void
+    public function up(): void
     {
         if (! $this->db->columnNameExists('plugin_docman_approval', 'link_version_id')) {
             $res = $this->db->dbh->exec('ALTER TABLE plugin_docman_approval ADD COLUMN link_version_id INT(11) UNSIGNED NULL DEFAULT NULL');
@@ -81,7 +81,7 @@ final class b201907191700_move_link_version_column_approval extends ForgeUpgrade
         $this->db->dbh->commit();
     }
 
-    private function doesLinkVersionExist(int $link_version_id) : bool
+    private function doesLinkVersionExist(int $link_version_id): bool
     {
         $statement = $this->db->dbh->prepare('SELECT id FROM plugin_docman_link_version WHERE id = ?');
         if ($statement->execute([$link_version_id]) === false) {
@@ -93,7 +93,7 @@ final class b201907191700_move_link_version_column_approval extends ForgeUpgrade
         return (bool) $statement->fetchColumn();
     }
 
-    private function doesFileVersionExist(int $file_version_id) : bool
+    private function doesFileVersionExist(int $file_version_id): bool
     {
         $statement = $this->db->dbh->prepare('SELECT id FROM plugin_docman_version WHERE id = ?');
         if ($statement->execute([$file_version_id]) === false) {
@@ -105,7 +105,7 @@ final class b201907191700_move_link_version_column_approval extends ForgeUpgrade
         return (bool) $statement->fetchColumn();
     }
 
-    private function fixLinkApprovalTable(int $table_id) : void
+    private function fixLinkApprovalTable(int $table_id): void
     {
         $statement = $this->db->dbh->prepare(
             'UPDATE plugin_docman_approval SET link_version_id = version_id, version_id = NULL WHERE table_id = ?'
@@ -117,7 +117,7 @@ final class b201907191700_move_link_version_column_approval extends ForgeUpgrade
         }
     }
 
-    private function markApprovalTableAsPotentiallyCorrupted(int $table_id) : void
+    private function markApprovalTableAsPotentiallyCorrupted(int $table_id): void
     {
         $statement = $this->db->dbh->prepare(
             'UPDATE plugin_docman_approval SET might_be_corrupted = TRUE WHERE table_id = ?'

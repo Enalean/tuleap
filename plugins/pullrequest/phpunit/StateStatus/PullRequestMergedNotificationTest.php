@@ -34,7 +34,9 @@ use UserHelper;
 
 final class PullRequestMergedNotificationTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox, TemporaryTestDirectory;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
+    use TemporaryTestDirectory;
 
     public function testMergedNotificationCanBeBuiltFromTheOwnersOfThePullRequest(): void
     {

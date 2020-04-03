@@ -54,7 +54,7 @@ final class BeforeCopyVisitorTest extends TestCase
     /**
      * @dataProvider dataProviderProcessableItemClasses
      */
-    public function testAllExpectedItemTypesCanBeProcessed(string $processed_item_class) : void
+    public function testAllExpectedItemTypesCanBeProcessed(string $processed_item_class): void
     {
         $item_factory = Mockery::mock(Docman_ItemFactory::class);
         $item_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(false);
@@ -82,7 +82,7 @@ final class BeforeCopyVisitorTest extends TestCase
     /**
      * @dataProvider dataProviderProcessableItemClasses
      */
-    public function testProcessingOfANonExpectedItemTypeIsRejected(string $processed_item_class) : void
+    public function testProcessingOfANonExpectedItemTypeIsRejected(string $processed_item_class): void
     {
         $document_ongoing_upload_retriever = Mockery::mock(DocumentOngoingUploadRetriever::class);
         $document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturn(false);
@@ -103,14 +103,14 @@ final class BeforeCopyVisitorTest extends TestCase
         );
     }
 
-    public function dataProviderProcessableItemClasses() : ?\Generator
+    public function dataProviderProcessableItemClasses(): ?\Generator
     {
         foreach (self::VISITOR_PROCESSABLE_CLASSES as $processable_class) {
             yield [$processable_class];
         }
     }
 
-    public function testProcessingGenericItemIsRejected() : void
+    public function testProcessingGenericItemIsRejected(): void
     {
         $before_copy_visitor = new BeforeCopyVisitor(
             new DoesItemHasExpectedTypeVisitor(Docman_Item::class),
@@ -122,7 +122,7 @@ final class BeforeCopyVisitorTest extends TestCase
         $before_copy_visitor->visitItem(Mockery::mock(Docman_Item::class));
     }
 
-    public function testDocumentExpectedTitleIsUpdatedInCaseOfConflict() : void
+    public function testDocumentExpectedTitleIsUpdatedInCaseOfConflict(): void
     {
         $item_factory                      = Mockery::mock(Docman_ItemFactory::class);
         $document_ongoing_upload_retriever = Mockery::mock(DocumentOngoingUploadRetriever::class);
@@ -153,7 +153,7 @@ final class BeforeCopyVisitorTest extends TestCase
         );
     }
 
-    public function testFolderExpectedTitleIsUpdatedInCaseOfConflict() : void
+    public function testFolderExpectedTitleIsUpdatedInCaseOfConflict(): void
     {
         $item_factory        = Mockery::mock(Docman_ItemFactory::class);
         $before_copy_visitor = new BeforeCopyVisitor(
@@ -182,7 +182,7 @@ final class BeforeCopyVisitorTest extends TestCase
         );
     }
 
-    public function testCopyOfADocumentIsRejectedIfAnUploadIsAlreadyOngoingWithTheSameTitle() : void
+    public function testCopyOfADocumentIsRejectedIfAnUploadIsAlreadyOngoingWithTheSameTitle(): void
     {
         $document_ongoing_upload_retriever = Mockery::mock(DocumentOngoingUploadRetriever::class);
         $before_copy_visitor               = new BeforeCopyVisitor(

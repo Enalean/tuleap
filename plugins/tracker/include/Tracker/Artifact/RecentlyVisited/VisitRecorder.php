@@ -44,7 +44,7 @@ class VisitRecorder
     /**
      * @throws \DataAccessException
      */
-    public function record(\PFUser $user, \Tracker_Artifact $artifact) : void
+    public function record(\PFUser $user, \Tracker_Artifact $artifact): void
     {
         if ($user->isAnonymous()) {
             return;

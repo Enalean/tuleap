@@ -51,7 +51,7 @@ final class ReviewerRetrieverTest extends TestCase
      */
     private $retriever;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->dao                = Mockery::mock(ReviewerDAO::class);
         $this->user_manager       = Mockery::mock(\UserManager::class);

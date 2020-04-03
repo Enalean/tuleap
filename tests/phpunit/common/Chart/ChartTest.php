@@ -25,7 +25,7 @@ namespace Tuleap\Chart {
     use PHPUnit\Framework\TestCase;
     use Tuleap\Test\Network\HTTPHeaderStack;
 
-    function header($header, $replace = true, $http_response_code = null) : void
+    function header($header, $replace = true, $http_response_code = null): void
     {
         \Tuleap\header($header, $replace, $http_response_code);
     }

@@ -36,7 +36,9 @@ use UserHelper;
 
 final class PullRequestUpdatedNotificationTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox, TemporaryTestDirectory;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
+    use TemporaryTestDirectory;
 
     public function testUpdateNotificationCanBeBuilt(): void
     {

@@ -28,12 +28,12 @@ use Symfony\Component\Console\Command\Command;
 
 final class CLICommandsCollectorTest extends TestCase
 {
-    public function testALoadedCommandCanBeFoundInTheApplication() : void
+    public function testALoadedCommandCanBeFoundInTheApplication(): void
     {
         $commands_collector = new CLICommandsCollector();
         $commands_collector->addCommand(
             'testcommand',
-            static function () : Command {
+            static function (): Command {
                 return new class extends Command {
                     public function __construct()
                     {

@@ -275,5 +275,5 @@ class ScatterPlot extends Plot
             );
         }
     }
-} // Class
+}
 /* EOF */

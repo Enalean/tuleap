@@ -104,16 +104,19 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
             $vMonitored = new Valid_WhiteList('is_monitored', array(0, 1));
             $vMonitored->required();
 
-            if ($request->valid($vForumName) &&
-               $request->valid($vDescription) &&
-               $request->valid($vIsPublic) &&
-               $request->valid($vMonitored)) {
+            if (
+                $request->valid($vForumName) &&
+                $request->valid($vDescription) &&
+                $request->valid($vIsPublic) &&
+                $request->valid($vMonitored)
+            ) {
                 $forum_name   = $request->get('forum_name');
                 $is_public    = $request->get('is_public');
                 $description  = $request->get('description');
                 $is_monitored = $request->get('is_monitored');
 
-                if ((in_array($current_project->getAccess(), [Project::ACCESS_PRIVATE, Project::ACCESS_PRIVATE_WO_RESTRICTED], true) && $is_public == 0)
+                if (
+                    (in_array($current_project->getAccess(), [Project::ACCESS_PRIVATE, Project::ACCESS_PRIVATE_WO_RESTRICTED], true) && $is_public == 0)
                     || forum_can_be_public($current_project)
                 ) {
                     $fid = forum_create_forum($group_id, $forum_name, $is_public, 1, $description);
@@ -132,10 +135,12 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
                 $vGrpForum = new Valid_UInt('group_forum_id');
                 $vGrpForum->required();
 
-                if ($request->valid($vForumName) &&
-                   $request->valid($vDescription) &&
-                   $request->valid($vIsPublic) &&
-                   $request->valid($vGrpForum)) {
+                if (
+                    $request->valid($vForumName) &&
+                    $request->valid($vDescription) &&
+                    $request->valid($vIsPublic) &&
+                    $request->valid($vGrpForum)
+                ) {
                     $forum_name     = $request->get('forum_name');
                     $description    = $request->get('description');
                     $group_forum_id = $request->get('group_forum_id');

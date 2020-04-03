@@ -32,7 +32,9 @@ use Tuleap\GlobalResponseMock;
 
 class TrackerFormElementFieldStringTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalResponseMock, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalResponseMock;
+    use GlobalLanguageMock;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact

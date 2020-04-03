@@ -220,7 +220,7 @@ class ItemRepresentationVisitor implements ItemVisitor
         return $this->item_representation_builder->buildItemRepresentation($item, null, null);
     }
 
-    private function buildFileDirectAccessURL(Docman_Item $item) : string
+    private function buildFileDirectAccessURL(Docman_Item $item): string
     {
         $parameters = ['action' => 'show', 'switcholdui' => 'true', 'group_id' => $item->getGroupId(), 'id' => $item->getId()];
         $version    = $this->docman_version_factory->getCurrentVersionForItem($item);

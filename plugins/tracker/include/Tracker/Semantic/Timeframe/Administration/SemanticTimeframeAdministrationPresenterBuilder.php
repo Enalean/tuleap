@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Timeframe\Administration;
 
@@ -46,7 +46,7 @@ class SemanticTimeframeAdministrationPresenterBuilder
         ?Tracker_FormElement_Field_Date $start_date_field,
         ?Tracker_FormElement_Field_Numeric $duration_field,
         ?Tracker_FormElement_Field_Date $end_date_field
-    ) : SemanticTimeframeAdministrationPresenter {
+    ): SemanticTimeframeAdministrationPresenter {
         $usable_start_date_fields = $this->buildSelectBoxEntries(
             $this->tracker_formelement_factory->getUsedFormElementsByType($tracker, ['date']),
             $start_date_field
@@ -80,7 +80,7 @@ class SemanticTimeframeAdministrationPresenterBuilder
         );
     }
 
-    private function buildSelectBoxEntries(array $fields, ?\Tracker_FormElement_Field $current_field) : array
+    private function buildSelectBoxEntries(array $fields, ?\Tracker_FormElement_Field $current_field): array
     {
         return array_map(function (\Tracker_FormElement_Field $field) use ($current_field) {
             return [
@@ -92,7 +92,7 @@ class SemanticTimeframeAdministrationPresenterBuilder
     }
 
 
-    private function doesTrackerHaveCharts(Tracker $tracker) : bool
+    private function doesTrackerHaveCharts(Tracker $tracker): bool
     {
         $event = new DoesAPluginRenderAChartBasedOnSemanticTimeframeForTrackerEvent($tracker);
 

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\wiki\Events;
 
@@ -50,22 +50,22 @@ class GetItemsReferencingWikiPageCollectionEvent implements Dispatchable
         $this->user      = $user;
     }
 
-    public function addItemsReferencingWikiPage(array $items_referencing_wiki_page) : void
+    public function addItemsReferencingWikiPage(array $items_referencing_wiki_page): void
     {
         $this->items_referencing_wiki_page = array_merge($this->items_referencing_wiki_page, $items_referencing_wiki_page);
     }
 
-    public function getItemsReferencingWikiPage() : array
+    public function getItemsReferencingWikiPage(): array
     {
         return $this->items_referencing_wiki_page;
     }
 
-    public function getWikiPage() : WikiPage
+    public function getWikiPage(): WikiPage
     {
         return $this->wiki_page;
     }
 
-    public function getUser() : \PFUser
+    public function getUser(): \PFUser
     {
         return $this->user;
     }
