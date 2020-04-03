@@ -19,20 +19,41 @@
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Project\Admin\DescriptionFields;
 
 class DescriptionFieldLabelBuilder
 {
-    public static function getFieldTranslatedTextLabel(string $field_value): string
+    public static function getFieldTranslatedName(string $field_value): string
     {
-        if (preg_match('/(.*):(.*)/', $field_value, $matches)) {
-            if ($GLOBALS['Language']->hasText($matches[1], $matches[2])) {
-                $field_value = $GLOBALS['Language']->getText($matches[1], $matches[2]);
-            }
+        switch ($field_value) {
+            case 'project_desc_name:full_desc':
+                return $GLOBALS['Language']->getText('project_desc_name', 'full_desc');
+            case 'project_desc_name:other_comments':
+                return $GLOBALS['Language']->getText('project_desc_name', 'other_comments');
+            case 'project_desc_name:req_soft':
+                return $GLOBALS['Language']->getText('project_desc_name', 'req_soft');
+            case 'project_desc_name:int_prop':
+                return $GLOBALS['Language']->getText('project_desc_name', 'int_prop');
+            default:
+                return $field_value;
         }
+    }
 
-        return $field_value;
+    public static function getFieldTranslatedDescription(string $field_value): string
+    {
+        switch ($field_value) {
+            case 'project_desc_desc:full_desc':
+                return $GLOBALS['Language']->getText('project_desc_desc', 'full_desc');
+            case 'project_desc_desc:other_comments':
+                return $GLOBALS['Language']->getText('project_desc_desc', 'other_comments');
+            case 'project_desc_desc:req_soft':
+                return $GLOBALS['Language']->getText('project_desc_desc', 'req_soft');
+            case 'project_desc_desc:int_prop':
+                return $GLOBALS['Language']->getText('project_desc_desc', 'int_prop');
+            default:
+                return $field_value;
+        }
     }
 }

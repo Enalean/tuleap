@@ -18,9 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Value Object of a Custom Project Description Field
- */
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Project_CustomDescription_CustomDescription
 {
 
@@ -55,17 +53,6 @@ class Project_CustomDescription_CustomDescription
     public function getName()
     {
         return $this->name;
-    }
-
-    public function getLabel()
-    {
-        $label = $this->getName();
-        if (preg_match('/(.*):(.*)/', $label, $matches)) {
-            if ($GLOBALS['Language']->hasText($matches[1], $matches[2])) {
-                $label = $GLOBALS['Language']->getText($matches[1], $matches[2]);
-            }
-        }
-        return $label;
     }
 
     public function getDescription()
