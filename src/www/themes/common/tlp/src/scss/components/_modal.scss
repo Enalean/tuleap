@@ -113,6 +113,10 @@ $tlp-modal-transition: 100ms ease-out;
     &:hover {
         opacity: .5;
     }
+
+    &:focus {
+        outline: 1px dotted;
+    }
 }
 
 .tlp-modal-title {

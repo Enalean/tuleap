@@ -27,7 +27,13 @@
             <h1 class="tlp-modal-title" id="document-confirm-deletion-modal-title" v-translate>
                 Hold on a second!
             </h1>
-            <div class="tlp-modal-close" data-dismiss="modal" v-bind:aria-label="close">
+            <div
+                class="tlp-modal-close"
+                tabindex="0"
+                role="button"
+                data-dismiss="modal"
+                v-bind:aria-label="close"
+            >
                 ×
             </div>
         </div>

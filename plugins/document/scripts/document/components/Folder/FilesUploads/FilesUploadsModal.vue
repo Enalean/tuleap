@@ -24,7 +24,13 @@
                 <i class="fa fa-upload tlp-modal-title-icon"></i>
                 <translate>Uploading documents</translate>
             </h1>
-            <div class="tlp-modal-close" data-dismiss="modal" v-bind:aria-label="close">
+            <div
+                class="tlp-modal-close"
+                tabindex="0"
+                role="button"
+                data-dismiss="modal"
+                v-bind:aria-label="close"
+            >
                 &times;
             </div>
         </div>

@@ -30,6 +30,8 @@
         </h1>
         <div
             class="tlp-modal-close"
+            tabindex="0"
+            role="button"
             data-dismiss="modal"
             v-bind:aria-label="`${$gettext('Close')}`"
         >

@@ -27,7 +27,13 @@
     >
         <div class="tlp-modal-header">
             <transition-modal-title />
-            <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
+            <div
+                class="tlp-modal-close"
+                tabindex="0"
+                role="button"
+                data-dismiss="modal"
+                aria-label="Close"
+            >
                 &times;
             </div>
         </div>
