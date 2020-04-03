@@ -19,6 +19,7 @@
  */
 
 use Tuleap\BurningParrotCompatiblePageDetector;
+use Tuleap\Theme\BurningParrot\BurningParrotTheme;
 
 /**
  * Instanciate the right theme according to user and platform preferences
@@ -66,9 +67,8 @@ class ThemeManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         if (! file_exists($path)) {
             return null;
         }
-        $klass = "Tuleap\\Theme\\BurningParrot\BurningParrotTheme";
         include_once $path;
-        return new $klass('/themes/BurningParrot', $current_user);
+        return new BurningParrotTheme('/themes/BurningParrot', $current_user);
     }
 
     /**
@@ -96,11 +96,17 @@ class ThemeManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         if (preg_match('`' . preg_quote(self::$LEGACY_EXTENSION, '`') . '$`', $path)) {
             $klass = $name . '_Theme';
             include_once $path;
+            if (! class_exists($klass)) {
+                throw new LogicException("$klass does not seem to be a valid theme class name");
+            }
             return new $klass($webroot);
         }
 
         $klass = "Tuleap\\Theme\\{$name}\\{$name}Theme";
         include_once dirname($path) . "/{$name}Theme.php";
+        if (! class_exists($klass)) {
+            throw new LogicException("$klass does not seem to be a valid theme class name");
+        }
         return new $klass($webroot, $current_user);
     }
 

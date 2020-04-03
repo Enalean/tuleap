@@ -70,14 +70,9 @@ class Chart_Gantt extends Chart
         $this->scale->actinfo->vgrid->SetColor($header_color);
     }
 
-    /**
-     * Get the name of the jpgraph class to instantiate
-     *
-     * @return string
-     */
-    protected function getGraphClass()
+    protected function getGraphClass(): string
     {
-        return 'GanttGraph';
+        return \GanttGraph::class;
     }
 
     /**

@@ -3551,8 +3551,10 @@ class soap_server extends nusoap_base
             $call_arg = array ($class, $method);
         } else {
             $this->debug('in invoke_method, calling instance method using call_user_func_array()');
-            $instance = new $class();
-            $call_arg = array(&$instance, $method);
+            if (class_exists($class)) {
+                $instance = new $class();
+                $call_arg = array(&$instance, $method);
+            }
         }
         /** @psalm-var callable $call_arg */
         $this->methodreturn = call_user_func_array($call_arg, $this->methodparams);

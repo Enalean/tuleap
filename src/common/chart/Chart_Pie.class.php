@@ -30,14 +30,8 @@ use Tuleap\Chart\Chart;
 */
 class Chart_Pie extends Chart
 {
-
-    /**
-     * Get the name of the jpgraph class to instantiate
-     *
-     * @return string
-     */
-    protected function getGraphClass()
+    protected function getGraphClass(): string
     {
-        return 'PieGraph';
+        return \PieGraph::class;
     }
 }

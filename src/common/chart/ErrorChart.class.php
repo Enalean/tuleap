@@ -70,13 +70,8 @@ class ErrorChart extends Chart
         return $text;
     }
 
-    /**
-     * Get the name of the jpgraph class to instantiate
-     *
-     * @return string
-     */
-    protected function getGraphClass()
+    protected function getGraphClass(): string
     {
-        return 'CanvasGraph';
+        return \CanvasGraph::class;
     }
 }

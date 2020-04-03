@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Project\REST\UserGroupRepresentation;
 
 class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormElement_Field_List_BindValue
 {
@@ -87,8 +88,7 @@ class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormEleme
 
     public function getFullRESTValue(Tracker_FormElement_Field $field)
     {
-        $class_user_representation = '\\Tuleap\\Project\\REST\\UserGroupRepresentation';
-        $ugroup_representation     = new $class_user_representation();
+        $ugroup_representation = new UserGroupRepresentation();
 
         $ugroup_manager = new UGroupManager();
         $project        = $field->getTracker()->getProject();
@@ -99,10 +99,7 @@ class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormEleme
 
     public function getRESTId()
     {
-        $project_id           = $this->getProject()->getID();
-        $representation_class = '\\Tuleap\\Project\\REST\\UserGroupRepresentation';
-        $user_group_id        = call_user_func_array($representation_class . '::getRESTIdForProject', array($project_id, $this->getUgroupId()));
-
-        return $user_group_id;
+        $project_id = $this->getProject()->getID();
+        return UserGroupRepresentation::getRESTIdForProject($project_id, $this->getUgroupId());
     }
 }

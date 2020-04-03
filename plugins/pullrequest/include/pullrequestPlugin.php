@@ -221,6 +221,10 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
     {
         $version = $params['version'];
         $class   = "\\Tuleap\\PullRequest\\REST\\$version\\RepositoryResource";
+        if (! class_exists($class)) {
+            throw new LogicException("$class does not exist");
+        }
+
         $repository_resource = new $class();
 
         $params['result'] = $repository_resource->getPaginatedPullRequests(

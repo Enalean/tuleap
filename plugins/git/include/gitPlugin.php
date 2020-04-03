@@ -2094,6 +2094,9 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     public function getRESTRepositoryRepresentationBuilder($version)
     {
         $class  = "Tuleap\\Git\\REST\\" . $version . "\\RepositoryRepresentationBuilder";
+        if (! class_exists($class)) {
+            throw new LogicException("$class cannot be found");
+        }
         return new $class(
             $this->getGitPermissionsManager(),
             $this->getGerritServerFactory(),
@@ -2106,6 +2109,9 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     public function rest_project_get_git($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $class            = "Tuleap\\Git\\REST\\" . $params['version'] . "\\ProjectResource";
+        if (! class_exists($class)) {
+            throw new LogicException("$class cannot be found");
+        }
         $project          = $params['project'];
         $project_resource = new $class(
             $this->getRepositoryFactory(),

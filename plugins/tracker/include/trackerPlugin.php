@@ -1161,6 +1161,9 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     private function buildRightVersionOfMilestonesBurndownResource($version)
     {
         $class_with_right_namespace = '\\Tuleap\\Tracker\\REST\\' . $version . '\\MilestonesBurndownResource';
+        if (! class_exists($class_with_right_namespace)) {
+            throw new LogicException($class_with_right_namespace . ' does not exist');
+        }
         return new $class_with_right_namespace();
     }
 

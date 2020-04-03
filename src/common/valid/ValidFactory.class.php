@@ -333,14 +333,16 @@ class ValidFactory
      */
     public static function getInstance($validator, $key = null)
     {
-        if (is_a($validator, 'Valid')) {
+        if ($validator instanceof \Valid) {
             return $validator;
-        } elseif (is_string($validator) && class_exists('Valid_' . $validator)) {
-            $validator_classname = 'Valid_' . $validator;
-            $v = new $validator_classname($key);
-            return $v;
-        } else {
+        }
+        if (! is_string($validator)) {
             return null;
         }
+        $class_name = 'Valid_' . $validator;
+        if (! class_exists($class_name)) {
+            return null;
+        }
+        return new $class_name($key);
     }
 }

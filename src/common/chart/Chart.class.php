@@ -96,11 +96,11 @@ class Chart
     /**
      * Get the name of the jpgraph class to instantiate
      *
-     * @return string
+     * @psalm-return class-string
      */
-    protected function getGraphClass()
+    protected function getGraphClass(): string
     {
-        return 'Graph';
+        return \Graph::class;
     }
 
     /**
