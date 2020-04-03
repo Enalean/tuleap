@@ -1,0 +1,79 @@
+<div class="tlp-framed test-campaigns">
+    <feedback-message></feedback-message>
+    <div class="test-campaigns-header">
+        <h1 class="test-campaigns-header-title">
+            <span ng-if="milestone.label">{{ milestone.label }} - </span>
+            <span translate>Test campaigns</span>
+        </h1>
+        <button class="tlp-button-primary new-campaign-button"
+            ng-click="$ctrl.openNewCampaignModal()"
+        >
+            <i class="fa fa-plus tlp-button-icon"></i>
+            <span translate>New campaign</span>
+        </button>
+        <div class="test-campaigns-header-spacer"></div>
+        <input type="search" class="tlp-search test-campaigns-search" placeholder="{{ 'Label or status...' | translate }}" ng-model="search">
+    </div>
+
+    <a class="tlp-card tlp-card-selectable test-campaign-card"
+        ng-class="{'tlp-card-inactive': campaign.status !== 'Open'}"
+        ng-repeat="campaign in $ctrl.filtered_campaigns | InPropertiesFilter:search:['label', 'status'] track by campaign.id"
+        ui-sref="campaigns.executions({ id: campaign.id })"
+    >
+        <h2 class="test-campaign-title">{{ campaign.label }}</h2>
+        <div class="test-campaign-progressions">
+            <div class="test-campaign-progression passed"
+                ng-if="campaign.nb_of_passed"
+            >
+                <div class="test-campaign-progression-value">{{ campaign.nb_of_passed }}</div>
+                <div class="test-campaign-progression-bar"></div>
+            </div>
+            <div class="test-campaign-progression failed"
+                style="width: {{ campaign.nb_of_failed * 100 / campaign.total }}%"
+                ng-if="campaign.nb_of_failed"
+            >
+                <div class="test-campaign-progression-value">{{ campaign.nb_of_failed }}</div>
+                <div class="test-campaign-progression-bar"></div>
+            </div>
+            <div class="test-campaign-progression blocked"
+                style="width: {{ campaign.nb_of_blocked * 100 / campaign.total }}%"
+                ng-if="campaign.nb_of_blocked"
+            >
+                <div class="test-campaign-progression-value">{{ campaign.nb_of_blocked }}</div>
+                <div class="test-campaign-progression-bar"></div>
+            </div>
+            <div class="test-campaign-progression notrun"
+                style="width: {{ campaign.nb_of_notrun * 100 / campaign.total }}%"
+                ng-if="campaign.nb_of_notrun"
+            >
+                <div class="test-campaign-progression-value">{{ campaign.nb_of_notrun }}</div>
+                <div class="test-campaign-progression-bar"></div>
+            </div>
+        </div>
+    </a>
+
+    <div class="tlp-framed no-campaign-info"
+        ng-if="$ctrl.shouldShowNoCampaigns() || $ctrl.shouldShowNoOpenCampaigns()"
+    >
+        <span translate ng-if="$ctrl.shouldShowNoCampaigns()">There are no campaigns</span>
+        <span translate ng-if="$ctrl.shouldShowNoOpenCampaigns()">There are no open campaigns</span>
+    </div>
+
+    <div class="tlp-framed load-closed-campaigns">
+        <a href=""
+            ng-if="$ctrl.shouldShowLoadClosedButton()"
+            ng-click="$ctrl.showClosedCampaigns()"
+            translate
+        >Load closed campaigns </a>
+        <a href=""
+            ng-if="$ctrl.shouldShowHideClosedButton()"
+            ng-click="$ctrl.hideClosedCampaigns()"
+            translate
+        >Hide closed campaigns </a>
+    </div>
+
+    <img src="/themes/BurningParrot/images/spinner.gif"
+        ng-if="$ctrl.loading"
+        class="loader"
+    >
+</div>

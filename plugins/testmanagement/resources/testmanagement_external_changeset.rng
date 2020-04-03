@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <start>
+    <element name="external_field_change">
+      <attribute name="field_name">
+        <data type="string"/>
+      </attribute>
+      <attribute name="type">
+        <value>ttmstepdef</value>
+      </attribute>
+      <oneOrMore>
+        <element name="step">
+          <ref name="step_value"/>
+        </element>
+      </oneOrMore>
+    </element>
+  </start>
+  <define name="step_value">
+    <element name="description">
+      <attribute name="format">
+        <choice>
+          <value>text</value>
+          <value>html</value>
+        </choice>
+      </attribute>
+      <data type="string"/>
+    </element>
+    <element name="expected_results">
+      <attribute name="format">
+        <choice>
+          <value>text</value>
+          <value>html</value>
+        </choice>
+      </attribute>
+      <data type="string"/>
+    </element>
+  </define>
+</grammar>

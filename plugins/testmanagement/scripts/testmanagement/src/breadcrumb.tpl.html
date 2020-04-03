@@ -1,0 +1,7 @@
+<nav id="testmanagement-breadcrumb" class="breadcrumb">
+    <span class="breadcrumb-item" ng-repeat="step in steps" ng-if="step.ncyBreadcrumbLabel">
+        <a class="breadcrumb-link" href="{{step.ncyBreadcrumbLink}}">
+            {{ step.ncyBreadcrumbLabel }}
+        </a>
+    </span>
+</nav>

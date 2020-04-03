@@ -1,0 +1,17 @@
+<div class="tlp-framed">
+    <h1 translate>Dependencies graph of &#34;{{ graph.title }}&#34;</h1>
+
+    <div ng-repeat="error in graph.errors track by $index" class="tlp-alert-danger">{{ error }}</div>
+
+    <div id="graph-container">
+        <img ng-if="!graph.graphd3" src="/themes/BurningParrot/images/spinner.gif" class="loader loader-graph">
+
+        <div id="graph-utils">
+            <button id="focus-graph" type="button" class="tlp-button-secondary tlp-button-outline tlp-button-small" title="{{ 'Focus graph' | translate }}"><i class="fa fa-bullseye tlp-button-icon"></i></button>
+            <button id="zoomin-graph" type="button" class="tlp-button-secondary tlp-button-outline tlp-button-small" title="{{ 'Zoom in' | translate }}"><i class="fa fa-search-plus tlp-button-icon"></i></button>
+            <button id="zoomout-graph" type="button" class="tlp-button-secondary tlp-button-outline tlp-button-small" title="{{ 'Zoom out' | translate }}"><i class="fa fa-search-minus tlp-button-icon"></i></button>
+        </div>
+
+        <graph ng-if="graph.graphd3" class="graph" model="graph.graphd3"></graph>
+    </div>
+</div>

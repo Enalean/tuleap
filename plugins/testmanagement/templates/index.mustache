@@ -1,0 +1,16 @@
+<div id="testmanagement-app"
+     ng-app="testmanagement"
+     ng-controller="TestManagementCtrl"
+>
+    <div class="testmanagement-init-data" ng-non-bindable
+         data-nodejs-server="{{ nodejs_server }}"
+         data-project-id="{{ project_id }}"
+         data-tracker-ids="{{ tracker_ids }}"
+         data-issue-tracker-config="{{ issue_tracker_config }}"
+         data-language="{{ lang }}"
+         data-current-user="{{ current_user }}"
+         data-current-milestone="{{ current_milestone }}"
+    ></div>
+    <div ncy-breadcrumb></div>
+    <ui-view></ui-view>
+</div>

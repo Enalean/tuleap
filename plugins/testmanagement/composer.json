@@ -1,0 +1,13 @@
+{
+  "name": "tuleap/plugin-testmanagement",
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\TestManagement\\": ["include/TestManagement/", "include/"]
+    },
+    "classmap": ["include/"],
+    "files": ["include/constants.php"]
+  },
+  "config": {
+    "sort-packages": true
+  }
+}

@@ -1,0 +1,101 @@
+<div class="tlp-framed">
+    <h1>{{ title }}</h1>
+    <form action="" method="POST">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
+        <input type="hidden" name="action" value="admin-update" />
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="campaign_id">
+                {{ campaigns }}
+                <i class="fa fa-asterisk"></i>
+            </label>
+            <input type="text"
+                name="campaign_tracker_id"
+                id="campaign_id"
+                value="{{ campaign_tracker_id }}"
+                class="tlp-input"
+                size="20"
+                placeholder="{{ placeholder }}"
+                pattern="[0-9]*"
+                required
+            />
+        </div>
+        <div class="tlp-form-element
+            {{# is_definition_disabled }} tlp-form-element-disabled {{/ is_definition_disabled }}
+        ">
+
+            <label class="tlp-label" for="test_definition_id">
+                {{ definitions }}
+                <i class="fa fa-asterisk"></i>
+            </label>
+            <input type="text"
+                name="test_definition_tracker_id"
+                id="test_definition_id"
+                value="{{ test_definition_tracker_id }}"
+                class="tlp-input"
+                size="20"
+                placeholder="{{ placeholder }}"
+                pattern="[0-9]*"
+                required
+                {{# is_definition_disabled }}disabled{{/ is_definition_disabled }}
+            />
+            {{# is_definition_disabled }}
+                <p class="tlp-text-info">
+                    {{# dgettext }}
+                        tuleap-testmanagement | This tracker uses the Step definition field, which can only be used with
+                        TestManagement. Please <a href="%s">remove the field</a> before choosing another tracker.
+                        | {{ definition_admin_url }}
+                    {{/ dgettext }}
+                </p>
+            {{/ is_definition_disabled }}
+        </div>
+        <div class="tlp-form-element
+            {{# is_execution_disabled }} tlp-form-element-disabled {{/ is_execution_disabled }}
+        ">
+            <label class="tlp-label" for="test_execution_id">
+                {{ executions }}
+                <i class="fa fa-asterisk"></i>
+            </label>
+            <input type="text"
+                name="test_execution_tracker_id"
+                id="test_execution_id"
+                value="{{ test_execution_tracker_id }}"
+                class="tlp-input"
+                size="20"
+                placeholder="{{ placeholder }}"
+                pattern="[0-9]*"
+                required
+               {{# is_execution_disabled }}disabled{{/ is_execution_disabled }}
+            />
+            {{# is_execution_disabled }}
+                <p class="tlp-text-info">
+                    {{# dgettext }}
+                        tuleap-testmanagement | This tracker uses the Step execution field, which can only be used with
+                        TestManagement. Please <a href="%s">remove the field</a> before choosing another tracker.
+                        | {{ execution_admin_url }}
+                    {{/ dgettext }}
+                </p>
+            {{/ is_execution_disabled }}
+        </div>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="issue_id">
+                {{ issues }}
+            </label>
+            <input type="text"
+                   name="issue_tracker_id"
+                   id="issue_id"
+                {{# issue_tracker_id}}
+                   value="{{ issue_tracker_id }}"
+                {{/issue_tracker_id}}
+                   class="tlp-input"
+                   size="20"
+                   placeholder="{{ placeholder }}"
+                   pattern="[0-9]*"
+            />
+        </div>
+        <div class="tlp-form-element">
+            <button type="submit" class="tlp-button-primary">{{ submit }}</button>
+        </div>
+    </form>
+</div>

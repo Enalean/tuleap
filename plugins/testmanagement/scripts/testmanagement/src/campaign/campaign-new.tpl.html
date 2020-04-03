@@ -1,0 +1,61 @@
+<form class="tlp-modal"
+    name="newCampaignForm"
+    ng-submit="campaign_modal.createCampaign()"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" translate>Create a campaign</h1>
+        <div class="tlp-modal-close" tabindex="0" role="button" data-dismiss="modal" aria-label="{{ 'Close' | translate }}">&times;</div>
+    </div>
+
+    <div class="tlp-modal-body">
+        <div class="tlp-form-element"
+            ng-class="{ 'tlp-form-element-error': newCampaignForm.campaign_label.$dirty && newCampaignForm.campaign_label.$invalid }">
+            <label class="tlp-label" for="campaign-label">
+                <span translate>Campaign label</span> <i class="fa fa-asterisk"></i>
+            </label>
+            <input type="text"
+                class="tlp-input"
+                id="campaign-label"
+                name="campaign_label"
+                ng-model="campaign_modal.campaign.label"
+                required="required"
+                ng-trim
+                auto-focus
+            />
+            <p class="tlp-text-danger"
+                ng-show="newCampaignForm.campaign_label.$dirty && newCampaignForm.campaign_label.$invalid"
+            >
+                <span translate>A campaign label is required</span>
+                <i class="fa fa-frown-o"></i>
+            </p>
+        </div>
+        <div class="tlp-form-element">
+            <label class="tlp-label" translate>Choose tests</label>
+            <select class="tlp-select" ng-model="campaign_modal.test_params.selector">
+                <option value="none" translate>No tests</option>
+                <option value="all" translate>All tests</option>
+                <option value="milestone" ng-if="campaign_modal.has_milestone" translate>Milestone tests</option>
+                <optgroup label="{{'From Test definition tracker reports' | translate}}">
+                <option ng-value="report.id" ng-repeat="report in campaign_modal.test_reports">{{ report.label }}</option>
+                </optgroup>
+            </select>
+        </div>
+    </div>
+
+    <div class="tlp-modal-footer">
+        <button
+            type="button"
+            class="tlp-button-primary tlp-button-outline tlp-modal-action"
+            data-dismiss="modal"
+            translate
+        >Cancel</button>
+        <button
+            type="submit"
+            class="tlp-button-primary tlp-modal-action"
+            ng-disabled="campaign_modal.submitting_campaign || ! newCampaignForm.$valid">
+            <i class="fa fa-spinner fa-spin" ng-if="campaign_modal.submitting_campaign"></i>
+            <span translate>Create campaign</span>
+        </button>
+
+    </div>
+</form>

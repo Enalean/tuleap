@@ -1,0 +1,248 @@
+@mixin definitions($main, $white) {
+    .ttm-definition-step-draggable {
+        background-color: $white;
+        padding: 5px 0 0;
+
+        &:first-child {
+            margin: 5px 0 0;
+        }
+
+        &.gu-transit {
+            margin: 10px;
+            border-radius: 3px;
+            opacity: .5;
+        }
+
+        &.gu-mirror {
+            position: absolute;
+            border-radius: 3px;
+            box-shadow: 0 7px 30px 0 rgba(0, 0, 0, .2);
+        }
+
+        &:hover {
+            .btn,
+            .ttm-definition-step-add-bar {
+                opacity: 1;
+                pointer-events: auto;
+            }
+        }
+
+        .btn,
+        .ttm-definition-step-add-bar {
+            transition: opacity ease-in-out 100ms;
+            opacity: 0;
+            pointer-events: none;
+            margin: 3px 0 0;
+        }
+    }
+
+    .step-definition-drag-icon {
+        width: 20px;
+        height: 24px;
+        padding: 5px 0 0;
+        background: url('../../../www/images/ic/drag.png') no-repeat 5px 8px;
+    }
+
+    .ttm-definition-step-add-bar {
+        transition: opacity ease-in-out 100ms;
+        opacity: 0;
+
+        &:hover {
+            opacity: 1;
+            pointer-events: auto;
+            .btn-primary {
+                opacity: 1;
+                pointer-events: auto;
+            }
+        }
+
+        .btn-primary {
+            transition: opacity ease-in-out 100ms;
+            opacity: 0;
+            pointer-events: none;
+            margin: 5px 0;
+        }
+    }
+
+    .ttm-definition-step-add-bar {
+        display: flex;
+        position: relative;
+        justify-content: center;
+
+        > .btn {
+            z-index: 1;
+            font-weight: bold;
+        }
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            opacity: .5;
+            background: $main;
+        }
+    }
+
+    .ttm-step-definition-navicon {
+        position: relative;
+        top: 7px;
+        padding: 0 6px;
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    .draggable-step-description-text {
+        max-width: 90%;
+        padding: 5px 0 0 6px;
+
+        > .rte_format {
+            margin: 0 0 10px;
+        }
+    }
+
+    .draggable-step-definition {
+        padding: 0;
+
+        &:hover {
+            cursor: move;
+        }
+    }
+
+    .ttm-definition-step,
+    .ttm-execution-step {
+        display: flex;
+        align-items: flex-start;
+    }
+
+    .ttm-execution-step {
+        padding: 10px 0;
+
+        &:last-child {
+            padding: 10px 0 0;
+        }
+    }
+
+    .ttm-definition-step-rank,
+    .ttm-execution-step-rank {
+        padding: 0 6px;
+        border: 1px solid $main;
+        border-radius: 10px;
+        color: $main;
+
+        &.ttm-execution-step-rank-edition {
+            position: relative;
+            top: 3px;
+        }
+    }
+
+    .ttm-definition-step-description {
+        width: 100%;
+        margin: 0 0 0 10px;
+    }
+
+    .ttm-definition-step-description-action > div {
+        > .rte_format {
+            margin: 0 0 10px;
+
+            > select {
+                margin: 0;
+            }
+        }
+
+        > textarea {
+            margin: 0;
+        }
+    }
+
+    .ttm-execution-step-description {
+        margin: 0 0 0 10px;
+    }
+
+    .ttm-definition-step-description-format {
+        margin: 0;
+    }
+
+    .ttm-definition-step-expected,
+    .ttm-execution-step-expected {
+        display: flex;
+        align-items: baseline;
+        margin: 10px 0 0 5px;
+    }
+
+    .ttm-definition-step-expected-arrow,
+    .ttm-execution-step-expected-arrow {
+        margin: 0 5px 0 0;
+        fill: #333333;
+    }
+
+    .ttm-definition-step-expected-edit {
+        width: 100%;
+    }
+
+    .ttm-definition-step-expected-edit-title {
+        margin: 0 0 10px;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .ttm-execution-step-status {
+        margin: 0 0 0 20px;
+    }
+
+    .ttm-definition-step-actions {
+        display: flex;
+        justify-content: space-between;
+        margin: 0 0 10px;
+    }
+
+    .ttm-definition-step-description-deleted {
+        text-decoration: line-through;
+    }
+
+    .ttm-definition-step-description-text {
+        white-space: pre-line;
+    }
+
+    .ttm-definition-step-expected-results-textarea,
+    .ttm-definition-step-description-textarea {
+        box-sizing: border-box;
+        width: 100%;
+        margin: 0;
+    }
+
+}
+
+body {
+    @import '../../src/www/themes/FlamingParrot/css/utils/variables-orange';
+    @include definitions($main, $white);
+
+    &.FlamingParrot_Blue {
+        @import '../../src/www/themes/FlamingParrot/css/utils/variables-blue';
+        @include definitions($main, $white);
+    }
+
+    &.FlamingParrot_Green {
+        @import '../../src/www/themes/FlamingParrot/css/utils/variables-green';
+        @include definitions($main, $white);
+    }
+
+    &.FlamingParrot_BlueGrey {
+        @import '../../src/www/themes/FlamingParrot/css/utils/variables-bluegrey';
+        @include definitions($main, $white);
+    }
+
+    &.FlamingParrot_Purple {
+        @import '../../src/www/themes/FlamingParrot/css/utils/variables-purple';
+        @include definitions($main, $white);
+    }
+
+    &.FlamingParrot_Red {
+        @import '../../src/www/themes/FlamingParrot/css/utils/variables-red';
+        @include definitions($main, $white);
+    }
+}

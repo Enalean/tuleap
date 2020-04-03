@@ -1,0 +1,38 @@
+<div class="test-campaign-header">
+    <h1 class="test-campaign-header-title">{{ $ctrl.campaign_state.campaign.label }}</h1>
+    <button type="button"
+            class="tlp-button-primary execution-header-button"
+            aria-haspopup="true"
+            aria-expanded="false"
+            onclick="this.blur();"
+            ng-click="$ctrl.openEditCampaignModal()"
+            ng-if="$ctrl.campaign_state.campaign.user_can_update"
+            title="{{ ::'Edit campaign' | translate }}"
+    >
+        <i class="fa fa-pencil tlp-button-icon"></i> {{ 'Edit' | translate }}
+    </button>
+    <button type="button"
+        class="tlp-button-primary tlp-button-outline execution-header-button"
+        ng-click="$ctrl.launchAutomatedTests()"
+        ng-if="$ctrl.isAutomatedTestButtonShown()"
+    ><i class="fa fa-gears tlp-button-icon"
+        ng-class="{ 'fa-spinner fa-spin': $ctrl.triggered }"
+    ></i> {{ ::'Launch automated tests' | translate }}</button>
+    <div class="test-campaign-header-spacer"></div>
+    <div class="test-campaign-tester"
+         ng-if="$ctrl.isRealtimeEnabled()"
+         ng-repeat="presence in $ctrl.campaign_state.presences_on_campaign | orderBy:'-score' | limitTo:6"
+    >
+        <div class="tlp-avatar tlp-tooltip tlp-tooltip-top" data-tlp-tooltip="{{ presence.real_name }}">
+            <img title="{{ presence.real_name }}"
+                 ng-src="{{ presence.avatar_url }}"
+                 onerror="this.src='/themes/common/images/avatar_default.png'"
+                 alt="avatar">
+        </div>
+        <span ng-if="$ctrl.positiveScore(presence.score)"
+            class="tlp-badge-primary">{{ $ctrl.positiveScore(presence.score) }}</span>
+    </div>
+    <i class="fa fa-trophy test-campaign-header-trophy"
+       ng-if="$ctrl.isRealtimeEnabled()"
+       ng-click="$ctrl.showPresencesModal()"></i>
+</div>

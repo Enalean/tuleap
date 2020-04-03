@@ -1,0 +1,37 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 1.8.7.1\n"
+
+msgid "Add step"
+msgstr "Ajouter une étape"
+
+msgid "Delete"
+msgstr "Supprimer"
+
+msgid "Expected results"
+msgstr "Résultats attendus"
+
+msgid "Format:"
+msgstr "Format :"
+
+msgid "Reorder steps"
+msgstr "Réordonner les étapes"
+
+msgid "Stop reordering steps"
+msgstr "Arrêter de réordonner les étapes"
+
+msgid "There isn't any step defined yet. Start by adding one."
+msgstr "Aucune étape n'est définie. Commencez par en ajouter une."
+
+msgid "Undo deletion"
+msgstr "Annuler la suppression"

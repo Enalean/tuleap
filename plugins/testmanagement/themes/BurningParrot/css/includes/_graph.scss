@@ -1,0 +1,13 @@
+#graph-container {
+    position: relative;
+    height: 70vh;
+
+    .loader-graph {
+        position: absolute;
+        left: 50%;
+    }
+
+    #graph-utils {
+        position: absolute;
+    }
+}

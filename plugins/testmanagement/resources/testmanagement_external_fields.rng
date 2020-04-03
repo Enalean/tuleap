@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<element name="externalField" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <attribute name="type">
+    <value>ttmstepdef</value>
+  </attribute>
+  <attribute name="ID">
+    <data type="ID"/>
+  </attribute>
+  <attribute name="rank">
+    <data type="int"/>
+  </attribute>
+  <optional>
+    <attribute name="id">
+      <data type="long"/>
+    </attribute>
+  </optional>
+  <optional>
+    <attribute name="tracker_id">
+      <data type="long"/>
+    </attribute>
+  </optional>
+  <optional>
+    <attribute name="parent_id">
+      <data type="long"/>
+    </attribute>
+  </optional>
+  <element name="name">
+    <data type="string"/>
+  </element>
+  <element name="label">
+    <data type="string"/>
+  </element>
+  <optional>
+    <element name="description">
+      <data type="string"/>
+    </element>
+  </optional>
+</element>

@@ -1,0 +1,137 @@
+<div class="tlp-framed test-campaign">
+    <socket-disconnect></socket-disconnect>
+    <feedback-message></feedback-message>
+    <execution-list-header handle-removed-executions-callback="hideDetailsForRemovedTestExecution()"
+    ></execution-list-header>
+
+    <div class="test-campaign-current-progression-container">
+        <div class="test-campaign-current-progression">
+            <div class="tests-passed" ng-if="campaign.nb_of_passed" style="width: {{ campaign.nb_of_passed * 100 / campaign.total }}%">
+                {{ campaign.nb_of_passed }}
+            </div>
+            <div class="tests-failed" ng-if="campaign.nb_of_failed" style="width: {{ campaign.nb_of_failed * 100 / campaign.total }}%">
+                {{ campaign.nb_of_failed }}
+            </div>
+            <div class="tests-blocked" ng-if="campaign.nb_of_blocked" style="width: {{ campaign.nb_of_blocked * 100 / campaign.total }}%">
+                {{ campaign.nb_of_blocked }}
+            </div>
+            <div class="tests-notrun" ng-if="campaign.nb_of_notrun" style="width: {{ campaign.nb_of_notrun * 100 / campaign.total }}%">
+                {{ campaign.nb_of_notrun }}
+            </div>
+        </div>
+    </div>
+
+    <div class="test-campaign-tests">
+        <section class="tlp-pane tests-pane">
+            <div class="tlp-pane-container">
+                <section class="tlp-pane-section tests-list-filters">
+                    <input type="search"
+                           class="tlp-search tlp-search-small tests-list-filter-search"
+                           placeholder="{{ 'Id, summary, category…' | translate }}"
+                           ng-model="search">
+
+                    <div class="tlp-button-bar">
+                        <div class="tlp-button-bar-item">
+                            <input type="checkbox" id="status-filter-passed" class="tlp-button-bar-checkbox">
+                            <label for="status-filter-passed"
+                                   class="tlp-button-small tlp-button-outline tlp-button-success"
+                                   ng-click="toggleStatus('passed')"
+                                   title="{{ 'Passed' | translate }}">
+                                <i class="fa fa-fw fa-lg fa-check-circle test-status-icon passed"></i>
+                            </label>
+                        </div>
+                        <div class="tlp-button-bar-item">
+                            <input type="checkbox" id="status-filter-failed" class="tlp-button-bar-checkbox">
+                            <label for="status-filter-failed"
+                                   class="tlp-button-small tlp-button-outline tlp-button-danger"
+                                   ng-click="toggleStatus('failed')"
+                                   title="{{ 'Failed' | translate }}">
+                                <i class="fa fa-fw fa-lg fa-times-circle test-status-icon failed"></i>
+                            </label>
+                        </div>
+                        <div class="tlp-button-bar-item">
+                            <input type="checkbox" id="status-filter-blocked" class="tlp-button-bar-checkbox">
+                            <label for="status-filter-blocked"
+                                   class="tlp-button-small tlp-button-outline tlp-button-info"
+                                   ng-click="toggleStatus('blocked')"
+                                   title="{{ 'Blocked' | translate }}">
+                                <i class="fa fa-fw fa-lg fa-exclamation-circle test-status-icon blocked"></i>
+                            </label>
+                        </div>
+                        <div class="tlp-button-bar-item">
+                            <input type="checkbox" id="status-filter-notrun" class="tlp-button-bar-checkbox">
+                            <label for="status-filter-notrun"
+                                   class="tlp-button-small tlp-button-outline tlp-button-secondary"
+                                   ng-click="toggleStatus('notrun')"
+                                   title="{{ 'Not run' | translate }}">
+                                <i class="fa fa-fw fa-lg fa-question-circle test-status-icon notrun"></i>
+                            </label>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="empty-pane empty-execution-list" ng-if="shouldShowEmptyState()">
+                    <p class="empty-pane-text" translate>There are no tests you can see.</p>
+                </section>
+
+                <section class="tlp-pane-section tests-list-section">
+                    <ul class="tests-list">
+                        <li class="tests-list-category"
+                            ng-repeat-start="category in categories"
+                            ng-if="canCategoryBeDisplayed(category)">
+                            {{ category.label }}
+                        </li>
+                        <li class="tests-list-test {{ execution.status }}"
+                            ng-repeat-end=""
+                            ng-repeat="execution in category.executions
+                                | toArray:false
+                                | ExecutionListFilter:search:status
+                                | orderBy:'definition.id'
+                                | unique:'definition.id'
+                                track by execution.definition.id"
+                            ui-sref=".detail({ execid: execution.id, defid: execution.definition.id })"
+                            ng-click="viewTestExecution(execution)"
+                            ng-class="{active: checkActiveClassOnExecution(execution)}">
+                            <div class="tlp-avatar-small tlp-tooltip tlp-tooltip-top"
+                                 data-tlp-tooltip="{{ presence.real_name }}"
+                                 ng-if="execution.viewed_by"
+                                 ng-repeat="user in execution.viewed_by">
+                                <img title="{{ user.real_name }}"
+                                     ng-src="{{ user.avatar_url }}"
+                                     onerror="this.src='/themes/common/images/avatar_default.png'"
+                                     alt="avatar">
+                            </div>
+                            <span class="tests-list-test-title">
+                                <span class="tests-list-test-id">
+                                    #{{ execution.definition.id }}
+                                </span>
+                                {{ execution.definition.summary}}
+                            </span>
+                            <i class="fa fa-cogs test-automated-icon"
+                               ng-if="execution.definition.automated_tests !== ''"
+                               title="{{ 'This is an automated test' | translate }}"></i>
+                            <i class="fa fa-check-circle test-status-icon passed"
+                               ng-if="execution.status === 'passed'"
+                               title="{{ 'Passed' | translate }}"></i>
+                            <i class="fa fa-times-circle test-status-icon failed"
+                               ng-if="execution.status === 'failed'"
+                               title="{{ 'Failed' | translate }}"></i>
+                            <i class="fa fa-exclamation-circle test-status-icon blocked"
+                               ng-if="execution.status === 'blocked'"
+                               title="{{ 'Blocked' | translate }}"></i>
+                        </li>
+                    </ul>
+
+                    <img src="/themes/BurningParrot/images/spinner.gif" ng-if="loading()" class="loader">
+                </section>
+            </div>
+        </section>
+
+        <section class="current-test" ui-view>
+            <section class="no-tests-selected">
+                <i class="fa fa-hand-o-left no-tests-selected-icon"></i>
+                {{ 'Please select a test' | translate }}
+            </section>
+        </section>
+    </div>
+</div>

@@ -1,0 +1,65 @@
+<form class="tlp-modal"
+    name="link_issue_form"
+    ng-submit="modal.linkIssue()"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" translate>Link "{{ modal.test_summary }}" to an existing bug</h1>
+        <div class="tlp-modal-close" tabindex="0" role="button" data-dismiss="modal" aria-label="{{ 'Close' | translate }}">&times;</div>
+    </div>
+
+    <div class="tlp-modal-body">
+        <div class="tlp-property">
+            <p translate>Enter the id of the bug you want to link to "{{ modal.test_summary }}". The description of this test will be added as a follow-up comment to the linked bug.</p>
+        </div>
+        <div class="tlp-form-element"
+            ng-class="{ 'tlp-form-element-error': link_issue_form.issue_id.$dirty && link_issue_form.issue_id.$invalid }">
+            <label class="tlp-label" for="issue-id">
+                <span translate>Bug Id</span> <i class="fa fa-asterisk"></i>
+            </label>
+            <div class="link-issue-modal-input-container">
+                <input type="number"
+                    class="tlp-input link-issue-modal-input"
+                    size="15"
+                    id="issue-id"
+                    name="issue_id"
+                    ng-model="modal.issue.id"
+                    ng-model-options="{debounce: modal.issue_debounce}"
+                    required="required"
+                    ng-trim
+                />
+                <div>
+                    <i class="fa fa-spinner fa-spin" ng-if="link_issue_form.issue_id.$pending"></i>
+                    <span ng-show="link_issue_form.$valid">
+                        <span class="tlp-badge-{{ modal.issue_artifact.tracker.color_name }} tlp-badge-outline link-issue-modal-badge">{{ modal.issue_artifact.xref }}</span>
+                        {{ modal.issue_artifact.title }}
+                    </span>
+                    <span class="tlp-text-danger"
+                        ng-show="(link_issue_form.$dirty && link_issue_form.$invalid) || modal.error_message"
+                    >
+                        <span ng-if="link_issue_form.issue_id.$error.validIssueId" translate>The entered id is incorrect.</span>
+                        <span ng-if="link_issue_form.issue_id.$error.issueNotAlreadyLinked" translate>This artifact is already linked to this test.</span>
+                        {{ modal.error_message }}
+                        <i class="fa fa-frown-o"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tlp-modal-footer">
+        <button
+            type="button"
+            class="tlp-button-primary tlp-button-outline tlp-modal-action"
+            data-dismiss="modal"
+            translate
+        >Cancel</button>
+        <button
+            type="submit"
+            class="tlp-button-primary tlp-modal-action"
+            ng-disabled="modal.linking_in_progress || ! link_issue_form.$valid">
+            <i class="fa fa-spinner fa-spin" ng-if="modal.linking_in_progress"></i>
+            <span translate>Link</span>
+        </button>
+
+    </div>
+</form>

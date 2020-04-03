@@ -1,0 +1,10 @@
+vendor/
+*.css
+*.mo
+*.po~
+*.pot
+node_modules/
+/nbproject/
+.sass-cache/
+*.css.map
+test-results.xml

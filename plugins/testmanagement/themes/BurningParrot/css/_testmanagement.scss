@@ -1,0 +1,16 @@
+@import '../../src/www/themes/BurningParrot/css/includes/global-variables';
+@import '../../plugins/tracker/scripts/angular-artifact-modal/index';
+@import 'includes/colors';
+@import 'includes/socket';
+@import 'includes/artifact-links-graph';
+@import 'includes/graph';
+@import 'includes/campaign';
+@import 'includes/execution-list';
+@import 'includes/presence';
+
+.loader {
+    display: block;
+    margin: 0 auto;
+    width: 26px;
+    height: 26px;
+}

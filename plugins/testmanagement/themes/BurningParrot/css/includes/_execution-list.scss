@@ -1,0 +1,256 @@
+@import 'link_issue_modal';
+@import 'current-execution';
+
+.test-campaign {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - #{$navbar-height} - 75px);
+    overflow: hidden;
+}
+
+.has-visible-project-banner .test-campaign {
+    height: calc(100vh - #{$navbar-height} - 75px - #{$project-banner-base-height});
+}
+
+$toolbar-height: 46px;
+.toolbar ~ #testmanagement-app .test-campaign {
+    height: calc(100vh - #{$navbar-height} - 75px - #{$toolbar-height});
+}
+
+.has-visible-project-banner .toolbar ~ #testmanagement-app .test-campaign {
+    height: calc(100vh - #{$navbar-height} - 75px - #{$toolbar-height} - #{$project-banner-base-height});
+}
+
+.test-campaign-header {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: flex-end;
+    margin: 0 0 $tlp-spacing;
+}
+
+.test-campaign-header-title {
+    margin: 0;
+}
+
+.execution-header-button {
+    margin: 0 0 0 $tlp-spacing;
+}
+
+.test-campaign-header-spacer {
+    flex: 1 1 auto;
+}
+
+.test-campaign-tester {
+    position: relative;
+    margin: 0 0 0 5px;
+
+    > .tlp-badge-primary {
+        position: absolute;
+        top: -6px;
+        right: -1px;
+        padding: 1px 5px;
+        font-size: 10px;
+    }
+}
+
+.test-campaign-header-trophy {
+    margin: 0 0 0 $tlp-spacing;
+    color: #F3B13A;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.test-campaign-current-progression-container {
+    display: table;
+    width: 100%;
+    margin: 0 0 $tlp-spacing;
+}
+
+.test-campaign-current-progression {
+    display: table-row;
+    border-radius: 15px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .5px;
+    text-align: center;
+
+    > div:first-child {
+        border-radius: 10px 0 0 10px;
+    }
+
+    > div:last-child {
+        border-radius: 0 10px 10px 0;
+    }
+
+    > div:only-child {
+        border-radius: 10px;
+    }
+
+
+    > .tests-passed {
+        display: table-cell;
+        padding: 2px;
+        background: $tlp-ui-success;
+        color: $tlp-ui-white;
+    }
+
+    > .tests-failed {
+        display: table-cell;
+        padding: 2px;
+        background: $tlp-ui-danger;
+        color: $tlp-ui-white;
+    }
+
+    > .tests-blocked {
+        display: table-cell;
+        padding: 2px;
+        background: $tlp-ui-info;
+        color: $tlp-ui-white;
+    }
+
+    > .tests-notrun {
+        display: table-cell;
+        padding: 2px;
+        background: $tlp-ui-dimmed;
+        color: $tlp-ui-white;
+    }
+}
+
+.test-campaign-tests {
+    display: flex;
+    flex: 1 1 auto;
+    overflow-y: auto;
+}
+
+.tests-pane {
+    width: 40%;
+    min-width: 410px;
+    margin: 0 $tlp-spacing 0 0;
+}
+
+.test-status-icon {
+    &.passed {
+        color: $tlp-ui-success;
+    }
+
+    &.failed {
+        color: $tlp-ui-danger;
+    }
+
+    &.blocked {
+        color: $tlp-ui-info;
+    }
+
+    &.notrun {
+        color: $tlp-ui-dimmed;
+    }
+}
+
+.test-automated-icon {
+    margin: 0 5px 0 0;
+}
+
+.tests-list-section {
+    padding: 0;
+    overflow-y: auto;
+}
+
+.tests-list {
+    padding: 0;
+    list-style-type: none;
+    font-size: 14px;
+}
+
+.tests-list-filters {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: flex-end;
+
+    > .tlp-search {
+        flex: 1;
+        min-width: 75px;
+        margin-right: 20px;
+    }
+}
+
+.tests-list-category {
+    padding: 5px 10px;
+    background: $tlp-theme-background-color;
+    color: $tlp-theme-color;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .3px;
+    text-transform: uppercase;
+}
+
+.tests-list-test {
+    display: flex;
+    align-items: baseline;
+    padding: 7px 10px;
+    cursor: pointer;
+
+    &.passed {
+        border-left: 3px solid $tlp-ui-success;
+        background: transparentize($tlp-ui-success, .96);
+        color: $tlp-ui-success;
+    }
+
+    &.failed {
+        border-left: 3px solid $tlp-ui-danger;
+        background: transparentize($tlp-ui-danger, .96);
+        color: $tlp-ui-danger;
+    }
+
+    &.blocked {
+        border-left: 3px solid $tlp-ui-info;
+        background: transparentize($tlp-ui-info, .96);
+        color: $tlp-ui-info;
+    }
+
+    &.notrun {
+        border-left: 3px solid transparent;
+        background: transparent;
+        color: $tlp-ui-dimmed;
+    }
+
+    &:hover {
+        background: transparentize($tlp-theme-color, .93);
+    }
+
+    > .tlp-avatar-small {
+        flex: 0 0 auto;
+        align-self: center;
+        margin: 0 5px 0 0;
+    }
+}
+
+.tests-list-test-id {
+    font-size: 11px;
+}
+
+.tests-list-test-title {
+    flex: 1 1 auto;
+    margin: 0 5px;
+}
+
+.no-tests-selected {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    margin: 0;
+    overflow: hidden;
+    color: transparentize($tlp-theme-color, .5);
+    font-size: 24px;
+}
+
+.no-tests-selected-icon {
+    margin: 0 4px 0 0;
+}
+
+.empty-execution-list {
+    margin: $tlp-spacing 0 0;
+}

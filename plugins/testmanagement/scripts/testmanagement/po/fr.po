@@ -1,0 +1,280 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.1\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "1 test will be added"
+msgid_plural "{{ $count }} tests will be added"
+msgstr[0] "1 test sera ajouté"
+msgstr[1] "{{ $count }} tests seront ajoutés"
+
+msgid "1 test will be removed"
+msgid_plural "{{ $count }} tests will be removed"
+msgstr[0] "1 test sera supprimé"
+msgstr[1] "{{ $count }} tests seront supprimés"
+
+msgid "A campaign label is required"
+msgstr "Le label de la campagne est obligatoire"
+
+msgid "Add a test"
+msgstr "Ajouter un test"
+
+msgid "All tests"
+msgstr "Tous les tests"
+
+msgid ""
+"An authentication token that authorizes Tuleap to trigger this Jenkins job"
+msgstr ""
+"Un jeton d'authentification qui autorise Tuleap à déclencher ce build Jenkins"
+
+msgid ""
+"An error occurred while executing this step. Please try again later. "
+"{{ error }}"
+msgstr ""
+"Une erreur s'est produite pendant l'exécution de cette étape. Veuillez "
+"réessayer plus tard. {{ error }}"
+
+msgid ""
+"An error occurred while loading the campaigns. Please refresh the page. "
+"{{ message }}"
+msgstr ""
+"Une erreur s'est produite pendant le chargement des campagnes. Veuillez "
+"rafraîchir cette page. {{ message }}"
+
+msgid "An error occurred while loading the tests. {{ error }}"
+msgstr "Une erreur est survenue pendant le chargement des tests. {{ error }}"
+
+msgid "Authentication Token"
+msgstr "Jeton d'authentification"
+
+msgid "Blocked"
+msgstr "Bloqué"
+
+msgid "Bug"
+msgstr "Le bug"
+
+msgid "Bug Id"
+msgstr "Id bug"
+
+msgid "Campaign"
+msgstr "Campagne"
+
+msgid "Campaign label"
+msgstr "Label de la campagne"
+
+msgid "Campaigns"
+msgstr "Campagnes"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Choose tests"
+msgstr "Sélectionner les tests"
+
+msgid "Close"
+msgstr "Fermer"
+
+msgid "Comment..."
+msgstr "Commenter…"
+
+msgid "Create a campaign"
+msgstr "Créer une campagne"
+
+msgid "Create a new bug"
+msgstr "Créer un nouveau bug"
+
+msgid "Create campaign"
+msgstr "Créer campagne"
+
+msgid "Dependencies graph of &#34;{{ graph.title }}&#34;"
+msgstr "Graphe de dépendances de &#34;{{ graph.title }}&#34;"
+
+msgid "Dependencies graph of &#34;{{ modal.title }}&#34;"
+msgstr "Graphe de dépendances de &#34;{{ modal.title }}&#34;"
+
+msgid "Edit"
+msgstr "Éditer"
+
+msgid "Edit campaign"
+msgstr "Éditer la campagne"
+
+msgid "Edit this test"
+msgstr "Éditer ce test"
+
+msgid "Edit {{ campaign.label }} campaign"
+msgstr "Édition de la campagne {{ campaign.label }}"
+
+msgid ""
+"Enter the id of the bug you want to link to \"{{ modal.test_summary }}\". "
+"The description of this test will be added as a follow-up comment to the "
+"linked bug."
+msgstr ""
+"Entrez l'id du bug à lier avec \"{{ modal.test_summary }}\". La description "
+"du test sera ajoutée en commentaire du bug lié."
+
+msgid "Error while refreshing the list of linked bugs"
+msgstr "Erreur pendant la récupération des bugs liés"
+
+msgid "Expected results"
+msgstr "Résultats attendus"
+
+msgid "Failed"
+msgstr "Échoué"
+
+msgid "Focus graph"
+msgstr "Recentrer le graphe"
+
+msgid "From Test definition tracker reports"
+msgstr "Rapports de l’outil de suivi de définition des tests"
+
+msgid "Hide closed campaigns"
+msgstr "Cacher les campagnes fermées"
+
+msgid "Id"
+msgstr "Id"
+
+msgid "Id, summary, category…"
+msgstr "Id, résumé, catégorie…"
+
+msgid "Jenkins authentication token"
+msgstr "Jeton d'authentification Jenkins"
+
+msgid "Jenkins job"
+msgstr "Projet Jenkins"
+
+msgid "Job URL"
+msgstr "URL du projet"
+
+msgid "Label or status..."
+msgstr "Label ou statut…"
+
+msgid "Launch automated tests"
+msgstr "Lancer les tests automatisés"
+
+msgid "Link"
+msgstr "Lier"
+
+msgid "Link \"{{ modal.test_summary }}\" to an existing bug"
+msgstr "Lier \"{{ modal.test_summary }}\" à un bug existant"
+
+msgid "Link to an existing bug"
+msgstr "Lier à un bug existant"
+
+msgid "Linked bugs"
+msgstr "Bugs liés"
+
+msgid "Load closed campaigns"
+msgstr "Charger les campagnes fermées"
+
+msgid "Milestone tests"
+msgstr "Tests du jalon"
+
+msgid "New campaign"
+msgstr "Nouvelle campagne"
+
+msgid "No tests"
+msgstr "Aucun test"
+
+msgid "Not run"
+msgstr "Non exécuté"
+
+msgid "Passed"
+msgstr "Succès"
+
+msgid "Please select a test"
+msgstr "Merci de sélectionner un test"
+
+msgid "Pre-select tests from a tracker report"
+msgstr "Pré-sélectionner les tests d'un rapport"
+
+msgid "Reload the test"
+msgstr "Recharger le test"
+
+msgid "Save changes"
+msgstr "Enregistrer les changements"
+
+msgid "Show dependencies graph for this test"
+msgstr "Afficher le graphe de dépendances"
+
+msgid "Summary"
+msgstr "Résumé"
+
+msgid "Test campaigns"
+msgstr "Campagne de tests"
+
+msgid "Test description"
+msgstr "Description du test"
+
+msgid "Test summary"
+msgstr "Résumé du test"
+
+msgid "Tests"
+msgstr "Tests"
+
+msgid "The URL to a Jenkins job that will execute automated tests"
+msgstr "L'URL vers un projet Jenkins qui exécutera les tests automatisés"
+
+msgid "The entered id is incorrect."
+msgstr "L’id saisi est incorrect."
+
+msgid "The job at URL {{ job_url }} has been succesfully launched."
+msgstr "Le projet à l'URL {{ job_url }} a été lancé avec succès."
+
+msgid ""
+"The test has been changed by someone else. You should reload the test before "
+"executing it."
+msgstr ""
+"Le test a été changé par quelqu'un d'autre. Vous devez recharger la dernière "
+"version du test avant de pouvoir l’exécuter."
+
+msgid "There are no campaigns"
+msgstr "Il n'existe pas de campagne"
+
+msgid "There are no open campaigns"
+msgstr "Il n’existe pas de campagne ouverte"
+
+msgid "There are no tests you can see."
+msgstr "Il n'y a aucun test visible."
+
+msgid "This artifact is already linked to this test."
+msgstr "Cet artéfact est déjà lié à ce test."
+
+msgid "This is an automated test"
+msgstr "Ceci est un test automatisé"
+
+msgid "This test has no description. Please edit it."
+msgstr "Ce test n'a pas de description. Veuillez l'éditer."
+
+msgid "You are disconnected from real time. Please reload your page."
+msgstr "Vous êtes déconnecté du temps réel. Rechargez votre page."
+
+msgid ""
+"You have just updated the test definition, so it has been reset. Please "
+"start over."
+msgstr ""
+"Vous venez de mettre à jour la définition du test, veuillez recommencer "
+"l’exécution de ce test. "
+
+msgid "Zoom in"
+msgstr "Zoom avant"
+
+msgid "Zoom out"
+msgstr "Zoom arrière"
+
+msgid "by"
+msgstr "par"
+
+msgid "has been successfully linked to this test."
+msgstr "a bien été lié au test."
+
+msgid "{{ modal.title }} test campaign scores"
+msgstr "Scores pour la campagne de tests {{ modal.title }}"

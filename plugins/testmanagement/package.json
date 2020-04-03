@@ -1,0 +1,48 @@
+{
+  "name": "@tuleap/plugin-testmanagement",
+  "author": "Enalean",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "dependencies": {
+    "@tuleap/plugin-tracker": "file:../tracker",
+    "angular": "^1.7.9",
+    "angular-breadcrumb": "~0.3.0",
+    "angular-cookies": "^1.7.9",
+    "angular-gettext": "^2.4.1",
+    "angular-jwt": "^0.1.11",
+    "angular-locker": "~2.0.3",
+    "angular-moment": "^1.3.0",
+    "angular-sanitize": "^1.7.9",
+    "angular-socket-io": "^0.7.0",
+    "angular-ui-router": "^0.3.2",
+    "d3-drag": "^1.2.1",
+    "d3-force": "^1.1.0",
+    "d3-selection": "^1.1.0",
+    "d3-selection-multi": "^1.0.1",
+    "d3-zoom": "^1.6.0",
+    "dragula": "^3.7.2",
+    "lodash": "^2.4.2",
+    "moment": "^2.18.1",
+    "restangular": "~1.4.0",
+    "socket.io-client": "^2.0.3",
+    "uuid": "^3.2.1",
+    "vue": "^2.6.11",
+    "vue-dompurify-html": "^2.1.1",
+    "vue-gettext": "^2.1.8",
+    "vuex": "^3.1.3"
+  },
+  "devDependencies": {
+    "angular-mocks": "^1.7.9",
+    "jquery": "^3.4.1"
+  },
+  "config": {
+    "bin": "../../node_modules/.bin"
+  },
+  "scripts": {
+    "build": "rm -rf ../../src/www/assets/testmanagement && $npm_package_config_bin/webpack --config webpack.prod.js",
+    "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
+    "test": "BABEL_ENV=test $npm_package_config_bin/jest",
+    "postshrinkwrap": "php ../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
+  }
+}

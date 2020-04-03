@@ -1,0 +1,151 @@
+.score-modal {
+    padding: 0;
+}
+
+.podium {
+    display: flex;
+    align-items: flex-end;
+    height: 400px;
+    overflow: hidden;
+    padding: $tlp-spacing $tlp-spacing 0;
+    margin: 0 0 $tlp-spacing;
+    border-bottom: 1px solid $tlp-ui-border-light;
+}
+
+.step {
+    width: 33%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &.first {
+        height: 100%;
+        z-index: 2;
+
+        > .tester {
+            color: #F3B13A;
+        }
+
+        > .stand {
+            border-top: 3px solid #F3B13A;
+
+            > .tlp-badge-primary {
+                margin: 10px 0 0;
+                font-size: 14px;
+                letter-spacing: .5px;
+                background: #F3B13A;
+                border-color: #F3B13A;
+            }
+        }
+    }
+
+    &.second {
+        height: 80%;
+
+        > .tester {
+            color: #AFAFAF;
+        }
+
+        > .stand {
+            border-top: 3px solid #AFAFAF;
+
+            > .tlp-badge-primary {
+                margin: 10px 0 0;
+                font-size: 14px;
+                letter-spacing: .5px;
+                background: #AFAFAF;
+                border-color: #AFAFAF;
+            }
+        }
+    }
+
+    &.third {
+        height: 70%;
+
+        > .tester {
+            color: #EC8440;
+        }
+
+        > .stand {
+            border-top: 3px solid #EC8440;
+
+            > .tlp-badge-primary {
+                margin: 10px 0 0;
+                font-size: 14px;
+                letter-spacing: .5px;
+                background: #EC8440;
+                border-color: #EC8440;
+            }
+        }
+    }
+
+    .tester {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 0 0 auto;
+        margin: 0 0 $tlp-spacing;
+
+        > .tlp-avatar-large {
+            margin: 0 0 10px;
+        }
+
+        > .tester-name {
+            font-size: 22px;
+            text-align: center;
+        }
+    }
+}
+
+
+
+.stand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1 1 auto;
+    width: 100%;
+    padding: $tlp-spacing;
+    background: #fff;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.07);
+}
+
+.star {
+    flex: 0 0 auto;
+}
+
+.score-list {
+    margin: 0;
+    padding: $tlp-spacing;
+    list-style-type: none;
+    width: 100%;
+}
+
+.score-list-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid $tlp-ui-border-light;
+
+    &:last-child {
+        border: 0;
+    }
+
+    .position {
+        margin: 0 $tlp-spacing 0 0;
+        font-size: 14px;
+        color: $tlp-theme-color;
+        width: 30px;
+        text-align: right;
+    }
+
+    .tester {
+        flex: 1 1 auto;
+        display: flex;
+        align-items: center;
+
+        > .tlp-avatar {
+            margin: 0 5px 0 0;
+        }
+    }
+}

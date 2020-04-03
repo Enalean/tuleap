@@ -1,0 +1,18 @@
+.alert-disconnect {
+    display: flex;
+    max-width: 300px;
+    top: 0;
+    right: 0;
+    position: absolute;
+    box-sizing: border-box;
+    transition: all;
+    z-index: 100;
+
+    > i {
+        margin: 10px;
+    }
+
+    > p {
+        margin-left: 5px;
+    }
+}

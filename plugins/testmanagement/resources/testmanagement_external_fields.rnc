@@ -1,0 +1,14 @@
+namespace xsd = "http://www.w3.org/2001/XMLSchema"
+
+
+element externalField {
+    attribute type { 'ttmstepdef' },
+    attribute ID { xsd:ID },
+    attribute rank { xsd:int },
+    attribute id { xsd:long }?,
+    attribute tracker_id { xsd:long }?,
+    attribute parent_id { xsd:long }?,
+    element name { xsd:string },
+    element label { xsd:string },
+    element description { xsd:string }?
+}

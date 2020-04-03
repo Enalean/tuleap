@@ -1,0 +1,12 @@
+<section class="steps">
+    <execution-detail-just-updated></execution-detail-just-updated>
+    <div ng-bind-html="$ctrl.execution.definition.description"
+         ng-if="$ctrl.execution.definition.description.length"
+         class="steps-maindescription"
+    ></div>
+    <step ng-repeat="step in $ctrl.execution.definition.steps track by step.id"
+        step="step"
+        step-result="$ctrl.execution.steps_results[step.id]"
+        execution="$ctrl.execution"
+    ></step>
+</section>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testmanagement>
+    <configuration>
+        <issues>T808</issues>
+        <campaigns>T805</campaigns>
+        <definitions>T806</definitions>
+        <executions>T807</executions>
+    </configuration>
+</testmanagement>

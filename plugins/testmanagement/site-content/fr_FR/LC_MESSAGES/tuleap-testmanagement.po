@@ -1,0 +1,225 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2020-03-25 18:01+0100\n"
+"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.3\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+
+msgid "Configuration incomplete"
+msgstr "Configuration incomplète"
+
+msgid "Covered by"
+msgstr "Couvert par"
+
+msgid "Covers"
+msgstr "Couvre"
+
+msgid ""
+"Current campaign does not have any job configured to launch automated tests"
+msgstr ""
+"La campagne courante n'a pas de job configuré pour pouvoir exécuter des "
+"tests automatisés"
+
+msgid ""
+"Current tracker is not configured to be a test definition tracker in "
+"TestManagement, but is using a \"Step definition\" field: you may remove the "
+"field from the tracker."
+msgstr ""
+"Cet outil de suivi n'est pas configuré pour être une base de définitions de "
+"tests dans TestManagement, mais cependant utilise le champ \"Définition "
+"d'étapes\": vous devriez supprimer ce champ."
+
+msgid ""
+"Current tracker is not configured to be a test execution tracker in "
+"TestManagement, but is using a \"Step execution\" field: you may remove the "
+"field from the tracker."
+msgstr ""
+"Cet outil de suivi n'est pas configuré pour être une base d'exécution de "
+"tests dans TestManagement, mais cependant utilise le champ \"Exécution "
+"d'étapes\": vous devriez supprimer ce champ."
+
+msgid "Definition of a step"
+msgstr "Définition d'une étape"
+
+msgid ""
+"Direct edition of steps results is not allowed. Please use TestManagement "
+"service instead."
+msgstr ""
+"Éditer directement le résultat des étapes n'est pas permis. Merci d'utiliser "
+"le service TestManagement pour cela."
+
+msgid "Enter the tracker id..."
+msgstr "Entrez l'id de l'outil de suivi…"
+
+msgid "Execution result of a step"
+msgstr "Résultat d'exécution d'une étape"
+
+msgid "Expected results"
+msgstr "Résultats attendus"
+
+msgid "Issue Tracker"
+msgstr "Outil de suivi des bugs"
+
+msgid "Job URL is invalid"
+msgstr "L'URL du job n'est pas valide"
+
+msgid "Permission denied"
+msgstr "Permission refusée"
+
+msgid "See graph of dependencies"
+msgstr "Voir le graphe de dépendances"
+
+#, php-format
+msgid ""
+"Service %s cannot be activated because the artifact link type \"%s\" is not "
+"activated"
+msgstr ""
+"Le service %s ne peut être activé car le lien entre artéfact typé \"%s\" "
+"n'est pas activé"
+
+msgid "Start TestManagement"
+msgstr "Démarrer TestManagement"
+
+msgid "Step definition"
+msgstr "Définition d'étapes"
+
+msgid "Step execution"
+msgstr "Exécution d'étapes"
+
+msgid "Test Campaigns"
+msgstr "Campagnes de test"
+
+msgid "Test Campaigns Tracker"
+msgstr "Outil de suivi des campagnes de tests"
+
+msgid "Test Definitions Tracker"
+msgstr "Outil de suivi des définitions de tests"
+
+msgid "Test Executions Tracker"
+msgstr "Outil de suivi des exécutions de tests"
+
+msgid "Test Management"
+msgstr "Test Management"
+
+msgid "Test management tool"
+msgstr "Gestion des tests"
+
+msgid "TestManagement config is not fully set up,"
+msgstr "La configuration de TestManagement est incomplète,"
+
+msgid "Tests executions"
+msgstr "Exécution de tests"
+
+msgid ""
+"The post actions cannot be saved because this tracker is used in "
+"TestManagement and \"frozen fields\" or \"hidden fieldsets\" actions are "
+"defined."
+msgstr ""
+"Les post actions ne peuvent être enregistrées car ce tracker est utilisé "
+"dans la configuration de TestManagement et des \"champs figés\" ou des \" "
+"groupes de champ cachés\" sont définis."
+
+#, php-format
+msgid "The submitted administration configuration is not valid."
+msgstr "La configuration envoyée n'est pas valide."
+
+#, php-format
+msgid "The tracker id %1$s is deleted"
+msgstr "L'outil de suivi %1$s est supprimé"
+
+#, php-format
+msgid "The tracker id %1$s is not a valid id"
+msgstr "L'id de l'outil de suivi %1$s n'est pas valide"
+
+#, php-format
+msgid "The tracker id %1$s is not part of this project"
+msgstr "L'outil de suivi %1$s ne fait pas parti de ce projet"
+
+#, php-format
+msgid "The tracker id %1$s not found"
+msgstr "Impossible de trouver l'outil de suivi %1$s"
+
+#, php-format
+msgid "The tracker id %1$s uses frozen fields workflow post action"
+msgstr ""
+"L'outil de suivi %1$s utilise des actions de type champs figés dans son "
+"workflow"
+
+#, php-format
+msgid "The tracker id %1$s uses hidden fieldsets workflow post action"
+msgstr ""
+"L'outil de suivi %1$s utilise des actions de type groupe de champs cachés "
+"dans son workflow"
+
+msgid ""
+"The tracker is using a field \"Step definition\" that is only available in "
+"the context of Test Management. However this service is not enabled in the "
+"project: you may remove the field from the tracker."
+msgstr ""
+"Cet outil de suivi utilise le champ \"Définition d'étapes\" qui n'est "
+"utilisable que dans le contexte de TestManagement. Cependant il s'avère que "
+"ce service n'est pas activé dans le projet: vous pouvez supprimer ce champ."
+
+msgid ""
+"The tracker is using a field \"Step execution\" that is only available in "
+"the context of Test Management. However this service is not enabled in the "
+"project: you may remove the field from the tracker."
+msgstr ""
+"Cet outil de suivi utilise le champ \"Exécution d'étapes\" qui n'est "
+"utilisable que dans le contexte de TestManagement. Cependant il s'avère que "
+"ce service n'est pas activé dans le projet: vous pouvez supprimer ce champ."
+
+msgid ""
+"This tracker uses the Step definition field, which can only be used with\n"
+"                        TestManagement. Please <a href=\"%s\">remove the "
+"field</a> before choosing another tracker."
+msgstr ""
+"Cet outil de suivi utilise le champ 'Définition d'étapes', qui ne peut être "
+"utilisé qu'avec TestManagement. Veuillez s'il vous plaît <a href=\"%s"
+"\">enlever ce champ</a> avant de choisir un autre outil de suivi."
+
+msgid ""
+"This tracker uses the Step execution field, which can only be used with\n"
+"                        TestManagement. Please <a href=\"%s\">remove the "
+"field</a> before choosing another tracker."
+msgstr ""
+"Cet outil de suivi utilise le champ 'Exécution d'étapes', qui ne peut être "
+"utilisé qu'avec TestManagement. Veuillez s'il vous plaît <a href=\"%s"
+"\">enlever ce champ</a> avant de choisir un autre outil de suivi."
+
+msgid "We configured Test Management for you. Enjoy!"
+msgstr ""
+"La configuration initiale de Test Management a été effectuée pour vous."
+
+#, php-format
+msgid ""
+"We tried to configure Test Management for you but an existing tracker (%1$s) "
+"is using Tracker Engine v3 and prevented it."
+msgstr ""
+"We tried to configure Test Management for you but an existing tracker (%1$s) "
+"is using Tracker Engine v3 and prevented it."
+
+msgid ""
+"We tried to configure Test Management for you but an internal error "
+"prevented it."
+msgstr ""
+"Une erreur interne a empêché la configuration initiale de Test Management."
+
+msgid "come back later."
+msgstr "revenez plus tard."
+
+msgid ""
+"go in the admin section to set manually the trackers or let us do it for you."
+msgstr ""
+"rendez vous dans la section administrateur ou laissez nous nous en occuper "
+"pour vous."

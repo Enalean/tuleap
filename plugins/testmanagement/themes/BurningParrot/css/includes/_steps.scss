@@ -1,0 +1,136 @@
+.steps execution-detail-just-updated > .feedback-info {
+    margin: 20px;
+}
+
+.steps-maindescription {
+    margin: $tlp-spacing 0 0;
+    padding: 0 $tlp-spacing $tlp-spacing;
+    border-bottom: 1px solid $tlp-ui-border-light;
+}
+
+.steps-step {
+    display: flex;
+    align-items: baseline;
+    border-bottom: 1px solid $tlp-ui-border-light;
+
+    &.passed {
+        background: transparentize($tlp-ui-success, .96);
+
+        > .steps-step-description > .steps-step-expected {
+            > div > .steps-step-expected-title {
+                color: $tlp-ui-success;
+            }
+
+            > .steps-step-expected-arrow {
+                fill: $tlp-ui-success;
+            }
+        }
+    }
+
+    &.failed {
+        background: transparentize($tlp-ui-danger, .96);
+
+        > .steps-step-description > .steps-step-expected {
+            > div > .steps-step-expected-title {
+                color: $tlp-ui-danger;
+            }
+
+            > .steps-step-expected-arrow {
+                fill: $tlp-ui-danger;
+            }
+        }
+    }
+
+    &.blocked {
+        background: transparentize($tlp-ui-info, .96);
+
+        > .steps-step-description > .steps-step-expected {
+            > div > .steps-step-expected-title {
+                color: $tlp-ui-info;
+            }
+
+            > .steps-step-expected-arrow {
+                fill: $tlp-ui-info;
+            }
+        }
+    }
+
+    &.notrun {
+        background: transparent;
+
+        > .steps-step-description > .steps-step-expected {
+            > div > .steps-step-expected-title {
+                color: $tlp-ui-dimmed;
+            }
+
+            > .steps-step-expected-arrow {
+                fill: $tlp-ui-dimmed;
+            }
+        }
+    }
+}
+
+.steps-step-number {
+    margin: $tlp-spacing;
+}
+
+.steps-step-description {
+    flex-grow: 1;
+    margin: $tlp-spacing 0;
+}
+
+.steps-step-expected {
+    display: flex;
+    align-items: baseline;
+    margin: $tlp-half-spacing 0 0 5px;
+
+    > .steps-step-expected-content {
+        margin: 0 0 0 $tlp-spacing;
+    }
+}
+
+.steps-step-expected-arrow {
+    flex: 0 0 auto;
+    margin: 0 5px 0 0;
+}
+
+.steps-step-expected-title {
+    margin: 0 0 10px;
+    font-weight: bold;
+}
+
+.steps-step-action {
+    position: relative;
+    margin: 0 $tlp-spacing;
+}
+
+.steps-step-action-pass {
+    width: 60px;
+    border-radius: 3px 0 0 3px;
+}
+
+.steps-step-action-dropdown-trigger {
+    width: 26px;
+    padding: 0 5px;
+    text-overflow: clip;
+}
+
+.tlp-dropdown-menu.steps-step-action-dropdown {
+    right: -8px;
+}
+
+.steps-step-action-fail {
+    color: $tlp-ui-danger;
+}
+
+.steps-step-action-block {
+    color: $tlp-ui-info;
+}
+
+.steps-step-action-notrun {
+    color: $tlp-ui-dimmed;
+}
+
+.steps-step-action-disabled {
+    color: $tlp-ui-dimmed;
+}

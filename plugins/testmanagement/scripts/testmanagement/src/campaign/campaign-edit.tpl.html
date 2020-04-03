@@ -1,0 +1,161 @@
+<form class="tlp-modal tlp-modal-medium-sized"
+      name="editCampaignForm"
+      ng-submit="editCampaign(campaign)">
+    <div class="tlp-modal-header">
+      <h1 class="tlp-modal-title">
+          <i class="fa fa-pencil tlp-modal-title-icon"></i>
+          <span translate>Edit {{ campaign.label }} campaign</span>
+      </h1>
+      <div class="tlp-modal-close" tabindex="0" role="button" data-dismiss="modal" aria-label="{{ 'Close' | translate }}">&times;</div>
+    </div>
+
+    <div class="tlp-modal-body">
+        <div class="tlp-form-element"
+             ng-class="{ 'tlp-form-element-error': editCampaignForm.campaign_label.$dirty && editCampaignForm.campaign_label.$invalid }">
+            <label class="tlp-label" for="campaign-label">
+                {{ 'Campaign label' | translate }} <i class="fa fa-asterisk"></i>
+            </label>
+            <input type="text"
+                   class="tlp-input edit-campaign-label-input"
+                   id="campaign-label"
+                   name="campaign_label"
+                   ng-model="campaign.label"
+                   placeholder="{{ 'Campaign label' | translate }}"
+                   required
+                   ng-trim />
+            <p class="tlp-text-danger" ng-show="editCampaignForm.campaign_label.$dirty && editCampaignForm.campaign_label.$invalid">
+                {{ 'A campaign label is required' | translate }}
+                <i class="fa fa-frown-o"></i>
+            </p>
+        </div>
+
+        <hr class="tlp-modal-separator">
+
+        <h2 class="tlp-modal-subtitle" translate>Jenkins job</h2>
+        <div class="tlp-form-element"
+            ng-class="{ 'tlp-form-element-error': editCampaignForm.campaign_job_url.$dirty && editCampaignForm.campaign_job_url.$invalid }"
+        >
+            <label class="tlp-label" for="campaign-job-url" translate>Job URL</label>
+            <input type="url"
+                class="tlp-input edit-campaign-job-url-input"
+                id="campaign-job-url"
+                name="campaign_job_url"
+                ng-model="campaign.job_configuration.url"
+                placeholder="https://jenkins.example.com"
+            />
+            <p class="tlp-text-info" translate>The URL to a Jenkins job that will execute automated tests</p>
+        </div>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="campaign-job-token" translate>Authentication Token</label>
+            <input type="text"
+                class="tlp-input edit-campaign-job-token-input"
+                id="campaign-job-token"
+                name="campaign_job_token"
+                ng-model="campaign.job_configuration.token"
+                placeholder="{{ ::'Jenkins authentication token' | translate }}"
+            />
+            <p class="tlp-text-info" translate>An authentication token that authorizes Tuleap to trigger this Jenkins job</p>
+        </div>
+
+        <hr class="tlp-modal-separator">
+
+        <h2 class="tlp-modal-subtitle" translate>Tests</h2>
+        <div class="tlp-table-actions">
+            <button type="button"
+                    class="tlp-button-primary tlp-table-actions-element"
+                    ng-click="showAddTestModal()">
+                <i class="fa fa-plus"></i> {{ 'Add a test' | translate }}
+            </button>
+            <div class="tlp-table-actions-spacer"></div>
+            <div class="tlp-form-element tlp-table-actions-element">
+                <select class="tlp-select tlp-select-adjusted"
+                        ng-model="filters.selected_report"
+                        ng-change="selectReportTests()">
+                    <option value="" translate>Pre-select tests from a tracker report</option>
+                    <option ng-repeat="report in test_reports" ng-value="report.id">{{ report.label }}</option>
+                </select>
+            </div>
+            <div class="tlp-table-actions-spacer edit-campaign-tests-list-actions-spacer-small"></div>
+            <div class="tlp-form-element edit-campaign-tests-search-container">
+                <input type="search"
+                       class="tlp-search tlp-table-actions-element"
+                       enable-tlp-table-filter
+                       data-target-table-id="edit-campaign-tests-list"
+                       autocomplete="off"
+                       placeholder="{{ 'Id, summary, category…' | translate }}">
+            </div>
+        </div>
+        <table class="tlp-table edit-campaign-tests-list" id="edit-campaign-tests-list">
+            <thead>
+                <th class="edit-campaign-tests-list-header check"><i class="fa"></i></th>
+                <th class="edit-campaign-tests-list-header id tlp-table-cell-numeric" translate>Id</th>
+                <th translate>Summary</th>
+            </thead>
+            <tbody>
+                <tr class="tlp-table-empty-filter">
+                    <td colspan="3" class="tlp-table-cell-empty">
+                        There aren't any matching tests
+                    </td>
+                </tr>
+            </tbody>
+            <tbody ng-repeat-start="category in tests_list">
+                <tr ng-click="toggleCategory(category)">
+                    <td colspan="3" class="tlp-table-cell-section tlp-table-cell-filterable">
+                        <i class="fa edit-campaign-tests-list-check edit-campaign-tests-list-section-check"
+                           ng-class="categoryCheckmark(category)"></i>
+                        <span class="edit-campaign-tests-list-section-label">{{ category.label }}</span>
+                    </td>
+                </tr>
+            </tbody>
+            <tbody ng-repeat-end="">
+                <tr class="edit-campaign-tests-list-test"
+                    ng-repeat="test in category.tests
+                        | toArray:false
+                        | unique:'definition.id'
+                        track by test.definition.id"
+                    ng-class="diffState(test)"
+                    ng-click="toggleTest(test)">
+                    <td>
+                        <i class="fa edit-campaign-tests-list-check"
+                           ng-class="testCheckmark(test)"></i>
+                    </td>
+                    <td class="tlp-table-cell-numeric tlp-table-cell-filterable">{{ test.definition.id }}</td>
+                    <td class="tlp-table-cell-filterable">{{ test.definition.summary }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="tlp-modal-footer edit-campaign-footer">
+        <div class="edit-campaign-tests-diff">
+            <div class="tlp-badge-success tlp-badge-outline"
+                ng-if="addedTests().length > 0"
+                translate
+                translate-n="addedTests().length"
+                translate-plural="{{ $count }} tests will be added"
+            >
+                1 test will be added
+            </div>
+            <div class="tlp-badge-danger tlp-badge-outline"
+                ng-if="removedTests().length > 0"
+                translate
+                translate-n="removedTests().length"
+                translate-plural="{{ $count }} tests will be removed"
+            >
+                1 test will be removed
+            </div>
+        </div>
+        <button type="button"
+                class="tlp-button-primary tlp-button-outline tlp-modal-action"
+                data-dismiss="modal">
+            {{ 'Cancel' | translate }}
+        </button>
+        <button type="submit"
+                class="tlp-button-primary tlp-modal-action"
+                ng-disabled="submitting_changes || ! editCampaignForm.$valid">
+            <i class="fa fa-spinner fa-spin" ng-if="submitting_changes"></i>
+            {{ 'Save changes' | translate }}
+        </button>
+    </div>
+</form>
+

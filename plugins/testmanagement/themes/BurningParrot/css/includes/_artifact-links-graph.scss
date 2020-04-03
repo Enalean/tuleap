@@ -1,0 +1,79 @@
+@import "../../src/www/themes/common/css/utils/colors";
+
+.artifact-links-graph-modal {
+    height: 70vh;
+    max-height: 70vh;
+}
+
+.graph {
+    display: block;
+    height: 100%;
+    max-height: 100%;
+}
+
+.link {
+    fill: $tlp-ui-dimmed;
+    stroke: $tlp-ui-dimmed;
+    stroke-width: 1.5px;
+}
+
+circle {
+    transition: stroke-width linear .05s;
+    cursor: pointer;
+    stroke-width: 2px;
+
+    &:hover {
+        stroke-width: 5px;
+    }
+
+    @each $color-name, $colors in $tlp-swatch-color-map {
+        &.#{$color-name} {
+            stroke: darken(map-get($colors, 'primary'), 20%);
+        }
+    }
+}
+
+text {
+    font: 12px sans-serif;
+    text-shadow: 0 1px 0 #ffffff, 1px 0 0 #ffffff, 0 -1px 0 #ffffff, -1px 0 0 #ffffff;
+    cursor: pointer;
+}
+
+.loader-node {
+    position: absolute;
+    left: 50%;
+    visibility: hidden;
+}
+
+#artifact-links-graph-utils {
+    position: absolute;
+}
+
+.overlay {
+    fill: none;
+    pointer-events: all;
+}
+
+.graph-label {
+    opacity: .8;
+
+    .ref-name {
+        font-weight: bold;
+        text-shadow: none;
+        fill: #ffffff;
+    }
+
+    &:hover {
+        text-decoration: none;
+
+        > text:not(.ref-name) {
+            text-decoration: underline;
+        }
+    }
+}
+
+@each $color-name, $colors in $tlp-swatch-color-map {
+    &.#{$color-name} {
+        fill: darken(map-get($colors, 'primary'), 20%);
+    }
+}
