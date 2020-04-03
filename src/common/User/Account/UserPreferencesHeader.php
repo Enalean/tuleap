@@ -35,8 +35,8 @@ final class UserPreferencesHeader
         $layout->addJavascriptAsset(
             new JavascriptAsset(
                 new IncludeAssets(
-                    __DIR__ . '/../../../www/assets/account/scripts',
-                    '/assets/account/scripts'
+                    __DIR__ . '/../../../www/assets/core',
+                    '/assets/core'
                 ),
                 'preferences-nav.js'
             )

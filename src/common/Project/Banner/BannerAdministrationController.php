@@ -67,7 +67,7 @@ final class BannerAdministrationController implements DispatchableWithRequest, D
         return new self(
             AdministrationLayoutHelper::buildSelf(),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates/project/admin/banner/'),
-            new IncludeAssets(__DIR__ . '/../../../www/assets/', '/assets'),
+            new IncludeAssets(__DIR__ . '/../../../www/assets/core', '/assets/core'),
             new BannerRetriever(new BannerDao())
         );
     }
