@@ -2,10 +2,10 @@
     "baseUrl": "https://tuleap",
     "reporter": "junit",
     "reporterOptions": {
-        "mochaFile": "/output/core-results-[hash].xml"
+        "mochaFile": "/output/timetracking-results-[hash].xml"
     },
-    "screenshotsFolder": "/output/core-screenshots",
-    "videosFolder": "/output/core-videos",
+    "screenshotsFolder": "/output/timetracking-screenshots",
+    "videosFolder": "/output/timetracking-videos",
     "video": true,
     "videoUploadOnPasses": false,
     "pluginsFile": false,

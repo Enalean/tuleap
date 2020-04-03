@@ -118,6 +118,10 @@ seed_data() {
         load_project "$project"
     done
 
+    for project in $(find /usr/share/tuleap/plugins/*/tests/e2e/cypress/_fixtures/ -maxdepth 1 -mindepth 1 -type d) ; do
+        load_project "$project"
+    done
+
     chown -R codendiadm:codendiadm /var/log/tuleap
 }
 
