@@ -240,7 +240,7 @@ class FlamingParrot_Theme extends Layout
         $banner = null;
         if (!empty($params['group'])) {
             $project = $project_manager->getProject($params['group']);
-            $banner  = $this->getProjectBanner($project, $current_user, 'project-banner-fp.js');
+            $banner  = $this->getProjectBanner($project, $current_user, 'project/project-banner-fp.js');
         }
 
         $current_project_navbar_info = $this->getCurrentProjectNavbarInfo($project_manager, $params, $banner);

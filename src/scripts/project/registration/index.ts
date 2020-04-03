@@ -34,7 +34,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     await initVueGettext(Vue, (locale: string) =>
         import(
-            /* webpackChunkName: "project-registration-po-" */ "./po/" + getPOFileFromLocale(locale)
+            /* webpackChunkName: "project/project-registration-po-" */ "./po/" +
+                getPOFileFromLocale(locale)
         )
     );
 

@@ -1,0 +1,12 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/burningparrot-theme",
+  "description": "Tuleap BurningParrot theme framework",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "dependencies": {
+    "smooth-scrollbar": "^7.4.1"
+  },
+  "devDependencies": {}
+}

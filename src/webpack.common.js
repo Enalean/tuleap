@@ -131,22 +131,23 @@ const webpack_config_for_rich_text_editor = {
 
 const webpack_config_for_burning_parrot_code = {
     entry: {
-        appearance: "./scripts/account/appearance.ts",
-        avatar: "./scripts/account/avatar.ts",
-        "keys-tokens": "./scripts/account/keys-tokens.ts",
-        "preferences-nav": "./scripts/account/preferences-nav.ts",
-        security: "./scripts/account/security.ts",
-        timezone: "./scripts/account/timezone.ts",
-        dashboard: "./scripts/dashboards/dashboard.js",
+        "account/appearance": "./scripts/account/appearance.ts",
+        "account/avatar": "./scripts/account/avatar.ts",
+        "account/keys-tokens": "./scripts/account/keys-tokens.ts",
+        "account/preferences-nav": "./scripts/account/preferences-nav.ts",
+        "account/security": "./scripts/account/security.ts",
+        "account/timezone": "./scripts/account/timezone.ts",
+        "dashboards/dashboard": "./scripts/dashboards/dashboard.js",
         "widget-project-heartbeat": "./scripts/dashboards/widgets/project-heartbeat/index.js",
         "access-denied-error": "./scripts/BurningParrot/src/access-denied-error.js",
         "burning-parrot": "./scripts/BurningParrot/src/index.js",
         "frs-admin-license-agreement": "./scripts/frs/admin/license-agreement.js",
         "project-admin": "./scripts/project/admin/src/index.js",
         "project-admin-ugroups": "./scripts/project/admin/src/project-admin-ugroups.js",
-        "project-banner-bp": "./scripts/project/banner/index-bp.ts",
-        "project-banner-fp": "./scripts/project/banner/index-fp.ts",
-        "project-registration-creation": "./scripts/project/registration/index-for-modal.ts",
+        "project/project-banner-bp": "./scripts/project/banner/index-bp.ts",
+        "project/project-banner-fp": "./scripts/project/banner/index-fp.ts",
+        "project/project-registration-creation":
+            "./scripts/project/registration/index-for-modal.ts",
         "site-admin-generate-pie-charts": "./scripts/site-admin/generate-pie-charts.js",
         "site-admin-mass-emailing": "./scripts/site-admin/massmail.js",
         "site-admin-most-recent-logins": "./scripts/site-admin/most-recent-logins.js",
@@ -197,9 +198,10 @@ const webpack_config_for_vue = {
     entry: {
         "frs-permissions": "./scripts/frs/permissions-per-group/index.js",
         "news-permissions": "./scripts/news/permissions-per-group/index.js",
-        "project-admin-banner": "./scripts/project/admin/banner/index-banner-project-admin.ts",
+        "project/project-admin-banner":
+            "./scripts/project/admin/banner/index-banner-project-admin.ts",
         "project-admin-services": "./scripts/project/admin/services/src/index-project-admin.js",
-        "project-registration": "./scripts/project/registration/index.ts",
+        "project/project-registration": "./scripts/project/registration/index.ts",
         "site-admin-services": "./scripts/project/admin/services/src/index-site-admin.js",
     },
     context,
@@ -330,6 +332,51 @@ const webpack_config_legacy_combined = {
     ],
 };
 
+const colors = ["blue", "green", "grey", "orange", "purple", "red"];
+const burning_parrot_entry_points = {};
+for (const color of colors) {
+    burning_parrot_entry_points[
+        `BurningParrot/burning-parrot-${color}`
+    ] = `./themes/BurningParrot/css/burning-parrot-${color}.scss`;
+    burning_parrot_entry_points[
+        `BurningParrot/burning-parrot-${color}-condensed`
+    ] = `./themes/BurningParrot/css/burning-parrot-${color}-condensed.scss`;
+    burning_parrot_entry_points[
+        `account/account-${color}`
+    ] = `./themes/BurningParrot/css/account/account-${color}.scss`;
+    burning_parrot_entry_points[
+        `account/account-${color}-condensed`
+    ] = `./themes/BurningParrot/css/account/account-${color}-condensed.scss`;
+    burning_parrot_entry_points[
+        `dashboards/dashboards-${color}`
+    ] = `./themes/BurningParrot/css/dashboards/dashboards-${color}.scss`;
+    burning_parrot_entry_points[
+        `dashboards/dashboards-${color}-condensed`
+    ] = `./themes/BurningParrot/css/dashboards/dashboards-${color}-condensed.scss`;
+    burning_parrot_entry_points[
+        `project/project-registration-${color}`
+    ] = `./themes/BurningParrot/css/project-registration/project-registration-${color}.scss`;
+    burning_parrot_entry_points[
+        `project/project-registration-${color}-condensed`
+    ] = `./themes/BurningParrot/css/project-registration/project-registration-${color}-condensed.scss`;
+    burning_parrot_entry_points[
+        `project/project-registration-creation-${color}`
+    ] = `./themes/BurningParrot/css/project-registration-creation/project-registration-creation-${color}.scss`;
+    burning_parrot_entry_points[
+        `project/project-registration-creation-${color}-condensed`
+    ] = `./themes/BurningParrot/css/project-registration-creation/project-registration-creation-${color}-condensed.scss`;
+}
+
+const webpack_config_for_burning_parrot_css = {
+    entry: burning_parrot_entry_points,
+    context,
+    output,
+    module: {
+        rules: [webpack_configurator.rule_scss_loader, webpack_configurator.rule_css_assets],
+    },
+    plugins: [manifest_plugin, ...webpack_configurator.getCSSExtractionPlugins()],
+};
+
 module.exports = [
     webpack_config_for_ckeditor,
     webpack_config_legacy_combined,
@@ -337,4 +384,5 @@ module.exports = [
     webpack_config_for_flaming_parrot_code,
     webpack_config_for_burning_parrot_code,
     webpack_config_for_vue,
+    webpack_config_for_burning_parrot_css,
 ];

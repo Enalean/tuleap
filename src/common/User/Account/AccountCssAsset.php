@@ -32,10 +32,10 @@ class AccountCssAsset extends CssAsset
     {
         parent::__construct(
             new IncludeAssets(
-                __DIR__ . '/../../../www/assets/account/css',
-                '/assets/account/css',
+                __DIR__ . '/../../../www/assets/core',
+                '/assets/core',
             ),
-            'account'
+            'account/account'
         );
     }
 }

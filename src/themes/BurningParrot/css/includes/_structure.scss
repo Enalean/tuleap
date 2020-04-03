@@ -1,0 +1,117 @@
+/**
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding: $navbar-height 0 0;
+    background: $tlp-theme-background-color;
+}
+
+#main-container {
+    display: flex;
+    flex: 1 1 auto;
+}
+
+main {
+    &[role=main] {
+        width: 100%;
+    }
+
+    &.fluid-main { //stylelint-disable-line selector-no-qualifying-type
+        display: table;
+    }
+}
+
+
+#feedback {
+    margin: 0 0 $tlp-spacing;
+
+    &:empty {
+        margin: 0;
+    }
+}
+
+main[role=main]:not(.tlp-framed) > #feedback {
+    margin: $tlp-spacing $tlp-spacing 0;
+
+    &:empty {
+        margin: 0;
+    }
+}
+
+%empty-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.empty-page {
+    @extend %empty-container;
+    margin: 100px auto $tlp-spacing;
+}
+
+.empty-pane {
+    @extend %empty-container;
+}
+
+.empty-page-text,
+.empty-pane-text,
+.empty-page-text-with-small-text {
+    margin: 0 0 60px;
+    color: transparentize($tlp-theme-color, .7);
+    font-size: 30px;
+    line-height: 44px;
+    text-align: center;
+
+    > .empty-page-small-text {
+        margin: $tlp-half-spacing 0 0;
+    }
+}
+
+.empty-page-small-text {
+    color: transparentize($tlp-theme-color, .7);
+    font-size: $tlp-spacing;
+    line-height: 20px;
+    text-align: center;
+}
+
+.empty-page-text-with-small-text {
+    margin: 0 0 $tlp-double-spacing;
+}
+
+.empty-page-icon,
+.empty-pane-icon {
+    margin: 0 0 30px;
+}
+
+.empty-page-illustration {
+    margin: 0 0 3 * $tlp-spacing;
+}
+
+@import 'header';
+@import 'sidebar';
+@import 'toolbar';
+@import 'navbar';
+@import 'navbar-dropdown';
+@import 'navbar-dropdown-projects';
+@import 'navbar-dropdown-items';
+@import 'navbar-dropdown-history';
+@import 'footer';

@@ -1,0 +1,76 @@
+/**
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@import 'siteadmin-homepage';
+@import 'siteadmin-user-list';
+@import 'siteadmin-user-details';
+@import 'siteadmin-user-password';
+@import 'siteadmin-pending-users';
+@import 'siteadmin-pending-projects';
+@import 'siteadmin-permission-delegation';
+@import 'siteadmin-system-events';
+@import 'siteadmin-project';
+@import 'siteadmin-project-history';
+@import 'siteadmin-project-list';
+@import 'siteadmin-project-webhooks';
+@import 'siteadmin-platform-access';
+@import 'siteadmin-custom-homepage';
+@import 'siteadmin-pending-tracker-removal';
+@import 'siteadmin-description-fields';
+@import 'siteadmin-trovecats';
+@import 'siteadmin-massmail';
+@import 'siteadmin-news';
+@import 'siteadmin-templates';
+
+.siteadmin-trovecat-list-category {
+    width: 100%;
+}
+
+.siteadmin-trovecat-list-actions {
+    text-align: left;
+    white-space: nowrap;
+}
+
+.siteadmin-custom-site-content-empty-icon {
+    color: transparentize($tlp-theme-color, .7);
+    font-size: 100px;
+}
+
+.siteadmin-custom-site-content-customisation,
+.siteadmin-custom-site-content-original {
+    width: 50%;
+}
+
+.siteadmin-custom-site-content-keys {
+    color: $tlp-ui-dimmed;
+    font-size: 12px;
+}
+
+.siteadmin-custom-site-content-line-number {
+    white-space: nowrap;
+
+    > code {
+        white-space: pre;
+        tab-size: 4;
+    }
+}
+
+.allowed-projects-all-form-switch {
+    display: inline-block;
+}

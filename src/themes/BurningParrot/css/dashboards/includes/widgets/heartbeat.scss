@@ -1,0 +1,146 @@
+/**
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.dashboard-widget-content.dashboard-widget-content-projectheartbeat {
+    margin: 0 $tlp-spacing $tlp-spacing;
+}
+
+.dashboard-widget-content-projectheartbeat-empty-no-activity,
+.dashboard-widget-content-projectheartbeat-empty-no-perms,
+.dashboard-widget-content-projectheartbeat-error,
+.dashboard-widget-content-projectheartbeat-activities,
+.dashboard-widget-content-projectheartbeat-loading {
+    display: none;
+
+    &.shown {
+        display: block;
+    }
+}
+
+.dashboard-widget-content-projectheartbeat-empty {
+    display: none;
+
+    &.shown {
+        display: flex;
+    }
+}
+
+.dashboard-widget-content-projectheartbeat-loading {
+    height: 200px;
+    background: url('../../../../www/themes/BurningParrot/images/spinner.gif') no-repeat center center;
+}
+
+.widget-project-heartbeat-empty-icon {
+    fill: transparentize($tlp-theme-color, .7);
+}
+
+$timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
+
+.dashboard-widget-content-projectheartbeat-activities {
+    position: relative;
+    padding: $tlp-spacing 0;
+
+    &::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        left: 10px;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(to top, $tlp-ui-white 0, $timeline-color $tlp-spacing, transparent $tlp-spacing + 1px),
+            linear-gradient(to bottom, $tlp-ui-white 0, $timeline-color $tlp-spacing);
+    }
+}
+
+.dashboard-widget-content-projectheartbeat-label {
+    display: inline-block;
+    position: relative;
+    z-index: 2;
+    margin: $tlp-spacing 0;
+    padding: 5px;
+    border-radius: 3px;
+    background: $timeline-color;
+    color: $tlp-theme-color;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .5px;
+    line-height: 7px;
+    text-transform: uppercase;
+
+    &:first-child {
+        margin: 0 0 $tlp-spacing;
+    }
+}
+
+.dashboard-widget-content-projectheartbeat-item {
+    display: flex;
+    position: relative;
+    z-index: 2;
+    align-items: flex-start;
+    margin: 0 0 $tlp-spacing;
+
+    &:last-child {
+        margin: 0;
+    }
+}
+
+.dashboard-widget-content-projectheartbeat-item-icon {
+    display: flex;
+    position: relative;
+    top: 1px;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    margin: 0 $tlp-half-spacing 0 0;
+    border-radius: 50%;
+    background: $tlp-theme-color;
+
+    > .tuleap-svg {
+        fill: $tlp-ui-white;
+    }
+}
+
+.dashboard-widget-content-projectheartbeat-item-message {
+    margin: 0 0 5px;
+    line-height: 22px;
+
+    > .direct-link-to-artifact > span {
+        margin: 0 5px 0 0;
+    }
+
+    > a {
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+.dashboard-widget-content-projectheartbeat-item-time {
+    color: $tlp-ui-dimmed;
+    font-size: 12px;
+}
+
+.dashboard-widget-content-projectheartbeat-item-time-icon {
+    margin: 0 3px 0 0;
+}

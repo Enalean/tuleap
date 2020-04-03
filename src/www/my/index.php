@@ -1,7 +1,7 @@
 <?php
 /**
-  * Copyright 1999-2000 (c) The SourceForge Crew
   * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
+  * Copyright 1999-2000 (c) The SourceForge Crew
   *
   * This file is a part of Tuleap.
   *
@@ -62,6 +62,7 @@ $csrf_token                 = new CSRFSynchronizerToken('/my/');
 $dashboard_widget_dao       = new DashboardWidgetDao($widget_factory);
 $user_dashboard_dao         = new UserDashboardDao($dashboard_widget_dao);
 $dashboard_widget_retriever = new DashboardWidgetRetriever($dashboard_widget_dao);
+$core_assets                = new IncludeAssets(__DIR__ . '/../assets/core', '/assets/core');
 $router                     = new UserDashboardRouter(
     new UserDashboardController(
         $csrf_token,
@@ -78,16 +79,8 @@ $router                     = new UserDashboardRouter(
         new WidgetMinimizor($dashboard_widget_dao),
         new AssetsIncluder(
             $GLOBALS['Response'],
-            new IncludeAssets(__DIR__ . '/../assets/core', '/assets/core'),
-            new CssAssetCollection(
-                [new CssAsset(
-                    new IncludeAssets(
-                        __DIR__ . '/../assets/dashboards/themes',
-                        '/assets/dashboards/themes'
-                    ),
-                    'dashboards'
-                )]
-            )
+            $core_assets,
+            new CssAssetCollection([new CssAsset($core_assets, 'dashboards/dashboards')])
         )
     ),
     new WidgetDashboardController(

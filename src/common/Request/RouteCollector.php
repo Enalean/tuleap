@@ -612,10 +612,10 @@ class RouteCollector
 
     public static function getProjectRegistrationController(): ProjectRegistrationController
     {
+        $core_assets = new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core');
         return new ProjectRegistrationController(
             TemplateRendererFactory::build(),
-            new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core'),
-            new IncludeAssets(__DIR__ . '/../../www/assets/project-registration/themes', '/assets/project-registration/themes'),
+            $core_assets,
             new ProjectRegistrationUserPermissionChecker(
                 new \ProjectDao()
             ),

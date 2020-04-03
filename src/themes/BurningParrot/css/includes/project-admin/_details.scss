@@ -1,0 +1,115 @@
+/**
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.project-admin-details-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.project-admin-details-container {
+    display: flex;
+}
+
+.project-admin-details-public-info {
+    flex: 0 1 auto;
+    width: 100%;
+    max-width: 40%;
+    margin: 0 $tlp-spacing $tlp-spacing 0;
+}
+
+.project-admin-details-public-info-meta {
+    display: flex;
+    margin: 0 0 $tlp-spacing;
+}
+
+.project-admin-details-public-info-meta-type {
+    margin: 0 $tlp-double-spacing 0 0;
+    white-space: nowrap;
+}
+
+.project-admin-details-right-container {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    width: 100%;
+    max-width: 60%;
+}
+
+.project-admin-details-visibility {
+    margin: 0 0 $tlp-spacing;
+}
+
+.project-admin-details-hierarchy-buttons {
+    display: flex;
+}
+
+#project-admin-details-hierarchy-delete-button {
+    margin: 0 0 0 $tlp-half-spacing;
+}
+
+#project-admin-details-hierarchy-project-select {
+    width: 250px;
+}
+
+.project-admin-details-hierarchy-description {
+    margin: 0 0 $tlp-spacing;
+}
+
+.project-admin-details-submit {
+    align-self: center;
+    margin: $tlp-spacing 0 $tlp-double-spacing;
+}
+
+.project-admin-details-info-access {
+    margin-bottom: $tlp-double-spacing;
+    text-align: center;
+}
+
+#project-admin-details-info-access-level {
+    margin: 0;
+    color: $tlp-theme-color;
+    font-size: 30px;
+    font-weight: 600;
+}
+
+#project-admin-details-info-access-level-icon {
+    margin: 0 $tlp-half-spacing 0 0;
+}
+
+#project-admin-details-info-access-level-badge {
+    margin: $tlp-spacing 0 0;
+}
+
+#term-of-service-usage {
+    display: none;
+}
+
+@media screen and (max-width: 1200px) {
+    .project-admin-details-container {
+        flex-direction: column;
+    }
+
+    .project-admin-details-public-info {
+        max-width: 100%;
+    }
+
+    .project-admin-details-right-container {
+        max-width: 100%;
+    }
+}

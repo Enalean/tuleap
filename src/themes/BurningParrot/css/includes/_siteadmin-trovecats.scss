@@ -1,0 +1,58 @@
+.trove-cats-general-properties {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 0 $tlp-spacing;
+}
+
+.trove-cats-fullname-property {
+    width: calc(50% - #{$tlp-half-spacing});
+    margin: 0 $tlp-half-spacing $tlp-spacing 0;
+}
+
+.trove-cats-shortname-property {
+    width: calc(50% - #{$tlp-half-spacing});
+    margin: 0 0 $tlp-spacing $tlp-half-spacing;
+}
+
+.trove-cats-parent-property {
+    width: calc(50% - #{$tlp-half-spacing});
+    margin: 0 $tlp-half-spacing $tlp-spacing 0;
+}
+
+.trove-cats-description-property {
+    width: 100%;
+}
+
+.trove-cats-nb-max-values-input {
+    width: 60px;
+}
+
+.trove-cats-is-project-flag-warning,
+.trove-cats-nb-max-values-input-warning {
+    display: none;
+
+    &.shown {
+        display: block;
+    }
+}
+
+.trove-cats-modal-edit {
+    text-align: left;
+}
+
+.trove-cats-checkbox-modal-edit {
+    line-height: 14px;
+}
+
+.trove-cats-modal-action {
+    text-align: left;
+}
+
+.trove-cats-option-hidden {
+    display: none;
+}
+
+.trove-cats-project-flag-column {
+    text-align: center;
+    white-space: nowrap;
+}

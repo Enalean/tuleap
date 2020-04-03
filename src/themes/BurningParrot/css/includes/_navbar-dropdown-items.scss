@@ -1,0 +1,25 @@
+$nav-dropdown-content-projects-content-padding: 10px 20px;
+$nav-dropdown-content-border: 1px solid $tlp-ui-border-dark;
+
+.nav-dropdown-content {
+    min-width: 150px;
+    max-width: 550px;
+}
+
+.nav-dropdown-content-item {
+    display: block;
+    padding: $nav-dropdown-content-projects-content-padding;
+    overflow: hidden;
+    color: $tlp-ui-dimmed;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: normal;
+    line-height: 20px;
+    text-decoration: none;
+}
+
+.nav-dropdown-content-item:hover {
+    background-color: transparentize($tlp-theme-color, .9);
+    color: $tlp-theme-color;
+    text-decoration: none;
+}

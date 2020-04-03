@@ -1,0 +1,69 @@
+/**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@keyframes fadeout {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+#massmail-header {
+    width: 50%;
+    margin: 0 0 $tlp-spacing;
+}
+
+#massmail-preview {
+    display: flex;
+    align-items: center;
+    max-width: 1000px;
+}
+
+#massmail-preview-destination-submit {
+    flex: 0 0 auto;
+    margin: 0 0 0 $tlp-spacing;
+}
+
+#massmail-preview-destination-or {
+    margin: 0 $tlp-half-spacing;
+}
+
+#massmail-preview-feedback {
+    &.tlp-alert-danger,
+    &.tlp-alert-success {
+        animation-name: fadeout;
+        animation-duration: 350ms;
+        animation-delay: 4500ms;
+        animation-fill-mode: forwards;
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    #massmail-header {
+        width: 100%;
+    }
+
+    #massmail-preview-destination-submit {
+        flex: inherit;
+        width: 100%;
+    }
+}

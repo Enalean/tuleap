@@ -48,24 +48,18 @@ final class ProjectRegistrationController implements DispatchableWithRequest, Di
     /**
      * @var IncludeAssets
      */
-    private $javascript_assets;
-    /**
-     * @var IncludeAssets
-     */
-    private $css_assets;
+    private $assets;
 
     public function __construct(
         TemplateRendererFactory $template_renderer_factory,
-        IncludeAssets $javascript_assets,
-        IncludeAssets $css_assets,
+        IncludeAssets $assets,
         ProjectRegistrationUserPermissionChecker $permission_checker,
         ProjectRegistrationPresenterBuilder $presenter_builder
     ) {
         $this->template_renderer_factory = $template_renderer_factory;
         $this->presenter_builder         = $presenter_builder;
         $this->permission_checker        = $permission_checker;
-        $this->javascript_assets       = $javascript_assets;
-        $this->css_assets = $css_assets;
+        $this->assets                    = $assets;
     }
 
     /**
@@ -79,8 +73,8 @@ final class ProjectRegistrationController implements DispatchableWithRequest, Di
             throw new ForbiddenException();
         }
 
-        $layout->includeFooterJavascriptFile($this->javascript_assets->getFileURL('project-registration.js'));
-        $layout->addCssAsset(new CssAsset($this->css_assets, 'project-registration'));
+        $layout->includeFooterJavascriptFile($this->assets->getFileURL('project/project-registration.js'));
+        $layout->addCssAsset(new CssAsset($this->assets, 'project/project-registration'));
 
         $layout->header(["title" => _("Project Registration")]);
 
