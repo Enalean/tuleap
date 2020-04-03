@@ -27,13 +27,28 @@ class NaturePresenter
     public const FORWARD_LABEL = 'forward';
     public const REVERSE_LABEL = 'reverse';
 
+    /**
+     * @var string
+     */
     public $reverse_label;
+    /**
+     * @var string
+     */
     public $forward_label;
+    /**
+     * @var string
+     */
     public $shortname;
+    /**
+     * @var bool
+     */
     public $is_system = false;
+    /**
+     * @var bool
+     */
     public $is_visible;
 
-    public function __construct($shortname, $forward_label, $reverse_label, $is_visible)
+    public function __construct(string $shortname, string $forward_label, string $reverse_label, bool $is_visible)
     {
         $this->shortname           = $shortname;
         $this->forward_label       = $forward_label;
