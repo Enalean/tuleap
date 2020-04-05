@@ -22,6 +22,8 @@
 namespace Tuleap\Git\GitPHP;
 
 use GitPHP\Commit\TreePresenter;
+use Tuleap\Git\CommonMarkExtension\LinkToGitFileBlobFinder;
+use Tuleap\Git\CommonMarkExtension\LinkToGitFileExtension;
 use Tuleap\Markdown\CommonMarkInterpreter;
 
 class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
@@ -146,7 +148,10 @@ class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
         $readme_tree_item = $this->getReadmeTreeItem($tree);
         $this->tpl->assign('readme_content', $readme_tree_item);
         if ($readme_tree_item !== null) {
-            $content_interpretor = CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance());
+            $content_interpretor = CommonMarkInterpreter::build(
+                \Codendi_HTMLPurifier::instance(),
+                new LinkToGitFileExtension(new LinkToGitFileBlobFinder($readme_tree_item, $commit))
+            );
             $this->tpl->assign(
                 'readme_content_interpreted',
                 $content_interpretor->getInterpretedContent(
