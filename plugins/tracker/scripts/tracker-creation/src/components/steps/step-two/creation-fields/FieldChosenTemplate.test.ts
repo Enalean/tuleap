@@ -32,7 +32,8 @@ describe("FieldChosenTemplate", () => {
         is_a_xml_import = false,
         is_created_from_empty = false,
         is_a_duplication_of_a_tracker_from_another_project = false,
-        project_of_selected_tracker_template: ProjectTemplate | null = null
+        project_of_selected_tracker_template: ProjectTemplate | null = null,
+        is_created_from_default_template = false
     ): Promise<Wrapper<FieldChosenTemplate>> {
         return shallowMount(FieldChosenTemplate, {
             mocks: {
@@ -44,6 +45,7 @@ describe("FieldChosenTemplate", () => {
                         is_a_xml_import,
                         is_a_duplication_of_a_tracker_from_another_project,
                         project_of_selected_tracker_template,
+                        is_created_from_default_template,
                     },
                 }),
             },
@@ -81,7 +83,7 @@ describe("FieldChosenTemplate", () => {
                 },
             } as State;
 
-            const wrapper = await getWrapper(state);
+            const wrapper = await getWrapper(state, false, false, false, false, null, true);
             expect(wrapper.find("[data-test=project-of-chosen-template]").exists()).toBe(false);
             expect(wrapper.get("[data-test=chosen-template]").text()).toEqual("Bugs");
         });

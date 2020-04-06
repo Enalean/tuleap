@@ -26,9 +26,15 @@ import {
 } from "./type";
 import { extractNameAndShortnameFromXmlFile } from "../helpers/xml-data-extractor";
 import { getSlugifiedShortname } from "../helpers/shortname-slugifier";
+import { isDefaultTemplateSelected } from "./is-default-template-selected";
 
-export function setActiveOption(state: State, option: CreationOptions): void {
+export function setActiveOption(state: State, option: CreationOptions | string): void {
     state.active_option = option;
+    state.selected_tracker_template = null;
+
+    if (isDefaultTemplateSelected(state)) {
+        setSelectedTrackerTemplate(state, option);
+    }
 }
 
 export function setSelectedTrackerTemplate(state: State, tracker_id: string): void {

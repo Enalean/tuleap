@@ -21,7 +21,7 @@ export interface State {
     csrf_token: CSRFToken;
     default_templates: Tracker[];
     project_templates: ProjectTemplate[];
-    active_option: CreationOptions;
+    active_option: CreationOptions | string;
     selected_tracker_template: Tracker | null;
     selected_project_tracker_template: Tracker | null;
     selected_project: ProjectWithTrackers | null;
@@ -53,6 +53,7 @@ export interface ProjectTemplate {
 export interface Tracker {
     readonly id: string;
     readonly name: string;
+    readonly description: string;
     readonly tlp_color: string;
 }
 

@@ -84,22 +84,22 @@ class DefaultTemplatesCollectionTest extends TestCase
         $collection->add(
             'default-bug',
             new DefaultTemplate(
-                new TrackerTemplatesRepresentation('default-bug', 'Bugs', 'clockwork-orange'),
+                new TrackerTemplatesRepresentation('default-bug', 'Bugs', 'Description', 'clockwork-orange'),
                 '/path/to/xml'
             )
         );
         $collection->add(
             'default-activity',
             new DefaultTemplate(
-                new TrackerTemplatesRepresentation('default-activity', 'Activities', 'fiesta-red'),
+                new TrackerTemplatesRepresentation('default-activity', 'Activities', 'Description', 'fiesta-red'),
                 '/path/to/xml'
             )
         );
 
         $this->assertEquals(
             [
-                new TrackerTemplatesRepresentation('default-activity', 'Activities', 'fiesta-red'),
-                new TrackerTemplatesRepresentation('default-bug', 'Bugs', 'clockwork-orange')
+                new TrackerTemplatesRepresentation('default-activity', 'Activities', 'Description', 'fiesta-red'),
+                new TrackerTemplatesRepresentation('default-bug', 'Bugs', 'Description', 'clockwork-orange')
             ],
             $collection->getSortedDefaultTemplatesRepresentations()
         );

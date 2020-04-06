@@ -45,13 +45,13 @@ import { CreationOptions } from "../../../../store/type";
 @Component
 export default class TrackerBaseCard extends Vue {
     @State
-    readonly active_option!: CreationOptions;
+    readonly active_option!: CreationOptions | string;
 
     @Mutation
-    readonly setActiveOption!: (option: CreationOptions) => void;
+    readonly setActiveOption!: (option: CreationOptions | string) => void;
 
     @Prop({ required: true })
-    readonly optionName!: CreationOptions;
+    readonly optionName!: CreationOptions | string;
 
     get is_option_active(): boolean {
         return this.active_option === this.optionName;

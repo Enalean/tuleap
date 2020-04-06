@@ -19,6 +19,7 @@
 
 import { CreationOptions, ProjectTemplate, State, Tracker } from "./type";
 import { TRACKER_SHORTNAME_FORMAT } from "../constants";
+import { isDefaultTemplateSelected } from "./is-default-template-selected";
 
 export const is_ready_for_step_2 = (state: State): boolean => {
     if (state.active_option === CreationOptions.NONE_YET) {
@@ -29,7 +30,8 @@ export const is_ready_for_step_2 = (state: State): boolean => {
         isDuplicationReady(state) ||
         isXmlImportReady(state) ||
         isEmptyReady(state) ||
-        isDuplicationFromAnotherProjectReady(state)
+        isDuplicationFromAnotherProjectReady(state) ||
+        isDefaultTemplateSelected(state)
     );
 };
 
@@ -59,6 +61,11 @@ function isXmlImportReady(state: State): boolean {
         state.is_parsing_a_xml_file === false
     );
 }
+
+export const is_created_from_default_template = (state: State): boolean => {
+    return isDefaultTemplateSelected(state);
+};
+
 export const is_created_from_empty = (state: State): boolean => {
     return state.active_option === CreationOptions.TRACKER_EMPTY;
 };

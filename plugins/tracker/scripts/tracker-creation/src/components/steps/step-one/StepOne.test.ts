@@ -20,7 +20,7 @@
 import StepOne from "./StepOne.vue";
 import { shallowMount, Wrapper } from "@vue/test-utils";
 import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
-import { State } from "../../../store/type";
+import { ProjectTemplate, State, Tracker } from "../../../store/type";
 import { createTrackerCreationLocalVue } from "../../../helpers/local-vue-for-tests";
 
 describe("StepOne", () => {
@@ -28,7 +28,10 @@ describe("StepOne", () => {
         const wrapper: Wrapper<StepOne> = shallowMount(StepOne, {
             mocks: {
                 $store: createStoreMock({
-                    state: {} as State,
+                    state: {
+                        default_templates: [] as Tracker[],
+                        project_templates: [] as ProjectTemplate[],
+                    } as State,
                 }),
             },
             localVue: await createTrackerCreationLocalVue(),
@@ -42,6 +45,8 @@ describe("StepOne", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
+                        default_templates: [] as Tracker[],
+                        project_templates: [{} as ProjectTemplate],
                         company_name: "Nichya company",
                     } as State,
                 }),
@@ -49,7 +54,9 @@ describe("StepOne", () => {
             localVue: await createTrackerCreationLocalVue(),
         });
 
-        expect(wrapper.vm.$data.title_company_name).toEqual("Nichya company templates");
+        expect(wrapper.get("[data-test=platform-template-name]").text()).toEqual(
+            "Nichya company templates"
+        );
     });
 
     it(`displays 'Custom templates' if the platform name is Tuleap`, async () => {
@@ -57,6 +64,8 @@ describe("StepOne", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
+                        default_templates: [] as Tracker[],
+                        project_templates: [{} as ProjectTemplate],
                         company_name: "Tuleap",
                     } as State,
                 }),
@@ -64,6 +73,25 @@ describe("StepOne", () => {
             localVue: await createTrackerCreationLocalVue(),
         });
 
-        expect(wrapper.vm.$data.title_company_name).toEqual("Custom templates");
+        expect(wrapper.get("[data-test=platform-template-name]").text()).toEqual(
+            "Custom templates"
+        );
+    });
+
+    it(`Does not display custom template block if there is no project_templates`, async () => {
+        const wrapper = shallowMount(StepOne, {
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        default_templates: [] as Tracker[],
+                        project_templates: [] as ProjectTemplate[],
+                        company_name: "Tuleap",
+                    } as State,
+                }),
+            },
+            localVue: await createTrackerCreationLocalVue(),
+        });
+
+        expect(wrapper.find("[data-test=platform-template-name]").exists()).toBe(false);
     });
 });

@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DefaultTemplateCard Displays a card for a tracker 1`] = `
+<tracker-base-card-stub
+  optionname="default-bug"
+>
+  <div
+    class="card-glyph"
+  >
+    <svg-tracker-template-stub />
+  </div>
+   
+  <div
+    class="card-content"
+  >
+    <h4
+      class="card-title"
+    >
+      Bug
+    </h4>
+     
+    <div
+      class="card-description"
+    >
+      <span
+        class="card-description-content"
+      >
+        
+                    Bugs
+                
+      </span>
+    </div>
+  </div>
+</tracker-base-card-stub>
+`;

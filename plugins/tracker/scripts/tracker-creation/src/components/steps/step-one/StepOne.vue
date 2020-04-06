@@ -23,17 +23,22 @@
             <step-one-info />
         </template>
 
-        <template v-slot:interactive_content>
+        <template v-slot:interactive_content v-if="project_templates.length > 0">
             <h3 data-test="platform-template-name">{{ title_company_name }}</h3>
             <div class="tracker-creation-starting-point-options">
                 <tracker-template-card />
-                <tracker-from-another-project-card />
             </div>
+        </template>
+
+        <template v-slot:interactive_content_default>
+            <h3>{{ default_templates_title }}</h3>
+            <default-template-section />
         </template>
 
         <template v-slot:interactive_content_advanced>
             <h3>{{ advanced_users_title }}</h3>
             <div class="tracker-creation-starting-point-options">
+                <tracker-from-another-project-card />
                 <tracker-xml-file-card />
                 <tracker-empty-card />
             </div>
@@ -50,10 +55,13 @@ import StepLayout from "../layout/StepLayout.vue";
 import StepOneInfo from "./StepOneInfo.vue";
 import TrackerEmptyCard from "./cards/TrackerEmpty/TrackerEmptyCard.vue";
 import TrackerFromAnotherProjectCard from "./cards/TrackerFromAnotherProject/TrackerFromAnotherProjectCard.vue";
+import { Tracker } from "../../../store/type";
+import DefaultTemplateSection from "./cards/DefaultTemplate/DefaultTemplateSection.vue";
 import { sprintf } from "sprintf-js";
 
 @Component({
     components: {
+        DefaultTemplateSection,
         TrackerEmptyCard,
         StepLayout,
         TrackerTemplateCard,
@@ -69,20 +77,28 @@ export default class StepOne extends Vue {
     @State
     readonly company_name!: string;
 
-    private title_company_name = "";
+    @State
+    readonly default_templates!: Tracker[];
+
+    @State
+    readonly project_templates!: Tracker[];
 
     mounted(): void {
         this.setSlugifyShortnameMode(true);
+    }
 
-        if (this.company_name === "Tuleap") {
-            this.title_company_name = this.$gettext("Custom templates");
-        } else {
-            this.title_company_name = sprintf(this.$gettext("%s templates"), this.company_name);
-        }
+    get title_company_name(): string {
+        return this.company_name === "Tuleap"
+            ? this.$gettext("Custom templates")
+            : sprintf(this.$gettext("%s templates"), this.company_name);
     }
 
     get advanced_users_title(): string {
         return this.$gettext("For advanced users");
+    }
+
+    get default_templates_title(): string {
+        return this.$ngettext("Tuleap template", "Tuleap templates", this.default_templates.length);
     }
 }
 </script>

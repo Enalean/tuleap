@@ -38,11 +38,18 @@ describe("TrackerFromAnotherProject", () => {
     }
 
     it("fills the tracker select options with the trackers of the selected project", async () => {
-        const bugs_tracker: Tracker = { id: "104", name: "Bugs", tlp_color: "peggy-pink" };
+        const bugs_tracker: Tracker = {
+            id: "104",
+            name: "Bugs",
+            tlp_color: "peggy-pink",
+        } as Tracker;
         const helpdesk_project: ProjectWithTrackers = {
             id: "101",
             name: "Helpdesk",
-            trackers: [{ id: "103", name: "SLA", tlp_color: "peggy-pink" }, bugs_tracker],
+            trackers: [
+                { id: "103", name: "SLA", tlp_color: "peggy-pink" } as Tracker,
+                bugs_tracker,
+            ],
         };
 
         const wrapper = await getWrapper({
@@ -86,8 +93,12 @@ describe("TrackerFromAnotherProject", () => {
     });
 
     it("Sets the selected tracker in store when a new one is selected", async () => {
-        const bugs_tracker: Tracker = { id: "104", name: "Bugs", tlp_color: "peggy-pink" };
-        const sla_tracker = { id: "103", name: "SLA", tlp_color: "peggy-pink" };
+        const bugs_tracker: Tracker = {
+            id: "104",
+            name: "Bugs",
+            tlp_color: "peggy-pink",
+        } as Tracker;
+        const sla_tracker = { id: "103", name: "SLA", tlp_color: "peggy-pink" } as Tracker;
         const helpdesk_project: ProjectWithTrackers = {
             id: "101",
             name: "Helpdesk",

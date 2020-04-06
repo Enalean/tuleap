@@ -37,9 +37,7 @@
                 </div>
                 <field-shortname />
                 <field-description />
-                <field-tracker-template-id
-                    v-if="is_a_duplication || is_a_duplication_of_a_tracker_from_another_project"
-                />
+                <field-tracker-template-id v-if="should_tracker_template_id_be_displayed" />
                 <field-tracker-empty v-if="is_created_from_empty" />
             </form>
         </template>
@@ -88,6 +86,9 @@ export default class StepTwo extends Vue {
     readonly is_a_xml_import!: boolean;
 
     @Getter
+    readonly is_created_from_default_template!: boolean;
+
+    @Getter
     readonly is_a_duplication_of_a_tracker_from_another_project!: boolean;
 
     @Mutation
@@ -119,7 +120,9 @@ export default class StepTwo extends Vue {
     }
 
     mounted(): void {
-        if (this.is_a_duplication) {
+        if (this.is_created_from_default_template) {
+            this.initTrackerNameWithTheSelectedTemplateName();
+        } else if (this.is_a_duplication) {
             this.initTrackerNameWithTheSelectedTemplateName();
         } else if (this.is_created_from_empty) {
             this.reinitTrackerToBeCreatedData();
@@ -165,6 +168,14 @@ export default class StepTwo extends Vue {
         }
 
         return "application/x-www-form-urlencoded";
+    }
+
+    get should_tracker_template_id_be_displayed(): boolean {
+        return (
+            this.is_created_from_default_template ||
+            this.is_a_duplication ||
+            this.is_a_duplication_of_a_tracker_from_another_project
+        );
     }
 }
 </script>

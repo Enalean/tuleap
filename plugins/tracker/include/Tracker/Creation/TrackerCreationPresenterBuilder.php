@@ -74,7 +74,7 @@ class TrackerCreationPresenterBuilder
 
             $formatted_tracker = [];
             foreach ($tracker_list as $tracker) {
-                $formatted_tracker[] = new TrackerTemplatesRepresentation($tracker['id'], $tracker['name'], $tracker['color']);
+                $formatted_tracker[] = new TrackerTemplatesRepresentation($tracker['id'], $tracker['name'], $tracker['description'], $tracker['color']);
             }
 
             $project_templates[] = new ProjectTemplatesRepresentation($project, $formatted_tracker);
@@ -140,6 +140,7 @@ class TrackerCreationPresenterBuilder
                 $trackers_base_info[] = [
                     'id' => $tracker->getId(),
                     'name' => $tracker->getName(),
+                    'description' => $tracker->getDescription(),
                     'tlp_color' => $tracker->getColor()->getName()
                 ];
             }

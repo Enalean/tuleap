@@ -15,38 +15,32 @@
   -
   - You should have received a copy of the GNU General Public License
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -
   -->
 
 <template>
-    <div class="tlp-form-element">
-        <label class="tlp-label" for="tracker-description" v-translate>Description</label>
-        <textarea
-            type="text"
-            class="tlp-textarea tlp-textarea-large"
-            id="tracker-description"
-            name="tracker-description"
-            v-bind:placeholder="placeholder"
-            rows="4"
-        ></textarea>
+    <div class="tracker-creation-starting-point-options">
+        <default-template-card
+            v-for="tracker in default_templates"
+            v-bind:key="tracker.id"
+            v-bind:tracker="tracker"
+        />
     </div>
 </template>
 <script lang="ts">
 import Vue from "vue";
-import { State } from "vuex-class";
 import { Component } from "vue-property-decorator";
-import { TrackerToBeCreatedMandatoryData } from "../../../../store/type";
+import { Tracker } from "../../../../../store/type";
+import DefaultTemplateCard from "./DefaultTemplateCard.vue";
+import { State } from "vuex-class";
 
-@Component
-export default class FieldDescription extends Vue {
+@Component({
+    components: {
+        DefaultTemplateCard,
+    },
+})
+export default class DefaultTemplateSection extends Vue {
     @State
-    readonly tracker_to_be_created!: TrackerToBeCreatedMandatoryData;
-
-    get placeholder(): string {
-        return this.$gettextInterpolate(
-            this.$gettext("My %{ tracker_name } tracker description..."),
-            { tracker_name: this.tracker_to_be_created.name },
-            true
-        );
-    }
+    readonly default_templates!: Tracker[];
 }
 </script>
