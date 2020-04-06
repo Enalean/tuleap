@@ -152,6 +152,9 @@ msgstr "Outil de suivi d'un autre project"
 msgid "Tracker shortname:"
 msgstr "Nom court de l'outil de suivi :"
 
+msgid "Trackers from template projects"
+msgstr "Outils de suivi des modèles de projet"
+
 msgid "Tuleap template"
 msgid_plural "Tuleap templates"
 msgstr[0] "Modèle d'outil de suivi Tuleap"

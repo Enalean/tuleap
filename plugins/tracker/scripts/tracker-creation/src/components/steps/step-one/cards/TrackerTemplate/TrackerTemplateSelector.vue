@@ -20,7 +20,7 @@
 <template>
     <div class="tlp-form-element card-content card-tracker-template-selector">
         <label class="tlp-label card-title" for="tracker-creation-template-selector" v-translate>
-            Template
+            Trackers from template projects
         </label>
         <select
             class="tlp-select"
