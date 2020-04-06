@@ -2,6 +2,7 @@
     "packages": [
         "src/www/themes/**/",
         "src/",
+        "src/themes/**/",
         "plugins/**/"
     ],
     "version": "independent"

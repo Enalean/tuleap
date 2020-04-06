@@ -1,0 +1,131 @@
+/**
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+$card-border-margin: 150px;
+
+.project-registration-default-templates-section {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.project-registration-template-card {
+    display: flex;
+    width: calc(50% - #{$tlp-half-spacing});
+    min-height: 120px;
+    margin: 0 $tlp-half-spacing $tlp-spacing 0;
+
+    &:nth-child(even) {
+        margin: 0 0 $tlp-spacing $tlp-half-spacing;
+    }
+}
+
+.project-registration-template-card-description-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.project-registration-template-card-description {
+    color: $tlp-ui-dimmed;
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.project-registration-template-card-title {
+    margin: 0 0 $tlp-half-spacing;
+    font-size: 16px;
+    font-weight: normal;
+    line-height: 18px;
+}
+
+.project-registration-template-card-svg {
+    fill: $tlp-ui-border-dark;
+}
+
+.project-registration-template-card-svg-stroke {
+    stroke: $tlp-ui-border-dark;
+}
+
+.project-registration-selected-template {
+    display: none;
+
+    &:checked {
+        + label {
+            border-color: $tlp-theme-color;
+
+            > div > .project-registration-template-card-title {
+                margin: 0 0 $tlp-half-spacing;
+                color: $tlp-theme-color;
+                font-size: 16px;
+                font-weight: normal;
+                line-height: 18px;
+            }
+
+            > div > svg > .project-registration-template-card-svg {
+                fill: $tlp-theme-color;
+            }
+
+            > div > svg > .project-registration-template-card-svg-stroke {
+                stroke: $tlp-theme-color;
+            }
+        }
+    }
+}
+
+.project-registration-template-label {
+    display: flex;
+    position: relative;
+    width: 100%;
+    cursor: pointer;
+}
+
+.project-registration-template-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 0 0 0 ($card-border-margin - $tlp-spacing);
+}
+
+.project-registration-template-glyph {
+    display: flex;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    width: ($card-border-margin - 2 * $tlp-spacing);
+    height: calc(100% - 2 * #{$tlp-spacing});
+}
+
+.user-project-list-select {
+    margin: 0 0 $tlp-half-spacing;
+}
+
+@media screen and (max-width: 1200px) {
+    .project-registration-default-templates-section {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .project-registration-template-card {
+        width: 100%;
+        margin: 0 0 $tlp-spacing;
+
+        &:nth-child(even) {
+            margin: 0 0 $tlp-spacing;
+        }
+    }
+}

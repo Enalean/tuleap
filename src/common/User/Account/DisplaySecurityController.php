@@ -101,7 +101,7 @@ final class DisplaySecurityController implements DispatchableWithRequest, Dispat
                     __DIR__ . '/../../../www/assets/core',
                     '/assets/core'
                 ),
-                'security.js'
+                'account/security.js'
             )
         );
         $layout->includeFooterJavascriptFile('/scripts/check_pw.js');

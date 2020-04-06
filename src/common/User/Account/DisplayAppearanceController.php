@@ -86,7 +86,7 @@ final class DisplayAppearanceController implements DispatchableWithRequest, Disp
                     __DIR__ . '/../../../www/assets/core',
                     '/assets/core'
                 ),
-                'appearance.js'
+                'account/appearance.js'
             )
         );
 

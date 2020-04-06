@@ -59,14 +59,16 @@ class AssetsIncluderTest extends TestCase
         });
         $css_include_assets = Mockery::mock(IncludeAssets::class);
         $css_include_assets->allows('getPath');
-        $this->css_asset_collection = new CssAssetCollection([new CssAsset($css_include_assets, 'dashboards')]);
+        $this->css_asset_collection = new CssAssetCollection(
+            [new CssAsset($css_include_assets, 'dashboards/dashboards')]
+        );
 
         $this->includer = new AssetsIncluder($this->layout, $include_assets, $this->css_asset_collection);
     }
 
     public function testItAlwaysIncludesDashboardJsAndCss() : void
     {
-        $this->layout->shouldReceive('includeFooterJavascriptFile')->once()->with('dashboard.js');
+        $this->layout->shouldReceive('includeFooterJavascriptFile')->once()->with('dashboards/dashboard.js');
         $this->layout->shouldReceive('addCssAssetCollection')->once()->with($this->css_asset_collection);
 
         $this->includer->includeAssets([]);
@@ -107,7 +109,7 @@ class AssetsIncluderTest extends TestCase
         $dashboard = $this->getDashboardWithWidgets(['first_widget', 'second_widget']);
 
         //first widget
-        $this->layout->shouldReceive('includeFooterJavascriptFile')->with('dashboard.js')->ordered()->once();
+        $this->layout->shouldReceive('includeFooterJavascriptFile')->with('dashboards/dashboard.js')->ordered()->once();
         $this->layout->shouldReceive('includeFooterJavascriptFile')->with('dependency_one')->ordered()->once();
         $this->layout->shouldReceive('includeFooterJavascriptSnippet')->with('dependency_two')->once();
         $this->layout->shouldReceive('includeFooterJavascriptFile')->with('dependency_three')->ordered()->once();
@@ -122,7 +124,7 @@ class AssetsIncluderTest extends TestCase
 
     private function expectDependenciesScriptsWillNOTBeIncluded() : void
     {
-        $this->layout->shouldReceive('includeFooterJavascriptFile')->once()->with('dashboard.js');
+        $this->layout->shouldReceive('includeFooterJavascriptFile')->once()->with('dashboards/dashboard.js');
         $this->layout->shouldNotReceive('includeFooterJavascriptSnippet');
     }
 

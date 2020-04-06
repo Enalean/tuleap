@@ -1,0 +1,190 @@
+/**
+ * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ *
+ *  This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+.user-preferences-color-selector-selection-blue,
+.user-preferences-color-selector-selection-green,
+.user-preferences-color-selector-selection-grey,
+.user-preferences-color-selector-selection-orange,
+.user-preferences-color-selector-selection-purple,
+.user-preferences-color-selector-selection-red {
+    margin: 0 5px 0 0;
+}
+
+.user-preferences-color-selector-selection-blue {
+    color: $tlp-theme-blue;
+}
+
+.user-preferences-color-selector-selection-green {
+    color: $tlp-theme-green;
+}
+
+.user-preferences-color-selector-selection-grey {
+    color: $tlp-theme-grey;
+}
+
+.user-preferences-color-selector-selection-orange {
+    color: $tlp-theme-orange;
+}
+
+.user-preferences-color-selector-selection-purple {
+    color: $tlp-theme-purple;
+}
+
+.user-preferences-color-selector-selection-red {
+    color: $tlp-theme-red;
+}
+
+/* stylelint-disable selector-class-pattern */
+.theme-blue .select2-results__option--highlighted > .user-preferences-color-selector-selection-blue,
+.theme-green .select2-results__option--highlighted > .user-preferences-color-selector-selection-green,
+.theme-grey .select2-results__option--highlighted > .user-preferences-color-selector-selection-grey,
+.theme-orange .select2-results__option--highlighted > .user-preferences-color-selector-selection-orange,
+.theme-purple .select2-results__option--highlighted > .user-preferences-color-selector-selection-purple,
+.theme-red .select2-results__option--highlighted > .user-preferences-color-selector-selection-red {
+    color: $tlp-ui-white;
+}
+/* stylelint-enable selector-class-pattern */
+
+.user-preferences-section-appearance-form {
+    display: flex;
+    justify-content: space-between;
+}
+
+.user-preferences-section-appearance-preview,
+.user-preferences-section-appearance-fields {
+    width: calc(50% - #{$tlp-spacing});
+}
+
+.user-preferences-section-appearance-preview-text {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.user-preferences-section-appearance-preview-blue {
+    > .user-preferences-section-appearance-preview-color-fill {
+        fill: $tlp-theme-blue;
+    }
+
+    > .user-preferences-section-appearance-preview-color-stroke {
+        stroke: $tlp-theme-blue;
+    }
+
+    > .user-preferences-section-appearance-preview-background {
+        fill: $tlp-theme-background-blue;
+    }
+
+    > .user-preferences-section-appearance-preview-sidebar {
+        fill: $tlp-theme-sidebar-background-blue;
+    }
+}
+
+.user-preferences-section-appearance-preview-grey {
+    > .user-preferences-section-appearance-preview-color-fill {
+        fill: $tlp-theme-grey;
+    }
+
+    > .user-preferences-section-appearance-preview-color-stroke {
+        stroke: $tlp-theme-grey;
+    }
+
+    > .user-preferences-section-appearance-preview-background {
+        fill: $tlp-theme-background-grey;
+    }
+
+    > .user-preferences-section-appearance-preview-sidebar {
+        fill: $tlp-theme-sidebar-background-grey;
+    }
+}
+
+.user-preferences-section-appearance-preview-orange {
+    > .user-preferences-section-appearance-preview-color-fill {
+        fill: $tlp-theme-orange;
+    }
+
+    > .user-preferences-section-appearance-preview-color-stroke {
+        stroke: $tlp-theme-orange;
+    }
+
+    > .user-preferences-section-appearance-preview-background {
+        fill: $tlp-theme-background-orange;
+    }
+
+    > .user-preferences-section-appearance-preview-sidebar {
+        fill: $tlp-theme-sidebar-background-orange;
+    }
+}
+
+.user-preferences-section-appearance-preview-red {
+    > .user-preferences-section-appearance-preview-color-fill {
+        fill: $tlp-theme-red;
+    }
+
+    > .user-preferences-section-appearance-preview-color-stroke {
+        stroke: $tlp-theme-red;
+    }
+
+    > .user-preferences-section-appearance-preview-background {
+        fill: $tlp-theme-background-red;
+    }
+
+    > .user-preferences-section-appearance-preview-sidebar {
+        fill: $tlp-theme-sidebar-background-red;
+    }
+}
+
+.user-preferences-section-appearance-preview-green {
+    > .user-preferences-section-appearance-preview-color-fill {
+        fill: $tlp-theme-green;
+    }
+
+    > .user-preferences-section-appearance-preview-color-stroke {
+        stroke: $tlp-theme-green;
+    }
+
+    > .user-preferences-section-appearance-preview-background {
+        fill: $tlp-theme-background-green;
+    }
+
+    > .user-preferences-section-appearance-preview-sidebar {
+        fill: $tlp-theme-sidebar-background-green;
+    }
+}
+
+.user-preferences-section-appearance-preview-purple {
+    > .user-preferences-section-appearance-preview-color-fill {
+        fill: $tlp-theme-purple;
+    }
+
+    > .user-preferences-section-appearance-preview-color-stroke {
+        stroke: $tlp-theme-purple;
+    }
+
+    > .user-preferences-section-appearance-preview-background {
+        fill: $tlp-theme-background-purple;
+    }
+
+    > .user-preferences-section-appearance-preview-sidebar {
+        fill: $tlp-theme-sidebar-background-purple;
+    }
+}
+
+.user-preferences-section-appearance-preview-without-accessibility > g > .user-preferences-section-appearance-preview-accessibility {
+    display: none;
+}

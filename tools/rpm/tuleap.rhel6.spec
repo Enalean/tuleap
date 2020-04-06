@@ -593,6 +593,11 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/*.json
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/composer.lock
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/scripts/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/css
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/node_modules
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/composer.json
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/package.json
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/package-lock.json
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/gerrit_setup
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/githooks
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/version_numbers
@@ -603,7 +608,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/scripts/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/php73/run.sh
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/FlamingParrot/composer.json
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/BurningParrot/composer.json
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/common/package.json
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/common/webpack.*.js
 
@@ -1076,12 +1080,9 @@ fi
 %{APP_DIR}/src/www/api/reference
 %dir %{APP_DIR}/src/www/assets
 %{APP_DIR}/src/www/assets/core
-%{APP_DIR}/src/www/assets/account
 %{APP_DIR}/src/www/assets/admindelegation
-%{APP_DIR}/src/www/assets/dashboards
 %{APP_DIR}/src/www/assets/docman
 %{APP_DIR}/src/www/assets/pluginsadministration
-%{APP_DIR}/src/www/assets/project-registration
 %{APP_DIR}/src/www/assets/projectlinks
 %{APP_DIR}/src/www/assets/statistics
 %{APP_DIR}/src/www/assets/userlog
@@ -1496,6 +1497,7 @@ fi
 
 %files theme-burningparrot
 %defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/src/themes/BurningParrot
 %{APP_DIR}/src/www/themes/BurningParrot
 
 #%doc

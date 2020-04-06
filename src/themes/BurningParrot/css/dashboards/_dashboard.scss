@@ -1,0 +1,411 @@
+/**
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@import '../../../../node_modules/dragula/dist/dragula.min.css';
+
+#add-dashboard-button {
+    margin: 11px 0 11px $tlp-double-spacing;
+
+    &:first-child {
+        margin: 11px 0;
+    }
+}
+
+.dashboard-tabs {
+    margin: 0;
+}
+
+.dashboard-tabs-dropdown {
+    margin: 0 0 0 $tlp-half-spacing;
+}
+
+#dashboard-tabs-dropdown-trigger {
+    transition: color 100ms, opacity 100ms;
+    opacity: .5;
+    color: $tlp-ui-dimmed;
+
+    &:hover {
+        opacity: 1;
+        color: $tlp-theme-color;
+    }
+}
+
+.dashboard-widgets-container {
+    padding: $tlp-half-spacing / 2 0;
+}
+
+@keyframes shakeWidget {
+    0% {
+        transform: rotate(-.2deg);
+    }
+
+    50% {
+        transform: rotate(0);
+    }
+
+    100% {
+        transform: rotate(.2deg);
+    }
+}
+
+#dashboard-layout-dropdown-template {
+    display: none;
+}
+
+.dashboard-widgets-row {
+    display: flex;
+    position: relative;
+    flex: 1;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: $tlp-half-spacing / 2 0;
+    transition: box-shadow 100ms;
+
+    &.shake-widgets {
+        .dashboard-widget {
+            animation: 100ms infinite alternate shakeWidget;
+            border-right: 0;
+            border-bottom: 0;
+            border-left: 0;
+            box-shadow: 0 7px 30px 0 rgba(0, 0, 0, .2);
+        }
+    }
+
+    > .dashboard-row-dropdown {
+        position: absolute;
+        top: -13px;
+        right: $tlp-spacing;
+        transition: opacity 100ms;
+        opacity: 0;
+    }
+
+    &:hover {
+        > .dashboard-row-dropdown {
+            opacity: 1;
+        }
+    }
+
+    > span:first-of-type,
+    > span:last-of-type {
+        padding: 0 7.5px;
+    }
+}
+
+.dashboard-widgets-empty-line {
+    display: flex;
+    flex-direction: row;
+    padding: $tlp-half-spacing / 2;
+}
+
+.dashboard-widgets-column {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    flex-shrink: 1;
+    width: calc(100% / 3);
+    padding: 0 $tlp-half-spacing / 2;
+
+    > :last-child {
+        margin-bottom: 0;
+    }
+}
+
+.dashboard-widgets-empty-column {
+    align-self: stretch;
+    padding: 0 $tlp-half-spacing / 2;
+}
+
+.dashboard-row-dropdown.shown {
+    opacity: 1;
+}
+
+.dashboard-row-dropdown-button {
+    cursor: pointer;
+
+    > .dashboard-row-dropdown-path {
+        transition: fill 100ms;
+        fill: transparentize($tlp-ui-dimmed, .5);
+    }
+
+    &:hover {
+        > .dashboard-row-dropdown-path {
+            fill: $tlp-theme-color;
+        }
+    }
+}
+
+.dashboard-dropdown-too-many-columns-layout.hidden {
+    display: none;
+}
+
+.dashboard-dropdown-layout-field-path {
+    transition: fill 100ms;
+    fill: transparentize($tlp-theme-color, .5);
+
+    &.selected {
+        fill: $tlp-theme-color;
+    }
+}
+
+/* stylelint-disable selector-no-qualifying-type */
+body.gu-unselectable {
+    $placeholder-width: 3px;
+    $placeholder-height: 3px;
+    $placeholder-radius: 10px;
+
+    @keyframes columnWave {
+        0% {
+            height: $placeholder-height;
+            opacity: .5;
+            box-shadow: 0 0 0 0 transparentize($tlp-theme-color, .5);
+        }
+
+        50% {
+            height: $placeholder-height * 4;
+            opacity: 1;
+            box-shadow: 0 0 0 6px transparentize($tlp-theme-color, 1);
+        }
+
+        100% {
+            height: $placeholder-height;
+            opacity: .5;
+            box-shadow: 0 0 0 0 transparentize($tlp-theme-color, 1);
+        }
+    }
+
+    @keyframes rowWave {
+        0% {
+            width: $placeholder-width;
+            opacity: .5;
+            box-shadow: 0 0 0 0 transparentize($tlp-theme-color, .5);
+        }
+
+        50% {
+            width: $placeholder-width * 4;
+            opacity: 1;
+            box-shadow: 0 0 0 6px transparentize($tlp-theme-color, 1);
+        }
+
+        100% {
+            width: $placeholder-width;
+            opacity: .5;
+            box-shadow: 0 0 0 0 transparentize($tlp-theme-color, 1);
+        }
+    }
+
+    @mixin widget-placeholder($top, $bottom, $left, $direction) {
+        content: '';
+        position: absolute;
+        top: $top;
+        bottom: $bottom;
+        left: $left;
+        transform: translate(-50%, -50%);
+        border-radius: $placeholder-radius;
+        background: $tlp-theme-color;
+
+        @if $direction == 'column' {
+            width: $placeholder-height;
+            height: $placeholder-width;
+            animation: 1.5s ease-in-out infinite columnWave;
+
+        } @else {
+            width: $placeholder-width;
+            height: $placeholder-height;
+            animation: 1.5s ease-in-out infinite rowWave;
+        }
+    }
+
+    .dashboard-widgets-empty-line,
+    .dashboard-widgets-empty-column,
+    .dashboard-widgets-line,
+    .dashboard-widgets-column {
+        position: relative;
+    }
+
+    .dashboard-widgets-empty-line:empty::before {
+        @include widget-placeholder(50%, auto, 50%, 'row');
+    }
+
+    .dashboard-widgets-empty-column:empty::before {
+        @include widget-placeholder(50%, auto, 50%, 'column');
+    }
+
+    .dashboard-widgets-row:not(.one-column) .dashboard-widget:not(.gu-mirror):not(.gu-transit) {
+        position: relative;
+
+        &::after {
+            @include widget-placeholder(auto, -14px, 50%, 'row');
+        }
+
+        &:first-child::before {
+            @include widget-placeholder(-11px, auto, 50%, 'row');
+        }
+    }
+}
+/* stylelint-enable */
+
+.dashboard-dropdown-layout {
+    margin: 0;
+    padding: 0 $tlp-half-spacing $tlp-half-spacing;
+
+    &:last-child {
+        padding: 0 $tlp-half-spacing;
+    }
+
+    &.hidden {
+        display: none;
+    }
+
+    > .dashboard-dropdown-layout-field {
+        display: none;
+    }
+
+    &:hover {
+        .dashboard-dropdown-layout-field-path {
+            fill: $tlp-theme-color;
+        }
+    }
+}
+
+.dashboard-widget {
+    flex: 1 1 auto;
+    width: 100%;
+    transition: box-shadow 100ms;
+
+    &.gu-mirror {
+        border-right: 0;
+        border-bottom: 0;
+        border-left: 0;
+        opacity: 1;
+        box-shadow: 0 7px 30px 0 rgba(0, 0, 0, .2);
+    }
+}
+
+.dashboard-widget-minimized {
+    flex-grow: 0;
+}
+
+.one-column > .tlp-dropdown {
+    display: none;
+    pointer-events: none;
+}
+
+$nb-empty-columns-separators-in-three-columns: 4;
+$nb-empty-columns-separators-in-four-columns: 5;
+
+$empty-space-taken-in-three-columns: $nb-empty-columns-separators-in-three-columns * $tlp-half-spacing;
+$empty-space-taken-in-four-columns: $nb-empty-columns-separators-in-four-columns * $tlp-half-spacing;
+
+$grid-width-in-three-columns: calc((100% - #{$empty-space-taken-in-three-columns} ) / 3);
+$two-columns-span-in-three-columns: calc((#{$grid-width-in-three-columns} * 2 ) + #{$tlp-half-spacing});
+
+$grid-width-in-four-columns: calc((100% - #{$empty-space-taken-in-four-columns} ) / 4);
+$two-columns-span-in-four-columns: calc((#{$grid-width-in-four-columns} * 2 ) + #{$tlp-half-spacing});
+
+.two-columns-small-big {
+    > div:first-of-type {
+        flex-grow: 1;
+        flex-shrink: 1;
+        width: $grid-width-in-three-columns;
+    }
+
+    > div:nth-of-type(2) {
+        flex-grow: 2;
+        flex-shrink: 1;
+        width: $two-columns-span-in-three-columns;
+    }
+}
+
+.two-columns-big-small {
+    > div:first-of-type {
+        flex-grow: 2;
+        flex-shrink: 1;
+        width: $two-columns-span-in-three-columns;
+    }
+
+    > div:nth-of-type(2) {
+        flex-grow: 1;
+        flex-shrink: 1;
+        width: $grid-width-in-three-columns;
+    }
+}
+
+.three-columns-small-big-small {
+    > div:first-of-type {
+        flex-grow: 1;
+        flex-shrink: 1;
+        width: $grid-width-in-four-columns;
+    }
+
+    > div:nth-of-type(2) {
+        flex-grow: 1;
+        flex-shrink: 1;
+        width: $two-columns-span-in-four-columns;
+    }
+
+    > div:nth-of-type(3) {
+        flex-grow: 1;
+        flex-shrink: 1;
+        width: $grid-width-in-four-columns;
+    }
+}
+
+.three-columns-big-small-small {
+    > div:first-of-type {
+        flex-grow: 1;
+        flex-shrink: 1;
+        width: $two-columns-span-in-four-columns;
+    }
+
+    > div:nth-of-type(2) {
+        flex-grow: 1;
+        flex-shrink: 1;
+        width: $grid-width-in-four-columns;
+    }
+
+    > div:nth-of-type(3) {
+        flex-grow: 1;
+        flex-shrink: 1;
+        width: $grid-width-in-four-columns;
+    }
+}
+
+.three-columns-small-small-big {
+    > div:first-of-type {
+        flex-grow: 1;
+        flex-shrink: 1;
+        width: $grid-width-in-four-columns;
+    }
+
+    > div:nth-of-type(2) {
+        flex-grow: 1;
+        flex-shrink: 1;
+        width: $grid-width-in-four-columns;
+    }
+
+    > div:nth-of-type(3) {
+        flex-grow: 1;
+        flex-shrink: 1;
+        width: $two-columns-span-in-four-columns;
+    }
+}
+
+@import 'includes/dashboard-widgets';
+@import 'includes/dashboard-project';
+@import 'includes/dashboard-user';

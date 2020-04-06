@@ -115,7 +115,7 @@ class ProjectDashboardController
         AssetsIncluder $assets_includer,
         EventManager $event_manager,
         BaseLayout $layout,
-        IncludeAssets $javascript_assets,
+        IncludeAssets $core_assets,
         CssAsset $css_asset
     ) {
         $this->csrf                     = $csrf;
@@ -129,7 +129,7 @@ class ProjectDashboardController
         $this->assets_includer          = $assets_includer;
         $this->event_manager            = $event_manager;
         $this->layout                   = $layout;
-        $this->javascript_assets        = $javascript_assets;
+        $this->javascript_assets        = $core_assets;
         $this->css_asset                = $css_asset;
     }
 
@@ -143,7 +143,9 @@ class ProjectDashboardController
         $should_display_project_created_modal = $request->get("should-display-created-project-modal");
 
         if ($should_display_project_created_modal) {
-            $this->layout->includeFooterJavascriptFile($this->javascript_assets->getFileURL('project-registration-creation.js'));
+            $this->layout->includeFooterJavascriptFile(
+                $this->javascript_assets->getFileURL('project/project-registration-creation.js')
+            );
             $this->layout->addCssAsset($this->css_asset);
         }
 

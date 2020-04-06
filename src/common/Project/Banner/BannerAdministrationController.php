@@ -75,7 +75,7 @@ final class BannerAdministrationController implements DispatchableWithRequest, D
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $layout->includeFooterJavascriptFile($this->banner_assets->getFileURL('ckeditor.js'));
-        $layout->includeFooterJavascriptFile($this->banner_assets->getFileURL('project-admin-banner.js'));
+        $layout->includeFooterJavascriptFile($this->banner_assets->getFileURL('project/project-admin-banner.js'));
 
         $callback = function (\Project $project, \PFUser $current_user) use ($layout): void {
             $banner = $this->banner_retriever->getBannerForProject($project);

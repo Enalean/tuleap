@@ -1,0 +1,343 @@
+/**
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#siteadmin-homepage-container {
+    display: flex;
+    align-items: flex-start;
+}
+
+.siteadmin-homepage-column {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    width: 100%;
+    margin: 0 $tlp-spacing 0 0;
+}
+
+.siteadmin-homepage-row {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: flex-start;
+    margin: 0 0 $tlp-spacing;
+
+    &:first-child {
+        flex: 0 1 auto;
+    }
+
+    &:last-child {
+        margin: 0;
+    }
+
+    > .tlp-pane {
+        flex: 1 1 auto;
+        width: 100%;
+        max-width: 50%;
+        margin: 0 $tlp-spacing 0 0;
+
+        &:last-child {
+            margin: 0;
+        }
+
+        &:first-child:last-child {
+            max-width: 100%;
+        }
+
+        > .tlp-pane-container {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+
+    @media screen and (max-width: 1200px) {
+        flex-direction: column;
+
+        > .tlp-pane {
+            width: 100%;
+            max-width: none;
+            margin: 0 0 $tlp-spacing;
+
+            &:last-child {
+                margin: 0;
+            }
+        }
+    }
+}
+
+.siteadmin-homepage-validation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 120px;
+    margin: 0 0 ($tlp-spacing * 2);
+}
+
+.siteadmin-homepage-users-icon,
+.siteadmin-homepage-projects-icon {
+    fill: transparentize($tlp-theme-color, .8);
+}
+
+.siteadmin-homepage-validation-count {
+    margin: 0 0 0 $tlp-spacing;
+    font-size: 100px;
+    font-weight: 300;
+
+    &:not(.tlp-text-warning) {
+        color: transparentize($tlp-theme-color, .8);
+    }
+}
+
+.siteadmin-homepage-no-validation {
+    color: transparentize($tlp-theme-color, .6);
+    text-align: center;
+}
+
+.siteadmin-homepage-stat-badge {
+    margin: 0 5px 5px 0;
+}
+
+.siteadmin-homepage-stat-lastlogins {
+    display: block;
+    margin: $tlp-half-spacing 0 $tlp-double-spacing;
+}
+
+.siteadmin-homepage-statistics,
+.siteadmin-homepage-system-events {
+    > .tlp-pane-container > .tlp-pane-section:last-child {
+        border-top: 1px solid $tlp-ui-border-light;
+    }
+}
+
+.siteadmin-homepage-statistics-section-last,
+.siteadmin-homepage-system-events-queue:last-of-type {
+    border-bottom: 0;
+}
+
+.siteadmin-homepage-system-events {
+    flex: 1 1 auto;
+    width: 500px;
+    margin: 0;
+
+    > .tlp-pane-container > .tlp-pane-section:last-child {
+        border-top: 1px solid $tlp-ui-border-light;
+    }
+}
+
+.siteadmin-homepage-system-events-queue {
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+        background: transparentize($tlp-theme-color, .95);
+    }
+}
+
+.siteadmin-homepage-system-events-queue-content {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.siteadmin-homepage-system-events-queue-content-flag {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
+    min-width: 40%;
+    margin: $tlp-half-spacing 0;
+
+    &.flag-error {
+        color: $tlp-ui-danger;
+        font-size: 50px;
+    }
+
+    &.flag-warning {
+        color: $tlp-ui-warning;
+        font-size: 36px;
+    }
+
+    &.flag-success {
+        color: $tlp-ui-success;
+        font-size: 26px;
+    }
+}
+
+.siteadmin-homepage-system-events-queue-content-details {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+}
+
+.siteadmin-homepage-system-events-queue-content-new-running-done,
+.siteadmin-homepage-system-events-queue-content-warning-error {
+    display: flex;
+    justify-content: center;
+
+    > .system-event-type-count {
+        margin: $tlp-spacing / 4;
+        font-size: 14px;
+        text-transform: uppercase;
+
+        &::before {
+            text-transform: none;
+        }
+    }
+}
+
+.siteadmin-homepage-statistics-section-graph {
+    padding-top: 0;
+}
+
+#siteadmin-homepage-users-legend,
+#siteadmin-homepage-projects-legend {
+    padding: 20px;
+
+    > ul {
+        padding: 0;
+    }
+}
+
+#siteadmin-homepage-users,
+#siteadmin-homepage-projects {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.siteadmin-homepage-users-legend,
+.siteadmin-homepage-projects-legend {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.siteadmin-homepage-users-legend-text-span,
+.siteadmin-homepage-projects-legend-text-span {
+    color: $tlp-ui-dimmed;
+    font-size: 12px;
+    line-height: 18px;
+    cursor: default;
+}
+
+.siteadmin-homepage-users-legend-selected,
+.siteadmin-homepage-projects-legend-selected {
+    font-weight: 600;
+}
+
+.siteadmin-homepage-users-legend-color-span,
+.siteadmin-homepage-projects-legend-color-span {
+    flex: 0 0 auto;
+    width: 12px;
+    height: 12px;
+    margin: 0 5px 0 0;
+    border-radius: 50%;
+    opacity: .8;
+}
+
+.siteadmin-homepage-users-legend-color-active,
+.siteadmin-homepage-projects-legend-color-active {
+    background-color: $tlp-ui-success;
+}
+
+.siteadmin-homepage-users-legend-color-suspended,
+.siteadmin-homepage-projects-legend-color-suspended {
+    background-color: #cccccc;
+}
+
+.siteadmin-homepage-users-legend-color-restricted {
+    background-color: $tlp-ui-warning;
+}
+
+.siteadmin-homepage-users-legend-color-deleted,
+.siteadmin-homepage-projects-legend-color-deleted {
+    background-color: $tlp-ui-danger;
+}
+
+.siteadmin-homepage-users-legend-color-waiting,
+.siteadmin-homepage-projects-legend-color-pending {
+    background-color: $tlp-ui-info;
+}
+
+.siteadmin-homepage-users-slice-path,
+.siteadmin-homepage-projects-slice-path {
+    opacity: .8;
+}
+
+.siteadmin-homepage-users-slice-text,
+.siteadmin-homepage-projects-slice-text {
+    font-weight: 600;
+}
+
+.siteadmin-homepage-users-slice-text-undisplayed,
+.siteadmin-homepage-projects-slice-text-undisplayed {
+    opacity: 0;
+}
+
+.siteadmin-homepage-users-slice-active,
+.siteadmin-homepage-projects-slice-active {
+    > path {
+        fill: $tlp-ui-success;
+    }
+
+    > text {
+        fill: darken($tlp-ui-success, 10%);
+    }
+}
+
+.siteadmin-homepage-users-slice-suspended,
+.siteadmin-homepage-projects-slice-suspended {
+    > path {
+        fill: #cccccc;
+    }
+
+    > text {
+        fill: darken(#cccccc, 10%);
+    }
+}
+
+.siteadmin-homepage-users-slice-restricted {
+    > path {
+        fill: $tlp-ui-warning;
+    }
+
+    > text {
+        fill: darken($tlp-ui-warning, 10%);
+    }
+}
+
+.siteadmin-homepage-users-slice-deleted,
+.siteadmin-homepage-projects-slice-deleted {
+    > path {
+        fill: $tlp-ui-danger;
+    }
+
+    > text {
+        fill: darken($tlp-ui-danger, 10%);
+    }
+}
+
+.siteadmin-homepage-users-slice-waiting,
+.siteadmin-homepage-projects-slice-pending {
+    > path {
+        fill: $tlp-ui-info;
+    }
+
+    > text {
+        fill: darken($tlp-ui-info, 10%);
+    }
+}

@@ -39,6 +39,9 @@ class PermissionDeniedRestrictedAccountController
     public function displayError(\PFUser $user)
     {
         $layout = $this->theme_manager->getBurningParrot($user);
+        if ($layout === null) {
+            throw new \Exception("Could not load BurningParrot theme");
+        }
 
         $layout->header(["title" => _("Permission denied")]);
 

@@ -78,7 +78,7 @@ final class DisplayEditionController implements DispatchableWithRequest, Dispatc
                     __DIR__ . '/../../../www/assets/core',
                     '/assets/core'
                 ),
-                'preferences-nav.js'
+                'account/preferences-nav.js'
             )
         );
 

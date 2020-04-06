@@ -33,7 +33,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     await initVueGettext(Vue, (locale: string) =>
         import(
-            /* webpackChunkName: "project-admin-banner-po-" */ "./po/" + getPOFileFromLocale(locale)
+            /* webpackChunkName: "project/project-admin-banner-po-" */ "./po/" +
+                getPOFileFromLocale(locale)
         )
     );
 

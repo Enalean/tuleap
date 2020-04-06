@@ -76,7 +76,7 @@ final class BannerAdministrationControllerTest extends TestCase
             ->with('ckeditor.js');
         $this->include_assets->shouldReceive('getFileURL')
             ->once()
-            ->with('project-admin-banner.js');
+            ->with('project/project-admin-banner.js');
         $layout->shouldReceive('includeFooterJavascriptFile')->twice();
         $this->banner_retriever->shouldReceive('getBannerForProject')
             ->with($project)

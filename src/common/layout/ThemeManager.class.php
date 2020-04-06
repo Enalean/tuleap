@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,9 +24,8 @@ use Tuleap\BurningParrotCompatiblePageDetector;
  * Instanciate the right theme according to user and platform preferences
  * and theme availability
  */
-class ThemeManager
+class ThemeManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    private static $BURNING_PARROT   = 'BurningParrot';
     private static $FLAMING_PARROT   = 'FlamingParrot';
     private static $LEGACY_EXTENSION = '_Theme.class.php';
     private static $PSR2_EXTENSION   = 'Theme.php';
@@ -45,9 +44,9 @@ class ThemeManager
     public function getTheme(PFUser $current_user)
     {
         if ($this->page_detector->isInCompatiblePage($current_user)) {
-            $theme = $this->getStandardTheme($current_user, self::$BURNING_PARROT);
+            $theme = $this->getBurningParrot($current_user);
         } else {
-            $theme = $this->getStandardTheme($current_user, self::$FLAMING_PARROT);
+            $theme = $this->getFlamingParrot($current_user);
         }
 
         if ($theme === null && ! IS_SCRIPT) {
@@ -59,11 +58,25 @@ class ThemeManager
     }
 
     /**
-     * @return \Tuleap\Theme\BurningParrot\BurningParrotTheme
+     * @return \Tuleap\Theme\BurningParrot\BurningParrotTheme|null
      */
     public function getBurningParrot(PFUser $current_user)
     {
-        return $this->getStandardTheme($current_user, self::$BURNING_PARROT);
+        $path = __DIR__ . '/../../themes/BurningParrot/include/BurningParrotTheme.php';
+        if (! file_exists($path)) {
+            return null;
+        }
+        $klass = "Tuleap\\Theme\\BurningParrot\BurningParrotTheme";
+        include_once $path;
+        return new $klass('/themes/BurningParrot', $current_user);
+    }
+
+    /**
+     * @return \Tuleap\Layout\BaseLayout|null
+     */
+    private function getFlamingParrot(PFUser $current_user)
+    {
+        return $this->getStandardTheme($current_user, self::$FLAMING_PARROT);
     }
 
     private function getStandardTheme(PFUser $current_user, $name)

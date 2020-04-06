@@ -1,0 +1,104 @@
+/**
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+$small-screen-size: 1200px;
+
+#project-admin-members-controls {
+    display: flex;
+}
+
+#project-admin-members-modal-buttons-section {
+    > button:nth-child(2) {
+        margin-left: $tlp-spacing;
+    }
+
+    > button:not(:nth-child(2)) {
+        margin-left: $tlp-half-spacing;
+    }
+}
+
+#project-admin-members-add-user-select {
+    width: 250px;
+}
+
+#project-admin-members-modal-import-users-button {
+    margin-left: $tlp-double-spacing;
+}
+
+.project-admin-members-import-members-title {
+    margin: 0 0 $tlp-double-spacing;
+}
+
+#project-admin-members-input-file-helper {
+    line-height: 24px;
+}
+
+.projectadmin-userlist-result-ugroup-separator:last-child {
+    display: none;
+}
+
+.project-admin-members-username-column {
+    width: 25%;
+}
+
+.project-admin-members-uemails {
+    width: 25%;
+    color: $tlp-theme-color;
+}
+
+.project-admin-members-account-status {
+    width: 20%;
+}
+
+.project-admin-members-ugroups {
+    width: 25%;
+
+    @media screen and (max-width: #{$small-screen-size}) {
+        word-break: break-all;
+    }
+}
+
+#project-admin-import-members-list-preview {
+    > tbody {
+        > .project-admin-members-import-warning {
+            > .project-admin-members-import-warning-line {
+                background: transparentize($tlp-ui-warning, .9);
+                color: darken($tlp-ui-warning, 10%);
+            }
+        }
+    }
+}
+
+.project-admin-members-import-warning-icon {
+    margin: 0 5px 0 0;
+}
+
+#project-admin-members-upload-file-form-element {
+    margin-bottom: $tlp-spacing;
+}
+
+.file-input-error {
+    color: $tlp-ui-danger;
+}
+
+#import-members-spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

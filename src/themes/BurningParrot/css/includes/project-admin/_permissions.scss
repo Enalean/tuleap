@@ -1,0 +1,99 @@
+/**
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.project-admin-permission-per-group {
+    display: flex;
+    align-items: flex-start;
+}
+
+.permission-per-group-search-section {
+    width: 300px;
+}
+
+.permission-per-group-result-section {
+    width: 100%;
+    margin: 0 0 0 $tlp-spacing;
+}
+
+.permission-per-group-public-news {
+    color: $tlp-ui-success;
+}
+
+.permission-per-group-private-news {
+    color: $tlp-ui-danger;
+}
+
+.permission-per-group-header-tooltip {
+    margin: 0 0 0 5px;
+    text-transform: none;
+}
+
+.permission-per-group-load-button {
+    display: flex;
+    justify-content: center;
+}
+
+@media screen and (max-width: 1200px) {
+    .project-admin-permission-per-group {
+        flex-direction: column;
+    }
+
+    .permission-per-group-result-section {
+        margin: 0;
+    }
+
+    .permission-per-group-search-section {
+        width: 100%;
+    }
+}
+
+.permission-per-group-loader {
+    height: 100px;
+    background: url('../../../www/themes/BurningParrot/images/spinner.gif') no-repeat center center;
+}
+
+.permission-per-group-table > tbody > tr > td {
+    @each $badge in $badge-names {
+        > .#{$badge} {
+            margin: 1px 2px 1px 0;
+        }
+    }
+}
+
+.permission-per-group-double-column-table {
+    > th:first-child {
+        width: 33%;
+    }
+
+    > th:last-child {
+        width: 66%;
+    }
+}
+
+.permission-per-group-triple-column-table {
+    > th {
+        width: 33%;
+    }
+}
+
+.permission-per-group-sextuple-column-table {
+    > th {
+        width: 16.667%;
+    }
+}

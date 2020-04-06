@@ -38,7 +38,7 @@ final class UserPreferencesHeader
                     __DIR__ . '/../../../www/assets/core',
                     '/assets/core'
                 ),
-                'preferences-nav.js'
+                'account/preferences-nav.js'
             )
         );
 

@@ -89,8 +89,8 @@ final class DisplayAccountInformationController implements DispatchableWithReque
             '/assets/core'
         );
 
-        $layout->addJavascriptAsset(new JavascriptAsset($account_asset, 'avatar.js'));
-        $layout->addJavascriptAsset(new JavascriptAsset($account_asset, 'timezone.js'));
+        $layout->addJavascriptAsset(new JavascriptAsset($account_asset, 'account/avatar.js'));
+        $layout->addJavascriptAsset(new JavascriptAsset($account_asset, 'account/timezone.js'));
 
         (new UserPreferencesHeader())->display(_('Account'), $layout);
         $this->renderer->renderToPage(

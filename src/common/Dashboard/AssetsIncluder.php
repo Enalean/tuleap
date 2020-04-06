@@ -55,7 +55,7 @@ class AssetsIncluder
      */
     public function includeAssets(array $dashboards_presenter)
     {
-        $this->layout->includeFooterJavascriptFile($this->include_assets->getFileURL('dashboard.js'));
+        $this->layout->includeFooterJavascriptFile($this->include_assets->getFileURL('dashboards/dashboard.js'));
         $css_assets = $this->includeAssetsNeededByWidgets($dashboards_presenter);
         $this->layout->addCssAssetCollection($css_assets);
     }

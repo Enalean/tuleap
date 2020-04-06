@@ -1,0 +1,57 @@
+/**
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+header {
+    display: flex;
+    position: fixed;
+    z-index: 2004;
+    top: 0;
+    left: 0;
+    flex-direction: column;
+    width: 100%;
+    background: $navbar-background;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .1);
+}
+
+.header-motd {
+    padding: $tlp-spacing;
+    background: $tlp-theme-sidebar-background-color;
+    color: $tlp-ui-white;
+    line-height: 26px;
+    text-align: center;
+
+    a {
+        color: $tlp-ui-white;
+        text-decoration: underline;
+    }
+
+    button {
+        margin: 0;
+    }
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    height: $navbar-height;
+}
+
+.header-nav {
+    display: flex;
+}

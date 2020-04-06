@@ -93,7 +93,7 @@ final class DisplayKeysTokensController implements DispatchableWithRequest, Disp
                     __DIR__ . '/../../../www/assets/core',
                     '/assets/core'
                 ),
-                'keys-tokens.js'
+                'account/keys-tokens.js'
             )
         );
 

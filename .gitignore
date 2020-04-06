@@ -32,10 +32,11 @@ nbproject
 !src/www/themes/common/css/bootstrap-2.3.0.min.css
 !src/www/themes/common/css/bootstrap-responsive-2.3.0.min.css
 !src/www/themes/common/css/animate.min.css
-!src/www/themes/BurningParrot/vendor/**/*.css
+!src/themes/BurningParrot/vendor/**/*.css
 src/vendor/
 src/tuleap-cfg/vendor/
 src/www/themes/*/vendor/
+src/themes/*/vendor/
 plugins/*/vendor/
 tools/Configuration/vendor/
 /.idea/
@@ -52,7 +53,6 @@ plugins/*/www/assets/*
 plugins/*/www/themes/*/assets/*
 plugins/*/assets
 plugins/themes/*/assets
-src/www/themes/BurningParrot/css/vendor/*.scss
 test_results/*
 test_results_e2e/*
 test_results_distlp/*
