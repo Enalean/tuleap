@@ -119,6 +119,7 @@ class OAuth2GrantAccessTokenFromAuthorizationCode
 
         $representation = $this->response_builder->buildRepresentationFromAuthorizationCode(
             new \DateTimeImmutable(),
+            $app,
             $authorization_code
         );
 

@@ -23,7 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\Grant;
 
 use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenCreator;
+use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCode;
+use Tuleap\OAuth2Server\OpenIDConnect\IDToken\OpenIDConnectIDTokenCreator;
 use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshToken;
 use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenCreator;
 
@@ -37,15 +39,24 @@ class AccessTokenGrantRepresentationBuilder
      * @var OAuth2RefreshTokenCreator
      */
     private $refresh_token_creator;
+    /**
+     * @var OpenIDConnectIDTokenCreator
+     */
+    private $id_token_creator;
 
-    public function __construct(OAuth2AccessTokenCreator $access_token_creator, OAuth2RefreshTokenCreator $refresh_token_creator)
-    {
+    public function __construct(
+        OAuth2AccessTokenCreator $access_token_creator,
+        OAuth2RefreshTokenCreator $refresh_token_creator,
+        OpenIDConnectIDTokenCreator $id_token_creator
+    ) {
         $this->access_token_creator  = $access_token_creator;
         $this->refresh_token_creator = $refresh_token_creator;
+        $this->id_token_creator      = $id_token_creator;
     }
 
     public function buildRepresentationFromAuthorizationCode(
         \DateTimeImmutable $current_time,
+        OAuth2App $app,
         OAuth2AuthorizationCode $authorization_code
     ): OAuth2AccessTokenSuccessfulRequestRepresentation {
         $access_token = $this->access_token_creator->issueAccessToken(
@@ -54,11 +65,13 @@ class AccessTokenGrantRepresentationBuilder
             $authorization_code->getScopes()
         );
         $refresh_token = $this->refresh_token_creator->issueRefreshTokenIdentifierFromAuthorizationCode($current_time, $authorization_code);
+        $id_token      = $this->id_token_creator->issueIDTokenFromAuthorizationCode($current_time, $app, $authorization_code);
 
-        return OAuth2AccessTokenSuccessfulRequestRepresentation::fromAccessTokenAndRefreshToken(
+        return OAuth2AccessTokenSuccessfulRequestRepresentation::fromAccessTokenAndRefreshTokenWithUserAuthentication(
             $access_token,
             $refresh_token,
-            $current_time
+            $id_token,
+            $current_time,
         );
     }
 
