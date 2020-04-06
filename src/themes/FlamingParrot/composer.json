@@ -1,0 +1,12 @@
+{
+  "name": "tuleap/theme-flamingparrot",
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\Theme\\FlamingParrot\\": ["./include"]
+    },
+    "classmap": ["./include"]
+  },
+  "config": {
+    "sort-packages": true
+  }
+}

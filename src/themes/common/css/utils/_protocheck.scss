@@ -17,22 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../node_modules/smooth-scrollbar/dist/smooth-scrollbar';
-@import '../../common/css/utils/tooltip';
+// stylelint-disable-next-line selector-class-pattern
+.pc_checkbox,
+.pc_radiobutton { // stylelint-disable-line selector-class-pattern
+    padding-left: 24px;
+    border: 1px solid transparent;
+    background-repeat: no-repeat;
+    background-position: 3px center;
+}
 
-@import 'includes/global-variables';
-@import 'includes/smooth-scrollbar-overrides';
-@import 'includes/structure';
-@import 'includes/siteadmin';
-@import 'includes/resource_restrictor';
-@import 'includes/autocomplete';
-@import 'includes/homepage';
-@import 'includes/profile';
-@import 'includes/toggler';
-@import 'includes/modals';
-@import 'includes/breadcrumb';
-@import 'includes/project-admin';
-@import 'includes/software_map';
-@import 'includes/error';
-@import 'includes/ckeditor';
-@import 'includes/project-banner';
+.pc_focus { // stylelint-disable-line selector-class-pattern
+    border: 1px dotted #000000;
+}

@@ -61,7 +61,7 @@
 
 .tlp-search.tlp-search-small.admin-sidebar-search {
     border-color: darken($tlp-theme-sidebar-background-color, 3%);
-    background: transparentize(#ffffff, .95) url('../../../www/themes/BurningParrot/images/admin-sidebar-search-background.png') no-repeat 10px center;
+    background: transparentize(#ffffff, .95) url('../images/admin-sidebar-search-background.png') no-repeat 10px center;
     color: transparentize(#ffffff, .2);
 
     &:-ms-input-placeholder { // stylelint-disable-line selector-no-vendor-prefix

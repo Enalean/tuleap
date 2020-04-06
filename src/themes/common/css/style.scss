@@ -1,0 +1,617 @@
+/**
+ * Copyright (c) Enalean, 2011-Present. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2008. All rights reserved
+ *
+ * Originally written by Nicolas Terray, 2008
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/* stylelint-disable selector-class-pattern */
+
+@import './utils/utils';
+
+/********  general   **********/
+body {
+    margin: 0;
+    background: #bcbcad;
+}
+
+/* stylelint-disable-next-line selector-no-qualifying-type */
+body.lab-mode {
+    padding-bottom: 3em;
+}
+
+.center {
+    text-align: center;
+}
+
+.alignright {
+    text-align: right;
+}
+
+.left {
+    text-align: left;
+}
+
+.error {
+    color: #980000;
+    font-weight: bold;
+}
+
+.feedback {
+    color: #ff0000;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.disable {
+    color: #808080;
+}
+
+.highlight {
+    color: #ff0000;
+}
+
+.newproject {
+    background-color: #eeeeee;
+}
+
+.top_up {
+    color: #009900;
+}
+
+.top_down {
+    color: #cc0000;
+}
+
+.command {
+    font-family: 'Courier New', courier, sans-serif;
+}
+
+.subdomain {
+    color: #008000;
+}
+
+.bg_confirmdownload {
+    background-color: #f7f7f7;
+}
+
+img {
+    border: 0;
+}
+
+/********   links    **********/
+a:link,
+a:visited {
+    color: #8b4020;
+    text-decoration: none;
+}
+
+a:active {
+    color: #000000;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #ff0000;
+    text-decoration: underline;
+}
+
+/* stylelint-disable-next-line selector-no-qualifying-type */
+a.btn {
+    color: #222222;
+
+    &:hover {
+        color: #222222;
+    }
+
+    &:visited {
+        color: #222222;
+    }
+
+    &:active {
+        color: #222222;
+    }
+}
+
+/* stylelint-disable-next-line selector-no-qualifying-type */
+a.btn.btn-primary {
+    color: #ffffff;
+
+    &:hover {
+        color: #ffffff;
+    }
+
+    &:visited {
+        color: #ffffff;
+    }
+
+    &:active {
+        color: #ffffff;
+    }
+}
+
+/******** priorities **********/
+.priora {
+    background-color: #dadada;
+}
+
+.priorb {
+    background-color: #dad0d0;
+}
+
+.priorc {
+    background-color: #dacaca;
+}
+
+.priord {
+    background-color: #dac0c0;
+}
+
+.priore {
+    background-color: #dababa;
+}
+
+.priorf {
+    background-color: #dab0b0;
+}
+
+.priorg {
+    background-color: #daaaaa;
+}
+
+.priorh {
+    background-color: #da9090;
+}
+
+.priori {
+    background-color: #da8a8a;
+}
+
+/* .footer { color: #333333; } */
+.footer {
+    padding-top: 1.5em;
+    color: #ffffff;
+}
+
+.standardtable {
+    width: 99%;
+    border-spacing: 0;
+    border: 0;
+    color: #333333;
+}
+
+/* content frame specific */
+.contenttable {
+    width: 99%;
+    border-spacing: 0;
+    border: 0;
+    background-color: #f7f7f7;
+    vertical-align: top;
+}
+
+.row_below_outertabs,
+.outer_body_row,
+.end_inner_body_row,
+.below_tabs_selected_toptab {
+    background: #e8e8e0;
+}
+
+.start_main_body_row,
+.main_body_row,
+.end_main_body_row,
+.below_tabs_selected_bottomtab {
+    background: #f7f7f7;
+}
+
+.below_tabs {
+    background: #909090;
+}
+
+.form_search_box {
+    margin-right: 1em;
+}
+
+select[name=type_of_search] {
+    width: auto;
+}
+
+/* left menu specific */
+.menuframe {
+    width: 60px;
+    background-color: #e8e8e0;
+    text-align: left;
+    vertical-align: top;
+}
+
+.menutable {
+    width: 150px;
+    border-spacing: 0;
+    border: 0;
+    background-color: #e8e8e0;
+    vertical-align: top;
+}
+
+.menutitle {
+    color: #333333;
+    font-weight: bold;
+    text-align: left;
+    vertical-align: top;
+}
+
+.menuitem {
+    color: #333333;
+    text-align: right;
+    vertical-align: top;
+}
+
+/* group menu specific (see tabs and tabselect too) */
+.groupmenutable {
+    width: 100%;
+    border-top: thin solid #000000;
+    border-bottom: thin solid #000000;
+    background-color: #e8e8e0;
+}
+
+/* classic box */
+.boxtable {
+    width: 99%;
+    border-spacing: 1px;
+    border: 0;
+    vertical-align: top;
+}
+
+.boxtitle {
+    background-color: #e0ddd2;
+    color: #000000;
+    font-weight: bold;
+    text-align: center;
+}
+
+.boxitem {
+    background-color: transparent;
+    color: #333333;
+    text-align: left;
+}
+
+.boxitemalt {
+    background-color: #ffffff;
+    text-align: left;
+}
+
+.boxitemgrey {
+    background-color: #efefef;
+    text-align: left;
+}
+
+.boxhighlight {
+    background-color: #e8e8e0;
+    color: #333333;
+    text-align: left;
+}
+
+/* stylelint-disable selector-no-qualifying-type */
+td.matrix_cell.matrix_highlight_col,
+tr.boxitem:hover {
+    background-color: #fffff0;
+}
+
+td.matrix_cell.matrix_highlight_col,
+tr.boxitemalt:hover {
+    background-color: #fffff0;
+}
+/* stylelint-enable selector-no-qualifying-type */
+
+.boxspace {
+    font-size: 2pt; /* stylelint-disable unit-whitelist */
+}
+
+.maintitlebar {
+    color: #ffffff;
+}
+
+.slogan {
+    font-weight: bold;
+}
+
+.tabs {
+    color: #000000;
+}
+
+.tabs:visited {
+    color: #000000;
+}
+
+.tabs:hover {
+    color: #ff0000;
+}
+
+.tabselect {
+    color: #000000;
+    font-weight: bold;
+}
+
+.tabselect:visited {
+    color: #000000;
+    font-weight: bold;
+}
+
+.tabselect:hover {
+    color: #ff0000;
+    font-weight: bold;
+}
+
+.titlebar {
+    color: #000000;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.develtitle {
+    color: #000000;
+    font-weight: bold;
+}
+
+.legallink {
+    color: #000000;
+    font-weight: bold;
+}
+
+.sortbutton {
+    color: #000000;
+    text-decoration: none;
+}
+
+.sortbutton:hover {
+    text-decoration: underline;
+}
+
+.sortbutton:visited {
+    color: #000000;
+}
+
+/* calendar (fixed font size) */
+.calendar_month {
+    background-color: #e0ddd2;
+}
+
+.calendar_day {
+    background-color: #ffe6b5;
+}
+
+.calendar_currentday {
+    background-color: #ffffa3;
+}
+
+.calendar_nextmonth {
+    background-color: #dbeaf5;
+}
+
+.calendar_daymonth {
+    background-color: #ffffff;
+}
+
+.calendar_font_othermonth {
+    color: #808080;
+}
+
+.calendar_font {
+    color: #000000;
+}
+
+.calendar_font_month {
+    color: #000000;
+}
+
+.calendar_font_day {
+    color: #000000;
+}
+
+/* Help classes */
+.bg_help {
+    background-color: #ffffff;
+}
+
+/* text with tooltips (e.g. artifact fields) */
+.artifact_field_tooltip {
+    color: #000000;
+    text-decoration: none;
+}
+
+.artifact_field_tooltip:hover {
+    color: #ff0000;
+    text-decoration: none;
+}
+
+/* stylelint-disable-next-line selector-id-pattern */
+#footer_debug {
+    padding-top: 24px;
+    padding-bottom: 1em;
+    background: #ffffff url('../images/debug_gradient.png') top left repeat-x;
+    color: #333333;
+}
+
+/* field sets */
+.fieldset_separator {
+    background-color: #cccccc;
+    text-align: center;
+}
+
+/* stylelint-disable-next-line selector-no-qualifying-type */
+td.artifact_spacer {
+    width: 5%;
+}
+
+.iframe_service {
+    width: 100%;
+    height: 650px;
+    border: 1px solid #cccccc;
+}
+
+.iframe_showonly {
+    font-size: .85em;
+    text-align: right;
+}
+
+/* Start homepage & footer customization */
+#homepage {
+    margin: auto;
+    margin-top: 1em;
+    margin-bottom: 2em;
+}
+
+/* stylelint-disable-next-line selector-id-pattern */
+#homepage_speech {
+    width: 715px;
+    margin-right: 5px;
+    float: left;
+}
+
+/* stylelint-disable-next-line selector-id-pattern */
+#homepage_boxes {
+    width: 235px;
+    margin-left: 5px;
+    float: right;
+}
+
+/* stylelint-disable-next-line selector-id-pattern */
+#homepage_news {
+    clear: both;
+}
+
+#homepage .hero-unit {
+    min-height: 220px;
+    background: #f3f4f6 url('../images/homepage/image-homepage-tuleap.png') no-repeat;
+}
+
+#homepage img {
+    vertical-align: middle;
+}
+
+#homepage hr {
+    margin: 18px 0;
+    border: 0;
+    border-top: 1px solid #eeeeee;
+    border-bottom: 1px solid #ffffff;
+}
+
+.footer ul,
+#homepage ul {
+    margin: 0 0 9px 25px;
+    padding: 0;
+}
+
+/* stylelint-disable selector-no-qualifying-type */
+.footer ul.unstyled,
+#homepage ul.unstyled {
+    margin-left: 0;
+    list-style: none;
+}
+/* stylelint-enable selector-no-qualifying-type */
+
+#homepage h2,
+#homepage h3,
+#homepage h4,
+.footer h3 {
+    margin: 0;
+    font-size: 1.2em;
+}
+
+#homepage h2 {
+    font-size: 24px;
+    line-height: 36px;
+}
+
+#homepage h3 {
+    font-size: 18px;
+    line-height: 27px;
+}
+
+#homepage p {
+    margin-top: 0;
+}
+
+.footer li {
+    line-height: 18px;
+}
+
+.footer.container {
+    color: #666666;
+}
+
+/* End */
+
+/* Start BOOTSTRAP OVERRIDES */
+h2 {
+    font-size: 2em;
+}
+
+h3 {
+    font-size: 1.3em;
+}
+
+blockquote p {
+    font-size: 1em;
+}
+
+input[type='file'] {
+    margin-top: -13px;
+}
+
+legend {
+    -moz-box-sizing: border-box; /* stylelint-disable-line property-no-vendor-prefix */
+    box-sizing: border-box;
+}
+
+.dropdown-menu {
+    z-index: 3000;
+}
+
+.modal {
+    form {
+        margin: 0;
+    }
+}
+
+.dropdown-submenu.pull-left.glued > .dropdown-menu {
+    left: 0%;
+    margin: 0;
+    transform: translateX(-100%);
+}
+
+/* End */
+
+/* stylelint-disable-next-line selector-id-pattern */
+#browser_deprecated {
+    padding: 3px;
+    background: #cc0000;
+    color: #eeeeee;
+    text-align: center;
+
+    a {
+        color: #ffffff;
+        font-weight: bold;
+    }
+}
+
+/* stylelint-disable-next-line selector-id-pattern */
+#filter_type {
+    width: 120px;
+}
+/* stylelint-enable */

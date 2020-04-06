@@ -333,42 +333,66 @@ const webpack_config_legacy_combined = {
 };
 
 const colors = ["blue", "green", "grey", "orange", "purple", "red"];
-const burning_parrot_entry_points = {};
+const theme_entry_points = {
+    "common-theme/style": "./themes/common/css/style.scss",
+    "common-theme/print": "./themes/common/css/print.scss",
+};
 for (const color of colors) {
-    burning_parrot_entry_points[
+    theme_entry_points[
         `BurningParrot/burning-parrot-${color}`
     ] = `./themes/BurningParrot/css/burning-parrot-${color}.scss`;
-    burning_parrot_entry_points[
+    theme_entry_points[
         `BurningParrot/burning-parrot-${color}-condensed`
     ] = `./themes/BurningParrot/css/burning-parrot-${color}-condensed.scss`;
-    burning_parrot_entry_points[
+    theme_entry_points[
         `account/account-${color}`
     ] = `./themes/BurningParrot/css/account/account-${color}.scss`;
-    burning_parrot_entry_points[
+    theme_entry_points[
         `account/account-${color}-condensed`
     ] = `./themes/BurningParrot/css/account/account-${color}-condensed.scss`;
-    burning_parrot_entry_points[
+    theme_entry_points[
         `dashboards/dashboards-${color}`
     ] = `./themes/BurningParrot/css/dashboards/dashboards-${color}.scss`;
-    burning_parrot_entry_points[
+    theme_entry_points[
         `dashboards/dashboards-${color}-condensed`
     ] = `./themes/BurningParrot/css/dashboards/dashboards-${color}-condensed.scss`;
-    burning_parrot_entry_points[
+    theme_entry_points[
         `project/project-registration-${color}`
     ] = `./themes/BurningParrot/css/project-registration/project-registration-${color}.scss`;
-    burning_parrot_entry_points[
+    theme_entry_points[
         `project/project-registration-${color}-condensed`
     ] = `./themes/BurningParrot/css/project-registration/project-registration-${color}-condensed.scss`;
-    burning_parrot_entry_points[
+    theme_entry_points[
         `project/project-registration-creation-${color}`
     ] = `./themes/BurningParrot/css/project-registration-creation/project-registration-creation-${color}.scss`;
-    burning_parrot_entry_points[
+    theme_entry_points[
         `project/project-registration-creation-${color}-condensed`
     ] = `./themes/BurningParrot/css/project-registration-creation/project-registration-creation-${color}-condensed.scss`;
 }
 
 const webpack_config_for_burning_parrot_css = {
-    entry: burning_parrot_entry_points,
+    entry: theme_entry_points,
+    context,
+    output,
+    module: {
+        rules: [webpack_configurator.rule_scss_loader, webpack_configurator.rule_css_assets],
+    },
+    plugins: [manifest_plugin, ...webpack_configurator.getCSSExtractionPlugins()],
+};
+
+const flamingparrot_entry_points = {
+    "FlamingParrot/print": "./themes/FlamingParrot/css/print.scss",
+};
+
+const fp_colors = ["Blue", "BlueGrey", "Green", "Orange", "Purple", "Red"];
+for (const color of fp_colors) {
+    flamingparrot_entry_points[
+        `FlamingParrot/FlamingParrot_${color}`
+    ] = `./themes/FlamingParrot/css/FlamingParrot_${color}.scss`;
+}
+
+const webpack_config_for_flaming_parrot_css = {
+    entry: flamingparrot_entry_points,
     context,
     output,
     module: {
@@ -385,4 +409,5 @@ module.exports = [
     webpack_config_for_burning_parrot_code,
     webpack_config_for_vue,
     webpack_config_for_burning_parrot_css,
+    webpack_config_for_flaming_parrot_css,
 ];

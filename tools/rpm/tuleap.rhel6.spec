@@ -598,6 +598,9 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/composer.json
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/package.json
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/package-lock.json
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/common
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/FlamingParrot/css
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/FlamingParrot/composer.json
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/gerrit_setup
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/githooks
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/version_numbers
@@ -607,9 +610,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/run_dev/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/scripts/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/php73/run.sh
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/FlamingParrot/composer.json
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/common/package.json
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/common/webpack.*.js
 
 # Link to local config for logo and themes images
 # Needed for nginx try_files
@@ -1105,11 +1105,7 @@ fi
 %{APP_DIR}/src/www/svn
 # Only "common" theme is embedded into the package
 %dir %{APP_DIR}/src/www/themes
-%dir %{APP_DIR}/src/www/themes/common
-%{APP_DIR}/src/www/themes/common/assets
-%{APP_DIR}/src/www/themes/common/css
-%{APP_DIR}/src/www/themes/common/font
-%{APP_DIR}/src/www/themes/common/images
+%{APP_DIR}/src/www/themes/common
 %dir %{APP_DIR}/src/www/themes/common/tlp
 %{APP_DIR}/src/www/themes/common/tlp/dist
 %{APP_DIR}/src/www/themes/local
@@ -1493,6 +1489,7 @@ fi
 
 %files theme-flamingparrot
 %defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/src/themes/FlamingParrot
 %{APP_DIR}/src/www/themes/FlamingParrot
 
 %files theme-burningparrot

@@ -1,10 +1,27 @@
-@import '../../default/css/style.scss';
+/**
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@import '../../default/css/style';
 
 @mixin definitions($main, $color-name) {
-    $openid-connect-link-background-url-base: "/themes/FlamingParrot/images/login/login-background-";
-
     &.openid-connect-link {
-        background: url("#{$openid-connect-link-background-url-base}#{$color-name}.png") no-repeat center top, linear-gradient(#FFFFFF 0%, #F5F5F5 75%);
+        background: url('../../../../../src/themes/FlamingParrot/images/login/login-background-#{$color-name}.png') no-repeat center top, linear-gradient(#ffffff 0%, #f5f5f5 75%);
     }
 
     #linked-providers > .provider > .provider-header {
@@ -22,129 +39,160 @@
     }
 
     .btn:not(.btn-link):not(.disabled).btn-primary.provider-button {
-        &.inca_silver {
+        &.inca_silver { //stylelint-disable-line selector-class-pattern
             border-color: $inca_silver;
             background: $inca_silver;
+
             &:hover {
                 border-color: darken($inca_silver, 5%);
                 background: darken($inca_silver, 5%);
             }
         }
-        &.chrome_silver {
+
+        &.chrome_silver { //stylelint-disable-line selector-class-pattern
             border-color: $chrome_silver;
             background: $chrome_silver;
+
             &:hover {
                 border-color: darken($chrome_silver, 5%);
                 background: darken($chrome_silver, 5%);
             }
         }
-        &.fiesta_red {
+
+        &.fiesta_red { //stylelint-disable-line selector-class-pattern
             border-color: $fiesta_red;
             background: $fiesta_red;
+
             &:hover {
                 border-color: darken($fiesta_red, 5%);
                 background: darken($fiesta_red, 5%);
             }
         }
-        &.teddy_brown {
+
+        &.teddy_brown { //stylelint-disable-line selector-class-pattern
             border-color: $teddy_brown;
             background: $teddy_brown;
+
             &:hover {
                 border-color: darken($teddy_brown, 5%);
                 background: darken($teddy_brown, 5%);
             }
         }
-        &.clockwork_orange {
+
+        &.clockwork_orange { //stylelint-disable-line selector-class-pattern
             border-color: $clockwork_orange;
             background: $clockwork_orange;
+
             &:hover {
                 border-color: darken($clockwork_orange, 5%);
                 background: darken($clockwork_orange, 5%);
             }
         }
-        &.red_wine {
+
+        &.red_wine { //stylelint-disable-line selector-class-pattern
             border-color: $red_wine;
             background: $red_wine;
+
             &:hover {
                 border-color: darken($red_wine, 5%);
                 background: darken($red_wine, 5%);
             }
         }
-        &.acid_green {
+
+        &.acid_green { //stylelint-disable-line selector-class-pattern
             border-color: $acid_green;
             background: $acid_green;
+
             &:hover {
                 border-color: darken($acid_green, 5%);
                 background: darken($acid_green, 5%);
             }
         }
-        &.army_green {
+
+        &.army_green { //stylelint-disable-line selector-class-pattern
             border-color: $army_green;
             background: $army_green;
+
             &:hover {
                 border-color: darken($army_green, 5%);
                 background: darken($army_green, 5%);
             }
         }
-        &.sherwood_green {
+
+        &.sherwood_green { //stylelint-disable-line selector-class-pattern
             border-color: $sherwood_green;
             background: $sherwood_green;
+
             &:hover {
                 border-color: darken($sherwood_green, 5%);
                 background: darken($sherwood_green, 5%);
             }
         }
-        &.ocean_turquoise {
+
+        &.ocean_turquoise { //stylelint-disable-line selector-class-pattern
             border-color: $ocean_turquoise;
             background: $ocean_turquoise;
+
             &:hover {
                 border-color: darken($ocean_turquoise, 5%);
                 background: darken($ocean_turquoise, 5%);
             }
         }
-        &.daphne_blue {
+
+        &.daphne_blue { //stylelint-disable-line selector-class-pattern
             border-color: $daphne_blue;
             background: $daphne_blue;
+
             &:hover {
                 border-color: darken($daphne_blue, 5%);
                 background: darken($daphne_blue, 5%);
             }
         }
-        &.lake_placid_blue {
+
+        &.lake_placid_blue { //stylelint-disable-line selector-class-pattern
             border-color: $lake_placid_blue;
             background: $lake_placid_blue;
+
             &:hover {
                 border-color: darken($lake_placid_blue, 5%);
                 background: darken($lake_placid_blue, 5%);
             }
         }
-        &.deep_blue {
+
+        &.deep_blue { //stylelint-disable-line selector-class-pattern
             border-color: $deep_blue;
             background: $deep_blue;
+
             &:hover {
                 border-color: darken($deep_blue, 5%);
                 background: darken($deep_blue, 5%);
             }
         }
-        &.plum_crazy {
+
+        &.plum_crazy { //stylelint-disable-line selector-class-pattern
             border-color: $plum_crazy;
             background: $plum_crazy;
+
             &:hover {
                 border-color: darken($plum_crazy, 5%);
                 background: darken($plum_crazy, 5%);
             }
         }
-        &.peggy_pink {
+
+        &.peggy_pink { //stylelint-disable-line selector-class-pattern
             border-color: $peggy_pink;
             background: $peggy_pink;
+
             &:hover {
                 border-color: darken($peggy_pink, 5%);
                 background: darken($peggy_pink, 5%);
             }
         }
-        &.flamingo_pink {
+
+        &.flamingo_pink { //stylelint-disable-line selector-class-pattern
             border-color: $flamingo_pink;
             background: $flamingo_pink;
+
             &:hover {
                 border-color: darken($flamingo_pink, 5%);
                 background: darken($flamingo_pink, 5%);
@@ -154,38 +202,38 @@
 }
 
 body {
-    &.FlamingParrot_Orange {
-        @import '../../../../../src/www/themes/FlamingParrot/css/utils/variables-orange';
+    &.FlamingParrot_Orange { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
+        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-orange';
 
         @include definitions($main, $color-name);
     }
 
-    &.FlamingParrot_Blue {
-        @import '../../../../../src/www/themes/FlamingParrot/css/utils/variables-blue';
+    &.FlamingParrot_Blue { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
+        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-blue';
 
         @include definitions($main, $color-name);
     }
 
-    &.FlamingParrot_Green {
-        @import '../../../../../src/www/themes/FlamingParrot/css/utils/variables-green';
+    &.FlamingParrot_Green { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
+        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-green';
 
         @include definitions($main, $color-name);
     }
 
-    &.FlamingParrot_BlueGrey {
-        @import '../../../../../src/www/themes/FlamingParrot/css/utils/variables-bluegrey';
+    &.FlamingParrot_BlueGrey { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
+        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-bluegrey';
 
         @include definitions($main, $color-name);
     }
 
-    &.FlamingParrot_Purple {
-        @import '../../../../../src/www/themes/FlamingParrot/css/utils/variables-purple';
+    &.FlamingParrot_Purple { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
+        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-purple';
 
         @include definitions($main, $color-name);
     }
 
-    &.FlamingParrot_Red {
-        @import '../../../../../src/www/themes/FlamingParrot/css/utils/variables-red';
+    &.FlamingParrot_Red { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
+        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-red';
 
         @include definitions($main, $color-name);
     }

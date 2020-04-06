@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 @import './default-style';
-@import '../../../../../src/www/themes/common/css/utils/colors';
+@import '../../../../../src/themes/common/css/utils/colors';
 
 @mixin definitions($main) {
     /* stylelint-disable selector-no-qualifying-type */
@@ -61,7 +61,7 @@
 /* stylelint-disable selector-no-qualifying-type, selector-class-pattern */
 body {
     &.FlamingParrot_Orange {
-        @import '../../../../../src/www/themes/FlamingParrot/css/utils/variables-orange';
+        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-orange';
 
         @include definitions($main);
 
@@ -71,7 +71,7 @@ body {
     }
 
     &.FlamingParrot_Blue {
-        @import '../../../../../src/www/themes/FlamingParrot/css/utils/variables-blue';
+        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-blue';
 
         @include definitions($main);
 
@@ -81,7 +81,7 @@ body {
     }
 
     &.FlamingParrot_Green {
-        @import '../../../../../src/www/themes/FlamingParrot/css/utils/variables-green';
+        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-green';
 
         @include definitions($main);
 
@@ -91,7 +91,7 @@ body {
     }
 
     &.FlamingParrot_BlueGrey {
-        @import '../../../../../src/www/themes/FlamingParrot/css/utils/variables-bluegrey';
+        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-bluegrey';
 
         @include definitions($main);
 
@@ -101,7 +101,7 @@ body {
     }
 
     &.FlamingParrot_Purple {
-        @import '../../../../../src/www/themes/FlamingParrot/css/utils/variables-purple';
+        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-purple';
 
         @include definitions($main);
 
@@ -111,7 +111,7 @@ body {
     }
 
     &.FlamingParrot_Red {
-        @import '../../../../../src/www/themes/FlamingParrot/css/utils/variables-red';
+        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-red';
 
         @include definitions($main);
 
