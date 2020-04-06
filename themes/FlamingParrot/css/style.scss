@@ -1,3 +1,22 @@
+/**
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 @import '../../default/css/style';
 
 @mixin definitions($main) {
@@ -7,33 +26,33 @@
 }
 
 body {
-    &.FlamingParrot_Orange {
-        @import '../../src/www/themes/FlamingParrot/css/utils/variables-orange';
+    &.FlamingParrot_Orange { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
+        @import '../../src/themes/FlamingParrot/css/utils/variables-orange';
         @include definitions($main);
     }
 
-    &.FlamingParrot_Blue {
-        @import '../../src/www/themes/FlamingParrot/css/utils/variables-blue';
+    &.FlamingParrot_Blue { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
+        @import '../../src/themes/FlamingParrot/css/utils/variables-blue';
         @include definitions($main);
     }
 
-    &.FlamingParrot_Green {
-        @import '../../src/www/themes/FlamingParrot/css/utils/variables-green';
+    &.FlamingParrot_Green { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
+        @import '../../src/themes/FlamingParrot/css/utils/variables-green';
         @include definitions($main);
     }
 
-    &.FlamingParrot_BlueGrey {
-        @import '../../src/www/themes/FlamingParrot/css/utils/variables-bluegrey';
+    &.FlamingParrot_BlueGrey { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
+        @import '../../src/themes/FlamingParrot/css/utils/variables-bluegrey';
         @include definitions($main);
     }
 
-    &.FlamingParrot_Purple {
-        @import '../../src/www/themes/FlamingParrot/css/utils/variables-purple';
+    &.FlamingParrot_Purple { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
+        @import '../../src/themes/FlamingParrot/css/utils/variables-purple';
         @include definitions($main);
     }
 
-    &.FlamingParrot_Red {
-        @import '../../src/www/themes/FlamingParrot/css/utils/variables-red';
+    &.FlamingParrot_Red { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
+        @import '../../src/themes/FlamingParrot/css/utils/variables-red';
         @include definitions($main);
     }
 }
