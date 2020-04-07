@@ -1129,7 +1129,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                         $row = array_merge($row, $result->getRow());
                         //row == id, f1, f2, f3, f4...
                     }
-                    $html .= '<tr class="' . $additional_classname . '">';
+                    $html .= '<tr class="' . $additional_classname . '" data-test="tracker-report-table-results-artifact">';
                     $current_user = UserManager::instance()->getCurrentUser();
                     if ($extracolumn) {
                         $display_extracolumn = true;
@@ -1240,7 +1240,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 }
             }
         } else {
-            $html .= '<tr class="tracker_report_table_no_result"><td colspan="' . (count($this->getColumns()) + 2) . '" align="center">' . 'No results' . '</td></tr>';
+            $html .= '<tr class="tracker_report_table_no_result" data-test="tracker-report-table-empty-state"><td colspan="' . (count($this->getColumns()) + 2) . '" align="center">' . 'No results' . '</td></tr>';
         }
         if (!$only_rows) {
             $html .= '</tbody>';
