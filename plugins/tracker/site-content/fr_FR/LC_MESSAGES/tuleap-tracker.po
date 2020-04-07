@@ -256,6 +256,12 @@ msgstr ""
 msgid "CSV import"
 msgstr "Import CSV"
 
+#, php-format
+msgid "Can not connect to Jira server, please check your Jira credentials."
+msgstr ""
+"Impossible de se connecter au serveur Jira, veuillez vérifier vos "
+"identifiants de connexion."
+
 msgid "Can submit"
 msgstr "Peut soumettre"
 
@@ -383,6 +389,9 @@ msgstr "Date de fin"
 
 msgid "Error during parsing expert query"
 msgstr "Erreur pendant l'analyse de la requête experte"
+
+msgid "Fail to retrieve the full collection of projects."
+msgstr "Echec lors de la récupération de la collection de tous les projets."
 
 msgid "Field dependencies"
 msgstr "Dépendances entre champs"
@@ -687,6 +696,9 @@ msgstr "La sémantique plage de temps a été mise à jour avec succès"
 
 msgid "Semantics"
 msgstr "Sémantiques"
+
+msgid "Server url is invalid"
+msgstr "L'url du serveur est invalide"
 
 msgid "Shortcuts"
 msgstr "Raccourcis"
@@ -1566,6 +1578,9 @@ msgid ""
 msgstr ""
 "Vous devez configurer la sémantique status si vous voulez utiliser le niveau "
 "de notification \"mise à jour du status\" pour ce tracker"
+
+msgid "You must provide a valid Jira server, user email and token"
+msgstr "Vous devez fournir un serveur Jira, un email utilisateur et un jeton"
 
 msgid ""
 "Your file is not encoded in UTF-8, we are not able to parse it safely. "

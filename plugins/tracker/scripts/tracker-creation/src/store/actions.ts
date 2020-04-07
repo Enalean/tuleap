@@ -1,7 +1,7 @@
 /*
  * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,21 +15,27 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-import { Store, StoreOptions } from "vuex";
-import { State } from "./type";
-import * as mutations from "./mutations";
-import * as getters from "./getters";
-import * as actions from "./actions";
+import { post } from "tlp";
+import { Context, Credentials, ProjectList } from "./type";
 
-export function createStore(initial_state: State): Store<State> {
-    const store_options: StoreOptions<State> = {
-        state: initial_state,
-        mutations,
-        getters,
-        actions,
-    };
+export async function getJiraProjectList(
+    context: Context,
+    credentials: Credentials
+): Promise<ProjectList[]> {
+    const response = await post(
+        "/plugins/tracker/" +
+            encodeURIComponent(context.state.project_unix_name) +
+            "/jira/project_list",
+        {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ credentials }),
+        }
+    );
 
-    return new Store(store_options);
+    return response.json();
 }

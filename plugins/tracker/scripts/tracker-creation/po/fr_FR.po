@@ -47,11 +47,19 @@ msgstr "Modèle choisi"
 msgid "Color"
 msgstr "Couleur"
 
+msgid "Connect"
+msgstr "Connexion"
+
 msgid "Create a new tracker"
 msgstr "Créer un nouvel outil de suivi"
 
 msgid "Create my tracker"
 msgstr "Créer mon outil de suivi"
+
+msgid "Create your new tracker and import its artifacts from Jira server"
+msgstr ""
+"Créez votre nouvel outil de suivi et importez ses artefacts depuis un "
+"serveur Jira"
 
 msgid "Create your new tracker based on a tracker template XML file."
 msgstr "Créez votre nouvel outil de suivi basé sur un fichier au format XML."
@@ -83,6 +91,9 @@ msgstr "Vide"
 
 msgid "For advanced users"
 msgstr "Pour les utilisateurs avancés"
+
+msgid "From Jira"
+msgstr "Depuis Jira"
 
 msgid "Give your tracker some basic info"
 msgstr "Donnez à votre outil de suivi quelques infos de base"
@@ -143,6 +154,9 @@ msgstr ""
 "Le modèle de l'outil de suivi que vous sélectionnez fournit des champs "
 "préconfigurés, des permissions, des règles de transitions ..."
 
+msgid "Token"
+msgstr "Jeton"
+
 msgid "Tracker XML file"
 msgstr "Fichier XML"
 
@@ -159,3 +173,9 @@ msgid "Tuleap template"
 msgid_plural "Tuleap templates"
 msgstr[0] "Modèle d'outil de suivi Tuleap"
 msgstr[1] "Modèles d'outils de suivi Tuleap"
+
+msgid "User email"
+msgstr "Adresse email de l'utilisateur"
+
+msgid "Your Jira server url"
+msgstr "L'url de votre serveur Jira"

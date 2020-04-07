@@ -1,7 +1,8 @@
-/*
+<?php
+/**
  * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,21 +16,27 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-import { Store, StoreOptions } from "vuex";
-import { State } from "./type";
-import * as mutations from "./mutations";
-import * as getters from "./getters";
-import * as actions from "./actions";
+declare(strict_types=1);
 
-export function createStore(initial_state: State): Store<State> {
-    const store_options: StoreOptions<State> = {
-        state: initial_state,
-        mutations,
-        getters,
-        actions,
-    };
+namespace Tuleap\Tracker\Creation\JiraImporter;
 
-    return new Store(store_options);
+class JiraProjectCollection
+{
+    /**
+     * @var array
+     */
+    private $jira_projects = [];
+
+    public function addProject(array $project): void
+    {
+        $this->jira_projects[] = $project;
+    }
+
+    public function getJiraProjects(): array
+    {
+        return $this->jira_projects;
+    }
 }

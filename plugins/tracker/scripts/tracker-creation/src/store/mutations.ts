@@ -19,6 +19,8 @@
 
 import {
     CreationOptions,
+    Credentials,
+    ProjectList,
     ProjectWithTrackers,
     State,
     Tracker,
@@ -157,4 +159,12 @@ export function setIsXmlAFileSelected(state: State): void {
 
 export function setSlugifyShortnameMode(state: State, is_active: boolean): void {
     state.is_in_slugify_mode = is_active;
+}
+
+export function setJiraCredentials(state: State, credentials: Credentials): void {
+    state.from_jira_data.credentials = credentials;
+}
+
+export function setProjectList(state: State, project_list: ProjectList[]): void {
+    state.from_jira_data.project_list = project_list;
 }
