@@ -90,3 +90,9 @@ CREATE TABLE plugin_oauth2_refresh_token_scope (
     scope_key VARCHAR(255) NOT NULL,
     PRIMARY KEY (refresh_token_id, scope_key)
 ) ENGINE=InnoDB;
+
+CREATE TABLE plugin_oauth2_oidc_signing_key (
+    enforce_one_row_table ENUM('SHOULD_HAVE_AT_MOST_ONE_ROW') NOT NULL PRIMARY KEY DEFAULT 'SHOULD_HAVE_AT_MOST_ONE_ROW',
+    public_key TEXT NOT NULL,
+    private_key BLOB NOT NULL
+) ENGINE=InnoDB;

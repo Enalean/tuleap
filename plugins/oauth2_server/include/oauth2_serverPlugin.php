@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Tuleap\Authentication\Scope\AggregateAuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
@@ -62,6 +63,8 @@ use Tuleap\OAuth2Server\Grant\OAuth2ClientAuthenticationMiddleware;
 use Tuleap\OAuth2Server\Grant\RefreshToken\OAuth2GrantAccessTokenFromRefreshToken;
 use Tuleap\OAuth2Server\OpenIDConnect\IDToken\JWTBuilderFactory;
 use Tuleap\OAuth2Server\OpenIDConnect\IDToken\OpenIDConnectIDTokenCreator;
+use Tuleap\OAuth2Server\OpenIDConnect\IDToken\OpenIDConnectSigningKeyDAO;
+use Tuleap\OAuth2Server\OpenIDConnect\IDToken\OpenIDConnectSigningKeyFactory;
 use Tuleap\OAuth2Server\OpenIDConnect\Scope\OAuth2SignInScope;
 use Tuleap\OAuth2Server\ProjectAdmin\ListAppsController;
 use Tuleap\OAuth2Server\RefreshToken\OAuth2OfflineAccessScope;
@@ -334,7 +337,9 @@ final class oauth2_serverPlugin extends Plugin
             new OpenIDConnectIDTokenCreator(
                 OAuth2SignInScope::fromItself(),
                 new JWTBuilderFactory(),
-                new DateInterval('PT2M')
+                new DateInterval('PT2M'),
+                new OpenIDConnectSigningKeyFactory(new KeyFactory(), new OpenIDConnectSigningKeyDAO()),
+                new Sha256()
             )
         );
         return new AccessTokenGrantController(
