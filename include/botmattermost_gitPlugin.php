@@ -182,7 +182,7 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
         $this->getController(HTTPRequest::instance())->deleteBotNotificationByBot($event->getBot());
     }
 
-    public function process() : void
+    public function process(): void
     {
         $request = HTTPRequest::instance();
         if ($this->isAllowed($request->getProject()->getID())) {

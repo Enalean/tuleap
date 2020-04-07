@@ -83,7 +83,8 @@ class Validator
 
     private function isValidAddAction(HTTPRequest $request)
     {
-        if ($request->existAndNonEmpty('bot_id') &&
+        if (
+            $request->existAndNonEmpty('bot_id') &&
             $request->exist('channels')
         ) {
             return $this->validBotId($request->get('bot_id'));
