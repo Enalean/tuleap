@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../../../src/www/themes/common/tlp/src/scss/variables/colors/common-colors';
+@import '../../../../../src/themes/tlp/src/scss/variables/colors/common-colors';
 @import '../../../../tracker/themes/default/css/includes/columns-colors';
 
 $cardwall-font-basepath: '../fonts/' !default;
@@ -331,7 +331,7 @@ input[type='text'].search-in-cardwall { /* stylelint-disable-line selector-no-qu
 }
 
 .cardwall-cell-stacked > .cardwall-cell-container > ul > .cardwall_board_postit {
-    position: absolute !important; /* !important as we want to override inline style (drag 'n drop) */
+    position: absolute !important; /* use !important as we want to override inline style (drag 'n drop) */
     top: 10px;
     width: 100%;
 }

@@ -19,7 +19,7 @@
 
 import * as actions from "../../store/actions.js";
 import initial_state from "../../store/state.js";
-import { mockFetchError } from "../../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper.js";
+import { mockFetchError } from "../../../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper.js";
 import { ERROR_OCCURRED } from "../../../../constants.js";
 import * as rest_querier from "../../api/rest-querier.js";
 

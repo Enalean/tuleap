@@ -27,7 +27,7 @@ import * as actions from "./card-actions";
 import {
     mockFetchError,
     mockFetchSuccess,
-} from "../../../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper";
+} from "../../../../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper";
 import { ListField, TextField } from "./api-artifact-type";
 
 jest.mock("tlp");

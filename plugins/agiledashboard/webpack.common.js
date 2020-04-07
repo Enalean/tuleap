@@ -150,7 +150,7 @@ const webpack_config_for_kanban = {
     },
     resolve: {
         alias: webpack_configurator.extendAliases(webpack_configurator.tlp_fetch_alias, {
-            "angular-tlp": path.resolve(__dirname, "../../src/www/themes/common/tlp/angular-tlp"),
+            "angular-tlp": path.resolve(__dirname, "../../src/themes/tlp/angular-tlp"),
             // cumulative-flow-chart
             d3$: path.resolve(__dirname, "node_modules/d3"),
             lodash$: path.resolve(__dirname, "./scripts/kanban/node_modules/lodash"),

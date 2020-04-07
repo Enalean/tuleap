@@ -18,9 +18,7 @@
  */
 
 const path = require("path");
-
-const path_to_tuleap_root = path.resolve(__dirname, "../../../");
-const path_to_tlp = path.join(path_to_tuleap_root, "src/www/themes/common/tlp/");
+const path_to_tlp = path.join(__dirname, "../../../src/themes/tlp/");
 
 const tlp_fetch_alias = {
     "tlp-fetch": path.join(path_to_tlp, "src/js/fetch-wrapper.js"),

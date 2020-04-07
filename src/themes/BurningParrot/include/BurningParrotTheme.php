@@ -30,7 +30,6 @@ use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
 use Tuleap\BuildVersion\VersionPresenter;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\SidebarPresenter;
 use Tuleap\OpenGraph\NoOpenGraphPresenter;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
@@ -80,13 +79,11 @@ class BurningParrotTheme extends BaseLayout
         $this->renderer        = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
         $this->version         = VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence());
 
-        $this->project_flags_builder    = new ProjectFlagsBuilder(new ProjectFlagsDao());
+        $this->project_flags_builder = new ProjectFlagsBuilder(new ProjectFlagsDao());
 
-        $tlp_include_assets = new IncludeAssets(
-            __DIR__ . '/../../../www/themes/common/tlp/dist',
-            '/themes/common/tlp/dist'
+        $this->includeFooterJavascriptFile(
+            $this->include_asset->getFileURLWithFallback('tlp-' . $user->getLocale() . '.js', 'tlp-en_US.js')
         );
-        $this->includeFooterJavascriptFile($tlp_include_assets->getFileURLWithFallback('tlp-' . $user->getLocale() . '.js', 'tlp-en_US.js'));
         $this->includeFooterJavascriptFile($this->include_asset->getFileURL('burning-parrot.js'));
     }
 

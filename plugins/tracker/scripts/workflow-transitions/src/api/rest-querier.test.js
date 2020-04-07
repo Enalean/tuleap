@@ -18,7 +18,7 @@
  */
 
 import * as tlp_fetch from "tlp-fetch";
-import { mockFetchSuccess } from "../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper.js";
+import { mockFetchSuccess } from "../../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper.js";
 import {
     createTransition,
     createWorkflowTransitions,

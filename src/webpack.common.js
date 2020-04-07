@@ -64,6 +64,65 @@ const webpack_config_for_ckeditor = {
     ],
 };
 
+let entry_points = {
+    "tlp-en_US": polyfills_for_fetch.concat(["dom4", "./themes/tlp/src/index.en_US.js"]),
+    "tlp-fr_FR": polyfills_for_fetch.concat(["dom4", "./themes/tlp/src/index.fr_FR.js"]),
+};
+
+const tlp_colors = ["orange", "blue", "green", "red", "grey", "purple"];
+for (const color of tlp_colors) {
+    entry_points[`tlp-${color}`] = `./themes/tlp/src/scss/tlp-${color}.scss`;
+    entry_points[`tlp-${color}-condensed`] = `./themes/tlp/src/scss/tlp-${color}-condensed.scss`;
+}
+
+const webpack_config_for_tlp = {
+    entry: entry_points,
+    context,
+    output: {
+        path: assets_dir_path,
+        filename: "tlp-[chunkhash].[name].js",
+        library: "tlp",
+    },
+    resolve: {
+        alias: {
+            select2: "select2/dist/js/select2.full.js",
+        },
+    },
+    module: {
+        rules: [
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+            webpack_configurator.rule_scss_loader,
+            webpack_configurator.rule_css_assets,
+        ],
+    },
+    plugins: [manifest_plugin, ...webpack_configurator.getCSSExtractionPlugins()],
+};
+
+const webpack_config_for_tlp_doc = {
+    entry: {
+        style: "./themes/tlp/doc/css/main.scss",
+        script: "./themes/tlp/doc/js/index.js",
+    },
+    context,
+    // This one does NOT go in www/assets/core because we do not deliver it in production, only in dev environment
+    output: webpack_configurator.configureOutput(path.resolve(__dirname, "./www/tlp-doc/dist/")),
+    externals: {
+        tlp: "tlp",
+    },
+    module: {
+        rules: [
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+            webpack_configurator.rule_scss_loader,
+        ],
+    },
+    plugins: [
+        // Since it has a different output, it gets its own CleanWebpackPlugin and ManifestPlugin
+        webpack_configurator.getCleanWebpackPlugin(),
+        webpack_configurator.getManifestPlugin(),
+        ...webpack_configurator.getCSSExtractionPlugins(),
+    ],
+};
+
 const webpack_config_for_flaming_parrot_code = {
     entry: {
         "flamingparrot-with-polyfills": polyfills_for_fetch.concat([
@@ -84,7 +143,7 @@ const webpack_config_for_flaming_parrot_code = {
                 "./scripts/FlamingParrot/keymaster-sequence/keymaster.sequence.min.js"
             ),
             // navbar-history-flamingparrot needs this because TLP is not included in FlamingParrot
-            "tlp-fetch": path.resolve(__dirname, "./www/themes/common/tlp/src/js/fetch-wrapper.js"),
+            "tlp-fetch": path.resolve(__dirname, "./themes/tlp/src/js/fetch-wrapper.js"),
         },
     },
     module: {
@@ -111,7 +170,7 @@ const webpack_config_for_rich_text_editor = {
     },
     resolve: {
         alias: {
-            "tlp-fetch": path.resolve(__dirname, "./www/themes/common/tlp/src/js/fetch-wrapper.js"),
+            "tlp-fetch": path.resolve(__dirname, "./themes/tlp/src/js/fetch-wrapper.js"),
         },
     },
     module: {
@@ -405,6 +464,8 @@ module.exports = [
     webpack_config_for_ckeditor,
     webpack_config_legacy_combined,
     webpack_config_for_rich_text_editor,
+    webpack_config_for_tlp,
+    webpack_config_for_tlp_doc,
     webpack_config_for_flaming_parrot_code,
     webpack_config_for_burning_parrot_code,
     webpack_config_for_vue,

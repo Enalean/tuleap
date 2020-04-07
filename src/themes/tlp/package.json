@@ -1,0 +1,19 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/tlp",
+  "description": "Tuleap CSS framework",
+  "license": "GPL-2.0-or-later",
+  "main": "index.js",
+  "private": true,
+  "dependencies": {
+    "flatpickr": "^4.6.2",
+    "jquery": "2.1.0",
+    "popper.js": "^1.14.7",
+    "select2": "^4.0.10"
+  },
+  "devDependencies": {
+    "codemirror": "^5.48.4",
+    "dompurify": "^2.0.8"
+  },
+  "types": "./src/index.d.ts"
+}

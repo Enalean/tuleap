@@ -20,7 +20,7 @@
 import { postProject, getProjectUserIsAdminOf, getTermOfService } from "./rest-querier";
 
 import * as tlp from "tlp";
-import { mockFetchSuccess } from "../../../../../www/themes/common/tlp/mocks/tlp-fetch-mock-helper";
+import { mockFetchSuccess } from "../../../../../themes/tlp/mocks/tlp-fetch-mock-helper";
 import { MinimalProjectRepresentation, ProjectProperties, TemplateData } from "../type";
 
 jest.mock("tlp");

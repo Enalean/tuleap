@@ -1,0 +1,148 @@
+/**
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+$tlp-badge-radius: 15px;
+$tlp-badge-color: #ffffff;
+$tlp-badge-font-size: 12px;
+$tlp-badge-line-height: 12px;
+$tlp-badge-font-weight: 600;
+$tlp-badge-padding: 6px 9px;
+@if $tlp-density == $tlp-density-condensed {
+    $tlp-badge-padding: 4px 8px;
+}
+
+$tlp-badge-secondary-background: $tlp-ui-border-normal;
+$tlp-badge-secondary-color: darken($tlp-ui-dimmed, 10%);
+$tlp-badge-secondary-outline-border: #999999;
+$tlp-badge-secondary-outline-color: $tlp-ui-dimmed;
+
+%tlp-badge {
+    display: inline-block;
+    padding: $tlp-badge-padding;
+    border-radius: $tlp-badge-radius;
+    color: $tlp-badge-color;
+    font-size: $tlp-badge-font-size;
+    font-weight: $tlp-badge-font-weight;
+    line-height: $tlp-badge-line-height;
+    text-decoration: none;
+    vertical-align: middle;
+    white-space: nowrap;
+
+    &:hover {
+        text-decoration: none;
+    }
+}
+
+.tlp-badge-icon {
+    margin: 0 3px 0 2px;
+}
+
+.tlp-badge-primary {
+    @extend %tlp-badge;
+
+    border: 1px solid $tlp-theme-color;
+    background: $tlp-theme-color;
+
+    &.tlp-badge-outline {
+        border: 1px solid transparentize($tlp-theme-color, .4);
+        background: transparentize($tlp-theme-color, .9);
+        color: $tlp-theme-color;
+    }
+}
+
+.tlp-badge-secondary {
+    @extend %tlp-badge;
+
+    border: 1px solid $tlp-badge-secondary-background;
+    background: $tlp-badge-secondary-background;
+    color: $tlp-badge-secondary-color;
+
+    &.tlp-badge-outline {
+        border: 1px solid transparentize($tlp-badge-secondary-outline-border, .4);
+        background: transparentize($tlp-badge-secondary-outline-border, .9);
+        color: $tlp-badge-secondary-outline-color;
+    }
+}
+
+.tlp-badge-info {
+    @extend %tlp-badge;
+
+    border: 1px solid $tlp-ui-info;
+    background: $tlp-ui-info;
+
+    &.tlp-badge-outline {
+        border: 1px solid transparentize($tlp-ui-info, .4);
+        background: transparentize($tlp-ui-info, .9);
+        color: $tlp-ui-info;
+    }
+}
+
+.tlp-badge-success {
+    @extend %tlp-badge;
+
+    border: 1px solid $tlp-ui-success;
+    background: $tlp-ui-success;
+
+    &.tlp-badge-outline {
+        border: 1px solid transparentize($tlp-ui-success, .4);
+        background: transparentize($tlp-ui-success, .9);
+        color: $tlp-ui-success;
+    }
+}
+
+.tlp-badge-warning {
+    @extend %tlp-badge;
+
+    border: 1px solid $tlp-ui-warning;
+    background: $tlp-ui-warning;
+
+    &.tlp-badge-outline {
+        border: 1px solid transparentize($tlp-ui-warning, .4);
+        background: transparentize($tlp-ui-warning, .9);
+        color: $tlp-ui-warning;
+    }
+}
+
+.tlp-badge-danger {
+    @extend %tlp-badge;
+
+    border: 1px solid $tlp-ui-danger;
+    background: $tlp-ui-danger;
+
+    &.tlp-badge-outline {
+        border: 1px solid transparentize($tlp-ui-danger, .4);
+        background: transparentize($tlp-ui-danger, .9);
+        color: $tlp-ui-danger;
+    }
+}
+
+@each $color-name, $colors in $tlp-swatch-color-map {
+    .tlp-badge-#{$color-name} {
+        @extend %tlp-badge;
+
+        border: 1px solid map-get($colors, 'primary');
+        background: map-get($colors, 'primary');
+
+        &.tlp-badge-outline {
+            border: 1px solid transparentize(map-get($colors, 'primary'), .4);
+            background: transparentize(map-get($colors, 'primary'), .9);
+            color: map-get($colors, 'text');
+        }
+    }
+}

@@ -18,14 +18,14 @@
  */
 
 import { initArtifactAdditionalAction } from "./artifact-additional-action";
-import * as fetch_wrapper from "../../../../../src/www/themes/common/tlp/src/js/fetch-wrapper";
+import * as fetch_wrapper from "../../../../../src/themes/tlp/src/js/fetch-wrapper";
 import * as get_text from "../../../../../src/scripts/tuleap/gettext/gettext-init";
 import * as feedbacks from "../../../../../src/scripts/tuleap/feedback";
 import GetText from "node-gettext";
 import {
     mockFetchError,
     mockFetchSuccess,
-} from "../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper";
+} from "../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper";
 
 describe("Artifact additional action", () => {
     beforeEach(() => {

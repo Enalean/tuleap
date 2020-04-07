@@ -19,7 +19,7 @@
 
 import Vue from "vue";
 import GetTextPlugin from "vue-gettext";
-import { mockFetchError } from "../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper.js";
+import { mockFetchError } from "../../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper.js";
 import { createStore } from "../store/index.js";
 import ReadingMode from "./ReadingMode.vue";
 import BackendCrossTrackerReport from "../backend-cross-tracker-report.js";

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { patch } from "../../../../../src/www/themes/common/tlp/src/js/fetch-wrapper";
+import { patch } from "../../../../../src/themes/tlp/src/js/fetch-wrapper";
 import {
     getPOFileFromLocale,
     initGettext,
