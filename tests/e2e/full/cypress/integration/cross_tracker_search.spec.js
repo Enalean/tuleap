@@ -48,6 +48,15 @@ function assertAllArtifacts() {
 }
 
 describe("Cross tracker search", function () {
+    before(() => {
+        cy.clearCookie("__Host-TULEAP_session_hash");
+        cy.projectMemberLogin();
+    });
+
+    beforeEach(function () {
+        Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+    });
+
     it("User should be able to set trackers from widgets", function () {
         cy.server();
         cy.visit("/my/");
@@ -58,7 +67,7 @@ describe("Cross tracker search", function () {
         cy.get("[data-test=dashboard-add-widget-button-submit]").click();
 
         // select some trackers
-        cy.getProjectId("dashboard").then((project_id) => {
+        cy.getProjectId("cross-tracker-search").then((project_id) => {
             cy.visit("/my/");
 
             cy.route(
