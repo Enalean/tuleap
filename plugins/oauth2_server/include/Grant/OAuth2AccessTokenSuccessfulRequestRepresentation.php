@@ -44,15 +44,24 @@ final class OAuth2AccessTokenSuccessfulRequestRepresentation implements \JsonSer
      * @var int
      */
     private $expires_in;
+    /**
+     * @var string|null
+     */
+    private $id_token;
 
-    private function __construct(ConcealedString $access_token_identifier, ?ConcealedString $refresh_token, int $expires_in_seconds)
-    {
+    private function __construct(
+        ConcealedString $access_token_identifier,
+        ?ConcealedString $refresh_token,
+        int $expires_in_seconds,
+        ?string $id_token
+    ) {
         $this->access_token  = $access_token_identifier;
         $this->refresh_token = $refresh_token;
         if ($expires_in_seconds <= 0) {
             throw new CannotSetANegativeExpirationDelayOnAccessTokenException($expires_in_seconds);
         }
         $this->expires_in = $expires_in_seconds;
+        $this->id_token   = $id_token;
     }
 
     public static function fromAccessTokenAndRefreshToken(
@@ -63,7 +72,22 @@ final class OAuth2AccessTokenSuccessfulRequestRepresentation implements \JsonSer
         return new self(
             $access_token->getIdentifier(),
             $refresh_token,
-            $access_token->getExpiration()->getTimestamp() - $current_time->getTimestamp()
+            $access_token->getExpiration()->getTimestamp() - $current_time->getTimestamp(),
+            null
+        );
+    }
+
+    public static function fromAccessTokenAndRefreshTokenWithUserAuthentication(
+        OAuth2AccessTokenWithIdentifier $access_token,
+        ?ConcealedString $refresh_token,
+        ?string $id_token,
+        \DateTimeImmutable $current_time
+    ): self {
+        return new self(
+            $access_token->getIdentifier(),
+            $refresh_token,
+            $access_token->getExpiration()->getTimestamp() - $current_time->getTimestamp(),
+            $id_token
         );
     }
 
@@ -76,6 +100,9 @@ final class OAuth2AccessTokenSuccessfulRequestRepresentation implements \JsonSer
         ];
         if ($this->refresh_token !== null) {
             $json_encoded['refresh_token'] = $this->refresh_token->getString();
+        }
+        if ($this->id_token !== null) {
+            $json_encoded['id_token'] = $this->id_token;
         }
 
         return $json_encoded;

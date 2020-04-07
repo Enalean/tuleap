@@ -56,6 +56,21 @@ final class OAuth2AccessTokenSuccessfulRequestRepresentationTest extends TestCas
         );
     }
 
+    public function testBuildsSuccessfulRequestRepresentationIncludingAnIDTokenThatCanBeJSONEncoded(): void
+    {
+        $representation = OAuth2AccessTokenSuccessfulRequestRepresentation::fromAccessTokenAndRefreshTokenWithUserAuthentication(
+            new OAuth2AccessTokenWithIdentifier(new ConcealedString('identifier'), new \DateTimeImmutable('@20')),
+            null,
+            'jwt_id_token',
+            new \DateTimeImmutable('@10')
+        );
+
+        $this->assertJsonStringEqualsJsonString(
+            '{"access_token":"identifier","id_token":"jwt_id_token","token_type":"bearer","expires_in":10}',
+            json_encode($representation, JSON_THROW_ON_ERROR)
+        );
+    }
+
     public function testDoesNotBuildRequestRepresentationWhenTheAccessTokenHaveAlreadyExpired(): void
     {
         $this->expectException(CannotSetANegativeExpirationDelayOnAccessTokenException::class);

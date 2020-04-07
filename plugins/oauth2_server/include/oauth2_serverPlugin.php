@@ -60,6 +60,8 @@ use Tuleap\OAuth2Server\Grant\AuthorizationCode\PrefixOAuth2AuthCode;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\Scope\OAuth2AuthorizationCodeScopeDAO;
 use Tuleap\OAuth2Server\Grant\OAuth2ClientAuthenticationMiddleware;
 use Tuleap\OAuth2Server\Grant\RefreshToken\OAuth2GrantAccessTokenFromRefreshToken;
+use Tuleap\OAuth2Server\OpenIDConnect\IDToken\JWTBuilderFactory;
+use Tuleap\OAuth2Server\OpenIDConnect\IDToken\OpenIDConnectIDTokenCreator;
 use Tuleap\OAuth2Server\OpenIDConnect\Scope\OAuth2SignInScope;
 use Tuleap\OAuth2Server\ProjectAdmin\ListAppsController;
 use Tuleap\OAuth2Server\RefreshToken\OAuth2OfflineAccessScope;
@@ -328,6 +330,11 @@ final class oauth2_serverPlugin extends Plugin
                 new OAuth2ScopeSaver(new OAuth2RefreshTokenScopeDAO()),
                 new DateInterval('PT6H'),
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+            ),
+            new OpenIDConnectIDTokenCreator(
+                OAuth2SignInScope::fromItself(),
+                new JWTBuilderFactory(),
+                new DateInterval('PT2M')
             )
         );
         return new AccessTokenGrantController(
