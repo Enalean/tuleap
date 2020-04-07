@@ -21,6 +21,7 @@
 namespace Tuleap\TestManagement\Step\Definition\Field;
 
 use Codendi_HTMLPurifier;
+use LogicException;
 use PFUser;
 use ReferenceManager;
 use TemplateRendererFactory;
@@ -29,8 +30,10 @@ use Tracker_Artifact_ChangesetValue;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_FieldVisitor;
+use Tracker_FormElementFactory;
 use Tuleap\TestManagement\Step\Step;
 use Tuleap\TestManagement\Step\StepPresenter;
+use Tuleap\Tracker\Artifact\UploadDataAttributesForRichTextEditorBuilder;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 
@@ -161,7 +164,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
             $steps = $this->getStepsPresentersFromChangesetValue($value);
         }
 
-        return $this->renderStepEditionToString($steps);
+        return $this->renderStepEditionToString($artifact, $steps);
     }
 
     private function getDefaultFormat(PFUser $user): string
@@ -208,7 +211,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
 
         $steps = $this->getStepsPresentersFromSubmittedValues($submitted_values);
 
-        return $this->renderStepEditionToString($steps);
+        return $this->renderStepEditionToString(null, $steps);
     }
 
     protected function fetchSubmitValueMasschange(): string
@@ -345,9 +348,9 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         $changeset_value_id,
         $value,
         ?Tracker_Artifact_ChangesetValue $previous_changesetvalue,
-        CreatedFileURLMapping $id_mapping
+        CreatedFileURLMapping $url_mapping
     ) {
-        $steps = $this->transformSubmittedValuesIntoArrayOfStructuredSteps($value);
+        $steps = $this->transformSubmittedValuesIntoArrayOfStructuredSteps($value, $url_mapping);
 
         return $this->getValueDao()->create($changeset_value_id, $steps) &&
             $this->extractCrossRefs($artifact, $value);
@@ -358,8 +361,10 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
      *
      * @psalm-return list<Step>
      */
-    private function transformSubmittedValuesIntoArrayOfStructuredSteps(array $submitted_values): array
-    {
+    private function transformSubmittedValuesIntoArrayOfStructuredSteps(
+        array $submitted_values,
+        CreatedFileURLMapping $url_mapping
+    ): array {
         if ($this->doesUserWantToRemoveAllSteps($submitted_values) || ! isset($submitted_values['description'])) {
             return [];
         }
@@ -383,6 +388,15 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
             $expected_results_format = '';
             if (isset($submitted_values['expected_results_format'][$key])) {
                 $expected_results_format = $submitted_values['expected_results_format'][$key];
+            }
+
+            $substitutor = new \Tuleap\Tracker\FormElement\Field\File\FileURLSubstitutor();
+            if ($description_format === Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT) {
+                $description = $substitutor->substituteURLsInHTML($description, $url_mapping);
+            }
+
+            if ($expected_results_format === Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT) {
+                $expected_results = $substitutor->substituteURLsInHTML($expected_results, $url_mapping);
             }
 
             $steps[] = new Step(
@@ -500,18 +514,45 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
      *
      * @return String
      */
-    protected function renderStepEditionToString(array $steps_presenters)
+    protected function renderStepEditionToString(?Tracker_Artifact $artifact, array $steps_presenters)
     {
+        $tracker = $this->getTracker();
+        if (! $tracker) {
+            throw new LogicException(self::class . ' # ' . $this->getId() . ' must have a valid tracker');
+        }
+
         $renderer = TemplateRendererFactory::build()->getRenderer(TESTMANAGEMENT_BASE_DIR . '/templates');
 
         $empty_step_presenter = $this->getEmptyStepPresenter();
 
+        $rich_textarea_provider = new UploadDataAttributesForRichTextEditorBuilder(
+            Tracker_FormElementFactory::instance(),
+            $this->getFrozenFieldDetector()
+        );
+
+        $data_attributes = array_merge(
+            [
+                [
+                    'name'  => 'field-id',
+                    'value' => $this->id
+                ],
+                [
+                    'name'  => 'steps',
+                    'value' => json_encode($steps_presenters)
+                ],
+
+                [
+                    'name'  => 'empty-step',
+                    'value' => json_encode($empty_step_presenter)
+                ],
+            ],
+            $rich_textarea_provider->getDataAttributes($tracker, $this->getCurrentUser(), $artifact)
+        );
+
         return $renderer->renderToString(
             'step-def-edit',
             [
-                'field_id'                => $this->id,
-                'json_encoded_steps'      => json_encode($steps_presenters),
-                'json_encoded_empty_step' => json_encode($empty_step_presenter)
+                'data_attributes' => $data_attributes
             ]
         );
     }
@@ -527,11 +568,12 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
 
         $submitted_steps = $this->getValueFromSubmitOrDefault($submitted_values);
         if ($submitted_steps) {
+            $url_mapping = new CreatedFileURLMapping();
             $steps = array_filter(array_map(
                 function (Step $step) {
                     return $this->getStepPresenter($step);
                 },
-                $this->transformSubmittedValuesIntoArrayOfStructuredSteps($submitted_steps)
+                $this->transformSubmittedValuesIntoArrayOfStructuredSteps($submitted_steps, $url_mapping)
             ));
         }
 

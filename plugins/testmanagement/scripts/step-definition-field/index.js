@@ -45,6 +45,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 initial_steps: JSON.parse(mount_point.dataset.steps),
                 artifact_field_id: JSON.parse(mount_point.dataset.fieldId),
                 empty_step: JSON.parse(mount_point.dataset.emptyStep),
+                upload_url: mount_point.dataset.uploadUrl,
+                upload_field_name: mount_point.dataset.uploadFieldName,
+                upload_max_size: mount_point.dataset.uploadMaxSize,
             },
         }).$mount(mount_point);
     }
