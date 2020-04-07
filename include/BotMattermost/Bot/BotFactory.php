@@ -69,12 +69,14 @@ class BotFactory
         $bot_avatar_url,
         $bot_id
     ) {
-        if (! $this->dao->updateBot(
-            trim($bot_name),
-            trim($bot_webhook_url),
-            trim($bot_avatar_url),
-            $bot_id
-        )) {
+        if (
+            ! $this->dao->updateBot(
+                trim($bot_name),
+                trim($bot_webhook_url),
+                trim($bot_avatar_url),
+                $bot_id
+            )
+        ) {
             throw new CannotUpdateBotException();
         }
     }

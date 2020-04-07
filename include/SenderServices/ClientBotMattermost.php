@@ -49,7 +49,7 @@ class ClientBotMattermost
         $this->stream_factory = HTTPFactoryBuilder::streamFactory();
     }
 
-    public function sendMessage(string $post_string, string $url) : void
+    public function sendMessage(string $post_string, string $url): void
     {
         $request = $this->request_factory->createRequest('POST', $url)
             ->withHeader('Content-Type', 'application/json')

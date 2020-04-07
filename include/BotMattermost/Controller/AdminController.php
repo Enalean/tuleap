@@ -182,13 +182,13 @@ class AdminController
         }
     }
 
-    private function redirectToAdminSectionWithErrorFeedback(Exception $e, BaseLayout $response) : void
+    private function redirectToAdminSectionWithErrorFeedback(Exception $e, BaseLayout $response): void
     {
         $response->addFeedback(Feedback::ERROR, $e->getMessage());
         $response->redirect('/admin/');
     }
 
-    private function redirectToIndex(BaseLayout $response) : void
+    private function redirectToIndex(BaseLayout $response): void
     {
         $response->redirect(BOT_MATTERMOST_BASE_URL . '/admin/');
     }

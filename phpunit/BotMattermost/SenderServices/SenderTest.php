@@ -38,7 +38,7 @@ class SenderTest extends TestCase
     private $botMattermost_client;
     private $logger;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
         $this->encoder_message      = new EncoderMessage();

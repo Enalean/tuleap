@@ -36,7 +36,7 @@ class EncoderMessageTest extends TestCase
     private $encoder_message;
     private $bot;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
         $this->bot             = \Mockery::spy(\Tuleap\BotMattermost\Bot\Bot::class);

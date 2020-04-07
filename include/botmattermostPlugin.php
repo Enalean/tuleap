@@ -92,7 +92,7 @@ class BotMattermostPlugin extends Plugin
         }
     }
 
-    public function routeAdmin() : \Tuleap\Request\DispatchableWithRequest
+    public function routeAdmin(): \Tuleap\Request\DispatchableWithRequest
     {
         return new Router(
             new AdminController(
@@ -104,7 +104,7 @@ class BotMattermostPlugin extends Plugin
         );
     }
 
-    public function defaultCollectRoutesEvent(CollectRoutesEvent $event) : void
+    public function defaultCollectRoutesEvent(CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
             $r->addRoute(['GET', 'POST'], '/admin/[index.php]', $this->getRouteHandler('routeAdmin'));
