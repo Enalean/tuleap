@@ -131,7 +131,7 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
      *
      * @throws NotFoundException
      */
-    public function getProject(array $variables) : Project
+    public function getProject(array $variables): Project
     {
         return $this->getProjectByName($variables[self::PROJECT_NAME_VARIABLE_NAME]);
     }

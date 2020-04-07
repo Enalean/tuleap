@@ -72,7 +72,7 @@ class baselinePlugin extends Plugin  // @codingStandardsIgnoreLine
         return $this->pluginInfo;
     }
 
-    public function service_classnames(array &$params) : void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    public function service_classnames(array &$params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $params['classnames'][self::SERVICE_SHORTNAME] = \Tuleap\Baseline\BaselineTuleapService::class;
     }

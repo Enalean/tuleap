@@ -27,7 +27,7 @@ class TrackerFactory
 {
     public static function one(): TrackerBuilder
     {
-        return (new TrackerBuilder)
+        return (new TrackerBuilder())
             ->project(ProjectFactory::one());
     }
 }

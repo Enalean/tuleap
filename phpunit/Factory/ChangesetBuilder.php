@@ -54,7 +54,7 @@ class ChangesetBuilder
             ->shouldReceive('getValue')
             ->with($field)
             ->andReturn(
-                new class($value) extends Tracker_Artifact_ChangesetValue_String
+                new class ($value) extends Tracker_Artifact_ChangesetValue_String
                 {
                     /** @var string */
                     private $value;
