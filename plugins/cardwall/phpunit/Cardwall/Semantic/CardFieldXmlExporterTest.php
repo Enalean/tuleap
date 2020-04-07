@@ -51,7 +51,7 @@ final class CardFieldXmlExporterTest extends TestCase
      */
     private $color_dao;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

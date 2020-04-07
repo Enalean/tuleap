@@ -26,7 +26,9 @@ use Tuleap\Layout\BaseLayout;
 
 class OneStepProjectCreationValidatorTest extends TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, GlobalLanguageMock, ForgeConfigSandbox;
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
+    use ForgeConfigSandbox;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Rule_ProjectName

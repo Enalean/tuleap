@@ -34,14 +34,14 @@ final class Cardwall_SwimLineFactoryTest extends \PHPUnit\Framework\TestCase
      */
     private $factory;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->config     = \Mockery::mock(\Cardwall_OnTop_Config::class);
         $this->factory    = new Cardwall_SwimlineFactory($this->config, \Mockery::spy(\Cardwall_FieldProviders_IProvideFieldGivenAnArtifact::class));
     }
 
-    public function testItReturnsAnEmptyArrayIfThereAreNoColumnsAndNoPresenters() : void
+    public function testItReturnsAnEmptyArrayIfThereAreNoColumnsAndNoPresenters(): void
     {
         $columns    = new Cardwall_OnTop_Config_ColumnFreestyleCollection();
         $presenters = array();
@@ -49,7 +49,7 @@ final class Cardwall_SwimLineFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertSame(array(), $swimlines);
     }
 
-    public function testItReturnsAnEmptyArrayIfThereAreNoColumnsButSomePresenters() : void
+    public function testItReturnsAnEmptyArrayIfThereAreNoColumnsButSomePresenters(): void
     {
         $columns    = new Cardwall_OnTop_Config_ColumnFreestyleCollection();
         $presenters = array(\Mockery::spy(\Cardwall_CardInCellPresenter::class));
@@ -57,7 +57,7 @@ final class Cardwall_SwimLineFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertSame(array(), $swimlines);
     }
 
-    public function testItReturnsANestedArrayOfPresenterPresentersIfThereAreColumnsButNoPresenters() : void
+    public function testItReturnsANestedArrayOfPresenterPresentersIfThereAreColumnsButNoPresenters(): void
     {
         $mocked_column = \Mockery::spy(\Cardwall_Column::class);
         $mocked_column->shouldReceive('getId')->andReturns(44);
@@ -71,7 +71,7 @@ final class Cardwall_SwimLineFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($expected, $swimlines);
     }
 
-    public function testItAsksTheColumnIfItGoesInThere() : void
+    public function testItAsksTheColumnIfItGoesInThere(): void
     {
         $artifact1 = Mockery::mock(Tracker_Artifact::class);
         $artifact2 = Mockery::mock(Tracker_Artifact::class);
@@ -94,7 +94,7 @@ final class Cardwall_SwimLineFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($expected, $swimlines);
     }
 
-    public function testItIgnoresPresentersIfThereIsNoMatchingColumn() : void
+    public function testItIgnoresPresentersIfThereIsNoMatchingColumn(): void
     {
         $artifact = Mockery::mock(Tracker_Artifact::class);
         $column = new Cardwall_Column(55, null, null);

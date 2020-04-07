@@ -38,8 +38,8 @@ use URLVerification;
 
 class URLVerificationRedirectionTests extends TestCase
 {
-
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\URLVerification

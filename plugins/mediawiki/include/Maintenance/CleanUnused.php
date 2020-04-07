@@ -154,7 +154,7 @@ class CleanUnused
         $this->logger->info("End of purge of used but empty mediawiki");
     }
 
-    private function purgeUsedServicesEmptyWikiForAllProjectsExceptTemplate(bool $dry_run, ?int $limit) : void
+    private function purgeUsedServicesEmptyWikiForAllProjectsExceptTemplate(bool $dry_run, ?int $limit): void
     {
         if ($limit !== null) {
             $this->logger->info("Start purge of $limit used but empty mediawiki on projects which are not defined as template");

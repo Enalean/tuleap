@@ -70,7 +70,8 @@ class UpdateEditionController implements DispatchableWithRequest
         $wants_csv_separator       = (string) $request->get('user_csv_separator');
         $wants_csv_dateformat      = (string) $request->get('user_csv_dateformat');
 
-        if ($text_default_format === $wants_text_default_format
+        if (
+            $text_default_format === $wants_text_default_format
             && $csv_separator === $wants_csv_separator
             && $csv_dateformat === $wants_csv_dateformat
         ) {

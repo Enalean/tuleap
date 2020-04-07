@@ -28,13 +28,13 @@ use Tuleap\Cryptography\Exception\InvalidCiphertextException;
 
 final class SymmetricCryptoTest extends TestCase
 {
-    public function testItCannotBeInstantiated() : void
+    public function testItCannotBeInstantiated(): void
     {
         $this->expectException(\RuntimeException::class);
         new SymmetricCrypto();
     }
 
-    public function testNoncesAreNotReused() : void
+    public function testNoncesAreNotReused(): void
     {
         $key       = new EncryptionKey(
             new ConcealedString(random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES))
@@ -47,7 +47,7 @@ final class SymmetricCryptoTest extends TestCase
         $this->assertNotEquals($ciphertext_1, $ciphertext_2);
     }
 
-    public function testCiphertextCanBeDecrypted() : void
+    public function testCiphertextCanBeDecrypted(): void
     {
         $key       = new EncryptionKey(
             new ConcealedString(random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES))
@@ -60,7 +60,7 @@ final class SymmetricCryptoTest extends TestCase
         $this->assertEquals($plaintext->getString(), $decrypted_ciphertext->getString());
     }
 
-    public function testACiphertextEncryptedWithADifferentKeyCannotBeDecrypted() : void
+    public function testACiphertextEncryptedWithADifferentKeyCannotBeDecrypted(): void
     {
         $key_1     = new EncryptionKey(
             new ConcealedString(random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES))
@@ -76,7 +76,7 @@ final class SymmetricCryptoTest extends TestCase
         SymmetricCrypto::decrypt($ciphertext, $key_2);
     }
 
-    public function testAWronglyFormattedCiphertextCannotBeDecrypted() : void
+    public function testAWronglyFormattedCiphertextCannotBeDecrypted(): void
     {
         $key = new EncryptionKey(
             new ConcealedString(random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES))
@@ -86,7 +86,7 @@ final class SymmetricCryptoTest extends TestCase
         SymmetricCrypto::decrypt('wrongly_formatted_exception', $key);
     }
 
-    public function testAPreviouslyEncryptedValueCanBeDecrypted() : void
+    public function testAPreviouslyEncryptedValueCanBeDecrypted(): void
     {
         $key = new EncryptionKey(new ConcealedString(base64_decode('8sgzyjKu2S90GmxShUuWcFOpum6nIZzlCAoxn3MZdwU=')));
 

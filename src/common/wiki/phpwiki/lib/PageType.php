@@ -88,13 +88,13 @@ class PageType
         }
         $class = "PageType_" . (string) $name;
         if (class_exists($class)) {
-            return new $class;
+            return new $class();
         }
         trigger_error(
             sprintf("PageType '%s' unknown", (string) $name),
             E_USER_WARNING
         );
-        return new PageType_wikitext;
+        return new PageType_wikitext();
     }
 
     /**
@@ -247,12 +247,14 @@ class PageType_interwikimap extends PageType
 
     public function _parseMap($text)
     {
-        if (!preg_match_all(
-            "/^\s*(\S+)\s+(.+)$/m",
-            $text,
-            $matches,
-            PREG_SET_ORDER
-        )) {
+        if (
+            !preg_match_all(
+                "/^\s*(\S+)\s+(.+)$/m",
+                $text,
+                $matches,
+                PREG_SET_ORDER
+            )
+        ) {
             return false;
         }
 

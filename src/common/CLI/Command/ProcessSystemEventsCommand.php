@@ -64,14 +64,14 @@ final class ProcessSystemEventsCommand extends Command
         $this->lock_factory                   = $lock_factory;
     }
 
-    protected function configure() : void
+    protected function configure(): void
     {
         $this
             ->setDescription('Process pending system events')
             ->addArgument('queue', InputArgument::REQUIRED, sprintf('Which queue should be run. Default queue is `%s`', SystemEvent::DEFAULT_QUEUE));
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output) : int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $request_queue = $input->getArgument('queue');
 

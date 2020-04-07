@@ -30,7 +30,6 @@ use PHPUnit\Framework\TestCase;
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Docman_SOAPActionsTest extends TestCase
 {
-
     use MockeryPHPUnitIntegration;
 
     private $MD5Map;

@@ -19,7 +19,7 @@
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation;
 
@@ -37,6 +37,7 @@ use Tuleap\Layout\BreadCrumbDropdown\SubItemsSection;
 class TrackerCreationBreadCrumbsBuilderTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
      */

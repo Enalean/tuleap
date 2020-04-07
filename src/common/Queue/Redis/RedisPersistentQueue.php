@@ -99,7 +99,7 @@ class RedisPersistentQueue implements PersistentQueue
      *
      * This ensure events are re-queued on main event queue before going further
      */
-    private function queuePastEvents(\Redis $redis, string $processing_queue) : void
+    private function queuePastEvents(\Redis $redis, string $processing_queue): void
     {
         $this->connect();
         $this->logger->debug('queuePastEvents');
@@ -127,7 +127,7 @@ class RedisPersistentQueue implements PersistentQueue
         } while ($this->redis->exec() === null);
     }
 
-    private function waitForEvents(\Redis $redis, string $processing_queue, callable $callback) : void
+    private function waitForEvents(\Redis $redis, string $processing_queue, callable $callback): void
     {
         $this->logger->debug('Wait for events');
         $message_counter = 0;

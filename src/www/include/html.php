@@ -44,8 +44,10 @@ function html_image($src, $args, $display = 1)
     }
 
     // ## if no height AND no width tag, insert em both
-    if ((!isset($args['height']) || !$args['height']) &&
-            (!isset($args['width'])  || !$args['width'])) {
+    if (
+        (!isset($args['height']) || !$args['height']) &&
+            (!isset($args['width'])  || !$args['width'])
+    ) {
      /* Check to see if we've already fetched the image data */
         if ($img_size) {
             if ((!isset($img_size[$src]) || !$img_size[$src]) && is_file($GLOBALS['sys_urlroot'] . util_get_dir_image_theme() . $src)) {
@@ -324,9 +326,11 @@ function html_build_select_box_from_arrays(
     for ($i = 0; $i < $rows; $i++) {
         //  uggh - sorry - don't show the 100 row and Any row
         //  if it was shown above, otherwise do show it
-        if ((($vals[$i] != '100') && ($vals[$i] != '0')) ||
-        ($vals[$i] == '100' && !$show_100) ||
-        ($vals[$i] == '0' && !$show_any)) {
+        if (
+            (($vals[$i] != '100') && ($vals[$i] != '0')) ||
+            ($vals[$i] == '100' && !$show_100) ||
+            ($vals[$i] == '0' && !$show_any)
+        ) {
             $return .= '
 				<OPTION VALUE="' . $hp->purify($vals[$i]) . '"';
             if (is_array($checked_val)) {

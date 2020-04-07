@@ -36,7 +36,7 @@ final class RESTReferenceCreatorTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testReferenceIsCommunicatedToTheBugzillaServer() : void
+    public function testReferenceIsCommunicatedToTheBugzillaServer(): void
     {
         $http_client = new Client();
         $logger      = Mockery::mock(LoggerInterface::class);

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Docman\ApprovalTable;
 
@@ -32,6 +32,7 @@ use PHPUnit\Framework\TestCase;
 class ApprovalTableRetrieverTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var Docman_VersionFactory|Mockery\MockInterface
      */
@@ -46,7 +47,7 @@ class ApprovalTableRetrieverTest extends TestCase
      */
     private $approval_table_factory;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 

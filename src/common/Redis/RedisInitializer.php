@@ -52,7 +52,7 @@ class RedisInitializer
      * @throws RedisConnectionException
      * @throws \RedisException
      */
-    public function init(\Redis $client) : void
+    public function init(\Redis $client): void
     {
         if ($this->host === '') {
             throw new RedisConnectionException('No Redis server has been setup');

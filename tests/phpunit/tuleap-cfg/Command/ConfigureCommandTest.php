@@ -35,7 +35,7 @@ class ConfigureCommandTest extends \PHPUnit\Framework\TestCase
      */
     private $root;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->root = vfsStream::setup('slash');
     }

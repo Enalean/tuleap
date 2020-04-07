@@ -138,8 +138,10 @@ class Collection
         $compare_with_equals = method_exists($wanted, 'equals');
         //function in_array doesn't work with object ?!
         foreach ($this->elements as $key => $value) {
-            if (($compare_with_equals && $wanted->equals($value))
-                || (!$compare_with_equals && ((method_exists($value, 'equals') && $value->equals($wanted)) || ($wanted === $value)))) {
+            if (
+                ($compare_with_equals && $wanted->equals($value))
+                || (!$compare_with_equals && ((method_exists($value, 'equals') && $value->equals($wanted)) || ($wanted === $value)))
+            ) {
                 unset($this->elements[$key]);
                 return true;
             }

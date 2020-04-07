@@ -41,7 +41,7 @@ final class Docman_CloneItemsVisitorTest extends TestCase // phpcs:ignore Squiz.
 {
     use MockeryPHPUnitIntegration;
 
-    public function testLinkVersionIsCreatedWhenALinkIsCopied() : void
+    public function testLinkVersionIsCreatedWhenALinkIsCopied(): void
     {
         $project_manager      = Mockery::mock(ProjectManager::instance());
         $link_version_factory = Mockery::mock(Docman_LinkVersionFactory::class);

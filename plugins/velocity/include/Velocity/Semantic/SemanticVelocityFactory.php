@@ -26,7 +26,7 @@ use Tuleap\AgileDashboard\Semantic\SemanticDone;
 
 class SemanticVelocityFactory
 {
-    public function getInstanceByTracker(Tracker $tracker) : SemanticVelocity
+    public function getInstanceByTracker(Tracker $tracker): SemanticVelocity
     {
         return SemanticVelocity::load($tracker);
     }

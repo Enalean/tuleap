@@ -30,8 +30,8 @@ use URLVerification;
 
 class URLVerificationPrivateRestrictedTest extends TestCase
 {
-
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     private $url_verification;
 

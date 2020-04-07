@@ -31,7 +31,9 @@ use PHPUnit\Framework\TestCase;
 
 final class URLVerificationPermissionsOverriderRestrictedPlatformAndNoOverriderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
+    use ForgeConfigSandbox;
 
     private $url_verification;
     private $event_manager;

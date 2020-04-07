@@ -182,8 +182,10 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
             if ($user === null) {
                 continue;
             }
-            if ($user->getStatus() !== PFUser::STATUS_PENDING && $user->getStatus() !== PFUser::STATUS_VALIDATED &&
-                $user->getStatus() !== PFUser::STATUS_VALIDATED_RESTRICTED) {
+            if (
+                $user->getStatus() !== PFUser::STATUS_PENDING && $user->getStatus() !== PFUser::STATUS_VALIDATED &&
+                $user->getStatus() !== PFUser::STATUS_VALIDATED_RESTRICTED
+            ) {
                 continue;
             }
 

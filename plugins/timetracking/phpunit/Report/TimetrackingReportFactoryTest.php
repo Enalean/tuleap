@@ -58,7 +58,7 @@ class TimetrackingReportFactoryTest extends TestCase
      */
     private $tracker;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

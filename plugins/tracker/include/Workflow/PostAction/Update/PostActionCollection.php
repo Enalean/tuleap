@@ -160,37 +160,37 @@ class PostActionCollection implements PostActionVisitor
         $validator->validate($tracker, ...$this->set_float_value_actions);
     }
 
-    public function getFrozenFieldsPostActions() : array
+    public function getFrozenFieldsPostActions(): array
     {
         return $this->frozen_fields_actions;
     }
 
-    public function getHiddenFieldsetsPostActions() : array
+    public function getHiddenFieldsetsPostActions(): array
     {
         return $this->hidden_fieldsets_actions;
     }
 
-    public function getCIBuildPostActions() : array
+    public function getCIBuildPostActions(): array
     {
         return $this->ci_build_actions;
     }
 
-    public function getSetDateValuePostActions() : array
+    public function getSetDateValuePostActions(): array
     {
         return $this->set_date_value_actions;
     }
 
-    public function getSetIntValuePostActions() : array
+    public function getSetIntValuePostActions(): array
     {
         return $this->set_int_value_actions;
     }
 
-    public function getSetFloatValuePostActions() : array
+    public function getSetFloatValuePostActions(): array
     {
         return $this->set_float_value_actions;
     }
 
-    public function getExternalPostActionsValue() : array
+    public function getExternalPostActionsValue(): array
     {
         return $this->external_post_actions;
     }

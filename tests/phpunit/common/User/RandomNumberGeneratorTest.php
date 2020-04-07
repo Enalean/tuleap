@@ -22,7 +22,8 @@
 class RandomNumberGeneratorTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    public function testItGeneratesTokenOfTheAskedSize() : void
+
+    public function testItGeneratesTokenOfTheAskedSize(): void
     {
         $number_generator_8_bits = new RandomNumberGenerator(1);
         $this->assertEquals(2, strlen($number_generator_8_bits->getNumber()));

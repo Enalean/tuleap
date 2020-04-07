@@ -21,7 +21,9 @@
 
 final class PermissionManagerTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\GlobalResponseMock, \Tuleap\GlobalLanguageMock;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\GlobalResponseMock;
+    use \Tuleap\GlobalLanguageMock;
 
     /**
      * @var Tracker_Permission_PermissionSetter

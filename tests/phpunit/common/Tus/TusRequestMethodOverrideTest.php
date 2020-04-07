@@ -32,7 +32,7 @@ final class TusRequestMethodOverrideTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testMethodCanBeOverridden() : void
+    public function testMethodCanBeOverridden(): void
     {
         $request = Mockery::mock(ServerRequestInterface::class);
         $request->shouldReceive('getHeaderLine')->with('X-Http-Method-Override')->andReturn('PATCH');
@@ -46,7 +46,7 @@ final class TusRequestMethodOverrideTest extends TestCase
         $method_overrider->process($request, new AlwaysSuccessfulRequestHandler($response_factory));
     }
 
-    public function testMethodIsLeftUntouchedWhenThereIsNoOverrideHeader() : void
+    public function testMethodIsLeftUntouchedWhenThereIsNoOverrideHeader(): void
     {
         $request = Mockery::mock(ServerRequestInterface::class);
         $request->shouldReceive('getHeaderLine')->with('X-Http-Method-Override')->andReturn('');
@@ -57,7 +57,7 @@ final class TusRequestMethodOverrideTest extends TestCase
         $method_overrider->process($request, new AlwaysSuccessfulRequestHandler($response_factory));
     }
 
-    public function testRequestIsRejectedIfTheMethodToOverrideIsNotAllowed() : void
+    public function testRequestIsRejectedIfTheMethodToOverrideIsNotAllowed(): void
     {
         $request = Mockery::mock(ServerRequestInterface::class);
         $request->shouldReceive('getHeaderLine')->with('X-Http-Method-Override')->andReturn('PATCH');
@@ -71,7 +71,7 @@ final class TusRequestMethodOverrideTest extends TestCase
         $this->assertEquals(405, $response->getStatusCode());
     }
 
-    public function testRequestIsRejectedIfTheRequestedOverrideMethodIsNotAllowed() : void
+    public function testRequestIsRejectedIfTheRequestedOverrideMethodIsNotAllowed(): void
     {
         $request = Mockery::mock(ServerRequestInterface::class);
         $request->shouldReceive('getHeaderLine')->with('X-Http-Method-Override')->andReturn('LOCK');

@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 final class Transition_PostAction_Field_DateTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\GlobalLanguageMock, \Tuleap\GlobalResponseMock;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\GlobalLanguageMock;
+    use \Tuleap\GlobalResponseMock;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElementFactory

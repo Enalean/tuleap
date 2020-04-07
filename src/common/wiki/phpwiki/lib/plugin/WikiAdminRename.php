@@ -85,8 +85,10 @@ class WikiPlugin_WikiAdminRename extends WikiPlugin_WikiAdminSelect
         $options = array('regex' => @$post_args['regex'],
                          'icase' => @$post_args['icase']);
         foreach ($pages as $name) {
-            if (($newname = $this->renameHelper($name, $from, $to, $options))
-                 and $newname != $name) {
+            if (
+                ($newname = $this->renameHelper($name, $from, $to, $options))
+                 and $newname != $name
+            ) {
                 if ($dbi->isWikiPage($newname)) {
                     $ul->pushContent(HTML::li(fmt(
                         "Page %s already exists. Ignored.",
@@ -153,8 +155,10 @@ class WikiPlugin_WikiAdminRename extends WikiPlugin_WikiAdminSelect
         if ($p && !$request->isPost()) {
             $pages = $p;
         }
-        if ($p && $request->isPost() &&
-            !empty($post_args['rename']) && empty($post_args['cancel'])) {
+        if (
+            $p && $request->isPost() &&
+            !empty($post_args['rename']) && empty($post_args['cancel'])
+        ) {
             // without individual PagePermissions:
             if (!ENABLE_PAGEPERM and !$request->_user->isAdmin()) {
                 $request->_notAuthorized(WIKIAUTH_ADMIN);

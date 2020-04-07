@@ -34,7 +34,8 @@ use Tuleap\Upload\FileBeingUploadedInformation;
 
 class FileUploadFinisherTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     public function testThumbnailIsGenerated(): void
     {

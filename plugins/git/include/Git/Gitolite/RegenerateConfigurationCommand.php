@@ -51,7 +51,7 @@ class RegenerateConfigurationCommand extends Command
         $this->system_event_manager = $system_event_manager;
     }
 
-    protected function configure() : void
+    protected function configure(): void
     {
         $this->setDescription('Force the re-generation of the Gitolite configuration')
             ->addArgument(
@@ -67,7 +67,7 @@ class RegenerateConfigurationCommand extends Command
             );
     }
 
-    public function execute(InputInterface $input, OutputInterface $output) : int
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $should_all_configurations_be_regenerated = $input->getOption('all');
         if ($should_all_configurations_be_regenerated) {
@@ -77,7 +77,7 @@ class RegenerateConfigurationCommand extends Command
         return $this->regenerateConfigurationsOfSomeProjects($output, $input->getArgument('project_ids'));
     }
 
-    private function regenerateAllConfigurations(OutputInterface $output) : int
+    private function regenerateAllConfigurations(OutputInterface $output): int
     {
         $projects    = $this->project_manager->getProjectsByStatus(\Project::STATUS_ACTIVE);
         $project_ids = [];
@@ -93,7 +93,7 @@ class RegenerateConfigurationCommand extends Command
     /**
      * @param string[] $project_ids
      */
-    private function regenerateConfigurationsOfSomeProjects(OutputInterface $output, array $project_ids) : int
+    private function regenerateConfigurationsOfSomeProjects(OutputInterface $output, array $project_ids): int
     {
         $verified_project_ids = [];
         foreach ($project_ids as $project_id) {

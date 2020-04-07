@@ -47,7 +47,7 @@ class ArtifactTest extends TrackerBase
      */
     private $xml_client;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -82,7 +82,8 @@ class ArtifactTest extends TrackerBase
 
     private function getReleaseTrackerInformation()
     {
-        if ($this->release_name_field_id &&
+        if (
+            $this->release_name_field_id &&
             $this->release_status_field_id &&
             $this->release_status_current_value_id
         ) {
@@ -229,10 +230,10 @@ class ArtifactTest extends TrackerBase
         $this->assertEquals((string) $artifact_xml->values_by_field->slogan->value, 'slogan');
     }
 
-    private function verifySloganAndStatusFieldPresenceAndValue(SimpleXMLElement $items) : void
+    private function verifySloganAndStatusFieldPresenceAndValue(SimpleXMLElement $items): void
     {
         $this->assertTrue(
-            (static function (SimpleXMLElement $items) : bool {
+            (static function (SimpleXMLElement $items): bool {
                 foreach ($items as $item) {
                     if ((string) $item->label === 'Slogan' && (string) $item->value === 'slogan') {
                         return true;
@@ -243,11 +244,13 @@ class ArtifactTest extends TrackerBase
             'Slogan field not found or with an incorrect value'
         );
         $this->assertTrue(
-            (function (SimpleXMLElement $items) : bool {
+            (function (SimpleXMLElement $items): bool {
                 foreach ($items as $item) {
-                    if ((string) $item->label === 'Status' &&
+                    if (
+                        (string) $item->label === 'Status' &&
                         (string) $item->values->item->label === 'SM New' &&
-                        (int) $item->bind_value_ids === $this->status_value_id) {
+                        (int) $item->bind_value_ids === $this->status_value_id
+                    ) {
                         return true;
                     }
                 }

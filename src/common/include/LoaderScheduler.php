@@ -36,13 +36,13 @@ class LoaderScheduler
         $this->plugin_loader  = $plugin_loader;
     }
 
-    public function loadPluginsThenStartSession($is_script) : void
+    public function loadPluginsThenStartSession($is_script): void
     {
         $this->plugin_loader->loadPlugins();
         $this->startSession($is_script);
     }
 
-    private function startSession($is_script) : void
+    private function startSession($is_script): void
     {
         if (! $is_script) {
             PHP_Session::start();

@@ -36,7 +36,7 @@ class UserTokenVerifierTest extends TestCase
     private $user_manager;
     private $current_time;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->dao          = \Mockery::mock(UserAuthorizationDAO::class);
         $this->hasher       = \Mockery::mock(SplitTokenVerificationStringHasher::class);

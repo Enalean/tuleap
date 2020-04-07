@@ -143,19 +143,22 @@ final class FileToUploadCreator
             throw new UploadIllegalNameException();
         }
 
-        if ($this->file_factory->isFileBaseNameExists(
-            $name,
-            $release->getReleaseID(),
-            $release->getGroupID()
-        )
+        if (
+            $this->file_factory->isFileBaseNameExists(
+                $name,
+                $release->getReleaseID(),
+                $release->getGroupID()
+            )
         ) {
             throw new UploadFileNameAlreadyExistsException();
         }
 
-        if ($this->file_factory->isSameFileMarkedToBeRestored(
-            $name,
-            $release->getReleaseID()
-        )) {
+        if (
+            $this->file_factory->isSameFileMarkedToBeRestored(
+                $name,
+                $release->getReleaseID()
+            )
+        ) {
             throw new UploadFileMarkedToBeRestoredException();
         }
     }

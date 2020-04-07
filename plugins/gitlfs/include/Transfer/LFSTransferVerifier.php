@@ -80,7 +80,8 @@ class LFSTransferVerifier
             return;
         }
 
-        if ($this->filesystem->has($object_path_ready_to_be_available) &&
+        if (
+            $this->filesystem->has($object_path_ready_to_be_available) &&
             $this->lfs_object_retriever->doesLFSObjectExists($lfs_object)
         ) {
             $this->lfs_object_dao->saveObjectReferenceByOIDValue(

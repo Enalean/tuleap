@@ -54,7 +54,7 @@ final class TransitionRetrieverTest extends TestCase
         $this->transition_retriever = new TransitionRetriever($this->state_factory, $this->transition_extractor);
     }
 
-    public function testTransitionForAnArtifactStateCanBeRetrieved() : void
+    public function testTransitionForAnArtifactStateCanBeRetrieved(): void
     {
         $artifact = Mockery::mock(Tracker_Artifact::class);
 
@@ -86,7 +86,7 @@ final class TransitionRetrieverTest extends TestCase
         $this->assertSame($expected_transition, $transition);
     }
 
-    public function testFirstTransitionForAnArtifactStateDoesNotExistWhenThereIsNoWorkflow() : void
+    public function testFirstTransitionForAnArtifactStateDoesNotExistWhenThereIsNoWorkflow(): void
     {
         $artifact = Mockery::mock(Tracker_Artifact::class);
         $artifact->shouldReceive('getWorkflow')->andReturn(null);
@@ -95,7 +95,7 @@ final class TransitionRetrieverTest extends TestCase
         $this->transition_retriever->getReferenceTransitionForCurrentState($artifact);
     }
 
-    public function testFirstTransitionForAnArtifactStateDoesNotExistWhenWorkflowIsNotUsed() : void
+    public function testFirstTransitionForAnArtifactStateDoesNotExistWhenWorkflowIsNotUsed(): void
     {
         $artifact = Mockery::mock(Tracker_Artifact::class);
 
@@ -107,7 +107,7 @@ final class TransitionRetrieverTest extends TestCase
         $this->transition_retriever->getReferenceTransitionForCurrentState($artifact);
     }
 
-    public function testFirstTransitionForAnArtifactStateCanNotBeFoundWhenWorkflowIsInAdvancedMode() : void
+    public function testFirstTransitionForAnArtifactStateCanNotBeFoundWhenWorkflowIsInAdvancedMode(): void
     {
         $artifact = Mockery::mock(Tracker_Artifact::class);
 
@@ -120,7 +120,7 @@ final class TransitionRetrieverTest extends TestCase
         $this->transition_retriever->getReferenceTransitionForCurrentState($artifact);
     }
 
-    public function testFirstTransitionCanNotBeFoundForAnArtifactStateWhenChangesetsAreMissing() : void
+    public function testFirstTransitionCanNotBeFoundForAnArtifactStateWhenChangesetsAreMissing(): void
     {
         $artifact = Mockery::mock(Tracker_Artifact::class);
 
@@ -135,7 +135,7 @@ final class TransitionRetrieverTest extends TestCase
         $this->transition_retriever->getReferenceTransitionForCurrentState($artifact);
     }
 
-    public function testFirstTransitionCanNotBeFoundForAnArtifactStateWhenChangesetValueForAFieldDoesNotExist() : void
+    public function testFirstTransitionCanNotBeFoundForAnArtifactStateWhenChangesetValueForAFieldDoesNotExist(): void
     {
         $artifact = Mockery::mock(Tracker_Artifact::class);
 

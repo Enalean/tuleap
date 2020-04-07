@@ -23,6 +23,7 @@ use PHPUnit\Framework\TestCase;
 class AgileDashboard_KanbanColumnManagerTest extends TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var int
      */

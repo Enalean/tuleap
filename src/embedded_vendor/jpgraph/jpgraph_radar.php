@@ -351,7 +351,7 @@ class RadarAxis extends AxisPrototype
             $this->title->Stroke($this->img, $xt - $dx * $w, $yt - $dy * $h, $title);
         }
     }
-} // Class
+}
 
 
 //===================================================
@@ -424,7 +424,7 @@ class RadarGrid
             $pnts = array();
         }
     }
-} // Class
+}
 
 
 //===================================================
@@ -592,7 +592,7 @@ class RadarPlot
             $graph->legend->Add($this->legend, $this->color, $this->mark);
         }
     }
-} // Class
+}
 
 //===================================================
 // CLASS RadarGraph
@@ -792,8 +792,10 @@ class RadarGraph extends Graph
         if (!$this->yscale->IsSpecified() && count($this->plots) > 0) {
             list($min,$max) = $this->GetPlotsYMinMax($this->plots);
             $this->yscale->AutoScale($this->img, 0, $max, $this->len / $this->ytick_factor);
-        } elseif ($this->yscale->IsSpecified() &&
-                ( $this->yscale->auto_ticks || !$this->yscale->ticks->IsSpecified())) {
+        } elseif (
+            $this->yscale->IsSpecified() &&
+                ( $this->yscale->auto_ticks || !$this->yscale->ticks->IsSpecified())
+        ) {
             // The tick calculation will use the user suplied min/max values to determine
             // the ticks. If auto_ticks is false the exact user specifed min and max
             // values will be used for the scale.
@@ -920,6 +922,6 @@ class RadarGraph extends Graph
             }
         }
     }
-} // Class
+}
 
 /* EOF */

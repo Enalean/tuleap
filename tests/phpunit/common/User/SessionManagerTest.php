@@ -42,7 +42,7 @@ final class SessionManagerTest extends \PHPUnit\Framework\TestCase
      */
     private $session_dao;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->user_manager            = \Mockery::spy(\UserManager::class);
@@ -50,7 +50,7 @@ final class SessionManagerTest extends \PHPUnit\Framework\TestCase
         $this->session_dao             = \Mockery::spy(\SessionDao::class);
     }
 
-    public function testItThrowsAnExceptionWhenTheSessionIdentifierIsMalformed() : void
+    public function testItThrowsAnExceptionWhenTheSessionIdentifierIsMalformed(): void
     {
         $session_manager = new SessionManager($this->user_manager, $this->session_dao, $this->random_number_generator);
 
@@ -60,7 +60,7 @@ final class SessionManagerTest extends \PHPUnit\Framework\TestCase
         $session_manager->getUser($session_identifier, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS);
     }
 
-    public function testItThrowsAnExceptionWhenTheSessionIsNotFound() : void
+    public function testItThrowsAnExceptionWhenTheSessionIsNotFound(): void
     {
         $session_manager = new SessionManager($this->user_manager, $this->session_dao, $this->random_number_generator);
 
@@ -72,7 +72,7 @@ final class SessionManagerTest extends \PHPUnit\Framework\TestCase
         $session_manager->getUser($session_identifier, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS);
     }
 
-    public function testItThrowsAnExceptionWhenTokenDoesNotMatch() : void
+    public function testItThrowsAnExceptionWhenTokenDoesNotMatch(): void
     {
         $session_manager = new SessionManager($this->user_manager, $this->session_dao, $this->random_number_generator);
 
@@ -86,7 +86,7 @@ final class SessionManagerTest extends \PHPUnit\Framework\TestCase
         $session_manager->getUser($session_identifier, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS);
     }
 
-    public function testItThrowsAnExceptionWhenTheUserCanNotBeRetrieved() : void
+    public function testItThrowsAnExceptionWhenTheUserCanNotBeRetrieved(): void
     {
         $session_manager = new SessionManager($this->user_manager, $this->session_dao, $this->random_number_generator);
 
@@ -104,7 +104,7 @@ final class SessionManagerTest extends \PHPUnit\Framework\TestCase
         $session_manager->getUser($session_identifier, self::CURRENT_TIME, self::SESSION_LIFETIME_2_WEEKS);
     }
 
-    public function testItGetsTheUserFromTheSessionIdentifier() : void
+    public function testItGetsTheUserFromTheSessionIdentifier(): void
     {
         $session_manager = new SessionManager($this->user_manager, $this->session_dao, $this->random_number_generator);
 
@@ -127,7 +127,7 @@ final class SessionManagerTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($user, $session_user);
     }
 
-    public function testItThrowsAnExceptionWhenTheSessionCanNotBeCreated() : void
+    public function testItThrowsAnExceptionWhenTheSessionCanNotBeCreated(): void
     {
         $session_manager = new SessionManager($this->user_manager, $this->session_dao, $this->random_number_generator);
 
@@ -139,7 +139,7 @@ final class SessionManagerTest extends \PHPUnit\Framework\TestCase
         $session_manager->createSession($user, $request, self::CURRENT_TIME);
     }
 
-    public function testItCreatesANewSession() : void
+    public function testItCreatesANewSession(): void
     {
         $session_manager = new SessionManager($this->user_manager, $this->session_dao, $this->random_number_generator);
 

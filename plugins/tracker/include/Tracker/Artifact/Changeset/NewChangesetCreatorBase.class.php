@@ -140,15 +140,17 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
                         $url_mapping
                     );
 
-                    if (! $this->storeComment(
-                        $artifact,
-                        $comment,
-                        $submitter,
-                        $submitted_on,
-                        $comment_format,
-                        $changeset_id,
-                        $url_mapping
-                    )) {
+                    if (
+                        ! $this->storeComment(
+                            $artifact,
+                            $comment,
+                            $submitter,
+                            $submitted_on,
+                            $comment_format,
+                            $changeset_id,
+                            $url_mapping
+                        )
+                    ) {
                         throw new Tracker_CommentNotStoredException();
                     }
 
@@ -229,15 +231,17 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         CreatedFileURLMapping $url_mapping
     ): bool {
         foreach ($this->fields_retriever->getFields($artifact) as $field) {
-            if (! $this->saveNewChangesetForField(
-                $field,
-                $artifact,
-                $previous_changeset,
-                $fields_data,
-                $submitter,
-                $changeset_id,
-                $url_mapping
-            )) {
+            if (
+                ! $this->saveNewChangesetForField(
+                    $field,
+                    $artifact,
+                    $previous_changeset,
+                    $fields_data,
+                    $submitter,
+                    $changeset_id,
+                    $url_mapping
+                )
+            ) {
                 $purifier = Codendi_HTMLPurifier::instance();
                 throw new Tracker_FieldValueNotStoredException(
                     $GLOBALS['Language']->getText(

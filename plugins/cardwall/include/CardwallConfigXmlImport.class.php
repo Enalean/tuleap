@@ -122,7 +122,7 @@ class CardwallConfigXmlImport
     private function importCardwalls(SimpleXMLElement $cardwalls)
     {
         foreach ($cardwalls->{CardwallConfigXml::NODE_TRACKERS}->children() as $cardwall_tracker) {
-            $cardwall_tracker_xml_id = (String) $cardwall_tracker[CardwallConfigXml::ATTRIBUTE_TRACKER_ID];
+            $cardwall_tracker_xml_id = (string) $cardwall_tracker[CardwallConfigXml::ATTRIBUTE_TRACKER_ID];
             if (array_key_exists($cardwall_tracker_xml_id, $this->mapping)) {
                 $tracker_id = $this->mapping[$cardwall_tracker_xml_id];
                 $this->importOneCardwall($cardwall_tracker, $tracker_id);

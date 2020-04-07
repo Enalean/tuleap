@@ -72,7 +72,7 @@ class documentPlugin extends Plugin // phpcs:ignore
         return $this->pluginInfo;
     }
 
-    public function getOldPluginInfo() : DocmanPluginInfo
+    public function getOldPluginInfo(): DocmanPluginInfo
     {
         if (!$this->old_docman_plugin_info) {
             $this->old_docman_plugin_info = new DocmanPluginInfo($this->getDocmanPlugin());
@@ -133,7 +133,7 @@ class documentPlugin extends Plugin // phpcs:ignore
         );
     }
 
-    public function getProjectExtractor() : DocumentTreeProjectExtractor
+    public function getProjectExtractor(): DocumentTreeProjectExtractor
     {
         return new DocumentTreeProjectExtractor(ProjectManager::instance());
     }

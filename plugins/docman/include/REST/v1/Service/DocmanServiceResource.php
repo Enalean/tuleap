@@ -111,7 +111,7 @@ final class DocmanServiceResource extends AuthenticatedResource
      * @param int $id Id of the project
      */
 
-    public function optionsService(int $id) : void
+    public function optionsService(int $id): void
     {
         Header::allowOptionsGet();
     }

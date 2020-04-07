@@ -51,7 +51,7 @@ abstract class Tracker_Widget_Renderer extends Widget
         }
     }
 
-    private function getRenderer() : ?Tracker_Report_Renderer
+    private function getRenderer(): ?Tracker_Report_Renderer
     {
         $store_in_session = false;
         $arrf             = Tracker_Report_RendererFactory::instance();

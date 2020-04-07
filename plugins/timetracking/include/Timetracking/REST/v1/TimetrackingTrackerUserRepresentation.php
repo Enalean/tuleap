@@ -48,7 +48,7 @@ class TimetrackingTrackerUserRepresentation
         $this->minutes   = $minutes;
     }
 
-    public static function build(string $user_name, int $user_id, int $minutes) : TimetrackingTrackerUserRepresentation
+    public static function build(string $user_name, int $user_id, int $minutes): TimetrackingTrackerUserRepresentation
     {
         return new self($user_name, $user_id, $minutes);
     }

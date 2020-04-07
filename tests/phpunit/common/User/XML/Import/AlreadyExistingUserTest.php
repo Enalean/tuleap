@@ -27,7 +27,7 @@ final class AlreadyExistingUserTest extends \PHPUnit\Framework\TestCase
     /** @var AlreadyExistingUser */
     private $user;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->user = new AlreadyExistingUser(
             new \PFUser(['user_name' => 'cstevens', 'language_id' => 'en']),
@@ -36,17 +36,17 @@ final class AlreadyExistingUserTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItReturnsFalseWhenActionIsCreate() : void
+    public function testItReturnsFalseWhenActionIsCreate(): void
     {
         $this->assertFalse($this->user->isActionAllowed('create'));
     }
 
-    public function testItReturnsFalseWhenActionIsActivate() : void
+    public function testItReturnsFalseWhenActionIsActivate(): void
     {
         $this->assertTrue($this->user->isActionAllowed('noop'));
     }
 
-    public function testItReturnsFalseWhenActionIsMap() : void
+    public function testItReturnsFalseWhenActionIsMap(): void
     {
         $this->assertTrue($this->user->isActionAllowed('map'));
     }

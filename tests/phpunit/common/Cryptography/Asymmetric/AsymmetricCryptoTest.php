@@ -31,13 +31,13 @@ final class AsymmetricCryptoTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testItCannotBeInstantiated() : void
+    public function testItCannotBeInstantiated(): void
     {
         $this->expectException(\RuntimeException::class);
         new AsymmetricCrypto();
     }
 
-    public function testASignedMessageCanBeVerified() : void
+    public function testASignedMessageCanBeVerified(): void
     {
         $key_pair   = \sodium_crypto_sign_keypair();
         $secret_key = new SignatureSecretKey(new ConcealedString(\sodium_crypto_sign_secretkey($key_pair)));
@@ -50,7 +50,7 @@ final class AsymmetricCryptoTest extends TestCase
         $this->assertTrue($is_signature_valid);
     }
 
-    public function testAnInvalidSignedMessageIsNotVerified() : void
+    public function testAnInvalidSignedMessageIsNotVerified(): void
     {
         $secret_key1 = new SignatureSecretKey(
             new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SIGN_SECRETKEYBYTES))
@@ -66,7 +66,7 @@ final class AsymmetricCryptoTest extends TestCase
         $this->assertFalse($is_signature_valid);
     }
 
-    public function testInvalidSignatureIsRejected() : void
+    public function testInvalidSignatureIsRejected(): void
     {
         $public_key = \Mockery::mock(SignaturePublicKey::class);
 

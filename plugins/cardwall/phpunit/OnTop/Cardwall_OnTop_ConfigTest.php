@@ -34,7 +34,7 @@ final class Cardwall_OnTop_ConfigTest extends \PHPUnit\Framework\TestCase
      */
     private $config;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -65,7 +65,7 @@ final class Cardwall_OnTop_ConfigTest extends \PHPUnit\Framework\TestCase
         $this->artifact->shouldReceive('getLastChangeset')->andReturn($changset);
     }
 
-    public function testItAsksForMappingByGivenListOfColumns() : void
+    public function testItAsksForMappingByGivenListOfColumns(): void
     {
         $tracker                 = $this->buildTracker(4);
         $dao                     = \Mockery::spy(\Cardwall_OnTop_Dao::class);
@@ -80,7 +80,7 @@ final class Cardwall_OnTop_ConfigTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('whatever', $config->getMappings());
     }
 
-    public function testItReturnsNullIfThereIsNoMapping() : void
+    public function testItReturnsNullIfThereIsNoMapping(): void
     {
         $tracker = $this->buildTracker(1);
         $mapping_tracker = $this->buildTracker(2);
@@ -93,7 +93,7 @@ final class Cardwall_OnTop_ConfigTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($config->getMappingFor($mapping_tracker));
     }
 
-    public function testItReturnsTheCorrespondingMapping() : void
+    public function testItReturnsTheCorrespondingMapping(): void
     {
         $tracker                 = $this->buildTracker(1);
         $mapping_tracker         = $this->buildTracker(99);
@@ -108,7 +108,7 @@ final class Cardwall_OnTop_ConfigTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($mapping, $config->getMappingFor($mapping_tracker));
     }
 
-    public function testItIsNotInColumnWhenNoFieldAndNoMapping() : void
+    public function testItIsNotInColumnWhenNoFieldAndNoMapping(): void
     {
         $this->config->shouldReceive('getMappingFor')->andReturns(null);
         $field_provider = \Mockery::spy(\Cardwall_FieldProviders_CustomFieldRetriever::class);
@@ -117,7 +117,7 @@ final class Cardwall_OnTop_ConfigTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($this->config->isInColumn($this->artifact, $field_provider, $column));
     }
 
-    public function testItIsMappedToAColumnWhenTheStatusValueMatchColumnMapping() : void
+    public function testItIsMappedToAColumnWhenTheStatusValueMatchColumnMapping(): void
     {
         $this->config->shouldReceive('getMappingFor')->andReturns($this->mapping);
 
@@ -130,7 +130,7 @@ final class Cardwall_OnTop_ConfigTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($this->config->isInColumn($this->artifact, $field_provider, $column));
     }
 
-    public function testItIsNotMappedWhenTheStatusValueDoesntMatchColumnMapping() : void
+    public function testItIsNotMappedWhenTheStatusValueDoesntMatchColumnMapping(): void
     {
         $this->config->shouldReceive('getMappingFor')->andReturns($this->mapping);
 
@@ -143,7 +143,7 @@ final class Cardwall_OnTop_ConfigTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($this->config->isInColumn($this->artifact, $field_provider, $column));
     }
 
-    public function testItIsMappedToAColumnWhenStatusIsNullAndNoneIsMappedToColumn() : void
+    public function testItIsMappedToAColumnWhenStatusIsNullAndNoneIsMappedToColumn(): void
     {
         $this->config->shouldReceive('getMappingFor')->andReturns($this->mapping);
 
@@ -156,7 +156,7 @@ final class Cardwall_OnTop_ConfigTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($this->config->isInColumn($this->artifact, $field_provider, $column));
     }
 
-    public function testItIsMappedToColumnIfStatusMatchColumn() : void
+    public function testItIsMappedToColumnIfStatusMatchColumn(): void
     {
         $this->config->shouldReceive('getMappingFor')->andReturns($this->mapping);
 
@@ -169,7 +169,7 @@ final class Cardwall_OnTop_ConfigTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($this->config->isInColumn($this->artifact, $field_provider, $column));
     }
 
-    public function testItIsMappedToColumnIfStatusIsNullAndMatchColumnNone() : void
+    public function testItIsMappedToColumnIfStatusIsNullAndMatchColumnNone(): void
     {
         $this->config->shouldReceive('getMappingFor')->andReturns($this->mapping);
 

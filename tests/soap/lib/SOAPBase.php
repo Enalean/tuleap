@@ -38,7 +38,7 @@ class SOAPBase extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Classes.
 
     private static $user_ids;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

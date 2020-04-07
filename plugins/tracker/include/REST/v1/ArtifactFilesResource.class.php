@@ -71,7 +71,7 @@ class ArtifactFilesResource
      * @throws RestException 404
      * @throws RestException 406
      */
-    protected function getId($id, $offset = 0, $limit = self::DEFAULT_LIMIT) : FileDataRepresentation
+    protected function getId($id, $offset = 0, $limit = self::DEFAULT_LIMIT): FileDataRepresentation
     {
         $this->checkLimitValue($limit);
 
@@ -89,7 +89,7 @@ class ArtifactFilesResource
     /**
      * @throws RestException 404
      */
-    private function getAttachedFileInfo(int $id) : Tracker_FileInfo
+    private function getAttachedFileInfo(int $id): Tracker_FileInfo
     {
         $file_info_factory = new Tracker_FileInfoFactory(
             new Tracker_FileInfoDao(),

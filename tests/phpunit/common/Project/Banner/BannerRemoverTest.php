@@ -29,7 +29,7 @@ final class BannerRemoverTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testBannerIsRemoved() : void
+    public function testBannerIsRemoved(): void
     {
         $dao            = \Mockery::mock(BannerDao::class);
         $banner_remover = new BannerRemover($dao);

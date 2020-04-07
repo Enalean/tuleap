@@ -31,7 +31,8 @@ use Tuleap\GlobalLanguageMock;
 
 class SemanticDescriptionTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /**
      * @var Tracker_Semantic_Description

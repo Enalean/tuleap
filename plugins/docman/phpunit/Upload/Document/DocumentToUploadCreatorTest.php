@@ -45,7 +45,7 @@ final class DocumentToUploadCreatorTest extends TestCase
      */
     private $permissions_item_updater;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         \ForgeConfig::store();
 
@@ -54,7 +54,7 @@ final class DocumentToUploadCreatorTest extends TestCase
         $this->permissions_item_updater = Mockery::mock(PermissionItemUpdater::class);
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         \ForgeConfig::restore();
     }
@@ -111,7 +111,7 @@ final class DocumentToUploadCreatorTest extends TestCase
         $this->assertSame(12, $document_to_upload->getItemId());
     }
 
-    public function permissionsForGroupsDataProvider() : array
+    public function permissionsForGroupsDataProvider(): array
     {
         return [
             [new DocmanItemPermissionsForGroupsSet([])],

@@ -24,9 +24,10 @@ declare(strict_types=1);
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 final class ArtifactRulesManagerTest extends \PHPUnit\Framework\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\GlobalResponseMock;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\GlobalResponseMock;
 
-    public function testValidate() : void
+    public function testValidate(): void
     {
         /*
         Fields:
@@ -200,7 +201,7 @@ final class ArtifactRulesManagerTest extends \PHPUnit\Framework\TestCase
         //$this->assertEqual($GLOBALS['feedback'],  'f_1(a_1) -> f_2(b_2)');
     }
 
-    public function testForbidden() : void
+    public function testForbidden(): void
     {
         $r1 = new ArtifactRuleValue(1, 1, 'A', '1', 'B', '2');
         $r2 = new ArtifactRuleValue(2, 1, 'B', '3', 'C', '4');
@@ -255,7 +256,7 @@ final class ArtifactRulesManagerTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($arm->fieldIsAForbiddenTarget(1, 'D', 'D'), "Field D cannot be the target of field D");
     }
 
-    public function testFieldHasSourceTarget() : void
+    public function testFieldHasSourceTarget(): void
     {
         $r1 = new ArtifactRuleValue(1, 1, 'A', '1', 'B', '2');
         $r2 = new ArtifactRuleValue(2, 1, 'B', '3', 'C', '4');
@@ -282,7 +283,7 @@ final class ArtifactRulesManagerTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($arm->fieldHasTarget(1, 'F'));
     }
 
-    public function testIsCyclic() : void
+    public function testIsCyclic(): void
     {
         $r1 = new ArtifactRuleValue(1, 1, 'A', '1', 'B', '2');
         $r2 = new ArtifactRuleValue(2, 1, 'B', '3', 'C', '4');
@@ -325,7 +326,7 @@ final class ArtifactRulesManagerTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($arm->isCyclic(1, 'E', 'E'));
     }
 
-    public function testRuleExists() : void
+    public function testRuleExists(): void
     {
         $r1 = new ArtifactRuleValue(1, 1, 'A', '1', 'B', '2');
         $r2 = new ArtifactRuleValue(2, 1, 'B', '3', 'C', '4');
@@ -369,7 +370,7 @@ final class ArtifactRulesManagerTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($arm->ruleExists(1, 'E', 'E'));
     }
 
-    public function testValueHasSourceTarget() : void
+    public function testValueHasSourceTarget(): void
     {
         $r1 = new ArtifactRuleValue(1, 1, 'A', '1', 'B', '2');
         $r2 = new ArtifactRuleValue(2, 1, 'B', '3', 'C', '4');

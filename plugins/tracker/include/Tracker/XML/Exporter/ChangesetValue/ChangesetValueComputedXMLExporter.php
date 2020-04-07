@@ -115,7 +115,8 @@ class ChangesetValueComputedXMLExporter extends Tracker_XML_Exporter_ChangesetVa
     ) {
         $number_of_changeset = count($artifact->getChangesets());
 
-        if ($number_of_changeset === 1 ||
+        if (
+            $number_of_changeset === 1 ||
             ($number_of_changeset > 1 && ! $changeset_value->isManualValue()) ||
             $this->previousChangesetIsNotInManualValue($artifact, $changeset_value, $number_of_changeset)
         ) {

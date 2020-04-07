@@ -88,7 +88,7 @@ class PluginLoader
         return ForgeConfig::get('codendi_cache_dir') . '/' . self::HOOK_CACHE_KEY;
     }
 
-    private function getFromCache() : ?SerializedPluginProxy
+    private function getFromCache(): ?SerializedPluginProxy
     {
         if (! file_exists(self::getHooksCacheFile())) {
             return null;
@@ -102,13 +102,13 @@ class PluginLoader
         return new SerializedPluginProxy($cache);
     }
 
-    private function storeInCache(SerializedPluginProxy $proxy) : void
+    private function storeInCache(SerializedPluginProxy $proxy): void
     {
         self::invalidateCache();
         $this->serializeInFile(self::getHooksCacheFile(), $proxy->getSerializablePluginCache());
     }
 
-    private function serializeInFile(string $path, EventPluginCache $var) : void
+    private function serializeInFile(string $path, EventPluginCache $var): void
     {
         $content = '<?php' . PHP_EOL . 'return ' . VarExporter::export($var) . ';';
         try {

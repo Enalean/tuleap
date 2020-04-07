@@ -57,8 +57,10 @@ class Tracker_Artifact_Changeset_ChangesetDataInitializator
             if ($field instanceof Tracker_FormElement_Field_SubmittedOn) {
                  $tracker_data[$field->getId()] = $artifact->getSubmittedOn();
             }
-            if ($field instanceof Tracker_FormElement_Field_Date &&
-                    ! array_key_exists($field->getId(), $tracker_data)) {
+            if (
+                $field instanceof Tracker_FormElement_Field_Date &&
+                    ! array_key_exists($field->getId(), $tracker_data)
+            ) {
                 //user doesn't have access to field
                 $tracker_data[$field->getId()] = $field->getValue($field->getId());
             }

@@ -53,7 +53,7 @@ class AddedLinkByNatureCollection implements ICollectChangeOfLinksBetweenTwoChan
         $this->added[] = $artifactlinkinfo;
     }
 
-    public function fetchFormatted(PFUser $user, $format, $ignore_perms) : string
+    public function fetchFormatted(PFUser $user, $format, $ignore_perms): string
     {
         if ($this->nature->shortname) {
             return sprintf(dgettext('tuleap-tracker', 'Added %s: %s'), $this->nature->forward_label, $this->formatter->format($this->added, $user, $format, $ignore_perms));

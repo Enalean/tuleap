@@ -36,7 +36,7 @@ final class SOAPRequestValidatorImplementationTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testNoExceptionIsRaisedWhenTheUserCanAccessTheProject() : void
+    public function testNoExceptionIsRaisedWhenTheUserCanAccessTheProject(): void
     {
         $access_checker = Mockery::mock(ProjectAccessChecker::class);
         $validator      = new SOAPRequestValidatorImplementation(
@@ -50,7 +50,7 @@ final class SOAPRequestValidatorImplementationTest extends TestCase
         $validator->assertUserCanAccessProject(Mockery::mock(PFUser::class), Mockery::mock(Project::class));
     }
 
-    public function testAnExceptionIsRaisedWhenTheUserCanNotAccessTheProject() : void
+    public function testAnExceptionIsRaisedWhenTheUserCanNotAccessTheProject(): void
     {
         $access_checker = Mockery::mock(ProjectAccessChecker::class);
         $validator      = new SOAPRequestValidatorImplementation(
@@ -69,7 +69,7 @@ final class SOAPRequestValidatorImplementationTest extends TestCase
         $validator->assertUserCanAccessProject(Mockery::mock(PFUser::class), Mockery::mock(Project::class));
     }
 
-    public function testCurrentUserIsRetrievedWhenSessionKeyIsValid() : void
+    public function testCurrentUserIsRetrievedWhenSessionKeyIsValid(): void
     {
         $user_manager = Mockery::mock(UserManager::class);
         $validator    = new SOAPRequestValidatorImplementation(
@@ -87,7 +87,7 @@ final class SOAPRequestValidatorImplementationTest extends TestCase
         $this->assertSame($expected_user, $user);
     }
 
-    public function testAnExceptionIsThrownWhenSessionKeyIsInvalid() : void
+    public function testAnExceptionIsThrownWhenSessionKeyIsInvalid(): void
     {
         $user_manager = Mockery::mock(UserManager::class);
         $validator    = new SOAPRequestValidatorImplementation(

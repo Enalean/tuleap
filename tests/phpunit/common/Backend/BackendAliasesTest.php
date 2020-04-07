@@ -34,12 +34,13 @@ use Tuleap\ForgeConfigSandbox;
 
 final class BackendAliasesTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     private $alias_file;
     private $backend;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $GLOBALS['alias_file']         = vfsStream::setup()->url() . '/aliases.codendi';
         $this->alias_file              = $GLOBALS['alias_file'];
@@ -82,19 +83,19 @@ final class BackendAliasesTest extends TestCase
         EventManager::clearInstance();
     }
 
-    public function testItReturnsTrueInCaseOfSuccess() : void
+    public function testItReturnsTrueInCaseOfSuccess(): void
     {
         $this->backend->shouldReceive('system')->andReturns(true);
         $this->assertEquals($this->backend->update(), true);
     }
 
-    public function testItRunNewaliasesCommand() : void
+    public function testItRunNewaliasesCommand(): void
     {
         $this->backend->shouldReceive('system')->with('/usr/bin/newaliases > /dev/null')->once();
         $this->backend->update();
     }
 
-    public function testItGeneratesAnAliasesFile() : void
+    public function testItGeneratesAnAliasesFile(): void
     {
         $this->backend->shouldReceive('system')->andReturns(true);
         $this->backend->update();
@@ -102,7 +103,7 @@ final class BackendAliasesTest extends TestCase
         $this->assertFalse($aliases === false);
     }
 
-    public function testItGenerateSiteWideAliases() : void
+    public function testItGenerateSiteWideAliases(): void
     {
         $this->backend->shouldReceive('system')->andReturns(true);
         $this->backend->update();
@@ -110,7 +111,7 @@ final class BackendAliasesTest extends TestCase
         $this->assertStringContainsString('codendi-contact', $aliases, "Codendi-wide aliases not set");
     }
 
-    public function testItGeneratesMailingListAliases() : void
+    public function testItGeneratesMailingListAliases(): void
     {
         $this->backend->shouldReceive('system')->andReturns(true);
         $this->backend->update();
@@ -120,7 +121,7 @@ final class BackendAliasesTest extends TestCase
         $this->assertStringContainsString('"listwithanunexpectednewline":', $aliases);
     }
 
-    public function testItGeneratesUserAliasesGivenByPlugins() : void
+    public function testItGeneratesUserAliasesGivenByPlugins(): void
     {
         $this->backend->shouldReceive('system')->andReturns(true);
         $this->backend->update();

@@ -44,7 +44,7 @@ class CumulativeFlowChartTest extends TestCase
      */
     private $report;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         $this->report = Mockery::mock(\Tracker_Report::class);
 

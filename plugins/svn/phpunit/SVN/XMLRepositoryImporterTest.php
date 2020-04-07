@@ -19,7 +19,7 @@
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\SVN;
 
@@ -51,7 +51,9 @@ use UserManager;
 
 class XMLRepositoryImporterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalSVNPollution;
+    use MockeryPHPUnitIntegration;
+    use GlobalSVNPollution;
+
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|XMLRepositoryImporter
      */

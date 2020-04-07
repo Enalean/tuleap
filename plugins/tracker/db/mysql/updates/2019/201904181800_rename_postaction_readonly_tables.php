@@ -36,7 +36,7 @@ class b201904181800_rename_postaction_readonly_tables extends ForgeUpgrade_Bucke
         $this->renameFieldsTable();
     }
 
-    private function renamePostActionTable() : void
+    private function renamePostActionTable(): void
     {
         $sql         = "RENAME TABLE plugin_tracker_workflow_transition_postactions_read_only TO plugin_tracker_workflow_postactions_frozen_fields";
         $exec_result = $this->db->dbh->exec($sql);
@@ -46,7 +46,7 @@ class b201904181800_rename_postaction_readonly_tables extends ForgeUpgrade_Bucke
         }
     }
 
-    private function renameFieldsTable() : void
+    private function renameFieldsTable(): void
     {
         $sql         = "RENAME TABLE plugin_tracker_workflow_transition_postactions_read_only_fields TO plugin_tracker_workflow_postactions_frozen_fields_value";
         $exec_result = $this->db->dbh->exec($sql);

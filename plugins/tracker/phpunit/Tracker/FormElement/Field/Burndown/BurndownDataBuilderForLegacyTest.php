@@ -33,6 +33,7 @@ use Tuleap\Tracker\UserWithReadAllPermissionBuilder;
 class BurndownDataBuilderForLegacyTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var string
      */
@@ -51,7 +52,7 @@ class BurndownDataBuilderForLegacyTest extends TestCase
      */
     private $burndown_data_builder;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -93,7 +94,7 @@ class BurndownDataBuilderForLegacyTest extends TestCase
         $GLOBALS['Language']->shouldReceive('getText');
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         date_default_timezone_set($this->original_timezone);
         unset($GLOBALS['Language']);

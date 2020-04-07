@@ -37,7 +37,7 @@ class ArtifactViewBuilderTest extends TestCase
      */
     private $builder;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -72,7 +72,7 @@ class ArtifactViewBuilderTest extends TestCase
         );
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         unset($GLOBALS['_SESSION']);
     }

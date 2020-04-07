@@ -66,7 +66,7 @@ final class DocmanFileDownloadController extends DispatchablePSR15Compatible imp
         $this->logger                           = $logger;
     }
 
-    public function handle(ServerRequestInterface $request) : ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $item = $this->item_factory->getItemFromDb($request->getAttribute('file_id'));
 

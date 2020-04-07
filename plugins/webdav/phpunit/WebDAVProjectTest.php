@@ -41,7 +41,8 @@ require_once __DIR__ . '/bootstrap.php';
  */
 final class WebDAVProjectTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /**
      * Testing when The project have no active services

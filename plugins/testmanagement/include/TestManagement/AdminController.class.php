@@ -124,7 +124,8 @@ class AdminController extends TestManagementController
             false
         );
 
-        if ($campaign_tracker_id === false ||
+        if (
+            $campaign_tracker_id === false ||
             $campaign_tracker_id === null ||
             $definition_tracker_id === false ||
             $definition_tracker_id === null ||

@@ -68,7 +68,7 @@ class CollectorTest extends TestCase
         $this->project->shouldReceive('getUnixNameLowerCase')->andReturn('leprojet');
     }
 
-    public function testCollectSizeForGitoliteRepositories() : void
+    public function testCollectSizeForGitoliteRepositories(): void
     {
         $this->git_log_dao->shouldReceive('hasRepositoriesUpdatedAfterGivenDate')->andReturn(true);
         $this->git_log_dao->shouldReceive('hasRepositories')->andReturn(true);
@@ -79,7 +79,7 @@ class CollectorTest extends TestCase
         $this->assertEquals(11, $this->collector->collectForGitoliteRepositories($this->project));
     }
 
-    public function testCollectSizeWhenNoRepositories() : void
+    public function testCollectSizeWhenNoRepositories(): void
     {
         $this->git_log_dao->shouldReceive('hasRepositoriesUpdatedAfterGivenDate')->andReturn(false);
         $this->git_log_dao->shouldReceive('hasRepositories')->andReturn(false);
@@ -90,7 +90,7 @@ class CollectorTest extends TestCase
         $this->assertEquals(11, $this->collector->collectForGitoliteRepositories($this->project));
     }
 
-    public function testCollectLastSizeWhenNoNewCommit() : void
+    public function testCollectLastSizeWhenNoNewCommit(): void
     {
         $this->git_log_dao->shouldReceive('hasRepositoriesUpdatedAfterGivenDate')->andReturn(false);
         $this->git_log_dao->shouldReceive('hasRepositories')->andReturn(true);

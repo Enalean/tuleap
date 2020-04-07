@@ -34,7 +34,7 @@ final class ItemBeingCopiedExpectation
         $this->expected_title = $expected_title;
     }
 
-    public function getExpectedTitle() : string
+    public function getExpectedTitle(): string
     {
         return $this->expected_title;
     }

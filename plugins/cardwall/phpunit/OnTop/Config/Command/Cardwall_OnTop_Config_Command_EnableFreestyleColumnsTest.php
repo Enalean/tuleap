@@ -25,7 +25,7 @@ final class Cardwall_OnTop_Config_Command_EnableFreestyleColumnsTest extends \PH
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -37,7 +37,7 @@ final class Cardwall_OnTop_Config_Command_EnableFreestyleColumnsTest extends \PH
         $this->command = new Cardwall_OnTop_Config_Command_EnableFreestyleColumns($tracker, $this->dao);
     }
 
-    public function testItEnablesIfItIsNotAlreadyTheCase() : void
+    public function testItEnablesIfItIsNotAlreadyTheCase(): void
     {
         $request = new HTTPRequest();
         $request->set('use_freestyle_columns', '1');
@@ -47,7 +47,7 @@ final class Cardwall_OnTop_Config_Command_EnableFreestyleColumnsTest extends \PH
         $this->command->execute($request);
     }
 
-    public function testItDoesNotEnableIfItIsNotAlreadyTheCase() : void
+    public function testItDoesNotEnableIfItIsNotAlreadyTheCase(): void
     {
         $request = new HTTPRequest();
         $request->set('use_freestyle_columns', '1');
@@ -57,7 +57,7 @@ final class Cardwall_OnTop_Config_Command_EnableFreestyleColumnsTest extends \PH
         $this->command->execute($request);
     }
 
-    public function testItDisablesIfItIsNotAlreadyTheCase() : void
+    public function testItDisablesIfItIsNotAlreadyTheCase(): void
     {
         $request = new HTTPRequest();
         $request->set('use_freestyle_columns', '0');
@@ -67,7 +67,7 @@ final class Cardwall_OnTop_Config_Command_EnableFreestyleColumnsTest extends \PH
         $this->command->execute($request);
     }
 
-    public function testItDoesNotDisableIfItIsNotAlreadyTheCase() : void
+    public function testItDoesNotDisableIfItIsNotAlreadyTheCase(): void
     {
         $request = new HTTPRequest();
         $request->set('use_freestyle_columns', '0');

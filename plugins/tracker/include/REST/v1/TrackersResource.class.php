@@ -798,7 +798,7 @@ class TrackersResource extends AuthenticatedResource
         throw new I18NRestException(400, dgettext('tuleap-tracker', 'Please provide a valid query.'));
     }
 
-    private function getModeUpdater() : ModeUpdater
+    private function getModeUpdater(): ModeUpdater
     {
         return new ModeUpdater(
             new Workflow_Dao(),
@@ -813,12 +813,12 @@ class TrackersResource extends AuthenticatedResource
         );
     }
 
-    private function getTransitionReplicator() : TransitionReplicator
+    private function getTransitionReplicator(): TransitionReplicator
     {
         return TransitionReplicatorBuilder::build();
     }
 
-    private function deactivateLegacyTransitions(Tracker $tracker) : void
+    private function deactivateLegacyTransitions(Tracker $tracker): void
     {
         $workflow_id = $tracker->getWorkflow()->getId();
 

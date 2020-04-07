@@ -62,10 +62,12 @@ if ($ldapPlugin && $pluginManager->isPluginAvailable($ldapPlugin)) {
 //print_r($_SERVER['argv']);
     $arg = extract_params($_SERVER['argv']);
 //print_r($arg);
-    if (isset($arg['ldapid'])
-    && isset($arg['realname'])
-    && isset($arg['email'])
-    && isset($arg['uid'])) {
+    if (
+        isset($arg['ldapid'])
+        && isset($arg['realname'])
+        && isset($arg['email'])
+        && isset($arg['uid'])
+    ) {
         //  Check if user exists
         $user = UserManager::instance()->getUserByLdapId($arg['ldapid']);
         if ($user) {

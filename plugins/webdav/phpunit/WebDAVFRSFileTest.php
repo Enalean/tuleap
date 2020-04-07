@@ -40,7 +40,8 @@ require_once __DIR__ . '/bootstrap.php';
  */
 final class WebDAVFRSFileTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /**
      * Testing delete when user is not admin

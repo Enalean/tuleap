@@ -24,7 +24,7 @@ namespace Tuleap\Tus;
 
 abstract class TusServerException extends \RuntimeException
 {
-    final public function getHTTPStatusCode() : int
+    final public function getHTTPStatusCode(): int
     {
         return (int) $this->getCode();
     }

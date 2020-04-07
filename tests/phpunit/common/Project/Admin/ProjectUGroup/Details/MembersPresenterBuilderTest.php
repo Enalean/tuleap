@@ -32,7 +32,8 @@ use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 
 final class MembersPresenterBuilderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /**
      * @var MembersPresenterBuilder

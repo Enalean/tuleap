@@ -27,7 +27,8 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
     $vImmutableTagsWhitelist = new Valid_Text('immutable-tags-whitelist');
     $vImmutableTagsPath      = new Valid_Text('immutable-tags-path');
 
-    if ($request->valid($vImmutableTagsWhitelist) &&
+    if (
+        $request->valid($vImmutableTagsWhitelist) &&
         $request->valid($vImmutableTagsPath)
     ) {
         $immutable_tags_whitelist = trim($request->get('immutable-tags-whitelist'));

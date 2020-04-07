@@ -65,7 +65,8 @@ class PullRequestFileRepresentationFactory
         $modified_files_iterator->attachIterator(new \ArrayIterator($modified_files_line_stat));
 
         foreach ($modified_files_iterator as list($name_status_line, $lines_stat_line)) {
-            if (preg_match('/(?P<status>[A-Z])\\t(?P<file_name>.+)/', $name_status_line, $name_status) !== 1 ||
+            if (
+                preg_match('/(?P<status>[A-Z])\\t(?P<file_name>.+)/', $name_status_line, $name_status) !== 1 ||
                 preg_match(
                     '/(?P<added_lines>(\d|-)+)\\t(?P<removed_lines>(\d|-)+)\\t(?P<file_name>.+)/',
                     $lines_stat_line,

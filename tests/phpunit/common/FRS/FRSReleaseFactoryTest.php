@@ -50,7 +50,7 @@ class FRSReleaseFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore 
         ProjectManager::setInstance($project_manager);
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         parent::tearDown();
         ProjectManager::clearInstance();

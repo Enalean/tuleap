@@ -41,7 +41,7 @@ class FieldValueMatcherTest extends TestCase
      */
     private $matcher;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

@@ -36,7 +36,7 @@ final class ConditionalTuleapCronEnvExecutionDelayer implements ExecutionDelayer
         $this->execution_delayer = $execution_delayer;
     }
 
-    public function delay() : void
+    public function delay(): void
     {
         if (getenv(self::DELAY_ENV_VAR_NAME) === '1') {
             $this->execution_delayer->delay();

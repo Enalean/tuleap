@@ -140,7 +140,8 @@ class StatisticsPlugin extends Plugin
 
     public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
     {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0
+        if (
+            strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0
             && ! strpos($_SERVER['REQUEST_URI'], 'project_stat.php')
         ) {
             $event->setIsInBurningParrotCompatiblePage();
@@ -249,7 +250,8 @@ class StatisticsPlugin extends Plugin
     public function cssFile($params)
     {
         // This stops styles inadvertently clashing with the main site.
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
+        if (
+            strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0
         ) {
             echo '<link rel="stylesheet" type="text/css" href="' . $this->getAssets()->getFileURL('style-fp.css') . '" />' . "\n";

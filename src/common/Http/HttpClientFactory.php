@@ -31,12 +31,12 @@ class HttpClientFactory
 {
     private const TIMEOUT = 5;
 
-    public static function createClient(Plugin ...$plugins) : \Psr\Http\Client\ClientInterface
+    public static function createClient(Plugin ...$plugins): \Psr\Http\Client\ClientInterface
     {
         return self::createClientWithStandardConfig(...$plugins);
     }
 
-    public static function createAsyncClient(Plugin ...$plugins) : \Http\Client\HttpAsyncClient
+    public static function createAsyncClient(Plugin ...$plugins): \Http\Client\HttpAsyncClient
     {
         return self::createClientWithStandardConfig(...$plugins);
     }
@@ -46,7 +46,7 @@ class HttpClientFactory
      * query internal resources. Queries requested by users (e.g. webhooks)
      * MUST NOT use it.
      */
-    public static function createClientForInternalTuleapUse(Plugin ...$plugins) : \Psr\Http\Client\ClientInterface
+    public static function createClientForInternalTuleapUse(Plugin ...$plugins): \Psr\Http\Client\ClientInterface
     {
         return self::createClientWithConfigForInternalTuleapUse(...$plugins);
     }
@@ -56,7 +56,7 @@ class HttpClientFactory
      * query internal resources. Queries requested by users (e.g. webhooks)
      * MUST NOT use it.
      */
-    public static function createAsyncClientForInternalTuleapUse(Plugin ...$plugins) : \Http\Client\HttpAsyncClient
+    public static function createAsyncClientForInternalTuleapUse(Plugin ...$plugins): \Http\Client\HttpAsyncClient
     {
         return self::createClientWithConfigForInternalTuleapUse(...$plugins);
     }

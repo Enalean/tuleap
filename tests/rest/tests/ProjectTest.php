@@ -106,7 +106,7 @@ class ProjectTest extends ProjectBase
         $this->assertEquals($response->getStatusCode(), 201);
     }
 
-    public function testProjectCreationWithAnIncorrectProjectIDFails() : void
+    public function testProjectCreationWithAnIncorrectProjectIDFails(): void
     {
         $post_resource = json_encode([
             'label'       => 'Invalid project creation template ID',
@@ -127,7 +127,7 @@ class ProjectTest extends ProjectBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    public function testProjectCreationWithXMLTemplate() : void
+    public function testProjectCreationWithXMLTemplate(): void
     {
         $post_resource = json_encode([
             'label'       => 'Created from scrum XML template',

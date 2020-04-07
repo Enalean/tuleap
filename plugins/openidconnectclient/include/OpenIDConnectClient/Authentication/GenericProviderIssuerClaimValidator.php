@@ -29,7 +29,7 @@ use Tuleap\OpenIDConnectClient\Provider\Provider;
  */
 final class GenericProviderIssuerClaimValidator implements IssuerClaimValidator
 {
-    public function isIssuerClaimValid(Provider $provider, string $iss_from_id_token) : bool
+    public function isIssuerClaimValid(Provider $provider, string $iss_from_id_token): bool
     {
         /*
          * OpenID Connect Core Standard said the issuer identifier must exactly match

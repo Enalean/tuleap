@@ -22,7 +22,8 @@
 
 class ForgeUpgradeConfigTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\TemporaryTestDirectory;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\TemporaryTestDirectory;
 
     private $fixtures;
     private $command;
@@ -35,7 +36,7 @@ class ForgeUpgradeConfigTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
      */
     private $forgeupgrade_config;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
         $this->fixtures = $this->getTmpDir();

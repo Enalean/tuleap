@@ -36,7 +36,7 @@ class ConfigPermissionsSerializerGitoliteConfTest extends TestCase
     private $mirror_1;
     private $mirror_2;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
         $this->mirror_mapper = Mockery::spy(\Git_Mirror_MirrorDataMapper::class);
@@ -54,7 +54,7 @@ class ConfigPermissionsSerializerGitoliteConfTest extends TestCase
         \ForgeConfig::set('codendi_cache_dir', $this->cache_dir);
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         exec('rm -rf ' . escapeshellarg($this->cache_dir));
         \ForgeConfig::restore();

@@ -42,7 +42,7 @@ class EqualComparisonChecker extends ComparisonChecker
         parent::visitCurrentDateTimeValueWrapper($value_wrapper, $parameters);
     }
 
-    public function getOperator() : string
+    public function getOperator(): string
     {
         return self::OPERATOR;
     }

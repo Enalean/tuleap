@@ -107,14 +107,14 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
         }
     }
 
-    public function javascript_file($params) : void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function javascript_file($params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL) === 0) {
             echo $this->getIncludeAssets()->getHTMLSnippet('rollup.js');
         }
     }
 
-    private function getIncludeAssets() : IncludeAssets
+    private function getIncludeAssets(): IncludeAssets
     {
         return new IncludeAssets(
             __DIR__ . '/../../../src/www/assets/artifactsfolders/',
@@ -253,7 +253,7 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
         }
     }
 
-    public function process() : void
+    public function process(): void
     {
         if (! defined('TRACKER_BASE_URL')) {
             return;
@@ -275,7 +275,8 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
 
     public function tracker_is_nature_valid($params) // phpcs:ignore
     {
-        if ($this->getDao()->isTrackerConfiguredToContainFolders($params['tracker_id']) === false
+        if (
+            $this->getDao()->isTrackerConfiguredToContainFolders($params['tracker_id']) === false
             && $params['nature'] === NatureInFolderPresenter::NATURE_IN_FOLDER
         ) {
             $params['error'] = "Link between " . $params['artifact']->getId() . " and " . $params['children_id'] . " is inconsistent because tracker " .

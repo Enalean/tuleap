@@ -42,7 +42,7 @@ final class LegacySendMessageController implements DispatchableWithRequest
         $this->project_manager = $project_manager;
     }
 
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables) : void
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         \Tuleap\Project\ServiceInstrumentation::increment('docman');
         $func = $request->getValidated('func', new Valid_WhiteList('func', array('docman_access_request')));

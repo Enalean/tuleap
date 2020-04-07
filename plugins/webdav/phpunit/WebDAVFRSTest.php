@@ -43,7 +43,8 @@ use WebDAVUtils;
  */
 final class WebDAVFRSTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /**
      * Testing when The project have no packages

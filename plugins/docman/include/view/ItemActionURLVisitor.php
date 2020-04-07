@@ -33,22 +33,22 @@ use Tuleap\Docman\Item\ItemVisitor;
 
 final class ItemActionURLVisitor implements ItemVisitor
 {
-    public function visitFolder(Docman_Folder $item, array $params = []) : ?string
+    public function visitFolder(Docman_Folder $item, array $params = []): ?string
     {
         return null;
     }
 
-    public function visitWiki(Docman_Wiki $item, array $params = []) : ?string
+    public function visitWiki(Docman_Wiki $item, array $params = []): ?string
     {
         return null;
     }
 
-    public function visitLink(Docman_Link $item, array $params = []) : ?string
+    public function visitLink(Docman_Link $item, array $params = []): ?string
     {
         return null;
     }
 
-    public function visitFile(Docman_File $item, array $params = []) : ?string
+    public function visitFile(Docman_File $item, array $params = []): ?string
     {
         if (! isset($params['action']) || $params['action'] !== 'show') {
             return null;
@@ -60,17 +60,17 @@ final class ItemActionURLVisitor implements ItemVisitor
         return $download_href;
     }
 
-    public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []) : ?string
+    public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []): ?string
     {
         return null;
     }
 
-    public function visitEmpty(Docman_Empty $item, array $params = []) : ?string
+    public function visitEmpty(Docman_Empty $item, array $params = []): ?string
     {
         return null;
     }
 
-    public function visitItem(Docman_Item $item, array $params = []) : ?string
+    public function visitItem(Docman_Item $item, array $params = []): ?string
     {
         return null;
     }

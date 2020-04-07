@@ -35,7 +35,7 @@ class FieldsExtractor
      *
      * @return Tracker_FormElement_Field[]
      */
-    public function extractFieldsInsideContainer(Tracker_FormElement_Container $container) : array
+    public function extractFieldsInsideContainer(Tracker_FormElement_Container $container): array
     {
         $fields = [];
         foreach ($container->getFormElements() as $form_element) {

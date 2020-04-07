@@ -37,7 +37,7 @@ class DBCreator
         $this->database_name = $database_name;
     }
 
-    public function createDB() : EasyDB
+    public function createDB(): EasyDB
     {
         return Factory::fromArray([
             $this->getDSN(),
@@ -46,7 +46,7 @@ class DBCreator
         ]);
     }
 
-    private function getDSN() : string
+    private function getDSN(): string
     {
         return 'mysql:host=' . \ForgeConfig::get('sys_dbhost') . ';dbname=' . $this->database_name;
     }

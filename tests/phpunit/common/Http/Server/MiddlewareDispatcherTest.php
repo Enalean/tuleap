@@ -34,13 +34,13 @@ final class MiddlewareDispatcherTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testRequestIsDispatched() : void
+    public function testRequestIsDispatched(): void
     {
         $passthrough_middleware = new class implements MiddlewareInterface {
             public function process(
                 ServerRequestInterface $request,
                 RequestHandlerInterface $handler
-            ) : ResponseInterface {
+            ): ResponseInterface {
                 return $handler->handle($request);
             }
         };
@@ -59,19 +59,19 @@ final class MiddlewareDispatcherTest extends TestCase
         $this->assertSame($expected_response, $response);
     }
 
-    public function testMiddlewareStackCannotBeEmpty() : void
+    public function testMiddlewareStackCannotBeEmpty(): void
     {
         $this->expectException(EmptyMiddlewareStackException::class);
         new MiddlewareDispatcher();
     }
 
-    public function testFinalMiddlewareInTheStackMustGenerateAResponse() : void
+    public function testFinalMiddlewareInTheStackMustGenerateAResponse(): void
     {
         $passthrough_middleware = new class implements MiddlewareInterface {
             public function process(
                 ServerRequestInterface $request,
                 RequestHandlerInterface $handler
-            ) : ResponseInterface {
+            ): ResponseInterface {
                 return $handler->handle($request);
             }
         };

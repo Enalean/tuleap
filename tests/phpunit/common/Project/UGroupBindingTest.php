@@ -32,7 +32,9 @@ use UGroupBinding;
 
 final class UGroupBindingTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock, GlobalResponseMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
+    use GlobalResponseMock;
 
     /**
      * @var UGroupBinding

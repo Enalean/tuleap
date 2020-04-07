@@ -165,10 +165,12 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
         $vBody->required();
         $vBody->setErrorMessage($GLOBALS['Language']->getText('forum_forum_utils', 'include_body_and_subject'));
 
-        if ($request->valid($vThreadId)
-           && $request->valid($vFollowUp)
-           && $request->valid($vSubject)
-           && $request->valid($vBody)) {
+        if (
+            $request->valid($vThreadId)
+            && $request->valid($vFollowUp)
+            && $request->valid($vSubject)
+            && $request->valid($vBody)
+        ) {
                post_message(
                    $request->get('thread_id'),
                    $request->get('is_followup_to'),

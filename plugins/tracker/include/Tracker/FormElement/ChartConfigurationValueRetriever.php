@@ -75,7 +75,7 @@ class ChartConfigurationValueRetriever
      *
      * @throws Tracker_FormElement_Chart_Field_Exception
      */
-    public function getTimePeriod(Tracker_Artifact $artifact, PFUser $user) : TimePeriodWithoutWeekEnd
+    public function getTimePeriod(Tracker_Artifact $artifact, PFUser $user): TimePeriodWithoutWeekEnd
     {
         return $this->timeframe_builder->buildTimePeriodWithoutWeekendForArtifactChartRendering(
             $artifact,

@@ -356,7 +356,8 @@ class Tracker_RulesManager
                 $target_field = $request->get('target_field');
                 $tracker_id = $this->tracker->id;
 
-                if ($this->isCyclic($tracker_id, $source_field, $target_field) ||
+                if (
+                    $this->isCyclic($tracker_id, $source_field, $target_field) ||
                     $this->fieldIsAForbiddenSource($tracker_id, $source_field, $target_field) ||
                     $this->fieldIsAForbiddenTarget($tracker_id, $target_field, $source_field)
                 ) {

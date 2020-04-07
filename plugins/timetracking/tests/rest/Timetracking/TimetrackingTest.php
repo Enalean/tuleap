@@ -214,7 +214,7 @@ class TimetrackingTest extends TimetrackingBase
 
         $times_ids = [1, 2];
 
-        for ($offset = 0; $offset <= 1; $offset ++) {
+        for ($offset = 0; $offset <= 1; $offset++) {
             $response = $this->getResponseByName(
                 TimetrackingDataBuilder::USER_TESTER_NAME,
                 $this->client->get('users/' . $this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME] . "/timetracking?limit=1&offset=$offset&query=$query")

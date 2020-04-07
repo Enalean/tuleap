@@ -124,7 +124,7 @@ class Diff3
 {
     public function __construct($orig, $final1, $final2)
     {
-        $eng = new _DiffEngine;
+        $eng = new _DiffEngine();
         $this->ConflictingBlocks = 0;  //Conflict counter
         $this->blocks = $this->diff3(
             $eng->diff($orig, $final1),
@@ -135,7 +135,7 @@ class Diff3
     private function diff3($edits1, $edits2)
     {
         $blocks = array();
-        $bb = new _Diff3_BlockBuilder;
+        $bb = new _Diff3_BlockBuilder();
 
         $e1 = current($edits1);
         $e2 = current($edits2);

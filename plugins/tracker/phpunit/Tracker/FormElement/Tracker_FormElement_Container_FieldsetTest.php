@@ -110,7 +110,7 @@ class Tracker_FormElement_Container_FieldsetTest extends TestCase //phpcs:ignore
         $this->assertEquals($container_should_load_child, $container_fieldset->getFormElements());
     }
 
-    public function testImportFormElementReturnNullWhenNoInstance() : void
+    public function testImportFormElementReturnNullWhenNoInstance(): void
     {
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" standalone="yes"?>

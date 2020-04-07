@@ -42,7 +42,7 @@ class ForgeAccess
         $this->permissions_overrider_manager = $permissions_overrider_manager;
     }
 
-    public function doesPlatformRequireLogin() : bool
+    public function doesPlatformRequireLogin(): bool
     {
         if (ForgeConfig::areAnonymousAllowed() && ! $this->permissions_overrider_manager->doesOverriderForceUsageOfAnonymous()) {
             return false;

@@ -79,9 +79,11 @@ class WikiPlugin_OrphanedPages extends WikiPlugin
             // Test for absence of backlinks. If a page is linked to
             // only by itself, it is still an orphan
             $parent = $links_iter->next();
-            if (!$parent               // page has no parents
+            if (
+                !$parent               // page has no parents
                 or (($parent->getName() == $page->getName())
-                    and !$links_iter->next())) { // or page has only itself as a parent
+                    and !$links_iter->next())
+            ) { // or page has only itself as a parent
                 $pages[] = $page;
             }
         }

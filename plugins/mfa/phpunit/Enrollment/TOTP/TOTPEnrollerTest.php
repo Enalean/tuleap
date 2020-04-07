@@ -54,7 +54,7 @@ class TOTPEnrollerTest extends TestCase
      */
     private $user;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->dao            = \Mockery::mock(TOTPEnrollmentDAO::class);
         $this->encryption_key = \Mockery::mock(EncryptionKey::class);

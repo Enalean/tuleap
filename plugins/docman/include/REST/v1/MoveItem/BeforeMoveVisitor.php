@@ -69,7 +69,7 @@ final class BeforeMoveVisitor implements ItemVisitor
     /**
      * @throws RestException
      */
-    public function visitFolder(Docman_Folder $folder_to_move, array $params = []) : void
+    public function visitFolder(Docman_Folder $folder_to_move, array $params = []): void
     {
         $this->handleItem($folder_to_move);
         $destination_folder = $params['destination'];
@@ -92,7 +92,7 @@ final class BeforeMoveVisitor implements ItemVisitor
     /**
      * @throws RestException
      */
-    public function visitWiki(Docman_Wiki $item, array $params = []) : void
+    public function visitWiki(Docman_Wiki $item, array $params = []): void
     {
         $this->handleDocument($item, $params['destination'], $params['current_time']);
     }
@@ -100,7 +100,7 @@ final class BeforeMoveVisitor implements ItemVisitor
     /**
      * @throws RestException
      */
-    public function visitLink(Docman_Link $item, array $params = []) : void
+    public function visitLink(Docman_Link $item, array $params = []): void
     {
         $this->handleDocument($item, $params['destination'], $params['current_time']);
     }
@@ -108,7 +108,7 @@ final class BeforeMoveVisitor implements ItemVisitor
     /**
      * @throws RestException
      */
-    public function visitFile(Docman_File $item, array $params = []) : void
+    public function visitFile(Docman_File $item, array $params = []): void
     {
         $this->handleDocument($item, $params['destination'], $params['current_time']);
     }
@@ -116,7 +116,7 @@ final class BeforeMoveVisitor implements ItemVisitor
     /**
      * @throws RestException
      */
-    public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []) : void
+    public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []): void
     {
         $this->handleDocument($item, $params['destination'], $params['current_time']);
     }
@@ -124,12 +124,12 @@ final class BeforeMoveVisitor implements ItemVisitor
     /**
      * @throws RestException
      */
-    public function visitEmpty(Docman_Empty $item, array $params = []) : void
+    public function visitEmpty(Docman_Empty $item, array $params = []): void
     {
         $this->handleDocument($item, $params['destination'], $params['current_time']);
     }
 
-    public function visitItem(Docman_Item $item, array $params = []) : void
+    public function visitItem(Docman_Item $item, array $params = []): void
     {
         throw new LogicException('Cannot move a non specialized item');
     }
@@ -141,7 +141,7 @@ final class BeforeMoveVisitor implements ItemVisitor
         Docman_Document $document_to_move,
         Docman_Folder $destination,
         DateTimeImmutable $current_time
-    ) : void {
+    ): void {
         $this->handleItem($document_to_move);
 
         $document_title = $document_to_move->getTitle();
@@ -162,7 +162,7 @@ final class BeforeMoveVisitor implements ItemVisitor
     /**
      * @throws RestException
      */
-    private function handleItem(Docman_Item $item_to_move) : void
+    private function handleItem(Docman_Item $item_to_move): void
     {
         $this->checkTypeExpectation($item_to_move);
 
@@ -177,7 +177,7 @@ final class BeforeMoveVisitor implements ItemVisitor
     /**
      * @throws RestException
      */
-    private function checkTypeExpectation(Docman_Item $item) : void
+    private function checkTypeExpectation(Docman_Item $item): void
     {
         if (! $item->accept($this->does_item_has_expected_type)) {
             throw new RestException(400, 'The item to move does not match the type expected by the route');

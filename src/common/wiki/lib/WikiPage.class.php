@@ -397,11 +397,13 @@ class WikiPage
     public function delete()
     {
         if ($this->exist()) {
-            if ($this->wiki_dao->deleteWikiPage($this->id)
+            if (
+                $this->wiki_dao->deleteWikiPage($this->id)
                 && $this->wiki_dao->deleteWikiPageVersion($this->id)
                 && $this->wiki_dao->deleteLinksFromToWikiPage($this->id)
                 && $this->wiki_dao->deleteWikiPageFromNonEmptyList($this->id)
-                && $this->wiki_dao->deleteWikiPageRecentInfos($this->id)) {
+                && $this->wiki_dao->deleteWikiPageRecentInfos($this->id)
+            ) {
                 $this->id = 0;
                 return true;
             } else {

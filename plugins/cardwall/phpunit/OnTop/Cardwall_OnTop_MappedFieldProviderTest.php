@@ -25,7 +25,7 @@ final class Cardwall_OnTop_MappedFieldProviderTest extends \PHPUnit\Framework\Te
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testItProvidesTheStatusFieldIfNoMapping() : void
+    public function testItProvidesTheStatusFieldIfNoMapping(): void
     {
         $tracker  = \Mockery::spy(\Tracker::class);
 
@@ -37,7 +37,7 @@ final class Cardwall_OnTop_MappedFieldProviderTest extends \PHPUnit\Framework\Te
         $this->assertEquals($status_field, $provider->getField($tracker));
     }
 
-    public function testItProvidesTheMappedFieldIfThereIsAMapping() : void
+    public function testItProvidesTheMappedFieldIfThereIsAMapping(): void
     {
         $tracker  = Mockery::mock(Tracker::class);
 
@@ -52,7 +52,7 @@ final class Cardwall_OnTop_MappedFieldProviderTest extends \PHPUnit\Framework\Te
         $this->assertEquals($mapped_field, $provider->getField($tracker));
     }
 
-    public function testItReturnsNullIfThereIsACustomMappingButNoFieldChoosenYet() : void
+    public function testItReturnsNullIfThereIsACustomMappingButNoFieldChoosenYet(): void
     {
         $tracker  = Mockery::mock(Tracker::class);
 

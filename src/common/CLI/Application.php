@@ -93,7 +93,7 @@ class Application extends \Symfony\Component\Console\Application
     {
         return array_merge(
             parent::getDefaultCommands(),
-            [new ClearCachesCommand, new RestoreCachesCommand, new PlatformAccessControlCommand]
+            [new ClearCachesCommand(), new RestoreCachesCommand(), new PlatformAccessControlCommand()]
         );
     }
 }

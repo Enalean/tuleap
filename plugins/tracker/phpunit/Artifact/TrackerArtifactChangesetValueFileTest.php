@@ -28,7 +28,8 @@ use Tuleap\GlobalLanguageMock;
 
 class TrackerArtifactChangesetValueFileTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /**
      * @var Tracker_Artifact_Changeset|\Mockery\MockInterface|Tracker_Artifact_Changeset

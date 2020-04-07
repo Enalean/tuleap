@@ -28,7 +28,8 @@ require_once __DIR__ . '/../../../bootstrap.php';
 
 class ReplicationHTTPUserAuthenticatorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /**
      * @var \PasswordHandler

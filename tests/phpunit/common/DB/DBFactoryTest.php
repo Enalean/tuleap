@@ -29,13 +29,13 @@ final class DBFactoryTest extends TestCase
 {
     use ForgeConfigSandbox;
 
-    public function testConnectionsAreOnlyCreatedOncePerDatabaseName() : void
+    public function testConnectionsAreOnlyCreatedOncePerDatabaseName(): void
     {
         $this->assertSame(DBFactory::getMainTuleapDBConnection(), DBFactory::getMainTuleapDBConnection());
         $this->assertSame(DBFactory::getDBConnection('my_db'), DBFactory::getDBConnection('my_db'));
     }
 
-    public function testConnectionsForDifferentDatabaseNameAreDifferent() : void
+    public function testConnectionsForDifferentDatabaseNameAreDifferent(): void
     {
         $this->assertNotSame(DBFactory::getDBConnection('my_db'), DBFactory::getDBConnection('my_db2'));
     }

@@ -38,7 +38,8 @@ class SVN_CommitMessageValidator
 
     public function assertCommitMessageIsValid(Project $project, $commit_message)
     {
-        if ($project->isSVNMandatoryRef()
+        if (
+            $project->isSVNMandatoryRef()
             && ! $this->reference_manager->stringContainsReferences($commit_message, $project)
         ) {
             throw new Exception('Commit message must contains a reference');

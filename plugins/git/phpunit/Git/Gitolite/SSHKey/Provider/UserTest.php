@@ -28,7 +28,8 @@ require_once __DIR__ . '/../../../../bootstrap.php';
 class UserTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    public function testItExtractsUserSSHKeys() : void
+
+    public function testItExtractsUserSSHKeys(): void
     {
         $key1_user1 = new Key('user1', 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDgTGQXojsjAemABiCqPS9k7h5VLigeNhfJFc1Xx3DRZ0B1+eCAI7IT65VzYEHlkW8pTK9IZO6yFLM5aYiLF5GD1VoDxP7zuslCU5gTIl1eWJzMQY/5mc4IP+8dk+p4CoTlXwU5xnZatUWwiF8PnaM2evga4sAwLHBZ8QqiNIaHEQ== Home');
         $key2_user1 = new Key('user1', 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDF8IKZurK86EWGW2Q8jYkiXmkWZfEQ2SJlYnIylWMey0tRB5pr9G9oKbKt25RHigfeFJXgKIvPhAku5R08ejfoAG+/V3H8cXqf0zk0VxuIuTZk7OJ+8ll0i8x52Daepr102i7agnNk2c7CQ9Tz2+sXgYrMVPK4QroEOXY1rFCbHQ== Work');
@@ -49,7 +50,7 @@ class UserTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected_result, array_values(iterator_to_array($user_with_ssh_key_provider)));
     }
 
-    public function testItDoesNotFindSSHKeyIfNoUsersHaveUploadedOne() : void
+    public function testItDoesNotFindSSHKeyIfNoUsersHaveUploadedOne(): void
     {
         $user_manager       = \Mockery::spy(\UserManager::class);
         $users_with_ssh_key = new ArrayIterator(array());

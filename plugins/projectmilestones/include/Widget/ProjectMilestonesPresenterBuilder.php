@@ -205,7 +205,7 @@ class ProjectMilestonesPresenterBuilder
                 Tracker_ArtifactFactory::instance(),
                 $milestone_factory,
                 $planning_factory,
-                new AgileDashboard_Milestone_Backlog_BacklogItemBuilder,
+                new AgileDashboard_Milestone_Backlog_BacklogItemBuilder(),
                 new RemainingEffortValueRetriever(Tracker_FormElementFactory::instance()),
                 new ArtifactsInExplicitBacklogDao(),
                 new Tracker_Artifact_PriorityDao()

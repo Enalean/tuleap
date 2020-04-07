@@ -27,7 +27,8 @@ use Tuleap\GlobalLanguageMock;
 
 final class CreateTestProjectTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /**
      * @dataProvider userNameProvider

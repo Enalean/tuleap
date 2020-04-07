@@ -40,7 +40,7 @@ class PermissionsExporterTest extends TestCase
      */
     private $permissions_exporter;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->frozen_field_detector = \Mockery::mock(FrozenFieldDetector::class);
         $this->permissions_exporter  = new PermissionsExporter(

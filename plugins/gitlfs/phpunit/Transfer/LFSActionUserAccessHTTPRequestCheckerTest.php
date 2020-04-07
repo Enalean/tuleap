@@ -40,7 +40,7 @@ class LFSActionUserAccessHTTPRequestCheckerTest extends TestCase
     private $authorization_token_unserializer;
     private $authorization_verifier;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->plugin                           = \Mockery::mock(\gitlfsPlugin::class);
         $this->authorization_token_unserializer = \Mockery::mock(SplitTokenIdentifierTranslator::class);
@@ -104,7 +104,7 @@ class LFSActionUserAccessHTTPRequestCheckerTest extends TestCase
     public function testRequestWithAnIncorrectlyFormattedAuthorizationIsDenied()
     {
         $this->authorization_token_unserializer->shouldReceive('getSplitToken')
-            ->andThrow(new InvalidIdentifierFormatException);
+            ->andThrow(new InvalidIdentifierFormatException());
 
         $access_checker = new LFSActionUserAccessHTTPRequestChecker(
             $this->plugin,

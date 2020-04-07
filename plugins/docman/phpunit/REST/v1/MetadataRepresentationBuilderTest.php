@@ -36,7 +36,7 @@ class MetadataRepresentationBuilderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testItBuildMetadataWithoutBasicProperties() : void
+    public function testItBuildMetadataWithoutBasicProperties(): void
     {
         $item = Mockery::mock(\Docman_Item::class);
 
@@ -112,7 +112,7 @@ class MetadataRepresentationBuilderTest extends TestCase
         $this->assertEquals($representation, $expected_representation);
     }
 
-    public function testMetadataWithDatePropertyIsCorrectlyBuilt() : void
+    public function testMetadataWithDatePropertyIsCorrectlyBuilt(): void
     {
         $item = Mockery::mock(\Docman_Item::class);
 
@@ -154,7 +154,7 @@ class MetadataRepresentationBuilderTest extends TestCase
      * @testWith [0]
      *           ["0"]
      */
-    public function testMetadataWithDatePropertyButWithoutActualValueIsCorrectlyBuilt($value) : void
+    public function testMetadataWithDatePropertyButWithoutActualValueIsCorrectlyBuilt($value): void
     {
         $item = Mockery::mock(\Docman_Item::class);
 
@@ -192,7 +192,7 @@ class MetadataRepresentationBuilderTest extends TestCase
         $this->assertEquals([$expected_representation], $representation);
     }
 
-    public function testMetadataOwnerPropertyIsCorrectlyBuilt() : void
+    public function testMetadataOwnerPropertyIsCorrectlyBuilt(): void
     {
         $item = Mockery::mock(\Docman_Item::class);
 

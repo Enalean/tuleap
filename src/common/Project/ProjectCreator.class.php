@@ -835,7 +835,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      * @throws Project_InvalidShortName_Exception
      * @throws ProjectDescriptionMandatoryException
      */
-    private function checkProjectCreationData(ProjectCreationData $data) : void
+    private function checkProjectCreationData(ProjectCreationData $data): void
     {
         if (!$this->rule_short_name->isValid($data->getUnixName())) {
             throw new Project_InvalidShortName_Exception($this->rule_short_name->getErrorMessage());

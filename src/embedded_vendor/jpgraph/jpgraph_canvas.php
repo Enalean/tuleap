@@ -95,6 +95,6 @@ class CanvasGraph extends Graph
             }
         }
     }
-} // Class
+}
 
 /* EOF */

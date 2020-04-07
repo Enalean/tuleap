@@ -50,7 +50,7 @@ if ($request->valid($vCodendiUserOnly)) {
 $display_restricted_user = true;
 $requested_project_id    = $request->get('project_id');
 if ($requested_project_id !== '' && $requested_project_id !== false) {
-    $display_restricted_user = (static function (int $project_id) : bool {
+    $display_restricted_user = (static function (int $project_id): bool {
         $project = ProjectManager::instance()->getProject($project_id);
 
         if ($project->isError()) {
@@ -140,14 +140,16 @@ if ($json_format) {
         }
 
         foreach ($ugroups_dar as $row) {
-            if ($row['ugroup_id'] > 100
+            if (
+                $row['ugroup_id'] > 100
                 || in_array($row['ugroup_id'], array(ProjectUGroup::PROJECT_MEMBERS, ProjectUGroup::PROJECT_ADMIN))
             ) {
                 $ugroup = new ProjectUGroup($row);
                 $id     = $ugroup->getNormalizedName();
                 $text   = $ugroup->getTranslatedName();
 
-                if (mb_stripos($text, $userName) !== false
+                if (
+                    mb_stripos($text, $userName) !== false
                     || mb_stripos($id, $userName) !== false
                 ) {
                     $json_entries[] = array(

@@ -27,5 +27,5 @@ interface TaskWorker
     /**
      * @throws TaskWorkerTimedOutException
      */
-    public function run(string $event) : void;
+    public function run(string $event): void;
 }

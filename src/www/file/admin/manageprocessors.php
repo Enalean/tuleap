@@ -72,9 +72,11 @@ $vProcRank->required();
 
 if ($request->isPost() && $request->existAndNonEmpty('add')) {
     // add a new processor to the database
-    if ($request->valid($vProcName) &&
+    if (
+        $request->valid($vProcName) &&
         $request->valid($vProcRank) &&
-        $request->valid($vAdd)) {
+        $request->valid($vAdd)
+    ) {
         $procname = $request->get('procname');
         $procrank = $request->get('procrank');
         if ($procrank == "") {
@@ -99,10 +101,12 @@ $vProcessRank->required();
 
 if ($request->isPost() && $request->existAndNonEmpty('update')) {
     // update a processor
-    if ($request->valid($vProcessName) &&
+    if (
+        $request->valid($vProcessName) &&
         $request->valid($vProcessRank) &&
         $request->valid($vProcId)      &&
-        $request->valid($vUpdate)) {
+        $request->valid($vUpdate)
+    ) {
         $proc_id     = $request->get('proc_id');
         $processname = $request->get('processname');
         $processrank = $request->get('processrank');

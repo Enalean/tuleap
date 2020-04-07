@@ -53,8 +53,10 @@ class EmptyFileToUploadFinisher
         $uploaded_document_path = $this->document_upload_path_allocator->getPathForItemBeingUploaded($file_information);
 
         $allocated_path_directory = dirname($uploaded_document_path);
-        if (! \is_dir($allocated_path_directory) &&
-            ! \mkdir($allocated_path_directory, 0777, true) && ! \is_dir($allocated_path_directory)) {
+        if (
+            ! \is_dir($allocated_path_directory) &&
+            ! \mkdir($allocated_path_directory, 0777, true) && ! \is_dir($allocated_path_directory)
+        ) {
             throw new CannotWriteFileException();
         }
         touch($uploaded_document_path);

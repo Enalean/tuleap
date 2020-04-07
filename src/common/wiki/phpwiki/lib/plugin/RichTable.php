@@ -70,10 +70,12 @@ class WikiPlugin_RichTable extends WikiPlugin
             $line = substr(array_shift($lines), 1);
             $attrs = $this->_parse_attr($line);
             foreach ($attrs as $key => $value) {
-                if (in_array($key, array("id", "class", "title", "style",
+                if (
+                    in_array($key, array("id", "class", "title", "style",
                                           "bgcolor", "frame", "rules", "border",
                                           "cellspacing", "cellpadding",
-                                          "summary", "align", "width"))) {
+                                          "summary", "align", "width"))
+                ) {
                     $table->setAttr($key, $value);
                 }
             }
@@ -95,8 +97,10 @@ class WikiPlugin_RichTable extends WikiPlugin
                 $row = HTML::tr();
                 $attrs = $this->_parse_attr(substr($line, 1));
                 foreach ($attrs as $key => $value) {
-                    if (in_array($key, array("id", "class", "title", "style",
-                                              "bgcolor", "align", "valign"))) {
+                    if (
+                        in_array($key, array("id", "class", "title", "style",
+                                              "bgcolor", "align", "valign"))
+                    ) {
                         $row->setAttr($key, $value);
                     }
                 }
@@ -115,9 +119,11 @@ class WikiPlugin_RichTable extends WikiPlugin
                 if ($line[0] == "*") {
                     $attrs = $this->_parse_attr(substr($line, 1));
                     foreach ($attrs as $key => $value) {
-                        if (in_array($key, array("id", "class", "title", "style",
+                        if (
+                            in_array($key, array("id", "class", "title", "style",
                                                   "colspan", "rowspan", "width", "height",
-                                                  "bgcolor", "align", "valign"))) {
+                                                  "bgcolor", "align", "valign"))
+                        ) {
                             $cell->setAttr($key, $value);
                         }
                     }

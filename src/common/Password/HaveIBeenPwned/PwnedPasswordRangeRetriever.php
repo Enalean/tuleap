@@ -53,7 +53,7 @@ class PwnedPasswordRangeRetriever
         $this->logger          = $logger;
     }
 
-    public function getHashSuffixesMatchingPrefix(string $sha1_password_prefix) : string
+    public function getHashSuffixesMatchingPrefix(string $sha1_password_prefix): string
     {
         if (strlen($sha1_password_prefix) !== PwnedPasswordChecker::PREFIX_SIZE) {
             throw new \LengthException(

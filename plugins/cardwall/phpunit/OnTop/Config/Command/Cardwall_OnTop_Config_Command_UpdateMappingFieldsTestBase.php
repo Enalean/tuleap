@@ -25,7 +25,7 @@ abstract class Cardwall_OnTop_Config_Command_UpdateMappingFieldsTestBase extends
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 

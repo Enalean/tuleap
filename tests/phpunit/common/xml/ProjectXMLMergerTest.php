@@ -26,7 +26,8 @@ use Tuleap\TemporaryTestDirectory;
 
 class ProjectXMLMergerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, TemporaryTestDirectory;
+    use MockeryPHPUnitIntegration;
+    use TemporaryTestDirectory;
 
     private $fixtures;
     private $destination;

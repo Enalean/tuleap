@@ -40,7 +40,8 @@ use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 
 final class ReviewerAutocompleterControllerTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|UserManager
@@ -64,7 +65,7 @@ final class ReviewerAutocompleterControllerTest extends TestCase
      */
     private $controller;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->user_manager                    = Mockery::mock(UserManager::class);
         $this->pull_request_factory            = Mockery::mock(Factory::class);

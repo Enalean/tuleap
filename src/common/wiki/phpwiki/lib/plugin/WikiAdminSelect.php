@@ -161,21 +161,24 @@ class WikiPlugin_WikiAdminSelect extends WikiPlugin
                                                      'name' => 'WikiAdminSelect',
             'value' => _("Go")))
         ));
-        if ($request->isPost()
+        if (
+            $request->isPost()
             && ! $request->getArg('wikiadmin')
-            && !empty($p)) {
+            && !empty($p)
+        ) {
             $this->_list = array();
             // List all selected pages again.
             foreach ($p as $page => $name) {
                 $this->_list[$name] = 1;
             }
-        } elseif ($request->isPost()
+        } elseif (
+            $request->isPost()
             and $request->_user->isAdmin()
                 and !empty($p)
                 //and $request->getArg('verify')
                 and ($request->getArg('action') == 'WikiAdminSelect')
                 and $request->getArg('wikiadmin')
-               ) {
+        ) {
             // handle external plugin
             $loader = new WikiPluginLoader();
             $a = array_keys($request->getArg('wikiadmin'));

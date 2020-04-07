@@ -123,7 +123,8 @@ class PermissionPerTypeExtractor
     {
         $all_ugroups = $this->frs_permission_factory->getFrsUGroupsByPermission($project, $type);
 
-        if (isset($all_ugroups[$selected_ugroup]) ||
+        if (
+            isset($all_ugroups[$selected_ugroup]) ||
             ((int) $selected_ugroup === ProjectUGroup::PROJECT_ADMIN && $type === FRSPermission::FRS_ADMIN)
         ) {
             return $all_ugroups;

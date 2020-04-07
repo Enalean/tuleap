@@ -21,6 +21,7 @@
 final class AgileDashboard_KanbanActionsCheckerTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var Tracker_FormElement_Field[]
      */

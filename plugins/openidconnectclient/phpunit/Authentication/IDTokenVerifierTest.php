@@ -209,7 +209,7 @@ class IDTokenVerifierTest extends TestCase
         return (string) $id_token_builder->getToken(new Sha256(), self::$rsa_key);
     }
 
-    private function generateIssuerValidatorValid() : IssuerClaimValidator
+    private function generateIssuerValidatorValid(): IssuerClaimValidator
     {
         return new class implements IssuerClaimValidator
         {
@@ -220,7 +220,7 @@ class IDTokenVerifierTest extends TestCase
         };
     }
 
-    private function generateIssuerValidatorInvalid() : IssuerClaimValidator
+    private function generateIssuerValidatorInvalid(): IssuerClaimValidator
     {
         return new class implements IssuerClaimValidator
         {

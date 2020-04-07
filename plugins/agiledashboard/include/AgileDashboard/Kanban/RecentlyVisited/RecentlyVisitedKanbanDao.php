@@ -28,7 +28,7 @@ class RecentlyVisitedKanbanDao extends DataAccessObject
 {
     public function save(int $user_id, int $kanban_id, int $created_on): void
     {
-        $this->getDB()->tryFlatTransaction(function () use ($user_id, $kanban_id, $created_on) : void {
+        $this->getDB()->tryFlatTransaction(function () use ($user_id, $kanban_id, $created_on): void {
             $this->getDB()->run(
                 'INSERT INTO plugin_agiledashboard_kanban_recently_visited(user_id, kanban_id, created_on)
                 VALUES (?, ?, ?)

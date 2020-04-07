@@ -30,7 +30,7 @@ class ProjectDefinedService extends \Service
         return ($this->data['icon'] !== '') ? $this->data['icon'] : 'fa-angle-double-right';
     }
 
-    public function isOpenedInNewTab() : bool
+    public function isOpenedInNewTab(): bool
     {
         return $this->data['is_in_new_tab'] === '1';
     }

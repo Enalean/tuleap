@@ -27,7 +27,7 @@ class Codendi_MailTest extends TestCase // phpcs:ignore
 {
     use MockeryPHPUnitIntegration;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -38,7 +38,7 @@ class Codendi_MailTest extends TestCase // phpcs:ignore
         ForgeConfig::set('codendi_log', $tmp_dir->url());
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         ForgeConfig::restore();
         parent::tearDown();

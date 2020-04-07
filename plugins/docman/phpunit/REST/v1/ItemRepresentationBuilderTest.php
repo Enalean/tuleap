@@ -36,7 +36,9 @@ use Tuleap\GlobalLanguageMock;
 
 class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
+
     /**
      * @var Mockery\MockInterface|ApprovalTableRetriever
      */
@@ -86,7 +88,7 @@ class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
      */
     private $html_purifier;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -119,7 +121,7 @@ class ItemRepresentationBuilderTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItBuildsAnItemRepresentationOfAnItem() : void
+    public function testItBuildsAnItemRepresentationOfAnItem(): void
     {
         $owner_id       = 123;
         $docman_item_id = 666;

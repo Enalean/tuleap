@@ -56,7 +56,7 @@ class NotifierCustomSenderTest extends TestCase
     private $default_format_var;
     private $default_format_value;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

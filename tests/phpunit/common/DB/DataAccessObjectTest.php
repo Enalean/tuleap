@@ -30,13 +30,13 @@ final class DataAccessObjectTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testDBIsAlwaysRetrievedFromTheConnection() : void
+    public function testDBIsAlwaysRetrievedFromTheConnection(): void
     {
         $connection = \Mockery::mock(DBConnection::class);
 
-        $dao = new class($connection) extends DataAccessObject
+        $dao = new class ($connection) extends DataAccessObject
         {
-            public function getDBPubliclyForTest() : EasyDB
+            public function getDBPubliclyForTest(): EasyDB
             {
                 return $this->getDB();
             }
@@ -50,11 +50,11 @@ final class DataAccessObjectTest extends TestCase
         $this->assertSame($db2, $dao->getDBPubliclyForTest());
     }
 
-    public function testFoundRowsReturnsAnInteger() : void
+    public function testFoundRowsReturnsAnInteger(): void
     {
         $connection = \Mockery::mock(DBConnection::class);
 
-        $dao = new class($connection) extends DataAccessObject {
+        $dao = new class ($connection) extends DataAccessObject {
         };
 
         $db = \Mockery::mock(EasyDB::class);

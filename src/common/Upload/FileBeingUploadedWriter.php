@@ -47,7 +47,7 @@ final class FileBeingUploadedWriter implements TusWriter
     /**
      * @inheritdoc
      */
-    public function writeChunk(TusFileInformation $file_information, int $offset, $input_source) : int
+    public function writeChunk(TusFileInformation $file_information, int $offset, $input_source): int
     {
         if (! \is_resource($input_source)) {
             throw new \InvalidArgumentException(
@@ -58,8 +58,10 @@ final class FileBeingUploadedWriter implements TusWriter
         $allocated_path = $this->path_allocator->getPathForItemBeingUploaded($file_information);
 
         $allocated_path_directory = dirname($allocated_path);
-        if (! \is_dir($allocated_path_directory) &&
-            ! \mkdir($allocated_path_directory, 0777, true) && ! \is_dir($allocated_path_directory)) {
+        if (
+            ! \is_dir($allocated_path_directory) &&
+            ! \mkdir($allocated_path_directory, 0777, true) && ! \is_dir($allocated_path_directory)
+        ) {
             throw new CannotWriteFileException();
         }
 
@@ -84,7 +86,7 @@ final class FileBeingUploadedWriter implements TusWriter
         return $copied_size;
     }
 
-    private function handlePotentialDBReconnection() : void
+    private function handlePotentialDBReconnection(): void
     {
         // The copy of the file to the disk can be quite long so the DB
         // server can decide to close the connection, we want to make sure

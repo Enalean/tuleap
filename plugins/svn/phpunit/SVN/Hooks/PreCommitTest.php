@@ -43,6 +43,7 @@ use Tuleap\Svn\SHA1CollisionDetector;
 class PreCommitTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Repository
      */

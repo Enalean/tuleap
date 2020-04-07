@@ -359,7 +359,7 @@ class AdminController extends BaseController
         );
     }
 
-    private function getAdminChartsPresenter(Project $project) : AdminChartsPresenter
+    private function getAdminChartsPresenter(Project $project): AdminChartsPresenter
     {
         $token = new CSRFSynchronizerToken('/plugins/agiledashboard/?action=admin');
 

@@ -40,7 +40,7 @@ class TimeUpdaterTest extends TestCase
      */
     private $time_updater;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

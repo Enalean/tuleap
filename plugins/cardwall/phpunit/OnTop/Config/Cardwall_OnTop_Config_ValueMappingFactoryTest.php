@@ -25,7 +25,7 @@ final class Cardwall_OnTop_Config_ValueMappingFactoryTest extends \PHPUnit\Frame
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $element_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
@@ -86,14 +86,14 @@ final class Cardwall_OnTop_Config_ValueMappingFactoryTest extends \PHPUnit\Frame
         ));
     }
 
-    public function testItLoadsMappingsFromTheDatabase() : void
+    public function testItLoadsMappingsFromTheDatabase(): void
     {
         $mappings = $this->factory->getMappings($this->tracker, $this->tracker_20, $this->field_124);
         $this->assertCount(2, $mappings);
         $this->assertEquals(1002, $mappings[1002]->getValueId());
     }
 
-    public function testItLoadStatusValues() : void
+    public function testItLoadStatusValues(): void
     {
         $columns = new Cardwall_OnTop_Config_ColumnFreestyleCollection(
             array(
@@ -109,7 +109,7 @@ final class Cardwall_OnTop_Config_ValueMappingFactoryTest extends \PHPUnit\Frame
         $this->assertEquals(3, $mappings[1003]->getColumnId());
     }
 
-    public function testItLoadsMappingsFromTheDatabase2() : void
+    public function testItLoadsMappingsFromTheDatabase2(): void
     {
         $element_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
 

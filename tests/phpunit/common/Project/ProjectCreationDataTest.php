@@ -157,7 +157,7 @@ final class ProjectCreationDataTest extends TestCase
         $this->assertEquals(Project::ACCESS_PUBLIC, $project_data->getAccess());
     }
 
-    public function testItCreatesAPrivateProjectFromWebPayload() : void
+    public function testItCreatesAPrivateProjectFromWebPayload(): void
     {
         ForgeConfig::set(ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY, 1);
 
@@ -184,7 +184,7 @@ final class ProjectCreationDataTest extends TestCase
         bool $is_public,
         bool $allow_restricted,
         string $expected_visibility
-    ) : void {
+    ): void {
         ForgeConfig::set(ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY, 1);
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
 

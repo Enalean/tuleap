@@ -237,9 +237,11 @@ class PlotMark
             $imgscale = $this->iScale;
         }
 
-        if ($this->type == MARK_IMG ||
-        ($this->type >= MARK_FLAG1 && $this->type <= MARK_FLAG4 ) ||
-        $this->type >= MARK_IMG_PUSHPIN) {
+        if (
+            $this->type == MARK_IMG ||
+            ($this->type >= MARK_FLAG1 && $this->type <= MARK_FLAG4 ) ||
+            $this->type >= MARK_IMG_PUSHPIN
+        ) {
             // Note: For the builtin images we use the "filename" parameter
             // to denote the color
             $anchor_x = 0.5;
@@ -503,7 +505,7 @@ class PlotMark
         $this->title->Align("center", "center");
         $this->title->Stroke($img, $x, $y);
     }
-} // Class
+}
 
 
 
@@ -536,8 +538,10 @@ class ImgData
                 JpGraphError::RaiseL(23001, $this->name, $aIdx);//('This marker "'.($this->name).'" does not exist in color: '.$aIdx);
             }
             $idx = $this->index[$aIdx];
-        } elseif (!is_integer($aIdx) ||
-        (is_integer($aIdx) && $aIdx > $this->maxidx )) {
+        } elseif (
+            !is_integer($aIdx) ||
+            (is_integer($aIdx) && $aIdx > $this->maxidx )
+        ) {
             JpGraphError::RaiseL(23002, $this->name);//('Mark color index too large for marker "'.($this->name).'"');
         } else {
             $idx = $aIdx;

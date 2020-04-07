@@ -27,7 +27,7 @@ use PHPUnit\Framework\TestCase;
 
 final class TrackerColorTest extends TestCase
 {
-    public function testColorCanBeBuiltFromAValidColorName() : void
+    public function testColorCanBeBuiltFromAValidColorName(): void
     {
         $color_name = 'inca-silver';
         $color      = TrackerColor::fromName($color_name);
@@ -38,25 +38,25 @@ final class TrackerColorTest extends TestCase
      * @testWith ["inca_silver"]
      *           ["inca-silver"]
      */
-    public function testColorCanBeBuiltFromColorNameThatMightNotBeStandardized(string $color_name) : void
+    public function testColorCanBeBuiltFromColorNameThatMightNotBeStandardized(string $color_name): void
     {
         $color = TrackerColor::fromNotStandardizedName($color_name);
         $this->assertEquals('inca-silver', $color->getName());
     }
 
-    public function testDefaultColorCanBeBuilt() : void
+    public function testDefaultColorCanBeBuilt(): void
     {
         $color = TrackerColor::default();
         $this->assertNotEmpty($color->getName());
     }
 
-    public function testInvalidColorNameIsRejected() : void
+    public function testInvalidColorNameIsRejected(): void
     {
         $this->expectException(InvalidArgumentException::class);
         TrackerColor::fromName('notvalidcolorname');
     }
 
-    public function testInvalidNotStandardizedColorNameIsRejected() : void
+    public function testInvalidNotStandardizedColorNameIsRejected(): void
     {
         $this->expectException(InvalidArgumentException::class);
         TrackerColor::fromNotStandardizedName('notvalidcolorname');

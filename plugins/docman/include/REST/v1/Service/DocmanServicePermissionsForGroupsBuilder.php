@@ -46,7 +46,7 @@ class DocmanServicePermissionsForGroupsBuilder
         $this->ugroup_manager      = $ugroup_manager;
     }
 
-    public function getServicePermissionsForGroupRepresentation(Project $project) : DocmanServicePermissionsForGroupsRepresentation
+    public function getServicePermissionsForGroupRepresentation(Project $project): DocmanServicePermissionsForGroupsRepresentation
     {
         $project_id = $project->getID();
         $ugroup_ids = $this->permissions_manager->getAuthorizedUGroupIdsForProject(

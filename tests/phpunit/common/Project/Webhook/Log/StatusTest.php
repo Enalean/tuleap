@@ -24,35 +24,35 @@ namespace Tuleap\Project\Webhook\Log;
 
 final class StatusTest extends \PHPUnit\Framework\TestCase
 {
-    public function testItUsesGivenInformation() : void
+    public function testItUsesGivenInformation(): void
     {
         $status = new Status('200 OK', 1489595500);
 
         $this->assertEquals('200 OK', $status->getStatus());
     }
 
-    public function testItDeterminesTheStatusIsSuccessful() : void
+    public function testItDeterminesTheStatusIsSuccessful(): void
     {
         $status = new Status('200 OK', 1489595500);
 
         $this->assertFalse($status->isInError());
     }
 
-    public function testItIsInErrorIfTheStatusIsEmpty() : void
+    public function testItIsInErrorIfTheStatusIsEmpty(): void
     {
         $status = new Status('', 1489595500);
 
         $this->assertTrue($status->isInError());
     }
 
-    public function testItIsInErrorIfWeGotAnHTTPErrorCode() : void
+    public function testItIsInErrorIfWeGotAnHTTPErrorCode(): void
     {
         $status = new Status('500 Internal Server Error', 1489595500);
 
         $this->assertTrue($status->isInError());
     }
 
-    public function testItIsInErrorWhenCurlGivesAnError() : void
+    public function testItIsInErrorWhenCurlGivesAnError(): void
     {
         $status = new Status('Operation timed out after 5000 milliseconds with 0 bytes received', 1489595500);
 

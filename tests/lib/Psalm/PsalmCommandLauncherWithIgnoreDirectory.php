@@ -47,7 +47,7 @@ final class PsalmCommandLauncherWithIgnoreDirectory
         $this->shell_passthrough   = $shell_passthrough;
     }
 
-    public function execute(string $launch_command, string ...$argv) : int
+    public function execute(string $launch_command, string ...$argv): int
     {
         $init_script = array_shift($argv);
 
@@ -96,12 +96,12 @@ final class PsalmCommandLauncherWithIgnoreDirectory
         return $exit_code;
     }
 
-    private function isPsalmCommand(string $command) : bool
+    private function isPsalmCommand(string $command): bool
     {
         return preg_match('/(psalm|psalm-language-server|psalm-plugin|psalter|psalm-refactor)$/', $command) === 1;
     }
 
-    private function writeTemporaryConfigWithExcludedDirectories(\SimpleXMLElement $config) : string
+    private function writeTemporaryConfigWithExcludedDirectories(\SimpleXMLElement $config): string
     {
         if (! isset($config->projectFiles)) {
             $config->addChild('projectFiles');
@@ -118,7 +118,7 @@ final class PsalmCommandLauncherWithIgnoreDirectory
         return $this->writeTemporaryConfig($config);
     }
 
-    private function writeTemporaryConfig(\SimpleXMLElement $config) : string
+    private function writeTemporaryConfig(\SimpleXMLElement $config): string
     {
         $temp_file = $this->temporary_directory . DIRECTORY_SEPARATOR . 'tuleap_psalm_' . bin2hex(random_bytes(16));
         if (is_file($temp_file)) {

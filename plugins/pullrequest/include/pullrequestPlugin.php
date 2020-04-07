@@ -221,7 +221,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
     {
         $version = $params['version'];
         $class   = "\\Tuleap\\PullRequest\\REST\\$version\\RepositoryResource";
-        $repository_resource = new $class;
+        $repository_resource = new $class();
 
         $params['result'] = $repository_resource->getPaginatedPullRequests(
             $params['repository'],
@@ -530,7 +530,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
 
     public function postInitGitRepositoryWithDataEvent(PostInitGitRepositoryWithDataEvent $event)
     {
-        (new GitPullRequestReferenceRemover)->removeAll(GitExec::buildFromRepository($event->getRepository()));
+        (new GitPullRequestReferenceRemover())->removeAll(GitExec::buildFromRepository($event->getRepository()));
     }
 
     public static function getLogger()

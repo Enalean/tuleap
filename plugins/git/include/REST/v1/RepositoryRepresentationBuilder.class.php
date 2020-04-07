@@ -142,10 +142,12 @@ class RepositoryRepresentationBuilder
             $additional_information->getAdditionalInformation()
         );
 
-        if ($fields == GitRepositoryRepresentation::FIELDS_ALL && $this->permissions_manger->userIsGitAdmin(
-            $user,
-            $repository->getProject()
-        )) {
+        if (
+            $fields == GitRepositoryRepresentation::FIELDS_ALL && $this->permissions_manger->userIsGitAdmin(
+                $user,
+                $repository->getProject()
+            )
+        ) {
             $permission_representation = new GitRepositoryPermissionRepresentation();
             $permission_representation->build($repository);
 

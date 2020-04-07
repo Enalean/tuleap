@@ -31,13 +31,14 @@ use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 class PostReceiveMailsRetrieverTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /** @var GitRepository */
     private $repository;
 
     /** @var PostReceiveMailsRetriever */
     private $retriever;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -82,7 +83,7 @@ class PostReceiveMailsRetrieverTest extends \PHPUnit\Framework\TestCase
         $this->retriever = new PostReceiveMailsRetriever($notified_users_dao, $notified_ugroup_dao, $ugroup_manager);
     }
 
-    public function testItReturnsMailsForRepository() : void
+    public function testItReturnsMailsForRepository(): void
     {
         $emails = $this->retriever->getNotifiedMails($this->repository);
 
@@ -90,28 +91,28 @@ class PostReceiveMailsRetrieverTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue(in_array('smith@example.com', $emails));
     }
 
-    public function testItReturnsMailsOfUsersForRepository() : void
+    public function testItReturnsMailsOfUsersForRepository(): void
     {
         $emails = $this->retriever->getNotifiedMails($this->repository);
 
         $this->assertTrue(in_array('andrew@example.com', $emails));
     }
 
-    public function testItReturnsMailsOfUgroupMembersForRepository() : void
+    public function testItReturnsMailsOfUgroupMembersForRepository(): void
     {
         $emails = $this->retriever->getNotifiedMails($this->repository);
 
         $this->assertTrue(in_array('charles@example.com', $emails));
     }
 
-    public function testItRemovesGroupMembersThatAreNotAlive() : void
+    public function testItRemovesGroupMembersThatAreNotAlive(): void
     {
         $emails = $this->retriever->getNotifiedMails($this->repository);
 
         $this->assertTrue(! in_array('suspended@example.com', $emails));
     }
 
-    public function testItRemovesDuplicates() : void
+    public function testItRemovesDuplicates(): void
     {
         $emails = $this->retriever->getNotifiedMails($this->repository);
 

@@ -83,8 +83,10 @@ class PermissionsManager implements IPermissionsManagerNG
         }
         //now we search for $permission_type
         foreach ($ugroups as $ugroup) {
-            if (isset($this->_permissions[$object_id][$ugroup]) &&
-                in_array($permission_type, $this->_permissions[$object_id][$ugroup])) {
+            if (
+                isset($this->_permissions[$object_id][$ugroup]) &&
+                in_array($permission_type, $this->_permissions[$object_id][$ugroup])
+            ) {
                 return true;
             }
         }

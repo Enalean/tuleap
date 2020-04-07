@@ -149,8 +149,10 @@ class Docman_SettingsBo
       */
     public function _importMetadataUsage($srcBo, $label)
     {
-        if ($srcBo->getMetadataUsage($label) == true &&
-           $this->getMetadataUsage($label) != true) {
+        if (
+            $srcBo->getMetadataUsage($label) == true &&
+            $this->getMetadataUsage($label) != true
+        ) {
             $this->updateMetadataUsage($label, true);
         }
     }

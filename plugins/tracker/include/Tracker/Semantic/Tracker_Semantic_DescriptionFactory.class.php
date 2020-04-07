@@ -39,7 +39,7 @@ class Tracker_Semantic_DescriptionFactory implements IBuildSemanticFromXML, IDup
     {
         if (!isset(self::$instance)) {
             $c = self::class;
-            self::$instance = new $c;
+            self::$instance = new $c();
         }
         return self::$instance;
     }

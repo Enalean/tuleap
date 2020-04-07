@@ -46,7 +46,7 @@ class RemainingEffortValueRetrieverTest extends TestCase
     /** @var \Tracker_FormElement_Field_Float */
     private $remaining_effort_field;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
         $this->form_element_factory       = Mockery::mock(Tracker_FormElementFactory::class);
@@ -58,7 +58,7 @@ class RemainingEffortValueRetrieverTest extends TestCase
         $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         Mockery::close();
         parent::tearDown();

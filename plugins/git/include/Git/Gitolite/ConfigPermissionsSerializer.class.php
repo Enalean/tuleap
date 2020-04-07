@@ -235,7 +235,8 @@ class Git_Gitolite_ConfigPermissionsSerializer
 
     private function getPatternConfiguration(GitRepository $repository, array $ugroups, $pattern_for_gitolite, $type)
     {
-        if ((count($ugroups) === 1 && $ugroups[0]->getId() == ProjectUGroup::NONE) ||
+        if (
+            (count($ugroups) === 1 && $ugroups[0]->getId() == ProjectUGroup::NONE) ||
             count($ugroups) === 0
         ) {
             $pattern_config = '';

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Docman\Test\rest\Docman;
 
@@ -186,7 +186,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
     /**
      * @depends testGetRootId
      */
-    public function testUpdatePermissionsFileDocument(int $root_id) : void
+    public function testUpdatePermissionsFileDocument(int $root_id): void
     {
         $file_doc_id = $this->createANewFileAndGetItsId(
             $root_id,

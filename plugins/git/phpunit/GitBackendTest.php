@@ -29,7 +29,8 @@ require_once 'bootstrap.php';
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class GitBackendTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, TemporaryTestDirectory;
+    use MockeryPHPUnitIntegration;
+    use TemporaryTestDirectory;
 
     protected function setUp(): void
     {

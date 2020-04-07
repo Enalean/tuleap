@@ -176,7 +176,8 @@ class GitPermissionsManager
             Git::PERM_READ => $this->getGlobalPermission($repository, Git::PERM_READ)
         );
 
-        if (! $repository->isMigratedToGerrit() &&
+        if (
+            ! $repository->isMigratedToGerrit() &&
             ! $this->fine_grained_retriever->doesRepositoryUseFineGrainedPermissions($repository)
         ) {
             $permissions[Git::PERM_WRITE] = $this->getGlobalPermission($repository, Git::PERM_WRITE);

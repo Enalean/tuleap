@@ -143,13 +143,15 @@ function IniConfig($file)
         //} elseif (array_key_exists($item, $rsdef)) {
         //    define($item, $rsdef[$item]);
         // calculate them later or not at all:
-        } elseif (in_array(
-            $item,
-            array('DATABASE_PREFIX', 'SERVER_NAME', 'SERVER_PORT',
+        } elseif (
+            in_array(
+                $item,
+                array('DATABASE_PREFIX', 'SERVER_NAME', 'SERVER_PORT',
                                  'SCRIPT_NAME', 'DATA_PATH', 'PHPWIKI_DIR', 'VIRTUAL_PATH',
                                  'LDAP_AUTH_HOST','IMAP_AUTH_HOST','POP3_AUTH_HOST',
-            'PLUGIN_CACHED_CACHE_DIR')
-        )) {
+                'PLUGIN_CACHED_CACHE_DIR')
+            )
+        ) {
         } elseif (!defined("_PHPWIKI_INSTALL_RUNNING")) {
             trigger_error(sprintf("missing config setting for %s", $item));
         }
@@ -175,21 +177,25 @@ function IniConfig($file)
         }
 
         // calculate them later: old or dynamic constants
-        if (!array_key_exists($item, $rs) and
+        if (
+            !array_key_exists($item, $rs) and
             in_array($item, array('USE_PATH_INFO',
                                   'ALLOW_HTTP_AUTH_LOGIN', 'ALLOW_LDAP_LOGIN',
                                   'ALLOW_IMAP_LOGIN', 'ALLOW_USER_LOGIN',
                                   'REQUIRE_SIGNIN_BEFORE_EDIT',
                                   'WIKIDB_NOCACHE_MARKUP',
                                   'COMPRESS_OUTPUT'
-                                  ))) {
+                                  ))
+        ) {
         } elseif (!$val) {
             define($item, false);
-        } elseif (strtolower($val) == 'false' ||
+        } elseif (
+            strtolower($val) == 'false' ||
                 strtolower($val) == 'no' ||
                 $val == '' ||
                 $val == false ||
-                $val == '0') {
+                $val == '0'
+        ) {
             define($item, false);
         } else {
             define($item, true);
@@ -299,8 +305,10 @@ function IniConfig($file)
 
     // TODO: can this be a constant?
     global $DisabledActions;
-    if (!array_key_exists('DISABLED_ACTIONS', $rs)
-        and array_key_exists('DISABLED_ACTIONS', $rsdef)) {
+    if (
+        !array_key_exists('DISABLED_ACTIONS', $rs)
+        and array_key_exists('DISABLED_ACTIONS', $rsdef)
+    ) {
         $rs['DISABLED_ACTIONS'] = @$rsdef['DISABLED_ACTIONS'];
     }
     if (array_key_exists('DISABLED_ACTIONS', $rs)) {
@@ -433,8 +441,10 @@ function fixup_static_configs($file)
             "ADMIN_USER"
         );
         // protect against recursion
-        if (!preg_match("/config\-(dist|default)\.ini$/", $file)
-            and !defined("_PHPWIKI_INSTALL_RUNNING")) {
+        if (
+            !preg_match("/config\-(dist|default)\.ini$/", $file)
+            and !defined("_PHPWIKI_INSTALL_RUNNING")
+        ) {
             include_once(dirname(__FILE__) . "/install.php");
             run_install("_part1");
             trigger_error($error, E_USER_ERROR);
@@ -450,8 +460,10 @@ function fixup_static_configs($file)
             "ADMIN_PASSWD"
         );
         // protect against recursion
-        if (!preg_match("/config\-(dist|default)\.ini$/", $file)
-           and !defined("_PHPWIKI_INSTALL_RUNNING")) {
+        if (
+            !preg_match("/config\-(dist|default)\.ini$/", $file)
+            and !defined("_PHPWIKI_INSTALL_RUNNING")
+        ) {
             include_once(dirname(__FILE__) . "/install.php");
             run_install("_part1");
             trigger_error($error, E_USER_ERROR);
@@ -645,8 +657,10 @@ function fixup_dynamic_configs($file)
         // proper VIRTUAL_PATH is '/wikidir/index.php', since the
         // pages will appear at e.g. '/wikidir/index.php/HomePage'.
         $REDIRECT_URL = &$_SERVER['REDIRECT_URL'];
-        if (USE_PATH_INFO and isset($REDIRECT_URL)
-            and ! IsProbablyRedirectToIndex()) {
+        if (
+            USE_PATH_INFO and isset($REDIRECT_URL)
+            and ! IsProbablyRedirectToIndex()
+        ) {
             // FIXME: This is a hack, and won't work if the requested
             // pagename has a slash in it.
             $temp = strtr(dirname($REDIRECT_URL . 'x'), "\\", '/');
@@ -688,9 +702,11 @@ function fixup_dynamic_configs($file)
     define('SCRIPT_FILENAME', $SCRIPT_FILENAME);
 
     // Get remote host name, if apache hasn't done it for us
-    if (empty($_SERVER['REMOTE_HOST'])
+    if (
+        empty($_SERVER['REMOTE_HOST'])
         and !empty($_SERVER['REMOTE_ADDR'])
-        and ENABLE_REVERSE_DNS) {
+        and ENABLE_REVERSE_DNS
+    ) {
         $_SERVER['REMOTE_HOST'] = gethostbyaddr($_SERVER['REMOTE_ADDR']);
     }
 }

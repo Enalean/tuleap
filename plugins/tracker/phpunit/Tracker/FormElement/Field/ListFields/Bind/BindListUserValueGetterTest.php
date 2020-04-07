@@ -19,7 +19,7 @@
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
 
@@ -36,6 +36,7 @@ use Tracker_FormElement_Field_List_Bind_UsersValue;
 class BindListUserValueGetterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|BindListUserValueGetter
      */

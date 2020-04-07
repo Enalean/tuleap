@@ -29,7 +29,7 @@ class CrossReferenceCreatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

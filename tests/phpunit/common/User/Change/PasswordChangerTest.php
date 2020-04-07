@@ -46,7 +46,7 @@ class PasswordChangerTest extends TestCase
      */
     private $user;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->user_manager    = \Mockery::mock(\UserManager::class);
         $this->session_manager = \Mockery::mock(SessionManager::class);

@@ -41,7 +41,9 @@ use Tuleap\GlobalResponseMock;
 
 final class FirstKanbanCreatorTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, GlobalLanguageMock, GlobalResponseMock;
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
+    use GlobalResponseMock;
 
     /**
      * @var Mockery\MockInterface|TrackerFactory
@@ -72,7 +74,7 @@ final class FirstKanbanCreatorTest extends TestCase
      */
     private $kanban_creator;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $project = Mockery::mock(Project::class);
         $project->shouldReceive('getID')->andReturn(123);
@@ -95,7 +97,7 @@ final class FirstKanbanCreatorTest extends TestCase
         );
     }
 
-    public function testCreationFirstKanban() : void
+    public function testCreationFirstKanban(): void
     {
         $this->kanban_manager->shouldReceive('getTrackersUsedAsKanban')->andReturn([]);
         $this->tracker_factory->shouldReceive('isShortNameExists')->andReturn(false);
@@ -111,7 +113,7 @@ final class FirstKanbanCreatorTest extends TestCase
         $this->kanban_creator->createFirstKanban(Mockery::mock(PFUser::class));
     }
 
-    public function testItAddsAssignedToMeReportAsSelectableReport() : void
+    public function testItAddsAssignedToMeReportAsSelectableReport(): void
     {
         $default_report        = $this->buildReport(10, true, 'Default');
         $assigned_to_me_report = $this->buildReport(20, true, 'Assigned to me');
@@ -135,7 +137,7 @@ final class FirstKanbanCreatorTest extends TestCase
         $this->kanban_creator->createFirstKanban(Mockery::mock(PFUser::class));
     }
 
-    public function testItDoesNotAddAReportAsSelectableReportIfAssignedToMeReportNotFound() : void
+    public function testItDoesNotAddAReportAsSelectableReportIfAssignedToMeReportNotFound(): void
     {
         $default_report = $this->buildReport(10, true, 'Default');
 
@@ -157,7 +159,7 @@ final class FirstKanbanCreatorTest extends TestCase
         $this->kanban_creator->createFirstKanban(Mockery::mock(PFUser::class));
     }
 
-    public function testItDoesNotAddAReportAsSelectableReportIfNoPublicReportFound() : void
+    public function testItDoesNotAddAReportAsSelectableReportIfNoPublicReportFound(): void
     {
         $default_report = $this->buildReport(10, true, 'Default');
 
@@ -179,7 +181,7 @@ final class FirstKanbanCreatorTest extends TestCase
         $this->kanban_creator->createFirstKanban(Mockery::mock(PFUser::class));
     }
 
-    public function testItDoesNotAddTwiceAssignedToMeReportAsSelectableReport() : void
+    public function testItDoesNotAddTwiceAssignedToMeReportAsSelectableReport(): void
     {
         $default_report              = $this->buildReport(10, true, 'Default');
         $assigned_to_me_report       = $this->buildReport(15, true, 'Assigned to me');
@@ -203,7 +205,7 @@ final class FirstKanbanCreatorTest extends TestCase
         $this->kanban_creator->createFirstKanban(Mockery::mock(PFUser::class));
     }
 
-    private function buildReport(int $id, bool $is_public, string $name) : Tracker_Report
+    private function buildReport(int $id, bool $is_public, string $name): Tracker_Report
     {
         $report = Mockery::mock(Tracker_Report::class);
         $report->shouldReceive('getId')->andReturn($id);

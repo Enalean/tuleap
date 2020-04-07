@@ -27,5 +27,5 @@ interface CanContainACopyRepresentation
     /**
      * @return string[]
      */
-    public static function getNonCopyRequiredObjectProperties() : array;
+    public static function getNonCopyRequiredObjectProperties(): array;
 }

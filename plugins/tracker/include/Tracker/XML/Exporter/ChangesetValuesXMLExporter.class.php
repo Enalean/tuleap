@@ -113,7 +113,8 @@ class Tracker_XML_Exporter_ChangesetValuesXMLExporter
             return true;
         }
 
-        if ($this->is_in_archive_context &&
+        if (
+            $this->is_in_archive_context &&
             $this->isComputedField($changeset_value) &&
             $changeset_value->getChangeset()->isLastChangesetOfArtifact()
         ) {

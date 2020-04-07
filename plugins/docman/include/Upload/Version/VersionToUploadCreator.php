@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Docman\Upload\Version;
 
@@ -66,7 +66,7 @@ class VersionToUploadCreator
         string $title,
         string $description,
         ?string $approval_table_action
-    ) : VersionToUpload {
+    ): VersionToUpload {
         $file_size = $filesize;
         if ((int) $file_size > (int) \ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)) {
             throw new UploadMaxSizeExceededException(
@@ -133,7 +133,7 @@ class VersionToUploadCreator
         return new VersionToUpload($version_id);
     }
 
-    private function getExpirationDate(\DateTimeImmutable $current_time) :  \DateTimeImmutable
+    private function getExpirationDate(\DateTimeImmutable $current_time): \DateTimeImmutable
     {
         return $current_time->add(new \DateInterval('PT' . self::EXPIRATION_DELAY_IN_HOURS . 'H'));
     }

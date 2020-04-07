@@ -168,7 +168,7 @@ class RouteCollector
     public static function getAdminSiteContentCustomisation()
     {
         return new SiteContentCustomisationController(
-            new AdminPageRenderer,
+            new AdminPageRenderer(),
             TemplateRendererFactory::build(),
             new \BaseLanguageFactory()
         );
@@ -177,16 +177,16 @@ class RouteCollector
     public static function getAdminPasswordPolicy()
     {
         return new PasswordPolicyDisplayController(
-            new AdminPageRenderer,
+            new AdminPageRenderer(),
             TemplateRendererFactory::build(),
-            new PasswordConfigurationRetriever(new PasswordConfigurationDAO)
+            new PasswordConfigurationRetriever(new PasswordConfigurationDAO())
         );
     }
 
     public static function postAdminPasswordPolicy()
     {
         return new PasswordPolicyUpdateController(
-            new PasswordConfigurationSaver(new PasswordConfigurationDAO)
+            new PasswordConfigurationSaver(new PasswordConfigurationDAO())
         );
     }
 
@@ -441,12 +441,12 @@ class RouteCollector
         );
     }
 
-    public static function postLogoutAccount() : LogoutController
+    public static function postLogoutAccount(): LogoutController
     {
         return new LogoutController(\UserManager::instance());
     }
 
-    public function postDisableLegacyBrowsersWarningMessage() : DisableLegacyBrowsersWarningMessageController
+    public function postDisableLegacyBrowsersWarningMessage(): DisableLegacyBrowsersWarningMessageController
     {
         return new DisableLegacyBrowsersWarningMessageController();
     }
@@ -504,12 +504,12 @@ class RouteCollector
         return new \Tuleap\CVS\ViewVC\ViewVCController();
     }
 
-    public static function getOldFileDownloadURLRedirection() : FRSFileDownloadOldURLRedirectionController
+    public static function getOldFileDownloadURLRedirection(): FRSFileDownloadOldURLRedirectionController
     {
         return new FRSFileDownloadOldURLRedirectionController(HTTPFactoryBuilder::responseFactory(), new SapiEmitter());
     }
 
-    public static function getFileDownload() : FRSFileDownloadController
+    public static function getFileDownload(): FRSFileDownloadController
     {
         return new FRSFileDownloadController(
             new URLVerification(),
@@ -560,22 +560,22 @@ class RouteCollector
         return new LatestNewsController(new NewsDao(), Codendi_HTMLPurifier::instance());
     }
 
-    public static function getNewsPermissionsPerGroup() : DispatchableWithRequest
+    public static function getNewsPermissionsPerGroup(): DispatchableWithRequest
     {
         return new PermissionsPerGroup();
     }
 
-    public static function getProjectAdminMembersController() : DispatchableWithRequest
+    public static function getProjectAdminMembersController(): DispatchableWithRequest
     {
         return ProjectMembersController::buildSelf();
     }
 
-    public static function getPostUserGroupIdAdd() : DispatchableWithRequest
+    public static function getPostUserGroupIdAdd(): DispatchableWithRequest
     {
         return MemberAdditionController::buildSelf();
     }
 
-    public static function getPostUserGroupIdRemove() : DispatchableWithRequest
+    public static function getPostUserGroupIdRemove(): DispatchableWithRequest
     {
         return MemberRemovalController::buildSelf();
     }
@@ -605,7 +605,7 @@ class RouteCollector
         return DeleteController::buildSelf();
     }
 
-    public static function getGetProjectBannerAdministration() : DispatchableWithRequest
+    public static function getGetProjectBannerAdministration(): DispatchableWithRequest
     {
         return BannerAdministrationController::buildSelf();
     }
@@ -634,7 +634,7 @@ class RouteCollector
     }
 
 
-    private function getLegacyControllerHandler(string $path) : array
+    private function getLegacyControllerHandler(string $path): array
     {
         return [
             'core' => true,

@@ -51,14 +51,14 @@ final class DocmanFileDownloadControllerTest extends TestCase
      */
     private $response_generator;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->emitter            = Mockery::mock(EmitterInterface::class);
         $this->item_factory       = Mockery::mock(Docman_ItemFactory::class);
         $this->response_generator = Mockery::mock(DocmanFileDownloadResponseGenerator::class);
     }
 
-    public function testDownloadFailsWhenTheFileCanNotBeFound() : void
+    public function testDownloadFailsWhenTheFileCanNotBeFound(): void
     {
         $controller = new DocmanFileDownloadController(
             $this->emitter,
@@ -76,7 +76,7 @@ final class DocmanFileDownloadControllerTest extends TestCase
         $controller->handle($request);
     }
 
-    public function testOnlyAFileCanBeDownloaded() : void
+    public function testOnlyAFileCanBeDownloaded(): void
     {
         $controller = new DocmanFileDownloadController(
             $this->emitter,
@@ -94,7 +94,7 @@ final class DocmanFileDownloadControllerTest extends TestCase
         $controller->handle($request);
     }
 
-    public function testDownloadFailsWhenRequestedVersionCannotBeFound() : void
+    public function testDownloadFailsWhenRequestedVersionCannotBeFound(): void
     {
         $controller = new DocmanFileDownloadController(
             $this->emitter,
@@ -120,7 +120,7 @@ final class DocmanFileDownloadControllerTest extends TestCase
         $controller->handle($request);
     }
 
-    public function testDownloadFailsWhenResponseCannotBeGenerated() : void
+    public function testDownloadFailsWhenResponseCannotBeGenerated(): void
     {
         $controller = new DocmanFileDownloadController(
             $this->emitter,
@@ -145,7 +145,7 @@ final class DocmanFileDownloadControllerTest extends TestCase
         $controller->handle($request);
     }
 
-    public function testFileItemCanBeDownloaded() : void
+    public function testFileItemCanBeDownloaded(): void
     {
         $controller = new DocmanFileDownloadController(
             $this->emitter,

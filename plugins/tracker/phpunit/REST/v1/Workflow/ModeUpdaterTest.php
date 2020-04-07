@@ -53,7 +53,7 @@ class ModeUpdaterTest extends TestCase
     private $state_factory;
     private $reference_transition_extractor;
 
-    protected function setUp() :void
+    protected function setUp(): void
     {
         $this->workflow_dao                   = Mockery::mock(Workflow_Dao::class);
         $this->transition_replicator          = Mockery::mock(TransitionReplicator::class);

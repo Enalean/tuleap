@@ -48,7 +48,7 @@ class SystemEventProcessManagerTest extends TestCase
      */
     private $lock_factory;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         $this->process = \Mockery::mock(\SystemEventProcess::class, ['getLockName' => 'lock']);
 

@@ -36,7 +36,7 @@ class LFSJSONHTTPDispatchableTest extends TestCase
      * @runInSeparateProcess
      * @dataProvider providerAcceptHeader
      */
-    public function testRequestAcceptingGitLFSResponseAreProcessed($accept_header) : void
+    public function testRequestAcceptingGitLFSResponseAreProcessed($accept_header): void
     {
         $dispatchable = \Mockery::mock(DispatchableWithRequestNoAuthz::class);
         $dispatchable->shouldReceive('process')->once();
@@ -53,7 +53,7 @@ class LFSJSONHTTPDispatchableTest extends TestCase
         );
     }
 
-    public function providerAcceptHeader() : array
+    public function providerAcceptHeader(): array
     {
         return [
             ['application/vnd.git-lfs+json'],
@@ -61,7 +61,7 @@ class LFSJSONHTTPDispatchableTest extends TestCase
         ];
     }
 
-    public function testRequestNotAcceptingGitLFSResponseAreNotProcessed() : void
+    public function testRequestNotAcceptingGitLFSResponseAreNotProcessed(): void
     {
         $dispatchable = \Mockery::mock(DispatchableWithRequestNoAuthz::class);
         $dispatchable->shouldReceive('process')->never();
@@ -83,13 +83,13 @@ class LFSJSONHTTPDispatchableTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testGitLFSErrorsAreGivenAccordingToTheGitLFSSpecification() : void
+    public function testGitLFSErrorsAreGivenAccordingToTheGitLFSSpecification(): void
     {
         $dispatchable = \Mockery::mock(DispatchableWithRequestNoAuthz::class);
 
         $error_message = 'Error message test';
         $error_code    = 444;
-        $git_lfs_error = new class($error_message, $error_code) extends GitLFSException {
+        $git_lfs_error = new class ($error_message, $error_code) extends GitLFSException {
             public function __construct(string $message, int $code)
             {
                 parent::__construct($message, $code);

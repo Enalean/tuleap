@@ -58,7 +58,8 @@ class RepositorySimpleRepresentationBuilder
     ) {
         $permissions = $this->permissions_manager->getRepositoryGlobalPermissions($repository);
 
-        if ($selected_ugroup_id
+        if (
+            $selected_ugroup_id
             && ! $this->hasRepositoryAPermissionContainingUGroupId($permissions, $selected_ugroup_id)
         ) {
             return;

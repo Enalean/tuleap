@@ -24,5 +24,5 @@ namespace Tuleap\CLI\DelayExecution;
 
 interface ExecutionDelayer
 {
-    public function delay() : void;
+    public function delay(): void;
 }

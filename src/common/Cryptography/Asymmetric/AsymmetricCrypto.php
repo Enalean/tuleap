@@ -31,7 +31,7 @@ final class AsymmetricCrypto
         throw new \RuntimeException('Do not instantiate this class, invoke the static methods directly');
     }
 
-    public static function sign(string $message, SignatureSecretKey $secret_key) : string
+    public static function sign(string $message, SignatureSecretKey $secret_key): string
     {
         $raw_key_material = $secret_key->getRawKeyMaterial();
 
@@ -45,7 +45,7 @@ final class AsymmetricCrypto
     /**
      * @throws InvalidSignatureException
      */
-    public static function verify(string $message, SignaturePublicKey $public_key, string $signature) : bool
+    public static function verify(string $message, SignaturePublicKey $public_key, string $signature): bool
     {
         if (\mb_strlen($signature, '8bit') !== SODIUM_CRYPTO_SIGN_BYTES) {
             throw new InvalidSignatureException('Signature must be SODIUM_CRYPTO_SIGN_BYTES long');

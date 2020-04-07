@@ -61,7 +61,7 @@ class BacklogRequiredTrackerCollectionTest extends TestCase
      */
     private $other_tracker_without_initial_effort_semantic;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -96,7 +96,7 @@ class BacklogRequiredTrackerCollectionTest extends TestCase
         $this->other_tracker_without_initial_effort_semantic->shouldReceive('getId')->andReturn(4);
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         unset($GLOBALS['Language']);
         parent::tearDown();

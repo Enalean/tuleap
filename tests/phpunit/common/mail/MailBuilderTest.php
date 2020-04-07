@@ -45,7 +45,7 @@ final class MailBuilderTest extends \PHPUnit\Framework\TestCase
      */
     private $codendi_mail;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -83,7 +83,7 @@ final class MailBuilderTest extends \PHPUnit\Framework\TestCase
         $GLOBALS['HTML']               = \Mockery::spy(\Layout::class);
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         UserManager::clearInstance();
         unset($GLOBALS['sys_default_domain']);
@@ -92,7 +92,7 @@ final class MailBuilderTest extends \PHPUnit\Framework\TestCase
         parent::tearDown();
     }
 
-    public function testItBuildsAndSendsATruncatedEmailIfProjectUsesTruncatedEmail() : void
+    public function testItBuildsAndSendsATruncatedEmailIfProjectUsesTruncatedEmail(): void
     {
         $project = \Mockery::spy(\Project::class)->shouldReceive('getTruncatedEmailsUsage')->andReturns(true)->getMock();
         $this->codendi_mail->shouldReceive('send')->andReturns(true);
@@ -107,7 +107,7 @@ final class MailBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($sent);
     }
 
-    public function testItBuildsAndSendsAClassicEmailIfProjectDoesNotUseTruncatedEmail() : void
+    public function testItBuildsAndSendsAClassicEmailIfProjectDoesNotUseTruncatedEmail(): void
     {
         $project = \Mockery::spy(\Project::class)->shouldReceive('getTruncatedEmailsUsage')->andReturns(false)->getMock();
         $this->codendi_mail->shouldReceive('send')->andReturns(true);
@@ -121,7 +121,7 @@ final class MailBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($sent);
     }
 
-    public function testItDoesNotStopIfAMailIsNotSent() : void
+    public function testItDoesNotStopIfAMailIsNotSent(): void
     {
         $project        = \Mockery::spy(\Project::class)->shouldReceive('getTruncatedEmailsUsage')->andReturns(false)->getMock();
         $codendi_mail_2 = \Mockery::spy(\Codendi_Mail::class)->shouldReceive('send')->once()->andReturns(true)->getMock();
@@ -141,7 +141,7 @@ final class MailBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($sent);
     }
 
-    public function testItDoesNotTryToSendAMailIfNotRecipientHasBeenSet() : void
+    public function testItDoesNotTryToSendAMailIfNotRecipientHasBeenSet(): void
     {
         $project = \Mockery::spy(\Project::class)->shouldReceive('getTruncatedEmailsUsage')->andReturns(false)->getMock();
         $this->builder->shouldReceive('getMailSender')->andReturns($this->codendi_mail);

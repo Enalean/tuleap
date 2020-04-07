@@ -94,7 +94,7 @@ class PermissionsOnFieldsTests extends TestCase
         $controller->process($request, \Mockery::mock(BaseLayout::class), ['id' => 23]);
     }
 
-    public function controllerProvider() : array
+    public function controllerProvider(): array
     {
         return [
             [ ByFieldController::class ],

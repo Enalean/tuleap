@@ -35,7 +35,7 @@ class PwnedPasswordRangeRetrieverTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testAPIResponseIsRetrieved() : void
+    public function testAPIResponseIsRetrieved(): void
     {
         $http_client   = new Client();
         $response_body = HTTPFactoryBuilder::streamFactory()->createStream('API_RESPONSE');
@@ -52,7 +52,7 @@ class PwnedPasswordRangeRetrieverTest extends TestCase
         $this->assertEquals('API_RESPONSE', $hash_suffixes);
     }
 
-    public function testTooLongPrefixIsRejected() : void
+    public function testTooLongPrefixIsRejected(): void
     {
         $retriever = new PwnedPasswordRangeRetriever(
             Mockery::mock(ClientInterface::class),
@@ -65,7 +65,7 @@ class PwnedPasswordRangeRetrieverTest extends TestCase
         $retriever->getHashSuffixesMatchingPrefix(sha1('password'));
     }
 
-    public function testAPICallWithInvalidResponseGivesEmptyResult() : void
+    public function testAPICallWithInvalidResponseGivesEmptyResult(): void
     {
         $http_client = new Client();
         $response    = HTTPFactoryBuilder::responseFactory()->createResponse(504);
@@ -85,7 +85,7 @@ class PwnedPasswordRangeRetrieverTest extends TestCase
         $this->assertEquals('', $hash_suffixes);
     }
 
-    public function testAPICallErrorGivesEmptyResult() : void
+    public function testAPICallErrorGivesEmptyResult(): void
     {
         $http_client = new Client();
         $http_client->addException(Mockery::mock(Exception\RequestException::class));

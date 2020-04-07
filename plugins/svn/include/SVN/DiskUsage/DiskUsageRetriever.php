@@ -76,8 +76,10 @@ class DiskUsageRetriever
         $this->logger->info("Collecting statistics for project " . $project->getUnixName());
         $yesterday = new DateTime("yesterday midnight");
 
-        if (! $this->hasRepositoriesUpdatedAfterGivenDate($project, $yesterday->getTimestamp())
-            && $this->disk_usage_dao->hasRepositories($project->getID())) {
+        if (
+            ! $this->hasRepositoriesUpdatedAfterGivenDate($project, $yesterday->getTimestamp())
+            && $this->disk_usage_dao->hasRepositories($project->getID())
+        ) {
             $this->logger->info("No new commit made on this project since yesterday, duplicate value from DB.");
 
             return $this->getLastSizeForProject($project);

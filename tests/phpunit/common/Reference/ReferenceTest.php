@@ -26,7 +26,7 @@ use Reference;
 
 final class ReferenceTest extends TestCase
 {
-    public function testScope() : void
+    public function testScope(): void
     {
         $ref = new Reference(1, "art", "Goto artifact", '/tracker/?func=detail&aid=$1&group_id=$group_id', 'S', 'tracker', 'artifact', 1, 101);
         $this->assertTrue($ref->isSystemReference());
@@ -34,7 +34,7 @@ final class ReferenceTest extends TestCase
         $this->assertFalse($ref2->isSystemReference());
     }
 
-    public function testComputeNumParams() : void
+    public function testComputeNumParams(): void
     {
         $ref = new Reference(1, "art", "Goto artifact", '/tracker/?func=detail&aid=$1&group_id=$group_id', 'S', 'tracker', 'artifact', 1, 101);
         $this->assertSame(1, $ref->getNumParam());
@@ -47,7 +47,7 @@ final class ReferenceTest extends TestCase
     }
 
 
-    public function testReplace() : void
+    public function testReplace(): void
     {
         // Test with full list
         $ref = new Reference(1, "test", "Goto test", '/test/?proj=$projname&param1=$1&param5=$5&param3=$3&param4=$4&param2=$2&testname=$0&group_id=$group_id', 'P', 'tracker', 'artifact', 1, 101);

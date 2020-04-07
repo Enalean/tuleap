@@ -21,7 +21,6 @@
 declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\Grant\AuthorizationCode\PKCE;
-
 namespace Tuleap\OAuth2Server\Grant\AuthorizationCode\PKCE;
 
 final class InvalidFormatCodeVerifierException extends \RuntimeException implements OAuth2PKCEVerificationException

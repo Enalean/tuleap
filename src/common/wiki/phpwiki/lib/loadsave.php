@@ -107,13 +107,15 @@ function EndLoadDump(&$request)
         }
         $editedby = sprintf(_("Edited by: %s"), $request->_user->getId());
         $content = "Loaded the following pages:\n" . join("\n", $pages);
-        if (mail(
-            join(',', $all_emails),
-            "[" . WIKI_NAME . "] " . _("LoadDump"),
-            _("LoadDump") . "\n" .
+        if (
+            mail(
+                join(',', $all_emails),
+                "[" . WIKI_NAME . "] " . _("LoadDump"),
+                _("LoadDump") . "\n" .
                  $editedby . "\n\n" .
-            $content
-        )) {
+                $content
+            )
+        ) {
             trigger_error(sprintf(
                 _("PageChange Notification of %s sent to %s"),
                 join("\n", $pages),
@@ -495,9 +497,11 @@ function SavePage(&$request, &$pageinfo, $source, $filename)
     }
 
     $current = $page->getCurrentRevision();
-    if ($current and (! $current->hasDefaultContents())
+    if (
+        $current and (! $current->hasDefaultContents())
          && ($current->getPackedContent() != $content)
-         && ($merging == true)) {
+         && ($merging == true)
+    ) {
         include_once('lib/editpage.php');
         $request->setArg('pagename', $pagename);
         $r = $current->getVersion();
@@ -529,8 +533,10 @@ function SavePage(&$request, &$pageinfo, $source, $filename)
         $mesg->pushContent(' - ', _("New page"));
         $isnew = true;
     } else {
-        if ((! $current->hasDefaultContents())
-             && ($current->getPackedContent() != $content)) {
+        if (
+            (! $current->hasDefaultContents())
+             && ($current->getPackedContent() != $content)
+        ) {
             if ($overwrite) {
                 $mesg->pushContent(
                     ' ',
@@ -546,8 +552,10 @@ function SavePage(&$request, &$pageinfo, $source, $filename)
                 $needs_merge = true; // hackish
                 $skip = true;
             }
-        } elseif ($current->getPackedContent() == $content
-                 && $current->get('author') == $versiondata['author']) {
+        } elseif (
+            $current->getPackedContent() == $content
+                 && $current->get('author') == $versiondata['author']
+        ) {
             // The page metadata is already changed, we don't need a new revision.
             // This was called previously "is identical to current version %d - skipped"
             // which is wrong, since the pagedata was stored, not skipped.
@@ -791,8 +799,10 @@ function SortByPageVersion($a, $b)
  */
 function LoadFile(&$request, $filename, $text = false, $mtime = false)
 {
-    if (preg_match("/config$/", dirname($filename))             // our or other config
-        and preg_match("/config.*\.ini/", basename($filename))) { // backups and other versions also
+    if (
+        preg_match("/config$/", dirname($filename))             // our or other config
+        and preg_match("/config.*\.ini/", basename($filename))
+    ) { // backups and other versions also
         trigger_error(sprintf("Refused to load %s", $filename), E_USER_WARNING);
         return;
     }
@@ -826,11 +836,13 @@ function LoadFile(&$request, $filename, $text = false, $mtime = false)
                 $filename
             ), $basename);
         }
-    } elseif (($pageinfo = ParseSerializedPage(
-        $text,
-        $default_pagename,
-        $request->getUser()
-    ))) {
+    } elseif (
+        ($pageinfo = ParseSerializedPage(
+            $text,
+            $default_pagename,
+            $request->getUser()
+        ))
+    ) {
         SavePage($request, $pageinfo, sprintf(
             _("Serialized file %s"),
             $filename
@@ -895,8 +907,10 @@ function LoadZip(&$request, $zipfile, $files = false, $exclude = false)
         // FIXME: basename("filewithnoslashes") seems to return
         // garbage sometimes.
         $fn = basename("/dummy/" . $fn);
-        if (($files && !in_array($fn, $files))
-             || ($exclude && in_array($fn, $exclude))) {
+        if (
+            ($files && !in_array($fn, $files))
+             || ($exclude && in_array($fn, $exclude))
+        ) {
             PrintXML(
                 HTML::dt(WikiLink($fn)),
                 HTML::dd(_("Skipping"))
@@ -924,8 +938,10 @@ class LimitedFileSet extends fileSet
         $incl = &$this->_includefiles;
         $excl = &$this->_exclude;
 
-        if (($incl && !in_array($fn, $incl))
-             || ($excl && in_array($fn, $excl))) {
+        if (
+            ($incl && !in_array($fn, $incl))
+             || ($excl && in_array($fn, $excl))
+        ) {
             $this->_skiplist[] = $fn;
             return false;
         } else {
@@ -1007,7 +1023,7 @@ function LoadAny(&$request, $file_or_dir, $files = false, $exclude = false)
 function RakeSandboxAtUserRequest(&$request)
 {
     $source = $request->getArg('source');
-    $finder = new FileFinder;
+    $finder = new FileFinder();
     $source = $finder->slashifyPath($source);
     $page = rawurldecode(basename($source));
     StartLoadDump($request, fmt(
@@ -1078,12 +1094,14 @@ function SetupWiki(&$request)
     $dbi = $request->_dbi;
 
     // Ensure that all mandatory pages are loaded
-    $finder = new FileFinder;
-    foreach (array_merge(
-        explode(':', 'OldTextFormattingRules:TextFormattingRules:PhpWikiAdministration'),
-        $GLOBALS['AllActionPages'],
-        array(constant('HOME_PAGE'))
-    ) as $f) {
+    $finder = new FileFinder();
+    foreach (
+        array_merge(
+            explode(':', 'OldTextFormattingRules:TextFormattingRules:PhpWikiAdministration'),
+            $GLOBALS['AllActionPages'],
+            array(constant('HOME_PAGE'))
+        ) as $f
+    ) {
         $page = gettext($f);
         $epage = urlencode($page);
 

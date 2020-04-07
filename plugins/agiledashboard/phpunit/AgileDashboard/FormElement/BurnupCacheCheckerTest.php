@@ -66,7 +66,7 @@ class BurnupCacheCheckerTest extends TestCase
 
     private $burnup_cache_dao;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 

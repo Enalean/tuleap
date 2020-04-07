@@ -79,7 +79,7 @@ class AddToTopBacklogPostActionDao extends DataAccessObject
         );
     }
 
-    public function createPostActionForTransitionId(int $transition_id) : void
+    public function createPostActionForTransitionId(int $transition_id): void
     {
         $this->getDB()->insert(
             "plugin_agiledashboard_tracker_workflow_action_add_top_backlog",

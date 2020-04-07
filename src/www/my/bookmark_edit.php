@@ -31,9 +31,11 @@ $csrf_token      = new CSRFSynchronizerToken($bookmark_url_id);
 $bookmark_url   = '';
 $bookmark_title = '';
 
-if ($request->isPost() &&
+if (
+    $request->isPost() &&
     $request->valid($vUrl) &&
-    $request->valid($vTitle)) {
+    $request->valid($vTitle)
+) {
     $csrf_token->check();
 
     $bookmark_url   = $request->get('bookmark_url');

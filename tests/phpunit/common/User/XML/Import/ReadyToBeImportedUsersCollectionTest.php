@@ -29,7 +29,7 @@ final class ReadyToBeImportedUsersCollectionTest extends \PHPUnit\Framework\Test
     /** @var UsersToBeImportedCollection */
     private $collection;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -43,7 +43,7 @@ final class ReadyToBeImportedUsersCollectionTest extends \PHPUnit\Framework\Test
         $this->collection->add($this->user, $this->id, $this->username, $this->ldap_id);
     }
 
-    public function testItRetrievesUserByUserName() : void
+    public function testItRetrievesUserByUserName(): void
     {
         $this->assertEquals(
             $this->user,
@@ -51,14 +51,14 @@ final class ReadyToBeImportedUsersCollectionTest extends \PHPUnit\Framework\Test
         );
     }
 
-    public function testItThrowsAnExceptionWhenUsernameNotFound() : void
+    public function testItThrowsAnExceptionWhenUsernameNotFound(): void
     {
         $this->expectException(\User\XML\Import\UserNotFoundException::class);
 
         $this->collection->getUserByUserName('unknown');
     }
 
-    public function testItRetrievesUserById() : void
+    public function testItRetrievesUserById(): void
     {
         $this->assertEquals(
             $this->collection->getUserById($this->id),
@@ -66,14 +66,14 @@ final class ReadyToBeImportedUsersCollectionTest extends \PHPUnit\Framework\Test
         );
     }
 
-    public function testItThrowsAnExceptionWhenIdNotFound() : void
+    public function testItThrowsAnExceptionWhenIdNotFound(): void
     {
         $this->expectException(\User\XML\Import\UserNotFoundException::class);
 
         $this->collection->getUserById(66);
     }
 
-    public function testItRetrievesUserByLdapId() : void
+    public function testItRetrievesUserByLdapId(): void
     {
         $this->assertEquals(
             $this->user,
@@ -81,14 +81,14 @@ final class ReadyToBeImportedUsersCollectionTest extends \PHPUnit\Framework\Test
         );
     }
 
-    public function testItThrowsAnExceptionWhenLdapIdNotFound() : void
+    public function testItThrowsAnExceptionWhenLdapIdNotFound(): void
     {
         $this->expectException(\User\XML\Import\UserNotFoundException::class);
 
         $this->collection->getUserById('unknown');
     }
 
-    public function testItDoesNotIndexByLdapIdWhenNoLdapId() : void
+    public function testItDoesNotIndexByLdapIdWhenNoLdapId(): void
     {
         $user = \Mockery::spy(\User\XML\Import\ReadyToBeImportedUser::class);
 

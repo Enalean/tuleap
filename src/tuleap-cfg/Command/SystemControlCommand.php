@@ -119,7 +119,7 @@ class SystemControlCommand extends Command
         return 0;
     }
 
-    private function getSystemControlContext() : string
+    private function getSystemControlContext(): string
     {
         $env = getenv(self::ENV_SYSTEMCTL);
         if ($env === false) {
@@ -149,7 +149,7 @@ class SystemControlCommand extends Command
         ];
     }
 
-    private function formatErrorMessage(SystemControlInterface $command) : string
+    private function formatErrorMessage(SystemControlInterface $command): string
     {
         $error_message = '<error>Error while running `' . $command->getCommandLine() . '`';
         $stdout = $command->getOutput();
@@ -171,7 +171,7 @@ class SystemControlCommand extends Command
         return $error_message;
     }
 
-    private function addTrailingCRLFWhenMissing(string $string) : string
+    private function addTrailingCRLFWhenMissing(string $string): string
     {
         return substr($string, -1) === PHP_EOL ? $string : $string . PHP_EOL;
     }

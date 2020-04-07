@@ -40,7 +40,9 @@ require_once __DIR__ . '/../../bootstrap.php';
 
 class RepositoryManagerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalSVNPollution;
+    use MockeryPHPUnitIntegration;
+    use GlobalSVNPollution;
+
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectManager
      */

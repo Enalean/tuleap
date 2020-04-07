@@ -440,9 +440,11 @@ class ZipReader
         if (!is_string($zipfile)) { // filepointer: File already open
             $this->fp = $zipfile;
             $zipfile = null;
-        } elseif (((ord($zipfile[0]) * 256 + ord($zipfile[1])) % 31 == 0) // buffer
-        and (substr($zipfile, 0, 2) == "\037\213")
-        or (substr($zipfile, 0, 2) == "x\332")) {  // 120, 218
+        } elseif (
+            ((ord($zipfile[0]) * 256 + ord($zipfile[1])) % 31 == 0) // buffer
+            and (substr($zipfile, 0, 2) == "\037\213")
+            or (substr($zipfile, 0, 2) == "x\332")
+        ) {  // 120, 218
             $this->fp = null;
             $this->buf = $zipfile;
             $zipfile = null;
@@ -736,12 +738,14 @@ function ParseRFC822Headers(&$string)
         $string = substr($string, strlen($match[0]));
     }
 
-    while (preg_match(
-        '/^([!-9;-~]+) [ \t]* : [ \t]* '
+    while (
+        preg_match(
+            '/^([!-9;-~]+) [ \t]* : [ \t]* '
                       . '( .* \r?\n (?: [ \t] .* \r?\n)* )/x',
-        $string,
-        $match
-    )) {
+            $string,
+            $match
+        )
+    ) {
         $headers[strtolower($match[1])]
             = preg_replace('/^\s+|\s+$/', '', $match[2]);
         $string = substr($string, strlen($match[0]));
@@ -768,13 +772,15 @@ function ParseMimeContentType($string)
     // FIXME: Remove (RFC822 style comments).
 
     // Get type/subtype
-    if (!preg_match(
-        ':^\s*(' . MIME_TOKEN_REGEXP . ')\s*'
+    if (
+        !preg_match(
+            ':^\s*(' . MIME_TOKEN_REGEXP . ')\s*'
                     . '/'
                     . '\s*(' . MIME_TOKEN_REGEXP . ')\s*:x',
-        $string,
-        $match
-    )) {
+            $string,
+            $match
+        )
+    ) {
         ExitWiki(sprintf("Bad %s", 'MIME content-type'));
     }
 
@@ -783,12 +789,14 @@ function ParseMimeContentType($string)
     $string  = substr($string, strlen($match[0]));
 
     $param = array();
-    while (preg_match(
-        '/^;\s*(' . MIME_TOKEN_REGEXP . ')\s*=\s*'
+    while (
+        preg_match(
+            '/^;\s*(' . MIME_TOKEN_REGEXP . ')\s*=\s*'
                       . '(?:(' . MIME_TOKEN_REGEXP . ')|"((?:[^"\\\\]|\\.)*)") \s*/sx',
-        $string,
-        $match
-    )) {
+            $string,
+            $match
+        )
+    ) {
         //" <--kludge for brain-dead syntax coloring
         if (strlen($match[2])) {
             $val = $match[2];
@@ -812,11 +820,13 @@ function ParseMimeMultipart($data, $boundary)
 
     $boundary = preg_quote($boundary);
 
-    while (preg_match(
-        "/^(|.*?\n)--$boundary((?:--)?)[^\n]*\n/s",
-        $data,
-        $match
-    )) {
+    while (
+        preg_match(
+            "/^(|.*?\n)--$boundary((?:--)?)[^\n]*\n/s",
+            $data,
+            $match
+        )
+    ) {
         $data = substr($data, strlen($match[0]));
         if (! isset($parts)) {
             $parts = array();  // First time through: discard leading chaff
@@ -873,7 +883,7 @@ function ParseMimeifiedPerm($string)
         $groups = preg_split("/,/D", trim($groupstring));
         foreach ($groups as $group) {
             $group = trim($group);
-            $bool = (boolean) (substr($group, 0, 1) != '-');
+            $bool = (bool) (substr($group, 0, 1) != '-');
             if (substr($group, 0, 1) == '-' or substr($group, 0, 1) == '+') {
                 $group = substr($group, 1);
             }
@@ -890,8 +900,10 @@ function ParseMimeifiedPerm($string)
 // references.
 function ParseMimeifiedPages($data)
 {
-    if (!($headers = ParseRFC822Headers($data))
-        || empty($headers['content-type'])) {
+    if (
+        !($headers = ParseRFC822Headers($data))
+        || empty($headers['content-type'])
+    ) {
         //trigger_error( sprintf(_("Can't find %s"),'content-type header'),
         //               E_USER_WARNING );
         return false;

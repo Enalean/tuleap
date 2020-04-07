@@ -30,7 +30,6 @@ use Tuleap\Docman\REST\v1\Files\DocmanFilesPATCHRepresentation;
 
 class ApprovalTableUpdateActionCheckerTest extends TestCase
 {
-
     use MockeryPHPUnitIntegration;
 
     /**

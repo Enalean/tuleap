@@ -47,7 +47,7 @@ final class DocmanItemPermissionsForGroupsRepresentation
      * @param UserGroupRepresentation[] $can_write
      * @param UserGroupRepresentation[] $can_manage
      */
-    public static function build(array $can_read, array $can_write, array $can_manage) : self
+    public static function build(array $can_read, array $can_write, array $can_manage): self
     {
         $representation             = new self();
         $representation->can_read   = $can_read;

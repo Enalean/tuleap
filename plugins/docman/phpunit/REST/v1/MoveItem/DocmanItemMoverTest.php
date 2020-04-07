@@ -57,7 +57,7 @@ final class DocmanItemMoverTest extends TestCase
      */
     private $event_manager;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->item_factory        = Mockery::mock(Docman_ItemFactory::class);
         $this->permissions_manager = Mockery::mock(Docman_PermissionsManager::class);
@@ -75,7 +75,7 @@ final class DocmanItemMoverTest extends TestCase
         );
     }
 
-    public function testAnItemCanBeMoved() : void
+    public function testAnItemCanBeMoved(): void
     {
         $destination_folder_id                 = 147;
         $representation                        = new DocmanMoveItemRepresentation();
@@ -108,7 +108,7 @@ final class DocmanItemMoverTest extends TestCase
         );
     }
 
-    public function testCannotMoveAnItemIntoADestinationThatDoesNotExist() : void
+    public function testCannotMoveAnItemIntoADestinationThatDoesNotExist(): void
     {
         $representation                        = new DocmanMoveItemRepresentation();
         $representation->destination_folder_id = 147;
@@ -125,7 +125,7 @@ final class DocmanItemMoverTest extends TestCase
         );
     }
 
-    public function testCannotMoveAnItemIntoADestinationTheUserCannotRead() : void
+    public function testCannotMoveAnItemIntoADestinationTheUserCannotRead(): void
     {
         $representation                        = new DocmanMoveItemRepresentation();
         $representation->destination_folder_id = 147;
@@ -144,7 +144,7 @@ final class DocmanItemMoverTest extends TestCase
         );
     }
 
-    public function testCannotMoveAnItemIntoADifferentProject() : void
+    public function testCannotMoveAnItemIntoADifferentProject(): void
     {
         $destination_folder_id                 = 147;
         $representation                        = new DocmanMoveItemRepresentation();
@@ -169,7 +169,7 @@ final class DocmanItemMoverTest extends TestCase
         );
     }
 
-    public function testCannotMoveAnItemIntoTheFolderTheItemIsAlreadyIn() : void
+    public function testCannotMoveAnItemIntoTheFolderTheItemIsAlreadyIn(): void
     {
         $destination_folder_id                 = 147;
         $representation                        = new DocmanMoveItemRepresentation();
@@ -196,7 +196,7 @@ final class DocmanItemMoverTest extends TestCase
         );
     }
 
-    public function testCannotMoveAnItemIntoSomethingThatIsNotAFolder() : void
+    public function testCannotMoveAnItemIntoSomethingThatIsNotAFolder(): void
     {
         $destination_id                        = 147;
         $representation                        = new DocmanMoveItemRepresentation();
@@ -225,7 +225,7 @@ final class DocmanItemMoverTest extends TestCase
         );
     }
 
-    public function testCannotMoveAnItemTheUserCannotWrite() : void
+    public function testCannotMoveAnItemTheUserCannotWrite(): void
     {
         $destination_folder_id                 = 147;
         $representation                        = new DocmanMoveItemRepresentation();
@@ -260,7 +260,7 @@ final class DocmanItemMoverTest extends TestCase
         );
     }
 
-    public function testCannotMoveAnItemIntoAFolderTheUserCannotWrite() : void
+    public function testCannotMoveAnItemIntoAFolderTheUserCannotWrite(): void
     {
         $destination_folder_id                 = 147;
         $representation                        = new DocmanMoveItemRepresentation();
@@ -296,7 +296,7 @@ final class DocmanItemMoverTest extends TestCase
         );
     }
 
-    public function testIssueWithTheMoveIsNotSilentlyIgnored() : void
+    public function testIssueWithTheMoveIsNotSilentlyIgnored(): void
     {
         $destination_folder_id                 = 147;
         $representation                        = new DocmanMoveItemRepresentation();

@@ -61,7 +61,7 @@ final class OAuth2AuthorizationCodeCreatorTest extends TestCase
 
         $formatter = new class implements SplitTokenFormatter
         {
-            public function getIdentifier(SplitToken $token) : ConcealedString
+            public function getIdentifier(SplitToken $token): ConcealedString
             {
                 return $token->getVerificationString()->getString();
             }

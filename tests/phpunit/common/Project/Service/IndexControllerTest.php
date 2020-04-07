@@ -34,7 +34,8 @@ use Tuleap\Test\Helpers\LayoutHelperPassthrough;
 
 final class IndexControllerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /** @var IndexController */
     private $controller;

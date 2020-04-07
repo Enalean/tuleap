@@ -50,7 +50,7 @@ class HiddenFieldsetsDao extends DataAccessObject
         return $this->getDB()->q($sql, $transition_id);
     }
 
-    public function isAHiddenFieldsetPostActionUsedInTracker(int $tracker_id) : bool
+    public function isAHiddenFieldsetPostActionUsedInTracker(int $tracker_id): bool
     {
         $sql = 'SELECT NULL
             FROM tracker_workflow
@@ -64,7 +64,7 @@ class HiddenFieldsetsDao extends DataAccessObject
         return $result !== false;
     }
 
-    public function createPostActionForTransitionId(int $transition_id, array $fieldset_ids) : void
+    public function createPostActionForTransitionId(int $transition_id, array $fieldset_ids): void
     {
         $hidden_fieldsets_action_id = (int) $this->getDB()->insertReturnId(
             "plugin_tracker_workflow_postactions_hidden_fieldsets",
@@ -82,7 +82,7 @@ class HiddenFieldsetsDao extends DataAccessObject
         }
     }
 
-    public function deletePostActionsByTransitionId(int $transition_id) : void
+    public function deletePostActionsByTransitionId(int $transition_id): void
     {
         $sql = "
             DELETE plugin_tracker_workflow_postactions_hidden_fieldsets, plugin_tracker_workflow_postactions_hidden_fieldsets_value
@@ -97,7 +97,7 @@ class HiddenFieldsetsDao extends DataAccessObject
         );
     }
 
-    public function deleteAllPostActionsForWorkflow(int $workflow_id) : void
+    public function deleteAllPostActionsForWorkflow(int $workflow_id): void
     {
         $sql = "
             DELETE plugin_tracker_workflow_postactions_hidden_fieldsets, plugin_tracker_workflow_postactions_hidden_fieldsets_value

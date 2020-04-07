@@ -28,20 +28,21 @@ use UserHelper;
 class WebhookRequestSenderTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    protected function setUp() : void
+
+    protected function setUp(): void
     {
         parent::setUp();
         UserHelper::clearInstance();
         UserHelper::setInstance(\Mockery::spy(UserHelper::class));
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         UserHelper::clearInstance();
         parent::tearDown();
     }
 
-    public function testItSendsWebhooks() : void
+    public function testItSendsWebhooks(): void
     {
         $webhook_factory = \Mockery::mock(WebhookFactory::class);
         $webhook_emitter = \Mockery::mock(Emitter::class);

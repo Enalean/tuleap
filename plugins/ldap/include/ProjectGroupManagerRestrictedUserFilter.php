@@ -38,7 +38,7 @@ final class ProjectGroupManagerRestrictedUserFilter
         $this->user_manager = $user_manager;
     }
 
-    public function filter(Project $project, LDAPSetOfUserIDsForDiff $set_of_user_ids) : LDAPSetOfUserIDsForDiff
+    public function filter(Project $project, LDAPSetOfUserIDsForDiff $set_of_user_ids): LDAPSetOfUserIDsForDiff
     {
         if (! ForgeConfig::areRestrictedUsersAllowed()) {
             return $set_of_user_ids;
@@ -52,14 +52,14 @@ final class ProjectGroupManagerRestrictedUserFilter
         return $this->addInUsersToRemoveUsersThatAreRestricted($project, $set_of_user_ids);
     }
 
-    private function areRestrictedUsersAllowed(Project $project) : bool
+    private function areRestrictedUsersAllowed(Project $project): bool
     {
         $project_access = $project->getAccess();
         return $project_access === Project::ACCESS_PUBLIC_UNRESTRICTED || $project_access === Project::ACCESS_PRIVATE ||
             $project->isSuperPublic();
     }
 
-    private function clearRestrictedUsersToAddInAProjectNotIncludingRestrictedContext(LDAPSetOfUserIDsForDiff $set_of_user_ids) : LDAPSetOfUserIDsForDiff
+    private function clearRestrictedUsersToAddInAProjectNotIncludingRestrictedContext(LDAPSetOfUserIDsForDiff $set_of_user_ids): LDAPSetOfUserIDsForDiff
     {
         $user_ids_to_add = [];
         foreach ($set_of_user_ids->getUserIDsToAdd() as $user_id) {
@@ -76,7 +76,7 @@ final class ProjectGroupManagerRestrictedUserFilter
         );
     }
 
-    private function addInUsersToRemoveUsersThatAreRestricted(Project $project, LDAPSetOfUserIDsForDiff $set_of_user_ids) : LDAPSetOfUserIDsForDiff
+    private function addInUsersToRemoveUsersThatAreRestricted(Project $project, LDAPSetOfUserIDsForDiff $set_of_user_ids): LDAPSetOfUserIDsForDiff
     {
         $extra_user_id_to_delete = [];
         foreach ($project->getMembers() as $member) {

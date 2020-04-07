@@ -91,7 +91,7 @@ class StreamFilterTest extends TestCase
         }
     }
 
-    public function testFilterThrowingAnExceptionDuringProcessingIsReplacedByFilterFatalError() : void
+    public function testFilterThrowingAnExceptionDuringProcessingIsReplacedByFilterFatalError(): void
     {
         $source_resource = fopen('php://memory', 'rb+');
         fwrite($source_resource, 'Test data');
@@ -111,7 +111,7 @@ class StreamFilterTest extends TestCase
         fclose($destination_resource);
     }
 
-    public function testUserFilterIsNotifiedWhenTheResourceIsBeingClosed() : void
+    public function testUserFilterIsNotifiedWhenTheResourceIsBeingClosed(): void
     {
         $filter = \Mockery::mock(FilterInterface::class);
         $filter->shouldReceive('getFilteredChainIdentifier')->andReturns(STREAM_FILTER_READ);
@@ -122,7 +122,7 @@ class StreamFilterTest extends TestCase
         fclose($source_resource);
     }
 
-    public function testUserFilterIsNotifiedWhenTheFilterIsBeingDetached() : void
+    public function testUserFilterIsNotifiedWhenTheFilterIsBeingDetached(): void
     {
         $filter = \Mockery::mock(FilterInterface::class);
         $filter->shouldReceive('getFilteredChainIdentifier')->andReturns(STREAM_FILTER_READ);

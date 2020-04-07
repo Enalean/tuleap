@@ -175,7 +175,7 @@ class StockPlot extends Plot
     public function ModBox($img, $xscale, $yscale, $i, $xl, $xr, $neg)
     {
     }
-} // Class
+}
 
 //===================================================
 // CLASS BoxPlot

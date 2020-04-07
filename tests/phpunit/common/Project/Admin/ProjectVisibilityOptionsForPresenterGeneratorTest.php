@@ -27,7 +27,7 @@ use Project;
 
 final class ProjectVisibilityOptionsForPresenterGeneratorTest extends TestCase
 {
-    public function testGeneratedOptionsWhenRestrictedUsersAreNotAllowed() : void
+    public function testGeneratedOptionsWhenRestrictedUsersAreNotAllowed(): void
     {
         $generator = new ProjectVisibilityOptionsForPresenterGenerator();
         $options   = $generator->generateVisibilityOptions(false, Project::ACCESS_PUBLIC);
@@ -40,7 +40,7 @@ final class ProjectVisibilityOptionsForPresenterGeneratorTest extends TestCase
         $this->assertEquals(Project::ACCESS_PUBLIC, $this->getSelectedAccess($options));
     }
 
-    public function testGeneratedOptionsWhenRestrictedUsersAreAllowed() : void
+    public function testGeneratedOptionsWhenRestrictedUsersAreAllowed(): void
     {
         $generator = new ProjectVisibilityOptionsForPresenterGenerator();
         $options   = $generator->generateVisibilityOptions(true, Project::ACCESS_PRIVATE_WO_RESTRICTED);
@@ -53,7 +53,7 @@ final class ProjectVisibilityOptionsForPresenterGeneratorTest extends TestCase
         $this->assertEquals(Project::ACCESS_PRIVATE_WO_RESTRICTED, $this->getSelectedAccess($options));
     }
 
-    private function getAvailableAccesses(array $options) : array
+    private function getAvailableAccesses(array $options): array
     {
         $accesses = [];
 
@@ -64,7 +64,7 @@ final class ProjectVisibilityOptionsForPresenterGeneratorTest extends TestCase
         return $accesses;
     }
 
-    private function getSelectedAccess(array $options) : string
+    private function getSelectedAccess(array $options): string
     {
         foreach ($options as $option) {
             if ($option['selected'] !== '') {

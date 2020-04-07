@@ -27,12 +27,13 @@ require_once __DIR__ . '/../../bootstrap.php';
 class Git_Hook_ParseLog_CountPushesTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     private $extract_cross_ref;
     private $log_pushes;
     private $parse_log;
     private $logger;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -42,7 +43,7 @@ class Git_Hook_ParseLog_CountPushesTest extends \PHPUnit\Framework\TestCase
         $this->parse_log         = new Git_Hook_ParseLog($this->log_pushes, $this->extract_cross_ref, $this->logger);
     }
 
-    public function testItLogPush() : void
+    public function testItLogPush(): void
     {
         $push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns(array('469eaa9'))->getMock();
         $this->log_pushes->shouldReceive('executeForRepository')->with($push_details)->once();

@@ -77,7 +77,7 @@ class Router implements DispatchableWithRequest, DispatchableWithBurningParrot
         }
     }
 
-    private function getIncludeAsset() : IncludeAssets
+    private function getIncludeAsset(): IncludeAssets
     {
         return new IncludeAssets(
             __DIR__ . '/../../../../../src/www/assets/bugzilla_reference',

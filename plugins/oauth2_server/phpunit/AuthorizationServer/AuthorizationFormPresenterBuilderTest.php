@@ -33,6 +33,8 @@ use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
 final class AuthorizationFormPresenterBuilderTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var AuthorizationFormPresenterBuilder
      */
@@ -44,8 +46,6 @@ final class AuthorizationFormPresenterBuilderTest extends TestCase
             new RedirectURIBuilder(HTTPFactoryBuilder::URIFactory())
         );
     }
-
-    use MockeryPHPUnitIntegration;
 
     public function testBuild(): void
     {

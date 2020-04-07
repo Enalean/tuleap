@@ -42,7 +42,7 @@ final class PsalmCommandLauncherWithIgnoreDirectoryTest extends TestCase
         $this->tmp_dir = vfsStream::setup();
     }
 
-    public function testPsalmCommandIsCalledWithRewrittenConfig() : void
+    public function testPsalmCommandIsCalledWithRewrittenConfig(): void
     {
         $ignored_directory_provider = Mockery::mock(PsalmIgnoreDirectory::class);
 
@@ -51,7 +51,7 @@ final class PsalmCommandLauncherWithIgnoreDirectoryTest extends TestCase
 
         $shell_passthrough = Mockery::mock(ShellPassthrough::class);
         $shell_passthrough->shouldReceive('__invoke')->withArgs(
-            function (string $command) use ($temporary_dir_for_rewritten_config) : bool {
+            function (string $command) use ($temporary_dir_for_rewritten_config): bool {
                 $this->assertStringNotContainsString('{config_path}', $command);
                 $tmp_files = scandir($temporary_dir_for_rewritten_config, SCANDIR_SORT_DESCENDING);
                 $this->assertCount(3, $tmp_files);
@@ -80,7 +80,7 @@ final class PsalmCommandLauncherWithIgnoreDirectoryTest extends TestCase
         $this->assertCount(2, $tmp_files);
     }
 
-    public function testItExecutePsalmWithAnotherPhpInterpreter() : void
+    public function testItExecutePsalmWithAnotherPhpInterpreter(): void
     {
         $ignored_directory_provider = Mockery::mock(PsalmIgnoreDirectory::class);
         $ignored_directory_provider->shouldReceive('getIgnoredDirectories');
@@ -92,7 +92,7 @@ final class PsalmCommandLauncherWithIgnoreDirectoryTest extends TestCase
 
         $shell_passthrough = Mockery::mock(ShellPassthrough::class);
         $shell_passthrough->shouldReceive('__invoke')->withArgs(
-            function (string $command) use ($temporary_dir_for_rewritten_config) : bool {
+            function (string $command) use ($temporary_dir_for_rewritten_config): bool {
                 return strpos($command, '/usr/bin/php73 ') === 0;
             }
         )->andReturn(147);
@@ -107,7 +107,7 @@ final class PsalmCommandLauncherWithIgnoreDirectoryTest extends TestCase
         $this->assertEquals(147, $exit_code);
     }
 
-    public function testIncorrectCallToInitScriptIsRejected() : void
+    public function testIncorrectCallToInitScriptIsRejected(): void
     {
         $command_launcher = new PsalmCommandLauncherWithIgnoreDirectory(
             $this->tmp_dir->url(),
@@ -121,7 +121,7 @@ final class PsalmCommandLauncherWithIgnoreDirectoryTest extends TestCase
         $this->expectOutputRegex('/^Usage: init_script/');
     }
 
-    public function testFailsWhenConfigFileCanNotBeFound() : void
+    public function testFailsWhenConfigFileCanNotBeFound(): void
     {
         $command_launcher = new PsalmCommandLauncherWithIgnoreDirectory(
             $this->tmp_dir->url(),
@@ -142,7 +142,7 @@ final class PsalmCommandLauncherWithIgnoreDirectoryTest extends TestCase
         $this->expectOutputString("$config_path can not be read\n");
     }
 
-    public function testFailsWhenConfigFileIsNotAValidXMLFile() : void
+    public function testFailsWhenConfigFileIsNotAValidXMLFile(): void
     {
         $command_launcher = new PsalmCommandLauncherWithIgnoreDirectory(
             $this->tmp_dir->url(),
@@ -164,7 +164,7 @@ final class PsalmCommandLauncherWithIgnoreDirectoryTest extends TestCase
         $this->expectOutputString("$config_path is not a valid XML file\n");
     }
 
-    public function testUnknownPsalmCommandIsRejected() : void
+    public function testUnknownPsalmCommandIsRejected(): void
     {
         $command_launcher = new PsalmCommandLauncherWithIgnoreDirectory(
             $this->tmp_dir->url(),
@@ -185,7 +185,7 @@ final class PsalmCommandLauncherWithIgnoreDirectoryTest extends TestCase
         $this->expectOutputRegex('/^wrong_command is not a Psalm command/');
     }
 
-    public function testDoNotExecuteToUpdateBaseline() : void
+    public function testDoNotExecuteToUpdateBaseline(): void
     {
         $command_launcher = new PsalmCommandLauncherWithIgnoreDirectory(
             $this->tmp_dir->url(),

@@ -26,19 +26,19 @@ use PHPUnit\Framework\TestCase;
 
 final class DBTransactionExecutorPassthroughTest extends TestCase
 {
-    public function testCallableIsCalled() : void
+    public function testCallableIsCalled(): void
     {
         $transation_executor = new DBTransactionExecutorPassthrough();
 
         $callable = new class {
             private $number_of_calls = 0;
 
-            public function __invoke() : void
+            public function __invoke(): void
             {
                 $this->number_of_calls++;
             }
 
-            public function getNumberOfCalls() : int
+            public function getNumberOfCalls(): int
             {
                 return $this->number_of_calls;
             }

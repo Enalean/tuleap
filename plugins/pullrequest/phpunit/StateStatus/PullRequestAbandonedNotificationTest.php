@@ -34,7 +34,9 @@ use UserHelper;
 
 final class PullRequestAbandonedNotificationTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox, TemporaryTestDirectory;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
+    use TemporaryTestDirectory;
 
     public function testAbandonedNotificationCanBeBuiltFromTheOwnersOfThePullRequest(): void
     {

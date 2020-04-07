@@ -51,12 +51,12 @@ final class LaunchEveryMinuteJobCommand extends Command
         $this->logger           = $logger;
     }
 
-    protected function configure() : void
+    protected function configure(): void
     {
         $this->setDescription('Trigger an event that is supposed to be launched every minute by Cron or SystemD timers');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output) : int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->event_dispatcher->dispatch(new EventCronJobEveryMinute($this->logger));
         return 0;

@@ -192,10 +192,12 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
         try {
             $this->administrator_checker->checkUserIsProjectAdministrator($user, $project);
         } catch (ForbiddenException $e) {
-            if (! $this->membership_delegation_dao->doesUserHasMembershipDelegation(
-                $user->getId(),
-                $project->getID()
-            )) {
+            if (
+                ! $this->membership_delegation_dao->doesUserHasMembershipDelegation(
+                    $user->getId(),
+                    $project->getID()
+                )
+            ) {
                 throw $e;
             }
         }
@@ -371,7 +373,8 @@ class ProjectMembersController implements DispatchableWithRequest, DispatchableW
             $this->appendUgroups($ugroups, $project, ProjectUGroup::FORUM_ADMIN);
         }
 
-        if (in_array($member['news_flags'], array(UserPermissionsDao::NEWS_WRITER_FLAG, UserPermissionsDao::NEWS_ADMIN_FLAG))
+        if (
+            in_array($member['news_flags'], array(UserPermissionsDao::NEWS_WRITER_FLAG, UserPermissionsDao::NEWS_ADMIN_FLAG))
             && $project->usesNews()
         ) {
             $this->appendUgroups($ugroups, $project, ProjectUGroup::NEWS_WRITER);

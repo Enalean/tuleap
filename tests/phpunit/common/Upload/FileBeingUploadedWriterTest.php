@@ -31,9 +31,10 @@ use Tuleap\Tus\TusFileInformation;
 
 class FileBeingUploadedWriterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
-    public function testWriteChunk() : void
+    public function testWriteChunk(): void
     {
         $tmp_dir = vfsStream::setup()->url();
         \ForgeConfig::set('tmp_dir', $tmp_dir);
@@ -69,7 +70,7 @@ class FileBeingUploadedWriterTest extends TestCase
         $this->assertSame($written_size, strlen($content));
     }
 
-    public function testCanNotWriteMoreThanTheFileSize() : void
+    public function testCanNotWriteMoreThanTheFileSize(): void
     {
         $tmp_dir = vfsStream::setup()->url();
         \ForgeConfig::set('tmp_dir', $tmp_dir);
@@ -101,7 +102,7 @@ class FileBeingUploadedWriterTest extends TestCase
         $this->assertSame($written_size, $file_length);
     }
 
-    public function testInputThatIsNotAResourceIsRejected() : void
+    public function testInputThatIsNotAResourceIsRejected(): void
     {
         $writer = new FileBeingUploadedWriter(\Mockery::mock(PathAllocator::class), \Mockery::mock(DBConnection::class));
 

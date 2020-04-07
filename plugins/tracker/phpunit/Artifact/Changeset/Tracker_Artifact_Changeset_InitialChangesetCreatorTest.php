@@ -23,7 +23,9 @@ use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 
 class Tracker_Artifact_Changeset_InitialChangesetCreatorTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\GlobalLanguageMock;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\GlobalLanguageMock;
+
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_Selectbox
      */

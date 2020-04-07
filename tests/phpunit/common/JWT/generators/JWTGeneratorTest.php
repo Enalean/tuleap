@@ -56,7 +56,7 @@ class JWTGeneratorTest extends TestCase
      */
     private $signer;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 

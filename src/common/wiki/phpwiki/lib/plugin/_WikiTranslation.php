@@ -482,7 +482,8 @@ class _PageList_Column_customlang extends _PageList_Column
         );
         // how to markup untranslated words and not existing pages?
         // untranslated: (TODO) link to translation editor
-        if ($trans == $text or // untranslated
+        if (
+            $trans == $text or // untranslated
             (($this->_from_lang != 'en') and
              ($this->_field != 'en') and
              ($trans == $this->_plugin->fast_translate(
@@ -490,11 +491,14 @@ class _PageList_Column_customlang extends _PageList_Column
                  'en',
                  $this->_from_lang
              ))
-             )) {
+             )
+        ) {
             global $WikiTheme;
             $link = $WikiTheme->linkUnknownWikiWord($trans);
-            if (!($this->_noT or $this->_nolinks)
-                and $this->dbi->isWikiPage($trans)) {
+            if (
+                !($this->_noT or $this->_nolinks)
+                and $this->dbi->isWikiPage($trans)
+            ) {
                 $url = WikiURL($trans, array('action' => 'TranslateText',
                                              'lang' => $this->_field));
                 $button = $WikiTheme->makeButton('T', $url);

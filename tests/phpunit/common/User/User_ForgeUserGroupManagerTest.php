@@ -37,7 +37,7 @@ final class User_ForgeUserGroupManagerTest extends \PHPUnit\Framework\TestCase
      */
     private $manager;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->dao = \Mockery::spy(\UserGroupDao::class);
@@ -47,7 +47,7 @@ final class User_ForgeUserGroupManagerTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItThrowsExceptionIfUGroupNotFound() : void
+    public function testItThrowsExceptionIfUGroupNotFound(): void
     {
         $this->expectException(\User_UserGroupNotFoundException::class);
 
@@ -58,7 +58,7 @@ final class User_ForgeUserGroupManagerTest extends \PHPUnit\Framework\TestCase
         $this->manager->updateUserGroup($ugroup);
     }
 
-    public function testItReturnsTrueIfThereAreNoModifications() : void
+    public function testItReturnsTrueIfThereAreNoModifications(): void
     {
         $ugroup = new User_ForgeUGroup(45, 'people', 'to eat');
 
@@ -72,7 +72,7 @@ final class User_ForgeUserGroupManagerTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($update);
     }
 
-    public function testItUpdates() : void
+    public function testItUpdates(): void
     {
         $ugroup = new User_ForgeUGroup(45, 'people', 'to eat');
 
@@ -88,7 +88,7 @@ final class User_ForgeUserGroupManagerTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($update);
     }
 
-    public function testItThrowsAnExceptionIfUGroupNameAlreadyExists() : void
+    public function testItThrowsAnExceptionIfUGroupNameAlreadyExists(): void
     {
         $this->expectException(\User_UserGroupNameInvalidException::class);
         $ugroup = new User_ForgeUGroup(45, 'people', 'to eat');

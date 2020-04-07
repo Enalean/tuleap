@@ -84,7 +84,7 @@ class _RecentChanges_RssFormatter091 extends _RecentChanges_RssFormatter
     public function format($changes)
     {
         //    include_once('lib/RssWriter.php');
-        $rss = new RSSWriter091;
+        $rss = new RSSWriter091();
 
         $rss->channel($this->channel_properties());
 

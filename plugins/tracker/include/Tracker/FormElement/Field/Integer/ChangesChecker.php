@@ -25,7 +25,7 @@ use Tracker_Artifact_ChangesetValue_Integer;
 class ChangesChecker
 {
 
-    public function hasChanges(Tracker_Artifact_ChangesetValue_Integer $old_value, $new_value) : bool
+    public function hasChanges(Tracker_Artifact_ChangesetValue_Integer $old_value, $new_value): bool
     {
         $value_to_compare = null;
         if ($new_value !== null && $new_value !== '') {

@@ -42,7 +42,7 @@ final class Cardwall_Column_isInColumnTest extends \PHPUnit\Framework\TestCase
      */
     private $config;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $tracker = Mockery::mock(Tracker::class);
@@ -64,21 +64,21 @@ final class Cardwall_Column_isInColumnTest extends \PHPUnit\Framework\TestCase
         $this->config = new Cardwall_OnTop_Config($tracker, $dao, $column_factory, $tracker_mapping_factory);
     }
 
-    public function testItIsInTheCellIfTheLabelMatches() : void
+    public function testItIsInTheCellIfTheLabelMatches(): void
     {
         $this->field->shouldReceive('getFirstValueFor')->with($this->artifact->getLastChangeset())->andReturns('ongoing');
         $column   = $this->newCardwall_Column(0, 'ongoing');
         $this->assertIn($column);
     }
 
-    public function testItIsNotInTheCellIfTheLabelDoesntMatch() : void
+    public function testItIsNotInTheCellIfTheLabelDoesntMatch(): void
     {
         $this->field->shouldReceive('getFirstValueFor')->with($this->artifact->getLastChangeset())->andReturns('ongoing');
         $column   = $this->newCardwall_Column(0, 'done');
         $this->assertNotIn($column);
     }
 
-    public function testItIsInTheCellIfItHasNoStatusAndTheColumnHasId100() : void
+    public function testItIsInTheCellIfItHasNoStatusAndTheColumnHasId100(): void
     {
         $null_status = null;
         $this->field->shouldReceive('getFirstValueFor')->with($this->artifact->getLastChangeset())->andReturns($null_status);
@@ -86,7 +86,7 @@ final class Cardwall_Column_isInColumnTest extends \PHPUnit\Framework\TestCase
         $this->assertIn($column);
     }
 
-    public function testItIsNotInTheCellIfItHasNoStatus() : void
+    public function testItIsNotInTheCellIfItHasNoStatus(): void
     {
         $null_status = null;
         $this->field->shouldReceive('getFirstValueFor')->with($this->artifact->getLastChangeset())->andReturns($null_status);
@@ -94,7 +94,7 @@ final class Cardwall_Column_isInColumnTest extends \PHPUnit\Framework\TestCase
         $this->assertNotIn($column);
     }
 
-    public function testItIsNotInTheCellIfHasANonMatchingLabelTheColumnIdIs100() : void
+    public function testItIsNotInTheCellIfHasANonMatchingLabelTheColumnIdIs100(): void
     {
         $this->field->shouldReceive('getFirstValueFor')->with($this->artifact->getLastChangeset())->andReturns('ongoing');
         $column   = $this->newCardwall_Column(100, 'done');
@@ -120,11 +120,11 @@ final class Cardwall_Column_isInColumnTest extends \PHPUnit\Framework\TestCase
 
 class Cardwall_Column_canContainStatusTest extends \PHPUnit\Framework\TestCase
 {
-
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     private $column;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -133,11 +133,11 @@ class Cardwall_Column_canContainStatusTest extends \PHPUnit\Framework\TestCase
         $this->column = new Cardwall_Column($id, $label, $header_color);
     }
 
-    public function testItReturnsTrueOnNoneColumnIfStatusIsNone() : void
+    public function testItReturnsTrueOnNoneColumnIfStatusIsNone(): void
     {
         $this->assertTrue($this->column->canContainStatus('None'));
     }
-    public function testItReturnsTrueOnNoneColumnIfStatusIsNull() : void
+    public function testItReturnsTrueOnNoneColumnIfStatusIsNull(): void
     {
         $this->assertTrue($this->column->canContainStatus(null));
     }

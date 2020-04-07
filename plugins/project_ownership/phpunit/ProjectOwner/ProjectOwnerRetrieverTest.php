@@ -36,7 +36,7 @@ class ProjectOwnerRetrieverTest extends TestCase
      */
     private $user_manager;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->dao          = \Mockery::mock(ProjectOwnerDAO::class);
         $this->user_manager = \Mockery::mock(\UserManager::class);

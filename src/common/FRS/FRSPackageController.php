@@ -132,7 +132,8 @@ class FRSPackageController
         }
 
         $package_data = $request->get('package');
-        if ($package_data['name'] !== html_entity_decode($package->getName())
+        if (
+            $package_data['name'] !== html_entity_decode($package->getName())
             && $this->package_factory->isPackageNameExist($package_data['name'], $project->getGroupId())
         ) {
             throw new FRSPackageNameAlreadyExistsException();

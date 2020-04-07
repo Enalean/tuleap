@@ -39,17 +39,17 @@ final class ConcealedString
         $this->value = $value;
     }
 
-    public function getString() : string
+    public function getString(): string
     {
         return $this->value;
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
         return $this->value;
     }
 
-    public function __debugInfo() : array
+    public function __debugInfo(): array
     {
         return ['value' => '** protected value, invoke getString instead of trying to dump it **'];
     }

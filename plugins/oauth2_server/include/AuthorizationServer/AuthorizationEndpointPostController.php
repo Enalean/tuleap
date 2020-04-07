@@ -145,7 +145,8 @@ final class AuthorizationEndpointPostController extends DispatchablePSR15Compati
     private function getValidBodyParameters(ServerRequestInterface $request): array
     {
         $body_params = $request->getParsedBody();
-        if (! is_array($body_params)
+        if (
+            ! is_array($body_params)
             || ! isset($body_params[self::REDIRECT_URI])
             || ! is_string($body_params[self::REDIRECT_URI])
             || ! isset($body_params[self::APP_IDENTIFIER])

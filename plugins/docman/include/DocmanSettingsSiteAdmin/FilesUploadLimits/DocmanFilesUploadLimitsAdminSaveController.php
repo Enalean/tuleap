@@ -46,7 +46,7 @@ class DocmanFilesUploadLimitsAdminSaveController implements DispatchableWithRequ
      *
      * @param array $variables
      */
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables) : void
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         if (! $request->getCurrentUser()->isSuperUser()) {
             $layout->addFeedback(
@@ -70,7 +70,7 @@ class DocmanFilesUploadLimitsAdminSaveController implements DispatchableWithRequ
         $layout->redirect($request->getFromServer('REQUEST_URI'));
     }
 
-    private function saveAdminInformation(\HTTPRequest $request, BaseLayout $layout) : void
+    private function saveAdminInformation(\HTTPRequest $request, BaseLayout $layout): void
     {
         $this->docman_settings_saver->saveNbMaxFiles($request, $layout);
         $this->docman_settings_saver->saveMaxFileSize($request, $layout);

@@ -43,7 +43,7 @@ class TimeControllerTest extends TestCase
      */
     private $time;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

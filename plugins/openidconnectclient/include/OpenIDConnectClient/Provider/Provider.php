@@ -26,23 +26,23 @@ interface Provider
 {
     public function getId(): int;
 
-    public function getName() : string;
+    public function getName(): string;
 
-    public function getClientId() : string;
+    public function getClientId(): string;
 
-    public function getClientSecret() : string;
+    public function getClientSecret(): string;
 
-    public function isUniqueAuthenticationEndpoint() : bool;
+    public function isUniqueAuthenticationEndpoint(): bool;
 
-    public function getIcon() : string;
+    public function getIcon(): string;
 
-    public function getColor() : string;
+    public function getColor(): string;
 
-    public function getAuthorizationEndpoint() : string;
+    public function getAuthorizationEndpoint(): string;
 
-    public function getTokenEndpoint() : string;
+    public function getTokenEndpoint(): string;
 
-    public function getUserInfoEndpoint() : string;
+    public function getUserInfoEndpoint(): string;
 
-    public function getRedirectUri() : string;
+    public function getRedirectUri(): string;
 }

@@ -36,7 +36,8 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
     $vCanChangeSVNLog = new Valid_WhiteList('form_can_change_svn_log', array('0', '1'));
     $vCanChangeSVNLog->required();
 
-    if ($request->valid($vTracked) &&
+    if (
+        $request->valid($vTracked) &&
         $request->valid($vPreamble) &&
         $request->valid($vMandatoryRef) &&
         $request->valid($vCanChangeSVNLog)

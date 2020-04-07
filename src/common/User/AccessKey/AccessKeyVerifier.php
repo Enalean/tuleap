@@ -114,7 +114,8 @@ class AccessKeyVerifier
     private function updateLastAccessInformationIfNeeded(SplitToken $access_key, $last_usage, $last_ip, $ip_address_requesting_verification): void
     {
         $current_time = new DateTimeImmutable();
-        if ($last_usage !== null && $last_ip !== null &&
+        if (
+            $last_usage !== null && $last_ip !== null &&
             $last_ip === $ip_address_requesting_verification &&
             ($current_time->getTimestamp() - $last_usage) < (int) \ForgeConfig::get('last_access_resolution')
         ) {

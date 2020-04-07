@@ -34,7 +34,8 @@ use Tuleap\Test\Builders\TemplateRendererFactoryBuilder;
 
 final class DisplayExperimentalControllerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, TemporaryTestDirectory;
+    use MockeryPHPUnitIntegration;
+    use TemporaryTestDirectory;
 
     /**
      * @var DisplayExperimentalController

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Taskboard\AgileDashboard;
 
@@ -125,7 +125,7 @@ class ScrumBoardTypeSelectorControllerTest extends TestCase
     /**
      * @param $default_board string | false
      */
-    private function mockDefaultBoardType($default_board) : void
+    private function mockDefaultBoardType($default_board): void
     {
         $this->dao->shouldReceive('searchBoardTypeByProjectId')->with(150)->andReturn($default_board);
     }

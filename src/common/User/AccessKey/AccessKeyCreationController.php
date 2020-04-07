@@ -67,7 +67,7 @@ class AccessKeyCreationController implements DispatchableWithRequest
         $access_key_creator = new AccessKeyCreator(
             new LastAccessKeyIdentifierStore(
                 new PrefixedSplitTokenSerializer(new PrefixAccessKey()),
-                (new KeyFactory)->getEncryptionKey(),
+                (new KeyFactory())->getEncryptionKey(),
                 $_SESSION
             ),
             new AccessKeyDAO(),

@@ -188,8 +188,10 @@ class LanguageConv
             return $this->g2312->gb2utf8($aTxt);
         } elseif ($aFF === FF_BIG5) {
             return iconv('BIG5', 'UTF-8', $aTxt);
-        } elseif (ASSUME_EUCJP_ENCODING &&
-        ($aFF == FF_MINCHO || $aFF == FF_GOTHIC || $aFF == FF_PMINCHO || $aFF == FF_PGOTHIC)) {
+        } elseif (
+            ASSUME_EUCJP_ENCODING &&
+            ($aFF == FF_MINCHO || $aFF == FF_GOTHIC || $aFF == FF_PMINCHO || $aFF == FF_PGOTHIC)
+        ) {
             return mb_convert_encoding($aTxt, 'UTF-8', 'EUC-JP');
         } elseif ($aFF == FF_DAVID || $aFF == FF_MIRIAM || $aFF == FF_AHRON) {
             return LanguageConv::heb_iso2uni($aTxt);
@@ -544,7 +546,7 @@ class TTF
                   FS_ITALIC => $aItalic,
                   FS_BOLDITALIC => $aBoldIt );
     }
-} // Class
+}
 
 
 //=============================================================================

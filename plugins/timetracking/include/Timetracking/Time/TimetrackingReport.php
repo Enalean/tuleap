@@ -57,7 +57,7 @@ class TimetrackingReport
         $this->trackers = $trackers;
     }
 
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -65,7 +65,7 @@ class TimetrackingReport
     /**
      * @return Tracker[]
      */
-    public function getTrackers() : array
+    public function getTrackers(): array
     {
         if (count($this->valid_trackers) === 0 && count($this->invalid_trackers) === 0) {
             $this->populateValidityTrackers();
@@ -76,7 +76,7 @@ class TimetrackingReport
     /**
      * @return Tracker[]
      */
-    public function getInvalidTrackers() : array
+    public function getInvalidTrackers(): array
     {
         if (count($this->valid_trackers) === 0 && count($this->invalid_trackers) === 0) {
             $this->populateValidityTrackers();
@@ -84,7 +84,7 @@ class TimetrackingReport
         return $this->invalid_trackers;
     }
 
-    private function populateValidityTrackers() : void
+    private function populateValidityTrackers(): void
     {
         $this->valid_trackers   = [];
         $this->invalid_trackers = [];

@@ -35,8 +35,10 @@ class SkinTuleap extends SkinTemplate
             $tc = new $classname();
 
             $tc->params = array();
-        if (($tc->project = $project =
-                group_get_object_by_name($GLOBALS['fusionforgeproject']))) {
+        if (
+            ($tc->project = $project =
+                group_get_object_by_name($GLOBALS['fusionforgeproject']))
+        ) {
                 $tc->params['group'] = $GLOBALS['group_id'] =
                     $project->getID();
                 $tc->params['toptab'] = 'plugin_mediawiki';
@@ -206,7 +208,7 @@ class TuleapTemplate extends BaseTemplate
         echo "</div></div>\n";
         $GLOBALS['HTML']->footer($this->params);
         wfRestoreWarnings();
-    } // end of execute() method
+    }
 
 
     protected function renderPortals($sidebar)
@@ -329,4 +331,4 @@ class TuleapTemplate extends BaseTemplate
     </div>
         <?php
     }
-} // end of class
+}

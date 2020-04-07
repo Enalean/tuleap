@@ -32,6 +32,7 @@ use Tuleap\AgileDashboard\Milestone\StatusMilestoneRepresentationBuilder;
 class QueryToMilestoneRepresentationBuilderConverterTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var QueryToMilestoneRepresentationBuilderConverter
      */

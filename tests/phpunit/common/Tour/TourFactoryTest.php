@@ -31,7 +31,9 @@ use Tuleap_TourFactory;
 
 final class TourFactoryTest extends \PHPUnit\Framework\TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
+    use GlobalLanguageMock;
 
     /**
      * @var Tuleap_TourFactory
@@ -49,7 +51,7 @@ final class TourFactoryTest extends \PHPUnit\Framework\TestCase
     /** @var PFUser */
     private $user;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->fixtures_dir    = __DIR__ . '/_fixtures';
         $this->project_manager = \Mockery::spy(\ProjectManager::class);
@@ -59,13 +61,13 @@ final class TourFactoryTest extends \PHPUnit\Framework\TestCase
         ForgeConfig::set('sys_custom_incdir', $this->fixtures_dir);
     }
 
-    public function testItReturnsTheWelcomeTour() : void
+    public function testItReturnsTheWelcomeTour(): void
     {
         $tour = $this->factory->getTour($this->user, Tuleap_Tour_WelcomeTour::TOUR_NAME);
         $this->assertInstanceOf(\Tuleap_Tour_WelcomeTour::class, $tour);
     }
 
-    public function testItReturnsACustomTour() : void
+    public function testItReturnsACustomTour(): void
     {
         $this->user->shouldReceive('getLocale')->andReturns('en_US');
 
@@ -73,7 +75,7 @@ final class TourFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf(\Tuleap_Tour::class, $tour);
     }
 
-    public function testItThrowsExceptionIfTourIsNotFound() : void
+    public function testItThrowsExceptionIfTourIsNotFound(): void
     {
         $this->user->shouldReceive('getLocale')->andReturns('fr_US');
 

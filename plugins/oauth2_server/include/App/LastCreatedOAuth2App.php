@@ -44,7 +44,7 @@ final class LastCreatedOAuth2App
         $this->secret = $secret;
     }
 
-    public function getAppID() : int
+    public function getAppID(): int
     {
         return $this->app_id;
     }

@@ -34,7 +34,7 @@ class ReferenceCreatorTest extends TestCase
      */
     private $creator;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

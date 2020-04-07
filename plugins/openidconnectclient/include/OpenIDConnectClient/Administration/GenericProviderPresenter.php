@@ -111,7 +111,7 @@ class GenericProviderPresenter
         return false;
     }
 
-    public function getCallbackUrl() : string
+    public function getCallbackUrl(): string
     {
         return strtolower($this->provider->getRedirectUri());
     }

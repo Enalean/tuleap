@@ -34,7 +34,7 @@ final class BannerRemover
         $this->banner_dao = $banner_dao;
     }
 
-    public function deleteBanner(UserCanEditBannerPermission $banner_permission) : void
+    public function deleteBanner(UserCanEditBannerPermission $banner_permission): void
     {
         $this->banner_dao->deleteBanner((int) $banner_permission->getProject()->getID());
     }

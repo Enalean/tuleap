@@ -37,12 +37,12 @@ final class WorkflowRulesManagerTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         Tracker_ArtifactFactory::clearInstance();
     }
 
-    public function testCanNotLoopInfinitelyWhileProcessingChildrenTriggers() : void
+    public function testCanNotLoopInfinitelyWhileProcessingChildrenTriggers(): void
     {
         $rules_dao       = Mockery::mock(Tracker_Workflow_Trigger_RulesDao::class);
         $rules_processor = Mockery::mock(Tracker_Workflow_Trigger_RulesProcessor::class);
@@ -74,7 +74,7 @@ final class WorkflowRulesManagerTest extends TestCase
         Tracker_ArtifactFactory::setInstance($artifact_factory);
 
         $rules_processor->shouldReceive('process')->withArgs(
-            static function (Tracker_Artifact $artifact) use ($rules_manager) : bool {
+            static function (Tracker_Artifact $artifact) use ($rules_manager): bool {
                 $rules_manager->processChildrenTriggers($artifact);
                 return true;
             }

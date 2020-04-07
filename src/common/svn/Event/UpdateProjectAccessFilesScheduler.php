@@ -40,10 +40,12 @@ class UpdateProjectAccessFilesScheduler
 
     public function scheduleUpdateOfProjectAccessFiles(Project $project): void
     {
-        if ($this->system_event_manager->areThereMultipleEventsQueuedMatchingFirstParameter(
-            SystemEvent::TYPE_SVN_UPDATE_PROJECT_ACCESS_FILES,
-            $project->getID()
-        )) {
+        if (
+            $this->system_event_manager->areThereMultipleEventsQueuedMatchingFirstParameter(
+                SystemEvent::TYPE_SVN_UPDATE_PROJECT_ACCESS_FILES,
+                $project->getID()
+            )
+        ) {
             return;
         }
 

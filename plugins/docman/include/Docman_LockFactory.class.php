@@ -101,8 +101,10 @@ class Docman_LockFactory
      */
     public function userIsLockerByItemId($itemId, $user)
     {
-        if ($this->itemIsLockedByItemId($itemId) &&
-            $this->_cachedItem[$itemId]['user_id'] == $user->getId()) {
+        if (
+            $this->itemIsLockedByItemId($itemId) &&
+            $this->_cachedItem[$itemId]['user_id'] == $user->getId()
+        ) {
             return true;
         }
         return false;

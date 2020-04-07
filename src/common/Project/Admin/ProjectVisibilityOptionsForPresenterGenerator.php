@@ -32,7 +32,7 @@ final class ProjectVisibilityOptionsForPresenterGenerator
     public function generateVisibilityOptions(
         bool $does_platform_allow_restricted_users,
         string $current_project_visibility
-    ) : array {
+    ): array {
         if ($does_platform_allow_restricted_users) {
             return [
                 [

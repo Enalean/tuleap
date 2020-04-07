@@ -124,7 +124,7 @@ class EventManagerTest extends TestCase // phpcs:ignore
         $event_manager->processEvent($event);
     }
 
-    public function testItStopsEventPropagation() : void
+    public function testItStopsEventPropagation(): void
     {
         $stoppable_event = new class implements StoppableEventInterface {
             public const NAME = 'foo';

@@ -246,13 +246,13 @@ class Tracker_Workflow_Trigger_RulesManager
     {
         $this->loop_safe_guard->process(
             $parent,
-            function () use ($parent) : void {
+            function () use ($parent): void {
                 $this->processChildrenTriggersWithinLoopSafeGuard($parent);
             }
         );
     }
 
-    private function processChildrenTriggersWithinLoopSafeGuard(Tracker_Artifact $parent) : void
+    private function processChildrenTriggersWithinLoopSafeGuard(Tracker_Artifact $parent): void
     {
         $this->logger->start(__METHOD__, $parent->getId());
 

@@ -59,7 +59,7 @@ final class ReviewerUpdaterTest extends TestCase
      */
     private $reviewer_updater;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->dao                 = Mockery::mock(ReviewerDAO::class);
         $this->permissions_checker = Mockery::mock(PullRequestPermissionChecker::class);

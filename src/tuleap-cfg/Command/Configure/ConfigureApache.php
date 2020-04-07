@@ -43,7 +43,7 @@ class ConfigureApache
             || $this->configureSSLConf($this->base_directory . '/etc/httpd/conf.d/ssl.conf');
     }
 
-    private function configureHTTPDConf(string $file_path) : bool
+    private function configureHTTPDConf(string $file_path): bool
     {
         if (! file_exists($file_path)) {
             return false;
@@ -73,7 +73,7 @@ class ConfigureApache
         return false;
     }
 
-    private function configureSSLConf(string $file_path) : bool
+    private function configureSSLConf(string $file_path): bool
     {
         if (! file_exists($file_path)) {
             return false;

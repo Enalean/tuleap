@@ -82,7 +82,7 @@ class AgileDashboardRouterBuilder
         $this->all_bread_crumbs_for_milestone_builder = $all_bread_crumbs_for_milestone_builder;
     }
 
-    public function build(Codendi_Request $request) : AgileDashboardRouter
+    public function build(Codendi_Request $request): AgileDashboardRouter
     {
         $plugin = $this->plugin_factory->getPluginByName(
             AgileDashboardPlugin::PLUGIN_NAME

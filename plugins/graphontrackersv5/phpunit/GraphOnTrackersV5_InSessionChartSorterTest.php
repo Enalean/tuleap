@@ -44,7 +44,7 @@ class GraphOnTrackersV5_InSessionChartSorterTest extends TestCase
     /** @var GraphOnTrackersV5_InSessionChartSorter */
     private $sorter;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

@@ -25,7 +25,7 @@ final class Cardwall_OnTop_Config_TrackerMappingNoFieldTest extends \PHPUnit\Fra
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testItHasAnEmptyValueMappings() : void
+    public function testItHasAnEmptyValueMappings(): void
     {
         $tracker          = Mockery::mock(Tracker::class);
         $available_fields = array();
@@ -33,7 +33,7 @@ final class Cardwall_OnTop_Config_TrackerMappingNoFieldTest extends \PHPUnit\Fra
         $this->assertEquals(array(), $mapping->getValueMappings());
     }
 
-    public function testItsFieldIsNull() : void
+    public function testItsFieldIsNull(): void
     {
         $tracker          = Mockery::mock(Tracker::class);
         $available_fields = array();

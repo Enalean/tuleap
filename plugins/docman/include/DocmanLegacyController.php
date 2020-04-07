@@ -59,7 +59,7 @@ final class DocmanLegacyController implements DispatchableWithRequest
         $this->dao                       = $dao;
     }
 
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables) : void
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         (
             new DocmanHTTPControllerProxy(

@@ -33,7 +33,7 @@ class UserRESTReferenceRetrieverTest extends TestCase
      */
     private $user_manager;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->user_manager = \Mockery::mock(\UserManager::class);
     }
@@ -119,6 +119,6 @@ class UserRESTReferenceRetrieverTest extends TestCase
         $this->expectExceptionCode(400);
         $this->expectExceptionMessage('At least one key must');
 
-        $retriever->getUserFromReference(new UserRESTReferenceRepresentation);
+        $retriever->getUserFromReference(new UserRESTReferenceRepresentation());
     }
 }

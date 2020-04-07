@@ -44,7 +44,7 @@ class AgileDashboardChartsConfigurationUpdater
         $this->request                     = $request;
     }
 
-    public function updateConfiguration() : void
+    public function updateConfiguration(): void
     {
         $project = $this->request->getProject();
 
@@ -56,7 +56,7 @@ class AgileDashboardChartsConfigurationUpdater
         $this->redirectToAdmin($project);
     }
 
-    private function redirectToAdmin(Project $project) : void
+    private function redirectToAdmin(Project $project): void
     {
         $query_parts = [
             'group_id' => $project->getID(),

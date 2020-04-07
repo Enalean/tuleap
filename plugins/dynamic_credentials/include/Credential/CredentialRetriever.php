@@ -54,16 +54,16 @@ class CredentialRetriever
         $identifier = $this->identifier_extractor->extract($username);
         $row        = $this->dao->getUnrevokedCredentialByIdentifier($identifier);
         if (empty($row)) {
-            throw new CredentialNotFoundException;
+            throw new CredentialNotFoundException();
         }
 
         if (! $this->password_handler->verifyHashPassword($password, $row['password'])) {
-            throw new CredentialAuthenticationException;
+            throw new CredentialAuthenticationException();
         }
 
         $account = $this->instantiateCredential($row);
         if ($account->hasExpired()) {
-            throw new CredentialExpiredException;
+            throw new CredentialExpiredException();
         }
 
         return $account;

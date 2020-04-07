@@ -44,7 +44,7 @@ final class CardInCellPresenterTest extends TestCase
      */
     private $card_presenter;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $swimline_field_values   = array(100, 221);
@@ -55,28 +55,28 @@ final class CardInCellPresenterTest extends TestCase
         $this->presenter         = new Cardwall_CardInCellPresenter($this->card_presenter, self::CARD_FIELD_ID, $swimline_id, $swimline_field_values);
     }
 
-    public function testItHasColumnDropInto() : void
+    public function testItHasColumnDropInto(): void
     {
         $drop_into               = 'drop-into-3-100 drop-into-3-221';
         $this->assertEquals($drop_into, $this->presenter->getDropIntoClass());
     }
 
-    public function testItHasCardFieldId() : void
+    public function testItHasCardFieldId(): void
     {
         $this->assertEquals(self::CARD_FIELD_ID, $this->presenter->getCardFieldId());
     }
 
-    public function testItHasACardPresenter() : void
+    public function testItHasACardPresenter(): void
     {
         $this->assertEquals($this->card_presenter, $this->presenter->getCardPresenter());
     }
 
-    public function testItHasAnArtifact() : void
+    public function testItHasAnArtifact(): void
     {
         $this->assertEquals($this->artifact, $this->presenter->getArtifact());
     }
 
-    public function testItHasAnId() : void
+    public function testItHasAnId(): void
     {
         $this->assertEquals(self::CARD_ID, $this->presenter->getId());
     }

@@ -33,7 +33,8 @@ use Tuleap\Templating\Mustache\MustacheEngine;
 
 class LicenseAgreementDisplayTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     /**
      * @var LicenseAgreementDisplay

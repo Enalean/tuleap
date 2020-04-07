@@ -59,7 +59,8 @@ class FieldCalculator
             $last_id                = null;
             if ($children) {
                 foreach ($children as $row) {
-                    if (! isset($already_seen[$row['id']]) &&
+                    if (
+                        ! isset($already_seen[$row['id']]) &&
                         (! isset($row['parent_id']) || $last_id !== $row['parent_id'])
                     ) {
                         if (isset($row['value']) && $row['value'] !== null) {

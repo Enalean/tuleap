@@ -825,8 +825,10 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
             $userRow = $user->toRow();
             if ($user->getPassword() != '') {
                 $password_handler = PasswordHandlerFactory::getPasswordHandler();
-                if (!$password_handler->verifyHashPassword($user->getPassword(), $user->getUserPw()) ||
-                        $password_handler->isPasswordNeedRehash($user->getUserPw())) {
+                if (
+                    !$password_handler->verifyHashPassword($user->getPassword(), $user->getUserPw()) ||
+                        $password_handler->isPasswordNeedRehash($user->getUserPw())
+                ) {
                     // Update password
                     $userRow['clear_password'] = $user->getPassword();
                 }

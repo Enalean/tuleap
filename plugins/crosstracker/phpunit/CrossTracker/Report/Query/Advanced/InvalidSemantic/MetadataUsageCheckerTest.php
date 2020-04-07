@@ -91,7 +91,7 @@ class MetadataUsageCheckerTest extends \PHPUnit\Framework\TestCase
      */
     private $submitted_on_102;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         $initial_global_state = array_merge([], $GLOBALS);
 

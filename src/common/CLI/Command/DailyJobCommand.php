@@ -74,12 +74,12 @@ class DailyJobCommand extends Command
         $this->user_suspension_manager = $user_suspension_manager;
     }
 
-    protected function configure() : void
+    protected function configure(): void
     {
         $this->setDescription('Execute time consuming, low priority housekeeping jobs that should run once a day');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output) : int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->execution_delayed_launcher->execute(function () {
             $this->db_connection->reconnectAfterALongRunningProcess();

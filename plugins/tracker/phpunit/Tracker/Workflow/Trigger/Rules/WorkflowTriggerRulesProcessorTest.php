@@ -38,9 +38,10 @@ use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 
 final class WorkflowTriggerRulesProcessorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
-    public function testRulesProcessorDoesNotLoopWhenUpdatingAnArtifactParentWithItself() : void
+    public function testRulesProcessorDoesNotLoopWhenUpdatingAnArtifactParentWithItself(): void
     {
         $workflow_user = Mockery::mock(Tracker_Workflow_WorkflowUser::class);
         $processor     = new Tracker_Workflow_Trigger_RulesProcessor(
@@ -88,7 +89,7 @@ final class WorkflowTriggerRulesProcessorTest extends TestCase
         Tracker_Artifact $parent,
         Tracker_Workflow_Trigger_TriggerRule $rule,
         Tracker_Workflow_Trigger_RulesProcessor $processor
-    ) : void {
+    ): void {
         $artifact_mock->shouldReceive('getId')->andReturn($artifact_id);
         $artifact_mock->shouldReceive('getXRef')->andReturn('xref #' . $artifact_id);
         $artifact_mock->shouldReceive('getParentWithoutPermissionChecking')->andReturn($parent);
@@ -96,13 +97,13 @@ final class WorkflowTriggerRulesProcessorTest extends TestCase
         $changeset->shouldReceive('getUri')->andReturn('');
         $artifact_mock->shouldReceive('getLastChangeset')->andReturn($changeset);
         $artifact_mock->shouldReceive('createNewChangeset')->andReturnUsing(
-            static function () use ($processor, $parent, $rule) : void {
+            static function () use ($processor, $parent, $rule): void {
                 $processor->process($parent, $rule);
             }
         );
     }
 
-    public function testRuleOnlyUpdatesAParentArtifactIfItIsInTheExpectedTargetedTracker() : void
+    public function testRuleOnlyUpdatesAParentArtifactIfItIsInTheExpectedTargetedTracker(): void
     {
         $workflow_user = Mockery::mock(Tracker_Workflow_WorkflowUser::class);
         $processor     = new Tracker_Workflow_Trigger_RulesProcessor(

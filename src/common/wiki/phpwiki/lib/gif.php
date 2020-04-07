@@ -813,10 +813,12 @@ class CGIF
         $nPad = ($this->m_gfh->m_nWidth % 4) ? 4 - ($this->m_gfh->m_nWidth % 4) : 0;
         for ($y = 0; $y < $this->m_gfh->m_nHeight; $y++) {
             for ($x = 0; $x < $this->m_gfh->m_nWidth; $x++, $nPxl++) {
-                if (($x >= $this->m_img->m_gih->m_nLeft) &&
-                   ($y >= $this->m_img->m_gih->m_nTop) &&
-                   ($x <  ($this->m_img->m_gih->m_nLeft + $this->m_img->m_gih->m_nWidth)) &&
-                   ($y <  ($this->m_img->m_gih->m_nTop  + $this->m_img->m_gih->m_nHeight))) {
+                if (
+                    ($x >= $this->m_img->m_gih->m_nLeft) &&
+                    ($y >= $this->m_img->m_gih->m_nTop) &&
+                    ($x <  ($this->m_img->m_gih->m_nLeft + $this->m_img->m_gih->m_nWidth)) &&
+                    ($y <  ($this->m_img->m_gih->m_nTop  + $this->m_img->m_gih->m_nHeight))
+                ) {
                     // PART OF IMAGE
                     if ($this->m_img->m_bTrans && (ord($data[$nPxl]) == $this->m_img->m_nTrans)) {
                         // TRANSPARENT -> BACKGROUND
@@ -911,10 +913,12 @@ class CGIF
         for ($y = 0; $y < $this->m_gfh->m_nHeight; $y++) {
             $bmp .= "\x00";
             for ($x = 0; $x < $this->m_gfh->m_nWidth; $x++, $nPxl++) {
-                if (($x >= $this->m_img->m_gih->m_nLeft) &&
-                   ($y >= $this->m_img->m_gih->m_nTop) &&
-                   ($x <  ($this->m_img->m_gih->m_nLeft + $this->m_img->m_gih->m_nWidth)) &&
-                   ($y <  ($this->m_img->m_gih->m_nTop  + $this->m_img->m_gih->m_nHeight))) {
+                if (
+                    ($x >= $this->m_img->m_gih->m_nLeft) &&
+                    ($y >= $this->m_img->m_gih->m_nTop) &&
+                    ($x <  ($this->m_img->m_gih->m_nLeft + $this->m_img->m_gih->m_nWidth)) &&
+                    ($y <  ($this->m_img->m_gih->m_nTop  + $this->m_img->m_gih->m_nHeight))
+                ) {
                     // PART OF IMAGE
                     $bmp .= $data[$nPxl];
                 } else {

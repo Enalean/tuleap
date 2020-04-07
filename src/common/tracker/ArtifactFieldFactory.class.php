@@ -210,8 +210,10 @@ class ArtifactFieldFactory
                     } else {
                       // we add operator for date filtering (used for masschange)
                       // the field present in HTTP_POST_VARS is named like [$field_name]_op
-                        if ((isset($this->USAGE_BY_NAME[substr($key, 0, strlen($key) - strlen('_op'))]) && substr($key, -3) == '_op') ||
-                          (isset($this->USAGE_BY_NAME[substr($key, 0, strlen($key) - strlen('_end'))]) && substr($key, -4) == '_end')) {
+                        if (
+                            (isset($this->USAGE_BY_NAME[substr($key, 0, strlen($key) - strlen('_op'))]) && substr($key, -3) == '_op') ||
+                            (isset($this->USAGE_BY_NAME[substr($key, 0, strlen($key) - strlen('_end'))]) && substr($key, -4) == '_end')
+                        ) {
                              $vfl[$key] = $request->get($key);
                         } else {
                             //echo "Rejected key = ".$key." val = $val<BR>";
@@ -261,9 +263,10 @@ class ArtifactFieldFactory
             // The test here restrict to multiselect box but as I have no idea of the potential
             // impact of doing it on all possible fields, it's more safe
             if ($field->getDisplayType() == 'MB') {
-                if (($request->get('func') == 'postadd' && $field->userCanSubmit($this->ArtifactType->getGroupId(), $this->ArtifactType->getID(), $user->getId()))
-                 || ($request->get('func') == 'postmod' && $field->userCanUpdate($this->ArtifactType->getGroupId(), $this->ArtifactType->getID(), $user->getId()))
-                   ) {
+                if (
+                    ($request->get('func') == 'postadd' && $field->userCanSubmit($this->ArtifactType->getGroupId(), $this->ArtifactType->getID(), $user->getId()))
+                    || ($request->get('func') == 'postmod' && $field->userCanUpdate($this->ArtifactType->getGroupId(), $this->ArtifactType->getID(), $user->getId()))
+                ) {
                     if (!isset($vfl[$field->field_name])) {
                            $vfl[$field->field_name] = '';
                     }
@@ -331,8 +334,10 @@ class ArtifactFieldFactory
     {
         $result_fields = array();
         foreach ($this->USAGE_BY_NAME as $key => $field) {
-            if ($field->getUseIt() == 1 &&
-            !$field->userCanSubmit($this->ArtifactType->Group->getID(), $this->ArtifactType->getID())) {
+            if (
+                $field->getUseIt() == 1 &&
+                !$field->userCanSubmit($this->ArtifactType->Group->getID(), $this->ArtifactType->getID())
+            ) {
                   $result_fields[$key] = $field->getDefaultValue();
             }
         }
@@ -572,38 +577,52 @@ class ArtifactFieldFactory
     {
         $af = new ArtifactField();
 
-        if (($data_type == $af->DATATYPE_INT || $data_type == $af->DATATYPE_USER)
-        && ($display_type == "SB")) {
+        if (
+            ($data_type == $af->DATATYPE_INT || $data_type == $af->DATATYPE_USER)
+            && ($display_type == "SB")
+        ) {
             return "100";
         }
 
-        if (($data_type == $af->DATATYPE_INT || $data_type == $af->DATATYPE_USER)
-        && ($display_type == "MB")) {
+        if (
+            ($data_type == $af->DATATYPE_INT || $data_type == $af->DATATYPE_USER)
+            && ($display_type == "MB")
+        ) {
             return "100";
         }
 
-        if (($data_type == $af->DATATYPE_TEXT)
-        && ($display_type == "TF")) {
+        if (
+            ($data_type == $af->DATATYPE_TEXT)
+            && ($display_type == "TF")
+        ) {
             return "";
         }
 
-        if (($data_type == $af->DATATYPE_TEXT)
-        && ($display_type == "TA")) {
+        if (
+            ($data_type == $af->DATATYPE_TEXT)
+            && ($display_type == "TA")
+        ) {
             return "";
         }
 
-        if (($data_type == $af->DATATYPE_DATE)
-        && ($display_type == "DF")) {
+        if (
+            ($data_type == $af->DATATYPE_DATE)
+            && ($display_type == "DF")
+        ) {
             return "";
         }
 
-        if (($data_type == $af->DATATYPE_FLOAT)
-        && ($display_type == "TF")) {
+        if (
+            ($data_type == $af->DATATYPE_FLOAT)
+            && ($display_type == "TF")
+        ) {
             return "0.0";
         }
 
-        if (($data_type == $af->DATATYPE_INT)
-        && ($display_type == "TF")) {
+        if (
+            ($data_type == $af->DATATYPE_INT)
+            && ($display_type == "TF")
+        ) {
             return "0";
         }
 

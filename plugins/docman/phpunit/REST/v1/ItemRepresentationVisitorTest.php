@@ -19,7 +19,7 @@
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1;
 
@@ -35,6 +35,7 @@ use Tuleap\Docman\REST\v1\Wiki\WikiPropertiesRepresentation;
 class ItemRepresentationVisitorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var EventManager|Mockery\LegacyMockInterface|Mockery\MockInterface
      */

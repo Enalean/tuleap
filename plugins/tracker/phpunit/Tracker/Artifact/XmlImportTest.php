@@ -166,7 +166,7 @@ class XmlImportTest extends TestCase
      */
     private $external_field_extractor;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         $this->tracker = Mockery::mock(Tracker::class);
         $this->tracker->shouldReceive('getId')->andReturn($this->tracker_id);

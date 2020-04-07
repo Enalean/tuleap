@@ -23,9 +23,10 @@ declare(strict_types=1);
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateFieldTest extends Cardwall_OnTop_Config_Command_UpdateMappingFieldsTestBase
 {
-    use \Tuleap\GlobalResponseMock, \Tuleap\GlobalLanguageMock;
+    use \Tuleap\GlobalResponseMock;
+    use \Tuleap\GlobalLanguageMock;
 
-    public function testItUpdatesMappingFields() : void
+    public function testItUpdatesMappingFields(): void
     {
         $request = new HTTPRequest();
         $request->set(
@@ -56,7 +57,7 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateFieldTest ex
         $this->command->execute($request);
     }
 
-    public function testItDoesntUpdatesMappingFieldsIfItIsNotNeeded() : void
+    public function testItDoesntUpdatesMappingFieldsIfItIsNotNeeded(): void
     {
         $request = new HTTPRequest();
         $request->set(

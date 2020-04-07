@@ -29,7 +29,7 @@ class ACLUpdaterTest extends PHPUnit\Framework\TestCase
 
     private $path;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->backend     = $this->getMockBuilder('Backend')->disableOriginalConstructor()->getMock();

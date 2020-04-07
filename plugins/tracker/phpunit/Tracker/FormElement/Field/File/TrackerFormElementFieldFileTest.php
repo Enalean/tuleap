@@ -40,7 +40,10 @@ use Tuleap\TemporaryTestDirectory;
 
 final class TrackerFormElementFieldFileTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock, GlobalResponseMock, TemporaryTestDirectory;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
+    use GlobalResponseMock;
+    use TemporaryTestDirectory;
 
     /**
      * @var string

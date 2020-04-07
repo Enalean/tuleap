@@ -26,14 +26,14 @@ require_once __DIR__ . '/../../bootstrap.php';
 
 class Git_Hook_ParseLogTest extends \PHPUnit\Framework\TestCase
 {
-
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     private $extract_cross_ref;
     private $log_pushes;
     private $parse_log;
     private $logger;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -43,7 +43,7 @@ class Git_Hook_ParseLogTest extends \PHPUnit\Framework\TestCase
         $this->parse_log         = new Git_Hook_ParseLog($this->log_pushes, $this->extract_cross_ref, $this->logger);
     }
 
-    public function testItExecutesExtractOnEachCommit() : void
+    public function testItExecutesExtractOnEachCommit(): void
     {
         $push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns(array('469eaa9'))->getMock();
 
@@ -52,7 +52,7 @@ class Git_Hook_ParseLogTest extends \PHPUnit\Framework\TestCase
         $this->parse_log->execute($push_details);
     }
 
-    public function testItDoesntAttemptToExtractWhenBranchIsDeleted() : void
+    public function testItDoesntAttemptToExtractWhenBranchIsDeleted(): void
     {
         $push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns(array())->getMock();
 
@@ -61,7 +61,7 @@ class Git_Hook_ParseLogTest extends \PHPUnit\Framework\TestCase
         $this->parse_log->execute($push_details);
     }
 
-    public function testItExecutesExtractEvenWhenThereAreErrors() : void
+    public function testItExecutesExtractEvenWhenThereAreErrors(): void
     {
         $push_details = \Mockery::spy(\Git_Hook_PushDetails::class);
         $push_details->shouldReceive('getRevisionList')->andReturns(array('0fb0737', '469eaa9'));

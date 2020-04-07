@@ -27,7 +27,7 @@ use stdClass;
 
 final class DocmanValidateRepresentationForCopyTest extends TestCase
 {
-    public function testValidCopyRepresentation() : void
+    public function testValidCopyRepresentation(): void
     {
         $representation = new class implements CanContainACopyRepresentation
         {
@@ -39,7 +39,7 @@ final class DocmanValidateRepresentationForCopyTest extends TestCase
                 $this->copy = new stdClass();
             }
 
-            public static function getNonCopyRequiredObjectProperties() : array
+            public static function getNonCopyRequiredObjectProperties(): array
             {
                 return [];
             }
@@ -51,7 +51,7 @@ final class DocmanValidateRepresentationForCopyTest extends TestCase
         $this->assertFalse($validator->isValidAsANonCopyRepresentation($representation));
     }
 
-    public function testValidNonCopyRepresentation() : void
+    public function testValidNonCopyRepresentation(): void
     {
         $representation = new class implements CanContainACopyRepresentation
         {
@@ -59,7 +59,7 @@ final class DocmanValidateRepresentationForCopyTest extends TestCase
             public $description;
             public $copy;
 
-            public static function getNonCopyRequiredObjectProperties() : array
+            public static function getNonCopyRequiredObjectProperties(): array
             {
                 return ['title'];
             }
@@ -71,14 +71,14 @@ final class DocmanValidateRepresentationForCopyTest extends TestCase
         $this->assertFalse($validator->isValidAsACopyRepresentation($representation));
     }
 
-    public function testCopyRepresentationIsNotValidWhenRequiredParameterIsMissing() : void
+    public function testCopyRepresentationIsNotValidWhenRequiredParameterIsMissing(): void
     {
         $representation = $representation = new class implements CanContainACopyRepresentation
         {
             public $title;
             public $copy;
 
-            public static function getNonCopyRequiredObjectProperties() : array
+            public static function getNonCopyRequiredObjectProperties(): array
             {
                 return ['title'];
             }
@@ -90,14 +90,14 @@ final class DocmanValidateRepresentationForCopyTest extends TestCase
         $this->assertFalse($validator->isValidAsACopyRepresentation($representation));
     }
 
-    public function testCopyRepresentationIsNotValidWhenRequiredParameterIsEmpty() : void
+    public function testCopyRepresentationIsNotValidWhenRequiredParameterIsEmpty(): void
     {
         $representation = $representation = new class implements CanContainACopyRepresentation
         {
             public $title = '';
             public $copy;
 
-            public static function getNonCopyRequiredObjectProperties() : array
+            public static function getNonCopyRequiredObjectProperties(): array
             {
                 return ['title'];
             }

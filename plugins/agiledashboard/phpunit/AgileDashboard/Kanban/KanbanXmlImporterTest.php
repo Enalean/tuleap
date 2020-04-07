@@ -77,7 +77,7 @@ class KanbanXmlImporterTest extends TestCase
         $this->kanban_column_manager                 = \Mockery::spy(\AgileDashboard_KanbanColumnManager::class);
         $this->kanban_manager                        = \Mockery::spy(\AgileDashboard_KanbanManager::class);
         $this->kanban_factory                        = \Mockery::spy(\AgileDashboard_KanbanFactory::class);
-        $this->mappings_registry                     = new \Tuleap\XML\MappingsRegistry;
+        $this->mappings_registry                     = new \Tuleap\XML\MappingsRegistry();
 
         $this->user                = new PFUser(['user_id' => 101, 'language_id' => 'en']);
         $this->project             = \Mockery::spy(\Project::class, ['getID' => 100, 'getUnixName' => false, 'isPublic' => false]);

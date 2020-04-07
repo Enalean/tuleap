@@ -51,13 +51,13 @@ final class RepositoriesWithObjectsOverTheLimitCommand extends Command
         $this->repository_objects_size_retriever = $repository_objects_size_retriever;
     }
 
-    protected function configure() : void
+    protected function configure(): void
     {
         $this->setDescription('Search for repositories active in the last 2 months with objects over the size limit')
             ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt or json)', 'txt');
     }
 
-    public function execute(InputInterface $input, OutputInterface $output) : int
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         switch ($format = $input->getOption('format')) {
             case 'txt':
@@ -76,7 +76,7 @@ final class RepositoriesWithObjectsOverTheLimitCommand extends Command
     /**
      * @return LargestObjectSizeGitRepository[]
      */
-    private function getRepositoriesWithLargestObjectSize(OutputInterface $output) : array
+    private function getRepositoriesWithLargestObjectSize(OutputInterface $output): array
     {
         $repositories                = $this->repository_factory->getAllRepositoriesWithActivityInTheLast2Months();
         $repositories_over_the_limit = [];
@@ -96,7 +96,7 @@ final class RepositoriesWithObjectsOverTheLimitCommand extends Command
         return $repositories_over_the_limit;
     }
 
-    private function displayAsText(OutputInterface $output) : void
+    private function displayAsText(OutputInterface $output): void
     {
         $table_rows = [];
         foreach ($this->getRepositoriesWithLargestObjectSize($output) as $repository_over_the_limit) {
@@ -117,7 +117,7 @@ final class RepositoriesWithObjectsOverTheLimitCommand extends Command
         $table->render();
     }
 
-    private function displayAsJSON(OutputInterface $output) : void
+    private function displayAsJSON(OutputInterface $output): void
     {
         $rows = [];
         foreach ($this->getRepositoriesWithLargestObjectSize($output) as $repository_over_the_limit) {

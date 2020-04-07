@@ -47,7 +47,7 @@ class LockCreateRequest implements GitLfsHTTPOperation
      * @throws IncorrectlyFormattedReferenceRequestException
      * @return self
      */
-    public static function buildFromJSONString(string $json_string) : LockCreateRequest
+    public static function buildFromJSONString(string $json_string): LockCreateRequest
     {
         $decoded_json           = json_decode($json_string);
         $json_decode_error_code = json_last_error();
@@ -61,7 +61,7 @@ class LockCreateRequest implements GitLfsHTTPOperation
      * @throws IncorrectlyFormattedReferenceRequestException
      * @return self
      */
-    private static function buildFromObject(\stdClass $parameters) : LockCreateRequest
+    private static function buildFromObject(\stdClass $parameters): LockCreateRequest
     {
         if (! isset($parameters->path)) {
             throw new IncorrectlyFormattedReferenceRequestException('path should be present in the request');

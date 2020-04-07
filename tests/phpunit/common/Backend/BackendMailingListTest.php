@@ -31,7 +31,7 @@ final class BackendMailingListTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testDeleteProjectMailingListsNothingToDelete() : void
+    public function testDeleteProjectMailingListsNothingToDelete(): void
     {
         $backend = \Mockery::mock(\BackendMailingList::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $dao = \Mockery::spy(\MailingListDao::class);
@@ -45,7 +45,7 @@ final class BackendMailingListTest extends TestCase
         $this->assertTrue($backend->deleteProjectMailingLists(1));
     }
 
-    public function testDeleteProjectMailingListsDbDeleteFail() : void
+    public function testDeleteProjectMailingListsDbDeleteFail(): void
     {
         $backend = \Mockery::mock(\BackendMailingList::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $dao = \Mockery::spy(\MailingListDao::class);
@@ -62,7 +62,7 @@ final class BackendMailingListTest extends TestCase
         $this->assertFalse($backend->deleteProjectMailingLists(1));
     }
 
-    public function testDeleteProjectMailingListsSuccess() : void
+    public function testDeleteProjectMailingListsSuccess(): void
     {
         $backend = \Mockery::mock(\BackendMailingList::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $dao = \Mockery::spy(\MailingListDao::class);

@@ -34,8 +34,10 @@ final class StreamFilter
         }
 
         $chain_identifier = $filter->getFilteredChainIdentifier();
-        if ($chain_identifier !== STREAM_FILTER_READ && $chain_identifier !== STREAM_FILTER_WRITE &&
-            $chain_identifier !== STREAM_FILTER_ALL) {
+        if (
+            $chain_identifier !== STREAM_FILTER_READ && $chain_identifier !== STREAM_FILTER_WRITE &&
+            $chain_identifier !== STREAM_FILTER_ALL
+        ) {
             throw new \DomainException(
                 'Only acceptable chain identifier are STREAM_FILTER_READ (' . STREAM_FILTER_READ . '), ' .
                 'STREAM_FILTER_WRITE (' . STREAM_FILTER_WRITE . ') ' .

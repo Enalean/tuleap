@@ -84,8 +84,10 @@ class TuleapWeb
             );
         }
 
-        if (($this->for_development || $should_tls_certificate_be_generated)
-                && ! file_exists(self::SSL_CERT_CERT_PATH)) {
+        if (
+            ($this->for_development || $should_tls_certificate_be_generated)
+                && ! file_exists(self::SSL_CERT_CERT_PATH)
+        ) {
             $this->common->generateSSLCertificate(
                 $this->server_name,
                 self::SSL_CERT_CERT_PATH,

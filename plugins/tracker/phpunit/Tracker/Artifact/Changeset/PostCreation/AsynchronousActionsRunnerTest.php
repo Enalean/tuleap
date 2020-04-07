@@ -31,7 +31,7 @@ class AsynchronousActionsRunnerTest extends TestCase
     private $actions_runner;
     private $artifact_factory;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->actions_runner   = \Mockery::mock(ActionsRunner::class);
         $this->artifact_factory = \Mockery::mock(\Tracker_ArtifactFactory::class);

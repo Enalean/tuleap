@@ -39,7 +39,7 @@ abstract class DataAccessObject
         }
     }
 
-    final protected function getDB() : EasyDB
+    final protected function getDB(): EasyDB
     {
         return $this->db_connection->getDB();
     }
@@ -48,7 +48,7 @@ abstract class DataAccessObject
      * Returns the number of affected rows by the LAST query.
      * Must be called immediately after performing a query.
      */
-    public function foundRows() : int
+    public function foundRows(): int
     {
         return (int) $this->getDB()->single('SELECT FOUND_ROWS()');
     }

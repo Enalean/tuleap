@@ -18,7 +18,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 class b201909241447_add_project_banner_table extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
 {

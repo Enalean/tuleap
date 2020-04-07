@@ -25,17 +25,17 @@ namespace TuleapCfg\Command;
 
 interface SystemControlInterface
 {
-    public function getBeforeMessage() : string;
+    public function getBeforeMessage(): string;
 
-    public function run() : void;
+    public function run(): void;
 
-    public function isSuccessful() : bool;
+    public function isSuccessful(): bool;
 
     public function getExitCode(): int;
 
-    public function getOutput() : string;
+    public function getOutput(): string;
 
-    public function getErrorOutput() : string;
+    public function getErrorOutput(): string;
 
-    public function getCommandLine() : string;
+    public function getCommandLine(): string;
 }

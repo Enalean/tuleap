@@ -98,7 +98,7 @@ final class OAuth2SignInScope implements AuthenticationScope
         return $this->definition;
     }
 
-    public function covers(AuthenticationScope $scope) : bool
+    public function covers(AuthenticationScope $scope): bool
     {
         return self::IDENTIFIER_KEY === $scope->getIdentifier()->toString();
     }

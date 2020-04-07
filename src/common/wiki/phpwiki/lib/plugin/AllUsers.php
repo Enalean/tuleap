@@ -76,7 +76,7 @@ class WikiPlugin_AllUsers extends WikiPlugin
         $args = $this->getArgs($argstr, $request);
         extract($args);
         if ($debug) {
-            $timer = new DebugTimer;
+            $timer = new DebugTimer();
         }
 
         $group = $request->getGroup();

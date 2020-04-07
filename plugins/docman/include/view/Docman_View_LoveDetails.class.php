@@ -80,8 +80,10 @@ class Docman_View_LoveDetails
         while ($vIter->valid()) {
             $e = $vIter->current();
 
-            if ($e->getStatus() == 'A'
-               || $e->getStatus() == 'P') {
+            if (
+                $e->getStatus() == 'A'
+                || $e->getStatus() == 'P'
+            ) {
                 $vals[$i]  = $e->getRank() + 1;
                 $texts[$i] = dgettext('tuleap-docman', 'After') . ' ' . Docman_MetadataHtmlList::_getElementName($e);
                 $i++;

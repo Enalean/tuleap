@@ -50,12 +50,12 @@ final class CannotAddRestrictedUserToProjectNotAllowingRestricted extends Runtim
         $this->restricted_user = $restricted_user;
     }
 
-    public function getProject() : Project
+    public function getProject(): Project
     {
         return $this->project;
     }
 
-    public function getRestrictedUser() : PFUser
+    public function getRestrictedUser(): PFUser
     {
         return $this->restricted_user;
     }

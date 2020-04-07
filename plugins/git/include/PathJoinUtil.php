@@ -25,20 +25,20 @@ use MalformedPathException;
 
 final class PathJoinUtil
 {
-    private static function notEmpty($e) : bool
+    private static function notEmpty($e): bool
     {
         return !empty($e) || $e === '0';
     }
 
-    public static function unixPathJoin(array $elements) : string
+    public static function unixPathJoin(array $elements): string
     {
-        $path = implode('/', array_filter($elements, function ($element) : bool {
+        $path = implode('/', array_filter($elements, function ($element): bool {
             return self::notEmpty($element);
         }));
         return preg_replace('%/{1,}%', "/", $path);
     }
 
-    public static function userRepoPath($username, $namespace) : string
+    public static function userRepoPath($username, $namespace): string
     {
         $path = self::unixPathJoin(['u', $username, $namespace]);
         if (strpos($path, '..') !== false) {

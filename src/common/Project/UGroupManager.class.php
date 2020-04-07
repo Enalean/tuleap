@@ -83,7 +83,7 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         return $this->ugroup_user_dao;
     }
 
-    private function getProjectMemberAdder() : ProjectMemberAdder
+    private function getProjectMemberAdder(): ProjectMemberAdder
     {
         if (! $this->project_member_adder) {
             $this->project_member_adder = ProjectMemberAdderWithStatusCheckAndNotifications::build();

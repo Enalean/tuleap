@@ -30,7 +30,7 @@ final class WorkflowRulesManagerLoopSafeGuardTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testAnArtifactIsProcessedOnlyOnceWhenARecursiveLoopIsDetectedInTheProcess() : void
+    public function testAnArtifactIsProcessedOnlyOnceWhenARecursiveLoopIsDetectedInTheProcess(): void
     {
         $logger          = Mockery::mock(\Psr\Log\LoggerInterface::class);
         $workflow_logger = new WorkflowBackendLogger($logger, \Psr\Log\LogLevel::ERROR);
@@ -42,7 +42,7 @@ final class WorkflowRulesManagerLoopSafeGuardTest extends TestCase
         $artifact = Mockery::mock(Tracker_Artifact::class);
         $artifact->shouldReceive('getId')->andReturn(123);
 
-        $process = new class($guard, $artifact) {
+        $process = new class ($guard, $artifact) {
             /**
              * @var int
              */
@@ -62,7 +62,7 @@ final class WorkflowRulesManagerLoopSafeGuardTest extends TestCase
                 $this->artifact = $artifact;
             }
 
-            public function __invoke() : void
+            public function __invoke(): void
             {
                 $this->nb_executions++;
                 $this->guard->process($this->artifact, $this);
@@ -73,7 +73,7 @@ final class WorkflowRulesManagerLoopSafeGuardTest extends TestCase
         $this->assertEquals(1, $process->nb_executions);
     }
 
-    public function testAnArtifactCanBeProcessedSequentiallyMultipleTimes() : void
+    public function testAnArtifactCanBeProcessedSequentiallyMultipleTimes(): void
     {
         $logger          = Mockery::mock(\Psr\Log\LoggerInterface::class);
         $workflow_logger = new WorkflowBackendLogger($logger, \Psr\Log\LogLevel::ERROR);
@@ -91,7 +91,7 @@ final class WorkflowRulesManagerLoopSafeGuardTest extends TestCase
              */
             public $nb_executions = 0;
 
-            public function __invoke() : void
+            public function __invoke(): void
             {
                 $this->nb_executions++;
             }

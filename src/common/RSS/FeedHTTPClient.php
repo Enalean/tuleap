@@ -47,7 +47,7 @@ final class FeedHTTPClient implements HeaderAwareClientInterface
         $this->http_request_factory = $http_request_factory;
     }
 
-    public function get($uri, array $headers = []) : ResponseInterface
+    public function get($uri, array $headers = []): ResponseInterface
     {
         $request = $this->http_request_factory->createRequest('GET', $uri);
         foreach ($headers as $name => $value) {

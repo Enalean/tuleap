@@ -272,7 +272,8 @@ class TimePeriodWithoutWeekEnd implements TimePeriod
 
     public function isTodayWithinTimePeriod(): bool
     {
-        if ($this->getStartDate() <= $this->getTodayTimestamp() &&
+        if (
+            $this->getStartDate() <= $this->getTodayTimestamp() &&
             $this->getNumberOfDaysSinceStart() <= $this->getDuration()
         ) {
             return true;

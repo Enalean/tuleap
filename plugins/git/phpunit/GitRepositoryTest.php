@@ -26,7 +26,8 @@ require_once 'bootstrap.php';
 
 class GitRepositoryTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, TemporaryTestDirectory;
+    use MockeryPHPUnitIntegration;
+    use TemporaryTestDirectory;
 
     public function testDeletionPathShouldBeInProjectPath(): void
     {

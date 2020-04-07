@@ -66,7 +66,7 @@ use Workflow_Transition_ConditionFactory;
 
 class TransitionReplicatorBuilder
 {
-    public static function build() : TransitionReplicator
+    public static function build(): TransitionReplicator
     {
         $field_ids_validator  = new PostActionFieldIdValidator();
         $form_element_factory = Tracker_FormElementFactory::instance();

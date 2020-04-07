@@ -172,14 +172,16 @@ class Tracker_ArtifactCreator //phpcs:ignore
         }
 
         $url_mapping = new CreatedFileURLMapping();
-        if (! $this->createFirstChangesetNoValidation(
-            $artifact,
-            $fields_data,
-            $user,
-            $submitted_on,
-            $send_notification,
-            $url_mapping
-        )) {
+        if (
+            ! $this->createFirstChangesetNoValidation(
+                $artifact,
+                $fields_data,
+                $user,
+                $submitted_on,
+                $send_notification,
+                $url_mapping
+            )
+        ) {
             $this->logger->debug(
                 sprintf('Reverting the creation of artifact in tracker #%d failed: changeset creation failed', $tracker->getId())
             );

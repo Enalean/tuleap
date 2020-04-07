@@ -41,7 +41,7 @@ final class MappingFileOptimusPrimeTransformerTest extends \PHPUnit\Framework\Te
      */
     private $user_manager;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->filename = vfsStream::setup()->url() . '/users.csv';
@@ -146,7 +146,7 @@ EOS;
         file_put_contents($this->filename, $content, FILE_APPEND);
     }
 
-    public function testItTransformsAToBeMappedToAWillBeMappedUser() : void
+    public function testItTransformsAToBeMappedToAWillBeMappedUser(): void
     {
         $cstevens  = $this->user_manager->getUserByUserName('cstevens');
         $cstevens2 = $this->buildUser('cstevens2');
@@ -169,7 +169,7 @@ EOS;
         $this->assertEquals($cstevens, $user->getMappedUser());
     }
 
-    public function testItTransformsAnEmailDoesnotMatchToAWillBeMappedUser() : void
+    public function testItTransformsAnEmailDoesnotMatchToAWillBeMappedUser(): void
     {
         $cstevens  = $this->user_manager->getUserByUserName('cstevens');
         $this->addEmailDoesNotMatchUserToCollection();
@@ -182,7 +182,7 @@ EOS;
         $this->assertEquals($cstevens, $user->getMappedUser());
     }
 
-    public function testItTransformsAToBeCreatedToAWillBeMappedUser() : void
+    public function testItTransformsAToBeCreatedToAWillBeMappedUser(): void
     {
         $cstevens  = $this->user_manager->getUserByUserName('cstevens');
         $this->addToBeCreatedUserToCollection();
@@ -195,7 +195,7 @@ EOS;
         $this->assertEquals($cstevens, $user->getMappedUser());
     }
 
-    public function testItTransformsAToBeActivatedToAWillBeMappedUser() : void
+    public function testItTransformsAToBeActivatedToAWillBeMappedUser(): void
     {
         $cstevens  = $this->user_manager->getUserByUserName('cstevens');
         $this->addToBeActivatedUserToCollection();
@@ -208,7 +208,7 @@ EOS;
         $this->assertEquals($cstevens, $user->getMappedUser());
     }
 
-    public function testItTransformsAnAlreadyExistingToAWillBeMappedUser() : void
+    public function testItTransformsAnAlreadyExistingToAWillBeMappedUser(): void
     {
         $cstevens  = $this->user_manager->getUserByUserName('cstevens');
         $this->addAlreadyExistingUserToCollection();
@@ -221,7 +221,7 @@ EOS;
         $this->assertEquals($cstevens, $user->getMappedUser());
     }
 
-    public function testItTransformsAToBeCreatedToAWillBeCreatedUserInActiveStatus() : void
+    public function testItTransformsAToBeCreatedToAWillBeCreatedUserInActiveStatus(): void
     {
         $this->addToBeCreatedUserToCollection();
         $this->generateCSV('to.be.created', 'create:A');
@@ -236,7 +236,7 @@ EOS;
         $this->assertEquals(PFUser::STATUS_ACTIVE, $user->getStatus());
     }
 
-    public function testItTransformsAToBeCreatedToAWillBeCreatedUserInARestrictedStatus() : void
+    public function testItTransformsAToBeCreatedToAWillBeCreatedUserInARestrictedStatus(): void
     {
         $this->addToBeCreatedUserToCollection();
         $this->generateCSV('to.be.created', 'create:R');
@@ -247,7 +247,7 @@ EOS;
         $this->assertEquals(PFUser::STATUS_RESTRICTED, $user->getStatus());
     }
 
-    public function testItTransformsAToBeCreatedToAWillBeCreatedUserInASuspendedStatus() : void
+    public function testItTransformsAToBeCreatedToAWillBeCreatedUserInASuspendedStatus(): void
     {
         $this->addToBeCreatedUserToCollection();
         $this->generateCSV('to.be.created', 'create:S');
@@ -258,7 +258,7 @@ EOS;
         $this->assertEquals(PFUser::STATUS_SUSPENDED, $user->getStatus());
     }
 
-    public function testItTransformsAToBeCreatedToAWillBeCreatedUserInDefaultStatusSuspended() : void
+    public function testItTransformsAToBeCreatedToAWillBeCreatedUserInDefaultStatusSuspended(): void
     {
         $this->addToBeCreatedUserToCollection();
         $this->generateCSV('to.be.created', 'create');
@@ -269,7 +269,7 @@ EOS;
         $this->assertEquals(PFUser::STATUS_SUSPENDED, $user->getStatus());
     }
 
-    public function testItThrowsAnExceptionWhenGivenStatusIsInvalid() : void
+    public function testItThrowsAnExceptionWhenGivenStatusIsInvalid(): void
     {
         $this->addToBeCreatedUserToCollection();
         $this->generateCSV('to.be.created', 'create:D');
@@ -279,7 +279,7 @@ EOS;
         $new_collection = $this->transformer->transform($this->collection, $this->filename);
     }
 
-    public function testItTransformsAToBeActivatedToAWillBeActivatedUser() : void
+    public function testItTransformsAToBeActivatedToAWillBeActivatedUser(): void
     {
         $to_be_activated = $this->user_manager->getUserByUserName('to.be.activated');
         $this->addToBeActivatedUserToCollection();
@@ -293,7 +293,7 @@ EOS;
         $this->assertEquals('to.be.activated', $user->getUserName());
     }
 
-    public function testItTransformsAnAlreadyExistingToAWillBeActivatedUser() : void
+    public function testItTransformsAnAlreadyExistingToAWillBeActivatedUser(): void
     {
         $already_existing = $this->user_manager->getUserByUserName('already.existing');
         $this->addAlreadyExistingUserToCollection();
@@ -307,7 +307,7 @@ EOS;
         $this->assertEquals('already.existing', $user->getUserName());
     }
 
-    public function testItThrowsAnExceptionWhenAUserInCollectionIsNotTransformedOrKept() : void
+    public function testItThrowsAnExceptionWhenAUserInCollectionIsNotTransformedOrKept(): void
     {
         $this->addToBeActivatedUserToCollection();
         $this->addToBeMappedUserToCollection();
@@ -318,7 +318,7 @@ EOS;
         $this->transformer->transform($this->collection, $this->filename);
     }
 
-    public function testItThrowsAnExceptionIfUsernameAppearsMultipleTimesInCSVFile() : void
+    public function testItThrowsAnExceptionIfUsernameAppearsMultipleTimesInCSVFile(): void
     {
         $this->addToBeMappedUserToCollection();
         $this->generateCSV('to.be.mapped', 'map:cstevens');
@@ -329,7 +329,7 @@ EOS;
         $this->transformer->transform($this->collection, $this->filename);
     }
 
-    public function testItSkipsAlreadyExistingUsersNotFoundInMapping() : void
+    public function testItSkipsAlreadyExistingUsersNotFoundInMapping(): void
     {
         $this->addAlreadyExistingUserToCollection();
         $this->addToBeMappedUserToCollection();
@@ -343,21 +343,21 @@ EOS;
         );
     }
 
-    public function testItThrowsAnExceptionIfMappingFileDoesNotExist() : void
+    public function testItThrowsAnExceptionIfMappingFileDoesNotExist(): void
     {
         $this->expectException(\User\XML\Import\MappingFileDoesNotExistException::class);
 
         $this->transformer->transform($this->collection, '/path/to/inexisting/file');
     }
 
-    public function testItDoesNotThrowAnExceptionIfUserInMappingIsUnknownInCollectionSoThatWeCanReuseTheMappingFileInAnotherImport() : void
+    public function testItDoesNotThrowAnExceptionIfUserInMappingIsUnknownInCollectionSoThatWeCanReuseTheMappingFileInAnotherImport(): void
     {
         $this->generateCSV('unknown.user', 'map:cstevens');
 
         $this->transformer->transform($this->collection, $this->filename);
     }
 
-    public function testItDoesNotThrowAnExceptionWhenMapIsFilledWithAKnownUser() : void
+    public function testItDoesNotThrowAnExceptionWhenMapIsFilledWithAKnownUser(): void
     {
         $this->addToBeMappedUserToCollection();
 
@@ -366,7 +366,7 @@ EOS;
         $this->transformer->transform($this->collection, $this->filename);
     }
 
-    public function testItDoesNotThrowAnExceptionWhenEmailDoesNotMatch() : void
+    public function testItDoesNotThrowAnExceptionWhenEmailDoesNotMatch(): void
     {
         $this->addEmailDoesNotMatchUserToCollection();
 
@@ -375,7 +375,7 @@ EOS;
         $this->transformer->transform($this->collection, $this->filename);
     }
 
-    public function testItDoesNotThrowExceptionWhenEntryInTheCollectionIsAlreadyExistingUser() : void
+    public function testItDoesNotThrowExceptionWhenEntryInTheCollectionIsAlreadyExistingUser(): void
     {
         $this->addAlreadyExistingUserToCollection();
 
@@ -384,7 +384,7 @@ EOS;
         $this->transformer->transform($this->collection, $this->filename);
     }
 
-    public function testItDoesNotThrowExceptionWhenEntryInTheCollectionToBeActivatedUser() : void
+    public function testItDoesNotThrowExceptionWhenEntryInTheCollectionToBeActivatedUser(): void
     {
         $this->addToBeActivatedUserToCollection();
 
@@ -393,7 +393,7 @@ EOS;
         $this->transformer->transform($this->collection, $this->filename);
     }
 
-    public function testItDoesNotThrowExceptionWhenEntryInTheCollectionIsToBeCreatedUser() : void
+    public function testItDoesNotThrowExceptionWhenEntryInTheCollectionIsToBeCreatedUser(): void
     {
         $this->addToBeCreatedUserToCollection();
 
@@ -402,7 +402,7 @@ EOS;
         $this->transformer->transform($this->collection, $this->filename);
     }
 
-    public function testItThrowsExceptionWhenThereIsATypoInTheAction() : void
+    public function testItThrowsExceptionWhenThereIsATypoInTheAction(): void
     {
         $this->addToBeMappedUserToCollection();
 
@@ -413,7 +413,7 @@ EOS;
         $this->transformer->transform($this->collection, $this->filename);
     }
 
-    public function testItThrowsExceptionWhenMapIsNotFilled() : void
+    public function testItThrowsExceptionWhenMapIsNotFilled(): void
     {
         $this->addToBeMappedUserToCollection();
 
@@ -424,7 +424,7 @@ EOS;
         $this->transformer->transform($this->collection, $this->filename);
     }
 
-    public function testItThrowsExceptionWhenMapIsFilledWithAnUnknownUser() : void
+    public function testItThrowsExceptionWhenMapIsFilledWithAnUnknownUser(): void
     {
         $this->addToBeMappedUserToCollection();
 
@@ -435,7 +435,7 @@ EOS;
         $this->transformer->transform($this->collection, $this->filename);
     }
 
-    public function testItDoesNotThrowExceptionWhenEntryInTheCollectionIsToBeCreatedSuspendedUser() : void
+    public function testItDoesNotThrowExceptionWhenEntryInTheCollectionIsToBeCreatedSuspendedUser(): void
     {
         $this->addToBeCreatedUserToCollection();
 
@@ -444,7 +444,7 @@ EOS;
         $this->transformer->transform($this->collection, $this->filename);
     }
 
-    public function testItDoesNotThrowExceptionWhenEntryInTheCollectionIsToBeActivatedUser() : void
+    public function testItDoesNotThrowExceptionWhenEntryInTheCollectionIsToBeActivatedUser(): void
     {
         $this->addToBeActivatedUserToCollection();
 
@@ -453,7 +453,7 @@ EOS;
         $this->transformer->transform($this->collection, $this->filename);
     }
 
-    public function testItThrowsAnExceptionWhenEmailDoesNotMatch() : void
+    public function testItThrowsAnExceptionWhenEmailDoesNotMatch(): void
     {
         $this->addEmailDoesNotMatchUserToCollection();
 
@@ -464,7 +464,7 @@ EOS;
         $this->transformer->transform($this->collection, $this->filename);
     }
 
-    public function testItThrowsAnExceptionWhenUserIsNotSupported() : void
+    public function testItThrowsAnExceptionWhenUserIsNotSupported(): void
     {
         $this->addEmailDoesNotMatchUserToCollection();
 
@@ -473,7 +473,7 @@ EOS;
         $this->transformer->transformWithoutMap($this->collection, 'create:A');
     }
 
-    public function testItActivatesUserThatWasSuspended() : void
+    public function testItActivatesUserThatWasSuspended(): void
     {
         $this->addToBeActivatedUserToCollection();
 
@@ -484,7 +484,7 @@ EOS;
         $this->assertInstanceOf(\User\XML\Import\WillBeActivatedUser::class, $user);
     }
 
-    public function testItCreatesMissingUsers() : void
+    public function testItCreatesMissingUsers(): void
     {
         $this->addToBeCreatedUserToCollection();
 
@@ -495,7 +495,7 @@ EOS;
         $this->assertInstanceOf(\User\XML\Import\WillBeCreatedUser::class, $user);
     }
 
-    public function testItDoesNothingForUsersThatAreAlreadyActive() : void
+    public function testItDoesNothingForUsersThatAreAlreadyActive(): void
     {
         $this->addAlreadyExistingUserToCollection();
 
@@ -506,7 +506,7 @@ EOS;
         $this->assertInstanceOf(\User\XML\Import\AlreadyExistingUser::class, $user);
     }
 
-    public function testItDoesNothingForAlreadyExistingUsers() : void
+    public function testItDoesNothingForAlreadyExistingUsers(): void
     {
         $this->addAlreadyExistingUserToCollection();
 
@@ -517,7 +517,7 @@ EOS;
         $this->assertInstanceOf(\User\XML\Import\AlreadyExistingUser::class, $user);
     }
 
-    public function testItManageSeveralUsersWithoutOveralpingResponsabilities() : void
+    public function testItManageSeveralUsersWithoutOveralpingResponsabilities(): void
     {
         $this->addToBeActivatedUserToCollection(104);
         $this->addToBeCreatedUserToCollection(105);

@@ -91,14 +91,14 @@ class TroveCatHierarchyRetriever
                 'has_spacing'                     => count($last_parent) > 1,
                 'fullname'                        => $row_child['fullname'],
                 'shortname'                       => $row_child['shortname'],
-                'is_mandatory'                    => (boolean) $row_child['mandatory'],
-                'display_during_project_creation' => (boolean) $row_child['display_during_project_creation'],
+                'is_mandatory'                    => (bool) $row_child['mandatory'],
+                'display_during_project_creation' => (bool) $row_child['display_during_project_creation'],
                 'hierarchy'                       => implode(' :: ', $last_parent),
                 'hierarchy_ids'                   => implode(' :: ', $last_parent_ids),
                 'is_top_level_id'                 => (int) $row_child['parent'] === 0,
                 'is_parent_mandatory'             => (int) $row_child['parent_mandatory'] === 1 && $row_child['parent_mandatory'] !== null,
                 'nb_max_values'                   => (int) $row_child['nb_max_values'],
-                'is_project_flag'                 => (boolean) $row_child['is_project_flag'],
+                'is_project_flag'                 => (bool) $row_child['is_project_flag'],
                 'purified_delete_message'         => Codendi_HTMLPurifier::instance()->purify(
                     $GLOBALS['Language']->getText(
                         'admin_trove_cat_delete',

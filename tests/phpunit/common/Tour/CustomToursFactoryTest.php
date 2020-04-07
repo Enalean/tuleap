@@ -34,7 +34,9 @@ use URL;
 
 final class CustomToursFactoryTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
+    use GlobalLanguageMock;
 
     /** @var Tuleap_CustomToursFactory */
     protected $factory;
@@ -50,7 +52,7 @@ final class CustomToursFactoryTest extends TestCase
     /** @var PFUser */
     protected $user;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->project_manager = \Mockery::spy(ProjectManager::class);
         $this->url_processor   = \Mockery::spy(URL::class);
@@ -63,7 +65,7 @@ final class CustomToursFactoryTest extends TestCase
         $this->user->shouldReceive('getLocale')->andReturns('es_CU');
     }
 
-    public function testItDoesNotGetToursIfCustomTourFolderDoesntExist() : void
+    public function testItDoesNotGetToursIfCustomTourFolderDoesntExist(): void
     {
         $request_uri = '';
         ForgeConfig::set('sys_custom_incdir', $this->fixtures_dir . '/somewhereElse');
@@ -74,7 +76,7 @@ final class CustomToursFactoryTest extends TestCase
         $this->assertEmpty($tours);
     }
 
-    public function testItGetsToursInCorrectLanguage() : void
+    public function testItGetsToursInCorrectLanguage(): void
     {
         $user = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('getLocale')->andReturns('fr_FR');
@@ -84,7 +86,7 @@ final class CustomToursFactoryTest extends TestCase
         $this->assertEmpty($tours);
     }
 
-    public function testItReturnsEmptyArrayIfNoAvailableTours() : void
+    public function testItReturnsEmptyArrayIfNoAvailableTours(): void
     {
         $enabled_tours = array();
         $current_location = '/plugind/lala';
@@ -95,7 +97,7 @@ final class CustomToursFactoryTest extends TestCase
         $this->assertEmpty($valid_tours);
     }
 
-    public function testItReturnsOnlyValidTours() : void
+    public function testItReturnsOnlyValidTours(): void
     {
         $this->project_manager->shouldReceive('getValidProject')->andReturns(\Mockery::spy(\Project::class));
 
@@ -132,7 +134,7 @@ final class CustomToursFactoryTest extends TestCase
         $this->assertInstanceOf(\Tuleap_Tour::class, $valid_tours[1]);
     }
 
-    public function testItReturnsOnlyValidToursForCurrentLocation() : void
+    public function testItReturnsOnlyValidToursForCurrentLocation(): void
     {
         $this->url_processor->shouldReceive('getGroupIdFromUrl')->andReturn(101);
         $this->project_manager->shouldReceive('getValidProject')->with(101)->andReturns(\Mockery::spy(\Project::class));
@@ -157,7 +159,7 @@ final class CustomToursFactoryTest extends TestCase
         $this->assertInstanceOf(\Tuleap_Tour::class, $valid_tours[0]);
     }
 
-    public function testItManagesTheLocationWithoutPlaceholders() : void
+    public function testItManagesTheLocationWithoutPlaceholders(): void
     {
         $this->project_manager->shouldReceive('getValidProject')->andReturns(\Mockery::spy(\Project::class));
 
@@ -181,7 +183,7 @@ final class CustomToursFactoryTest extends TestCase
         $this->assertInstanceOf(\Tuleap_Tour::class, $valid_tours[0]);
     }
 
-    public function testItManagesTheLocationWithProjectId() : void
+    public function testItManagesTheLocationWithProjectId(): void
     {
         $this->url_processor->shouldReceive('getGroupIdFromUrl')->andReturns(144);
         $this->project_manager->shouldReceive('getValidProject')->andReturns(\Mockery::spy(\Project::class));
@@ -202,7 +204,7 @@ final class CustomToursFactoryTest extends TestCase
         $this->assertInstanceOf(\Tuleap_Tour::class, $valid_tours[0]);
     }
 
-    public function testItManagesTheLocationWithProjectName() : void
+    public function testItManagesTheLocationWithProjectName(): void
     {
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getUnixName')->andReturns('jojo');
@@ -225,7 +227,7 @@ final class CustomToursFactoryTest extends TestCase
         $this->assertInstanceOf(\Tuleap_Tour::class, $valid_tours[0]);
     }
 
-    public function testItManagesThelocationWithProjectNameAndId() : void
+    public function testItManagesThelocationWithProjectNameAndId(): void
     {
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getUnixName')->andReturns('jojo');
@@ -248,7 +250,7 @@ final class CustomToursFactoryTest extends TestCase
         $this->assertInstanceOf(\Tuleap_Tour::class, $valid_tours[0]);
     }
 
-    public function testItManagesAttributes() : void
+    public function testItManagesAttributes(): void
     {
         $this->project_manager->shouldReceive('getValidProject')->andThrows(new Project_NotFoundException());
         $placeholder = Tuleap_CustomToursFactory::PLACEHOLDER_ATTRIBUTE_VALUE;
@@ -269,7 +271,7 @@ final class CustomToursFactoryTest extends TestCase
         $this->assertInstanceOf(\Tuleap_Tour::class, $valid_tours[0]);
     }
 
-    public function testItManagesEverything() : void
+    public function testItManagesEverything(): void
     {
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getUnixName')->andReturns('jojo');
@@ -296,7 +298,7 @@ final class CustomToursFactoryTest extends TestCase
         $this->assertInstanceOf(\Tuleap_Tour::class, $valid_tours[0]);
     }
 
-    public function testItFailsIfAttributeMissing() : void
+    public function testItFailsIfAttributeMissing(): void
     {
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getUnixName')->andReturns('jojo');
@@ -320,7 +322,7 @@ final class CustomToursFactoryTest extends TestCase
         $this->assertEmpty($valid_tours);
     }
 
-    public function testItIgnoresInvalidToursInEnabledList() : void
+    public function testItIgnoresInvalidToursInEnabledList(): void
     {
         $bad_enabled_tours = array(
             array (
@@ -344,7 +346,7 @@ final class CustomToursFactoryTest extends TestCase
         $this->assertEmpty($valid_tours);
     }
 
-    public function testItThrowsAnExceptionIfFileNotFound() : void
+    public function testItThrowsAnExceptionIfFileNotFound(): void
     {
         $enabled_tours = array(
             array(
@@ -358,7 +360,7 @@ final class CustomToursFactoryTest extends TestCase
         $this->factory->getTour($this->user, 'woofwoof_tour');
     }
 
-    public function testItThrowsAnExceptionIfInvalidJsonArray() : void
+    public function testItThrowsAnExceptionIfInvalidJsonArray(): void
     {
         $enabled_tours = array(
             array(
@@ -372,7 +374,7 @@ final class CustomToursFactoryTest extends TestCase
         $this->factory->getTour($this->user, 'my_second_invalid_tour');
     }
 
-    public function testItThrowsAnExceptionIfTourDoesNotHaveSteps() : void
+    public function testItThrowsAnExceptionIfTourDoesNotHaveSteps(): void
     {
         $enabled_tours = array(
             array(
@@ -386,7 +388,7 @@ final class CustomToursFactoryTest extends TestCase
         $this->factory->getTour($this->user, 'my_invalid_tour');
     }
 
-    public function testItValidatesAGoodTour() : void
+    public function testItValidatesAGoodTour(): void
     {
         $enabled_tours = array(
             array(

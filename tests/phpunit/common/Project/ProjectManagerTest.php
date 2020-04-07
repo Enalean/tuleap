@@ -40,7 +40,9 @@ use UserManager;
 
 final class ProjectManagerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
+    use GlobalLanguageMock;
 
     /** @var UserManager */
     private $user_manager;
@@ -58,13 +60,13 @@ final class ProjectManagerTest extends TestCase
         $this->project_manager_test_version->shouldReceive('_getUserManager')->andReturns($this->user_manager);
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         ProjectManager::clearInstance();
         unset($GLOBALS['Language']);
     }
 
-    public function testOnlyProjectsTheUserCanAccessAreReturnedForTheRESTAPI() : void
+    public function testOnlyProjectsTheUserCanAccessAreReturnedForTheRESTAPI(): void
     {
         $project_access_checker = Mockery::mock(ProjectAccessChecker::class);
         $project_dao            = Mockery::mock(ProjectDao::class);
@@ -83,7 +85,7 @@ final class ProjectManagerTest extends TestCase
             ->with(
                 Mockery::any(),
                 Mockery::on(
-                    static function (Project $project) : bool {
+                    static function (Project $project): bool {
                         return $project->getID() === 102;
                     }
                 )
@@ -92,7 +94,7 @@ final class ProjectManagerTest extends TestCase
             ->with(
                 Mockery::any(),
                 Mockery::on(
-                    static function (Project $project) : bool {
+                    static function (Project $project): bool {
                         return $project->getID() === 103;
                     }
                 )

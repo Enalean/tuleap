@@ -39,7 +39,8 @@ class RestReadOnlyAdminUserBuilder
     {
         $request_method = strtoupper($_SERVER['REQUEST_METHOD']);
 
-        if (($request_method === 'OPTIONS' || $request_method === 'GET') &&
+        if (
+            ($request_method === 'OPTIONS' || $request_method === 'GET') &&
             ! $user->isAnonymous() &&
             $this->forge_user_group_permissions_manager->doesUserHavePermission($user, new RestReadOnlyAdminPermission())
         ) {

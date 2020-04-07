@@ -59,12 +59,12 @@ final class QueueSystemCheckCommand extends Command
         $this->execution_delayed_launcher = $execution_delayed_launcher;
     }
 
-    protected function configure() : void
+    protected function configure(): void
     {
         $this->setDescription('Put a SYSTEM_CHECK event in processing queue');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output) : int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->execution_delayed_launcher->execute(function () {
             $this->db_connection->reconnectAfterALongRunningProcess();

@@ -40,6 +40,7 @@ use UGroupManager;
 class XMLMediaWikiExporterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|MediawikiMaintenanceWrapper
      */
@@ -188,7 +189,7 @@ class XMLMediaWikiExporterTest extends TestCase
         $this->assertEquals($attrs['files-folder-backup'], 'files');
     }
 
-    public function testItExportsMediaWikiPermissions() : void
+    public function testItExportsMediaWikiPermissions(): void
     {
         $this->mediawiki_manager->shouldReceive('getReadAccessControl')->andReturn(
             [

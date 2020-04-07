@@ -97,7 +97,7 @@ class RepositoryDisplayController
         }
     }
 
-    private function fixPathInfo(array $variables) : string
+    private function fixPathInfo(array $variables): string
     {
         if (isset($variables['path']) && $variables['path'] !== '') {
             return $this->addTrailingSlash($this->addLeadingSlash($variables['path']));
@@ -105,7 +105,7 @@ class RepositoryDisplayController
         return '/';
     }
 
-    private function addLeadingSlash(string $path) : string
+    private function addLeadingSlash(string $path): string
     {
         if ($path[0] !== '/') {
             return '/' . $path;
@@ -113,7 +113,7 @@ class RepositoryDisplayController
         return $path;
     }
 
-    private function addTrailingSlash(string $path) : string
+    private function addTrailingSlash(string $path): string
     {
         if (strrpos($path, "/") !== (strlen($path) - 1)) {
             return $path . '/';

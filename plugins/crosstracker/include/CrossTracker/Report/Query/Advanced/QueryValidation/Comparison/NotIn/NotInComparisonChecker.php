@@ -38,7 +38,7 @@ class NotInComparisonChecker extends ComparisonChecker
         }
     }
 
-    public function getOperator() : string
+    public function getOperator(): string
     {
         return self::OPERATOR;
     }

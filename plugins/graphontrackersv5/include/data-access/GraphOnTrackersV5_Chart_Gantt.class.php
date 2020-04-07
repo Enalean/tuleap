@@ -313,10 +313,12 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
         $artifact_summary = $ff->getFormElementById($this->summary);
         $artifact_scale = $ff->getFormElementById($this->scale);
 
-        if (($artifact_field_start && $artifact_field_start->userCanRead()) ||
+        if (
+            ($artifact_field_start && $artifact_field_start->userCanRead()) ||
             ($artifact_field_finish && $artifact_field_finish->userCanRead()) ||
             ($artifact_summary && $artifact_summary->userCanRead()) ||
-            ($artifact_scale && $artifact_scale->userCanRead())) {
+            ($artifact_scale && $artifact_scale->userCanRead())
+        ) {
             return true;
         } else {
             return false;

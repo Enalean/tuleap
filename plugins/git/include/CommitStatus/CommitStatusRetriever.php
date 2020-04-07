@@ -56,7 +56,7 @@ class CommitStatusRetriever
         }
         foreach ($commit_references as $commit_reference) {
             if (! isset($commit_status_rows_indexed_by_reference[$commit_reference])) {
-                $statuses[] = new CommitStatusUnknown;
+                $statuses[] = new CommitStatusUnknown();
                 continue;
             }
             $commit_status_row = $commit_status_rows_indexed_by_reference[$commit_reference];

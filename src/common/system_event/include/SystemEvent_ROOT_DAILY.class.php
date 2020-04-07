@@ -133,7 +133,7 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
         }
     }
 
-    private function runCommand(Process $process, \Psr\Log\LoggerInterface $logger, array &$warnings) : void
+    private function runCommand(Process $process, \Psr\Log\LoggerInterface $logger, array &$warnings): void
     {
         $process->setTimeout(null);
         $process->run();

@@ -46,7 +46,7 @@ class SVN_Apache_Auth_FactoryTest extends TestCase
         };
 
         $this->event_manager                    = \Mockery::mock(\EventManager::class);
-        $this->event_manager_with_plugin_answer = new class($this->my_svn_apache) extends EventManager
+        $this->event_manager_with_plugin_answer = new class ($this->my_svn_apache) extends EventManager
         {
             /**
              * @var SVN_Apache

@@ -21,6 +21,7 @@
 class AgileDashboard_Planning_NearestPlanningTrackerProviderTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker
      */

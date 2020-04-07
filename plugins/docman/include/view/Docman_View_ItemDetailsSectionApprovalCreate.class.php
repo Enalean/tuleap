@@ -369,8 +369,10 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
     {
         $html = '';
 
-        if (($this->table !== null && !$this->table->isClosed())
-           || $this->table === null) {
+        if (
+            ($this->table !== null && !$this->table->isClosed())
+            || $this->table === null
+        ) {
             $atrf = new Docman_ApprovalTableReviewerFactory($this->table, $this->item);
             $ugroups = $atrf->getUgroupsAllowedForTable($this->item->getGroupId());
             $html .= '<div id="docman_approval_table_create_add_reviewers">';

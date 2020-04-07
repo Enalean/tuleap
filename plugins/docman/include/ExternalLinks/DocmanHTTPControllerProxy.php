@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Docman\ExternalLinks;
 
@@ -55,7 +55,7 @@ class DocmanHTTPControllerProxy
         $this->docman_item_dao        = $docman_item_dao;
     }
 
-    public function process(\HTTPRequest $request, \PFUser $user) : void
+    public function process(\HTTPRequest $request, \PFUser $user): void
     {
         $folder_id = $this->parameters_extractor->extractFolderIdFromParams($request);
 
@@ -81,7 +81,7 @@ class DocmanHTTPControllerProxy
     }
 
 
-    private function processEventWhenNeeded(\HTTPRequest $request, ExternalLinkRedirector $redirector) : void
+    private function processEventWhenNeeded(\HTTPRequest $request, ExternalLinkRedirector $redirector): void
     {
         if ($this->parameters_extractor->extractRequestIsForOldUIParams($request)) {
             $this->event_manager->processEvent($redirector);

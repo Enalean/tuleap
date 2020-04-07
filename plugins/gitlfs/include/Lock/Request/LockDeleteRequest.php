@@ -47,7 +47,7 @@ class LockDeleteRequest implements GitLfsHTTPOperation
      * @throws IncorrectlyFormattedReferenceRequestException
      * @return self
      */
-    public static function buildFromJSONString(string $json_string) : LockDeleteRequest
+    public static function buildFromJSONString(string $json_string): LockDeleteRequest
     {
         $decoded_json           = json_decode($json_string);
         $json_decode_error_code = json_last_error();
@@ -61,7 +61,7 @@ class LockDeleteRequest implements GitLfsHTTPOperation
      * @throws IncorrectlyFormattedReferenceRequestException
      * @return self
      */
-    private static function buildFromObject(\stdClass $parameters) : LockDeleteRequest
+    private static function buildFromObject(\stdClass $parameters): LockDeleteRequest
     {
         $force = isset($parameters->force) ? $parameters->force : false;
 

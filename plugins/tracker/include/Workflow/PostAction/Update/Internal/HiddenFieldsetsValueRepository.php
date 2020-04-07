@@ -36,7 +36,7 @@ class HiddenFieldsetsValueRepository
         $this->hidden_fieldsets_dao = $hidden_fieldsets_dao;
     }
 
-    public function create(Transition $transition, HiddenFieldsetsValue $hidden_fieldsets_value) :  void
+    public function create(Transition $transition, HiddenFieldsetsValue $hidden_fieldsets_value): void
     {
         $this->hidden_fieldsets_dao->createPostActionForTransitionId(
             $transition->getId(),
@@ -44,7 +44,7 @@ class HiddenFieldsetsValueRepository
         );
     }
 
-    public function deleteAllByTransition(Transition $transition) : void
+    public function deleteAllByTransition(Transition $transition): void
     {
         $this->hidden_fieldsets_dao->deletePostActionsByTransitionId($transition->getId());
     }

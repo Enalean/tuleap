@@ -31,52 +31,52 @@ final class CurrentPageTest extends \PHPUnit\Framework\TestCase
      */
     private $current_page;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->current_page = new CurrentPage();
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         unset($_SERVER['REQUEST_URI']);
     }
 
-    public function testItIsInProjectDashboard() : void
+    public function testItIsInProjectDashboard(): void
     {
         $_SERVER['REQUEST_URI'] = '/projects/gpig/';
 
         $this->assertTrue($this->current_page->isDashboard());
     }
 
-    public function testItIsInASpecifiedProjectDashboard() : void
+    public function testItIsInASpecifiedProjectDashboard(): void
     {
         $_SERVER['REQUEST_URI'] = '/projects/gpig/?dashboard=666';
 
         $this->assertTrue($this->current_page->isDashboard());
     }
 
-    public function testItIsInUserDashboard() : void
+    public function testItIsInUserDashboard(): void
     {
         $_SERVER['REQUEST_URI'] = '/my/';
 
         $this->assertTrue($this->current_page->isDashboard());
     }
 
-    public function testItIsInASpecifiedUserDashboard() : void
+    public function testItIsInASpecifiedUserDashboard(): void
     {
         $_SERVER['REQUEST_URI'] = '/my/?dashboard=666';
 
         $this->assertTrue($this->current_page->isDashboard());
     }
 
-    public function testItIsNotInDashboardIfUserIsManagingBookmarks() : void
+    public function testItIsNotInDashboardIfUserIsManagingBookmarks(): void
     {
         $_SERVER['REQUEST_URI'] = '/my/bookmark';
 
         $this->assertFalse($this->current_page->isDashboard());
     }
 
-    public function testItIsNotInDashboardIfUserIsOnAnotherPage() : void
+    public function testItIsNotInDashboardIfUserIsOnAnotherPage(): void
     {
         $_SERVER['REQUEST_URI'] = '/whatever';
 

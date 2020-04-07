@@ -69,7 +69,7 @@ final class FRSFileDownloadController extends DispatchablePSR15Compatible implem
      * @throws NotFoundException
      * @throws FRSFileNotPresentInStorage
      */
-    public function handle(ServerRequestInterface $request) : ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $file_id = (int) $request->getAttribute('file_id');
 

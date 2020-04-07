@@ -26,10 +26,10 @@ use Tuleap\DB\DataAccessObject;
 
 class HierarchyDAO extends DataAccessObject
 {
-    public function updateChildren(int $parent_id, array $child_ids) : void
+    public function updateChildren(int $parent_id, array $child_ids): void
     {
         $this->getDB()->tryFlatTransaction(
-            function () use ($parent_id, $child_ids) : void {
+            function () use ($parent_id, $child_ids): void {
                 $this->removeExistingIsChildNatures($parent_id, $child_ids);
                 $this->changeTrackerHierarchy($parent_id, $child_ids);
                 $this->addIsChildNature($parent_id, $child_ids);
@@ -59,14 +59,14 @@ class HierarchyDAO extends DataAccessObject
      * Furthermore, Taskhas a new parent which is Release instead
      * of UserStory, we must remove corresponding nature _is_child.
      */
-    private function removeExistingIsChildNatures(int $parent_id, array $child_ids) : void
+    private function removeExistingIsChildNatures(int $parent_id, array $child_ids): void
     {
         $this->removeIsChildNatureForTrackersThatAreNotAnymoreChildren($parent_id, $child_ids);
         $this->removeIsChildNatureForArtifactsThatWasManuallySetAsChildren($parent_id, $child_ids);
         $this->removeIsChildNatureForTrackersThatHaveANewParent($parent_id, $child_ids);
     }
 
-    private function changeTrackerHierarchy(int $parent_id, array $child_ids) : void
+    private function changeTrackerHierarchy(int $parent_id, array $child_ids): void
     {
         $this->deleteAllChildren($parent_id);
 
@@ -79,7 +79,7 @@ class HierarchyDAO extends DataAccessObject
         }
     }
 
-    private function addIsChildNature(int $parent_id, array $child_ids) : void
+    private function addIsChildNature(int $parent_id, array $child_ids): void
     {
         if (empty($child_ids)) {
             return;
@@ -105,7 +105,7 @@ class HierarchyDAO extends DataAccessObject
         );
     }
 
-    public function searchChildTrackerIds(int $tracker_id) : array
+    public function searchChildTrackerIds(int $tracker_id): array
     {
         return $this->getDB()->run(
             'SELECT t.id FROM tracker AS t
@@ -115,17 +115,17 @@ class HierarchyDAO extends DataAccessObject
         );
     }
 
-    public function searchAncestorIds(int $tracker_id) : array
+    public function searchAncestorIds(int $tracker_id): array
     {
         return $this->getDB()->column('SELECT parent_id FROM tracker_hierarchy WHERE child_id = ?', [$tracker_id]);
     }
 
-    private function deleteAllChildren($parent_id) : void
+    private function deleteAllChildren($parent_id): void
     {
         $this->getDB()->run('DELETE FROM tracker_hierarchy WHERE parent_id = ?', $parent_id);
     }
 
-    private function removeIsChildNatureForTrackersThatAreNotAnymoreChildren(int $parent_id, array $child_ids) : void
+    private function removeIsChildNatureForTrackersThatAreNotAnymoreChildren(int $parent_id, array $child_ids): void
     {
         $hierarchy_join_condition = EasyStatement::open()->with(
             'hierarchy.child_id = child_art.tracker_id AND hierarchy.parent_id = ?',
@@ -151,7 +151,7 @@ class HierarchyDAO extends DataAccessObject
         $this->getDB()->safeQuery($sql, $hierarchy_join_condition->values());
     }
 
-    private function removeIsChildNatureForArtifactsThatWasManuallySetAsChildren(int $parent_id, array $child_ids) : void
+    private function removeIsChildNatureForArtifactsThatWasManuallySetAsChildren(int $parent_id, array $child_ids): void
     {
         $where_condition = EasyStatement::open()->with('nature = ?', Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
         if (! empty($child_ids)) {
@@ -175,7 +175,7 @@ class HierarchyDAO extends DataAccessObject
         $this->getDB()->safeQuery($sql, array_merge([$parent_id], $where_condition->values()));
     }
 
-    private function removeIsChildNatureForTrackersThatHaveANewParent(int $parent_id, array $child_ids) : void
+    private function removeIsChildNatureForTrackersThatHaveANewParent(int $parent_id, array $child_ids): void
     {
         if (empty($child_ids)) {
             return;
@@ -202,12 +202,12 @@ class HierarchyDAO extends DataAccessObject
         $this->getDB()->safeQuery($sql, $hierarchy_join_condition->values());
     }
 
-    public function getChildren($tracker_id) : array
+    public function getChildren($tracker_id): array
     {
         return $this->getDB()->column('SELECT child_id FROM tracker_hierarchy WHERE parent_id = ?', [$tracker_id]);
     }
 
-    public function searchTrackerHierarchy(array $tracker_ids) : array
+    public function searchTrackerHierarchy(array $tracker_ids): array
     {
         if (empty($tracker_ids)) {
             return [];
@@ -222,7 +222,7 @@ class HierarchyDAO extends DataAccessObject
         return (array) $this->getDB()->safeQuery($sql, $condition->values());
     }
 
-    public function searchParentChildAssociations(int $group_id) : array
+    public function searchParentChildAssociations(int $group_id): array
     {
         $sql = 'SELECT h.*
                 FROM       tracker_hierarchy AS h
@@ -232,13 +232,13 @@ class HierarchyDAO extends DataAccessObject
         return $this->getDB()->run($sql, $group_id);
     }
 
-    public function isAHierarchySetInProject(int $project_id) : bool
+    public function isAHierarchySetInProject(int $project_id): bool
     {
         $rows = $this->searchParentChildAssociations($project_id);
         return count($rows) > 0;
     }
 
-    public function deleteParentChildAssociationsForTracker(int $tracker_id) : void
+    public function deleteParentChildAssociationsForTracker(int $tracker_id): void
     {
         $sql = 'DELETE h.*
                 FROM tracker_hierarchy AS h
@@ -248,7 +248,7 @@ class HierarchyDAO extends DataAccessObject
         $this->getDB()->run($sql, $tracker_id, $tracker_id);
     }
 
-    public function duplicate(int $parent_id, int $child_id, array $tracker_mapping) : void
+    public function duplicate(int $parent_id, int $child_id, array $tracker_mapping): void
     {
         if (isset($tracker_mapping[$parent_id], $tracker_mapping[$child_id])) {
             $sql = 'INSERT INTO tracker_hierarchy (parent_id, child_id)
@@ -270,7 +270,7 @@ class HierarchyDAO extends DataAccessObject
      * as a defect (one shall have only one parent)
      *
      */
-    public function getParentsInHierarchy(int $artifact_id) : array
+    public function getParentsInHierarchy(int $artifact_id): array
     {
         $sql = "SELECT parent_art.*
                 FROM           tracker_changeset_value_artifactlink artlink
@@ -283,7 +283,7 @@ class HierarchyDAO extends DataAccessObject
         return $this->getDB()->run($sql, $artifact_id);
     }
 
-    public function isProjectUsingTrackerHierarchy(int $project_id) : bool
+    public function isProjectUsingTrackerHierarchy(int $project_id): bool
     {
         $sql = "SELECT NULL
                 FROM tracker_hierarchy

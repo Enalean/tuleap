@@ -52,7 +52,7 @@ class LSFAPIHTTPAuthorization
         $this->split_token_unserializer = $split_token_unserializer;
     }
 
-    public function getUserFromAuthorizationToken(HTTPRequest $request, GitRepository $repository, GitLfsHTTPOperation $lfs_request) : ?PFUser
+    public function getUserFromAuthorizationToken(HTTPRequest $request, GitRepository $repository, GitLfsHTTPOperation $lfs_request): ?PFUser
     {
         $authorization_header = $request->getFromServer('HTTP_AUTHORIZATION');
         if ($authorization_header === false) {
@@ -94,7 +94,7 @@ class LSFAPIHTTPAuthorization
         GitRepository $repository,
         SplitToken $authorization_token,
         UserOperation $user_operation
-    ) : ?PFUser {
+    ): ?PFUser {
         try {
             return $this->token_verifier->getUser(
                 new \DateTimeImmutable(),

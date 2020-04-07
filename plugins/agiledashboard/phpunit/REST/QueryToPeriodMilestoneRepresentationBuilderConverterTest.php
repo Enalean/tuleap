@@ -30,6 +30,7 @@ use Tuleap\AgileDashboard\Milestone\FutureMilestoneRepresentationBuilder;
 class QueryToPeriodMilestoneRepresentationBuilderConverterTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var QueryToPeriodMilestoneRepresentationBuilderConverter
      */

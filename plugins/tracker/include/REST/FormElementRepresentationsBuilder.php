@@ -72,7 +72,7 @@ class FormElementRepresentationsBuilder
     /**
      * @return Tracker_REST_FormElementRepresentation[]
      */
-    public function buildRepresentationsInTrackerContext(Tracker $tracker, PFUser $user) : array
+    public function buildRepresentationsInTrackerContext(Tracker $tracker, PFUser $user): array
     {
         return $this->buildRepresentations($tracker, null, $user);
     }
@@ -80,7 +80,7 @@ class FormElementRepresentationsBuilder
     /**
      * @return Tracker_REST_FormElementRepresentation[]
      */
-    public function buildRepresentationsInArtifactContext(Tracker_Artifact $artifact, PFUser $user) : array
+    public function buildRepresentationsInArtifactContext(Tracker_Artifact $artifact, PFUser $user): array
     {
         return $this->buildRepresentations($artifact->getTracker(), $artifact, $user);
     }
@@ -88,7 +88,7 @@ class FormElementRepresentationsBuilder
     /**
      * @return Tracker_REST_FormElementRepresentation[]
      */
-    private function buildRepresentations(Tracker $tracker, ?Tracker_Artifact $artifact, PFUser $user) : array
+    private function buildRepresentations(Tracker $tracker, ?Tracker_Artifact $artifact, PFUser $user): array
     {
         $representation_collection = [];
         foreach ($this->form_element_factory->getAllUsedFormElementOfAnyTypesForTracker($tracker) as $form_element) {
@@ -154,7 +154,7 @@ class FormElementRepresentationsBuilder
         Tracker_FormElement $form_element,
         ?Tracker_Artifact $artifact,
         PFUser $user
-    ) : array {
+    ): array {
         if ($artifact === null) {
             return $this->permissions_exporter->exportUserPermissionsForFieldWithoutWorkflowComputedPermissions(
                 $user,

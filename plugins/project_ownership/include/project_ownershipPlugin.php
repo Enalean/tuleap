@@ -131,8 +131,10 @@ class project_ownershipPlugin extends Plugin // phpcs:ignore
     public function projectUGroupMemberUpdatable(ProjectUGroupMemberUpdatable $ugroup_member_update)
     {
         $ugroup = $ugroup_member_update->getGroup();
-        if ((int) $ugroup->getId() !== ProjectUGroup::PROJECT_ADMIN &&
-            (int) $ugroup->getId() !== ProjectUGroup::PROJECT_MEMBERS) {
+        if (
+            (int) $ugroup->getId() !== ProjectUGroup::PROJECT_ADMIN &&
+            (int) $ugroup->getId() !== ProjectUGroup::PROJECT_MEMBERS
+        ) {
             return;
         }
         $project_owner_retriever = new ProjectOwnerRetriever(new ProjectOwnerDAO(), UserManager::instance());
@@ -171,7 +173,7 @@ class project_ownershipPlugin extends Plugin // phpcs:ignore
 
     public function projectImportCleanupUserCreatorFromAdministrators(
         ProjectImportCleanupUserCreatorFromAdministrators $cleanup_user_creator_from_administrators
-    ) : void {
+    ): void {
         $xml_project_user_creator_project_owner_updater = new XMLProjectImportUserCreatorProjectOwnerCleaner(
             new ProjectOwnerUpdater(
                 new ProjectOwnerDAO(),

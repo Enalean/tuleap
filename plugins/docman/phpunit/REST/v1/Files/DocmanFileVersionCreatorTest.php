@@ -32,7 +32,6 @@ use Tuleap\Docman\Upload\Version\VersionToUploadCreator;
 
 class DocmanFileVersionCreatorTest extends TestCase
 {
-
     use MockeryPHPUnitIntegration;
 
     /**

@@ -167,11 +167,12 @@ abstract class Docman_ApprovalTable
         if (isset($row['nb_reviewers']) && isset($row['rejected']) && isset($row['nb_approved']) && isset($row['nb_declined'])) {
             if ($row['rejected'] > 0) {
                 $approvalState = PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED;
-            } elseif ($row['nb_reviewers'] > 0 // There are reviewers
+            } elseif (
+                $row['nb_reviewers'] > 0 // There are reviewers
                      && $row['nb_approved'] > 0 // Avoid case when everybody "Will not review"
                      && (($row['nb_reviewers'] == $row['nb_approved']) // Everybody approved
                          || $row['nb_reviewers'] == ($row['nb_approved'] + $row['nb_declined']))
-                     ) {
+            ) {
                     $approvalState = PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED;
             } else {
                 $approvalState = PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET;

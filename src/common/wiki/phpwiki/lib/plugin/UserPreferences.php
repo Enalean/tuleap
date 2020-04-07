@@ -53,9 +53,11 @@ class WikiPlugin_UserPreferences extends WikiPlugin
         global $request;
         $pagename = $request->getArg('pagename');
         $user = $request->getUser();
-        if (isset($user->_prefs) and
+        if (
+            isset($user->_prefs) and
              isset($user->_prefs->_prefs) and
-             isset($user->_prefs->_method)) {
+             isset($user->_prefs->_method)
+        ) {
             $pref = $user->_prefs;
         } else {
             $pref = $user->getPreferences();
@@ -75,11 +77,13 @@ class WikiPlugin_UserPreferences extends WikiPlugin
         if (isa($request, 'MockRequest')) {
             return '';
         }
-        if ((!$request->isActionPage($request->getArg('pagename'))
+        if (
+            (!$request->isActionPage($request->getArg('pagename'))
              and (!isset($user->_prefs->_method)
                   or !in_array($user->_prefs->_method, array('ADODB','SQL'))))
             or (in_array($request->getArg('action'), array('zip','ziphtml')))
-            or (isa($user, '_ForbiddenUser'))) {
+            or (isa($user, '_ForbiddenUser'))
+        ) {
             $no_args = $this->getDefaultArguments();
 // ?
 //            foreach ($no_args as $key => $value) {
@@ -90,8 +94,10 @@ class WikiPlugin_UserPreferences extends WikiPlugin
             return Template('userprefs', $no_args);
         }
         $userid = $user->UserName();
-        if (// ((defined('ALLOW_BOGO_LOGIN') && ALLOW_BOGO_LOGIN && $user->isSignedIn()) ||
-             $user->isAuthenticated() and !empty($userid)) {
+        if (
+// ((defined('ALLOW_BOGO_LOGIN') && ALLOW_BOGO_LOGIN && $user->isSignedIn()) ||
+             $user->isAuthenticated() and !empty($userid)
+        ) {
             $pref = &$request->_prefs;
             $args['isForm'] = true;
             //trigger_error("DEBUG: reading prefs from getPreferences".print_r($pref));

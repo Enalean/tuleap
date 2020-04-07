@@ -34,9 +34,9 @@ use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 final class OAuth2AccessTokenCreatorTest extends TestCase
 {
-    private const EXPECTED_EXPIRATION_DELAY_SECONDS = 30;
-
     use MockeryPHPUnitIntegration;
+
+    private const EXPECTED_EXPIRATION_DELAY_SECONDS = 30;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OAuth2AccessTokenDAO
@@ -59,7 +59,7 @@ final class OAuth2AccessTokenCreatorTest extends TestCase
 
         $formatter = new class implements SplitTokenFormatter
         {
-            public function getIdentifier(SplitToken $token) : ConcealedString
+            public function getIdentifier(SplitToken $token): ConcealedString
             {
                 return $token->getVerificationString()->getString();
             }

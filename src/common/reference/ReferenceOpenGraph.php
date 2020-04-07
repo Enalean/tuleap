@@ -52,7 +52,7 @@ class ReferenceOpenGraph
         $this->dispatcher = $dispatcher;
     }
 
-    public function getContent() : string
+    public function getContent(): string
     {
         $html = '';
         try {

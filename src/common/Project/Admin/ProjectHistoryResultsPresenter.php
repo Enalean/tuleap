@@ -84,7 +84,8 @@ class ProjectHistoryResultsPresenter
     {
         $val = $row['old_value'];
 
-        if (strstr($msg_key, "perm_granted_for_")
+        if (
+            strstr($msg_key, "perm_granted_for_")
             || strstr($msg_key, "perm_reset_for_")
             || strstr($msg_key, "membership_request_updated")
         ) {

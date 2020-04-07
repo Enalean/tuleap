@@ -70,7 +70,7 @@ class VelocityPluginComputationTest extends \PHPUnit\Framework\TestCase
      */
     private $velocity_computation;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

@@ -51,7 +51,7 @@ final class OwnerRetrieverTest extends TestCase
      */
     private $owner_retriever;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->user_manager       = \Mockery::mock(UserManager::class);
         $this->reviewer_retriever = \Mockery::mock(ReviewerRetriever::class);

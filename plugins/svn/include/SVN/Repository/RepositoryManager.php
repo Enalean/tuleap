@@ -352,7 +352,7 @@ class RepositoryManager
         }
     }
 
-    private function archiveBeforePurge(Repository $repository) : bool
+    private function archiveBeforePurge(Repository $repository): bool
     {
         $source_path = $repository->getBackupPath();
 

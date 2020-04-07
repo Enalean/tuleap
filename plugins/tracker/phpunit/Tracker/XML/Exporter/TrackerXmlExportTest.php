@@ -60,7 +60,7 @@ class TrackerXmlExportTest extends TestCase
      */
     private $external_field_extractor;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         $this->tracker1 = Mockery::mock(Tracker::class);
         $this->tracker1->shouldReceive('isProjectAllowedToUseNature');

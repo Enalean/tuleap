@@ -39,7 +39,7 @@ class ImportValidateChangesetExternalField implements Dispatchable
         $this->xml = $xml;
     }
 
-    public function getXml() : SimpleXMLElement
+    public function getXml(): SimpleXMLElement
     {
         return $this->xml;
     }

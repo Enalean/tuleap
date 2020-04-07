@@ -26,7 +26,7 @@ final class ArtifactRuleFactoryTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testGetRuleById() : void
+    public function testGetRuleById(): void
     {
         $rules_dar             = \Mockery::spy(\DataAccessResult::class);
         $rules_dar->shouldReceive('getRow')->andReturns(array(

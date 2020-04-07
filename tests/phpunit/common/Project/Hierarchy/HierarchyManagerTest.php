@@ -34,7 +34,7 @@ final class HierarchyManagerTest extends \PHPUnit\Framework\TestCase
     /** @var Project_HierarchyManager */
     private $hierarchy_manager;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->dao               = \Mockery::spy(\ProjectHierarchyDao::class);
         $this->hierarchy_manager = \Mockery::mock(\Project_HierarchyManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -44,7 +44,7 @@ final class HierarchyManagerTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testSetParentProjectReturnsTrueIfItAddsParent() : void
+    public function testSetParentProjectReturnsTrueIfItAddsParent(): void
     {
         $this->dao->shouldReceive('addParentProject')->andReturns(true)->once();
 
@@ -57,7 +57,7 @@ final class HierarchyManagerTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($set);
     }
 
-    public function testSetParentProjectReturnsTrueIfItUpdatesParent() : void
+    public function testSetParentProjectReturnsTrueIfItUpdatesParent(): void
     {
         $this->hierarchy_manager->shouldReceive('getAllParents')->andReturns(array());
         $this->dao->shouldReceive('updateParentProject')->andReturns(true)->once();
@@ -73,7 +73,7 @@ final class HierarchyManagerTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($set);
     }
 
-    public function testSetParentProjectReturnsTrueIfItDeletesParent() : void
+    public function testSetParentProjectReturnsTrueIfItDeletesParent(): void
     {
         $this->hierarchy_manager->shouldReceive('getAllParents')->andReturns(array());
         $this->dao->shouldReceive('removeParentProject')->andReturns(true)->once();
@@ -89,7 +89,7 @@ final class HierarchyManagerTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($set);
     }
 
-    public function testSetParentProjectThrowsExceptionIfProjectIsAncestorOfParent() : void
+    public function testSetParentProjectThrowsExceptionIfProjectIsAncestorOfParent(): void
     {
         $hierarchy_manager = \Mockery::mock(\Project_HierarchyManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -102,7 +102,7 @@ final class HierarchyManagerTest extends \PHPUnit\Framework\TestCase
         $hierarchy_manager->setParentProject(135, 185);
     }
 
-    public function testSetParentProjectReturnsFalseIfProjectAddsItselfAsParent() : void
+    public function testSetParentProjectReturnsFalseIfProjectAddsItselfAsParent(): void
     {
         $this->dao->shouldReceive('getParentProject')->andReturns(\TestHelper::emptyDar());
 
@@ -112,7 +112,7 @@ final class HierarchyManagerTest extends \PHPUnit\Framework\TestCase
         $this->hierarchy_manager->setParentProject(135, 135);
     }
 
-    public function testGetAllParentsReturnsAnEmptyArrayIfTheProjectIsOrphan() : void
+    public function testGetAllParentsReturnsAnEmptyArrayIfTheProjectIsOrphan(): void
     {
         $project_id = 145;
         $this->hierarchy_manager->shouldReceive('getParentProject')->with(145)->andReturns(false);
@@ -121,7 +121,7 @@ final class HierarchyManagerTest extends \PHPUnit\Framework\TestCase
         $this->assertEmpty($result);
     }
 
-    public function testGetAllParentsReturnsOneElementInArrayIfTheProjectHasOneParentWhichIsOrphan() : void
+    public function testGetAllParentsReturnsOneElementInArrayIfTheProjectHasOneParentWhichIsOrphan(): void
     {
         $father_project = \Mockery::spy(\Project::class)->shouldReceive('getId')->andReturns(247)->getMock();
         $project_id     = 145;
@@ -136,7 +136,7 @@ final class HierarchyManagerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testGetAllParentsReturnsAsManyElementsInArrayAsTheProjectHasAncestors() : void
+    public function testGetAllParentsReturnsAsManyElementsInArrayAsTheProjectHasAncestors(): void
     {
         $great_grand_mother_project = \Mockery::spy(\Project::class)->shouldReceive('getId')->andReturns(444)->getMock();
         $grand_mother_project       = \Mockery::spy(\Project::class)->shouldReceive('getId')->andReturns(333)->getMock();

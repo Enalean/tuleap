@@ -52,7 +52,7 @@ final class StreamFilterWrapper extends \php_user_filter
         return PSFS_PASS_ON;
     }
 
-    public function onClose() : void
+    public function onClose(): void
     {
         $this->user_filter->filterDetachedEvent();
     }

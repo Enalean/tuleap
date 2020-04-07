@@ -26,6 +26,7 @@ use PHPUnit\Framework\TestCase;
 class FieldUsedInSemanticObjectCheckerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var \Tracker_FormElement_Field
      */
@@ -40,7 +41,7 @@ class FieldUsedInSemanticObjectCheckerTest extends TestCase
      */
     private $background_dao;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

@@ -952,7 +952,8 @@ class GitActions extends PluginActions
             return false;
         }
 
-        if ($this->isDisablingFineGrainedPermissions($repository, $enable_fine_grained_permissions)
+        if (
+            $this->isDisablingFineGrainedPermissions($repository, $enable_fine_grained_permissions)
             && ! (isset($repoAccess[Git::PERM_WRITE]) && isset($repoAccess[Git::PERM_WPLUS]))
         ) {
             $this->getController()->addError(dgettext('tuleap-git', 'Please define both Write and Rewind permissions.'));
@@ -1355,7 +1356,8 @@ class GitActions extends PluginActions
     {
         $mirror_ids = $this->getSelectedMirrorIdsFromRequest($selected_mirror_ids, $project->getID());
 
-        if ($this->mirror_data_mapper->doesAllSelectedMirrorIdsExist($mirror_ids)
+        if (
+            $this->mirror_data_mapper->doesAllSelectedMirrorIdsExist($mirror_ids)
             && $this->mirror_data_mapper->removeAllDefaultMirrorsToProject($project)
             && $this->mirror_data_mapper->addDefaultMirrorsToProject($project, $mirror_ids)
         ) {

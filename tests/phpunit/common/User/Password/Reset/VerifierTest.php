@@ -27,7 +27,8 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 class VerifierTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    public function testItGetsUserAssociatedWithToken() : void
+
+    public function testItGetsUserAssociatedWithToken(): void
     {
         $creation_date = new \DateTime();
         $dao           = \Mockery::spy(\Tuleap\User\Password\Reset\DataAccessObject::class);
@@ -54,7 +55,7 @@ class VerifierTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($user, $token_verifier->getUser($token));
     }
 
-    public function testItThrowsAnExceptionWhenTokenIDCanNotBeFound() : void
+    public function testItThrowsAnExceptionWhenTokenIDCanNotBeFound(): void
     {
         $dao = \Mockery::spy(\Tuleap\User\Password\Reset\DataAccessObject::class);
         $dao->shouldReceive('getTokenInformationById')->andReturns(false);
@@ -73,7 +74,7 @@ class VerifierTest extends \PHPUnit\Framework\TestCase
         $token_verifier->getUser($token);
     }
 
-    public function testItThrowsAnExceptionWhenVerifierPartIsNotValid() : void
+    public function testItThrowsAnExceptionWhenVerifierPartIsNotValid(): void
     {
         $dao = \Mockery::spy(\Tuleap\User\Password\Reset\DataAccessObject::class);
         $dao->shouldReceive('getTokenInformationById')->andReturns(array('verifier' => 'token_verification_part_password_hashed'));
@@ -94,7 +95,7 @@ class VerifierTest extends \PHPUnit\Framework\TestCase
         $token_verifier->getUser($token);
     }
 
-    public function testItThrowsAnExceptionWhenTheTokenIsExpired() : void
+    public function testItThrowsAnExceptionWhenTheTokenIsExpired(): void
     {
         $expired_creation_date = new \DateTime();
         $expired_creation_date->sub(new \DateInterval(Verifier::TOKEN_VALIDITY_PERIOD));

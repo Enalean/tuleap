@@ -36,7 +36,7 @@ class AttachmentToFinalPlaceMoverTest extends TestCase
         $fileinfo->shouldReceive('postUploadActions')->once();
         $fileinfo->shouldReceive('delete')->never();
 
-        $method = function (string $path_a, string $path_b) : bool {
+        $method = function (string $path_a, string $path_b): bool {
             if ($path_a !== '/path/to/file' || $path_b !== '/path/to/dest') {
                 $this->fail();
             }
@@ -54,7 +54,7 @@ class AttachmentToFinalPlaceMoverTest extends TestCase
         $fileinfo->shouldReceive('postUploadActions')->never();
         $fileinfo->shouldReceive('delete')->once();
 
-        $method = function (string $path_a, string $path_b) : bool {
+        $method = function (string $path_a, string $path_b): bool {
             if ($path_a !== '/path/to/file' || $path_b !== '/path/to/dest') {
                 $this->fail();
             }

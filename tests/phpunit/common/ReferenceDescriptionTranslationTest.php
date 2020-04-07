@@ -28,9 +28,10 @@ use Tuleap\GlobalLanguageMock;
 
 final class ReferenceDescriptionTranslationTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
-    public function testReferenceDescriptionNotLookingLikeAnInternalDescriptionIsNotTranslated() : void
+    public function testReferenceDescriptionNotLookingLikeAnInternalDescriptionIsNotTranslated(): void
     {
         $reference            = \Mockery::mock(\Reference::class);
         $expected_description = 'My reference description';
@@ -41,7 +42,7 @@ final class ReferenceDescriptionTranslationTest extends TestCase
         $this->assertEquals($expected_description, $reference_description_translation->getTranslatedDescription());
     }
 
-    public function testPluginReferenceDescriptionIsTranslated() : void
+    public function testPluginReferenceDescriptionIsTranslated(): void
     {
         $reference = \Mockery::mock(\Reference::class);
         $reference->shouldReceive('getDescription')->andReturn('plugin_aaaaa:myref_build_desc_key');
@@ -55,7 +56,7 @@ final class ReferenceDescriptionTranslationTest extends TestCase
         $this->assertEquals($expected_translation, $reference_description_translation->getTranslatedDescription());
     }
 
-    public function testProjectReferenceDescriptionIsTranslated() : void
+    public function testProjectReferenceDescriptionIsTranslated(): void
     {
         $reference = \Mockery::mock(\Reference::class);
         $reference->shouldReceive('getDescription')->andReturn('projectref_desc_key');
@@ -73,7 +74,7 @@ final class ReferenceDescriptionTranslationTest extends TestCase
      * @testWith ["plugin_aaaaa:notfound_desc_key"]
      *           ["project_ref_notfound_desc_key"]
      */
-    public function testDescriptionLookingLikeInternalDescriptionButNotExistingIsNotTranslated(string $raw_description) : void
+    public function testDescriptionLookingLikeInternalDescriptionButNotExistingIsNotTranslated(string $raw_description): void
     {
         $reference = \Mockery::mock(\Reference::class);
         $reference->shouldReceive('getDescription')->andReturn($raw_description);

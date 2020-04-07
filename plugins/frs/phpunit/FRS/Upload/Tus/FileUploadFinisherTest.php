@@ -41,7 +41,8 @@ use Tuleap\Upload\FileAlreadyUploadedInformation;
 
 final class FileUploadFinisherTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     /**
      * @var FileUploadFinisher

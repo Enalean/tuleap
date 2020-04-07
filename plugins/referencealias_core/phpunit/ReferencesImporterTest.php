@@ -31,7 +31,7 @@ class ReferencesImporterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
         $this->dao      = \Mockery::spy(\Tuleap\ReferenceAliasCore\Dao::class);

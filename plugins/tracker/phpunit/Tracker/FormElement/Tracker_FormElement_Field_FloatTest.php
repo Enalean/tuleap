@@ -40,7 +40,8 @@ use UserManager;
 
 final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserManager
@@ -56,20 +57,20 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
         UserManager::setInstance($this->user_manager);
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         UserManager::clearInstance();
         unset($GLOBALS['Response']);
     }
 
-    public function testNoDefaultValue() : void
+    public function testNoDefaultValue(): void
     {
         $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial();
         $float_field->shouldReceive('getProperty')->andReturn(null);
         $this->assertFalse($float_field->hasDefaultValue());
     }
 
-    public function testDefaultValue() : void
+    public function testDefaultValue(): void
     {
         $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial();
         $float_field->shouldReceive('getProperty')->with('default_value')->andReturn('12.34');
@@ -77,7 +78,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
         $this->assertEquals(12.34, $float_field->getDefaultValue());
     }
 
-    public function testGetChangesetValue() : void
+    public function testGetChangesetValue(): void
     {
         $value_dao = \Mockery::mock(Tracker_FormElement_Field_Value_FloatDao::class);
         $value_dao->shouldReceive('searchById')->andReturn(
@@ -93,7 +94,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
         );
     }
 
-    public function testGetChangesetValueDoesNotExist() : void
+    public function testGetChangesetValueDoesNotExist(): void
     {
         $value_dao = \Mockery::mock(Tracker_FormElement_Field_Value_FloatDao::class);
         $value_dao->shouldReceive('searchById')->andReturn(\TestHelper::emptyDar());
@@ -104,7 +105,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
         $this->assertNull($float_field->getChangesetValue(null, 123, false));
     }
 
-    public function testIsValidRequiredField() : void
+    public function testIsValidRequiredField(): void
     {
         $GLOBALS['Response'] = \Mockery::spy(Response::class);
 
@@ -126,7 +127,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
         $this->assertFalse($float_field->isValidRegardingRequiredProperty($artifact, null));
     }
 
-    public function testIsValidNotRequiredField() : void
+    public function testIsValidNotRequiredField(): void
     {
         $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $float_field->shouldReceive('isRequired')->andReturn(true);
@@ -135,13 +136,13 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
         $this->assertTrue($float_field->isValid($artifact, null));
     }
 
-    public function testGetFieldData() : void
+    public function testGetFieldData(): void
     {
         $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial();
         $this->assertEquals('3.14159', $float_field->getFieldData('3.14159'));
     }
 
-    public function testFetchChangesetValue() : void
+    public function testFetchChangesetValue(): void
     {
         $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial();
         $this->assertSame('3.1416', $float_field->fetchChangesetValue(123, 456, 3.14159));
@@ -150,7 +151,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
         $this->assertSame('', $float_field->fetchChangesetValue(123, 456, null));
     }
 
-    public function testItSearchOnZeroValue() : void
+    public function testItSearchOnZeroValue(): void
     {
         $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial();
         $criteria    = \Mockery::mock(Tracker_Report_Criteria::class);
@@ -161,7 +162,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
         $this->assertNotEquals($float_field->getCriteriaFrom($criteria), '');
     }
 
-    public function testItSearchOnCustomQuery() : void
+    public function testItSearchOnCustomQuery(): void
     {
         $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial();
         $criteria    = \Mockery::mock(Tracker_Report_Criteria::class);
@@ -172,7 +173,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
         $this->assertNotEquals($float_field->getCriteriaFrom($criteria), '');
     }
 
-    public function testItDoesntSearchOnEmptyString() : void
+    public function testItDoesntSearchOnEmptyString(): void
     {
         $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial();
         $criteria    = \Mockery::mock(Tracker_Report_Criteria::class);
@@ -183,7 +184,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
         $this->assertEquals($float_field->getCriteriaFrom($criteria), '');
     }
 
-    public function testItDoesntSearchOnNullCriteria() : void
+    public function testItDoesntSearchOnNullCriteria(): void
     {
         $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial();
         $criteria    = \Mockery::mock(Tracker_Report_Criteria::class);
@@ -194,7 +195,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
         $this->assertEquals('', $float_field->getCriteriaFrom($criteria));
     }
 
-    public function testItFetchCriteriaAndSetValueZero() : void
+    public function testItFetchCriteriaAndSetValueZero(): void
     {
         $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial();
         $criteria    = \Mockery::mock(Tracker_Report_Criteria::class);
@@ -208,7 +209,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
         );
     }
 
-    public function testItFetchCriteriaAndLeaveItEmptyValue() : void
+    public function testItFetchCriteriaAndLeaveItEmptyValue(): void
     {
         $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial();
         $criteria    = \Mockery::mock(Tracker_Report_Criteria::class);
@@ -222,7 +223,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
         );
     }
 
-    public function testTheValueIndexedByFieldNameIsReturned() : void
+    public function testTheValueIndexedByFieldNameIsReturned(): void
     {
         $float_field = \Mockery::mock(Tracker_FormElement_Field_Float::class)->makePartial();
         $value = [

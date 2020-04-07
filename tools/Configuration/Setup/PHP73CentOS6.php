@@ -37,7 +37,7 @@ class PHP73CentOS6
         $this->logger = $logger;
     }
 
-    public function main() : void
+    public function main(): void
     {
         try {
             $options = getopt(
@@ -59,7 +59,7 @@ class PHP73CentOS6
         }
     }
 
-    private function exitIfHelp(array $options) : void
+    private function exitIfHelp(array $options): void
     {
         if (isset($options['h']) || isset($options['help'])) {
             $this->help();
@@ -67,7 +67,7 @@ class PHP73CentOS6
         }
     }
 
-    private function getModules(array $options) : array
+    private function getModules(array $options): array
     {
         $all_modules = ['nginx', 'apache', 'fpm'];
         if (isset($options['module'])) {
@@ -78,12 +78,12 @@ class PHP73CentOS6
         return $all_modules;
     }
 
-    private function getIsDevelopment(array $options) : bool
+    private function getIsDevelopment(array $options): bool
     {
         return isset($options['development']);
     }
 
-    private function configure(array $modules, $for_development) : void
+    private function configure(array $modules, $for_development): void
     {
         $conf_loader = new Etc\LoadLocalInc('/etc/tuleap', '/usr/share/tuleap');
         $variables   = $conf_loader->getVars();
@@ -110,7 +110,7 @@ class PHP73CentOS6
         }
     }
 
-    private function help() : void
+    private function help(): void
     {
         echo <<<EOT
 Usage: /usr/share/tuleap/tools/utils/php73/run.php [--module=nginx,fpm]
@@ -122,7 +122,7 @@ Configuration of Tuleap for usage of PHP 7.3 / FPM and Nginx
 EOT;
     }
 
-    private function setErrorHandler(LoggerInterface $logger) : void
+    private function setErrorHandler(LoggerInterface $logger): void
     {
         // Make all warnings or notices fatal
         set_error_handler(function ($errno, $errstr, $errfile, $errline) use ($logger) {

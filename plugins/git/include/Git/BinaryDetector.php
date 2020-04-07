@@ -29,7 +29,7 @@ final class BinaryDetector
     /**
      * @see https://git.kernel.org/pub/scm/git/git.git/tree/xdiff-interface.c?id=v2.20.1#n187
      */
-    public static function isBinary(string $data) : bool
+    public static function isBinary(string $data): bool
     {
         $inspected_data = \substr($data, 0, self::INSPECTED_BYTES);
 

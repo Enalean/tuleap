@@ -29,7 +29,8 @@ use UserManager;
 
 final class WillBeCreatedUserTest extends \PHPUnit\Framework\TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /** @var ToBeCreatedUser */
     private $user;
@@ -40,7 +41,7 @@ final class WillBeCreatedUserTest extends \PHPUnit\Framework\TestCase
     /** @var Logger */
     private $logger;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -56,14 +57,14 @@ final class WillBeCreatedUserTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItCreatesANewUserInDatabase() : void
+    public function testItCreatesANewUserInDatabase(): void
     {
         $this->user_manager->shouldReceive('createAccount')->once()->andReturns(new \PFUser(['language_id' => 'en']));
 
         $this->user->process($this->user_manager, $this->logger);
     }
 
-    public function testItThrowsAnExceptionIfUserCannotBeCreated() : void
+    public function testItThrowsAnExceptionIfUserCannotBeCreated(): void
     {
         $this->user_manager->shouldReceive('createAccount')->andReturns(false);
 

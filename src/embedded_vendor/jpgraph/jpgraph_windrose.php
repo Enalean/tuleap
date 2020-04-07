@@ -1717,4 +1717,4 @@ class WindroseGraph extends Graph
             );
         }
     }
-} // Class
+}

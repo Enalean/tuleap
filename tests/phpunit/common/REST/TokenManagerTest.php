@@ -61,7 +61,7 @@ final class TokenManagerTest extends TestCase
      */
     private $user;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->user_manager  = \Mockery::spy(\UserManager::class);
         $this->token_dao     = \Mockery::spy(\Rest_TokenDao::class);
@@ -74,7 +74,7 @@ final class TokenManagerTest extends TestCase
         $this->user        = new \PFUser(['user_id' => $this->user_id, 'language_id' => 'en']);
     }
 
-    public function testItReturnsTheUserIfTokenIsValid() : void
+    public function testItReturnsTheUserIfTokenIsValid(): void
     {
         $this->user_manager->shouldReceive('getUserById')->with($this->user_id)->andReturns($this->user);
 
@@ -82,7 +82,7 @@ final class TokenManagerTest extends TestCase
         $this->assertEquals($this->user, $this->token_manager->checkToken($this->token));
     }
 
-    public function testItThrowsAnExceptionIfTokenIsInvalid() : void
+    public function testItThrowsAnExceptionIfTokenIsInvalid(): void
     {
         $this->token_dao->shouldReceive('checkTokenExistenceForUserId')->with($this->user_id, $this->token_value)->andReturns(\TestHelper::emptyDar());
         $this->expectException(\Rest_Exception_InvalidTokenException::class);
@@ -90,7 +90,7 @@ final class TokenManagerTest extends TestCase
         $this->token_manager->checkToken($this->token);
     }
 
-    public function testItExpiresATokenIfItBelongsToUser() : void
+    public function testItExpiresATokenIfItBelongsToUser(): void
     {
         $this->user_manager->shouldReceive('getUserById')->with($this->user_id)->andReturns($this->user);
 
@@ -100,14 +100,14 @@ final class TokenManagerTest extends TestCase
         $this->token_manager->expireToken($this->token);
     }
 
-    public function testItExpiresAllTokensForAUser() : void
+    public function testItExpiresAllTokensForAUser(): void
     {
         $this->token_dao->shouldReceive('deleteAllTokensForUser')->with($this->user_id)->once();
 
         $this->token_manager->expireAllTokensForUser($this->user);
     }
 
-    public function testItDoesNotExpireATokenIfItDoesNotBelongToUser() : void
+    public function testItDoesNotExpireATokenIfItDoesNotBelongToUser(): void
     {
         $this->token_dao->shouldReceive('checkTokenExistenceForUserId')->with($this->user_id, $this->token_value)->andReturns(\TestHelper::emptyDar());
 
@@ -117,7 +117,7 @@ final class TokenManagerTest extends TestCase
         $this->token_manager->expireToken($this->token);
     }
 
-    public function testItAddsATokenToDatabase() : void
+    public function testItAddsATokenToDatabase(): void
     {
         $this->token_dao->shouldReceive('addTokenForUserId')->with($this->user_id, \Mockery::any(), \Mockery::any())->andReturns(true)->once();
 

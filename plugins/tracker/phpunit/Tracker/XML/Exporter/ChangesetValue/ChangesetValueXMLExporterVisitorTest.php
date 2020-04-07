@@ -19,7 +19,7 @@
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 use Tuleap\Tracker\XML\Exporter\ChangesetValue\ExternalExporterCollector;
 
@@ -211,7 +211,7 @@ final class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitorTest extends \P
      */
     private function getExternalChangeset($changeset, $field)
     {
-        return new class(1, $changeset, $field, false) extends Tracker_Artifact_ChangesetValue {
+        return new class (1, $changeset, $field, false) extends Tracker_Artifact_ChangesetValue {
             public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor)
             {
                 return $visitor->visitExternalField($this);

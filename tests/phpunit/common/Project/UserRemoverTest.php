@@ -30,7 +30,9 @@ use Tuleap\GlobalResponseMock;
 
 class UserRemoverTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalResponseMock, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalResponseMock;
+    use GlobalLanguageMock;
 
     /**
      * @var UserRemover

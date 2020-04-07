@@ -60,7 +60,8 @@ class BurnupCacheChecker
     {
         $is_burnup_under_calculation = false;
 
-        if ($this->isCacheCompleteForBurnup($artifact, $time_period, $user) === false
+        if (
+            $this->isCacheCompleteForBurnup($artifact, $time_period, $user) === false
         ) {
             $this->cache_generator->forceBurnupCacheGeneration($artifact);
             $is_burnup_under_calculation = true;

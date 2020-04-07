@@ -26,12 +26,13 @@ require_once __DIR__ . '/../bootstrap.php';
 class SystemEvent_GIT_REPO_FORKTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     private $old_repository;
     private $new_repository;
     private $old_repository_id = 115;
     private $new_repository_id = 123;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -48,14 +49,14 @@ class SystemEvent_GIT_REPO_FORKTest extends \PHPUnit\Framework\TestCase
         $this->event->injectDependencies($this->repository_factory);
     }
 
-    public function testItGetsTheRepositoryIdsFromTheFactory() : void
+    public function testItGetsTheRepositoryIdsFromTheFactory(): void
     {
         $this->repository_factory->shouldReceive('getRepositoryById')->with($this->old_repository_id)->andReturns($this->old_repository);
         $this->repository_factory->shouldReceive('getRepositoryById')->with($this->new_repository_id)->andReturns($this->new_repository);
         $this->event->process();
     }
 
-    public function testItDelegatesToBackendRepositoryCreation() : void
+    public function testItDelegatesToBackendRepositoryCreation(): void
     {
         $this->repository_factory->shouldReceive('getRepositoryById')->with($this->old_repository_id)->andReturns($this->old_repository);
         $this->repository_factory->shouldReceive('getRepositoryById')->with($this->new_repository_id)->andReturns($this->new_repository);
@@ -63,7 +64,7 @@ class SystemEvent_GIT_REPO_FORKTest extends \PHPUnit\Framework\TestCase
         $this->event->process();
     }
 
-    public function testItMarksTheEventAsDone() : void
+    public function testItMarksTheEventAsDone(): void
     {
         $this->repository_factory->shouldReceive('getRepositoryById')->with($this->old_repository_id)->andReturns($this->old_repository);
         $this->repository_factory->shouldReceive('getRepositoryById')->with($this->new_repository_id)->andReturns($this->new_repository);
@@ -71,7 +72,7 @@ class SystemEvent_GIT_REPO_FORKTest extends \PHPUnit\Framework\TestCase
         $this->event->process();
     }
 
-    public function testItMarksTheEventAsWarningWhenTheRepoDoesNotExist() : void
+    public function testItMarksTheEventAsWarningWhenTheRepoDoesNotExist(): void
     {
         $this->repository_factory->shouldReceive('getRepositoryById')->andReturns(null);
         $this->event->shouldReceive('warning')->with('Unable to find repository, perhaps it was deleted in the mean time?')->once();

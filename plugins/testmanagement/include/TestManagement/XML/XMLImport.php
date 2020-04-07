@@ -59,7 +59,7 @@ class XMLImport
     /**
      * @throws Exception
      */
-    public function import(Project $project, string $extraction_path, array $tracker_mapping) : void
+    public function import(Project $project, string $extraction_path, array $tracker_mapping): void
     {
         $xml_path = $extraction_path . '/testmanagement.xml';
         if (file_exists($xml_path)) {
@@ -96,7 +96,8 @@ class XMLImport
                         $issue_tracker_id === '' ? null : (int) $issue_tracker_id
                     );
                 }
-            } catch (TrackerNotInProjectException |
+            } catch (
+                TrackerNotInProjectException |
                 TrackerHasAtLeastOneFrozenFieldsPostActionException |
                 TrackerHasAtLeastOneHiddenFieldsetsPostActionException $exception
             ) {

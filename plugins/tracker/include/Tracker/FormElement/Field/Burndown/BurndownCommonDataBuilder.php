@@ -106,7 +106,7 @@ class BurndownCommonDataBuilder
         return $capacity;
     }
 
-    public function getTimePeriod(TimePeriodWithoutWeekEnd $time_period) : TimePeriodWithoutWeekEnd
+    public function getTimePeriod(TimePeriodWithoutWeekEnd $time_period): TimePeriodWithoutWeekEnd
     {
         if ($time_period->getStartDate() === null) {
             return TimePeriodWithoutWeekEnd::buildFromDuration($_SERVER['REQUEST_TIME'], $time_period->getDuration());

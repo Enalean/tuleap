@@ -2704,8 +2704,10 @@ class soap_transport_http extends nusoap_base
             $this->debug('received a total of ' . strlen($this->incoming_payload) . ' bytes of data from server');
 
       // close filepointer
-            if ((isset($this->incoming_headers['connection']) && strtolower($this->incoming_headers['connection']) == 'close') ||
-            (! $this->persistentConnection) || feof($this->fp)) {
+            if (
+                (isset($this->incoming_headers['connection']) && strtolower($this->incoming_headers['connection']) == 'close') ||
+                (! $this->persistentConnection) || feof($this->fp)
+            ) {
                  fclose($this->fp);
                  $this->fp = false;
                  $this->debug('closed socket');
@@ -2840,9 +2842,10 @@ class soap_transport_http extends nusoap_base
             return false;
         }
 
-        if (($http_status >= 300 && $http_status <= 307) ||
-        ($http_status >= 400 && $http_status <= 417) ||
-        ($http_status >= 501 && $http_status <= 505)
+        if (
+            ($http_status >= 300 && $http_status <= 307) ||
+            ($http_status >= 400 && $http_status <= 417) ||
+            ($http_status >= 501 && $http_status <= 505)
         ) {
             $this->setError("Unsupported HTTP response status $http_status $http_reason (soap_client->response has contents of the response)");
             return false;
@@ -3497,8 +3500,10 @@ class soap_server extends nusoap_base
             $delim = '';
         }
 
-        if (strlen($delim) > 0 && substr_count($this->methodname, $delim) == 1 &&
-        class_exists(substr($this->methodname, 0, strpos($this->methodname, $delim)))) {
+        if (
+            strlen($delim) > 0 && substr_count($this->methodname, $delim) == 1 &&
+            class_exists(substr($this->methodname, 0, strpos($this->methodname, $delim)))
+        ) {
          // get the class and method name
             $class = substr($this->methodname, 0, strpos($this->methodname, $delim));
             $method = substr($this->methodname, strpos($this->methodname, $delim) + strlen($delim));
@@ -3975,7 +3980,7 @@ class soap_server extends nusoap_base
             $schemaTargetNamespace = $namespace;
         }
 
-        $this->wsdl = new wsdl;
+        $this->wsdl = new wsdl();
         $this->wsdl->serviceName = $serviceName;
         $this->wsdl->endpoint = $endpoint;
         $this->wsdl->namespaces['tns'] = $namespace;
@@ -5491,10 +5496,11 @@ class wsdl extends nusoap_base
                     }
                 }
                 // if user took advantage of a minOccurs=0, then only serialize named parameters
-                if (isset($optionals)
-                 && (!isset($xvalue[$eName]))
-                 && ( (!isset($attrs['nillable'])) || $attrs['nillable'] != 'true')
-                 ) {
+                if (
+                    isset($optionals)
+                    && (!isset($xvalue[$eName]))
+                    && ( (!isset($attrs['nillable'])) || $attrs['nillable'] != 'true')
+                ) {
                     if (isset($attrs['minOccurs']) && $attrs['minOccurs'] <> '0') {
                                       $this->debug("apparent error: no value provided for element $eName with minOccurs=" . $attrs['minOccurs']);
                     }
@@ -6196,17 +6202,19 @@ class soap_parser extends nusoap_base
             if (strtolower($value) == 'false' || strtolower($value) == 'f') {
                 return false;
             }
-            return (boolean) $value;
+            return (bool) $value;
         }
         if ($type == 'base64' || $type == 'base64Binary') {
             $this->debug('Decode base64 value');
             return base64_decode($value);
         }
      // obscure numeric types
-        if ($type == 'nonPositiveInteger' || $type == 'negativeInteger'
-        || $type == 'nonNegativeInteger' || $type == 'positiveInteger'
-        || $type == 'unsignedInt'
-        || $type == 'unsignedShort' || $type == 'unsignedByte') {
+        if (
+            $type == 'nonPositiveInteger' || $type == 'negativeInteger'
+            || $type == 'nonNegativeInteger' || $type == 'positiveInteger'
+            || $type == 'unsignedInt'
+            || $type == 'unsignedShort' || $type == 'unsignedByte'
+        ) {
             return (int) $value;
         }
      // bogus: parser treats array with no elements as a simple type

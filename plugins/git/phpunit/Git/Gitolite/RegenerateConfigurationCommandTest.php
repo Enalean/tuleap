@@ -33,13 +33,13 @@ class RegenerateConfigurationCommandTest extends TestCase
     private $project_manager;
     private $event_manager;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->project_manager = \Mockery::mock(\ProjectManager::class);
         $this->event_manager   = \Mockery::mock(\Git_SystemEventManager::class);
     }
 
-    public function testConfigurationForAllProjectsCanBeRegenerated() : void
+    public function testConfigurationForAllProjectsCanBeRegenerated(): void
     {
         $command        = new RegenerateConfigurationCommand($this->project_manager, $this->event_manager);
         $command_tester = new CommandTester($command);
@@ -55,7 +55,7 @@ class RegenerateConfigurationCommandTest extends TestCase
         $this->assertSame(0, $command_tester->getStatusCode());
     }
 
-    public function testConfigurationForSomeProjectsCanBeRegenerated() : void
+    public function testConfigurationForSomeProjectsCanBeRegenerated(): void
     {
         $command        = new RegenerateConfigurationCommand($this->project_manager, $this->event_manager);
         $command_tester = new CommandTester($command);
@@ -78,7 +78,7 @@ class RegenerateConfigurationCommandTest extends TestCase
         $this->assertSame(0, $command_tester->getStatusCode());
     }
 
-    public function testInvalidProjectIDIsRejected() : void
+    public function testInvalidProjectIDIsRejected(): void
     {
         $command        = new RegenerateConfigurationCommand($this->project_manager, $this->event_manager);
         $command_tester = new CommandTester($command);
@@ -90,7 +90,7 @@ class RegenerateConfigurationCommandTest extends TestCase
         $this->assertSame(1, $command_tester->getStatusCode());
     }
 
-    public function testNoUnnecessaryWorkIsDoneWhenNoProjectIDIsProvided() : void
+    public function testNoUnnecessaryWorkIsDoneWhenNoProjectIDIsProvided(): void
     {
         $command        = new RegenerateConfigurationCommand($this->project_manager, $this->event_manager);
         $command_tester = new CommandTester($command);

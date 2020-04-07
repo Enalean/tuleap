@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Timeframe\Events;
 
@@ -41,17 +41,17 @@ class DoesAPluginRenderAChartBasedOnSemanticTimeframeForTrackerEvent
         $this->tracker = $tracker;
     }
 
-    public function getTracker() : \Tracker
+    public function getTracker(): \Tracker
     {
         return $this->tracker;
     }
 
-    public function setItRendersAChartForTracker() : void
+    public function setItRendersAChartForTracker(): void
     {
         $this->does_a_plugin_render_a_chart_for_tracker = true;
     }
 
-    public function doesAPluginRenderAChartForTracker() : bool
+    public function doesAPluginRenderAChartForTracker(): bool
     {
         return $this->does_a_plugin_render_a_chart_for_tracker;
     }

@@ -26,7 +26,7 @@ require_once __DIR__ . '/../bootstrap.php';
 
 class TrackerWorkflowsTest extends TrackerBase
 {
-    public function testGetStatusFieldId() : int
+    public function testGetStatusFieldId(): int
     {
         $response = $this->getResponseByName(
             \REST_TestDataBuilder::ADMIN_USER_NAME,

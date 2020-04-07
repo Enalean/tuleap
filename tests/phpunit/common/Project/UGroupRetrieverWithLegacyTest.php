@@ -30,6 +30,7 @@ use UGroupManager;
 class UGroupRetrieverWithLegacyTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UGroupManager
      */

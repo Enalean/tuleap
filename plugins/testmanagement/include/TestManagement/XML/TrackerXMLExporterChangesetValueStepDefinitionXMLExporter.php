@@ -19,7 +19,7 @@
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\TestManagement\XML;
 
@@ -53,7 +53,7 @@ class TrackerXMLExporterChangesetValueStepDefinitionXMLExporter extends Tracker_
         SimpleXMLElement $changeset_xml,
         Tracker_Artifact $artifact,
         Tracker_Artifact_ChangesetValue $changeset_value
-    ) : void {
+    ): void {
         $values = $changeset_value->getValue();
         $field  = $changeset_value->getField();
         if (! count($values) > 0) {

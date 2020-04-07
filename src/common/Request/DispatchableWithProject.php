@@ -33,5 +33,5 @@ interface DispatchableWithProject
      *
      * @param array $variables
      */
-    public function getProject(array $variables) : Project;
+    public function getProject(array $variables): Project;
 }

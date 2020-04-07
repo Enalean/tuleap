@@ -30,8 +30,8 @@ use Tuleap\Upload\FileBeingUploadedInformation;
 
 class FileUploadCleanerTest extends TestCase
 {
-
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     public function testDanglingFilesBeingUploadedAreCleaned(): void
     {

@@ -35,7 +35,8 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class DisplayKeysTokensControllerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, TemporaryTestDirectory;
+    use MockeryPHPUnitIntegration;
+    use TemporaryTestDirectory;
 
     /**
      * @var DisplayKeysTokensController

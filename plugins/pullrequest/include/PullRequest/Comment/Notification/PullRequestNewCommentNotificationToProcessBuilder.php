@@ -85,7 +85,7 @@ final class PullRequestNewCommentNotificationToProcessBuilder implements Notific
         $this->html_url_builder            = $html_url_builder;
     }
 
-    public function getNotificationsToProcess(EventSubjectToNotification $event) : array
+    public function getNotificationsToProcess(EventSubjectToNotification $event): array
     {
         $comment = $this->comment_factory->getCommentByID($event->getCommentID());
 

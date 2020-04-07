@@ -30,7 +30,8 @@ use Tuleap\TemporaryTestDirectory;
 
 final class SvnlookTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, TemporaryTestDirectory;
+    use MockeryPHPUnitIntegration;
+    use TemporaryTestDirectory;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Project

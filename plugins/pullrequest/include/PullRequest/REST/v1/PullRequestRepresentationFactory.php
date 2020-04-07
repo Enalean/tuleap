@@ -100,7 +100,7 @@ class PullRequestRepresentationFactory
     /**
      * @return array{string, int|null}
      */
-    private function getLastBuildInformation(PullRequest $pull_request, \GitRepository $repository_destination) : array
+    private function getLastBuildInformation(PullRequest $pull_request, \GitRepository $repository_destination): array
     {
         $commit_status = $this->commit_status_retriever->getLastCommitStatus(
             $repository_destination,

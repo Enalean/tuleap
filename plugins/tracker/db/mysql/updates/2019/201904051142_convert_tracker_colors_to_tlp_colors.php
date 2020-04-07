@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 class b201904051142_convert_tracker_colors_to_tlp_colors extends ForgeUpgrade_Bucket //phpcs:ignore
 {

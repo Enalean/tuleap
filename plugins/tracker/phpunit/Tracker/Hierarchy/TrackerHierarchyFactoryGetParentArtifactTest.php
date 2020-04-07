@@ -19,14 +19,17 @@
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 
 final class TrackerHierarchyFactoryGetParentArtifactTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\GlobalResponseMock, \Tuleap\GlobalLanguageMock;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\GlobalResponseMock;
+    use \Tuleap\GlobalLanguageMock;
+
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|HierarchyDAO
      */

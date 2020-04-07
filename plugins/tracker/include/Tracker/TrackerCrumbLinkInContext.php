@@ -47,12 +47,12 @@ class TrackerCrumbLinkInContext
         $this->url             = $url;
     }
 
-    public function getPrimaryLink() : BreadCrumbLink
+    public function getPrimaryLink(): BreadCrumbLink
     {
         return new BreadCrumbLink($this->primary_label, $this->url);
     }
 
-    public function getSecondaryLink() : BreadCrumbLink
+    public function getSecondaryLink(): BreadCrumbLink
     {
         return new BreadCrumbLink($this->secondary_label, $this->url);
     }

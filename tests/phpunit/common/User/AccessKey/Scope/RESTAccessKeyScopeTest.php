@@ -30,7 +30,7 @@ final class RESTAccessKeyScopeTest extends AuthenticationScopeTestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function getAuthenticationScopeClassname() : string
+    public function getAuthenticationScopeClassname(): string
     {
         return RESTAccessKeyScope::class;
     }

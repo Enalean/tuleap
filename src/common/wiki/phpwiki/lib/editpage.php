@@ -77,8 +77,10 @@ class PageEditor
             $this->_initialEdit = true;
 
             // The edit request has specified some initial content from a template
-            if (($template = $request->getArg('template'))
-                   and $request->_dbi->isWikiPage($template)) {
+            if (
+                ($template = $request->getArg('template'))
+                   and $request->_dbi->isWikiPage($template)
+            ) {
                 $page = $request->_dbi->getPage($template);
                 $current = $page->getCurrentRevision();
                 $this->_content = $current->getPackedContent();
@@ -101,12 +103,16 @@ class PageEditor
         $tokens['CONCURRENT_UPDATE_MESSAGE'] = '';
         $r = $this->request;
 
-        if (isset($r->args['pref']['editWidth'])
-            and ($r->getPref('editWidth') != $r->args['pref']['editWidth'])) {
+        if (
+            isset($r->args['pref']['editWidth'])
+            and ($r->getPref('editWidth') != $r->args['pref']['editWidth'])
+        ) {
             $r->_prefs->set('editWidth', $r->args['pref']['editWidth']);
         }
-        if (isset($r->args['pref']['editHeight'])
-            and ($r->getPref('editHeight') != $r->args['pref']['editHeight'])) {
+        if (
+            isset($r->args['pref']['editHeight'])
+            and ($r->getPref('editHeight') != $r->args['pref']['editHeight'])
+        ) {
             $r->_prefs->set('editHeight', $r->args['pref']['editHeight']);
         }
 
@@ -567,8 +573,10 @@ class PageEditor
         $posted = $request->getArg('edit');
         $request->setArg('edit', false);
 
-        if (!$posted || !$request->isPost()
-            || $request->getArg('action') != 'edit') {
+        if (
+            !$posted || !$request->isPost()
+            || $request->getArg('action') != 'edit'
+        ) {
             return false;
         }
 

@@ -27,7 +27,8 @@ require_once 'bootstrap.php';
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class GitTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalResponseMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalResponseMock;
 
     protected function setup(): void
     {

@@ -57,7 +57,7 @@ class HiddenFieldsets extends Transition_PostAction
      * Get the shortname of the post action
      *
      */
-    public function getShortName() : string
+    public function getShortName(): string
     {
         return self::SHORT_NAME;
     }

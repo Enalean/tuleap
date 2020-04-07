@@ -31,7 +31,7 @@ class GitPullRequestReferenceNamespaceAvailabilityCheckerTest extends TestCase
 
     public function testNamespaceIsAvailableWhenNoGitReferenceAreFound()
     {
-        $namespace_availability_checker = new GitPullRequestReferenceNamespaceAvailabilityChecker;
+        $namespace_availability_checker = new GitPullRequestReferenceNamespaceAvailabilityChecker();
 
         $executor = \Mockery::mock(GitExec::class);
         $executor->shouldReceive('getReferencesFromPattern')->andReturns([]);
@@ -41,7 +41,7 @@ class GitPullRequestReferenceNamespaceAvailabilityCheckerTest extends TestCase
 
     public function testNamespaceIsNotAvailableWhenGitReferencesAreFound()
     {
-        $namespace_availability_checker = new GitPullRequestReferenceNamespaceAvailabilityChecker;
+        $namespace_availability_checker = new GitPullRequestReferenceNamespaceAvailabilityChecker();
 
         $executor = \Mockery::mock(GitExec::class);
         $executor->shouldReceive('getReferencesFromPattern')->andReturns(['refs/tlpr/1/head']);

@@ -86,30 +86,38 @@ class WikiRequest extends Request
         // Restore auth state. This doesn't check for proper authorization!
         $userid = $this->_deduceUsername();
         if (ENABLE_USER_NEW) {
-            if (isset($this->_user) and
+            if (
+                isset($this->_user) and
                 !empty($this->_user->_authhow) and
-                $this->_user->_authhow == 'session') {
+                $this->_user->_authhow == 'session'
+            ) {
                 // users might switch in a session between the two objects.
                 // restore old auth level here or in updateAuthAndPrefs?
                 //$user = $this->getSessionVar('wiki_user');
                 // revive db handle, because these don't survive sessions
-                if (isset($this->_user) and
+                if (
+                    isset($this->_user) and
                      ( ! isa($this->_user, WikiUserClassname())
-                       or (strtolower(get_class($this->_user)) == '_passuser'))) {
+                       or (strtolower(get_class($this->_user)) == '_passuser'))
+                ) {
                     $this->_user = WikiUser($userid, $this->_user->_prefs);
                 }
             // revive other db handle
-                if (isset($this->_user->_prefs->_method)
+                if (
+                    isset($this->_user->_prefs->_method)
                     and ($this->_user->_prefs->_method == 'SQL'
                          or $this->_user->_prefs->_method == 'ADODB'
                          or $this->_user->_prefs->_method == 'PDO'
-                         or $this->_user->_prefs->_method == 'HomePage')) {
+                         or $this->_user->_prefs->_method == 'HomePage')
+                ) {
                     $this->_user->_HomePagehandle = $this->getPage($userid);
                 }
             // need to update the lockfile filehandle
-                if (isa($this->_user, '_FilePassUser')
+                if (
+                    isa($this->_user, '_FilePassUser')
                      and $this->_user->_file->lockfile
-                     and !$this->_user->_file->fplock) {
+                     and !$this->_user->_file->fplock
+                ) {
                     //$level = $this->_user->_level;
                     $this->_user = UpgradeUser(
                         $this->_user,
@@ -162,11 +170,13 @@ class WikiRequest extends Request
         }
         //check changed LANG and THEME inside a session.
         // (e.g. by using another baseurl)
-        if (isset($this->_user->_authhow)
+        if (
+            isset($this->_user->_authhow)
             and $this->_user->_authhow == 'session'
             and !isset($_theme->theme)
             and defined('THEME')
-            and $user_theme != THEME) {
+            and $user_theme != THEME
+        ) {
             include_once("themes/" . THEME . "/themeinfo.php");
         }
         if (empty($WikiTheme) and isset($user_theme)) {
@@ -201,9 +211,11 @@ class WikiRequest extends Request
         if ($auth_args = $this->getArg('auth')) {
             $this->setArg('auth', false);
             $this->_handleAuthRequest($auth_args); // possible NORETURN
-        } elseif (! $this->_user
+        } elseif (
+            ! $this->_user
                  or (isa($this->_user, WikiUserClassname())
-                     and ! $this->_user->isSignedIn())) {
+                     and ! $this->_user->isSignedIn())
+        ) {
             // If not auth request, try to sign in as saved user.
             if (($saved_user = $this->getPref('userid')) != false) {
                 $this->_signIn($saved_user);
@@ -354,9 +366,11 @@ class WikiRequest extends Request
             }
             // If no password was submitted, it's not really
             // a failure --- just need to prompt for password...
-            if (!ALLOW_USER_PASSWORDS
+            if (
+                !ALLOW_USER_PASSWORDS
                 and ALLOW_BOGO_LOGIN
-                and !isset($auth_args['passwd'])) {
+                and !isset($auth_args['passwd'])
+            ) {
                 $fail_message = false;
             }
             $olduser->PrintLoginForm($this, $auth_args, $fail_message, 'newpage');

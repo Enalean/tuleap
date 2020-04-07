@@ -50,7 +50,7 @@ final class SystemEventUserActiveStatusChange extends SystemEvent
         UserManager $user_manager,
         UserGroupDao $user_group_dao,
         UserRemover $user_remover
-    ) : void {
+    ): void {
         $this->user_manager   = $user_manager;
         $this->user_group_dao = $user_group_dao;
         $this->user_remover   = $user_remover;
@@ -64,7 +64,7 @@ final class SystemEventUserActiveStatusChange extends SystemEvent
      * string will be html instead of plain/text
      *
      */
-    public function verbalizeParameters($with_link) : string
+    public function verbalizeParameters($with_link): string
     {
         $txt = '';
         $txt .= 'user: ' . $this->verbalizeUserId($this->getIdFromParam(), $with_link);
@@ -96,7 +96,7 @@ final class SystemEventUserActiveStatusChange extends SystemEvent
     /**
      * Perform user creation on system
      */
-    private function createUser(PFUser $user) : bool
+    private function createUser(PFUser $user): bool
     {
         $system_backend = Backend::instance('System');
         \assert($system_backend instanceof \BackendSystem);
@@ -104,7 +104,7 @@ final class SystemEventUserActiveStatusChange extends SystemEvent
         return $system_backend->createUserHome($user);
     }
 
-    private function cleanRestrictedUserFromProjectMembershipIfNecessary(PFUser $user) : void
+    private function cleanRestrictedUserFromProjectMembershipIfNecessary(PFUser $user): void
     {
         if (! ForgeConfig::areRestrictedUsersAllowed()) {
             return;

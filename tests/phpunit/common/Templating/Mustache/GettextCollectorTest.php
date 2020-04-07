@@ -29,7 +29,7 @@ final class GettextCollectorTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testItCollectsGettext() : void
+    public function testItCollectsGettext(): void
     {
         $collector = new GettextCollector(new GettextSectionContentTransformer());
         $entries = \Mockery::mock(\Tuleap\Language\Gettext\POTEntryCollection::class);
@@ -42,7 +42,7 @@ final class GettextCollectorTest extends \PHPUnit\Framework\TestCase
         $collector->collectEntry('gettext', 'whatever', $entries);
     }
 
-    public function testItCollectsNgettext() : void
+    public function testItCollectsNgettext(): void
     {
         $collector = new GettextCollector(new GettextSectionContentTransformer());
         $entries = \Mockery::mock(\Tuleap\Language\Gettext\POTEntryCollection::class);
@@ -55,7 +55,7 @@ final class GettextCollectorTest extends \PHPUnit\Framework\TestCase
         $collector->collectEntry('ngettext', 'singular | plural', $entries);
     }
 
-    public function testItCollectsDgettext() : void
+    public function testItCollectsDgettext(): void
     {
         $collector = new GettextCollector(new GettextSectionContentTransformer());
         $entries = \Mockery::mock(\Tuleap\Language\Gettext\POTEntryCollection::class);
@@ -68,7 +68,7 @@ final class GettextCollectorTest extends \PHPUnit\Framework\TestCase
         $collector->collectEntry('dgettext', 'mydomain | whatever', $entries);
     }
 
-    public function testItCollectsDngettext() : void
+    public function testItCollectsDngettext(): void
     {
         $collector = new GettextCollector(new GettextSectionContentTransformer());
         $entries = \Mockery::mock(\Tuleap\Language\Gettext\POTEntryCollection::class);
@@ -81,7 +81,7 @@ final class GettextCollectorTest extends \PHPUnit\Framework\TestCase
         $collector->collectEntry('dngettext', 'mydomain | singular | plural', $entries);
     }
 
-    public function testItRaisesAnExceptionIfSectionNameIsUnknown() : void
+    public function testItRaisesAnExceptionIfSectionNameIsUnknown(): void
     {
         $collector = new GettextCollector(new GettextSectionContentTransformer());
         $entries = \Mockery::spy(\Tuleap\Language\Gettext\POTEntryCollection::class);

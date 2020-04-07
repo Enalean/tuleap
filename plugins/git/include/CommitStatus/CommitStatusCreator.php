@@ -49,7 +49,7 @@ class CommitStatusCreator
             throw new InvalidCommitReferenceException("$commit_reference does not reference a commit");
         }
 
-        $commit_status = CommitStatusWithKnownStatus::buildFromStatusName($status_name, new \DateTimeImmutable);
+        $commit_status = CommitStatusWithKnownStatus::buildFromStatusName($status_name, new \DateTimeImmutable());
 
         $this->dao->create(
             $git_repository->getId(),

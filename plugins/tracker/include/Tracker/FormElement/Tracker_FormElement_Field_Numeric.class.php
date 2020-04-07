@@ -435,7 +435,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
         return $this->getComputedValue($user, $artifact, $timestamp);
     }
 
-    protected function getArtifactTimeframeHelper() : ArtifactTimeframeHelper
+    protected function getArtifactTimeframeHelper(): ArtifactTimeframeHelper
     {
         $form_element_factory       = Tracker_FormElementFactory::instance();
         $semantic_timeframe_builder = new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory);

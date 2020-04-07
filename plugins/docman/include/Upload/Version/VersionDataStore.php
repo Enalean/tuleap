@@ -68,17 +68,17 @@ final class VersionDataStore implements TusDataStore
         $this->version_being_uploaded_locker               = $version_being_uploaded_locker;
     }
 
-    public function getFileInformationProvider() : TusFileInformationProvider
+    public function getFileInformationProvider(): TusFileInformationProvider
     {
         return $this->version_being_uploaded_information_provider;
     }
 
-    public function getWriter() : TusWriter
+    public function getWriter(): TusWriter
     {
         return $this->version_being_uploaded_writer;
     }
 
-    public function getFinisher() : ?TusFinisherDataStore
+    public function getFinisher(): ?TusFinisherDataStore
     {
         return $this->version_upload_finisher;
     }
@@ -88,7 +88,7 @@ final class VersionDataStore implements TusDataStore
         return $this->version_upload_canceler;
     }
 
-    public function getLocker() : ?TusLocker
+    public function getLocker(): ?TusLocker
     {
         return $this->version_being_uploaded_locker;
     }

@@ -32,7 +32,7 @@ final class ProjectCreatedPayloadTest extends TestCase
     /**
      * @dataProvider ownerDataProvider
      */
-    public function testPayloadCreation(bool $has_owner) : void
+    public function testPayloadCreation(bool $has_owner): void
     {
         $project = \Mockery::mock(\Project::class);
         $project->shouldReceive('getStartDate')->andReturn(0);
@@ -70,7 +70,7 @@ final class ProjectCreatedPayloadTest extends TestCase
         );
     }
 
-    public function ownerDataProvider() : array
+    public function ownerDataProvider(): array
     {
         return [
             [true],

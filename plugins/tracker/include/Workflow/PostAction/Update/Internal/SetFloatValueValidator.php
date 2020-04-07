@@ -83,7 +83,7 @@ class SetFloatValueValidator
         }
     }
 
-    private function extractFloatFieldIds(\Tracker $tracker) : array
+    private function extractFloatFieldIds(\Tracker $tracker): array
     {
         $float_fields    = $this->form_element_factory->getUsedFormElementsByType($tracker, 'float');
         $float_field_ids = [];

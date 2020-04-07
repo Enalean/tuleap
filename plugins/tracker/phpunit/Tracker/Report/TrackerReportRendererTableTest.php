@@ -121,7 +121,7 @@ class TrackerReportRendererTableTest extends TestCase
         unset($GLOBALS['sys_server_join']);
     }
 
-    public function testOrderOnArtifactIdDescendingWhenSortIsDefined() : void
+    public function testOrderOnArtifactIdDescendingWhenSortIsDefined(): void
     {
         $this->tracker_report_renderer_table->shouldReceive('getSort')->andReturn(
             [
@@ -140,7 +140,7 @@ class TrackerReportRendererTableTest extends TestCase
         );
     }
 
-    public function testOrderNotDefinedWhenNoSortDefined() : void
+    public function testOrderNotDefinedWhenNoSortDefined(): void
     {
         $this->tracker_report_renderer_table->shouldReceive('getSort')->andReturn([]);
 

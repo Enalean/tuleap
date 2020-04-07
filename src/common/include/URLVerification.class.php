@@ -93,7 +93,7 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
         return PermissionsOverrider_PermissionsOverriderManager::instance();
     }
 
-    private function getForgeAccess() : ForgeAccess
+    private function getForgeAccess(): ForgeAccess
     {
         return new ForgeAccess($this->getPermissionsOverriderManager());
     }
@@ -252,7 +252,8 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
     {
         $user = $this->getCurrentUser();
 
-        if ($this->getForgeAccess()->doesPlatformRequireLogin() &&
+        if (
+            $this->getForgeAccess()->doesPlatformRequireLogin() &&
             $user->isAnonymous() &&
             ! $this->isScriptAllowedForAnonymous($server)
         ) {

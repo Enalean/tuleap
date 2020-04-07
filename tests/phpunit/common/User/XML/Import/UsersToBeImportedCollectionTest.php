@@ -33,7 +33,7 @@ final class UsersToBeImportedCollectionTest extends \PHPUnit\Framework\TestCase
 
     private $output_filename;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->output_filename = vfsStream::setup()->url() . '/output.csv';
@@ -65,7 +65,7 @@ final class UsersToBeImportedCollectionTest extends \PHPUnit\Framework\TestCase
         return array($header, $first_data);
     }
 
-    public function testItGeneratesTheHeader() : void
+    public function testItGeneratesTheHeader(): void
     {
         $this->collection->toCSV($this->output_filename);
 
@@ -73,7 +73,7 @@ final class UsersToBeImportedCollectionTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(array('name', 'action', 'comments'), $header);
     }
 
-    public function testItDoesNotDumpAlreadyExistingUser() : void
+    public function testItDoesNotDumpAlreadyExistingUser(): void
     {
         $this->collection->add(new AlreadyExistingUser(\Mockery::spy(\PFUser::class), 104, 'ldap1234'));
         $this->collection->toCSV($this->output_filename);
@@ -82,7 +82,7 @@ final class UsersToBeImportedCollectionTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($data);
     }
 
-    public function testItDumpsToBeActivatedUser() : void
+    public function testItDumpsToBeActivatedUser(): void
     {
         $user = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('getUserName')->andReturns('jdoe');
@@ -95,7 +95,7 @@ final class UsersToBeImportedCollectionTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(array('jdoe', 'noop', 'Status of existing user jdoe is [S]'), $data);
     }
 
-    public function testItDumpsToBeCreatedUser() : void
+    public function testItDumpsToBeCreatedUser(): void
     {
         $this->collection->add(new ToBeCreatedUser('jdoe', 'John Doe', 'jdoe@example.com', 104, 'ldap1234'));
         $this->collection->toCSV($this->output_filename);
@@ -104,7 +104,7 @@ final class UsersToBeImportedCollectionTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(array('jdoe', 'create:S', 'John Doe (jdoe) <jdoe@example.com> must be created'), $data);
     }
 
-    public function testItDumpsEmailDoesNotMatchUser() : void
+    public function testItDumpsEmailDoesNotMatchUser(): void
     {
         $user = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('getUserName')->andReturns('jdoe');
@@ -125,7 +125,7 @@ final class UsersToBeImportedCollectionTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItDumpsToBeMappedUser() : void
+    public function testItDumpsToBeMappedUser(): void
     {
         $user1 = \Mockery::spy(\PFUser::class);
         $user1->shouldReceive('getUserName')->andReturns('john');

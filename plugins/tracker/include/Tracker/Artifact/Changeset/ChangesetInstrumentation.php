@@ -28,7 +28,7 @@ final class ChangesetInstrumentation
 {
     private const METRIC_NAME  = 'tracker_artifact_changesets_total';
 
-    public static function increment() : void
+    public static function increment(): void
     {
         Prometheus::instance()->increment(self::METRIC_NAME, 'Total number of artifact changesets');
     }

@@ -51,7 +51,7 @@ class WorkflowFactoryTest extends TestCase
     /** @var XML_Security */
     private $xml_security;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -64,7 +64,7 @@ class WorkflowFactoryTest extends TestCase
         $this->project = Mockery::mock(Project::class);
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         PermissionsManager::clearInstance();
         $this->xml_security->disableExternalLoadOfEntities();

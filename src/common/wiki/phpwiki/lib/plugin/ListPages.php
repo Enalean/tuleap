@@ -98,9 +98,11 @@ class WikiPlugin_ListPages extends WikiPlugin
             if (!isset($userids) || !is_array($userids) || !count($userids)) {
                 // TKL: moved getBuddies call inside if statement because it was
                 // causing the userids[] parameter to be ignored
-                if (is_string($active_userid)
-                and strlen($active_userid)
-                and $active_user->isSignedIn()) {
+                if (
+                    is_string($active_userid)
+                    and strlen($active_userid)
+                    and $active_user->isSignedIn()
+                ) {
                     $userids = getBuddies($active_userid, $dbi);
                 } else {
                     $userids = array();

@@ -36,6 +36,7 @@ use Tracker_FormElementFactory;
 class CardFieldsTrackerPresenterBuilderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var BackgroundColorDao
      */
@@ -50,7 +51,7 @@ class CardFieldsTrackerPresenterBuilderTest extends TestCase
      */
     private $builder;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

@@ -76,8 +76,10 @@ class PluginFileInfo extends PluginInfo
             }
             foreach ($variables as $variable) {
                 $key = $variable['name'];
-                if (preg_match('`^"(.*)"$`', $variable['value'], $match) ||
-                    preg_match('`^\'(.*)\'$`', $variable['value'], $match)) {
+                if (
+                    preg_match('`^"(.*)"$`', $variable['value'], $match) ||
+                    preg_match('`^\'(.*)\'$`', $variable['value'], $match)
+                ) {
                     $value = $match[1];
                 } else {
                     $value = $variable['value'];

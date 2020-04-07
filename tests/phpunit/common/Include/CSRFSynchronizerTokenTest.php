@@ -20,7 +20,11 @@
 
 class CSRFSynchronizerTokenTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\ForgeConfigSandbox, \Tuleap\GlobalResponseMock, \Tuleap\GlobalLanguageMock, \Tuleap\TemporaryTestDirectory;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\ForgeConfigSandbox;
+    use \Tuleap\GlobalResponseMock;
+    use \Tuleap\GlobalLanguageMock;
+    use \Tuleap\TemporaryTestDirectory;
 
     /**
      * @var array

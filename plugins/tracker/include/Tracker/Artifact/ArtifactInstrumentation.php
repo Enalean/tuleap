@@ -37,7 +37,7 @@ final class ArtifactInstrumentation
     /**
      * @psalm-param self::TYPE_CREATED|self::TYPE_UPDATED|self::TYPE_VIEWED|self::TYPE_DELETED $type
      */
-    public static function increment(string $type) : void
+    public static function increment(string $type): void
     {
         Prometheus::instance()->increment(self::METRIC_NAME, 'Total number of artifacts', ['type' => $type]);
     }

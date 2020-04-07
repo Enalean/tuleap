@@ -43,7 +43,7 @@ class DefaultCloneURLSelectorTest extends TestCase
      */
     private $current_user;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->selector     = new DefaultCloneURLSelector();
         $this->clone_urls   = Mockery::mock(CloneURLs::class);

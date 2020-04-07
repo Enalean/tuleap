@@ -24,7 +24,8 @@ use Tuleap\User\UserAuthenticationSucceeded;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\GlobalLanguageMock;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\GlobalLanguageMock;
 
     /**
      * @var EventManager|\Mockery\LegacyMockInterface|\Mockery\MockInterface
@@ -48,7 +49,7 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
     private $password_handler;
     private $login_manager;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->event_manager     = Mockery::mock(EventManager::class);
@@ -65,7 +66,7 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItDelegatesAuthenticationToPlugin() : void
+    public function testItDelegatesAuthenticationToPlugin(): void
     {
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->buildUser(PFUser::STATUS_ACTIVE));
         $this->password_verifier->shouldReceive('verifyPassword')->andReturns(true);
@@ -88,7 +89,7 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
         $this->login_manager->authenticate('john', 'password');
     }
 
-    public function testItUsesDbAuthIfPluginDoesntAnswer() : void
+    public function testItUsesDbAuthIfPluginDoesntAnswer(): void
     {
         $this->event_manager->shouldReceive('processEvent')->times(3);
         $this->password_verifier->shouldReceive('verifyPassword')->andReturns(true);
@@ -97,7 +98,7 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
         $this->login_manager->authenticate('john', 'password');
     }
 
-    public function testItThrowsAnExceptionWhenUserIsNotFound() : void
+    public function testItThrowsAnExceptionWhenUserIsNotFound(): void
     {
         $this->event_manager->shouldReceive('processEvent')->once();
         $this->expectException(\User_InvalidPasswordException::class);
@@ -105,7 +106,7 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
         $this->login_manager->authenticate('john', 'password');
     }
 
-    public function testItThrowsAnExceptionWhenPasswordIsWrong() : void
+    public function testItThrowsAnExceptionWhenPasswordIsWrong(): void
     {
         $this->event_manager->shouldReceive('processEvent')->once();
         $this->expectException(\User_InvalidPasswordWithUserException::class);
@@ -113,7 +114,7 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
         $this->login_manager->authenticate('john', 'wrong_password');
     }
 
-    public function testItThrowsAnExceptionWithUserWhenPasswordIsWrong() : void
+    public function testItThrowsAnExceptionWithUserWhenPasswordIsWrong(): void
     {
         $this->event_manager->shouldReceive('processEvent')->once();
         $exception_catched = false;
@@ -128,7 +129,7 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($exception_catched);
     }
 
-    public function testItAsksPluginIfDbAuthIsAuthorizedForUser() : void
+    public function testItAsksPluginIfDbAuthIsAuthorizedForUser(): void
     {
         $user = $this->buildUser(PFUser::STATUS_ACTIVE);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns($user);
@@ -150,7 +151,7 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
         $this->login_manager->authenticate('john', 'password');
     }
 
-    public function testItReturnsTheUserOnSuccess() : void
+    public function testItReturnsTheUserOnSuccess(): void
     {
         $this->event_manager->shouldReceive('processEvent')->times(3);
         $this->password_verifier->shouldReceive('verifyPassword')->andReturns(true);
@@ -162,7 +163,7 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testItPersistsValidUser() : void
+    public function testItPersistsValidUser(): void
     {
         $user = $this->buildUser(PFUser::STATUS_ACTIVE);
 
@@ -171,7 +172,7 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
         $this->login_manager->validateAndSetCurrentUser($user);
     }
 
-    public function testItDoesntPersistUserWithInvalidStatus() : void
+    public function testItDoesntPersistUserWithInvalidStatus(): void
     {
         $user = $this->buildUser(PFUser::STATUS_DELETED);
 
@@ -181,7 +182,7 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
         $this->login_manager->validateAndSetCurrentUser($user);
     }
 
-    public function testItVerifiesUserPasswordLifetime() : void
+    public function testItVerifiesUserPasswordLifetime(): void
     {
         $user = $this->buildUser(PFUser::STATUS_ACTIVE);
 
@@ -190,7 +191,7 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
         $this->login_manager->validateAndSetCurrentUser($user);
     }
 
-    public function testItDoesntUseDbAuthIfPluginAuthenticate() : void
+    public function testItDoesntUseDbAuthIfPluginAuthenticate(): void
     {
         $this->user_manager->shouldReceive('getUserById')->with(105)->andReturns($this->buildUser(PFUser::STATUS_ACTIVE))->once();
         $this->event_manager->shouldReceive('processEvent')->with(
@@ -213,7 +214,7 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
         $this->login_manager->authenticate('john', 'password');
     }
 
-    public function testItRaisesAnExceptionIfPluginForbidLogin() : void
+    public function testItRaisesAnExceptionIfPluginForbidLogin(): void
     {
         $this->expectException(\User_InvalidPasswordWithUserException::class);
         $user = $this->buildUser(PFUser::STATUS_ACTIVE);

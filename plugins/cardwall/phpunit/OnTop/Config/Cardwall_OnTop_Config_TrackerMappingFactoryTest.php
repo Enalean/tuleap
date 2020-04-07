@@ -25,7 +25,7 @@ final class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends \PHPUnit\Fra
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->field_122    = $this->buildSelectBoxField(122);
@@ -82,7 +82,7 @@ final class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends \PHPUnit\Fra
         return $selectbox_field;
     }
 
-    public function testItRemovesTheCurrentTrackerFromTheProjectTrackers() : void
+    public function testItRemovesTheCurrentTrackerFromTheProjectTrackers(): void
     {
         $expected_trackers = array(
             10 => $this->tracker_10,
@@ -92,7 +92,7 @@ final class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends \PHPUnit\Fra
         $this->assertSame($expected_trackers, $this->factory->getTrackers($this->tracker));
     }
 
-    public function testItLoadsMappingsFromTheDatabase() : void
+    public function testItLoadsMappingsFromTheDatabase(): void
     {
         $this->value_mapping_factory->shouldReceive('getMappings')->andReturns([]);
         $this->dao->shouldReceive('searchMappingFields')->with($this->tracker->getId())->andReturns(TestHelper::arrayToDar(
@@ -110,7 +110,7 @@ final class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends \PHPUnit\Fra
         $this->assertEquals($this->field_124, $mappings[20]->getField());
     }
 
-    public function testItUsesStatusFieldIfNoField() : void
+    public function testItUsesStatusFieldIfNoField(): void
     {
         $this->value_mapping_factory->shouldReceive('getStatusMappings')->andReturns([]);
         $this->dao->shouldReceive('searchMappingFields')->with($this->tracker->getId())->andReturns(TestHelper::arrayToDar(
@@ -123,7 +123,7 @@ final class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends \PHPUnit\Fra
         $this->assertInstanceOf(\Cardwall_OnTop_Config_TrackerMappingStatus::class, $mappings[10]);
     }
 
-    public function testItReturnsANoFieldMappingIfNothingInDBAndNoStatus() : void
+    public function testItReturnsANoFieldMappingIfNothingInDBAndNoStatus(): void
     {
         $this->dao->shouldReceive('searchMappingFields')->with($this->tracker->getId())->andReturns(TestHelper::arrayToDar(
             array('tracker_id' => 20, 'field_id' => null)
@@ -134,7 +134,7 @@ final class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends \PHPUnit\Fra
         $this->assertInstanceOf(\Cardwall_OnTop_Config_TrackerMappingNoField::class, $mappings[20]);
     }
 
-    public function testItReturnsEmptyMappingIfNoStatus() : void
+    public function testItReturnsEmptyMappingIfNoStatus(): void
     {
         $this->dao->shouldReceive('searchMappingFields')->with($this->tracker->getId())->andReturns(TestHelper::arrayToDar(
             array('tracker_id' => 20, 'field_id' => null)
@@ -145,7 +145,7 @@ final class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends \PHPUnit\Fra
         //TDOD: check type of what is returned
     }
 
-    public function testItLoadValueMappings() : void
+    public function testItLoadValueMappings(): void
     {
         $this->dao->shouldReceive('searchMappingFields')->with($this->tracker->getId())->andReturns(TestHelper::arrayToDar(
             array('tracker_id' => 20, 'field_id' => 124)
@@ -156,7 +156,7 @@ final class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends \PHPUnit\Fra
         $this->factory->getMappings($this->tracker, $this->columns);
     }
 
-    public function testItLoadValueMappingsEvenForStatusField() : void
+    public function testItLoadValueMappingsEvenForStatusField(): void
     {
         $this->dao->shouldReceive('searchMappingFields')->with($this->tracker->getId())->andReturns(TestHelper::arrayToDar(
             array('tracker_id' => 10, 'field_id' => null)

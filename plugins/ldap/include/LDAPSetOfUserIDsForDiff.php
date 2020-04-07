@@ -44,17 +44,17 @@ final class LDAPSetOfUserIDsForDiff
         $this->user_ids_not_impacted = $user_ids_not_impacted;
     }
 
-    public function getUserIDsToAdd() : array
+    public function getUserIDsToAdd(): array
     {
         return $this->user_ids_to_add;
     }
 
-    public function getUserIDsToRemove() : array
+    public function getUserIDsToRemove(): array
     {
         return $this->user_ids_to_remove;
     }
 
-    public function getUserIDsNotImpacted() : array
+    public function getUserIDsNotImpacted(): array
     {
         return $this->user_ids_not_impacted;
     }

@@ -46,7 +46,7 @@ class BindDecoratorRetrieverTest extends TestCase
     /** @var Tracker_FormElement_Field_List_Bind_Static */
     private $bind_static;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

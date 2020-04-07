@@ -31,7 +31,9 @@ use UGroupManager;
 
 final class PermissionPerGroupBuilderTest extends \PHPUnit\Framework\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, ForgeConfigSandbox, GlobalLanguageMock;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
+    use GlobalLanguageMock;
 
     /**
      * @var UGroupManager
@@ -42,7 +44,7 @@ final class PermissionPerGroupBuilderTest extends \PHPUnit\Framework\TestCase
      */
     private $builder;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -50,7 +52,7 @@ final class PermissionPerGroupBuilderTest extends \PHPUnit\Framework\TestCase
         $this->builder        = new PermissionPerGroupBuilder($this->ugroup_manager);
     }
 
-    public function testItAddsAnonymousUgroupIfPlatformAllowsThem() : void
+    public function testItAddsAnonymousUgroupIfPlatformAllowsThem(): void
     {
         $project = \Mockery::spy(\Project::class, ['getID' => false, 'getUnixName' => false, 'isPublic' => false]);
         $request = \Mockery::spy(\HTTPRequest::class);
@@ -64,7 +66,7 @@ final class PermissionPerGroupBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(ProjectUGroup::ANONYMOUS, $ugroups['dynamic'][0]['id']);
     }
 
-    public function testItAddsAuthenticatedUgroupIfPlatformAllowsThem() : void
+    public function testItAddsAuthenticatedUgroupIfPlatformAllowsThem(): void
     {
         $project = \Mockery::spy(\Project::class, ['getID' => false, 'getUnixName' => false, 'isPublic' => false]);
         $request = \Mockery::spy(\HTTPRequest::class);
@@ -78,7 +80,7 @@ final class PermissionPerGroupBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(ProjectUGroup::AUTHENTICATED, $ugroups['dynamic'][0]['id']);
     }
 
-    public function testItAlwaysAddRegisteredUgroup() : void
+    public function testItAlwaysAddRegisteredUgroup(): void
     {
         $project = \Mockery::spy(\Project::class, ['getID' => false, 'getUnixName' => false, 'isPublic' => false]);
         $request = \Mockery::spy(\HTTPRequest::class);

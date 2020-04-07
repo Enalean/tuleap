@@ -34,7 +34,9 @@ use Tuleap\TemporaryTestDirectory;
 
 final class PluginLoaderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox, TemporaryTestDirectory;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
+    use TemporaryTestDirectory;
 
     /**
      * @var string
@@ -54,7 +56,7 @@ final class PluginLoaderTest extends TestCase
      */
     private $logger;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $tuleap_cache_directory = $this->getTmpDir();
         ForgeConfig::set('codendi_cache_dir', $tuleap_cache_directory);
@@ -65,7 +67,7 @@ final class PluginLoaderTest extends TestCase
         $this->logger         = Mockery::mock(\Psr\Log\LoggerInterface::class);
     }
 
-    public function testMissingHooksFileCacheIsCreated() : void
+    public function testMissingHooksFileCacheIsCreated(): void
     {
         $plugin_loader  = new PluginLoader($this->event_manager, $this->plugin_factory, $this->logger);
 
@@ -77,7 +79,7 @@ final class PluginLoaderTest extends TestCase
         $this->assertInstanceOf(EventPluginCache::class, $unserialized_hooks_cache);
     }
 
-    public function testEmptyHooksFileCacheIsPopulated() : void
+    public function testEmptyHooksFileCacheIsPopulated(): void
     {
         $plugin_loader  = new PluginLoader($this->event_manager, $this->plugin_factory, $this->logger);
 
@@ -91,7 +93,7 @@ final class PluginLoaderTest extends TestCase
         $this->assertInstanceOf(EventPluginCache::class, $unserialized_hooks_cache);
     }
 
-    public function testReadOnlyEmptyHooksFileCacheIsPopulatedWithoutWarning() : void
+    public function testReadOnlyEmptyHooksFileCacheIsPopulatedWithoutWarning(): void
     {
         $plugin_loader  = new PluginLoader($this->event_manager, $this->plugin_factory, $this->logger);
 
@@ -106,7 +108,7 @@ final class PluginLoaderTest extends TestCase
         $this->assertInstanceOf(EventPluginCache::class, $unserialized_hooks_cache);
     }
 
-    public function testHooksFileCacheWithGarbageDataIsOverwritten() : void
+    public function testHooksFileCacheWithGarbageDataIsOverwritten(): void
     {
         $plugin_loader  = new PluginLoader($this->event_manager, $this->plugin_factory, $this->logger);
 

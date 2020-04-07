@@ -33,7 +33,8 @@ use UserManager;
 
 final class MailFilterTest extends \PHPUnit\Framework\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     /**
      * @var UserManager
@@ -67,7 +68,7 @@ final class MailFilterTest extends \PHPUnit\Framework\TestCase
     private $user_registered_bis;
 
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->user_registered     = \Mockery::spy(\PFUser::class);
@@ -106,7 +107,7 @@ final class MailFilterTest extends \PHPUnit\Framework\TestCase
         $this->user_manager->shouldReceive('getAllUsersByEmail')->with('unknown-user@example.com')->andReturns(array($this->unknown_user));
     }
 
-    public function testItFilterPeopleWhoCanNotReadProject() : void
+    public function testItFilterPeopleWhoCanNotReadProject(): void
     {
         $this->initializeMails();
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')
@@ -125,7 +126,7 @@ final class MailFilterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected_mails, $filtered_mails);
     }
 
-    public function testItFilterPeopleWhoCanReadProjectAndAreSuspendedOrDeleted() : void
+    public function testItFilterPeopleWhoCanReadProjectAndAreSuspendedOrDeleted(): void
     {
         $this->initializeMails();
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')
@@ -140,7 +141,7 @@ final class MailFilterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected_mails, $filtered_mails);
     }
 
-    public function testItDoesNotFilterPeopleWhoCanReadProjectAndAreActive() : void
+    public function testItDoesNotFilterPeopleWhoCanReadProjectAndAreActive(): void
     {
         $this->initializeMails();
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')
@@ -155,7 +156,7 @@ final class MailFilterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected_mails, $filtered_mails);
     }
 
-    public function testItKeepsOneMailWhenSeveralAccountsAreLinkedToTheSameMail() : void
+    public function testItKeepsOneMailWhenSeveralAccountsAreLinkedToTheSameMail(): void
     {
         $this->user_manager->shouldReceive('getAllUsersByEmail')->with($this->user_registered->getEmail())->andReturns(array($this->user_registered, $this->user_registered_bis));
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')
@@ -172,7 +173,7 @@ final class MailFilterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected_mails, $filtered_mails);
     }
 
-    public function testItKeepsOneMailWhenSeveralAccountsAreLinkedToTheSameMailEvenOneAccountCanNotAccessToProject() : void
+    public function testItKeepsOneMailWhenSeveralAccountsAreLinkedToTheSameMailEvenOneAccountCanNotAccessToProject(): void
     {
         $this->user_manager->shouldReceive('getAllUsersByEmail')->with($this->user_registered->getEmail())->andReturns(array($this->user_registered, $this->user_registered_bis));
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')
@@ -190,7 +191,7 @@ final class MailFilterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected_mails, $filtered_mails);
     }
 
-    public function testItFilterPeopleWhoAreNotMemberOfProject() : void
+    public function testItFilterPeopleWhoAreNotMemberOfProject(): void
     {
         $this->user_manager->shouldReceive('getAllUsersByEmail')->with($this->user_registered->getEmail())->andReturns(array());
 
@@ -203,7 +204,7 @@ final class MailFilterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected_mails, $filtered_mails);
     }
 
-    public function testItKeepsAllMailIfUserCanReadProject() : void
+    public function testItKeepsAllMailIfUserCanReadProject(): void
     {
         $this->initializeMails();
 
@@ -227,7 +228,7 @@ final class MailFilterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected_mails, $filtered_mails);
     }
 
-    public function testItDoesNotFilterMailsWhenConfigurationAllowsIt() : void
+    public function testItDoesNotFilterMailsWhenConfigurationAllowsIt(): void
     {
         ForgeConfig::set('sys_mail_secure_mode', false);
         $this->initializeMails();
@@ -247,7 +248,7 @@ final class MailFilterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected_mails, $filtered_mails);
     }
 
-    public function testItFiltersDuplicateMails() : void
+    public function testItFiltersDuplicateMails(): void
     {
         ForgeConfig::set('sys_mail_secure_mode', false);
 
@@ -262,7 +263,7 @@ final class MailFilterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(array('user1@example.com'), array_values($filtered_emails));
     }
 
-    public function testItManageWhenEmailsAreNull() : void
+    public function testItManageWhenEmailsAreNull(): void
     {
         ForgeConfig::set('sys_mail_secure_mode', false);
 
@@ -278,7 +279,7 @@ final class MailFilterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(array('user-active@example.com', 'user1@example.com'), array_values($filtered_emails));
     }
 
-    public function testItManageWhenEmailsAreFalse() : void
+    public function testItManageWhenEmailsAreFalse(): void
     {
         ForgeConfig::set('sys_mail_secure_mode', false);
 

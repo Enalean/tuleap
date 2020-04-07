@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\layout\HomePage;
 
@@ -41,12 +41,12 @@ class LastMonthStatisticsCollectorSVN implements Dispatchable
         $this->timestamp = $timestamp;
     }
 
-    public function getTimestamp() : int
+    public function getTimestamp(): int
     {
         return $this->timestamp;
     }
 
-    public function getSVNPluginCommitsCount() : int
+    public function getSVNPluginCommitsCount(): int
     {
         return $this->svn_commits;
     }

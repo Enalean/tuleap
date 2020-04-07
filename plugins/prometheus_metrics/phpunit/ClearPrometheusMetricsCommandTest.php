@@ -29,7 +29,7 @@ final class ClearPrometheusMetricsCommandTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testCommandFlushesTheStorage() : void
+    public function testCommandFlushesTheStorage(): void
     {
         $storage = \Mockery::mock(FlushableStorage::class);
         $command = new ClearPrometheusMetricsCommand($storage);

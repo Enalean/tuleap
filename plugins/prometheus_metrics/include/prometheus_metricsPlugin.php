@@ -99,11 +99,11 @@ class prometheus_metricsPlugin extends Plugin  // @codingStandardsIgnoreLine
         $event->getRouteCollector()->get('/metrics', $this->getRouteHandler('routeGetMetrics'));
     }
 
-    public function collectCLICommands(CLICommandsCollector $commands_collector) : void
+    public function collectCLICommands(CLICommandsCollector $commands_collector): void
     {
         $commands_collector->addCommand(
             ClearPrometheusMetricsCommand::NAME,
-            static function () : ClearPrometheusMetricsCommand {
+            static function (): ClearPrometheusMetricsCommand {
                 return new ClearPrometheusMetricsCommand(
                     (new PrometheusFlushableStorageProvider())->getFlushableStorage()
                 );

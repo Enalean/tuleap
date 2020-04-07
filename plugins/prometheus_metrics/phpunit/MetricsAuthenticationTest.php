@@ -60,7 +60,7 @@ final class MetricsAuthenticationTest extends TestCase
         $this->metrics_authentication = new MetricsAuthentication($response_factory, new BasicAuthLoginExtractor(), $this->config_dir_root);
     }
 
-    public function testAuthentication() : void
+    public function testAuthentication(): void
     {
         $expected_password = str_repeat('A', 16);
         file_put_contents($this->config_dir_root . '/metrics_secret.key', $expected_password);
@@ -73,7 +73,7 @@ final class MetricsAuthenticationTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function testExecutionIsInterruptedWhenSecretFileIsNotPresent() : void
+    public function testExecutionIsInterruptedWhenSecretFileIsNotPresent(): void
     {
         $this->expectException(\RuntimeException::class);
         $this->metrics_authentication->process(
@@ -82,7 +82,7 @@ final class MetricsAuthenticationTest extends TestCase
         );
     }
 
-    public function testExecutionIsInterruptedWhenSecretIsTooSmall() : void
+    public function testExecutionIsInterruptedWhenSecretIsTooSmall(): void
     {
         file_put_contents($this->config_dir_root . '/metrics_secret.key', 'too_small');
         $this->expectException(\RuntimeException::class);
@@ -92,7 +92,7 @@ final class MetricsAuthenticationTest extends TestCase
         );
     }
 
-    public function testNoBasicAuthorizationHeaderNotSet() : void
+    public function testNoBasicAuthorizationHeaderNotSet(): void
     {
         file_put_contents($this->config_dir_root . '/metrics_secret.key', str_repeat('A', 16));
         $server_request = Mockery::mock(ServerRequestInterface::class);
@@ -102,7 +102,7 @@ final class MetricsAuthenticationTest extends TestCase
         $this->assertEquals(401, $response->getStatusCode());
     }
 
-    public function testAuthenticationRejectedWithIncorrectCredential() : void
+    public function testAuthenticationRejectedWithIncorrectCredential(): void
     {
         file_put_contents($this->config_dir_root . '/metrics_secret.key', str_repeat('A', 16));
 

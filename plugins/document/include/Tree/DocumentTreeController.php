@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Document\Tree;
 
@@ -89,7 +89,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
      *
      * @throws NotFoundException
      */
-    public function getProject(array $variables) : Project
+    public function getProject(array $variables): Project
     {
         return $this->project_extractor->getProject($variables);
     }
@@ -108,7 +108,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
         );
     }
 
-    private function includeJavascriptFiles(BaseLayout $layout) : void
+    private function includeJavascriptFiles(BaseLayout $layout): void
     {
         $ckeditor_assets = new IncludeAssets(__DIR__ . '/../../../../src/www/assets/core', '/assets/core');
         $layout->includeFooterJavascriptFile($ckeditor_assets->getFileURL('ckeditor.js'));

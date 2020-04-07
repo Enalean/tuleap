@@ -42,14 +42,14 @@ class ActionsRunnerTest extends TestCase
      */
     private $dao;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->logger = \Mockery::mock(\Psr\Log\LoggerInterface::class);
         $this->dao    = \Mockery::mock(ActionsRunnerDao::class);
         \ForgeConfig::store();
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         \ForgeConfig::restore();
     }

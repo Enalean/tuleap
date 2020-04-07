@@ -40,7 +40,9 @@ require_once __DIR__ . '/bootstrap.php';
 
 final class UserManagerAuthenticateTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
+    use GlobalLanguageMock;
 
     private $username    = 'toto';
     private $password    = 'welcome0';

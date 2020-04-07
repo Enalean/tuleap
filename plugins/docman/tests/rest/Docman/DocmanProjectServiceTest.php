@@ -30,7 +30,7 @@ use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
 
 final class DocmanProjectServiceTest extends DocmanTestExecutionHelper
 {
-    public function testGetServiceRepresentationAsAdministrator() : void
+    public function testGetServiceRepresentationAsAdministrator(): void
     {
         $admin_response = $this->getResponse(
             $this->client->get('projects/' . urlencode((string) $this->project_id) . '/docman_service'),
@@ -42,7 +42,7 @@ final class DocmanProjectServiceTest extends DocmanTestExecutionHelper
         $this->assertNotNull($admin_result['permissions_for_groups']);
     }
 
-    public function testGetServiceRepresentationAsRegularDocmanUser() : void
+    public function testGetServiceRepresentationAsRegularDocmanUser(): void
     {
         $response = $this->getResponse(
             $this->client->get('projects/' . urlencode((string) $this->project_id) . '/docman_service'),
@@ -54,7 +54,7 @@ final class DocmanProjectServiceTest extends DocmanTestExecutionHelper
         $this->assertNull($result['permissions_for_groups']);
     }
 
-    public function testGetServiceRepresentationAsRESTReadOnlyUser() : void
+    public function testGetServiceRepresentationAsRESTReadOnlyUser(): void
     {
         $response = $this->getResponse(
             $this->client->get('projects/' . urlencode((string) $this->project_id) . '/docman_service'),

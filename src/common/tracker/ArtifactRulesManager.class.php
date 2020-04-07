@@ -157,13 +157,15 @@ class ArtifactRulesManager
                                     if ($applied && $valid) {
                                         break;
                                     }
-                                    if ($rule->canApplyTo(
-                                        $artifact_type_id,
-                                        $source,
-                                        $source_value,
-                                        $target,
-                                        $target_value
-                                    )) {
+                                    if (
+                                        $rule->canApplyTo(
+                                            $artifact_type_id,
+                                            $source,
+                                            $source_value,
+                                            $target,
+                                            $target_value
+                                        )
+                                    ) {
                                         $applied = true;
                                         $valid = $rule->applyTo(
                                             $artifact_type_id,

@@ -92,8 +92,10 @@ class WikiPlugin_BackLinks extends WikiPlugin
         // languages does not always end up with so subtle a
         // distinction as it does with English in this case. :)
         if (!$noheader) {
-            if ($page == $request->getArg('pagename')
-                and !$dbi->isWikiPage($page)) {
+            if (
+                $page == $request->getArg('pagename')
+                and !$dbi->isWikiPage($page)
+            ) {
                     // BackLinks plugin is more than likely being called
                     // upon for an empty page on said page, while either
                     // 'browse'ing, 'create'ing or 'edit'ing.

@@ -48,7 +48,7 @@ class TrackerV3
     public static function instance()
     {
         if (! self::$instance) {
-            self::$instance = new TrackerV3(new ArtifactDao);
+            self::$instance = new TrackerV3(new ArtifactDao());
         }
         return self::$instance;
     }

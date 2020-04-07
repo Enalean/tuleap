@@ -40,7 +40,7 @@ class ListValueValidatorTest extends TestCase
     /** @var ListValueValidator */
     private $validator;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->empty_string_checker = Mockery::mock(EmptyStringChecker::class);

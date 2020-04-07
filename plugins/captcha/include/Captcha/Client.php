@@ -58,7 +58,7 @@ class Client
         $this->stream_factory  = $stream_factory;
     }
 
-    public function verify(string $challenge, string $user_ip) : bool
+    public function verify(string $challenge, string $user_ip): bool
     {
         $request = $this->request_factory->createRequest('POST', self::SITE_VERIFY_URL)
             ->withHeader('Content-Type', 'application/x-www-form-urlencoded')

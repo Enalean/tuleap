@@ -26,15 +26,16 @@ require_once __DIR__ . '/../bootstrap.php';
 
 class SystemEvent_GIT_EDIT_SSH_KEYSTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\GlobalLanguageMock;
 
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\GlobalLanguageMock;
     private $user_account_manager;
     private $logger;
     private $user;
     private $user_manager;
     private $sshkey_dumper;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -48,7 +49,7 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends \PHPUnit\Framework\TestCase
         $this->user_manager->shouldReceive('getUserById')->with(105)->andReturns($this->user);
     }
 
-    public function testItLogsAnErrorIfNoUserIsPassed() : void
+    public function testItLogsAnErrorIfNoUserIsPassed(): void
     {
         $event = new SystemEvent_GIT_EDIT_SSH_KEYS('', '', '', '', '', '', '', '', '', '');
         $event->injectDependencies(
@@ -64,7 +65,7 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends \PHPUnit\Framework\TestCase
         $event->process();
     }
 
-    public function testItLogsAnErrorIfUserIsInvalid() : void
+    public function testItLogsAnErrorIfUserIsInvalid(): void
     {
         $event = new SystemEvent_GIT_EDIT_SSH_KEYS('', '', '', 'me', '', '', '', '', '', '');
         $event->injectDependencies(
@@ -80,7 +81,7 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends \PHPUnit\Framework\TestCase
         $event->process();
     }
 
-    public function testItTransformsEmptyKeyStringIntoArrayBeforeSendingToGitUserManager() : void
+    public function testItTransformsEmptyKeyStringIntoArrayBeforeSendingToGitUserManager(): void
     {
         $original_keys = array();
         $new_keys = array();
@@ -102,7 +103,7 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends \PHPUnit\Framework\TestCase
         $event->process();
     }
 
-    public function testItTransformsNonEmptyKeyStringIntoArrayBeforeSendingToGitUserManager() : void
+    public function testItTransformsNonEmptyKeyStringIntoArrayBeforeSendingToGitUserManager(): void
     {
         $new_keys      = array();
         $original_keys = array(
@@ -127,7 +128,7 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends \PHPUnit\Framework\TestCase
          $event->process();
     }
 
-    public function testItWarnsAdminsWhenSSHKeySynchFails() : void
+    public function testItWarnsAdminsWhenSSHKeySynchFails(): void
     {
         $event = new SystemEvent_GIT_EDIT_SSH_KEYS('', '', '', '105::', '', '', '', '', '', '');
         $event->injectDependencies(

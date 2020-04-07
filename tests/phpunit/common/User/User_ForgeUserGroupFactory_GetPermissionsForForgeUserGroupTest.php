@@ -34,6 +34,7 @@ use User_ForgeUserGroupPermissionsDao;
 class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends \PHPUnit\Framework\TestCase // @codingStandardsIgnoreLine
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var User_ForgeUserGroupPermissionsDao
      */
@@ -44,14 +45,14 @@ class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends \PH
      */
     protected $factory;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->dao     = \Mockery::spy(\User_ForgeUserGroupPermissionsDao::class);
         $this->factory = new User_ForgeUserGroupPermissionsFactory($this->dao, \Mockery::spy(\EventManager::class));
     }
 
-    public function testItReturnsEmptyArrayIfNoResultsInDb() : void
+    public function testItReturnsEmptyArrayIfNoResultsInDb(): void
     {
         $user_group = new User_ForgeUGroup(101, '', '');
 
@@ -61,7 +62,7 @@ class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends \PH
         $this->assertEquals(0, count($all));
     }
 
-    public function testItReturnsAnArrayOfDistinctPermissions() : void
+    public function testItReturnsAnArrayOfDistinctPermissions(): void
     {
         $user_group  = new User_ForgeUGroup(101, '', '');
         $expected_id = User_ForgeUserGroupPermission_ProjectApproval::ID;
@@ -81,7 +82,7 @@ class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends \PH
         $this->assertEquals($expected_id, $permission->getId());
     }
 
-    public function testItReturnsEmptyArrayIfAllForgeUserGroupHasAllPermissions() : void
+    public function testItReturnsEmptyArrayIfAllForgeUserGroupHasAllPermissions(): void
     {
         $user_group   = new UserForgeUGroupPresenter(new User_ForgeUGroup(101, '', ''), true);
         $expected_id1 = User_ForgeUserGroupPermission_ProjectApproval::ID;
@@ -108,7 +109,7 @@ class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends \PH
         $this->assertEquals(0, count($all));
     }
 
-    public function testItReturnsArrayIfAllForgeUserGroupHasNoPermission() : void
+    public function testItReturnsArrayIfAllForgeUserGroupHasNoPermission(): void
     {
         $user_group      = new UserForgeUGroupPresenter(new User_ForgeUGroup(101, '', ''), true);
 

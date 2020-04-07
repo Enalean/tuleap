@@ -29,13 +29,14 @@ use Tuleap\Layout\BaseLayout;
 
 class TrackerTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     private $tracker;
     private $formelement_factory;
     private $workflow_factory;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         $GLOBALS['Response'] = Mockery::mock(BaseLayout::class);
         $this->workflow_factory = \Mockery::spy(\WorkflowFactory::class);
@@ -47,7 +48,7 @@ class TrackerTest extends TestCase
         $this->tracker->shouldReceive('getId')->andReturns(110);
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         unset($GLOBALS['Response']);
     }
@@ -150,7 +151,7 @@ class TrackerTest extends TestCase
         $this->assertFalse($this->tracker->hasBlockingError($header, $lines));
     }
 
-    public function testHasBlockingErrorReturnNoErrorWhenEmptyValue() : void
+    public function testHasBlockingErrorReturnNoErrorWhenEmptyValue(): void
     {
         $header = ['summary', 'details'];
         $lines = [

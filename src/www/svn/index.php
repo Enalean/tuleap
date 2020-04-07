@@ -22,11 +22,13 @@ if ($request->valid($vFunc) && $request->get('func') === 'detailrevision' && use
     $there_are_specific_permissions = svn_utils_is_there_specific_permission($project_svnroot);
 
     require('./detail_revision.php');
-} elseif (user_isloggedin() &&                                                             //We'll browse
+} elseif (
+    user_isloggedin() &&                                                             //We'll browse
             (
              ($request->valid($vFunc) && $request->get('func') === 'browse')     //if user ask for it
              || $request->existAndNonEmpty('rev_id')     //or if user set rev_id
-             )) {
+             )
+) {
     $there_are_specific_permissions = svn_utils_is_there_specific_permission($project_svnroot);
 
     require('./browse_revision.php');

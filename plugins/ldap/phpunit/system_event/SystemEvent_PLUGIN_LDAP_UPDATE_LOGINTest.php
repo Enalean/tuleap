@@ -33,7 +33,8 @@ require_once __DIR__ . '/../bootstrap.php';
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 final class SystemEvent_PLUGIN_LDAP_UPDATE_LOGINTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalSVNPollution;
+    use MockeryPHPUnitIntegration;
+    use GlobalSVNPollution;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\UserManager

@@ -479,7 +479,7 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
         );
     }
 
-    private function getProjectMemberAdder() : ProjectMemberAdder
+    private function getProjectMemberAdder(): ProjectMemberAdder
     {
         return ProjectMemberAdderWithoutStatusCheckAndNotifications::build();
     }
@@ -522,7 +522,7 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
         ugroup_remove_user_from_ugroup($group_id, $ugroup_id, $user_id);
     }
 
-    protected function removeUserFromDynamicGroup(PFUser $user) : void
+    protected function removeUserFromDynamicGroup(PFUser $user): void
     {
         $project = $this->getProject();
         if ($project === null) {

@@ -26,7 +26,7 @@ use PHPUnit\Framework\TestCase;
 
 final class HTTPHeaderTest extends TestCase
 {
-    public function testSavedValuesCanBeRetrieved() : void
+    public function testSavedValuesCanBeRetrieved(): void
     {
         $header = new HTTPHeader('my_header', true, 200);
 

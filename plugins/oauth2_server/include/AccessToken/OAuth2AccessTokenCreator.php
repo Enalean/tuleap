@@ -85,7 +85,7 @@ class OAuth2AccessTokenCreator
         $expiration_date     = $current_time->add($this->access_token_expiration_delay);
 
         $access_token_id = $this->transaction_executor->execute(
-            function () use ($verification_string, $expiration_date, $scopes, $authorization_grant_id) : int {
+            function () use ($verification_string, $expiration_date, $scopes, $authorization_grant_id): int {
                 $access_token_id = $this->dao->create(
                     $authorization_grant_id,
                     $this->hasher->computeHash($verification_string),

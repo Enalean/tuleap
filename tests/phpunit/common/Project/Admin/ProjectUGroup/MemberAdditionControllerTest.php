@@ -34,7 +34,8 @@ use Tuleap\Request\ProjectRetriever;
 
 final class MemberAdditionControllerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /**
      * @var M\LegacyMockInterface|M\MockInterface|ProjectRetriever

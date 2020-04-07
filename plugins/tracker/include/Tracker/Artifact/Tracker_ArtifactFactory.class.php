@@ -56,7 +56,7 @@ class Tracker_ArtifactFactory
     {
         if (!isset(self::$instance)) {
             $c = self::class;
-            self::setInstance(new $c);
+            self::setInstance(new $c());
         }
         return self::$instance;
     }

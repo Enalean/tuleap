@@ -88,7 +88,7 @@ class AdditionalModalPresenterBuilder
             'modal-content',
             array(
                 'title'                   => $title,
-                'is_linked'               => (boolean) $ldap_group,
+                'is_linked'               => (bool) $ldap_group,
                 'ugroup_id'               => $ugroup->getId(),
                 'ugroup_name'             => NameTranslator::getUserGroupDisplayName($ugroup->getName()),
                 'ldap_group_name'         => $ldap_group ? $ldap_group->getGroupCommonName() : '',

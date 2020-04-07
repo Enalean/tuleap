@@ -31,7 +31,10 @@ use PHPUnit\Framework\TestCase;
 
 class URLVerificationWithAnonymousTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
+    use ForgeConfigSandbox;
+
     private $urlVerification;
     private $em;
     private $overrider_manager;

@@ -19,7 +19,7 @@
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Planning;
 
@@ -38,6 +38,7 @@ use TrackerFactory;
 final class PlanningFactoryTestGetPlanningTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var Planning
      */

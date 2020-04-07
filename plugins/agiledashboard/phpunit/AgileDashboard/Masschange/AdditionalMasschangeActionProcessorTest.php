@@ -36,7 +36,8 @@ use Tuleap\GlobalResponseMock;
 
 class AdditionalMasschangeActionProcessorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalResponseMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalResponseMock;
 
     /**
      * @var AdditionalMasschangeActionProcessor

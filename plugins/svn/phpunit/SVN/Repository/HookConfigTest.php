@@ -28,6 +28,7 @@ use Tuleap\Project\ProjectAccessChecker;
 class HookConfigTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var \Project
      */

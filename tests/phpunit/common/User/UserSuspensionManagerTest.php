@@ -43,7 +43,8 @@ use UserManager;
 
 class UserSuspensionManagerTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     private $dao;
     private $lang_factory;
@@ -57,7 +58,7 @@ class UserSuspensionManagerTest extends TestCase
     private $user_suspension_manager;
     private $mail_account_suspension_presenter;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
         ForgeConfig::set('sys_logger_level', 'debug');

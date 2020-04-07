@@ -24,7 +24,7 @@ use PHPUnit\Framework\TestCase;
 
 class StreamFilterWrapperTest extends TestCase
 {
-    public function testIncorrectFilterIsRejected() : void
+    public function testIncorrectFilterIsRejected(): void
     {
         $filter_wrapper = new StreamFilterWrapper();
         $filter_wrapper->params = 'invalid_filter';
@@ -34,20 +34,20 @@ class StreamFilterWrapperTest extends TestCase
         $filter_wrapper->onCreate();
     }
 
-    public function testTheCorrectAmountOfWrittenDataIsCounted() : void
+    public function testTheCorrectAmountOfWrittenDataIsCounted(): void
     {
         $filter = new class implements FilterInterface {
-            public function process($data_chunk) : string
+            public function process($data_chunk): string
             {
                 return $data_chunk;
             }
 
-            public function getFilteredChainIdentifier() : int
+            public function getFilteredChainIdentifier(): int
             {
                 return STREAM_FILTER_WRITE;
             }
 
-            public function filterDetachedEvent() : void
+            public function filterDetachedEvent(): void
             {
             }
         };

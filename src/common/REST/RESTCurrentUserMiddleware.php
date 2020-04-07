@@ -50,7 +50,7 @@ final class RESTCurrentUserMiddleware implements MiddlewareInterface
         $this->basic_rest_authentication = $basic_rest_authentication;
     }
 
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $this->basic_rest_authentication->__isAllowed();
         try {

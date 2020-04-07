@@ -93,14 +93,16 @@ class Widget_MyProjects extends Widget
             $prevIsPublic = false;
             $disable_contact = (bool) ForgeConfig::get(self::CONFIG_DISABLE_CONTACT);
             while ($row = db_fetch_array($result)) {
-                if ($row['access'] === Project::ACCESS_PRIVATE_WO_RESTRICTED &&
+                if (
+                    $row['access'] === Project::ACCESS_PRIVATE_WO_RESTRICTED &&
                     ForgeConfig::areRestrictedUsersAllowed() &&
                     $user->isRestricted()
                 ) {
                     continue;
                 }
                 $tdClass = '';
-                if ($display_privacy
+                if (
+                    $display_privacy
                     && $prevIsPublic
                     && ! in_array($row['access'], [Project::ACCESS_PRIVATE, Project::ACCESS_PRIVATE_WO_RESTRICTED], true)
                 ) {

@@ -129,8 +129,10 @@ class Docman_View_ReportSettings extends Docman_View_Extra
         $reportFactory = new Docman_ReportFactory($this->groupId);
         $r = $reportFactory->getReportById($reportId);
 
-        if ($r != null
-           && $r->getGroupId() == $this->groupId) {
+        if (
+            $r != null
+            && $r->getGroupId() == $this->groupId
+        ) {
             $txts = array(dgettext('tuleap-docman', 'Personal'),
                           dgettext('tuleap-docman', 'Project'));
             $vals = array('I', 'P');

@@ -907,7 +907,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         return $this->extractNumericValues($bind_values);
     }
 
-    private function extractNumericValues(Array $bind_values)
+    private function extractNumericValues(array $bind_values)
     {
         $numeric_values = array();
 

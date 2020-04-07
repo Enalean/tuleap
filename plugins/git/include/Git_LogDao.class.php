@@ -142,7 +142,7 @@ class Git_LogDao extends \Tuleap\DB\DataAccessObject
         return $this->getDB()->single($sql, [$project_id, $date]) > 0;
     }
 
-    public function hasRepositories(int $project_id) : bool
+    public function hasRepositories(int $project_id): bool
     {
         $sql = "SELECT COUNT(*)
                 FROM plugin_git

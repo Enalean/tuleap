@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\wiki\Events;
 
@@ -36,7 +36,7 @@ class ItemReferencingWikiPageRepresentation
      */
     public $item_name;
 
-    public function __construct(int $item_id, String $item_name)
+    public function __construct(int $item_id, string $item_name)
     {
         $this->item_id   = JsonCast::toInt($item_id);
         $this->item_name = $item_name;

@@ -43,7 +43,9 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 final class Tracker_FormElement_Field_ComputedTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalResponseMock, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalResponseMock;
+    use GlobalLanguageMock;
 
     /**
      * @return Tracker_FormElement_Field_Computed|LegacyMockInterface|MockInterface

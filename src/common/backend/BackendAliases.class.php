@@ -80,7 +80,8 @@ class BackendAliases extends Backend
             return false;
         }
 
-        if ((! $this->writeGenericAliases($fp))
+        if (
+            (! $this->writeGenericAliases($fp))
             || (! $this->writeListAliases($fp))
             || (! $this->writeOtherAliases($fp))
         ) {

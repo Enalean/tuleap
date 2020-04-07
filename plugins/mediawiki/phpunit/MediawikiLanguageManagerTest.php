@@ -40,7 +40,7 @@ class MediawikiLanguageManagerTest extends TestCase
     /** @var MediawikiLanguageDao */
     private $dao;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
         $this->dao              = \Mockery::spy(\MediawikiLanguageDao::class);
@@ -51,7 +51,7 @@ class MediawikiLanguageManagerTest extends TestCase
         ForgeConfig::store();
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         ForgeConfig::restore();
         parent::tearDown();

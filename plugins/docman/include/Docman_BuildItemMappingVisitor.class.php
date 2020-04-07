@@ -171,8 +171,10 @@ class Docman_BuildItemMappingVisitor
         $nodesToInspect = array();
         $srcList = $srcItem->getAllItems();
         $dstList = $dstItem->getAllItems();
-        if ($srcList && $srcList->size() &&
-           $dstList && $dstList->size()) {
+        if (
+            $srcList && $srcList->size() &&
+            $dstList && $dstList->size()
+        ) {
             $srcIter = $srcList->iterator();
             $dstIter = $dstList->iterator();
             $srcIter->rewind();

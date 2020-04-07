@@ -31,7 +31,9 @@ use Tuleap\SVN\SVNAuthenticationCacheInvalidator;
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class SystemEvent_PROJECT_DELETE_Test extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox, GlobalSVNPollution;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
+    use GlobalSVNPollution;
 
     protected function setUp(): void
     {

@@ -34,7 +34,7 @@ class DownloadURLBuilderTest extends TestCase
     private $user;
     private $download_url_builder;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 

@@ -220,7 +220,7 @@ function displayPage(&$request, $template = false)
             /* simply add the SearchHighlight plugin to the top of the page.
                This just parses the wikitext, and doesn't highlight the markup */
             include_once('lib/WikiPlugin.php');
-            $loader = new WikiPluginLoader;
+            $loader = new WikiPluginLoader();
             $xml = $loader->expandPI('<' . '?plugin SearchHighlight s="' . $result['query'] . '"?' . '>', $request, $markup);
             if ($xml and is_array($xml)) {
                 foreach (array_reverse($xml) as $line) {

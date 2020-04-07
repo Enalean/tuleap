@@ -828,7 +828,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
             return null;
         }
         $classname_with_namespace = 'Tuleap\Tracker\REST\ChangesetRepresentation';
-        $changeset_representation = new $classname_with_namespace;
+        $changeset_representation = new $classname_with_namespace();
         $changeset_representation->build(
             $this,
             $comment,

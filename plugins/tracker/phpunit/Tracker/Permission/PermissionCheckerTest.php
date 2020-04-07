@@ -24,6 +24,7 @@ use Tuleap\Project\ProjectAccessChecker;
 final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PFUser
      */
@@ -322,7 +323,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $this->all_trackers_forge_admin_user->shouldReceive('isLoggedIn')->andReturns(true);
     }
 
-    public function testTrackerAccessForUserNotAllowedToAccessToProject() : void
+    public function testTrackerAccessForUserNotAllowedToAccessToProject(): void
     {
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->andThrow(Mockery::mock(Project_AccessException::class));
 
@@ -331,7 +332,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $this->assertFalse($this->permission_checker->userCanViewTracker($this->restricted, $this->tracker));
     }
 
-    public function testAccessPermsAnonymousFullAccess() : void
+    public function testAccessPermsAnonymousFullAccess(): void
     {
         $t_access_anonymous = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
         \assert($t_access_anonymous instanceof Tracker);
@@ -359,7 +360,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $this->assertTrue($this->permission_checker->userCanViewTracker($this->tracker_admin, $t_access_anonymous));
     }
 
-    public function testAccessPermsRegisteredFullAccess() : void
+    public function testAccessPermsRegisteredFullAccess(): void
     {
         $t_access_registered = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $t_access_registered->shouldReceive('getId')->andReturns(2);
@@ -386,7 +387,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $this->assertTrue($this->permission_checker->userCanViewTracker($this->tracker_admin, $t_access_registered));
     }
 
-    public function testAccessPermsMemberFullAccess() : void
+    public function testAccessPermsMemberFullAccess(): void
     {
         $t_access_members = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $t_access_members->shouldReceive('getId')->andReturns(3);
@@ -413,7 +414,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $this->assertTrue($this->permission_checker->userCanViewTracker($this->tracker_admin, $t_access_members));
     }
 
-    public function testAccessPermsTrackerAdminAllProjects() : void
+    public function testAccessPermsTrackerAdminAllProjects(): void
     {
         $t_access_members = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $t_access_members->shouldReceive('getId')->andReturns(3);
@@ -436,7 +437,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $this->assertTrue($this->permission_checker->userCanViewTracker($this->all_trackers_forge_admin_user, $t_access_members));
     }
 
-    public function testAccessPermsAdminFullAccess() : void
+    public function testAccessPermsAdminFullAccess(): void
     {
         $t_access_admin = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $t_access_admin->shouldReceive('getId')->andReturns(4);
@@ -463,7 +464,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $this->assertTrue($this->permission_checker->userCanViewTracker($this->tracker_admin, $t_access_admin));
     }
 
-    public function testAccessPermsSubmitterFullAccess() : void
+    public function testAccessPermsSubmitterFullAccess(): void
     {
         $t_access_submitter = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $t_access_submitter->shouldReceive('getId')->andReturns(5);
@@ -491,7 +492,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $this->assertTrue($this->permission_checker->userCanViewTracker($this->tracker_admin, $t_access_submitter));
     }
 
-    public function testAccessPermsAssigneeFullAccess() : void
+    public function testAccessPermsAssigneeFullAccess(): void
     {
         $t_access_assignee = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $t_access_assignee->shouldReceive('getId')->andReturns(6);
@@ -519,7 +520,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $this->assertTrue($this->permission_checker->userCanViewTracker($this->tracker_admin, $t_access_assignee));
     }
 
-    public function testAccessPermsSubmitterAssigneeFullAccess() : void
+    public function testAccessPermsSubmitterAssigneeFullAccess(): void
     {
         $t_access_submitterassignee  = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $t_access_submitterassignee->shouldReceive('getId')->andReturns(7);
@@ -549,7 +550,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $this->assertTrue($this->permission_checker->userCanViewTracker($this->tracker_admin, $t_access_submitterassignee));
     }
 
-    public function testAccessPermsPrivateProject() : void
+    public function testAccessPermsPrivateProject(): void
     {
         $t_access_registered  = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $t_access_registered->shouldReceive('getId')->andReturns(7);
@@ -587,7 +588,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $this->assertTrue($this->permission_checker->userCanViewTracker($this->super_admin, $t_access_registered));
     }
 
-    public function testTrackerInNotActiveProjectIsOnlyReadableBySuperAdmin() : void
+    public function testTrackerInNotActiveProjectIsOnlyReadableBySuperAdmin(): void
     {
         $project = Mockery::mock(Project::class);
         $project->shouldReceive('isActive')->andReturns(false);
@@ -606,7 +607,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $this->assertFalse($this->permission_checker->userCanViewTracker($this->project_member, $tracker));
     }
 
-    public function testArtifactAccessForUserNotAllowedToAccessToProject() : void
+    public function testArtifactAccessForUserNotAllowedToAccessToProject(): void
     {
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->andThrow(Mockery::mock(Project_AccessException::class));
 
@@ -618,7 +619,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $this->assertFalse($this->permission_checker->userCanView($this->restricted, $artifact));
     }
 
-    public function testUserCanViewTrackerAccessSubmitter() : void
+    public function testUserCanViewTrackerAccessSubmitter(): void
     {
         $ugroup_sub = 102;
 
@@ -644,7 +645,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $this->assertFalse($this->permission_checker->userCanView($this->u_ass, $artifact));
     }
 
-    public function testUserCanViewTrackerAccessAssignee() : void
+    public function testUserCanViewTrackerAccessAssignee(): void
     {
         $ugroup_ass = 101;
 
@@ -675,7 +676,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $this->assertFalse($this->permission_checker->userCanView($this->user, $artifact_assignee));
     }
 
-    public function testUserCanViewTrackerAccessSubmitterOrAssignee() : void
+    public function testUserCanViewTrackerAccessSubmitterOrAssignee(): void
     {
         $ugroup_ass = 101;
         $ugroup_sub = 102;
@@ -709,7 +710,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \PHPUnit\Framework\
         $this->assertFalse($this->permission_checker->userCanView($this->user, $artifact_subass));
     }
 
-    public function testUserCanViewTrackerAccessFull() : void
+    public function testUserCanViewTrackerAccessFull(): void
     {
         $ugroup_ful = 103;
 

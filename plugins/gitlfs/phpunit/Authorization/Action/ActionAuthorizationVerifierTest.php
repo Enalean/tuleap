@@ -37,7 +37,7 @@ class ActionAuthorizationVerifierTest extends TestCase
     private $repository_factory;
     private $current_time;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->dao                = \Mockery::mock(ActionAuthorizationDAO::class);
         $this->hasher             = \Mockery::mock(SplitTokenVerificationStringHasher::class);

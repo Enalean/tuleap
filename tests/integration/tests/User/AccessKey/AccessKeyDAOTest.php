@@ -43,7 +43,7 @@ final class AccessKeyDAOTest extends TestCase
         $this->access_key_scope_dao = new AccessKeyScopeDAO();
     }
 
-    public static function tearDownAfterClass() : void
+    public static function tearDownAfterClass(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
 

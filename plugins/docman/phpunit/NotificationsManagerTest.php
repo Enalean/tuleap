@@ -33,6 +33,7 @@ use Tuleap\Docman\Notifications\UsersUpdater;
 class Docman_NotificationsManagerTest extends \PHPUnit\Framework\TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ILinkUrlProvider
      */

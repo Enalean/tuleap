@@ -105,7 +105,7 @@ class WelcomeUpdateController implements DispatchableWithRequest
     }
 
 
-    private function welcomeExitError(HTTPRequest $request, BaseLayout $layout, $title, $text) : void
+    private function welcomeExitError(HTTPRequest $request, BaseLayout $layout, $title, $text): void
     {
         assert($layout instanceof \FlamingParrot_Theme);
 
@@ -126,7 +126,7 @@ class WelcomeUpdateController implements DispatchableWithRequest
         }
     }
 
-    private function userValuesHaveNotBeenModified(PFUser $current_user, $timezone, $mailVa, $mailSite) : bool
+    private function userValuesHaveNotBeenModified(PFUser $current_user, $timezone, $mailVa, $mailSite): bool
     {
         return $current_user->getTimezone() == $timezone &&
             $current_user->getMailVA() == $mailVa &&

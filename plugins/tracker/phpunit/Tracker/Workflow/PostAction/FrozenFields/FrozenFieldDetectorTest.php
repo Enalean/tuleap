@@ -51,7 +51,7 @@ final class FrozenFieldDetectorTest extends TestCase
         $this->frozen_field_detector = new FrozenFieldDetector($this->transition_retriever, $this->frozen_retriever);
     }
 
-    public function testIsFieldFrozenReturnsFalseWhenNoTransitionIsDefinedForCurrentState() : void
+    public function testIsFieldFrozenReturnsFalseWhenNoTransitionIsDefinedForCurrentState(): void
     {
         $this->transition_retriever->shouldReceive('getReferenceTransitionForCurrentState')
             ->andThrow(NoTransitionForStateException::class);
@@ -64,7 +64,7 @@ final class FrozenFieldDetectorTest extends TestCase
         );
     }
 
-    public function testIsFieldFrozenReturnsFalseWhenNoFrozenFieldsPostAction() : void
+    public function testIsFieldFrozenReturnsFalseWhenNoFrozenFieldsPostAction(): void
     {
         $artifact = Mockery::mock(Tracker_Artifact::class);
         $field    = Mockery::mock(Tracker_FormElement_Field::class);
@@ -82,7 +82,7 @@ final class FrozenFieldDetectorTest extends TestCase
         );
     }
 
-    public function testIsFieldFrozenReturnsFalseWhenGivenFieldIsNotAmongFrozenFields() : void
+    public function testIsFieldFrozenReturnsFalseWhenGivenFieldIsNotAmongFrozenFields(): void
     {
         $field    = Mockery::mock(Tracker_FormElement_Field::class);
         $artifact = $this->mockArtifactWithWorkflow();
@@ -97,7 +97,7 @@ final class FrozenFieldDetectorTest extends TestCase
         );
     }
 
-    public function testIsFieldFrozenReturnsTrueWhenGivenFieldIsReadOnly() : void
+    public function testIsFieldFrozenReturnsTrueWhenGivenFieldIsReadOnly(): void
     {
         $field    = Mockery::mock(Tracker_FormElement_Field::class);
         $artifact = $this->mockArtifactWithWorkflow();

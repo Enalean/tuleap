@@ -204,4 +204,4 @@ class Fortune
         fwrite($fd, chr(($l >> 8) & 255));
         fwrite($fd, chr($l & 255));
     }
-} // End of class
+}

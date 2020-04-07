@@ -19,7 +19,7 @@
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Tracker;
 
@@ -33,7 +33,9 @@ use Tuleap\GlobalLanguageMock;
 
 class Tracker_Artifact_ChavesetValue_ListTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use GlobalLanguageMock, Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_FormElement_Field_List
      */
@@ -68,7 +70,7 @@ class Tracker_Artifact_ChavesetValue_ListTest extends TestCase // phpcs:ignore S
         $this->field     = Mockery::mock(Tracker_FormElement_Field_List::class);
     }
 
-    public function testNoDiff() : void
+    public function testNoDiff(): void
     {
         $bind_value = Mockery::mock(Tracker_FormElement_Field_List_BindValue::class);
 
@@ -78,7 +80,7 @@ class Tracker_Artifact_ChavesetValue_ListTest extends TestCase // phpcs:ignore S
         $this->assertFalse($list_2->diff($list_1));
     }
 
-    public function testDiffCleared() : void
+    public function testDiffCleared(): void
     {
         $bind_value = $this->getBindValueForLabel("Sandra");
         $list_1 = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, []);
@@ -87,7 +89,7 @@ class Tracker_Artifact_ChavesetValue_ListTest extends TestCase // phpcs:ignore S
         $this->assertEquals(' cleared values: Sandra', $list_1->diff($list_2));
     }
 
-    public function testDiffSetto() : void
+    public function testDiffSetto(): void
     {
         $bind_value_1 = $this->getBindValueForLabel("Sandra");
         $bind_value_2 = $this->getBindValueForLabel("Manon");
@@ -122,7 +124,7 @@ class Tracker_Artifact_ChavesetValue_ListTest extends TestCase // phpcs:ignore S
         $this->assertEquals(" changed from Sandra &lt;b&gt; to Manon  &lt;b&gt;", $list_2->diff($list_1));
     }
 
-    public function testDiffAdded() : void
+    public function testDiffAdded(): void
     {
         $bind_value_1 = $this->getBindValueForLabel("Sandra");
         $bind_value_2 = $this->getBindValueForLabel("Manon");
@@ -144,7 +146,7 @@ class Tracker_Artifact_ChavesetValue_ListTest extends TestCase // phpcs:ignore S
         $this->assertEquals('Manon removed', $list_1->diff($list_2));
     }
 
-    public function testDiffAddedAndRemoved() : void
+    public function testDiffAddedAndRemoved(): void
     {
         $bind_value_1 = $this->getBindValueForLabel("Sandra");
         $bind_value_2 = $this->getBindValueForLabel("Manon");

@@ -49,7 +49,7 @@ final class TaskWorkerProcessCommand extends Command
         $this->logger           = $logger;
     }
 
-    protected function configure() : void
+    protected function configure(): void
     {
         $this->setDescription('Process one async event');
         $this->setHidden(true);

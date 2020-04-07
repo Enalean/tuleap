@@ -34,7 +34,9 @@ use Tuleap\Layout\ServiceUrlCollector;
 
 final class ServicePOSTDataBuilderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
+    use ForgeConfigSandbox;
 
     /**
      * @var ServicePOSTDataBuilder

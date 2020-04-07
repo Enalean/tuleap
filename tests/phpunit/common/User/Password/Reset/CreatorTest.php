@@ -25,7 +25,8 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 class CreatorTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    public function testItCreatesToken() : void
+
+    public function testItCreatesToken(): void
     {
         $hasher = \Mockery::mock(SplitTokenVerificationStringHasher::class);
         $hasher->shouldReceive('computeHash')->andReturns('random_hashed');
@@ -42,7 +43,7 @@ class CreatorTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(22, $token->getID());
     }
 
-    public function testItThrowsExceptionWhenTokenCanNotBeCreated() : void
+    public function testItThrowsExceptionWhenTokenCanNotBeCreated(): void
     {
         $hasher = \Mockery::mock(SplitTokenVerificationStringHasher::class);
         $hasher->shouldReceive('computeHash')->andReturns('random_hashed');

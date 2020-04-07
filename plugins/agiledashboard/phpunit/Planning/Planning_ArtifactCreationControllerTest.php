@@ -20,7 +20,10 @@
 
 final class Planning_ArtifactCreationControllerTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\ForgeConfigSandbox, \Tuleap\GlobalResponseMock;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\ForgeConfigSandbox;
+    use \Tuleap\GlobalResponseMock;
+
     /**
      * @var int
      */

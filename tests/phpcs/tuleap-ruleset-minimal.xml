@@ -6,7 +6,7 @@
 >
     <description>Tuleap minimal coding standard.</description>
 
-    <rule ref="PSR2">
+    <rule ref="PSR12">
         <exclude name="Generic.Files.LineLength.TooLong"/>
         <exclude name="PSR1.Files.SideEffects.FoundWithSymbols"/>
         <!-- checked by SlevomatCodingStandard.Namespaces.UseSpacing -->
@@ -17,6 +17,8 @@
         <exclude name="PSR1.Methods.CamelCapsMethodName.NotCamelCaps"/>
         <exclude name="PSR2.Methods.MethodDeclaration.Underscore"/>
         <exclude name="PSR1.Classes.ClassDeclaration.MultipleClasses"/>
+        <!-- conflict and mostly checked by TuleapCodingStandard.Sniffs.Commenting.FileCopyrightSniff -->
+        <exclude name="PSR12.Files.FileHeader.SpacingAfterBlock"/>
     </rule>
     <rule ref="PSR12.Operators.OperatorSpacing"/>
     <!-- Type casting operators MUST NOT have any space within the parentheses. -->

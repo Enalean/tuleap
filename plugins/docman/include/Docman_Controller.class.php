@@ -382,11 +382,12 @@ class Docman_Controller extends Controler
 
     public function request()
     {
-        if ($this->request->exist('action')
+        if (
+            $this->request->exist('action')
             && ($this->request->get('action') == 'plugin_docman_approval_reviewer'
                 || $this->request->get('action') == 'plugin_docman_approval_requester'
                 )
-            ) {
+        ) {
             if ($this->request->get('hide')) {
                 user_set_preference('hide_' . $this->request->get('action'), 1);
             } else {
@@ -484,9 +485,11 @@ class Docman_Controller extends Controler
                     // If the item (folder) defined in the report is not the
                     // same than the current one, replace it.
                     $this->_initReport($item);
-                    if ($this->_viewParams['filter'] !== null
-                       && $this->_viewParams['filter']->getItemId() !== null
-                       && $this->_viewParams['filter']->getItemId() != $item->getId()) {
+                    if (
+                        $this->_viewParams['filter'] !== null
+                        && $this->_viewParams['filter']->getItemId() !== null
+                        && $this->_viewParams['filter']->getItemId() != $item->getId()
+                    ) {
                         $reportItem = $item_factory->getItemFromDb($this->_viewParams['filter']->getItemId());
                         // If item defined in the report exists, use it
                         // otherwise raise an error
@@ -1011,8 +1014,10 @@ class Docman_Controller extends Controler
                     } else {
                         $this->_viewParams['importMd'] = false;
                         if ($this->userCanAdmin()) {
-                            if ($this->request->exist('import_md') &&
-                               $this->request->get('import_md') == '1') {
+                            if (
+                                $this->request->exist('import_md') &&
+                                $this->request->get('import_md') == '1'
+                            ) {
                                 $this->_viewParams['importMd'] = true;
                             }
                         }
@@ -1180,9 +1185,11 @@ class Docman_Controller extends Controler
                 $atf   = Docman_ApprovalTableFactoriesFactory::getFromItem($item);
                 $table = $atf->getTable();
                 $atrf  = new Docman_ApprovalTableReviewerFactory($table, $item);
-                if (!$this->userCanRead($item->getId())
-                || !$atrf->isReviewer($user->getId())
-                || !$table->isEnabled()) {
+                if (
+                    !$this->userCanRead($item->getId())
+                    || !$atrf->isReviewer($user->getId())
+                    || !$table->isEnabled()
+                ) {
                     $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to edit this item.'));
                     $this->view = 'Details';
                 } else {
@@ -1368,9 +1375,11 @@ class Docman_Controller extends Controler
                 } else {
                     // For properties update ('update' action), we need to confirm
                     // the recursive application of metadata update.
-                    if ($view == 'update' &&
-                       $this->request->exist('recurse') &&
-                       !$this->request->exist('cancel')) {
+                    if (
+                        $view == 'update' &&
+                        $this->request->exist('recurse') &&
+                        !$this->request->exist('cancel')
+                    ) {
                         $this->_viewParams['recurse'] = $this->request->get('recurse');
                         if (!$this->request->exist('validate_recurse')) {
                             $updateConfirmed = false;
@@ -1624,8 +1633,10 @@ class Docman_Controller extends Controler
         $mdFactory = new Docman_MetadataFactory($this->groupId);
         if ($mdFactory->isValidLabel($label)) {
             $_md = $mdFactory->getFromLabel($label);
-            if ($_md !== null
-               && $_md->getGroupId() == $this->groupId) {
+            if (
+                $_md !== null
+                && $_md->getGroupId() == $this->groupId
+            ) {
                 $valid = true;
                 $md = $_md;
             }

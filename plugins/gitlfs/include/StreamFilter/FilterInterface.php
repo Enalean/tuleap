@@ -22,7 +22,7 @@ namespace Tuleap\GitLFS\StreamFilter;
 
 interface FilterInterface
 {
-    public function process($data_chunk) : string;
-    public function getFilteredChainIdentifier() : int;
-    public function filterDetachedEvent() : void;
+    public function process($data_chunk): string;
+    public function getFilteredChainIdentifier(): int;
+    public function filterDetachedEvent(): void;
 }

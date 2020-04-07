@@ -46,7 +46,7 @@ class ReferenceOpenGraphDispatcher implements DispatcherInterface
         $this->request_factory = $request_factory;
     }
 
-    public function dispatch(Url $url) : Response
+    public function dispatch(Url $url): Response
     {
         $request = $this->request_factory->createRequest('GET', $url->__toString());
 

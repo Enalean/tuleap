@@ -59,7 +59,9 @@ use XML_RNGValidator;
 
 final class TrackerXmlImportTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
+
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerXmlImportFeedbackCollector
      */

@@ -40,7 +40,8 @@ use Tuleap\Request\ProjectRetriever;
 
 final class DeleteControllerTest extends TestCase
 {
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /** @var DeleteController */
     private $controller;
@@ -140,7 +141,7 @@ final class DeleteControllerTest extends TestCase
         $this->controller->process($this->request, $this->layout, ['id' => (string) Project::ADMIN_PROJECT_ID]);
     }
 
-    public function testItDoesNotAllowToDeleteSystemServices() : void
+    public function testItDoesNotAllowToDeleteSystemServices(): void
     {
         $this->service_manager->shouldReceive('getService')->with($this->service_id)->andReturn(
             new Service($this->project, ['service_id' => $this->service_id, 'scope' => Service::SCOPE_SYSTEM])

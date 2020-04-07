@@ -34,14 +34,14 @@ class RequestSignatureVerifierTest extends TestCase
     public const SECRET_KEY  = 'KOJqKTCvuBvSdKN/MgGLlTI7T3hrZKERlq2JDLB7Wc+RrsZy+jdE7QV6Sx9WQEKBOd0LP8gwt/AJADcOg3yTrw==';
     public const USED_DOMAIN = 'example.com';
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
         \ForgeConfig::store();
         \ForgeConfig::set('sys_https_host', self::USED_DOMAIN);
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         \ForgeConfig::restore();
         parent::tearDown();

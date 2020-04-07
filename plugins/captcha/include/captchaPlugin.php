@@ -185,7 +185,7 @@ class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
         }
     }
 
-    public function routeGetAdmin() : DispatchableWithRequest
+    public function routeGetAdmin(): DispatchableWithRequest
     {
         try {
             $configuration = $this->getConfiguration();
@@ -198,7 +198,7 @@ class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
         );
     }
 
-    public function routePostAdmin() : DispatchableWithRequest
+    public function routePostAdmin(): DispatchableWithRequest
     {
         return new UpdateController(
             new ConfigurationSaver(new DataAccessObject())

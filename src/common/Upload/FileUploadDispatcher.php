@@ -43,7 +43,7 @@ final class FileUploadDispatcher implements RequestHandlerInterface
         $this->middlewares = $middlewares;
     }
 
-    public function handle(ServerRequestInterface $request) : ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $middleware = current($this->middlewares);
         if ($middleware === false) {

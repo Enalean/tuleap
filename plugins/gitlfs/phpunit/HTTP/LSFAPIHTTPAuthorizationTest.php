@@ -38,13 +38,13 @@ final class LSFAPIHTTPAuthorizationTest extends TestCase
     private $token_verifier;
     private $token_unserializer;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->token_verifier     = \Mockery::mock(UserTokenVerifier::class);
         $this->token_unserializer = \Mockery::mock(SplitTokenIdentifierTranslator::class);
     }
 
-    public function testUserWithAValidAuthorizationTokenIsFoundWithADownloadOperation() : void
+    public function testUserWithAValidAuthorizationTokenIsFoundWithADownloadOperation(): void
     {
         $lfs_http_api_authorization = new LSFAPIHTTPAuthorization($this->token_verifier, $this->token_unserializer);
 
@@ -90,7 +90,7 @@ final class LSFAPIHTTPAuthorizationTest extends TestCase
         );
     }
 
-    public function testUserIsFoundWhenTheOperationCanBeEitherAnDownloadOrUploadOperationAndUploadTokenIsGiven() : void
+    public function testUserIsFoundWhenTheOperationCanBeEitherAnDownloadOrUploadOperationAndUploadTokenIsGiven(): void
     {
         $lfs_http_api_authorization = new LSFAPIHTTPAuthorization($this->token_verifier, $this->token_unserializer);
 
@@ -171,7 +171,7 @@ final class LSFAPIHTTPAuthorizationTest extends TestCase
         );
     }
 
-    public function testNoUserIsRetrievedWhenTheAuthorizationIsNotValid() : void
+    public function testNoUserIsRetrievedWhenTheAuthorizationIsNotValid(): void
     {
         $lfs_http_api_authorization = new LSFAPIHTTPAuthorization($this->token_verifier, $this->token_unserializer);
 

@@ -169,7 +169,7 @@ class UserSuspensionManager
      *
      * @return bool True if sent, false otherwise
      */
-    private function sendNotificationMail(PFUser $user, DateTimeImmutable $last_access_date, DateTimeImmutable $suspension_date, BaseLanguage $language) : bool
+    private function sendNotificationMail(PFUser $user, DateTimeImmutable $last_access_date, DateTimeImmutable $suspension_date, BaseLanguage $language): bool
     {
         $presenter = $this->mail_presenter_factory->createMailAccountSuspensionAlertPresenter($last_access_date, $suspension_date, $language);
         $this->mail->setFrom(ForgeConfig::get('sys_noreply'));
@@ -185,7 +185,7 @@ class UserSuspensionManager
      * @param int $inactive_delay Inactive accounts delay (number of days after since login)
      * @param DateTimeImmutable $date Execution date
      */
-    private function getIdleAccounts(int $notification_delay, int $inactive_delay, DateTimeImmutable $date) : array
+    private function getIdleAccounts(int $notification_delay, int $inactive_delay, DateTimeImmutable $date): array
     {
         $start_date = $this->getLastAccessDate($notification_delay, $inactive_delay, $date);
         $end_date = $start_date->modify('+23hours 59 minutes 59 seconds');
@@ -201,7 +201,7 @@ class UserSuspensionManager
      * @param int $inactive_delay   Inactive accounts delay (number of days after last login)
      * @param DateTimeImmutable $date Execution date
      */
-    private function getLastAccessDate(int $notification_delay, int $inactive_delay, DateTimeImmutable $date) : DateTimeImmutable
+    private function getLastAccessDate(int $notification_delay, int $inactive_delay, DateTimeImmutable $date): DateTimeImmutable
     {
         $date_param = '- ' . ($inactive_delay - $notification_delay) . ' day';
         return $date->modify($date_param);
@@ -210,7 +210,7 @@ class UserSuspensionManager
     /**
      * @param int $notification_delay Suspension notification delay (number of days before suspension)
      */
-    private function getSuspensionDate(int $notification_delay, DateTimeImmutable $date) : DateTimeImmutable
+    private function getSuspensionDate(int $notification_delay, DateTimeImmutable $date): DateTimeImmutable
     {
         $date_param = '+ ' .  $notification_delay . ' day';
         return $date->modify($date_param);
@@ -379,7 +379,7 @@ class UserSuspensionManager
         }
     }
 
-    private function sendSuspensionMail(PFUser $user, DateTimeImmutable $last_access_date, BaseLanguage $language) : bool
+    private function sendSuspensionMail(PFUser $user, DateTimeImmutable $last_access_date, BaseLanguage $language): bool
     {
         $presenter = $this->mail_presenter_factory->createMailAccountSuspensionPresenter($last_access_date, $language);
         $this->mail->setFrom(ForgeConfig::get('sys_noreply'));
@@ -390,7 +390,7 @@ class UserSuspensionManager
         return $this->mail->send();
     }
 
-    private function getInactiveAccounts(DateTimeImmutable $date) : array
+    private function getInactiveAccounts(DateTimeImmutable $date): array
     {
         $last_valid_access_end = $date->sub(
             new DateInterval("P" . ForgeConfig::get('sys_suspend_inactive_accounts_delay') . "D")

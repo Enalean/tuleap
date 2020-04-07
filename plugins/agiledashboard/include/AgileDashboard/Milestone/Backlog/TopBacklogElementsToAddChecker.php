@@ -19,7 +19,7 @@
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Milestone\Backlog;
 
@@ -61,7 +61,8 @@ class TopBacklogElementsToAddChecker
         foreach ($added_artifact_ids as $added_artifact_id) {
             $artifact = $this->artifact_factory->getArtifactById($added_artifact_id);
 
-            if ($artifact !== null &&
+            if (
+                $artifact !== null &&
                 ! in_array($artifact->getTrackerId(), $root_planning->getBacklogTrackersIds())
             ) {
                 $ids_in_error[] = $added_artifact_id;

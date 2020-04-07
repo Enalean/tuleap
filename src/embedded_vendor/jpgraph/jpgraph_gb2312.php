@@ -1547,4 +1547,4 @@ class GB2312toUTF8
         }
         return $str;
     }
-} // END Class
+}

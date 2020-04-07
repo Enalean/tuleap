@@ -42,7 +42,7 @@ class Request
                 break;
         }
 
-        $this->session = new Request_SessionVars;
+        $this->session = new Request_SessionVars();
 
         $GLOBALS['request'] = $this;
     }
@@ -317,7 +317,7 @@ class Request
             header($status);
             $status = $m[1];
         } else {
-            $status = (integer) $status;
+            $status = (int) $status;
             $reason = array('200' => 'OK',
                             '302' => 'Found',
                             '303' => 'See Other',
@@ -358,9 +358,11 @@ class Request
         // Should we compress even when apache_note is not available?
         // sf.net bug #933183 and http://bugs.php.net/17557
         // This effectively eliminates CGI, but all other servers also. hmm.
-        if ($compress
+        if (
+            $compress
             and (!function_exists('ob_gzhandler')
-                 or !function_exists('apache_note'))) {
+                 or !function_exists('apache_note'))
+        ) {
             $compress = false;
         }
 
@@ -372,9 +374,11 @@ class Request
 
         // New: we check for the client Accept-Encoding: "gzip" presence also
         // This should eliminate a lot or reported problems.
-        if ($compress
+        if (
+            $compress
             and (!$this->get("HTTP_ACCEPT_ENCODING")
-                 or !strstr($this->get("HTTP_ACCEPT_ENCODING"), "gzip"))) {
+                 or !strstr($this->get("HTTP_ACCEPT_ENCODING"), "gzip"))
+        ) {
             $compress = false;
         }
 
@@ -383,9 +387,11 @@ class Request
         // wget is, Mozilla, and MSIE no.
         // Of the RSS readers only MagpieRSS 0.5.2 is. http://www.rssgov.com/rssparsers.html
         // See also http://phpwiki.sourceforge.net/phpwiki/KnownBugs
-        if ($compress
+        if (
+            $compress
             and $this->getArg('format')
-            and strstr($this->getArg('format'), 'rss')) {
+            and strstr($this->getArg('format'), 'rss')
+        ) {
             $compress = false;
         }
 
@@ -436,8 +442,10 @@ class Request
      */
     public function chunkOutput()
     {
-        if (!empty($this->_is_buffering_output) or
-            (@ob_get_level())) {
+        if (
+            !empty($this->_is_buffering_output) or
+            (@ob_get_level())
+        ) {
             $this->_do_chunked_output = true;
             if (empty($this->_ob_get_length)) {
                 $this->_ob_get_length = 0;
@@ -772,11 +780,13 @@ class HTTP_ETag
             }
         }
 
-        while (preg_match(
-            '@^(W/)?"((?:\\\\.|[^"])*)"\s*,?\s*@i',
-            $taglist,
-            $m
-        )) {
+        while (
+            preg_match(
+                '@^(W/)?"((?:\\\\.|[^"])*)"\s*,?\s*@i',
+                $taglist,
+                $m
+            )
+        ) {
             list($match, $weak, $str) = $m;
             $taglist = substr($taglist, strlen($match));
             $tag = new HTTP_ETag(stripslashes($str), $weak);

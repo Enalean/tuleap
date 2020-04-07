@@ -50,7 +50,7 @@ final class DocmanServiceRepresentationBuilderTest extends TestCase
      */
     private $builder;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->item_representation_builder           = Mockery::mock(ItemRepresentationBuilder::class);
         $this->docman_permissions_manager            = Mockery::mock(Docman_PermissionsManager::class);
@@ -63,7 +63,7 @@ final class DocmanServiceRepresentationBuilderTest extends TestCase
         );
     }
 
-    public function testServiceRepresentationHasAllTheInformationWhenTheUserCanAdministrateTheDocumentManager() : void
+    public function testServiceRepresentationHasAllTheInformationWhenTheUserCanAdministrateTheDocumentManager(): void
     {
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive('usesService')->andReturn(true);
@@ -82,7 +82,7 @@ final class DocmanServiceRepresentationBuilderTest extends TestCase
         $this->assertEquals($permissions_for_groups_representation, $representation->permissions_for_groups);
     }
 
-    public function testServiceRepresentationCanNoBeGeneratedWhenTheProjectDoesNotUseTheDocumentManager() : void
+    public function testServiceRepresentationCanNoBeGeneratedWhenTheProjectDoesNotUseTheDocumentManager(): void
     {
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive('usesService')->andReturn(false);
@@ -90,7 +90,7 @@ final class DocmanServiceRepresentationBuilderTest extends TestCase
         $this->assertNull($this->builder->getServiceRepresentation($project, Mockery::mock(PFUser::class)));
     }
 
-    public function testServiceRepresentationIsEmptyIfTheRootItemCanNotBeAccessed() : void
+    public function testServiceRepresentationIsEmptyIfTheRootItemCanNotBeAccessed(): void
     {
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive('usesService')->andReturn(true);
@@ -102,7 +102,7 @@ final class DocmanServiceRepresentationBuilderTest extends TestCase
         $this->assertNull($representation->permissions_for_groups);
     }
 
-    public function testServiceRepresentationOnlyHaveInformationAboutTheRootItemifTheUserCanNotAdministrateTheDocumentManager() : void
+    public function testServiceRepresentationOnlyHaveInformationAboutTheRootItemifTheUserCanNotAdministrateTheDocumentManager(): void
     {
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive('usesService')->andReturn(true);

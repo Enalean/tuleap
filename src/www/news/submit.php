@@ -47,11 +47,12 @@ if (user_isloggedin()) {
             $validPromoteNews = new Valid_WhiteList('promote_news', array('0', '3'));
             $validSummary->required();
 
-            if ($request->valid($validSummary)
+            if (
+                $request->valid($validSummary)
                 && $request->valid($validDetails)
                 && $request->valid($validPrivateNews)
                 && $request->valid($validPromoteNews)
-                ) {
+            ) {
                 /*
                  Insert the row into the db if it's a generic message
                  OR this person is an admin for the group involved

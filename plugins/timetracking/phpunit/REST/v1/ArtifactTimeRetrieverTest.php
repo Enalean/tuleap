@@ -79,7 +79,7 @@ class ArtifactTimeRetrieverTest extends TestCase
      */
     private $time_retriever;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->time_retriever        = M::mock(TimeRetriever::class);

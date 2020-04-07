@@ -29,7 +29,7 @@ final class DefaultProjectVisibilityRetriever
 {
     public const CONFIG_SETTING_NAME = 'default_project_visibility';
 
-    public function getDefaultProjectVisibility() : string
+    public function getDefaultProjectVisibility(): string
     {
         $are_restricted_users_allowed          = ForgeConfig::areRestrictedUsersAllowed();
         $default_project_visibility_setting    = ForgeConfig::get(self::CONFIG_SETTING_NAME);
@@ -42,8 +42,10 @@ final class DefaultProjectVisibilityRetriever
             return $default_project_visibility_setting;
         }
 
-        if ($default_project_visibility_setting === Project::ACCESS_PRIVATE ||
-            $default_project_visibility_setting === Project::ACCESS_PUBLIC) {
+        if (
+            $default_project_visibility_setting === Project::ACCESS_PRIVATE ||
+            $default_project_visibility_setting === Project::ACCESS_PUBLIC
+        ) {
             return $default_project_visibility_setting;
         }
 

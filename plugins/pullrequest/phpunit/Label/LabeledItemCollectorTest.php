@@ -37,7 +37,8 @@ require_once __DIR__ . '/../../../../src/www/include/utils.php';
 
 class LabeledItemCollectorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /**
      * @var \UserManager

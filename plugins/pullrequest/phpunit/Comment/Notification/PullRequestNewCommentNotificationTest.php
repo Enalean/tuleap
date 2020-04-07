@@ -34,7 +34,9 @@ use UserHelper;
 
 final class PullRequestNewCommentNotificationTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox, TemporaryTestDirectory;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
+    use TemporaryTestDirectory;
 
     public function testNewCommentNotificationCanBeBuiltFromTheOwnersOfThePullRequestAndTheAddedComment(): void
     {

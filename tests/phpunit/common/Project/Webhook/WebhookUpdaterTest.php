@@ -26,7 +26,7 @@ final class WebhookUpdaterTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testItCreatesAWebhook() : void
+    public function testItCreatesAWebhook(): void
     {
         $dao     = \Mockery::mock(\Tuleap\Project\Webhook\WebhookDao::class);
         $updater = new WebhookUpdater($dao);
@@ -35,7 +35,7 @@ final class WebhookUpdaterTest extends \PHPUnit\Framework\TestCase
         $updater->add('Webhook name', 'https://example.com');
     }
 
-    public function testItUpdatesAWebhook() : void
+    public function testItUpdatesAWebhook(): void
     {
         $dao     = \Mockery::mock(\Tuleap\Project\Webhook\WebhookDao::class);
         $updater = new WebhookUpdater($dao);
@@ -44,7 +44,7 @@ final class WebhookUpdaterTest extends \PHPUnit\Framework\TestCase
         $updater->edit(1, 'Webhook name', 'https://example.com');
     }
 
-    public function testItDeletesAWebhook() : void
+    public function testItDeletesAWebhook(): void
     {
         $dao     = \Mockery::mock(\Tuleap\Project\Webhook\WebhookDao::class);
         $updater = new WebhookUpdater($dao);
@@ -53,7 +53,7 @@ final class WebhookUpdaterTest extends \PHPUnit\Framework\TestCase
         $updater->delete(1);
     }
 
-    public function testItChecksDataBeforeManipulatingIt() : void
+    public function testItChecksDataBeforeManipulatingIt(): void
     {
         $dao     = \Mockery::spy(\Tuleap\Project\Webhook\WebhookDao::class);
         $updater = new WebhookUpdater($dao);
@@ -66,7 +66,7 @@ final class WebhookUpdaterTest extends \PHPUnit\Framework\TestCase
         $updater->edit(1, 'Webhook name', 'Not an URL');
     }
 
-    public function testItThrowsAnExceptionWhenDataCanNotBeProperlyAccessed() : void
+    public function testItThrowsAnExceptionWhenDataCanNotBeProperlyAccessed(): void
     {
         $dao     = \Mockery::mock(\Tuleap\Project\Webhook\WebhookDao::class);
         $dao->shouldReceive('createWebhook')->andReturns(false);

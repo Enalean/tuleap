@@ -80,7 +80,8 @@ class Tuleap_CustomToursFactory
     private function extractWellFormedTourList(array &$tour_list, $tour_folder)
     {
         foreach ($tour_list as $key => $tour_data) {
-            if (! $this->isTourDataWellFormed($tour_data) ||
+            if (
+                ! $this->isTourDataWellFormed($tour_data) ||
                 ! $this->doesTourStepsFileExist($tour_folder, $tour_data['tour_name'])
             ) {
                 unset($tour_list[$key]);

@@ -329,7 +329,8 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     {
         // Only show the stylesheet if we're actually in the Docman pages.
         // This stops styles inadvertently clashing with the main site.
-        if ($this->currentRequestIsForPlugin() ||
+        if (
+            $this->currentRequestIsForPlugin() ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0
         ) {
             echo '<link rel="stylesheet" type="text/css" href="' . $this->getAssets()->getFileURL('default-style.css') . '" />' . "\n";
@@ -1317,7 +1318,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     }
 
     /** @see \Event::REST_PROJECT_RESOURCES */
-    public function rest_project_resources(array $params) : void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function rest_project_resources(array $params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         ResourcesInjector::declareProjectResources($params['resources'], $params['project']);
     }
@@ -1412,17 +1413,17 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         );
     }
 
-    public function routeLegacyRestoreDocumentsController() : LegacyRestoreDocumentsController
+    public function routeLegacyRestoreDocumentsController(): LegacyRestoreDocumentsController
     {
         return new LegacyRestoreDocumentsController($this);
     }
 
-    public function routeLegacySendMessageController() : LegacySendMessageController
+    public function routeLegacySendMessageController(): LegacySendMessageController
     {
         return new LegacySendMessageController(ProjectManager::instance());
     }
 
-    public function routeLegacyController() : DocmanLegacyController
+    public function routeLegacyController(): DocmanLegacyController
     {
         return new DocmanLegacyController(
             $this,
@@ -1432,7 +1433,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         );
     }
 
-    public function routeFileDownload() : DocmanFileDownloadController
+    public function routeFileDownload(): DocmanFileDownloadController
     {
         $response_factory = HTTPFactoryBuilder::responseFactory();
         return new DocmanFileDownloadController(
@@ -1451,7 +1452,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     }
 
 
-    public function collectRoutesEvent(CollectRoutesEvent $event) : void
+    public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $route_collector = $event->getRouteCollector();
 
@@ -1533,7 +1534,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         $collector->setUrl(DOCMAN_BASE_URL . "?group_id=" . $collector->getProject()->getID());
     }
 
-    public function getItemsReferencingWikiPageCollectionEvent(GetItemsReferencingWikiPageCollectionEvent $event) : void
+    public function getItemsReferencingWikiPageCollectionEvent(GetItemsReferencingWikiPageCollectionEvent $event): void
     {
         $wiki_page = $event->getWikiPage();
 
@@ -1577,7 +1578,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         return new Docman_ItemDao();
     }
 
-    public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event) : void
+    public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event): void
     {
         $event->addServiceIfPluginIsNotRestricted($this, $this->getServiceShortname());
     }

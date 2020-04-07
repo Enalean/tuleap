@@ -39,7 +39,8 @@ use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 
 final class MemberAdderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     /**
      * @var MemberAdder

@@ -392,12 +392,14 @@ class ReleaseResource extends AuthenticatedResource
             throw new RestException(403, "Access to package denied");
         }
 
-        if (! $this->release_factory->userCanRead(
-            $package->getGroupID(),
-            $package->getPackageID(),
-            $release->getReleaseID(),
-            $user->getId()
-        )) {
+        if (
+            ! $this->release_factory->userCanRead(
+                $package->getGroupID(),
+                $package->getPackageID(),
+                $release->getReleaseID(),
+                $user->getId()
+            )
+        ) {
             throw new RestException(403, "Access to release denied");
         }
 

@@ -37,7 +37,8 @@ use Tuleap\Test\Builders\UserTestBuilder;
 
 final class DisplaySecurityControllerTest extends TestCase
 {
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration, TemporaryTestDirectory;
+    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use TemporaryTestDirectory;
 
     /**
      * @var CSRFSynchronizerToken|M\LegacyMockInterface|M\MockInterface

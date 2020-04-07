@@ -40,7 +40,7 @@ class LFSBasicTransferObjectSaverTest extends TestCase
     private $path_allocator;
     private $prometheus;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->filesystem           = \Mockery::mock(FilesystemInterface::class);
         $this->db_connection        = \Mockery::mock(DBConnection::class);

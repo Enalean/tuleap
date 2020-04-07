@@ -34,7 +34,7 @@ final class SOAP_RequestLimitatorTest extends \PHPUnit\Framework\TestCase
         $dao->shouldReceive('searchFirstCallToMethod')->with(
             'addProject',
             Mockery::on(
-                static function (int $time) use ($request_time) : bool {
+                static function (int $time) use ($request_time): bool {
                     $one_hour_ago = $request_time - 3600;
                     $delta        = abs($time - $one_hour_ago);
 
@@ -57,7 +57,7 @@ final class SOAP_RequestLimitatorTest extends \PHPUnit\Framework\TestCase
         return $dao;
     }
 
-    public function testTwoRequestsShouldBeAllowedByConfiguration() : void
+    public function testTwoRequestsShouldBeAllowedByConfiguration(): void
     {
         $dao = $this->givenThereWasAlreadyOneCallTheLastHour();
         $limitator = new SOAP_RequestLimitator($nb_call = 10, $timeframe = 3600, $dao);
@@ -76,7 +76,7 @@ final class SOAP_RequestLimitatorTest extends \PHPUnit\Framework\TestCase
         return $dao;
     }
 
-    public function testOneRequestIsAllowed() : void
+    public function testOneRequestIsAllowed(): void
     {
         $dao = $this->givenThereIsNoPreviousCallStoredInDB();
 
@@ -98,7 +98,7 @@ final class SOAP_RequestLimitatorTest extends \PHPUnit\Framework\TestCase
         return $dao;
     }
 
-    public function testTwoRequestsShouldThrowAnException() : void
+    public function testTwoRequestsShouldThrowAnException(): void
     {
         $dao = $this->givenThereWasAlreadyTenCallToAddProject();
 

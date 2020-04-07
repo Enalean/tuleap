@@ -85,7 +85,7 @@ class Transition_PostAction_CIBuildDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    public function deletePostActionByTransition(int $transition_id) : bool
+    public function deletePostActionByTransition(int $transition_id): bool
     {
         $escaped_transition_id = $this->da->escapeInt($transition_id);
 

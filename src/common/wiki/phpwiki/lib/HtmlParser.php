@@ -55,7 +55,7 @@ class HtmlParser extends XmlParser
     {
         $classname = "HtmlParser_" . $dialect;
         if (class_exists($classname)) {
-            $this->dialect = new $classname;
+            $this->dialect = new $classname();
         } else {
             trigger_error(sprintf("unknown HtmlParser dialect %s", $dialect), E_USER_ERROR);
         }

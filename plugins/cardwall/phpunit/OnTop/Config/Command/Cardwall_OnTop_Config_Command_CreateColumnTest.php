@@ -23,9 +23,11 @@ declare(strict_types=1);
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Cardwall_OnTop_Config_Command_CreateColumnTest extends \PHPUnit\Framework\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\GlobalResponseMock, \Tuleap\GlobalLanguageMock;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\GlobalResponseMock;
+    use \Tuleap\GlobalLanguageMock;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -37,7 +39,7 @@ final class Cardwall_OnTop_Config_Command_CreateColumnTest extends \PHPUnit\Fram
         $this->command = new Cardwall_OnTop_Config_Command_CreateColumn($tracker, $this->dao);
     }
 
-    public function testItCreatesANewColumn() : void
+    public function testItCreatesANewColumn(): void
     {
         $request = new HTTPRequest();
         $request->set('new_column', 'On Going');

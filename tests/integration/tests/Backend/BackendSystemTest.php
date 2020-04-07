@@ -34,7 +34,8 @@ use PFUser;
 
 final class BackendSystemTest extends \PHPUnit\Framework\TestCase
 {
-    use MockeryPHPUnitIntegration, \Tuleap\TemporaryTestDirectory;
+    use MockeryPHPUnitIntegration;
+    use \Tuleap\TemporaryTestDirectory;
 
     private $initial_sys_project_backup_path;
     private $initial_sys_custom_incdir;
@@ -43,7 +44,7 @@ final class BackendSystemTest extends \PHPUnit\Framework\TestCase
     private $initial_ftp_anon_dir_prefix;
     private $initial_ftp_frs_dir_prefix;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $GLOBALS['codendi_shell_skel']        = __DIR__ . '/_fixtures/etc/skel_codendi';
         $GLOBALS['tmp_dir']                   = $this->getTmpDir() . '/var/tmp';
@@ -73,7 +74,7 @@ final class BackendSystemTest extends \PHPUnit\Framework\TestCase
     }
 
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         Backend::clearInstances();
         unset($GLOBALS['codendi_shell_skel'], $GLOBALS['tmp_dir'], $GLOBALS['ftp_frs_dir_prefix'], $GLOBALS['sys_file_deletion_delay'], $GLOBALS['codendi_log']);
@@ -85,13 +86,13 @@ final class BackendSystemTest extends \PHPUnit\Framework\TestCase
         ForgeConfig::set('ftp_frs_dir_prefix', $this->initial_ftp_frs_dir_prefix);
     }
 
-    public function testConstructor() : void
+    public function testConstructor(): void
     {
         $this->assertNotNull(BackendSystem::instance());
     }
 
 
-    public function testCreateUserHome() : void
+    public function testCreateUserHome(): void
     {
         // We use codendiadm uid/gid to avoid chown warnings (because test is not run as root)
         $user = new PFUser([
@@ -107,7 +108,7 @@ final class BackendSystemTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue(is_file(ForgeConfig::get('homedir_prefix') . "/codendiadm/.profile"), "User files from /etc/codendi_skel should be created");
     }
 
-    public function testCreateProjectHome() : void
+    public function testCreateProjectHome(): void
     {
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getUnixNameMixedCase')->andReturns('TestPrj');
@@ -134,7 +135,7 @@ final class BackendSystemTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($backend->createProjectHome(99999), false);
     }
 
-    public function testArchiveUserHome() : void
+    public function testArchiveUserHome(): void
     {
         // We use codendiadm uid/gid to avoid chown warnings (because test is not run as root)
         $user = new PFUser([
@@ -158,7 +159,7 @@ final class BackendSystemTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue(is_file(ForgeConfig::get('sys_project_backup_path') . "/codendiadm.tgz"), "Archive should be created");
     }
 
-    public function testArchiveProjectHome() : void
+    public function testArchiveProjectHome(): void
     {
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getUnixName')->with(false)->andReturns('TestProj');
@@ -187,7 +188,7 @@ final class BackendSystemTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($backend->archiveProjectHome(99999));
     }
 
-    public function testRenameProjectHomeDirectory() : void
+    public function testRenameProjectHomeDirectory(): void
     {
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getUnixName')->with(false)->andReturns('TestProject');
@@ -218,7 +219,7 @@ final class BackendSystemTest extends \PHPUnit\Framework\TestCase
      * Special case when the project rename is just about changing case
      * TestProject -> testproject
      */
-    public function testRenameProjectHomeDirectoryToLowerCase() : void
+    public function testRenameProjectHomeDirectoryToLowerCase(): void
     {
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getUnixName')->with(false)->andReturns('TestProject');
@@ -245,7 +246,7 @@ final class BackendSystemTest extends \PHPUnit\Framework\TestCase
      * Special case when the project rename is just about changing case
      * testproject -> TestProject
      */
-    public function testRenameProjectHomeDirectoryToUpperCase() : void
+    public function testRenameProjectHomeDirectoryToUpperCase(): void
     {
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getUnixName')->with(false)->andReturns('testproject');
@@ -274,7 +275,7 @@ final class BackendSystemTest extends \PHPUnit\Framework\TestCase
     /**
      * testproject -> projecttest
      */
-    public function testRenameProjectHomeDirectoryLowerCase() : void
+    public function testRenameProjectHomeDirectoryLowerCase(): void
     {
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getUnixName')->with(false)->andReturns('testproject');
@@ -298,35 +299,35 @@ final class BackendSystemTest extends \PHPUnit\Framework\TestCase
         $this->assertDirectoryExists(ForgeConfig::get('grpdir_prefix') . "/projecttest", 'Project home should be renamed');
     }
 
-    public function testIsProjectNameAvailableWithExistingFileInProjectHome() : void
+    public function testIsProjectNameAvailableWithExistingFileInProjectHome(): void
     {
         touch(ForgeConfig::get('grpdir_prefix') . "/testproject");
         $backend = \Mockery::mock(\BackendSystem::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->assertFalse($backend->isProjectNameAvailable('testproject'), 'A file with the same name exists in home/groups/');
     }
 
-    public function testIsProjectNameAvailableWithExistingFileInProjectHomeWithMixedCase() : void
+    public function testIsProjectNameAvailableWithExistingFileInProjectHomeWithMixedCase(): void
     {
         touch(ForgeConfig::get('grpdir_prefix') . "/testproject");
         $backend = \Mockery::mock(\BackendSystem::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->assertFalse($backend->isProjectNameAvailable('TestProject'), 'A file with the same name in lowercase exists in home/groups/');
     }
 
-    public function testIsProjectNameAvailableWithExistingFileInFRS() : void
+    public function testIsProjectNameAvailableWithExistingFileInFRS(): void
     {
         touch($GLOBALS['ftp_frs_dir_prefix'] . "/testproject");
         $backend = \Mockery::mock(\BackendSystem::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->assertFalse($backend->isProjectNameAvailable('testproject'), 'A file with the same name exists in var/lib/codendi/ftp/codendi');
     }
 
-    public function testIsProjectNameAvailableWithExistingFileInAnnoFtp() : void
+    public function testIsProjectNameAvailableWithExistingFileInAnnoFtp(): void
     {
         touch(ForgeConfig::get('ftp_anon_dir_prefix') . "/testproject");
         $backend = \Mockery::mock(\BackendSystem::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->assertFalse($backend->isProjectNameAvailable('testproject'), 'A file with the same name exists in var/lib/codendi/ftp/pub');
     }
 
-    public function testRenameUserHomeDirectory() : void
+    public function testRenameUserHomeDirectory(): void
     {
         // We use codendiadm uid/gid to avoid chown warnings (because test is not run as root)
         $user = new PFUser([
@@ -343,7 +344,7 @@ final class BackendSystemTest extends \PHPUnit\Framework\TestCase
         $this->assertDirectoryNotExists(ForgeConfig::get('homedir_prefix') . "/codendiadm", 'Home dir should no more exists');
     }
 
-    public function testCleanupFrs() : void
+    public function testCleanupFrs(): void
     {
         $backend = \Mockery::mock(\BackendSystem::class)->makePartial()->shouldAllowMockingProtectedMethods();
 

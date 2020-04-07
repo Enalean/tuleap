@@ -82,7 +82,7 @@ final class OAuth2AuthorizationCode
     /**
      * @psalm-mutation-free
      */
-    public function getID() : int
+    public function getID(): int
     {
         return $this->authorization_code_id;
     }

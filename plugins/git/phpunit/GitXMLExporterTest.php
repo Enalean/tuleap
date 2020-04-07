@@ -37,7 +37,10 @@ use Tuleap\TemporaryTestDirectory;
 
 class GitXMLExporterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, TemporaryTestDirectory, GlobalLanguageMock, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use TemporaryTestDirectory;
+    use GlobalLanguageMock;
+    use ForgeConfigSandbox;
 
     /**
      * @var \UserManager

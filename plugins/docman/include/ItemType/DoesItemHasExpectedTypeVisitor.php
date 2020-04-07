@@ -53,42 +53,42 @@ final class DoesItemHasExpectedTypeVisitor implements ItemVisitor
     /**
      * @psalm-return class-string<Docman_Item>
      */
-    public function getExpectedItemClass() : string
+    public function getExpectedItemClass(): string
     {
         return $this->expected_item_class;
     }
 
-    public function visitFolder(Docman_Folder $item, array $params = []) : bool
+    public function visitFolder(Docman_Folder $item, array $params = []): bool
     {
         return $this->visitItem($item);
     }
 
-    public function visitWiki(Docman_Wiki $item, array $params = []) : bool
+    public function visitWiki(Docman_Wiki $item, array $params = []): bool
     {
         return $this->visitItem($item);
     }
 
-    public function visitLink(Docman_Link $item, array $params = []) : bool
+    public function visitLink(Docman_Link $item, array $params = []): bool
     {
         return $this->visitItem($item);
     }
 
-    public function visitFile(Docman_File $item, array $params = []) : bool
+    public function visitFile(Docman_File $item, array $params = []): bool
     {
         return $this->visitItem($item);
     }
 
-    public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []) : bool
+    public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []): bool
     {
         return $this->visitItem($item);
     }
 
-    public function visitEmpty(Docman_Empty $item, array $params = []) : bool
+    public function visitEmpty(Docman_Empty $item, array $params = []): bool
     {
         return $this->visitItem($item);
     }
 
-    public function visitItem(Docman_Item $item, array $params = []) : bool
+    public function visitItem(Docman_Item $item, array $params = []): bool
     {
         return get_class($item) === $this->expected_item_class;
     }

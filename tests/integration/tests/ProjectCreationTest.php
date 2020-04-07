@@ -34,7 +34,8 @@ use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 
 class ProjectCreationTest extends TestCase
 {
-    use GlobalLanguageMock, GlobalSVNPollution;
+    use GlobalLanguageMock;
+    use GlobalSVNPollution;
 
     private $backup_project_can_be_created;
     private $backup_codendi_log;

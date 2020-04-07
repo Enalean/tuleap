@@ -122,7 +122,7 @@ class ForumMLPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         }
     }
 
-    private function getAssets():IncludeAssets
+    private function getAssets(): IncludeAssets
     {
         return new IncludeAssets(
             __DIR__ . '/../../../src/www/assets/forumml',
@@ -229,22 +229,22 @@ class ForumMLPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         }
     }
 
-    public function routeGetMessages() : DispatchableWithRequest
+    public function routeGetMessages(): DispatchableWithRequest
     {
         return new ForumML\ListMailsController($this);
     }
 
-    public function routeSendMail() : DispatchableWithRequest
+    public function routeSendMail(): DispatchableWithRequest
     {
         return new ForumML\SendMailController($this);
     }
 
-    public function routeWriteMail() : DispatchableWithRequest
+    public function routeWriteMail(): DispatchableWithRequest
     {
         return new ForumML\WriteMailController($this);
     }
 
-    public function routeOutputAttachment() : DispatchableWithRequest
+    public function routeOutputAttachment(): DispatchableWithRequest
     {
         return new ForumML\OutputAttachmentController($this);
     }

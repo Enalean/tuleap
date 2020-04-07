@@ -30,7 +30,7 @@ class QueryParameterParserTest extends TestCase
     /** @var QueryParameterParser */
     private $query_parser;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->query_parser = new QueryParameterParser(
             new JsonDecoder()

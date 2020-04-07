@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 class b201908081421_add_index_on_user_access_key_expiration_date extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
 {

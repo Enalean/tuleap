@@ -41,7 +41,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
     private $john_doe;
     private $cat_steven;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->user_manager = \Mockery::spy(\UserManager::class);
@@ -136,7 +136,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
 
     private function createArchiveXMLUsers(string $user_xml): ArchiveInterface
     {
-        return new class($user_xml) implements ArchiveInterface
+        return new class ($user_xml) implements ArchiveInterface
         {
             /** @var string */
             private $user_xml;
@@ -169,7 +169,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
         };
     }
 
-    public function testItReturnsACollection() : void
+    public function testItReturnsACollection(): void
     {
         $xml = $this->createArchiveXMLUsers('<?xml version="1.0" encoding="UTF-8"?><users />');
 
@@ -178,7 +178,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
         $this->assertInstanceOf(\User\XML\Import\UsersToBeImportedCollection::class, $collection);
     }
 
-    public function testItReturnsACollectionWithAliveUserInLDAP() : void
+    public function testItReturnsACollectionWithAliveUserInLDAP(): void
     {
         $xml = $this->createArchiveXMLUsers('<?xml version="1.0" encoding="UTF-8"?>
             <users>
@@ -203,7 +203,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
         );
     }
 
-    public function testItReturnsACollectionWithToBeActivatedWhenUserInLDAPIsNotAlive() : void
+    public function testItReturnsACollectionWithToBeActivatedWhenUserInLDAPIsNotAlive(): void
     {
         $xml = $this->createArchiveXMLUsers('<?xml version="1.0" encoding="UTF-8"?>
             <users>
@@ -228,7 +228,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
         );
     }
 
-    public function testItReturnsACollectionWithAliveUserNotInLDAP() : void
+    public function testItReturnsACollectionWithAliveUserNotInLDAP(): void
     {
         $xml = $this->createArchiveXMLUsers('<?xml version="1.0" encoding="UTF-8"?>
             <users>
@@ -253,7 +253,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
         );
     }
 
-    public function testItReturnsACollectionWithUserNotInLDAPToBeActivated() : void
+    public function testItReturnsACollectionWithUserNotInLDAPToBeActivated(): void
     {
         $xml = $this->createArchiveXMLUsers('<?xml version="1.0" encoding="UTF-8"?>
             <users>
@@ -278,7 +278,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
         );
     }
 
-    public function testItReturnsACollectionWithUserNotInLDAPWhenLdapIdDoesNotMatch() : void
+    public function testItReturnsACollectionWithUserNotInLDAPWhenLdapIdDoesNotMatch(): void
     {
         $xml = $this->createArchiveXMLUsers('<?xml version="1.0" encoding="UTF-8"?>
             <users>
@@ -303,7 +303,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
         );
     }
 
-    public function testItReturnsACollectionWithUserToBeMappedWhenEmailDoesNotMatch() : void
+    public function testItReturnsACollectionWithUserToBeMappedWhenEmailDoesNotMatch(): void
     {
         $xml = $this->createArchiveXMLUsers('<?xml version="1.0" encoding="UTF-8"?>
             <users>
@@ -328,7 +328,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
         );
     }
 
-    public function testItTrustsLDAPEvenIfEmailDoesNotMatch() : void
+    public function testItTrustsLDAPEvenIfEmailDoesNotMatch(): void
     {
         $xml = $this->createArchiveXMLUsers('<?xml version="1.0" encoding="UTF-8"?>
             <users>
@@ -353,7 +353,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
         );
     }
 
-    public function testItReturnsACollectionWithUserToBeCreatedWhenNotFoundInLDAPByUsernameOrByEmail() : void
+    public function testItReturnsACollectionWithUserToBeCreatedWhenNotFoundInLDAPByUsernameOrByEmail(): void
     {
         $xml = $this->createArchiveXMLUsers('<?xml version="1.0" encoding="UTF-8"?>
             <users>
@@ -384,7 +384,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
         );
     }
 
-    public function testItReturnsACollectionWithUserToBeMappedWhenUserIsFoundByMail() : void
+    public function testItReturnsACollectionWithUserToBeMappedWhenUserIsFoundByMail(): void
     {
         $xml = $this->createArchiveXMLUsers('<?xml version="1.0" encoding="UTF-8"?>
             <users>
@@ -418,7 +418,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
         );
     }
 
-    public function testItReturnsAlreadyActiveUserWhenUserIsValidInLdap() : void
+    public function testItReturnsAlreadyActiveUserWhenUserIsValidInLdap(): void
     {
         $xml = $this->createArchiveXMLUsers('<?xml version="1.0" encoding="UTF-8"?>
             <users>
@@ -443,7 +443,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
         );
     }
 
-    public function testItReturnsAnAlreadyExistingUserWhenUsernameAreEqualsAndEmailAreDifferent() : void
+    public function testItReturnsAnAlreadyExistingUserWhenUsernameAreEqualsAndEmailAreDifferent(): void
     {
         $xml = $this->createArchiveXMLUsers('<?xml version="1.0" encoding="UTF-8"?>
             <users>
@@ -469,7 +469,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \PHPUnit\Framework\Te
         );
     }
 
-    public function testItCreatesUserWhenNeitherLdapNorUserNameMatchEvenIfEmailExists() : void
+    public function testItCreatesUserWhenNeitherLdapNorUserNameMatchEvenIfEmailExists(): void
     {
         $xml = $this->createArchiveXMLUsers('<?xml version="1.0" encoding="UTF-8"?>
             <users>

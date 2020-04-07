@@ -25,14 +25,14 @@ final class Cardwall_CardInCellPresenterNodeTest extends \PHPUnit\Framework\Test
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testItHoldsTheGivenPresenter() : void
+    public function testItHoldsTheGivenPresenter(): void
     {
         $presenter      = \Mockery::spy(\Cardwall_CardInCellPresenter::class);
         $presenter_node = new Cardwall_CardInCellPresenterNode($presenter);
         $this->assertEquals($presenter, $presenter_node->getCardInCellPresenter());
     }
 
-    public function testItHasAnArtifact() : void
+    public function testItHasAnArtifact(): void
     {
         $artifact       = \Mockery::spy(\Tracker_Artifact::class);
         $presenter      = \Mockery::spy(\Cardwall_CardInCellPresenter::class);

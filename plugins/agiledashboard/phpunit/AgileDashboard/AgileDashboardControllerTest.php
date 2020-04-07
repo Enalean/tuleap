@@ -31,7 +31,11 @@ use Tuleap\GlobalResponseMock;
 
 final class AgileDashboardControllerTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox, GlobalResponseMock, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
+    use GlobalResponseMock;
+    use GlobalLanguageMock;
+
     /** @var UserManager */
     private $user_manager;
 
@@ -142,7 +146,7 @@ final class AgileDashboardControllerTest extends \PHPUnit\Framework\TestCase //p
         $controller->createKanban();
     }
 
-    private function getMockedController(Tracker $tracker) : AdminController
+    private function getMockedController(Tracker $tracker): AdminController
     {
         $admin_user = Mockery::spy(\PFUser::class)->shouldReceive('isAdmin')->with(789)->andReturns(true)->getMock();
 

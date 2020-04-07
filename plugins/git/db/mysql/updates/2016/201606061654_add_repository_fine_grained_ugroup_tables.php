@@ -54,7 +54,8 @@ EOT;
 
     public function postUp()
     {
-        if (! $this->db->tableNameExists('plugin_git_repository_fine_grained_permissions_writers') ||
+        if (
+            ! $this->db->tableNameExists('plugin_git_repository_fine_grained_permissions_writers') ||
             ! $this->db->tableNameExists('plugin_git_repository_fine_grained_permissions_rewinders')
         ) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(

@@ -35,7 +35,7 @@ class TimeRetrieverTest extends TestCase
      */
     private $retriever;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

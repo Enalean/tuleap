@@ -239,7 +239,8 @@ class Git_AdminGerritController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
 
             if ($this->allGerritServerParamsRequiredExist($request_gerrit_server)) {
                 $gerrit_server = $this->admin_gerrit_builder->buildFromRequest($request_gerrit_server);
-                if ($gerrit_server['host'] != $server->getHost() ||
+                if (
+                    $gerrit_server['host'] != $server->getHost() ||
                     $gerrit_server['ssh_port'] != $server->getSSHPort() ||
                     $gerrit_server['http_port'] != $server->getHTTPPort() ||
                     $gerrit_server['login'] != $server->getLogin() ||
@@ -287,7 +288,7 @@ class Git_AdminGerritController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
         return (isset($request_gerrit_server['http_password']) && ! empty($request_gerrit_server['http_password']));
     }
 
-    private function allGerritServerParamsRequiredExist(array $request_gerrit_server) : bool
+    private function allGerritServerParamsRequiredExist(array $request_gerrit_server): bool
     {
         return (isset($request_gerrit_server['host']) && ! empty($request_gerrit_server['host'])) &&
         (isset($request_gerrit_server['ssh_port']) && ! empty($request_gerrit_server['ssh_port'])) &&

@@ -50,7 +50,7 @@ class _UserPreference_recalgo extends _UserPreference // recommendation engine a
 
 class _UserPreference_recnnbr extends _UserPreference_numeric
 {
-}// recommendation engine key clustering, neighborhood size
+}
 
 $WikiTheme->customUserPreferences(array
          (

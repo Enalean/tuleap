@@ -51,7 +51,7 @@ final class ItemStatusMapperTest extends TestCase
         $this->assertEquals(PLUGIN_DOCMAN_ITEM_STATUS_REJECTED, $status);
     }
 
-    public function testTryingToFindIDForAnUnknownValueThrowsAnException() : void
+    public function testTryingToFindIDForAnUnknownValueThrowsAnException(): void
     {
         $mapper = new ItemStatusMapper($this->docman_setting_bo);
 
@@ -95,7 +95,7 @@ final class ItemStatusMapperTest extends TestCase
         $this->assertEquals(PLUGIN_DOCMAN_ITEM_STATUS_REJECTED, $status);
     }
 
-    public function testInheritanceTryingToFindIDForAnUnknownValueThrowsAnException() : void
+    public function testInheritanceTryingToFindIDForAnUnknownValueThrowsAnException(): void
     {
         $mapper = new ItemStatusMapper($this->docman_setting_bo);
         $parent = \Mockery::mock(\Docman_Item::class);

@@ -40,7 +40,7 @@ final class ProjectXMLExporterTest extends \PHPUnit\Framework\TestCase
     private $options;
     private $archive;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->event_manager  = M::spy(EventManager::class);
         $this->ugroup_manager = M::spy(UGroupManager::class);
@@ -66,7 +66,7 @@ final class ProjectXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->user    = M::spy(PFUser::class);
     }
 
-    public function testItExportsStaticUgroupsForTheGivenProject() : void
+    public function testItExportsStaticUgroupsForTheGivenProject(): void
     {
         $user_01 = B\UserTestBuilder::aUser()->withId(101)->withLdapId('ldap_01')->withUserName('user_01')->build();
         $user_02 = B\UserTestBuilder::aUser()->withId(102)->withLdapId('ldap_02')->withUserName('user_02')->build();
@@ -151,7 +151,7 @@ final class ProjectXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($xml_objet->ugroups->ugroup[4]->members->member[0]);
     }
 
-    public function testItExportsDynamicUgroupsForTheGivenProject() : void
+    public function testItExportsDynamicUgroupsForTheGivenProject(): void
     {
         $user_admin_1 = B\UserTestBuilder::aUser()->withId(101)->withLdapId('ldap_01')->withUserName('user_01')->build();
         $user_1 = B\UserTestBuilder::aUser()->withId(102)->withLdapId('ldap_02')->withUserName('user_02')->build();
@@ -211,7 +211,7 @@ final class ProjectXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals((string) $xml_objet->ugroups->ugroup[1]->members->member[2]['format'], 'username');
     }
 
-    public function testItExportsProjectInfo() : void
+    public function testItExportsProjectInfo(): void
     {
         $data_01 = array(
             'is_used'    => true,

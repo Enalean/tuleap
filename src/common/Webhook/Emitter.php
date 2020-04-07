@@ -87,7 +87,7 @@ class Emitter
         }
     }
 
-    private function buildFormURLEncodedRequest(Webhook $webhook, Payload $payload) : RequestInterface
+    private function buildFormURLEncodedRequest(Webhook $webhook, Payload $payload): RequestInterface
     {
         return $this->http_request_factory->createRequest('POST', $webhook->getUrl())
             ->withHeader('Content-Type', 'application/x-www-form-urlencoded')

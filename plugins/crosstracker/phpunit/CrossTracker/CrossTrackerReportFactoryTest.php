@@ -54,7 +54,7 @@ class CrossTrackerReportFactoryTest extends TestCase
      */
     private $report_dao;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

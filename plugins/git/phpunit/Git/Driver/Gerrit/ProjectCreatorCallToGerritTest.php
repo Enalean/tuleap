@@ -28,7 +28,9 @@ require_once __DIR__ . '/../../../bootstrap.php';
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class ProjectCreatorCallToGerritTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox, TemporaryTestDirectory;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
+    use TemporaryTestDirectory;
 
     protected $contributors      = 'tuleap-localhost-mozilla/firefox-contributors';
     protected $integrators       = 'tuleap-localhost-mozilla/firefox-integrators';

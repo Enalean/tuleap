@@ -32,9 +32,10 @@ use UserDao;
 
 final class RestrictedUsersProjectCounterTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
-    public function testThereIsNoRestrictedUsersWhenRestrictedUsersAreDisabledAtTheInstanceLevel() : void
+    public function testThereIsNoRestrictedUsersWhenRestrictedUsersAreDisabledAtTheInstanceLevel(): void
     {
         $user_dao = Mockery::mock(UserDao::class);
         $counter  = new RestrictedUsersProjectCounter($user_dao);
@@ -46,7 +47,7 @@ final class RestrictedUsersProjectCounterTest extends TestCase
         $this->assertEquals(0, $counter->getNumberOfRestrictedUsersInProject($project));
     }
 
-    public function testTotalNumberOfRestrictedUsersInAProjectCanBeRetrieved() : void
+    public function testTotalNumberOfRestrictedUsersInAProjectCanBeRetrieved(): void
     {
         $user_dao = Mockery::mock(UserDao::class);
         $counter  = new RestrictedUsersProjectCounter($user_dao);

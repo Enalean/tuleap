@@ -161,11 +161,13 @@ class BaseLanguage
         if (is_dir($basedir)) {
             $fd = opendir($basedir);
             while (false !== ($file = readdir($fd))) {
-                if (is_dir($basedir . '/' . $file)
-                   && $file != '.'
-                   && $file != '..'
-                   && $file != '.svn'
-                   && $file != 'CVS') {
+                if (
+                    is_dir($basedir . '/' . $file)
+                    && $file != '.'
+                    && $file != '..'
+                    && $file != '.svn'
+                    && $file != 'CVS'
+                ) {
                     $location = $basedir . '/' . $file . '/site-content/' . $lang;
                     if (is_dir($location)) {
                         $this->loadAllTabFiles($location, $text_array);
@@ -186,11 +188,13 @@ class BaseLanguage
             while (false !== ($file = readdir($fd))) {
                 if (preg_match('/\.tab$/', $file)) {
                     $this->parseLanguageFile($basedir . '/' . $file, $text_array);
-                } elseif (is_dir($basedir . '/' . $file)
+                } elseif (
+                    is_dir($basedir . '/' . $file)
                        && $file != '.'
                        && $file != '..'
                        && $file != '.svn'
-                       && $file != 'CVS') {
+                       && $file != 'CVS'
+                ) {
                     $this->loadAllTabFiles($basedir . '/' . $file, $text_array);
                 }
             }
@@ -225,8 +229,10 @@ class BaseLanguage
     {
         $ary = @file($fname, 1);
         for ($i = 0; $i < sizeof($ary); $i++) {
-            if (substr($ary[$i], 0, 1) == '#' ||  //ignore comments...
-                strlen(trim($ary[$i])) == 0) {    //...or empty lines
+            if (
+                substr($ary[$i], 0, 1) == '#' ||  //ignore comments...
+                strlen(trim($ary[$i])) == 0
+            ) {    //...or empty lines
                 continue;
             }
 

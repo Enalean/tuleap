@@ -47,7 +47,7 @@ final class GateKeeperTest extends TestCase
      */
     private $gate_keeper;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->user        = new PFUser(array('user_id' => 112, 'language_id' => 'en'));
         $this->anonymous   = new PFUser(array('user_id' => 0, 'language_id' => 'en'));
@@ -55,12 +55,12 @@ final class GateKeeperTest extends TestCase
         $this->request     = \Mockery::spy(HTTPRequest::class);
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         unset($GLOBALS['DEBUG_MODE'], $_SERVER['HTTP_REFERER']);
     }
 
-    public function testItThrowsExceptionWhenTokenOrAccessKeyAuthenticationWithoutSSL() : void
+    public function testItThrowsExceptionWhenTokenOrAccessKeyAuthenticationWithoutSSL(): void
     {
         $this->request->shouldReceive('isSecure')->andReturns(false);
         $this->expectException(\Exception::class);
@@ -68,7 +68,7 @@ final class GateKeeperTest extends TestCase
         $this->gate_keeper->assertAccess($this->anonymous, $this->request);
     }
 
-    public function testItLetsPassWhenTokenOrAccessKeyAuthenticationWithSSL() : void
+    public function testItLetsPassWhenTokenOrAccessKeyAuthenticationWithSSL(): void
     {
         $this->request->shouldReceive('isSecure')->andReturns(true);
 
@@ -76,7 +76,7 @@ final class GateKeeperTest extends TestCase
         $this->assertTrue(true, 'No exception should be raised');
     }
 
-    public function testItLetsPassWhenTokenOrAccessKeyAuthenticationWithoutSSLButWithDebug() : void
+    public function testItLetsPassWhenTokenOrAccessKeyAuthenticationWithoutSSLButWithDebug(): void
     {
         $this->request->shouldReceive('isSecure')->andReturns(false);
         $GLOBALS['DEBUG_MODE'] = 1;
@@ -85,7 +85,7 @@ final class GateKeeperTest extends TestCase
         $this->assertTrue(true, 'No exception should be raised');
     }
 
-    public function testItLetPassHTTPWhenCookieAuthentication() : void
+    public function testItLetPassHTTPWhenCookieAuthentication(): void
     {
         $this->request->shouldReceive('isSecure')->andReturns(false);
 
@@ -93,7 +93,7 @@ final class GateKeeperTest extends TestCase
         $this->assertTrue(true, 'No exception should be raised');
     }
 
-    public function testItLetPassWhenReferMatchesHost() : void
+    public function testItLetPassWhenReferMatchesHost(): void
     {
         $_SERVER['HTTP_REFERER'] = 'http://example.com/bla';
         $this->request->shouldReceive('getServerUrl')->andReturns('http://example.com');
@@ -102,7 +102,7 @@ final class GateKeeperTest extends TestCase
         $this->assertTrue(true, 'No exception should be raised');
     }
 
-    public function testItLetPassWhenReferMatchesAnEquivalentHostWithCase() : void
+    public function testItLetPassWhenReferMatchesAnEquivalentHostWithCase(): void
     {
         $_SERVER['HTTP_REFERER'] = 'https://example.com/';
         $this->request->shouldReceive('getServerUrl')->andReturns('https://EXAMPLE.COM');
@@ -111,7 +111,7 @@ final class GateKeeperTest extends TestCase
         $this->assertTrue(true, 'No exception should be raised');
     }
 
-    public function testItLetPassWhenReferMatchesAnEquivalentIDNHost() : void
+    public function testItLetPassWhenReferMatchesAnEquivalentIDNHost(): void
     {
         $_SERVER['HTTP_REFERER'] = 'https://チューリップ.example.com/';
         $this->request->shouldReceive('getServerUrl')->andReturns('https://xn--7cke4dscza1i.example.com');
@@ -120,7 +120,7 @@ final class GateKeeperTest extends TestCase
         $this->assertTrue(true, 'No exception should be raised');
     }
 
-    public function testItLetPassWhenReferMatchesAnEquivalentIDNHostWithCase() : void
+    public function testItLetPassWhenReferMatchesAnEquivalentIDNHostWithCase(): void
     {
         $_SERVER['HTTP_REFERER'] = 'https://チューリップ.example.com/';
         $this->request->shouldReceive('getServerUrl')->andReturns('https://チューリップ.EXAMPLE.COM');
@@ -129,7 +129,7 @@ final class GateKeeperTest extends TestCase
         $this->assertTrue(true, 'No exception should be raised');
     }
 
-    public function testItThrowsExceptionWhenReferIsDiffentFromHost() : void
+    public function testItThrowsExceptionWhenReferIsDiffentFromHost(): void
     {
         $_SERVER['HTTP_REFERER'] = 'http://wannabe_attacker.com/bla';
         $this->request->shouldReceive('getServerUrl')->andReturns('http://example.com');
@@ -138,7 +138,7 @@ final class GateKeeperTest extends TestCase
         $this->gate_keeper->assertAccess($this->user, $this->request);
     }
 
-    public function testItThrowsExceptionWhenNoReferer() : void
+    public function testItThrowsExceptionWhenNoReferer(): void
     {
         unset($_SERVER['HTTP_REFERER']);
         $this->request->shouldReceive('getServerUrl')->andReturns('http://example.com');

@@ -84,7 +84,7 @@ final class ReviewerAutocompleterController extends DispatchablePSR15Compatible 
         $this->json_response_builder           = $json_response_builder;
     }
 
-    public function handle(ServerRequestInterface $request) : ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         \Tuleap\Project\ServiceInstrumentation::increment('pullrequest');
 

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tracker\Tests\Rest;
 
@@ -26,7 +26,7 @@ use Tuleap\Tracker\Tests\REST\TrackerBase;
 
 class SemanticTimeframeImportTest extends TrackerBase
 {
-    public function testImportSemanticTimeframe() : void
+    public function testImportSemanticTimeframe(): void
     {
         $response = $this->getResponse(
             $this->client->get('trackers/' . $this->tracker_with_timeframe_semantic_id)

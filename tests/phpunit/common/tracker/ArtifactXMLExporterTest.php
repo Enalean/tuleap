@@ -23,7 +23,8 @@ declare(strict_types=1);
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\ForgeConfigSandbox;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\ForgeConfigSandbox;
 
     /** @var ArtifactXMLExporter */
     private $exporter;
@@ -40,7 +41,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
     private $archive;
     private $logger;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->dao                = \Mockery::spy(\ArtifactXMLExporterDao::class);
@@ -174,7 +175,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         throw new Exception("$name not found");
     }
 
-    public function testItCreatesAnInitialChangesetATheTimeOfOpenDateWhenThereIsNoHistory() : void
+    public function testItCreatesAnInitialChangesetATheTimeOfOpenDateWhenThereIsNoHistory(): void
     {
         $this->exportTrackerDataFromFixture('artifact_without_any_history');
 
@@ -191,7 +192,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($this->expected_open_date, (string) $this->xml->artifact->changeset[0]->submitted_on);
     }
 
-    public function testItCreatesAnInitialChangesetBasedOnTheOldestValueKnownWhenThereIsHistory() : void
+    public function testItCreatesAnInitialChangesetBasedOnTheOldestValueKnownWhenThereIsHistory(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_full_history');
 
@@ -201,7 +202,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($this->expected_open_date, (string) $this->xml->artifact->changeset[0]->submitted_on);
     }
 
-    public function testItCreatesAChangesetForEachHistoryEntry() : void
+    public function testItCreatesAChangesetForEachHistoryEntry(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_full_history');
 
@@ -211,7 +212,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($this->toExpectedDate(3234567890), (string) $this->xml->artifact->changeset[2]->submitted_on);
     }
 
-    public function testItCreatesALastChangesetAtImportTimeWhenHistoryDiffersFromCurrentState() : void
+    public function testItCreatesALastChangesetAtImportTimeWhenHistoryDiffersFromCurrentState(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_half_history');
 
@@ -219,7 +220,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($this->toExpectedDate($_SERVER['REQUEST_TIME']), (string) $this->xml->artifact->changeset[3]->submitted_on);
     }
 
-    public function testItDoesntMessPreviousArtifactWhenTryingToUpdateInitialChangeset() : void
+    public function testItDoesntMessPreviousArtifactWhenTryingToUpdateInitialChangeset(): void
     {
         $this->exportTrackerDataFromFixture('two_artifacts');
 
@@ -245,7 +246,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('html', (string) $this->xml->artifact->changeset[2]->comments->comment->body['format']);
     }
 
-    public function testItHasACommentVersions() : void
+    public function testItHasACommentVersions(): void
     {
         $this->logger->shouldReceive('warn')->never();
         $this->exportTrackerDataFromFixture('artifact_with_comment_updates');
@@ -272,7 +273,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('html', (string) $comments->comment[2]->body['format']);
     }
 
-    public function testItCreatesAChangesetWithOneAttachment() : void
+    public function testItCreatesAChangesetWithOneAttachment(): void
     {
         $this->archive->shouldReceive('addEmptyDir')->with('data')->once();
 
@@ -292,7 +293,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('The screenshot', (string) $this->xml->artifact->file[0]->description);
     }
 
-    public function testItCreatesAChangesetWithTwoAttachmentsWithSameName() : void
+    public function testItCreatesAChangesetWithTwoAttachmentsWithSameName(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_two_attachments_same_name');
 
@@ -321,7 +322,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('The screenshot v2', (string) $this->xml->artifact->file[1]->description);
     }
 
-    public function testItCreatesAChangesetWithDeletedAttachments() : void
+    public function testItCreatesAChangesetWithDeletedAttachments(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_deleted_attachment');
 
@@ -337,7 +338,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('zzz.pdf', (string) $this->xml->artifact->file[0]->filename);
     }
 
-    public function testItCreatesAChangesetWithNullAttachments() : void
+    public function testItCreatesAChangesetWithNullAttachments(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_null_attachment');
 
@@ -347,7 +348,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function testItCreatesAnInitialChangesetATheTimeOfOpenDateWhenThereIsNoCCChanges() : void
+    public function testItCreatesAnInitialChangesetATheTimeOfOpenDateWhenThereIsNoCCChanges(): void
     {
         $this->exportTrackerDataFromFixture('artifact_cc_no_changes');
 
@@ -377,7 +378,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function testItCreatesTheTwoCCChangesChangeset() : void
+    public function testItCreatesTheTwoCCChangesChangeset(): void
     {
         $this->exportTrackerDataFromFixture('artifact_cc_add_new');
 
@@ -388,7 +389,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('jeanjean', (string) $this->xml->artifact->changeset[2]->field_change->value[1]);
     }
 
-    public function testItCreatesChangesWithDeletedCC() : void
+    public function testItCreatesChangesWithDeletedCC(): void
     {
         $this->exportTrackerDataFromFixture('artifact_cc_remove');
 
@@ -403,7 +404,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('john@doe.org', (string) $this->xml->artifact->changeset[1]->field_change->value);
     }
 
-    public function testItSetNoneAsOriginalSeverityValue() : void
+    public function testItSetNoneAsOriginalSeverityValue(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_severity_history');
 
@@ -413,7 +414,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('severity', (string) $this->xml->artifact->changeset[1]->field_change['field_name']);
     }
 
-    public function testItCreatesASingleChangesetWithSummaryAndAttachment() : void
+    public function testItCreatesASingleChangesetWithSummaryAndAttachment(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_summary_and_attachment');
         $this->assertCount(1, $this->xml->artifact->changeset);
@@ -443,7 +444,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function testItCreatesChangesetWithSummaryAndAttachmentChange() : void
+    public function testItCreatesChangesetWithSummaryAndAttachmentChange(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_summary_and_attachment_change');
 
@@ -467,7 +468,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertCount(1, $this->xml->artifact->file);
     }
 
-    public function testItCreatesChangesetWithAttachmentAndSummaryWhenHistoryDiffersFromCurrentState() : void
+    public function testItCreatesChangesetWithAttachmentAndSummaryWhenHistoryDiffersFromCurrentState(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_summary_attachment_half_history');
 
@@ -496,7 +497,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertCount(1, $this->xml->artifact->file);
     }
 
-    public function testItDoesNotExportPermsIfThereIsNoPerms() : void
+    public function testItDoesNotExportPermsIfThereIsNoPerms(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_full_history');
         foreach ($this->xml->artifact->xpath('changeset') as $changeset) {
@@ -504,7 +505,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function testItCreatesPermsOnArtifactAtTheVeryEnd() : void
+    public function testItCreatesPermsOnArtifactAtTheVeryEnd(): void
     {
         $permissions_are_exported = false;
         $this->exportTrackerDataFromFixture('artifact_with_full_history_with_perms_on_artifact');
@@ -527,7 +528,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($permissions_are_exported);
     }
 
-    public function testItTransformsNobodyIntoProjectAdministrators() : void
+    public function testItTransformsNobodyIntoProjectAdministrators(): void
     {
         $permissions_are_exported = false;
         $this->exportTrackerDataFromFixture('artifact_with_full_history_with_perms_on_artifact_with_nobody');
@@ -549,7 +550,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($permissions_are_exported);
     }
 
-    public function testItDoesNotExportPermissionsInFirstChangesets() : void
+    public function testItDoesNotExportPermissionsInFirstChangesets(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_full_history');
 
@@ -566,7 +567,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function testItCreatesAChangesetForEachHistoryEntryWithStringHistory() : void
+    public function testItCreatesAChangesetForEachHistoryEntryWithStringHistory(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_string_history');
 
@@ -583,7 +584,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($this->toExpectedDate(3234570000), (string) $this->xml->artifact->changeset[2]->submitted_on);
     }
 
-    public function testItCreatesAnInitialChangesetATheTimeOfOpenDateWhenThereIsNoHistoryWithString() : void
+    public function testItCreatesAnInitialChangesetATheTimeOfOpenDateWhenThereIsNoHistoryWithString(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_string_no_history');
 
@@ -609,7 +610,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function testItDoesntCreateAnExtraChangesetWhenThereIsAFloatToStringConversionWithTrailingZero() : void
+    public function testItDoesntCreateAnExtraChangesetWhenThereIsAFloatToStringConversionWithTrailingZero(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_float_history');
 
@@ -620,7 +621,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('2048', (string) $this->xml->artifact->changeset[2]->field_change->value);
     }
 
-    public function testItReturnsZeroIfNoNewValue() : void
+    public function testItReturnsZeroIfNoNewValue(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_float_history_with_no_value');
 
@@ -631,7 +632,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('0', (string) $this->xml->artifact->changeset[2]->field_change->value);
     }
 
-    public function testItConvertsHistoricalValuesWhenFieldTypeChanged() : void
+    public function testItConvertsHistoricalValuesWhenFieldTypeChanged(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_float_history_with_string_value');
         $this->assertCount(4, $this->xml->artifact->changeset);
@@ -641,7 +642,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('43.0', (string) $this->xml->artifact->changeset[3]->field_change->value);
     }
 
-    public function testItDoesntCreateAnExtraChangesetWhenThereIsAnIntToStringConversionWithTrailingZero() : void
+    public function testItDoesntCreateAnExtraChangesetWhenThereIsAnIntToStringConversionWithTrailingZero(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_integer_history');
 
@@ -652,7 +653,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('2048', (string) $this->xml->artifact->changeset[2]->field_change->value);
     }
 
-    public function testItReturnsZeroIfNoNewValueWithIntegerHistory() : void
+    public function testItReturnsZeroIfNoNewValueWithIntegerHistory(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_integer_history_with_no_value');
 
@@ -663,7 +664,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('0', (string) $this->xml->artifact->changeset[2]->field_change->value);
     }
 
-    public function testItConvertsHistoricalValuesWhenFieldTypeChangedWithIntegerAndStringHistory() : void
+    public function testItConvertsHistoricalValuesWhenFieldTypeChangedWithIntegerAndStringHistory(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_integer_history_with_string_value');
         $this->assertCount(5, $this->xml->artifact->changeset);
@@ -674,7 +675,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('43', (string) $this->xml->artifact->changeset[4]->field_change->value);
     }
 
-    public function testItCreatesAChangesetForEachHistoryEntryWithScalarHistory() : void
+    public function testItCreatesAChangesetForEachHistoryEntryWithScalarHistory(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_scalar_history');
 
@@ -710,7 +711,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($this->toExpectedDate(3234567500), (string) $this->xml->artifact->changeset[5]->submitted_on);
     }
 
-    public function testItCreatesAnInitialChangesetATheTimeOfOpenDateWhenThereIsScalarNoHistory() : void
+    public function testItCreatesAnInitialChangesetATheTimeOfOpenDateWhenThereIsScalarNoHistory(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_scalar_no_history');
 
@@ -731,7 +732,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($this->toExpectedDate(1234543210), (string) $date->value);
     }
 
-    public function testItCreatesALastChangesetAtImportTimeWhenHistoryDiffersFromCurrentStateWithScalarHalfHistory() : void
+    public function testItCreatesALastChangesetAtImportTimeWhenHistoryDiffersFromCurrentStateWithScalarHalfHistory(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_scalar_half_history');
 
@@ -752,7 +753,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($this->toExpectedDate(1234555555), (string) $date->value);
     }
 
-    public function testItCreatesTheChangesetWithValueStoredOnArtifactTable() : void
+    public function testItCreatesTheChangesetWithValueStoredOnArtifactTable(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_close_date_no_history');
 
@@ -764,7 +765,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($this->toExpectedDate(1234800000), (string) $this->xml->artifact->changeset[1]->submitted_on);
     }
 
-    public function testItCreatesTheChangesetWhenArtifactIsKeptReopen() : void
+    public function testItCreatesTheChangesetWhenArtifactIsKeptReopen(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_close_date_kept_reopen');
         $this->assertCount(3, $this->xml->artifact->changeset);
@@ -778,7 +779,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($this->toExpectedDate(1234900000), (string) $this->xml->artifact->changeset[2]->submitted_on);
     }
 
-    public function testItCreatesTheChangesetWhenOneOpenAndCloseArtifact() : void
+    public function testItCreatesTheChangesetWhenOneOpenAndCloseArtifact(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_close_date_history');
 
@@ -799,7 +800,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($this->toExpectedDate(1234840000), (string) $this->xml->artifact->changeset[4]->submitted_on);
     }
 
-    public function testItCreatesTheInitialChangesetWithRecordedValue() : void
+    public function testItCreatesTheInitialChangesetWithRecordedValue(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_status_no_history');
 
@@ -813,7 +814,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('Closed', $field_change->value);
     }
 
-    public function testItAlwaysTrustValueInArtifactTableEvenIfThereIsAValueInValueList() : void
+    public function testItAlwaysTrustValueInArtifactTableEvenIfThereIsAValueInValueList(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_status_history');
 
@@ -827,7 +828,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('Closed', $field_change->value);
     }
 
-    public function testItCreatesAChangesetForEachHistoryEntryWithStaticList() : void
+    public function testItCreatesAChangesetForEachHistoryEntryWithStaticList(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_static_list_history');
         $this->assertCount(3, $this->xml->artifact->changeset);
@@ -851,7 +852,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($this->toExpectedDate(3234570000), (string) $this->xml->artifact->changeset[2]->submitted_on);
     }
 
-    public function testItCreatesALastChangesetWhenHistoryWasNotRecorded() : void
+    public function testItCreatesALastChangesetWhenHistoryWasNotRecorded(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_static_list_half_history');
 
@@ -864,12 +865,12 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($this->toExpectedDate($_SERVER['REQUEST_TIME']), (string) $this->xml->artifact->changeset[2]->submitted_on);
     }
 
-    public function testItDoesntGetBlockedWhenThereIsNoDataStatusFieldValueList() : void
+    public function testItDoesntGetBlockedWhenThereIsNoDataStatusFieldValueList(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_no_value_list_for_status_field');
     }
 
-    public function testItCreatesAChangesetForEachHistoryEntryWithUserList() : void
+    public function testItCreatesAChangesetForEachHistoryEntryWithUserList(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_user_list_history');
 
@@ -892,7 +893,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
     /**
      * @see https://tuleap.net/plugins/tracker/?aid=6880&group_id=101
      */
-    public function testItDealsWithChangeOfDataTypeWhenSBisChangedIntoMSBThenChangedBackIntoSB() : void
+    public function testItDealsWithChangeOfDataTypeWhenSBisChangedIntoMSBThenChangedBackIntoSB(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_user_list_and_type_change');
 
@@ -904,7 +905,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('users', (string) $field_change['bind']);
     }
 
-    public function testItCreatesAChangesetForEachHistoryEntryInHappyPath() : void
+    public function testItCreatesAChangesetForEachHistoryEntryInHappyPath(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_static_multi_list_history');
         $this->assertCount(3, $this->xml->artifact->changeset);
@@ -930,7 +931,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($this->toExpectedDate(3234570000), (string) $this->xml->artifact->changeset[2]->submitted_on);
     }
 
-    public function testItCreatesAChangesetForEachHistoryEntryWithMultipleStaticMultiSelectBoxesInHappyPath() : void
+    public function testItCreatesAChangesetForEachHistoryEntryWithMultipleStaticMultiSelectBoxesInHappyPath(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_static_multiple_multi_list_history');
         $this->assertCount(5, $this->xml->artifact->changeset);
@@ -975,7 +976,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($this->toExpectedDate(3234590000), (string) $this->xml->artifact->changeset[4]->submitted_on);
     }
 
-    public function testItDoesNotCreateAChangesetForAnHistoryEntryIfItHasAZeroValue() : void
+    public function testItDoesNotCreateAChangesetForAnHistoryEntryIfItHasAZeroValue(): void
     {
         $this->logger->shouldReceive('warning')->once();
 
@@ -1003,7 +1004,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($this->toExpectedDate(3234580000), (string) $this->xml->artifact->changeset[2]->submitted_on);
     }
 
-    public function testItCreatesAChangesetForAnHistoryEntryIfItHasAZeroValueInASetOfValues() : void
+    public function testItCreatesAChangesetForAnHistoryEntryIfItHasAZeroValueInASetOfValues(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_static_multi_list_history_with_0_in_set_of_values');
         $this->assertCount(4, $this->xml->artifact->changeset);
@@ -1036,7 +1037,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($this->toExpectedDate(3234580000), (string) $this->xml->artifact->changeset[3]->submitted_on);
     }
 
-    public function testItDoesNotCreateAChangesetForAnHistoryEntryIfItHasALabelWithAComma() : void
+    public function testItDoesNotCreateAChangesetForAnHistoryEntryIfItHasALabelWithAComma(): void
     {
         $this->logger->shouldReceive('warning')->once();
 
@@ -1063,7 +1064,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($this->toExpectedDate(3234580000), (string) $this->xml->artifact->changeset[2]->submitted_on);
     }
 
-    public function testItCreatesAChangesetForEachHistoryEntryInHappyPathWithUserMultiList() : void
+    public function testItCreatesAChangesetForEachHistoryEntryInHappyPathWithUserMultiList(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_user_multi_list_history');
         $this->assertCount(3, $this->xml->artifact->changeset);
@@ -1089,7 +1090,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($this->toExpectedDate(3234570000), (string) $this->xml->artifact->changeset[2]->submitted_on);
     }
 
-    public function testItCreatesAChangesetForEachHistoryEntryWithMultipleUserMultiSelectBoxesInHappyPath() : void
+    public function testItCreatesAChangesetForEachHistoryEntryWithMultipleUserMultiSelectBoxesInHappyPath(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_user_multiple_multi_list_history');
         $this->assertCount(5, $this->xml->artifact->changeset);
@@ -1134,7 +1135,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($this->toExpectedDate(3234590000), (string) $this->xml->artifact->changeset[4]->submitted_on);
     }
 
-    public function testItDoesNotCreateAnExtraChangesetIfUsersAreNotInTheSameOrder() : void
+    public function testItDoesNotCreateAnExtraChangesetIfUsersAreNotInTheSameOrder(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_user_multi_list_history_with_user_in_wrong_order');
         $this->assertCount(4, $this->xml->artifact->changeset);
@@ -1166,7 +1167,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($this->toExpectedDate(3234580000), (string) $this->xml->artifact->changeset[3]->submitted_on);
     }
 
-    public function testItDoesNotCreateAnExtraChangesetIfUsersLastValueIsNone() : void
+    public function testItDoesNotCreateAnExtraChangesetIfUsersLastValueIsNone(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_user_multi_list_history_finishing_by_none');
         $this->assertCount(3, $this->xml->artifact->changeset);
@@ -1194,7 +1195,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
     /**
      * @see https://tuleap.net/plugins/tracker/?aid=6880&group_id=101
      */
-    public function testItDealsWithChangeOfDataTypeWhenMSBisChangedIntoInSBandThenChangedBackInMSB() : void
+    public function testItDealsWithChangeOfDataTypeWhenMSBisChangedIntoInSBandThenChangedBackInMSB(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_user_multi_list_history_with_data_change');
 
@@ -1207,7 +1208,7 @@ final class ArtifactXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('users', (string) $field_change['bind']);
     }
 
-    public function testItIgnoresMissingUser() : void
+    public function testItIgnoresMissingUser(): void
     {
         $this->exportTrackerDataFromFixture('artifact_with_user_multi_list_and_missing_user');
         $this->assertCount(1, $this->xml->artifact->changeset);

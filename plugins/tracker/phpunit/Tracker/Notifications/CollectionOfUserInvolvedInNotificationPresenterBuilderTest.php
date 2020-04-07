@@ -30,7 +30,7 @@ class CollectionOfUserInvolvedInNotificationPresenterBuilderTest extends TestCas
 {
     use MockeryPHPUnitIntegration;
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         \UserHelper::clearInstance();
     }

@@ -29,12 +29,12 @@ final class HTTPHeaderStack
      */
     private static $header_stack = [];
 
-    public static function clear() : void
+    public static function clear(): void
     {
         self::$header_stack = [];
     }
 
-    public static function push(HTTPHeader $http_header) : void
+    public static function push(HTTPHeader $http_header): void
     {
         self::$header_stack[] = $http_header;
     }
@@ -42,7 +42,7 @@ final class HTTPHeaderStack
     /**
      * @return HTTPHeader[]
      */
-    public static function getStack() : array
+    public static function getStack(): array
     {
         return self::$header_stack;
     }

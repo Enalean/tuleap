@@ -35,7 +35,9 @@ use Tuleap\Project\UserPermissionsDao;
 
 class AddProjectMemberTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
+    use ForgeConfigSandbox;
 
     /**
      * @var AddProjectMember

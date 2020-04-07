@@ -26,6 +26,7 @@ require_once __DIR__ . '/../bootstrap.php';
 class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var SystemEvent_GIT_GERRIT_MIGRATION
      */
@@ -53,7 +54,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends TestCase
      */
     private $dao;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -76,28 +77,28 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends TestCase
         $this->event->injectDependencies($this->dao, $factory, $this->server_factory, $this->logger, $this->project_creator, \Mockery::spy(\Git_GitRepositoryUrlManager::class), $this->user_manager, \Mockery::spy(\MailBuilder::class));
     }
 
-    public function testItSwitchesTheBackendToGerrit() : void
+    public function testItSwitchesTheBackendToGerrit(): void
     {
         $this->server_factory->shouldReceive('getServer')->with($this->repository)->andReturns($this->gerrit_server);
         $this->dao->shouldReceive('switchToGerrit')->with($this->repository_id, $this->remote_server_id)->once();
         $this->event->process();
     }
 
-    public function testItCallsDoneAndReturnsTrue() : void
+    public function testItCallsDoneAndReturnsTrue(): void
     {
         $this->server_factory->shouldReceive('getServer')->with($this->repository)->andReturns($this->gerrit_server);
         $this->event->shouldReceive('done')->once();
         $this->assertTrue($this->event->process());
     }
 
-    public function testItUpdatesGitolitePermissionsToForbidPushesByAnyoneButGerrit() : void
+    public function testItUpdatesGitolitePermissionsToForbidPushesByAnyoneButGerrit(): void
     {
         $this->server_factory->shouldReceive('getServer')->with($this->repository)->andReturns($this->gerrit_server);
         $this->gitolite_backend->shouldReceive('updateRepoConf')->once();
         $this->assertTrue($this->event->process());
     }
 
-    public function testItInformsAboutMigrationSuccess() : void
+    public function testItInformsAboutMigrationSuccess(): void
     {
         $this->server_factory->shouldReceive('getServer')->with($this->repository)->andReturns($this->gerrit_server);
         $remote_project = 'tuleap.net-Firefox/mobile';
@@ -108,7 +109,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends TestCase
         $this->event->process();
     }
 
-    public function testItInformsAboutAnyGenericFailure() : void
+    public function testItInformsAboutAnyGenericFailure(): void
     {
         $this->user_manager->shouldReceive('getUserById')->andReturns(
             new PFUser([
@@ -124,7 +125,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends TestCase
         $this->event->process();
     }
 
-    public function testItInformsAboutAnyGerritRelatedFailureByAddingAPrefix() : void
+    public function testItInformsAboutAnyGerritRelatedFailureByAddingAPrefix(): void
     {
         $this->user_manager->shouldReceive('getUserById')->andReturns(
             new PFUser([
@@ -140,7 +141,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends TestCase
         $this->event->process();
     }
 
-    public function testItInformsAboutAnyServerFactoryFailure() : void
+    public function testItInformsAboutAnyServerFactoryFailure(): void
     {
         $this->user_manager->shouldReceive('getUserById')->andReturns(
             new PFUser([
@@ -155,14 +156,14 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends TestCase
         $this->event->process();
     }
 
-    public function testItMarksTheEventAsWarningWhenTheRepoDoesNotExist() : void
+    public function testItMarksTheEventAsWarningWhenTheRepoDoesNotExist(): void
     {
         $this->event->setParameters("$this->deleted_repository_id::$this->remote_server_id");
         $this->event->shouldReceive('error')->with('Unable to find repository, perhaps it was deleted in the mean time?')->once();
         $this->event->process();
     }
 
-    public function testItCreatesAProject() : void
+    public function testItCreatesAProject(): void
     {
         $this->server_factory->shouldReceive('getServer')->with($this->repository)->andReturns($this->gerrit_server);
         //ssh gerrit gerrit create tuleap.net-Firefox/all/mobile

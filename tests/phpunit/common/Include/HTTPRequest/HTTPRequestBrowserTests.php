@@ -23,7 +23,10 @@ declare(strict_types=1);
 
 class HTTPRequestBrowserTests extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\GlobalLanguageMock, \Tuleap\ForgeConfigSandbox, \Tuleap\TemporaryTestDirectory;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\GlobalLanguageMock;
+    use \Tuleap\ForgeConfigSandbox;
+    use \Tuleap\TemporaryTestDirectory;
 
     /** @var HTTPRequest */
     private $request;

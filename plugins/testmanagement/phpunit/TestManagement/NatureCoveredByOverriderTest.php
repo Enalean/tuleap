@@ -46,7 +46,7 @@ class NatureCoveredByOverriderTest extends TestCase
 
     private $test_definition_tracker_id = 444;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

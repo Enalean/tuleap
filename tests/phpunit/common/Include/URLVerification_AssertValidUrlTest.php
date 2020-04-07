@@ -30,7 +30,7 @@ class URLVerification_AssertValidUrlTest extends TestCase
     private $request;
     private $url_verification;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -43,7 +43,7 @@ class URLVerification_AssertValidUrlTest extends TestCase
         $this->url_verification->shouldReceive('getCurrentUser')->andReturn(Mockery::spy(PFUser::class));
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         parent::tearDown();
 

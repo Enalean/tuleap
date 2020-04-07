@@ -74,7 +74,7 @@ class ProjectXMLImporterTest extends TestCase
      */
     private $sync_members;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->event_manager     = M::spy(EventManager::class);
         $this->project_manager   = M::spy(\ProjectManager::class);

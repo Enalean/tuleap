@@ -77,7 +77,7 @@ class Template
         static $loader;
 
         if (empty($loader)) {
-            $loader = new WikiPluginLoader;
+            $loader = new WikiPluginLoader();
         }
 
         $this->_print($loader->expandPI($pi, $this->_request, $this, $this->_basepage));

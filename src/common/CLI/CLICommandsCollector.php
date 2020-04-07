@@ -36,12 +36,12 @@ class CLICommandsCollector implements Dispatchable
     /**
      * @psalm-param callable():\Symfony\Component\Console\Command\Command $command_factory
      */
-    public function addCommand(string $command_name, callable $command_factory) : void
+    public function addCommand(string $command_name, callable $command_factory): void
     {
         $this->command_factories[$command_name] = $command_factory;
     }
 
-    public function loadCommands(Application $application) : void
+    public function loadCommands(Application $application): void
     {
         $factory_command_loader = new FactoryCommandLoader($this->command_factories);
         $application->setCommandLoader($factory_command_loader);

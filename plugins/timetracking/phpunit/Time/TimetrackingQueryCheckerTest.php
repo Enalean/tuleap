@@ -39,7 +39,7 @@ class TimetrackingQueryCheckerTest extends TestCase
      */
     private $checker;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         $this->checker = new TimetrackingQueryChecker();
     }

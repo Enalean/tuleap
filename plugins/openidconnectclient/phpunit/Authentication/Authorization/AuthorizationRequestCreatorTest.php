@@ -35,7 +35,7 @@ class AuthorizationRequestCreatorTest extends TestCase
 
     private $state_manager;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $state = \Mockery::mock(State::class);
         $state->shouldReceive('getSignedState')->andReturns(self::SIGNED_STATE);

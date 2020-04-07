@@ -19,7 +19,8 @@
  *
  */
 
-declare(strict_types=1, ticks=1);
+declare(strict_types=1);
+declare(ticks=1);
 
 namespace Tuleap\CLI\Command;
 

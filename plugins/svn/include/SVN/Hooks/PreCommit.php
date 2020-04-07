@@ -106,7 +106,8 @@ class PreCommit
 
     public function assertCommitToTagIsAllowed()
     {
-        if ($this->repositoryUsesImmutableTags()
+        if (
+            $this->repositoryUsesImmutableTags()
             && !$this->isCommitAllowed()
         ) {
             throw new SVN_CommitToTagDeniedException("Commit to tag is not allowed");

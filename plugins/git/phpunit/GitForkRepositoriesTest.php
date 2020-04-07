@@ -34,7 +34,9 @@ use Tuleap\GlobalResponseMock;
 
 final class GitForkRepositoriesTest extends \PHPUnit\Framework\TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalResponseMock, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalResponseMock;
+    use GlobalLanguageMock;
 
     protected function setUp(): void
     {
@@ -46,7 +48,7 @@ final class GitForkRepositoriesTest extends \PHPUnit\Framework\TestCase
         unset($GLOBALS['HTML'], $_SESSION);
     }
 
-    public function testRendersForkRepositoriesView() : void
+    public function testRendersForkRepositoriesView(): void
     {
         $request = new Codendi_Request(array('choose_destination' => 'personal'));
 
@@ -69,7 +71,7 @@ final class GitForkRepositoriesTest extends \PHPUnit\Framework\TestCase
         $git->_dispatchActionAndView('do_fork_repositories', null, null, null, $user);
     }
 
-    public function testExecutesForkRepositoriesActionWithAListOfRepos() : void
+    public function testExecutesForkRepositoriesActionWithAListOfRepos(): void
     {
         $groupId = 101;
         $repo = new GitRepository();
@@ -103,7 +105,7 @@ final class GitForkRepositoriesTest extends \PHPUnit\Framework\TestCase
         $git->_doDispatchForkRepositories($request, $user);
     }
 
-    public function testItUsesTheSynchronizerTokenToAvoidDuplicateForks() : void
+    public function testItUsesTheSynchronizerTokenToAvoidDuplicateForks(): void
     {
         $git       = \Mockery::mock(\Git::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $exception = new \Exception();

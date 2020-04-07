@@ -99,7 +99,7 @@ class GroupSyncAdminEmailNotificationsManager implements GroupSyncNotificationsM
         return $users;
     }
 
-    private function getUserFromId($id) : ?\PFUser
+    private function getUserFromId($id): ?\PFUser
     {
         $user_lr = $this->ldap_user_manager->getLdapFromUserId($id);
         if ($user_lr && (($user = $this->ldap_user_manager->getUserFromLdap($user_lr)) !== false)) {

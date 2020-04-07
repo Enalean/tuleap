@@ -357,8 +357,10 @@ class GTextTableCell
 
         // We don't stroke the grid lines that are on the edge of the table since this is
         // the place of the border.
-        if (( ($this->iCol > 0 && $idx == 0) || ($this->iCol + $this->iColSpan - 1 < $this->iTable->iSize[1] - 1 && $idx == 3) )
-        && $this->iGridWeight[$idx] > 0) {
+        if (
+            ( ($this->iCol > 0 && $idx == 0) || ($this->iCol + $this->iColSpan - 1 < $this->iTable->iSize[1] - 1 && $idx == 3) )
+            && $this->iGridWeight[$idx] > 0
+        ) {
             $x = $aDir == 1 ? $aX : $aX + $aWidth - 1;
             $y = $aY + $aHeight - 1;
             $aImg->SetColor($this->iGridColor[$idx]);
@@ -401,8 +403,10 @@ class GTextTableCell
 
         // We don't stroke the grid lines that are on the edge of the table since this is
         // the place of the border.
-        if (( ($this->iRow > 0 && $idx == 1) || ($this->iRow + $this->iRowSpan - 1 < $this->iTable->iSize[0] - 1 && $idx == 2) )
-        && $this->iGridWeight[$idx] > 0) {
+        if (
+            ( ($this->iRow > 0 && $idx == 1) || ($this->iRow + $this->iRowSpan - 1 < $this->iTable->iSize[0] - 1 && $idx == 2) )
+            && $this->iGridWeight[$idx] > 0
+        ) {
             $y = $aDir == 1 ? $aY : $aY + $aHeight - 1;
             $x = $aX + $aWidth - 1;
             $aImg->SetColor($this->iGridColor[$idx]);

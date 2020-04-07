@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1;
 
@@ -106,7 +106,7 @@ class DocmanWikiResource extends AuthenticatedResource
      * @throws RestException 404
      */
 
-    public function patch(int $id, DocmanPATCHItemRepresentation $representation) : void
+    public function patch(int $id, DocmanPATCHItemRepresentation $representation): void
     {
         $this->checkAccess();
         $this->setHeaders();
@@ -150,7 +150,7 @@ class DocmanWikiResource extends AuthenticatedResource
      * @throws I18NRestException 403
      * @throws I18NRestException 404
      */
-    public function delete(int $id, bool $delete_associated_wiki_page = false) : void
+    public function delete(int $id, bool $delete_associated_wiki_page = false): void
     {
         $this->checkAccess();
         $this->setHeaders();
@@ -373,7 +373,7 @@ class DocmanWikiResource extends AuthenticatedResource
     /**
      * @url OPTIONS {id}/permissions
      */
-    public function optionsPermissions(int $id) : void
+    public function optionsPermissions(int $id): void
     {
         Header::allowOptionsPost();
     }
@@ -391,7 +391,7 @@ class DocmanWikiResource extends AuthenticatedResource
      *
      * @throws RestException 400
      */
-    public function putPermissions(int $id, DocmanItemPermissionsForGroupsSetRepresentation $representation) : void
+    public function putPermissions(int $id, DocmanItemPermissionsForGroupsSetRepresentation $representation): void
     {
         $this->checkAccess();
         $this->optionsPermissions($id);

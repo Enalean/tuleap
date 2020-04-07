@@ -35,17 +35,17 @@ class HudsonJobBuilderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $GLOBALS['Language'] = \Mockery::spy(\BaseLanguage::class);
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         unset($GLOBALS['Language']);
     }
 
-    public function testExceptionIsRaisedWhenThePageCannotBeFound() : void
+    public function testExceptionIsRaisedWhenThePageCannotBeFound(): void
     {
         $minimal_job = \Mockery::mock(MinimalHudsonJob::class);
         $minimal_job->shouldReceive('getName');

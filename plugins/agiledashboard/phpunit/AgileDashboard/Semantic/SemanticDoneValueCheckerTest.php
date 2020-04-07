@@ -38,7 +38,7 @@ class SemanticDoneValueCheckerTest extends TestCase
      */
     private $value_checker;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

@@ -71,7 +71,7 @@ class NodeJSClient implements Client
      *
      * @param $message (MessageDataPresenter) : Message to send to Node.js server
      */
-    public function sendMessage(MessageDataPresenter $message) : void
+    public function sendMessage(MessageDataPresenter $message): void
     {
         if ($this->url === null) {
             return;
@@ -103,7 +103,7 @@ class NodeJSClient implements Client
         }
     }
 
-    private function getNodeJsServerAddress() : string
+    private function getNodeJsServerAddress(): string
     {
         return ForgeConfig::get('nodejs_server_int') !== '' ?
             ForgeConfig::get('nodejs_server_int') : ForgeConfig::get('nodejs_server');

@@ -42,7 +42,7 @@ final class MiddlewareDispatcher implements RequestHandlerInterface
         $this->middlewares = $middleware_stack;
     }
 
-    public function handle(ServerRequestInterface $request) : ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $middleware = current($this->middlewares);
         if ($middleware === false) {

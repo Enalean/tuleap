@@ -39,8 +39,10 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
 
     //We process the request
     foreach ($permissions_wanted_by_user as $field_id => $ugroups_permissions) {
-        if (is_numeric($field_id)
-            && isset($stored_ugroups_permissions[$field_id])) {
+        if (
+            is_numeric($field_id)
+            && isset($stored_ugroups_permissions[$field_id])
+        ) {
             $the_field_can_be_submitted = $stored_ugroups_permissions[$field_id]['field']['field']->isSubmitable();
             $the_field_can_be_updated   = $stored_ugroups_permissions[$field_id]['field']['field']->isUpdateable();
 
@@ -94,10 +96,12 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
                             $add_submit_to_history = true;
                             $anonymous_is_already_set_to_submit = true;
                         } else {
-                            if (isset($stored_ugroup_permissions['permissions']['PLUGIN_TRACKER_FIELD_SUBMIT'])
+                            if (
+                                isset($stored_ugroup_permissions['permissions']['PLUGIN_TRACKER_FIELD_SUBMIT'])
                                 && (!isset($ugroups_permissions[$stored_ugroup_id])
                                     || !isset($ugroups_permissions[$stored_ugroup_id]['submit'])
-                                    || $ugroups_permissions[$stored_ugroup_id]['submit'] !== "on")) {
+                                    || $ugroups_permissions[$stored_ugroup_id]['submit'] !== "on")
+                            ) {
                                 $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_anon_submit', array($stored_ugroup_permissions['ugroup']['name'], $anonymous_name)));
                                 permission_clear_ugroup_object($group_id, 'PLUGIN_TRACKER_FIELD_SUBMIT', $stored_ugroup_id, $fake_object_id);
                                 $add_submit_to_history = true;
@@ -120,9 +124,11 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
                             $add_update_to_history = true;
                             $anonymous_is_already_set_to_update = true;
                         } else {
-                            if (!isset($ugroups_permissions[$stored_ugroup_id])
+                            if (
+                                !isset($ugroups_permissions[$stored_ugroup_id])
                                 || !isset($ugroups_permissions[$stored_ugroup_id]['others'])
-                                || $ugroups_permissions[$stored_ugroup_id]['others'] !== "100") {
+                                || $ugroups_permissions[$stored_ugroup_id]['others'] !== "100"
+                            ) {
                                 if (isset($stored_ugroup_permissions['permissions']['PLUGIN_TRACKER_FIELD_UPDATE'])) {
                                     $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_anon_update', array($stored_ugroup_permissions['ugroup']['name'], $anonymous_name)));
                                     permission_clear_ugroup_object($group_id, 'PLUGIN_TRACKER_FIELD_UPDATE', $stored_ugroup_id, $fake_object_id);
@@ -152,9 +158,11 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
                             $add_read_to_history = true;
                             $anonymous_is_already_set_to_read = true;
                         } else {
-                            if (!isset($ugroups_permissions[$stored_ugroup_id])
+                            if (
+                                !isset($ugroups_permissions[$stored_ugroup_id])
                                 || !isset($ugroups_permissions[$stored_ugroup_id]['others'])
-                                || $ugroups_permissions[$stored_ugroup_id]['others'] !== "100") {
+                                || $ugroups_permissions[$stored_ugroup_id]['others'] !== "100"
+                            ) {
                                 if (isset($stored_ugroup_permissions['permissions']['PLUGIN_TRACKER_FIELD_READ'])) {
                                     $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_anon_read', array($stored_ugroup_permissions['ugroup']['name'], $anonymous_name)));
                                     permission_clear_ugroup_object($group_id, 'PLUGIN_TRACKER_FIELD_READ', $stored_ugroup_id, $fake_object_id);
@@ -191,10 +199,12 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
                                 $add_submit_to_history = true;
                                 $registered_is_already_set_to_submit = true;
                             } elseif ($stored_ugroup_id !== $GLOBALS['UGROUP_ANONYMOUS']) {
-                                if (isset($stored_ugroup_permissions['permissions']['PLUGIN_TRACKER_FIELD_SUBMIT'])
+                                if (
+                                    isset($stored_ugroup_permissions['permissions']['PLUGIN_TRACKER_FIELD_SUBMIT'])
                                     && (!isset($ugroups_permissions[$stored_ugroup_id])
                                         || !isset($ugroups_permissions[$stored_ugroup_id]['submit'])
-                                        || $ugroups_permissions[$stored_ugroup_id]['submit'] !== "on")) {
+                                        || $ugroups_permissions[$stored_ugroup_id]['submit'] !== "on")
+                                ) {
                                     $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_regis_submit', array($stored_ugroup_permissions['ugroup']['name'], $registered_name)));
                                     permission_clear_ugroup_object($group_id, 'PLUGIN_TRACKER_FIELD_SUBMIT', $stored_ugroup_id, $fake_object_id);
                                     $add_submit_to_history = true;
@@ -223,9 +233,11 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
                                 $add_update_to_history = true;
                                 $registered_is_already_set_to_update = true;
                             } elseif ($stored_ugroup_id !== $GLOBALS['UGROUP_ANONYMOUS']) { //ugroups other than anonymous
-                                if (!isset($ugroups_permissions[$stored_ugroup_id])
-                                || !isset($ugroups_permissions[$stored_ugroup_id]['others'])
-                                || $ugroups_permissions[$stored_ugroup_id]['others'] !== "100") {
+                                if (
+                                    !isset($ugroups_permissions[$stored_ugroup_id])
+                                    || !isset($ugroups_permissions[$stored_ugroup_id]['others'])
+                                    || $ugroups_permissions[$stored_ugroup_id]['others'] !== "100"
+                                ) {
                                     if (isset($stored_ugroup_permissions['permissions']['PLUGIN_TRACKER_FIELD_UPDATE'])) {
                                         $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_regis_update', array($stored_ugroup_permissions['ugroup']['name'], $registered_name)));
                                         permission_clear_ugroup_object($group_id, 'PLUGIN_TRACKER_FIELD_UPDATE', $stored_ugroup_id, $fake_object_id);
@@ -261,9 +273,11 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
                                 $add_read_to_history = true;
                                 $registered_is_already_set_to_read = true;
                             } elseif ($stored_ugroup_id !== $GLOBALS['UGROUP_ANONYMOUS']) { //ugroups other than anonymous
-                                if (!isset($ugroups_permissions[$stored_ugroup_id])
-                                || !isset($ugroups_permissions[$stored_ugroup_id]['others'])
-                                || $ugroups_permissions[$stored_ugroup_id]['others'] !== "100") {
+                                if (
+                                    !isset($ugroups_permissions[$stored_ugroup_id])
+                                    || !isset($ugroups_permissions[$stored_ugroup_id]['others'])
+                                    || $ugroups_permissions[$stored_ugroup_id]['others'] !== "100"
+                                ) {
                                     if (isset($stored_ugroup_permissions['permissions']['PLUGIN_TRACKER_FIELD_READ'])) {
                                         $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('tracker_admin_permissions', 'ignore_g_regis_read', array($stored_ugroup_permissions['ugroup']['name'], $registered_name)));
                                         permission_clear_ugroup_object($group_id, 'PLUGIN_TRACKER_FIELD_READ', $stored_ugroup_id, $fake_object_id);
@@ -293,9 +307,11 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
 
                     //SUBMIT Permission
                     //-----------------
-                    if ($the_field_can_be_submitted && !isset($stored_ugroups_permissions[$field_id]['ugroups'][$ugroup_id]['permissions']['PLUGIN_TRACKER_FIELD_SUBMIT'])
+                    if (
+                        $the_field_can_be_submitted && !isset($stored_ugroups_permissions[$field_id]['ugroups'][$ugroup_id]['permissions']['PLUGIN_TRACKER_FIELD_SUBMIT'])
                         && isset($ugroup_permissions['submit'])
-                        && $ugroup_permissions['submit'] === "on") {
+                        && $ugroup_permissions['submit'] === "on"
+                    ) {
                         //if the ugroup is not anonymous and not registered, we have to:
                         // check consistency with current permissions for anonymous users
                         // and current permissions for registered users
@@ -307,9 +323,11 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
                             permission_add_ugroup($group_id, 'PLUGIN_TRACKER_FIELD_SUBMIT', $fake_object_id, $ugroup_id);
                             $add_submit_to_history = true;
                         }
-                    } elseif (isset($stored_ugroups_permissions[$field_id]['ugroups'][$ugroup_id]['permissions']['PLUGIN_TRACKER_FIELD_SUBMIT'])
+                    } elseif (
+                        isset($stored_ugroups_permissions[$field_id]['ugroups'][$ugroup_id]['permissions']['PLUGIN_TRACKER_FIELD_SUBMIT'])
                               && isset($ugroup_permissions['submit'])
-                              && $ugroup_permissions['submit'] !== "on") {
+                              && $ugroup_permissions['submit'] !== "on"
+                    ) {
                         //If we don't have already clear the permissions
                         if (!$user_set_anonymous_to_submit && !$user_set_registered_to_submit) {
                             permission_clear_ugroup_object($group_id, 'PLUGIN_TRACKER_FIELD_SUBMIT', $ugroup_id, $fake_object_id);
@@ -319,9 +337,11 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
 
                     //UPDATE Permission
                     //-----------------
-                    if ($the_field_can_be_updated && !isset($stored_ugroups_permissions[$field_id]['ugroups'][$ugroup_id]['permissions']['PLUGIN_TRACKER_FIELD_UPDATE'])
+                    if (
+                        $the_field_can_be_updated && !isset($stored_ugroups_permissions[$field_id]['ugroups'][$ugroup_id]['permissions']['PLUGIN_TRACKER_FIELD_UPDATE'])
                         && isset($ugroup_permissions['others'])
-                        && $ugroup_permissions['others'] === "1") {
+                        && $ugroup_permissions['others'] === "1"
+                    ) {
                         //if the ugroup is not anonymous and not registered, we have to:
                         // check consistency with current permissions for anonymous users
                         // and current permissions for registered users
@@ -333,9 +353,11 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
                             permission_add_ugroup($group_id, 'PLUGIN_TRACKER_FIELD_UPDATE', $fake_object_id, $ugroup_id);
                             $add_update_to_history = true;
                         }
-                    } elseif (isset($stored_ugroups_permissions[$field_id]['ugroups'][$ugroup_id]['permissions']['PLUGIN_TRACKER_FIELD_UPDATE'])
+                    } elseif (
+                        isset($stored_ugroups_permissions[$field_id]['ugroups'][$ugroup_id]['permissions']['PLUGIN_TRACKER_FIELD_UPDATE'])
                               && isset($ugroup_permissions['others'])
-                              && $ugroup_permissions['others'] !== "1") {
+                              && $ugroup_permissions['others'] !== "1"
+                    ) {
                         //If we don't have already clear the permissions
                         if (!$user_set_anonymous_to_update && !$user_set_registered_to_update) {
                             permission_clear_ugroup_object($group_id, 'PLUGIN_TRACKER_FIELD_UPDATE', $ugroup_id, $fake_object_id);
@@ -345,9 +367,11 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
 
                     //READ Permission
                     //-----------------
-                    if (!isset($stored_ugroups_permissions[$field_id]['ugroups'][$ugroup_id]['permissions']['PLUGIN_TRACKER_FIELD_READ'])
+                    if (
+                        !isset($stored_ugroups_permissions[$field_id]['ugroups'][$ugroup_id]['permissions']['PLUGIN_TRACKER_FIELD_READ'])
                         && isset($ugroup_permissions['others'])
-                        && $ugroup_permissions['others'] === "0") {
+                        && $ugroup_permissions['others'] === "0"
+                    ) {
                         //if the ugroup is not anonymous and not registered, we have to:
                         // check consistency with current permissions for anonymous users
                         // and current permissions for registered users
@@ -363,9 +387,11 @@ function plugin_tracker_permission_process_update_fields_permissions($group_id, 
                             permission_add_ugroup($group_id, 'PLUGIN_TRACKER_FIELD_READ', $fake_object_id, $ugroup_id);
                             $add_read_to_history = true;
                         }
-                    } elseif (isset($stored_ugroups_permissions[$field_id]['ugroups'][$ugroup_id]['permissions']['PLUGIN_TRACKER_FIELD_READ'])
+                    } elseif (
+                        isset($stored_ugroups_permissions[$field_id]['ugroups'][$ugroup_id]['permissions']['PLUGIN_TRACKER_FIELD_READ'])
                               && isset($ugroup_permissions['others'])
-                              && $ugroup_permissions['others'] !== "0") {
+                              && $ugroup_permissions['others'] !== "0"
+                    ) {
                         //If we don't have already clear the permissions
                         if (!$user_set_anonymous_to_read && !$user_set_registered_to_read) {
                             permission_clear_ugroup_object($group_id, 'PLUGIN_TRACKER_FIELD_READ', $ugroup_id, $fake_object_id);
@@ -421,9 +447,11 @@ function plugin_tracker_permission_get_field_tracker_ugroups_permissions($group_
 {
     $tracker_permissions = plugin_tracker_permission_get_tracker_ugroups_permissions($group_id, $atid);
     //Anonymous can access ?
-    if (isset($tracker_permissions[$GLOBALS['UGROUP_ANONYMOUS']])
+    if (
+        isset($tracker_permissions[$GLOBALS['UGROUP_ANONYMOUS']])
         && isset($tracker_permissions[$GLOBALS['UGROUP_ANONYMOUS']]['permissions'])
-        && count($tracker_permissions[$GLOBALS['UGROUP_ANONYMOUS']]['permissions']) > 0) {
+        && count($tracker_permissions[$GLOBALS['UGROUP_ANONYMOUS']]['permissions']) > 0
+    ) {
         //Do nothing
     } else {
         //We remove the id
@@ -432,9 +460,11 @@ function plugin_tracker_permission_get_field_tracker_ugroups_permissions($group_
         }
 
         //Registered can access ?
-        if (isset($tracker_permissions[$GLOBALS['UGROUP_REGISTERED']])
+        if (
+            isset($tracker_permissions[$GLOBALS['UGROUP_REGISTERED']])
             && isset($tracker_permissions[$GLOBALS['UGROUP_REGISTERED']]['permissions'])
-            && count($tracker_permissions[$GLOBALS['UGROUP_REGISTERED']]['permissions']) > 0) {
+            && count($tracker_permissions[$GLOBALS['UGROUP_REGISTERED']]['permissions']) > 0
+        ) {
             //Do nothing
         } else {
             //We remove the id

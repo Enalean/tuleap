@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Docman\Upload\Version;
 
@@ -41,7 +41,7 @@ class DocumentOnGoingVersionToUploadDAO extends DataAccessObject
         string $title,
         string $description,
         ?string $approval_table_action
-    ) : int {
+    ): int {
         $version_id = $this->getDB()->insertReturnId(
             'plugin_docman_new_version_upload',
             [
@@ -63,7 +63,7 @@ class DocumentOnGoingVersionToUploadDAO extends DataAccessObject
         return (int) $version_id;
     }
 
-    public function searchDocumentVersionOngoingUploadByItemIdAndExpirationDate(int $id, int $timestamp) : array
+    public function searchDocumentVersionOngoingUploadByItemIdAndExpirationDate(int $id, int $timestamp): array
     {
         $sql = 'SELECT *
                 FROM plugin_docman_new_version_upload
@@ -72,7 +72,7 @@ class DocumentOnGoingVersionToUploadDAO extends DataAccessObject
         return $this->getDB()->run($sql, $id, $timestamp);
     }
 
-    public function searchDocumentVersionOngoingUploadByVersionIDUserIDAndExpirationDate(int $id, int $user_id, int $timestamp) : ?array
+    public function searchDocumentVersionOngoingUploadByVersionIDUserIDAndExpirationDate(int $id, int $user_id, int $timestamp): ?array
     {
         $sql = 'SELECT *
                 FROM plugin_docman_new_version_upload
@@ -82,7 +82,7 @@ class DocumentOnGoingVersionToUploadDAO extends DataAccessObject
     }
 
 
-    public function searchDocumentVersionOngoingUploadForAnotherUserByItemIdAndExpirationDate(int $id, int $user_id, int $timestamp) : array
+    public function searchDocumentVersionOngoingUploadForAnotherUserByItemIdAndExpirationDate(int $id, int $user_id, int $timestamp): array
     {
         $sql = 'SELECT *
                 FROM plugin_docman_new_version_upload
@@ -100,7 +100,7 @@ class DocumentOnGoingVersionToUploadDAO extends DataAccessObject
         $this->getDB()->run($sql, $version_id);
     }
 
-    public function searchDocumentVersionOngoingUploadByUploadID(int $version_id) : array
+    public function searchDocumentVersionOngoingUploadByUploadID(int $version_id): array
     {
         $sql = 'SELECT *
                 FROM plugin_docman_new_version_upload

@@ -24,5 +24,5 @@ namespace Tuleap\Tus;
 
 interface TusFinisherDataStore
 {
-    public function finishUpload(TusFileInformation $file_information) : void;
+    public function finishUpload(TusFileInformation $file_information): void;
 }

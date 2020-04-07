@@ -52,7 +52,7 @@ class FrontRouterTest extends TestCase
      */
     private $request_instrumentation;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -85,7 +85,7 @@ class FrontRouterTest extends TestCase
         );
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         unset($_SERVER['REQUEST_METHOD']);
         unset($_SERVER['REQUEST_URI']);
@@ -95,7 +95,7 @@ class FrontRouterTest extends TestCase
         parent::tearDown();
     }
 
-    public function testRouteNotFound() : void
+    public function testRouteNotFound(): void
     {
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI']    = '/stuff';
@@ -107,7 +107,7 @@ class FrontRouterTest extends TestCase
         $this->router->route($this->request, $this->layout);
     }
 
-    public function testItDispatchRequestWithoutAuthz() : void
+    public function testItDispatchRequestWithoutAuthz(): void
     {
         $handler = \Mockery::mock(DispatchableWithRequestNoAuthz::class);
 
@@ -129,7 +129,7 @@ class FrontRouterTest extends TestCase
         $this->router->route($this->request, $this->layout);
     }
 
-    public function testItChecksWithURLVerificationWhenDispatchingWithRequest() : void
+    public function testItChecksWithURLVerificationWhenDispatchingWithRequest(): void
     {
         $handler = \Mockery::mock(DispatchableWithRequest::class);
 
@@ -153,7 +153,7 @@ class FrontRouterTest extends TestCase
         $this->router->route($this->request, $this->layout);
     }
 
-    public function testItRaisesAnErrorWhenHandlerIsUnknown() : void
+    public function testItRaisesAnErrorWhenHandlerIsUnknown(): void
     {
         $handler = \Mockery::mock(DispatchableWithRequest::class);
 
@@ -185,7 +185,7 @@ class FrontRouterTest extends TestCase
         $this->router->route($this->request, $this->layout);
     }
 
-    public function testItDispatchWithProject() : void
+    public function testItDispatchWithProject(): void
     {
         $handler = \Mockery::mock(DispatchableWithRequest::class . ', ' . DispatchableWithProject::class);
         $handler->shouldReceive('process')->with($this->request, $this->layout, [])->once();
@@ -211,7 +211,7 @@ class FrontRouterTest extends TestCase
         $this->router->route($this->request, $this->layout);
     }
 
-    public function testItProvidesABurningParrotThemeWhenControllerAskForIt() : void
+    public function testItProvidesABurningParrotThemeWhenControllerAskForIt(): void
     {
         $handler = \Mockery::mock(DispatchableWithRequest::class . ', ' . DispatchableWithBurningParrot::class);
 
@@ -235,14 +235,14 @@ class FrontRouterTest extends TestCase
         $this->router->route($this->request);
     }
 
-    public function testItInstantiatePluginsWhenRoutingAPluginRoute() : void
+    public function testItInstantiatePluginsWhenRoutingAPluginRoute(): void
     {
         $controller = Mockery::mock(DispatchableWithRequest::class);
         $controller->shouldReceive('process')->once();
         $this->request_instrumentation->shouldReceive('increment')->once();
 
         $this->plugin_manager->shouldReceive('getPluginByName')->with('foobar')->andReturns(
-            new class($controller) {
+            new class ($controller) {
 
                 private $controller;
 
@@ -273,7 +273,7 @@ class FrontRouterTest extends TestCase
         $this->router->route($this->request);
     }
 
-    public function testItRoutesToRouteCollectorWithParams() : void
+    public function testItRoutesToRouteCollectorWithParams(): void
     {
         $this->request_instrumentation->shouldReceive('increment')->once();
         $url_verification = Mockery::mock(\URLVerification::class);
@@ -301,7 +301,7 @@ class FrontRouterTest extends TestCase
      *           [101]
      * @runInSeparateProcess
      */
-    public function testHTTPStatusCodeIsCorrectlyRecorded(int $status_code) : void
+    public function testHTTPStatusCodeIsCorrectlyRecorded(int $status_code): void
     {
         $handler = \Mockery::mock(DispatchableWithRequestNoAuthz::class);
         $handler->shouldReceive('process');

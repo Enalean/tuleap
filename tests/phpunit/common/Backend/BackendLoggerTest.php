@@ -29,7 +29,8 @@ use Tuleap\TemporaryTestDirectory;
 
 class BackendLoggerTest extends TestCase
 {
-    use ForgeConfigSandbox, TemporaryTestDirectory;
+    use ForgeConfigSandbox;
+    use TemporaryTestDirectory;
 
     private $log_file;
     /** @var BackendLogger */

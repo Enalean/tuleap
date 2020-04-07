@@ -47,7 +47,7 @@ class AssetsIncluderTest extends TestCase
     /** @var CssAssetCollection */
     private $css_asset_collection;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -66,7 +66,7 @@ class AssetsIncluderTest extends TestCase
         $this->includer = new AssetsIncluder($this->layout, $include_assets, $this->css_asset_collection);
     }
 
-    public function testItAlwaysIncludesDashboardJsAndCss() : void
+    public function testItAlwaysIncludesDashboardJsAndCss(): void
     {
         $this->layout->shouldReceive('includeFooterJavascriptFile')->once()->with('dashboards/dashboard.js');
         $this->layout->shouldReceive('addCssAssetCollection')->once()->with($this->css_asset_collection);
@@ -74,7 +74,7 @@ class AssetsIncluderTest extends TestCase
         $this->includer->includeAssets([]);
     }
 
-    public function testItDoesNotIncludeDependenciesIfThereIsNoDashboard() : void
+    public function testItDoesNotIncludeDependenciesIfThereIsNoDashboard(): void
     {
         $this->expectDependenciesScriptsWillNOTBeIncluded();
         $this->layout->shouldReceive('addCssAssetCollection')->once()->with($this->css_asset_collection);
@@ -82,7 +82,7 @@ class AssetsIncluderTest extends TestCase
         $this->includer->includeAssets([]);
     }
 
-    public function testItDoesNotIncludeDependenciesIfCurrentDashboardDoesNotHaveAnyWidgets() : void
+    public function testItDoesNotIncludeDependenciesIfCurrentDashboardDoesNotHaveAnyWidgets(): void
     {
         $empty_dashboard               = Mockery::mock(ProjectDashboardPresenter::class);
         $empty_dashboard->is_active    = true;
@@ -94,7 +94,7 @@ class AssetsIncluderTest extends TestCase
         $this->includer->includeAssets([$empty_dashboard]);
     }
 
-    public function testItDoesNotIncludeDependenciesIfItIsNotNeeded() : void
+    public function testItDoesNotIncludeDependenciesIfItIsNotNeeded(): void
     {
         $dashboard = $this->getDashboardWithWidgets(['widget_without_dependencies']);
 
@@ -104,7 +104,7 @@ class AssetsIncluderTest extends TestCase
         $this->includer->includeAssets([$dashboard]);
     }
 
-    public function testItIncludesDependenciesWidgetsWithoutDuplicationWhenRequested() : void
+    public function testItIncludesDependenciesWidgetsWithoutDuplicationWhenRequested(): void
     {
         $dashboard = $this->getDashboardWithWidgets(['first_widget', 'second_widget']);
 
@@ -122,7 +122,7 @@ class AssetsIncluderTest extends TestCase
         $this->includer->includeAssets([$dashboard]);
     }
 
-    private function expectDependenciesScriptsWillNOTBeIncluded() : void
+    private function expectDependenciesScriptsWillNOTBeIncluded(): void
     {
         $this->layout->shouldReceive('includeFooterJavascriptFile')->once()->with('dashboards/dashboard.js');
         $this->layout->shouldNotReceive('includeFooterJavascriptSnippet');
@@ -131,7 +131,7 @@ class AssetsIncluderTest extends TestCase
     /**
      * @param string[] $widget_names
      */
-    private function getDashboardWithWidgets(array $widget_names) : ProjectDashboardPresenter
+    private function getDashboardWithWidgets(array $widget_names): ProjectDashboardPresenter
     {
         $javascript_dependencies = [
             'first_widget'                => [

@@ -69,7 +69,8 @@ class MoveChangesetXMLUpdater
         $target_initial_effort_field = $this->initial_effort_factory->getByTracker($target_tracker)->getField();
         $field_change                = $changeset_xml->field_change[$index];
 
-        if ($target_initial_effort_field &&
+        if (
+            $target_initial_effort_field &&
             $this->isFieldChangeCorrespondingToTitleSemanticField($field_change, $source_initial_effort_field)
         ) {
             $this->updateFieldChangeNode(

@@ -63,7 +63,7 @@ if ($trackers_array !== false) {
 
     foreach ($trackers_array as $tracker) {
         echo '<option value="' . (int) $tracker->getId() . '">' . $hp->purify($tracker->getName()) . '</option>';
-        $count ++;
+        $count++;
     }
 }
 

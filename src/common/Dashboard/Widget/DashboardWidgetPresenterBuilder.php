@@ -99,7 +99,8 @@ class DashboardWidgetPresenterBuilder
         $widgets_presenter = array();
         foreach ($column->getWidgets() as $dashboard_widget) {
             $widget = $this->widget_factory->getInstanceByWidgetName($dashboard_widget->getName());
-            if ($widget &&
+            if (
+                $widget &&
                 $widget->isAvailable() &&
                 $this->disabled_project_widgets_checker->checkWidgetIsDisabledFromDashboard($widget, $dashboard) === false
             ) {

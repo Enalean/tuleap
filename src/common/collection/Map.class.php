@@ -133,10 +133,12 @@ class Map
         $compare_with_equals = method_exists($wanted, 'equals');
         $removed = false;
         if ($this->containsKey($key) && isset($this->elements[$key])) {
-            if (($compare_with_equals && $wanted->equals($this->elements[$key]))
-             || (!$compare_with_equals && (
+            if (
+                ($compare_with_equals && $wanted->equals($this->elements[$key]))
+                || (!$compare_with_equals && (
                  (method_exists($this->elements[$key], 'equals') && $this->elements[$key]->equals($wanted))
-                 || ($wanted === $this->elements[$key])))) {
+                 || ($wanted === $this->elements[$key])))
+            ) {
                 unset($this->elements[$key]);
                 $removed = true;
             }

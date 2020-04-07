@@ -36,7 +36,7 @@ class GraphOnTrackersV5BurndownDataTest extends TestCase
      * @var GraphOnTrackersV5_Burndown_Data
      */
     private $burndown_data;
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
         $this->burndown_data = \Mockery::spy(\GraphOnTrackersV5_Burndown_Data::class);

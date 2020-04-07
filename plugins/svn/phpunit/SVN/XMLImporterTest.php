@@ -38,7 +38,8 @@ use Tuleap\SVN\Repository\RuleName;
 
 final class XMLImporterTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, GlobalSVNPollution;
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use GlobalSVNPollution;
 
     /**
      * @var \org\bovigo\vfs\vfsStreamDirectory

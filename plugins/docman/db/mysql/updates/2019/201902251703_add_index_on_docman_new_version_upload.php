@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 class b201902251703_add_index_on_docman_new_version_upload extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
 {

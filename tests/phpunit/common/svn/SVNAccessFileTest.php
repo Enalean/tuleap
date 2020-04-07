@@ -26,7 +26,10 @@ use Tuleap\GlobalSVNPollution;
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class SVNAccessFileTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalSVNPollution, GlobalResponseMock, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalSVNPollution;
+    use GlobalResponseMock;
+    use GlobalLanguageMock;
 
     public function testisGroupDefinedInvalidSyntax(): void
     {

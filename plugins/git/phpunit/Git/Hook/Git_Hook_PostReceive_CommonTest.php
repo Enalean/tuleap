@@ -26,7 +26,9 @@ require_once __DIR__ . '/../../bootstrap.php';
 
 class Git_Hook_PostReceive_CommonTest extends \PHPUnit\Framework\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\GlobalLanguageMock;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\GlobalLanguageMock;
+
     protected $log_analyzer;
     protected $git_repository_factory;
     protected $post_receive;
@@ -40,7 +42,7 @@ class Git_Hook_PostReceive_CommonTest extends \PHPUnit\Framework\TestCase
     protected $mail_builder;
     protected $event_manager;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->user                       = \Mockery::spy(\PFUser::class);
@@ -70,7 +72,7 @@ class Git_Hook_PostReceive_CommonTest extends \PHPUnit\Framework\TestCase
         $this->repository->shouldReceive('getNotifiedMails')->andReturns(array());
     }
 
-    public function testItGetRepositoryFromFactory() : void
+    public function testItGetRepositoryFromFactory(): void
     {
         $this->push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns(array())->getMock();
 
@@ -80,7 +82,7 @@ class Git_Hook_PostReceive_CommonTest extends \PHPUnit\Framework\TestCase
         $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master', $this->mail_builder);
     }
 
-    public function testItGetUserFromManager() : void
+    public function testItGetUserFromManager(): void
     {
         $this->push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns(array())->getMock();
 
@@ -91,7 +93,7 @@ class Git_Hook_PostReceive_CommonTest extends \PHPUnit\Framework\TestCase
         $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master', $this->mail_builder);
     }
 
-    public function testItSkipsIfRepositoryIsNotKnown() : void
+    public function testItSkipsIfRepositoryIsNotKnown(): void
     {
         $this->push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns(array())->getMock();
 
@@ -104,7 +106,7 @@ class Git_Hook_PostReceive_CommonTest extends \PHPUnit\Framework\TestCase
         $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master', $this->mail_builder);
     }
 
-    public function testItFallsBackOnAnonymousIfUserIsNotKnows() : void
+    public function testItFallsBackOnAnonymousIfUserIsNotKnows(): void
     {
         $this->push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns(array())->getMock();
 
@@ -120,7 +122,7 @@ class Git_Hook_PostReceive_CommonTest extends \PHPUnit\Framework\TestCase
         $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master', $this->mail_builder);
     }
 
-    public function testItGetsPushDetailsFromLogAnalyzer() : void
+    public function testItGetsPushDetailsFromLogAnalyzer(): void
     {
         $this->push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns(array())->getMock();
 
@@ -135,7 +137,7 @@ class Git_Hook_PostReceive_CommonTest extends \PHPUnit\Framework\TestCase
         $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master', $this->mail_builder);
     }
 
-    public function testItExecutesExtractOnEachCommit() : void
+    public function testItExecutesExtractOnEachCommit(): void
     {
         $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
@@ -148,7 +150,7 @@ class Git_Hook_PostReceive_CommonTest extends \PHPUnit\Framework\TestCase
         $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master', $this->mail_builder);
     }
 
-    public function testItTriggersACiBuild() : void
+    public function testItTriggersACiBuild(): void
     {
         $this->push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns(array('469eaa9'))->getMock();
         $this->log_analyzer->shouldReceive('getPushDetails')->andReturns($this->push_details);
@@ -159,7 +161,7 @@ class Git_Hook_PostReceive_CommonTest extends \PHPUnit\Framework\TestCase
         $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master', $this->mail_builder);
     }
 
-    public function testItLaunchesGrokMirrorUpdates() : void
+    public function testItLaunchesGrokMirrorUpdates(): void
     {
         $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
 

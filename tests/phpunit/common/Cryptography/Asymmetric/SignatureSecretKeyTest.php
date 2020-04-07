@@ -28,14 +28,14 @@ use Tuleap\Cryptography\Exception\InvalidKeyException;
 
 final class SignatureSecretKeyTest extends TestCase
 {
-    public function itConstructsSignatureSecretKey() : void
+    public function itConstructsSignatureSecretKey(): void
     {
         $key = new SignatureSecretKey(new ConcealedString(str_repeat('a', \SODIUM_CRYPTO_SIGN_SECRETKEYBYTES)));
 
         $this->assertEquals(\SODIUM_CRYPTO_SIGN_SECRETKEYBYTES, mb_strlen($key->getRawKeyMaterial()));
     }
 
-    public function testSignatureSecretKeyWithAWronglySizedIsNotConstructed() : void
+    public function testSignatureSecretKeyWithAWronglySizedIsNotConstructed(): void
     {
         $this->expectException(InvalidKeyException::class);
         new SignatureSecretKey(new ConcealedString('wrongly_sized_key_material'));

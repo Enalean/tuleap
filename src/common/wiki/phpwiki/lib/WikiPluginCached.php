@@ -110,7 +110,7 @@ class WikiPluginCached extends WikiPlugin
             $url .= "&start_debug=1";
         }
         return array($id, $url);
-    } // genUrl
+    }
 
     public function run($dbi, $argstr, &$request, $basepage)
     {
@@ -378,7 +378,7 @@ class WikiPluginCached extends WikiPlugin
             return substr($argstr, 0, strlen($argstr) - 1);
         }
         return '';
-    } // glueArgs
+    }
 
     public function staticUrl($tmpfile)
     {
@@ -440,7 +440,7 @@ class WikiPluginCached extends WikiPlugin
     {
         $this->_errortext .= $addtext;
     }
-} // WikiPluginCached
+}
 
 
 // $Log: WikiPluginCached.php,v $

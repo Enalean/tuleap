@@ -92,7 +92,7 @@ class OAuth2AuthorizationCodeCreator
         $expiration_date     = $current_time->add($this->access_token_expiration_delay);
 
         $authorization_code_id = $this->transaction_executor->execute(
-            function () use ($app, $user, $verification_string, $expiration_date, $scopes, $pkce_code_challenge) : int {
+            function () use ($app, $user, $verification_string, $expiration_date, $scopes, $pkce_code_challenge): int {
                 $authorization_code_id = $this->authorization_code_dao->create(
                     $app->getId(),
                     (int) $user->getId(),

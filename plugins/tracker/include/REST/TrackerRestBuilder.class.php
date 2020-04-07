@@ -52,7 +52,7 @@ class Tracker_REST_TrackerRestBuilder
         $this->permissions_representation_builder   = $permissions_representation_builder;
     }
 
-    public function getTrackerRepresentationInTrackerContext(PFUser $user, Tracker $tracker) : CompleteTrackerRepresentation
+    public function getTrackerRepresentationInTrackerContext(PFUser $user, Tracker $tracker): CompleteTrackerRepresentation
     {
         return $this->buildTrackerRepresentation(
             $user,
@@ -64,7 +64,7 @@ class Tracker_REST_TrackerRestBuilder
         );
     }
 
-    public function getTrackerRepresentationInArtifactContext(PFUser $user, Tracker_Artifact $artifact) : CompleteTrackerRepresentation
+    public function getTrackerRepresentationInArtifactContext(PFUser $user, Tracker_Artifact $artifact): CompleteTrackerRepresentation
     {
         $tracker = $artifact->getTracker();
 

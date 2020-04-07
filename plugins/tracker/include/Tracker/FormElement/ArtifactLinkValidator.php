@@ -222,10 +222,12 @@ class ArtifactLinkValidator
                     return false;
                 }
 
-                if ($this->dao->isTypeDisabledInProject(
-                    $artifact->getTracker()->getProject()->getID(),
-                    $nature_shortname
-                )) {
+                if (
+                    $this->dao->isTypeDisabledInProject(
+                        $artifact->getTracker()->getProject()->getID(),
+                        $nature_shortname
+                    )
+                ) {
                     $GLOBALS['Response']->addFeedback(
                         Feedback::ERROR,
                         sprintf(

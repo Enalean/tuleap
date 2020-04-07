@@ -36,7 +36,7 @@ class LauncherTest extends TestCase
     private $repository;
     private $commit_info;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -50,7 +50,7 @@ class LauncherTest extends TestCase
         $this->project->shouldReceive('usesService')->with('hudson')->andReturn(true);
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         unset($this->logger);
         unset($this->project);

@@ -23,17 +23,17 @@ declare(strict_types=1);
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class b201906191100_convert_tracker_colors_to_standardized_names extends ForgeUpgrade_Bucket
 {
-    public function description() : string
+    public function description(): string
     {
         return 'Convert tracker colors to standardized names';
     }
 
-    public function preUp() : void
+    public function preUp(): void
     {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() : void
+    public function up(): void
     {
         $sql = 'ALTER TABLE tracker ALTER color SET DEFAULT "inca-silver"';
         if ($this->db->dbh->exec($sql) === false) {

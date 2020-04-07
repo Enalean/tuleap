@@ -99,7 +99,7 @@ class SiteHomepageController implements DispatchableWithRequest, DispatchableWit
         $layout->footer(array());
     }
 
-    private function displayStandardHomepage(bool $display_new_account_button, string $login_url, bool $is_secure) : void
+    private function displayStandardHomepage(bool $display_new_account_button, string $login_url, bool $is_secure): void
     {
         $current_user = UserManager::instance()->getCurrentUser();
 

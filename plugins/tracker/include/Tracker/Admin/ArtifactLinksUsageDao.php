@@ -97,7 +97,8 @@ class ArtifactLinksUsageDao extends DataAccessObject
 
     public function duplicate($template_id, $project_id)
     {
-        if (! $this->activateForProject($project_id) ||
+        if (
+            ! $this->activateForProject($project_id) ||
             ! $this->duplicateTypesUsageInProject($template_id, $project_id)
         ) {
             return false;

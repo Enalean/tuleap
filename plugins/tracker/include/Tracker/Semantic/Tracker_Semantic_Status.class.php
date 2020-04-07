@@ -375,7 +375,8 @@ class Tracker_Semantic_Status extends Tracker_Semantic
         $filtered_values = array();
         $open_values     = $request->get('open_values');
 
-        if (! $open_values ||
+        if (
+            ! $open_values ||
             ! is_array($open_values) ||
             ! isset($open_values[$this->getFieldId()]) ||
             ! is_array($open_values[$this->getFieldId()])

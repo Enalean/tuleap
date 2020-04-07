@@ -24,7 +24,7 @@ namespace Tuleap\Test\Psalm;
 
 final class ShellPassthroughUsingPassthruFunction implements ShellPassthrough
 {
-    public function __invoke(string $command) : int
+    public function __invoke(string $command): int
     {
         $exit_code = 0;
         passthru($command, $exit_code);

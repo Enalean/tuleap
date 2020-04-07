@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1;
 
@@ -38,6 +38,7 @@ use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 class DocumentBeforeModificationValidatorVisitorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var Docman_Item|\Mockery\MockInterface
      */
@@ -55,7 +56,7 @@ class DocumentBeforeModificationValidatorVisitorTest extends TestCase
      */
     private $validator_visitor;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -134,7 +135,7 @@ class DocumentBeforeModificationValidatorVisitorTest extends TestCase
         $file_item->accept($this->validator_visitor);
     }
 
-    public function testItThrowExceptionWhenUserCantWriteFile() : void
+    public function testItThrowExceptionWhenUserCantWriteFile(): void
     {
         $file_item = new Docman_File();
 

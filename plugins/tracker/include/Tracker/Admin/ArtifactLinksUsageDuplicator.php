@@ -37,7 +37,8 @@ class ArtifactLinksUsageDuplicator
 
     public function duplicate(Project $template, Project $project)
     {
-        if ($this->dao->isProjectUsingArtifactLinkTypes($template->getID()) ||
+        if (
+            $this->dao->isProjectUsingArtifactLinkTypes($template->getID()) ||
             (! $template->usesService(trackerPlugin::SERVICE_SHORTNAME) &&
                 $project->usesService(trackerPlugin::SERVICE_SHORTNAME)
             )

@@ -88,9 +88,11 @@ class WikiPlugin_CreatePage extends WikiPlugin
         //   http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.2.1
         $url = WikiURL($s, $param, 'absurl');
         // FIXME: expand vars in templates here.
-        if (strlen($url) > 255
+        if (
+            strlen($url) > 255
             or (!empty($vars) and !empty($param['template']))
-            or preg_match('/%%\w+%%/', $initial_content)) { // need variable expansion
+            or preg_match('/%%\w+%%/', $initial_content)
+        ) { // need variable expansion
             unset($param['initial_content']);
             $url = WikiURL($s, $param, 'absurl');
             $page = $dbi->getPage($s);

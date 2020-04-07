@@ -41,8 +41,10 @@ class Tracker_XML_Importer_CopyArtifactInformationsAggregator extends \Psr\Log\A
 
     public function log($level, $message, array $context = [])
     {
-        if ($level === LogLevel::WARNING || $level === LogLevel::ERROR || $level === LogLevel::CRITICAL ||
-            $level === LogLevel::EMERGENCY || $level === LogLevel::ALERT) {
+        if (
+            $level === LogLevel::WARNING || $level === LogLevel::ERROR || $level === LogLevel::CRITICAL ||
+            $level === LogLevel::EMERGENCY || $level === LogLevel::ALERT
+        ) {
             $this->logs_stack[] = "[$level] $message";
         }
         $this->backend_logger->log($level, $message, $context);

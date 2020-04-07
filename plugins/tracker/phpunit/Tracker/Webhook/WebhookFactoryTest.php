@@ -34,7 +34,7 @@ class WebhookFactoryTest extends TestCase
      */
     private $factory;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

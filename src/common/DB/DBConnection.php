@@ -40,7 +40,7 @@ class DBConnection
         $this->db_creator = $db_creator;
     }
 
-    public function getDB() : EasyDB
+    public function getDB(): EasyDB
     {
         if ($this->db === null) {
             $this->db = $this->db_creator->createDB();
@@ -54,7 +54,7 @@ class DBConnection
      *
      * @throws \PDOException
      */
-    public function reconnectAfterALongRunningProcess() : void
+    public function reconnectAfterALongRunningProcess(): void
     {
         if ($this->db === null) {
             return;

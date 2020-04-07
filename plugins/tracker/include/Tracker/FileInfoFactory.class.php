@@ -43,7 +43,7 @@ class Tracker_FileInfoFactory
         $this->artifact_factory    = $artifact_factory;
     }
 
-    public function getById(int $id) : ?Tracker_FileInfo
+    public function getById(int $id): ?Tracker_FileInfo
     {
         static $cache = array();
 
@@ -89,7 +89,7 @@ class Tracker_FileInfoFactory
      * @throws Tracker_FileInfo_InvalidFileInfoException
      * @throws Tracker_FileInfo_UnauthorisedException
      */
-    public function getArtifactByFileInfoIdAndUser(PFUser $user, int $id) : Tracker_Artifact
+    public function getArtifactByFileInfoIdAndUser(PFUser $user, int $id): Tracker_Artifact
     {
         $row = $this->dao->searchArtifactIdByFileInfoIdInLastChangeset($id)->getRow();
         if (! $row) {

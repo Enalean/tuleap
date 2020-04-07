@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Docman\Test\rest\Docman;
 
@@ -169,7 +169,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
     /**
      * @depends testGetRootId
      */
-    public function testUpdatePermissionsEmbeddedDocument(int $root_id) : void
+    public function testUpdatePermissionsEmbeddedDocument(int $root_id): void
     {
         $embedded_doc_id = $this->createEmbeddedFileAndReturnItsId(
             $root_id,

@@ -34,7 +34,9 @@ use Tuleap\GlobalResponseMock;
 
 final class GitForkCrossProjectTest extends \PHPUnit\Framework\TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalResponseMock, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalResponseMock;
+    use GlobalLanguageMock;
 
     protected function setUp(): void
     {
@@ -46,7 +48,7 @@ final class GitForkCrossProjectTest extends \PHPUnit\Framework\TestCase
         unset($GLOBALS['HTML'], $_SESSION);
     }
 
-    public function testExecutesForkCrossProjectActionWithForkRepositoriesView() : void
+    public function testExecutesForkCrossProjectActionWithForkRepositoriesView(): void
     {
         $groupId = 101;
         $project = Mockery::mock(Project::class);
@@ -97,7 +99,7 @@ final class GitForkCrossProjectTest extends \PHPUnit\Framework\TestCase
         $git->_dispatchActionAndView('do_fork_repositories', null, null, null, $user);
     }
 
-    public function testAddsErrorWhenRepositoriesAreMissing() : void
+    public function testAddsErrorWhenRepositoriesAreMissing(): void
     {
         $project = Mockery::mock(Project::class);
         $project->shouldReceive('getID')->andReturns(11);
@@ -114,7 +116,7 @@ final class GitForkCrossProjectTest extends \PHPUnit\Framework\TestCase
         $git->_doDispatchForkCrossProject($request, null);
     }
 
-    public function testAddsErrorWhenDestinationProjectIsMissing() : void
+    public function testAddsErrorWhenDestinationProjectIsMissing(): void
     {
         $project = Mockery::mock(Project::class);
         $project->shouldReceive('getID')->andReturns(11);
@@ -133,7 +135,7 @@ final class GitForkCrossProjectTest extends \PHPUnit\Framework\TestCase
         $git->_doDispatchForkCrossProject($request, null);
     }
 
-    public function testItUsesTheSynchronizerTokenToAvoidDuplicateForks() : void
+    public function testItUsesTheSynchronizerTokenToAvoidDuplicateForks(): void
     {
         $git = \Mockery::mock(\Git::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $exception = new \Exception();
@@ -142,7 +144,7 @@ final class GitForkCrossProjectTest extends \PHPUnit\Framework\TestCase
         $git->_doDispatchForkCrossProject(null, null);
     }
 
-    public function testUserMustBeAdminOfTheDestinationProject() : void
+    public function testUserMustBeAdminOfTheDestinationProject(): void
     {
         $project = Mockery::mock(Project::class);
         $project->shouldReceive('getID')->andReturns(123);

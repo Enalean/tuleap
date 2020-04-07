@@ -26,7 +26,8 @@ use Tuleap\GlobalLanguageMock;
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Rule_UserNameIntegrationTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     public function testOk(): void
     {

@@ -52,22 +52,22 @@ class ExternalLinksManager implements Dispatchable
         $this->external_links[] = $external_link;
     }
 
-    public function hasExternalLinks() : bool
+    public function hasExternalLinks(): bool
     {
         return count($this->external_links) > 0;
     }
 
-    public function getProjectId() : int
+    public function getProjectId(): int
     {
         return $this->project_id;
     }
 
-    public function getLinks() : array
+    public function getLinks(): array
     {
         return $this->external_links;
     }
 
-    public function getFolderId() : int
+    public function getFolderId(): int
     {
         return $this->folder_id;
     }

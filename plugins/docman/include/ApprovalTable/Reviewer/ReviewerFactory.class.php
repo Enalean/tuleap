@@ -79,9 +79,11 @@ class Docman_ApprovalTableReviewerFactory
     {
         $res = false;
 
-        if ($this->table !== null
-           && $this->table->isEnabled()
-           && $this->table->getNotification() != PLUGIN_DOCMAN_APPROVAL_NOTIF_DISABLED) {
+        if (
+            $this->table !== null
+            && $this->table->isEnabled()
+            && $this->table->getNotification() != PLUGIN_DOCMAN_APPROVAL_NOTIF_DISABLED
+        ) {
             $atsm = $this->_getApprovalTableNotificationCycle();
             switch ($this->table->getNotification()) {
                 case PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE:

@@ -31,9 +31,10 @@ use Tuleap\Http\HTTPFactoryBuilder;
 
 final class NodeJSClientTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
-    public function testMessageIsTransmittedToRealTimeNodeJSServer() : void
+    public function testMessageIsTransmittedToRealTimeNodeJSServer(): void
     {
         $realtime_server_address = 'realtime.example.com';
         ForgeConfig::set('nodejs_server', $realtime_server_address);

@@ -212,8 +212,10 @@ class Codendi_DiffEngine
         while ($xi < $n_from || $yi < $n_to) {
             // Skip matching "snake".
             $copy = array();
-            while ($xi < $n_from && $yi < $n_to
-                    && !$this->xchanged[$xi] && !$this->ychanged[$yi]) {
+            while (
+                $xi < $n_from && $yi < $n_to
+                    && !$this->xchanged[$xi] && !$this->ychanged[$yi]
+            ) {
                 $copy[] = $from_lines[$xi++];
                 ++$yi;
             }
@@ -376,15 +378,19 @@ class Codendi_DiffEngine
     public function _compareseq($xoff, $xlim, $yoff, $ylim)
     {
         // Slide down the bottom initial diagonal.
-        while ($xoff < $xlim && $yoff < $ylim
-               && $this->xv[$xoff] == $this->yv[$yoff]) {
+        while (
+            $xoff < $xlim && $yoff < $ylim
+               && $this->xv[$xoff] == $this->yv[$yoff]
+        ) {
             ++$xoff;
             ++$yoff;
         }
 
         // Slide up the top initial diagonal.
-        while ($xlim > $xoff && $ylim > $yoff
-               && $this->xv[$xlim - 1] == $this->yv[$ylim - 1]) {
+        while (
+            $xlim > $xoff && $ylim > $yoff
+               && $this->xv[$xlim - 1] == $this->yv[$ylim - 1]
+        ) {
             --$xlim;
             --$ylim;
         }
@@ -1138,11 +1144,13 @@ class Codendi_WordLevelDiff extends Codendi_MappedDiff
     public function _split($lines)
     {
         // FIXME: fix POSIX char class.
-        if (!preg_match_all(
-            '/ ( [^\S\n]+ | [[:alnum:]]+ | . ) (?: (?!< \n) [^\S\n])? /xs',
-            implode("\n", $lines),
-            $m
-        )) {
+        if (
+            !preg_match_all(
+                '/ ( [^\S\n]+ | [[:alnum:]]+ | . ) (?: (?!< \n) [^\S\n])? /xs',
+                implode("\n", $lines),
+                $m
+            )
+        ) {
             return array(array(''), array(''));
         }
         return array($m[0], $m[1]);

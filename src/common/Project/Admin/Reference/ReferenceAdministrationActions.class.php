@@ -45,9 +45,11 @@ class ReferenceAdministrationActions extends Actions
         global $feedback;
         $request = HTTPRequest::instance();
         // Sanity check
-        if ((! $request->get('group_id'))
+        if (
+            (! $request->get('group_id'))
             || (! $request->get('keyword'))
-            || (! $request->get('link'))) {
+            || (! $request->get('link'))
+        ) {
             exit_error(
                 $GLOBALS['Language']->getText('global', 'error'),
                 $GLOBALS['Language']->getText('project_reference', 'missing_parameter')
@@ -104,8 +106,10 @@ class ReferenceAdministrationActions extends Actions
     {
         $request = HTTPRequest::instance();
         // Sanity check
-        if ((! $request->get('group_id'))
-            || (! $request->get('reference_id'))) {
+        if (
+            (! $request->get('group_id'))
+            || (! $request->get('reference_id'))
+        ) {
             exit_error(
                 $GLOBALS['Language']->getText('global', 'error'),
                 $GLOBALS['Language']->getText('project_reference', 'missing_parameter')
@@ -202,8 +206,10 @@ class ReferenceAdministrationActions extends Actions
         global $feedback;
         $request = HTTPRequest::instance();
         // Sanity check
-        if ((! $request->get('group_id'))
-            || (! $request->get('reference_id'))) {
+        if (
+            (! $request->get('group_id'))
+            || (! $request->get('reference_id'))
+        ) {
             exit_error(
                 $GLOBALS['Language']->getText('global', 'error'),
                 $GLOBALS['Language']->getText('project_reference', 'missing_parameter')

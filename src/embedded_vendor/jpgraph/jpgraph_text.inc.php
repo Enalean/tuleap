@@ -384,4 +384,4 @@ class Text
     {
         $this->{'_' . $name} = $value;
     }
-} // Class
+}

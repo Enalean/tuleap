@@ -120,7 +120,8 @@ class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgnoreLine
             }
 
             $burnup_timeperiod_start_day_timestamp = $burnup_period->getStartDate();
-            if ($burnup_timeperiod_start_day_timestamp !== null &&
+            if (
+                $burnup_timeperiod_start_day_timestamp !== null &&
                 $yesterday < $burnup_timeperiod_start_day_timestamp
             ) {
                 $this->logger->debug(

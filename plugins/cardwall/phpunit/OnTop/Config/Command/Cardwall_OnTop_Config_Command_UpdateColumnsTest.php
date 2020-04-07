@@ -25,7 +25,7 @@ final class Cardwall_OnTop_Config_Command_UpdateColumnsTest extends \PHPUnit\Fra
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -37,7 +37,7 @@ final class Cardwall_OnTop_Config_Command_UpdateColumnsTest extends \PHPUnit\Fra
         $this->command = new Cardwall_OnTop_Config_Command_UpdateColumns($tracker, $this->dao);
     }
 
-    public function testItUpdatesAllColumns() : void
+    public function testItUpdatesAllColumns(): void
     {
         $request = new HTTPRequest();
         $request->set(

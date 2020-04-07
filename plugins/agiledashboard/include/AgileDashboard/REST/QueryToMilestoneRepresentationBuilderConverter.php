@@ -68,7 +68,7 @@ class QueryToMilestoneRepresentationBuilderConverter
             throw MalformedQueryParameterException::invalidQueryParameter();
         }
 
-        if ($query_object == new stdClass) {
+        if ($query_object == new stdClass()) {
             return new StatusMilestoneRepresentationBuilder(
                 $this->milestone_representation_builder,
                 new StatusAll()

@@ -69,7 +69,7 @@ final class DocmanItemMover
         Docman_Item $item_to_move,
         PFUser $user,
         DocmanMoveItemRepresentation $representation
-    ) : void {
+    ): void {
         $destination_item_id = $representation->destination_folder_id;
         $destination_folder  = $this->item_factory->getItemFromDb($representation->destination_folder_id);
         if ($destination_folder === null || ! $this->permissions_manager->userCanAccess($user, $destination_item_id)) {

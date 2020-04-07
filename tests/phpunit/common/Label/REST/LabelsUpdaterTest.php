@@ -50,7 +50,7 @@ final class LabelsUpdaterTest extends \PHPUnit\Framework\TestCase
     /** @var Labelable */
     private $item;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->item              = \Mockery::mock(\Tuleap\Label\Labelable::class)->shouldReceive('getId')->andReturns(101)->getMock();
         $this->item_label_dao    = \Mockery::spy(\Tuleap\Label\LabelableDao::class);
@@ -60,7 +60,7 @@ final class LabelsUpdaterTest extends \PHPUnit\Framework\TestCase
         $this->project_id        = 66;
     }
 
-    public function testItAddsAndRemoveLabels() : void
+    public function testItAddsAndRemoveLabels(): void
     {
         $body = new LabelsPATCHRepresentation();
         $body->add = array(
@@ -80,7 +80,7 @@ final class LabelsUpdaterTest extends \PHPUnit\Framework\TestCase
         $this->updater->update($this->project_id, $this->item, $body);
     }
 
-    public function testItUsesTransaction() : void
+    public function testItUsesTransaction(): void
     {
         $body = new LabelsPATCHRepresentation();
         $body->add = array(
@@ -93,7 +93,7 @@ final class LabelsUpdaterTest extends \PHPUnit\Framework\TestCase
         $this->updater->update($this->project_id, $this->item, $body);
     }
 
-    public function testItOnlyAddsLabels() : void
+    public function testItOnlyAddsLabels(): void
     {
         $body = new LabelsPATCHRepresentation();
         $body->add = array(
@@ -108,7 +108,7 @@ final class LabelsUpdaterTest extends \PHPUnit\Framework\TestCase
         $this->updater->update($this->project_id, $this->item, $body);
     }
 
-    public function testItOnlyRemovesLabels() : void
+    public function testItOnlyRemovesLabels(): void
     {
         $body = new LabelsPATCHRepresentation();
         $body->remove = array(
@@ -123,7 +123,7 @@ final class LabelsUpdaterTest extends \PHPUnit\Framework\TestCase
         $this->updater->update($this->project_id, $this->item, $body);
     }
 
-    public function testItDoesNotKnowHowToAddAndRemoveTheSameLabel() : void
+    public function testItDoesNotKnowHowToAddAndRemoveTheSameLabel(): void
     {
         $body = new LabelsPATCHRepresentation();
         $body->add = array(
@@ -143,7 +143,7 @@ final class LabelsUpdaterTest extends \PHPUnit\Framework\TestCase
         $this->updater->update($this->project_id, $this->item, $body);
     }
 
-    public function testItDoesNotAddLabelThatIsNotInProject() : void
+    public function testItDoesNotAddLabelThatIsNotInProject(): void
     {
         $this->project_label_dao->shouldReceive('checkThatAllLabelIdsExistInProjectInTransaction')->with(66, array(1))->andThrows(new UnknownLabelException());
 
@@ -160,7 +160,7 @@ final class LabelsUpdaterTest extends \PHPUnit\Framework\TestCase
         $this->updater->update($this->project_id, $this->item, $body);
     }
 
-    public function testItCreatesLabelToAdd() : void
+    public function testItCreatesLabelToAdd(): void
     {
         $this->project_label_dao->shouldReceive('createIfNeededInTransaction')->with(66, 'Emergency Fix', \Mockery::any())->andReturns(10);
 
@@ -176,7 +176,7 @@ final class LabelsUpdaterTest extends \PHPUnit\Framework\TestCase
         $this->updater->update($this->project_id, $this->item, $body);
     }
 
-    public function testItTrimsLabelToAdd() : void
+    public function testItTrimsLabelToAdd(): void
     {
         $body = new LabelsPATCHRepresentation();
         $body->add = array(
@@ -188,7 +188,7 @@ final class LabelsUpdaterTest extends \PHPUnit\Framework\TestCase
         $this->updater->update($this->project_id, $this->item, $body);
     }
 
-    public function testItDoesNotAddEmptyLabels() : void
+    public function testItDoesNotAddEmptyLabels(): void
     {
         $body = new LabelsPATCHRepresentation();
         $body->add = array(

@@ -43,7 +43,7 @@ class JenkinsCSRFCrumbRetriever
         $this->request_factory = $request_factory;
     }
 
-    public function getCSRFCrumbHeader($jenkins_server_url) : string
+    public function getCSRFCrumbHeader($jenkins_server_url): string
     {
         if (mb_substr($jenkins_server_url, -1) === '/') {
             $jenkins_server_url = mb_substr($jenkins_server_url, 0, -1);

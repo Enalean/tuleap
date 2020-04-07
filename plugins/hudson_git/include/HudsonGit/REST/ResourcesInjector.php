@@ -29,7 +29,7 @@ use Tuleap\HudsonGit\REST\v1\GitJenkinsServersResource;
  */
 class ResourcesInjector
 {
-    public function populate(\Luracast\Restler\Restler $restler) : void
+    public function populate(\Luracast\Restler\Restler $restler): void
     {
         $restler->addAPIClass(
             GitJenkinsServersResource::class,

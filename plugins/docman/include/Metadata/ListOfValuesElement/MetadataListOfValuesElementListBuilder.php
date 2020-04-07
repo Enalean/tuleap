@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Docman\Metadata\ListOfValuesElement;
 
@@ -40,7 +40,7 @@ class MetadataListOfValuesElementListBuilder
     /**
      * @return Docman_MetadataListOfValuesElement[]
      */
-    public function build(int $id, bool $only_active) : array
+    public function build(int $id, bool $only_active): array
     {
         $dar = $this->dao->searchByFieldId($id, $only_active);
         $list_of_elements = [];

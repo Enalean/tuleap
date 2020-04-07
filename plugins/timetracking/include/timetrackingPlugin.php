@@ -97,7 +97,8 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
 
     public function cssfile($params)
     {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
+        if (
+            strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
             strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL) === 0
         ) {
             $style_css_url = $this->getAssets()->getFileURL('style-fp.css');
@@ -133,7 +134,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
         );
     }
 
-    public function process() : void
+    public function process(): void
     {
         $router = new Router(
             TrackerFactory::instance(),

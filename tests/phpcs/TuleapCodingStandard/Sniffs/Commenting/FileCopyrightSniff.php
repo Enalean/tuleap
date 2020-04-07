@@ -27,7 +27,7 @@ use PHP_CodeSniffer\Sniffs\Sniff;
 
 final class FileCopyrightSniff implements Sniff
 {
-    public function register() : array
+    public function register(): array
     {
         return [T_OPEN_TAG];
     }
@@ -54,8 +54,10 @@ final class FileCopyrightSniff implements Sniff
         $first_non_whitespace_instruction_line = $tokens[$first_non_whitespace_instruction_pos]['line'];
         $open_tag_line                         = $tokens[$stack_pointer]['line'];
 
-        if ($first_non_whitespace_instruction_pos === ($stack_pointer + 1) &&
-            ($open_tag_line + 1) === $first_non_whitespace_instruction_line) {
+        if (
+            $first_non_whitespace_instruction_pos === ($stack_pointer + 1) &&
+            ($open_tag_line + 1) === $first_non_whitespace_instruction_line
+        ) {
             return $file->numTokens + 1;
         }
 
@@ -89,7 +91,7 @@ final class FileCopyrightSniff implements Sniff
         return $file->numTokens + 1;
     }
 
-    private function addErrorMissingCopyright(File $file, int $pointer) : void
+    private function addErrorMissingCopyright(File $file, int $pointer): void
     {
         $file->addError(
             'You must add a copyright block at the beginning of the file',

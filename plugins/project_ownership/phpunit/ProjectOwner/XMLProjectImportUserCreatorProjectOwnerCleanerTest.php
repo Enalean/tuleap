@@ -34,7 +34,7 @@ final class XMLProjectImportUserCreatorProjectOwnerCleanerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testFirstProjectAdministratorFoundNotBeingTheCreatorIsSetAsProjectOwner() : void
+    public function testFirstProjectAdministratorFoundNotBeingTheCreatorIsSetAsProjectOwner(): void
     {
         $updater = Mockery::mock(ProjectOwnerUpdater::class);
         $cleaner = new XMLProjectImportUserCreatorProjectOwnerCleaner($updater);
@@ -55,7 +55,7 @@ final class XMLProjectImportUserCreatorProjectOwnerCleanerTest extends TestCase
         $cleaner->updateProjectOwnership($this->createEvent($creator, $ugroup));
     }
 
-    public function testNothingIsDoneWhenTheUGroupIsCorruptedAndCannotFindTheProjec() : void
+    public function testNothingIsDoneWhenTheUGroupIsCorruptedAndCannotFindTheProjec(): void
     {
         $updater = Mockery::mock(ProjectOwnerUpdater::class);
         $cleaner = new XMLProjectImportUserCreatorProjectOwnerCleaner($updater);
@@ -71,7 +71,7 @@ final class XMLProjectImportUserCreatorProjectOwnerCleanerTest extends TestCase
     }
 
 
-    private function createEvent(PFUser $creator, ProjectUGroup $ugroup) : ProjectImportCleanupUserCreatorFromAdministrators
+    private function createEvent(PFUser $creator, ProjectUGroup $ugroup): ProjectImportCleanupUserCreatorFromAdministrators
     {
         return new ProjectImportCleanupUserCreatorFromAdministrators($creator, $ugroup);
     }
@@ -79,7 +79,7 @@ final class XMLProjectImportUserCreatorProjectOwnerCleanerTest extends TestCase
     /**
      * @return ProjectUGroup|Mockery\MockInterface
      */
-    private function createUGroupAdmin() : ProjectUGroup
+    private function createUGroupAdmin(): ProjectUGroup
     {
         $ugroup = Mockery::mock(ProjectUGroup::class);
         $ugroup->shouldReceive('getId')->andReturn(ProjectUGroup::PROJECT_ADMIN);

@@ -25,20 +25,20 @@ final class MailManagerTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $user_manager = \Mockery::spy(\UserManager::class);
         UserManager::setInstance($user_manager);
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         UserManager::clearInstance();
         parent::tearDown();
     }
 
-    public function testGetMailPrefsShouldReturnUsersAccordingToPreferences() : void
+    public function testGetMailPrefsShouldReturnUsersAccordingToPreferences(): void
     {
         $mm = \Mockery::mock(\MailManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -62,7 +62,7 @@ final class MailManagerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(array($nicolas), $prefs['text']);
     }
 
-    public function testGetMailPrefsShouldReturnUserWithTextPref() : void
+    public function testGetMailPrefsShouldReturnUserWithTextPref(): void
     {
         $mm = \Mockery::mock(\MailManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -86,7 +86,7 @@ final class MailManagerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals([], $prefs['html']);
     }
 
-    public function testGetMailPrefsShouldReturnUserWithHtmlPref() : void
+    public function testGetMailPrefsShouldReturnUserWithHtmlPref(): void
     {
         $mm = \Mockery::mock(\MailManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -110,7 +110,7 @@ final class MailManagerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(array($manuel2), $prefs['html']);
     }
 
-    public function testGetMailPrefsShouldReturnLastUser() : void
+    public function testGetMailPrefsShouldReturnLastUser(): void
     {
         $mm = \Mockery::mock(\MailManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -134,7 +134,7 @@ final class MailManagerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(array($manuel2), $prefs['html']);
     }
 
-    public function testGetMailPrefsShouldReturnHTMLUsersWithAnonymous() : void
+    public function testGetMailPrefsShouldReturnHTMLUsersWithAnonymous(): void
     {
         $mm = \Mockery::mock(\MailManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -152,14 +152,14 @@ final class MailManagerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('fr_BE', $prefs['html'][0]->getLanguageID());
     }
 
-    public function testGetMailPrefsByUsersShouldReturnHTMLByDefault() : void
+    public function testGetMailPrefsByUsersShouldReturnHTMLByDefault(): void
     {
         $mm   = new MailManager();
         $user = new PFUser(array('id' => 123, 'language_id' => 'en_US'));
         $this->assertEquals(Codendi_Mail_Interface::FORMAT_HTML, $mm->getMailPreferencesByUser($user));
     }
 
-    public function testGetMailPrefsByUsersShouldReturnTextWhenUserRequestIt() : void
+    public function testGetMailPrefsByUsersShouldReturnTextWhenUserRequestIt(): void
     {
         $mm   = new MailManager();
         $user = \Mockery::spy(\PFUser::class);
@@ -167,7 +167,7 @@ final class MailManagerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(Codendi_Mail_Interface::FORMAT_TEXT, $mm->getMailPreferencesByUser($user));
     }
 
-    public function testGetMailPrefsByUsersShouldReturnHTMLWhenPreferenceReturnsFalse() : void
+    public function testGetMailPrefsByUsersShouldReturnHTMLWhenPreferenceReturnsFalse(): void
     {
         $mm   = new MailManager();
         $user = \Mockery::spy(\PFUser::class);

@@ -33,7 +33,9 @@ use Tuleap\SVN\SvnPermissionManager;
 
 class RepositoryCreatorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalSVNPollution;
+    use MockeryPHPUnitIntegration;
+    use GlobalSVNPollution;
+
     /**
      * @var AccessFileHistoryCreator
      */

@@ -105,7 +105,7 @@ final class OAuth2AuthorizationCodeDAOTest extends TestCase
         $db->delete('plugin_oauth2_refresh_token_scope', []);
     }
 
-    public static function tearDownAfterClass() : void
+    public static function tearDownAfterClass(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
         $db->delete('groups', ['group_id' => self::$active_project_id]);

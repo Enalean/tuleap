@@ -104,7 +104,7 @@ class Workflow_Transition_ConditionFactory
         return $this->fieldnotempty_factory->getFieldNotEmpty($transition);
     }
 
-    public function getCommentNotEmptyCondition(Transition $transition) : Workflow_Transition_Condition_CommentNotEmpty
+    public function getCommentNotEmptyCondition(Transition $transition): Workflow_Transition_Condition_CommentNotEmpty
     {
         return $this->formatCommentNotEmptyCondition(
             $this->commentnotempty_factory->getCommentNotEmpty($transition),
@@ -115,7 +115,7 @@ class Workflow_Transition_ConditionFactory
     private function formatCommentNotEmptyCondition(
         ?Workflow_Transition_Condition_CommentNotEmpty $condition,
         Transition $transition
-    ) : Workflow_Transition_Condition_CommentNotEmpty {
+    ): Workflow_Transition_Condition_CommentNotEmpty {
         if ($condition === null) {
             return new Workflow_Transition_Condition_CommentNotEmpty(
                 $transition,

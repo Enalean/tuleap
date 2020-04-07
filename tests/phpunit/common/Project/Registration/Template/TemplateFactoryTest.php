@@ -33,7 +33,8 @@ use Tuleap\XML\ProjectXMLMerger;
 
 class TemplateFactoryTest extends TestCase
 {
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     /**
      * @var TemplateFactory

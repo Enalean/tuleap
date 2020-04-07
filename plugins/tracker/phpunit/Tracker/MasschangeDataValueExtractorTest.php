@@ -33,9 +33,10 @@ use Tuleap\GlobalLanguageMock;
 
 final class MasschangeDataValueExtractorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
-    public function testItReturnsFieldWithItNewValue() : void
+    public function testItReturnsFieldWithItNewValue(): void
     {
         $form_element_factory           = Mockery::mock(Tracker_FormElementFactory::class);
         $masschange_data_values_manager = new Tracker_MasschangeDataValueExtractor($form_element_factory);

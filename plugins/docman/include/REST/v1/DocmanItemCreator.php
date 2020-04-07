@@ -231,7 +231,7 @@ class DocmanItemCreator
         FilePropertiesPOSTPATCHRepresentation $file_properties,
         MetadataToCreate $metadata_to_create,
         ?DocmanItemPermissionsForGroupsSetRepresentation $permissions_for_groups_representation
-    ) : CreatedItemRepresentation {
+    ): CreatedItemRepresentation {
         if ($this->item_factory->doesTitleCorrespondToExistingDocument($title, $parent_item->getId())) {
             throw new RestException(400, "A file with same title already exists in the given folder.");
         }
@@ -530,7 +530,7 @@ class DocmanItemCreator
     private function getPermissionsForGroupsSet(
         Docman_Item $parent_item,
         ?DocmanItemPermissionsForGroupsSetRepresentation $representation
-    ) : ?DocmanItemPermissionsForGroupsSet {
+    ): ?DocmanItemPermissionsForGroupsSet {
         if ($representation === null) {
             return null;
         }

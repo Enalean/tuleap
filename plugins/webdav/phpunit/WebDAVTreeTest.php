@@ -40,7 +40,8 @@ require_once __DIR__ . '/bootstrap.php';
 
 final class WebDAVTreeTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     private $user;
     private $project;

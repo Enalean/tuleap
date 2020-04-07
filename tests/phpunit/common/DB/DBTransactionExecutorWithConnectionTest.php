@@ -30,7 +30,7 @@ final class DBTransactionExecutorWithConnectionTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testTransactionIsGivenToTheUnderlyingDB() : void
+    public function testTransactionIsGivenToTheUnderlyingDB(): void
     {
         $db_connection = \Mockery::mock(DBConnection::class);
 

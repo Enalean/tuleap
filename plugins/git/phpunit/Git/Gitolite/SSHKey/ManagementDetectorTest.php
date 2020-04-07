@@ -27,7 +27,8 @@ require_once __DIR__ . '/../../../bootstrap.php';
 class ManagementDetectorTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    public function testItCanNotManageAuthorizedKeysFileIfGitolite3IsNotUsed() : void
+
+    public function testItCanNotManageAuthorizedKeysFileIfGitolite3IsNotUsed(): void
     {
         $version_detector     = \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class);
         $version_detector->shouldReceive('isGitolite3')->andReturns(false);
@@ -39,7 +40,7 @@ class ManagementDetectorTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($management_detector->isAuthorizedKeysFileManagedByTuleap());
     }
 
-    public function testItIsAbleToFindThatTuleapManagesAuthorizedKeysFile() : void
+    public function testItIsAbleToFindThatTuleapManagesAuthorizedKeysFile(): void
     {
         $version_detector     = \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class);
         $version_detector->shouldReceive('isGitolite3')->andReturns(true);
@@ -52,7 +53,7 @@ class ManagementDetectorTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($management_detector->isAuthorizedKeysFileManagedByTuleap());
     }
 
-    public function testItIsAbleToDetectThatTuleapManagesAuthorizedKeysFile() : void
+    public function testItIsAbleToDetectThatTuleapManagesAuthorizedKeysFile(): void
     {
         $version_detector     = \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class);
         $version_detector->shouldReceive('isGitolite3')->andReturns(true);
@@ -65,7 +66,7 @@ class ManagementDetectorTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($management_detector->isAuthorizedKeysFileManagedByTuleap());
     }
 
-    public function testItCanNotBeRequestedToMigrateToTuleapManagementIfGitolite3IsNotUsed() : void
+    public function testItCanNotBeRequestedToMigrateToTuleapManagementIfGitolite3IsNotUsed(): void
     {
         $version_detector     = \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class);
         $version_detector->shouldReceive('isGitolite3')->andReturns(false);
@@ -77,7 +78,7 @@ class ManagementDetectorTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($management_detector->canRequestAuthorizedKeysFileManagementByTuleap());
     }
 
-    public function testItCanNotBeRequestedToMigrateToTuleapManagementIfTuleapAlreadyManagesTheAuthorizedKeysFile() : void
+    public function testItCanNotBeRequestedToMigrateToTuleapManagementIfTuleapAlreadyManagesTheAuthorizedKeysFile(): void
     {
         $version_detector     = \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class);
         $version_detector->shouldReceive('isGitolite3')->andReturns(true);
@@ -90,7 +91,7 @@ class ManagementDetectorTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($management_detector->canRequestAuthorizedKeysFileManagementByTuleap());
     }
 
-    public function testItCanNotBeRequestedToMigrateToTuleapManagementIfThereIsAlreadyAMigrationRunning() : void
+    public function testItCanNotBeRequestedToMigrateToTuleapManagementIfThereIsAlreadyAMigrationRunning(): void
     {
         $version_detector     = \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class);
         $version_detector->shouldReceive('isGitolite3')->andReturns(true);
@@ -104,7 +105,7 @@ class ManagementDetectorTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($management_detector->canRequestAuthorizedKeysFileManagementByTuleap());
     }
 
-    public function testItCanBeRequestedToMigrateToTuleapManagementIfThatsNotAlreadyTheCase() : void
+    public function testItCanBeRequestedToMigrateToTuleapManagementIfThatsNotAlreadyTheCase(): void
     {
         $version_detector     = \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class);
         $version_detector->shouldReceive('isGitolite3')->andReturns(true);

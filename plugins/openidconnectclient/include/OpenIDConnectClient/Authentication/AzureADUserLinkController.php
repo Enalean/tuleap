@@ -42,7 +42,7 @@ class AzureADUserLinkController implements DispatchableWithRequest, Dispatchable
         $this->login_controller = $login_controller;
     }
 
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables) : void
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $this->checkTLSPresence($request, $layout);
 

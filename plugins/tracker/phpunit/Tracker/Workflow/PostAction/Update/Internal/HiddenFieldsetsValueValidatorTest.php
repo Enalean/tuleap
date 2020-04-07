@@ -38,7 +38,7 @@ final class HiddenFieldsetsValueValidatorTest extends TestCase
 
     private $form_element_factory;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->form_element_factory = Mockery::mock(\Tracker_FormElementFactory::class);
 

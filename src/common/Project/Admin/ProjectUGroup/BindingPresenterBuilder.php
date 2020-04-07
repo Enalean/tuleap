@@ -85,7 +85,7 @@ class BindingPresenterBuilder
             if ($project->userIsAdmin()) {
                 $ugroups[] = $this->getUgroupBindingPresenter($project, $id, $clone['cloneName']);
             } else {
-                $nb_not_visible ++;
+                $nb_not_visible++;
             }
         }
 

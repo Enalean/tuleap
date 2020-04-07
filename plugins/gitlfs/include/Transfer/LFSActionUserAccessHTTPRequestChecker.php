@@ -92,7 +92,8 @@ class LFSActionUserAccessHTTPRequestChecker
         }
 
         $repository = $authorized_action->getRepository();
-        if ($repository === null || ! $repository->isCreated() || ! $repository->getProject()->isActive() ||
+        if (
+            $repository === null || ! $repository->isCreated() || ! $repository->getProject()->isActive() ||
             ! $this->plugin->isAllowed($repository->getProject()->getID())
         ) {
             throw new NotFoundException(dgettext('tuleap-git', 'Repository does not exist'));

@@ -30,12 +30,13 @@ use XML_Security;
 class CardFieldXmlExtractorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var XML_Security
      */
     private $xml_security;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -43,7 +44,7 @@ class CardFieldXmlExtractorTest extends TestCase
         $this->xml_security->enableExternalLoadOfEntities();
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         $this->xml_security->disableExternalLoadOfEntities();
 

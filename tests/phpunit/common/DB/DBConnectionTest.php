@@ -30,7 +30,7 @@ final class DBConnectionTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testOnlyOneDBIsCreated() : void
+    public function testOnlyOneDBIsCreated(): void
     {
         $db_creator    = \Mockery::mock(DBCreator::class);
         $db_connection = new DBConnection($db_creator);
@@ -42,7 +42,7 @@ final class DBConnectionTest extends TestCase
         $this->assertSame($db, $db_connection->getDB());
     }
 
-    public function testDBIsLazilyCreated() : void
+    public function testDBIsLazilyCreated(): void
     {
         $db_creator = \Mockery::mock(DBCreator::class);
         $db_creator->shouldNotReceive('createDB');
@@ -51,7 +51,7 @@ final class DBConnectionTest extends TestCase
         $db_connection->reconnectAfterALongRunningProcess();
     }
 
-    public function testExistingDBIsKeptIfConnectionHasNotBeenClosedAfterALongProcess() : void
+    public function testExistingDBIsKeptIfConnectionHasNotBeenClosedAfterALongProcess(): void
     {
         $db_creator    = \Mockery::mock(DBCreator::class);
         $db_connection = new DBConnection($db_creator);
@@ -64,7 +64,7 @@ final class DBConnectionTest extends TestCase
         $this->assertSame($db, $db_connection->getDB());
     }
 
-    public function testNewDBIsCreatedIfTheConnectionHasBeenClosedAfterALongRunningProcess() : void
+    public function testNewDBIsCreatedIfTheConnectionHasBeenClosedAfterALongRunningProcess(): void
     {
         $db_creator    = \Mockery::mock(DBCreator::class);
         $db_connection = new DBConnection($db_creator);
@@ -74,7 +74,7 @@ final class DBConnectionTest extends TestCase
         $db_creator->shouldReceive('createDB')->andReturn($db_closed, $db);
 
         $db_closed->shouldReceive('run')->andReturnUsing(
-            function () : void {
+            function (): void {
                 trigger_error('MySQL server has gone away', E_USER_WARNING);
                 throw new \PDOException('SQLSTATE[HY000]: General error: 2006 MySQL server has gone away');
             }
@@ -85,7 +85,7 @@ final class DBConnectionTest extends TestCase
         $this->assertSame($db, $db_connection->getDB());
     }
 
-    public function testDBCommunicationFailureNotRelatedToAClosedStateAfterALongRunningProcessAreNotHidden() : void
+    public function testDBCommunicationFailureNotRelatedToAClosedStateAfterALongRunningProcessAreNotHidden(): void
     {
         $db_creator    = \Mockery::mock(DBCreator::class);
         $db_connection = new DBConnection($db_creator);

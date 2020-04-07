@@ -29,7 +29,7 @@ final class PrefixAccessKey implements PrefixSplitTokenForSerialization
     /**
      * @psalm-pure
      */
-    public function getString() : string
+    public function getString(): string
     {
         return 'tlp-k1-';
     }

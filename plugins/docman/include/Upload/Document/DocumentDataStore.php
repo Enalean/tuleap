@@ -68,17 +68,17 @@ final class DocumentDataStore implements TusDataStore
         $this->document_upload_canceler                     = $document_upload_canceler;
     }
 
-    public function getFileInformationProvider() : TusFileInformationProvider
+    public function getFileInformationProvider(): TusFileInformationProvider
     {
         return $this->document_being_uploaded_information_provider;
     }
 
-    public function getWriter() : TusWriter
+    public function getWriter(): TusWriter
     {
         return $this->document_being_uploaded_writer;
     }
 
-    public function getFinisher() : ?TusFinisherDataStore
+    public function getFinisher(): ?TusFinisherDataStore
     {
         return $this->document_upload_finisher;
     }
@@ -88,7 +88,7 @@ final class DocumentDataStore implements TusDataStore
         return $this->document_upload_canceler;
     }
 
-    public function getLocker() : ?TusLocker
+    public function getLocker(): ?TusLocker
     {
         return $this->document_being_uploaded_locker;
     }

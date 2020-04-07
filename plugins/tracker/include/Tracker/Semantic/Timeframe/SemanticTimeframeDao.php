@@ -47,7 +47,7 @@ class SemanticTimeframeDao extends DataAccessObject
         return $result !== null;
     }
 
-    public function deleteTimeframeSemantic(int $tracker_id) : void
+    public function deleteTimeframeSemantic(int $tracker_id): void
     {
         $sql = 'DELETE FROM tracker_semantic_timeframe WHERE tracker_id = ?';
 

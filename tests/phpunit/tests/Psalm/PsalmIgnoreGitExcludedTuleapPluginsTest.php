@@ -30,7 +30,7 @@ final class PsalmIgnoreGitExcludedTuleapPluginsTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testOnlyPluginsAreExcluded() : void
+    public function testOnlyPluginsAreExcluded(): void
     {
         $system_command = \Mockery::mock(\System_Command::class);
         $system_command->shouldReceive('exec')->with(\Mockery::pattern('#plugins/\'\*$#'))->once()->andReturn([]);
@@ -39,7 +39,7 @@ final class PsalmIgnoreGitExcludedTuleapPluginsTest extends TestCase
         $this->assertEmpty($ignore_directory->getIgnoredDirectories());
     }
 
-    public function testWhenNoPluginsIsExcludedItDoesNotCrash() : void
+    public function testWhenNoPluginsIsExcludedItDoesNotCrash(): void
     {
         $system_command = \Mockery::mock(\System_Command::class);
         $system_command->shouldReceive('exec')->andThrow(
@@ -50,7 +50,7 @@ final class PsalmIgnoreGitExcludedTuleapPluginsTest extends TestCase
         $this->assertEmpty($ignore_directory->getIgnoredDirectories());
     }
 
-    public function testGitFatalErrorsAreNotHidden() : void
+    public function testGitFatalErrorsAreNotHidden(): void
     {
         $system_command = \Mockery::mock(\System_Command::class);
         $system_command->shouldReceive('exec')->andThrow(

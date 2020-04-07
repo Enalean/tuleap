@@ -50,7 +50,7 @@ class TimetrackingReportFactory
     /**
      * @throws TimetrackingReportNotFoundException
      */
-    public function getReportById(int $id) : TimetrackingReport
+    public function getReportById(int $id): TimetrackingReport
     {
         $report_id = $this->report_dao->searchReportById($id);
 

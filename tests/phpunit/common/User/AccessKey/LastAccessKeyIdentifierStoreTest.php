@@ -42,7 +42,7 @@ class LastAccessKeyIdentifierStoreTest extends TestCase
      */
     private $access_key_formatter;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->encryption_key = \Mockery::mock(EncryptionKey::class);
         $this->encryption_key->shouldReceive('getRawKeyMaterial')->andReturns(

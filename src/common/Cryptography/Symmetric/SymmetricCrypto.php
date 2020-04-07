@@ -33,7 +33,7 @@ final class SymmetricCrypto
         throw new \RuntimeException('Do not instantiate this class, invoke the static methods directly');
     }
 
-    public static function encrypt(ConcealedString $plaintext, EncryptionKey $secret_key) : string
+    public static function encrypt(ConcealedString $plaintext, EncryptionKey $secret_key): string
     {
         $nonce = \random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
 
@@ -51,7 +51,7 @@ final class SymmetricCrypto
     /**
      * @throws \Tuleap\Cryptography\Exception\InvalidCiphertextException
      */
-    public static function decrypt(string $ciphertext, EncryptionKey $secret_key) : ConcealedString
+    public static function decrypt(string $ciphertext, EncryptionKey $secret_key): ConcealedString
     {
         $nonce             = \mb_substr($ciphertext, 0, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, '8bit');
         $ciphertext_length = \mb_strlen($ciphertext, '8bit');

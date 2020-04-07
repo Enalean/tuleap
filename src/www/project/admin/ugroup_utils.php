@@ -321,7 +321,7 @@ function ugroup_db_get_dynamic_members(
     $show_suspended = false,
     bool $show_deleted = false,
     array $user_ids = array()
-)  : ?string {
+): ?string {
     $data_access = CodendiDataAccess::instance();
 
     $sqlname  = "user.user_name AS full_name";
@@ -744,9 +744,9 @@ function ugroup_count_project_admins($groupId, $usersSql)
         while ($row = db_fetch_array($res)) {
             $user = $um->getUserById($row['user_id']);
             if ($user->isMember($groupId, 'A')) {
-                $admins ++;
+                $admins++;
             } else {
-                $nonAdmins ++;
+                $nonAdmins++;
             }
         }
     }

@@ -61,7 +61,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
      */
     private $gitphp_project;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         ForgeConfig::store();
 
@@ -88,7 +88,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         HTTPRequest::clearInstance();
         ForgeConfig::restore();

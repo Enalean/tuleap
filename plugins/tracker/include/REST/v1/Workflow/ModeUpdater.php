@@ -78,7 +78,7 @@ class ModeUpdater
         $this->hidden_fieldsets_dao  = $hidden_fieldsets_dao;
     }
 
-    public function switchWorkflowToAdvancedMode(Tracker $tracker) : void
+    public function switchWorkflowToAdvancedMode(Tracker $tracker): void
     {
         $workflow    = $tracker->getWorkflow();
         $workflow_id = (int) $workflow->getId();
@@ -98,7 +98,7 @@ class ModeUpdater
      * @throws \Tuleap\Tracker\Workflow\PostAction\Update\Internal\UnknownPostActionIdsException
      * @throws \Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdateException
      */
-    public function switchWorkflowToSimpleMode(Tracker $tracker) : void
+    public function switchWorkflowToSimpleMode(Tracker $tracker): void
     {
         $workflow    = $tracker->getWorkflow();
         $workflow_id = $workflow->getId();

@@ -35,33 +35,33 @@ final class WorkflowBackendLoggerTest extends TestCase
      */
     private $backend_logger;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->backend_logger = Mockery::mock(\Psr\Log\LoggerInterface::class);
     }
 
-    public function testLogsMethod() : void
+    public function testLogsMethod(): void
     {
         $logger = new WorkflowBackendLogger($this->backend_logger, \Psr\Log\LogLevel::DEBUG);
         $this->backend_logger->shouldReceive('debug')->with('[WF] ┌ Start theMethod()', [])->once();
         $logger->start('theMethod');
     }
 
-    public function testLogsOptionalArgument() : void
+    public function testLogsOptionalArgument(): void
     {
         $logger = new WorkflowBackendLogger($this->backend_logger, \Psr\Log\LogLevel::DEBUG);
         $this->backend_logger->shouldReceive('debug')->with('[WF] ┌ Start theMethod(1, a)', [])->once();
         $logger->start('theMethod', 1, 'a');
     }
 
-    public function testWorksAlsoWorksForEndMethod() : void
+    public function testWorksAlsoWorksForEndMethod(): void
     {
         $logger = new WorkflowBackendLogger($this->backend_logger, \Psr\Log\LogLevel::DEBUG);
         $this->backend_logger->shouldReceive('debug')->with('[WF] └ End theMethod(1, a)', [])->once();
         $logger->end('theMethod', 1, 'a');
     }
 
-    public function testIncrementsOnStartAndDecrementsOnEnd() : void
+    public function testIncrementsOnStartAndDecrementsOnEnd(): void
     {
         $logger = new WorkflowBackendLogger($this->backend_logger, \Psr\Log\LogLevel::DEBUG);
         $this->backend_logger->shouldReceive('debug')->with('[WF] ┌ Start method()', [])->once();
@@ -74,7 +74,7 @@ final class WorkflowBackendLoggerTest extends TestCase
         $logger->end('method');
     }
 
-    public function testIncludesTheFingerprint() : void
+    public function testIncludesTheFingerprint(): void
     {
         $logger = new WorkflowBackendLogger($this->backend_logger, \Psr\Log\LogLevel::DEBUG);
         $this->backend_logger->shouldReceive('debug')->with('[WF] [12345] toto', [])->once();
@@ -82,7 +82,7 @@ final class WorkflowBackendLoggerTest extends TestCase
         $logger->debug('toto');
     }
 
-    public function testDoesNotChangeTheFingerprint() : void
+    public function testDoesNotChangeTheFingerprint(): void
     {
         $logger = new WorkflowBackendLogger($this->backend_logger, \Psr\Log\LogLevel::DEBUG);
         $this->backend_logger->shouldReceive('debug')->with('[WF] [12345] toto', [])->once();
@@ -91,7 +91,7 @@ final class WorkflowBackendLoggerTest extends TestCase
         $logger->debug('toto');
     }
 
-    public function testLogLevelIsRespected() : void
+    public function testLogLevelIsRespected(): void
     {
         $logger = new WorkflowBackendLogger($this->backend_logger, \Psr\Log\LogLevel::INFO);
         $this->backend_logger->shouldReceive('debug')->never();

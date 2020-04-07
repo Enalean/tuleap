@@ -32,15 +32,17 @@ use Tuleap\GlobalResponseMock;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Cardwall_CardControllerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox, GlobalResponseMock;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
+    use GlobalResponseMock;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         ForgeConfig::set('codendi_dir', __DIR__ . '/../../..');
     }
 
-    public function testItReturnsJson() : void
+    public function testItReturnsJson(): void
     {
         $artifact_id    = 55;
         $artifact_title = 'bla';

@@ -37,7 +37,8 @@ use Tuleap\SVN\Repository\Settings;
 
 class RepositoryResourceUpdaterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalSVNPollution;
+    use MockeryPHPUnitIntegration;
+    use GlobalSVNPollution;
 
     /**
      * @var MailNotificationManager

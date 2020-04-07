@@ -41,7 +41,8 @@ require_once __DIR__ . '/bootstrap.php';
  */
 class WebDAVDocmanFolderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /**
      * Testing when the folder have no childrens

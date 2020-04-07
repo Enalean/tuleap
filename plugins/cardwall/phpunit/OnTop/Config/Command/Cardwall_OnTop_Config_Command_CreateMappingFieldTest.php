@@ -25,7 +25,7 @@ final class Cardwall_OnTop_Config_Command_CreateMappingFieldTest extends \PHPUni
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -43,7 +43,7 @@ final class Cardwall_OnTop_Config_Command_CreateMappingFieldTest extends \PHPUni
         $this->command = new Cardwall_OnTop_Config_Command_CreateMappingField($tracker, $this->dao, $tracker_factory);
     }
 
-    public function testItCreatesANewMappingField() : void
+    public function testItCreatesANewMappingField(): void
     {
         $request = new HTTPRequest();
         $request->set('add_mapping_on', '42');

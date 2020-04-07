@@ -29,7 +29,7 @@ final class NoMockeryMockInDataProviderExtensionTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testExecutionIsBlockedWhenMockeryIsOpenedBeforeTheFirstTest() : void
+    public function testExecutionIsBlockedWhenMockeryIsOpenedBeforeTheFirstTest(): void
     {
         \Mockery::mock(\stdClass::class);
         $extension = new NoMockeryMockInDataProviderExtension();
@@ -38,7 +38,7 @@ final class NoMockeryMockInDataProviderExtensionTest extends TestCase
         $extension->executeBeforeFirstTest();
     }
 
-    public function testExecutionIsNotBlockedWhenNoMocksAreCreated() : void
+    public function testExecutionIsNotBlockedWhenNoMocksAreCreated(): void
     {
         $extension = new NoMockeryMockInDataProviderExtension();
         $extension->executeBeforeFirstTest();

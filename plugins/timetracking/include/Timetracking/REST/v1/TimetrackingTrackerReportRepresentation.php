@@ -57,7 +57,7 @@ class TimetrackingTrackerReportRepresentation
      */
     public $time_per_user;
 
-    public function build(Tracker $tracker, array $time_per_user) : void
+    public function build(Tracker $tracker, array $time_per_user): void
     {
         $this->id    = JsonCast::toInt($tracker->getId());
         $this->uri   = $tracker->getUri();

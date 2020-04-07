@@ -33,7 +33,7 @@ class TQLTest extends RestBase
 
     private $tracker_id;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
         $this->tracker_id = $this->getTrackerId();

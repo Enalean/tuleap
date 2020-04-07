@@ -22,7 +22,9 @@ declare(strict_types=1);
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class User_SSHKeyDumperTest extends \PHPUnit\Framework\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\TemporaryTestDirectory, \Tuleap\ForgeConfigSandbox;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\TemporaryTestDirectory;
+    use \Tuleap\ForgeConfigSandbox;
 
     private $toto_name;
     private $toto_home;
@@ -32,7 +34,7 @@ final class User_SSHKeyDumperTest extends \PHPUnit\Framework\TestCase
     private $sshkey_dumper;
     private $backend;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -59,7 +61,7 @@ final class User_SSHKeyDumperTest extends \PHPUnit\Framework\TestCase
         $this->sshkey_dumper->__construct($this->backend);
     }
 
-    public function testItDoesntWriteTheKeyWhenUserAsNotAValidUnixAccount() : void
+    public function testItDoesntWriteTheKeyWhenUserAsNotAValidUnixAccount(): void
     {
         $this->backend->shouldReceive('log')->never();
         $this->user->setUnixStatus('S');
@@ -67,7 +69,7 @@ final class User_SSHKeyDumperTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse(is_file($this->toto_home . '/.ssh/authorized_keys'));
     }
 
-    public function testItWriteTheKeyInTheAutorizedKeyFile() : void
+    public function testItWriteTheKeyInTheAutorizedKeyFile(): void
     {
         $this->backend->shouldReceive('log')->with(
             Hamcrest\Matchers::matchesPattern('/Authorized_keys for ' . $this->toto_name . ' written/'),
@@ -89,7 +91,7 @@ final class User_SSHKeyDumperTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('0600', $this->getFileModeAsString($this->toto_home . '/.ssh/authorized_keys'));
     }
 
-    public function testItDoesntModifyFilesWhenUserMadeASymlink() : void
+    public function testItDoesntModifyFilesWhenUserMadeASymlink(): void
     {
         // The user tries to compromise the system, it has an SSH account on the
         // server and made a link from its own authorized_keys file onto someoneelse
@@ -111,7 +113,7 @@ final class User_SSHKeyDumperTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse(is_link($this->foobar_home . '/.ssh/authorized_keys'));
     }
 
-    public function testItRaisesAnErrorWhenUserAttemptedToMakeALinkOnSshDir() : void
+    public function testItRaisesAnErrorWhenUserAttemptedToMakeALinkOnSshDir(): void
     {
         // variation of previous test but user did:
         // /home/users/toto/.ssh -> /root/.ssh
@@ -129,7 +131,7 @@ final class User_SSHKeyDumperTest extends \PHPUnit\Framework\TestCase
         $this->sshkey_dumper->writeSSHKeys($this->user);
     }
 
-    public function testItDoesntModifyDirectoriesWhenUserMadeASymlink() : void
+    public function testItDoesntModifyDirectoriesWhenUserMadeASymlink(): void
     {
         // variation of previous test but user did:
         // /home/users/toto/.ssh -> /root/.ssh

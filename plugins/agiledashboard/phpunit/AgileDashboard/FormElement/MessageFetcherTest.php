@@ -29,6 +29,7 @@ use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
 final class MessageFetcherTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_FormElement_Field
      */

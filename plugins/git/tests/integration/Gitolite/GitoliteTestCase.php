@@ -42,7 +42,8 @@ use UserManager;
 
 abstract class GitoliteTestCase extends \PHPUnit\Framework\TestCase
 {
-    use MockeryPHPUnitIntegration, TemporaryTestDirectory;
+    use MockeryPHPUnitIntegration;
+    use TemporaryTestDirectory;
 
     /** @var Git_GitoliteDriver */
     protected $driver;
@@ -93,7 +94,7 @@ abstract class GitoliteTestCase extends \PHPUnit\Framework\TestCase
      */
     private $repo_dir;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->cwd           = getcwd();
@@ -162,7 +163,7 @@ abstract class GitoliteTestCase extends \PHPUnit\Framework\TestCase
         );
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         parent::tearDown();
         chdir($this->cwd);

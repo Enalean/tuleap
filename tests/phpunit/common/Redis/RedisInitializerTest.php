@@ -42,7 +42,7 @@ class RedisInitializerTest extends TestCase
         $initializer->init($redis);
     }
 
-    public function testInitializationFailsIfNoHostHaveBeenProvided() : void
+    public function testInitializationFailsIfNoHostHaveBeenProvided(): void
     {
         $initializer = new RedisInitializer('', 6379, new ConcealedString(''));
 
@@ -53,7 +53,7 @@ class RedisInitializerTest extends TestCase
         $initializer->init($redis);
     }
 
-    public function testInitializationFailsIfConnectDoesNotSucceed() : void
+    public function testInitializationFailsIfConnectDoesNotSucceed(): void
     {
         $initializer = new RedisInitializer('redis', 6379, new ConcealedString(''));
 
@@ -65,7 +65,7 @@ class RedisInitializerTest extends TestCase
         $initializer->init($redis);
     }
 
-    public function testNoPasswordLeaksInExceptionMessage() : void
+    public function testNoPasswordLeaksInExceptionMessage(): void
     {
         $password    = 'my_password';
         $initializer = new RedisInitializer('redis', 6379, new ConcealedString($password));

@@ -70,12 +70,12 @@ class TrackerCrumbInContext implements Dispatchable
         return $this->user;
     }
 
-    public function addGoToLink(string $type, TrackerCrumbLinkInContext $link) : void
+    public function addGoToLink(string $type, TrackerCrumbLinkInContext $link): void
     {
         $this->go_to_links[$type] = $link;
     }
 
-    public function getCrumb(string $primary) : BreadCrumb
+    public function getCrumb(string $primary): BreadCrumb
     {
         if (! isset($this->go_to_links[$primary])) {
             throw new \LogicException('Primary link must have been added to collection before use');
@@ -93,7 +93,7 @@ class TrackerCrumbInContext implements Dispatchable
         return $this->addSubItems($crumb, $links);
     }
 
-    private function addSubItems(BreadCrumb $crumb, array $links) : BreadCrumb
+    private function addSubItems(BreadCrumb $crumb, array $links): BreadCrumb
     {
         if (count($links) > 0) {
             $sub_items = new BreadCrumbSubItems();

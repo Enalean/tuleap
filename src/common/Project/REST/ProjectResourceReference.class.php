@@ -34,7 +34,7 @@ class ProjectResourceReference
      */
     public $uri;
 
-    public function build(Project $project, string $resource_type) : self
+    public function build(Project $project, string $resource_type): self
     {
         $this->type = $resource_type;
         $this->uri  = ProjectRepresentation::ROUTE . '/' . $project->getId() . '/' . $resource_type;

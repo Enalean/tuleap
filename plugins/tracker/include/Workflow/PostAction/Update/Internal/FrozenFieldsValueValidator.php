@@ -67,7 +67,7 @@ class FrozenFieldsValueValidator
         }
     }
 
-    private function extractUsedFieldIds(Tracker $tracker) : array
+    private function extractUsedFieldIds(Tracker $tracker): array
     {
         $used_fields    = $this->form_element_factory->getUsedFields($tracker);
         $used_field_ids = [];
@@ -79,7 +79,7 @@ class FrozenFieldsValueValidator
         return $used_field_ids;
     }
 
-    private function extractFieldDependenciesFieldIds(Tracker $tracker) : array
+    private function extractFieldDependenciesFieldIds(Tracker $tracker): array
     {
         $involved_fields    = $this->tracker_rule_factory->getInvolvedFieldsByTrackerId($tracker->getId());
         $involved_field_ids = [];
@@ -94,7 +94,7 @@ class FrozenFieldsValueValidator
     /**
      * @throws InvalidPostActionException
      */
-    private function validateSelectedField(Tracker $tracker, FrozenFieldsValue $frozen_fields) : void
+    private function validateSelectedField(Tracker $tracker, FrozenFieldsValue $frozen_fields): void
     {
         $used_field_ids     = $this->extractUsedFieldIds($tracker);
         $involved_field_ids = $this->extractFieldDependenciesFieldIds($tracker);

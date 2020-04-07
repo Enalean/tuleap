@@ -36,7 +36,7 @@ final class SSHKeyMassDumperTest extends \Tuleap\Git\Gitolite\GitoliteTestCase
     private $key1;
     private $key2;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->key1 = 'ssh-rsa AAAAYZi1ju3FeZu6EKKltZ0uftOfj6w== marcel@labobine.net';
@@ -45,7 +45,7 @@ final class SSHKeyMassDumperTest extends \Tuleap\Git\Gitolite\GitoliteTestCase
         $this->mass_dumper = new Git_Gitolite_SSHKeyMassDumper($this->dumper, $this->user_manager);
     }
 
-    public function testItDumpsSshKeysForOneUser() : void
+    public function testItDumpsSshKeysForOneUser(): void
     {
         $invalid_keys_collector = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector::class);
         $this->user_manager->shouldReceive('getUsersWithSshKey')->andReturns(\TestHelper::arrayToDar(new PFUser(array('authorized_keys' => $this->key1, 'user_name' => 'john_do'))));
@@ -59,7 +59,7 @@ final class SSHKeyMassDumperTest extends \Tuleap\Git\Gitolite\GitoliteTestCase
         $this->assertEmptyGitStatus();
     }
 
-    public function testItRemovesSshKeyFileWhenUserDeletedAllHisKeys() : void
+    public function testItRemovesSshKeyFileWhenUserDeletedAllHisKeys(): void
     {
         $invalid_keys_collector = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector::class);
         $this->git_exec->shouldReceive('push')->times(2);
@@ -73,7 +73,7 @@ final class SSHKeyMassDumperTest extends \Tuleap\Git\Gitolite\GitoliteTestCase
         $this->assertFalse(is_file($this->gitolite_admin_dir . '/keydir/john_do@0.pub'));
     }
 
-    public function testItRemovesOnlySshFilesForUsersWithoutKeys() : void
+    public function testItRemovesOnlySshFilesForUsersWithoutKeys(): void
     {
         $invalid_keys_collector = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector::class);
         $this->git_exec->shouldReceive('push')->andReturn(true);
@@ -89,7 +89,7 @@ final class SSHKeyMassDumperTest extends \Tuleap\Git\Gitolite\GitoliteTestCase
         $this->assertEmptyGitStatus();
     }
 
-    public function testItRemovesSshFilesWhenKeysAreDeleted() : void
+    public function testItRemovesSshFilesWhenKeysAreDeleted(): void
     {
         $invalid_keys_collector = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector::class);
         $this->git_exec->shouldReceive('push')->andReturn(true);
@@ -107,7 +107,7 @@ final class SSHKeyMassDumperTest extends \Tuleap\Git\Gitolite\GitoliteTestCase
         $this->assertEmptyGitStatus();
     }
 
-    public function testItDoesntRemoveTheGitoliteAdminSSHKey() : void
+    public function testItDoesntRemoveTheGitoliteAdminSSHKey(): void
     {
         $invalid_keys_collector = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector::class);
         $this->git_exec->shouldReceive('push')->andReturn(true);
@@ -126,7 +126,7 @@ final class SSHKeyMassDumperTest extends \Tuleap\Git\Gitolite\GitoliteTestCase
         $this->assertTrue(is_file($this->gitolite_admin_dir . '/keydir/id_rsa_gl-adm.pub'));
     }
 
-    public function testItDoesntRemoveTheGerritReservedKeys() : void
+    public function testItDoesntRemoveTheGerritReservedKeys(): void
     {
         $invalid_keys_collector = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector::class);
         $this->git_exec->shouldReceive('push')->andReturn(true);

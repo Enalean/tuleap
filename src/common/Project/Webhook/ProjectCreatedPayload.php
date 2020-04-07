@@ -62,7 +62,7 @@ class ProjectCreatedPayload implements Payload
         ];
     }
 
-    private function extractOwner(\Project $project) : ?\PFUser
+    private function extractOwner(\Project $project): ?\PFUser
     {
         $admins = $project->getAdmins();
         if (empty($admins)) {

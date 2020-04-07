@@ -34,7 +34,7 @@ $bad_projects_with_mw_sql = "SELECT g.group_id, g.group_name
         SELECT project_id FROM plugin_mediawiki_database
     )";
 
-$data_access_object = new DataAccessObject;
+$data_access_object = new DataAccessObject();
 $data_access_object->enableExceptionsOnError();
 try {
     $projects = $data_access_object->retrieve($bad_projects_with_mw_sql);

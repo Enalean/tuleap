@@ -113,7 +113,7 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
         $this->project_manager                = $project_manager;
     }
 
-    public function finishUpload(TusFileInformation $file_information) : void
+    public function finishUpload(TusFileInformation $file_information): void
     {
         $item_id = $file_information->getID();
 
@@ -128,7 +128,7 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
         $this->document_ongoing_upload_dao->deleteByItemID($item_id);
     }
 
-    private function createDocument($uploaded_document_path, $item_id) : void
+    private function createDocument($uploaded_document_path, $item_id): void
     {
         $this->transaction_executor->execute(function () use ($uploaded_document_path, $item_id) {
             if ($this->docman_item_factory->getItemFromDb($item_id) !== null) {
@@ -160,7 +160,7 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
                 throw new \RuntimeException('Could not copy uploaded item #' . $item_id);
             }
 
-            $current_time    = (new \DateTimeImmutable)->getTimestamp();
+            $current_time    = (new \DateTimeImmutable())->getTimestamp();
             $is_item_created = $this->docman_item_factory->create(
                 [
                     'item_id'           => $item_id,
@@ -203,7 +203,7 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
         $this->logger->debug('Item #' . $item_id . ' has been created');
     }
 
-    private function getFiletype(string $filename, string $path) : string
+    private function getFiletype(string $filename, string $path): string
     {
         $mime_type = $this->docman_mime_type_detector->getRightOfficeType($filename);
         if ($mime_type !== null) {
@@ -212,7 +212,7 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
         return mime_content_type($path);
     }
 
-    private function notifyCreation($item_id) : void
+    private function notifyCreation($item_id): void
     {
         $item = $this->docman_item_factory->getItemFromDb($item_id);
         if ($item === null) {

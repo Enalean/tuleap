@@ -27,7 +27,7 @@ use Codendi_Mail;
 
 class MailFactory
 {
-    public function getMail() : Codendi_Mail
+    public function getMail(): Codendi_Mail
     {
         return new Codendi_Mail();
     }

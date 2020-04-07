@@ -125,7 +125,7 @@ class WikiPlugin_PluginManager extends WikiPlugin
         $tbody = HTML::tbody();
         $row_no = 0;
 
-        $w = new WikiPluginLoader;
+        $w = new WikiPluginLoader();
         foreach ($plugins as $pluginName) {
             // instantiate a plugin
             $pluginName = str_replace(".php", "", $pluginName);
@@ -168,8 +168,10 @@ class WikiPlugin_PluginManager extends WikiPlugin
                 if (_($pluginDocPageName) != $pluginDocPageName) {
                     $localizedPluginDocPageName = _($pluginDocPageName);
                 }
-                if ($localizedPluginDocPageName &&
-                   $dbi->isWikiPage($localizedPluginDocPageName)) {
+                if (
+                    $localizedPluginDocPageName &&
+                    $dbi->isWikiPage($localizedPluginDocPageName)
+                ) {
                     $pluginDocPageNamelink =
                     WikiLink($localizedPluginDocPageName, 'if_known');
                 }

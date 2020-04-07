@@ -31,7 +31,9 @@ require_once __DIR__ . '/../../bootstrap.php';
 
 class ChartMessageFetcherTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
+
     /**
      * @var \Tracker
      */
@@ -48,7 +50,7 @@ class ChartMessageFetcherTest extends TestCase
 
     private $hierarchy_factory;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -123,7 +125,7 @@ class ChartMessageFetcherTest extends TestCase
         $this->assertStringContainsString('Chores', $html);
     }
 
-    private function mockStartDateField() : void
+    private function mockStartDateField(): void
     {
         $start_date_field = \Mockery::mock(\Tracker_FormElement_Field_Date::class);
 
@@ -132,7 +134,7 @@ class ChartMessageFetcherTest extends TestCase
         );
     }
 
-    private function mockDurationField() : void
+    private function mockDurationField(): void
     {
         $duration_field = \Mockery::mock(\Tracker_FormElement_Field_Integer::class);
 

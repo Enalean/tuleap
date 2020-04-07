@@ -27,7 +27,9 @@ use Tuleap\GlobalResponseMock;
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class TrackerFactoryPossibleChildrenTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock, GlobalResponseMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
+    use GlobalResponseMock;
 
     public function testGetPossibleChildrenShouldNotContainSelf()
     {

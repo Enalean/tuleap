@@ -30,7 +30,7 @@ final class BinaryDetectorTest extends TestCase
      * @testWith ["Tuleap"]
      *           ["<?xml version=\"1.1\"?><_/>"]
      */
-    public function testTextDataIsNotRecognizedAsBinary(string $text) : void
+    public function testTextDataIsNotRecognizedAsBinary(string $text): void
     {
         $this->assertFalse(BinaryDetector::isBinary($text));
     }
@@ -41,7 +41,7 @@ final class BinaryDetectorTest extends TestCase
      *           ["tar"]
      *           ["zip"]
      */
-    public function testBinaryContentIsRecognizedAsBinary(string $fixture_name) : void
+    public function testBinaryContentIsRecognizedAsBinary(string $fixture_name): void
     {
         $this->assertTrue(BinaryDetector::isBinary(file_get_contents(__DIR__ . '/fixtures/' . $fixture_name)));
     }

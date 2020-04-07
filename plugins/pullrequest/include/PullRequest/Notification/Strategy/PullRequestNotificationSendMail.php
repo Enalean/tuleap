@@ -78,7 +78,7 @@ final class PullRequestNotificationSendMail implements PullRequestNotificationSt
         $this->locale_switcher                 = $locale_switcher;
     }
 
-    public function execute(NotificationToProcess $notification) : void
+    public function execute(NotificationToProcess $notification): void
     {
         $pull_request           = $notification->getPullRequest();
         $destination_repository = $this->repository_factory->getRepositoryById($pull_request->getRepoDestId());

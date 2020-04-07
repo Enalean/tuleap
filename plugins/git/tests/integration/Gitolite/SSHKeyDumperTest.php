@@ -30,14 +30,14 @@ final class SSHKeyDumperTest extends GitoliteTestCase
     protected $key1;
     protected $key2;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->key1 = 'ssh-rsa AAAAYZi1ju3FeZu6EKKltZ0uftOfj6w== marcel@labobine.net';
         $this->key2 = 'ssh-rsa AAAAXYiTICSgWURDPDGW/HeNUYZIRcznQ== marcel@shanon.net';
     }
 
-    public function testAddUserKey() : void
+    public function testAddUserKey(): void
     {
         $user = new PFUser([
             'id'              => 12,
@@ -56,7 +56,7 @@ final class SSHKeyDumperTest extends GitoliteTestCase
         $this->assertEmptyGitStatus();
     }
 
-    public function testAddUserWithSeveralKeys() : void
+    public function testAddUserWithSeveralKeys(): void
     {
         $user = new PFUser([
             'id'              => 12,
@@ -77,7 +77,7 @@ final class SSHKeyDumperTest extends GitoliteTestCase
         $this->assertEmptyGitStatus();
     }
 
-    public function testRemoveUserKey() : void
+    public function testRemoveUserKey(): void
     {
         $invalid_keys_collector = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector::class);
         $this->git_exec->shouldReceive('push')->andReturn(true)->times(2);
@@ -106,7 +106,7 @@ final class SSHKeyDumperTest extends GitoliteTestCase
         $this->assertEmptyGitStatus();
     }
 
-    public function testItDeletesAllTheKeys() : void
+    public function testItDeletesAllTheKeys(): void
     {
         $invalid_keys_collector = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector::class);
         $this->git_exec->shouldReceive('push')->andReturn(true);
@@ -130,7 +130,7 @@ final class SSHKeyDumperTest extends GitoliteTestCase
         $this->assertEmptyGitStatus();
     }
 
-    public function testItFlipsTheKeys() : void
+    public function testItFlipsTheKeys(): void
     {
         $invalid_keys_collector = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector::class);
         $this->git_exec->shouldReceive('push')->andReturn(true);

@@ -71,8 +71,10 @@ class WikiPlugin_WikiAdminChown extends WikiPlugin_WikiAdminSelect
         $count = 0;
         foreach ($pages as $name) {
             $page = $dbi->getPage($name);
-            if (($owner = $page->getOwner()) and
-                 $newowner != $owner) {
+            if (
+                ($owner = $page->getOwner()) and
+                 $newowner != $owner
+            ) {
                 if (!mayAccessPage('change', $name)) {
                     $ul->pushContent(HTML::li(fmt(
                         "Access denied to change page '%s'.",
@@ -141,8 +143,10 @@ class WikiPlugin_WikiAdminChown extends WikiPlugin_WikiAdminSelect
         if ($p && !$request->isPost()) {
             $pages = $p;
         }
-        if ($p && $request->isPost() &&
-            !empty($post_args['chown']) && empty($post_args['cancel'])) {
+        if (
+            $p && $request->isPost() &&
+            !empty($post_args['chown']) && empty($post_args['cancel'])
+        ) {
             // without individual PagePermissions:
             if (!ENABLE_PAGEPERM and !$request->_user->isAdmin()) {
                 $request->_notAuthorized(WIKIAUTH_ADMIN);

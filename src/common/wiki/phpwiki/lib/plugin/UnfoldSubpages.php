@@ -127,11 +127,13 @@ class WikiPlugin_UnfoldSubpages extends WikiPlugin_IncludePage
                 $r = $page->getCurrentRevision();
                 $c = $r->getContent();   // array of lines
                 // follow redirects
-                if (preg_match(
-                    '/<' . '\?plugin\s+RedirectTo\s+page=(\w+)\s+\?' . '>/',
-                    implode("\n", $c),
-                    $m
-                )) {
+                if (
+                    preg_match(
+                        '/<' . '\?plugin\s+RedirectTo\s+page=(\w+)\s+\?' . '>/',
+                        implode("\n", $c),
+                        $m
+                    )
+                ) {
                     // trap recursive redirects
                     if (in_array($m[1], $included_pages)) {
                         if (!$quiet) {

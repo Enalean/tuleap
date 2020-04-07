@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -27,6 +27,7 @@ use PHPUnit\Framework\TestCase;
 final class Docman_LockFactoryTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var Docman_Log|\Mockery\MockInterface
      */

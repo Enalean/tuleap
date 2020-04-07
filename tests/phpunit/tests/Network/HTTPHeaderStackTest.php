@@ -26,12 +26,12 @@ use PHPUnit\Framework\TestCase;
 
 final class HTTPHeaderStackTest extends TestCase
 {
-    public function tearDown() : void
+    public function tearDown(): void
     {
         HTTPHeaderStack::clear();
     }
 
-    public function testHeadersAreAddedToTheStack() : void
+    public function testHeadersAreAddedToTheStack(): void
     {
         HTTPHeaderStack::push(new HTTPHeader('test1', false, null));
         HTTPHeaderStack::push(new HTTPHeader('test2', false, null));
@@ -43,7 +43,7 @@ final class HTTPHeaderStackTest extends TestCase
         $this->assertEquals('test2', $stack[1]->getHeader());
     }
 
-    public function testHeaderStackCanBeCleared() : void
+    public function testHeaderStackCanBeCleared(): void
     {
         $this->assertEmpty(HTTPHeaderStack::getStack());
 

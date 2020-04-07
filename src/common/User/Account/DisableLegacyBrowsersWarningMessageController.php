@@ -31,7 +31,7 @@ use Tuleap\Request\DispatchableWithRequestNoAuthz;
 
 final class DisableLegacyBrowsersWarningMessageController implements DispatchableWithRequestNoAuthz
 {
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables) : void
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $csrf = new CSRFSynchronizerToken('/account/disable_legacy_browser_warning');
         $csrf->check('/my/', $request);

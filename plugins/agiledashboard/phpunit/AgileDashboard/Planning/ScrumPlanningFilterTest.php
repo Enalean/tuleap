@@ -28,6 +28,7 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 class ScrumPlanningFilterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var \PFUser
      */

@@ -156,8 +156,10 @@ class Gitolite3LogParser
 
     private function parseLine(array $line, $filename)
     {
-        if (count($line) === self::EXPECTED_NUMBER_OF_FIELDS_IN_LOG_LINE &&
-                $this->isAReadAccess($line) && $this->isNotASystemUser($line[4])) {
+        if (
+            count($line) === self::EXPECTED_NUMBER_OF_FIELDS_IN_LOG_LINE &&
+                $this->isAReadAccess($line) && $this->isNotASystemUser($line[4])
+        ) {
             $this->logger->debug(
                 'File ' . $filename . '. Add one Read access for repository ' . $line[3] . ' pattern ' . $line[7] . ' for user ' . $line[4]
             );

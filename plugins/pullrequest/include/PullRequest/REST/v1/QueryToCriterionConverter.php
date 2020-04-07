@@ -44,7 +44,7 @@ class QueryToCriterionConverter
             throw new MalformedQueryParameterException();
         }
 
-        if ($query_object == new stdClass) {
+        if ($query_object == new stdClass()) {
             return new StatusAll();
         }
 

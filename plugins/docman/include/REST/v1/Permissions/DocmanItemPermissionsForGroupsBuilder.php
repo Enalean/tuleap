@@ -62,7 +62,7 @@ class DocmanItemPermissionsForGroupsBuilder
         $this->ugroup_manager             = $ugroup_manager;
     }
 
-    public function getRepresentation(PFUser $user, Docman_Item $item) : ?DocmanItemPermissionsForGroupsRepresentation
+    public function getRepresentation(PFUser $user, Docman_Item $item): ?DocmanItemPermissionsForGroupsRepresentation
     {
         if (! $this->docman_permissions_manager->userCanManage($user, $item->getId())) {
             return null;
@@ -81,7 +81,7 @@ class DocmanItemPermissionsForGroupsBuilder
      * @psalm-param value-of<Docman_PermissionsManager::ITEM_PERMISSION_TYPES> $permission_type
      * @return UserGroupRepresentation[]
      */
-    private function buildUGroupsRepresentationForPermission(Project $project, Docman_Item $item, string $permission_type) : array
+    private function buildUGroupsRepresentationForPermission(Project $project, Docman_Item $item, string $permission_type): array
     {
         $user_group_representations = [];
 

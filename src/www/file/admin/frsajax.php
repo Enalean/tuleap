@@ -84,10 +84,12 @@ if ($action == 'permissions_frs_package') {
             $vPackageId->required();
             $vGroupId = new Valid_GroupId();
             $vGroupId->required();
-            if ($request->valid($vName) &&
+            if (
+                $request->valid($vName) &&
                 $request->valid($vDate) &&
                 $request->valid($vGroupId) &&
-                $request->valid($vPackageId)) {
+                $request->valid($vPackageId)
+            ) {
                 $name = $request->get('name');
                 $package_id = $request->get('package_id');
                 $date       = $request->get('date');
@@ -121,11 +123,13 @@ if ($action == 'permissions_frs_package') {
                 $vReleaseId->required();
                 $vGroupId = new Valid_GroupId();
                 $vGroupId->required();
-                if ($request->valid($vName) &&
+                if (
+                    $request->valid($vName) &&
                     $request->valid($vDate) &&
                     $request->valid($vGroupId) &&
                     $request->valid($vPackageId) &&
-                    $request->valid($vReleaseId)) {
+                    $request->valid($vReleaseId)
+                ) {
                     $name       = $request->get('name');
                     $package_id = $request->get('package_id');
                     $date       = $request->get('date');

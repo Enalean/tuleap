@@ -43,7 +43,7 @@ final class FRSFileDownloadOldURLRedirectionController extends DispatchablePSR15
         $this->response_factory = $response_factory;
     }
 
-    public function handle(ServerRequestInterface $request) : ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         return $this->response_factory->createResponse(301)
             ->withHeader('Location', '/file/download/' . urlencode((string) $request->getAttribute('file_id')));

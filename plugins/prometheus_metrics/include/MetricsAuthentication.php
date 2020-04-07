@@ -72,7 +72,7 @@ final class MetricsAuthentication implements MiddlewareInterface
         return $handler->handle($request);
     }
 
-    private function extractAuthentication(ServerRequestInterface $request) : MetricsAuthCredential
+    private function extractAuthentication(ServerRequestInterface $request): MetricsAuthCredential
     {
         $credential_set = $this->basic_auth_login_extractor->extract($request);
         if ($credential_set === null) {
@@ -82,7 +82,7 @@ final class MetricsAuthentication implements MiddlewareInterface
         return MetricsAuthCredential::fromLoginCredentialSet($credential_set);
     }
 
-    private function getSecret() : ConcealedString
+    private function getSecret(): ConcealedString
     {
         $path = $this->config_dir_root . '/metrics_secret.key';
         if (! file_exists($path)) {

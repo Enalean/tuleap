@@ -27,6 +27,7 @@ require_once __DIR__ . '/../../bootstrap.php';
 class Git_Hook_ExtractCrossReferencesTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     private $git_exec_repo;
     private $user;
     private $repository;
@@ -35,7 +36,7 @@ class Git_Hook_ExtractCrossReferencesTest extends \PHPUnit\Framework\TestCase
     private $post_receive;
     private $push_details;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -63,14 +64,14 @@ class Git_Hook_ExtractCrossReferencesTest extends \PHPUnit\Framework\TestCase
     }
 
 
-    public function testItGetsEachRevisionContent() : void
+    public function testItGetsEachRevisionContent(): void
     {
         $this->git_exec_repo->shouldReceive('catFile')->with('469eaa9')->once();
 
         $this->post_receive->execute($this->push_details, '469eaa9');
     }
 
-    public function testItExtractCrossReferencesForGivenUser() : void
+    public function testItExtractCrossReferencesForGivenUser(): void
     {
         $this->git_exec_repo->shouldReceive('catFile')->andReturns('whatever');
 
@@ -79,7 +80,7 @@ class Git_Hook_ExtractCrossReferencesTest extends \PHPUnit\Framework\TestCase
         $this->post_receive->execute($this->push_details, '469eaa9');
     }
 
-    public function testItExtractCrossReferencesOnGitCommit() : void
+    public function testItExtractCrossReferencesOnGitCommit(): void
     {
         $this->git_exec_repo->shouldReceive('catFile')->andReturns('whatever');
 
@@ -88,7 +89,7 @@ class Git_Hook_ExtractCrossReferencesTest extends \PHPUnit\Framework\TestCase
         $this->post_receive->execute($this->push_details, '469eaa9');
     }
 
-    public function testItExtractCrossReferencesOnCommitMessage() : void
+    public function testItExtractCrossReferencesOnCommitMessage(): void
     {
         $this->git_exec_repo->shouldReceive('catFile')->andReturns('bla bla bla');
 
@@ -97,7 +98,7 @@ class Git_Hook_ExtractCrossReferencesTest extends \PHPUnit\Framework\TestCase
         $this->post_receive->execute($this->push_details, '469eaa9');
     }
 
-    public function testItExtractCrossReferencesForProject() : void
+    public function testItExtractCrossReferencesForProject(): void
     {
         $this->git_exec_repo->shouldReceive('catFile')->andReturns('');
 
@@ -106,7 +107,7 @@ class Git_Hook_ExtractCrossReferencesTest extends \PHPUnit\Framework\TestCase
         $this->post_receive->execute($this->push_details, '469eaa9');
     }
 
-    public function testItSetTheReferenceToTheRepository() : void
+    public function testItSetTheReferenceToTheRepository(): void
     {
         $this->git_exec_repo->shouldReceive('catFile')->andReturns('');
 
@@ -115,7 +116,7 @@ class Git_Hook_ExtractCrossReferencesTest extends \PHPUnit\Framework\TestCase
         $this->post_receive->execute($this->push_details, '469eaa9');
     }
 
-    public function testItSetTheReferenceToTheRepositoryWithSubRepo() : void
+    public function testItSetTheReferenceToTheRepositoryWithSubRepo(): void
     {
         $this->git_exec_repo->shouldReceive('catFile')->andReturns('');
 

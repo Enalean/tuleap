@@ -65,8 +65,10 @@ class Docman_MetadataHtmlFactory
                             'theme_path' => $themePath);
 
         foreach ($mdIter as $md) {
-            if (($whitelist && isset($mdla[$md->getLabel()]))
-               || (!$whitelist && !isset($mdla[$md->getLabel()]))) {
+            if (
+                ($whitelist && isset($mdla[$md->getLabel()]))
+                || (!$whitelist && !isset($mdla[$md->getLabel()]))
+            ) {
                 $fields[$md->getLabel()] = $this->getFromMetadata($md, $formParams);
             }
         }

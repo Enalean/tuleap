@@ -41,12 +41,12 @@ final class JenkinsClientTest extends TestCase
      */
     private $jenkins_csrf_crumb_retriever;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->jenkins_csrf_crumb_retriever = Mockery::mock(JenkinsCSRFCrumbRetriever::class);
     }
 
-    public function testLaunchJobBuildThrowsAnExceptionOnFailedRequest() : void
+    public function testLaunchJobBuildThrowsAnExceptionOnFailedRequest(): void
     {
         $http_client = new Client();
         $http_client->addResponse(HTTPFactoryBuilder::responseFactory()->createResponse(500));
@@ -64,7 +64,7 @@ final class JenkinsClientTest extends TestCase
         $jenkins_client->launchJobBuild('https://some.url.example.com/job/my_job');
     }
 
-    public function testLaunchJobBuildThrowsAnExceptionOnNetworkFailure() : void
+    public function testLaunchJobBuildThrowsAnExceptionOnNetworkFailure(): void
     {
         $http_client = Mockery::mock(ClientInterface::class);
         $http_client->shouldReceive('sendRequest')->andThrow(
@@ -89,7 +89,7 @@ final class JenkinsClientTest extends TestCase
      * @testWith [200]
      *           [201]
      */
-    public function testLaunchJobSetsCorrectOptions(int $http_response_status_code) : void
+    public function testLaunchJobSetsCorrectOptions(int $http_response_status_code): void
     {
         $http_client    = new Client();
         $jenkins_client = new Jenkins_Client(
@@ -118,7 +118,7 @@ final class JenkinsClientTest extends TestCase
         $this->assertEquals($expected_body, $request->getBody()->getContents());
     }
 
-    public function testTokenAsParameter() : void
+    public function testTokenAsParameter(): void
     {
         $http_client = new Client();
 
@@ -142,7 +142,7 @@ final class JenkinsClientTest extends TestCase
         $this->assertEquals('token=thou+shall+not+pass', $request->getUri()->getQuery());
     }
 
-    public function testLaunchJobWithParametersGivenByUser() : void
+    public function testLaunchJobWithParametersGivenByUser(): void
     {
         $http_client = new Client();
 
@@ -165,7 +165,7 @@ final class JenkinsClientTest extends TestCase
         $this->assertEquals($job_url, (string) $request->getUri());
     }
 
-    public function testLaunchJobWithParametersGivenByUserAndToken() : void
+    public function testLaunchJobWithParametersGivenByUserAndToken(): void
     {
         $http_client = new Client();
 
@@ -189,7 +189,7 @@ final class JenkinsClientTest extends TestCase
         $this->assertEquals($job_url . '&token=thou+shall+not+pass', (string) $request->getUri());
     }
 
-    public function testLaunchJobWithACSRFCrumbHeader() : void
+    public function testLaunchJobWithACSRFCrumbHeader(): void
     {
         $http_client = new Client();
 
@@ -215,7 +215,7 @@ final class JenkinsClientTest extends TestCase
         $this->assertEquals($csrf_crumb_header_value, $request->getHeaderLine($csrf_crumb_header_name));
     }
 
-    public function testLaunchJobBuildWithInvalidURL() : void
+    public function testLaunchJobBuildWithInvalidURL(): void
     {
         $http_client = new Client();
 

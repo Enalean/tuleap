@@ -31,7 +31,8 @@ use Tuleap\GlobalLanguageMock;
 
 final class DateHelperTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     public function testDistanceOfTimeInWords(): void
     {

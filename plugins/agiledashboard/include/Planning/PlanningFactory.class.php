@@ -326,7 +326,7 @@ class PlanningFactory
         );
         $hierarchy   = $this->tracker_factory->getHierarchy($tracker_ids);
         $tmp_tracker_ids_to_sort_plannings = $hierarchy->sortTrackerIds($tracker_ids);
-        usort($plannings, static function (Planning $a, Planning $b) use ($tmp_tracker_ids_to_sort_plannings) : int {
+        usort($plannings, static function (Planning $a, Planning $b) use ($tmp_tracker_ids_to_sort_plannings): int {
             return strcmp(
                 array_search($a->getPlanningTrackerId(), $tmp_tracker_ids_to_sort_plannings),
                 array_search($b->getPlanningTrackerId(), $tmp_tracker_ids_to_sort_plannings)

@@ -36,13 +36,13 @@ class SimilarFieldsFilterTest extends TestCase
     /** @var SimilarFieldsFilter */
     private $filter;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->filter = new SimilarFieldsFilter();
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         Tracker_Semantic_Title::clearInstances();
         Tracker_Semantic_Description::clearInstances();

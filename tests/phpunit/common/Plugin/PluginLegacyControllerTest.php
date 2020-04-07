@@ -30,7 +30,7 @@ final class PluginLegacyControllerTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testLegacyPluginCanBeAccessed() : void
+    public function testLegacyPluginCanBeAccessed(): void
     {
         $plugin = Mockery::mock(PluginWithLegacyInternalRouting::class);
         $plugin->shouldReceive('getName')->andReturn('test');

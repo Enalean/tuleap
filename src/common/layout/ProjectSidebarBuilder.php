@@ -133,7 +133,7 @@ class ProjectSidebarBuilder
         PFUser $user,
         \Service $service,
         array $allowed_services
-    ) : bool {
+    ): bool {
         $short_name = $service->getShortName();
 
         if (! $service->isUsed()) {
@@ -153,7 +153,8 @@ class ProjectSidebarBuilder
             }
         }
 
-        if (! $this->isProjectSuperPublic($project)
+        if (
+            ! $this->isProjectSuperPublic($project)
             && $this->restrictedMemberIsNotProjectMember($user, $project)
             && ! $this->permission_overrider->doesOverriderAllowUserToAccessProject($user, $project)
             && ! in_array($short_name, $allowed_services)
@@ -164,7 +165,7 @@ class ProjectSidebarBuilder
         return true;
     }
 
-    private function getLink(\Service $service, Project $project) : string
+    private function getLink(\Service $service, Project $project): string
     {
         $project_id = $project->getID();
 
@@ -206,13 +207,13 @@ class ProjectSidebarBuilder
         return $this->uri_sanitizer->sanitizeForHTMLAttribute($link);
     }
 
-    private function isEnabled($toptab, \Service $service) : bool
+    private function isEnabled($toptab, \Service $service): bool
     {
         return (is_numeric($toptab) && $toptab == $service->getId())
             || ($service->getShortName() && ($toptab == $service->getShortName()));
     }
 
-    private function getLabel(\Service $service) : string
+    private function getLabel(\Service $service): string
     {
         $label = '<span title="' . $this->purifier->purify($service->getInternationalizedDescription()) . '">';
         $label .= $this->purifier->purify($service->getInternationalizedName()) . '</span>';
@@ -220,7 +221,7 @@ class ProjectSidebarBuilder
         return $label;
     }
 
-    private function userCanSeeAdminService(Project $project, PFUser $user) : bool
+    private function userCanSeeAdminService(Project $project, PFUser $user): bool
     {
         if (! $user->isLoggedIn()) {
             return false;

@@ -869,9 +869,11 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
     $vPackage_id = new Valid_UInt();
     $vStatus_id =  new Valid_UInt();
 
-    if ($vName->validate($res['name']) &&
+    if (
+        $vName->validate($res['name']) &&
         $vPackage_id->validate($res['package_id']) &&
-        $vStatus_id->validate($res['status_id'])) {
+        $vStatus_id->validate($res['status_id'])
+    ) {
         $release['status_id'] = $res['status_id'];
         $release['name'] = $res['name'];
         $release['package_id'] = $res['package_id'];
@@ -1266,7 +1268,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                             }
                         }
                     }
-                    $index ++;
+                    $index++;
                 }
             }
 

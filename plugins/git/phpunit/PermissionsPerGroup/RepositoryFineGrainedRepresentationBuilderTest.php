@@ -72,7 +72,7 @@ class RepositoryFineGrainedRepresentationBuilderTest extends TestCase
      */
     private $representation_builder;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

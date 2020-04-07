@@ -38,7 +38,7 @@ final class HudsonTestResultTest extends TestCase
     /** @var XML_Security */
     private $xml_security;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -48,7 +48,7 @@ final class HudsonTestResultTest extends TestCase
         $GLOBALS['Language'] = Mockery::spy(BaseLanguage::class);
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         unset($GLOBALS['Language']);
         $this->xml_security->disableExternalLoadOfEntities();

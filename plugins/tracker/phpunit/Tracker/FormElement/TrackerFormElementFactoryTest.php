@@ -37,7 +37,9 @@ use User\XML\Import\IFindUserFromXMLReference;
 
 class TrackerFormElementFactoryTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, GlobalLanguageMock, GlobalResponseMock;
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
+    use GlobalResponseMock;
 
     /**
      * @var Mockery\MockInterface|Tracker_FormElementFactory
@@ -105,7 +107,7 @@ class TrackerFormElementFactoryTest extends TestCase
         parent::tearDown();
     }
 
-    public function testImportFormElement() : void
+    public function testImportFormElement(): void
     {
         $mapping = [];
 
@@ -124,7 +126,7 @@ class TrackerFormElementFactoryTest extends TestCase
         $this->assertSame($mapping['F0'], $this->form_element);
     }
 
-    public function testImportFormElementReturnWarningFeedbackWhenNoFormelementCorresponding() : void
+    public function testImportFormElementReturnWarningFeedbackWhenNoFormelementCorresponding(): void
     {
         $mapping = [];
 

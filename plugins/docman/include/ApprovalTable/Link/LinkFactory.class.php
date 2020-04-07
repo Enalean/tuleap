@@ -48,8 +48,10 @@ class Docman_ApprovalTableLinkFactory extends Docman_ApprovalTableVersionnedFact
             $lastVersionNumber = $row['number'];
             $lastItemVersion = $vFactory->getSpecificVersion($item, $lastVersionNumber);
 
-            if ($versionNumber !== null
-               && $lastItemVersion->getNumber() != $versionNumber) {
+            if (
+                $versionNumber !== null
+                && $lastItemVersion->getNumber() != $versionNumber
+            ) {
                 $this->itemVersion = $vFactory->getSpecificVersion($item, $versionNumber);
                 $this->customizable = false;
             } else {

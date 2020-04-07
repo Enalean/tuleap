@@ -39,7 +39,8 @@ use Tuleap\User\Account\AccountTabPresenterCollection;
 
 final class AccountAppsControllerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, TemporaryTestDirectory;
+    use MockeryPHPUnitIntegration;
+    use TemporaryTestDirectory;
 
     /**
      * @var AccountAppsController

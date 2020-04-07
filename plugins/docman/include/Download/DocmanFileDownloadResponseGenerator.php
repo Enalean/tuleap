@@ -59,7 +59,7 @@ class DocmanFileDownloadResponseGenerator
         PFUser $current_user,
         Docman_File $docman_file,
         ?int $version_id
-    ) : ResponseInterface {
+    ): ResponseInterface {
         $permission_manager = Docman_PermissionsManager::instance($docman_file->getGroupId());
         if (! $permission_manager->userCanAccess($current_user, $docman_file->getId())) {
             throw new UserCannotAccessFileException($current_user, $docman_file);

@@ -118,7 +118,7 @@ final class UserTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($user->getPreference('existing_preference'), 'Preferences has been deleted. No call to dao since cached during delete');
     }
 
-    public function testNone() : void
+    public function testNone(): void
     {
         $user_none = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $user_none->shouldReceive('getId')->andReturns(100);
@@ -129,7 +129,7 @@ final class UserTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($user->isNone());
     }
 
-    public function testIsMemberSiteAdmin() : void
+    public function testIsMemberSiteAdmin(): void
     {
         $siteadmin = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $ug_siteadmin = array(
@@ -157,7 +157,7 @@ final class UserTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($siteadmin->isMember(123, 'A'));
     }
 
-    public function testIsMemberProjectAdmin() : void
+    public function testIsMemberProjectAdmin(): void
     {
         $projectadmin     = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $ug_project_admin = array(
@@ -193,7 +193,7 @@ final class UserTest extends \PHPUnit\Framework\TestCase
     /**
      * This test reproduce bug #20456 on codex.xerox.com
      */
-    public function testIsMemberProjectMember() : void
+    public function testIsMemberProjectMember(): void
     {
         $projectmember     = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $ug_project_member = array(
@@ -226,7 +226,7 @@ final class UserTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($projectmember->isMember(1, 'A'));
     }
 
-    public function testGetAuthorizedKeysSplitedWith1Key() : void
+    public function testGetAuthorizedKeysSplitedWith1Key(): void
     {
         $k1 = 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAtfKHvNobjjB+cYGue/c/SXUL9Htay'
             . 'lfQJWnLiV3AuqnbrWm6l9WGnv6+44/6e38Jwk0ywuvCdM5xi9gtWPN9Cw2S8qLbhVr'
@@ -241,7 +241,7 @@ final class UserTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($res[0], $k1);
     }
 
-    public function testGetAuthorizedKeysSplitedWith2Keys() : void
+    public function testGetAuthorizedKeysSplitedWith2Keys(): void
     {
         $k1 = 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAtfKHvNobjjB+cYGue/c/SXUL9Htay'
             . 'lfQJWnLiV3AuqnbrWm6l9WGnv6+44/6e38Jwk0ywuvCdM5xi9gtWPN9Cw2S8qLbhVr'
@@ -264,7 +264,7 @@ final class UserTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($k2, $res[1]);
     }
 
-    public function testGetAuthorizedKeysSplitedWithEmptyKey() : void
+    public function testGetAuthorizedKeysSplitedWithEmptyKey(): void
     {
         $k1 = 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAtfKHvNobjjB+cYGue/c/SXUL9Htay'
             . 'lfQJWnLiV3AuqnbrWm6l9WGnv6+44/6e38Jwk0ywuvCdM5xi9gtWPN9Cw2S8qLbhVr'
@@ -286,7 +286,7 @@ final class UserTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($k2, $res[2]);
     }
 
-    public function testActiveUserCanSeePeopleNotInHisProjects() : void
+    public function testActiveUserCanSeePeopleNotInHisProjects(): void
     {
         $activeUser = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $activeUser->setId(123);
@@ -300,7 +300,7 @@ final class UserTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($activeUser->canSee($notProjectMember));
     }
 
-    public function testRestrictedUserCanSeePeopleInHisProjects() : void
+    public function testRestrictedUserCanSeePeopleInHisProjects(): void
     {
         $restrictedUser = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $restrictedUser->setId(123);
@@ -314,7 +314,7 @@ final class UserTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($restrictedUser->canSee($otherProjectMember));
     }
 
-    public function testRestrictedUserCannotSeePeopleNotInHisProjects() : void
+    public function testRestrictedUserCannotSeePeopleNotInHisProjects(): void
     {
         $restrictedUser = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $restrictedUser->setId(123);
@@ -328,7 +328,7 @@ final class UserTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($restrictedUser->canSee($notProjectMember));
     }
 
-    public function testGetAuthorizedKeysSplitedWithoutKey() : void
+    public function testGetAuthorizedKeysSplitedWithoutKey(): void
     {
         $user = new PFUser(array('language_id'     => 'en_US',
                                'authorized_keys' => ''));
@@ -336,7 +336,7 @@ final class UserTest extends \PHPUnit\Framework\TestCase
         $this->assertCount(0, $res);
     }
 
-    public function testGetAllProjectShouldListOnlyOneOccurenceOfEachProject() : void
+    public function testGetAllProjectShouldListOnlyOneOccurenceOfEachProject(): void
     {
         $user = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -350,7 +350,7 @@ final class UserTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(array(102, 103, 104, 101), $user->getAllProjects());
     }
 
-    public function testGetLanguageShouldUserLanguageFactoryIfNotDefined() : void
+    public function testGetLanguageShouldUserLanguageFactoryIfNotDefined(): void
     {
         $langFactory = \Mockery::spy(\BaseLanguageFactory::class);
         $langFactory->shouldReceive('getBaseLanguage')->with('fr_BE')->once();
@@ -360,13 +360,13 @@ final class UserTest extends \PHPUnit\Framework\TestCase
         $user->getLanguage();
     }
 
-    public function testItStringifiesTheUser() : void
+    public function testItStringifiesTheUser(): void
     {
         $user = new PFUser(['user_id' => 123, 'language_id' => 'en_US']);
         $this->assertEquals("User #123", (string) $user);
     }
 
-    public function testItReturnsTrueWhenUserIsAdminOfProjectAdministration() : void
+    public function testItReturnsTrueWhenUserIsAdminOfProjectAdministration(): void
     {
         $user = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $user->shouldReceive('getUserGroupData')->andReturns(array(1 => array('admin_flags' => 'A')));
@@ -375,7 +375,7 @@ final class UserTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($user->isSuperUser());
     }
 
-    public function testItReturnsTrueWhenUserHasSiteAdministrationPermissionDelegation() : void
+    public function testItReturnsTrueWhenUserHasSiteAdministrationPermissionDelegation(): void
     {
         $user = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $user->shouldReceive('getUserGroupData')->andReturns(array());
@@ -384,7 +384,7 @@ final class UserTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($user->isSuperUser());
     }
 
-    public function testItReturnsFalseWhenUserIsNotSiteAdministrator() : void
+    public function testItReturnsFalseWhenUserIsNotSiteAdministrator(): void
     {
         $user = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $user->shouldReceive('getUserGroupData')->andReturns(array());
@@ -393,7 +393,7 @@ final class UserTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($user->isSuperUser());
     }
 
-    public function testItSetTheAlternateValueWhenPreferenceIsTheDefaultOne() : void
+    public function testItSetTheAlternateValueWhenPreferenceIsTheDefaultOne(): void
     {
         $user_id = 101;
         $user    = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -425,7 +425,7 @@ final class UserTest extends \PHPUnit\Framework\TestCase
         $user->togglePreference('pref_name', 'default_value', 'alt_value');
     }
 
-    public function testItSetTheDefaultValueWhenNoPreference() : void
+    public function testItSetTheDefaultValueWhenNoPreference(): void
     {
         $user = \Mockery::mock(\PFUser::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $dao  = \Mockery::mock(\UserPreferencesDao::class);

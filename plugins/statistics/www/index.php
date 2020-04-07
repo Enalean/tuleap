@@ -57,7 +57,8 @@ if ($request->exist('type_values')) {
     $type_values = array('session');
 }
 
-if (isset($_REQUEST['start'])
+if (
+    isset($_REQUEST['start'])
     && isset($_REQUEST['end'])
     && strtotime($_REQUEST['start']) > strtotime($_REQUEST['end'])
 ) {

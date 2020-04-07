@@ -182,8 +182,10 @@ class tracker_date_reminderPlugin extends Plugin
                 } elseif (array_key_exists('submit_notif_settings', $_REQUEST) && $_REQUEST['submit_notif_settings']) {
                     if ((!isset($_REQUEST['notified_users']) || (isset($_REQUEST['notified_users']) && $_REQUEST['notified_users'] == null)) && _(!isset($_REQUEST['notified_groups']) || (isset($_REQUEST['notified_groups']) && $_REQUEST['notified_groups'] == null))) {
                         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'specify_notified_users'));
-                    } elseif (count($_REQUEST['notified_users']) == 1 && $_REQUEST['notified_users'][0] == 100 &&
-                        count($_REQUEST['notified_groups']) == 1 && $_REQUEST['notified_groups'][0] == 100) {
+                    } elseif (
+                        count($_REQUEST['notified_users']) == 1 && $_REQUEST['notified_users'][0] == 100 &&
+                        count($_REQUEST['notified_groups']) == 1 && $_REQUEST['notified_groups'][0] == 100
+                    ) {
                         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'specify_notified_users'));
                     } elseif (!isset($_REQUEST['start']) || (isset($_REQUEST['start']) && $_REQUEST['start'] == null)) {
                         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'specify_notification_start'));

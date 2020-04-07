@@ -39,7 +39,7 @@ final class RequestHandlerAsMiddleware implements MiddlewareInterface
         $this->request_handler = $request_handler;
     }
 
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         return $this->request_handler->handle($request);
     }

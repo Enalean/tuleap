@@ -50,7 +50,7 @@ class ProjectVisibilityConfigManager
         $this->config_dao->save($forge_config_option, $new_value);
     }
 
-    public function updateDefaultProjectVisibility(string $new_value) : bool
+    public function updateDefaultProjectVisibility(string $new_value): bool
     {
         $acceptable_values = [Project::ACCESS_PUBLIC, Project::ACCESS_PRIVATE];
         if (ForgeConfig::areRestrictedUsersAllowed()) {

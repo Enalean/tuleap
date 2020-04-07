@@ -37,7 +37,7 @@ AND @comment = ""
 EOS;
 
 try {
-    $parser = new Parser;
+    $parser = new Parser();
     $result = $parser->parse($input);
     print_r($result);
 } catch (SyntaxError $ex) {

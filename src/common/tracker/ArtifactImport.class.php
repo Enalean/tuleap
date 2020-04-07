@@ -230,15 +230,17 @@ class ArtifactImport
      //echo $label.",";
                 if ($field) {
                            $field_name = $field->getName();
-                    if ($field_name != "artifact_id" &&
-                    $field_name != "open_date" &&
-                       $field_name != "last_update_date" &&
-                    $field_name != "submitted_by" &&
-                    $label != $this->lbl_list['follow_ups'] &&
-                    $label != $this->lbl_list['is_dependent_on'] &&
-                    $label != $this->lbl_list['add_cc'] &&
-                    $label != $this->lbl_list['cc_comment'] &&
-                    !$field->isEmptyOk() && !in_array($label, $this->parsed_labels)) {
+                    if (
+                        $field_name != "artifact_id" &&
+                        $field_name != "open_date" &&
+                        $field_name != "last_update_date" &&
+                        $field_name != "submitted_by" &&
+                        $label != $this->lbl_list['follow_ups'] &&
+                        $label != $this->lbl_list['is_dependent_on'] &&
+                        $label != $this->lbl_list['add_cc'] &&
+                        $label != $this->lbl_list['cc_comment'] &&
+                        !$field->isEmptyOk() && !in_array($label, $this->parsed_labels)
+                    ) {
                                    $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'field_mandatory', array($label,$this->ath->getName())));
                                    return false;
                     }
@@ -276,14 +278,18 @@ class ArtifactImport
             }
         } else {
             if (!array_key_exists($val, $predef_vals) && $val != $GLOBALS['Language']->getText('global', 'none') && $val != "") {
-                if (($field_name == 'severity') &&
-                (strcasecmp($val, '1') == 0 || strcasecmp($val, '5') == 0 || strcasecmp($val, 9) == 0)) {
+                if (
+                    ($field_name == 'severity') &&
+                    (strcasecmp($val, '1') == 0 || strcasecmp($val, '5') == 0 || strcasecmp($val, 9) == 0)
+                ) {
                        //accept simple ints for Severity fields instead of 1 - Ordinary,5 - Major,9 - Critical
                        //accept simple ints for Priority fields instead of 1 - Lowest,5 - Medium,9 - Highest
-                } elseif ($field_name == 'submitted_by' &&
-                (($val == $GLOBALS['Language']->getText('global', 'none') && $this->ath->allowsAnon()) ||
-                $val == "" ||
-                user_getemail_from_unix($val) != $GLOBALS['Language']->getText('include_user', 'not_found'))) {
+                } elseif (
+                    $field_name == 'submitted_by' &&
+                    (($val == $GLOBALS['Language']->getText('global', 'none') && $this->ath->allowsAnon()) ||
+                    $val == "" ||
+                    user_getemail_from_unix($val) != $GLOBALS['Language']->getText('include_user', 'not_found'))
+                ) {
                           //accept anonymous user, use importing user as 'submitted by', or simply make sure that user is a known user
                 } else {
                       $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'not_a_predefined_value', array(
@@ -331,11 +337,15 @@ class ArtifactImport
             }
 
           // check whether we specify None for a field which is mandatory
-            if ($field && !$field->isEmptyOk() &&
-            $field_name != "artifact_id") {
-                if ($field_name == "submitted_by" ||
-                $field_name == "open_date" ||
-                $field_name == "last_update_date") {
+            if (
+                $field && !$field->isEmptyOk() &&
+                $field_name != "artifact_id"
+            ) {
+                if (
+                    $field_name == "submitted_by" ||
+                    $field_name == "open_date" ||
+                    $field_name == "last_update_date"
+                ) {
                            //submitted on, submitted by and last modified on are accepted as "" on inserts and
                            //we put time() importing user as default
                 } else {
@@ -390,7 +400,8 @@ class ArtifactImport
                 }
 
                 if ($field) {
-                    if ($field_name != "artifact_id" &&
+                    if (
+                        $field_name != "artifact_id" &&
                            $field_name != "open_date" &&
                            $field_name != "last_update_date" &&
                            $field_name != "submitted_by" &&
@@ -398,7 +409,8 @@ class ArtifactImport
                            $label != $this->lbl_list['is_dependent_on'] &&
                            $label != $this->lbl_list['add_cc'] &&
                            $label != $this->lbl_list['cc_comment'] &&
-                           !$field->isEmptyOk() && !in_array($label, $this->parsed_labels)) {
+                           !$field->isEmptyOk() && !in_array($label, $this->parsed_labels)
+                    ) {
                                    $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'field_mandatory_and_line', array(
                                    $row + 1,
                                    $hp->purify(implode(",", $data), CODENDI_PURIFIER_CONVERT_HTML) ,
@@ -629,8 +641,10 @@ class ArtifactImport
    */
     public function setPredefinedValue($field, $column_number)
     {
-        if ($field &&
-        ($field->getDisplayType() == "SB" || $field->getDisplayType() == "MB")) {
+        if (
+            $field &&
+            ($field->getDisplayType() == "SB" || $field->getDisplayType() == "MB")
+        ) {
           //special case for submitted by
             if ($field->getName() == "submitted_by") {
            // simply put nothing in predefined values for submitted_by
@@ -776,9 +790,11 @@ class ArtifactImport
         $i = 0;
         foreach ($comments as $comment) {
             $i++;
-            if (($i == 1) &&
-            ( (count($comments) > 1) ||
-            (trim($comment) == $GLOBALS['Language']->getText('tracker_import_utils', 'no_followups')) )) {
+            if (
+                ($i == 1) &&
+                ( (count($comments) > 1) ||
+                (trim($comment) == $GLOBALS['Language']->getText('tracker_import_utils', 'no_followups')) )
+            ) {
          //skip first line
                 continue;
             }
@@ -1122,10 +1138,12 @@ class ArtifactImport
       // 1 instead of "1 - Ordinary"
       // 5 instead of "5 - Major"
       // 9 intead of "9 - Critical"
-                    if ($field_name == "severity" &&
-                    (strcasecmp($imported_value, '1') == 0 ||
-                    strcasecmp($imported_value, '5') == 0 ||
-                    strcasecmp($imported_value, '9') == 0)) {
+                    if (
+                        $field_name == "severity" &&
+                        (strcasecmp($imported_value, '1') == 0 ||
+                        strcasecmp($imported_value, '5') == 0 ||
+                        strcasecmp($imported_value, '9') == 0)
+                    ) {
                         $value = $imported_value;
                     }
                 }

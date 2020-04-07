@@ -33,7 +33,7 @@ final class UserGroupRepresentationTest extends TestCase
      *           ["101"]
      *           ["2"]
      */
-    public function testValidRESTUserGroupIdentifierAreNotRejected(string $identifier) : void
+    public function testValidRESTUserGroupIdentifierAreNotRejected(string $identifier): void
     {
         $this->expectNotToPerformAssertions();
         UserGroupRepresentation::checkRESTIdIsAppropriate($identifier);
@@ -44,7 +44,7 @@ final class UserGroupRepresentationTest extends TestCase
      *           ["45"]
      *           ["102_2"]
      */
-    public function testNotValidRESTUserGroupIdentifierAreRejected(string $invalid_identifier) : void
+    public function testNotValidRESTUserGroupIdentifierAreRejected(string $invalid_identifier): void
     {
         $this->expectException(Exception::class);
         UserGroupRepresentation::checkRESTIdIsAppropriate($invalid_identifier);

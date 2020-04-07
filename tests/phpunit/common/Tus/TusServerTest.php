@@ -40,7 +40,7 @@ final class TusServerTest extends TestCase
     private $data_store;
     private $file_information_provider;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->response_factory          = HTTPFactoryBuilder::responseFactory();
         $this->data_store                = \Mockery::mock(TusDataStore::class);
@@ -48,7 +48,7 @@ final class TusServerTest extends TestCase
         $this->data_store->shouldReceive('getFileInformationProvider')->andReturns($this->file_information_provider);
     }
 
-    public function testInformationAboutTheServerCanBeGathered() : void
+    public function testInformationAboutTheServerCanBeGathered(): void
     {
         $this->data_store->shouldReceive('getTerminater')->andReturns(null);
         $server = new TusServer($this->response_factory, $this->data_store);
@@ -63,7 +63,7 @@ final class TusServerTest extends TestCase
         $this->assertFalse($response->hasHeader('Tus-Extension'));
     }
 
-    public function testInformationAboutExtensionsAreGivenIfThereIsAnAvailableExtension() : void
+    public function testInformationAboutExtensionsAreGivenIfThereIsAnAvailableExtension(): void
     {
         $this->data_store->shouldReceive('getTerminater')->andReturns(\Mockery::mock(TusTerminaterDataStore::class));
         $server = new TusServer($this->response_factory, $this->data_store);
@@ -77,7 +77,7 @@ final class TusServerTest extends TestCase
         $this->assertNotEmpty(\explode(',', $response->getHeaderLine('Tus-Extension')));
     }
 
-    public function testInformationAboutTheFileBeingUploadedCanBeGathered() : void
+    public function testInformationAboutTheFileBeingUploadedCanBeGathered(): void
     {
         $server = new TusServer($this->response_factory, $this->data_store);
 
@@ -102,7 +102,7 @@ final class TusServerTest extends TestCase
     /**
      * @dataProvider validUploadRequestProvider
      */
-    public function testFileCanBeUploaded(int $upload_offset, string $body_content, string $content_type, bool $has_finisher) : void
+    public function testFileCanBeUploaded(int $upload_offset, string $body_content, string $content_type, bool $has_finisher): void
     {
         $data_writer = \Mockery::mock(TusWriter::class);
         $this->data_store->shouldReceive('getWriter')->andReturns($data_writer);
@@ -139,7 +139,7 @@ final class TusServerTest extends TestCase
                 $file_information,
                 $upload_offset,
                 \Mockery::on(
-                    function ($input_resource) use ($body_content) : bool {
+                    function ($input_resource) use ($body_content): bool {
                         return stream_get_contents($input_resource) === $body_content;
                     }
                 )
@@ -157,7 +157,7 @@ final class TusServerTest extends TestCase
         $this->assertEquals($upload_offset + strlen($body_content), $response->getHeaderLine('Upload-Offset'));
     }
 
-    public function validUploadRequestProvider() : array
+    public function validUploadRequestProvider(): array
     {
         return [
             [0, 'Content to upload', 'application/offset+octet-stream', false],
@@ -170,7 +170,7 @@ final class TusServerTest extends TestCase
         ];
     }
 
-    public function testRequestWithANonSupportedVersionOfTheProtocolIsRejected() : void
+    public function testRequestWithANonSupportedVersionOfTheProtocolIsRejected(): void
     {
         $server = new TusServer($this->response_factory, $this->data_store);
 
@@ -184,7 +184,7 @@ final class TusServerTest extends TestCase
         $this->assertTrue($response->hasHeader('Tus-Version'));
     }
 
-    public function testAnUploadRequestWithAnIncorrectOffsetIsRejected() : void
+    public function testAnUploadRequestWithAnIncorrectOffsetIsRejected(): void
     {
         $this->data_store->shouldReceive('getLocker')->andReturns(null);
         $server = new TusServer($this->response_factory, $this->data_store);
@@ -209,7 +209,7 @@ final class TusServerTest extends TestCase
         $this->assertEquals(409, $response->getStatusCode());
     }
 
-    public function testAnUploadRequestWithoutTheOffsetIsRejected() : void
+    public function testAnUploadRequestWithoutTheOffsetIsRejected(): void
     {
         $server = new TusServer($this->response_factory, $this->data_store);
 
@@ -226,7 +226,7 @@ final class TusServerTest extends TestCase
         $this->assertEquals(400, $response->getStatusCode());
     }
 
-    public function testAnUploadRequestWithAnIncorrectContentTypeIsRejected() : void
+    public function testAnUploadRequestWithAnIncorrectContentTypeIsRejected(): void
     {
         $server = new TusServer($this->response_factory, $this->data_store);
 
@@ -242,7 +242,7 @@ final class TusServerTest extends TestCase
         $this->assertEquals(415, $response->getStatusCode());
     }
 
-    public function testAnErrorIsGivenWhenTheIncomingRequestBodyCannotBeRead() : void
+    public function testAnErrorIsGivenWhenTheIncomingRequestBodyCannotBeRead(): void
     {
         $data_writer = \Mockery::mock(TusWriter::class);
         $this->data_store->shouldReceive('getWriter')->andReturns($data_writer);
@@ -266,7 +266,7 @@ final class TusServerTest extends TestCase
         $this->assertEquals(500, $response->getStatusCode());
     }
 
-    public function testAnErrorIsGivenWhenTheFileCanNotBeSaved() : void
+    public function testAnErrorIsGivenWhenTheFileCanNotBeSaved(): void
     {
         $data_writer = \Mockery::mock(TusWriter::class);
         $this->data_store->shouldReceive('getWriter')->andReturns($data_writer);
@@ -296,7 +296,7 @@ final class TusServerTest extends TestCase
         $this->assertTrue($response->hasHeader('Tus-Resumable'));
     }
 
-    public function testANotFoundErrorIsGivenWhenTheFileCanNotBeProvided() : void
+    public function testANotFoundErrorIsGivenWhenTheFileCanNotBeProvided(): void
     {
         $server = new TusServer($this->response_factory, $this->data_store);
 
@@ -312,7 +312,7 @@ final class TusServerTest extends TestCase
         $this->assertEquals(404, $response->getStatusCode());
     }
 
-    public function testAnUploadCanBeTerminatedWhenTheTerminationExtensionIsEnabled() : void
+    public function testAnUploadCanBeTerminatedWhenTheTerminationExtensionIsEnabled(): void
     {
         $terminater = \Mockery::mock(TusTerminaterDataStore::class);
         $this->data_store->shouldReceive('getTerminater')->andReturns($terminater);
@@ -331,7 +331,7 @@ final class TusServerTest extends TestCase
         $this->assertEquals(204, $response->getStatusCode());
     }
 
-    public function testAnUploadCanNotBeTerminatedWhenTheTerminationExtensionIsNotEnabled() : void
+    public function testAnUploadCanNotBeTerminatedWhenTheTerminationExtensionIsNotEnabled(): void
     {
         $this->data_store->shouldReceive('getTerminater')->andReturns(null);
         $server = new TusServer($this->response_factory, $this->data_store);
@@ -345,7 +345,7 @@ final class TusServerTest extends TestCase
         $this->assertEquals(405, $response->getStatusCode());
     }
 
-    public function testAnUploadIsNotFinishedWhenAllDataHasNotBeenCopied() : void
+    public function testAnUploadIsNotFinishedWhenAllDataHasNotBeenCopied(): void
     {
         $data_writer = \Mockery::mock(TusWriter::class);
         $this->data_store->shouldReceive('getWriter')->andReturns($data_writer);
@@ -377,7 +377,7 @@ final class TusServerTest extends TestCase
         $server->handle($incomplete_upload_request);
     }
 
-    public function testALockedUploadIsNotOverwritten() : void
+    public function testALockedUploadIsNotOverwritten(): void
     {
         $locker = \Mockery::mock(TusLocker::class);
         $this->data_store->shouldReceive('getLocker')->andReturns($locker);

@@ -98,7 +98,8 @@ final class AddAppController extends DispatchablePSR15Compatible
         $this->csrf_token->check($list_clients_url);
 
         $parsed_body = $request->getParsedBody();
-        if (! is_array($parsed_body)
+        if (
+            ! is_array($parsed_body)
             || ! isset($parsed_body['name'])
             || ! isset($parsed_body['redirect_uri'])
         ) {

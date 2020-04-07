@@ -35,7 +35,7 @@ class AzureADProviderDao extends DataAccessObject
         string $color,
         string $tenant_id,
         string $acceptable_tenant_auth_identifier
-    ) : int {
+    ): int {
         return $this->getDB()->tryFlatTransaction(
             static function (EasyDB $db) use (
                 $name,
@@ -45,7 +45,7 @@ class AzureADProviderDao extends DataAccessObject
                 $color,
                 $tenant_id,
                 $acceptable_tenant_auth_identifier
-            ) : int {
+            ): int {
                 $sql = "INSERT INTO plugin_openidconnectclient_provider(name, client_id, client_secret, icon, color)
                     VALUES (?, ?, ?, ?, ?)";
 
@@ -78,7 +78,7 @@ class AzureADProviderDao extends DataAccessObject
         string $color,
         string $tenant_id,
         string $acceptable_tenant_auth_identifier
-    ) : void {
+    ): void {
         $this->getDB()->tryFlatTransaction(
             function (EasyDB $db) use (
                 $id,
@@ -90,7 +90,7 @@ class AzureADProviderDao extends DataAccessObject
                 $color,
                 $tenant_id,
                 $acceptable_tenant_auth_identifier
-            ) : void {
+            ): void {
                 if ($is_unique_authentication_endpoint) {
                     $this->disableUniqueAuthenticationProvider();
                 }

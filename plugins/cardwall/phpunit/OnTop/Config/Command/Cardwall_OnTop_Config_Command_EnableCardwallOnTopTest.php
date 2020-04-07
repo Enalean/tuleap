@@ -23,9 +23,11 @@ declare(strict_types=1);
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Cardwall_OnTop_Config_Command_EnableCardwallOnTopTest extends \PHPUnit\Framework\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\GlobalResponseMock, \Tuleap\GlobalLanguageMock;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\GlobalResponseMock;
+    use \Tuleap\GlobalLanguageMock;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -37,7 +39,7 @@ final class Cardwall_OnTop_Config_Command_EnableCardwallOnTopTest extends \PHPUn
         $this->command = new Cardwall_OnTop_Config_Command_EnableCardwallOnTop($tracker, $this->dao);
     }
 
-    public function testItEnablesIfItIsNotAlreadyTheCase() : void
+    public function testItEnablesIfItIsNotAlreadyTheCase(): void
     {
         $request = new HTTPRequest();
         $request->set('cardwall_on_top', '1');
@@ -47,7 +49,7 @@ final class Cardwall_OnTop_Config_Command_EnableCardwallOnTopTest extends \PHPUn
         $this->command->execute($request);
     }
 
-    public function testItDoesNotEnableIfItIsNotAlreadyTheCase() : void
+    public function testItDoesNotEnableIfItIsNotAlreadyTheCase(): void
     {
         $request = new HTTPRequest();
         $request->set('cardwall_on_top', '1');
@@ -57,7 +59,7 @@ final class Cardwall_OnTop_Config_Command_EnableCardwallOnTopTest extends \PHPUn
         $this->command->execute($request);
     }
 
-    public function testItDisablesIfItIsNotAlreadyTheCase() : void
+    public function testItDisablesIfItIsNotAlreadyTheCase(): void
     {
         $request = new HTTPRequest();
         $request->set('cardwall_on_top', '0');
@@ -67,7 +69,7 @@ final class Cardwall_OnTop_Config_Command_EnableCardwallOnTopTest extends \PHPUn
         $this->command->execute($request);
     }
 
-    public function testItDoesNotDisableIfItIsNotAlreadyTheCase() : void
+    public function testItDoesNotDisableIfItIsNotAlreadyTheCase(): void
     {
         $request = new HTTPRequest();
         $request->set('cardwall_on_top', '0');

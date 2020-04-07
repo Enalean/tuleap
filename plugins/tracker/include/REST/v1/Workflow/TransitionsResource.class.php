@@ -434,7 +434,8 @@ class TransitionsResource extends AuthenticatedResource
         } catch (OrphanTransitionException $exception) {
             $this->getRESTLogger()->error('Cannot update transition post actions', ['exception' => $exception]);
             throw new RestException(520);
-        } catch (InvalidPostActionException |
+        } catch (
+            InvalidPostActionException |
                  UnknownPostActionIdsException |
                  IncompatibleWorkflowModeException |
                  PostActionNonEligibleForTrackerException $exception
@@ -590,7 +591,7 @@ class TransitionsResource extends AuthenticatedResource
         return new Transition_PostAction_Field_FloatDao();
     }
 
-    private function getFrozenFieldsDao() : FrozenFieldsDao
+    private function getFrozenFieldsDao(): FrozenFieldsDao
     {
         return new FrozenFieldsDao();
     }
@@ -613,7 +614,7 @@ class TransitionsResource extends AuthenticatedResource
         return TransitionReplicatorBuilder::build();
     }
 
-    private function getStateFactory() : StateFactory
+    private function getStateFactory(): StateFactory
     {
         return new StateFactory(
             $this->getTransitionFactory(),
@@ -621,7 +622,7 @@ class TransitionsResource extends AuthenticatedResource
         );
     }
 
-    private function getTransitionUpdater() : TransitionUpdater
+    private function getTransitionUpdater(): TransitionUpdater
     {
         return new TransitionUpdater(
             $this->getConditionsUpdater(),

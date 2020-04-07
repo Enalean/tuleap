@@ -36,19 +36,20 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 
 final class HierarchyControllerTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         $GLOBALS['Response'] = Mockery::spy(Layout::class);
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         unset($GLOBALS['Response']);
     }
 
-    public function testTrackersImplicatedInTriggersRulesCanNotBeRemovedFromTheChild() : void
+    public function testTrackersImplicatedInTriggersRulesCanNotBeRemovedFromTheChild(): void
     {
         $request              = Mockery::mock(Codendi_Request::class);
         $hierarchical_tracker = Mockery::mock(Tracker_Hierarchy_HierarchicalTracker::class);
@@ -83,7 +84,7 @@ final class HierarchyControllerTest extends TestCase
 
         $hierarchy_dao->shouldReceive('updateChildren')->with(
             789,
-            Mockery::on(static function (array $children) : bool {
+            Mockery::on(static function (array $children): bool {
                 return count($children) === 2;
             })
         );

@@ -29,6 +29,7 @@ require_once __DIR__ . '/../bootstrap.php';
 class Git_SystemCheckTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     private $driver;
     private $gitgc;
 

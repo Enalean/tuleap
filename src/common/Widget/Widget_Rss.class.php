@@ -232,7 +232,7 @@ abstract class Widget_Rss extends Widget
     /**
      * @throws \Laminas\Feed\Exception\RuntimeException
      */
-    private function retrieveFeed(string $url) : \Laminas\Feed\Reader\Feed\FeedInterface
+    private function retrieveFeed(string $url): \Laminas\Feed\Reader\Feed\FeedInterface
     {
         $http_client = new FeedHTTPClient(HttpClientFactory::createClient(), HTTPFactoryBuilder::requestFactory());
         FeedReader::setHttpClient($http_client);

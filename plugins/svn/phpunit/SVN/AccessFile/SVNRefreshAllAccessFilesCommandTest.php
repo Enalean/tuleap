@@ -34,6 +34,7 @@ use Tuleap\SVN\Repository\RepositoryManager;
 class SVNRefreshAllAccessFilesCommandTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|AccessFileHistoryCreator
      */

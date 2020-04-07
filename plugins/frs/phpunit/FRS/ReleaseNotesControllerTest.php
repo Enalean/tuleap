@@ -45,7 +45,8 @@ use Tuleap\Request\NotFoundException;
 
 final class ReleaseNotesControllerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /** @var ReleaseNotesController */
     private $release_notes_controller;

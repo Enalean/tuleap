@@ -349,8 +349,10 @@ class BackendSystem extends Backend
             $stat = stat("$private_dir");
             if ($stat) {
                 $dummy_user = posix_getpwnam('dummy');
-                if (($stat['uid'] != $dummy_user['uid'])
-                    || ($stat['gid'] != $project->getUnixGID())) {
+                if (
+                    ($stat['uid'] != $dummy_user['uid'])
+                    || ($stat['gid'] != $project->getUnixGID())
+                ) {
                     $this->log("Restoring privacy on private dir: $private_dir", Backend::LOG_WARNING);
                     $this->chown($private_dir, "dummy");
                     $this->chgrp($private_dir, $unix_group_name);

@@ -44,17 +44,17 @@ final class HTTPHeader
         $this->http_status_code = $http_status_code;
     }
 
-    public function getHeader() : string
+    public function getHeader(): string
     {
         return $this->header;
     }
 
-    public function isReplace() : bool
+    public function isReplace(): bool
     {
         return $this->replace;
     }
 
-    public function getHttpStatusCode() : ?int
+    public function getHttpStatusCode(): ?int
     {
         return $this->http_status_code;
     }

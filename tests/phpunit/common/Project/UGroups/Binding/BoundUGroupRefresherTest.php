@@ -30,7 +30,9 @@ use Tuleap\GlobalResponseMock;
 
 final class BoundUGroupRefresherTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock, GlobalResponseMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
+    use GlobalResponseMock;
 
     /** @var BoundUGroupRefresher */
     private $refresher;

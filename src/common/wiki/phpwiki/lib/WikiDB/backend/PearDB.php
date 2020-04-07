@@ -21,7 +21,7 @@ class WikiDB_backend_PearDB extends WikiDB_backend
         // TODO: apparently some Pear::Db version adds LIMIT 1,0 to getOne(),
         // which is invalid for "select version()"
         if (!in_array($name, get_class_methods("DB_common"))) {
-            $finder = new FileFinder;
+            $finder = new FileFinder();
             $dir = dirname(__FILE__) . "/../../pear";
             $finder->_prepend_to_include_path($dir);
             include_once("$dir/DB/common.php"); // use our version instead.
@@ -1166,8 +1166,10 @@ class WikiDB_backend_PearDB extends WikiDB_backend
 
         $query = $this->_dbh->last_query;
 
-        if (! preg_match('/^\s*"?(INSERT|UPDATE|DELETE|REPLACE|CREATE'
-                         . '|DROP|ALTER|GRANT|REVOKE|LOCK|UNLOCK)\s/', $query)) {
+        if (
+            ! preg_match('/^\s*"?(INSERT|UPDATE|DELETE|REPLACE|CREATE'
+                         . '|DROP|ALTER|GRANT|REVOKE|LOCK|UNLOCK)\s/', $query)
+        ) {
             // Last query was not of the sort which doesn't return any data.
             //" <--kludge for brain-dead syntax coloring
             return false;

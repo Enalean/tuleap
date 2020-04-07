@@ -23,7 +23,8 @@ namespace Tuleap\User\History;
 class HistoryCleanerTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    public function testItClearsUserHistory() : void
+
+    public function testItClearsUserHistory(): void
     {
         $user          = \Mockery::spy(\PFUser::class);
         $event_manager = \Mockery::mock(\EventManager::class);

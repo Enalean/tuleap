@@ -93,7 +93,7 @@ class Common
         }
     }
 
-    private function writeFromTemplate(string $target_path, string $plugin_name, string $template_path) : void
+    private function writeFromTemplate(string $target_path, string $plugin_name, string $template_path): void
     {
         file_put_contents(
             $target_path,

@@ -46,7 +46,7 @@ class ConfigPermissionsSerializerTest extends TestCase
     private $repository;
     private $repository_id = 200;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -78,7 +78,7 @@ class ConfigPermissionsSerializerTest extends TestCase
         );
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         PermissionsManager::clearInstance();
         parent::tearDown();

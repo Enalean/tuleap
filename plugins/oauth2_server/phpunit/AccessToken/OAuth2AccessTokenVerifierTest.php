@@ -209,22 +209,22 @@ final class OAuth2AccessTokenVerifierTest extends TestCase
     {
         return new class /** @psalm-immutable */ implements AuthenticationScope
         {
-            public static function fromItself() : AuthenticationScope
+            public static function fromItself(): AuthenticationScope
             {
                 throw new \LogicException('This method is not supposed to be called in the test');
             }
 
-            public static function fromIdentifier(AuthenticationScopeIdentifier $identifier) : ?AuthenticationScope
+            public static function fromIdentifier(AuthenticationScopeIdentifier $identifier): ?AuthenticationScope
             {
                 throw new \LogicException('This method is not supposed to be called in the test');
             }
 
-            public function getIdentifier() : AuthenticationScopeIdentifier
+            public function getIdentifier(): AuthenticationScopeIdentifier
             {
                 return OAuth2ScopeIdentifier::fromIdentifierKey('required');
             }
 
-            public function getDefinition() : AuthenticationScopeDefinition
+            public function getDefinition(): AuthenticationScopeDefinition
             {
                 return new class /** @psalm-immutable */ implements AuthenticationScopeDefinition {
                     public function getName(): string
@@ -239,7 +239,7 @@ final class OAuth2AccessTokenVerifierTest extends TestCase
                 };
             }
 
-            public function covers(AuthenticationScope $scope) : bool
+            public function covers(AuthenticationScope $scope): bool
             {
                 return true;
             }
@@ -252,17 +252,17 @@ final class OAuth2AccessTokenVerifierTest extends TestCase
         {
             use AuthenticationScopeThrowOnActualMethodCall;
 
-            public static function fromItself() : AuthenticationScope
+            public static function fromItself(): AuthenticationScope
             {
                 throw new \LogicException('This method is not supposed to be called in the test');
             }
 
-            public static function fromIdentifier(AuthenticationScopeIdentifier $identifier) : ?AuthenticationScope
+            public static function fromIdentifier(AuthenticationScopeIdentifier $identifier): ?AuthenticationScope
             {
                 throw new \LogicException('This method is not supposed to be called in the test');
             }
 
-            public function covers(AuthenticationScope $scope) : bool
+            public function covers(AuthenticationScope $scope): bool
             {
                 return false;
             }

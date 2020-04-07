@@ -25,9 +25,9 @@ namespace Tuleap\Event\Events;
 
 interface ArchiveDeletedItemProvider
 {
-    public function getArchivePath() : string;
+    public function getArchivePath(): string;
 
-    public function getPrefix() : string;
+    public function getPrefix(): string;
 
-    public function purge() : void;
+    public function purge(): void;
 }

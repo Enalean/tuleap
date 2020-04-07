@@ -113,7 +113,7 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent
         return true;
     }
 
-    private function cleanRestrictedUsersIfNecessary(Project $project) : void
+    private function cleanRestrictedUsersIfNecessary(Project $project): void
     {
         if (! ForgeConfig::areRestrictedUsersAllowed() || $project->getAccess() !== Project::ACCESS_PRIVATE_WO_RESTRICTED) {
             return;
@@ -143,7 +143,7 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent
         }
     }
 
-    private function notifyUser(Project $project, PFUser $user) : void
+    private function notifyUser(Project $project, PFUser $user): void
     {
         $user_language = $user->getLanguage();
         $purifier      = Codendi_HTMLPurifier::instance();

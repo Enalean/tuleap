@@ -32,7 +32,7 @@ final class RequestHandlerAsMiddlewareTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testARequestHandlerIsTransformedAsAMiddleware() : void
+    public function testARequestHandlerIsTransformedAsAMiddleware(): void
     {
         $expected_response = HTTPFactoryBuilder::responseFactory()->createResponse();
         $request_handler   = Mockery::mock(RequestHandlerInterface::class);

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Docman\Metadata;
 
@@ -38,6 +38,7 @@ use Tuleap\Docman\REST\v1\Metadata\PUTCustomMetadataRepresentation;
 class CustomMetadataRepresentationRetrieverTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var \Mockery\MockInterface|MetadataListOfValuesElementListBuilder
      */

@@ -181,7 +181,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         return $project->usesService($this->getServiceShortname());
     }
 
-    public function service_classnames(array &$params) : void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    public function service_classnames(array &$params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $params['classnames'][$this->getServiceShortname()] = \Tuleap\TestManagement\Service::class;
     }
@@ -353,10 +353,12 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
             $config = $this->getConfig();
         }
 
-        if ((int) $config->getCampaignTrackerId($project) === (int) $tracker_id ||
+        if (
+            (int) $config->getCampaignTrackerId($project) === (int) $tracker_id ||
             (int) $config->getIssueTrackerId($project) === (int) $tracker_id ||
             (int) $config->getTestDefinitionTrackerId($project) === (int) $tracker_id ||
-            (int) $config->getTestExecutionTrackerId($project) === (int) $tracker_id) {
+            (int) $config->getTestExecutionTrackerId($project) === (int) $tracker_id
+        ) {
             $params['result']['message']        = $this->getPluginInfo()->getPluginDescriptor()->getFullName();
             $params['result']['can_be_deleted'] = false;
         }
@@ -443,7 +445,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         );
     }
 
-    private function getTrackerChecker() : TrackerChecker
+    private function getTrackerChecker(): TrackerChecker
     {
         return new TrackerChecker(
             TrackerFactory::instance(),
@@ -795,7 +797,8 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
             $tracker = $event->getTracker();
             $config  = $this->getConfig();
 
-            if ($tracker->getId() == $config->getTestExecutionTrackerId($tracker->getProject()) ||
+            if (
+                $tracker->getId() == $config->getTestExecutionTrackerId($tracker->getProject()) ||
                 $tracker->getId() == $config->getTestDefinitionTrackerId($tracker->getProject())
             ) {
                 $message = dgettext(

@@ -31,7 +31,7 @@ class UserTestBuilder
      */
     private $language;
 
-    public static function aUser() : self
+    public static function aUser(): self
     {
         return new self();
     }

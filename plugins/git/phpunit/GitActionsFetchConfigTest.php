@@ -28,7 +28,8 @@ require_once __DIR__ . '/bootstrap.php';
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class GitActionsFetchConfigTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalResponseMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalResponseMock;
 
     /**
      * @var GitActions

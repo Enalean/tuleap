@@ -34,7 +34,7 @@ final class Cardwall_PaneBuilderTest extends \PHPUnit\Framework\TestCase
     private $mapping_collection;
     private $columns;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->card_in_cell_presenter_builder = Mockery::spy(Cardwall_CardInCellPresenterBuilder::class);
@@ -48,7 +48,7 @@ final class Cardwall_PaneBuilderTest extends \PHPUnit\Framework\TestCase
         $this->columns                        = \Mockery::spy(\Cardwall_OnTop_Config_ColumnCollection::class);
     }
 
-    public function testItReturnsAnEmptyBoard() : void
+    public function testItReturnsAnEmptyBoard(): void
     {
         $this->dao->shouldReceive('getBacklogArtifacts')->andReturns(\TestHelper::emptyDar());
 
@@ -57,7 +57,7 @@ final class Cardwall_PaneBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf(\Cardwall_Board::class, $pane_builder->getBoard($this->user, $this->milestone_artifact, $this->columns, $this->mapping_collection));
     }
 
-    public function testItReturnsABoardWithASoloSwimline() : void
+    public function testItReturnsABoardWithASoloSwimline(): void
     {
         $swimline_artifact = $this->buildMockArtifactAllUserCanView();
         $swimline_artifact->shouldReceive('getChildrenForUser')->andReturns(array());
@@ -75,7 +75,7 @@ final class Cardwall_PaneBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf(\Cardwall_SwimlineSolo::class, $board->swimlines[0]);
     }
 
-    public function testItReturnsABoardWithaSwimline() : void
+    public function testItReturnsABoardWithaSwimline(): void
     {
         $child_artifact = $this->buildMockArtifactAllUserCanView();
 

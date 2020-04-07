@@ -209,7 +209,7 @@ class Legend
 
     public function HasItems()
     {
-        return (boolean) (count($this->txtcol));
+        return (bool) (count($this->txtcol));
     }
 
     public function Stroke($aImg)
@@ -545,4 +545,4 @@ class Legend
             }
         }
     }
-} // Class
+}

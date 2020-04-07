@@ -79,7 +79,7 @@ class TrackerBase extends RestBase
      */
     public $tracker_with_timeframe_semantic_id;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -175,7 +175,7 @@ class TrackerBase extends RestBase
         return $found_transition;
     }
 
-    protected function getAUsedField(int $tracker_id, string $field_shortname) : ?array
+    protected function getAUsedField(int $tracker_id, string $field_shortname): ?array
     {
         $tracker = $this->tracker_representations[$tracker_id];
         foreach ($tracker['fields'] as $tracker_field) {
@@ -189,7 +189,7 @@ class TrackerBase extends RestBase
         return null;
     }
 
-    protected function getAUsedFieldId(int $tracker_id, string $field_shortname) : ?int
+    protected function getAUsedFieldId(int $tracker_id, string $field_shortname): ?int
     {
         $field = $this->getAUsedField($tracker_id, $field_shortname);
         if ($field !== null) {

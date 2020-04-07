@@ -30,7 +30,7 @@ class TransitionExtractor
     /**
      * @throws NoTransitionForStateException
      */
-    public function extractReferenceTransitionFromState(State $state) : Transition
+    public function extractReferenceTransitionFromState(State $state): Transition
     {
         $transitions = $state->getTransitions();
 
@@ -48,11 +48,12 @@ class TransitionExtractor
         throw new NoTransitionForStateException();
     }
 
-    public function extractSiblingTransitionsFromState(State $state, Transition $transition) : array
+    public function extractSiblingTransitionsFromState(State $state, Transition $transition): array
     {
         $sibling_transitions = [];
         foreach ($state->getTransitions() as $state_transition) {
-            if ($transition->getIdFrom() === $state_transition->getIdFrom() &&
+            if (
+                $transition->getIdFrom() === $state_transition->getIdFrom() &&
                 $transition->getIdTo() === $state_transition->getIdTo()
             ) {
                 continue;

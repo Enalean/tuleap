@@ -36,6 +36,7 @@ use Tuleap\User\REST\MinimalUserRepresentation;
 class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var \EventManager|Mockery\LegacyMockInterface|Mockery\MockInterface
      */
@@ -75,7 +76,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
      */
     private $link_version_factory;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->item_factory                           = Mockery::mock(Docman_ItemFactory::class);
@@ -100,7 +101,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
         );
     }
 
-    public function testItReturnsRepresentationOfItemUserCanSee() : void
+    public function testItReturnsRepresentationOfItemUserCanSee(): void
     {
         $item = Mockery::mock(Docman_Item::class);
         $item->shouldReceive('getId')->andReturn(3);
@@ -271,7 +272,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
         $this->assertEquals($expected_representation, $representation);
     }
 
-    public function testItReturnsRepresentationOfParentsItems() : void
+    public function testItReturnsRepresentationOfParentsItems(): void
     {
         $dar_folder_1    = [
             'item_id'     => 2,

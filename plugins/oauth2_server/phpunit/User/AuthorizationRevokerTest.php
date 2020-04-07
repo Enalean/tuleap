@@ -31,6 +31,7 @@ use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 final class AuthorizationRevokerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var AuthorizationRevoker
      */

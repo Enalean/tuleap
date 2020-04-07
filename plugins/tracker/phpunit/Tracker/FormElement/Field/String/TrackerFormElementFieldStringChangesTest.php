@@ -40,7 +40,7 @@ class TrackerFormElementFieldStringChangesTest extends TestCase
      */
     private $field;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->field = Mockery::mock(Tracker_FormElement_Field_String::class)->makePartial();
         $this->previous_value = Mockery::mock(Tracker_Artifact_ChangesetValue_String::class);

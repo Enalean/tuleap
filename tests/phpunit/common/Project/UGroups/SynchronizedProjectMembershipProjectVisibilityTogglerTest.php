@@ -31,7 +31,8 @@ use Tuleap\GlobalLanguageMock;
 
 final class SynchronizedProjectMembershipProjectVisibilityTogglerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /**
      * @var SynchronizedProjectMembershipProjectVisibilityToggler

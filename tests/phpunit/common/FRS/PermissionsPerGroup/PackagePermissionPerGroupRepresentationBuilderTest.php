@@ -84,7 +84,7 @@ class PackagePermissionPerGroupRepresentationBuilderTest extends TestCase
 
     private $package_id;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

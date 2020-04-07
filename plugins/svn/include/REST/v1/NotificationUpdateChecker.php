@@ -59,11 +59,13 @@ class NotificationUpdateChecker
         }
 
         foreach ($new_notifications as $new_notification) {
-            if (! $this->mail_notification_manager->isAnExistingPath(
-                $repository,
-                0,
-                $new_notification->getPath()
-            )) {
+            if (
+                ! $this->mail_notification_manager->isAnExistingPath(
+                    $repository,
+                    0,
+                    $new_notification->getPath()
+                )
+            ) {
                 return true;
             }
 
@@ -74,19 +76,24 @@ class NotificationUpdateChecker
 
             foreach ($old_notifications as $old_notification) {
                 if ($new_notification->getPath() === $old_notification->getPath()) {
-                    if ($this->sortNotification($new_notification->getNotifiedMails())
+                    if (
+                        $this->sortNotification($new_notification->getNotifiedMails())
                         !== $this->sortNotification($old_notification->getNotifiedMails())
                     ) {
                         return true;
                     }
 
-                    if ($this->sortNotification($new_notification->getNotifiedUsers())
-                        != $this->sortNotification($old_notification->getNotifiedUsers())) {
+                    if (
+                        $this->sortNotification($new_notification->getNotifiedUsers())
+                        != $this->sortNotification($old_notification->getNotifiedUsers())
+                    ) {
                         return true;
                     }
 
-                    if ($this->sortNotification($new_notification->getNotifiedUgroups())
-                        != $this->sortNotification($old_notification->getNotifiedUgroups())) {
+                    if (
+                        $this->sortNotification($new_notification->getNotifiedUgroups())
+                        != $this->sortNotification($old_notification->getNotifiedUgroups())
+                    ) {
                         return true;
                     }
                 }

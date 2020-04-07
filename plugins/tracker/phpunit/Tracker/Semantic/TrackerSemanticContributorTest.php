@@ -32,7 +32,8 @@ use Tuleap\GlobalLanguageMock;
 
 class TrackerSemanticContributorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /**
      * @var Tracker_FormElement_Field_List|\Mockery\MockInterface|Tracker_FormElement_Field_List
@@ -49,7 +50,7 @@ class TrackerSemanticContributorTest extends TestCase
      */
     private $semantic;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 

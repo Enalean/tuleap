@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Docman\DocumentDeletion;
 
@@ -71,7 +71,7 @@ class DocmanWikiDeletor
     /**
      * @throws DeleteFailedException
      */
-    public function deleteWiki(Docman_Wiki $wiki, PFUser $user, bool $delete_referenced_wiki_page) : bool
+    public function deleteWiki(Docman_Wiki $wiki, PFUser $user, bool $delete_referenced_wiki_page): bool
     {
         $wiki_page = $this->wiki_page_retriever->retrieveAssociatedWikiPage($wiki);
         $this->deleteWikiItem($wiki, $user);
@@ -106,7 +106,7 @@ class DocmanWikiDeletor
     /**
      * @throws DeleteFailedException
      */
-    private function deleteWikiItem(Docman_Wiki $wiki, PFUser $user) : bool
+    private function deleteWikiItem(Docman_Wiki $wiki, PFUser $user): bool
     {
         if ($this->permission_manager->userCanDelete($user, $wiki)) {
             $this->item_factory->delete($wiki);
@@ -116,7 +116,7 @@ class DocmanWikiDeletor
         }
     }
 
-    private function restrictAccessToWikiPage(Docman_Wiki $wiki) : void
+    private function restrictAccessToWikiPage(Docman_Wiki $wiki): void
     {
         $is_still_referenced = $this->item_dao->isWikiPageReferenced(
             $wiki->getPagename(),

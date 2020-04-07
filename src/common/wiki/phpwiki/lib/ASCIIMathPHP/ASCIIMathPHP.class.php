@@ -541,11 +541,13 @@ class ASCIIMathPHP
             }
 
          // Dealing with matrices
-            if ($node_5 !== false && $node_6 !== false &&
-            $node_cnt > 1 &&
-            $node_5->getName() == 'mrow' &&
-            $node_6->getName() == 'mo' &&
-            $node_6->getContent() == ',') {
+            if (
+                $node_5 !== false && $node_6 !== false &&
+                $node_cnt > 1 &&
+                $node_5->getName() == 'mrow' &&
+                $node_6->getName() == 'mo' &&
+                $node_6->getContent() == ','
+            ) {
                 // Checking if Node 5 has a LastChild
                 if ($node_7 = $node_5->getLastChild()) {
                     $node_7_cntnt = $node_7->getContent();
@@ -563,9 +565,11 @@ class ASCIIMathPHP
                     }
 
              // If there is a matching left bracket
-                    if ($node_8 !== false &&
-                    (($node_8_cntnt == '(' && $node_7_cntnt == ')' && $sym['output'] != '}') ||
-                    ($node_8_cntnt == '[' && $node_7_cntnt == ']'))) {
+                    if (
+                        $node_8 !== false &&
+                        (($node_8_cntnt == '(' && $node_7_cntnt == ')' && $sym['output'] != '}') ||
+                        ($node_8_cntnt == '[' && $node_7_cntnt == ']'))
+                    ) {
                                 $is_mtrx_flg = true;
                                 $comma_pos_arr = array();
 
@@ -639,8 +643,10 @@ class ASCIIMathPHP
                                 $row_frag_node_arr = array();
 
                                 for ($j = 1; $j < ($num_child - 1); $j++) {
-                                    if (isset($comma_pos_arr[$i][$k]) &&
-                                    $j == $comma_pos_arr[$i][$k]) {
+                                    if (
+                                        isset($comma_pos_arr[$i][$k]) &&
+                                        $j == $comma_pos_arr[$i][$k]
+                                    ) {
                                         $tmp_node->removeFirstChild();
 
                                         $tmp_c_node = $this->createNode();

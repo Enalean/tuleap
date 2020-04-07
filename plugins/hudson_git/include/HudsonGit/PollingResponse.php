@@ -37,7 +37,7 @@ class PollingResponse
         $this->job_paths = $job_paths;
     }
 
-    public function getBody() : string
+    public function getBody(): string
     {
         return $this->body;
     }
@@ -45,7 +45,7 @@ class PollingResponse
     /**
      * @return string[]
      */
-    public function getJobPaths() : array
+    public function getJobPaths(): array
     {
         return $this->job_paths;
     }

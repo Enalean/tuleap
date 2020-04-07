@@ -48,7 +48,8 @@ class TokenResponse
     {
         $token_response_body = (string) $response->getBody();
         $json_response       = json_decode($token_response_body, true);
-        if ($json_response === null ||
+        if (
+            $json_response === null ||
             ! isset($json_response['token_type'], $json_response['id_token'], $json_response['access_token'])
         ) {
             throw new IncorrectlyFormattedTokenResponseException($token_response_body);

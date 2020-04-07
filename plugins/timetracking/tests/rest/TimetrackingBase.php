@@ -33,7 +33,7 @@ class TimetrackingBase extends RestBase
     protected $timetracking_artifact_ids;
     protected $timetracking_user_test;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
         $this->timetracking_project_id   = $this->getProjectId(self::PROJECT_NAME);

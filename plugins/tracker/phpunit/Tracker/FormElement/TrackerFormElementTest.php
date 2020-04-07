@@ -36,7 +36,9 @@ use Tuleap\GlobalResponseMock;
 
 class TrackerFormElementTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock, GlobalResponseMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
+    use GlobalResponseMock;
 
     protected function tearDown(): void
     {

@@ -280,7 +280,8 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
     private function showFlamingParrotBurningParrotUnificationTour(PFUser $current_user)
     {
-        if ($current_user->getPreference(Tuleap_Tour_WelcomeTour::TOUR_NAME) &&
+        if (
+            $current_user->getPreference(Tuleap_Tour_WelcomeTour::TOUR_NAME) &&
             ! $current_user->getPreference(Tuleap_Tour_FlamingParrotBurningParrotUnificationTour::TOUR_NAME)
         ) {
             $GLOBALS['Response']->addTour(new Tuleap_Tour_FlamingParrotBurningParrotUnificationTour());

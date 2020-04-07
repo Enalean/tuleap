@@ -28,7 +28,6 @@ use PHPUnit\Framework\TestCase;
 
 class Docman_MetadataListOfValuesElementTest extends TestCase // @codingStandardsIgnoreLine
 {
-
     use MockeryPHPUnitIntegration;
 
     /**

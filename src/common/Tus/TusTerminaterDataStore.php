@@ -24,5 +24,5 @@ namespace Tuleap\Tus;
 
 interface TusTerminaterDataStore
 {
-    public function terminateUpload(TusFileInformation $file_information) : void;
+    public function terminateUpload(TusFileInformation $file_information): void;
 }

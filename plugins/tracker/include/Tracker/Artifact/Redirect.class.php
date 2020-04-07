@@ -28,12 +28,12 @@ class Tracker_Artifact_Redirect
     public $base_url = '';
     public $query_parameters = [];
 
-    public function toUrl() : string
+    public function toUrl(): string
     {
         return rtrim((string) $this->base_url, '/') . '/?' . http_build_query($this->query_parameters);
     }
 
-    public function stayInTracker() : bool
+    public function stayInTracker(): bool
     {
         return $this->mode !== self::STATE_SUBMIT;
     }

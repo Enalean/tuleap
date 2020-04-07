@@ -58,7 +58,7 @@ class FileOngoingUploadDao extends DataAccessObject
             $filetype,
             $user_id,
             &$id
-        ) : void {
+        ): void {
             $id = (int) $db->insertReturnId(
                 'tracker_fileinfo',
                 [

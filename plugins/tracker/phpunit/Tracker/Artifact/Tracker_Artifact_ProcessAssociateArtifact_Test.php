@@ -38,7 +38,9 @@ use UserManager;
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_Artifact_ProcessAssociateArtifact_Test extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock, GlobalResponseMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
+    use GlobalResponseMock;
 
     /**
      * @var Mockery\Mock|Tracker_Artifact

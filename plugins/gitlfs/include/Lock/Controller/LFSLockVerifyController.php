@@ -86,8 +86,10 @@ class LFSLockVerifyController implements DispatchableWithRequestNoAuthz
             $variables['project_name'],
             $variables['path']
         );
-        if ($repository === null || ! $repository->isCreated() ||
-            ! $repository->getProject()->isActive() || ! $this->plugin->isAllowed($repository->getProject()->getID())) {
+        if (
+            $repository === null || ! $repository->isCreated() ||
+            ! $repository->getProject()->isActive() || ! $this->plugin->isAllowed($repository->getProject()->getID())
+        ) {
             throw new NotFoundException(dgettext('tuleap-git', 'Repository does not exist'));
         }
 
@@ -112,7 +114,7 @@ class LFSLockVerifyController implements DispatchableWithRequestNoAuthz
         $this->displayLocks($lock_verify_request, $repository, $user);
     }
 
-    private function displayLocks(LockVerifyRequest $lock_verify_request, \GitRepository $repository, \PFUser $user) : void
+    private function displayLocks(LockVerifyRequest $lock_verify_request, \GitRepository $repository, \PFUser $user): void
     {
         $reference = $lock_verify_request->getReference() === null ? null : $lock_verify_request->getReference()->getName();
 

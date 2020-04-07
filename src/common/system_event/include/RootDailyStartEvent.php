@@ -50,7 +50,7 @@ class RootDailyStartEvent implements Dispatchable
         return $this->logger;
     }
 
-    public function addWarning(string $message) : void
+    public function addWarning(string $message): void
     {
         $this->warnings[] = $message;
     }

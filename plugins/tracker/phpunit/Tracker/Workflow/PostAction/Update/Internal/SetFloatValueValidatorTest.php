@@ -38,7 +38,7 @@ class SetFloatValueValidatorTest extends TestCase
     /** @var \Tracker_FormElementFactory | Mockery\MockInterface */
     private $form_element_factory;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->field_id_validator = Mockery::mock(PostActionFieldIdValidator::class);
         $this->field_id_validator->shouldReceive('validate')->byDefault();

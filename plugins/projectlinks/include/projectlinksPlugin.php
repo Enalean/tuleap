@@ -75,12 +75,12 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
         });
     }
 
-    public function routeAdminPage() : \Tuleap\Request\DispatchableWithRequest
+    public function routeAdminPage(): \Tuleap\Request\DispatchableWithRequest
     {
         return new \Tuleap\Plugin\PluginLegacyController($this);
     }
 
-    public function process() : void
+    public function process(): void
     {
         // serve the administration pages for project links
 
@@ -166,11 +166,13 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                 // delete project link
                 $link_id = (int) $request->get('link_id');
                 // NB: use group_id to defend against malicious use
-                if (db_query(
-                    "DELETE FROM plugin_projectlinks_relationship
+                if (
+                    db_query(
+                        "DELETE FROM plugin_projectlinks_relationship
                          WHERE (master_group_id=" . db_ei($group_id) . ")
                             AND (link_id=" . db_ei($link_id) . ");"
-                )) {
+                    )
+                ) {
                     $feedback .= ' ' . $Language->getText('plugin_plinks', 'project_link_deleted_OK');
                 } else {
                     $feedback .= ' ' . $Language->getText('plugin_plinks', 'update_failed', db_error());
@@ -182,17 +184,21 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                 $link_type_id = (int) $request->get('link_type_id');
                 // delete project relationship instances
                 // NB: use group_id to defend against malicious use
-                if (! db_query(
-                    "DELETE FROM plugin_projectlinks_relationship
+                if (
+                    ! db_query(
+                        "DELETE FROM plugin_projectlinks_relationship
                     WHERE (master_group_id=" . db_ei($group_id) . ") AND (link_type_id=" . db_ei($link_type_id) . ");"
-                )) {
+                    )
+                ) {
                     $feedback .= ' ' . $Language->getText('plugin_plinks', 'update_failed', db_error());
                 } else {
                     //delete the relationship type if no error deleting instances
-                    if (! db_query(
-                        "DELETE FROM plugin_projectlinks_link_type
+                    if (
+                        ! db_query(
+                            "DELETE FROM plugin_projectlinks_link_type
                             WHERE (group_id=" . db_ei($group_id) . ")AND (link_type_id=" . db_ei($link_type_id) . ");"
-                    )) {
+                        )
+                    ) {
                         $feedback .= ' ' . $Language->getText('plugin_plinks', 'update_failed', db_error());
                     } else {
                         $feedback .= ' ' . $Language->getText('plugin_plinks', 'project_link_deleted_OK');
@@ -231,17 +237,19 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                 );");
                 if (db_numrows($pfcheck) > 0) {
                     $feedback .= ' ' . $Language->getText('plugin_plinks', 'project_link_type_change_makes_duplicate');
-                } elseif (update_database(
-                    "plugin_projectlinks_link_type",
-                    array(
+                } elseif (
+                    update_database(
+                        "plugin_projectlinks_link_type",
+                        array(
                         "name" => $q_name,
                         "reverse_name" => $q_reverse_name,
                         "description" => $q_description,
                         "uri_plus" => $q_uri_plus,
                         "group_id" => $group_id
-                    ),
-                    ($link_type_id === null ? null : "link_type_id=$link_type_id")
-                )) {
+                        ),
+                        ($link_type_id === null ? null : "link_type_id=$link_type_id")
+                    )
+                ) {
                     $feedback .= ' ' . $Language->getText('plugin_plinks', 'update_ok') . ' ';
                 } else {
                     $feedback .= ' ' . $Language->getText('plugin_plinks', 'update_failed', db_error());
@@ -287,7 +295,8 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                                 WHERE (link_type_id = " . db_ei($template_type_id) . ");");
                 if (db_numrows($db_res) == 1) {
                     $row = db_fetch_array($db_res);
-                    if (db_query("INSERT INTO plugin_projectlinks_link_type (
+                    if (
+                        db_query("INSERT INTO plugin_projectlinks_link_type (
                         group_id,
                         name,
                         reverse_name,
@@ -299,7 +308,8 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                         '" . db_es($row['reverse_name']) . "',
                         '" . db_es($row['description']) . "',
                         '" . db_es($row['uri_plus']) . "'
-                    );")) {
+                    );")
+                    ) {
                         $feedback .= ' ' . $Language->getText('plugin_plinks', 'update_ok');
                     }
                 }
@@ -894,11 +904,13 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
                 $updates["creation_date"] = time();
             }
 
-            if (update_database(
-                "plugin_projectlinks_relationship",
-                $updates,
-                is_null($link_id) ? "" : "link_id=$link_id"
-            )) {
+            if (
+                update_database(
+                    "plugin_projectlinks_relationship",
+                    $updates,
+                    is_null($link_id) ? "" : "link_id=$link_id"
+                )
+            ) {
                 $feedback = $Language->getText('plugin_plinks', 'update_ok_named', $hp->purify($targetProject->getPublicName())) . ' ';
             } else {
                 $feedback = $Language->getText(

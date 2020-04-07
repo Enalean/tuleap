@@ -21,7 +21,10 @@
 
 class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\ForgeConfigSandbox, \Tuleap\TemporaryTestDirectory, \Tuleap\GlobalLanguageMock;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\ForgeConfigSandbox;
+    use \Tuleap\TemporaryTestDirectory;
+    use \Tuleap\GlobalLanguageMock;
 
     protected function setUp(): void
     {

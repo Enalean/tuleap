@@ -32,7 +32,7 @@ final class FRSFileDownloadOldURLRedirectionControllerTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testOldURLsAreRedirectedToTheNewURL() : void
+    public function testOldURLsAreRedirectedToTheNewURL(): void
     {
         $controller = new FRSFileDownloadOldURLRedirectionController(
             HTTPFactoryBuilder::responseFactory(),

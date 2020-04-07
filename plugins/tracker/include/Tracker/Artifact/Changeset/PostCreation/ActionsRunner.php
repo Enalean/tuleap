@@ -98,7 +98,7 @@ class ActionsRunner
                 new RecipientsManager(
                     Tracker_FormElementFactory::instance(),
                     UserManager::instance(),
-                    new UnsubscribersNotificationDAO,
+                    new UnsubscribersNotificationDAO(),
                     new UserNotificationSettingsRetriever(
                         new Tracker_GlobalNotificationDao(),
                         new UnsubscribersNotificationDAO(),

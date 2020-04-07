@@ -51,7 +51,7 @@ class MovedArtifactValueBuilderTest extends TestCase
         $this->field_string = \Mockery::spy(\Tracker_FormElement_Field_String::class)->shouldReceive('getId')->andReturns(101)->getMock();
     }
 
-    public function testItThrowsAnExceptionIfArtifactHasNoTitle() : void
+    public function testItThrowsAnExceptionIfArtifactHasNoTitle(): void
     {
         $this->artifact->shouldReceive('getTitle')->andReturns(null);
         $this->tracker->shouldReceive('getTitleField')->andReturns($this->field_string);
@@ -61,7 +61,7 @@ class MovedArtifactValueBuilderTest extends TestCase
         $this->builder->getValues($this->artifact, $this->tracker);
     }
 
-    public function testItThrowsAnExceptionIfTrackerHasNoTitle() : void
+    public function testItThrowsAnExceptionIfTrackerHasNoTitle(): void
     {
         $this->artifact->shouldReceive('getTitle')->andReturns("title");
         $this->tracker->shouldReceive('getTitleField')->andReturns(null);
@@ -71,7 +71,7 @@ class MovedArtifactValueBuilderTest extends TestCase
         $this->builder->getValues($this->artifact, $this->tracker);
     }
 
-    public function testItBuildsArtifactValuesRepresentation() : void
+    public function testItBuildsArtifactValuesRepresentation(): void
     {
         $this->artifact->shouldReceive('getTitle')->andReturns("title");
         $this->tracker->shouldReceive('getTitleField')->andReturns($this->field_string);

@@ -299,7 +299,7 @@ class Tracker_DateReminderRenderer
      *
      * @return Array
      */
-    public function validateReminderUgroups(Array $selectedUgroups)
+    public function validateReminderUgroups(array $selectedUgroups)
     {
         $groupId = $this->getTracker()->getGroupId();
         /** @psalm-suppress DeprecatedFunction */
@@ -329,7 +329,7 @@ class Tracker_DateReminderRenderer
      *
      * @return Array
      */
-    public function validateReminderRoles(Array $selectedRoles)
+    public function validateReminderRoles(array $selectedRoles)
     {
         $validRoles = array();
         $all_possible_roles = array(

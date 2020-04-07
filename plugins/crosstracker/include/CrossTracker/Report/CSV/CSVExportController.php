@@ -210,7 +210,8 @@ class CSVExportController implements DispatchableWithRequest
     private function checkUserIsAllowedToSeeReport(PFUser $user, CrossTrackerReport $report)
     {
         $widget = $this->cross_tracker_dao->searchCrossTrackerWidgetByCrossTrackerReportId($report->getId());
-        if ($widget['dashboard_type'] === UserDashboardController::DASHBOARD_TYPE
+        if (
+            $widget['dashboard_type'] === UserDashboardController::DASHBOARD_TYPE
             && $widget['user_id'] !== (int) $user->getId()
         ) {
             throw new ForbiddenException();

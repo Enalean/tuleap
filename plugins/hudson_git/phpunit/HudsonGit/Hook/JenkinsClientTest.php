@@ -34,7 +34,7 @@ final class JenkinsClientTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testJenkinsIsNotified() : void
+    public function testJenkinsIsNotified(): void
     {
         $http_client          = new Client();
         $csrf_crumb_retriever = Mockery::mock(JenkinsCSRFCrumbRetriever::class);

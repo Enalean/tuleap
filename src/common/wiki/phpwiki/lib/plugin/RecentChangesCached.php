@@ -24,7 +24,7 @@ rcs_id('$Id: RecentChangesCached.php,v 1.4 2004/03/08 18:17:10 rurban Exp $');
 // +---------------------------------------------------------------------+
 // | WikiPluginCached.php                                                |
 // +---------------------------------------------------------------------+
-// | Copyright (C) 2002 Johannes Große (Johannes Gro&szlig;e)            |
+// | Copyright (C) 2002 Johannes GroÃŸe (Johannes Gro&szlig;e)            |
 // | You may copy this code freely under the conditions of the GPL       |
 // +---------------------------------------------------------------------+
 
@@ -78,12 +78,12 @@ class WikiPlugin_RecentChangesCached extends WikiPluginCached
 
     public function getHtml($dbi, $argarray, $request, $basepage)
     {
-        $loader = new WikiPluginLoader;
+        $loader = new WikiPluginLoader();
         return $loader->expandPI('<?plugin RecentChanges '
             . WikiPluginCached::glueArgs($argarray)
                                  . ' ?>', $request, $this, $basepage);
     }
-} // WikiPlugin_TexToPng
+}
 
 // $Log: RecentChangesCached.php,v $
 // Revision 1.4  2004/03/08 18:17:10  rurban

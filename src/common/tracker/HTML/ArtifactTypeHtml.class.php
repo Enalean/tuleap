@@ -495,8 +495,10 @@ EOS;
                 $html .= " >";
                 $html .= $part_permissions['values']['name'];
                 if ($group_first) {
-                    if (isset($part_permissions['tracker_permissions'])
-                    && count($part_permissions['tracker_permissions']) === 0) {
+                    if (
+                        isset($part_permissions['tracker_permissions'])
+                        && count($part_permissions['tracker_permissions']) === 0
+                    ) {
                         $html .= " *";
                         $a_star_is_displayed = true;
                     }
@@ -1006,50 +1008,64 @@ EOS;
         echo '<select name="field_type" onChange="onChangeFieldType(' . $form_name . ')">';
         if ($data_type && $display_type) {
             $selected = "";
-            if (($data_type == $af->DATATYPE_INT || $data_type == $af->DATATYPE_USER)
-                 && ($display_type == "SB")) {
+            if (
+                ($data_type == $af->DATATYPE_INT || $data_type == $af->DATATYPE_USER)
+                 && ($display_type == "SB")
+            ) {
                 $selected = " selected";
             }
             echo '<option value="1"' . $selected . '>' . $Language->getText('tracker_include_type', 'sb') . '</option>';
 
             $selected = "";
-            if (($data_type == $af->DATATYPE_INT || $data_type == $af->DATATYPE_USER)
-                 && ($display_type == "MB")) {
+            if (
+                ($data_type == $af->DATATYPE_INT || $data_type == $af->DATATYPE_USER)
+                 && ($display_type == "MB")
+            ) {
                 $selected = " selected";
             }
             echo '<option value="2"' . $selected . '>' . $Language->getText('tracker_include_type', 'mb') . '</option>';
 
             $selected = "";
-            if (($data_type == $af->DATATYPE_TEXT)
-                 && ($display_type == "TF")) {
+            if (
+                ($data_type == $af->DATATYPE_TEXT)
+                 && ($display_type == "TF")
+            ) {
                 $selected = " selected";
             }
             echo '<option value="3"' . $selected . '>' . $Language->getText('tracker_include_type', 'tf') . '</option>';
 
             $selected = "";
-            if (($data_type == $af->DATATYPE_TEXT)
-                 && ($display_type == "TA")) {
+            if (
+                ($data_type == $af->DATATYPE_TEXT)
+                 && ($display_type == "TA")
+            ) {
                 $selected = " selected";
             }
             echo '<option value="4"' . $selected . '>' . $Language->getText('tracker_include_type', 'ta') . '</option>';
 
             $selected = "";
-            if (($data_type == $af->DATATYPE_DATE)
-                 && ($display_type == "DF")) {
+            if (
+                ($data_type == $af->DATATYPE_DATE)
+                 && ($display_type == "DF")
+            ) {
                 $selected = " selected";
             }
             echo '<option value="5"' . $selected . '>' . $Language->getText('tracker_include_type', 'df') . '</option>';
 
             $selected = "";
-            if (($data_type == $af->DATATYPE_FLOAT)
-                 && ($display_type == "TF")) {
+            if (
+                ($data_type == $af->DATATYPE_FLOAT)
+                 && ($display_type == "TF")
+            ) {
                 $selected = " selected";
             }
             echo '<option value="6"' . $selected . '>' . $Language->getText('tracker_include_type', 'ff') . '</option>';
 
             $selected = "";
-            if (($data_type == $af->DATATYPE_INT)
-                 && ($display_type == "TF")) {
+            if (
+                ($data_type == $af->DATATYPE_INT)
+                 && ($display_type == "TF")
+            ) {
                 $selected = " selected";
             }
             echo '<option value="7"' . $selected . '>' . $Language->getText('tracker_include_type', 'if') . '</option>';
@@ -1161,11 +1177,13 @@ EOS;
 
 
         //be more conservative for semi-standard fields like assigned_to ...
-        if ($field &&
+        if (
+            $field &&
              !user_is_super_user() &&
              ($field->isStandardField() ||
               $field->getName() == "assigned_to" ||
-              $field->getName() == "multi_assigned_to")) {
+              $field->getName() == "multi_assigned_to")
+        ) {
             echo $field->getLabelFieldType();
         } else {
             $this->displayFieldType($data_type, $display_type, "form_create");
@@ -1327,8 +1345,10 @@ EOS;
             $fields = $fieldset->getAllUsedFields();
             foreach ($fields as $field) {
               // Special case for special fields (excluded comment_type_id)
-                if ((($field->getName() != "comment_type_id") && ($field->isSpecial())) ||
-                   (($field->getName() == "status_id") && !user_is_super_user())) {
+                if (
+                    (($field->getName() != "comment_type_id") && ($field->isSpecial())) ||
+                    (($field->getName() == "status_id") && !user_is_super_user())
+                ) {
                     continue;
                 }
 
@@ -1426,11 +1446,13 @@ EOS;
         for ($i = 0; $i < $rows; $i++) {
             $ug = db_result($ugroup_res, $i, 'ugroup_id');
             $selected = "";
-            if (($ug == $GLOBALS['UGROUP_NONE']) ||
-            ($ug == $GLOBALS['UGROUP_ANONYMOUS']) ||
-            ($ug == $GLOBALS['UGROUP_PROJECT_MEMBERS']) ||
-            ($ug == $GLOBALS['UGROUP_PROJECT_ADMIN']) ||
-            ($ug == $GLOBALS['UGROUP_TRACKER_ADMIN'])) {
+            if (
+                ($ug == $GLOBALS['UGROUP_NONE']) ||
+                ($ug == $GLOBALS['UGROUP_ANONYMOUS']) ||
+                ($ug == $GLOBALS['UGROUP_PROJECT_MEMBERS']) ||
+                ($ug == $GLOBALS['UGROUP_PROJECT_ADMIN']) ||
+                ($ug == $GLOBALS['UGROUP_TRACKER_ADMIN'])
+            ) {
                 continue;
             }
 
@@ -1673,8 +1695,10 @@ EOS;
             "\n<td align =\"center\">" . $hp->purify($rank, CODENDI_PURIFIER_CONVERT_HTML) . '</td>' .
             "\n<td align =\"center\">" . $hp->purify($status, CODENDI_PURIFIER_CONVERT_HTML) . '</td>';
 
-            if (( $row['status'] == "P" || $field->getName() == "severity" )
-                            && (!user_is_super_user())) {
+            if (
+                ( $row['status'] == "P" || $field->getName() == "severity" )
+                            && (!user_is_super_user())
+            ) {
                 // Unable to delete Permanent values, except for values in the tracker templates (for Codendi admins)
                 $html .= "\n<td align =\"center\">-</td>";
             } else {
@@ -1954,8 +1978,10 @@ EOS;
                 $role_label = $this->arr_roles[$i]['role_label'];
                 $cbox_name = 'cb_' . $role_id . '_' . $event_id;
                 //echo "<BR>$role_label $role_id $event_label $event_id ".$arr_notif['$role_label']['$event_label'];
-                if ((($event_label == 'NEW_ARTIFACT') && ($role_label != 'ASSIGNEE') && ($role_label != 'SUBMITTER')) ||
-                    (($event_label == 'ROLE_CHANGE') && ($role_label != 'ASSIGNEE') && ($role_label != 'CC'))) {
+                if (
+                    (($event_label == 'NEW_ARTIFACT') && ($role_label != 'ASSIGNEE') && ($role_label != 'SUBMITTER')) ||
+                    (($event_label == 'ROLE_CHANGE') && ($role_label != 'ASSIGNEE') && ($role_label != 'CC'))
+                ) {
                     // if the user is not a member then the ASSIGNEE column cannot
                     // be set. If it's not an assignee or a submitter the new_artifact event is meaningless
                     echo '   <td align="center"><input type="hidden" name="' . $cbox_name . '" value="1">-</td>' . "\n";

@@ -19,7 +19,7 @@
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Planning;
 
@@ -32,6 +32,7 @@ use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 class PlanningUpdaterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     /**
      * @var PlanningUpdater
      */

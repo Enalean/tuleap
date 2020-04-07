@@ -68,7 +68,8 @@ class ReplicationHTTPUserAuthenticator
 
         $gerrit_server_id = $repository->getRemoteServerId();
         $gerrit_server    = $this->server_factory->getServerById($gerrit_server_id);
-        if (hash_equals($gerrit_server->getGenericUserName(), $login) &&
+        if (
+            hash_equals($gerrit_server->getGenericUserName(), $login) &&
             $this->password_handler->verifyHashPassword($password, $gerrit_server->getReplicationPassword())
         ) {
             $this->checkPasswordStorageConformity($gerrit_server, $password);

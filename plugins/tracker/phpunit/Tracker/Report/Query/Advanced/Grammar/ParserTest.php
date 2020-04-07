@@ -25,6 +25,7 @@ use PHPUnit\Framework\TestCase;
 final class ParserTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
     public function testItThrowsASyntaxErrorIfQueryIsEmpty(): void
     {
         $this->expectException(\Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError::class);

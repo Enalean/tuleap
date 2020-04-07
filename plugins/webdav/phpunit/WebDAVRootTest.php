@@ -42,7 +42,8 @@ require_once __DIR__ . '/bootstrap.php';
  */
 final class WebDAVRootTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /**
      * @var \Mockery\Mock

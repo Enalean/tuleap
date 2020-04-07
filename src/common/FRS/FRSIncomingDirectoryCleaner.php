@@ -32,7 +32,7 @@ class FRSIncomingDirectoryCleaner
 {
     private const TWO_WEEKS_IN_HOURS = 2 * 7 * 24;
 
-    public function run() : void
+    public function run(): void
     {
         $tmp_watch = new TmpWatch(\ForgeConfig::get('ftp_incoming_dir'), self::TWO_WEEKS_IN_HOURS);
         $tmp_watch->run();

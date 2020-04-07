@@ -975,7 +975,7 @@ class GitRepository implements DVCSRepository
 
     public function setIsMirrored($is_mirrored)
     {
-        $this->is_mirrored = (boolean) $is_mirrored;
+        $this->is_mirrored = (bool) $is_mirrored;
     }
 
     public function getIsMirrored()

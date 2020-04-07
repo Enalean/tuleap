@@ -92,8 +92,10 @@ class Docman_View_GetMenuItemsVisitor implements ItemVisitor
             $itemFactory = Docman_ItemFactory::instance($item->getGroupId());
             $parents = $itemFactory->getParents($item->getId());
             $this->actions['parents'] = $parents;
-            if ($this->if->getCopyPreference($this->user) !== false ||
-               $pasteItemId !== false && $pasteItemId != $item->getId() && !(isset($parents[$pasteItemId]) && $parents[$pasteItemId])) {
+            if (
+                $this->if->getCopyPreference($this->user) !== false ||
+                $pasteItemId !== false && $pasteItemId != $item->getId() && !(isset($parents[$pasteItemId]) && $parents[$pasteItemId])
+            ) {
                 $this->actions['canPaste'] = true;
             }
         }

@@ -19,7 +19,7 @@
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace phpunit\common\Project\Registration;
 
@@ -40,7 +40,9 @@ use Tuleap\Project\Registration\RestrictedUsersNotAllowedException;
 
 class ProjectRegistrationUserPermissionCheckerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
+
     /**
      * @var ProjectRegistrationUserPermissionChecker
      */

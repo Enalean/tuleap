@@ -267,7 +267,7 @@ class GitForkPermissionsManager
         $project = ($project_id) ? ProjectManager::instance()->getProject($project_id) : $this->repository->getProject();
         $user    = UserManager::instance()->getCurrentUser();
 
-        $can_use_fine_grained_permissions = (boolean) ($this->git_permission_manager->userIsGitAdmin($user, $project) ||
+        $can_use_fine_grained_permissions = (bool) ($this->git_permission_manager->userIsGitAdmin($user, $project) ||
             $is_fork ||
             $this->repository->belongsTo($user));
 

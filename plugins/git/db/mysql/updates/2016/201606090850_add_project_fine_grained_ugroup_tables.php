@@ -64,7 +64,8 @@ EOT;
 
     public function postUp()
     {
-        if (! $this->db->tableNameExists('plugin_git_default_fine_grained_permissions') ||
+        if (
+            ! $this->db->tableNameExists('plugin_git_default_fine_grained_permissions') ||
             ! $this->db->tableNameExists('plugin_git_default_fine_grained_permissions_writers') ||
             ! $this->db->tableNameExists('plugin_git_default_fine_grained_permissions_rewinders')
         ) {

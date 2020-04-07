@@ -21,7 +21,10 @@
 
 class SiteCacheTest extends \PHPUnit\Framework\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\ForgeConfigSandbox, \Tuleap\GlobalLanguageMock, \Tuleap\TemporaryTestDirectory;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\ForgeConfigSandbox;
+    use \Tuleap\GlobalLanguageMock;
+    use \Tuleap\TemporaryTestDirectory;
 
     protected function tearDown(): void
     {

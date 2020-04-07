@@ -43,17 +43,17 @@ final class DelegatedUserAccessForProject implements Dispatchable
         $this->user = $user;
     }
 
-    public function getUser() : PFUser
+    public function getUser(): PFUser
     {
         return $this->user;
     }
 
-    public function canUserAccessProject() : bool
+    public function canUserAccessProject(): bool
     {
         return $this->can_user_access;
     }
 
-    public function enableAccessToProjectToTheUser() : void
+    public function enableAccessToProjectToTheUser(): void
     {
         $this->can_user_access = true;
     }
