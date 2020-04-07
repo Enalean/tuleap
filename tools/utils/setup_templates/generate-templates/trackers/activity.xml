@@ -2,7 +2,7 @@
 <tracker id="T425" parent_id="0" instantiate_for_new_projects="1">
   <name><![CDATA[Activities]]></name>
   <item_name>activity</item_name>
-  <description><![CDATA[All activities for the kanban board]]></description>
+  <description><![CDATA[Track daily tasks, meeting actions and follow-ups, etc.]]></description>
   <color>clockwork-orange</color>
   <cannedResponses/>
   <formElements>
