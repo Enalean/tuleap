@@ -1,13 +1,47 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`DefaultTemplateCard Displays a card for a tracker 1`] = `
+exports[`DefaultTemplateCard Displays a card for activity tracker 1`] = `
+<tracker-base-card-stub
+  optionname="default-activity"
+>
+  <div
+    class="card-glyph"
+  >
+    <svg-activity-stub />
+  </div>
+   
+  <div
+    class="card-content"
+  >
+    <h4
+      class="card-title"
+    >
+      Activity
+    </h4>
+     
+    <div
+      class="card-description"
+    >
+      <span
+        class="card-description-content"
+      >
+        
+                    Activities
+                
+      </span>
+    </div>
+  </div>
+</tracker-base-card-stub>
+`;
+
+exports[`DefaultTemplateCard Displays a card for bug tracker 1`] = `
 <tracker-base-card-stub
   optionname="default-bug"
 >
   <div
     class="card-glyph"
   >
-    <svg-tracker-template-stub />
+    <svg-bug-stub />
   </div>
    
   <div
