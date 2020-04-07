@@ -41,6 +41,25 @@
                 </a>
             {else}
                 <div class="tlp-button-bar git-repository-blob-header-actions-bar">
+                    {if $can_be_rendered}
+                        {if $rendered_file}
+                            <div class="tlp-button-bar-item">
+                                <a href="?a=blob&amp;hb={$commit->GetHash()|urlencode}&amp;h={$blob->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}&amp;show_source=1"
+                                   class="tlp-button-primary tlp-button-outline tlp-button-small"
+                                >
+                                    {t domain="gitphp"}Show source{/t}
+                                </a>
+                            </div>
+                        {else}
+                            <div class="tlp-button-bar-item">
+                                <a href="?a=blob&amp;hb={$commit->GetHash()|urlencode}&amp;h={$blob->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}"
+                                   class="tlp-button-primary tlp-button-outline tlp-button-small"
+                                >
+                                    {t domain="gitphp"}Display rendered file{/t}
+                                </a>
+                            </div>
+                        {/if}
+                    {/if}
                     <div class="tlp-button-bar-item">
                         <a href="{$SCRIPT_NAME}?a=blame&amp;f={$blob->GetPath()|urlencode}&amp;hb={$commit->GetHash()|urlencode}"
                            class="tlp-button-primary tlp-button-outline tlp-button-small"

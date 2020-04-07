@@ -23,9 +23,12 @@ namespace Tuleap\Git\GitPHP;
 
 use EventManager;
 use Tuleap\Git\BinaryDetector;
+use Tuleap\Git\CommonMarkExtension\LinkToGitFileBlobFinder;
+use Tuleap\Git\CommonMarkExtension\LinkToGitFileExtension;
 use Tuleap\Git\GitPHP\Events\DisplayFileContentInGitView;
 use Tuleap\Git\Repository\View\LanguageDetectorForPrismJS;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Markdown\CommonMarkInterpreter;
 
 /**
  * Blob controller class
@@ -94,6 +97,7 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
         if (isset($_GET['h'])) {
             $this->params['hash'] = $_GET['h'];
         }
+        $this->params['show_source'] = isset($_GET['show_source']);
     }
 
     /**
@@ -219,9 +223,25 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
 
         $this->tpl->assign('extrascripts', array('blame'));
 
-        $detector = new LanguageDetectorForPrismJS();
-        $this->tpl->assign('language', $detector->getLanguage($blob->GetName()));
-        $this->tpl->assign('bloblines', $blob->GetData(true));
+        $detector          = new LanguageDetectorForPrismJS();
+        $detected_language = $detector->getLanguage($blob->GetName());
+        $this->tpl->assign('language', $detected_language);
+        $can_file_be_rendered = $detected_language === 'md' || $detected_language === 'markdown';
+        $this->tpl->assign('can_be_rendered', $can_file_be_rendered);
+        if ($can_file_be_rendered && ! $this->params['show_source']) {
+            $content_interpretor = CommonMarkInterpreter::build(
+                \Codendi_HTMLPurifier::instance(),
+                new LinkToGitFileExtension(new LinkToGitFileBlobFinder($blob, $commit))
+            );
+            $this->tpl->assign(
+                'rendered_file',
+                $content_interpretor->getInterpretedContent(
+                    $blob->GetData()
+                )
+            );
+        } else {
+            $this->tpl->assign('bloblines', $blob->GetData(true));
+        }
         $include_assets = new IncludeAssets(__DIR__ . '/../../../../../src/www/assets/git', '/assets/git');
         $GLOBALS['Response']->includeFooterJavascriptFile(
             $include_assets->getFileURL('repository-blob.js')

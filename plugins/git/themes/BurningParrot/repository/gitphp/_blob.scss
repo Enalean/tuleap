@@ -58,6 +58,11 @@ $gitphp-code-font: normal normal 14px / 20px monospace;
     text-align: center;
 }
 
+#git-repository-blob-file-rendered {
+    padding: $tlp-spacing;
+    background: $tlp-ui-white;
+}
+
 #git-repository-blob-file,
 #git-repository-blame-file {
     display: flex;
@@ -115,13 +120,13 @@ $above-highlight-line: 2;
     font: $gitphp-code-font;
     line-height: 1.5;
 
-    &[class*="language-"] {
+    &[class*='language-'] {
         margin: 0;
         padding: 5px $tlp-half-spacing;
         background: none;
     }
 
-    > code[class*="language-"] {
+    > code[class*='language-'] {
         position: relative;
         z-index: $above-highlight-line;
         font: $gitphp-code-font;
@@ -166,5 +171,5 @@ $above-highlight-line: 2;
 }
 
 .git-repository-blob-empty-pane {
-    margin: 40px 0 0 0;
+    margin: 40px 0 0;
 }
