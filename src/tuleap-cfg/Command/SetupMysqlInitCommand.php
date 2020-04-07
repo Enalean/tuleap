@@ -30,6 +30,8 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use TuleapCfg\Command\SetupMysql\ConnectionManager;
+use TuleapCfg\Command\SetupMysql\InvalidSSLConfigurationException;
+use TuleapCfg\Command\SetupMysql\MysqlCommandHelper;
 
 final class SetupMysqlInitCommand extends Command
 {
@@ -43,11 +45,28 @@ final class SetupMysqlInitCommand extends Command
     private const OPT_MEDIAWIKI      = 'mediawiki';
     private const OPT_MEDIAWIKI_VALUE_PER_PROJECT = 'per-project';
     private const OPT_MEDIAWIKI_VALUE_CENTRAL     = 'central';
+    /**
+     * @var MysqlCommandHelper
+     */
+    private $command_helper;
+
+    public function __construct()
+    {
+        $this->command_helper = new MysqlCommandHelper();
+        parent::__construct('setup:mysql-init');
+    }
 
     public function getHelp(): string
     {
+        $ssl_opt       = MysqlCommandHelper::OPT_SSL;
+        $ssl_disabled  = ConnectionManager::SSL_NO_SSL;
+        $ssl_no_verify = ConnectionManager::SSL_NO_VERIFY;
+        $ssl_verify_ca = ConnectionManager::SSL_VERIFY_CA;
+        $ssl_ca_file   = MysqlCommandHelper::OPT_SSL_CA;
         return <<<EOT
         Initialize the database (MySQL > 5.7 or MariaDB 10.3) for use with Tuleap
+
+        This command is idempotent so it's safe to be used several times (with same parameters...).
 
         By using --app-password option, it will create the tuleap DB (`tuleap` by default or --db-name),
         the database admin user (`tuleapadm` or --admin-user) with the required GRANTS.
@@ -58,15 +77,22 @@ final class SetupMysqlInitCommand extends Command
 
         Both --app-password and --nss-password can be used independently or together.
 
-        This command is idempotent so it's safe to be used several times (with same parameters...).
+        The connection to the database can be encrypted and you can control the way it's done with ${ssl_opt} with:
+        - ${ssl_disabled}: no usage of encryption (default)
+        - ${ssl_no_verify}: connection will be encrypted by host won't be verified
+        - ${ssl_verify_ca}: connection is encrypted and host is verified
+
+        And encrypted connection requires a Certificate Authority (CA) file that must be provide with ${ssl_ca_file}.
+
         EOT;
     }
 
     protected function configure(): void
     {
-        $this->setName('setup:mysql-init')
+        $this->command_helper->addOptions($this);
+
+        $this
             ->setDescription('Initialize database (users, database, permissions)')
-            ->addOption('host', '', InputOption::VALUE_REQUIRED, 'MySQL server host', 'localhost')
             ->addOption(self::OPT_ADMIN_USER, '', InputOption::VALUE_REQUIRED, 'MySQL admin user', 'root')
             ->addOption(self::OPT_ADMIN_PASSWORD, '', InputOption::VALUE_REQUIRED, 'MySQL admin password')
             ->addOption(self::OPT_APP_DBNAME, '', InputOption::VALUE_REQUIRED, 'Name of the DB name to host Tuleap tables (`tuleap` by default)', 'tuleap')
@@ -81,10 +107,19 @@ final class SetupMysqlInitCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $host = $input->getOption('host');
-        assert(is_string($host));
+        try {
+            $host        = $this->command_helper->getHost($input);
+            $port        = $this->command_helper->getPort($input);
+            $ssl_mode    = $this->command_helper->getSSLMode($input);
+            $ssl_ca_file = $this->command_helper->getSSLCAFile($input, $ssl_mode);
+        } catch (InvalidSSLConfigurationException $exception) {
+            $io->getErrorStyle()->writeln(sprintf('<error>%s</error>', $exception->getMessage()));
+            return 1;
+        }
+
         $user = $input->getOption(self::OPT_ADMIN_USER);
         assert(is_string($user));
+
         $password = $input->getOption(self::OPT_ADMIN_PASSWORD);
         if (! $password) {
             $io->getErrorStyle()->writeln(sprintf('<error>Missing mysql password for admin user `%s`</error>', $user));
@@ -93,7 +128,7 @@ final class SetupMysqlInitCommand extends Command
         assert(is_string($password));
 
         $connexion_manager = new ConnectionManager();
-        $db = $connexion_manager->getDBWithoutDBName($io, $host, $user, $password);
+        $db = $connexion_manager->getDBWithoutDBName($io, $host, $port, $ssl_mode, $ssl_ca_file, $user, $password);
         if ($db === null) {
             $io->getErrorStyle()->writeln('<error>Unable to connect to mysql server</error>');
             return 1;

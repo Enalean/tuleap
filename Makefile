@@ -101,7 +101,11 @@ generate-templates-plugins:
 # Tests and all
 #
 
-post-checkout: composer generate-mo dev-clear-cache dev-forgeupgrade generate-templates-docker npm-build restart-services ## Clear caches, run forgeupgrade, build assets and generate language files
+post-checkout-build: composer generate-mo generate-templates-docker npm-build ## Rebuild the application, can be run without stack up
+
+post-checkout-reload-env: dev-clear-cache dev-forgeupgrade restart-services ## Clear caches, forgeupgrade and restart services
+
+post-checkout: post-checkout-build post-checkout-reload-env ## Clear caches, run forgeupgrade, build assets and generate language files
 
 npm-build:
 	npm install
