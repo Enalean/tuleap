@@ -17,22 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../node_modules/smooth-scrollbar/dist/smooth-scrollbar';
-@import '../../common/css/utils/tooltip';
-
-@import 'includes/global-variables';
-@import 'includes/smooth-scrollbar-overrides';
-@import 'includes/structure';
-@import 'includes/siteadmin';
-@import 'includes/resource_restrictor';
-@import 'includes/autocomplete';
-@import 'includes/homepage';
-@import 'includes/profile';
-@import 'includes/toggler';
-@import 'includes/modals';
-@import 'includes/breadcrumb';
-@import 'includes/project-admin';
-@import 'includes/software_map';
-@import 'includes/error';
-@import 'includes/ckeditor';
-@import 'includes/project-banner';
+.codendi-tooltip {
+    position: absolute;
+    z-index: 100051;
+    padding: 4px 8px;
+    border: 1px solid #808080;
+    background-color: #ffffcc;
+    font-size: .8em;
+}

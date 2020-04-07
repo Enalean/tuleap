@@ -28,9 +28,9 @@ use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 
-require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/../../../themes/FlamingParrot/vendor/autoload.php';
 
-class FlamingParrot_Theme extends Layout
+class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
 
     /**
@@ -60,7 +60,7 @@ class FlamingParrot_Theme extends Layout
 
     private function getTemplateDir()
     {
-        return dirname(__FILE__) . '/templates/';
+        return __DIR__ . '/../../../themes/FlamingParrot/templates/';
     }
 
     public static function getVariants()
@@ -124,10 +124,7 @@ class FlamingParrot_Theme extends Layout
 
     protected function displayCommonStylesheetElements($params)
     {
-        $core_flaming_parrot_include_assets = new IncludeAssets(
-            ForgeConfig::get('tuleap_dir') . '/src/www/themes/FlamingParrot/assets',
-            '/themes/FlamingParrot/assets'
-        );
+        $core_assets = new IncludeAssets(__DIR__ . '/../../assets/core', '/assets/core');
 
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/animate.min.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/scripts/bootstrap/bootstrap-select/bootstrap-select.css" />';
@@ -137,9 +134,9 @@ class FlamingParrot_Theme extends Layout
         echo '<link rel="stylesheet" type="text/css" href="/scripts/bootstrap/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/scripts/jscrollpane/jquery.jscrollpane.css" />';
 
-        $style_css_url = $this->getCSSThemeFileURL($core_flaming_parrot_include_assets);
+        $style_css_url = $this->getCSSThemeFileURL($core_assets);
         echo '<link rel="stylesheet" type="text/css" href="' . $style_css_url . '" />';
-        $print_css_url = $core_flaming_parrot_include_assets->getFileURL('print.css');
+        $print_css_url = $core_assets->getFileURL('FlamingParrot/print.css');
         echo '<link rel="stylesheet" type="text/css" href="' . $print_css_url . '" media="print" />';
 
         $custom_dir = $GLOBALS['codendi_dir'] . '/src/www' . $this->getStylesheetTheme('') . 'custom';
@@ -155,7 +152,7 @@ class FlamingParrot_Theme extends Layout
         $theme_variant = new ThemeVariant();
         $variant_used  = $theme_variant->getVariantForUser($current_user);
 
-        return $include_assets->getFileURL($variant_used . '.css');
+        return $include_assets->getFileURL('FlamingParrot/' . $variant_used . '.css');
     }
 
     private function body($params)

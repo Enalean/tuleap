@@ -1,0 +1,343 @@
+/**
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/* stylelint-disable scss/dollar-variable-pattern */
+// Business colors - Primaries
+$inca_silver: #5d5d5d;
+$chrome_silver: #8f8f8f;
+$firemist_silver: #c5c5c5;
+$red_wine: #a10202;
+$fiesta_red: #f02727;
+$coral_pink: #ff8a8a;
+$teddy_brown: #9a600d;
+$clockwork_orange: #f18e06;
+$graffiti_yellow: #ffd300;
+$army_green: #5f8347;
+$neon_green: #6abf1d;
+$acid_green: #b9e45d;
+$sherwood_green: #009465;
+$ocean_turquoise: #28c4a0;
+$surf_green: #75e4bf;
+$deep_blue: #0480bf;
+$lake_placid_blue: #1ebade;
+$daphne_blue: #87dbef;
+$plum_crazy: #7c2db3;
+$ultra_violet: #a44ee1;
+$lilac_purple: #ce91fa;
+$panther_pink: #c42887;
+$peggy_pink: #e560b2;
+$flamingo_pink: #edacd4;
+
+// Business colors - Secondaries
+$inca_silver_secondary: #ededed;
+$chrome_silver_secondary: #f4f4f4;
+$firemist_silver_secondary: #fafafa;
+$red_wine_secondary: #f4dbdb;
+$fiesta_red_secondary: #ffe5e5;
+$coral_pink_secondary: #fff2f2;
+$teddy_brown_secondary: #f8eccc;
+$clockwork_orange_secondary: #fff5db;
+$graffiti_yellow_secondary: #fffbe7;
+$army_green_secondary: #edf3db;
+$neon_green_secondary: #f4f8e9;
+$acid_green_secondary: #f8fbf3;
+$sherwood_green_secondary: #e3f6f0;
+$ocean_turquoise_secondary: #ecfaf6;
+$surf_green_secondary: #f5fffc;
+$deep_blue_secondary: #e1f2fa;
+$lake_placid_blue_secondary: #eef7fb;
+$daphne_blue_secondary: #f4fcff;
+$plum_crazy_secondary: #f1e9f8;
+$ultra_violet_secondary: #f6f3f9;
+$lilac_purple_secondary: #faf7fd;
+$panther_pink_secondary: #feeaf1;
+$peggy_pink_secondary: #fff1f6;
+$flamingo_pink_secondary: #fff7fa;
+
+// Business colors - Text
+$inca_silver_text: #525252;
+$chrome_silver_text: #5f5f5f;
+$firemist_silver_text: #6f6f6f;
+$red_wine_text: #842f2f;
+$fiesta_red_text: #b70d0d;
+$coral_pink_text: #bf4747;
+$teddy_brown_text: #774a0a;
+$clockwork_orange_text: #945600;
+$graffiti_yellow_text: #8a6c00;
+$army_green_text: #385f1e;
+$neon_green_text: #137900;
+$acid_green_text: #567d00;
+$sherwood_green_text: #006545;
+$ocean_turquoise_text: #00775c;
+$surf_green_text: #1b805e;
+$deep_blue_text: #005f90;
+$lake_placid_blue_text: #007792;
+$daphne_blue_text: #007a96;
+$plum_crazy_text: #6a14a7;
+$ultra_violet_text: #8b21d6;
+$lilac_purple_text: #8e4cbd;
+$panther_pink_text: #9a1d69;
+$peggy_pink_text: #c5007a;
+$flamingo_pink_text: #b7438a;
+
+// Business colors - Borders
+$inca_silver_border: #a5a5a5;
+$chrome_silver_border: #b7b7b7;
+$firemist_silver_border: #c9c9c9;
+$red_wine_border: #da6d70;
+$fiesta_red_border: #f7a0a0;
+$coral_pink_border: #f1c9c9;
+$teddy_brown_border: #b38d57;
+$clockwork_orange_border: #ffc16c;
+$graffiti_yellow_border: #f5d01b;
+$army_green_border: #86ab65;
+$neon_green_border: #94c765;
+$acid_green_border: #c4e6a5;
+$sherwood_green_border: #28c4a0;
+$ocean_turquoise_border: #6be0c5;
+$surf_green_border: #90e0cd;
+$deep_blue_border: #4eb9f1;
+$lake_placid_blue_border: #83daef;
+$daphne_blue_border: #8deaff;
+$plum_crazy_border: #a075bf;
+$ultra_violet_border: #dab7f3;
+$lilac_purple_border: #ddc0f3;
+$panther_pink_border: #e886c3;
+$peggy_pink_border: #e8b7d6;
+$flamingo_pink_border: #ffd0e1;
+/* stylelint-enable */
+
+$swatch-color-map: (
+    'inca-silver':
+    (
+        primary: $inca_silver,
+        secondary: $inca_silver_secondary,
+        border: $inca_silver_border,
+        text: $inca_silver_text,
+        pattern:
+        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAO0lEQVQoU2NkIBIwYlH3HyqGIoeuEKYIph8uj6wQXRGKYphCXIrgiklWCNJJlNUwK4jyDLpivMGDM/gBpiMIC2fsGi0AAAAASUVORK5CYII='
+    ),
+    'chrome-silver':
+    (
+        primary: $chrome_silver,
+        secondary: $chrome_silver_secondary,
+        border: $chrome_silver_border,
+        text: $chrome_silver_text,
+        pattern:
+        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAN0lEQVQoU2NkIBIwEqmOAZvC/1DNKHLoCmGKYBbB5ZEVoitCUUyWQpAJRFkNs4ooz+AMLaLDEQDzRQYLoXGuIgAAAABJRU5ErkJggg=='
+    ),
+    'firemist-silver':
+    (
+        primary: $firemist_silver,
+        secondary: $firemist_silver_secondary,
+        border: $firemist_silver_border,
+        text: $firemist_silver_text,
+        pattern:
+        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAALklEQVQoU2NkIBIwEqmOgSKF/xkYMA1ANxGkCAZQ5LBZTZSJOP1GkWewmkq0iQC0cwMLy6sC+AAAAABJRU5ErkJggg=='
+    ),
+    'red-wine':
+    (
+        primary: $red_wine,
+        secondary: $red_wine_secondary,
+        border: $red_wine_border,
+        text: $red_wine_text,
+        pattern:
+        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAKCAYAAAB8OZQwAAAAFElEQVQYV2NkgID/UBpEMTIOZUEAOBkKC6eV9MQAAAAASUVORK5CYII='
+    ),
+    'fiesta-red':
+    (
+        primary: $fiesta_red,
+        secondary: $fiesta_red_secondary,
+        border: $fiesta_red_border,
+        text: $fiesta_red_text,
+        pattern:
+        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAKCAYAAAB8OZQwAAAAE0lEQVQYV2NkQID/UCYj41AWBAAQQQoLL2tcTwAAAABJRU5ErkJggg=='
+    ),
+    'coral-pink':
+    (
+        primary: $coral_pink,
+        secondary: $coral_pink_secondary,
+        border: $coral_pink_border,
+        text: $coral_pink_text,
+        pattern:
+        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAKCAYAAAB8OZQwAAAAGElEQVQYV2NkQID/DAwMjCAumICCIScIABBpCgsKzidJAAAAAElFTkSuQmCC'
+    ),
+    'teddy-brown':
+    (
+        primary: $teddy_brown,
+        secondary: $teddy_brown_secondary,
+        border: $teddy_brown_border,
+        text: $teddy_brown_text,
+        pattern:
+        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAJklEQVQoU2NkYGD4z0AEYKSJQiIsZmAAWU0UoI0biQ4eot1IlEIAK5wGBTsO21kAAAAASUVORK5CYII='
+    ),
+    'clockwork-orange':
+    (
+        primary: $clockwork_orange,
+        secondary: $clockwork_orange_secondary,
+        border: $clockwork_orange_border,
+        text: $clockwork_orange_text,
+        pattern:
+        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAICAYAAADA+m62AAAAJklEQVQoU2NkYGD4z0AEYCRFIRHmMTCATCQKkGQ10Z4h2mqiFAIAecMEBZ+4TpwAAAAASUVORK5CYII='
+    ),
+    'graffiti-yellow':
+    (
+        primary: $graffiti_yellow,
+        secondary: $graffiti_yellow_secondary,
+        border: $graffiti_yellow_border,
+        text: $graffiti_yellow_text,
+        pattern:
+        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAICAYAAADA+m62AAAAG0lEQVQoU2NkYGD4z0AEYCRCDVgJbRQOdjcCAOk3AgdaYQEOAAAAAElFTkSuQmCC'
+    ),
+    'army-green':
+    (
+        primary: $army_green,
+        secondary: $army_green_secondary,
+        border: $army_green_border,
+        text: $army_green_text,
+        pattern:
+        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAJCAYAAAD+WDajAAAANUlEQVQoU2NkwAT/YUKMaHJwCQYGBkZkSRQJkCaYJIYETBKrBFE6YW7CaSdWBeheASmCmwAAqgwJCNMDfv0AAAAASUVORK5CYII='
+    ),
+    'neon-green':
+    (
+        primary: $neon_green,
+        secondary: $neon_green_secondary,
+        border: $neon_green_border,
+        text: $neon_green_text,
+        pattern:
+        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAJCAYAAAD+WDajAAAAMklEQVQoU2NkwAT/oUKMjGhycAmQOLIkigSyJIYETBKrBFE6YW7CaSdWBeheASmCmwAAqxIJCmDTh/IAAAAASUVORK5CYII='
+    ),
+    'acid-green':
+    (
+        primary: $acid_green,
+        secondary: $acid_green_secondary,
+        border: $acid_green_border,
+        text: $acid_green_text,
+        pattern:
+        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAJCAYAAAD+WDajAAAAM0lEQVQoU2NkwAT/GRgYGEHCYAIJwCXQJVEkkCUxJGCSWCWI0glzD047sSpA9wpIEdwEAKs2CQpUckTQAAAAAElFTkSuQmCC'
+    ),
+    'sherwood-green':
+    (
+        primary: $sherwood_green,
+        secondary: $sherwood_green_secondary,
+        border: $sherwood_green_border,
+        text: $sherwood_green_text,
+        pattern:
+        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAKElEQVQoU2NkIBIwQtX9J6CekWyFMI0wC2A2YZg4gApxeZ50XxMMdgDcMAwL/F/cwAAAAABJRU5ErkJggg=='
+    ),
+    'ocean-turquoise':
+    (
+        primary: $ocean_turquoise,
+        secondary: $ocean_turquoise_secondary,
+        border: $ocean_turquoise_border,
+        text: $ocean_turquoise_text,
+        pattern:
+        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAK0lEQVQoU2NkIBIwEqmOAVnhfxyawGrQFaLbANI82BRi8w+GG/GGFNHhCAARkQoLuHVJTgAAAABJRU5ErkJggg=='
+    ),
+    'surf-green':
+    (
+        primary: $surf_green,
+        secondary: $surf_green_secondary,
+        border: $surf_green_border,
+        text: $surf_green_text,
+        pattern:
+        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAMUlEQVQoU2NkIBIwEqmOgWyF/9FsgBuEbiJIIUwMmY1hNUkKkW3HaTXOQCDb1zhNBADbdQYL29YF0gAAAABJRU5ErkJggg=='
+    ),
+    'deep-blue':
+    (
+        primary: $deep_blue,
+        secondary: $deep_blue_secondary,
+        border: $deep_blue_border,
+        text: $deep_blue_text,
+        pattern:
+        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAARklEQVQoU2NkwAT/oUKMyFIoHAYGBpgimBq4PLJCdEUoimEKkRVhFQMJYlMEMw0uR5JCkG6irMawBi3EwG4mK3jQTUYxBABt4w4JizXljwAAAABJRU5ErkJggg=='
+    ),
+    'lake-placid-blue':
+    (
+        primary: $lake_placid_blue,
+        secondary: $lake_placid_blue_secondary,
+        border: $lake_placid_blue_border,
+        text: $lake_placid_blue_text,
+        pattern:
+        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAP0lEQVQoU2NkIBIwYlH3HyqGIoeuEKYIph8uj6wQ3SQUPkwhVusYGBjg4iQrBLmJKKthjifKM+iK8QYPzuAHALSADAvR5e1eAAAAAElFTkSuQmCC'
+    ),
+    'daphne-blue':
+    (
+        primary: $daphne_blue,
+        secondary: $daphne_blue_secondary,
+        border: $daphne_blue_border,
+        text: $daphne_blue_text,
+        pattern:
+        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAO0lEQVQoU2NkIBIwEqmOAZvC/1DNKHLoCkGKYGLIbBQTUSSgpsLFkE0kWiHIEKKshgUAUZ7BGVpEhyMAAbEKCyJQyzEAAAAASUVORK5CYII='
+    ),
+    'plum-crazy':
+    (
+        primary: $plum_crazy,
+        secondary: $plum_crazy_secondary,
+        border: $plum_crazy_border,
+        text: $plum_crazy_text,
+        pattern:
+        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAMklEQVQoU2NkIBIwQtX9R1KPVYwihdgcwwgzESaJ7ASQGFyeZIXoJqFbD7ea+r4mGOwA3DAMC2da0w8AAAAASUVORK5CYII='
+    ),
+    'ultra-violet':
+    (
+        primary: $ultra_violet,
+        secondary: $ultra_violet_secondary,
+        border: $ultra_violet_border,
+        text: $ultra_violet_text,
+        pattern:
+        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAL0lEQVQoU2NkIBIwEqmOAVnhf6gmmBgKnyyFMFegmwwWx+ZGggpp50asIUZ0OAIAEZEKC7CvpQsAAAAASUVORK5CYII='
+    ),
+    'lilac-purple':
+    (
+        primary: $lilac_purple,
+        secondary: $lilac_purple_secondary,
+        border: $lilac_purple_border,
+        text: $lilac_purple_text,
+        pattern:
+        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAMUlEQVQoU2NkIBIwEqmOgWyF/xkYwJphNNxCbCZiKAKpRldIkolY/Ue2Z3CGFtEmAgB0kQULqk3wPgAAAABJRU5ErkJggg=='
+    ),
+    'panther-pink':
+    (
+        primary: $panther_pink,
+        secondary: $panther_pink_secondary,
+        border: $panther_pink_border,
+        text: $panther_pink_text,
+        pattern:
+        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAFklEQVQYV2NkwAEYiZH4j6wIWQeFEgDL2QQDnNTt9AAAAABJRU5ErkJggg=='
+    ),
+    'peggy-pink':
+    (
+        primary: $peggy_pink,
+        secondary: $peggy_pink_secondary,
+        border: $peggy_pink_border,
+        text: $peggy_pink_text,
+        pattern:
+        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAFCAYAAABmWJ3mAAAAF0lEQVQYV2NkwAEYKZb4DzWBEd0ouAQALOQCBtacyWUAAAAASUVORK5CYII='
+    ),
+    'flamingo-pink':
+    (
+        primary: $flamingo_pink,
+        secondary: $flamingo_pink_secondary,
+        border: $flamingo_pink_border,
+        text: $flamingo_pink_text,
+        pattern:
+        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAFCAYAAABmWJ3mAAAAFElEQVQYV2NkwAEYaSvxn4GBgREABvABBqnItn8AAAAASUVORK5CYII='
+    )
+);

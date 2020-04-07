@@ -17,22 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../node_modules/smooth-scrollbar/dist/smooth-scrollbar';
-@import '../../common/css/utils/tooltip';
+ul.cross_reference_list { // stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
+    padding-left: 0;
+    list-style-type: none;
+}
 
-@import 'includes/global-variables';
-@import 'includes/smooth-scrollbar-overrides';
-@import 'includes/structure';
-@import 'includes/siteadmin';
-@import 'includes/resource_restrictor';
-@import 'includes/autocomplete';
-@import 'includes/homepage';
-@import 'includes/profile';
-@import 'includes/toggler';
-@import 'includes/modals';
-@import 'includes/breadcrumb';
-@import 'includes/project-admin';
-@import 'includes/software_map';
-@import 'includes/error';
-@import 'includes/ckeditor';
-@import 'includes/project-banner';
+ul.cross_reference_list li { // stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
+    line-height: 30px;
+}
+
+td.forum_reference_separator { // stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
+    padding-top: 10px;
+    border-top: thin dotted #808080;
+}
+
+.delete_ref { // stylelint-disable-line selector-class-pattern
+    padding-left: 4px;
+}
+
+.delete_ref img { // stylelint-disable-line selector-class-pattern
+    vertical-align: middle;
+}

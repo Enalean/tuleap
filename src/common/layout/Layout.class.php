@@ -517,6 +517,11 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         return '/themes/' . $GLOBALS['sys_user_theme'] . '/css/' . $css;
     }
 
+    private function getAssets(): IncludeAssets
+    {
+        return new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core');
+    }
+
     /**
      * Display all the stylesheets for the current page
      */
@@ -551,12 +556,12 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
 
     protected function displayCommonStylesheetElements($params)
     {
-        $common_theme_assets = new IncludeAssets(__DIR__ . '/../../www/themes/common/assets', '/themes/common/assets');
+        $core_assets = $this->getAssets();
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/bootstrap-tuleap-22d39b3.min.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/bootstrap-tuleap-responsive-22d39b3.min.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/animate.min.css" />';
-        echo '<link rel="stylesheet" type="text/css" href="' . $common_theme_assets->getFileURL('style.css') . '" />';
-        echo '<link rel="stylesheet" type="text/css" href="' . $common_theme_assets->getFileURL('print.css') . '" media="print" />';
+        echo '<link rel="stylesheet" type="text/css" href="' . $core_assets->getFileURL('common-theme/style.css') . '" />';
+        echo '<link rel="stylesheet" type="text/css" href="' . $core_assets->getFileURL('common-theme/print.css') . '" media="print" />';
         echo '<link rel="stylesheet" type="text/css" href="' . $this->getStylesheetTheme('style.css') . '" />';
         echo '<link rel="stylesheet" type="text/css" href="' . $this->getStylesheetTheme('print.css') . '" media="print" />';
         echo '<link rel="stylesheet" type="text/css" href="/scripts/bootstrap/bootstrap-select/bootstrap-select.css" />';

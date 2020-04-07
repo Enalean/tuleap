@@ -17,22 +17,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../node_modules/smooth-scrollbar/dist/smooth-scrollbar';
-@import '../../common/css/utils/tooltip';
+#footer_debug_separator { // stylelint-disable-line selector-id-pattern
+    margin-top: 50px;
+    padding-top: 24px;
+    padding-bottom: 1em;
+    background: #ffffff url('../../common/images/debug_gradient.png') top left repeat-x;
+    color: #333333;
+}
 
-@import 'includes/global-variables';
-@import 'includes/smooth-scrollbar-overrides';
-@import 'includes/structure';
-@import 'includes/siteadmin';
-@import 'includes/resource_restrictor';
-@import 'includes/autocomplete';
-@import 'includes/homepage';
-@import 'includes/profile';
-@import 'includes/toggler';
-@import 'includes/modals';
-@import 'includes/breadcrumb';
-@import 'includes/project-admin';
-@import 'includes/software_map';
-@import 'includes/error';
-@import 'includes/ckeditor';
-@import 'includes/project-banner';
+#footer_debug { // stylelint-disable-line selector-id-pattern
+    margin-top: 10px;
+}
+
+#footer_debug_content { // stylelint-disable-line selector-id-pattern
+    padding: 10px;
+    background: #ebebeb;
+    color: #333333;
+
+    fieldset legend {
+        padding-left: 1em;
+        color: #333333;
+    }
+
+    td {
+        color: #333333;
+    }
+
+    pre {
+        color: #404040;
+    }
+}

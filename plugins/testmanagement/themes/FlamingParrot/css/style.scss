@@ -1,7 +1,26 @@
+/**
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 @mixin definitions($main, $white) {
     .ttm-definition-step-draggable {
-        background-color: $white;
         padding: 5px 0 0;
+        background-color: $white;
 
         &:first-child {
             margin: 5px 0 0;
@@ -29,10 +48,10 @@
 
         .btn,
         .ttm-definition-step-add-bar {
+            margin: 3px 0 0;
             transition: opacity ease-in-out 100ms;
             opacity: 0;
             pointer-events: none;
-            margin: 3px 0 0;
         }
     }
 
@@ -44,12 +63,16 @@
     }
 
     .ttm-definition-step-add-bar {
+        display: flex;
+        position: relative;
+        justify-content: center;
         transition: opacity ease-in-out 100ms;
         opacity: 0;
 
         &:hover {
             opacity: 1;
             pointer-events: auto;
+
             .btn-primary {
                 opacity: 1;
                 pointer-events: auto;
@@ -57,17 +80,11 @@
         }
 
         .btn-primary {
+            margin: 5px 0;
             transition: opacity ease-in-out 100ms;
             opacity: 0;
             pointer-events: none;
-            margin: 5px 0;
         }
-    }
-
-    .ttm-definition-step-add-bar {
-        display: flex;
-        position: relative;
-        justify-content: center;
 
         > .btn {
             z-index: 1;
@@ -100,7 +117,7 @@
         max-width: 90%;
         padding: 5px 0 0 6px;
 
-        > .rte_format {
+        > .rte_format { //stylelint-disable-line selector-class-pattern
             margin: 0 0 10px;
         }
     }
@@ -146,7 +163,7 @@
     }
 
     .ttm-definition-step-description-action > div {
-        > .rte_format {
+        > .rte_format { //stylelint-disable-line selector-class-pattern
             margin: 0 0 10px;
 
             > select {
@@ -218,31 +235,31 @@
 }
 
 body {
-    @import '../../src/www/themes/FlamingParrot/css/utils/variables-orange';
+    @import '../../src/themes/FlamingParrot/css/utils/variables-orange';
     @include definitions($main, $white);
 
-    &.FlamingParrot_Blue {
-        @import '../../src/www/themes/FlamingParrot/css/utils/variables-blue';
+    &.FlamingParrot_Blue { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
+        @import '../../src/themes/FlamingParrot/css/utils/variables-blue';
         @include definitions($main, $white);
     }
 
-    &.FlamingParrot_Green {
-        @import '../../src/www/themes/FlamingParrot/css/utils/variables-green';
+    &.FlamingParrot_Green { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
+        @import '../../src/themes/FlamingParrot/css/utils/variables-green';
         @include definitions($main, $white);
     }
 
-    &.FlamingParrot_BlueGrey {
-        @import '../../src/www/themes/FlamingParrot/css/utils/variables-bluegrey';
+    &.FlamingParrot_BlueGrey { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
+        @import '../../src/themes/FlamingParrot/css/utils/variables-bluegrey';
         @include definitions($main, $white);
     }
 
-    &.FlamingParrot_Purple {
-        @import '../../src/www/themes/FlamingParrot/css/utils/variables-purple';
+    &.FlamingParrot_Purple { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
+        @import '../../src/themes/FlamingParrot/css/utils/variables-purple';
         @include definitions($main, $white);
     }
 
-    &.FlamingParrot_Red {
-        @import '../../src/www/themes/FlamingParrot/css/utils/variables-red';
+    &.FlamingParrot_Red { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
+        @import '../../src/themes/FlamingParrot/css/utils/variables-red';
         @include definitions($main, $white);
     }
 }

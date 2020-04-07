@@ -27,32 +27,32 @@ $cardwall-font-basepath: '../../default/fonts/';
 }
 
 body {
-    @import '../../../../../src/www/themes/FlamingParrot/css/utils/variables-orange';
+    @import '../../../../../src/themes/FlamingParrot/css/utils/variables-orange';
     @include definitions($main, $main-background);
 
     //scss-lint:disable SelectorFormat
-    &.FlamingParrot_Blue {
-        @import '../../../../../src/www/themes/FlamingParrot/css/utils/variables-blue';
+    &.FlamingParrot_Blue { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
+        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-blue';
         @include definitions($main, $main-background);
     }
 
-    &.FlamingParrot_Green {
-        @import '../../../../../src/www/themes/FlamingParrot/css/utils/variables-green';
+    &.FlamingParrot_Green { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
+        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-green';
         @include definitions($main, $main-background);
     }
 
-    &.FlamingParrot_BlueGrey {
-        @import '../../../../../src/www/themes/FlamingParrot/css/utils/variables-bluegrey';
+    &.FlamingParrot_BlueGrey { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
+        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-bluegrey';
         @include definitions($main, $main-background);
     }
 
-    &.FlamingParrot_Purple {
-        @import '../../../../../src/www/themes/FlamingParrot/css/utils/variables-purple';
+    &.FlamingParrot_Purple { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
+        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-purple';
         @include definitions($main, $main-background);
     }
 
-    &.FlamingParrot_Red {
-        @import '../../../../../src/www/themes/FlamingParrot/css/utils/variables-red';
+    &.FlamingParrot_Red { //stylelint-disable-line selector-no-qualifying-type, selector-class-pattern
+        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-red';
         @include definitions($main, $main-background);
     }
 }

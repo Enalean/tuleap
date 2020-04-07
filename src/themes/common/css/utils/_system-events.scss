@@ -1,0 +1,54 @@
+/**
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/* stylelint-disable selector-no-qualifying-type, selector-class-pattern */
+.table td.system_event_status_NEW,
+.table td.system_event_status_RUNNING,
+.table td.system_event_status_DONE,
+.table td.system_event_status_WARNING,
+.table td.system_event_status_ERROR {
+    color: #ffffff;
+    font-weight: bold;
+    text-align: center;
+}
+
+td.system_event_status_NEW {
+    background-color: #808080 !important;
+}
+
+td.system_event_status_RUNNING {
+    background-color: #0000ff !important;
+}
+
+td.system_event_status_DONE {
+    background-color: #008000 !important;
+}
+
+td.system_event_status_WARNING {
+    background-color: #ffa500 !important;
+}
+
+td.system_event_status_ERROR {
+    background-color: #ff0000 !important;
+}
+/* stylelint-enable */
+
+#filter_type { // stylelint-disable-line selector-id-pattern
+    width: auto;
+}

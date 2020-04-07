@@ -34,31 +34,31 @@
 
 /* stylelint-disable selector-no-qualifying-type, selector-class-pattern */
 body {
-    @import '../../../../../src/www/themes/FlamingParrot/css/utils/variables-orange';
+    @import '../../../../../src/themes/FlamingParrot/css/utils/variables-orange';
     @include definitions($main);
 
     &.FlamingParrot_Blue {
-        @import '../../../../../src/www/themes/FlamingParrot/css/utils/variables-blue';
+        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-blue';
         @include definitions($main);
     }
 
     &.FlamingParrot_Green {
-        @import '../../../../../src/www/themes/FlamingParrot/css/utils/variables-green';
+        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-green';
         @include definitions($main);
     }
 
     &.FlamingParrot_BlueGrey {
-        @import '../../../../../src/www/themes/FlamingParrot/css/utils/variables-bluegrey';
+        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-bluegrey';
         @include definitions($main);
     }
 
     &.FlamingParrot_Purple {
-        @import '../../../../../src/www/themes/FlamingParrot/css/utils/variables-purple';
+        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-purple';
         @include definitions($main);
     }
 
     &.FlamingParrot_Red {
-        @import '../../../../../src/www/themes/FlamingParrot/css/utils/variables-red';
+        @import '../../../../../src/themes/FlamingParrot/css/utils/variables-red';
         @include definitions($main);
     }
 }
