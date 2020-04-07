@@ -19,9 +19,6 @@
  */
 
 use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminPaneContent;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
-use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\BotMattermost\BotMattermostDeleted;
 use Tuleap\BotMattermost\BotMattermostLogger;
 use Tuleap\BotMattermost\SenderServices\ClientBotMattermost;
@@ -38,9 +35,6 @@ use Tuleap\BotMattermostAgileDashboard\SenderServices\StandUpNotificationSender;
 use Tuleap\BotMattermost\SenderServices\EncoderMessage;
 use Tuleap\BotMattermost\SenderServices\Sender;
 use Tuleap\Cron\EventCronJobEveryMinute;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 require_once 'autoload.php';
 require_once 'constants.php';
@@ -172,7 +166,7 @@ class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacy
         return HTTPRequest::instance();
     }
 
-    public function process() : void
+    public function process(): void
     {
         $request = $this->getRequest();
         if ($this->isAllowed($request->getProject()->getID())) {

@@ -38,7 +38,8 @@ use Tuleap\GlobalLanguageMock;
 
 final class StandUpNotificationBuilderTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     public function testNotificationCanBeBuiltWhenTheParentOfTheMilestoneArtifactCanNotBeFound(): void
     {
