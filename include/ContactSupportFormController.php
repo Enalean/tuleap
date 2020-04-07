@@ -46,7 +46,7 @@ class ContactSupportFormController implements DispatchableWithRequest
      * @throws ForbiddenException
      * @throws NotFoundException
      */
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables) : void
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $modal_presenter = new ModalPresenter(
             $this->getFormPresenter(),
@@ -69,14 +69,14 @@ class ContactSupportFormController implements DispatchableWithRequest
         return ob_get_clean();
     }
 
-    public function getFormContent() : string
+    public function getFormContent(): string
     {
         $form_presenter = $this->getFormPresenter();
 
         return $this->renderer->renderToString('form-burning-parrot', $form_presenter);
     }
 
-    private function getFormPresenter() : FormPresenter
+    private function getFormPresenter(): FormPresenter
     {
         return new FormPresenter(
             ForgeConfig::get('sys_email_admin')

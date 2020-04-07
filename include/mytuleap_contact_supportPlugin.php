@@ -85,7 +85,7 @@ class mytuleap_contact_supportPlugin extends Plugin // phpcs:ignore PSR1.Classes
         return TemplateRendererFactory::build()->getRenderer($template_path);
     }
 
-    public function collectRoutesEvent(CollectRoutesEvent $event) : void
+    public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addGroup('/plugins/mytuleap_contact_support', function (RouteCollector $r) {
                 $r->post(
@@ -99,12 +99,12 @@ class mytuleap_contact_supportPlugin extends Plugin // phpcs:ignore PSR1.Classes
         });
     }
 
-    public function routePost() : SendMailSupportController
+    public function routePost(): SendMailSupportController
     {
         return $this->getSendMailSupportController();
     }
 
-    public function routeGet() : ContactSupportFormController
+    public function routeGet(): ContactSupportFormController
     {
         return $this->getContactSupportFormController();
     }
@@ -121,7 +121,7 @@ class mytuleap_contact_supportPlugin extends Plugin // phpcs:ignore PSR1.Classes
         echo $asset->getHTMLSnippet('modal-flaming-parrot.js');
     }
 
-    public function site_help($params) : void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function site_help($params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['extra_content'] = $this->getContactSupportFormController()->getFormContent();
     }
@@ -143,7 +143,7 @@ class mytuleap_contact_supportPlugin extends Plugin // phpcs:ignore PSR1.Classes
         $params['stylesheets'][] = $asset->getFileURL('style-burningparrot-' . $variant->getName() . '.css');
     }
 
-    private function getIncludeAssets() : IncludeAssets
+    private function getIncludeAssets(): IncludeAssets
     {
         return new IncludeAssets(
             __DIR__ . '/../../../src/www/assets/mytuleap_contact_support/',
