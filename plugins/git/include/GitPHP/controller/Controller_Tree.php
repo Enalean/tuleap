@@ -24,6 +24,7 @@ namespace Tuleap\Git\GitPHP;
 use GitPHP\Commit\TreePresenter;
 use Tuleap\Git\CommonMarkExtension\LinkToGitFileBlobFinder;
 use Tuleap\Git\CommonMarkExtension\LinkToGitFileExtension;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Markdown\CommonMarkInterpreter;
 
 class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
@@ -157,6 +158,10 @@ class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
                 $content_interpretor->getInterpretedContent(
                     $readme_tree_item->GetData()
                 )
+            );
+            $include_assets = new IncludeAssets(__DIR__ . '/../../../../../src/www/assets/git', '/assets/git');
+            $GLOBALS['Response']->includeFooterJavascriptFile(
+                $include_assets->getFileURL('repository-blob.js')
             );
         }
 
