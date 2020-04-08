@@ -46,7 +46,7 @@
         var manifest = window.manifest_framework_file;
         var new_stylesheet = document.createElement("link");
         new_stylesheet.rel = "stylesheet";
-        new_stylesheet.href = "../dist/" + manifest["tlp-" + color + ".css"];
+        new_stylesheet.href = "/assets/core/" + manifest["tlp-" + color + ".css"];
         new_stylesheet.onload = function () {
             if (new_stylesheet.sheet.cssRules.length) {
                 stylesheet.remove();
