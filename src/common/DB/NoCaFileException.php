@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,32 +16,17 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
+
+declare(strict_types=1);
 
 namespace Tuleap\DB;
 
-final class DBFactory
+final class NoCaFileException extends \RuntimeException
 {
-    /**
-     * @var array<string, DBConnection>
-     */
-    private static $connections = [];
-
-    private function __construct()
+    public function __construct()
     {
-    }
-
-    public static function getMainTuleapDBConnection(): DBConnection
-    {
-        return self::getDBConnection(\ForgeConfig::get('sys_dbname'));
-    }
-
-    public static function getDBConnection(string $database_name): DBConnection
-    {
-        if (! isset(self::$connections[$database_name])) {
-            self::$connections[$database_name] = new DBConnection(new DBCreator($database_name));
-        }
-
-        return self::$connections[$database_name];
+        parent::__construct('No or invalid CA file provided for Database encrypted connection. Check database.inc');
     }
 }

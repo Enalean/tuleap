@@ -3,7 +3,7 @@
 # Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 # http://www.codendi.com
 #
-# 
+#
 #
 # include.py - Include file for all the python scripts that contains reusable functions
 #
@@ -62,18 +62,27 @@ load_local_config(db_include)
 # Database Connect Functions
 ##############################
 def db_connect():
-    """Connect to Codendi database"""
+    """Connect to application database"""
     global dbh
     global sys_dbhost
     load_local_config(db_config_file)
-    # connect to the database
+    connect_args = dict(db=sys_dbname, host=sys_dbhost, user=sys_dbuser, passwd=sys_dbpasswd)
+
+    if sys_enablessl == '1':
+        # Due to MySQLdb limitations, we cannot enforce certificate trust
+        # see https://mysqlclient.readthedocs.io/user_guide.html 'ssl' section
+        # and related https://dev.mysql.com/doc/refman/5.7/en/mysql-ssl-set.html
+        connect_args['ssl'] = {'ca': sys_db_ssl_ca}
+
     pos = sys_dbhost.find(':')
     if pos > 0:
         dbport = int(sys_dbhost[pos+1:])
         sys_dbhost = sys_dbhost[:pos]
-        dbh = MySQLdb.connect(db=sys_dbname, host=sys_dbhost, port=dbport, user=sys_dbuser, passwd=sys_dbpasswd)
-    else:
-        dbh = MySQLdb.connect(db=sys_dbname, host=sys_dbhost, user=sys_dbuser, passwd=sys_dbpasswd)
+        connect_args['host'] = sys_dbhost
+        connect_args['port'] = dbport
+
+    # connect to the database
+    dbh = MySQLdb.connect(**connect_args)
 
 ##############################
 # File open function, spews the entire file to an array.
@@ -139,7 +148,7 @@ def get_codendi_user():
 #            if m is not None:
 #                return m.group(1)
 #        f.close
-        
+
 
 def constant_time_str_compare(value1, value2):
     if len(value1) != len(value2):

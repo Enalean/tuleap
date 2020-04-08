@@ -23,6 +23,7 @@
  *  Mediawiki plugin of Tuleap.
  */
 
+use Tuleap\DB\DBConfig;
 use Tuleap\Mediawiki\MediawikiExtensionDAO;
 use Tuleap\Mediawiki\MediawikiMathExtensionEnabler;
 
@@ -148,6 +149,9 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
     $wgDBadminuser      = forge_get_config('database_user');
     $wgDBadminpassword  = forge_get_config('database_password');
     $wgDBport           = forge_get_config('database_port');
+    if (DBConfig::isSSLEnabled()) {
+        $wgDBssl = true;
+    }
     $wgMainCacheType    = CACHE_NONE;
     $wgMemCachedServers = array();
     $wgEnableParserCache = false;

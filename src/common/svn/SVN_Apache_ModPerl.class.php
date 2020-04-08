@@ -17,9 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\DB\DBConfig;
 use Tuleap\SvnCore\Cache\Parameters;
-
-require_once 'SVN_Apache.class.php';
 
 class SVN_Apache_ModPerl extends SVN_Apache
 {
@@ -36,15 +35,12 @@ class SVN_Apache_ModPerl extends SVN_Apache
 
     public function getHeaders()
     {
-        $ret = 'PerlLoadModule Apache::Tuleap' . PHP_EOL;
-        return $ret;
+        return 'PerlLoadModule Apache::Tuleap' . PHP_EOL;
     }
 
     protected function getProjectAuthentication($row)
     {
-        $tuleap_dsn          = $this->escapeStringForApacheConf(
-            'DBI:mysql:' . ForgeConfig::get('sys_dbname') . ':' . ForgeConfig::get('sys_dbhost')
-        );
+        $tuleap_dsn          = $this->escapeStringForApacheConf($this->getDBIConnect());
         $maximum_credentials = $this->escapeStringForApacheConf($this->cache_parameters->getMaximumCredentials());
         $lifetime            = $this->escapeStringForApacheConf($this->cache_parameters->getLifetime());
 
@@ -64,7 +60,7 @@ class SVN_Apache_ModPerl extends SVN_Apache
         return $conf;
     }
 
-    private function addRedisBlock()
+    private function addRedisBlock(): string
     {
         $conf = '';
         $redis_server = trim(ForgeConfig::get('redis_server'));
@@ -77,5 +73,17 @@ class SVN_Apache_ModPerl extends SVN_Apache
             $conf .= '    TuleapRedisPassword "' . $this->escapeStringForApacheConf($redis_password) . '"' . "\n";
         }
         return $conf;
+    }
+
+    private function getDBIConnect(): string
+    {
+        $connect = sprintf('DBI:mysql:%s:%s', ForgeConfig::get('sys_dbname'), ForgeConfig::get('sys_dbhost'));
+        if (DBConfig::isSSLEnabled()) {
+            $connect = sprintf('%s;mysql_ssl=1;mysql_ssl_ca_file=%s', $connect, DBConfig::getSSLCACertFile());
+            if (DBConfig::isSSLVerifyCert()) {
+                $connect = sprintf('%s;mysql_ssl_verify_server_cert=1', $connect);
+            }
+        }
+        return $connect;
     }
 }

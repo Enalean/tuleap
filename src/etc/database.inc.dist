@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) Enalean, 2012-2017. All Rights Reserved.
+// Copyright (c) Enalean, 2011-Present. All Rights Reserved.
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 //
 // This file is a part of Tuleap.
@@ -24,16 +24,15 @@ $sys_dbname='%sys_dbname%';
 $sys_dbuser='%sys_dbuser%';
 $sys_dbpasswd='%sys_dbpasswd%';
 
-// If set to 1 (one) connexions to DB are made through SSL.
+// If set to '1' (one) connexions to DB are made through SSL.
 // Note: Mysql server must be properly configured to accept SSL
-// connexions (GRANT ... REQUIRE SSL). This is the only way to
-// guaranty that communications are encrypted.
-$sys_enablessl='0';
+// connection. Either with a grant for user or by forcing all
+// connections to be in SSL with `require_secure_transport=ON`
+$sys_enablessl          = '0';
+$sys_db_ssl_ca          = '/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem';
+$sys_db_ssl_verify_cert = '0';
 
 // for phpWiki
 $sys_server='mysql';
 //The value should be 20 due to mysql max join limit
 $sys_server_join='20';
-
-// End of customizations -- place nothing after the closing PHP tag!
-?>
