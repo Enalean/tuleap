@@ -1,14 +1,33 @@
-@import '../../../../../src/www/themes/common/tlp/src/scss/variables/colors/common-colors';
+/**
+ * Copyright (c) Enalean, 2011-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@import '../../../../../src/themes/tlp/src/scss/variables/colors/common-colors';
 
 form[name=edit_chart_form] label {
     font-weight: bold;
 }
 
-.tracker_report_renderer_graphontrackers_charts {
+.tracker_report_renderer_graphontrackers_charts { //stylelint-disable-line selector-class-pattern
     margin-top: 40px;
     clear: both;
 
-    > .widget_report_graph {
+    > .widget_report_graph { //stylelint-disable-line selector-class-pattern
         display: inline-block;
         padding: 0 20px 20px 0;
         text-align: right;
@@ -20,41 +39,41 @@ form[name=edit_chart_form] label {
     }
 }
 
-.widget_content > .tracker_report_renderer_graphontrackers_charts {
+.widget_content > .tracker_report_renderer_graphontrackers_charts { //stylelint-disable-line selector-class-pattern
     margin-top: 0;
 
-    > .widget_report_graph > .widget {
-        > .widget_titlebar {
+    > .widget_report_graph > .widget { //stylelint-disable-line selector-class-pattern
+        > .widget_titlebar { //stylelint-disable-line selector-class-pattern
             border-bottom-color: #b2b2b2;
             color: #222222;
 
-            > .plugin_graphontrackersv5_widget_actions {
+            > .plugin_graphontrackersv5_widget_actions { //stylelint-disable-line selector-class-pattern, selector-max-compound-selectors
                 display: none;
             }
         }
 
-        > .widget_content {
+        > .widget_content { //stylelint-disable-line selector-class-pattern
             border-top-color: #b2b2b2;
         }
     }
 }
 
 .dashboard-widget {
-    .widget_titlebar {
+    .widget_titlebar { //stylelint-disable-line selector-class-pattern
         color: #747474;
         text-align: left;
     }
 
-    .plugin_graphontrackersv5_widget_actions {
+    .plugin_graphontrackersv5_widget_actions { //stylelint-disable-line selector-class-pattern
         display: none;
     }
 }
 
-.plugin_graphontrackersv5_widget_actions {
+.plugin_graphontrackersv5_widget_actions { //stylelint-disable-line selector-class-pattern
     float: right;
 }
 
-.tracker_report_renderer_graphontrackers_graph {
+.tracker_report_renderer_graphontrackers_graph { //stylelint-disable-line selector-class-pattern
     text-align: center;
 
     text {

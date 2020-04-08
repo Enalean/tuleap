@@ -20,7 +20,7 @@
 import {
     mockFetchSuccess,
     mockFetchError,
-} from "../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper.js";
+} from "../../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper.js";
 import {
     PROJECT_KEY,
     ERROR_TYPE_NO_GIT,

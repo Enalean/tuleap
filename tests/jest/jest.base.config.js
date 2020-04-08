@@ -27,11 +27,8 @@ module.exports = {
     },
     moduleNameMapper: {
         "^.+\\.po$": "identity-obj-proxy",
-        "^tlp$": path.resolve(__dirname, "../../src/www/themes/common/tlp/src/js/index.js"),
-        "^tlp-fetch$": path.resolve(
-            __dirname,
-            "../../src/www/themes/common/tlp/src/js/fetch-wrapper.js"
-        ),
+        "^tlp$": path.resolve(__dirname, "../../src/themes/tlp/src/js/index.js"),
+        "^tlp-fetch$": path.resolve(__dirname, "../../src/themes/tlp/src/js/fetch-wrapper.js"),
     },
     setupFiles: [path.resolve(__dirname, "./fail-unhandled-promise-rejection.js")],
     setupFilesAfterEnv: [path.resolve(__dirname, "./fail-console-error-warning.js")],

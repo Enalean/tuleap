@@ -26,8 +26,6 @@ src/www/scripts/vendor/
 src/www/scripts/fieldDependencies.js
 src/www/scripts/filterlist.js
 src/www/scripts/user.js
-src/www/themes/common/tlp/doc/codemirror/
-src/www/themes/common/tlp/src/types/
-src/www/themes/common/tlp/src/vendor-i18n/
+src/themes/tlp/src/types/
 tests/simpletest/common/include/_fixtures
 plugins/mediawiki/www/

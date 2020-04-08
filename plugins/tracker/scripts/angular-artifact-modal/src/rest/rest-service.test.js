@@ -20,7 +20,7 @@
 import {
     mockFetchError,
     mockFetchSuccess,
-} from "../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper.js";
+} from "../../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper.js";
 import * as RestService from "./rest-service.js";
 import * as rest_error_state from "./rest-error-state.js";
 

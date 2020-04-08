@@ -593,14 +593,18 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/*.json
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/composer.lock
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/scripts/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/css
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/node_modules
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/composer.json
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/package.json
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/css
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/images
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/node_modules
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/package-lock.json
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/common
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/FlamingParrot/css
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/package.json
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/FlamingParrot/composer.json
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/FlamingParrot/css
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/FlamingParrot/images
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/common
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/tlp
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/tlp-doc
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/gerrit_setup
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/githooks
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/version_numbers
@@ -1106,8 +1110,6 @@ fi
 # Only "common" theme is embedded into the package
 %dir %{APP_DIR}/src/www/themes
 %{APP_DIR}/src/www/themes/common
-%dir %{APP_DIR}/src/www/themes/common/tlp
-%{APP_DIR}/src/www/themes/common/tlp/dist
 %{APP_DIR}/src/www/themes/local
 %{APP_DIR}/src/www/tos
 %{APP_DIR}/src/www/tour

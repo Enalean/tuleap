@@ -23,7 +23,7 @@ import AdvancedTemplateList from "./AdvancedTemplateList.vue";
 import { shallowMount, Wrapper } from "@vue/test-utils";
 import { TemplateData } from "../../../type";
 import * as rest_querier from "../../../api/rest-querier";
-import { mockFetchSuccess } from "../../../../../../../www/themes/common/tlp/mocks/tlp-fetch-mock-helper";
+import { mockFetchSuccess } from "../../../../../../../themes/tlp/mocks/tlp-fetch-mock-helper";
 import { State } from "../../../store/type";
 import { createStoreMock } from "../../../../../../vue-components/store-wrapper-jest";
 import { Store } from "vuex-mock-store";

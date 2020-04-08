@@ -24,7 +24,7 @@ import { HandleDropPayload, MoveCardsPayload, ReorderCardsPayload, SwimlaneState
 import { RootState } from "../type";
 import { Card, ColumnDefinition, Swimlane, Direction, CardPosition } from "../../type";
 import * as tlp from "tlp";
-import { mockFetchSuccess } from "../../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper";
+import { mockFetchSuccess } from "../../../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper";
 
 jest.mock("tlp");
 

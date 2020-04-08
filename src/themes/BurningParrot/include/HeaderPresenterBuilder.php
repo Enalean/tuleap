@@ -160,23 +160,16 @@ class HeaderPresenterBuilder
         return $page_title;
     }
 
-    private function getStylesheets(ThemeVariation $theme_variation)
+    private function getStylesheets(ThemeVariation $theme_variation): array
     {
-        $tlp_framework_css_asset = new CssAsset(
-            new IncludeAssets(
-                __DIR__ . '/../../../www/themes/common/tlp/dist',
-                '/themes/common/tlp/dist'
-            ),
-            'tlp'
+        $core_assets = new IncludeAssets(
+            __DIR__ . '/../../../www/assets/core',
+            '/assets/core'
         );
-        $burning_parrot_css_asset = new CssAsset(
-            new IncludeAssets(
-                __DIR__ . '/../../../www/assets/core',
-                '/assets/core'
-            ),
-            'BurningParrot/burning-parrot'
-        );
-        $css_assets = new CssAssetCollection([$tlp_framework_css_asset, $burning_parrot_css_asset]);
+        $css_assets = new CssAssetCollection([
+            new CssAsset($core_assets, 'tlp'),
+            new CssAsset($core_assets, 'BurningParrot/burning-parrot')
+        ]);
         $this->css_assets = $css_assets->merge($this->css_assets);
 
         $stylesheets = [];

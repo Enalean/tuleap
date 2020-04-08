@@ -1,0 +1,199 @@
+/**
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+$tlp-table-cell-padding: 10px;
+@if $tlp-density == $tlp-density-condensed {
+    $tlp-table-cell-padding: 6px;
+}
+
+
+/**
+ * Table actions
+ */
+.tlp-table-actions {
+    display: flex;
+    margin: 0 0 $tlp-spacing;
+}
+
+.tlp-table-actions-element {
+    margin: 0 $tlp-spacing / 2 0 0;
+
+    &:last-child {
+        margin: 0;
+    }
+}
+
+.tlp-table-actions-spacer {
+    flex: 1;
+    min-width: $tlp-spacing;
+}
+
+.tlp-table-actions-filter {
+    min-width: 150px;
+}
+
+
+/**
+ * Table
+ */
+%tlp-table-th {
+    padding: $tlp-table-cell-padding;
+    background: $tlp-table-header-background;
+    color: $tlp-theme-color;
+    font-weight: 600;
+
+    &.tlp-table-cell-numeric {
+        text-align: right;
+    }
+}
+
+.tlp-table {
+    width: 100%;
+
+    /* stylelint-disable selector-no-qualifying-type */
+    > thead > tr > th {
+        @extend %tlp-table-th;
+
+        border-bottom: 2px solid $tlp-theme-color;
+    }
+
+    > tfoot > tr > th {
+        @extend %tlp-table-th;
+
+        border-top: 2px solid $tlp-theme-color;
+    }
+
+    > tbody {
+        &.tlp-table-tbody-hidden {
+            display: none;
+        }
+
+        > tr:nth-child(even) > td {
+            background: $tlp-table-row-background-even;
+        }
+
+        > tr:nth-child(odd) > td {
+            background: $tlp-table-row-background-odd;
+        }
+
+        > tr:hover > td {
+            background: mix($tlp-theme-color, $tlp-ui-white, 7%);
+        }
+
+        > tr > td {
+            padding: $tlp-table-cell-padding;
+            border-bottom: 1px solid transparent;
+            line-height: normal;
+            vertical-align: middle;
+
+            &.tlp-table-cell-section {
+                padding: 5px $tlp-table-cell-padding;
+                background: $tlp-theme-background-color;
+                color: $tlp-theme-color;
+                font-size: 13px;
+                font-weight: 600;
+                letter-spacing: .3px;
+                text-transform: uppercase;
+            }
+
+            &.tlp-table-cell-empty {
+                height: 100px;
+                background: $tlp-table-row-background-empty;
+                color: transparentize($tlp-theme-color, .7);
+                font-style: italic;
+                text-align: center;
+                vertical-align: middle;
+            }
+
+            > .tlp-badge-primary,
+            > .tlp-badge-secondary,
+            > .tlp-badge-info,
+            > .tlp-badge-success,
+            > .tlp-badge-warning,
+            > .tlp-badge-danger {
+                margin: -4px 0 -3px;
+            }
+
+            .tlp-avatar-jumbo,
+            .tlp-avatar-extra-large,
+            .tlp-avatar-large,
+            .tlp-avatar,
+            .tlp-avatar-small,
+            .tlp-avatar-mini {
+                width: 20px;
+                height: 20px;
+                background: url('../images/tlp-avatar-mini.png');
+            }
+        }
+
+        > .tlp-table-last-row > td,
+        > tr:last-child > td {
+            border: 0;
+        }
+
+        > .tlp-table-row-hidden {
+            display: none;
+        }
+
+
+        > .tlp-table-empty-filter {
+            > td {
+                border: 0;
+            }
+
+            &:not(.tlp-table-empty-filter-shown) {
+                display: none;
+            }
+        }
+    }
+    /* stylelint-enable */
+}
+
+.tlp-table-cell-numeric {
+    text-align: right;
+}
+
+.tlp-table-cell-actions {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.tlp-table-cell-actions-button {
+    margin: -10px 0 -5px;
+
+    + .tlp-table-cell-actions-button {
+        margin: -10px 0 -5px 5px;
+
+        &.tlp-switch {
+            margin: -5px 0 -5px 5px;
+        }
+    }
+
+    &.tlp-switch {
+        margin: -5px 0;
+    }
+}
+
+.tlp-table-sort {
+    display: block;
+}
+
+.tlp-table-sort-icon {
+    margin: 0 0 0 ($tlp-spacing / 2);
+}

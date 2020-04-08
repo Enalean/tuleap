@@ -1,0 +1,53 @@
+/**
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+@font-face {
+    font-family: 'SourceSansPro';
+    font-weight: 300;
+    src: url('../fonts/source-sans-pro/SourceSansPro-Light.eot');
+    src: url('../fonts/source-sans-pro/SourceSansPro-Light.ttf.woff') format('truetype');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SourceSansPro';
+    src: url('../fonts/source-sans-pro/SourceSansPro-Regular.eot');
+    src: url('../fonts/source-sans-pro/SourceSansPro-Regular.ttf.woff') format('truetype');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SourceSansPro';
+    font-weight: 600;
+    src: url('../fonts/source-sans-pro/SourceSansPro-Semibold.eot');
+    src: url('../fonts/source-sans-pro/SourceSansPro-Semibold.ttf.woff') format('truetype');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SourceSansPro';
+    font-weight: 700;
+    src: url('../fonts/source-sans-pro/SourceSansPro-Bold.eot');
+    src: url('../fonts/source-sans-pro/SourceSansPro-Bold.ttf.woff') format('truetype');
+    font-display: swap;
+}
+
+$fa-font-path: '../fonts/font-awesome-4.7.0/fonts';
+@import '../../fonts/font-awesome-4.7.0/scss/font-awesome';
+
+@import '../../fonts/tlp-font/tlp-font';

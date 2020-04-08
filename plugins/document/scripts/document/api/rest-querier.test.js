@@ -54,7 +54,7 @@ import {
     putFolderPermissions,
 } from "./rest-querier.js";
 
-import { mockFetchSuccess } from "../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper.js";
+import { mockFetchSuccess } from "../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper.js";
 import { DOCMAN_FOLDER_EXPANDED_VALUE } from "../constants.js";
 import * as tlp from "tlp";
 
