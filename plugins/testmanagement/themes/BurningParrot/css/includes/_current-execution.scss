@@ -11,62 +11,43 @@
         overflow-y: auto;
     }
 
-    &.passed > .tlp-pane-container > .current-test-header {
-        background: $tlp-ui-success;
-        color: $tlp-ui-white;
-
-        .current-test-header-comment a {
-            color: $tlp-ui-white;
-            text-decoration: underline;
+    &.passed > .tlp-pane-container {
+        > .current-test-header {
+            background: $tlp-ui-success;
         }
 
-        > .current-test-header-who {
-            color: transparentize($tlp-ui-white, .3);
+        > .current-test-latest-result {
+            background: linear-gradient(0deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), $tlp-ui-success;
         }
     }
 
-    &.failed > .tlp-pane-container > .current-test-header {
-        background: $tlp-ui-danger;
-        color: $tlp-ui-white;
-
-        .current-test-header-comment a {
-            color: $tlp-ui-white;
-            text-decoration: underline;
+    &.failed > .tlp-pane-container {
+        > .current-test-header {
+            background: $tlp-ui-danger;
         }
 
-        > .current-test-header-who {
-            color: transparentize($tlp-ui-white, .3);
+        > .current-test-latest-result {
+            background: linear-gradient(0deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), $tlp-ui-danger;
         }
     }
 
-    &.blocked > .tlp-pane-container > .current-test-header {
-        background: $tlp-ui-info;
-        color: $tlp-ui-white;
-
-        .current-test-header-comment a {
-            color: $tlp-ui-white;
-            text-decoration: underline;
+    &.blocked > .tlp-pane-container {
+        > .current-test-header {
+            background: $tlp-ui-info;
         }
 
-        > .current-test-header-who {
-            color: transparentize($tlp-ui-white, .3);
+        > .current-test-latest-result {
+            background: linear-gradient(0deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), $tlp-ui-info;
         }
     }
 
-    &.notrun > .tlp-pane-container > .current-test-header {
-        background: #e9e9e9;
-        color: #444444;
-
-        > .current-test-status {
-            display: none;
+    &.notrun > .tlp-pane-container {
+        > .current-test-header {
+            background: $tlp-ui-dimmed;
         }
 
-        > .current-test-header-who {
-            color: transparentize($tlp-ui-white, .3);
-        }
-
-        > .current-test-header-title-container > .current-test-header-title {
-            color: #444444;
+        > .current-test-latest-result {
+            background: linear-gradient(0deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), $tlp-ui-dimmed;
         }
     }
 }
@@ -87,20 +68,18 @@
 .current-test-header {
     display: flex;
     flex: 0 0 auto;
-    align-items: flex-start;
+    align-items: baseline;
+    justify-content: space-between;
+    color: $tlp-ui-white;
 }
 
 .current-test-status {
-    margin: 0 $tlp-spacing 0 0;
-    font-size: 40px;
-}
-
-.current-test-header-title-container {
-    flex: 1 1 auto;
+    margin: 0 $tlp-half-spacing 0 0;
+    font-size: 30px;
 }
 
 .current-test-header-title {
-    margin: 0 0 $tlp-spacing / 2;
+    margin: 0;
     color: $tlp-ui-white;
     font-size: 24px;
 }
@@ -119,16 +98,20 @@
     }
 }
 
-.current-test-header-who,
-.current-test-header-comment {
-    font-size: 16px;
+.current-test-header-who {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 28px;
 }
 
 .current-test-header-comment {
     margin: 10px 0 0;
     font-size: 14px;
-    font-style: italic;
     line-height: 22px;
+
+    p {
+        font-size: inherit;
+    }
 }
 
 .current-test-header-actions {
@@ -139,11 +122,25 @@
 }
 
 .current-test-header-action {
-    width: 27px;
     margin: 0 0 0 $tlp-spacing;
     color: $tlp-ui-white;
-    font-size: 27px;
     cursor: pointer;
+}
+
+.current-test-latest-result {
+    display: flex;
+    background-blend-mode: overlay, normal;
+    mix-blend-mode: normal;
+    color: $tlp-ui-white;
+
+    a {
+        color: $tlp-ui-white;
+        text-decoration: underline;
+    }
+}
+
+.current-test-latest-result-description {
+    flex: 1 1 auto;
 }
 
 .artifact-link-graph-dot {
@@ -152,18 +149,6 @@
 
 .artifact-link-graph-path {
     stroke: $tlp-ui-white;
-}
-
-.notrun .current-test-header-action {
-    color: $tlp-ui-dimmed;
-
-    .artifact-link-graph-dot {
-        fill: $tlp-ui-dimmed;
-    }
-
-    .artifact-link-graph-path {
-        stroke: $tlp-ui-dimmed;
-    }
 }
 
 .current-test-content {
@@ -185,6 +170,7 @@
     }
 }
 
+// stylelint-disable-next-line selector-no-qualifying-type
 execution-with-steps.current-test-content {
     padding: 0 0 130px;
 }

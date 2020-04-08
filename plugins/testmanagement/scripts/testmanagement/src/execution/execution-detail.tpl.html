@@ -17,25 +17,9 @@
 <section id="test" class="tlp-pane current-test" ng-class="execution.status">
     <div class="tlp-pane-container">
         <section class="tlp-pane-header current-test-header">
-            <i class="fa fa-check current-test-status" ng-if="execution.status === 'passed'"></i>
-            <i class="fa fa-times current-test-status" ng-if="execution.status === 'failed'"></i>
-            <i class="fa fa-exclamation current-test-status" ng-if="execution.status === 'blocked'"></i>
-            <div class="current-test-header-title-container">
-                <h1 class="current-test-header-title">
-                    {{ execution.definition.summary }}
-                </h1>
-                <div class="current-test-header-who" ng-if="execution.previous_result.has_been_run_at_least_once">
-                    <span ng-if="execution.previous_result.submitted_on">
-                        {{ execution.previous_result.submitted_on | amCalendar }}
-                    </span>
-                    <span ng-if="execution.previous_result.submitted_by.real_name">
-                        <span translate>by</span> {{ execution.previous_result.submitted_by.real_name }}
-                    </span>
-                </div>
-                <div class="current-test-header-comment" ng-if="execution.previous_result.result">
-                    <div ng-bind-html="execution.previous_result.result"></div>
-                </div>
-            </div>
+            <h1 class="current-test-header-title">
+                {{ execution.definition.summary }}
+            </h1>
 
             <div class="current-test-header-actions">
                 <div class="tlp-dropdown" ng-if="linkMenuIsVisible">
@@ -86,6 +70,25 @@
                 >
                     <i class="fa fa-tlp-dependencies-graph"/>
                 </span>
+            </div>
+        </section>
+
+        <section class="tlp-pane-section current-test-latest-result" ng-if="execution.previous_result.has_been_run_at_least_once">
+            <i class="fa fa-check-circle current-test-status" ng-if="execution.status === 'passed'"></i>
+            <i class="fa fa-times-circle current-test-status" ng-if="execution.status === 'failed'"></i>
+            <i class="fa fa-exclamation-circle current-test-status" ng-if="execution.status === 'blocked'"></i>
+            <div class="current-test-latest-result-description">
+                <div class="current-test-header-who">
+                    <span ng-if="execution.previous_result.submitted_on">
+                        {{ execution.previous_result.submitted_on | amCalendar }}
+                    </span>
+                    <span ng-if="execution.previous_result.submitted_by.real_name">
+                        <span translate>by</span> {{ execution.previous_result.submitted_by.real_name }}
+                    </span>
+                </div>
+                <div class="current-test-header-comment" ng-if="execution.previous_result.result">
+                    <div ng-bind-html="execution.previous_result.result"></div>
+                </div>
             </div>
         </section>
 
