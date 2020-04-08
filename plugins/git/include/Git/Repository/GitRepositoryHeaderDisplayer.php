@@ -74,7 +74,7 @@ class GitRepositoryHeaderDisplayer
 
     private function includeAssetsForBurningParrot(HTTPRequest $request, BaseLayout $layout): void
     {
-        if (in_array($request->get('a'), ['blob', 'blame'], true)) {
+        if (! $request->exist('a') || in_array($request->get('a'), ['blob', 'blame', 'tree'], true)) {
             $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->include_assets, 'syntax-highlight'));
         }
         $layout->addCssAsset(new CssAsset($this->include_assets, 'bp-style'));
