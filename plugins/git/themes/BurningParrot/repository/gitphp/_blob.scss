@@ -61,6 +61,14 @@ $gitphp-code-font: normal normal 14px / 20px monospace;
 #git-repository-blob-file-rendered {
     padding: $tlp-spacing;
     background: $tlp-ui-white;
+
+    pre {
+        overflow-x: auto;
+    }
+
+    img {
+        max-width: 100%;
+    }
 }
 
 #git-repository-blob-file,
