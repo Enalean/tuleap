@@ -24,6 +24,10 @@
               <label><![CDATA[Results]]></label>
               <properties rows="10" cols="50"/>
             </formElement>
+            <formElement type="file" ID="F16190" rank="1">
+              <name><![CDATA[attachments]]></name>
+              <label><![CDATA[Attachments]]></label>
+            </formElement>
           </formElements>
         </formElement>
         <formElement type="column" ID="F12768" rank="2">
@@ -199,6 +203,9 @@
     <permission scope="field" REF="F12767" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="F12767" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="F12767" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F16190" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F16190" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F16190" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
     <permission scope="field" REF="F12769" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="F12769" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="F12769" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
