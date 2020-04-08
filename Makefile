@@ -87,6 +87,8 @@ generate-templates-docker: ## Generate XML templates
 generate-templates: generate-templates-plugins
 	xsltproc tools/utils/setup_templates/generate-templates/generate-agile_alm.xml \
 		-o tools/utils/setup_templates/agile_alm/agile_alm_template.xml
+	xsltproc tools/utils/setup_templates/generate-templates/generate-kanban.xml \
+		-o tools/utils/setup_templates/kanban/kanban_template.xml
 
 generate-templates-plugins:
 	@find . plugins/ -mindepth 2 -maxdepth 2 -type f -name 'Makefile' | while read file; do \

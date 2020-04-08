@@ -1,0 +1,51 @@
+<?xml-stylesheet type="text/xsl" href="style.xsl"?>
+<project>
+    <dashboards>
+        <dashboard name="Project Kanban">
+            <line>
+                <column>
+                    <widget name="projectnote">
+                        <preference name="note">
+                            <value name="title">Note from the editor</value>
+                            <value name="content"><![CDATA[
+You've created a new project based upon a template.
+
+Feel free to change tools customization to your needs.
+
+Add user groups and set permissions.
+
+Customize workflow options.
+
+Need professional support to help you adapt your workspace? Get in touch with our sales team: <sales@enalean.com>
+]]></value>
+                        </preference>
+                    </widget>
+                    <widget name="projectmembers" />
+                </column>
+                <column>
+                    <widget name="plugin_agiledashboard_projects_kanban">
+                        <preference name="kanban">
+                            <reference name="id" REF="K01"/>
+                            <value name="title">Activities</value>
+                        </preference>
+                    </widget>
+                </column>
+            </line>
+        </dashboard>
+    </dashboards>
+    <trackers use-natures="true">
+        <include-template-tracker path="trackers/activity.xml"/>
+        <triggers/>
+    </trackers>
+    <natures>
+        <nature>_is_child</nature>
+    </natures>
+    <agiledashboard>
+        <plannings />
+        <kanban_list title="Kanban">
+            <kanban tracker_id="T425" name="Activities" ID="K01">
+                <column wip="1" REF="V13416"/>
+            </kanban>
+        </kanban_list>
+    </agiledashboard>
+</project>
