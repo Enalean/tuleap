@@ -632,7 +632,7 @@ tuleap.agiledashboard.Burndown = Class.create({
         this.width = this.width - this.margin.left - this.margin.right;
         this.height = this.height - this.margin.top - this.margin.bottom;
 
-        this.ideal_data = [this.data.capacity, 0];
+        this.ideal_data = [Number(this.data.capacity), 0];
     },
 
     display: function (append_element_selector) {
@@ -658,7 +658,7 @@ tuleap.agiledashboard.Burndown = Class.create({
     },
 
     defineAbscissas: function () {
-        this.x = this.d3.scale.linear().range([0, this.width]);
+        this.x = this.d3.scaleLinear().range([0, this.width]);
         this.x.domain(
             this.d3.extent(this.ideal_data, function (d, index) {
                 return index;
@@ -667,7 +667,7 @@ tuleap.agiledashboard.Burndown = Class.create({
     },
 
     defineOrdinates: function () {
-        this.y = this.d3.scale.linear().range([this.height, 0]);
+        this.y = this.d3.scaleLinear().range([this.height, 0]);
         this.y.domain(this.d3.extent(this.data.points.concat(this.ideal_data), Number));
     },
 
@@ -684,7 +684,7 @@ tuleap.agiledashboard.Burndown = Class.create({
     },
 
     defineLineFunctions: function () {
-        this.ideal_line = this.d3.svg
+        this.ideal_line = this.d3
             .line()
             .x(
                 function (d, index) {
@@ -692,7 +692,7 @@ tuleap.agiledashboard.Burndown = Class.create({
                 }.bind(this)
             )
             .y(this.y);
-        this.actual_line = this.d3.svg
+        this.actual_line = this.d3
             .line()
             .x(this.getXCoordinateForAGivenBurndownPoint.bind(this))
             .y(this.y);
