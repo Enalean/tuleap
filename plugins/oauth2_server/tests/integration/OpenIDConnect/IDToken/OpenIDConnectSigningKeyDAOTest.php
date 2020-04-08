@@ -44,8 +44,10 @@ final class OpenIDConnectSigningKeyDAOTest extends TestCase
 
     public function testCanSaveAndRetrieveKey(): void
     {
+        $this->assertNull($this->dao->searchPublicKey());
         $this->assertNull($this->dao->searchEncryptedPrivateKey());
         $this->dao->save('public_key', 'encrypted_private_key');
+        $this->assertEquals('public_key', $this->dao->searchPublicKey());
         $this->assertEquals('encrypted_private_key', $this->dao->searchEncryptedPrivateKey());
     }
 
