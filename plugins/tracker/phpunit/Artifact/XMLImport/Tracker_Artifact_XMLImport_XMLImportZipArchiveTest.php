@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,13 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../../bootstrap.php';
+declare(strict_types=1);
 
-class Tracker_Artifact_XMLImport_XMLImportZipArchiveTest extends TuleapTestCase
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\TemporaryTestDirectory;
+
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_Artifact_XMLImport_XMLImportZipArchiveTest extends \PHPUnit\Framework\TestCase
 {
+    use MockeryPHPUnitIntegration;
+    use TemporaryTestDirectory;
 
     /** @var Tracker */
     private $tracker;
+    /**
+     * @var int
+     */
     private $tracker_id;
 
     /** @var ZipArchive */
@@ -39,15 +48,14 @@ class Tracker_Artifact_XMLImport_XMLImportZipArchiveTest extends TuleapTestCase
     /** @var Tracker_Artifact_XMLImport_XMLImportZipArchive */
     private $archive;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-        $this->tmp_dir      = '/var/tmp';
-        $this->fixtures_dir = dirname(__FILE__) . '/_fixtures';
-        $this->tracker_id   = getmypid(); // to be sure that there is no overlap
-                                          // with other tests executed on the
-                                          // same platform
-        $this->tracker      = aTracker()->withId($this->tracker_id)->build();
+        $this->tmp_dir      =  $this->getTmpDir();
+        $this->fixtures_dir = __DIR__ . '/_fixtures';
+        $this->tracker_id   = 1;
+        $tracker = Mockery::mock(Tracker::class);
+        $tracker->shouldReceive('getId')->andReturn(1);
+        $this->tracker = $tracker;
 
         $this->zip = new ZipArchive();
         if ($this->zip->open($this->fixtures_dir . '/archive.zip') !== true) {
@@ -61,45 +69,40 @@ class Tracker_Artifact_XMLImport_XMLImportZipArchiveTest extends TuleapTestCase
         );
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
-        parent::tearDown();
         $this->zip->close();
-        `rm -rf $this->tmp_dir/import_tv5_*`;
     }
 
-    public function itGivesTheXMLFile()
+    public function testItGivesTheXMLFile(): void
     {
-        $expected = file_get_contents($this->fixtures_dir . '/artifacts.xml');
-        $this->assertEqual($expected, $this->archive->getXML());
+        $this->assertXmlStringEqualsXmlFile($this->fixtures_dir . '/artifacts.xml', $this->archive->getXML());
     }
 
-    public function itExtractAttachmentsIntoARandomTemporaryDirectory()
+    public function testItExtractAttachmentsIntoARandomTemporaryDirectory(): void
     {
         $extraction_path = $this->archive->getExtractionPath();
-        $this->assertTrue(is_dir($extraction_path));
+        $this->assertDirectoryExists($extraction_path);
 
         $expected_prefix = $this->tmp_dir . '/import_tv5_' . $this->tracker_id . '_';
-        $this->assertPattern('%' . $expected_prefix . '\w+%', $extraction_path);
+        $this->assertStringStartsWith($expected_prefix, $extraction_path);
 
         $this->archive->extractFiles();
-        $expected  = file_get_contents($this->fixtures_dir . '/data/123/file.txt');
-        $extracted = file_get_contents($extraction_path . '/data/123/file.txt');
-        $this->assertEqual($extracted, $expected);
+        $this->assertFileEquals($this->fixtures_dir . '/data/123/file.txt', $extraction_path . '/data/123/file.txt');
     }
 
-    public function itEnsuresThatTemporaryDirectoryIsNotReadableByEveryone()
+    public function testItEnsuresThatTemporaryDirectoryIsNotReadableByEveryone(): void
     {
         $extraction_path = $this->archive->getExtractionPath();
         $perms = fileperms($extraction_path) & 0777;
-        $this->assertEqual(0700, $perms);
+        $this->assertEquals(0700, $perms);
     }
 
-    public function itCleansUp()
+    public function testItCleansUp(): void
     {
         $extraction_path = $this->archive->getExtractionPath();
         $this->archive->extractFiles();
         $this->archive->cleanUp();
-        $this->assertFalse(file_exists($extraction_path));
+        $this->assertFileNotExists($extraction_path);
     }
 }
