@@ -94,13 +94,22 @@ pipeline {
                 }
                 stage('Build and run CentOS 6') { steps { script { actions.runBuildAndRun('centos6') } } }
                 stage('Build and run CentOS 7') { steps { script { actions.runBuildAndRun('centos7') } } }
-                stage('Code conformity') {
+                stage('Translations') {
                     stages {
-                        stage('Check translation files') {
+                        stage('Check .po files') {
                             steps { script {
                                 actions.runFilesStatusChangesDetection('.', 'translation files', '"*.po\$"')
                             } }
                         }
+                        stage('Check .tab files') {
+                            steps { script {
+                                sh 'sources/src/utils/analyse_language_files.pl sources/'
+                            } }
+                        }
+                    }
+                }
+                stage('Code conformity') {
+                    stages {
                         stage('ESLint static analysis') {
                             agent {
                                 docker {
