@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,7 @@ export {
     getUserIsAdmin,
     getDashCasedLocale,
     getRepositoriesOwners,
+    getExternalPlugins,
 };
 
 let current_user_id;
@@ -31,13 +32,22 @@ let current_project_id;
 let is_administrator = false;
 let locale;
 let repositories_owners = [];
+let external_plugins = [];
 
-function build(user_id, project_id, is_user_administrator, user_locale, owners) {
+function build(
+    user_id,
+    project_id,
+    is_user_administrator,
+    user_locale,
+    owners,
+    external_plugins_enabled
+) {
     current_user_id = user_id;
     current_project_id = project_id;
     is_administrator = Boolean(is_user_administrator);
     locale = user_locale;
     repositories_owners = owners;
+    external_plugins = external_plugins_enabled;
 }
 
 function getUserId() {
@@ -58,4 +68,8 @@ function getDashCasedLocale() {
 
 function getRepositoriesOwners() {
     return repositories_owners;
+}
+
+function getExternalPlugins() {
+    return external_plugins;
 }

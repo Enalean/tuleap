@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -54,6 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
             isAdmin,
             repositoriesOwners,
             displayMode,
+            externalPlugins,
         } = vue_mount_point.dataset;
 
         setUrls(repositoriesAdministrationUrl, repositoryListUrl, repositoriesForkUrl);
@@ -62,7 +63,8 @@ document.addEventListener("DOMContentLoaded", () => {
             projectId,
             isAdmin,
             locale,
-            JSON.parse(repositoriesOwners)
+            JSON.parse(repositoriesOwners),
+            JSON.parse(externalPlugins)
         );
 
         new AppComponent({

@@ -29,6 +29,8 @@ use Http\Message\CookieJar;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Git\CollectGitRoutesEvent;
+use Tuleap\Git\Events\ExternalGitHomepagePluginInfos;
+use Tuleap\Git\Events\GetExternalGitHomepagePluginsEvent;
 use Tuleap\Git\Events\GitAdminGetExternalPanePresenters;
 use Tuleap\Git\Events\XMLExportExternalContentEvent;
 use Tuleap\Git\Events\XMLImportExternalContentEvent;
@@ -88,6 +90,7 @@ class hudson_gitPlugin extends Plugin
             $this->addHook(XMLImportExternalContentEvent::NAME);
             $this->addHook(XMLExportExternalContentEvent::NAME);
             $this->addHook(Event::REST_RESOURCES);
+            $this->addHook(GetExternalGitHomepagePluginsEvent::NAME);
         }
     }
 
@@ -408,5 +411,14 @@ class hudson_gitPlugin extends Plugin
     {
         $injector = new ResourcesInjector();
         $injector->populate($params['restler']);
+    }
+
+    public function getExternalGitHomepagePluginsEvent(GetExternalGitHomepagePluginsEvent $event): void
+    {
+        $factory = self::getJenkinsServerFactory();
+        $servers = $factory->getJenkinsServerOfProject($event->getProject());
+
+        $plugin_infos = new ExternalGitHomepagePluginInfos("hudson_git", $servers);
+        $event->addExternalPluginInfos($plugin_infos);
     }
 }

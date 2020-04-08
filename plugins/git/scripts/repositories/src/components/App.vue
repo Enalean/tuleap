@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -21,7 +21,10 @@
     <div>
         <git-breadcrumbs />
         <div class="tlp-framed">
-            <h1><translate>Git repositories</translate></h1>
+            <div class="git-repository-list-header">
+                <h1><translate>Git repositories</translate></h1>
+                <jenkins-servers v-if="has_jenkins_server" v-bind:servers="jenkins_servers" />
+            </div>
             <action-bar />
             <error-message />
             <git-repository-create />
@@ -46,6 +49,8 @@ import ErrorMessage from "./ErrorMessage.vue";
 import RepositoryListSpinner from "./RepositoryListSpinner.vue";
 import FolderRepositoryList from "./folders/FolderRepositoryList.vue";
 import { PROJECT_KEY } from "../constants.js";
+import { getExternalPlugins } from "../repository-list-presenter";
+import JenkinsServers from "./ActionBar/JenkinsServers.vue";
 
 export default {
     name: "App",
@@ -60,11 +65,22 @@ export default {
         GitBreadcrumbs,
         RepositoryListSpinner,
         FolderRepositoryList,
+        JenkinsServers,
     },
     props: {
         displayMode: String,
     },
     computed: {
+        has_jenkins_server() {
+            return getExternalPlugins().find((plugin) => {
+                return plugin.plugin_name === "hudson_git" && plugin.data.length > 0;
+            });
+        },
+        jenkins_servers() {
+            return getExternalPlugins().find((plugin) => {
+                return plugin.plugin_name === "hudson_git";
+            }).data;
+        },
         ...mapGetters(["isFolderDisplayMode"]),
     },
     mounted() {
