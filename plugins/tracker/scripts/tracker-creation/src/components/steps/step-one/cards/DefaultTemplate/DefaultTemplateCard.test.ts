@@ -22,7 +22,7 @@ import DefaultTemplateCard from "./DefaultTemplateCard.vue";
 import { Tracker } from "../../../../../store/type";
 
 describe("DefaultTemplateCard", () => {
-    it("Displays a card for a tracker", () => {
+    it("Displays a card for bug tracker", () => {
         const wrapper = shallowMount(DefaultTemplateCard, {
             propsData: {
                 tracker: {
@@ -30,6 +30,19 @@ describe("DefaultTemplateCard", () => {
                     name: "Bug",
                     description: "Bugs",
                     tlp_color: "fiesta-red",
+                } as Tracker,
+            },
+        });
+        expect(wrapper.element).toMatchSnapshot();
+    });
+    it("Displays a card for activity tracker", () => {
+        const wrapper = shallowMount(DefaultTemplateCard, {
+            propsData: {
+                tracker: {
+                    id: "default-activity",
+                    name: "Activity",
+                    description: "Activities",
+                    tlp_color: "clockwork-orange",
                 } as Tracker,
             },
         });
