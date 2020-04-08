@@ -34,6 +34,19 @@ final class MysqlCommandHelper
     public const OPT_SSL    = 'ssl-mode';
     public const OPT_SSL_CA = 'ssl-ca';
 
+    private const ENV_SSL_MODE = 'TULEAP_DB_SSL_MODE';
+    private const ENV_SSL_CA   = 'TULEAP_DB_SSL_CA';
+
+    /**
+     * @var string
+     */
+    private $base_directory;
+
+    public function __construct(string $base_directory)
+    {
+        $this->base_directory = $base_directory;
+    }
+
     public function addOptions(Command $command): Command
     {
         $command
@@ -57,31 +70,44 @@ final class MysqlCommandHelper
     }
 
     /**
-     * @psalm-return ConnectionManager::SSL_*
+     * @psalm-return value-of<ConnectionManagerInterface::ALLOWED_SSL_MODES>
      */
-    public function getSSLMode(InputInterface $input): string
+    public function getSSLMode(InputInterface $input)
     {
+        $ssl_mode = getenv(self::ENV_SSL_MODE);
+        if (in_array($ssl_mode, ConnectionManagerInterface::ALLOWED_SSL_MODES, true)) {
+            return $ssl_mode;
+        }
         $ssl_mode = $input->getOption(self::OPT_SSL);
-        if (! in_array($ssl_mode, [ConnectionManager::SSL_NO_SSL, ConnectionManager::SSL_NO_VERIFY, ConnectionManager::SSL_VERIFY_CA], true)) {
-            assert(is_string($ssl_mode));
+        assert(is_string($ssl_mode));
+        if (! in_array($ssl_mode, ConnectionManagerInterface::ALLOWED_SSL_MODES, true)) {
             throw new InvalidSSLConfigurationException(sprintf('Invalid `%s` value: %s', self::OPT_SSL, $ssl_mode));
         }
         return $ssl_mode;
     }
 
     /**
-     * @psalm-param ConnectionManager::SSL_* $ssl_mode
+     * @psalm-param value-of<ConnectionManagerInterface::ALLOWED_SSL_MODES> $ssl_mode
      */
     public function getSSLCAFile(InputInterface $input, string $ssl_mode): string
     {
-        $ssl_ca_file = '';
+        $ssl_ca_file = getenv(self::ENV_SSL_CA);
+        if ($ssl_ca_file !== false) {
+            $ca_file_path = $this->base_directory . '/' . $ssl_ca_file;
+            if (file_exists($ca_file_path)) {
+                return $ssl_ca_file;
+            }
+            throw new InvalidSSLConfigurationException(sprintf('Invalid `%s` value: %s no such file', self::OPT_SSL_CA, $ca_file_path));
+        }
         if ($ssl_mode !== ConnectionManager::SSL_NO_SSL) {
             $ssl_ca_file = $input->getOption(self::OPT_SSL_CA);
             assert(is_string($ssl_ca_file));
-            if (! is_file($ssl_ca_file)) {
-                throw new InvalidSSLConfigurationException(sprintf('Invalid `%s` value: %s no such file', self::OPT_SSL_CA, $ssl_ca_file));
+            $ca_file_path = $this->base_directory . '/' . $ssl_ca_file;
+            if (! is_file($ca_file_path)) {
+                throw new InvalidSSLConfigurationException(sprintf('Invalid `%s` value: %s no such file', self::OPT_SSL_CA, $ca_file_path));
             }
+            return $ssl_ca_file;
         }
-        return $ssl_ca_file;
+        return '';
     }
 }

@@ -14,13 +14,6 @@ fi
 
 setup_tuleap() {
     echo "Setup Tuleap"
-    cat /usr/share/tuleap/src/etc/database.inc.dist | \
-        sed \
-         -e "s/localhost/$DB_HOST/" \
-	     -e "s/%sys_dbname%/tuleap/" \
-	     -e "s/%sys_dbuser%/tuleapadm/" \
-	     -e "s/%sys_dbpasswd%/welcome0/" > /etc/tuleap/conf/database.inc
-    chgrp runner /etc/tuleap/conf/database.inc
 
     cat /usr/share/tuleap/src/etc/local.inc.dist | \
 	sed \
@@ -51,6 +44,10 @@ setup_database() {
 
     MYSQLROOT="mysql -h$DB_HOST -uroot -pwelcome0"
     echo "Use remote db $DB_HOST"
+
+    # runner should have access to Tuleap conf, esp. database.inc because some tests pre-cond changes values directly
+    # into the db (@see \Test\Rest\TuleapConfig)
+    usermod -a -G codendiadm runner
 
     /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:mysql-init \
         --host="$DB_HOST" \
@@ -151,6 +148,7 @@ seed_plugin_data() {
 }
 
 setup_tuleap
+setup_database
 case "$PHP_FPM" in
     '/opt/remi/php73/root/usr/sbin/php-fpm')
     echo "Deploy PHP FPM 7.3"
@@ -161,7 +159,6 @@ case "$PHP_FPM" in
     "$PHP_CLI" /usr/share/tuleap/tools/utils/php74/run.php --modules=nginx,fpm
     ;;
 esac
-setup_database
 tuleap_db_config
 seed_data
 $PHP_FPM --daemonize

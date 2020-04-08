@@ -589,10 +589,8 @@ setup_nss() {
 #
 setup_tuleap() {
     echo "Installing Tuleap configuration files..."
-    for f in /etc/$PROJECT_NAME/conf/local.inc \
-	     /etc/$PROJECT_NAME/conf/database.inc; do
-	install_dist_conf $f
-    done
+	install_dist_conf /etc/$PROJECT_NAME/conf/local.inc
+
     # replace string patterns in local.inc
     substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_default_domain%' "$sys_default_domain"
     substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_org_name%' "$sys_org_name"
@@ -609,12 +607,6 @@ setup_tuleap() {
 
     substitute "/etc/$PROJECT_NAME/conf/local.inc" 'codendiadm' "$PROJECT_ADMIN"
     fix_paths "/etc/$PROJECT_NAME/conf/local.inc"
-
-    # replace string patterns in database.inc
-    substitute "/etc/$PROJECT_NAME/conf/database.inc" '%sys_dbpasswd%' "$codendiadm_passwd"
-    substitute "/etc/$PROJECT_NAME/conf/database.inc" '%sys_dbuser%' "$PROJECT_ADMIN"
-    substitute "/etc/$PROJECT_NAME/conf/database.inc" '%sys_dbname%' "$PROJECT_NAME"
-    substitute "/etc/$PROJECT_NAME/conf/database.inc" 'localhost' "$mysql_host_and_port"
 }
 
 ###############################################################################
@@ -970,6 +962,9 @@ fi
 
 set -e
 
+build_dir /etc/$PROJECT_NAME $PROJECT_ADMIN $PROJECT_ADMIN 755
+build_dir /etc/$PROJECT_NAME/conf $PROJECT_ADMIN $PROJECT_ADMIN 700
+
 echo "Initialize MySQL database"
 /usr/bin/tuleap-cfg setup:mysql-init \
     --host="${mysql_host}" \
@@ -1016,8 +1011,6 @@ build_dir /var/lib/$PROJECT_NAME/docman $PROJECT_ADMIN $PROJECT_ADMIN 700
 build_dir $TULEAP_CACHE_DIR $PROJECT_ADMIN $PROJECT_ADMIN 755
 # config dirs
 build_dir /etc/skel_$PROJECT_NAME root root 755
-build_dir /etc/$PROJECT_NAME $PROJECT_ADMIN $PROJECT_ADMIN 755
-build_dir /etc/$PROJECT_NAME/conf $PROJECT_ADMIN $PROJECT_ADMIN 700
 build_dir /etc/$PROJECT_NAME/site-content $PROJECT_ADMIN $PROJECT_ADMIN 755
 build_dir /etc/$PROJECT_NAME/site-content/en_US $PROJECT_ADMIN $PROJECT_ADMIN 755
 build_dir /etc/$PROJECT_NAME/site-content/en_US/others $PROJECT_ADMIN $PROJECT_ADMIN 755

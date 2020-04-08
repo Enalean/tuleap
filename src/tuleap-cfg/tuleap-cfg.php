@@ -31,5 +31,5 @@ $application->add(new \TuleapCfg\Command\ConfigureCommand());
 $application->add(new \TuleapCfg\Command\SystemControlCommand(new ProcessFactory()));
 $application->add(new \TuleapCfg\Command\DockerAioRunCommand(new ProcessFactory()));
 $application->add(new \TuleapCfg\Command\SetupMysqlCommand());
-$application->add(new \TuleapCfg\Command\SetupMysqlInitCommand());
+$application->add(new \TuleapCfg\Command\SetupMysqlInitCommand(new \TuleapCfg\Command\SetupMysql\ConnectionManager()));
 $application->run();

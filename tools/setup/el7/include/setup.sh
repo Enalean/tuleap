@@ -1,15 +1,10 @@
-_setupDatabaseInc() {
-    ${awk} '{ gsub("%sys_dbpasswd%", "'"${sys_db_password}"'");
-              gsub("%sys_dbuser%", "'"${sys_db_user}"'");
-              gsub("%sys_dbname%", "'"${sys_db_name}"'");
-              gsub("localhost", "'"${mysql_server}"'");
-              print }' "${install_dir}/src/etc/${database_inc}.dist" \
-                  > "${tuleap_conf}/${database_inc}"
-}
-
 _setupForgeupgrade() {
+    # Only needed for short term tests as futur test containers will have this created out of rpms
+    if [ ! -d "${tuleap_dir}/forgeupgrade" ]; then
+        ${install} --group=${tuleap_unix_user} --owner=${tuleap_unix_user} --mode=0750 -d "${tuleap_dir}/forgeupgrade"
+    fi
     ${install} --group=${tuleap_unix_user} --owner=${tuleap_unix_user} \
-        --mode=0644 "${forgeupgrade_dist}" "${forgeupgrade_conf}"
+        --mode=0640 "${forgeupgrade_dist}" "${forgeupgrade_conf}"
 }
 
 _setupMysqlPassword() {

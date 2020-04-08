@@ -221,7 +221,7 @@ $CLI_command_collector->addCommand(
     CorrectFrsRepositoryPermissionsCommand::NAME,
     function (): CorrectFrsRepositoryPermissionsCommand {
         return new CorrectFrsRepositoryPermissionsCommand(
-            new DirectoryIterator('/var/lib/tuleap/ftp/tuleap/'),
+            new DirectoryIterator(ForgeConfig::get('ftp_frs_dir_prefix')),
             ProjectManager::instance()
         );
     }

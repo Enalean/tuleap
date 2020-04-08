@@ -188,7 +188,7 @@ $svn_root_file = '/etc/httpd/conf.d/tuleap-svnroot.conf'; // File containing SVN
 $svn_log_path  = 'logs/svn_log'; // Where apache logs files for svn should go to
 
 // FRS paths - do *not* use variables in the following parameters
-$ftp_frs_dir_prefix  = '/var/lib/tuleap/ftp/codendi';   // Where the released files are located
+$ftp_frs_dir_prefix  = '/var/lib/tuleap/ftp/tuleap';   // Where the released files are located
 $ftp_incoming_dir    = '/var/lib/tuleap/ftp/incoming';// Where files are placed when uploaded
 $ftp_anon_dir_prefix = '/var/lib/tuleap/ftp/pub';     // prefix to add to the anon ftp project homedir
 

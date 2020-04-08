@@ -44,7 +44,7 @@ final class SetupMysqlCommand extends Command
 
     public function __construct()
     {
-        $this->command_helper = new MysqlCommandHelper();
+        $this->command_helper = new MysqlCommandHelper('/');
         parent::__construct('setup:mysql');
     }
 

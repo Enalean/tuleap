@@ -29,11 +29,8 @@ use ParagonIE\EasyDB\Factory;
 use PDO;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class ConnectionManager
+class ConnectionManager implements ConnectionManagerInterface
 {
-    public const SSL_NO_SSL     = 'disabled';
-    public const SSL_NO_VERIFY  = 'no-verify';
-    public const SSL_VERIFY_CA  = 'verify-ca';
     public const DEFAULT_CA_FILE_PATH = '/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem';
 
     private const MAX_DB_WAIT_LOOPS = 60;
@@ -44,7 +41,7 @@ class ConnectionManager
     ];
 
     /**
-     * @psalm-param self::SSL_* $ssl_mode
+     * @psalm-param value-of<ConnectionManagerInterface::ALLOWED_SSL_MODES> $ssl_mode
      */
     public function getDBWithoutDBName(SymfonyStyle $io, string $host, int $port, string $ssl_mode, string $ssl_ca_file, string $user, string $password): ?EasyDB
     {
@@ -60,7 +57,7 @@ class ConnectionManager
     }
 
     /**
-     * @psalm-param self::SSL_* $ssl_mode
+     * @psalm-param value-of<ConnectionManagerInterface::ALLOWED_SSL_MODES> $ssl_mode
      */
     public function getDBWithDBName(SymfonyStyle $io, string $host, int $port, string $ssl_mode, string $ssl_ca_file, string $user, string $password, string $dbname): ?EasyDB
     {
@@ -76,7 +73,7 @@ class ConnectionManager
     }
 
     /**
-     * @psalm-param self::SSL_* $ssl_mode
+     * @psalm-param value-of<ConnectionManagerInterface::ALLOWED_SSL_MODES> $ssl_mode
      */
     private function getOptions(string $ssl_mode, string $ssl_ca_file): array
     {
