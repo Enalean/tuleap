@@ -50,6 +50,12 @@
                 </div>
             {else}
                 {* Just plain display *}
+                {if $rendered_file}
+                <div id="git-repository-blob-file-rendered">
+                    {$rendered_file}
+                </div>
+                {/if}
+                {if $bloblines}
                 <div id="git-repository-blob-file">
                     <div class="git-repository-blob-file-linenumbers">{foreach from=$bloblines item=line name=bloblines}
 <a href="#L{$smarty.foreach.bloblines.iteration}"
@@ -65,6 +71,7 @@
 {/foreach}</code><!--
                     --></pre>
                 </div>
+                {/if}
             {/if}
         </section>
     </div>

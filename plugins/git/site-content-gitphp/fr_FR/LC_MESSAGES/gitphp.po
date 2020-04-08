@@ -153,6 +153,9 @@ msgstr "Diff"
 msgid "Diff with selected"
 msgstr "Diff avec marqué"
 
+msgid "Display rendered file"
+msgstr "Afficher le fichier rendu"
+
 msgid "Download"
 msgstr "Télécharger"
 
@@ -257,6 +260,9 @@ msgstr "Marquer pour diff"
 # Link beside commits - selects this commit to be used in a diff
 msgid "Selected for diff"
 msgstr "Marqué pour diff"
+
+msgid "Show source"
+msgstr "Voir la source"
 
 msgid "Side by side diff"
 msgstr "Diff côte à côte"
