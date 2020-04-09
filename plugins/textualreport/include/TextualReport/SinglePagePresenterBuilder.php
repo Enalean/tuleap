@@ -82,27 +82,22 @@ class SinglePagePresenterBuilder
         $color           = ThemeVariantColor::buildFromVariant($theme_variant->getVariantForUser($current_user));
         $theme_variation = new ThemeVariation($color, $current_user);
 
-        $root_core_themes_directory = __DIR__ . '/../../../../src/www/themes/';
-
-        $tlp_framework_base_css = new CssAssetWithoutVariantDeclinaisons(
-            new IncludeAssets(
-                $root_core_themes_directory . '/common/tlp/dist/',
-                $root_core_themes_directory . '/common/tlp/dist/'
-            ),
-            'tlp' . $theme_variation->getFileColorCondensedSuffix()
+        $assets = new IncludeAssets(
+            __DIR__ . '/../../../../src/www/assets/core',
+            __DIR__ . '/../../../../src/www/assets/core'
         );
 
-        $core_burning_parrot_include_assets = new IncludeAssets(
-            $root_core_themes_directory . '/BurningParrot/assets',
-            $root_core_themes_directory . '/BurningParrot/assets'
+        $tlp_framework_base_css = new CssAssetWithoutVariantDeclinaisons(
+            $assets,
+            'tlp' . $theme_variation->getFileColorCondensedSuffix()
         );
 
         $stylesheets = file_get_contents(
             $tlp_framework_base_css->getFileURL($theme_variation)
         );
         $stylesheets .= file_get_contents(
-            $core_burning_parrot_include_assets->getFileURL(
-                'burning-parrot-' . $color->getName() . '.css'
+            $assets->getFileURL(
+                'BurningParrot/burning-parrot-' . $color->getName() . '.css'
             )
         );
 
