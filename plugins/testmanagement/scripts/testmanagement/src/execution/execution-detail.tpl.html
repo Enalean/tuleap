@@ -90,7 +90,13 @@
                     </span>
                 </div>
                 <div class="current-test-header-comment" ng-if="execution.previous_result.result">
-                    <div ng-bind-html="execution.previous_result.result"></div>
+                    <div ng-bind-html="truncateHTML(execution.previous_result.result, 200)"></div>
+                    <button type="button"
+                            class="tlp-button-outline tlp-button-small"
+                            ng-class="::{'tlp-button-danger': execution.status === 'failed', 'tlp-button-success': execution.status === 'passed', 'tlp-button-info': execution.status === 'blocked', 'tlp-button-secondary': execution.status === 'notrun'}"
+                            ng-click="showExecutionDetailsModal()"
+                            translate
+                    >View details</button>
                 </div>
             </div>
         </section>

@@ -105,12 +105,26 @@
 }
 
 .current-test-header-comment {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
     margin: 10px 0 0;
     font-size: 14px;
     line-height: 22px;
+    word-break: break-word;
+
+    > button {
+        flex: 0 0 auto;
+        margin: 0 0 0 20px;
+    }
 
     p {
         font-size: inherit;
+    }
+
+    img {
+        max-width: 32px;
+        max-height: 32px;
     }
 }
 

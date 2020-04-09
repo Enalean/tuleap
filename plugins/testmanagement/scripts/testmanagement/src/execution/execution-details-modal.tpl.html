@@ -1,0 +1,33 @@
+<div
+    class="tlp-modal tlp-modal-medium-sized"
+    role="dialog"
+    aria-labelledby="execution-details-modal-title"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="execution-details-modal-title" translate>
+            Details
+        </h1>
+        <div
+            class="tlp-modal-close"
+            tabindex="0"
+            role="button"
+            data-dismiss="modal"
+            aria-label="Close"
+        >
+            ×
+        </div>
+    </div>
+    <div class="tlp-modal-body">
+        <div ng-bind-html="modal.execution.previous_result.result"></div>
+    </div>
+    <div class="tlp-modal-footer">
+        <button
+            type="button"
+            class="tlp-button-primary tlp-modal-action"
+            data-dismiss="modal"
+            translate
+        >
+            Close
+        </button>
+    </div>
+</div>
