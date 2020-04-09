@@ -130,3 +130,7 @@ input[type=number] {
         -moz-appearance: number-input; //stylelint-disable-line property-no-vendor-prefix
     }
 }
+
+img {
+    max-width: 100%;
+}

@@ -18,9 +18,12 @@
  */
 
 import { has, remove } from "lodash";
+import { truncateHTML } from "./truncate";
 
 import "./execution-link-issue.tpl.html";
+import "./execution-details-modal.tpl.html";
 import ExecutionLinkIssueCtrl from "./execution-link-issue-controller.js";
+import ExecutionDetailsModalCtrl from "./execution-details-modal-controller.js";
 import { theTestHasJustBeenUpdated } from "./execution-detail-just-updated-state.js";
 import {
     PASSED_STATUS,
@@ -75,8 +78,10 @@ function ExecutionDetailCtrl(
     $scope.canCreateIssue = issue_config.permissions.create;
     $scope.canLinkIssue = issue_config.permissions.link;
     $scope.showArtifactLinksGraphModal = showArtifactLinksGraphModal;
+    $scope.showExecutionDetailsModal = showExecutionDetailsModal;
     $scope.showEditArtifactModal = showEditArtifactModal;
     $scope.closeLinkedIssueAlert = closeLinkedIssueAlert;
+    $scope.truncateHTML = truncateHTML;
     $scope.linkedIssueId = null;
     $scope.linkedIssueAlertVisible = false;
 
@@ -213,6 +218,19 @@ function ExecutionDetailCtrl(
 
     function showArtifactLinksGraphModal(execution) {
         ArtifactLinksGraphService.showGraphModal(execution);
+    }
+
+    function showExecutionDetailsModal() {
+        TlpModalService.open({
+            templateUrl: "execution-details-modal.tpl.html",
+            controller: ExecutionDetailsModalCtrl,
+            controllerAs: "modal",
+            resolve: {
+                modal_model: {
+                    test_execution: $scope.execution,
+                },
+            },
+        });
     }
 
     function showEditArtifactModal($event, definition) {
