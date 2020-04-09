@@ -18,7 +18,6 @@
  */
 
 import _ from "lodash";
-import CKEDITOR from "ckeditor";
 
 export default ExecutionService;
 
@@ -138,8 +137,9 @@ function ExecutionService(
             offset = offset + limit;
             if (offset < total_executions) {
                 return getAllRemoteExecutions(campaign_id, limit, offset, remote_executions);
+            } else {
+                return remote_executions;
             }
-            return remote_executions;
         });
     }
 
@@ -324,25 +324,7 @@ function ExecutionService(
             if (!user_uuid_exists) {
                 execution.viewed_by.push(user);
             }
-            let field = document.getElementById("execution_" + execution_id);
-            loadRTE(field, execution);
         }
-    }
-
-    function loadRTE(field, execution) {
-        let config = {
-            toolbar: [
-                ["Bold", "Italic", "Underline"],
-                ["Link", "Unlink", "Image"],
-            ],
-            language: document.body.dataset.userLocale,
-        };
-
-        let editor = CKEDITOR.inline(field, config);
-        editor.on("change", function () {
-            execution.results = editor.getData();
-        });
-        field.setAttribute("contenteditable", true);
     }
 
     function removeViewTestExecution(execution_id, user_to_remove) {

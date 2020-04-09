@@ -587,7 +587,7 @@ class ExecutionsResource
         $value_representation           = new ArtifactValuesRepresentation();
         $value_representation->field_id = (int) $field->getId();
         $value_representation->value    = array(
-            'format'  => Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT,
+            'format'  => Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
             'content' => $value
         );
 
