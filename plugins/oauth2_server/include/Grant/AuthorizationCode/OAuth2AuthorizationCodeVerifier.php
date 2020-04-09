@@ -124,7 +124,7 @@ class OAuth2AuthorizationCodeVerifier
                     throw new OAuth2AuthCodeNoValidScopeFound($auth_code);
                 }
 
-                return OAuth2AuthorizationCode::approveForSetOfScopes($auth_code, $user, $row['pkce_code_challenge'], $scopes);
+                return OAuth2AuthorizationCode::approveForSetOfScopes($auth_code, $user, $row['pkce_code_challenge'], $row['oidc_nonce'], $scopes);
             }
         );
     }

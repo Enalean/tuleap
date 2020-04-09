@@ -50,17 +50,23 @@ final class OAuth2AuthorizationCode
      * @psalm-readonly
      */
     private $pkce_code_challenge;
+    /**
+     * @var string|null
+     * @psalm-readonly
+     */
+    private $oidc_nonce;
 
     /**
      * @param AuthenticationScope[] $scopes
      *
      * @psalm-param non-empty-array<AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier>> $scopes
      */
-    private function __construct(int $authorization_code_id, PFUser $user, ?string $pkce_code_challenge, array $scopes)
+    private function __construct(int $authorization_code_id, PFUser $user, ?string $pkce_code_challenge, ?string $oidc_nonce, array $scopes)
     {
         $this->authorization_code_id = $authorization_code_id;
         $this->user                  = $user;
         $this->pkce_code_challenge   = $pkce_code_challenge;
+        $this->oidc_nonce            = $oidc_nonce;
         $this->scopes                = $scopes;
     }
 
@@ -69,12 +75,13 @@ final class OAuth2AuthorizationCode
      *
      * @psalm-param non-empty-array<AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier>> $scopes
      */
-    public static function approveForSetOfScopes(SplitToken $auth_code_token, PFUser $user, ?string $pkce_code_challenge, array $scopes): self
+    public static function approveForSetOfScopes(SplitToken $auth_code_token, PFUser $user, ?string $pkce_code_challenge, ?string $oidc_nonce, array $scopes): self
     {
         return new self(
             $auth_code_token->getID(),
             $user,
             $pkce_code_challenge,
+            $oidc_nonce,
             $scopes
         );
     }
@@ -112,5 +119,13 @@ final class OAuth2AuthorizationCode
     public function getPKCECodeChallenge(): ?string
     {
         return $this->pkce_code_challenge;
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function getOIDCNonce(): ?string
+    {
+        return $this->oidc_nonce;
     }
 }

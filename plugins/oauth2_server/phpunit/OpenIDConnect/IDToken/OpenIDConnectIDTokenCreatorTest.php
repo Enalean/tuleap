@@ -105,7 +105,11 @@ final class OpenIDConnectIDTokenCreatorTest extends TestCase
         );
     }
 
-    public function testCanIssueIDToken(): void
+    /**
+     * @testWith ["nonce"]
+     *           [null]
+     */
+    public function testCanIssueIDToken(?string $nonce): void
     {
         \ForgeConfig::set('sys_https_host', 'tuleap.example.com');
         $current_time = new \DateTimeImmutable('@10');
@@ -113,7 +117,7 @@ final class OpenIDConnectIDTokenCreatorTest extends TestCase
         $payload = $this->id_token_creator->issueIDTokenFromAuthorizationCode(
             $current_time,
             $this->getApp(),
-            $this->getAuthorizationCode([OAuth2SignInScope::fromItself()])
+            $this->getAuthorizationCode([OAuth2SignInScope::fromItself()], $nonce)
         );
 
         $this->assertNotNull($payload);
@@ -124,6 +128,11 @@ final class OpenIDConnectIDTokenCreatorTest extends TestCase
         $this->assertEquals('tlp-client-id-987', $token->getClaim('aud'));
         $this->assertEquals($current_time->getTimestamp(), $token->getClaim('iat'));
         $this->assertEquals($current_time->getTimestamp() + self::EXPECTED_EXPIRATION_DELAY_SECONDS, $token->getClaim('exp'));
+        if ($nonce === null) {
+            $this->assertFalse($token->hasClaim('nonce'));
+        } else {
+            $this->assertEquals($nonce, $token->getClaim('nonce'));
+        }
         $this->assertTrue($token->verify(new Sha256(), self::SIGNING_PUBLIC_KEY));
     }
 
@@ -132,18 +141,19 @@ final class OpenIDConnectIDTokenCreatorTest extends TestCase
         $payload = $this->id_token_creator->issueIDTokenFromAuthorizationCode(
             new \DateTimeImmutable('@10'),
             $this->getApp(),
-            $this->getAuthorizationCode([OAuth2TestScope::fromItself()])
+            $this->getAuthorizationCode([OAuth2TestScope::fromItself()], 'nonce')
         );
 
         $this->assertNull($payload);
     }
 
-    private function getAuthorizationCode(array $scopes): OAuth2AuthorizationCode
+    private function getAuthorizationCode(array $scopes, ?string $nonce): OAuth2AuthorizationCode
     {
         return OAuth2AuthorizationCode::approveForSetOfScopes(
             new SplitToken(789, SplitTokenVerificationString::generateNewSplitTokenVerificationString()),
             UserTestBuilder::aUser()->withId(147)->build(),
             null,
+            $nonce,
             $scopes
         );
     }

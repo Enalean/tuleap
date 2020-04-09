@@ -37,6 +37,7 @@
         <input type="hidden" name="redirect_uri" value="{{ redirect_uri }}">
         {{# state }}<input type="hidden" name="state" value="{{ state }}">{{/ state }}
         {{# pkce_code_challenge }}<input type="hidden" name="pkce_code_challenge" value="{{ pkce_code_challenge }}">{{/ pkce_code_challenge }}
+        {{# oidc_nonce }}<input type="hidden" name="oidc_nonce" value="{{ oidc_nonce }}">{{/ oidc_nonce }}
         <input type="hidden" name="app_identifier" value="{{ app_identifier }}">
         {{# scope_identifier_presenters }}
             <input type="hidden" name="scope[]" value="{{ scope_key }}">

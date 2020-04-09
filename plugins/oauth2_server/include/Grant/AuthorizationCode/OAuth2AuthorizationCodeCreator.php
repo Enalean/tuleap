@@ -86,19 +86,21 @@ class OAuth2AuthorizationCodeCreator
         OAuth2App $app,
         array $scopes,
         \PFUser $user,
-        ?string $pkce_code_challenge
+        ?string $pkce_code_challenge,
+        ?string $oidc_nonce
     ): ConcealedString {
         $verification_string = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
         $expiration_date     = $current_time->add($this->access_token_expiration_delay);
 
         $authorization_code_id = $this->transaction_executor->execute(
-            function () use ($app, $user, $verification_string, $expiration_date, $scopes, $pkce_code_challenge): int {
+            function () use ($app, $user, $verification_string, $expiration_date, $scopes, $pkce_code_challenge, $oidc_nonce): int {
                 $authorization_code_id = $this->authorization_code_dao->create(
                     $app->getId(),
                     (int) $user->getId(),
                     $this->hasher->computeHash($verification_string),
                     $expiration_date->getTimestamp(),
-                    $pkce_code_challenge
+                    $pkce_code_challenge,
+                    $oidc_nonce
                 );
                 $this->authorization_code_scope_saver->saveScopes($authorization_code_id, $scopes);
 

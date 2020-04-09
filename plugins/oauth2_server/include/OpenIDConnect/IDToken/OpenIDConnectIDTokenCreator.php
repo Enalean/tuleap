@@ -72,15 +72,18 @@ class OpenIDConnectIDTokenCreator
             return null;
         }
 
-        $builder = $this->builder_factory->getBuilder();
-        $token   = $builder->issuedBy('https://' . \ForgeConfig::get('sys_https_host'))
+        $builder = $this->builder_factory->getBuilder()->issuedBy('https://' . \ForgeConfig::get('sys_https_host'))
                 ->relatedTo((string) $authorization_code->getUser()->getId())
                 ->permittedFor(ClientIdentifier::fromOAuth2App($app)->toString())
                 ->issuedAt($current_time->getTimestamp())
-                ->expiresAt($current_time->add($this->id_token_expiration_delay)->getTimestamp())
-                ->getToken($this->signer, $this->signing_key_factory->getKey());
+                ->expiresAt($current_time->add($this->id_token_expiration_delay)->getTimestamp());
 
-        return (string) $token;
+        $nonce = $authorization_code->getOIDCNonce();
+        if ($nonce !== null) {
+            $builder = $builder->withClaim('nonce', $nonce);
+        }
+
+        return (string) $builder->getToken($this->signer, $this->signing_key_factory->getKey());
     }
 
     /**

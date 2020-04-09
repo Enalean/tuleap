@@ -53,6 +53,11 @@ final class AuthorizationFormData
      */
     private $pkce_code_challenge;
     /**
+     * @var string|null
+     * @psalm-readonly
+     */
+    private $oidc_nonce;
+    /**
      * @var AuthenticationScope[]
      * @psalm-readonly
      */
@@ -64,6 +69,7 @@ final class AuthorizationFormData
         string $redirect_uri,
         ?string $state,
         ?string $pkce_code_challenge,
+        ?string $oidc_nonce,
         AuthenticationScope ...$scopes
     ) {
         $this->app                 = $app;
@@ -71,6 +77,7 @@ final class AuthorizationFormData
         $this->redirect_uri        = $redirect_uri;
         $this->state               = $state;
         $this->pkce_code_challenge = $pkce_code_challenge;
+        $this->oidc_nonce          = $oidc_nonce;
         $this->scopes              = $scopes;
     }
 
@@ -112,6 +119,14 @@ final class AuthorizationFormData
     public function getPKCECodeChallenge(): ?string
     {
         return $this->pkce_code_challenge;
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function getOIDCNonce(): ?string
+    {
+        return $this->oidc_nonce;
     }
 
     /**

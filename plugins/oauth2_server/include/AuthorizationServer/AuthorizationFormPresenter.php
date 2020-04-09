@@ -62,6 +62,11 @@ final class AuthorizationFormPresenter
      */
     public $pkce_code_challenge;
     /**
+     * @var string|null
+     * @psalm-readonly
+     */
+    public $oidc_nonce;
+    /**
      * @var string
      * @psalm-readonly
      */
@@ -96,6 +101,7 @@ final class AuthorizationFormPresenter
         $this->state                       = $data->getState();
         $pkce_code_challenge               = $data->getPKCECodeChallenge();
         $this->pkce_code_challenge         = $pkce_code_challenge === null ? null : bin2hex($pkce_code_challenge);
+        $this->oidc_nonce                  = $data->getOIDCNonce();
         $this->redirect_uri                = $data->getRedirectUri();
         $this->deny_authorization_uri      = $deny_authorization_uri;
         $this->scope_definition_presenters = $scope_definition_presenters;
