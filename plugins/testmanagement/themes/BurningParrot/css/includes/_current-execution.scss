@@ -189,44 +189,49 @@ execution-with-steps.current-test-content {
     padding: 0 0 130px;
 }
 
-.current-test-results-container {
+.current-test-footer {
     display: flex;
     flex: 0 0 auto;
+    flex-direction: column;
     align-items: center;
 }
 
-.current-test-comment {
+.current-test-comment-counter {
+    display: flex;
+    align-items: flex-start;
     width: 100%;
-    min-height: 42px;
-    max-height: 100px;
-    padding: 8px 12px;
-    overflow: auto;
-    transition: border-color 150ms linear;
-    border: 1px solid $tlp-ui-border-normal;
-    border-radius: 3px;
+    margin: 0 0 $tlp-spacing;
+}
+
+.current-test-comment {
+    flex: 1 1 auto;
+    height: 38px;
+    transition: height 100ms;
 
     &:focus {
-        border-color: $tlp-theme-color;
+        height: 100px;
+        transition: height 100ms;
     }
 }
 
 .tlp-form-element-append.current-test-counter {
-    display: none;
+    flex: 0 0 auto;
+    margin: 0 0 0 $tlp-spacing;
 }
 
 .current-test-results {
     display: flex;
     justify-content: space-around;
-    margin: 0 0 0 $tlp-half-spacing;
+    width: 100%;
+    max-width: 600px;
 }
 
 .current-test-result {
-    width: 50px;
-    height: 50px;
-    margin: 0 0 0 $tlp-half-spacing;
+    width: 60px;
+    height: 60px;
     padding: 0;
     border-radius: 50%;
-    font-size: 25px;
+    font-size: 30px;
 
     &.tlp-button-secondary {
         border-color: $tlp-ui-dimmed;
@@ -239,12 +244,8 @@ execution-with-steps.current-test-content {
     margin: 0 5px 0 0;
 }
 
-.tlp-alert-warning.current-test-should-be-reloaded-warning {
-    margin: $tlp-spacing 0 0;
-
-    &::before {
-        top: 35%;
-    }
+.current-test-should-be-reloaded-warning {
+    width: 100%;
 }
 
 .current-test-should-be-reloaded-button {
