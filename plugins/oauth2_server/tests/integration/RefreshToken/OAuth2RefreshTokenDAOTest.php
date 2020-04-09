@@ -115,7 +115,7 @@ final class OAuth2RefreshTokenDAOTest extends TestCase
     protected function tearDown(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->delete('plugin_oauth2_refresh_token', []);
+        $db->run('DELETE FROM plugin_oauth2_refresh_token');
     }
 
     public static function tearDownAfterClass(): void

@@ -97,12 +97,12 @@ final class OAuth2AuthorizationCodeDAOTest extends TestCase
     protected function tearDown(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->delete('plugin_oauth2_authorization_code', []);
-        $db->delete('plugin_oauth2_authorization_code_scope', []);
-        $db->delete('plugin_oauth2_access_token', []);
-        $db->delete('plugin_oauth2_access_token_scope', []);
-        $db->delete('plugin_oauth2_refresh_token', []);
-        $db->delete('plugin_oauth2_refresh_token_scope', []);
+        $db->run('DELETE FROM plugin_oauth2_authorization_code');
+        $db->run('DELETE FROM plugin_oauth2_authorization_code_scope');
+        $db->run('DELETE FROM plugin_oauth2_access_token');
+        $db->run('DELETE FROM plugin_oauth2_access_token_scope');
+        $db->run('DELETE FROM plugin_oauth2_refresh_token');
+        $db->run('DELETE FROM plugin_oauth2_refresh_token_scope');
     }
 
     public static function tearDownAfterClass(): void
