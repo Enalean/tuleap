@@ -554,6 +554,13 @@ done
 # Needed for nginx try_files
 %{__ln_s} /etc/%{APP_NAME}/themes/common/images $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/local
 
+# Configuration
+%{__install} -d $RPM_BUILD_ROOT/etc/%{APP_NAME}
+%{__install} -d $RPM_BUILD_ROOT/etc/%{APP_NAME}/conf
+%{__install} -d $RPM_BUILD_ROOT/etc/%{APP_NAME}/plugins
+%{__install} -d $RPM_BUILD_ROOT/etc/%{APP_NAME}/plugins/pluginsadministration
+%{__install} -d $RPM_BUILD_ROOT/etc/%{APP_NAME}/forgeupgrade
+
 # Data dir
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}
 %{__install} -m 700 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/user
@@ -962,6 +969,13 @@ fi
 %{APP_DIR}/plugins/statistics
 %{APP_DIR}/plugins/tracker_date_reminder
 %{APP_DIR}/plugins/userlog
+
+# Configuration
+%attr(00750,root,codendiadm) /etc/%{APP_NAME}
+%attr(00750,codendiadm,codendiadm) /etc/%{APP_NAME}/conf
+%attr(00750,codendiadm,codendiadm) /etc/%{APP_NAME}/plugins
+%attr(00750,codendiadm,codendiadm) /etc/%{APP_NAME}/plugins/pluginsadministration
+%attr(00750,codendiadm,codendiadm) /etc/%{APP_NAME}/forgeupgrade
 
 # Data dir
 %dir %attr(755,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}
