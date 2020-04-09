@@ -266,7 +266,7 @@ $main_doc_script     = $include_asset_doc->getFileURL('script.js');
 <?php echo $tlp_script_tag; ?>
 <script type="text/javascript">
     window.manifest_framework_file = <?php
-        echo (string) file_get_contents(__DIR__ . '/../dist/manifest.json');
+        echo (string) file_get_contents(__DIR__ . '/../assets/core/manifest.json');
     ?>
 </script>
 <script type="text/javascript" src="<?php echo $main_doc_script; ?>"></script>
