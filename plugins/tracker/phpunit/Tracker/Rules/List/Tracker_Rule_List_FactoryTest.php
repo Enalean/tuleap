@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2012 - 2018. All rights reserved
+  * Copyright (c) Enalean, 2012 - Present. All rights reserved
   *
   * This file is a part of Tuleap.
   *
@@ -17,46 +17,34 @@
   * You should have received a copy of the GNU General Public License
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
-require_once __DIR__ . '/../../../bootstrap.php';
 
-class Tracker_Rule_List_FactoryTest extends TuleapTestCase
+declare(strict_types=1);
+
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_Rule_List_FactoryTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /**
      * @var Tracker_Rule_List_Dao
      */
-    protected $list_rule_dao;
+    private $list_rule_dao;
 
     /**
      *
      * @var Tracker_Rule_List_Factory
      */
-    protected $list_rule_factory;
+    private $list_rule_factory;
 
-    /** @var XML_Security */
-    protected $xml_security;
-
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->list_rule_dao = mock('Tracker_Rule_List_Dao');
+        $this->list_rule_dao = \Mockery::spy(\Tracker_Rule_List_Dao::class);
         $this->list_rule_factory = new Tracker_Rule_List_Factory($this->list_rule_dao);
-
-        $this->xml_security = new XML_Security();
-        $this->xml_security->enableExternalLoadOfEntities();
     }
 
-    public function tearDown()
+    public function testCreateRuleListGeneratesANewObjectThatContainsAllValuesPassed(): void
     {
-        $this->xml_security->disableExternalLoadOfEntities();
-
-        parent::tearDown();
-    }
-
-    public function testCreateRuleListGeneratesANewObjectThatContainsAllValuesPassed()
-    {
-        stub($this->list_rule_dao)->insert()->returns(true);
+        $this->list_rule_dao->shouldReceive('insert')->andReturns(true);
 
         $source_field_id = 10;
         $target_field_id = 11;
@@ -67,24 +55,24 @@ class Tracker_Rule_List_FactoryTest extends TuleapTestCase
         $list_rule = $this->list_rule_factory
                 ->create($source_field_id, $target_field_id, $tracker_id, $source_value, $target_value);
 
-        $this->assertIsA($list_rule, 'Tracker_Rule_List');
-        $this->assertEqual($list_rule->getTrackerId(), $tracker_id);
-        $this->assertEqual($list_rule->getTargetFieldId(), $target_field_id);
-        $this->assertEqual($list_rule->getSourceFieldId(), $source_field_id);
-        $this->assertEqual($list_rule->getSourceValue(), $source_value);
-        $this->assertEqual($list_rule->getTargetValue(), $target_value);
+        $this->assertInstanceOf(\Tracker_Rule_List::class, $list_rule);
+        $this->assertEquals($tracker_id, $list_rule->getTrackerId());
+        $this->assertEquals($target_field_id, $list_rule->getTargetFieldId());
+        $this->assertEquals($source_field_id, $list_rule->getSourceFieldId());
+        $this->assertEquals($source_value, $list_rule->getSourceValue());
+        $this->assertEquals($target_value, $list_rule->getTargetValue());
     }
 
-    public function testSearchByIdReturnsNullIfNoEntryIsFoundByTheDao()
+    public function testSearchByIdReturnsNullIfNoEntryIsFoundByTheDao(): void
     {
-        stub($this->list_rule_dao)->searchById()->returns(false);
+        $this->list_rule_dao->shouldReceive('searchById')->andReturns(false);
         $list_rule = $this->list_rule_factory
                 ->searchById(999);
 
         $this->assertNull($list_rule);
     }
 
-    public function testSearchByIdReturnsANewObjectIfOneEntryIsFoundByTheDao()
+    public function testSearchByIdReturnsANewObjectIfOneEntryIsFoundByTheDao(): void
     {
         $data = array(
             'source_field_id'   => 46345,
@@ -94,26 +82,26 @@ class Tracker_Rule_List_FactoryTest extends TuleapTestCase
             'target_value_id'   => '465',
         );
 
-        stub($this->list_rule_dao)->searchById()->returns($data);
+        $this->list_rule_dao->shouldReceive('searchById')->andReturns($data);
         $list_rule = $this->list_rule_factory
                 ->searchById(999);
 
         $this->assertNotNull($list_rule);
     }
 
-    public function testSearchByTrackerIdReturnsNullIfNoEntryIsFoundByTheDao()
+    public function testSearchByTrackerIdReturnsNullIfNoEntryIsFoundByTheDao(): void
     {
-        stub($this->list_rule_dao)->searchByTrackerId()->returnsEmptyDar();
+        $this->list_rule_dao->shouldReceive('searchByTrackerId')->andReturns(\TestHelper::emptyDar());
         $list_rule = $this->list_rule_factory
                 ->searchByTrackerId(999);
 
-        $this->assertTrue(is_array($list_rule));
-        $this->assertCount($list_rule, 0);
+        $this->assertIsArray($list_rule);
+        $this->assertCount(0, $list_rule);
     }
 
-    public function testSearchByTrackerIdReturnsAnArrayOfASingleObjectIfOneEntryIsFoundByTheDao()
+    public function testSearchByTrackerIdReturnsAnArrayOfASingleObjectIfOneEntryIsFoundByTheDao(): void
     {
-        $data_access_result = mock('DataAccessResult');
+        $data_access_result = \Mockery::spy(\DataAccessResult::class);
 
         $data = array(
             'source_field_id'   => 46345,
@@ -123,20 +111,19 @@ class Tracker_Rule_List_FactoryTest extends TuleapTestCase
             'target_value_id'   => '465',
         );
 
-        stub($data_access_result)->rowCount()->returns(1);
-        stub($data_access_result)->getRow()->at(1)->returns($data);
-        stub($data_access_result)->getRow()->at(2)->returns(false);
+        $data_access_result->shouldReceive('rowCount')->andReturns(1);
+        $data_access_result->shouldReceive('getRow')->andReturns($data, false);
 
-        stub($this->list_rule_dao)->searchByTrackerId()->returnsDar($data);
+        $this->list_rule_dao->shouldReceive('searchByTrackerId')->andReturns(\TestHelper::arrayToDar($data));
         $list_rules = $this->list_rule_factory
                 ->searchByTrackerId(999);
 
         $this->assertNotNull($list_rules);
-        $this->assertIsA($list_rules, 'array');
-        $this->assertCount($list_rules, 1);
+        $this->assertIsArray($list_rules);
+        $this->assertCount(1, $list_rules);
     }
 
-    public function testDuplicateDoesNotInsertWhenNoRulesExist()
+    public function testDuplicateDoesNotInsertWhenNoRulesExist(): void
     {
         $from_tracker_id = 56;
         $to_tracker_id   = 789;
@@ -153,16 +140,15 @@ class Tracker_Rule_List_FactoryTest extends TuleapTestCase
 
         $db_data = false;
 
-        $dao = mock('Tracker_Rule_List_Dao');
-        stub($dao)->searchByTrackerId()->returnsDar($db_data);
-        stub($dao)->create()->never();
-        $form_factory = mock('Tracker_FormElementFactory');
+        $dao = \Mockery::spy(\Tracker_Rule_List_Dao::class);
+        $dao->shouldReceive('searchByTrackerId')->andReturns(\TestHelper::arrayToDar($db_data));
+        $dao->shouldReceive('create')->never();
 
-        $factory = new Tracker_Rule_List_Factory($dao, $form_factory);
+        $factory = new Tracker_Rule_List_Factory($dao);
         $factory->duplicate($from_tracker_id, $to_tracker_id, $field_mapping);
     }
 
-    public function testDuplicateInsertsANewRule()
+    public function testDuplicateInsertsANewRule(): void
     {
         $from_tracker_id = 56;
         $to_tracker_id   = 789;
@@ -220,37 +206,35 @@ class Tracker_Rule_List_FactoryTest extends TuleapTestCase
             'target_value_id' => 1005
         );
 
-        $dao = mock('Tracker_Rule_List_Dao');
-        stub($dao)->searchByTrackerId()->returnsDar($db_data1, $db_data2, $db_data3);
-        stub($dao)->create($to_tracker_id, 888, 777, 999, 666)->at(0);
-        stub($dao)->create($to_tracker_id, 9999, 9998, 9997, 9996)->at(1);
-        stub($dao)->create($to_tracker_id, 9999, 9998, 9997, 9995)->at(2);
-        $form_factory = mock('Tracker_FormElementFactory');
+        $dao = \Mockery::spy(\Tracker_Rule_List_Dao::class);
+        $dao->shouldReceive('searchByTrackerId')->andReturns(\TestHelper::arrayToDar($db_data1, $db_data2, $db_data3));
+        $dao->shouldReceive('create')->with($to_tracker_id, 888, 777, 999, 666)->once();
+        $dao->shouldReceive('create')->with($to_tracker_id, 9999, 9998, 9997, 9996)->once();
+        $dao->shouldReceive('create')->with($to_tracker_id, 9999, 9998, 9997, 9995)->once();
+        $form_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
 
-        $factory = new Tracker_Rule_List_Factory($dao, $form_factory);
+        $factory = new Tracker_Rule_List_Factory($dao);
         $factory->duplicate($from_tracker_id, $to_tracker_id, $field_mapping);
     }
 
-    public function testExport()
+    public function testExport(): void
     {
-        $xml = simplexml_load_file(dirname(__FILE__) . '/../../../_fixtures/ImportTrackerRulesTest.xml');
+        $f1 = \Mockery::spy(\Tracker_FormElement_Field_List::class)->shouldReceive('getId')->andReturns(102)->getMock();
+        $f2 = \Mockery::spy(\Tracker_FormElement_Field_List::class)->shouldReceive('getId')->andReturns(103)->getMock();
 
-        $f1 = stub('Tracker_FormElement_Field_List')->getId()->returns(102);
-        $f2 = stub('Tracker_FormElement_Field_List')->getId()->returns(103);
+        $form_element_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
+        $form_element_factory->shouldReceive('getFormElementById')->with(102)->andReturns($f1);
+        $form_element_factory->shouldReceive('getFormElementById')->with(103)->andReturns($f2);
 
-        $form_element_factory = mock('Tracker_FormElementFactory');
-        stub($form_element_factory)->getFormElementById(102)->returns($f1);
-        stub($form_element_factory)->getFormElementById(103)->returns($f2);
+        $bind_f1 = \Mockery::spy(\Tracker_FormElement_Field_List_Bind_Static::class);
+        $bind_f2 = \Mockery::spy(\Tracker_FormElement_Field_List_Bind_Static::class);
 
-        $bind_f1 = mock('Tracker_FormElement_Field_List_Bind_Static');
-        $bind_f2 = mock('Tracker_FormElement_Field_List_Bind_Static');
+        $f1->shouldReceive('getBind')->andReturns($bind_f1);
+        $f2->shouldReceive('getBind')->andReturns($bind_f2);
 
-        stub($f1)->getBind()->returns($bind_f1);
-        stub($f2)->getBind()->returns($bind_f2);
-
-        $bf = mock('Tracker_FormElement_Field_List_BindFactory');
-        $bf->setReturnValue('getType', 'static', array($bind_f1));
-        $bf->setReturnValue('getType', 'static', array($bind_f2));
+        $bf = \Mockery::spy(\Tracker_FormElement_Field_List_BindFactory::class);
+        $bf->shouldReceive('getType')->with($bind_f1)->andReturns('static');
+        $bf->shouldReceive('getType')->with($bind_f2)->andReturns('static');
 
         $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $array_xml_mapping = array('F25' => 102,
@@ -269,8 +253,8 @@ class Tracker_Rule_List_FactoryTest extends TuleapTestCase
         $r1 = new Tracker_Rule_List(1, 101, 103, 806, 102, 803);
         $r2 = new Tracker_Rule_List(1, 101, 103, 806, 102, 804);
 
-        $trm = partial_mock('Tracker_Rule_List_Factory', array('searchByTrackerId'), array(mock('Tracker_Rule_List_Dao')));
-        $trm->setReturnValue('searchByTrackerId', array($r1, $r2));
+        $trm = \Mockery::mock(\Tracker_Rule_List_Factory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $trm->shouldReceive('searchByTrackerId')->andReturns(array($r1, $r2));
 
         $trm->exportToXML($root, $array_xml_mapping, $form_element_factory, 666);
         $this->assertNull($root->dependencies->rule);
