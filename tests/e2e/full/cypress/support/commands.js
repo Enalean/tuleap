@@ -62,6 +62,12 @@ Cypress.Commands.add("RestrictedRegularUserLogin", () => {
     cy.get("#form_pw").type("Correct Horse Battery Staple{enter}");
 });
 
+Cypress.Commands.add("heisenbergLogin", () => {
+    cy.visit("/");
+    cy.get("#form_loginname").type("heisenberg");
+    cy.get("#form_pw").type("Correct Horse Battery Staple{enter}");
+});
+
 Cypress.Commands.add("userLogout", () => {
     cy.get("[data-test=user_logout]").click({ force: true });
 });
@@ -112,3 +118,26 @@ Cypress.Commands.add("getProjectId", (project_shortname) => {
     cy.visit(`/projects/${project_shortname}/`);
     return cy.get("[data-test=project-sidebar]").should("have.attr", "data-project-id");
 });
+
+// Use this command to attach a file to a file input
+// Don't forget to pass the filename in the arguments
+// Also, the file has to be put under the fixtures folder
+// see https://github.com/cypress-io/cypress/issues/170#issuecomment-609395903
+Cypress.Commands.add(
+    "uploadFixtureFile",
+    {
+        prevSubject: "element",
+    },
+    (input, file_name, file_type) => {
+        cy.fixture(file_name)
+            .then((content) => Cypress.Blob.base64StringToBlob(content, file_type))
+            .then((blob) => {
+                const test_file = new File([blob], file_name);
+                const data_transfer = new DataTransfer();
+
+                data_transfer.items.add(test_file);
+                input[0].files = data_transfer.files;
+                return input;
+            });
+    }
+);

@@ -66,7 +66,10 @@
                                         <label class="tlp-label" for="email">{{# gettext }}Email{{/ gettext }} <i class="fa fa-asterisk"></i></label>
                                         <input type="email" class="tlp-input" id="email" name="email" value="{{ email }}" size="50" placeholder="fox@example.com" autocomplete="email" required>
                                         {{# change_email_pending }}
-                                        <p class="tlp-text-warning">{{# gettext }}An email change was requested, please check your inbox to complete the change.{{/ gettext }}</p>
+                                        <p
+                                            class="tlp-text-warning"
+                                            data-test="user-prefs-email-need-confirmation-warning"
+                                        >{{# gettext }}An email change was requested, please check your inbox to complete the change.{{/ gettext }}</p>
                                         {{/ change_email_pending }}
                                     </div>
                                 {{/ can_change_email }}
@@ -104,7 +107,7 @@
                         {{# csrf_token }}
                             {{> csrf_token_input }}
                         {{/ csrf_token }}
-                        <button type="submit" class="tlp-button-primary">
+                        <button type="submit" class="tlp-button-primary" data-test="user-prefs-submit-button">
                             <i class="fa fa-floppy-o tlp-button-icon"></i> {{# gettext }}Update{{/ gettext }}
                         </button>
                     </section>
@@ -175,7 +178,7 @@
         </div>
         <div class="tlp-modal-footer">
             <button type="reset" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">{{# gettext }}Cancel{{/ gettext }}</button>
-            <button type="submit" class="tlp-button-primary tlp-modal-action">
+            <button type="submit" class="tlp-button-primary tlp-modal-action" data-test="user-prefs-save-avatar-button">
                 <i class="fa fa-floppy-o tlp-button-icon"></i>
                 {{# gettext }}Save new avatar{{/ gettext }}
             </button>

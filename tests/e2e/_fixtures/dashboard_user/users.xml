@@ -32,4 +32,11 @@
         <email>ProjectMember@example.com</email>
         <ldapid></ldapid>
     </user>
+    <user>
+        <id>103</id>
+        <username>Heisenberg</username>
+        <realname>Walter White</realname>
+        <email>walter-white@los-pollos-hermanos.us</email>
+        <ldapid></ldapid>
+    </user>
 </users>
