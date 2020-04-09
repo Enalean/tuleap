@@ -31,13 +31,28 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use TuleapCfg\Command\SetupMysql\ConnectionManager;
+use TuleapCfg\Command\SetupMysql\InvalidSSLConfigurationException;
+use TuleapCfg\Command\SetupMysql\MysqlCommandHelper;
 use TuleapCfg\Command\SetupMysql\StatementLoader;
 
 final class SetupMysqlCommand extends Command
 {
+    /**
+     * @var MysqlCommandHelper
+     */
+    private $command_helper;
+
+    public function __construct()
+    {
+        $this->command_helper = new MysqlCommandHelper();
+        parent::__construct('setup:mysql');
+    }
+
     protected function configure(): void
     {
-        $this->setName('setup:mysql')
+        $this->command_helper->addOptions($this);
+        $this
+            ->setDescription('Feed the database with core structure and values')
             ->addOption('host', '', InputOption::VALUE_REQUIRED, 'MySQL server host', 'localhost')
             ->addOption('user', '', InputOption::VALUE_REQUIRED, 'MySQL user for setup', 'tuleapadm')
             ->addOption('dbname', '', InputOption::VALUE_REQUIRED, 'Database name', 'tuleap')
@@ -50,8 +65,16 @@ final class SetupMysqlCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $host = $input->getOption('host');
-        assert(is_string($host));
+        try {
+            $host        = $this->command_helper->getHost($input);
+            $port        = $this->command_helper->getPort($input);
+            $ssl_mode    = $this->command_helper->getSSLMode($input);
+            $ssl_ca_file = $this->command_helper->getSSLCAFile($input, $ssl_mode);
+        } catch (InvalidSSLConfigurationException $exception) {
+            $io->getErrorStyle()->writeln(sprintf('<error>%s</error>', $exception->getMessage()));
+            return 1;
+        }
+
         $user = $input->getOption('user');
         assert(is_string($user));
         $dbname = $input->getOption('dbname');
@@ -69,7 +92,7 @@ final class SetupMysqlCommand extends Command
         assert(is_string($password));
 
         $connexion_manager = new ConnectionManager();
-        $db = $connexion_manager->getDBWithDBName($io, $host, $user, $password, $dbname);
+        $db = $connexion_manager->getDBWithDBName($io, $host, $port, $ssl_mode, $ssl_ca_file, $user, $password, $dbname);
         if ($db === null) {
             $io->getErrorStyle()->writeln('<error>Unable to connect to mysql server</error>');
             return 1;
