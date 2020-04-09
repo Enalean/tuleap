@@ -34,11 +34,13 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OAuth2Server\Scope\OAuth2ScopeRetriever;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\User\OAuth2\AccessToken\InvalidOAuth2AccessTokenException;
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenDoesNotHaveRequiredScopeException;
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenExpiredException;
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenMatchingUnknownUserException;
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenNotFoundException;
+use Tuleap\User\OAuth2\ResourceServer\GrantedAuthorization;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
 final class OAuth2AccessTokenVerifierTest extends TestCase
@@ -76,9 +78,11 @@ final class OAuth2AccessTokenVerifierTest extends TestCase
         $this->verifier = new OAuth2AccessTokenVerifier($this->dao, $this->scope_retriever, $this->user_manager, $this->hasher);
     }
 
-    public function testGivingACorrectTokenTheCorrespondingUserIsRetrieved(): void
+    public function testGivingACorrectTokenTheGrantedAuthorizationIsRetrieved(): void
     {
-        $expected_user = new \PFUser(['user_id' => 102, 'language_id' => 'en']);
+        $expected_user          = UserTestBuilder::aUser()->withId(102)->build();
+        $required_scope         = $this->buildRequiredScope();
+        $expected_authorization = new GrantedAuthorization($expected_user, [$required_scope]);
         $this->user_manager->shouldReceive('getUserById')->with($expected_user->getId())->andReturn($expected_user);
 
         $access_token = new SplitToken(
@@ -93,12 +97,11 @@ final class OAuth2AccessTokenVerifierTest extends TestCase
             ]
         );
         $this->hasher->shouldReceive('verifyHash')->andReturn(true);
-        $required_scope = $this->buildRequiredScope();
         $this->scope_retriever->shouldReceive('getScopesBySplitToken')->andReturn([$required_scope]);
 
-        $user = $this->verifier->getUser($access_token, $required_scope);
+        $result = $this->verifier->getGrantedAuthorization($access_token, $required_scope);
 
-        $this->assertSame($expected_user, $user);
+        $this->assertEquals($expected_authorization, $result);
     }
 
     public function testVerificationFailsWhenTokenCanNotBeFound(): void
@@ -109,7 +112,7 @@ final class OAuth2AccessTokenVerifierTest extends TestCase
         $this->dao->shouldReceive('searchAccessToken')->with($access_token->getID())->andReturn(null);
 
         $this->expectException(OAuth2AccessTokenNotFoundException::class);
-        $this->verifier->getUser($access_token, $this->buildRequiredScope());
+        $this->verifier->getGrantedAuthorization($access_token, $this->buildRequiredScope());
     }
 
     public function testVerificationFailsWhenVerificationStringDoesNotMatch(): void
@@ -125,7 +128,7 @@ final class OAuth2AccessTokenVerifierTest extends TestCase
         $this->hasher->shouldReceive('verifyHash')->andReturn(false);
 
         $this->expectException(InvalidOAuth2AccessTokenException::class);
-        $this->verifier->getUser($access_token, $this->buildRequiredScope());
+        $this->verifier->getGrantedAuthorization($access_token, $this->buildRequiredScope());
     }
 
     public function testVerificationFailsWhenTheAccessTokenHasExpired(): void
@@ -145,7 +148,7 @@ final class OAuth2AccessTokenVerifierTest extends TestCase
         $this->hasher->shouldReceive('verifyHash')->andReturn(true);
 
         $this->expectException(OAuth2AccessTokenExpiredException::class);
-        $this->verifier->getUser($access_token, $this->buildRequiredScope());
+        $this->verifier->getGrantedAuthorization($access_token, $this->buildRequiredScope());
     }
 
     public function testVerificationFailsWhenTheUserCanNotBeFound(): void
@@ -168,7 +171,7 @@ final class OAuth2AccessTokenVerifierTest extends TestCase
         $this->scope_retriever->shouldReceive('getScopesBySplitToken')->andReturn([$required_scope]);
 
         $this->expectException(OAuth2AccessTokenMatchingUnknownUserException::class);
-        $this->verifier->getUser($access_token, $required_scope);
+        $this->verifier->getGrantedAuthorization($access_token, $required_scope);
     }
 
     /**
@@ -194,7 +197,7 @@ final class OAuth2AccessTokenVerifierTest extends TestCase
         $this->scope_retriever->shouldReceive('getScopesBySplitToken')->andReturn($scopes_matching_access_token);
 
         $this->expectException(OAuth2AccessTokenDoesNotHaveRequiredScopeException::class);
-        $this->verifier->getUser($access_token, $this->buildRequiredScope());
+        $this->verifier->getGrantedAuthorization($access_token, $this->buildRequiredScope());
     }
 
     public function dataProviderScopeFailures(): array

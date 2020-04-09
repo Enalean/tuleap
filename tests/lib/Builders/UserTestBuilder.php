@@ -95,6 +95,15 @@ class UserTestBuilder
         return $this;
     }
 
+    /**
+     * @psalm-param \PFUser::STATUS_*
+     */
+    public function withStatus(string $status): self
+    {
+        $this->params['status'] = $status;
+        return $this;
+    }
+
     public function build(): \PFUser
     {
         $user = new \PFUser($this->params);

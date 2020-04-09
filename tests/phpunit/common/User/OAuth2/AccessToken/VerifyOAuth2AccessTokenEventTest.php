@@ -29,23 +29,27 @@ use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\User\OAuth2\ResourceServer\GrantedAuthorization;
 
 final class VerifyOAuth2AccessTokenEventTest extends TestCase
 {
     public function testReturnsGivenValues(): void
     {
-        $token          = new SplitToken(1, SplitTokenVerificationString::generateNewSplitTokenVerificationString());
-        $required_scope = $this->buildRequiredScope();
-        $event          = new VerifyOAuth2AccessTokenEvent($token, $required_scope);
-        $user           = UserTestBuilder::aUser()->build();
-        $event->setVerifiedUser($user);
+        $token                 = new SplitToken(
+            1,
+            SplitTokenVerificationString::generateNewSplitTokenVerificationString()
+        );
+        $required_scope        = $this->buildRequiredScope();
+        $event                 = new VerifyOAuth2AccessTokenEvent($token, $required_scope);
+        $granted_authorization = new GrantedAuthorization(UserTestBuilder::aUser()->build(), [$required_scope]);
+        $event->setGrantedAuthorization($granted_authorization);
 
         $this->assertSame($token, $event->getAccessToken());
         $this->assertSame($required_scope, $event->getRequiredScope());
-        $this->assertSame($user, $event->getUser());
+        $this->assertSame($granted_authorization, $event->getGrantedAuthorization());
     }
 
-    public function testThrowsNotFoundExceptionWhenNoUserHasBeenSet(): void
+    public function testThrowsNotFoundExceptionWhenNoGrantedAuthorizationHasBeenSet(): void
     {
         $event = new VerifyOAuth2AccessTokenEvent(
             new SplitToken(1, SplitTokenVerificationString::generateNewSplitTokenVerificationString()),
@@ -53,7 +57,7 @@ final class VerifyOAuth2AccessTokenEventTest extends TestCase
         );
 
         $this->expectException(OAuth2AccessTokenNotFoundException::class);
-        $event->getUser();
+        $event->getGrantedAuthorization();
     }
 
     private function buildRequiredScope(): AuthenticationScope

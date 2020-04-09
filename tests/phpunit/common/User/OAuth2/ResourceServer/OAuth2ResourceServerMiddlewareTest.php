@@ -33,6 +33,7 @@ use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenException;
 use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenDoesNotHaveRequiredScopeException;
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenExpiredException;
 use Tuleap\User\OAuth2\AccessToken\VerifyOAuth2AccessTokenEvent;
@@ -91,17 +92,20 @@ final class OAuth2ResourceServerMiddlewareTest extends TestCase
         $this->access_token_unserializer->shouldReceive('getSplitToken')->andReturn(
             $event->getAccessToken()
         );
-        $event->setVerifiedUser(new \PFUser(['language_id' => 'en']));
+        $granted_authorization = new GrantedAuthorization(UserTestBuilder::aUser()->build(), [$this->required_scope]);
+        $event->setGrantedAuthorization($granted_authorization);
         $this->event_dispatcher->shouldReceive('dispatch')->andReturn($event);
         $this->login_manager->shouldReceive('validateAndSetCurrentUser');
         $handler = \Mockery::mock(RequestHandlerInterface::class);
         $expected_response = HTTPFactoryBuilder::responseFactory()->createResponse();
         $handler->shouldReceive('handle')->andReturn($expected_response);
 
-        $response = $this->middleware->process(
-            $this->buildServerRequest('Bearer FooToken'),
-            $handler
-        );
+        $request = $this->buildServerRequest('Bearer FooToken');
+        $request->shouldReceive('withAttribute')
+            ->once()
+            ->with(OAuth2ResourceServerMiddleware::class, \Mockery::type(GrantedAuthorization::class))
+            ->andReturnSelf();
+        $response = $this->middleware->process($request, $handler);
 
         $this->assertSame($expected_response, $response);
     }
@@ -188,7 +192,9 @@ final class OAuth2ResourceServerMiddlewareTest extends TestCase
         $this->access_token_unserializer->shouldReceive('getSplitToken')->andReturn(
             $event->getAccessToken()
         );
-        $event->setVerifiedUser(new \PFUser(['language_id' => 'en']));
+        $event->setGrantedAuthorization(
+            new GrantedAuthorization(UserTestBuilder::aUser()->build(), [$this->required_scope])
+        );
         $this->event_dispatcher->shouldReceive('dispatch')->andReturn($event);
         $this->login_manager->shouldReceive('validateAndSetCurrentUser')->andThrow(
             new class extends User_LoginException {
@@ -273,7 +279,10 @@ final class OAuth2ResourceServerMiddlewareTest extends TestCase
         );
     }
 
-    private function buildServerRequest(string $authorization_header_line): ServerRequestInterface
+    /**
+     * @return \Mockery\LegacyMockInterface|\Mockery\MockInterface|ServerRequestInterface
+     */
+    private function buildServerRequest(string $authorization_header_line)
     {
         $server_request = \Mockery::mock(ServerRequestInterface::class);
         $server_request->shouldReceive('getHeaderLine')->with('Authorization')->andReturn($authorization_header_line);

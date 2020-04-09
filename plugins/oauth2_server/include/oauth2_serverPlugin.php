@@ -68,6 +68,7 @@ use Tuleap\OAuth2Server\OpenIDConnect\IDToken\OpenIDConnectSigningKeyDAO;
 use Tuleap\OAuth2Server\OpenIDConnect\IDToken\OpenIDConnectSigningKeyFactory;
 use Tuleap\OAuth2Server\OpenIDConnect\JWK\JWKSDocumentEndpointController;
 use Tuleap\OAuth2Server\OpenIDConnect\Scope\OAuth2SignInScope;
+use Tuleap\OAuth2Server\OpenIDConnect\Scope\OpenIDConnectEmailScope;
 use Tuleap\OAuth2Server\ProjectAdmin\ListAppsController;
 use Tuleap\OAuth2Server\RefreshToken\OAuth2OfflineAccessScope;
 use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenCreator;
@@ -485,11 +486,8 @@ final class oauth2_serverPlugin extends Plugin
         $stream_factory   = HTTPFactoryBuilder::streamFactory();
         $password_handler = \PasswordHandlerFactory::getPasswordHandler();
         $event_manager    = EventManager::instance();
-        $user_manager = UserManager::instance();
         return new Tuleap\OAuth2Server\User\UserInfoController(
-            $response_factory,
-            $stream_factory,
-            $user_manager,
+            new JSONResponseBuilder($response_factory, $stream_factory),
             new SapiEmitter(),
             new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
             new RejectNonHTTPSRequestMiddleware($response_factory, $stream_factory),
@@ -501,7 +499,7 @@ final class oauth2_serverPlugin extends Plugin
                 OAuth2SignInScope::fromItself(),
                 new User_LoginManager(
                     $event_manager,
-                    $user_manager,
+                    UserManager::instance(),
                     new \Tuleap\User\PasswordVerifier($password_handler),
                     new User_PasswordExpirationChecker(),
                     $password_handler
@@ -540,8 +538,11 @@ final class oauth2_serverPlugin extends Plugin
             new SplitTokenVerificationStringHasher()
         );
 
-        $user = $verifier->getUser($event->getAccessToken(), $event->getRequiredScope());
-        $event->setVerifiedUser($user);
+        $granted_authorization = $verifier->getGrantedAuthorization(
+            $event->getAccessToken(),
+            $event->getRequiredScope()
+        );
+        $event->setGrantedAuthorization($granted_authorization);
     }
 
     public function collectOAuth2ScopeBuilder(OAuth2ScopeBuilderCollector $collector): void
@@ -550,6 +551,7 @@ final class oauth2_serverPlugin extends Plugin
             new AuthenticationScopeBuilderFromClassNames(
                 OAuth2OfflineAccessScope::class,
                 OAuth2SignInScope::class,
+                OpenIDConnectEmailScope::class
             )
         );
     }

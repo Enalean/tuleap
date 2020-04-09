@@ -32,6 +32,7 @@ use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenDoesNotHaveRequiredScopeExce
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenExpiredException;
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenMatchingUnknownUserException;
 use Tuleap\User\OAuth2\AccessToken\OAuth2AccessTokenNotFoundException;
+use Tuleap\User\OAuth2\ResourceServer\GrantedAuthorization;
 
 class OAuth2AccessTokenVerifier
 {
@@ -73,8 +74,10 @@ class OAuth2AccessTokenVerifier
      * @throws OAuth2AccessTokenExpiredException
      * @throws OAuth2AccessTokenDoesNotHaveRequiredScopeException
      */
-    public function getUser(SplitToken $access_token, AuthenticationScope $required_scope): \PFUser
-    {
+    public function getGrantedAuthorization(
+        SplitToken $access_token,
+        AuthenticationScope $required_scope
+    ): GrantedAuthorization {
         $row = $this->access_token_dao->searchAccessToken($access_token->getID());
         if ($row === null) {
             throw new OAuth2AccessTokenNotFoundException($access_token->getID());
@@ -89,7 +92,8 @@ class OAuth2AccessTokenVerifier
             throw new OAuth2AccessTokenExpiredException($access_token);
         }
 
-        if (! $this->hasNeededScopes($access_token, $required_scope)) {
+        $token_scopes = $this->scope_retriever->getScopesBySplitToken($access_token);
+        if (empty($token_scopes) || ! $this->hasNeededScopes($token_scopes, $required_scope)) {
             throw new OAuth2AccessTokenDoesNotHaveRequiredScopeException($required_scope);
         }
 
@@ -97,7 +101,7 @@ class OAuth2AccessTokenVerifier
         if ($user === null) {
             throw new OAuth2AccessTokenMatchingUnknownUserException($row['user_id']);
         }
-        return $user;
+        return new GrantedAuthorization($user, $token_scopes);
     }
 
     private function isAccessTokenExpired(int $expiration_timestamp): bool
@@ -108,11 +112,12 @@ class OAuth2AccessTokenVerifier
     }
 
     /**
+     * @param AuthenticationScope[] $access_token_scopes
+     * @psalm-param AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier>[] $access_token_scopes
      * @psalm-param AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier> $required_scope
      */
-    private function hasNeededScopes(SplitToken $access_token, AuthenticationScope $required_scope): bool
+    private function hasNeededScopes(array $access_token_scopes, AuthenticationScope $required_scope): bool
     {
-        $access_token_scopes = $this->scope_retriever->getScopesBySplitToken($access_token);
         foreach ($access_token_scopes as $access_token_scope) {
             if ($access_token_scope->covers($required_scope)) {
                 return true;
