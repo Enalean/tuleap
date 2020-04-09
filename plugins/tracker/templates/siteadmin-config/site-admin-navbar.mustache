@@ -5,7 +5,7 @@
         <a class="tlp-tab {{ email_gateway_active }}" href="{{ emailgateway_url }}">{{ emailgateway }}</a>
         <a class="tlp-tab {{ artifact_link_active }}" href="{{ natures_url }}">{{ natures }}</a>
         <a class="tlp-tab {{ report_active }}" href="{{ report_config_url }}">{{ report_config_panel }}</a>
-        <a class="tlp-tab {{ artifact_deletion_active }}" href="{{ artifacts_deletion_url }}">
+        <a class="tlp-tab {{ artifact_deletion_active }}" href="{{ artifacts_deletion_url }}" data-test="artifact-deletion">
             {{# dgettext }} tuleap-tracker | Artifacts deletion {{/ dgettext }}
         </a>
     </nav>

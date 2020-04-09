@@ -72,7 +72,8 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
         $html .= '<div class="artifact-submit-button">';
         $html .= '<input type="hidden" id="submit-type" />';
         $html .= '<div class="btn-group dropup">';
-        $html .= '<button class="btn btn-large btn-primary" type="submit">' . $GLOBALS['Language']->getText('global', 'btn_submit') . '</button>';
+        $html .= '<button class="btn btn-large btn-primary" data-test="artifact-submit-button" type="submit">'
+            . $GLOBALS['Language']->getText('global', 'btn_submit') . '</button>';
         $html .= '<button class="btn btn-large btn-primary dropdown-toggle" data-toggle="dropdown" data-test="artifact-submit-options"><span class="caret"></span></button>';
         $html .= '<ul class="dropdown-menu">';
         $html .= '<li><input type="submit" name="submit_and_continue" class="btn btn-link" value="' . $GLOBALS['Language']->getText('global', 'btn_submit_and_continue') . '" /></li>';

@@ -364,7 +364,9 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         $params['plugins'][] = array(
             'label' => $GLOBALS['Language']->getText('plugin_tracker', 'descriptor_name'),
-            'href'  => $this->getPluginPath() . '/config.php'
+            'href'  => $this->getPluginPath() . '/config.php',
+            'has_shortname' => true,
+            'shortname' => 'admin-tracker'
         );
     }
 

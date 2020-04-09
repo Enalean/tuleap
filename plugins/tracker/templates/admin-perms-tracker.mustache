@@ -22,7 +22,7 @@
                         {{/has_link}}
                     </td>
                     <td>
-                        <select name="{{permission_name}}">
+                        <select name="{{permission_name}}" data-test="{{ permission_name }}">
                             {{#permissions_list}}
                             <option value="{{value}}" {{selected}}>{{label}}</option>
                             {{/permissions_list}}
@@ -33,7 +33,7 @@
             </tbody>
         </table>
 
-        <input type="submit" name="update" value="{{submit_permissions}}" />
+        <input type="submit" name="update" value="{{submit_permissions}}" data-test="tracker-permission-submit"/>
     </div>
 </form>
 

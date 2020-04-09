@@ -1170,6 +1170,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                         $html .= '<td>';
                         $html .= '<a
                             class="direct-link-to-artifact"
+                            data-test="direct-link-to-artifact"
                             href="' . $url . '"
                             title="' . $GLOBALS['Language']->getText('plugin_tracker_include_report', 'show') . ' artifact #' . $row['id'] . '">';
                         $html .= '<i class="fa fa-edit"></i>';

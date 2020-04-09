@@ -29,7 +29,7 @@
                 type="radio"
                 class="tracker-creation-template-card-radio-button"
                 name="selected-option"
-                data-test="selected-option"
+                v-bind:data-test="`selected-option-${optionName}`"
                 v-on:change="setActiveOption(optionName)"
             />
             <slot name="content" v-bind:is-option-active="is_option_active"></slot>

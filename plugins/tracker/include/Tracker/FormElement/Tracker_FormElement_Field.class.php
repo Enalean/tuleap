@@ -468,7 +468,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     }
 
     /**
-     * @param Tracker_Artifact $artifact   the artifact
      * @param string           $html_value in html
      *
      * @return string html
@@ -482,11 +481,16 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             $required = $this->required ? ' <span class="highlight">*</span>' : '';
             $html .= '<div class="' . $this->getClassNames($additional_classes, $is_field_read_only) . '"
                 data-field-id="' . $this->id . '"
+                data-test="tracker-artifact-value-' . $this->getName() . '"
                 data-is-required="' . ($this->required ? 'true' : 'false') . '">';
 
             if (! $is_field_read_only && $this->userCanUpdate()) {
                 $title = $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_artifact', 'edit_field', array($this->getLabel())));
-                $html .= '<button type="button" title="' . $title . '" class="tracker_formelement_edit">' . $purifier->purify($this->getLabel())  . $required . '</button>';
+                $html .= '<button type="button" title="' . $title . '"
+                                class="tracker_formelement_edit"
+                                data-test="edit-field-' . $this->getName() . '">' .
+                    $purifier->purify($this->getLabel()) . $required .
+                    '</button>';
             }
 
             $html .= '<label id="tracker_artifact_' . $this->id . '" for="tracker_artifact_' . $this->id . '" title="' . $purifier->purify($this->description) . '" class="tracker_formelement_label">' .  $purifier->purify($this->getLabel())  . $required . '</label>';

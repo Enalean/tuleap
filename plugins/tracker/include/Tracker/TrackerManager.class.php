@@ -720,7 +720,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                 $html .= $GLOBALS['Language']->getText('plugin_tracker_index', 'no_accessible_trackers_msg');
             }
             if ($this->userCanCreateTracker($project->group_id, $user)) {
-                $html .= '<br /><a id="tracker_createnewlink" href="' . TRACKER_BASE_URL . '/' .
+                $html .= '<br /><a id="tracker_createnewlink"  data-test="new-tracker-creation" href="' . TRACKER_BASE_URL . '/' .
                     urlencode($project->getUnixNameLowerCase()) . '/new">';
                 $html .= $GLOBALS['HTML']->getImage('ic/add.png', ['alt' => 'add']) . ' ';
                 $html .= $GLOBALS['Language']->getText('plugin_tracker_index', 'create_new_tracker');

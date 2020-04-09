@@ -356,7 +356,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         if ($is_disabled) {
             $disabled = 'disabled="disabled"';
         }
-        $html  = '<a class="btn auto-compute" ' . $disabled . '><i class="fa fa-repeat fa-flip-horizontal"></i>';
+        $html  = '<a class="btn auto-compute" ' . $disabled . ' data-test="switch-to-autocompute">
+                    <i class="fa fa-repeat fa-flip-horizontal"></i>';
         $html .= $GLOBALS['Language']->getText('plugin_tracker_deprecation_field', 'title_autocompute');
         $html .= '</a>';
 
@@ -397,9 +398,10 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     {
         $purifier = Codendi_HTMLPurifier::instance();
         $html     = '<input type="text" class="field-computed"
+            data-test="' . $this->getName() . '"
             name="artifact[' . $purifier->purify($this->getId()) . '][' . self::FIELD_VALUE_MANUAL . ']"
             value="' . $purifier->purify($displayed_value) . '" />';
-        $html    .= '<input type="hidden"
+        $html     .= '<input type="hidden"
             name="artifact[' . $purifier->purify($this->getId()) . '][' . self::FIELD_VALUE_IS_AUTOCOMPUTED . ']"
             value="' . $purifier->purify((int) $is_autocomputed) . '" />';
 
@@ -446,7 +448,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             $value = $value . '<span class="artifact-timeframe-helper"> (' . $time_frame_helper->getEndDateArtifactHelperForReadOnlyView($user, $artifact) . ')</span>';
         }
 
-        $html = '<div class="auto-computed-label">' . $value . '</div>' .
+        $html = '<div class="auto-computed-label" data-test="computed-value">' . $value . '</div>' .
             '<div class="back-to-autocompute">' . $html_computed_complete_value . '</div>';
 
         return $html;

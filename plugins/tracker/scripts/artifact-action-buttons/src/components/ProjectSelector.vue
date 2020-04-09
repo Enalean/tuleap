@@ -25,6 +25,7 @@
         <select
             id="move-artifact-project-selector"
             name="move-artifact-project-selector"
+            data-test="move-artifact-project-selector"
             v-model="selected_project_id"
         >
             <option disabled="disabled" value="null" selected>

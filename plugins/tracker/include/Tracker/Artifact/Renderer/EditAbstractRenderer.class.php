@@ -65,7 +65,7 @@ abstract class Tracker_Artifact_EditAbstractRenderer extends Tracker_Artifact_Ar
         $artifact_id   = $html_purifier->purify($artifact->getId());
         $changeset_id  = $html_purifier->purify($artifact->getLastChangeset()->getId());
 
-        $html .= '<input type="hidden" id="artifact_informations" data-artifact-id="' . $artifact_id . '" data-changeset-id="' . $changeset_id . '">';
+        $html .= '<input type="hidden" id="artifact_informations" data-artifact-id="' . $artifact_id . '" data-changeset-id="' . $changeset_id . '" data-test="current-artifact-id" value="' . $artifact_id . '">';
 
         return $html;
     }

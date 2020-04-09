@@ -173,6 +173,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
         }
         $hp = Codendi_HTMLPurifier::instance();
         $html .= '<input type="text" class="user-mention"
+                         data-test="' . $this->getName() . '"
                          name="artifact[' . $this->id . ']"
                          ' . ($this->isRequired() ? 'required' : '') . '
                          size="' . $this->getProperty('size') . '"

@@ -53,6 +53,7 @@
                         v-on:click="moveDryRunArtifact()"
                         v-bind:disabled="has_no_selected_tracker || is_processing_move"
                         v-show="!has_processed_dry_run"
+                        data-test="move-artifact"
                     >
                         <i class="fa fa-share"></i>
                         <translate>Move artifact</translate>
@@ -63,6 +64,7 @@
                         v-on:click="moveArtifact()"
                         v-bind:disabled="is_processing_move"
                         v-show="has_processed_dry_run"
+                        data-test="confirm-move-artifact"
                     >
                         <i class="fa fa-check"></i>
                         <translate>Confirm</translate>
