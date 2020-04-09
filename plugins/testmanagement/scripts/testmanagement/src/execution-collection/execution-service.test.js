@@ -18,6 +18,7 @@
  */
 
 import _ from "lodash";
+import CKEDITOR from "ckeditor";
 import execution_collection_module from "./execution-collection.js";
 import angular from "angular";
 import "angular-mocks";
@@ -29,6 +30,10 @@ describe("ExecutionService", () => {
         wrapPromise,
         ExecutionRestService,
         SharedPropertiesService,
+        editor,
+        ckeditorInlineSpy,
+        setAttributeSpy,
+        ckeditor_field,
         ExecutionService;
 
     beforeEach(() => {
@@ -679,6 +684,19 @@ describe("ExecutionService", () => {
     });
 
     describe("viewTestExecution() -", function () {
+        beforeEach(() => {
+            editor = {
+                on: jest.fn(),
+                destroy: jest.fn(),
+                showNotification: jest.fn(),
+            };
+
+            ckeditorInlineSpy = jest.fn(() => editor);
+            setAttributeSpy = jest.spyOn(document, "getElementById");
+            ckeditor_field = document.createElement("ckeditor");
+            setAttributeSpy.mockReturnValue(ckeditor_field);
+            CKEDITOR.inline = ckeditorInlineSpy;
+        });
         it("Given that executions with no users on, when I user views a test, then there is user on", function () {
             var executions = {
                 4: {
@@ -705,6 +723,7 @@ describe("ExecutionService", () => {
             ExecutionService.executions = executions;
             ExecutionService.viewTestExecution(4, user);
 
+            expect(ckeditorInlineSpy).toHaveBeenCalled();
             expect(ExecutionService.executions[4].viewed_by).toEqual(results);
         });
 
@@ -744,6 +763,7 @@ describe("ExecutionService", () => {
             ExecutionService.executions = executions;
             ExecutionService.viewTestExecution(4, user_two);
 
+            expect(ckeditorInlineSpy).toHaveBeenCalled();
             expect(ExecutionService.executions[4].viewed_by).toEqual(results);
         });
 
@@ -781,6 +801,7 @@ describe("ExecutionService", () => {
             ExecutionService.executions = executions;
             ExecutionService.viewTestExecution(4, user_one_bis);
 
+            expect(ckeditorInlineSpy).toHaveBeenCalled();
             expect(ExecutionService.executions[4].viewed_by).toEqual(results);
         });
     });
@@ -1043,6 +1064,18 @@ describe("ExecutionService", () => {
     });
 
     describe("displayPresencesForAllExecutions() -", function () {
+        beforeEach(() => {
+            editor = {
+                on: jest.fn(),
+                destroy: jest.fn(),
+                showNotification: jest.fn(),
+            };
+            ckeditorInlineSpy = jest.fn(() => editor);
+            setAttributeSpy = jest.spyOn(document, "getElementById");
+            ckeditor_field = document.createElement("ckeditor");
+            setAttributeSpy.mockReturnValue(ckeditor_field);
+            CKEDITOR.inline = ckeditorInlineSpy;
+        });
         it("Given that executions, when I display all users, then there users are on the associate execution", function () {
             var user_one = {
                 id: "101",
@@ -1131,6 +1164,7 @@ describe("ExecutionService", () => {
             ExecutionService.presences_by_execution = presences;
             ExecutionService.displayPresencesForAllExecutions();
 
+            expect(ckeditorInlineSpy).toHaveBeenCalled();
             expect(ExecutionService.executions).toEqual(results);
         });
     });
