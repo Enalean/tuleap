@@ -116,7 +116,7 @@ final class OAuth2AccessTokenDAOTest extends TestCase
     protected function tearDown(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
-        $db->delete('plugin_oauth2_access_token', []);
+        $db->run('DELETE FROM plugin_oauth2_access_token');
     }
 
     public static function tearDownAfterClass(): void
