@@ -231,7 +231,7 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
         if ($can_file_be_rendered && ! $this->params['show_source']) {
             $content_interpretor = CommonMarkInterpreter::build(
                 \Codendi_HTMLPurifier::instance(),
-                new LinkToGitFileExtension(new LinkToGitFileBlobFinder($blob, $commit))
+                new LinkToGitFileExtension(new LinkToGitFileBlobFinder($blob->GetPath(), $commit))
             );
             $this->tpl->assign(
                 'rendered_file',

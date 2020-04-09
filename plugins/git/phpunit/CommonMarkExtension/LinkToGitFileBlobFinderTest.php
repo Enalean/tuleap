@@ -33,10 +33,6 @@ final class LinkToGitFileBlobFinderTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Blob
-     */
-    private $content_blob;
-    /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Commit
      */
     private $current_commit;
@@ -44,20 +40,13 @@ final class LinkToGitFileBlobFinderTest extends TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Project
      */
     private $project;
-    /**
-     * @var LinkToGitFileBlobFinder
-     */
-    private $blob_finder;
 
     protected function setUp(): void
     {
-        $this->content_blob   = \Mockery::mock(Blob::class);
         $this->current_commit = \Mockery::mock(Commit::class);
         $this->project        = \Mockery::mock(Project::class);
 
         $this->current_commit->shouldReceive('GetProject')->andReturn($this->project);
-
-        $this->blob_finder = new LinkToGitFileBlobFinder($this->content_blob, $this->current_commit);
     }
 
     /**
@@ -65,14 +54,15 @@ final class LinkToGitFileBlobFinderTest extends TestCase
      */
     public function testCanFindsExistingFile(string $readme_path, string $url, string $expected_path): void
     {
-        $this->content_blob->shouldReceive('GetPath')->andReturn($readme_path);
+        $blob_finder = new LinkToGitFileBlobFinder($readme_path, $this->current_commit);
+
         $this->current_commit->shouldReceive('PathToHash')->andReturn('blob_ref');
         $this->current_commit->shouldReceive('GetHash')->andReturn('commit_ref');
         $linked_blob = \Mockery::mock(Blob::class);
         $linked_blob->shouldReceive('GetHash')->andReturn('blob_ref');
         $this->project->shouldReceive('GetBlob')->andReturn($linked_blob);
 
-        $found_blob = $this->blob_finder->findBlob($url);
+        $found_blob = $blob_finder->findBlob($url);
         $this->assertEquals($expected_path, $found_blob->getPath());
         $this->assertEquals('blob_ref', $found_blob->getBlobRef());
         $this->assertEquals('commit_ref', $found_blob->getCommitRef());
@@ -94,9 +84,9 @@ final class LinkToGitFileBlobFinderTest extends TestCase
 
     public function testReturnsNullIfFileCannotBeFound(): void
     {
-        $this->content_blob->shouldReceive('GetPath')->andReturn('README.md');
+        $blob_finder = new LinkToGitFileBlobFinder('README.md', $this->current_commit);
         $this->current_commit->shouldReceive('PathToHash')->andReturn('');
         $this->project->shouldReceive('GetBlob')->andReturn(null);
-        $this->assertNull($this->blob_finder->findBlob('https://example.com'));
+        $this->assertNull($blob_finder->findBlob('https://example.com'));
     }
 }

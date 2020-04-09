@@ -22,31 +22,30 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\CommonMarkExtension;
 
-use Tuleap\Git\GitPHP\Blob;
 use Tuleap\Git\GitPHP\Commit;
 use Tuleap\URI\URIModifier;
 
 class LinkToGitFileBlobFinder
 {
     /**
-     * @var Blob
+     * @var string
      */
-    private $content_blob;
+    private $current_path;
     /**
      * @var Commit
      */
     private $current_commit;
 
-    public function __construct(Blob $content_blob, Commit $current_commit)
+    public function __construct(string $current_path, Commit $current_commit)
     {
-        $this->content_blob   = $content_blob;
+        $this->current_path   = $current_path;
         $this->current_commit = $current_commit;
     }
 
     public function findBlob(string $url): ?BlobPointedByURL
     {
         if (strpos($url, '/') !== 0) {
-            $current_dir_full_path = dirname('/' . $this->content_blob->GetPath());
+            $current_dir_full_path = dirname('/' . $this->current_path);
             $url = $current_dir_full_path . '/' . $url;
         }
         $url = URIModifier::removeDotSegments($url);
