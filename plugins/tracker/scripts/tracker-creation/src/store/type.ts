@@ -100,6 +100,16 @@ export interface ProjectList {
     label: string;
 }
 
+export interface TrackerList {
+    id: string;
+    name: string;
+}
+
+export interface ProjectTrackerPayload {
+    credentials: Credentials;
+    project_key: string;
+}
+
 export enum CreationOptions {
     NONE_YET = "none_yet",
     TRACKER_TEMPLATE = "tracker_template",

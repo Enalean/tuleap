@@ -36,7 +36,7 @@ class JiraConnectionException extends \Exception
         $this->i18n_message = $i18n_message;
     }
 
-    public static function creadentialsKeyIsMissing(): self
+    public static function credentialsKeyIsMissing(): self
     {
         return new self(
             "credentials key is mandatory",

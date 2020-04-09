@@ -157,6 +157,9 @@ msgstr ""
 msgid "Token"
 msgstr "Jeton"
 
+msgid "Tracker"
+msgstr "Outil de suivi"
+
 msgid "Tracker XML file"
 msgstr "Fichier XML"
 

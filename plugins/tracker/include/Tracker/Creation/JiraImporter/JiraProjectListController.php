@@ -25,14 +25,12 @@ namespace Tuleap\Tracker\Creation\JiraImporter;
 
 use HTTPRequest;
 use Project;
-use Rule_Regexp;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Tracker\Creation\TrackerCreationPermissionChecker;
-use Valid_LocalURI;
 
-class JiraTrackerListController implements DispatchableWithRequest, DispatchableWithProject
+class JiraProjectListController implements DispatchableWithRequest, DispatchableWithProject
 {
     /**
      * @var \ProjectManager
@@ -46,15 +44,21 @@ class JiraTrackerListController implements DispatchableWithRequest, Dispatchable
      * @var JiraProjectBuilder
      */
     private $jira_project_builder;
+    /**
+     * @var ClientWrapperBuilder
+     */
+    private $wrapper_builder;
 
     public function __construct(
         \ProjectManager $project_manager,
         TrackerCreationPermissionChecker $permission_checker,
-        JiraProjectBuilder $jira_project_builder
+        JiraProjectBuilder $jira_project_builder,
+        ClientWrapperBuilder $wrapper_builder
     ) {
         $this->project_manager      = $project_manager;
         $this->permission_checker   = $permission_checker;
         $this->jira_project_builder = $jira_project_builder;
+        $this->wrapper_builder      = $wrapper_builder;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
@@ -63,31 +67,8 @@ class JiraTrackerListController implements DispatchableWithRequest, Dispatchable
         $user    = $request->getCurrentUser();
         $this->permission_checker->checkANewTrackerCanBeCreated($project, $user);
 
-        $body = $request->getJsonDecodedBody();
-
         try {
-            if (! isset($body->credentials)) {
-                throw JiraConnectionException::creadentialsKeyIsMissing();
-            }
-
-            if (
-                ! isset($body->credentials->server_url)
-                || ! isset($body->credentials->user_email)
-                || ! isset($body->credentials->token)
-            ) {
-                throw JiraConnectionException::credentialsValuesAreMissing();
-            }
-            $jira_server = $body->credentials->server_url;
-            $jira_user   = $body->credentials->user_email;
-            $jira_token  = $body->credentials->token;
-
-            $valid_http = new Rule_Regexp(Valid_LocalURI::URI_REGEXP);
-            if (!$valid_http->isValid($jira_server)) {
-                throw JiraConnectionException::urlIsInvalid();
-            }
-
-            $wrapper = $this->buildWrapper($jira_server, $jira_user, $jira_token);
-
+            $wrapper = $this->wrapper_builder->buildFromRequest($request);
             $projects = $this->jira_project_builder->build($wrapper);
             $layout->sendJSON($projects);
         } catch (JiraConnectionException $exception) {
@@ -103,13 +84,5 @@ class JiraTrackerListController implements DispatchableWithRequest, Dispatchable
     public function getProject(array $variables): Project
     {
         return $this->project_manager->getValidProjectByShortNameOrId($variables['project_name']);
-    }
-
-    /**
-     * for testing purpose
-     */
-    protected function buildWrapper(string $jira_server, string $jira_user, string $jira_token): ClientWrapper
-    {
-        return ClientWrapper::build($jira_server, $jira_user, $jira_token);
     }
 }
