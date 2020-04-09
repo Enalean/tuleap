@@ -34,6 +34,18 @@ class OpenIDConnectSigningKeyDAO extends DataAccessObject
         );
     }
 
+    public function searchPublicKey(): ?string
+    {
+        $row = $this->getDB()->row('SELECT public_key FROM plugin_oauth2_oidc_signing_key');
+
+
+        if ($row === null) {
+            return null;
+        }
+
+        return $row['public_key'];
+    }
+
     public function searchEncryptedPrivateKey(): ?string
     {
         $row = $this->getDB()->row('SELECT private_key FROM plugin_oauth2_oidc_signing_key');

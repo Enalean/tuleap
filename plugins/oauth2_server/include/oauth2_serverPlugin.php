@@ -31,6 +31,7 @@ use Tuleap\Cryptography\KeyFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Http\Server\Authentication\BasicAuthLoginExtractor;
 use Tuleap\Http\Server\DisableCacheMiddleware;
 use Tuleap\Http\Server\RejectNonHTTPSRequestMiddleware;
@@ -65,6 +66,7 @@ use Tuleap\OAuth2Server\OpenIDConnect\IDToken\JWTBuilderFactory;
 use Tuleap\OAuth2Server\OpenIDConnect\IDToken\OpenIDConnectIDTokenCreator;
 use Tuleap\OAuth2Server\OpenIDConnect\IDToken\OpenIDConnectSigningKeyDAO;
 use Tuleap\OAuth2Server\OpenIDConnect\IDToken\OpenIDConnectSigningKeyFactory;
+use Tuleap\OAuth2Server\OpenIDConnect\JWK\JWKSDocumentEndpointController;
 use Tuleap\OAuth2Server\OpenIDConnect\Scope\OAuth2SignInScope;
 use Tuleap\OAuth2Server\ProjectAdmin\ListAppsController;
 use Tuleap\OAuth2Server\RefreshToken\OAuth2OfflineAccessScope;
@@ -185,6 +187,7 @@ final class oauth2_serverPlugin extends Plugin
                 $r->post('/token', $this->getRouteHandler('routeAccessTokenCreation'));
                 $r->post('/token/revoke', $this->getRouteHandler('routeTokenRevocation'));
                 $r->addRoute(['GET', 'POST'], '/userinfo', $this->getRouteHandler('routeUserInfoEndpoint'));
+                $r->get('/jwks', $this->getRouteHandler('routeJWKSDocument'));
             }
         );
     }
@@ -504,6 +507,19 @@ final class oauth2_serverPlugin extends Plugin
                     $password_handler
                 )
             )
+        );
+    }
+
+    public function routeJWKSDocument(): DispatchableWithRequest
+    {
+        $response_factory = HTTPFactoryBuilder::responseFactory();
+        $stream_factory   = HTTPFactoryBuilder::streamFactory();
+        return new JWKSDocumentEndpointController(
+            new OpenIDConnectSigningKeyFactory(new KeyFactory(), new OpenIDConnectSigningKeyDAO()),
+            new JSONResponseBuilder($response_factory, $stream_factory),
+            new SapiEmitter(),
+            new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
+            new RejectNonHTTPSRequestMiddleware($response_factory, $stream_factory),
         );
     }
 

@@ -33,6 +33,18 @@ final class OpenIDConnectSigningKeyFactoryTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
+    private const SIGNING_PUBLIC_KEY  = <<<EOT
+        -----BEGIN PUBLIC KEY-----
+        MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApVp45DC1lniS5l9yiR81
+        OM3BCESDLyZYX3pXS32oJz0eOIqgA4mnqGNvupo/ARJnu1W/KVNNqxBNGno1oNLg
+        V3GkHULBV+D4NDaX4064I0k1dk0HZBd8OG8QB0dwFoNFZ19SNrsEyq4xFn3CIysl
+        lfFE6GVQVht84/etmvO5+p4Dj6kUM4FO46jBXQBxSQs7ErE22m67CViu9ApDjZ1W
+        9e7mHItPZfw0ldH6Y6+ZXfz8SBs/lblm/1BST1C7l/5vQtjStgHmiGlVL6CRIzyx
+        DCJKYKP1r0FrwUEnMJEU1h+MyMSKPP9gzln8+icbhSvQF/eX6oZCfl+ibrC/nRZf
+        2QIDAQAB
+        -----END PUBLIC KEY-----
+        EOT;
+
     private const SIGNING_PRIVATE_KEY = <<<EOT
         -----BEGIN PRIVATE KEY-----
         MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQClWnjkMLWWeJLm
@@ -87,7 +99,7 @@ final class OpenIDConnectSigningKeyFactoryTest extends TestCase
         $this->signing_key_factory = new OpenIDConnectSigningKeyFactory($encryption_key_factory, $this->dao);
     }
 
-    public function testGetExistingSigningKeyFromTheDB(): void
+    public function testGetExistingSigningPrivateKeyFromTheDB(): void
     {
         $this->dao->shouldReceive('searchEncryptedPrivateKey')->once()->andReturn(
             SymmetricCrypto::encrypt(new ConcealedString(self::SIGNING_PRIVATE_KEY), $this->encryption_key)
@@ -98,12 +110,30 @@ final class OpenIDConnectSigningKeyFactoryTest extends TestCase
         $this->assertEquals(self::SIGNING_PRIVATE_KEY, $key->getContent());
     }
 
-    public function testCreateNewSigningKeyWhenNoneAlreadyExist(): void
+    public function testGetExistingSigningPublicKeyFromTheDB(): void
+    {
+        $this->dao->shouldReceive('searchPublicKey')->once()->andReturn(self::SIGNING_PUBLIC_KEY);
+
+        $public_key = $this->signing_key_factory->getPublicKey();
+
+        $this->assertEquals(self::SIGNING_PUBLIC_KEY, $public_key);
+    }
+
+    public function testCreateNewSigningKeyWhenNoneAlreadyExistBeforeReturningPrivateKey(): void
     {
         $this->dao->shouldReceive('searchEncryptedPrivateKey')->once()->andReturn(null);
         $this->dao->shouldReceive('save')->once();
 
         $key = $this->signing_key_factory->getKey();
         $this->assertNotEmpty($key->getContent());
+    }
+
+    public function testCreateNewSigningKeyWhenNoneAlreadyExistBeforeReturningPublicKey(): void
+    {
+        $this->dao->shouldReceive('searchPublicKey')->once()->andReturn(null);
+        $this->dao->shouldReceive('save')->once();
+
+        $public_key = $this->signing_key_factory->getPublicKey();
+        $this->assertNotEmpty($public_key);
     }
 }
