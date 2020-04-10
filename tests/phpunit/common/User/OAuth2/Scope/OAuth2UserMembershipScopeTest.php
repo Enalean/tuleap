@@ -22,20 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\User\OAuth2\Scope;
 
-use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
-use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
+use Tuleap\Authentication\Scope\AuthenticationScopeTestCase;
 
-final class CoreOAuth2ScopeBuilderFactory
+final class OAuth2UserMembershipScopeTest extends AuthenticationScopeTestCase
 {
-    private function __construct()
+    public function getAuthenticationScopeClassname(): string
     {
-    }
-
-    public static function buildCoreOAuth2ScopeBuilder(): AuthenticationScopeBuilder
-    {
-        return new AuthenticationScopeBuilderFromClassNames(
-            OAuth2ProjectReadScope::class,
-            OAuth2UserMembershipScope::class,
-        );
+        return OAuth2UserMembershipScope::class;
     }
 }
