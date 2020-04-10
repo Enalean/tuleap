@@ -281,7 +281,7 @@ class UserManager
             $required_scope
         );
 
-        return $this->event_dispatcher->dispatch($event)->getUser();
+        return $this->event_dispatcher->dispatch($event)->getGrantedAuthorization()->getUser();
     }
 
     /**
