@@ -116,16 +116,7 @@ class UserResource extends AuthenticatedResource
     {
         $this->checkAccess();
 
-        $user_id = null;
-        if ($id === self::SELF_ID) {
-            $user_id = (int) $this->user_manager->getCurrentUser()->getId();
-        } elseif (ctype_digit($id)) {
-            $user_id = (int) $id;
-        }
-
-        if ($user_id === null) {
-            throw new RestException(400, 'Provided User Id is not well formed.');
-        }
+        $user_id = $this->getUserIDFromIDOrSelf($id);
 
         $user                = $this->getUserById($user_id);
         $user_representation = ($this->is_authenticated) ? new UserRepresentation() : new MinimalUserRepresentation();
@@ -245,6 +236,12 @@ class UserResource extends AuthenticatedResource
     /**
      * Get the list of user groups the given user is member of
      *
+     * The user ID can be either:
+     * <ul>
+     *   <li>an integer value to get this specific user information</li>
+     *   <li>the "self" value to get our own user information</li>
+     * </ul>
+     *
      * This list of groups is displayed as an array of string:
      * <pre>
      * [
@@ -259,7 +256,7 @@ class UserResource extends AuthenticatedResource
      * @url GET {id}/membership
      * @access protected
      *
-     * @param int $id Id of the desired user
+     * @param string $id Id of the desired user
      *
      * @throws RestException 400
      * @throws RestException 403
@@ -271,12 +268,14 @@ class UserResource extends AuthenticatedResource
     {
         $this->checkAccess();
 
-        $watchee = $this->getUserById($id);
+        $user_id = $this->getUserIDFromIDOrSelf($id);
+
+        $watchee = $this->getUserById($user_id);
         $watcher = $this->user_manager->getCurrentUser();
         if ($this->checkUserCanSeeOtherUser($watcher, $watchee)) {
             return $this->ugroup_literalizer->getUserGroupsForUser($watchee);
         }
-        throw new RestException(403, "Cannot see other's membreship");
+        throw new RestException(403, "Cannot see other's membership");
     }
 
     /**
@@ -679,5 +678,25 @@ class UserResource extends AuthenticatedResource
         }
 
         return $access_key_representations;
+    }
+
+
+    /**
+     * @throws RestException 400
+     */
+    private function getUserIDFromIDOrSelf(string $id): int
+    {
+        $user_id = null;
+        if ($id === self::SELF_ID) {
+            $user_id = (int) $this->user_manager->getCurrentUser()->getId();
+        } elseif (ctype_digit($id)) {
+            $user_id = (int) $id;
+        }
+
+        if ($user_id === null) {
+            throw new RestException(400, 'Provided User Id is not well formed.');
+        }
+
+        return $user_id;
     }
 }
