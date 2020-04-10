@@ -46,10 +46,14 @@ import {
     Tracker,
     ProjectWithTrackers,
     ProjectTemplate,
+    JiraImportData,
 } from "../../../../store/type";
 
 @Component
 export default class FieldChosenTemplate extends Vue {
+    @State
+    readonly from_jira_data!: JiraImportData;
+
     @State
     readonly tracker_to_be_created!: TrackerToBeCreatedMandatoryData;
 
@@ -78,6 +82,9 @@ export default class FieldChosenTemplate extends Vue {
     readonly is_created_from_default_template!: boolean;
 
     @Getter
+    readonly is_created_from_jira!: boolean;
+
+    @Getter
     readonly is_a_duplication_of_a_tracker_from_another_project!: boolean;
 
     private selected_template_name = "";
@@ -96,6 +103,12 @@ export default class FieldChosenTemplate extends Vue {
         } else if (this.is_a_duplication_of_a_tracker_from_another_project) {
             this.selected_template_name = this.selected_project_tracker_template.name;
             this.selected_template_project_name = this.selected_project.name;
+        } else if (this.is_created_from_jira) {
+            if (!this.from_jira_data.tracker || !this.from_jira_data.project) {
+                throw new Error("Jira project or tracker not found in store!");
+            }
+            this.selected_template_name = this.from_jira_data.tracker.name;
+            this.selected_template_project_name = this.from_jira_data.project.label;
         }
     }
 }

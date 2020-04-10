@@ -135,8 +135,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         from_jira_data: {
             credentials: null,
             project: null,
-            tracker_name: null,
+            tracker: null,
             project_list: null,
+            tracker_list: null,
         },
         display_jira_importer: Boolean(display_jira_importer),
         project_unix_name,

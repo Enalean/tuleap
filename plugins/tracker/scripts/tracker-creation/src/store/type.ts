@@ -84,9 +84,10 @@ export interface DataForColorPicker {
 
 export interface JiraImportData {
     credentials: Credentials | null;
-    project: string | null;
-    tracker_name: string | null;
+    project: ProjectList | null;
+    tracker: TrackerList | null;
     project_list: ProjectList[] | null;
+    tracker_list: TrackerList[] | null;
 }
 
 export interface Credentials {

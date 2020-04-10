@@ -32,7 +32,7 @@ exports[`TrackerFromJiraProject renders the component 1`] = `
        
       <option
         data-test="project-TO"
-        value="TO"
+        value="{\\"id\\":\\"TO\\",\\"label\\":\\"toto\\"}"
       >
         
                 toto
@@ -40,7 +40,7 @@ exports[`TrackerFromJiraProject renders the component 1`] = `
       </option>
       <option
         data-test="project-TU"
-        value="TU"
+        value="{\\"id\\":\\"TU\\",\\"label\\":\\"tutu\\"}"
       >
         
                 tutu
@@ -49,6 +49,38 @@ exports[`TrackerFromJiraProject renders the component 1`] = `
     </select>
   </div>
    
-  <!---->
+  <div
+    class="tlp-form-element"
+  >
+    <label
+      class="tlp-label"
+      for="tracker_name"
+    >
+      <!---->
+       
+      <translate-stub
+        tag="span"
+      >
+        Tracker
+      </translate-stub>
+    </label>
+     
+    <select
+      class="tlp-select"
+      data-test="tracker-name"
+      id="tracker_name"
+      name="tracker_name"
+    >
+      <option
+        data-current-language="en_US"
+        data-msgid="Choose a tracker..."
+        selected="selected"
+        value=""
+      >
+        Choose a tracker...
+      </option>
+       
+    </select>
+  </div>
 </div>
 `;

@@ -20,9 +20,12 @@
 import * as getters from "./getters";
 import {
     CreationOptions,
+    JiraImportData,
+    ProjectList,
     ProjectTemplate,
     State,
     Tracker,
+    TrackerList,
     TrackerToBeCreatedMandatoryData,
 } from "./type";
 
@@ -146,6 +149,21 @@ describe("getters", () => {
                 selected_project_tracker_template: null,
             } as State;
 
+            expect(getters.is_ready_for_step_2(state)).toBe(true);
+        });
+
+        it("Is ready if when a jira project and a jira tracker are selected", () => {
+            const state: State = {
+                active_option: CreationOptions.FROM_JIRA,
+                from_jira_data: {
+                    project: {
+                        id: "IE",
+                    } as ProjectList,
+                    tracker: {
+                        id: "IE",
+                    } as TrackerList,
+                } as JiraImportData,
+            } as State;
             expect(getters.is_ready_for_step_2(state)).toBe(true);
         });
     });

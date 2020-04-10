@@ -21,7 +21,13 @@ import FieldChosenTemplate from "./FieldChosenTemplate.vue";
 import { shallowMount, Wrapper } from "@vue/test-utils";
 import { createStoreMock } from "../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import { createTrackerCreationLocalVue } from "../../../../helpers/local-vue-for-tests";
-import { ProjectTemplate, State } from "../../../../store/type";
+import {
+    JiraImportData,
+    ProjectList,
+    ProjectTemplate,
+    State,
+    TrackerList,
+} from "../../../../store/type";
 
 describe("FieldChosenTemplate", () => {
     let state: State;
@@ -33,7 +39,8 @@ describe("FieldChosenTemplate", () => {
         is_created_from_empty = false,
         is_a_duplication_of_a_tracker_from_another_project = false,
         project_of_selected_tracker_template: ProjectTemplate | null = null,
-        is_created_from_default_template = false
+        is_created_from_default_template = false,
+        is_created_from_jira = false
     ): Promise<Wrapper<FieldChosenTemplate>> {
         return shallowMount(FieldChosenTemplate, {
             mocks: {
@@ -46,6 +53,7 @@ describe("FieldChosenTemplate", () => {
                         is_a_duplication_of_a_tracker_from_another_project,
                         project_of_selected_tracker_template,
                         is_created_from_default_template,
+                        is_created_from_jira,
                     },
                 }),
             },
@@ -71,6 +79,14 @@ describe("FieldChosenTemplate", () => {
                 id: "2",
                 name: "Tracker from another project",
             },
+            from_jira_data: {
+                project: {
+                    label: "My chosen project",
+                } as ProjectList,
+                tracker: {
+                    name: "A Jira tracker",
+                } as TrackerList,
+            } as JiraImportData,
         } as State;
     });
 
@@ -126,6 +142,15 @@ describe("FieldChosenTemplate", () => {
 
             expect(wrapper.find("[data-test=project-of-chosen-template]").exists()).toBe(false);
             expect(wrapper.get("[data-test=chosen-template]").text()).toEqual("Empty");
+        });
+
+        it("is an import from jira", async () => {
+            const wrapper = await getWrapper(state, false, false, false, false, null, false, true);
+
+            expect(wrapper.get("[data-test=project-of-chosen-template]").text()).toEqual(
+                "My chosen project"
+            );
+            expect(wrapper.get("[data-test=chosen-template]").text()).toEqual("A Jira tracker");
         });
 
         it("is a duplication of a tracker from another project", async () => {

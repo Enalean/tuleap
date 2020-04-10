@@ -24,6 +24,7 @@ import {
     ProjectWithTrackers,
     State,
     Tracker,
+    TrackerList,
     TrackerToBeCreatedMandatoryData,
 } from "./type";
 import { extractNameAndShortnameFromXmlFile } from "../helpers/xml-data-extractor";
@@ -167,4 +168,16 @@ export function setJiraCredentials(state: State, credentials: Credentials): void
 
 export function setProjectList(state: State, project_list: ProjectList[]): void {
     state.from_jira_data.project_list = project_list;
+}
+
+export function setTrackerList(state: State, tracker_list: TrackerList[]): void {
+    state.from_jira_data.tracker_list = tracker_list;
+}
+
+export function setProject(state: State, project: ProjectList): void {
+    state.from_jira_data.project = project;
+}
+
+export function setTracker(state: State, tracker: TrackerList): void {
+    state.from_jira_data.tracker = tracker;
 }
