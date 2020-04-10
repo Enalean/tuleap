@@ -135,9 +135,9 @@ describe("Report expert queries", () => {
             checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1"]);
         });
 
-        it("bug1, bug2 & bug3 for last_update_date between(now() - 1w, now())", () => {
+        it("nothing for last_update_date between(now() - 1w, now())", () => {
             findArtifactsWithExpertQuery("last_update_date between(now() - 1w, now())");
-            checkOnlyExpectedArtifactsAreListed(summary_column_id, ["bug1", "bug2", "bug3"]);
+            checkNoArtifactsAreListed();
         });
 
         it("bug1, bug2 & bug3 for submitted_by = MYSELF()", () => {
