@@ -29,13 +29,6 @@ setup_lhs() {
 setup_tuleap() {
     echo "Setup Tuleap"
 
-    cat /usr/share/tuleap/src/etc/database.inc.dist | \
-        sed \
-         -e "s/localhost/$DB_HOST/" \
-         -e "s/%sys_dbname%/tuleap/" \
-         -e "s/%sys_dbuser%/tuleapadm/" \
-         -e "s/%sys_dbpasswd%/welcome0/" > /etc/tuleap/conf/database.inc
-
     cat /usr/share/tuleap/src/etc/local.inc.dist | \
     sed \
     -e "s#/var/lib/tuleap/ftp/codendi#/var/lib/tuleap/ftp/tuleap#g" \

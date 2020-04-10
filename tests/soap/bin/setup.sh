@@ -14,14 +14,6 @@ setup_tuleap() {
     chmod g+w /var/log/tuleap/codendi_syslog
     chown -R codendiadm:codendiadm /var/tmp/tuleap_cache /etc/tuleap/plugins
 
-    cat /usr/share/tuleap/src/etc/database.inc.dist | \
-        sed \
-         -e "s/localhost/$DB_HOST/" \
-	     -e "s/%sys_dbname%/tuleap/" \
-	     -e "s/%sys_dbuser%/tuleapadm/" \
-	     -e "s/%sys_dbpasswd%/welcome0/" > /etc/tuleap/conf/database.inc
-     chgrp runner /etc/tuleap/conf/database.inc
-
     cat /usr/share/tuleap/src/etc/local.inc.dist | \
 	sed \
 	-e "s#/var/lib/tuleap/ftp/codendi#/var/lib/tuleap/ftp/tuleap#g" \
@@ -105,6 +97,7 @@ seed_data() {
 }
 
 setup_tuleap
+setup_database
 case "$PHP_FPM" in
     '/opt/remi/php73/root/usr/sbin/php-fpm')
     echo "Deploy PHP FPM 7.3"
@@ -117,5 +110,4 @@ case "$PHP_FPM" in
 esac
 "$PHP_FPM" --daemonize
 nginx
-setup_database
 seed_data
