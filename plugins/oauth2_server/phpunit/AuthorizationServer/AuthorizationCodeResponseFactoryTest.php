@@ -108,7 +108,7 @@ final class AuthorizationCodeResponseFactoryTest extends TestCase
     public function testCreateErrorResponseRedirectsWithErrorCode(): void
     {
         $response = $this->authorization_code_response_factory->createErrorResponse(
-            AuthorizationEndpointGetController::ERROR_CODE_INVALID_REQUEST,
+            AuthorizationEndpointController::ERROR_CODE_INVALID_REQUEST,
             'https://example.com',
             null
         );
@@ -121,7 +121,7 @@ final class AuthorizationCodeResponseFactoryTest extends TestCase
     public function testCreateErrorResponseRedirectsWithStateWhenNotNull(): void
     {
         $response = $this->authorization_code_response_factory->createErrorResponse(
-            AuthorizationEndpointGetController::ERROR_CODE_INVALID_REQUEST,
+            AuthorizationEndpointController::ERROR_CODE_INVALID_REQUEST,
             'https://example.com',
             '9EEbiaQfNRQXusHSe'
         );

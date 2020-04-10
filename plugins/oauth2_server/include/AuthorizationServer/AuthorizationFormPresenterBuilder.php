@@ -45,7 +45,7 @@ class AuthorizationFormPresenterBuilder
         $deny_authorization_uri = $this->client_uri_redirect_builder->buildErrorURI(
             $form_data->getRedirectUri(),
             $form_data->getState(),
-            AuthorizationEndpointGetController::ERROR_CODE_ACCESS_DENIED
+            AuthorizationEndpointController::ERROR_CODE_ACCESS_DENIED
         );
         return new AuthorizationFormPresenter(
             $form_data,

@@ -46,7 +46,7 @@ use Tuleap\OAuth2Server\App\LastCreatedOAuth2AppStore;
 use Tuleap\OAuth2Server\App\OAuth2AppCredentialVerifier;
 use Tuleap\OAuth2Server\App\OAuth2AppRemover;
 use Tuleap\OAuth2Server\App\PrefixOAuth2ClientSecret;
-use Tuleap\OAuth2Server\AuthorizationServer\AuthorizationEndpointGetController;
+use Tuleap\OAuth2Server\AuthorizationServer\AuthorizationEndpointController;
 use Tuleap\OAuth2Server\AuthorizationServer\PKCE\PKCEInformationExtractor;
 use Tuleap\OAuth2Server\AuthorizationServer\RedirectURIBuilder;
 use Tuleap\OAuth2Server\Grant\AccessTokenGrantController;
@@ -177,13 +177,14 @@ final class oauth2_serverPlugin extends Plugin
         $route_collector->addGroup(
             '/oauth2',
             function (FastRoute\RouteCollector $r): void {
-                $r->get(
+                $r->addRoute(
+                    ['GET', 'POST'],
                     '/authorize',
-                    $this->getRouteHandler('routeAuthorizationEndpointGet')
+                    $this->getRouteHandler('routeAuthorizationEndpoint')
                 );
                 $r->post(
-                    '/authorize',
-                    $this->getRouteHandler('routeAuthorizationEndpointPost')
+                    '/authorize-process-consent',
+                    $this->getRouteHandler('routeAuthorizationProcessConsentEndpoint')
                 );
                 $r->post('/token', $this->getRouteHandler('routeAccessTokenCreation'));
                 $r->post('/token/revoke', $this->getRouteHandler('routeTokenRevocation'));
@@ -250,13 +251,13 @@ final class oauth2_serverPlugin extends Plugin
         );
     }
 
-    public function routeAuthorizationEndpointGet(): DispatchableWithRequest
+    public function routeAuthorizationEndpoint(): DispatchableWithRequest
     {
         $response_factory = HTTPFactoryBuilder::responseFactory();
         $stream_factory = HTTPFactoryBuilder::streamFactory();
         $redirect_uri_builder = new RedirectURIBuilder(HTTPFactoryBuilder::URIFactory());
         $scope_builder = $this->buildScopeBuilder();
-        return new AuthorizationEndpointGetController(
+        return new AuthorizationEndpointController(
             new \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationFormRenderer(
                 $response_factory,
                 $stream_factory,
@@ -287,10 +288,10 @@ final class oauth2_serverPlugin extends Plugin
         );
     }
 
-    public function routeAuthorizationEndpointPost(): DispatchableWithRequest
+    public function routeAuthorizationProcessConsentEndpoint(): DispatchableWithRequest
     {
         $response_factory = HTTPFactoryBuilder::responseFactory();
-        return new \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationEndpointPostController(
+        return new \Tuleap\OAuth2Server\AuthorizationServer\AuthorizationEndpointProcessConsentController(
             \UserManager::instance(),
             new AppFactory(new AppDao(), ProjectManager::instance()),
             $this->buildScopeBuilder(),
@@ -305,7 +306,7 @@ final class oauth2_serverPlugin extends Plugin
                 new RedirectURIBuilder(HTTPFactoryBuilder::URIFactory()),
                 new \URLRedirect(\EventManager::instance())
             ),
-            new \CSRFSynchronizerToken(AuthorizationEndpointGetController::CSRF_TOKEN),
+            new \CSRFSynchronizerToken(AuthorizationEndpointController::CSRF_TOKEN),
             new SapiEmitter(),
             new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
             new RejectNonHTTPSRequestMiddleware($response_factory, HTTPFactoryBuilder::streamFactory()),

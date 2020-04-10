@@ -93,7 +93,7 @@ class AuthorizationCodeResponseFactory
 
     /**
      * See https://tools.ietf.org/html/rfc6749#section-4.1.2.1
-     * @psalm-param AuthorizationEndpointGetController::ERROR_CODE_* $error_code
+     * @psalm-param AuthorizationEndpointController::ERROR_CODE_* $error_code
      */
     public function createErrorResponse(string $error_code, string $redirect_uri, ?string $state): ResponseInterface
     {

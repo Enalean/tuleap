@@ -40,7 +40,7 @@ use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\ForbiddenException;
 
-final class AuthorizationEndpointGetController extends DispatchablePSR15Compatible implements DispatchableWithBurningParrot
+final class AuthorizationEndpointController extends DispatchablePSR15Compatible implements DispatchableWithBurningParrot
 {
     // see https://tools.ietf.org/html/rfc6749#section-4.1.1
     private const RESPONSE_TYPE_PARAMETER = 'response_type';
@@ -118,8 +118,15 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
             return $this->response_factory->createRedirectToLoginResponse($request);
         }
 
-        $query_params = $request->getQueryParams();
-        $client_id    = (string) ($query_params[self::CLIENT_ID_PARAMETER] ?? '');
+        if ($request->getMethod() === 'POST') {
+            $request_params = $request->getParsedBody();
+            if (! \is_array($request_params)) {
+                throw new ForbiddenException();
+            }
+        } else {
+            $request_params = $request->getQueryParams();
+        }
+        $client_id = (string) ($request_params[self::CLIENT_ID_PARAMETER] ?? '');
         try {
             $client_identifier = ClientIdentifier::fromClientId($client_id);
             $client_app        = $this->app_factory->getAppMatchingClientId($client_identifier);
@@ -127,13 +134,13 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
             throw new ForbiddenException();
         }
 
-        $redirect_uri = (string) ($query_params[self::REDIRECT_URI_PARAMETER] ?? '');
+        $redirect_uri = (string) ($request_params[self::REDIRECT_URI_PARAMETER] ?? '');
         if ($redirect_uri !== $client_app->getRedirectEndpoint()) {
             throw new ForbiddenException();
         }
 
-        $state_value = $query_params[self::STATE_PARAMETER] ?? null;
-        if (! isset($query_params[self::RESPONSE_TYPE_PARAMETER]) || $query_params[self::RESPONSE_TYPE_PARAMETER] !== self::CODE_PARAMETER) {
+        $state_value = $request_params[self::STATE_PARAMETER] ?? null;
+        if (! isset($request_params[self::RESPONSE_TYPE_PARAMETER]) || $request_params[self::RESPONSE_TYPE_PARAMETER] !== self::CODE_PARAMETER) {
             return $this->response_factory->createErrorResponse(
                 self::ERROR_CODE_INVALID_REQUEST,
                 $redirect_uri,
@@ -141,7 +148,7 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
             );
         }
 
-        if (! isset($query_params[self::SCOPE_PARAMETER])) {
+        if (! isset($request_params[self::SCOPE_PARAMETER])) {
             return $this->response_factory->createErrorResponse(
                 self::ERROR_CODE_INVALID_SCOPE,
                 $redirect_uri,
@@ -149,7 +156,7 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
             );
         }
         try {
-            $scopes = $this->scope_extractor->extractScopes((string) $query_params[self::SCOPE_PARAMETER]);
+            $scopes = $this->scope_extractor->extractScopes((string) $request_params[self::SCOPE_PARAMETER]);
         } catch (InvalidOAuth2ScopeException $e) {
             return $this->response_factory->createErrorResponse(
                 self::ERROR_CODE_INVALID_SCOPE,
@@ -159,7 +166,7 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
         }
 
         try {
-            $code_challenge = $this->pkce_information_extractor->extractCodeChallenge($client_app, $query_params);
+            $code_challenge = $this->pkce_information_extractor->extractCodeChallenge($client_app, $request_params);
         } catch (OAuth2PKCEInformationExtractionException $exception) {
             return $this->response_factory->createErrorResponse(
                 self::ERROR_CODE_INVALID_REQUEST,
@@ -168,7 +175,7 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
             );
         }
 
-        $oidc_nonce = $query_params[self::NONCE_PARAMETER] ?? null;
+        $oidc_nonce = $request_params[self::NONCE_PARAMETER] ?? null;
 
         if ($this->authorization_comparator->areRequestedScopesAlreadyGranted($user, $client_app, $scopes)) {
             return $this->response_factory->createSuccessfulResponse(

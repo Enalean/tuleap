@@ -37,7 +37,7 @@ use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
-final class AuthorizationEndpointPostController extends DispatchablePSR15Compatible
+final class AuthorizationEndpointProcessConsentController extends DispatchablePSR15Compatible
 {
     // We can name those however we want, they are not constrained by the spec.
     private const REDIRECT_URI        = 'redirect_uri';
