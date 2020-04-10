@@ -20,6 +20,8 @@
 
 use FastRoute\RouteCollector;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
+use Tuleap\AgileDashboard\REST\v1\AdditionalPanesForMilestoneEvent;
+use Tuleap\AgileDashboard\REST\v1\PaneInfoRepresentation;
 use Tuleap\Event\Events\ImportValidateChangesetExternalField;
 use Tuleap\Event\Events\ImportValidateExternalFields;
 use Tuleap\layout\HomePage\StatisticsCollectionCollector;
@@ -29,6 +31,8 @@ use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\TestManagement\Administration\StepFieldUsageDetector;
 use Tuleap\TestManagement\Administration\TrackerChecker;
+use Tuleap\TestManagement\AgileDashboardPaneInfo;
+use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\Dao;
 use Tuleap\TestManagement\FirstConfigCreator;
@@ -64,9 +68,6 @@ use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForT
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\CheckPostActionsForTracker;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
-use Tuleap\AgileDashboard\REST\v1\PaneInfoRepresentation;
-use Tuleap\AgileDashboard\REST\v1\AdditionalPanesForMilestoneEvent;
-use Tuleap\TestManagement\AgileDashboardPaneInfo;
 use Tuleap\Tracker\XML\Exporter\ChangesetValue\GetExternalExporter;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -481,8 +482,14 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
 
     public function import_xml_project_tracker_done(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
-        $importer = new XMLImport($this->getConfig(), $this->getTrackerChecker());
-        $importer->import($params['project'], $params['extraction_path'], $params['mapping']);
+        $importer = new XMLImport($this->getConfig(), $this->getTrackerChecker(), new ExecutionDao());
+        $importer->import(
+            $params['project'],
+            $params['extraction_path'],
+            $params['mapping'],
+            $params['artifact_id_mapping'],
+            $params['changeset_id_mapping']
+        );
     }
 
     public function tracker_get_editable_type_in_project(GetEditableTypesInProject $event): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
@@ -710,7 +717,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
             return;
         }
 
-        $exporter    = new Exporter($this->getConfig(), new XML_RNGValidator());
+        $exporter    = new Exporter($this->getConfig(), new XML_RNGValidator(), new ExecutionDao());
         $xml_content = $exporter->exportToXML($project);
 
         if ($xml_content) {
@@ -733,7 +740,10 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         $temporaray_file = 'export_ttm_' . $project->getID() . time() . '.xml';
         $temporary_path  = $this->getTmpDir() . "/$temporaray_file";
 
-        file_put_contents($temporary_path, $xml_content->asXML());
+        $dom = dom_import_simplexml($xml_content)->ownerDocument;
+        $dom->formatOutput = true;
+
+        file_put_contents($temporary_path, $dom->saveXML());
         $archive->addFile('testmanagement.xml', $temporary_path);
     }
 

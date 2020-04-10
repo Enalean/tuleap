@@ -52,4 +52,39 @@ class ExecutionDao extends DataAccessObject
             'execution_artifact_id' => $execution_id
         ]);
     }
+
+    public function searchByExecutionTrackerId(int $execution_tracker_id): array
+    {
+        $sql = 'SELECT exec.*
+            FROM plugin_testmanagement_execution AS exec
+            INNER JOIN tracker_artifact AS art
+                ON (art.id = exec.execution_artifact_id AND art.tracker_id = ?)';
+
+        return $this->getDB()->run($sql, $execution_tracker_id);
+    }
+
+    public function updateExecutionToUseSpecificVersionOfDefinition(
+        int $execution_artifact_id,
+        int $execution_tracker_id,
+        int $definition_changeset_id,
+        int $definition_tracker_id
+    ): void {
+        $sql = 'REPLACE INTO plugin_testmanagement_execution
+            SELECT exec.id, def_changeset.id
+            FROM tracker_artifact AS exec,
+                 tracker_artifact AS def
+                INNER JOIN tracker_changeset AS def_changeset
+                    ON (def.id = def_changeset.artifact_id)
+            WHERE
+                exec.id = ? AND exec.tracker_id = ?
+                AND def_changeset.id = ? AND def.tracker_id = ?';
+
+        $this->getDB()->run(
+            $sql,
+            $execution_artifact_id,
+            $execution_tracker_id,
+            $definition_changeset_id,
+            $definition_tracker_id
+        );
+    }
 }

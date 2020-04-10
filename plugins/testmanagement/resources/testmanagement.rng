@@ -18,6 +18,20 @@
           <data type="string"/>
         </element>
       </element>
+      <optional>
+        <element name="executions">
+          <zeroOrMore>
+            <element name="execution">
+              <attribute name="execution_artifact_id">
+                <data type="int"/>
+              </attribute>
+              <attribute name="definition_changeset_id">
+                <data type="string"/>
+              </attribute>
+            </element>
+          </zeroOrMore>
+        </element>
+      </optional>
     </element>
   </start>
 </grammar>

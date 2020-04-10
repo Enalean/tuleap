@@ -8,6 +8,7 @@ artifact =
     attribute id { xsd:long },
     attribute tracker_id { xsd:long }?,
     element changeset {
+        attribute id { xsd:ID }?,
         element submitted_by { tracker_user_content },
         element submitted_on { date_content },
         element comments     { comments },

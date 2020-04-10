@@ -7,6 +7,12 @@ grammar {
             element campaigns { xsd:string },
             element definitions { xsd:string },
             element executions { xsd:string }
-        }
+        },
+        element executions {
+            element execution {
+                attribute execution_artifact_id { xsd:int },
+                attribute definition_changeset_id { xsd:string }
+            }*
+        }?
     }
 }

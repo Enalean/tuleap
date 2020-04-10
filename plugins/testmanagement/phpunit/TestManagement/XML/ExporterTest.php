@@ -22,9 +22,13 @@ namespace Tuleap\TestManagement\XML;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
+use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Project;
+use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\Config;
+use XML_RNGValidator;
 
 class ExporterTest extends TestCase
 {
@@ -34,15 +38,25 @@ class ExporterTest extends TestCase
      * @var Exporter
      */
     private $exporter;
+    private $execution_dao;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Config
+     */
+    private $config;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
+     */
+    private $project;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->config   = \Mockery::spy(Config::class);
-        $this->exporter = new Exporter($this->config, new \XML_RNGValidator());
+        $this->config        = Mockery::mock(Config::class);
+        $this->execution_dao = Mockery::mock(ExecutionDao::class);
+        $this->exporter      = new Exporter($this->config, new XML_RNGValidator(), $this->execution_dao);
 
-        $this->project = \Mockery::spy(\Project::class);
+        $this->project = Mockery::spy(Project::class);
     }
 
     public function testItExportsTTMConfigurationInXML()
@@ -54,6 +68,8 @@ class ExporterTest extends TestCase
             'getTestExecutionTrackerId'  => 4,
             'isConfigNeeded'             => false
         ]);
+
+        $this->execution_dao->shouldReceive('searchByExecutionTrackerId')->once()->andReturn([]);
 
         $xml_content = $this->exporter->exportToXML($this->project);
 
@@ -73,6 +89,8 @@ class ExporterTest extends TestCase
             'isConfigNeeded'             => false
         ]);
 
+        $this->execution_dao->shouldReceive('searchByExecutionTrackerId')->once()->andReturn([]);
+
         $xml_content = $this->exporter->exportToXML($this->project);
 
         $this->assertEquals((string) $xml_content->configuration->issues, '');
@@ -91,8 +109,36 @@ class ExporterTest extends TestCase
             'isConfigNeeded'             => true
         ]);
 
+        $this->execution_dao->shouldReceive('searchByExecutionTrackerId')->never();
+
         $xml_content = $this->exporter->exportToXML($this->project);
 
         $this->assertNull($xml_content);
+    }
+
+    public function testItExportExistingExecutionsMapping()
+    {
+        $this->config->shouldReceive([
+            'getIssueTrackerId'          => 1,
+            'getCampaignTrackerId'       => 2,
+            'getTestDefinitionTrackerId' => 3,
+            'getTestExecutionTrackerId'  => 4,
+            'isConfigNeeded'             => false
+        ]);
+
+        $this->execution_dao
+            ->shouldReceive('searchByExecutionTrackerId')
+            ->once()
+            ->andReturn([
+                ['execution_artifact_id' => 123, 'definition_changeset_id' => 10001],
+                ['execution_artifact_id' => 124, 'definition_changeset_id' => 10002],
+            ]);
+
+        $xml_content = $this->exporter->exportToXML($this->project);
+
+        $this->assertEquals('123', (string) $xml_content->executions->execution[0]['execution_artifact_id']);
+        $this->assertEquals('CHANGESET_10001', (string) $xml_content->executions->execution[0]['definition_changeset_id']);
+        $this->assertEquals('124', (string) $xml_content->executions->execution[1]['execution_artifact_id']);
+        $this->assertEquals('CHANGESET_10002', (string) $xml_content->executions->execution[1]['definition_changeset_id']);
     }
 }

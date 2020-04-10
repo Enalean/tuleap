@@ -6,4 +6,8 @@
         <definitions>T3</definitions>
         <executions>T4</executions>
     </configuration>
+    <executions>
+      <execution execution_artifact_id="123" definition_changeset_id="CHANGESET_10001"/>
+      <execution execution_artifact_id="124" definition_changeset_id="CHANGESET_10002"/>
+    </executions>
 </testmanagement>

@@ -99,21 +99,25 @@ final class Tracker_Artifact_XMLExportTest extends \PHPUnit\Framework\TestCase
         $value_dao = \Mockery::spy(\Tracker_Artifact_Changeset_ValueDao::class);
         $value_dao->shouldReceive('searchById')->andReturns(array());
 
+        $changeset_01->shouldReceive('getId')->andReturns(10001);
         $changeset_01->shouldReceive('getSubmittedBy')->andReturns(101);
         $changeset_01->shouldReceive('getSubmittedOn')->andReturns($timestamp_01);
         $changeset_01->shouldReceive('getValues')->andReturns(array($value_01, $value_02));
         $changeset_01->shouldReceive('getValueDao')->andReturns($value_dao);
 
+        $changeset_02->shouldReceive('getId')->andReturns(10002);
         $changeset_02->shouldReceive('getSubmittedBy')->andReturns(101);
         $changeset_02->shouldReceive('getSubmittedOn')->andReturns($timestamp_02);
         $changeset_02->shouldReceive('getValues')->andReturns(array($value_03, $value_04));
         $changeset_02->shouldReceive('getValueDao')->andReturns($value_dao);
 
+        $changeset_03->shouldReceive('getId')->andReturns(10003);
         $changeset_03->shouldReceive('getSubmittedBy')->andReturns(101);
         $changeset_03->shouldReceive('getSubmittedOn')->andReturns($timestamp_03);
         $changeset_03->shouldReceive('getValues')->andReturns(array($value_05, $value_06));
         $changeset_03->shouldReceive('getValueDao')->andReturns($value_dao);
 
+        $changeset_04->shouldReceive('getId')->andReturns(10004);
         $changeset_04->shouldReceive('getSubmittedBy')->andReturns(102);
         $changeset_04->shouldReceive('getSubmittedOn')->andReturns($timestamp_04);
         $changeset_04->shouldReceive('getValues')->andReturns(array($value_07));

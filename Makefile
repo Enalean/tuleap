@@ -55,7 +55,10 @@ rnc2rng: src/common/xml/resources/project/project.rng \
 	 plugins/tracker/resources/trackers.rng \
 	 plugins/tracker/resources/artifacts.rng \
 	 plugins/agiledashboard/resources/xml_project_agiledashboard.rng \
-	 plugins/cardwall/resources/xml_project_cardwall.rng
+	 plugins/cardwall/resources/xml_project_cardwall.rng \
+	 plugins/testmanagement/resources/testmanagement.rng \
+	 plugins/testmanagement/resources/testmanagement_external_changeset.rng \
+	 plugins/testmanagement/resources/testmanagement_external_fields.rng
 
 src/common/xml/resources/project/project.rng: src/common/xml/resources/project/project.rnc plugins/tracker/resources/tracker-definition.rnc plugins/docman/resources/docman-definition.rnc src/common/xml/resources/ugroups-definition.rnc plugins/svn/resources/svn-definition.rnc src/common/xml/resources/frs-definition.rnc src/common/xml/resources/mediawiki-definition.rnc src/common/xml/resources/project-definition.rnc
 
