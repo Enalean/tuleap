@@ -102,10 +102,20 @@ final class UsersTest extends RestBase // phpcs:ignore
         $this->assertEquals(404, $response->getStatusCode());
     }
 
-    public function testGETMembershipBySelfReturnsUserGroups()
+    public function testGETMembershipBySelfReturnsUserGroups(): void
     {
-        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->get('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME] . '/membership'));
-        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertGETMembershipBySelfReturnsUserGroupsForAnID($this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME]);
+    }
+
+    public function testGETMembershipBySelfReturnsUserGroupsWithSelfID(): void
+    {
+        $this->assertGETMembershipBySelfReturnsUserGroupsForAnID('self');
+    }
+
+    private function assertGETMembershipBySelfReturnsUserGroupsForAnID(string $id): void
+    {
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->get('users/' . urlencode($id) . '/membership'));
+        $this->assertEquals(200, $response->getStatusCode());
 
         $json = $response->json();
         $this->assertCount(3, $json);
