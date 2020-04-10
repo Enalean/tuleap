@@ -1,0 +1,66 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TrackerFromJiraServer renders the component 1`] = `
+<div>
+  <div
+    class="tlp-form-element"
+  >
+    <label
+      class="tlp-label"
+      data-current-language="en_US"
+      data-msgid="Your Jira server url"
+      for="jira_url"
+    >
+      Your Jira server url
+    </label>
+     
+    <input
+      class="tlp-input"
+      id="jira_url"
+      pattern="https?://.+"
+      placeholder="https://jira_server.com"
+      type="url"
+    />
+  </div>
+   
+  <div
+    class="tlp-form-element"
+  >
+    <label
+      class="tlp-label"
+      data-current-language="en_US"
+      data-msgid="User email"
+      for="username"
+    >
+      User email
+    </label>
+     
+    <input
+      class="tlp-input"
+      id="username"
+      placeholder="Bob@example.com"
+      type="text"
+    />
+  </div>
+   
+  <div
+    class="tlp-form-element"
+  >
+    <label
+      class="tlp-label"
+      data-current-language="en_US"
+      data-msgid="Token"
+      for="token"
+    >
+      Token
+    </label>
+     
+    <input
+      class="tlp-input"
+      id="token"
+      placeholder="ToKeNGLsLC1wY4j6qiuk61kFX"
+      type="text"
+    />
+  </div>
+</div>
+`;

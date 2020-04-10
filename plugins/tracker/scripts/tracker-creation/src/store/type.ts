@@ -38,6 +38,9 @@ export interface State {
     color_picker_data: DataForColorPicker[];
     default_tracker_color: string;
     company_name: string;
+    from_jira_data: JiraImportData;
+    display_jira_importer: boolean;
+    project_unix_name: string;
 }
 
 export interface CSRFToken {
@@ -79,10 +82,34 @@ export interface DataForColorPicker {
     text: string;
 }
 
+export interface JiraImportData {
+    credentials: Credentials | null;
+    project: string | null;
+    tracker_name: string | null;
+    project_list: ProjectList[] | null;
+}
+
+export interface Credentials {
+    server_url: string;
+    user_email: string;
+    token: string;
+}
+
+export interface ProjectList {
+    id: string;
+    label: string;
+}
+
 export enum CreationOptions {
     NONE_YET = "none_yet",
     TRACKER_TEMPLATE = "tracker_template",
     TRACKER_XML_FILE = "tracker_xml_file",
     TRACKER_EMPTY = "tracker_empty",
     TRACKER_ANOTHER_PROJECT = "tracker_another_project",
+    FROM_JIRA = "from_jira",
+}
+
+export interface Context {
+    state: State;
+    commit: Function;
 }

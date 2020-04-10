@@ -27,6 +27,7 @@ use Project;
 
 class TrackerCreationPresenter
 {
+    public const DISPLAY_JIRA_IMPORTER = 'display_jira_importer';
     /**
      * @var string
      */
@@ -68,6 +69,10 @@ class TrackerCreationPresenter
      * @var false|string
      */
     public $default_templates;
+    /**
+     * @var bool
+     */
+    public $display_jira_importer;
 
     public function __construct(
         array $default_templates,
@@ -92,5 +97,6 @@ class TrackerCreationPresenter
             ]
         );
         $this->company_name                 = (string) ForgeConfig::get('sys_org_name');
+        $this->display_jira_importer        = (bool) ForgeConfig::get(self::DISPLAY_JIRA_IMPORTER);
     }
 }

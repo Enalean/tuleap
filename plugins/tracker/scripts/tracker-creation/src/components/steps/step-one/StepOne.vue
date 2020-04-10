@@ -41,6 +41,7 @@
                 <tracker-from-another-project-card />
                 <tracker-xml-file-card />
                 <tracker-empty-card />
+                <tracker-from-jira-card v-if="display_jira_importer" />
             </div>
         </template>
     </step-layout>
@@ -58,10 +59,12 @@ import TrackerFromAnotherProjectCard from "./cards/TrackerFromAnotherProject/Tra
 import { Tracker } from "../../../store/type";
 import DefaultTemplateSection from "./cards/DefaultTemplate/DefaultTemplateSection.vue";
 import { sprintf } from "sprintf-js";
+import TrackerFromJiraCard from "./cards/FromJira/TrackerFromJiraCard.vue";
 
 @Component({
     components: {
         DefaultTemplateSection,
+        TrackerFromJiraCard,
         TrackerEmptyCard,
         StepLayout,
         TrackerTemplateCard,
@@ -82,6 +85,9 @@ export default class StepOne extends Vue {
 
     @State
     readonly project_templates!: Tracker[];
+
+    @State
+    readonly display_jira_importer!: boolean;
 
     mounted(): void {
         this.setSlugifyShortnameMode(true);

@@ -105,6 +105,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         (color_name: string) => ({ id: color_name, text: "" })
     );
 
+    const display_jira_importer = vue_mount_point.dataset.displayJiraImporter;
+
     const initial_state: State = {
         csrf_token,
         default_templates,
@@ -130,6 +132,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         is_in_slugify_mode: true,
         project_id: parseInt(project_id, 10),
         company_name,
+        from_jira_data: {
+            credentials: null,
+            project: null,
+            tracker_name: null,
+            project_list: null,
+        },
+        display_jira_importer: Boolean(display_jira_importer),
+        project_unix_name,
     };
 
     new AppComponent({

@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TrackerFromJiraProject renders the component 1`] = `
+<div>
+  <div
+    class="tlp-form-element"
+  >
+    <label
+      class="tlp-label"
+      data-current-language="en_US"
+      data-msgid="Project"
+      for="project"
+    >
+      Project
+    </label>
+     
+    <select
+      class="tlp-select"
+      id="project"
+      name="project"
+    >
+      <option
+        data-current-language="en_US"
+        data-msgid="Choose a project..."
+        value=""
+      >
+        Choose a project...
+      </option>
+       
+      <option
+        data-test="project-TO"
+        value="TO"
+      >
+        
+                toto
+            
+      </option>
+      <option
+        data-test="project-TU"
+        value="TU"
+      >
+        
+                tutu
+            
+      </option>
+    </select>
+  </div>
+</div>
+`;

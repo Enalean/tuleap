@@ -22,6 +22,7 @@ use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\CLI\CLICommandsCollector;
+use Tuleap\CLI\Events\GetWhitelistedKeys;
 use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -80,10 +81,12 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Config\ConfigController;
 use Tuleap\Tracker\Creation\DefaultTemplatesCollectionBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\JiraTrackerListController;
 use Tuleap\Tracker\Creation\TrackerCreationBreadCrumbsBuilder;
 use Tuleap\Tracker\Creation\TrackerCreationController;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\Creation\TrackerCreationPermissionChecker;
+use Tuleap\Tracker\Creation\TrackerCreationPresenter;
 use Tuleap\Tracker\Creation\TrackerCreationPresenterBuilder;
 use Tuleap\Tracker\Creation\TrackerCreationProcessorController;
 use Tuleap\Tracker\Creation\TrackerCreator;
@@ -283,6 +286,8 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $this->addHook(Statistics_Event::FREQUENCE_STAT_ENTRIES);
             $this->addHook(Statistics_Event::FREQUENCE_STAT_SAMPLE);
         }
+
+        $this->addHook(GetWhitelistedKeys::NAME);
 
         $this->addHook(Event::LIST_DELETED_TRACKERS);
         $this->addHook(TemplatePresenter::EVENT_ADDITIONAL_ADMIN_BUTTONS);
@@ -1827,6 +1832,15 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         return new PermissionsOnFieldsUpdateController(TrackerFactory::instance());
     }
 
+    public function routeJiraTrackerListController(): DispatchableWithRequest
+    {
+        return new JiraTrackerListController(
+            $this->getProjectManager(),
+            $this->getTrackerCreationPermissionChecker(),
+            new \Tuleap\Tracker\Creation\JiraImporter\JiraProjectBuilder()
+        );
+    }
+
     public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event)
     {
         $event->getRouteCollector()->addGroup(TRACKER_BASE_URL, function (FastRoute\RouteCollector $r) {
@@ -1857,6 +1871,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
             $r->addRoute(['GET', 'POST'], GlobalAdminController::URL . '/{id:\d+}', $this->getRouteHandler('routeGlobalAdmin'));
 
+            $r->post('/{project_name:[A-z0-9-]+}/jira/project_list', $this->getRouteHandler('routeJiraTrackerListController'));
             $r->get('/{project_name:[A-z0-9-]+}/new', $this->getRouteHandler('routeCreateNewTracker'));
             $r->get('/{project_name:[A-z0-9-]+}/new-information', $this->getRouteHandler('routeCreateNewTracker'));
             $r->post('/{project_name:[A-z0-9-]+}/new-information', $this->getRouteHandler('routeProcessNewTrackerCreation'));
@@ -1970,7 +1985,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                 \TrackerFactory::instance(),
                 new DefaultTemplatesCollectionBuilder(\EventManager::instance())
             ),
-            new TrackerCreationPermissionChecker(new TrackerManager())
+            $this->getTrackerCreationPermissionChecker()
         );
     }
 
@@ -1982,7 +1997,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $user_manager,
             \ProjectManager::instance(),
             TrackerCreator::build(),
-            new TrackerCreationPermissionChecker(new TrackerManager()),
+            $this->getTrackerCreationPermissionChecker(),
             new DefaultTemplatesCollectionBuilder(\EventManager::instance())
         );
     }
@@ -2097,5 +2112,15 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                 OAuth2TrackerReadScope::class
             )
         );
+    }
+
+    private function getTrackerCreationPermissionChecker(): TrackerCreationPermissionChecker
+    {
+        return new TrackerCreationPermissionChecker(new TrackerManager());
+    }
+
+    public function getWhitelistedKeys(GetWhitelistedKeys $event): void
+    {
+        $event->addPluginsKeys(TrackerCreationPresenter::DISPLAY_JIRA_IMPORTER);
     }
 }

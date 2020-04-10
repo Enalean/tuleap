@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TrackerFromJira renders the component 1`] = `
+<div
+  class="card-content"
+>
+  <!---->
+   
+  <tracker-from-jira-server-stub
+    value="[object Object]"
+  />
+   
+  <button
+    class="tlp-button-primary create-from-jira-button"
+    data-test="create-from-jira"
+    disabled="disabled"
+    type="button"
+  >
+    <span
+      data-current-language="en_US"
+      data-msgid="Connect"
+    >
+      Connect
+    </span>
+     
+    <i
+      class="fa tlp-button-icon-right fa-connect"
+    />
+  </button>
+</div>
+`;
