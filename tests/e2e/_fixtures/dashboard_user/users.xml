@@ -36,7 +36,7 @@
         <id>103</id>
         <username>Heisenberg</username>
         <realname>Walter White</realname>
-        <email>walter-white@los-pollos-hermanos.us</email>
+        <email>walter-white@example.com</email>
         <ldapid></ldapid>
     </user>
 </users>
