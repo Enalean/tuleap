@@ -151,7 +151,7 @@ class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
         if ($readme_tree_item !== null) {
             $content_interpretor = CommonMarkInterpreter::build(
                 \Codendi_HTMLPurifier::instance(),
-                new LinkToGitFileExtension(new LinkToGitFileBlobFinder($readme_tree_item, $commit))
+                new LinkToGitFileExtension(new LinkToGitFileBlobFinder($readme_tree_item->GetFullPath(), $commit))
             );
             $this->tpl->assign(
                 'readme_content_interpreted',
