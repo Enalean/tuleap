@@ -105,6 +105,7 @@ final class PKCECodeVerifierTest extends TestCase
             new SplitToken(1, SplitTokenVerificationString::generateNewSplitTokenVerificationString()),
             UserTestBuilder::aUser()->build(),
             $code_challenge,
+            null,
             [OAuth2TestScope::fromItself()]
         );
     }

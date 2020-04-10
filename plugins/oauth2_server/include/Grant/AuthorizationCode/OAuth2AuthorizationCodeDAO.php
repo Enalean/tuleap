@@ -32,7 +32,8 @@ class OAuth2AuthorizationCodeDAO extends DataAccessObject
         int $user_id,
         string $hashed_verification_string,
         int $expiration_date_timestamp,
-        ?string $pkce_code_challenge
+        ?string $pkce_code_challenge,
+        ?string $oidc_nonce
     ): int {
         return (int) $this->getDB()->insertReturnId(
             'plugin_oauth2_authorization_code',
@@ -42,18 +43,19 @@ class OAuth2AuthorizationCodeDAO extends DataAccessObject
                 'verifier'              => $hashed_verification_string,
                 'expiration_date'       => $expiration_date_timestamp,
                 'pkce_code_challenge'   => $pkce_code_challenge,
+                'oidc_nonce'            => $oidc_nonce,
                 'has_already_been_used' => false
             ]
         );
     }
 
     /**
-     * @psalm-return null|array{verifier:string,user_id:int,expiration_date:int,has_already_been_used:0|1,pkce_code_challenge:?string}
+     * @psalm-return null|array{verifier:string,user_id:int,expiration_date:int,has_already_been_used:0|1,pkce_code_challenge:?string,oidc_nonce:?string}
      */
     public function searchAuthorizationCode(int $authorization_code_id): ?array
     {
         return $this->getDB()->row(
-            'SELECT plugin_oauth2_authorization_code.verifier, user_id, expiration_date, has_already_been_used, pkce_code_challenge
+            'SELECT plugin_oauth2_authorization_code.verifier, user_id, expiration_date, has_already_been_used, pkce_code_challenge, oidc_nonce
                        FROM plugin_oauth2_authorization_code
                        JOIN plugin_oauth2_server_app ON plugin_oauth2_authorization_code.app_id = plugin_oauth2_server_app.id
                        JOIN `groups` ON plugin_oauth2_server_app.project_id = `groups`.group_id

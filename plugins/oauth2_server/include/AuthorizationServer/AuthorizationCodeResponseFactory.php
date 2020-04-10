@@ -71,14 +71,16 @@ class AuthorizationCodeResponseFactory
         \PFUser $user,
         string $redirect_uri,
         ?string $state,
-        ?string $pkce_code_challenge
+        ?string $pkce_code_challenge,
+        ?string $oidc_nonce
     ): ResponseInterface {
         $authorization_code = $this->authorization_code_creator->createAuthorizationCodeIdentifier(
             new \DateTimeImmutable(),
             $app,
             $scopes,
             $user,
-            $pkce_code_challenge
+            $pkce_code_challenge,
+            $oidc_nonce
         );
 
         $success_redirect_uri = $this->client_uri_redirect_builder->buildSuccessURI(

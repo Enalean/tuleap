@@ -49,6 +49,8 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
     public const  SCOPE_PARAMETER         = 'scope';
     public const  CODE_PARAMETER          = 'code';
     public const  STATE_PARAMETER         = 'state';
+    // see https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest
+    private const NONCE_PARAMETER         = 'nonce';
     // see https://tools.ietf.org/html/rfc6749#section-4.1.2.1
     public const  ERROR_PARAMETER            = 'error';
     public const  ERROR_CODE_INVALID_REQUEST = 'invalid_request';
@@ -166,6 +168,8 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
             );
         }
 
+        $oidc_nonce = $query_params[self::NONCE_PARAMETER] ?? null;
+
         if ($this->authorization_comparator->areRequestedScopesAlreadyGranted($user, $client_app, $scopes)) {
             return $this->response_factory->createSuccessfulResponse(
                 $client_app,
@@ -173,14 +177,15 @@ final class AuthorizationEndpointGetController extends DispatchablePSR15Compatib
                 $user,
                 $redirect_uri,
                 $state_value,
-                $code_challenge
+                $code_challenge,
+                $oidc_nonce
             );
         }
 
         $layout = $request->getAttribute(BaseLayout::class);
         assert($layout instanceof BaseLayout);
         $csrf_token = new \CSRFSynchronizerToken(self::CSRF_TOKEN);
-        $data       = new AuthorizationFormData($client_app, $csrf_token, $redirect_uri, $state_value, $code_challenge, ...$scopes);
+        $data       = new AuthorizationFormData($client_app, $csrf_token, $redirect_uri, $state_value, $code_challenge, $oidc_nonce, ...$scopes);
         return $this->form_renderer->renderForm($data, $layout);
     }
 }

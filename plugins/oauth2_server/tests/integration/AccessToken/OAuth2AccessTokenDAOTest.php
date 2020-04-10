@@ -97,14 +97,16 @@ final class OAuth2AccessTokenDAOTest extends TestCase
             102,
             'hashed_verification_string',
             20,
-            'pkce_code_chall'
+            'pkce_code_chall',
+            'oidc_nonce'
         );
         self::$deleted_project_auth_code_id = $auth_code_dao->create(
             self::$deleted_project_id,
             102,
             'hashed_verification_string',
             20,
-            'pkce_code_chall'
+            'pkce_code_chall',
+            'oidc_nonce'
         );
     }
 

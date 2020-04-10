@@ -86,6 +86,7 @@ final class AccessTokenGrantRepresentationBuilderTest extends TestCase
                 new SplitToken(1, SplitTokenVerificationString::generateNewSplitTokenVerificationString()),
                 new \PFUser(['language_id' => 'en']),
                 'pkce_code_challenge',
+                'oidc_nonce',
                 [OAuth2TestScope::fromItself()]
             )
         );

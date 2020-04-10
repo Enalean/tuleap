@@ -88,7 +88,8 @@ final class OAuth2AuthorizationCodeVerifierTest extends TestCase
                 'verifier'              => 'expected_hashed_verification_string',
                 'expiration_date'       => (new DateTimeImmutable('tomorrow'))->getTimestamp(),
                 'has_already_been_used' => 0,
-                'pkce_code_challenge'   => 'code_challenge'
+                'pkce_code_challenge'   => 'code_challenge',
+                'oidc_nonce'            => 'nonce',
             ]
         );
         $this->dao->shouldReceive('markAuthorizationCodeAsUsed')->with($auth_code->getID())->once();

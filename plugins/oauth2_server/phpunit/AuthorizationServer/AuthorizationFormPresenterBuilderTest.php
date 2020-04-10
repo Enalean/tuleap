@@ -82,6 +82,7 @@ final class AuthorizationFormPresenterBuilderTest extends TestCase
         $redirect_uri        = 'https://example.com';
         $state_value         = 'xyz';
         $pkce_code_challenge = 'pkce_code_challenge';
+        $oidc_nonce          = 'oidc_nonce';
 
         $form_data = new AuthorizationFormData(
             new OAuth2App(
@@ -95,6 +96,7 @@ final class AuthorizationFormPresenterBuilderTest extends TestCase
             $redirect_uri,
             $state_value,
             $pkce_code_challenge,
+            $oidc_nonce,
             $foobar_scope,
             $typevalue_scope
         );

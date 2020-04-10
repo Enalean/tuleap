@@ -82,7 +82,7 @@ final class OAuth2AuthorizationCodeCreatorTest extends TestCase
         $current_time = new \DateTimeImmutable('@10');
 
         $this->dao->shouldReceive('create')
-            ->with(12, 102, \Mockery::any(), $current_time->getTimestamp() + self::EXPECTED_EXPIRATION_DELAY_SECONDS, 'pkce_code_chall')
+            ->with(12, 102, \Mockery::any(), $current_time->getTimestamp() + self::EXPECTED_EXPIRATION_DELAY_SECONDS, 'pkce_code_chall', 'oidc_nonce')
             ->once()->andReturn(1);
         $this->scope_saver->shouldReceive('saveScopes')->once();
 
@@ -91,7 +91,8 @@ final class OAuth2AuthorizationCodeCreatorTest extends TestCase
             $this->buildOAuth2App(),
             [\Mockery::mock(AuthenticationScope::class)],
             new \PFUser(['language_id' => 'en', 'user_id' => '102']),
-            'pkce_code_chall'
+            'pkce_code_chall',
+            'oidc_nonce'
         );
 
         $this->assertNotEmpty($auth_code->getString());
@@ -110,14 +111,16 @@ final class OAuth2AuthorizationCodeCreatorTest extends TestCase
             $this->buildOAuth2App(),
             $auth_scopes,
             new \PFUser(['language_id' => 'en', 'user_id' => '102']),
-            'pkce_code_chall'
+            'pkce_code_chall',
+            'oidc_nonce'
         );
         $auth_code_2 = $this->auth_code_creator->createAuthorizationCodeIdentifier(
             $current_time,
             $this->buildOAuth2App(),
             $auth_scopes,
             new \PFUser(['language_id' => 'en', 'user_id' => '103']),
-            'pkce_code_chall'
+            'pkce_code_chall',
+            'oidc_nonce'
         );
 
         $this->assertFalse($auth_code_1->isIdenticalTo($auth_code_2));

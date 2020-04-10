@@ -34,16 +34,19 @@ final class OAuth2AuthorizationCodeTest extends TestCase
         $user                = new \PFUser(['language_id' => 'en']);
         $scope               = OAuth2TestScope::fromItself();
         $pkce_code_challenge = 'code_chall';
+        $nonce               = 'oidc_nonce';
         $auth_code = OAuth2AuthorizationCode::approveForSetOfScopes(
             new SplitToken(12, SplitTokenVerificationString::generateNewSplitTokenVerificationString()),
             $user,
             $pkce_code_challenge,
+            $nonce,
             [$scope]
         );
 
         $this->assertSame(12, $auth_code->getID());
         $this->assertSame($user, $auth_code->getUser());
         $this->assertSame($pkce_code_challenge, $auth_code->getPKCECodeChallenge());
+        $this->assertSame($nonce, $auth_code->getOIDCNonce());
         $scopes = $auth_code->getScopes();
         $this->assertCount(1, $scopes);
         $this->assertEquals($scope, $scopes[0]);

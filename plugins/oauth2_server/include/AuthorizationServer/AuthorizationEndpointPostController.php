@@ -45,6 +45,7 @@ final class AuthorizationEndpointPostController extends DispatchablePSR15Compati
     private const APP_IDENTIFIER      = 'app_identifier';
     private const SCOPE               = 'scope';
     private const PKCE_CODE_CHALLENGE = 'pkce_code_challenge';
+    private const OIDC_NONCE          = 'oidc_nonce';
 
     /**
      * @var \UserManager
@@ -135,7 +136,8 @@ final class AuthorizationEndpointPostController extends DispatchablePSR15Compati
 
         $redirect_uri = $body_params[self::REDIRECT_URI];
         $state_value  = $body_params[self::STATE] ?? null;
-        return $this->response_creator->createSuccessfulResponse($client_app, $scopes, $user, $redirect_uri, $state_value, $pkce_code_challenge);
+        $oidc_nonce   = $body_params[self::OIDC_NONCE] ?? null;
+        return $this->response_creator->createSuccessfulResponse($client_app, $scopes, $user, $redirect_uri, $state_value, $pkce_code_challenge, $oidc_nonce);
     }
 
     /**

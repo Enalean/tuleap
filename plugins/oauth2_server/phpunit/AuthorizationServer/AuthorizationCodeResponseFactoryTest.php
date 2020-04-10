@@ -73,6 +73,7 @@ final class AuthorizationCodeResponseFactoryTest extends TestCase
             UserTestBuilder::aUser()->withId(102)->build(),
             'https://example.com',
             null,
+            null,
             null
         );
         $this->assertSame(302, $response->getStatusCode());
@@ -94,7 +95,8 @@ final class AuthorizationCodeResponseFactoryTest extends TestCase
             UserTestBuilder::aUser()->withId(102)->build(),
             'https://example.com',
             '6k9Sfw',
-            'pkce_code_challenge'
+            'pkce_code_challenge',
+            'oidc_nonce'
         );
         $this->assertSame(302, $response->getStatusCode());
         $location = $response->getHeaderLine('Location');

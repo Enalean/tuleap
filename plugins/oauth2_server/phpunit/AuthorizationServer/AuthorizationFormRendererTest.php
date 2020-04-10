@@ -97,6 +97,7 @@ final class AuthorizationFormRendererTest extends TestCase
             $redirect_uri,
             'xyz',
             'pkce_chall',
+            'oidc_nonce',
             $foobar_scope,
             $typevalue_scope
         );

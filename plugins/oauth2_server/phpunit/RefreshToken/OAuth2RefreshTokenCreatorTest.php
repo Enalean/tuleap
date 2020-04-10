@@ -149,6 +149,7 @@ final class OAuth2RefreshTokenCreatorTest extends TestCase
             new SplitToken(1, SplitTokenVerificationString::generateNewSplitTokenVerificationString()),
             UserTestBuilder::aUser()->build(),
             null,
+            null,
             $scopes
         );
     }
