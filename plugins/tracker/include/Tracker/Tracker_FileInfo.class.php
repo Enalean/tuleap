@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\REST\Artifact\FileInfoRepresentation;
 
 class Tracker_FileInfo
 {
@@ -55,13 +56,9 @@ class Tracker_FileInfo
         $this->filetype     = $filetype;
     }
 
-    /**
-     * @return Tuleap\Tracker\REST\Artifact\FileInfoRepresentation
-     */
-    public function getRESTValue()
+    public function getRESTValue(): FileInfoRepresentation
     {
-        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\FileInfoRepresentation';
-        $file_info_representation = new $classname_with_namespace();
+        $file_info_representation = new FileInfoRepresentation();
         $file_info_representation->build(
             $this->id,
             $this->submitted_by,
@@ -75,13 +72,9 @@ class Tracker_FileInfo
         return $file_info_representation;
     }
 
-    /**
-     * @return Tuleap\Tracker\REST\Artifact\FileInfoFullRepresentation
-     */
-    public function getFullRESTValue()
+    public function getFullRESTValue(): FileInfoRepresentation
     {
-        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\FileInfoRepresentation';
-        $file_info_representation = new $classname_with_namespace();
+        $file_info_representation = new FileInfoRepresentation();
         $file_info_representation->build(
             $this->id,
             $this->submitted_by,

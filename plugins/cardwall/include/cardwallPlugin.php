@@ -572,6 +572,9 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
     private function buildRightVersionOfMilestonesCardwallResource($version)
     {
         $class_with_right_namespace = '\\Tuleap\\Cardwall\\REST\\' . $version . '\\MilestonesCardwallResource';
+        if (! class_exists($class_with_right_namespace)) {
+            throw new LogicException("$class_with_right_namespace does not exist");
+        }
         return new $class_with_right_namespace($this->getConfigFactory());
     }
 

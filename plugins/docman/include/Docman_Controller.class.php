@@ -1767,6 +1767,9 @@ class Docman_Controller extends Controler
         $className = static::class;
         $class = substr($className, 0, -(strlen("Controller"))) . 'Actions';
         require_once($class . '.class.php');
+        if (! class_exists($class)) {
+            throw new LogicException("$class does not exist");
+        }
         $wa = new $class($this, $this->gid);
         $wa->process($this->action, $this->_actionParams);
     }

@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueUnchanged;
@@ -938,15 +939,13 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         }
 
         if ($type === Tracker_FormElement_Field_List_Bind_Ugroups::TYPE) {
-            $class_user_representation = '\\Tuleap\\Project\\REST\\UserGroupRepresentation';
-
             $ugroup_manager = new UGroupManager();
             $project        = $this->getTracker()->getProject();
             $user_groups    = $ugroup_manager->getUGroups($project, array(ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED, ProjectUGroup::NONE));
 
             $values = array();
             foreach ($user_groups as $ugroup) {
-                $ugroup_representation = new $class_user_representation();
+                $ugroup_representation = new UserGroupRepresentation();
                 $ugroup_representation->build($project->getID(), $ugroup);
                 $values[] = $ugroup_representation;
             }

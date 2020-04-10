@@ -216,6 +216,9 @@ abstract class PluginController
         }
         $results       = array();
         $className     = static::class . 'Actions';
+        if (! class_exists($className)) {
+            throw new LogicException("$className does not exist");
+        }
         $wa            = $this->instantiateAction($className);
         foreach ($this->actions as $name => $params) {
             $wa->process($name, $params);
@@ -228,6 +231,8 @@ abstract class PluginController
      * Can be overriden to pass additionnal parameters to the action
      *
      * @param string $action The name of the action
+     *
+     * @psalm-param class-string $action
      *
      * @return PluginActions
      */

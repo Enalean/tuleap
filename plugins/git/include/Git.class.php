@@ -1208,18 +1208,9 @@ class Git extends PluginController
         }
     }
 
-    /**
-     * Instantiate an action based on a given name.
-     *
-     * Can be overriden to pass additionnal parameters to the action
-     *
-     * @param string $action The name of the action
-     *
-     * @return PluginActions
-     */
     protected function instantiateAction($action)
     {
-        return new $action(
+        $instance = new $action(
             $this,
             $this->git_system_event_manager,
             $this->factory,
@@ -1258,6 +1249,8 @@ class Git extends PluginController
             $this->ugroups_to_notify_dao,
             $this->ugroup_manager
         );
+        \assert($instance instanceof PluginActions);
+        return $instance;
     }
 
     public function _doDispatchForkCrossProject($request, $user)

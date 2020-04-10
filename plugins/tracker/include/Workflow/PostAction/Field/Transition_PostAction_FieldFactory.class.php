@@ -188,11 +188,11 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
      *
      * @param string $xml_tag_name
      *
-     * @return string
+     * @psalm-return class-string
      *
      * @throws Transition_PostAction_NotFoundException
      */
-    private function getPostActionClassFromXmlTagName($xml_tag_name)
+    private function getPostActionClassFromXmlTagName($xml_tag_name): string
     {
         $short_name = $this->getShortNameFromXmlTagName($xml_tag_name);
 
@@ -234,11 +234,12 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
      * @param Transition $transition The transition to which this PostAction is associated
      * @param mixed      $row        The raw data (array-like)
      * @param string     $shortname  The PostAction short name
-     * @param string     $klass      The PostAction class name
+     *
+     * @psalm-param class-string $klass
      *
      * @return Transition_PostAction
      */
-    private function buildPostAction(Transition $transition, $row, $shortname, $klass)
+    private function buildPostAction(Transition $transition, $row, $shortname, string $klass)
     {
         $id    = (int) $row['id'];
         $field = $this->getFieldFromRow($row);

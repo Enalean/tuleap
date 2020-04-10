@@ -22,6 +22,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
+
 class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement_Field_ArtifactId
 {
 
@@ -58,8 +60,7 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
 
     public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
     {
-        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation';
-        $artifact_field_value_full_representation = new $classname_with_namespace();
+        $artifact_field_value_full_representation = new ArtifactFieldValueFullRepresentation();
         $artifact_field_value_full_representation->build(
             $this->getId(),
             Tracker_FormElementFactory::instance()->getType($this),
