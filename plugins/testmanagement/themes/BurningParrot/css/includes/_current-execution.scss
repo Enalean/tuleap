@@ -197,7 +197,7 @@ execution-with-steps.current-test-content {
 
 .current-test-comment {
     width: 100%;
-    min-height: 42px;
+    min-height: 50px;
     max-height: 100px;
     padding: 8px 12px;
     overflow: auto;
@@ -206,7 +206,14 @@ execution-with-steps.current-test-content {
     border-radius: 3px;
 
     &:focus {
+        min-height: 64px; // magic value to display 2 line of text (padding + 2 line-height of <p>)
         border-color: $tlp-theme-color;
+    }
+
+    p {
+        margin: 0 0 5px;
+        font-size: 14px;
+        line-height: normal;
     }
 }
 
