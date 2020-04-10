@@ -95,6 +95,7 @@ class UserGroupResource extends AuthenticatedResource
      *
      * @url GET {id}
      * @access hybrid
+     * @oauth2-scope read:user_membership
      *
      * @param string $id Id of the ugroup This should be one of two formats<br>
      * - format: projectId_ugroupId for dynamic project user groups (project members...)<br>

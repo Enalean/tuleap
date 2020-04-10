@@ -255,6 +255,7 @@ class UserResource extends AuthenticatedResource
      *
      * @url GET {id}/membership
      * @access protected
+     * @oauth2-scope read:user_membership
      *
      * @param string $id Id of the desired user
      *

@@ -1080,6 +1080,9 @@ msgstr "Membres"
 msgid "Members of user groups"
 msgstr "Membre des groupes"
 
+msgid "Membership in user groups (read only)"
+msgstr "Appartenance aux groupes d'utilisateurs (lecture seule)"
+
 msgid "Membership management"
 msgstr "Gestion des membres"
 
@@ -1546,6 +1549,9 @@ msgstr "Rang"
 
 msgid "Read only access to information about projects"
 msgstr "Accès en lecture seule aux informations concernant les projets"
+
+msgid "Read only access to your membership in user groups"
+msgstr "Accès en lecture seule à votre présence dans des groupes utilisateurs"
 
 msgid "Real Name"
 msgstr "Nom Complet"
