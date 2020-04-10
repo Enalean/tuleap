@@ -72,7 +72,7 @@
     "webpack-merge-and-include-globally": "^2.1.24"
   },
   "scripts": {
-    "build": "lerna --concurrency=1 exec --stream npm install && lerna --concurrency=\"$(node ./tools/utils/scripts/max-usable-processors.js)\" run build",
+    "build": "lerna --concurrency=1 exec --stream 'npm install --no-audit' && lerna --concurrency=\"$(node ./tools/utils/scripts/max-usable-processors.js)\" run build",
     "eslint": "eslint --config .eslintrc.js --no-eslintrc --ext .js,.ts,.vue",
     "stylelint": "stylelint --config .stylelintrc.js",
     "test": "BABEL_ENV=test jest --config tests/jest/jest.projects.config.js"

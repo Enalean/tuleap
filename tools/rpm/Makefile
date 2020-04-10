@@ -80,7 +80,7 @@ mo:
 
 node:
 	cd $(BASE_DIR) &&\
-	     npm install &&\
+	     npm install --no-audit &&\
 	     npm run build
 
 composer:
