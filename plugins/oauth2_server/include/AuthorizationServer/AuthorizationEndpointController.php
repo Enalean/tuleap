@@ -38,9 +38,10 @@ use Tuleap\OAuth2Server\Scope\ScopeExtractor;
 use Tuleap\OAuth2Server\User\AuthorizationComparator;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithBurningParrot;
+use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\ForbiddenException;
 
-final class AuthorizationEndpointController extends DispatchablePSR15Compatible implements DispatchableWithBurningParrot
+final class AuthorizationEndpointController extends DispatchablePSR15Compatible implements DispatchableWithBurningParrot, DispatchableWithRequestNoAuthz
 {
     // see https://tools.ietf.org/html/rfc6749#section-4.1.1
     private const RESPONSE_TYPE_PARAMETER = 'response_type';
@@ -51,11 +52,15 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
     public const  STATE_PARAMETER         = 'state';
     // see https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest
     private const NONCE_PARAMETER         = 'nonce';
+    private const PROMPT_PARAMETER        = 'prompt';
     // see https://tools.ietf.org/html/rfc6749#section-4.1.2.1
     public const  ERROR_PARAMETER            = 'error';
     public const  ERROR_CODE_INVALID_REQUEST = 'invalid_request';
     private const ERROR_CODE_INVALID_SCOPE   = 'invalid_scope';
     public const  ERROR_CODE_ACCESS_DENIED   = 'access_denied';
+    // see https://openid.net/specs/openid-connect-core-1_0.html#AuthError
+    private const ERROR_CODE_INTERACTION_REQUIRED = 'interaction_required';
+    private const ERROR_CODE_LOGIN_REQUIRED       = 'login_required';
 
     public const CSRF_TOKEN = 'oauth2_server_authorization_endpoint';
     /**
@@ -86,6 +91,10 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
      * @var PKCEInformationExtractor
      */
     private $pkce_information_extractor;
+    /**
+     * @var PromptParameterValuesExtractor
+     */
+    private $prompt_parameter_values_extractor;
 
     public function __construct(
         AuthorizationFormRenderer $form_renderer,
@@ -95,17 +104,19 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
         AuthorizationCodeResponseFactory $response_factory,
         AuthorizationComparator $authorization_comparator,
         PKCEInformationExtractor $pkce_information_extractor,
+        PromptParameterValuesExtractor $prompt_parameter_values_extractor,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack
     ) {
         parent::__construct($emitter, ...$middleware_stack);
-        $this->form_renderer              = $form_renderer;
-        $this->user_manager               = $user_manager;
-        $this->app_factory                = $app_factory;
-        $this->scope_extractor            = $scope_extractor;
-        $this->response_factory           = $response_factory;
-        $this->authorization_comparator   = $authorization_comparator;
-        $this->pkce_information_extractor = $pkce_information_extractor;
+        $this->form_renderer                     = $form_renderer;
+        $this->user_manager                      = $user_manager;
+        $this->app_factory                       = $app_factory;
+        $this->scope_extractor                   = $scope_extractor;
+        $this->response_factory                  = $response_factory;
+        $this->authorization_comparator          = $authorization_comparator;
+        $this->pkce_information_extractor        = $pkce_information_extractor;
+        $this->prompt_parameter_values_extractor = $prompt_parameter_values_extractor;
     }
 
     /**
@@ -113,11 +124,6 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $user = $this->user_manager->getCurrentUser();
-        if ($user->isAnonymous()) {
-            return $this->response_factory->createRedirectToLoginResponse($request);
-        }
-
         if ($request->getMethod() === 'POST') {
             $request_params = $request->getParsedBody();
             if (! \is_array($request_params)) {
@@ -126,6 +132,7 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
         } else {
             $request_params = $request->getQueryParams();
         }
+
         $client_id = (string) ($request_params[self::CLIENT_ID_PARAMETER] ?? '');
         try {
             $client_identifier = ClientIdentifier::fromClientId($client_id);
@@ -146,6 +153,29 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
                 $redirect_uri,
                 $state_value
             );
+        }
+
+        try {
+            $prompt_values = $this->prompt_parameter_values_extractor->extractPromptValues((string) ($request_params[self::PROMPT_PARAMETER] ?? ''));
+        } catch (PromptNoneParameterCannotBeMixedWithOtherPromptParametersException $exception) {
+            return $this->response_factory->createErrorResponse(
+                self::ERROR_CODE_INVALID_REQUEST,
+                $redirect_uri,
+                $state_value
+            );
+        }
+        $require_no_interaction = in_array(PromptParameterValuesExtractor::PROMPT_NONE, $prompt_values, true);
+
+        $user = $this->user_manager->getCurrentUser();
+        if ($user->isAnonymous()) {
+            if ($require_no_interaction) {
+                return $this->response_factory->createErrorResponse(
+                    self::ERROR_CODE_LOGIN_REQUIRED,
+                    $redirect_uri,
+                    $state_value
+                );
+            }
+            return $this->response_factory->createRedirectToLoginResponse($request);
         }
 
         if (! isset($request_params[self::SCOPE_PARAMETER])) {
@@ -186,6 +216,14 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
                 $state_value,
                 $code_challenge,
                 $oidc_nonce
+            );
+        }
+
+        if ($require_no_interaction) {
+            return $this->response_factory->createErrorResponse(
+                self::ERROR_CODE_INTERACTION_REQUIRED,
+                $redirect_uri,
+                $state_value
             );
         }
 

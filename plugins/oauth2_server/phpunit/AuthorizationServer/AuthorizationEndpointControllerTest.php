@@ -95,6 +95,7 @@ final class AuthorizationEndpointControllerTest extends TestCase
             $this->response_factory,
             $this->comparator,
             $this->pkce_information_extractor,
+            new PromptParameterValuesExtractor(),
             \Mockery::mock(EmitterInterface::class)
         );
     }
@@ -106,15 +107,51 @@ final class AuthorizationEndpointControllerTest extends TestCase
         }
     }
 
-    public function testHandleRedirectsAnonymousToLogin(): void
+    public function testHandleRedirectsAnonymousToLoginWhenInteractionAreAllowed(): void
     {
         $this->user_manager->shouldReceive('getCurrentUser')->andReturn(
             UserTestBuilder::anAnonymousUser()->build()
         );
+        $project = new \Project(['group_id' => 101, 'group_name' => 'Rest Project']);
+        $request = (new NullServerRequest())->withQueryParams(
+            [
+                'client_id'      => 'tlp-client-id-1',
+                'redirect_uri'   => 'https://example.com/redirect',
+                'response_type'  => 'code',
+            ]
+        );
+        $this->app_factory->shouldReceive('getAppMatchingClientId')
+            ->once()
+            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
-        $this->response_factory->shouldReceive('createRedirectToLoginResponse')->andReturn($response);
+        $this->response_factory->shouldReceive('createRedirectToLoginResponse')->once()->andReturn($response);
 
-        $this->assertSame($response, $this->controller->handle(new NullServerRequest()));
+        $this->assertSame($response, $this->controller->handle($request));
+    }
+
+    public function testRejectsAnonymousUserWithAnErrorWhenNoInteractionAreAllowed(): void
+    {
+        $this->user_manager->shouldReceive('getCurrentUser')->andReturn(
+            UserTestBuilder::anAnonymousUser()->build()
+        );
+        $project = new \Project(['group_id' => 101, 'group_name' => 'Rest Project']);
+        $request = (new NullServerRequest())->withQueryParams(
+            [
+                'client_id'      => 'tlp-client-id-1',
+                'redirect_uri'   => 'https://example.com/redirect',
+                'response_type'  => 'code',
+                'prompt'         => 'none',
+            ]
+        );
+        $this->app_factory->shouldReceive('getAppMatchingClientId')
+            ->once()
+            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
+        $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
+        $this->response_factory->shouldReceive('createErrorResponse')
+            ->with('login_required', 'https://example.com/redirect', null)
+            ->once()->andReturn($response);
+
+        $this->assertSame($response, $this->controller->handle($request));
     }
 
     /**
@@ -215,7 +252,11 @@ final class AuthorizationEndpointControllerTest extends TestCase
             'Scope is unknown'                     => [
                 ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/redirect?key=value', 'response_type' => 'code', 'state' => 'xyz', 'scope' => 'invalid_scope'],
                 'https://example.com/redirect?key=value&state=xyz&error=invalid_scope'
-            ]
+            ],
+            'Prompt parameter is not valid'        => [
+                ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/redirect?key=value', 'response_type' => 'code', 'state' => 'xyz', 'prompt' => 'login none'],
+                'https://example.com/redirect?key=value&state=xyz&error=invalid_request'
+            ],
         ];
     }
 
@@ -290,6 +331,43 @@ final class AuthorizationEndpointControllerTest extends TestCase
 
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
         $this->response_factory->shouldReceive('createSuccessfulResponse')->andReturn($response);
+
+        $this->assertSame($response, $this->controller->handle($request));
+    }
+
+    public function testHandlesRedirectWithAnInteractionRequiredErrorWhenUserNeedsToConsent(): void
+    {
+        $user = UserTestBuilder::aUser()->withId(102)->build();
+        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
+        $project = M::mock(\Project::class)->shouldReceive('getPublicName')
+            ->andReturn('Test Project')
+            ->getMock();
+        $request = (new NullServerRequest())->withQueryParams(
+            [
+                'client_id'     => 'tlp-client-id-1',
+                'redirect_uri'  => 'https://example.com/redirect',
+                'response_type' => 'code',
+                'state'         => 'xyz',
+                'scope'         => 'scopename:read',
+                'prompt'        => 'none',
+            ]
+        );
+
+        $this->app_factory->shouldReceive('getAppMatchingClientId')
+            ->once()
+            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
+        $this->scope_extractor->shouldReceive('extractScopes')
+            ->once()
+            ->andReturn([M::mock(AuthenticationScope::class)]);
+        $this->comparator->shouldReceive('areRequestedScopesAlreadyGranted')
+            ->once()
+            ->andReturnFalse();
+        $this->pkce_information_extractor->shouldReceive('extractCodeChallenge')->andReturn('extracted_code_challenge');
+
+        $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
+        $this->response_factory->shouldReceive('createErrorResponse')
+            ->with('interaction_required', 'https://example.com/redirect', 'xyz')
+            ->once()->andReturn($response);
 
         $this->assertSame($response, $this->controller->handle($request));
     }
