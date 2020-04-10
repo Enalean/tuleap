@@ -9,13 +9,6 @@ fi
 
 setup_tuleap() {
     echo "Setup Tuleap"
-    cat /usr/share/tuleap/src/etc/database.inc.dist | \
-        sed \
-        -e "s/localhost/$DB_HOST/" \
-        -e "s/%sys_dbname%/tuleap/" \
-        -e "s/%sys_dbuser%/tuleapadm/" \
-        -e "s/%sys_dbpasswd%/welcome0/" > /etc/tuleap/conf/database.inc
-    chgrp codendiadm /etc/tuleap/conf/database.inc
 
     cat /usr/share/tuleap/src/etc/local.inc.dist | \
 	sed \
