@@ -7,18 +7,7 @@ _setupDatabaseInc() {
                   > "${tuleap_conf}/${database_inc}"
 }
 
-_setupDirectory() {
-    # ${1}: group ownership
-    # ${2}: ownership
-    # ${3}: permission mode
-    # ${4}: directory
-
-    ${install} --group=${1} --owner=${2} --mode=${3} --directory ${4}
-}
-
 _setupForgeupgrade() {
-    _setupDirectory "${tuleap_unix_user}" "${tuleap_unix_user}" "0755" \
-        "${tuleap_dir}/forgeupgrade"
     ${install} --group=${tuleap_unix_user} --owner=${tuleap_unix_user} \
         --mode=0644 "${forgeupgrade_dist}" "${forgeupgrade_conf}"
 }

@@ -103,19 +103,14 @@ if [ ${tuleap_installed:-false} = "false" ] || \
         "${admin_password}" \
         "${server_name}"
 
-    for directory in ${tuleap_conf} ${tuleap_plugins} ${pluginsadministration}; do
-        if [ ! -d ${directory} ]; then
-            _setupDirectory "${tuleap_unix_user}" "${tuleap_unix_user}" "0755" \
-                "${directory}"
-        fi
-    done
-
     if [ -f "${tuleap_conf}/${local_inc}" ]; then
         _infoMessage "Saving ${local_inc} file"
         ${mv} "${tuleap_conf}/${local_inc}" \
             "${tuleap_conf}/${local_inc}.$(date +%Y-%m-%d_%H-%M-%S)"
     fi
     _setupLocalInc
+    chown root:codendiadm "${tuleap_conf}/${local_inc}"
+    chmod 00640 "${tuleap_conf}/${local_inc}"
 
     if [ -f "${tuleap_conf}/${database_inc}" ]; then
         _infoMessage "Saving ${database_inc} file"
@@ -123,6 +118,8 @@ if [ ${tuleap_installed:-false} = "false" ] || \
             "${tuleap_conf}/${database_inc}.$(date +%Y-%m-%d_%H-%M-%S)"
     fi
     _setupDatabaseInc
+    chown root:codendiadm "${tuleap_conf}/${database_inc}"
+    chmod 00640 "${tuleap_conf}/${database_inc}"
 
     _setupForgeupgrade
     _phpActivePlugin "tracker" "${tuleap_unix_user}"
