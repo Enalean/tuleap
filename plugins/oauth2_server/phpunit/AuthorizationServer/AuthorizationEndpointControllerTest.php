@@ -43,11 +43,11 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class AuthorizationEndpointGetControllerTest extends TestCase
+final class AuthorizationEndpointControllerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /** @var AuthorizationEndpointGetController */
+    /** @var AuthorizationEndpointController */
     private $controller;
     /**
      * @var M\LegacyMockInterface|M\MockInterface|AuthorizationFormRenderer
@@ -87,7 +87,7 @@ final class AuthorizationEndpointGetControllerTest extends TestCase
         $this->response_factory           = M::mock(AuthorizationCodeResponseFactory::class);
         $this->comparator                 = M::mock(AuthorizationComparator::class);
         $this->pkce_information_extractor = M::mock(PKCEInformationExtractor::class);
-        $this->controller                 = new AuthorizationEndpointGetController(
+        $this->controller                 = new AuthorizationEndpointController(
             $this->form_renderer,
             $this->user_manager,
             $this->app_factory,
@@ -158,6 +158,16 @@ final class AuthorizationEndpointGetControllerTest extends TestCase
             'No redirect URI'                                  => [['client_id' => 'tlp-client-id-1']],
             "Redirect URI does not match App's registered URI" => [['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/invalid-redirect-uri']]
         ];
+    }
+
+    public function testHandlesThrowsForbiddenWhenPOSTRequestHasNoBody(): void
+    {
+        $user = UserTestBuilder::aUser()->withId(102)->build();
+        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
+        $request = (new NullServerRequest())->withParsedBody(null)->withMethod('POST');
+
+        $this->expectException(ForbiddenException::class);
+        $this->controller->handle($request);
     }
 
     /**
@@ -243,22 +253,28 @@ final class AuthorizationEndpointGetControllerTest extends TestCase
         $this->assertSame($response, $this->controller->handle($request));
     }
 
-    public function testHandleRedirectsWithAuthorizationCodeWhenAPreviousAuthorizationHasBeenGranted(): void
+    /**
+     * @dataProvider dataProviderSupportedRequestHTTPMethod
+     */
+    public function testHandleRedirectsWithAuthorizationCodeWhenAPreviousAuthorizationHasBeenGranted(string $request_http_method): void
     {
         $user = UserTestBuilder::aUser()->withId(102)->build();
         $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
         $project = M::mock(\Project::class)->shouldReceive('getPublicName')
             ->andReturn('Test Project')
             ->getMock();
-        $request = (new NullServerRequest())->withQueryParams(
-            [
-                'client_id'     => 'tlp-client-id-1',
-                'redirect_uri'  => 'https://example.com/redirect',
-                'response_type' => 'code',
-                'state'         => 'xyz',
-                'scope'         => 'scopename:read',
-            ]
-        );
+        $request_params = [
+            'client_id'     => 'tlp-client-id-1',
+            'redirect_uri'  => 'https://example.com/redirect',
+            'response_type' => 'code',
+            'state'         => 'xyz',
+            'scope'         => 'scopename:read',
+        ];
+        if ($request_http_method === 'POST') {
+            $request = (new NullServerRequest())->withParsedBody($request_params)->withMethod('POST');
+        } else {
+            $request = (new NullServerRequest())->withQueryParams($request_params)->withMethod('GET');
+        }
 
         $this->app_factory->shouldReceive('getAppMatchingClientId')
             ->once()
@@ -278,22 +294,29 @@ final class AuthorizationEndpointGetControllerTest extends TestCase
         $this->assertSame($response, $this->controller->handle($request));
     }
 
-    public function testHandleRendersAuthorizationForm(): void
+    /**
+     * @dataProvider dataProviderSupportedRequestHTTPMethod
+     */
+    public function testHandleRendersAuthorizationForm(string $request_http_method): void
     {
         $user = UserTestBuilder::aUser()->withId(102)->build();
         $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
         $project = M::mock(\Project::class)->shouldReceive('getPublicName')
             ->andReturn('Test Project')
             ->getMock();
-        $request = (new NullServerRequest())->withQueryParams(
-            [
-                'client_id'     => 'tlp-client-id-1',
-                'redirect_uri'  => 'https://example.com/redirect',
-                'response_type' => 'code',
-                'state'         => 'xyz',
-                'scope'         => 'scopename:read',
-            ]
-        );
+        $request        = (new NullServerRequest())->withMethod($request_http_method);
+        $request_params = [
+            'client_id'     => 'tlp-client-id-1',
+            'redirect_uri'  => 'https://example.com/redirect',
+            'response_type' => 'code',
+            'state'         => 'xyz',
+            'scope'         => 'scopename:read',
+        ];
+        if ($request_http_method === 'POST') {
+            $request = $request->withParsedBody($request_params);
+        } else {
+            $request = $request->withQueryParams($request_params);
+        }
         $this->app_factory->shouldReceive('getAppMatchingClientId')
             ->once()
             ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
@@ -307,5 +330,13 @@ final class AuthorizationEndpointGetControllerTest extends TestCase
         $this->form_renderer->shouldReceive('renderForm')->once();
 
         $this->controller->handle($request->withAttribute(BaseLayout::class, LayoutBuilder::build()));
+    }
+
+    public function dataProviderSupportedRequestHTTPMethod(): array
+    {
+        return [
+            ['GET'],
+            ['POST'],
+        ];
     }
 }

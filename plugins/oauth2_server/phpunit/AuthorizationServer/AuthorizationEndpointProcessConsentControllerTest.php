@@ -39,12 +39,12 @@ use Tuleap\OAuth2Server\User\NewAuthorization;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-final class AuthorizationEndpointPostControllerTest extends TestCase
+final class AuthorizationEndpointProcessConsentControllerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var AuthorizationEndpointPostController
+     * @var AuthorizationEndpointProcessConsentController
      */
     private $controller;
     /**
@@ -80,7 +80,7 @@ final class AuthorizationEndpointPostControllerTest extends TestCase
         $this->authorization_creator = M::mock(AuthorizationCreator::class);
         $this->response_factory      = M::mock(AuthorizationCodeResponseFactory::class);
         $this->csrf_token            = M::mock(\CSRFSynchronizerToken::class);
-        $this->controller            = new AuthorizationEndpointPostController(
+        $this->controller            = new AuthorizationEndpointProcessConsentController(
             $this->user_manager,
             $this->app_factory,
             $this->scope_builder,

@@ -47,9 +47,9 @@ class RedirectURIBuilder
         parse_str($uri->getQuery(), $query);
 
         if ($state_value !== null) {
-            $query[AuthorizationEndpointGetController::STATE_PARAMETER] = $state_value;
+            $query[AuthorizationEndpointController::STATE_PARAMETER] = $state_value;
         }
-        $query[AuthorizationEndpointGetController::ERROR_PARAMETER] = $error_code;
+        $query[AuthorizationEndpointController::ERROR_PARAMETER] = $error_code;
 
         return $uri->withQuery(http_build_query($query));
     }
@@ -63,11 +63,11 @@ class RedirectURIBuilder
         parse_str($uri->getQuery(), $query);
 
         if ($state_value !== null) {
-            $query[AuthorizationEndpointGetController::STATE_PARAMETER] = $state_value;
+            $query[AuthorizationEndpointController::STATE_PARAMETER] = $state_value;
         }
-        $query[AuthorizationEndpointGetController::CODE_PARAMETER] = $authorization_code->getString();
-        $uri_with_query = $uri->withQuery(http_build_query($query));
-        \sodium_memzero($query[AuthorizationEndpointGetController::CODE_PARAMETER]);
+        $query[AuthorizationEndpointController::CODE_PARAMETER] = $authorization_code->getString();
+        $uri_with_query                                         = $uri->withQuery(http_build_query($query));
+        \sodium_memzero($query[AuthorizationEndpointController::CODE_PARAMETER]);
 
         return $uri_with_query;
     }
