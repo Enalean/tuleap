@@ -21,6 +21,13 @@ msgstr "L'accès a été révoqué."
 msgid "Access to your email address"
 msgstr "Accès à votre adresse e-mail"
 
+msgid ""
+"Access to your user profile. Includes access to your real name, avatar "
+"picture, language and timezone."
+msgstr ""
+"Accès à votre profil utilisateur. Inclus l'accès à votre nom complet, image "
+"d'avatar, langue et fuseau horaire."
+
 msgid "Add an App"
 msgstr "Ajouter une App"
 
@@ -144,6 +151,9 @@ msgid ""
 msgstr ""
 "Voici une liste des apps OAuth2 auxquelles vous avez autorisé l'accès à "
 "Tuleap en votre nom."
+
+msgid "User profile"
+msgstr "Profil utilisateur"
 
 msgid "You did not authorize any OAuth2 App yet."
 msgstr "Vous n'avez pas encore autorisé d'app OAuth2."

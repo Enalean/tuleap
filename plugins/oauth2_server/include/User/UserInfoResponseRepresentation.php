@@ -23,53 +23,79 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\User;
 
 /**
- * @psalm-immutable
- *
  * @see https://openid.net/specs/openid-connect-core-1_0.html#UserInfoResponse
  * @see https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
+ * Note: The following claims are NOT SUPPORTED as we don't have any information on them:
+ *      given_name, family_name, middle_name, nickname, website, gender, birthdate, address, phone_number, phone_number_verified, updated_at
  */
 final class UserInfoResponseRepresentation implements \JsonSerializable
 {
     /**
-     * @var string
+     * @var bool
+     * @psalm-readonly
      */
-    private $sub;
+    private $include_email;
     /**
-     * @var string|null
+     * @var bool
+     * @psalm-readonly
      */
-    private $email;
+    private $include_profile;
     /**
-     * @var bool|null
+     * @var \PFUser
+     * @psalm-readonly
      */
-    private $email_verified;
+    private $user;
 
-    private function __construct(string $sub, ?string $email, ?bool $email_verified)
+    private function __construct(\PFUser $user, bool $include_email, bool $include_profile)
     {
-        $this->sub            = $sub;
-        $this->email          = $email;
-        $this->email_verified = $email_verified;
+        $this->user            = $user;
+        $this->include_email   = $include_email;
+        $this->include_profile = $include_profile;
     }
 
-    public static function fromSubject(string $subject): self
+    public static function fromUserWithSubject(\PFUser $user): self
     {
-        return new self($subject, null, null);
+        return new self($user, false, false);
     }
 
-    public function withEmail(string $email, bool $email_verified): self
+    public function withEmail(): self
     {
-        return new self($this->sub, $email, $email_verified);
+        return new self($this->user, true, $this->include_profile);
+    }
+
+    public function withProfile(): self
+    {
+        return new self($this->user, $this->include_email, true);
+    }
+
+    /**
+     * @see https://tools.ietf.org/html/rfc5646
+     */
+    private function getRFC5646FormattedLocale(string $locale): string
+    {
+        return str_replace('_', '-', $locale);
+    }
+
+    private function getAbsoluteProfileURI(string $relative_uri): string
+    {
+        return 'https://' . \ForgeConfig::get('sys_https_host') . $relative_uri;
     }
 
     public function jsonSerialize(): array
     {
-        $json_encoded = [
-            'sub' => $this->sub
-        ];
-        if ($this->email !== null) {
-            $json_encoded['email'] = $this->email;
+        // See https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
+        $json_encoded = ['sub' => (string) $this->user->getId()];
+        if ($this->include_email === true) {
+            $json_encoded['email']          = $this->user->getEmail();
+            $json_encoded['email_verified'] = $this->user->isAlive();
         }
-        if ($this->email_verified !== null) {
-            $json_encoded['email_verified'] = $this->email_verified;
+        if ($this->include_profile === true) {
+            $json_encoded['name']               = $this->user->getRealName();
+            $json_encoded['preferred_username'] = $this->user->getUserName();
+            $json_encoded['profile']            = $this->getAbsoluteProfileURI($this->user->getPublicProfileUrl());
+            $json_encoded['picture']            = $this->user->getAvatarUrl();
+            $json_encoded['zoneinfo']           = $this->user->getTimezone();
+            $json_encoded['locale']             = $this->getRFC5646FormattedLocale($this->user->getLocale());
         }
         return $json_encoded;
     }
