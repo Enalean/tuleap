@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\User\OAuth2\AccessToken;
 
-use PFUser;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Event\Dispatchable;
+use Tuleap\User\OAuth2\ResourceServer\GrantedAuthorization;
 
 final class VerifyOAuth2AccessTokenEvent implements Dispatchable
 {
@@ -44,9 +44,9 @@ final class VerifyOAuth2AccessTokenEvent implements Dispatchable
      */
     private $required_scope;
     /**
-     * @var PFUser|null
+     * @var GrantedAuthorization|null
      */
-    private $user;
+    private $granted_authorization;
 
     /**
      * @psalm-param AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier> $required_scope
@@ -73,16 +73,19 @@ final class VerifyOAuth2AccessTokenEvent implements Dispatchable
         return $this->required_scope;
     }
 
-    public function setVerifiedUser(PFUser $user): void
+    public function setGrantedAuthorization(GrantedAuthorization $authorization): void
     {
-        $this->user = $user;
+        $this->granted_authorization = $authorization;
     }
 
-    public function getUser(): PFUser
+    /**
+     * @psalm-mutation-free
+     */
+    public function getGrantedAuthorization(): GrantedAuthorization
     {
-        if ($this->user === null) {
+        if ($this->granted_authorization === null) {
             throw new OAuth2AccessTokenNotFoundException($this->access_token->getID());
         }
-        return $this->user;
+        return $this->granted_authorization;
     }
 }

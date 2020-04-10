@@ -26,30 +26,68 @@ use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Response\JSONResponseBuilder;
+use Tuleap\Http\Server\NullServerRequest;
+use Tuleap\OAuth2Server\OAuth2TestScope;
+use Tuleap\OAuth2Server\OpenIDConnect\Scope\OpenIDConnectEmailScope;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\User\OAuth2\ResourceServer\GrantedAuthorization;
+use Tuleap\User\OAuth2\ResourceServer\OAuth2ResourceServerMiddleware;
 
 final class UserInfoControllerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testReturnsAJSONObjectContainingSubjectClaim(): void
+    /**
+     * @var UserInfoController
+     */
+    private $controller;
+
+    protected function setUp(): void
     {
-        $user_manager = M::mock(\UserManager::class);
-        $controller   = new UserInfoController(
-            HTTPFactoryBuilder::responseFactory(),
-            HTTPFactoryBuilder::streamFactory(),
-            $user_manager,
+        $this->controller = new UserInfoController(
+            new JSONResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
             M::mock(EmitterInterface::class)
         );
-        $user_manager->shouldReceive('getCurrentUser')
-            ->once()
-            ->andReturn(UserTestBuilder::aUser()->withId(110)->build());
+    }
 
-        $response = $controller->handle(M::mock(ServerRequestInterface::class));
+    public function testReturnsAJSONObjectContainingSubjectClaim(): void
+    {
+        $granted_authorization = new GrantedAuthorization(
+            UserTestBuilder::aUser()->withId(110)->build(),
+            [OAuth2TestScope::fromItself()]
+        );
+
+        $request = (new NullServerRequest())->withAttribute(
+            OAuth2ResourceServerMiddleware::class,
+            $granted_authorization
+        );
+
+        $response = $this->controller->handle($request);
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertJsonStringEqualsJsonString('{"sub":"110"}', $response->getBody()->getContents());
+    }
+
+    public function testReturnsAJSONObjectContainingEmailClaim(): void
+    {
+        $user                  = UserTestBuilder::aUser()->withId(110)
+            ->withEmail('user@example.com')
+            ->withStatus(\PFUser::STATUS_ACTIVE)
+            ->build();
+        $granted_authorization = new GrantedAuthorization($user, [OpenIDConnectEmailScope::fromItself()]);
+        $request               = (new NullServerRequest())->withAttribute(
+            OAuth2ResourceServerMiddleware::class,
+            $granted_authorization
+        );
+
+        $response = $this->controller->handle($request);
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertJsonStringEqualsJsonString(
+            '{"sub":"110","email":"user@example.com","email_verified":true}',
+            $response->getBody()->getContents()
+        );
     }
 }

@@ -23,49 +23,51 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\User;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
-use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Tuleap\Http\Response\JSONResponseBuilder;
+use Tuleap\OAuth2Server\OpenIDConnect\Scope\OpenIDConnectEmailScope;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
+use Tuleap\User\OAuth2\ResourceServer\GrantedAuthorization;
+use Tuleap\User\OAuth2\ResourceServer\OAuth2ResourceServerMiddleware;
 
 final class UserInfoController extends DispatchablePSR15Compatible implements DispatchableWithRequestNoAuthz
 {
-    private const CONTENT_TYPE_RESPONSE = 'application/json;charset=UTF-8';
     /**
-     * @var ResponseFactoryInterface
+     * @var JSONResponseBuilder
      */
-    private $response_factory;
-    /**
-     * @var StreamFactoryInterface
-     */
-    private $stream_factory;
-    /**
-     * @var \UserManager
-     */
-    private $user_manager;
+    private $json_response_builder;
 
     public function __construct(
-        ResponseFactoryInterface $response_factory,
-        StreamFactoryInterface $stream_factory,
-        \UserManager $user_manager,
+        JSONResponseBuilder $json_response_builder,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack
     ) {
         parent::__construct($emitter, ...$middleware_stack);
-        $this->response_factory = $response_factory;
-        $this->stream_factory   = $stream_factory;
-        $this->user_manager     = $user_manager;
+        $this->json_response_builder = $json_response_builder;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $current_user_id = $this->user_manager->getCurrentUser()->getId();
-        $json            = json_encode(["sub" => (string) $current_user_id], JSON_THROW_ON_ERROR);
-        return $this->response_factory->createResponse(200)
-            ->withHeader('Content-Type', self::CONTENT_TYPE_RESPONSE)
-            ->withBody($this->stream_factory->createStream($json));
+        $granted_authorization = $request->getAttribute(OAuth2ResourceServerMiddleware::class);
+        assert($granted_authorization instanceof GrantedAuthorization);
+
+        $current_user       = $granted_authorization->getUser();
+        $user_info_response = UserInfoResponseRepresentation::fromSubject((string) $current_user->getId());
+
+        $email_scope = OpenIDConnectEmailScope::fromItself();
+        foreach ($granted_authorization->getScopes() as $scope) {
+            if ($email_scope->covers($scope)) {
+                $user_info_response = $user_info_response->withEmail(
+                    $current_user->getEmail(),
+                    $current_user->isAlive()
+                );
+                break;
+            }
+        }
+
+        return $this->json_response_builder->fromData($user_info_response);
     }
 }

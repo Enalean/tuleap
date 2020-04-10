@@ -18,6 +18,9 @@ msgstr "%s du projet %s souhaite se connecter à votre compte Tuleap."
 msgid "Access has been revoked."
 msgstr "L'accès a été révoqué."
 
+msgid "Access to your email address"
+msgstr "Accès à votre adresse e-mail"
+
 msgid "Add an App"
 msgstr "Ajouter une App"
 
@@ -69,6 +72,9 @@ msgstr "Supprimer l'App"
 
 msgid "Deny"
 msgstr "Refuser"
+
+msgid "Email address"
+msgstr "Adresse e-mail"
 
 msgid "Force PKCE usage?"
 msgstr "Force l'utilisation de PKCE ?"
