@@ -97,7 +97,7 @@ def runPHPCodingStandards(String phpcsPath, String rulesetPath, String filesToAn
     }
     sh """
     docker run --rm -v $WORKSPACE/sources:/sources:ro -w /sources --network none php:7.3-cli-alpine -d memory_limit=512M \
-        ${phpcsPath} --extensions=php --encoding=utf-8 --standard="${rulesetPath}" -p ${filesToAnalyze}
+        ${phpcsPath} --extensions=php,phpstub --encoding=utf-8 --standard="${rulesetPath}" -p ${filesToAnalyze}
     """
 }
 
