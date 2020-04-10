@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,9 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once __DIR__ . '/../../../../bootstrap.php';
-class Workflow_Transition_Condition_Permissions_FactoryTest extends TuleapTestCase
+
+declare(strict_types=1);
+
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class Workflow_Transition_Condition_Permissions_FactoryTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     private $xml_mapping = array();
 
@@ -29,26 +33,29 @@ class Workflow_Transition_Condition_Permissions_FactoryTest extends TuleapTestCa
     /** @var Transition */
     private $transition;
 
-    public function setUp()
+    private $permissions_manager;
+    private $ugroup_manager;
+    private $project;
+
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->permissions_manager = mock('PermissionsManager');
+        $this->permissions_manager = \Mockery::spy(\PermissionsManager::class);
         PermissionsManager::setInstance($this->permissions_manager);
 
-        $this->ugroup_manager = mock('UgroupManager');
-        $this->project        = mock('Project');
+        $this->ugroup_manager = \Mockery::spy(\UGroupManager::class);
+        $this->project        = \Mockery::spy(\Project::class);
 
-        $this->transition          = stub('Transition')->getId()->returns(123);
+        $this->transition          = \Mockery::spy(\Transition::class)->shouldReceive('getId')->andReturns(123)->getMock();
         $this->permissions_factory = new Workflow_Transition_Condition_Permissions_Factory($this->ugroup_manager);
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         PermissionsManager::clearInstance();
-        parent::tearDown();
     }
 
-    public function itReconstitutesLegacyPermissions()
+    public function testItReconstitutesLegacyPermissions(): void
     {
         $xml = new SimpleXMLElement('
             <permissions>
@@ -58,10 +65,10 @@ class Workflow_Transition_Condition_Permissions_FactoryTest extends TuleapTestCa
 
         $condition = $this->permissions_factory->getInstanceFromXML($xml, $this->xml_mapping, $this->transition, $this->project);
 
-        $this->assertIsA($condition, 'Workflow_Transition_Condition_Permissions');
+        $this->assertInstanceOf(\Workflow_Transition_Condition_Permissions::class, $condition);
     }
 
-    public function _itReconstitutesPermissions()
+    public function testItReconstitutesPermissions(): void
     {
         $xml = new SimpleXMLElement('
             <condition type="perms">
@@ -74,24 +81,17 @@ class Workflow_Transition_Condition_Permissions_FactoryTest extends TuleapTestCa
 
         $condition = $this->permissions_factory->getInstanceFromXML($xml, $this->xml_mapping, $this->transition, $this->project);
 
-        $this->assertIsA($condition, 'Workflow_Transition_Condition_Permissions');
+        $this->assertInstanceOf(\Workflow_Transition_Condition_Permissions::class, $condition);
     }
 
-    public function itDelegatesDuplicateToPermissionsManager()
+    public function testItDelegatesDuplicateToPermissionsManager(): void
     {
         $new_transition_id = 2;
         $field_mapping     = array('some fields mapping');
         $ugroup_mapping    = array('some ugroups mapping');
         $duplicate_type    = PermissionsDao::DUPLICATE_NEW_PROJECT;
 
-        expect($this->permissions_manager)
-            ->duplicatePermissions(
-                $this->transition->getId(),
-                $new_transition_id,
-                array(Workflow_Transition_Condition_Permissions::PERMISSION_TRANSITION),
-                $ugroup_mapping,
-                $duplicate_type
-            )->once();
+        $this->permissions_manager->shouldReceive('duplicatePermissions')->with($this->transition->getId(), $new_transition_id, array(Workflow_Transition_Condition_Permissions::PERMISSION_TRANSITION), $ugroup_mapping, $duplicate_type)->once();
         $this->permissions_factory->duplicate($this->transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
     }
 }
