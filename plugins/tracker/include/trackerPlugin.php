@@ -81,7 +81,9 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Config\ConfigController;
 use Tuleap\Tracker\Creation\DefaultTemplatesCollectionBuilder;
-use Tuleap\Tracker\Creation\JiraImporter\JiraTrackerListController;
+use Tuleap\Tracker\Creation\JiraImporter\ClientWrapperBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\JiraProjectListController;
+use Tuleap\Tracker\Creation\JiraImporter\JiraTrackersListController;
 use Tuleap\Tracker\Creation\TrackerCreationBreadCrumbsBuilder;
 use Tuleap\Tracker\Creation\TrackerCreationController;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
@@ -1835,12 +1837,23 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         return new PermissionsOnFieldsUpdateController(TrackerFactory::instance());
     }
 
-    public function routeJiraTrackerListController(): DispatchableWithRequest
+    public function routeJiraProjectListController(): DispatchableWithRequest
     {
-        return new JiraTrackerListController(
+        return new JiraProjectListController(
             $this->getProjectManager(),
             $this->getTrackerCreationPermissionChecker(),
-            new \Tuleap\Tracker\Creation\JiraImporter\JiraProjectBuilder()
+            new \Tuleap\Tracker\Creation\JiraImporter\JiraProjectBuilder(),
+            new ClientWrapperBuilder()
+        );
+    }
+
+    public function routeJiraTrackerListController(): DispatchableWithRequest
+    {
+        return new JiraTrackersListController(
+            $this->getProjectManager(),
+            $this->getTrackerCreationPermissionChecker(),
+            new \Tuleap\Tracker\Creation\JiraImporter\JiraTrackerBuilder(),
+            new ClientWrapperBuilder()
         );
     }
 
@@ -1874,7 +1887,8 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
             $r->addRoute(['GET', 'POST'], GlobalAdminController::URL . '/{id:\d+}', $this->getRouteHandler('routeGlobalAdmin'));
 
-            $r->post('/{project_name:[A-z0-9-]+}/jira/project_list', $this->getRouteHandler('routeJiraTrackerListController'));
+            $r->post('/{project_name:[A-z0-9-]+}/jira/project_list', $this->getRouteHandler('routeJiraProjectListController'));
+            $r->post('/{project_name:[A-z0-9-]+}/jira/{jira_project_key:[A-z]+}/tracker_list', $this->getRouteHandler('routeJiraTrackerListController'));
             $r->get('/{project_name:[A-z0-9-]+}/new', $this->getRouteHandler('routeCreateNewTracker'));
             $r->get('/{project_name:[A-z0-9-]+}/new-information', $this->getRouteHandler('routeCreateNewTracker'));
             $r->post('/{project_name:[A-z0-9-]+}/new-information', $this->getRouteHandler('routeProcessNewTrackerCreation'));

@@ -20,13 +20,31 @@
 
 import TrackerFromJiraProject from "./TrackerFromJiraProject.vue";
 import { createTrackerCreationLocalVue } from "../../../../../helpers/local-vue-for-tests";
-import { shallowMount } from "@vue/test-utils";
-import { ProjectList } from "../../../../../store/type";
+import { shallowMount, Wrapper } from "@vue/test-utils";
+import { Credentials, JiraImportData, ProjectList, State } from "../../../../../store/type";
+import { createStoreMock } from "../../../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 
 describe("TrackerFromJiraProject", () => {
-    it("renders the component", async () => {
-        const wrapper = shallowMount(TrackerFromJiraProject, {
+    let state: State;
+    let wrapper: Wrapper<TrackerFromJiraProject>;
+    beforeEach(async () => {
+        state = {
+            from_jira_data: {
+                credentials: {
+                    server_url: "https://example.com",
+                    user_email: "user-email@example.com",
+                    token: "azerty1234",
+                } as Credentials,
+            } as JiraImportData,
+        } as State;
+
+        wrapper = shallowMount(TrackerFromJiraProject, {
             localVue: await createTrackerCreationLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state,
+                }),
+            },
             propsData: {
                 project_list: [
                     { id: "TO", label: "toto" } as ProjectList,
@@ -34,7 +52,36 @@ describe("TrackerFromJiraProject", () => {
                 ],
             },
         });
+    });
 
+    it("renders the component", () => {
         expect(wrapper.element).toMatchSnapshot();
+    });
+
+    it("load the project list", async () => {
+        const value = "TO";
+        await wrapper.vm.$nextTick();
+
+        (wrapper.find("[data-test=project-TO]").element as HTMLOptionElement).selected = true;
+
+        wrapper.get("[data-test=project-list]").trigger("change");
+
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("getJiraTrackerList", {
+            credentials: state.from_jira_data.credentials,
+            project_key: value,
+        });
+        expect(wrapper.vm.$data.error_message).toBe("");
+
+        expect(wrapper.find("[data-test=jira-fail-load-project]").exists()).toBe(false);
+    });
+
+    it("display the error message", async () => {
+        wrapper.vm.$data.error_message = "Oh snap!";
+
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.find("[data-test=jira-fail-load-trackers]").exists()).toBe(true);
     });
 });

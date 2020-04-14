@@ -19,7 +19,7 @@
  */
 
 import { post } from "tlp";
-import { Context, Credentials, ProjectList } from "./type";
+import { Context, Credentials, ProjectList, ProjectTrackerPayload, TrackerList } from "./type";
 
 export async function getJiraProjectList(
     context: Context,
@@ -34,6 +34,27 @@ export async function getJiraProjectList(
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({ credentials }),
+        }
+    );
+
+    return response.json();
+}
+
+export async function getJiraTrackerList(
+    context: Context,
+    project_tracker_payload: ProjectTrackerPayload
+): Promise<TrackerList[]> {
+    const response = await post(
+        "/plugins/tracker/" +
+            encodeURIComponent(context.state.project_unix_name) +
+            "/jira/" +
+            encodeURIComponent(project_tracker_payload.project_key) +
+            "/tracker_list",
+        {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ credentials: project_tracker_payload.credentials }),
         }
     );
 

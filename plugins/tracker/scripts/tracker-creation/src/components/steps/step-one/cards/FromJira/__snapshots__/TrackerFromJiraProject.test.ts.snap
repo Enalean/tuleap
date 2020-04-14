@@ -2,6 +2,8 @@
 
 exports[`TrackerFromJiraProject renders the component 1`] = `
 <div>
+  <!---->
+   
   <div
     class="tlp-form-element"
   >
@@ -16,6 +18,7 @@ exports[`TrackerFromJiraProject renders the component 1`] = `
      
     <select
       class="tlp-select"
+      data-test="project-list"
       id="project"
       name="project"
     >
@@ -45,5 +48,7 @@ exports[`TrackerFromJiraProject renders the component 1`] = `
       </option>
     </select>
   </div>
+   
+  <!---->
 </div>
 `;
