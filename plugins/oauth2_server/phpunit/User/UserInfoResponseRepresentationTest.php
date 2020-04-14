@@ -22,61 +22,28 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\User;
 
-use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
-use Tuleap\Http\HTTPFactoryBuilder;
-use Tuleap\Http\Response\JSONResponseBuilder;
-use Tuleap\Http\Server\NullServerRequest;
-use Tuleap\OAuth2Server\OAuth2TestScope;
-use Tuleap\OAuth2Server\OpenIDConnect\Scope\OpenIDConnectEmailScope;
-use Tuleap\OAuth2Server\OpenIDConnect\Scope\OpenIDConnectProfileScope;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\User\OAuth2\ResourceServer\GrantedAuthorization;
-use Tuleap\User\OAuth2\ResourceServer\OAuth2ResourceServerMiddleware;
 
-final class UserInfoControllerTest extends TestCase
+final class UserInfoResponseRepresentationTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
-
-    /**
-     * @var UserInfoController
-     */
-    private $controller;
 
     protected function setUp(): void
     {
         \ForgeConfig::set('sys_https_host', 'tuleap.example.com');
-        $this->controller = new UserInfoController(
-            new JSONResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
-            M::mock(EmitterInterface::class)
-        );
     }
 
     /**
-     * @dataProvider dataProviderScopes
+     * @dataProvider dataProviderClaims
      */
-    public function testReturnsAJSONObjectWithAskedClaims(
-        GrantedAuthorization $authorization,
+    public function testBuildsRepresentation(
+        bool $with_email,
+        bool $with_profile,
         string $expected_json
     ): void {
-        $request = (new NullServerRequest())->withAttribute(
-            OAuth2ResourceServerMiddleware::class,
-            $authorization
-        );
-
-        $response = $this->controller->handle($request);
-
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertJsonStringEqualsJsonString($expected_json, $response->getBody()->getContents());
-    }
-
-    public function dataProviderScopes(): array
-    {
-        $user = UserTestBuilder::aUser()->withId(110)
+        $user           = UserTestBuilder::aUser()->withId(110)
             ->withEmail('user@example.com')
             ->withStatus(\PFUser::STATUS_ACTIVE)
             ->withUserName('testuser')
@@ -84,21 +51,40 @@ final class UserInfoControllerTest extends TestCase
             ->withTimezone('America/Montreal')
             ->withLocale('en_US')
             ->build();
+        $representation = UserInfoResponseRepresentation::fromUserWithSubject($user);
+        if ($with_email === true) {
+            $representation = $representation->withEmail();
+        }
+        if ($with_profile === true) {
+            $representation = $representation->withProfile();
+        }
+        $this->assertJsonStringEqualsJsonString(
+            $expected_json,
+            json_encode($representation, JSON_THROW_ON_ERROR)
+        );
+    }
+
+    public function dataProviderClaims(): array
+    {
         return [
             'With subject claim only' => [
-                new GrantedAuthorization($user, [OAuth2TestScope::fromItself()]),
+                false,
+                false,
                 '{"sub":"110"}'
             ],
-            'With email scope'        => [
-                new GrantedAuthorization($user, [OpenIDConnectEmailScope::fromItself()]),
+            'With email'              => [
+                true,
+                false,
                 '{"sub":"110","email":"user@example.com","email_verified":true}'
             ],
-            'With profile scope'      => [
-                new GrantedAuthorization($user, [OpenIDConnectProfileScope::fromItself()]),
+            'With profile'            => [
+                false,
+                true,
                 '{"sub":"110","name":"Test USER","preferred_username":"testuser","profile":"https:\/\/tuleap.example.com\/users\/testuser","picture":"https:\/\/\/themes\/common\/images\/avatar_default.png","zoneinfo":"America\/Montreal","locale":"en-US"}'
             ],
-            'With all scopes'         => [
-                new GrantedAuthorization($user, [OpenIDConnectEmailScope::fromItself(), OpenIDConnectProfileScope::fromItself()]),
+            'With all claims'         => [
+                true,
+                true,
                 '{"sub":"110","email":"user@example.com","email_verified":true,"name":"Test USER","preferred_username":"testuser","profile":"https:\/\/tuleap.example.com\/users\/testuser","picture":"https:\/\/\/themes\/common\/images\/avatar_default.png","zoneinfo":"America\/Montreal","locale":"en-US"}'
             ]
         ];

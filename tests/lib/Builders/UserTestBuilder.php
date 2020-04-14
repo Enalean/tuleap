@@ -104,6 +104,12 @@ class UserTestBuilder
         return $this;
     }
 
+    public function withLocale(string $language_tag): self
+    {
+        $this->params['language_id'] = $language_tag;
+        return $this;
+    }
+
     public function build(): \PFUser
     {
         $user = new \PFUser($this->params);

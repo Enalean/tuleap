@@ -69,6 +69,7 @@ use Tuleap\OAuth2Server\OpenIDConnect\IDToken\OpenIDConnectSigningKeyFactory;
 use Tuleap\OAuth2Server\OpenIDConnect\JWK\JWKSDocumentEndpointController;
 use Tuleap\OAuth2Server\OpenIDConnect\Scope\OAuth2SignInScope;
 use Tuleap\OAuth2Server\OpenIDConnect\Scope\OpenIDConnectEmailScope;
+use Tuleap\OAuth2Server\OpenIDConnect\Scope\OpenIDConnectProfileScope;
 use Tuleap\OAuth2Server\ProjectAdmin\ListAppsController;
 use Tuleap\OAuth2Server\RefreshToken\OAuth2OfflineAccessScope;
 use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenCreator;
@@ -552,7 +553,8 @@ final class oauth2_serverPlugin extends Plugin
             new AuthenticationScopeBuilderFromClassNames(
                 OAuth2OfflineAccessScope::class,
                 OAuth2SignInScope::class,
-                OpenIDConnectEmailScope::class
+                OpenIDConnectEmailScope::class,
+                OpenIDConnectProfileScope::class
             )
         );
     }

@@ -28,6 +28,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\OAuth2Server\OpenIDConnect\Scope\OpenIDConnectEmailScope;
+use Tuleap\OAuth2Server\OpenIDConnect\Scope\OpenIDConnectProfileScope;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\User\OAuth2\ResourceServer\GrantedAuthorization;
@@ -49,22 +50,25 @@ final class UserInfoController extends DispatchablePSR15Compatible implements Di
         $this->json_response_builder = $json_response_builder;
     }
 
+    /**
+     * @throws \JsonException
+     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $granted_authorization = $request->getAttribute(OAuth2ResourceServerMiddleware::class);
         assert($granted_authorization instanceof GrantedAuthorization);
 
         $current_user       = $granted_authorization->getUser();
-        $user_info_response = UserInfoResponseRepresentation::fromSubject((string) $current_user->getId());
+        $user_info_response = UserInfoResponseRepresentation::fromUserWithSubject($current_user);
 
         $email_scope = OpenIDConnectEmailScope::fromItself();
+        $profile_scope = OpenIDConnectProfileScope::fromItself();
         foreach ($granted_authorization->getScopes() as $scope) {
             if ($email_scope->covers($scope)) {
-                $user_info_response = $user_info_response->withEmail(
-                    $current_user->getEmail(),
-                    $current_user->isAlive()
-                );
-                break;
+                $user_info_response = $user_info_response->withEmail();
+            }
+            if ($profile_scope->covers($scope)) {
+                $user_info_response = $user_info_response->withProfile();
             }
         }
 
