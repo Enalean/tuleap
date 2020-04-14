@@ -48,6 +48,7 @@ use Tuleap\OAuth2Server\App\OAuth2AppRemover;
 use Tuleap\OAuth2Server\App\PrefixOAuth2ClientSecret;
 use Tuleap\OAuth2Server\AuthorizationServer\AuthorizationEndpointController;
 use Tuleap\OAuth2Server\AuthorizationServer\PKCE\PKCEInformationExtractor;
+use Tuleap\OAuth2Server\AuthorizationServer\PromptParameterValuesExtractor;
 use Tuleap\OAuth2Server\AuthorizationServer\RedirectURIBuilder;
 use Tuleap\OAuth2Server\Grant\AccessTokenGrantController;
 use Tuleap\OAuth2Server\Grant\AccessTokenGrantErrorResponseBuilder;
@@ -282,6 +283,7 @@ final class oauth2_serverPlugin extends Plugin
                 )
             ),
             new PKCEInformationExtractor(),
+            new PromptParameterValuesExtractor(),
             new SapiEmitter(),
             new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
             new RejectNonHTTPSRequestMiddleware($response_factory, $stream_factory),
