@@ -113,7 +113,7 @@ class PluginFactory // phpcs:ignore
 
     /**
      * create a plugin in the db
-     * @return the new plugin or false if there is already the plugin (same name)
+     * @return Plugin|false the new plugin or false if there is already the plugin (same name)
      */
     public function createPlugin($name)
     {

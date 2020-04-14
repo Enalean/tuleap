@@ -41,6 +41,6 @@
 
     public function validate($password)
     {
-        return preg_match($this->regexp, $password);
+        return preg_match($this->regexp, $password) === 1;
     }
 }

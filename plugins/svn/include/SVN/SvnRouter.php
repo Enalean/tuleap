@@ -277,7 +277,9 @@ class SvnRouter implements DispatchableWithRequest
             $GLOBALS['Response']->redirect('/');
         }
 
-        return $request->getProject()->getService('plugin_svn');
+        $service = $request->getProject()->getService('plugin_svn');
+        assert($service instanceof ServiceSvn);
+        return $service;
     }
 
     private function getProjectFromViewVcURL(HTTPRequest $request)

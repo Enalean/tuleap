@@ -89,7 +89,7 @@ class ReferenceDao extends DataAccessObject
     }
 
     /**
-     * @return DataAccessResult
+     * @return array|false
      */
     public function searchByKeyword($keyword)
     {
@@ -135,7 +135,7 @@ class ReferenceDao extends DataAccessObject
     }
 
     /**
-     * @return DataAccessResult
+     * @return array|false
      */
     public function getSystemReferenceByNatureAndKeyword($keyword, $nature)
     {
@@ -152,7 +152,7 @@ class ReferenceDao extends DataAccessObject
     }
 
     /**
-     * @return DataAccessResult
+     * @return array|false
      */
     public function getSystemReferenceNatureByKeyword($keyword)
     {

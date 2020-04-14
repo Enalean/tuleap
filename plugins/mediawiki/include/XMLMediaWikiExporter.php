@@ -102,7 +102,7 @@ class XMLMediaWikiExporter
         $this->logger->info('Export mediawiki');
         $root_node = $xml_content->addChild('mediawiki');
         $root_node->addAttribute('pages-backup', 'wiki_pages.xml');
-        $root_node->addAttribute('language', $this->language_manager->getUsedLanguageForProject($this->project));
+        $root_node->addAttribute('language', $this->language_manager->getUsedLanguageForProject($this->project) ?? '');
         $root_node->addAttribute('files-folder-backup', 'files');
 
         $this->logger->info('Export mediawiki permissions');

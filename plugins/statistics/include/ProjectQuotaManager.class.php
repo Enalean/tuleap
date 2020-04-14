@@ -163,7 +163,7 @@ class ProjectQuotaManager
      *
      * @param int $groupId ID of the project we want to retrieve its custom quota
      *
-     * @return int
+     * @return int|null
      */
     public function getProjectCustomQuota($groupId)
     {

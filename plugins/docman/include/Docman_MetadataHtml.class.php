@@ -247,7 +247,7 @@ class Docman_MetadataHtml
     /**
      * Return field input validator.
      *
-     * @return string
+     * @return Docman_Validator|null
      */
     public function &getValidator()
     {

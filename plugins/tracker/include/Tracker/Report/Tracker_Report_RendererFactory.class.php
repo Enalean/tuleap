@@ -416,7 +416,7 @@ class Tracker_Report_RendererFactory
                         $row['description'],
                         $row['rank'],
                         $row['chunksz'],
-                        $row['multisort']
+                        (bool) $row['multisort']
                     );
 
                     if ($store_in_session) {

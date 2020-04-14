@@ -225,7 +225,7 @@ class UserHelper
      *
      * @param int the user_id of the user to display
      * @see getDisplayName
-     * @return string
+     * @return string|null
      */
     public function getDisplayNameFromUserId($user_id)
     {

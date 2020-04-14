@@ -27,6 +27,6 @@ interface ReadyToBeImportedUser extends User
 
     public function process(UserManager $user_manager, LoggerInterface $logger);
 
-    /** @return PFUser */
+    /** @return \PFUser */
     public function getRealUser(UserManager $user_manager);
 }

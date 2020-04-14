@@ -188,7 +188,7 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
      *
      * @param string $xml_tag_name
      *
-     * @psalm-return class-string
+     * @psalm-return class-string<Transition_PostAction>
      *
      * @throws Transition_PostAction_NotFoundException
      */

@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\REST\Artifact;
 
 use Tuleap\REST\JsonCast;
 
-class ArtifactFieldValueFileFullRepresentation
+class ArtifactFieldValueFileFullRepresentation extends ArtifactFieldValueRepresentationData
 {
     /**
      * @var int ID of the field

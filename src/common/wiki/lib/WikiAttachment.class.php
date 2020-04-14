@@ -627,7 +627,7 @@ class WikiAttachment /* implements UGroupPermission */
      * @param int $offset
      * @param int $limit
      *
-     * @return bool
+     * @return DataAccessResult
      */
     public function listPendingAttachments($groupId, $offset, $limit)
     {

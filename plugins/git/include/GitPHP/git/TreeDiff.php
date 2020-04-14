@@ -228,7 +228,7 @@ class TreeDiff implements \Iterator, \Countable
             $this->ReadData();
         }
 
-        return reset($this->fileDiffs);
+        reset($this->fileDiffs);
     }
 
     /**
@@ -270,7 +270,7 @@ class TreeDiff implements \Iterator, \Countable
             $this->ReadData();
         }
 
-        return next($this->fileDiffs);
+        next($this->fileDiffs);
     }
 
     /**

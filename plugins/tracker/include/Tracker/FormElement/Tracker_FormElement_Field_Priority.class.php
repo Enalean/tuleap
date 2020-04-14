@@ -39,11 +39,14 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
         return '';
     }
 
+    /**
+     * @param null|Tracker_Report|int $report
+     */
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report = null, $from_aid = null)
     {
         $value = $this->getArtifactRank($artifact_id);
 
-        if (! $report) {
+        if (! $report instanceof Tracker_Report) {
             return $value;
         }
 

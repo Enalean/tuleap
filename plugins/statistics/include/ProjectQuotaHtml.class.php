@@ -87,7 +87,7 @@ class ProjectQuotaHtml
      *
      * @param HTTPRequest $request HTTP request
      *
-     * @return String
+     * @return string|null
      */
     private function validateProjectFilter(HTTPRequest $request)
     {
@@ -136,7 +136,7 @@ class ProjectQuotaHtml
         $orderParams  = $this->validateOrderByFilter($request);
         $sortBy       = $orderParams['sort'];
         $orderBy      = $orderParams['order'];
-        $list         = $this->getListOfProjectsIds($filter);
+        $list         = $this->getListOfProjectsIds($filter ?? '');
         $purifier     = Codendi_HTMLPurifier::instance();
 
         $customQuotas = $this->dao->getAllCustomQuota($list, $offset, $count, $sortBy, $orderBy);

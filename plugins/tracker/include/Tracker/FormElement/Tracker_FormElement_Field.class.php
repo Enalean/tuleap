@@ -283,11 +283,11 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
     /**
      * Return the fieldset of this field
-     * @return Tracker_FormElement_FieldSet
+     * @return Tracker_FormElement_Field|null
      */
     public function getParent()
     {
-        return Tracker_FormElementFactory::instance()->getFieldByid($this->parent_id);
+        return Tracker_FormElementFactory::instance()->getFieldById($this->parent_id);
     }
 
     /**

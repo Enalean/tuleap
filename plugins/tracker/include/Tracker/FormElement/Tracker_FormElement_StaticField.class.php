@@ -33,17 +33,17 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement
     // TODO : remove these functions (no need for that kind of "fields"
     public function fetchAddCriteria($used, $prefix = '')
     {
-        return null;
+        return '';
     }
 
     public function fetchAddColumn($used, $prefix = '')
     {
-        return null;
+        return '';
     }
 
     public function fetchAddTooltip($used, $prefix = '')
     {
-        return null;
+        return '';
     }
 
     /**

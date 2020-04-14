@@ -313,7 +313,11 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     public function getTracker()
     {
         if (!$this->tracker) {
-            $this->tracker = TrackerFactory::instance()->getTrackerByid($this->tracker_id);
+            $tracker = TrackerFactory::instance()->getTrackerById($this->tracker_id);
+            if ($tracker === null) {
+                throw new RuntimeException('Tracker does not exist');
+            }
+            $this->tracker = $tracker;
         }
         return $this->tracker;
     }

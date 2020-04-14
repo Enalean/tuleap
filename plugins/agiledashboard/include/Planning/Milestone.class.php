@@ -48,17 +48,17 @@ interface Planning_Milestone // @codingStandardsIgnoreLine
     public function userCanView(PFUser $user);
 
     /**
-     * @return int
+     * @return int|int[]
      */
     public function getTrackerId();
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getArtifactId();
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getArtifactTitle();
 
@@ -141,7 +141,7 @@ interface Planning_Milestone // @codingStandardsIgnoreLine
     /**
      * Get the timestamp of the last modification of the milestone
      *
-     * @return int timestamp
+     * @return int|null timestamp
      */
     public function getLastModifiedDate();
 
@@ -155,14 +155,14 @@ interface Planning_Milestone // @codingStandardsIgnoreLine
     /**
      * Return capacity
      *
-     * @return float
+     * @return float|null
      */
     public function getCapacity();
 
     /**
      * Return remaining_effort
      *
-     * @return float
+     * @return float|null
      */
     public function getRemainingEffort();
 

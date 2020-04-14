@@ -83,8 +83,6 @@ final class TrackerHierarchyFactoryGetParentTest extends \PHPUnit\Framework\Test
 
     public function testItReturnsNullIfNoParentTracker(): void
     {
-        $this->tracker_factory->shouldReceive('getTrackerById')->with(null)->once();
-
         $this->dao->shouldReceive('searchTrackerHierarchy')->andReturn([])->once();
         $this->assertNull($this->hierarchy_factory->getParent($this->epic_tracker));
     }

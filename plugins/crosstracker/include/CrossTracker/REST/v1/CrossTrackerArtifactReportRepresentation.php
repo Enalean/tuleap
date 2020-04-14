@@ -76,7 +76,7 @@ class CrossTrackerArtifactReportRepresentation
     public function build(\Tracker_Artifact $artifact, \PFUser $user)
     {
         $this->id               = JsonCast::toInt($artifact->getId());
-        $this->title            = $artifact->getTitle();
+        $this->title            = $artifact->getTitle() ?? '';
         $this->badge            =
             array(
                 "uri"       => $artifact->getUri(),

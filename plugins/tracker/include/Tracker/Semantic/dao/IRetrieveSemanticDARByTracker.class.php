@@ -29,7 +29,8 @@ interface Tracker_Semantic_IRetrieveSemanticDARByTracker
      *
      * @param int $tracker_id The tracker id
      *
-     * @return DataAccessResult — collection of array('field_id' => …)
+     * @return false|DataAccessResult — collection of array('field_id' => …)
+     * @psalm-ignore-falsable-return
      */
     public function searchByTrackerId($tracker_id);
 }

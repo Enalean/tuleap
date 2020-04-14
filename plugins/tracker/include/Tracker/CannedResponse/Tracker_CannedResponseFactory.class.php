@@ -173,9 +173,15 @@ class Tracker_CannedResponseFactory
     {
         $tf = $this->getTrackerFactory();
         $from_tracker = $tf->getTrackerById($from_tracker_id);
+        if ($from_tracker === null) {
+            throw new RuntimeException('Tracker does not exist');
+        }
         $to_tracker = $tf->getTrackerById($to_tracker_id);
         $from_canned_responses = $this->getCannedResponses($from_tracker);
         foreach ($from_canned_responses as $from_canned_response) {
+            if ($to_tracker === null) {
+                throw new RuntimeException('Tracker does not exist');
+            }
             $this->create($to_tracker, $from_canned_response->getTitle(), $from_canned_response->getBody());
         }
     }

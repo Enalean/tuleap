@@ -1087,6 +1087,9 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         if (!$this->tracker) {
             $this->tracker = TrackerFactory::instance()->getTrackerById($this->tracker_id);
         }
+        if ($this->tracker === null) {
+            throw new RuntimeException('Tracker does not exist');
+        }
         return $this->tracker;
     }
 

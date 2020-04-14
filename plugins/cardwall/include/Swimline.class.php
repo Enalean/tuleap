@@ -56,7 +56,7 @@ class Cardwall_Swimline
     }
 
     /**
-     * @return Tracker_CardPresenter
+     * @return Tracker_CardPresenter|null
      */
     public function getCardPresenter()
     {

@@ -107,7 +107,7 @@ class CardRepresentation
     ): void {
         $this->id                = JsonCast::toInt($artifact->getId());
         $this->tracker_id        = JsonCast::toInt($artifact->getTrackerId());
-        $this->label             = $artifact->getTitle();
+        $this->label             = $artifact->getTitle() ?? '';
         $this->xref              = $artifact->getXRef();
         $this->rank              = $rank;
         $this->color             = $artifact->getTracker()->getColor()->getName();

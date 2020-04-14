@@ -187,7 +187,11 @@ class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      */
     public function getTracker()
     {
-        return TrackerFactory::instance()->getTrackerByid($this->tracker_id);
+        $tracker = TrackerFactory::instance()->getTrackerById($this->tracker_id);
+        if ($tracker === null) {
+            throw new RuntimeException('Tracker does not exist');
+        }
+        return $tracker;
     }
 
     /**

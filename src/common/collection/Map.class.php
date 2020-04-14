@@ -35,7 +35,7 @@ class Map
     }
 
     /**
-     * @return the value to which this map maps the specified key.
+     * @return mixed the value to which this map maps the specified key.
      */
     public function get($key)
     {

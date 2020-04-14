@@ -191,7 +191,7 @@ class Workflow_Transition_ConditionFactory
      * @param SimpleXMLElement $xml         containing the structure of the imported workflow
      * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
      *
-     * @return Workflow_Transition_Condition The condition object, or null if error
+     * @return Workflow_Transition_Condition|null The condition object, or null if error
      */
     private function getInstanceFromXML($xml, &$xmlMapping, Transition $transition, Project $project)
     {

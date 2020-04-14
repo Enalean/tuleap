@@ -67,7 +67,7 @@ class MinimalArtifactRepresentation
         $this->xref = $artifact->getXRef();
 
         $this->html_url        = $artifact->getUri();
-        $this->title           = $artifact->getTitle();
+        $this->title           = $artifact->getTitle() ?? '';
         $this->badge_color     = $artifact->getTracker()->getColor()->getName();
         $this->submission_date = JsonCast::toDate($artifact->getSubmittedOn());
     }

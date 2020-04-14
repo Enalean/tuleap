@@ -85,9 +85,13 @@ class CardwallConfigXmlExport
             return;
         }
 
+        $field = $mapping->getField();
+        if ($field === null) {
+            return;
+        }
         $mapping_node = $mappings_node->addChild(CardwallConfigXml::NODE_MAPPING);
         $mapping_node->addAttribute('tracker_id', $mapping->getTracker()->getXMLId());
-        $mapping_node->addAttribute('field_id', $mapping->getField()->getXMLId());
+        $mapping_node->addAttribute('field_id', $field->getXMLId());
 
         $values_node = $mapping_node->addChild(CardwallConfigXml::NODE_VALUES);
         foreach ($mapping->getValueMappings() as $value_mapping) {

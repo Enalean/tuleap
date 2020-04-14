@@ -417,6 +417,7 @@ class AgileDashboardRouter
         if ($this->service == null) {
             $project = $request->getProject();
             $this->service = $project->getService('plugin_agiledashboard');
+            assert($this->service instanceof Service);
         }
         return $this->service;
     }

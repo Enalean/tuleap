@@ -49,7 +49,9 @@ class Cardwall_OnTop_Config_MappedFieldProvider implements Cardwall_FieldProvide
     {
         $mapping = $this->config->getMappingFor($tracker);
         if ($mapping) {
-            return $mapping->getField();
+            $field = $mapping->getField();
+            assert($field === null || $field instanceof Tracker_FormElement_Field_Selectbox);
+            return $field;
         }
         return $this->semantic_status_provider->getField($tracker);
     }

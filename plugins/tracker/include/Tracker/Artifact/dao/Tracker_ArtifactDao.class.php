@@ -975,7 +975,8 @@ class Tracker_ArtifactDao extends DataAccessObject
      * Retrieve all artifacts linked by the given one that are of a specific tracker type
      *
      * @param int $artifact_id
-     * @return DataAccessResult
+     * @return array|false
+     * @psalm-ignore-falsable-return
      */
     public function getLinkedArtifactsOfTrackerTypeAsString($artifact_id, $tracker_id)
     {
@@ -999,7 +1000,8 @@ class Tracker_ArtifactDao extends DataAccessObject
      *
      * @param string $artifact_ids string of comma separated list of artifact IDs e.g '12,568,12,4589'
      * @param int $artifact_ids comma separated list of artifact IDs
-     * @return DataAccessResult
+     * @return array|false
+     * @psalm-ignore-falsable-return
      */
     public function getLinkedArtifactsOfArtifactsOfTrackerTypeAsString($artifact_ids, $tracker_id)
     {

@@ -57,6 +57,9 @@ class XML_SimpleXMLCDATAFactory
     {
         $dom_node = dom_import_simplexml($node);
         $document = $dom_node->ownerDocument;
+        if ($document === null) {
+            return;
+        }
         $value    = Encoding_SupportedXmlCharEncoding::getXMLCompatibleString($node_value);
         $cdata    = $document->createCDATASection($value);
         $dom_node->appendChild($cdata);

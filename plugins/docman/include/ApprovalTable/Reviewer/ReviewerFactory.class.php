@@ -139,7 +139,7 @@ class Docman_ApprovalTableReviewerFactory
      * Create reviewer from database.
      * This method update 'isReviewer' cache (see corresponding method)
      *
-     * @return Docman_ApprovalReviewer
+     * @return Docman_ApprovalReviewer|null
      */
     public function getReviewer($userId)
     {

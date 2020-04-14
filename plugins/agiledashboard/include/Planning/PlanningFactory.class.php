@@ -167,6 +167,9 @@ class PlanningFactory
         $backlog_tracker_ids  = $first_planning->getBacklogTrackersIds();
 
         $planning_tracker = $this->tracker_factory->getTrackerById($planning_tracker_id);
+        if ($planning_tracker === null) {
+            throw new RuntimeException('Tracker does not exist');
+        }
 
         foreach ($backlog_tracker_ids as $backlog_tracker_id) {
             $backlog_trackers[] = $this->tracker_factory->getTrackerById($backlog_tracker_id);
@@ -503,7 +506,11 @@ class PlanningFactory
      */
     private function getPlanningTracker(Planning $planning)
     {
-        return $this->tracker_factory->getTrackerById($planning->getPlanningTrackerId());
+        $tracker = $this->tracker_factory->getTrackerById($planning->getPlanningTrackerId());
+        if ($tracker === null) {
+            throw new RuntimeException('Tracker does not exist');
+        }
+        return $tracker;
     }
 
     /**
@@ -640,7 +647,10 @@ class PlanningFactory
     {
         $trackers = array();
         foreach ($this->getPotentialPlanningTrackerIds($user, $group_id) as $tracker_id) {
-            $trackers[] = $this->tracker_factory->getTrackerById($tracker_id);
+            $tracker = $this->tracker_factory->getTrackerById($tracker_id);
+            if ($tracker !== null) {
+                $trackers[] = $tracker;
+            }
         }
         return $trackers;
     }
@@ -676,9 +686,10 @@ class PlanningFactory
             $existing_planning_tracker_ids = $this->getPlanningTrackerIdsByGroupId($group_id);
             foreach ($existing_planning_tracker_ids as $tracker_id) {
                 if (! in_array($tracker_id, $potential_planning_trackers)) {
-                    $plannings[] = $this->getPlanningByPlanningTracker(
-                        $this->tracker_factory->getTrackerById($tracker_id)
-                    );
+                    $tracker = $this->tracker_factory->getTrackerById($tracker_id);
+                    if ($tracker !== null) {
+                        $plannings[] = $this->getPlanningByPlanningTracker($tracker);
+                    }
                 }
             }
         }

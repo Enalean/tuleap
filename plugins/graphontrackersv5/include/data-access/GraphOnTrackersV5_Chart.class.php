@@ -371,11 +371,12 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
      */
     public function fetchAsArray()
     {
-        if (! $this->userCanVisualize() || ! $this->getEngineWithData()) {
+        $engine = $this->getEngineWithData();
+        if (! $this->userCanVisualize() || ! $engine) {
             return array();
         }
 
-        return $this->getEngineWithData()->toArray();
+        return $engine->toArray();
     }
 
     public function getRow()
@@ -420,7 +421,7 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
     }
 
     /**
-     * @return GraphOnTrackersV5_Engine
+     * @return GraphOnTrackersV5_Engine|false
      */
     protected function getEngineWithData()
     {

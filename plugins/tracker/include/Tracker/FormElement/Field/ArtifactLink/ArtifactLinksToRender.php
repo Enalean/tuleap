@@ -117,6 +117,9 @@ class ArtifactLinksToRender
             $matching_ids['last_changeset_id'] = substr($matching_ids['last_changeset_id'], 0, -1);
 
             $tracker = $tracker_factory->getTrackerById($tracker_id);
+            if ($tracker === null) {
+                continue;
+            }
             $project = $tracker->getProject();
             if ($tracker->userCanView() && ! $tracker->isDeleted()) {
                 $report = $report_factory->getDefaultReportsByTrackerId($tracker->getId());
@@ -203,7 +206,8 @@ class ArtifactLinksToRender
         if (isset($this->can_user_artifact_link_cache[$user->getId()][spl_object_hash($artifact_link)])) {
             return $this->can_user_artifact_link_cache[$user->getId()][spl_object_hash($artifact_link)];
         }
-        $can_use_artifact_link = ($artifact_link->getTracker()->isActive() &&
+        $artifact_link_tracker = $artifact_link->getTracker();
+        $can_use_artifact_link = ($artifact_link_tracker !== null && $artifact_link_tracker->isActive() &&
             $artifact_link->userCanView($user) && ! $this->hideArtifact($artifact_link));
         $this->can_user_artifact_link_cache[$user->getId()][spl_object_hash($artifact_link)] = $can_use_artifact_link;
         return $can_use_artifact_link;

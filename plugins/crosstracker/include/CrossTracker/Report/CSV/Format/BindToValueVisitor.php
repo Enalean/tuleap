@@ -61,6 +61,9 @@ class BindToValueVisitor implements BindVisitor
         try {
             $bind_value_id = $this->getSelectedBindValueId($parameters);
             $list_value = $bind->getValue($bind_value_id);
+            if ($list_value === null) {
+                return new EmptyValue();
+            }
             return new TextValue($list_value->getLabel());
         } catch (BindValueIsEmptyException $e) {
             return new EmptyValue();

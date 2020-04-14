@@ -70,6 +70,9 @@ class ArtifactXMLNodeHelper
     public function getCDATASection(DOMNode $node, $value)
     {
         $no = $node->ownerDocument;
+        if ($no === null) {
+            return new DOMCdataSection('');
+        }
         return $no->createCDATASection($value);
     }
 

@@ -110,7 +110,7 @@ class Config
         }
 
         $tracker = $this->tracker_factory->getTrackerById($id);
-        if ($tracker->isActive()) {
+        if ($tracker !== null && $tracker->isActive()) {
             return (int) $id;
         }
 

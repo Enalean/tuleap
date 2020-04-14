@@ -138,7 +138,8 @@ final class CompatPDODataAccessResult implements LegacyDataAccessResultInterface
 
     /**
      * @deprecated
-     * @return array Return the current element
+     * @return false|array Return the current element
+     * @psalm-ignore-falsable-return
      */
     public function current()
     {

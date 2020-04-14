@@ -135,6 +135,10 @@ class KanbanItemsResource extends AuthenticatedResource
         $kanban       = $this->getKanban($current_user, $item->kanban_id);
         $tracker      = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
 
+        if ($tracker === null) {
+            throw new \RuntimeException('Tracker does not exist');
+        }
+
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
             $tracker->getProject()
         );

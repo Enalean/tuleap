@@ -199,7 +199,7 @@ class MilestoneRepresentation
     ) {
         $this->id                   = JsonCast::toInt($milestone->getArtifactId());
         $this->uri                  = self::ROUTE . '/' . $this->id;
-        $this->label                = $milestone->getArtifactTitle();
+        $this->label                = $milestone->getArtifactTitle() ?? '';
         $this->status_value         = $milestone->getArtifact()->getStatus();
         $this->semantic_status      = $milestone->getArtifact()->getSemanticStatusValue();
         $this->submitted_by         = JsonCast::toInt($milestone->getArtifact()->getFirstChangeset()->getSubmittedBy());

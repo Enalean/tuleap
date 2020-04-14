@@ -216,7 +216,7 @@ $gFormSectionLevel = 0;   // used to ensure form sections are controlled properl
 $gFormGroupLevel = 0;   // used to ensure form groups are controlled properly
 $gFormHiddenParams = "";   // to accumulate the values of hidden parameters
 $gFormCaptions = "";
-$gValidationCollection = ""; // validation control
+$gValidationCollection = []; // validation control
 
 //=============================================================================
 function form_Start($serviceURI = "")
@@ -313,7 +313,7 @@ function form_End(
                 $valItem->ParamName . "' is not a form item ($valItemKey => $valItem)");
         }
         $jsItemRef = form_JS_ElementRef($valItem->ParamName) . ".value";
-        $jsItemErrStart = "{result=false;alert('" . addslashes($gFormCaptions[$valItem->ParamName]) . ": ";
+        $jsItemErrStart = "{result=false;alert('" . addslashes($gFormCaptions[$valItem->ParamName] ?? '') . ": ";
         $jsItemErrEnd = "');}\n";
         $jsItemPresent = "if ($jsItemRef == '')"
                     . $jsItemErrStart

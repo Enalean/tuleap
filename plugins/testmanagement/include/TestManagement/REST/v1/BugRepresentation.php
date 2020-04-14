@@ -50,7 +50,7 @@ class BugRepresentation
     {
         $this->id      = JsonCast::toInt($bug_artifact->getId());
         $this->xref    = $bug_artifact->getXRef();
-        $this->title   = $bug_artifact->getTitle();
+        $this->title   = $bug_artifact->getTitle() ?? '';
         $this->tracker = $tracker_representation;
     }
 }

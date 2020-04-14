@@ -65,7 +65,7 @@ class WikiDao extends DataAccessObject
     *
     * @param int $groupId
     * @param string $pagename
-    * @return int version number
+    * @return int|null version number
     */
     public function searchCurrentWikiVersion($groupId, $pagename)
     {

@@ -56,7 +56,7 @@ class Workflow_Transition_Condition_CommentNotEmpty extends Workflow_Transition_
     public function exportToXml(SimpleXMLElement $root, $xmlMapping)
     {
         if (! $this->is_comment_required) {
-            return null;
+            return;
         }
 
         $child = $root->addChild('condition');

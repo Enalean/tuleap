@@ -107,6 +107,9 @@ class MyArtifactsCollection implements \Countable
     {
         if (! isset($this->trackers[$tracker_id])) {
             $tracker = $this->tracker_factory->getTrackerById($tracker_id);
+            if ($tracker === null) {
+                throw new \RuntimeException('Tracker does not exist');
+            }
 
             $with_title = false;
             if (($title_field = Tracker_Semantic_Title::load($tracker)->getField()) && $title_field->userCanRead($user)) {

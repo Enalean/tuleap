@@ -74,6 +74,9 @@ class Cardwall_OnTop_Config_Command_DeleteMappingFields extends Cardwall_OnTop_C
         }
     }
 
+    /**
+     * @psalm-assert-if-true !null $mapping_tracker
+     */
     private function canDelete($is_custom, ?Tracker $mapping_tracker = null)
     {
         return !$is_custom

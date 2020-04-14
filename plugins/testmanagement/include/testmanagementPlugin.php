@@ -761,6 +761,9 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         if ($is_submit_artifact_url) {
             $tracker_id = $request->get('tracker');
             $tracker    = TrackerFactory::instance()->getTrackerById($tracker_id);
+            if ($tracker === null) {
+                throw new RuntimeException('Tracker does not exist');
+            }
 
             return $this->isTrackerUsingStepDefinitionField($tracker);
         }

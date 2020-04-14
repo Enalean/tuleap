@@ -57,7 +57,7 @@ class FileModuleMonitorFactory
      *
      * @param int $packageId Id of the package
      *
-     * @return DataAccessResult
+     * @return DataAccessResult|array
      */
     public function whoIsPubliclyMonitoringPackage($packageId)
     {
@@ -366,7 +366,7 @@ class FileModuleMonitorFactory
         $list        = $this->whoIsPubliclyMonitoringPackage($fileModuleId);
         $totalCount  = count($this->getFilesModuleMonitorFromDb($fileModuleId));
         $count       = $totalCount - count($this->whoIsPubliclyMonitoringPackage($fileModuleId));
-        if ($list->rowCount() == 0) {
+        if (count($list) === 0) {
             $editContent .= $GLOBALS['Language']->getText('file_filemodule_monitor', 'users_monitor', $count) . '<br />';
             $editContent .= $GLOBALS['Language']->getText('file_filemodule_monitor', 'no_list');
         } else {
@@ -594,7 +594,9 @@ class FileModuleMonitorFactory
                         foreach ($users as $userName) {
                             if (!empty($userName)) {
                                 $user = $um->findUser($userName);
-                                $this->addUserMonitoring($user, $groupId, $fileModuleId, $package, $frspf, $userHelper);
+                                if ($user !== null) {
+                                    $this->addUserMonitoring($user, $groupId, $fileModuleId, $package, $frspf, $userHelper);
+                                }
                             }
                         }
                         break;

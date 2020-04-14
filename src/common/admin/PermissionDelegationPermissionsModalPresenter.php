@@ -32,7 +32,7 @@ class Admin_PermissionDelegationPermissionsModalPresenter
     private $name;
 
     /**
-     * @var Tuleap\User\ForgeUserGroupPermission\UserForgeUGroupPresenter[]
+     * @var User_ForgeUserGroupPermission[]
      */
     private $permissions;
 

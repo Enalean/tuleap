@@ -189,7 +189,7 @@ class Docman_WikiController extends Docman_Controller
                             if ($lockInfos) {
                                 $uH = UserHelper::instance();
                                 $locker = $uH->getDisplayNameFromUserId($lockInfos['user_id']);
-                                $message = sprintf(dgettext('tuleap-docman', '%1$s locked this page. You cannot modify it until the lock owner or a document manager release the lock.'), $locker);
+                                $message = sprintf(dgettext('tuleap-docman', '%1$s locked this page. You cannot modify it until the lock owner or a document manager release the lock.'), $locker ?? '');
                             }
                             break;
                         }

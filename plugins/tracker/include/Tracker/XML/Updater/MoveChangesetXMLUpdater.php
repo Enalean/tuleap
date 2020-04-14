@@ -136,6 +136,9 @@ class MoveChangesetXMLUpdater
         FeedbackFieldCollectorInterface $feedback_field_collector
     ) {
         $last_index = $artifact_xml->changeset === null ? -1 : count($artifact_xml->changeset) - 1;
+        if ($artifact_xml->changeset === null) {
+            return;
+        }
         for ($index = $last_index; $index >= 0; $index--) {
             $this->parseFieldChangeNodesInReverseOrder(
                 $source_tracker,
@@ -280,6 +283,9 @@ class MoveChangesetXMLUpdater
     private function deleteEmptyCommentNodes(SimpleXMLElement $comments_xml)
     {
         $last_index = $comments_xml->comment === null ? -1 : count($comments_xml->comment) - 1;
+        if ($comments_xml->comment === null) {
+            return;
+        }
         for ($index = $last_index; $index >= 0; $index--) {
             if ((string) $comments_xml->comment[$index]->body === '') {
                 unset($comments_xml->comment[$index]);

@@ -163,7 +163,7 @@ class UsersToBeImportedCollectionBuilder
         );
     }
 
-    /** @return \PFUser */
+    /** @return \PFUser|null */
     private function getExistingUserFromXML(SimpleXMLElement $user)
     {
         $ldap_id = (string) $user->ldapid;

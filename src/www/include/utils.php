@@ -48,7 +48,7 @@ function format_date($format, $value, $default_value = '-')
 * @global $sys_datefmt the user preference date format defined in the language file, and set by pre.php
 *
 * @param string $date the date in the sys_datefmt format (Y-M-d H:i ex: 2004-Feb-03 16:13)
-* @return string the date in the user format, or null if the conversion was not possible or wrong
+* @return string|null the date in the user format, or null if the conversion was not possible or wrong
 */
 function util_sysdatefmt_to_userdateformat($date)
 {

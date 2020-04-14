@@ -31,6 +31,6 @@ class Cardwall_SwimlineSolo extends Cardwall_Swimline
 
     public function getCardPresenter()
     {
-        return false;
+        return  null;
     }
 }

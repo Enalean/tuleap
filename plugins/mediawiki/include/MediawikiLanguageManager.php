@@ -44,7 +44,7 @@ class MediawikiLanguageManager
 
     /**
      *
-     * @return string
+     * @return string|null
      */
     public function getUsedLanguageForProject(Project $project)
     {

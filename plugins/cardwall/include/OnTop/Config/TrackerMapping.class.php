@@ -69,7 +69,7 @@ abstract class Cardwall_OnTop_Config_TrackerMapping
     }
 
     /**
-     * @return Tracker_FormElement
+     * @return Tracker_FormElement|null
      */
     abstract public function getField();
 

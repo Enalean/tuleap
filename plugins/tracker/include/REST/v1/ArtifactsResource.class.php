@@ -992,13 +992,13 @@ class ArtifactsResource extends AuthenticatedResource
             $source_tracker = $artifact->getTracker();
             $target_tracker = $this->tracker_factory->getTrackerById($patch->move->tracker_id);
 
+            if ($target_tracker === null || $target_tracker->isDeleted()) {
+                throw new RestException(404, "Target tracker not found");
+            }
+
             $status_verificator->checkProjectStatusAllowsAllUsersToAccessIt(
                 $target_tracker->getProject()
             );
-
-            if (! $target_tracker || $target_tracker->isDeleted()) {
-                throw new RestException(404, "Target tracker not found");
-            }
 
             if (! $source_tracker->userIsAdmin($user) || ! $target_tracker->userIsAdmin($user)) {
                 throw new RestException(400, "User must be admin of both trackers");

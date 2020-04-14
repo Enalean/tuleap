@@ -96,7 +96,7 @@ class AgileDashboard_BacklogItem_SubBacklogItemProvider
 
     private function getMatchingIdsForMilestone(Planning_Milestone $milestone, Tracker $backlog_tracker, PFUser $user)
     {
-        $milestone_id_seed = array($milestone->getArtifactId());
+        $milestone_id_seed = array($milestone->getArtifactId() ?? 0);
         $this->inspected_ids = $milestone_id_seed;
 
         $filtrable_backlog_tracker_ids = $this->getSubPlanningTrackerIds($milestone, $user);

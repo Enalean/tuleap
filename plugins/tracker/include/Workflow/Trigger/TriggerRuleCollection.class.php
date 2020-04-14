@@ -54,7 +54,7 @@ class Tracker_Workflow_Trigger_TriggerRuleCollection implements Iterator, Counta
 
     public function next()
     {
-        return next($this->trigger_rules);
+        next($this->trigger_rules);
     }
 
     public function rewind()

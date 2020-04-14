@@ -208,7 +208,7 @@ class TrackerXmlExport
     ) {
         $tracker = $this->tracker_factory->getTrackerById($tracker_id);
 
-        if ($tracker->isActive()) {
+        if ($tracker !== null && $tracker->isActive()) {
             $xml_content = $xml_content->addChild('trackers');
             $this->exportTrackerAndArtifacts($user, $archive, $xml_content, $tracker);
         }
@@ -228,7 +228,7 @@ class TrackerXmlExport
                                          <trackers />'
         );
 
-        if ($tracker->isActive()) {
+        if ($tracker !== null && $tracker->isActive()) {
             $this->exportTrackerAndArtifacts($user, $archive, $xml_content, $tracker);
         }
 

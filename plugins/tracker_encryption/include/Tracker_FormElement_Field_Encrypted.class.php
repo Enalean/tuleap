@@ -132,7 +132,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
                 $encryption_manager = new Encryption_Manager($tracker_key);
                 return $this->getValueDao()->create($changeset_value_id, $encryption_manager->encrypt($value));
             } catch (Tracker_EncryptionException $exception) {
-                return $exception->getMessage();
+                return false;
             }
         } else {
             return $this->getValueDao()->create($changeset_value_id, $value);

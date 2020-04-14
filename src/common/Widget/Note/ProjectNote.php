@@ -125,7 +125,7 @@ class ProjectNote extends \Widget
 
         $note = $request->get('note');
 
-        return $this->dao->create($this->owner_id, $note['title'], $note['content']);
+        return (int) $this->dao->create($this->owner_id, $note['title'], $note['content']);
     }
 
     public function cloneContent(

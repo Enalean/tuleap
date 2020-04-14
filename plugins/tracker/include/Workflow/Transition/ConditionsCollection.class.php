@@ -47,6 +47,9 @@ class Workflow_Transition_ConditionsCollection implements ArrayAccess
 
     public function offsetGet($offset)
     {
+        /**
+         * @psalm-suppress NullableReturnStatement
+         */
         return isset($this->conditions[$offset]) ? $this->conditions[$offset] : null;
     }
     // }}}

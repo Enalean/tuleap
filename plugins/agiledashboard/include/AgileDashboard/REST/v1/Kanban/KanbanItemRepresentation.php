@@ -75,7 +75,7 @@ class KanbanItemRepresentation
     ) {
         $this->id                    = JsonCast::toInt($artifact->getId());
         $this->item_name             = $artifact->getTracker()->getItemName();
-        $this->label                 = $artifact->getTitle();
+        $this->label                 = $artifact->getTitle() ?? '';
         $this->color                 = $artifact->getTracker()->getColor()->getName();
         $this->timeinfo              = $timeinfo;
         $this->in_column             = $in_column;

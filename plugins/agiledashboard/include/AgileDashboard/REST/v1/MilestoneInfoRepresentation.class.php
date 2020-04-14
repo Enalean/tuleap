@@ -43,7 +43,7 @@ class MilestoneInfoRepresentation
     public function __construct(\Planning_Milestone $milestone)
     {
         $this->id            = JsonCast::toInt($milestone->getArtifactId());
-        $this->label         = $milestone->getArtifactTitle();
+        $this->label         = $milestone->getArtifactTitle() ?? '';
         $this->last_modified = JsonCast::toDate($milestone->getLastModifiedDate());
         $this->uri           = self::ROUTE . '/' . $this->id;
     }

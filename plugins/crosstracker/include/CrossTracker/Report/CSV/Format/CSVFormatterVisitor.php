@@ -63,7 +63,7 @@ class CSVFormatterVisitor implements FormatterVisitor
 
     public function visitNumericValue(NumericValue $numeric_value, FormatterParameters $parameters)
     {
-        return $numeric_value->getValue();
+        return (string) $numeric_value->getValue();
     }
 
     public function visitEmptyValue(EmptyValue $empty_value, FormatterParameters $parameters)

@@ -268,7 +268,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
                     $artifact_id = $request->getValidated('src_aid', 'uint', 0);
                     $artifact    = $this->getArtifactFactory()->getArtifactById($artifact_id);
                     if (! $artifact) {
-                        return false;
+                        return;
                     }
                     $this->fetchBurndownImage($artifact, $current_user);
                 } catch (Tracker_FormElement_Chart_Field_Exception $e) {

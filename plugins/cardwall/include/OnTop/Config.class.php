@@ -199,7 +199,9 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig
                 if ($column) {
                     $value = $value_mapping->getValue();
                     $mapped_field = $field_mapping->getField();
-                    $mappings->add(new Cardwall_Mapping($column->id, $mapped_field->getId(), $value->getId()));
+                    if ($mapped_field !== null) {
+                        $mappings->add(new Cardwall_Mapping($column->id, $mapped_field->getId(), $value->getId()));
+                    }
                 }
             }
         }

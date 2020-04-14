@@ -42,7 +42,7 @@ class MilestoneRepresentation
     public function __construct(\Planning_Milestone $milestone)
     {
         $this->id    = JsonCast::toInt($milestone->getArtifactId());
-        $this->label = $milestone->getArtifactTitle();
+        $this->label = $milestone->getArtifactTitle() ?? '';
         $this->uri   = AGILEDASHBOARD_BASE_URL . '/?' .
             http_build_query(
                 [

@@ -27,7 +27,9 @@
  */
 class LDAP_UserSync
 {
-
+    /**
+     * @var self
+     */
     private static $instance;
     protected $attributes;
 
@@ -58,6 +60,8 @@ class LDAP_UserSync
 
     /**
      * Return the sync attributes
+     *
+     * @param LDAP $ldap
      *
      * @return array
      */

@@ -124,6 +124,9 @@ class ShowKanbanController extends BaseController
             }
 
             $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
+            if ($tracker === null) {
+                throw new \RuntimeException('Tracker does not exist');
+            }
 
             $user_is_kanban_admin = $this->permissions_manager->userCanAdministrate(
                 $user,

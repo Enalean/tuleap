@@ -652,7 +652,7 @@ class ArtifactField
       // to make a test for the type of value function it is
       // if ($value_func == '...')
             if (is_numeric($value_id)) {
-                return $uh->getDisplayNameFromUserId($value_id);
+                return $uh->getDisplayNameFromUserId($value_id) ?? '';
             } else {
                 return $Language->getText('tracker_common_field', 'not_found');
             }
@@ -804,7 +804,7 @@ class ArtifactField
      * @param group_artifact_id: the group artifact id
      * @param status: the status
      *
-     * @return array
+     * @return array|false
      */
     public function getFieldValues($group_artifact_id, $status)
     {
@@ -832,7 +832,7 @@ class ArtifactField
      * @param group_artifact_id: the group artifact id
      * @param value_id: the value id
      *
-     * @return array
+     * @return array|null
      */
     public function getFieldValue($group_artifact_id, $value_id)
     {

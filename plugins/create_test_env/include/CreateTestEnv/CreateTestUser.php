@@ -79,6 +79,9 @@ class CreateTestUser
     {
         $parent = $node->addChild($name);
         $dom = dom_import_simplexml($parent);
+        if ($dom->ownerDocument === null) {
+            return;
+        }
         $dom->appendChild($dom->ownerDocument->createCDATASection($value));
     }
 

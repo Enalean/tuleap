@@ -43,6 +43,9 @@ class Cardwall_OnTop_ConfigFactory
     public function getOnTopConfigByTrackerId($tracker_id)
     {
         $tracker = $this->tracker_factory->getTrackerById($tracker_id);
+        if ($tracker === null) {
+            throw new RuntimeException('Tracker does not exist');
+        }
         return $this->getOnTopConfig($tracker);
     }
 

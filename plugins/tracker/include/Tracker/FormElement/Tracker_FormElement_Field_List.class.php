@@ -53,7 +53,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     abstract public function isNone($value);
 
     /**
-     * @return Tracker_FormElement_Field_List_Bind
+     * @return Tracker_FormElement_Field_List_Bind|null
+     * @psalm-ignore-nullable-return
      */
     public function getBind()
     {

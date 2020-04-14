@@ -47,6 +47,6 @@ class InvalidArtifactRepresentation
     {
         $this->xref     = $artifact->getXRef();
         $this->html_url = $artifact->getUri();
-        $this->title    = $artifact->getTitle();
+        $this->title    = $artifact->getTitle() ?? '';
     }
 }

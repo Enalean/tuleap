@@ -69,7 +69,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Mil
     public function __construct(Tracker_Artifact $artifact, $is_inconsistent)
     {
         $this->id              = $artifact->getId();
-        $this->title           = $artifact->getTitle();
+        $this->title           = $artifact->getTitle() ?? '';
         $this->artifact        = $artifact;
         $this->color           = $this->artifact->getTracker()->getColor()->getName();
         $this->type            = $this->artifact->getTracker()->getName();

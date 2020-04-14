@@ -258,6 +258,10 @@ class Router
             $project = $request->getProject();
             $this->service = $project->getService('plugin_testmanagement');
         }
+        if ($this->service === null) {
+            throw new \RuntimeException('Could not find TestManagement service');
+        }
+
         return $this->service;
     }
 

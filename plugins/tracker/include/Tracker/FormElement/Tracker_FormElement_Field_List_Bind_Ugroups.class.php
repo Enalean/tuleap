@@ -120,7 +120,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     }
 
     /**
-     * @return Tracker_FormElement_Field_List_Bind_UgroupsValue
+     * @return Tracker_FormElement_Field_List_Bind_UgroupsValue|null
      */
     public function getValue($value_id)
     {

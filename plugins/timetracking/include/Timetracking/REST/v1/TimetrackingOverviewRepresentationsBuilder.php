@@ -85,6 +85,9 @@ class TimetrackingOverviewRepresentationsBuilder
         foreach ($trackers_row as $tracker_row) {
             $tracker_representation = new MinimalTrackerRepresentation();
             $tracker                = $this->tracker_factory->getTrackerById($tracker_row["tracker_id"]);
+            if ($tracker === null) {
+                throw new \RuntimeException('Tracker does not exist');
+            }
             if ($this->checkTrackerAndPermissions($tracker, $user)) {
                 $tracker_representation->build($tracker);
                 $tracker_representations["trackers"][] = $tracker_representation;
@@ -112,6 +115,9 @@ class TimetrackingOverviewRepresentationsBuilder
 
         foreach ($trackers_row as $tracker_row) {
             $tracker = $this->tracker_factory->getTrackerById($tracker_row["tracker_id"]);
+            if ($tracker === null) {
+                throw new \RuntimeException('Tracker does not exist');
+            }
             if ($this->checkTrackerAndPermissions($tracker, $user)) {
                 $tracker_representations["trackers"][] = $this->tracker_rest_builder->getTrackerRepresentationInTrackerContext(
                     $user,
