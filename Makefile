@@ -166,7 +166,8 @@ tests_cypress_distlp: ## Run Cypress distlp tests
 	@tests/e2e/distlp/wrap.sh
 
 phpunit-ci-run:
-	$(PHP) -d pcov.directory=. src/vendor/bin/phpunit \
+	$(PHP) -d pcov.directory=. -d pcov.exclude='~(vendor|node_modules|tests/(?!(?:lib|phpcs))|plugins/\w+/(?!include))~' \
+		src/vendor/bin/phpunit \
 		-c tests/phpunit/phpunit.xml \
 		--log-junit /tmp/results/phpunit_tests_results.xml \
 		--coverage-html=/tmp/results/coverage/ \
