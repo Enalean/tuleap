@@ -55,6 +55,8 @@ class ClientWrapperBuilder
             throw JiraConnectionException::urlIsInvalid();
         }
 
-        return ClientWrapper::build($jira_server, $jira_user, $jira_token);
+        $jira_credentials = new JiraCredentials($jira_server, $jira_user, $jira_token);
+
+        return ClientWrapper::build($jira_credentials);
     }
 }

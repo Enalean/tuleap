@@ -28,7 +28,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
 {
 
-    public const FIELDTYPE_STRING            = 'string';
+    public const FIELDTYPE_STRING            = Tracker_FormElement_Field_String::TYPE;
     public const FIELDTYPE_TEXT              = 'text';
     public const FIELDTYPE_INT               = 'int';
     public const FIELDTYPE_FLOAT             = 'float';

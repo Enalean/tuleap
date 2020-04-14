@@ -94,6 +94,9 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
         $tracker_description = $request->get('tracker-description') ?? '';
         $tracker_template_id = $request->get('tracker-template-id');
         $from_empty_tracker = $request->get('from-tracker-empty');
+        $jira_server         = $request->get('jira_server');
+        $jira_token          = $request->get('jira_token');
+        $jira_user           = $request->get('jira_user');
 
         $default_templates_collection = $this->default_templates_collection_builder->build();
         $is_from_default_tracker = $tracker_template_id && $default_templates_collection->has($tracker_template_id);
@@ -126,6 +129,16 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
                     (string) $tracker_description,
                     (string) $tracker_shortname,
                     (string) $tracker_color
+                );
+            } elseif ($jira_server) {
+                $tracker = $this->tracker_creator->createFromJira(
+                    $project,
+                    (string) $tracker_name,
+                    (string) $tracker_shortname,
+                    (string) $tracker_color,
+                    $jira_token,
+                    $jira_user,
+                    $jira_server
                 );
             } else {
                 $file    = $_FILES;
