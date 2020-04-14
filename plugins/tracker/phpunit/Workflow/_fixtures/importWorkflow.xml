@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tracker>
+    <field_id REF="F32"/>
+    <is_used>1</is_used>
+    <transitions>
+        <transition>
+            <from_id REF="null"/>
+            <to_id REF="F32-V0"/>
+        </transition>
+        <transition>
+            <from_id REF="F32-V0"/>
+            <to_id REF="F32-V1"/>
+        </transition>
+        <transition>
+            <from_id REF="F32-V1"/>
+            <to_id REF="F32-V0"/>
+            <postactions>
+                <postaction_field_date valuetype="1">
+                    <field_id REF="F1"/>
+                </postaction_field_date>
+            </postactions>
+            <permissions>
+                <permission ugroup="UGROUP_PROJECT_MEMBERS"/>
+            </permissions>
+        </transition>
+    </transitions>
+</tracker>
