@@ -25,6 +25,7 @@ namespace Tuleap\OAuth2Server\AuthorizationServer;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UriFactoryInterface;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCodeCreator;
@@ -47,17 +48,23 @@ class AuthorizationCodeResponseFactory
      * @var \URLRedirect
      */
     private $login_redirect;
+    /**
+     * @var UriFactoryInterface
+     */
+    private $uri_factory;
 
     public function __construct(
         ResponseFactoryInterface $response_factory,
         OAuth2AuthorizationCodeCreator $authorization_code_creator,
         RedirectURIBuilder $client_uri_redirect_builder,
-        \URLRedirect $login_redirect
+        \URLRedirect $login_redirect,
+        UriFactoryInterface $uri_factory
     ) {
         $this->response_factory            = $response_factory;
         $this->authorization_code_creator  = $authorization_code_creator;
         $this->client_uri_redirect_builder = $client_uri_redirect_builder;
         $this->login_redirect              = $login_redirect;
+        $this->uri_factory                 = $uri_factory;
     }
 
     /**
@@ -101,9 +108,25 @@ class AuthorizationCodeResponseFactory
         return $this->response_factory->createResponse(302)->withHeader('Location', (string) $error_uri);
     }
 
-    public function createRedirectToLoginResponse(ServerRequestInterface $request): ResponseInterface
+    public function createRedirectToLoginResponse(ServerRequestInterface $request, array $request_params): ResponseInterface
     {
+        if (isset($request_params[AuthorizationEndpointController::PROMPT_PARAMETER])) {
+            $request_params[AuthorizationEndpointController::PROMPT_PARAMETER] = trim(
+                str_replace(
+                    PromptParameterValuesExtractor::PROMPT_LOGIN,
+                    '',
+                    $request_params[AuthorizationEndpointController::PROMPT_PARAMETER]
+                )
+            );
+        }
+
+        $url_path = $request->getUri()->getPath();
+        $server   = ['REQUEST_URI' => $url_path . '?' . http_build_query($request_params)];
+
+        $return_to_login = $this->uri_factory->createUri($this->login_redirect->buildReturnToLogin($server));
+        $return_to_login = $return_to_login->withQuery($return_to_login->getQuery() . '&prompt=login');
+
         return $this->response_factory->createResponse(302)
-            ->withHeader('Location', $this->login_redirect->buildReturnToLogin($request->getServerParams()));
+            ->withHeader('Location', (string) $return_to_login);
     }
 }

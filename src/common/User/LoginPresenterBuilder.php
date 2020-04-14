@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,11 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class User_LoginPresenterBuilder
 {
 
     /** @return User_LoginPresenter */
-    public function build($return_to, $printer_version, $form_loginname, $is_secure, CSRFSynchronizerToken $login_csrf)
+    public function build($return_to, $printer_version, $form_loginname, $is_secure, CSRFSynchronizerToken $login_csrf, string $prompt_param)
     {
         $additional_connectors = '';
         EventManager::instance()->processEvent(
@@ -48,6 +49,7 @@ class User_LoginPresenterBuilder
             $form_loginname,
             $additional_connectors,
             $login_csrf,
+            $prompt_param,
             $display_new_account_button
         );
 
@@ -71,6 +73,6 @@ class User_LoginPresenterBuilder
         $printer_version = 0;
         $form_loginname  = '';
 
-        return $this->build($return_to, $printer_version, $form_loginname, $is_secure, $login_csrf);
+        return $this->build($return_to, $printer_version, $form_loginname, $is_secure, $login_csrf, '');
     }
 }

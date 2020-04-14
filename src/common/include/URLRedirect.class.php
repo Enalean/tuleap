@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -38,6 +38,8 @@ class URLRedirect
 
     /**
      * Build the redirection of user to the login page.
+     *
+     * @psalm-param array{REQUEST_URI:string} $server
      */
     public function buildReturnToLogin($server)
     {
