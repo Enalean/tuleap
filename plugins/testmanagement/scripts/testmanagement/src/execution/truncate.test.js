@@ -49,9 +49,10 @@ describe("truncateHTML", () => {
     });
 
     it(`Given the text to cut is nested in sub tags
-        Then it adds an ellipsis inside those tags`, () => {
-        expect(truncateHTML("<p>Hello <strong>World</strong></p>", 8, placeholder_image_text)).toBe(
-            "<p>Hello <strong>Wo…</strong></p>"
+        Then it adds an ellipsis inside those tags
+        So that hyperlinks are still accessible`, () => {
+        expect(truncateHTML('<p>Hello <a href="/">World</a></p>', 8, placeholder_image_text)).toBe(
+            '<p>Hello <a href="/">Wo…</a></p>'
         );
     });
 
@@ -75,6 +76,27 @@ describe("truncateHTML", () => {
         );
         expect(truncateHTML("<p><img><img></p>", 100, placeholder_image_text)).toBe(
             "<p><i>A screenshot has been attached</i></p>"
+        );
+    });
+
+    it(`Given there are line breaks
+        Then it removes them`, () => {
+        expect(truncateHTML("Hello <br><br><br> World", 100, placeholder_image_text)).toBe(
+            "Hello  World"
+        );
+    });
+
+    it(`Given there are empty blocks
+        Then they are removed`, () => {
+        expect(truncateHTML("Hello <p></p> World", 100, placeholder_image_text)).toBe(
+            "Hello  World"
+        );
+    });
+
+    it(`Given there are more than one p tag
+        Then it takes only the first one`, () => {
+        expect(truncateHTML("<p>Hello</p><p>World</p>", 100, placeholder_image_text)).toBe(
+            "<p>Hello</p>"
         );
     });
 });

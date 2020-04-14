@@ -29,6 +29,7 @@ export function truncateHTML(content, max_length, placeholder_image_text) {
 
     let counter = 0;
     let images_counter = 0;
+    let p_counter = 0;
     const truncated_tree = map(tree, function (node) {
         if (counter >= max_length) {
             return null;
@@ -37,6 +38,17 @@ export function truncateHTML(content, max_length, placeholder_image_text) {
         if (node.type === "element" && node.tagName === "img") {
             images_counter++;
             return null;
+        }
+
+        if (node.type === "element" && toString(node).trim().length === 0) {
+            return null;
+        }
+
+        if (node.type === "element" && node.tagName === "p") {
+            p_counter++;
+            if (p_counter > 1) {
+                return null;
+            }
         }
 
         if (node.type !== "text") {
