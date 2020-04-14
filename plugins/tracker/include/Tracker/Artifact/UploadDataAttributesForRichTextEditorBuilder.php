@@ -22,60 +22,47 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact;
 
-use ForgeConfig;
 use PFUser;
 use Tracker;
 use Tracker_Artifact;
-use Tracker_FormElementFactory;
-use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 
 class UploadDataAttributesForRichTextEditorBuilder
 {
     /**
-     * @var Tracker_FormElementFactory
+     * @var FileUploadDataProvider
      */
-    private $form_element_factory;
-    /**
-     * @var FrozenFieldDetector
-     */
-    private $frozen_field_detector;
+    private $file_upload_data_provider;
 
     public function __construct(
-        Tracker_FormElementFactory $form_element_factory,
-        FrozenFieldDetector $frozen_field_detector
+        FileUploadDataProvider $file_upload_data_provider
     ) {
-        $this->form_element_factory      = $form_element_factory;
-        $this->frozen_field_detector     = $frozen_field_detector;
+        $this->file_upload_data_provider = $file_upload_data_provider;
     }
 
     public function getDataAttributes(Tracker $tracker, PFUser $user, ?Tracker_Artifact $artifact): array
     {
         $data_attributes = [];
 
-        $fields = $this->form_element_factory->getUsedFileFields($tracker);
-        foreach ($fields as $field) {
-            if (! $field->userCanUpdate($user)) {
-                continue;
-            }
-
-            if ($artifact !== null && $this->frozen_field_detector->isFieldFrozen($artifact, $field)) {
-                continue;
-            }
-
-            $data_attributes[]    = [
-                'name'  => 'upload-url',
-                'value' => '/api/v1/tracker_fields/' . (int) $field->getId() . '/files'
+        $field_upload_data = $this->file_upload_data_provider->getFileUploadData(
+            $tracker,
+            $artifact,
+            $user
+        );
+        if ($field_upload_data) {
+            $data_attributes[] = [
+                'name' => 'upload-url',
+                'value' => $field_upload_data->getUploadUrl()
             ];
-            $data_attributes[]    = [
-                'name'  => 'upload-field-name',
-                'value' => 'artifact[' . (int) $field->getId() . '][][tus-uploaded-id]'
+            $data_attributes[] = [
+                'name' => 'upload-field-name',
+                'value' => $field_upload_data->getUploadFileName()
             ];
-            $data_attributes[]    = [
-                'name'  => 'upload-max-size',
-                'value' => ForgeConfig::get('sys_max_size_upload')
+            $data_attributes[] = [
+                'name' => 'upload-max-size',
+                'value' => $field_upload_data->getUploadMaxSize()
             ];
-            break;
         }
+
 
         return $data_attributes;
     }

@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\Artifact\RichTextareaProvider;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
@@ -297,8 +298,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
         $rich_textarea_provider = new RichTextareaProvider(
             TemplateRendererFactory::build(),
             new \Tuleap\Tracker\Artifact\UploadDataAttributesForRichTextEditorBuilder(
-                Tracker_FormElementFactory::instance(),
-                $this->getFrozenFieldDetector()
+                new FileUploadDataProvider($this->getFrozenFieldDetector(), Tracker_FormElementFactory::instance())
             )
         );
 

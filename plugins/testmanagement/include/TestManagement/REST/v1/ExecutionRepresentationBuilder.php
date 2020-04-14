@@ -31,6 +31,7 @@ use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\Campaign\Execution\PaginatedExecutions;
 use Tuleap\TestManagement\ConfigConformanceValidator;
 use Tuleap\TestManagement\REST\v1\Execution\StepsResultsRepresentationBuilder;
+use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\User\REST\UserRepresentation;
 use UserManager;
@@ -87,6 +88,10 @@ class ExecutionRepresentationBuilder
      * @var \Codendi_HTMLPurifier
      */
     private $purifier;
+    /**
+     * @var FileUploadDataProvider
+     */
+    private $file_upload_data_provider;
 
     public function __construct(
         UserManager $user_manager,
@@ -99,19 +104,21 @@ class ExecutionRepresentationBuilder
         DefinitionForExecutionRetriever $definition_retriever,
         ExecutionDao $execution_dao,
         StepsResultsRepresentationBuilder $steps_results_representation_builder,
-        \Codendi_HTMLPurifier $purifier
+        \Codendi_HTMLPurifier $purifier,
+        FileUploadDataProvider $file_upload_data_provider
     ) {
-        $this->user_manager                         = $user_manager;
-        $this->tracker_form_element_factory         = $tracker_form_element_factory;
-        $this->conformance_validator                = $conformance_validator;
-        $this->assigned_to_representation_builder   = $assigned_to_representation_builder;
-        $this->artifact_dao                         = $artifact_dao;
-        $this->artifact_factory                     = $artifact_factory;
-        $this->requirement_retriever                = $requirement_retriever;
-        $this->definition_retriever                 = $definition_retriever;
-        $this->execution_dao                        = $execution_dao;
-        $this->steps_results_representation_builder = $steps_results_representation_builder;
-        $this->purifier                             = $purifier;
+        $this->user_manager                                 = $user_manager;
+        $this->tracker_form_element_factory                 = $tracker_form_element_factory;
+        $this->conformance_validator                        = $conformance_validator;
+        $this->assigned_to_representation_builder           = $assigned_to_representation_builder;
+        $this->artifact_dao                                 = $artifact_dao;
+        $this->artifact_factory                             = $artifact_factory;
+        $this->requirement_retriever                        = $requirement_retriever;
+        $this->definition_retriever                         = $definition_retriever;
+        $this->execution_dao                                = $execution_dao;
+        $this->steps_results_representation_builder         = $steps_results_representation_builder;
+        $this->purifier                                     = $purifier;
+        $this->file_upload_data_provider                    = $file_upload_data_provider;
     }
 
     /**
@@ -157,6 +164,8 @@ class ExecutionRepresentationBuilder
     ) {
         $previous_result_representation = $this->getPreviousResultRepresentationForExecution($user, $execution);
 
+        $file_field_data = $this->file_upload_data_provider->getFileUploadData($execution->getTracker(), $execution, $user);
+
         $definition = $this->definition_retriever->getDefinitionRepresentationForExecution($user, $execution);
         $definition_representation = $this->getDefinitionRepresentationForExecution(
             $user,
@@ -175,7 +184,8 @@ class ExecutionRepresentationBuilder
             $definition_representation,
             $this->getLinkedBugsRepresentationForExecution($user, $execution),
             (int) $this->getExecutionTime($user, $execution),
-            $this->steps_results_representation_builder->build($user, $execution, $definition)
+            $this->steps_results_representation_builder->build($user, $execution, $definition),
+            $file_field_data
         );
         return $execution_representation;
     }

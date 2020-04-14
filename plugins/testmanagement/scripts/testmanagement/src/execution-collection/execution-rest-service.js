@@ -1,6 +1,11 @@
 export default ExecutionRestService;
+import { put } from "tlp";
 
 ExecutionRestService.$inject = ["$http", "$q", "Restangular", "SharedPropertiesService"];
+
+const headers = {
+    "content-type": "application/json",
+};
 
 function ExecutionRestService($http, $q, Restangular, SharedPropertiesService) {
     Object.assign(Restangular.configuration.defaultHeaders, {
@@ -44,7 +49,6 @@ function ExecutionRestService($http, $q, Restangular, SharedPropertiesService) {
                     results: response.data,
                     total: response.headers("X-PAGINATION-SIZE"),
                 };
-
                 return result;
             });
     }
@@ -62,17 +66,25 @@ function ExecutionRestService($http, $q, Restangular, SharedPropertiesService) {
             });
     }
 
-    function putTestExecution(execution_id, new_status, time, results) {
-        return rest
-            .one("testmanagement_executions", execution_id)
-            .put({
-                status: new_status,
-                time: time,
-                results: results,
-            })
-            .then(function (response) {
-                return response.data;
-            });
+    async function putTestExecution(execution_id, new_status, time, results, uploaded_file_ids) {
+        let param = {
+            status: new_status,
+            uploaded_file_ids: uploaded_file_ids,
+            results: results,
+        };
+
+        if (time) {
+            param.time = time;
+        }
+
+        const body = JSON.stringify(param);
+
+        const response = await put(`/api/v1/testmanagement_executions/${execution_id}`, {
+            headers,
+            body,
+        });
+
+        return response.json();
     }
 
     function updateExecutionToUseLatestVersionOfDefinition(execution_id) {

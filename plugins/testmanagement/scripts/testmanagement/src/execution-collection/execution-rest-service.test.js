@@ -21,6 +21,10 @@ import execution_module from "./execution-collection.js";
 import angular from "angular";
 import "angular-mocks";
 import { createAngularPromiseWrapper } from "../../../../../../tests/jest/angular-promise-wrapper.js";
+import { mockFetchSuccess } from "../../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper";
+import * as tlp from "tlp";
+
+jest.mock("tlp");
 
 describe("ExecutionRestService", () => {
     let mockBackend, wrapPromise, ExecutionRestService, SharedPropertiesService;
@@ -92,25 +96,22 @@ describe("ExecutionRestService", () => {
     });
 
     it("putTestExecution()", async () => {
-        const execution = {
-            id: 4,
-            status: "passed",
-            previous_result: {
-                result: "",
-                status: "notrun",
+        const tlpPutSpy = jest.spyOn(tlp, "put");
+        mockFetchSuccess(tlpPutSpy);
+
+        await ExecutionRestService.putTestExecution(4, "passed", 1, "nothing", [13]);
+
+        expect(tlpPutSpy).toHaveBeenCalledWith("/api/v1/testmanagement_executions/4", {
+            headers: {
+                "content-type": "application/json",
             },
-        };
-
-        mockBackend
-            .expectPUT("/api/v1/testmanagement_executions/4?results=nothing&status=passed&time=1")
-            .respond(execution);
-
-        const promise = ExecutionRestService.putTestExecution(4, "passed", 1, "nothing");
-
-        mockBackend.flush();
-
-        const execution_updated = await wrapPromise(promise);
-        expect(execution_updated.id).toBeDefined();
+            body: JSON.stringify({
+                status: "passed",
+                uploaded_file_ids: [13],
+                results: "nothing",
+                time: 1,
+            }),
+        });
     });
 
     it("changePresenceOnTestExecution()", async () => {

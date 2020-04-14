@@ -21,6 +21,7 @@
 namespace Tuleap\TestManagement\REST\v1;
 
 use BackendLogger;
+use EventManager;
 use Luracast\Restler\RestException;
 use PFUser;
 use Tracker_Artifact;
@@ -39,6 +40,9 @@ use Tracker_REST_Artifact_ArtifactUpdater;
 use Tracker_REST_Artifact_ArtifactValidator;
 use Tracker_URLVerification;
 use TrackerFactory;
+use TransitionFactory;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\RealTime\NodeJSClient;
@@ -54,19 +58,29 @@ use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\ConfigConformanceValidator;
 use Tuleap\TestManagement\Dao;
 use Tuleap\TestManagement\RealTime\RealTimeMessageSender;
+use Tuleap\TestManagement\REST\FormattedChangesetValueForFileFieldRetriever;
 use Tuleap\TestManagement\REST\v1\Execution\StepsResultsFilter;
 use Tuleap\TestManagement\REST\v1\Execution\StepsResultsRepresentationBuilder;
+use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\Tracker\REST\ChangesetCommentRepresentation;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
+use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
+use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use UserManager;
+use Workflow_Transition_ConditionFactory;
 
 class ExecutionsResource
 {
     public const FIELD_RESULTS = 'results';
-    public const FIELD_STATUS  = 'status';
-    public const FIELD_TIME    = 'time';
+    public const FIELD_STATUS = 'status';
+    public const FIELD_TIME = 'time';
 
     /** @var Config */
     private $config;
@@ -86,7 +100,7 @@ class ExecutionsResource
     /** @var ExecutionRepresentationBuilder */
     private $execution_representation_builder;
 
-    /** @var RealTimeMessageSender  */
+    /** @var RealTimeMessageSender */
     private $realtime_message_sender;
 
     /** @var ExecutionDao */
@@ -112,11 +126,11 @@ class ExecutionsResource
         $this->config          = new Config(new Dao(), TrackerFactory::instance());
         $conformance_validator = new ConfigConformanceValidator($this->config);
 
-        $this->user_manager                    = UserManager::instance();
-        $this->tracker_factory                 = TrackerFactory::instance();
-        $this->formelement_factory             = Tracker_FormElementFactory::instance();
-        $this->artifact_factory                = Tracker_ArtifactFactory::instance();
-        $artifact_dao                          = new ArtifactDao();
+        $this->user_manager        = UserManager::instance();
+        $this->tracker_factory     = TrackerFactory::instance();
+        $this->formelement_factory = Tracker_FormElementFactory::instance();
+        $this->artifact_factory    = Tracker_ArtifactFactory::instance();
+        $artifact_dao              = new ArtifactDao();
 
         $this->testmanagement_artifact_factory = new ArtifactFactory(
             $this->config,
@@ -148,16 +162,17 @@ class ExecutionsResource
             $this->definition_retriever,
             $this->execution_dao,
             $steps_results_representation_builder,
-            \Codendi_HTMLPurifier::instance()
+            \Codendi_HTMLPurifier::instance(),
+            $this->getFileUploadDataProvider(),
         );
 
-        $node_js_client         = new NodeJSClient(
+        $node_js_client          = new NodeJSClient(
             HttpClientFactory::createClient(),
             HTTPFactoryBuilder::requestFactory(),
             HTTPFactoryBuilder::streamFactory(),
             new BackendLogger()
         );
-        $permissions_serializer = new Tracker_Permission_PermissionsSerializer(
+        $permissions_serializer  = new Tracker_Permission_PermissionsSerializer(
             new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
         );
         $artifact_message_sender = new RealTimeArtifactMessageSender(
@@ -245,7 +260,7 @@ class ExecutionsResource
 
         $user     = $this->getCurrentUser();
         $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $id);
-        if (! $artifact) {
+        if (!$artifact) {
             throw new RestException(404);
         }
 
@@ -262,10 +277,10 @@ class ExecutionsResource
      *
      * @url POST
      *
-     * @param TrackerReference $tracker_reference       Execution tracker of the execution {@from body}
-     * @param int              $definition_id Definition of the execution {@from body}
-     * @param string           $status        Status of the execution {@from body} {@choice notrun,passed,failed,blocked}
-     * @param string           $results       Result of the execution {@from body}
+     * @param TrackerReference $tracker_reference Execution tracker of the execution {@from body}
+     * @param int $definition_id Definition of the execution {@from body}
+     * @param string $status Status of the execution {@from body} {@choice notrun,passed,failed,blocked}
+     * @param string $results Result of the execution {@from body}
      * @return ExecutionRepresentation
      *
      * @throws RestException 400
@@ -298,9 +313,16 @@ class ExecutionsResource
                 $this->tracker_factory
             );
 
-            $values = $this->getValuesByFieldsName($user, $tracker_reference->id, $definition_id, $status, $time, $results);
+            $values = $this->getValuesByFieldsName(
+                $user,
+                $tracker_reference->id,
+                $definition_id,
+                $status,
+                $time,
+                $results
+            );
 
-            if (! empty($values)) {
+            if (!empty($values)) {
                 $artifact_reference = $creator->create($user, $tracker_reference, $values);
             } else {
                 throw new RestException(400, "No valid data are provided");
@@ -323,7 +345,7 @@ class ExecutionsResource
      *
      * @url PATCH {id}
      *
-     * @param string                       $id   Id of the execution artifact
+     * @param string $id Id of the execution artifact
      * @param PATCHExecutionRepresentation $body Actions to performs on the execution {@from body}
      *
      * @throws RestException 400
@@ -341,7 +363,7 @@ class ExecutionsResource
             $execution_artifact->getTracker()->getProject()
         );
 
-        if (! $execution_artifact->userCanUpdate($user)) {
+        if (!$execution_artifact->userCanUpdate($user)) {
             throw new RestException(403);
         }
 
@@ -374,9 +396,10 @@ class ExecutionsResource
      *
      * @url PUT {id}
      *
-     * @param string $id      Id of the artifact
-     * @param string $status  Status of the execution {@from body} {@choice notrun,passed,failed,blocked}
-     * @param int    $time    Time to pass the execution {@from body}
+     * @param string $id Id of the artifact
+     * @param string $status Status of the execution {@from body} {@choice notrun,passed,failed,blocked}
+     * @param int[] $uploaded_file_ids files_ids to pass the execution {@from body}
+     * @param int $time Time to pass the execution {@from body}
      * @param string $results Result of the execution {@from body}
      * @return ExecutionRepresentation
      *
@@ -384,7 +407,7 @@ class ExecutionsResource
      * @throws RestException 403
      * @throws RestException 500
      */
-    protected function putId($id, $status, $time = 0, $results = '')
+    protected function putId($id, $status, array $uploaded_file_ids = [], $time = 0, $results = '')
     {
         $user     = $this->getCurrentUser();
         $artifact = $this->getArtifactById($user, (int) $id);
@@ -395,7 +418,7 @@ class ExecutionsResource
 
         $this->execution_status_updater->update(
             $artifact,
-            $this->getChanges($status, $time, $results, $artifact, $user),
+            $this->getChanges($status, $uploaded_file_ids, $time, $results, $artifact, $user),
             $user
         );
 
@@ -409,16 +432,16 @@ class ExecutionsResource
      *
      * @url PATCH {id}/presences
      *
-     * @param string $id           Id of the artifact
-     * @param string $uuid         Uuid of current user {@from body}
-     * @param string $remove_from  Id of the old artifact {@from body}
+     * @param string $id Id of the artifact
+     * @param string $uuid Uuid of current user {@from body}
+     * @param string $remove_from Id of the old artifact {@from body}
      *
      * @throws RestException 404
      *
      */
     protected function presences($id, $uuid, $remove_from = ''): void
     {
-        $user = $this->getCurrentUser();
+        $user     = $this->getCurrentUser();
         $artifact = $this->getArtifactById($user, (int) $id);
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
@@ -438,9 +461,9 @@ class ExecutionsResource
      *
      * @url PATCH {id}/issues
      *
-     * @param string                         $id        Id of the test execution artifact
-     * @param string                         $issue_id  Id of the issue artifact {@from body}
-     * @param ChangesetCommentRepresentation $comment   Comment describing the test execution {body, format} {@from body}
+     * @param string $id Id of the test execution artifact
+     * @param string $issue_id Id of the issue artifact {@from body}
+     * @param ChangesetCommentRepresentation $comment Comment describing the test execution {body, format} {@from body}
      *
      * @throws RestException 400
      * @throws RestException 404
@@ -462,7 +485,7 @@ class ExecutionsResource
             $issue_artifact->getTracker()->getProject()
         );
 
-        if (! $execution_artifact || ! $issue_artifact) {
+        if (!$execution_artifact || !$issue_artifact) {
             throw new RestException(404);
         }
 
@@ -472,7 +495,7 @@ class ExecutionsResource
         }
 
         $is_linked = $execution_artifact->linkArtifact($issue_artifact->getId(), $user);
-        if (! $is_linked) {
+        if (!$is_linked) {
             throw new RestException(400, 'Could not link the issue artifact to the test execution');
         }
 
@@ -503,10 +526,12 @@ class ExecutionsResource
     }
 
     /**
+     * @throws RestException
      * @return array
      */
     private function getChanges(
         string $status,
+        array $uploaded_file_ids,
         int $time,
         string $results,
         Tracker_Artifact $artifact,
@@ -534,6 +559,11 @@ class ExecutionsResource
             $changes[] = $result_value;
         }
 
+        if ($uploaded_file_ids !== []) {
+            $changes[] = $this->getFormattedChangesetValueForFieldsRetriever()
+                              ->getFormattedChangesetValueForFieldFile($uploaded_file_ids, $artifact, $user);
+        }
+
         if ($time !== 0) {
             $time_value = $this->getFormattedChangesetValueForFieldInt(
                 self::FIELD_TIME,
@@ -556,7 +586,7 @@ class ExecutionsResource
         PFUser $user
     ): ?ArtifactValuesRepresentation {
         $field = $this->getFieldByName($field_name, $artifact->getTrackerId(), $user);
-        if (! $field) {
+        if (!$field) {
             return null;
         }
 
@@ -566,7 +596,7 @@ class ExecutionsResource
             $binds = $field->getBind()->getValuesByKeyword($value);
         }
         $bind = array_pop($binds);
-        if (! $bind) {
+        if (!$bind) {
             throw new RestException(400, 'Invalid status value');
         }
 
@@ -584,14 +614,14 @@ class ExecutionsResource
         PFUser $user
     ): ?ArtifactValuesRepresentation {
         $field = $this->getFieldByName($field_name, $artifact->getTrackerId(), $user);
-        if (! $field) {
+        if (!$field) {
             return null;
         }
 
         $value_representation           = new ArtifactValuesRepresentation();
         $value_representation->field_id = (int) $field->getId();
         $value_representation->value    = array(
-            'format'  => Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT,
+            'format' => Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT,
             'content' => $value
         );
 
@@ -605,7 +635,7 @@ class ExecutionsResource
         PFUser $user
     ): ?ArtifactValuesRepresentation {
         $field = $this->getFieldByName($field_name, $artifact->getTrackerId(), $user);
-        if (! $field) {
+        if (!$field) {
             return null;
         }
 
@@ -618,7 +648,7 @@ class ExecutionsResource
 
     private function getFieldByName(string $field_name, int $tracker_id, PFUser $user): ?\Tracker_FormElement_Field
     {
-        return  $this->formelement_factory->getUsedFieldByNameForUser(
+        return $this->formelement_factory->getUsedFieldByNameForUser(
             $tracker_id,
             $field_name,
             $user
@@ -653,19 +683,23 @@ class ExecutionsResource
         $status_field         = $this->getFieldByName(ExecutionRepresentation::FIELD_STATUS, $tracker_id, $user);
         $time_field           = $this->getFieldByName(ExecutionRepresentation::FIELD_TIME, $tracker_id, $user);
         $results_field        = $this->getFieldByName(ExecutionRepresentation::FIELD_RESULTS, $tracker_id, $user);
-        $artifact_links_field = $this->getFieldByName(ExecutionRepresentation::FIELD_ARTIFACT_LINKS, $tracker_id, $user);
+        $artifact_links_field = $this->getFieldByName(
+            ExecutionRepresentation::FIELD_ARTIFACT_LINKS,
+            $tracker_id,
+            $user
+        );
 
         $values = array();
 
         if ($status_field) {
             $status_field_binds = [];
             assert($status_field instanceof \Tracker_FormElement_Field_List);
-            $bind               = $status_field->getBind();
+            $bind = $status_field->getBind();
             if ($bind) {
                 assert($bind instanceof Tracker_FormElement_Field_List_Bind);
                 $status_field_binds = $bind->getValuesByKeyword($status);
             }
-            $status_field_bind  = array_pop($status_field_binds);
+            $status_field_bind = array_pop($status_field_binds);
 
             if ($status_field_bind !== null) {
                 $values[] = $this->createArtifactValuesRepresentation(
@@ -710,8 +744,11 @@ class ExecutionsResource
     /**
      * @param mixed $value
      */
-    private function createArtifactValuesRepresentation(int $field_id, $value, string $key): ArtifactValuesRepresentation
-    {
+    private function createArtifactValuesRepresentation(
+        int $field_id,
+        $value,
+        string $key
+    ): ArtifactValuesRepresentation {
         $artifact_values_representation           = new ArtifactValuesRepresentation();
         $artifact_values_representation->field_id = $field_id;
         if ($key === 'value') {
@@ -758,7 +795,7 @@ class ExecutionsResource
     }
 
     /**
-     * @param PFUser           $user
+     * @param PFUser $user
      * @param Tracker_Artifact $artifact
      *
      * @return ExecutionRepresentation
@@ -779,10 +816,43 @@ class ExecutionsResource
     private function getCurrentUser(): PFUser
     {
         $user = $this->user_manager->getCurrentUser();
-        if (! $user) {
+        if (!$user) {
             throw new RestException(404, "User not found");
         }
 
         return $user;
+    }
+
+    private function getFrozenFieldDetector(): FrozenFieldDetector
+    {
+        return new FrozenFieldDetector(
+            new TransitionRetriever(
+                new StateFactory(
+                    new TransitionFactory(
+                        Workflow_Transition_ConditionFactory::build(),
+                        EventManager::instance(),
+                        new DBTransactionExecutorWithConnection(
+                            DBFactory::getMainTuleapDBConnection()
+                        )
+                    ),
+                    new SimpleWorkflowDao()
+                ),
+                new TransitionExtractor()
+            ),
+            new FrozenFieldsRetriever(
+                new FrozenFieldsDao(),
+                Tracker_FormElementFactory::instance()
+            )
+        );
+    }
+
+    private function getFileUploadDataProvider(): FileUploadDataProvider
+    {
+        return new FileUploadDataProvider($this->getFrozenFieldDetector(), $this->formelement_factory);
+    }
+
+    private function getFormattedChangesetValueForFieldsRetriever(): FormattedChangesetValueForFileFieldRetriever
+    {
+        return new FormattedChangesetValueForFileFieldRetriever($this->getFileUploadDataProvider());
     }
 }

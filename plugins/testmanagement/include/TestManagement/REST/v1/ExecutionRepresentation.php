@@ -21,6 +21,7 @@
 namespace Tuleap\TestManagement\REST\v1;
 
 use Tuleap\REST\JsonCast;
+use Tuleap\Tracker\Artifact\FileUploadData;
 use Tuleap\User\REST\UserRepresentation;
 
 class ExecutionRepresentation
@@ -89,6 +90,16 @@ class ExecutionRepresentation
      */
     public $steps_results;
 
+    /**
+     * @var string | null
+     */
+    public $upload_url;
+
+    /**
+     * @var int | null
+     */
+    public $max_size_upload;
+
     public function build(
         int $artifact_id,
         string $status,
@@ -99,7 +110,8 @@ class ExecutionRepresentation
         DefinitionRepresentation $definition,
         array $linked_bug,
         int $time,
-        array $steps_results
+        array $steps_results,
+        ?FileUploadData $file_field_data
     ): void {
         $this->id               = JsonCast::toInt($artifact_id);
         $this->uri              = self::ROUTE . '/' . $this->id;
@@ -112,5 +124,10 @@ class ExecutionRepresentation
         $this->time             = $time;
         $this->linked_bugs      = $linked_bug;
         $this->steps_results    = (array) JsonCast::toObject($steps_results);
+
+        if ($file_field_data) {
+            $this->upload_url      = $file_field_data->getUploadUrl();
+            $this->max_size_upload = $file_field_data->getUploadMaxSize();
+        }
     }
 }

@@ -19,6 +19,14 @@
 
 import _ from "lodash";
 import CKEDITOR from "ckeditor";
+import prettyKibibytes from "pretty-kibibytes";
+
+import {
+    buildFileUploadHandler,
+    MaxSizeUploadExceededError,
+    UploadError,
+} from "../../../../../../src/scripts/tuleap/ckeditor/file-upload-handler-factory";
+import { isThereAnImageWithDataURI } from "../../../../../../src/scripts/tuleap/ckeditor/image-urls-finder.js";
 
 export default ExecutionService;
 
@@ -28,6 +36,7 @@ ExecutionService.$inject = [
     "ExecutionConstants",
     "ExecutionRestService",
     "SharedPropertiesService",
+    "gettextCatalog",
 ];
 
 function ExecutionService(
@@ -35,7 +44,8 @@ function ExecutionService(
     $rootScope,
     ExecutionConstants,
     ExecutionRestService,
-    SharedPropertiesService
+    SharedPropertiesService,
+    gettextCatalog
 ) {
     const self = this;
 
@@ -75,6 +85,7 @@ function ExecutionService(
             campaign: {},
             executions_by_categories_by_campaigns: {},
             executions: {},
+            editor: null,
             categories: {},
             loading: {},
             presences_loaded: false,
@@ -234,10 +245,17 @@ function ExecutionService(
             execution.userCanReloadTestBecauseDefinitionIsUpdated = () => {
                 delete execution.userCanReloadTestBecauseDefinitionIsUpdated;
                 updateTestExecutionNow(execution, execution_updated);
+                clearEditor(execution);
             };
         } else {
             updateTestExecutionNow(execution, execution_updated);
+            clearEditor(execution);
         }
+    }
+
+    function clearEditor(execution) {
+        self.editor.setData("");
+        execution.uploaded_file_ids = [];
     }
 
     function hasDefinitionChanged(execution, execution_updated) {
@@ -330,6 +348,13 @@ function ExecutionService(
     }
 
     function loadRTE(field, execution) {
+        let additional_options = {};
+        if (execution.upload_url) {
+            additional_options = {
+                extraPlugins: "uploadimage",
+                uploadUrl: execution.upload_url,
+            };
+        }
         let config = {
             disableNativeSpellChecker: false,
             toolbar: [
@@ -337,13 +362,65 @@ function ExecutionService(
                 ["Link", "Unlink", "Image"],
             ],
             language: document.body.dataset.userLocale,
+            ...additional_options,
         };
 
-        let editor = CKEDITOR.inline(field, config);
-        editor.on("change", function () {
-            execution.results = editor.getData();
+        self.editor = CKEDITOR.inline(field, config);
+        self.editor.on("change", function () {
+            execution.results = self.editor.getData();
         });
         field.setAttribute("contenteditable", true);
+        setupImageUpload(field, execution);
+    }
+
+    function setupImageUpload(field, execution) {
+        if (!execution.upload_url) {
+            disablePasteOfImages();
+            return;
+        }
+
+        execution.uploaded_file_ids = [];
+
+        const onStartCallback = () => {};
+        const onErrorCallback = (error) => {
+            if (error instanceof MaxSizeUploadExceededError) {
+                execution.error = gettextCatalog.getString(
+                    "You are not allowed to upload images bigger than {{ max_size }}",
+                    { max_size: prettyKibibytes(execution.max_size_upload) }
+                );
+            } else if (error instanceof UploadError) {
+                execution.error = gettextCatalog.getString("Unable to upload the image");
+            }
+        };
+        const onSuccessCallback = (id, download_href) => {
+            addToFilesAddedByTextField(execution, { id, download_href });
+        };
+
+        const fileUploadRequestHandler = buildFileUploadHandler({
+            ckeditor_instance: self.editor,
+            max_size_upload: execution.max_size_upload,
+            onStartCallback,
+            onErrorCallback,
+            onSuccessCallback,
+        });
+
+        self.editor.on("fileUploadRequest", fileUploadRequestHandler, null, null, 4);
+    }
+
+    function disablePasteOfImages() {
+        self.editor.on("paste", (event) => {
+            if (isThereAnImageWithDataURI(event.data.dataValue)) {
+                event.data.dataValue = "";
+                event.cancel();
+                self.editor.showNotification(
+                    gettextCatalog.getString("You are not allowed to paste images here")
+                );
+            }
+        });
+    }
+
+    function addToFilesAddedByTextField(execution, uploaded_file) {
+        execution.uploaded_file_ids.push(uploaded_file.id);
     }
 
     function removeViewTestExecution(execution_id, user_to_remove) {

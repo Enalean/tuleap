@@ -45,7 +45,6 @@ final class ExecutionsTest extends BaseTest
             ))),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
-
         $this->assertEquals(404, $response->getStatusCode());
 
         $updated_execution = $this->getLastExecutionForValid73Campaign(REST_TestDataBuilder::TEST_BOT_USER_NAME);
@@ -84,6 +83,23 @@ final class ExecutionsTest extends BaseTest
             'status' => $initial_value,
             'time'   => 0
         ))));
+    }
+
+    public function testPutExecutionsReturnErrorIfWeAddFilesWithoutFileField(): void
+    {
+        $initial_value = 'failed';
+        $new_value     = 'blocked';
+
+        $execution = $this->getLastExecutionForValid73Campaign(TestManagementDataBuilder::USER_TESTER_NAME);
+        $this->assertEquals($initial_value, $execution['status']);
+
+        $response = $this->getResponse($this->client->put('testmanagement_executions/' . $execution['id'], null, json_encode(array(
+            'status' => $new_value,
+            'time'   => 0,
+            'uploaded_file_ids' => [12]
+        ))));
+
+        $this->assertEquals($response->getStatusCode(), 400);
     }
 
     public function testPatchIssueLinkExecutionsWithRESTReadOnlyUser()
