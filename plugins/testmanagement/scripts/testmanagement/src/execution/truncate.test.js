@@ -19,34 +19,62 @@
 
 import { truncateHTML } from "./truncate";
 
+const placeholder_image_text = "A screenshot has been attached";
+
 describe("truncateHTML", () => {
     it(`Given the content is smaller than expected length,
         Then it does not add an ellipsis`, () => {
-        expect(truncateHTML("<p>Hello World</p>", 888)).toBe("<p>Hello World</p>");
+        expect(truncateHTML("<p>Hello World</p>", 888, placeholder_image_text)).toBe(
+            "<p>Hello World</p>"
+        );
     });
 
     it(`Given the content is bigger than expected length,
         Then it adds an ellipsis`, () => {
-        expect(truncateHTML("<p>Hello World</p>", 8)).toBe("<p>Hello Wo…</p>");
+        expect(truncateHTML("<p>Hello World</p>", 8, placeholder_image_text)).toBe(
+            "<p>Hello Wo…</p>"
+        );
     });
 
     it(`Given the content is bigger than expected length,
         And it contains additional content,
         Then it adds an ellipsis and remove the remaining content`, () => {
         expect(
-            truncateHTML("<p>Hello World <strong>!</strong></p><p>to be also removed</p>", 8)
+            truncateHTML(
+                "<p>Hello World <strong>!</strong></p><p>to be also removed</p>",
+                8,
+                placeholder_image_text
+            )
         ).toBe("<p>Hello Wo…</p>");
     });
 
     it(`Given the text to cut is nested in sub tags
         Then it adds an ellipsis inside those tags`, () => {
-        expect(truncateHTML("<p>Hello <strong>World</strong></p>", 8)).toBe(
+        expect(truncateHTML("<p>Hello <strong>World</strong></p>", 8, placeholder_image_text)).toBe(
             "<p>Hello <strong>Wo…</strong></p>"
         );
     });
 
     it(`Given the text is plain text
         Then it adds an ellipsis without adding tags`, () => {
-        expect(truncateHTML("Hello World", 8)).toBe("Hello Wo…");
+        expect(truncateHTML("Hello World", 8, placeholder_image_text)).toBe("Hello Wo…");
+    });
+
+    it(`Given the text contains images
+        Then it removes them`, () => {
+        expect(truncateHTML("Hello <img> World", 100, placeholder_image_text)).toBe("Hello  World");
+    });
+
+    it(`Given the text contains only images
+        Then it replaces it with the placeholder image text: **`, () => {
+        expect(truncateHTML("<img>", 100, placeholder_image_text)).toBe(
+            "<p><i>A screenshot has been attached</i></p>"
+        );
+        expect(truncateHTML("<p><img></p>", 100, placeholder_image_text)).toBe(
+            "<p><i>A screenshot has been attached</i></p>"
+        );
+        expect(truncateHTML("<p><img><img></p>", 100, placeholder_image_text)).toBe(
+            "<p><i>A screenshot has been attached</i></p>"
+        );
     });
 });

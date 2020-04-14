@@ -25,6 +25,9 @@ msgstr[1] "{{ $count }} tests seront supprimés"
 msgid "A campaign label is required"
 msgstr "Le label de la campagne est obligatoire"
 
+msgid "A screenshot has been attached"
+msgstr "Une image à été attachée"
+
 msgid "Add a test"
 msgstr "Ajouter un test"
 

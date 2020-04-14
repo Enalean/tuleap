@@ -22,13 +22,20 @@ import parse from "rehype-parse";
 import toHtml from "hast-util-to-html";
 import map from "unist-util-map";
 import remove from "unist-util-remove";
+import toString from "hast-util-to-string";
 
-export function truncateHTML(content, expected_length) {
+export function truncateHTML(content, max_length, placeholder_image_text) {
     const tree = unified().use(parse, { fragment: true }).parse(content);
 
     let counter = 0;
+    let images_counter = 0;
     const truncated_tree = map(tree, function (node) {
-        if (counter >= expected_length) {
+        if (counter >= max_length) {
+            return null;
+        }
+
+        if (node.type === "element" && node.tagName === "img") {
+            images_counter++;
             return null;
         }
 
@@ -36,13 +43,13 @@ export function truncateHTML(content, expected_length) {
             return node;
         }
 
-        if (counter + node.value.length < expected_length) {
+        if (counter + node.value.length < max_length) {
             counter += node.value.length;
             return node;
         }
 
-        const nb_addable = expected_length - counter;
-        counter = expected_length;
+        const nb_addable = max_length - counter;
+        counter = max_length;
 
         return Object.assign({}, node, {
             value: node.value.substr(0, nb_addable) + "…",
@@ -52,6 +59,10 @@ export function truncateHTML(content, expected_length) {
     remove(truncated_tree, (node) => {
         return typeof node.type === "undefined";
     });
+
+    if (images_counter > 0 && toString(truncated_tree).trim().length === 0) {
+        return "<p><i>" + placeholder_image_text + "</i></p>";
+    }
 
     return toHtml(truncated_tree);
 }
