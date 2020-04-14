@@ -59,6 +59,7 @@ codendi.RTE = Class.create({
         var replace_options = {
             resize_enabled: true,
             language: document.body.dataset.userLocale,
+            disableNativeSpellChecker: false,
         };
 
         if (CKEDITOR.instances && CKEDITOR.instances[this.element.id]) {

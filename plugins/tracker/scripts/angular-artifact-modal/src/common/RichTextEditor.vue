@@ -125,6 +125,7 @@ export default {
                 ],
                 height: "100px",
                 readOnly: this.disabled,
+                disableNativeSpellChecker: false,
                 ...additional_options,
             };
         },

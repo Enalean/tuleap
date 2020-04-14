@@ -39,5 +39,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     CKEDITOR.replace(textarea, {
         toolbar: tuleap.ckeditor.toolbar,
+        disableNativeSpellChecker: false,
     });
 });

@@ -85,6 +85,7 @@ export default {
                 ["Bold", "Italic", "Underline", "Strike", "Subscript", "Superscript", "-"],
                 ["RemoveFormat", "NumberedList", "BulletedList", "Format"],
             ],
+            disableNativeSpellChecker: false,
         });
 
         this.editor.on("instanceReady", this.onInstanceReady);

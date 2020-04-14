@@ -108,6 +108,7 @@ export default class BannerPresenter extends Vue {
                 ["Cut", "Copy", "Paste", "Undo", "Redo", "Link", "Unlink"],
                 ["Bold", "Italic"],
             ],
+            disableNativeSpellChecker: false,
         });
 
         this.editor.on("instanceReady", this.onInstanceReady);

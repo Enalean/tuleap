@@ -33,6 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
     [].forEach.call(ckeditor_selector, function (ckeditor_element) {
         CKEDITOR.replace(ckeditor_element.id, {
             toolbar: tuleap.ckeditor.toolbar,
+            disableNativeSpellChecker: false,
         });
     });
 
