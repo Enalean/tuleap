@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,38 +17,47 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once __DIR__ . '/../../../../bootstrap.php';
 
-class Workflow_Transition_Condition_FieldNotEmpty_FactoryTest extends TuleapTestCase
+declare(strict_types=1);
+
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class Workflow_Transition_Condition_FieldNotEmpty_FactoryTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     private $field_id = 3;
+    private $field;
+    private $dao;
+    private $factory;
+    private $transition;
+    private $field_string;
+    private $field_string_f15;
+    private $xml_mapping;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->field            = stub('Tracker_FormElement_Field_String')->getId()->returns($this->field_id);
-        $element_factory        = mock('Tracker_FormElementFactory');
-        stub($element_factory)->getFormElementById($this->field_id)->returns($this->field);
+        $this->field            = \Mockery::spy(\Tracker_FormElement_Field_String::class)->shouldReceive('getId')->andReturns($this->field_id)->getMock();
+        $element_factory        = \Mockery::spy(\Tracker_FormElementFactory::class);
+        $element_factory->shouldReceive('getFormElementById')->with($this->field_id)->andReturns($this->field);
         Tracker_FormElementFactory::setInstance($element_factory);
-        $this->dao              = mock('Workflow_Transition_Condition_FieldNotEmpty_Dao');
+        $this->dao              = \Mockery::spy(\Workflow_Transition_Condition_FieldNotEmpty_Dao::class);
         $this->factory          = new Workflow_Transition_Condition_FieldNotEmpty_Factory($this->dao, $element_factory);
-        $this->transition       = stub('Transition')->getId()->returns(42);
-        $this->field_string     = stub('Tracker_FormElement_Field_String')->getId()->returns(0);
-        $this->field_string_f15 = stub('Tracker_FormElement_Field_String')->getId()->returns(1);
+        $this->transition       = \Mockery::spy(\Transition::class)->shouldReceive('getId')->andReturns(42)->getMock();
+        $this->field_string     = \Mockery::spy(\Tracker_FormElement_Field_String::class)->shouldReceive('getId')->andReturns(0)->getMock();
+        $this->field_string_f15 = \Mockery::spy(\Tracker_FormElement_Field_String::class)->shouldReceive('getId')->andReturns(1)->getMock();
         $this->xml_mapping  = array(
             'F14' => $this->field_string,
             'F15' => $this->field_string_f15
         );
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         Tracker_FormElementFactory::clearInstance();
-        parent::tearDown();
     }
 
-    public function itReconstitutesANotEmptyCondition()
+    public function testItReconstitutesANotEmptyCondition(): void
     {
         $xml = new SimpleXMLElement('
             <condition type="notempty">
@@ -62,10 +71,10 @@ class Workflow_Transition_Condition_FieldNotEmpty_FactoryTest extends TuleapTest
         $expected->addField($this->field_string_f15);
 
         $condition = $this->factory->getInstanceFromXML($xml, $this->xml_mapping, $this->transition);
-        $this->assertEqual($condition, $expected);
+        $this->assertEquals($expected, $condition);
     }
 
-    public function itDoesNotReconstitutesAnythingIfThereIsNoRefToField()
+    public function testItDoesNotReconstitutesAnythingIfThereIsNoRefToField(): void
     {
         $xml = new SimpleXMLElement('
             <condition type="notempty" />
@@ -75,20 +84,20 @@ class Workflow_Transition_Condition_FieldNotEmpty_FactoryTest extends TuleapTest
         $this->assertNull($condition);
     }
 
-    public function itDuplicateConditionInDatabase()
+    public function testItDuplicateConditionInDatabase(): void
     {
         $new_transition_id = 2;
         $field_mapping     = array('some fields mapping');
         $ugroup_mapping    = array('some ugroups mapping');
         $duplicate_type    = PermissionsDao::DUPLICATE_NEW_PROJECT;
 
-        expect($this->dao)->duplicate($this->transition->getId(), $new_transition_id, $field_mapping)->once();
+        $this->dao->shouldReceive('duplicate')->with($this->transition->getId(), $new_transition_id, $field_mapping)->once();
         $this->factory->duplicate($this->transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
     }
 
-    public function itChecksThatFieldIsNotUsed()
+    public function testItChecksThatFieldIsNotUsed(): void
     {
-        stub($this->dao)->isFieldUsed($this->field_id)->once()->returns(true);
+        $this->dao->shouldReceive('isFieldUsed')->with($this->field_id)->once()->andReturns(true);
         $this->assertTrue($this->factory->isFieldUsedInConditions($this->field));
     }
 }
