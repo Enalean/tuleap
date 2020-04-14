@@ -120,8 +120,8 @@ seed_data() {
 
 setup_lhs
 setup_tuleap
-/usr/share/tuleap/tools/utils/php73/run.php --modules=nginx,fpm
 setup_database
+/usr/share/tuleap/tools/utils/php73/run.php --modules=nginx,fpm
 seed_data
 
 /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/tuleap.php config-set sys_project_approval 0
