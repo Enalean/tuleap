@@ -138,6 +138,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
             if (isset($v['value_id'])) {
                 $v = array($v);
             }
+            /** @psalm-var array{value_id:int} $val */
             foreach ($v as $val) {
                 if ($val['value_id'] != 100) {
                     if ($row = $this->getValueDao()->searchById($val['value_id'], $this->id)->getRow()) {
@@ -843,7 +844,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     /**
      * Get the array wich contains files submitted by the user
      *
-     * @return array or null if not found
+     * @return null|array null if not found
      */
     protected function getSubmittedInfoFromFILES()
     {

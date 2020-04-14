@@ -192,7 +192,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
 
     /**
      * Create a new content for this widget
-     * @return int the id of the new content
+     * @return int|false the id of the new content
      */
     public function create(Codendi_Request $request)
     {
@@ -285,7 +285,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
     /**
      * Return an item (we don't know the group_id)
      * @param int $item_id the id of the item to retrieve
-     * @return Docman_Item
+     * @return Docman_Item|null
      */
     protected function getItem($item_id)
     {
@@ -296,7 +296,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
             $dPm  = Docman_PermissionsManager::instance($row['group_id']);
             $user = UserManager::instance()->getCurrentUser();
             if (!$dPm->userCanRead($user, $item->getId())) {
-                $item = false;
+                $item = null;
             }
         }
         return $item;

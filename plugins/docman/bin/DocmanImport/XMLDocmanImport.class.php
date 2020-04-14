@@ -229,6 +229,10 @@ class XMLDocmanImport
             }
         }
 
+        if ($parentId === null) {
+            return;
+        }
+
         $this->loadXML($xmlDoc);
         $rootNode = $this->findPath($path);
         if ($rootNode instanceof SimpleXMLElement) {
@@ -408,6 +412,9 @@ class XMLDocmanImport
     {
         $domNode = dom_import_simplexml($node);
         $dom = $domNode->ownerDocument;
+        if ($dom === null) {
+            return;
+        }
         $textNode = $dom->createTextNode($text);
         $domNode->appendChild($textNode);
     }
@@ -719,6 +726,7 @@ class XMLDocmanImport
         if (is_numeric($s)) {
             return $s;
         } else {
+            require_once __DIR__ . '/DateParser.class.php';
             return DateParser::parseIso8601($s);
         }
     }

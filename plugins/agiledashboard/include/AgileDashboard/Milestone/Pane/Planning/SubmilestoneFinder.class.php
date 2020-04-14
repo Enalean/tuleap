@@ -69,7 +69,11 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder
 
     private function findTrackersForMultiMilestonesConfiguration(Planning_Milestone $milestone)
     {
-        $children = $this->hierarchy_factory->getChildren($milestone->getTrackerId());
+        $tracker_id = $milestone->getTrackerId();
+        if (is_array($tracker_id)) {
+            $tracker_id = array_pop($tracker_id);
+        }
+        $children = $this->hierarchy_factory->getChildren($tracker_id);
 
         if (! $children) {
             return null;

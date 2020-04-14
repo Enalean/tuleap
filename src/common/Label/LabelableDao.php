@@ -37,7 +37,8 @@ interface LabelableDao
 
     /**
      * @param int $project_id
-     * @return \DataAccessResult
+     * @return \DataAccessResult|false
+     * @psalm-ignore-falsable-return
      */
     public function searchLabelsUsedInProject($project_id);
 

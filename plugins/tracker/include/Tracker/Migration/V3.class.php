@@ -118,7 +118,11 @@ class Tracker_Migration_V3
             $reminder_dao->create($tv3->getID(), $id);
 
             $logger->info("$log_prefix Complete");
-            return $this->tracker_factory->getTrackerById($id);
+            $tracker = $this->tracker_factory->getTrackerById($id);
+            if ($tracker === null) {
+                throw new RuntimeException('Tracker does not exist');
+            }
+            return $tracker;
         }
     }
 }

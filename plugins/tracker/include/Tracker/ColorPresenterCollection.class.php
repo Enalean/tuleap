@@ -49,7 +49,7 @@ class Tracker_ColorPresenterCollection implements Iterator
 
     public function next()
     {
-        return next($this->colors);
+        next($this->colors);
     }
 
     public function rewind()

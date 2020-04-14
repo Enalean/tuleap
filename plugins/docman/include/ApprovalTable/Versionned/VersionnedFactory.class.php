@@ -106,7 +106,7 @@ abstract class Docman_ApprovalTableVersionnedFactory extends Docman_ApprovalTabl
         $tableCreated = false;
         if ($import == 'copy' || $import == 'reset' || $import == 'empty') {
             $srcTable = $this->getLastTableForItem();
-            if ($import == 'copy' || $import == 'reset') {
+            if (($import == 'copy' || $import == 'reset') && $srcTable !== null) {
                 $dstTable = clone $srcTable;
                 $this->_updateTableWithLastId($dstTable);
                 if ($import == 'copy') {
@@ -118,7 +118,7 @@ abstract class Docman_ApprovalTableVersionnedFactory extends Docman_ApprovalTabl
                 $tableCreated = $this->newTableEmpty($userId);
             }
             // Close source table
-            if (!$srcTable->isClosed()) {
+            if ($srcTable !== null && !$srcTable->isClosed()) {
                 $srcTable->setStatus(PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED);
                 $this->_updateTable($srcTable);
             }
@@ -131,7 +131,7 @@ abstract class Docman_ApprovalTableVersionnedFactory extends Docman_ApprovalTabl
     /**
      * Return the last created approval table for the item
      *
-     * @return Docman_ApprovalTable object
+     * @return Docman_ApprovalTable|null object
      */
     public function getLastTableForItem()
     {

@@ -115,7 +115,10 @@ class Tracker_HierarchyFactory
         if (!isset($this->cache_children_of_tracker[$tracker_id])) {
             $this->cache_children_of_tracker[$tracker_id] = array();
             foreach ($this->hierarchy_dao->searchChildTrackerIds($tracker_id) as $row) {
-                $this->cache_children_of_tracker[$tracker_id][] = $this->tracker_factory->getTrackerById($row['id']);
+                $tracker = $this->tracker_factory->getTrackerById($row['id']);
+                if ($tracker !== null) {
+                    $this->cache_children_of_tracker[$tracker_id][] = $tracker;
+                }
             }
         }
         return $this->cache_children_of_tracker[$tracker_id];
@@ -155,12 +158,15 @@ class Tracker_HierarchyFactory
     }
 
     /**
-     * @return Tracker
+     * @return Tracker|null
      */
     public function getParent(Tracker $tracker)
     {
         $hierarchy         = $this->getHierarchy(array($tracker->getId()));
         $parent_tracker_id = $hierarchy->getParent($tracker->getId());
+        if ($parent_tracker_id === null) {
+            return null;
+        }
         return $this->tracker_factory->getTrackerById($parent_tracker_id);
     }
 
@@ -177,7 +183,7 @@ class Tracker_HierarchyFactory
         $hierarchy         = $this->getHierarchy(array($tracker->getId()));
         $parent_tracker_id = $hierarchy->getParent($tracker->getId());
         $stack = array();
-        while ($parent_tracker = $this->tracker_factory->getTrackerById($parent_tracker_id)) {
+        while (($parent_tracker_id !== null) && ($parent_tracker = $this->tracker_factory->getTrackerById($parent_tracker_id))) {
             $stack[] = $parent_tracker;
             $parent_tracker_id = $hierarchy->getParent($parent_tracker->getId());
         }

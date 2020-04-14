@@ -270,6 +270,9 @@ class Router
         $GLOBALS['Response']->redirect($url);
     }
 
+    /**
+     * @psalm-return never-return
+     */
     private function redirectToTuleapHomepage()
     {
         $GLOBALS['Response']->addFeedback(
@@ -278,6 +281,7 @@ class Router
         );
 
         $GLOBALS['Response']->redirect('/');
+        exit;
     }
 
     /**

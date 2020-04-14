@@ -277,7 +277,7 @@ class GitRepository implements DVCSRepository
     /**
      * Gives the parent GitRepository object of this
      * Look into the database
-     * @return GitRepository
+     * @return GitRepository|null
      */
     public function getParent()
     {

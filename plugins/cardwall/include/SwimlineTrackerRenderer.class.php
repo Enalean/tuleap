@@ -41,6 +41,6 @@ class Cardwall_SwimlineTrackerRenderer extends Cardwall_Swimline
 
     public function getCardPresenter()
     {
-        return false;
+        return null;
     }
 }

@@ -61,7 +61,7 @@ class Tracker_ArtifactChildPresenter
         $base_url = HTTPRequest::instance()->getServerUrl();
 
         $this->xref         = $artifact->getXRef();
-        $this->title        = $artifact->getTitle();
+        $this->title        = $artifact->getTitle() ?? '';
         $this->id           = $artifact->getId();
         $this->url          = $base_url . $artifact->getUri();
         $this->status       = $semantic->getStatus($artifact);

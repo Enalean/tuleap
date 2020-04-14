@@ -88,6 +88,8 @@ class ProftpdRouter
      */
     private function getService(HTTPRequest $request)
     {
-        return $request->getProject()->getService('plugin_proftpd');
+        $service = $request->getProject()->getService('plugin_proftpd');
+        assert($service instanceof ServiceProFTPd);
+        return $service;
     }
 }

@@ -117,7 +117,7 @@ class Tracker_Rule_List_Dao extends DataAccessObject
 
     /**
      * create a row in the table tracker_rule and in tracker_rule_list
-     * @return true or id(auto_increment) if there is no error
+     * @return false|DataAccessResult or id(auto_increment) if there is no error
      */
     public function create($tracker_id, $source_field_id, $source_value_id, $target_field_id, $target_value_id)
     {

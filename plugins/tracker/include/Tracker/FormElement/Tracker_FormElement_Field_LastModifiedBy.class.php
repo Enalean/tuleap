@@ -364,7 +364,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
      *
      * @param string the user name
      *
-     * @return int the user id
+     * @return null|int the user id
      */
     public function getFieldData($value)
     {

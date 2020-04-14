@@ -93,7 +93,7 @@ class LDAP
      *
      * @param String $key Parameter name
      *
-     * @return String
+     * @return String|null
      */
     public function getLDAPParam($key)
     {

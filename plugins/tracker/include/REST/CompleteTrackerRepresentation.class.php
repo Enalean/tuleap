@@ -131,9 +131,10 @@ class CompleteTrackerRepresentation implements TrackerRepresentation
         $this->color_name  = $tracker->getColor()->getName();
         $this->permissions_for_groups = $permissions;
 
-        if ($tracker->getParent()) {
+        $tracker_parent = $tracker->getParent();
+        if ($tracker_parent) {
             $this->parent = new TrackerReference();
-            $this->parent->build($tracker->getParent());
+            $this->parent->build($tracker_parent);
         }
     }
 }

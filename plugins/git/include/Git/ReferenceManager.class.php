@@ -48,7 +48,7 @@ class Git_ReferenceManager
      * Return a reference that match keyword and value
      * @param String $keyword
      * @param String $value
-     * @return Reference
+     * @return Reference|false
      */
     public function getReference(Project $project, $keyword, $value)
     {

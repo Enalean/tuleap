@@ -821,7 +821,7 @@ class FRSFileFactory
      * @param int $offset
      * @param int $limit
      *
-     * @return bool
+     * @return DataAccessResult
      */
     public function listPendingFiles($groupId, $offset, $limit)
     {
@@ -834,7 +834,7 @@ class FRSFileFactory
      *
      * @param int $groupId
      *
-     * @return bool
+     * @return DataAccessResult
      */
     public function listToBeRestoredFiles($groupId)
     {
@@ -847,7 +847,7 @@ class FRSFileFactory
      *
      * @param int $groupId
      *
-     * @return DataAccessObject
+     * @return DataAccessResult
      */
     public function listStagingCandidates($groupId)
     {

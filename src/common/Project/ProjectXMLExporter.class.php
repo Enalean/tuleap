@@ -178,6 +178,9 @@ class ProjectXMLExporter
     private function convertToXml(SimpleXMLElement $xml_element)
     {
         $dom = dom_import_simplexml($xml_element)->ownerDocument;
+        if ($dom === null) {
+            return '';
+        }
         $dom->formatOutput = true;
 
         return $dom->saveXML();

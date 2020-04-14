@@ -147,6 +147,9 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
     public function getInstanceFromRow($row)
     {
         $tracker = $this->tracker_factory->getTrackerById($row['tracker_id']);
+        if ($tracker === null) {
+            throw new RuntimeException('Tracker does not exist');
+        }
 
         return new Workflow(
             $this->getGlobalRulesManager($tracker),

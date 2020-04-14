@@ -89,7 +89,7 @@ class TrackerFactory
 
     /**
      * @param int $tracker_id the id of the tracker to retrieve
-     * @return Tracker identified by id (null if not found)
+     * @return Tracker|null identified by id (null if not found)
      */
     public function getTrackerById($tracker_id)
     {
@@ -428,6 +428,9 @@ class TrackerFactory
         $this->duplicatePermissions($id_template, $id, $ugroup_mapping, $field_mapping, $duplicate_type);
 
         $source_tracker = $this->getTrackerById($id_template);
+        if ($tracker === null || $source_tracker === null) {
+            throw new RuntimeException('Tracker does not exist');
+        }
         $this->duplicateWebhooks($source_tracker, $tracker);
 
         $this->postCreateActions($tracker);
@@ -690,6 +693,9 @@ class TrackerFactory
         );
         if ($tracker_id) {
             $trackerDB = $this->getTrackerById($tracker_id);
+            if ($trackerDB === null) {
+                throw new RuntimeException('Tracker does not exist');
+            }
             //create cannedResponses
             $response_factory = $tracker->getCannedResponseFactory();
             foreach ($tracker->cannedResponses as $response) {

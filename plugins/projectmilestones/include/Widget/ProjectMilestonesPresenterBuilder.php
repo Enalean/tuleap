@@ -300,6 +300,9 @@ class ProjectMilestonesPresenterBuilder
 
         foreach ($trackers_id_agile_dashboard as $tracker_id) {
             $tracker                 = $this->tracker_factory->getTrackerById($tracker_id);
+            if ($tracker === null) {
+                continue;
+            }
             $tracker_agile_dashboard = [
                 'id' => (int) $tracker_id,
                 'color_name' => $tracker->getColor()->getName(),

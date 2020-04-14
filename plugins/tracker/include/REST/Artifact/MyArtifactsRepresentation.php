@@ -59,7 +59,7 @@ class MyArtifactsRepresentation
         $this->id       = JsonCast::toInt($artifact->getId());
         $this->uri      = ArtifactRepresentation::ROUTE . '/' . $artifact->getId();
         $this->html_url = $artifact->getUri();
-        $this->title    = $artifact->getTitle();
+        $this->title    = $artifact->getTitle() ?? '';
         $this->xref     = $artifact->getXRef();
         $this->tracker  = $tracker_representation;
         return $this;

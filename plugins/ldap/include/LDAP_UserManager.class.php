@@ -84,7 +84,7 @@ class LDAP_UserManager
      * Get LDAPResult object corresponding to an LDAP ID
      *
      * @param  $ldapId    The LDAP identifier
-     * @return LDAPResult
+     * @return LDAPResult|false
      */
     public function getLdapFromLdapId($ldapId)
     {
@@ -545,7 +545,7 @@ class LDAP_UserManager
         $attributes = $this->user_sync->getSyncAttributes($this->ldap);
         $ldapSearch = false;
 
-        foreach (explode(';', $this->ldap->getLDAPParam('people_dn')) as $people_dn) {
+        foreach (explode(';', $this->ldap->getLDAPParam('people_dn') ?? '') as $people_dn) {
             $ldapSearch = $this->ldap->search($people_dn, $ldap_query, LDAP::SCOPE_ONELEVEL, $attributes);
             if ($ldapSearch !== false && count($ldapSearch) === 1) {
                 break;

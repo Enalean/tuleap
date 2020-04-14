@@ -1125,7 +1125,7 @@ class Docman_ItemFactory
      * @param $orphan      Hashmap of item ids. Items (in ItemList) without
      *                     parent node
      * @param $wantedItems Items needed to continue to build the tree.
-     * @return int Id of root item if found, false otherwise.
+     * @return int|false Id of root item if found, false otherwise.
      */
     public function connectOrphansToParents(&$itemList, &$orphans, &$wantedItems)
     {

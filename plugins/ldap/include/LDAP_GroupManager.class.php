@@ -136,7 +136,7 @@ abstract class LDAP_GroupManager
     /**
      * Return the GroupDn for the current group name
      *
-     * @return String
+     * @return String|false
      */
     public function getGroupDn()
     {

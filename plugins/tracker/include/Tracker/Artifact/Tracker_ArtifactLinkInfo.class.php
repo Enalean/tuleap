@@ -106,7 +106,7 @@ class Tracker_ArtifactLinkInfo
     /**
      * Returns the tracker this artifact belongs to
      *
-     * @return Tracker The tracker this artifact belongs to
+     * @return Tracker|null The tracker this artifact belongs to
      */
     public function getTracker()
     {

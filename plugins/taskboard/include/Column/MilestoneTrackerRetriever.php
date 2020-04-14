@@ -50,6 +50,10 @@ class MilestoneTrackerRetriever
             throw new InvalidColumnException();
         }
         $row = $dar->getRow();
-        return $this->tracker_factory->getTrackerById($row['tracker_id']);
+        $tracker = $this->tracker_factory->getTrackerById($row['tracker_id']);
+        if ($tracker === null) {
+            throw new \RuntimeException('Tracker does not exist');
+        }
+        return $tracker;
     }
 }

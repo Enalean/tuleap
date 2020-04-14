@@ -154,7 +154,7 @@ class ArtifactFieldSetFactory
      * getfieldSetById - return the fieldset of the tracker $ArtifactType whitch have the ID $field_set_id
      *
      * @param int $field_set_id the id of the field set we are looking for
-     * @return Object{ArtifactFieldSet} the field set found, or null if not
+     * @return null|Object{ArtifactFieldSet} the field set found, or null if not
      */
     public function getFieldSetById($field_set_id)
     {

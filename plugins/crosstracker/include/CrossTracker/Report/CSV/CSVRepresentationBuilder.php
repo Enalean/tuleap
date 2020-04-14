@@ -135,7 +135,7 @@ class CSVRepresentationBuilder
         $last_update_date = new DateValue($artifact->getLastUpdateDate(), true);
         $formatted_last_update_date = $last_update_date->accept($this->visitor, $formatter_parameters);
 
-        $title = new TextValue($artifact->getTitle());
+        $title = new TextValue($artifact->getTitle() ?? '');
         $formatted_title = $title->accept($this->visitor, $formatter_parameters);
 
         $description = new TextValue((string) $artifact->getDescription());

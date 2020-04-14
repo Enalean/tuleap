@@ -94,7 +94,7 @@ class Rule_Timestamp extends Rule
 
     public function isValid($val)
     {
-        return preg_match(self::TIMESTAMP_REGEX, $val);
+        return preg_match(self::TIMESTAMP_REGEX, $val) === 1;
     }
 }
 
@@ -828,7 +828,7 @@ class Rule_File extends Rule
     /**
      * Check file upload validity
      *
-     * @param  Array   One entry in $_FILES superarray (e.g. $_FILES['test'])
+     * @param  string|array $file  One entry in $_FILES superarray (e.g. $_FILES['test'])
      * @return bool Is file upload valid or not.
      */
     public function isValid($file)

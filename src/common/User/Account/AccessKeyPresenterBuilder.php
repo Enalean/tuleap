@@ -74,7 +74,6 @@ class AccessKeyPresenterBuilder
     }
 
     /**
-     * @return static
      * @throws \Tuleap\Cryptography\Exception\CannotPerformIOOperationException
      */
     public static function build(): self

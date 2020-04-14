@@ -86,7 +86,7 @@ class CampaignRetriever
             $job = new NoJobConfiguration();
         }
 
-        return new Campaign($artifact, $artifact->getTitle(), $job);
+        return new Campaign($artifact, $artifact->getTitle() ?? '', $job);
     }
 
     private function getDecryptedToken(?string $encrypted_job_token): ConcealedString

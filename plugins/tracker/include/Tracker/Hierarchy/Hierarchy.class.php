@@ -88,7 +88,7 @@ class Tracker_Hierarchy
      *
      * @param int $tracker_id
      *
-     * @return int
+     * @return int|null
      */
     public function getParent($tracker_id)
     {

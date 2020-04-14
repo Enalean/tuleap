@@ -170,7 +170,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone
      */
     public function getArtifactTitle()
     {
-        return $this->artifact->getTitle();
+        return $this->artifact->getTitle() ?? '';
     }
 
     /**
@@ -362,7 +362,11 @@ class Planning_ArtifactMilestone implements Planning_Milestone
         }
 
         if ($potential_submilestone->getArtifact()->getTracker()->getParent()) {
-            return $potential_submilestone->getArtifact()->getTracker()->getParent()->getId() == $this->getArtifact()->getTracker()->getId();
+            $parent = $potential_submilestone->getArtifact()->getTracker()->getParent();
+            if ($parent === null) {
+                throw new RuntimeException('Tracker does not exist');
+            }
+            return $parent->getId() == $this->getArtifact()->getTracker()->getId();
         }
 
         return false;

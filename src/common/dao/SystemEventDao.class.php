@@ -218,7 +218,7 @@ class SystemEventDao extends DataAccessObject
     }
 
     /**
-     * @return array of event id and parameters
+     * @return DataAccessResult|false array of event id and parameters
      */
     public function searchNewGitRepoUpdateEvents()
     {

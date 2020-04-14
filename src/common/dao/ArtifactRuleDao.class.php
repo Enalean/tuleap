@@ -128,7 +128,7 @@ class ArtifactRuleDao extends DataAccessObject
 
     /**
     * create a row in the table artifact_rule
-    * @return true or id(auto_increment) if there is no error
+    * @return false|int id(auto_increment) if there is no error
     */
     public function create($group_artifact_id, $source_field_id, $source_value_id, $target_field_id, $rule_type, $target_value_id)
     {

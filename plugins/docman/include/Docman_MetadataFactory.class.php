@@ -333,7 +333,7 @@ class Docman_MetadataFactory
     /**
      * Return the metadata value for a given metadata and item.
      *
-     * @return either a scalar (date, string, ...) or a LoveIterator for the
+     * @return scalar|ArrayIterator|null either a scalar (date, string, ...) or a LoveIterator for the
      * list of values.
      */
     public function getMetadataValue($item, $md)

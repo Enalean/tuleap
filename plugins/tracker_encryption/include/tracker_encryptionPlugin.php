@@ -98,7 +98,9 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
         if ($params['key'] == "" || $tracker_key->isValidPublicKey($params['key'])) {
             $tracker_key->associateKeyToTracker();
             $tracker = TrackerFactory::instance()->getTrackerById($params['tracker_id']);
-            $tracker_key->historizeKey($tracker->getGroupId());
+            if ($tracker !== null) {
+                $tracker_key->historizeKey($tracker->getGroupId());
+            }
             $tracker_key->resetEncryptedFieldValues($params['tracker_id']);
             $logger->info(
                 "[Tracker Encryption] A new public key has been set for the tracker[" . $params['tracker_id'] . "]."
@@ -143,7 +145,7 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
         $tracker = TrackerFactory::instance()->getTrackerById($tracker_id);
         switch ($func) {
             case 'admin-encryption':
-                if ($tracker->userIsAdmin()) {
+                if ($tracker !== null && $tracker->userIsAdmin()) {
                     $this->displayTrackerKeyForm($tracker_id);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
@@ -151,7 +153,7 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
                 }
                 break;
             case 'admin-editencryptionkey':
-                if ($tracker->userIsAdmin()) {
+                if ($tracker !== null && $tracker->userIsAdmin()) {
                     $key = trim($request->getValidated('key', 'text', ''));
                     $csrf_token = new CSRFSynchronizerToken('/plugins/tracker_encryption/?tracker='.$tracker_id.'&func=admin-editencryptionkey');
                     $csrf_token->check();
@@ -169,7 +171,9 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
         $tracker = TrackerFactory::instance()->getTrackerById($tracker_id);
         $title = $GLOBALS['Language']->getText('plugin_tracker_encryption', 'descriptor_name');
         $layout = new TrackerManager();
-        $tracker->displayAdminHeader($layout, 'Encryption', $title);
+        if ($tracker !== null) {
+            $tracker->displayAdminHeader($layout, 'Encryption', $title);
+        }
         $csrf_token = new CSRFSynchronizerToken('/plugins/tracker_encryption/?tracker='.$tracker_id.'&func=admin-editencryptionkey');
         $renderer   = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/');
         $renderer->renderToPage(

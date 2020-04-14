@@ -100,7 +100,7 @@ class Planning_VirtualTopMilestone implements Planning_Milestone
      */
     public function userCanView(PFUser $user)
     {
-        return null;
+        return false;
     }
 
     public function getLinkedArtifacts(PFUser $user)

@@ -64,7 +64,7 @@ class AgileDashboard_SequenceIdManager
         }
 
         if (! isset($this->backlog_item_ids[$milestone->getArtifactId()])) {
-            $this->backlog_item_ids[$milestone->getArtifactId()] = array();
+            $this->backlog_item_ids[$milestone->getArtifactId() ?? 0] = array();
             $backlog           = $this->backlog_factory->getBacklog($milestone);
             $backlog_artifacts = $backlog->getArtifacts($user);
 

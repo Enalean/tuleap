@@ -44,7 +44,7 @@ class AgileDashboard_Milestone_Backlog_DescendantItemsCollection implements Iter
 
     public function next()
     {
-        return next($this->items);
+        next($this->items);
     }
 
     public function rewind()

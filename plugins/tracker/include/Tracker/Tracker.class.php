@@ -111,7 +111,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     public const ASSIGNED_TO_FIELD_NAME      = "assigned_to";
     public const IMPEDIMENT_FIELD_NAME       = "impediment";
     public const TYPE_FIELD_NAME             = "type";
-    public const NO_PARENT                   = -1;
+    public const NO_PARENT                   = null;
 
     // The limit to 25 char is due to cross references
     // extraction fails if length is more than 25
@@ -919,7 +919,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 }
                 break;
         }
-        return false;
+        return;
     }
 
     /**
@@ -2392,6 +2392,9 @@ class Tracker implements Tracker_Dispatchable_Interface
     protected function sendXML(SimpleXMLElement $xmlElem)
     {
         $dom = dom_import_simplexml($xmlElem)->ownerDocument;
+        if ($dom === null) {
+            return;
+        }
         $dom->formatOutput = true;
 
         $output_filename = 'Tracker_' . $this->item_name . '.xml';
@@ -3292,7 +3295,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     /**
      * Return parent tracker of current tracker (if any)
      *
-     * @return Tracker
+     * @return Tracker|null
      */
     public function getParent()
     {

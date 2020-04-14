@@ -537,7 +537,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * Get the artifact title, or null if no title defined in semantics
      *
-     * @return string the title of the artifact, or null if no title defined in semantics
+     * @return string|null the title of the artifact, or null if no title defined in semantics
      */
     public function getTitle()
     {
@@ -1179,7 +1179,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function getTracker()
     {
         if (!isset($this->tracker)) {
-            $this->tracker = TrackerFactory::instance()->getTrackerByid($this->tracker_id);
+            $tracker = TrackerFactory::instance()->getTrackerById($this->tracker_id);
+            if ($tracker === null) {
+                throw new RuntimeException('Tracker does not exist');
+            }
+            $this->tracker = $tracker;
         }
         return $this->tracker;
     }

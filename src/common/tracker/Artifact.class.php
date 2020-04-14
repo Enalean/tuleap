@@ -972,13 +972,13 @@ class Artifact
                         $update_value = '';
                         if ($is_text) {
                             if ($field->isStandardField()) {
-                                $upd_list .= "$field_name='" . db_es(htmlspecialchars($value)) . "',";
+                                $upd_list .= "$field_name='" . db_es(htmlspecialchars((string) $value)) . "',";
                             } else {
-                                $update_value = htmlspecialchars($value);
+                                $update_value = htmlspecialchars((string) $value);
                             }
 
                             $this->addHistory($field, $old_value, $value);
-                            $value = stripslashes($value);
+                            $value = stripslashes((string) $value);
                         } else {
                             if ($field->isStandardField()) {
                                 $upd_list .= "$field_name='" . db_es($value) . "',";
@@ -1010,7 +1010,11 @@ class Artifact
         } // while
 
         for ($i = 0; $i < sizeof($text_value_list); $i++) {
-            $reference_manager->extractCrossRef($text_value_list[$i], $this->getID(), ReferenceManager::REFERENCE_NATURE_ARTIFACT, $this->ArtifactType->getGroupID());
+            $html = '';
+            if (! is_array($text_value_list[$i])) {
+                $html = (string) $text_value_list[$i];
+            }
+            $reference_manager->extractCrossRef($html, $this->getID(), ReferenceManager::REFERENCE_NATURE_ARTIFACT, $this->ArtifactType->getGroupID());
         }
 
         $request = HTTPRequest::instance();
@@ -3353,7 +3357,7 @@ class Artifact
                 if (db_result($orig_subm, 0, 'mod_by') == 100) {
                     $user_quoted = db_result($orig_subm, 0, 'email');
                 } else {
-                    $user_quoted = $uh->getDisplayNameFromUserId(db_result($orig_subm, 0, 'mod_by'));
+                    $user_quoted = $uh->getDisplayNameFromUserId(db_result($orig_subm, 0, 'mod_by')) ?? '';
                 }
                 $user_quoted = addslashes(addslashes($user_quoted));
                 if ($pv == 0) {

@@ -284,13 +284,17 @@ class ArtifactImport
                 ) {
                        //accept simple ints for Severity fields instead of 1 - Ordinary,5 - Major,9 - Critical
                        //accept simple ints for Priority fields instead of 1 - Lowest,5 - Medium,9 - Highest
-                } elseif (
+                    return true;
+                }
+                /** @psalm-suppress ParadoxicalCondition */
+                if (
                     $field_name == 'submitted_by' &&
                     (($val == $GLOBALS['Language']->getText('global', 'none') && $this->ath->allowsAnon()) ||
                     $val == "" ||
                     user_getemail_from_unix($val) != $GLOBALS['Language']->getText('include_user', 'not_found'))
                 ) {
                           //accept anonymous user, use importing user as 'submitted by', or simply make sure that user is a known user
+                    return true;
                 } else {
                       $this->setError($GLOBALS['Language']->getText('tracker_import_utils', 'not_a_predefined_value', array(
                       $row + 1,

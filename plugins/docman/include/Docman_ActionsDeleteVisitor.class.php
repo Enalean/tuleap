@@ -25,6 +25,9 @@ use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\DocumentDeletion\DocmanWikiDeletor;
 use Tuleap\Docman\Item\ItemVisitor;
 
+/**
+ * @implements ItemVisitor<bool>
+ */
 class Docman_ActionsDeleteVisitor implements ItemVisitor
 {
     protected $user;
@@ -150,7 +153,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
 
     public function visitItem(Docman_Item $item, array $params = [])
     {
-        return null;
+        return false;
     }
 
     /**

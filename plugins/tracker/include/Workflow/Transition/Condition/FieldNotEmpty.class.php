@@ -45,7 +45,7 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
     public function exportToXml(SimpleXMLElement $root, $xmlMapping)
     {
         if (! $this->fields) {
-            return null;
+            return;
         }
 
         $child = $root->addChild('condition');

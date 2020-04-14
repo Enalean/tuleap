@@ -72,7 +72,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollection implements
 
     public function next()
     {
-        return next($this->rows);
+        next($this->rows);
     }
 
     public function rewind()

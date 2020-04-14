@@ -114,7 +114,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
     ) {
         $this->initCollections($user, $milestone, $backlog, $redirect_to_self);
 
-        return $this->todo_collection[$milestone->getArtifactId()];
+        return $this->todo_collection[$milestone->getArtifactId() ?? 0];
     }
 
     public function getDoneCollection(
@@ -125,7 +125,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
     ) {
         $this->initCollections($user, $milestone, $backlog, $redirect_to_self);
 
-        return $this->done_collection[$milestone->getArtifactId()];
+        return $this->done_collection[$milestone->getArtifactId() ?? 0];
     }
 
     public function getUnassignedOpenCollection(
@@ -236,7 +236,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
     ) {
         $this->initCollections($user, $milestone, $backlog, $redirect_to_self);
 
-        return $this->inconsistent_collection[$milestone->getArtifactId()];
+        return $this->inconsistent_collection[$milestone->getArtifactId() ?? 0];
     }
 
     public function getOpenClosedAndInconsistentCollection(
@@ -247,8 +247,8 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
     ) {
         $this->initCollections($user, $milestone, $backlog, $redirect_to_self);
 
-        if ($this->inconsistent_collection[$milestone->getArtifactId()]->getTotalAvaialableSize() === 0) {
-            return $this->open_closed_and_inconsistent_collection[$milestone->getArtifactId()];
+        if ($this->inconsistent_collection[$milestone->getArtifactId() ?? 0]->getTotalAvaialableSize() === 0) {
+            return $this->open_closed_and_inconsistent_collection[$milestone->getArtifactId() ?? 0];
         }
 
         return $this->reorderOpenClosedAndInconsistentCollection($milestone);
@@ -262,7 +262,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
     ) {
         $this->initCollections($user, $milestone, $backlog, $redirect_to_self);
 
-        return $this->open_and_closed_collection[$milestone->getArtifactId()];
+        return $this->open_and_closed_collection[$milestone->getArtifactId() ?? 0];
     }
 
     private function initCollections(
@@ -271,11 +271,11 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         AgileDashboard_Milestone_Backlog_Backlog $backlog,
         $redirect_to_self
     ) {
-        if (isset($this->open_and_closed_collection[$milestone->getArtifactId()])) {
+        if (isset($this->open_and_closed_collection[$milestone->getArtifactId() ?? 0])) {
             return;
         }
 
-        $id = $milestone->getArtifactId();
+        $id = $milestone->getArtifactId() ?? 0;
 
         $this->open_and_closed_collection[$id]              = $this->backlog_item_builder->getCollection();
         $this->open_closed_and_inconsistent_collection[$id] = $this->backlog_item_builder->getCollection();
@@ -338,12 +338,12 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
             return;
         }
 
-        if (isset($this->todo_collection[$milestone->getArtifactId()])) {
-            $this->todo_collection[$milestone->getArtifactId()]->setParentItemName($name);
+        if (isset($this->todo_collection[$milestone->getArtifactId() ?? 0])) {
+            $this->todo_collection[$milestone->getArtifactId() ?? 0]->setParentItemName($name);
         }
 
-        if (isset($this->done_collection[$milestone->getArtifactId()])) {
-            $this->done_collection[$milestone->getArtifactId()]->setParentItemName($name);
+        if (isset($this->done_collection[$milestone->getArtifactId() ?? 0])) {
+            $this->done_collection[$milestone->getArtifactId() ?? 0]->setParentItemName($name);
         }
     }
 
@@ -505,8 +505,8 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
 
         $this->pushItemInOpenCollections($milestone, $artifact, $semantics, $backlog_item, $user);
         $this->pushItemInDoneCollection($milestone, $artifact, $semantics, $backlog_item, $user);
-        $this->open_and_closed_collection[$milestone->getArtifactId()]->push($backlog_item);
-        $this->open_closed_and_inconsistent_collection[$milestone->getArtifactId()]->push($backlog_item);
+        $this->open_and_closed_collection[$milestone->getArtifactId() ?? 0]->push($backlog_item);
+        $this->open_closed_and_inconsistent_collection[$milestone->getArtifactId() ?? 0]->push($backlog_item);
     }
 
     private function pushItemInOpenCollections(
@@ -525,7 +525,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
             $backlog_item->setRemainingEffort(
                 $this->remaining_effort_value_retriever->getRemainingEffortValue($user, $backlog_item->getArtifact())
             );
-            $this->todo_collection[$milestone->getArtifactId()]->push($backlog_item);
+            $this->todo_collection[$milestone->getArtifactId() ?? 0]->push($backlog_item);
         }
     }
 
@@ -536,14 +536,14 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item,
         PFUser $user
     ) {
-        $this->setInitialEffort($backlog_item, $semantics[$artifact->getId()]);
+        $this->setInitialEffort($backlog_item, $semantics[$artifact->getId() ?? 0]);
         $backlog_item->setRemainingEffort(
             $this->remaining_effort_value_retriever->getRemainingEffortValue($user, $backlog_item->getArtifact())
         );
 
         if ($semantics[$artifact->getId()][Tracker_Semantic_Status::NAME] != AgileDashboard_BacklogItemDao::STATUS_OPEN) {
             $backlog_item->setStatus($artifact->getStatus(), Tracker_Semantic_Status::CLOSED);
-            $this->done_collection[$milestone->getArtifactId()]->push($backlog_item);
+            $this->done_collection[$milestone->getArtifactId() ?? 0]->push($backlog_item);
         }
     }
 
@@ -629,14 +629,14 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         array $planned
     ) {
         foreach ($planned as $planned_artifact_id) {
-            if (! $this->open_and_closed_collection[$milestone->getArtifactId()]->containsId($planned_artifact_id)) {
+            if (! $this->open_and_closed_collection[$milestone->getArtifactId() ?? 0]->containsId($planned_artifact_id)) {
                 $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $planned_artifact_id);
 
                 if ($artifact) {
                     $item = $this->backlog_item_builder->getItem($artifact, $redirect_to_self, true);
                     $item->setStatus($artifact->getStatus(), $artifact->getSemanticStatusValue());
-                    $this->inconsistent_collection[$milestone->getArtifactId()]->push($item);
-                    $this->open_closed_and_inconsistent_collection[$milestone->getArtifactId()]->push($item);
+                    $this->inconsistent_collection[$milestone->getArtifactId() ?? 0]->push($item);
+                    $this->open_closed_and_inconsistent_collection[$milestone->getArtifactId() ?? 0]->push($item);
                 }
             }
         }
@@ -648,7 +648,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         $indexed_rank      = array();
         $sort_collection   = $this->backlog_item_builder->getCollection();
 
-        $item_ids = $this->open_closed_and_inconsistent_collection[$milestone->getArtifactId()]->getItemIds();
+        $item_ids = $this->open_closed_and_inconsistent_collection[$milestone->getArtifactId() ?? 0]->getItemIds();
         if (count($item_ids) === 0) {
             return $sort_collection;
         }
@@ -658,7 +658,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
             $indexed_rank[$rank['artifact_id']] = $rank['rank'];
         }
 
-        foreach ($this->open_closed_and_inconsistent_collection[$milestone->getArtifactId()] as $artifact) {
+        foreach ($this->open_closed_and_inconsistent_collection[$milestone->getArtifactId() ?? 0] as $artifact) {
             $order_artifacts[$indexed_rank[$artifact->id()]] = $artifact;
         }
 

@@ -500,7 +500,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
         $changeset = $this->getTrackerChangesetFactory()->getChangeset($artifact, $changeset_id);
 
-        return $this->getComputedValue($current_user, $changeset->getArtifact(), $changeset->getSubmittedOn());
+        return (string) $this->getComputedValue($current_user, $changeset->getArtifact(), $changeset->getSubmittedOn());
     }
 
     public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)

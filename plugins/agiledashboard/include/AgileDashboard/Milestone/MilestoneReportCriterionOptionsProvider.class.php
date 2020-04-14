@@ -106,7 +106,7 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider
                     }
 
                     $milestone               = $this->artifact_factory->getArtifactById((int) $milestone_id);
-                    $user_can_view_milestone = $milestone->userCanView($user);
+                    $user_can_view_milestone = $milestone !== null && $milestone->userCanView($user);
                     if ($user_can_view_milestone) {
                         $content                = str_pad('', $index, '-') . ' ' . $hp->purify($milestone_title);
                         $options[]              = $this->getOptionForSelectBox($selected_milestone_id, $milestone_id, $content);

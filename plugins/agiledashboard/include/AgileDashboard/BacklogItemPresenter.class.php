@@ -76,7 +76,7 @@ class AgileDashboard_BacklogItemPresenter implements
     public function __construct(Tracker_Artifact $artifact, $redirect_to_self, $is_inconsistent)
     {
         $this->id               = $artifact->getId();
-        $this->title            = $artifact->getTitle();
+        $this->title            = $artifact->getTitle() ?? '';
         $this->url              = $artifact->getUri();
         $this->redirect_to_self = $redirect_to_self;
         $this->artifact         = $artifact;

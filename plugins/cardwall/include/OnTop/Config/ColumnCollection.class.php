@@ -67,6 +67,7 @@ class Cardwall_OnTop_Config_ColumnCollection implements ArrayAccess, IteratorAgg
      */
     public function offsetGet($offset)
     {
+        /** @psalm-suppress NullableReturnStatement */
         return isset($this->columns[$offset]) ? $this->columns[$offset] : null;
     }
 

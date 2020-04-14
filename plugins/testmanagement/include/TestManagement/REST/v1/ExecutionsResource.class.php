@@ -262,7 +262,7 @@ class ExecutionsResource
      *
      * @url POST
      *
-     * @param TrackerReference $tracker       Execution tracker of the execution {@from body}
+     * @param TrackerReference $tracker_reference       Execution tracker of the execution {@from body}
      * @param int              $definition_id Definition of the execution {@from body}
      * @param string           $status        Status of the execution {@from body} {@choice notrun,passed,failed,blocked}
      * @param string           $results       Result of the execution {@from body}
@@ -274,14 +274,18 @@ class ExecutionsResource
      * @throws RestException 500
      */
     protected function post(
-        TrackerReference $tracker,
+        TrackerReference $tracker_reference,
         $definition_id,
         $status,
         int $time = 0,
         $results = ''
     ) {
+        $tracker = $this->tracker_factory->getTrackerById($tracker_reference->id);
+        if ($tracker === null) {
+            throw new RestException(404);
+        }
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
-            $this->tracker_factory->getTrackerById($tracker->id)->getProject()
+            $tracker->getProject()
         );
 
         try {
@@ -294,10 +298,10 @@ class ExecutionsResource
                 $this->tracker_factory
             );
 
-            $values = $this->getValuesByFieldsName($user, $tracker->id, $definition_id, $status, $time, $results);
+            $values = $this->getValuesByFieldsName($user, $tracker_reference->id, $definition_id, $status, $time, $results);
 
             if (! empty($values)) {
-                $artifact_reference = $creator->create($user, $tracker, $values);
+                $artifact_reference = $creator->create($user, $tracker_reference, $values);
             } else {
                 throw new RestException(400, "No valid data are provided");
             }

@@ -222,7 +222,11 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                                     $group_id     = $request->get('group_id');
                                     $token      = new CSRFSynchronizerToken('/tracker/admin/restore.php');
                                     $token->check();
-                                    $tracker_name = $this->getTrackerFactory()->getTrackerById($tracker_id)->getName();
+                                    $tracker = $this->getTrackerFactory()->getTrackerById($tracker_id);
+                                    if ($tracker === null) {
+                                        throw new RuntimeException('Tracker does not exist');
+                                    }
+                                    $tracker_name = $tracker->getName();
                                     $this->restoreDeletedTracker($tracker_id);
                                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker', 'info_tracker_restored', $tracker_name));
                                     $GLOBALS['Response']->redirect('/tracker/admin/restore.php');

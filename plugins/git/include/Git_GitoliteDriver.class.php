@@ -322,7 +322,7 @@ class Git_GitoliteDriver
      * @param String $oldName The old name of the project
      * @param String $newName The new name of the project
      *
-     * @return true if success, false otherwise
+     * @return bool true if success, false otherwise
      */
     public function renameProject($oldName, $newName)
     {
