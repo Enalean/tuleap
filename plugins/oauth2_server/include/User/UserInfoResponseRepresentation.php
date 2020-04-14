@@ -22,6 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\User;
 
+use Tuleap\language\LanguageTagFormatter;
+use Tuleap\OAuth2Server\OpenIDConnect\Issuer;
+
 /**
  * @see https://openid.net/specs/openid-connect-core-1_0.html#UserInfoResponse
  * @see https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
@@ -68,17 +71,9 @@ final class UserInfoResponseRepresentation implements \JsonSerializable
         return new self($this->user, $this->include_email, true);
     }
 
-    /**
-     * @see https://tools.ietf.org/html/rfc5646
-     */
-    private function getRFC5646FormattedLocale(string $locale): string
-    {
-        return str_replace('_', '-', $locale);
-    }
-
     private function getAbsoluteProfileURI(string $relative_uri): string
     {
-        return 'https://' . \ForgeConfig::get('sys_https_host') . $relative_uri;
+        return Issuer::toString() . $relative_uri;
     }
 
     public function jsonSerialize(): array
@@ -95,7 +90,9 @@ final class UserInfoResponseRepresentation implements \JsonSerializable
             $json_encoded['profile']            = $this->getAbsoluteProfileURI($this->user->getPublicProfileUrl());
             $json_encoded['picture']            = $this->user->getAvatarUrl();
             $json_encoded['zoneinfo']           = $this->user->getTimezone();
-            $json_encoded['locale']             = $this->getRFC5646FormattedLocale($this->user->getLocale());
+            $json_encoded['locale']             = LanguageTagFormatter::formatAsRFC5646LanguageTag(
+                $this->user->getLocale()
+            );
         }
         return $json_encoded;
     }

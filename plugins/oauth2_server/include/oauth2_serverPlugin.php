@@ -194,6 +194,7 @@ final class oauth2_serverPlugin extends Plugin
                 $r->get('/jwks', $this->getRouteHandler('routeJWKSDocument'));
             }
         );
+        $route_collector->addRoute('GET', '/.well-known/openid-configuration', $this->getRouteHandler('routeDiscovery'));
     }
 
     public function routeGetProjectAdmin(): DispatchableWithRequest
@@ -522,6 +523,22 @@ final class oauth2_serverPlugin extends Plugin
             new SapiEmitter(),
             new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
             new RejectNonHTTPSRequestMiddleware($response_factory, $stream_factory),
+        );
+    }
+
+    public function routeDiscovery(): DispatchableWithRequest
+    {
+        $response_factory = HTTPFactoryBuilder::responseFactory();
+        $stream_factory   = HTTPFactoryBuilder::streamFactory();
+        return new \Tuleap\OAuth2Server\OpenIDConnect\Discovery\DiscoveryController(
+            new \Tuleap\OAuth2Server\OpenIDConnect\Discovery\ConfigurationResponseRepresentationBuilder(
+                new \BaseLanguageFactory(),
+                $this->buildScopeBuilder()
+            ),
+            new JSONResponseBuilder($response_factory, $stream_factory),
+            new SapiEmitter(),
+            new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
+            new RejectNonHTTPSRequestMiddleware($response_factory, $stream_factory)
         );
     }
 
