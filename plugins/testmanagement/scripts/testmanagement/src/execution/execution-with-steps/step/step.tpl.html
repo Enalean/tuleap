@@ -35,7 +35,7 @@
         <div class="tlp-dropdown-split-button"
             ng-hide="$ctrl.execution.userCanReloadTestBecauseDefinitionIsUpdated"
         >
-            <button class="tlp-dropdown-split-button-main tlp-button-secondary tlp-button-outline steps-step-action-pass"
+            <button class="tlp-dropdown-split-button-main tlp-button-secondary tlp-button-outline tlp-button-small steps-step-action-pass"
                 type="button"
                 ng-click="$ctrl.setToPassed()"
                 ng-disabled="$ctrl.saving"
@@ -48,7 +48,7 @@
                     }"
                 ></i>
             </button>
-            <button class="tlp-button-secondary tlp-button-outline tlp-append tlp-dropdown-split-button-caret steps-step-action-dropdown-trigger"
+            <button class="tlp-button-secondary tlp-button-outline tlp-button-small tlp-append tlp-dropdown-split-button-caret steps-step-action-dropdown-trigger"
                 ng-disabled="$ctrl.saving"
                 ng-click="$ctrl.openDropdown()"
             >
