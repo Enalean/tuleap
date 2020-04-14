@@ -26,10 +26,12 @@ use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\OAuth2Server\App\AppFactory;
 use Tuleap\OAuth2Server\App\ClientIdentifier;
 use Tuleap\OAuth2Server\App\InvalidClientIdentifierKey;
+use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\OAuth2Server\App\OAuth2AppNotFoundException;
 use Tuleap\OAuth2Server\AuthorizationServer\PKCE\OAuth2PKCEInformationExtractionException;
 use Tuleap\OAuth2Server\AuthorizationServer\PKCE\PKCEInformationExtractor;
@@ -207,7 +209,7 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
 
         $oidc_nonce = $request_params[self::NONCE_PARAMETER] ?? null;
 
-        if ($this->authorization_comparator->areRequestedScopesAlreadyGranted($user, $client_app, $scopes)) {
+        if (! $this->isConsentRequired($prompt_values, $user, $client_app, $scopes)) {
             return $this->response_factory->createSuccessfulResponse(
                 $client_app,
                 $scopes,
@@ -232,5 +234,16 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
         $csrf_token = new \CSRFSynchronizerToken(self::CSRF_TOKEN);
         $data       = new AuthorizationFormData($client_app, $csrf_token, $redirect_uri, $state_value, $code_challenge, $oidc_nonce, ...$scopes);
         return $this->form_renderer->renderForm($data, $layout);
+    }
+
+    /**
+     * @param string[] $prompt_values
+     * @param AuthenticationScope[] $scopes
+     * @psalm-param non-empty-list<AuthenticationScope<\Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier>> $scopes
+     */
+    private function isConsentRequired(array $prompt_values, \PFUser $user, OAuth2App $client_app, array $scopes): bool
+    {
+        $require_consent = in_array(PromptParameterValuesExtractor::PROMPT_CONSENT, $prompt_values, true);
+        return $require_consent || ! $this->authorization_comparator->areRequestedScopesAlreadyGranted($user, $client_app, $scopes);
     }
 }

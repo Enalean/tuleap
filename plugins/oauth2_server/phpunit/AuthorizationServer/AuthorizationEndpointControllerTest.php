@@ -335,6 +335,39 @@ final class AuthorizationEndpointControllerTest extends TestCase
         $this->assertSame($response, $this->controller->handle($request));
     }
 
+    public function testRendersAuthorizationFormWhenAPreviousAuthorizationHasBeenGrantedButConsentIsRequiredByPromptParameter(): void
+    {
+        $user = UserTestBuilder::aUser()->withId(102)->build();
+        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
+        $project = M::mock(\Project::class)->shouldReceive('getPublicName')
+            ->andReturn('Test Project')
+            ->getMock();
+        $request = (new NullServerRequest())->withQueryParams(
+            [
+                'client_id'     => 'tlp-client-id-1',
+                'redirect_uri'  => 'https://example.com/redirect',
+                'response_type' => 'code',
+                'state'         => 'xyz',
+                'scope'         => 'scopename:read',
+                'prompt'        => 'consent',
+            ]
+        );
+
+        $this->app_factory->shouldReceive('getAppMatchingClientId')
+            ->once()
+            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
+        $this->scope_extractor->shouldReceive('extractScopes')
+            ->once()
+            ->andReturn([M::mock(AuthenticationScope::class)]);
+        $this->comparator->shouldReceive('areRequestedScopesAlreadyGranted')
+            ->andReturnTrue();
+        $this->pkce_information_extractor->shouldReceive('extractCodeChallenge')->andReturn('extracted_code_challenge');
+
+        $this->form_renderer->shouldReceive('renderForm')->once();
+
+        $this->controller->handle($request->withAttribute(BaseLayout::class, LayoutBuilder::build()));
+    }
+
     public function testHandlesRedirectWithAnInteractionRequiredErrorWhenUserNeedsToConsent(): void
     {
         $user = UserTestBuilder::aUser()->withId(102)->build();
