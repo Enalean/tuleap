@@ -1,0 +1,13 @@
+{
+    "baseUrl": "https://tuleap",
+    "reporter": "junit",
+    "reporterOptions": {
+        "mochaFile": "/output/mediawiki-results-[hash].xml"
+    },
+    "screenshotsFolder": "/output/mediawiki-screenshots",
+    "videosFolder": "/output/mediawiki-videos",
+    "video": true,
+    "videoUploadOnPasses": false,
+    "pluginsFile": false,
+    "pageLoadTimeout": 120000
+}

@@ -1,0 +1,13 @@
+{
+    "baseUrl": "https://tuleap",
+    "reporter": "junit",
+    "reporterOptions": {
+        "mochaFile": "/output/agiledashboard-results-[hash].xml"
+    },
+    "screenshotsFolder": "/output/agiledashboard-screenshots",
+    "videosFolder": "/output/agiledashboard-videos",
+    "video": true,
+    "videoUploadOnPasses": false,
+    "pluginsFile": false,
+    "pageLoadTimeout": 120000
+}
