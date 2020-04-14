@@ -32,7 +32,8 @@ var tuleap = tuleap || {};
 tuleap.trackers = tuleap.trackers || {};
 
 (function ($) {
-    var submit_buttons = "form div input[type='submit'], .tuleap-modal input[type='submit']",
+    var submit_buttons =
+            "form div input[type='submit'], .tuleap-modal input[type='submit'], button[type='submit'], button.artifact-submit-options",
         infos_element = "input#artifact_informations",
         last_viewed_changeset;
 
@@ -43,14 +44,30 @@ tuleap.trackers = tuleap.trackers || {};
             var self = this;
 
             if (isOnArtifactEditionView()) {
-                $("form").submit(function (event) {
-                    return self.isArtifactSubmittable(event);
-                });
+                const artifact_form = document.querySelector("form.artifact-form");
+
+                if (!artifact_form) {
+                    return;
+                }
+
+                const submit_art_form_buttons = artifact_form.querySelectorAll("[type=submit]");
+
+                for (let button of submit_art_form_buttons) {
+                    button.addEventListener("click", () => {
+                        if (self.isArtifactSubmittable()) {
+                            if (button.name === "submit_and_stay") {
+                                setSubmitAndStayOption(artifact_form);
+                            }
+
+                            artifact_form.submit();
+                        }
+                    });
+                }
             }
         },
 
-        isArtifactSubmittable: function (event) {
-            processSubmitQuery(event);
+        isArtifactSubmittable: function () {
+            processSubmitQuery();
             return this.can_submit;
         },
     };
@@ -59,7 +76,17 @@ tuleap.trackers = tuleap.trackers || {};
         tuleap.trackers.submissionKeeper.init();
     });
 
-    function processSubmitQuery(event) {
+    function setSubmitAndStayOption(artifact_form) {
+        const submit_and_stay = document.createElement("input");
+
+        submit_and_stay.setAttribute("type", "hidden");
+        submit_and_stay.setAttribute("name", "submit_and_stay");
+        submit_and_stay.setAttribute("value", "1");
+
+        artifact_form.appendChild(submit_and_stay);
+    }
+
+    function processSubmitQuery() {
         var artifact_id = getArtifactId(),
             last_changeset_id = getLastChangesetId(),
             new_changesets = getNewChangesets(artifact_id, last_changeset_id);
@@ -68,23 +95,22 @@ tuleap.trackers = tuleap.trackers || {};
             event.preventDefault();
             processNewChangesets(new_changesets);
             updateLastViewedChangeset(new_changesets);
+
             tuleap.trackers.submissionKeeper.can_submit = false;
         }
     }
 
     function thereAreNotificationsPending() {
-        if (!$(".artifact-event-popup")) {
-            return false;
-        }
         return $(".artifact-event-popup").length > 0;
     }
 
     function processNewChangesets(changesets) {
         changesets.each(function (changeset) {
-            $("#notification-placeholder").append(changeset["html"]);
+            $("#notification-placeholder").append(changeset.html);
         });
         $(".artifact-event-popup").fadeIn(500);
         $(".artifact-event-popup button").click(detachPopup);
+        $("#tracker_artifact_followup_comments").addClass("tracker-artifact-in-concurrent-edition");
 
         disableSubmitButtons();
         displayInfoMessage();
