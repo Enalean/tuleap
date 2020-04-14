@@ -105,6 +105,6 @@ class TemporaryFileManagerPurgeTest extends TestCase
 
         $this->file_manager->purgeOldTemporaryFiles();
 
-        $this->assertFileNotExists($this->file_to_delete);
+        $this->assertFileDoesNotExist($this->file_to_delete);
     }
 }

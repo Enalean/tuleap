@@ -54,9 +54,9 @@ class SVN_Apache_ModPerlTest extends TestCase
         $project_db_row = $this->setConfForGuineaPigProject();
         $conf = $mod->getConf($project_db_row["public_path"], $project_db_row["system_path"]);
 
-        $this->assertRegExp('/Require valid-user/', $conf);
-        $this->assertRegExp('/AuthType Basic/', $conf);
-        $this->assertRegExp('/AuthName "Subversion Authorization \(Guinea Pig\)"/', $conf);
+        $this->assertMatchesRegularExpression('/Require valid-user/', $conf);
+        $this->assertMatchesRegularExpression('/AuthType Basic/', $conf);
+        $this->assertMatchesRegularExpression('/AuthName "Subversion Authorization \(Guinea Pig\)"/', $conf);
     }
 
     public function testGetApacheAuthShouldSetupPerlAccess(): void
@@ -65,8 +65,8 @@ class SVN_Apache_ModPerlTest extends TestCase
         $project_db_row = $this->setConfForGuineaPigProject();
         $conf = $mod->getConf($project_db_row["public_path"], $project_db_row["system_path"]);
 
-        $this->assertRegExp('/PerlAccessHandler/', $conf);
-        $this->assertRegExp('/TuleapDSN/', $conf);
+        $this->assertMatchesRegularExpression('/PerlAccessHandler/', $conf);
+        $this->assertMatchesRegularExpression('/TuleapDSN/', $conf);
     }
 
     public function testGetApacheAuthShouldNotReferenceAuthMysql(): void
@@ -75,7 +75,7 @@ class SVN_Apache_ModPerlTest extends TestCase
         $project_db_row = $this->setConfForGuineaPigProject();
         $conf = $mod->getConf($project_db_row["public_path"], $project_db_row["system_path"]);
 
-        $this->assertNotRegExp('/AuthMYSQLEnable/', $conf);
+        $this->assertDoesNotMatchRegularExpression('/AuthMYSQLEnable/', $conf);
     }
 
     public function testItShouldUseCacheParameters(): void

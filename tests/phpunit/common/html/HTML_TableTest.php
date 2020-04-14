@@ -41,41 +41,41 @@ final class HTML_TableTest extends TestCase
 
     public function testItBuildsATable(): void
     {
-        $this->assertRegExp('/<table>\s*<\/table>/', $this->html_table->render());
+        $this->assertMatchesRegularExpression('/<table>\s*<\/table>/', $this->html_table->render());
     }
 
     public function testItBuildsTableWithTitles(): void
     {
-        $this->assertRegExp('/<th>Bla<\/th>/', $this->html_table->setColumnsTitle(array('Bla'))->render());
+        $this->assertMatchesRegularExpression('/<th>Bla<\/th>/', $this->html_table->setColumnsTitle(array('Bla'))->render());
     }
 
     public function testItBuildsTableWithBody(): void
     {
-        $this->assertRegExp('/\s*<tbody>Bla<\/tbody>\s*/', $this->html_table->setBody('Bla')->render());
+        $this->assertMatchesRegularExpression('/\s*<tbody>Bla<\/tbody>\s*/', $this->html_table->setBody('Bla')->render());
     }
 
     public function testItHasNoTableHeadIfNoTitles(): void
     {
-        $this->assertNotRegExp('/<thead>\s*<\/thead>/', $this->html_table->render());
+        $this->assertDoesNotMatchRegularExpression('/<thead>\s*<\/thead>/', $this->html_table->render());
     }
 
     public function testItHasColumnTitleWhenWeAddTitles(): void
     {
-        $this->assertRegExp('/<th>foo<\/th><th>bar<\/th>/', $this->html_table->addColumnTitle('foo')->addColumnTitle('bar')->render());
+        $this->assertMatchesRegularExpression('/<th>foo<\/th><th>bar<\/th>/', $this->html_table->addColumnTitle('foo')->addColumnTitle('bar')->render());
     }
 
     public function testItHasNoTableBodyIfNoBoby(): void
     {
-        $this->assertNotRegExp('/<tbody>\s*<\/tbody>/', $this->html_table->render());
+        $this->assertDoesNotMatchRegularExpression('/<tbody>\s*<\/tbody>/', $this->html_table->render());
     }
 
     public function testItHasTableClasses(): void
     {
-        $this->assertRegExp('/<table class="bla">/', $this->html_table->addTableClass('bla')->render());
+        $this->assertMatchesRegularExpression('/<table class="bla">/', $this->html_table->addTableClass('bla')->render());
     }
 
     public function testItHasAnId(): void
     {
-        $this->assertRegExp('/<table.*id="bla".*>/', $this->html_table->setId('bla')->render());
+        $this->assertMatchesRegularExpression('/<table.*id="bla".*>/', $this->html_table->setId('bla')->render());
     }
 }

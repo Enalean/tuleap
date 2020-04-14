@@ -67,7 +67,7 @@ class TmpWatchTest extends TestCase
         $tmp_watch = new TmpWatch($this->target_dir . '/foo', 1);
         $tmp_watch->run();
 
-        $this->assertFileNotExists($this->target_dir . '/foo/bar');
+        $this->assertFileDoesNotExist($this->target_dir . '/foo/bar');
     }
 
     public function testItDoesntRemovesFilesThatAreNotExpired(): void
@@ -90,7 +90,7 @@ class TmpWatchTest extends TestCase
         $tmp_watch = new TmpWatch($this->target_dir . '/foo', 14 * 24);
         $tmp_watch->run();
 
-        $this->assertFileNotExists($this->target_dir . '/foo/bar');
+        $this->assertFileDoesNotExist($this->target_dir . '/foo/bar');
     }
 
     public function testItRemovesSeveralFiles(): void
@@ -104,9 +104,9 @@ class TmpWatchTest extends TestCase
         $tmp_watch = new TmpWatch($this->target_dir . '/foo', 1);
         $tmp_watch->run();
 
-        $this->assertFileNotExists($this->target_dir . '/foo/bar');
-        $this->assertFileNotExists($this->target_dir . '/foo/baz');
-        $this->assertFileNotExists($this->target_dir . '/foo/bur');
+        $this->assertFileDoesNotExist($this->target_dir . '/foo/bar');
+        $this->assertFileDoesNotExist($this->target_dir . '/foo/baz');
+        $this->assertFileDoesNotExist($this->target_dir . '/foo/bur');
     }
 
     public function testItRemovesOnlyExpiredFiles(): void
@@ -120,9 +120,9 @@ class TmpWatchTest extends TestCase
         $tmp_watch = new TmpWatch($this->target_dir . '/foo', 2);
         $tmp_watch->run();
 
-        $this->assertFileNotExists($this->target_dir . '/foo/bar');
+        $this->assertFileDoesNotExist($this->target_dir . '/foo/bar');
         $this->assertFileExists($this->target_dir . '/foo/baz');
-        $this->assertFileNotExists($this->target_dir . '/foo/bur');
+        $this->assertFileDoesNotExist($this->target_dir . '/foo/bur');
     }
 
     public function testItDoesntRemoveDirectories(): void

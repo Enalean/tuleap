@@ -52,7 +52,7 @@ class FileUploadCancelerTest extends TestCase
         $dao->shouldReceive('deleteByItemID')->once();
 
         $canceler->terminateUpload($file_information);
-        $this->assertFileNotExists($item_path);
+        $this->assertFileDoesNotExist($item_path);
     }
 
     public function testCancellingAnUploadThatHasNotYetStartedDoesNotGiveAWarning(): void
@@ -70,6 +70,6 @@ class FileUploadCancelerTest extends TestCase
         $dao->shouldReceive('deleteByItemID')->once();
 
         $canceler->terminateUpload($file_information);
-        $this->assertFileNotExists($item_path);
+        $this->assertFileDoesNotExist($item_path);
     }
 }

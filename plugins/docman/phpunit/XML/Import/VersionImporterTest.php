@@ -205,7 +205,7 @@ class VersionImporterTest extends TestCase
             $this->importer->import($this->node, $this->item, 1);
         } catch (UnableToCreateVersionInDbException $exception) {
             $exception_caught = true;
-            $this->assertFileNotExists($file_path);
+            $this->assertFileDoesNotExist($file_path);
         }
         $this->assertTrue($exception_caught);
     }

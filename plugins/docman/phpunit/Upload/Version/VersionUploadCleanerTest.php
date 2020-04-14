@@ -54,6 +54,6 @@ class VersionUploadCleanerTest extends TestCase
         $current_time = new \DateTimeImmutable();
         $cleaner->deleteDanglingVersionToUpload($current_time);
         $this->assertFileExists($existing_version_being_uploaded_path);
-        $this->assertFileNotExists($non_existing_item_path);
+        $this->assertFileDoesNotExist($non_existing_item_path);
     }
 }

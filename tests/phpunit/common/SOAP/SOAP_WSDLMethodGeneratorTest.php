@@ -61,7 +61,7 @@ final class SOAP_WSDLMethodGeneratorTest extends \PHPUnit\Framework\TestCase
     public function testExtractCommentShouldNotFinishByTonsOfSpaces(): void
     {
         $comment = $this->givenTheCommentOfAddProject();
-        $this->assertNotRegExp('%[ ]+$%', $comment);
+        $this->assertDoesNotMatchRegularExpression('%[ ]+$%', $comment);
     }
 
     public function testExtractParamsShouldListAllParameters(): void

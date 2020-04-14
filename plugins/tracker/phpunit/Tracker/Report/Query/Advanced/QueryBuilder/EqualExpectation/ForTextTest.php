@@ -57,6 +57,6 @@ final class ForTextTest extends TestCase
 
         $suffix = spl_object_hash($comparison);
 
-        $this->assertRegExp("/tracker_changeset_value_text AS CVText_{$field_id}_{$suffix}/", $from_where->getFromAsString());
+        $this->assertMatchesRegularExpression("/tracker_changeset_value_text AS CVText_{$field_id}_{$suffix}/", $from_where->getFromAsString());
     }
 }

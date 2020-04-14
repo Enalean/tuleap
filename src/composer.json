@@ -93,7 +93,7 @@
     "mockery/mockery": "^1.3",
     "php-http/mock-client": "^1.2",
     "phpcompatibility/php-compatibility": "^9.1",
-    "phpunit/phpunit": "^8.0",
+    "phpunit/phpunit": "^9.1",
     "sensiolabs-de/deptrac-shim": "^0.6.0",
     "simpletest/simpletest": "dev-master-tuleap#20190916",
     "slevomat/coding-standard": "^6.0",

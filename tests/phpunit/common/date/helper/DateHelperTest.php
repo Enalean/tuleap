@@ -120,14 +120,14 @@ final class DateHelperTest extends TestCase
     public function testFormatDateFormatsTheDateAccordingToLanguage(): void
     {
         $dayOnly = true;
-        $this->assertRegExp('/2011-\d+-\d+/', $this->formatDate($dayOnly, 'Y-m-d'));
-        $this->assertRegExp('/2011\/\d+\/\d+/', $this->formatDate($dayOnly, "Y/d/m"));
+        $this->assertMatchesRegularExpression('/2011-\d+-\d+/', $this->formatDate($dayOnly, 'Y-m-d'));
+        $this->assertMatchesRegularExpression('/2011\/\d+\/\d+/', $this->formatDate($dayOnly, "Y/d/m"));
     }
 
     public function testFormatDateCanReturnTheTimeAsWell(): void
     {
         $dayOnly = false;
-        $this->assertRegExp('/2011-\d+-\d+ \d+:\d+/', $this->formatDate($dayOnly, "Y-m-d h:i"));
+        $this->assertMatchesRegularExpression('/2011-\d+-\d+ \d+:\d+/', $this->formatDate($dayOnly, "Y-m-d h:i"));
     }
 
     private function formatDate($dayOnly, $format)

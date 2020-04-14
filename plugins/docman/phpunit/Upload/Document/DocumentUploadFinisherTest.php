@@ -127,6 +127,6 @@ final class DocumentUploadFinisherTest extends TestCase
 
         $upload_finisher->finishUpload($file_information);
 
-        $this->assertFileNotExists($path_item_being_uploaded);
+        $this->assertFileDoesNotExist($path_item_being_uploaded);
     }
 }

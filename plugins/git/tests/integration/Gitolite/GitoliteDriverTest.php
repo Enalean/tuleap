@@ -161,7 +161,7 @@ final class GitoliteDriverTest extends GitoliteTestCase
 
         $gitoliteConf = $this->getGitoliteConf();
 
-        $this->assertRegExp('#^include "projects/project1.conf"$#m', $gitoliteConf);
+        $this->assertMatchesRegularExpression('#^include "projects/project1.conf"$#m', $gitoliteConf);
     }
 
     protected function getGitoliteConf()
@@ -192,8 +192,8 @@ final class GitoliteDriverTest extends GitoliteTestCase
             $this->fixtures_dir . '/perms/newone.conf',
             $this->gitolite_admin_dir . '/conf/projects/newone.conf'
         );
-        $this->assertNotRegExp('`\ninclude "projects/legacy.conf"\n`', $this->getGitoliteConf());
-        $this->assertRegExp('`\ninclude "projects/newone.conf"\n`', $this->getGitoliteConf());
+        $this->assertDoesNotMatchRegularExpression('`\ninclude "projects/legacy.conf"\n`', $this->getGitoliteConf());
+        $this->assertMatchesRegularExpression('`\ninclude "projects/newone.conf"\n`', $this->getGitoliteConf());
         $this->assertEmptyGitStatus();
     }
 
@@ -215,8 +215,8 @@ final class GitoliteDriverTest extends GitoliteTestCase
 
         $gitoliteConf = $this->getGitoliteConf();
 
-        $this->assertRegExp('#^include "%HOSTNAME.conf"$#m', $gitoliteConf);
-        $this->assertNotRegExp('#^include "projects/project1.conf"$#m', $gitoliteConf);
+        $this->assertMatchesRegularExpression('#^include "%HOSTNAME.conf"$#m', $gitoliteConf);
+        $this->assertDoesNotMatchRegularExpression('#^include "projects/project1.conf"$#m', $gitoliteConf);
     }
 
     public function testItWritesTheGitoliteConfFileInTheHOSTNAMEDotConfFileIfHostnameVariableIsSet(): void
@@ -229,7 +229,7 @@ final class GitoliteDriverTest extends GitoliteTestCase
         $this->another_gitolite_driver->updateMainConfIncludes();
 
         $gitoliteConf = $this->getFileConf($hostname);
-        $this->assertRegExp('#^include "projects/project1.conf"$#m', $gitoliteConf);
+        $this->assertMatchesRegularExpression('#^include "projects/project1.conf"$#m', $gitoliteConf);
     }
 
     public function testItAddsAllTheRequiredFilesForPush(): void

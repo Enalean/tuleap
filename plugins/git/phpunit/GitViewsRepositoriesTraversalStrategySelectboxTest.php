@@ -47,7 +47,7 @@ class GitViewsRepositoriesTraversalStrategySelectboxTest extends TestCase
         $expectedPattern = $this->getExpectedPattern($repositories);
 
         $strategy->__construct($view);
-        $this->assertRegExp('`' . $expectedPattern . '`', $strategy->fetch($repositories, $user));
+        $this->assertMatchesRegularExpression('`' . $expectedPattern . '`', $strategy->fetch($repositories, $user));
     }
 
     public function getExpectedPattern($repositories): string
@@ -74,7 +74,7 @@ class GitViewsRepositoriesTraversalStrategySelectboxTest extends TestCase
         $a_repository_id = 4;
 
         $strategy->__construct($view);
-        $this->assertRegExp('`value="' . $a_repository_id . '"`', $strategy->fetch($repositories, $user));
+        $this->assertMatchesRegularExpression('`value="' . $a_repository_id . '"`', $strategy->fetch($repositories, $user));
     }
 
     private function getFlatTree($strategy): array

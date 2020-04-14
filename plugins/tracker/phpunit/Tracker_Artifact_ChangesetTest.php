@@ -65,12 +65,12 @@ final class Tracker_Artifact_ChangesetTest extends \PHPUnit\Framework\TestCase /
         $changeset_with_comment     = $this->buildChangeset(5, $artifact, 101, time(), "user@example.com", $comment);
 
         $pattern = '/' . preg_quote('tracker_artifact_followup-with_changes') . '/';
-        $this->assertRegExp($pattern, $changeset_with_changes->getFollowUpClassnames('The changes'));
-        $this->assertRegExp($pattern, $changeset_with_both_changes_and_comment->getFollowUpClassnames('The changes'));
-        $this->assertRegExp($pattern, $changeset_by_workflowadmin->getFollowUpClassnames('The changes'));
-        $this->assertRegExp($pattern, $changeset_by_anonymous->getFollowUpClassnames('The changes'));
+        $this->assertMatchesRegularExpression($pattern, $changeset_with_changes->getFollowUpClassnames('The changes'));
+        $this->assertMatchesRegularExpression($pattern, $changeset_with_both_changes_and_comment->getFollowUpClassnames('The changes'));
+        $this->assertMatchesRegularExpression($pattern, $changeset_by_workflowadmin->getFollowUpClassnames('The changes'));
+        $this->assertMatchesRegularExpression($pattern, $changeset_by_anonymous->getFollowUpClassnames('The changes'));
 
-        $this->assertNotRegExp($pattern, $changeset_with_comment->getFollowUpClassnames(false));
+        $this->assertDoesNotMatchRegularExpression($pattern, $changeset_with_comment->getFollowUpClassnames(false));
     }
 
     public function testItContainsComment(): void
@@ -94,12 +94,12 @@ final class Tracker_Artifact_ChangesetTest extends \PHPUnit\Framework\TestCase /
         $changeset_with_comment     = $this->buildChangeset(5, $artifact, 101, time(), "user@example.com", $comment);
 
         $pattern = '/' . preg_quote('tracker_artifact_followup-with_comment') . '/';
-        $this->assertRegExp($pattern, $changeset_with_comment->getFollowUpClassnames(false));
-        $this->assertRegExp($pattern, $changeset_with_both_changes_and_comment->getFollowUpClassnames('The changes'));
-        $this->assertRegExp($pattern, $changeset_by_workflowadmin->getFollowUpClassnames('The changes'));
-        $this->assertRegExp($pattern, $changeset_by_anonymous->getFollowUpClassnames('The changes'));
+        $this->assertMatchesRegularExpression($pattern, $changeset_with_comment->getFollowUpClassnames(false));
+        $this->assertMatchesRegularExpression($pattern, $changeset_with_both_changes_and_comment->getFollowUpClassnames('The changes'));
+        $this->assertMatchesRegularExpression($pattern, $changeset_by_workflowadmin->getFollowUpClassnames('The changes'));
+        $this->assertMatchesRegularExpression($pattern, $changeset_by_anonymous->getFollowUpClassnames('The changes'));
 
-        $this->assertNotRegExp($pattern, $changeset_with_changes->getFollowUpClassnames('The changes'));
+        $this->assertDoesNotMatchRegularExpression($pattern, $changeset_with_changes->getFollowUpClassnames('The changes'));
     }
 
     public function testItContainsSystemUser(): void
@@ -123,12 +123,12 @@ final class Tracker_Artifact_ChangesetTest extends \PHPUnit\Framework\TestCase /
         $changeset_with_comment     = $this->buildChangeset(5, $artifact, 101, time(), "user@example.com", $comment);
 
         $pattern = '/' . preg_quote('tracker_artifact_followup-by_system_user') . '/';
-        $this->assertNotRegExp($pattern, $changeset_with_comment->getFollowUpClassnames(false));
-        $this->assertNotRegExp($pattern, $changeset_with_both_changes_and_comment->getFollowUpClassnames('The changes'));
-        $this->assertNotRegExp($pattern, $changeset_with_changes->getFollowUpClassnames('The changes'));
-        $this->assertNotRegExp($pattern, $changeset_by_anonymous->getFollowUpClassnames('The changes'));
+        $this->assertDoesNotMatchRegularExpression($pattern, $changeset_with_comment->getFollowUpClassnames(false));
+        $this->assertDoesNotMatchRegularExpression($pattern, $changeset_with_both_changes_and_comment->getFollowUpClassnames('The changes'));
+        $this->assertDoesNotMatchRegularExpression($pattern, $changeset_with_changes->getFollowUpClassnames('The changes'));
+        $this->assertDoesNotMatchRegularExpression($pattern, $changeset_by_anonymous->getFollowUpClassnames('The changes'));
 
-        $this->assertRegExp($pattern, $changeset_by_workflowadmin->getFollowUpClassnames('The changes'));
+        $this->assertMatchesRegularExpression($pattern, $changeset_by_workflowadmin->getFollowUpClassnames('The changes'));
     }
 
     /**
@@ -241,8 +241,8 @@ final class Tracker_Artifact_ChangesetTest extends \PHPUnit\Framework\TestCase /
 
         $result = $current_changeset->diffToprevious();
 
-        $this->assertRegExp('/field1/', $result);
-        $this->assertNotRegExp('/field2/', $result);
+        $this->assertMatchesRegularExpression('/field1/', $result);
+        $this->assertDoesNotMatchRegularExpression('/field2/', $result);
     }
 
     public function testDisplayDiffShouldNotStripHtmlTagsInPlainTextFormat(): void
@@ -256,8 +256,8 @@ final class Tracker_Artifact_ChangesetTest extends \PHPUnit\Framework\TestCase /
 
         $changeset = new Tracker_Artifact_Changeset(null, null, null, null, null);
         $result    = $changeset->displayDiff($diff, $format, $field);
-        $this->assertRegExp('%Quelle est la couleur <b> du <i> <s> cheval blanc%', $result);
-        $this->assertRegExp('%Summary%', $result);
+        $this->assertMatchesRegularExpression('%Quelle est la couleur <b> du <i> <s> cheval blanc%', $result);
+        $this->assertMatchesRegularExpression('%Summary%', $result);
     }
 
     public function testItDeletesCommentsValuesAndChangeset(): void

@@ -43,10 +43,10 @@ class WikiAttachmentTest extends TestCase
         $this->assertEquals('toto.txt', $wa->getFilesystemName());
         $wa->initFilesystemName();
         $this->assertNotEquals('toto.txt', $wa->getFilesystemName());
-        $this->assertRegexp('/toto.txt_[0..9]*/', $wa->getFilesystemName());
+        $this->assertMatchesRegularExpression('/toto.txt_[0..9]*/', $wa->getFilesystemName());
         $wa->filesystemName = 'titi.txt';
         $this->assertNotEquals('toto.txt', $wa->getFilesystemName());
-        $this->assertNotRegExp('/toto.txt_[0..9]*/', $wa->getFilesystemName());
+        $this->assertDoesNotMatchRegularExpression('/toto.txt_[0..9]*/', $wa->getFilesystemName());
         $this->assertEquals('titi.txt', $wa->getFilesystemName());
     }
 

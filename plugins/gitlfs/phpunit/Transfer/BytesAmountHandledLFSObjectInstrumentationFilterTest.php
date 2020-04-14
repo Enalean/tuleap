@@ -45,7 +45,7 @@ class BytesAmountHandledLFSObjectInstrumentationFilterTest extends TestCase
         fclose($input_source);
         fclose($destination_resource);
 
-        $this->assertRegExp("/(.*)gitlfs_object_receive_bytes(.*)$size/", $prometheus->renderText());
+        $this->assertMatchesRegularExpression("/(.*)gitlfs_object_receive_bytes(.*)$size/", $prometheus->renderText());
     }
 
     public function testTransmittedBytesAreCounted(): void
@@ -66,6 +66,6 @@ class BytesAmountHandledLFSObjectInstrumentationFilterTest extends TestCase
         fclose($input_source);
         fclose($destination_resource);
 
-        $this->assertRegExp("/(.*)gitlfs_object_transmit_bytes(.*)$transfer_type(.*)$size/", $prometheus->renderText());
+        $this->assertMatchesRegularExpression("/(.*)gitlfs_object_transmit_bytes(.*)$transfer_type(.*)$size/", $prometheus->renderText());
     }
 }

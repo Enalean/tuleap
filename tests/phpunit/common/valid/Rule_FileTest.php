@@ -64,7 +64,7 @@ class Rule_FileTest extends TestCase
             ->andReturn(UPLOAD_ERR_INI_SIZE);
         $this->file['error'] = UPLOAD_ERR_INI_SIZE;
         $this->assertFalse($r->isValid($this->file));
-        $this->assertRegExp('/' . UPLOAD_ERR_INI_SIZE . '/', $r->error);
+        $this->assertMatchesRegularExpression('/' . UPLOAD_ERR_INI_SIZE . '/', $r->error);
     }
 
     public function testErrorFormSize(): void
@@ -77,7 +77,7 @@ class Rule_FileTest extends TestCase
             ->andReturn(UPLOAD_ERR_FORM_SIZE);
         $this->file['error'] = UPLOAD_ERR_FORM_SIZE;
         $this->assertFalse($r->isValid($this->file));
-        $this->assertRegExp('/' . UPLOAD_ERR_FORM_SIZE . '/', $r->error);
+        $this->assertMatchesRegularExpression('/' . UPLOAD_ERR_FORM_SIZE . '/', $r->error);
     }
 
     public function testErrorPartial(): void
@@ -90,7 +90,7 @@ class Rule_FileTest extends TestCase
             ->andReturn(UPLOAD_ERR_PARTIAL);
         $this->file['error'] = UPLOAD_ERR_PARTIAL;
         $this->assertFalse($r->isValid($this->file));
-        $this->assertRegExp('/' . UPLOAD_ERR_PARTIAL . '/', $r->error);
+        $this->assertMatchesRegularExpression('/' . UPLOAD_ERR_PARTIAL . '/', $r->error);
     }
 
     public function testErrorNoFile(): void
@@ -103,7 +103,7 @@ class Rule_FileTest extends TestCase
             ->andReturn(UPLOAD_ERR_NO_FILE);
         $this->file['error'] = UPLOAD_ERR_NO_FILE;
         $this->assertFalse($r->isValid($this->file));
-        $this->assertRegExp('/' . UPLOAD_ERR_NO_FILE . '/', $r->error);
+        $this->assertMatchesRegularExpression('/' . UPLOAD_ERR_NO_FILE . '/', $r->error);
     }
 
     public function testErrorMaxSize(): void
@@ -115,7 +115,7 @@ class Rule_FileTest extends TestCase
             ->with('rule_file', 'error_upload_size', UPLOAD_ERR_INI_SIZE)
             ->andReturn(UPLOAD_ERR_INI_SIZE);
         $this->assertFalse($r->isValid($this->file));
-        $this->assertRegExp('/' . UPLOAD_ERR_INI_SIZE . '/', $r->error);
+        $this->assertMatchesRegularExpression('/' . UPLOAD_ERR_INI_SIZE . '/', $r->error);
     }
 
     public function testNoName(): void

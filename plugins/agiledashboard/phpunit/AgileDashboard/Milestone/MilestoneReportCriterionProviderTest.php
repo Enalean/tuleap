@@ -116,7 +116,7 @@ class MilestoneReportCriterionProviderTest extends TestCase
             ->once()
             ->andReturn('');
 
-        $this->assertRegExp('/<select name="additional_criteria\[agiledashboard_milestone\]"/', $this->provider->getCriterion($this->task_tracker, $this->user));
+        $this->assertMatchesRegularExpression('/<select name="additional_criteria\[agiledashboard_milestone\]"/', $this->provider->getCriterion($this->task_tracker, $this->user));
     }
 
     public function testItSelectsTheGivenMilestone(): void

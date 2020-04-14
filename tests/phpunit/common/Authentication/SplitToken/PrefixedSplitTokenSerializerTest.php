@@ -39,7 +39,7 @@ final class PrefixedSplitTokenSerializerTest extends TestCase
 
     public function testBuiltIdentifierIsInTheBase64CharsetSoItCanBeSafelyUsedInHTTPHeadersAndURLs(): void
     {
-        $this->assertRegExp('/(?:[a-zA-Z0-9]|-|\.|\_|\~|\+|\/|=)+/', $this->buildIdentifier()->getString());
+        $this->assertMatchesRegularExpression('/(?:[a-zA-Z0-9]|-|\.|\_|\~|\+|\/|=)+/', $this->buildIdentifier()->getString());
     }
 
     private function buildIdentifier(): ConcealedString

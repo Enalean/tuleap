@@ -310,7 +310,7 @@ final class QueryBuilderVisitorTest extends TestCase
 
         $result = $this->query_builder->visitEqualComparison($comparison, $this->parameters);
 
-        $this->assertRegExp('/tracker_changeset_value_text/', $result->getFromAsString());
+        $this->assertMatchesRegularExpression('/tracker_changeset_value_text/', $result->getFromAsString());
     }
 
     public function testItRetrievesForIntegerFieldInEqualComparisonTheExpertFromAndWhereClausesOfTheField(): void
@@ -319,7 +319,7 @@ final class QueryBuilderVisitorTest extends TestCase
 
         $result = $this->query_builder->visitEqualComparison($comparison, $this->parameters);
 
-        $this->assertRegExp('/tracker_changeset_value_int/', $result->getFromAsString());
+        $this->assertMatchesRegularExpression('/tracker_changeset_value_int/', $result->getFromAsString());
     }
 
     public function testItRetrievesForFloatFieldInEqualComparisonTheExpertFromAndWhereClausesOfTheField(): void
@@ -328,7 +328,7 @@ final class QueryBuilderVisitorTest extends TestCase
 
         $result = $this->query_builder->visitEqualComparison($comparison, $this->parameters);
 
-        $this->assertRegExp('/tracker_changeset_value_float/', $result->getFromAsString());
+        $this->assertMatchesRegularExpression('/tracker_changeset_value_float/', $result->getFromAsString());
     }
 
     public function testItRetrievesForDateFieldInEqualComparisonTheExpertFromAndWhereClausesOfTheField(): void
@@ -337,7 +337,7 @@ final class QueryBuilderVisitorTest extends TestCase
 
         $result = $this->query_builder->visitEqualComparison($comparison, $this->parameters);
 
-        $this->assertRegExp('/tracker_changeset_value_date/', $result->getFromAsString());
+        $this->assertMatchesRegularExpression('/tracker_changeset_value_date/', $result->getFromAsString());
     }
 
     public function testItRetrievesForTextInNotEqualComparisonTheExpertFromAndWhereClausesOfTheField(): void
@@ -346,7 +346,7 @@ final class QueryBuilderVisitorTest extends TestCase
 
         $result = $this->query_builder->visitNotEqualComparison($comparison, $this->parameters);
 
-        $this->assertRegExp('/tracker_changeset_value_text/', $result->getFromAsString());
+        $this->assertMatchesRegularExpression('/tracker_changeset_value_text/', $result->getFromAsString());
     }
 
     public function testItRetrievesForIntegerFieldInNotEqualComparisonTheExpertFromAndWhereClausesOfTheField(): void
@@ -355,7 +355,7 @@ final class QueryBuilderVisitorTest extends TestCase
 
         $result = $this->query_builder->visitNotEqualComparison($comparison, $this->parameters);
 
-        $this->assertRegExp('/tracker_changeset_value_int/', $result->getFromAsString());
+        $this->assertMatchesRegularExpression('/tracker_changeset_value_int/', $result->getFromAsString());
     }
 
     public function testItRetrievesForFloatFieldInNotEqualComparisonTheExpertFromAndWhereClausesOfTheField(): void
@@ -364,7 +364,7 @@ final class QueryBuilderVisitorTest extends TestCase
 
         $result = $this->query_builder->visitNotEqualComparison($comparison, $this->parameters);
 
-        $this->assertRegExp('/tracker_changeset_value_float/', $result->getFromAsString());
+        $this->assertMatchesRegularExpression('/tracker_changeset_value_float/', $result->getFromAsString());
     }
 
     public function testItRetrievesForIntegerFieldInLesserThanComparisonTheExpertFromAndWhereClausesOfTheField(): void
@@ -373,7 +373,7 @@ final class QueryBuilderVisitorTest extends TestCase
 
         $result = $this->query_builder->visitLesserThanComparison($comparison, $this->parameters);
 
-        $this->assertRegExp('/tracker_changeset_value_int/', $result->getFromAsString());
+        $this->assertMatchesRegularExpression('/tracker_changeset_value_int/', $result->getFromAsString());
     }
 
     public function testItRetrievesForFloatFieldInLesserThanComparisonTheExpertFromAndWhereClausesOfTheField(): void
@@ -382,7 +382,7 @@ final class QueryBuilderVisitorTest extends TestCase
 
         $result = $this->query_builder->visitLesserThanComparison($comparison, $this->parameters);
 
-        $this->assertRegExp('/tracker_changeset_value_float/', $result->getFromAsString());
+        $this->assertMatchesRegularExpression('/tracker_changeset_value_float/', $result->getFromAsString());
     }
 
     public function testItRetrievesForIntegerFieldInGreaterThanComparisonTheExpertFromAndWhereClausesOfTheField(): void
@@ -391,7 +391,7 @@ final class QueryBuilderVisitorTest extends TestCase
 
         $result = $this->query_builder->visitGreaterThanComparison($comparison, $this->parameters);
 
-        $this->assertRegExp('/tracker_changeset_value_int/', $result->getFromAsString());
+        $this->assertMatchesRegularExpression('/tracker_changeset_value_int/', $result->getFromAsString());
     }
 
     public function testItRetrievesForFloatFieldInGreaterThanComparisonTheExpertFromAndWhereClausesOfTheField(): void
@@ -400,7 +400,7 @@ final class QueryBuilderVisitorTest extends TestCase
 
         $result = $this->query_builder->visitGreaterThanComparison($comparison, $this->parameters);
 
-        $this->assertRegExp('/tracker_changeset_value_float/', $result->getFromAsString());
+        $this->assertMatchesRegularExpression('/tracker_changeset_value_float/', $result->getFromAsString());
     }
 
     public function testItRetrievesForIntegerFieldInLesserThanOrEqualComparisonTheExpertFromAndWhereClausesOfTheField(): void
@@ -409,7 +409,7 @@ final class QueryBuilderVisitorTest extends TestCase
 
         $result = $this->query_builder->visitLesserThanOrEqualComparison($comparison, $this->parameters);
 
-        $this->assertRegExp('/tracker_changeset_value_int/', $result->getFromAsString());
+        $this->assertMatchesRegularExpression('/tracker_changeset_value_int/', $result->getFromAsString());
     }
 
     public function testItRetrievesForFloatFieldInLesserThanOrEqualComparisonTheExpertFromAndWhereClausesOfTheField(): void
@@ -418,7 +418,7 @@ final class QueryBuilderVisitorTest extends TestCase
 
         $result = $this->query_builder->visitLesserThanOrEqualComparison($comparison, $this->parameters);
 
-        $this->assertRegExp('/tracker_changeset_value_float/', $result->getFromAsString());
+        $this->assertMatchesRegularExpression('/tracker_changeset_value_float/', $result->getFromAsString());
     }
 
     public function testItRetrievesForIntegerFieldInGreaterThanOrEqualComparisonTheExpertFromAndWhereClausesOfTheField(): void
@@ -427,7 +427,7 @@ final class QueryBuilderVisitorTest extends TestCase
 
         $result = $this->query_builder->visitGreaterThanOrEqualComparison($comparison, $this->parameters);
 
-        $this->assertRegExp('/tracker_changeset_value_int/', $result->getFromAsString());
+        $this->assertMatchesRegularExpression('/tracker_changeset_value_int/', $result->getFromAsString());
     }
 
     public function testItRetrievesForFloatFieldInGreaterThanOrEqualComparisonTheExpertFromAndWhereClausesOfTheField(): void
@@ -436,7 +436,7 @@ final class QueryBuilderVisitorTest extends TestCase
 
         $result = $this->query_builder->visitGreaterThanOrEqualComparison($comparison, $this->parameters);
 
-        $this->assertRegExp('/tracker_changeset_value_float/', $result->getFromAsString());
+        $this->assertMatchesRegularExpression('/tracker_changeset_value_float/', $result->getFromAsString());
     }
 
     public function testItRetrievesForIntegerFieldInBetweenComparisonTheExpertFromAndWhereClausesOfTheField(): void
@@ -451,7 +451,7 @@ final class QueryBuilderVisitorTest extends TestCase
 
         $result = $this->query_builder->visitBetweenComparison($comparison, $this->parameters);
 
-        $this->assertRegExp('/tracker_changeset_value_int/', $result->getFromAsString());
+        $this->assertMatchesRegularExpression('/tracker_changeset_value_int/', $result->getFromAsString());
     }
 
     public function testItRetrievesForFloatFieldInBetweenComparisonTheExpertFromAndWhereClausesOfTheField(): void
@@ -466,6 +466,6 @@ final class QueryBuilderVisitorTest extends TestCase
 
         $result = $this->query_builder->visitBetweenComparison($comparison, $this->parameters);
 
-        $this->assertRegExp('/tracker_changeset_value_float/', $result->getFromAsString());
+        $this->assertMatchesRegularExpression('/tracker_changeset_value_float/', $result->getFromAsString());
     }
 }
