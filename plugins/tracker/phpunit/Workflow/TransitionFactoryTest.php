@@ -19,28 +19,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
-require_once __DIR__ . '/../bootstrap.php';
-
-class TransitionFactory_BaseTest extends TuleapTestCase
+final class TransitionFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /** @var TransitionFactory */
-    protected $factory;
+    private $factory;
 
     /** @var Workflow_Transition_ConditionFactory */
-    protected $condition_factory;
+    private $condition_factory;
 
     /**
      * @var EventManager|\Mockery\LegacyMockInterface|\Mockery\MockInterface
      */
-    protected $event_manager;
+    private $event_manager;
 
-    public function setUp()
+    private $postaction_factory;
+    private $a_field_not_used_in_transitions;
+    private $a_field_used_in_post_actions;
+    private $a_field_used_in_conditions;
+
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
         $this->condition_factory  = \Mockery::spy(\Workflow_Transition_ConditionFactory::class);
         $this->postaction_factory = \Mockery::spy(\Transition_PostActionFactory::class);
         $this->event_manager      = \Mockery::spy(\EventManager::class);
@@ -55,61 +60,42 @@ class TransitionFactory_BaseTest extends TuleapTestCase
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
-        stub($this->factory)->getPostActionFactory()->returns($this->postaction_factory);
+        $this->factory->shouldReceive('getPostActionFactory')->andReturns($this->postaction_factory);
 
-        $this->project = \Mockery::spy(\Project::class);
-    }
-}
-
-class TransitionFactory_isFieldUsedInTransitionsTest extends TransitionFactory_BaseTest
-{
-
-    private $a_field_not_used_in_transitions;
-    private $a_field_used_in_post_actions;
-    private $a_field_used_in_conditions;
-
-    public function setUp()
-    {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
         $this->a_field_not_used_in_transitions = \Mockery::spy(\Tracker_FormElement_Field_Date::class);
-        stub($this->a_field_not_used_in_transitions)->getId()->returns(1002);
+        $this->a_field_not_used_in_transitions->shouldReceive('getId')->andReturns(1002);
 
         $this->a_field_used_in_post_actions = \Mockery::spy(\Tracker_FormElement_Field_Date::class);
-        stub($this->a_field_used_in_post_actions)->getId()->returns(1003);
+        $this->a_field_used_in_post_actions->shouldReceive('getId')->andReturns(1003);
 
         $this->a_field_used_in_conditions = \Mockery::spy(\Tracker_FormElement_Field_Date::class);
-        stub($this->a_field_used_in_conditions)->getId()->returns(1004);
+        $this->a_field_used_in_conditions->shouldReceive('getId')->andReturns(1004);
 
-        stub($this->postaction_factory)->isFieldUsedInPostActions($this->a_field_not_used_in_transitions)->returns(false);
-        stub($this->postaction_factory)->isFieldUsedInPostActions($this->a_field_used_in_post_actions)->returns(true);
-        stub($this->postaction_factory)->isFieldUsedInPostActions($this->a_field_used_in_conditions)->returns(false);
+        $this->postaction_factory->shouldReceive('isFieldUsedInPostActions')->with($this->a_field_not_used_in_transitions)->andReturns(false);
+        $this->postaction_factory->shouldReceive('isFieldUsedInPostActions')->with($this->a_field_used_in_post_actions)->andReturns(true);
+        $this->postaction_factory->shouldReceive('isFieldUsedInPostActions')->with($this->a_field_used_in_conditions)->andReturns(false);
 
-        stub($this->condition_factory)->isFieldUsedInConditions($this->a_field_not_used_in_transitions)->returns(false);
-        stub($this->condition_factory)->isFieldUsedInConditions($this->a_field_used_in_post_actions)->returns(false);
-        stub($this->condition_factory)->isFieldUsedInConditions($this->a_field_used_in_conditions)->returns(true);
+        $this->condition_factory->shouldReceive('isFieldUsedInConditions')->with($this->a_field_not_used_in_transitions)->andReturns(false);
+        $this->condition_factory->shouldReceive('isFieldUsedInConditions')->with($this->a_field_used_in_post_actions)->andReturns(false);
+        $this->condition_factory->shouldReceive('isFieldUsedInConditions')->with($this->a_field_used_in_conditions)->andReturns(true);
     }
 
-    public function itReturnsTrueIfFieldIsUsedInPostActions()
+    public function testItReturnsTrueIfFieldIsUsedInPostActions(): void
     {
         $this->assertTrue($this->factory->isFieldUsedInTransitions($this->a_field_used_in_post_actions));
     }
 
-    public function itReturnsTrueIfFieldIsUsedInConditions()
+    public function testItReturnsTrueIfFieldIsUsedInConditions(): void
     {
         $this->assertTrue($this->factory->isFieldUsedInTransitions($this->a_field_used_in_conditions));
     }
 
-    public function itReturnsFalseIsNiotUsedInTransitions()
+    public function testItReturnsFalseIsNiotUsedInTransitions(): void
     {
         $this->assertFalse($this->factory->isFieldUsedInTransitions($this->a_field_not_used_in_transitions));
     }
-}
 
-class TransitionFactory_duplicateTest extends TransitionFactory_BaseTest
-{
-
-    public function testDuplicate()
+    public function testDuplicate(): void
     {
         $field_value_new = \Mockery::spy(\Tracker_FormElement_Field_List_Value::class);
         $field_value_new->shouldReceive('getId')->andReturns(2066);
