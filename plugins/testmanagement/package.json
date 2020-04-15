@@ -23,6 +23,7 @@
     "d3-zoom": "^1.6.0",
     "dragula": "^3.7.2",
     "hast-util-to-html": "^7.1.0",
+    "hast-util-to-string": "^1.0.3",
     "lodash": "^2.4.2",
     "moment": "^2.18.1",
     "rehype-parse": "^6.0.2",

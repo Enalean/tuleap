@@ -81,7 +81,7 @@ function ExecutionDetailCtrl(
     $scope.showExecutionDetailsModal = showExecutionDetailsModal;
     $scope.showEditArtifactModal = showEditArtifactModal;
     $scope.closeLinkedIssueAlert = closeLinkedIssueAlert;
-    $scope.truncateHTML = truncateHTML;
+    $scope.truncateExecutionResult = truncateExecutionResult;
     $scope.linkedIssueId = null;
     $scope.linkedIssueAlertVisible = false;
 
@@ -107,6 +107,14 @@ function ExecutionDetailCtrl(
             );
         }
     });
+
+    function truncateExecutionResult(execution, max_length) {
+        return truncateHTML(
+            execution.previous_result.result,
+            max_length,
+            gettextCatalog.getString("A screenshot has been attached")
+        );
+    }
 
     function initialization() {
         execution_id = parseInt($state.params.execid, 10);
