@@ -92,9 +92,8 @@ class Tracker_DateReminder
     /**
      * Get tracker id of the reminder
      *
-     * @return int
      */
-    public function getTrackerId()
+    public function getTrackerId(): int
     {
         return $this->trackerId;
     }
