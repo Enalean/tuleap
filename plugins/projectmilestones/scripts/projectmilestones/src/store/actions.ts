@@ -24,9 +24,16 @@ import {
     getOpenSprints,
     getNbOfPastRelease,
     getLastRelease as getLast,
+    getTestManagementCampaigns as getTTMCampaigns,
 } from "../api/rest-querier";
 
-import { Context, MilestoneContent, MilestoneData, TrackerNumberArtifacts } from "../type";
+import {
+    Context,
+    MilestoneContent,
+    MilestoneData,
+    TestManagementCampaign,
+    TrackerNumberArtifacts,
+} from "../type";
 import { FetchWrapperError } from "tlp";
 
 async function getCurrentMilestones(context: Context): Promise<void> {
@@ -169,4 +176,37 @@ export async function handleErrorMessage(
     } catch (error) {
         context.commit("setErrorMessage", "");
     }
+}
+
+export async function getTestManagementCampaigns(
+    context: Context,
+    milestone: MilestoneData
+): Promise<TestManagementCampaign> {
+    const project_id = context.state.project_id;
+
+    const campaign: TestManagementCampaign = {
+        nb_of_notrun: 0,
+        nb_of_blocked: 0,
+        nb_of_failed: 0,
+        nb_of_passed: 0,
+    };
+
+    if (!project_id) {
+        throw new Error("Project id should not be null.");
+    }
+
+    const campaigns = await getTTMCampaigns(milestone.id, {
+        offset: context.state.offset,
+        limit: context.state.limit,
+        project_id,
+    });
+
+    campaigns.forEach((camp) => {
+        campaign.nb_of_blocked += camp.nb_of_blocked;
+        campaign.nb_of_notrun += camp.nb_of_notrun;
+        campaign.nb_of_failed += camp.nb_of_failed;
+        campaign.nb_of_passed += camp.nb_of_passed;
+    });
+
+    return campaign;
 }

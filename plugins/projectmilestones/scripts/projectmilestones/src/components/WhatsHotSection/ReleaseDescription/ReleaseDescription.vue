@@ -20,7 +20,13 @@
 <template>
     <div>
         <div class="release-content-description">
-            <release-description-badges-tracker v-bind:release_data="release_data" />
+            <div>
+                <release-description-badges-tracker v-bind:release_data="release_data" />
+                <test-management-displayer
+                    v-if="is_testmanagement_available && project_milestone_activate_ttm"
+                    v-bind:release_data="release_data"
+                />
+            </div>
             <chart-displayer class="release-charts-row" v-bind:release_data="release_data" />
         </div>
         <div class="release-description-row">
@@ -63,9 +69,12 @@ import ReleaseDescriptionBadgesTracker from "./ReleaseDescriptionBadgesTracker.v
 import ReleaseButtonsDescription from "./ReleaseButtonsDescription.vue";
 import ChartDisplayer from "./Chart/ChartDisplayer.vue";
 import { State } from "vuex-class";
+import TestManagementDisplayer from "./TestManagement/TestManagementDisplayer.vue";
+import { is_testmanagement_activated } from "../../../helpers/test-management-helper";
 
 @Component({
     components: {
+        TestManagementDisplayer,
         ChartDisplayer,
         ReleaseButtonsDescription,
         ReleaseDescriptionBadgesTracker,
@@ -78,6 +87,8 @@ export default class ReleaseDescription extends Vue {
     readonly project_id!: number;
     @State
     readonly user_can_view_sub_milestones_planning!: boolean;
+    @State
+    readonly project_milestone_activate_ttm!: boolean;
 
     get get_planning_link(): string | null {
         if (
@@ -105,6 +116,10 @@ export default class ReleaseDescription extends Vue {
             return "";
         }
         return submilestone_tracker.label;
+    }
+
+    get is_testmanagement_available(): boolean {
+        return is_testmanagement_activated(this.release_data);
     }
 }
 </script>

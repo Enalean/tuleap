@@ -19,7 +19,14 @@
 
 import * as actions from "./actions";
 import { mockFetchError } from "../../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper";
-import { TrackerAgileDashboard, Context, MilestoneData, TrackerProjectLabel, State } from "../type";
+import {
+    TrackerAgileDashboard,
+    Context,
+    MilestoneData,
+    TrackerProjectLabel,
+    State,
+    TestManagementCampaign,
+} from "../type";
 import * as rest_querier from "../api/rest-querier";
 
 describe("Store actions", () => {
@@ -252,6 +259,43 @@ describe("Store actions", () => {
                 milestone
             );
             expect(enriched_milestones_received).toEqual(enriched_milestones);
+        });
+    });
+
+    describe("getTestManagementCampaigns", () => {
+        it("When there is a project id, Then all campaigns are returned", async () => {
+            const milestone: MilestoneData = {
+                id: 101,
+            } as MilestoneData;
+
+            const campaigns: TestManagementCampaign[] = [
+                {
+                    nb_of_notrun: 1,
+                    nb_of_blocked: 2,
+                    nb_of_failed: 0,
+                    nb_of_passed: 5,
+                },
+                {
+                    nb_of_passed: 1,
+                    nb_of_blocked: 3,
+                    nb_of_failed: 5,
+                    nb_of_notrun: 1,
+                },
+            ];
+
+            const expected_campaign: TestManagementCampaign = {
+                nb_of_notrun: 2,
+                nb_of_blocked: 5,
+                nb_of_failed: 5,
+                nb_of_passed: 6,
+            };
+
+            jest.spyOn(rest_querier, "getTestManagementCampaigns").mockReturnValue(
+                Promise.resolve(campaigns)
+            );
+
+            const campaign = await actions.getTestManagementCampaigns(context, milestone);
+            expect(campaign).toEqual(expected_campaign);
         });
     });
 

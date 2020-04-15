@@ -35,6 +35,26 @@ msgid_plural "%{ total_closed_sprint } closed %{tracker_label}"
 msgstr[0] "%{total_closed_sprint} %{tracker_label} fermé(e)"
 msgstr[1] "%{total_closed_sprint} %{tracker_label} fermé(e)s"
 
+msgid "%{total_test_blocked} test blocked"
+msgid_plural "%{ total_test_blocked } tests blocked"
+msgstr[0] "%{total_test_blocked} test bloqué"
+msgstr[1] "%{total_test_blocked} tests bloqués"
+
+msgid "%{total_test_failed} test failed"
+msgid_plural "%{ total_test_failed } tests failed"
+msgstr[0] "%{total_test_failed} test échoué"
+msgstr[1] "%{total_test_failed} tests échoués"
+
+msgid "%{total_test_notrun} test not run"
+msgid_plural "%{ total_test_notrun } tests not run"
+msgstr[0] "%{total_test_notrun} test non exécuté"
+msgstr[1] "%{total_test_notrun} tests non exécutés"
+
+msgid "%{total_test_passed} test passed"
+msgid_plural "%{ total_test_passed } tests passed"
+msgstr[0] "%{total_test_passed} test passé"
+msgstr[1] "%{total_test_passed} tests passés"
+
 msgid "'%s' field is empty or invalid."
 msgstr "Le champs '%s' est vide ou invalide."
 
@@ -100,6 +120,9 @@ msgstr "Passé"
 
 msgid "Recently closed"
 msgstr "Récemment fermé(e)"
+
+msgid "Tests Results"
+msgstr "Résultats des tests"
 
 msgid "What's hot"
 msgstr "En cours"
