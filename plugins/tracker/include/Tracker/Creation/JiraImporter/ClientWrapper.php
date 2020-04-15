@@ -28,7 +28,6 @@ use Http\Message\Authentication\BasicAuth;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
-use stdClass;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 
@@ -70,7 +69,7 @@ class ClientWrapper
     /**
      * @throws JiraConnectionException
      */
-    public function getUrl(string $url): ?stdClass
+    public function getUrl(string $url): ?array
     {
         $request = $this->factory->createRequest('GET', $this->base_url . $url);
 
@@ -86,6 +85,6 @@ class ClientWrapper
             throw JiraConnectionException::connectionToServerFailed((int) $e->getCode(), $e->getMessage());
         }
 
-        return json_decode($response->getBody()->getContents());
+        return json_decode($response->getBody()->getContents(), true, 512, JSON_OBJECT_AS_ARRAY);
     }
 }

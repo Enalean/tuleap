@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
-use stdClass;
-
 class JiraProjectBuilder
 {
     /**
@@ -43,10 +41,10 @@ class JiraProjectBuilder
         $this->buildProjectList($jira_projects, $project_collection);
 
         $count   = 1;
-        $is_last = $jira_projects->isLast;
+        $is_last = $jira_projects['isLast'];
         while (! $is_last) {
-            $max_results = $jira_projects->maxResults;
-            $offset      = $jira_projects->maxResults * $count;
+            $max_results = $jira_projects['maxResults'];
+            $offset      = $jira_projects['maxResults'] * $count;
 
             $jira_projects = $wrapper->getUrl(
                 "/project/search?&startAt=" . urlencode((string) $offset) . "&maxResults=" .
@@ -59,24 +57,27 @@ class JiraProjectBuilder
 
             $this->buildProjectList($jira_projects, $project_collection);
 
-            $is_last = $jira_projects->isLast;
+            $is_last = $jira_projects['isLast'];
             $count++;
         }
 
         return $project_collection->getJiraProjects();
     }
 
-    private function buildProjectList(?stdClass $jira_projects, JiraProjectCollection $collection): void
+    private function buildProjectList(?array $jira_projects, JiraProjectCollection $collection): void
     {
-        if (! $jira_projects) {
+        if (! $jira_projects || ! $jira_projects['values']) {
             return;
         }
 
-        foreach ($jira_projects->values as $project) {
+        foreach ($jira_projects['values'] as $project) {
+            if (! $project['key'] || ! $project['name']) {
+                throw new \LogicException('Key or name has not been founded in jira_representation');
+            }
             $collection->addProject(
                 [
-                    'id'    => $project->key,
-                    'label' => $project->name,
+                    'id'    => $project['key'],
+                    'label' => $project['name'],
                 ]
             );
         }

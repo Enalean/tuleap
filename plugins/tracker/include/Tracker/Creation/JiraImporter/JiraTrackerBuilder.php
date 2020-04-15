@@ -33,14 +33,17 @@ class JiraTrackerBuilder
         $project_details = $wrapper->getUrl('/project/' . urlencode($project_key));
 
         $tracker_list = [];
-        if (! $project_details) {
+        if (! $project_details || ! $project_details['issueTypes']) {
             return $tracker_list;
         }
 
-        foreach ($project_details->issueTypes as $tracker) {
+        foreach ($project_details['issueTypes'] as $tracker) {
+            if (! isset($tracker['id']) || ! isset($tracker['name'])) {
+                throw new \LogicException('Tracker does not have an id or a name');
+            }
             $tracker_list[] = [
-                "id"   => $tracker->id,
-                "name" => $tracker->name
+                "id"   => $tracker['id'],
+                "name" => $tracker['name']
             ];
         }
 

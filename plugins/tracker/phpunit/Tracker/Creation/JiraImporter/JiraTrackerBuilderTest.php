@@ -34,22 +34,14 @@ final class JiraTrackerBuilderTest extends TestCase
     {
         $builder = new JiraTrackerBuilder();
 
-        $wrapper = \Mockery::mock(ClientWrapper::class);
+        $wrapper     = \Mockery::mock(ClientWrapper::class);
         $project_key = "IE";
 
-        $tracker_one = new \stdClass();
-        $tracker_one->id = "epic";
-        $tracker_one->name = "Epics";
+        $tracker_one = ["id" => "epic", "name" => "Epics"];
+        $tracker_two = ["id" => "issue", "name" => "Issues"];
 
-        $tracker_two = new \stdClass();
-        $tracker_two->id = "issue";
-        $tracker_two->name = "Issues";
 
-        $project_details = new \stdClass();
-        $project_details->issueTypes = [
-            $tracker_one,
-            $tracker_two
-        ];
+        $project_details = ["issueTypes" => [$tracker_one, $tracker_two]];
 
         $wrapper->shouldReceive('getUrl')->with("/project/" . $project_key)->andReturn($project_details);
 
@@ -61,5 +53,24 @@ final class JiraTrackerBuilderTest extends TestCase
         $result = $builder->build($wrapper, $project_key);
 
         $this->assertEquals($expected_tracker_list, $result);
+    }
+
+    public function testItThrowsAnExceptionIfJiraRepresentationHasChanged(): void
+    {
+        $builder = new JiraTrackerBuilder();
+
+        $wrapper     = \Mockery::mock(ClientWrapper::class);
+        $project_key = "IE";
+
+        $tracker_one = ["id" => "epic", "ezezezez" => "Epics"];
+        $tracker_two = ["id" => "issue", "name" => "Issues"];
+
+
+        $project_details = ["issueTypes" => [$tracker_one, $tracker_two]];
+
+        $wrapper->shouldReceive('getUrl')->with("/project/" . $project_key)->andReturn($project_details);
+
+        $this->expectException(\LogicException::class);
+        $builder->build($wrapper, $project_key);
     }
 }
