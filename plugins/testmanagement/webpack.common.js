@@ -48,7 +48,9 @@ const webpack_config_for_angular = {
     },
     module: {
         rules: [
-            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+            ...webpack_configurator.configureTypescriptRules(
+                webpack_configurator.babel_options_ie11
+            ),
             webpack_configurator.rule_ng_cache_loader,
             webpack_configurator.rule_vue_loader,
             webpack_configurator.rule_angular_mixed_vue_gettext,
@@ -57,6 +59,7 @@ const webpack_config_for_angular = {
     },
     plugins: [
         manifest_plugin,
+        webpack_configurator.getTypescriptCheckerPlugin(false),
         webpack_configurator.getMomentLocalePlugin(),
         webpack_configurator.getVueLoaderPlugin(),
     ],

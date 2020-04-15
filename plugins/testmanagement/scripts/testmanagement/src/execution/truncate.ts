@@ -23,35 +23,49 @@ import toHtml from "hast-util-to-html";
 import map from "unist-util-map";
 import remove from "unist-util-remove";
 import toString from "hast-util-to-string";
+import { Node, Parent } from "unist";
 
-export function truncateHTML(content, max_length, placeholder_image_text) {
+export function truncateHTML(
+    content: string,
+    max_length: number,
+    placeholder_image_text: string
+): string {
     const tree = unified().use(parse, { fragment: true }).parse(content);
 
+    if (!isParent(tree)) {
+        return content;
+    }
+
+    const dummy: Node = { type: "tlp-dummy" };
     let counter = 0;
     let images_counter = 0;
     let p_counter = 0;
-    const truncated_tree = map(tree, function (node) {
+    const truncated_tree = map(tree, function (node: Node): Node {
         if (counter >= max_length) {
-            return null;
+            return { ...dummy };
         }
 
         if (node.type === "element" && node.tagName === "img") {
             images_counter++;
-            return null;
+            return { ...dummy };
         }
 
         if (node.type === "element" && toString(node).trim().length === 0) {
-            return null;
+            return { ...dummy };
         }
 
         if (node.type === "element" && node.tagName === "p") {
             p_counter++;
             if (p_counter > 1) {
-                return null;
+                return { ...dummy };
             }
         }
 
         if (node.type !== "text") {
+            return node;
+        }
+
+        if (typeof node.value !== "string") {
             return node;
         }
 
@@ -68,8 +82,8 @@ export function truncateHTML(content, max_length, placeholder_image_text) {
         });
     });
 
-    remove(truncated_tree, (node) => {
-        return typeof node.type === "undefined";
+    remove(truncated_tree, (node: Node) => {
+        return node.type === dummy.type;
     });
 
     if (images_counter > 0 && toString(truncated_tree).trim().length === 0) {
@@ -77,4 +91,8 @@ export function truncateHTML(content, max_length, placeholder_image_text) {
     }
 
     return toHtml(truncated_tree);
+}
+
+function isParent(x: Node): x is Parent {
+    return "children" in x;
 }
