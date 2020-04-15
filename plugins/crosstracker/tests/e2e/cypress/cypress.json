@@ -1,0 +1,13 @@
+{
+    "baseUrl": "https://tuleap",
+    "reporter": "junit",
+    "reporterOptions": {
+        "mochaFile": "/output/cross-tracker-results-[hash].xml"
+    },
+    "screenshotsFolder": "/output/cross-tracker-screenshots",
+    "videosFolder": "/output/cross-tracker-videos",
+    "video": true,
+    "videoUploadOnPasses": false,
+    "pluginsFile": false,
+    "pageLoadTimeout": 120000
+}

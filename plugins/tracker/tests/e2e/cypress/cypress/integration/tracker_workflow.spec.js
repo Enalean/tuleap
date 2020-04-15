@@ -1,7 +1,7 @@
 /*
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,10 +15,11 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-import { PROJECT_ADMINISTRATORS_ID } from "../../../../../src/scripts/user/user-group-constants.js";
-import { POST_ACTION_TYPE } from "../../../../../plugins/tracker/scripts/workflow-transitions/src/constants/workflow-constants.js";
+import { PROJECT_ADMINISTRATORS_ID } from "../../../../../../../src/scripts/user/user-group-constants.js";
+import { POST_ACTION_TYPE } from "../../../../../scripts/workflow-transitions/src/constants/workflow-constants.js";
 
 function getTrackerIdFromTrackerListPage() {
     cy.visitProjectService("tracker-project", "Trackers");
