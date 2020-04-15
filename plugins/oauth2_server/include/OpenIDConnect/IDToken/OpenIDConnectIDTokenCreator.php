@@ -27,6 +27,7 @@ use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\OAuth2Server\App\ClientIdentifier;
 use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCode;
+use Tuleap\OAuth2Server\OpenIDConnect\Issuer;
 use Tuleap\OAuth2Server\OpenIDConnect\Scope\OAuth2SignInScope;
 
 class OpenIDConnectIDTokenCreator
@@ -72,7 +73,7 @@ class OpenIDConnectIDTokenCreator
             return null;
         }
 
-        $builder = $this->builder_factory->getBuilder()->issuedBy('https://' . \ForgeConfig::get('sys_https_host'))
+        $builder = $this->builder_factory->getBuilder()->issuedBy(Issuer::toString())
                 ->relatedTo((string) $authorization_code->getUser()->getId())
                 ->permittedFor(ClientIdentifier::fromOAuth2App($app)->toString())
                 ->issuedAt($current_time->getTimestamp())
