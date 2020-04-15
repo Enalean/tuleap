@@ -436,6 +436,13 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %description plugin-label
 %{summary}.
 
+%package plugin-oauth2-server
+Summary: OAuth2 Server
+Group: Development/Tools
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+%description plugin-oauth2-server
+%{summary}.
+
 %package plugin-project-ownership
 Summary: Project ownership
 Group: Development/Tools
@@ -496,13 +503,6 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-agiledashboar
 %endif
 
 %if %{with experimental}
-
-%package plugin-oauth2-server
-Summary: OAuth2 Server
-Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
-%description plugin-oauth2-server
-%{summary}.
 
 %endif
 
@@ -1436,6 +1436,11 @@ fi
 %{APP_DIR}/plugins/label
 %{APP_DIR}/src/www/assets/label
 
+%files plugin-oauth2-server
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/oauth2_server
+%{APP_DIR}/src/www/assets/oauth2_server
+
 %files plugin-project-ownership
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/project_ownership
@@ -1477,11 +1482,6 @@ fi
 %endif
 
 %if %{with experimental}
-
-%files plugin-oauth2-server
-%defattr(-,root,root,-)
-%{APP_DIR}/plugins/oauth2_server
-%{APP_DIR}/src/www/assets/oauth2_server
 
 %endif
 
