@@ -58,7 +58,6 @@ class AppsPresenterBuilder
     public function build(\PFUser $user, CSRFSynchronizerTokenPresenter $csrf_token_presenter): AppsPresenter
     {
         $tabs = $this->dispatcher->dispatch(new AccountTabPresenterCollection($user, AccountAppsController::URL));
-        assert($tabs instanceof AccountTabPresenterCollection);
 
         $app_presenters = [];
         $apps           = $this->app_factory->getAppsAuthorizedByUser($user);
