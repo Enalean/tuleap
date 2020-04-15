@@ -22,7 +22,8 @@ const webpack_configurator = require("../../tools/utils/scripts/webpack-configur
 
 const context = __dirname;
 const output = webpack_configurator.configureOutput(
-    path.resolve(__dirname, "../../src/www/assets/ldap")
+    path.resolve(__dirname, "../../src/www/assets/ldap"),
+    "/assets/ldap/"
 );
 
 const entry_points = {
@@ -48,7 +49,9 @@ module.exports = [
         },
         module: {
             rules: [
-                webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+                ...webpack_configurator.configureTypescriptRules(
+                    webpack_configurator.babel_options_ie11
+                ),
                 webpack_configurator.rule_mustache_files,
                 webpack_configurator.rule_po_files,
                 webpack_configurator.rule_scss_loader,
@@ -58,6 +61,7 @@ module.exports = [
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
+            webpack_configurator.getTypescriptCheckerPlugin(false),
             ...webpack_configurator.getCSSExtractionPlugins(),
         ],
     },
