@@ -165,12 +165,15 @@ tests_cypress_dev: ## Start cypress container to launch tests manually
 tests_cypress_distlp: ## Run Cypress distlp tests
 	@tests/e2e/distlp/wrap.sh
 
+ifeq ($(COVERAGE_ENABLED),1)
+COVERAGE_PARAMS_PHPUNIT=--coverage-html=/tmp/results/coverage/
+endif
 phpunit-ci-run:
 	$(PHP) -d pcov.directory=. -d pcov.exclude='~(vendor|node_modules|tests/(?!(?:lib|phpcs))|plugins/\w+/(?!include))~' \
 		src/vendor/bin/phpunit \
 		-c tests/phpunit/phpunit.xml \
 		--log-junit /tmp/results/phpunit_tests_results.xml \
-		--coverage-html=/tmp/results/coverage/ \
+		$(COVERAGE_PARAMS_PHPUNIT) \
 		--random-order \
 		--do-not-cache-result
 
@@ -182,15 +185,17 @@ run-as-owner:
 	su -c "$(MAKE) -C $(CURDIR) $(TARGET) PHP=$(PHP)" -l runner
 
 phpunit-ci-73:
+	$(eval COVERAGE_ENABLED ?= 1)
 	mkdir -p $(WORKSPACE)/results/ut-phpunit/php-73
-	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-phpunit/php-73:/tmp/results --network none enalean/tuleap-test-phpunit:c7-php73 make -C /tuleap TARGET=phpunit-ci-run PHP=/opt/remi/php73/root/usr/bin/php run-as-owner
+	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-phpunit/php-73:/tmp/results --network none enalean/tuleap-test-phpunit:c7-php73 make -C /tuleap TARGET="phpunit-ci-run COVERAGE_ENABLED=$(COVERAGE_ENABLED)" PHP=/opt/remi/php73/root/usr/bin/php run-as-owner
 
 phpunit-docker-73: ## Run PHPUnit tests in Docker container with PHP 7.3. Use FILES parameter to run specific tests.
 	@docker run --rm -v $(CURDIR):/tuleap:ro --network none enalean/tuleap-test-phpunit:c7-php73 scl enable php73 "make -C /tuleap phpunit FILES=$(FILES)"
 
 phpunit-ci-74:
+	$(eval COVERAGE_ENABLED ?= 1)
 	mkdir -p $(WORKSPACE)/results/ut-phpunit/php-74
-	@docker run --rm -v $(CURDIR):/tuleap:ro --network none -v $(WORKSPACE)/results/ut-phpunit/php-74:/tmp/results enalean/tuleap-test-phpunit:c7-php74 make -C /tuleap TARGET=phpunit-ci-run PHP=/opt/remi/php74/root/usr/bin/php run-as-owner
+	@docker run --rm -v $(CURDIR):/tuleap:ro --network none -v $(WORKSPACE)/results/ut-phpunit/php-74:/tmp/results enalean/tuleap-test-phpunit:c7-php74 make -C /tuleap TARGET="phpunit-ci-run COVERAGE_ENABLED=$(COVERAGE_ENABLED)" PHP=/opt/remi/php74/root/usr/bin/php run-as-owner
 
 phpunit-docker-74: ## Run PHPUnit tests in Docker container with PHP 7.4. Use FILES parameter to run specific tests.
 	@docker run --rm -v $(CURDIR):/tuleap:ro --network none enalean/tuleap-test-phpunit:c7-php74 scl enable php74 "make -C /tuleap phpunit FILES=$(FILES)"

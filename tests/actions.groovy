@@ -23,17 +23,25 @@ def runSimpleTestTests(String version) {
     sh "make -C $WORKSPACE/sources simpletest-${version}-ci"
 }
 
-def runPHPUnitTests(String version) {
-    sh "make -C $WORKSPACE/sources phpunit-ci-${version}"
+def runPHPUnitTests(String version, Boolean with_coverage = false) {
+    def coverage_enabled='0'
+    if (with_coverage) {
+        coverage_enabled='1'
+    }
+    sh "make -C $WORKSPACE/sources phpunit-ci-${version} COVERAGE_ENABLED=${coverage_enabled}"
 }
 
-def runJestTests(String name, String path) {
+def runJestTests(String name, String path, Boolean with_coverage = false) {
+    def coverage_params=''
+    if (with_coverage) {
+        coverage_params="--coverage --coverageReporters=text-summary --coverageReporters=cobertura --coverageDirectory='\$WORKSPACE/results/jest/coverage/'"
+    }
     sh """
     mkdir -p 'results/jest/coverage/'
     export JEST_JUNIT_OUTPUT_DIR="\$WORKSPACE/results/jest/"
     export JEST_JUNIT_OUTPUT_NAME="test-${name}-results.xml"
     export JEST_SUITE_NAME="Jest ${name} test suite"
-    npm --prefix "sources/" test -- '${path}' --ci --maxWorkers=2 --reporters=default --reporters=jest-junit --coverage --coverageReporters=text-summary --coverageReporters=cobertura --coverageDirectory="\$WORKSPACE/results/jest/coverage/"
+    npm --prefix "sources/" test -- '${path}' --ci --maxWorkers=2 --reporters=default --reporters=jest-junit ${coverage_params}
     """
 }
 
