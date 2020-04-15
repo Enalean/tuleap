@@ -511,7 +511,7 @@ class ProjectTest extends ProjectBase
         ));
         $this->assertArrayHasKey('id', $release_milestone['artifact']);
         $this->assertArrayHasKey('uri', $release_milestone['artifact']);
-        $this->assertRegExp('%^artifacts/[0-9]+$%', $release_milestone['artifact']['uri']);
+        $this->assertMatchesRegularExpression('%^artifacts/[0-9]+$%', $release_milestone['artifact']['uri']);
 
         $this->assertArrayHasKey('open', $release_milestone['status_count']);
         $this->assertArrayHasKey('closed', $release_milestone['status_count']);

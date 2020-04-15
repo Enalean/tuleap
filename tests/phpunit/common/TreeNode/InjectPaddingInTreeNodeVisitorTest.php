@@ -35,6 +35,6 @@ class TreeNodeInjectPaddingInTreeNodeVisitorTest extends TestCase
         $root->accept($visitor);
 
         $data = $node2->getData();
-        $this->assertRegExp('%div class="tree-blank" >[^<]*</div><div class="tree-last"%', $data['tree-padding']);
+        $this->assertMatchesRegularExpression('%div class="tree-blank" >[^<]*</div><div class="tree-last"%', $data['tree-padding']);
     }
 }

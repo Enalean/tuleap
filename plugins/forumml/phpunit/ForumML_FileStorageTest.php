@@ -93,7 +93,7 @@ final class ForumML_FileStorageTest extends TestCase
         $fdate1 = $path_array1[count($path_array1) - 2];
         $this->assertEquals($fdate1, $date1);
         // check regexp
-        $this->assertRegExp($this->name_pattern, $name1);
+        $this->assertMatchesRegularExpression($this->name_pattern, $name1);
     }
 
     // case 2: an attachment file whose name has less than 64 characters
@@ -117,7 +117,7 @@ final class ForumML_FileStorageTest extends TestCase
         $fdate2 = $path_array2[count($path_array2) - 2];
         $this->assertEquals($fdate2, $date1);
         // check regexp
-        $this->assertRegExp($this->name_pattern, $name2);
+        $this->assertMatchesRegularExpression($this->name_pattern, $name2);
     }
 
     // case 3: attachment filename with only alphanumeric characters
@@ -131,7 +131,7 @@ final class ForumML_FileStorageTest extends TestCase
         $path3 = $this->file_storage->_getPath($name3, $list1, $date1, $type1);
         $this->assertNotNull($path3);
         $this->assertIsString($path3);
-        $this->assertNotRegExp($this->name_pattern, $name3);
+        $this->assertDoesNotMatchRegularExpression($this->name_pattern, $name3);
     }
 
     // case 4: attachment filename is an empty string
@@ -147,7 +147,7 @@ final class ForumML_FileStorageTest extends TestCase
         $this->assertIsString($path4);
         $path_array4 = explode("/", $path4);
         $fname4 = $path_array4[count($path_array4) - 1];
-        $this->assertRegExp('/^attachment.*/', $fname4);
+        $this->assertMatchesRegularExpression('/^attachment.*/', $fname4);
     }
 
     // case 5: same attachment name submitted 2 times same day for same list

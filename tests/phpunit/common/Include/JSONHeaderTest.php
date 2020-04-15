@@ -26,7 +26,7 @@ final class JSONHeaderTest extends TestCase
 {
     public function testStartsWithHeaderInfo(): void
     {
-        $this->assertRegExp('/^X-JSON:.*/', JSONHeader::getHeaderForPrototypeJS('something'));
+        $this->assertMatchesRegularExpression('/^X-JSON:.*/', JSONHeader::getHeaderForPrototypeJS('something'));
     }
 
     /**

@@ -313,8 +313,8 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
         $project_creator->createGerritProject($this->server, $this->repository_in_a_private_project, false);
 
         $this->assertFileExists("$this->gerrit_tmpdir/project.config");
-        $this->assertNotRegExp('/group mozilla\//', file_get_contents("$this->gerrit_tmpdir/project.config"));
-        $this->assertRegExp('/group Administrators/', file_get_contents("$this->gerrit_tmpdir/project.config"));
+        $this->assertDoesNotMatchRegularExpression('/group mozilla\//', file_get_contents("$this->gerrit_tmpdir/project.config"));
+        $this->assertMatchesRegularExpression('/group Administrators/', file_get_contents("$this->gerrit_tmpdir/project.config"));
     }
 
     public function testItDoesNotSetPermsOnRegisteredUsersIfProjectIsPrivate(): void
@@ -345,7 +345,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
         $project_creator->createGerritProject($this->server, $this->repository_in_a_private_project, $this->migrate_access_rights);
         $project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
 
-        $this->assertNotRegExp('/Registered Users/', file_get_contents("$this->gerrit_tmpdir/project.config"));
+        $this->assertDoesNotMatchRegularExpression('/Registered Users/', file_get_contents("$this->gerrit_tmpdir/project.config"));
     }
 
     public function testItDoesNotSetPermsOnRegisteredUsersIfRepoHasNoPermsForRegisteredOrAnonymous(): void
@@ -361,7 +361,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
         $this->project_creator->createGerritProject($this->server, $this->repository_without_registered, $this->migrate_access_rights);
         $this->project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
 
-        $this->assertNotRegExp('/Registered Users/', file_get_contents("$this->gerrit_tmpdir/project.config"));
+        $this->assertDoesNotMatchRegularExpression('/Registered Users/', file_get_contents("$this->gerrit_tmpdir/project.config"));
     }
 
     public function testItSetsPermsLabelCodeReviewOnceIfUserCanReadANdWrite(): void
@@ -373,8 +373,8 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
         $this->project_creator->createGerritProject($this->server, $this->repository_with_registered, $this->migrate_access_rights);
         $this->project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
 
-        $this->assertNotRegExp('/label-Code-Review = -1..+1/', file_get_contents("$this->gerrit_tmpdir/project.config"));
-        $this->assertRegExp('/label-Code-Review = -2..+2/', file_get_contents("$this->gerrit_tmpdir/project.config"));
+        $this->assertDoesNotMatchRegularExpression('/label-Code-Review = -1..+1/', file_get_contents("$this->gerrit_tmpdir/project.config"));
+        $this->assertMatchesRegularExpression('/label-Code-Review = -2..+2/', file_get_contents("$this->gerrit_tmpdir/project.config"));
     }
 
     public function testItSetsPermsOnRegisteredUsersIfRepoHasReadForRegistered()
@@ -386,7 +386,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
         $this->project_creator->createGerritProject($this->server, $this->repository_with_registered, $this->migrate_access_rights);
         $this->project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
 
-        $this->assertRegExp('/Registered Users/', file_get_contents("$this->gerrit_tmpdir/project.config"));
+        $this->assertMatchesRegularExpression('/Registered Users/', file_get_contents("$this->gerrit_tmpdir/project.config"));
     }
 
     public function testItSetsPermsOnRegisteredUsersIfRepoHasWriteForRegistered()
@@ -398,7 +398,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
         $this->project_creator->createGerritProject($this->server, $this->repository_with_registered, $this->migrate_access_rights);
         $this->project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
 
-        $this->assertRegExp('/Registered Users/', file_get_contents("$this->gerrit_tmpdir/project.config"));
+        $this->assertMatchesRegularExpression('/Registered Users/', file_get_contents("$this->gerrit_tmpdir/project.config"));
     }
 
     public function testItSetsPermsOnRegisteredUsersIfRepoHasExecuteForRegistered()
@@ -410,7 +410,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
         $this->project_creator->createGerritProject($this->server, $this->repository_with_registered, $this->migrate_access_rights);
         $this->project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
 
-        $this->assertRegExp('/Registered Users/', file_get_contents("$this->gerrit_tmpdir/project.config"));
+        $this->assertMatchesRegularExpression('/Registered Users/', file_get_contents("$this->gerrit_tmpdir/project.config"));
     }
 
     public function isSetsPermsOnRegisteredUsersIfRepoHasReadForAuthenticated()
@@ -422,7 +422,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
         $this->project_creator->createGerritProject($this->server, $this->repository_with_registered, $this->migrate_access_rights);
         $this->project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
 
-        $this->assertRegExp('/Registered Users/', file_get_contents("$this->gerrit_tmpdir/project.config"));
+        $this->assertMatchesRegularExpression('/Registered Users/', file_get_contents("$this->gerrit_tmpdir/project.config"));
     }
 
     public function testItSetsPermsOnRegisteredUsersIfRepoHasWriteForAuthenticated()
@@ -434,7 +434,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
         $this->project_creator->createGerritProject($this->server, $this->repository_with_registered, $this->migrate_access_rights);
         $this->project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
 
-        $this->assertRegExp('/Registered Users/', file_get_contents("$this->gerrit_tmpdir/project.config"));
+        $this->assertMatchesRegularExpression('/Registered Users/', file_get_contents("$this->gerrit_tmpdir/project.config"));
     }
 
     public function testItSetsPermsOnRegisteredUsersIfRepoHasExecuteForAuthenticated()
@@ -446,7 +446,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
         $this->project_creator->createGerritProject($this->server, $this->repository_with_registered, $this->migrate_access_rights);
         $this->project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
 
-        $this->assertRegExp('/Registered Users/', file_get_contents("$this->gerrit_tmpdir/project.config"));
+        $this->assertMatchesRegularExpression('/Registered Users/', file_get_contents("$this->gerrit_tmpdir/project.config"));
     }
 
     public function testItSetsPermsOnRegisteredUsersIfRepoHasReadForAnonymous()
@@ -458,7 +458,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
         $this->project_creator->createGerritProject($this->server, $this->repository_with_registered, $this->migrate_access_rights);
         $this->project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
 
-        $this->assertRegExp('/Registered Users/', file_get_contents("$this->gerrit_tmpdir/project.config"));
+        $this->assertMatchesRegularExpression('/Registered Users/', file_get_contents("$this->gerrit_tmpdir/project.config"));
     }
 
     public function testItSetsPermsOnRegisteredUsersIfRepoHasWriteForAnonymous()
@@ -470,7 +470,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
         $this->project_creator->createGerritProject($this->server, $this->repository_with_registered, $this->migrate_access_rights);
         $this->project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
 
-        $this->assertRegExp('/Registered Users/', file_get_contents("$this->gerrit_tmpdir/project.config"));
+        $this->assertMatchesRegularExpression('/Registered Users/', file_get_contents("$this->gerrit_tmpdir/project.config"));
     }
 
     public function testItSetsPermsOnRegisteredUsersIfRepoHasExecuteForAnonymous()
@@ -482,7 +482,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
         $this->project_creator->createGerritProject($this->server, $this->repository_with_registered, $this->migrate_access_rights);
         $this->project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
 
-        $this->assertRegExp('/Registered Users/', file_get_contents("$this->gerrit_tmpdir/project.config"));
+        $this->assertMatchesRegularExpression('/Registered Users/', file_get_contents("$this->gerrit_tmpdir/project.config"));
     }
 
     private function assertItClonesTheDistantRepo(): void
@@ -562,9 +562,9 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
         $groups_file = "$this->gerrit_tmpdir/groups";
         $group_file_contents = file_get_contents($groups_file);
 
-        $this->assertRegExp("%$this->project_members_uuid\t$this->project_members_gerrit_name\n%", $group_file_contents);
-        $this->assertRegExp("%$this->another_ugroup_uuid\t$this->another_ugroup_gerrit_name\n%", $group_file_contents);
-        $this->assertRegExp("%$this->replication_uuid\t$this->replication\n%", $group_file_contents);
-        $this->assertRegExp("%global:Registered-Users\tRegistered Users\n%", $group_file_contents);
+        $this->assertMatchesRegularExpression("%$this->project_members_uuid\t$this->project_members_gerrit_name\n%", $group_file_contents);
+        $this->assertMatchesRegularExpression("%$this->another_ugroup_uuid\t$this->another_ugroup_gerrit_name\n%", $group_file_contents);
+        $this->assertMatchesRegularExpression("%$this->replication_uuid\t$this->replication\n%", $group_file_contents);
+        $this->assertMatchesRegularExpression("%global:Registered-Users\tRegistered Users\n%", $group_file_contents);
     }
 }

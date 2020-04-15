@@ -72,7 +72,7 @@ class PlanningTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration
         ));
         $this->assertArrayHasKey('id', $release_planning['milestone_tracker']);
         $this->assertArrayHasKey('uri', $release_planning['milestone_tracker']);
-        $this->assertRegExp('%^trackers/[0-9]+$%', $release_planning['milestone_tracker']['uri']);
+        $this->assertMatchesRegularExpression('%^trackers/[0-9]+$%', $release_planning['milestone_tracker']['uri']);
         $this->assertCount(1, $release_planning['backlog_trackers']);
         $this->assertEquals($release_planning['milestones_uri'], 'plannings/' . $release_planning['id'] . '/milestones');
 

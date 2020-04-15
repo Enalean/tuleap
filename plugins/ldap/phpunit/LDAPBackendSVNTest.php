@@ -29,8 +29,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use SVN_Apache_Auth_Factory;
 
-require_once __DIR__ . '/bootstrap.php';
-
 class LDAPBackendSVNTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -50,7 +48,7 @@ class LDAPBackendSVNTest extends TestCase
         parent::tearDown();
     }
 
-    private function GivenAFullApacheConf(): string
+    private function givenAFullApacheConf(): string
     {
         $backend  = \Mockery::mock(\LDAP_BackendSVN::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -99,13 +97,13 @@ class LDAPBackendSVNTest extends TestCase
 
     public function testFullConfShouldWrapEveryThing(): void
     {
-        $conf = $this->GivenAFullApacheConf();
+        $conf = $this->givenAFullApacheConf();
 
-        $this->assertRegExp('/TuleapLdapServers/', $conf);
-        $this->ThenThereAreTwoLocationDefinedGpigAndGarden($conf);
+        $this->assertMatchesRegularExpression('/TuleapLdapServers/', $conf);
+        $this->thenThereAreTwoLocationDefinedGpigAndGarden($conf);
     }
 
-    private function ThenThereAreTwoLocationDefinedGpigAndGarden($conf): void
+    private function thenThereAreTwoLocationDefinedGpigAndGarden($conf): void
     {
         $matches = array();
         preg_match_all('%<Location /svnroot/([^>]*)>%', $conf, $matches);

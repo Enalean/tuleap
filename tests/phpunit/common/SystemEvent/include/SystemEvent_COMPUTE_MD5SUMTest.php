@@ -142,7 +142,7 @@ class SystemEvent_COMPUTE_MD5SUMTest extends TestCase
 
         // Check errors
         $this->assertEquals(SystemEvent::STATUS_ERROR, $this->evt->getStatus());
-        $this->assertRegExp('/Could not update the computed checksum for file/i', $this->evt->getLog());
+        $this->assertMatchesRegularExpression('/Could not update the computed checksum for file/i', $this->evt->getLog());
     }
 
     public function testComparisonMd5sumFailure(): void
@@ -182,6 +182,6 @@ class SystemEvent_COMPUTE_MD5SUMTest extends TestCase
 
         // Check errors
         $this->assertEquals(SystemEvent::STATUS_ERROR, $this->evt->getStatus());
-        $this->assertRegExp('/Could not send mail to inform user that comparing md5sum failed/i', $this->evt->getLog());
+        $this->assertMatchesRegularExpression('/Could not send mail to inform user that comparing md5sum failed/i', $this->evt->getLog());
     }
 }

@@ -54,7 +54,7 @@ class GitoliteAccessURLGeneratorTest extends TestCase
 
         $url = $access_url_generator->getSSHURL($repository);
 
-        $this->assertRegExp('%^ssh://gitolite@%', $url);
+        $this->assertMatchesRegularExpression('%^ssh://gitolite@%', $url);
     }
 
     public function testGetAccessTypeShouldIncludesRepositoryFullName()
@@ -75,8 +75,8 @@ class GitoliteAccessURLGeneratorTest extends TestCase
         $ssh_url  = $access_url_generator->getSSHURL($repository);
         $http_url = $access_url_generator->getHTTPURL($repository);
 
-        $this->assertRegExp('%/gpig/u/johndoe/uber/bionic\.git$%', $ssh_url);
-        $this->assertRegExp('%/gpig/u/johndoe/uber/bionic\.git$%', $http_url);
+        $this->assertMatchesRegularExpression('%/gpig/u/johndoe/uber/bionic\.git$%', $ssh_url);
+        $this->assertMatchesRegularExpression('%/gpig/u/johndoe/uber/bionic\.git$%', $http_url);
     }
 
     public function testSSHURLIsEmptyWhenParameterIsSetToEmpty()
@@ -129,7 +129,7 @@ class GitoliteAccessURLGeneratorTest extends TestCase
         $ssh_url  = $access_url_generator->getSSHURL($repository);
         $http_url = $access_url_generator->getHTTPURL($repository);
 
-        $this->assertRegExp('%^ssh://gitolite@example.com%', $ssh_url);
-        $this->assertRegExp('%^https://example.com%', $http_url);
+        $this->assertMatchesRegularExpression('%^ssh://gitolite@example.com%', $ssh_url);
+        $this->assertMatchesRegularExpression('%^https://example.com%', $http_url);
     }
 }

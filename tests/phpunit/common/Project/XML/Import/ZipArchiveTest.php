@@ -65,7 +65,7 @@ final class ZipArchiveTest extends \PHPUnit\Framework\TestCase
         $this->assertDirectoryExists($extraction_path);
 
         $expected_prefix = $this->tmp_dir . '/import_project_';
-        $this->assertRegExp('%' . $expected_prefix . '\w+%', $extraction_path);
+        $this->assertMatchesRegularExpression('%' . $expected_prefix . '\w+%', $extraction_path);
 
         $this->archive->extractFiles();
 
@@ -87,6 +87,6 @@ final class ZipArchiveTest extends \PHPUnit\Framework\TestCase
         $extraction_path = $this->archive->getExtractionPath();
         $this->archive->extractFiles();
         $this->archive->cleanUp();
-        $this->assertFileNotExists($extraction_path);
+        $this->assertFileDoesNotExist($extraction_path);
     }
 }

@@ -80,7 +80,7 @@ final class Tracker_FormElement_Field_CheckboxTest extends \PHPUnit\Framework\Te
 
         $html =  $method->invokeArgs($field, $parameters);
 
-        $this->assertRegExp('/<input type="hidden" lename/', $html);
+        $this->assertMatchesRegularExpression('/<input type="hidden" lename/', $html);
     }
 
     public function testItReplaceCSVNullValueByNone(): void

@@ -96,7 +96,7 @@ class SVN_Apache_SvnrootConfTest extends TestCase
     {
         $conf = $this->givenAFullApacheConfWithModPerl();
 
-        $this->assertRegExp('/PerlLoadModule Apache::Tuleap/', $conf);
+        $this->assertMatchesRegularExpression('/PerlLoadModule Apache::Tuleap/', $conf);
         $this->thenThereAreTwoLocationDefinedGpigAndGarden($conf);
         $this->thenThereAreOnlyOneCustomLogStatement($conf);
     }
@@ -120,6 +120,6 @@ class SVN_Apache_SvnrootConfTest extends TestCase
         ForgeConfig::set(SVN_Apache_SvnrootConf::CONFIG_SVN_LOG_PATH, '${APACHE_LOG_DIR}/tuleap_svn.log');
 
         $conf = $this->givenAFullApacheConfWithModPerl();
-        $this->assertRegExp('%\${APACHE_LOG_DIR}/tuleap_svn\.log%', $conf);
+        $this->assertMatchesRegularExpression('%\${APACHE_LOG_DIR}/tuleap_svn\.log%', $conf);
     }
 }

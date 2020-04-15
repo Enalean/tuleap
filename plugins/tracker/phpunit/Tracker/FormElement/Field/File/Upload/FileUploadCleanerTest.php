@@ -79,9 +79,9 @@ class FileUploadCleanerTest extends TestCase
         (new FileUploadCleaner($logger, $dao, $form_element_factory, new DBTransactionExecutorPassthrough()))
             ->deleteDanglingFilesToUpload(new \DateTimeImmutable());
 
-        $this->assertFileNotExists($base_path . '/field/11');
-        $this->assertFileNotExists($base_path . '/field/thumbnails/11');
+        $this->assertFileDoesNotExist($base_path . '/field/11');
+        $this->assertFileDoesNotExist($base_path . '/field/thumbnails/11');
         $this->assertFileExists($base_path . '/field/12');
-        $this->assertFileNotExists($base_path . '/field/13');
+        $this->assertFileDoesNotExist($base_path . '/field/13');
     }
 }

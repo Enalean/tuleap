@@ -158,7 +158,7 @@ final class SetupMysqlInitCommandTest extends TestCase
         ]);
 
         $this->assertEquals(1, $this->command_tester->getStatusCode());
-        $this->assertFileNotExists($this->base_dir . '/etc/tuleap/conf/database.inc');
+        $this->assertFileDoesNotExist($this->base_dir . '/etc/tuleap/conf/database.inc');
     }
 
     public function testUsesSSLModeDefinedWithEnvVariable(): void

@@ -41,11 +41,11 @@ class HTML_Table_BoostrapTest extends TestCase
 
     public function testItBuildsATable(): void
     {
-        $this->assertRegExp('/<table class="table">\s*<\/table>/', $this->html_table->render());
+        $this->assertMatchesRegularExpression('/<table class="table">\s*<\/table>/', $this->html_table->render());
     }
 
     public function testItHasTableClasses(): void
     {
-        $this->assertRegExp('/<table class="table bla">/', $this->html_table->addTableClass('bla')->render());
+        $this->assertMatchesRegularExpression('/<table class="table bla">/', $this->html_table->addTableClass('bla')->render());
     }
 }

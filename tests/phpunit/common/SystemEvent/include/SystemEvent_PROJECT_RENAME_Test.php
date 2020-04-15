@@ -312,7 +312,7 @@ class SystemEvent_PROJECT_RENAME_Test extends TestCase
 
         // Check errors
         $this->assertEquals(SystemEvent::STATUS_ERROR, $evt->getStatus());
-        $this->assertRegExp('/could not rename CVS/i', $evt->getLog());
+        $this->assertMatchesRegularExpression('/could not rename CVS/i', $evt->getLog());
     }
 
     public function testRenameHomeRepositoryFailure(): void
@@ -381,7 +381,7 @@ class SystemEvent_PROJECT_RENAME_Test extends TestCase
 
         // Check errors
         $this->assertEquals(SystemEvent::STATUS_ERROR, $evt->getStatus());
-        $this->assertRegExp('/Could not rename project home/i', $evt->getLog());
+        $this->assertMatchesRegularExpression('/Could not rename project home/i', $evt->getLog());
     }
 
     public function testRenameFRSRepositoryFailure(): void
@@ -448,7 +448,7 @@ class SystemEvent_PROJECT_RENAME_Test extends TestCase
 
         // Check errors
         $this->assertEquals(SystemEvent::STATUS_ERROR, $evt->getStatus());
-        $this->assertRegExp('/Could not rename FRS repository/i', $evt->getLog());
+        $this->assertMatchesRegularExpression('/Could not rename FRS repository/i', $evt->getLog());
     }
 
     public function testRenameFTPRepositoryFailure(): void
@@ -516,7 +516,7 @@ class SystemEvent_PROJECT_RENAME_Test extends TestCase
 
         // Check errors
         $this->assertEquals(SystemEvent::STATUS_ERROR, $evt->getStatus());
-        $this->assertRegExp('/Could not rename FTP repository/i', $evt->getLog());
+        $this->assertMatchesRegularExpression('/Could not rename FTP repository/i', $evt->getLog());
     }
 
     public function testRenameDBUpdateFailure(): void
@@ -645,7 +645,7 @@ class SystemEvent_PROJECT_RENAME_Test extends TestCase
         $evt->process();
 
         $this->assertEquals(SystemEvent::STATUS_ERROR, $evt->getStatus());
-        $this->assertRegExp('/.*SVN repository.*not available/', $evt->getLog());
-        $this->assertRegExp('/.*CVS repository.*not available/', $evt->getLog());
+        $this->assertMatchesRegularExpression('/.*SVN repository.*not available/', $evt->getLog());
+        $this->assertMatchesRegularExpression('/.*CVS repository.*not available/', $evt->getLog());
     }
 }

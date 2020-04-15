@@ -516,7 +516,7 @@ final class Tracker_FormElement_Field_ListTest extends \PHPUnit\Framework\TestCa
         $res = $this->list_field->getCriteriaValue($criteria);
 
         $this->assertCount(2, $res);
-        $this->assertContains(101, $res);
+        $this->assertContains('101', $res);
         $this->assertContains(103, $res);
     }
 

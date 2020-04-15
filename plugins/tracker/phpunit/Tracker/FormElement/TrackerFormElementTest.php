@@ -107,8 +107,8 @@ class TrackerFormElementTest extends TestCase
 
         $content = $this->WhenIDisplayAdminFormElement($formElement);
 
-        $this->assertRegExp('%Update%', $content);
-        $this->assertRegExp('%</form>%', $content);
+        $this->assertMatchesRegularExpression('%Update%', $content);
+        $this->assertMatchesRegularExpression('%</form>%', $content);
     }
 
     private function whenIDisplayAdminFormElement($formElement)

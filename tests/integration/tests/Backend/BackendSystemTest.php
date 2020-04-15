@@ -155,7 +155,7 @@ final class BackendSystemTest extends \PHPUnit\Framework\TestCase
         $backend->shouldReceive('getUserManager')->andReturns($um);
 
         $this->assertTrue($backend->archiveUserHome(104));
-        $this->assertDirectoryNotExists(ForgeConfig::get('homedir_prefix') . '/codendiadm', 'Home dir should be deleted');
+        $this->assertDirectoryDoesNotExist(ForgeConfig::get('homedir_prefix') . '/codendiadm', 'Home dir should be deleted');
         $this->assertTrue(is_file(ForgeConfig::get('sys_project_backup_path') . "/codendiadm.tgz"), "Archive should be created");
     }
 
@@ -180,7 +180,7 @@ final class BackendSystemTest extends \PHPUnit\Framework\TestCase
         symlink($projdir, $lcprojlnk);
 
         $this->assertTrue($backend->archiveProjectHome(142));
-        $this->assertDirectoryNotExists($projdir, "Project dir should be deleted");
+        $this->assertDirectoryDoesNotExist($projdir, "Project dir should be deleted");
         $this->assertFalse(is_link($lcprojlnk), "Project link should be deleted");
         $this->assertTrue(is_file(ForgeConfig::get('sys_project_backup_path') . "/TestProj.tgz"), "Archive should be created");
 
@@ -207,10 +207,10 @@ final class BackendSystemTest extends \PHPUnit\Framework\TestCase
 
         $this->assertTrue($backend->renameProjectHomeDirectory($project, "FooBar"));
 
-        $this->assertFileNotExists(ForgeConfig::get('grpdir_prefix') . "/TestProject", 'Old project home should no longer exists');
+        $this->assertFileDoesNotExist(ForgeConfig::get('grpdir_prefix') . "/TestProject", 'Old project home should no longer exists');
         $this->assertDirectoryExists(ForgeConfig::get('grpdir_prefix') . "/FooBar", "Project home should be renamed");
 
-        $this->assertFileNotExists(ForgeConfig::get('grpdir_prefix') . "/testproject", 'Old project home lowercase version should no longer exists');
+        $this->assertFileDoesNotExist(ForgeConfig::get('grpdir_prefix') . "/testproject", 'Old project home lowercase version should no longer exists');
         $this->assertTrue(is_link(ForgeConfig::get('grpdir_prefix') . "/foobar"), "Project home lowercase version should be renamed");
         $this->assertEquals(readlink(ForgeConfig::get('grpdir_prefix') . "/foobar"), ForgeConfig::get('grpdir_prefix') . "/FooBar", "Project home lowercase version should be link to the uppercase version");
     }
@@ -238,7 +238,7 @@ final class BackendSystemTest extends \PHPUnit\Framework\TestCase
 
         $this->assertTrue($backend->renameProjectHomeDirectory($project, "testproject"));
 
-        $this->assertFileNotExists(ForgeConfig::get('grpdir_prefix') . "/TestProject", 'Old project home should no longer exists');
+        $this->assertFileDoesNotExist(ForgeConfig::get('grpdir_prefix') . "/TestProject", 'Old project home should no longer exists');
         $this->assertDirectoryExists(ForgeConfig::get('grpdir_prefix') . "/testproject", 'Project home should be renamed');
     }
 
@@ -295,7 +295,7 @@ final class BackendSystemTest extends \PHPUnit\Framework\TestCase
 
         $this->assertTrue($backend->renameProjectHomeDirectory($project, "projecttest"));
 
-        $this->assertFileNotExists(ForgeConfig::get('grpdir_prefix') . "/testproject", 'Old project home should no longer exists');
+        $this->assertFileDoesNotExist(ForgeConfig::get('grpdir_prefix') . "/testproject", 'Old project home should no longer exists');
         $this->assertDirectoryExists(ForgeConfig::get('grpdir_prefix') . "/projecttest", 'Project home should be renamed');
     }
 
@@ -341,7 +341,7 @@ final class BackendSystemTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($backend->renameUserHomeDirectory($user, 'toto'));
         $this->assertDirectoryExists(ForgeConfig::get('homedir_prefix') . "/toto", "Home dir should be created");
 
-        $this->assertDirectoryNotExists(ForgeConfig::get('homedir_prefix') . "/codendiadm", 'Home dir should no more exists');
+        $this->assertDirectoryDoesNotExist(ForgeConfig::get('homedir_prefix') . "/codendiadm", 'Home dir should no more exists');
     }
 
     public function testCleanupFrs(): void

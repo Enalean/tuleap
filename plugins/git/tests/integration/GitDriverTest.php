@@ -152,7 +152,7 @@ final class GitDriverTest extends \PHPUnit\Framework\TestCase
         $driver = new GitDriver();
         $driver->cloneAtSpecifiqBranch($this->sourcePath, $this->destination_path, "master");
         $driver->removeRepository($this->destination_path);
-        $this->assertFileNotExists($this->destination_path);
+        $this->assertFileDoesNotExist($this->destination_path);
     }
 
     public function testMergeAndPush(): void

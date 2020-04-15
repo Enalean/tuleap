@@ -149,7 +149,7 @@ class SystemEvent_USER_RENAME_Test extends TestCase
 
         // Check errors
         $this->assertEquals(SystemEvent::STATUS_ERROR, $evt->getStatus());
-        $this->assertRegExp('/Could not rename user home/i', $evt->getLog());
+        $this->assertMatchesRegularExpression('/Could not rename user home/i', $evt->getLog());
     }
 
     public function testUpdateCVSWritersFailure(): void
@@ -206,7 +206,7 @@ class SystemEvent_USER_RENAME_Test extends TestCase
 
         // Check errors
         $this->assertEquals(SystemEvent::STATUS_ERROR, $evt->getStatus());
-        $this->assertRegExp('/Could not update CVS writers for the user/i', $evt->getLog());
+        $this->assertMatchesRegularExpression('/Could not update CVS writers for the user/i', $evt->getLog());
     }
 
     public function testUpdateSVNAccessFailure(): void
@@ -263,6 +263,6 @@ class SystemEvent_USER_RENAME_Test extends TestCase
 
         // Check errors
         $this->assertEquals(SystemEvent::STATUS_ERROR, $evt->getStatus());
-        $this->assertRegExp('/Could not update SVN access files for the user/i', $evt->getLog());
+        $this->assertMatchesRegularExpression('/Could not update SVN access files for the user/i', $evt->getLog());
     }
 }

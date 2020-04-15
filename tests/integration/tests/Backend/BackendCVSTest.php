@@ -99,7 +99,7 @@ final class BackendCVSTest extends TestCase
         mkdir($projdir . "/CVSROOT");
 
         $this->assertTrue($backend->archiveProjectCVS(142));
-        $this->assertDirectoryNotExists($projdir, 'Project CVS repository should be deleted');
+        $this->assertDirectoryDoesNotExist($projdir, 'Project CVS repository should be deleted');
         $this->assertFileExists(ForgeConfig::get('sys_project_backup_path') . '/TestProj-cvs.tgz', 'CVS Archive should be created');
 
         // Check that a wrong project id does not raise an error
@@ -447,8 +447,8 @@ final class BackendCVSTest extends TestCase
         $project->shouldReceive('getUnixGID')->andReturns($stat['gid']);
 
         $this->assertFileExists($cvsdir . '/CVSROOT/loginfo');
-        $this->assertFileNotExists($cvsdir . '/CVSROOT/commitinfo');
-        $this->assertFileNotExists($cvsdir . '/CVSROOT/config');
+        $this->assertFileDoesNotExist($cvsdir . '/CVSROOT/commitinfo');
+        $this->assertFileDoesNotExist($cvsdir . '/CVSROOT/config');
 
         $backend = \Mockery::mock(\BackendCVS::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $backend->shouldReceive('getHTTPUserUID')->andReturns($stat['uid']);

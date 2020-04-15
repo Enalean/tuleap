@@ -47,7 +47,7 @@ class AccessFileReaderTest extends TestCase
 
     public function testItReadsTheDefaultBlock(): void
     {
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '/le default/',
             $this->reader->readDefaultBlock($this->repository)
         );
@@ -55,7 +55,7 @@ class AccessFileReaderTest extends TestCase
 
     public function testItReadsTheContentBlock(): void
     {
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '/le content/',
             $this->reader->readContentBlock($this->repository)
         );
@@ -63,7 +63,7 @@ class AccessFileReaderTest extends TestCase
 
     public function testItDoesNotContainDelimiters(): void
     {
-        $this->assertNotRegExp(
+        $this->assertDoesNotMatchRegularExpression(
             '/# BEGIN CODENDI DEFAULT SETTINGS/',
             $this->reader->readDefaultBlock($this->repository)
         );

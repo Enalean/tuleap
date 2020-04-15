@@ -173,7 +173,7 @@ class VersionUploadFinisherTest extends TestCase
 
         $upload_finisher->finishUpload($file_information);
 
-        $this->assertFileNotExists($path_item_being_uploaded);
+        $this->assertFileDoesNotExist($path_item_being_uploaded);
     }
 
     public function testDocumentWithoutApprovalTableIsAddedToTheDocumentManagerWhenTheUploadIsComplete(): void
@@ -278,7 +278,7 @@ class VersionUploadFinisherTest extends TestCase
 
         $upload_finisher->finishUpload($file_information);
 
-        $this->assertFileNotExists($path_item_being_uploaded);
+        $this->assertFileDoesNotExist($path_item_being_uploaded);
     }
 
     public function testDocumentWithApprovalTableAndBadActionApprovalIsAddedToTheDocumentManagerWhenTheUploadIsComplete(): void
@@ -383,6 +383,6 @@ class VersionUploadFinisherTest extends TestCase
 
         $upload_finisher->finishUpload($file_information);
 
-        $this->assertFileNotExists($path_item_being_uploaded);
+        $this->assertFileDoesNotExist($path_item_being_uploaded);
     }
 }

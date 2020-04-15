@@ -103,6 +103,6 @@ final class Tracker_Artifact_XMLImport_XMLImportZipArchiveTest extends \PHPUnit\
         $extraction_path = $this->archive->getExtractionPath();
         $this->archive->extractFiles();
         $this->archive->cleanUp();
-        $this->assertFileNotExists($extraction_path);
+        $this->assertFileDoesNotExist($extraction_path);
     }
 }

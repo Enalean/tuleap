@@ -59,7 +59,7 @@ class FileUploadCleanerTest extends TestCase
         $current_time = new \DateTimeImmutable();
         $cleaner->deleteDanglingFilesToUpload($current_time);
         $this->assertFileExists($existing_item_being_uploaded_path);
-        $this->assertFileNotExists($non_existing_item_path);
-        $this->assertFileNotExists(dirname($non_existing_item_path));
+        $this->assertFileDoesNotExist($non_existing_item_path);
+        $this->assertFileDoesNotExist(dirname($non_existing_item_path));
     }
 }

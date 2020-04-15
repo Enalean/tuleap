@@ -55,7 +55,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
 
         $response = $this->getResponse($this->client->post('artifacts', null, $post_body));
         $this->assertEquals(201, $response->getStatusCode());
-        $this->assertRegExp('/.+ GMT$/', $response->getHeader('Last-Modified')->normalize()->__toString(), 'Last-Modified must be RFC1123 complient');
+        $this->assertMatchesRegularExpression('/.+ GMT$/', $response->getHeader('Last-Modified')->normalize()->__toString(), 'Last-Modified must be RFC1123 complient');
         $this->assertNotNull($response->getHeader('Etag'));
         $this->assertNotNull($response->getHeader('Location'));
 

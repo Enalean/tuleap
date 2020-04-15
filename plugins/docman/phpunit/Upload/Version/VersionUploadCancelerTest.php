@@ -49,7 +49,7 @@ class VersionUploadCancelerTest extends TestCase
         $dao->shouldReceive('deleteByVersionID')->once();
 
         $canceler->terminateUpload($file_information);
-        $this->assertFileNotExists($item_path);
+        $this->assertFileDoesNotExist($item_path);
     }
 
     public function testCancellingAnUploadThatHasNotYetStartedDoesNotGiveAWarning(): void
@@ -67,6 +67,6 @@ class VersionUploadCancelerTest extends TestCase
         $dao->shouldReceive('deleteByVersionID')->once();
 
         $canceler->terminateUpload($file_information);
-        $this->assertFileNotExists($item_path);
+        $this->assertFileDoesNotExist($item_path);
     }
 }

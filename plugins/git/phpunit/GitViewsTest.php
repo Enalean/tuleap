@@ -36,8 +36,8 @@ class GitViewsTest extends TestCase
 
         $view = \Mockery::mock(\GitViews::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $output = $view->getUserProjectsAsOptions($user, $manager, '50');
-        $this->assertRegExp('/<option value="123"/', $output);
-        $this->assertNotRegExp('/<option value="456"/', $output);
+        $this->assertMatchesRegularExpression('/<option value="123"/', $output);
+        $this->assertDoesNotMatchRegularExpression('/<option value="456"/', $output);
     }
 
     public function testOptionsShouldContainThePublicNameOfTheProject(): void
@@ -47,7 +47,7 @@ class GitViewsTest extends TestCase
         $manager = $this->givenAProjectManager($project);
 
         $view = \Mockery::mock(\GitViews::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->assertRegExp('/Guinea Pig/', $view->getUserProjectsAsOptions($user, $manager, '50'));
+        $this->assertMatchesRegularExpression('/Guinea Pig/', $view->getUserProjectsAsOptions($user, $manager, '50'));
     }
 
     public function testOptionsShouldContainTheUnixNameOfTheProjectAsTitle(): void
@@ -57,7 +57,7 @@ class GitViewsTest extends TestCase
         $manager = $this->givenAProjectManager($project);
 
         $view = \Mockery::mock(\GitViews::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->assertRegExp('/title="gpig"/', $view->getUserProjectsAsOptions($user, $manager, '50'));
+        $this->assertMatchesRegularExpression('/title="gpig"/', $view->getUserProjectsAsOptions($user, $manager, '50'));
     }
 
     public function testOptionsShouldPurifyThePublicNameOfTheProject(): void
@@ -67,7 +67,7 @@ class GitViewsTest extends TestCase
         $manager = $this->givenAProjectManager($project);
 
         $view = \Mockery::mock(\GitViews::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->assertRegExp('/Guinea &lt; Pig/', $view->getUserProjectsAsOptions($user, $manager, '50'));
+        $this->assertMatchesRegularExpression('/Guinea &lt; Pig/', $view->getUserProjectsAsOptions($user, $manager, '50'));
     }
 
     public function testCurrentProjectMustNotBeInProjectList(): void
@@ -77,7 +77,7 @@ class GitViewsTest extends TestCase
         $manager = $this->givenAProjectManager($project);
 
         $view = \Mockery::mock(\GitViews::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->assertNotRegExp('/Guinea Pig/', $view->getUserProjectsAsOptions($user, $manager, '123'));
+        $this->assertDoesNotMatchRegularExpression('/Guinea Pig/', $view->getUserProjectsAsOptions($user, $manager, '123'));
     }
 
     public function testProjectListMustContainsOnlyProjectsWithGitEnabled(): void
@@ -87,7 +87,7 @@ class GitViewsTest extends TestCase
         $manager = $this->givenAProjectManager($project);
 
         $view = \Mockery::mock(\GitViews::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->assertNotRegExp('/Guinea Pig/', $view->getUserProjectsAsOptions($user, $manager, '50'));
+        $this->assertDoesNotMatchRegularExpression('/Guinea Pig/', $view->getUserProjectsAsOptions($user, $manager, '50'));
     }
 
     private function givenAProject($id, $name, $unixName = null, $useGit = true): Project

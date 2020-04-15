@@ -180,7 +180,7 @@ final class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProviderTest
 
         $options = $this->provider->getSelectboxOptions($this->task_tracker, '*', $this->user);
 
-        $this->assertNotRegExp('/Sprint 31/', implode('', $options));
+        $this->assertDoesNotMatchRegularExpression('/Sprint 31/', implode('', $options));
     }
 
     private function getDarResults(): DataAccessResult
