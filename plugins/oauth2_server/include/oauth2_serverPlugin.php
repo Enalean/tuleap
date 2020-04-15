@@ -273,7 +273,8 @@ final class oauth2_serverPlugin extends Plugin
                 $response_factory,
                 $this->buildOAuth2AuthorizationCodeCreator(),
                 $redirect_uri_builder,
-                new \URLRedirect(\EventManager::instance())
+                new \URLRedirect(\EventManager::instance()),
+                HTTPFactoryBuilder::URIFactory()
             ),
             new \Tuleap\OAuth2Server\User\AuthorizationComparator(
                 new \Tuleap\OAuth2Server\User\AuthorizedScopeFactory(
@@ -307,7 +308,8 @@ final class oauth2_serverPlugin extends Plugin
                 $response_factory,
                 $this->buildOAuth2AuthorizationCodeCreator(),
                 new RedirectURIBuilder(HTTPFactoryBuilder::URIFactory()),
-                new \URLRedirect(\EventManager::instance())
+                new \URLRedirect(\EventManager::instance()),
+                HTTPFactoryBuilder::URIFactory()
             ),
             new \CSRFSynchronizerToken(AuthorizationEndpointController::CSRF_TOKEN),
             new SapiEmitter(),

@@ -30,6 +30,11 @@ class User_LoginPresenter
      * @var CSRFSynchronizerToken
      */
     private $csrf_token;
+    /**
+     * @var string
+     * @psalm-readonly
+     */
+    public $prompt_parameter;
 
     public function __construct(
         $return_to,
@@ -37,6 +42,7 @@ class User_LoginPresenter
         $form_loginname,
         $additional_connectors,
         CSRFSynchronizerToken $csrf_token,
+        string $prompt_parameter,
         $display_new_account_button = true,
         $allow_password_recovery = true
     ) {
@@ -47,6 +53,7 @@ class User_LoginPresenter
         $this->allow_password_recovery    = $allow_password_recovery;
         $this->additional_connectors      = $additional_connectors;
         $this->csrf_token                 = $csrf_token;
+        $this->prompt_parameter           = $prompt_parameter;
     }
 
     public function getTemplateDir()

@@ -154,6 +154,29 @@ final class AuthorizationEndpointControllerTest extends TestCase
         $this->assertSame($response, $this->controller->handle($request));
     }
 
+    public function testHandleRedirectsToLoginWhenPromptParameterRequiresIt(): void
+    {
+        $this->user_manager->shouldReceive('getCurrentUser')->andReturn(
+            UserTestBuilder::aUser()->withId(102)->build()
+        );
+        $project = new \Project(['group_id' => 101, 'group_name' => 'Rest Project']);
+        $request = (new NullServerRequest())->withQueryParams(
+            [
+                'client_id'      => 'tlp-client-id-1',
+                'redirect_uri'   => 'https://example.com/redirect',
+                'response_type'  => 'code',
+                'prompt'         => 'login',
+            ]
+        );
+        $this->app_factory->shouldReceive('getAppMatchingClientId')
+            ->once()
+            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
+        $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
+        $this->response_factory->shouldReceive('createRedirectToLoginResponse')->once()->andReturn($response);
+
+        $this->assertSame($response, $this->controller->handle($request));
+    }
+
     /**
      * @dataProvider dataProviderInvalidEssentialQueryParameters
      */

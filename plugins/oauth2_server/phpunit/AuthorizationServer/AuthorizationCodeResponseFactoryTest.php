@@ -56,7 +56,8 @@ final class AuthorizationCodeResponseFactoryTest extends TestCase
             HTTPFactoryBuilder::responseFactory(),
             $this->authorization_code_creator,
             new RedirectURIBuilder(HTTPFactoryBuilder::URIFactory()),
-            $this->url_redirect
+            $this->url_redirect,
+            HTTPFactoryBuilder::URIFactory()
         );
     }
 
@@ -134,11 +135,24 @@ final class AuthorizationCodeResponseFactoryTest extends TestCase
 
     public function testCreateRedirectToLoginResponse(): void
     {
-        $this->url_redirect->shouldReceive('buildReturnToLogin')->andReturn('/login');
+        $this->url_redirect->shouldReceive('buildReturnToLogin')
+            ->with(['REQUEST_URI' => '/oauth2/authorize?client_id=1'])->once()->andReturn('/login');
         $request  = new NullServerRequest();
-        $response = $this->authorization_code_response_factory->createRedirectToLoginResponse($request);
+        $request  = $request->withUri($request->getUri()->withHost('example.com')->withPath('/oauth2/authorize'));
+        $response = $this->authorization_code_response_factory->createRedirectToLoginResponse($request, ['client_id' => '1']);
         $this->assertSame(302, $response->getStatusCode());
-        $this->assertEquals('/login', $response->getHeaderLine('Location'));
+        $this->assertEquals('/login?&prompt=login', $response->getHeaderLine('Location'));
+    }
+
+    public function testCreateRedirectToLoginResponseAndLoginValueFromPromptToAvoidAnInfiniteRedirectionLoop(): void
+    {
+        $this->url_redirect->shouldReceive('buildReturnToLogin')
+            ->with(['REQUEST_URI' => '/oauth2/authorize?client_id=1&prompt=consent'])->once()->andReturn('/login');
+        $request  = new NullServerRequest();
+        $request  = $request->withUri($request->getUri()->withHost('example.com')->withPath('/oauth2/authorize'));
+        $response = $this->authorization_code_response_factory->createRedirectToLoginResponse($request, ['client_id' => '1', 'prompt' => 'login consent']);
+        $this->assertSame(302, $response->getStatusCode());
+        $this->assertEquals('/login?&prompt=login', $response->getHeaderLine('Location'));
     }
 
     private function buildOAuth2App(): OAuth2App

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2018. All rights reserved
+ * Copyright (c) Enalean, 2015-Present. All rights reserved
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -73,8 +73,9 @@ if ($request->isPost()) {
     if (!$_rVar['form_loginname'] || !$_rVar['form_pw']) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('include_session', 'missing_pwd'));
     } else {
-        $user = $um->login($_rVar['form_loginname'], $_rVar['form_pw']);
-        $status = $user->getStatus();
+        $user    = $um->login($_rVar['form_loginname'], $_rVar['form_pw']);
+        $status  = $user->getStatus();
+        $success = true;
     }
 }
 
@@ -88,7 +89,7 @@ if ($request->isPost()) {
 if ($user === null) {
     $user = $um->getCurrentUser();
 }
-if ($user->isLoggedIn()) {
+if ($user->isLoggedIn() && ($success === true || $request->get('prompt') !== 'login')) {
     account_redirect_after_login($_rVar['return_to']);
 }
 
@@ -105,7 +106,8 @@ $presenter = $presenter_builder->build(
     $_cVar['pv'],
     $_rVar['form_loginname'],
     $request->isSecure(),
-    $login_csrf
+    $login_csrf,
+    (string) $request->get('prompt')
 );
 
 if ($pvMode) {

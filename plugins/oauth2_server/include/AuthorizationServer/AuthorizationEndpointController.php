@@ -54,7 +54,7 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
     public const  STATE_PARAMETER         = 'state';
     // see https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest
     private const NONCE_PARAMETER         = 'nonce';
-    private const PROMPT_PARAMETER        = 'prompt';
+    public const PROMPT_PARAMETER         = 'prompt';
     // see https://tools.ietf.org/html/rfc6749#section-4.1.2.1
     public const  ERROR_PARAMETER            = 'error';
     public const  ERROR_CODE_INVALID_REQUEST = 'invalid_request';
@@ -167,9 +167,10 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
             );
         }
         $require_no_interaction = in_array(PromptParameterValuesExtractor::PROMPT_NONE, $prompt_values, true);
+        $require_login          = in_array(PromptParameterValuesExtractor::PROMPT_LOGIN, $prompt_values, true);
 
         $user = $this->user_manager->getCurrentUser();
-        if ($user->isAnonymous()) {
+        if ($require_login || $user->isAnonymous()) {
             if ($require_no_interaction) {
                 return $this->response_factory->createErrorResponse(
                     self::ERROR_CODE_LOGIN_REQUIRED,
@@ -177,7 +178,7 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
                     $state_value
                 );
             }
-            return $this->response_factory->createRedirectToLoginResponse($request);
+            return $this->response_factory->createRedirectToLoginResponse($request, $request_params);
         }
 
         if (! isset($request_params[self::SCOPE_PARAMETER])) {
