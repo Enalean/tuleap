@@ -550,10 +550,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/scripts/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/php73/run.sh
 
-# Link to local config for logo and themes images
-# Needed for nginx try_files
-%{__ln_s} /etc/%{APP_NAME}/themes/common/images $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/local
-
 # Configuration
 %{__install} -d $RPM_BUILD_ROOT/etc/%{APP_NAME}
 %{__install} -d $RPM_BUILD_ROOT/etc/%{APP_NAME}/conf
@@ -954,7 +950,6 @@ fi
 # Only "common" theme is embedded into the package
 %dir %{APP_DIR}/src/www/themes
 %{APP_DIR}/src/www/themes/common
-%{APP_DIR}/src/www/themes/local
 %{APP_DIR}/src/www/tos
 %{APP_DIR}/src/www/tour
 %{APP_DIR}/src/www/tracker
