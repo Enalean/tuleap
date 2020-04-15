@@ -26,6 +26,28 @@ pipeline {
             }
         }
 
+        stage('Unit tests PHP with coverage') {
+            steps { script { actions.runPHPUnitTests('73', true) } }
+            post { always { junit 'results/ut-phpunit/*/phpunit_tests_results.xml' } }
+        }
+
+        stage ('Unit tests JS/TS with coverage') {
+            agent {
+                docker {
+                    image 'node:13.3-alpine'
+                    reuseNode true
+                    args '--network none'
+                }
+            }
+            steps { script { actions.runJestTests('Tuleap', '.', true) } }
+            post {
+                always {
+                    junit 'results/jest/test-*-results.xml'
+                    publishCoverage adapters: [istanbulCoberturaAdapter('results/jest/coverage/cobertura-coverage.xml')], tag: 'Javascript'
+                }
+            }
+        }
+
         stage('Tests') {
             failFast false
             parallel {
