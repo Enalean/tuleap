@@ -1297,6 +1297,11 @@ if [ "$auto_passwd" = "true" ]; then
     todo "Auto generated passwords (mysql, application, etc) are stored in $passwd_file"
 fi
 
+##############################################
+# Run deployment after update/install
+#
+/usr/bin/tuleap-cfg site-deploy
+
 ################### Switch to PHP 7.3 + nginx
 control_service httpd stop
 $INSTALL_DIR/tools/utils/php73/run.php

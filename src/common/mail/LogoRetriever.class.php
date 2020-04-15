@@ -25,7 +25,7 @@ class LogoRetriever
 
     public function __construct()
     {
-        $this->logo_path     = ForgeConfig::get('sys_urlroot') . '/themes/FlamingParrot/images/organization_logo.png';
+        $this->logo_path     = ForgeConfig::get('sys_data_dir') . '/images/organization_logo.png';
         $this->logo_mimetype = 'image/png';
     }
 
@@ -40,7 +40,7 @@ class LogoRetriever
     public function getUrl()
     {
         if ($this->hasLogo()) {
-            return HTTPRequest::instance()->getServerUrl() . '/themes/FlamingParrot/images/organization_logo.png';
+            return HTTPRequest::instance()->getServerUrl() . '/images/organization_logo.png';
         }
         return null;
     }

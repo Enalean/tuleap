@@ -121,8 +121,12 @@ if [ ${tuleap_installed:-false} = "false" ] || \
     _setupForgeupgrade
     _phpActivePlugin "tracker" "${tuleap_unix_user}"
     _phpForgeupgrade "record-only"
+
     ${tuleapcfg} systemctl enable "${timers[@]}"
     ${tuleapcfg} systemctl start "${timers[@]}"
+
+    ${tuleapcfg} site-deploy
+
     _phpConfigureModule "nginx,fpm"
     ${tuleapcfg} systemctl restart "nginx" "tuleap"
     ${tuleapcfg} systemctl enable "nginx"

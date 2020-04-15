@@ -43,16 +43,12 @@ describe("User dashboards", function () {
         cy.get("[data-test=dashboard-add-widget-empty-state-button]").click();
         cy.get("[data-test=myimageviewer]").click();
         cy.get("[data-test=dashboard-widget-image-input-url]").type(
-            "https://tuleap/themes/BurningParrot/images/organization_logo.png"
+            "https://tuleap/images/organization_logo.png"
         );
         cy.get("[data-test=dashboard-add-widget-button-submit]").click();
         cy.get("[data-test=dashboard-widget-myimageviewer]")
             .find("img")
-            .should(
-                "have.attr",
-                "src",
-                "https://tuleap/themes/BurningParrot/images/organization_logo.png"
-            );
+            .should("have.attr", "src", "https://tuleap/images/organization_logo.png");
 
         // widget my artifacts
         cy.get("[data-test=dashboard-configuration-button]").click();
