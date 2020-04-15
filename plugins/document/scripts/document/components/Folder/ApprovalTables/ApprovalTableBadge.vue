@@ -33,7 +33,10 @@ import { extractApprovalTableData } from "../../../helpers/approval-table-helper
 
 export default {
     props: {
-        item: Object,
+        item: {
+            type: Object,
+            default: () => ({}),
+        },
         isInFolderContentRow: Boolean,
     },
     data() {
@@ -52,8 +55,6 @@ export default {
                 "Not yet": this.$gettext("Not yet"),
                 Approved: this.$gettext("Approved"),
                 Rejected: this.$gettext("Rejected"),
-                Declined: this.$gettext("Declined"),
-                Commented: this.$gettext("Commented"),
             };
 
             this.approval_data = extractApprovalTableData(
