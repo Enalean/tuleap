@@ -37,12 +37,7 @@ class Test_Artifact_Builder
     private $formElementFactory;
     private $changesets;
     private $hierarchy_factory;
-    private $ancestors;
-    private $title;
     private $parent_without_permission_checking;
-    private $submitted_by;
-    private $submitted_on;
-    private $submitted_by_user;
     private $status;
 
     public function withId($id)
@@ -69,18 +64,6 @@ class Test_Artifact_Builder
         return $this;
     }
 
-    public function withSubmittedBy($submitted_by)
-    {
-        $this->submitted_by = $submitted_by;
-        return $this;
-    }
-
-    public function withSubmittedOn($submitted_on)
-    {
-        $this->submitted_on = $submitted_on;
-        return $this;
-    }
-
     public function withFormElementFactory(Tracker_FormElementFactory $factory)
     {
         $this->formElementFactory = $factory;
@@ -99,15 +82,6 @@ class Test_Artifact_Builder
         return $this;
     }
 
-    public function withParent(Tracker_Artifact $parent)
-    {
-        if (!isset($this->ancestors)) {
-            $this->ancestors = array();
-        }
-        $this->ancestors[] = $parent;
-        return $this;
-    }
-
     public function withParentWithoutPermissionChecking(Tracker_Artifact $parent)
     {
         $this->parent_without_permission_checking = $parent;
@@ -120,27 +94,9 @@ class Test_Artifact_Builder
         return $this;
     }
 
-    public function withoutParent()
-    {
-        $this->ancestors = array();
-        return $this;
-    }
-
-    public function withTitle($title)
-    {
-        $this->title = $title;
-        return $this;
-    }
-
-    public function withSubmitter(PFUser $user)
-    {
-        $this->submitted_by_user = $user;
-        return $this;
-    }
-
     public function build()
     {
-        $artifact = new Tracker_Artifact($this->id, $this->tracker_id, $this->submitted_by, $this->submitted_on, null);
+        $artifact = new Tracker_Artifact($this->id, $this->tracker_id, null, 10, null);
         if ($this->tracker) {
             $artifact->setTracker($this->tracker);
         }
@@ -153,17 +109,8 @@ class Test_Artifact_Builder
         if ($this->hierarchy_factory) {
             $artifact->setHierarchyFactory($this->hierarchy_factory);
         }
-        if (isset($this->ancestors)) {
-            $artifact->setAllAncestors($this->ancestors);
-        }
-        if ($this->title) {
-            $artifact->setTitle($this->title);
-        }
         if ($this->parent_without_permission_checking) {
             $artifact->setParentWithoutPermissionChecking($this->parent_without_permission_checking);
-        }
-        if ($this->submitted_by_user) {
-            $artifact->setSubmittedByUser($this->submitted_by_user);
         }
         if ($this->status) {
             $artifact->setStatus($this->status);
