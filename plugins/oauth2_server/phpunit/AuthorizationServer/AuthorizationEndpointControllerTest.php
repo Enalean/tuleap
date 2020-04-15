@@ -283,29 +283,41 @@ final class AuthorizationEndpointControllerTest extends TestCase
     public function dataProviderInvalidQueryParameters(): array
     {
         return [
-            'No response type'                     => [
+            'No response type'                         => [
                 ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/redirect?key=value'],
                 'https://example.com/redirect?key=value&error=invalid_request'
             ],
-            'Response type is not allowed'         => [
+            'Response type is not allowed'             => [
                 ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/redirect?key=value', 'response_type' => 'invalid_response_type'],
                 'https://example.com/redirect?key=value&error=invalid_request'
             ],
-            'State parameter is passed unmodified' => [
+            'State parameter is passed unmodified'     => [
                 ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/redirect?key=value', 'response_type' => 'invalid_response_type', 'state' => 'xyz'],
                 'https://example.com/redirect?key=value&state=xyz&error=invalid_request'
             ],
-            'Scope is not given'                   => [
+            'Scope is not given'                       => [
                 ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/redirect?key=value', 'response_type' => 'code', 'state' => 'xyz'],
                 'https://example.com/redirect?key=value&state=xyz&error=invalid_scope'
             ],
-            'Scope is unknown'                     => [
+            'Scope is unknown'                         => [
                 ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/redirect?key=value', 'response_type' => 'code', 'state' => 'xyz', 'scope' => 'invalid_scope'],
                 'https://example.com/redirect?key=value&state=xyz&error=invalid_scope'
             ],
-            'Prompt parameter is not valid'        => [
+            'Prompt parameter is not valid'            => [
                 ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/redirect?key=value', 'response_type' => 'code', 'state' => 'xyz', 'prompt' => 'login none'],
                 'https://example.com/redirect?key=value&state=xyz&error=invalid_request'
+            ],
+            'Use not supported request parameter'      => [
+                ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/redirect?key=value', 'response_type' => 'code', 'request' => 'notsupported'],
+                'https://example.com/redirect?key=value&error=request_not_supported'
+            ],
+            'Use not supported request URI parameter'  => [
+                ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/redirect?key=value', 'response_type' => 'code', 'request_uri' => 'notsupported'],
+                'https://example.com/redirect?key=value&error=request_uri_not_supported'
+            ],
+            'Use not supported registration parameter' => [
+                ['client_id' => 'tlp-client-id-1', 'redirect_uri' => 'https://example.com/redirect?key=value', 'response_type' => 'code', 'registration' => 'notsupported'],
+                'https://example.com/redirect?key=value&error=registration_not_supported'
             ],
         ];
     }

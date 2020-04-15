@@ -57,14 +57,20 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
     private const NONCE_PARAMETER         = 'nonce';
     public const PROMPT_PARAMETER         = 'prompt';
     private const MAX_AGE_PARAMETER       = 'max_age';
+    private const REQUEST_PARAMETER       = 'request';
+    private const REQUEST_URI_PARAMETER   = 'request_uri';
+    private const REGISTRATION_PARAMETER  = 'registration';
     // see https://tools.ietf.org/html/rfc6749#section-4.1.2.1
     public const  ERROR_PARAMETER            = 'error';
     public const  ERROR_CODE_INVALID_REQUEST = 'invalid_request';
     private const ERROR_CODE_INVALID_SCOPE   = 'invalid_scope';
     public const  ERROR_CODE_ACCESS_DENIED   = 'access_denied';
     // see https://openid.net/specs/openid-connect-core-1_0.html#AuthError
-    private const ERROR_CODE_INTERACTION_REQUIRED = 'interaction_required';
-    private const ERROR_CODE_LOGIN_REQUIRED       = 'login_required';
+    private const ERROR_CODE_INTERACTION_REQUIRED       = 'interaction_required';
+    private const ERROR_CODE_LOGIN_REQUIRED             = 'login_required';
+    private const ERROR_CODE_REQUEST_NOT_SUPPORTED      = 'request_not_supported';
+    private const ERROR_CODE_REQUEST_URI_NOT_SUPPORTED  = 'request_uri_not_supported';
+    private const ERROR_CODE_REGISTRATION_NOT_SUPPORTED = 'registration_not_supported';
 
     public const CSRF_TOKEN = 'oauth2_server_authorization_endpoint';
     /**
@@ -160,6 +166,28 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
         if (! isset($request_params[self::RESPONSE_TYPE_PARAMETER]) || $request_params[self::RESPONSE_TYPE_PARAMETER] !== self::CODE_PARAMETER) {
             return $this->response_factory->createErrorResponse(
                 self::ERROR_CODE_INVALID_REQUEST,
+                $redirect_uri,
+                $state_value
+            );
+        }
+
+        if (isset($request_params[self::REQUEST_PARAMETER])) {
+            return $this->response_factory->createErrorResponse(
+                self::ERROR_CODE_REQUEST_NOT_SUPPORTED,
+                $redirect_uri,
+                $state_value
+            );
+        }
+        if (isset($request_params[self::REQUEST_URI_PARAMETER])) {
+            return $this->response_factory->createErrorResponse(
+                self::ERROR_CODE_REQUEST_URI_NOT_SUPPORTED,
+                $redirect_uri,
+                $state_value
+            );
+        }
+        if (isset($request_params[self::REGISTRATION_PARAMETER])) {
+            return $this->response_factory->createErrorResponse(
+                self::ERROR_CODE_REGISTRATION_NOT_SUPPORTED,
                 $redirect_uri,
                 $state_value
             );
