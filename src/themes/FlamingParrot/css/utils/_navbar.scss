@@ -24,12 +24,12 @@ $nav-dropdown-content-border-radius: 3px;
     max-width: $sidebar-width;
     height: $navbar-height;
     float: left;
-    background: $navbar-color url('/themes/common/images/organization_logo.png') no-repeat center center;
+    background: $navbar-color url('/images/organization_logo.png') no-repeat center center;
 
     &.logo-collapsed {
         width: $sidebar-width-collapsed;
         max-width: $sidebar-width-collapsed;
-        background: $navbar-color url('/themes/common/images/organization_logo_small.png') no-repeat center center;
+        background: $navbar-color url('/images/organization_logo_small.png') no-repeat center center;
     }
 }
 

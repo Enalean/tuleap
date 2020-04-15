@@ -122,6 +122,7 @@ setup_lhs
 setup_tuleap
 setup_database
 /usr/share/tuleap/tools/utils/php73/run.php --modules=nginx,fpm
+/usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php site-deploy
 seed_data
 
 /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/tuleap.php config-set sys_project_approval 0
