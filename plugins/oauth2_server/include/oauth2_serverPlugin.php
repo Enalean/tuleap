@@ -353,7 +353,8 @@ final class oauth2_serverPlugin extends Plugin
                 new JWTBuilderFactory(),
                 new DateInterval('PT2M'),
                 new OpenIDConnectSigningKeyFactory(new KeyFactory(), new OpenIDConnectSigningKeyDAO()),
-                new Sha256()
+                new Sha256(),
+                UserManager::instance()
             )
         );
         return new AccessTokenGrantController(
