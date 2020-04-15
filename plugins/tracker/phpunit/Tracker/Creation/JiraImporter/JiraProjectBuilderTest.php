@@ -25,7 +25,6 @@ namespace Tracker\Creation\JiraImporter;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 use Tuleap\Tracker\Creation\JiraImporter\JiraProjectBuilder;
@@ -37,29 +36,31 @@ final class JiraProjectBuilderTest extends TestCase
 
     public function testItBuildsRecursivelyProjects(): void
     {
-        $project_one        = new stdClass();
-        $project_one->key   = "TO";
-        $project_one->name  = "toto";
-        $result             = new stdClass();
-        $result->isLast     = false;
-        $result->maxResults = "2";
-        $result->startAt    = "0";
-        $result->values     = [
-            $project_one
+        $project_one = [
+            'key'  => "TO",
+            'name' => 'toto'
+        ];
+
+        $result = [
+            'isLast'     => false,
+            'maxResults' => 2,
+            'startAt'    => 0,
+            'values'     => [$project_one]
         ];
 
         $wrapper = \Mockery::mock(ClientWrapper::class);
         $wrapper->shouldReceive('getUrl')->with('/project/search')->andReturn($result);
 
-        $project_two              = new stdClass();
-        $project_two->key         = "TU";
-        $project_two->name        = "tutu";
-        $other_result             = new stdClass();
-        $other_result->isLast     = true;
-        $other_result->maxResults = "2";
-        $other_result->startAt    = "1";
-        $other_result->values     = [
-            $project_two
+        $project_two = [
+            'key'  => "TU",
+            'name' => 'tutu'
+        ];
+
+        $other_result = [
+            'isLast'     => true,
+            'maxResults' => 2,
+            'startAt'    => 1,
+            'values'     => [$project_two]
         ];
 
         $wrapper->shouldReceive('getUrl')->with(
@@ -69,14 +70,14 @@ final class JiraProjectBuilderTest extends TestCase
         $expected_collection = new JiraProjectCollection();
         $expected_collection->addProject(
             [
-                'id'    => $project_one->key,
-                'label' => $project_one->name,
+                'id'    => $project_one['key'],
+                'label' => $project_one['name'],
             ]
         );
         $expected_collection->addProject(
             [
-                'id'    => $project_two->key,
-                'label' => $project_two->name,
+                'id'    => $project_two['key'],
+                'label' => $project_two['name'],
             ]
         );
 
@@ -88,15 +89,16 @@ final class JiraProjectBuilderTest extends TestCase
 
     public function testItThrowsAndExceptionIfRecursiveCallGoesWrong(): void
     {
-        $project_one        = new stdClass();
-        $project_one->key   = "TO";
-        $project_one->name  = "toto";
-        $result             = new stdClass();
-        $result->isLast     = false;
-        $result->maxResults = "2";
-        $result->startAt    = "0";
-        $result->values     = [
-            $project_one
+        $project_one = [
+            'key'  => "TO",
+            'name' => 'toto'
+        ];
+
+        $result = [
+            'isLast'     => false,
+            'maxResults' => 2,
+            'startAt'    => 0,
+            'values'     => [$project_one]
         ];
 
         $wrapper = \Mockery::mock(ClientWrapper::class);
@@ -108,6 +110,33 @@ final class JiraProjectBuilderTest extends TestCase
 
         $this->expectException(JiraConnectionException::class);
         $this->expectExceptionMessage("can not retrieve full collection");
+
+        $builder = new JiraProjectBuilder();
+        $builder->build($wrapper);
+    }
+
+    public function itThrowsALogicExceptionIfJiraAPIHaveChanged(): void
+    {
+        $project_one = [
+            'key'      => "TO",
+            'dsdsdsds' => 'toto'
+        ];
+
+        $result = [
+            'isLast'     => false,
+            'maxResults' => 2,
+            'startAt'    => 0,
+            'values'     => [$project_one]
+        ];
+
+        $wrapper = \Mockery::mock(ClientWrapper::class);
+        $wrapper->shouldReceive('getUrl')->with('/project/search')->andReturn($result);
+
+        $wrapper->shouldReceive('getUrl')->with(
+            "/project/search?&startAt=" . urlencode("2") . "&maxResults=" . urlencode("2")
+        )->andReturn(null);
+
+        $this->expectException(\LogicException::class);
 
         $builder = new JiraProjectBuilder();
         $builder->build($wrapper);
