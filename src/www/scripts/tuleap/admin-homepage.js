@@ -34,6 +34,7 @@
 
                 CKEDITOR.replace(textarea_id, {
                     toolbar: tuleap.ckeditor.toolbar,
+                    disableNativeSpellChecker: false,
                 });
 
                 CKEDITOR.on("instanceReady", function () {

@@ -331,6 +331,7 @@ function ExecutionService(
 
     function loadRTE(field, execution) {
         let config = {
+            disableNativeSpellChecker: false,
             toolbar: [
                 ["Bold", "Italic", "Underline"],
                 ["Link", "Unlink", "Image"],
