@@ -35,6 +35,7 @@ use Tuleap\Tracker\TrackerIsInvalidException;
 use Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker;
 use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookFactory;
+use Tuleap\Tracker\XML\Importer\ImportedChangesetMapping;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 use Tuleap\XML\MappingsRegistry;
 use Tuleap\XML\PHPCast;
@@ -301,6 +302,7 @@ class TrackerXmlImport
         $created_trackers_mapping = array();
         $created_trackers_objects = array();
         $artifacts_id_mapping     = new Tracker_XML_Importer_ArtifactImportedMapping();
+        $changeset_id_mapping     = new ImportedChangesetMapping();
         $url_mapping              = new CreatedFileURLMapping();
 
         $xml_trackers = $this->getAllXmlTrackers($xml_input);
@@ -335,7 +337,8 @@ class TrackerXmlImport
             $artifacts_id_mapping,
             $url_mapping,
             $created_artifacts,
-            $configuration
+            $configuration,
+            $changeset_id_mapping
         );
 
         // Deal with artifact link types after changesets import to keep the history of types
@@ -358,17 +361,18 @@ class TrackerXmlImport
 
         $this->event_manager->processEvent(
             Event::IMPORT_XML_PROJECT_TRACKER_DONE,
-            array(
-                'project'             => $project,
-                'xml_content'         => $xml_input,
-                'mapping'             => $created_trackers_mapping,
-                'field_mapping'       => $this->xml_fields_mapping,
-                'mappings_registery'  => $registery,
-                'artifact_id_mapping' => $artifacts_id_mapping,
-                'extraction_path'     => $extraction_path,
-                'logger'              => $this->logger,
-                'value_mapping'       => $xml_mapping
-            )
+            [
+                'project'              => $project,
+                'xml_content'          => $xml_input,
+                'mapping'              => $created_trackers_mapping,
+                'field_mapping'        => $this->xml_fields_mapping,
+                'mappings_registery'   => $registery,
+                'artifact_id_mapping'  => $artifacts_id_mapping,
+                'changeset_id_mapping' => $changeset_id_mapping,
+                'extraction_path'      => $extraction_path,
+                'logger'               => $this->logger,
+                'value_mapping'        => $xml_mapping
+            ]
         );
 
         $this->event_manager->processEvent(
@@ -537,7 +541,8 @@ class TrackerXmlImport
         Tracker_XML_Importer_ArtifactImportedMapping $artifacts_id_mapping,
         CreatedFileURLMapping $url_mapping,
         array $created_artifacts,
-        ImportConfig $configuration
+        ImportConfig $configuration,
+        ImportedChangesetMapping $changeset_id_mapping
     ) {
         foreach ($xml_trackers as $xml_tracker_id => $xml_tracker) {
             if (isset($xml_tracker->artifacts)) {
@@ -549,7 +554,8 @@ class TrackerXmlImport
                     $artifacts_id_mapping,
                     $url_mapping,
                     $created_artifacts[$xml_tracker_id],
-                    $configuration
+                    $configuration,
+                    $changeset_id_mapping
                 );
             }
         }

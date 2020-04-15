@@ -20,6 +20,7 @@
 
 class Tracker_XML_Exporter_ChangesetXMLExporter
 {
+    public const PREFIX = 'CHANGESET_';
 
     /**
      * @var Tracker_XML_Exporter_ChangesetValuesXMLExporter
@@ -60,6 +61,7 @@ class Tracker_XML_Exporter_ChangesetXMLExporter
         Tracker_Artifact_Changeset $changeset
     ) {
         $changeset_xml = $artifact_xml->addChild('changeset');
+        $changeset_xml->addAttribute('id', self::PREFIX . $changeset->getId());
 
         if ($changeset->getSubmittedBy()) {
             $this->user_xml_exporter->exportUserByUserId(

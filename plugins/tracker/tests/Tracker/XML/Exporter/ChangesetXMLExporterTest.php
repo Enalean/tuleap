@@ -70,13 +70,20 @@ class Tracker_XML_Exporter_ChangesetXMLExporterTest extends TuleapTestCase
         );
 
         $this->artifact  = \Mockery::spy(\Tracker_Artifact::class);
-        $this->changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
+        $this->changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
         $this->comment   = \Mockery::spy(\Tracker_Artifact_Changeset_Comment::class);
 
-        stub($this->changeset)->getValues()->returns($this->values);
-        stub($this->changeset)->getArtifact()->returns($this->artifact);
-        stub($this->changeset)->getComment()->returns($this->comment);
-        stub($this->changeset)->getSubmittedBy()->returns(101);
+        $this->changeset->shouldReceive(
+            [
+                'getValues'      => $this->values,
+                'getArtifact'    => $this->artifact,
+                'getComment'     => $this->comment,
+                'getSubmittedBy' => 101,
+                'getSubmittedOn' => 1234567890,
+                'getId'          => 123,
+            ]
+        );
+        $this->changeset->shouldReceive('forceFetchAllValues');
     }
 
     public function itAppendsChangesetNodeToArtifactNode()
@@ -110,6 +117,21 @@ class Tracker_XML_Exporter_ChangesetXMLExporterTest extends TuleapTestCase
         expect($this->comment)->exportToXML()->once();
 
         $this->exporter->exportFullHistory($this->artifact_xml, $this->changeset);
+    }
+
+    public function itExportsTheIdOfTheChangeset(): void
+    {
+        $user = new PFUser([
+            'user_id' => 101,
+            'language_id' => 'en',
+            'user_name' => 'user_01',
+            'ldap_id' => 'ldap_01'
+        ]);
+        $this->user_manager->shouldReceive('getUserById')->with(101)->andReturn($user);
+
+        $this->exporter->exportFullHistory($this->artifact_xml, $this->changeset);
+
+        $this->assertEqual((string) $this->artifact_xml->changeset['id'], 'CHANGESET_123');
     }
 
     public function itExportsAnonUser()

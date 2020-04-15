@@ -22,6 +22,8 @@ namespace Tuleap\TestManagement\XML;
 
 use Project;
 use SimpleXMLElement;
+use Tracker_XML_Exporter_ChangesetXMLExporter;
+use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\Config;
 use XML_RNGValidator;
 
@@ -42,11 +44,16 @@ class Exporter
      * @var XML_RNGValidator
      */
     private $validator;
+    /**
+     * @var ExecutionDao
+     */
+    private $execution_dao;
 
-    public function __construct(Config $config, XML_RNGValidator $validator)
+    public function __construct(Config $config, XML_RNGValidator $validator, ExecutionDao $execution_dao)
     {
-        $this->config    = $config;
-        $this->validator = $validator;
+        $this->config        = $config;
+        $this->validator     = $validator;
+        $this->execution_dao = $execution_dao;
     }
 
     /**
@@ -80,6 +87,10 @@ class Exporter
         $execution_tracker_id = $this->config->getTestExecutionTrackerId($project);
         $configuration_xml_content->addChild(self::EXECUTIONS, "T$execution_tracker_id");
 
+        if ($execution_tracker_id) {
+            $this->addExecutionsNode($testmanagement_xml_content, $execution_tracker_id);
+        }
+
         $this->validateXMLContent($testmanagement_xml_content);
 
         return $testmanagement_xml_content;
@@ -94,5 +105,20 @@ class Exporter
         $rng_path = realpath(TESTMANAGEMENT_RESOURCE_DIR . '/testmanagement.rng');
 
         $this->validator->validate($testmanagement_xml_content, $rng_path);
+    }
+
+    private function addExecutionsNode(SimpleXMLElement $testmanagement_xml_content, int $execution_tracker_id): void
+    {
+        $executions = $this->execution_dao->searchByExecutionTrackerId($execution_tracker_id);
+        if (count($executions) === 0) {
+            return;
+        }
+
+        $executions_xml = $testmanagement_xml_content->addChild('executions');
+        foreach ($executions as $row) {
+            $child = $executions_xml->addChild('execution');
+            $child->addAttribute('execution_artifact_id', $row['execution_artifact_id']);
+            $child->addAttribute('definition_changeset_id', Tracker_XML_Exporter_ChangesetXMLExporter::PREFIX . $row['definition_changeset_id']);
+        }
     }
 }

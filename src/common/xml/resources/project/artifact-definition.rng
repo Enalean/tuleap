@@ -23,6 +23,11 @@
     </optional>
     <zeroOrMore>
       <element name="changeset">
+        <optional>
+          <attribute name="id">
+            <data type="ID"/>
+          </attribute>
+        </optional>
         <element name="submitted_by">
           <ref name="tracker_user_content"/>
         </element>

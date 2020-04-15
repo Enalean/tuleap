@@ -255,7 +255,6 @@ class XmlImportTest extends TestCase
         $this->artifact_creator
             ->shouldReceive('createFirstChangeset')
             ->with(
-                $this->tracker,
                 $artifact,
                 $data,
                 $this->john_doe,
@@ -354,7 +353,6 @@ class XmlImportTest extends TestCase
         $this->artifact_creator
             ->shouldReceive('createFirstChangeset')
             ->with(
-                $this->tracker,
                 $artifact,
                 $data,
                 $this->john_doe,
@@ -446,7 +444,6 @@ class XmlImportTest extends TestCase
         $this->artifact_creator
             ->shouldReceive('createFirstChangeset')
             ->with(
-                $this->tracker,
                 $artifact,
                 $data,
                 $this->john_doe,
@@ -535,7 +532,6 @@ class XmlImportTest extends TestCase
         $this->artifact_creator
             ->shouldReceive('createFirstChangeset')
             ->with(
-                $this->tracker,
                 $artifact,
                 $data,
                 $this->john_doe,

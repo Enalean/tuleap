@@ -228,7 +228,8 @@ class Tracker_Action_CopyArtifact
                 $xml_artifact,
                 $fields_data_builder,
                 $config,
-                new CreatedFileURLMapping()
+                new CreatedFileURLMapping(),
+                new \Tuleap\Tracker\XML\Importer\ImportedChangesetMapping()
             );
         }
     }

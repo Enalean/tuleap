@@ -23,13 +23,16 @@ namespace Tuleap\TestManagement\XML;
 
 use Exception;
 use Project;
+use SimpleXMLElement;
+use Tracker_XML_Importer_ArtifactImportedMapping;
 use Tuleap\TestManagement\Administration\TrackerChecker;
 use Tuleap\TestManagement\Administration\TrackerHasAtLeastOneFrozenFieldsPostActionException;
 use Tuleap\TestManagement\Administration\TrackerHasAtLeastOneHiddenFieldsetsPostActionException;
 use Tuleap\TestManagement\Administration\TrackerNotInProjectException;
+use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\Config;
+use Tuleap\Tracker\XML\Importer\ImportedChangesetMapping;
 use XML_RNGValidator;
-use SimpleXMLElement;
 
 class XMLImport
 {
@@ -49,61 +52,74 @@ class XMLImport
      * @var TrackerChecker
      */
     private $tracker_checker;
+    /**
+     * @var ExecutionDao
+     */
+    private $execution_dao;
 
-    public function __construct(Config $config, TrackerChecker $tracker_checker)
+    public function __construct(Config $config, TrackerChecker $tracker_checker, ExecutionDao $execution_dao)
     {
         $this->config          = $config;
         $this->tracker_checker = $tracker_checker;
+        $this->execution_dao   = $execution_dao;
     }
 
     /**
      * @throws Exception
      */
-    public function import(Project $project, string $extraction_path, array $tracker_mapping): void
-    {
+    public function import(
+        Project $project,
+        string $extraction_path,
+        array $tracker_mapping,
+        Tracker_XML_Importer_ArtifactImportedMapping $artifact_id_mapping,
+        ImportedChangesetMapping $changeset_mapping
+    ): void {
         $xml_path = $extraction_path . '/testmanagement.xml';
-        if (file_exists($xml_path)) {
-            $xml = simplexml_load_string(file_get_contents($xml_path));
-            if (! $xml) {
-                throw new Exception("Cannot load XML from $xml_path");
-            }
-
-            $xml_validator = new XML_RNGValidator();
-            $rng_path      = realpath(TESTMANAGEMENT_RESOURCE_DIR . '/testmanagement.rng');
-
-            $xml_validator->validate($xml, $rng_path);
-
-            try {
-                $campaign_tracker_id   = $this->getXMLRef($xml, $tracker_mapping, self::CAMPAIGNS);
-                $definition_tracker_id = $this->getXMLRef($xml, $tracker_mapping, self::DEFINITIONS);
-                $execution_tracker_id  = $this->getXMLRef($xml, $tracker_mapping, self::EXECUTIONS);
-                $issue_tracker_id      = $this->getXMLRef($xml, $tracker_mapping, self::ISSUES);
-
-                if ($issue_tracker_id !== '') {
-                    $this->tracker_checker->checkTrackerIsInProject($project, $issue_tracker_id);
-                }
-
-                if ($campaign_tracker_id !== '' && $definition_tracker_id !== '' && $execution_tracker_id !== '') {
-                    $this->tracker_checker->checkTrackerIsInProject($project, $campaign_tracker_id);
-                    $this->tracker_checker->checkSubmittedTrackerCanBeUsed($project, $definition_tracker_id);
-                    $this->tracker_checker->checkSubmittedTrackerCanBeUsed($project, $execution_tracker_id);
-
-                    $this->config->setProjectConfiguration(
-                        $project,
-                        $campaign_tracker_id,
-                        $definition_tracker_id,
-                        $execution_tracker_id,
-                        $issue_tracker_id === '' ? null : (int) $issue_tracker_id
-                    );
-                }
-            } catch (
-                TrackerNotInProjectException |
-                TrackerHasAtLeastOneFrozenFieldsPostActionException |
-                TrackerHasAtLeastOneHiddenFieldsetsPostActionException $exception
-            ) {
-                throw new Exception("Trackers defined in the configuration files are not valid.");
-            }
+        if (! file_exists($xml_path)) {
+            return;
         }
+        $xml = simplexml_load_string(file_get_contents($xml_path));
+        if (! $xml) {
+            throw new Exception("Cannot load XML from $xml_path");
+        }
+
+        $xml_validator = new XML_RNGValidator();
+        $rng_path      = realpath(TESTMANAGEMENT_RESOURCE_DIR . '/testmanagement.rng');
+
+        $xml_validator->validate($xml, $rng_path);
+
+        try {
+            $campaign_tracker_id   = $this->getXMLRef($xml, $tracker_mapping, self::CAMPAIGNS);
+            $definition_tracker_id = $this->getXMLRef($xml, $tracker_mapping, self::DEFINITIONS);
+            $execution_tracker_id  = $this->getXMLRef($xml, $tracker_mapping, self::EXECUTIONS);
+            $issue_tracker_id      = $this->getXMLRef($xml, $tracker_mapping, self::ISSUES);
+
+            if ($issue_tracker_id !== '') {
+                $this->tracker_checker->checkTrackerIsInProject($project, $issue_tracker_id);
+            }
+
+            if ($campaign_tracker_id !== '' && $definition_tracker_id !== '' && $execution_tracker_id !== '') {
+                $this->tracker_checker->checkTrackerIsInProject($project, $campaign_tracker_id);
+                $this->tracker_checker->checkSubmittedTrackerCanBeUsed($project, $definition_tracker_id);
+                $this->tracker_checker->checkSubmittedTrackerCanBeUsed($project, $execution_tracker_id);
+
+                $this->config->setProjectConfiguration(
+                    $project,
+                    $campaign_tracker_id,
+                    $definition_tracker_id,
+                    $execution_tracker_id,
+                    $issue_tracker_id === '' ? null : (int) $issue_tracker_id
+                );
+            }
+        } catch (
+            TrackerNotInProjectException |
+            TrackerHasAtLeastOneFrozenFieldsPostActionException |
+            TrackerHasAtLeastOneHiddenFieldsetsPostActionException $exception
+        ) {
+            throw new Exception("Trackers defined in the configuration files are not valid.");
+        }
+
+        $this->bindExecutionsToSpecificDefinitionChangeset((int) $execution_tracker_id, (int) $definition_tracker_id, $xml, $artifact_id_mapping, $changeset_mapping);
     }
 
     /**
@@ -118,5 +134,42 @@ class XMLImport
         }
 
         return $tracker_mapping[$reference];
+    }
+
+    private function bindExecutionsToSpecificDefinitionChangeset(
+        int $execution_tracker_id,
+        int $definition_tracker_id,
+        SimpleXMLElement $xml,
+        Tracker_XML_Importer_ArtifactImportedMapping $artifact_id_mapping,
+        ImportedChangesetMapping $changeset_mapping
+    ): void {
+        if (! $execution_tracker_id) {
+            return;
+        }
+        if (! $definition_tracker_id) {
+            return;
+        }
+        if (! $xml->executions) {
+            return;
+        }
+
+        foreach ($xml->executions->execution as $execution_xml) {
+            if (! $artifact_id_mapping->containsSource((string) $execution_xml['execution_artifact_id'])) {
+                continue;
+            }
+            $execution_artifact_id = (int) $artifact_id_mapping->get((string) $execution_xml['execution_artifact_id']);
+
+            $definition_changeset_id = $changeset_mapping->get((string) $execution_xml['definition_changeset_id']);
+            if (! $definition_changeset_id) {
+                continue;
+            }
+
+            $this->execution_dao->updateExecutionToUseSpecificVersionOfDefinition(
+                $execution_artifact_id,
+                $execution_tracker_id,
+                $definition_changeset_id,
+                $definition_tracker_id
+            );
+        }
     }
 }
