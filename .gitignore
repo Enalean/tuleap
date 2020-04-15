@@ -53,7 +53,6 @@ test_results_e2e/*
 test_results_distlp/*
 tests/soap/vendor
 tests/rest/vendor
-src/www/themes/local
 tests/phpunit/phpunit_test_results.xml
 .metrics_secret.key
 test-results.xml
