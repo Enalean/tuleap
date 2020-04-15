@@ -43,9 +43,9 @@ class ConnectionManager implements ConnectionManagerInterface
     /**
      * @psalm-param value-of<ConnectionManagerInterface::ALLOWED_SSL_MODES> $ssl_mode
      */
-    public function getDBWithoutDBName(SymfonyStyle $io, string $host, int $port, string $ssl_mode, string $ssl_ca_file, string $user, string $password): ?EasyDB
+    public function getDBWithoutDBName(SymfonyStyle $io, string $host, int $port, string $ssl_mode, string $ssl_ca_file, string $user, string $password): DBWrapperInterface
     {
-        return $this->loopToConnect(
+        $easydb = $this->loopToConnect(
             $io,
             [
                 'mysql:host=' . $host . ';port=' . $port,
@@ -54,14 +54,18 @@ class ConnectionManager implements ConnectionManagerInterface
                 $this->getOptions($ssl_mode, $ssl_ca_file),
             ]
         );
+        if ($easydb === null) {
+            throw new \RuntimeException('Cannot connect to database');
+        }
+        return new EasyDBWrapper($easydb);
     }
 
     /**
      * @psalm-param value-of<ConnectionManagerInterface::ALLOWED_SSL_MODES> $ssl_mode
      */
-    public function getDBWithDBName(SymfonyStyle $io, string $host, int $port, string $ssl_mode, string $ssl_ca_file, string $user, string $password, string $dbname): ?EasyDB
+    public function getDBWithDBName(SymfonyStyle $io, string $host, int $port, string $ssl_mode, string $ssl_ca_file, string $user, string $password, string $dbname): DBWrapperInterface
     {
-        return $this->loopToConnect(
+        $easydb = $this->loopToConnect(
             $io,
             [
                 'mysql:host=' . $host . ';dbname=' . $dbname,
@@ -70,6 +74,10 @@ class ConnectionManager implements ConnectionManagerInterface
                 $this->getOptions($ssl_mode, $ssl_ca_file),
             ]
         );
+        if ($easydb === null) {
+            throw new \RuntimeException('Cannot connect to database');
+        }
+        return new EasyDBWrapper($easydb);
     }
 
     /**
@@ -109,7 +117,7 @@ class ConnectionManager implements ConnectionManagerInterface
         return null;
     }
 
-    public function checkSQLModes(EasyDB $db): void
+    public function checkSQLModes(DBWrapperInterface $db): void
     {
         $row = $db->row('SHOW VARIABLES LIKE \'sql_mode\'');
         $errors = [];

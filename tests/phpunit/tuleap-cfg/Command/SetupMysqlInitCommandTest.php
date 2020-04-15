@@ -24,11 +24,8 @@ declare(strict_types=1);
 namespace TuleapCfg\Command;
 
 use org\bovigo\vfs\vfsStream;
-use ParagonIE\EasyDB\EasyDB;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Tester\CommandTester;
-use TuleapCfg\Command\SetupMysql\ConnectionManagerInterface;
 
 final class SetupMysqlInitCommandTest extends TestCase
 {
@@ -40,37 +37,24 @@ final class SetupMysqlInitCommandTest extends TestCase
      * @var CommandTester
      */
     private $command_tester;
+    /**
+     * @var TestDBWrapper
+     */
+    private $db_wrapper;
 
     protected function setUp(): void
     {
-        vfsStream::setup('slash');
-        $this->base_dir = vfsStream::url('slash');
+        $this->base_dir = vfsStream::setup()->url();
         mkdir($this->base_dir . '/etc/tuleap/conf', 0750, true);
         mkdir($this->base_dir . '/etc/pki/ca-trust/extracted/pem/', 0750, true);
         touch($this->base_dir . '/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem');
         touch($this->base_dir . '/some_ca.pem');
 
-        $connection_manager = new class implements ConnectionManagerInterface {
+        $this->db_wrapper = new TestDBWrapper();
 
-            public function getDBWithoutDBName(
-                SymfonyStyle $io,
-                string $host,
-                int $port,
-                string $ssl_mode,
-                string $ssl_ca_file,
-                string $user,
-                string $password
-            ): ?EasyDB {
-                return null;
-            }
-
-            public function checkSQLModes(EasyDB $db): void
-            {
-            }
-        };
         $this->command_tester = new CommandTester(
             new SetupMysqlInitCommand(
-                $connection_manager,
+                new TestConnectionManager($this->db_wrapper),
                 $this->base_dir
             )
         );
@@ -106,23 +90,6 @@ final class SetupMysqlInitCommandTest extends TestCase
         $this->assertEquals('0', $sys_db_ssl_verify_cert);
     }
 
-    public function testItWritesConfigurationFileUserWithoutMiddleAt(): void
-    {
-        $this->command_tester->execute([
-            '--skip-database'  => true,
-            '--admin-password' => 'welcome0',
-            '--app-password'   => 'a complex password',
-            '--app-user'       => 'tuleap@%'
-        ]);
-
-        $this->assertEquals(0, $this->command_tester->getStatusCode());
-        $this->assertEmpty($this->command_tester->getDisplay());
-
-        $this->assertFileExists($this->base_dir . '/etc/tuleap/conf/database.inc');
-        require($this->base_dir . '/etc/tuleap/conf/database.inc');
-        $this->assertEquals('tuleap', $sys_dbuser);
-    }
-
     public function testItWritesConfigurationFileWithGivenValuesEnableSSL(): void
     {
         $this->command_tester->execute([
@@ -149,7 +116,7 @@ final class SetupMysqlInitCommandTest extends TestCase
         $this->assertEquals('1', $sys_db_ssl_verify_cert);
     }
 
-    public function testNotConfigurationFileWrittenIfPasswordNotProvided(): void
+    public function testNoConfigurationFileWrittenIfPasswordNotProvided(): void
     {
         $this->command_tester->execute([
             '--skip-database'  => true,
@@ -198,5 +165,92 @@ final class SetupMysqlInitCommandTest extends TestCase
         require($this->base_dir . '/etc/tuleap/conf/database.inc');
 
         $this->assertEquals('/some_ca.pem', $sys_db_ssl_ca);
+    }
+
+    public function testGrantTuleapAccessApplicationToUser(): void
+    {
+        $this->command_tester->execute([
+            '--admin-password' => 'welcome0',
+            '--app-password'   => 'a complex password',
+            '--app-user'       => 'tuleap',
+        ]);
+
+        $this->assertEquals(0, $this->command_tester->getStatusCode());
+
+        $this->db_wrapper->assertContains("CREATE USER IF NOT EXISTS 'tuleap'@'%' IDENTIFIED BY 'a complex password'");
+        $this->db_wrapper->assertContains("GRANT ALL PRIVILEGES ON 'tuleap'.* TO 'tuleap'@'%'");
+    }
+
+    public function testGrantTuleapAccessToNssUser(): void
+    {
+        copy(__DIR__ . '/../../../../src/etc/local.inc.dist', $this->base_dir . '/etc/tuleap/conf/local.inc');
+
+        $this->command_tester->execute([
+            '--admin-password' => 'welcome0',
+            '--nss-password'   => 'another complex password',
+            '--nss-user'       => 'dbauthuser',
+        ]);
+
+        $this->assertEquals(0, $this->command_tester->getStatusCode());
+
+        $this->db_wrapper->assertContains("CREATE USER IF NOT EXISTS 'dbauthuser'@'%' IDENTIFIED BY 'another complex password'");
+        $this->db_wrapper->assertContains("GRANT CREATE,SELECT ON 'tuleap'.'user' TO 'dbauthuser'@'%'");
+    }
+
+    public function testCannotSetupNssUserWithoutLocalInc(): void
+    {
+        $this->command_tester->execute([
+            '--admin-password' => 'welcome0',
+            '--nss-password'   => 'another complex password',
+            '--nss-user'       => 'dbauthuser',
+        ]);
+
+        $this->assertStringContainsString('requires to have ' . $this->base_dir . '/etc/tuleap/conf/local.inc', $this->command_tester->getDisplay());
+
+        $this->assertEquals(1, $this->command_tester->getStatusCode());
+
+        $this->db_wrapper->assertNoStatments();
+    }
+
+    public function testGrantMediawikiPerProjectAccessToApplicationUser(): void
+    {
+        $this->command_tester->execute([
+            '--admin-password' => 'welcome0',
+            '--app-password'   => 'a complex password',
+            '--app-user'       => 'tuleap',
+            '--mediawiki'      => 'per-project',
+        ]);
+
+        $this->assertEquals(0, $this->command_tester->getStatusCode());
+
+        $this->db_wrapper->assertContains("GRANT ALL PRIVILEGES ON `plugin_mediawiki_%`.* TO 'tuleap'@'%'");
+    }
+
+    public function testGrantMediawikiCentralAccessToApplicationUser(): void
+    {
+        $this->command_tester->execute([
+            '--admin-password' => 'welcome0',
+            '--app-password'   => 'a complex password',
+            '--app-user'       => 'tuleap',
+            '--mediawiki'      => 'central',
+        ]);
+
+        $this->assertEquals(0, $this->command_tester->getStatusCode());
+
+        $this->db_wrapper->assertContains("GRANT ALL PRIVILEGES ON 'tuleap_mediawiki'.* TO 'tuleap'@'%'");
+    }
+
+    public function testGrantUserWithSpecificHostname(): void
+    {
+        $this->command_tester->execute([
+            '--admin-password' => 'welcome0',
+            '--app-password'   => 'a complex password',
+            '--app-user'       => 'tuleap',
+            '--grant-hostname' => '1.2.3.4',
+        ]);
+
+        $this->assertEquals(0, $this->command_tester->getStatusCode());
+
+        $this->db_wrapper->assertContains("GRANT ALL PRIVILEGES ON 'tuleap'.* TO 'tuleap'@'1.2.3.4'");
     }
 }

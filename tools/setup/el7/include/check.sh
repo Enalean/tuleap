@@ -101,11 +101,3 @@ _checkSeLinux() {
         _infoMessage "SELinux in $(${getenforce}) mode"
     fi
 }
-
-_checkWebServerIp() {
-    if [ "${mysql_server,,}" != "localhost" -a "${mysql_server}" != "127.0.0.1" -a "${web_server_ip:-NULL}" = "NULL" ]; then
-       _errorMessage "You are running Tuleap with a remote mysql server"
-       _errorMessage "You have to define the web server IP with --web-server-ip option"
-       exit 1
-    fi
-}

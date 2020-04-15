@@ -21,26 +21,34 @@
 
 declare(strict_types=1);
 
-namespace TuleapCfg\Command\SetupMysql;
+namespace TuleapCfg\Command;
 
 use Symfony\Component\Console\Style\SymfonyStyle;
+use TuleapCfg\Command\SetupMysql\ConnectionManagerInterface;
+use TuleapCfg\Command\SetupMysql\DBWrapperInterface;
 
-interface ConnectionManagerInterface
+final class TestConnectionManager implements ConnectionManagerInterface
 {
-    public const SSL_NO_SSL     = 'disabled';
-    public const SSL_NO_VERIFY  = 'no-verify';
-    public const SSL_VERIFY_CA  = 'verify-ca';
+    private $db;
 
-    public const ALLOWED_SSL_MODES = [
-        self::SSL_NO_SSL,
-        self::SSL_NO_VERIFY,
-        self::SSL_VERIFY_CA,
-    ];
+    public function __construct(DBWrapperInterface $db)
+    {
+        $this->db = $db;
+    }
 
-    /**
-     * @psalm-param value-of<self::ALLOWED_SSL_MODES> $ssl_mode
-     */
-    public function getDBWithoutDBName(SymfonyStyle $io, string $host, int $port, string $ssl_mode, string $ssl_ca_file, string $user, string $password): DBWrapperInterface;
+    public function getDBWithoutDBName(
+        SymfonyStyle $io,
+        string $host,
+        int $port,
+        string $ssl_mode,
+        string $ssl_ca_file,
+        string $user,
+        string $password
+    ): DBWrapperInterface {
+        return $this->db;
+    }
 
-    public function checkSQLModes(DBWrapperInterface $db): void;
+    public function checkSQLModes(DBWrapperInterface $db): void
+    {
+    }
 }

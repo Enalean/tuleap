@@ -971,7 +971,7 @@ echo "Initialize MySQL database"
     --admin-user="${mysql_user}" \
     --admin-password="${rt_passwd}" \
     --db-name="${PROJECT_NAME}" \
-    --app-user="${PROJECT_ADMIN}@%" \
+    --app-user="${PROJECT_ADMIN}" \
     --app-password="${codendiadm_passwd}"
 
 echo "Load MySQL database"

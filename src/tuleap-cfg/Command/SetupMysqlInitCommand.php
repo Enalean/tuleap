@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace TuleapCfg\Command;
 
-use ParagonIE\EasyDB\EasyDB;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -31,6 +30,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use TuleapCfg\Command\SetupMysql\ConnectionManager;
 use TuleapCfg\Command\SetupMysql\ConnectionManagerInterface;
+use TuleapCfg\Command\SetupMysql\DBWrapperInterface;
 use TuleapCfg\Command\SetupMysql\InvalidSSLConfigurationException;
 use TuleapCfg\Command\SetupMysql\MysqlCommandHelper;
 
@@ -47,6 +47,10 @@ final class SetupMysqlInitCommand extends Command
     private const OPT_MEDIAWIKI_VALUE_PER_PROJECT = 'per-project';
     private const OPT_MEDIAWIKI_VALUE_CENTRAL     = 'central';
     private const OPT_SKIP_DATABASE  = 'skip-database';
+    private const OPT_GRANT_HOSTNAME = 'grant-hostname';
+    private const OPT_LOG_PASSWORD   = 'log-password';
+    private const OPT_AZURE_SUFFIX   = 'azure-suffix';
+    private const ENV_AZURE_SUFFIX   = 'TULEAP_DB_AZURE_SUFFIX';
 
     /**
      * @var MysqlCommandHelper
@@ -112,10 +116,13 @@ final class SetupMysqlInitCommand extends Command
             ->addOption(self::OPT_ADMIN_PASSWORD, '', InputOption::VALUE_REQUIRED, 'MySQL admin password')
             ->addOption(self::OPT_APP_DBNAME, '', InputOption::VALUE_REQUIRED, 'Name of the DB name to host Tuleap tables (`tuleap` by default)', 'tuleap')
             ->addOption(self::OPT_APP_USER, '', InputOption::VALUE_REQUIRED, 'Name of the DB user to be used for Tuleap (`tuleapadm`) by default', 'tuleapadm')
+            ->addOption(self::OPT_GRANT_HOSTNAME, '', InputOption::VALUE_REQUIRED, 'Hostname value for mysql grant. This is the right hand side of `user`@`hostname`. Default is `%`', '%')
             ->addOption(self::OPT_APP_PASSWORD, '', InputOption::VALUE_REQUIRED, 'Password for the application dbuser (typically tuleapadm)')
             ->addOption(self::OPT_NSS_USER, '', InputOption::VALUE_REQUIRED, 'Name of the DB user that will be used for libnss-mysql or http authentication', 'dbauthuser')
             ->addOption(self::OPT_NSS_PASSWORD, '', InputOption::VALUE_REQUIRED, 'Password for nss-user')
-            ->addOption(self::OPT_MEDIAWIKI, '', InputOption::VALUE_REQUIRED, 'Grant permissions for mediawiki. Possible values: `per-project` or `central`');
+            ->addOption(self::OPT_MEDIAWIKI, '', InputOption::VALUE_REQUIRED, 'Grant permissions for mediawiki. Possible values: `per-project` or `central`')
+            ->addOption(self::OPT_LOG_PASSWORD, '', InputOption::VALUE_REQUIRED, 'Write user & password into given file')
+            ->addOption(self::OPT_AZURE_SUFFIX, '', InputOption::VALUE_REQUIRED, 'Value to add to user\'s name to comply with Microsoft Azure rules');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -153,32 +160,56 @@ final class SetupMysqlInitCommand extends Command
             return 1;
         }
         assert($app_password === null || is_string($app_password));
+
         $app_user = $input->getOption(self::OPT_APP_USER);
         if (! is_string($app_user)) {
             $io->getErrorStyle()->writeln(sprintf('<error>%s must be a string</error>', self::OPT_APP_USER));
         }
         assert(is_string($app_user));
 
-        if ($initialize_db) {
-            $return_value = $this->initializeDatabase(
-                $input,
-                $io,
-                $host,
-                $port,
-                $ssl_mode,
-                $ssl_ca_file,
-                $user,
-                $password,
-                $app_dbname,
-                $app_user,
-                $app_password
-            );
-            if ($return_value !== 0) {
-                return $return_value;
+        if (getenv(self::ENV_AZURE_SUFFIX) !== false) {
+            $azure_suffix = getenv(self::ENV_AZURE_SUFFIX);
+        } else {
+            $azure_suffix = $input->getOption(self::OPT_AZURE_SUFFIX);
+            if (! $azure_suffix) {
+                $azure_suffix = '';
             }
         }
+        assert(is_string($azure_suffix));
 
-        return $this->writeConfigurationFile($host, $port, $ssl_mode, $ssl_ca_file, $app_dbname, $app_user, $app_password);
+        $grant_hostname = $input->getOption(self::OPT_GRANT_HOSTNAME);
+        assert(is_string($grant_hostname));
+
+        $nss_user = $input->getOption(self::OPT_NSS_USER);
+        assert(is_string($nss_user));
+
+        $nss_password = $input->getOption(self::OPT_NSS_PASSWORD);
+        assert($nss_password === null || is_string($nss_password));
+        $local_inc_file = $this->base_directory . '/etc/tuleap/conf/local.inc';
+        if ($nss_password !== null && ! file_exists($local_inc_file)) {
+            $io->getErrorStyle()->writeln(sprintf('<error>Setting NSS user/password requires to have %s file first</error>', $local_inc_file));
+            return 1;
+        }
+
+        if ($initialize_db) {
+            $db = $this->connection_manager->getDBWithoutDBName($io, $host, $port, $ssl_mode, $ssl_ca_file, $user, $password);
+            $output->writeln('<info>Successfully connected to the server !</info>');
+
+            $this->connection_manager->checkSQLModes($db);
+
+            $this->initializeDatabase($input, $io, $db, $app_dbname, $app_user, $grant_hostname, $app_password);
+            $this->initializeNss($input, $io, $db, $app_dbname, $grant_hostname, $nss_user, $nss_password);
+            $this->initializeMediawiki($input, $io, $db, $app_user, $grant_hostname);
+
+            $db->run('FLUSH PRIVILEGES');
+        }
+
+        $return_value = $this->writeDatabaseIncFile($host, $port, $ssl_mode, $ssl_ca_file, $app_dbname, $app_user, $azure_suffix, $app_password);
+        if ($return_value !== 0) {
+            return $return_value;
+        }
+
+        return $this->writeLocalIncFile($local_inc_file, $nss_user, $azure_suffix, $nss_password);
     }
 
     /**
@@ -187,99 +218,103 @@ final class SetupMysqlInitCommand extends Command
     private function initializeDatabase(
         InputInterface $input,
         SymfonyStyle $output,
-        string $host,
-        int $port,
-        string $ssl_mode,
-        string $ssl_ca_file,
-        string $user,
-        string $password,
+        DBWrapperInterface $db,
         string $app_dbname,
         string $app_user,
+        string $grant_hostname,
         ?string $app_password
-    ): int {
-        $db = $this->connection_manager->getDBWithoutDBName($output, $host, $port, $ssl_mode, $ssl_ca_file, $user, $password);
-        if ($db === null) {
-            $output->getErrorStyle()->writeln('<error>Unable to connect to mysql server</error>');
-            return 1;
+    ): void {
+        if (! $app_password || ! $app_user) {
+            return;
         }
-        $output->writeln('<info>Successfully connected to the server !</info>');
 
-        $this->connection_manager->checkSQLModes($db);
+        $existing_db = $db->single(sprintf('SHOW DATABASES LIKE "%s"', $db->escapeIdentifier($app_dbname, false)));
+        if ($existing_db) {
+            $output->writeln(sprintf('<info>Database %s already exists</info>', $app_dbname));
+        } else {
+            $output->writeln(sprintf('<info>Create database %s</info>', $app_dbname));
+            $db->run(sprintf('CREATE DATABASE %s DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci', $db->escapeIdentifier($app_dbname)));
+        }
 
-        if ($app_password && $app_user) {
-            $this->setUpApplication(
-                $output,
-                $db,
-                $app_dbname,
-                $app_user,
-                $app_password,
+        $output->writeln(sprintf('<info>Grant privileges on %s to %s</info>', $app_dbname, $app_user));
+        $this->createUser($db, $app_user, $app_password, $grant_hostname);
+        $db->run(sprintf(
+            'GRANT ALL PRIVILEGES ON %s.* TO %s',
+            $db->escapeIdentifier($app_dbname),
+            $this->quoteDbUser($app_user, $grant_hostname),
+        ));
+
+        $log_password = $input->getOption(self::OPT_LOG_PASSWORD);
+        if (is_string($log_password)) {
+            file_put_contents($log_password, sprintf("MySQL application user (%s): %s\n", $app_user, $app_password), FILE_APPEND);
+        }
+    }
+
+    private function initializeNss(
+        InputInterface $input,
+        SymfonyStyle $output,
+        DBWrapperInterface $db,
+        string $app_dbname,
+        string $grant_hostname,
+        string $nss_user,
+        ?string $nss_password
+    ): void {
+        if (! $nss_password) {
+            return;
+        }
+
+        $this->setUpNss(
+            $output,
+            $db,
+            $app_dbname,
+            $nss_user,
+            $nss_password,
+            $grant_hostname,
+        );
+
+        $log_password = $input->getOption(self::OPT_LOG_PASSWORD);
+        if (is_string($log_password)) {
+            file_put_contents(
+                $log_password,
+                sprintf("MySQL dbauth user (%s): %s\n", $nss_user, $nss_password),
+                FILE_APPEND
             );
         }
+    }
 
-        $nss_password = $input->getOption(self::OPT_NSS_PASSWORD);
-        if ($nss_password) {
-            assert(is_string($nss_password));
-            $nss_user = $input->getOption(self::OPT_NSS_USER);
-            assert(is_string($nss_user));
-            $this->setUpNss(
-                $output,
-                $db,
-                $app_dbname,
-                $nss_user,
-                $nss_password,
-            );
-        }
-
+    private function initializeMediawiki(
+        InputInterface $input,
+        SymfonyStyle $output,
+        DBWrapperInterface $db,
+        string $app_user,
+        string $grant_hostname
+    ): void {
         $mediawiki = $input->getOption(self::OPT_MEDIAWIKI);
         if ($mediawiki) {
             assert(is_string($mediawiki));
-            $app_user = $input->getOption(self::OPT_APP_USER);
-            assert(is_string($app_user));
-            $this->setUpMediawiki($output, $db, $mediawiki, $app_user);
+            $this->setUpMediawiki($output, $db, $mediawiki, $app_user, $grant_hostname);
         }
-
-        $db->run('FLUSH PRIVILEGES');
-
-        return 0;
     }
 
-    private function setUpApplication(OutputInterface $io, EasyDB $db, string $target_dbname, string $target_dbuser, string $target_password): void
-    {
-        $existing_db = $db->single(sprintf('SHOW DATABASES LIKE "%s"', $db->escapeIdentifier($target_dbname, false)));
-        if ($existing_db) {
-            $io->writeln(sprintf('<info>Database %s already exists</info>', $target_dbname));
-        } else {
-            $io->writeln(sprintf('<info>Create database %s</info>', $target_dbname));
-            $db->run(sprintf('CREATE DATABASE %s DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci', $db->escapeIdentifier($target_dbname)));
-        }
-
-        $io->writeln(sprintf('<info>Grant privileges on %s to %s</info>', $target_dbname, $target_dbuser));
-        $this->createUser($db, $target_dbuser, $target_password);
-        $db->run(sprintf(
-            'GRANT ALL PRIVILEGES ON %s.* TO %s',
-            $db->escapeIdentifier($target_dbname),
-            $this->quoteDbUser($target_dbuser),
-        ));
-    }
 
     /**
      * @see https://bugs.mysql.com/bug.php?id=80379
      */
-    private function setUpNss(SymfonyStyle $io, EasyDB $db, string $target_dbname, string $nss_user, string $nss_password): void
+    private function setUpNss(SymfonyStyle $io, DBWrapperInterface $db, string $target_dbname, string $nss_user, string $nss_password, string $grant_hostname): void
     {
         $io->writeln(sprintf('<info>Grant privileges to %s</info>', $nss_user));
 
-        $this->createUser($db, $nss_user, $nss_password);
+        $this->createUser($db, $nss_user, $nss_password, $grant_hostname);
 
-        $this->grantOn($db, ['SELECT'], $target_dbname, 'user', $nss_user);
-        $this->grantOn($db, ['SELECT'], $target_dbname, 'groups', $nss_user);
-        $this->grantOn($db, ['SELECT'], $target_dbname, 'user_group', $nss_user);
+        $this->grantOn($db, ['SELECT'], $target_dbname, 'user', $nss_user, $grant_hostname);
+        $this->grantOn($db, ['SELECT'], $target_dbname, 'groups', $nss_user, $grant_hostname);
+        $this->grantOn($db, ['SELECT'], $target_dbname, 'user_group', $nss_user, $grant_hostname);
 
-        $this->grantOn($db, ['SELECT', 'UPDATE'], $target_dbname, 'svn_token', $nss_user);
-        $this->grantOn($db, ['SELECT'], $target_dbname, 'plugin_ldap_user', $nss_user);
+        $this->grantOn($db, ['SELECT', 'UPDATE'], $target_dbname, 'svn_token', $nss_user, $grant_hostname);
+        $this->grantOn($db, ['SELECT'], $target_dbname, 'plugin_ldap_user', $nss_user, $grant_hostname);
     }
 
-    private function grantOn(EasyDB $db, array $grants, string $db_name, string $table_name, string $user): void
+    private function grantOn(DBWrapperInterface $db, array $grants, string $db_name, string $table_name, string $user, string $grant_hostname): void
     {
         array_walk(
             $grants,
@@ -297,39 +332,31 @@ final class SetupMysqlInitCommand extends Command
             implode(',', $grants),
             $db->escapeIdentifier($db_name),
             $db->escapeIdentifier($table_name),
-            $this->quoteDbUser($user),
+            $this->quoteDbUser($user, $grant_hostname),
         ));
         $db->run(sprintf(
             'REVOKE CREATE ON %s.%s FROM %s',
             $db->escapeIdentifier($db_name),
             $db->escapeIdentifier($table_name),
-            $this->quoteDbUser($user),
+            $this->quoteDbUser($user, $grant_hostname),
         ));
     }
 
-    private function createUser(EasyDB $db, string $user, string $password): void
+    private function createUser(DBWrapperInterface $db, string $user, string $password, string $grant_hostname): void
     {
         $db->run(sprintf(
             'CREATE USER IF NOT EXISTS %s IDENTIFIED BY \'%s\'',
-            $this->quoteDbUser($user),
+            $this->quoteDbUser($user, $grant_hostname),
             $db->escapeIdentifier($password, false),
         ));
     }
 
-    private function quoteDbUser(string $user_identifier): string
+    private function quoteDbUser(string $user_identifier, string $grant_hostname): string
     {
-        return implode(
-            '@',
-            array_map(
-                static function ($str) {
-                    return sprintf("'%s'", $str);
-                },
-                explode('@', $user_identifier)
-            )
-        );
+        return sprintf("'%s'@'%s'", $user_identifier, $grant_hostname);
     }
 
-    private function setUpMediawiki(SymfonyStyle $io, EasyDB $db, string $mediawiki, string $app_user): void
+    private function setUpMediawiki(SymfonyStyle $io, DBWrapperInterface $db, string $mediawiki, string $app_user, string $grant_hostname): void
     {
         if ($mediawiki !== self::OPT_MEDIAWIKI_VALUE_CENTRAL && $mediawiki !== self::OPT_MEDIAWIKI_VALUE_PER_PROJECT) {
             throw new \RuntimeException(sprintf('Invalid --mediawiki value. Valid values are `%s` or `%s`', self::OPT_MEDIAWIKI_VALUE_PER_PROJECT, self::OPT_MEDIAWIKI_VALUE_CENTRAL));
@@ -339,7 +366,7 @@ final class SetupMysqlInitCommand extends Command
             $db->run(
                 sprintf(
                     'GRANT ALL PRIVILEGES ON `plugin_mediawiki_%%`.* TO %s',
-                    $this->quoteDbUser($app_user),
+                    $this->quoteDbUser($app_user, $grant_hostname),
                 )
             );
         } else {
@@ -358,21 +385,22 @@ final class SetupMysqlInitCommand extends Command
             }
             $db->run(
                 sprintf(
-                    'GRANT ALL PRIVILEGES on %s.* TO %s',
+                    'GRANT ALL PRIVILEGES ON %s.* TO %s',
                     $db->escapeIdentifier($mediawiki_database),
-                    $this->quoteDbUser($app_user)
+                    $this->quoteDbUser($app_user, $grant_hostname)
                 )
             );
         }
     }
 
-    private function writeConfigurationFile(
+    private function writeDatabaseIncFile(
         string $host,
         int $port,
         string $ssl_mode,
         string $ssl_ca_file,
         string $dbname,
         string $user,
+        string $azure_suffix,
         ?string $password
     ): int {
         if ($password === null) {
@@ -380,7 +408,9 @@ final class SetupMysqlInitCommand extends Command
         }
         $template = file_get_contents(__DIR__ . '/../../etc/database.inc.dist');
 
-        $user_parts = explode('@', $user);
+        if ($azure_suffix !== '') {
+            $user = sprintf('%s@%s', $user, $azure_suffix);
+        }
 
         $conf_string = str_replace(
             [
@@ -392,7 +422,7 @@ final class SetupMysqlInitCommand extends Command
             [
                 $host,
                 $dbname,
-                $user_parts[0],
+                $user,
                 $password,
             ],
             $template,
@@ -424,6 +454,34 @@ final class SetupMysqlInitCommand extends Command
         chgrp($target_file, 'codendiadm');
 
         if (file_put_contents($target_file, $conf_string) === strlen($conf_string)) {
+            return 0;
+        }
+        return 1;
+    }
+
+    private function writeLocalIncFile(string $local_inc_file, string $user, string $azure_suffix, ?string $password): int
+    {
+        if (! $password) {
+            return 0;
+        }
+
+        if ($azure_suffix !== '') {
+            $user = sprintf('%s@%s', $user, $azure_suffix);
+        }
+
+        $conf_string = preg_replace(
+            [
+                '/\$sys_dbauth_user.*/',
+                '/\$sys_dbauth_passwd.*/',
+            ],
+            [
+                sprintf('$sys_dbauth_user = \'%s\';', $user),
+                sprintf('$sys_dbauth_passwd = \'%s\';', $password),
+            ],
+            file_get_contents($local_inc_file),
+        );
+
+        if (file_put_contents($local_inc_file, $conf_string) === strlen($conf_string)) {
             return 0;
         }
         return 1;

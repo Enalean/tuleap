@@ -23,16 +23,14 @@ declare(strict_types=1);
 
 namespace TuleapCfg\Command\SetupMysql;
 
-use ParagonIE\EasyDB\EasyDB;
-
 class StatementLoader
 {
     /**
-     * @var EasyDB
+     * @var DBWrapperInterface
      */
     private $db;
 
-    public function __construct(EasyDB $db)
+    public function __construct(DBWrapperInterface $db)
     {
         $this->db = $db;
     }
@@ -46,6 +44,6 @@ class StatementLoader
         $sql = file_get_contents($filepath);
         $transformed = str_replace("\\\n", '', $sql);
 
-        $this->db->getPdo()->exec($transformed);
+        $this->db->rawExec($transformed);
     }
 }

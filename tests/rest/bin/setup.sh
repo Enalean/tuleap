@@ -54,7 +54,7 @@ setup_database() {
         --admin-user=root \
         --admin-password=welcome0 \
         --db-name="$MYSQL_DBNAME" \
-        --app-user="$MYSQL_USER@%" \
+        --app-user="$MYSQL_USER" \
         --app-password="$MYSQL_PASSWORD"
 
     $MYSQLROOT $MYSQL_DBNAME < /usr/share/tuleap/src/db/mysql/database_structure.sql
