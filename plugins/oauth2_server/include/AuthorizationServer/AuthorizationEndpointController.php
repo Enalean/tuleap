@@ -35,6 +35,7 @@ use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\OAuth2Server\App\OAuth2AppNotFoundException;
 use Tuleap\OAuth2Server\AuthorizationServer\PKCE\OAuth2PKCEInformationExtractionException;
 use Tuleap\OAuth2Server\AuthorizationServer\PKCE\PKCEInformationExtractor;
+use Tuleap\OAuth2Server\RefreshToken\OAuth2OfflineAccessScope;
 use Tuleap\OAuth2Server\Scope\InvalidOAuth2ScopeException;
 use Tuleap\OAuth2Server\Scope\ScopeExtractor;
 use Tuleap\OAuth2Server\User\AuthorizationComparator;
@@ -97,6 +98,10 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
      * @var PromptParameterValuesExtractor
      */
     private $prompt_parameter_values_extractor;
+    /**
+     * @var OAuth2OfflineAccessScope
+     */
+    private $offline_access_scope;
 
     public function __construct(
         AuthorizationFormRenderer $form_renderer,
@@ -107,6 +112,7 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
         AuthorizationComparator $authorization_comparator,
         PKCEInformationExtractor $pkce_information_extractor,
         PromptParameterValuesExtractor $prompt_parameter_values_extractor,
+        OAuth2OfflineAccessScope $offline_access_scope,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack
     ) {
@@ -119,6 +125,7 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
         $this->authorization_comparator          = $authorization_comparator;
         $this->pkce_information_extractor        = $pkce_information_extractor;
         $this->prompt_parameter_values_extractor = $prompt_parameter_values_extractor;
+        $this->offline_access_scope              = $offline_access_scope;
     }
 
     /**
@@ -244,6 +251,16 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
     private function isConsentRequired(array $prompt_values, \PFUser $user, OAuth2App $client_app, array $scopes): bool
     {
         $require_consent = in_array(PromptParameterValuesExtractor::PROMPT_CONSENT, $prompt_values, true);
-        return $require_consent || ! $this->authorization_comparator->areRequestedScopesAlreadyGranted($user, $client_app, $scopes);
+        if ($require_consent || ! $this->authorization_comparator->areRequestedScopesAlreadyGranted($user, $client_app, $scopes)) {
+            return true;
+        }
+
+        foreach ($scopes as $scope) {
+            if ($this->offline_access_scope->covers($scope)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

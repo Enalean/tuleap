@@ -284,6 +284,7 @@ final class oauth2_serverPlugin extends Plugin
             ),
             new PKCEInformationExtractor(),
             new PromptParameterValuesExtractor(),
+            OAuth2OfflineAccessScope::fromItself(),
             new SapiEmitter(),
             new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
             new RejectNonHTTPSRequestMiddleware($response_factory, $stream_factory),
