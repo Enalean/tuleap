@@ -32,6 +32,9 @@ use Tuleap\OAuth2Server\OpenIDConnect\Scope\OAuth2SignInScope;
 
 class OpenIDConnectIDTokenCreator
 {
+    // See https://openid.net/specs/openid-connect-core-1_0.html#IDToken
+    private const CLAIM_AUTH_TIME = 'auth_time';
+
     /**
      * @var OAuth2SignInScope
      */
@@ -52,19 +55,25 @@ class OpenIDConnectIDTokenCreator
      * @var Sha256
      */
     private $signer;
+    /**
+     * @var \UserManager
+     */
+    private $user_manager;
 
     public function __construct(
         OAuth2SignInScope $sign_in_scope,
         JWTBuilderFactory $builder_factory,
         \DateInterval $date_interval,
         OpenIDConnectSigningKeyFactory $signing_key_factory,
-        Sha256 $signer
+        Sha256 $signer,
+        \UserManager $user_manager
     ) {
         $this->sign_in_scope             = $sign_in_scope;
         $this->builder_factory           = $builder_factory;
         $this->id_token_expiration_delay = $date_interval;
         $this->signing_key_factory       = $signing_key_factory;
         $this->signer                    = $signer;
+        $this->user_manager              = $user_manager;
     }
 
     public function issueIDTokenFromAuthorizationCode(\DateTimeImmutable $current_time, OAuth2App $app, OAuth2AuthorizationCode $authorization_code): ?string
@@ -73,11 +82,15 @@ class OpenIDConnectIDTokenCreator
             return null;
         }
 
+        $user        = $authorization_code->getUser();
+        $access_info = $this->user_manager->getUserAccessInfo($user);
+
         $builder = $this->builder_factory->getBuilder()->issuedBy(Issuer::toString())
-                ->relatedTo((string) $authorization_code->getUser()->getId())
+                ->relatedTo((string) $user->getId())
                 ->permittedFor(ClientIdentifier::fromOAuth2App($app)->toString())
                 ->issuedAt($current_time->getTimestamp())
-                ->expiresAt($current_time->add($this->id_token_expiration_delay)->getTimestamp());
+                ->expiresAt($current_time->add($this->id_token_expiration_delay)->getTimestamp())
+                ->withClaim(self::CLAIM_AUTH_TIME, (int) $access_info['last_auth_success']);
 
         $nonce = $authorization_code->getOIDCNonce();
         if ($nonce !== null) {

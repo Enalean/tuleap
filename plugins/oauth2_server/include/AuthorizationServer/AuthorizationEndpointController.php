@@ -56,6 +56,7 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
     // see https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest
     private const NONCE_PARAMETER         = 'nonce';
     public const PROMPT_PARAMETER         = 'prompt';
+    private const MAX_AGE_PARAMETER       = 'max_age';
     // see https://tools.ietf.org/html/rfc6749#section-4.1.2.1
     public const  ERROR_PARAMETER            = 'error';
     public const  ERROR_CODE_INVALID_REQUEST = 'invalid_request';
@@ -174,10 +175,9 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
             );
         }
         $require_no_interaction = in_array(PromptParameterValuesExtractor::PROMPT_NONE, $prompt_values, true);
-        $require_login          = in_array(PromptParameterValuesExtractor::PROMPT_LOGIN, $prompt_values, true);
 
         $user = $this->user_manager->getCurrentUser();
-        if ($require_login || $user->isAnonymous()) {
+        if ($this->doesRequireLogin($user, $prompt_values, $request_params)) {
             if ($require_no_interaction) {
                 return $this->response_factory->createErrorResponse(
                     self::ERROR_CODE_LOGIN_REQUIRED,
@@ -242,6 +242,28 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
         $csrf_token = new \CSRFSynchronizerToken(self::CSRF_TOKEN);
         $data       = new AuthorizationFormData($client_app, $csrf_token, $redirect_uri, $state_value, $code_challenge, $oidc_nonce, ...$scopes);
         return $this->form_renderer->renderForm($data, $layout);
+    }
+
+    /**
+     * @param string[] $prompt_values
+     */
+    private function doesRequireLogin(\PFUser $user, array $prompt_values, array $request_params): bool
+    {
+        $require_login = in_array(PromptParameterValuesExtractor::PROMPT_LOGIN, $prompt_values, true);
+        if ($require_login || $user->isAnonymous()) {
+            return true;
+        }
+
+        if (! isset($request_params[self::MAX_AGE_PARAMETER])) {
+            return false;
+        }
+
+        $current_time   = (new \DateTimeImmutable())->getTimestamp();
+        $access_info    = $this->user_manager->getUserAccessInfo($user);
+        $last_auth_time = (int) $access_info['last_auth_success'];
+        $max_age        = (int) $request_params[self::MAX_AGE_PARAMETER];
+
+        return ($current_time - $last_auth_time) >= $max_age;
     }
 
     /**

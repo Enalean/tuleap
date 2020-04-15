@@ -87,6 +87,10 @@ final class OpenIDConnectIDTokenCreatorTest extends TestCase
     private const EXPECTED_EXPIRATION_DELAY_SECONDS = 60;
 
     /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\UserManager
+     */
+    private $user_manager;
+    /**
      * @var OpenIDConnectIDTokenCreator
      */
     private $id_token_creator;
@@ -96,12 +100,15 @@ final class OpenIDConnectIDTokenCreatorTest extends TestCase
         $signing_key_factory = \Mockery::mock(OpenIDConnectSigningKeyFactory::class);
         $signing_key_factory->shouldReceive('getKey')->andReturn(new Key(self::SIGNING_PRIVATE_KEY));
 
+        $this->user_manager = \Mockery::mock(\UserManager::class);
+
         $this->id_token_creator = new OpenIDConnectIDTokenCreator(
             OAuth2SignInScope::fromItself(),
             new JWTBuilderFactory(),
             new \DateInterval('PT' . self::EXPECTED_EXPIRATION_DELAY_SECONDS . 'S'),
             $signing_key_factory,
-            new Sha256()
+            new Sha256(),
+            $this->user_manager
         );
     }
 
@@ -113,6 +120,8 @@ final class OpenIDConnectIDTokenCreatorTest extends TestCase
     {
         \ForgeConfig::set('sys_https_host', 'tuleap.example.com');
         $current_time = new \DateTimeImmutable('@10');
+
+        $this->user_manager->shouldReceive('getUserAccessInfo')->andReturn(['last_auth_success' => '5']);
 
         $payload = $this->id_token_creator->issueIDTokenFromAuthorizationCode(
             $current_time,
@@ -128,6 +137,7 @@ final class OpenIDConnectIDTokenCreatorTest extends TestCase
         $this->assertEquals('tlp-client-id-987', $token->getClaim('aud'));
         $this->assertEquals($current_time->getTimestamp(), $token->getClaim('iat'));
         $this->assertEquals($current_time->getTimestamp() + self::EXPECTED_EXPIRATION_DELAY_SECONDS, $token->getClaim('exp'));
+        $this->assertEquals(5, $token->getClaim('auth_time'));
         if ($nonce === null) {
             $this->assertFalse($token->hasClaim('nonce'));
         } else {

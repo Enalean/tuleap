@@ -180,6 +180,30 @@ final class AuthorizationEndpointControllerTest extends TestCase
         $this->assertSame($response, $this->controller->handle($request));
     }
 
+    public function testHandleRedirectsToLoginWhenMaxAgeParameterRequiresIt(): void
+    {
+        $this->user_manager->shouldReceive('getCurrentUser')->andReturn(
+            UserTestBuilder::aUser()->withId(102)->build()
+        );
+        $this->user_manager->shouldReceive('getUserAccessInfo')->andReturn(['last_auth_success' => 1]);
+        $project = new \Project(['group_id' => 101, 'group_name' => 'Rest Project']);
+        $request = (new NullServerRequest())->withQueryParams(
+            [
+                'client_id'      => 'tlp-client-id-1',
+                'redirect_uri'   => 'https://example.com/redirect',
+                'response_type'  => 'code',
+                'max_age'        => '1',
+            ]
+        );
+        $this->app_factory->shouldReceive('getAppMatchingClientId')
+            ->once()
+            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
+        $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
+        $this->response_factory->shouldReceive('createRedirectToLoginResponse')->once()->andReturn($response);
+
+        $this->assertSame($response, $this->controller->handle($request));
+    }
+
     /**
      * @dataProvider dataProviderInvalidEssentialQueryParameters
      */
@@ -508,5 +532,40 @@ final class AuthorizationEndpointControllerTest extends TestCase
             ['GET'],
             ['POST'],
         ];
+    }
+
+    public function testHandleRendersAuthorizationFormWhenMaxAgeParameterIsSetButTheUserHasAuthenticatedRecently(): void
+    {
+        $user = UserTestBuilder::aUser()->withId(102)->build();
+        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
+        $this->user_manager->shouldReceive('getUserAccessInfo')->andReturn(
+            ['last_auth_success' => (new \DateTimeImmutable())->sub(new \DateInterval('PT60S'))->getTimestamp()]
+        );
+        $project = M::mock(\Project::class)->shouldReceive('getPublicName')
+            ->andReturn('Test Project')
+            ->getMock();
+        $request = (new NullServerRequest())->withQueryParams(
+            [
+                'client_id'     => 'tlp-client-id-1',
+                'redirect_uri'  => 'https://example.com/redirect',
+                'response_type' => 'code',
+                'state'         => 'xyz',
+                'scope'         => 'scopename:read',
+                'max_age'       => '3600'
+            ]
+        );
+        $this->app_factory->shouldReceive('getAppMatchingClientId')
+            ->once()
+            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
+        $this->scope_extractor->shouldReceive('extractScopes')
+            ->once()
+            ->andReturn([M::mock(AuthenticationScope::class)]);
+        $this->comparator->shouldReceive('areRequestedScopesAlreadyGranted')
+            ->once()
+            ->andReturnFalse();
+        $this->pkce_information_extractor->shouldReceive('extractCodeChallenge')->andReturn('extracted_code_challenge');
+        $this->form_renderer->shouldReceive('renderForm')->once();
+
+        $this->controller->handle($request->withAttribute(BaseLayout::class, LayoutBuilder::build()));
     }
 }
