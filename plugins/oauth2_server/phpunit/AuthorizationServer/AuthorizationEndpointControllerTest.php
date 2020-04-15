@@ -36,6 +36,8 @@ use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\OAuth2Server\App\OAuth2AppNotFoundException;
 use Tuleap\OAuth2Server\AuthorizationServer\PKCE\OAuth2PKCEInformationExtractionException;
 use Tuleap\OAuth2Server\AuthorizationServer\PKCE\PKCEInformationExtractor;
+use Tuleap\OAuth2Server\OAuth2TestScope;
+use Tuleap\OAuth2Server\RefreshToken\OAuth2OfflineAccessScope;
 use Tuleap\OAuth2Server\Scope\InvalidOAuth2ScopeException;
 use Tuleap\OAuth2Server\Scope\ScopeExtractor;
 use Tuleap\OAuth2Server\User\AuthorizationComparator;
@@ -96,6 +98,7 @@ final class AuthorizationEndpointControllerTest extends TestCase
             $this->comparator,
             $this->pkce_information_extractor,
             new PromptParameterValuesExtractor(),
+            OAuth2OfflineAccessScope::fromItself(),
             \Mockery::mock(EmitterInterface::class)
         );
     }
@@ -345,7 +348,7 @@ final class AuthorizationEndpointControllerTest extends TestCase
             ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
         $this->scope_extractor->shouldReceive('extractScopes')
             ->once()
-            ->andReturn([M::mock(AuthenticationScope::class)]);
+            ->andReturn([OAuth2TestScope::fromItself()]);
         $this->comparator->shouldReceive('areRequestedScopesAlreadyGranted')
             ->once()
             ->andReturnTrue();
@@ -383,6 +386,39 @@ final class AuthorizationEndpointControllerTest extends TestCase
             ->once()
             ->andReturn([M::mock(AuthenticationScope::class)]);
         $this->comparator->shouldReceive('areRequestedScopesAlreadyGranted')
+            ->andReturnTrue();
+        $this->pkce_information_extractor->shouldReceive('extractCodeChallenge')->andReturn('extracted_code_challenge');
+
+        $this->form_renderer->shouldReceive('renderForm')->once();
+
+        $this->controller->handle($request->withAttribute(BaseLayout::class, LayoutBuilder::build()));
+    }
+
+    public function testRendersAuthorizationFormWhenAPreviousAuthorizationHasBeenGrantedButConsentIsRequiredBecauseOfflineAccessScopeIsAsked(): void
+    {
+        $user = UserTestBuilder::aUser()->withId(102)->build();
+        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
+        $project = M::mock(\Project::class)->shouldReceive('getPublicName')
+            ->andReturn('Test Project')
+            ->getMock();
+        $request = (new NullServerRequest())->withQueryParams(
+            [
+                'client_id'     => 'tlp-client-id-1',
+                'redirect_uri'  => 'https://example.com/redirect',
+                'response_type' => 'code',
+                'state'         => 'xyz',
+                'scope'         => 'offline_access',
+            ]
+        );
+
+        $this->app_factory->shouldReceive('getAppMatchingClientId')
+            ->once()
+            ->andReturn(new OAuth2App(1, 'Jenkins', 'https://example.com/redirect', true, $project));
+        $this->scope_extractor->shouldReceive('extractScopes')
+            ->once()
+            ->andReturn([OAuth2OfflineAccessScope::fromItself()]);
+        $this->comparator->shouldReceive('areRequestedScopesAlreadyGranted')
+            ->once()
             ->andReturnTrue();
         $this->pkce_information_extractor->shouldReceive('extractCodeChallenge')->andReturn('extracted_code_challenge');
 
