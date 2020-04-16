@@ -9,5 +9,10 @@
         "psr-4": {
             "Tuleap\\OAuth2Server\\": "phpunit/"
         }
+    },
+    "require-dev": {
+        "amphp/http-server": "^2.0",
+        "amphp/log": "^1.1",
+        "amphp/http-server-router": "^1.0"
     }
 }
