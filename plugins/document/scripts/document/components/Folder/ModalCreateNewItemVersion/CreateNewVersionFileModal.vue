@@ -72,7 +72,10 @@ export default {
         FileProperties,
     },
     props: {
-        item: Object,
+        item: {
+            type: Object,
+            default: () => ({}),
+        },
     },
     data() {
         return {
@@ -138,7 +141,7 @@ export default {
                 this.version.title,
                 this.version.changelog,
                 this.version.is_file_locked,
-                this.item.approval_table_action,
+                this.approval_table_action,
             ]);
             this.is_loading = false;
             if (this.has_modal_error === false) {
