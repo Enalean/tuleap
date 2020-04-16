@@ -30,7 +30,8 @@ describe("StepTwo", () => {
         is_a_xml_import = false,
         is_created_from_empty = false,
         is_a_duplication_of_a_tracker_from_another_project = false,
-        is_created_from_default_template = false
+        is_created_from_default_template = false,
+        is_created_from_jira = false
     ): Promise<Wrapper<StepTwo>> {
         return mount(StepTwo, {
             mocks: {
@@ -43,6 +44,7 @@ describe("StepTwo", () => {
                         is_a_duplication_of_a_tracker_from_another_project,
                         is_ready_to_submit: true,
                         is_created_from_default_template,
+                        is_created_from_jira,
                     },
                 }),
             },
@@ -57,6 +59,7 @@ describe("StepTwo", () => {
                 "router-link": true,
                 "field-tracker-empty": true,
                 "field-tracker-color": true,
+                "field-from-jira": true,
             },
         });
     }
@@ -184,6 +187,18 @@ describe("StepTwo", () => {
             expect(wrapper.get("#tracker-creation-form").attributes("enctype")).toEqual(
                 "application/x-www-form-urlencoded"
             );
+        });
+    });
+
+    describe("Create from jira", () => {
+        let wrapper: Wrapper<StepTwo>;
+
+        beforeEach(async () => {
+            wrapper = await getWrapper({} as State, false, false, false, false, false, true);
+        });
+
+        it("appends the hidden input", () => {
+            expect(wrapper.find("field-from-jira-stub").exists()).toBe(true);
         });
     });
 

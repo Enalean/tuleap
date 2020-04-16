@@ -21,7 +21,7 @@
 
 class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Integer implements Tracker_FormElement_Field_ReadOnly
 {
-
+    public const TYPE = "aid";
     public $default_properties = array();
 
     public function getCriteriaFrom($criteria)

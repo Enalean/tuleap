@@ -53,17 +53,17 @@ class ClientWrapper
         $this->base_url = $base_url . "/rest/api/latest/";
     }
 
-    public static function build(string $base_url, string $jira_username, string $jira_token): self
+    public static function build(JiraCredentials $jira_credentials): self
     {
         $client = HttpClientFactory::createClient(
             new AuthenticationPlugin(
-                new BasicAuth($jira_username, $jira_token)
+                new BasicAuth($jira_credentials->getJiraUsername(), $jira_credentials->getJiraToken())
             )
         );
 
         $request_factory = HTTPFactoryBuilder::requestFactory();
 
-        return new self($client, $request_factory, $base_url);
+        return new self($client, $request_factory, $jira_credentials->getJiraUrl());
     }
 
     /**

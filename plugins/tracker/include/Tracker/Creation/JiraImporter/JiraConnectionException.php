@@ -69,7 +69,7 @@ class JiraConnectionException extends \Exception
     public static function connectionToServerFailed(int $error_code, string $message): self
     {
         return new self(
-            "Error %s: %s",
+            "Error can't connect to server :" .  $error_code . " " . $message,
             sprintf(
                 dgettext(
                     'tuleap-tracker',

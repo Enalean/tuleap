@@ -272,6 +272,9 @@ class frsPlugin extends \Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         $artifact_id_mapping = $params['artifact_id_mapping'];
 
         $frs_release_mapping = $mappings->get(FRSXMLImporter::MAPPING_KEY);
+        if (! $frs_release_mapping) {
+            return;
+        }
 
         foreach ($frs_release_mapping as $release_id => $xml_artifact_id) {
             $artifact_id = $artifact_id_mapping->get($xml_artifact_id);

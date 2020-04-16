@@ -30,9 +30,14 @@ use Tracker_Exception;
 use TrackerFactory;
 use TrackerFromXmlException;
 use TrackerXmlImport;
+use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
+use Tuleap\Tracker\Creation\JiraImporter\JiraCredentials;
 use Tuleap\Tracker\TrackerIsInvalidException;
+use Tuleap\XML\MappingsRegistry;
 use UserManager;
 use XML_ParseException;
+use XML_SimpleXMLCDATAFactory;
 use XMLImportHelper;
 
 class TrackerCreator
@@ -54,17 +59,23 @@ class TrackerCreator
      * @var TrackerCreationDataChecker
      */
     private $creation_data_checker;
+    /**
+     * @var XML_SimpleXMLCDATAFactory
+     */
+    private $cdata_section_factory;
 
     public function __construct(
         TrackerXmlImport $tracker_xml_import,
         TrackerFactory $tracker_factory,
         TrackerCreatorXmlErrorDisplayer $xml_error_displayer,
-        TrackerCreationDataChecker $creation_data_checker
+        TrackerCreationDataChecker $creation_data_checker,
+        XML_SimpleXMLCDATAFactory $cdata_section_factory
     ) {
         $this->tracker_xml_import    = $tracker_xml_import;
         $this->tracker_factory       = $tracker_factory;
         $this->xml_error_displayer   = $xml_error_displayer;
         $this->creation_data_checker = $creation_data_checker;
+        $this->cdata_section_factory = $cdata_section_factory;
     }
 
     public static function build(): self
@@ -80,7 +91,8 @@ class TrackerCreator
                 \ReferenceManager::instance(),
                 new \TrackerDao(),
                 TrackerFactory::instance()
-            )
+            ),
+            new XML_SimpleXMLCDATAFactory()
         );
     }
 
@@ -144,5 +156,76 @@ class TrackerCreator
         }
 
         return $duplicate['tracker'];
+    }
+
+    /**
+     * @throws TrackerCreationHasFailedException
+     * @throws TrackerIsInvalidException
+     * @throws Tracker_Exception
+     */
+    public function createFromJira(
+        Project $project,
+        string $name,
+        string $itemname,
+        string $color,
+        string $jira_token,
+        string $jira_username,
+        string $jira_url
+    ): Tracker {
+        $this->creation_data_checker->checkAtProjectCreation((int) $project->getID(), $name, $itemname);
+        $jira_exporter = $this->getJiraExporter($jira_token, $jira_username, $jira_url);
+
+        $xml          = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project />');
+        $trackers_xml = $xml->addChild('trackers');
+        $tracker_xml  = $trackers_xml->addChild('tracker');
+        $tracker_xml->addAttribute('instantiate_for_new_projects', '0');
+        $tracker_xml->addAttribute('id', "T200");
+        $tracker_xml->addAttribute('parent_id', "0");
+
+        $this->cdata_section_factory->insert($tracker_xml, 'name', $name);
+        $this->cdata_section_factory->insert($tracker_xml, 'item_name', $itemname);
+        $this->cdata_section_factory->insert($tracker_xml, 'color', $color);
+
+        $tracker_xml->addChild('cannedResponses');
+
+        try {
+            $jira_exporter->exportJiraToXml($tracker_xml);
+            $trackers = $this->tracker_xml_import->import(
+                new ImportConfig(),
+                $project,
+                $xml,
+                new MappingsRegistry(),
+                \ForgeConfig::get('tmp_dir')
+            );
+
+            if ($trackers && count($trackers) === 1) {
+                $tracker_id = (int) array_values($trackers)[0];
+
+                $tracker = $this->tracker_factory->getTrackerById($tracker_id);
+                if ($tracker) {
+                    return $tracker;
+                }
+            }
+
+            throw new TrackerCreationHasFailedException();
+        } catch (XML_ParseException $exception) {
+            $this->xml_error_displayer->displayErrors($project, $exception->getErrors(), $exception->getFileLines());
+            throw new TrackerCreationHasFailedException();
+        } catch (TrackerFromXmlException $exception) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
+            throw new TrackerCreationHasFailedException();
+        } catch (JiraImporter\JiraConnectionException $e) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e->getI18nMessage());
+            throw new TrackerCreationHasFailedException();
+        }
+    }
+
+    /**
+     * protected for testing purpose
+     */
+    protected function getJiraExporter(string $jira_token, string $jira_username, string $jira_url): JiraXmlExporter
+    {
+        $jira_credentials = new JiraCredentials($jira_url, $jira_username, $jira_token);
+        return JiraXmlExporter::build($jira_credentials);
     }
 }

@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FieldFromJira Displays a card for bug tracker 1`] = `
+<div>
+  <input
+    data-test="jira-server"
+    name="jira_server"
+    type="hidden"
+    value="https://example.com"
+  />
+   
+  <input
+    name="jira_user"
+    type="hidden"
+    value="user-email@example.com"
+  />
+   
+  <input
+    name="jira_token"
+    type="hidden"
+    value="azerty1234"
+  />
+   
+  <input
+    name="jira_project"
+    type="hidden"
+    value="{\\"id\\":\\"AB\\",\\"label\\":\\"A beautifull porject\\"}"
+  />
+   
+  <input
+    name="jira_tracker_name"
+    type="hidden"
+    value="{\\"id\\":\\"bug\\",\\"name\\":\\"Bugs\\"}"
+  />
+</div>
+`;

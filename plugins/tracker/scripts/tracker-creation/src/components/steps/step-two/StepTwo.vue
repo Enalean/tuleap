@@ -39,6 +39,7 @@
                 <field-description />
                 <field-tracker-template-id v-if="should_tracker_template_id_be_displayed" />
                 <field-tracker-empty v-if="is_created_from_empty" />
+                <field-from-jira v-if="is_created_from_jira" />
             </form>
         </template>
     </step-layout>
@@ -57,9 +58,11 @@ import FieldTrackerTemplateId from "./creation-fields/FieldTrackerTemplateId.vue
 import FieldCsrfToken from "./creation-fields/FieldCSRFToken.vue";
 import FieldTrackerEmpty from "./creation-fields/FieldTrackerEmpty.vue";
 import FieldTrackerColor from "./creation-fields/FieldTrackerColor.vue";
+import FieldFromJira from "./creation-fields/FieldFromJira.vue";
 
 @Component({
     components: {
+        FieldFromJira,
         FieldTrackerEmpty,
         StepLayout,
         StepTwoInfo,
@@ -87,6 +90,9 @@ export default class StepTwo extends Vue {
 
     @Getter
     readonly is_created_from_default_template!: boolean;
+
+    @Getter
+    readonly is_created_from_jira!: boolean;
 
     @Getter
     readonly is_a_duplication_of_a_tracker_from_another_project!: boolean;
