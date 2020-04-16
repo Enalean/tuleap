@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../../simpletest/common/include/builders/aRequest.php';
 require_once __DIR__ . '/../../lib/SimpleMockOngoingInterlligentStub.php';
 require_once __DIR__ . '/../../lib/MockeryOngoingIntelligentStub.php';
 require_once __DIR__ . '/../../lib/TestHelper.class.php';
