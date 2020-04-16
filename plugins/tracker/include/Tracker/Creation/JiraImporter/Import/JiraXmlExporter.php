@@ -27,6 +27,7 @@ use SimpleXMLElement;
 use Tracker_FormElement_Field_ArtifactId;
 use Tracker_FormElement_Field_String;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraToTuleapFieldTypeMapper;
@@ -52,17 +53,23 @@ class JiraXmlExporter
      * @var JiraToTuleapFieldTypeMapper
      */
     private $field_type_mapper;
+    /**
+     * @var XmlReportExporter
+     */
+    private $report_exporter;
 
     public function __construct(
         FieldXmlExporter $field_xml_exporter,
         ErrorCollector $error_collector,
         JiraFieldRetriever $jira_field_retriever,
-        JiraToTuleapFieldTypeMapper $field_type_mapper
+        JiraToTuleapFieldTypeMapper $field_type_mapper,
+        XmlReportExporter $report_exporter
     ) {
-        $this->field_xml_exporter        = $field_xml_exporter;
-        $this->error_collector           = $error_collector;
-        $this->jira_field_retriever      = $jira_field_retriever;
-        $this->field_type_mapper = $field_type_mapper;
+        $this->field_xml_exporter   = $field_xml_exporter;
+        $this->error_collector      = $error_collector;
+        $this->jira_field_retriever = $jira_field_retriever;
+        $this->field_type_mapper    = $field_type_mapper;
+        $this->report_exporter      = $report_exporter;
     }
 
     public static function build(
@@ -83,7 +90,8 @@ class JiraXmlExporter
             ),
             $error_collector,
             new JiraFieldRetriever($wrapper),
-            $jira_field_mapper
+            $jira_field_mapper,
+            new XmlReportExporter($cdata_factory)
         );
     }
 
@@ -125,7 +133,7 @@ class JiraXmlExporter
 
         $node_tracker->addChild('semantics');
         $node_tracker->addChild('rules');
-        $node_tracker->addChild('reports');
+        $this->report_exporter->exportReports($node_tracker);
         $node_tracker->addChild('workflow');
         $node_tracker->addChild('permissions');
 

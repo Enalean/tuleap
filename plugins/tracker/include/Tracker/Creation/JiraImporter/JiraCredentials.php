@@ -23,6 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
+/**
+ * @psalm-immutable
+ */
 class JiraCredentials
 {
     /**
