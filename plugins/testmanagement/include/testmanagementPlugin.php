@@ -740,10 +740,19 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         $temporaray_file = 'export_ttm_' . $project->getID() . time() . '.xml';
         $temporary_path  = $this->getTmpDir() . "/$temporaray_file";
 
-        $dom = dom_import_simplexml($xml_content)->ownerDocument;
-        $dom->formatOutput = true;
+        $dom = dom_import_simplexml($xml_content);
+        if (!$dom) {
+            return;
+        }
 
-        file_put_contents($temporary_path, $dom->saveXML());
+        $dom_document = $dom->ownerDocument;
+        if (!$dom_document) {
+            return;
+        }
+
+        $dom_document->formatOutput = true;
+
+        file_put_contents($temporary_path, $dom_document->saveXML());
         $archive->addFile('testmanagement.xml', $temporary_path);
     }
 
