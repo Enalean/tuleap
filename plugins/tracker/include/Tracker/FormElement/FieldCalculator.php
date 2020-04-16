@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement;
 
@@ -40,7 +42,7 @@ class FieldCalculator
         $computed_field_id
     ) {
         $sum          = null;
-        $already_seen = array();
+        $already_seen = new ArtifactsAlreadyProcessedDuringComputationCollection();
 
         do {
             $children_list = $this->children_computation_provider->fetchChildrenAndManualValuesOfArtifacts(
@@ -48,7 +50,8 @@ class FieldCalculator
                 $timestamp,
                 $stop_on_manual_value,
                 $target_field_name,
-                $computed_field_id
+                $computed_field_id,
+                $already_seen
             );
 
             $manual_sum = $children_list['manual_sum'];
@@ -60,18 +63,18 @@ class FieldCalculator
             if ($children) {
                 foreach ($children as $row) {
                     if (
-                        ! isset($already_seen[$row['id']]) &&
+                        ! $already_seen->hasArtifactBeenProcessedDuringComputation($row['id']) &&
                         (! isset($row['parent_id']) || $last_id !== $row['parent_id'])
                     ) {
                         if (isset($row['value']) && $row['value'] !== null) {
-                            $already_seen[$row['parent_id']] = true;
+                            $already_seen->addArtifactAsAlreadyProcessed((string) $row['parent_id']);
                             $last_id                         = $row['parent_id'];
                             $sum                             += $row['value'];
                         } elseif ($row['type'] === 'computed' && $row['artifact_link_id'] !== null) {
                             $artifact_ids_to_fetch[] = $row['artifact_link_id'];
                         } elseif (isset($row[$row['type'] . '_value'])) {
-                            $already_seen[$row['id']] = true;
-                            $sum                      += $row[$row['type'] . '_value'];
+                            $already_seen->addArtifactAsAlreadyProcessed((string) $row['id']);
+                            $sum += $row[$row['type'] . '_value'];
                         }
                     }
                 }
@@ -79,7 +82,7 @@ class FieldCalculator
             }
 
             foreach ($current_fetch_artifact as $artifact_fetched) {
-                $already_seen[$artifact_fetched] = true;
+                $already_seen->addArtifactAsAlreadyProcessed((string) $artifact_fetched);
             }
 
             if ($manual_sum !== null) {
