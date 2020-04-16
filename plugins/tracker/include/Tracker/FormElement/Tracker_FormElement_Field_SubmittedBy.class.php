@@ -50,14 +50,15 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
         if ($criteria_value = $this->getCriteriaValue($criteria)) {
             $a = 'A_' . $this->id;
             $b = 'B_' . $this->id;
-            $ids_to_search = array_intersect(
+            $ids_to_search = array_values(array_intersect(
                 array_values($criteria_value),
                 array_merge(array(100), array_keys($this->getBind()->getAllValues()))
-            );
+            ));
             if (count($ids_to_search) > 1) {
                 return " artifact.submitted_by IN(" . $this->getCriteriaDao()->getDa()->escapeIntImplode($ids_to_search) . ") ";
-            } elseif (count($ids_to_search)) {
-                return " artifact.submitted_by = " . $this->getCriteriaDao()->getDa()->escapeInt($ids_to_search[0]) . " ";
+            } else {
+                $id_to_search = isset($ids_to_search[0]) ? $ids_to_search[0] : null;
+                return " artifact.submitted_by = " . $this->getCriteriaDao()->getDa()->escapeInt($id_to_search) . " ";
             }
         }
         return '';

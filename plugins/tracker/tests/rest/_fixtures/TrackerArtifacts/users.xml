@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<users>
+  <user>
+    <id>102</id>
+    <username>rest_api_tester_1</username>
+    <realname><![CDATA[Test User 1]]></realname>
+    <email><![CDATA[test_user_1@example.com]]></email>
+    <ldapid>tester1</ldapid>
+  </user>
+  <user>
+    <id>201</id>
+    <username>rest_api_tracker_admin_1</username>
+    <realname><![CDATA[Test User Tracker Admin 1]]></realname>
+    <email><![CDATA[rest_api_tracker_admin_1@example.com]]></email>
+    <ldapid/>
+  </user>
+</users>
