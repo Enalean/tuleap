@@ -1,9 +1,5 @@
 /*
- * Copyright Enalean (c) 2017-2018. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,22 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Gettext from "node-gettext";
 import { render } from "mustache";
 import { sprintf } from "sprintf-js";
 import preview_template from "./preview.mustache";
-import french_translations from "./po/fr.po";
 import { autocomplete_groups_for_select2 } from "../autocomplete-for-select2.js";
+import {
+    getPOFileFromLocale,
+    initGettext,
+} from "../../../../src/scripts/tuleap/gettext/gettext-init";
 
-export { initLdapBindingPreview };
-
-function initLdapBindingPreview(options, callback) {
+export async function initLdapBindingPreview(options, callback) {
     const { preserve, button, preview, display_name, select } = options;
 
-    const gettext_provider = new Gettext();
-    gettext_provider.addTranslations("fr_FR", "ldap-bindings", french_translations);
-    gettext_provider.setLocale(select.dataset.locale);
-    gettext_provider.setTextDomain("ldap-bindings");
+    const gettext_provider = await initGettext(select.dataset.locale, "ldap-bindings", (locale) =>
+        import(
+            /* webpackChunkName: "project-admin-ldap-po-" */ "./po/" + getPOFileFromLocale(locale)
+        )
+    );
 
     const select2 = autocomplete_groups_for_select2(select, {
         allowClear: true,

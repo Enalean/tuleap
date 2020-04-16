@@ -1,9 +1,5 @@
 /*
- * Copyright Enalean (c) 2017. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,25 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, modal as createModal } from "tlp";
+import { get } from "tlp";
 import { initLdapBindingPreview } from "./preview-for-select2.js";
+import { openTargetModalIdOnClick } from "../../../../src/scripts/tuleap/modals/modal-opener.ts";
+
+const LDAP_LINK_BUTTON_ID = "project-admin-members-link-ldap-button";
 
 document.addEventListener("DOMContentLoaded", () => {
     initLdapGroupsAutocompleter();
-    initLdapLinkModal();
+    openTargetModalIdOnClick(document, LDAP_LINK_BUTTON_ID);
 });
-
-function initLdapLinkModal() {
-    const button = document.getElementById("project-admin-members-link-ldap-button");
-    if (!button) {
-        return;
-    }
-    const modal = createModal(document.getElementById(button.dataset.targetModalId));
-
-    button.addEventListener("click", () => {
-        modal.show();
-    });
-}
 
 function initLdapGroupsAutocompleter() {
     const select = document.getElementById("project-admin-members-ldap-group-select");
