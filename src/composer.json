@@ -27,7 +27,7 @@
       "Tuleap\\": ["../tests/simpletest", "../tests/phpunit/common"],
       "TuleapCfg\\": ["../tests/phpunit/tuleap-cfg"]
     },
-    "classmap": ["../tests/lib/", "../tests/simpletest", "../tests/phpunit"]
+    "classmap": ["../tests/lib/", "../tests/phpunit"]
   },
   "repositories": [
     {
