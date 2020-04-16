@@ -124,4 +124,50 @@ describe("User preferences", () => {
             );
         });
     });
+
+    describe("[Notifications] tab", () => {
+        beforeEach(() => {
+            cy.visit("/account/notifications");
+        });
+
+        it("allows user to receive emails about site updates and security notices", () => {
+            const site_update_checkbox = "[data-test=user-prefs-site-updates]";
+
+            cy.get(site_update_checkbox).click();
+            cy.get("[data-test=user-prefs-update-notification]").click();
+
+            cy.get(site_update_checkbox).should("have.checked", "checked");
+
+            assertFeedbackContainsMessage("User preferences successfully updated");
+        });
+
+        it("allows user to receive community mailings", () => {
+            const community_mailing_checkbox = "[data-test=user-prefs-community-mailing]";
+
+            cy.get(community_mailing_checkbox).click();
+            cy.get("[data-test=user-prefs-update-notification]").click();
+
+            cy.get(community_mailing_checkbox).should("have.checked", "checked");
+
+            assertFeedbackContainsMessage("User preferences successfully updated");
+        });
+
+        it("allows user to change the format of the tracker emails to text", () => {
+            const text_format_radio_button = "[data-test=user-prefs-text-format]";
+            cy.get(text_format_radio_button).click();
+            cy.get("[data-test=user-prefs-update-notification]").click();
+            cy.get(text_format_radio_button).should("have.checked", "checked");
+
+            assertFeedbackContainsMessage("Email format preference successfully updated");
+        });
+
+        it("allows user to change the format of the tracker emails to HTML", () => {
+            const html_format_radio_button = "[data-test=user-prefs-html-format]";
+            cy.get(html_format_radio_button).click();
+            cy.get("[data-test=user-prefs-update-notification]").click();
+            cy.get(html_format_radio_button).should("have.checked", "checked");
+
+            assertFeedbackContainsMessage("Email format preference successfully updated");
+        });
+    });
 });

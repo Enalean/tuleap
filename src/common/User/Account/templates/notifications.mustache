@@ -14,14 +14,26 @@
                     <section class="tlp-pane-section">
                         <div class="tlp-form-element">
                             <label class="tlp-label tlp-checkbox">
-                                <input type="checkbox" name="site_email_updates" value="1" {{# site_email_updates_checked }}checked{{/ site_email_updates_checked }}>
+                                <input
+                                    type="checkbox"
+                                    name="site_email_updates"
+                                    value="1"
+                                    data-test="user-prefs-site-updates"
+                                    {{# site_email_updates_checked }}checked{{/ site_email_updates_checked }}
+                                >
                                 {{# gettext }}Receive emails about site updates, including security notices{{/ gettext }}
                             </label>
                             <p class="tlp-text-info">{{# gettext }}Low traffic, highly recommended.{{/ gettext }}</p>
                         </div>
                         <div class="tlp-form-element">
                             <label class="tlp-label tlp-checkbox">
-                                <input type="checkbox" name="site_email_community" value="1" {{# site_email_community_checked }}checked{{/ site_email_community_checked }}>
+                                <input
+                                    type="checkbox"
+                                    name="site_email_community"
+                                    value="1"
+                                    data-test="user-prefs-community-mailing"
+                                    {{# site_email_community_checked }}checked{{/ site_email_community_checked }}
+                                >
                                 {{# gettext }}Receive additional community mailing{{/ gettext }}
                             </label>
                             <p class="tlp-text-info">{{# gettext }}Low traffic.{{/ gettext }}</p>
@@ -30,10 +42,24 @@
                         <div class="tlp-form-element">
                             <label class="tlp-label">{{# gettext }}Tracker email format{{/ gettext }}</label>
                             <label class="tlp-label tlp-radio">
-                                <input type="radio" name="email_format" value="html" {{# email_format_html }}checked{{/ email_format_html }}> HTML
+                                <input
+                                    type="radio"
+                                    name="email_format"
+                                    value="html"
+                                    data-test="user-prefs-html-format"
+                                    {{# email_format_html }}checked{{/ email_format_html }}
+                                >
+                                {{# gettext }} HTML {{/gettext}}
                             </label>
                             <label class="tlp-label tlp-radio">
-                                <input type="radio" name="email_format" value="text" {{# email_format_text }}checked{{/ email_format_text }}> {{# gettext }}Text{{/ gettext }}
+                                <input
+                                    type="radio"
+                                    name="email_format"
+                                    value="text"
+                                    data-test="user-prefs-text-format"
+                                    {{# email_format_text }}checked{{/ email_format_text }}
+                                >
+                                {{# gettext }}Text{{/ gettext }}
                             </label>
                         </div>
                     </section>
@@ -42,7 +68,7 @@
                             {{> csrf_token_input }}
                         {{/ csrf_token }}
 
-                        <button type="submit" class="tlp-button-primary">
+                        <button type="submit" class="tlp-button-primary" data-test="user-prefs-update-notification">
                             <i class="fa fa-floppy-o tlp-button-icon"></i> {{# gettext }}Update notifications settings{{/ gettext }}
                         </button>
                     </section>
