@@ -19,30 +19,8 @@
  */
 
 describe("SVN", function () {
-    describe("Regular users", function () {
-        before(() => {
-            cy.clearCookie("__Host-TULEAP_session_hash");
-            cy.projectMemberLogin();
-        });
-
-        beforeEach(() => {
-            Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
-
-            cy.visitProjectService("svn-project-full", "SVN");
-        });
-        it("do not have administrator privileges", function () {
-            cy.get("[data-test=svn-admin-groups]").should("not.exist");
-        });
-
-        it("should be able to browse existing repository", function () {
-            cy.get("[data-test=svn-repository-access").click();
-            cy.get("[data-test=svn-repository-view").contains("branches");
-            cy.get("[data-test=svn-repository-view").contains("tags");
-            cy.get("[data-test=svn-repository-view").contains("trunk");
-        });
-    });
-
-    describe("Project Administrators", function () {
+    let project_id;
+    context("Project Administrators", function () {
         beforeEach(function () {
             cy.clearCookie("__Host-TULEAP_session_hash");
             cy.ProjectAdministratorLogin();
@@ -56,16 +34,9 @@ describe("SVN", function () {
             cy.visitProjectService("svn-project-full", "SVN");
         });
 
-        it("should be able to delegate the administrator permission", function () {
-            cy.get("[data-test=svn-admin-groups]").click();
-            cy.get("[data-test=svn-admin-group-select]").select([
-                "Project administrators",
-                "Registered users",
-            ]);
-
-            cy.get("[data-test=svn-admin-save]").click();
-
-            cy.get("[data-test=feedback]").contains("it was already granted to");
+        it("can access to admin section", function () {
+            project_id = this.svn_project_id;
+            cy.visit("/plugins/svn/?group_id=" + project_id + "&action=admin-groups");
         });
 
         it("should be able to delete a repository", function () {
@@ -137,6 +108,69 @@ describe("SVN", function () {
                 wrap.should("contain", "admin, ProjectAdministrator");
                 wrap.should("contain", "project_members");
             });
+        });
+    });
+
+    context("Regular users", function () {
+        before(() => {
+            cy.clearCookie("__Host-TULEAP_session_hash");
+            cy.projectMemberLogin();
+        });
+
+        beforeEach(() => {
+            Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+
+            cy.visitProjectService("svn-project-full", "SVN");
+        });
+        it("do not have administrator privileges", function () {
+            cy.get("[data-test=svn-admin-groups]").should("not.exist");
+        });
+
+        it("should be able to browse existing repository", function () {
+            cy.get("[data-test=svn-repository-access-sample").click();
+            cy.get("[data-test=svn-repository-view").contains("branches");
+            cy.get("[data-test=svn-repository-view").contains("tags");
+            cy.get("[data-test=svn-repository-view").contains("trunk");
+        });
+
+        it("should raise an error when user try to access to plugin SVN admin page", function () {
+            cy.visit("/plugins/svn/?group_id=" + project_id + "&action=admin-groups");
+
+            cy.get("[data-test=feedback]").contains("Permission Denied");
+        });
+    });
+
+    describe("Project Administrators", function () {
+        beforeEach(function () {
+            cy.clearCookie("__Host-TULEAP_session_hash");
+            cy.ProjectAdministratorLogin();
+
+            cy.getProjectId("svn-project-full").as("svn_project_id");
+        });
+
+        beforeEach(() => {
+            Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+        });
+
+        it("should be able to delegate the administrator permission", function () {
+            cy.clearCookie("__Host-TULEAP_session_hash");
+            cy.ProjectAdministratorLogin();
+            cy.visitProjectService("svn-project-full", "SVN");
+            cy.get("[data-test=svn-admin-groups]").click();
+            cy.get("[data-test=svn-admin-group-select]").select([
+                "Project administrators",
+                "Registered users",
+            ]);
+
+            cy.get("[data-test=svn-admin-save]").click();
+
+            cy.get("[data-test=feedback]").contains("it was already granted to");
+        });
+        it("regular user is now administrator", function () {
+            cy.clearCookie("__Host-TULEAP_session_hash");
+            cy.projectMemberLogin();
+            cy.visitProjectService("svn-project-full", "SVN");
+            cy.get("[data-test=svn-admin-groups]").click();
         });
     });
 });

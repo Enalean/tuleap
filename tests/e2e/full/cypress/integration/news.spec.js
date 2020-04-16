@@ -1,7 +1,7 @@
 /*
- * Copyright (c) Enalean, 2018 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,47 +15,27 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-describe("Git", function () {
+describe("News", function () {
     let project_id;
     context("Project administrators", function () {
         before(() => {
             cy.clearCookie("__Host-TULEAP_session_hash");
             cy.ProjectAdministratorLogin();
-            cy.getProjectId("git-project").as("project_id");
+            cy.getProjectId("permissions-project-01").as("project_id");
         });
 
-        beforeEach(() => {
+        beforeEach(function () {
             Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
         });
 
         it("can access to admin section", function () {
             project_id = this.project_id;
-            cy.visit("/plugins/git/?group_id=" + project_id + "&action=admin");
-        });
-
-        context("Git repository list", function () {
-            it("can create a new repository", function () {
-                cy.visit("/plugins/git/git-project/");
-                cy.get("[data-test=empty_state_create_repository]").click();
-                cy.get("[data-test=create_repository_name]").type("Aquali");
-                cy.get("[data-test=create_repository]").click();
-
-                cy.get("[data-test=git_repo_name]").contains("Aquali", {
-                    timeout: 20000,
-                });
-            });
-
-            it("shows the new repository in the list", function () {
-                cy.visit("/plugins/git/git-project/");
-                cy.get("[data-test=repository_name]").contains("Aquali", {
-                    timeout: 20000,
-                });
-            });
+            cy.visit("/news/admin/?group_id=" + project_id);
         });
     });
-
     context("Project members", function () {
         before(() => {
             cy.clearCookie("__Host-TULEAP_session_hash");
@@ -65,10 +45,12 @@ describe("Git", function () {
         beforeEach(function () {
             Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
         });
-        it("should raise an error when user try to access to plugin Git admin page", function () {
-            cy.visit("/plugins/git/?group_id=" + project_id + "&action=admin");
+        it("should raise an error when user try to access to News admin page", function () {
+            cy.visit("/news/admin/?group_id=" + project_id);
 
-            cy.get("[data-test=git-administration-page]").should("not.exist");
+            cy.get("[data-test=feedback]").contains(
+                "Permission Denied. You have to be an admin on the News service of this project."
+            );
         });
     });
 });
