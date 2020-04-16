@@ -9,7 +9,11 @@
             </div>
             <section class="tlp-pane-section">
                 {{# last_created_app }}
-                    <div class="tlp-alert-success">
+                    <div class="tlp-alert-success"
+                         data-test="oauth2-app-creation-success"
+                         data-oauth2-new-app-client-id="{{ client_id }}"
+                         data-oauth2-new-app-client-secret="{{ client_secret }}"
+                    >
                         <p>
                             {{# dgettext }}
                                 tuleap-oauth2_server |
@@ -26,6 +30,7 @@
                         class="tlp-button-primary tlp-table-actions-element"
                         data-target-modal-id="oauth2-server-add-client-modal"
                         id="oauth2-server-add-client-button"
+                        data-test="oauth2-create-app-button"
                     >
                         <i class="fa fa-plus tlp-button-icon"></i> {{# dgettext }}tuleap-oauth2_server | Add an App{{/ dgettext }}
                     </button>

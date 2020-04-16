@@ -5,6 +5,7 @@
     aria-labelledby="oauth2-server-add-modal-label"
     action="{{ add_client_url }}"
     method="post"
+    data-test="oauth2-new-app-modal"
 >
     {{# csrf_token }}
         {{> csrf_token_input }}
@@ -31,6 +32,7 @@
                 name="name"
                 placeholder="{{# dgettext }}tuleap-oauth2_server | My REST API consumer App{{/ dgettext }}"
                 required
+                data-test="oauth2-new-app-name"
             >
         </div>
         <div class="tlp-form-element">
@@ -43,6 +45,7 @@
                 placeholder="https://"
                 pattern="^https:\/\/[^#]*$"
                 required
+                data-test="oauth2-new-app-redirect-uri"
             >
             <p class="tlp-text-info"><i class="fa fa-life-saver"></i> {{# dgettext }}tuleap-oauth2_server | Redirect endpoint must use HTTPS. It must not include a fragment component (#anchor){{/ dgettext}}</p>
         </div>
@@ -56,7 +59,7 @@
         <button type="reset" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
             {{# dgettext }}tuleap-oauth2_server | Cancel {{/ dgettext }}
         </button>
-        <button type="submit" class="tlp-button-primary tlp-modal-action">
+        <button type="submit" class="tlp-button-primary tlp-modal-action" data-test="oauth2-new-app-modal-submit-button">
             <i class="fa fa-plus tlp-button-icon"></i>
             {{# dgettext }}tuleap-oauth2_server | Add an App {{/ dgettext }}
         </button>
