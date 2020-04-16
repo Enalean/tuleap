@@ -39,10 +39,6 @@
         <DeprecatedInterface errorLevel="info" />
         <DeprecatedTrait errorLevel="info" />
 
-        <InternalMethod errorLevel="info" />
-        <InternalProperty errorLevel="info" />
-        <InternalClass errorLevel="info" />
-
         <PropertyNotSetInConstructor errorLevel="info" />
         <MissingConstructor errorLevel="info" />
 
