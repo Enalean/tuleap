@@ -24,39 +24,9 @@
 // @see http://nat.truemesh.com/archives/000727.html
 require_once __DIR__ . '/../bootstrap.php';
 
-function aTextField()
-{
-    return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_Text');
-}
-
-function anIntegerField()
-{
-    return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_Integer');
-}
-
-function aFloatField()
-{
-    return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_Float');
-}
-
 function aStringField()
 {
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_String');
-}
-
-function aDateFieldWithTime()
-{
-    return new Test_Tracker_FormElementDate_Builder('Tracker_FormElement_Field_Date', true);
-}
-
-function aMockDateWithoutTimeField()
-{
-    return new Test_Tracker_FormElementDate_Builder('Tracker_FormElement_Field_Date', false);
-}
-
-function anOpenListField()
-{
-    return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_OpenList');
 }
 
 function anArtifactLinkField()
@@ -72,11 +42,6 @@ function aSelectBoxField()
 function aMultiSelectBoxField()
 {
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_MultiSelectbox');
-}
-
-function aRadiobuttonField()
-{
-    return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_Radiobutton');
 }
 
 function aFileField()

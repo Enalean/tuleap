@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,16 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../../bootstrap.php';
+declare(strict_types=1);
 
-class Tracker_Workflow_Trigger_RulesBuilderDataTest extends TuleapTestCase
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_Workflow_Trigger_RulesBuilderDataTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function itHasNoData()
+    public function testItHasNoData(): void
     {
         $rules_builder_data = new Tracker_Workflow_Trigger_RulesBuilderData(new ArrayIterator(), array());
-        $this->assertEqual(
-            $rules_builder_data->fetchFormattedForJson(),
+        $this->assertEquals(
             array(
                 "targets" => array(),
                 "conditions" => array(
@@ -41,55 +42,64 @@ class Tracker_Workflow_Trigger_RulesBuilderDataTest extends TuleapTestCase
                     ),
                 ),
                 "triggers" => array(),
-            )
+            ),
+            $rules_builder_data->fetchFormattedForJson()
         );
     }
 
-    public function itHasATargetFieldOfTheTrackerOnWhichRulesWillApply()
+    public function testItHasATargetFieldOfTheTrackerOnWhichRulesWillApply(): void
     {
-        $field_id = 269;
-        $target_field = aMockField()->withId($field_id)->build();
+        $field_id     = 269;
+        $target_field = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
+        $target_field->shouldReceive('getId')->andReturn($field_id);
         $rules_builder_data = new Tracker_Workflow_Trigger_RulesBuilderData(new ArrayIterator(array($target_field)), array());
 
-        stub($target_field)->fetchFormattedForJson()->returns('whatever')->once();
+        $target_field->shouldReceive('fetchFormattedForJson')->andReturns('whatever')->once();
 
         $result = $rules_builder_data->fetchFormattedForJson();
-        $this->assertCount($result['targets'], 1);
-        $this->assertEqual($result['targets'][$field_id], 'whatever');
+        $this->assertCount(1, $result['targets']);
+        $this->assertEquals('whatever', $result['targets'][$field_id]);
     }
 
-    public function itHasATriggerTracker()
+    public function testItHasATriggerTracker(): void
     {
         $tracker_id = 90;
+        $tracker    = Mockery::mock(Tracker::class);
+        $tracker->shouldReceive('getId')->andReturn($tracker_id);
+        $tracker->shouldReceive('getName')->andReturn('Tasks');
         $triggering_field = new Tracker_Workflow_Trigger_RulesBuilderTriggeringFields(
-            aTracker()->withId($tracker_id)->withName('Tasks')->build(),
+            $tracker,
             new ArrayIterator()
         );
 
         $rules_builder_data = new Tracker_Workflow_Trigger_RulesBuilderData(new ArrayIterator(), array($triggering_field));
         $result = $rules_builder_data->fetchFormattedForJson();
-        $this->assertCount($result['triggers'], 1);
-        $this->assertEqual($result['triggers'][$tracker_id]['id'], 90);
-        $this->assertEqual($result['triggers'][$tracker_id]['name'], 'Tasks');
-        $this->assertEqual($result['triggers'][$tracker_id]['fields'], array());
+        $this->assertCount(1, $result['triggers']);
+        $this->assertEquals(90, $result['triggers'][$tracker_id]['id']);
+        $this->assertEquals('Tasks', $result['triggers'][$tracker_id]['name']);
+        $this->assertEquals(array(), $result['triggers'][$tracker_id]['fields']);
     }
 
-    public function itHasATriggerTrackerWithAField()
+    public function testItHasATriggerTrackerWithAField(): void
     {
         $field_id = 693;
-        $field = aMockField()->withId($field_id)->build();
-        stub($field)->fetchFormattedForJson()->returns('whatever')->once();
+        $field = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
+        $field->shouldReceive('getId')->andReturn($field_id);
+        $field->shouldReceive('fetchFormattedForJson')->andReturns('whatever')->once();
 
         $tracker_id = 90;
+        $tracker    = Mockery::mock(Tracker::class);
+        $tracker->shouldReceive('getId')->andReturn($tracker_id);
+        $tracker->shouldReceive('getName')->andReturn('Tasks');
         $triggering_field = new Tracker_Workflow_Trigger_RulesBuilderTriggeringFields(
-            aTracker()->withId($tracker_id)->withName('Tasks')->build(),
+            $tracker,
             new ArrayIterator(array($field))
         );
 
         $rules_builder_data = new Tracker_Workflow_Trigger_RulesBuilderData(new ArrayIterator(), array($triggering_field));
         $result = $rules_builder_data->fetchFormattedForJson();
         $trigger = $result['triggers'][$tracker_id];
-        $this->assertCount($trigger['fields'], 1);
-        $this->assertEqual($trigger['fields'][$field_id], 'whatever');
+        $this->assertCount(1, $trigger['fields']);
+        $this->assertEquals('whatever', $trigger['fields'][$field_id]);
     }
 }
