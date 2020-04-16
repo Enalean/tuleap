@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,12 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../../../bootstrap.php';
+declare(strict_types=1);
 
-class Tracker_Workflow_Trigger_RulesProcessor_AtLeastOneStrategyTest extends TuleapTestCase
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_Workflow_Trigger_RulesProcessor_AtLeastOneStrategyTest extends \PHPUnit\Framework\TestCase
 {
-
-    public function itAlwaysApplyRuleWhenAtLeastOneValueIsSet()
+    public function testItAlwaysApplyRuleWhenAtLeastOneValueIsSet(): void
     {
         $strategy = new Tracker_Workflow_Trigger_RulesProcessor_AtLeastOneStrategy();
         $this->assertTrue($strategy->allPrecondtionsAreMet());
