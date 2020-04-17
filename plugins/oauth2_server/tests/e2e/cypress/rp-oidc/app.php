@@ -23,16 +23,21 @@ declare(strict_types=1);
 use Amp\ByteStream\ResourceOutputStream;
 use Amp\Http\Server\HttpServer;
 use Amp\Http\Server\RequestHandler\CallableRequestHandler;
-use Amp\Http\Status;
-use Amp\Http\Server\Response;
 use Amp\Log\ConsoleFormatter;
 use Amp\Log\StreamHandler;
 use Amp\Socket\BindContext;
 use Amp\Socket\Certificate;
 use Amp\Socket\Server;
-use Amp\Http\Server\Request;
 use Amp\Socket\ServerTlsContext;
+use Http\Adapter\Guzzle6\Client;
+use Http\Client\Common\Plugin\LoggerPlugin;
 use Monolog\Logger;
+use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\OAuth2Server\E2E\RelyingPartyOIDC\OAuth2InitFlowController;
+use Tuleap\OAuth2Server\E2E\RelyingPartyOIDC\OAuth2AuthorizationCallbackController;
+use Tuleap\OAuth2Server\E2E\RelyingPartyOIDC\OAuth2TestFlowClientCredentialStorage;
+use Tuleap\OAuth2Server\E2E\RelyingPartyOIDC\OAuth2TestFlowHTTPClientWithClientCredentialFactory;
+use Tuleap\OAuth2Server\E2E\RelyingPartyOIDC\OAuth2TestFlowSecretGenerator;
 
 require_once __DIR__ . '/../../../../../../src/vendor/autoload.php';
 require_once __DIR__ . '/../../../../vendor/autoload.php';
@@ -41,8 +46,10 @@ Amp\Loop::run(
     static function () {
         $log_handler = new StreamHandler(new ResourceOutputStream(STDOUT));
         $log_handler->setFormatter(new ConsoleFormatter());
-        $logger = new Logger('rp-oidc');
-        $logger->pushHandler($log_handler);
+        $logger_front_channel = new Logger('rp-oidc-front-channel');
+        $logger_front_channel->pushHandler($log_handler);
+        $logger_back_channel  = new Logger('rp-oidc-backchannel');
+        $logger_back_channel->pushHandler($log_handler);
 
         $private_key = openssl_pkey_new();
         $cert        = openssl_csr_new(['commonName' => 'oauth2-server-rp-oidc'], $private_key);
@@ -52,13 +59,13 @@ Amp\Loop::run(
         openssl_pkey_export($private_key, $out);
         $private_part = (string) $out;
 
-        $state          = bin2hex(random_bytes(32));
-        $pkce_challenge = bin2hex(random_bytes(32));
+        $secret_generator          = new OAuth2TestFlowSecretGenerator();
+        $client_credential_storage = new OAuth2TestFlowClientCredentialStorage();
 
         $cert_file = tmpfile();
         fwrite($cert_file, $public_part . $private_part);
         $cert_file_path = stream_get_meta_data($cert_file)['uri'];
-        $logger->debug('Certificate generated at ' . $cert_file_path);
+        $logger_front_channel->debug('Certificate generated at ' . $cert_file_path);
 
         $cert    = new Certificate($cert_file_path);
         $context = (new BindContext())->withTlsContext((new ServerTlsContext())->withDefaultCertificate($cert));
@@ -69,44 +76,29 @@ Amp\Loop::run(
         $router->addRoute(
             'GET',
             '/init-flow',
-            new CallableRequestHandler(
-                static function (Request $request) use ($state, $pkce_challenge): Response {
-                    parse_str($request->getUri()->getQuery(), $query_params);
-                    $redirect_parameters = [
-                        'response_type'         => 'code',
-                        'client_id'             => $query_params['client_id'],
-                        'client_secret'         => $query_params['client_secret'],
-                        'scope'                 => 'openid offline_access',
-                        'redirect_uri'          => 'https://oauth2-server-rp-oidc:8443/callback',
-                        'state'                 => $state,
-                        'code_challenge'        => sodium_bin2base64(hash('sha256', $pkce_challenge, true), SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING),
-                        'code_challenge_method' => 'S256'
-                    ];
-                    return new Response(
-                        Status::FOUND,
-                        ['Location' => 'https://tuleap/oauth2/authorize?' . http_build_query($redirect_parameters)]
-                    );
-                }
-            )
+            new CallableRequestHandler(new OAuth2InitFlowController($secret_generator, $client_credential_storage))
+        );
+        $http_client = new \Http\Client\Common\PluginClient(
+            Client::createWithConfig(['verify' => false]),
+            [new LoggerPlugin($logger_back_channel)]
         );
         $router->addRoute(
             'GET',
             '/callback',
             new CallableRequestHandler(
-                static function (Request $request) use ($state): Response {
-                    parse_str($request->getUri()->getQuery(), $query_params);
-                    if ($query_params['state'] !== $state) {
-                        return new Response(
-                            Status::BAD_REQUEST,
-                            ['Content-Type' => 'text/html'],
-                            'Failure, state does not match'
-                        );
-                    }
-                    return new Response(Status::OK, ['Content-Type' => 'text/html'], 'OK');
-                }
+                new OAuth2AuthorizationCallbackController(
+                    $secret_generator,
+                    $http_client,
+                    new OAuth2TestFlowHTTPClientWithClientCredentialFactory(
+                        $http_client,
+                        $client_credential_storage
+                    ),
+                    HTTPFactoryBuilder::requestFactory(),
+                    HTTPFactoryBuilder::streamFactory()
+                )
             )
         );
-        $server = new HttpServer($sockets, $router, $logger);
+        $server = new HttpServer($sockets, $router, $logger_front_channel);
 
         yield $server->start();
 
