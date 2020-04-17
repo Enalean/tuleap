@@ -48,7 +48,6 @@ describe("ReleaseDescription", () => {
         store_options = {
             state: {
                 label_tracker_planning: "Releases",
-                project_milestone_activate_ttm: true,
             },
         };
 
@@ -205,13 +204,6 @@ describe("ReleaseDescription", () => {
         component_options.propsData = {
             release_data,
         };
-
-        const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.contains(TestManagementDisplayer)).toBe(false);
-    });
-
-    it("When the project has not activated project_milestone_activate_ttm, Then TestManagementDisplayer is not rendered", async () => {
-        store_options.state.project_milestone_activate_ttm = false;
 
         const wrapper = await getPersonalWidgetInstance(store_options);
         expect(wrapper.contains(TestManagementDisplayer)).toBe(false);

@@ -19,71 +19,77 @@
 
 <template>
     <div
-        v-if="is_testmanagement_available && project_milestone_activate_ttm"
-        class="release-ttm-section"
-    >
-        <ul>
-            <li data-test="nb-test-passed">
-                <translate
-                    v-bind:translate-params="{
-                        total_test_passed: release_data.campaign.nb_of_passed,
-                    }"
-                    v-bind:translate-n="release_data.campaign.nb_of_passed"
-                    translate-plural="%{ total_test_passed } tests passed"
-                >
-                    %{total_test_passed} test passed
-                </translate>
-            </li>
-            <li data-test="nb-test-failed">
-                <translate
-                    v-bind:translate-params="{
-                        total_test_failed: release_data.campaign.nb_of_failed,
-                    }"
-                    v-bind:translate-n="release_data.campaign.nb_of_failed"
-                    translate-plural="%{ total_test_failed } tests failed"
-                >
-                    %{total_test_failed} test failed
-                </translate>
-            </li>
-            <li data-test="nb-test-notrun">
-                <translate
-                    v-bind:translate-params="{
-                        total_test_notrun: release_data.campaign.nb_of_notrun,
-                    }"
-                    v-bind:translate-n="release_data.campaign.nb_of_notrun"
-                    translate-plural="%{ total_test_notrun } tests not run"
-                >
-                    %{total_test_notrun} test not run
-                </translate>
-            </li>
-            <li data-test="nb-test-blocked">
-                <translate
-                    v-bind:translate-params="{
-                        total_test_blocked: release_data.campaign.nb_of_blocked,
-                    }"
-                    v-bind:translate-n="release_data.campaign.nb_of_blocked"
-                    translate-plural="%{ total_test_blocked } tests blocked"
-                >
-                    %{total_test_blocked} test blocked
-                </translate>
-            </li>
-        </ul>
-    </div>
+        v-if="is_testmanagement_available"
+        v-bind:id="`release-widget-pie-chart-ttm-${release_data.id}`"
+        class="release-widget-pie-chart-ttm"
+        data-test="display-ttm"
+    ></div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { MilestoneData } from "../../../../type";
-import { State } from "vuex-class";
 import { is_testmanagement_activated } from "../../../../helpers/test-management-helper";
+import { DataPieChart } from "../../../../../../../../../src/scripts/charts-builders/type";
+import { createPieChart } from "../../../../chart_builder/pie_chart_drawer/pie-chart-drawer";
 
 @Component({})
 export default class TestManagement extends Vue {
     @Prop()
     readonly release_data!: MilestoneData;
-    @State
-    readonly project_milestone_activate_ttm!: boolean;
+
+    PIE_CHART_HEIGHT_WIDTH = 170;
+    PIE_CHART_RADIUS = 170;
+
+    get getSizes(): { width: number; height: number; radius: number } {
+        return {
+            width: this.PIE_CHART_HEIGHT_WIDTH,
+            height: this.PIE_CHART_HEIGHT_WIDTH,
+            radius: this.PIE_CHART_RADIUS,
+        };
+    }
+
+    get getDataPieChartCampaign(): DataPieChart[] {
+        if (!this.release_data.campaign) {
+            return [];
+        }
+
+        return [
+            {
+                key: "notrun",
+                label: this.$gettext("Not run"),
+                count: this.release_data.campaign.nb_of_notrun,
+            },
+            {
+                key: "passed",
+                label: this.$gettext("Passed"),
+                count: this.release_data.campaign.nb_of_passed,
+            },
+            {
+                key: "failed",
+                label: this.$gettext("Failed"),
+                count: this.release_data.campaign.nb_of_failed,
+            },
+            {
+                key: "blocked",
+                label: this.$gettext("Blocked"),
+                count: this.release_data.campaign.nb_of_blocked,
+            },
+        ];
+    }
+
+    mounted(): void {
+        if (this.release_data.campaign) {
+            const chart_container = document.getElementById(
+                "release-widget-pie-chart-ttm-" + this.release_data.id
+            );
+
+            if (chart_container) {
+                createPieChart(chart_container, this.getSizes, this.getDataPieChartCampaign);
+            }
+        }
+    }
 
     get is_testmanagement_available(): boolean {
         return (

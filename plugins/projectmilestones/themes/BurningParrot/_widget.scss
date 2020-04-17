@@ -21,6 +21,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 
 @import '../../../../plugins/tracker/themes/default/css/includes/burndown-chart';
 @import '../../../../plugins/agiledashboard/themes/FlamingParrot/css/burnup-chart';
+@import '../../../../plugins/testmanagement/themes/BurningParrot/css/includes/colors';
 @import 'headers';
 @import 'release-toggle';
 @import 'release-toggle-tracker-artifacts-badges';

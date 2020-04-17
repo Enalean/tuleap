@@ -48,7 +48,6 @@ describe("TestManagement", () => {
             state: {
                 label_tracker_planning: "Releases",
                 project_id,
-                project_milestone_activate_ttm: true,
             },
         };
 
@@ -78,40 +77,6 @@ describe("TestManagement", () => {
         component_options.propsData = {
             release_data,
         };
-    });
-
-    it("When the component is rendered, Then there is a list", async () => {
-        component_options.data = (): DefaultData<TestManagement> => {
-            return {
-                is_loading: false,
-                error_message: null,
-            };
-        };
-
-        store_options.state.project_milestone_activate_ttm = true;
-
-        const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.contains("[data-test=nb-test-failed]")).toBe(true);
-        expect(wrapper.contains("[data-test=nb-test-blocked]")).toBe(true);
-        expect(wrapper.contains("[data-test=nb-test-notrun]")).toBe(true);
-        expect(wrapper.contains("[data-test=nb-test-passed]")).toBe(true);
-    });
-
-    it("When the project has not activated project_milestone_activate_ttm, Then there is not lists", async () => {
-        component_options.data = (): DefaultData<TestManagement> => {
-            return {
-                is_loading: false,
-                error_message: null,
-            };
-        };
-
-        store_options.state.project_milestone_activate_ttm = false;
-
-        const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.contains("[data-test=nb-test-failed]")).toBe(false);
-        expect(wrapper.contains("[data-test=nb-test-blocked]")).toBe(false);
-        expect(wrapper.contains("[data-test=nb-test-notrun]")).toBe(false);
-        expect(wrapper.contains("[data-test=nb-test-passed]")).toBe(false);
     });
 
     it("When there is not campagin in release data, Then there is not lists", async () => {
@@ -144,12 +109,12 @@ describe("TestManagement", () => {
             release_data,
         };
 
-        store_options.state.project_milestone_activate_ttm = true;
-
         const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.contains("[data-test=nb-test-failed]")).toBe(false);
-        expect(wrapper.contains("[data-test=nb-test-blocked]")).toBe(false);
-        expect(wrapper.contains("[data-test=nb-test-notrun]")).toBe(false);
-        expect(wrapper.contains("[data-test=nb-test-passed]")).toBe(false);
+        expect(wrapper.contains("[data-test=display-ttm]")).toBe(false);
+    });
+
+    it("When component is renderer, Then there is a div element with id of release", async () => {
+        const wrapper = await getPersonalWidgetInstance(store_options);
+        expect(wrapper.element).toMatchSnapshot();
     });
 });

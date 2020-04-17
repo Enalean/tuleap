@@ -23,7 +23,7 @@
             <div>
                 <release-description-badges-tracker v-bind:release_data="release_data" />
                 <test-management-displayer
-                    v-if="is_testmanagement_available && project_milestone_activate_ttm"
+                    v-if="is_testmanagement_available"
                     v-bind:release_data="release_data"
                 />
             </div>
@@ -87,8 +87,6 @@ export default class ReleaseDescription extends Vue {
     readonly project_id!: number;
     @State
     readonly user_can_view_sub_milestones_planning!: boolean;
-    @State
-    readonly project_milestone_activate_ttm!: boolean;
 
     get get_planning_link(): string | null {
         if (
