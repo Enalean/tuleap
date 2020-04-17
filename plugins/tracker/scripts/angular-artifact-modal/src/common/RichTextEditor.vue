@@ -118,10 +118,17 @@ export default {
 
             return {
                 toolbar: [
-                    ["Bold", "Italic", "Underline"],
-                    ["NumberedList", "BulletedList", "-", "Blockquote", "Format"],
+                    ["Bold", "Italic"],
+                    ["NumberedList", "BulletedList", "-", "Blockquote", "Styles", "Format"],
                     ["Link", "Unlink", "Anchor", "Image"],
                     ["Source"],
+                ],
+                stylesSet: [
+                    { name: "Bold", element: "strong", overrides: "b" },
+                    { name: "Italic", element: "em", overrides: "i" },
+                    { name: "Code", element: "code" },
+                    { name: "Subscript", element: "sub" },
+                    { name: "Superscript", element: "sup" },
                 ],
                 height: "100px",
                 readOnly: this.disabled,

@@ -151,6 +151,16 @@ em {
     font-style: italic;
 }
 
+sub {
+    font-size: smaller;
+    vertical-align: sub;
+}
+
+sup {
+    font-size: smaller;
+    vertical-align: super;
+}
+
 blockquote {
     margin: 0 0 $tlp-spacing;
     padding: 0 0 0 $tlp-spacing / 2;

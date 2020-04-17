@@ -80,16 +80,23 @@ codendi.RTE = Class.create({
             ];
         } else if (this.options.toolbar === "minimal") {
             toolbar = [
-                ["Bold", "Italic", "Underline"],
+                ["Bold", "Italic"],
                 ["NumberedList", "BulletedList", "-", "Blockquote", "Format"],
                 ["Link", "Unlink", "Anchor", "Image"],
             ];
         } else if (this.options.toolbar === "tuleap") {
             toolbar = [
-                ["Bold", "Italic", "Underline"],
-                ["NumberedList", "BulletedList", "-", "Blockquote", "Format"],
+                ["Bold", "Italic"],
+                ["NumberedList", "BulletedList", "-", "Blockquote", "Styles", "Format"],
                 ["Link", "Unlink", "Anchor", "Image"],
                 ["Source"],
+            ];
+            replace_options.stylesSet = [
+                { name: "Bold", element: "strong", overrides: "b" },
+                { name: "Italic", element: "em", overrides: "i" },
+                { name: "Code", element: "code" },
+                { name: "Subscript", element: "sub" },
+                { name: "Superscript", element: "sup" },
             ];
         } else if (this.options.toolbar === "advanced") {
             toolbar = [

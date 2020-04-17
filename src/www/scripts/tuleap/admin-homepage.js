@@ -32,10 +32,7 @@
             $('textarea[id^="admin-headline-"]').each(function () {
                 var textarea_id = $(this).attr("id");
 
-                CKEDITOR.replace(textarea_id, {
-                    toolbar: tuleap.ckeditor.toolbar,
-                    disableNativeSpellChecker: false,
-                });
+                CKEDITOR.replace(textarea_id, tuleap.ckeditor.config);
 
                 CKEDITOR.on("instanceReady", function () {
                     switchHeadline();
