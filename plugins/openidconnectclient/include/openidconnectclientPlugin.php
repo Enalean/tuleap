@@ -21,6 +21,7 @@
 use FastRoute\RouteCollector;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\BurningParrotCompatiblePageEvent;
+use Tuleap\Http\Client\Authentication\BasicAuth;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Layout\IncludeAssets;
@@ -222,7 +223,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         $flow              = new Flow(
             $state_manager,
             $provider_manager,
-            new TokenRequestCreator($request_factory, $stream_factory),
+            new TokenRequestCreator($request_factory, $stream_factory, new BasicAuth()),
             new TokenRequestSender($http_client),
             $id_token_verifier,
             new UserInfoRequestCreator($request_factory),
