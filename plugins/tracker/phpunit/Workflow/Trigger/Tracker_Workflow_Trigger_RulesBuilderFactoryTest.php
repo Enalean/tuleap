@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,10 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../../bootstrap.php';
+declare(strict_types=1);
 
-class Tracker_Workflow_Trigger_RulesBuilderFactoryTest extends TuleapTestCase
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_Workflow_Trigger_RulesBuilderFactoryTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /**
      * @var Tracker
@@ -32,19 +34,19 @@ class Tracker_Workflow_Trigger_RulesBuilderFactoryTest extends TuleapTestCase
      * @var Tracker_Workflow_Trigger_RulesBuilderFactory
      */
     private $factory;
+    private $formelement_factory;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
-
-        $this->target_tracker      = aTracker()->withId(12)->withChildren(array())->build();
+        $this->target_tracker = Mockery::mock(Tracker::class);
+        $this->target_tracker->shouldReceive('getId')->andReturn(12);
+        $this->target_tracker->shouldReceive('getChildren')->andReturn([]);
         $this->formelement_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
 
         $this->factory = new Tracker_Workflow_Trigger_RulesBuilderFactory($this->formelement_factory);
     }
 
-    public function itHasAllTargetTrackerSelectBoxFields()
+    public function testItHasAllTargetTrackerSelectBoxFields(): void
     {
         $this->formelement_factory->shouldReceive('getUsedStaticSbFields')
             ->with($this->target_tracker)
@@ -54,13 +56,16 @@ class Tracker_Workflow_Trigger_RulesBuilderFactoryTest extends TuleapTestCase
         $this->factory->getForTracker($this->target_tracker);
     }
 
-    public function itHasAllTriggeringFields()
+    public function testItHasAllTriggeringFields(): void
     {
-        $child_tracker = aTracker()->withId(200)->build();
-        $this->target_tracker->setChildren(array($child_tracker));
+        $child_tracker = Mockery::mock(Tracker::class);
+        $child_tracker->shouldReceive('getId')->andReturn(200);
+        $target_tracker = Mockery::mock(Tracker::class);
+        $target_tracker->shouldReceive('getId')->andReturn(12);
+        $target_tracker->shouldReceive('getChildren')->andReturn([$child_tracker]);
 
         $this->formelement_factory->shouldReceive('getUsedStaticSbFields')
-            ->with($this->target_tracker)
+            ->with($target_tracker)
             ->once()
             ->andReturn(Mockery::spy(DataAccessResult::class));
 
@@ -69,6 +74,6 @@ class Tracker_Workflow_Trigger_RulesBuilderFactoryTest extends TuleapTestCase
             ->once()
             ->andReturn(Mockery::spy(DataAccessResult::class));
 
-        $this->factory->getForTracker($this->target_tracker);
+        $this->factory->getForTracker($target_tracker);
     }
 }
