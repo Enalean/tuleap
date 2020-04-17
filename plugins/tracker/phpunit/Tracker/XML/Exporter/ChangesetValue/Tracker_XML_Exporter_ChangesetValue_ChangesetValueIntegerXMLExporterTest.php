@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,10 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once __DIR__ . '/../../../../bootstrap.php';
 
-class Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporterTest extends TuleapTestCase
+declare(strict_types=1);
+
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporterTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /** @var Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporter */
     private $exporter;
@@ -37,31 +40,30 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporterTest e
     /** @var Tracker_FormElement_Field */
     private $field;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-        $this->field         = aFileField()->withName('story_points')->build();
+        $this->field         = Mockery::spy(Tracker_FormElement_Field_File::class)->shouldReceive('getName')->andReturn('story_points')->getMock();
         $this->exporter      = new Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporter();
         $this->artifact_xml  = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
         $this->changeset_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');
 
-        $this->changeset_value = mock('Tracker_Artifact_ChangesetValue_File');
-        stub($this->changeset_value)->getValue()->returns(123);
-        stub($this->changeset_value)->getField()->returns($this->field);
+        $this->changeset_value = \Mockery::spy(\Tracker_Artifact_ChangesetValue_File::class);
+        $this->changeset_value->shouldReceive('getValue')->andReturns(123);
+        $this->changeset_value->shouldReceive('getField')->andReturns($this->field);
     }
 
-    public function itCreatesFieldChangeNodeInChangesetNode()
+    public function testItCreatesFieldChangeNodeInChangesetNode(): void
     {
         $this->exporter->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            mock('Tracker_Artifact'),
+            \Mockery::spy(\Tracker_Artifact::class),
             $this->changeset_value
         );
 
         $field_change = $this->changeset_xml->field_change;
-        $this->assertEqual((string) $field_change['type'], 'int');
-        $this->assertEqual((string) $field_change['field_name'], $this->field->getName());
-        $this->assertEqual($field_change->value, 123);
+        $this->assertEquals('int', (string) $field_change['type']);
+        $this->assertEquals($this->field->getName(), (string) $field_change['field_name']);
+        $this->assertEquals(123, (int) $field_change->value);
     }
 }

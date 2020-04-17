@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,10 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../../../bootstrap.php';
+declare(strict_types=1);
 
-class Tracker_XML_Exporter_ChangesetXMLExporterTest extends TuleapTestCase
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_XML_Exporter_ChangesetXMLExporterTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /** @var Tracker_XML_Exporter_ChangesetXMLExporter */
     private $exporter;
@@ -41,11 +43,25 @@ class Tracker_XML_Exporter_ChangesetXMLExporterTest extends TuleapTestCase
 
     /** @var UserXMLExporter */
     private $user_xml_exporter;
+    /**
+     * @var Tracker_Artifact_ChangesetValue_Integer
+     */
+    private $int_changeset_value;
+    /**
+     * @var Tracker_Artifact_ChangesetValue_Float
+     */
+    private $float_changeset_value;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact_Changeset
+     */
+    private $changeset;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact_Changeset_Comment
+     */
+    private $comment;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
         $this->user_manager      = \Mockery::spy(\UserManager::class);
         $this->user_xml_exporter = \Mockery::mock(
             \UserXMLExporter::class,
@@ -86,24 +102,24 @@ class Tracker_XML_Exporter_ChangesetXMLExporterTest extends TuleapTestCase
         $this->changeset->shouldReceive('forceFetchAllValues');
     }
 
-    public function itAppendsChangesetNodeToArtifactNode()
+    public function testItAppendsChangesetNodeToArtifactNode(): void
     {
         $this->exporter->exportWithoutComments($this->artifact_xml, $this->changeset);
 
-        $this->assertEqual(count($this->artifact_xml->changeset), 1);
-        $this->assertEqual(count($this->artifact_xml->changeset->submitted_by), 1);
-        $this->assertEqual(count($this->artifact_xml->changeset->submitted_on), 1);
+        $this->assertCount(1, $this->artifact_xml->changeset);
+        $this->assertCount(1, $this->artifact_xml->changeset->submitted_by);
+        $this->assertCount(1, $this->artifact_xml->changeset->submitted_on);
     }
 
-    public function itDelegatesTheExportOfValues()
+    public function testItDelegatesTheExportOfValues(): void
     {
-        expect($this->values_exporter)->exportSnapshot($this->artifact_xml, '*', $this->artifact, $this->values)->once();
-        expect($this->comment)->exportToXML()->never();
+        $this->values_exporter->shouldReceive('exportSnapshot')->with($this->artifact_xml, \Mockery::any(), $this->artifact, $this->values)->once();
+        $this->comment->shouldReceive('exportToXML')->never();
 
         $this->exporter->exportWithoutComments($this->artifact_xml, $this->changeset);
     }
 
-    public function itExportsTheComments()
+    public function testItExportsTheComments(): void
     {
         $user = new PFUser([
             'user_id' => 101,
@@ -113,13 +129,13 @@ class Tracker_XML_Exporter_ChangesetXMLExporterTest extends TuleapTestCase
         ]);
         $this->user_manager->shouldReceive('getUserById')->with(101)->andReturn($user);
 
-        expect($this->values_exporter)->exportChangedFields($this->artifact_xml, '*', $this->artifact, $this->values)->once();
-        expect($this->comment)->exportToXML()->once();
+        $this->values_exporter->shouldReceive('exportChangedFields')->with($this->artifact_xml, \Mockery::any(), $this->artifact, $this->values)->once();
+        $this->comment->shouldReceive('exportToXML')->once();
 
         $this->exporter->exportFullHistory($this->artifact_xml, $this->changeset);
     }
 
-    public function itExportsTheIdOfTheChangeset(): void
+    public function testItExportsTheIdOfTheChangeset(): void
     {
         $user = new PFUser([
             'user_id' => 101,
@@ -131,32 +147,32 @@ class Tracker_XML_Exporter_ChangesetXMLExporterTest extends TuleapTestCase
 
         $this->exporter->exportFullHistory($this->artifact_xml, $this->changeset);
 
-        $this->assertEqual((string) $this->artifact_xml->changeset['id'], 'CHANGESET_123');
+        $this->assertEquals('CHANGESET_123', (string) $this->artifact_xml->changeset['id']);
     }
 
-    public function itExportsAnonUser()
+    public function testItExportsAnonUser(): void
     {
-        expect($this->user_xml_exporter)->exportUserByMail()->once();
+        $this->user_xml_exporter->shouldReceive('exportUserByMail')->once();
 
-        $changeset = mockery_stub(\Tracker_Artifact_Changeset::class)->getValues()->returns(array());
-        stub($changeset)->getSubmittedBy()->returns(null);
-        stub($changeset)->getEmail()->returns('veloc@dino.com');
-        stub($changeset)->getArtifact()->returns($this->artifact);
+        $changeset = Mockery::spy(\Tracker_Artifact_Changeset::class)->shouldReceive('getValues')->andReturns(array())->getMock();
+        $changeset->shouldReceive('getSubmittedBy')->andReturns(null);
+        $changeset->shouldReceive('getEmail')->andReturns('veloc@dino.com');
+        $changeset->shouldReceive('getArtifact')->andReturns($this->artifact);
         $this->exporter->exportFullHistory($this->artifact_xml, $changeset);
     }
 
-    public function itRemovesNullValuesInChangesetValues()
+    public function testItRemovesNullValuesInChangesetValues(): void
     {
         $value = \Mockery::spy(\Tracker_Artifact_ChangesetValue::class);
 
-        expect($this->values_exporter)->exportChangedFields('*', '*', '*', array(101 => $value))->once();
+        $this->values_exporter->shouldReceive('exportChangedFields')->with(\Mockery::any(), \Mockery::any(), \Mockery::any(), array(101 => $value))->once();
 
-        $changeset = mockery_stub(\Tracker_Artifact_Changeset::class)->getValues()->returns(array(
+        $changeset = Mockery::spy(\Tracker_Artifact_Changeset::class)->shouldReceive('getValues')->andReturns(array(
             101 => $value,
             102 => null
-        ));
+        ))->getMock();
 
-        stub($changeset)->getArtifact()->returns($this->artifact);
+        $changeset->shouldReceive('getArtifact')->andReturns($this->artifact);
 
         $this->exporter->exportFullHistory($this->artifact_xml, $changeset);
     }
