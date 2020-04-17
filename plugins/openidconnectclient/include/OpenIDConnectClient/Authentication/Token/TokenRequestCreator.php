@@ -52,7 +52,7 @@ class TokenRequestCreator
         $this->basic_auth           = $basic_auth;
     }
 
-    public function createTokenRequest(Provider $provider, AuthorizationResponse $authorization_response, string $redirect_uri): TokenRequest
+    public function createTokenRequest(Provider $provider, AuthorizationResponse $authorization_response, string $redirect_uri, ConcealedString $pkce_code_verifier): TokenRequest
     {
         $http_request = $this->http_request_factory->createRequest(
             'POST',
@@ -65,9 +65,10 @@ class TokenRequestCreator
                 $this->stream_factory->createStream(
                     http_build_query(
                         [
-                            'grant_type'   => 'authorization_code',
-                            'code'         => $authorization_response->getCode(),
-                            'redirect_uri' => $redirect_uri,
+                            'grant_type'    => 'authorization_code',
+                            'code'          => $authorization_response->getCode(),
+                            'redirect_uri'  => $redirect_uri,
+                            'code_verifier' => $pkce_code_verifier->getString(),
                         ]
                     )
                 )

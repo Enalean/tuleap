@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,24 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\OpenIDConnectClient\Authentication;
 
 use PHPUnit\Framework\TestCase;
+use Tuleap\Cryptography\ConcealedString;
 
-class SessionStateTest extends TestCase
+final class SessionStateTest extends TestCase
 {
-    public function testCanBeTransformedToAMinimalRepresentationAndBuiltFromIt()
+    public function testCanBeTransformedToAMinimalRepresentationAndBuiltFromIt(): void
     {
-        $session_state         = new SessionState('secret_key', 'return_to', 'nonce');
+        $session_state         = new SessionState('secret_key', 'return_to', 'nonce', new ConcealedString('code_verifier'));
         $representation        = $session_state->convertToMinimalRepresentation();
         $rebuilt_session_state = SessionState::buildFromMinimalRepresentation($representation);
 
         $this->assertSame($session_state->getSecretKey(), $rebuilt_session_state->getSecretKey());
         $this->assertSame($session_state->getNonce(), $rebuilt_session_state->getNonce());
         $this->assertSame($session_state->getReturnTo(), $rebuilt_session_state->getReturnTo());
+        $this->assertTrue($session_state->getPKCECodeVerifier()->isIdenticalTo($rebuilt_session_state->getPKCECodeVerifier()));
     }
 
-    public function testBuildingFromAnInvalidRepresentationIsRejected()
+    public function testBuildingFromAnInvalidRepresentationIsRejected(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 

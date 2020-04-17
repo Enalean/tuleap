@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,15 +21,16 @@
 namespace Tuleap\OpenIDConnectClient\Authentication;
 
 use PHPUnit\Framework\TestCase;
+use Tuleap\Cryptography\ConcealedString;
 
-class StateStorageTest extends TestCase
+final class StateStorageTest extends TestCase
 {
-    public function testStoredStateIsRetrieved()
+    public function testStoredStateIsRetrieved(): void
     {
         $storage_medium = [];
         $state_storage  = new StateStorage($storage_medium);
 
-        $state = new State(123, 'return_to', 'secret_key', 'nonce');
+        $state = new State(123, 'return_to', 'secret_key', 'nonce', new ConcealedString('pkce_code_verifier'));
         $state_storage->saveState($state);
         $session_state = $state_storage->loadState();
 
@@ -38,12 +39,12 @@ class StateStorageTest extends TestCase
         $this->assertSame($state->getReturnTo(), $session_state->getReturnTo());
     }
 
-    public function testStateStorageCanBeCleared()
+    public function testStateStorageCanBeCleared(): void
     {
         $storage_medium = [];
         $state_storage  = new StateStorage($storage_medium);
 
-        $state = new State(123, 'return_to', 'secret_key', 'nonce');
+        $state = new State(123, 'return_to', 'secret_key', 'nonce', new ConcealedString('pkce_code_verifier'));
         $state_storage->saveState($state);
 
         $this->assertNotNull($state_storage->loadState());

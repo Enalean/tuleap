@@ -68,7 +68,8 @@ class StateManager
                     $signed_state,
                     $stored_state->getReturnTo(),
                     $stored_state->getSecretKey(),
-                    $stored_state->getNonce()
+                    $stored_state->getNonce(),
+                    $stored_state->getPKCECodeVerifier()
                 );
             } catch (Exception $ex) {
                 throw new StateMismatchException('Invalid state hash returned from server');
@@ -76,10 +77,7 @@ class StateManager
         }
     }
 
-    /**
-     * @return State
-     */
-    public function initState(Provider $provider, $return_to)
+    public function initState(Provider $provider, ?string $return_to): State
     {
         $state = $this->state_factory->createState($provider->getId(), $return_to);
         $this->state_storage->saveState($state);

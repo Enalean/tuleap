@@ -24,23 +24,23 @@ namespace Tuleap\OpenIDConnectClient\Authentication;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Cryptography\ConcealedString;
 
-require_once(__DIR__ . '/../bootstrap.php');
-
-class StateManagerTest extends TestCase
+final class StateManagerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     public function testItValidatesValidState(): void
     {
-        $key           = 'Tuleap_key';
-        $return_to     = '/return_to';
-        $nonce         = 'random_string';
-        $state_factory = \Mockery::spy(\Tuleap\OpenIDConnectClient\Authentication\StateFactory::class);
-        $state_storage = \Mockery::spy(\Tuleap\OpenIDConnectClient\Authentication\StateStorage::class);
-        $state         = new State(1234, $return_to, $key, $nonce);
-        $signed_state  = $state->getSignedState();
-        $stored_state  = new SessionState($key, $return_to, $nonce);
+        $key                = 'Tuleap_key';
+        $return_to          = '/return_to';
+        $nonce              = 'random_string';
+        $pkce_code_verifier = new ConcealedString('code_verifier');
+        $state_factory      = \Mockery::spy(\Tuleap\OpenIDConnectClient\Authentication\StateFactory::class);
+        $state_storage      = \Mockery::spy(\Tuleap\OpenIDConnectClient\Authentication\StateStorage::class);
+        $state              = new State(1234, $return_to, $key, $nonce, $pkce_code_verifier);
+        $signed_state       = $state->getSignedState();
+        $stored_state       = new SessionState($key, $return_to, $nonce, $pkce_code_verifier);
         $state_storage->shouldReceive('loadState')->andReturns($stored_state);
 
         $state_manager = new StateManager($state_storage, $state_factory);
@@ -49,13 +49,14 @@ class StateManagerTest extends TestCase
 
     public function testItDoesNotValidateInvalidState(): void
     {
-        $return_to     = '/return_to';
-        $nonce         = 'random_string';
-        $state_factory = \Mockery::spy(\Tuleap\OpenIDConnectClient\Authentication\StateFactory::class);
-        $state_storage = \Mockery::spy(\Tuleap\OpenIDConnectClient\Authentication\StateStorage::class);
-        $state         = new State(1234, $return_to, 'key1', $nonce);
-        $signed_state  = $state->getSignedState();
-        $stored_state  = new SessionState('key2', $return_to, $nonce);
+        $return_to          = '/return_to';
+        $nonce              = 'random_string';
+        $pkce_code_verifier = new ConcealedString('code_verifier');
+        $state_factory      = \Mockery::spy(\Tuleap\OpenIDConnectClient\Authentication\StateFactory::class);
+        $state_storage      = \Mockery::spy(\Tuleap\OpenIDConnectClient\Authentication\StateStorage::class);
+        $state              = new State(1234, $return_to, 'key1', $nonce, $pkce_code_verifier);
+        $signed_state       = $state->getSignedState();
+        $stored_state       = new SessionState('key2', $return_to, $nonce, $pkce_code_verifier);
         $state_storage->shouldReceive('loadState')->andReturns($stored_state);
 
         $state_manager = new StateManager($state_storage, $state_factory);

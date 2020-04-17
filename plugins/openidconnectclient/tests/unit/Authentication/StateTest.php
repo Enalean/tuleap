@@ -24,30 +24,32 @@ namespace Tuleap\OpenIDConnectClient\Authentication;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Cryptography\ConcealedString;
 
-class StateTest extends TestCase
+final class StateTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     public function testItCreatesStateFromSignedState(): void
     {
-        $secret_key  = 'Tuleap';
-        $return_to   = '/return_to';
-        $provider_id = 1234;
-        $nonce       = 'random_string';
+        $secret_key         = 'Tuleap';
+        $return_to          = '/return_to';
+        $provider_id        = 1234;
+        $nonce              = 'random_string';
+        $pkce_code_verifier = new ConcealedString('pkce_code_verifier');
 
-        $state        = new State($provider_id, $return_to, $secret_key, $nonce);
+        $state        = new State($provider_id, $return_to, $secret_key, $nonce, $pkce_code_verifier);
         $signed_state = $state->getSignedState();
 
-        $this->assertEquals($state, State::createFromSignature($signed_state, $return_to, $secret_key, $nonce));
+        $this->assertEquals($state, State::createFromSignature($signed_state, $return_to, $secret_key, $nonce, $pkce_code_verifier));
     }
 
     public function testCannotCreateFromSignatureWithInvalidSecretKey(): void
     {
-        $state        = new State(12, '/return_to', 'key', 'random');
+        $state        = new State(12, '/return_to', 'key', 'random', new ConcealedString('pkce_code_verifier'));
         $signed_state = $state->getSignedState();
 
         $this->expectException(\RuntimeException::class);
-        State::createFromSignature($signed_state, '/return_to', 'invalid_key', 'random');
+        State::createFromSignature($signed_state, '/return_to', 'invalid_key', 'random', new ConcealedString('pkce_code_verifier'));
     }
 }
