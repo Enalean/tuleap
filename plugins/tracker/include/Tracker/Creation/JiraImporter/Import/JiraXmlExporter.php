@@ -27,12 +27,16 @@ use SimpleXMLElement;
 use Tracker_FormElement_Field_ArtifactId;
 use Tracker_FormElement_Field_String;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Permissions\PermissionsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraToTuleapFieldTypeMapper;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 use Tuleap\Tracker\Creation\JiraImporter\JiraCredentials;
+use UserManager;
 use XML_SimpleXMLCDATAFactory;
 
 class JiraXmlExporter
@@ -58,18 +62,39 @@ class JiraXmlExporter
      */
     private $report_exporter;
 
+    /**
+     * @var FieldMappingCollection
+     */
+    private $jira_field_mapping_collection;
+
+    /**
+     * @var PermissionsXMLExporter
+     */
+    private $permissions_xml_exporter;
+
+    /**
+     * @var ArtifactsXMLExporter
+     */
+    private $artifacts_xml_exporter;
+
     public function __construct(
         FieldXmlExporter $field_xml_exporter,
         ErrorCollector $error_collector,
         JiraFieldRetriever $jira_field_retriever,
         JiraToTuleapFieldTypeMapper $field_type_mapper,
-        XmlReportExporter $report_exporter
+        XmlReportExporter $report_exporter,
+        FieldMappingCollection $field_mapping_collection,
+        PermissionsXMLExporter $permissions_xml_exporter,
+        ArtifactsXMLExporter $artifacts_xml_exporter
     ) {
-        $this->field_xml_exporter   = $field_xml_exporter;
-        $this->error_collector      = $error_collector;
-        $this->jira_field_retriever = $jira_field_retriever;
-        $this->field_type_mapper    = $field_type_mapper;
-        $this->report_exporter      = $report_exporter;
+        $this->field_xml_exporter            = $field_xml_exporter;
+        $this->error_collector               = $error_collector;
+        $this->jira_field_retriever          = $jira_field_retriever;
+        $this->field_type_mapper             = $field_type_mapper;
+        $this->report_exporter               = $report_exporter;
+        $this->jira_field_mapping_collection = $field_mapping_collection;
+        $this->permissions_xml_exporter      = $permissions_xml_exporter;
+        $this->artifacts_xml_exporter        = $artifacts_xml_exporter;
     }
 
     public static function build(
@@ -91,14 +116,21 @@ class JiraXmlExporter
             $error_collector,
             new JiraFieldRetriever($wrapper),
             $jira_field_mapper,
-            new XmlReportExporter($cdata_factory)
+            new XmlReportExporter($cdata_factory),
+            new FieldMappingCollection(),
+            new PermissionsXMLExporter(),
+            new ArtifactsXMLExporter(
+                $wrapper,
+                new XML_SimpleXMLCDATAFactory(),
+                UserManager::instance()
+            )
         );
     }
 
     /**
      * @throws JiraConnectionException
      */
-    public function exportJiraToXml(SimpleXMLElement $node_tracker): void
+    public function exportJiraToXml(SimpleXMLElement $node_tracker, string $jira_project_id): void
     {
         $form_elements = $node_tracker->addChild('formElements');
 
@@ -117,7 +149,8 @@ class JiraXmlExporter
             "Artifact id",
             "artifact_id",
             1,
-            "0"
+            "0",
+            $this->jira_field_mapping_collection
         );
 
         $this->field_xml_exporter->exportField(
@@ -127,15 +160,27 @@ class JiraXmlExporter
             "Link to original artifact",
             "jira_artifact_url",
             2,
-            "0"
+            "0",
+            $this->jira_field_mapping_collection
         );
+
         $this->exportJiraField($node_jira_atf_form_elements);
 
         $node_tracker->addChild('semantics');
         $node_tracker->addChild('rules');
         $this->report_exporter->exportReports($node_tracker);
         $node_tracker->addChild('workflow');
-        $node_tracker->addChild('permissions');
+
+        $this->permissions_xml_exporter->exportFieldsPermissions(
+            $node_tracker,
+            $this->jira_field_mapping_collection
+        );
+
+        $this->artifacts_xml_exporter->exportArtifacts(
+            $node_tracker,
+            $this->jira_field_mapping_collection,
+            $jira_project_id
+        );
 
         if ($this->error_collector->hasError()) {
             foreach ($this->error_collector->getErrors() as $error) {
@@ -146,13 +191,13 @@ class JiraXmlExporter
 
     private function exportJiraField(SimpleXMLElement $node_jira_atf_form_elements): void
     {
-        $fields            = $this->jira_field_retriever->getAllJiraFields();
-
+        $fields = $this->jira_field_retriever->getAllJiraFields();
         foreach ($fields as $key => $field) {
             $this->field_type_mapper->exportFieldToXml(
                 $field,
                 '1',
-                $node_jira_atf_form_elements
+                $node_jira_atf_form_elements,
+                $this->jira_field_mapping_collection
             );
         }
     }

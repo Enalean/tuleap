@@ -26,7 +26,10 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import;
 use Mockery;
 use Tracker_FormElement_Field_ArtifactId;
 use Tracker_FormElement_Field_String;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Permissions\PermissionsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraToTuleapFieldTypeMapper;
@@ -58,19 +61,41 @@ final class JiraXmlExporterTest extends \PHPUnit\Framework\TestCase
      */
     private $field_xml_exporter;
 
+    /**
+     * @var FieldMappingCollection
+     */
+    private $jira_field_mapping_collection;
+
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PermissionsXMLExporter
+     */
+    private $permissions_xml_exporter;
+
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ArtifactsXMLExporter
+     */
+    private $artifacts_xml_exporter;
+
     protected function setUp(): void
     {
-        $this->field_xml_exporter   = Mockery::mock(FieldXmlExporter::class);
-        $this->jira_field_retriever = Mockery::mock(JiraFieldRetriever::class);
-        $error_collector            = new ErrorCollector();
-        $this->field_type_mapper    = Mockery::mock(JiraToTuleapFieldTypeMapper::class);
-        $this->report_exporter      = Mockery::mock(XmlReportExporter::class);
-        $this->jira_exporter        = new JiraXmlExporter(
+        $this->field_xml_exporter            = Mockery::mock(FieldXmlExporter::class);
+        $this->jira_field_retriever          = Mockery::mock(JiraFieldRetriever::class);
+        $error_collector                     = new ErrorCollector();
+        $this->field_type_mapper             = Mockery::mock(JiraToTuleapFieldTypeMapper::class);
+        $this->report_exporter               = Mockery::mock(XmlReportExporter::class);
+        $this->jira_field_mapping_collection = new FieldMappingCollection();
+        $this->permissions_xml_exporter      = Mockery::mock(PermissionsXMLExporter::class);
+        $this->artifacts_xml_exporter        = Mockery::mock(ArtifactsXMLExporter::class);
+
+        $this->jira_exporter = new JiraXmlExporter(
             $this->field_xml_exporter,
             $error_collector,
             $this->jira_field_retriever,
             $this->field_type_mapper,
-            $this->report_exporter
+            $this->report_exporter,
+            $this->jira_field_mapping_collection,
+            $this->permissions_xml_exporter,
+            $this->artifacts_xml_exporter
         );
     }
 
@@ -89,7 +114,8 @@ final class JiraXmlExporterTest extends \PHPUnit\Framework\TestCase
                 Mockery::type('string'),
                 Mockery::type('string'),
                 1,
-                Mockery::type('string')
+                Mockery::type('string'),
+                $this->jira_field_mapping_collection
             ]
         )->once();
 
@@ -101,11 +127,14 @@ final class JiraXmlExporterTest extends \PHPUnit\Framework\TestCase
                 Mockery::type('string'),
                 Mockery::type('string'),
                 2,
-                Mockery::type('string')
+                Mockery::type('string'),
+                $this->jira_field_mapping_collection
             ]
         )->once();
 
         $this->report_exporter->shouldReceive('exportReports')->once();
+        $this->permissions_xml_exporter->shouldReceive('exportFieldsPermissions')->once();
+        $this->artifacts_xml_exporter->shouldReceive('exportArtifacts')->once();
 
         $this->jira_field_retriever->shouldReceive('getAllJiraFields')->once();
         $this->jira_exporter->exportJiraToXml($trackers_xml, '{"id":"TEST","label":"test project"}');

@@ -49,8 +49,8 @@ class FieldXmlExporter
         $fieldset_node = $parent_node->addChild("formElement");
         $fieldset_node->addAttribute('type', Tracker_FormElement_Container_Fieldset::TYPE);
 
-        $ID = "F" . $id;
-        $fieldset_node->addAttribute('ID', $ID);
+        $xml_id = "F" . $id;
+        $fieldset_node->addAttribute('ID', $xml_id);
         $fieldset_node->addAttribute('rank', (string) $rank);
         $fieldset_node->addAttribute('use_it', '1');
 
@@ -67,13 +67,14 @@ class FieldXmlExporter
         string $label,
         string $jira_field_id,
         int $rank,
-        string $required
+        string $required,
+        FieldMappingCollection $jira_field_mapping_collection
     ): void {
         $field = $parent_node->addChild('formElement');
         $field->addAttribute('type', $type);
 
-        $ID = "F" . $jira_field_id;
-        $field->addAttribute('ID', $ID);
+        $xml_id = "F" . $jira_field_id;
+        $field->addAttribute('ID', $xml_id);
         $field->addAttribute('rank', (string) $rank);
         $field->addAttribute('use_it', "1");
 
@@ -81,5 +82,13 @@ class FieldXmlExporter
 
         $this->cdata_section_factory->insert($field, 'name', $name);
         $this->cdata_section_factory->insert($field, 'label', $label);
+
+        $jira_field_mapping_collection->addMapping(
+            new FieldMapping(
+                $jira_field_id,
+                $xml_id,
+                $name
+            )
+        );
     }
 }

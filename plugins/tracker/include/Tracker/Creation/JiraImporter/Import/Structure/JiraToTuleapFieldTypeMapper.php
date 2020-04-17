@@ -49,7 +49,8 @@ class JiraToTuleapFieldTypeMapper
     public function exportFieldToXml(
         array $jira_field,
         string $required,
-        SimpleXMLElement $jira_atf_fieldset
+        SimpleXMLElement $jira_atf_fieldset,
+        FieldMappingCollection $jira_field_mapping_collection
     ): void {
         $id        = isset($jira_field['id']) ? $jira_field['id'] : $jira_field['key'];
         $jira_type = $jira_field['name'];
@@ -81,7 +82,8 @@ class JiraToTuleapFieldTypeMapper
                         $jira_type,
                         $id,
                         1,
-                        $required
+                        $required,
+                        $jira_field_mapping_collection
                     );
                     break;
                 case 'description':
