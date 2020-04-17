@@ -18,7 +18,7 @@
  */
 
 import { has, remove } from "lodash";
-import { truncateHTML } from "./truncate";
+import { truncateHTML } from "./truncate.ts";
 
 import "./execution-link-issue.tpl.html";
 import "./execution-details-modal.tpl.html";
