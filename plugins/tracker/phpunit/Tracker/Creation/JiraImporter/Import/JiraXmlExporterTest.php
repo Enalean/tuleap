@@ -26,6 +26,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import;
 use Mockery;
 use Tracker_FormElement_Field_ArtifactId;
 use Tracker_FormElement_Field_String;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraToTuleapFieldTypeMapper;
@@ -33,6 +34,11 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraToTuleapFieldTypeM
 final class JiraXmlExporterTest extends \PHPUnit\Framework\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|XmlReportExporter
+     */
+    private $report_exporter;
 
     /**
      * @var JiraXmlExporter
@@ -54,15 +60,17 @@ final class JiraXmlExporterTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp(): void
     {
-        $this->field_xml_exporter       = Mockery::mock(FieldXmlExporter::class);
-        $this->jira_field_retriever     = Mockery::mock(JiraFieldRetriever::class);
-        $error_collector                = new ErrorCollector();
-        $this->field_type_mapper = Mockery::mock(JiraToTuleapFieldTypeMapper::class);
-        $this->jira_exporter            = new JiraXmlExporter(
+        $this->field_xml_exporter   = Mockery::mock(FieldXmlExporter::class);
+        $this->jira_field_retriever = Mockery::mock(JiraFieldRetriever::class);
+        $error_collector            = new ErrorCollector();
+        $this->field_type_mapper    = Mockery::mock(JiraToTuleapFieldTypeMapper::class);
+        $this->report_exporter      = Mockery::mock(XmlReportExporter::class);
+        $this->jira_exporter        = new JiraXmlExporter(
             $this->field_xml_exporter,
             $error_collector,
             $this->jira_field_retriever,
-            $this->field_type_mapper
+            $this->field_type_mapper,
+            $this->report_exporter
         );
     }
 
@@ -96,6 +104,8 @@ final class JiraXmlExporterTest extends \PHPUnit\Framework\TestCase
                 Mockery::type('string')
             ]
         )->once();
+
+        $this->report_exporter->shouldReceive('exportReports')->once();
 
         $this->jira_field_retriever->shouldReceive('getAllJiraFields')->once();
         $this->jira_exporter->exportJiraToXml($trackers_xml, '{"id":"TEST","label":"test project"}');
