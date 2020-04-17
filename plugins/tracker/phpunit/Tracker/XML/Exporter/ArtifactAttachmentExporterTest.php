@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,10 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../../../bootstrap.php';
+declare(strict_types=1);
 
-class ArtifactAttachmentExporterTest extends TuleapTestCase
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+final class ArtifactAttachmentExporterTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\TemporaryTestDirectory;
 
     /** @var ZipArchive */
     private $archive;
@@ -35,45 +38,32 @@ class ArtifactAttachmentExporterTest extends TuleapTestCase
     /** @var string */
     private $extraction_path;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
-
         $this->archive_path    = $this->getTmpDir() . '/test.zip';
-        $this->file01_path     = dirname(__FILE__) . '/_fixtures/file01.txt';
+        $this->file01_path     = __DIR__ . '/_fixtures/file01.txt';
         $this->extraction_path = $this->getTmpDir() . '/extraction';
         mkdir($this->extraction_path);
 
         $this->initArchive();
     }
 
-    public function tearDown()
+    public function testItAddsFileIntoArchive(): void
     {
-        exec('rm -rf ' . $this->extraction_path);
-        unlink($this->archive_path);
-
-        parent::tearDown();
-    }
-
-    public function itAddsFileIntoArchive()
-    {
-        $tracker    = aTracker()->build();
+        $tracker    = Mockery::spy(Tracker::class);
         $file_field = \Mockery::spy(\Tracker_FormElement_Field_File::class);
-        $file_info  = mockery_stub(\Tracker_FileInfo::class)->getPath()->returns($this->file01_path);
-        stub($file_info)->getId()->returns(1);
+        $file_info  = \Mockery::spy(\Tracker_FileInfo::class)->shouldReceive('getPath')->andReturns($this->file01_path)->getMock();
+        $file_info->shouldReceive('getId')->andReturns(1);
 
         $files      = array($file_info);
         $changeset  = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $file_value = new Tracker_Artifact_ChangesetValue_File(1, $changeset, $file_field, 1, $files);
-        stub($changeset)->getValue($file_field)->returns($file_value);
+        $changeset->shouldReceive('getValue')->with($file_field)->andReturns($file_value);
 
-        $artifact = mockery_stub(\Tracker_Artifact::class)->getTracker()->returns($tracker);
-        stub($artifact)->getLastChangeset()->returns($changeset);
+        $artifact = Mockery::spy(\Tracker_Artifact::class)->shouldReceive('getTracker')->andReturns($tracker)->getMock();
+        $artifact->shouldReceive('getLastChangeset')->andReturns($changeset);
 
-        $form_element_factory = mockery_stub(\Tracker_FormElementFactory::class)->getUsedFileFields($tracker)->returns(
-            array($file_field)
-        );
+        $form_element_factory = Mockery::spy(\Tracker_FormElementFactory::class)->shouldReceive('getUsedFileFields')->with($tracker)->andReturns(array($file_field))->getMock();
 
         $exporter = new Tracker_XML_Exporter_ArtifactAttachmentExporter($form_element_factory);
 
@@ -81,15 +71,15 @@ class ArtifactAttachmentExporterTest extends TuleapTestCase
 
         $this->extractArchive();
 
-        $this->assertEqual(file_get_contents($this->extraction_path . '/data/Artifact1'), 'file01');
+        $this->assertStringEqualsFile($this->extraction_path . '/data/Artifact1', 'file01');
     }
 
-    private function initArchive()
+    private function initArchive(): void
     {
         $this->archive = new Tuleap\Project\XML\Export\ZipArchive($this->archive_path);
     }
 
-    private function extractArchive()
+    private function extractArchive(): void
     {
         $this->archive->close();
 

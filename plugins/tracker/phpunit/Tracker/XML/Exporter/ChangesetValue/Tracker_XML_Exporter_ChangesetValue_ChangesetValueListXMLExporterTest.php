@@ -17,10 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once __DIR__ . '/../../../../bootstrap.php';
 
-class Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporterTest extends TuleapTestCase
+declare(strict_types=1);
+
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporterTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /** @var Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter */
     private $exporter;
@@ -37,11 +40,11 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporterTest exte
     /** @var Tracker_FormElement_Field */
     private $field;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->exporter      = new Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter(
-            mock('UserXmlExporter')
+            \Mockery::spy(\UserXMLExporter::class)
         );
         $this->artifact_xml  = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
         $this->changeset_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');
@@ -54,38 +57,37 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporterTest exte
             null
         );
 
-        $this->field = aMultiSelectBoxField()
-            ->withBind($bind_static)
-            ->withName('status')
-            ->build();
+        $this->field = Mockery::spy(Tracker_FormElement_Field_MultiSelectbox::class);
+        $this->field->shouldReceive('getBind')->andReturn($bind_static);
+        $this->field->shouldReceive('getName')->andReturn('status');
 
-        $this->changeset_value = mock('Tracker_Artifact_ChangesetValue_List');
-        stub($this->changeset_value)->getField()->returns($this->field);
+        $this->changeset_value = \Mockery::spy(\Tracker_Artifact_ChangesetValue_List::class);
+        $this->changeset_value->shouldReceive('getField')->andReturns($this->field);
     }
 
-    public function itCreatesFieldChangeNodeWithOneValueInChangesetNode()
+    public function testItCreatesFieldChangeNodeWithOneValueInChangesetNode(): void
     {
-        stub($this->changeset_value)->getValue()->returns(array(
+        $this->changeset_value->shouldReceive('getValue')->andReturns(array(
             '101'
         ));
 
         $this->exporter->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            mock('Tracker_Artifact'),
+            \Mockery::spy(\Tracker_Artifact::class),
             $this->changeset_value
         );
 
         $field_change = $this->changeset_xml->field_change;
-        $this->assertEqual((string) $field_change['type'], 'list');
-        $this->assertEqual((string) $field_change['bind'], 'static');
-        $this->assertEqual((string) $field_change->value, '101');
-        $this->assertEqual((string) $field_change->value['format'], 'id');
+        $this->assertEquals('list', (string) $field_change['type']);
+        $this->assertEquals('static', (string) $field_change['bind']);
+        $this->assertEquals('101', (string) $field_change->value);
+        $this->assertEquals('id', (string) $field_change->value['format']);
     }
 
-    public function itCreatesFieldChangeNodeWithMultipleValuesInChangesetNode()
+    public function testItCreatesFieldChangeNodeWithMultipleValuesInChangesetNode(): void
     {
-        stub($this->changeset_value)->getValue()->returns(array(
+        $this->changeset_value->shouldReceive('getValue')->andReturns(array(
             '101',
             '102'
         ));
@@ -93,16 +95,16 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporterTest exte
         $this->exporter->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            mock('Tracker_Artifact'),
+            \Mockery::spy(\Tracker_Artifact::class),
             $this->changeset_value
         );
 
         $field_change = $this->changeset_xml->field_change;
-        $this->assertEqual((string) $field_change['type'], 'list');
-        $this->assertEqual((string) $field_change['bind'], 'static');
-        $this->assertEqual((string) $field_change->value[0], '101');
-        $this->assertEqual((string) $field_change->value[0]['format'], 'id');
-        $this->assertEqual((string) $field_change->value[1], '102');
-        $this->assertEqual((string) $field_change->value[1]['format'], 'id');
+        $this->assertEquals('list', (string) $field_change['type']);
+        $this->assertEquals('static', (string) $field_change['bind']);
+        $this->assertEquals('101', (string) $field_change->value[0]);
+        $this->assertEquals('id', (string) $field_change->value[0]['format']);
+        $this->assertEquals('102', (string) $field_change->value[1]);
+        $this->assertEquals('id', (string) $field_change->value[1]['format']);
     }
 }

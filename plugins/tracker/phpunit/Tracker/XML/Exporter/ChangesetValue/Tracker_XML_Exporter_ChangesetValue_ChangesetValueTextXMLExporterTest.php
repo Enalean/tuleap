@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,10 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once __DIR__ . '/../../../../bootstrap.php';
 
-class Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporterTest extends TuleapTestCase
+declare(strict_types=1);
+
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporterTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /** @var Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter */
     private $exporter;
@@ -37,36 +40,35 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporterTest exte
     /** @var Tracker_FormElement_Field */
     private $field;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-        $this->field         = aFileField()->withName('textarea')->build();
+        $this->field         = Mockery::spy(Tracker_FormElement_Field_File::class)->shouldReceive('getName')->andReturn('textarea')->getMock();
         $this->exporter      = new Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporter();
         $this->artifact_xml  = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
         $this->changeset_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');
 
-        $this->changeset_value = mock('Tracker_Artifact_ChangesetValue_Text');
-        stub($this->changeset_value)->getField()->returns($this->field);
+        $this->changeset_value = \Mockery::spy(\Tracker_Artifact_ChangesetValue_Text::class);
+        $this->changeset_value->shouldReceive('getField')->andReturns($this->field);
     }
 
-    public function itCreatesTextNodeWithHTMLFormattedText()
+    public function testItCreatesTextNodeWithHTMLFormattedText(): void
     {
-        stub($this->changeset_value)->getText()->returns('<p>test</p>');
-        stub($this->changeset_value)->getFormat()->returns(Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
+        $this->changeset_value->shouldReceive('getText')->andReturns('<p>test</p>');
+        $this->changeset_value->shouldReceive('getFormat')->andReturns(Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
 
         $this->exporter->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            mock('Tracker_Artifact'),
+            \Mockery::spy(\Tracker_Artifact::class),
             $this->changeset_value
         );
 
         $field_change = $this->changeset_xml->field_change;
 
-        $this->assertEqual((string) $field_change['field_name'], 'textarea');
-        $this->assertEqual((string) $field_change['type'], 'text');
+        $this->assertEquals('textarea', (string) $field_change['field_name']);
+        $this->assertEquals('text', (string) $field_change['type']);
 
-        $this->assertEqual((string) $field_change->value, '<p>test</p>');
-        $this->assertEqual((string) $field_change->value['format'], 'html');
+        $this->assertEquals('<p>test</p>', (string) $field_change->value);
+        $this->assertEquals('html', (string) $field_change->value['format']);
     }
 }
