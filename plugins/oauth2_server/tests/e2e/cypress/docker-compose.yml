@@ -1,0 +1,12 @@
+version: "2"
+
+services:
+  oauth2-server-rp-oidc:
+    build:
+      context: plugins/oauth2_server/tests/e2e/cypress/rp-oidc/
+      dockerfile: rp-oidc.dockerfile
+    command: php /tuleap/plugins/oauth2_server/tests/e2e/cypress/rp-oidc/app.php
+    volumes:
+      - .:/tuleap:ro
+    networks:
+      - tuleap

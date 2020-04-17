@@ -39,7 +39,7 @@ has_failed=0
 su -c 'CYPRESS_CACHE_FOLDER=/var/cache/cypress/ cypress run --project /tuleap/tests/e2e/full' -l runner || has_failed=1
 
 for project in $(find /tuleap/plugins/*/tests/e2e/ -maxdepth 1 -mindepth 1 -type d) ; do
-    su -c "CYPRESS_CACHE_FOLDER=/var/cache/cypress/ cypress run --project $project" -l runner|| has_failed=1
+    su -c "CYPRESS_CACHE_FOLDER=/var/cache/cypress/ cypress run --project $project" -l runner || has_failed=1
 done
 
-has_failed=1
+exit $has_failed

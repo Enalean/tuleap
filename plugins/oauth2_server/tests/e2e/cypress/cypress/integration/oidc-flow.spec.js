@@ -23,13 +23,15 @@ describe("OIDC flow", function () {
         cy.getProjectId("oidc-flow").as("project_id");
     });
 
-    it("can create a new OAuth2 app", function () {
+    it("setup a OAuth2 app to sign in on a third party service", function () {
         cy.visit(`/plugins/oauth2_server/project/${encodeURIComponent(this.project_id)}/admin`);
         cy.get("[data-test=oauth2-create-app-button]").click();
 
         cy.get("[data-test=oauth2-new-app-modal]").within(() => {
             cy.get("[data-test=oauth2-new-app-name]").type("Test OIDC flow");
-            cy.get("[data-test=oauth2-new-app-redirect-uri]").type("https://rp-oidc/callback");
+            cy.get("[data-test=oauth2-new-app-redirect-uri]").type(
+                "https://oauth2-server-rp-oidc:8443/callback"
+            );
 
             cy.get("[data-test=oauth2-new-app-modal-submit-button]").click();
         });
@@ -39,6 +41,17 @@ describe("OIDC flow", function () {
             cy.wrap(client_id).should("not.be.empty");
             const client_secret = $success_message.attr("data-oauth2-new-app-client-secret");
             cy.wrap(client_secret).should("not.be.empty");
+
+            cy.request({
+                url: `https://oauth2-server-rp-oidc:8443/init-flow?client_id=${encodeURIComponent(
+                    client_id
+                )}&client_secret=${encodeURIComponent(client_secret)}`,
+                followRedirect: false,
+            }).then(function (resp) {
+                cy.visit(resp.headers.location);
+                cy.get("[data-test=oauth2-authorize-request-submit-button]").click();
+                cy.contains("OK");
+            });
         });
     });
 });
