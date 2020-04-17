@@ -27,11 +27,11 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
 
 $logger = new \Tuleap\Configuration\Logger\Console();
 
-$fpm      = \Tuleap\Configuration\FPM\TuleapWeb::buildForPHP73($logger, 'codendiadm', true);
+$fpm      = \TuleapCfg\Command\SiteDeploy\SiteDeployFPM::buildForPHP73($logger, 'codendiadm', true);
 $nginx    = new \Tuleap\Configuration\Nginx\BackendWeb($logger, '/usr/share/tuleap', '/etc/nginx', 'reverse-proxy');
 $redis = new \Tuleap\Configuration\Redis\BackendWeb('codendiadm');
 
-$fpm->configure();
+$fpm->forceDeploy();
 $nginx->configure();
 $redis->configure();
 
