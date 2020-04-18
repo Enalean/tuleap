@@ -38,7 +38,7 @@ final class JSONResponseBuilderTest extends TestCase
 
         $response = $builder->fromData($data_to_encode);
 
-        $this->assertEquals('application/json', $response->getHeaderLine('Content-Type'));
+        $this->assertEquals('application/json;charset=utf-8', $response->getHeaderLine('Content-Type'));
         $this->assertEquals('{"a":123}', $response->getBody()->getContents());
     }
 

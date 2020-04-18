@@ -20,15 +20,25 @@
 
 declare(strict_types=1);
 
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Tuleap\APIExplorer\Specification\Swagger\SwaggerJsonController;
+use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
+use Tuleap\BuildVersion\VersionPresenter;
+use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Response\JSONResponseBuilder;
+use Tuleap\Http\Server\ServiceInstrumentationMiddleware;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\REST\ExplorerEndpointAvailableEvent;
+use Tuleap\REST\ResourcesInjector;
+use Tuleap\REST\RestlerFactory;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class api_explorerPlugin extends Plugin
 {
-    private const API_EXPLORER_ENDPOINT = '/api/explorer/';
+    private const API_EXPLORER_ENDPOINT       = '/api/explorer/';
+    public const SERVICE_NAME_INSTRUMENTATION = 'api-explorer';
 
     public function __construct($id)
     {
@@ -63,9 +73,14 @@ final class api_explorerPlugin extends Plugin
 
     public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
-        $event->getRouteCollector()->get(
+        $route_collector = $event->getRouteCollector();
+        $route_collector->get(
             self::API_EXPLORER_ENDPOINT,
             $this->getRouteHandler('routeGet')
+        );
+        $route_collector->get(
+            self::API_EXPLORER_ENDPOINT . 'swagger.json',
+            $this->getRouteHandler('routeGetSwaggerJson')
         );
     }
 
@@ -77,6 +92,21 @@ final class api_explorerPlugin extends Plugin
                 __DIR__ . '/../../../src/www/assets/api-explorer',
                 '/assets/api-explorer'
             )
+        );
+    }
+
+    public function routeGetSwaggerJson(): SwaggerJsonController
+    {
+        return new SwaggerJsonController(
+            new RestlerFactory(
+                new RestlerCache(),
+                new ResourcesInjector(),
+                EventManager::instance(),
+            ),
+            VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence())->version_identifier,
+            new JSONResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
+            new SapiEmitter(),
+            new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION)
         );
     }
 

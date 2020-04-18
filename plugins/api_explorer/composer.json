@@ -4,5 +4,10 @@
     "psr-4": {
       "Tuleap\\APIExplorer\\": "include/"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tuleap\\APIExplorer\\": "phpunit/"
+    }
   }
 }
