@@ -17,10 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once __DIR__ . '/../../../bootstrap.php';
 
-class Tracker_XML_Importer_CopyArtifactInformationsAggregatorTest extends TuleapTestCase
+declare(strict_types=1);
+
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_XML_Importer_CopyArtifactInformationsAggregatorTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /** @var Tracker_XML_Importer_CopyArtifactInformationsAggregator */
     private $logger;
@@ -28,18 +31,18 @@ class Tracker_XML_Importer_CopyArtifactInformationsAggregatorTest extends Tuleap
     /** @var \Psr\Log\LoggerInterface */
     private $backend_logger;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        $this->backend_logger = mock(\Psr\Log\LoggerInterface::class);
+        $this->backend_logger = \Mockery::spy(\Psr\Log\LoggerInterface::class);
         $this->logger         = new Tracker_XML_Importer_CopyArtifactInformationsAggregator($this->backend_logger);
     }
 
-    public function itDoesNotContainsAnyMessageIfThereAreNone()
+    public function testItDoesNotContainsAnyMessageIfThereAreNone(): void
     {
-        $this->assertEqual($this->logger->getAllLogs(), array());
+        $this->assertEquals(array(), $this->logger->getAllLogs());
     }
 
-    public function itContainsAllTheLoggedMessages()
+    public function testItContainsAllTheLoggedMessages(): void
     {
         $this->logger->error("this is an error");
         $this->logger->warning("this is a warning");
@@ -48,19 +51,19 @@ class Tracker_XML_Importer_CopyArtifactInformationsAggregatorTest extends Tuleap
             "[error] this is an error",
             "[warning] this is a warning"
         );
-        $this->assertEqual($this->logger->getAllLogs(), $expected_logs);
+        $this->assertEquals($expected_logs, $this->logger->getAllLogs());
     }
 
-    public function itAlsoLogsUsingTheBackendLogger()
+    public function testItAlsoLogsUsingTheBackendLogger(): void
     {
-        expect($this->backend_logger)->log()->once();
+        $this->backend_logger->shouldReceive('log')->once();
 
         $this->logger->error("this is an error");
     }
 
-    public function itOnlyLogsErrorsAndWarningsInTheLogStack()
+    public function testItOnlyLogsErrorsAndWarningsInTheLogStack(): void
     {
-        expect($this->backend_logger)->log()->count(4);
+        $this->backend_logger->shouldReceive('log')->times(4);
 
         $this->logger->error("this is an error");
         $this->logger->warning("this is a warning");
@@ -71,6 +74,6 @@ class Tracker_XML_Importer_CopyArtifactInformationsAggregatorTest extends Tuleap
             "[error] this is an error",
             "[warning] this is a warning"
         );
-        $this->assertEqual($this->logger->getAllLogs(), $expected_logs);
+        $this->assertEquals($expected_logs, $this->logger->getAllLogs());
     }
 }
