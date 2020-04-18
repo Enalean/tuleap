@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,13 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\XML\Updater\FieldChange;
 
 use Tracker_FormElement_Field_Computed;
 
-require_once __DIR__ . '/../../../../bootstrap.php';
-
-class FieldChangeComputedXMLUpdaterTest extends \TuleapTestCase
+// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class FieldChangeComputedXMLUpdaterTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \SimpleXMLElement
@@ -35,27 +36,26 @@ class FieldChangeComputedXMLUpdaterTest extends \TuleapTestCase
      */
     private $updater;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
         $this->field_change = new \SimpleXMLElement('<?xml version="1.0"?>
                   <field_change field_name="capacity" type="computed">
                   </field_change>');
         $this->updater = new FieldChangeComputedXMLUpdater();
     }
 
-    public function itUpdatesWhenOnlyIsAutocomputedIsSet()
+    public function testItUpdatesWhenOnlyIsAutocomputedIsSet(): void
     {
         $submitted_value = array(
             Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => '1'
         );
         $this->updater->update($this->field_change, $submitted_value);
 
-        $this->assertEqual($this->field_change->is_autocomputed, '1');
+        $this->assertEquals('1', $this->field_change->is_autocomputed);
         $this->assertFalse(isset($this->field_change->manual_value));
     }
 
-    public function itUpdatesWhenAutocomputedIsSetAndManualValueEmpty()
+    public function testItUpdatesWhenAutocomputedIsSetAndManualValueEmpty(): void
     {
         $submitted_value = array(
             Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => '1',
@@ -63,22 +63,22 @@ class FieldChangeComputedXMLUpdaterTest extends \TuleapTestCase
         );
         $this->updater->update($this->field_change, $submitted_value);
 
-        $this->assertEqual($this->field_change->is_autocomputed, '1');
+        $this->assertEquals('1', $this->field_change->is_autocomputed);
         $this->assertFalse(isset($this->field_change->manual_value));
     }
 
-    public function itUpdatesWhenOnlyAManualValueIsSet()
+    public function testItUpdatesWhenOnlyAManualValueIsSet(): void
     {
         $submitted_value = array(
             Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => '1.5'
         );
         $this->updater->update($this->field_change, $submitted_value);
 
-        $this->assertEqual($this->field_change->is_autocomputed, '0');
-        $this->assertEqual($this->field_change->manual_value, 1.5);
+        $this->assertEquals('0', $this->field_change->is_autocomputed);
+        $this->assertEquals(1.5, (float) $this->field_change->manual_value);
     }
 
-    public function itUpdatesWhenAManualValueIsSetAndIsAutocomputedDisabled()
+    public function testItUpdatesWhenAManualValueIsSetAndIsAutocomputedDisabled(): void
     {
         $submitted_value = array(
             Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => '0',
@@ -86,11 +86,11 @@ class FieldChangeComputedXMLUpdaterTest extends \TuleapTestCase
         );
         $this->updater->update($this->field_change, $submitted_value);
 
-        $this->assertEqual($this->field_change->is_autocomputed, '0');
-        $this->assertEqual($this->field_change->manual_value, 1.5);
+        $this->assertEquals('0', $this->field_change->is_autocomputed);
+        $this->assertEquals(1.5, (float) $this->field_change->manual_value);
     }
 
-    public function itDoesNotUpdateWhenAManualValueOrIsAutocomputedIsNotProvided()
+    public function testItDoesNotUpdateWhenAManualValueOrIsAutocomputedIsNotProvided(): void
     {
         $submitted_value = array();
         $this->updater->update($this->field_change, $submitted_value);
@@ -99,7 +99,7 @@ class FieldChangeComputedXMLUpdaterTest extends \TuleapTestCase
         $this->assertFalse(isset($this->field_change->manual_value));
     }
 
-    public function itUpdatesEverythingIfAManualValueIsSetAndIsAutocomputedIsEnabled()
+    public function testItUpdatesEverythingIfAManualValueIsSetAndIsAutocomputedIsEnabled(): void
     {
         $submitted_value = array(
             Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => '1',
@@ -107,11 +107,11 @@ class FieldChangeComputedXMLUpdaterTest extends \TuleapTestCase
         );
         $this->updater->update($this->field_change, $submitted_value);
 
-        $this->assertEqual($this->field_change->is_autocomputed, '1');
-        $this->assertEqual($this->field_change->manual_value, 1.5);
+        $this->assertEquals('1', $this->field_change->is_autocomputed);
+        $this->assertEquals(1.5, (float) $this->field_change->manual_value);
     }
 
-    public function itUpdatesWhenOldValueIsManualAndValuesIsAutocomputed()
+    public function testItUpdatesWhenOldValueIsManualAndValuesIsAutocomputed(): void
     {
         $submitted_value = array(
             Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => '1',
@@ -124,7 +124,7 @@ class FieldChangeComputedXMLUpdaterTest extends \TuleapTestCase
                   </field_change>');
         $this->updater->update($specific_field_change, $submitted_value);
 
-        $this->assertEqual($specific_field_change->is_autocomputed, '1');
+        $this->assertEquals('1', $specific_field_change->is_autocomputed);
         $this->assertFalse(isset($specific_field_change->manual_value));
     }
 }
