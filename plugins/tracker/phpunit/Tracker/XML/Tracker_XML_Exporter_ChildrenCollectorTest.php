@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,56 +17,56 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once __DIR__ . '/../../bootstrap.php';
 
-class Tracker_XML_Exporter_ChildrenCollectorTest extends TuleapTestCase
+declare(strict_types=1);
+
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_XML_Exporter_ChildrenCollectorTest extends \PHPUnit\Framework\TestCase
 {
-
     /** @var Tracker_XML_Exporter_ChildrenCollectorTest */
     private $collector;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
         $this->collector = new Tracker_XML_ChildrenCollector();
     }
 
-    public function itRaisesAnExceptionWhenTooManyChildrenAreAdded()
+    public function testItRaisesAnExceptionWhenTooManyChildrenAreAdded(): void
     {
-        $this->expectException('Tracker_XML_Exporter_TooManyChildrenException');
+        $this->expectException(\Tracker_XML_Exporter_TooManyChildrenException::class);
         for ($i = 0; $i <= Tracker_XML_ChildrenCollector::MAX; ++$i) {
             $this->collector->addChild($i, 'whatever');
         }
     }
 
-    public function itPopsChildren()
+    public function testItPopsChildren(): void
     {
         $this->collector->addChild(1, 'whatever');
         $this->collector->addChild(2, 'whatever');
 
-        $this->assertEqual(1, $this->collector->pop());
-        $this->assertEqual(2, $this->collector->pop());
-        $this->assertEqual(null, $this->collector->pop());
+        $this->assertEquals(1, $this->collector->pop());
+        $this->assertEquals(2, $this->collector->pop());
+        $this->assertEquals(null, $this->collector->pop());
     }
 
-    public function itDoesNotStackTwiceTheSameChild()
+    public function testItDoesNotStackTwiceTheSameChild(): void
     {
         $this->collector->addChild(1, 1123);
         $this->collector->addChild(1, 1123);
-        $this->assertEqual($this->collector->getAllChildrenIds(), array(1));
+        $this->assertEquals(array(1), $this->collector->getAllChildrenIds());
     }
 
-    public function itReturnsAllParents()
+    public function testItReturnsAllParents(): void
     {
         $this->collector->addChild(1, 1123);
         $this->collector->addChild(2, 1123);
         $this->collector->addChild(3, 147);
 
         $parents_array = array(1123, 147);
-        $this->assertEqual($parents_array, $this->collector->getAllParents());
+        $this->assertEquals($parents_array, $this->collector->getAllParents());
     }
 
-    public function itReturnsChildrenOfAParent()
+    public function testItReturnsChildrenOfAParent(): void
     {
         $parent_id = 1123;
         $this->collector->addChild(1, $parent_id);
@@ -74,10 +74,10 @@ class Tracker_XML_Exporter_ChildrenCollectorTest extends TuleapTestCase
         $this->collector->addChild(3, 147);
 
         $children_array = array(1, 2);
-        $this->assertEqual($children_array, $this->collector->getChildrenForParent($parent_id));
+        $this->assertEquals($children_array, $this->collector->getChildrenForParent($parent_id));
     }
 
-    public function itReturnsEmptyArrayIfParentNotFound()
+    public function testItReturnsEmptyArrayIfParentNotFound(): void
     {
         $parent_id = 1123;
         $this->collector->addChild(1, $parent_id);
@@ -85,14 +85,14 @@ class Tracker_XML_Exporter_ChildrenCollectorTest extends TuleapTestCase
         $this->collector->addChild(3, 147);
 
         $children_array = array();
-        $this->assertEqual($children_array, $this->collector->getChildrenForParent(666));
+        $this->assertEquals($children_array, $this->collector->getChildrenForParent(666));
     }
 
-    public function itAddsTheParentEvenIfChildIsAlreadyStacked()
+    public function testItAddsTheParentEvenIfChildIsAlreadyStacked(): void
     {
         $this->collector->addChild(1, 1123);
         $this->collector->addChild(1, 1124);
-        $this->assertEqual($this->collector->getAllChildrenIds(), array(1));
-        $this->assertEqual($this->collector->getAllParents(), array(1123, 1124));
+        $this->assertEquals(array(1), $this->collector->getAllChildrenIds());
+        $this->assertEquals(array(1123, 1124), $this->collector->getAllParents());
     }
 }
