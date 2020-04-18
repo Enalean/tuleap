@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "89d1e71ce8dff63172804075e4c6baae",
+    "content-hash": "bb6e276cdbb3d4c3a4020192946c69f5",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -5722,82 +5722,6 @@
             "time": "2019-10-18T14:03:03+00:00"
         },
         {
-            "name": "simpletest/simpletest",
-            "version": "dev-master-tuleap",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Enalean/simpletest.git",
-                "reference": "5507b185c9041d046356ff7fad92d100b604c409"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Enalean/simpletest/zipball/5507b185c9041d046356ff7fad92d100b604c409",
-                "reference": "5507b185c9041d046356ff7fad92d100b604c409",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.0.5"
-            },
-            "replace": {
-                "lastcraft/simpletest": "self.version",
-                "vierbergenlars/simpletest": "self.version"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "."
-                ]
-            },
-            "license": [
-                "LGPL-2.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Marcus Baker",
-                    "email": "marcus@lastcraft.com",
-                    "role": "Original project lead"
-                },
-                {
-                    "name": "Jason Sweat",
-                    "role": "Original developer"
-                },
-                {
-                    "name": "Travis Swicegood",
-                    "role": "Original developer"
-                },
-                {
-                    "name": "Perrick Penet",
-                    "role": "Original developer"
-                },
-                {
-                    "name": "Edward Z. Yang",
-                    "role": "Original developer"
-                },
-                {
-                    "name": "Lachlan Donald",
-                    "email": "lachlan@ljd.cc"
-                },
-                {
-                    "name": "Lars Vierbergen",
-                    "email": "vierbergenlars@gmail.com"
-                }
-            ],
-            "description": "Unit testing, mock objects and web testing framework for PHP built around test cases.",
-            "homepage": "http://simpletest.org/",
-            "keywords": [
-                "code-coverage",
-                "selenium",
-                "simpletest",
-                "testing",
-                "unit-test"
-            ],
-            "support": {
-                "issues": "https://github.com/simpletest/simpletest/issues",
-                "source": "https://github.com/Enalean/simpletest/tree/20190916"
-            },
-            "time": "2019-09-14T14:51:34+00:00"
-        },
-        {
             "name": "slevomat/coding-standard",
             "version": "6.1.5",
             "source": {
@@ -6245,8 +6169,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "luracast/restler": 20,
-        "mustache/mustache": 20,
-        "simpletest/simpletest": 20
+        "mustache/mustache": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

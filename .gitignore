@@ -3,7 +3,6 @@ src/www/scripts/combined/*
 src/utils/*.pyc
 src/utils/cvs1/*.pyc
 src/utils/svn/*.pyc
-tests/simpletest/common/include/_fixtures/big_file
 .vagrant
 *.box
 nbproject

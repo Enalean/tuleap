@@ -30,8 +30,8 @@ final class PsalmCILauncherTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    private const FILE_IN_SCOPE = 'src/common/Config/ForgeConfig.php';
-    private const FILE_OUT_OF_SCOPE = 'simpletest/common/Config/ConfigTest.php';
+    private const FILE_IN_SCOPE     = 'src/common/Config/ForgeConfig.php';
+    private const FILE_OUT_OF_SCOPE = 'src/vendor/Something/Foo.php';
     private const FILE_NOT_EXISTING = 'DoNotExist.php';
 
     /**

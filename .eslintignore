@@ -27,5 +27,4 @@ src/www/scripts/fieldDependencies.js
 src/www/scripts/filterlist.js
 src/www/scripts/user.js
 src/themes/tlp/src/types/
-tests/simpletest/common/include/_fixtures
 plugins/mediawiki/www/

@@ -19,10 +19,6 @@ def runFilesStatusChangesDetection(String repository_to_inspect, String name_of_
     }
 }
 
-def runSimpleTestTests(String version) {
-    sh "make -C $WORKSPACE/sources simpletest-${version}-ci"
-}
-
 def runPHPUnitTests(String version, Boolean with_coverage = false) {
     def coverage_enabled='0'
     if (with_coverage) {

@@ -44,9 +44,6 @@ use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
 use UserManager;
 
-/**
- * @see tests/simpletest/common/Project/ProjectCreatorTest.php
- */
 final class ProjectCreatorTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
