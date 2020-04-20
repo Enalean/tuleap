@@ -49,7 +49,7 @@ final class ExplorerController implements DispatchableWithRequestNoAuthz, Dispat
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
-        \Tuleap\Project\ServiceInstrumentation::increment('api-explorer');
+        \Tuleap\Project\ServiceInstrumentation::increment(\api_explorerPlugin::SERVICE_NAME_INSTRUMENTATION);
 
         $layout->includeFooterJavascriptFile($this->assets->getFileURL('api-explorer.js'));
         $layout->addCssAsset(

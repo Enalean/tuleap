@@ -24,12 +24,9 @@ require_once __DIR__ . '/../project/admin/permissions.php';
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Request\RequestInstrumentation;
 use Tuleap\REST\BasicAuthentication;
+use Tuleap\REST\RestlerFactory;
 use Tuleap\REST\TuleapRESTAuthentication;
 use Tuleap\REST\GateKeeper;
-use Luracast\Restler\Restler;
-use Luracast\Restler\Explorer\v2\Explorer;
-use Luracast\Restler\Defaults;
-use Luracast\Restler\Format\JsonFormat;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 
 $message_factory = \Tuleap\Http\HTTPFactoryBuilder::responseFactory();
@@ -60,26 +57,7 @@ if ($matches && isset($matches[1]) && $matches[1] == 2) {
     $version = 2;
 }
 
-// Do not put .json at the end of the resource
-Explorer::$useFormatAsExtension = false;
-
-//Do not hide the API
-Explorer::$hideProtected = false;
-// Use /api/v1/projects uri
-Defaults::$useUrlBasedVersioning = true;
-
-// Do not unescape unicode or it will break the api (see request #9162)
-JsonFormat::$unEscapedUnicode = false;
-
-if (ForgeConfig::get('DEBUG_MODE')) {
-    $restler = new Restler(false, true);
-    $restler->setSupportedFormats('JsonFormat', 'XmlFormat', 'HtmlFormat');
-} else {
-    $restler_cache = new RestlerCache();
-    Defaults::$cacheDirectory = $restler_cache->getAndInitiateCacheDirectory($version);
-    $restler = new Restler(true, false);
-    $restler->setSupportedFormats('JsonFormat', 'XmlFormat');
-}
+$restler = (new RestlerFactory(new RestlerCache(), new Tuleap\REST\ResourcesInjector(), EventManager::instance()))->buildRestler($version);
 
 $restler->onComplete(static function () use ($restler, $request_instrumentation) {
     $request_instrumentation->incrementRest($restler->responseCode);
@@ -99,13 +77,6 @@ $restler->onComplete(static function () use ($restler, $request_instrumentation)
 // Do not let Restler find itself the domain, when behind a reverse proxy, it's
 // a mess.
 $restler->setBaseUrls($http_request->getServerUrl());
-$restler->setAPIVersion($version);
-
-$core_resources_injector = new Tuleap\REST\ResourcesInjector();
-$core_resources_injector->populate($restler);
-
-EventManager::instance()->processEvent(Event::REST_RESOURCES, array('restler' => $restler));
-$restler->addAPIClass('Explorer');
 
 $restler->addAuthenticationClass('\\' . TuleapRESTAuthentication::class);
 $restler->addAuthenticationClass('\\' . BasicAuthentication::class);

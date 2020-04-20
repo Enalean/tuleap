@@ -1,0 +1,124 @@
+{
+  "swagger": "2.0",
+  "host": "example.com:8443",
+  "basePath": "\/api",
+  "produces": [
+    "application\/json",
+    "application\/xml"
+  ],
+  "consumes": [
+    "application\/json",
+    "application\/xml"
+  ],
+  "info": {
+    "version": "11.13-2",
+    "title": " API"
+  },
+  "paths": {
+    "\/somepath\/{id}\/demo": {
+      "get": {
+        "operationId": "retrieveSwaggerJsonDemoResource",
+        "tags": [
+          "somepath"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "type": "integer",
+            "format": "int64",
+            "description": "ID of demo",
+            "in": "path",
+            "required": true
+          },
+          {
+            "default": "default value",
+            "description": "",
+            "in": "query",
+            "name": "some",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "summary": "Get demo representation \ud83d\udd13",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateSwaggerJsonDemoResource",
+        "tags": [
+          "somepath"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "type": "integer",
+            "format": "int64",
+            "description": "ID of demo",
+            "in": "path",
+            "required": true
+          },
+          {
+            "name": "representation",
+            "description": "message  \n",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#\/definitions\/SwaggerJsonDemoRepresentation"
+            }
+          }
+        ],
+        "summary": "Put demo representation \ud83d\udd10",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "security": [
+          {
+            "api_access_key": []
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "SwaggerJsonDemoRepresentation": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "description": ""
+        }
+      },
+      "required": [
+        "message"
+      ]
+    }
+  },
+  "securityDefinitions": {
+    "api_access_key": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "X-Auth-AccessKey"
+    }
+  }
+}

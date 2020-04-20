@@ -28,7 +28,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 
 final class JSONResponseBuilder
 {
-    private const CONTENT_TYPE = 'application/json';
+    private const CONTENT_TYPE = 'application/json;charset=utf-8';
 
     /**
      * @var ResponseFactoryInterface
