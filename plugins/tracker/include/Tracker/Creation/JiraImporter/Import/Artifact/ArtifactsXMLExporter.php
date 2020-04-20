@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
 
 use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
+use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use UserManager;
 use XML_SimpleXMLCDATAFactory;
@@ -59,6 +60,7 @@ class ArtifactsXMLExporter
     public function exportArtifacts(
         SimpleXMLElement $tracker_node,
         FieldMappingCollection $jira_field_mapping_collection,
+        string $jira_base_url,
         string $jira_project_id
     ): void {
         $url = "/search?jql=project=" . urlencode($jira_project_id) . "&fields=*all";
@@ -99,6 +101,12 @@ class ArtifactsXMLExporter
             );
 
             $changeset_node->addChild('comments');
+
+            $jira_link = rtrim($jira_base_url, "/") . "/browse/" . urlencode($artifact['key']);
+            $field_change_node = $changeset_node->addChild('field_change');
+            $field_change_node->addAttribute('type', 'string');
+            $field_change_node->addAttribute('field_name', JiraXmlExporter::JIRA_LINK_FIELD_NAME);
+            $field_change_node->addChild('value', $jira_link);
 
             foreach ($artifact['fields'] as $key => $value) {
                 $mapping = $jira_field_mapping_collection->getMappingFromJiraField($key);

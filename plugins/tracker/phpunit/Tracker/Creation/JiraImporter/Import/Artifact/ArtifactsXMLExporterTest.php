@@ -65,6 +65,7 @@ class ArtifactsXMLExporterTest extends TestCase
             )
         );
         $jira_project_id = 'project';
+        $jira_base_url   = 'URLinstance';
 
         $wrapper->shouldReceive('getUrl')->andReturn([
             'startAt' => 0,
@@ -93,6 +94,7 @@ class ArtifactsXMLExporterTest extends TestCase
         $exporter->exportArtifacts(
             $tracker_node,
             $mapping_collection,
+            $jira_base_url,
             $jira_project_id
         );
 
@@ -108,7 +110,10 @@ class ArtifactsXMLExporterTest extends TestCase
         $this->assertNotNull($artifact_node_01->changeset);
         $artifact_node_01_field_changes = $artifact_node_01->changeset->field_change;
         $this->assertNotNull($artifact_node_01_field_changes);
-        $this->assertCount(1, $artifact_node_01_field_changes);
+        $this->assertCount(2, $artifact_node_01_field_changes);
+
+        $this->assertSame("URLinstance/browse/key01", (string) $artifact_node_01_field_changes[0]->value);
+        $this->assertSame("summary01", (string) $artifact_node_01_field_changes[1]->value);
 
         $artifact_node_02 = $artifacts_node->artifact[1];
         $this->assertSame("10043", (string) $artifact_node_02['id']);
@@ -118,6 +123,9 @@ class ArtifactsXMLExporterTest extends TestCase
         $this->assertNotNull($artifact_node_02->changeset);
         $artifact_node_02_field_changes = $artifact_node_02->changeset->field_change;
         $this->assertNotNull($artifact_node_02_field_changes);
-        $this->assertCount(1, $artifact_node_02_field_changes);
+        $this->assertCount(2, $artifact_node_02_field_changes);
+
+        $this->assertSame("URLinstance/browse/key02", (string) $artifact_node_02_field_changes[0]->value);
+        $this->assertSame("summary02", (string) $artifact_node_02_field_changes[1]->value);
     }
 }
