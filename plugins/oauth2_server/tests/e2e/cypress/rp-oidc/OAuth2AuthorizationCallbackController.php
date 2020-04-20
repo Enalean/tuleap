@@ -31,6 +31,7 @@ use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\ValidationData;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Tuleap\JWT\JWKS\PKCS1Format;
 
@@ -118,6 +119,8 @@ final class OAuth2AuthorizationCallbackController
             throw new \RuntimeException(sprintf('The user info sub (%s) does not match the ID token sub (%s)', $user_info_response['sub'], $sub));
         }
 
+        $this->revoke($http_client_with_client_credentials, $refresh_token_response);
+
         return new Response(Status::OK, ['Content-Type' => 'text/html'], 'OK as ' . $user_info_response['preferred_username']);
     }
 
@@ -194,16 +197,21 @@ final class OAuth2AuthorizationCallbackController
      */
     private function getUserInfo(string $access_token): array
     {
-        $response = $this->http_client->sendRequest(
-            $this->request_factory->createRequest('GET', OAuth2TestFlowConstants::BASE_CLIENT_URI . '/oauth2/userinfo')
-                ->withHeader('Authorization', 'Bearer ' . $access_token)
-        );
+        $response = $this->sendUserInfoRequest($access_token);
 
         if ($response->getStatusCode() !== 200) {
             throw new \RuntimeException('Failed to retrieve the user info');
         }
 
         return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+    }
+
+    private function sendUserInfoRequest(string $access_token): ResponseInterface
+    {
+        return $this->http_client->sendRequest(
+            $this->request_factory->createRequest('GET', OAuth2TestFlowConstants::BASE_CLIENT_URI . '/oauth2/userinfo')
+                ->withHeader('Authorization', 'Bearer ' . $access_token)
+        );
     }
 
     private function validateIDToken(string $id_token_jwt): string
@@ -254,5 +262,39 @@ final class OAuth2AuthorizationCallbackController
         }
 
         throw new \RuntimeException('No valid RS256 key found');
+    }
+
+    /**
+     * @param string[] $token_response
+     * @psalm-param array{access_token:string,refresh_token:string} $token_response
+     */
+    private function revoke(ClientInterface $http_client_with_client_credential, array $token_response): void
+    {
+        $revocation_response = $http_client_with_client_credential->sendRequest(
+            $this->request_factory->createRequest('POST', OAuth2TestFlowConstants::BASE_CLIENT_URI . '/oauth2/token/revoke')
+                ->withHeader('Content-Type', 'application/x-www-form-urlencoded')
+                ->withBody(
+                    $this->stream_factory->createStream(
+                        http_build_query(['token' => $token_response['refresh_token']])
+                    )
+                )
+        );
+
+        if ($revocation_response->getStatusCode() !== 200) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Failed to revoke token %d %s',
+                    $revocation_response->getStatusCode(),
+                    $revocation_response->getBody()->getContents()
+                )
+            );
+        }
+
+        $user_info_response = $this->sendUserInfoRequest($token_response['access_token']);
+        if ($user_info_response->getStatusCode() !== 401) {
+            throw new \RuntimeException(
+                'Expected to get an Unauthorized error when calling userinfo endpoint with a revoked token, got code ' . $user_info_response->getStatusCode()
+            );
+        }
     }
 }
