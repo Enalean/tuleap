@@ -78,12 +78,17 @@ final class OAuth2AuthorizationCallbackController
             return new Response(Status::BAD_REQUEST, ['Content-Type' => 'text/html'], 'Failure, code parameter was not returned by the OAuth2 provider');
         }
 
-        $access_token_response = $this->exchangeAuthorizationCode(
-            $this->http_client_with_client_credential_factory->getHTTPClient(),
+        $http_client_with_client_credentials = $this->http_client_with_client_credential_factory->getHTTPClient();
+
+        $access_token_response  = $this->exchangeAuthorizationCode(
+            $http_client_with_client_credentials,
             $auth_code
         );
-
-        $user_info_response = $this->getUserInfo($access_token_response['access_token']);
+        $refresh_token_response = $this->refreshTokens(
+            $http_client_with_client_credentials,
+            $access_token_response['refresh_token']
+        );
+        $user_info_response = $this->getUserInfo($refresh_token_response['access_token']);
 
         return new Response(Status::OK, ['Content-Type' => 'text/html'], 'OK as ' . $user_info_response['preferred_username']);
     }
@@ -114,6 +119,39 @@ final class OAuth2AuthorizationCallbackController
             throw new \RuntimeException(
                 sprintf(
                     'Failed to exchange the authorization code %d %s',
+                    $response->getStatusCode(),
+                    $response->getBody()->getContents()
+                )
+            );
+        }
+
+        return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+    }
+
+    /**
+     * @psalm-return array{access_token:string,refresh_token:string}
+     */
+    private function refreshTokens(ClientInterface $http_client_with_client_credential, string $refresh_token): array
+    {
+        $response = $http_client_with_client_credential->sendRequest(
+            $this->request_factory->createRequest('POST', OAuth2TestFlowConstants::BASE_CLIENT_URI . '/oauth2/token')
+                ->withHeader('Content-Type', 'application/x-www-form-urlencoded')
+                ->withBody(
+                    $this->stream_factory->createStream(
+                        http_build_query(
+                            [
+                                'grant_type'    => 'refresh_token',
+                                'refresh_token' => $refresh_token
+                            ]
+                        )
+                    )
+                )
+        );
+
+        if ($response->getStatusCode() !== 200) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Failed to refresh tokens %d %s',
                     $response->getStatusCode(),
                     $response->getBody()->getContents()
                 )
