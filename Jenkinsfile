@@ -46,10 +46,6 @@ pipeline {
         stage('Tests') {
             failFast false
             parallel {
-                stage('UT SimpleTest PHP 7.3') {
-                    steps { script { actions.runSimpleTestTests('73') } }
-                    post { always { junit 'results/ut-simpletest/php-73/results.xml' } }
-                }
                 stage('UT PHPUnit') {
                     stages {
                         stage('UT PHPUnit PHP 7.3') { steps { script { actions.runPHPUnitTests('73') } } }
