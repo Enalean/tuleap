@@ -120,6 +120,11 @@ final class AzureADProvider implements Provider
         return "https://graph.microsoft.com/oidc/userinfo";
     }
 
+    public function getJWKSEndpoint(): ?string
+    {
+        return self::BASE_AZURE_URL . urlencode($this->acceptable_tenant_for_authentication_configuration->getValueForAuthenticationFlow()) . '/discovery/v2.0/keys?appid=' . urlencode($this->getClientId());
+    }
+
     public function getClientId(): string
     {
         return $this->client_id;

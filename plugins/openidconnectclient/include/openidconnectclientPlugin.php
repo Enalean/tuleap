@@ -19,6 +19,8 @@
  */
 
 use FastRoute\RouteCollector;
+use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Http\Client\Authentication\BasicAuth;
@@ -39,6 +41,8 @@ use Tuleap\OpenIDConnectClient\Authentication\AzureProviderIssuerClaimValidator;
 use Tuleap\OpenIDConnectClient\Authentication\Flow;
 use Tuleap\OpenIDConnectClient\Authentication\GenericProviderIssuerClaimValidator;
 use Tuleap\OpenIDConnectClient\Authentication\IDTokenVerifier;
+use Tuleap\OpenIDConnectClient\Authentication\IssuerClaimValidator;
+use Tuleap\OpenIDConnectClient\Authentication\JWKSKeyFetcher;
 use Tuleap\OpenIDConnectClient\Authentication\StateFactory;
 use Tuleap\OpenIDConnectClient\Authentication\StateManager;
 use Tuleap\OpenIDConnectClient\Authentication\StateStorage;
@@ -207,20 +211,17 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         }
     }
 
-    /**
-     * @return Flow
-     */
-    private function getFlow(ProviderManager $provider_manager, $audience_claim_validator)
+    private function getFlow(ProviderManager $provider_manager, IssuerClaimValidator $issuer_claim_validator): Flow
     {
         $state_manager     = new StateManager(
             new StateStorage($_SESSION),
             new StateFactory(new RandomNumberGenerator())
         );
-        $id_token_verifier = new IDTokenVerifier($audience_claim_validator);
         $request_factory   = HTTPFactoryBuilder::requestFactory();
         $stream_factory    = HTTPFactoryBuilder::streamFactory();
         $http_client       = HttpClientFactory::createClient();
-        $flow              = new Flow(
+        $id_token_verifier = new IDTokenVerifier(new Parser(), $issuer_claim_validator, new JWKSKeyFetcher($http_client, $request_factory), new Sha256());
+        return new Flow(
             $state_manager,
             $provider_manager,
             new TokenRequestCreator($request_factory, $stream_factory, new BasicAuth()),
@@ -229,7 +230,6 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
             new UserInfoRequestCreator($request_factory),
             new UserInfoRequestSender($http_client)
         );
-        return $flow;
     }
 
     /**
