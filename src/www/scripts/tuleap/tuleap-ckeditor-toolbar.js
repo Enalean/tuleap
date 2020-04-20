@@ -18,9 +18,19 @@
 var tuleap = tuleap || {};
 tuleap.ckeditor = tuleap.ckeditor || {};
 
-tuleap.ckeditor.toolbar = [
-    ["Bold", "Italic", "Underline"],
-    ["NumberedList", "BulletedList", "-", "Blockquote", "Format"],
-    ["Link", "Unlink", "Anchor", "Image"],
-    ["Source"],
-];
+tuleap.ckeditor.config = {
+    toolbar: [
+        ["Bold", "Italic"],
+        ["NumberedList", "BulletedList", "-", "Blockquote", "Styles", "Format"],
+        ["Link", "Unlink", "Anchor", "Image"],
+        ["Source"],
+    ],
+    stylesSet: [
+        { name: "Bold", element: "strong", overrides: "b" },
+        { name: "Italic", element: "em", overrides: "i" },
+        { name: "Code", element: "code" },
+        { name: "Subscript", element: "sub" },
+        { name: "Superscript", element: "sup" },
+    ],
+    disableNativeSpellChecker: false,
+};

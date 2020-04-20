@@ -64,10 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function initHTMLEditor() {
-        editor = CKEDITOR.replace("mail_message", {
-            toolbar: tuleap.ckeditor.toolbar,
-            disableNativeSpellChecker: false,
-        });
+        editor = CKEDITOR.replace("mail_message", tuleap.ckeditor.config);
     }
 
     function initSelect2() {

@@ -82,8 +82,16 @@ export default {
                 ],
                 ["Image", "Table", "HorizontalRule", "SpecialChar", "-", "Source"],
                 "/",
-                ["Bold", "Italic", "Underline", "Strike", "Subscript", "Superscript", "-"],
-                ["RemoveFormat", "NumberedList", "BulletedList", "Format"],
+                ["Bold", "Italic", "Strike", "-"],
+                ["RemoveFormat", "NumberedList", "BulletedList", "Styles", "Format"],
+            ],
+            stylesSet: [
+                { name: "Bold", element: "strong", overrides: "b" },
+                { name: "Italic", element: "em", overrides: "i" },
+                { name: "Strike", element: "s" },
+                { name: "Code", element: "code" },
+                { name: "Subscript", element: "sub" },
+                { name: "Superscript", element: "sup" },
             ],
             disableNativeSpellChecker: false,
         });

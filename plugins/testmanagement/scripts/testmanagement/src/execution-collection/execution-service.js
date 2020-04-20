@@ -333,8 +333,15 @@ function ExecutionService(
         let config = {
             disableNativeSpellChecker: false,
             toolbar: [
-                ["Bold", "Italic", "Underline"],
+                ["Bold", "Italic", "Styles"],
                 ["Link", "Unlink", "Image"],
+            ],
+            stylesSet: [
+                { name: "Bold", element: "strong", overrides: "b" },
+                { name: "Italic", element: "em", overrides: "i" },
+                { name: "Code", element: "code" },
+                { name: "Subscript", element: "sub" },
+                { name: "Superscript", element: "sup" },
             ],
             language: document.body.dataset.userLocale,
         };

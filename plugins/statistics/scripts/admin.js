@@ -31,10 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var ckeditor_selector = document.querySelectorAll(".project-over-quota-massmail-body");
 
     [].forEach.call(ckeditor_selector, function (ckeditor_element) {
-        CKEDITOR.replace(ckeditor_element.id, {
-            toolbar: tuleap.ckeditor.toolbar,
-            disableNativeSpellChecker: false,
-        });
+        CKEDITOR.replace(ckeditor_element.id, tuleap.ckeditor.config);
     });
 
     var project_selectors = document.querySelectorAll(".project-autocompleter");

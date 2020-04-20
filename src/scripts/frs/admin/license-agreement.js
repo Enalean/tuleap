@@ -21,7 +21,4 @@
 import CKEDITOR from "ckeditor";
 import tuleap from "tuleap";
 
-CKEDITOR.replace("license-agreement-content", {
-    toolbar: tuleap.ckeditor.toolbar,
-    disableNativeSpellChecker: false,
-});
+CKEDITOR.replace("license-agreement-content", tuleap.ckeditor.config);
