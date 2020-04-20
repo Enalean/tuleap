@@ -92,11 +92,6 @@ class MockTrackerBuilder
     }
 }
 
-function aMockTracker()
-{
-    return new MockTrackerBuilder(mock(Tracker::class));
-}
-
 function aMockeryTracker()
 {
     return new MockTrackerBuilder(\Mockery::spy(Tracker::class));

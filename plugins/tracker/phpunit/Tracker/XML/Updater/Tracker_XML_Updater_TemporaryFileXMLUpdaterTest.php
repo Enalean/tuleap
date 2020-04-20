@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,10 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once __DIR__ . '/../../../bootstrap.php';
 
-class Tracker_XML_Updater_TemporaryFileXMLUpdaterTest extends TuleapTestCase
+declare(strict_types=1);
+
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_XML_Updater_TemporaryFileXMLUpdaterTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /** @var Tracker_XML_Updater_TemporaryFileXMLUpdater */
     private $updater;
@@ -28,9 +31,8 @@ class Tracker_XML_Updater_TemporaryFileXMLUpdaterTest extends TuleapTestCase
     /** @var SimpleXMLElement */
     private $artifact_xml;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
         $this->artifact_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>'
                 . '<artifact>'
                 . '  <file id="fileinfo_1">'
@@ -43,18 +45,18 @@ class Tracker_XML_Updater_TemporaryFileXMLUpdaterTest extends TuleapTestCase
                 . '  </file>'
                 . '</artifact>');
 
-        $temporary_file_creator = mock('Tracker_XML_Updater_TemporaryFileCreator');
-        stub($temporary_file_creator)->createTemporaryFile('/path/to/toto.txt')->returns('/tmp/toto.txt');
-        stub($temporary_file_creator)->createTemporaryFile('/path/to/Spec.doc')->returns('/tmp/Spec.doc');
+        $temporary_file_creator = \Mockery::spy(\Tracker_XML_Updater_TemporaryFileCreator::class);
+        $temporary_file_creator->shouldReceive('createTemporaryFile')->with('/path/to/toto.txt')->andReturns('/tmp/toto.txt');
+        $temporary_file_creator->shouldReceive('createTemporaryFile')->with('/path/to/Spec.doc')->andReturns('/tmp/Spec.doc');
 
         $this->updater = new Tracker_XML_Updater_TemporaryFileXMLUpdater($temporary_file_creator);
     }
 
-    public function itReplacesThePathWithTheNewTempraryPath()
+    public function testItReplacesThePathWithTheNewTemporaryPath(): void
     {
         $this->updater->update($this->artifact_xml);
 
-        $this->assertEqual((string) $this->artifact_xml->file[0]->path, '/tmp/toto.txt');
-        $this->assertEqual((string) $this->artifact_xml->file[1]->path, '/tmp/Spec.doc');
+        $this->assertEquals('/tmp/toto.txt', (string) $this->artifact_xml->file[0]->path);
+        $this->assertEquals('/tmp/Spec.doc', (string) $this->artifact_xml->file[1]->path);
     }
 }

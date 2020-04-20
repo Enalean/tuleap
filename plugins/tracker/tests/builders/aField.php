@@ -29,25 +29,11 @@ function aStringField()
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_String');
 }
 
-function anArtifactLinkField()
-{
-    return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_ArtifactLink');
-}
-
 function aSelectBoxField()
 {
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_Selectbox');
 }
 
-function aMultiSelectBoxField()
-{
-    return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_MultiSelectbox');
-}
-
-function aFileField()
-{
-    return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_File');
-}
 
 class Test_Tracker_FormElement_Builder
 {

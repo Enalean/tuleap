@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,20 +17,20 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once __DIR__ . '/../../../../bootstrap.php';
 
-class Tracker_XML_Updater_FieldChange_FieldChangePermissionsOnArtifactXMLUpdaterTest extends TuleapTestCase
+declare(strict_types=1);
+
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_XML_Updater_FieldChange_FieldChangePermissionsOnArtifactXMLUpdaterTest extends \PHPUnit\Framework\TestCase
 {
-
     /** @var Tracker_XML_Updater_FieldChange_FieldChangePermissionsOnArtifactXMLUpdater */
     private $updater;
 
     /** @var SimpleXMLElement */
     private $field_change_xml;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
         $this->updater          = new Tracker_XML_Updater_FieldChange_FieldChangePermissionsOnArtifactXMLUpdater();
         $this->field_change_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>'
             . '<field_change field_name="perms" use_perm="1">'
@@ -39,7 +39,7 @@ class Tracker_XML_Updater_FieldChange_FieldChangePermissionsOnArtifactXMLUpdater
             . '</field_change>');
     }
 
-    public function itUpdatesTheUgroupNodesValueWithSubmittedValue()
+    public function testItUpdatesTheUgroupNodesValueWithSubmittedValue(): void
     {
         $this->updater->update(
             $this->field_change_xml,
@@ -52,11 +52,11 @@ class Tracker_XML_Updater_FieldChange_FieldChangePermissionsOnArtifactXMLUpdater
             )
         );
 
-        $this->assertEqual((int) $this->field_change_xml->ugroup[0]['ugroup_id'], 1001);
-        $this->assertEqual((int) $this->field_change_xml->ugroup[1]['ugroup_id'], 1002);
+        $this->assertEquals(1001, (int) $this->field_change_xml->ugroup[0]['ugroup_id']);
+        $this->assertEquals(1002, (int) $this->field_change_xml->ugroup[1]['ugroup_id']);
     }
 
-    public function itUpdatesTheUsePerm()
+    public function testItUpdatesTheUsePerm(): void
     {
         $this->updater->update(
             $this->field_change_xml,
@@ -66,11 +66,11 @@ class Tracker_XML_Updater_FieldChange_FieldChangePermissionsOnArtifactXMLUpdater
             )
         );
 
-        $this->assertEqual((int) $this->field_change_xml['use_perm'], 0);
-        $this->assertEqual(count($this->field_change_xml->ugroup), 0);
+        $this->assertEquals(0, (int) $this->field_change_xml['use_perm']);
+        $this->assertCount(0, $this->field_change_xml->ugroup);
     }
 
-    public function itUpdatesTheUsePermEvenWhenUGroupsAreNotSubmitted()
+    public function testItUpdatesTheUsePermEvenWhenUGroupsAreNotSubmitted(): void
     {
         $this->updater->update(
             $this->field_change_xml,
@@ -79,7 +79,7 @@ class Tracker_XML_Updater_FieldChange_FieldChangePermissionsOnArtifactXMLUpdater
             )
         );
 
-        $this->assertEqual((int) $this->field_change_xml['use_perm'], 0);
-        $this->assertEqual(count($this->field_change_xml->ugroup), 0);
+        $this->assertEquals(0, (int) $this->field_change_xml['use_perm']);
+        $this->assertCount(0, $this->field_change_xml->ugroup);
     }
 }
