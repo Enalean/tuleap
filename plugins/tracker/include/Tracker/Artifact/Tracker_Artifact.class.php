@@ -1769,9 +1769,15 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     {
         $artifact_links = $this->getLinkedArtifacts($user);
         $allowed_trackers = $this->getAllowedChildrenTypes();
+
+
+        if (! $allowed_trackers) {
+            return [];
+        }
+
         foreach ($artifact_links as $artifact_link) {
             $tracker = $artifact_link->getTracker();
-            if (in_array($tracker, $allowed_trackers)) {
+            if (array_key_exists($tracker->getId(), $allowed_trackers)) {
                 $sub_linked_artifacts = $artifact_link->getLinkedArtifactsOfHierarchy($user);
                 $artifact_links       = array_merge($artifact_links, $sub_linked_artifacts);
             }
