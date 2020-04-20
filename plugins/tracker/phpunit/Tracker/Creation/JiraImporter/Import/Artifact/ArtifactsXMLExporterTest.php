@@ -66,6 +66,7 @@ class ArtifactsXMLExporterTest extends TestCase
         );
         $jira_project_id = 'project';
         $jira_base_url   = 'URLinstance';
+        $jira_issue_name = 'Story';
 
         $wrapper->shouldReceive('getUrl')->andReturn([
             'startAt' => 0,
@@ -77,7 +78,11 @@ class ArtifactsXMLExporterTest extends TestCase
                     'self' => 'https://jira_instance/rest/api/latest/issue/10042',
                     'key' => 'key01',
                     'fields' => [
-                        'summary' => 'summary01'
+                        'summary' => 'summary01',
+                        'issuetype' =>
+                        [
+                            'id' => '10004'
+                        ]
                     ]
                 ],
                 [
@@ -85,7 +90,11 @@ class ArtifactsXMLExporterTest extends TestCase
                     'self' => 'https://jira_instance/rest/api/latest/issue/10043',
                     'key' => 'key02',
                     'fields' => [
-                        'summary' => 'summary02'
+                        'summary' => 'summary02',
+                        'issuetype' =>
+                        [
+                            'id' => '10004'
+                        ]
                     ]
                 ]
             ]
@@ -95,7 +104,8 @@ class ArtifactsXMLExporterTest extends TestCase
             $tracker_node,
             $mapping_collection,
             $jira_base_url,
-            $jira_project_id
+            $jira_project_id,
+            $jira_issue_name
         );
 
         $this->assertXMLArtifactsContent($tracker_node);
@@ -128,6 +138,7 @@ class ArtifactsXMLExporterTest extends TestCase
         );
         $jira_project_id = 'project';
         $jira_base_url   = 'URLinstance';
+        $jira_issue_name = 'Story';
 
         $wrapper->shouldReceive('getUrl')->andReturn(
             [
@@ -140,7 +151,11 @@ class ArtifactsXMLExporterTest extends TestCase
                         'self' => 'https://jira_instance/rest/api/latest/issue/10042',
                         'key' => 'key01',
                         'fields' => [
-                            'summary' => 'summary01'
+                            'summary' => 'summary01',
+                            'issuetype' =>
+                            [
+                                'id' => '10004'
+                            ]
                         ]
                     ]
                 ]
@@ -155,7 +170,11 @@ class ArtifactsXMLExporterTest extends TestCase
                         'self' => 'https://jira_instance/rest/api/latest/issue/10043',
                         'key' => 'key02',
                         'fields' => [
-                            'summary' => 'summary02'
+                            'summary' => 'summary02',
+                            'issuetype' =>
+                            [
+                                'id' => '10004'
+                            ]
                         ]
                     ]
                 ]
@@ -166,7 +185,8 @@ class ArtifactsXMLExporterTest extends TestCase
             $tracker_node,
             $mapping_collection,
             $jira_base_url,
-            $jira_project_id
+            $jira_project_id,
+            $jira_issue_name
         );
 
         $this->assertXMLArtifactsContent($tracker_node);

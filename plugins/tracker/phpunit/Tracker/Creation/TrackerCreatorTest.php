@@ -199,7 +199,8 @@ final class TrackerCreatorTest extends \PHPUnit\Framework\TestCase
             "azerty123",
             "user@example.com",
             "https://example.com",
-            "Jira project"
+            "Jira project",
+            "Story"
         );
     }
 }

@@ -171,7 +171,8 @@ class TrackerCreator
         string $jira_token,
         string $jira_username,
         string $jira_url,
-        string $jira_project_id
+        string $jira_project_id,
+        string $jira_issue_type_name
     ): Tracker {
         $this->creation_data_checker->checkAtProjectCreation((int) $project->getID(), $name, $itemname);
         $jira_exporter = $this->getJiraExporter($jira_token, $jira_username, $jira_url);
@@ -190,7 +191,7 @@ class TrackerCreator
         $tracker_xml->addChild('cannedResponses');
 
         try {
-            $jira_exporter->exportJiraToXml($tracker_xml, $jira_url, $jira_project_id);
+            $jira_exporter->exportJiraToXml($tracker_xml, $jira_url, $jira_project_id, $jira_issue_type_name);
             $trackers = $this->tracker_xml_import->import(
                 new ImportConfig(),
                 $project,

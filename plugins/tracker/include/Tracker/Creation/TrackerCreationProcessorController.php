@@ -134,6 +134,9 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
                 $jira_project_object = json_decode($request->get('jira_project'), true);
                 $jira_project_id     = (string) $jira_project_object['id'];
 
+                $jira_tracker_object  = json_decode($request->get('jira_tracker_name'), true);
+                $jira_issue_type_name = (string) $jira_tracker_object['name'];
+
                 $tracker = $this->tracker_creator->createFromJira(
                     $project,
                     (string) $tracker_name,
@@ -142,7 +145,8 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
                     $jira_token,
                     $jira_user,
                     $jira_server,
-                    $jira_project_id
+                    $jira_project_id,
+                    $jira_issue_type_name
                 );
             } else {
                 $file    = $_FILES;

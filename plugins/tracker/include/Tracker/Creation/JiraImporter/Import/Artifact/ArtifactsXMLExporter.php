@@ -63,18 +63,19 @@ class ArtifactsXMLExporter
         SimpleXMLElement $tracker_node,
         FieldMappingCollection $jira_field_mapping_collection,
         string $jira_base_url,
-        string $jira_project_id
+        string $jira_project_id,
+        string $jira_issue_type_name
     ): void {
         $user = $this->user_manager->getCurrentUser();
         if ($user === null) {
             return;
         }
 
-        $url = "/search?jql=project=" . urlencode($jira_project_id) . "&fields=*all";
+        $url = "/search?jql=project=" . urlencode($jira_project_id) . " AND issuetype=" . urlencode($jira_issue_type_name) . "&fields=*all";
         $jira_artifacts_response = $this->wrapper->getUrl($url);
 
-        if (! isset($jira_artifacts_response['issues'])) {
-            return;
+        if (! $jira_artifacts_response) {
+            throw JiraConnectionException::canNotRetrieveFullCollectionOfIssuesException();
         }
 
         $artifacts_node = $tracker_node->addChild('artifacts');
@@ -94,16 +95,12 @@ class ArtifactsXMLExporter
             $max_results = $jira_artifacts_response['maxResults'];
             $offset      = $jira_artifacts_response['maxResults'] * $count_loop;
 
-            $url = "/search?jql=project=" . urlencode($jira_project_id) . "&fields=*all" .
+            $url = "/search?jql=project=" . urlencode($jira_project_id) . " AND issuetype=" . urlencode($jira_issue_type_name) . "&fields=*all" .
                 "&startAt=" . urlencode((string) $offset) . "&maxResults=" . urlencode((string) $max_results);
 
             $jira_artifacts_response = $this->wrapper->getUrl($url);
             if (! $jira_artifacts_response) {
                 throw JiraConnectionException::canNotRetrieveFullCollectionOfIssuesException();
-            }
-
-            if (! isset($jira_artifacts_response['issues'])) {
-                return;
             }
 
             $this->exportBatchOfIssuesInArtifactXMLFormat(
@@ -127,6 +124,10 @@ class ArtifactsXMLExporter
         string $jira_base_url,
         FieldMappingCollection $jira_field_mapping_collection
     ): void {
+        if (! isset($jira_artifacts_response['issues'])) {
+            return;
+        }
+
         $jira_artifacts = $jira_artifacts_response['issues'];
         if (count($jira_artifacts) === 0) {
             return;
