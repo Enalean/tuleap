@@ -25,6 +25,8 @@ namespace Tuleap\OAuth2Server\E2E\RelyingPartyOIDC;
 use Amp\Http\Server\Request;
 use Amp\Http\Server\Response;
 use Amp\Http\Status;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
 
 final class OAuth2InitFlowController
 {
@@ -36,11 +38,31 @@ final class OAuth2InitFlowController
      * @var OAuth2TestFlowClientCredentialStorage
      */
     private $client_credential_storage;
+    /**
+     * @var ClientInterface
+     */
+    private $http_client;
+    /**
+     * @var RequestFactoryInterface
+     */
+    private $request_factory;
+    /**
+     * @var OAuth2TestFlowConfigurationStorage
+     */
+    private $configuration_storage;
 
-    public function __construct(OAuth2TestFlowSecretGenerator $secret_generator, OAuth2TestFlowClientCredentialStorage $client_credential_storage)
-    {
+    public function __construct(
+        OAuth2TestFlowSecretGenerator $secret_generator,
+        OAuth2TestFlowClientCredentialStorage $client_credential_storage,
+        ClientInterface $http_client,
+        RequestFactoryInterface $request_factory,
+        OAuth2TestFlowConfigurationStorage $configuration_storage
+    ) {
         $this->secret_generator          = $secret_generator;
         $this->client_credential_storage = $client_credential_storage;
+        $this->http_client               = $http_client;
+        $this->request_factory           = $request_factory;
+        $this->configuration_storage     = $configuration_storage;
     }
 
     public function __invoke(Request $request): Response
@@ -65,6 +87,8 @@ final class OAuth2InitFlowController
         }
         $this->client_credential_storage->setCredentials($client_id, $client_secret);
 
+        $endpoints = $this->discoverEndpoints();
+
         $redirect_parameters = [
             'response_type'         => 'code',
             'client_id'             => $client_id,
@@ -78,7 +102,32 @@ final class OAuth2InitFlowController
         ];
         return new Response(
             Status::FOUND,
-            ['Location' => OAuth2TestFlowConstants::BASE_CLIENT_URI . '/oauth2/authorize?' . http_build_query($redirect_parameters)]
+            ['Location' => $endpoints->getAuthorizationEndpoint() . '?' . http_build_query($redirect_parameters)]
         );
+    }
+
+    private function discoverEndpoints(): OAuth2TestFlowConfiguration
+    {
+        $response  = $this->http_client->sendRequest(
+            $this->request_factory->createRequest('GET', OAuth2TestFlowConstants::DISCOVERY_ENDPOINT)
+        );
+        if ($response->getStatusCode() !== 200) {
+            throw new \RuntimeException(
+                'Failed to retrieve endpoints configuration %d %s',
+                $response->getStatusCode(),
+                $response->getBody()->getContents()
+            );
+        }
+
+        $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+
+        $configuration = new OAuth2TestFlowConfiguration(
+            $json['authorization_endpoint'],
+            $json['token_endpoint'],
+            $json['userinfo_endpoint'],
+            $json['jwks_uri']
+        );
+        $this->configuration_storage->setConfiguration($configuration);
+        return $configuration;
     }
 }
