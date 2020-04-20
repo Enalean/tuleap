@@ -38,7 +38,11 @@
             <release-header-remaining-days v-bind:release_data="release_data" />
             <release-header-remaining-points v-bind:release_data="release_data" />
         </div>
-        <div v-else>
+        <div v-else class="closed-release-header-badges">
+            <past-release-header-tests-displayer
+                v-if="is_testmanagement_activated"
+                v-bind:release_data="release_data"
+            />
             <past-release-header-initial-points v-bind:release_data="release_data" />
         </div>
     </div>
@@ -52,9 +56,12 @@ import Vue from "vue";
 import { MilestoneData } from "../../../type";
 import { Component, Prop } from "vue-property-decorator";
 import PastReleaseHeaderInitialPoints from "./PastReleaseHeaderInitialPoints.vue";
+import PastReleaseHeaderTestsDisplayer from "./PastReleaseHeaderTestsDisplayer.vue";
+import { is_testmanagement_activated } from "../../../helpers/test-management-helper";
 
 @Component({
     components: {
+        PastReleaseHeaderTestsDisplayer,
         PastReleaseHeaderInitialPoints,
         ReleaseHeaderRemainingPoints,
         ReleaseHeaderRemainingDays,
@@ -72,6 +79,12 @@ export default class ReleaseHeader extends Vue {
 
     startDateExist(): boolean {
         return this.release_data.start_date !== null;
+    }
+
+    get is_testmanagement_activated(): boolean {
+        return (
+            is_testmanagement_activated(this.release_data) && this.release_data.campaign !== null
+        );
     }
 }
 </script>

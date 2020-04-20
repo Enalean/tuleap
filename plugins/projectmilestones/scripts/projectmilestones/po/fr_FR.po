@@ -133,3 +133,8 @@ msgid "pt to go"
 msgid_plural "pts to go"
 msgstr[0] "pt restant"
 msgstr[1] "pts restants"
+
+msgid "test"
+msgid_plural "tests"
+msgstr[0] "test"
+msgstr[1] "tests"

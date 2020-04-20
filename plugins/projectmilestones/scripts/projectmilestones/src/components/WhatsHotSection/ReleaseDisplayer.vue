@@ -53,10 +53,11 @@ import ReleaseBadgesDisplayer from "./ReleaseBadges/ReleaseBadgesDisplayer.vue";
 import ReleaseDescription from "./ReleaseDescription/ReleaseDescription.vue";
 import ReleaseHeader from "./ReleaseHeader/ReleaseHeader.vue";
 import Vue from "vue";
-import { MilestoneData } from "../../type";
+import { MilestoneData, TestManagementCampaign } from "../../type";
 import { Component, Prop } from "vue-property-decorator";
 import { Action } from "vuex-class";
 import { FetchWrapperError } from "tlp";
+import { is_testmanagement_activated } from "../../helpers/test-management-helper";
 
 @Component({
     components: {
@@ -74,6 +75,8 @@ export default class ReleaseDisplayer extends Vue {
     isPastRelease!: boolean;
     @Action
     getEnhancedMilestones!: (release_data: MilestoneData) => Promise<MilestoneData>;
+    @Action
+    getTestManagementCampaigns!: (release_data: MilestoneData) => Promise<TestManagementCampaign>;
 
     is_open = false;
     is_loading = true;
@@ -92,6 +95,11 @@ export default class ReleaseDisplayer extends Vue {
         try {
             this.release_data_enhanced = await this.getEnhancedMilestones(this.release_data);
             this.is_open = this.isOpen;
+            if (this.isPastRelease && this.is_testmanagement_activated) {
+                this.release_data_enhanced.campaign = await this.getTestManagementCampaigns(
+                    this.release_data_enhanced
+                );
+            }
         } catch (rest_error) {
             await this.handle_error(rest_error);
         } finally {
@@ -116,6 +124,10 @@ export default class ReleaseDisplayer extends Vue {
         if (!this.is_loading || this.is_open) {
             this.is_open = !this.is_open;
         }
+    }
+
+    get is_testmanagement_activated(): boolean {
+        return is_testmanagement_activated(this.release_data);
     }
 }
 </script>
