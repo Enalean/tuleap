@@ -132,8 +132,12 @@ class JiraXmlExporter
     /**
      * @throws JiraConnectionException
      */
-    public function exportJiraToXml(SimpleXMLElement $node_tracker, string $jira_base_url, string $jira_project_id): void
-    {
+    public function exportJiraToXml(
+        SimpleXMLElement $node_tracker,
+        string $jira_base_url,
+        string $jira_project_id,
+        string $jira_issue_type_name
+    ): void {
         $form_elements = $node_tracker->addChild('formElements');
 
         $node_jira_atf_form_elements = $this->field_xml_exporter->exportFieldsetWithName(
@@ -182,7 +186,8 @@ class JiraXmlExporter
             $node_tracker,
             $this->jira_field_mapping_collection,
             $jira_base_url,
-            $jira_project_id
+            $jira_project_id,
+            $jira_issue_type_name
         );
 
         if ($this->error_collector->hasError()) {
