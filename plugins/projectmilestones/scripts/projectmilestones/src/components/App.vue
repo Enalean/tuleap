@@ -25,7 +25,10 @@
         </div>
         <div v-else-if="is_loading" class="release-loader" data-test="is-loading"></div>
         <div v-else>
-            <div class="project-release-widget-content" data-test="widget-content">
+            <div
+                class="project-release-widget-content"
+                data-test="widget-content-project-milestones"
+            >
                 <roadmap-section v-bind:label_tracker_planning="label_tracker_planning" />
                 <whats-hot-section />
                 <past-section v-bind:label_tracker_planning="label_tracker_planning" />
