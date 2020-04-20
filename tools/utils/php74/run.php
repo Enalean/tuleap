@@ -20,6 +20,7 @@
  */
 
 require_once __DIR__ . '/../../Configuration/vendor/autoload.php';
+require_once __DIR__ . '/../../../src/vendor/autoload.php';
 
 $php74 = new \Tuleap\Configuration\Setup\PHP74CentOS(new Tuleap\Configuration\Logger\Console());
 $php74->main();
