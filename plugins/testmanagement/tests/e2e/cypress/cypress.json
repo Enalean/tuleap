@@ -1,0 +1,13 @@
+{
+    "baseUrl": "https://tuleap",
+    "reporter": "junit",
+    "reporterOptions": {
+        "mochaFile": "/output/testmanagement-results-[hash].xml"
+    },
+    "screenshotsFolder": "/output/testmanagement-screenshots",
+    "videosFolder": "/output/testmanagement-videos",
+    "video": true,
+    "videoUploadOnPasses": false,
+    "pluginsFile": false,
+    "pageLoadTimeout": 120000
+}

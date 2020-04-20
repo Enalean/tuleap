@@ -31,7 +31,9 @@ describe("Project admin", function () {
         it("should be able to create a new public project", function () {
             cy.visit("/project/new");
 
-            cy.get("[data-test=project-registration-card-label").first().click();
+            cy.get(
+                "[data-test=project-registration-card-label][for=project-registration-tuleap-template-issues]"
+            ).click();
 
             cy.get("[data-test=project-registration-next-button").click();
 
