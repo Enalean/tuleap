@@ -184,24 +184,13 @@ _pluginSVN() {
            [ ${mysql_password:-NULL} != "NULL" ]; then
             dbauthuser_password="$(_setupRandomPassword)"
 
-            dbauthuser_grant="dbauthuser@localhost"
-            if [ "${web_server_ip:-NULL}" != "NULL" ]; then
-                dbauthuser_grant="dbauthuser@${web_server_ip}"
-            fi
-
             ${tuleapcfg} setup:mysql-init \
                 --host="${mysql_server}" \
                 --admin-user="${mysql_user}" \
                 --admin-password="${mysql_password}" \
                 --db-name="${sys_db_name}" \
-                --nss-user="${dbauthuser_grant}" \
                 --nss-password="${dbauthuser_password}"
 
-            ${sed} --in-place \
-                "s|sys_dbauth_passwd.*|sys_dbauth_passwd = '${dbauthuser_password}';|g" \
-                "${tuleap_conf}/${local_inc}"
-            _logPassword \
-                "MySQL dbauth user password (dbauthuser): ${dbauthuser_password}"
             plugin_svn_configured="true"
         else
             _errorMessage "You must enter your MySQL user and password"
@@ -237,6 +226,5 @@ _pluginMediawiki() {
         --host="${mysql_server}" \
         --admin-user="${mysql_user}" \
         --admin-password="${mysql_password}" \
-        --app-user="${mysql_app_user_grant}" \
         --mediawiki=per-project
 }

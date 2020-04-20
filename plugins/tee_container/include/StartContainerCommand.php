@@ -131,7 +131,6 @@ final class StartContainerCommand extends Command
             $this->getStringFromEnvironment('DB_HOST'),
             $this->getStringFromEnvironment('DB_ADMIN_USER'),
             $this->getStringFromEnvironment('DB_ADMIN_PASSWORD'),
-            '%',
         );
         $ssh_daemon->shutdownDaemon($output);
     }

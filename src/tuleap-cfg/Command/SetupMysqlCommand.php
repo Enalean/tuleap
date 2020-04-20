@@ -93,11 +93,6 @@ final class SetupMysqlCommand extends Command
 
         $connexion_manager = new ConnectionManager();
         $db = $connexion_manager->getDBWithDBName($io, $host, $port, $ssl_mode, $ssl_ca_file, $user, $password, $dbname);
-        if ($db === null) {
-            $io->getErrorStyle()->writeln('<error>Unable to connect to mysql server</error>');
-            return 1;
-        }
-
         $output->writeln('<info>Successfully connected to the database !</info>');
 
         $connexion_manager->checkSQLModes($db);

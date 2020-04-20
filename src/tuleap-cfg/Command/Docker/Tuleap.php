@@ -40,7 +40,7 @@ final class Tuleap
         $this->process_factory = $process_factory;
     }
 
-    public function setup(OutputInterface $output, string $tuleap_fqdn, string $db_host, string $db_admin_user, string $db_admin_password, string $web_server_ip): void
+    public function setup(OutputInterface $output, string $tuleap_fqdn, string $db_host, string $db_admin_user, string $db_admin_password): void
     {
         $output->writeln('Install Tuleap');
         $this->process_factory->getProcessWithoutTimeout(
@@ -54,7 +54,6 @@ final class Tuleap
                 '--mysql-server=' . $db_host,
                 '--mysql-user=' . $db_admin_user,
                 '--mysql-password=' . $db_admin_password,
-                '--web-server-ip=' . $web_server_ip,
             ]
         )->mustRun();
         $this->process_factory->getProcess(['/usr/bin/tuleap', 'config-set', ServiceControl::FORGECONFIG_INIT_MODE, ServiceControl::SUPERVISORD])->mustRun();

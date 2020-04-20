@@ -1,5 +1,5 @@
 _optionsSelected() {
-    local -a longOptions=('server-name:,' 'web-server-ip:,''mysql-server:,'
+    local -a longOptions=('server-name:,' 'mysql-server:,'
                           'mysql-port:,' 'mysql-user:,' 'mysql-password:,'
                           'debug,' 'disable-check-server-name,'
                           'disable-auto-passwd,' 'disable-mysql-configuration,'
@@ -14,11 +14,6 @@ _optionsSelected() {
             --server-name)
                 _checkArgument "${1}" "${2}"
                 server_name=${2}
-                shift 2
-                ;;
-            --web-server-ip)
-                _checkArgument "${1}" "${2}"
-                web_server_ip=${2}
                 shift 2
                 ;;
             --mysql-server)

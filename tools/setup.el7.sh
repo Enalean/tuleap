@@ -47,11 +47,6 @@ _optionsSelected "${@}"
 ${tuleapcfg} systemctl mask "php73-php-fpm.service"
 _checkIfTuleapInstalled
 
-mysql_app_user_grant="${sys_db_user}@localhost"
-if [ "${web_server_ip:-NULL}" != "NULL" ]; then
-    mysql_app_user_grant="${sys_db_user}@${web_server_ip}"
-fi
-
 if [ ${tuleap_installed:-false} = "false" ] || \
     [ ${reinstall:-false} = "true" ]; then
     _checkMandatoryOptions "${@}"
@@ -62,7 +57,6 @@ if [ ${tuleap_installed:-false} = "false" ] || \
     _checkCommand
     _checkSeLinux
     _optionMessages "${@}"
-    _checkWebServerIp
     _checkFilePassword
 
     if [ "${mysql_password:-NULL}" = "NULL" -a "${mysql_server,,}" = "localhost" ] || \
@@ -84,7 +78,6 @@ if [ ${tuleap_installed:-false} = "false" ] || \
 
     admin_password="$(_setupRandomPassword)"
     sys_db_password="$(_setupRandomPassword)"
-    _logPassword "MySQL system user password (${sys_db_user}): ${sys_db_password}"
     _logPassword "Site admin password (${project_admin}): ${admin_password}"
 
     # Only needed for short term tests as futur test containers will have this created out of rpms
@@ -98,12 +91,11 @@ if [ ${tuleap_installed:-false} = "false" ] || \
         --admin-user="${mysql_user}" \
         --admin-password="${mysql_password}" \
         --db-name="${sys_db_name}" \
-        --app-user="${mysql_app_user_grant}" \
-        --app-password="${sys_db_password}"
+        --app-password="${sys_db_password}" \
+        --log-password=${password_file}
 
     ${tuleapcfg} setup:mysql \
         --host="${mysql_server}" \
-        --user="${sys_db_user}" \
         --dbname="${sys_db_name}" \
         --password="${sys_db_password}" \
         "${admin_password}" \

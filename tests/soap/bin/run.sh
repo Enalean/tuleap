@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -x
+set -euxo pipefail
 
 setup_runner_account() {
     USER_ID=$(stat -c '%u' /usr/share/tuleap)

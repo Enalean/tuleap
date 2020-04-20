@@ -118,7 +118,7 @@ class DockerAioRunCommand extends Command
 
         $mysql_daemon = $this->initializeMysqlDataStore($output);
         $ssh_daemon->startDaemon($output);
-        $tuleap->setup($output, 'tuleap.local', 'localhost', 'root', (string) getenv('MYSQL_ROOT_PASSWORD'), 'localhost');
+        $tuleap->setup($output, 'tuleap.local', 'localhost', 'root', (string) getenv('MYSQL_ROOT_PASSWORD'));
         $this->shutdownMysql($output, $mysql_daemon);
         $ssh_daemon->shutdownDaemon($output);
     }

@@ -23,24 +23,43 @@ declare(strict_types=1);
 
 namespace TuleapCfg\Command\SetupMysql;
 
-use Symfony\Component\Console\Style\SymfonyStyle;
+use ParagonIE\EasyDB\EasyDB;
 
-interface ConnectionManagerInterface
+final class EasyDBWrapper implements DBWrapperInterface
 {
-    public const SSL_NO_SSL     = 'disabled';
-    public const SSL_NO_VERIFY  = 'no-verify';
-    public const SSL_VERIFY_CA  = 'verify-ca';
-
-    public const ALLOWED_SSL_MODES = [
-        self::SSL_NO_SSL,
-        self::SSL_NO_VERIFY,
-        self::SSL_VERIFY_CA,
-    ];
 
     /**
-     * @psalm-param value-of<self::ALLOWED_SSL_MODES> $ssl_mode
+     * @var EasyDB
      */
-    public function getDBWithoutDBName(SymfonyStyle $io, string $host, int $port, string $ssl_mode, string $ssl_ca_file, string $user, string $password): DBWrapperInterface;
+    private $db;
 
-    public function checkSQLModes(DBWrapperInterface $db): void;
+    public function __construct(EasyDB $db)
+    {
+        $this->db = $db;
+    }
+
+    public function run(string $statement, ...$params)
+    {
+        return $this->db->run($statement, ...$params);
+    }
+
+    public function escapeIdentifier(string $identifier, bool $quote = true): string
+    {
+        return $this->db->escapeIdentifier($identifier, $quote);
+    }
+
+    public function row(string $statement)
+    {
+        return $this->db->row($statement);
+    }
+
+    public function single(string $statement)
+    {
+        return $this->db->single($statement);
+    }
+
+    public function rawExec(string $statement): void
+    {
+        $this->db->getPdo()->exec($statement);
+    }
 }

@@ -61,7 +61,7 @@ setup_database() {
         --admin-user="root" \
         --admin-password="welcome0" \
         --db-name="${MYSQL_DBNAME}" \
-        --app-user="${MYSQL_USER}@%" \
+        --app-user="${MYSQL_USER}" \
         --app-password="${MYSQL_PASSWORD}"
 
     /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:mysql \

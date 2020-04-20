@@ -66,7 +66,6 @@ declare -r httpd_conf_ssl="/etc/httpd/conf.d/ssl.conf"
 
 # declare options
 declare -r sys_db_name="tuleap"
-declare -r sys_db_user="tuleap"
 declare -r my_opt="--batch --skip-column-names"
 declare -r project_admin="admin"
 declare -r tuleap_unix_user="codendiadm"

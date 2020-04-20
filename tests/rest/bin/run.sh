@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -ex
+set -euxo pipefail
 
 setup_runner_account() {
     USER_ID=$(stat -c '%u' /usr/share/tuleap)
@@ -25,7 +25,7 @@ setup_runner_account
 
 /usr/share/tuleap/tests/rest/bin/setup.sh
 
-if [ "$1" != "setup" ]; then
+if [ "${1:-0}" != "setup" ]; then
     sudo -E -u runner "/usr/share/tuleap/tests/rest/bin/test_suite.sh"
 else
     set +x # No longer need debug, will make output below messy

@@ -23,24 +23,26 @@ declare(strict_types=1);
 
 namespace TuleapCfg\Command\SetupMysql;
 
-use Symfony\Component\Console\Style\SymfonyStyle;
-
-interface ConnectionManagerInterface
+interface DBWrapperInterface
 {
-    public const SSL_NO_SSL     = 'disabled';
-    public const SSL_NO_VERIFY  = 'no-verify';
-    public const SSL_VERIFY_CA  = 'verify-ca';
+    public function escapeIdentifier(string $identifier, bool $quote = true): string;
 
-    public const ALLOWED_SSL_MODES = [
-        self::SSL_NO_SSL,
-        self::SSL_NO_VERIFY,
-        self::SSL_VERIFY_CA,
-    ];
+    public function rawExec(string $statement): void;
 
     /**
-     * @psalm-param value-of<self::ALLOWED_SSL_MODES> $ssl_mode
+     * @param  string $statement SQL query without user data
+     * @param  mixed  ...$params Parameters
+     * @return mixed
      */
-    public function getDBWithoutDBName(SymfonyStyle $io, string $host, int $port, string $ssl_mode, string $ssl_ca_file, string $user, string $password): DBWrapperInterface;
+    public function run(string $statement, ...$params);
 
-    public function checkSQLModes(DBWrapperInterface $db): void;
+    /**
+     * @return mixed
+     */
+    public function row(string $statement);
+
+    /**
+     * @return mixed
+     */
+    public function single(string $statement);
 }
