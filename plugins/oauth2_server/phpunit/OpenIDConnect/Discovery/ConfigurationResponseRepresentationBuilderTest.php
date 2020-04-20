@@ -77,7 +77,7 @@ final class ConfigurationResponseRepresentationBuilderTest extends TestCase
             'id_token_signing_alg_values_supported' => ['RS256'],
             'userinfo_signing_alg_values_supported' => ['none'],
             'token_endpoint_auth_methods_supported' => ['client_secret_basic'],
-            'service_documentation'                 => 'https://tuleap.example.com/doc/en/',
+            'service_documentation'                 => 'https://tuleap.example.com/doc/en/user-guide/oauth2.html',
             'ui_locales_supported'                  => ['ja-JP', 'en-US', 'fr-FR'],
             'claims_parameter_supported'            => false,
             'request_parameter_supported'           => false,

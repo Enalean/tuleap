@@ -70,7 +70,7 @@ final class ConfigurationResponseRepresentation implements \JsonSerializable
             'id_token_signing_alg_values_supported' => [(new Sha256())->getAlgorithmId()],
             'userinfo_signing_alg_values_supported' => ['none'],
             'token_endpoint_auth_methods_supported' => ['client_secret_basic'],
-            'service_documentation'                 => $issuer . '/doc/en/',
+            'service_documentation'                 => $issuer . '/doc/en/user-guide/oauth2.html',
             'ui_locales_supported'                  => $this->supported_languages,
             'claims_parameter_supported'            => false,
             'request_parameter_supported'           => false,
