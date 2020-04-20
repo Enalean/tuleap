@@ -23,10 +23,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
 
+use PFUser;
 use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
+use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 use UserManager;
 use XML_SimpleXMLCDATAFactory;
 
@@ -63,6 +65,11 @@ class ArtifactsXMLExporter
         string $jira_base_url,
         string $jira_project_id
     ): void {
+        $user = $this->user_manager->getCurrentUser();
+        if ($user === null) {
+            return;
+        }
+
         $url = "/search?jql=project=" . urlencode($jira_project_id) . "&fields=*all";
         $jira_artifacts_response = $this->wrapper->getUrl($url);
 
@@ -70,17 +77,61 @@ class ArtifactsXMLExporter
             return;
         }
 
+        $artifacts_node = $tracker_node->addChild('artifacts');
+
+        $this->exportBatchOfIssuesInArtifactXMLFormat(
+            $user,
+            $artifacts_node,
+            $jira_artifacts_response,
+            $jira_base_url,
+            $jira_field_mapping_collection
+        );
+
+        $count_loop = 1;
+        $total      = (int) $jira_artifacts_response['total'];
+        $is_last    = $total <= (int) $jira_artifacts_response['maxResults'];
+        while (! $is_last) {
+            $max_results = $jira_artifacts_response['maxResults'];
+            $offset      = $jira_artifacts_response['maxResults'] * $count_loop;
+
+            $url = "/search?jql=project=" . urlencode($jira_project_id) . "&fields=*all" .
+                "&startAt=" . urlencode((string) $offset) . "&maxResults=" . urlencode((string) $max_results);
+
+            $jira_artifacts_response = $this->wrapper->getUrl($url);
+            if (! $jira_artifacts_response) {
+                throw JiraConnectionException::canNotRetrieveFullCollectionOfIssuesException();
+            }
+
+            if (! isset($jira_artifacts_response['issues'])) {
+                return;
+            }
+
+            $this->exportBatchOfIssuesInArtifactXMLFormat(
+                $user,
+                $artifacts_node,
+                $jira_artifacts_response,
+                $jira_base_url,
+                $jira_field_mapping_collection
+            );
+
+            $is_last = (int) $jira_artifacts_response['total'] <=
+                ((int) $jira_artifacts_response['startAt'] + (int) $jira_artifacts_response['maxResults']);
+            $count_loop++;
+        }
+    }
+
+    private function exportBatchOfIssuesInArtifactXMLFormat(
+        PFUser $user,
+        SimpleXMLElement $artifacts_node,
+        array $jira_artifacts_response,
+        string $jira_base_url,
+        FieldMappingCollection $jira_field_mapping_collection
+    ): void {
         $jira_artifacts = $jira_artifacts_response['issues'];
         if (count($jira_artifacts) === 0) {
             return;
         }
 
-        $user = $this->user_manager->getCurrentUser();
-        if ($user === null) {
-            return;
-        }
-
-        $artifacts_node = $tracker_node->addChild('artifacts');
         foreach ($jira_artifacts as $artifact) {
             $artifact_node = $artifacts_node->addChild('artifact');
             $artifact_node->addAttribute('id', $artifact['id']);

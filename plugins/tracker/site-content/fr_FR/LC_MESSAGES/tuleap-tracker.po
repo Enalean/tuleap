@@ -390,6 +390,9 @@ msgstr "Date de fin"
 msgid "Error during parsing expert query"
 msgstr "Erreur pendant l'analyse de la requête experte"
 
+msgid "Fail to retrieve the full collection of issues in selected tracker."
+msgstr "Echec lors de la récupération de la collection des issues dans le tracker sélectionné."
+
 msgid "Fail to retrieve the full collection of projects."
 msgstr "Echec lors de la récupération de la collection de tous les projets."
 

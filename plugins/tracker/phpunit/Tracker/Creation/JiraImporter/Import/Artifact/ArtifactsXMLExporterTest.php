@@ -98,6 +98,82 @@ class ArtifactsXMLExporterTest extends TestCase
             $jira_project_id
         );
 
+        $this->assertXMLArtifactsContent($tracker_node);
+    }
+
+    public function testItExportsArtifactsPaginated(): void
+    {
+        $wrapper      = Mockery::mock(ClientWrapper::class);
+        $user_manager = Mockery::mock(UserManager::class);
+
+        $exporter = new ArtifactsXMLExporter(
+            $wrapper,
+            new XML_SimpleXMLCDATAFactory(),
+            $user_manager
+        );
+
+        $user = Mockery::mock(PFUser::class);
+        $user->shouldReceive('getUserName')->andReturn('user01');
+
+        $user_manager->shouldReceive('getCurrentUser')->andReturn($user);
+
+        $tracker_node = new SimpleXMLElement('<tracker/>');
+        $mapping_collection = new FieldMappingCollection();
+        $mapping_collection->addMapping(
+            new FieldMapping(
+                'summary',
+                'Fsummary',
+                'summary'
+            )
+        );
+        $jira_project_id = 'project';
+        $jira_base_url   = 'URLinstance';
+
+        $wrapper->shouldReceive('getUrl')->andReturn(
+            [
+                'startAt' => 0,
+                'maxResults' => 1,
+                'total' => 2,
+                'issues' => [
+                    [
+                        'id' => '10042',
+                        'self' => 'https://jira_instance/rest/api/latest/issue/10042',
+                        'key' => 'key01',
+                        'fields' => [
+                            'summary' => 'summary01'
+                        ]
+                    ]
+                ]
+            ],
+            [
+                'startAt' => 1,
+                'maxResults' => 1,
+                'total' => 2,
+                'issues' => [
+                    [
+                        'id' => '10043',
+                        'self' => 'https://jira_instance/rest/api/latest/issue/10043',
+                        'key' => 'key02',
+                        'fields' => [
+                            'summary' => 'summary02'
+                        ]
+                    ]
+                ]
+            ]
+        );
+
+        $exporter->exportArtifacts(
+            $tracker_node,
+            $mapping_collection,
+            $jira_base_url,
+            $jira_project_id
+        );
+
+        $this->assertXMLArtifactsContent($tracker_node);
+    }
+
+    private function assertXMLArtifactsContent(SimpleXMLElement $tracker_node): void
+    {
         $artifacts_node = $tracker_node->artifacts;
         $this->assertNotNull($artifacts_node);
         $this->assertCount(2, $artifacts_node->children());
