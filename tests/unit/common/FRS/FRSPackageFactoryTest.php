@@ -61,7 +61,8 @@ class FRSPackageFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore 
                                'error_state'      => null,
                                'error_message'    => null
                                );
-        $package1 = FRSPackageFactory::getFRSPackageFromArray($packageArray1);
+        $frs_package_factory = new FRSPackageFactory();
+        $package1            = $frs_package_factory->getFRSPackageFromArray($packageArray1);
 
         $packageArray2 = array('package_id'       => 2,
                                'group_id'         => 2,
@@ -74,7 +75,7 @@ class FRSPackageFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore 
                                'error_state'      => null,
                                'error_message'    => null
                                );
-        $package2 = FRSPackageFactory::getFRSPackageFromArray($packageArray2);
+        $package2 = $frs_package_factory->getFRSPackageFromArray($packageArray2);
 
         $data_access = \Mockery::mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
         $data_access->shouldReceive('query')
@@ -101,7 +102,7 @@ class FRSPackageFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore 
         $this->assertTrue($this->frs_package_factory->userCanRead($this->group_id, $this->package_id, $this->user_id));
     }
 
-    protected function _userCanReadWithSpecificPerms($can_read_package)
+    private function userCanReadWithSpecificPerms($can_read_package)
     {
         $this->frs_permission_manager->shouldReceive('userCanRead')->andReturns(true);
         $this->frs_permission_manager->shouldReceive('isAdmin')->andReturns(false);
@@ -116,13 +117,13 @@ class FRSPackageFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore 
 
     public function testUserCanReadWithSpecificPermsHasAccess()
     {
-        $this->frs_package_factory = $this->_userCanReadWithSpecificPerms(true);
+        $this->frs_package_factory = $this->userCanReadWithSpecificPerms(true);
         $this->assertTrue($this->frs_package_factory->userCanRead($this->group_id, $this->package_id, $this->user_id));
     }
 
     public function testUserCanReadWithSpecificPermsHasNoAccess()
     {
-        $this->frs_package_factory = $this->_userCanReadWithSpecificPerms(false);
+        $this->frs_package_factory = $this->userCanReadWithSpecificPerms(false);
         $this->assertFalse($this->frs_package_factory->userCanRead($this->group_id, $this->package_id, $this->user_id));
     }
 

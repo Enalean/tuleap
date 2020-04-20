@@ -865,10 +865,10 @@ class GitRepository implements DVCSRepository
      */
     public function isSubPath($referencePath, $repositoryPath)
     {
-        if (strpos(realpath($repositoryPath), realpath($referencePath)) === 0) {
-            return true;
-        }
-        return false;
+        $repository_path = realpath($repositoryPath);
+        $reference_path  = realpath($referencePath);
+
+        return $reference_path !== false && $repository_path !== false && strpos(realpath($repository_path), realpath($reference_path)) === 0;
     }
 
     /**

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bb6e276cdbb3d4c3a4020192946c69f5",
+    "content-hash": "1ccecf88021ac5b0382eb3777ac8ab2a",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -1409,12 +1409,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Enalean/Restler.git",
-                "reference": "20190410"
+                "reference": "20200420"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Enalean/Restler/zipball/20190410",
-                "reference": "20190410",
+                "url": "https://api.github.com/repos/Enalean/Restler/zipball/20200420",
+                "reference": "20200420",
                 "shasum": ""
             },
             "require": {
@@ -1468,9 +1468,9 @@
                 "server"
             ],
             "support": {
-                "source": "https://github.com/Enalean/Restler/tree/20190410"
+                "source": "https://github.com/Enalean/Restler/tree/20200420"
             },
-            "time": "2019-04-10T06:59:21+00:00"
+            "time": "2020-04-20T17:23:53+00:00"
         },
         {
             "name": "monolog/monolog",
