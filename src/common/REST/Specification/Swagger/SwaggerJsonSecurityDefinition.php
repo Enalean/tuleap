@@ -20,25 +20,8 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\APIExplorer\Specification\Swagger;
+namespace Tuleap\REST\Specification\Swagger;
 
-/**
- * @psalm-immutable
- */
-final class SwaggerJsonAPIAccessKey
+interface SwaggerJsonSecurityDefinition
 {
-    public const NAME = 'api_access_key';
-
-    /**
-     * @var string
-     */
-    public $type = 'apiKey';
-    /**
-     * @var string
-     */
-    public $in   = 'header';
-    /**
-     * @var string
-     */
-    public $name = 'X-Auth-AccessKey';
 }

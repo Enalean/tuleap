@@ -78,7 +78,7 @@
           }
         ],
         "summary": "Put demo representation \ud83d\udd10",
-        "description": "",
+        "description": "This endpoint can be accessed with an OAuth 2.0 access token with the scope <strong>write:demo</strong>.",
         "responses": {
           "200": {
             "description": "Success",
@@ -96,6 +96,9 @@
         "security": [
           {
             "api_access_key": []
+          },
+          {
+            "oauth2": ["write:demo"]
           }
         ]
       }
@@ -119,6 +122,7 @@
       "type": "apiKey",
       "in": "header",
       "name": "X-Auth-AccessKey"
-    }
+    },
+    "oauth2": {}
   }
 }

@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\APIExplorer\Specification\Swagger;
 
+use Codendi_HTMLPurifier;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -30,6 +32,7 @@ use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\REST\RestlerFactory;
+use Tuleap\REST\Specification\Swagger\SwaggerJsonSecurityDefinitionsCollection;
 
 final class SwaggerJsonController extends DispatchablePSR15Compatible implements DispatchableWithRequestNoAuthz
 {
@@ -44,6 +47,14 @@ final class SwaggerJsonController extends DispatchablePSR15Compatible implements
      */
     private $version;
     /**
+     * @var EventDispatcherInterface
+     */
+    private $event_dispatcher;
+    /**
+     * @var Codendi_HTMLPurifier
+     */
+    private $html_purifier;
+    /**
      * @var JSONResponseBuilder
      */
     private $json_response_builder;
@@ -51,12 +62,16 @@ final class SwaggerJsonController extends DispatchablePSR15Compatible implements
     public function __construct(
         RestlerFactory $restler_factory,
         string $version,
+        EventDispatcherInterface $event_dispatcher,
+        Codendi_HTMLPurifier $html_purifier,
         JSONResponseBuilder $json_response_builder,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack
     ) {
         $this->restler_factory       = $restler_factory;
         $this->version               = $version;
+        $this->event_dispatcher      = $event_dispatcher;
+        $this->html_purifier         = $html_purifier;
         $this->json_response_builder = $json_response_builder;
         parent::__construct($emitter, ...$middleware_stack);
     }
@@ -72,13 +87,17 @@ final class SwaggerJsonController extends DispatchablePSR15Compatible implements
 
         $restler = $this->restler_factory->buildRestler(self::API_VERSION);
 
+        $security_definitions = $this->event_dispatcher->dispatch(
+            new SwaggerJsonSecurityDefinitionsCollection()
+        )->getSecurityDefinitions();
+
         $swagger = new SwaggerJson(
             $swagger_host,
             $restler->getWritableMimeTypes(),
             $restler->getReadableMimeTypes(),
             SwaggerJsonInfo::fromVersion($this->version),
-            new SwaggerJsonPathsAndDefinitions(self::API_VERSION),
-            [SwaggerJsonAPIAccessKey::NAME => new SwaggerJsonAPIAccessKey()]
+            new SwaggerJsonPathsAndDefinitions(self::API_VERSION, $security_definitions, $this->html_purifier),
+            $security_definitions
         );
 
         return $this->json_response_builder->fromData($swagger);

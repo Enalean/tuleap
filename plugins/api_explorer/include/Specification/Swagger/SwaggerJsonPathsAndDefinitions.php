@@ -33,6 +33,8 @@ use Luracast\Restler\Data\ValidationInfo;
 use Luracast\Restler\Routes;
 use Luracast\Restler\Util;
 use stdClass;
+use Tuleap\REST\Specification\Swagger\SwaggerJsonSecurityDefinition;
+use Tuleap\REST\Specification\Swagger\SwaggerJsonSecurityDefinitionsCollection;
 
 final class SwaggerJsonPathsAndDefinitions
 {
@@ -75,10 +77,24 @@ final class SwaggerJsonPathsAndDefinitions
      * @var array
      */
     private $models = [];
+    /**
+     * @var array
+     */
+    private $security_definitions;
+    /**
+     * @var \Codendi_HTMLPurifier
+     */
+    private $html_purifier;
 
-    public function __construct(int $api_version)
+    /**
+     * @param SwaggerJsonSecurityDefinition[] $security_definitions
+     * @psalm-param array<string,SwaggerJsonSecurityDefinition> $security_definitions
+     */
+    public function __construct(int $api_version, array $security_definitions, \Codendi_HTMLPurifier $html_purifier)
     {
-        $this->paths = $this->paths($api_version);
+        $this->security_definitions = $security_definitions;
+        $this->html_purifier        = $html_purifier;
+        $this->paths                = $this->paths($api_version);
     }
 
     public function getPaths(): array
@@ -124,7 +140,17 @@ final class SwaggerJsonPathsAndDefinitions
         $r->responses   = $this->responses($route);
         //TODO: avoid hard coding. Properly detect security
         if ($route['accessLevel']) {
-            $r->security = array(array(SwaggerJsonAPIAccessKey::NAME => array()));
+            $r->security = [[SwaggerJsonSecurityDefinitionsCollection::TYPE_NAME_ACCESS_KEY => []]];
+            if (isset($m['oauth2-scope'], $this->security_definitions[SwaggerJsonSecurityDefinitionsCollection::TYPE_NAME_OAUTH2])) {
+                $r->security[] = [SwaggerJsonSecurityDefinitionsCollection::TYPE_NAME_OAUTH2 => [$m['oauth2-scope']]];
+
+                $oauth2_token_description = sprintf(
+                    "%s\n\n\nThis endpoint can be accessed with an OAuth 2.0 access token with the scope <strong>%s</strong>.",
+                    $r->description,
+                    $this->html_purifier->purify($m['oauth2-scope'])
+                );
+                $r->description = trim($oauth2_token_description);
+            }
         }
 
         return $r;

@@ -47,6 +47,8 @@ final class SwaggerJsonDemoResource extends AuthenticatedResource
      * @param int $id ID of demo
      * @param SwaggerJsonDemoRepresentation $representation {@from body}
      *
+     * @oauth2-scope write:demo
+     *
      * @throws RestException 400
      */
     protected function put(int $id, SwaggerJsonDemoRepresentation $representation): void

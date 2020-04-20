@@ -22,53 +22,63 @@ declare(strict_types=1);
 
 namespace Tuleap\APIExplorer\Specification\Swagger;
 
+use Tuleap\REST\Specification\Swagger\SwaggerJsonSecurityDefinition;
+
 /**
- * @psalm-immutable
- *
  * @see https://swagger.io/docs/specification/2-0/
  */
 final class SwaggerJson
 {
     /**
      * @var string
+     * @psalm-readonly
      */
     public $swagger = '2.0';
     /**
      * @var string
+     * @psalm-readonly
      */
     public $host;
     /**
      * @var string
+     * @psalm-readonly
      */
     public $basePath = '/api';
     /**
      * @var string[]
+     * @psalm-readonly
      */
     public $produces;
     /**
      * @var string[]
+     * @psalm-readonly
      */
     public $consumes;
     /**
      * @var SwaggerJsonInfo
+     * @psalm-readonly
      */
     public $info;
     /**
      * @var array
+     * @psalm-readonly
      */
     public $paths;
     /**
      * @var array
+     * @psalm-readonly
      */
     public $definitions;
     /**
-     * @var array
-     * @psalm-var array<string,object>
+     * @var array SwaggerJsonSecurityDefinition[]
+     * @psalm-var array<string,SwaggerJsonSecurityDefinition>
+     * @psalm-readonly
      */
     public $securityDefinitions;
 
     /**
-     * @psalm-param array<string,object> $security_definitions
+     * @param SwaggerJsonSecurityDefinition[] $security_definitions
+     * @psalm-param array<string,SwaggerJsonSecurityDefinition> $security_definitions
      */
     public function __construct(
         string $host,
