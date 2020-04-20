@@ -131,6 +131,9 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
                     (string) $tracker_color
                 );
             } elseif ($jira_server) {
+                $jira_project_object = json_decode($request->get('jira_project'), true);
+                $jira_project_id     = (string) $jira_project_object['id'];
+
                 $tracker = $this->tracker_creator->createFromJira(
                     $project,
                     (string) $tracker_name,
@@ -138,7 +141,8 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
                     (string) $tracker_color,
                     $jira_token,
                     $jira_user,
-                    $jira_server
+                    $jira_server,
+                    $jira_project_id
                 );
             } else {
                 $file    = $_FILES;

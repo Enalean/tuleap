@@ -62,6 +62,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \PHPUnit\Framework\TestCase
     public function testJiraSummaryFieldIsMappedToStringField(): void
     {
         $jira_field = ["name" => "Summary", "id" => "summary"];
+        $collection = new FieldMappingCollection();
 
         $this->field_exporter->shouldReceive('exportField')->withArgs(
             [
@@ -71,10 +72,11 @@ final class JiraToTuleapFieldTypeMapperTest extends \PHPUnit\Framework\TestCase
                 $jira_field['name'],
                 $jira_field['id'],
                 1,
-                "1"
+                "1",
+                $collection
             ]
         );
 
-        $this->mapper->exportFieldToXml($jira_field, "1", $this->jira_atf_fieldset);
+        $this->mapper->exportFieldToXml($jira_field, "1", $this->jira_atf_fieldset, $collection);
     }
 }

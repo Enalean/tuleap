@@ -70,6 +70,7 @@ final class FieldXmlExporterTest extends TestCase
     public function testItExportAField(): void
     {
         $parent_node = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><formElements/>');
+        $collection = new FieldMappingCollection();
 
         $this->exporter->exportField(
             $parent_node,
@@ -78,7 +79,8 @@ final class FieldXmlExporterTest extends TestCase
             "Label",
             "Summary",
             1,
-            "1"
+            "1",
+            $collection
         );
 
         $form_element_node = $parent_node->formElement;
