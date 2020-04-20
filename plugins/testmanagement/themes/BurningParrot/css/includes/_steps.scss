@@ -13,6 +13,10 @@
     align-items: baseline;
     border-bottom: 1px solid $tlp-ui-border-light;
 
+    &:last-child {
+        border-bottom: 0;
+    }
+
     &.passed {
         background: transparentize($tlp-ui-success, .96);
 

@@ -86,6 +86,9 @@ msgstr "Sélectionner les tests"
 msgid "Close"
 msgstr "Fermer"
 
+msgid "Comment"
+msgstr "Commentaire"
+
 msgid "Create a campaign"
 msgstr "Créer une campagne"
 
