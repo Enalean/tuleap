@@ -25,9 +25,14 @@ namespace Tuleap\OAuth2Server\E2E\RelyingPartyOIDC;
 use Amp\Http\Server\Request;
 use Amp\Http\Server\Response;
 use Amp\Http\Status;
+use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Signer\Key;
+use Lcobucci\JWT\Signer\Rsa\Sha256;
+use Lcobucci\JWT\ValidationData;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use Tuleap\JWT\JWKS\PKCS1Format;
 
 final class OAuth2AuthorizationCallbackController
 {
@@ -44,6 +49,18 @@ final class OAuth2AuthorizationCallbackController
      */
     private $http_client_with_client_credential_factory;
     /**
+     * @var OAuth2TestFlowClientCredentialStorage
+     */
+    private $client_credential_storage;
+    /**
+     * @var Parser
+     */
+    private $parser;
+    /**
+     * @var Sha256
+     */
+    private $signer;
+    /**
      * @var RequestFactoryInterface
      */
     private $request_factory;
@@ -56,12 +73,18 @@ final class OAuth2AuthorizationCallbackController
         OAuth2TestFlowSecretGenerator $secret_generator,
         ClientInterface $http_client,
         OAuth2TestFlowHTTPClientWithClientCredentialFactory $http_client_factory,
+        OAuth2TestFlowClientCredentialStorage $client_credential_storage,
+        Parser $parser,
+        Sha256 $signer,
         RequestFactoryInterface $request_factory,
         StreamFactoryInterface $stream_factory
     ) {
         $this->secret_generator                           = $secret_generator;
         $this->http_client                                = $http_client;
         $this->http_client_with_client_credential_factory = $http_client_factory;
+        $this->client_credential_storage                  = $client_credential_storage;
+        $this->parser                                     = $parser;
+        $this->signer                                     = $signer;
         $this->request_factory                            = $request_factory;
         $this->stream_factory                             = $stream_factory;
     }
@@ -84,11 +107,16 @@ final class OAuth2AuthorizationCallbackController
             $http_client_with_client_credentials,
             $auth_code
         );
+        $sub = $this->validateIDToken($access_token_response['id_token']);
         $refresh_token_response = $this->refreshTokens(
             $http_client_with_client_credentials,
             $access_token_response['refresh_token']
         );
+
         $user_info_response = $this->getUserInfo($refresh_token_response['access_token']);
+        if (! hash_equals($sub, $user_info_response['sub'])) {
+            throw new \RuntimeException(sprintf('The user info sub (%s) does not match the ID token sub (%s)', $user_info_response['sub'], $sub));
+        }
 
         return new Response(Status::OK, ['Content-Type' => 'text/html'], 'OK as ' . $user_info_response['preferred_username']);
     }
@@ -176,5 +204,55 @@ final class OAuth2AuthorizationCallbackController
         }
 
         return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+    }
+
+    private function validateIDToken(string $id_token_jwt): string
+    {
+        $id_token = $this->parser->parse($id_token_jwt);
+
+        $public_key = $this->getPublicKey();
+        if (! $id_token->verify($this->signer, new Key($public_key))) {
+            throw new \RuntimeException('Verification of the ID token signature has failed');
+        }
+
+        $validation_data = new ValidationData();
+        $validation_data->setIssuer(OAuth2TestFlowConstants::BASE_CLIENT_URI);
+        $validation_data->setAudience($this->client_credential_storage->getClientId());
+        if (! $id_token->validate($validation_data)) {
+            throw new \RuntimeException('Validation of ID token claims has failed');
+        }
+
+        $expected_nonce = $this->secret_generator->getNonce();
+        $nonce_claim    = $id_token->getClaim('nonce', '');
+        if (! hash_equals($expected_nonce, $nonce_claim)) {
+            throw new \RuntimeException(
+                sprintf('Nonce claim (%s) has failed does not have the expected value (%s)', $nonce_claim, $expected_nonce)
+            );
+        }
+
+        return $id_token->getClaim('sub', '');
+    }
+
+    private function getPublicKey(): string
+    {
+        $response = $this->http_client->sendRequest(
+            $this->request_factory->createRequest('GET', OAuth2TestFlowConstants::BASE_CLIENT_URI . '/oauth2/jwks')
+        );
+
+        if ($response->getStatusCode() !== 200) {
+            throw new \RuntimeException('Failed to retrieve the JWKS document');
+        }
+
+        $jwks_document = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        foreach ($jwks_document['keys'] as $key) {
+            if ($key['alg'] === 'RS256') {
+                return PKCS1Format::convertFromRSAModulusAndExponent(
+                    sodium_base642bin($key['n'], SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING),
+                    sodium_base642bin($key['e'], SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING)
+                );
+            }
+        }
+
+        throw new \RuntimeException('No valid RS256 key found');
     }
 }

@@ -72,6 +72,7 @@ final class OAuth2InitFlowController
             'scope'                 => 'openid offline_access profile',
             'redirect_uri'          => OAuth2TestFlowConstants::REDIRECT_URI,
             'state'                 => $this->secret_generator->getState(),
+            'nonce'                 => $this->secret_generator->getNonce(),
             'code_challenge'        => sodium_bin2base64(hash('sha256', $this->secret_generator->getPKCEChallenge(), true), SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING),
             'code_challenge_method' => 'S256'
         ];

@@ -31,6 +31,8 @@ use Amp\Socket\Server;
 use Amp\Socket\ServerTlsContext;
 use Http\Adapter\Guzzle6\Client;
 use Http\Client\Common\Plugin\LoggerPlugin;
+use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Monolog\Logger;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\OAuth2Server\E2E\RelyingPartyOIDC\OAuth2InitFlowController;
@@ -93,6 +95,9 @@ Amp\Loop::run(
                         $http_client,
                         $client_credential_storage
                     ),
+                    $client_credential_storage,
+                    new Parser(),
+                    new Sha256(),
                     HTTPFactoryBuilder::requestFactory(),
                     HTTPFactoryBuilder::streamFactory()
                 )
