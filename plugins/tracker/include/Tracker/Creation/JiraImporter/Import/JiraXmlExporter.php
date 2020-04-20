@@ -41,6 +41,8 @@ use XML_SimpleXMLCDATAFactory;
 
 class JiraXmlExporter
 {
+    public const JIRA_LINK_FIELD_NAME = "jira_artifact_url";
+
     /**
      * @var FieldXmlExporter
      */
@@ -130,7 +132,7 @@ class JiraXmlExporter
     /**
      * @throws JiraConnectionException
      */
-    public function exportJiraToXml(SimpleXMLElement $node_tracker, string $jira_project_id): void
+    public function exportJiraToXml(SimpleXMLElement $node_tracker, string $jira_base_url, string $jira_project_id): void
     {
         $form_elements = $node_tracker->addChild('formElements');
 
@@ -156,7 +158,7 @@ class JiraXmlExporter
         $this->field_xml_exporter->exportField(
             $node_jira_atf_form_elements,
             Tracker_FormElement_Field_String::TYPE,
-            "jira_artifact_url",
+            self::JIRA_LINK_FIELD_NAME,
             "Link to original artifact",
             "jira_artifact_url",
             2,
@@ -179,6 +181,7 @@ class JiraXmlExporter
         $this->artifacts_xml_exporter->exportArtifacts(
             $node_tracker,
             $this->jira_field_mapping_collection,
+            $jira_base_url,
             $jira_project_id
         );
 

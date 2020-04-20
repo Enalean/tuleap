@@ -137,6 +137,6 @@ final class JiraXmlExporterTest extends \PHPUnit\Framework\TestCase
         $this->artifacts_xml_exporter->shouldReceive('exportArtifacts')->once();
 
         $this->jira_field_retriever->shouldReceive('getAllJiraFields')->once();
-        $this->jira_exporter->exportJiraToXml($trackers_xml, '{"id":"TEST","label":"test project"}');
+        $this->jira_exporter->exportJiraToXml($trackers_xml, "URLinstance", "TEST");
     }
 }

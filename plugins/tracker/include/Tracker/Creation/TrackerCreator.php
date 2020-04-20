@@ -190,7 +190,7 @@ class TrackerCreator
         $tracker_xml->addChild('cannedResponses');
 
         try {
-            $jira_exporter->exportJiraToXml($tracker_xml, $jira_project_id);
+            $jira_exporter->exportJiraToXml($tracker_xml, $jira_url, $jira_project_id);
             $trackers = $this->tracker_xml_import->import(
                 new ImportConfig(),
                 $project,
