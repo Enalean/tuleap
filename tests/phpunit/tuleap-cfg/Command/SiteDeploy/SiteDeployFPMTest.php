@@ -23,12 +23,14 @@ declare(strict_types=1);
 
 namespace TuleapCfg\Command\SiteDeploy;
 
-use org\bovigo\vfs\vfsStream;
 use Psr\Log\NullLogger;
 use PHPUnit\Framework\TestCase;
+use Tuleap\TemporaryTestDirectory;
 
 final class SiteDeployFPMTest extends TestCase
 {
+    use TemporaryTestDirectory;
+
     /**
      * @var string
      */
@@ -37,27 +39,31 @@ final class SiteDeployFPMTest extends TestCase
      * @var string
      */
     private $php74_configuration_folder;
-
-    private $temp_dir;
     /**
-     * @var \org\bovigo\vfs\vfsStreamDirectory
+     * @var string
      */
-    private $vfsStream;
+    private $temp_dir;
     /**
      * @var string
      */
     private $current_user;
+    /**
+     * @var string
+     */
+    private $tuleap_redis_conf_file;
 
     protected function setUp(): void
     {
-        $this->vfsStream = vfsStream::setup();
-        $base_dir = $this->vfsStream->url();
+        $base_dir = $this->getTmpDir();
         $this->php73_configuration_folder = $base_dir . '/etc/opt/remi/php73';
         mkdir($this->php73_configuration_folder . '/php-fpm.d', 0755, true);
         $this->php74_configuration_folder = $base_dir . '/etc/opt/remi/php74';
         mkdir($this->php74_configuration_folder . '/php-fpm.d', 0755, true);
         $this->temp_dir = $base_dir . '/var/tmp';
         mkdir($this->temp_dir, 0755, true);
+        $tuleap_conf_dir = $base_dir . '/etc/tuleap/conf';
+        mkdir($tuleap_conf_dir, 0755, true);
+        $this->tuleap_redis_conf_file = $tuleap_conf_dir . '/redis.inc';
         $this->current_user = posix_getpwuid(posix_geteuid())['name'];
     }
 
@@ -67,6 +73,7 @@ final class SiteDeployFPMTest extends TestCase
             new NullLogger(),
             $this->current_user,
             false,
+            new FPMSessionFiles(),
             $this->php73_configuration_folder,
             __DIR__ . '/../../../../../src/etc/fpm73',
             [],
@@ -96,6 +103,7 @@ final class SiteDeployFPMTest extends TestCase
             new NullLogger(),
             $this->current_user,
             false,
+            new FPMSessionFiles(),
             $this->php74_configuration_folder,
             __DIR__ . '/../../../../../src/etc/fpm74',
             [],
@@ -125,6 +133,7 @@ final class SiteDeployFPMTest extends TestCase
             new NullLogger(),
             $this->current_user,
             true,
+            new FPMSessionFiles(),
             $this->php73_configuration_folder,
             __DIR__ . '/../../../../../src/etc/fpm73',
             [],
@@ -165,6 +174,7 @@ final class SiteDeployFPMTest extends TestCase
             new NullLogger(),
             $this->current_user,
             false,
+            new FPMSessionFiles(),
             $this->php73_configuration_folder,
             __DIR__ . '/../../../../../src/etc/fpm73',
             [],
@@ -194,6 +204,7 @@ final class SiteDeployFPMTest extends TestCase
             new NullLogger(),
             $this->current_user,
             false,
+            new FPMSessionFiles(),
             $this->php73_configuration_folder,
             __DIR__ . '/../../../../../src/etc/fpm73',
             [],
@@ -218,6 +229,7 @@ final class SiteDeployFPMTest extends TestCase
             new NullLogger(),
             $this->current_user,
             false,
+            new FPMSessionFiles(),
             $this->php73_configuration_folder,
             __DIR__ . '/../../../../../src/etc/fpm73',
             [],
@@ -245,6 +257,7 @@ final class SiteDeployFPMTest extends TestCase
             new NullLogger(),
             $this->current_user,
             false,
+            new FPMSessionFiles(),
             $this->php73_configuration_folder,
             __DIR__ . '/../../../../../src/etc/fpm73',
             [],
@@ -256,5 +269,77 @@ final class SiteDeployFPMTest extends TestCase
             $this->assertEquals('', file_get_contents($this->php73_configuration_folder . '/php-fpm.d/' . $file));
         }
         $this->assertStringContainsString('user = ' . $this->current_user, file_get_contents($this->php73_configuration_folder . '/php-fpm.d/tuleap_common.part'));
+    }
+
+    public function testDeployPHP73WithSimpleRedisSession(): void
+    {
+        $deploy = new SiteDeployFPM(
+            new NullLogger(),
+            $this->current_user,
+            false,
+            new FPMSessionRedis($this->tuleap_redis_conf_file, $this->current_user, 'redis'),
+            $this->php73_configuration_folder,
+            __DIR__ . '/../../../../../src/etc/fpm73',
+            [],
+            $this->temp_dir,
+        );
+        $deploy->configure();
+
+        $tuleap_conf = file_get_contents($this->php73_configuration_folder . '/php-fpm.d/tuleap_sessions.part');
+        $this->assertStringContainsString('php_value[session.save_handler] = redis', $tuleap_conf);
+        $this->assertStringContainsString('php_value[session.save_path]    = "tcp://redis:6379"', $tuleap_conf);
+
+        require($this->tuleap_redis_conf_file);
+        $this->assertEquals('redis', $redis_server);
+        $this->assertEquals(6379, $redis_port);
+        $this->assertEquals('', $redis_password);
+    }
+
+    public function testDeployPHP74WithSimpleRedisSession(): void
+    {
+        $deploy = new SiteDeployFPM(
+            new NullLogger(),
+            $this->current_user,
+            false,
+            new FPMSessionRedis($this->tuleap_redis_conf_file, $this->current_user, 'redis'),
+            $this->php74_configuration_folder,
+            __DIR__ . '/../../../../../src/etc/fpm74',
+            [],
+            $this->temp_dir,
+        );
+        $deploy->configure();
+
+        $tuleap_conf = file_get_contents($this->php74_configuration_folder . '/php-fpm.d/tuleap_sessions.part');
+        $this->assertStringContainsString('php_value[session.save_handler] = redis', $tuleap_conf);
+        $this->assertStringContainsString('php_value[session.save_path]    = "tcp://redis:6379"', $tuleap_conf);
+
+        require($this->tuleap_redis_conf_file);
+        $this->assertEquals('redis', $redis_server);
+        $this->assertEquals(6379, $redis_port);
+        $this->assertEquals('', $redis_password);
+    }
+
+    public function testDeployPHP73WithAuthenticatedRedisSession(): void
+    {
+        $deploy = new SiteDeployFPM(
+            new NullLogger(),
+            $this->current_user,
+            false,
+            new FPMSessionRedis($this->tuleap_redis_conf_file, $this->current_user, 'another-redis', 7222, 'this_is_secure'),
+            $this->php73_configuration_folder,
+            __DIR__ . '/../../../../../src/etc/fpm73',
+            [],
+            $this->temp_dir,
+        );
+        $deploy->configure();
+
+        $tuleap_conf = file_get_contents($this->php73_configuration_folder . '/php-fpm.d/tuleap_sessions.part');
+        $this->assertStringContainsString('php_value[session.save_handler] = redis', $tuleap_conf);
+        $this->assertStringContainsString('php_value[session.save_path]    = "tcp://another-redis:7222?auth=this_is_secure"', $tuleap_conf);
+
+        require($this->tuleap_redis_conf_file);
+        $this->assertEquals('another-redis', $redis_server);
+        $this->assertEquals(7222, $redis_port);
+        $this->assertEquals('this_is_secure', $redis_password);
     }
 }

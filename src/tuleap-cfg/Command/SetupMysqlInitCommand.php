@@ -61,7 +61,7 @@ final class SetupMysqlInitCommand extends Command
      */
     private $connection_manager;
     /**
-     * @var string|null
+     * @var string
      */
     private $base_directory;
 

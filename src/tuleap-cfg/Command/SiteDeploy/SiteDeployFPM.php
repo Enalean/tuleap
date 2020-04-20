@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace TuleapCfg\Command\SiteDeploy;
 
 use Psr\Log\LoggerInterface;
+use TuleapCfg\Command\TemplateHelper;
 
 final class SiteDeployFPM
 {
@@ -34,8 +35,13 @@ final class SiteDeployFPM
         'tuleap.conf'                      => 'tuleap.conf',
         'tuleap-long-running-request.conf' => 'tuleap-long-running-request.conf',
         'tuleap_common.part'               => 'tuleap_common.part',
-        'tuleap_sessions_files.part'       => 'tuleap_sessions.part',
     ];
+
+    private const ENV_SESSION     = 'TULEAP_FPM_SESSION_MODE';
+    private const SESSION_REDIS   = 'redis';
+    private const REDIS_SERVER    = 'TULEAP_REDIS_SERVER';
+    private const REDIS_PORT      = 'TULEAP_REDIS_PORT';
+    private const REDIS_PASSWORD  = 'TULEAP_REDIS_PASSWORD';
 
     /**
      * @var int|string
@@ -53,14 +59,16 @@ final class SiteDeployFPM
      * @var string
      */
     private $temp_base_directory;
-
     /**
-     * @param int|string $application_user
+     * @var FPMSessionInterface
      */
+    private $session;
+
     public function __construct(
         LoggerInterface $logger,
-        $application_user,
+        string $application_user,
         bool $development,
+        FPMSessionInterface $session,
         string $php_configuration_folder,
         string $tuleap_php_configuration_folder,
         array $previous_php_configuration_folders,
@@ -69,10 +77,30 @@ final class SiteDeployFPM
         $this->logger                             = $logger;
         $this->application_user                   = $application_user;
         $this->development                        = $development;
+        $this->session                            = $session;
         $this->php_configuration_folder           = $php_configuration_folder;
         $this->tuleap_php_configuration_folder    = $tuleap_php_configuration_folder;
         $this->previous_php_configuration_folders = $previous_php_configuration_folders;
         $this->temp_base_directory                = $temp_base_directory;
+    }
+
+    public static function buildSessionFromEnv(): FPMSessionInterface
+    {
+        $session_mode = getenv(self::ENV_SESSION);
+        if ($session_mode === self::SESSION_REDIS && ($server = getenv(self::REDIS_SERVER)) !== false) {
+            $port = getenv(self::REDIS_PORT);
+            if ($port === false) {
+                $port = FPMSessionRedis::DEFAULT_REDIS_PORT;
+            } else {
+                $port = (int) $port;
+            }
+            $password = getenv(self::REDIS_PASSWORD);
+            if ($password === false) {
+                $password = '';
+            }
+            return new FPMSessionRedis(\ForgeConfig::get('redis_config_file'), \ForgeConfig::get('sys_http_user'), $server, $port, $password);
+        }
+        return new FPMSessionFiles();
     }
 
     public static function buildForPHP73(
@@ -84,6 +112,7 @@ final class SiteDeployFPM
             $logger,
             $application_user,
             $development,
+            self::buildSessionFromEnv(),
             '/etc/opt/remi/php73',
             '/usr/share/tuleap/src/etc/fpm73',
             []
@@ -99,6 +128,7 @@ final class SiteDeployFPM
             $logger,
             $application_user,
             $development,
+            self::buildSessionFromEnv(),
             '/etc/opt/remi/php74',
             '/usr/share/tuleap/src/etc/fpm74',
             []
@@ -118,6 +148,7 @@ final class SiteDeployFPM
                 $this->deployFreshTuleapConf($reference_file, $fpm_configuration_to_deploy);
             }
         }
+        $this->session->deployFreshTuleapConf($this->logger, $this->tuleap_php_configuration_folder, $this->php_configuration_folder);
 
         $this->createMissingDirectories();
 
@@ -143,6 +174,7 @@ final class SiteDeployFPM
         foreach ($this->getConfigurationFilesToDeploy() as $reference_file => $fpm_configuration_to_deploy) {
             $this->deployFreshTuleapConf($reference_file, $fpm_configuration_to_deploy);
         }
+        $this->session->forceDeployFreshTuleapConf($this->logger, $this->tuleap_php_configuration_folder, $this->php_configuration_folder);
 
         $this->createMissingDirectories();
     }
@@ -177,25 +209,12 @@ final class SiteDeployFPM
             $this->application_user,
         );
 
-        $this->replacePlaceHolderInto(
+        TemplateHelper::replacePlaceHolderInto(
             "$this->tuleap_php_configuration_folder/$reference_file",
             "$this->php_configuration_folder/php-fpm.d/$configuration_name",
             $variables,
-            $replacement
-        );
-    }
-
-    private function replacePlaceHolderInto(string $template_path, string $target_path, array $variables, array $values): void
-    {
-        file_put_contents(
-            $target_path,
-            str_replace(
-                $variables,
-                $values,
-                file_get_contents(
-                    $template_path
-                )
-            )
+            $replacement,
+            0640
         );
     }
 

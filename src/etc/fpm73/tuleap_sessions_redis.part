@@ -1,0 +1,4 @@
+php_value[session.save_handler] = redis
+php_value[session.save_path]    = "%redis-server%"
+php_value[redis.session.locking_enabled] = 1
+php_value[redis.session.lock_retries] = 10
