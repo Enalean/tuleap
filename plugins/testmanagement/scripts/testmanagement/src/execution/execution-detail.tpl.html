@@ -127,35 +127,38 @@
                               execution="execution"
         ></execution-with-steps>
 
-        <section class="tlp-pane-section">
-            <div class="current-test-results-container">
-                <div class="current-test-comment" id="execution_{{execution.id}}">
-                </div>
-                <div class="current-test-results" ng-if="! execution.userCanReloadTestBecauseDefinitionIsUpdated">
-                    <button id="test-result-passed" type="button"
-                            class="current-test-result tlp-button-large tlp-button-success"
-                            title="{{ 'Passed' | translate }}" ng-click="pass(execution)"
-                            ng-disabled="execution.saving">
-                        <i class="fa fa-fw fa-check-circle"></i>
-                    </button>
-                    <button id="test-result-failed" type="button"
-                            class="current-test-result tlp-button-large tlp-button-danger"
-                            title="{{ 'Failed' | translate }}" ng-click="fail(execution)"
-                            ng-disabled="execution.saving">
-                        <i class="fa fa-fw fa-times-circle"></i>
-                    </button>
-                    <button id="test-result-blocked" type="button"
-                            class="current-test-result tlp-button-large tlp-button-info"
-                            title="{{ 'Blocked' | translate }}"
-                            ng-click="block(execution)" ng-disabled="execution.saving">
-                        <i class="fa fa-fw fa-exclamation-circle"></i>
-                    </button>
-                    <button id="test-result-notrun" type="button"
-                            class="current-test-result tlp-button-large tlp-button-secondary"
-                            title="{{ 'Not run' | translate }}" ng-click="notrun(execution)"
-                            ng-disabled="execution.saving">
-                        <i class="fa fa-fw fa-question-circle"></i>
-                    </button>
+        <section class="tlp-pane-section current-test-footer-section">
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="execution_{{execution.id}}" translate>Comment</label>
+                <div class="current-test-results-container">
+                    <div class="current-test-comment" id="execution_{{execution.id}}">
+                    </div>
+                    <div class="current-test-results" ng-if="! execution.userCanReloadTestBecauseDefinitionIsUpdated">
+                        <button id="test-result-passed" type="button"
+                                class="current-test-result tlp-button-large tlp-button-success"
+                                title="{{ 'Passed' | translate }}" ng-click="pass(execution)"
+                                ng-disabled="execution.saving">
+                            <i class="fa fa-fw fa-check-circle"></i>
+                        </button>
+                        <button id="test-result-failed" type="button"
+                                class="current-test-result tlp-button-large tlp-button-danger"
+                                title="{{ 'Failed' | translate }}" ng-click="fail(execution)"
+                                ng-disabled="execution.saving">
+                            <i class="fa fa-fw fa-times-circle"></i>
+                        </button>
+                        <button id="test-result-blocked" type="button"
+                                class="current-test-result tlp-button-large tlp-button-info"
+                                title="{{ 'Blocked' | translate }}"
+                                ng-click="block(execution)" ng-disabled="execution.saving">
+                            <i class="fa fa-fw fa-exclamation-circle"></i>
+                        </button>
+                        <button id="test-result-notrun" type="button"
+                                class="current-test-result tlp-button-large tlp-button-secondary"
+                                title="{{ 'Not run' | translate }}" ng-click="notrun(execution)"
+                                ng-disabled="execution.saving">
+                            <i class="fa fa-fw fa-question-circle"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
             <timer class="tlp-form-element tlp-form-element-append current-test-counter"

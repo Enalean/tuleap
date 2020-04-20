@@ -184,6 +184,10 @@ execution-with-steps.current-test-content {
     padding: 0 0 130px;
 }
 
+.current-test-footer-section {
+    border-top: 1px solid $tlp-ui-border-light;
+}
+
 .current-test-results-container {
     display: flex;
     flex: 0 0 auto;
