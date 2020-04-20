@@ -46,10 +46,6 @@ pipeline {
         stage('Tests') {
             failFast false
             parallel {
-                stage('UT SimpleTest PHP 7.3') {
-                    steps { script { actions.runSimpleTestTests('73') } }
-                    post { always { junit 'results/ut-simpletest/php-73/results.xml' } }
-                }
                 stage('UT PHPUnit') {
                     stages {
                         stage('UT PHPUnit PHP 7.3') { steps { script { actions.runPHPUnitTests('73') } } }
@@ -69,10 +65,6 @@ pipeline {
                         stage('SOAP PHP 7.3') { steps { script { actions.runSOAPTests('mysql57', '73') } } }
                     }
                     post { always { junit "results/soap/*/soap_tests.xml" } }
-                }
-                stage('Distributed SVN integration') {
-                    steps { script { actions.runEndToEndTests('distlp') } }
-                    post { always { junit 'results/e2e/**/*.xml' } }
                 }
                 stage('Check translation files') {
                     steps { script {
