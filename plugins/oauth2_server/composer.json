@@ -7,12 +7,14 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tuleap\\OAuth2Server\\": "phpunit/"
+            "Tuleap\\OAuth2Server\\": "phpunit/",
+            "Tuleap\\OAuth2Server\\E2E\\RelyingPartyOIDC\\": "tests/e2e/cypress/rp-oidc/"
         }
     },
     "require-dev": {
         "amphp/http-server": "^2.0",
         "amphp/log": "^1.1",
-        "amphp/http-server-router": "^1.0"
+        "amphp/http-server-router": "^1.0",
+        "php-http/logger-plugin": "^1.1"
     }
 }

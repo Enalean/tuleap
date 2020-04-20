@@ -50,7 +50,7 @@ describe("OIDC flow", function () {
             }).then(function (resp) {
                 cy.visit(resp.headers.location);
                 cy.get("[data-test=oauth2-authorize-request-submit-button]").click();
-                cy.contains("OK");
+                cy.contains("OK as ProjectAdministrator");
             });
         });
     });
