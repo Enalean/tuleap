@@ -170,6 +170,8 @@ describe("ExecutionDetailController -", () => {
 
         describe("pass()", () => {
             it("Then the status will be saved to 'passed' and the timer will be reset", () => {
+                execution.uploaded_file_ids = [];
+
                 $scope.pass(execution);
                 $scope.$apply();
 
@@ -177,7 +179,8 @@ describe("ExecutionDetailController -", () => {
                     execution.id,
                     "passed",
                     null,
-                    execution.results
+                    execution.results,
+                    []
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
                 expect($scope.timer.execution_time).toEqual(0);
@@ -204,7 +207,8 @@ describe("ExecutionDetailController -", () => {
                     execution.id,
                     "failed",
                     null,
-                    execution.results
+                    execution.results,
+                    []
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
                 expect($scope.timer.execution_time).toEqual(0);
@@ -220,7 +224,8 @@ describe("ExecutionDetailController -", () => {
                     execution.id,
                     "blocked",
                     null,
-                    execution.results
+                    execution.results,
+                    []
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
                 expect($scope.timer.execution_time).toEqual(0);
@@ -229,6 +234,8 @@ describe("ExecutionDetailController -", () => {
 
         describe("notrun()", () => {
             it("Then the status will be saved to 'notrun' and the timer will be reset", () => {
+                execution.uploaded_file_ids = [13];
+
                 $scope.notrun(execution);
                 $scope.$apply();
 
@@ -236,7 +243,8 @@ describe("ExecutionDetailController -", () => {
                     execution.id,
                     "notrun",
                     null,
-                    execution.results
+                    execution.results,
+                    execution.uploaded_file_ids
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
                 expect($scope.timer.execution_time).toEqual(0);

@@ -51,8 +51,11 @@ use Tracker_REST_Artifact_ArtifactUpdater;
 use Tracker_REST_Artifact_ArtifactValidator;
 use Tracker_URLVerification;
 use TrackerFactory;
+use TransitionFactory;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\KeyFactory;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
@@ -81,9 +84,18 @@ use Tuleap\TestManagement\MilestoneItemsArtifactFactory;
 use Tuleap\TestManagement\RealTime\RealTimeMessageSender;
 use Tuleap\TestManagement\REST\v1\Execution\StepsResultsFilter;
 use Tuleap\TestManagement\REST\v1\Execution\StepsResultsRepresentationBuilder;
+use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
+use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
+use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use UserManager;
+use Workflow_Transition_ConditionFactory;
 
 class CampaignsResource
 {
@@ -185,7 +197,8 @@ class CampaignsResource
             $definition_retriever,
             $this->execution_dao,
             $steps_results_representation_builder,
-            \Codendi_HTMLPurifier::instance()
+            \Codendi_HTMLPurifier::instance(),
+            new FileUploadDataProvider($this->getFrozenFieldDetector(), $formelement_factory)
         );
 
         $campaign_dao = new CampaignDao();
@@ -722,5 +735,28 @@ class CampaignsResource
         }
 
         return $user;
+    }
+
+    private function getFrozenFieldDetector(): FrozenFieldDetector
+    {
+        return new FrozenFieldDetector(
+            new TransitionRetriever(
+                new StateFactory(
+                    new TransitionFactory(
+                        Workflow_Transition_ConditionFactory::build(),
+                        EventManager::instance(),
+                        new DBTransactionExecutorWithConnection(
+                            DBFactory::getMainTuleapDBConnection()
+                        )
+                    ),
+                    new SimpleWorkflowDao()
+                ),
+                new TransitionExtractor()
+            ),
+            new FrozenFieldsRetriever(
+                new FrozenFieldsDao(),
+                Tracker_FormElementFactory::instance()
+            )
+        );
     }
 }

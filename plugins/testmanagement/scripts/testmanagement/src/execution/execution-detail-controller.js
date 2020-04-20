@@ -328,16 +328,17 @@ function ExecutionDetailCtrl(
 
     function setNewStatus(execution, new_status) {
         execution.saving = true;
-        var execution_time = null;
-
+        let execution_time = null;
         if (execution.time) {
             execution_time = execution.time;
         }
+
         ExecutionRestService.putTestExecution(
             execution.id,
             new_status,
             execution_time,
-            execution.results
+            execution.results,
+            execution.uploaded_file_ids
         )
             .then(function (data) {
                 ExecutionService.updateTestExecution(

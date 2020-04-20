@@ -260,11 +260,20 @@ msgstr "Ceci est un test automatisé"
 msgid "This test has no description. Please edit it."
 msgstr "Ce test n'a pas de description. Veuillez l'éditer."
 
+msgid "Unable to upload the image"
+msgstr "Impossible d'inserer l'image"
+
 msgid "View details"
 msgstr "Voir les détails"
 
 msgid "You are disconnected from real time. Please reload your page."
 msgstr "Vous êtes déconnecté du temps réel. Rechargez votre page."
+
+msgid "You are not allowed to paste images here"
+msgstr "Vous n'êtes pas autorisé à coller des images ici"
+
+msgid "You are not allowed to upload images bigger than {{ max_size }}"
+msgstr "Vous n'êtes pas autorisé inserer des images plus lourdes que {{ max_size }}"
 
 msgid ""
 "You have just updated the test definition, so it has been reset. Please "
