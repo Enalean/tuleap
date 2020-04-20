@@ -70,7 +70,7 @@ final class SetupMysqlInitCommandTest extends TestCase
     {
         $this->command_tester->execute([
             '--skip-database'  => true,
-            '--host'           => '1.2.3.4',
+            '--host'           => '192.0.2.1',
             '--admin-password' => 'welcome0',
             '--app-password'   => 'a complex password',
         ]);
@@ -80,7 +80,7 @@ final class SetupMysqlInitCommandTest extends TestCase
 
         $this->assertFileExists($this->base_dir . '/etc/tuleap/conf/database.inc');
         require($this->base_dir . '/etc/tuleap/conf/database.inc');
-        $this->assertEquals('1.2.3.4', $sys_dbhost);
+        $this->assertEquals('192.0.2.1', $sys_dbhost);
         $this->assertEquals('tuleap', $sys_dbname);
         $this->assertEquals('tuleapadm', $sys_dbuser);
         $this->assertEquals('a complex password', $sys_dbpasswd);
@@ -94,7 +94,7 @@ final class SetupMysqlInitCommandTest extends TestCase
     {
         $this->command_tester->execute([
             '--skip-database'  => true,
-            '--host'           => '1.2.3.4',
+            '--host'           => '192.0.2.1',
             '--admin-password' => 'welcome0',
             '--app-password'   => 'a complex password',
             '--ssl-mode'       => 'verify-ca',
@@ -106,7 +106,7 @@ final class SetupMysqlInitCommandTest extends TestCase
 
         $this->assertFileExists($this->base_dir . '/etc/tuleap/conf/database.inc');
         require($this->base_dir . '/etc/tuleap/conf/database.inc');
-        $this->assertEquals('1.2.3.4', $sys_dbhost);
+        $this->assertEquals('192.0.2.1', $sys_dbhost);
         $this->assertEquals('tuleap', $sys_dbname);
         $this->assertEquals('tuleapadm', $sys_dbuser);
         $this->assertEquals('a complex password', $sys_dbpasswd);
@@ -120,7 +120,7 @@ final class SetupMysqlInitCommandTest extends TestCase
     {
         $this->command_tester->execute([
             '--skip-database'  => true,
-            '--host'           => '1.2.3.4',
+            '--host'           => '192.0.2.1',
             '--app-password'   => 'a complex password',
         ]);
 
@@ -134,7 +134,7 @@ final class SetupMysqlInitCommandTest extends TestCase
 
         $this->command_tester->execute([
             '--skip-database'  => true,
-            '--host'           => '1.2.3.4',
+            '--host'           => '192.0.2.1',
             '--admin-password' => 'welcome0',
             '--app-password'   => 'a complex password',
         ]);
@@ -154,7 +154,7 @@ final class SetupMysqlInitCommandTest extends TestCase
 
         $this->command_tester->execute([
             '--skip-database'  => true,
-            '--host'           => '1.2.3.4',
+            '--host'           => '192.0.2.1',
             '--admin-password' => 'welcome0',
             '--app-password'   => 'a complex password',
         ]);
@@ -246,11 +246,11 @@ final class SetupMysqlInitCommandTest extends TestCase
             '--admin-password' => 'welcome0',
             '--app-password'   => 'a complex password',
             '--app-user'       => 'tuleap',
-            '--grant-hostname' => '1.2.3.4',
+            '--grant-hostname' => '192.0.2.1',
         ]);
 
         $this->assertEquals(0, $this->command_tester->getStatusCode());
 
-        $this->db_wrapper->assertContains("GRANT ALL PRIVILEGES ON 'tuleap'.* TO 'tuleap'@'1.2.3.4'");
+        $this->db_wrapper->assertContains("GRANT ALL PRIVILEGES ON 'tuleap'.* TO 'tuleap'@'192.0.2.1'");
     }
 }
