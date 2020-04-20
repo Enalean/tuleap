@@ -35,9 +35,10 @@ use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Monolog\Logger;
 use Tuleap\Http\HTTPFactoryBuilder;
-use Tuleap\OAuth2Server\E2E\RelyingPartyOIDC\OAuth2InitFlowController;
 use Tuleap\OAuth2Server\E2E\RelyingPartyOIDC\OAuth2AuthorizationCallbackController;
+use Tuleap\OAuth2Server\E2E\RelyingPartyOIDC\OAuth2InitFlowController;
 use Tuleap\OAuth2Server\E2E\RelyingPartyOIDC\OAuth2TestFlowClientCredentialStorage;
+use Tuleap\OAuth2Server\E2E\RelyingPartyOIDC\OAuth2TestFlowConfigurationStorage;
 use Tuleap\OAuth2Server\E2E\RelyingPartyOIDC\OAuth2TestFlowHTTPClientWithClientCredentialFactory;
 use Tuleap\OAuth2Server\E2E\RelyingPartyOIDC\OAuth2TestFlowSecretGenerator;
 
@@ -63,6 +64,7 @@ Amp\Loop::run(
 
         $secret_generator          = new OAuth2TestFlowSecretGenerator();
         $client_credential_storage = new OAuth2TestFlowClientCredentialStorage();
+        $configuration_storage     = new OAuth2TestFlowConfigurationStorage();
 
         $cert_file = tmpfile();
         fwrite($cert_file, $public_part . $private_part);
@@ -74,15 +76,23 @@ Amp\Loop::run(
 
         $sockets = [Server::listen('0.0.0.0:8443', $context), Server::listen('[::]:8443', $context)];
 
-        $router = new Amp\Http\Server\Router();
-        $router->addRoute(
-            'GET',
-            '/init-flow',
-            new CallableRequestHandler(new OAuth2InitFlowController($secret_generator, $client_credential_storage))
-        );
+        $router      = new Amp\Http\Server\Router();
         $http_client = new \Http\Client\Common\PluginClient(
             Client::createWithConfig(['verify' => false]),
             [new LoggerPlugin($logger_back_channel)]
+        );
+        $router->addRoute(
+            'GET',
+            '/init-flow',
+            new CallableRequestHandler(
+                new OAuth2InitFlowController(
+                    $secret_generator,
+                    $client_credential_storage,
+                    $http_client,
+                    HTTPFactoryBuilder::requestFactory(),
+                    $configuration_storage
+                )
+            )
         );
         $router->addRoute(
             'GET',
@@ -96,6 +106,7 @@ Amp\Loop::run(
                         $client_credential_storage
                     ),
                     $client_credential_storage,
+                    $configuration_storage,
                     new Parser(),
                     new Sha256(),
                     HTTPFactoryBuilder::requestFactory(),

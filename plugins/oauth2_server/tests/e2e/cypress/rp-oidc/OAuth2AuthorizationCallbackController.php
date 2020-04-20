@@ -54,6 +54,10 @@ final class OAuth2AuthorizationCallbackController
      */
     private $client_credential_storage;
     /**
+     * @var OAuth2TestFlowConfigurationStorage
+     */
+    private $configuration_storage;
+    /**
      * @var Parser
      */
     private $parser;
@@ -75,6 +79,7 @@ final class OAuth2AuthorizationCallbackController
         ClientInterface $http_client,
         OAuth2TestFlowHTTPClientWithClientCredentialFactory $http_client_factory,
         OAuth2TestFlowClientCredentialStorage $client_credential_storage,
+        OAuth2TestFlowConfigurationStorage $configuration_storage,
         Parser $parser,
         Sha256 $signer,
         RequestFactoryInterface $request_factory,
@@ -84,6 +89,7 @@ final class OAuth2AuthorizationCallbackController
         $this->http_client                                = $http_client;
         $this->http_client_with_client_credential_factory = $http_client_factory;
         $this->client_credential_storage                  = $client_credential_storage;
+        $this->configuration_storage                      = $configuration_storage;
         $this->parser                                     = $parser;
         $this->signer                                     = $signer;
         $this->request_factory                            = $request_factory;
@@ -103,7 +109,6 @@ final class OAuth2AuthorizationCallbackController
         }
 
         $http_client_with_client_credentials = $this->http_client_with_client_credential_factory->getHTTPClient();
-
         $access_token_response  = $this->exchangeAuthorizationCode(
             $http_client_with_client_credentials,
             $auth_code
@@ -130,7 +135,7 @@ final class OAuth2AuthorizationCallbackController
     private function exchangeAuthorizationCode(ClientInterface $http_client_with_client_credential, string $auth_code): array
     {
         $response = $http_client_with_client_credential->sendRequest(
-            $this->request_factory->createRequest('POST', OAuth2TestFlowConstants::BASE_CLIENT_URI . '/oauth2/token')
+            $this->request_factory->createRequest('POST', $this->configuration_storage->getConfiguration()->getTokenEndpoint())
                 ->withHeader('Content-Type', 'application/x-www-form-urlencoded')
                 ->withBody(
                     $this->stream_factory->createStream(
@@ -165,7 +170,7 @@ final class OAuth2AuthorizationCallbackController
     private function refreshTokens(ClientInterface $http_client_with_client_credential, string $refresh_token): array
     {
         $response = $http_client_with_client_credential->sendRequest(
-            $this->request_factory->createRequest('POST', OAuth2TestFlowConstants::BASE_CLIENT_URI . '/oauth2/token')
+            $this->request_factory->createRequest('POST', $this->configuration_storage->getConfiguration()->getTokenEndpoint())
                 ->withHeader('Content-Type', 'application/x-www-form-urlencoded')
                 ->withBody(
                     $this->stream_factory->createStream(
@@ -209,7 +214,7 @@ final class OAuth2AuthorizationCallbackController
     private function sendUserInfoRequest(string $access_token): ResponseInterface
     {
         return $this->http_client->sendRequest(
-            $this->request_factory->createRequest('GET', OAuth2TestFlowConstants::BASE_CLIENT_URI . '/oauth2/userinfo')
+            $this->request_factory->createRequest('GET', $this->configuration_storage->getConfiguration()->getUserinfoEndpoint())
                 ->withHeader('Authorization', 'Bearer ' . $access_token)
         );
     }
@@ -244,7 +249,7 @@ final class OAuth2AuthorizationCallbackController
     private function getPublicKey(): string
     {
         $response = $this->http_client->sendRequest(
-            $this->request_factory->createRequest('GET', OAuth2TestFlowConstants::BASE_CLIENT_URI . '/oauth2/jwks')
+            $this->request_factory->createRequest('GET', $this->configuration_storage->getConfiguration()->getJwksUri())
         );
 
         if ($response->getStatusCode() !== 200) {

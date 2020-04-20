@@ -22,13 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\E2E\RelyingPartyOIDC;
 
-final class OAuth2TestFlowConstants
+final class OAuth2TestFlowConfigurationStorage
 {
-    public const REDIRECT_URI    = 'https://oauth2-server-rp-oidc:8443/callback';
-    public const BASE_CLIENT_URI = 'https://tuleap';
-    public const DISCOVERY_ENDPOINT = self::BASE_CLIENT_URI . '/.well-known/openid-configuration';
+    /**
+     * @var OAuth2TestFlowConfiguration|null
+     */
+    private $configuration = null;
 
-    private function __construct()
+    public function setConfiguration(OAuth2TestFlowConfiguration $configuration): void
     {
+        $this->configuration = $configuration;
+    }
+
+    /**
+     * @return OAuth2TestFlowConfiguration
+     */
+    public function getConfiguration()
+    {
+        if ($this->configuration === null) {
+            throw new RuntimeException('OIDC configuration is missing, did you call GET /init-flow first?');
+        }
+        return $this->configuration;
     }
 }
