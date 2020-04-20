@@ -22,9 +22,11 @@ declare(strict_types=1);
 
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
+use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
+use Tuleap\Tracker\Artifact\XMLImport\TrackerImportConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
@@ -50,6 +52,10 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
      * @var DBTransactionExecutor
      */
     private $transaction_executor;
+    /**
+     * @var \Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver
+     */
+    private $artifact_changeset_saver;
 
     public function __construct(
         Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
@@ -61,7 +67,8 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         ReferenceManager $reference_manager,
         SourceOfAssociationCollectionBuilder $source_of_association_collection_builder,
         Tracker_Artifact_Changeset_ChangesetDataInitializator $field_initializator,
-        DBTransactionExecutor $transaction_executor
+        DBTransactionExecutor $transaction_executor,
+        ArtifactChangesetSaver $artifact_changeset_saver
     ) {
         parent::__construct(
             $fields_validator,
@@ -76,6 +83,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         $this->reference_manager                        = $reference_manager;
         $this->source_of_association_collection_builder = $source_of_association_collection_builder;
         $this->transaction_executor                     = $transaction_executor;
+        $this->artifact_changeset_saver                 = $artifact_changeset_saver;
     }
 
     /**
@@ -94,7 +102,8 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         int $submitted_on,
         bool $send_notification,
         string $comment_format,
-        CreatedFileURLMapping $url_mapping
+        CreatedFileURLMapping $url_mapping,
+        TrackerImportConfig $tracker_import_config
     ): ?Tracker_Artifact_Changeset {
         $comment = trim($comment);
 
@@ -104,7 +113,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         }
 
         try {
-            $new_changeset = $this->transaction_executor->execute(function () use ($artifact, $fields_data, $comment, $comment_format, $submitter, $submitted_on, $email, $url_mapping) {
+            $new_changeset = $this->transaction_executor->execute(function () use ($artifact, $fields_data, $comment, $comment_format, $submitter, $submitted_on, $email, $url_mapping, $tracker_import_config) {
                 try {
                     $this->validateNewChangeset($artifact, $fields_data, $comment, $submitter, $email);
 
@@ -117,13 +126,14 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
                      */
                     $artifact->getWorkflow()->before($fields_data, $submitter, $artifact);
 
-                    $changeset_id = $this->changeset_dao->create(
-                        $artifact->getId(),
-                        $submitter->getId(),
-                        $email,
-                        $submitted_on
-                    );
-                    if (! $changeset_id) {
+                    try {
+                        $changeset_id = $this->artifact_changeset_saver->saveChangeset(
+                            $artifact,
+                            $submitter,
+                            $submitted_on,
+                            $tracker_import_config
+                        );
+                    } catch (Tracker_Artifact_Exception_CannotCreateNewChangeset $exception) {
                         $GLOBALS['Response']->addFeedback(
                             'error',
                             $GLOBALS['Language']->getText('plugin_tracker_artifact', 'unable_update')

@@ -198,7 +198,7 @@ class Tracker_ArtifactCreatorTest extends TestCase // phpcs:ignore
         $this->assertFalse($result);
     }
 
-    public function testItCreateChangesetIfCreateArtifactsInDbSucceeds()
+    public function testItCreateChangesetIfCreateArtifactsInDbSucceeds(): void
     {
         $this->send_notification = false;
         $this->fields_validator->shouldReceive('validate')->andReturns(true);
@@ -216,7 +216,8 @@ class Tracker_ArtifactCreatorTest extends TestCase // phpcs:ignore
                 $this->fields_data,
                 $this->user,
                 $this->submitted_on,
-                Mockery::type(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class)
+                Mockery::type(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class),
+                Mockery::type(\Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig::class)
             )
             ->once();
 

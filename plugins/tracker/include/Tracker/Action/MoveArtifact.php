@@ -133,7 +133,7 @@ class MoveArtifact
             $global_rank = $this->artifact_priority_manager->getGlobalRank($artifact->getId());
             $limit       = $this->artifacts_deletion_manager->deleteArtifactBeforeMoveOperation($artifact, $user);
 
-            if (! $this->processMove($xml_artifacts->artifact, $target_tracker, $global_rank)) {
+            if (! $this->processMove($xml_artifacts->artifact, $target_tracker, $global_rank, $user)) {
                 throw new MoveArtifactNotDoneException();
             }
 
@@ -170,11 +170,11 @@ class MoveArtifact
         return $xml_artifacts;
     }
 
-    private function processMove(SimpleXMLElement $artifact_xml, Tracker $tracker, $global_rank)
+    private function processMove(SimpleXMLElement $artifact_xml, Tracker $tracker, $global_rank, PFUser $user): bool
     {
         $tracker->getWorkflow()->disable();
 
-        $moved_artifact = $this->xml_import->importArtifactWithAllDataFromXMLContent($tracker, $artifact_xml);
+        $moved_artifact = $this->xml_import->importArtifactWithAllDataFromXMLContent($tracker, $artifact_xml, $user);
 
         if (! $moved_artifact) {
             return false;

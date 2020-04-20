@@ -48,6 +48,7 @@ use Tracker_XML_Importer_ArtifactImportedMapping;
 use TrackerXmlFieldsMapping_FromAnotherPlatform;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
@@ -62,6 +63,10 @@ class XmlImportTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerXmlImportConfig
+     */
+    private $import_config;
     private $summary_field_id = 50;
 
     private $tracker_id = 100;
@@ -213,6 +218,8 @@ class XmlImportTest extends TestCase
         $this->rng_validator =  Mockery::mock(XML_RNGValidator::class);
         $this->rng_validator->shouldReceive('validate');
 
+        $this->import_config = Mockery::mock(TrackerXmlImportConfig::class);
+
         $this->external_field_extractor = Mockery::mock(ExternalFieldsExtractor::class);
 
         $this->importer = new Tracker_Artifact_XMLImport(
@@ -233,7 +240,7 @@ class XmlImportTest extends TestCase
         );
     }
 
-    public function testImportChangesetInNewArtifactWithNoChangeSet()
+    public function testImportChangesetInNewArtifactWithNoChangeSet(): void
     {
         $this->xml_artifact_source_platform_extractor->shouldReceive("getSourcePlatform")->andReturn("https://web/");
 
@@ -260,7 +267,8 @@ class XmlImportTest extends TestCase
                 $this->john_doe,
                 Mockery::any(),
                 false,
-                Mockery::any()
+                Mockery::any(),
+                Mockery::type(TrackerXmlImportConfig::class)
             )
             ->andReturn($changeset_1)
             ->once();
@@ -279,7 +287,8 @@ class XmlImportTest extends TestCase
                 Mockery::any(),
                 false,
                 "text",
-                $this->url_mapping
+                $this->url_mapping,
+                Mockery::type(TrackerXmlImportConfig::class)
             )
             ->andReturn($changeset_2)
             ->once();
@@ -298,7 +307,8 @@ class XmlImportTest extends TestCase
                 Mockery::any(),
                 false,
                 "text",
-                $this->url_mapping
+                $this->url_mapping,
+                Mockery::type(TrackerXmlImportConfig::class)
             )
             ->andReturn($changeset_3)
             ->once();
@@ -321,11 +331,12 @@ class XmlImportTest extends TestCase
             $this->extraction_path,
             $this->xml_mapping,
             $this->url_mapping,
-            $this->config
+            $this->config,
+            $this->import_config
         );
     }
 
-    public function testUpdateModeItCreateArtifactAndChangesetInExistingTracker()
+    public function testUpdateModeItCreateArtifactAndChangesetInExistingTracker(): void
     {
         $this->xml_artifact_source_platform_extractor->shouldReceive("getSourcePlatform")->andReturn();
 
@@ -358,7 +369,8 @@ class XmlImportTest extends TestCase
                 $this->john_doe,
                 Mockery::any(),
                 false,
-                $this->url_mapping
+                $this->url_mapping,
+                Mockery::type(TrackerXmlImportConfig::class)
             )
             ->andReturn($changeset_1)
             ->once();
@@ -377,7 +389,8 @@ class XmlImportTest extends TestCase
                 Mockery::any(),
                 false,
                 "text",
-                $this->url_mapping
+                $this->url_mapping,
+                Mockery::type(TrackerXmlImportConfig::class)
             )
             ->andReturn($changeset_2)
             ->once();
@@ -396,7 +409,8 @@ class XmlImportTest extends TestCase
                 Mockery::any(),
                 false,
                 "text",
-                $this->url_mapping
+                $this->url_mapping,
+                Mockery::type(TrackerXmlImportConfig::class)
             )
             ->andReturn($changeset_3)
             ->once();
@@ -412,11 +426,12 @@ class XmlImportTest extends TestCase
             $this->extraction_path,
             $this->xml_mapping,
             $this->url_mapping,
-            $this->config
+            $this->config,
+            $this->import_config
         );
     }
 
-    public function testUpdateModeWithoutSourcePlatformAttributeItCreateArtifactAndChangesetInExistingTracker()
+    public function testUpdateModeWithoutSourcePlatformAttributeItCreateArtifactAndChangesetInExistingTracker(): void
     {
         $this->xml_artifact_source_platform_extractor->shouldReceive("getSourcePlatform")->andReturn(null);
 
@@ -449,7 +464,8 @@ class XmlImportTest extends TestCase
                 $this->john_doe,
                 Mockery::any(),
                 false,
-                $this->url_mapping
+                $this->url_mapping,
+                Mockery::type(TrackerXmlImportConfig::class)
             )
             ->andReturn($changeset_1)
             ->once();
@@ -468,7 +484,8 @@ class XmlImportTest extends TestCase
                 Mockery::any(),
                 false,
                 "text",
-                $this->url_mapping
+                $this->url_mapping,
+                Mockery::type(TrackerXmlImportConfig::class)
             )
             ->andReturn($changeset_2)
             ->once();
@@ -487,7 +504,8 @@ class XmlImportTest extends TestCase
                 Mockery::any(),
                 false,
                 "text",
-                $this->url_mapping
+                $this->url_mapping,
+                Mockery::type(TrackerXmlImportConfig::class)
             )
             ->andReturn($changeset_3)
             ->once();
@@ -502,11 +520,12 @@ class XmlImportTest extends TestCase
             $this->extraction_path,
             $this->xml_mapping,
             $this->url_mapping,
-            $this->config
+            $this->config,
+            $this->import_config
         );
     }
 
-    public function testUpdateModeWithWrongSourcePlatformAttributeItCreateArtifactAndChangesetInExistingTracker()
+    public function testUpdateModeWithWrongSourcePlatformAttributeItCreateArtifactAndChangesetInExistingTracker(): void
     {
         $this->xml_artifact_source_platform_extractor->shouldReceive("getSourcePlatform")->andReturn(null);
 
@@ -537,7 +556,8 @@ class XmlImportTest extends TestCase
                 $this->john_doe,
                 Mockery::any(),
                 false,
-                $this->url_mapping
+                $this->url_mapping,
+                Mockery::type(TrackerXmlImportConfig::class)
             )
             ->andReturn($changeset_1)
             ->once();
@@ -556,7 +576,8 @@ class XmlImportTest extends TestCase
                 Mockery::any(),
                 false,
                 "text",
-                $this->url_mapping
+                $this->url_mapping,
+                Mockery::type(TrackerXmlImportConfig::class)
             )
             ->andReturn($changeset_2)
             ->once();
@@ -575,7 +596,8 @@ class XmlImportTest extends TestCase
                 Mockery::any(),
                 false,
                 "text",
-                $this->url_mapping
+                $this->url_mapping,
+                Mockery::type(TrackerXmlImportConfig::class)
             )
             ->andReturn($changeset_3)
             ->once();
@@ -594,11 +616,12 @@ class XmlImportTest extends TestCase
             $this->extraction_path,
             $this->xml_mapping,
             $this->url_mapping,
-            $this->config
+            $this->config,
+            $this->import_config
         );
     }
 
-    public function testUpdateItCreateChangesetsInExistingArtifactWithChangeset()
+    public function testUpdateItCreateChangesetsInExistingArtifactWithChangeset(): void
     {
         $this->xml_artifact_source_platform_extractor->shouldReceive("getSourcePlatform")->andReturn("https://web/");
 
@@ -637,7 +660,8 @@ class XmlImportTest extends TestCase
                 Mockery::any(),
                 false,
                 "text",
-                $this->url_mapping
+                $this->url_mapping,
+                Mockery::type(TrackerXmlImportConfig::class)
             )
             ->once()
             ->andReturn($changeset_1);
@@ -656,7 +680,8 @@ class XmlImportTest extends TestCase
                 Mockery::any(),
                 false,
                 "text",
-                $this->url_mapping
+                $this->url_mapping,
+                Mockery::type(TrackerXmlImportConfig::class)
             )
             ->andReturn($changeset_2)
             ->once();
@@ -675,7 +700,8 @@ class XmlImportTest extends TestCase
                 Mockery::any(),
                 false,
                 "text",
-                $this->url_mapping
+                $this->url_mapping,
+                Mockery::type(TrackerXmlImportConfig::class)
             )
             ->andReturn($changeset_3)
             ->once();
@@ -688,7 +714,8 @@ class XmlImportTest extends TestCase
             $this->extraction_path,
             $this->xml_mapping,
             $this->url_mapping,
-            $this->config
+            $this->config,
+            $this->import_config
         );
     }
 

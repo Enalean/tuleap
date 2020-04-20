@@ -23,6 +23,7 @@ use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
+use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 use Tuleap\Tracker\CreateTrackerFromXMLEvent;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
@@ -290,7 +291,8 @@ class TrackerXmlImport
         Project $project,
         SimpleXMLElement $xml_input,
         MappingsRegistry $registery,
-        $extraction_path
+        $extraction_path,
+        PFUser $user
     ) {
         if (! $xml_input->trackers) {
             return;
@@ -304,11 +306,13 @@ class TrackerXmlImport
             __DIR__ . '/../resources/trackers.rng'
         );
 
+        $tracker_import_config = new TrackerXmlImportConfig($project, $user, new \DateTimeImmutable());
+
         $this->activateArtlinkV2($project, $xml_input->trackers);
 
-        $this->xml_fields_mapping = array();
-        $created_trackers_mapping = array();
-        $created_trackers_objects = array();
+        $this->xml_fields_mapping = [];
+        $created_trackers_mapping = [];
+        $created_trackers_objects = [];
         $artifacts_id_mapping     = new Tracker_XML_Importer_ArtifactImportedMapping();
         $changeset_id_mapping     = new ImportedChangesetMapping();
         $url_mapping              = new CreatedFileURLMapping();
@@ -346,7 +350,8 @@ class TrackerXmlImport
             $url_mapping,
             $created_artifacts,
             $configuration,
-            $changeset_id_mapping
+            $changeset_id_mapping,
+            $tracker_import_config
         );
 
         // Deal with artifact link types after changesets import to keep the history of types
@@ -396,7 +401,7 @@ class TrackerXmlImport
             )
         );
 
-        $this->xml_saver->storeUsedXmlForTrackersCreation($project, $xml_input);
+        $this->xml_saver->storeUsedXmlForTrackersCreation($tracker_import_config, $xml_input);
 
         return $created_trackers_mapping;
     }
@@ -552,8 +557,9 @@ class TrackerXmlImport
         CreatedFileURLMapping $url_mapping,
         array $created_artifacts,
         ImportConfig $configuration,
-        ImportedChangesetMapping $changeset_id_mapping
-    ) {
+        ImportedChangesetMapping $changeset_id_mapping,
+        TrackerXmlImportConfig $tracker_import_config
+    ): void {
         foreach ($xml_trackers as $xml_tracker_id => $xml_tracker) {
             if (isset($xml_tracker->artifacts)) {
                 $this->xml_import->importArtifactChangesFromXML(
@@ -565,7 +571,8 @@ class TrackerXmlImport
                     $url_mapping,
                     $created_artifacts[$xml_tracker_id],
                     $configuration,
-                    $changeset_id_mapping
+                    $changeset_id_mapping,
+                    $tracker_import_config
                 );
             }
         }

@@ -304,6 +304,14 @@ CREATE TABLE tracker_changeset_incomingmail(
     raw_mail TEXT NOT NULL
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS plugin_tracker_changeset_from_xml;
+CREATE TABLE plugin_tracker_changeset_from_xml(
+   changeset_id INT(11) NOT NULL PRIMARY KEY,
+   user_id INT(11) NOT NULL,
+   timestamp INT(11) NOT NULL,
+   xml_filename VARCHAR(50)
+) ENGINE=InnoDB;
+
 DROP TABLE IF EXISTS tracker_changeset_value;
 CREATE TABLE tracker_changeset_value(
     id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,

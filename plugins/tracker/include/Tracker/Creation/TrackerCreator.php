@@ -173,7 +173,8 @@ class TrackerCreator
         string $jira_username,
         string $jira_url,
         string $jira_project_id,
-        string $jira_issue_type_name
+        string $jira_issue_type_name,
+        \PFUser $user
     ): Tracker {
         $this->creation_data_checker->checkAtProjectCreation((int) $project->getID(), $name, $itemname);
         $jira_exporter = $this->getJiraExporter($jira_token, $jira_username, $jira_url);
@@ -198,7 +199,8 @@ class TrackerCreator
                 $project,
                 $xml,
                 new MappingsRegistry(),
-                \ForgeConfig::get('tmp_dir')
+                \ForgeConfig::get('tmp_dir'),
+                $user
             );
 
             if ($trackers && count($trackers) === 1) {

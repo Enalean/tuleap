@@ -17,6 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\TrackerIsInvalidException;
@@ -671,80 +673,85 @@ class TrackerFactory
      * @param Tracker $tracker object to save
      * @return int id of the newly created tracker
      */
-    public function saveObject($tracker)
+    public function saveObject($tracker): int
     {
         // create tracker
-        $this->getDao()->startTransaction();
-        $tracker_id = $this->getDao()->create(
-            $tracker->group_id,
-            $tracker->name,
-            $tracker->description,
-            $tracker->item_name,
-            $tracker->allow_copy,
-            $tracker->submit_instructions,
-            $tracker->browse_instructions,
-            '',
-            '',
-            $tracker->instantiate_for_new_projects,
-            $tracker->log_priority_changes,
-            $tracker->getNotificationsLevel(),
-            $tracker->getColor()->getName(),
-            $tracker->isEmailgatewayEnabled()
-        );
-        if ($tracker_id) {
-            $trackerDB = $this->getTrackerById($tracker_id);
-            if ($trackerDB === null) {
-                throw new RuntimeException('Tracker does not exist');
-            }
-            //create cannedResponses
-            $response_factory = $tracker->getCannedResponseFactory();
-            foreach ($tracker->cannedResponses as $response) {
-                $response_factory->saveObject($tracker_id, $response);
-            }
-            //create formElements
-            foreach ($tracker->formElements as $formElement) {
-                // these fields have no parent
-                Tracker_FormElementFactory::instance()->saveObject($trackerDB, $formElement, 0, true, true);
-            }
-            //create report
-            foreach ($tracker->reports as $report) {
-                Tracker_ReportFactory::instance()->saveObject($tracker_id, $report);
-            }
-            //create semantics
-            if (isset($tracker->semantics)) {
-                foreach ($tracker->semantics as $semantic) {
-                    Tracker_SemanticFactory::instance()->saveObject($semantic, $trackerDB);
-                }
-            }
-            //create rules
-            if (isset($tracker->rules)) {
-                $this->getRuleFactory()->saveObject($tracker->rules, $trackerDB);
-            }
-            //create workflow
-            if (isset($tracker->workflow)) {
-                WorkflowFactory::instance()->saveObject($tracker->workflow, $trackerDB);
-            }
+        $transaction_executor = $this->getTransactionExecutor();
 
-            if (count($tracker->webhooks) > 0) {
-                $this->getWebhookFactory()->saveWebhooks($tracker->webhooks, $tracker_id);
-            }
-
-            //tracker permissions
-            if ($tracker->permissionsAreCached()) {
-                $pm = PermissionsManager::instance();
-                foreach ($tracker->getPermissionsByUgroupId() as $ugroup => $permissions) {
-                    foreach ($permissions as $permission) {
-                        $pm->addPermission($permission, $tracker_id, $ugroup);
+        return $transaction_executor->execute(
+            function () use ($tracker) {
+                $tracker_id = $this->getDao()->create(
+                    $tracker->group_id,
+                    $tracker->name,
+                    $tracker->description,
+                    $tracker->item_name,
+                    $tracker->allow_copy,
+                    $tracker->submit_instructions,
+                    $tracker->browse_instructions,
+                    '',
+                    '',
+                    $tracker->instantiate_for_new_projects,
+                    $tracker->log_priority_changes,
+                    $tracker->getNotificationsLevel(),
+                    $tracker->getColor()->getName(),
+                    $tracker->isEmailgatewayEnabled()
+                );
+                if ($tracker_id) {
+                    $trackerDB = $this->getTrackerById($tracker_id);
+                    if ($trackerDB === null) {
+                        throw new RuntimeException('Tracker does not exist');
                     }
-                }
-            } else {
-                $this->saveTrackerDefaultPermission($tracker_id);
-            }
+                    //create cannedResponses
+                    $response_factory = $tracker->getCannedResponseFactory();
+                    foreach ($tracker->cannedResponses as $response) {
+                        $response_factory->saveObject($tracker_id, $response);
+                    }
+                    //create formElements
+                    foreach ($tracker->formElements as $formElement) {
+                        // these fields have no parent
+                        Tracker_FormElementFactory::instance()->saveObject($trackerDB, $formElement, 0, true, true);
+                    }
+                    //create report
+                    foreach ($tracker->reports as $report) {
+                        Tracker_ReportFactory::instance()->saveObject($tracker_id, $report);
+                    }
+                    //create semantics
+                    if (isset($tracker->semantics)) {
+                        foreach ($tracker->semantics as $semantic) {
+                            Tracker_SemanticFactory::instance()->saveObject($semantic, $trackerDB);
+                        }
+                    }
+                    //create rules
+                    if (isset($tracker->rules)) {
+                        $this->getRuleFactory()->saveObject($tracker->rules, $trackerDB);
+                    }
+                    //create workflow
+                    if (isset($tracker->workflow)) {
+                        WorkflowFactory::instance()->saveObject($tracker->workflow, $trackerDB);
+                    }
 
-            $this->postCreateActions($trackerDB);
-        }
-        $this->getDao()->commit();
-        return $tracker_id;
+                    if (count($tracker->webhooks) > 0) {
+                        $this->getWebhookFactory()->saveWebhooks($tracker->webhooks, $tracker_id);
+                    }
+
+                    //tracker permissions
+                    if ($tracker->permissionsAreCached()) {
+                        $pm = PermissionsManager::instance();
+                        foreach ($tracker->getPermissionsByUgroupId() as $ugroup => $permissions) {
+                            foreach ($permissions as $permission) {
+                                $pm->addPermission($permission, $tracker_id, $ugroup);
+                            }
+                        }
+                    } else {
+                        $this->saveTrackerDefaultPermission($tracker_id);
+                    }
+
+                    $this->postCreateActions($trackerDB);
+                }
+
+                return (int) $tracker_id;
+            }
+        );
     }
 
     /**
@@ -815,5 +822,10 @@ class TrackerFactory
     protected function getTrackerChecker(): TrackerCreationDataChecker
     {
         return TrackerCreationDataChecker::build();
+    }
+
+    protected function getTransactionExecutor(): DBTransactionExecutorWithConnection
+    {
+        return  new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
     }
 }

@@ -64,6 +64,11 @@ final class TrackerXmlImportTest extends TestCase
     use GlobalLanguageMock;
 
     /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface
+     */
+    private $user;
+
+    /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerXmlSaver
      */
     private $tracker_xml_saver;
@@ -203,6 +208,9 @@ final class TrackerXmlImportTest extends TestCase
         $this->project = Mockery::spy(Project::class);
         $this->project->shouldReceive('getId')->andReturns($group_id);
 
+        $this->user = Mockery::mock(\PFUser::class);
+        $this->user->shouldReceive('getId')->andReturn(1);
+
         $this->mapping_registery = new MappingsRegistry();
         $this->configuration     = new ImportConfig();
     }
@@ -226,7 +234,7 @@ final class TrackerXmlImportTest extends TestCase
         );
 
         $this->tracker_xml_saver->shouldReceive('storeUsedXmlForTrackersCreation')->once();
-        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
+        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '', $this->user);
     }
 
     public function testItShouldNotRaiseExceptionWithOnlyWhitespacesTrackerDescription(): void
@@ -248,7 +256,7 @@ final class TrackerXmlImportTest extends TestCase
         );
 
         $this->tracker_xml_saver->shouldReceive('storeUsedXmlForTrackersCreation')->once();
-        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
+        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '', $this->user);
     }
 
     public function testItShouldRaiseExceptionWithEmptyTrackerName(): void
@@ -268,7 +276,7 @@ final class TrackerXmlImportTest extends TestCase
         );
 
         $this->expectException('XML_ParseException');
-        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
+        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '', $this->user);
     }
 
     public function testItShouldRaiseExceptionWithOnlyWhitespacesTrackerName(): void
@@ -288,7 +296,7 @@ final class TrackerXmlImportTest extends TestCase
         );
 
         $this->expectException('XML_ParseException');
-        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
+        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '', $this->user);
     }
 
     public function testItShouldRaiseExceptionWithEmptyTrackerShortName(): void
@@ -308,7 +316,7 @@ final class TrackerXmlImportTest extends TestCase
         );
 
         $this->expectException('XML_ParseException');
-        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
+        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '', $this->user);
     }
 
     public function testItShouldRaiseExceptionWithInvalidTrackerShortName(): void
@@ -328,7 +336,7 @@ final class TrackerXmlImportTest extends TestCase
         );
 
         $this->expectException('XML_ParseException');
-        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
+        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '', $this->user);
     }
 
     public function testItAllowsItemsLabelToHavePlusCharacter(): void
@@ -372,7 +380,8 @@ final class TrackerXmlImportTest extends TestCase
             $this->project,
             $xml_input,
             $this->mapping_registery,
-            ''
+            '',
+            $this->user
         );
 
         $this->assertEquals($expected_tracker_mapping, $created_trackers_mapping);
@@ -591,7 +600,8 @@ final class TrackerXmlImportTest extends TestCase
             $this->project,
             $xml,
             $this->mapping_registery,
-            ''
+            '',
+            $this->user
         );
 
         $expected_mapping = [
@@ -629,7 +639,8 @@ final class TrackerXmlImportTest extends TestCase
             $this->project,
             $xml,
             $this->mapping_registery,
-            ''
+            '',
+            $this->user
         );
 
         $expected_mapping = [
@@ -678,7 +689,8 @@ final class TrackerXmlImportTest extends TestCase
             $this->project,
             $xml,
             $this->mapping_registery,
-            ''
+            '',
+            $this->user
         );
     }
 
@@ -703,7 +715,8 @@ final class TrackerXmlImportTest extends TestCase
             $this->project,
             $xml,
             $this->mapping_registery,
-            ''
+            '',
+            $this->user
         );
     }
 
@@ -722,7 +735,8 @@ final class TrackerXmlImportTest extends TestCase
             $this->project,
             $xml,
             $this->mapping_registery,
-            ''
+            '',
+            $this->user
         );
     }
 
@@ -774,7 +788,8 @@ final class TrackerXmlImportTest extends TestCase
             "trcker description",
             "bugs",
             'peggy-pink',
-            $feedback_collector
+            $feedback_collector,
+            $this->user
         );
     }
 
@@ -803,7 +818,8 @@ final class TrackerXmlImportTest extends TestCase
             $this->project,
             $xml,
             $this->mapping_registery,
-            ''
+            '',
+            $this->user
         );
     }
 

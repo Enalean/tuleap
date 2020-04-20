@@ -20,8 +20,10 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
+use Tuleap\Tracker\Artifact\XMLImport\TrackerImportConfig;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
 /**
@@ -35,6 +37,10 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
      * @var \Psr\Log\LoggerInterface
      */
     private $logger;
+    /**
+     * @var ArtifactChangesetSaver
+     */
+    private $artifact_changeset_saver;
 
     public function __construct(
         Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
@@ -43,7 +49,8 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
         Tracker_ArtifactFactory $artifact_factory,
         EventManager $event_manager,
         Tracker_Artifact_Changeset_ChangesetDataInitializator $field_initializator,
-        \Psr\Log\LoggerInterface $logger
+        \Psr\Log\LoggerInterface $logger,
+        ArtifactChangesetSaver $artifact_changeset_saver
     ) {
         parent::__construct(
             $fields_validator,
@@ -55,6 +62,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
 
         $this->changeset_dao = $changeset_dao;
         $this->logger        = $logger;
+        $this->artifact_changeset_saver = $artifact_changeset_saver;
     }
 
     /**
@@ -71,7 +79,8 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
         array $fields_data,
         PFUser $submitter,
         int $submitted_on,
-        CreatedFileURLMapping $url_mapping
+        CreatedFileURLMapping $url_mapping,
+        TrackerImportConfig $import_config
     ): ?int {
         if (! $this->doesRequestAppearToBeValid($artifact, $fields_data, $submitter)) {
             $this->logger->debug(
@@ -95,8 +104,9 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
             return null;
         }
 
-        $changeset_id = $this->createChangesetId($artifact, $submitter, $submitted_on);
-        if (! $changeset_id) {
+        try {
+            $changeset_id = $this->artifact_changeset_saver->saveChangeset($artifact, $submitter, $submitted_on, $import_config);
+        } catch (Tracker_Artifact_Exception_CannotCreateNewChangeset $exception) {
             $this->logger->debug(
                 sprintf(
                     'Creation of the first changeset of artifact #%d failed: DB failure',
@@ -141,22 +151,6 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
         foreach ($this->fields_retriever->getFields($artifact) as $field) {
             $this->saveNewChangesetForField($field, $artifact, $fields_data, $submitter, $changeset_id, $url_mapping);
         }
-    }
-
-    /**
-     * @return int|false
-     */
-    private function createChangesetId(
-        Tracker_Artifact $artifact,
-        PFUser $submitter,
-        int $submitted_on
-    ) {
-        $email = null;
-        if ($submitter->isAnonymous()) {
-            $email = $submitter->getEmail();
-        }
-
-        return $this->changeset_dao->create($artifact->getId(), $submitter->getId(), $email, $submitted_on);
     }
 
     private function doesRequestAppearToBeValid(

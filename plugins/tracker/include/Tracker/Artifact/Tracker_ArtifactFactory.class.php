@@ -25,6 +25,7 @@
 
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\MyArtifactsCollection;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
@@ -369,7 +370,8 @@ class Tracker_ArtifactFactory
             $this,
             EventManager::instance(),
             new Tracker_Artifact_Changeset_ChangesetDataInitializator($formelement_factory),
-            $logger
+            $logger,
+            ArtifactChangesetSaver::build()
         );
         $creator = new Tracker_ArtifactCreator($this, $fields_validator, $changeset_creator, $visit_recorder, $logger, new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()));
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,7 +22,7 @@ require_once __DIR__ . '/../../../src/www/include/pre.php';
 
 try {
     $user_manager = UserManager::instance();
-    $user_manager->forceLogin($argv[1]);
+    $user = $user_manager->forceLogin($argv[1]);
 
     $tracker = TrackerFactory::instance()->getTrackerById($argv[2]);
     if ($tracker) {
@@ -43,7 +43,7 @@ try {
             ForgeConfig::get('tmp_dir')
         );
 
-        $xml_import->importFromArchive($tracker, $archive);
+        $xml_import->importFromArchive($tracker, $archive, $user);
     }
 } catch (XML_ParseException $exception) {
     echo $exception->getMessage() . PHP_EOL;

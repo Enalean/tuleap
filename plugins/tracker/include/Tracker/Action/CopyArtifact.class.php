@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
 class Tracker_Action_CopyArtifact
@@ -229,7 +230,8 @@ class Tracker_Action_CopyArtifact
                 $fields_data_builder,
                 $config,
                 new CreatedFileURLMapping(),
-                new \Tuleap\Tracker\XML\Importer\ImportedChangesetMapping()
+                new \Tuleap\Tracker\XML\Importer\ImportedChangesetMapping(),
+                new TrackerNoXMLImportLoggedConfig()
             );
         }
     }
