@@ -92,6 +92,16 @@ class JiraConnectionException extends \Exception
         );
     }
 
+    public static function canNotRetrieveFullCollectionOfIssuesException(): self
+    {
+        return new self(
+            "can not retrieve full collection of issues",
+            dgettext(
+                'tuleap-tracker',
+                "Fail to retrieve the full collection of issues in selected tracker."
+            )
+        );
+    }
 
     public static function urlIsInvalid(): self
     {
