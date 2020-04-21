@@ -30,6 +30,7 @@ use Tracker_Exception;
 use TrackerFactory;
 use TrackerFromXmlException;
 use TrackerXmlImport;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\JiraCredentials;
@@ -168,7 +169,7 @@ class TrackerCreator
         string $name,
         string $itemname,
         string $color,
-        string $jira_token,
+        ConcealedString $jira_token,
         string $jira_username,
         string $jira_url,
         string $jira_project_id,
@@ -225,7 +226,7 @@ class TrackerCreator
     /**
      * protected for testing purpose
      */
-    protected function getJiraExporter(string $jira_token, string $jira_username, string $jira_url): JiraXmlExporter
+    protected function getJiraExporter(ConcealedString $jira_token, string $jira_username, string $jira_url): JiraXmlExporter
     {
         $jira_credentials = new JiraCredentials($jira_url, $jira_username, $jira_token);
         return JiraXmlExporter::build($jira_credentials);

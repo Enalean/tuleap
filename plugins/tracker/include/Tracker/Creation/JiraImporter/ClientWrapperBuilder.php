@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
 use Rule_Regexp;
+use Tuleap\Cryptography\ConcealedString;
 use Valid_LocalURI;
 
 class ClientWrapperBuilder
@@ -48,7 +49,7 @@ class ClientWrapperBuilder
         }
         $jira_server = $body->credentials->server_url;
         $jira_user   = $body->credentials->user_email;
-        $jira_token  = $body->credentials->token;
+        $jira_token  = new ConcealedString($body->credentials->token);
 
         $valid_http = new Rule_Regexp(Valid_LocalURI::URI_REGEXP);
         if (! $valid_http->isValid($jira_server)) {
