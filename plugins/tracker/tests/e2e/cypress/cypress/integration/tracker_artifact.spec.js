@@ -19,7 +19,7 @@
  */
 
 describe("Tracker artifacts", function () {
-    let artifact_id;
+    let artifact_id, project_id;
 
     describe("Site admin specific settings for move/deletion", function () {
         it("must be able to set the artifact deletion setting", function () {
@@ -39,11 +39,17 @@ describe("Tracker artifacts", function () {
         before(function () {
             cy.clearCookie("__Host-TULEAP_session_hash");
             cy.ProjectAdministratorLogin();
+            cy.getProjectId("tracker-artifact").as("project_id");
         });
 
         beforeEach(function () {
             Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
             cy.visitProjectService("tracker-artifact", "Trackers");
+        });
+
+        it("can access to admin section", function () {
+            project_id = this.project_id;
+            cy.visit("/plugins/tracker/global-admin/" + project_id);
         });
 
         it("must be able to create tracker from Tuleap template Bug", function () {
@@ -163,6 +169,16 @@ describe("Tracker artifacts", function () {
     describe("Tracker dedicated permissions", function () {
         before(function () {
             cy.clearCookie("__Host-TULEAP_session_hash");
+        });
+
+        it("should raise an error when user try to access to plugin Tracker admin page", function () {
+            cy.projectMemberLogin();
+            cy.request({
+                url: "/plugins/tracker/global-admin/" + project_id,
+                failOnStatusCode: false,
+            }).then((response) => {
+                expect(response.status).to.eq(403);
+            });
         });
 
         it("tracker admin must be able to delegate tracker administration privilege", function () {

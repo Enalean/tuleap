@@ -82,3 +82,21 @@ describe("Project admin", function () {
         });
     });
 });
+
+context("Project member", function () {
+    before(() => {
+        cy.clearCookie("__Host-TULEAP_session_hash");
+        cy.projectMemberLogin();
+    });
+
+    beforeEach(() => {
+        Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+    });
+
+    it("should raise an error when user try to access to project admin page", function () {
+        //here we don't care about project, member should not be admin of any project
+        cy.visit("/project/admin/?group_id=101");
+
+        cy.get("[data-test=feedback]").contains("You do not have permission to view this page");
+    });
+});

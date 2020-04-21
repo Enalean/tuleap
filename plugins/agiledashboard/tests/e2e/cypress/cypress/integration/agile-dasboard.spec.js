@@ -18,44 +18,72 @@
  */
 
 describe("Agile Dashboard", function () {
-    before(function () {
-        cy.clearCookie("__Host-TULEAP_session_hash");
-        cy.ProjectAdministratorLogin();
-        cy.visitProjectService("agile-dashboard", "Agile Dashboard");
-    });
-
-    beforeEach(function () {
-        Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
-    });
-
-    it("should start scrum", function () {
-        cy.get("[data-test=start-scrum]").click();
-
-        cy.contains(
-            "[data-test=feedback]",
-            "We created an initial scrum configuration for you. Enjoy!",
-            {
-                timeout: 20000,
-            }
-        );
-    });
-
-    it("should start a Kanban with Scrum elements", function () {
-        //This the Administration menu in the breadcrumb.
-        cy.get("[data-test=breadcrumb-dropdown-link]").click({ force: true });
-        cy.get("[data-test=admin-kanban-pane]").click();
-        cy.get("[data-test=admin-kanban-activate-checkbox]").check();
-        cy.get("[data-test=ad-service-submit]").click();
-
-        cy.visitProjectService("agile-dashboard", "Agile Dashboard");
-        cy.get("[data-test=add-kanban-button]").click();
-
-        cy.get("[data-test=add-kanban-modal]").within(() => {
-            cy.get("[data-test=kanban-name]").type("My kanban from scrum");
-            cy.get("[data-test=tracker-kanban]").select("Epics");
-            cy.get("[data-test=create-kanban-modal-submit]").click();
+    let project_id;
+    context("Project administrators", function () {
+        before(function () {
+            cy.clearCookie("__Host-TULEAP_session_hash");
+            cy.ProjectAdministratorLogin();
+            cy.getProjectId("agile-dashboard").as("project_id");
         });
-        cy.contains("[data-test=feedback]", "Kanban My kanban from scrum successfully created.");
-        cy.contains("[data-test=kanban-home-kanban-title]", "My kanban from scrum");
+
+        beforeEach(function () {
+            Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+        });
+
+        it("can access to admin section", function () {
+            project_id = this.project_id;
+            cy.visit("/plugins/agiledashboard/?group_id=" + project_id + "&action=admin");
+        });
+
+        it("should start scrum", function () {
+            cy.visitProjectService("agile-dashboard", "Agile Dashboard");
+            cy.get("[data-test=start-scrum]").click();
+
+            cy.contains(
+                "[data-test=feedback]",
+                "We created an initial scrum configuration for you. Enjoy!",
+                {
+                    timeout: 20000,
+                }
+            );
+        });
+
+        it("should start a Kanban with Scrum elements", function () {
+            //This the Administration menu in the breadcrumb.
+            cy.get("[data-test=breadcrumb-dropdown-link]").click({ force: true });
+            cy.get("[data-test=admin-kanban-pane]").click();
+            cy.get("[data-test=admin-kanban-activate-checkbox]").check();
+            cy.get("[data-test=ad-service-submit]").click();
+
+            cy.visitProjectService("agile-dashboard", "Agile Dashboard");
+            cy.get("[data-test=add-kanban-button]").click();
+
+            cy.get("[data-test=add-kanban-modal]").within(() => {
+                cy.get("[data-test=kanban-name]").type("My kanban from scrum");
+                cy.get("[data-test=tracker-kanban]").select("Epics");
+                cy.get("[data-test=create-kanban-modal-submit]").click();
+            });
+            cy.contains(
+                "[data-test=feedback]",
+                "Kanban My kanban from scrum successfully created."
+            );
+            cy.contains("[data-test=kanban-home-kanban-title]", "My kanban from scrum");
+        });
+    });
+
+    describe("Project members", function () {
+        before(function () {
+            cy.clearCookie("__Host-TULEAP_session_hash");
+            cy.projectMemberLogin();
+        });
+
+        beforeEach(function () {
+            Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
+        });
+
+        it("can not for admin page access", function () {
+            cy.visit("/plugins/agiledashboard/?group_id=" + project_id + "&action=admin");
+            cy.get("[data-test=scrum_title]").contains("Scrum");
+        });
     });
 });
