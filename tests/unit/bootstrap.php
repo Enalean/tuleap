@@ -22,6 +22,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__) . '/../include/autoload.php');
-require_once(dirname(__FILE__) . '/../include/constants.php');
-require_once(dirname(__FILE__) . '/../../../src/common/constants.php');
+require_once(__DIR__ . '/../../include/autoload.php');
+require_once(__DIR__ . '/../../include/constants.php');
+require_once(__DIR__ . '/../../../../src/common/constants.php');
