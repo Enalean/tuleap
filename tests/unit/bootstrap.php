@@ -20,4 +20,4 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../include/botmattermost_agiledashboardPlugin.php';
+require_once __DIR__ . '/../../include/botmattermost_agiledashboardPlugin.php';
