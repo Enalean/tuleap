@@ -23,13 +23,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
+use Tuleap\Cryptography\ConcealedString;
+
 /**
  * @psalm-immutable
  */
 class JiraCredentials
 {
     /**
-     * @var string
+     * @var ConcealedString
      */
     private $jira_token;
     /**
@@ -44,14 +46,14 @@ class JiraCredentials
     public function __construct(
         string $jira_url,
         string $jira_username,
-        string $jira_token
+        ConcealedString $jira_token
     ) {
         $this->jira_token = $jira_token;
         $this->jira_username = $jira_username;
         $this->jira_url = $jira_url;
     }
 
-    public function getJiraToken(): string
+    public function getJiraToken(): ConcealedString
     {
         return $this->jira_token;
     }

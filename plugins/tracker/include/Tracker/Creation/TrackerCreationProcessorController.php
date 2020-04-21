@@ -26,6 +26,7 @@ use HTTPRequest;
 use Project;
 use Tracker_Exception;
 use TrackerFromXmlException;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
@@ -95,7 +96,7 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
         $tracker_template_id = $request->get('tracker-template-id');
         $from_empty_tracker = $request->get('from-tracker-empty');
         $jira_server         = $request->get('jira_server');
-        $jira_token          = $request->get('jira_token');
+        $jira_token          = new ConcealedString((string) $request->get('jira_token'));
         $jira_user           = $request->get('jira_user');
 
         $default_templates_collection = $this->default_templates_collection_builder->build();

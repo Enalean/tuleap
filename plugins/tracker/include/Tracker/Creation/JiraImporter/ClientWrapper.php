@@ -57,7 +57,7 @@ class ClientWrapper
     {
         $client = HttpClientFactory::createClient(
             new AuthenticationPlugin(
-                new BasicAuth($jira_credentials->getJiraUsername(), $jira_credentials->getJiraToken())
+                new BasicAuth($jira_credentials->getJiraUsername(), $jira_credentials->getJiraToken()->getString())
             )
         );
 

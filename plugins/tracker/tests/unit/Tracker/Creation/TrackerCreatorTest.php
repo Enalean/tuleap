@@ -27,6 +27,7 @@ use Mockery;
 use Tracker;
 use TrackerFactory;
 use TrackerXmlImport;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
 use XML_SimpleXMLCDATAFactory;
 
@@ -196,7 +197,7 @@ final class TrackerCreatorTest extends \PHPUnit\Framework\TestCase
             "my new tracker",
             "my_tracker",
             "inca-silver",
-            "azerty123",
+            new ConcealedString("azerty123"),
             "user@example.com",
             "https://example.com",
             "Jira project",
