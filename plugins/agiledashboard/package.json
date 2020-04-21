@@ -31,7 +31,7 @@
   "scripts": {
     "build": "rm -rf ../../src/www/assets/agiledashboard/ && $npm_package_config_bin/webpack --config webpack.prod.js",
     "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
-    "test": "BABEL_ENV=test $npm_package_config_bin/jest --config=jest.projects.config.js",
+    "test": "BABEL_ENV=test $npm_package_config_bin/jest --config=../../tests/jest/jest.projects.config.js \"$(pwd)\"",
     "postshrinkwrap": "php ../../tools/utils/scripts/clean-lockfile-from-local-tuleap-dep.php \"$(pwd)\""
   }
 }
