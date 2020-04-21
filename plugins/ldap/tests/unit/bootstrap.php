@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,10 +17,4 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once __DIR__ . '/../../../../src/vendor/autoload.php';
-require_once __DIR__ . '/bootstrap.php';
-require_once __DIR__ . '/../../tests/unit/bootstrap.php';
-
-$plugin_rest_initializer = new \Tuleap\DynamicCredentials\REST\DynamicCredentialsPluginRESTInitializer();
-$plugin_rest_initializer->initialize();
+require_once __DIR__ . '/../../include/ldapPlugin.php';
