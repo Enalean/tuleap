@@ -30,6 +30,7 @@ use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Permissions\PermissionsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Semantic\SemanticsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldRetriever;
@@ -41,7 +42,8 @@ use XML_SimpleXMLCDATAFactory;
 
 class JiraXmlExporter
 {
-    public const JIRA_LINK_FIELD_NAME = "jira_artifact_url";
+    public const JIRA_LINK_FIELD_NAME    = "jira_artifact_url";
+    public const JIRA_SUMMARY_FIELD_NAME = "summary";
 
     /**
      * @var FieldXmlExporter
@@ -79,6 +81,11 @@ class JiraXmlExporter
      */
     private $artifacts_xml_exporter;
 
+    /**
+     * @var SemanticsXMLExporter
+     */
+    private $semantics_xml_exporter;
+
     public function __construct(
         FieldXmlExporter $field_xml_exporter,
         ErrorCollector $error_collector,
@@ -87,7 +94,8 @@ class JiraXmlExporter
         XmlReportExporter $report_exporter,
         FieldMappingCollection $field_mapping_collection,
         PermissionsXMLExporter $permissions_xml_exporter,
-        ArtifactsXMLExporter $artifacts_xml_exporter
+        ArtifactsXMLExporter $artifacts_xml_exporter,
+        SemanticsXMLExporter $semantics_xml_exporter
     ) {
         $this->field_xml_exporter            = $field_xml_exporter;
         $this->error_collector               = $error_collector;
@@ -97,6 +105,7 @@ class JiraXmlExporter
         $this->jira_field_mapping_collection = $field_mapping_collection;
         $this->permissions_xml_exporter      = $permissions_xml_exporter;
         $this->artifacts_xml_exporter        = $artifacts_xml_exporter;
+        $this->semantics_xml_exporter        = $semantics_xml_exporter;
     }
 
     public static function build(
@@ -125,7 +134,8 @@ class JiraXmlExporter
                 $wrapper,
                 new XML_SimpleXMLCDATAFactory(),
                 UserManager::instance()
-            )
+            ),
+            new SemanticsXMLExporter()
         );
     }
 
@@ -172,7 +182,8 @@ class JiraXmlExporter
 
         $this->exportJiraField($node_jira_atf_form_elements);
 
-        $node_tracker->addChild('semantics');
+        $this->semantics_xml_exporter->exportSemantics($node_tracker, $this->jira_field_mapping_collection);
+
         $node_tracker->addChild('rules');
         $this->report_exporter->exportReports($node_tracker);
         $node_tracker->addChild('workflow');
