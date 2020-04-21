@@ -32,7 +32,7 @@ use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Layout\Feedback\NewFeedback;
 use Tuleap\OAuth2Server\App\AppDao;
 use Tuleap\OAuth2Server\App\InvalidAppDataException;
-use Tuleap\OAuth2Server\App\LastCreatedOAuth2AppStore;
+use Tuleap\OAuth2Server\App\LastGeneratedClientSecretStore;
 use Tuleap\OAuth2Server\App\NewOAuth2App;
 use Tuleap\Request\DispatchablePSR15Compatible;
 
@@ -51,7 +51,7 @@ final class AddAppController extends DispatchablePSR15Compatible
      */
     private $hasher;
     /**
-     * @var LastCreatedOAuth2AppStore
+     * @var LastGeneratedClientSecretStore
      */
     private $last_created_app_store;
     /**
@@ -67,7 +67,7 @@ final class AddAppController extends DispatchablePSR15Compatible
         ResponseFactoryInterface $response_factory,
         AppDao $app_dao,
         SplitTokenVerificationStringHasher $hasher,
-        LastCreatedOAuth2AppStore $last_created_app_store,
+        LastGeneratedClientSecretStore $last_created_app_store,
         RedirectWithFeedbackFactory $redirector,
         \CSRFSynchronizerToken $csrf_token,
         EmitterInterface $emitter,
@@ -121,7 +121,7 @@ final class AddAppController extends DispatchablePSR15Compatible
         }
         $app_id = $this->app_dao->create($app_to_be_saved);
 
-        $this->last_created_app_store->storeLastCreatedApp($app_id, $app_to_be_saved);
+        $this->last_created_app_store->storeLastGeneratedClientSecret($app_id, $app_to_be_saved->getSecret());
 
         return $this->response_factory->createResponse(302)->withHeader('Location', $list_clients_url);
     }

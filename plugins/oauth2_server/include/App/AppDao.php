@@ -83,6 +83,15 @@ class AppDao extends DataAccessObject
         return (int) $this->getDB()->lastInsertId();
     }
 
+    public function updateSecret(int $app_id, string $hashed_secret): void
+    {
+        $this->getDB()->update(
+            'plugin_oauth2_server_app',
+            ['verifier' => $hashed_secret],
+            ['id' => $app_id]
+        );
+    }
+
     public function delete(int $app_id): void
     {
         $this->getDB()->run('DELETE FROM plugin_oauth2_server_app WHERE id = ?', $app_id);

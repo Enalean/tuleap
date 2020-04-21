@@ -22,6 +22,7 @@ import {
     hiddenInputReplaceCallback,
     buildRevocationReplaceCallback,
     buildDeletionReplaceCallback,
+    buildRegenerationReplaceBallback,
 } from "./replacers";
 
 describe(`replacers`, () => {
@@ -36,7 +37,7 @@ describe(`replacers`, () => {
 
     describe(`hiddenInputReplaceCallback`, () => {
         it(`throws when the clicked button does not have a data-app-id attribute`, () => {
-            const delete_button = createAndAppendDeleteButton(doc);
+            const delete_button = createAndAppendButton(doc);
 
             expect(() => hiddenInputReplaceCallback(delete_button)).toThrow(
                 "Missing data-app-id attribute on button"
@@ -44,48 +45,32 @@ describe(`replacers`, () => {
         });
 
         it(`sets hidden input value from the clicked button's data-app-id value`, () => {
-            const delete_button = createAndAppendDeleteButton(doc);
+            const delete_button = createAndAppendButton(doc);
             delete_button.dataset.appId = "123";
 
             expect(hiddenInputReplaceCallback(delete_button)).toEqual("123");
         });
     });
 
-    describe(`buildDeletionReplaceCallback`, () => {
-        it(`throws when the clicked button does not have a data-app-name attribute`, () => {
-            const delete_button = createAndAppendDeleteButton(doc);
+    type replacerFactory = (gettext_provider: GetText) => (clicked_button: HTMLElement) => string;
 
-            const callback = buildDeletionReplaceCallback(gettext_provider);
-            expect(() => callback(delete_button)).toThrow(
-                "Missing data-app-name attribute on button"
-            );
+    describe.each([
+        ["buildDeletionReplaceCallback", buildDeletionReplaceCallback],
+        ["buildRevocationReplaceCallback", buildRevocationReplaceCallback],
+        ["buildRegenerationReplaceBallback", buildRegenerationReplaceBallback],
+    ])("%s", (name: string, factory: replacerFactory) => {
+        it(`throws when the clicked button does not have a data-app-name attribute`, () => {
+            const button = createAndAppendButton(doc);
+            const callback = factory(gettext_provider);
+            expect(() => callback(button)).toThrow("Missing data-app-name attribute on button");
         });
 
         it(`fills the translation placeholder with the clicked button's data-app-name value`, () => {
-            const delete_button = createAndAppendDeleteButton(doc);
-            delete_button.dataset.appName = "My OAuth2 App";
+            const button = createAndAppendButton(doc);
+            button.dataset.appName = "My OAuth2 App";
 
-            const callback = buildDeletionReplaceCallback(gettext_provider);
-            expect(callback(delete_button)).toContain("My OAuth2 App");
-        });
-    });
-
-    describe(`buildRevocationReplaceCallback`, () => {
-        it(`throws when the clicked button does not have a data-app-name attribute`, () => {
-            const delete_button = createAndAppendDeleteButton(doc);
-
-            const callback = buildRevocationReplaceCallback(gettext_provider);
-            expect(() => callback(delete_button)).toThrow(
-                "Missing data-app-name attribute on button"
-            );
-        });
-
-        it(`fills the translation placeholder with the clicked button's data-app-name value`, () => {
-            const delete_button = createAndAppendDeleteButton(doc);
-            delete_button.dataset.appName = "My OAuth2 App";
-
-            const callback = buildRevocationReplaceCallback(gettext_provider);
-            expect(callback(delete_button)).toContain("My OAuth2 App");
+            const callback = factory(gettext_provider);
+            expect(callback(button)).toContain("My OAuth2 App");
         });
     });
 });
@@ -94,7 +79,7 @@ function createLocalDocument(): Document {
     return document.implementation.createHTMLDocument();
 }
 
-function createAndAppendDeleteButton(doc: Document): HTMLElement {
+function createAndAppendButton(doc: Document): HTMLElement {
     const button = doc.createElement("button");
     doc.body.append(button);
     return button;

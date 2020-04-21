@@ -23,57 +23,49 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\App;
 
 use PHPUnit\Framework\TestCase;
-use Project;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
-use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
 
-final class LastCreatedOAuth2AppStoreTest extends TestCase
+final class LastGeneratedClientSecretStoreTest extends TestCase
 {
     /**
-     * @var LastCreatedOAuth2AppStore
+     * @var LastGeneratedClientSecretStore
      */
     private $store;
 
     protected function setUp(): void
     {
         $storage = [];
-        $this->store = new LastCreatedOAuth2AppStore(
+        $this->store = new LastGeneratedClientSecretStore(
             new PrefixedSplitTokenSerializer(new PrefixOAuth2ClientSecret()),
             new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES))),
             $storage
         );
     }
 
-    public function testAnNewlyCreatedAppCanStoredAndRetrievedOnce(): void
+    public function testANewlyGeneratedClientSecretCanBeStoredAndRetrievedOnce(): void
     {
-        $this->store->storeLastCreatedApp(1, $this->buildNewOAuth2App());
+        $secret = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
+        $this->store->storeLastGeneratedClientSecret(1, $secret);
 
-        $last_created_app = $this->store->getLastCreatedApp();
-        $this->assertNotNull($last_created_app);
-        $this->assertEquals(1, $last_created_app->getAppID());
-        $this->assertNull($this->store->getLastCreatedApp());
+        $last_client_secret = $this->store->getLastGeneratedClientSecret();
+        $this->assertNotNull($last_client_secret);
+        $this->assertEquals(1, $last_client_secret->getAppID());
+        // Does not retrieve twice
+        $this->assertNull($this->store->getLastGeneratedClientSecret());
     }
 
-    public function testOnlyTheMostCreatedAppIsRemembered(): void
+    public function testOnlyTheLastSecretIsRemembered(): void
     {
-        $this->store->storeLastCreatedApp(2, $this->buildNewOAuth2App());
-        $this->store->storeLastCreatedApp(3, $this->buildNewOAuth2App());
+        $secret = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
+        $second_secret = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
+        $this->store->storeLastGeneratedClientSecret(2, $secret);
+        $this->store->storeLastGeneratedClientSecret(3, $second_secret);
 
-        $last_created_app = $this->store->getLastCreatedApp();
+        $last_created_app = $this->store->getLastGeneratedClientSecret();
         $this->assertNotNull($last_created_app);
         $this->assertEquals(3, $last_created_app->getAppID());
-    }
-
-    private function buildNewOAuth2App(): NewOAuth2App
-    {
-        return NewOAuth2App::fromAppData(
-            'name',
-            'https://example.com/redirect',
-            true,
-            new Project(['group_id' => 102]),
-            new SplitTokenVerificationStringHasher()
-        );
     }
 }

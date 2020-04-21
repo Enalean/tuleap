@@ -66,11 +66,11 @@ final class ClientIdentifierTest extends TestCase
         $this->assertEquals('tlp-client-id-8', $identifier->toString());
     }
 
-    public function testClientIdentifierCanBeBuiltFromTheLastCreatedApp(): void
+    public function testClientIdentifierCanBeBuiltFromTheLastGeneratedClientSecret(): void
     {
-        $last_created_app = new LastCreatedOAuth2App(9, new ConcealedString('secret'));
+        $last_created_app = new LastGeneratedClientSecret(9, new ConcealedString('secret'));
 
-        $identifier = ClientIdentifier::fromLastCreatedOAuth2App($last_created_app);
+        $identifier = ClientIdentifier::fromLastGeneratedClientSecret($last_created_app);
 
         $this->assertEquals(9, $identifier->getInternalId());
         $this->assertEquals('tlp-client-id-9', $identifier->toString());

@@ -89,6 +89,16 @@ msgstr "Force l'utilisation de PKCE ?"
 msgid "Force usage of PKCE to authenticate"
 msgstr "Forcer à utiliser PKCE pour s'authentifier"
 
+msgid "Generate a new client secret"
+msgstr "Générer un nouveau secret client"
+
+msgid ""
+"Here is the generated secret for your app %s. Make sure to copy it. You "
+"won't be able to see it again!"
+msgstr ""
+"Voici le secret généré pour votre app %s. Prenez soin de le copier. Vous ne "
+"pourrez pas le voir de nouveau !"
+
 msgid "My REST API consumer App"
 msgstr "Mon App utilisant l'API REST"
 
@@ -157,10 +167,3 @@ msgstr "Profil utilisateur"
 
 msgid "You did not authorize any OAuth2 App yet."
 msgstr "Vous n'avez pas encore autorisé d'app OAuth2."
-
-msgid ""
-"Your new app %s has been created, make sure to copy the following secret. "
-"You won't be able to see it again!"
-msgstr ""
-"Votre nouvelle app %s vient d'être créée, prenez soin de copier le secret "
-"qui suit. Vous ne pourrez pas le voir de nouveau !"

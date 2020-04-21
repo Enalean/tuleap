@@ -90,7 +90,7 @@ final class DeleteAppControllerTest extends TestCase
     {
         return [
             'No body' => [null],
-            'No name' => [['not_app_id' => '12']]
+            'No app id' => [['not_app_id' => '12']]
         ];
     }
 
@@ -113,11 +113,7 @@ final class DeleteAppControllerTest extends TestCase
 
     public function testGetUrl(): void
     {
-        $project = M::mock(\Project::class)->shouldReceive('getID')
-            ->once()
-            ->andReturn(102)
-            ->getMock();
-
+        $project = new \Project(['group_id' => 102]);
         $this->assertSame('/plugins/oauth2_server/project/102/admin/delete-app', DeleteAppController::getUrl($project));
     }
 
