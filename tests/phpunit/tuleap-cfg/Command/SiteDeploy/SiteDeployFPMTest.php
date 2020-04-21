@@ -43,6 +43,10 @@ final class SiteDeployFPMTest extends TestCase
      * @var \org\bovigo\vfs\vfsStreamDirectory
      */
     private $vfsStream;
+    /**
+     * @var string
+     */
+    private $current_user;
 
     protected function setUp(): void
     {
@@ -54,13 +58,14 @@ final class SiteDeployFPMTest extends TestCase
         mkdir($this->php74_configuration_folder . '/php-fpm.d', 0755, true);
         $this->temp_dir = $base_dir . '/var/tmp';
         mkdir($this->temp_dir, 0755, true);
+        $this->current_user = posix_getpwuid(posix_geteuid())['name'];
     }
 
     public function testDeployPHP73Prod(): void
     {
         $deploy = new SiteDeployFPM(
             new NullLogger(),
-            getmyuid(),
+            $this->current_user,
             false,
             $this->php73_configuration_folder,
             __DIR__ . '/../../../../../src/etc/fpm73',
@@ -79,8 +84,8 @@ final class SiteDeployFPMTest extends TestCase
         $this->assertDirectoryExists($this->temp_dir . '/tuleap_cache/php/wsdlcache');
 
         $tuleap_conf = file_get_contents($this->php73_configuration_folder . '/php-fpm.d/tuleap_common.part');
-        $this->assertStringContainsString('user = ' . getmyuid(), $tuleap_conf);
-        $this->assertStringContainsString('group = ' . getmyuid(), $tuleap_conf);
+        $this->assertStringContainsString('user = ' . $this->current_user, $tuleap_conf);
+        $this->assertStringContainsString('group = ' . $this->current_user, $tuleap_conf);
 
         $this->assertFileEquals(__DIR__ . '/../../../../../src/etc/fpm73/tuleap_errors_prod.part', $this->php73_configuration_folder . '/php-fpm.d/tuleap_errors.part');
     }
@@ -89,7 +94,7 @@ final class SiteDeployFPMTest extends TestCase
     {
         $deploy = new SiteDeployFPM(
             new NullLogger(),
-            getmyuid(),
+            $this->current_user,
             false,
             $this->php74_configuration_folder,
             __DIR__ . '/../../../../../src/etc/fpm74',
@@ -108,8 +113,8 @@ final class SiteDeployFPMTest extends TestCase
         $this->assertDirectoryExists($this->temp_dir . '/tuleap_cache/php/wsdlcache');
 
         $tuleap_conf = file_get_contents($this->php74_configuration_folder . '/php-fpm.d/tuleap_common.part');
-        $this->assertStringContainsString('user = ' . getmyuid(), $tuleap_conf);
-        $this->assertStringContainsString('group = ' . getmyuid(), $tuleap_conf);
+        $this->assertStringContainsString('user = ' . $this->current_user, $tuleap_conf);
+        $this->assertStringContainsString('group = ' . $this->current_user, $tuleap_conf);
 
         $this->assertFileEquals(__DIR__ . '/../../../../../src/etc/fpm73/tuleap_errors_prod.part', $this->php74_configuration_folder . '/php-fpm.d/tuleap_errors.part');
     }
@@ -118,7 +123,7 @@ final class SiteDeployFPMTest extends TestCase
     {
         $deploy = new SiteDeployFPM(
             new NullLogger(),
-            getmyuid(),
+            $this->current_user,
             true,
             $this->php73_configuration_folder,
             __DIR__ . '/../../../../../src/etc/fpm73',
@@ -137,8 +142,8 @@ final class SiteDeployFPMTest extends TestCase
         $this->assertDirectoryExists($this->temp_dir . '/tuleap_cache/php/wsdlcache');
 
         $tuleap_conf = file_get_contents($this->php73_configuration_folder . '/php-fpm.d/tuleap_common.part');
-        $this->assertStringContainsString('user = ' . getmyuid(), $tuleap_conf);
-        $this->assertStringContainsString('group = ' . getmyuid(), $tuleap_conf);
+        $this->assertStringContainsString('user = ' . $this->current_user, $tuleap_conf);
+        $this->assertStringContainsString('group = ' . $this->current_user, $tuleap_conf);
 
         $this->assertFileEquals(__DIR__ . '/../../../../../src/etc/fpm73/tuleap_errors_dev.part', $this->php73_configuration_folder . '/php-fpm.d/tuleap_errors.part');
     }
@@ -158,7 +163,7 @@ final class SiteDeployFPMTest extends TestCase
 
         $deploy = new SiteDeployFPM(
             new NullLogger(),
-            getmyuid(),
+            $this->current_user,
             false,
             $this->php73_configuration_folder,
             __DIR__ . '/../../../../../src/etc/fpm73',
@@ -187,7 +192,7 @@ final class SiteDeployFPMTest extends TestCase
 
         $deploy = new SiteDeployFPM(
             new NullLogger(),
-            getmyuid(),
+            $this->current_user,
             false,
             $this->php73_configuration_folder,
             __DIR__ . '/../../../../../src/etc/fpm73',
@@ -200,7 +205,7 @@ final class SiteDeployFPMTest extends TestCase
             $target_file = $this->php73_configuration_folder . '/php-fpm.d/' . $file;
             $this->assertNotEmpty(file_get_contents($this->php73_configuration_folder . '/php-fpm.d/' . $file), "$target_file should not be empty");
         }
-        $this->assertStringContainsString('user = ' . getmyuid(), file_get_contents($this->php73_configuration_folder . '/php-fpm.d/tuleap_common.part'));
+        $this->assertStringContainsString('user = ' . $this->current_user, file_get_contents($this->php73_configuration_folder . '/php-fpm.d/tuleap_common.part'));
     }
 
 
@@ -211,7 +216,7 @@ final class SiteDeployFPMTest extends TestCase
 
         $deploy = new SiteDeployFPM(
             new NullLogger(),
-            getmyuid(),
+            $this->current_user,
             false,
             $this->php73_configuration_folder,
             __DIR__ . '/../../../../../src/etc/fpm73',
@@ -238,7 +243,7 @@ final class SiteDeployFPMTest extends TestCase
 
         $deploy = new SiteDeployFPM(
             new NullLogger(),
-            getmyuid(),
+            $this->current_user,
             false,
             $this->php73_configuration_folder,
             __DIR__ . '/../../../../../src/etc/fpm73',
@@ -250,6 +255,6 @@ final class SiteDeployFPMTest extends TestCase
         foreach ($all_files as $file) {
             $this->assertEquals('', file_get_contents($this->php73_configuration_folder . '/php-fpm.d/' . $file));
         }
-        $this->assertStringContainsString('user = ' . getmyuid(), file_get_contents($this->php73_configuration_folder . '/php-fpm.d/tuleap_common.part'));
+        $this->assertStringContainsString('user = ' . $this->current_user, file_get_contents($this->php73_configuration_folder . '/php-fpm.d/tuleap_common.part'));
     }
 }
