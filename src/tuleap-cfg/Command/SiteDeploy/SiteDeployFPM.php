@@ -216,7 +216,7 @@ final class SiteDeployFPM
 
     private function createMissingDirectories(): void
     {
-        if (! is_dir('/var/tmp/tuleap_cache/php/session') || ! is_dir('/var/tmp/tuleap_cache/php/wsdlcache')) {
+        if (! is_dir($this->temp_base_directory . '/tuleap_cache/php/session') || ! is_dir($this->temp_base_directory . '/tuleap_cache/php/wsdlcache')) {
             $this->logger->info("Create temporary directories");
             $this->createDirectoryForAppUser($this->temp_base_directory . '/tuleap_cache');
             $this->createDirectoryForAppUser($this->temp_base_directory . '/tuleap_cache/php');

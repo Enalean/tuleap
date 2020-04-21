@@ -59,9 +59,9 @@ final class TrackerXMLExporterChangesetValueStepDefinitionXMLExporterTest extend
         $step2 = new Step(
             2,
             'yep',
-            'text',
+            'html',
             'nope',
-            'text',
+            'html',
             2
         );
 
@@ -76,7 +76,7 @@ final class TrackerXMLExporterChangesetValueStepDefinitionXMLExporterTest extend
 
         $artifact = Mockery::mock(Tracker_Artifact::class);
         $exporter->export($artifact_xml, $changeset_xml, $artifact, $changeset_value);
-        $this->assertEquals($this->getXmlResult(), $changeset_xml);
+        $this->assertXmlStringEqualsXmlString($this->getXmlResult()->asXML(), $changeset_xml->asXML());
     }
 
     public function testItDoesntExportsTheExternalChangesetIfTheirIsNotStepOnChangeset(): void
@@ -103,7 +103,7 @@ final class TrackerXMLExporterChangesetValueStepDefinitionXMLExporterTest extend
 
         $artifact = Mockery::mock(Tracker_Artifact::class);
         $exporter->export($artifact_xml, $changeset_xml, $artifact, $changeset_value);
-        $this->assertEquals($expected_xml, $changeset_xml);
+        $this->assertXmlStringEqualsXmlString($expected_xml->asXML(), $changeset_xml->asXML());
     }
 
     private function getXmlResult(): SimpleXMLElement
