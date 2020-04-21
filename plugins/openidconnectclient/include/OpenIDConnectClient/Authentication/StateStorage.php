@@ -34,12 +34,13 @@ class StateStorage
         $this->storage =& $storage;
     }
 
-    public function saveState(State $state)
+    public function saveState(State $state): void
     {
         $stored_state = new SessionState(
             $state->getSecretKey(),
             $state->getReturnTo(),
-            $state->getNonce()
+            $state->getNonce(),
+            $state->getPKCECodeVerifier()
         );
         $this->storage[self::AUTHORIZATION_STATE] = $stored_state->convertToMinimalRepresentation();
     }

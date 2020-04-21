@@ -18,12 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\OpenIDConnectClient\Authentication;
 
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Key;
+use Tuleap\Cryptography\ConcealedString;
 
 class State
 {
@@ -32,7 +35,7 @@ class State
      */
     private $provider_id;
     /**
-     * @var string
+     * @var string|null
      */
     private $return_to;
     /**
@@ -43,23 +46,28 @@ class State
      * @var string
      */
     private $nonce;
+    /**
+     * @var ConcealedString
+     */
+    private $pkce_code_verifier;
 
-    public function __construct($provider_id, $return_to, $secret_key, $nonce)
+    public function __construct(int $provider_id, ?string $return_to, string $secret_key, string $nonce, ConcealedString $pkce_code_verifier)
     {
-        $this->provider_id = $provider_id;
-        $this->return_to   = $return_to;
-        $this->secret_key  = $secret_key;
-        $this->nonce       = $nonce;
+        $this->provider_id        = $provider_id;
+        $this->return_to          = $return_to;
+        $this->secret_key         = $secret_key;
+        $this->nonce              = $nonce;
+        $this->pkce_code_verifier = $pkce_code_verifier;
     }
 
-    public static function createFromSignature($signed_state, $return_to, $secret_key, $nonce): self
+    public static function createFromSignature(string $signed_state, ?string $return_to, string $secret_key, string $nonce, ConcealedString $pkce_code_verifier): self
     {
         $token = (new Parser())->parse($signed_state);
         if (! $token->verify(new Sha256(), $secret_key)) {
             throw new \RuntimeException('Signed state cannot be verifier');
         }
         $provider_id = (int) $token->getClaim('provider_id');
-        return new self($provider_id, $return_to, $secret_key, $nonce);
+        return new self($provider_id, $return_to, $secret_key, $nonce, $pkce_code_verifier);
     }
 
     public function getSignedState(): string
@@ -67,26 +75,28 @@ class State
         return (string) (new Builder())->withClaim('provider_id', $this->provider_id)->getToken(new Sha256(), new Key($this->secret_key));
     }
 
-    public function getProviderId()
+    public function getProviderId(): int
     {
         return $this->provider_id;
     }
 
-    public function getReturnTo()
+    public function getReturnTo(): ?string
     {
         return $this->return_to;
     }
 
-    public function getSecretKey()
+    public function getSecretKey(): string
     {
         return $this->secret_key;
     }
 
-    /**
-     * @return string
-     */
-    public function getNonce()
+    public function getNonce(): string
     {
         return $this->nonce;
+    }
+
+    public function getPKCECodeVerifier(): ConcealedString
+    {
+        return $this->pkce_code_verifier;
     }
 }

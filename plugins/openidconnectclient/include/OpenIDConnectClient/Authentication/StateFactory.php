@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,9 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\OpenIDConnectClient\Authentication;
 
 use RandomNumberGenerator;
+use Tuleap\Cryptography\ConcealedString;
 
 class StateFactory
 {
@@ -34,6 +37,11 @@ class StateFactory
      */
     private static $nonce;
 
+    /**
+     * @var ConcealedString
+     */
+    private static $pkce_code_verifier;
+
     public function __construct(RandomNumberGenerator $random_number_generator)
     {
         if (self::$key === null) {
@@ -42,10 +50,13 @@ class StateFactory
         if (self::$nonce === null) {
             self::$nonce = $random_number_generator->getNumber();
         }
+        if (self::$pkce_code_verifier === null) {
+            self::$pkce_code_verifier = new ConcealedString($random_number_generator->getNumber());
+        }
     }
 
-    public function createState($provider_id = null, $return_to = null)
+    public function createState(int $provider_id, ?string $return_to = null): State
     {
-        return new State($provider_id, $return_to, self::$key, self::$nonce);
+        return new State($provider_id, $return_to, self::$key, self::$nonce, self::$pkce_code_verifier);
     }
 }

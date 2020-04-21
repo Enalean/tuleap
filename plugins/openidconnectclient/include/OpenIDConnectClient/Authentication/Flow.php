@@ -91,7 +91,8 @@ class Flow
         $token_request  = $this->token_request_creator->createTokenRequest(
             $provider,
             $authorization_response,
-            $provider->getRedirectUri()
+            $provider->getRedirectUri(),
+            $state->getPKCECodeVerifier()
         );
         $token_response = $this->token_request_sender->sendTokenRequest($token_request);
         $id_token       = $this->id_token_verifier->validate(
