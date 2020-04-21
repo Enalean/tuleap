@@ -21,8 +21,8 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../../../tests/phpunit/bootstrap.php';
-require_once __DIR__ . '/../include/baselinePlugin.php';
+require_once __DIR__ . '/../../../../tests/unit/bootstrap.php';
+require_once __DIR__ . '/../../include/baselinePlugin.php';
 
 foreach (['Factory', 'Stub', 'Support'] as $folder) {
     $files = glob(__DIR__ . '/' . $folder . '/*.php');
