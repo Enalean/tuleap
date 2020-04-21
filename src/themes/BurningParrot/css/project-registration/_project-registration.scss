@@ -71,7 +71,7 @@ $title-margin-left: $illustration-width + $illustration-spacing;
     > .project-registration-content {
         display: flex;
         align-items: baseline;
-        justify-content: flex-end;
+        justify-content: space-between;
     }
 
     &.pinned {
@@ -89,13 +89,15 @@ $title-margin-left: $illustration-width + $illustration-spacing;
         border-top: 0;
         background: transparentize($tlp-ui-white, .1);
         box-shadow: 0 -1px 2px 0 rgba(0, 0, 0, .1);
-
-        > .project-registration-content {
-            display: flex;
-            align-items: baseline;
-            justify-content: flex-end;
-        }
     }
+}
+
+.project-creation-navigation-back-to-legacy {
+    color: $tlp-ui-dimmed;
+}
+
+.project-footer-external-link-icon {
+    margin: 0 4px 0 0;
 }
 
 .project-registration-back-button {

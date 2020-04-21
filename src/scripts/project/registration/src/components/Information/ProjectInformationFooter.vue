@@ -21,24 +21,27 @@
 <template>
     <div class="project-registration-button-container">
         <div class="project-registration-content">
-            <router-link
-                to="/new"
-                v-on:click.native="resetSelectedTemplate"
-                class="project-registration-back-button"
-                data-test="project-registration-back-button"
-            >
-                <i class="fa fa-long-arrow-left"></i>
-                <span class="project-registration-back-button-text" v-translate>Back</span>
-            </router-link>
-            <button
-                type="submit"
-                class="tlp-button-primary tlp-button-large tlp-form-element-disabled project-registration-next-button"
-                data-test="project-registration-next-button"
-                v-bind:disabled="is_creating_project"
-            >
-                <span v-translate>Start my project</span>
-                <i v-bind:class="get_icon" data-test="project-submission-icon" />
-            </button>
+            <back-to-legacy />
+            <div>
+                <router-link
+                    to="/new"
+                    v-on:click.native="resetSelectedTemplate"
+                    class="project-registration-back-button"
+                    data-test="project-registration-back-button"
+                >
+                    <i class="fa fa-long-arrow-left"></i>
+                    <span class="project-registration-back-button-text" v-translate>Back</span>
+                </router-link>
+                <button
+                    type="submit"
+                    class="tlp-button-primary tlp-button-large tlp-form-element-disabled project-registration-next-button"
+                    data-test="project-registration-next-button"
+                    v-bind:disabled="is_creating_project"
+                >
+                    <span v-translate>Start my project</span>
+                    <i v-bind:class="get_icon" data-test="project-submission-icon" />
+                </button>
+            </div>
         </div>
     </div>
 </template>
@@ -47,8 +50,9 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { State } from "vuex-class";
+import BackToLegacy from "../Layout/BackToLegacy.vue";
 
-@Component
+@Component({ components: { BackToLegacy } })
 export default class ProjectInformationFooter extends Vue {
     @State
     is_creating_project!: boolean;

@@ -18,25 +18,10 @@
   -
   -->
 
-<template>
+<template functional>
     <!-- prettier-ignore -->
-    <a v-bind:href="url" class="tracker-creation-navigation-back-to-legacy">
-        <i class="fa fa-random tracker-footer-external-link-icon"></i><!--
+    <a href="/project/register.php" class="project-creation-navigation-back-to-legacy">
+        <i class="fa fa-random project-footer-external-link-icon"></i><!--
         --><translate>Switch to legacy UI</translate>
     </a>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import { State } from "vuex-class";
-
-@Component
-export default class BackToLegacy extends Vue {
-    @State
-    readonly project_id!: number;
-
-    get url() {
-        return `/plugins/tracker/?group_id=${encodeURIComponent(this.project_id)}&func=create`;
-    }
-}
-</script>

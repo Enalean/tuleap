@@ -55,10 +55,7 @@ class FlamingParrot_NavBarItemProjectsPresenter extends FlamingParrot_NavBarItem
         $this->is_trove_cat_enabled            = ForgeConfig::get('sys_use_trove');
         $this->is_project_registration_enabled = $is_project_registration_enabled;
 
-        $this->project_registration_url = '/project/register.php';
-        if (ForgeConfig::get(\ProjectManager::FORCE_NEW_PROJECT_CREATION_USAGE) === '1') {
-            $this->project_registration_url = '/project/new';
-        }
+        $this->project_registration_url = '/project/new';
 
         $this->display_only_trovemap =
             $this->is_trove_cat_enabled
