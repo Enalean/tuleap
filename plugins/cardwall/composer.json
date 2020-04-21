@@ -8,9 +8,9 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Tuleap\\Cardwall\\": "phpunit/"
+      "Tuleap\\Cardwall\\": "tests/unit/"
     },
-    "classmap": ["phpunit/"]
+    "classmap": ["tests/unit/"]
   },
   "config": {
     "sort-packages": true

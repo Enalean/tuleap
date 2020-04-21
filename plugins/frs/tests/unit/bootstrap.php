@@ -15,12 +15,8 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ *
+ *
  */
-
-require_once __DIR__ . '/../../../../src/vendor/autoload.php';
-require_once __DIR__ . '/bootstrap.php';
-require_once __DIR__ . '/../../tests/unit/bootstrap.php';
-
-$plugin_rest_initializer = new \Tuleap\DynamicCredentials\REST\DynamicCredentialsPluginRESTInitializer();
-$plugin_rest_initializer->initialize();
+require_once __DIR__ . '/../../include/frsPlugin.php';

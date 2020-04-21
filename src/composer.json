@@ -24,10 +24,10 @@
     "psr-4": {
       "Tuleap\\Test\\": ["../tests/lib/"],
       "TuleapCodingStandard\\": ["../tests/phpcs/TuleapCodingStandard", "../tests/phpcs/tests/"],
-      "Tuleap\\": ["../tests/phpunit/common"],
-      "TuleapCfg\\": ["../tests/phpunit/tuleap-cfg"]
+      "Tuleap\\": ["../tests/unit/common"],
+      "TuleapCfg\\": ["../tests/unit/tuleap-cfg"]
     },
-    "classmap": ["../tests/lib/", "../tests/phpunit"]
+    "classmap": ["../tests/lib/", "../tests/unit"]
   },
   "repositories": [
     {
