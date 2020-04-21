@@ -34,13 +34,10 @@ final class OAuth2TestFlowConfigurationStorage
         $this->configuration = $configuration;
     }
 
-    /**
-     * @return OAuth2TestFlowConfiguration
-     */
-    public function getConfiguration()
+    public function getConfiguration(): OAuth2TestFlowConfiguration
     {
         if ($this->configuration === null) {
-            throw new RuntimeException('OIDC configuration is missing, did you call GET /init-flow first?');
+            throw new \RuntimeException('OIDC configuration is missing, did you call GET /init-flow first?');
         }
         return $this->configuration;
     }
