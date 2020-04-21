@@ -34,6 +34,8 @@ use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\REST\ResourcesInjector;
 use Tuleap\REST\RestlerFactory;
+use Tuleap\REST\Specification\Swagger\SwaggerJsonSecurityDefinition;
+use Tuleap\REST\Specification\Swagger\SwaggerJsonSecurityDefinitionsCollection;
 
 final class SwaggerJsonControllerTest extends TestCase
 {
@@ -46,6 +48,17 @@ final class SwaggerJsonControllerTest extends TestCase
 
         $event_manager = \Mockery::mock(\EventManager::class);
         $event_manager->shouldReceive('processEvent');
+        $collection_security_definitions = new SwaggerJsonSecurityDefinitionsCollection();
+        $collection_security_definitions->addSecurityDefinition(
+            SwaggerJsonSecurityDefinitionsCollection::TYPE_NAME_OAUTH2,
+            new class implements SwaggerJsonSecurityDefinition
+            {
+            }
+        );
+
+        $event_manager->shouldReceive('dispatch')->with(
+            \Mockery::type(SwaggerJsonSecurityDefinitionsCollection::class)
+        )->andReturn($collection_security_definitions);
 
         $resources_injector = new class extends ResourcesInjector
         {
@@ -62,6 +75,8 @@ final class SwaggerJsonControllerTest extends TestCase
                 $event_manager
             ),
             '11.13-2',
+            $event_manager,
+            \Codendi_HTMLPurifier::instance(),
             new JSONResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
             \Mockery::mock(EmitterInterface::class)
         );

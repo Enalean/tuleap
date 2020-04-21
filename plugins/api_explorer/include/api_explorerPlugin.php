@@ -97,13 +97,16 @@ final class api_explorerPlugin extends Plugin
 
     public function routeGetSwaggerJson(): SwaggerJsonController
     {
+        $event_manager = EventManager::instance();
         return new SwaggerJsonController(
             new RestlerFactory(
                 new RestlerCache(),
                 new ResourcesInjector(),
-                EventManager::instance(),
+                $event_manager,
             ),
             VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence())->version_identifier,
+            $event_manager,
+            Codendi_HTMLPurifier::instance(),
             new JSONResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
             new SapiEmitter(),
             new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION)
