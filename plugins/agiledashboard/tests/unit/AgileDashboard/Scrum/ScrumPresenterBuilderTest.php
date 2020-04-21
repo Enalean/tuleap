@@ -137,7 +137,6 @@ class ScrumPresenterBuilderTest extends TestCase
             "",
             false,
             true,
-            false,
             []
         );
 
@@ -196,7 +195,6 @@ class ScrumPresenterBuilderTest extends TestCase
             "",
             false,
             true,
-            false,
             []
         );
 
@@ -258,7 +256,6 @@ class ScrumPresenterBuilderTest extends TestCase
             "",
             false,
             true,
-            false,
             []
         );
 
@@ -317,7 +314,6 @@ class ScrumPresenterBuilderTest extends TestCase
             "",
             true,
             true,
-            false,
             []
         );
 

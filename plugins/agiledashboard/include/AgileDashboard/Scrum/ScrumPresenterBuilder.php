@@ -117,7 +117,6 @@ class ScrumPresenterBuilder
             $this->getAdditionalContent(),
             $this->doesProjectUseExplicitBacklog($project),
             $has_workflow_action_add_to_top_backlog_defined,
-            (bool) $user->useLabFeatures(),
             $additional_scrum_sections->getAdditionalSectionsControllers()
         );
     }
