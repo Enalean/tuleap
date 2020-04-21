@@ -333,12 +333,14 @@ function ExecutionDetailCtrl(
             execution_time = execution.time;
         }
 
+        let uploaded_file_ids = ExecutionService.getUsedUploadedFilesIds(execution);
+
         ExecutionRestService.putTestExecution(
             execution.id,
             new_status,
             execution_time,
             execution.results,
-            execution.uploaded_file_ids
+            uploaded_file_ids
         )
             .then(function (data) {
                 ExecutionService.updateTestExecution(

@@ -63,6 +63,7 @@ function ExecutionService(
         removeTestExecution,
         removeTestExecutionWithoutUpdateCampaignStatus,
         updateTestExecution,
+        getUsedUploadedFilesIds,
         updatePresenceOnCampaign,
         removeAllPresencesOnCampaign,
         viewTestExecution,
@@ -255,7 +256,7 @@ function ExecutionService(
 
     function clearEditor(execution) {
         self.editor.setData("");
-        execution.uploaded_file_ids = [];
+        execution.uploaded_files = [];
     }
 
     function hasDefinitionChanged(execution, execution_updated) {
@@ -386,7 +387,7 @@ function ExecutionService(
             return;
         }
 
-        execution.uploaded_file_ids = [];
+        execution.uploaded_files = [];
 
         const onStartCallback = () => {};
         const onErrorCallback = (error) => {
@@ -414,6 +415,16 @@ function ExecutionService(
         self.editor.on("fileUploadRequest", fileUploadRequestHandler, null, null, 4);
     }
 
+    function getUsedUploadedFilesIds(execution) {
+        let upload_files_id = [];
+        execution.uploaded_files.forEach(function (item) {
+            if (self.editor.getData().indexOf(item.download_href) !== -1) {
+                upload_files_id.push(item.id);
+            }
+        });
+        return upload_files_id;
+    }
+
     function disablePasteOfImages() {
         self.editor.on("paste", (event) => {
             if (isThereAnImageWithDataURI(event.data.dataValue)) {
@@ -427,7 +438,7 @@ function ExecutionService(
     }
 
     function addToFilesAddedByTextField(execution, uploaded_file) {
-        execution.uploaded_file_ids.push(uploaded_file.id);
+        execution.uploaded_files.push(uploaded_file);
     }
 
     function removeViewTestExecution(execution_id, user_to_remove) {

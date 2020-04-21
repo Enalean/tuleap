@@ -30,10 +30,13 @@ describe("ExecutionDetailController -", () => {
         ExecutionService,
         TlpModalService,
         NewTuleapArtifactModalService,
+        ckeditorGetData,
         ExecutionRestService;
 
     beforeEach(() => {
         angular.mock.module(execution_module);
+        ckeditorGetData = {};
+        ckeditorGetData.getData = () => "";
 
         let $controller, $rootScope;
 
@@ -164,13 +167,14 @@ describe("ExecutionDetailController -", () => {
             jest.spyOn(ExecutionRestService, "putTestExecution").mockReturnValue(
                 $q.when(execution)
             );
+            ExecutionService.editor = ckeditorGetData;
             $scope.execution = execution;
             $scope.timer = { execution_time: time };
         });
 
         describe("pass()", () => {
             it("Then the status will be saved to 'passed' and the timer will be reset", () => {
-                execution.uploaded_file_ids = [];
+                execution.uploaded_files = [];
 
                 $scope.pass(execution);
                 $scope.$apply();
@@ -234,7 +238,13 @@ describe("ExecutionDetailController -", () => {
 
         describe("notrun()", () => {
             it("Then the status will be saved to 'notrun' and the timer will be reset", () => {
-                execution.uploaded_file_ids = [13];
+                ckeditorGetData.getData = () => ["/download/href"];
+                execution.uploaded_files = [
+                    {
+                        id: 13,
+                        download_href: "/download/href",
+                    },
+                ];
 
                 $scope.notrun(execution);
                 $scope.$apply();
@@ -244,7 +254,34 @@ describe("ExecutionDetailController -", () => {
                     "notrun",
                     null,
                     execution.results,
-                    execution.uploaded_file_ids
+                    [13]
+                );
+                expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
+                expect($scope.timer.execution_time).toEqual(0);
+            });
+
+            it("Then the status will be saved to 'notrun', the timer will be reset and only the file in ckeditor will be send", () => {
+                ckeditorGetData.getData = () => ["/download/href"];
+                execution.uploaded_files = [
+                    {
+                        id: 13,
+                        download_href: "/download/href",
+                    },
+                    {
+                        id: 14,
+                        download_href: "/download/otherhref",
+                    },
+                ];
+
+                $scope.notrun(execution);
+                $scope.$apply();
+
+                expect(ExecutionRestService.putTestExecution).toHaveBeenCalledWith(
+                    execution.id,
+                    "notrun",
+                    null,
+                    execution.results,
+                    [13]
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
                 expect($scope.timer.execution_time).toEqual(0);
