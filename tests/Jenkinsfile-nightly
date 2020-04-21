@@ -61,10 +61,6 @@ pipeline {
                                 }
                             }
                         }
-                        stage('UT SimpleTest PHP 7.4') {
-                            steps { script { actions.runSimpleTestTests('74') } }
-                            post { always { junit 'results/ut-simpletest/php-74/results.xml' } }
-                        }
                     }
                 }
                 stage('E2E tests') {

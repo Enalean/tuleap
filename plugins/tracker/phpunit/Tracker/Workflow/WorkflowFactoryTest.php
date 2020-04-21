@@ -30,6 +30,7 @@ use Project;
 use SimpleXMLElement;
 use Tracker;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
+use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElementFactory;
 use Tracker_Workflow_Trigger_RulesManager;
 use TrackerFactory;
@@ -72,7 +73,7 @@ class WorkflowFactoryTest extends TestCase
         parent::tearDown();
     }
 
-    public function testImport()
+    public function testImport(): void
     {
         $xml = simplexml_load_file(__DIR__ . '/_fixtures/importWorkflow.xml');
 
@@ -86,8 +87,8 @@ class WorkflowFactoryTest extends TestCase
         $static_value_02->shouldReceive('getId')->andReturn(802);
 
         $mapping = array(
-            'F1'     => aSelectBoxField()->withId(110)->build(),
-            'F32'    => aSelectBoxField()->withId(111)->build(),
+            'F1'     => Mockery::mock(Tracker_FormElement_Field_Selectbox::class)->shouldReceive('getId')->andReturn(110)->getMock(),
+            'F32'    => Mockery::mock(Tracker_FormElement_Field_Selectbox::class)->shouldReceive('getId')->andReturn(111)->getMock(),
             'F32-V0' => $static_value_01,
             'F32-V1' => $static_value_02
         );
@@ -171,7 +172,7 @@ class WorkflowFactoryTest extends TestCase
         $this->assertEquals($third_transition, $transitions[2]);
     }
 
-    public function testImportSimpleWorkflow()
+    public function testImportSimpleWorkflow(): void
     {
         $xml = simplexml_load_file(__DIR__ . '/_fixtures/importSimpleWorkflow.xml');
 
@@ -185,8 +186,8 @@ class WorkflowFactoryTest extends TestCase
         $static_value_02->shouldReceive('getId')->andReturn(802);
 
         $mapping = array(
-            'F1'     => aSelectBoxField()->withId(110)->build(),
-            'F32'    => aSelectBoxField()->withId(111)->build(),
+            'F1'     => Mockery::mock(Tracker_FormElement_Field_Selectbox::class)->shouldReceive('getId')->andReturn(110)->getMock(),
+            'F32'    => Mockery::mock(Tracker_FormElement_Field_Selectbox::class)->shouldReceive('getId')->andReturn(111)->getMock(),
             'F32-V0' => $static_value_01,
             'F32-V1' => $static_value_02
         );

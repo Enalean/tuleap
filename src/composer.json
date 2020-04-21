@@ -24,7 +24,7 @@
     "psr-4": {
       "Tuleap\\Test\\": ["../tests/lib/"],
       "TuleapCodingStandard\\": ["../tests/phpcs/TuleapCodingStandard", "../tests/phpcs/tests/"],
-      "Tuleap\\": ["../tests/simpletest", "../tests/phpunit/common"],
+      "Tuleap\\": ["../tests/phpunit/common"],
       "TuleapCfg\\": ["../tests/phpunit/tuleap-cfg"]
     },
     "classmap": ["../tests/lib/", "../tests/phpunit"]
@@ -37,10 +37,6 @@
     {
       "type": "vcs",
       "url": "https://github.com/Enalean/Restler.git"
-    },
-    {
-      "type":"vcs",
-      "url":"https://github.com/Enalean/simpletest.git"
     }
   ],
   "require": {
@@ -95,7 +91,6 @@
     "phpcompatibility/php-compatibility": "^9.1",
     "phpunit/phpunit": "^9.1",
     "sensiolabs-de/deptrac-shim": "^0.6.0",
-    "simpletest/simpletest": "dev-master-tuleap#20190916",
     "slevomat/coding-standard": "^6.0",
     "squizlabs/php_codesniffer": "^3.4",
     "vimeo/psalm": "^3.3"
