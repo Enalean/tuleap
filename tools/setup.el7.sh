@@ -117,9 +117,9 @@ if [ ${tuleap_installed:-false} = "false" ] || \
     ${tuleapcfg} systemctl enable "${timers[@]}"
     ${tuleapcfg} systemctl start "${timers[@]}"
 
-    ${tuleapcfg} site-deploy
+    ${tuleapcfg} site-deploy --force
 
-    _phpConfigureModule "nginx,fpm"
+    _phpConfigureModule "nginx"
     ${tuleapcfg} systemctl restart "nginx" "tuleap"
     ${tuleapcfg} systemctl enable "nginx"
     _endMessage

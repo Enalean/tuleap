@@ -23,10 +23,14 @@ declare(strict_types=1);
 
 namespace TuleapCfg\Command\Docker;
 
+use ForgeConfig;
+use Psr\Log\LogLevel;
+use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tuleap\System\ServiceControl;
 use TuleapCfg\Command\Configure\ConfigureApache;
 use TuleapCfg\Command\ProcessFactory;
+use TuleapCfg\Command\SiteDeploy\SiteDeployFPM;
 
 final class Tuleap
 {
@@ -57,6 +61,7 @@ final class Tuleap
             ]
         )->mustRun();
         $this->process_factory->getProcess(['/usr/bin/tuleap', 'config-set', ServiceControl::FORGECONFIG_INIT_MODE, ServiceControl::SUPERVISORD])->mustRun();
+        $this->regenerateConfigurations($output);
     }
 
     public function update(OutputInterface $output): void
@@ -68,8 +73,17 @@ final class Tuleap
 
     private function regenerateConfigurations(OutputInterface $output): void
     {
-        $output->writeln('<info>Regenerate configurations for nginx, fpm</info>');
-        $this->process_factory->getProcess([__DIR__ . '/../../../../tools/utils/php73/run.php', '--module=nginx,fpm'])->mustRun();
+        $output->writeln('<info>Regenerate configurations for nginx</info>');
+        $this->process_factory->getProcess([__DIR__ . '/../../../../tools/utils/php73/run.php', '--module=nginx'])->mustRun();
+
+        ForgeConfig::loadLocalInc();
+        $output->writeln('<info>Regenerate configuration for fpm</info>');
+        $site_deploy_fpm = SiteDeployFPM::buildForPHP73(
+            new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]),
+            'codendiadm',
+            false
+        );
+        $site_deploy_fpm->forceDeploy();
 
         $output->writeln('<info>Regenerate configuration for apache</info>');
         $configure_apache = new ConfigureApache('/');

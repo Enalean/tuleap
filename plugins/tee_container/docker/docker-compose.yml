@@ -1,0 +1,42 @@
+# This compose file is provided for test purpose as:
+# * it doesnt run the docker.tuleap.org/tuleap-enterprise-edition image but the community one (tuleap-aio).
+# * the database is part of this compose file and that's not suitable for production
+# * password are either hardcoded to dumb value or not existent (redis)
+version: "2"
+
+services:
+  web:
+    image: enalean/tuleap-aio:centos7
+    command: /usr/share/tuleap/plugins/tee_container/bin/tee-container.php run
+    volumes:
+      - ../../../:/usr/share/tuleap:ro,cached
+      - tuleap-data:/data
+    depends_on:
+      - db
+      - redis
+    environment:
+      - TULEAP_FQDN=tuleap.local
+      - DB_HOST=db
+      - DB_ADMIN_USER=root
+      - DB_ADMIN_PASSWORD=welcome0
+      - TULEAP_FPM_SESSION_MODE=redis
+      - TULEAP_REDIS_SERVER=redis
+
+  db:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=welcome0
+    volumes:
+      - ../../../src/etc/tuleap-mysql57-dev.cnf:/etc/mysql/mysql.conf.d/mysql-server.cnf:ro,cached
+      - db57-data:/var/lib/mysql
+
+  redis:
+    image: redis:5
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+
+volumes:
+  tuleap-data:
+  db57-data:
+  redis-data:

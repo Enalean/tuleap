@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace TuleapCfg\Command\SiteDeploy;
 
-use Config_LocalIncFinder;
 use ForgeConfig;
 use Psr\Log\LogLevel;
 use Symfony\Component\Console\Command\Command;
@@ -35,12 +34,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 final class SiteDeployFPMCommand extends Command
 {
     public const NAME = 'site-deploy:fpm';
+    public const OPT_PHP_VERSION = 'php-version';
+    public const PHP73           = 'php73';
+    public const PHP74           = 'php74';
+    public const OPT_FORCE       = 'force';
 
-    private const OPT_PHP_VERSION = 'php-version';
     private const OPT_DEVELOPMENT = 'development';
-    private const PHP73           = 'php73';
-    private const PHP74           = 'php74';
-    private const OPT_FORCE       = 'force';
 
     public function __construct()
     {
@@ -57,8 +56,7 @@ final class SiteDeployFPMCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        ForgeConfig::loadFromFile(__DIR__ . '/../../../etc/local.inc.dist');
-        ForgeConfig::loadFromFile((new Config_LocalIncFinder())->getLocalIncPath());
+        ForgeConfig::loadLocalInc();
 
         $php_version = $input->getOption(self::OPT_PHP_VERSION);
         assert(is_string($php_version));

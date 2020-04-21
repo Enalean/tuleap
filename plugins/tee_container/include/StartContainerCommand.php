@@ -81,7 +81,7 @@ final class StartContainerCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $version_presenter = VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence());
-        $output->writeln(sprintf("<info>Start init sequence for %s</info>", $version_presenter->getFullDescriptiveVersion()));
+        $output->writeln(sprintf('<info>Start init sequence for %s</info>', $version_presenter->getFullDescriptiveVersion()));
         try {
             $tuleap = new Tuleap($this->process_factory);
             if (! $this->data_persistence->isThereAnyData()) {

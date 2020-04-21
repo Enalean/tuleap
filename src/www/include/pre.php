@@ -37,12 +37,9 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 date_default_timezone_set(TimezoneRetriever::getServerTimezone());
 
 // Defines all of the settings first (hosts, databases, etc.)
-$locar_inc_finder = new Config_LocalIncFinder();
-$local_inc = $locar_inc_finder->getLocalIncPath();
+$local_inc = ForgeConfig::loadLocalInc();
 require($local_inc);
 require($GLOBALS['db_config_file']);
-ForgeConfig::loadFromFile($GLOBALS['codendi_dir'] . '/src/etc/local.inc.dist'); //load the default settings
-ForgeConfig::loadFromFile($local_inc);
 ForgeConfig::loadFromFile($GLOBALS['db_config_file']);
 if (isset($GLOBALS['DEBUG_MODE'])) {
     ForgeConfig::loadFromFile($GLOBALS['codendi_dir'] . '/src/etc/development.inc.dist');

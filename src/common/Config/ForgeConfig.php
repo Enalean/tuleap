@@ -46,6 +46,14 @@ class ForgeConfig
         self::$conf_stack[0] = array_merge(self::$conf_stack[0], $value_provider->getVariables());
     }
 
+    public static function loadLocalInc(): string
+    {
+        self::loadFromFile(__DIR__ . '/../../etc/local.inc.dist');
+        $local_inc_file_path = (new Config_LocalIncFinder())->getLocalIncPath();
+        self::loadFromFile($local_inc_file_path);
+        return $local_inc_file_path;
+    }
+
     public static function loadFromFile($file)
     {
         self::load(new ConfigValueFileProvider($file));
