@@ -31,47 +31,59 @@ final class NewOAuth2AppTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testFromAppDataThrowsWhenAppNameIsEmpty(): void
+    /**
+     * @dataProvider dataProviderInvalidData
+     */
+    public function testFromAppDataThrowsWhenDataIsInvalid(string $app_name, string $redirect_uri)
     {
         $this->expectException(InvalidAppDataException::class);
-        NewOAuth2App::fromAppData('', 'https://example.com/redirect', true, M::mock(\Project::class), new SplitTokenVerificationStringHasher());
+        NewOAuth2App::fromAppData(
+            $app_name,
+            $redirect_uri,
+            true,
+            M::mock(\Project::class),
+            new SplitTokenVerificationStringHasher()
+        );
     }
 
-    public function testFromAppDataThrowsWhenRedirectEndpointIsEmpty(): void
+    public function dataProviderInvalidData(): array
     {
-        $this->expectException(InvalidAppDataException::class);
-        NewOAuth2App::fromAppData('Jenkins', '', true, M::mock(\Project::class), new SplitTokenVerificationStringHasher());
+        return [
+            'Throws when App name is empty'               => ['', 'https://example.com/redirect'],
+            'Throws when Redirect URI is empty'           => ['Jenkins', ''],
+            'Throws when Redirect URI is not HTTPS'       => ['Jenkins', 'http://insecure.example.com'],
+            'Throws when Redirect URI contains an anchor' => ['Jenkins', 'https://example.com/redirect#fragment'],
+        ];
     }
 
-    public function testFromAppDataThrowsWhenRedirectEndpointIsNotHTTPS(): void
-    {
-        $this->expectException(InvalidAppDataException::class);
-        NewOAuth2App::fromAppData('Jenkins', 'http://insecure.example.com', true, M::mock(\Project::class), new SplitTokenVerificationStringHasher());
-    }
-
-    public function testFromAppDataThrowsWhenRedirectEndpointContainsAnAnchor(): void
-    {
-        $this->expectException(InvalidAppDataException::class);
-        NewOAuth2App::fromAppData('Jenkins', 'https://example.com/redirect#fragment', true, M::mock(\Project::class), new SplitTokenVerificationStringHasher());
-    }
-
-    public function testFromAppDataReturnsANewOauth2AppToBeSavedInDatabase(): void
-    {
-        $app_name          = 'Jenkins';
-        $redirect_endpoint = 'https://example.com/redirect';
-        $project           = M::mock(\Project::class);
-        $new_app           = NewOAuth2App::fromAppData($app_name, $redirect_endpoint, true, $project, new SplitTokenVerificationStringHasher());
+    /**
+     * @dataProvider dataProviderValidData
+     */
+    public function testFromAppDataReturnsANewOauth2AppToBeSavedInDatabase(
+        string $redirect_uri,
+        bool $use_pkce
+    ): void {
+        $app_name = 'Jenkins';
+        $project  = M::mock(\Project::class);
+        $new_app  = NewOAuth2App::fromAppData(
+            $app_name,
+            $redirect_uri,
+            $use_pkce,
+            $project,
+            new SplitTokenVerificationStringHasher()
+        );
         $this->assertSame($app_name, $new_app->getName());
-        $this->assertSame($redirect_endpoint, $new_app->getRedirectEndpoint());
-        $this->assertTrue($new_app->isUsingPKCE());
+        $this->assertSame($redirect_uri, $new_app->getRedirectEndpoint());
+        $this->assertSame($use_pkce, $new_app->isUsingPKCE());
         $this->assertSame($project, $new_app->getProject());
     }
 
-    public function testFromAppDataAllowsRedirectEndpointWithQuery(): void
+    public function dataProviderValidData(): array
     {
-        $redirect_endpoint = 'https://example.com/redirect?key=value';
-        $new_app = NewOAuth2App::fromAppData('Jenkins', $redirect_endpoint, true, M::mock(\Project::class), new SplitTokenVerificationStringHasher());
-        $this->assertSame($redirect_endpoint, $new_app->getRedirectEndpoint());
+        return [
+            'Valid data'                       => ['https://example.com/redirect', false],
+            'Valid with query in redirect URI' => ['https://example.com/redirect?key=value', true]
+        ];
     }
 
     public function testNewAppSecretCanBeHashed(): void

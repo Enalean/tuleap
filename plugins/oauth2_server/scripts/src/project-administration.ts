@@ -24,6 +24,7 @@ import {
 import {
     openModalAndReplacePlaceholders,
     openTargetModalIdOnClick,
+    openAllTargetModalsOnClick,
 } from "../../../../src/scripts/tuleap/modals/modal-opener";
 import {
     buildDeletionReplaceCallback,
@@ -37,6 +38,8 @@ const NEW_SECRET_BUTTONS_SELECTOR = "[data-new-client-secret-button]";
 const NEW_SECRET_MODAL_ID = "oauth2-server-new-secret-modal";
 const NEW_SECRET_MODAL_APP_ID = "oauth2-server-new-secret-app-id";
 const NEW_SECRET_MODAL_DESCRIPTION = "oauth2-server-new-secret-app-name";
+
+const EDIT_BUTTONS_SELECTOR = "[data-edit-client-button]";
 
 const DELETE_BUTTONS_SELECTOR = "[data-delete-client-button]";
 const DELETE_MODAL_ID = "oauth2-server-delete-client-modal";
@@ -53,6 +56,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
 
     openTargetModalIdOnClick(document, ADD_BUTTON_ID);
+    openAllTargetModalsOnClick(document, EDIT_BUTTONS_SELECTOR);
     openModalAndReplacePlaceholders({
         document: document,
         buttons_selector: DELETE_BUTTONS_SELECTOR,

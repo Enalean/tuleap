@@ -60,6 +60,37 @@ final class OAuth2App
     }
 
     /**
+     * @throws InvalidAppDataException
+     */
+    public static function fromAppData(
+        string $app_id,
+        string $app_name,
+        string $redirect_endpoint,
+        bool $use_pkce,
+        \Project $project
+    ): self {
+        if (! self::isAppDataValid($app_id, $app_name, $redirect_endpoint)) {
+            throw new InvalidAppDataException();
+        }
+
+        return new self((int) $app_id, $app_name, $redirect_endpoint, $use_pkce, $project);
+    }
+
+    private static function isAppDataValid(string $app_id, string $app_name, string $redirect_endpoint): bool
+    {
+        $string_validator = new \Valid_String();
+        $string_validator->required();
+        // See https://tools.ietf.org/html/rfc6749#section-3.1.2
+        $redirect_endpoint_validator = new \Valid_String();
+        $redirect_endpoint_validator->required();
+        $redirect_endpoint_validator->addRule(new \Rule_Regexp('/^https:\/\/[^#]*$/i'));
+
+        return is_numeric($app_id)
+            && $string_validator->validate($app_name)
+            && $redirect_endpoint_validator->validate($redirect_endpoint);
+    }
+
+    /**
      * @psalm-mutation-free
      */
     public function getId(): int
