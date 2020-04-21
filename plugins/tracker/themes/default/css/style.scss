@@ -26,6 +26,10 @@
 @import 'includes/artifact-link-field';
 @import 'includes/xml-validation';
 
+$tracker-artifact-submit-buttons-height: 80px;
+$tracker-artifact-submit-buttons-concurrent-edition-height: 286px;
+$tracker-artifact-followup-comments-in-concurrent-edition-padding-bottom: $tracker-artifact-submit-buttons-height + $tracker-artifact-submit-buttons-concurrent-edition-height;
+
 /* stylelint-disable selector-id-pattern, selector-class-pattern, selector-no-qualifying-type, selector-max-compound-selectors */
 /* {{{ New trackers */
 button[name=tracker_query_submit] {
@@ -797,10 +801,14 @@ select.tracker-report-expert-allowed-fields {
     /* stylelint-disable-next-line declaration-block-no-duplicate-properties */
     width: 100%;
     margin-top: 30px;
-    padding: 30px 12px 80px;
+    padding: 30px 12px $tracker-artifact-submit-buttons-height;
     border-top: 1px solid #ffffff;
     background: #f7f7f7;
     box-shadow: 0 -1px #d8d8d8;
+
+    &.tracker-artifact-in-concurrent-edition {
+        padding: 30px 12px $tracker-artifact-followup-comments-in-concurrent-edition-padding-bottom;
+    }
 
     #tracker_artifact_followup_comments-content {
         max-width: 960px;
