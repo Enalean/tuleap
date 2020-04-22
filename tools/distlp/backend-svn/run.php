@@ -19,6 +19,7 @@
  */
 
 require_once __DIR__ . '/../../Configuration/vendor/autoload.php';
+require_once __DIR__ . '/../../../src/vendor/autoload.php';
 
 // Make all warnings or notices fatal
 set_error_handler(function ($errno, $errstr, $errfile, $errline) {

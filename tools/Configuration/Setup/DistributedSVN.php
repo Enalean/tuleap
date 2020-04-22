@@ -24,6 +24,7 @@ namespace Tuleap\Configuration\Setup;
 use Psr\Log\LoggerInterface;
 use Tuleap\Configuration;
 use Tuleap\Configuration\Apache\LogrotateDeployer;
+use TuleapCfg\Command\SiteDeploy\SiteDeployFPM;
 
 class DistributedSVN
 {
@@ -89,11 +90,11 @@ class DistributedSVN
     {
         $vars = $this->getVars();
 
-        $fpm           = new Configuration\FPM\BackendSVN($this->logger, $vars->getApplicationBaseDir(), $vars->getApplicationUser());
+        $fpm           = SiteDeployFPM::buildForPHP73($this->logger, $vars->getApplicationUser(), true);
         $nginx         = new Configuration\Nginx\BackendSVN($this->logger, $vars->getApplicationBaseDir(), '/etc/nginx', $vars->getServerName());
         $apache_config = new Configuration\Apache\BackendSVN($this->logger, $vars->getApplicationUser(), new LogrotateDeployer($this->logger));
 
-        $fpm->configure();
+        $fpm->forceDeploy();
         $nginx->configure();
         $apache_config->configure();
     }
