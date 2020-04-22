@@ -92,6 +92,17 @@ describe("TTM campaign", () => {
         });
 
         context("Within the campaign", () => {
+            beforeEach(() => {
+                cy.route(
+                    "PATCH",
+                    "/api/v1/testmanagement_campaigns/*/testmanagement_executions"
+                ).as("createCampaign");
+                cy.route("GET", "/api/v1/testmanagement_campaigns/*/testmanagement_executions*").as(
+                    "loadTestsOfCampaign"
+                );
+                cy.route("PUT", "/api/v1/testmanagement_executions/*").as("updateExecution");
+            });
+
             it("Adds a test", () => {
                 cy.get("[data-test=edit-campaign-button]").click();
 
@@ -105,6 +116,56 @@ describe("TTM campaign", () => {
                 cy.contains("1 test will be added");
 
                 cy.get("[data-test=edit-campaign-save-button]").click();
+                cy.wait("@createCampaign");
+            });
+
+            it("Displays the test as notrun", () => {
+                cy.wait("@loadTestsOfCampaign");
+                cy.contains("My first test").click();
+                cy.get("[data-test=current-test").should("have.class", "notrun");
+            });
+
+            it("Marks a test as passed", () => {
+                cy.get("[data-test=mark-test-as-passed]").click();
+                cy.wait("@updateExecution");
+                cy.get("[data-test=current-test").should("have.class", "passed");
+            });
+
+            it("Marks a test as failed", () => {
+                cy.get("[data-test=mark-test-as-failed]").click();
+                cy.wait("@updateExecution");
+                cy.get("[data-test=current-test").should("have.class", "failed");
+            });
+
+            it("Marks a test as blocked", () => {
+                cy.get("[data-test=mark-test-as-blocked]").click();
+                cy.wait("@updateExecution");
+                cy.get("[data-test=current-test").should("have.class", "blocked");
+            });
+
+            it("Marks a test as notrun", () => {
+                cy.get("[data-test=mark-test-as-notrun]").click();
+                cy.wait("@updateExecution");
+                cy.get("[data-test=current-test").should("have.class", "notrun");
+            });
+
+            it("Register a comment alongside the status", () => {
+                cy.get("[data-test=current-test-comment]").then(($container) => {
+                    cy.window().then((win) => {
+                        win.CKEDITOR.instances[$container.attr("id")].setData(
+                            "<p>This does not work! Fix ASAP!</p>"
+                        );
+                    });
+                });
+
+                cy.get("[data-test=mark-test-as-failed]").click();
+                cy.wait("@updateExecution");
+                cy.get("[data-test=current-test").should("have.class", "failed");
+                cy.get("[data-test=view-details-button]").click();
+                cy.get("[data-test=view-details-modal]").within(() => {
+                    cy.contains("This does not work! Fix ASAP!");
+                    cy.get("[data-dismiss=modal]").first().click();
+                });
             });
         });
     });

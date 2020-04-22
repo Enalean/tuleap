@@ -15,7 +15,7 @@
     </button>
 </div>
 
-<section id="test" class="tlp-pane current-test" ng-class="execution.status">
+<section id="test" class="tlp-pane current-test" ng-class="execution.status" data-test="current-test">
     <div class="tlp-pane-container">
         <section class="tlp-pane-header current-test-header">
             <h1 class="current-test-header-title">
@@ -92,6 +92,7 @@
                 <div class="current-test-header-comment" ng-if="execution.previous_result.result">
                     <div ng-bind-html="truncateExecutionResult(execution, 200)"></div>
                     <button type="button"
+                            data-test="view-details-button"
                             class="tlp-button-outline tlp-button-small"
                             ng-class="{'tlp-button-danger': execution.status === 'failed', 'tlp-button-success': execution.status === 'passed', 'tlp-button-info': execution.status === 'blocked', 'tlp-button-secondary': execution.status === 'notrun'}"
                             ng-click="showExecutionDetailsModal()"
@@ -131,28 +132,32 @@
             <div class="tlp-form-element">
                 <label class="tlp-label" for="execution_{{execution.id}}" translate>Comment</label>
                 <div class="current-test-results-container">
-                    <div class="current-test-comment" id="execution_{{execution.id}}">
+                    <div class="current-test-comment" id="execution_{{execution.id}}" data-test="current-test-comment">
                     </div>
                     <div class="current-test-results" ng-if="! execution.userCanReloadTestBecauseDefinitionIsUpdated">
                         <button id="test-result-passed" type="button"
+                                data-test="mark-test-as-passed"
                                 class="current-test-result tlp-button-large tlp-button-success"
                                 title="{{ 'Passed' | translate }}" ng-click="pass(execution)"
                                 ng-disabled="execution.saving">
                             <i class="fa fa-fw fa-check-circle"></i>
                         </button>
                         <button id="test-result-failed" type="button"
+                                data-test="mark-test-as-failed"
                                 class="current-test-result tlp-button-large tlp-button-danger"
                                 title="{{ 'Failed' | translate }}" ng-click="fail(execution)"
                                 ng-disabled="execution.saving">
                             <i class="fa fa-fw fa-times-circle"></i>
                         </button>
                         <button id="test-result-blocked" type="button"
+                                data-test="mark-test-as-blocked"
                                 class="current-test-result tlp-button-large tlp-button-info"
                                 title="{{ 'Blocked' | translate }}"
                                 ng-click="block(execution)" ng-disabled="execution.saving">
                             <i class="fa fa-fw fa-exclamation-circle"></i>
                         </button>
                         <button id="test-result-notrun" type="button"
+                                data-test="mark-test-as-notrun"
                                 class="current-test-result tlp-button-large tlp-button-secondary"
                                 title="{{ 'Not run' | translate }}" ng-click="notrun(execution)"
                                 ng-disabled="execution.saving">
