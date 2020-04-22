@@ -382,12 +382,12 @@ function ExecutionService(
     }
 
     function setupImageUpload(field, execution) {
+        execution.uploaded_files = [];
+
         if (!execution.upload_url) {
             disablePasteOfImages();
             return;
         }
-
-        execution.uploaded_files = [];
 
         const onStartCallback = () => {};
         const onErrorCallback = (error) => {
