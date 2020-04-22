@@ -138,22 +138,20 @@ final class UpdatePasswordController implements DispatchableWithRequest
                 throw new UpdatePasswordException(_('Passwords do not match'));
             }
 
-            if ($password_pre_update_event->isOldPasswordRequiredToUpdatePassword()) {
-                $old_password = new ConcealedString((string) $request->get('current_password'));
-                if (! $this->password_verifier->verifyPassword($user, $old_password->getString())) {
-                    throw new UpdatePasswordException(_('Current password is incorrect'));
-                }
-
-                if ($new_password->isIdenticalTo($old_password)) {
-                    throw new UpdatePasswordException(_('Current and new passwords are identical'));
-                }
+            $old_password = new ConcealedString((string) $request->get('current_password'));
+            if (! $this->password_verifier->verifyPassword($user, $old_password)) {
+                throw new UpdatePasswordException(_('Current password is incorrect'));
             }
 
-            if (! $this->password_sanity_checker->check($new_password->getString())) {
+            if ($new_password->isIdenticalTo($old_password)) {
+                throw new UpdatePasswordException(_('Current and new passwords are identical'));
+            }
+
+            if (! $this->password_sanity_checker->check($new_password)) {
                 throw new UpdatePasswordSanityCheckerException($this->password_sanity_checker->getErrors());
             }
 
-            $this->password_changer->changePassword($user, $new_password->getString());
+            $this->password_changer->changePassword($user, $new_password);
 
             $layout->addFeedback(Feedback::INFO, _('Password successfully updated'));
         } catch (User_StatusInvalidException $exception) {

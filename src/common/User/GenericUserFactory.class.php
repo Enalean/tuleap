@@ -77,10 +77,9 @@ class GenericUserFactory
     /**
      *
      * @param int $group_id
-     * @param string $password
      * @return GenericUser
      */
-    public function create($group_id, $password)
+    public function create($group_id, \Tuleap\Cryptography\ConcealedString $password)
     {
         $generic_user = $this->generateGenericUser($group_id, new PFUser());
         $generic_user->setPassword($password);

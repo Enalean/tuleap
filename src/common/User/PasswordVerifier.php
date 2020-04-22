@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,7 @@
 namespace Tuleap\User;
 
 use PFUser;
+use Tuleap\Cryptography\ConcealedString;
 
 class PasswordVerifier
 {
@@ -34,25 +35,25 @@ class PasswordVerifier
         $this->password_handler = $password_handler;
     }
 
-    /**
-     * @return bool
-     */
-    public function verifyPassword(PFUser $user, $password)
+    public function verifyPassword(PFUser $user, ConcealedString $password): bool
     {
         $hashed_password        = $user->getUserPw();
+        if ($hashed_password === null) {
+            return false;
+        }
         $legacy_hashed_password = $user->getLegacyUserPw();
 
         return $this->isPasswordValid($password, $hashed_password) ||
             $this->isLegacyPasswordValid($password, $legacy_hashed_password);
     }
 
-    private function isPasswordValid($password, $hashed_password)
+    private function isPasswordValid(ConcealedString $password, string $hashed_password): bool
     {
         return $this->password_handler->verifyHashPassword($password, $hashed_password);
     }
 
-    private function isLegacyPasswordValid($password, $legacy_hashed_password)
+    private function isLegacyPasswordValid(ConcealedString $password, string $legacy_hashed_password): bool
     {
-        return hash_equals($legacy_hashed_password, md5($password));
+        return hash_equals($legacy_hashed_password, md5($password->getString()));
     }
 }

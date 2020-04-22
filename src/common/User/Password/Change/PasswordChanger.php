@@ -20,6 +20,7 @@
 
 namespace Tuleap\User\Password\Change;
 
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\User\Password\Reset\Revoker as ResetTokenRevoker;
 use Tuleap\User\SessionManager;
 
@@ -53,7 +54,7 @@ class PasswordChanger
      * @throws \Tuleap\User\Password\Reset\TokenDataAccessException
      * @throws \Tuleap\User\SessionDataAccessException
      */
-    public function changePassword(\PFUser $user, $new_password)
+    public function changePassword(\PFUser $user, ConcealedString $new_password)
     {
         $this->token_revoker->revokeTokens($user);
         $this->session_manager->destroyAllSessionsButTheCurrentOne($user);

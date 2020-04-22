@@ -20,6 +20,7 @@
 namespace User\XML\Import;
 
 use PFUser;
+use Tuleap\Cryptography\ConcealedString;
 use UserManager;
 use Psr\Log\LoggerInterface;
 use RandomNumberGenerator;
@@ -87,13 +88,13 @@ class WillBeCreatedUser implements ReadyToBeImportedUser
         return $this->status;
     }
 
-    private function getPassword()
+    private function getPassword(): ConcealedString
     {
         if ($this->use_lame_password) {
-            return 'Correct Horse Battery Staple';
+            return new ConcealedString('Correct Horse Battery Staple');
         }
         $random_generator = new RandomNumberGenerator();
-        return $random_generator->getNumber();
+        return new ConcealedString($random_generator->getNumber());
     }
 
     public function process(UserManager $user_manager, LoggerInterface $logger)

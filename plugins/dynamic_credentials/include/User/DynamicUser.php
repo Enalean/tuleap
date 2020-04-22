@@ -20,6 +20,8 @@
 
 namespace Tuleap\DynamicCredentials\User;
 
+use Tuleap\Cryptography\ConcealedString;
+
 class DynamicUser extends \PFUser
 {
     public const ID = 80;
@@ -54,7 +56,7 @@ class DynamicUser extends \PFUser
         return $this->is_logged_in;
     }
 
-    public function setPassword($password)
+    public function setPassword(ConcealedString $password): void
     {
     }
 

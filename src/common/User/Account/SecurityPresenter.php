@@ -55,11 +55,6 @@ final class SecurityPresenter
      * @var bool
      * @psalm-readonly
      */
-    public $old_password_is_required;
-    /**
-     * @var bool
-     * @psalm-readonly
-     */
     public $user_can_change_password;
     /**
      * @var PasswordValidatorPresenter[]
@@ -92,7 +87,6 @@ final class SecurityPresenter
         $this->csrf_token = $csrf_token;
         $this->remember_me_activated = (int) $user->getStickyLogin() === 1;
         $this->username = $user->getUserName();
-        $this->old_password_is_required = $password_pre_update_event->isOldPasswordRequiredToUpdatePassword();
         $this->user_can_change_password = $password_pre_update_event->areUsersAllowedToChangePassword();
         $this->passwords_validators = $password_validator_presenter;
         if ($user_access['last_auth_success']) {

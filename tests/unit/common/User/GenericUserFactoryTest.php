@@ -22,6 +22,11 @@ class GenericUserFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalLanguageMock;
 
+    /**
+     * @var GenericUserFactory
+     */
+    private $factory;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -46,12 +51,12 @@ class GenericUserFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
     public function testCreateReturnsGenericUserWithCorrectId(): void
     {
         $group_id = '120';
-        $password = 'my_password';
+        $password = new \Tuleap\Cryptography\ConcealedString('my_password');
 
         $generic_user = $this->factory->create($group_id, $password);
         $this->assertInstanceOf(\GenericUser::class, $generic_user);
 
-        $this->assertEquals($generic_user->getPassword(), 'my_password');
+        $this->assertTrue($generic_user->getPassword()->isIdenticalTo($password));
         $this->assertEquals($generic_user->getProject(), $this->project);
     }
 
@@ -60,7 +65,7 @@ class GenericUserFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $project_name = 'vla';
         $this->project->shouldReceive('getUnixName')->andReturns($project_name);
 
-        $generic_user = $this->factory->create('120', 'my_password');
+        $generic_user = $this->factory->create('120', new \Tuleap\Cryptography\ConcealedString('my_password'));
         $this->assertEquals(substr($generic_user->getUnixName(), -strlen($project_name)), $project_name);
     }
 
@@ -69,7 +74,7 @@ class GenericUserFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $suffix = '-team';
         ForgeConfig::set(GenericUserFactory::CONFIG_KEY_SUFFIX, $suffix);
 
-        $generic_user = $this->factory->create('120', 'my_password');
+        $generic_user = $this->factory->create('120', new \Tuleap\Cryptography\ConcealedString('my_password'));
         $this->assertEquals(substr($generic_user->getUnixName(), -strlen($suffix)), $suffix);
     }
 }

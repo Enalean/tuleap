@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,30 +19,38 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class StandardPasswordHandler extends PasswordHandler
+declare(strict_types=1);
+
+use Tuleap\Cryptography\ConcealedString;
+
+class StandardPasswordHandler implements PasswordHandler
 {
-    public function verifyHashPassword($plain_password, $hash_password)
+    public function verifyHashPassword(ConcealedString $plain_password, string $hash_password): bool
     {
-        return password_verify($plain_password, $hash_password);
+        return password_verify($plain_password->getString(), $hash_password);
     }
 
-    public function computeHashPassword($plain_password)
+    public function computeHashPassword(ConcealedString $plain_password): string
     {
-        return password_hash($plain_password, PASSWORD_DEFAULT);
+        $password_hash = password_hash($plain_password->getString(), PASSWORD_DEFAULT);
+        if (! $password_hash) {
+            throw new LogicException('Could not compute password hash');
+        }
+        return $password_hash;
     }
 
-    public function isPasswordNeedRehash($hash_password)
+    public function isPasswordNeedRehash(string $hash_password): bool
     {
         return password_needs_rehash($hash_password, PASSWORD_DEFAULT);
     }
 
-    public function computeUnixPassword($plain_password)
+    public function computeUnixPassword(ConcealedString $plain_password): string
     {
         $number_generator = new RandomNumberGenerator(self::SALT_SIZE);
         $salt             = $number_generator->getNumber();
         // We use SHA-512 with 5000 rounds to create the Unix Password
         // SHA-512 is more widely available than BCrypt in GLibc OS library
         // Only 5000 rounds are used (which is the default value) to keep reasonable performance
-        return crypt($plain_password, '$6$rounds=5000$' . $salt . '$');
+        return crypt($plain_password->getString(), '$6$rounds=5000$' . $salt . '$');
     }
 }

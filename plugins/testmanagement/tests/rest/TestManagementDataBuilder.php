@@ -41,7 +41,7 @@ class TestManagementDataBuilder extends REST_TestDataBuilder
         echo 'Setup TestManagement REST tests configuration' . PHP_EOL;
 
         $user = $this->user_manager->getUserByUserName(self::USER_TESTER_NAME);
-        $user->setPassword(self::USER_TESTER_PASS);
+        $user->setPassword(new \Tuleap\Cryptography\ConcealedString(self::USER_TESTER_PASS));
         $this->user_manager->updateDb($user);
     }
 }

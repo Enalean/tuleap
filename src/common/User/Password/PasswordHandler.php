@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,23 +19,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-abstract class PasswordHandler
+use Tuleap\Cryptography\ConcealedString;
+
+interface PasswordHandler
 {
     // We need 16 hex chars (8 bytes) to use as a salt to generate the UNIX password
     public const SALT_SIZE = 8;
 
-    abstract public function verifyHashPassword($plain_password, $hash_password);
+    public function verifyHashPassword(ConcealedString $plain_password, string $hash_password): bool;
 
-    abstract public function computeHashPassword($plain_password);
+    public function computeHashPassword(ConcealedString $plain_password): string;
 
-    abstract public function isPasswordNeedRehash($hash_password);
+    public function isPasswordNeedRehash(string $hash_password): bool;
 
     /**
      * Generate Unix shadow password
-     *
-     * @param String $plain_password Clear password
-     *
-     * @return String
      */
-    abstract public function computeUnixPassword($plain_password);
+    public function computeUnixPassword(ConcealedString $plain_password): string;
 }

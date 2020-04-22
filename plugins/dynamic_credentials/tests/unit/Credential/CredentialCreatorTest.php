@@ -25,6 +25,7 @@ require_once __DIR__ . '/../bootstrap.php';
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Cryptography\ConcealedString;
 
 class CredentialCreatorTest extends TestCase
 {
@@ -43,6 +44,6 @@ class CredentialCreatorTest extends TestCase
 
         $this->expectException(DuplicateCredentialException::class);
 
-        $credential_creator->create('username', 'password', new \DateTimeImmutable());
+        $credential_creator->create('username', new ConcealedString('password'), new \DateTimeImmutable());
     }
 }

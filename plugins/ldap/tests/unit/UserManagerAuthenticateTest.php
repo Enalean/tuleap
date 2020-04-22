@@ -32,11 +32,10 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use UserManager;
-
-require_once __DIR__ . '/bootstrap.php';
 
 final class UserManagerAuthenticateTest extends TestCase
 {
@@ -45,7 +44,7 @@ final class UserManagerAuthenticateTest extends TestCase
     use GlobalLanguageMock;
 
     private $username    = 'toto';
-    private $password    = 'welcome0';
+    private $password;
     private $ldap_params = array(
         'dn'          => 'dc=tuleap,dc=local',
         'mail'        => 'mail',
@@ -82,6 +81,7 @@ final class UserManagerAuthenticateTest extends TestCase
     {
         parent::setUp();
         ForgeConfig::set('sys_logger_level', 'debug');
+        $this->password = new ConcealedString('welcome0');
         $this->empty_ldap_result_iterator   = $this->buildLDAPIterator([], []);
         $this->john_mc_lane_result_iterator = $this->buildLDAPIterator(
             [

@@ -22,9 +22,8 @@ namespace Tuleap\Git\Gerrit;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\GlobalLanguageMock;
-
-require_once __DIR__ . '/../../../bootstrap.php';
 
 class ReplicationHTTPUserAuthenticatorTest extends TestCase
 {
@@ -59,7 +58,7 @@ class ReplicationHTTPUserAuthenticatorTest extends TestCase
         );
 
         $this->expectException('User_InvalidPasswordException');
-        $replication_user_authenticator->authenticate($repository, 'login', 'password');
+        $replication_user_authenticator->authenticate($repository, 'login', new ConcealedString('password'));
     }
 
     public function testItAcceptsSpecificLogin(): void
@@ -73,18 +72,19 @@ class ReplicationHTTPUserAuthenticatorTest extends TestCase
             $this->user_validator
         );
         $gerrit_server->shouldReceive('getGenericUserName')->andReturns($user_login);
+        $gerrit_server->shouldReceive('getReplicationPassword')->andReturns('hashpassword');
         $this->server_factory->shouldReceive('getServerById')->andReturns($gerrit_server);
         $this->password_handler->shouldReceive('verifyHashPassword')->andReturns(true);
         $this->user_validator->shouldReceive('isLoginAnHTTPUserLogin')->andReturns(true);
 
-        $replication_http_user = $replication_user_authenticator->authenticate($repository, $user_login, 'password');
+        $replication_http_user = $replication_user_authenticator->authenticate($repository, $user_login, new ConcealedString('password'));
         $this->assertEquals($user_login, $replication_http_user->getUnixName());
     }
 
     public function testItRejectsInvalidPassword(): void
     {
         $user_login                     = 'forge__gerrit_1';
-        $user_password                  = 'password';
+        $user_password                  = new ConcealedString('password');
         $repository                     = \Mockery::spy(\GitRepository::class);
         $gerrit_server                  = \Mockery::spy(\Git_RemoteServer_GerritServer::class);
         $replication_user_authenticator = new ReplicationHTTPUserAuthenticator(

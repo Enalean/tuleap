@@ -21,6 +21,7 @@ namespace Tuleap\REST;
 
 use Luracast\Restler\iAuthenticate;
 use Luracast\Restler\InvalidAuthCredentials;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminUserBuilder;
 use User_ForgeUserGroupPermissionsDao;
 use User_ForgeUserGroupPermissionsManager;
@@ -52,7 +53,7 @@ class BasicAuthentication implements iAuthenticate
     public function __isAllowed() // phpcs:ignore
     {
         if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
-            $current_user = $this->user_manager->login($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+            $current_user = $this->user_manager->login($_SERVER['PHP_AUTH_USER'], new ConcealedString($_SERVER['PHP_AUTH_PW']));
 
             if ($current_user->isLoggedIn()) {
                 $current_user = $this->read_only_admin_user_builder->buildReadOnlyAdminUser($current_user);

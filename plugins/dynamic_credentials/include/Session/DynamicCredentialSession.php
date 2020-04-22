@@ -20,6 +20,7 @@
 
 namespace Tuleap\DynamicCredentials\Session;
 
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\DynamicCredentials\Credential\Credential;
 use Tuleap\DynamicCredentials\Credential\CredentialRetriever;
 
@@ -48,7 +49,7 @@ class DynamicCredentialSession
      * @throws \Tuleap\DynamicCredentials\Credential\CredentialAuthenticationException
      * @throws \Tuleap\DynamicCredentials\Credential\CredentialNotFoundException
      */
-    public function initialize($username, $password)
+    public function initialize(string $username, ConcealedString $password)
     {
         $credential = $this->credential_retriever->authenticate($username, $password);
         $this->storage[self::STORAGE_IDENTIFIER] = $credential->getIdentifier();

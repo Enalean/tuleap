@@ -20,6 +20,7 @@
  */
 
 use Tuleap\CookieManager;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\User\Account\DisplaySecurityController;
@@ -531,11 +532,11 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      *
      * @deprected
      * @param $name string The login name submitted by the user
-     * @param $pwd string The password submitted by the user
+     * @param ConcealedString $pwd The password submitted by the user
      * @param $allowpending boolean True if pending users are allowed (for verify.php). Default is false
      * @return PFUser Registered user or anonymous if the authentication failed
      */
-    public function login($name, $pwd, $allowpending = false)
+    public function login($name, ConcealedString $pwd, $allowpending = false)
     {
         try {
             $password_expiration_checker = new User_PasswordExpirationChecker();
@@ -823,11 +824,14 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         if (!$user->isAnonymous()) {
             $old_user = $this->getUserByIdWithoutCache($user->getId());
             $userRow = $user->toRow();
-            if ($user->getPassword() != '') {
+            $user_password = $user->getPassword();
+            if ($user_password !== null) {
+                $user_password_hash = $user->getUserPw();
                 $password_handler = PasswordHandlerFactory::getPasswordHandler();
                 if (
-                    !$password_handler->verifyHashPassword($user->getPassword(), $user->getUserPw()) ||
-                        $password_handler->isPasswordNeedRehash($user->getUserPw())
+                    $user_password_hash === null ||
+                    ! $password_handler->verifyHashPassword($user_password, $user_password_hash) ||
+                        $password_handler->isPasswordNeedRehash($user_password_hash)
                 ) {
                     // Update password
                     $userRow['clear_password'] = $user->getPassword();

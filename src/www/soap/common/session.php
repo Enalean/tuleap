@@ -119,7 +119,8 @@ if (defined('NUSOAP')) {
     {
         global $Language;
 
-        $user = UserManager::instance()->login($loginname, $passwd);
+        $user = UserManager::instance()->login($loginname, new \Tuleap\Cryptography\ConcealedString($passwd));
+        sodium_memzero($passwd);
         if ($user->isLoggedIn()) {
             $return = array(
             'user_id'      => $user->getId(),

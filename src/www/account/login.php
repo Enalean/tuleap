@@ -73,7 +73,8 @@ if ($request->isPost()) {
     if (!$_rVar['form_loginname'] || !$_rVar['form_pw']) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('include_session', 'missing_pwd'));
     } else {
-        $user    = $um->login($_rVar['form_loginname'], $_rVar['form_pw']);
+        $user    = $um->login($_rVar['form_loginname'], new \Tuleap\Cryptography\ConcealedString($_rVar['form_pw']));
+        sodium_memzero($_rVar['form_pw']);
         $status  = $user->getStatus();
         $success = true;
     }

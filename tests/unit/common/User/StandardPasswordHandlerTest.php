@@ -24,6 +24,7 @@ namespace Tuleap\User;
 
 use PHPUnit\Framework\TestCase;
 use StandardPasswordHandler;
+use Tuleap\Cryptography\ConcealedString;
 
 final class StandardPasswordHandlerTest extends TestCase
 {
@@ -47,7 +48,7 @@ final class StandardPasswordHandlerTest extends TestCase
      */
     public function itVerifyPassword(): void
     {
-        $check_password = $this->password_handler->verifyHashPassword(self::HASHED_WORD, self::BCRYPT_HASH);
+        $check_password = $this->password_handler->verifyHashPassword(new ConcealedString(self::HASHED_WORD), self::BCRYPT_HASH);
         $this->assertTrue($check_password);
     }
 
@@ -56,7 +57,7 @@ final class StandardPasswordHandlerTest extends TestCase
      */
     public function itVerifyPasswordSaltedMD5(): void
     {
-        $check_password = $this->password_handler->verifyHashPassword(self::HASHED_WORD, self::MD5_HASH);
+        $check_password = $this->password_handler->verifyHashPassword(new ConcealedString(self::HASHED_WORD), self::MD5_HASH);
         $this->assertTrue($check_password);
     }
 
@@ -65,7 +66,7 @@ final class StandardPasswordHandlerTest extends TestCase
      */
     public function itVerifyPasswordSaltedSHA512(): void
     {
-        $check_password = $this->password_handler->verifyHashPassword(self::HASHED_WORD, self::SHA512_HASH);
+        $check_password = $this->password_handler->verifyHashPassword(new ConcealedString(self::HASHED_WORD), self::SHA512_HASH);
         $this->assertTrue($check_password);
     }
 

@@ -51,6 +51,13 @@ try {
     );
 }
 
+if ($user->getUserPw() === null) {
+    exit_error(
+        $GLOBALS['Language']->getText('include_exit', 'error'),
+        $GLOBALS['Language']->getText('account_lostlogin', 'invalid_hash')
+    );
+}
+
 if (
     $request->isPost()
     && $request->exist('Update')

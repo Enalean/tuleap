@@ -20,11 +20,10 @@
 
 namespace Tuleap\DynamicCredentials\Credential;
 
-require_once __DIR__ . '/../bootstrap.php';
-
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Cryptography\ConcealedString;
 
 class CredentialRetrieverTest extends TestCase
 {
@@ -44,7 +43,7 @@ class CredentialRetrieverTest extends TestCase
 
         $credential_retriever = new CredentialRetriever($dao, $password_handler, $identifier_extractor);
 
-        $credential = $credential_retriever->authenticate('username', 'password');
+        $credential = $credential_retriever->authenticate('username', new ConcealedString('password'));
 
         $this->assertEquals('identifier', $credential->getIdentifier());
     }
@@ -60,7 +59,7 @@ class CredentialRetrieverTest extends TestCase
 
         $this->expectException(CredentialInvalidUsernameException::class);
 
-        $credential_retriever->authenticate('username', 'password');
+        $credential_retriever->authenticate('username', new ConcealedString('password'));
     }
 
     public function testAuthenticationRejectsUnknownCredential()
@@ -75,7 +74,7 @@ class CredentialRetrieverTest extends TestCase
 
         $this->expectException(CredentialNotFoundException::class);
 
-        $credential_retriever->authenticate('username', 'password');
+        $credential_retriever->authenticate('username', new ConcealedString('password'));
     }
 
     public function testAuthenticationRejectsInvalidPassword()
@@ -94,7 +93,7 @@ class CredentialRetrieverTest extends TestCase
 
         $this->expectException(CredentialAuthenticationException::class);
 
-        $credential_retriever->authenticate('username', 'password');
+        $credential_retriever->authenticate('username', new ConcealedString('password'));
     }
 
     public function testAuthenticationRejectsExpiredAccount()
@@ -113,7 +112,7 @@ class CredentialRetrieverTest extends TestCase
 
         $this->expectException(CredentialExpiredException::class);
 
-        $credential_retriever->authenticate('username', 'password');
+        $credential_retriever->authenticate('username', new ConcealedString('password'));
     }
 
     public function testCredentialCanBeRetrievedByIdentifier()

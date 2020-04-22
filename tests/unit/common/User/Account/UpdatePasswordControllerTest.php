@@ -27,6 +27,7 @@ use Feedback;
 use Mockery as M;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Password\PasswordSanityChecker;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
@@ -97,14 +98,9 @@ final class UpdatePasswordControllerTest extends TestCase
                 return $event;
             }
 
-            public function disablePasswordChange()
+            public function disablePasswordChange(): void
             {
                 $this->password_change = false;
-            }
-
-            public function disableNeedOfOldPassword()
-            {
-                $this->old_password_required = false;
             }
         };
 
@@ -132,6 +128,7 @@ final class UpdatePasswordControllerTest extends TestCase
         );
 
         $this->user = UserTestBuilder::aUser()->withId(120)->build();
+        $this->user->setUserPw('some_password_hash');
     }
 
     public function testItThrowsExceptionWhenUserIsAnonymous(): void
@@ -172,7 +169,14 @@ final class UpdatePasswordControllerTest extends TestCase
 
     public function testItCannotUpdateIfOldPasswordIsNotVerified(): void
     {
-        $this->password_verifier->shouldReceive('verifyPassword')->with($this->user, 'the_old_password')->once()->andReturnFalse();
+        $this->password_verifier->shouldReceive('verifyPassword')->with(
+            $this->user,
+            \Mockery::on(
+                static function (ConcealedString $password): bool {
+                    return $password->isIdenticalTo(new ConcealedString('the_old_password'));
+                }
+            )
+        )->once()->andReturnFalse();
 
         $this->password_changer->shouldNotReceive('changePassword');
 
@@ -185,7 +189,7 @@ final class UpdatePasswordControllerTest extends TestCase
 
     public function testItCannotUpdateWhenNewPasswordDoesntMatch(): void
     {
-        $this->password_verifier->shouldReceive('verifyPassword')->with($this->user, 'the_old_password')->andReturnTrue();
+        $this->password_verifier->shouldReceive('verifyPassword')->with($this->user, new ConcealedString('the_old_password'))->andReturnTrue();
 
         $this->password_changer->shouldNotReceive('changePassword');
 
@@ -221,10 +225,9 @@ final class UpdatePasswordControllerTest extends TestCase
 
     public function testItCannotUpdateIfPasswordStrategyIsNotMet(): void
     {
-        $this->password_verifier->shouldReceive('verifyPassword')->with($this->user, 'the_old_password')->andReturnTrue();
-        $this->password_verifier->shouldReceive('verifyPassword')->with($this->user, 'the_new_password')->andReturnTrue();
+        $this->password_verifier->shouldReceive('verifyPassword')->andReturnTrue();
 
-        $this->password_sanity_checker->shouldReceive('check')->with('the_new_password')->andReturnFalse();
+        $this->password_sanity_checker->shouldReceive('check')->andReturnFalse();
         $this->password_sanity_checker->shouldReceive('getErrors')->andReturn(['some error about been pwned']);
 
         $this->password_changer->shouldNotReceive('changePassword');
@@ -248,9 +251,8 @@ final class UpdatePasswordControllerTest extends TestCase
 
     public function testItReportsAnErrorIfPasswordChangeFails(): void
     {
-        $this->password_verifier->shouldReceive('verifyPassword')->with($this->user, 'the_old_password')->andReturnTrue();
-        $this->password_verifier->shouldReceive('verifyPassword')->with($this->user, 'the_new_password')->andReturnTrue();
-        $this->password_sanity_checker->shouldReceive('check')->with('the_new_password')->andReturnTrue();
+        $this->password_verifier->shouldReceive('verifyPassword')->andReturnTrue();
+        $this->password_sanity_checker->shouldReceive('check')->andReturnTrue();
 
         $this->password_changer->shouldReceive('changePassword')->andThrow(new \Exception());
 
@@ -292,41 +294,19 @@ final class UpdatePasswordControllerTest extends TestCase
 
     public function testItChangesPasswordWithSuccess(): void
     {
-        $this->password_verifier->shouldReceive('verifyPassword')->with($this->user, 'the_old_password')->andReturnTrue();
-        $this->password_verifier->shouldReceive('verifyPassword')->with($this->user, 'the_new_password')->andReturnTrue();
-        $this->password_sanity_checker->shouldReceive('check')->with('the_new_password')->andReturnTrue();
+        $this->password_verifier->shouldReceive('verifyPassword')->andReturnTrue();
+        $this->password_sanity_checker->shouldReceive('check')->with(\Mockery::on(
+            static function (ConcealedString $str): bool {
+                return $str->isIdenticalTo(new ConcealedString('the_new_password'));
+            }
+        ))->once()->andReturnTrue();
 
-        $this->password_changer->shouldReceive('changePassword')->with($this->user, 'the_new_password')->once();
+        $this->password_changer->shouldReceive('changePassword')->once();
 
         $this->controller->process(
             HTTPRequestBuilder::get()
                 ->withUser($this->user)
                 ->withParam('current_password', 'the_old_password')
-                ->withParam('new_password', 'the_new_password')
-                ->withParam('repeat_new_password', 'the_new_password')
-                ->build(),
-            LayoutBuilder::buildWithInspector($this->layout_inspector),
-            []
-        );
-
-        $feedback = $this->layout_inspector->getFeedback();
-        $this->assertCount(1, $feedback);
-        $this->assertEquals(Feedback::INFO, $feedback[0]['level']);
-        $this->assertStringContainsStringIgnoringCase('success', $feedback[0]['message']);
-    }
-
-    public function testAPluginAllowsToChangePasswordWithoutOldPassword(): void
-    {
-        $this->event_manager->disableNeedOfOldPassword();
-
-        $this->password_verifier->shouldReceive('verifyPassword')->with($this->user, 'the_new_password')->andReturnTrue();
-        $this->password_sanity_checker->shouldReceive('check')->with('the_new_password')->andReturnTrue();
-
-        $this->password_changer->shouldReceive('changePassword')->with($this->user, 'the_new_password')->once();
-
-        $this->controller->process(
-            HTTPRequestBuilder::get()
-                ->withUser($this->user)
                 ->withParam('new_password', 'the_new_password')
                 ->withParam('repeat_new_password', 'the_new_password')
                 ->build(),

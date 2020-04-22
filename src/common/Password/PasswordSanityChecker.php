@@ -22,6 +22,7 @@
 namespace Tuleap\Password;
 
 use PasswordStrategy;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Password\Configuration\PasswordConfigurationDAO;
 use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
 
@@ -55,10 +56,10 @@ class PasswordSanityChecker
         );
     }
 
-    public function check(string $password): bool
+    public function check(ConcealedString $password): bool
     {
         $password_strategy = $this->getStrategy();
-        $valid  = $password_strategy->validate($password);
+        $valid  = $password_strategy->validate($password->getString());
         $this->errors = $password_strategy->errors;
         return $valid;
     }

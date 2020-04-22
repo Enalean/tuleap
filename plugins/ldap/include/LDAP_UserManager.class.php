@@ -21,6 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\LDAP\Exception\IdentifierTypeNotFoundException;
 use Tuleap\LDAP\Exception\IdentifierTypeNotRecognizedException;
 
@@ -325,7 +326,7 @@ class LDAP_UserManager
      * @throws LDAP_AuthenticationFailedException
      * @throws LDAP_UserNotFoundException
      */
-    public function authenticate($username, $password)
+    public function authenticate($username, ConcealedString $password)
     {
         if (! $this->ldap->authenticate($username, $password)) {
             throw new LDAP_AuthenticationFailedException();
@@ -376,10 +377,9 @@ class LDAP_UserManager
     /**
      * Synchronize user account with LDAP informations
      *
-     * @param  String     $password
      * @return bool
      */
-    public function synchronizeUser(PFUser $user, LDAPResult $lr, $password)
+    public function synchronizeUser(PFUser $user, LDAPResult $lr, ConcealedString $password)
     {
         $user->setPassword($password);
 

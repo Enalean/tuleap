@@ -30,6 +30,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Tuleap\Cryptography\ConcealedString;
 use TuleapCfg\Command\SetupMysql\ConnectionManager;
 use TuleapCfg\Command\SetupMysql\InvalidSSLConfigurationException;
 use TuleapCfg\Command\SetupMysql\MysqlCommandHelper;
@@ -80,8 +81,10 @@ final class SetupMysqlCommand extends Command
         $dbname = $input->getOption('dbname');
         assert(is_string($dbname));
         $password = $input->getOption('password');
-        $admin_password = $input->getArgument('admin_password');
-        assert(is_string($admin_password));
+        $clear_admin_password = $input->getArgument('admin_password');
+        assert(is_string($clear_admin_password));
+        $admin_password = new ConcealedString($clear_admin_password);
+        sodium_memzero($clear_admin_password);
         $domain_name    = $input->getArgument('domain_name');
         assert(is_string($domain_name));
 

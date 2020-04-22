@@ -250,7 +250,7 @@ if ($request->isPost()) {
         }
 
         $password_sanity_checker = \Tuleap\Password\PasswordSanityChecker::build();
-        if (! $password_sanity_checker->check($request->get('form_pw'))) {
+        if (! $password_sanity_checker->check(new \Tuleap\Cryptography\ConcealedString($request->get('form_pw')))) {
             foreach ($password_sanity_checker->getErrors() as $error) {
                 $GLOBALS['Response']->addFeedback(Feedback::ERROR, $error);
             }
@@ -270,7 +270,7 @@ if ($request->isPost()) {
             new \Tuleap\User\Password\Reset\Revoker(new \Tuleap\User\Password\Reset\DataAccessObject())
         );
         try {
-            $password_changer->changePassword($user, $request->get('form_pw'));
+            $password_changer->changePassword($user, new \Tuleap\Cryptography\ConcealedString($request->get('form_pw')));
             $GLOBALS['Response']->addFeedback(Feedback::INFO, $Language->getText('admin_user_changepw', 'msg_changed'));
         } catch (Exception $ex) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_user_changepw', 'error_update'));

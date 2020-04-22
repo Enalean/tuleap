@@ -24,6 +24,6 @@ require_once __DIR__ . '/pre.php';
 
 $request = HTTPRequest::instance();
 $password_sanity_checker = \Tuleap\Password\PasswordSanityChecker::build();
-$password_sanity_checker->check($request->get('form_pw'));
+$password_sanity_checker->check(new \Tuleap\Cryptography\ConcealedString($request->get('form_pw')));
 
 echo '[' . implode(', ', array_keys($password_sanity_checker->getErrors())) . ']';

@@ -30,6 +30,7 @@ use PFUser;
 use Project;
 use REST_TestDataBuilder;
 use Tracker_ArtifactFactory;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Dashboard\User\UserDashboardDao;
 use Tuleap\Dashboard\User\UserDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
@@ -77,7 +78,7 @@ class TimetrackingDataBuilder extends REST_TestDataBuilder
     private function createUser()
     {
         $user = $this->user_manager->getUserByUserName(self::USER_TESTER_NAME);
-        $user->setPassword(self::USER_TESTER_PASS);
+        $user->setPassword(new ConcealedString(self::USER_TESTER_PASS));
         $this->user_manager->updateDb($user);
     }
 

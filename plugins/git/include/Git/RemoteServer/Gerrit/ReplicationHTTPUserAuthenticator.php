@@ -25,6 +25,7 @@ use Git_RemoteServer_GerritServerFactory;
 use Git_RemoteServer_NotFoundException;
 use GitRepository;
 use PasswordHandler;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
 use User_InvalidPasswordException;
 
@@ -60,7 +61,7 @@ class ReplicationHTTPUserAuthenticator
      * @throws User_InvalidPasswordException
      * @throws Git_RemoteServer_NotFoundException
      */
-    public function authenticate(GitRepository $repository, $login, $password)
+    public function authenticate(GitRepository $repository, $login, ConcealedString $password)
     {
         if (! $this->user_validator->isLoginAnHTTPUserLogin($login)) {
             throw new User_InvalidPasswordException();

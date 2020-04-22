@@ -68,7 +68,6 @@ use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\DispatchTemporaryRedirect;
 use Tuleap\User\Account\AccountTabPresenterCollection;
-use Tuleap\User\Account\PasswordPreUpdateEvent;
 
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -92,7 +91,6 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         $this->addHook('site_admin_option_hook');
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
-        $this->addHook(PasswordPreUpdateEvent::NAME);
         $this->addHook(Event::GET_LOGIN_URL);
         $this->addHook('display_newaccount');
         $this->addHook(CollectRoutesEvent::NAME);
@@ -166,13 +164,6 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
     {
         return $this->canPluginAuthenticateUser() &&
         $provider_manager->isAProviderConfiguredAsUniqueAuthenticationEndpoint();
-    }
-
-    public function passwordPreUpdateEvent(PasswordPreUpdateEvent $event)
-    {
-        if ($this->isLoginConfiguredToUseAProviderAsUniqueAuthenticationEndpoint($this->getProviderManager())) {
-            $event->oldPasswordIsNotRequiredToUpdatePassword();
-        }
     }
 
     public function get_login_url($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
