@@ -1093,7 +1093,8 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         }
 
         $this->assertNotNull($f->getComputedMd5());
-        $this->assertTrue(FRSFileFactory::compareMd5Checksums($f->getComputedMd5(), $f->getReferenceMd5()));
+        $frs_file_factory = new FRSFileFactory();
+        $this->assertTrue($frs_file_factory->compareMd5Checksums($f->getComputedMd5(), $f->getReferenceMd5()));
 
         unlink($GLOBALS['ftp_incoming_dir'] . '/toto.txt');
     }

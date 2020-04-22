@@ -26,7 +26,9 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker;
+use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 use Tuleap\AgileDashboard\Semantic\SemanticDone;
+use Tuleap\AgileDashboard\Semantic\SemanticDoneValueChecker;
 
 class BacklogRequiredTrackerCollectionTest extends TestCase
 {
@@ -245,7 +247,14 @@ class BacklogRequiredTrackerCollectionTest extends TestCase
         $collection->addBacklogRequiredTracker($other_required_tracker);
 
         $GLOBALS['Language']->shouldReceive('getText')->andReturn('Initial effort');
-        $this->assertEquals([SemanticDone::getLabel()], $collection->getSemanticMisconfiguredForAllTrackers());
+        $semantic_done = new SemanticDone(
+            Mockery::mock(Tracker::class),
+            Mockery::mock(\Tracker_Semantic_Status::class),
+            Mockery::mock(SemanticDoneDao::class),
+            Mockery::mock(SemanticDoneValueChecker::class),
+            []
+        );
+        $this->assertEquals([$semantic_done->getLabel()], $collection->getSemanticMisconfiguredForAllTrackers());
     }
 
     public function testItReturnsInitialEffortLabelWhenAllTrackersMissIt()

@@ -77,7 +77,7 @@ class ServiceManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      * Only for testing purpose
      *
      */
-    public function setInstance(ServiceManager $service_manager)
+    public static function setInstance(ServiceManager $service_manager)
     {
         self::$instance = $service_manager;
     }
@@ -85,7 +85,7 @@ class ServiceManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     /**
      * Only for testing purpose
      */
-    public function clearInstance()
+    public static function clearInstance()
     {
         self::$instance = null;
     }

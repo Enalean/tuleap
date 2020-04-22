@@ -243,8 +243,8 @@ class Rule_NoCr extends Rule
     public function isValid($val)
     {
         if (
-            is_string($val) && strpos($val, 0x0A) === false && strpos($val, 0x0D) === false
-            && strpos($val, 0x00) === false
+            is_string($val) && strpos($val, chr(0x0A)) === false && strpos($val, chr(0x0D)) === false
+            && strpos($val, chr(0x00)) === false
         ) {
             return true;
         }
