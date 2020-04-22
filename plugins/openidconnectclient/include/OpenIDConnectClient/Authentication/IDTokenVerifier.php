@@ -18,90 +18,117 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\OpenIDConnectClient\Authentication;
 
+use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Signer\Rsa\Sha256;
+use Lcobucci\JWT\Token;
+use Lcobucci\JWT\ValidationData;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 
 class IDTokenVerifier
 {
     /**
+     * @var Parser
+     */
+    private $parser;
+    /**
      * @var IssuerClaimValidator
      */
     private $issuer_claim_validator;
+    /**
+     * @var JWKSKeyFetcher
+     */
+    private $jwks_key_fetcher;
+    /**
+     * @var Sha256
+     */
+    private $signer;
 
-    public function __construct(IssuerClaimValidator $issuer_claim_validator)
-    {
+    public function __construct(
+        Parser $parser,
+        IssuerClaimValidator $issuer_claim_validator,
+        JWKSKeyFetcher $jwks_key_fetcher,
+        Sha256 $signer
+    ) {
+        $this->parser                 = $parser;
         $this->issuer_claim_validator = $issuer_claim_validator;
+        $this->jwks_key_fetcher       = $jwks_key_fetcher;
+        $this->signer                 = $signer;
     }
 
     /**
-     * @return array
      * @throws MalformedIDTokenException
      */
-    public function validate(Provider $provider, $nonce, $encoded_id_token)
+    public function validate(Provider $provider, string $nonce, string $encoded_id_token): string
     {
-        $id_token = $this->getJWTPayload($encoded_id_token);
+        try {
+            $id_token = $this->parser->parse($encoded_id_token);
+        } catch (\InvalidArgumentException | \RuntimeException $exception) {
+            throw new MalformedIDTokenException($exception->getMessage(), 0, $exception);
+        }
+
+        $validation_data = new ValidationData();
+
+        try {
+            $sub_claim = $id_token->getClaim('sub');
+        } catch (\OutOfBoundsException $exception) {
+            throw new MalformedIDTokenException('sub claim is not present', 0, $exception);
+        }
 
         if (
-            ! $this->isSubjectIdentifierClaimPresent($id_token) ||
-            ! isset($id_token['iss']) ||
-            ! $this->issuer_claim_validator->isIssuerClaimValid($provider, $id_token['iss']) ||
+            ! is_string($sub_claim) ||
+            ! $id_token->validate($validation_data) ||
+            ! $this->isNonceValid($nonce, $id_token) ||
             ! $this->isAudienceClaimValid($provider->getClientId(), $id_token) ||
-            ! $this->isNonceValid($nonce, $id_token)
+            ! $this->issuer_claim_validator->isIssuerClaimValid($provider, $id_token->getClaim('iss', ''))
         ) {
             throw new MalformedIDTokenException('ID token claims are not valid');
         }
 
-        return $id_token;
-    }
-
-    /**
-     * @return array
-     * @throws MalformedIDTokenException
-     */
-    private function getJWTPayload($encoded_id_token)
-    {
-        $jwt_parts = explode('.', $encoded_id_token);
-        if (count($jwt_parts) !== 3) {
-            throw new MalformedIDTokenException('ID token must composed of 3 parts');
+        if (! $this->verifySignature($provider, $id_token)) {
+            throw new MalformedIDTokenException('ID token signature is not valid');
         }
 
-        $encoded_payload = $jwt_parts[1];
-
-        try {
-            $payload = json_decode(sodium_base642bin($encoded_payload, SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING), true, 512, JSON_THROW_ON_ERROR);
-        } catch (\JsonException | \SodiumException $ex) {
-            throw new MalformedIDTokenException('ID token parts must be an URL safe base64 encoded JSON');
-        }
-
-        return (array) $payload;
+        return $sub_claim;
     }
 
-    private function isSubjectIdentifierClaimPresent(array $id_token)
+    private function isAudienceClaimValid(string $provider_client_id, Token $id_token): bool
     {
-        return isset($id_token['sub']);
+        $audience_claim = $id_token->getClaim('aud');
+
+        if (is_string($audience_claim)) {
+            return $provider_client_id === $audience_claim;
+        }
+
+        if (is_array($audience_claim)) {
+            return in_array($provider_client_id, $audience_claim, true);
+        }
+
+        return false;
     }
 
-    /**
-     * @return bool
-     */
-    private function isAudienceClaimValid($provider_client_id, array $id_token)
+    private function isNonceValid(string $nonce, Token $id_token): bool
     {
-        if (! isset($id_token['aud'])) {
-            return false;
-        }
-        return $id_token['aud'] === $provider_client_id ||
-            (is_array($id_token['aud']) && in_array($provider_client_id, $id_token['aud']));
+        return hash_equals($nonce, $id_token->getClaim('nonce', ''));
     }
 
-    /**
-     * @return bool
-     */
-    private function isNonceValid($nonce, array $id_token)
+    private function verifySignature(Provider $provider, Token $id_token): bool
     {
-        if (! isset($id_token['nonce'])) {
-            return false;
+        $keys_pem_format = $this->jwks_key_fetcher->fetchKey($provider);
+
+        if ($keys_pem_format === null) {
+            return true;
         }
-        return hash_equals($nonce, $id_token['nonce']);
+
+        foreach ($keys_pem_format as $key_pem_format) {
+            if ($id_token->verify($this->signer, $key_pem_format)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

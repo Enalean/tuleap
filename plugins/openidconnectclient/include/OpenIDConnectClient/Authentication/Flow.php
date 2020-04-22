@@ -95,7 +95,7 @@ class Flow
             $state->getPKCECodeVerifier()
         );
         $token_response = $this->token_request_sender->sendTokenRequest($token_request);
-        $id_token       = $this->id_token_verifier->validate(
+        $id_token_sub   = $this->id_token_verifier->validate(
             $provider,
             $state->getNonce(),
             $token_response->getIDToken()
@@ -106,6 +106,6 @@ class Flow
 
         $this->state_manager->clearState();
 
-        return new FlowResponse($provider, $state->getReturnTo(), $id_token['sub'], $user_info_response->getClaims());
+        return new FlowResponse($provider, $state->getReturnTo(), $id_token_sub, $user_info_response->getClaims());
     }
 }

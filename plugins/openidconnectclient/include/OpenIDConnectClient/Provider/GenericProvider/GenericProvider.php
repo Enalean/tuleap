@@ -126,6 +126,11 @@ final class GenericProvider implements Provider
         return $this->user_info_endpoint;
     }
 
+    public function getJWKSEndpoint(): ?string
+    {
+        return null;
+    }
+
     public function getClientId(): string
     {
         return $this->client_id;

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,31 +20,8 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OpenIDConnectClient\Provider;
+namespace Tuleap\OpenIDConnectClient\Authentication;
 
-interface Provider
+final class JWKSKeyFetcherException extends \RuntimeException
 {
-    public function getId(): int;
-
-    public function getName(): string;
-
-    public function getClientId(): string;
-
-    public function getClientSecret(): string;
-
-    public function isUniqueAuthenticationEndpoint(): bool;
-
-    public function getIcon(): string;
-
-    public function getColor(): string;
-
-    public function getAuthorizationEndpoint(): string;
-
-    public function getTokenEndpoint(): string;
-
-    public function getUserInfoEndpoint(): string;
-
-    public function getJWKSEndpoint(): ?string;
-
-    public function getRedirectUri(): string;
 }
