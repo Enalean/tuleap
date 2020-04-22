@@ -83,15 +83,25 @@ Cypress.Commands.add("visitProjectService", (project_unixname, service_label) =>
     }
 
     cy.visit("/projects/" + project_unixname);
+    visitServiceInCurrentProject(service_label, (href) => {
+        cache_service_urls[project_unixname] = cache_service_urls[project_unixname] || {};
+        cache_service_urls[project_unixname][service_label] = href;
+    });
+});
+
+Cypress.Commands.add("visitServiceInCurrentProject", (service_label) => {
+    visitServiceInCurrentProject(service_label, () => {});
+});
+
+function visitServiceInCurrentProject(service_label, before_visit_callback) {
     cy.get("[data-test=project-sidebar]")
         .contains(service_label)
         .should("have.attr", "href")
         .then((href) => {
-            cache_service_urls[project_unixname] = cache_service_urls[project_unixname] || {};
-            cache_service_urls[project_unixname][service_label] = href;
+            before_visit_callback(href);
             cy.visit(href);
         });
-});
+}
 
 Cypress.Commands.add("updatePlatformVisibilityAndAllowRestricted", () => {
     cy.platformAdminLogin();
