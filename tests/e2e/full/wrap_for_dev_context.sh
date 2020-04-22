@@ -25,6 +25,5 @@ $DOCKERCOMPOSE up -d --build
 
 TEST_RESULT_OUTPUT="$test_results_folder" $DOCKERCOMPOSE up -d --build
 
-TULEAP_IP="$(docker inspect "$($DOCKERCOMPOSE ps -q tuleap)" --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}')"
-OAUTH2_SERVER_RP_OIDC_IP="$(docker inspect "$($DOCKERCOMPOSE ps -q oauth2-server-rp-oidc)" --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}')"
-echo "Please set in /etc/hosts: \`$TULEAP_IP tuleap\` and \`$OAUTH2_SERVER_RP_OIDC_IP oauth2-server-rp-oidc\`"
+HOSTS="$($DOCKERCOMPOSE ps -q | xargs docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}{{range .NetworkSettings.Networks}}{{range .Aliases}} {{ . }}{{end}}{{end}}' | grep -v mysql57)"
+echo -e "Please set in /etc/hosts:\n\e[32m$HOSTS\e[0m"
