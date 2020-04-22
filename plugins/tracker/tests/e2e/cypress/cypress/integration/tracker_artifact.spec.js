@@ -18,6 +18,18 @@
  *
  */
 
+function submitAndStay() {
+    cy.get("[data-test=artifact-submit-options]").click();
+    cy.get("[data-test=artifact-submit-and-stay]").click();
+}
+
+function createNewBug(bug_title) {
+    cy.visitProjectService("tracker-artifact", "Trackers");
+    cy.get("[data-test=tracker-link-bug]").click();
+    cy.get("[data-test=new-artifact]").click();
+    cy.get("[data-test=summary]").type(bug_title);
+}
+
 describe("Tracker artifacts", function () {
     let artifact_id, project_id;
 
@@ -98,14 +110,8 @@ describe("Tracker artifacts", function () {
 
         describe("Artifact manipulation", function () {
             it("must be able to create new artifact", function () {
-                cy.visitProjectService("tracker-artifact", "Trackers");
-                cy.get("[data-test=tracker-link-bug]").click();
-                cy.get("[data-test=new-artifact]").click();
-
-                cy.get("[data-test=summary]").type("My new bug");
-
-                cy.get("[data-test=artifact-submit-options]").click();
-                cy.get("[data-test=artifact-submit-and-stay]").click();
+                createNewBug("My new bug");
+                submitAndStay();
 
                 cy.get("[data-test=feedback]").contains("Artifact Successfully Created");
                 cy.get("[data-test=tracker-artifact-value-summary]").contains("My new bug");
@@ -150,8 +156,7 @@ describe("Tracker artifacts", function () {
                 cy.get("[data-test=remaining_effort]").clear().type(20);
 
                 // submit and check
-                cy.get("[data-test=artifact-submit-options]").click();
-                cy.get("[data-test=artifact-submit-and-stay]").click();
+                submitAndStay();
                 cy.get("[data-test=computed-value]").contains(20);
 
                 //edit field and go back in autocomputed mode
@@ -159,8 +164,7 @@ describe("Tracker artifacts", function () {
                 cy.get("[data-test=switch-to-autocompute]").click();
 
                 //submit and check
-                cy.get("[data-test=artifact-submit-options]").click();
-                cy.get("[data-test=artifact-submit-and-stay]").click();
+                submitAndStay();
                 cy.get("[data-test=computed-value]").contains("Empty");
             });
         });
@@ -237,6 +241,59 @@ describe("Tracker artifacts", function () {
 
             cy.get("[data-test=tracker-link-bug]").click();
             cy.get("[data-test=tracker-administration]").click();
+        });
+    });
+
+    describe("Concurrent artifact edition", () => {
+        before(function () {
+            cy.clearCookie("__Host-TULEAP_session_hash");
+            cy.projectMemberLogin();
+        });
+
+        it("A popup is shown to warn the user that someone has edited the artifact while he was editing it.", () => {
+            createNewBug("Concurrent edition test");
+            submitAndStay();
+
+            cy.get("[data-test=current-artifact-id]")
+                .should("have.attr", "data-artifact-id")
+                .as("artifact_id")
+                .then((artifact_id) => {
+                    // Add a follow-up comment to the artifact via the REST API
+                    cy.putFromTuleapApi(`https://tuleap/api/artifacts/${artifact_id}`, {
+                        values: [],
+                        comment: {
+                            body:
+                                "I have commented this artifact while you were editing it. You mad bro?",
+                            post_processed_body: "string",
+                            format: "string",
+                        },
+                    });
+                });
+
+            cy.get("#tracker_followup_comment_new").type(
+                "This my freshly created artifact. Hope nobody has edited it in the meantime!"
+            );
+
+            submitAndStay();
+
+            // Check popup is shown and submit buttons disabled
+            cy.get("[data-test=concurrent-edition-popup-shown]");
+            cy.get("[data-test=artifact-submit]").should("be", "disabled");
+            cy.get("[data-test=artifact-submit-options]").should("be", "disabled");
+            cy.get("[data-test=artifact-submit-and-stay]").should("be", "disabled");
+
+            // Acknowledge changes
+            cy.get("[data-test=acknowledge-concurrent-edition-button]").click();
+
+            // Check popup is hidden and submit buttons enabled
+            cy.get("[data-test=concurrent-edition-popup-shown]").should("not.exist");
+            cy.get("[data-test=artifact-submit]").should("not.be", "disabled");
+            cy.get("[data-test=artifact-submit-options]").should("not.be", "disabled");
+            cy.get("[data-test=artifact-submit-and-stay]").should("not.be", "disabled");
+
+            submitAndStay();
+
+            cy.get("[data-test=artifact-follow-up]").should("have.length", 2);
         });
     });
 });

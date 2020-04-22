@@ -108,7 +108,8 @@ tuleap.trackers = tuleap.trackers || {};
         changesets.each(function (changeset) {
             $("#notification-placeholder").append(changeset.html);
         });
-        $(".artifact-event-popup").fadeIn(500);
+        $(".artifact-event-popup").fadeIn(500).attr("data-test", "concurrent-edition-popup-shown");
+
         $(".artifact-event-popup button").click(detachPopup);
         $("#tracker_artifact_followup_comments").addClass("tracker-artifact-in-concurrent-edition");
 
