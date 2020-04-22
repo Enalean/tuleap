@@ -42,11 +42,12 @@ final class SiteDeployFPM
         'tuleap_common.part'               => 'tuleap_common.part',
     ];
 
-    private const ENV_SESSION     = 'TULEAP_FPM_SESSION_MODE';
-    private const SESSION_REDIS   = 'redis';
-    private const REDIS_SERVER    = 'TULEAP_REDIS_SERVER';
-    private const REDIS_PORT      = 'TULEAP_REDIS_PORT';
-    private const REDIS_PASSWORD  = 'TULEAP_REDIS_PASSWORD';
+    private const ENV_SESSION        = 'TULEAP_FPM_SESSION_MODE';
+    private const SESSION_REDIS      = 'redis';
+    private const ENV_REDIS_SERVER   = 'TULEAP_REDIS_SERVER';
+    private const ENV_REDIS_PORT     = 'TULEAP_REDIS_PORT';
+    private const ENV_REDIS_PASSWORD = 'TULEAP_REDIS_PASSWORD';
+    private const ENV_REDIS_TLS      = 'TULEAP_REDIS_USE_TLS';
 
     /**
      * @var int|string
@@ -92,18 +93,19 @@ final class SiteDeployFPM
     public static function buildSessionFromEnv(): FPMSessionInterface
     {
         $session_mode = getenv(self::ENV_SESSION);
-        if ($session_mode === self::SESSION_REDIS && ($server = getenv(self::REDIS_SERVER)) !== false) {
-            $port = getenv(self::REDIS_PORT);
+        if ($session_mode === self::SESSION_REDIS && ($server = getenv(self::ENV_REDIS_SERVER)) !== false) {
+            $port = getenv(self::ENV_REDIS_PORT);
             if ($port === false) {
                 $port = FPMSessionRedis::DEFAULT_REDIS_PORT;
             } else {
                 $port = (int) $port;
             }
-            $password = getenv(self::REDIS_PASSWORD);
+            $password = getenv(self::ENV_REDIS_PASSWORD);
             if ($password === false) {
                 $password = '';
             }
-            return new FPMSessionRedis(\ForgeConfig::get('redis_config_file'), \ForgeConfig::get('sys_http_user'), $server, $port, $password);
+            $use_tls = getenv(self::ENV_REDIS_TLS) === '1';
+            return new FPMSessionRedis(\ForgeConfig::get('redis_config_file'), \ForgeConfig::get('sys_http_user'), $server, $use_tls, $port, $password);
         }
         return new FPMSessionFiles();
     }

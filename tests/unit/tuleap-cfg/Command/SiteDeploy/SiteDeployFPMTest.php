@@ -325,7 +325,7 @@ final class SiteDeployFPMTest extends TestCase
             new NullLogger(),
             $this->current_user,
             false,
-            new FPMSessionRedis($this->tuleap_redis_conf_file, $this->current_user, 'another-redis', 7222, 'this_is_secure'),
+            new FPMSessionRedis($this->tuleap_redis_conf_file, $this->current_user, 'another-redis', false, 7222, 'this_is_secure'),
             $this->php73_configuration_folder,
             __DIR__ . '/../../../../../src/etc/fpm73',
             [],
@@ -341,5 +341,29 @@ final class SiteDeployFPMTest extends TestCase
         $this->assertEquals('another-redis', $redis_server);
         $this->assertEquals(7222, $redis_port);
         $this->assertEquals('this_is_secure', $redis_password);
+    }
+
+    public function testDeployPHP73WithAuthenticatedRedisSessionWithTLS(): void
+    {
+        $deploy = new SiteDeployFPM(
+            new NullLogger(),
+            $this->current_user,
+            false,
+            new FPMSessionRedis($this->tuleap_redis_conf_file, $this->current_user, 'another-redis', true, 7222, ''),
+            $this->php73_configuration_folder,
+            __DIR__ . '/../../../../../src/etc/fpm73',
+            [],
+            $this->temp_dir,
+        );
+        $deploy->configure();
+
+        $tuleap_conf = file_get_contents($this->php73_configuration_folder . '/php-fpm.d/tuleap_sessions.part');
+        $this->assertStringContainsString('php_value[session.save_handler] = redis', $tuleap_conf);
+        $this->assertStringContainsString('php_value[session.save_path]    = "tls://another-redis:7222"', $tuleap_conf);
+
+        require($this->tuleap_redis_conf_file);
+        $this->assertEquals('tls://another-redis', $redis_server);
+        $this->assertEquals(7222, $redis_port);
+        $this->assertEquals('', $redis_password);
     }
 }
