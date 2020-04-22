@@ -8,6 +8,7 @@
             ng-click="$ctrl.openEditCampaignModal()"
             ng-if="$ctrl.campaign_state.campaign.user_can_update"
             title="{{ ::'Edit campaign' | translate }}"
+            data-test="edit-campaign-button"
     >
         <i class="fa fa-pencil tlp-button-icon"></i> {{ 'Edit' | translate }}
     </button>

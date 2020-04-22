@@ -166,6 +166,7 @@
     </label>
     <input type="text"
         class="tlp-input"
+        data-test="{{ 'artifact-modal-field-' + field.name }}"
         ng-model="modal.values[field.field_id].value"
         ng-required="{{ field.required }}"
         ng-disabled="modal.isDisabled(field)"
@@ -477,6 +478,7 @@
         </button>
         <input
             type="submit"
+            data-test="artifact-modal-save-button"
             class="tlp-button-primary tlp-modal-action"
             value="{{ 'Save changes' | translate }}"
             ng-disabled="modal.isUploadingInCKEditor()"

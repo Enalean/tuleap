@@ -18,6 +18,7 @@
             <input type="text"
                    class="tlp-input edit-campaign-label-input"
                    id="campaign-label"
+                   data-test=campaign-label
                    name="campaign_label"
                    ng-model="campaign.label"
                    placeholder="{{ 'Campaign label' | translate }}"
@@ -63,6 +64,7 @@
         <div class="tlp-table-actions">
             <button type="button"
                     class="tlp-button-primary tlp-table-actions-element"
+                    data-test="add-test-button"
                     ng-click="showAddTestModal()">
                 <i class="fa fa-plus"></i> {{ 'Add a test' | translate }}
             </button>
@@ -151,6 +153,7 @@
             {{ 'Cancel' | translate }}
         </button>
         <button type="submit"
+                data-test="edit-campaign-save-button"
                 class="tlp-button-primary tlp-modal-action"
                 ng-disabled="submitting_changes || ! editCampaignForm.$valid">
             <i class="fa fa-spinner fa-spin" ng-if="submitting_changes"></i>
