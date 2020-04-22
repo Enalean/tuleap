@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Reports;
 
+use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use XML_SimpleXMLCDATAFactory;
 
 class XmlReportExporter
@@ -37,7 +39,7 @@ class XmlReportExporter
         $this->cdata_factory = $cdata_factory;
     }
 
-    public function exportReports(\SimpleXMLElement $trackers_node): void
+    public function exportReports(\SimpleXMLElement $trackers_node, FieldMappingCollection $field_mapping_collection): void
     {
         $reports_node = $trackers_node->addChild('reports');
         $report_node  = $reports_node->addChild('report');
@@ -54,6 +56,14 @@ class XmlReportExporter
         $renderer_node->addAttribute('chunksz', "15");
 
         $this->cdata_factory->insert($renderer_node, 'name', 'Results');
-        $renderer_node->addChild('columns');
+        $columns_node = $renderer_node->addChild('columns');
+
+        $summary_field = $field_mapping_collection->getMappingFromJiraField(JiraXmlExporter::JIRA_SUMMARY_FIELD_NAME);
+        if ($summary_field === null) {
+            return;
+        }
+        $field_node   = $columns_node->addChild('field');
+
+        $field_node->addAttribute('REF', $summary_field->getXMLId());
     }
 }

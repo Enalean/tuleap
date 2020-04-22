@@ -23,13 +23,25 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Reports;
 
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
+
 final class XmlReportExporterTest extends \PHPUnit\Framework\TestCase
 {
     public function testItExportReports(): void
     {
+        $mapping = new FieldMappingCollection();
+        $mapping->addMapping(
+            new FieldMapping(
+                'summary',
+                'Fsummary',
+                'summary'
+            )
+        );
+
         $tracker_node  = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><trackers />');
         $report_export = new XmlReportExporter(new \XML_SimpleXMLCDATAFactory());
-        $report_export->exportReports($tracker_node);
+        $report_export->exportReports($tracker_node, $mapping);
 
         $reports_node = $tracker_node->reports;
         $this->assertNotNull($reports_node);
@@ -58,6 +70,13 @@ final class XmlReportExporterTest extends \PHPUnit\Framework\TestCase
 
         $rendreder_name = $renderer_node->name;
         $this->assertNotNull($rendreder_name);
+
+        $columns_node = $renderer_node->columns;
+        $this->assertNotNull($columns_node);
+
+        $field = $columns_node->field;
+        $this->assertEquals("Fsummary", $field['REF']);
+
         $this->assertEquals("Results", (string) $rendreder_name);
     }
 }

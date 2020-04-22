@@ -185,7 +185,7 @@ class JiraXmlExporter
         $this->semantics_xml_exporter->exportSemantics($node_tracker, $this->jira_field_mapping_collection);
 
         $node_tracker->addChild('rules');
-        $this->report_exporter->exportReports($node_tracker);
+        $this->report_exporter->exportReports($node_tracker, $this->jira_field_mapping_collection);
         $node_tracker->addChild('workflow');
 
         $this->permissions_xml_exporter->exportFieldsPermissions(
