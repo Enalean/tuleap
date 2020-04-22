@@ -31,6 +31,7 @@ class GenericProviderDao extends DataAccessObject
         $name,
         $authorization_endpoint,
         $token_endpoint,
+        ?string $jwks_endpoint,
         $user_info_endpoint,
         $client_id,
         $client_secret,
@@ -42,6 +43,7 @@ class GenericProviderDao extends DataAccessObject
                 $name,
                 $authorization_endpoint,
                 $token_endpoint,
+                $jwks_endpoint,
                 $user_info_endpoint,
                 $client_id,
                 $client_secret,
@@ -55,10 +57,10 @@ class GenericProviderDao extends DataAccessObject
 
                 $id = $db->lastInsertId();
 
-                $sql = "INSERT INTO plugin_openidconnectclient_provider_generic(provider_id, authorization_endpoint, token_endpoint, user_info_endpoint)
-                    VALUES (?, ?, ?, ?)";
+                $sql = "INSERT INTO plugin_openidconnectclient_provider_generic(provider_id, authorization_endpoint, token_endpoint, jwks_endpoint, user_info_endpoint)
+                    VALUES (?, ?, ?, ?, ?)";
 
-                $db->run($sql, $id, $authorization_endpoint, $token_endpoint, $user_info_endpoint);
+                $db->run($sql, $id, $authorization_endpoint, $token_endpoint, $jwks_endpoint, $user_info_endpoint);
 
                 return (int) $id;
             }
@@ -76,6 +78,7 @@ class GenericProviderDao extends DataAccessObject
         $name,
         $authorization_endpoint,
         $token_endpoint,
+        ?string $jwks_endpoint,
         $user_info_endpoint,
         $is_unique_authentication_endpoint,
         $client_id,
@@ -89,6 +92,7 @@ class GenericProviderDao extends DataAccessObject
                 $name,
                 $authorization_endpoint,
                 $token_endpoint,
+                $jwks_endpoint,
                 $user_info_endpoint,
                 $is_unique_authentication_endpoint,
                 $client_id,
@@ -113,10 +117,11 @@ class GenericProviderDao extends DataAccessObject
                 $sql = "UPDATE plugin_openidconnectclient_provider_generic SET
                         authorization_endpoint = ?,
                         token_endpoint = ?,
+                        jwks_endpoint = ?,
                         user_info_endpoint = ?
                     WHERE provider_id = ?";
 
-                $db->run($sql, $authorization_endpoint, $token_endpoint, $user_info_endpoint, $id);
+                $db->run($sql, $authorization_endpoint, $token_endpoint, $jwks_endpoint, $user_info_endpoint, $id);
             }
         );
     }

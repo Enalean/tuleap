@@ -48,6 +48,11 @@ final class GenericProvider implements Provider
     private $token_endpoint;
 
     /**
+     * @var string|null
+     */
+    private $jwks_endpoint;
+
+    /**
      * @var string
      */
     private $user_info_endpoint;
@@ -82,6 +87,7 @@ final class GenericProvider implements Provider
         string $name,
         string $authorization_endpoint,
         string $token_endpoint,
+        ?string $jwks_endpoint,
         string $user_info_endpoint,
         string $client_id,
         string $client_secret,
@@ -93,6 +99,7 @@ final class GenericProvider implements Provider
         $this->name                              = $name;
         $this->authorization_endpoint            = $authorization_endpoint;
         $this->token_endpoint                    = $token_endpoint;
+        $this->jwks_endpoint                     = $jwks_endpoint;
         $this->user_info_endpoint                = $user_info_endpoint;
         $this->client_id                         = $client_id;
         $this->client_secret                     = $client_secret;
@@ -128,7 +135,10 @@ final class GenericProvider implements Provider
 
     public function getJWKSEndpoint(): ?string
     {
-        return null;
+        if ($this->jwks_endpoint === '') {
+            return null;
+        }
+        return $this->jwks_endpoint;
     }
 
     public function getClientId(): string

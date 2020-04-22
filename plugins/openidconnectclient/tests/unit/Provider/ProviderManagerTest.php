@@ -91,6 +91,7 @@ class ProviderManagerTest extends TestCase
             'Provider',
             'https://example.com/auth',
             'https://example.com/token',
+            'https://example.com/jwks',
             'https://example.com/userinfo',
             'Id Client',
             'secret',

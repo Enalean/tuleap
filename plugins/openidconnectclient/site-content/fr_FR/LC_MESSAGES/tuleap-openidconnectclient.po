@@ -93,6 +93,9 @@ msgstr ""
 "Si vous ne faites plus confiance à un fournisseur, vous pouvez supprimer le "
 "lien."
 
+msgid "JWKS endpoint"
+msgstr "Route du document JWKS"
+
 msgid "Last login date"
 msgstr "Dernière connexion"
 

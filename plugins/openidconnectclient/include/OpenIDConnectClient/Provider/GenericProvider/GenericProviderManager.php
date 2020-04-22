@@ -45,6 +45,7 @@ class GenericProviderManager
         string $name,
         string $authorization_endpoint,
         string $token_endpoint,
+        string $jwks_endpoint,
         string $user_info_endpoint,
         string $client_id,
         string $client_secret,
@@ -56,6 +57,7 @@ class GenericProviderManager
             $name,
             $authorization_endpoint,
             $token_endpoint,
+            $jwks_endpoint,
             $user_info_endpoint,
             $is_unique_authentication_endpoint,
             $client_id,
@@ -72,6 +74,7 @@ class GenericProviderManager
             $name,
             $authorization_endpoint,
             $token_endpoint,
+            $jwks_endpoint,
             $user_info_endpoint,
             $client_id,
             $client_secret,
@@ -84,6 +87,7 @@ class GenericProviderManager
             $name,
             $authorization_endpoint,
             $token_endpoint,
+            $jwks_endpoint,
             $user_info_endpoint,
             $client_id,
             $client_secret,
@@ -102,6 +106,7 @@ class GenericProviderManager
             $provider->getName(),
             $provider->getAuthorizationEndpoint(),
             $provider->getTokenEndpoint(),
+            $provider->getJWKSEndpoint() ?? '',
             $provider->getUserInfoEndpoint(),
             $provider->isUniqueAuthenticationEndpoint(),
             $provider->getClientId(),
@@ -119,6 +124,7 @@ class GenericProviderManager
             $provider->getName(),
             $provider->getAuthorizationEndpoint(),
             $provider->getTokenEndpoint(),
+            $provider->getJWKSEndpoint(),
             $provider->getUserInfoEndpoint(),
             $provider->isUniqueAuthenticationEndpoint(),
             $provider->getClientId(),
@@ -132,6 +138,7 @@ class GenericProviderManager
         string $name,
         string $authorization_endpoint,
         string $token_endpoint,
+        string $jwks_endpoint,
         string $userinfo_endpoint,
         bool $is_unique_authentication_endpoint,
         string $client_id,
@@ -142,14 +149,15 @@ class GenericProviderManager
         $string_validator   = new Valid_String();
         $http_uri_validator = new Valid_HTTPSURI();
         $http_uri_validator->required();
-        $userinfo_endpoint_validator = new Valid_HTTPSURI();
+        $https_uri_validator_not_required = new Valid_HTTPSURI();
 
         return $string_validator->validate($name)
             && $string_validator->validate($client_id)
             && $string_validator->validate($client_secret)
             && $http_uri_validator->validate($authorization_endpoint)
             && $http_uri_validator->validate($token_endpoint)
-            && $userinfo_endpoint_validator->validate($userinfo_endpoint)
+            && $https_uri_validator_not_required->validate($jwks_endpoint)
+            && $https_uri_validator_not_required->validate($userinfo_endpoint)
             && is_bool($is_unique_authentication_endpoint)
             && $string_validator->validate($icon)
             && $string_validator->validate($color);
@@ -162,6 +170,7 @@ class GenericProviderManager
             $row['name'],
             $row['authorization_endpoint'],
             $row['token_endpoint'],
+            $row['jwks_endpoint'],
             $row['user_info_endpoint'],
             $row['client_id'],
             $row['client_secret'],

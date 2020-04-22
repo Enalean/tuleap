@@ -44,6 +44,7 @@ class GenericProviderManagerTest extends TestCase
             'Provider',
             'https://example.com/auth',
             'https://example.com/token',
+            'https://example.com/jwks',
             'https://example.com/userinfo',
             'Id Client',
             'Secret',
@@ -56,6 +57,7 @@ class GenericProviderManagerTest extends TestCase
             'Provider',
             'https://example.com/auth',
             'https://example.com/token',
+            'https://example.com/jwks',
             'https://example.com/userinfo',
             'Id Client',
             'Secret',
@@ -80,6 +82,7 @@ class GenericProviderManagerTest extends TestCase
             'Provider',
             'https://example.com/auth',
             'https://example.com/token',
+            'https://example.com/jwks',
             '',
             'Id Client',
             'Secret',
@@ -93,7 +96,47 @@ class GenericProviderManagerTest extends TestCase
             'Provider',
             'https://example.com/auth',
             'https://example.com/token',
+            'https://example.com/jwks',
             '',
+            'Id Client',
+            'Secret',
+            'github',
+            'fiesta_red'
+        );
+
+        $this->assertEquals($generic_provider, $res);
+    }
+
+    public function testItCreatesNewGenericProviderWithAnEmptyJWKSEndpoint(): void
+    {
+        $generic_provider_dao     = \Mockery::mock(GenericProviderDao::class);
+        $generic_provider_manager = new GenericProviderManager(
+            $generic_provider_dao
+        );
+
+        $generic_provider_dao->shouldReceive('create')->andReturn(1)->once();
+
+        $generic_provider = new GenericProvider(
+            1,
+            'Provider',
+            'https://example.com/auth',
+            'https://example.com/token',
+            '',
+            'https://example.com/userinfo',
+            'Id Client',
+            'Secret',
+            false,
+            'github',
+            'fiesta_red'
+        );
+
+
+        $res = $generic_provider_manager->createGenericProvider(
+            'Provider',
+            'https://example.com/auth',
+            'https://example.com/token',
+            '',
+            'https://example.com/userinfo',
             'Id Client',
             'Secret',
             'github',
@@ -115,6 +158,7 @@ class GenericProviderManagerTest extends TestCase
             'Provider',
             'https://example.com/auth',
             'https://example.com/token',
+            'https://example.com/jwks',
             'https://example.com/userinfo',
             'ID',
             'Secret',
@@ -136,11 +180,12 @@ class GenericProviderManagerTest extends TestCase
 
         $generic_provider_dao->shouldReceive('create')->never();
         $generic_provider_dao->shouldReceive('save')->never();
-        $this->expectException('Tuleap\OpenIDConnectClient\Provider\ProviderMalformedDataException');
+        $this->expectException(ProviderMalformedDataException::class);
 
         $provider = new GenericProvider(
             0,
             'Provider',
+            'Not A URL',
             'Not A URL',
             'Not A URL',
             'Not A URL',
@@ -155,6 +200,7 @@ class GenericProviderManagerTest extends TestCase
             $provider->getName(),
             $provider->getAuthorizationEndpoint(),
             $provider->getTokenEndpoint(),
+            $provider->getJWKSEndpoint(),
             $provider->getUserInfoEndpoint(),
             $provider->getClientId(),
             $provider->getClientSecret(),

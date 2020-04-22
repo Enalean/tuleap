@@ -102,6 +102,21 @@
                 >
             </div>
 
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="jwks_endpoint-{{ getId }}">
+                    {{# dgettext }} tuleap-openidconnectclient | JWKS endpoint {{/ dgettext }}
+                </label>
+                <input
+                        type="url"
+                        class="tlp-input"
+                        id="jwks_endpoint-{{ getId }}"
+                        name="jwks_endpoint"
+                        pattern="https://.+"
+                        placeholder="{{ https_placeholder }}"
+                        value="{{ jwks_endpoint }}"
+                >
+            </div>
+
             <div class="tlp-form-element provider-admin-modal-userinfo-endpoint-container">
                 <label class="tlp-label" for="userinfo_endpoint-{{ getId }}">
                     {{ userinfo_endpoint }}
