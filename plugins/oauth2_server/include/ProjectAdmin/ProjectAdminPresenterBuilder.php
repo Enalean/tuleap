@@ -27,7 +27,7 @@ use Tuleap\Cryptography\KeyFactory;
 use Tuleap\OAuth2Server\App\AppDao;
 use Tuleap\OAuth2Server\App\AppFactory;
 use Tuleap\OAuth2Server\App\ClientIdentifier;
-use Tuleap\OAuth2Server\App\LastCreatedOAuth2AppStore;
+use Tuleap\OAuth2Server\App\LastGeneratedClientSecretStore;
 use Tuleap\OAuth2Server\App\PrefixOAuth2ClientSecret;
 
 class ProjectAdminPresenterBuilder
@@ -37,14 +37,14 @@ class ProjectAdminPresenterBuilder
      */
     private $app_factory;
     /**
-     * @var LastCreatedOAuth2AppStore
+     * @var LastGeneratedClientSecretStore
      */
-    private $last_created_app_store;
+    private $client_secret_store;
 
-    public function __construct(AppFactory $app_factory, LastCreatedOAuth2AppStore $last_created_app_store)
+    public function __construct(AppFactory $app_factory, LastGeneratedClientSecretStore $last_created_app_store)
     {
-        $this->app_factory            = $app_factory;
-        $this->last_created_app_store = $last_created_app_store;
+        $this->app_factory         = $app_factory;
+        $this->client_secret_store = $last_created_app_store;
     }
 
     public static function buildSelf(): self
@@ -52,7 +52,7 @@ class ProjectAdminPresenterBuilder
         $storage =& $_SESSION ?? [];
         return new self(
             new AppFactory(new AppDao(), \ProjectManager::instance()),
-            new LastCreatedOAuth2AppStore(
+            new LastGeneratedClientSecretStore(
                 new PrefixedSplitTokenSerializer(new PrefixOAuth2ClientSecret()),
                 (new KeyFactory())->getEncryptionKey(),
                 $storage
@@ -79,13 +79,13 @@ class ProjectAdminPresenterBuilder
 
     private function getLastCreatedAppPresenter(): ?LastCreatedOAuth2AppPresenter
     {
-        $last_created_app = $this->last_created_app_store->getLastCreatedApp();
-        if ($last_created_app === null) {
+        $last_secret = $this->client_secret_store->getLastGeneratedClientSecret();
+        if ($last_secret === null) {
             return null;
         }
         return new LastCreatedOAuth2AppPresenter(
-            ClientIdentifier::fromLastCreatedOAuth2App($last_created_app)->toString(),
-            $last_created_app->getSecret()
+            ClientIdentifier::fromLastGeneratedClientSecret($last_secret)->toString(),
+            $last_secret->getSecret()
         );
     }
 }

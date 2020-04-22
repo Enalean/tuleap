@@ -43,7 +43,7 @@ use Tuleap\OAuth2Server\AccessToken\OAuth2AccessTokenVerifier;
 use Tuleap\OAuth2Server\AccessToken\Scope\OAuth2AccessTokenScopeDAO;
 use Tuleap\OAuth2Server\App\AppDao;
 use Tuleap\OAuth2Server\App\AppFactory;
-use Tuleap\OAuth2Server\App\LastCreatedOAuth2AppStore;
+use Tuleap\OAuth2Server\App\LastGeneratedClientSecretStore;
 use Tuleap\OAuth2Server\App\OAuth2AppCredentialVerifier;
 use Tuleap\OAuth2Server\App\OAuth2AppRemover;
 use Tuleap\OAuth2Server\App\PrefixOAuth2ClientSecret;
@@ -176,6 +176,10 @@ final class oauth2_serverPlugin extends Plugin
                     '/project/{project_id:\d+}/admin/delete-app',
                     $this->getRouteHandler('routeDeleteProjectAdmin')
                 );
+                $r->post(
+                    '/project/{project_id:\d+}/admin/new-client-secret',
+                    $this->getRouteHandler('routeNewClientSecret')
+                );
                 $r->get('/account/apps', $this->getRouteHandler('routeGetAccountApps'));
                 $r->post('/account/apps/revoke', $this->getRouteHandler('routePostAccountAppRevoke'));
             }
@@ -214,7 +218,7 @@ final class oauth2_serverPlugin extends Plugin
             $response_factory,
             new AppDao(),
             new SplitTokenVerificationStringHasher(),
-            new LastCreatedOAuth2AppStore(
+            new LastGeneratedClientSecretStore(
                 new PrefixedSplitTokenSerializer(new PrefixOAuth2ClientSecret()),
                 (new KeyFactory())->getEncryptionKey(),
                 $storage
@@ -246,6 +250,36 @@ final class oauth2_serverPlugin extends Plugin
                 new OAuth2AuthorizationCodeDAO(),
                 new AuthorizationDao(),
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+            ),
+            new \CSRFSynchronizerToken(ListAppsController::CSRF_TOKEN),
+            new SapiEmitter(),
+            new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
+            new \Tuleap\Project\Routing\ProjectRetrieverMiddleware(ProjectRetriever::buildSelf()),
+            new \Tuleap\Project\Admin\Routing\RejectNonProjectAdministratorMiddleware(
+                UserManager::instance(),
+                new ProjectAdministratorChecker()
+            )
+        );
+    }
+
+    public function routeNewClientSecret(): DispatchableWithRequest
+    {
+        $storage =& $_SESSION ?? [];
+        $response_factory = HTTPFactoryBuilder::responseFactory();
+        return new \Tuleap\OAuth2Server\ProjectAdmin\NewClientSecretController(
+            $response_factory,
+            new \Tuleap\Http\Response\RedirectWithFeedbackFactory(
+                $response_factory,
+                new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())
+            ),
+            new \Tuleap\OAuth2Server\App\ClientSecretUpdater(
+                new SplitTokenVerificationStringHasher(),
+                new AppDao(),
+                new LastGeneratedClientSecretStore(
+                    new PrefixedSplitTokenSerializer(new PrefixOAuth2ClientSecret()),
+                    (new KeyFactory())->getEncryptionKey(),
+                    $storage
+                )
             ),
             new \CSRFSynchronizerToken(ListAppsController::CSRF_TOKEN),
             new SapiEmitter(),

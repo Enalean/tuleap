@@ -25,11 +25,20 @@ import {
     openModalAndReplacePlaceholders,
     openTargetModalIdOnClick,
 } from "../../../../src/scripts/tuleap/modals/modal-opener";
-import { buildDeletionReplaceCallback, hiddenInputReplaceCallback } from "./replacers";
+import {
+    buildDeletionReplaceCallback,
+    buildRegenerationReplaceBallback,
+    hiddenInputReplaceCallback,
+} from "./replacers";
 
 const ADD_BUTTON_ID = "oauth2-server-add-client-button";
 
-const DELETE_BUTTONS_SELECTOR = ".oauth2-server-delete-client-button";
+const NEW_SECRET_BUTTONS_SELECTOR = "[data-new-client-secret-button]";
+const NEW_SECRET_MODAL_ID = "oauth2-server-new-secret-modal";
+const NEW_SECRET_MODAL_APP_ID = "oauth2-server-new-secret-app-id";
+const NEW_SECRET_MODAL_DESCRIPTION = "oauth2-server-new-secret-app-name";
+
+const DELETE_BUTTONS_SELECTOR = "[data-delete-client-button]";
 const DELETE_MODAL_ID = "oauth2-server-delete-client-modal";
 const DELETE_MODAL_HIDDEN_INPUT_ID = "oauth2-server-delete-client-modal-app-id";
 const DELETE_MODAL_DESCRIPTION = "oauth2-server-delete-client-modal-app-name";
@@ -55,6 +64,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         paragraph_replacement: {
             paragraph_id: DELETE_MODAL_DESCRIPTION,
             paragraphReplaceCallback: buildDeletionReplaceCallback(gettext_provider),
+        },
+    });
+    openModalAndReplacePlaceholders({
+        document: document,
+        buttons_selector: NEW_SECRET_BUTTONS_SELECTOR,
+        modal_element_id: NEW_SECRET_MODAL_ID,
+        hidden_input_replacement: {
+            input_id: NEW_SECRET_MODAL_APP_ID,
+            hiddenInputReplaceCallback,
+        },
+        paragraph_replacement: {
+            paragraph_id: NEW_SECRET_MODAL_DESCRIPTION,
+            paragraphReplaceCallback: buildRegenerationReplaceBallback(gettext_provider),
         },
     });
 });

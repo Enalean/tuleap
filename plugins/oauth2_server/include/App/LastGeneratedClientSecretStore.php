@@ -28,9 +28,9 @@ use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 
-class LastCreatedOAuth2AppStore
+class LastGeneratedClientSecretStore
 {
-    private const STORAGE_NAME = 'oauth2_last_created_app';
+    private const STORAGE_NAME = 'oauth2_last_generated_client_secret';
 
     /**
      * @var EncryptionKey
@@ -55,18 +55,15 @@ class LastCreatedOAuth2AppStore
         $this->storage               =& $storage;
     }
 
-    public function storeLastCreatedApp(int $app_id, NewOAuth2App $new_oauth2_app): void
+    public function storeLastGeneratedClientSecret(int $app_id, SplitTokenVerificationString $secret): void
     {
         $this->storage[self::STORAGE_NAME] = [
             'app_id'   => $app_id,
-            'verifier' => SymmetricCrypto::encrypt(
-                $new_oauth2_app->getSecret()->getString(),
-                $this->encryption_key
-            )
+            'verifier' => SymmetricCrypto::encrypt($secret->getString(), $this->encryption_key)
         ];
     }
 
-    public function getLastCreatedApp(): ?LastCreatedOAuth2App
+    public function getLastGeneratedClientSecret(): ?LastGeneratedClientSecret
     {
         if (! isset($this->storage[self::STORAGE_NAME])) {
             return null;
@@ -75,7 +72,7 @@ class LastCreatedOAuth2AppStore
         unset($this->storage[self::STORAGE_NAME]);
 
         $app_id = $storage_value['app_id'];
-        return new LastCreatedOAuth2App(
+        return new LastGeneratedClientSecret(
             $app_id,
             $this->split_token_formatter->getIdentifier(
                 new SplitToken(

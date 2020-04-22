@@ -17,7 +17,7 @@
                         <p>
                             {{# dgettext }}
                                 tuleap-oauth2_server |
-                                Your new app %s has been created, make sure to copy the following secret. You won't be able to see it again! |
+                                Here is the generated secret for your app %s. Make sure to copy it. You won't be able to see it again! |
                                 {{ client_id }}
                             {{/ dgettext }}
                         </p>
@@ -54,7 +54,17 @@
                             <td>{{# use_pkce }}<i class="fa fa-check"></i>{{/ use_pkce }}</td>
                             <td class="tlp-table-cell-actions">
                                 <button
-                                    class="tlp-button-danger tlp-button-outline oauth2-server-delete-client-button"
+                                    class="tlp-button-danger tlp-button-outline tlp-button-small tlp-table-cell-actions-button"
+                                    data-new-client-secret-button
+                                    data-app-id="{{ id }}"
+                                    data-app-name="{{ name }}"
+                                >
+                                    <i class="fa fa-key tlp-button-icon"></i>
+                                    {{# dgettext }}tuleap-oauth2_server | Generate a new client secret{{/ dgettext }}
+                                </button>
+                                <button
+                                    class="tlp-button-danger tlp-button-outline tlp-button-small tlp-table-cell-actions-button"
+                                    data-delete-client-button
                                     data-app-id="{{ id }}"
                                     data-app-name="{{ name }}"
                                 >
@@ -79,3 +89,4 @@
 </div>
 {{> app-add-modal }}
 {{> app-delete-modal }}
+{{> new-secret-modal }}

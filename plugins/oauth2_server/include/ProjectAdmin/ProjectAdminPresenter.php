@@ -45,6 +45,11 @@ final class ProjectAdminPresenter
      */
     public $delete_client_url;
     /**
+     * @var string
+     * @psalm-readonly
+     */
+    public $generate_new_secret_url;
+    /**
      * @var LastCreatedOAuth2AppPresenter|null
      * @psalm-readonly
      */
@@ -59,10 +64,11 @@ final class ProjectAdminPresenter
         \Project $project,
         ?LastCreatedOAuth2AppPresenter $last_created_app
     ) {
-        $this->apps              = $apps;
-        $this->csrf_token        = $csrf_token;
-        $this->add_client_url    = AddAppController::getUrl($project);
-        $this->delete_client_url = DeleteAppController::getUrl($project);
-        $this->last_created_app  = $last_created_app;
+        $this->apps                    = $apps;
+        $this->csrf_token              = $csrf_token;
+        $this->add_client_url          = AddAppController::getUrl($project);
+        $this->delete_client_url       = DeleteAppController::getUrl($project);
+        $this->generate_new_secret_url = NewClientSecretController::getUrl($project);
+        $this->last_created_app        = $last_created_app;
     }
 }

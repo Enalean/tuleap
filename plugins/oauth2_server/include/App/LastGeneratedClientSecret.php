@@ -27,7 +27,7 @@ use Tuleap\Cryptography\ConcealedString;
 /**
  * @psalm-immutable
  */
-final class LastCreatedOAuth2App
+final class LastGeneratedClientSecret
 {
     /**
      * @var int

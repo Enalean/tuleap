@@ -20,20 +20,16 @@
 
 declare(strict_types=1);
 
-namespace ProjectAdmin;
+namespace Tuleap\OAuth2Server\ProjectAdmin;
 
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OAuth2Server\App\AppFactory;
-use Tuleap\OAuth2Server\App\LastCreatedOAuth2App;
-use Tuleap\OAuth2Server\App\LastCreatedOAuth2AppStore;
+use Tuleap\OAuth2Server\App\LastGeneratedClientSecret;
+use Tuleap\OAuth2Server\App\LastGeneratedClientSecretStore;
 use Tuleap\OAuth2Server\App\OAuth2App;
-use Tuleap\OAuth2Server\ProjectAdmin\AppPresenter;
-use Tuleap\OAuth2Server\ProjectAdmin\LastCreatedOAuth2AppPresenter;
-use Tuleap\OAuth2Server\ProjectAdmin\ProjectAdminPresenter;
-use Tuleap\OAuth2Server\ProjectAdmin\ProjectAdminPresenterBuilder;
 
 final class ProjectAdminPresenterBuilderTest extends TestCase
 {
@@ -44,9 +40,9 @@ final class ProjectAdminPresenterBuilderTest extends TestCase
      */
     private $presenter_builder;
     /**
-     * @var M\LegacyMockInterface|M\MockInterface|LastCreatedOAuth2AppStore
+     * @var M\LegacyMockInterface|M\MockInterface|LastGeneratedClientSecretStore
      */
-    private $last_created_app_store;
+    private $client_secret_store;
     /**
      * @var M\LegacyMockInterface|M\MockInterface|AppFactory
      */
@@ -54,16 +50,16 @@ final class ProjectAdminPresenterBuilderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->app_factory            = M::mock(AppFactory::class);
-        $this->last_created_app_store = M::mock(LastCreatedOAuth2AppStore::class);
-        $this->presenter_builder      = new ProjectAdminPresenterBuilder($this->app_factory, $this->last_created_app_store);
+        $this->app_factory = M::mock(AppFactory::class);
+        $this->client_secret_store = M::mock(LastGeneratedClientSecretStore::class);
+        $this->presenter_builder = new ProjectAdminPresenterBuilder($this->app_factory, $this->client_secret_store);
     }
 
     /**
      * @dataProvider dataProviderLastCreatedApp
      */
     public function testBuildTransformsAppsIntoPresenters(
-        ?LastCreatedOAuth2App $last_created_app,
+        ?LastGeneratedClientSecret $last_generated_client_secret,
         ?LastCreatedOAuth2AppPresenter $expected_last_created_oauth2_presenter
     ): void {
         $project    = M::mock(\Project::class)->shouldReceive('getID')
@@ -79,7 +75,9 @@ final class ProjectAdminPresenterBuilderTest extends TestCase
                     new OAuth2App(2, 'My custom REST client', 'https://my-custom-client.example.com', true, $project)
                 ]
             );
-        $this->last_created_app_store->shouldReceive('getLastCreatedApp')->once()->andReturn($last_created_app);
+        $this->client_secret_store->shouldReceive('getLastGeneratedClientSecret')->once()->andReturn(
+            $last_generated_client_secret
+        );
 
         $expected = new ProjectAdminPresenter(
             [
@@ -98,7 +96,7 @@ final class ProjectAdminPresenterBuilderTest extends TestCase
         return [
             'No app has just been created' => [null, null],
             'An app has just been created' => [
-                new LastCreatedOAuth2App(2, new ConcealedString('secret')),
+                new LastGeneratedClientSecret(2, new ConcealedString('secret')),
                 new LastCreatedOAuth2AppPresenter('tlp-client-id-2', new ConcealedString('secret'))
             ],
         ];
