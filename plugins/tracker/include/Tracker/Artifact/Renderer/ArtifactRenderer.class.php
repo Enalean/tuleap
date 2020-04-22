@@ -103,7 +103,7 @@ abstract class Tracker_Artifact_ArtifactRenderer
         return '<div class="hidden-artifact-submit-button">
                     <input type="hidden" id="submit-type" />
                     <div class="btn-group dropup">
-                        <button class="btn btn-large btn-primary" type="submit">' . $GLOBALS['Language']->getText('global', 'btn_submit') . '</button>
+                        <button class="btn btn-large btn-primary" type="submit" data-test="artifact-submit">' . $GLOBALS['Language']->getText('global', 'btn_submit') . '</button>
                         <button class="btn btn-large btn-primary dropdown-toggle artifact-submit-options" data-toggle="dropdown" data-test="artifact-submit-options">
                             <span class="caret"></span>
                         </button>

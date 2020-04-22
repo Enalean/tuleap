@@ -39,3 +39,15 @@ Cypress.Commands.add("postFromTuleapApi", (url, payload) => {
         },
     });
 });
+
+Cypress.Commands.add("putFromTuleapApi", (url, payload) => {
+    cy.request({
+        method: "PUT",
+        url: url,
+        body: payload,
+        headers: {
+            accept: "application/json",
+            referer: Cypress.config("baseUrl"),
+        },
+    });
+});

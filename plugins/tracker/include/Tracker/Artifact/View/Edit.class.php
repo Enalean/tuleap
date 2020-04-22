@@ -191,7 +191,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
                 $diff_to_previous = $item->diffToPreviousArtifactView($this->user, $previous_item);
                 $classnames  = 'tracker_artifact_followup ';
                 $classnames .= $item->getFollowUpClassnames($diff_to_previous);
-                $comment_html = '<li id="followup_' . $item->getId() . '" class="' . $classnames . '">';
+                $comment_html = '<li id="followup_' . $item->getId() . '" class="' . $classnames . '" data-test="artifact-follow-up">';
                 $comment_html .= $item->fetchFollowUp($diff_to_previous);
                 $comment_html .= '</li>';
                 $comments_content[] = $comment_html;
