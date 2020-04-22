@@ -34,7 +34,6 @@ RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     postfix \
     rsyslog \
     supervisor \
-    php73-php-pecl-redis \
     tuleap-documentation \
     tuleap-plugin-agiledashboard \
     tuleap-plugin-api-explorer \
