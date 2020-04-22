@@ -19,7 +19,7 @@
 
 <template functional>
     <div class="card-content" data-test="template-description">
-        <h4 class="card-title" v-translate>Template</h4>
+        <h4 class="card-title" v-translate>Trackers from template projects</h4>
         <div class="card-description">
             <span class="card-description-content" v-translate>
                 Choose one tracker template among ones available in your platform.
