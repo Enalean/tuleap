@@ -12,6 +12,9 @@ while [ ! -f "/data/etc/tuleap/conf/redis.inc" ]; do
     sleep 1
 done
 
+export TULEAP_FPM_SESSION_MODE=redis
+export REDIS_SERVER=redis
+
 ln -s /data/etc/tuleap /etc/tuleap
 
 /usr/share/tuleap/src/utils/tuleap wait-for-redis

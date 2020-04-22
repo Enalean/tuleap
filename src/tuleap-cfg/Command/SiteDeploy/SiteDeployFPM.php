@@ -28,6 +28,11 @@ use TuleapCfg\Command\TemplateHelper;
 
 final class SiteDeployFPM
 {
+    public const PHP73_DST_CONF_DIR = '/etc/opt/remi/php73';
+    public const PHP73_SRC_CONF_DIR = __DIR__ . '/../../../etc/fpm73';
+    public const PHP74_DST_CONF_DIR = '/etc/opt/remi/php74';
+    public const PHP74_SRC_CONF_DIR = __DIR__ . '/../../../etc/fpm74';
+
     private const FPM_PART_ERRORS      = 'tuleap_errors.part';
     private const FPM_PART_ERRORS_PROD = 'tuleap_errors_prod.part';
     private const FPM_PART_ERRORS_DEV  = 'tuleap_errors_dev.part';
@@ -113,8 +118,8 @@ final class SiteDeployFPM
             $application_user,
             $development,
             self::buildSessionFromEnv(),
-            '/etc/opt/remi/php73',
-            '/usr/share/tuleap/src/etc/fpm73',
+            self::PHP73_DST_CONF_DIR,
+            self::PHP73_SRC_CONF_DIR,
             []
         );
     }
@@ -129,8 +134,8 @@ final class SiteDeployFPM
             $application_user,
             $development,
             self::buildSessionFromEnv(),
-            '/etc/opt/remi/php74',
-            '/usr/share/tuleap/src/etc/fpm74',
+            self::PHP74_DST_CONF_DIR,
+            self::PHP74_SRC_CONF_DIR,
             []
         );
     }

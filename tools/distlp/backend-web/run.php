@@ -18,7 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use TuleapCfg\Command\SiteDeploy\FPMSessionRedis;
+use TuleapCfg\Command\SiteDeploy\SiteDeployFPM;
+
 require_once __DIR__ . '/../../Configuration/vendor/autoload.php';
+require_once __DIR__ . '/../../../src/vendor/autoload.php';
 
 // Make all warnings or notices fatal
 set_error_handler(function ($errno, $errstr, $errfile, $errline) {
@@ -27,13 +31,24 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
 
 $logger = new \Tuleap\Configuration\Logger\Console();
 
-$fpm      = \TuleapCfg\Command\SiteDeploy\SiteDeployFPM::buildForPHP73($logger, 'codendiadm', true);
-$nginx    = new \Tuleap\Configuration\Nginx\BackendWeb($logger, '/usr/share/tuleap', '/etc/nginx', 'reverse-proxy');
-$redis = new \Tuleap\Configuration\Redis\BackendWeb('codendiadm');
+$redis_conf_file = '/etc/tuleap/conf/redis.inc';
+$fpm   = new SiteDeployFPM(
+    $logger,
+    'codendiadm',
+    true,
+    new FPMSessionRedis(
+        $redis_conf_file,
+        'codendiadm',
+        'redis',
+    ),
+    SiteDeployFPM::PHP73_DST_CONF_DIR,
+    SiteDeployFPM::PHP73_SRC_CONF_DIR,
+    [],
+);
+$nginx = new \Tuleap\Configuration\Nginx\BackendWeb($logger, '/usr/share/tuleap', '/etc/nginx', 'reverse-proxy');
 
 $fpm->forceDeploy();
 $nginx->configure();
-$redis->configure();
 
 $exec = new \Tuleap\Configuration\Common\Exec();
 
