@@ -26,8 +26,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use RandomNumberGenerator;
 
-require_once(__DIR__ . '/../bootstrap.php');
-
 class StateFactoryTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -58,6 +56,20 @@ class StateFactoryTest extends TestCase
 
         $this->assertEquals($state_1_1->getNonce(), $state_2->getNonce());
         $this->assertEquals($state_1_1->getNonce(), $state_1_2->getNonce());
+    }
+
+    /**
+     * @see https://tools.ietf.org/html/rfc7636#section-4.2
+     */
+    public function testPKCECodeVerifierHasTheRequiredSize(): void
+    {
+        $state_factory = new StateFactory(new RandomNumberGenerator());
+        $state         = $state_factory->createState(1);
+
+        $pkce_code_verifier_length = strlen($state->getPKCECodeVerifier()->getString());
+
+        $this->assertGreaterThanOrEqual(43, $pkce_code_verifier_length);
+        $this->assertLessThanOrEqual(128, $pkce_code_verifier_length);
     }
 
     public function testItCreatesStateWithGivenParameters(): void

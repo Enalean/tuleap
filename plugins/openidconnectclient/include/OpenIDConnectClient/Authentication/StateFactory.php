@@ -51,7 +51,7 @@ class StateFactory
             self::$nonce = $random_number_generator->getNumber();
         }
         if (self::$pkce_code_verifier === null) {
-            self::$pkce_code_verifier = new ConcealedString($random_number_generator->getNumber());
+            self::$pkce_code_verifier = new ConcealedString(sodium_bin2hex(random_bytes(32)));
         }
     }
 
