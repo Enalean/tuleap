@@ -29,6 +29,7 @@ use Tracker_FormElement_Field_String;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Permissions\PermissionsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Semantic\SemanticsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldRetriever;
@@ -76,6 +77,11 @@ final class JiraXmlExporterTest extends \PHPUnit\Framework\TestCase
      */
     private $artifacts_xml_exporter;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|SemanticsXMLExporter
+     */
+    private $semantics_xml_exporter;
+
     protected function setUp(): void
     {
         $this->field_xml_exporter            = Mockery::mock(FieldXmlExporter::class);
@@ -86,6 +92,7 @@ final class JiraXmlExporterTest extends \PHPUnit\Framework\TestCase
         $this->jira_field_mapping_collection = new FieldMappingCollection();
         $this->permissions_xml_exporter      = Mockery::mock(PermissionsXMLExporter::class);
         $this->artifacts_xml_exporter        = Mockery::mock(ArtifactsXMLExporter::class);
+        $this->semantics_xml_exporter        = Mockery::mock(SemanticsXMLExporter::class);
 
         $this->jira_exporter = new JiraXmlExporter(
             $this->field_xml_exporter,
@@ -95,7 +102,8 @@ final class JiraXmlExporterTest extends \PHPUnit\Framework\TestCase
             $this->report_exporter,
             $this->jira_field_mapping_collection,
             $this->permissions_xml_exporter,
-            $this->artifacts_xml_exporter
+            $this->artifacts_xml_exporter,
+            $this->semantics_xml_exporter
         );
     }
 
@@ -135,6 +143,7 @@ final class JiraXmlExporterTest extends \PHPUnit\Framework\TestCase
         $this->report_exporter->shouldReceive('exportReports')->once();
         $this->permissions_xml_exporter->shouldReceive('exportFieldsPermissions')->once();
         $this->artifacts_xml_exporter->shouldReceive('exportArtifacts')->once();
+        $this->semantics_xml_exporter->shouldReceive('exportSemantics')->once();
 
         $this->jira_field_retriever->shouldReceive('getAllJiraFields')->once();
         $this->jira_exporter->exportJiraToXml($trackers_xml, "URLinstance", "TEST", "Story");
