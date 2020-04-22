@@ -52,14 +52,19 @@ final class FPMSessionRedis implements FPMSessionInterface
      * @var string
      */
     private $application_user;
+    /**
+     * @var bool
+     */
+    private $use_tls;
 
-    public function __construct(string $tuleap_conf_file, string $application_user, string $server, int $port = self::DEFAULT_REDIS_PORT, ?string $password = null)
+    public function __construct(string $tuleap_conf_file, string $application_user, string $server, bool $use_tls = false, int $port = self::DEFAULT_REDIS_PORT, ?string $password = null)
     {
         $this->server           = $server;
         $this->port             = $port;
         $this->password         = $password;
         $this->tuleap_conf_file = $tuleap_conf_file;
         $this->application_user = $application_user;
+        $this->use_tls          = $use_tls;
     }
 
     public function deployFreshTuleapConf(
@@ -108,7 +113,8 @@ final class FPMSessionRedis implements FPMSessionInterface
 
     private function getDSN(): string
     {
-        $base = sprintf('tcp://%s:%d', $this->server, $this->port);
+        $protocol = $this->use_tls ? 'tls' : 'tcp';
+        $base = sprintf('%s://%s:%d', $protocol, $this->server, $this->port);
         if ($this->password !== null && $this->password !== '') {
             return $base . '?auth=' . $this->password;
         }
@@ -129,9 +135,13 @@ final class FPMSessionRedis implements FPMSessionInterface
 
     private function getTuleapConfFile(): string
     {
+        $server = $this->server;
+        if ($this->use_tls) {
+            $server = 'tls://' . $server;
+        }
         return <<<EOT
         <?php
-        \$redis_server   = '$this->server';
+        \$redis_server   = '$server';
         \$redis_port     = $this->port;
         \$redis_password = '$this->password';
         EOT;

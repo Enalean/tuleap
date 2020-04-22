@@ -40,7 +40,7 @@ AutoReqProv: no
 # Php and web related stuff
 Requires: php73-php-common >= 7.3.15
 Requires: php73-php, php73-php-mysql, php73-php-xml, php73-php-json, php73-php-mbstring, php73-php-gd, php73-php-soap
-Requires: php73-php-intl, php73-php-process, php73-php-opcache, php73-php-fpm, php73-php-pecl-redis, php73-php-sodium
+Requires: php73-php-intl, php73-php-process, php73-php-opcache, php73-php-fpm, php73-php-pecl-redis5, php73-php-sodium
 Requires: php73-php-pecl-zip
 Requires: rh-mysql57-mysql
 
