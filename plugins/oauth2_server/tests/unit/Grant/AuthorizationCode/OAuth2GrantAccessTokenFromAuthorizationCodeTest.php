@@ -24,6 +24,7 @@ namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
@@ -81,7 +82,8 @@ final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends TestCase
             $this->representation_builder,
             $this->auth_code_unserializer,
             $this->auth_code_verifier,
-            $this->pkce_code_verifier
+            $this->pkce_code_verifier,
+            new NullLogger()
         );
     }
 

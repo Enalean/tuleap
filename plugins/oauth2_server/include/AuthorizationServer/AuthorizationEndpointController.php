@@ -26,6 +26,7 @@ use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Psr\Log\LoggerInterface;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\OAuth2Server\App\AppFactory;
@@ -109,6 +110,10 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
      * @var OAuth2OfflineAccessScope
      */
     private $offline_access_scope;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     public function __construct(
         AuthorizationFormRenderer $form_renderer,
@@ -120,6 +125,7 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
         PKCEInformationExtractor $pkce_information_extractor,
         PromptParameterValuesExtractor $prompt_parameter_values_extractor,
         OAuth2OfflineAccessScope $offline_access_scope,
+        LoggerInterface $logger,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack
     ) {
@@ -133,6 +139,7 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
         $this->pkce_information_extractor        = $pkce_information_extractor;
         $this->prompt_parameter_values_extractor = $prompt_parameter_values_extractor;
         $this->offline_access_scope              = $offline_access_scope;
+        $this->logger                            = $logger;
     }
 
     /**
@@ -154,16 +161,25 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
             $client_identifier = ClientIdentifier::fromClientId($client_id);
             $client_app        = $this->app_factory->getAppMatchingClientId($client_identifier);
         } catch (InvalidClientIdentifierKey | OAuth2AppNotFoundException $exception) {
+            $this->logger->info($exception->getMessage());
             throw new ForbiddenException();
         }
 
         $redirect_uri = (string) ($request_params[self::REDIRECT_URI_PARAMETER] ?? '');
-        if ($redirect_uri !== $client_app->getRedirectEndpoint()) {
+        if (! hash_equals($client_app->getRedirectEndpoint(), $redirect_uri)) {
+            $this->logger->info(
+                sprintf(
+                    'Given redirect URI (%s) does not match the expected one (%s)',
+                    $redirect_uri,
+                    $client_app->getRedirectEndpoint()
+                )
+            );
             throw new ForbiddenException();
         }
 
         $state_value = $request_params[self::STATE_PARAMETER] ?? null;
         if (! isset($request_params[self::RESPONSE_TYPE_PARAMETER]) || $request_params[self::RESPONSE_TYPE_PARAMETER] !== self::CODE_PARAMETER) {
+            $this->logger->info('Response type not given or unsupported');
             return $this->response_factory->createErrorResponse(
                 self::ERROR_CODE_INVALID_REQUEST,
                 $redirect_uri,
@@ -172,6 +188,7 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
         }
 
         if (isset($request_params[self::REQUEST_PARAMETER])) {
+            $this->logger->info(sprintf('Parameter %s is not supported', self::REQUEST_PARAMETER));
             return $this->response_factory->createErrorResponse(
                 self::ERROR_CODE_REQUEST_NOT_SUPPORTED,
                 $redirect_uri,
@@ -179,6 +196,7 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
             );
         }
         if (isset($request_params[self::REQUEST_URI_PARAMETER])) {
+            $this->logger->info(sprintf('Parameter %s is not supported', self::REQUEST_URI_PARAMETER));
             return $this->response_factory->createErrorResponse(
                 self::ERROR_CODE_REQUEST_URI_NOT_SUPPORTED,
                 $redirect_uri,
@@ -186,6 +204,7 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
             );
         }
         if (isset($request_params[self::REGISTRATION_PARAMETER])) {
+            $this->logger->info(sprintf('Parameter %s is not supported', self::REGISTRATION_PARAMETER));
             return $this->response_factory->createErrorResponse(
                 self::ERROR_CODE_REGISTRATION_NOT_SUPPORTED,
                 $redirect_uri,
@@ -196,6 +215,7 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
         try {
             $prompt_values = $this->prompt_parameter_values_extractor->extractPromptValues((string) ($request_params[self::PROMPT_PARAMETER] ?? ''));
         } catch (PromptNoneParameterCannotBeMixedWithOtherPromptParametersException $exception) {
+            $this->logger->info($exception->getMessage());
             return $this->response_factory->createErrorResponse(
                 self::ERROR_CODE_INVALID_REQUEST,
                 $redirect_uri,
@@ -207,6 +227,7 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
         $user = $this->user_manager->getCurrentUser();
         if ($this->doesRequireLogin($user, $prompt_values, $request_params)) {
             if ($require_no_interaction) {
+                $this->logger->debug('Login is required but RP has asked for no interaction');
                 return $this->response_factory->createErrorResponse(
                     self::ERROR_CODE_LOGIN_REQUIRED,
                     $redirect_uri,
@@ -217,6 +238,7 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
         }
 
         if (! isset($request_params[self::SCOPE_PARAMETER])) {
+            $this->logger->info(sprintf('Parameter %s is missing', self::SCOPE_PARAMETER));
             return $this->response_factory->createErrorResponse(
                 self::ERROR_CODE_INVALID_SCOPE,
                 $redirect_uri,
@@ -226,6 +248,7 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
         try {
             $scopes = $this->scope_extractor->extractScopes((string) $request_params[self::SCOPE_PARAMETER]);
         } catch (InvalidOAuth2ScopeException $e) {
+            $this->logger->info($e->getMessage());
             return $this->response_factory->createErrorResponse(
                 self::ERROR_CODE_INVALID_SCOPE,
                 $redirect_uri,
@@ -236,6 +259,7 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
         try {
             $code_challenge = $this->pkce_information_extractor->extractCodeChallenge($client_app, $request_params);
         } catch (OAuth2PKCEInformationExtractionException $exception) {
+            $this->logger->info($exception->getMessage());
             return $this->response_factory->createErrorResponse(
                 self::ERROR_CODE_INVALID_REQUEST,
                 $redirect_uri,
@@ -246,6 +270,7 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
         $oidc_nonce = $request_params[self::NONCE_PARAMETER] ?? null;
 
         if (! $this->isConsentRequired($prompt_values, $user, $client_app, $scopes)) {
+            $this->logger->debug('Consent is not required, redirecting the user with a successful response');
             return $this->response_factory->createSuccessfulResponse(
                 $client_app,
                 $scopes,
@@ -258,6 +283,7 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
         }
 
         if ($require_no_interaction) {
+            $this->logger->debug('Consent is required but RP has asked for no interaction');
             return $this->response_factory->createErrorResponse(
                 self::ERROR_CODE_INTERACTION_REQUIRED,
                 $redirect_uri,
@@ -265,6 +291,7 @@ final class AuthorizationEndpointController extends DispatchablePSR15Compatible 
             );
         }
 
+        $this->logger->debug('Asking consent to the user');
         $layout = $request->getAttribute(BaseLayout::class);
         assert($layout instanceof BaseLayout);
         $csrf_token = new \CSRFSynchronizerToken(self::CSRF_TOKEN);

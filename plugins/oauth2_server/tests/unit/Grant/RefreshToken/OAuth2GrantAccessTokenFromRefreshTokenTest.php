@@ -24,6 +24,7 @@ namespace Tuleap\OAuth2Server\Grant\RefreshToken;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenException;
 use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
@@ -40,6 +41,7 @@ use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshToken;
 use Tuleap\OAuth2Server\RefreshToken\OAuth2RefreshTokenVerifier;
 use Tuleap\OAuth2Server\Scope\InvalidOAuth2ScopeException;
 use Tuleap\OAuth2Server\Scope\ScopeExtractor;
+use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
 final class OAuth2GrantAccessTokenFromRefreshTokenTest extends TestCase
 {
@@ -83,7 +85,8 @@ final class OAuth2GrantAccessTokenFromRefreshTokenTest extends TestCase
             $this->refresh_token_unserializer,
             $this->refresh_token_verifier,
             $this->representation_builder,
-            $this->scope_extractor
+            $this->scope_extractor,
+            new NullLogger()
         );
     }
 
@@ -183,7 +186,9 @@ final class OAuth2GrantAccessTokenFromRefreshTokenTest extends TestCase
                 new \DateTimeImmutable('@10')
             )
         );
-        $this->scope_extractor->shouldReceive('extractScopes')->andThrow(new InvalidOAuth2ScopeException());
+        $this->scope_extractor->shouldReceive('extractScopes')->andThrow(
+            InvalidOAuth2ScopeException::scopeDoesNotExist(OAuth2ScopeIdentifier::fromIdentifierKey('donotexist'))
+        );
 
         $body_params = ['refresh_token' => 'valid_refresh_token', 'scope' => ''];
 

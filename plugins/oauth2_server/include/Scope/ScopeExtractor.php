@@ -56,13 +56,13 @@ class ScopeExtractor
             try {
                 $scope_identifier = OAuth2ScopeIdentifier::fromIdentifierKey($scope_key);
             } catch (InvalidOAuth2ScopeIdentifierException $e) {
-                throw new InvalidOAuth2ScopeException();
+                throw InvalidOAuth2ScopeException::invalidFormat($e);
             }
             $scope            = $this->scope_builder->buildAuthenticationScopeFromScopeIdentifier(
                 $scope_identifier
             );
             if ($scope === null) {
-                throw new InvalidOAuth2ScopeException();
+                throw InvalidOAuth2ScopeException::scopeDoesNotExist($scope_identifier);
             }
             $scope_list[] = $scope;
         }

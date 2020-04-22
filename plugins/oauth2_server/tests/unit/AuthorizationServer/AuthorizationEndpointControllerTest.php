@@ -26,6 +26,7 @@ use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 use Tuleap\Authentication\Scope\AuthenticationScope;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Server\NullServerRequest;
@@ -44,6 +45,7 @@ use Tuleap\OAuth2Server\User\AuthorizationComparator;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\User\OAuth2\Scope\OAuth2ScopeIdentifier;
 
 final class AuthorizationEndpointControllerTest extends TestCase
 {
@@ -99,6 +101,7 @@ final class AuthorizationEndpointControllerTest extends TestCase
             $this->pkce_information_extractor,
             new PromptParameterValuesExtractor(),
             OAuth2OfflineAccessScope::fromItself(),
+            new NullLogger(),
             \Mockery::mock(EmitterInterface::class)
         );
     }
@@ -272,7 +275,7 @@ final class AuthorizationEndpointControllerTest extends TestCase
             ->once()
             ->andReturn(new OAuth2App(1, 'Jenkins', $query_parameters['redirect_uri'], true, $project));
         $this->scope_extractor->shouldReceive('extractScopes')
-            ->andThrow(new InvalidOAuth2ScopeException());
+            ->andThrow(InvalidOAuth2ScopeException::scopeDoesNotExist(OAuth2ScopeIdentifier::fromIdentifierKey('donotexist')));
 
         $response = HTTPFactoryBuilder::responseFactory()->createResponse(302);
         $this->response_factory->shouldReceive('createErrorResponse')->andReturn($response);

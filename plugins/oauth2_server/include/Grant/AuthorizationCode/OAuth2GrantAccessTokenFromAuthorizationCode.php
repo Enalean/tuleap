@@ -25,6 +25,7 @@ namespace Tuleap\OAuth2Server\Grant\AuthorizationCode;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Log\LoggerInterface;
 use Tuleap\Authentication\SplitToken\SplitTokenException;
 use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
 use Tuleap\Cryptography\ConcealedString;
@@ -69,6 +70,10 @@ class OAuth2GrantAccessTokenFromAuthorizationCode
      * @var PKCECodeVerifier
      */
     private $pkce_code_verifier;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     public function __construct(
         ResponseFactoryInterface $response_factory,
@@ -77,20 +82,23 @@ class OAuth2GrantAccessTokenFromAuthorizationCode
         AccessTokenGrantRepresentationBuilder $representation_builder,
         SplitTokenIdentifierTranslator $access_token_identifier_unserializer,
         OAuth2AuthorizationCodeVerifier $authorization_code_verifier,
-        PKCECodeVerifier $pkce_code_verifier
+        PKCECodeVerifier $pkce_code_verifier,
+        LoggerInterface $logger
     ) {
-        $this->response_factory = $response_factory;
-        $this->stream_factory = $stream_factory;
+        $this->response_factory                          = $response_factory;
+        $this->stream_factory                            = $stream_factory;
         $this->access_token_grant_error_response_builder = $access_token_grant_error_response_builder;
-        $this->response_builder = $representation_builder;
-        $this->access_token_identifier_unserializer = $access_token_identifier_unserializer;
-        $this->authorization_code_verifier = $authorization_code_verifier;
-        $this->pkce_code_verifier = $pkce_code_verifier;
+        $this->response_builder                          = $representation_builder;
+        $this->access_token_identifier_unserializer      = $access_token_identifier_unserializer;
+        $this->authorization_code_verifier               = $authorization_code_verifier;
+        $this->pkce_code_verifier                        = $pkce_code_verifier;
+        $this->logger                                    = $logger;
     }
 
     public function grantAccessToken(OAuth2App $app, array $body_params): ResponseInterface
     {
         if (! isset($body_params[self::AUTH_CODE_PARAMETER])) {
+            $this->logger->info(sprintf('Request body does not have a %s parameter', self::AUTH_CODE_PARAMETER));
             return $this->access_token_grant_error_response_builder->buildInvalidRequestResponse();
         }
 
@@ -99,6 +107,7 @@ class OAuth2GrantAccessTokenFromAuthorizationCode
                 $this->access_token_identifier_unserializer->getSplitToken(new ConcealedString($body_params[self::AUTH_CODE_PARAMETER]))
             );
         } catch (OAuth2ServerException | SplitTokenException $exception) {
+            $this->logger->info($exception->getMessage());
             return $this->access_token_grant_error_response_builder->buildInvalidGrantResponse();
         } finally {
             \sodium_memzero($body_params[self::AUTH_CODE_PARAMETER]);
@@ -107,16 +116,26 @@ class OAuth2GrantAccessTokenFromAuthorizationCode
         try {
             $this->pkce_code_verifier->verifyCode($authorization_code, $body_params[self::CODE_VERIFIER_PARAMETER] ?? null);
         } catch (OAuth2PKCEVerificationException $exception) {
+            $this->logger->info($exception->getMessage());
             return $this->access_token_grant_error_response_builder->buildInvalidGrantResponse();
         }
 
         if (! isset($body_params[self::REDIRECT_URI_PARAMETER])) {
+            $this->logger->info(sprintf('Request body does not have a %s parameter', self::REDIRECT_URI_PARAMETER));
             return $this->access_token_grant_error_response_builder->buildInvalidRequestResponse();
         }
         if (! \hash_equals($app->getRedirectEndpoint(), $body_params[self::REDIRECT_URI_PARAMETER])) {
+            $this->logger->info(
+                sprintf(
+                    'Given redirect URI (%s) does not match the expected one (%s)',
+                    $body_params[self::REDIRECT_URI_PARAMETER],
+                    $app->getRedirectEndpoint()
+                )
+            );
             return $this->access_token_grant_error_response_builder->buildInvalidGrantResponse();
         }
 
+        $this->logger->debug('Access token request with an authorization code successfully verified');
         $representation = $this->response_builder->buildRepresentationFromAuthorizationCode(
             new \DateTimeImmutable(),
             $app,
