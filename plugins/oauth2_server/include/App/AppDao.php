@@ -92,6 +92,19 @@ class AppDao extends DataAccessObject
         );
     }
 
+    public function updateApp(OAuth2App $updated_app): void
+    {
+        $this->getDB()->update(
+            'plugin_oauth2_server_app',
+            [
+                'name' => $updated_app->getName(),
+                'redirect_endpoint' => $updated_app->getRedirectEndpoint(),
+                'use_pkce' => $updated_app->isUsingPKCE()
+            ],
+            ['id' => $updated_app->getId()]
+        );
+    }
+
     public function delete(int $app_id): void
     {
         $this->getDB()->run('DELETE FROM plugin_oauth2_server_app WHERE id = ?', $app_id);

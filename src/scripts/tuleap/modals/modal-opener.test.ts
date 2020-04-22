@@ -18,7 +18,11 @@
  */
 
 import * as tlp from "tlp";
-import { openModalAndReplacePlaceholders, openTargetModalIdOnClick } from "./modal-opener";
+import {
+    openModalAndReplacePlaceholders,
+    openTargetModalIdOnClick,
+    openAllTargetModalsOnClick,
+} from "./modal-opener";
 
 jest.mock("tlp");
 
@@ -84,6 +88,53 @@ describe(`Modal Opener`, () => {
         });
     });
 
+    describe(`openAllTargetModalsOnClick()`, () => {
+        it(`does not crash when there are no buttons`, () => {
+            openAllTargetModalsOnClick(document, ".button-class");
+
+            expect.assertions(0);
+        });
+
+        it(`throws when the button does not have a data-target-modal-id attribute`, () => {
+            createAndAppendButtonWithClassName(doc);
+
+            expect(() => openAllTargetModalsOnClick(doc, ".button-class")).toThrow(
+                "Missing data-target-modal-id attribute on button"
+            );
+        });
+
+        it(`throws when the element referenced by data-target-modal-id can't be found`, () => {
+            const button = createAndAppendButtonWithClassName(doc);
+            button.dataset.targetModalId = "unknown_modal_id";
+
+            expect(() => openAllTargetModalsOnClick(doc, ".button-class")).toThrow(
+                "Could not find the element referenced by data-target-modal-id"
+            );
+        });
+
+        describe(`when I click on the button`, () => {
+            let button: HTMLElement;
+            beforeEach(() => {
+                button = createAndAppendButtonWithClassName(doc);
+                button.dataset.targetModalId = "modal_id";
+                createAndAppendElementById(doc, "div", "modal_id");
+                simulateClick(button);
+
+                createModal.mockImplementation(() => ({ show: jest.fn() }));
+            });
+
+            it(`when the button is clicked, it will create a modal from the data-target-modal-id and show it`, () => {
+                const modal = { show: jest.fn() };
+                createModal.mockImplementation(() => modal);
+
+                openAllTargetModalsOnClick(doc, ".button-class");
+
+                expect(createModal).toHaveBeenCalled();
+                expect(modal.show).toHaveBeenCalled();
+            });
+        });
+    });
+
     describe(`openModalAndReplacePlaceholders()`, () => {
         const replaceModalWithOptions = (): void =>
             openModalAndReplacePlaceholders({
@@ -107,14 +158,14 @@ describe(`Modal Opener`, () => {
         });
 
         it(`throws when there is no paragraph in the modal`, () => {
-            const delete_button = createAndAppendDeleteButton(doc);
+            const delete_button = createAndAppendButtonWithClassName(doc);
             simulateClick(delete_button);
 
             expect(() => replaceModalWithOptions()).toThrow("Missing paragraph in modal");
         });
 
         it(`throws when there is no hidden input in the modal`, () => {
-            const delete_button = createAndAppendDeleteButton(doc);
+            const delete_button = createAndAppendButtonWithClassName(doc);
             createAndAppendElementById(doc, "input", "paragraph_id");
             simulateClick(delete_button);
 
@@ -122,7 +173,7 @@ describe(`Modal Opener`, () => {
         });
 
         it(`throws when the modal element can't be found`, () => {
-            const delete_button = createAndAppendDeleteButton(doc);
+            const delete_button = createAndAppendButtonWithClassName(doc);
             createAndAppendElementById(doc, "input", "paragraph_id");
             createAndAppendElementById(doc, "input", "hidden_input_id");
             simulateClick(delete_button);
@@ -135,7 +186,7 @@ describe(`Modal Opener`, () => {
             let paragraph: HTMLElement;
             let hidden_input: HTMLInputElement;
             beforeEach(() => {
-                const delete_button = createAndAppendDeleteButton(doc);
+                const delete_button = createAndAppendButtonWithClassName(doc);
                 modal_element = createAndAppendElementById(doc, "div", "modal_id");
                 paragraph = createAndAppendElementById(doc, "p", "paragraph_id");
                 hidden_input = doc.createElement("input");
@@ -186,7 +237,7 @@ function createAndAppendElementById(doc: Document, tag_name: string, id: string)
     return element;
 }
 
-function createAndAppendDeleteButton(doc: Document): HTMLElement {
+function createAndAppendButtonWithClassName(doc: Document): HTMLElement {
     const button = doc.createElement("button");
     button.classList.add("button-class");
     doc.body.append(button);

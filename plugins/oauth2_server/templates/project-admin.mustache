@@ -54,6 +54,14 @@
                             <td>{{# use_pkce }}<i class="fa fa-check"></i>{{/ use_pkce }}</td>
                             <td class="tlp-table-cell-actions">
                                 <button
+                                    class="tlp-button-primary tlp-button-outline tlp-button-small tlp-table-cell-actions-button"
+                                    data-edit-client-button
+                                    data-target-modal-id="oauth2-server-edit-client-modal-{{ id }}"
+                                >
+                                    <i class="fa fa-edit tlp-button-icon"></i>
+                                    {{# dgettext }}tuleap-oauth2_server | Edit{{/ dgettext }}
+                                </button>
+                                <button
                                     class="tlp-button-danger tlp-button-outline tlp-button-small tlp-table-cell-actions-button"
                                     data-new-client-secret-button
                                     data-app-id="{{ id }}"
@@ -90,3 +98,7 @@
 {{> app-add-modal }}
 {{> app-delete-modal }}
 {{> new-secret-modal }}
+
+{{# apps }}
+    {{> app-edit-modal }}
+{{/ apps }}

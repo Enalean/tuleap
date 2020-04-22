@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { modal as createModal } from "tlp";
+import { Modal, modal as createModal } from "tlp";
 
 export function openTargetModalIdOnClick(
     doc: Document,
@@ -28,6 +28,29 @@ export function openTargetModalIdOnClick(
     if (!button || !(button instanceof HTMLElement)) {
         return;
     }
+    const modal = getTargetModal(doc, button);
+    button.addEventListener("click", () => {
+        if (beforeModalOpenCallback !== undefined) {
+            beforeModalOpenCallback(button);
+        }
+        modal.show();
+    });
+}
+
+export function openAllTargetModalsOnClick(doc: Document, buttons_selector: string): void {
+    const buttons = doc.querySelectorAll(buttons_selector);
+    for (const button of buttons) {
+        if (!(button instanceof HTMLElement)) {
+            continue;
+        }
+        const modal = getTargetModal(doc, button);
+        button.addEventListener("click", () => {
+            modal.show();
+        });
+    }
+}
+
+function getTargetModal(doc: Document, button: HTMLElement): Modal {
     if (!button.dataset.targetModalId) {
         throw new Error("Missing data-target-modal-id attribute on button");
     }
@@ -35,13 +58,7 @@ export function openTargetModalIdOnClick(
     if (!modal_element) {
         throw new Error("Could not find the element referenced by data-target-modal-id");
     }
-    const modal = createModal(modal_element);
-    button.addEventListener("click", () => {
-        if (beforeModalOpenCallback !== undefined) {
-            beforeModalOpenCallback(button);
-        }
-        modal.show();
-    });
+    return createModal(modal_element);
 }
 
 export interface HiddenInputReplacement {

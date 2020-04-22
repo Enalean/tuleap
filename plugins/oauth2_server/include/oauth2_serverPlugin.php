@@ -180,6 +180,10 @@ final class oauth2_serverPlugin extends Plugin
                     '/project/{project_id:\d+}/admin/new-client-secret',
                     $this->getRouteHandler('routeNewClientSecret')
                 );
+                $r->post(
+                    '/project/{project_id:\d+}/admin/edit-app',
+                    $this->getRouteHandler('routeEditApp')
+                );
                 $r->get('/account/apps', $this->getRouteHandler('routeGetAccountApps'));
                 $r->post('/account/apps/revoke', $this->getRouteHandler('routePostAccountAppRevoke'));
             }
@@ -281,6 +285,27 @@ final class oauth2_serverPlugin extends Plugin
                     $storage
                 )
             ),
+            new \CSRFSynchronizerToken(ListAppsController::CSRF_TOKEN),
+            new SapiEmitter(),
+            new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
+            new \Tuleap\Project\Routing\ProjectRetrieverMiddleware(ProjectRetriever::buildSelf()),
+            new \Tuleap\Project\Admin\Routing\RejectNonProjectAdministratorMiddleware(
+                UserManager::instance(),
+                new ProjectAdministratorChecker()
+            )
+        );
+    }
+
+    public function routeEditApp(): DispatchableWithRequest
+    {
+        $response_factory = HTTPFactoryBuilder::responseFactory();
+        return new \Tuleap\OAuth2Server\ProjectAdmin\EditAppController(
+            $response_factory,
+            new \Tuleap\Http\Response\RedirectWithFeedbackFactory(
+                $response_factory,
+                new \Tuleap\Layout\Feedback\FeedbackSerializer(new FeedbackDao())
+            ),
+            new AppDao(),
             new \CSRFSynchronizerToken(ListAppsController::CSRF_TOKEN),
             new SapiEmitter(),
             new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),

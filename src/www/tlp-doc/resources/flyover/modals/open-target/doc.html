@@ -15,3 +15,14 @@ Arguments:
         <br>If provided, it will be called just before opening the modal.
     </li>
 </ul>
+
+<h5>openAllTargetModalsOnClick()</h5>
+<p>Useful when you have many buttons and have one modal per button.</p>
+Arguments:
+<ul>
+    <li>{ Document } document</li>
+    <li>{ String } buttons_selector. A CSS selector to select multiple buttons. Each of these buttons will open its own modal on click.
+        <br>The button element MUST have an attribute named <code class="code-inline">data-target-modal-id</code> that references its modal element.
+        On click of this button, it will open that modal.
+    </li>
+</ul>

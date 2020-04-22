@@ -1,7 +1,8 @@
 <p>
     <button
         type="button"
-        class="tlp-button-primary delete-app-button"
+        class="tlp-button-primary"
+        data-delete-app-button
         data-app-id="12"
         data-app-name="My first app"
     >
@@ -11,7 +12,8 @@
 <p>
     <button
         type="button"
-        class="tlp-button-primary delete-app-button"
+        class="tlp-button-primary"
+        data-delete-app-button
         data-app-id="24"
         data-app-name="My second app"
     >
@@ -52,8 +54,8 @@
     </div>
 </form>
 
-<script>
-    import { openModalAndReplacePlaceholders } from "../../../../../../../../scripts/tuleap/modals/modal-opener";
+<script lang="ts">
+    import { openModalAndReplacePlaceholders } from "../../../../../../scripts/tuleap/modals/modal-opener";
 
     const hiddenInputReplaceCallback = (clicked_button: HTMLElement): string => {
         if (!clicked_button.dataset.appId) {
@@ -75,7 +77,7 @@
         );
     };
 
-    const DELETE_BUTTONS_SELECTOR = ".delete-app-button";
+    const DELETE_BUTTONS_SELECTOR = "[data-delete-app-button]";
     const DELETE_APP_MODAL_ID = "delete-app-modal";
     const DELETE_MODAL_HIDDEN_INPUT_ID = "delete-modal-app-id";
     const DELETE_MODAL_DESCRIPTION = "delete-modal-app-name";

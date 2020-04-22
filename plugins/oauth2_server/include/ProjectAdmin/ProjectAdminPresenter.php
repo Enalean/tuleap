@@ -50,6 +50,11 @@ final class ProjectAdminPresenter
      */
     public $generate_new_secret_url;
     /**
+     * @var string
+     * @psalm-readonly
+     */
+    public $edit_client_url;
+    /**
      * @var LastCreatedOAuth2AppPresenter|null
      * @psalm-readonly
      */
@@ -69,6 +74,7 @@ final class ProjectAdminPresenter
         $this->add_client_url          = AddAppController::getUrl($project);
         $this->delete_client_url       = DeleteAppController::getUrl($project);
         $this->generate_new_secret_url = NewClientSecretController::getUrl($project);
+        $this->edit_client_url         = EditAppController::getUrl($project);
         $this->last_created_app        = $last_created_app;
     }
 }
