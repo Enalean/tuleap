@@ -45,7 +45,6 @@ class GetWhitelistedKeys implements Dispatchable
         \ProjectManager::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION_PER_USER => true,
         \ProjectManager::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION => true,
         \ProjectManager::CONFIG_RESTRICTED_USERS_CAN_CREATE_PROJECTS => true,
-        \ProjectManager::FORCE_NEW_PROJECT_CREATION_USAGE => true,
         \ProjectManager::SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY => true,
         \ForgeAccess::ANONYMOUS_CAN_SEE_CONTACT => true,
         \ForgeAccess::ANONYMOUS_CAN_SEE_SITE_HOMEPAGE => true,

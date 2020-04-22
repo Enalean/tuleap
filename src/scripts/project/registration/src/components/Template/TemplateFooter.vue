@@ -25,6 +25,7 @@
         v-bind:class="pinned_class"
     >
         <div class="project-registration-content">
+            <back-to-legacy />
             <button
                 type="button"
                 class="tlp-button-primary tlp-button-large tlp-form-element-disabled project-registration-next-button"
@@ -44,8 +45,9 @@ import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { Getter } from "vuex-class";
 import { isElementInViewport } from "../../helpers/is-element-in-viewport";
+import BackToLegacy from "../Layout/BackToLegacy.vue";
 
-@Component
+@Component({ components: { BackToLegacy } })
 export default class TemplateFooter extends Vue {
     @Getter
     is_template_selected!: boolean;

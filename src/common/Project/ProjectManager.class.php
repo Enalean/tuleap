@@ -41,7 +41,6 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
     public const CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION          = 'nb_projects_waiting_for_validation';
     public const CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION_PER_USER = 'nb_projects_waiting_for_validation_per_user';
     public const CONFIG_RESTRICTED_USERS_CAN_CREATE_PROJECTS        = 'restricted_users_can_create_projects';
-    public const FORCE_NEW_PROJECT_CREATION_USAGE                   = 'force_new_project_creation_usage';
     public const SYS_USER_CAN_CHOOSE_PROJECT_PRIVACY                = 'sys_user_can_choose_project_privacy';
 
     /**

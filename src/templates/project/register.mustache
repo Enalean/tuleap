@@ -26,6 +26,17 @@
 
         <p>{{getPageDescriptionBeg}} {{getSysName}} {{getPageDescriptionEnd}}</p>
 
+        <div class="alert alert-error">
+            <span class="one-step-project-switch-to-new">
+                {{# gettext }}
+                    This page is deprecated and will be removed soon. You should switch to the new project creation flow.
+                {{/ gettext }}
+            </span>
+            <a href="/project/new" class="btn btn-primary">
+                <i class="fa fa-long-arrow-right"></i> {{# gettext }}Switch to new tracker creation flow{{/ gettext }}
+            </a>
+        </div>
+
         {{#isProjectApprovalEnabled}}
             <p><span class="label label-warning">{{getWarning}}</span> {{getWarningMessage}}</p>
         {{/isProjectApprovalEnabled}}

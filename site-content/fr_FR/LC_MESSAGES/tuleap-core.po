@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #, php-format
 msgid ""
@@ -1804,6 +1804,9 @@ msgstr "Le formal d'affichage des noms n'est pas valide"
 msgid "Successfully updated."
 msgstr "Mis à jour avec succès."
 
+msgid "Switch to new tracker creation flow"
+msgstr "Basculer sur la nouvelle interface de création de projet"
+
 msgid "Switching the project status back to \"pending\" is not possible."
 msgstr "Remettre le projet au statut \"en attente\" n'est pas possible."
 
@@ -2079,6 +2082,13 @@ msgstr ""
 "l'Agiledashboard et sur les rapports de type cardwall dans les outils de "
 "suivi. Ceci permet de mieux différencier les couleurs ainsi que leurs "
 "variantes."
+
+msgid ""
+"This page is deprecated and will be removed soon. You should switch to the "
+"new project creation flow."
+msgstr ""
+"Cette page est dépréciée et sera bientôt supprimée. Vous devriez utiliser la "
+"nouvelle interface de création de projet."
 
 msgid ""
 "This permission grants the right to manage platform administration users. "
