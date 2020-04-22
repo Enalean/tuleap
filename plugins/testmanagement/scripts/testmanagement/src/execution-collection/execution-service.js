@@ -369,6 +369,7 @@ function ExecutionService(
                 { name: "Subscript", element: "sub" },
                 { name: "Superscript", element: "sup" },
             ],
+            uiColor: "ffffff",
             language: document.body.dataset.userLocale,
             ...additional_options,
         };

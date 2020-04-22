@@ -197,7 +197,7 @@ execution-with-steps.current-test-content {
 .current-test-comment {
     width: 100%;
     min-height: 50px;
-    max-height: 100px;
+    max-height: 200px;
     padding: 8px 12px;
     overflow: auto;
     transition: border-color 150ms linear;
@@ -213,6 +213,10 @@ execution-with-steps.current-test-content {
         margin: 0 0 5px;
         font-size: 14px;
         line-height: normal;
+    }
+
+    img {
+        height: auto !important;
     }
 }
 
