@@ -25,7 +25,6 @@ use EventManager;
 use Luracast\Restler\RestException;
 use PFUser;
 use Tracker_Artifact;
-use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_ArtifactFactory;
 use Tracker_Exception;
 use Tracker_FormElement_Field_List_Bind;
@@ -58,7 +57,11 @@ use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\ConfigConformanceValidator;
 use Tuleap\TestManagement\Dao;
 use Tuleap\TestManagement\RealTime\RealTimeMessageSender;
+use Tuleap\TestManagement\REST\ExecutionChangesExtractor;
 use Tuleap\TestManagement\REST\FormattedChangesetValueForFileFieldRetriever;
+use Tuleap\TestManagement\REST\FormattedChangesetValueForIntFieldRetriever;
+use Tuleap\TestManagement\REST\FormattedChangesetValueForListFieldRetriever;
+use Tuleap\TestManagement\REST\FormattedChangesetValueForTextFieldRetriever;
 use Tuleap\TestManagement\REST\v1\Execution\StepsResultsFilter;
 use Tuleap\TestManagement\REST\v1\Execution\StepsResultsRepresentationBuilder;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
@@ -78,10 +81,6 @@ use Workflow_Transition_ConditionFactory;
 
 class ExecutionsResource
 {
-    public const FIELD_RESULTS = 'results';
-    public const FIELD_STATUS = 'status';
-    public const FIELD_TIME = 'time';
-
     /** @var Config */
     private $config;
 
@@ -418,7 +417,7 @@ class ExecutionsResource
 
         $this->execution_status_updater->update(
             $artifact,
-            $this->getChanges($status, $uploaded_file_ids, $time, $results, $artifact, $user),
+            $this->getExecutionChangesExtractor()->getChanges($status, $uploaded_file_ids, $time, $results, $artifact, $user),
             $user
         );
 
@@ -523,127 +522,6 @@ class ExecutionsResource
         }
 
         $this->optionsIssues($id);
-    }
-
-    /**
-     * @throws RestException
-     * @return array
-     */
-    private function getChanges(
-        string $status,
-        array $uploaded_file_ids,
-        int $time,
-        string $results,
-        Tracker_Artifact $artifact,
-        PFUser $user
-    ) {
-        $changes = array();
-
-        $status_value = $this->getFormattedChangesetValueForFieldList(
-            self::FIELD_STATUS,
-            $status,
-            $artifact,
-            $user
-        );
-        if ($status_value) {
-            $changes[] = $status_value;
-        }
-
-        $result_value = $this->getFormattedChangesetValueForFieldText(
-            self::FIELD_RESULTS,
-            $results,
-            $artifact,
-            $user
-        );
-        if ($result_value) {
-            $changes[] = $result_value;
-        }
-
-        if ($uploaded_file_ids !== []) {
-            $changes[] = $this->getFormattedChangesetValueForFieldsRetriever()
-                              ->getFormattedChangesetValueForFieldFile($uploaded_file_ids, $artifact, $user);
-        }
-
-        if ($time !== 0) {
-            $time_value = $this->getFormattedChangesetValueForFieldInt(
-                self::FIELD_TIME,
-                $time,
-                $artifact,
-                $user
-            );
-            if ($time_value) {
-                $changes[] = $time_value;
-            }
-        }
-
-        return $changes;
-    }
-
-    private function getFormattedChangesetValueForFieldList(
-        string $field_name,
-        string $value,
-        Tracker_Artifact $artifact,
-        PFUser $user
-    ): ?ArtifactValuesRepresentation {
-        $field = $this->getFieldByName($field_name, $artifact->getTrackerId(), $user);
-        if (!$field) {
-            return null;
-        }
-
-        $binds = [];
-        assert($field instanceof \Tracker_FormElement_Field_List);
-        if ($field->getBind()) {
-            $binds = $field->getBind()->getValuesByKeyword($value);
-        }
-        $bind = array_pop($binds);
-        if (!$bind) {
-            throw new RestException(400, 'Invalid status value');
-        }
-
-        $value_representation                 = new ArtifactValuesRepresentation();
-        $value_representation->field_id       = (int) $field->getId();
-        $value_representation->bind_value_ids = array((int) $bind->getId());
-
-        return $value_representation;
-    }
-
-    private function getFormattedChangesetValueForFieldText(
-        string $field_name,
-        string $value,
-        Tracker_Artifact $artifact,
-        PFUser $user
-    ): ?ArtifactValuesRepresentation {
-        $field = $this->getFieldByName($field_name, $artifact->getTrackerId(), $user);
-        if (!$field) {
-            return null;
-        }
-
-        $value_representation           = new ArtifactValuesRepresentation();
-        $value_representation->field_id = (int) $field->getId();
-        $value_representation->value    = array(
-            'format' => Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT,
-            'content' => $value
-        );
-
-        return $value_representation;
-    }
-
-    private function getFormattedChangesetValueForFieldInt(
-        string $field_name,
-        int $value,
-        Tracker_Artifact $artifact,
-        PFUser $user
-    ): ?ArtifactValuesRepresentation {
-        $field = $this->getFieldByName($field_name, $artifact->getTrackerId(), $user);
-        if (!$field) {
-            return null;
-        }
-
-        $value_representation           = new ArtifactValuesRepresentation();
-        $value_representation->field_id = (int) $field->getId();
-        $value_representation->value    = $value;
-
-        return $value_representation;
     }
 
     private function getFieldByName(string $field_name, int $tracker_id, PFUser $user): ?\Tracker_FormElement_Field
@@ -851,8 +729,13 @@ class ExecutionsResource
         return new FileUploadDataProvider($this->getFrozenFieldDetector(), $this->formelement_factory);
     }
 
-    private function getFormattedChangesetValueForFieldsRetriever(): FormattedChangesetValueForFileFieldRetriever
+    private function getExecutionChangesExtractor(): ExecutionChangesExtractor
     {
-        return new FormattedChangesetValueForFileFieldRetriever($this->getFileUploadDataProvider());
+        return new ExecutionChangesExtractor(
+            new FormattedChangesetValueForFileFieldRetriever($this->getFileUploadDataProvider()),
+            new FormattedChangesetValueForIntFieldRetriever($this->formelement_factory),
+            new FormattedChangesetValueForTextFieldRetriever($this->formelement_factory),
+            new FormattedChangesetValueForListFieldRetriever($this->formelement_factory)
+        );
     }
 }
