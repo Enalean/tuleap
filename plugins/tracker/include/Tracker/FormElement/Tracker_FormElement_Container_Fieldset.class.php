@@ -214,35 +214,47 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         return parent::canBeRemovedFromUsage() && ! $this->isFieldsetUsedInPostAction();
     }
 
-    /**
-     * getLabel - the label of this Tracker_FormElement_FieldSet
-     * The tracker label can be internationalized.
-     * To do this, fill the name field with the ad-hoc format.
-     *
-     * @return string label, the name if the name is not internationalized, or the localized text if so
-     */
-    public function getLabel()
+    public function getLabel(): string
     {
-        global $Language;
-        if ($this->isLabelMustBeLocalized()) {
-            return $Language->getText('plugin_tracker_common_fieldset', $this->label);
-        } else {
+        if (substr($this->label, -8) !== '_lbl_key') {
             return $this->label;
         }
-    }
 
-    /**
-     * Returns if the fieldset name must be localized or not.
-     * The field set name must be localized if the name looks like fieldset_{$fieldset_id}_lbl_key
-     *
-     * @return true if the fieldset name must be localized, false otherwise.
-     */
-    public function isLabelMustBeLocalized()
-    {
-        $pattern = "/fieldset_(.*)_lbl_key/";
-        return preg_match($pattern, $this->label);
+        switch ($this->label) {
+            case 'fieldset_default_lbl_key':
+                return $GLOBALS['Language']->getText('plugin_tracker_common_fieldset', 'fieldset_default_lbl_key');
+            case 'fieldset_default_bugs_lbl_key':
+                return $GLOBALS['Language']->getText('plugin_tracker_common_fieldset', 'fieldset_default_bugs_lbl_key');
+            case 'fieldset_status_bugs_lbl_key':
+                return $GLOBALS['Language']->getText('plugin_tracker_common_fieldset', 'fieldset_status_bugs_lbl_key');
+            case 'fieldset_default_patches_lbl_key':
+                return $GLOBALS['Language']->getText('plugin_tracker_common_fieldset', 'fieldset_default_patches_lbl_key');
+            case 'fieldset_patchtext_patches_lbl_key':
+                return $GLOBALS['Language']->getText('plugin_tracker_common_fieldset', 'fieldset_patchtext_patches_lbl_key');
+            case 'fieldset_status_patches_lbl_key':
+                return $GLOBALS['Language']->getText('plugin_tracker_common_fieldset', 'fieldset_status_patches_lbl_key');
+            case 'fieldset_default_SR_lbl_key':
+                return $GLOBALS['Language']->getText('plugin_tracker_common_fieldset', 'fieldset_default_SR_lbl_key');
+            case 'fieldset_status_SR_lbl_key':
+                return $GLOBALS['Language']->getText('plugin_tracker_common_fieldset', 'fieldset_status_SR_lbl_key');
+            case 'fieldset_default_tasks_lbl_key':
+                return $GLOBALS['Language']->getText('plugin_tracker_common_fieldset', 'fieldset_default_tasks_lbl_key');
+            case 'fieldset_status_tasks_lbl_key':
+                return $GLOBALS['Language']->getText('plugin_tracker_common_fieldset', 'fieldset_status_tasks_lbl_key');
+            case 'fieldset_default_slmbugs_lbl_key':
+                return $GLOBALS['Language']->getText('plugin_tracker_common_fieldset', 'fieldset_default_slmbugs_lbl_key');
+            case 'fieldset_salome_slmbugs_lbl_key':
+                return $GLOBALS['Language']->getText('plugin_tracker_common_fieldset', 'fieldset_salome_slmbugs_lbl_key');
+            case 'fieldset_status_slmbugs_lbl_key':
+                return $GLOBALS['Language']->getText('plugin_tracker_common_fieldset', 'fieldset_status_slmbugs_lbl_key');
+            case 'fieldset_scrum_status_lbl_key':
+                return $GLOBALS['Language']->getText('plugin_tracker_common_fieldset', 'fieldset_scrum_status_lbl_key');
+            case 'fieldset_scrum_description_lbl_key':
+                return $GLOBALS['Language']->getText('plugin_tracker_common_fieldset', 'fieldset_scrum_description_lbl_key');
+            default:
+                return $this->label;
+        }
     }
-
 
     public static function getFactoryLabel()
     {
