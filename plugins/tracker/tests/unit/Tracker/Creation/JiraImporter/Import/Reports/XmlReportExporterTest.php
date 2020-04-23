@@ -23,10 +23,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Reports;
 
+use PHPUnit\Framework\TestCase;
+use Tracker_FormElement_Field_String;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 
-final class XmlReportExporterTest extends \PHPUnit\Framework\TestCase
+final class XmlReportExporterTest extends TestCase
 {
     public function testItExportReports(): void
     {
@@ -35,7 +37,8 @@ final class XmlReportExporterTest extends \PHPUnit\Framework\TestCase
             new FieldMapping(
                 'summary',
                 'Fsummary',
-                'summary'
+                'summary',
+                Tracker_FormElement_Field_String::TYPE
             )
         );
 

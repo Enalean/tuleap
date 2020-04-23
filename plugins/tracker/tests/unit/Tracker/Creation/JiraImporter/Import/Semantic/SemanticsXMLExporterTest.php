@@ -25,6 +25,8 @@ namespace Tuleap\unit\Tracker\Creation\JiraImporter\Import\Semantic;
 
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
+use Tracker_FormElement_Field_String;
+use Tracker_FormElement_Field_Text;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Semantic\SemanticsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
@@ -42,14 +44,16 @@ class SemanticsXMLExporterTest extends TestCase
             new FieldMapping(
                 'summary',
                 'Fsummary',
-                'summary'
+                'summary',
+                Tracker_FormElement_Field_String::TYPE
             )
         );
         $mapping->addMapping(
             new FieldMapping(
                 'description',
                 'Fdescription',
-                'description'
+                'description',
+                Tracker_FormElement_Field_Text::TYPE
             )
         );
 

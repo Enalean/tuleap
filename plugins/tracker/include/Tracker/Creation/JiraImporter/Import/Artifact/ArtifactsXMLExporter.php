@@ -49,14 +49,21 @@ class ArtifactsXMLExporter
      */
     private $user_manager;
 
+    /**
+     * @var FieldChangeXMLExporter
+     */
+    private $field_change_xml_exporter;
+
     public function __construct(
         ClientWrapper $wrapper,
         XML_SimpleXMLCDATAFactory $simplexml_cdata_factory,
-        UserManager $user_manager
+        UserManager $user_manager,
+        FieldChangeXMLExporter $field_change_xml_exporter
     ) {
-        $this->wrapper                 = $wrapper;
-        $this->simplexml_cdata_factory = $simplexml_cdata_factory;
-        $this->user_manager            = $user_manager;
+        $this->wrapper                   = $wrapper;
+        $this->simplexml_cdata_factory   = $simplexml_cdata_factory;
+        $this->user_manager              = $user_manager;
+        $this->field_change_xml_exporter = $field_change_xml_exporter;
     }
 
     public function exportArtifacts(
@@ -162,11 +169,12 @@ class ArtifactsXMLExporter
 
             foreach ($artifact['fields'] as $key => $value) {
                 $mapping = $jira_field_mapping_collection->getMappingFromJiraField($key);
-                if ($mapping !== null) {
-                    $field_change_node = $changeset_node->addChild('field_change');
-                    $field_change_node->addAttribute('type', 'string');
-                    $field_change_node->addAttribute('field_name', $mapping->getFieldName());
-                    $field_change_node->addChild('value', $value);
+                if ($mapping !== null && $value !== null) {
+                    $this->field_change_xml_exporter->exportFieldChange(
+                        $mapping,
+                        $changeset_node,
+                        $value
+                    );
                 }
             }
         }
