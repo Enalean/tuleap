@@ -200,12 +200,14 @@ execution-with-steps.current-test-content {
     max-height: 100px;
     padding: 8px 12px;
     overflow: auto;
-    transition: border-color 150ms linear;
+    transition: border-color ease-out 150ms;
     border: 1px solid $tlp-ui-border-normal;
     border-radius: 3px;
 
-    &:focus {
+    &:focus,
+    &.cke_focus { // stylelint-disable-line selector-class-pattern
         min-height: 64px; // magic value to display 2 line of text (padding + 2 line-height of <p>)
+        border-radius: 0 3px 3px;
         border-color: $tlp-theme-color;
     }
 
