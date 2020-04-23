@@ -783,6 +783,12 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_openid_connect_client
 %{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_openid_connect_client
 
+%if %{with enterprise}
+%{__install} plugins/oauth2_server/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_oauth2_server
+%{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_oauth2_server
+%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_oauth2_server
+%endif
+
 # Symlink for compatibility with older version
 %{__ln_s} %{APP_DIR} $RPM_BUILD_ROOT/%{OLD_APP_DIR}
 %{__ln_s} %{APP_LIB_DIR} $RPM_BUILD_ROOT/%{OLD_APP_LIB_DIR}
@@ -1435,6 +1441,8 @@ fi
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/oauth2_server
 %{APP_DIR}/src/www/assets/oauth2_server
+%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_oauth2_server
+%config(noreplace) /etc/logrotate.d/%{APP_NAME}_oauth2_server
 
 %files plugin-project-ownership
 %defattr(-,root,root,-)

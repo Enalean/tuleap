@@ -25,6 +25,7 @@ namespace Tuleap\OAuth2Server\Grant\RefreshToken;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Log\LoggerInterface;
 use Tuleap\Authentication\SplitToken\SplitTokenException;
 use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
 use Tuleap\Cryptography\ConcealedString;
@@ -73,6 +74,10 @@ class OAuth2GrantAccessTokenFromRefreshToken
      * @var ScopeExtractor
      */
     private $scope_extractor;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     public function __construct(
         ResponseFactoryInterface $response_factory,
@@ -81,7 +86,8 @@ class OAuth2GrantAccessTokenFromRefreshToken
         SplitTokenIdentifierTranslator $refresh_token_identifier_unserializer,
         OAuth2RefreshTokenVerifier $refresh_token_verifier,
         AccessTokenGrantRepresentationBuilder $access_token_grant_representation_builder,
-        ScopeExtractor $scope_extractor
+        ScopeExtractor $scope_extractor,
+        LoggerInterface $logger
     ) {
         $this->response_factory                          = $response_factory;
         $this->stream_factory                            = $stream_factory;
@@ -90,11 +96,13 @@ class OAuth2GrantAccessTokenFromRefreshToken
         $this->refresh_token_verifier                    = $refresh_token_verifier;
         $this->access_token_grant_representation_builder = $access_token_grant_representation_builder;
         $this->scope_extractor                           = $scope_extractor;
+        $this->logger                                    = $logger;
     }
 
     public function grantAccessToken(OAuth2App $app, array $body_params): ResponseInterface
     {
         if (! isset($body_params[self::REFRESH_TOKEN_PARAMETER])) {
+            $this->logger->info(sprintf('Request body does not have a %s parameter', self::REFRESH_TOKEN_PARAMETER));
             return $this->access_token_grant_error_response_builder->buildInvalidRequestResponse();
         }
 
@@ -104,6 +112,7 @@ class OAuth2GrantAccessTokenFromRefreshToken
                 $this->access_token_identifier_unserializer->getSplitToken(new ConcealedString($body_params[self::REFRESH_TOKEN_PARAMETER]))
             );
         } catch (OAuth2ServerException | SplitTokenException $exception) {
+            $this->logger->info($exception->getMessage());
             return $this->access_token_grant_error_response_builder->buildInvalidGrantResponse();
         } finally {
             \sodium_memzero($body_params[self::REFRESH_TOKEN_PARAMETER]);
@@ -116,10 +125,12 @@ class OAuth2GrantAccessTokenFromRefreshToken
                     $this->scope_extractor->extractScopes((string) $body_params[self::SCOPE_PARAMETER])
                 );
             } catch (OAuth2ScopeNotCoveredByOneOfTheScopeAssociatedWithTheRefreshTokenException | InvalidOAuth2ScopeException $exception) {
+                $this->logger->info($exception->getMessage());
                 return $this->access_token_grant_error_response_builder->buildInvalidScopeResponse();
             }
         }
 
+        $this->logger->debug('Access token request with a refresh token successfully verified');
         $representation = $this->access_token_grant_representation_builder->buildRepresentationFromRefreshToken(
             new \DateTimeImmutable(),
             $refresh_token

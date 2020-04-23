@@ -22,8 +22,30 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\Scope;
 
+use Throwable;
+use Tuleap\Authentication\Scope\AuthenticationScopeIdentifier;
 use Tuleap\OAuth2Server\OAuth2ServerException;
+use Tuleap\User\OAuth2\Scope\InvalidOAuth2ScopeIdentifierException;
 
 final class InvalidOAuth2ScopeException extends \RuntimeException implements OAuth2ServerException
 {
+    private function __construct(string $message, ?Throwable $previous = null)
+    {
+        parent::__construct($message, 0, $previous);
+    }
+
+    public static function invalidFormat(InvalidOAuth2ScopeIdentifierException $ex): self
+    {
+        return new self('Scope cannot exist: ' . $ex->getMessage(), $ex);
+    }
+
+    public static function scopeDoesNotExist(AuthenticationScopeIdentifier $scope_identifier): self
+    {
+        return new self(
+            sprintf(
+                'The scope %s does not exist (some scopes are only available when a plugin is present)',
+                $scope_identifier->toString()
+            )
+        );
+    }
 }

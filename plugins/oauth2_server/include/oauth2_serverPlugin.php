@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
+use Psr\Log\LoggerInterface;
 use Tuleap\Authentication\Scope\AggregateAuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilder;
 use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
@@ -350,6 +351,7 @@ final class oauth2_serverPlugin extends Plugin
             new PKCEInformationExtractor(),
             new PromptParameterValuesExtractor(),
             OAuth2OfflineAccessScope::fromItself(),
+            $this->getLogger(),
             new SapiEmitter(),
             new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
             new RejectNonHTTPSRequestMiddleware($response_factory, $stream_factory),
@@ -393,6 +395,7 @@ final class oauth2_serverPlugin extends Plugin
             $response_factory,
             $stream_factory
         );
+        $logger                                    = $this->getLogger();
         $access_token_grant_representation_builder = new AccessTokenGrantRepresentationBuilder(
             new OAuth2AccessTokenCreator(
                 new PrefixedSplitTokenSerializer(new PrefixOAuth2AccessToken()),
@@ -435,7 +438,8 @@ final class oauth2_serverPlugin extends Plugin
                     new OAuth2ScopeRetriever(new OAuth2AuthorizationCodeScopeDAO(), $this->buildScopeBuilder()),
                     new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
                 ),
-                new PKCECodeVerifier()
+                new PKCECodeVerifier(),
+                $logger
             ),
             new OAuth2GrantAccessTokenFromRefreshToken(
                 $response_factory,
@@ -450,8 +454,10 @@ final class oauth2_serverPlugin extends Plugin
                     new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
                 ),
                 $access_token_grant_representation_builder,
-                new ScopeExtractor($this->buildScopeBuilder())
+                new ScopeExtractor($this->buildScopeBuilder()),
+                $logger
             ),
+            $logger,
             new SapiEmitter(),
             new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
             new RejectNonHTTPSRequestMiddleware($response_factory, $stream_factory),
@@ -464,7 +470,7 @@ final class oauth2_serverPlugin extends Plugin
                     new SplitTokenVerificationStringHasher()
                 ),
                 new BasicAuthLoginExtractor(),
-                BackendLogger::getDefaultLogger()
+                $logger
             )
         );
     }
@@ -688,5 +694,10 @@ final class oauth2_serverPlugin extends Plugin
                 new LocaleSwitcher()
             )
         );
+    }
+
+    private function getLogger(): LoggerInterface
+    {
+        return \BackendLogger::getDefaultLogger('oauth2_server.log');
     }
 }

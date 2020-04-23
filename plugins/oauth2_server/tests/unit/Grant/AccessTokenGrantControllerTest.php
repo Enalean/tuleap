@@ -26,6 +26,7 @@ use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\NullLogger;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2GrantAccessTokenFromAuthorizationCode;
@@ -64,6 +65,7 @@ final class AccessTokenGrantControllerTest extends TestCase
             new AccessTokenGrantErrorResponseBuilder($this->response_factory, $stream_factory),
             $this->grant_access_token_from_auth_code,
             $this->grant_access_token_from_refresh_token,
+            new NullLogger(),
             \Mockery::mock(EmitterInterface::class)
         );
     }

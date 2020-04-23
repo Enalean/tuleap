@@ -26,6 +26,7 @@ use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Psr\Log\LoggerInterface;
 use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2GrantAccessTokenFromAuthorizationCode;
 use Tuleap\OAuth2Server\Grant\RefreshToken\OAuth2GrantAccessTokenFromRefreshToken;
@@ -52,11 +53,16 @@ final class AccessTokenGrantController extends DispatchablePSR15Compatible imple
      * @var OAuth2GrantAccessTokenFromRefreshToken
      */
     private $access_token_from_refresh_token;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     public function __construct(
         AccessTokenGrantErrorResponseBuilder $access_token_grant_error_response_builder,
         OAuth2GrantAccessTokenFromAuthorizationCode $access_token_from_authorization_code,
         OAuth2GrantAccessTokenFromRefreshToken $access_token_from_refresh_token,
+        LoggerInterface $logger,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack
     ) {
@@ -64,6 +70,7 @@ final class AccessTokenGrantController extends DispatchablePSR15Compatible imple
         $this->access_token_grant_error_response_builder = $access_token_grant_error_response_builder;
         $this->access_token_from_authorization_code      = $access_token_from_authorization_code;
         $this->access_token_from_refresh_token           = $access_token_from_refresh_token;
+        $this->logger                                    = $logger;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -76,16 +83,20 @@ final class AccessTokenGrantController extends DispatchablePSR15Compatible imple
         $body_params = $request->getParsedBody();
 
         if (! is_array($body_params) || ! isset($body_params[self::GRANT_TYPE_PARAMETER])) {
+            $this->logger->info(sprintf('Request body does not have a %s parameter', self::GRANT_TYPE_PARAMETER));
             return $this->access_token_grant_error_response_builder->buildInvalidRequestResponse();
         }
 
         if ($body_params[self::GRANT_TYPE_PARAMETER] === self::GRANT_AUTHORIZATION_CODE) {
+            $this->logger->debug('Received an access token grant request with an authorization code');
             return $this->access_token_from_authorization_code->grantAccessToken($app, $body_params);
         }
         if ($body_params[self::GRANT_TYPE_PARAMETER] === self::GRANT_REFRESH_TOKEN) {
+            $this->logger->debug('Received an access token grant request with a refresh token');
             return $this->access_token_from_refresh_token->grantAccessToken($app, $body_params);
         }
 
+        $this->logger->info(sprintf('Access token grant request made with an unsupported grant type (%s)', $body_params[self::GRANT_TYPE_PARAMETER]));
         return $this->access_token_grant_error_response_builder->buildInvalidGrantResponse();
     }
 }
