@@ -23,14 +23,17 @@ declare(strict_types=1);
 
 namespace Tuleap\TEEContainer;
 
+use Psr\Log\LogLevel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
 use Tuleap\BuildVersion\VersionPresenter;
 use TuleapCfg\Command\Docker\DataPersistence;
 use TuleapCfg\Command\Docker\Postfix;
+use TuleapCfg\Command\Docker\Realtime;
 use TuleapCfg\Command\Docker\Rsyslog;
 use TuleapCfg\Command\Docker\SSHDaemon;
 use TuleapCfg\Command\Docker\Supervisord;
@@ -92,6 +95,9 @@ final class StartContainerCommand extends Command
                 $this->data_persistence->restore($output);
                 $tuleap->update($output);
             }
+            $realtime = new Realtime(new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]));
+            $realtime->setup($this->getStringFromEnvironment('TULEAP_FQDN'));
+
             $rsyslog = new Rsyslog();
             $rsyslog->setup($output);
 
