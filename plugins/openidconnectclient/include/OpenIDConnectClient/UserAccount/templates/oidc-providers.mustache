@@ -41,9 +41,16 @@
                                             {{^ unique_authentication_endpoint }}
                                                 <button
                                                         type="submit"
-                                                        class="tlp-button-primary tlp-button-small"
+                                                        class="
+                                                            tlp-button-primary tlp-button-small
+                                                            {{^ can_unlink_providers }}tlp-tooltip tlp-tooltip-bottom{{/ can_unlink_providers }}
+                                                        "
                                                         name="provider_to_unlink"
                                                         value="{{ user_mapping_id }}"
+                                                        {{^ can_unlink_providers }}
+                                                            disabled
+                                                            data-tlp-tooltip="{{# dgettext }} tuleap-openidconnectclient | You must link another account to be able to remove this link{{/ dgettext }}"
+                                                        {{/ can_unlink_providers }}
                                                 >
                                                     <i class="tlp-button-icon fa fa-unlink"></i> {{# dgettext }} tuleap-openidconnectclient | Unlink{{/ dgettext }}
                                                 </button>

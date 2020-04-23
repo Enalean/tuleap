@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,22 +24,73 @@ namespace Tuleap\OpenIDConnectClient\UserMapping;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
-require_once __DIR__ . '/../bootstrap.php';
-
-class UserMappingManagerTest extends TestCase
+final class UserMappingManagerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|UserMappingDao
+     */
+    private $dao;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|CanRemoveUserMappingChecker
+     */
+    private $can_remove_user_mapping_checker;
+    /**
+     * @var UserMappingManager
+     */
+    private $user_mapping_manager;
+
+    protected function setUp(): void
+    {
+        $this->dao                             = \Mockery::mock(UserMappingDao::class);
+        $this->can_remove_user_mapping_checker = \Mockery::mock(CanRemoveUserMappingChecker::class);
+        $this->user_mapping_manager = new UserMappingManager($this->dao, $this->can_remove_user_mapping_checker, new DBTransactionExecutorPassthrough());
+    }
+
     public function testItThrowsAnExceptionIfTheMappingCanNotBeFound(): void
     {
-        $dao = \Mockery::spy(\Tuleap\OpenIDConnectClient\UserMapping\UserMappingDao::class);
-        $dao->shouldReceive('searchByProviderIdAndUserId')->andReturns(false);
+        $this->dao->shouldReceive('searchByProviderIdAndUserId')->andReturns(false);
         $provider = \Mockery::spy(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
-        $user = \Mockery::spy(\PFUser::class);
-        $user_mapping_manager = new UserMappingManager($dao);
+        $user     = \Mockery::spy(\PFUser::class);
 
-        $this->expectException('Tuleap\OpenIDConnectClient\UserMapping\UserMappingNotFoundException');
-        $user_mapping_manager->getByProviderAndUser($provider, $user);
+        $this->expectException(UserMappingNotFoundException::class);
+        $this->user_mapping_manager->getByProviderAndUser($provider, $user);
+    }
+
+    public function testCannotRemoveMappingWhenGivenUserDoesNotMatchTheMapping(): void
+    {
+        $user         = UserTestBuilder::aUser()->withId(102)->build();
+        $user_mapping = new UserMapping(1, 103, 1, 'identifier', 10);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->user_mapping_manager->remove($user, $user_mapping);
+    }
+
+    public function testDoesNotRemoveMappingWhenItIsNotAcceptable(): void
+    {
+        $user         = UserTestBuilder::aUser()->withId(102)->build();
+        $user_mapping = new UserMapping(1, 102, 1, 'identifier', 10);
+
+        $this->dao->shouldReceive('searchUsageByUserId')->andReturn(\TestHelper::emptyDar());
+        $this->can_remove_user_mapping_checker->shouldReceive('canAUserMappingBeRemoved')->andReturn(false);
+
+        $this->expectException(UserMappingDataAccessException::class);
+        $this->user_mapping_manager->remove($user, $user_mapping);
+    }
+
+    public function testCanRemoveMapping(): void
+    {
+        $user         = UserTestBuilder::aUser()->withId(102)->build();
+        $user_mapping = new UserMapping(1, 102, 1, 'identifier', 10);
+
+        $this->dao->shouldReceive('searchUsageByUserId')->andReturn(\TestHelper::emptyDar());
+        $this->can_remove_user_mapping_checker->shouldReceive('canAUserMappingBeRemoved')->andReturn(true);
+        $this->dao->shouldReceive('deleteById')->once()->andReturn(true);
+
+        $this->user_mapping_manager->remove($user, $user_mapping);
     }
 }

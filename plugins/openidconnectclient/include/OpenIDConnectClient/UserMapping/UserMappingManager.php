@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,19 +21,32 @@
 namespace Tuleap\OpenIDConnectClient\UserMapping;
 
 use PFUser;
+use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 
 class UserMappingManager
 {
-
     /**
      * @var UserMappingDao
      */
     private $dao;
+    /**
+     * @var CanRemoveUserMappingChecker
+     */
+    private $can_remove_user_mapping_checker;
+    /**
+     * @var DBTransactionExecutor
+     */
+    private $transaction_executor;
 
-    public function __construct(UserMappingDao $dao)
-    {
-        $this->dao = $dao;
+    public function __construct(
+        UserMappingDao $dao,
+        CanRemoveUserMappingChecker $can_remove_user_mapping_checker,
+        DBTransactionExecutor $transaction_executor
+    ) {
+        $this->dao                             = $dao;
+        $this->can_remove_user_mapping_checker = $can_remove_user_mapping_checker;
+        $this->transaction_executor            = $transaction_executor;
     }
 
     /**
@@ -112,12 +125,24 @@ class UserMappingManager
     /**
      * @throws UserMappingDataAccessException
      */
-    public function remove(UserMapping $user_mapping)
+    public function remove(PFUser $user, UserMapping $user_mapping): void
     {
-        $is_deleted = $this->dao->deleteById($user_mapping->getId());
-        if (! $is_deleted) {
-            throw new UserMappingDataAccessException();
+        if ((int) $user->getId() !== $user_mapping->getUserId()) {
+            throw new \InvalidArgumentException('The provided user is not part of this user mapping');
         }
+
+        $this->transaction_executor->execute(
+            function () use ($user, $user_mapping): void {
+                if (! $this->can_remove_user_mapping_checker->canAUserMappingBeRemoved($user, $this->getUsageByUser($user))) {
+                    throw new UserMappingDataAccessException();
+                }
+
+                $is_deleted = $this->dao->deleteById($user_mapping->getId());
+                if (! $is_deleted) {
+                    throw new UserMappingDataAccessException();
+                }
+            }
+        );
     }
 
     /**

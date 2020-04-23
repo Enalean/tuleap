@@ -104,7 +104,7 @@ final class UnlinkController implements DispatchableWithRequest
         }
 
         try {
-            $this->user_mapping_manager->remove($user_mapping);
+            $this->user_mapping_manager->remove($user, $user_mapping);
             $this->redirectToAccountPage(
                 $layout,
                 sprintf(dgettext('tuleap-openidconnectclient', 'The link with %1$s have been removed.'), $provider->getName()),

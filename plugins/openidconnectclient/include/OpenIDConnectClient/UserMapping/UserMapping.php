@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,12 +23,15 @@ namespace Tuleap\OpenIDConnectClient\UserMapping;
 class UserMapping
 {
     private $id;
+    /**
+     * @var int
+     */
     private $user_id;
     private $provider_id;
     private $identifier;
     private $last_used;
 
-    public function __construct($id, $user_id, $provider_id, $identifier, $last_used)
+    public function __construct($id, int $user_id, $provider_id, $identifier, $last_used)
     {
         $this->id          = $id;
         $this->user_id     = $user_id;
@@ -42,7 +45,7 @@ class UserMapping
         return $this->id;
     }
 
-    public function getUserId()
+    public function getUserId(): int
     {
         return $this->user_id;
     }
