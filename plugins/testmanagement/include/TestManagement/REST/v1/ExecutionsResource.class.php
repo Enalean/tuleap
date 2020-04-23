@@ -354,7 +354,7 @@ class ExecutionsResource
      * @throws RestException 500
      *
      */
-    public function patchId($id, PATCHExecutionRepresentation $body): void
+    protected function patchId($id, PATCHExecutionRepresentation $body): void
     {
         $user               = $this->getCurrentUser();
         $execution_artifact = $this->getArtifactById($user, (int) $id);
