@@ -236,7 +236,7 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
      */
     public function getTranslatedDescription()
     {
-        return util_translate_desc_ugroup($this->getDescription());
+        return \Tuleap\User\UserGroup\DescriptionTranslator::getUserGroupDisplayDescription((string) $this->getDescription());
     }
 
     /**

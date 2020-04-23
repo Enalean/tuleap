@@ -346,7 +346,7 @@ class Tracker_DateReminder
         $ugroups        = explode(',', $this->ugroups);
         if (!empty($ugroups)) {
             foreach ($ugroups as $ugroup) {
-                $ugroupsLabel  .= ' "' . util_translate_name_ugroup($ugroupManager->getById($ugroup)->getName()) . ' "';
+                $ugroupsLabel  .= ' "' . \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $ugroupManager->getById($ugroup)->getName()) . ' "';
             }
         }
         return $ugroupsLabel;

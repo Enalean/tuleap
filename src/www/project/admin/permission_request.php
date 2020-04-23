@@ -98,7 +98,7 @@ if ($request->isPost() && $request->valid($vFunc)) {
                         $newUgroups   = array($ugroupName);
                         $addedUgroups = array();
                         if ($ugroupId == $GLOBALS['UGROUP_PROJECT_ADMIN']) {
-                            $addedUgroups[] = util_translate_name_ugroup('project_admin');
+                            $addedUgroups[] = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) 'project_admin');
                         } else {
                             $addedUgroups[] = $ugroupName;
                         }
@@ -185,7 +185,7 @@ if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
 }
 
 
-$ugroupList = array(array('value' => $GLOBALS['UGROUP_PROJECT_ADMIN'], 'text' => util_translate_name_ugroup('project_admin')));
+$ugroupList = array(array('value' => $GLOBALS['UGROUP_PROJECT_ADMIN'], 'text' => \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) 'project_admin')));
 /** @psalm-suppress DeprecatedFunction */
 $res = ugroup_db_get_existing_ugroups($group_id);
 while ($row = db_fetch_array($res)) {

@@ -79,6 +79,8 @@ final class UGroupListPresenterBuilderTest extends TestCase
                 'usesNews'                => false
             ]
         );
+
+        $GLOBALS['Language']->shouldReceive(['getText' => 'whatever']);
     }
 
     public function testItBuildsASynchronizedProjectMembershipPresenterForPublicProject(): void

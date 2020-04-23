@@ -23,7 +23,7 @@ require_once('session.php');
 
 function util_microtime_float($offset = null)
 {
-    list($usec, $sec) = explode(" ", microtime());
+    [$usec, $sec] = explode(" ", microtime());
     $now = ((float) $usec + (float) $sec);
     return ($offset !== null) ? ($now - $offset) : $now;
 }
@@ -92,14 +92,14 @@ function util_importdatefmt_to_unixtime($date)
     }
 
     if (strstr($date, "/") !== false) {
-        list($year,$month,$day,$hour,$minute) = util_xlsdatefmt_explode($date);
+        [$year, $month, $day, $hour, $minute] = util_xlsdatefmt_explode($date);
         $time = mktime($hour, $minute, 0, $month, $day, $year);
 
         return array($time,true);
     }
 
     if (strstr($date, "-") !== false) {
-        list($year,$month,$day,$hour,$minute) = util_sysdatefmt_explode($date);
+        [$year, $month, $day, $hour, $minute] = util_sysdatefmt_explode($date);
         $time = mktime($hour, $minute, 0, $month, $day, $year);
         return array($time,true);
     }
@@ -129,20 +129,20 @@ function util_xlsdatefmt_explode($date)
             $minute = '0';
         } else {
             if ($u_pref == "day_month_year") {
-                list(,$day,$month,$year) = $match;
+                [, $day, $month, $year] = $match;
                 $hour = '0';
                 $minute = '0';
             } else {
-                list(,$month,$day,$year) = $match;
+                [, $month, $day, $year] = $match;
                 $hour = '0';
                 $minute = '0';
             }
         }
     } else {
         if ($u_pref == "day_month_year") {
-            list(,$day,$month,$year,$hour,$minute) = $match;
+            [, $day, $month, $year, $hour, $minute] = $match;
         } else {
-            list(,$month,$day,$year,$hour,$minute) = $match;
+            [, $month, $day, $year, $hour, $minute] = $match;
         }
     }
 
@@ -161,7 +161,7 @@ function util_date_to_unixtime($date)
         return array($time,false);
     }
 
-    list($year,$month,$day) = util_date_explode($date);
+    [$year, $month, $day] = util_date_explode($date);
     $time = mktime(0, 0, 0, $month, $day, $year);
     return array($time,true);
 }
@@ -184,16 +184,16 @@ function util_date_explode($date)
                 $month = '1';
                 $day = '1';
             } else {
-                list(,$year) = $match;
+                [, $year] = $match;
                 $month = '1';
                 $day = '1';
             }
         } else {
-            list(,$year,$month) = $match;
+            [, $year, $month] = $match;
             $day = '1';
         }
     } else {
-        list(,$year,$month,$day) = $match;
+        [, $year, $month, $day] = $match;
     }
     return array($year,$month,$day);
 }
@@ -209,7 +209,7 @@ function util_sysdatefmt_to_unixtime($date)
         return array($time,false);
     }
 
-    list($year,$month,$day,$hour,$minute) = util_sysdatefmt_explode($date);
+    [$year, $month, $day, $hour, $minute] = util_sysdatefmt_explode($date);
     $time = mktime($hour, $minute, 0, $month, $day, $year);
     return array($time,true);
 }
@@ -238,25 +238,25 @@ function util_sysdatefmt_explode($date)
                     $hour = '0';
                     $minute = '0';
                 } else {
-                          list(,$year) = $match;
+                          [, $year] = $match;
                     $month = '1';
                     $day = '1';
                     $hour = '0';
                     $minute = '0';
                 }
             } else {
-                list(,$year,$month) = $match;
+                [, $year, $month] = $match;
                 $day = '1';
                 $hour = '0';
                 $minute = '0';
             }
         } else {
-            list(,$year,$month,$day) = $match;
+            [, $year, $month, $day] = $match;
             $hour = '0';
             $minute = '0';
         }
     } else {
-        list(,$year,$month,$day,$hour,$minute) = $match;
+        [, $year, $month, $day, $hour, $minute] = $match;
     }
 
     return array($year,getMonth($month, $ok),$day,$hour,$minute);
@@ -571,7 +571,7 @@ function util_normalize_email($address)
     if (strpos(':', $GLOBALS['sys_default_domain']) === false) {
         $host = $GLOBALS['sys_default_domain'];
     } else {
-        list($host, $port) = explode(':', $GLOBALS['sys_default_domain']);
+        [$host, $port] = explode(':', $GLOBALS['sys_default_domain']);
     }
     $address = util_cleanup_emails($address);
     if (validate_email($address)) {
@@ -936,34 +936,6 @@ function getStringFromServer($key)
     } else {
             return '';
     }
-}
-
-/**
- * If $text begins with $prefixe ends with $suffixe then returns the
- * translated name found in page $pagename. Else returns $name.
-**/
-function util_translate($text, $prefixe, $suffixe, $pagename)
-{
-    $new_text = $text;
-    if (strpos($new_text, $prefixe) === 0 && strpos($new_text, $suffixe) + strlen($suffixe) === strlen($new_text)) {
-        $new_text = $GLOBALS['Language']->getText($pagename, $new_text);
-    }
-    return $new_text;
-}
-
-/**
- * Translate the name of an ugroup
-**/
-function util_translate_name_ugroup($name)
-{
-    return util_translate($name, "ugroup_", "_name_key", "project_ugroup");
-}
-/**
- * Translate the description of an ugroup
-**/
-function util_translate_desc_ugroup($desc)
-{
-    return util_translate($desc, "ugroup_", "_desc_key", "project_ugroup");
 }
 
 function util_return_to($url)
