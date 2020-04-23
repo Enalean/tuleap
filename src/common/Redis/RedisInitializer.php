@@ -26,7 +26,11 @@ use Tuleap\Cryptography\ConcealedString;
 
 class RedisInitializer
 {
-    public const CONNECT_TIMEOUT = 0.1;
+    /**
+     * Connection timeout is raised to 200ms as we now (11.14) support TLS connection to redis
+     * and TLS handshake overhead + bumpy network can make things slower.
+     */
+    public const CONNECT_TIMEOUT = 0.2;
 
     /**
      * @var string

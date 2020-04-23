@@ -6,7 +6,7 @@ version: "2"
 
 services:
   web:
-    image: enalean/tuleap-aio:centos7
+    image: docker.tuleap.org/tuleap-enterprise-edition:dev
     command: /usr/share/tuleap/plugins/tee_container/bin/tee-container.php run
     volumes:
       - ../../../:/usr/share/tuleap:ro,cached
@@ -21,6 +21,9 @@ services:
       - DB_ADMIN_PASSWORD=welcome0
       - TULEAP_FPM_SESSION_MODE=redis
       - TULEAP_REDIS_SERVER=redis
+#      - TULEAP_REDIS_PORT=6380
+#      - TULEAP_REDIS_PASSWORD=some_password
+#      - TULEAP_REDIS_USE_TLS=1
 
   db:
     image: mysql:5.7
