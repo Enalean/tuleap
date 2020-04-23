@@ -19,6 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Cryptography\ConcealedString;
+
 header("Cache-Control: no-cache, no-store, must-revalidate");
 
 require_once __DIR__ . '/../include/pre.php';
@@ -89,14 +91,16 @@ function register_valid($mail_confirm_code, array &$errors)
         return 0;
     }
 
-    if ($request->get('page') != "admin_creation" && $request->get('form_pw') != $request->get('form_pw2')) {
+    $password              = new ConcealedString((string) $request->get('form_pw'));
+    $password_confirmation = new ConcealedString((string) $request->get('form_pw2'));
+    if ($request->get('page') !== "admin_creation" && ! $password->isIdenticalTo($password_confirmation)) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_passwd'));
         $errors['form_pw'] = $Language->getText('account_register', 'err_passwd');
         return 0;
     }
 
     $password_sanity_checker = \Tuleap\Password\PasswordSanityChecker::build();
-    if (! $password_sanity_checker->check($request->get('form_pw'))) {
+    if (! $password_sanity_checker->check($password)) {
         foreach ($password_sanity_checker->getErrors() as $error) {
             $GLOBALS['Response']->addFeedback('error', $error);
         }
@@ -130,7 +134,7 @@ function register_valid($mail_confirm_code, array &$errors)
     //use sys_lang as default language for each user at register
     $res = account_create(
         $request->get('form_loginname'),
-        $request->get('form_pw'),
+        $password_confirmation,
         '',
         $request->get('form_realname'),
         $request->get('form_register_purpose'),

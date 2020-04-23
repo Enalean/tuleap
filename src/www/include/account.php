@@ -105,7 +105,7 @@ function account_shellselects($current)
     }
 }
 // Set user password (Unix, Web)
-function account_create($loginname = '', $pw = '', $ldap_id = '', $realname = '', $register_purpose = '', $email = '', $status = 'P', $confirm_hash = '', $mail_site = 0, $mail_va = 0, $timezone = 'GMT', $lang_id = 'en_US', $unix_status = 'N', $expiry_date = 0)
+function account_create(string $loginname, \Tuleap\Cryptography\ConcealedString $pw, $ldap_id = '', $realname = '', $register_purpose = '', $email = '', $status = 'P', $confirm_hash = '', $mail_site = 0, $mail_va = 0, $timezone = 'GMT', $lang_id = 'en_US', $unix_status = 'N', $expiry_date = 0)
 {
     $um   = UserManager::instance();
     $user = new PFUser();
