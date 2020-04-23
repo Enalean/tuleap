@@ -3,7 +3,8 @@
     ng-class="{
         'tlp-modal-success': modal.execution.status === 'passed',
         'tlp-modal-danger': modal.execution.status === 'failed',
-        'tlp-modal-info': modal.execution.status === 'blocked'
+        'tlp-modal-info': modal.execution.status === 'blocked',
+        'notrun': modal.execution.status === 'notrun'
     }"
     role="dialog"
     aria-labelledby="execution-details-modal-title"
@@ -39,7 +40,8 @@
             ng-class="{
                 'tlp-button-success': modal.execution.status === 'passed',
                 'tlp-button-danger': modal.execution.status === 'failed',
-                'tlp-button-info': modal.execution.status === 'blocked'
+                'tlp-button-info': modal.execution.status === 'blocked',
+                'tlp-button-secondary': modal.execution.status === 'notrun'
             }"
             data-dismiss="modal"
             translate
