@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Password\Administration;
 
 use HTTPRequest;
@@ -25,10 +27,12 @@ use TemplateRenderer;
 use TemplateRendererFactory;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
 use Tuleap\Request\DispatchableWithRequest;
 
-class PasswordPolicyDisplayController implements DispatchableWithRequest
+final class PasswordPolicyDisplayController implements DispatchableWithRequest
 {
     /**
      * @var AdminPageRenderer
@@ -55,11 +59,16 @@ class PasswordPolicyDisplayController implements DispatchableWithRequest
         $this->password_configuration_retriever = $password_configuration_retriever;
     }
 
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $request->checkUserIsSuperUser();
 
-        $layout->includeFooterJavascriptFile('/scripts/admin/password-policy.js');
+        $layout->addJavascriptAsset(
+            new JavascriptAsset(
+                new IncludeAssets(__DIR__ . "/../../../www/assets/core", "/assets/core"),
+                "site-admin/password-policy.js"
+            )
+        );
 
         $this->admin_page_renderer->header('Password requirements');
         $this->template_renderer->renderToPage(
