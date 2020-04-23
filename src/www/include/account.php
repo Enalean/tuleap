@@ -20,6 +20,8 @@
  *
  */
 
+use Tuleap\Cryptography\ConcealedString;
+
 // adduser.php - All the forms and functions to manage unix users
 // Add user to an existing project
 function account_add_user_to_group($group_id, &$user_unix_name)
@@ -105,13 +107,15 @@ function account_shellselects($current)
     }
 }
 // Set user password (Unix, Web)
-function account_create(string $loginname, \Tuleap\Cryptography\ConcealedString $pw, $ldap_id = '', $realname = '', $register_purpose = '', $email = '', $status = 'P', $confirm_hash = '', $mail_site = 0, $mail_va = 0, $timezone = 'GMT', $lang_id = 'en_US', $unix_status = 'N', $expiry_date = 0)
+function account_create(string $loginname, ?ConcealedString $pw, $ldap_id = '', $realname = '', $register_purpose = '', $email = '', $status = 'P', $confirm_hash = '', $mail_site = 0, $mail_va = 0, $timezone = 'GMT', $lang_id = 'en_US', $unix_status = 'N', $expiry_date = 0)
 {
     $um   = UserManager::instance();
     $user = new PFUser();
     $user->setUserName($loginname);
     $user->setRealName($realname);
-    $user->setPassword($pw);
+    if ($pw !== null) {
+        $user->setPassword($pw);
+    }
     $user->setLdapId($ldap_id);
     $user->setRegisterPurpose($register_purpose);
     $user->setEmail($email);

@@ -240,13 +240,8 @@ msgid ""
 msgstr "Votre compte a été créé mais doit être approuvé par un administrateur"
 
 #, php-format
-msgid ""
-"Your new user account will be linked with %1$s. You must provide a password "
-"to use %2$s services (CVS, SVN, Git, FTP, ...)."
-msgstr ""
-"Votre nouveau compte utilisateur sera lié avec %1$s. Vous devez fournir un "
-"mot de passe pour vous authentifier avec les services de %2$s (CVS, SVN, "
-"Git, FTP, …)"
+msgid "Your new user account will be linked with %1$s."
+msgstr "Votre nouveau compte utilisateur sera lié avec %1$s."
 
 msgid "https://"
 msgstr "https://"

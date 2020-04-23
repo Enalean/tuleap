@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ class Account_RegisterPrefillValuesPresenter
     public $form_loginname;
     /** @var Account_RegisterField */
     public $form_email;
-    /** @var Account_RegisterField */
+    /** @var Account_RegisterField|null */
     public $form_pw;
     /** @var Account_RegisterField */
     public $form_realname;
@@ -38,7 +38,7 @@ class Account_RegisterPrefillValuesPresenter
     public function __construct(
         Account_RegisterField $login_name,
         Account_RegisterField $email,
-        Account_RegisterField $password,
+        ?Account_RegisterField $password,
         Account_RegisterField $realname,
         Account_RegisterField $register_purpose,
         Account_RegisterField $mail_site,
