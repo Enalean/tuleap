@@ -31,7 +31,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection
 
 class PermissionsXMLExporterTest extends TestCase
 {
-    public function testItExportsReadPermissionsForFieldsInMapping(): void
+    public function testItExportsDefaultPermissionsForFieldsInMapping(): void
     {
         $tracker_node = new SimpleXMLElement('<tracker/>');
         $mapping_collection = new FieldMappingCollection();
@@ -51,12 +51,82 @@ class PermissionsXMLExporterTest extends TestCase
 
         $permissions_node = $tracker_node->permissions;
         $this->assertNotNull($permissions_node);
+        $this->assertCount(3, $permissions_node->children());
+
+        $read_permission_node = $permissions_node->permission[0];
+        $this->assertSame("field", (string) $read_permission_node['scope']);
+        $this->assertSame("Fsummary", (string) $read_permission_node['REF']);
+        $this->assertSame("UGROUP_ANONYMOUS", (string) $read_permission_node['ugroup']);
+        $this->assertSame("PLUGIN_TRACKER_FIELD_READ", (string) $read_permission_node['type']);
+
+        $submit_permission_node = $permissions_node->permission[1];
+        $this->assertSame("field", (string) $submit_permission_node['scope']);
+        $this->assertSame("Fsummary", (string) $submit_permission_node['REF']);
+        $this->assertSame("UGROUP_REGISTERED", (string) $submit_permission_node['ugroup']);
+        $this->assertSame("PLUGIN_TRACKER_FIELD_SUBMIT", (string) $submit_permission_node['type']);
+
+        $update_permission_node = $permissions_node->permission[2];
+        $this->assertSame("field", (string) $update_permission_node['scope']);
+        $this->assertSame("Fsummary", (string) $update_permission_node['REF']);
+        $this->assertSame("UGROUP_PROJECT_MEMBERS", (string) $update_permission_node['ugroup']);
+        $this->assertSame("PLUGIN_TRACKER_FIELD_UPDATE", (string) $update_permission_node['type']);
+    }
+
+    public function testItExportsOnlyReadPermissionsForArtifactIdField(): void
+    {
+        $tracker_node = new SimpleXMLElement('<tracker/>');
+        $mapping_collection = new FieldMappingCollection();
+        $mapping_collection->addMapping(
+            new FieldMapping(
+                'artifact_id',
+                'Fartifact_id',
+                'Artifact Id'
+            )
+        );
+
+        $exporter = new PermissionsXMLExporter();
+        $exporter->exportFieldsPermissions(
+            $tracker_node,
+            $mapping_collection
+        );
+
+        $permissions_node = $tracker_node->permissions;
+        $this->assertNotNull($permissions_node);
         $this->assertCount(1, $permissions_node->children());
 
-        $permission_node = $permissions_node->permission;
-        $this->assertSame("field", (string) $permission_node['scope']);
-        $this->assertSame("Fsummary", (string) $permission_node['REF']);
-        $this->assertSame("UGROUP_PROJECT_MEMBERS", (string) $permission_node['ugroup']);
-        $this->assertSame("PLUGIN_TRACKER_FIELD_READ", (string) $permission_node['type']);
+        $read_permission_node = $permissions_node->permission[0];
+        $this->assertSame("field", (string) $read_permission_node['scope']);
+        $this->assertSame("Fartifact_id", (string) $read_permission_node['REF']);
+        $this->assertSame("UGROUP_ANONYMOUS", (string) $read_permission_node['ugroup']);
+        $this->assertSame("PLUGIN_TRACKER_FIELD_READ", (string) $read_permission_node['type']);
+    }
+
+    public function testItExportsOnlyReadPermissionsForOldJiraLinkField(): void
+    {
+        $tracker_node = new SimpleXMLElement('<tracker/>');
+        $mapping_collection = new FieldMappingCollection();
+        $mapping_collection->addMapping(
+            new FieldMapping(
+                'jira_artifact_url',
+                'Fjira_artifact_url',
+                'Link to original artifact'
+            )
+        );
+
+        $exporter = new PermissionsXMLExporter();
+        $exporter->exportFieldsPermissions(
+            $tracker_node,
+            $mapping_collection
+        );
+
+        $permissions_node = $tracker_node->permissions;
+        $this->assertNotNull($permissions_node);
+        $this->assertCount(1, $permissions_node->children());
+
+        $read_permission_node = $permissions_node->permission[0];
+        $this->assertSame("field", (string) $read_permission_node['scope']);
+        $this->assertSame("Fjira_artifact_url", (string) $read_permission_node['REF']);
+        $this->assertSame("UGROUP_ANONYMOUS", (string) $read_permission_node['ugroup']);
+        $this->assertSame("PLUGIN_TRACKER_FIELD_READ", (string) $read_permission_node['type']);
     }
 }

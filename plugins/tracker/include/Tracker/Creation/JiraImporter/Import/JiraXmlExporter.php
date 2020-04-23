@@ -45,6 +45,9 @@ class JiraXmlExporter
     public const JIRA_LINK_FIELD_NAME    = "jira_artifact_url";
     public const JIRA_SUMMARY_FIELD_NAME = "summary";
 
+    public const JIRA_LINK_FIELD_ID        = "jira_artifact_url";
+    public const JIRA_ARTIFACT_ID_FIELD_ID = "artifact_id";
+
     /**
      * @var FieldXmlExporter
      */
@@ -163,7 +166,7 @@ class JiraXmlExporter
             Tracker_FormElement_Field_ArtifactId::TYPE,
             "artifact id",
             "Artifact id",
-            "artifact_id",
+            self::JIRA_ARTIFACT_ID_FIELD_ID,
             1,
             "0",
             $this->jira_field_mapping_collection
@@ -174,7 +177,7 @@ class JiraXmlExporter
             Tracker_FormElement_Field_String::TYPE,
             self::JIRA_LINK_FIELD_NAME,
             "Link to original artifact",
-            "jira_artifact_url",
+            self::JIRA_LINK_FIELD_ID,
             2,
             "0",
             $this->jira_field_mapping_collection
