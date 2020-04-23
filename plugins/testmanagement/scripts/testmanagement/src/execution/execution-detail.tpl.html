@@ -93,7 +93,7 @@
                     <div ng-bind-html="truncateExecutionResult(execution, 200)"></div>
                     <button type="button"
                             class="tlp-button-outline tlp-button-small"
-                            ng-class="::{'tlp-button-danger': execution.status === 'failed', 'tlp-button-success': execution.status === 'passed', 'tlp-button-info': execution.status === 'blocked', 'tlp-button-secondary': execution.status === 'notrun'}"
+                            ng-class="{'tlp-button-danger': execution.status === 'failed', 'tlp-button-success': execution.status === 'passed', 'tlp-button-info': execution.status === 'blocked', 'tlp-button-secondary': execution.status === 'notrun'}"
                             ng-click="showExecutionDetailsModal()"
                             translate
                     >View details</button>
