@@ -60,6 +60,11 @@ class ProjectMilestonesException extends \Exception
         return new self(dgettext('tuleap-projectmilestones', 'No root planning is defined.'));
     }
 
+    public static function buildNoAgileDashboardPlugin(): self
+    {
+        return new self(dgettext('tuleap-projectmilestones', 'Service AgileDashboard is disabled.'));
+    }
+
     public function getTranslatedMessage(): string
     {
         return $this->translated_message;
