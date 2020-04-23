@@ -112,6 +112,6 @@ class WebDAVAuthentication
      */
     public function getUser($username, $password)
     {
-        return UserManager::instance()->login($username, $password);
+        return UserManager::instance()->login($username, new \Tuleap\Cryptography\ConcealedString($password));
     }
 }

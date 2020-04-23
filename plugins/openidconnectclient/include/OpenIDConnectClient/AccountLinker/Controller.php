@@ -25,6 +25,7 @@ use Feedback;
 use HTTPRequest;
 use PFUser;
 use TemplateRendererFactory;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMappingManager;
@@ -128,7 +129,7 @@ class Controller
             );
         }
 
-        $user = $this->user_manager->login($request->get('loginname'), $request->get('password'));
+        $user = $this->user_manager->login($request->get('loginname'), new ConcealedString($request->get('password')));
         if ($user->isAnonymous()) {
             $this->showIndex($request);
         } else {

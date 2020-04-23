@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\User\ForgeUserGroupPermission\SiteAdministratorPermission;
 
 /**
@@ -787,9 +788,9 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         return $this->language_id;
     }
     /**
-     * @return hash of user pwd
+     * @return string|null hash of user pwd
      */
-    public function getUserPw()
+    public function getUserPw(): ?string
     {
         return $this->user_pw;
     }
@@ -825,10 +826,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         return substr($this->locale, 0, 2);
     }
 
-    /**
-     * @return String Clear user password
-     */
-    public function getPassword()
+    public function getPassword(): ?ConcealedString
     {
         return $this->clear_password;
     }
@@ -1203,10 +1201,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey
 
     /**
      * Set clear password
-     *
-     * @param  String $password
      */
-    public function setPassword($password)
+    public function setPassword(ConcealedString $password): void
     {
         $this->clear_password = $password;
     }

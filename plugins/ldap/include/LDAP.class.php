@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Cryptography\ConcealedString;
+
 /**
  * LDAP class definition
  * Provides LDAP facilities:
@@ -177,11 +179,11 @@ class LDAP
      *   means that the user/password is valid.
      *
      * @param String $binddn DN to use to bind with
-     * @param String $bindpw Password associated to the DN
+     * @param ConcealedString $bindpw Password associated to the DN
      *
      * @return bool true if bind was successful, false otherwise.
      */
-    public function bind($binddn = null, $bindpw = null)
+    public function bind($binddn = null, ?ConcealedString $bindpw = null)
     {
         if (!$this->bound) {
             if (!$binddn) {
@@ -197,7 +199,7 @@ class LDAP
                 $this->bound = false;
             }
 
-            if ($bind_result = @ldap_bind($this->ds, $binddn, $bindpw)) {
+            if ($bind_result = @ldap_bind($this->ds, $binddn, $bindpw === null ? null : $bindpw->getString())) {
                 $this->bound = true;
             } else {
                 $error_message = 'Unable to bind to LDAP server: ' . $this->ldapParams['server'] .
@@ -260,13 +262,12 @@ class LDAP
      * with this DN and the given password
      *
      * @param string $login  Login name to authenticate with
-     * @param string $passwd Password associated to the login
      *
      * @return bool true if the login and password match, false otherwise
      */
-    public function authenticate($login, $passwd)
+    public function authenticate($login, ConcealedString $passwd)
     {
-        if (!$passwd) {
+        if ($passwd->isIdenticalTo(new ConcealedString(''))) {
             // avoid a successful bind on LDAP servers accepting anonymous connections
             //$this->setError($Language->getText('ldap_class','err_nopasswd'));
             return false;

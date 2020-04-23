@@ -21,6 +21,7 @@
 
 namespace Tuleap\CreateTestEnv;
 
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Password\PasswordSanityChecker;
 
 class CreateTestEnvironment
@@ -55,7 +56,6 @@ class CreateTestEnvironment
      * @param string $lastname
      * @param string $email
      * @param string $login
-     * @param string $password
      * @param string $archive
      *
      * @throws Exception\EmailNotUniqueException
@@ -69,7 +69,7 @@ class CreateTestEnvironment
      * @throws Exception\UnableToCreateTemporaryDirectoryException
      * @throws Exception\UnableToWriteFileException
      */
-    public function main($firstname, $lastname, $email, $login, $password, $archive)
+    public function main($firstname, $lastname, $email, $login, ConcealedString $password, $archive)
     {
         if (! $this->password_sanity_checker->check($password)) {
             throw new Exception\InvalidPasswordException($this->password_sanity_checker->getErrors());

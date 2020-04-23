@@ -22,6 +22,7 @@ namespace Tuleap\User\Password\Change;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\User\Password\Reset\Revoker;
 use Tuleap\User\SessionManager;
 
@@ -63,7 +64,7 @@ class PasswordChangerTest extends TestCase
         $this->revoker->shouldReceive('revokeTokens')->once();
         $this->user_manager->shouldReceive('updateDb')->once()->andReturns(true);
 
-        $password_changer->changePassword($this->user, 'new_password');
+        $password_changer->changePassword($this->user, new ConcealedString('new_password'));
     }
 
     public function testSessionsAndResetTokensAreInvalidatedBeforeUpdatingPassword()
@@ -77,6 +78,6 @@ class PasswordChangerTest extends TestCase
 
         $this->expectException(PasswordChangeException::class);
 
-        $password_changer->changePassword($this->user, 'new_password');
+        $password_changer->changePassword($this->user, new ConcealedString('new_password'));
     }
 }

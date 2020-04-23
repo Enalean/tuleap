@@ -20,6 +20,7 @@
 namespace Tuleap\Token\REST\v1;
 
 use Luracast\Restler\RestException;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Token\REST\TokenRepresentation;
 use Tuleap\REST\Header;
 use Exception;
@@ -65,7 +66,7 @@ class TokenResource
      *
      * @return Tuleap\Token\REST\TokenRepresentation
      */
-    public function post($username, $password)
+    public function post($username, string $password)
     {
         try {
             $password_handler = PasswordHandlerFactory::getPasswordHandler();
@@ -77,7 +78,8 @@ class TokenResource
                 $password_handler
             );
 
-            $user  = $user_login->authenticate($username, $password);
+            $user  = $user_login->authenticate($username, new ConcealedString($password));
+            sodium_memzero($password);
             $this->sendAllowHeaders();
 
             $token = new TokenRepresentation();

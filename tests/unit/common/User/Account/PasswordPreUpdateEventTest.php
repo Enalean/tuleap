@@ -23,37 +23,27 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Account;
 
-use PFUser;
-use Tuleap\Event\Dispatchable;
+use PHPUnit\Framework\TestCase;
+use Tuleap\Test\Builders\UserTestBuilder;
 
-final class PasswordPreUpdateEvent implements Dispatchable
+final class PasswordPreUpdateEventTest extends TestCase
 {
-    public const NAME = 'passwordPreUpdateEvent';
-
-    private $user_can_change_password;
-    /**
-     * @var PFUser
-     */
-    private $user;
-
-    public function __construct(PFUser $user)
+    public function testUserCannotChangePasswordIfTheyDoNotAlreadyHaveOne(): void
     {
-        $this->user                     = $user;
-        $this->user_can_change_password = $user->getUserPw() !== null;
+        $user = UserTestBuilder::aUser()->build();
+
+        $event = new PasswordPreUpdateEvent($user);
+
+        $this->assertFalse($event->areUsersAllowedToChangePassword());
     }
 
-    public function forbidUserToChangePassword(): void
+    public function testUseWithAnExistingPasswordCanByDefaultChangeIt(): void
     {
-        $this->user_can_change_password = false;
-    }
+        $user = UserTestBuilder::aUser()->build();
+        $user->setUserPw('some_password_hash');
 
-    public function areUsersAllowedToChangePassword(): bool
-    {
-        return $this->user_can_change_password;
-    }
+        $event = new PasswordPreUpdateEvent($user);
 
-    public function getUser(): PFUser
-    {
-        return $this->user;
+        $this->assertTrue($event->areUsersAllowedToChangePassword());
     }
 }

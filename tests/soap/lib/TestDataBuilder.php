@@ -26,15 +26,15 @@ class SOAP_TestDataBuilder extends TestDataBuilder
     public function generateUsers()
     {
         $admin_user = $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME);
-        $admin_user->setPassword(self::ADMIN_PASSWORD);
+        $admin_user->setPassword(new \Tuleap\Cryptography\ConcealedString(self::ADMIN_PASSWORD));
         $this->user_manager->updateDb($admin_user);
 
         $user_1 = $this->user_manager->getUserByUserName(self::TEST_USER_1_NAME);
-        $user_1->setPassword(self::TEST_USER_1_PASS);
+        $user_1->setPassword(new \Tuleap\Cryptography\ConcealedString(self::TEST_USER_1_PASS));
         $this->user_manager->updateDb($user_1);
 
         $user_2 = $this->user_manager->getUserByUserName(self::TEST_USER_2_NAME);
-        $user_2->setPassword(self::TEST_USER_2_PASS);
+        $user_2->setPassword(new \Tuleap\Cryptography\ConcealedString(self::TEST_USER_2_PASS));
         $this->user_manager->updateDb($user_2);
 
         return $this;

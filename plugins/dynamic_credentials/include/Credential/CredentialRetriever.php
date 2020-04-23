@@ -20,6 +20,8 @@
 
 namespace Tuleap\DynamicCredentials\Credential;
 
+use Tuleap\Cryptography\ConcealedString;
+
 class CredentialRetriever
 {
     /**
@@ -43,13 +45,12 @@ class CredentialRetriever
     }
 
     /**
-     * @return Credential
      * @throws CredentialAuthenticationException
      * @throws CredentialExpiredException
      * @throws CredentialInvalidUsernameException
      * @throws CredentialNotFoundException
      */
-    public function authenticate($username, $password)
+    public function authenticate(string $username, ConcealedString $password): Credential
     {
         $identifier = $this->identifier_extractor->extract($username);
         $row        = $this->dao->getUnrevokedCredentialByIdentifier($identifier);

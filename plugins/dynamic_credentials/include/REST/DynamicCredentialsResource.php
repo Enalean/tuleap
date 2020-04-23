@@ -21,6 +21,7 @@
 namespace Tuleap\DynamicCredentials\REST;
 
 use Luracast\Restler\RestException;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\DynamicCredentials\Credential\CredentialCreator;
 use Tuleap\DynamicCredentials\Credential\CredentialDAO;
 use Tuleap\DynamicCredentials\Credential\CredentialIdentifierExtractor;
@@ -66,7 +67,9 @@ class DynamicCredentialsResource
         }
 
         try {
-            $account_creator->create($username, $password, $expiration_date);
+            $concealed_password = new ConcealedString($password);
+            sodium_memzero($password);
+            $account_creator->create($username, $concealed_password, $expiration_date);
         } catch (CredentialInvalidUsernameException $ex) {
             throw new RestException(400, $ex->getMessage());
         } catch (DuplicateCredentialException $ex) {

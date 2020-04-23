@@ -17,6 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\User\PasswordVerifier;
 
 class User_LoginManager
@@ -70,13 +71,12 @@ class User_LoginManager
      * Authenticate user but doesn't verify if they are valid
      *
      * @param String $name
-     * @param String $password
      * @return PFUser
      * @throws User_InvalidPasswordWithUserException
      * @throws User_InvalidPasswordException
      * @throws User_PasswordExpiredException
      */
-    public function authenticate($name, $password)
+    public function authenticate($name, ConcealedString $password)
     {
         $auth_success     = false;
         $auth_user_id     = null;
@@ -113,7 +113,7 @@ class User_LoginManager
         return $user;
     }
 
-    private function authenticateFromDatabase(PFUser $user, $password)
+    private function authenticateFromDatabase(PFUser $user, ConcealedString $password)
     {
         $is_auth_valid          = false;
 

@@ -23,6 +23,7 @@ namespace Tuleap\CreateTestEnv\REST;
 
 use Tuleap\CreateTestEnv\Exception\InvalidPasswordException;
 use Tuleap\CreateTestEnv\Notifier;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Password\PasswordSanityChecker;
 use Tuleap\REST\Header;
 use Tuleap\CreateTestEnv\NotificationBotDao;
@@ -69,7 +70,7 @@ class CreateTestEnvResource
      * @throws RestException 400 Invalid request
      * @throws RestException 500 Server error
      */
-    public function post($secret, $firstname, $lastname, $email, $login, $password, $archive)
+    public function post($secret, $firstname, $lastname, $email, $login, string $password, $archive)
     {
         $tmp_name = null;
         try {
@@ -81,7 +82,8 @@ class CreateTestEnvResource
                 PasswordSanityChecker::build(),
                 $tmp_name
             );
-            $test_env->main($firstname, $lastname, $email, $login, $password, $archive);
+            $test_env->main($firstname, $lastname, $email, $login, new ConcealedString($password), $archive);
+            sodium_memzero($password);
 
             return (new TestEnvironmentRepresentation())->build(
                 $test_env->getProject(),

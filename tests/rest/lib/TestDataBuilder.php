@@ -105,7 +105,7 @@ class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLin
         $this->initPassword(self::TEST_USER_1_NAME, self::STANDARD_PASSWORD);
 
         $user_2 = $this->user_manager->getUserByUserName(self::TEST_USER_2_NAME);
-        $user_2->setPassword(self::TEST_USER_2_PASS);
+        $user_2->setPassword(new \Tuleap\Cryptography\ConcealedString(self::TEST_USER_2_PASS));
         $user_2->setAuthorizedKeys('ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDHk9 toto@marche');
         $this->user_manager->updateDb($user_2);
 
@@ -113,16 +113,16 @@ class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLin
         $this->initPassword(self::TEST_USER_4_NAME, self::STANDARD_PASSWORD);
 
         $user_5 = $this->user_manager->getUserByUserName(self::TEST_USER_5_NAME);
-        $user_5->setPassword(self::TEST_USER_5_PASS);
+        $user_5->setPassword(new \Tuleap\Cryptography\ConcealedString(self::TEST_USER_5_PASS));
         $this->user_manager->updateDb($user_5);
 
         $delegated_rest_project_manager = $this->user_manager->getUserByUserName(self::TEST_USER_DELEGATED_REST_PROJECT_MANAGER_NAME);
-        $delegated_rest_project_manager->setPassword(self::TEST_USER_DELEGATED_REST_PROJECT_MANAGER_PASS);
+        $delegated_rest_project_manager->setPassword(new \Tuleap\Cryptography\ConcealedString(self::TEST_USER_DELEGATED_REST_PROJECT_MANAGER_PASS));
         $this->user_manager->updateDb($delegated_rest_project_manager);
 
         $bot_rest_read_only_admin = new PFUser();
         $bot_rest_read_only_admin->setUserName(self::TEST_BOT_USER_NAME);
-        $bot_rest_read_only_admin->setPassword(self::TEST_BOT_USER_PASS);
+        $bot_rest_read_only_admin->setPassword(new \Tuleap\Cryptography\ConcealedString(self::TEST_BOT_USER_PASS));
         $bot_rest_read_only_admin->setStatus(self::TEST_BOT_USER_STATUS);
         $bot_rest_read_only_admin->setEmail(self::TEST_BOT_USER_MAIL);
         $bot_rest_read_only_admin->setLanguage($GLOBALS['Language']);
@@ -134,7 +134,7 @@ class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLin
     protected function initPassword(string $username, string $password): void
     {
         $user = $this->user_manager->getUserByUserName($username);
-        $user->setPassword($password);
+        $user->setPassword(new \Tuleap\Cryptography\ConcealedString($password));
         $this->user_manager->updateDb($user);
     }
 

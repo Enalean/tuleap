@@ -61,16 +61,12 @@ final class DisplaySecurityControllerTest extends TestCase
     {
         $this->event_manager = new class implements EventDispatcherInterface {
             private $password_change = true;
-            private $old_password_required = true;
 
             public function dispatch(object $event)
             {
                 if ($event instanceof PasswordPreUpdateEvent) {
                     if (! $this->password_change) {
                         $event->forbidUserToChangePassword();
-                    }
-                    if (! $this->old_password_required) {
-                        $event->oldPasswordIsNotRequiredToUpdatePassword();
                     }
                 }
                 return $event;
@@ -79,11 +75,6 @@ final class DisplaySecurityControllerTest extends TestCase
             public function disablePasswordChange()
             {
                 $this->password_change = false;
-            }
-
-            public function disableNeedOfOldPassword()
-            {
-                $this->old_password_required = false;
             }
         };
 
@@ -100,6 +91,7 @@ final class DisplaySecurityControllerTest extends TestCase
             ->withUserName('alice')
             ->withLanguage(M::spy(\BaseLanguage::class))
             ->build();
+        $this->user->setUserPw('some_password_hash');
     }
 
 
@@ -141,25 +133,6 @@ final class DisplaySecurityControllerTest extends TestCase
         $this->assertStringContainsString('name="new_password"', $output);
         $this->assertStringContainsString('name="repeat_new_password"', $output);
     }
-
-    public function testItRendersThePageWithoutTheNeedOfOldPassword(): void
-    {
-        $this->event_manager->disableNeedOfOldPassword();
-
-        ob_start();
-        $this->controller->process(
-            HTTPRequestBuilder::get()->withUser($this->user)->build(),
-            LayoutBuilder::build(),
-            []
-        );
-        $output = ob_get_clean();
-        $this->assertStringContainsString('Update password', $output);
-
-        $this->assertStringNotContainsString('name="current_password"', $output);
-        $this->assertStringContainsString('name="new_password"', $output);
-        $this->assertStringContainsString('name="repeat_new_password"', $output);
-    }
-
 
     public function testItDoesntRenderPasswordUpdateWhenItsNotAllowedForUser(): void
     {

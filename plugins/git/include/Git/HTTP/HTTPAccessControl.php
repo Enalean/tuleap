@@ -151,7 +151,7 @@ class HTTPAccessControl
             $user = $this->replication_http_user_authenticator->authenticate(
                 $repository,
                 $_SERVER['PHP_AUTH_USER'],
-                $_SERVER['PHP_AUTH_PW']
+                new ConcealedString($_SERVER['PHP_AUTH_PW'])
             );
 
             $this->logger->debug('LOGGED AS ' . $user->getUnixName());
@@ -178,7 +178,7 @@ class HTTPAccessControl
         }
 
         try {
-            $user = $this->login_manager->authenticate($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+            $user = $this->login_manager->authenticate($_SERVER['PHP_AUTH_USER'], new ConcealedString($_SERVER['PHP_AUTH_PW']));
             $this->logger->debug('LOGGED AS ' . $user->getUnixName());
             $this->updateLastAccessDateForUser($user);
             return $user;

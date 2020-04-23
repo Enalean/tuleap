@@ -19,6 +19,7 @@
 
 declare(strict_types=1);
 
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\User\UserAuthenticationSucceeded;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
@@ -86,7 +87,7 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
             return $hook instanceof \Tuleap\User\UserAuthenticationSucceeded;
         }))->once();
 
-        $this->login_manager->authenticate('john', 'password');
+        $this->login_manager->authenticate('john', new ConcealedString('password'));
     }
 
     public function testItUsesDbAuthIfPluginDoesntAnswer(): void
@@ -95,7 +96,7 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
         $this->password_verifier->shouldReceive('verifyPassword')->andReturns(true);
         $this->user_manager->shouldReceive('getUserByUserName')->with('john')->once()->andReturns($this->buildUser(PFUser::STATUS_ACTIVE));
 
-        $this->login_manager->authenticate('john', 'password');
+        $this->login_manager->authenticate('john', new ConcealedString('password'));
     }
 
     public function testItThrowsAnExceptionWhenUserIsNotFound(): void
@@ -103,7 +104,7 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
         $this->event_manager->shouldReceive('processEvent')->once();
         $this->expectException(\User_InvalidPasswordException::class);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns(null);
-        $this->login_manager->authenticate('john', 'password');
+        $this->login_manager->authenticate('john', new ConcealedString('password'));
     }
 
     public function testItThrowsAnExceptionWhenPasswordIsWrong(): void
@@ -111,7 +112,7 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
         $this->event_manager->shouldReceive('processEvent')->once();
         $this->expectException(\User_InvalidPasswordWithUserException::class);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->buildUser(PFUser::STATUS_ACTIVE));
-        $this->login_manager->authenticate('john', 'wrong_password');
+        $this->login_manager->authenticate('john', new ConcealedString('wrong_password'));
     }
 
     public function testItThrowsAnExceptionWithUserWhenPasswordIsWrong(): void
@@ -121,7 +122,7 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
         $user = $this->buildUser(PFUser::STATUS_ACTIVE);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns($user);
         try {
-            $this->login_manager->authenticate('john', 'wrong_password');
+            $this->login_manager->authenticate('john', new ConcealedString('wrong_password'));
         } catch (User_InvalidPasswordWithUserException $exception) {
             $this->assertEquals($exception->getUser(), $user);
             $exception_catched = true;
@@ -148,7 +149,7 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
             return $hook instanceof \Tuleap\User\UserAuthenticationSucceeded;
         }))->once();
 
-        $this->login_manager->authenticate('john', 'password');
+        $this->login_manager->authenticate('john', new ConcealedString('password'));
     }
 
     public function testItReturnsTheUserOnSuccess(): void
@@ -158,7 +159,7 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
         $user = $this->buildUser(PFUser::STATUS_ACTIVE);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns($user);
         $this->assertEquals(
-            $this->login_manager->authenticate('john', 'password'),
+            $this->login_manager->authenticate('john', new ConcealedString('password')),
             $user
         );
     }
@@ -211,7 +212,7 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
 
 
         $this->user_manager->shouldReceive('getUserByUserName')->never();
-        $this->login_manager->authenticate('john', 'password');
+        $this->login_manager->authenticate('john', new ConcealedString('password'));
     }
 
     public function testItRaisesAnExceptionIfPluginForbidLogin(): void
@@ -231,7 +232,7 @@ final class User_LoginManagerTest extends \PHPUnit\Framework\TestCase
             )
         )->once();
 
-        $this->login_manager->authenticate('john', 'password');
+        $this->login_manager->authenticate('john', new ConcealedString('password'));
     }
 
     private function buildUser(string $status): PFUser

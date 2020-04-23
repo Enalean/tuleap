@@ -27,6 +27,7 @@ use Docman_MetadataValueFactory;
 use PluginManager;
 use ProjectUGroup;
 use REST_TestDataBuilder;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Docman\Test\rest\DocmanDatabaseInitialization;
 
 class DocmanDataBuildCommon extends REST_TestDataBuilder
@@ -173,7 +174,7 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
     public function generateDocmanRegularUser(): void
     {
         $this->user = $this->user_manager->getUserByUserName(self::DOCMAN_REGULAR_USER_NAME);
-        $this->user->setPassword(self::DOCMAN_REGULAR_USER_PASSWORD);
+        $this->user->setPassword(new ConcealedString(self::DOCMAN_REGULAR_USER_PASSWORD));
         $this->user_manager->updateDb($this->user);
     }
 

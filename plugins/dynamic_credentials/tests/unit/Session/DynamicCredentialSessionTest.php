@@ -20,11 +20,11 @@
 
 namespace Tuleap\DynamicCredentials\Session;
 
-require_once __DIR__ . '/../bootstrap.php';
-
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\DynamicCredentials\Credential\Credential;
 use Tuleap\DynamicCredentials\Credential\CredentialAuthenticationException;
 use Tuleap\DynamicCredentials\Credential\CredentialRetriever;
 
@@ -32,10 +32,10 @@ class DynamicCredentialSessionTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testSessionIsStartedWhenAuthenticationIsSuccessful()
+    public function testSessionIsStartedWhenAuthenticationIsSuccessful(): void
     {
         $credential_retriever = Mockery::mock(CredentialRetriever::class);
-        $credential           = Mockery::mock(DynamicCredentialSession::class);
+        $credential           = Mockery::mock(Credential::class);
         $credential->shouldReceive('getIdentifier')->andReturn('identifier');
         $credential_retriever->shouldReceive('authenticate')->once()->andReturn($credential);
         $credential_retriever->shouldReceive('getByIdentifier')->once()->andReturn($credential);
@@ -43,7 +43,7 @@ class DynamicCredentialSessionTest extends TestCase
 
         $dynamic_session = new DynamicCredentialSession($session_storage, $credential_retriever);
 
-        $dynamic_session->initialize('username', 'password');
+        $dynamic_session->initialize('username', new ConcealedString('password'));
 
         $this->assertSame('identifier', current($session_storage));
         $this->assertSame($credential, $dynamic_session->getAssociatedCredential());
@@ -70,7 +70,7 @@ class DynamicCredentialSessionTest extends TestCase
         $dynamic_session = new DynamicCredentialSession($session_storage, $credential_retriever);
 
         try {
-            $dynamic_session->initialize('username', 'password');
+            $dynamic_session->initialize('username', new ConcealedString('password'));
         } catch (CredentialAuthenticationException $ex) {
         }
 

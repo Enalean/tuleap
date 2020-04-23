@@ -26,6 +26,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Password\PasswordSanityChecker;
 use UserManager;
 
@@ -57,7 +58,7 @@ class UserPasswordCommand extends Command
             ->addArgument('password', InputArgument::OPTIONAL, 'New password for user');
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $user_name = $input->getArgument('user_name');
         $user      = $this->user_manager->getUserByLoginName($user_name);
@@ -66,18 +67,19 @@ class UserPasswordCommand extends Command
             throw new InvalidArgumentException("User $user_name not found.");
         }
 
-        $password = $input->getArgument('password');
-        if (! $password) {
+        $password_cleartext = $input->getArgument('password');
+        if (! $password_cleartext) {
             $helper = $this->getHelper('question');
 
             $question = new Question('New password? ');
             $question->setHidden(true);
             $question->setHiddenFallback(false);
 
-            $password = $helper->ask($input, $output, $question);
+            $password_cleartext = $helper->ask($input, $output, $question);
         }
-
-        assert(is_string($password));
+        assert(is_string($password_cleartext));
+        $password = new ConcealedString($password_cleartext);
+        sodium_memzero($password_cleartext);
 
         if (! $this->password_sanity_checker->check($password)) {
             throw new InvalidArgumentException("The provided password does not match the expected password policy.");

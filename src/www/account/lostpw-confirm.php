@@ -35,7 +35,7 @@ $request      = HTTPRequest::instance();
 $user_manager = UserManager::instance();
 
 $user = $user_manager->getUserByUserName($request->get('form_loginname'));
-if ($user === null) {
+if ($user === null || $user->getUserPw() === null) {
     exit_error('Invalid User', 'That user does not exist.');
 }
 

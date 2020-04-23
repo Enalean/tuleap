@@ -65,7 +65,7 @@ $login_manager = new User_LoginManager(
 );
 
 try {
-    $tuleap_user = $login_manager->authenticate($user_name, $password);
+    $tuleap_user = $login_manager->authenticate($user_name, new \Tuleap\Cryptography\ConcealedString($password));
 } catch (Exception $exception) {
     fwrite(STDERR, 'Login or password invalid. Exit' . PHP_EOL);
     exit(1);

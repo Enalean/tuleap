@@ -24,6 +24,7 @@ require_once __DIR__ . '/../bootstrap.php';
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Cryptography\ConcealedString;
 
 class DynamicUserTest extends TestCase
 {
@@ -81,7 +82,7 @@ class DynamicUserTest extends TestCase
         $user         = new DynamicUser('Realname', [], $is_logged_in);
 
         $expected_password = $user->getPassword();
-        $user->setPassword('password');
+        $user->setPassword(new ConcealedString('password'));
         $this->assertEquals($expected_password, $user->getPassword());
 
         $expected_username = $user->getUserName();

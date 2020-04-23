@@ -373,20 +373,22 @@ class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
      *
      * @return UserInfo
      */
-    public function setProjectGenericUser($session_key, $group_id, $password)
+    public function setProjectGenericUser($session_key, $group_id, string $password)
     {
+        $concealed_password = new \Tuleap\Cryptography\ConcealedString($password);
+        sodium_memzero($password);
         if (! $this->isRequesterAdmin($session_key, $group_id)) {
             throw new SoapFault('3201', 'Permission denied: need to be project admin.');
         }
         $user = $this->generic_user_factory->fetch($group_id);
 
         if (! $user) {
-            $user = $this->generic_user_factory->create($group_id, $password);
+            $user = $this->generic_user_factory->create($group_id, $concealed_password);
             if (! $user) {
                 throw new SoapFault('3105', "Generic User creation failure");
             }
         } else {
-            $user->setPassword($password);
+            $user->setPassword($concealed_password);
             $this->generic_user_factory->update($user);
         }
 

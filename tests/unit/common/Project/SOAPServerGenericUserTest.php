@@ -39,7 +39,7 @@ class SOAPServerGenericUserTest extends TestCase
 
         $this->group_id    = 154;
         $this->session_key = '123';
-        $this->password    = 'pwd';
+        $this->password    = new \Tuleap\Cryptography\ConcealedString('pwd');
 
         $this->user = \Mockery::spy(\GenericUser::class);
         $this->user->shouldReceive('isLoggedIn')->andReturns(true);
@@ -96,7 +96,7 @@ class SOAPServerGenericUserTest extends TestCase
 
         $this->generic_user_factory->shouldReceive('create')
             ->once()
-            ->with($this->group_id, $this->password)
+            ->with($this->group_id, Mockery::type(\Tuleap\Cryptography\ConcealedString::class))
             ->andReturns($this->user);
 
         $this->server->shouldReceive('addProjectMember')->once();
