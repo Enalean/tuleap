@@ -27,6 +27,7 @@
             v-bind:key="last_release.id"
             v-bind:release_data="last_release"
             v-bind:is-past-release="true"
+            v-bind:is-open="false"
         />
         <span class="project-release-label" v-translate>Past</span>
         <div class="project-other-releases">
