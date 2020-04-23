@@ -36,6 +36,7 @@ use Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker;
 use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookFactory;
 use Tuleap\Tracker\XML\Importer\ImportedChangesetMapping;
+use Tuleap\Tracker\XML\Importer\TrackerXmlSaver;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 use Tuleap\XML\MappingsRegistry;
 use Tuleap\XML\PHPCast;
@@ -143,6 +144,10 @@ class TrackerXmlImport
      * @var \Tuleap\Tracker\Creation\TrackerCreationDataChecker
      */
     private $creation_data_checker;
+    /**
+     * @var TrackerXmlSaver
+     */
+    private $xml_saver;
 
     public function __construct(
         TrackerFactory $tracker_factory,
@@ -166,7 +171,8 @@ class TrackerXmlImport
         TrackerXMLFieldMappingFromExistingTracker $tracker_XML_field_mapping_from_existing_tracker,
         ExternalFieldsExtractor $external_fields_extractor,
         TrackerXmlImportFeedbackCollector $feedback_collector,
-        TrackerCreationDataChecker $creation_data_checker
+        TrackerCreationDataChecker $creation_data_checker,
+        TrackerXmlSaver $xml_saver
     ) {
         $this->tracker_factory                = $tracker_factory;
         $this->event_manager                  = $event_manager;
@@ -188,8 +194,9 @@ class TrackerXmlImport
         $this->webhook_factory                = $webhook_factory;
         $this->existing_tracker_field_mapping = $tracker_XML_field_mapping_from_existing_tracker;
         $this->external_fields_extractor      = $external_fields_extractor;
-        $this->feedback_collector = $feedback_collector;
-        $this->creation_data_checker = $creation_data_checker;
+        $this->feedback_collector             = $feedback_collector;
+        $this->creation_data_checker          = $creation_data_checker;
+        $this->xml_saver                      = $xml_saver;
     }
 
     /**
@@ -236,7 +243,8 @@ class TrackerXmlImport
             new TrackerXMLFieldMappingFromExistingTracker(),
             new ExternalFieldsExtractor($event_manager),
             new TrackerXmlImportFeedbackCollector(),
-            TrackerCreationDataChecker::build()
+            TrackerCreationDataChecker::build(),
+            new TrackerXmlSaver()
         );
     }
 
@@ -387,6 +395,8 @@ class TrackerXmlImport
                 'configuration'   => $configuration,
             )
         );
+
+        $this->xml_saver->storeUsedXmlForTrackersCreation($project, $xml_input);
 
         return $created_trackers_mapping;
     }
