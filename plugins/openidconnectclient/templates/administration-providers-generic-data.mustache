@@ -13,6 +13,17 @@
     </div>
     <div class="tlp-property">
         <label class="tlp-label">
+            {{# dgettext }} tuleap-openidconnectclient | JWKS endpoint {{/ dgettext }}
+        </label>
+        {{# jwks_endpoint }}
+            <p>{{ jwks_endpoint }}</p>
+        {{/ jwks_endpoint }}
+        {{^ jwks_endpoint }}
+            <p class="tlp-property-empty">{{ empty_content }}</p>
+        {{/ jwks_endpoint }}
+    </div>
+    <div class="tlp-property">
+        <label class="tlp-label">
             {{ userinfo_endpoint }}
         </label>
         {{# getUserInfoEndpoint }}

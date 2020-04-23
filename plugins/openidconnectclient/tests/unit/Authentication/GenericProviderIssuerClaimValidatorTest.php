@@ -38,7 +38,7 @@ class GenericProviderIssuerClaimValidatorTest extends TestCase
         $this->generic_issuer_claim_validator = new GenericProviderIssuerClaimValidator();
     }
 
-    public function testIssuerClaimIsValid()
+    public function testIssuerClaimIsValid(): void
     {
         $iss_from_id_tocken   = 'example.com';
 
@@ -47,6 +47,7 @@ class GenericProviderIssuerClaimValidatorTest extends TestCase
             'Provider',
             'https://example.com/oauth2/auth',
             'https://example.com/token',
+            'https://example.com/jwks',
             'https://example.com/userinfo',
             'client_id',
             'Secret',
@@ -59,7 +60,7 @@ class GenericProviderIssuerClaimValidatorTest extends TestCase
         $this->assertTrue($result);
     }
 
-    public function testIssuerClaimIsInvalid()
+    public function testIssuerClaimIsInvalid(): void
     {
         $iss_from_id_tocken   = 'evil.example.com';
 
@@ -68,6 +69,7 @@ class GenericProviderIssuerClaimValidatorTest extends TestCase
             'Provider',
             'https://example.com/oauth2/auth',
             'https://example.com/token',
+            'https://example.com/jwks',
             'https://example.com/userinfo',
             'client_id',
             'Secret',
