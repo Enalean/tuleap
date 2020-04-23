@@ -1,11 +1,16 @@
 <div
-    class="tlp-modal tlp-modal-medium-sized"
+    class="tlp-modal tlp-modal-medium-sized execution-details-modal"
+    ng-class="{
+        'tlp-modal-success': modal.execution.status === 'passed',
+        'tlp-modal-danger': modal.execution.status === 'failed',
+        'tlp-modal-info': modal.execution.status === 'blocked'
+    }"
     role="dialog"
     aria-labelledby="execution-details-modal-title"
 >
     <div class="tlp-modal-header">
-        <h1 class="tlp-modal-title" id="execution-details-modal-title" translate>
-            Details
+        <h1 class="tlp-modal-title" id="execution-details-modal-title">
+            {{ modal.execution.definition.summary }}
         </h1>
         <div
             class="tlp-modal-close"
@@ -17,13 +22,25 @@
             ×
         </div>
     </div>
+    <div class="tlp-modal-body execution-details-modal-info">
+        <i class="fa fa-check-circle execution-details-modal-info-status" ng-if="modal.execution.status === 'passed'"></i>
+        <i class="fa fa-times-circle execution-details-modal-info-status" ng-if="modal.execution.status === 'failed'"></i>
+        <i class="fa fa-exclamation-circle execution-details-modal-info-status" ng-if="modal.execution.status === 'blocked'"></i>
+        <span>{{ modal.execution.previous_result.submitted_on | amCalendar }}</span>&nbsp;
+        <span translate>by</span>&nbsp;{{ modal.execution.previous_result.submitted_by.real_name }}
+    </div>
     <div class="tlp-modal-body">
         <div ng-bind-html="modal.execution.previous_result.result"></div>
     </div>
     <div class="tlp-modal-footer">
         <button
             type="button"
-            class="tlp-button-primary tlp-modal-action"
+            class="tlp-modal-action"
+            ng-class="{
+                'tlp-button-success': modal.execution.status === 'passed',
+                'tlp-button-danger': modal.execution.status === 'failed',
+                'tlp-button-info': modal.execution.status === 'blocked'
+            }"
             data-dismiss="modal"
             translate
         >

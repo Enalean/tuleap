@@ -104,9 +104,6 @@ msgstr "Graphe de dépendances de &#34;{{ graph.title }}&#34;"
 msgid "Dependencies graph of &#34;{{ modal.title }}&#34;"
 msgstr "Graphe de dépendances de &#34;{{ modal.title }}&#34;"
 
-msgid "Details"
-msgstr "Détails"
-
 msgid "Edit"
 msgstr "Éditer"
 
