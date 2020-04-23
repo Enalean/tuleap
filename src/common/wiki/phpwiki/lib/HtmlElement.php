@@ -128,7 +128,7 @@ class HTML extends HtmlElement
         return isset($props[$tag]) ? $props[$tag] : 0;
     }
 
-    public function _setTagProperty($prop_flag, $tags)
+    public static function _setTagProperty($prop_flag, $tags)
     {
         $props = &$GLOBALS['HTML_TagProperties'];
         if (is_string($tags)) {
