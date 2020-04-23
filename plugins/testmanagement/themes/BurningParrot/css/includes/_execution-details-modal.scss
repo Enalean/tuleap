@@ -21,7 +21,8 @@
     $status: (
         'tlp-modal-success': $tlp-ui-success,
         'tlp-modal-danger': $tlp-ui-danger,
-        'tlp-modal-info': $tlp-ui-info
+        'tlp-modal-info': $tlp-ui-info,
+        'notrun': $tlp-ui-dimmed
     );
 
     @each $name, $color in $status {
@@ -29,6 +30,10 @@
             background: linear-gradient(0deg, rgba(0, 0, 0, .1), rgba(0, 0, 0, .1)), $color;
             color: $tlp-ui-white;
         }
+    }
+
+    &.notrun > .tlp-modal-header {
+        background: $tlp-ui-dimmed;
     }
 }
 
