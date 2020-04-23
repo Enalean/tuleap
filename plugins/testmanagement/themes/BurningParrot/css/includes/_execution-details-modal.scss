@@ -1,0 +1,45 @@
+/**
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.execution-details-modal {
+    $status: (
+        'tlp-modal-success': $tlp-ui-success,
+        'tlp-modal-danger': $tlp-ui-danger,
+        'tlp-modal-info': $tlp-ui-info
+    );
+
+    @each $name, $color in $status {
+        &.#{$name} > .execution-details-modal-info {
+            background: linear-gradient(0deg, rgba(0, 0, 0, .1), rgba(0, 0, 0, .1)), $color;
+            color: $tlp-ui-white;
+        }
+    }
+}
+
+.execution-details-modal-info {
+    display: flex;
+    align-items: center;
+    padding: $tlp-half-spacing $tlp-spacing;
+    font-size: 14px;
+}
+
+.execution-details-modal-info-status {
+    margin: 0 7px 0 0;
+    font-size: 26px;
+}
