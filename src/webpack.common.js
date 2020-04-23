@@ -223,6 +223,7 @@ const webpack_config_for_burning_parrot_code = {
             "./scripts/site-admin/system-events-notifications.js",
         "site-admin-trackers-pending-removal": "./scripts/site-admin/trackers-pending-removal.js",
         "site-admin-user-details": "./scripts/site-admin/userdetails.js",
+        "site-admin/password-policy": "./scripts/site-admin/password-policy.js",
         "trovecat-admin": "./scripts/tuleap/trovecat.js",
     },
     context,
