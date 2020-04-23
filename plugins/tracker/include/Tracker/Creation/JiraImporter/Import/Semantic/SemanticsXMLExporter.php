@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Semantic;
 
 use SimpleXMLElement;
+use Tracker_Semantic_Description;
 use Tracker_Semantic_Title;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
@@ -34,6 +35,7 @@ class SemanticsXMLExporter
     {
         $semantics_node = $tracker_node->addChild('semantics');
         $this->exportTitleSemantic($semantics_node, $field_mapping_collection);
+        $this->exportDescriptionSemantic($semantics_node, $field_mapping_collection);
     }
 
     private function exportTitleSemantic(SimpleXMLElement $semantics_node, FieldMappingCollection $field_mapping_collection): void
@@ -51,5 +53,22 @@ class SemanticsXMLExporter
         $semantic_node->addChild("description", $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'title_description'));
         $field_node = $semantic_node->addChild("field");
         $field_node->addAttribute("REF", (string) $summary_field->getXMLId());
+    }
+
+    private function exportDescriptionSemantic(SimpleXMLElement $semantics_node, FieldMappingCollection $field_mapping_collection): void
+    {
+        $description_field = $field_mapping_collection->getMappingFromJiraField(JiraXmlExporter::JIRA_DESCRIPTION_FIELD_NAME);
+        if ($description_field === null) {
+            return;
+        }
+
+        $semantic_node = $semantics_node->addChild("semantic");
+        $semantic_node->addAttribute("type", Tracker_Semantic_Description::NAME);
+
+        $semantic_node->addChild("shortname", Tracker_Semantic_Description::NAME);
+        $semantic_node->addChild("label", $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'description_label'));
+        $semantic_node->addChild("description", $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'description_description'));
+        $field_node = $semantic_node->addChild("field");
+        $field_node->addAttribute("REF", (string) $description_field->getXMLId());
     }
 }

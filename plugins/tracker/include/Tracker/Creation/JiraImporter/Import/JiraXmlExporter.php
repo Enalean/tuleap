@@ -42,8 +42,9 @@ use XML_SimpleXMLCDATAFactory;
 
 class JiraXmlExporter
 {
-    public const JIRA_LINK_FIELD_NAME    = "jira_artifact_url";
-    public const JIRA_SUMMARY_FIELD_NAME = "summary";
+    public const JIRA_LINK_FIELD_NAME        = "jira_artifact_url";
+    public const JIRA_SUMMARY_FIELD_NAME     = "summary";
+    public const JIRA_DESCRIPTION_FIELD_NAME = "description";
 
     public const JIRA_LINK_FIELD_ID        = "jira_artifact_url";
     public const JIRA_ARTIFACT_ID_FIELD_ID = "artifact_id";

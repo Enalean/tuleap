@@ -34,7 +34,7 @@ class SemanticsXMLExporterTest extends TestCase
 {
     use GlobalLanguageMock;
 
-    public function testExportsTheSemanticTitle(): void
+    public function testExportsTheSemantics(): void
     {
         $tracker_node = new SimpleXMLElement('<tracker/>');
         $mapping = new FieldMappingCollection();
@@ -45,6 +45,13 @@ class SemanticsXMLExporterTest extends TestCase
                 'summary'
             )
         );
+        $mapping->addMapping(
+            new FieldMapping(
+                'description',
+                'Fdescription',
+                'description'
+            )
+        );
 
         $exporter = new SemanticsXMLExporter();
         $exporter->exportSemantics(
@@ -53,11 +60,15 @@ class SemanticsXMLExporterTest extends TestCase
         );
 
         $this->assertNotNull($tracker_node->semantics);
-        $this->assertNotNull($tracker_node->semantics->semantic);
+        $this->assertCount(2, $tracker_node->semantics->children());
 
-        $semantic_node = $tracker_node->semantics->semantic;
-        $this->assertSame("title", (string) $semantic_node['type']);
-        $this->assertSame("Fsummary", (string) $semantic_node->field['REF']);
+        $semantic_title_node = $tracker_node->semantics->semantic[0];
+        $this->assertSame("title", (string) $semantic_title_node['type']);
+        $this->assertSame("Fsummary", (string) $semantic_title_node->field['REF']);
+
+        $semantic_description_node = $tracker_node->semantics->semantic[1];
+        $this->assertSame("description", (string) $semantic_description_node['type']);
+        $this->assertSame("Fdescription", (string) $semantic_description_node->field['REF']);
     }
 
     public function testItDoesNotExportSemanticTitleIfSummaryFieldNotfoundInMapping(): void

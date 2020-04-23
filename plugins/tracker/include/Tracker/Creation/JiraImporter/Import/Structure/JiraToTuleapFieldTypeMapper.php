@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
 use SimpleXMLElement;
 use Tracker_FormElement_Field_String;
+use Tracker_FormElement_Field_Text;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ErrorCollector;
 
 class JiraToTuleapFieldTypeMapper
@@ -87,6 +88,17 @@ class JiraToTuleapFieldTypeMapper
                     );
                     break;
                 case 'description':
+                    $this->field_xml_exporter->exportField(
+                        $jira_atf_fieldset,
+                        Tracker_FormElement_Field_Text::TYPE,
+                        $id,
+                        $jira_type,
+                        $id,
+                        2,
+                        $required,
+                        $jira_field_mapping_collection
+                    );
+                    break;
                 case 'priority':
                 case 'status':
                 case 'creator':

@@ -25,6 +25,7 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
 class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
 {
+    public const TYPE = 'text';
 
     public $default_properties = array(
         'rows'      => array(
@@ -39,7 +40,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
         ),
         'default_value' => array(
             'value' => '',
-            'type'  => 'text',
+            'type'  => self::TYPE,
             'size'  => 40,
         ),
     );
