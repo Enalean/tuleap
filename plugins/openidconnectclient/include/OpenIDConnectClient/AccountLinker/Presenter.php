@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,27 +21,32 @@
 namespace Tuleap\OpenIDConnectClient\AccountLinker;
 
 use ForgeConfig;
+use Tuleap\OpenIDConnectClient\Login\ConnectorPresenter;
 
 class Presenter
 {
-    private $link_id;
     private $return_to;
     private $provider_name;
     private $link_to_register_page;
     private $is_registering_possible;
+    /**
+     * @var ConnectorPresenter
+     * @psalm-readonly
+     */
+    public $provider_login_presenter;
 
-    public function __construct($link_id, $return_to, $provider_name, $link_to_register_page, $is_registering_possible)
-    {
-        $this->link_id                 = $link_id;
-        $this->return_to               = $return_to;
-        $this->provider_name           = $provider_name;
-        $this->link_to_register_page   = $link_to_register_page;
-        $this->is_registering_possible = $is_registering_possible;
-    }
-
-    public function link_id()
-    {
-        return $this->link_id;
+    public function __construct(
+        $return_to,
+        $provider_name,
+        $link_to_register_page,
+        $is_registering_possible,
+        ConnectorPresenter $provider_login_presenter
+    ) {
+        $this->return_to                = $return_to;
+        $this->provider_name            = $provider_name;
+        $this->link_to_register_page    = $link_to_register_page;
+        $this->is_registering_possible  = $is_registering_possible;
+        $this->provider_login_presenter = $provider_login_presenter;
     }
 
     public function return_to()

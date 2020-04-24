@@ -157,7 +157,7 @@ body.openid-connect-link {
 }
 
 #login-openid-providers, #login-openid-register {
-    #login-openid-or {
+    .login-openid-or {
         display: block;
         position: relative;
         height: 100px;

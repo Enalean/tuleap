@@ -30,7 +30,6 @@ use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\OpenIDConnectClient\AccountLinker;
-use Tuleap\OpenIDConnectClient\AccountLinker\RegisterPresenter;
 use Tuleap\OpenIDConnectClient\AccountLinker\UnlinkedAccountDao;
 use Tuleap\OpenIDConnectClient\AccountLinker\UnlinkedAccountManager;
 use Tuleap\OpenIDConnectClient\Administration;
@@ -81,6 +80,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
+    public const SESSION_LINK_ID_KEY = 'tuleap_oidc_link_id';
+
     public function __construct($id)
     {
         parent::__construct($id);
@@ -90,7 +91,6 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
 
         $this->addHook(Event::LOGIN_ADDITIONAL_CONNECTOR);
         $this->addHook('before_register');
-        $this->addHook(Event::USER_REGISTER_ADDITIONAL_FIELD);
         $this->addHook(Event::AFTER_USER_REGISTRATION);
         $this->addHook('anonymous_access_to_script_allowed');
         $this->addHook('javascript_file');
@@ -207,8 +207,9 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
 
     private function getFlow(ProviderManager $provider_manager, IssuerClaimValidator $issuer_claim_validator): Flow
     {
+        $storage           =& $this->getSessionStorage();
         $state_manager     = new StateManager(
-            new StateStorage($_SESSION),
+            new StateStorage($storage),
             new StateFactory(new RandomNumberGenerator())
         );
         $request_factory   = HTTPFactoryBuilder::requestFactory();
@@ -231,9 +232,10 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
      */
     private function getAuthorizationRequestCreator()
     {
+        $storage =& $this->getSessionStorage();
         return new AuthorizationRequestCreator(
             new StateManager(
-                new StateStorage($_SESSION),
+                new StateStorage($storage),
                 new StateFactory(new RandomNumberGenerator())
             )
         );
@@ -308,22 +310,11 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         return ! $is_registration_confirmation && $link_id && $this->canPluginAuthenticateUser();
     }
 
-    public function user_register_additional_field(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $request = $params['request'];
-        $link_id = $request->get('openidconnect_link_id');
-
-        if ($link_id && $this->canPluginAuthenticateUser()) {
-            $register_presenter       = new RegisterPresenter($link_id);
-            $renderer                 = TemplateRendererFactory::build()->getRenderer(OPENIDCONNECTCLIENT_TEMPLATE_DIR);
-            $params['field']         .= $renderer->renderToString('register_field', $register_presenter);
-        }
-    }
-
     public function after_user_registration(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $request = $params['request'];
-        $link_id = $request->get('openidconnect_link_id');
+        $storage =& $this->getSessionStorage();
+        $link_id = $storage[self::SESSION_LINK_ID_KEY] ?? '';
 
         if ($link_id) {
             $user_manager             = UserManager::instance();
@@ -339,7 +330,9 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
                 $user_manager,
                 $provider_manager,
                 $user_mapping_manager,
-                $unlinked_account_manager
+                $unlinked_account_manager,
+                new ConnectorPresenterBuilder($provider_manager, $this->getAuthorizationRequestCreator()),
+                $storage,
             );
 
             $account_linker_controler->linkRegisteringAccount($params['user_id'], $link_id, $request->getTime());
@@ -439,7 +432,8 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
             $username_generator
         );
 
-        $flow = $this->getFlow($provider_manager, new AzureProviderIssuerClaimValidator());
+        $flow    = $this->getFlow($provider_manager, new AzureProviderIssuerClaimValidator());
+        $storage =& $this->getSessionStorage();
 
         return new AzureADUserLinkController(
             new Login\Controller(
@@ -449,6 +443,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
                 $automatic_user_registration,
                 $flow,
                 $this->getLogger(),
+                $storage,
             )
         );
     }
@@ -477,7 +472,8 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
             $username_generator
         );
 
-        $flow = $this->getFlow($provider_manager, new GenericProviderIssuerClaimValidator());
+        $flow    = $this->getFlow($provider_manager, new GenericProviderIssuerClaimValidator());
+        $storage =& $this->getSessionStorage();
 
         $login_controller          = new Login\Controller(
             $user_manager,
@@ -486,12 +482,15 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
             $automatic_user_registration,
             $flow,
             $this->getLogger(),
+            $storage,
         );
         $account_linker_controller = new AccountLinker\Controller(
             $user_manager,
             $provider_manager,
             $user_mapping_manager,
-            $unlinked_account_manager
+            $unlinked_account_manager,
+            new ConnectorPresenterBuilder($provider_manager, $this->getAuthorizationRequestCreator()),
+            $storage,
         );
         return new Router(
             $login_controller,
@@ -558,5 +557,14 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
             $r->get('/account', $this->getRouteHandler('routeGetUserAccount'));
             $r->post('/account', $this->getRouteHandler('routePostUserAccount'));
         });
+    }
+
+    private function &getSessionStorage(): array
+    {
+        if (isset($_SESSION)) {
+            return $_SESSION;
+        }
+        $storage = [];
+        return $storage;
     }
 }
