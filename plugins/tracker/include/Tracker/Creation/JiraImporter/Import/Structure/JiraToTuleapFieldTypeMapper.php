@@ -51,6 +51,7 @@ class JiraToTuleapFieldTypeMapper
         array $jira_field,
         string $required,
         SimpleXMLElement $jira_atf_fieldset,
+        SimpleXMLElement $jira_custom_fieldset,
         FieldMappingCollection $jira_field_mapping_collection
     ): void {
         $id               = isset($jira_field['id']) ? $jira_field['id'] : $jira_field['key'];
@@ -76,9 +77,20 @@ class JiraToTuleapFieldTypeMapper
 
             switch ($jira_type) {
                 case 'summary':
-                case 'com.atlassian.jira.plugin.system.customfieldtypes:textfield':
                     $this->field_xml_exporter->exportField(
                         $jira_atf_fieldset,
+                        Tracker_FormElement_Field_String::TYPE,
+                        $id,
+                        $jira_field_label,
+                        $id,
+                        1,
+                        $required,
+                        $jira_field_mapping_collection
+                    );
+                    break;
+                case 'com.atlassian.jira.plugin.system.customfieldtypes:textfield':
+                    $this->field_xml_exporter->exportField(
+                        $jira_custom_fieldset,
                         Tracker_FormElement_Field_String::TYPE,
                         $id,
                         $jira_field_label,

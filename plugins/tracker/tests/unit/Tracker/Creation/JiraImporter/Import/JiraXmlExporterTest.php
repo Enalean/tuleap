@@ -113,7 +113,7 @@ final class JiraXmlExporterTest extends \PHPUnit\Framework\TestCase
         $trackers_xml = $xml->addChild('trackers');
 
         $fieldset_xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><formElement type="fieldset"/>');
-        $this->field_xml_exporter->shouldReceive('exportFieldsetWithName')->andReturn($fieldset_xml)->once();
+        $this->field_xml_exporter->shouldReceive('exportFieldsetWithName')->andReturn($fieldset_xml)->times(2);
         $this->field_xml_exporter->shouldReceive('exportField')->withArgs(
             [
                 $fieldset_xml,
