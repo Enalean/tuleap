@@ -47,6 +47,11 @@ final class JiraToTuleapFieldTypeMapperTest extends \PHPUnit\Framework\TestCase
      */
     private $mapper;
 
+    /**
+     * @var \SimpleXMLElement
+     */
+    private $jira_custom_fieldset;
+
     protected function setUp(): void
     {
         $this->field_exporter = Mockery::mock(FieldXmlExporter::class);
@@ -56,6 +61,10 @@ final class JiraToTuleapFieldTypeMapperTest extends \PHPUnit\Framework\TestCase
         );
 
         $this->jira_atf_fieldset = new \SimpleXMLElement(
+            '<?xml version="1.0" encoding="UTF-8"?><formElement type="fieldset"/>'
+        );
+
+        $this->jira_custom_fieldset = new \SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?><formElement type="fieldset"/>'
         );
     }
@@ -85,7 +94,13 @@ final class JiraToTuleapFieldTypeMapperTest extends \PHPUnit\Framework\TestCase
             ]
         );
 
-        $this->mapper->exportFieldToXml($jira_field, "1", $this->jira_atf_fieldset, $collection);
+        $this->mapper->exportFieldToXml(
+            $jira_field,
+            "1",
+            $this->jira_atf_fieldset,
+            $this->jira_custom_fieldset,
+            $collection
+        );
     }
 
     public function testJiraDescriptionFieldIsMappedToStringField(): void
@@ -114,7 +129,13 @@ final class JiraToTuleapFieldTypeMapperTest extends \PHPUnit\Framework\TestCase
             ]
         );
 
-        $this->mapper->exportFieldToXml($jira_field, "1", $this->jira_atf_fieldset, $collection);
+        $this->mapper->exportFieldToXml(
+            $jira_field,
+            "1",
+            $this->jira_atf_fieldset,
+            $this->jira_custom_fieldset,
+            $collection
+        );
     }
 
     public function testJiraTextFieldFieldIsMappedToStringField(): void
@@ -133,7 +154,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \PHPUnit\Framework\TestCase
 
         $this->field_exporter->shouldReceive('exportField')->withArgs(
             [
-                $this->jira_atf_fieldset,
+                $this->jira_custom_fieldset,
                 Tracker_FormElement_Field_String::TYPE,
                 $jira_field['id'],
                 $jira_field['name'],
@@ -144,6 +165,12 @@ final class JiraToTuleapFieldTypeMapperTest extends \PHPUnit\Framework\TestCase
             ]
         );
 
-        $this->mapper->exportFieldToXml($jira_field, "1", $this->jira_atf_fieldset, $collection);
+        $this->mapper->exportFieldToXml(
+            $jira_field,
+            "1",
+            $this->jira_atf_fieldset,
+            $this->jira_custom_fieldset,
+            $collection
+        );
     }
 }

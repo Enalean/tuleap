@@ -166,6 +166,14 @@ class JiraXmlExporter
             1
         );
 
+        $node_jira_custom_form_elements = $this->field_xml_exporter->exportFieldsetWithName(
+            $form_elements,
+            'jira_custom',
+            'Jira Custom Fields',
+            0,
+            2
+        );
+
         $this->field_xml_exporter->exportField(
             $node_jira_atf_form_elements,
             Tracker_FormElement_Field_ArtifactId::TYPE,
@@ -188,7 +196,10 @@ class JiraXmlExporter
             $this->jira_field_mapping_collection
         );
 
-        $this->exportJiraField($node_jira_atf_form_elements);
+        $this->exportJiraField(
+            $node_jira_atf_form_elements,
+            $node_jira_custom_form_elements
+        );
 
         $this->semantics_xml_exporter->exportSemantics($node_tracker, $this->jira_field_mapping_collection);
 
@@ -216,14 +227,17 @@ class JiraXmlExporter
         }
     }
 
-    private function exportJiraField(SimpleXMLElement $node_jira_atf_form_elements): void
-    {
+    private function exportJiraField(
+        SimpleXMLElement $node_jira_atf_form_elements,
+        SimpleXMLElement $node_jira_custom_form_elements
+    ): void {
         $fields = $this->jira_field_retriever->getAllJiraFields();
         foreach ($fields as $key => $field) {
             $this->field_type_mapper->exportFieldToXml(
                 $field,
                 '1',
                 $node_jira_atf_form_elements,
+                $node_jira_custom_form_elements,
                 $this->jira_field_mapping_collection
             );
         }
