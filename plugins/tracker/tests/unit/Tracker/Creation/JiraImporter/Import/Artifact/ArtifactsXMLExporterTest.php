@@ -28,8 +28,10 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
+use Tracker_FormElement_Field_String;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\FieldChangeXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use UserManager;
@@ -47,7 +49,10 @@ class ArtifactsXMLExporterTest extends TestCase
         $exporter = new ArtifactsXMLExporter(
             $wrapper,
             new XML_SimpleXMLCDATAFactory(),
-            $user_manager
+            $user_manager,
+            new FieldChangeXMLExporter(
+                new XML_SimpleXMLCDATAFactory()
+            )
         );
 
         $user = Mockery::mock(PFUser::class);
@@ -61,7 +66,8 @@ class ArtifactsXMLExporterTest extends TestCase
             new FieldMapping(
                 'summary',
                 'Fsummary',
-                'summary'
+                'summary',
+                Tracker_FormElement_Field_String::TYPE
             )
         );
         $jira_project_id = 'project';
@@ -119,7 +125,10 @@ class ArtifactsXMLExporterTest extends TestCase
         $exporter = new ArtifactsXMLExporter(
             $wrapper,
             new XML_SimpleXMLCDATAFactory(),
-            $user_manager
+            $user_manager,
+            new FieldChangeXMLExporter(
+                new XML_SimpleXMLCDATAFactory()
+            )
         );
 
         $user = Mockery::mock(PFUser::class);
@@ -133,7 +142,8 @@ class ArtifactsXMLExporterTest extends TestCase
             new FieldMapping(
                 'summary',
                 'Fsummary',
-                'summary'
+                'summary',
+                Tracker_FormElement_Field_String::TYPE
             )
         );
         $jira_project_id = 'project';

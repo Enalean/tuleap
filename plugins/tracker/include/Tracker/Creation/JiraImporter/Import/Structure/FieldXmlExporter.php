@@ -87,7 +87,8 @@ class FieldXmlExporter
             new FieldMapping(
                 $jira_field_id,
                 $xml_id,
-                $name
+                $name,
+                $type
             )
         );
     }

@@ -28,6 +28,7 @@ use Tracker_FormElement_Field_ArtifactId;
 use Tracker_FormElement_Field_String;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\FieldChangeXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Permissions\PermissionsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Semantic\SemanticsXMLExporter;
@@ -137,7 +138,10 @@ class JiraXmlExporter
             new ArtifactsXMLExporter(
                 $wrapper,
                 new XML_SimpleXMLCDATAFactory(),
-                UserManager::instance()
+                UserManager::instance(),
+                new FieldChangeXMLExporter(
+                    new XML_SimpleXMLCDATAFactory()
+                )
             ),
             new SemanticsXMLExporter()
         );
