@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,10 +17,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../node_modules/prismjs/themes/prism';
-@import 'code-font-parameters';
-
-code[class*='language-'],
-pre[class*='language-'] {
-    font-family: $code-font-family;
-}
+$code-font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
