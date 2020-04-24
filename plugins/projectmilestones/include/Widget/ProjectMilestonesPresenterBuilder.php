@@ -64,6 +64,7 @@ use Project_AccessRestrictedException;
 use Project_AccessProjectNotFoundException;
 use Project_AccessDeletedException;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
+use AgileDashboardPlugin;
 
 class ProjectMilestonesPresenterBuilder
 {
@@ -244,6 +245,10 @@ class ProjectMilestonesPresenterBuilder
             throw ProjectMilestonesException::buildUserNotAccessToPrivateProject();
         } catch (Project_AccessDeletedException | Project_AccessProjectNotFoundException | Project_AccessRestrictedException | ProjectAccessSuspendedException $e) {
             throw ProjectMilestonesException::buildUserNotAccessToProject();
+        }
+
+        if (!$project->usesService(AgileDashboardPlugin::PLUGIN_SHORTNAME)) {
+            throw ProjectMilestonesException::buildNoAgileDashboardPlugin();
         }
 
         if (!$root_planning) {

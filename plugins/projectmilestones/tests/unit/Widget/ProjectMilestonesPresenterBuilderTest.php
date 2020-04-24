@@ -47,6 +47,7 @@ use Tuleap\Tracker\TrackerColor;
 use Tuleap\Project\ProjectAccessChecker;
 use Project_AccessProjectNotFoundException;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use AgileDashboardPlugin;
 
 class ProjectMilestonesPresenterBuilderTest extends TestCase
 {
@@ -203,6 +204,8 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
         $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
 
+        $this->project->shouldReceive('usesService')->withArgs([AgileDashboardPlugin::PLUGIN_SHORTNAME])->once()->andReturn(true);
+
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
         $this->assertEquals(0, $built_presenter->nb_upcoming_releases);
@@ -236,6 +239,8 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
         $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
 
+        $this->project->shouldReceive('usesService')->withArgs([AgileDashboardPlugin::PLUGIN_SHORTNAME])->once()->andReturn(true);
+
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
         $this->assertEquals(3, $built_presenter->nb_upcoming_releases);
@@ -268,6 +273,8 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
         $this->http_request->shouldReceive("getBrowser")->andReturn(Mockery::mock(\Browser::class, ["isIE11" => false]));
 
         $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
+
+        $this->project->shouldReceive('usesService')->withArgs([AgileDashboardPlugin::PLUGIN_SHORTNAME])->once()->andReturn(true);
 
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
@@ -307,6 +314,8 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
         $this->http_request->shouldReceive("getBrowser")->andReturn(Mockery::mock(\Browser::class, ["isIE11" => false]));
 
         $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
+
+        $this->project->shouldReceive('usesService')->withArgs([AgileDashboardPlugin::PLUGIN_SHORTNAME])->once()->andReturn(true);
 
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
         $tracker_json    = '[{"id":122,"color_name":"fiesta-red","label":"Bug"},{"id":124,"color_name":"deep-blue","label":"Story"}]';
@@ -350,6 +359,8 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
         $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
 
+        $this->project->shouldReceive('usesService')->withArgs([AgileDashboardPlugin::PLUGIN_SHORTNAME])->once()->andReturn(true);
+
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
         $this->assertEquals(50, $built_presenter->nb_backlog_items);
@@ -381,6 +392,8 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
         $this->http_request->shouldReceive("getBrowser")->andReturn(Mockery::mock(\Browser::class, ["isIE11" => false]));
 
         $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
+
+        $this->project->shouldReceive('usesService')->withArgs([AgileDashboardPlugin::PLUGIN_SHORTNAME])->once()->andReturn(true);
 
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
@@ -416,6 +429,8 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
         $this->http_request->shouldReceive("getBrowser")->andReturn(Mockery::mock(\Browser::class, ["isIE11" => false]));
 
         $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
+
+        $this->project->shouldReceive('usesService')->withArgs([AgileDashboardPlugin::PLUGIN_SHORTNAME])->once()->andReturn(true);
 
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
@@ -453,6 +468,8 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
         $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
 
+        $this->project->shouldReceive('usesService')->withArgs([AgileDashboardPlugin::PLUGIN_SHORTNAME])->once()->andReturn(true);
+
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
         $this->assertTrue($built_presenter->is_timeframe_duration);
@@ -488,6 +505,8 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
         $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
 
+        $this->project->shouldReceive('usesService')->withArgs([AgileDashboardPlugin::PLUGIN_SHORTNAME])->once()->andReturn(true);
+
         $this->expectException(TimeframeBrokenConfigurationException::class);
         $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
     }
@@ -519,6 +538,8 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
         $this->http_request->shouldReceive("getBrowser")->andReturn(Mockery::mock(\Browser::class, ["isIE11" => false]));
 
         $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
+
+        $this->project->shouldReceive('usesService')->withArgs([AgileDashboardPlugin::PLUGIN_SHORTNAME])->once()->andReturn(true);
 
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
@@ -553,6 +574,8 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
         $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
 
+        $this->project->shouldReceive('usesService')->withArgs([AgileDashboardPlugin::PLUGIN_SHORTNAME])->once()->andReturn(true);
+
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
         $this->assertTrue($built_presenter->user_can_view_sub_milestones_planning);
@@ -584,6 +607,8 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
         $this->http_request->shouldReceive("getBrowser")->andReturn(Mockery::mock(\Browser::class, ["isIE11" => false]));
 
         $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
+
+        $this->project->shouldReceive('usesService')->withArgs([AgileDashboardPlugin::PLUGIN_SHORTNAME])->once()->andReturn(true);
 
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
@@ -617,6 +642,8 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
         $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
 
+        $this->project->shouldReceive('usesService')->withArgs([AgileDashboardPlugin::PLUGIN_SHORTNAME])->once()->andReturn(true);
+
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
         $this->assertEquals($built_presenter->burnup_mode, "effort");
@@ -648,6 +675,8 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
         $this->http_request->shouldReceive("getBrowser")->andReturn(Mockery::mock(\Browser::class, ["isIE11" => false]));
 
         $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
+
+        $this->project->shouldReceive('usesService')->withArgs([AgileDashboardPlugin::PLUGIN_SHORTNAME])->once()->andReturn(true);
 
         $built_presenter = $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
@@ -692,9 +721,22 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
     {
         $this->http_request->shouldReceive("getBrowser")->andReturn(Mockery::mock(\Browser::class, ["isIE11" => false]));
         $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
+        $this->project->shouldReceive('usesService')->withArgs([AgileDashboardPlugin::PLUGIN_SHORTNAME])->once()->andReturn(true);
         $this->expectException(ProjectMilestonesException::class);
         $this->expectExceptionMessage(ProjectMilestonesException::buildRootPlanningDontExist()->getTranslatedMessage());
         $this->builder->getProjectMilestonePresenter($this->project, null);
+
+        $this->http_request->shouldReceive("getCurrentUser")->andReturn($this->john_doe);
+    }
+
+    public function testThrowExceptionWhenNoServiceAgileDashboard(): void
+    {
+        $this->http_request->shouldReceive("getBrowser")->andReturn(Mockery::mock(\Browser::class, ["isIE11" => false]));
+        $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
+        $this->project->shouldReceive('usesService')->withArgs([AgileDashboardPlugin::PLUGIN_SHORTNAME])->once()->andReturn(false);
+        $this->expectException(ProjectMilestonesException::class);
+        $this->expectExceptionMessage(ProjectMilestonesException::buildNoAgileDashboardPlugin()->getTranslatedMessage());
+        $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
 
         $this->http_request->shouldReceive("getCurrentUser")->andReturn($this->john_doe);
     }

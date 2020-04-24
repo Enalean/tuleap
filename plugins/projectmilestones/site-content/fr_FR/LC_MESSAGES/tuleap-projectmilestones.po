@@ -26,6 +26,9 @@ msgstr "Le project n'existe pas."
 msgid "Project name"
 msgstr "Nom du projet"
 
+msgid "Service AgileDashboard is disabled."
+msgstr "Le service des tableaux de bords agile est désactivé."
+
 msgid ""
 "The plugin is not supported under IE11. Please use a more recent browser."
 msgstr ""
