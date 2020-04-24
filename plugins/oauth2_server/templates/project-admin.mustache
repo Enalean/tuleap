@@ -10,7 +10,7 @@
             <section class="tlp-pane-section">
                 {{# last_created_app }}
                     <div class="tlp-alert-success"
-                         data-test="oauth2-app-creation-success"
+                         data-test="oauth2-new-secret-success"
                          data-oauth2-new-app-client-id="{{ client_id }}"
                          data-oauth2-new-app-client-secret="{{ client_secret }}"
                     >
@@ -47,7 +47,7 @@
                     </thead>
                     <tbody>
                     {{# apps }}
-                        <tr>
+                        <tr data-test="oauth2-app-row">
                             <td>{{ name }}</td>
                             <td>{{ client_id }}</td>
                             <td>{{ redirect_endpoint }}</td>
@@ -57,6 +57,7 @@
                                     class="tlp-button-primary tlp-button-outline tlp-button-small tlp-table-cell-actions-button"
                                     data-edit-client-button
                                     data-target-modal-id="oauth2-server-edit-client-modal-{{ id }}"
+                                    data-test="oauth2-edit-app-button"
                                 >
                                     <i class="fa fa-edit tlp-button-icon"></i>
                                     {{# dgettext }}tuleap-oauth2_server | Edit{{/ dgettext }}
@@ -66,6 +67,7 @@
                                     data-new-client-secret-button
                                     data-app-id="{{ id }}"
                                     data-app-name="{{ name }}"
+                                    data-test="oauth2-new-client-secret-button"
                                 >
                                     <i class="fa fa-key tlp-button-icon"></i>
                                     {{# dgettext }}tuleap-oauth2_server | Generate a new client secret{{/ dgettext }}
@@ -75,6 +77,7 @@
                                     data-delete-client-button
                                     data-app-id="{{ id }}"
                                     data-app-name="{{ name }}"
+                                    data-test="oauth2-delete-app-button"
                                 >
                                     <i class="fa fa-trash-o tlp-button-icon"></i>
                                     {{# dgettext }}tuleap-oauth2_server | Delete{{/ dgettext }}

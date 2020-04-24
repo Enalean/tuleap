@@ -5,6 +5,7 @@
     aria-labelledby="oauth2-server-delete-client-modal-title"
     action="{{ delete_client_url }}"
     method="post"
+    data-test="oauth2-delete-app-modal"
 >
     <div class="tlp-modal-header">
         <h1 class="tlp-modal-title" id="oauth2-server-delete-client-modal-title">
@@ -29,7 +30,7 @@
         <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">
             {{# dgettext }}tuleap-oauth2_server | Cancel {{/ dgettext }}
         </button>
-        <button type="submit" class="tlp-button-danger tlp-modal-action">
+        <button type="submit" class="tlp-button-danger tlp-modal-action" data-test="oauth2-delete-app-modal-submit-button">
             <i class="fa fa-trash-o tlp-button-icon"></i> {{# dgettext }}tuleap-oauth2_server | Delete {{/ dgettext }}
         </button>
     </div>
