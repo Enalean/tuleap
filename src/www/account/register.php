@@ -49,7 +49,7 @@ if (! $request->getCurrentUser()->isSuperUser() && !$is_register_page_accessible
     );
 }
 
-function register_valid($mail_confirm_code, array &$errors)
+function register_valid(bool $is_password_needed, $mail_confirm_code, array &$errors)
 {
     global $Language;
 
@@ -69,7 +69,7 @@ function register_valid($mail_confirm_code, array &$errors)
         return 0;
     }
 
-    if (!$request->existAndNonEmpty('form_pw')) {
+    if ($is_password_needed && !$request->existAndNonEmpty('form_pw')) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_nopasswd'));
         $errors['form_pw'] = $Language->getText('account_register', 'err_nopasswd');
         return 0;
@@ -91,21 +91,24 @@ function register_valid($mail_confirm_code, array &$errors)
         return 0;
     }
 
-    $password              = new ConcealedString((string) $request->get('form_pw'));
-    $password_confirmation = new ConcealedString((string) $request->get('form_pw2'));
-    if ($request->get('page') !== "admin_creation" && ! $password->isIdenticalTo($password_confirmation)) {
-        $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_passwd'));
-        $errors['form_pw'] = $Language->getText('account_register', 'err_passwd');
-        return 0;
-    }
-
-    $password_sanity_checker = \Tuleap\Password\PasswordSanityChecker::build();
-    if (! $password_sanity_checker->check($password)) {
-        foreach ($password_sanity_checker->getErrors() as $error) {
-            $GLOBALS['Response']->addFeedback('error', $error);
+    $password = null;
+    if ($is_password_needed) {
+        $password              = new ConcealedString((string) $request->get('form_pw'));
+        $password_confirmation = new ConcealedString((string) $request->get('form_pw2'));
+        if ($request->get('page') !== "admin_creation" && ! $password->isIdenticalTo($password_confirmation)) {
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_passwd'));
+            $errors['form_pw'] = $Language->getText('account_register', 'err_passwd');
+            return 0;
         }
-        $errors['form_pw'] = 'Error';
-        return 0;
+
+        $password_sanity_checker = \Tuleap\Password\PasswordSanityChecker::build();
+        if (! $password_sanity_checker->check($password)) {
+            foreach ($password_sanity_checker->getErrors() as $error) {
+                $GLOBALS['Response']->addFeedback('error', $error);
+            }
+            $errors['form_pw'] = 'Error';
+            return 0;
+        }
     }
 
     $expiry_date = 0;
@@ -134,7 +137,7 @@ function register_valid($mail_confirm_code, array &$errors)
     //use sys_lang as default language for each user at register
     $res = account_create(
         $request->get('form_loginname'),
-        $password_confirmation,
+        $password,
         '',
         $request->get('form_realname'),
         $request->get('form_register_purpose'),
@@ -165,10 +168,8 @@ function getFieldError($field_key, array $errors)
 }
 
 
-function display_account_form($register_error, array $errors)
+function display_account_form(bool $is_password_needed, $register_error, array $errors): void
 {
-    global $Language;
-
     $request  = HTTPRequest::instance();
 
     $page = $request->get('page');
@@ -231,10 +232,15 @@ function display_account_form($register_error, array $errors)
         $presenter = new Account_RegisterByAdminPresenter($prefill, $extra_plugin_field);
         $template = 'register-admin';
     } else {
+        $password_field = null;
+        if ($is_password_needed) {
+            $password_field = new Account_RegisterField($form_pw, $form_pw_error);
+        }
+
         $prefill = new Account_RegisterPrefillValuesPresenter(
             new Account_RegisterField($form_loginname, $form_loginname_error),
             new Account_RegisterField($form_email, $form_email_error),
-            new Account_RegisterField($form_pw, $form_pw_error),
+            $password_field,
             new Account_RegisterField($form_realname, $form_realname_error),
             new Account_RegisterField($form_register_purpose, $form_register_purpose_error),
             new Account_RegisterField($form_mail_site, $form_mail_site_error),
@@ -245,6 +251,19 @@ function display_account_form($register_error, array $errors)
     }
     $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/account/');
     $renderer->renderToPage($template, $presenter);
+}
+
+$is_password_needed = true;
+if ($page !== 'admin_creation') {
+    $em = EventManager::instance();
+    $em->processEvent(
+        'before_register',
+        array(
+            'request'                      => $request,
+            'is_registration_confirmation' => $confirmation_register,
+            'is_password_needed'           => &$is_password_needed,
+        )
+    );
 }
 
 // ###### first check for valid login, if so, congratulate
@@ -270,7 +289,7 @@ if ($request->isPost() && $request->exist('Register')) {
     );
     $mail_confirm_code           = $mail_confirm_code_generator->getConfirmationCode();
     $logo_retriever              = new LogoRetriever();
-    if ($is_registration_valid && $new_userid = register_valid($mail_confirm_code, $errors)) {
+    if ($is_registration_valid && $new_userid = register_valid($is_password_needed, $mail_confirm_code, $errors)) {
         EventManager::instance()->processEvent(
             Event::AFTER_USER_REGISTRATION,
             array(
@@ -367,17 +386,6 @@ if ($request->isPost() && $request->exist('Register')) {
     }
 }
 
-if ($page != 'admin_creation') {
-    $em = EventManager::instance();
-    $em->processEvent(
-        'before_register',
-        array(
-            'request'                      => $request,
-            'is_registration_confirmation' => $confirmation_register
-        )
-    );
-}
-
 $body_class = array('register-page');
 if ($page == 'admin_creation') {
     $body_class[] = 'admin_register';
@@ -392,7 +400,7 @@ $HTML->header(array('title' => $Language->getText('account_register', 'title'), 
 
 if (!$confirmation_register || ! isset($presenter, $template)) {
     $reg_err = isset($GLOBALS['register_error']) ? $GLOBALS['register_error'] : '';
-    display_account_form($reg_err, $errors);
+    display_account_form($is_password_needed, $reg_err, $errors);
 } else {
     $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/account/');
     $renderer->renderToPage($template, $presenter);

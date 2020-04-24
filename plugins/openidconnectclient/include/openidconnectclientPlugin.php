@@ -287,7 +287,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
 
                 $GLOBALS['Response']->addFeedback(
                     Feedback::INFO,
-                    sprintf(dgettext('tuleap-openidconnectclient', 'Your new user account will be linked with %1$s. You must provide a password to use %2$s services (CVS, SVN, Git, FTP, ...).'), $provider->getName(), ForgeConfig::get('sys_name'))
+                    sprintf(dgettext('tuleap-openidconnectclient', 'Your new user account will be linked with %1$s.'), $provider->getName())
                 );
             } catch (Exception $ex) {
                 $GLOBALS['Response']->addFeedback(
@@ -296,6 +296,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
                 );
                 $GLOBALS['Response']->redirect('/');
             }
+            $params['is_password_needed'] = false;
         }
     }
 
