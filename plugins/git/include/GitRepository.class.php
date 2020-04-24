@@ -21,11 +21,7 @@
 
 use Tuleap\Git\PathJoinUtil;
 
-/**
- * Description of GitRepositoryclass
- */
-
-class GitRepository implements DVCSRepository
+class GitRepository
 {
     public const REPO_EXT       = '.git';
 
