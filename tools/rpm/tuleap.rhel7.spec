@@ -492,8 +492,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mfa
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tuleap_synchro
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/tuleap_synchro
-/usr/bin/find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -path "$RPM_BUILD_ROOT/%{APP_DIR}/plugins/*/scripts" -type d -execdir %{__rm} -rf "{}" \;
-/usr/bin/find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -path "$RPM_BUILD_ROOT/%{APP_DIR}/plugins/*/themes" -type d -execdir %{__rm} -rf "{}" \;
 %if %{with enterprise}
 %else
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/projectmilestones
@@ -549,6 +547,14 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/run_dev/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/scripts/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/php73/run.sh
+/usr/bin/find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -path "$RPM_BUILD_ROOT/%{APP_DIR}/plugins/*/scripts" -type d -execdir %{__rm} -rf "{}" \;
+/usr/bin/find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -path "$RPM_BUILD_ROOT/%{APP_DIR}/plugins/*/themes" -type d -execdir %{__rm} -rf "{}" \;
+/usr/bin/find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -path "$RPM_BUILD_ROOT/%{APP_DIR}/plugins/*/tests" -type d -execdir %{__rm} -rf "{}" \;
+/usr/bin/find "$RPM_BUILD_ROOT/%{APP_DIR}/" -depth -mindepth 3 -maxdepth 3 -type f \( \
+    -name 'composer.json' -o -name 'composer.lock' -o -name 'package.json' -o -name 'package-lock.json' -o \
+    -name 'tsconfig.json' -o -name 'webpack.common.js' -o -name 'webpack.dev.js' -o -name 'webpack.prod.js' -o \
+    -name 'Makefile' -o -name 'jest.config.js' -o -name 'build-manifest.json' \
+    \) -a -delete
 
 # Configuration
 %{__install} -d $RPM_BUILD_ROOT/etc/%{APP_NAME}
@@ -699,6 +705,9 @@ done
 %{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_tracker
 %{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_tracker
 %{__install} plugins/tracker/etc/sudoers.d/tuleap-plugin-tracker $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_plugin_tracker
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tracker/gulpfile.js
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tracker/doc/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tracker/functional/
 #
 # Plugin agiledashboard
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/agiledashboard
