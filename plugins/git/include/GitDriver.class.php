@@ -1,7 +1,7 @@
 <?php
 /**
+  * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
   * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-  * Copyright (c) Enalean, 2014. All Rights Reserved.
   *
   * This file is a part of Tuleap.
   *
@@ -19,16 +19,7 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-/**
- * Description of GitDriverclass
- * @TODO Create Class exception to thro GIT messages
- * @TODO Make this driver compliant with Apache ??
- * @TODO Make sure directories tree to manage forks and repo is a good choice
- */
-
-require_once(__DIR__ . '/../DVCS/DVCSDriver.class.php');
-
-class GitDriver implements DVCSDriver
+class GitDriver
 {
 
     protected function execGitAction($cmd, $action_name)

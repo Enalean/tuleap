@@ -4,7 +4,7 @@
     "psr-4": {
       "Tuleap\\Git\\": ["include/", "include/Git/"]
     },
-    "classmap": ["include/", "DVCS/"]
+    "classmap": ["include/"]
   },
   "require": {
     "smarty/smarty": "^2.6",
