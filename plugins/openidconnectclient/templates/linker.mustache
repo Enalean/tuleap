@@ -11,7 +11,6 @@
     </div>
 
     <form action="?action=link-existing" method="post" name="form_login" autocomplete="off">
-        <input type="hidden" name="link_id" value="{{ link_id }}">
         <input type="hidden" name="return_to" value="{{ return_to }}">
 
         <input type="text" id="loginname" name="loginname" placeholder="{{ account_login_name }}" required autofocus>
@@ -20,9 +19,13 @@
         <button type="submit" name="login" class="btn btn-primary">{{ account_login_login_btn }}</button>
     </form>
 
+    {{# provider_login_presenter }}
+        {{> login_connector }}
+    {{/ provider_login_presenter }}
+
     {{# is_registering_possible }}
         <div id="login-openid-register">
-            <span id="login-openid-or">
+            <span class="login-openid-or">
                 <span>{{ or_label }}</span>
             </span>
 

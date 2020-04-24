@@ -26,6 +26,7 @@ use HTTPRequest;
 use PFUser;
 use TemplateRendererFactory;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\OpenIDConnectClient\Login\ConnectorPresenterBuilder;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMappingManager;
@@ -52,24 +53,35 @@ class Controller
      * @var UnlinkedAccountManager
      */
     private $unlinked_account_manager;
+    /**
+     * @var ConnectorPresenterBuilder
+     */
+    private $connector_presenter_builder;
+    /**
+     * @var array
+     */
+    private $session_storage;
 
     public function __construct(
         UserManager $user_manager,
         ProviderManager $provider_manager,
         UserMappingManager $user_mapping_manager,
-        UnlinkedAccountManager $unlinked_account_manager
+        UnlinkedAccountManager $unlinked_account_manager,
+        ConnectorPresenterBuilder $connector_presenter_builder,
+        array &$session_storage
     ) {
-        $this->user_manager             = $user_manager;
-        $this->provider_manager         = $provider_manager;
-        $this->user_mapping_manager     = $user_mapping_manager;
-        $this->unlinked_account_manager = $unlinked_account_manager;
+        $this->user_manager                = $user_manager;
+        $this->provider_manager            = $provider_manager;
+        $this->user_mapping_manager        = $user_mapping_manager;
+        $this->unlinked_account_manager    = $unlinked_account_manager;
+        $this->connector_presenter_builder = $connector_presenter_builder;
+        $this->session_storage             =& $session_storage;
     }
 
-    public function showIndex(HTTPRequest $request)
+    public function showIndex(HTTPRequest $request): void
     {
-        $link_id = $request->get('link_id');
         try {
-            $unlinked_account = $this->unlinked_account_manager->getbyId($link_id);
+            $unlinked_account = $this->unlinked_account_manager->getbyId($this->session_storage[\openidconnectclientPlugin::SESSION_LINK_ID_KEY] ?? '');
             $provider         = $this->provider_manager->getById($unlinked_account->getProviderId());
         } catch (Exception $ex) {
             $this->redirectAfterFailure(
@@ -80,11 +92,13 @@ class Controller
         $link_to_register_page   = $this->generateLinkToRegisterPage($request);
         $is_registering_possible = !$provider->isUniqueAuthenticationEndpoint();
         $presenter               = new Presenter(
-            $link_id,
             $return_to,
             $provider->getName(),
             $link_to_register_page,
-            $is_registering_possible
+            $is_registering_possible,
+            $this->connector_presenter_builder->getLoginConnectorPresenter(
+                OPENIDCONNECTCLIENT_BASE_URL . '/?' . http_build_query(['action' => 'link-existing', 'return_to' => $return_to])
+            )
         );
         $renderer                = TemplateRendererFactory::build()->getRenderer(OPENIDCONNECTCLIENT_TEMPLATE_DIR);
 
@@ -101,7 +115,6 @@ class Controller
     private function generateLinkToRegisterPage(HTTPRequest $request)
     {
         $openid_connect_to_register_page = array(
-            'link_id'  => 'openidconnect_link_id',
             'name'     => 'form_realname',
             'nickname' => 'form_loginname',
             'email'    => 'form_email',
@@ -118,10 +131,10 @@ class Controller
         return '/account/register.php?' . http_build_query($query_parameters);
     }
 
-    public function linkExistingAccount(HTTPRequest $request)
+    public function linkExistingAccount(HTTPRequest $request): void
     {
         try {
-            $unlinked_account = $this->unlinked_account_manager->getbyId($request->get('link_id'));
+            $unlinked_account = $this->unlinked_account_manager->getbyId($this->session_storage[\openidconnectclientPlugin::SESSION_LINK_ID_KEY] ?? '');
             $provider         = $this->provider_manager->getById($unlinked_account->getProviderId());
         } catch (Exception $ex) {
             $this->redirectAfterFailure(
@@ -129,7 +142,10 @@ class Controller
             );
         }
 
-        $user = $this->user_manager->login($request->get('loginname'), new ConcealedString($request->get('password')));
+        $user = $this->user_manager->getCurrentUser();
+        if ($user->isAnonymous()) {
+            $user = $this->user_manager->login($request->get('loginname'), new ConcealedString($request->get('password')));
+        }
         if ($user->isAnonymous()) {
             $this->showIndex($request);
         } else {
@@ -161,7 +177,7 @@ class Controller
         }
     }
 
-    private function linkAccount(PFUser $user, Provider $provider, UnlinkedAccount $unlinked_account, $request_time)
+    private function linkAccount(PFUser $user, Provider $provider, UnlinkedAccount $unlinked_account, $request_time): void
     {
         try {
             $this->user_mapping_manager->create(
@@ -171,6 +187,7 @@ class Controller
                 $request_time
             );
             $this->unlinked_account_manager->removeById($unlinked_account->getId());
+            unset($this->session_storage[\openidconnectclientPlugin::SESSION_LINK_ID_KEY]);
         } catch (Exception $ex) {
             $this->redirectAfterFailure(
                 dgettext('tuleap-openidconnectclient', 'An error occurred, please retry')

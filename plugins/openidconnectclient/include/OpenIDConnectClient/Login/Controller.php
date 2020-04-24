@@ -67,6 +67,10 @@ class Controller
      * @var LoggerInterface
      */
     private $logger;
+    /**
+     * @var array
+     */
+    private $session_storage;
 
     public function __construct(
         UserManager $user_manager,
@@ -74,7 +78,8 @@ class Controller
         UnlinkedAccountManager $unlinked_account_manager,
         AutomaticUserRegistration $automatic_user_registration,
         Flow $flow,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        array &$session_storage
     ) {
         $this->user_manager                = $user_manager;
         $this->user_mapping_manager        = $user_mapping_manager;
@@ -82,6 +87,7 @@ class Controller
         $this->automatic_user_registration = $automatic_user_registration;
         $this->flow                        = $flow;
         $this->logger                      = $logger;
+        $this->session_storage             =& $session_storage;
     }
 
     public function login(\HTTPRequest $request, $return_to, $login_time)
@@ -205,9 +211,9 @@ class Controller
             );
         }
 
+        $this->session_storage[\openidconnectclientPlugin::SESSION_LINK_ID_KEY] = $unlinked_account->getId();
         $query_parameters = array(
             'action'    => 'link',
-            'link_id'   => $unlinked_account->getId(),
             'return_to' => $flow_response->getReturnTo(),
         );
         $user_informations = $flow_response->getUserInformations();
