@@ -23,6 +23,7 @@ namespace Tuleap\OpenIDConnectClient\UserMapping;
 use PFUser;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
+use UserDao;
 
 class UserMappingManager
 {
@@ -30,6 +31,10 @@ class UserMappingManager
      * @var UserMappingDao
      */
     private $dao;
+    /**
+     * @var UserDao
+     */
+    private $user_dao;
     /**
      * @var CanRemoveUserMappingChecker
      */
@@ -41,10 +46,12 @@ class UserMappingManager
 
     public function __construct(
         UserMappingDao $dao,
+        UserDao $user_dao,
         CanRemoveUserMappingChecker $can_remove_user_mapping_checker,
         DBTransactionExecutor $transaction_executor
     ) {
         $this->dao                             = $dao;
+        $this->user_dao                        = $user_dao;
         $this->can_remove_user_mapping_checker = $can_remove_user_mapping_checker;
         $this->transaction_executor            = $transaction_executor;
     }
@@ -52,8 +59,9 @@ class UserMappingManager
     /**
      * @throws UserMappingDataAccessException
      */
-    public function create($user_id, $provider_id, $identifier, $last_used)
+    public function create($user_id, $provider_id, $identifier, $last_used): void
     {
+        $this->user_dao->storeLoginSuccess($user_id, $last_used);
         $is_saved  = $this->dao->save($user_id, $provider_id, $identifier, $last_used);
         if (! $is_saved) {
             throw new UserMappingDataAccessException();
@@ -148,8 +156,9 @@ class UserMappingManager
     /**
      * @throws UserMappingDataAccessException
      */
-    public function updateLastUsed(UserMapping $user_mapping, $last_used)
+    public function updateLastUsed(UserMapping $user_mapping, int $last_used): void
     {
+        $this->user_dao->storeLoginSuccess($user_mapping->getUserId(), $last_used);
         $is_updated = $this->dao->updateLastUsed(
             $user_mapping->getId(),
             $last_used

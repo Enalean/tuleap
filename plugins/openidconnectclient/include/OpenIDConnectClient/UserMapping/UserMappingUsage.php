@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -38,7 +38,7 @@ class UserMappingUsage
         $provider_icon,
         $is_unique_authentication_endpoint,
         $user_id,
-        $last_used
+        int $last_used
     ) {
         $this->user_mapping_id                   = $user_mapping_id;
         $this->provider_id                       = $provider_id;
@@ -74,7 +74,7 @@ class UserMappingUsage
         return $this->user_id;
     }
 
-    public function getLastUsage()
+    public function getLastUsage(): int
     {
         return $this->last_used;
     }

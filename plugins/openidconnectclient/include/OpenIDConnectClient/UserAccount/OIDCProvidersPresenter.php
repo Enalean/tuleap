@@ -23,7 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\OpenIDConnectClient\UserAccount;
 
-use DateTime;
+use DateTimeImmutable;
+use Tuleap\OpenIDConnectClient\UserMapping\UserMappingUsage;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 
 /**
@@ -57,6 +58,9 @@ final class OIDCProvidersPresenter
      */
     public $can_unlink_providers;
 
+    /**
+     * @param UserMappingUsage[] $user_mappings_usage
+     */
     public function __construct(
         AccountTabPresenterCollection $tabs,
         \CSRFSynchronizerToken $csrf_token,
@@ -68,7 +72,7 @@ final class OIDCProvidersPresenter
         $this->csrf_token = $csrf_token;
 
         foreach ($user_mappings_usage as $user_mapping_usage) {
-            $last_usage = DateTime::createFromFormat('U', $user_mapping_usage->getLastUsage());
+            $last_usage = (new DateTimeImmutable())->setTimestamp($user_mapping_usage->getLastUsage());
             $this->user_mappings[] = array(
                 'user_mapping_id'                         => $user_mapping_usage->getUserMappingId(),
                 'provider_name'                           => $user_mapping_usage->getProviderName(),
