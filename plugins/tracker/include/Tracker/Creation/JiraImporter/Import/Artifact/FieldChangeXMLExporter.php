@@ -44,13 +44,9 @@ class FieldChangeXMLExporter
     public function exportFieldChange(FieldMapping $mapping, SimpleXMLElement $changeset_node, string $value): void
     {
         if ($mapping->getType() === Tracker_FormElement_Field_String::TYPE) {
-            $field_change_node = $changeset_node->addChild('field_change');
-            $field_change_node->addAttribute('type', 'string');
-            $field_change_node->addAttribute('field_name', $mapping->getFieldName());
-
-            $this->simplexml_cdata_factory->insert(
-                $field_change_node,
-                'value',
+            $this->exportStringFieldChange(
+                $changeset_node,
+                $mapping->getFieldName(),
                 $value
             );
         } elseif ($mapping->getType() === Tracker_FormElement_Field_Text::TYPE) {
@@ -64,5 +60,18 @@ class FieldChangeXMLExporter
                 $value
             );
         }
+    }
+
+    public function exportStringFieldChange(SimpleXMLElement $changeset_node, string $field_name, string $value): void
+    {
+        $field_change_node = $changeset_node->addChild('field_change');
+        $field_change_node->addAttribute('type', Tracker_FormElement_Field_String::TYPE);
+        $field_change_node->addAttribute('field_name', $field_name);
+
+        $this->simplexml_cdata_factory->insert(
+            $field_change_node,
+            'value',
+            $value
+        );
     }
 }

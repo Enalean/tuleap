@@ -162,10 +162,11 @@ class ArtifactsXMLExporter
             $changeset_node->addChild('comments');
 
             $jira_link = rtrim($jira_base_url, "/") . "/browse/" . urlencode($artifact['key']);
-            $field_change_node = $changeset_node->addChild('field_change');
-            $field_change_node->addAttribute('type', 'string');
-            $field_change_node->addAttribute('field_name', JiraXmlExporter::JIRA_LINK_FIELD_NAME);
-            $field_change_node->addChild('value', $jira_link);
+            $this->field_change_xml_exporter->exportStringFieldChange(
+                $changeset_node,
+                JiraXmlExporter::JIRA_LINK_FIELD_NAME,
+                $jira_link
+            );
 
             foreach ($artifact['fields'] as $key => $value) {
                 $mapping = $jira_field_mapping_collection->getMappingFromJiraField($key);
