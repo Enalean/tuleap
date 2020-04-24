@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
 use Mockery;
 use Tracker_FormElement_Field_String;
+use Tracker_FormElement_Field_Text;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ErrorCollector;
 
 final class JiraToTuleapFieldTypeMapperTest extends \PHPUnit\Framework\TestCase
@@ -61,7 +62,73 @@ final class JiraToTuleapFieldTypeMapperTest extends \PHPUnit\Framework\TestCase
 
     public function testJiraSummaryFieldIsMappedToStringField(): void
     {
-        $jira_field = ["name" => "Summary", "id" => "summary"];
+        $jira_field = [
+            "name" => "Summary",
+            "id" => "summary",
+            'schema' => [
+                'type' => 'string',
+                'system' => 'summary'
+            ]
+        ];
+        $collection = new FieldMappingCollection();
+
+        $this->field_exporter->shouldReceive('exportField')->withArgs(
+            [
+                $this->jira_atf_fieldset,
+                Tracker_FormElement_Field_String::TYPE,
+                $jira_field['id'],
+                $jira_field['name'],
+                $jira_field['id'],
+                1,
+                "1",
+                $collection
+            ]
+        );
+
+        $this->mapper->exportFieldToXml($jira_field, "1", $this->jira_atf_fieldset, $collection);
+    }
+
+    public function testJiraDescriptionFieldIsMappedToStringField(): void
+    {
+        $jira_field = [
+            "name" => "Description",
+            "id" => "description",
+            'schema' => [
+                'type' => 'string',
+                'system' => 'description'
+            ]
+        ];
+
+        $collection = new FieldMappingCollection();
+
+        $this->field_exporter->shouldReceive('exportField')->withArgs(
+            [
+                $this->jira_atf_fieldset,
+                Tracker_FormElement_Field_Text::TYPE,
+                $jira_field['id'],
+                $jira_field['name'],
+                $jira_field['id'],
+                2,
+                "1",
+                $collection
+            ]
+        );
+
+        $this->mapper->exportFieldToXml($jira_field, "1", $this->jira_atf_fieldset, $collection);
+    }
+
+    public function testJiraTextFieldFieldIsMappedToStringField(): void
+    {
+        $jira_field = [
+            "name" => "String Field",
+            "id" => "fieldid",
+            'schema' => [
+                'type' => 'string',
+                'custom' => 'com.atlassian.jira.plugin.system.customfieldtypes:textfield',
+                'customId' => 10045
+            ]
+        ];
+
         $collection = new FieldMappingCollection();
 
         $this->field_exporter->shouldReceive('exportField')->withArgs(

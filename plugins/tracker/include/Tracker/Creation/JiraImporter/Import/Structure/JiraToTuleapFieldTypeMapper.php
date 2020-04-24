@@ -53,11 +53,11 @@ class JiraToTuleapFieldTypeMapper
         SimpleXMLElement $jira_atf_fieldset,
         FieldMappingCollection $jira_field_mapping_collection
     ): void {
-        $id        = isset($jira_field['id']) ? $jira_field['id'] : $jira_field['key'];
-        $jira_type = $jira_field['name'];
+        $id               = isset($jira_field['id']) ? $jira_field['id'] : $jira_field['key'];
+        $jira_field_label = $jira_field['name'];
 
         // ignore this jira always there mapping who is created like a custom one
-        if ($jira_type === "Flagged") {
+        if ($jira_field_label === "Flagged") {
             return;
         }
 
@@ -76,11 +76,12 @@ class JiraToTuleapFieldTypeMapper
 
             switch ($jira_type) {
                 case 'summary':
+                case 'com.atlassian.jira.plugin.system.customfieldtypes:textfield':
                     $this->field_xml_exporter->exportField(
                         $jira_atf_fieldset,
                         Tracker_FormElement_Field_String::TYPE,
                         $id,
-                        $jira_type,
+                        $jira_field_label,
                         $id,
                         1,
                         $required,
@@ -92,7 +93,7 @@ class JiraToTuleapFieldTypeMapper
                         $jira_atf_fieldset,
                         Tracker_FormElement_Field_Text::TYPE,
                         $id,
-                        $jira_type,
+                        $jira_field_label,
                         $id,
                         2,
                         $required,
@@ -104,7 +105,6 @@ class JiraToTuleapFieldTypeMapper
                 case 'creator':
                 case 'updated':
                 case 'created':
-                case 'com.atlassian.jira.plugin.system.customfieldtypes:textfield':
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:textarea':
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:float':
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:readonlyfield':
