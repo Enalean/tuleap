@@ -18,7 +18,7 @@
 <section id="test" class="tlp-pane current-test" ng-class="execution.status" data-test="current-test">
     <div class="tlp-pane-container">
         <section class="tlp-pane-header current-test-header">
-            <h1 class="current-test-header-title">
+            <h1 class="current-test-header-title" data-test="current-test-header-title">
                 {{ execution.definition.summary }}
             </h1>
 
@@ -64,6 +64,7 @@
 
                 <a href="/plugins/tracker/?aid={{ execution.definition.id }}" class="current-test-header-action">
                     <i class="fa fa-fw fa-pencil"
+                       data-test="current-test-edit"
                        ng-click="showEditArtifactModal($event, execution.definition)"
                        title="{{ 'Edit this test' | translate }}"></i>
                 </a>
