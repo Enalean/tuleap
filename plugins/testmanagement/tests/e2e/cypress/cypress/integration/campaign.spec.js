@@ -100,7 +100,6 @@ describe("TTM campaign", () => {
                 cy.route("GET", "/api/v1/testmanagement_campaigns/*/testmanagement_executions*").as(
                     "loadTestsOfCampaign"
                 );
-                cy.route("PUT", "/api/v1/testmanagement_executions/*").as("updateExecution");
             });
 
             it("Adds a test", () => {
@@ -119,52 +118,72 @@ describe("TTM campaign", () => {
                 cy.wait("@createCampaign");
             });
 
-            it("Displays the test as notrun", () => {
-                cy.wait("@loadTestsOfCampaign");
-                cy.contains("My first test").click();
-                cy.get("[data-test=current-test").should("have.class", "notrun");
-            });
+            context("On the test", () => {
+                beforeEach(() => {
+                    cy.route("PUT", "/api/v1/testmanagement_executions/*").as("updateExecution");
+                    cy.route("GET", "/api/v1/testmanagement_definitions/*").as("loadDefinition");
+                });
 
-            it("Marks a test as passed", () => {
-                cy.get("[data-test=mark-test-as-passed]").click();
-                cy.wait("@updateExecution");
-                cy.get("[data-test=current-test").should("have.class", "passed");
-            });
+                it("Displays the test as notrun", () => {
+                    cy.wait("@loadTestsOfCampaign");
+                    cy.contains("My first test").click();
+                    cy.get("[data-test=current-test").should("have.class", "notrun");
+                });
 
-            it("Marks a test as failed", () => {
-                cy.get("[data-test=mark-test-as-failed]").click();
-                cy.wait("@updateExecution");
-                cy.get("[data-test=current-test").should("have.class", "failed");
-            });
+                it("Marks a test as passed", () => {
+                    cy.get("[data-test=mark-test-as-passed]").click();
+                    cy.wait("@updateExecution");
+                    cy.get("[data-test=current-test").should("have.class", "passed");
+                });
 
-            it("Marks a test as blocked", () => {
-                cy.get("[data-test=mark-test-as-blocked]").click();
-                cy.wait("@updateExecution");
-                cy.get("[data-test=current-test").should("have.class", "blocked");
-            });
+                it("Marks a test as failed", () => {
+                    cy.get("[data-test=mark-test-as-failed]").click();
+                    cy.wait("@updateExecution");
+                    cy.get("[data-test=current-test").should("have.class", "failed");
+                });
 
-            it("Marks a test as notrun", () => {
-                cy.get("[data-test=mark-test-as-notrun]").click();
-                cy.wait("@updateExecution");
-                cy.get("[data-test=current-test").should("have.class", "notrun");
-            });
+                it("Marks a test as blocked", () => {
+                    cy.get("[data-test=mark-test-as-blocked]").click();
+                    cy.wait("@updateExecution");
+                    cy.get("[data-test=current-test").should("have.class", "blocked");
+                });
 
-            it("Register a comment alongside the status", () => {
-                cy.get("[data-test=current-test-comment]").then(($container) => {
-                    cy.window().then((win) => {
-                        win.CKEDITOR.instances[$container.attr("id")].setData(
-                            "<p>This does not work! Fix ASAP!</p>"
-                        );
+                it("Marks a test as notrun", () => {
+                    cy.get("[data-test=mark-test-as-notrun]").click();
+                    cy.wait("@updateExecution");
+                    cy.get("[data-test=current-test").should("have.class", "notrun");
+                });
+
+                it("Registers a comment alongside the status", () => {
+                    cy.get("[data-test=current-test-comment]").then(($container) => {
+                        cy.window().then((win) => {
+                            win.CKEDITOR.instances[$container.attr("id")].setData(
+                                "<p>This does not work! Fix ASAP!</p>"
+                            );
+                        });
+                    });
+
+                    cy.get("[data-test=mark-test-as-failed]").click();
+                    cy.wait("@updateExecution");
+                    cy.get("[data-test=current-test").should("have.class", "failed");
+                    cy.get("[data-test=view-details-button]").click();
+                    cy.get("[data-test=view-details-modal]").within(() => {
+                        cy.contains("This does not work! Fix ASAP!");
+                        cy.get("[data-dismiss=modal]").first().click();
                     });
                 });
 
-                cy.get("[data-test=mark-test-as-failed]").click();
-                cy.wait("@updateExecution");
-                cy.get("[data-test=current-test").should("have.class", "failed");
-                cy.get("[data-test=view-details-button]").click();
-                cy.get("[data-test=view-details-modal]").within(() => {
-                    cy.contains("This does not work! Fix ASAP!");
-                    cy.get("[data-dismiss=modal]").first().click();
+                it("Edits the test", () => {
+                    cy.get("[data-test=current-test-edit]").click();
+                    cy.get("[data-test=artifact-modal-field-summary]").type(
+                        "{selectall}My first test edited"
+                    );
+                    cy.get("[data-test=artifact-modal-save-button]").click();
+                    cy.wait(["@updateExecution", "@loadDefinition"]);
+                    cy.get("[data-test=current-test]").should("have.class", "notrun");
+                    cy.get("[data-test=current-test-header-title]").contains(
+                        "My first test edited"
+                    );
                 });
             });
         });
