@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,8 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@import '../../code-font-parameters';
+
 $codemirror-like-line-numbers-color: #8c8c8c;
-$gitphp-code-font: normal normal 14px / 20px monospace;
 
 .git-repository-blob-header {
     display: flex;
@@ -72,7 +73,7 @@ $gitphp-code-font: normal normal 14px / 20px monospace;
     display: flex;
     width: 100%;
     background: $tlp-ui-white;
-    font: $gitphp-code-font;
+    font-family: $code-font-family;
     line-height: 1.5;
 }
 
@@ -80,7 +81,7 @@ $gitphp-code-font: normal normal 14px / 20px monospace;
 .git-repository-blob-file-code,
 .git-repository-blob-file-linenumbers {
     border: 0;
-    font: $gitphp-code-font;
+    font-family: $code-font-family;
 }
 
 .git-repository-blob-file-linenumbers {
@@ -121,7 +122,7 @@ $above-highlight-line: 2;
     padding: 5px $tlp-half-spacing;
     background: none;
     color: $tlp-typo-default-text-color;
-    font: $gitphp-code-font;
+    font-family: $code-font-family;
     line-height: 1.5;
 
     &[class*='language-'] {
@@ -133,7 +134,7 @@ $above-highlight-line: 2;
     > code[class*='language-'] {
         position: relative;
         z-index: $above-highlight-line;
-        font: $gitphp-code-font;
+        font-family: $code-font-family;
         text-shadow: none;
     }
 }
