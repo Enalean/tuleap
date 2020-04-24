@@ -1,9 +1,9 @@
 {{# access_key_presenter }}
     {{# last_access_key }}
-        <div class="tlp-alert-success">
+        <div class="tlp-alert-success" data-test="user-prefs-add-personal-access-key-feedback">
             <p>{{# gettext }}Here is your new access key. Please make sure to copy it, you won't be able to see it again!{{/ gettext }}</p>
             <p>
-                <code><strong>{{ last_access_key }}</strong></code>
+                <code><strong data-test="user-prefs-new-api-key">{{ last_access_key }}</strong></code>
                 <copy-to-clipboard
                         value="{{ last_access_key }}"
                         class="user-preferences-copy-secret"
@@ -23,10 +23,10 @@
 
 {{# svn_tokens_presenter }}
     {{# last_svn_token }}
-        <div class="tlp-alert-success">
+        <div class="tlp-alert-success" data-test="user-prefs-add-svn-token-feedback">
             <p>{{# gettext }}Here is your new SVN token. Please make sure you copy it, you won't be able to see it again!{{/ gettext }}</p>
             <p>
-                <code><strong>{{ last_svn_token }}</strong></code>
+                <code><strong data-test="user-prefs-new-svn-token">{{ last_svn_token }}</strong></code>
                 <copy-to-clipboard
                         value="{{ last_svn_token }}"
                         class="user-preferences-copy-secret"

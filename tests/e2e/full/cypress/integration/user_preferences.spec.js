@@ -170,4 +170,86 @@ describe("User preferences", () => {
             assertFeedbackContainsMessage("Email format preference successfully updated");
         });
     });
+
+    describe("in the [Keys & Tokens] tab", () => {
+        beforeEach(() => {
+            cy.visit("/account/keys-tokens");
+        });
+
+        describe("in the SSH keys section", () => {
+            it("the user can add his public SSH key", () => {
+                cy.get("#add-ssh-key-button").click();
+                cy.fixture("heisenberg.pub", "utf-8").then((heisenberg_public_ssh_key) => {
+                    cy.get("#ssh-key").type(heisenberg_public_ssh_key);
+                    cy.get("#submit-new-ssh-key-button").click();
+                    assertFeedbackContainsMessage(
+                        "SSH key(s) updated in database, will be propagated on filesystem in a few minutes, please be patient."
+                    );
+
+                    cy.get("[data-ssh_key_value]").should("have.length", 1);
+                });
+            });
+
+            it("the user can remove his public SSH key", () => {
+                cy.get("[data-test=user-prefs-remove-ssh-key-checkbox]").click();
+                cy.get("#remove-ssh-keys-button").click();
+
+                assertFeedbackContainsMessage(
+                    "SSH key(s) updated in database, will be propagated on filesystem in a few minutes, please be patient."
+                );
+
+                cy.get("[data-ssh_key_value]").should("have.length", 0);
+            });
+        });
+
+        describe("in the personal access key section", () => {
+            it("the user can generate a personal access key", () => {
+                cy.get("#generate-access-key-button").click();
+                cy.get("#access-key-description").type("An access key for GIT and REST");
+                cy.get("[data-test=user-prefs-personal-access-key-scope-option]").click({
+                    multiple: true,
+                });
+                cy.get("#access-key-expiration-date-picker").type("2099-12-31", { force: true });
+                cy.get("#generate-new-access-key-button").click();
+
+                cy.get("[data-test=user-prefs-add-personal-access-key-feedback]").contains(
+                    "Here is your new access key. Please make sure to copy it, you won't be able to see it again!"
+                );
+                cy.get("[data-test=user-prefs-new-api-key]").should("exist");
+                cy.get("[data-test=user-prefs-personal-access-key]").should("have.length", 1);
+            });
+
+            it("the user can revoke his personal access key", () => {
+                cy.get("[data-test=user-prefs-personal-access-key-checkbox]").click();
+                cy.get("#button-revoke-access-tokens").click();
+
+                assertFeedbackContainsMessage("Access keys have been successfully deleted.");
+
+                cy.get("[data-test=user-prefs-personal-access-key]").should("have.length", 0);
+            });
+        });
+
+        describe("in the SVN Tokens section", () => {
+            it("the user is able to create a SVN token", () => {
+                cy.get("#generate-svn-token-button").click();
+                cy.get("#svn-token-description").type("My handsome SVN token");
+                cy.get("#generate-new-svn-token-button").click();
+
+                cy.get("[data-test=user-prefs-add-svn-token-feedback]").contains(
+                    "Here is your new SVN token. Please make sure you copy it, you won't be able to see it again!"
+                );
+                cy.get("[data-test=user-prefs-new-svn-token]").should("exist");
+
+                cy.get("[data-test=user-prefs-svn-token]").should("have.length", 1);
+            });
+
+            it("the user is able to revoke his SVN tokens", () => {
+                cy.get("[data-test=user-prefs-revoke-svn-token-checkbox]").click();
+                cy.get("#button-revoke-svn-tokens").click();
+                cy.get("[data-test=user-prefs-svn-token]").should("have.length", 0);
+
+                assertFeedbackContainsMessage("SVN tokens have been successfully deleted");
+            });
+        });
+    });
 });
