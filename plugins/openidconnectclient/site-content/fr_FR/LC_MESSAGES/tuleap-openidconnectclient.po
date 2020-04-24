@@ -231,6 +231,9 @@ msgstr ""
 "Vous avez été authentifié avec succès par %1$s. Vous devez maintenant créer "
 "un lien avec un compte %2$s existant."
 
+msgid "You must link another account to be able to remove this link"
+msgstr "Vous devez lier un autre compte pour pouvoir supprimer ce lien"
+
 #, php-format
 msgid "Your account has been successfully linked to %1$s"
 msgstr "Votre compte a bien été lié à %1$s"

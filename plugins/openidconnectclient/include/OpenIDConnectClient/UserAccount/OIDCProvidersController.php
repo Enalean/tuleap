@@ -30,6 +30,7 @@ use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\OpenIDConnectClient\UserMapping\CanRemoveUserMappingChecker;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMappingManager;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
@@ -62,6 +63,10 @@ final class OIDCProvidersController implements DispatchableWithRequest, Dispatch
      */
     private $unique_provider;
     /**
+     * @var CanRemoveUserMappingChecker
+     */
+    private $can_unlink_provider_from_account_checker;
+    /**
      * @var IncludeAssets
      */
     private $oidc_assets;
@@ -72,20 +77,22 @@ final class OIDCProvidersController implements DispatchableWithRequest, Dispatch
         CSRFSynchronizerToken $csrf_token,
         UserMappingManager $user_mapping_manager,
         bool $unique_provider,
+        CanRemoveUserMappingChecker $can_unlink_provider_from_account_checker,
         IncludeAssets $oidc_assets
     ) {
-        $this->dispatcher = $dispatcher;
-        $this->renderer = $renderer_factory->getRenderer(__DIR__ . '/templates');
-        $this->csrf_token = $csrf_token;
-        $this->user_mapping_manager = $user_mapping_manager;
-        $this->unique_provider = $unique_provider;
-        $this->oidc_assets = $oidc_assets;
+        $this->dispatcher                               = $dispatcher;
+        $this->renderer                                 = $renderer_factory->getRenderer(__DIR__ . '/templates');
+        $this->csrf_token                               = $csrf_token;
+        $this->user_mapping_manager                     = $user_mapping_manager;
+        $this->unique_provider                          = $unique_provider;
+        $this->can_unlink_provider_from_account_checker = $can_unlink_provider_from_account_checker;
+        $this->oidc_assets                              = $oidc_assets;
     }
 
     /**
      * @inheritDoc
      */
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $user = $request->getCurrentUser();
         if ($user->isAnonymous()) {
@@ -111,7 +118,8 @@ final class OIDCProvidersController implements DispatchableWithRequest, Dispatch
                 $tabs,
                 $this->csrf_token,
                 $user_mappings_usage,
-                $this->unique_provider
+                $this->unique_provider,
+                $this->can_unlink_provider_from_account_checker->canAUserMappingBeRemoved($user, $user_mappings_usage)
             )
         );
         $layout->footer([]);

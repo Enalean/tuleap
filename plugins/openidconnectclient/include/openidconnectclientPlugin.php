@@ -23,6 +23,8 @@ use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\BurningParrotCompatiblePageEvent;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Http\Client\Authentication\BasicAuth;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -66,6 +68,7 @@ use Tuleap\OpenIDConnectClient\Router;
 use Tuleap\OpenIDConnectClient\UserAccount\AccountTabsBuilder;
 use Tuleap\OpenIDConnectClient\UserAccount\OIDCProvidersController;
 use Tuleap\OpenIDConnectClient\UserAccount\UnlinkController;
+use Tuleap\OpenIDConnectClient\UserMapping\CanRemoveUserMappingChecker;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMappingDao;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMappingManager;
 use Tuleap\Request\CollectRoutesEvent;
@@ -324,7 +327,11 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         if ($link_id) {
             $user_manager             = UserManager::instance();
             $provider_manager         = $this->getProviderManager();
-            $user_mapping_manager     = new UserMappingManager(new UserMappingDao());
+            $user_mapping_manager     = new UserMappingManager(
+                new UserMappingDao(),
+                new CanRemoveUserMappingChecker(),
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+            );
             $unlinked_account_manager = new UnlinkedAccountManager(new UnlinkedAccountDao(), new RandomNumberGenerator());
             $account_linker_controler = new AccountLinker\Controller(
                 $user_manager,
@@ -370,16 +377,21 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
             return new DispatchTemporaryRedirect('/account');
         }
 
+        $can_remove_user_mapping_checker = new CanRemoveUserMappingChecker();
+
         return new OIDCProvidersController(
             EventManager::instance(),
             TemplateRendererFactory::build(),
             OIDCProvidersController::getCSRFToken(),
             new UserMappingManager(
-                new UserMappingDao()
+                new UserMappingDao(),
+                $can_remove_user_mapping_checker,
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
             ),
             $this->isLoginConfiguredToUseAProviderAsUniqueAuthenticationEndpoint(
                 $this->getProviderManager()
             ),
+            new CanRemoveUserMappingChecker(),
             $this->getAssets(),
         );
     }
@@ -394,7 +406,9 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
             OIDCProvidersController::getCSRFToken(),
             $this->getProviderManager(),
             new UserMappingManager(
-                new UserMappingDao()
+                new UserMappingDao(),
+                new CanRemoveUserMappingChecker(),
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
             )
         );
     }
@@ -402,7 +416,11 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
     public function routeAzureIndex(): DispatchableWithRequest
     {
         $user_manager             = UserManager::instance();
-        $user_mapping_manager     = new UserMappingManager(new UserMappingDao());
+        $user_mapping_manager     = new UserMappingManager(
+            new UserMappingDao(),
+            new CanRemoveUserMappingChecker(),
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+        );
         $unlinked_account_manager = new UnlinkedAccountManager(
             new UnlinkedAccountDao(),
             new RandomNumberGenerator()
@@ -438,7 +456,11 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
 
         $user_manager                = UserManager::instance();
         $provider_manager            = $this->getProviderManager();
-        $user_mapping_manager        = new UserMappingManager(new UserMappingDao());
+        $user_mapping_manager        = new UserMappingManager(
+            new UserMappingDao(),
+            new CanRemoveUserMappingChecker(),
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+        );
         $unlinked_account_manager    = new UnlinkedAccountManager(
             new UnlinkedAccountDao(),
             new RandomNumberGenerator()
@@ -476,7 +498,11 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         $provider_manager                               = $this->getProviderManager();
         $generic_provider_manager                       = new GenericProviderManager(new GenericProviderDao());
         $azure_provider_manager                         = new AzureADProviderManager(new AzureADProviderDao());
-        $user_mapping_manager                           = new UserMappingManager(new UserMappingDao());
+        $user_mapping_manager                           = new UserMappingManager(
+            new UserMappingDao(),
+            new CanRemoveUserMappingChecker(),
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+        );
         $enable_unique_authentication_endpoint_verifier = new EnableUniqueAuthenticationEndpointVerifier(
             $user_mapping_manager
         );

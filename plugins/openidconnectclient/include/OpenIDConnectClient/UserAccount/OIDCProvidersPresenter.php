@@ -52,9 +52,18 @@ final class OIDCProvidersPresenter
      * @var bool
      */
     public $unique_authentication_endpoint;
+    /**
+     * @var bool
+     */
+    public $can_unlink_providers;
 
-    public function __construct(AccountTabPresenterCollection $tabs, \CSRFSynchronizerToken $csrf_token, array $user_mappings_usage, bool $unique_authentication_endpoint)
-    {
+    public function __construct(
+        AccountTabPresenterCollection $tabs,
+        \CSRFSynchronizerToken $csrf_token,
+        array $user_mappings_usage,
+        bool $unique_authentication_endpoint,
+        bool $can_unlink_providers
+    ) {
         $this->tabs = $tabs;
         $this->csrf_token = $csrf_token;
 
@@ -71,5 +80,6 @@ final class OIDCProvidersPresenter
         }
         $this->no_mappings = count($this->user_mappings) === 0;
         $this->unique_authentication_endpoint = $unique_authentication_endpoint;
+        $this->can_unlink_providers           = $can_unlink_providers;
     }
 }
