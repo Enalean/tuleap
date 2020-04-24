@@ -330,6 +330,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
             $provider_manager         = $this->getProviderManager();
             $user_mapping_manager     = new UserMappingManager(
                 new UserMappingDao(),
+                new UserDao(),
                 new CanRemoveUserMappingChecker(),
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
             );
@@ -386,6 +387,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
             OIDCProvidersController::getCSRFToken(),
             new UserMappingManager(
                 new UserMappingDao(),
+                new UserDao(),
                 $can_remove_user_mapping_checker,
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
             ),
@@ -408,6 +410,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
             $this->getProviderManager(),
             new UserMappingManager(
                 new UserMappingDao(),
+                new UserDao(),
                 new CanRemoveUserMappingChecker(),
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
             )
@@ -419,6 +422,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         $user_manager             = UserManager::instance();
         $user_mapping_manager     = new UserMappingManager(
             new UserMappingDao(),
+            new UserDao(),
             new CanRemoveUserMappingChecker(),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
         );
@@ -459,6 +463,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         $provider_manager            = $this->getProviderManager();
         $user_mapping_manager        = new UserMappingManager(
             new UserMappingDao(),
+            new UserDao(),
             new CanRemoveUserMappingChecker(),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
         );
@@ -501,6 +506,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         $azure_provider_manager                         = new AzureADProviderManager(new AzureADProviderDao());
         $user_mapping_manager                           = new UserMappingManager(
             new UserMappingDao(),
+            new UserDao(),
             new CanRemoveUserMappingChecker(),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
         );

@@ -36,6 +36,10 @@ final class UserMappingManagerTest extends TestCase
      */
     private $dao;
     /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\UserDao
+     */
+    private $user_dao;
+    /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|CanRemoveUserMappingChecker
      */
     private $can_remove_user_mapping_checker;
@@ -47,8 +51,9 @@ final class UserMappingManagerTest extends TestCase
     protected function setUp(): void
     {
         $this->dao                             = \Mockery::mock(UserMappingDao::class);
+        $this->user_dao                        = \Mockery::mock(\UserDao::class);
         $this->can_remove_user_mapping_checker = \Mockery::mock(CanRemoveUserMappingChecker::class);
-        $this->user_mapping_manager = new UserMappingManager($this->dao, $this->can_remove_user_mapping_checker, new DBTransactionExecutorPassthrough());
+        $this->user_mapping_manager = new UserMappingManager($this->dao, $this->user_dao, $this->can_remove_user_mapping_checker, new DBTransactionExecutorPassthrough());
     }
 
     public function testItThrowsAnExceptionIfTheMappingCanNotBeFound(): void
@@ -92,5 +97,23 @@ final class UserMappingManagerTest extends TestCase
         $this->dao->shouldReceive('deleteById')->once()->andReturn(true);
 
         $this->user_mapping_manager->remove($user, $user_mapping);
+    }
+
+    public function testUpdatesLastUsedInformation(): void
+    {
+        $this->user_dao->shouldReceive('storeLoginSuccess')->once();
+        $this->dao->shouldReceive('updateLastUsed')->once()->andReturn(true);
+
+        $user_mapping = new UserMapping(1, 102, 1, 'identifier', 10);
+
+        $this->user_mapping_manager->updateLastUsed($user_mapping, 20);
+    }
+
+    public function testCreatesAMapping(): void
+    {
+        $this->user_dao->shouldReceive('storeLoginSuccess')->once();
+        $this->dao->shouldReceive('save')->once()->andReturn(true);
+
+        $this->user_mapping_manager->create(102, 1, 'identifier', 10);
     }
 }
