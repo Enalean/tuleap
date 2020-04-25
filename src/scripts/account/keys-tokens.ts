@@ -19,11 +19,14 @@
 
 import { datePicker } from "tlp";
 import { openTargetModalIdOnClick } from "../tuleap/modals/modal-opener";
+import "../tuleap/custom-elements/custom-elements-polyfill-ie11";
+import "../tuleap/custom-elements/copy-to-clipboard";
 
 document.addEventListener("DOMContentLoaded", () => {
     handleSSHKeys();
     handleAccessKeys();
     handleSVNTokens();
+    handleCopySecretsToClipboard();
 });
 
 const ADD_SSH_KEY_BUTTON_ID = "add-ssh-key-button";
@@ -94,6 +97,34 @@ function handleSVNTokens(): void {
         "button-revoke-svn-tokens",
         "svn-tokens-selected[]"
     );
+}
+
+function toggleCopySecretElementVisibility(element: Element): void {
+    if (element.classList.contains("user-preferences-copy-secrets-hide")) {
+        element.classList.remove("user-preferences-copy-secrets-hide");
+    } else {
+        element.classList.add("user-preferences-copy-secrets-hide");
+    }
+}
+
+function handleCopySecretsToClipboard(): void {
+    document
+        .querySelectorAll("copy-to-clipboard.user-preferences-copy-secret")
+        .forEach((element: Element) => {
+            let already_copied = false;
+            element.addEventListener("copied-to-clipboard", () => {
+                if (already_copied) {
+                    return;
+                }
+                already_copied = true;
+                const children = [...element.children];
+                children.forEach(toggleCopySecretElementVisibility);
+                setTimeout(() => {
+                    children.forEach(toggleCopySecretElementVisibility);
+                    already_copied = false;
+                }, 2000);
+            });
+        });
 }
 
 function toggleButtonAccordingToCheckBoxesStateWithIds(

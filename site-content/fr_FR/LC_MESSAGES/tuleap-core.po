@@ -149,6 +149,9 @@ msgstr "Droits d'accès"
 msgid "Access history"
 msgstr "Historique d'accès"
 
+msgid "Access key copied!"
+msgstr "Clé d'accès copiée !"
+
 msgid "Access key description"
 msgstr "Description de la clé d'accès"
 
@@ -539,6 +542,12 @@ msgstr "Contact (menu \"Aide\")"
 
 msgid "Content"
 msgstr "Contenu"
+
+msgid "Copy the SVN token"
+msgstr "Copier le jeton SVN"
+
+msgid "Copy the access key"
+msgstr "Copier la clé d'accès"
 
 #, php-format
 msgid "Copyright (c) %s, %s Team, 2001-%d. All Rights Reserved"
@@ -1648,6 +1657,9 @@ msgstr "SVN"
 
 msgid "SVN Commits"
 msgstr "Commits SVN"
+
+msgid "SVN token copied!"
+msgstr "Jeton SVN copié !"
 
 msgid "SVN tokens"
 msgstr "Jetons SVN"
