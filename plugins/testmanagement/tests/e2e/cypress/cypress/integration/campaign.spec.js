@@ -185,6 +185,49 @@ describe("TTM campaign", () => {
                         "My first test edited"
                     );
                 });
+
+                it("Paste an image on comment box", () => {
+                    cy.route("PATCH", "/uploads/tracker/file/*").as("uploadFile");
+                    cy.get("[data-test=current-test-comment]")
+                        .trigger("focus")
+                        .then(($element) => {
+                            fetch(
+                                "data:image/gif;base64,R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs="
+                            )
+                                .then(function (res) {
+                                    return res.arrayBuffer();
+                                })
+                                .then(function (buf) {
+                                    const file = new File([buf], "blank.gif", {
+                                        type: "image/gif",
+                                    });
+                                    const data_transfer = new DataTransfer();
+                                    data_transfer.items.add(file);
+
+                                    const paste_event = Object.assign(
+                                        new Event("paste", { bubbles: true, cancelable: true }),
+                                        {
+                                            clipboardData: data_transfer,
+                                        }
+                                    );
+
+                                    $element[0].dispatchEvent(paste_event);
+                                });
+                        });
+                    cy.wait("@uploadFile");
+
+                    cy.get("[data-test=mark-test-as-failed]").click();
+                    cy.wait("@updateExecution");
+                    cy.get("[data-test=current-test").should("have.class", "failed");
+                    cy.get("[data-test=current-test-preview-latest-result]").contains(
+                        "A screenshot has been attached"
+                    );
+                    cy.get("[data-test=view-details-button]").click();
+                    cy.get("[data-test=view-details-modal]").within(() => {
+                        cy.get("img").should("have.attr", "src").should("include", "blank.gif");
+                        cy.get("[data-dismiss=modal]").first().click();
+                    });
+                });
             });
         });
     });
