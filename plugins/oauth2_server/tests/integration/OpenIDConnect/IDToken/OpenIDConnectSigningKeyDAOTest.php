@@ -42,19 +42,33 @@ final class OpenIDConnectSigningKeyDAOTest extends TestCase
         DBFactory::getMainTuleapDBConnection()->getDB()->run('DELETE FROM plugin_oauth2_oidc_signing_key');
     }
 
-    public function testCanSaveAndRetrieveKey(): void
+    public function testCanSaveAndRetrieveKeys(): void
     {
-        $this->assertNull($this->dao->searchPublicKey());
-        $this->assertNull($this->dao->searchEncryptedPrivateKey());
-        $this->dao->save('public_key', 'encrypted_private_key');
-        $this->assertEquals('public_key', $this->dao->searchPublicKey());
-        $this->assertEquals('encrypted_private_key', $this->dao->searchEncryptedPrivateKey());
+        $current_time = 10;
+        $this->assertEmpty($this->dao->searchPublicKeys());
+        $this->assertNull($this->dao->searchMostRecentNonExpiredEncryptedPrivateKey($current_time));
+        $this->dao->save('public_key_1', 'encrypted_private_key_1', 100, 90);
+        $this->dao->save('public_key_2', 'encrypted_private_key_2', 101, 90);
+        $this->assertEqualsCanonicalizing(['public_key_1', 'public_key_2'], $this->dao->searchPublicKeys());
+        $this->assertEquals(
+            ['public_key' => 'public_key_2', 'private_key' => 'encrypted_private_key_2'],
+            $this->dao->searchMostRecentNonExpiredEncryptedPrivateKey($current_time)
+        );
     }
 
-    public function testCanSaveKeyOnlyOnce(): void
+    public function testDoesNotRetrieveExpiredPrivateKeys(): void
     {
-        $this->dao->save('public_key', 'encrypted_private_key');
-        $this->expectException(\PDOException::class);
-        $this->dao->save('public_key', 'encrypted_private_key');
+        $this->dao->save('public_key', 'encrypted_private_key', 100, 90);
+
+        $time_in_the_future_where_all_keys_have_expired = 999;
+        $this->assertNull($this->dao->searchMostRecentNonExpiredEncryptedPrivateKey($time_in_the_future_where_all_keys_have_expired));
+    }
+
+    public function testCleanupOldKeysWhileSavingNewOne(): void
+    {
+        $this->dao->save('expired_public_key', 'expired_encrypted_private_key', 10, 5);
+        $this->dao->save('public_key', 'encrypted_private_key', 100, 90);
+
+        $this->assertEquals(['public_key'], $this->dao->searchPublicKeys());
     }
 }

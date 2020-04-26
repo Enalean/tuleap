@@ -34,6 +34,8 @@ class OpenIDConnectIDTokenCreator
 {
     // See https://openid.net/specs/openid-connect-core-1_0.html#IDToken
     private const CLAIM_AUTH_TIME = 'auth_time';
+    // See https://tools.ietf.org/html/rfc7515#section-4.1.4
+    private const HEADER_KEY_ID   = 'kid';
 
     /**
      * @var OAuth2SignInScope
@@ -85,19 +87,22 @@ class OpenIDConnectIDTokenCreator
         $user        = $authorization_code->getUser();
         $access_info = $this->user_manager->getUserAccessInfo($user);
 
+        $signing_private_key = $this->signing_key_factory->getKey($current_time);
+
         $builder = $this->builder_factory->getBuilder()->issuedBy(Issuer::toString())
                 ->relatedTo((string) $user->getId())
                 ->permittedFor(ClientIdentifier::fromOAuth2App($app)->toString())
                 ->issuedAt($current_time->getTimestamp())
                 ->expiresAt($current_time->add($this->id_token_expiration_delay)->getTimestamp())
-                ->withClaim(self::CLAIM_AUTH_TIME, (int) $access_info['last_auth_success']);
+                ->withClaim(self::CLAIM_AUTH_TIME, (int) $access_info['last_auth_success'])
+                ->withHeader(self::HEADER_KEY_ID, $signing_private_key->getFingerprintPublicKey());
 
         $nonce = $authorization_code->getOIDCNonce();
         if ($nonce !== null) {
             $builder = $builder->withClaim('nonce', $nonce);
         }
 
-        return (string) $builder->getToken($this->signer, $this->signing_key_factory->getKey());
+        return (string) $builder->getToken($this->signer, $signing_private_key->getPrivateKey());
     }
 
     /**

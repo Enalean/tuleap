@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\OpenIDConnect\JWK;
 
 use PHPUnit\Framework\TestCase;
+use Tuleap\OAuth2Server\OpenIDConnect\IDToken\SigningPublicKey;
 
 final class JSONWebKeySetTest extends TestCase
 {
@@ -45,7 +46,7 @@ final class JSONWebKeySetTest extends TestCase
 
     public function testBuilds(): void
     {
-        $jwk = JSONWebKey::fromPEMRSAPublicKeyForSignature(self::PUBLIC_KEY);
+        $jwk = JSONWebKey::fromSigningPublicKey(SigningPublicKey::fromPEMFormat(self::PUBLIC_KEY));
 
         $set = new JSONWebKeySet($jwk);
 

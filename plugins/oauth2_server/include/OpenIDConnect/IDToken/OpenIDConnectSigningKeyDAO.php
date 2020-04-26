@@ -26,35 +26,42 @@ use Tuleap\DB\DataAccessObject;
 
 class OpenIDConnectSigningKeyDAO extends DataAccessObject
 {
-    public function save(string $public_key, string $encrypted_private_key): void
+    public function save(string $public_key, string $encrypted_private_key, int $expiration_date, int $cleanup_keys_date): void
     {
         $this->getDB()->insert(
             'plugin_oauth2_oidc_signing_key',
-            ['public_key' => $public_key, 'private_key' => $encrypted_private_key]
+            ['public_key' => $public_key, 'private_key' => $encrypted_private_key, 'expiration_date' => $expiration_date]
         );
+        $this->getDB()->run('DELETE FROM plugin_oauth2_oidc_signing_key WHERE ? > expiration_date', $cleanup_keys_date);
     }
 
-    public function searchPublicKey(): ?string
+    /**
+     * @return string[]
+     */
+    public function searchPublicKeys(): array
     {
-        $row = $this->getDB()->row('SELECT public_key FROM plugin_oauth2_oidc_signing_key');
+        return $this->getDB()->column('SELECT public_key FROM plugin_oauth2_oidc_signing_key');
+    }
 
+    /**
+     * @return string[]|null
+     * @psalm-return array{public_key:string,private_key:string}|null
+     */
+    public function searchMostRecentNonExpiredEncryptedPrivateKey(int $current_time): ?array
+    {
+        $row = $this->getDB()->row(
+            'SELECT public_key, private_key
+                       FROM plugin_oauth2_oidc_signing_key
+                       WHERE expiration_date >= ?
+                       ORDER BY expiration_date DESC
+                       LIMIT 1',
+            $current_time
+        );
 
         if ($row === null) {
             return null;
         }
 
-        return $row['public_key'];
-    }
-
-    public function searchEncryptedPrivateKey(): ?string
-    {
-        $row = $this->getDB()->row('SELECT private_key FROM plugin_oauth2_oidc_signing_key');
-
-
-        if ($row === null) {
-            return null;
-        }
-
-        return $row['private_key'];
+        return $row;
     }
 }

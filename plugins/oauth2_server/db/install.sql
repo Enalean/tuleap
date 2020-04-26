@@ -93,7 +93,8 @@ CREATE TABLE plugin_oauth2_refresh_token_scope (
 ) ENGINE=InnoDB;
 
 CREATE TABLE plugin_oauth2_oidc_signing_key (
-    enforce_one_row_table ENUM('SHOULD_HAVE_AT_MOST_ONE_ROW') NOT NULL PRIMARY KEY DEFAULT 'SHOULD_HAVE_AT_MOST_ONE_ROW',
     public_key TEXT NOT NULL,
-    private_key BLOB NOT NULL
+    private_key BLOB NOT NULL,
+    expiration_date INT(11) UNSIGNED NOT NULL,
+    INDEX idx_expiration_date (expiration_date)
 ) ENGINE=InnoDB;

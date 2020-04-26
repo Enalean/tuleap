@@ -105,7 +105,9 @@ require_once __DIR__ . '/../vendor/autoload.php';
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class oauth2_serverPlugin extends Plugin
 {
-    public const SERVICE_NAME_INSTRUMENTATION = 'oauth2_server';
+    public const SERVICE_NAME_INSTRUMENTATION  = 'oauth2_server';
+    private const ID_TOKEN_EXPIRATION_DELAY    = 'PT2M';
+    private const SIGNING_KEY_EXPIRATION_DELAY = 'PT1H';
 
     public function __construct(?int $id)
     {
@@ -417,8 +419,13 @@ final class oauth2_serverPlugin extends Plugin
             new OpenIDConnectIDTokenCreator(
                 OAuth2SignInScope::fromItself(),
                 new JWTBuilderFactory(),
-                new DateInterval('PT2M'),
-                new OpenIDConnectSigningKeyFactory(new KeyFactory(), new OpenIDConnectSigningKeyDAO()),
+                new DateInterval(self::ID_TOKEN_EXPIRATION_DELAY),
+                new OpenIDConnectSigningKeyFactory(
+                    new KeyFactory(),
+                    new OpenIDConnectSigningKeyDAO(),
+                    new DateInterval(self::SIGNING_KEY_EXPIRATION_DELAY),
+                    new DateInterval(self::ID_TOKEN_EXPIRATION_DELAY),
+                ),
                 new Sha256(),
                 UserManager::instance()
             )
@@ -591,7 +598,13 @@ final class oauth2_serverPlugin extends Plugin
         $response_factory = HTTPFactoryBuilder::responseFactory();
         $stream_factory   = HTTPFactoryBuilder::streamFactory();
         return new JWKSDocumentEndpointController(
-            new OpenIDConnectSigningKeyFactory(new KeyFactory(), new OpenIDConnectSigningKeyDAO()),
+            new OpenIDConnectSigningKeyFactory(
+                new KeyFactory(),
+                new OpenIDConnectSigningKeyDAO(),
+                new DateInterval(self::SIGNING_KEY_EXPIRATION_DELAY),
+                new DateInterval(self::ID_TOKEN_EXPIRATION_DELAY),
+            ),
+            new DateInterval(self::ID_TOKEN_EXPIRATION_DELAY),
             new JSONResponseBuilder($response_factory, $stream_factory),
             new SapiEmitter(),
             new ServiceInstrumentationMiddleware(self::SERVICE_NAME_INSTRUMENTATION),
