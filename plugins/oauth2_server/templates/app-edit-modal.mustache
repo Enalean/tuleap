@@ -5,6 +5,7 @@
     role="dialog"
     aria-labelledby="oauth2-server-edit-modal-label"
     method="post"
+    data-test="oauth2-edit-app-modal"
 >
     {{# csrf_token }}
         {{> csrf_token_input }}
@@ -32,25 +33,33 @@
                 name="name"
                 required
                 value="{{ name }}"
+                data-test="oauth2-edit-app-name"
             >
         </div>
         <div class="tlp-form-element">
             <label for="oauth2-server-add-modal-redirect-uri" class="tlp-label">{{# dgettext }}tuleap-oauth2_server | Redirect endpoint {{/ dgettext }} <i class="fa fa-asterisk"></i></label>
             <input
-                    type="url"
-                    class="tlp-input"
-                    id="oauth2-server-add-modal-redirect-uri"
-                    name="redirect_uri"
-                    placeholder="https://"
-                    pattern="^https:\/\/[^#]*$"
-                    required
-                    value="{{ redirect_endpoint }}"
+                type="url"
+                class="tlp-input"
+                id="oauth2-server-add-modal-redirect-uri"
+                name="redirect_uri"
+                placeholder="https://"
+                pattern="^https:\/\/[^#]*$"
+                required
+                value="{{ redirect_endpoint }}"
+                data-test="oauth2-edit-app-redirect-uri"
             >
             <p class="tlp-text-info"><i class="fa fa-life-saver"></i> {{# dgettext }}tuleap-oauth2_server | Redirect endpoint must use HTTPS. It must not include a fragment component (#anchor){{/ dgettext}}</p>
         </div>
         <div class="tlp-form-element">
             <label class="tlp-label tlp-checkbox">
-                <input type="checkbox" name="use_pkce" value="1" {{# use_pkce }}checked{{/ use_pkce }}> {{# dgettext }}tuleap-oauth2_server | Force usage of PKCE to authenticate {{/ dgettext }}
+                <input
+                    type="checkbox"
+                    name="use_pkce"
+                    value="1"
+                    {{# use_pkce }}checked{{/ use_pkce }}
+                    data-test="oauth2-edit-app-use-pkce"
+                > {{# dgettext }}tuleap-oauth2_server | Force usage of PKCE to authenticate {{/ dgettext }}
             </label>
         </div>
     </div>
@@ -58,7 +67,7 @@
         <button type="reset" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
             {{# dgettext }}tuleap-oauth2_server | Cancel {{/ dgettext }}
         </button>
-        <button type="submit" class="tlp-button-primary tlp-modal-action">
+        <button type="submit" class="tlp-button-primary tlp-modal-action" data-test="oauth2-edit-app-modal-submit-button">
             <i class="fa fa-edit tlp-button-icon"></i>
             {{# dgettext }}tuleap-oauth2_server | Edit an App {{/ dgettext }}
         </button>
