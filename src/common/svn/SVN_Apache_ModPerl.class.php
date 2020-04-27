@@ -77,7 +77,10 @@ class SVN_Apache_ModPerl extends SVN_Apache
 
     private function getDBIConnect(): string
     {
-        $connect = sprintf('DBI:mysql:%s:%s', ForgeConfig::get('sys_dbname'), ForgeConfig::get('sys_dbhost'));
+        $connect = sprintf('DBI:mysql:%s:%s', ForgeConfig::get(DBConfig::CONF_DBNAME), ForgeConfig::get(DBConfig::CONF_HOST));
+        if (! DBConfig::isUsingDefaultPort()) {
+            $connect = sprintf('%s;port=%s', $connect, ForgeConfig::get(DBConfig::CONF_PORT));
+        }
         if (DBConfig::isSSLEnabled()) {
             // RHEL/CENTOS7 version of perl cannot verify SSL Cert issuer. Moreover perl package is affected by [1] and there
             // are no evidences that this corresponding fix was backported.

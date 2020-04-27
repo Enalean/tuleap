@@ -25,9 +25,14 @@ namespace Tuleap\DB;
 
 final class DBConfig
 {
+    public const CONF_HOST             = 'sys_dbhost';
+    public const CONF_PORT             = 'sys_dbport';
+    public const CONF_DBNAME           = 'sys_dbname';
     private const CONF_ENABLE_SSL      = 'sys_enablessl';
     private const CONF_SSL_CA          = 'sys_db_ssl_ca';
     private const CONF_SSL_VERIFY_CERT = 'sys_db_ssl_verify_cert';
+
+    public const DEFAULT_MYSQL_PORT = 3306;
 
     public static function isSSLEnabled(): bool
     {
@@ -48,5 +53,20 @@ final class DBConfig
             return \ForgeConfig::get(self::CONF_SSL_CA);
         }
         throw new NoCaFileException();
+    }
+
+    public static function getPDODSN(string $database_name): string
+    {
+        return sprintf(
+            'mysql:host=%s;port=%d;dbname=%s',
+            \ForgeConfig::get(self::CONF_HOST),
+            \ForgeConfig::get(self::CONF_PORT, self::DEFAULT_MYSQL_PORT),
+            $database_name
+        );
+    }
+
+    public static function isUsingDefaultPort(): bool
+    {
+        return (int) \ForgeConfig::get(self::CONF_PORT, self::DEFAULT_MYSQL_PORT) === self::DEFAULT_MYSQL_PORT;
     }
 }

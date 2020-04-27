@@ -41,7 +41,7 @@ class DBCreator
     public function createDB(): EasyDB
     {
         return Factory::fromArray([
-            $this->getDSN(),
+            DBConfig::getPDODSN($this->database_name),
             \ForgeConfig::get('sys_dbuser'),
             \ForgeConfig::get('sys_dbpasswd'),
             $this->getOptions(),
@@ -56,10 +56,5 @@ class DBCreator
             $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = DBConfig::isSSLVerifyCert();
         }
         return $options;
-    }
-
-    private function getDSN(): string
-    {
-        return 'mysql:host=' . \ForgeConfig::get('sys_dbhost') . ';dbname=' . $this->database_name;
     }
 }

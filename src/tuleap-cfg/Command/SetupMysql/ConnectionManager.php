@@ -48,7 +48,7 @@ class ConnectionManager implements ConnectionManagerInterface
         $easydb = $this->loopToConnect(
             $io,
             [
-                'mysql:host=' . $host . ';port=' . $port,
+                sprintf('mysql:host=%s;port=%d', $host, $port),
                 $user,
                 $password,
                 $this->getOptions($ssl_mode, $ssl_ca_file),
@@ -68,7 +68,7 @@ class ConnectionManager implements ConnectionManagerInterface
         $easydb = $this->loopToConnect(
             $io,
             [
-                'mysql:host=' . $host . ';dbname=' . $dbname,
+                sprintf('mysql:host=%s;port=%d;dbname=%s', $host, $port, $dbname),
                 $user,
                 $password,
                 $this->getOptions($ssl_mode, $ssl_ca_file),

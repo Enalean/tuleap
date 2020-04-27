@@ -428,6 +428,8 @@ final class SetupMysqlInitCommand extends Command
             $template,
         );
 
+        $conf_string = preg_replace('/\$sys_dbport.*/', '$sys_dbport = ' . $port . ';', $conf_string);
+
         if ($ssl_mode !== ConnectionManagerInterface::SSL_NO_SSL) {
             $verify_cert = $ssl_mode === ConnectionManagerInterface::SSL_VERIFY_CA ? 1 : 0;
             $conf_string = preg_replace(
