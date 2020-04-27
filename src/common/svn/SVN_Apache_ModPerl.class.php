@@ -62,12 +62,12 @@ class SVN_Apache_ModPerl extends SVN_Apache
 
     private function addRedisBlock(): string
     {
-        $conf = '';
         $redis_server = trim(ForgeConfig::get('redis_server'));
-        if ($redis_server) {
-            $redis_server .= ':' . trim(ForgeConfig::get('redis_port'));
-            $conf .= '    TuleapRedisServer "' . $this->escapeStringForApacheConf($redis_server) . '"' . "\n";
+        if (! $redis_server || strpos($redis_server, 'tls://') === 0) {
+            return '';
         }
+        $redis_server .= ':' . trim(ForgeConfig::get('redis_port'));
+        $conf = '    TuleapRedisServer "' . $this->escapeStringForApacheConf($redis_server) . '"' . "\n";
         $redis_password = trim(ForgeConfig::get('redis_password'));
         if ($redis_password) {
             $conf .= '    TuleapRedisPassword "' . $this->escapeStringForApacheConf($redis_password) . '"' . "\n";
@@ -79,10 +79,14 @@ class SVN_Apache_ModPerl extends SVN_Apache
     {
         $connect = sprintf('DBI:mysql:%s:%s', ForgeConfig::get('sys_dbname'), ForgeConfig::get('sys_dbhost'));
         if (DBConfig::isSSLEnabled()) {
-            $connect = sprintf('%s;mysql_ssl=1;mysql_ssl_ca_file=%s', $connect, DBConfig::getSSLCACertFile());
-            if (DBConfig::isSSLVerifyCert()) {
-                $connect = sprintf('%s;mysql_ssl_verify_server_cert=1', $connect);
-            }
+            // RHEL/CENTOS7 version of perl cannot verify SSL Cert issuer. Moreover perl package is affected by [1] and there
+            // are no evidences that this corresponding fix was backported.
+            // [1] https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-10789
+            $connect = sprintf(
+                '%s;mysql_ssl=1;mysql_ssl_ca_file=%s;mysql_ssl_verify_server_cert=0',
+                $connect,
+                DBConfig::getSSLCACertFile(),
+            );
         }
         return $connect;
     }
