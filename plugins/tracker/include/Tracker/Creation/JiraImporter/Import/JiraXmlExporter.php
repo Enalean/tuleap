@@ -198,7 +198,9 @@ class JiraXmlExporter
 
         $this->exportJiraField(
             $node_jira_atf_form_elements,
-            $node_jira_custom_form_elements
+            $node_jira_custom_form_elements,
+            $jira_project_id,
+            $jira_issue_type_name
         );
 
         $this->semantics_xml_exporter->exportSemantics($node_tracker, $this->jira_field_mapping_collection);
@@ -229,9 +231,11 @@ class JiraXmlExporter
 
     private function exportJiraField(
         SimpleXMLElement $node_jira_atf_form_elements,
-        SimpleXMLElement $node_jira_custom_form_elements
+        SimpleXMLElement $node_jira_custom_form_elements,
+        string $jira_project_id,
+        string $jira_issue_type_name
     ): void {
-        $fields = $this->jira_field_retriever->getAllJiraFields();
+        $fields = $this->jira_field_retriever->getAllJiraFields($jira_project_id, $jira_issue_type_name);
         foreach ($fields as $key => $field) {
             $this->field_type_mapper->exportFieldToXml(
                 $field,

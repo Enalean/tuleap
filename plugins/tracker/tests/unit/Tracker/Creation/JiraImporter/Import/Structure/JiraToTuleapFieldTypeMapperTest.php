@@ -71,23 +71,21 @@ final class JiraToTuleapFieldTypeMapperTest extends \PHPUnit\Framework\TestCase
 
     public function testJiraSummaryFieldIsMappedToStringField(): void
     {
-        $jira_field = [
-            "name" => "Summary",
-            "id" => "summary",
-            'schema' => [
-                'type' => 'string',
-                'system' => 'summary'
-            ]
-        ];
+        $jira_field = new JiraFieldAPIRepresentation(
+            'summary',
+            'Summary',
+            'summary'
+        );
+
         $collection = new FieldMappingCollection();
 
         $this->field_exporter->shouldReceive('exportField')->withArgs(
             [
                 $this->jira_atf_fieldset,
                 Tracker_FormElement_Field_String::TYPE,
-                $jira_field['id'],
-                $jira_field['name'],
-                $jira_field['id'],
+                $jira_field->getId(),
+                $jira_field->getLabel(),
+                $jira_field->getId(),
                 1,
                 "1",
                 $collection
@@ -105,14 +103,11 @@ final class JiraToTuleapFieldTypeMapperTest extends \PHPUnit\Framework\TestCase
 
     public function testJiraDescriptionFieldIsMappedToStringField(): void
     {
-        $jira_field = [
-            "name" => "Description",
-            "id" => "description",
-            'schema' => [
-                'type' => 'string',
-                'system' => 'description'
-            ]
-        ];
+        $jira_field = new JiraFieldAPIRepresentation(
+            'description',
+            'Description',
+            'description'
+        );
 
         $collection = new FieldMappingCollection();
 
@@ -120,9 +115,9 @@ final class JiraToTuleapFieldTypeMapperTest extends \PHPUnit\Framework\TestCase
             [
                 $this->jira_atf_fieldset,
                 Tracker_FormElement_Field_Text::TYPE,
-                $jira_field['id'],
-                $jira_field['name'],
-                $jira_field['id'],
+                $jira_field->getId(),
+                $jira_field->getLabel(),
+                $jira_field->getId(),
                 2,
                 "1",
                 $collection
@@ -140,15 +135,11 @@ final class JiraToTuleapFieldTypeMapperTest extends \PHPUnit\Framework\TestCase
 
     public function testJiraTextFieldFieldIsMappedToStringField(): void
     {
-        $jira_field = [
-            "name" => "String Field",
-            "id" => "fieldid",
-            'schema' => [
-                'type' => 'string',
-                'custom' => 'com.atlassian.jira.plugin.system.customfieldtypes:textfield',
-                'customId' => 10045
-            ]
-        ];
+        $jira_field = new JiraFieldAPIRepresentation(
+            'fieldid',
+            'String Field',
+            'com.atlassian.jira.plugin.system.customfieldtypes:textfield'
+        );
 
         $collection = new FieldMappingCollection();
 
@@ -156,9 +147,9 @@ final class JiraToTuleapFieldTypeMapperTest extends \PHPUnit\Framework\TestCase
             [
                 $this->jira_custom_fieldset,
                 Tracker_FormElement_Field_String::TYPE,
-                $jira_field['id'],
-                $jira_field['name'],
-                $jira_field['id'],
+                $jira_field->getId(),
+                $jira_field->getLabel(),
+                $jira_field->getId(),
                 1,
                 "1",
                 $collection
@@ -176,15 +167,11 @@ final class JiraToTuleapFieldTypeMapperTest extends \PHPUnit\Framework\TestCase
 
     public function testJiraTextAreaFieldIsMappedToStringField(): void
     {
-        $jira_field = [
-            "name" => "Text Field",
-            "id" => "fieldid",
-            'schema' => [
-                'type' => 'string',
-                'custom' => 'com.atlassian.jira.plugin.system.customfieldtypes:textarea',
-                'customId' => 10045
-            ]
-        ];
+        $jira_field = new JiraFieldAPIRepresentation(
+            'fieldid',
+            'Text Field',
+            'com.atlassian.jira.plugin.system.customfieldtypes:textarea'
+        );
 
         $collection = new FieldMappingCollection();
 
@@ -192,9 +179,9 @@ final class JiraToTuleapFieldTypeMapperTest extends \PHPUnit\Framework\TestCase
             [
                 $this->jira_custom_fieldset,
                 Tracker_FormElement_Field_Text::TYPE,
-                $jira_field['id'],
-                $jira_field['name'],
-                $jira_field['id'],
+                $jira_field->getId(),
+                $jira_field->getLabel(),
+                $jira_field->getId(),
                 2,
                 "1",
                 $collection
