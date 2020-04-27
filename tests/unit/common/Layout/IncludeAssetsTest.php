@@ -22,43 +22,80 @@ declare(strict_types=1);
 
 namespace Tuleap\Layout;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 
-class IncludeAssetsTest extends TestCase
+final class IncludeAssetsTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+    /**
+     * @var string
+     */
+    private $assets_dir_path;
+
+    protected function setUp(): void
+    {
+        $this->assets_dir_path = vfsStream::setup()->url() . '/assets';
+        mkdir($this->assets_dir_path);
+    }
 
     public function testItRaisesManifestExceptionIfThereIsNoManifestFile(): void
     {
-        $assets_dir = vfsStream::setup()->url() . '/assets';
-        mkdir($assets_dir);
-        $include_assets = new IncludeAssets($assets_dir, '/path/to');
+        $include_assets = new IncludeAssets($this->assets_dir_path, '/path/to');
 
         $this->expectException(IncludeAssetsManifestException::class);
 
         $include_assets->getFileURLWithFallback('aFile.js', 'fallback.js');
     }
 
+    public function testItReturnsFileURLWithHashedName(): void
+    {
+        file_put_contents($this->assets_dir_path . '/manifest.json', '{"file.js":"file-hashed.js"}');
+        $include_assets = new IncludeAssets($this->assets_dir_path, '/path/to');
+
+        $this->assertEquals('/path/to/file-hashed.js', $include_assets->getFileURL('file.js'));
+    }
+
+    public function testItDoesNotDoubleTrailingSlashInFileURL(): void
+    {
+        file_put_contents($this->assets_dir_path . '/manifest.json', '{"file.js":"file-hashed.js"}');
+        $include_assets = new IncludeAssets($this->assets_dir_path, '/path/to/');
+
+        $this->assertEquals('/path/to/file-hashed.js', $include_assets->getFileURL('file.js'));
+    }
+
+    public function testItReturnsFileURLWithNonHashedName(): void
+    {
+        file_put_contents($this->assets_dir_path . '/manifest.json', '{"file.js":"file-hashed.js"}');
+        $include_assets = new IncludeAssets($this->assets_dir_path, '/path/to');
+
+        $this->assertEquals('/path/to/file.js', $include_assets->getPath('file.js'));
+    }
+
+    public function testItReturnsJavascriptHTMLSnippet(): void
+    {
+        file_put_contents($this->assets_dir_path . '/manifest.json', '{"file.js":"file-hashed.js"}');
+        $include_assets = new IncludeAssets($this->assets_dir_path, '/path/to');
+
+        $this->assertEquals(
+            '<script type="text/javascript" src="/path/to/file-hashed.js"></script>' . PHP_EOL,
+            $include_assets->getHTMLSnippet('file.js')
+        );
+    }
+
     public function testItRaisesAssetsExceptionIfBothFileAndFallbackDoNotExist(): void
     {
-        $assets_dir = vfsStream::setup()->url() . '/assets';
-        mkdir($assets_dir);
-        file_put_contents($assets_dir . '/manifest.json', '{}');
-        $include_assets = new IncludeAssets($assets_dir, '/path/to');
+        file_put_contents($this->assets_dir_path . '/manifest.json', '{}');
+        $include_assets = new IncludeAssets($this->assets_dir_path, '/path/to');
 
         $this->expectException(IncludeAssetsException::class);
 
         $include_assets->getFileURLWithFallback('aFile.js', 'fallback.js');
     }
 
-    public function testItReturnFallbackIfFileDoNotExist(): void
+    public function testItReturnFallbackIfFileDoesNotExist(): void
     {
-        $assets_dir = vfsStream::setup()->url() . '/assets';
-        mkdir($assets_dir);
-        file_put_contents($assets_dir . '/manifest.json', '{"fallback.js":"fallback-hashed.js"}');
-        $include_assets = new IncludeAssets($assets_dir, '/path/to');
+        file_put_contents($this->assets_dir_path . '/manifest.json', '{"fallback.js":"fallback-hashed.js"}');
+        $include_assets = new IncludeAssets($this->assets_dir_path, '/path/to');
 
         $this->assertEquals(
             '/path/to/fallback-hashed.js',
@@ -66,12 +103,10 @@ class IncludeAssetsTest extends TestCase
         );
     }
 
-    public function testItDoesNotReturnFallbackIfFileExisst(): void
+    public function testItDoesNotReturnFallbackIfFileExists(): void
     {
-        $assets_dir = vfsStream::setup()->url() . '/assets';
-        mkdir($assets_dir);
-        file_put_contents($assets_dir . '/manifest.json', '{"aFile.js":"aFile-hashed.js"}');
-        $include_assets = new IncludeAssets($assets_dir, '/path/to');
+        file_put_contents($this->assets_dir_path . '/manifest.json', '{"aFile.js":"aFile-hashed.js"}');
+        $include_assets = new IncludeAssets($this->assets_dir_path, '/path/to');
 
         $this->assertEquals(
             '/path/to/aFile-hashed.js',

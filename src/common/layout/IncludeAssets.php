@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All rights reserved
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -11,39 +11,47 @@
  *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 namespace Tuleap\Layout;
 
 class IncludeAssets
 {
-
-
     public const MANIFEST_FILE_NAME = 'manifest.json';
 
     private $base_url;
     private $assets;
     private $manifest_file;
 
-    public function __construct($base_directory, $base_url)
+    public function __construct(string $base_directory, string $base_url)
     {
         $this->base_url      = $base_url;
         $this->manifest_file = $base_directory . '/' . self::MANIFEST_FILE_NAME;
     }
 
-    public function getHTMLSnippet($file_name)
+    /**
+     * @throws IncludeAssetsException
+     * @throws IncludeAssetsManifestException
+     */
+    public function getHTMLSnippet(string $file_name): string
     {
         return '<script type="text/javascript" src="' . $this->getFileURL($file_name) . '"></script>' . PHP_EOL;
     }
 
-    public function getFileURL($file_name)
+    /**
+     * @throws IncludeAssetsException
+     * @throws IncludeAssetsManifestException
+     */
+    public function getFileURL(string $file_name): string
     {
-        return $this->base_url . '/' . $this->getHashedName($file_name);
+        return $this->getBaseURLWithTrailingSlash() . $this->getHashedName($file_name);
     }
 
     /**
@@ -53,34 +61,50 @@ class IncludeAssets
     public function getFileURLWithFallback(string $file_name, string $fallback_filename): string
     {
         try {
-            return $this->base_url . '/' . $this->getHashedName($file_name);
+            return $this->getFileURL($file_name);
         } catch (IncludeAssetsException $exception) {
-            return $this->base_url . '/' . $this->getHashedName($fallback_filename);
+            return $this->getFileURL($fallback_filename);
         }
     }
 
-    public function getPath($file_name)
+    public function getPath(string $file_name): string
     {
-        return $this->base_url . '/' . $file_name;
+        return $this->getBaseURLWithTrailingSlash() . $file_name;
     }
 
-    private function getHashedName($file_name)
+    /**
+     * @throws IncludeAssetsException
+     * @throws IncludeAssetsManifestException
+     */
+    private function getHashedName(string $file_name): string
     {
         if ($this->assets === null) {
             $this->loadFromManifest();
         }
         if (! isset($this->assets[$file_name])) {
-            throw new IncludeAssetsException("manifest.json doesn't reference $file_name. Did you run `npm run build` ?");
+            throw new IncludeAssetsException(
+                "manifest.json doesn't reference $file_name. Did you run `npm run build` ?"
+            );
         }
         return $this->assets[$file_name];
     }
 
-    private function loadFromManifest()
+    /**
+     * @throws IncludeAssetsManifestException
+     */
+    private function loadFromManifest(): void
     {
         if (is_file($this->manifest_file)) {
             $this->assets = json_decode(file_get_contents($this->manifest_file), true);
         } else {
-            throw new IncludeAssetsManifestException("Asset {$this->manifest_file} doesn't exist. Did you run `npm run build` ?");
+            throw new IncludeAssetsManifestException(
+                "Asset {$this->manifest_file} doesn't exist. Did you run `npm run build` ?"
+            );
         }
+    }
+
+    private function getBaseURLWithTrailingSlash(): string
+    {
+        return rtrim($this->base_url, '/') . '/';
     }
 }
