@@ -13,7 +13,12 @@
                 </div>
                 <section class="tlp-pane-section">
                     <div class="tlp-table-actions">
-                        <button type="button" id="add-description-field-button" class="tlp-button-primary tlp-table-actions-element">
+                        <button
+                            type="button"
+                            id="add-description-field-button"
+                            class="tlp-button-primary tlp-table-actions-element"
+                            data-target-modal-id="add-description-field-modal"
+                        >
                             <i class="tlp-button-icon fa fa-plus"></i> {{ btn_add_field }}
                         </button>
 
@@ -52,9 +57,11 @@
                                         {{/ required_value }}
 
                                         <div class="tlp-switch">
-                                            <input type="checkbox"
+                                            <input
+                                                type="checkbox"
                                                 id="description-field-required-switch-{{ id }}"
-                                                class="tlp-switch-checkbox description-field-required-switch"
+                                                class="tlp-switch-checkbox"
+                                                data-description-field-required-switch
                                                 data-form-id="description-field-form-required-{{ id }}"
                                                 {{# required_value }}checked{{/ required_value }}
                                             >
@@ -68,15 +75,17 @@
                                 {{^ is_system }}
                                         <button
                                             type="button"
-                                            class="tlp-button-primary tlp-button-small tlp-button-outline tlp-table-cell-actions-button edit-description-field-button"
-                                            data-modal-id="edit-description-field-modal-{{ id }}"
+                                            class="tlp-button-primary tlp-button-small tlp-button-outline tlp-table-cell-actions-button"
+                                            data-edit-field-button
+                                            data-target-modal-id="edit-description-field-modal-{{ id }}"
                                         >
                                             <i class="tlp-button-icon fa fa-pencil"></i> {{ edit_btn }}
                                         </button>
                                         <button
                                             type="button"
-                                            class="tlp-button-danger tlp-button-small tlp-button-outline tlp-table-cell-actions-button delete-description-field-button"
-                                            data-modal-id="delete-description-field-modal-{{ id }}"
+                                            class="tlp-button-danger tlp-button-small tlp-button-outline tlp-table-cell-actions-button"
+                                            data-delete-field-button
+                                            data-target-modal-id="delete-description-field-modal-{{ id }}"
                                         >
                                             <i class="tlp-button-icon fa fa-trash-o"></i> {{ delete_btn }}
                                         </button>

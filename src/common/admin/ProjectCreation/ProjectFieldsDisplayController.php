@@ -22,11 +22,12 @@
 namespace Tuleap\Admin\ProjectCreation;
 
 use CSRFSynchronizerToken;
-use ForgeConfig;
 use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\ProjectCreationNavBarPresenter;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Project\Admin\DescriptionFields\DescriptionFieldAdminPresenterBuilder;
 use Tuleap\Project\Admin\DescriptionFields\FieldsListPresenter;
 use Tuleap\Project\DescriptionFieldsDao;
@@ -51,9 +52,14 @@ class ProjectFieldsDisplayController implements DispatchableWithRequest
             throw new ForbiddenException();
         }
 
-        $csrf_token  = new CSRFSynchronizerToken('/admin/project-creation/fields');
+        $csrf_token = new CSRFSynchronizerToken('/admin/project-creation/fields');
 
-        $layout->includeFooterJavascriptFile('/scripts/tuleap/admin-description-fields.js');
+        $layout->addJavascriptAsset(
+            new JavascriptAsset(
+                new IncludeAssets(__DIR__ . '/../../../www/assets/core', '/assets/core'),
+                "site-admin/description-fields.js"
+            )
+        );
 
         $description_fields_dao   = new DescriptionFieldsDao();
         $description_fields_infos = $description_fields_dao->searchAll();
@@ -73,7 +79,7 @@ class ProjectFieldsDisplayController implements DispatchableWithRequest
         $admin_page = new AdminPageRenderer();
         $admin_page->renderANoFramedPresenter(
             $title,
-            ForgeConfig::get('codendi_dir') . '/src/templates/admin/projects',
+            __DIR__ . '/../../../templates/admin/projects',
             FieldsListPresenter::TEMPLATE,
             $custom_project_fields_list_presenter
         );
