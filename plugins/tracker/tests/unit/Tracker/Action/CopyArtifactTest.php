@@ -471,7 +471,8 @@ XML;
                     }
                 ),
                 Mockery::type(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class),
-                Mockery::type(\Tuleap\Tracker\XML\Importer\ImportedChangesetMapping::class)
+                Mockery::type(\Tuleap\Tracker\XML\Importer\ImportedChangesetMapping::class),
+                Mockery::type(\Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig::class)
             )->once();
         $this->xml_importer->shouldReceive('importChangesets')
             ->with(
@@ -488,7 +489,8 @@ XML;
                     }
                 ),
                 Mockery::type(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class),
-                Mockery::type(\Tuleap\Tracker\XML\Importer\ImportedChangesetMapping::class)
+                Mockery::type(\Tuleap\Tracker\XML\Importer\ImportedChangesetMapping::class),
+                Mockery::type(\Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig::class)
             )->once();
         $this->xml_importer->shouldReceive('importChangesets')
             ->with(
@@ -505,7 +507,8 @@ XML;
                     }
                 ),
                 Mockery::type(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class),
-                Mockery::type(\Tuleap\Tracker\XML\Importer\ImportedChangesetMapping::class)
+                Mockery::type(\Tuleap\Tracker\XML\Importer\ImportedChangesetMapping::class),
+                Mockery::type(\Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig::class)
             )->once();
 
         $this->action->process($this->layout, $this->request, $this->user);

@@ -1353,4 +1353,15 @@ class Tracker_ArtifactDao extends DataAccessObject
 
         return (int) $row['nb'];
     }
+
+    public function updateLastChangsetId(int $changeset_id, int $artifact_id): void
+    {
+        $changeset_id = $this->da->escapeInt($changeset_id);
+        $artifact_id = $this->da->escapeInt($artifact_id);
+
+        $sql = "UPDATE tracker_artifact
+                SET last_changeset_id = $changeset_id
+                WHERE id = $artifact_id";
+        $this->update($sql);
+    }
 }

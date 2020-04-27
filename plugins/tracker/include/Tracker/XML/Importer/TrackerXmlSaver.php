@@ -24,23 +24,23 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\XML\Importer;
 
 use ForgeConfig;
-use Project;
 use SimpleXMLElement;
+use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 
 class TrackerXmlSaver
 {
-    public function storeUsedXmlForTrackersCreation(Project $project, SimpleXMLElement $xml): void
+    public function storeUsedXmlForTrackersCreation(TrackerXmlImportConfig $import_config, SimpleXMLElement $xml): void
     {
-        $file_system_folder  = ForgeConfig::get('sys_data_dir') . '/xml_import/';
-
+        $file_system_folder = $import_config->getFileSystemFolder();
         if (! is_dir($file_system_folder)) {
             if (! mkdir($file_system_folder, 750) && ! is_dir($file_system_folder)) {
                 throw new \RuntimeException(sprintf('Directory "%s" was not created', $file_system_folder));
             }
+
+            chown($file_system_folder, ForgeConfig::get('sys_http_user'));
+            chgrp($file_system_folder, ForgeConfig::get('sys_http_user'));
         }
 
-        $import_date = new \DateTimeImmutable();
-        $path = $file_system_folder . $project->getId() . '_tracker_import_' . $import_date->getTimestamp() . '.xml';
-        $xml->asXML($path);
+        $xml->asXML($import_config->getPathToXml());
     }
 }

@@ -44,11 +44,13 @@ use Tuleap\Tracker\Artifact\ArtifactDescriptionProvider;
 use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletionLimitRetriever;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
+use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldsWithoutRequiredValidationValidator;
 use Tuleap\Tracker\Artifact\PermissionsCache;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
@@ -1112,7 +1114,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @throws Tracker_Exception In the validation
      * @throws Tracker_NoChangeException In the validation
-     * @return Tracker_Artifact_Changeset|bool The new changeset if update is done without error, false otherwise
+     * @return Tracker_Artifact_Changeset|null
      */
     public function createNewChangeset($fields_data, $comment, PFUser $submitter, $send_notification = true, $comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT)
     {
@@ -1128,7 +1130,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             (int) $submitted_on,
             (bool) $send_notification,
             (string) $comment_format,
-            new \Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping()
+            new \Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping(),
+            new TrackerNoXMLImportLoggedConfig()
         );
     }
 
@@ -1151,7 +1154,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             (int) $submitted_on,
             (bool) $send_notification,
             (string) $comment_format,
-            new \Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping()
+            new \Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping(),
+            new TrackerNoXMLImportLoggedConfig()
         );
     }
 
@@ -2107,9 +2111,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return $email_domain;
     }
 
-    private function getNewChangesetCreator(Tracker_Artifact_Changeset_FieldsValidator $fields_validator)
+    private function getNewChangesetCreator(Tracker_Artifact_Changeset_FieldsValidator $fields_validator): Tracker_Artifact_Changeset_NewChangesetCreator
     {
-        $creator = new Tracker_Artifact_Changeset_NewChangesetCreator(
+        return new Tracker_Artifact_Changeset_NewChangesetCreator(
             $fields_validator,
             new FieldsToBeSavedInSpecificOrderRetriever($this->getFormElementFactory()),
             $this->getChangesetDao(),
@@ -2120,9 +2124,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $this->getSourceOfAssociationCollectionBuilder(),
             new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->getFormElementFactory()),
             $this->getTransactionExecutor(),
+            $this->getChangesetSaver()
         );
-
-        return $creator;
     }
 
     private function getSourceOfAssociationCollectionBuilder()
@@ -2257,5 +2260,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             ),
             Tracker_FormElementFactory::instance()
         );
+    }
+
+    /**
+     * for testing purpose
+     */
+    protected function getChangesetSaver(): ArtifactChangesetSaver
+    {
+        return ArtifactChangesetSaver::build();
     }
 }

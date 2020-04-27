@@ -1044,12 +1044,19 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $import_spotter = Spotter::instance();
         $import_spotter->startImport();
 
+        $user = UserManager::instance()->getCurrentUser();
+
+        if (! $user) {
+            $import_spotter->endImport();
+        }
+
         TrackerXmlImport::build($params['user_finder'], $params['logger'])->import(
             $params['configuration'],
             $params['project'],
             $params['xml_content'],
             $params['mappings_registery'],
-            $params['extraction_path']
+            $params['extraction_path'],
+            $user
         );
 
         $import_spotter->endImport();

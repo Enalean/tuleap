@@ -38,7 +38,9 @@ use Tracker_XML_Exporter_InArchiveFilePathXMLExporter;
 use Tracker_XML_Exporter_NullChildrenCollector;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use UserXMLExporter;
 use Workflow;
 
@@ -119,8 +121,12 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $comment_dao->shouldReceive('createNewVersion')->once()->andReturn(true);
 
         $dao = \Mockery::spy(\Tracker_Artifact_ChangesetDao::class);
-        $dao->shouldReceive('create')->with(66, 1234, null, $_SERVER['REQUEST_TIME'])->andReturn(1001);
-        $dao->shouldReceive('create')->with(66, 1234, null, $_SERVER['REQUEST_TIME'])->andReturn(1002);
+        $dao->shouldReceive('create')
+            ->with(66, 1234, null, $_SERVER['REQUEST_TIME'], Mockery::type(TrackerNoXMLImportLoggedConfig::class))
+            ->andReturn(1001);
+        $dao->shouldReceive('create')
+            ->with(66, 1234, null, $_SERVER['REQUEST_TIME'], Mockery::type(TrackerNoXMLImportLoggedConfig::class))
+            ->andReturn(1002);
 
         $user = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('getId')->andReturns(1234);
@@ -211,6 +217,9 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $fields_validator = \Mockery::spy(\Tracker_Artifact_Changeset_NewChangesetFieldsValidator::class);
         $fields_validator->shouldReceive('validate')->andReturns(true);
 
+        $artifact_saver    = Mockery::mock(ArtifactChangesetSaver::class);
+        $artifact_saver->shouldReceive('saveChangeset')->once();
+
         $creator = new Tracker_Artifact_Changeset_NewChangesetCreator(
             $fields_validator,
             new FieldsToBeSavedInSpecificOrderRetriever($factory),
@@ -222,6 +231,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
             \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder::class),
             new Tracker_Artifact_Changeset_ChangesetDataInitializator($factory),
             new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
+            $artifact_saver
         );
 
         $creator->create(
@@ -232,7 +242,8 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
             $submitted_on,
             $send_notification,
             $comment_format,
-            \Mockery::mock(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class)
+            \Mockery::mock(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class),
+            new TrackerNoXMLImportLoggedConfig()
         );
     }
 
@@ -329,7 +340,8 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $comment_dao->shouldReceive('createNewVersion')->andReturns(true)->once();
 
         $dao = \Mockery::spy(\Tracker_Artifact_ChangesetDao::class);
-        $dao->shouldReceive('create')->with(66, 1234, null, $_SERVER['REQUEST_TIME'])->andReturn(1002)->once();
+        $changeset_saver = Mockery::mock(ArtifactChangesetSaver::class);
+        $changeset_saver->shouldReceive('saveChangeset')->andReturn(1002);
 
         $user = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('getId')->andReturns(1234);
@@ -409,6 +421,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $artifact->shouldReceive('getReferenceManager')->andReturns($reference_manager);
         $artifact->shouldReceive('getArtifactFactory')->andReturns($art_factory);
         $artifact->shouldReceive('getHierarchyFactory')->andReturns($hierarchy_factory);
+        $artifact->shouldReceive('getChangesetSaver')->andReturns($changeset_saver);
 
         $workflow_checker = \Mockery::mock(\Tuleap\Tracker\Workflow\WorkflowUpdateChecker::class);
         $workflow_checker->shouldReceive('canFieldBeUpdated')->andReturnTrue();
@@ -582,7 +595,8 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $comment_dao->shouldReceive('createNewVersion')->andReturns(true)->once();
 
         $dao = \Mockery::spy(\Tracker_Artifact_ChangesetDao::class);
-        $dao->shouldReceive('create')->with(66, 1234, null, $_SERVER['REQUEST_TIME'])->andReturn(1002)->once();
+        $changeset_saver = Mockery::mock(ArtifactChangesetSaver::class);
+        $changeset_saver->shouldReceive('saveChangeset')->andReturn(1002);
 
         $user = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('getId')->andReturns(1234);
@@ -662,6 +676,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $artifact->shouldReceive('getReferenceManager')->andReturns($reference_manager);
         $artifact->shouldReceive('getArtifactFactory')->andReturns($art_factory);
         $artifact->shouldReceive('getHierarchyFactory')->andReturns($hierarchy_factory);
+        $artifact->shouldReceive('getChangesetSaver')->andReturns($changeset_saver);
 
         $GLOBALS['Response']->shouldReceive('getFeedbackErrors')->andReturns([]);
 

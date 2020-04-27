@@ -201,7 +201,8 @@ final class TrackerCreatorTest extends \PHPUnit\Framework\TestCase
             "user@example.com",
             "https://example.com",
             "Jira project",
-            "Story"
+            "Story",
+            Mockery::mock(\PFUser::class)
         );
     }
 }

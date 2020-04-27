@@ -26,6 +26,7 @@ use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
+use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
@@ -127,9 +128,13 @@ class Tracker_Migration_MigrationManager
         $this->logger->info('-- Beginning of migration of tracker v3 ' . $tv3_id . ' to ' . $tracker_name . ' --');
 
         $user         = $this->user_manager->getUserByUserName($username);
+        if (! $user) {
+            $this->logger->warning('Can not find the user for TV3 migration!!!');
+            $this->logger->warning('Skipping;');
+        }
         $tracker_id   = $this->createTrackerStructure($user, $project_id, $tv3_id, $tracker_name, $tracker_description, $tracker_short_name);
         $xml_path     = $this->exportTV3Data($tv3_id);
-        $this->importArtifactsData($username, $tracker_id, $xml_path);
+        $this->importArtifactsData($username, $tracker_id, $xml_path, $user);
         unlink($xml_path);
 
         $this->logger->info('-- End of migration of tracker v3 ' . $tv3_id . ' to ' . $tracker_name . ' --');
@@ -146,7 +151,7 @@ class Tracker_Migration_MigrationManager
         return $this->system_event_manager->isThereAMigrationQueuedForProject($project);
     }
 
-    private function importArtifactsData($username, $tracker_id, $xml_file_path)
+    private function importArtifactsData($username, $tracker_id, $xml_file_path, PFUser $user): void
     {
         $this->logger->info('--> Import into TV5 ');
         $this->user_manager->forceLogin($username);
@@ -155,7 +160,7 @@ class Tracker_Migration_MigrationManager
         if ($tracker) {
             $xml_import = $this->getXMLImporter();
 
-            $xml_import->importFromFile($tracker, $xml_file_path, ForgeConfig::get('sys_data_dir') . DIRECTORY_SEPARATOR . 'trackerv3');
+            $xml_import->importFromFile($tracker, $xml_file_path, $user);
         }
         $this->logger->info('<-- TV5 imported ' . PHP_EOL);
     }
@@ -196,7 +201,8 @@ class Tracker_Migration_MigrationManager
                 $this->artifact_factory,
                 EventManager::instance(),
                 new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->form_element_factory),
-                $this->logger
+                $this->logger,
+                ArtifactChangesetSaver::build()
             ),
             new VisitRecorder(new RecentlyVisitedDao()),
             $this->logger,
@@ -227,6 +233,7 @@ class Tracker_Migration_MigrationManager
             ),
             new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->form_element_factory),
             new \Tuleap\DB\DBTransactionExecutorWithConnection(\Tuleap\DB\DBFactory::getMainTuleapDBConnection()),
+            ArtifactChangesetSaver::build()
         );
     }
 

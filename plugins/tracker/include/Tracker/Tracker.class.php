@@ -37,6 +37,7 @@ use Tuleap\Tracker\Admin\HeaderPresenter;
 use Tuleap\Tracker\Admin\NewLayoutDao;
 use Tuleap\Tracker\Admin\TrackerGeneralSettingsChecker;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
+use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
@@ -3362,7 +3363,8 @@ class Tracker implements Tracker_Dispatchable_Interface
                 $this->getTrackerArtifactFactory(),
                 EventManager::instance(),
                 new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->getFormElementFactory()),
-                $logger
+                $logger,
+                ArtifactChangesetSaver::build()
             ),
             $this->getVisitRecorder(),
             $logger,
@@ -3388,6 +3390,7 @@ class Tracker implements Tracker_Dispatchable_Interface
             ),
             new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->getFormElementFactory()),
             new \Tuleap\DB\DBTransactionExecutorWithConnection(\Tuleap\DB\DBFactory::getMainTuleapDBConnection()),
+            ArtifactChangesetSaver::build()
         );
 
         $artifact_source_id_dao = new TrackerArtifactSourceIdDao();

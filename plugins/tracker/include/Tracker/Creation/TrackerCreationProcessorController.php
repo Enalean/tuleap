@@ -147,7 +147,8 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
                     $jira_user,
                     $jira_server,
                     $jira_project_id,
-                    $jira_issue_type_name
+                    $jira_issue_type_name,
+                    $user
                 );
             } else {
                 $file    = $_FILES;

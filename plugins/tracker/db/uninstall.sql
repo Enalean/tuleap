@@ -31,6 +31,7 @@ DROP TABLE IF EXISTS tracker_changeset;
 DROP TABLE IF EXISTS tracker_changeset_comment;
 DROP TABLE IF EXISTS tracker_changeset_comment_fulltext;
 DROP TABLE IF EXISTS tracker_changeset_incomingmail;
+DROP TABLE IF EXISTS plugin_tracker_changeset_from_xml;
 DROP TABLE IF EXISTS tracker_changeset_value;
 DROP TABLE IF EXISTS tracker_changeset_value_file;
 DROP TABLE IF EXISTS tracker_changeset_value_int;

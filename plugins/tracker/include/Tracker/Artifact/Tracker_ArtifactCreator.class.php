@@ -20,8 +20,10 @@
 
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
-use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\Artifact\XMLImport\TrackerImportConfig;
+use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
+use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
 /**
  * I create artifact from the request in a Tracker
@@ -94,7 +96,8 @@ class Tracker_ArtifactCreator //phpcs:ignore
         PFUser $user,
         $submitted_on,
         $send_notification,
-        CreatedFileURLMapping $url_mapping
+        CreatedFileURLMapping $url_mapping,
+        TrackerImportConfig $tracker_import_config
     ): ?Tracker_Artifact_Changeset {
         if (!$this->fields_validator->validate($artifact, $user, $fields_data)) {
             return null;
@@ -106,7 +109,8 @@ class Tracker_ArtifactCreator //phpcs:ignore
             $user,
             $submitted_on,
             $send_notification,
-            $url_mapping
+            $url_mapping,
+            $tracker_import_config
         );
     }
 
@@ -120,10 +124,18 @@ class Tracker_ArtifactCreator //phpcs:ignore
         PFUser $user,
         $submitted_on,
         $send_notification,
-        CreatedFileURLMapping $url_mapping
+        CreatedFileURLMapping $url_mapping,
+        TrackerImportConfig $tracker_import_config
     ): ?Tracker_Artifact_Changeset {
-        $changeset_id = $this->db_transaction_executor->execute(function () use ($artifact, $fields_data, $user, $submitted_on, $url_mapping) {
-            return $this->changeset_creator->create($artifact, $fields_data, $user, (int) $submitted_on, $url_mapping);
+        $changeset_id = $this->db_transaction_executor->execute(function () use ($artifact, $fields_data, $user, $submitted_on, $url_mapping, $tracker_import_config) {
+            return $this->changeset_creator->create(
+                $artifact,
+                $fields_data,
+                $user,
+                (int) $submitted_on,
+                $url_mapping,
+                $tracker_import_config
+            );
         });
         if (! $changeset_id) {
             return null;
@@ -177,7 +189,8 @@ class Tracker_ArtifactCreator //phpcs:ignore
                 $user,
                 $submitted_on,
                 $send_notification,
-                $url_mapping
+                $url_mapping,
+                new TrackerNoXMLImportLoggedConfig()
             )
         ) {
             $this->logger->debug(

@@ -31,11 +31,18 @@ use Tracker_Artifact_Changeset_ChangesetDataInitializator;
 use Tracker_Artifact_Changeset_Comment;
 use Tracker_Artifact_Changeset_NewChangesetCreator;
 use Tracker_Artifact_Changeset_Null;
+use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
+use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 
 final class Tracker_Artifact_Changeset_NewChangesetCreatorTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ArtifactChangesetSaver
+     */
+    private $changeset_saver;
 
     /**
      * @var mixed
@@ -103,6 +110,7 @@ final class Tracker_Artifact_Changeset_NewChangesetCreatorTest extends TestCase 
         $field_initializator->shouldReceive('process')->andReturn([]);
         $field_retriever = Mockery::mock(FieldsToBeSavedInSpecificOrderRetriever::class);
         $field_retriever->shouldReceive('getFields')->andReturn([]);
+        $this->changeset_saver          = Mockery::mock(ArtifactChangesetSaver::class);
         $this->creator = new Tracker_Artifact_Changeset_NewChangesetCreator(
             $fields_validator,
             $field_retriever,
@@ -114,6 +122,7 @@ final class Tracker_Artifact_Changeset_NewChangesetCreatorTest extends TestCase 
             \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder::class),
             $field_initializator,
             new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
+            $this->changeset_saver
         );
     }
 
@@ -122,6 +131,7 @@ final class Tracker_Artifact_Changeset_NewChangesetCreatorTest extends TestCase 
         $this->changeset_dao->shouldReceive('create')->andReturn(true);
         $this->artifact_factory->shouldReceive('save')->andReturn(true);
         $this->workflow->shouldReceive('after')->once();
+        $this->changeset_saver->shouldReceive('saveChangeset')->once();
 
         $this->creator->create(
             $this->artifact,
@@ -131,7 +141,8 @@ final class Tracker_Artifact_Changeset_NewChangesetCreatorTest extends TestCase 
             $this->submitted_on,
             false,
             Tracker_Artifact_Changeset_Comment::TEXT_COMMENT,
-            Mockery::mock(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class)
+            Mockery::mock(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class),
+            new TrackerNoXMLImportLoggedConfig()
         );
     }
 
@@ -140,6 +151,7 @@ final class Tracker_Artifact_Changeset_NewChangesetCreatorTest extends TestCase 
         $this->changeset_dao->shouldReceive('create')->andReturn(true);
         $this->artifact_factory->shouldReceive('save')->andReturn(false);
         $this->workflow->shouldReceive('after')->never();
+        $this->changeset_saver->shouldReceive('saveChangeset')->once();
 
         $this->expectException(Tracker_AfterSaveException::class);
 
@@ -151,7 +163,8 @@ final class Tracker_Artifact_Changeset_NewChangesetCreatorTest extends TestCase 
             $this->submitted_on,
             false,
             Tracker_Artifact_Changeset_Comment::TEXT_COMMENT,
-            Mockery::mock(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class)
+            Mockery::mock(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class),
+            new TrackerNoXMLImportLoggedConfig()
         );
     }
 }
