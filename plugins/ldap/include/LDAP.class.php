@@ -188,7 +188,7 @@ class LDAP
         if (!$this->bound) {
             if (!$binddn) {
                 $binddn = isset($this->ldapParams['bind_dn']) ? $this->ldapParams['bind_dn'] : null;
-                $bindpw = isset($this->ldapParams['bind_passwd']) ? $this->ldapParams['bind_passwd'] : null;
+                $bindpw = isset($this->ldapParams['bind_passwd']) ? new ConcealedString((string) $this->ldapParams['bind_passwd']) : null;
             }
             if ($binddn && (!$bindpw)) {
                 // Prevent successful binding if a username is given and the server
