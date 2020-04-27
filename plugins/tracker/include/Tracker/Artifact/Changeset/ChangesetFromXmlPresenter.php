@@ -23,30 +23,26 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Changeset;
 
-use Tuleap\DB\DataAccessObject;
-
-class ChangesetFromXmlDao extends DataAccessObject
+class ChangesetFromXmlPresenter
 {
-    public function saveChangesetIsCreatedFromXml(
-        string $path_to_xml,
-        int $import_timestamp,
-        int $user_id,
-        int $changeset_id
-    ): void {
-        $this->getDB()->run(
-            'INSERT INTO plugin_tracker_changeset_from_xml (changeset_id, user_id, timestamp, xml_filename) VALUES (?, ?, ?, ?)',
-            $changeset_id,
-            $user_id,
-            $import_timestamp,
-            $path_to_xml
-        );
-    }
+    /**
+     * @var string|null
+     */
+    public $user_name;
+    /**
+     * @var string
+     */
+    public $profil_url;
+    /**
+     * @var false|string
+     */
+    public $imported_on;
 
-    public function searchChangeset(int $changeset_id): ?array
+    public function __construct(\PFUser $user, int $timestamp)
     {
-        return $this->getDB()->row(
-            'SELECT * FROM plugin_tracker_changeset_from_xml WHERE changeset_id = ?',
-            $changeset_id
-        );
+        $this->user_name  = $user->getName();
+        $this->profil_url = $user->getPublicProfileUrl();
+
+        $this->imported_on = format_date($GLOBALS['Language']->getText('system', 'datefmt'), $timestamp);
     }
 }

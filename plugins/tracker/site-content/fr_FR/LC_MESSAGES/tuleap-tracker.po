@@ -391,7 +391,9 @@ msgid "Error during parsing expert query"
 msgstr "Erreur pendant l'analyse de la requête experte"
 
 msgid "Fail to retrieve the full collection of issues in selected tracker."
-msgstr "Echec lors de la récupération de la collection des issues dans le tracker sélectionné."
+msgstr ""
+"Echec lors de la récupération de la collection des issues dans le tracker "
+"sélectionné."
 
 msgid "Fail to retrieve the full collection of projects."
 msgstr "Echec lors de la récupération de la collection de tous les projets."
@@ -444,6 +446,9 @@ msgstr "Hiérarchie"
 
 msgid "Import / Export"
 msgstr "Import / Export"
+
+msgid "Imported in xml by <a href=\"%s\">%s</a> on %s"
+msgstr "Importé en xml par <a href=\"%s\">%s</a> le %s"
 
 msgid "Invalid color tracker name"
 msgstr "Nom de couleur pour l'outil de suivi non valide"

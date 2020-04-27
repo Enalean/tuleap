@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Changeset\ChangesetFromXmlDao;
+use Tuleap\Tracker\Artifact\Changeset\ChangesetFromXmlDisplayer;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 use Tuleap\Tracker\REST\ChangesetRepresentation;
 
@@ -247,6 +249,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
         $html .= '<div class="tracker_artifact_followup_header">';
         $html .= $this->getPermalink();
         $html .= $this->fetchChangesetActionButtons();
+        $html .= $this->fetchImportedFromXmlData();
         $html .= $this->getUserLink();
         $html .= $this->getTimeAgo();
         $html .= '</div>';
@@ -910,5 +913,17 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
         }
 
         return $this->id === $artifact_last_changeset->getId();
+    }
+
+    private function fetchImportedFromXmlData(): string
+    {
+        $renderer  = TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../../../templates/artifact");
+        $displayer = new ChangesetFromXmlDisplayer(
+            new ChangesetFromXmlDao(),
+            UserManager::instance(),
+            $renderer
+        );
+
+        return $displayer->display((int) $this->getId());
     }
 }
