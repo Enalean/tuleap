@@ -79,7 +79,7 @@ final class FieldXmlExporterTest extends TestCase
             "Label",
             "Summary",
             1,
-            "1",
+            true,
             $collection
         );
 

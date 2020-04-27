@@ -122,7 +122,7 @@ final class JiraXmlExporterTest extends \PHPUnit\Framework\TestCase
                 Mockery::type('string'),
                 Mockery::type('string'),
                 1,
-                Mockery::type('string'),
+                Mockery::type('bool'),
                 $this->jira_field_mapping_collection
             ]
         )->once();
@@ -135,7 +135,7 @@ final class JiraXmlExporterTest extends \PHPUnit\Framework\TestCase
                 Mockery::type('string'),
                 Mockery::type('string'),
                 2,
-                Mockery::type('string'),
+                Mockery::type('bool'),
                 $this->jira_field_mapping_collection
             ]
         )->once();
