@@ -112,12 +112,23 @@ class JiraToTuleapFieldTypeMapper
                         $jira_field_mapping_collection
                     );
                     break;
+                case 'com.atlassian.jira.plugin.system.customfieldtypes:textarea':
+                    $this->field_xml_exporter->exportField(
+                        $jira_custom_fieldset,
+                        Tracker_FormElement_Field_Text::TYPE,
+                        $id,
+                        $jira_field_label,
+                        $id,
+                        2,
+                        $required,
+                        $jira_field_mapping_collection
+                    );
+                    break;
                 case 'priority':
                 case 'status':
                 case 'creator':
                 case 'updated':
                 case 'created':
-                case 'com.atlassian.jira.plugin.system.customfieldtypes:textarea':
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:float':
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:readonlyfield':
                 case 'com.atlassian.jira.toolkit:viewmessage': //view message
