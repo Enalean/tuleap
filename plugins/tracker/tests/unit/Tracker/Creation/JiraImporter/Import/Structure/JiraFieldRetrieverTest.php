@@ -31,31 +31,82 @@ final class JiraFieldRetrieverTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
+    /**
+     * @var string
+     */
+    private $jira_project_id = 'projID';
+
+    /**
+     * @var string
+     */
+    private $jira_issue_type_name = 'issueName';
+
     public function testItExportsJiraFieldAndBuildAnArraySortedById(): void
     {
         $wrapper = \Mockery::mock(ClientWrapper::class);
         $field_retriever = new JiraFieldRetriever($wrapper);
 
-        $field_one['id'] = "10";
-        $field_two['id'] = "10004";
+        $system_field = [];
+        $system_field['required']         = true;
+        $system_field['schema']['type']   = 'string';
+        $system_field['schema']['system'] = 'summary';
+        $system_field['name']             = 'Summary';
+        $system_field['key']              = 'summary';
+        $system_field['hasDefaultValue']  = false;
+        $system_field['operation']        = [
+            'set'
+        ];
 
-        $wrapper->shouldReceive('getUrl')->with('/field')->andReturn([$field_one, $field_two]);
+        $custom_field = [];
+        $custom_field['required']           = false;
+        $custom_field['schema']['type']     = 'user';
+        $custom_field['schema']['custom']   = "com.atlassian.jira.toolkit:lastupdaterorcommenter";
+        $custom_field['schema']['customId'] = 10071;
+        $custom_field['name']               = '[opt] Last updator';
+        $custom_field['key']                = 'customfield_10071';
+        $custom_field['hasDefaultValue']    = false;
+        $custom_field['operation']          = [
+            'set'
+        ];
 
-        $expected["10"] = $field_one;
-        $expected["10004"] = $field_two;
-        $result = $field_retriever->getAllJiraFields();
+        $project_meta_content['projects'][0]['issuetypes'][0]['fields'] = [
+            'summary' => $system_field,
+            'custom_01' => $custom_field
+        ];
 
-        $this->assertEquals($expected, $result);
+        $wrapper->shouldReceive('getUrl')->andReturn($project_meta_content);
+
+        $result = $field_retriever->getAllJiraFields(
+            $this->jira_project_id,
+            $this->jira_issue_type_name
+        );
+
+        $this->assertCount(2, $result);
+        $this->assertArrayHasKey("summary", $result);
+        $this->assertArrayHasKey("custom_01", $result);
+
+        $system_field_representation = $result['summary'];
+        $this->assertEquals("summary", $system_field_representation->getId());
+        $this->assertEquals("Summary", $system_field_representation->getLabel());
+        $this->assertNotNull($system_field_representation->getSchema());
+
+        $custom_field_representation = $result['custom_01'];
+        $this->assertEquals("custom_01", $custom_field_representation->getId());
+        $this->assertEquals("[opt] Last updator", $custom_field_representation->getLabel());
+        $this->assertNotNull($custom_field_representation->getSchema());
     }
 
-    public function testReturnsAnEmptyArrayWhenNoFieldIsFounf(): void
+    public function testReturnsAnEmptyArrayWhenNoFieldFound(): void
     {
         $wrapper = \Mockery::mock(ClientWrapper::class);
         $field_retriever = new JiraFieldRetriever($wrapper);
 
-        $wrapper->shouldReceive('getUrl')->with('/field')->andReturn(null);
+        $wrapper->shouldReceive('getUrl')->andReturn(null);
 
-        $result = $field_retriever->getAllJiraFields();
+        $result = $field_retriever->getAllJiraFields(
+            $this->jira_project_id,
+            $this->jira_issue_type_name
+        );
 
         $this->assertEquals([], $result);
     }

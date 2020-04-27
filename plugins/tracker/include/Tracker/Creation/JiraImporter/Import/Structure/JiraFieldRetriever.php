@@ -37,20 +37,29 @@ class JiraFieldRetriever
         $this->wrapper = $wrapper;
     }
 
-    public function getAllJiraFields(): array
+    /**
+     * @return JiraFieldAPIRepresentation[]
+     */
+    public function getAllJiraFields(string $jira_project_id, string $jira_issue_type_name): array
     {
-        $jira_fields = $this->wrapper->getUrl('/field');
+        $meta_url = "issue/createmeta?projectKeys=" . urlencode($jira_project_id) .
+            "&issuetypeNames=" . urlencode($jira_issue_type_name) . "&expand=projects.issuetypes.fields";
+
+        $project_meta_content = $this->wrapper->getUrl($meta_url);
 
         $fields_by_id = [];
-        if (! $jira_fields) {
+        if (! $project_meta_content || ! isset($project_meta_content['projects'][0]['issuetypes'][0]['fields'])) {
             return $fields_by_id;
         }
 
-        foreach ($jira_fields as $jira_field) {
-            if (! $jira_field['id']) {
-                throw new \LogicException('Jira field does not have an id');
-            }
-            $fields_by_id[$jira_field['id']] = $jira_field;
+        $jira_fields = $project_meta_content['projects'][0]['issuetypes'][0]['fields'];
+        foreach ($jira_fields as $jira_field_id => $jira_field) {
+            $jira_field_api_representation = JiraFieldAPIRepresentation::buildFromAPIResponseAndID(
+                $jira_field_id,
+                $jira_field
+            );
+
+            $fields_by_id[$jira_field_api_representation->getId()] = $jira_field_api_representation;
         }
 
         return $fields_by_id;

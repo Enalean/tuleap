@@ -48,21 +48,21 @@ class JiraToTuleapFieldTypeMapper
     }
 
     public function exportFieldToXml(
-        array $jira_field,
+        JiraFieldAPIRepresentation $jira_field,
         string $required,
         SimpleXMLElement $jira_atf_fieldset,
         SimpleXMLElement $jira_custom_fieldset,
         FieldMappingCollection $jira_field_mapping_collection
     ): void {
-        $id               = isset($jira_field['id']) ? $jira_field['id'] : $jira_field['key'];
-        $jira_field_label = $jira_field['name'];
+        $id               = $jira_field->getId();
+        $jira_field_label = $jira_field->getLabel();
 
         // ignore this jira always there mapping who is created like a custom one
         if ($jira_field_label === "Flagged") {
             return;
         }
 
-        if (! isset($jira_field['schema'])) {
+        if ($jira_field->getSchema() === null) {
             switch ($id) {
                 case 'parent':
                 case 'statusCategory':
@@ -73,7 +73,7 @@ class JiraToTuleapFieldTypeMapper
                     break;
             }
         } else {
-            $jira_type = $jira_field['schema']['system'] ?? $jira_field['schema']['custom'];
+            $jira_type = $jira_field->getSchema();
 
             switch ($jira_type) {
                 case 'summary':
