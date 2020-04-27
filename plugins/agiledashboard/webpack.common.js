@@ -144,7 +144,6 @@ const webpack_config_for_kanban = {
     output,
     externals: {
         tlp: "tlp",
-        angular: "angular",
         jquery: "jQuery",
         ckeditor: "CKEDITOR",
     },
@@ -156,6 +155,7 @@ const webpack_config_for_kanban = {
             lodash$: path.resolve(__dirname, "./scripts/kanban/node_modules/lodash"),
             moment$: path.resolve(__dirname, "node_modules/moment"),
             // card-fields dependencies
+            angular$: path.resolve(__dirname, "./scripts/kanban/node_modules/angular"),
             "angular-sanitize$": path.resolve(
                 __dirname,
                 "./scripts/kanban/node_modules/angular-sanitize"
@@ -182,15 +182,6 @@ const webpack_config_for_kanban = {
     resolveLoader: {
         alias: webpack_configurator.easygettext_loader_alias,
     },
-};
-
-const webpack_config_for_angular = {
-    entry: {
-        angular: "./scripts/kanban/node_modules/angular",
-    },
-    context,
-    output,
-    plugins: [manifest_plugin],
 };
 
 const webpack_config_for_planning_v2 = {
@@ -250,6 +241,5 @@ module.exports = [
     webpack_config_for_typescript,
     webpack_config_for_javascript,
     webpack_config_for_kanban,
-    webpack_config_for_angular,
     webpack_config_for_planning_v2,
 ];
