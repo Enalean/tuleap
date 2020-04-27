@@ -76,8 +76,23 @@ final class ConfigurationResponseRepresentation implements \JsonSerializable
             'request_parameter_supported'           => false,
             'request_uri_parameter_supported'       => false,
             'require_request_uri_registration'      => false,
-            'op_tos_uri'                            => $issuer . '/tos/tos.php'
-
+            'op_tos_uri'                            => $issuer . '/tos/tos.php',
+            'claims_supported'                      => [
+                'sub',
+                'iss',
+                'aud',
+                'iat',
+                'exp',
+                'auth_time',
+                'email',
+                'email_verified',
+                'name',
+                'preferred_username',
+                'profile',
+                'picture',
+                'zoneinfo',
+                'locale',
+            ],
         ];
     }
 }
