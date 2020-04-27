@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\User\Account;
 
 use SVN_TokenPresenter;
+use Tuleap\Cryptography\ConcealedString;
 
 final class SVNTokensPresenter
 {
@@ -38,7 +39,7 @@ final class SVNTokensPresenter
      */
     public $has_svn_tokens;
     /**
-     * @var string|null
+     * @var ConcealedString|null
      * @psalm-readonly
      */
     public $last_svn_token;
@@ -46,7 +47,7 @@ final class SVNTokensPresenter
     /**
      * @param \SVN_Token[] $svn_tokens
      */
-    public function __construct(array $svn_tokens, ?string $last_svn_token)
+    public function __construct(array $svn_tokens, ?ConcealedString $last_svn_token)
     {
         foreach ($svn_tokens as $token) {
             $this->svn_tokens[] = new SVN_TokenPresenter($token);

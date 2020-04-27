@@ -23,6 +23,10 @@ namespace Tuleap\User\SVNToken;
 
 use Mockery as M;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Cryptography\KeyFactory;
+use Tuleap\Cryptography\Symmetric\EncryptionKey;
+use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
@@ -35,14 +39,19 @@ final class SVNTokenCreateControllerTest extends TestCase
 
     private $csrf_token;
     private $svn_token_handler;
+    /**
+     * @var M\LegacyMockInterface|M\MockInterface|KeyFactory
+     */
+    private $key_factory;
     private $controller;
 
     protected function setUp(): void
     {
         $this->csrf_token        = M::mock(\CSRFSynchronizerToken::class);
         $this->svn_token_handler = M::mock(\SVN_TokenHandler::class);
+        $this->key_factory       = M::mock(KeyFactory::class);
 
-        $this->controller = new SVNTokenCreateController($this->csrf_token, $this->svn_token_handler);
+        $this->controller = new SVNTokenCreateController($this->csrf_token, $this->svn_token_handler, $this->key_factory);
     }
 
     protected function tearDown(): void
@@ -78,7 +87,10 @@ final class SVNTokenCreateControllerTest extends TestCase
         $user = UserTestBuilder::aUser()->withId(120)->build();
         $this->csrf_token->shouldReceive('check');
 
-        $this->svn_token_handler->shouldReceive('generateSVNTokenForUser')->once()->with($user, 'Some comment')->andReturn('tlp-tk-blabla');
+        $key = new EncryptionKey(new ConcealedString(\random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
+        $this->key_factory->shouldReceive('getEncryptionKey')->andReturn($key);
+
+        $this->svn_token_handler->shouldReceive('generateSVNTokenForUser')->once()->with($user, 'Some comment')->andReturn(new ConcealedString('tlp-tk-blabla'));
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($user)->withParam('svn-token-description', 'Some comment')->build(),
@@ -86,7 +98,7 @@ final class SVNTokenCreateControllerTest extends TestCase
             []
         );
 
-        $this->assertEquals('tlp-tk-blabla', $_SESSION['last_svn_token']);
+        $this->assertEquals('tlp-tk-blabla', SymmetricCrypto::decrypt($_SESSION['last_svn_token'], $key));
     }
 
     public function testKeyGenerationFails(): void
@@ -94,7 +106,7 @@ final class SVNTokenCreateControllerTest extends TestCase
         $user = UserTestBuilder::aUser()->withId(120)->build();
         $this->csrf_token->shouldReceive('check');
 
-        $this->svn_token_handler->shouldReceive('generateSVNTokenForUser')->andReturnFalse();
+        $this->svn_token_handler->shouldReceive('generateSVNTokenForUser')->andReturnNull();
 
         $layout_inspector = new LayoutInspector();
 

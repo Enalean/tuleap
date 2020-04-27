@@ -25,6 +25,8 @@ namespace Tuleap\User\SVNToken;
 
 use HTTPRequest;
 use SVN_TokenHandler;
+use Tuleap\Cryptography\KeyFactory;
+use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -40,11 +42,16 @@ final class SVNTokenCreateController implements DispatchableWithRequest
      * @var \CSRFSynchronizerToken
      */
     private $csrf_token;
+    /**
+     * @var KeyFactory
+     */
+    private $key_factory;
 
-    public function __construct(\CSRFSynchronizerToken $csrf_token, SVN_TokenHandler $token_handler)
+    public function __construct(\CSRFSynchronizerToken $csrf_token, SVN_TokenHandler $token_handler, KeyFactory $key_factory)
     {
         $this->token_handler = $token_handler;
-        $this->csrf_token = $csrf_token;
+        $this->csrf_token    = $csrf_token;
+        $this->key_factory   = $key_factory;
     }
 
     /**
@@ -61,10 +68,10 @@ final class SVNTokenCreateController implements DispatchableWithRequest
         $this->csrf_token->check(DisplayKeysTokensController::URL);
 
         $token = $this->token_handler->generateSVNTokenForUser($user, $request->get('svn-token-description'));
-        if ($token === false) {
+        if ($token === null) {
             $layout->addFeedback(\Feedback::ERROR, _('An error occurred during the SVN token generation.'));
         } else {
-            $_SESSION['last_svn_token'] = $token;
+            $_SESSION['last_svn_token'] = SymmetricCrypto::encrypt($token, $this->key_factory->getEncryptionKey());
         }
 
         $layout->redirect(DisplayKeysTokensController::URL);

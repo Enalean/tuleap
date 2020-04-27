@@ -54,6 +54,7 @@ use Tuleap\admin\SiteContentCustomisationController;
 use Tuleap\Core\RSS\News\LatestNewsController;
 use Tuleap\Core\RSS\Project\LatestProjectController;
 use Tuleap\Core\RSS\Project\LatestProjectDao;
+use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Dashboard\Project\DisabledProjectWidgetsDao;
 use Tuleap\Error\PermissionDeniedPrivateProjectMailSender;
 use Tuleap\Error\PermissionDeniedRestrictedMemberMailSender;
@@ -390,7 +391,7 @@ class RouteCollector
 
     public static function postAccountSVNTokenCreate(): DispatchableWithRequest
     {
-        return new SVNTokenCreateController(DisplayKeysTokensController::getCSRFToken(), SVN_TokenHandler::build());
+        return new SVNTokenCreateController(DisplayKeysTokensController::getCSRFToken(), SVN_TokenHandler::build(), new KeyFactory());
     }
 
     public static function postAccountSVNTokenRevoke(): DispatchableWithRequest
