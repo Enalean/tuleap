@@ -31,7 +31,7 @@ use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Registration\ProjectRegistrationPresenterBuilder;
 use Tuleap\User\UserSuspensionManager;
 use Tuleap\System\ServiceControl;
-use Widget_MyProjects;
+use Tuleap\Widget\MyProjects;
 
 class GetWhitelistedKeys implements Dispatchable
 {
@@ -56,7 +56,7 @@ class GetWhitelistedKeys implements Dispatchable
         DefaultProjectVisibilityRetriever::CONFIG_SETTING_NAME => true,
         ServiceControl::FORGECONFIG_INIT_MODE => true,
         UserSuspensionManager::CONFIG_NOTIFICATION_DELAY => true,
-        Widget_MyProjects::CONFIG_DISABLE_CONTACT => true,
+        MyProjects::CONFIG_DISABLE_CONTACT => true,
         ProjectRegistrationPresenterBuilder::FORGECONFIG_CAN_USE_DEFAULT_SITE_TEMPLATE => true,
         BackendLogger::CONFIG_LOGGER => true,
         UserSuspensionManager::CONFIG_INACTIVE_EMAIL => true

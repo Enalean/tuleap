@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global CKEDITOR:readonly tlp:readonly tuleap:readonly */
+import CKEDITOR from "ckeditor";
+import { config as ckeditor_config } from "../../../www/scripts/tuleap/tuleap-ckeditor-toolbar";
+import { modal as createModal } from "tlp";
 
 document.addEventListener("DOMContentLoaded", function () {
     var massmail_project_member_links = document.querySelectorAll(".massmail-project-member-link");
@@ -27,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("massmail-project-members-project-id").value =
                 massmail_project_member_link.dataset.projectId;
 
-            var contact_modal = tlp.modal(document.getElementById("massmail-project-members"));
+            var contact_modal = createModal(document.getElementById("massmail-project-members"));
             contact_modal.show();
         });
     });
@@ -37,5 +39,5 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
     }
 
-    CKEDITOR.replace(textarea, tuleap.ckeditor.config);
+    CKEDITOR.replace(textarea, ckeditor_config);
 });

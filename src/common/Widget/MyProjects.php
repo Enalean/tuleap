@@ -19,16 +19,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Widget;
+
+use Codendi_HTMLPurifier;
+use CSRFSynchronizerToken;
+use ForgeConfig;
+use HTTPRequest;
+use Project;
+use RSS;
 use Tuleap\Layout\IncludeAssets;
+use UserManager;
 
 /**
 * Widget_MyProjects
 *
 * PROJECT LIST
 */
-
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Widget_MyProjects extends Widget
+class MyProjects extends \Widget
 {
     public const CONFIG_DISABLE_CONTACT = 'widget_myprojects_disable_contact';
 
@@ -37,19 +44,14 @@ class Widget_MyProjects extends Widget
         parent::__construct('myprojects');
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         return $GLOBALS['Language']->getText('my_index', 'my_projects');
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $hp = Codendi_HTMLPurifier::instance();
-        $include_assets = new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core');
-        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('ckeditor.js'));
-        $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/tuleap-ckeditor-toolbar.js');
-        $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/widgets/contact-modal.js');
-
         $html = '';
         $display_privacy = ForgeConfig::get('sys_display_project_privacy_in_service_bar');
         $user = UserManager::instance()->getCurrentUser();
@@ -205,11 +207,11 @@ class Widget_MyProjects extends Widget
         return $html;
     }
 
-    public function hasRss()
+    public function hasRss(): bool
     {
         return true;
     }
-    public function displayRss()
+    public function displayRss(): void
     {
         $hp = Codendi_HTMLPurifier::instance();
         $server_url = HTTPRequest::instance()->getServerUrl();
@@ -259,22 +261,32 @@ class Widget_MyProjects extends Widget
         }
         $rss->display();
     }
-    public function getDescription()
+    public function getDescription(): string
     {
         return $GLOBALS['Language']->getText('widget_description_my_projects', 'description');
     }
 
-    private function fetchMassMailForm(CSRFSynchronizerToken $token)
+    private function fetchMassMailForm(CSRFSynchronizerToken $token): string
     {
-        $presenter = new MassmailFormPresenter(
+        $presenter = new \MassmailFormPresenter(
             $token,
             $GLOBALS['Language']->getText('my_index', 'massmail_form_title'),
             'massmail_to_project_members.php'
         );
 
-        $template_factory = TemplateRendererFactory::build();
+        $template_factory = \TemplateRendererFactory::build();
         $renderer         = $template_factory->getRenderer($presenter->getTemplateDir());
 
         return $renderer->renderToString('contact-modal', $presenter);
+    }
+
+    public function getJavascriptDependencies(): array
+    {
+        $assets = new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core');
+        return [
+            ['file' => $assets->getFileURL('ckeditor.js')],
+            ['file' => '/scripts/tuleap/tuleap-ckeditor-toolbar.js'],
+            ['file' => $assets->getFileURL('dashboards/widget-contact-modal.js')],
+        ];
     }
 }

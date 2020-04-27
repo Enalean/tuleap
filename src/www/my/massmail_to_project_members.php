@@ -18,9 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Widget\MyProjects;
+
 require_once __DIR__ . '/../include/pre.php';
 
-if ((bool) ForgeConfig::get(Widget_MyProjects::CONFIG_DISABLE_CONTACT) === true) {
+if ((bool) ForgeConfig::get(MyProjects::CONFIG_DISABLE_CONTACT) === true) {
     $GLOBALS['Response']->addFeedback(
         Feedback::ERROR,
         _('Massmail to project members is disabled.')
