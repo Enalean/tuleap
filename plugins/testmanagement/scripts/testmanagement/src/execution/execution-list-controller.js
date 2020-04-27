@@ -146,21 +146,20 @@ function ExecutionListCtrl(
 
         $scope.campaign_id = $state.params.id;
         $scope.execution_id = $state.params.execid;
+        $scope.search = "";
+        $scope.loading = loading;
+        $scope.status = {
+            passed: false,
+            failed: false,
+            blocked: false,
+            notrun: false,
+        };
 
         SharedPropertiesService.setCampaignId($scope.campaign_id);
 
         self.loadExecutions();
         CampaignService.getCampaign($scope.campaign_id).then((campaign) => {
             $scope.campaign = campaign;
-            $scope.search = "";
-            $scope.loading = loading;
-            $scope.status = {
-                passed: false,
-                failed: false,
-                blocked: false,
-                notrun: false,
-            };
-
             ExecutionService.updateCampaign($scope.campaign);
         });
         watchAndSortCategories();
