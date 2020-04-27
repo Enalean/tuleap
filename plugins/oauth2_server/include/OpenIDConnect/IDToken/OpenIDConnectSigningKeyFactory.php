@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\OpenIDConnect\IDToken;
 
-use Lcobucci\JWT\Signer\Key;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
@@ -38,49 +37,77 @@ class OpenIDConnectSigningKeyFactory
      * @var OpenIDConnectSigningKeyDAO
      */
     private $dao;
+    /**
+     * @var \DateInterval
+     */
+    private $signing_key_expiration_delay;
+    /**
+     * @var \DateInterval
+     */
+    private $id_token_expiration_delay;
 
-    public function __construct(KeyFactory $key_factory, OpenIDConnectSigningKeyDAO $dao)
-    {
-        $this->key_factory = $key_factory;
-        $this->dao         = $dao;
+    public function __construct(
+        KeyFactory $key_factory,
+        OpenIDConnectSigningKeyDAO $dao,
+        \DateInterval $signing_key_expiration_delay,
+        \DateInterval $id_token_expiration_delay
+    ) {
+        $this->key_factory                  = $key_factory;
+        $this->dao                          = $dao;
+        $this->signing_key_expiration_delay = $signing_key_expiration_delay;
+        $this->id_token_expiration_delay    = $id_token_expiration_delay;
     }
 
     /**
-     * @return string Public key is returned in the PEM format
+     * @return SigningPublicKey[]
      */
-    public function getPublicKey(): string
+    public function getPublicKeys(\DateTimeImmutable $current_time): array
     {
-        $public_key = $this->dao->searchPublicKey();
-        if ($public_key === null) {
-            $encryption_key = $this->key_factory->getEncryptionKey();
-            $public_key = $this->generateAndSaveKey($encryption_key)->public_key;
+        $pem_public_keys = $this->dao->searchPublicKeys();
+        if (empty($pem_public_keys)) {
+            $encryption_key  = $this->key_factory->getEncryptionKey();
+            $pem_public_key  = $this->generateAndSaveKey($encryption_key, $current_time)->public_key;
+            $pem_public_keys = [$pem_public_key];
         }
 
-        return $public_key;
+        $public_keys = [];
+        foreach ($pem_public_keys as $pem_public_key) {
+            $public_keys[] = SigningPublicKey::fromPEMFormat($pem_public_key);
+        }
+        return $public_keys;
     }
 
-    public function getKey(): Key
+    public function getKey(\DateTimeImmutable $current_time): SigningPrivateKey
     {
         $encryption_key = $this->key_factory->getEncryptionKey();
 
-        $encrypted_jwt_private_key = $this->dao->searchEncryptedPrivateKey();
+        $row = $this->dao->searchMostRecentNonExpiredEncryptedPrivateKey($current_time->getTimestamp());
 
-        if ($encrypted_jwt_private_key === null) {
-            $encrypted_jwt_private_key = $this->generateAndSaveKey($encryption_key)->encrypted_private_key;
+        if ($row === null) {
+            $new_key     = $this->generateAndSaveKey($encryption_key, $current_time);
+            $private_key = new SigningPrivateKey(
+                SigningPublicKey::fromPEMFormat($new_key->public_key),
+                SymmetricCrypto::decrypt($new_key->encrypted_private_key, $encryption_key)
+            );
+        } else {
+            $private_key = new SigningPrivateKey(
+                SigningPublicKey::fromPEMFormat($row['public_key']),
+                SymmetricCrypto::decrypt($row['private_key'], $encryption_key)
+            );
         }
 
-        return new Key(SymmetricCrypto::decrypt($encrypted_jwt_private_key, $encryption_key)->getString());
+        return $private_key;
     }
 
     /**
      * @return object{public_key:string, encrypted_private_key:string}
      */
-    private function generateAndSaveKey(EncryptionKey $encryption_key): object
+    private function generateAndSaveKey(EncryptionKey $encryption_key, \DateTimeImmutable $current_time): object
     {
         $rsa_key = \openssl_pkey_new(
             [
                 'digest_alg'       => 'sha256',
-                'private_key_bits' => 4096,
+                'private_key_bits' => 2048,
                 'private_key_type' => OPENSSL_KEYTYPE_RSA
             ]
         );
@@ -90,7 +117,15 @@ class OpenIDConnectSigningKeyFactory
         $rsa_public_key = \openssl_pkey_get_details($rsa_key)['key'];
         \openssl_pkey_free($rsa_key);
 
-        $this->dao->save($rsa_public_key, $encrypted_jwt_private_key);
+        $new_key_expiration_date = $current_time->add($this->signing_key_expiration_delay);
+        $old_keys_cleanup_date   = $current_time->sub($this->id_token_expiration_delay);
+
+        $this->dao->save(
+            $rsa_public_key,
+            $encrypted_jwt_private_key,
+            $new_key_expiration_date->getTimestamp(),
+            $old_keys_cleanup_date->getTimestamp()
+        );
 
         return new /** @psalm-immutable */ class ($rsa_public_key, $encrypted_jwt_private_key)
         {

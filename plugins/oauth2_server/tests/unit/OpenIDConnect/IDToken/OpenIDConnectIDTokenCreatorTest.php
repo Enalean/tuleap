@@ -23,12 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\OpenIDConnect\IDToken;
 
 use Lcobucci\JWT\Parser;
-use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\OAuth2Server\App\OAuth2App;
 use Tuleap\OAuth2Server\Grant\AuthorizationCode\OAuth2AuthorizationCode;
@@ -41,7 +41,8 @@ final class OpenIDConnectIDTokenCreatorTest extends TestCase
     use ForgeConfigSandbox;
     use MockeryPHPUnitIntegration;
 
-    private const SIGNING_PUBLIC_KEY = <<<EOT
+    private const SIGNING_PUBLIC_KEY_FINGERPRINT = '13e908c0c14b52fa364f6573cda85971d16de83b17d6ef8793447724c464c01c';
+    private const SIGNING_PUBLIC_KEY             = <<<EOT
         -----BEGIN PUBLIC KEY-----
         MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApVp45DC1lniS5l9yiR81
         OM3BCESDLyZYX3pXS32oJz0eOIqgA4mnqGNvupo/ARJnu1W/KVNNqxBNGno1oNLg
@@ -98,7 +99,12 @@ final class OpenIDConnectIDTokenCreatorTest extends TestCase
     protected function setUp(): void
     {
         $signing_key_factory = \Mockery::mock(OpenIDConnectSigningKeyFactory::class);
-        $signing_key_factory->shouldReceive('getKey')->andReturn(new Key(self::SIGNING_PRIVATE_KEY));
+        $signing_key_factory->shouldReceive('getKey')->andReturn(
+            new SigningPrivateKey(
+                SigningPublicKey::fromPEMFormat(self::SIGNING_PUBLIC_KEY),
+                new ConcealedString(self::SIGNING_PRIVATE_KEY)
+            )
+        );
 
         $this->user_manager = \Mockery::mock(\UserManager::class);
 
@@ -143,6 +149,7 @@ final class OpenIDConnectIDTokenCreatorTest extends TestCase
         } else {
             $this->assertEquals($nonce, $token->getClaim('nonce'));
         }
+        $this->assertEquals(self::SIGNING_PUBLIC_KEY_FINGERPRINT, $token->getHeader('kid'));
         $this->assertTrue($token->verify(new Sha256(), self::SIGNING_PUBLIC_KEY));
     }
 

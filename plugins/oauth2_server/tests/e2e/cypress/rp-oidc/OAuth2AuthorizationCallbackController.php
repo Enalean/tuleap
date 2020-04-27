@@ -223,8 +223,12 @@ final class OAuth2AuthorizationCallbackController
     {
         $id_token = $this->parser->parse($id_token_jwt);
 
-        $public_key = $this->getPublicKey();
-        if (! $id_token->verify($this->signer, new Key($public_key))) {
+        $public_keys        = $this->getPublicKeys();
+        $is_signature_valid = false;
+        foreach ($public_keys as $public_key) {
+            $is_signature_valid = $is_signature_valid || $id_token->verify($this->signer, new Key($public_key));
+        }
+        if (! $is_signature_valid) {
             throw new \RuntimeException('Verification of the ID token signature has failed');
         }
 
@@ -246,7 +250,10 @@ final class OAuth2AuthorizationCallbackController
         return $id_token->getClaim('sub', '');
     }
 
-    private function getPublicKey(): string
+    /**
+     * @return string[]
+     */
+    private function getPublicKeys(): array
     {
         $response = $this->http_client->sendRequest(
             $this->request_factory->createRequest('GET', $this->configuration_storage->getConfiguration()->getJwksUri())
@@ -257,16 +264,21 @@ final class OAuth2AuthorizationCallbackController
         }
 
         $jwks_document = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $keys = [];
         foreach ($jwks_document['keys'] as $key) {
             if ($key['alg'] === 'RS256') {
-                return PKCS1Format::convertFromRSAModulusAndExponent(
+                $keys[] = PKCS1Format::convertFromRSAModulusAndExponent(
                     sodium_base642bin($key['n'], SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING),
                     sodium_base642bin($key['e'], SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING)
                 );
             }
         }
 
-        throw new \RuntimeException('No valid RS256 key found');
+        if (empty($keys)) {
+            throw new \RuntimeException('No valid RS256 key found');
+        }
+
+        return $keys;
     }
 
     /**

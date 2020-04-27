@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\OAuth2Server\OpenIDConnect\JWK;
 
 use PHPUnit\Framework\TestCase;
+use Tuleap\OAuth2Server\OpenIDConnect\IDToken\SigningPublicKey;
 
 final class JSONWebKeyTest extends TestCase
 {
@@ -46,7 +47,7 @@ final class JSONWebKeyTest extends TestCase
 
     public function testBuildsJWKSigningKeyFromRSAPEM(): void
     {
-        $jwk = JSONWebKey::fromPEMRSAPublicKeyForSignature(self::PUBLIC_KEY);
+        $jwk = JSONWebKey::fromSigningPublicKey(SigningPublicKey::fromPEMFormat(self::PUBLIC_KEY));
 
         $this->assertEquals('sig', $jwk->use);
         $this->assertEquals('RS256', $jwk->alg);
@@ -58,7 +59,8 @@ final class JSONWebKeyTest extends TestCase
     public function testDoesNotBuildJWKFromStringNotPEMFormatted(): void
     {
         $this->expectException(InvalidPublicRSAKeyPEMFormatException::class);
-        JSONWebKey::fromPEMRSAPublicKeyForSignature('wrong_format');
+        $wrong_format_key = 'AQAB';
+        JSONWebKey::fromSigningPublicKey(SigningPublicKey::fromPEMFormat($wrong_format_key));
     }
 
     public function testDoesNotBuildJWKFromKeyThatIsNotRSA(): void
@@ -71,6 +73,6 @@ final class JSONWebKeyTest extends TestCase
             EOT;
 
         $this->expectException(InvalidPublicRSAKeyPEMFormatException::class);
-        JSONWebKey::fromPEMRSAPublicKeyForSignature($ec_key);
+        JSONWebKey::fromSigningPublicKey(SigningPublicKey::fromPEMFormat($ec_key));
     }
 }

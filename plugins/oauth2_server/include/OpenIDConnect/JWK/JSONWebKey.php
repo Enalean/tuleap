@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\OAuth2Server\OpenIDConnect\JWK;
 
+use Tuleap\OAuth2Server\OpenIDConnect\IDToken\SigningPublicKey;
+
 /**
  * @psalm-immutable
  *
@@ -63,9 +65,10 @@ final class JSONWebKey
         $this->kid = $key_id;
     }
 
-    public static function fromPEMRSAPublicKeyForSignature(string $pem_public_key): self
+    public static function fromSigningPublicKey(SigningPublicKey $signing_public_key): self
     {
-        $public_key = \openssl_get_publickey($pem_public_key);
+        $pem_public_key = $signing_public_key->getPEMPublicKey();
+        $public_key     = \openssl_get_publickey($signing_public_key->getPEMPublicKey());
         if ($public_key === false) {
             throw new InvalidPublicRSAKeyPEMFormatException($pem_public_key);
         }
@@ -78,19 +81,7 @@ final class JSONWebKey
             'sig',
             sodium_bin2base64($details['rsa']['n'], SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING),
             sodium_bin2base64($details['rsa']['e'], SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING),
-            self::getPublicKeyFingerprint($pem_public_key)
+            $signing_public_key->getFingerprint()
         );
-    }
-
-    private static function getPublicKeyFingerprint(string $pem_public_key): string
-    {
-        $raw_key_base64 = str_replace(
-            ['-----BEGIN PUBLIC KEY-----', '-----END PUBLIC KEY-----', "\n"],
-            ['', '', ''],
-            $pem_public_key
-        );
-        $raw_key = sodium_base642bin($raw_key_base64, SODIUM_BASE64_VARIANT_ORIGINAL);
-
-        return hash('sha256', $raw_key);
     }
 }

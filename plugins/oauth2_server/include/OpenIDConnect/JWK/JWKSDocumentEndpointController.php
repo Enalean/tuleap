@@ -33,12 +33,14 @@ use Tuleap\Request\DispatchableWithRequestNoAuthz;
 
 final class JWKSDocumentEndpointController extends DispatchablePSR15Compatible implements DispatchableWithRequestNoAuthz
 {
-    private const MAX_AGE_DOCUMENT_SECONDS = 1800;
-
     /**
      * @var OpenIDConnectSigningKeyFactory
      */
     private $signing_key_factory;
+    /**
+     * @var \DateInterval
+     */
+    private $max_cache_age;
     /**
      * @var JSONResponseBuilder
      */
@@ -46,22 +48,34 @@ final class JWKSDocumentEndpointController extends DispatchablePSR15Compatible i
 
     public function __construct(
         OpenIDConnectSigningKeyFactory $signing_key_factory,
+        \DateInterval $max_cache_age,
         JSONResponseBuilder $json_response_builder,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack
     ) {
         parent::__construct($emitter, ...$middleware_stack);
         $this->signing_key_factory   = $signing_key_factory;
+        $this->max_cache_age         = $max_cache_age;
         $this->json_response_builder = $json_response_builder;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $jwks = new JSONWebKeySet(
-            JSONWebKey::fromPEMRSAPublicKeyForSignature($this->signing_key_factory->getPublicKey())
-        );
+        $keys = [];
+        foreach ($this->signing_key_factory->getPublicKeys(new \DateTimeImmutable()) as $public_key) {
+            $keys[] = JSONWebKey::fromSigningPublicKey($public_key);
+        }
+
+        $jwks = new JSONWebKeySet(...$keys);
 
         return $this->json_response_builder->fromData($jwks)
-            ->withHeader('Cache-Control', sprintf('max-age=%d,public', self::MAX_AGE_DOCUMENT_SECONDS));
+            ->withHeader('Cache-Control', sprintf('max-age=%d,public', $this->getMaxAgeInSeconds()));
+    }
+
+    private function getMaxAgeInSeconds(): int
+    {
+        $date = new \DateTimeImmutable();
+
+        return $date->add($this->max_cache_age)->getTimestamp() - $date->getTimestamp();
     }
 }
