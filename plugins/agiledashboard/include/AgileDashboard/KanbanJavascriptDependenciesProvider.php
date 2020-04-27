@@ -38,7 +38,6 @@ final class KanbanJavascriptDependenciesProvider implements JavascriptDependenci
     {
         $core_include_assets = new IncludeAssets(__DIR__ . '/../../../../src/www/assets/core', '/assets/core');
         return [
-            ['file' => $this->agiledashboard_include_assets->getFileURL('angular.js'), 'unique-name' => 'angular'],
             ['file' => $core_include_assets->getFileURL('ckeditor.js')],
             ['file' => $this->agiledashboard_include_assets->getFileURL('kanban.js')],
         ];
