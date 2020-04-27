@@ -17,30 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global require:readonly module:readonly */
+import { select2 } from "tlp";
+import { escaper } from "./escaper";
 
-var select2;
-var escaper;
-if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
-    select2 = require("tlp").select2;
-    escaper = require("./escaper.js").escaper;
-
-    module.exports = {
-        autocomplete_projects_for_select2: autocomplete_projects_for_select2,
-        autocomplete_users_for_select2: autocomplete_users_for_select2,
-    };
-} else {
-    var tuleap = window.tuleap || {};
-
-    select2 = window.tlp.select2;
-    escaper = tuleap.escaper;
-    tuleap.autocomplete_projects_for_select2 = autocomplete_projects_for_select2;
-    tuleap.autocomplete_users_for_select2 = autocomplete_users_for_select2;
-}
-
-function autocomplete_projects_for_select2(element, options) {
-    options = options || {};
-
+export function autocomplete_projects_for_select2(element, options = {}) {
     options.include_private_projects = options.include_private_projects || 0;
     options.placeholder = element.dataset.placeholder || "";
     options.minimumInputLength = 3;
@@ -68,9 +48,7 @@ const convertUsersToSelect2Entry = ({ tuleap_user_id, text }) => ({
     text: text,
 });
 
-function autocomplete_users_for_select2(element, options) {
-    options = options || {};
-
+export function autocomplete_users_for_select2(element, options = {}) {
     options.use_tuleap_id = options.use_tuleap_id || false;
     options.internal_users_only = options.internal_users_only || 0;
     options.placeholder = element.dataset.placeholder || "";
@@ -111,21 +89,9 @@ function autocomplete_users_for_select2(element, options) {
             return escaper.html(user.text);
         }
 
-        /* eslint-disable no-multi-str */
-        var markup =
-            '<div class="select2-result-user"> \
-            <div class="tlp-avatar select2-result-user__avatar"> \
-                ' +
-            (user.has_avatar ? '<img src="' + escaper.html(user.avatar_url) + '">' : "") +
-            " \
-            </div> \
-            " +
-            escaper.html(user.text) +
-            " \
-        </div>";
-        /* eslint-enable no-multi-str */
-
-        return markup;
+        const avatar = user.has_avatar ? '<img src="' + escaper.html(user.avatar_url) + '">' : "";
+        const escaped_text = escaper.html(user.text);
+        return `<div class="select2-result-user"><div class="tlp-avatar select2-result-user__avatar">${avatar}</div>${escaped_text}</div>`;
     }
 
     function formatUserWhenSelected(user) {
