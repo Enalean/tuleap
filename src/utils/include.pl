@@ -48,12 +48,12 @@ sub db_connect {
 	# connect to the database
 	my $dbopt = '';
 	if ($sys_enablessl) {
-	    $dbopt = ';mysql_ssl=1';
+        # RHEL/CENTOS7 version of perl cannot verify SSL Cert issuer. Moreover perl package is affected by [1] and there
+        # are no evidences that this corresponding fix was backported.
+        # [1] https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-10789
+	    $dbopt = ';mysql_ssl=1;mysql_ssl_verify_server_cert=0';
         if ($sys_db_ssl_ca && -f $sys_db_ssl_ca) {
             $dbopt .= ';mysql_ssl_ca_file='.$sys_db_ssl_ca;
-        }
-        if ($sys_db_ssl_verify_cert) {
-            $dbopt .= ';mysql_ssl_verify_server_cert=1';
         }
 	}
 	$dbh ||= DBI->connect("DBI:mysql:$sys_dbname:$sys_dbhost$dbopt", "$sys_dbuser", "$sys_dbpasswd");
