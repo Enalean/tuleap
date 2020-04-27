@@ -140,6 +140,19 @@ final class JiraXmlExporterTest extends \PHPUnit\Framework\TestCase
             ]
         )->once();
 
+        $this->field_xml_exporter->shouldReceive('exportField')->withArgs(
+            [
+                $fieldset_xml,
+                \Tracker_FormElement_Field_LastUpdateDate::TYPE,
+                Mockery::type('string'),
+                Mockery::type('string'),
+                Mockery::type('string'),
+                5,
+                Mockery::type('bool'),
+                $this->jira_field_mapping_collection
+            ]
+        )->once();
+
         $this->report_exporter->shouldReceive('exportReports')->once();
         $this->permissions_xml_exporter->shouldReceive('exportFieldsPermissions')->once();
         $this->artifacts_xml_exporter->shouldReceive('exportArtifacts')->once();

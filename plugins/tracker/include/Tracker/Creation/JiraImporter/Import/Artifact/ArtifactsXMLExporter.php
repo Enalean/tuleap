@@ -152,7 +152,7 @@ class ArtifactsXMLExporter
                 $format = ['format' => 'username']
             );
 
-            $this->simplexml_cdata_factory->insertWithAttributes(
+            $node_submitted_on =  $this->simplexml_cdata_factory->insertWithAttributes(
                 $changeset_node,
                 'submitted_on',
                 date('c', (new \DateTimeImmutable())->getTimestamp()),
@@ -174,6 +174,7 @@ class ArtifactsXMLExporter
                     $this->field_change_xml_exporter->exportFieldChange(
                         $mapping,
                         $changeset_node,
+                        $node_submitted_on,
                         (string) $value
                     );
                 }

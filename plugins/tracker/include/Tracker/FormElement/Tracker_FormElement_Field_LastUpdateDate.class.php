@@ -23,6 +23,7 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
 class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field_Date implements Tracker_FormElement_Field_ReadOnly
 {
+    public const TYPE = 'lud';
 
     public $default_properties = array();
 
