@@ -168,6 +168,32 @@ final class CampaignsTest extends BaseTest
         $this->revertCampaign($campaign);
     }
 
+
+    public function testPatchCampaignSuccessWithAutomatedTests()
+    {
+        $campaign                               = $this->valid_73_campaign;
+        $automated_tests_results = [
+            'build_url'      => 'https://exemple/of/url',
+            'junit_contents' => [],
+        ];
+
+        $response = $this->getResponse(
+            $this->client->patch(
+                'testmanagement_campaigns/' . $campaign['id'],
+                null,
+                json_encode(
+                    [
+                        'job_configuration' => ['url' => 'https://example.com', 'token' => 'so secret'],
+                        'automated_tests_results' => $automated_tests_results
+                    ]
+                )
+            )
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->revertCampaign($campaign);
+    }
+
     public function testPatchCampaignThrow400IfJobUrlIsInvalid()
     {
         $campaign = $this->valid_73_campaign;

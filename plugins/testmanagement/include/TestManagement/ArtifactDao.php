@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -218,6 +218,31 @@ class ArtifactDao extends DataAccessObject
                   AND linked_art.tracker_id = $execution_tracker_id
                 LIMIT $limit
                 OFFSET $offset";
+
+        return $this->retrieve($sql);
+    }
+
+
+    /**
+     * @return \DataAccessResult|false
+     *
+     * @psalm-ignore-falsable-return
+     */
+    public function searchExecutionArtifactsForCampaign(
+        int $campaign_artifact_id,
+        int $execution_tracker_id
+    ) {
+        $campaign_artifact_id = $this->da->escapeInt($campaign_artifact_id);
+        $execution_tracker_id = $this->da->escapeInt($execution_tracker_id);
+
+        $sql = "SELECT DISTINCT linked_art.*
+                FROM tracker_artifact parent_art
+                    INNER JOIN tracker_field                        f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
+                    INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
+                    INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
+                    INNER JOIN tracker_artifact                     linked_art ON (linked_art.id = artlink.artifact_id)
+                WHERE parent_art.id = $campaign_artifact_id
+                  AND linked_art.tracker_id = $execution_tracker_id";
 
         return $this->retrieve($sql);
     }

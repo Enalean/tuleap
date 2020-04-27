@@ -82,6 +82,11 @@ use Tuleap\TestManagement\Dao;
 use Tuleap\TestManagement\LabelFieldNotFoundException;
 use Tuleap\TestManagement\MilestoneItemsArtifactFactory;
 use Tuleap\TestManagement\RealTime\RealTimeMessageSender;
+use Tuleap\TestManagement\REST\ExecutionChangesExtractor;
+use Tuleap\TestManagement\REST\FormattedChangesetValueForFileFieldRetriever;
+use Tuleap\TestManagement\REST\FormattedChangesetValueForIntFieldRetriever;
+use Tuleap\TestManagement\REST\FormattedChangesetValueForListFieldRetriever;
+use Tuleap\TestManagement\REST\FormattedChangesetValueForTextFieldRetriever;
 use Tuleap\TestManagement\REST\v1\Execution\StepsResultsFilter;
 use Tuleap\TestManagement\REST\v1\Execution\StepsResultsRepresentationBuilder;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
@@ -146,59 +151,75 @@ class CampaignsResource
 
     /** @var ExecutionDao */
     private $execution_dao;
+    /**
+     * @var Tracker_REST_Artifact_ArtifactUpdater
+     */
+    private $artifact_updater;
+    /**
+     * @var Tracker_FormElementFactory
+     */
+    private $formelement_factory;
+    /**
+     * @var ArtifactFactory
+     */
+    private $testmanagement_artifact_factory;
+    /**
+     * @var ArtifactDao
+     */
+    private $artifact_dao;
 
     public function __construct()
     {
         $this->project_manager       = ProjectManager::instance();
         $this->user_manager          = UserManager::instance();
-        $tracker_factory       = TrackerFactory::instance();
+        $tracker_factory             = TrackerFactory::instance();
         $this->artifact_factory      = Tracker_ArtifactFactory::instance();
-        $formelement_factory   = Tracker_FormElementFactory::instance();
+        $this->formelement_factory   = Tracker_FormElementFactory::instance();
         $this->config                = new Config(new Dao(), $tracker_factory);
         $this->conformance_validator = new ConfigConformanceValidator(
             $this->config
         );
-        $artifact_dao                = new ArtifactDao();
+        $this->artifact_dao                = new ArtifactDao();
 
-        $testmanagement_artifact_factory = new ArtifactFactory(
+        $this->testmanagement_artifact_factory = new ArtifactFactory(
             $this->config,
             $this->artifact_factory,
-            $artifact_dao
+            $this->artifact_dao
         );
 
         $milestone_items_artifact_factory = new MilestoneItemsArtifactFactory(
             $this->config,
-            $artifact_dao,
+            $this->artifact_dao,
             $this->artifact_factory,
             EventManager::instance()
         );
 
         $assigned_to_representation_builder = new AssignedToRepresentationBuilder(
-            $formelement_factory,
+            $this->formelement_factory,
             $this->user_manager
         );
 
-        $requirement_retriever = new RequirementRetriever($this->artifact_factory, $artifact_dao, $this->config);
+        $requirement_retriever = new RequirementRetriever($this->artifact_factory, $this->artifact_dao, $this->config);
         $definition_retriever  = new DefinitionForExecutionRetriever($this->conformance_validator);
 
         $this->execution_dao                    = new ExecutionDao();
         $steps_results_representation_builder   = new StepsResultsRepresentationBuilder(
-            $formelement_factory,
+            $this->formelement_factory,
             new StepsResultsFilter()
         );
         $this->execution_representation_builder = new ExecutionRepresentationBuilder(
             $this->user_manager,
-            $formelement_factory,
+            $this->formelement_factory,
             $this->conformance_validator,
             $assigned_to_representation_builder,
-            $artifact_dao,
+            $this->artifact_dao,
             $this->artifact_factory,
             $requirement_retriever,
             $definition_retriever,
             $this->execution_dao,
             $steps_results_representation_builder,
             \Codendi_HTMLPurifier::instance(),
-            new FileUploadDataProvider($this->getFrozenFieldDetector(), $formelement_factory)
+            new FileUploadDataProvider($this->getFrozenFieldDetector(), $this->formelement_factory)
         );
 
         $campaign_dao = new CampaignDao();
@@ -207,13 +228,13 @@ class CampaignsResource
         $this->campaign_retriever = new CampaignRetriever($this->artifact_factory, $campaign_dao, $key_factory);
 
         $this->campaign_representation_builder = new CampaignRepresentationBuilder(
-            $formelement_factory,
-            $testmanagement_artifact_factory,
+            $this->formelement_factory,
+            $this->testmanagement_artifact_factory,
             $this->campaign_retriever
         );
 
         $artifact_validator = new Tracker_REST_Artifact_ArtifactValidator(
-            $formelement_factory
+            $this->formelement_factory
         );
 
         $artifact_creator = new Tracker_REST_Artifact_ArtifactCreator(
@@ -223,7 +244,7 @@ class CampaignsResource
         );
 
         $this->execution_creator = new ExecutionCreator(
-            $formelement_factory,
+            $this->formelement_factory,
             $this->config,
             $this->project_manager,
             $tracker_factory,
@@ -233,7 +254,7 @@ class CampaignsResource
 
         $definition_selector = new DefinitionSelector(
             $this->config,
-            $testmanagement_artifact_factory,
+            $this->testmanagement_artifact_factory,
             new ProjectAuthorization(),
             $this->artifact_factory,
             $milestone_items_artifact_factory,
@@ -243,20 +264,20 @@ class CampaignsResource
         $this->campaign_creator = new CampaignCreator(
             $this->config,
             $this->project_manager,
-            $formelement_factory,
+            $this->formelement_factory,
             $tracker_factory,
             $definition_selector,
             $artifact_creator,
             $this->execution_creator
         );
 
-        $artifact_updater = new Tracker_REST_Artifact_ArtifactUpdater(
+        $this->artifact_updater = new Tracker_REST_Artifact_ArtifactUpdater(
             $artifact_validator
         );
 
         $this->campaign_updater = new CampaignUpdater(
-            $formelement_factory,
-            $artifact_updater,
+            $this->formelement_factory,
+            $this->artifact_updater,
             new CampaignSaver($campaign_dao, $key_factory)
         );
 
@@ -524,11 +545,37 @@ class CampaignsResource
     /**
      * PATCH campaign
      *
+     * With this route it's possible to update label, job configuration and linked automated tests.
+     * <br>
+     * <br>
+     * To update automated tests, update the campaign with automated tests result Junits and build url
+     * this will update the corresponding tests
+     * <br>
+     * <br>
+     * Exemple :
+     *
+     * If you have a test with 'automated tests' field file as 'automated' :
+     * <br>
+     * <pre>
+     * {
+     * &nbsp;"automated_tests_results" : {<br>
+     * &nbsp;"build_url": "your/url",</br>
+     * &nbsp;"junit_contents ": [<br>
+     * &nbsp;"&lt;?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?&gt;
+     * &nbsp;&lt;testsuites name=\\"fake test\\" time=\\"13\\" tests=\\"1\\" failures=\\"0\\"&gt;<br>
+     * &nbsp;&lt;testsuite name=\\"fake test\\" timestamp=\\"2020-04-29T07:52:25\\" tests=\\"1\\" failures=\\"0\\" time=\\"6\\"&gt;<br>
+     * &nbsp;&lt;testcase name=\\"automated\\" time=\\"6.105\\" classname=\\"Project administrator can start Kanban\\"&gt;&lt;/testcase><br>
+     * &nbsp;&lt;/testsuite&gt;"<br>
+     * &nbsp;&lt;/testsuites&gt;"<br>
+     * ]}}
+     *</pre>
+     *
      * @url    PATCH {id}
      *
-     * @param int                            $id                Id of the campaign
-     * @param string                         $label             New label of the campaign {@from body}
-     * @param JobConfigurationRepresentation $job_configuration {@from body}
+     * @param int                                     $id Id of the campaign
+     * @param string                                  $label New label of the campaign {@from body}
+     * @param JobConfigurationRepresentation          $job_configuration {@from body}
+     * @param AutomatedTestsResultPATCHRepresentation $automated_tests_results {@from body}
      *
      * @return CampaignRepresentation
      *
@@ -536,16 +583,21 @@ class CampaignsResource
      * @throws RestException 403
      * @throws RestException 500
      */
-    protected function patch($id, $label = null, ?JobConfigurationRepresentation $job_configuration = null)
-    {
-        $user     = $this->getCurrentUser();
-        $campaign = $this->getUpdatedCampaign($user, $id, $label, $job_configuration);
+    protected function patch(
+        $id,
+        $label = null,
+        ?JobConfigurationRepresentation $job_configuration = null,
+        ?AutomatedTestsResultPATCHRepresentation $automated_tests_results = null
+    ) {
+        $user              = $this->getCurrentUser();
+        $campaign          = $this->getUpdatedCampaign($user, $id, $label, $job_configuration);
+        $campaign_artifact = $campaign->getArtifact();
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
-            $campaign->getArtifact()->getTracker()->getProject()
+            $campaign_artifact->getTracker()->getProject()
         );
 
-        if (! $campaign->getArtifact()->userCanUpdate($user)) {
+        if (!$campaign_artifact->userCanUpdate($user)) {
             throw new RestException(403, "You don't have the permission to update this campaign");
         }
 
@@ -569,6 +621,18 @@ class CampaignsResource
             throw new RestException(500, $exception->getMessage());
         } catch (Tracker_Exception $exception) {
             throw new RestException(500, $exception->getMessage());
+        }
+
+        if ($automated_tests_results !== null) {
+            try {
+                $this->getExecutionsFromAutomatedTestsUpdater()->updateExecutionFromAutomatedTests(
+                    $automated_tests_results,
+                    $campaign_artifact,
+                    $user
+                );
+            } catch (AutomatedTestsNotXmlException $exception) {
+                throw new RestException(400, $exception->getMessage());
+            }
         }
 
         $campaign_representation = $this->campaign_representation_builder->getCampaignRepresentation($user, $campaign);
@@ -757,6 +821,57 @@ class CampaignsResource
                 new FrozenFieldsDao(),
                 Tracker_FormElementFactory::instance()
             )
+        );
+    }
+
+    private function getExecutionsFromAutomatedTestsUpdater(): ExecutionFromAutomatedTestsUpdater
+    {
+        return new ExecutionFromAutomatedTestsUpdater(
+            $this->getExecutionStatusUpdater(),
+            $this->getExecutionChangesExtractor(),
+            new TestsDataFromJunitExtractor(),
+            $this->getExecutionsWithAutomatedTestDataRetriever()
+        );
+    }
+
+    private function getExecutionsWithAutomatedTestDataRetriever(): ListOfExecutionsWithAutomatedTestDataRetriever
+    {
+        return new ListOfExecutionsWithAutomatedTestDataRetriever(
+            $this->config,
+            $this->artifact_dao,
+            new DefinitionForExecutionRetriever(
+                new ConfigConformanceValidator($this->config)
+            ),
+            new ExecutionWithAutomatedTestDataProvider(
+                new ExecutionDao(),
+                $this->formelement_factory
+            ),
+            $this->artifact_factory,
+        );
+    }
+
+    private function getExecutionStatusUpdater(): ExecutionStatusUpdater
+    {
+        return new ExecutionStatusUpdater(
+            $this->artifact_updater,
+            $this->testmanagement_artifact_factory,
+            $this->realtime_message_sender,
+            $this->user_manager
+        );
+    }
+
+    private function getExecutionChangesExtractor(): ExecutionChangesExtractor
+    {
+        return new ExecutionChangesExtractor(
+            new FormattedChangesetValueForFileFieldRetriever(
+                new FileUploadDataProvider(
+                    $this->getFrozenFieldDetector(),
+                    $this->formelement_factory
+                )
+            ),
+            new FormattedChangesetValueForIntFieldRetriever($this->formelement_factory),
+            new FormattedChangesetValueForTextFieldRetriever($this->formelement_factory),
+            new FormattedChangesetValueForListFieldRetriever($this->formelement_factory)
         );
     }
 }

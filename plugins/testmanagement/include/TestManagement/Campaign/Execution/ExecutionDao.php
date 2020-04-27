@@ -38,6 +38,18 @@ class ExecutionDao extends DataAccessObject
         );
     }
 
+    /**
+     * @return int | false
+     */
+    public function searchDefinitionChangesetIdForExecution(int $executions_id)
+    {
+        $sql = "SELECT definition_changeset_id FROM plugin_testmanagement_execution WHERE execution_artifact_id = ?";
+        return $this->getDB()->single(
+            $sql,
+            [$executions_id]
+        );
+    }
+
     public function updateExecutionToUseLatestVersionOfDefinition(string $execution_id, int $definition_changeset_id): void
     {
         $sql = 'REPLACE INTO plugin_testmanagement_execution (execution_artifact_id, definition_changeset_id)
