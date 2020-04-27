@@ -227,7 +227,7 @@ function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
                 if ($val === '') {
                     $val .= ', ';
                 }
-                $val .= util_translate_name_ugroup($ugroup);
+                $val .= \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $ugroup);
             }
         } elseif ($msg_key == "group_type") {
             $template = TemplateSingleton::instance();

@@ -171,9 +171,9 @@ class Tracker_DateReminderRenderer
         $output  .= '<optgroup label="' . $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_optgroup_label_ugroup') . '" >';
         while ($row = db_fetch_array($res)) {
             if ($ugroups && in_array($row['ugroup_id'], $ugroups)) {
-                $output .= '<option value="u_' . intval($row['ugroup_id']) . '" selected>' . util_translate_name_ugroup($row['name']) . '</option>';
+                $output .= '<option value="u_' . intval($row['ugroup_id']) . '" selected>' . \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $row['name']) . '</option>';
             } else {
-                $output .= '<option value="u_' . intval($row['ugroup_id']) . '">' . util_translate_name_ugroup($row['name']) . '</option>';
+                $output .= '<option value="u_' . intval($row['ugroup_id']) . '">' . \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $row['name']) . '</option>';
             }
         }
         $output  .= '</optgroup>';

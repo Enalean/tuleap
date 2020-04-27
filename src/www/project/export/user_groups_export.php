@@ -81,7 +81,7 @@ if ($request->valid($vExport)) {
                 $users = db_query($sqlUsers);
                 while ($user = db_fetch_array($users)) {
                     $user_status_presenter = new StatusPresenter($user['status']);
-                    $r = array('group'    => util_translate_name_ugroup($ugrp['name']),
+                    $r = array('group'    => \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $ugrp['name']),
                                'username' => $user['user_name'],
                                'realname' => $um->getUserById($user['user_id'])->getRealname(),
                                'email'    => $user['email'],
@@ -110,7 +110,7 @@ if ($request->valid($vExport)) {
                               'email'    => _('User email address'),
                               'status'   => _('User status'));
             $user_status_presenter = new StatusPresenter($user->getStatus());
-            $record   = array('group'    => util_translate_name_ugroup('project_members'),
+            $record   = array('group'    => \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) 'project_members'),
                               'username' => $user->getName(),
                               'realname' => $user->getRealName(),
                               'email'    => $user->getEmail(),

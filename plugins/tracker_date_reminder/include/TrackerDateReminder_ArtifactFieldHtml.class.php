@@ -114,7 +114,7 @@ class TrackerDateReminder_ArtifactFieldHtml
         );
         $res = db_query($qry);
         while ($rows = db_fetch_array($res)) {
-            $groupNames[] = array('value' => 'g' . $rows['ugroup_id'], 'text' => util_translate_name_ugroup($rows['name']));
+            $groupNames[] = array('value' => 'g' . $rows['ugroup_id'], 'text' => \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $rows['name']));
         }
         $out .= html_build_multiple_select_box_from_array($groupNames, 'notified_groups[]', $notified_groups, 8, true, '', false, '', false, '', false);
 

@@ -430,7 +430,7 @@ function ugroup_get_all_dynamic_members($group_id, $atid = 0)
         while ($row = db_fetch_array($rs)) {
             $members[] = array(
                 'ugroup_id' => $ugroup_id,
-                'name'      => util_translate_name_ugroup($ugroups[$ugroup_id]),
+                'name'      => \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $ugroups[$ugroup_id]),
                 'user_id'   => $row['user_id'],
                 'user_name' => $row['user_name'],
             );

@@ -214,7 +214,7 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
 
     protected function getUgroupLabel($ugroup_id)
     {
-        return util_translate_name_ugroup($this->getUgroupName($ugroup_id));
+        return \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $this->getUgroupName($ugroup_id));
     }
 
     protected function getUgroupRESTRepresentation($u_group_id)

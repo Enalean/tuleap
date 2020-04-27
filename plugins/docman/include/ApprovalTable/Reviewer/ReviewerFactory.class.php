@@ -128,7 +128,7 @@ class Docman_ApprovalTableReviewerFactory
         while ($row = db_fetch_array($res)) {
             $r = array();
             $r['value'] = $row['ugroup_id'];
-            $r['text'] = util_translate_name_ugroup($row['name']);
+            $r['text'] = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $row['name']);
             $ugroups[] = $r;
         }
 

@@ -1418,7 +1418,7 @@ EOS;
 
         $selected = "";
         $ugroup_res = ugroup_db_get_ugroup($GLOBALS['UGROUP_PROJECT_MEMBERS']);
-        $name = util_translate_name_ugroup(db_result($ugroup_res, 0, 'name'));
+        $name = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) db_result($ugroup_res, 0, 'name'));
         if ($value_function && in_array("group_members", $value_function)) {
             $selected = " selected";
         }
@@ -1426,7 +1426,7 @@ EOS;
 
         $selected = "";
         $ugroup_res = ugroup_db_get_ugroup($GLOBALS['UGROUP_PROJECT_ADMIN']);
-        $name = util_translate_name_ugroup(db_result($ugroup_res, 0, 'name'));
+        $name = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) db_result($ugroup_res, 0, 'name'));
         if ($value_function && in_array("group_admins", $value_function)) {
             $selected = " selected";
         }
@@ -1434,7 +1434,7 @@ EOS;
 
         $selected = "";
         $ugroup_res = ugroup_db_get_ugroup($GLOBALS['UGROUP_TRACKER_ADMIN']);
-        $name = util_translate_name_ugroup(db_result($ugroup_res, 0, 'name'));
+        $name = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) db_result($ugroup_res, 0, 'name'));
         if ($value_function && in_array("tracker_admins", $value_function)) {
             $selected = " selected";
         }
@@ -1460,7 +1460,7 @@ EOS;
             if ($value_function && in_array($ugr, $value_function)) {
                 $selected = " selected";
             }
-            echo '<option value="' . $ugr . '"' . $selected . '>' . $hp->purify(util_translate_name_ugroup(db_result($ugroup_res, $i, 'name')), CODENDI_PURIFIER_CONVERT_HTML) . '</option>';
+            echo '<option value="' . $ugr . '"' . $selected . '>' . $hp->purify(\Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) db_result($ugroup_res, $i, 'name')), CODENDI_PURIFIER_CONVERT_HTML) . '</option>';
         }
 
         if ($this->Group->getID() != 100) {
@@ -1474,7 +1474,7 @@ EOS;
                 if ($value_function && in_array($ugr, $value_function)) {
                     $selected = " selected";
                 }
-                echo '<option value="' . $ugr . '"' . $selected . '>' . $hp->purify(util_translate_name_ugroup(db_result($ugroup_res, $i, 'name')), CODENDI_PURIFIER_CONVERT_HTML) . '</option>';
+                echo '<option value="' . $ugr . '"' . $selected . '>' . $hp->purify(\Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) db_result($ugroup_res, $i, 'name')), CODENDI_PURIFIER_CONVERT_HTML) . '</option>';
             }
         }
         echo '

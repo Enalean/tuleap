@@ -95,7 +95,7 @@ class ProjectHistoryResultsPresenter
                 if ($val) {
                     $val .= ', ';
                 }
-                $val .= util_translate_name_ugroup($ugroup);
+                $val .= \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $ugroup);
             }
         } elseif ($msg_key == "group_type") {
             $val = TemplateSingleton::instance()->getLabel($val);

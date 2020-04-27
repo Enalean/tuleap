@@ -38,6 +38,7 @@
 // type='TRACKER_ARTIFACT_ACCESS'  id='artifact_id'                table='artifact'
 
 use Tuleap\FRS\FRSPermissionManager;
+use Tuleap\User\UserGroup\NameTranslator;
 
 require_once __DIR__ . '/ugroup_utils.php';
 require_once __DIR__ . '/project_admin_utils.php';
@@ -499,13 +500,13 @@ function permission_get_ugroups_permissions($group_id, $object_id, $permission_t
             while ($row = db_fetch_array($res)) {
                 //We initialize ugroup entries only once
                 if (!isset($return[$row[0]])) {
-                    $return[$row[0]] = array(
-                                             'ugroup' => array(
-                                                               'id' => $row[0],
-                                                               'name' => util_translate_name_ugroup($row[1])
-                                                               ),
-                                             'permissions' => array()
-                                             );
+                    $return[$row[0]] = [
+                        'ugroup'      => [
+                            'id'   => $row[0],
+                            'name' => NameTranslator::getUserGroupDisplayKey((string) $row[1])
+                        ],
+                        'permissions' => []
+                    ];
                     //We add link for non-default ugroups
                     if ($row[0] > 100) {
                         $return[$row[0]]['ugroup']['link'] = '/project/admin/editugroup.php?group_id=' . $group_id . '&ugroup_id=' . $row[0] . '&func=edit';
@@ -532,14 +533,14 @@ function permission_get_ugroups_permissions($group_id, $object_id, $permission_t
         $res = db_query($sql);
         if ($res) {
             while ($row = db_fetch_array($res)) {
-                if (!isset($return[$row[0]])) {
-                    $return[$row[0]] = array(
-                                             'ugroup' => array(
-                                                               'id' => $row[0],
-                                                               'name' => util_translate_name_ugroup($row[1])
-                                                               ),
-                                             'permissions' => array()
-                                             );
+                if (! isset($return[$row[0]])) {
+                    $return[$row[0]] = [
+                        'ugroup'      => [
+                            'id'   => $row[0],
+                            'name' => NameTranslator::getUserGroupDisplayKey((string) $row[1])
+                        ],
+                        'permissions' => []
+                    ];
                 }
                 //if we have user-defined permissions,
                 //the default ugroups which don't have user-defined permission have no-access
@@ -566,13 +567,13 @@ function permission_get_ugroups_permissions($group_id, $object_id, $permission_t
         $res = db_query($sql);
         if ($res) {
             while ($row = db_fetch_array($res)) {
-                $return[$row[0]] = array(
-                                         'ugroup' => array(
-                                                           'id' => $row[0],
-                                                           'name' => util_translate_name_ugroup($row[1])
-                                                           ),
-                                         'permissions' => array()
-                                         );
+                $return[$row[0]] = [
+                    'ugroup'      => [
+                        'id'   => $row[0],
+                        'name' => NameTranslator::getUserGroupDisplayKey((string) $row[1])
+                    ],
+                    'permissions' => []
+                ];
                 //We add link for non-default ugroups
                 if ($row[0] > 100) {
                     $return[$row[0]]['ugroup']['link'] = '/project/admin/editugroup.php?group_id=' . $group_id . '&ugroup_id=' . $row[0] . '&func=edit';
@@ -627,7 +628,7 @@ function permission_fetch_selected_ugroups($permission_type, $object_id, $group_
     $res_ugroups = permission_db_authorized_ugroups($permission_type, $object_id);
     while ($row = db_fetch_array($res_ugroups)) {
         $data = db_fetch_array(ugroup_db_get_ugroup($row['ugroup_id']));
-        $ugroups[] = util_translate_name_ugroup($data['name']);
+        $ugroups[] = NameTranslator::getUserGroupDisplayKey((string) $data['name']);
     }
     return $ugroups;
 }
@@ -705,7 +706,7 @@ function permission_fetch_selection_field(
     $array = array();
 
     while ($row = db_fetch_array($res)) {
-        $name = util_translate_name_ugroup($row[1]);
+        $name = NameTranslator::getUserGroupDisplayKey($row[1]);
         $array[] = array(
             'value' => $row[0],
             'text' => $name
@@ -718,7 +719,7 @@ function permission_fetch_selection_field(
         ($nb_set ? util_result_column_to_array($res_ugroups) : $default_values),
         8,
         $show_nobody,
-        util_translate_name_ugroup('ugroup_nobody_name_key'),
+        NameTranslator::getUserGroupDisplayKey('ugroup_nobody_name_key'),
         false,
         '',
         false,
@@ -775,9 +776,9 @@ function permission_copy_tracker_and_field_permissions($from, $to, $group_id_fro
 
     //Copy of tracker permissions
     $sql = <<<EOS
-INSERT INTO `permissions` ( `permission_type`, `object_id`, `ugroup_id`) 
-    SELECT `permission_type`, '$to', `ugroup_id` 
-    FROM `permissions` 
+INSERT INTO `permissions` ( `permission_type`, `object_id`, `ugroup_id`)
+    SELECT `permission_type`, '$to', `ugroup_id`
+    FROM `permissions`
     WHERE `object_id` = '$from' $and_remove_ugroups
 EOS;
 
@@ -788,9 +789,9 @@ EOS;
 
    //Copy of field permissions
     $sql = <<<EOS
-INSERT INTO `permissions` ( `permission_type`, `object_id`, `ugroup_id`) 
+INSERT INTO `permissions` ( `permission_type`, `object_id`, `ugroup_id`)
     SELECT `permission_type`, CONCAT('$to#',RIGHT(`object_id`, LENGTH(`object_id`)-LENGTH('$from#'))), `ugroup_id`
-    FROM `permissions` 
+    FROM `permissions`
     WHERE `object_id` LIKE '$from#%' $and_remove_ugroups
 EOS;
 
@@ -1099,8 +1100,8 @@ function permission_process_update_fields_permissions($group_id, $atid, $fields,
     $permissions_updated = false;
 
     //some special ugroup names
-    $anonymous_name    = $GLOBALS['Language']->getText('project_ugroup', ugroup_get_name_from_id($GLOBALS['UGROUP_ANONYMOUS']));
-    $registered_name   = $GLOBALS['Language']->getText('project_ugroup', ugroup_get_name_from_id($GLOBALS['UGROUP_REGISTERED']));
+    $anonymous_name    = NameTranslator::getUserGroupDisplayKey(ugroup_get_name_from_id($GLOBALS['UGROUP_ANONYMOUS']));
+    $registered_name   = NameTranslator::getUserGroupDisplayKey(ugroup_get_name_from_id($GLOBALS['UGROUP_REGISTERED']));
 
     //We process the request
     foreach ($permissions_wanted_by_user as $field_id => $ugroups_permissions) {
@@ -1493,8 +1494,8 @@ function permission_process_update_tracker_permissions($group_id, $atid, $permis
     $len_prefixe_expected = strlen($prefixe_expected);
 
     //some special ugroup names
-    $anonymous_name    = $GLOBALS['Language']->getText('project_ugroup', ugroup_get_name_from_id($GLOBALS['UGROUP_ANONYMOUS']));
-    $registered_name   = $GLOBALS['Language']->getText('project_ugroup', ugroup_get_name_from_id($GLOBALS['UGROUP_REGISTERED']));
+    $anonymous_name    = NameTranslator::getUserGroupDisplayKey(ugroup_get_name_from_id($GLOBALS['UGROUP_ANONYMOUS']));
+    $registered_name   = NameTranslator::getUserGroupDisplayKey(ugroup_get_name_from_id($GLOBALS['UGROUP_REGISTERED']));
 
     //small variables for history
     $add_full_to_history      = false;

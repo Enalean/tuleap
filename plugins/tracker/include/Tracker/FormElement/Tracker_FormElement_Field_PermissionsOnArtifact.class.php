@@ -75,7 +75,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
 
             foreach ($this->getValueDao()->searchByChangesetValueId($changeset_value_id) as $value) {
                 $name = $this->getUGroupDao()->searchByUGroupId($value['ugroup_id'])->getRow();
-                $values[] = util_translate_name_ugroup($name['name']);
+                $values[] = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $name['name']);
             }
 
             return implode(',', $values);
@@ -399,7 +399,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
             $perms_name = array();
             foreach ($perms as $perm) {
                 $row = $ugroup_dao->searchByUGroupId($perm)->getRow();
-                $perms_name[] = util_translate_name_ugroup($row['name']);
+                $perms_name[] = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $row['name']);
             }
             $html .= implode(",", $perms_name);
         }

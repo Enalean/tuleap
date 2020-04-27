@@ -214,13 +214,13 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                     case 'group_members':
                         $ugroups[] = array(
                             self::REST_BINDING_LIST_ID    => $GLOBALS['UGROUP_PROJECT_MEMBERS'],
-                            self::REST_BINDING_LIST_LABEL => util_translate_name_ugroup(ugroup_get_name_from_id($GLOBALS['UGROUP_PROJECT_MEMBERS']))
+                            self::REST_BINDING_LIST_LABEL => \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) ugroup_get_name_from_id($GLOBALS['UGROUP_PROJECT_MEMBERS']))
                         );
                         break;
                     case 'group_admins':
                         $ugroups[] = array(
                             self::REST_BINDING_LIST_ID    => $GLOBALS['UGROUP_PROJECT_ADMIN'],
-                            self::REST_BINDING_LIST_LABEL => util_translate_name_ugroup(ugroup_get_name_from_id($GLOBALS['UGROUP_PROJECT_ADMIN']))
+                            self::REST_BINDING_LIST_LABEL => \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) ugroup_get_name_from_id($GLOBALS['UGROUP_PROJECT_ADMIN']))
                         );
                         break;
                     case 'artifact_submitters':
@@ -621,7 +621,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
 
         $selected = "";
         $ugroup_res = ugroup_db_get_ugroup($GLOBALS['UGROUP_PROJECT_MEMBERS']);
-        $name = util_translate_name_ugroup(db_result($ugroup_res, 0, 'name'));
+        $name = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) db_result($ugroup_res, 0, 'name'));
         if (in_array("group_members", $value_function)) {
             $selected = 'selected="selected"';
         }
@@ -629,7 +629,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
 
         $selected = "";
         $ugroup_res = ugroup_db_get_ugroup($GLOBALS['UGROUP_PROJECT_ADMIN']);
-        $name = util_translate_name_ugroup(db_result($ugroup_res, 0, 'name'));
+        $name = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) db_result($ugroup_res, 0, 'name'));
         if (in_array("group_admins", $value_function)) {
             $selected = 'selected="selected"';
         }
@@ -655,7 +655,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
             if (in_array($ugr, $value_function)) {
                 $selected = 'selected="selected"';
             }
-            $html .= '<option value="' . $ugr . '" ' . $selected . '>' . $hp->purify(util_translate_name_ugroup(db_result($ugroup_res, $i, 'name')), CODENDI_PURIFIER_CONVERT_HTML) . '</option>';
+            $html .= '<option value="' . $ugr . '" ' . $selected . '>' . $hp->purify(\Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) db_result($ugroup_res, $i, 'name')), CODENDI_PURIFIER_CONVERT_HTML) . '</option>';
         }
 
         $group_id = $field->getTracker()->getGroupId();
@@ -670,7 +670,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                 if (in_array($ugr, $value_function)) {
                     $selected = 'selected="selected"';
                 }
-                $html .= '<option value="' . $ugr . '" ' . $selected . '>' . $hp->purify(util_translate_name_ugroup(db_result($ugroup_res, $i, 'name')), CODENDI_PURIFIER_CONVERT_HTML) . '</option>';
+                $html .= '<option value="' . $ugr . '" ' . $selected . '>' . $hp->purify(\Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) db_result($ugroup_res, $i, 'name')), CODENDI_PURIFIER_CONVERT_HTML) . '</option>';
             }
         }
         $html .= '</select>';

@@ -556,7 +556,7 @@ function plugin_tracker_permission_fetch_selection_field($permission_type, $obje
 
     $array = array();
     while ($row = db_fetch_array($res)) {
-        $name = util_translate_name_ugroup($row[1]);
+        $name = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $row[1]);
         $array[] = array(
             'value' => $row[0],
             'text' => $name
@@ -583,7 +583,7 @@ function plugin_tracker_permission_fetch_selection_field($permission_type, $obje
         //show_100
         false,
         //text_100
-        util_translate_name_ugroup('ugroup_nobody_name_key'),
+        \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) 'ugroup_nobody_name_key'),
         //show_any
         false,
         //text_any

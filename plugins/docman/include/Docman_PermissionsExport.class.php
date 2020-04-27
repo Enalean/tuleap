@@ -76,7 +76,7 @@ class Docman_PermissionsExport
             /** @psalm-suppress DeprecatedFunction */
             $result = ugroup_db_get_existing_ugroups($this->group->getId(), array($GLOBALS['UGROUP_ANONYMOUS'], $GLOBALS['UGROUP_REGISTERED'], $GLOBALS['UGROUP_PROJECT_MEMBERS'], $GLOBALS['UGROUP_PROJECT_ADMIN']));
             while (($row = db_fetch_array($result))) {
-                $this->ugroups[$row['ugroup_id']] = util_translate_name_ugroup($row['name']);
+                $this->ugroups[$row['ugroup_id']] = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $row['name']);
             }
         }
         return $this->ugroups;
