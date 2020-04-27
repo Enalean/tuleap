@@ -173,4 +173,40 @@ final class JiraToTuleapFieldTypeMapperTest extends \PHPUnit\Framework\TestCase
             $collection
         );
     }
+
+    public function testJiraTextAreaFieldIsMappedToStringField(): void
+    {
+        $jira_field = [
+            "name" => "Text Field",
+            "id" => "fieldid",
+            'schema' => [
+                'type' => 'string',
+                'custom' => 'com.atlassian.jira.plugin.system.customfieldtypes:textarea',
+                'customId' => 10045
+            ]
+        ];
+
+        $collection = new FieldMappingCollection();
+
+        $this->field_exporter->shouldReceive('exportField')->withArgs(
+            [
+                $this->jira_custom_fieldset,
+                Tracker_FormElement_Field_Text::TYPE,
+                $jira_field['id'],
+                $jira_field['name'],
+                $jira_field['id'],
+                2,
+                "1",
+                $collection
+            ]
+        );
+
+        $this->mapper->exportFieldToXml(
+            $jira_field,
+            "1",
+            $this->jira_atf_fieldset,
+            $this->jira_custom_fieldset,
+            $collection
+        );
+    }
 }
